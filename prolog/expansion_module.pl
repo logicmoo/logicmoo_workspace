@@ -1,1 +1,0 @@
-:- module(expansion_module, []).
