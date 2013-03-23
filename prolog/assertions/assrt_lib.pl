@@ -5,7 +5,6 @@
 		      comps_to_goal/4,
 		      assertion_records/2]).
 
-:- use_module(library(expansion_module)).
 :- use_module(library(assertions_op)).
 :- use_module(library(sequence_list)).
 
@@ -19,7 +18,9 @@
 :- multifile assertions:doc_db/4.
 :- multifile assrt_lib:nodirective_error_hook/1.
 
-add_arg(H, M:G0, M:G) :-
+add_arg(H, M:G0, M:G) :- !,
+    add_arg(H, G0, G).
+add_arg(H, G0, G) :-
     G0 =.. [F|L],
     G  =.. [F,H|L].
 
@@ -459,14 +460,14 @@ compact_module_call(M, (A0;B0), (A;B)) :- !,
     maplist(compact_module_call(M), B0, B).
 compact_module_call(_, C, C).
 
-:- multifile ciao:declaration_hook/2.
-
-ciao:declaration_hook(Decl, Records) :-
-    assertion_records(Decl, Records).
-
 assertion_records(Decl, Records) :-
     '$set_source_module'(M, M),
     assertion_records(Decl, Records, M, Dict),
     %% ciao:get_dictionary/3 Must be after assertion_records/4
     %% to improve performance: --EMM
     ciao:get_dictionary((:- Decl), M, Dict).
+
+:- multifile ciao:declaration_hook/2.
+
+ciao:declaration_hook(Decl, Records) :-
+    assertion_records(Decl, Records).
