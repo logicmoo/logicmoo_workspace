@@ -1,24 +1,16 @@
-:- module(rtchecks, []).
+:- package(rtchecks).
 
-% A wrapper for the Ciao Runtime-Checks library
+:- use_package(assertions).
+:- use_package(hiord).
+:- use_package(library(inliner(inliner_ops))).
 
-:- expects_dialect(ciao).
+:- new_declaration(rtchecked/0).
 
-:- use_module(tools(assertions)).
+:- rtchecked.
 
-:- use_package(rtchecks).
+:- load_compilation_module(rtchecks(rtchecks_tr)).
 
-:- reexport(rtchecks(rtchecks_rt)).
-:- reexport(rtchecks(rtchecks_utils)).
+:- add_sentence_trans(rtchecks_sentence_tr/4, 8310).
+:- add_goal_trans(rtchecks_goal_tr/3, 8310).
 
-% To allow usage of rtchecks in normal SWI programs:
-
-goal_expansion(Goal0, Goal) :-
-    '$set_source_module'(M, M),
-    rtchecks_tr:rtchecks_goal_tr(Goal0, Goal, M),
-    !.
-
-term_expansion(Term0, Term) :-
-    '$set_source_module'(M, M),
-    rtchecks_tr:rtchecks_sentence_tr(Term0, Term, M, []),
-    !.
+:- set_prolog_flag(runtime_checks, yes).
