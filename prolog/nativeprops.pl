@@ -4,6 +4,4 @@
 
 :- expects_dialect(ciao).
 
-:- use_package(nativeprops).
-
 :- reexport(library(assertions(native_props))).
