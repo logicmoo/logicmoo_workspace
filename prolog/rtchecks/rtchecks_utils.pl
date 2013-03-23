@@ -2,7 +2,7 @@
 	  [handle_rtcheck/1, pretty_messages/1, rtcheck_to_messages/3,
 	   ctcheck_to_messages/3, check_to_messages/4, call_rtc/1,
 	   save_rtchecks/1, load_rtchecks/1, rtcheck_error/1],
-	  [assertions, nativeprops, regtypes, hiord]).
+	  [assertions, basicmodes, nativeprops, regtypes, hiord]).
 
 :- use_module(library(aggregates)).
 :- use_module(library(hiordlib)).
@@ -13,7 +13,7 @@
 :- use_module(library(debugger(debugger_lib))).
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
-:- use_module(tools(nativeprops)).
+:- use_module(library(assertions/native_props)).
 tracertc :- backtrace(40).	% gtrace
 :- endif.
 :- use_module(rtchecks(compact_list)).
