@@ -1,6 +1,7 @@
-:- module(ctchecks, []).
+:- module(swictchecks, []).
 
-:- use_module(tools(rtchecks)).
+:- use_module(library(compound_expand)).
+:- use_module(library(swirtchecks)).
 
 ctcheck_head((M:T --> B), M) :- !, ctcheck_head((T --> B), M).
 ctcheck_head((H0  --> _), M) :- !,
@@ -106,7 +107,7 @@ verif_is_property(IM, F, A) :-
 property_issue(From, IssuePIsL-Heads) :-
     print_message(error, acheck(prop_issue(From, Heads, IssuePIsL))).
 
-:- use_module(tools(tools_common)).
+% :- use_module(tools(tools_common)).
 
 issue_format(defined, '\tUsing undefined: ~w').
 issue_format(is_prop, '\tNot properties : ~w').
@@ -119,11 +120,16 @@ issue_message(Issue-Props) -->
      issue_format(Issue, Format)},
     [Format -[Compacted], nl].
 
+issue_messages([]) --> [].
+issue_messages([IssuePIs|IssuePIsL]) -->
+    issue_message(IssuePIs),
+    issue_messages(IssuePIsL).
+
 prolog:message(acheck(prop_issue(From, Heads, IssuePIsL))) -->
     {sort(Heads, Sorted), compact_pi_list(Sorted, Compacted)},
     prolog:message_location(From),
-    ['In assertions for ~w'-[Compacted],nl],
-    maplist_dcg(issue_message, IssuePIsL).
+    ['In assertions for ~w'-[Compacted], nl],
+    issue_messages(IssuePIsL).
 
 term_expansion(assertions:assertion_db(Head, M, _Status, Type, Cp, Ca,
 				       Su, Gl, _Co, _), _) :-
@@ -141,13 +147,10 @@ term_expansion(Term, _) :-
     ctcheck_head(Term, M),
     fail.
 
-ctcheck_goal(Goal, M) :-
-    implementation_module(M:Goal, IM),
-    ctcheck_goal(Goal, M, IM).
-
 goal_expansion(Goal, _) :-
     current_prolog_flag(check_assertions, Issues),
     memberchk(ctcheck, Issues),
     '$set_source_module'(M, M),
-    ctcheck_goal(Goal, M),
+    (predicate_property(M:Goal, imported_from(IM)) -> true ; IM = M),
+    ctcheck_goal(Goal, M, IM),
     fail.
