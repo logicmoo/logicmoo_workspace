@@ -2,11 +2,12 @@
 		      assertion_read/9,
 		      assertion_body/7,
 		      comps_to_goal/3,
-		      comps_to_goal/4]).
+		      comps_to_goal/4,
+		      assertion_records/2]).
 
-:- use_module(tools(lambda)).
-:- use_module(tools(assertions)).
-:- use_module(tools(tools_common), [sequence_list/3]).
+:- use_module(library(expansion_module)).
+:- use_module(library(assertions_op)).
+:- use_module(library(sequence_list)).
 
 :- expects_dialect(swi).
 
@@ -433,6 +434,8 @@ comps_to_goal2([Check|Checks], Check0, Goal) -->
 assrt_lib_tr((:- Decl), Records, M, Dict) :-
     assertion_records(Decl, Records, M, Dict).
 
+assertion_records_helper(Match, Match-Record, Record).
+
 assertion_records(M:Decl, Records, _, Dict) :-
     atom(M), !,
     assertion_records(Decl, Records, M, Dict).
@@ -448,7 +451,7 @@ assertion_records(Assertions, Records, CM, Dict) :-
 			   [Cp,  Ca,  Su,  Gl,  Co]))),
 	    ARecords),
     ARecords \= [], % Is a valid assertion if it defines at least one Record
-    maplist(Match+\(Match-Record)^Record^true, ARecords, Records).
+    maplist(assertion_records_helper(Match), ARecords, Records).
 
 compact_module_call(M, M:C, C) :- !.
 compact_module_call(M, (A0;B0), (A;B)) :- !,
@@ -467,6 +470,3 @@ assertion_records(Decl, Records) :-
     %% ciao:get_dictionary/3 Must be after assertion_records/4
     %% to improve performance: --EMM
     ciao:get_dictionary((:- Decl), M, Dict).
-
-term_expansion((:- Decl), Records) :-
-    assertion_records(Decl, Records).

@@ -1,24 +1,11 @@
-:- module(assertions, [op(975,  xfx, (=>)),
-		       op(978,  xfx, (::)),
-		       op(1150, fx,  (decl)),
-		       op(1150, xfx, (decl)),
-		       op(1150, fx,  (pred)),
-		       op(1150, xfx, (pred)),
-		       op(1150, fx,  (prop)),
-		       op(1150, xfx, (prop)),
-		       op(1150, fx,  (modedef)),
-		       op(1150, fx,  (calls)),
-		       op(1150, xfx, (calls)),
-		       op(1150, fx,  (success)),
-		       op(1150, xfx, (success)),
-		       op(1150, fx,  (test)),
-		       op(1150, xfx, (test)),
-		       op(1150, fx,  (comp)),
-		       op(1150, xfx, (comp)),
-		       op(1150, fx,  (entry)),
-		       op(1150, fx,  (exit)),
-		       op(1150, xfx, (exit)),
-		       op(500,  yfx, (#)),
-		       %% From basicmodes:
-		       op(500, fx, (?)),
-		       op(500, fx, (@))]).
+:- module(assertions, []).
+
+:- use_module(library(expansion_module)).
+:- reexport(library(assertions_op)).
+:- reexport(library(assertions/assrt_lib)).
+
+assrt_lib:nodirective_error_hook(Assr) :-
+    throw(error(context_error(nodirective, Assr), _)).
+
+term_expansion((:- Decl), Records) :-
+    assertion_records(Decl, Records).

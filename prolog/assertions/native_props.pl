@@ -88,7 +88,7 @@
 :- use_module(library(strings)).
 :- use_module(library(system)).
 :- use_module(library(odd)).
-:- use_module(rtchecks(rtchecks_send)).
+:- use_module(library(assertions(send_check))).
 :- use_module(engine(internals), ['$setarg'/4]).
 
 % --------------------------------------------------------------------------
@@ -1296,13 +1296,13 @@ fi(Goal, V) :-
     ; true
     ).
 
-:- true prop nsh(G, V).
+:- true prop nsh/2.
 :- meta_predicate nsh(goal, ?).
-nsh(M:Goal, Arg) :-
+nsh(Goal, Arg) :-
     check_nsh(Goal, Arg),
-    call(M:Goal).
+    call(Goal).
 
-check_nsh(Goal, Arg) :-
+check_nsh(_:Goal, Arg) :-
     ( term_variables(Arg, Vars),
       Vars \= [] ->
       Goal =.. [_|Args],
