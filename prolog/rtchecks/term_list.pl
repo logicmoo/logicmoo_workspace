@@ -14,10 +14,19 @@ push_term(E, L, V) :-
 	(T==E ; var(T), T = E),
 	!.
 
+:- if(current_prolog_flag(dialect, ciao)).
 push_meta(E, L, V) :-
 	member('$meta$rtc'(T, V), L),
 	(T==E ; var(T), T = E),
 	!.
+:- else.
+push_meta(E, L, V) :-
+    ( predicate_property(M:E, imported_from(IM)) ->
+      true
+    ; '$set_source_module'(IM, IM)
+    ),
+    push_term(IM:E, L, V).
+:- endif.
 
 collapse_terms(G, L0, L) :-
 	count_vars(G, [], C),
