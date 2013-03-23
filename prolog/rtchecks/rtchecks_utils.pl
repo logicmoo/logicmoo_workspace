@@ -13,6 +13,7 @@
 :- use_module(library(debugger(debugger_lib))).
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
+:- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(assertions/native_props)).
 tracertc :- backtrace(40).	% gtrace
 :- endif.
