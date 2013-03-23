@@ -1,7 +1,33 @@
 :- module(swictchecks, []).
 
+:- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(compound_expand)).
+:- use_module(library(compact_pi_list)).
 :- use_module(library(swirtchecks)).
+:- reexport(library(swirtchecks)).
+
+:- multifile prolog:message/3.
+
+issue_format(defined, '\tUsing undefined: ~w').
+issue_format(is_prop, '\tNot properties : ~w').
+
+issue_message(ctcheck-RTChecksL) --> !,
+    {append(RTChecksL, RTChecks)},
+    prolog:message(acheck(checks(ctcheck), RTChecks)).
+issue_message(Issue-Props) -->
+    {compact_pi_list(Props, Compacted),
+     issue_format(Issue, Format)},
+    [Format -[Compacted], nl].
+
+issue_messages([]) --> [].
+issue_messages([IssuePIs|IssuePIsL]) -->
+    issue_message(IssuePIs),
+    issue_messages(IssuePIsL).
+
+prolog:message(acheck(prop_issue(Heads, IssuePIsL))) -->
+    {sort(Heads, Sorted), compact_pi_list(Sorted, Compacted)},
+    ['In assertions for ~w'-[Compacted], nl],
+    issue_messages(IssuePIsL).
 
 ctcheck_head((M:T --> B), M) :- !, ctcheck_head((T --> B), M).
 ctcheck_head((H0  --> _), M) :- !,
@@ -14,14 +40,13 @@ ctcheck_head(M:T,      _) :- !, ctcheck_head(T, M).
 ctcheck_head(H,        M) :-
     ctcheck_goal(H, M, M).
 
+property_issue(IssuePIsL-Heads) :-
+    print_message(error, acheck(prop_issue(Heads, IssuePIsL))).
+
 ctcheck_goal(Goal, M, IM) :-
     functor(Goal, F, A),
     check_property(ctcheck, M:Goal, IM, CTChecks),
-    ignore(( source_location(File, Line),
-	     From = file(File, Line, -1, 0)
-	   ; From = file(unknown, 0, -1, 0)
-	   )),
-    property_issue(From, [ctcheck-[CTChecks]]-[M:F/A]).
+    property_issue([ctcheck-[CTChecks]]-[M:F/A]).
 
 :- create_prolog_flag(check_assertions, [], [type(term)]).
 
@@ -57,7 +82,7 @@ current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, PI-(Issue-Values)) :-
     ),
     member(Issue, Issues),
     checker_t(Issue),
-    implementation_module(N:H, IM),
+    (predicate_property(N:H, imported_from(IM)) -> true ; IM = N),
     check_property(Issue, N:H, IM, Values).
 
 % :- meta_predicate check_properties(?, ?).
@@ -65,19 +90,15 @@ current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, PI-(Issue-Values)) :-
 check_properties(Head, M, Type, Cp, Ca, Su, Gl, Issues) :-
     findall(Pair, current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, Pair),
 	    Pairs),
-    ignore(( source_location(File, Line),
-	     From = file(File, Line, -1, 0)
-	   ; From = file(unknown, 0, -1, 0)
-	   )),
-    report_issues(From-Pairs).
+    report_issues(Pairs).
 
-report_issues(From-Pairs) :-
+report_issues(Pairs) :-
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Grouped),
     maplist(\ (K-L)^ (G-K)^ group_pairs_by_key(L, G), Grouped, Trans),
     keysort(Trans, TSorted),
     group_pairs_by_key(TSorted, TGrouped),
-    maplist(property_issue(From), TGrouped).
+    maplist(property_issue, TGrouped).
 
 check_property(defined, M:H, _, M:F/A) :-
     functor(H, F, A),
@@ -101,35 +122,6 @@ verif_is_property(IM, F, A) :-
     ( AM = IM -> true
     ; predicate_property(AM:H, imported_from(IM))
     ).
-
-:- multifile prolog:message/3.
-
-property_issue(From, IssuePIsL-Heads) :-
-    print_message(error, acheck(prop_issue(From, Heads, IssuePIsL))).
-
-% :- use_module(tools(tools_common)).
-
-issue_format(defined, '\tUsing undefined: ~w').
-issue_format(is_prop, '\tNot properties : ~w').
-
-issue_message(ctcheck-RTChecksL) --> !,
-    {append(RTChecksL, RTChecks)},
-    prolog:message(acheck(checks(ctcheck), RTChecks)).
-issue_message(Issue-Props) -->
-    {compact_pi_list(Props, Compacted),
-     issue_format(Issue, Format)},
-    [Format -[Compacted], nl].
-
-issue_messages([]) --> [].
-issue_messages([IssuePIs|IssuePIsL]) -->
-    issue_message(IssuePIs),
-    issue_messages(IssuePIsL).
-
-prolog:message(acheck(prop_issue(From, Heads, IssuePIsL))) -->
-    {sort(Heads, Sorted), compact_pi_list(Sorted, Compacted)},
-    prolog:message_location(From),
-    ['In assertions for ~w'-[Compacted], nl],
-    issue_messages(IssuePIsL).
 
 term_expansion(assertions:assertion_db(Head, M, _Status, Type, Cp, Ca,
 				       Su, Gl, _Co, _), _) :-
