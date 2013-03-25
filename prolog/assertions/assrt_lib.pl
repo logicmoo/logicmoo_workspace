@@ -96,6 +96,13 @@ normalize_assertion_body((PD                 #CO), p, PD, true, true, true, true
 normalize_assertion_body((PD                    ), t, PD, true, true, true, true, "") :- !. %00000
 %% ---------------------------------------------------------------------------------------- %% ----
 
+fix_format_global(p, p).
+fix_format_global(d, p).
+fix_format_global(s, p).
+fix_format_global(g, g).
+fix_format_global(c, g).
+fix_format_global(t, g).
+
 valid_cp(CP) :- \+ invalid_cp(CP).
 
 invalid_cp(_/_).
@@ -237,7 +244,8 @@ normalize_assertions(Assertions, M, Pred, Status, Type, Cp, Ca, Su, Gl, Co) :-
     once(normalize_status_and_type(Assertions, Status, Type, BodyS)),
     current_body(BodyS, M, Body, Gl, Gl0),
     normalize_assertion_head_body(Body, M, Pred, Format, Cp, Ca, Su, Gl0, Co),
-    assertion_format(Type, Format).
+    (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
+    assertion_format(Type, GFormat).
 
 /*
 normalize_assertion(Assr, Pred, Status, Type, Cp, Ca, Su, Gl, Co) :-
@@ -459,6 +467,12 @@ compact_module_call(M, (A0;B0), (A;B)) :- !,
     maplist(compact_module_call(M), A0, A),
     maplist(compact_module_call(M), B0, B).
 compact_module_call(_, C, C).
+
+:- use_module(library(dialect/ciao), []).
+:- multifile ciao:declaration_hook/2.
+
+ciao:declaration_hook(Decl, Records) :-
+    assertion_records(Decl, Records).
 
 assertion_records(Decl, Records) :-
     '$set_source_module'(M, M),
