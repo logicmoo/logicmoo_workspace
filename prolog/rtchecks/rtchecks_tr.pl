@@ -120,6 +120,9 @@ be done in such a way that the compability do not be compromised.
 
 :- data head_alias_db/3.
 :- data goal_alias_db/3.
+:- if(current_prolog_flag(dialect, swi)).
+:- multifile generated_rtchecks_db/3.
+:- endif.
 :- data generated_rtchecks_db/3.
 % :- data rtchecks_db/3.
 % :- data nortchecks_db/3.
@@ -358,8 +361,10 @@ rtchecks_goal_tr(PPAssertion, PPRTCheck, _) :-
 	!.
 rtchecks_goal_tr('$orig_call'(Goal0), Goal, M) :-
 	qualify_goal(M, Goal0, Goal). % TODO: doesn't work with builtins (swi) --EMM
+:- if(current_prolog_flag(dialect, ciao)).
 rtchecks_goal_tr('$meta$rtc'(Goal, MG), MG=RM:Goal, M) :-
 	module_qualifier_i(M, Goal, RM).
+:- endif.
 rtchecks_goal_tr(Goal, Goal1, M) :-
 	goal_alias_db(Goal, Goal1, M), !.
 
@@ -426,8 +431,12 @@ cleanup_head_alias_db(M) :-
 cleanup_goal_alias_db(M) :-
 	retractall_fact(goal_alias_db(_, _, M)).
 
+:- if(current_prolog_flag(dialect, swi)).
+cleanup_generated_rtchecks_db(_).
+:- else.
 cleanup_generated_rtchecks_db(M) :-
 	retractall_fact(generated_rtchecks_db(_, _, M)).
+:- endif.
 
 process_sentence(Head, Body0, Clauses, M, Dict) :-
 	functor(Head, F, A),
@@ -445,6 +454,14 @@ head_body_clause(Head, Body, Clause) :-
 	; Clause = (Head :- Body)
 	).
 
+:- if(current_prolog_flag(dialect, swi)).
+mark_generated_rtchecks(F, A, M, C, [rtchecks_tr:generated_rtchecks_db(F, A, M)|C]).
+:- endif.
+:- if(current_prolog_flag(dialect, ciao)).
+mark_generated_rtchecks(F, A, M, C, C) :-
+    assertz_fact(generated_rtchecks_db(F, A, M)).
+:- endif.
+
 transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
 	( generated_rtchecks_db(F, A, M) ->
 	  head_alias_db(Head, Head1, M),
@@ -458,14 +475,14 @@ transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
 	    current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	    UsePosLoc = (UsePredLoc, UseAsrLoc),
 	    generate_rtchecks(F, A, M, Assertions, Pred, Dict, PLoc,
-			      UsePosLoc, _Pred2, Head, Body0, Body, Clauses, []) ->
-	    assertz_fact(generated_rtchecks_db(F, A, M))
+			      UsePosLoc, _Pred2, Head, Body0, Body, Clauses0,
+			      []) ->
+	    mark_generated_rtchecks(F, A, M, Clauses0, Clauses)
 	  ; head_body_clause(Head, Body, Clause),
 	    Clauses = [Clause]
 	  )
 	),
 	!.
-
 % transform_sentence_body(_, Head, _, _, _, Body, [(Head :- Body)]).
 
 transform_sentence(F, A, Head, Body0, Body, Clauses, M, Dict) :-
