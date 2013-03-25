@@ -1,10 +1,6 @@
 :- module(swiprops, [det/1, semidet/1, nondet/1, multi/1]).
 
-:- use_module(prosyn(expansions_handler)).
-:- use_module(tools(basicprops)).
-:- use_module(tools(nativeprops)).
-:- use_module(tools(rtchecks)).
-% :- use_module(rtchecks(rtchecks_send)).
+:- use_module(library(swiassertions)).
 
 % SWI-Like Properties:
 
