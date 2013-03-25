@@ -25,13 +25,23 @@ no_duplicates(Goal, Vars) :-
     ; nb_setarg(1, S, [Vars|X])
     ).
 
-% Kludge: using swipl internals. Perhaps is not a good idea --EMM
+/*
 expansion_module(M, EM) :-
     context_module(CM),
     module_property(CM, file(CF)),
     no_duplicates('$load_context_module'(EF, M, _), [EF, M]),
     module_property(EM, file(EF)),
     no_duplicates('$load_context_module'(CF, EM, _), [CF, EM]).
+*/
+
+% Kludge: using swipl internals. Perhaps is not a good idea --EMM
+
+expansion_module(M, EM) :-
+    context_module(CM),
+    module_property(CM, file(CF)),
+    no_duplicates('$load_context_module'(CF, EM, _), [CF, EM]),
+    module_property(EM, file(EF)),
+    no_duplicates('$load_context_module'(EF, M, _), [EF, M]).
 
 system:goal_expansion(Goal0, Goal) :-
     '$set_source_module'(M, M),
