@@ -62,7 +62,8 @@ pretty_messages(_) :-
 
 :- if(current_prolog_flag(dialect, swi)).
 
-pretty_messages(Messages) :-
+pretty_messages(Messages0) :-
+	compact_list(Messages0, Messages),
 	print_message(error, ciao_messages(Messages)).
 
 :- multifile
@@ -179,12 +180,12 @@ check_to_messages(rtcheck(Type, Pred0, Dict, PropValues0, Positions0),
 	map(Positions, position_to_message, PosMessages0),
 	reverse(PosMessages0, PosMessages),
 	check_time_msg(Time, TimeMsg),
-	Text = [TimeMsg, ' failure in ', ''({Pred}), '.', '\n',
+	Text = [TimeMsg, ' failure in assertion for ', ''({Pred}), '.', '\n',
 		'\tIn *', Type, '*, unsatisfied properties: ', '\n',
 		'\t\t', ''({Props}), '.'|Text0],
 	( Values = [] -> Text0 = Text1
-	; Text0 = ['\n', '\tBecause: ',
-		   '\n', '\t', ''({Values}), '.'|Text1]
+	; Text0 = ['\n', '\tBecause: ','\n',
+		   '\t\t', ''({Values}), '.'|Text1]
 	),
 	( select(message_lns(S, Ln0, Ln1, MessageType, Text2),
 		 PosMessages, PosMessages1) ->
