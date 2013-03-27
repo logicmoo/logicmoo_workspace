@@ -6,7 +6,7 @@
 :- multifile have_inline/0.
 
 :- if(current_prolog_flag(dialect, swi)).
-:- use_module(library(nativeprops)).
+:- use_module(library(swi/nativeprops)).
 % runtime-checks related flags:
 :- include(rtchecks(rtchecks_flags)).
 :- ( define_flag(Flag, _Values, Default),

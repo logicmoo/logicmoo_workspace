@@ -1,6 +1,7 @@
-:- module(swiprops, [det/1, semidet/1, nondet/1, multi/1]).
+:- module(plprops, [det/1, semidet/1, nondet/1, multi/1]).
 
-:- use_module(library(swiassertions)).
+:- use_module(library(swi/assertions)).
+:- use_module(library(swi/nativeprops)).
 
 % SWI-Like Properties:
 
@@ -12,22 +13,17 @@
 
 det(Goal) :-
 	Solved = solved(no),
-	(
-	    true
-	;
-	    arg(1, Solved, no) ->
-	    send_comp_rtcheck(Goal, det, fails),
-	    fail
+	( true
+	; arg(1, Solved, no) ->
+	  send_comp_rtcheck(Goal, det, fails),
+	  fail
 	),
 	prolog_current_choice(C0),
 	native_props:no_exception_2(Goal, det, _),
 	prolog_current_choice(C1),
-	(
-	    arg(1, Solved, no)
-	->
-	    true
-	;
-	    send_comp_rtcheck(Goal, det, non_det)
+	( arg(1, Solved, no)
+	-> true
+	; send_comp_rtcheck(Goal, det, non_det)
 % more than one solution!
 	),
 	( C0 == C1 -> !
@@ -51,16 +47,15 @@ nondet(Goal) :- Goal.
 
 multi(Goal) :-
 	Solved = solved(no),
-	(
-	    true
-	;
-	    arg(1, Solved, no) ->
-	    send_comp_rtcheck(Goal, multi, fails),
-	    fail
+	( true
+	; arg(1, Solved, no) ->
+	  send_comp_rtcheck(Goal, multi, fails),
+	  fail
 	),
 	prolog_current_choice(C0),
 	native_props:no_exception_2(Goal, multi, _),
 	prolog_current_choice(C1),
 	( C0 == C1 -> !
-	; nb_setarg(1, Solved, yes) ).
+	; nb_setarg(1, Solved, yes)
+	).
 

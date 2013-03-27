@@ -1,4 +1,4 @@
-:- module(swirtchecks, []).
+:- module(rtchecks, []).
 
 % A wrapper for the Ciao Runtime-Checks library
 :- use_module(library(compound_expand)).

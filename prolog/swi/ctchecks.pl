@@ -1,10 +1,9 @@
-:- module(swictchecks, []).
+:- module(ctchecks, []).
 
 :- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(compound_expand)).
 :- use_module(library(compact_pi_list)).
-:- use_module(library(swirtchecks)).
-:- reexport(library(swirtchecks)).
+:- reexport(library(swi/rtchecks)).
 
 :- multifile prolog:message/3.
 
