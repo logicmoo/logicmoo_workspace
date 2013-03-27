@@ -1,4 +1,4 @@
-:- module(swiassertions, []).
+:- module(assertions, []).
 
 :- use_module(library(compound_expand)).
 :- reexport(library(assertions_op)).
