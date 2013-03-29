@@ -316,9 +316,6 @@ do_modedef(A0, A1, A, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
     !.
 do_modedef(A0, A0, _, Cp0, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp0, Cp).
 
-mkcall(M:X, B, M:XB) :- !, mkcall(X, B, XB).
-mkcall(X, B, XB) :- X =.. [F|Args], XB =.. [F, B|Args].
-
 % Support for modes are hard-wired here:
 % ISO Modes
 modedef(+(A),   A, B, Cp,                Ca0,  Su,         Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :-
