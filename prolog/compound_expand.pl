@@ -17,40 +17,33 @@
     system:goal_expansion/2.
 
 :- meta_predicate no_duplicates(0, ?).
-no_duplicates(Goal, Vars) :-
+no_duplicates(Goal, Term) :-
     S = nd([]),
     Goal,
     arg(1, S, X),
-    ( memberchk(Vars, X) -> fail
-    ; nb_setarg(1, S, [Vars|X])
+    ( memberchk(Term, X) -> fail
+    ; nb_setarg(1, S, [Term|X])
     ).
-
-/*
-expansion_module(M, EM) :-
-    context_module(CM),
-    module_property(CM, file(CF)),
-    no_duplicates('$load_context_module'(EF, M, _), [EF, M]),
-    module_property(EM, file(EF)),
-    no_duplicates('$load_context_module'(CF, EM, _), [CF, EM]).
-*/
 
 % Kludge: using swipl internals. Perhaps is not a good idea --EMM
 
 expansion_module(M, EM) :-
     context_module(CM),
     module_property(CM, file(CF)),
-    no_duplicates('$load_context_module'(CF, EM, _), [CF, EM]),
+    no_duplicates('$load_context_module'(CF, EM, _), CF-EM),
     module_property(EM, file(EF)),
-    no_duplicates('$load_context_module'(EF, M, _), [EF, M]).
+    no_duplicates('$load_context_module'(EF, M, _), EF-M).
 
 system:goal_expansion(Goal0, Goal) :-
     '$set_source_module'(M, M),
     expansion_module(M, EM),
     EM:goal_expansion(Goal0, Goal),
+    Goal0 \== Goal,
     !.
 
 system:term_expansion(Term0, Term) :-
     '$set_source_module'(M, M),
     findall(EM, expansion_module(M, EM), ML),
     ML \= [],
-    '$expand':call_term_expansion(ML, Term0, Term).
+    '$expand':call_term_expansion(ML, Term0, Term),
+    Term0 \== Term. % Fail to try other expansions
