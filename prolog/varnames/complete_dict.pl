@@ -51,7 +51,7 @@ complete_dict_arg(Arg, Dict, Exclude, Idx0, Idx, EDict0, EDict) :-
 complete_dict_arg(_, _, _, Idx, Idx, EDict, EDict).
 
 new_name(Dict, Name, Idx0, Idx) :-
-	atom_number(AIdx0, Idx0),
+	system:atom_number(AIdx0, Idx0),
 	atom_concat('_', AIdx0, Name0),
 	(
 	    member(Name1 = _, Dict),
