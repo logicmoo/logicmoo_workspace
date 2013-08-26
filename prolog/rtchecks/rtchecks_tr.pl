@@ -128,7 +128,7 @@ be done in such a way that the compability do not be compromised.
 % :- data nortchecks_db/3.
 :- data posponed_sentence_db/7.
 
-valid_assertions(true,  entry) :- !, current_prolog_flag(rtchecks_entry, yes).
+valid_assertions(true, entry) :- !, current_prolog_flag(rtchecks_entry, yes).
 valid_assertions(check, exit) :- !, current_prolog_flag(rtchecks_exit,  yes).
 valid_assertions(trust, test) :- !,
 	current_prolog_flag(rtchecks_test,  yes),
@@ -254,7 +254,13 @@ black_list_pred('=', 2).
 
 :- if(current_prolog_flag(dialect, swi)).
 add_redefine_declaration(_, _, H) -->
-	[(:- redefine_system_predicate(H))].
+	( { predicate_property(H, imported_from(L)),
+	    module_property(L, class(C)),
+	    memberchk(C, [system, library])
+	  }
+	->[(:- redefine_system_predicate(H))]
+	; []
+	).
 
 add_meta_declaration(M, H) -->
 	( {predicate_property(M:H, meta_predicate(Spec))} ->
@@ -412,8 +418,11 @@ needs_posponed_definition(_) :- fail. % is_discontiguous(Goal).
 qualify_goal(M, Goal0, Goal) :-
 	( imported_from(M:Goal0, EM) ->
 	  Goal = EM:Goal0
-	; functor(Goal0, _, N),
-	  rename_head('1', N, Goal0, Goal) %' Kludge: force compilation error
+	;
+	  % functor(Goal0, _, N),
+	  % rename_head('1', N, Goal0, Goal)
+	  atom_concat(M, '$impl', IM),
+	  Goal = IM:Goal0 % Last opportunity: define Goal0 in IM
 	).
 
 cleanup_db_0(M) :-
