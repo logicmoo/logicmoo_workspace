@@ -1,4 +1,4 @@
-:- module(plprops, [det/1, semidet/1, nondet/1, multi/1]).
+:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/nativeprops)).
@@ -6,12 +6,13 @@
 
 % SWI-Like Properties:
 
+:- true prop type/1.
+:- meta_predicate type(0).
+type(Goal) :- call(Goal).
+
 :- prop det(X) + equiv(not_fails(is_det(X))).
-
 :- meta_predicate det(0).
-
 % det(Goal) :- not_fails(is_det(Goal)).
-
 det(Goal) :-
 	Solved = solved(no),
 	( true
@@ -20,12 +21,12 @@ det(Goal) :-
 	  fail
 	),
 	prolog_current_choice(C0),
-	native_props:no_exception_2(Goal, det, _),
+	Goal,
 	prolog_current_choice(C1),
 	( arg(1, Solved, no)
 	-> true
 	; send_comp_rtcheck(Goal, det, non_det)
-% more than one solution!
+	%% more than one solution!
 	),
 	( C0 == C1 -> !
 	; nb_setarg(1, Solved, yes)
@@ -45,7 +46,6 @@ nondet(Goal) :- Goal.
 
 :- meta_predicate multi(0).
 % multi(Goal) :- not_fails(Goal).
-
 multi(Goal) :-
 	Solved = solved(no),
 	( true
