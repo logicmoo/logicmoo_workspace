@@ -59,7 +59,7 @@ resolve_head((A,B), M, H) :- !,
     ( resolve_head(A, M, H)
     ; resolve_head(B, M, H)
     ).
-resolve_head((A;B), _, H) :- !,
+resolve_head((A;B), M, H) :- !,
     ( resolve_head(A, M, H)
     ; resolve_head(B, M, H)
     ).
@@ -108,8 +108,8 @@ check_property(is_prop, M:H, IM, M:F/A) :-
 check_property(ctcheck, M:H, IM, CTChecks) :-
 				% compile-time checks. Currently only
 				% compatibility checks.
-    % rtchecks_tr:location(Loc),
-    rtchecks_tr:generate_ctchecks(H, IM, _Loc, Goal),
+    rtchecks_tr:location(Loc),
+    rtchecks_tr:generate_ctchecks(H, IM, Loc, Goal),
     save_rtchecks(M:Goal),	% Now execute the checks
     load_rtchecks(CTChecks),	% and collect the failures
     CTChecks \= [].
