@@ -932,21 +932,33 @@ exception(Goal) :-
 	Goal,
 	send_comp_rtcheck(Goal, exception, no_exception).
 
-:- prop exception(Goal, E) # "Calls of the form @var{Goal} throw an
-	exception that unifies with @var{E}.".
+:- prop throw(Goal, E).
+:- meta_predicate throw(goal, ?).
+throw(Goal, E) :-
+	test_throw_2(Goal, throw(E), F, F\=E).
 
-:- meta_predicate exception(goal, ?).
-
-exception(Goal, E) :-
+:- meta_predicate test_throws_2(goal, ?, ?, goal).
+test_throw_2(Goal, throw(E), F, Test) :-
 	catch(Goal, F,
 	    (
-		( E \= F ->
-		    send_comp_rtcheck(Goal, exception(E), exception(F))
+		(
+		    F \= rtcheck(_, _, _, _, _, _),
+		    Test
+		->
+		    send_comp_rtcheck(Goal, Prop, exception(F))
 		;
 		    true
 		),
 		throw(F)
-	    )),
+	    )).
+
+:- prop exception(Goal, E) # "Calls of the form @var{Goal} throw an
+	exception that unifies with @var{E}.".
+% exception(Goal, E) :- exception(throw(Goal, E)).
+:- meta_predicate exception(goal, ?).
+
+exception(Goal, E) :-
+	test_throw_2(Goal, exception(E), F, F\=E),
 	send_comp_rtcheck(Goal, exception(E), no_exception).
 
 :- prop no_exception(Goal) #
@@ -954,34 +966,22 @@ exception(Goal, E) :-
 
 :- meta_predicate no_exception(goal).
 
-no_exception(Goal) :- no_exception_2(Goal, no_exception, _).
+no_exception(Goal) :- test_throw_2(Goal, no_exception, _, true).
 
 :- prop no_exception(Goal, E) # "Calls of the form @var{Goal} do not
 	throw exception @var{E}.".
 
 :- meta_predicate no_exception(goal, ?).
 
-no_exception(Goal, E) :- no_exception_2(Goal, no_exception(E), E).
+no_exception(Goal, E) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 
-:- meta_predicate no_exception_2(goal, ?, ?).
-no_exception_2(Goal, Prop, E) :-
-	catch(Goal, E,
-	      (( E \= rtcheck(_, _, _, _, _, _) ->
-				% Do not relaunch the rtcheck signal
-		 send_comp_rtcheck(Goal, Prop, exception(E))
-	       ; true
-	       ),
-	       throw(E)
-	      )).
-
-:- prop throws(Goal, Es) + rtcheck(unimplemented)
+:- prop throws(Goal, Es)
 # "Calls of the form @var{Goal} can throw only the exceptions that
    unify with the terms listed in @var{Es}.".
 
 :- meta_predicate throws(goal, ?).
 
-throws(Goal, _E) :- call(Goal).
-
+throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 
 :- prop signals(Goal, Es) + rtcheck(unimplemented)
 # "Calls of the form @var{Goal} can generate only the signals that
@@ -1192,6 +1192,7 @@ attach_cut_fail(V, C) :- attach_attribute(V, '$cut_fail'(V, C)).
 :- if(current_prolog_flag(dialect, ciao)).
 instance(var(A))      :- !, var(A).
 instance(nonvar(A))   :- !, nonvar(A).
+instance(term(A))     :- !.
 instance(gnd(A))      :- !, ground(A).
 instance(int(A))      :- !, integer(A).
 instance(num(A))      :- !, number(A).
@@ -1201,6 +1202,7 @@ instance(constant(A)) :- !, atom(A).
 :- if(current_prolog_flag(dialect, swi)).
 instance(_:var(A))      :- !, var(A).
 instance(_:nonvar(A))   :- !, nonvar(A).
+instance(_:term(A))     :- !.
 instance(_:gnd(A))      :- !, ground(A).
 instance(_:int(A))      :- !, integer(A).
 instance(_:num(A))      :- !, number(A).
@@ -1225,8 +1227,8 @@ freeze_metacut(V, C) :- freeze(V, '$metacut'(C)).
 :- if(current_prolog_flag(dialect, ciao)).
 clean_freezed(V) :- detach_attribute(V).
 
-compat(var(A))     :- !, var(A).
-compat(nonvar(A))  :- !. % nonvar(A).
+compat(var(A))     :- !.
+compat(nonvar(A))  :- !.
 compat(term(A))    :- !.
 compat(gnd(A))     :- !.
 compat(atm(A))     :- !, atm(A).
@@ -1242,8 +1244,8 @@ compat(atomic(A))  :- !, constant(A).
 :- if(current_prolog_flag(dialect, swi)).
 clean_freezed(V) :- del_attr(V, freeze).
 
-compat(_:var(A))     :- !, var(A).
-compat(_:nonvar(A))  :- !. % nonvar(A).
+compat(_:var(A))     :- !.
+compat(_:nonvar(A))  :- !.
 compat(_:term(A))    :- !.
 compat(_:gnd(A))     :- !.
 compat(_:atm(A))     :- !, atm(A).
