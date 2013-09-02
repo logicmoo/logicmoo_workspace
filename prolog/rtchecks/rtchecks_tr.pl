@@ -418,8 +418,11 @@ needs_posponed_definition(_) :- fail. % is_discontiguous(Goal).
 qualify_goal(M, Goal0, Goal) :-
 	( imported_from(M:Goal0, EM) ->
 	  Goal = EM:Goal0
-	; functor(Goal0, _, N),
-	  rename_head('1', N, Goal0, Goal) %' Kludge: force compilation error
+	;
+	  % functor(Goal0, _, N),
+	  % rename_head('1', N, Goal0, Goal)
+	  atom_concat(M, '$impl', IM),
+	  Goal = IM:Goal0 % Last opportunity: define Goal0 in IM
 	).
 
 cleanup_db_0(M) :-
