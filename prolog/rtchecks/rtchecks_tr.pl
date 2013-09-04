@@ -484,8 +484,7 @@ transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
 	    current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	    UsePosLoc = (UsePredLoc, UseAsrLoc),
 	    generate_rtchecks(F, A, M, Assertions, Pred, Dict, PLoc,
-			      UsePosLoc, _Pred2, Head, Body0, Body, Clauses0,
-			      []) ->
+			      UsePosLoc, _, Head, Body0, Body, Clauses0, []) ->
 	    mark_generated_rtchecks(F, A, M, Clauses0, Clauses)
 	  ; head_body_clause(Head, Body, Clause),
 	    Clauses = [Clause]
@@ -1028,7 +1027,8 @@ comps_parts_to_comp_lit(PropValues, Comp0, Body0, Body) :-
 get_chkcomp(Comp, PropValues, Pred, PredName, Dict, PosLoc, Body0, Body) :-
 	comps_to_comp_lit(PropValues, Comp, Body1, Body),
 	( PosLoc \= [] ->
-	  Body0 = add_info_rtsignal(Body1, PropValues, Pred, PredName, Dict, PosLoc)
+	  Body0 = add_info_rtsignal(Body1, PropValues, Pred,
+				    PredName, Dict, PosLoc)
 	; Body0 = Body1 % PredName and Dict are less relevant than PosLoc
 	).
 
@@ -1049,9 +1049,9 @@ comp_comp_lit(comp(_, _, PropValues, ChkComp, Comp), cui(Comp - PropValues, _, C
 
 compound_comp(Goal0-Goal, Goal0, Goal).
 
-:- discontiguous body_check_comp/5.
-body_check_comp([],       _,         _,        Body,  Body) :- !.
-body_check_comp(ChkComps, CheckedL0, GlobName, Body0, Body) :-
+:- discontiguous body_check_comp/6.
+body_check_comp([],       _,         _,        _,    Body,  Body) :- !.
+body_check_comp(ChkComps, CheckedL0, GlobName, Pred, Body0, Body) :-
 	compound_rtchecks_end(comp_call_lit, collapse_prop,
 	    ChkComps, CheckedL0, CompCall),
 	compound_rtchecks_end(comp_comp_lit, collapse_prop,
@@ -1059,7 +1059,7 @@ body_check_comp(ChkComps, CheckedL0, GlobName, Body0, Body) :-
 	map(CompCompL, comp_to_lit(GlobName), ChkComp0),
 	sort(ChkComp0, ChkComp),
 	comps_to_goal(ChkComp, compound_comp, CompsBody, Body),
-	Body0 = [CompCall, CompsBody].
+	Body0 = [CompCall, with_goal(CompsBody, Pred)].
 
 comp_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
 	    CheckedL) -->
@@ -1067,7 +1067,7 @@ comp_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
 		    PLoc, PosLocs, StatusTypes), ChkComps),
 	 current_prolog_flag(rtchecks_namefmt, NameFmt),
 	 get_globname(NameFmt, Pred, GlobName)},
-	body_check_comp(ChkComps, CheckedL, GlobName).
+	body_check_comp(ChkComps, CheckedL, GlobName, Pred).
 
 comp_to_lit(CompCompL, GlobName, ChkComp-Goal) :-
 	CompCompL = i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues),
