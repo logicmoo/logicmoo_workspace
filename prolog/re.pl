@@ -1,4 +1,6 @@
-:- module(re, []).
+:- module(re, [ re//1
+              , rematch1/4
+              ]).
 
 % DCG parser for regular expressions
 re(Z) --> basicRE(W), reTail(W, Z).
