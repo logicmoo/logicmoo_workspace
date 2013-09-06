@@ -128,30 +128,26 @@ be done in such a way that the compability do not be compromised.
 % :- data nortchecks_db/3.
 :- data posponed_sentence_db/7.
 
-valid_assertions(true, entry) :- !, current_prolog_flag(rtchecks_entry, yes).
-valid_assertions(check, exit) :- !, current_prolog_flag(rtchecks_exit,  yes).
-valid_assertions(trust, test) :- !,
-	current_prolog_flag(rtchecks_test,  yes),
-	current_prolog_flag(rtchecks_trust, yes).
-valid_assertions(Status, test) :- !,
-	current_prolog_flag(rtchecks_test, yes),
-	rtcheck_assr_status(Status).
-valid_assertions(trust, Type) :- !,
-	current_prolog_flag(rtchecks_trust, yes),
-	rtcheck_assr_type(Type).
-valid_assertions(check, Type) :- rtcheck_assr_type(Type).
+valid_assertions(Status, Type) :-
+	rtcheck_assr_type(Type),
+	( Type = (entry)
+	->Status = true
+	; rtcheck_assr_status(Status)
+	).
 
-rtcheck_assr_status(true).
-rtcheck_assr_status(trust).
-rtcheck_assr_status(check).
+% rtcheck_assr_status(true) :- current_prolog_flag(rtchecks_true, yes).
+rtcheck_assr_status(trust) :- current_prolog_flag(rtchecks_trust, yes).
+rtcheck_assr_status(debug) :- current_prolog_flag(rtchecks_debug, yes).
+rtcheck_assr_status(trace) :- current_prolog_flag(rtchecks_trace, yes).
+rtcheck_assr_status(check) :- current_prolog_flag(rtchecks_check, yes).
 
 rtcheck_assr_type(calls).
-rtcheck_assr_type(entry).
+rtcheck_assr_type(entry) :- current_prolog_flag(rtchecks_entry, yes).
 rtcheck_assr_type(pred).
 rtcheck_assr_type(prop).
-rtcheck_assr_type(test).
+rtcheck_assr_type(test) :- current_prolog_flag(rtchecks_test, yes).
 rtcheck_assr_type(comp).
-rtcheck_assr_type(exit).
+rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
 rtcheck_assr_type(success).
 
 :- if(have_inline).
@@ -484,8 +480,7 @@ transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
 	    current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	    UsePosLoc = (UsePredLoc, UseAsrLoc),
 	    generate_rtchecks(F, A, M, Assertions, Pred, Dict, PLoc,
-			      UsePosLoc, _Pred2, Head, Body0, Body, Clauses0,
-			      []) ->
+			      UsePosLoc, _, Head, Body0, Body, Clauses0, []) ->
 	    mark_generated_rtchecks(F, A, M, Clauses0, Clauses)
 	  ; head_body_clause(Head, Body, Clause),
 	    Clauses = [Clause]
@@ -666,10 +661,10 @@ do_generate_step1_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs) -->
 	    current_prolog_flag(rtchecks_entry, Entry),
 	    current_prolog_flag(rtchecks_exit,  Exit),
 	    current_prolog_flag(rtchecks_trust, Trust),
-	    compat_assrt(Level, no, Trust, CompatAssrt, []),
-	    call_assrt(Level, Trust, Entry, CallAssrt, []),
-	    succ_assrt(Level, no, Trust, Exit, SuccAssrt, []),
-	    comp_assrt(Level, no, Trust, CompAssrt, [])
+	    compat_assrt(Level, [test], CompatAssrt, []),
+	    call_assrt(Level, [entry], CallAssrt, []),
+	    succ_assrt(Level, [exit, success, pred], SuccAssrt, []),
+	    comp_assrt(Level, [comp, pred], CompAssrt, [])
 	},
 	generate_common_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs,
 	    CompatAssrt, CallAssrt, SuccAssrt, CompAssrt).
@@ -687,7 +682,7 @@ generate_step2_rtchecks(Assertions, Pred, M, PDict, PLoc, UsePosLoc, Goal0,
 	    generate_callloc(CallLoc, UsePosLoc, PDict, PLoc, PosLocs0, Pred,
 		NameFmt, Goal2, Goal)
 	),
-	(reverse(PosLocs0, PosLocs1) -> true),
+	once(reverse(PosLocs0, PosLocs1)),
 	collapse_terms(Goal1, PosLocs1, PosLocs2),
 	reverse(PosLocs2, PosLocs),
 	append(PosLocs, Goal1, Goal0).
@@ -697,10 +692,10 @@ do_generate_step2_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs) -->
 	    current_prolog_flag(rtchecks_level, Level),
 	    current_prolog_flag(rtchecks_trust, Trust),
 	    current_prolog_flag(rtchecks_test,  Test),
-	    compat_assrt(Level, Test, Trust, CompatAssrt, []),
-	    call_assrt(Level, Trust, no, CallAssrt, []),
-	    succ_assrt(Level, Test, Trust, no, SuccAssrt, []),
-	    comp_assrt(Level, Test, Trust, CompAssrt, [])
+	    compat_assrt(Level, [], CompatAssrt, []),
+	    call_assrt(Level, [], CallAssrt, []),
+	    succ_assrt(Level, [test, success, pred], SuccAssrt, []),
+	    comp_assrt(Level, [test, comp, pred], CompAssrt, [])
 	},
 	generate_common_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs,
 	    CompatAssrt, CallAssrt, SuccAssrt, CompAssrt).
@@ -708,72 +703,22 @@ do_generate_step2_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs) -->
 % ----------------------------------------------------------------------------
 neg_level(inner,   exports).
 neg_level(exports, inner).
-% ----------------------------------------------------------------------------
-test_compat_assrt(no) --> [].
-test_compat_assrt(yes) --> [(check, test)].
 
-trust_compat_assrt(no) --> [].
-trust_compat_assrt(yes) --> [(trust, pred)].
+compat_assrt(exports, _) --> [].
+compat_assrt(inner,  AL) -->
+	findall((A,pred), (valid_assertions(A,pred), \+ memberchk(A, AL))).
 
-compat_assrt(exports, _,    _) --> [].
-compat_assrt(inner,   Test, Trust) -->
-	test_compat_assrt(Test),
-	trust_compat_assrt(Trust),
-	[(check, pred)].
-% ----------------------------------------------------------------------------
-entry_assrt(no) --> [].
-entry_assrt(yes) --> [(true, entry)].
+call_assrt(Level, BL0) -->
+	{Level = exports -> BL = BL0 ; BL= [calls, pred|BL0]},
+	findall((A, B), (valid_assertions(A,B), memberchk(B, BL))).
 
-trust_call_assrt(no) --> [].
-trust_call_assrt(yes) --> [(trust, calls), (trust, pred)].
+succ_assrt(Level, BL0) -->
+	{Level = exports -> subtract(BL0, [test, success, pred], BL);BL = BL0},
+	findall((A, B), (valid_assertions(A,B), memberchk(B, BL))).
 
-level_call_assrt(exports, _) --> [].
-level_call_assrt(inner,   Trust) -->
-	trust_call_assrt(Trust),
-	[(check, calls), (check, pred)].
-
-call_assrt(Level, Trust, Entry) -->
-	entry_assrt(Entry),
-	level_call_assrt(Level, Trust).
-% ----------------------------------------------------------------------------
-test_succ_assrt(no)  --> [].
-test_succ_assrt(yes) --> [(check, test)].
-
-trust_succ_assrt(no)  --> [].
-trust_succ_assrt(yes) --> [(trust, success), (trust, pred)].
-
-level_succ_assrt(exports, _,    _) --> [].
-level_succ_assrt(inner,   Test, Trust) -->
-	test_succ_assrt(Test),
-	trust_succ_assrt(Trust),
-	[(check, success), (check, pred)].
-
-trust_exit_assrt(no)  --> [].
-trust_exit_assrt(yes) --> [(trust, exit)].
-
-exit_succ_assrt(no,  _)     --> [].
-exit_succ_assrt(yes, Trust) -->
-	[(check, exit)],
-	trust_exit_assrt(Trust).
-
-succ_assrt(Level, Test, Trust, Exit) -->
-	exit_succ_assrt(Exit, Trust),
-	level_succ_assrt(Level, Test, Trust).
-% ----------------------------------------------------------------------------
-test_comp_assrt(no) --> [].
-test_comp_assrt(yes) --> [(check, test)].
-
-trust_comp_assrt(no) --> [].
-trust_comp_assrt(yes) --> [(trust, comp), (trust, pred)].
-
-level_comp_assrt(exports, _,    _) --> [].
-level_comp_assrt(inner,   Test, Trust) -->
-	test_comp_assrt(Test),
-	trust_comp_assrt(Trust),
-	[(check, comp), (check, pred)].
-
-comp_assrt(Level, Test, Trust) -->
-	level_comp_assrt(Level, Test, Trust).
+comp_assrt(exports, _) --> [].
+comp_assrt(inner, BL) -->
+	findall((A, B), (valid_assertions(A,B), memberchk(B, BL))).
 % ----------------------------------------------------------------------------
 
 generate_callloc2(Dict, PLoc, PosLocs, Pred, NameFmt, Body0, Body) :-
@@ -1028,7 +973,8 @@ comps_parts_to_comp_lit(PropValues, Comp0, Body0, Body) :-
 get_chkcomp(Comp, PropValues, Pred, PredName, Dict, PosLoc, Body0, Body) :-
 	comps_to_comp_lit(PropValues, Comp, Body1, Body),
 	( PosLoc \= [] ->
-	  Body0 = add_info_rtsignal(Body1, PropValues, Pred, PredName, Dict, PosLoc)
+	  Body0 = add_info_rtsignal(Body1, PropValues, Pred,
+				    PredName, Dict, PosLoc)
 	; Body0 = Body1 % PredName and Dict are less relevant than PosLoc
 	).
 
@@ -1049,9 +995,9 @@ comp_comp_lit(comp(_, _, PropValues, ChkComp, Comp), cui(Comp - PropValues, _, C
 
 compound_comp(Goal0-Goal, Goal0, Goal).
 
-:- discontiguous body_check_comp/5.
-body_check_comp([],       _,         _,        Body,  Body) :- !.
-body_check_comp(ChkComps, CheckedL0, GlobName, Body0, Body) :-
+:- discontiguous body_check_comp/6.
+body_check_comp([],       _,         _,        _,    Body,  Body) :- !.
+body_check_comp(ChkComps, CheckedL0, GlobName, Pred, Body0, Body) :-
 	compound_rtchecks_end(comp_call_lit, collapse_prop,
 	    ChkComps, CheckedL0, CompCall),
 	compound_rtchecks_end(comp_comp_lit, collapse_prop,
@@ -1059,7 +1005,7 @@ body_check_comp(ChkComps, CheckedL0, GlobName, Body0, Body) :-
 	map(CompCompL, comp_to_lit(GlobName), ChkComp0),
 	sort(ChkComp0, ChkComp),
 	comps_to_goal(ChkComp, compound_comp, CompsBody, Body),
-	Body0 = [CompCall, CompsBody].
+	Body0 = [CompCall, with_goal(CompsBody, Pred)].
 
 comp_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
 	    CheckedL) -->
@@ -1067,7 +1013,7 @@ comp_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
 		    PLoc, PosLocs, StatusTypes), ChkComps),
 	 current_prolog_flag(rtchecks_namefmt, NameFmt),
 	 get_globname(NameFmt, Pred, GlobName)},
-	body_check_comp(ChkComps, CheckedL, GlobName).
+	body_check_comp(ChkComps, CheckedL, GlobName, Pred).
 
 comp_to_lit(CompCompL, GlobName, ChkComp-Goal) :-
 	CompCompL = i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues),

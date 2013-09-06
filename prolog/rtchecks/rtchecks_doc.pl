@@ -43,11 +43,17 @@ explanation of the meaning:
 
 @begin{itemize}
 
-@item @code{rtchecks_level} 
+@item @code{rtchecks_level}
   @begin{itemize}
    @item @code{exports}: Only use rtchecks for external calls of the
                          exported predicates.
    @item @code{inner}  : Use also rtchecks for internal calls. Default.
+  @end{itemize}
+
+@item @code{rtchecks_check}
+  @begin{itemize}
+   @item @code{no}     : Disable rtchecks for check assertions.
+   @item @code{yes}    : Enable  rtchecks for check assertions. Default.
   @end{itemize}
 
 @item @code{rtchecks_trust}
