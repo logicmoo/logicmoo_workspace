@@ -15,29 +15,29 @@ elementalRE(any) --> ".".
 elementalRE(group(X)) --> "(", re(X), ")".
 elementalRE(eos) --> "$".
 elementalRE(char(C)) --> [C], {\+(re_metachar([C]))}.
-re_metachar("\\").
-re_metachar("\|").
-re_metachar("*").
-re_metachar("+").
-re_metachar("\.").
-re_metachar("[").
-re_metachar("$").
-re_metachar("(").
-re_metachar(")").
 elementalRE(char(C)) --> "\\", [C], {re_metachar([C])}.
 %  For sets, first try the negative set syntax.  If the "[^" recognition
 %  succeeds, use cut to make sure that any subsequent failure does not
 %  cause the positive set interpretation to be used.
 elementalRE(negSet(X)) --> "[^", {!}, setItems(X), "]".
 elementalRE(posSet(X)) --> "[", setItems(X), "]".
+re_metachar("\\").
+re_metachar("|").
+re_metachar("*").
+re_metachar("+").
+re_metachar(".").
+re_metachar("[").
+re_metachar("$").
+re_metachar("(").
+re_metachar(")").
 setItems([Item1|MoreItems]) --> setItem(Item1), setItems(MoreItems).
 setItems([Item1]) --> setItem(Item1).
 setItem(char(C)) --> [C], {\+(set_metachar([C]))}.
+setItem(char(C)) --> "\\", [C], {set_metachar([C])}.
+setItem(range(A,B)) --> setItem(char(A)), "-", setItem(char(B)).
 set_metachar("\\").
 set_metachar("]").
 set_metachar("-").
-setItem(char(C)) --> "\\", [C], {set_metachar([C])}.
-setItem(range(A,B)) --> setItem(char(A)), "-", setItem(char(B)).
 
 
 % regular expression interpreter
