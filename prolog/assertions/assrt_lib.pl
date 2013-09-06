@@ -128,6 +128,8 @@ assrt_status(false).
 assrt_status(check).
 assrt_status(checked).
 assrt_status(trust).
+assrt_status(trace).
+assrt_status(debug).
 
 % ---------------------------------------------------------------------------
 % :- pred default_assrt_status(+assrt_type,-assrt_status)
