@@ -1,6 +1,53 @@
-:- module(re, [ re//1
-              , rematch1/4
+:- module(re, [ (=~)/2
+              , (\~)/2
+              , op(1050,xfx,=~)
+              , op(1050,xfx,\~)
               ]).
+:- use_module(library(error), [domain_error/2]).
 :- use_module(re/parser, [re//1]).
 :- use_module(re/engine/pp, [rematch1/4]).
+
+
+% operators for matching strings against regular expressions.
+% the syntax is the same used by Perl and Haskell, but Prolog
+% doesn't like '!' in operators so I had to use '\' instead.
+:- op(1050,xfx,=~).
+:- op(1050,xfx,\~).
+
+
+%%  =~(+Text, +Pattern) is semidet.
+%
+%   True if Text matches regular expression Pattern. Only the first
+%   match is considered.  Text and Pattern can be atoms or code lists.
+Text =~ Pattern :-
+    text_codes(Text, T),
+    text_codes(Pattern, P),
+    ( phrase(re(Re),P) ->
+        once(rematch1(Re, T, _, _))
+    ; % bad pattern ->
+        domain_error(regex, P)
+    ).
+
+
+%%  \~(+Text, +Pattern) is semidet.
+%
+%   Like `\+ Text =~ Pattern`.
+Text \~ Pattern :-
+    text_codes(Text, T),
+    text_codes(Pattern, P),
+    ( phrase(re(Re),P) ->
+        \+ rematch1(Re, T, _, _)
+    ; % bad pattern ->
+        domain_error(regex, P)
+    ).
+
+
+%%  text_codes(+Text, -Codes)
+%
+%   Convert Text (atom or codes) into Codes.
+text_codes(Atom, Codes) :-
+    atom(Atom),
+    !,
+    atom_codes(Atom, Codes).
+text_codes(Codes, Codes).
 
