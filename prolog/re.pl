@@ -1,7 +1,7 @@
 :- module(re, [ (=~)/2
               , (\~)/2
-              , op(1050,xfx,=~)
-              , op(1050,xfx,\~)
+              , op(700,xfx,=~)
+              , op(700,xfx,\~)
               ]).
 :- use_module(library(error), [domain_error/2]).
 :- use_module(re/parser, [re//1]).
@@ -11,8 +11,8 @@
 % operators for matching strings against regular expressions.
 % the syntax is the same used by Perl and Haskell, but Prolog
 % doesn't like '!' in operators so I had to use '\' instead.
-:- op(1050,xfx,=~).
-:- op(1050,xfx,\~).
+:- op(700,xfx,=~).
+:- op(700,xfx,\~).
 
 
 %%  =~(+Text, +Pattern) is semidet.
