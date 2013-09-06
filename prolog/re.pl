@@ -14,6 +14,7 @@ re_tail(W, Z) -->
 re_tail(W, W) -->
     { true }.
 
+
 basic_re(Z) -->
     simple_re(W),
     basic_re_tail(W, Z).
@@ -24,20 +25,25 @@ basic_re_tail(W, Z) -->
 basic_re_tail(W, W) -->
     { true }.
 
+
 simple_re(Z) -->
     elemental_re(W),
-    simple_retail(W, Z).
-simple_retail(W, star(W)) -->
+    simple_re_tail(W, Z).
+
+simple_re_tail(W, star(W)) -->
     "*".
-simple_retail(W, plus(W)) -->
+simple_re_tail(W, plus(W)) -->
     "+".
-simple_retail(W, W) -->
-    {true}.
+simple_re_tail(W, W) -->
+    { true }.
+
 
 elemental_re(any) -->
     ".".
 elemental_re(group(X)) -->
-    "(", re(X), ")".
+    "(",
+    re(X),
+    ")".
 elemental_re(eos) -->
     "$".
 elemental_re(char(C)) -->
@@ -47,15 +53,16 @@ elemental_re(char(C)) -->
     "\\",
     [C],
     { re_metachar([C]) }.
-elemental_re(negSet(X)) -->
+elemental_re(neg_set(X)) -->
     "[^",
-    !,  % don't backtrack into posSet/1 clause below
+    !,  % don't backtrack into pos_set/1 clause below
     set_items(X),
     "]".
-elemental_re(posSet(X)) -->
+elemental_re(pos_set(X)) -->
     "[",
     set_items(X),
     "]".
+
 
 re_metachar("\\").
 re_metachar("|").
@@ -66,6 +73,7 @@ re_metachar("[").
 re_metachar("$").
 re_metachar("(").
 re_metachar(")").
+
 
 set_items([Item1|MoreItems]) -->
     set_item(Item1),
@@ -84,6 +92,7 @@ set_item(range(A,B)) -->
     set_item(char(A)),
     "-",
     set_item(char(B)).
+
 
 set_metachar("\\").
 set_metachar("]").
@@ -130,10 +139,10 @@ rematch1(char(C), [C|U], U, []).
 
 rematch1(eos, [], [], []).
 
-rematch1(negSet(Set), [C|U], U, []) :-
+rematch1(neg_set(Set), [C|U], U, []) :-
     \+ char_set_member(C, Set).
 
-rematch1(posSet(Set), [C|U], U, []) :-
+rematch1(pos_set(Set), [C|U], U, []) :-
     char_set_member(C, Set).
 
 
