@@ -4,57 +4,57 @@
 
 % DCG parser for regular expressions
 re(Z) -->
-    basicRE(W),
-    reTail(W, Z).
+    basic_re(W),
+    re_tail(W, Z).
 
-reTail(W, Z) -->
+re_tail(W, Z) -->
     "|",
-    basicRE(X),
-    reTail(union(W,X), Z).
-reTail(W, W) -->
+    basic_re(X),
+    re_tail(union(W,X), Z).
+re_tail(W, W) -->
     { true }.
 
-basicRE(Z) -->
-    simpleRE(W),
-    basicREtail(W, Z).
+basic_re(Z) -->
+    simple_re(W),
+    basic_re_tail(W, Z).
 
-basicREtail(W, Z) -->
-    simpleRE(X),
-    basicREtail(conc(W,X), Z).
-basicREtail(W, W) -->
-    {true}.
+basic_re_tail(W, Z) -->
+    simple_re(X),
+    basic_re_tail(conc(W,X), Z).
+basic_re_tail(W, W) -->
+    { true }.
 
-simpleRE(Z) -->
-    elementalRE(W),
-    simpleREtail(W, Z).
-simpleREtail(W, star(W)) -->
+simple_re(Z) -->
+    elemental_re(W),
+    simple_retail(W, Z).
+simple_retail(W, star(W)) -->
     "*".
-simpleREtail(W, plus(W)) -->
+simple_retail(W, plus(W)) -->
     "+".
-simpleREtail(W, W) -->
+simple_retail(W, W) -->
     {true}.
 
-elementalRE(any) -->
+elemental_re(any) -->
     ".".
-elementalRE(group(X)) -->
+elemental_re(group(X)) -->
     "(", re(X), ")".
-elementalRE(eos) -->
+elemental_re(eos) -->
     "$".
-elementalRE(char(C)) -->
+elemental_re(char(C)) -->
     [C],
     { \+ re_metachar([C]) }.
-elementalRE(char(C)) -->
+elemental_re(char(C)) -->
     "\\",
     [C],
     { re_metachar([C]) }.
-elementalRE(negSet(X)) -->
+elemental_re(negSet(X)) -->
     "[^",
     !,  % don't backtrack into posSet/1 clause below
-    setItems(X),
+    set_items(X),
     "]".
-elementalRE(posSet(X)) -->
+elemental_re(posSet(X)) -->
     "[",
-    setItems(X),
+    set_items(X),
     "]".
 
 re_metachar("\\").
@@ -67,23 +67,23 @@ re_metachar("$").
 re_metachar("(").
 re_metachar(")").
 
-setItems([Item1|MoreItems]) -->
-    setItem(Item1),
-    setItems(MoreItems).
-setItems([Item1]) -->
-    setItem(Item1).
+set_items([Item1|MoreItems]) -->
+    set_item(Item1),
+    set_items(MoreItems).
+set_items([Item1]) -->
+    set_item(Item1).
 
-setItem(char(C)) -->
+set_item(char(C)) -->
     [C],
     { \+ set_metachar([C]) }.
-setItem(char(C)) -->
+set_item(char(C)) -->
     "\\",
     [C],
     { set_metachar([C]) }.
-setItem(range(A,B)) -->
-    setItem(char(A)),
+set_item(range(A,B)) -->
+    set_item(char(A)),
     "-",
-    setItem(char(B)).
+    set_item(char(B)).
 
 set_metachar("\\").
 set_metachar("]").
@@ -131,14 +131,15 @@ rematch1(char(C), [C|U], U, []).
 rematch1(eos, [], [], []).
 
 rematch1(negSet(Set), [C|U], U, []) :-
-    \+ charSetMember(C, Set).
+    \+ char_set_member(C, Set).
 
 rematch1(posSet(Set), [C|U], U, []) :-
-    charSetMember(C, Set).
+    char_set_member(C, Set).
 
 
-charSetMember(C, [char(C) | _]).
-charSetMember(C, [range(C1, C2) | _]) :-
+char_set_member(C, [char(C) | _]).
+char_set_member(C, [range(C1, C2) | _]) :-
     C1 =< C,
     C =< C2.
-charSetMember(C, [_|T]) :- charSetMember(C, T).
+char_set_member(C, [_|T]) :-
+    char_set_member(C, T).
