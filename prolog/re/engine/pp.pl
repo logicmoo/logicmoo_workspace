@@ -1,57 +1,63 @@
-:- module(re_engine_pp, [rematch1/4]).
+:- module(re_engine_pp, [engine_match/4]).
 
 % regular expression interpreter
 
-% rematch1(RE, S, Unmatched, Selected) is true if RE matches
+% engine_match(RE, Selected, S, Unmatched) is true if RE matches
 % a string Prefix such that S = [Prefix|Unmatched], and
 % Selected is the list of substrings of Prefix that matched
 % the parenthesized components of RE.
 
-rematch1(union(RE1, _RE2), S, U, Selected) :-
-    rematch1(RE1, S, U, Selected).
-rematch1(union(_RE1, RE2), S, U, Selected) :-
-    rematch1(RE2, S, U, Selected).
+engine_match(union(RE1, _RE2), Selected) -->
+    engine_match(RE1, Selected).
+engine_match(union(_RE1, RE2), Selected) -->
+    engine_match(RE2, Selected).
 
-rematch1(conc(RE1, RE2), S, U, Selected) :-
-    rematch1(RE1, S, U1, Sel1),
-    rematch1(RE2, U1, U, Sel2),
-    append(Sel1, Sel2, Selected).
+engine_match(conc(RE1, RE2), Selected) -->
+    engine_match(RE1, Sel1),
+    engine_match(RE2, Sel2),
+    { append(Sel1, Sel2, Selected) }.
 
-rematch1(star(RE), S, U, Selected) :-
+engine_match(star(RE), Selected) -->
     % Try longest match first.
-    rematch1(RE, S, U1, Sel1),
-    rematch1(star(RE), U1, U, Sel2),
-    append(Sel1, Sel2, Selected).
-rematch1(star(_RE), S, S, []).
+    engine_match(RE, Sel1),
+    engine_match(star(RE), Sel2),
+    { append(Sel1, Sel2, Selected) }.
+engine_match(star(_RE), []) -->
+    { true }.
 
-rematch1(plus(RE), S, U, Selected) :-
-    rematch1(RE, S, U1, Sel1),
-    rematch1(star(RE), U1, U, Sel2),
-    append(Sel1, Sel2, Selected).
+engine_match(plus(RE), Selected) -->
+    engine_match(RE, Sel1),
+    engine_match(star(RE), Sel2),
+    { append(Sel1, Sel2, Selected) }.
 
-rematch1(optional(RE), S, U, Selected) :-
-    rematch1(RE, S, U, Selected).
-rematch1(optional(_), S, S, []).
+engine_match(optional(RE), Selected) -->
+    engine_match(RE, Selected).
+engine_match(optional(_), []) -->
+    [].
 
 % Match a group and add it to the end of
 % list of selected items from the submatch.
-rematch1(group(RE), S, U, Selected) :-
-    rematch1(RE, S, U, Sel1),
+engine_match(group(RE), Selected, S, U) :-
+    engine_match(RE, Sel1, S, U),
     append(P, U, S),
     append(Sel1, [P], Selected).
 
-rematch1(any, [_C1|U], U, []).
+engine_match(any, []) -->
+    [_].
 
 % matches both regular characters and metacharacters
-rematch1(char(C), [C|U], U, []).
+engine_match(char(C), []) -->
+    [C].
 
-rematch1(eos, [], [], []).
+engine_match(eos, [], [], []).
 
-rematch1(neg_set(Set), [C|U], U, []) :-
-    \+ char_set_member(C, Set).
+engine_match(neg_set(Set), []) -->
+    [C],
+    { \+ char_set_member(C, Set) }.
 
-rematch1(pos_set(Set), [C|U], U, []) :-
-    char_set_member(C, Set).
+engine_match(pos_set(Set), []) -->
+    [C],
+    { char_set_member(C, Set) }.
 
 
 char_set_member(C, [char(C) | _]).

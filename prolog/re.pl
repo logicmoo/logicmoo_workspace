@@ -5,7 +5,7 @@
               ]).
 :- use_module(library(error), [domain_error/2]).
 :- use_module(re/parser, [re//1]).
-:- use_module(re/engine/pp, [rematch1/4]).
+:- use_module(re/engine/pp, [engine_match/4]).
 
 
 % operators for matching strings against regular expressions.
@@ -23,7 +23,7 @@ Text =~ Pattern :-
     text_codes(Text, T),
     text_codes(Pattern, P),
     ( phrase(re(Re),P) ->
-        once(rematch1(Re, T, _, _))
+        once(engine_match(Re, _, T, _))
     ; % bad pattern ->
         atom_codes(A, P),
         domain_error(regex, A)
@@ -37,7 +37,7 @@ Text \~ Pattern :-
     text_codes(Text, T),
     text_codes(Pattern, P),
     ( phrase(re(Re),P) ->
-        \+ rematch1(Re, T, _, _)
+        \+ engine_match(Re, _, T, _)
     ; % bad pattern ->
         atom_codes(A, P),
         domain_error(regex, A)
