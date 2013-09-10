@@ -30,11 +30,11 @@ simple_re(Z) -->
     elemental_re(W),
     simple_re_tail(W, Z).
 
-simple_re_tail(W, star(W)) -->
+simple_re_tail(W, count(W,0,999_999_999)) -->
     "*".
-simple_re_tail(W, plus(W)) -->
+simple_re_tail(W, count(W,1,999_999_999)) -->
     "+".
-simple_re_tail(W, optional(W)) -->
+simple_re_tail(W, count(W,0,1)) -->
     "?".
 simple_re_tail(W, count(W,N,N)) -->
     % {n}

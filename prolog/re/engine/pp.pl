@@ -17,24 +17,6 @@ engine_match(conc(RE1, RE2), Selected) -->
     engine_match(RE2, Sel2),
     { append(Sel1, Sel2, Selected) }.
 
-engine_match(star(RE), Selected) -->
-    % Try longest match first.
-    engine_match(RE, Sel1),
-    engine_match(star(RE), Sel2),
-    { append(Sel1, Sel2, Selected) }.
-engine_match(star(_RE), []) -->
-    { true }.
-
-engine_match(plus(RE), Selected) -->
-    engine_match(RE, Sel1),
-    engine_match(star(RE), Sel2),
-    { append(Sel1, Sel2, Selected) }.
-
-engine_match(optional(RE), Selected) -->
-    engine_match(RE, Selected).
-engine_match(optional(_), []) -->
-    [].
-
 % match a specific number of times
 engine_match(count(RE,N0,M0), Selected) -->
     { N0 > 0 },
