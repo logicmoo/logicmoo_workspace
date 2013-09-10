@@ -25,7 +25,8 @@ Text =~ Pattern :-
     ( phrase(re(Re),P) ->
         once(rematch1(Re, T, _, _))
     ; % bad pattern ->
-        domain_error(regex, P)
+        atom_codes(A, P),
+        domain_error(regex, A)
     ).
 
 
@@ -38,7 +39,8 @@ Text \~ Pattern :-
     ( phrase(re(Re),P) ->
         \+ rematch1(Re, T, _, _)
     ; % bad pattern ->
-        domain_error(regex, P)
+        atom_codes(A, P),
+        domain_error(regex, A)
     ).
 
 
