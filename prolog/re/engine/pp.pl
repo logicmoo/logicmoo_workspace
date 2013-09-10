@@ -35,6 +35,23 @@ engine_match(optional(RE), Selected) -->
 engine_match(optional(_), []) -->
     [].
 
+% match a specific number of times
+engine_match(count(RE,N0,M0), Selected) -->
+    { N0 > 0 },
+    engine_match(RE, Sel1),    % try for minimum matches
+    { succ(N, N0) },
+    { succ(M, M0) },
+    engine_match(count(RE,N,M), Sel2),
+    { append(Sel1, Sel2, Selected) }.
+engine_match(count(RE,0,M0), Selected) -->
+    { M0 > 0 },
+    engine_match(RE, Sel1),    % prefer more matches
+    { succ(M, M0) },
+    engine_match(count(RE,0,M), Sel2),
+    { append(Sel1, Sel2, Selected) }.
+engine_match(count(_,0,_), []) -->
+    { true }.
+
 % Match a group and add it to the end of
 % list of selected items from the submatch.
 engine_match(group(RE), Selected, S, U) :-

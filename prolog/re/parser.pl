@@ -1,4 +1,5 @@
 :- module(re_parser, [re//1]).
+:- use_module(library(dcg/basics), [integer//1]).
 
 % DCG parser for regular expressions
 re(Z) -->
@@ -35,6 +36,28 @@ simple_re_tail(W, plus(W)) -->
     "+".
 simple_re_tail(W, optional(W)) -->
     "?".
+simple_re_tail(W, count(W,N,N)) -->
+    % {n}
+    "{",
+    integer(N),
+    { N >= 0 },
+    "}".
+simple_re_tail(W, count(W,N,999_999_999)) -->
+    % {n,}
+    "{",
+    integer(N),
+    { N >= 0 },
+    ",",
+    "}".
+simple_re_tail(W, count(W,N,M)) -->
+    % {n,m}
+    "{",
+    integer(N),
+    { N >= 0 },
+    ",",
+    integer(M),
+    { M >= N },
+    "}".
 simple_re_tail(W, W) -->
     { true }.
 
