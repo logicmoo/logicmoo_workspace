@@ -5,6 +5,7 @@ re(Z) -->
     basic_re(W),
     re_tail(W, Z).
 
+
 re_tail(W, Z) -->
     "|",
     basic_re(X),

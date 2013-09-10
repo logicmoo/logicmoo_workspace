@@ -11,16 +11,19 @@ rematch1(union(RE1, _RE2), S, U, Selected) :-
     rematch1(RE1, S, U, Selected).
 rematch1(union(_RE1, RE2), S, U, Selected) :-
     rematch1(RE2, S, U, Selected).
+
 rematch1(conc(RE1, RE2), S, U, Selected) :-
     rematch1(RE1, S, U1, Sel1),
     rematch1(RE2, U1, U, Sel2),
     append(Sel1, Sel2, Selected).
+
 rematch1(star(RE), S, U, Selected) :-
     % Try longest match first.
     rematch1(RE, S, U1, Sel1),
     rematch1(star(RE), U1, U, Sel2),
     append(Sel1, Sel2, Selected).
 rematch1(star(_RE), S, S, []).
+
 rematch1(plus(RE), S, U, Selected) :-
     rematch1(RE, S, U1, Sel1),
     rematch1(star(RE), U1, U, Sel2),
@@ -38,8 +41,8 @@ rematch1(group(RE), S, U, Selected) :-
     append(Sel1, [P], Selected).
 
 rematch1(any, [_C1|U], U, []).
-% Note that the following works for matching both regular
-% characters and metacharacters.
+
+% matches both regular characters and metacharacters
 rematch1(char(C), [C|U], U, []).
 
 rematch1(eos, [], [], []).
