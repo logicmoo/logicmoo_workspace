@@ -32,6 +32,8 @@ simple_re_tail(W, star(W)) -->
     "*".
 simple_re_tail(W, plus(W)) -->
     "+".
+simple_re_tail(W, optional(W)) -->
+    "?".
 simple_re_tail(W, W) -->
     { true }.
 
@@ -67,6 +69,7 @@ re_metachar("|").
 re_metachar("*").
 re_metachar("+").
 re_metachar(".").
+re_metachar("?").
 re_metachar("[").
 re_metachar("$").
 re_metachar("(").

@@ -26,5 +26,11 @@ cat =~ 'c.t'.
 cot =~ 'c.t'.
 'c-t' =~ 'c.t'.
 
+% ? meta character
+https =~ 'https?'.
+http =~ 'https?'.
+bot =~ 'boo?t'.
+boot =~ 'boo?t'.
+
 % TODO
 % "hello world" =~ "world".  % match anywhere inside string

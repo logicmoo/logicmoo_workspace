@@ -25,6 +25,11 @@ rematch1(plus(RE), S, U, Selected) :-
     rematch1(RE, S, U1, Sel1),
     rematch1(star(RE), U1, U, Sel2),
     append(Sel1, Sel2, Selected).
+
+rematch1(optional(RE), S, U, Selected) :-
+    rematch1(RE, S, U, Selected).
+rematch1(optional(_), S, S, []).
+
 % Match a group and add it to the end of
 % list of selected items from the submatch.
 rematch1(group(RE), S, U, Selected) :-
