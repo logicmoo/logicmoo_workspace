@@ -7,6 +7,12 @@
 % Selected is the list of substrings of Prefix that matched
 % the parenthesized components of RE.
 
+engine_match(anywhere(RE), Selected) -->
+    engine_match(RE, Selected).
+engine_match(anywhere(RE), Selected) -->
+    [_],
+    engine_match(anywhere(RE), Selected).
+
 engine_match(union(RE1, _RE2), Selected) -->
     engine_match(RE1, Selected).
 engine_match(union(_RE1, RE2), Selected) -->

@@ -17,6 +17,13 @@ cat =~ 'cat|dog'.
 dog =~ 'cat|dog'.
 pig \~ 'cat|dog'.
 
+% ^ meta character
+begin =~ '^beg'.
+beggar =~ '^beg'.
+'i beg' \~ '^beg'.
+'hello world' =~ world.  % no anchor matches anywhere in string
+'i beg' =~ beg.
+
 % $ meta character
 dog =~ 'dog$'.
 doggie \~ 'dog$'.
@@ -43,6 +50,3 @@ boot =~ 'bo{2,4}t'.
 booot =~ 'bo{2,4}t'.
 boooot =~ 'bo{2,4}t'.
 booooot \~ 'bo{2,4}t'.
-
-% TODO
-% "hello world" =~ "world".  % match anywhere inside string

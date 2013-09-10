@@ -3,6 +3,11 @@
 
 % DCG parser for regular expressions
 re(Z) -->
+    "^",
+    !,  % don't backtrack into anywhere/1 rule
+    basic_re(W),
+    re_tail(W, Z).
+re(anywhere(Z)) -->
     basic_re(W),
     re_tail(W, Z).
 
@@ -88,6 +93,7 @@ elemental_re(pos_set(X)) -->
     "]".
 
 
+re_metachar("^").
 re_metachar("\\").
 re_metachar("|").
 re_metachar("*").
