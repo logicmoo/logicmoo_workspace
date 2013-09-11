@@ -1,60 +1,61 @@
-:- module(re_parser, [re//1]).
+:- module(re_parser, [re//2]).
 :- use_module(library(dcg/basics), [integer//1]).
+:- use_module(library(re/options), [adjust_case/3]).
 
 % DCG parser for regular expressions
-re(Z) -->
+re(Opt, Z) -->
     "^",
     !,  % don't backtrack into anywhere/1 rule
-    basic_re(W),
-    re_tail(W, Z).
-re(anywhere(Z)) -->
-    basic_re(W),
-    re_tail(W, Z).
+    basic_re(Opt,W),
+    re_tail(Opt,W,Z).
+re(Opt, anywhere(Z)) -->
+    basic_re(Opt,W),
+    re_tail(Opt,W,Z).
 
 
-re_tail(W, Z) -->
+re_tail(Opt, W, Z) -->
     "|",
-    basic_re(X),
-    re_tail(union(W,X), Z).
-re_tail(W, W) -->
+    basic_re(Opt,X),
+    re_tail(Opt,union(W,X), Z).
+re_tail(_Opt, W, W) -->
     { true }.
 
 
-basic_re(Z) -->
-    simple_re(W),
-    basic_re_tail(W, Z).
+basic_re(Opt, Z) -->
+    simple_re(Opt,W),
+    basic_re_tail(Opt,W,Z).
 
-basic_re_tail(W, Z) -->
-    simple_re(X),
-    basic_re_tail(conc(W,X), Z).
-basic_re_tail(W, W) -->
+basic_re_tail(Opt, W, Z) -->
+    simple_re(Opt,X),
+    basic_re_tail(Opt,conc(W,X), Z).
+basic_re_tail(_Opt, W, W) -->
     { true }.
 
 
-simple_re(Z) -->
-    elemental_re(W),
-    simple_re_tail(W, Z).
+simple_re(Opt, Z) -->
+    elemental_re(Opt,W),
+    simple_re_tail(Opt,W,Z).
 
-simple_re_tail(W, count(W,0,999_999_999)) -->
+simple_re_tail(_Opt, W, count(W,0,999_999_999)) -->
     "*".
-simple_re_tail(W, count(W,1,999_999_999)) -->
+simple_re_tail(_Opt, W, count(W,1,999_999_999)) -->
     "+".
-simple_re_tail(W, count(W,0,1)) -->
+simple_re_tail(_Opt, W, count(W,0,1)) -->
     "?".
-simple_re_tail(W, count(W,N,N)) -->
+simple_re_tail(_Opt, W, count(W,N,N)) -->
     % {n}
     "{",
     integer(N),
     { N >= 0 },
     "}".
-simple_re_tail(W, count(W,N,999_999_999)) -->
+simple_re_tail(_Opt, W, count(W,N,999_999_999)) -->
     % {n,}
     "{",
     integer(N),
     { N >= 0 },
     ",",
     "}".
-simple_re_tail(W, count(W,N,M)) -->
+simple_re_tail(_Opt, W, count(W,N,M)) -->
     % {n,m}
     "{",
     integer(N),
@@ -63,35 +64,36 @@ simple_re_tail(W, count(W,N,M)) -->
     integer(M),
     { M >= N },
     "}".
-simple_re_tail(W, W) -->
+simple_re_tail(_Opt, W, W) -->
     { true }.
 
 
-elemental_re(any) -->
+elemental_re(_Opt, any) -->
     ".".
-elemental_re(group(X)) -->
+elemental_re(Opt, group(X)) -->
     "(",
-    re(X),
+    re(Opt, X),
     ")".
-elemental_re(eos) -->
+elemental_re(_Opt, eos) -->
     "$".
-elemental_re(char(C)) -->
-    [C],
-    { \+ re_metachar([C]) }.
-elemental_re(RE) -->
+elemental_re(Opt, char(C)) -->
+    [C0],
+    { \+ re_metachar([C0]) },
+    { adjust_case(Opt, C0, C) }.
+elemental_re(_Opt, RE) -->
     "\\",
     [C],
     { perl_character_class(C, RE) }.
-elemental_re(char(C)) -->
+elemental_re(_Opt, char(C)) -->
     "\\",
     [C],
     { re_metachar([C]) }.
-elemental_re(neg_set(X)) -->
+elemental_re(_Opt, neg_set(X)) -->
     "[^",
     !,  % don't backtrack into pos_set/1 clause below
     set_items(X),
     "]".
-elemental_re(pos_set(X)) -->
+elemental_re(_Opt, pos_set(X)) -->
     "[",
     set_items(X),
     "]".

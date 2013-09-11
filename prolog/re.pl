@@ -4,8 +4,9 @@
               , op(700,xfx,\~)
               ]).
 :- use_module(library(error), [domain_error/2]).
-:- use_module(re/parser, [re//1]).
-:- use_module(re/engine/pp, [engine_match/4]).
+:- use_module(library(re/options), [new_options/2]).
+:- use_module(library(re/parser), [re//2]).
+:- use_module(library(re/engine/pp), [engine_match/5]).
 
 
 % operators for matching strings against regular expressions.
@@ -20,10 +21,15 @@
 %   True if Text matches regular expression Pattern. Only the first
 %   match is considered.  Text and Pattern can be atoms or code lists.
 Text =~ Pattern :-
+    \+ Pattern = _/_,  % no options
+    !,                 % next clause can't match
+    Text =~ Pattern/''.
+Text =~ Pattern/OptionAtom :-
+    new_options(OptionAtom, Options),
     text_codes(Text, T),
     text_codes(Pattern, P),
-    ( phrase(re(Re),P) ->
-        once(engine_match(Re, _, T, _))
+    ( phrase(re(Options, Re),P) ->
+        once(engine_match(Re, Options, _, T, _))
     ; % bad pattern ->
         atom_codes(A, P),
         domain_error(regex, A)
@@ -34,10 +40,15 @@ Text =~ Pattern :-
 %
 %   Like `\+ Text =~ Pattern`.
 Text \~ Pattern :-
+    \+ Pattern = _/_,  % no options
+    !,                 % next clause can't match
+    Text \~ Pattern/''.
+Text \~ Pattern/OptionAtom :-
+    new_options(OptionAtom, Options),
     text_codes(Text, T),
     text_codes(Pattern, P),
-    ( phrase(re(Re),P) ->
-        \+ engine_match(Re, _, T, _)
+    ( phrase(re(Options,Re),P) ->
+        \+ engine_match(Re, Options, _, T, _)
     ; % bad pattern ->
         atom_codes(A, P),
         domain_error(regex, A)

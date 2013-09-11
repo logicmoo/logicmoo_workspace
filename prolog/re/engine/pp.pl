@@ -1,4 +1,5 @@
-:- module(re_engine_pp, [engine_match/4]).
+:- module(re_engine_pp, [engine_match/5]).
+:- use_module(library(re/options), [adjust_case/3]).
 
 % regular expression interpreter
 
@@ -7,60 +8,61 @@
 % Selected is the list of substrings of Prefix that matched
 % the parenthesized components of RE.
 
-engine_match(anywhere(RE), Selected) -->
-    engine_match(RE, Selected).
-engine_match(anywhere(RE), Selected) -->
+engine_match(anywhere(RE), Opt, Selected) -->
+    engine_match(RE, Opt, Selected).
+engine_match(anywhere(RE), Opt, Selected) -->
     [_],
-    engine_match(anywhere(RE), Selected).
+    engine_match(anywhere(RE), Opt, Selected).
 
-engine_match(union(RE1, _RE2), Selected) -->
-    engine_match(RE1, Selected).
-engine_match(union(_RE1, RE2), Selected) -->
-    engine_match(RE2, Selected).
+engine_match(union(RE1, _RE2), Opt, Selected) -->
+    engine_match(RE1, Opt, Selected).
+engine_match(union(_RE1, RE2), Opt, Selected) -->
+    engine_match(RE2, Opt, Selected).
 
-engine_match(conc(RE1, RE2), Selected) -->
-    engine_match(RE1, Sel1),
-    engine_match(RE2, Sel2),
+engine_match(conc(RE1, RE2), Opt, Selected) -->
+    engine_match(RE1, Opt, Sel1),
+    engine_match(RE2, Opt, Sel2),
     { append(Sel1, Sel2, Selected) }.
 
 % match a specific number of times
-engine_match(count(RE,N0,M0), Selected) -->
+engine_match(count(RE,N0,M0), Opt, Selected) -->
     { N0 > 0 },
-    engine_match(RE, Sel1),    % try for minimum matches
+    engine_match(RE, Opt, Sel1),    % try for minimum matches
     { succ(N, N0) },
     { succ(M, M0) },
-    engine_match(count(RE,N,M), Sel2),
+    engine_match(count(RE,N,M), Opt, Sel2),
     { append(Sel1, Sel2, Selected) }.
-engine_match(count(RE,0,M0), Selected) -->
+engine_match(count(RE,0,M0), Opt, Selected) -->
     { M0 > 0 },
-    engine_match(RE, Sel1),    % prefer more matches
+    engine_match(RE, Opt, Sel1),    % prefer more matches
     { succ(M, M0) },
-    engine_match(count(RE,0,M), Sel2),
+    engine_match(count(RE,0,M), Opt, Sel2),
     { append(Sel1, Sel2, Selected) }.
-engine_match(count(_,0,_), []) -->
+engine_match(count(_,0,_), _Opt, []) -->
     { true }.
 
 % Match a group and add it to the end of
 % list of selected items from the submatch.
-engine_match(group(RE), Selected, S, U) :-
-    engine_match(RE, Sel1, S, U),
+engine_match(group(RE), Opt, Selected, S, U) :-
+    engine_match(RE, Opt, Sel1, S, U),
     append(P, U, S),
     append(Sel1, [P], Selected).
 
-engine_match(any, []) -->
+engine_match(any, _Opt, []) -->
     [_].
 
 % matches both regular characters and metacharacters
-engine_match(char(C), []) -->
-    [C].
+engine_match(char(C), Opt, []) -->
+    [C0],
+    { adjust_case(Opt, C0, C) }.
 
-engine_match(eos, [], [], []).
+engine_match(eos, _Opt, [], [], []).
 
-engine_match(neg_set(Set), []) -->
+engine_match(neg_set(Set), _Opt, []) -->
     [C],
     { \+ char_set_member(C, Set) }.
 
-engine_match(pos_set(Set), []) -->
+engine_match(pos_set(Set), _Opt, []) -->
     [C],
     { char_set_member(C, Set) }.
 
