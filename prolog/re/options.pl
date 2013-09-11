@@ -1,10 +1,11 @@
 :- module(re_options, [ adjust_case/3
+                      , singleline_mode/1
                       , new_options/2
                       ]).
 :- use_module(library(apply), [ foldl/4 ]).
 :- use_module(library(record)).
 
-:- record options(i='-').
+:- record options(i='-',s='-').
 
 %% new_options(+Atom, -Options) is semidet
 %
@@ -20,8 +21,10 @@ new_options(Atom, Options) :-
 %% set_option(+Option, +Options0, -Options) is semidet
 %
 %  Sets the option Option, giving a new Options value.
-set_option(i, Options0, Options) :-
-    set_i_of_options('+',Options0,Options).
+set_option(i) -->
+    set_i_of_options('+').
+set_option(s) -->
+    set_s_of_options('+').
 
 
 %% adjust_case(+Options, +Code0, -Code) is det.
@@ -35,3 +38,9 @@ adjust_case(Options, Code0, Code) :-
     ; % otherwise ->
           Code = Code0
     ).
+
+%%	singleline_mode(+Options) is semidet.
+%
+%	True if Options request single-line mode (`/s`).
+singleline_mode(Options) :-
+    options_s(Options, '+').

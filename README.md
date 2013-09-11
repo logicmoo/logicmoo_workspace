@@ -46,6 +46,7 @@ This section lists the regular expression syntax accepted by library(re).  Synta
 ## Flags
 
   * `i` - case-insensitive (default false)
+  * `s` - let `.` match `\n` (default false)
 
 ## Empty strings
 

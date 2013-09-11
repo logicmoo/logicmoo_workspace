@@ -1,5 +1,5 @@
 :- module(re_engine_pp, [engine_match/5]).
-:- use_module(library(re/options), [adjust_case/3]).
+:- use_module(library(re/options), [adjust_case/3, singleline_mode/1]).
 
 % regular expression interpreter
 
@@ -48,8 +48,15 @@ engine_match(group(RE), Opt, Selected, S, U) :-
     append(P, U, S),
     append(Sel1, [P], Selected).
 
-engine_match(any, _Opt, []) -->
-    [_].
+engine_match(any, Opt, []) -->
+    [C],
+    {
+        ( C = 0'\n ->
+            singleline_mode(Opt)
+        ; % not a new line ->
+            true
+        )
+    }.
 
 % matches both regular characters and metacharacters
 engine_match(char(C), Opt, []) -->

@@ -13,3 +13,8 @@ aBc =~ aBC/i.
 
 % i option doesn't help
 foo \~ abc/i.
+
+
+% s option (single-line mode)
+'abc\ndef' \~ 'c.d'.
+'abc\ndef' =~ 'c.d'/s.
