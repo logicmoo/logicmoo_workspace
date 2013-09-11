@@ -22,6 +22,8 @@ This section lists the regular expression syntax accepted by library(re).  Synta
   * `.` - any character, including newline
   * `[xyz]` - character class
   * `[^xyz]` - negated character class
+  * `\d` - Perl character class
+  * `\D` - negated Perl character class
 
 ## Composites
 
@@ -50,6 +52,15 @@ This section lists the regular expression syntax accepted by library(re).  Synta
 
   * `x` - single character
   * `A-Z` - character range (inclusive)
+
+## Perl character classes
+
+  * `\d` - digits (same as `[0-9]`)
+  * `\D` - not digits (same as `[^0-9]`)
+  * `\s` - whitespace (same as `[\t\n\f\r ]`)
+  * `\S` - not whitespace (same as `[^\t\n\f\r ]`)
+  * `\w` - word characters (same as `[0-9A-Za-z_]`)
+  * `\W` - not word characters (same as `[^0-9A-Za-z_]`)
 
 # Changes in this Version
 

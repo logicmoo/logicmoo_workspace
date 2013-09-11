@@ -78,6 +78,10 @@ elemental_re(eos) -->
 elemental_re(char(C)) -->
     [C],
     { \+ re_metachar([C]) }.
+elemental_re(RE) -->
+    "\\",
+    [C],
+    { perl_character_class(C, RE) }.
 elemental_re(char(C)) -->
     "\\",
     [C],
@@ -104,6 +108,24 @@ re_metachar("[").
 re_metachar("$").
 re_metachar("(").
 re_metachar(")").
+
+
+% define Perl character classes as character sets
+perl_character_class(0'd, pos_set([ range(48,57) ])).  % 0-9
+perl_character_class(0'w, pos_set([ range(48,57)       % 0-9
+                                  , range(65,90)       % A-Z
+                                  , range(97,122)      % a-z
+                                  , char(95)           % underscore
+                                  ])).
+perl_character_class(0's, pos_set([ char(0'\t)  % tab
+                                  , char(0'\n)  % newline
+                                  , char(0'\f)  % form feed
+                                  , char(0'\r)  % carriage return
+                                  , char(0' )   % space
+                                  ])).
+perl_character_class(Upper,neg_set(Set)) :-
+    code_type(Lower, lower(Upper)),
+    perl_character_class(Lower, pos_set(Set)).
 
 
 set_items([Item1|MoreItems]) -->
