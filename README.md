@@ -2,7 +2,7 @@
 
     :- use_module(library(re)).
     main :-
-        '99 bottles of beer' =~ '[0-9]+ bottles',
+        '99 Bottles of Beer' =~ '[0-9]+ bottles'/i,
         writeln('Take one down...').
 
 # Description
@@ -42,6 +42,10 @@ This section lists the regular expression syntax accepted by library(re).  Synta
 ## Grouping
 
   * `(re)` - numbered capturing group
+
+## Flags
+
+  * `i` - case-insensitive (default false)
 
 ## Empty strings
 
