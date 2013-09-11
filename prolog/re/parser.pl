@@ -78,7 +78,7 @@ elemental_re(_Opt, eos) -->
     "$".
 elemental_re(Opt, char(C)) -->
     [C0],
-    { \+ re_metachar([C0]) },
+    { \+ re_metachar(C0) },
     { adjust_case(Opt, C0, C) }.
 elemental_re(_Opt, RE) -->
     "\\",
@@ -87,7 +87,7 @@ elemental_re(_Opt, RE) -->
 elemental_re(_Opt, char(C)) -->
     "\\",
     [C],
-    { re_metachar([C]) }.
+    { re_metachar(C) }.
 elemental_re(_Opt, neg_set(X)) -->
     "[^",
     !,  % don't backtrack into pos_set/1 clause below
@@ -99,17 +99,18 @@ elemental_re(_Opt, pos_set(X)) -->
     "]".
 
 
-re_metachar("^").
-re_metachar("\\").
-re_metachar("|").
-re_metachar("*").
-re_metachar("+").
-re_metachar(".").
-re_metachar("?").
-re_metachar("[").
-re_metachar("$").
-re_metachar("(").
-re_metachar(")").
+% true if argument is a code for a regular expression meta character
+re_metachar(0'^).
+re_metachar(0'\\).
+re_metachar(0'|).
+re_metachar(0'*).
+re_metachar(0'+).
+re_metachar(0'.).
+re_metachar(0'?).
+re_metachar(0'[).
+re_metachar(0'$).
+re_metachar(0'().
+re_metachar(0')).
 
 
 % define Perl character classes as character sets
