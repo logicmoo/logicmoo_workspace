@@ -1,6 +1,6 @@
 # Synopsis
 
-    :- use_module(library(re)).
+    :- use_module(library(regex)).
     main :-
         '99 Bottles of Beer' =~ '[0-9]+ bottles'/i,
         writeln('Take one down...').
@@ -15,7 +15,7 @@ The `=~` operator matches a string (on the left side) against a regular expressi
 
 # Syntax Reference
 
-This section lists the regular expression syntax accepted by library(re).  Syntax not listed here is not yet supported.  Patches welcome.
+This section lists the regular expression syntax accepted by library(regex).  Syntax not listed here is not yet supported.  Patches welcome.
 
 ## Single characters
 
@@ -79,11 +79,12 @@ Rob Cameron for his [lecture notes](http://www.cs.sfu.ca/~cameron/Teaching/384/9
 
 Using SWI-Prolog 6.3 or later:
 
-    ?- pack_install(re).
+    ?- pack_install(regex).
 
 This module uses [semantic versioning](http://semver.org/).
+
 Source code available and pull requests accepted at
-http://github.com/mndrix/re
+http://github.com/mndrix/regex
 
 @author Michael Hendricks <michael@ndrix.org>
 @license BSD

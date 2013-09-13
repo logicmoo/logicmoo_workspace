@@ -1,7 +1,7 @@
-:- module(re_options, [ adjust_case/3
-                      , singleline_mode/1
-                      , new_options/2
-                      ]).
+:- module(regex_options, [ adjust_case/3
+                         , singleline_mode/1
+                         , new_options/2
+                         ]).
 :- use_module(library(apply), [ foldl/4 ]).
 :- use_module(library(record)).
 

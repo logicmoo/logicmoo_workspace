@@ -1,5 +1,5 @@
-:- module(re_engine_pp, [engine_match/5]).
-:- use_module(library(re/options), [adjust_case/3, singleline_mode/1]).
+:- module(regex_engine_pp, [engine_match/5]).
+:- use_module(library(regex/options), [adjust_case/3, singleline_mode/1]).
 
 % regular expression interpreter
 

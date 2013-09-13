@@ -1,4 +1,4 @@
-:- use_module(library(re)).
+:- use_module(library(regex)).
 
 :- use_module(library(tap)).
 

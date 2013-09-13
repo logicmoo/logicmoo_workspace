@@ -1,8 +1,8 @@
-name(re).
+name(regex).
 version('0.0.1').
 title('Regular expressions').
 author('Michael Hendricks','michael@ndrix.org').
 packager('Michael Hendricks','michael@ndrix.org').
 maintainer('Michael Hendricks','michael@ndrix.org').
-home('http://packs.ndrix.com/re/index.html').
-download('http://packs.ndrix.com/re/re-0.0.1.tgz').
+home('http://packs.ndrix.com/regex/index.html').
+download('http://packs.ndrix.com/regex/regex-0.0.1.tgz').

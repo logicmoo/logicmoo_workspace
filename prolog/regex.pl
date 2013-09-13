@@ -1,12 +1,12 @@
-:- module(re, [ (=~)/2
-              , (\~)/2
-              , op(700,xfx,=~)
-              , op(700,xfx,\~)
-              ]).
+:- module(regex, [ (=~)/2
+                 , (\~)/2
+                 , op(700,xfx,=~)
+                 , op(700,xfx,\~)
+                 ]).
 :- use_module(library(error), [domain_error/2]).
-:- use_module(library(re/options), [new_options/2]).
-:- use_module(library(re/parser), [re//2]).
-:- use_module(library(re/engine/pp), [engine_match/5]).
+:- use_module(library(regex/options), [new_options/2]).
+:- use_module(library(regex/parser), [re//2]).
+:- use_module(library(regex/engine/pp), [engine_match/5]).
 
 
 % operators for matching strings against regular expressions.

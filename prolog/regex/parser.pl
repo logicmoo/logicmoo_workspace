@@ -1,6 +1,6 @@
-:- module(re_parser, [re//2]).
+:- module(regex_parser, [re//2]).
 :- use_module(library(dcg/basics), [integer//1]).
-:- use_module(library(re/options), [adjust_case/3]).
+:- use_module(library(regex/options), [adjust_case/3]).
 
 % DCG parser for regular expressions
 re(Opt, Z) -->
