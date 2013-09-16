@@ -54,7 +54,7 @@ multi(Goal) :-
 	  fail
 	),
 	prolog_current_choice(C0),
-	native_props:no_exception_2(Goal, multi, _),
+	native_props:test_throw_2(Goal, multi, _, true),
 	prolog_current_choice(C1),
 	( C0 == C1 -> !
 	; nb_setarg(1, Solved, yes)
