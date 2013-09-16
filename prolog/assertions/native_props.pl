@@ -311,7 +311,7 @@ nonground(X) :- \+ ground(X).
 
 fails(Goal) :-
 	Solved = solved(no),
-	no_exception_2(Goal, fails, _),
+	test_throw_2(Goal, fails, _, true),
 	(
 	    arg(1, Solved, no) ->
 	    send_comp_rtcheck(Goal, fails, not_fails),
@@ -350,7 +350,7 @@ not_fails(Goal) :-
 	    fail
 	),
 	'$metachoice'(C0),
-	no_exception_2(Goal, not_fails, _),
+	test_throw_2(Goal, not_fails, _, true),
 	'$metachoice'(C1),
 	( C0 == C1 -> !
 	; '$setarg'(1, Solved, yes, true) ).
