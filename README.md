@@ -34,7 +34,7 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 
   * `x*` - zero or more `x`, prefer more
   * `x+` - one or more `x`, prefer more
-  * `x+` - zero or one `x`, prefer one
+  * `x?` - zero or one `x`, prefer one
   * `x{n,m}` - `n` or `n+1` or ... or `m` `x`, prefer more
   * `x{n,}` - `n` or more `x`, prefer more
   * `x{n}` - exactly `n` `x`
