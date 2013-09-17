@@ -69,7 +69,7 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 
 # Changes in this Version
 
-  * Fix packaging error
+  * Correct typo in Syntax documentation
 
 # Acknowledgements
 
