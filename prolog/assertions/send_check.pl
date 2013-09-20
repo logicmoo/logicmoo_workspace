@@ -4,7 +4,7 @@
 :- use_module(engine(exceptions)).
 
 get_root_goal(Goal, Goal0) :-
-	( b_getval(rtchecks_goal, Goal0)
+	( nb_current(rtchecks_goal, Goal0)
 	->true
 	; Goal0 = Goal
 	).
