@@ -1256,7 +1256,7 @@ compat(_:atom(A))    :- !, atm(A).
 compat(_:number(A))  :- !, num(A).
 compat(_:integer(A)) :- !, int(A).
 compat(_:ground(A))  :- !, gnd(A).
-compat(_:atomic(A))  :- !, atomic(A).
+compat(_:atomic(A))  :- !, constant(A).
 compat(_:H) :-
     functor(H, F, 1),
     arg(1, H, A),
