@@ -7,15 +7,21 @@
 
 :- record options(i='-',s='-').
 
-%% new_options(+Atom, -Options) is semidet
+%% new_options(+Sugar, -Options) is semidet
 %
 %  True if Options is an opaque value representing the regular expression
-%  options described by Atom.  Atom should be something like 'ims',
-%  'xi', etc.  Fails if Atom contains an unknown option.
-new_options(Atom, Options) :-
-    atom_chars(Atom, Chars),
+%  options described by Sugar (an atom or list). If Sugar is an atom it
+%  should it should be something like 'ims', 'xi', etc.
+%  Fails if Sugar contains an unknown option.
+new_options(Sugar, Options) :-
+    atom(Sugar),
+    Sugar \== [],  % empty list atom needs no expansion
+    !,
+    atom_chars(Sugar, Chars),
+    new_options(Chars, Options).
+new_options(List, Options) :-
     default_options(Options0),
-    foldl(set_option, Chars, Options0, Options).
+    foldl(set_option, List, Options0, Options).
 
 
 %% set_option(+Option, +Options0, -Options) is semidet

@@ -2,6 +2,7 @@
                  , (\~)/2
                  , op(700,xfx,=~)
                  , op(700,xfx,\~)
+                 , regex/4
                  ]).
 :- use_module(library(error), [domain_error/2]).
 :- use_module(library(regex/options), [new_options/2]).
@@ -23,36 +24,71 @@
 Text =~ Pattern :-
     \+ Pattern = _/_,  % no options
     !,                 % next clause can't match
-    Text =~ Pattern/''.
-Text =~ Pattern/OptionAtom :-
-    new_options(OptionAtom, Options),
-    text_codes(Text, T),
-    text_codes(Pattern, P),
-    ( phrase(re(Options, Re),P) ->
-        once(engine_match(Re, Options, _, T, _))
-    ; % bad pattern ->
-        atom_codes(A, P),
-        domain_error(regex, A)
-    ).
+    regex(Pattern,[],Text,_).
+Text =~ Pattern/Options :-
+    regex(Pattern,Options,Text,_).
 
 
 %%  \~(+Text, +Pattern) is semidet.
 %
 %   Like `\+ Text =~ Pattern`.
 Text \~ Pattern :-
-    \+ Pattern = _/_,  % no options
-    !,                 % next clause can't match
-    Text \~ Pattern/''.
-Text \~ Pattern/OptionAtom :-
-    new_options(OptionAtom, Options),
+    \+ Text =~ Pattern.
+
+
+%%  regex(+Pattern:text,+Options,+Text:text,?Captures:list) is semidet
+%
+%   True if Text matches the regular expression Pattern. The pattern's
+%   behavior is influenced by Options (see below). The values of any
+%   capturing subgroups are unified with Captures (see below). A `text`
+%   value may either be an atom or a list of codes.
+%
+%   Options can either be an atom or a list of options. If an atom, it's
+%   split into a list of single character atoms which is used as the
+%   Options value.  This allows on to use `is`, for example, instead of
+%   `[i,s]`.  Acceptable options are:
+%
+%     * `i` - case-insensitive (default false)
+%     * `s` - let `.` match `\n` (default false)
+%
+%   Captures is unified with a list of captured values, with the
+%   leftmost capture first, etc. Each captured value is a list of codes.
+%   For example,
+%
+%       ?- regex('(a+)(b*)', [], 'aaabbbbb', [A,B]).
+%       A = "aaa",
+%       B = "bbbbb".
+%
+%   A brief word on argument order. Prolog convention prefers to place
+%   an Options argument as the final argument or as the last one before
+%   outputs. However, widely followed regular expression
+%   convention places options immediately after the pattern. I chose to
+%   follow the latter convention. This argument order
+%   benefits higher-order calls like maplist/3 which can do things
+%   like:
+%
+%       ?- maplist(regex('(a+)(b+)', i), [ab, aab, abb], L).
+%       L = [["a", "b"], ["aa", "b"], ["a", "bb"]].
+regex(Pattern,Options,Text,Captures) :-
+    % normalize text representations
     text_codes(Text, T),
     text_codes(Pattern, P),
-    ( phrase(re(Options,Re),P) ->
-        \+ engine_match(Re, Options, _, T, _)
-    ; % bad pattern ->
+
+    % normalize options representation
+    new_options(Options, O),
+
+    % compile Pattern
+    ( phrase(re(O,Re),P) ->
+        once(regex_no_sugar(Re, O, Captures, T, _))
+    ; % invalid pattern ->
         atom_codes(A, P),
         domain_error(regex, A)
     ).
+
+
+% the heart and soul of regex/4
+regex_no_sugar(Re, Options, Captures, Codes0, Codes) :-
+    engine_match(Re, Options, Captures, Codes0, Codes).
 
 
 %%  text_codes(+Text, -Codes)
