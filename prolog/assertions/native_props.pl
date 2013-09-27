@@ -56,6 +56,8 @@
 		terminates/1,
 		test_type/2,
 		throws/2,
+		throw/2,
+		nsh/2,
 		user_output/2
 		% intervals/2 %[LD]
 		% , user_error/2
