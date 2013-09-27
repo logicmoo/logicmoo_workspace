@@ -26,7 +26,7 @@ no_duplicates(Goal, Term) :-
     ).
 
 % Kludge: using swipl internals. Perhaps is not a good idea --EMM
-
+:- public expansion_module/2.
 expansion_module(M, EM) :-
     context_module(CM),
     module_property(CM, file(CF)),
@@ -43,7 +43,7 @@ system:goal_expansion(Goal0, Goal) :-
 
 system:term_expansion(Term0, Term) :-
     '$set_source_module'(M, M),
-    findall(EM, expansion_module(M, EM), ML),
+    findall(EM-[term_expansion/2], expansion_module(M, EM), ML),
     ML \= [],
-    '$expand':call_term_expansion(ML, Term0, Term),
-    Term0 \== Term. % Fail to try other expansions
+    '$expand':call_term_expansion(ML, Term0, _, Term, _),
+    Term0 \== Term.				% Fail to try other expansions
