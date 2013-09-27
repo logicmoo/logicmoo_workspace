@@ -5,6 +5,7 @@
                  , regex/4
                  ]).
 :- use_module(library(error), [domain_error/2]).
+:- use_module(library(regex/captures), [new_captures/2, finalize_captures/1]).
 :- use_module(library(regex/options), [new_options/2]).
 :- use_module(library(regex/parser), [re//2]).
 :- use_module(library(regex/engine/pp), [engine_match/5]).
@@ -77,9 +78,13 @@ regex(Pattern,Options,Text,Captures) :-
     % normalize options representation
     new_options(Options, O),
 
+    % normalize captures representation
+    new_captures(Captures, C),
+
     % compile Pattern
     ( phrase(re(O,Re),P) ->
-        once(regex_no_sugar(Re, O, Captures, T, _))
+        once(regex_no_sugar(Re, O, C, T, _)),
+        finalize_captures(C)
     ; % invalid pattern ->
         atom_codes(A, P),
         domain_error(regex, A)

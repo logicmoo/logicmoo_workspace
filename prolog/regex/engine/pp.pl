@@ -1,4 +1,5 @@
 :- module(regex_engine_pp, [engine_match/5]).
+:- use_module(library(regex/captures)).
 :- use_module(library(regex/options), [adjust_case/3, singleline_mode/1]).
 
 % regular expression interpreter
@@ -22,7 +23,7 @@ engine_match(union(_RE1, RE2), Opt, Selected) -->
 engine_match(conc(RE1, RE2), Opt, Selected) -->
     engine_match(RE1, Opt, Sel1),
     engine_match(RE2, Opt, Sel2),
-    { append(Sel1, Sel2, Selected) }.
+    { concatenate_captures(Sel1, Sel2, Selected) }.
 
 % match a specific number of times
 engine_match(count(RE,N0,M0), Opt, Selected) -->
@@ -31,13 +32,13 @@ engine_match(count(RE,N0,M0), Opt, Selected) -->
     { succ(N, N0) },
     { succ(M, M0) },
     engine_match(count(RE,N,M), Opt, Sel2),
-    { append(Sel1, Sel2, Selected) }.
+    { concatenate_captures(Sel1, Sel2, Selected) }.
 engine_match(count(RE,0,M0), Opt, Selected) -->
     { M0 > 0 },
     engine_match(RE, Opt, Sel1),    % prefer more matches
     { succ(M, M0) },
     engine_match(count(RE,0,M), Opt, Sel2),
-    { append(Sel1, Sel2, Selected) }.
+    { concatenate_captures(Sel1, Sel2, Selected) }.
 engine_match(count(_,0,_), _Opt, []) -->
     { true }.
 
@@ -46,7 +47,7 @@ engine_match(count(_,0,_), _Opt, []) -->
 engine_match(group(RE), Opt, Selected, S, U) :-
     engine_match(RE, Opt, Sel1, S, U),
     append(P, U, S),
-    append(Sel1, [P], Selected).
+    push_captures(P, Sel1, Selected).
 
 engine_match(any, Opt, []) -->
     [C],
