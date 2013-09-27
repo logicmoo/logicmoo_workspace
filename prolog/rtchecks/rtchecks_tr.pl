@@ -400,11 +400,13 @@ is_discontiguous(M:Head) :-
 
 imported_from(Goal, EM) :- predicate_property(Goal, imported_from(EM)).
 
+/*
 module_qualifier_i(M, Goal, RM) :-
     ( imported_from(M:Goal, EM) -> RM = EM % Imported have priority
     ; '$set_source_module'(RM, RM) -> true
     ; RM = M
     ).
+*/
 
 needs_posponed_definition(_) :- fail. % is_discontiguous(Goal).
 
@@ -750,6 +752,7 @@ abstract_assertions(assr(Pred, Status, Type, Compat0, Call, Succ, _Comp,
 
 % Generate compile-time checks, currently only compatibility is checked,
 % fails if no ctchecks can be applied to Pred
+:- export(generate_ctchecks/4).
 generate_ctchecks(Pred, M, Loc, Lits) :-
     collect_assertions(Pred, M, ctcheck, Assertions0),
     maplist(abstract_assertions, Assertions0, Assertions),
