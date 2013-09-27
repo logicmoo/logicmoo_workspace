@@ -49,7 +49,7 @@ engine_match(group(RE), Opt, Selected, S, U) :-
     append(P, U, S),
     push_captures(P, Sel1, Selected).
 
-engine_match(any, Opt, []) -->
+engine_match(any, Opt, Selected) -->
     [C],
     {
         ( C = 0'\n ->
@@ -57,22 +57,27 @@ engine_match(any, Opt, []) -->
         ; % not a new line ->
             true
         )
-    }.
+    },
+    { empty_captures(Selected) }.
 
 % matches both regular characters and metacharacters
-engine_match(char(C), Opt, []) -->
+engine_match(char(C), Opt, Selected) -->
     [C0],
-    { adjust_case(Opt, C0, C) }.
+    { adjust_case(Opt, C0, C) },
+    { empty_captures(Selected) }.
 
-engine_match(eos, _Opt, [], [], []).
+engine_match(eos, _Opt, [], [], Selected) :-
+    empty_captures(Selected).
 
-engine_match(neg_set(Set), _Opt, []) -->
+engine_match(neg_set(Set), _Opt, Selected) -->
     [C],
-    { \+ char_set_member(C, Set) }.
+    { \+ char_set_member(C, Set) },
+    { empty_captures(Selected) }.
 
-engine_match(pos_set(Set), _Opt, []) -->
+engine_match(pos_set(Set), _Opt, Selected) -->
     [C],
-    { char_set_member(C, Set) }.
+    { char_set_member(C, Set) },
+    { empty_captures(Selected) }.
 
 
 char_set_member(C, [char(C) | _]).

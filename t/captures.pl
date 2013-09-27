@@ -14,7 +14,11 @@ regex('a (\\d+)rd', [], 'a 3rd', ["3"]).
 regex('(\\S+) (\\S+)', [], 'hello world', ["hello", "world"]).
 
 
-'captures initially unbound' :-
+'all captures initially unbound' :-
+    regex('hello ([a-z]+)', i, 'Hello Sue', Captures),
+    Captures == ["Sue"].
+
+'single capture initially unbound' :-
     regex('hello ([a-z]+)', i, 'Hello Joe', [Whom]),
     Whom == "Joe".
 
