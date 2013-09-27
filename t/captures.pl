@@ -6,12 +6,13 @@
 regex('\\d+', [], '932', []).
 regex('.*', [], howdy, []).
 
-% single capture
-regex('(\\d+)', [], '932', ["932"]).
-regex('a (\\d+)rd', [], 'a 3rd', ["3"]).
+'single capture (entire)' :-
+    regex('(\\d+)', [], '932', ["932"]).
+'single capture (partial)' :-
+    regex('a (\\d+)rd', [], 'a 3rd', ["3"]).
 
-% two captures
-regex('(\\S+) (\\S+)', [], 'hello world', ["hello", "world"]).
+'two captures' :-
+    regex('(\\S+) (\\S+)', [], 'hello world', ["hello", "world"]).
 
 
 'all captures initially unbound' :-
