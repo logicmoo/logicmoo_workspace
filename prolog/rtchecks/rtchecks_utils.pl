@@ -152,7 +152,7 @@ select_defined(Term, SDict0, SDict) :-
 	).
 
 :- regtype ctime_t/1.
-
+:- public  ctime_t/1.
 ctime_t(ctcheck).
 ctime_t(rtcheck).
 
