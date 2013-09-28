@@ -72,13 +72,15 @@ engine_match(char(C), Opt, Selected) -->
 engine_match(eos, _Opt, [], [], Selected) :-
     empty_captures(Selected).
 
-engine_match(neg_set(Set), _Opt, Selected) -->
-    [C],
+engine_match(neg_set(Set), Opt, Selected) -->
+    [C0],
+    { adjust_case(Opt,C0,C) },
     { \+ char_set_member(C, Set) },
     { empty_captures(Selected) }.
 
-engine_match(pos_set(Set), _Opt, Selected) -->
-    [C],
+engine_match(pos_set(Set), Opt, Selected) -->
+    [C0],
+    { adjust_case(Opt,C0,C) },
     { char_set_member(C, Set) },
     { empty_captures(Selected) }.
 

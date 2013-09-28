@@ -11,6 +11,12 @@ abc =~ 'ABC'/i.
 abc =~ aBc/i.
 aBc =~ aBC/i.
 
+% i option affects character classes too
+'E' =~ '[a-z]'/i.
+'E' =~ '[A-Z]'/i.
+'e' =~ '[a-z]'/i.
+'e' =~ '[A-Z]'/i.
+
 % i option doesn't help
 foo \~ abc/i.
 

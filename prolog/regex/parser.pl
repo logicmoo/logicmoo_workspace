@@ -139,9 +139,10 @@ set_items(Opt, [Item1|MoreItems]) -->
 set_items(Opt, [Item1]) -->
     set_item(Opt, Item1).
 
-set_item(_Opt, char(C)) -->
-    [C],
-    { \+ set_metachar([C]) }.
+set_item(Opt, char(C)) -->
+    [C0],
+    { \+ set_metachar([C0]) },
+    { adjust_case(Opt,C0,C) }.
 set_item(_Opt, char(C)) -->
     "\\",
     [C],
