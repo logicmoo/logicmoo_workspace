@@ -84,22 +84,22 @@ elemental_re(Opt, char(C)) -->
     [C0],
     { \+ re_metachar(C0) },
     { adjust_case(Opt, C0, C) }.
-elemental_re(_Opt, RE) -->
+elemental_re(Opt, RE) -->
     "\\",
     [C],
-    { perl_character_class(C, RE) }.
+    { perl_character_class(C, Opt, RE) }.
 elemental_re(_Opt, char(C)) -->
     "\\",
     [C],
     { re_metachar(C) }.
-elemental_re(_Opt, neg_set(X)) -->
+elemental_re(Opt, neg_set(X)) -->
     "[^",
     !,  % don't backtrack into pos_set/1 clause below
-    set_items(X),
+    set_items(Opt,X),
     "]".
-elemental_re(_Opt, pos_set(X)) -->
+elemental_re(Opt, pos_set(X)) -->
     "[",
-    set_items(X),
+    set_items(Opt,X),
     "]".
 
 
@@ -118,38 +118,38 @@ re_metachar(0')).
 
 
 % define Perl character classes as character sets
-perl_character_class(0'd, pos_set(X)) :-
-    set_items(X,"0-9",[]).
-perl_character_class(0'w, pos_set(X)) :-
-    set_items(X,"0-9A-Za-z_",[]).
-perl_character_class(0's, pos_set([ char(0'\t)  % tab
+perl_character_class(0'd, Opt, pos_set(X)) :-
+    set_items(Opt, X,"0-9",[]).
+perl_character_class(0'w, Opt, pos_set(X)) :-
+    set_items(Opt, X,"0-9A-Za-z_",[]).
+perl_character_class(0's, _Opt, pos_set([ char(0'\t)  % tab
                                   , char(0'\n)  % newline
                                   , char(0'\f)  % form feed
                                   , char(0'\r)  % carriage return
                                   , char(0' )   % space
                                   ])).
-perl_character_class(Upper,neg_set(Set)) :-
+perl_character_class(Upper, Opt, neg_set(Set)) :-
     code_type(Lower, lower(Upper)),
-    perl_character_class(Lower, pos_set(Set)).
+    perl_character_class(Lower, Opt, pos_set(Set)).
 
 
-set_items([Item1|MoreItems]) -->
-    set_item(Item1),
-    set_items(MoreItems).
-set_items([Item1]) -->
-    set_item(Item1).
+set_items(Opt, [Item1|MoreItems]) -->
+    set_item(Opt, Item1),
+    set_items(Opt, MoreItems).
+set_items(Opt, [Item1]) -->
+    set_item(Opt, Item1).
 
-set_item(char(C)) -->
+set_item(_Opt, char(C)) -->
     [C],
     { \+ set_metachar([C]) }.
-set_item(char(C)) -->
+set_item(_Opt, char(C)) -->
     "\\",
     [C],
     { set_metachar([C]) }.
-set_item(range(A,B)) -->
-    set_item(char(A)),
+set_item(Opt, range(A,B)) -->
+    set_item(Opt, char(A)),
     "-",
-    set_item(char(B)).
+    set_item(Opt, char(B)).
 
 
 set_metachar("\\").
