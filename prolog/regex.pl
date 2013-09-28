@@ -92,8 +92,11 @@ regex(Pattern,Options,Text,Captures) :-
 
 
 % the heart and soul of regex/4
-regex_no_sugar(Re, Options, Captures, Codes0, Codes) :-
-    engine_match(Re, Options, Captures, Codes0, Codes).
+regex_no_sugar(Re, Options, Captures) -->
+    engine_match(Re, Options, Captures).
+regex_no_sugar(Re, Options, Captures) -->
+    [_],
+    regex_no_sugar(Re, Options, Captures).
 
 
 %%  text_codes(+Text, -Codes)

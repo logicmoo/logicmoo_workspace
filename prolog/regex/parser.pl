@@ -3,7 +3,7 @@
 :- use_module(library(regex/options), [adjust_case/3]).
 
 % DCG parser for regular expressions
-re(Opt, anywhere(Z)) -->
+re(Opt, Z) -->
     basic_re(Opt,W),
     re_tail(Opt,W,Z).
 
