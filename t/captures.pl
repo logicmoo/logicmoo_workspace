@@ -28,6 +28,11 @@ regex('.*', [], howdy, []).
     regex('(?<A>\\d) (?<B>\\d)', [], 'a 1 2 b', ['A'=A]),
     A == "1".
 
+'one named capture, two names given'(todo) :-
+    regex('(?<A>a)bcd', [], 'abcd', ['B'=B,'A'=A]),
+    A == "a",
+    var(B).
+
 'named capture treated as a numbered capture' :-
     regex('(?<A>a)bcd', [], 'abcd', Captures),
     Captures == ["a"].
