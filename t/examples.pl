@@ -18,9 +18,9 @@ dog =~ 'cat|dog'.
 pig \~ 'cat|dog'.
 
 % ^ meta character
-begin =~ '^beg'.
-beggar =~ '^beg'.
-'i beg' \~ '^beg'.
+'begin with ^'(todo) :- begin =~ '^beg'.
+'beggar with ^'(todo) :- beggar =~ '^beg'.
+'i beg with ^'(todo) :- 'i beg' \~ '^beg'.
 'hello world' =~ world.  % no anchor matches anywhere in string
 'i beg' =~ beg.
 

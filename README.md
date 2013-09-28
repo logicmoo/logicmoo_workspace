@@ -50,7 +50,6 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 
 ## Empty strings
 
-  * `^` - at beginning of text
   * `$` - at end of text
 
 ## Character class elements

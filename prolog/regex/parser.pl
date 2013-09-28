@@ -3,11 +3,6 @@
 :- use_module(library(regex/options), [adjust_case/3]).
 
 % DCG parser for regular expressions
-re(Opt, Z) -->
-    "^",
-    !,  % don't backtrack into anywhere/1 rule
-    basic_re(Opt,W),
-    re_tail(Opt,W,Z).
 re(Opt, anywhere(Z)) -->
     basic_re(Opt,W),
     re_tail(Opt,W,Z).
@@ -70,6 +65,8 @@ simple_re_tail(_Opt, W, W) -->
 
 elemental_re(_Opt, any) -->
     ".".
+%elemental_re(_Opt, caret) -->
+%    "^".
 elemental_re(Opt, group(X)) -->
     "(",
     re(Opt, X),
