@@ -33,6 +33,14 @@ regex('.*', [], howdy, []).
     A == "a",
     var(B).
 
+'numbered, constrained captures' :-
+    when(ground(A),(number_codes(N,A), 1 =:= N mod 2)),
+    regex("odd: ([0-9]+)", [], "odd: 77", [A]).
+
+'named, constrained captures' :-
+    when(ground(A),(number_codes(N,A), 0 =:= N mod 2)),
+    regex("even: (?<A>[0-9]+)", [], "even: 42", ['A'=A]).
+
 'named capture treated as a numbered capture' :-
     regex('(?<A>a)bcd', [], 'abcd', Captures),
     Captures == ["a"].
