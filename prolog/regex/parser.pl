@@ -118,12 +118,10 @@ re_metachar(0')).
 
 
 % define Perl character classes as character sets
-perl_character_class(0'd, pos_set([ range(48,57) ])).  % 0-9
-perl_character_class(0'w, pos_set([ range(48,57)       % 0-9
-                                  , range(65,90)       % A-Z
-                                  , range(97,122)      % a-z
-                                  , char(95)           % underscore
-                                  ])).
+perl_character_class(0'd, pos_set(X)) :-
+    set_items(X,"0-9",[]).
+perl_character_class(0'w, pos_set(X)) :-
+    set_items(X,"0-9A-Za-z_",[]).
 perl_character_class(0's, pos_set([ char(0'\t)  % tab
                                   , char(0'\n)  % newline
                                   , char(0'\f)  % form feed
