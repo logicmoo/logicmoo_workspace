@@ -42,6 +42,7 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 ## Grouping
 
   * `(re)` - numbered capturing group
+  * `(?<name>re)` - named & numbered capturing group
 
 ## Flags
 

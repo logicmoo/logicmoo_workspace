@@ -43,6 +43,15 @@ engine_match(group(RE), Opt, Selected, S, U) :-
     append(P, U, S),
     push_captures(P, Sel1, Selected).
 
+% Match a named group. Try saving the capture under a name; otherwise,
+% treat the group as a numbered capture.
+engine_match(named_group(Name,RE), Opt, Selected, S, U) :-
+    engine_match(RE, Opt, Sel1, S, U),
+    append(P, U, S),
+    ( set_captures(Name, P, Sel1, Selected)
+    ; push_captures(P, Sel1, Selected)
+    ).
+
 engine_match(any, Opt, Selected) -->
     [C],
     {

@@ -1,5 +1,5 @@
 :- module(regex_parser, [re//2]).
-:- use_module(library(dcg/basics), [integer//1]).
+:- use_module(library(dcg/basics), [integer//1, string//1]).
 :- use_module(library(regex/options), [adjust_case/3]).
 
 % DCG parser for regular expressions
@@ -69,6 +69,13 @@ elemental_re(_Opt, any) -->
 %    "^".
 elemental_re(Opt, group(X)) -->
     "(",
+    re(Opt, X),
+    ")".
+elemental_re(Opt, named_group(Name, X)) -->
+    "(?<",
+    string(NameCodes),
+    { atom_codes(Name, NameCodes) },
+    ">",
     re(Opt, X),
     ")".
 elemental_re(_Opt, eos) -->

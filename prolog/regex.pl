@@ -60,6 +60,11 @@ Text \~ Pattern :-
 %       A = "aaa",
 %       B = "bbbbb".
 %
+%   Named captures are also supported. In that case, Captures must be
+%   a list of pairs like `['A'=A,'B'=B]`. Every named capture in the
+%   pattern must have a corresponding key in Captures. (This is a
+%   temporary restriction and will be removed later).
+%
 %   A brief word on argument order. Prolog convention prefers to place
 %   an Options argument as the final argument or as the last one before
 %   outputs. However, widely followed regular expression
