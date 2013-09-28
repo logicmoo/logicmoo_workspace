@@ -35,7 +35,7 @@ regex('.*', [], howdy, []).
 
 'numbered, constrained captures' :-
     when(ground(A),(number_codes(N,A), 1 =:= N mod 2)),
-    regex("odd: ([0-9]+)", [], "odd: 77", [A]).
+    regex("odd: ([0-9]+)", i, "Odd: 77", [A]).
 
 'named, constrained captures' :-
     when(ground(A),(number_codes(N,A), 0 =:= N mod 2)),
