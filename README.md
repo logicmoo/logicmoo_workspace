@@ -69,10 +69,9 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 
 # Changes in this Version
 
-  * Implement numbered captures via regex/4
-  * Implement named captures via regex/4
-  * Temporarily drop support for ^ pattern
-  * Fix various regular expression mistakes
+  * Fixed mistakes with named and numbered captures
+  * Automatically unify named captures with corresponding variables
+  * Refactored internals to ease future enhancements
 
 # Acknowledgements
 
