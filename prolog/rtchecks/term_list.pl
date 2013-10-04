@@ -21,9 +21,10 @@ push_meta(E, L, V) :-
 	!.
 :- else.
 push_meta(E, L, V) :-
+    '$set_source_module'(M, M),
     ( predicate_property(M:E, imported_from(IM)) ->
       true
-    ; '$set_source_module'(IM, IM)
+    ; IM = M
     ),
     push_term(IM:E, L, V).
 :- endif.
