@@ -1,4 +1,11 @@
 :- use_module(library(regex)).
+:- use_module(library(when), [when/2]).
+
+% relates an even number to its codes representation
+% (used for when/2 tests below)
+codes_even(Codes, Even) :-
+    number_codes(Even, Codes),
+    0 =:= Even mod 2.
 
 :- use_module(library(tap)).
 
@@ -56,3 +63,30 @@ regex('.*', [], howdy, []).
 'pattern matches but captures fail unification'(fail) :-
     Whom = "Thomas",
     regex('hello ([a-z]+)', i, 'Hello Tom', [Whom]).
+
+
+'implicit named captures: one' :-
+    N = _, % avoid singleton warning
+    "num: 42" =~ "num: (?<N>\\d+)$",
+    N == "42".
+
+'implicit named captures: two' :-
+    X = _, Y = _, % avoid singleton warnings
+    "hi:hola" =~ "(?<X>\\w+):(?<Y>\\w+)",
+    Y == "hola",
+    X == "hi".
+
+'implicit named captures: extra in-scope variables' :-
+    X = X,  % an extra, in-scope variable
+    Name = _, % avoid singleton warnings
+    "Hi John" =~ "hi (?<Name>[a-z]+)"/i,
+    Name == "John".
+
+'implicit named captures: contraints before match OK' :-
+    when( ground(X), codes_even(X,N) ),
+    "even: 42" =~ "even: (?<X>[0-9]+)$",
+    N =:= 42.
+
+'implicit named captures: contraints before match FAIL'(fail) :-
+    when( ground(X), codes_even(X,_) ),
+    "even: 43" =~ "even: (?<X>[0-9]+)$".

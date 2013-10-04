@@ -21,12 +21,33 @@
 %
 %   True if Text matches regular expression Pattern. Only the first
 %   match is considered.  Text and Pattern can be atoms or code lists.
+%
+%   Named captures are automatically bound to corresponding named
+%   variables in the surrounding scope.  For example,
+%
+%       "Hi John" =~ "hi (?<Name>[a-z]+)"/i,
+%       Name == "John".
 Text =~ Pattern :-
-    \+ Pattern = _/_,  % no options
-    !,                 % next clause can't match
-    regex(Pattern,[],Text,_).
-Text =~ Pattern/Options :-
-    regex(Pattern,Options,Text,_).
+    expand_equalstilde(Text =~ Pattern, _, Goal),
+    call(Goal).
+
+expand_equalstilde(Text =~ Pattern, Vars, regex(P,Options,Text,Vars)) :-
+    ( Pattern = P/Options ->
+        true
+    ; % no explicit options ->
+        P = Pattern,
+        Options = []
+    ).
+
+% macro expansion giving access to in-scope variables.
+user:goal_expansion(Text =~ Pattern, Goal) :-
+    % is goal expansion wanted?
+    prolog_load_context(module, Module),
+    Module \== regex,  % we don't want string interpolation ourselves
+    predicate_property(Module:(_=~_),imported_from(regex)),
+
+    prolog_load_context(variable_names, Vars),
+    expand_equalstilde(Text =~ Pattern, Vars, Goal).
 
 
 %%  \~(+Text, +Pattern) is semidet.
