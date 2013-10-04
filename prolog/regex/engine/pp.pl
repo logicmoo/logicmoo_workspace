@@ -1,6 +1,6 @@
 :- module(regex_engine_pp, [engine_match/5]).
 :- use_module(library(regex/captures)).
-:- use_module(library(regex/options), [adjust_case/3, singleline_mode/1]).
+:- use_module(library(regex/state)).
 
 % regular expression interpreter
 
@@ -9,80 +9,69 @@
 % Selected is the list of substrings of Prefix that matched
 % the parenthesized components of RE.
 
-engine_match(union(RE1, _RE2), Opt, Selected) -->
-    engine_match(RE1, Opt, Selected).
-engine_match(union(_RE1, RE2), Opt, Selected) -->
-    engine_match(RE2, Opt, Selected).
+engine_match(union(RE1, _RE2), State0, State) -->
+    engine_match(RE1, State0, State).
+engine_match(union(_RE1, RE2), State0, State) -->
+    engine_match(RE2, State0, State).
 
-engine_match(conc(RE1, RE2), Opt, Selected) -->
-    engine_match(RE1, Opt, Sel1),
-    engine_match(RE2, Opt, Sel2),
-    { concatenate_captures(Sel1, Sel2, Selected) }.
+engine_match(conc(RE1, RE2), State0, State) -->
+    engine_match(RE1, State0, State1),
+    engine_match(RE2, State1, State).
 
 % match a specific number of times
-engine_match(count(RE,N0,M0), Opt, Selected) -->
+engine_match(count(RE,N0,M0), State0, State) -->
     { N0 > 0 },
-    engine_match(RE, Opt, Sel1),    % try for minimum matches
+    engine_match(RE, State0, State1),    % try for minimum matches
     { succ(N, N0) },
     { succ(M, M0) },
-    engine_match(count(RE,N,M), Opt, Sel2),
-    { concatenate_captures(Sel1, Sel2, Selected) }.
-engine_match(count(RE,0,M0), Opt, Selected) -->
+    engine_match(count(RE,N,M), State1, State).
+engine_match(count(RE,0,M0), State0, State) -->
     { M0 > 0 },
-    engine_match(RE, Opt, Sel1),    % prefer more matches
+    engine_match(RE, State0, State1),    % prefer more matches
     { succ(M, M0) },
-    engine_match(count(RE,0,M), Opt, Sel2),
-    { concatenate_captures(Sel1, Sel2, Selected) }.
-engine_match(count(_,0,_), _Opt, []) -->
+    engine_match(count(RE,0,M), State1, State).
+engine_match(count(_,0,_), State, State) -->
     { true }.
 
-% Match a group and add it to the end of
-% list of selected items from the submatch.
-engine_match(group(RE), Opt, Selected, S, U) :-
-    engine_match(RE, Opt, Sel1, S, U),
-    append(P, U, S),
-    push_captures(P, Sel1, Selected).
+% Match a capturing group
+engine_match(group(RE), State0, State, S, U) :-
+    push_capture(P, State0, State1),
+    engine_match(RE, State1, State, S, U),
+    append(P, U, S).
 
 % Match a named group. Try saving the capture under a name; otherwise,
 % treat the group as a numbered capture.
-engine_match(named_group(Name,RE), Opt, Selected, S, U) :-
-    engine_match(RE, Opt, Sel1, S, U),
-    append(P, U, S),
-    ( set_captures(Name, P, Sel1, Selected)
-    ; push_captures(P, Sel1, Selected)
-    ).
+engine_match(named_group(Name,RE), State0, State, S, U) :-
+    push_capture(Name=P,State0,State1),
+    engine_match(RE, State1, State, S, U),
+    append(P, U, S).
 
-engine_match(any, Opt, Selected) -->
+engine_match(any, State, State) -->
     [C],
     {
         ( C = 0'\n ->
-            singleline_mode(Opt)
+            singleline_mode(State)
         ; % not a new line ->
             true
         )
-    },
-    { empty_captures(Selected) }.
+    }.
 
 % matches both regular characters and metacharacters
-engine_match(char(C), Opt, Selected) -->
+engine_match(char(C), State, State) -->
     [C0],
-    { adjust_case(Opt, C0, C) },
-    { empty_captures(Selected) }.
+    { adjust_case(State, C0, C) }.
 
-engine_match(eos, _Opt, [], [], Selected) :-
-    empty_captures(Selected).
+engine_match(eos, State, State, [], []).
 
-engine_match(neg_set(Set), Opt, Selected) -->
+engine_match(neg_set(Set), State, State) -->
     [C0],
-    { adjust_case(Opt,C0,C) },
-    { \+ char_set_member(C, Set) },
-    { empty_captures(Selected) }.
+    { adjust_case(State,C0,C) },
+    { \+ char_set_member(C, Set) }.
 
-engine_match(pos_set(Set), Opt, Selected) -->
+engine_match(pos_set(Set), State, State) -->
     [C0],
-    { adjust_case(Opt,C0,C) },
-    { char_set_member(C, Set) },
-    { empty_captures(Selected) }.
+    { adjust_case(State,C0,C) },
+    { char_set_member(C, Set) }.
 
 
 char_set_member(C, [char(C) | _]).

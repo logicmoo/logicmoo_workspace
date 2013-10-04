@@ -5,8 +5,7 @@
                  , regex/4
                  ]).
 :- use_module(library(error), [domain_error/2]).
-:- use_module(library(regex/captures), [new_captures/2, finalize_captures/1]).
-:- use_module(library(regex/options), [new_options/2]).
+:- use_module(library(regex/state), [new_state/3, numbered_captures/2]).
 :- use_module(library(regex/parser), [re//2]).
 :- use_module(library(regex/engine/pp), [engine_match/5]).
 
@@ -80,16 +79,17 @@ regex(Pattern,Options,Text,Captures) :-
     text_codes(Text, T),
     text_codes(Pattern, P),
 
-    % normalize options representation
-    new_options(Options, O),
-
-    % normalize captures representation
-    new_captures(Captures, C),
+    % normalize options and captures into a state value
+    new_state(Options, Captures, State0),
 
     % compile Pattern
-    ( phrase(re(O,Re),P) ->
-        once(regex_no_sugar(Re, O, C, T, _)),
-        finalize_captures(C)
+    ( phrase(re(State0,Re),P) ->
+        once(regex_no_sugar(Re, State0, State, T, _)),
+        ( var(Captures) ->
+            numbered_captures(State, Captures)
+        ; % captures already bound ->
+            true
+        )
     ; % invalid pattern ->
         atom_codes(A, P),
         domain_error(regex, A)
@@ -97,11 +97,11 @@ regex(Pattern,Options,Text,Captures) :-
 
 
 % the heart and soul of regex/4
-regex_no_sugar(Re, Options, Captures) -->
-    engine_match(Re, Options, Captures).
-regex_no_sugar(Re, Options, Captures) -->
+regex_no_sugar(Re, State0, State) -->
+    engine_match(Re, State0, State).
+regex_no_sugar(Re, State0, State) -->
     [_],
-    regex_no_sugar(Re, Options, Captures).
+    regex_no_sugar(Re, State0, State).
 
 
 %%  text_codes(+Text, -Codes)

@@ -24,11 +24,11 @@ regex('.*', [], howdy, []).
     A == "1",
     B == "2".
 
-'two named captures, only one is used'(todo) :-
+'two named captures, only one is used' :-
     regex('(?<A>\\d) (?<B>\\d)', [], 'a 1 2 b', ['A'=A]),
     A == "1".
 
-'one named capture, two names given'(todo) :-
+'one named capture, two names given' :-
     regex('(?<A>a)bcd', [], 'abcd', ['B'=B,'A'=A]),
     A == "a",
     var(B).

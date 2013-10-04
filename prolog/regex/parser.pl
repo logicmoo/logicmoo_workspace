@@ -1,6 +1,6 @@
 :- module(regex_parser, [re//2]).
 :- use_module(library(dcg/basics), [integer//1, string//1]).
-:- use_module(library(regex/options), [adjust_case/3]).
+:- use_module(library(regex/state), [adjust_case/3]).
 
 % DCG parser for regular expressions
 re(Opt, Z) -->
@@ -80,10 +80,10 @@ elemental_re(Opt, named_group(Name, X)) -->
     ")".
 elemental_re(_Opt, eos) -->
     "$".
-elemental_re(Opt, char(C)) -->
+elemental_re(State, char(C)) -->
     [C0],
     { \+ re_metachar(C0) },
-    { adjust_case(Opt, C0, C) }.
+    { adjust_case(State, C0, C) }.
 elemental_re(Opt, RE) -->
     "\\",
     [C],
@@ -139,10 +139,10 @@ set_items(Opt, [Item1|MoreItems]) -->
 set_items(Opt, [Item1]) -->
     set_item(Opt, Item1).
 
-set_item(Opt, char(C)) -->
+set_item(State, char(C)) -->
     [C0],
     { \+ set_metachar([C0]) },
-    { adjust_case(Opt,C0,C) }.
+    { adjust_case(State,C0,C) }.
 set_item(_Opt, char(C)) -->
     "\\",
     [C],
