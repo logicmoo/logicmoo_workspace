@@ -660,9 +660,6 @@ do_generate_step1_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs) -->
 	{
 	    current_prolog_flag(rtchecks_level, Level0),
 	    neg_level(Level0, Level),
-	    current_prolog_flag(rtchecks_entry, Entry),
-	    current_prolog_flag(rtchecks_exit,  Exit),
-	    current_prolog_flag(rtchecks_trust, Trust),
 	    compat_assrt(Level, [test], CompatAssrt, []),
 	    call_assrt(Level, [entry], CallAssrt, []),
 	    succ_assrt(Level, [exit, success, pred], SuccAssrt, []),
@@ -692,8 +689,6 @@ generate_step2_rtchecks(Assertions, Pred, M, PDict, PLoc, UsePosLoc, Goal0,
 do_generate_step2_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs) -->
 	{
 	    current_prolog_flag(rtchecks_level, Level),
-	    current_prolog_flag(rtchecks_trust, Trust),
-	    current_prolog_flag(rtchecks_test,  Test),
 	    compat_assrt(Level, [], CompatAssrt, []),
 	    call_assrt(Level, [], CallAssrt, []),
 	    succ_assrt(Level, [test, success, pred], SuccAssrt, []),
