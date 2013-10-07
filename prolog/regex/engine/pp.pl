@@ -1,5 +1,4 @@
 :- module(regex_engine_pp, [engine_match/5]).
-:- use_module(library(regex/captures)).
 :- use_module(library(regex/state)).
 
 % regular expression interpreter
