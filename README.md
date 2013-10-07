@@ -69,9 +69,7 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 
 # Changes in this Version
 
-  * Fixed mistakes with named and numbered captures
-  * Automatically unify named captures with corresponding variables
-  * Refactored internals to ease future enhancements
+  * Fixed packaging error related to old `regex/captures` module
 
 # Acknowledgements
 
