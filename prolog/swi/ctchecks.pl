@@ -37,14 +37,14 @@ ctcheck_head((H0  --> _), M) :- !,
 ctcheck_head((T :- _), M) :- !, ctcheck_head(T, M).
 ctcheck_head(M:T,      _) :- !, ctcheck_head(T, M).
 ctcheck_head(H,        M) :-
-    ctcheck_goal(H, M, M).
+    ctcheck_goal(H, M).
 
 property_issue(IssuePIsL-Heads) :-
     print_message(error, acheck(prop_issue(Heads, IssuePIsL))).
 
-ctcheck_goal(Goal, M, IM) :-
+ctcheck_goal(Goal, M) :-
     functor(Goal, F, A),
-    check_property(ctcheck, M:Goal, IM, CTChecks),
+    check_property(ctcheck, Goal, M, CTChecks),
     property_issue([ctcheck-[CTChecks]]-[M:F/A]).
 
 :- create_prolog_flag(check_assertions, [], [type(term)]).
@@ -82,9 +82,7 @@ current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, PI-(Issue-Values)) :-
     member(Issue, Issues),
     checker_t(Issue),
     (predicate_property(N:H, imported_from(IM)) -> true ; IM = N),
-    check_property(Issue, N:H, IM, Values).
-
-% :- meta_predicate check_properties(?, ?).
+    check_property(Issue, H, IM, Values).
 
 check_properties(Head, M, Type, Cp, Ca, Su, Gl, Issues) :-
     findall(Pair, current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, Pair),
@@ -99,17 +97,17 @@ report_issues(Pairs) :-
     group_pairs_by_key(TSorted, TGrouped),
     maplist(property_issue, TGrouped).
 
-check_property(defined, M:H, _, M:F/A) :-
+check_property(defined, H, M, M:F/A) :-
     functor(H, F, A),
     \+ current_predicate(M:F/A).
-check_property(is_prop, M:H, IM, M:F/A) :-
+check_property(is_prop, H, M, M:F/A) :-
     functor(H, F, A),
-    \+ verif_is_property(IM, F, A).
-check_property(ctcheck, M:H, IM, CTChecks) :-
+    \+ verif_is_property(M, F, A).
+check_property(ctcheck, H, M, CTChecks) :-
 				% compile-time checks. Currently only
 				% compatibility checks.
     rtchecks_tr:location(Loc),
-    rtchecks_tr:generate_ctchecks(H, IM, Loc, Goal),
+    rtchecks_tr:generate_ctchecks(H, M, Loc, Goal),
     save_rtchecks(M:Goal),	% Now execute the checks
     load_rtchecks(CTChecks),	% and collect the failures
     CTChecks \= [].
@@ -138,10 +136,13 @@ term_expansion(Term, _) :-
     ctcheck_head(Term, M),
     fail.
 
+ct_black_list(basic_props).
+
 goal_expansion(Goal, _) :-
     current_prolog_flag(check_assertions, Issues),
     memberchk(ctcheck, Issues),
     '$set_source_module'(M, M),
+    \+ ct_black_list(M),
     (predicate_property(M:Goal, imported_from(IM)) -> true ; IM = M),
-    ctcheck_goal(Goal, M, IM),
+    ctcheck_goal(Goal, IM),
     fail.
