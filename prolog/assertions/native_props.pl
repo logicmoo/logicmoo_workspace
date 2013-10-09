@@ -1276,6 +1276,12 @@ compat(Goal) :-
 	list(VS, clean_freezed),
 	!.
 
+:- if(current_prolog_flag(dialect, swi)).
+% TODO: compat/1 should be moved to basic_props.pl to avoid odd error
+% messages fixed with this kludge:
+:- basic_props:import(native_props:compat/1).
+:- endif.
+
 :- true prop nfi(G,V)
     # "@var{V} is not further instantiated.".
 :- true comp nfi(G,V) + (sideff(free), no_rtcheck).
