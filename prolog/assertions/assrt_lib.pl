@@ -280,9 +280,13 @@ normalize_assertion_head(M:H, _, P, Cp, Ca, Su, Gl) :-
 normalize_assertion_head(F/A, M, M:Pred, [], [], [], []) :- !,
     functor(Pred, F, A).
 normalize_assertion_head(Head, M, M:Pred, Cp, Ca, Su, Gl) :-
+    compound(Head),
+    !,
     functor(Head, F, A),
     functor(Pred, F, A),
     normalize_args(1, Head, M, Pred, Cp, Ca, Su, Gl).
+normalize_assertion_head(Head, M, M:Head, [], [], [], []) :-
+    atom(Head).
 
 normalize_args(N0, Head, M, Pred, Cp0, Ca0, Su0, Gl0) :-
     arg(N0, Head, HArg),
