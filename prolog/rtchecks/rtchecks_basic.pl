@@ -133,6 +133,7 @@ get_propnames(Prop, Prop).
 
 short_prop_name(Prop, Name-[]) :-
 	callable(Prop),
+	compound(Prop),
 	arg(1, Prop, Arg),
 	var(Arg),
 	Prop =.. [FName, _|Args],
@@ -269,7 +270,7 @@ inline_decl(F, A) -->
 unfold_decl(F, A) -->
 	{
 	    functor(Unfold, F, A),
-	    fill_struct(1, Unfold, yes)
+	    (compound(Unfold) -> fill_struct(1, Unfold, yes) ; true)
 	},
 	[(:- unfold(Unfold))].
 
