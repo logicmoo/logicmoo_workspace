@@ -156,8 +156,7 @@ long_prop_names(Props, PropNames, Dict, Names) :-
 
 % in this predicate, PredName and the name of each property must be ground
 % to avoid undesired unifications.
-get_pretty_names(short, Term, Dict, TermName, Dict) :-
-	Term = n(Pred, Compat, Call, Succ, Comp),
+get_pretty_names(short, n(Pred, Compat, Call, Succ, Comp), Dict, TermName, Dict) :-
 	functor(Pred, F, A),
 	PredName = F/A,
 	short_prop_names(Compat, CompatName),
@@ -196,9 +195,7 @@ is_member_prop([T0|_], T1) :-
 	!.
 is_member_prop([_|L], X) :- is_member_prop(L, X).
 
-is_same_prop(T0, T1) :-
-	T0 = cui(C0, U0, _),
-	T1 = cui(C1, U1, _),
+is_same_prop(cui(C0, U0, _), cui(C1, U1, _)) :-
 	C0 == C1,
 	% The unification should be done After the comparison, to avoid
 	% problems if [U0,U1] share variables with [C0,C1]:
@@ -246,9 +243,7 @@ lists_to_disj(A0, L) :-
 	remove_element(A1, fail, A2),
 	list_to_disj(A2, L).
 
-checkif_to_lit(CheckPosL, Params, CheckPos) :-
-	Params = pos(_Pred, PType),
-	CheckPosL = i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit),
+checkif_to_lit(i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit), pos(_Pred, PType), CheckPos) :-
 	get_checkif(PType, Exit, PredName, Dict, Compat, CompatNames, AsrLoc,
 		    CheckPos).
 

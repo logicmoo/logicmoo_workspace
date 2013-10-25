@@ -1013,6 +1013,5 @@ comp_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
 	 get_globname(NameFmt, Pred, GlobName)},
 	body_check_comp(ChkComps, CheckedL, GlobName, Pred).
 
-comp_to_lit(CompCompL, GlobName, ChkComp-Goal) :-
-	CompCompL = i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues),
+comp_to_lit(i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues), GlobName, ChkComp-Goal) :-
 	get_chkcomp(Comp, PropValues, GlobName, PredName, Dict, PosLoc, ChkComp, Goal).
