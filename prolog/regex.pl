@@ -132,5 +132,9 @@ text_codes(Atom, Codes) :-
     atom(Atom),
     !,
     atom_codes(Atom, Codes).
+text_codes(String, Codes) :-
+    string(String),
+    !,
+    string_codes(String, Codes).
 text_codes(Codes, Codes).
 
