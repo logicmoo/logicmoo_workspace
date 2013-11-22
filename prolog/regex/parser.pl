@@ -141,19 +141,19 @@ set_items(Opt, [Item1]) -->
 
 set_item(State, char(C)) -->
     [C0],
-    { \+ set_metachar([C0]) },
+    { \+ set_metachar(C0) },
     { adjust_case(State,C0,C) }.
 set_item(_Opt, char(C)) -->
     "\\",
     [C],
-    { set_metachar([C]) }.
+    { set_metachar(C) }.
 set_item(Opt, range(A,B)) -->
     set_item(Opt, char(A)),
     "-",
     set_item(Opt, char(B)).
 
 
-set_metachar("\\").
-set_metachar("]").
-set_metachar("-").
+set_metachar(0'\\).
+set_metachar(0']).
+set_metachar(0'-).
 
