@@ -5,6 +5,7 @@
 % character ranges
 deadbeef =~ '[a-f0-9]+'.
 "1973c" =~ '[a-f0-9]+'.
+`feed` =~ '[a-f0-9]+'.
 
 % + meta character
 abbba =~ 'ab+a'.

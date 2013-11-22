@@ -1,6 +1,8 @@
 :- use_module(library(regex)).
 :- use_module(library(when), [when/2]).
 
+:- set_prolog_flag(double_quotes, codes).
+
 % relates an even number to its codes representation
 % (used for when/2 tests below)
 codes_even(Codes, Even) :-

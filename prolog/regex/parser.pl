@@ -2,6 +2,8 @@
 :- use_module(library(dcg/basics), [integer//1, string//1]).
 :- use_module(library(regex/state), [adjust_case/3]).
 
+:- set_prolog_flag(double_quotes, string).
+
 % DCG parser for regular expressions
 re(Opt, Z) -->
     basic_re(Opt,W),
@@ -119,9 +121,11 @@ re_metachar(0')).
 
 % define Perl character classes as character sets
 perl_character_class(0'd, Opt, pos_set(X)) :-
-    set_items(Opt, X,"0-9",[]).
+    string_codes("0-9", Codes),
+    set_items(Opt, X,Codes,[]).
 perl_character_class(0'w, Opt, pos_set(X)) :-
-    set_items(Opt, X,"0-9A-Za-z_",[]).
+    string_codes("0-9A-Za-z_", Codes),
+    set_items(Opt, X,Codes,[]).
 perl_character_class(0's, _Opt, pos_set([ char(0'\t)  % tab
                                   , char(0'\n)  % newline
                                   , char(0'\f)  % form feed
