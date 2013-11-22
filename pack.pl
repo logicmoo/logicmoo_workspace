@@ -1,5 +1,5 @@
 name(regex).
-version('0.2.1').
+version('0.2.2').
 title('Regular expressions').
 author('Michael Hendricks','michael@ndrix.org').
 packager('Michael Hendricks','michael@ndrix.org').
