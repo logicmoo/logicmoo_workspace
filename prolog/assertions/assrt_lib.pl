@@ -457,10 +457,10 @@ assertion_records(Assertions, Records, CM, Dict) :-
     findall(Match-(assertions:assertion_db(Head, M, Status, Type, Cp, Ca,
 					   Su, Gl, Co, Dict)),
 	    ( normalize_assertions(Assertions, CM, M:Head, Status,
-				   Type, Cp0, Ca0, Su0, Gl0, Co0),
+				   Type, Cp0, Ca0, Su0, Gl0, Co),
 	      once(maplist(maplist(compact_module_call(M)),
-			   [Cp0, Ca0, Su0, Gl0, Co0],
-			   [Cp,  Ca,  Su,  Gl,  Co]))),
+			   [Cp0, Ca0, Su0, Gl0],
+			   [Cp,  Ca,  Su,  Gl]))),
 	    ARecords),
     ARecords \= [], % Is a valid assertion if it defines at least one Record
     maplist(assertion_records_helper(Match), ARecords, Records).
