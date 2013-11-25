@@ -89,10 +89,12 @@ check_properties(Head, M, Type, Cp, Ca, Su, Gl, Issues) :-
 	    Pairs),
     report_issues(Pairs).
 
+group_pairs_2(K-L, G-K) :- group_pairs_by_key(L, G).
+
 report_issues(Pairs) :-
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Grouped),
-    maplist(\ (K-L)^ (G-K)^ group_pairs_by_key(L, G), Grouped, Trans),
+    maplist(group_pairs_2, Grouped, Trans),
     keysort(Trans, TSorted),
     group_pairs_by_key(TSorted, TGrouped),
     maplist(property_issue, TGrouped).
