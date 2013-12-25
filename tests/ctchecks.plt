@@ -30,6 +30,7 @@ test(ctcex) :-
     with_output_to(string(Result), [ctcex]),
     comment_data(ctcex, Pattern),
     assertion(Pattern == Result),
+    set_prolog_flag(verbose, normal),
     set_prolog_flag(check_assertions, []).
 
 :- comment_data:disable.
