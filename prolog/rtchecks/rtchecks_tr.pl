@@ -238,13 +238,28 @@ remaining_preds(Preds, M) :-
   Note: Is weird to preserve ciao-compatibility
 */
 
-assertion_is_valid(ctcheck, Status, Type, _) :- valid_assertions(Status, Type).
+assertion_is_valid(ctcheck, Status, Type, _) :-
+    valid_ctcheck_assertions(Status, Type).
 assertion_is_valid(rtcheck, Status, Type, Comp) :-
 	( \+ memberchk(_:rtcheck(_), Comp) ->
 	  valid_assertions(Status, Type),
 	  \+ memberchk(_:no_rtcheck(_), Comp)
 	; true % Force run-time checking
 	).
+
+valid_ctcheck_assertions(Status, Type) :-
+    ctcheck_assr_status(Status),
+    ctcheck_assr_type(Type).
+
+ctcheck_assr_status(trust).
+ctcheck_assr_status(check).
+
+ctcheck_assr_type(calls).
+ctcheck_assr_type(entry).
+ctcheck_assr_type(pred).
+ctcheck_assr_type(prop).
+ctcheck_assr_type(exit).
+ctcheck_assr_type(success).
 
 black_list_pred('=', 2).
 

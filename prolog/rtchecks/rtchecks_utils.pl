@@ -83,14 +83,25 @@ prolog:error_message(unintercepted_signal(Signal)) -->
 prolog:message(ciao_messages(Messages)) -->
 	map(Messages, ciao_message).
 
+time_to_message_pred(ctcheck, ctcheck_to_messages).
+time_to_message_pred(rtcheck, rtcheck_to_messages).
+
 prolog:message(acheck(checks(Time), RTChecks)) -->
-	{map(RTChecks, check_to_messages(Time), Messages, [])},
+	{ time_to_message_pred(Time, Pred),
+	  map(RTChecks, Pred, Messages, [])
+	},
 	map(Messages, ciao_message).
 
 swi_message(Text) --> map(Text, message_to_swi), [nl].
 
-ciao_message(message_lns(Src, Ln0, _, _, Text)) -->
-    prolog:message_location(file(Src, Ln0, -1, _)),
+ciao_message(message_lns(Src, Ln, Pos, _, Text)) -->
+    { \+integer(Pos) ->
+      Location = file_term_position(Src, Pos)
+    ; Location = file(Src, Ln, -1, _)
+    },
+    {'$push_input_context'(rtchecks)},
+    prolog:message_location(Location),
+    {'$pop_input_context'},
     swi_message(Text).
 ciao_message(message(_, Text)) --> swi_message(Text).
 ciao_message(message(Text))    --> swi_message(Text).

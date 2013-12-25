@@ -28,23 +28,23 @@ prolog:message(acheck(prop_issue(Heads, IssuePIsL))) -->
     ['In assertions for ~w'-[Compacted], nl],
     issue_messages(IssuePIsL).
 
-ctcheck_head((M:T --> B), M) :- !, ctcheck_head((T --> B), M).
-ctcheck_head((H0  --> _), M) :- !,
+ctcheck_head(((M:T --> B)), M, P) :- !, ctcheck_head(((T --> B)), M, P).
+ctcheck_head(((H0  --> _)), M, P) :- !,
     H0 =.. L0,
     append(L0, [_, _], L),
     H =.. L,
-    ctcheck_head(H, M).
-ctcheck_head((T :- _), M) :- !, ctcheck_head(T, M).
-ctcheck_head(M:T,      _) :- !, ctcheck_head(T, M).
-ctcheck_head(H,        M) :-
-    ctcheck_goal(H, M).
+    ctcheck_head(H, M, P).
+ctcheck_head(((T :- _)), M, P) :- !, ctcheck_head(T, M, P).
+ctcheck_head(M:T,      _, P) :- !, ctcheck_head(T, M, P).
+ctcheck_head(H,        M, P) :-
+    ctcheck_goal(H, M, P).
 
 property_issue(IssuePIsL-Heads) :-
     print_message(error, acheck(prop_issue(Heads, IssuePIsL))).
 
-ctcheck_goal(Goal, M) :-
+ctcheck_goal(Goal, M, Pos) :-
     functor(Goal, F, A),
-    check_property(ctcheck, Goal, M, CTChecks),
+    check_property(ctcheck, Goal, M, Pos, CTChecks),
     property_issue([ctcheck-[CTChecks]]-[M:F/A]).
 
 :- create_prolog_flag(check_assertions, [], [type(term)]).
@@ -65,7 +65,7 @@ resolve_head((A;B), M, H) :- !,
     ).
 resolve_head(H, M, M:H).
 
-current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, PI-(Issue-Values)) :-
+current_property(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues, PI-(Issue-Values)) :-
     Type \= (test),
     functor(Head, HF,HA),
     PI=M:HF/HA,
@@ -82,10 +82,11 @@ current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, PI-(Issue-Values)) :-
     member(Issue, Issues),
     checker_t(Issue),
     (predicate_property(N:H, imported_from(IM)) -> true ; IM = N),
-    check_property(Issue, H, IM, Values).
+    check_property(Issue, H, IM, Pos, Values).
 
-check_properties(Head, M, Type, Cp, Ca, Su, Gl, Issues) :-
-    findall(Pair, current_property(Head, M, Type, Cp, Ca, Su, Gl, Issues, Pair),
+check_properties(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues) :-
+    findall(Pair,
+	    current_property(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues, Pair),
 	    Pairs),
     report_issues(Pairs).
 
@@ -99,16 +100,24 @@ report_issues(Pairs) :-
     group_pairs_by_key(TSorted, TGrouped),
     maplist(property_issue, TGrouped).
 
-check_property(defined, H, M, M:F/A) :-
+curr_location(Pos, Loc) :-
+    rtchecks_tr:location(Loc0),
+    ( nonvar(Pos) ->
+      Loc0 = loc(Src, Ln0, _),
+      Loc  = loc(Src, Ln0, Pos)
+    ; Loc = Loc0
+    ).
+
+check_property(defined, H, M, _, M:F/A) :-
     functor(H, F, A),
     \+ current_predicate(M:F/A).
-check_property(is_prop, H, M, M:F/A) :-
+check_property(is_prop, H, M, _, M:F/A) :-
     functor(H, F, A),
     \+ verif_is_property(M, F, A).
-check_property(ctcheck, H, M, CTChecks) :-
+check_property(ctcheck, H, M, Pos, CTChecks) :-
 				% compile-time checks. Currently only
 				% compatibility checks.
-    rtchecks_tr:location(Loc),
+    curr_location(Pos, Loc),
     rtchecks_tr:generate_ctchecks(H, M, Loc, Goal),
     save_rtchecks(M:Goal),	% Now execute the checks
     load_rtchecks(CTChecks),	% and collect the failures
@@ -123,28 +132,28 @@ verif_is_property(IM, F, A) :-
     ).
 
 term_expansion(assertions:assertion_db(Head, M, _Status, Type, Cp, Ca,
-				       Su, Gl, _Co, _), _) :-
+				       Su, Gl, _Co, _), Pos, _, _) :-
     !,
     current_prolog_flag(check_assertions, Issues),
     Issues \== [],
-    check_properties(Head, M, Type, Cp, Ca, Su, Gl, Issues),
+    check_properties(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues),
     fail.
 
-term_expansion(Term, _) :-
+term_expansion(Term, Pos, _, _) :-
     nonvar(Term),
     current_prolog_flag(check_assertions, Issues),
     memberchk(ctcheck, Issues),
     '$set_source_module'(M, M),
-    ctcheck_head(Term, M),
+    ctcheck_head(Term, M, Pos),
     fail.
 
 ct_black_list(basic_props).
 
-goal_expansion(Goal, _) :-
+goal_expansion(Goal, Pos, _, _) :-
     current_prolog_flag(check_assertions, Issues),
     memberchk(ctcheck, Issues),
     '$set_source_module'(M, M),
     \+ ct_black_list(M),
     (predicate_property(M:Goal, imported_from(IM)) -> true ; IM = M),
-    ctcheck_goal(Goal, IM),
+    ctcheck_goal(Goal, IM, Pos),
     fail.
