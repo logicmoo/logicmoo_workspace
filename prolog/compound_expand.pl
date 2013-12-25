@@ -13,8 +13,8 @@
 */
 
 :- multifile
-    system:term_expansion/2,
-    system:goal_expansion/2.
+    system:term_expansion/4,
+    system:goal_expansion/4.
 
 :- meta_predicate no_duplicates(0, ?).
 no_duplicates(Goal, Term) :-
@@ -34,16 +34,30 @@ expansion_module(M, EM) :-
     module_property(EM, file(EF)),
     no_duplicates('$load_context_module'(EF, M, _), EF-M).
 
-system:goal_expansion(Goal0, Goal) :-
+implemented_pi(M:F/A) :-
+    functor(H, F, A),
+    once(predicate_property(M:H, visible)),
+    \+ predicate_property(M:H, imported_from(_)).
+
+system:goal_expansion(Goal0, Pos0, Goal, Pos) :-
     '$set_source_module'(M, M),
     expansion_module(M, EM),
-    EM:goal_expansion(Goal0, Goal),
+    ( implemented_pi(EM:goal_expansion/4) ->
+      EM:goal_expansion(Goal0, Pos0, Goal, Pos)
+    ; EM:goal_expansion(Goal0, Goal),
+      Pos = Pos0
+    ),
     Goal0 \== Goal,
     !.
 
-system:term_expansion(Term0, Term) :-
+system:term_expansion(Term0, Pos0, Term, Pos) :-
     '$set_source_module'(M, M),
-    findall(EM-[term_expansion/2], expansion_module(M, EM), ML),
+    findall(EM-PI, ( expansion_module(M, EM),
+		     ( implemented_pi(EM:term_expansion/4)
+		     ->PI=[term_expansion/4]
+		     ; PI=[term_expansion/2]
+		     )), ML),
     ML \= [],
-    '$expand':call_term_expansion(ML, Term0, _, Term, _),
-    Term0 \== Term.				% Fail to try other expansions
+    '$expand':call_term_expansion(ML, Term0, Pos0, Term, Pos),
+    Term0 \== Term,
+    [Term0] \== Term.		% Fail to try other expansions
