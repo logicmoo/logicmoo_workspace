@@ -2,7 +2,7 @@
 
 /* This module allows to define compositional term and goal expansions,
    using this module in a module that already defines the predicates
-   term_expansion/2 and goal_expansion/2 but don't export them.
+   term_expansion/2/4 and goal_expansion/2/4 but don't export them.
    
    The composition of expansions is instrumental to grammar and
    syntacx extensions. We do not need to deal with all the complexity
