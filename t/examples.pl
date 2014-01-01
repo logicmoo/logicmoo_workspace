@@ -6,6 +6,9 @@
 deadbeef =~ '[a-f0-9]+'.
 "1973c" =~ '[a-f0-9]+'.
 `feed` =~ '[a-f0-9]+'.
+'C' =~ '[A-Z0-9]'.
+'trailing-dash' =~ '[a-zA-Z0-9-]+'.
+'leading-dash' =~ '[-a-zA-Z0-9]+'.
 
 % + meta character
 abbba =~ 'ab+a'.

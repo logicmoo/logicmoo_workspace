@@ -99,10 +99,19 @@ elemental_re(Opt, neg_set(X)) -->
     !,  % don't backtrack into pos_set/1 clause below
     set_items(Opt,X),
     "]".
+elemental_re(Opt, pos_set([char(0'-)|X])) -->
+    "[-",
+    !,  % don't backtrack into pos_set/1 clause below
+    set_items(Opt,X),
+    "]".
 elemental_re(Opt, pos_set(X)) -->
     "[",
     set_items(Opt,X),
     "]".
+elemental_re(Opt, pos_set([char(0'-)|X])) -->
+    "[",
+    set_items(Opt,X),
+    "-]".
 
 
 % true if argument is a code for a regular expression meta character
