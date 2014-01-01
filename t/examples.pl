@@ -1,5 +1,9 @@
 :- use_module(library(regex)).
 
+valid_email(Email) :-
+    % should have a leading ^
+    Email =~ '[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$'/i.
+
 :- use_module(library(tap)).
 
 % character ranges
@@ -54,3 +58,7 @@ boot =~ 'bo{2,4}t'.
 booot =~ 'bo{2,4}t'.
 boooot =~ 'bo{2,4}t'.
 booooot \~ 'bo{2,4}t'.
+
+% email
+valid_email("michael@ndrix.org").
+valid_email("some-one@googlemail.co.uk").
