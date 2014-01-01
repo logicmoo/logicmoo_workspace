@@ -69,7 +69,7 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 
 # Changes in this Version
 
-  * Support SWI-Prolog version 7
+  * Support literal dash in character classes
 
 # Acknowledgements
 
