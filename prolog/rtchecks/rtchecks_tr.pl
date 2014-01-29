@@ -187,12 +187,20 @@ inline_db(_, _, _, _) :- fail.
 ciao:declaration_hook(nortchecked, rtchecks:nortchecked(M)) :-
     '$set_source_module'(M, M).
 
+rel_file_name(ASrc, Src) :-
+    ( working_directory(Dir, Dir),
+      atom_concat(Dir, Src, ASrc)
+    ->true
+    ; Src = ASrc
+    ).
+
 :- dynamic location/3.
 location(Loc) :-
-	ignore((( location(Src, Ln0, Ln1)
-		; source_location(Src, Ln0),
+	ignore((( location(ASrc, Ln0, Ln1)
+		; source_location(ASrc, Ln0 ),
 		  Ln0 = Ln1
 		),
+		rel_file_name(ASrc, Src),
 		Loc = loc(Src, Ln0, Ln1)
 	       )).
 
@@ -839,8 +847,10 @@ remaining_pred(F, A, M) :-
 
 current_assertion(Pred0, M, TimeCheck,
 	    assr(Pred, Status, Type, Compat, Call, Succ, Comp, Loc, PredName, CompatName, CallName, SuccName, CompName, Dict)) :-
+	working_directory(Dir, Dir),
 	current_assertion_2(Pred0, TimeCheck, Status, Type, Pred, Compat, Call,
-			    Succ, Comp0, Dict0, S, LB, LE, _F, _A, M),
+			    Succ, Comp0, Dict0, AS, LB, LE, _F, _A, M),
+	rel_file_name(AS, S),
 	Loc = loc(S, LB, LE),
 	collapse_dups(Comp0, Comp),
 	Term = n(Pred, Compat, Call, Succ, Comp),
