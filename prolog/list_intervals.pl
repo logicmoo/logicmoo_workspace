@@ -27,20 +27,37 @@
     the GNU General Public License.
 */
 
-:- module(compact_list, [compact_list/2]).
+:- module(list_intervals, [list_intervals/2,
+			   compact_intervals/2,
+			   repack_list/2]).
 
-%% compact_list(+list,-list(pairs)) is det.
-%% compact_list(-list,+list(pairs)) is det.
-%
-% :- pred compact_list(?sorted, ?sorted).
-%
-compact_list([], []).
-compact_list([From|L], [From-To|PairL]) :-
-    compact_list(L, From, To, PairL).
+:- use_module(library(sort)).
 
-compact_list([Elem|L], From, To, PairL) :-
+%% list_intervals(+list,-list(pairs)) is det.
+%% list_intervals(-list,+list(pairs)) is det.
+%
+% :- pred list_intervals(?sorted, ?sorted).
+%
+list_intervals([], []).
+list_intervals([From|L], [From-To|PairL]) :-
+    list_intervals(L, From, To, PairL).
+
+list_intervals([Elem|L], From, To, PairL) :-
     (nonvar(To) -> From < To ; true), % make it reversible
     succ(From, Elem), !,
-    compact_list(L, Elem, To, PairL).
-compact_list(L, To, To, PairL) :-
-    compact_list(L, PairL).
+    list_intervals(L, Elem, To, PairL).
+list_intervals(L, To, To, PairL) :-
+    list_intervals(L, PairL).
+
+compact_intervals(L, R) :-
+    maplist(compact_interval, L, R).
+
+compact_interval(To-To,  To) :- To \= _-_, !.
+compact_interval(FromTo, FromTo).
+
+repack_list(List0, List) :-
+    compact_intervals(List1, List0),
+    list_intervals(List2, List1),
+    sort(List2, List3),
+    list_intervals(List3, List4),
+    compact_intervals(List4, List).
