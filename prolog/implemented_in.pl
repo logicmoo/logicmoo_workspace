@@ -3,6 +3,8 @@
 :- use_module(tools(tools_common)).
 :- use_module(tools(record_locations_db)).
 
+:- use_module(library(prolog_codewalk), []). % for message_location//1
+
 :- multifile
 	prolog:message//1,
 	prolog:message_location//1.
