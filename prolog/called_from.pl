@@ -1,11 +1,16 @@
 :- module(called_from, [called_from/1, called_from/2]).
 
-:- use_module(tools(tools_common)).
+:- use_module(library(normalize_head)).
+:- use_module(library(normalize_pi)).
+:- use_module(library(implementation_module)).
 :- use_module(tools(location_utils)).
-:- use_module(tools(record_locations_db)).
+
+:- dynamic
+    record_locations:declaration_location/3.
 
 :- multifile
-	prolog:message//1.
+    prolog:message//1,
+    record_locations:declaration_location/3.
 
 :- dynamic called_from_db/2.
 
@@ -34,7 +39,7 @@ called_from_meta(Ref0, OnTrace) :-
 			  ; Ref = M:H,
 			    nonvar(H),
 			    functor(H, F, A),
-			    declaration_location(M:F/A, dynamic(Type, Call), From),
+			    record_locations:declaration_location(M:F/A, dynamic(Type, Call), From),
 			    Type \= def,
 			    Args = [M:F/A, Call]
 			  ),

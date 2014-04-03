@@ -1,17 +1,19 @@
 :- module(implemented_in, [implemented_in/1]).
 
-:- use_module(tools(tools_common)).
-:- use_module(tools(record_locations_db)).
-
 :- use_module(library(prolog_codewalk), []). % for message_location//1
+:- use_module(library(normalize_head)).
+
+:- dynamic
+    record_locations:declaration_location/3.
 
 :- multifile
-	prolog:message//1,
-	prolog:message_location//1.
+    prolog:message//1,
+    prolog:message_location//1,
+    record_locations:declaration_location/3.
 
 prolog:message(acheck(implemented_in(From, Args))) -->
-	prolog:message_location(From),
-	['Implements ~w'-Args].
+    prolog:message_location(From),
+    ['Implements ~w'-Args].
 
 implemented_in(MGoal0) :-
     normalize_head(MGoal0, MGoal),
@@ -24,7 +26,7 @@ implemented_in(MGoal0) :-
 		), UML),
     sort(UML, ML),
     member(M, ML),
-    ( declaration_location(M:F/A, Declaration, From),
+    ( record_locations:declaration_location(M:F/A, Declaration, From),
       Declaration \= dynamic(query, _),
       Args = [Declaration]
     ;
