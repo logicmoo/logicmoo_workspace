@@ -6,7 +6,7 @@
 			   record_location/3, option_filechk/2,
 			   option_dirchk/2]).
 
-:- use_module(tools(database_fact)).
+:- use_module(library(database_fact)).
 
 :- dynamic
     record_locations:declaration_location/3.
