@@ -3,7 +3,7 @@
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(implementation_module)).
-:- use_module(tools(location_utils)).
+:- use_module(library(location_utils)).
 
 :- dynamic
     record_locations:declaration_location/3.
