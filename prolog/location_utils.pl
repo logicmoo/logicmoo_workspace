@@ -105,8 +105,10 @@ predicate_properties(P, List) :-
 		  \+ memberchk(Prop, [interpreted,
 				      visible,
 				      number_of_rules(_),
+				      number_of_clauses(_),
 				      imported_from(_),
 				      file(_),
+				      indexed(_),
 				      line_count(_)])
 		), List).
 
