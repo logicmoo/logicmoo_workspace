@@ -91,7 +91,10 @@ definition_location(M:F/A, Declaration, From) :-
 	functor(H, F, A),
 	P = M:H,
 	predicate_properties(P, List),
-	Declaration = predicate(List),
+	( List = []
+	->Declaration = predicate
+	; Declaration = predicate(List)
+	),
 	predicate_from(P, From).
 
 predicate_location(P, Loc) :-
