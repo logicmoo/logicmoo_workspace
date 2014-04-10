@@ -1,4 +1,4 @@
-:- module(implemented_in, [implemented_in/1]).
+:- module(implemented_in, [implemented_in/1, implemented_in/3]).
 
 :- use_module(library(prolog_codewalk), []). % for message_location//1
 :- use_module(library(normalize_head)).
@@ -15,7 +15,7 @@ prolog:message(acheck(implemented_in(From, Args))) -->
     prolog:message_location(From),
     ['Implements ~w'-Args].
 
-implemented_in(MGoal0) :-
+implemented_in(MGoal0, From, Args) :-
     normalize_head(MGoal0, MGoal),
     M:Goal = MGoal,
     functor(Goal, F, A),
@@ -37,7 +37,10 @@ implemented_in(MGoal0) :-
       Args = [M:F/A/N],
       N1 is N + 1,
       nb_setarg(1, Counter, N1)
-    ),
+    ).
+
+implemented_in(Goal) :-
+    implemented_in(Goal, From, Args),
     print_message(information, acheck(implemented_in(From, Args))),
     fail.
 implemented_in(_).
