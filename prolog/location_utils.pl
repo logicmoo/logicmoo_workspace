@@ -42,7 +42,8 @@ option_files(AliasL, FileChk) :-
 						  solutions(all)]),
 	      expand_file_name(Pattern, FileL0 ),
 	      member(File, FileL0 )),
-	    FileL),
+	    FileU),
+    sort(FileU, FileL),
     FileChk = in_set(FileL).
 
 option_dirs(AliasL, FileChk) :-
@@ -52,7 +53,8 @@ option_dirs(AliasL, FileChk) :-
 						  solutions(all)]),
 	      expand_file_name(Pattern, DirL),
 	      member(Dir, DirL)),
-	    DirL),
+	    DirU),
+    sort(DirU, DirL),
     FileChk = in_dir(DirL).
 
 option_dirchk(OptionL, DirChk) :-
@@ -62,7 +64,15 @@ option_dirchk(OptionL, DirChk) :-
     ->option_dirs([Alias], DirChk)
     ; DirChk = r_true
     ).
-    
+
+option_pred(Head, FileChk) :-
+    findall(File,
+	    ( implemented_in(Head, From, _),
+	      from_to_file(From, File)
+	    ), FileU),
+    sort(FileU, FileL),
+    FileChk = in_set(FileL).
+
 option_filechk(OptionL, FileChk) :-
     ( memberchk(files(AliasL), OptionL)
     ->option_files(AliasL, FileChk)
@@ -72,6 +82,8 @@ option_filechk(OptionL, FileChk) :-
     ->option_dirs(AliasL, FileChk)
     ; memberchk(dir(Alias), OptionL)
     ->option_dirs([Alias], FileChk)
+    ; memberchk(pred(Head), OptionL)
+    ->option_pred(Head, FileChk)
     ; FileChk = r_true
     ).
 
