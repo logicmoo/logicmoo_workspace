@@ -7,6 +7,8 @@
 			   option_dirchk/2]).
 
 :- use_module(library(database_fact)).
+:- use_module(library(normalize_head)).
+:- use_module(library(normalize_pi)).
 
 :- dynamic
     record_locations:declaration_location/3.
@@ -87,27 +89,40 @@ option_filechk(OptionL, FileChk) :-
     ; FileChk = r_true
     ).
 
+% For preds + decls
 property_location(Prop, Declaration, Location) :-
 	property_from(Prop, Declaration, From),
 	from_location(From, Location).
 
 % non det
-property_from(PI, Declaration, From) :-
-	( ( record_locations:declaration_location(PI, Declaration, From)
-	  ; definition_location(PI, Declaration, From)
-	  ) *-> true
-	; From = []
-	).
+property_from(Head, Declaration, From) :-
+    ( ( dec_location(Head, Declaration, From)
+      ; def_location(Head, Declaration, From)
+      ) *-> true
+    ; From = []
+    ).
 
-definition_location(M:F/A, Declaration, From) :-
-	functor(H, F, A),
-	P = M:H,
-	predicate_properties(P, List),
-	( List = []
-	->Declaration = predicate
-	; Declaration = predicate(List)
-	),
-	predicate_from(P, From).
+dec_location(Head/0, Declaration, From) :-
+    normalize_pi(Head, PI),
+    record_locations:declaration_location(PI, Declaration, From).
+dec_location(M:Head, Declaration, From) :-
+    normalize_pi(M:Head, PI),
+    record_locations:declaration_location(PI, Declaration, From).
+
+clause_from(Ref, clause(Ref)).
+
+def_location(Head/I, clause(I), From) :-
+    normalize_head(Head, P),
+    nth_clause(P, I, Ref),
+    clause_from(Ref, From).
+def_location(M:Head, Declaration, From) :-
+    normalize_head(M:Head, P),
+    predicate_properties(P, List),
+    ( List = []
+    ->Declaration = predicate
+    ; Declaration = predicate(List)
+    ),
+    predicate_from(P, From).
 
 predicate_location(P, Loc) :-
     predicate_from(P, From),
