@@ -5,7 +5,7 @@
    term_expansion/2/4 and goal_expansion/2/4 but don't export them.
    
    The composition of expansions is instrumental to grammar and
-   syntacx extensions. We do not need to deal with all the complexity
+   syntax extensions. We do not need to deal with all the complexity
    that the Ciao package system have, so with this helper the port of
    Ciao Packages to SWI Prolog can be achieved smoothly and such
    modules can be used in SWI Programs that do not requires the Ciao
