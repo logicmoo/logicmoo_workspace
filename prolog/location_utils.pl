@@ -79,7 +79,7 @@ option_filechk(OptionL, FileChk) :-
     ( memberchk(files(AliasL), OptionL)
     ->option_files(AliasL, FileChk)
     ; memberchk(file(Alias), OptionL)
-    ->option_dirs([Alias], FileChk)
+    ->option_files([Alias], FileChk)
     ; memberchk(dirs(AliasL), OptionL)
     ->option_dirs(AliasL, FileChk)
     ; memberchk(dir(Alias), OptionL)
