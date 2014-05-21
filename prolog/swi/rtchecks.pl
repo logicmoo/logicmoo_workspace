@@ -2,14 +2,9 @@
 
 % A wrapper for the Ciao Runtime-Checks library
 :- use_module(library(compound_expand)).
-
 :- expects_dialect(ciao).
-
-user:file_search_path(rtchecks, library(rtchecks)).
-
 :- use_package(rtchecks).
-:- reexport(rtchecks(rtchecks_rt)).
-:- reexport(rtchecks(rtchecks_utils)).
+:- reexport(library(swi/rtchecks_lib)).
 
 % To allow usage of rtchecks in normal SWI programs:
 
