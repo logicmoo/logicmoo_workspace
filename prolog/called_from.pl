@@ -31,6 +31,8 @@ called_from(Ref, Caller, Sorted) :-
     called_from_meta(Ref, collect_call_point(Caller), Sorted).
 
 collect_called_from(Ref, OnTrace) :-
+    cleanup_locations(_, dynamic(_, _), _),
+    retractall(called_from_db(_, _, _)),
     setup_call_cleanup(( current_prolog_flag(verbose, Verbose),
 			 set_prolog_flag(verbose, silent)
 		       ),
