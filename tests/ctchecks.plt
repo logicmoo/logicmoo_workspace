@@ -8,7 +8,7 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 :- use_module(library(swi/ctchecks)).
 
-:- use_module(comment_data).
+:- use_module(library(comment_data)).
 
 :- begin_tests(ctchecks).
 
