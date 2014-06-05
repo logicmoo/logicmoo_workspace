@@ -7,7 +7,6 @@
 user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 :- use_module(library(swi/ctchecks)).
-
 :- use_module(library(comment_data)).
 
 :- begin_tests(ctchecks).
@@ -16,15 +15,15 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 /* $ctcex$
 ERROR: In assertions for [ctcex:a/2]
-ERROR: ctcex.pl:11: Compile-Time failure in assertion for ctcex:a(a,b).
+ERROR: ctcex.pl:13: Compile-Time failure in assertion for ctcex:a(a,b).
 ERROR: 	In *compat*, unsatisfied properties: 
 ERROR: 		[int(a),list(b)].
-ERROR: ctcex.pl:14:0: Failed in ctcex:a(a,b).
+ERROR: ctcex.pl:16:0: Failed in ctcex:a(a,b).
 ERROR: In assertions for [ctcex:a/2]
-ERROR: ctcex.pl:11: Compile-Time failure in assertion for ctcex:a(1,b).
+ERROR: ctcex.pl:13: Compile-Time failure in assertion for ctcex:a(1,b).
 ERROR: 	In *compat*, unsatisfied properties: 
 ERROR: 		[list(b)].
-ERROR: ctcex.pl:17:4: Failed in ctcex:a(1,b).
+ERROR: ctcex.pl:19:4: Failed in ctcex:a(1,b).
 */
 
 test(ctcex) :-

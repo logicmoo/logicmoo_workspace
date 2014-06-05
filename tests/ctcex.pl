@@ -2,6 +2,8 @@
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/ctchecks)).
+:- use_module(library(swi/nativeprops)).
+:- use_module(library(swi/basicprops)).
 
 :- set_prolog_flag(check_assertions, [defined,
 				      is_prop,
