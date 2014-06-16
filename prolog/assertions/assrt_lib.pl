@@ -465,6 +465,7 @@ assertion_records(Assertions, Records, CM, Dict) :-
     ARecords \= [], % Is a valid assertion if it defines at least one Record
     maplist(assertion_records_helper(Match), ARecords, Records).
 
+:- public compact_module_call/3.
 compact_module_call(M, M:C, C) :- !.
 compact_module_call(M, (A0;B0), (A;B)) :- !,
     maplist(compact_module_call(M), A0, A),
