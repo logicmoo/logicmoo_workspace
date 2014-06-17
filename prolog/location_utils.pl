@@ -148,14 +148,18 @@ predicate_from(P, file(File, Line, -1, 0)) :-
 	predicate_property(P, file(File)),
 	predicate_property(P, line_count(Line)).
 
+record_location_goal(Goal, Type, From) :-
+    normalize_pi(Goal, PI),
+    ground(PI),
+    record_location(PI, Type, From).
+
 record_location(PI, Type, From) :-
     ( record_locations:declaration_location(PI, Type, From)
     ->true
     ; assertz(record_locations:declaration_location(PI, Type, From))
     ).
 
-:- meta_predicate record_location_meta(+,+,3,3).
-record_location_meta(MCall, From, FactBuilder, Recorder) :-
+record_location_meta_each(MCall, From, FactBuilder, Recorder) :-
     (predicate_property(MCall, imported_from(IM)) -> true ; IM:_ = MCall),
     MCall = SM:Call,
     call(FactBuilder, Def, IM:Call, MFact),
@@ -164,15 +168,16 @@ record_location_meta(MCall, From, FactBuilder, Recorder) :-
     ; (predicate_property(SM:MFact, imported_from(M)) -> true ; M = SM),
       Fact = MFact
     ),
-    nonvar(M),
-    nonvar(Fact),
-    functor(Fact, F, A),
-    call(Recorder, M:F/A, dynamic(Def, Call), From),
+    call(Recorder, M:Fact, dynamic(Def, IM:Call), From).
+
+:- meta_predicate record_location_meta(+,+,3,3).
+record_location_meta(MCall, From, FactBuilder, Recorder) :-
+    record_location_meta_each(MCall, From, FactBuilder, Recorder),
     fail.
 record_location_meta(_, _, _, _).
 
 record_location_dynamic(MCall, From) :-
-    record_location_meta(MCall, From, database_fact_ort, record_location).
+    record_location_meta(MCall, From, database_fact_ort, record_location_goal).
 
 cleanup_locations(PI, Type, From) :-
     retractall(record_locations:declaration_location(PI, Type, From)).
