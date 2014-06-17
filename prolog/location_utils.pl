@@ -162,13 +162,13 @@ record_location(PI, Type, From) :-
 record_location_meta_each(MCall, From, FactBuilder, Recorder) :-
     (predicate_property(MCall, imported_from(IM)) -> true ; IM:_ = MCall),
     MCall = SM:Call,
-    call(FactBuilder, Def, IM:Call, MFact),
-    nonvar(MFact),
-    ( MFact = M:Fact -> true
-    ; (predicate_property(SM:MFact, imported_from(M)) -> true ; M = SM),
-      Fact = MFact
+    call(FactBuilder, Def, IM:Call, Fact),
+    ( (var(Fact) ; Fact = _:_) ->
+      MFact = Fact
+    ; (predicate_property(SM:Fact, imported_from(M))->true ; M = SM),
+      MFact = M:Fact
     ),
-    call(Recorder, M:Fact, dynamic(Def, IM:Call), From).
+    call(Recorder, MFact, dynamic(Def, IM:Call), From).
 
 :- meta_predicate record_location_meta(+,+,3,3).
 record_location_meta(MCall, From, FactBuilder, Recorder) :-
