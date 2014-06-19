@@ -36,10 +36,11 @@ collect_called_from(Ref, OnTrace) :-
     setup_call_cleanup(( current_prolog_flag(verbose, Verbose),
 			 set_prolog_flag(verbose, silent)
 		       ),
-		       prolog_walk_code([trace_reference(Ref),
-					 module_class([user, system, library]),
-					 infer_meta_predicates(false),
+		       prolog_walk_code([infer_meta_predicates(false),
+					 autoload(false),
 					 evaluate(false),
+					 trace_reference(Ref),
+					 module_class([user, system, library]),
 					 on_trace(OnTrace)]),
 		       set_prolog_flag(verbose, Verbose)
 		      ).
