@@ -1,14 +1,15 @@
-:- module(location_utils, [property_location/3, predicate_location/2,
-			   property_from/3, record_location_dynamic/2,
-			   predicate_from/2, cleanup_locations/3,
-			   from_location/2, from_to_file/2, in_set/2,
-			   in_dir/2, r_true/1, record_location_meta/4,
-			   record_location/3, option_filechk/2,
-			   option_dirchk/2]).
+:- module(location_utils,
+	[property_location/3, predicate_location/2, property_from/3,
+	 record_location_dynamic/2, predicate_from/2, cleanup_locations/3,
+	 from_location/2, from_to_file/2, in_set/2, in_dir/2, r_true/1,
+	 record_location_meta/4, record_location/3,
+	 option_allchk/3, option_filechk/3, option_dirchk/3]).
 
+:- use_module(library(lists)).
 :- use_module(library(database_fact)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
+:- use_module(library(implemented_in)).
 
 :- dynamic
     record_locations:declaration_location/3.
@@ -37,6 +38,7 @@ in_dir(DirL, File) :-
 
 r_true(_).
 
+option_files([],     r_true)  :- !.
 option_files(AliasL, FileChk) :-
     findall(File,
 	    ( member(Alias, AliasL),
@@ -48,6 +50,7 @@ option_files(AliasL, FileChk) :-
     sort(FileU, FileL),
     FileChk = in_set(FileL).
 
+option_dirs([],     r_true)  :- !.
 option_dirs(AliasL, FileChk) :-
     findall(Dir,
 	    ( member(Alias, AliasL),
@@ -59,35 +62,54 @@ option_dirs(AliasL, FileChk) :-
     sort(DirU, DirL),
     FileChk = in_dir(DirL).
 
-option_dirchk(OptionL, DirChk) :-
-    ( memberchk(dirs(AliasL), OptionL)
-    ->option_dirs(AliasL, DirChk)
-    ; memberchk(dir(Alias), OptionL)
-    ->option_dirs([Alias], DirChk)
-    ; DirChk = r_true
-    ).
+option_dirchk(OptionL0, OptionL, DirChk) :-
+    select_option(dirs(AliasL0), OptionL0, OptionL1, []),
+    select_option(dir( Alias),   OptionL1, OptionL,  []),
+    ( Alias = []
+    ->AliasL = AliasL0
+    ; AliasL = [Alias|AliasL0]
+    ),
+    option_dirs(AliasL, DirChk).
 
-option_pred(Head, FileChk) :-
+option_pred([],   r_true)  :- !.
+option_pred(Head, PredChk) :-
     findall(File,
 	    ( implemented_in(Head, From, _),
 	      from_to_file(From, File)
 	    ), FileU),
     sort(FileU, FileL),
-    FileChk = in_set(FileL).
+    PredChk = in_set(FileL).
 
-option_filechk(OptionL, FileChk) :-
-    ( memberchk(files(AliasL), OptionL)
-    ->option_files(AliasL, FileChk)
-    ; memberchk(file(Alias), OptionL)
-    ->option_files([Alias], FileChk)
-    ; memberchk(dirs(AliasL), OptionL)
-    ->option_dirs(AliasL, FileChk)
-    ; memberchk(dir(Alias), OptionL)
-    ->option_dirs([Alias], FileChk)
-    ; memberchk(pred(Head), OptionL)
-    ->option_pred(Head, FileChk)
-    ; FileChk = r_true
-    ).
+option_filechk(OptionL0, OptionL, FileChk) :-
+    select_option(files(AliasL0), OptionL0, OptionL1, []),
+    select_option(file( Alias),   OptionL1, OptionL,  []),
+    ( Alias = []
+    ->AliasL = AliasL0
+    ; AliasL = [Alias|AliasL0]
+    ),
+    option_files(AliasL, FileChk).
+
+option_predchk(OptionL0, OptionL, PredChk) :-
+    select_option(pred(Head), OptionL0, OptionL, []),
+    option_pred(Head, PredChk).
+
+simplify_chks([], []).
+simplify_chks([Elem|L0 ], L) :-
+    simplify_chk(Elem, L0, L1, L, L2),
+    simplify_chks(L1, L2).
+
+simplify_chk(in_set(A), L0, [in_set(I)|L1], L, L) :-
+    select(in_set(B), L0, L1),
+    !,
+    intersection(A, B, I).
+simplify_chk(Elem, L0, L0, [Elem|L], L).
+
+option_allchk(OptionL0, OptionL, AllChkL) :-
+    option_dirchk(OptionL0,  OptionL1, DirChk),
+    option_filechk(OptionL1, OptionL2, FileChk),
+    option_predchk(OptionL2, OptionL,  PredChk),
+    sort([DirChk,FileChk,PredChk], AllChkL0),
+    simplify_chks(AllChkL0, AllChkL).
 
 % For preds + decls
 property_location(Prop, Declaration, Location) :-
