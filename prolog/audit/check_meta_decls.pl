@@ -42,7 +42,7 @@ cleanup_metainference :-
 hide_missing_meta_pred(prolog:generated_predicate/1).
 
 audit:check(meta_decls, M:Spec, Pairs, OptionL) :-
-    option_filechk(OptionL, FileChk),
+    option_filechk(OptionL, _, FileChkL),
     cleanup_metainference,
     prolog_walk_code([autoload(false)]),
     findall(information-((Loc/M)-Spec),
@@ -55,7 +55,7 @@ audit:check(meta_decls, M:Spec, Pairs, OptionL) :-
 	      \+ hide_missing_meta_pred(PI),
 	      property_from(PI, _, From),
 	      ( from_to_file(From, File)
-	      ->call(FileChk, File)
+	      ->forall(member(FileChk, FileChkL), call(FileChk, File))
 	      ; true
 	      ),
 	      from_location(From, Loc)), Pairs).
