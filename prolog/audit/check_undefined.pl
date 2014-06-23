@@ -1,9 +1,9 @@
 :- module(check_undefined, []).
 
 % A wrapper from library(check) to tools(audit)
-
-:- use_module(tools(tools_common)).
 :- use_module(library(location_utils)).
+:- use_module(library(normalize_head)).
+:- use_module(library(referenced_by)).
 :- use_module(library(check), []).
 
 :- multifile
@@ -11,7 +11,7 @@
     prolog:message//1.
 
 audit:check(undefined, Ref0, Results, OptionL) :-
-    option_filechk(OptionL, FileChk),
+    option_allchk(OptionL, _, FileChk),
     normalize_head(Ref0, Ref),
     check_undefined(collect_undef(FileChk, Ref), Results).
 

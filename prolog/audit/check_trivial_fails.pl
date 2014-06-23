@@ -9,7 +9,7 @@
 :- dynamic trivial_fail/2.
 
 audit:check(trivial_fails, Ref, Result, OptionL) :-
-    option_filechk(OptionL, FileChk),
+    option_allchk(OptionL, _, FileChk),
     check_trivial_fails(Ref, collect_trivial_fail(FileChk), Result).
 
 :- meta_predicate check_trivial_fails(?,3,-).

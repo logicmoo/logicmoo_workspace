@@ -2,7 +2,7 @@
 	[property_location/3, predicate_location/2, property_from/3,
 	 record_location_dynamic/2, predicate_from/2, cleanup_locations/3,
 	 from_location/2, from_to_file/2, in_set/2, in_dir/2, r_true/1,
-	 record_location_meta/4, record_location/3,
+	 conj_chks/2, record_location_meta/4, record_location/3,
 	 option_allchk/3, option_filechk/3, option_dirchk/3]).
 
 :- use_module(library(lists)).
@@ -102,14 +102,23 @@ simplify_chk(in_set(A), L0, [in_set(I)|L1], L, L) :-
     select(in_set(B), L0, L1),
     !,
     intersection(A, B, I).
+simplify_chk(r_true, L0, L0, L, L) :- !.
 simplify_chk(Elem, L0, L0, [Elem|L], L).
 
-option_allchk(OptionL0, OptionL, AllChkL) :-
+conj_chks(AllChkL, File) :-
+    forall(member(AllChk, AllChkL), call(AllChk, File)).
+
+compound_chks([],       r_true) :- !.
+compound_chks([AllChk], AllChk) :- !.
+compound_chks(AllChkL, conj_chks(AllChkL)) :- !.
+
+option_allchk(OptionL0, OptionL, AllChk) :-
     option_dirchk(OptionL0,  OptionL1, DirChk),
     option_filechk(OptionL1, OptionL2, FileChk),
     option_predchk(OptionL2, OptionL,  PredChk),
     sort([DirChk,FileChk,PredChk], AllChkL0),
-    simplify_chks(AllChkL0, AllChkL).
+    simplify_chks(AllChkL0, AllChkL),
+    compound_chks(AllChkL, AllChk).
 
 % For preds + decls
 property_location(Prop, Declaration, Location) :-

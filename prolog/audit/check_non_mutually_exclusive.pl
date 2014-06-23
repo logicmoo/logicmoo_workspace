@@ -1,7 +1,9 @@
 :- module(check_non_mutually_exclusive, []).
 
-:- use_module(tools(tools_common)).
 :- use_module(library(location_utils)).
+:- use_module(library(maplist_dcg)).
+:- use_module(library(normalize_head)).
+:- use_module(library(referenced_by)).
 :- use_module(library(check), []).
 
 :- multifile
@@ -12,7 +14,7 @@
 :- dynamic mutually_exclusive_db/1.
 
 audit:check(non_mutually_exclusive, Ref, Result, OptionL) :-
-    option_filechk(OptionL, FileChk),
+    option_allchk(OptionL, _, FileChk),
     findall(Pairs, check_non_mutually_exclusive(FileChk, Ref, Pairs), Result).
 
 check_non_mutually_exclusive(FileChk, Ref0, warning-(Ref-LocIdxs)) :-

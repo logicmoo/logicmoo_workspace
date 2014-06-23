@@ -10,10 +10,16 @@
 
 */
 
-:- use_module(library(is_entry_point)).
+:- use_module(library(auditable_predicate)).
+:- use_module(library(current_defined_predicate)).
 :- use_module(library(database_fact)).
+:- use_module(library(is_entry_point)).
 :- use_module(library(location_utils)).
+:- use_module(library(maplist_dcg)).
+:- use_module(library(normalize_head)).
+:- use_module(library(normalize_pi)).
 :- use_module(library(prolog_codewalk)).
+:- use_module(library(referenced_by)).
 
 :- multifile
     prolog:message//1,
@@ -33,7 +39,7 @@ collect_unused(FileChk, MGoal, Caller, From) :-
     record_location_meta(MGoal, From, cu_callee_hook, cu_caller_hook(Caller)).
 
 audit:check(unused, Ref, Result, OptionL) :-
-    option_filechk(OptionL, FileChk),
+    option_allchk(OptionL, _, FileChk),
     check_unused(Ref, FileChk, collect_unused(FileChk), Result).
 
 :- meta_predicate check_unused(?, ?, 3, -).
@@ -81,7 +87,7 @@ mark_rec(M:F/A) :-
     ).
 
 % Tarjan's scc algorithm:
-:- use_module(audit_tools(sccs)).
+:- use_module(library(audit/sccs)).
 
 sweep(Ref, FileChk, Pairs) :-
     findall(PI, unmarked(Ref, FileChk, PI), Nodes),

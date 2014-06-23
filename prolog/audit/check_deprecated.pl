@@ -1,7 +1,11 @@
 :- module(check_deprecated, []).
 
-:- use_module(tools(tools_common)).
+:- use_module(library(auditable_predicate)).
+:- use_module(library(current_defined_predicate)).
+:- use_module(library(implementation_module)).
+:- use_module(library(normalize_head)).
 :- use_module(library(location_utils)).
+:- use_module(library(referenced_by)).
 :- use_module(library(check), []).
 
 :- multifile
@@ -10,7 +14,7 @@
     audit:check/4.
 
 audit:check(deprecated, Ref, Result, OptionL) :-
-    option_filechk(OptionL, FileChk),
+    option_allchk(OptionL, _, FileChk),
     check_deprecated(Ref, collect_deprecated(FileChk), Result).
 
 :- meta_predicate check_deprecated(?,3,-).

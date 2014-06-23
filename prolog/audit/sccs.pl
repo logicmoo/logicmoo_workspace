@@ -1,4 +1,4 @@
-:- module(scc, [nodes_arcs_sccs/3]).
+:- module(sccs, [nodes_arcs_sccs/3]).
 
 % Tarjan's scc algorithm
 % http://en.wikipedia.org/wiki/Strongly_connected_component

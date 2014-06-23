@@ -1,16 +1,25 @@
 :- module(check_wrong_dynamic, []).
 
+:- use_module(library(check), []).
 :- use_module(library(compact_pi_list)).
-:- use_module(tools(tools_common)).
+:- use_module(library(maplist_dcg)).
+:- use_module(library(normalize_head)).
+:- use_module(library(normalize_pi)).
 :- use_module(library(database_fact)).
 :- use_module(library(location_utils)).
-:- use_module(library(check), []).
+:- use_module(library(auditable_predicate)).
+:- use_module(library(current_defined_predicate)).
 
 :- multifile
     prolog:message//1,
     audit:check/4,
     hide_wrong_dynamic/1,
     hide_var_dynamic/1.
+
+hide_var_dynamic(check_trivial_fails:collect_trivial_fail/4).
+hide_var_dynamic(check:list_strings/1).
+hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
+hide_var_dynamic(implemented_in:implemented_in/3).
 
 :- dynamic
     wrong_dynamic_db/3,
@@ -24,8 +33,8 @@ cleanup_dynamic_db :-
     cleanup_locations(_, dynamic(_, _), _).
 
 audit:check(wrong_dynamic, Ref, Result, OptionL) :-
-    option_allchk(OptionL, _, FileChkL),
-    check_wrong_dynamic(Ref, collect_wrong_dynamic(FileChkL), Result).
+    option_allchk(OptionL, _, FileChk),
+    check_wrong_dynamic(Ref, collect_wrong_dynamic(FileChk), Result).
 
 :- meta_predicate check_wrong_dynamic(?,3,-).
 check_wrong_dynamic(Ref0, Collect, Pairs) :-
@@ -122,9 +131,9 @@ prolog:message(acheck(wrong_dynamic)) -->
      'difficult to analyze.', nl, nl].
 
 :- meta_predicate collect_wrong_dynamic(+,:,+,+).
-collect_wrong_dynamic(FileChkL, MGoal, Caller, From) :-
+collect_wrong_dynamic(FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
-    forall(member(FileChk, FileChkL), call(FileChk, File)),
+    call(FileChk, File),
     collect_wrong_dynamic(MGoal, Caller, From),
     fail.
 collect_wrong_dynamic(_, _, _, _). % avoid side effects
