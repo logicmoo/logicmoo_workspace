@@ -146,6 +146,8 @@ def_location(M:Head, Declaration, From) :-
     ),
     predicate_from(P, From).
 
+:- meta_predicate predicate_location(:,-).
+
 predicate_location(P, Loc) :-
     predicate_from(P, From),
     from_location(From, Loc).
