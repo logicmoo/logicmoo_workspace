@@ -10,6 +10,7 @@
 
 */
 
+:- use_module(library(prolog_codewalk)).
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(database_fact)).
@@ -18,7 +19,6 @@
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
-:- use_module(library(prolog_codewalk)).
 :- use_module(library(referenced_by)).
 
 :- multifile
@@ -33,24 +33,29 @@ check_pred_file(PI, FileChk) :-
     call(FileChk, File),
     !.
 
+:- public collect_unused/4.
+
 collect_unused(FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
     record_location_meta(MGoal, From, cu_callee_hook, cu_caller_hook(Caller)).
 
-audit:check(unused, Ref, Result, OptionL) :-
-    option_allchk(OptionL, _, FileChk),
-    check_unused(Ref, FileChk, collect_unused(FileChk), Result).
+audit:check(unused, Ref, Result, OptionL0) :-
+    option_allchk(OptionL0, OptionL, FileChk),
+    check_unused(Ref, FileChk, OptionL, Result).
 
-:- meta_predicate check_unused(?, ?, 3, -).
-check_unused(Ref0, FileChk, Collect, Pairs) :-
+:- meta_predicate check_unused(?, ?, +, -).
+check_unused(Ref0, FileChk, OptionL0, Pairs) :-
     normalize_head(Ref0, Ref),
-    prolog_walk_code([infer_meta_predicates(false),
-		      autoload(false),
-		      evaluate(false),
-		      trace_reference(Ref),
-		      module_class([system, user, library]),
-		      on_trace(Collect)]),
+    merge_options(OptionL0,
+		  [source(false),
+		   infer_meta_predicates(false),
+		   autoload(false),
+		   evaluate(false),
+		   trace_reference(Ref),
+		   on_trace(collect_unused(FileChk))
+		  ], OptionL),
+    prolog_walk_code(OptionL),
     mark(Ref),
     sweep(Ref, FileChk, Pairs),
     cleanup_unused.
@@ -195,12 +200,15 @@ add_location_info_(M:PI, LI, L) :-
 unmarked(Ref, FileChk, MPI) :-
     Ref = M:H,
     MPI = M:F/A,
-    current_defined_predicate(MPI),
-    \+ marked(F, A, M),
-    functor(H, F, A),
+    ( current_defined_predicate(MPI),
+      functor(H, F, A),
+      auditable_predicate(Ref)
+    ; record_locations:declaration_location(MPI, dynamic(def, _), _),
+      functor(H, F, A)
+    ),
     \+ entry_caller(F, A, M, H),
-    check_pred_file(MPI, FileChk),
-    auditable_predicate(Ref).
+    \+ marked(F, A, M),
+    check_pred_file(MPI, FileChk).
 
 prolog:message(acheck(unused)) -->
     ['-----------------',nl,
@@ -245,6 +253,9 @@ hide_unused(_:'$exported_op'/3).
 hide_unused(predopts_analysis:attr_unify_hook/2).
 hide_unused(_:term_expansion/2).
 hide_unused(_:goal_expansion/2).
+hide_unused(_:term_expansion/4).
+hide_unused(_:goal_expansion/4).
+hide_unused(user:prolog_trace_interception/4).
 hide_unused(M:F/A) :-
     unused_mo_clpfd(M),
     unused_pi_clpfd(F, A).

@@ -1,6 +1,7 @@
 :- module(check_undefined, []).
 
 % A wrapper from library(check) to tools(audit)
+:- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
 :- use_module(library(normalize_head)).
 :- use_module(library(referenced_by)).
@@ -17,11 +18,12 @@ audit:check(undefined, Ref0, Results, OptionL) :-
 
 :- meta_predicate check_undefined(3,-).
 check_undefined(Collect, Pairs) :-
-    prolog_walk_code([infer_meta_predicates(false),
+    prolog_walk_code([source(false),
+		      infer_meta_predicates(false),
 		      autoload(false),
 		      undefined(trace),
 		      evaluate(false),
-		      module_class([user]),
+		      % module_class([system, library, user]),
 		      on_trace(Collect)]),
     findall(warning-(PI-(Loc/CI)),
 	    ( retract(check:undef(PI, From)),

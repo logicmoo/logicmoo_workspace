@@ -11,7 +11,7 @@
     prolog:message//1.
 
 audit:check(non_loaded, _, Results, OptionL) :-
-    option_dirchk(OptionL, in_dir(DirL)),
+    option_dirchk(OptionL, _, in_dir(DirL)),
     findall(Result, check_non_loaded(DirL, Result), ResultL),
     append(ResultL, Results).
 

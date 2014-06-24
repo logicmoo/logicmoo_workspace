@@ -1,6 +1,7 @@
 :- module(check_wrong_dynamic, []).
 
 :- use_module(library(check), []).
+:- use_module(library(prolog_codewalk)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
@@ -20,6 +21,7 @@ hide_var_dynamic(check_trivial_fails:collect_trivial_fail/4).
 hide_var_dynamic(check:list_strings/1).
 hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
 hide_var_dynamic(implemented_in:implemented_in/3).
+hide_var_dynamic(ref_scenarios:unfold_goal/3).
 
 :- dynamic
     wrong_dynamic_db/3,
@@ -32,19 +34,21 @@ cleanup_dynamic_db :-
     retractall(check_var_dynamic_db(_, _, _)),
     cleanup_locations(_, dynamic(_, _), _).
 
-audit:check(wrong_dynamic, Ref, Result, OptionL) :-
-    option_allchk(OptionL, _, FileChk),
-    check_wrong_dynamic(Ref, collect_wrong_dynamic(FileChk), Result).
+audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
+    option_allchk(OptionL0, OptionL, FileChk),
+    check_wrong_dynamic(Ref, FileChk, OptionL, Result).
 
-:- meta_predicate check_wrong_dynamic(?,3,-).
-check_wrong_dynamic(Ref0, Collect, Pairs) :-
-    cleanup_dynamic_db,
+check_wrong_dynamic(Ref0, FileChk, OptionL0, Pairs) :-
     normalize_head(Ref0, Ref),
-    prolog_walk_code([infer_meta_predicates(false),
-		      autoload(false),
-		      evaluate(false),
-		      trace_reference(Ref),
-		      on_trace(Collect)]),
+    merge_options(OptionL0,
+		  [source(false),
+		   infer_meta_predicates(false),
+		   autoload(false),
+		   evaluate(false),
+		   trace_reference(Ref),
+		   on_trace(collect_wrong_dynamic(FileChk))],
+		  OptionL),
+    prolog_walk_code(OptionL),
     collect_result(Ref, Pairs),
     cleanup_dynamic_db.
 
@@ -130,6 +134,7 @@ prolog:message(acheck(wrong_dynamic)) -->
      'a variable argument in a database predicate, making it', nl,
      'difficult to analyze.', nl, nl].
 
+:- public collect_wrong_dynamic/4.
 :- meta_predicate collect_wrong_dynamic(+,:,+,+).
 collect_wrong_dynamic(FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),

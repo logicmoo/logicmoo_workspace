@@ -1,45 +1,46 @@
 :- module(check_deprecated, []).
 
+:- use_module(library(prolog_codewalk)).
+:- use_module(library(check), []).
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(implementation_module)).
 :- use_module(library(normalize_head)).
 :- use_module(library(location_utils)).
 :- use_module(library(referenced_by)).
-:- use_module(library(check), []).
 
 :- multifile
     prolog:message//1,
     deprecated_predicate/2,
     audit:check/4.
 
-audit:check(deprecated, Ref, Result, OptionL) :-
-    option_allchk(OptionL, _, FileChk),
-    check_deprecated(Ref, collect_deprecated(FileChk), Result).
+audit:check(deprecated, Ref, Result, OptionL0) :-
+    option_allchk(OptionL0, OptionL, FileChk),
+    check_deprecated(Ref, FileChk, OptionL, Result).
 
-:- meta_predicate check_deprecated(?,3,-).
-check_deprecated(Ref0, Collect, Pairs) :-
+check_deprecated(Ref0, FileChk, OptionL0, Pairs) :-
     normalize_head(Ref0, Ref1),
-    Opts = [infer_meta_predicates(false),
-	    autoload(false),
-	    evaluate(false),
-	    trace_reference(Ref),
-	    on_trace(Collect)|Opts0
-	   ],
-    ( var(Ref1) ->
-      Ref = Ref1,
-      Opts0 = []
-    ; Ref1 = M:H,
-      Ref  = _:H,
-      Opts0 = [module(M)]
+    merge_options(OptionL0,
+		  [infer_meta_predicates(false),
+		   autoload(false),
+		   evaluate(false),
+		   trace_reference(Ref)
+		  ], OptionL),
+    prolog_walk_code([source(false),
+		      on_trace(have_deprecated(FileChk))
+		     |OptionL]),
+    findall(CRef, retract(deprecated_db(clause(CRef))), Clauses),
+    ( Clauses==[]
+    ->Pairs=[]
+    ; prolog_walk_code([clauses(Clauses),
+			on_trace(collect_deprecated)
+		       |OptionL]),
+      findall(information-(Call/Alt-(Loc/CI)),
+	      ( retract(deprecated_db(Call, Alt, From)),
+		from_location(From, Loc),
+		check:predicate_indicator(From, CI, [])
+	      ), Pairs)
     ),
-    findall(information-(Call/Alt-(Loc/CI)),
-	    ( clause(deprecated_predicate(Ref, _), _), % To speed up process
-	      prolog_walk_code(Opts),
-	      retract(deprecated_db(Call, Alt, From)),
-	      from_location(From, Loc),
-	      check:predicate_indicator(From, CI, [])
-	    ), Pairs),
     cleanup_locations(_, dynamic(_, _), _).
 
 predicate_head(Module:Head) -->
@@ -63,11 +64,15 @@ prolog:message(acheck(deprecated, PI/Alt-LocCIs)) -->
     [' deprecated, use ~q instead. Referenced by'-[Alt], nl],
     referenced_by(LocCIs).
 
-:- dynamic deprecated_db/3.
+:- dynamic deprecated_db/1, deprecated_db/3.
 
-collect_deprecated(FileChk, M:Goal, _, From) :-
+:- public have_deprecated/4.
+have_deprecated(FileChk, MGoal, _, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    implementation_module(M:Goal, IM),
-    deprecated_predicate(IM:Goal, Alt),
-    assertz(deprecated_db(IM:Goal, Alt, From)).
+    deprecated_predicate(MGoal, _),
+    assertz(deprecated_db(From)).
+
+collect_deprecated(MGoal, _, From) :-
+    deprecated_predicate(MGoal, Alt),
+    assertz(deprecated_db(MGoal, Alt, From)).

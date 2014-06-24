@@ -16,7 +16,7 @@ nodes_arcs_sccs(Ns, As0, Ss) :-
     length(Vs, L),
     pairs_keys_values(Ps, Ns, Vs),
     maplist(attach_arc(Ps), As0),
-    clpfd:scc(Vs, scc:successors),
+    clpfd:scc(Vs, sccs:successors),
     maplist(v_with_link(Ps), Vs, Ls0),
     keysort(Ls0, Ls1),
     group_pairs_by_key(Ls1, Ss0),

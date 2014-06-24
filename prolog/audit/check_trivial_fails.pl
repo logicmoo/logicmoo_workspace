@@ -1,7 +1,9 @@
 :- module(check_trivial_fails, []).
 
+:- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
 :- use_module(library(maplist_dcg)).
+:- use_module(library(normalize_head)).
 
 :- multifile
     prolog:message//1.
@@ -13,7 +15,8 @@ audit:check(trivial_fails, Ref, Result, OptionL0) :-
     check_trivial_fails(Ref, collect_trivial_fail(FileChk), OptionL, Result).
 
 :- meta_predicate check_trivial_fails(?,3,+,-).
-check_trivial_fails(Ref, Collect, OptionL0, Pairs) :-
+check_trivial_fails(Ref0, Collect, OptionL0, Pairs) :-
+    normalize_head(Ref0, Ref),
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
@@ -25,8 +28,7 @@ check_trivial_fails(Ref, Collect, OptionL0, Pairs) :-
     findall(CRef, retract(trivial_fail(clause(CRef), _)), Clauses),
     ( Clauses==[]
     ->Pairs=[]
-    ;
-      prolog_walk_code([clauses(Clauses)|OptionL]),
+    ; prolog_walk_code([clauses(Clauses)|OptionL]),
       findall(warning-(Loc-Args), (retract(trivial_fail(From, Args)),
 				   from_location(From, Loc)), Pairs)
     ),

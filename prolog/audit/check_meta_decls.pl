@@ -1,5 +1,6 @@
 :- module(check_meta_decls, []).
 
+:- use_module(library(prolog_codewalk)).
 :- use_module(library(prolog_metainference)).
 :- use_module(library(is_entry_point)).
 :- use_module(library(location_utils)).

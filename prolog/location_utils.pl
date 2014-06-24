@@ -122,8 +122,8 @@ option_allchk(OptionL0, OptionL, AllChk) :-
 
 % For preds + decls
 property_location(Prop, Declaration, Location) :-
-	property_from(Prop, Declaration, From),
-	from_location(From, Location).
+    property_from(Prop, Declaration, From),
+    from_location(From, Location).
 
 % non det
 property_from(Head, Declaration, From) :-
