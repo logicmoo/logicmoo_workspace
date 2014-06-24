@@ -8,19 +8,28 @@
 
 :- dynamic trivial_fail/2.
 
-audit:check(trivial_fails, Ref, Result, OptionL) :-
-    option_allchk(OptionL, _, FileChk),
-    check_trivial_fails(Ref, collect_trivial_fail(FileChk), Result).
+audit:check(trivial_fails, Ref, Result, OptionL0) :-
+    option_allchk(OptionL0, OptionL, FileChk),
+    check_trivial_fails(Ref, collect_trivial_fail(FileChk), OptionL, Result).
 
-:- meta_predicate check_trivial_fails(?,3,-).
-check_trivial_fails(Ref, Collect, Pairs) :-
-    prolog_walk_code([infer_meta_predicates(false),
-		      autoload(false),
-		      evaluate(false),
-		      trace_reference(Ref),
-		      on_trace(Collect)]),
-    findall(warning-(Loc-Args), (retract(trivial_fail(From, Args)),
-				 from_location(From, Loc)), Pairs),
+:- meta_predicate check_trivial_fails(?,3,+,-).
+check_trivial_fails(Ref, Collect, OptionL0, Pairs) :-
+    merge_options(OptionL0,
+		  [infer_meta_predicates(false),
+		   autoload(false),
+		   evaluate(false),
+		   trace_reference(Ref),
+		   on_trace(Collect)
+		  ], OptionL),
+    prolog_walk_code([source(false)|OptionL]),
+    findall(CRef, retract(trivial_fail(clause(CRef), _)), Clauses),
+    ( Clauses==[]
+    ->Pairs=[]
+    ;
+      prolog_walk_code([clauses(Clauses)|OptionL]),
+      findall(warning-(Loc-Args), (retract(trivial_fail(From, Args)),
+				   from_location(From, Loc)), Pairs)
+    ),
     cleanup_locations(_, dynamic(_, _), _).
 
 prolog:message(acheck(trivial_fails)) -->
@@ -34,7 +43,7 @@ prolog:message(acheck(trivial_fails, Loc-Args)) -->
     maplist_dcg(show_trivial_fail, Args).
 
 show_trivial_fail(Arg) -->
-    ['In ~w, possible trivial fail for literal ~w'-Arg, nl].
+    ['In ~q, possible trivial fail for literal ~q'-Arg, nl].
 
 module_qualified(:) :- !.
 module_qualified(N) :- integer(N), N >= 0.
@@ -68,28 +77,25 @@ collect_trivial_fail(FileChk, MGoal0, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
     record_location_dynamic(MGoal0, From),
-    MGoal0 = M:Goal0,
-    functor(Goal0, F, N),
-    functor(Head, F, N),
-    ( \+ predicate_property(M:Head, built_in),
-      \+ predicate_property(M:Head, foreign),
-      \+ predicate_property(M:Head, dynamic),
-      \+ predicate_property(M:Head, multifile),
-      catch(clause(M:Head, _), error(_What, _Where), fail),
-				% Some hooks are declared as multifile
-				% and would fail until defined
+    ( MGoal0 = M:Goal,
+      atom(M),
+      callable(Goal),
+      predicate_property(MGoal0, interpreted),
+      \+ predicate_property(MGoal0, dynamic),
+      \+ predicate_property(MGoal0, multifile),
       \+ ignore_predicate(MGoal0)
-    -> %% If there is a clause, check for trivial fails
-      ( predicate_property(M:Head, meta_predicate(Meta)) ->
-	functor(Goal, F, N),
-	meta_goal(1, M, Meta, Goal0, Goal)
-      ; Goal = Goal0
+    ->( predicate_property(MGoal0, meta_predicate(Meta)) ->
+	qualify_meta_goal(MGoal0, Meta, MGoal)
+      ; MGoal = MGoal0
       ),
-      ( clause(M:Goal, _) -> true
-      ;
-	(predicate_property(MGoal0, imported_from(IM)) -> true ; IM:_ = MGoal0),
-	assertz(trivial_fail(From, [Caller, IM:Goal]))
+      ( clause(MGoal, _)
+      ->true
+      ; assertz(trivial_fail(From, [Caller, MGoal]))
       )
-    ;
-      true
+    ; true
     ).
+
+qualify_meta_goal(M:Goal0, Meta, M:Goal) :-
+	functor(Goal0, F, N),
+	functor(Goal, F, N),
+	meta_goal(1, M, Meta, Goal0, Goal).
