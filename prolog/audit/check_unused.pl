@@ -34,6 +34,7 @@ check_pred_file(PI, FileChk) :-
     !.
 
 :- public collect_unused/4.
+:- meta_predicate collect_unused(1, +, +, +).
 
 collect_unused(FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
