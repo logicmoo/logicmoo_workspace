@@ -7,3 +7,4 @@ packager('Edison Mera Menendez', 'http://www.edisonm.com/').
 maintainer('Edison Mera Menendez', 'http://www.edisonm.com/').
 home('https://github.com/edisonm/assertions').
 download('https://github.com/edisonm/assertions.git').
+requires(xlibrary).
