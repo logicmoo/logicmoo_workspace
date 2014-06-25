@@ -89,6 +89,8 @@ current_dynamic_as_static(Ref, Loc, PI) :-
     ),
     auditable_predicate(Ref),
     predicate_property(Ref, dynamic),
+    %% if multifile, would be modified externally
+    \+ predicate_property(Ref, multifile),
     \+ ( wrong_dynamic_db(Type, PI, _),
 	 memberchk(Type,[def,retract])
        ),
