@@ -22,6 +22,7 @@ hide_var_dynamic(check:list_strings/1).
 hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
 hide_var_dynamic(implemented_in:implemented_in/3).
 hide_var_dynamic(ref_scenarios:unfold_goal/3).
+hide_var_dynamic(ntabling:tabling/2).
 
 :- dynamic
     wrong_dynamic_db/3,
