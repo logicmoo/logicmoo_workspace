@@ -58,7 +58,7 @@ prolog:message(acheck(undefined)) -->
     prolog:message(check(undefined_predicates)).
 prolog:message(acheck(undefined, PI-LocCIList)) -->
     check:predicate(PI),
-    [ ', which is referenced by', nl ],
+    [ ' undefined, which is referenced by', nl ],
     referenced_by(LocCIList).
 
 % prolog:message(check(undefined(PI, LocList))).
