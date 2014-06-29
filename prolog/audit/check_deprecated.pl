@@ -19,7 +19,7 @@ audit:check(deprecated, Ref, Result, OptionL0) :-
     check_deprecated(Ref, FileChk, OptionL, Result).
 
 check_deprecated(Ref0, FileChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, Ref1),
+    normalize_head(Ref0, Ref),
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
@@ -67,12 +67,20 @@ prolog:message(acheck(deprecated, PI/Alt-LocCIs)) -->
 :- dynamic deprecated_db/1, deprecated_db/3.
 
 :- public have_deprecated/4.
+:- meta_predicate have_deprecated(1, +, +, +).
+
 have_deprecated(FileChk, MGoal, _, From) :-
     from_to_file(From, File),
     call(FileChk, File),
     deprecated_predicate(MGoal, _),
-    assertz(deprecated_db(From)).
+    assertz(deprecated_db(From)),
+    fail.
+have_deprecated(_, _, _, _).
+
+:- public collect_deprecated/3.
 
 collect_deprecated(MGoal, _, From) :-
     deprecated_predicate(MGoal, Alt),
-    assertz(deprecated_db(MGoal, Alt, From)).
+    assertz(deprecated_db(MGoal, Alt, From)),
+    fail.
+collect_deprecated(_, _, _).

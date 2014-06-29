@@ -140,7 +140,7 @@ prop_loc_desc(PI, PI/LocDL) :-
 add_adj_key(PIL-L, warning-(PILocDL/L)) :-
     maplist(prop_loc_desc, PIL, PILocDL).
 
-:- multifile adjacency(+, 2, +, -).
+:- meta_predicate adjacency(+, 2, +, -).
 adjacency(SL, Dependent, S, S-L) :-
     findall(S2, ( member(S2, SL),
 		  S2 \= S,
@@ -252,10 +252,13 @@ message_unused(Level, Loc-(PI/D)) -->
 
 hide_unused(_:'$exported_op'/3).
 hide_unused(predopts_analysis:attr_unify_hook/2).
+hide_unused(shlib:loading/1).
+hide_unused(pce_global:'pce catcher'/2).
 hide_unused(_:term_expansion/2).
 hide_unused(_:goal_expansion/2).
 hide_unused(_:term_expansion/4).
 hide_unused(_:goal_expansion/4).
+hide_unused(user:thread_message_hook/3).
 hide_unused(user:prolog_trace_interception/4).
 hide_unused(M:F/A) :-
     unused_mo_clpfd(M),

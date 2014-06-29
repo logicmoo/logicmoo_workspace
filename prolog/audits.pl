@@ -6,4 +6,5 @@
 :- use_module(library(audit/check_non_mutually_exclusive)).
 :- use_module(library(audit/check_trivial_fails)).
 :- use_module(library(audit/check_undefined)).
+:- use_module(library(audit/check_unused)).
 :- use_module(library(audit/check_wrong_dynamic)).
