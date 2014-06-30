@@ -258,6 +258,8 @@ hide_unused(_:term_expansion/2).
 hide_unused(_:goal_expansion/2).
 hide_unused(_:term_expansion/4).
 hide_unused(_:goal_expansion/4).
+hide_unused(plunit:_).
+hide_unused(ciao:_).
 hide_unused(user:thread_message_hook/3).
 hide_unused(user:prolog_trace_interception/4).
 hide_unused(M:F/A) :-
