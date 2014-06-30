@@ -34,6 +34,7 @@ expansion_module(M, EM) :-
     module_property(EM, file(EF)),
     no_duplicates('$load_context_module'(EF, M, _), EF-M).
 
+:- public implemented_pi/1.
 implemented_pi(M:F/A) :-
     functor(H, F, A),
     once(predicate_property(M:H, visible)),
