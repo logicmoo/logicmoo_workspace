@@ -35,6 +35,7 @@ expansion_module(M, EM) :-
     no_duplicates('$load_context_module'(EF, M, _), EF-M).
 
 :- public implemented_pi/1.
+:- meta_predicate implemented_pi(:).
 implemented_pi(M:F/A) :-
     functor(H, F, A),
     once(predicate_property(M:H, visible)),
