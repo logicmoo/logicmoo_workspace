@@ -14,9 +14,14 @@
 
 % Assertion reader for SWI-Prolog
 
-:- multifile assertions:assertion_db/10.
-:- multifile assertions:doc_db/4.
-:- multifile assrt_lib:nodirective_error_hook/1.
+:- multifile
+    assertions:assertion_db/10,
+    assertions:doc_db/4,
+    assrt_lib:nodirective_error_hook/1.
+
+:- volatile
+    assertions:assertion_db/10,
+    assertions:doc_db/4.
 
 add_arg(H, M:G0, M:G) :- !,
     add_arg(H, G0, G).
