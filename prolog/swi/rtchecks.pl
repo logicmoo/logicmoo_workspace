@@ -13,6 +13,8 @@ goal_expansion(Goal0, Goal) :-
     rtchecks_tr:rtchecks_goal_tr(Goal0, Goal, M),
     !.
 
+term_expansion((:- include(library(nativeprops))),
+	       (:- use_module(library(assertions/native_props)))) :- !.
 term_expansion(Term0, Term) :-
     '$set_source_module'(M, M),
     rtchecks_tr:rtchecks_sentence_tr(Term0, Term, M, []),
