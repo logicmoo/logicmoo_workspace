@@ -939,7 +939,7 @@ exception(Goal) :-
 throw(Goal, E) :-
 	test_throw_2(Goal, throw(E), F, F\=E).
 
-:- meta_predicate test_throws_2(goal, ?, ?, goal).
+:- meta_predicate test_throw_2(goal, ?, ?, goal).
 test_throw_2(Goal, Prop, F, Test) :-
 	catch(Goal, F,
 	    (
