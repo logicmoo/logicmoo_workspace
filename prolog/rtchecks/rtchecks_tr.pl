@@ -1039,12 +1039,9 @@ body_check_comp(ChkComps, CheckedL0, GlobName, Pred, M, Body0, Body) :-
 	    ChkComps, [],        CompCompL),
 	map(CompCompL, comp_to_lit(GlobName, M), ChkComp0),
 	sort(ChkComp0, ChkComp1),
-	( \+ memberchk(add_info_rtsignal(_, _, _, _, _, _)-_, ChkComp1)
-	->ChkComp = ChkComp1
-	; ChkComp = [with_goal(G, Pred)-G|ChkComp1]
-	),
-	comps_to_goal(ChkComp, compound_comp, CompsBody, Body),
-	Body0 = [CompCall, CompsBody].
+	ChkComp = [with_goal(G, Pred)-G|ChkComp1],
+	comps_to_goal(ChkComp, compound_comp, CompBody, Body),
+	Body0 = [CompCall, CompBody].
 
 comp_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs, StatusTypes,
 	    CheckedL) -->
