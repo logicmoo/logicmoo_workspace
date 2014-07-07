@@ -10,9 +10,6 @@
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
 
-:- multifile foreign_interface:generating/0.
-:- dynamic   foreign_interface:generating/0.
-
 :- prop foreign/1 + nortcheck.
 :- meta_predicate foreign(0).
 foreign(G) :- call(G).

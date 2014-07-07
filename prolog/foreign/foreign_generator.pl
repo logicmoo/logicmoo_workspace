@@ -1,23 +1,30 @@
-:- module(foreign_interface, [generate_foreign_interface/3,
-			      generating/0]).
+:- module(foreign_generator, [generate_foreign_interface/2,
+			      generate_library/2,
+			      read_foreign_properties/8]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(foreign(foreign_props)).
 
-:- multifile generating/0.
-:- dynamic   generating/0.
+generate_library(M, FileSO) :-
+    file_name_extension(BaseFile, so, FileSO),
+    generate_foreign_interface(M, BaseFile),
+    absolute_file_name(foreign(foreign_interface), FIPl,
+		       [file_type(prolog), access(read)]),
+    directory_file_path(DI, _, FIPl),
+    atomic_list_concat(['swipl-ld -shared -I', DI, ' -o ', FileSO, ' ', BaseFile, '.c'],
+		       Command),
+    shell(Command, Status),
+    ( Status==0
+    ->true
+    ; print_message(warning, format('`~w\' exited with status ~w', [Command, Status]))
+    ).
 
-generate_foreign_interface(FileSpec, Module, BaseFile) :-
-    setup_call_cleanup(assertz(generating),
-		       ( use_module(FileSpec, []),
-			 do_generate_foreign_interface(Module, BaseFile)),
-		       retractall(generating)).
-
-do_generate_foreign_interface(Module, BaseFile) :-
-    atom_concat(BaseFile, '.h', File_h),
-    atom_concat(BaseFile, '.c', File_c),
+generate_foreign_interface(Module, BaseFile) :-
+    file_name_extension(BaseFile, h, File_h),
+    file_name_extension(BaseFile, c, File_c),
+    directory_file_path(_, Base, BaseFile),
     generate_foreign_h(Module, File_h),
-    generate_foreign_c(Module, File_c, File_h).
+    generate_foreign_c(Module, Base, File_c, File_h).
 
 c_var_name(Arg, CArg) :-
     format(atom(CArg), '_c_~w', [Arg]).
@@ -25,8 +32,10 @@ c_var_name(Arg, CArg) :-
 generate_foreign_h(Module, File) :-
     setup_call_cleanup(tell(File), generate_foreign_h(Module), told).
 
-generate_foreign_c(Module, File_c, File_h) :-
-    setup_call_cleanup(tell(File_c), generate_foreign_c(Module, File_h), told).
+generate_foreign_c(Module, Base, File_c, File_h) :-
+    setup_call_cleanup(tell(File_c),
+		       generate_foreign_c(Module, Base, File_h),
+		       told).
 
 generate_foreign_h(Module) :-
     write_header(Module),
@@ -42,11 +51,11 @@ generate_foreign_h(Module) :-
 add_autogen_note(Module) :-
     format('/* NOTE: File generated automatically from ~w */~n~n', [Module]).
 
-generate_foreign_c(Module, File_h) :-
+generate_foreign_c(Module, Base, File_h) :-
     add_autogen_note(Module),
     format('#include "~w"\n\n', [File_h]),
     implement_type_converters(Module),
-    generate_foreign_register(Module),
+    generate_foreign_register(Module, Base),
     generate_foreign_wrapper(Module).
 
 write_header(Module) :-
@@ -63,7 +72,9 @@ apply_dict(Head, Dict) :-
 
 current_type_props(M, Type, ADict) :-
     assertions:assertion_db(Type, M, _, prop, _, _, _, Glob, _, ADict),
-    (memberchk(type, Glob) -> true ; memberchk(regtype, Glob)).
+    once(( member(TType, [type, regtype]),
+	   memberchk(TType, Glob)
+	 )).
 
 declare_typedef_struct(func(Term), CSpecL, Name) :-
     format('typedef struct {~n', []),
@@ -277,12 +288,12 @@ c_get_ctype_decl(term) :-
 c_get_ctype_decl(_-CType) :-
     format('~w', CType).
 
-generate_foreign_register(Module) :-
-    format('install_t install_~w() {~n', [Module]),
+generate_foreign_register(Module, Base) :-
+    format('install_t install_~w() {~n', [Base]),
     findall(Bind, read_foreign_properties(_, Module, _, _, _, _, _, Bind), BindUL),
     sort(BindUL, BindL),
     maplist(register_foreign_bind, BindL),
-    format('} /* install_~w */~n~n', [Module]).
+    format('} /* install_~w */~n~n', [Base]).
 
 register_foreign_bind(CN/A as PN) :-
     format('    PL_register_foreign(\"~w\", ~w, pl_~w, 0);~n', [PN, A, CN]).
