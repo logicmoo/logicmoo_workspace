@@ -1,23 +1,120 @@
 :- module(foreign_generator, [generate_foreign_interface/2,
-			      generate_library/2,
+			      generate_library/3,
+			      gen_foreign_library/2,
 			      read_foreign_properties/8]).
 
 :- use_module(library(swi/assertions)).
+:- use_module(library(maplist_dcg)).
 :- use_module(foreign(foreign_props)).
 
-generate_library(M, FileSO) :-
+:- multifile
+    gen_foreign_library/2,
+    use_foreign_source/2,
+    use_foreign_header/2,
+    include_foreign_dir/2,
+    extra_compiler_opts/2,
+    link_foreign_library/2,
+    pkg_foreign_config/2.
+
+command_to_atom(Command, Args, Atom) :-
+    process_create(path(Command), Args, [stdout(pipe(Out))]),
+    read_stream_to_codes(Out, String),
+    string_to_atom(String, Atom).
+
+fortran_command(Command) :-
+    command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
+    atomic_list_concat(AtomL, ';\n', Atom),
+    findall(Value, ( member(NameValue, AtomL),
+		     atomic_list_concat([Name|ValueL], '=', NameValue),
+		     memberchk(Name, ['PLCFLAGS', 'PLLDFLAGS']),
+		     atomic_list_concat(ValueL, '=', CValueC),
+		     atom_concat('"', ValueC, CValueC),
+		     atom_concat(Value, '"', ValueC)		     
+		   ),
+	    ValueL),
+    atomic_list_concat([gfortran|ValueL], ' ', Command).
+
+intermediate_obj(DirSO, Source, Object) -->
+    {file_name_extension(Base, for, Source)},
+    !,
+    { file_base_name(Base, Name),
+      file_name_extension(Name, o, NameO),
+      directory_file_path(DirSO, NameO, Object),
+      fortran_command(Fortran)
+    },
+    {atomic_list_concat([Fortran, '-c', Source, '-o', Object], ' ', Command)},
+    [Command].
+intermediate_obj(_, Source, Source) --> [].
+
+is_newer(File1, File2) :-
+    exists_file(File1),
+    exists_file(File2),
+    time_file(File1, Time1),
+    time_file(File2, Time2),
+    Time1 > Time2.
+
+generate_library(M, AliasSO, File) :-
+    absolute_file_name(AliasSO, FileSO),
+    findall(FSource, ( use_foreign_source(M, FAlias),
+		       absolute_file_name(FAlias, FSource)
+		     ), FSourceL),
+    ( forall(( member(Dep, [File|FSourceL])
+	     ; use_foreign_header(M, HAlias),
+	       absolute_file_name(HAlias, Dep)
+	     ),
+	     is_newer(FileSO, Dep))
+    ->print_message(informational,
+		    format('Skipping build of ~w: is up to date', [FileSO]))
+    ; do_generate_library(M, FileSO, FSourceL)
+    ).
+
+do_generate_library(M, FileSO, FSourceL) :-
     file_name_extension(BaseFile, so, FileSO),
     generate_foreign_interface(M, BaseFile),
-    absolute_file_name(foreign(foreign_interface), FIPl,
+    absolute_file_name(foreign(foreign_interface), IntfPl,
 		       [file_type(prolog), access(read)]),
-    directory_file_path(DI, _, FIPl),
-    atomic_list_concat(['swipl-ld -shared -I', DI, ' -o ', FileSO, ' ', BaseFile, '.c'],
-		       Command),
-    shell(Command, Status),
-    ( Status==0
-    ->true
-    ; print_message(warning, format('`~w\' exited with status ~w', [Command, Status]))
-    ).
+    directory_file_path(DirIntf, _, IntfPl),
+    directory_file_path(DirSO,   _, FileSO),
+    maplist_dcg(intermediate_obj(DirSO), FSourceL, FTargetL, Commands, CommandsT),
+    atomic_list_concat(FTargetL, ' ', FSources),
+    findall(CLib, ( link_foreign_library(M, Lib),
+		    atom_concat('-l', Lib, CLib)
+		  ; pkg_foreign_config(M, Package),
+		    command_to_atom('pkg-config', ['--libs', Package], CLib0),
+		    atom_concat(CLib, '\n', CLib0)
+		  ), CLibL),
+    atomic_list_concat(CLibL, ' ', CLibs),
+    findall(COpt, ( extra_compiler_opts(M, COpt)
+		  ; pkg_foreign_config(M, Package),
+		    command_to_atom('pkg-config', ['--cflags', Package], COpt0),
+		    atom_concat(COpt, '\n', COpt0)
+		  ), COptL),
+    ( COptL = []
+    ->COpts = ''
+    ; atomic_list_concat(COptL, ',', COpts)
+    ),
+    findall(IDir, ( ( Dir = DirSO
+		    ; Dir = DirIntf
+		    ; include_foreign_dir(M, DAlias),
+		      absolute_file_name(DAlias, Dir, [file_type(directory)])
+		    ),
+		    atom_concat('-I', Dir, IDir)
+		  ),
+	    IDirL),
+    atomic_list_concat(IDirL, ' ', IDirs),
+    atomic_list_concat(['swipl-ld -shared ', COpts, IDirs, ' ', FSources,
+			' ', BaseFile, '.c ', CLibs, ' -o ', FileSO],
+		       CommandT),
+    CommandsT = [CommandT],
+    forall(member(Command, Commands),
+	   ( shell(Command, Status),
+	     ( Status==0
+	     ->MessageType=information
+	     ; MessageType=error
+	     ),
+	     print_message(MessageType, format('`~w\' exited with status ~w',
+					       [Command, Status]))
+	   )).
 
 generate_foreign_interface(Module, BaseFile) :-
     file_name_extension(BaseFile, h, File_h),
