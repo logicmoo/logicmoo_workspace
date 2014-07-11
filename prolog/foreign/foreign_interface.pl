@@ -2,8 +2,8 @@
 
 :- use_module(library(compound_expand)).
 :- use_module(library(swi/assertions)).
-:- use_module(foreign(foreign_props)).
-:- use_module(foreign(foreign_generator)).
+:- use_module(library(foreign/foreign_props)).
+:- use_module(library(foreign/foreign_generator)).
 
 term_expansion((:- gen_foreign_library(AliasSO)),
 	       foreign_generator:gen_foreign_library(M, AliasSO)) :-

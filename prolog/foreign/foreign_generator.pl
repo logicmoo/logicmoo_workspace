@@ -5,7 +5,7 @@
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(maplist_dcg)).
-:- use_module(foreign(foreign_props)).
+:- use_module(library(foreign/foreign_props)).
 
 :- multifile
     gen_foreign_library/2,
@@ -71,7 +71,7 @@ generate_library(M, AliasSO, File) :-
 do_generate_library(M, FileSO, FSourceL) :-
     file_name_extension(BaseFile, so, FileSO),
     generate_foreign_interface(M, BaseFile),
-    absolute_file_name(foreign(foreign_interface), IntfPl,
+    absolute_file_name(library(foreign/foreign_interface), IntfPl,
 		       [file_type(prolog), access(read)]),
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
@@ -109,7 +109,7 @@ do_generate_library(M, FileSO, FSourceL) :-
     forall(member(Command, Commands),
 	   ( shell(Command, Status),
 	     ( Status==0
-	     ->MessageType=information
+	     ->MessageType=informational
 	     ; MessageType=error
 	     ),
 	     print_message(MessageType, format('`~w\' exited with status ~w',
