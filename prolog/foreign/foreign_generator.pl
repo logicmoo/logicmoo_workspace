@@ -91,7 +91,7 @@ do_generate_library(M, FileSO, FSourceL) :-
 		  ), COptL),
     ( COptL = []
     ->COpts = ''
-    ; atomic_list_concat(COptL, ',', COpts)
+    ; atomic_list_concat(COptL, ' ', COpts)
     ),
     findall(IDir, ( ( Dir = DirSO
 		    ; Dir = DirIntf
