@@ -1,6 +1,6 @@
 :- module(check_auto, []).
 
-:- use_module(audit_tools(audit)).
+:- use_module(library(audit/audit)).
 
 :- multifile user:term_expansion/2.
 

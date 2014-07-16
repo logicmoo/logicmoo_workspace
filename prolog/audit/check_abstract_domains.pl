@@ -187,10 +187,8 @@ remove_all(_, TraceCalls, TraceCalls).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- include(audit_tools(abstract_domain_decls)).
-
-:- use_module(audit_tools(abstract_domain)).
-
+:- include(library(audit/abstract_domain_decls)).
+:- use_module(library(audit/abstract_domain)).
 :- use_module(domains(abstract_domain_fail)).
 :- use_module(domains(abstract_domain_sideff)).
 :- use_module(domains(abstract_domain_product)). % this always at the end
