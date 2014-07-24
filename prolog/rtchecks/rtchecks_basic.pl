@@ -158,12 +158,11 @@ long_prop_names(Props, PropNames, Dict, Names) :-
 % to avoid undesired unifications.
 get_pretty_names(short, n(Pred, Compat, Call, Succ, Comp), Dict, TermName, Dict) :-
 	functor(Pred, F, A),
-	PredName = F/A,
 	short_prop_names(Compat, CompatName),
 	short_prop_names(Call,   CallName),
 	short_prop_names(Succ,   SuccName),
 	short_prop_names(Comp,   CompName),
-	TermName = n(PredName, CompatName, CallName, SuccName, CompName).
+	TermName = n(F/A, CompatName, CallName, SuccName, CompName).
 get_pretty_names(long, Term, Dict0, TermName, Dict) :-
 	Term = n(_Pred, Compat, Call, Succ, Comp),
 	complete_dict(Term, Dict0, [], CDict),

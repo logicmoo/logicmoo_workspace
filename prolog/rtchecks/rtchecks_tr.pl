@@ -507,9 +507,8 @@ transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
 	  ( Assertions \= [] ->
 	    current_prolog_flag(rtchecks_asrloc,  UseAsrLoc),
 	    current_prolog_flag(rtchecks_predloc, UsePredLoc),
-	    UsePosLoc = (UsePredLoc, UseAsrLoc),
 	    generate_rtchecks(F, A, M, Assertions, Pred, Dict, PLoc,
-			      UsePosLoc, _, Head, Body0, Body, Clauses0, []) ->
+			      (UsePredLoc, UseAsrLoc), _, Head, Body0, Body, Clauses0, []) ->
 	    mark_generated_rtchecks(F, A, M, Clauses0, Clauses)
 	  ; head_body_clause(Head, Body, Clause),
 	    Clauses = [Clause]
@@ -578,8 +577,7 @@ process_body(Dict, Pred, F, A, M, Body0, Body) :-
 	    location(Loc),
 	    current_prolog_flag(rtchecks_namefmt, NameFmt),
 	    get_predname(NameFmt, Dict, Pred, PredName),
-	    Terms0 = [Loc = Loc0, PredName = PredName0],
-	    collapse_terms(Body1, Terms0, Terms),
+	    collapse_terms(Body1, [Loc = Loc0, PredName = PredName0], Terms),
 	    lists_to_lits([Terms, Body1], Body),
 	    functor(Pred, F, A)
 	).
@@ -783,8 +781,7 @@ generate_ctchecks(Pred, M, Loc, Lits) :-
 				% earlier, even compile-time. --EMM
     current_prolog_flag(rtchecks_asrloc,  UseAsrLoc),
     current_prolog_flag(rtchecks_predloc, UsePredLoc),
-    UsePosLoc = (UsePredLoc, UseAsrLoc),
-    compat_rtchecks(Assertions, Pred, Loc, UsePosLoc, PosLocs0, _,
+    compat_rtchecks(Assertions, Pred, Loc, (UsePredLoc, UseAsrLoc), PosLocs0, _,
 		    [], _, Goal1, []),
     once(reverse(PosLocs0, PosLocs1)),
     collapse_terms(Goal1, PosLocs1, PosLocs2),
@@ -858,9 +855,8 @@ current_assertion(Pred0, M, TimeCheck,
 	rel_file_name(AS, S),
 	Loc = loc(S, LB, LE),
 	collapse_dups(Comp0, Comp),
-	Term = n(Pred, Compat, Call, Succ, Comp),
 	current_prolog_flag(rtchecks_namefmt, NameFmt),
-	get_pretty_names(NameFmt, Term, Dict0, TermName, Dict),
+	get_pretty_names(NameFmt, n(Pred, Compat, Call, Succ, Comp), Dict0, TermName, Dict),
 	TermName = n(PredName, CompatName, CallName, SuccName, CompName).
 
 assertion_pred(assr(Pred, _, _, _, _, _, _, _, _, _, _, _, _, _), Pred).
@@ -1039,8 +1035,7 @@ body_check_comp(ChkComps, CheckedL0, GlobName, Pred, M, Body0, Body) :-
 	    ChkComps, [],        CompCompL),
 	map(CompCompL, comp_to_lit(GlobName, M), ChkComp0),
 	sort(ChkComp0, ChkComp1),
-	ChkComp = [with_goal(G, Pred)-G|ChkComp1],
-	comps_to_goal(ChkComp, compound_comp, CompBody, Body),
+	comps_to_goal([with_goal(G, Pred)-G|ChkComp1], compound_comp, CompBody, Body),
 	Body0 = [CompCall, CompBody].
 
 comp_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs, StatusTypes,
