@@ -3,7 +3,7 @@
 	 record_location_dynamic/2, predicate_from/2, cleanup_locations/3,
 	 from_location/2, from_to_file/2, in_set/2, in_dir/2, r_true/1,
 	 conj_chks/2, record_location_meta/4, record_location/3,
-	 option_allchk/3, option_filechk/3, option_dirchk/3]).
+	 option_allchk/3, option_filechk/3, option_dirchk/3, compound_chks/2]).
 
 :- use_module(library(lists)).
 :- use_module(library(database_fact)).
@@ -108,17 +108,33 @@ simplify_chk(Elem, L0, L0, [Elem|L], L).
 conj_chks(AllChkL, File) :-
     forall(member(AllChk, AllChkL), call(AllChk, File)).
 
-compound_chks([],       r_true) :- !.
-compound_chks([AllChk], AllChk) :- !.
-compound_chks(AllChkL, conj_chks(AllChkL)) :- !.
+compound_chks_rec([],       r_true) :- !.
+compound_chks_rec([AllChk], AllChk) :- !.
+compound_chks_rec(AllChkL, conj_chks(AllChkL)).
+
+rm_conj_chks([],     []).
+rm_conj_chks([E|L1], L2) :-
+    rm_conj_chk(E, L2, L),
+    rm_conj_chks(L1, L).
+
+rm_conj_chk(conj_chks(L0 ), L1, L) :- !,
+    append(L1, L0, L).
+rm_conj_chk(E, [E|L], L).
+
+compound_chks -->
+    rm_conj_chks,
+    compound_chks_0.
+
+compound_chks_0 -->
+    sort,
+    simplify_chks,
+    compound_chks_rec.
 
 option_allchk(OptionL0, OptionL, AllChk) :-
     option_dirchk(OptionL0,  OptionL1, DirChk),
     option_filechk(OptionL1, OptionL2, FileChk),
     option_predchk(OptionL2, OptionL,  PredChk),
-    sort([DirChk,FileChk,PredChk], AllChkL0),
-    simplify_chks(AllChkL0, AllChkL),
-    compound_chks(AllChkL, AllChk).
+    compound_chks_0([DirChk,FileChk,PredChk], AllChk).
 
 % For preds + decls
 property_location(Prop, Declaration, Location) :-
