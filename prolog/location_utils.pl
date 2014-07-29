@@ -1,8 +1,8 @@
 :- module(location_utils,
 	[property_location/3, predicate_location/2, property_from/3,
-	 record_location_dynamic/2, predicate_from/2, cleanup_locations/3,
+	 record_location_dynamic/2, predicate_from/2, cleanup_locations/4,
 	 from_location/2, from_to_file/2, in_set/2, in_dir/2, r_true/1,
-	 conj_chks/2, record_location_meta/4, record_location/3,
+	 conj_chks/2, record_location_meta/4, record_location/4,
 	 option_allchk/3, option_filechk/3, option_dirchk/3, compound_chks/2]).
 
 :- use_module(library(lists)).
@@ -10,11 +10,8 @@
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(implemented_in)).
-
-:- dynamic
-    record_locations:declaration_location/3.
-:- multifile
-    record_locations:declaration_location/3.
+:- use_module(library(implementation_module)).
+:- use_module(library(record_locations)).
 
 from_location(From, Location) :-
 	prolog:message_location(From, Location, []),
@@ -149,12 +146,12 @@ property_from(Head, Declaration, From) :-
     ; From = []
     ).
 
-dec_location(Head/0, Declaration, From) :-
-    normalize_pi(Head, PI),
-    record_locations:declaration_location(PI, Declaration, From).
-dec_location(M:Head, Declaration, From) :-
-    normalize_pi(M:Head, PI),
-    record_locations:declaration_location(PI, Declaration, From).
+dec_location(Head0/0, Declaration, From) :-
+    normalize_head(Head0, M:Head),
+    declaration_location(Head, M, Declaration, From).
+dec_location(M:Head0, Declaration, From) :-
+    normalize_head(M:Head0, M:Head),
+    declaration_location(Head, M, Declaration, From).
 
 clause_from(Ref, clause(Ref)).
 
@@ -198,23 +195,24 @@ predicate_from(P, file(File, Line, -1, 0)) :-
 	predicate_property(P, line_count(Line)).
 
 record_location_goal(Goal, Type, From) :-
-    normalize_pi(Goal, PI),
-    ground(PI),
-    record_location(PI, Type, From).
+    normalize_head(Goal, M:Head),
+    ground(M),
+    callable(Head),
+    record_location(Head, M, Type, From).
 
-record_location(PI, Type, From) :-
-    ( record_locations:declaration_location(PI, Type, From)
+record_location(Head, M, Type, From) :-
+    ( declaration_location(Head, M, Type, From)
     ->true
-    ; assertz(record_locations:declaration_location(PI, Type, From))
+    ; assertz(declaration_location(Head, M, Type, From))
     ).
 
 record_location_meta_each(MCall, From, FactBuilder, Recorder) :-
-    (predicate_property(MCall, imported_from(IM)) -> true ; IM:_ = MCall),
+    implementation_module(MCall, IM),
     MCall = SM:Call,
     call(FactBuilder, Def, IM:Call, Fact),
     ( (var(Fact) ; Fact = _:_) ->
       MFact = Fact
-    ; (predicate_property(SM:Fact, imported_from(M))->true ; M = SM),
+    ; implementation_module(SM:Fact, M),
       MFact = M:Fact
     ),
     call(Recorder, MFact, dynamic(Def, IM:Call), From).
@@ -228,5 +226,5 @@ record_location_meta(_, _, _, _).
 record_location_dynamic(MCall, From) :-
     record_location_meta(MCall, From, database_fact_ort, record_location_goal).
 
-cleanup_locations(PI, Type, From) :-
-    retractall(record_locations:declaration_location(PI, Type, From)).
+cleanup_locations(Head, M, Type, From) :-
+    retractall(declaration_location(Head, M, Type, From)).

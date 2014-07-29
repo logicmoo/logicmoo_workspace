@@ -20,8 +20,7 @@
 hide_var_dynamic(check:list_strings/1).
 hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
 hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
-hide_var_dynamic(check_trivial_fails:collect_trivial_fail/4).
-hide_var_dynamic(check_trivial_fails:collect_trivial_fail/4).
+hide_var_dynamic(check_trivial_fails:collect_trivial_fail/3).
 hide_var_dynamic(implemented_in:implemented_in/3).
 hide_var_dynamic(implemented_in:implemented_in/3).
 hide_var_dynamic(ntabling:tabling/2).
@@ -36,7 +35,7 @@ hide_wrong_dynamic(user:prolog_trace_interception/4).
 cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _)),
     retractall(check_var_dynamic_db(_, _, _)),
-    cleanup_locations(_, dynamic(_, _), _).
+    cleanup_locations(_, _, dynamic(_, _), _).
 
 audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
@@ -156,10 +155,10 @@ collect_wrong_dynamic(MGoal, Caller, From) :-
 record_location_wd(Caller, M:Fact, Def, From) :-
     Def = dynamic(Type, MGoal),
     normalize_pi(MGoal, MPI),
-    ( nonvar(M),
-      nonvar(Fact)
+    ( atom(M),
+      callable(Fact)
     ->functor(Fact, F, A),
-      record_location(M:F/A, Def, From),
+      record_location(Fact, M, Def, From),
       \+ hide_wrong_dynamic(M:F/A),
       assertz(wrong_dynamic_db(Type, M:F/A, MPI-From))
     ; \+ database_fact(Caller) ->

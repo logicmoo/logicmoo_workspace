@@ -30,7 +30,7 @@ check_undefined(Collect, Pairs) :-
 	      from_location(From, Loc),
 	      check:predicate_indicator(From, CI, [])
 	    ), Pairs),
-    cleanup_locations(_, dynamic(_, _), _).
+    cleanup_locations(_, _, dynamic(_, _), _).
 
 % Hook to hide undef messages:
 :- multifile hide_undef/1.

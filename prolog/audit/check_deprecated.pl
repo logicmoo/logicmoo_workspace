@@ -41,7 +41,7 @@ check_deprecated(Ref0, FileChk, OptionL0, Pairs) :-
 		check:predicate_indicator(From, CI, [])
 	      ), Pairs)
     ),
-    cleanup_locations(_, dynamic(_, _), _).
+    cleanup_locations(_, _, dynamic(_, _), _).
 
 predicate_head(Module:Head) -->
     { nonvar(Head),

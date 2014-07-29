@@ -15,6 +15,7 @@
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(database_fact)).
 :- use_module(library(is_entry_point)).
+:- use_module(library(record_locations)).
 :- use_module(library(location_utils)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
@@ -64,7 +65,7 @@ check_unused(Ref0, FileChk, OptionL0, Pairs) :-
 cleanup_unused :-
     retractall(calls_to(_, _, _, _)),
     retractall(marked(_, _, _)),
-    cleanup_locations(_, dynamic(_, _), _).
+    cleanup_locations(_, _, dynamic(_, _), _).
 
 :- meta_predicate is_entry_caller(+,+,+).
 is_entry_caller('<initialization>', _, _) :- !.
@@ -204,7 +205,7 @@ unmarked(Ref, FileChk, MPI) :-
     ( current_defined_predicate(MPI),
       functor(H, F, A),
       auditable_predicate(Ref)
-    ; record_locations:declaration_location(MPI, dynamic(def, _), _),
+    ; declaration_location(H, M, dynamic(def, _), _),
       functor(H, F, A)
     ),
     \+ entry_caller(F, A, M, H),
@@ -294,6 +295,7 @@ cu_caller_hook(Caller, MGoal, dynamic(use, _), _From) :-
     normalize_pi(Caller, CPI),
     (calls_to(F, A, M, MPI) -> true ; assertz(calls_to(F, A, M, MPI))).
 cu_caller_hook(_Caller, MGoal, dynamic(def, Goal), From) :-
-    normalize_pi(MGoal, MPI),
-    ground(MPI),
-    record_location(MPI, dynamic(def, Goal), From).
+    normalize_head(MGoal, M:Head),
+    nonvar(M),
+    callable(Head),
+    record_location(Head, M, dynamic(def, Goal), From).

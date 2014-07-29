@@ -2,8 +2,11 @@
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
+:- use_module(library(record_locations)).
+:- use_module(library(database_fact)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
+:- use_module(library(implementation_module)).
 
 :- multifile
     prolog:message//1.
@@ -12,27 +15,34 @@
 
 audit:check(trivial_fails, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_trivial_fails(Ref, collect_trivial_fail(FileChk), OptionL, Result).
+    check_trivial_fails(Ref, FileChk, OptionL, Result).
 
-:- meta_predicate check_trivial_fails(?,3,+,-).
-check_trivial_fails(Ref0, Collect, OptionL0, Pairs) :-
+check_trivial_fails(Ref0, FileChk, OptionL0, Pairs) :-
     normalize_head(Ref0, Ref),
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(Ref),
-		   on_trace(Collect)
+		   trace_reference(Ref)
 		  ], OptionL),
-    prolog_walk_code([source(false)|OptionL]),
+    prolog_walk_code([source(false),
+		      on_trace(collect_trivial_fail_1r(FileChk))
+		     |OptionL]),
+    prolog_walk_code([source(false),
+		      on_trace(collect_trivial_fail_2r(FileChk))
+		     |OptionL]),
     findall(CRef, retract(trivial_fail(clause(CRef), _)), Clauses),
     ( Clauses==[]
     ->Pairs=[]
-    ; prolog_walk_code([clauses(Clauses)|OptionL]),
-      findall(warning-(Loc-Args), (retract(trivial_fail(From, Args)),
-				   from_location(From, Loc)), Pairs)
+    ; prolog_walk_code([clauses(Clauses),
+			on_trace(collect_trivial_fail)
+		       |OptionL]),
+      findall(warning-(Loc-Args),
+	      ( retract(trivial_fail(From, Args)),
+		from_location(From, Loc)
+	      ), Pairs)
     ),
-    cleanup_locations(_, dynamic(_, _), _).
+    cleanup_locations(_, _, dynamic(_, _), _).
 
 prolog:message(acheck(trivial_fails)) -->
     ['-------------',nl,
@@ -45,7 +55,7 @@ prolog:message(acheck(trivial_fails, Loc-Args)) -->
     maplist_dcg(show_trivial_fail, Args).
 
 show_trivial_fail(Arg) -->
-    ['In ~q, possible trivial fail for literal ~q'-Arg, nl].
+    ['In ~q, trivial fail for ~q'-Arg, nl].
 
 module_qualified(:) :- !.
 module_qualified(N) :- integer(N), N >= 0.
@@ -75,29 +85,61 @@ meta_goal(_, _, _, _).
 ignore_predicate(pce_expansion:pce_class(_, _, template, _, _, _)).
 ignore_predicate(pce_host:property(system_source_prefix(_))).
 
-collect_trivial_fail(FileChk, MGoal0, Caller, From) :-
+:- public
+    collect_trivial_fail_1r/4,
+    collect_trivial_fail_2r/4.
+
+collect_trivial_fail_1r(FileChk, MGoal, _, From) :-
+    nonvar(MGoal),
     from_to_file(From, File),
     call(FileChk, File),
-    record_location_dynamic(MGoal0, From),
-    ( MGoal0 = M:Goal,
-      atom(M),
-      callable(Goal),
-      predicate_property(MGoal0, interpreted),
-      \+ predicate_property(MGoal0, dynamic),
-      \+ predicate_property(MGoal0, multifile),
-      \+ ignore_predicate(MGoal0)
-    ->( predicate_property(MGoal0, meta_predicate(Meta)) ->
-	qualify_meta_goal(MGoal0, Meta, MGoal)
-      ; MGoal = MGoal0
-      ),
-      ( clause(MGoal, _)
-      ->true
-      ; assertz(trivial_fail(From, [Caller, MGoal]))
-      )
-    ; true
-    ).
+    record_location_dynamic(MGoal, From).
 
+collect_trivial_fail_2r(FileChk, MGoal, Caller, From) :-
+    nonvar(MGoal),
+    from_to_file(From, File),
+    call(FileChk, File),
+    collect_trivial_fail(MGoal, Caller, From).
+
+collect_trivial_fail(MGoal0, Caller, From) :-
+    nonvar(MGoal0 ),
+    MGoal0 = M:Goal,
+    atom(M),
+    callable(Goal),
+    implementation_module(MGoal0, IM),
+    ( MGoal1 = MGoal0
+    ; database_use_fact(IM:Goal, Fact0 ),
+      nonvar(Fact0 ),
+      ( Fact0 = FM:Fact1
+      ->atom(FM),
+	callable(Fact1),
+	MGoal1 = Fact0
+      ; callable(Fact0 )
+      ->MGoal1 = M:Fact0
+      )
+    ),
+    ( predicate_property(MGoal1, interpreted),
+      %% \+ predicate_property(MGoal1, dynamic),
+      \+ predicate_property(MGoal1, multifile),
+      \+ ignore_predicate(MGoal1)
+    ->( predicate_property(MGoal1, meta_predicate(Meta)) ->
+	qualify_meta_goal(MGoal1, Meta, MGoal)
+      ; MGoal = MGoal1
+      ),
+      ( \+ ( clause(MGoal, _)
+	   ; dyn_defined(MGoal)
+	   )
+      ->assertz(trivial_fail(From, [Caller, MGoal0]))
+      ; true
+      )
+    ),
+    fail.
+
+dyn_defined(M:Head) :-
+    implementation_module(M:Head, IM),
+    declaration_location(Head, IM, dynamic(def, _), _).
+		 
 qualify_meta_goal(M:Goal0, Meta, M:Goal) :-
-	functor(Goal0, F, N),
-	functor(Goal, F, N),
-	meta_goal(1, M, Meta, Goal0, Goal).
+    functor(Goal0, F, N),
+    functor(Goal, F, N),
+    meta_goal(1, M, Meta, Goal0, Goal).

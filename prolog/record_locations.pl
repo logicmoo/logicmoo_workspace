@@ -1,15 +1,16 @@
-:- module(record_locations, []).
+:- module(record_locations,
+	  [declaration_location/4]).
 
 :- dynamic
-    declaration_location/3.
+    declaration_location/4.
 
 :- multifile
     user:term_expansion/2,
     user:goal_expansion/2,
-    declaration_location/3.
+    declaration_location/4.
 
 :- discontiguous
-    declaration_location/3.
+    declaration_location/4.
 
 record_location_term((:- module(_, L))) :-
     assert_declaration(export, L).
@@ -53,7 +54,7 @@ assert_include_declaration(U) :-
     source_location(File, Line),
     '$set_source_module'(M, M),
     L = file(File, Line, -1, 0),
-    assert_location(M:(-), include(U), L).
+    assert_location((-), M, include(U), L).
 
 assert_declaration_one(reexport(U), L, M, PI) :-
     !,
@@ -63,20 +64,22 @@ assert_declaration_one(Declaration, L, _, M:PI) :-
     assert_declaration_one(Declaration, L, M, PI).
 assert_declaration_one(Declaration, L, M, F/A) :-
     !,
-    assert_location(M:F/A, Declaration, L).
-assert_declaration_one(Declaration, L, M, H) :-
     functor(H, F, A),
-    assert_location(M:F/A, Declaration, L).
+    assert_location(H, M, Declaration, L).
+assert_declaration_one(Declaration, L, M, H) :-
+    assert_location(H, M, Declaration, L).
 
 assert_reexport_declaration_2((F/A as G), U, L, M) :-
-    assert_location(M:G/A, reexport(U, [F/A as G]), L).
+    functor(H, G, A),
+    assert_location(H, M, reexport(U, [F/A as G]), L).
 assert_reexport_declaration_2(F/A, U, L, M) :-
-    assert_location(M:F/A, reexport(U, [F/A]), L).
+    functor(H, F, A),
+    assert_location(H, M, reexport(U, [F/A]), L).
 assert_reexport_declaration_2(op(_, _, _), _, _, _).
 assert_reexport_declaration_2(except(_),   _, _, _).
 
-assert_location(PI, Declaration, Loc) :-
-    compile_aux_clauses(record_locations:declaration_location(PI, Declaration, Loc)).
+assert_location(H, M, Declaration, Loc) :-
+    compile_aux_clauses(record_locations:declaration_location(H, M, Declaration, Loc)).
 
 user:term_expansion(Term, _) :-
     record_location_term(Term),

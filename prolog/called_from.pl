@@ -8,13 +8,10 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(implementation_module)).
 :- use_module(library(location_utils)).
-
-:- dynamic
-    record_locations:declaration_location/3.
+:- use_module(library(record_locations)).
 
 :- multifile
-    prolog:message//1,
-    record_locations:declaration_location/3.
+    prolog:message//1.
 
 :- dynamic called_from_db/3.
 
@@ -28,7 +25,7 @@ called_from(Ref) :-
 called_from(Ref, Caller) :-
     called_from(Ref, Caller, [], Sorted),
     maplist(print_call_point, Sorted),
-    cleanup_locations(_, dynamic(_, _), _),
+    cleanup_locations(_, _, dynamic(_, _), _),
     retractall(called_from_db(_, _, _)).
 
 called_from(Ref0, Caller, OptionL, Pairs) :-
@@ -41,7 +38,7 @@ collect_called_from(Ref, Caller, OptionL, Sorted) :-
     keysort(Pairs, Sorted).
 
 collect_called_from(Ref, Caller, OptionL0) :-
-    cleanup_locations(_, dynamic(_, _), _),
+    cleanup_locations(_, _, dynamic(_, _), _),
     retractall(called_from_db(_, _, _)),
     merge_options([infer_meta_predicates(false),
 		   autoload(false),
@@ -63,11 +60,11 @@ current_called_from(Call, Loc, PI, CPI) :-
       normalize_pi(Caller, CPI)
     ; Call = M:H,
       PI = M:F/A,
-      ( nonvar(H)
+      ( callable(H)
       ->functor(H, F, A),
-	record_locations:declaration_location(PI, dynamic(Type, CPI), From),
+	declaration_location(H, M, dynamic(Type, CPI), From),
 	Type \= def
-      ; record_locations:declaration_location(PI, dynamic(Type, CPI), From),
+      ; declaration_location(H, M, dynamic(Type, CPI), From),
 	Type \= def,
 	functor(H, F, A)
       )

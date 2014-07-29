@@ -2,14 +2,11 @@
 
 :- use_module(library(prolog_codewalk), []). % for message_location//1
 :- use_module(library(normalize_head)).
-
-:- dynamic
-    record_locations:declaration_location/3.
+:- use_module(library(record_locations)).
 
 :- multifile
     prolog:message//1,
-    prolog:message_location//1,
-    record_locations:declaration_location/3.
+    prolog:message_location//1.
 
 prolog:message(acheck(implemented_in(From, Args))) -->
     prolog:message_location(From),
@@ -26,7 +23,7 @@ implemented_in(MGoal0, From, Args) :-
 		), UML),
     sort(UML, ML),
     member(M, ML),
-    ( record_locations:declaration_location(M:F/A, Declaration, From),
+    ( declaration_location(Goal, M, Declaration, From),
       Declaration \= dynamic(query, _),
       Args = [Declaration]
     ;
