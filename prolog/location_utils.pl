@@ -79,8 +79,8 @@ option_pred(Head, PredChk) :-
 
 option_filechk(OptionL0, OptionL, FileChk) :-
     select_option(files(AliasL0), OptionL0, OptionL1, []),
-    select_option(file( Alias),   OptionL1, OptionL,  []),
-    ( Alias = []
+    select_option(file( Alias),   OptionL1, OptionL,  Alias),
+    ( var(Alias) % ignore
     ->AliasL = AliasL0
     ; AliasL = [Alias|AliasL0]
     ),
