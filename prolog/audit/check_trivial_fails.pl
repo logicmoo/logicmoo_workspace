@@ -89,12 +89,14 @@ ignore_predicate(pce_host:property(system_source_prefix(_))).
     collect_trivial_fail_1r/4,
     collect_trivial_fail_2r/4.
 
+:- meta_predicate collect_trivial_fail_1r(1,+,+,+).
 collect_trivial_fail_1r(FileChk, MGoal, _, From) :-
     nonvar(MGoal),
     from_to_file(From, File),
     call(FileChk, File),
     record_location_dynamic(MGoal, From).
 
+:- meta_predicate collect_trivial_fail_2r(1,+,+,+).
 collect_trivial_fail_2r(FileChk, MGoal, Caller, From) :-
     nonvar(MGoal),
     from_to_file(From, File),
