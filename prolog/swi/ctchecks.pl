@@ -126,12 +126,12 @@ check_property(ctcheck, H, M, Pos, CTChecks) :-
 verif_is_property(_, call, N) :- N > 0, !. % meta checks not supported yet --EMM
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
-    assertions:assertion_db(H, AM, _, prop, _, _, _, _, _, _),
+    assrt_lib:assertion_db(H, AM, _, prop, _, _, _, _, _, _),
     ( AM = IM -> true
     ; predicate_property(AM:H, imported_from(IM))
     ).
 
-term_expansion(assertions:assertion_db(Head, M, _Status, Type, Cp, Ca,
+term_expansion(assrt_lib:assertion_db(Head, M, _Status, Type, Cp, Ca,
 				       Su, Gl, _Co, _), Pos, _, _) :-
     !,
     current_prolog_flag(check_assertions, Issues),
