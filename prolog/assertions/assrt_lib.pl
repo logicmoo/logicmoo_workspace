@@ -3,7 +3,8 @@
 		      assertion_body/7,
 		      comps_to_goal/3,
 		      comps_to_goal/4,
-		      assertion_records/2]).
+		      assertion_records/2,
+		      assertion_db/10]).
 
 :- use_module(library(assertions_op)).
 :- use_module(library(sequence_list)).
@@ -15,13 +16,13 @@
 % Assertion reader for SWI-Prolog
 
 :- multifile
-    assertions:assertion_db/10,
-    assertions:doc_db/4,
+    assrt_lib:assertion_db/10,
+    assrt_lib:doc_db/4,
     assrt_lib:nodirective_error_hook/1.
 
 % :- volatile
-%     assertions:assertion_db/10,
-%     assertions:doc_db/4.
+%     assrt_lib:assertion_db/10,
+%     assrt_lib:doc_db/4.
 
 add_arg(H, M:G0, M:G) :- !,
     add_arg(H, G0, G).
@@ -31,8 +32,8 @@ add_arg(H, G0, G) :-
 
 % For Compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line, Line) :-
-    clause(assertions:assertion_db(Head, M, Status, Type, Comp, Call,
-				   Succ, Glob0, Comm, Dict), true, Ref),
+    clause(assrt_lib:assertion_db(Head, M, Status, Type, Comp, Call,
+				  Succ, Glob0, Comm, Dict), true, Ref),
     maplist(add_arg(Head), Glob0, Glob),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
     clause_property(Ref, file(File)),
@@ -456,11 +457,11 @@ assertion_records_helper(Match, Match-Record, Record).
 assertion_records(M:Decl, Records, _, Dict) :-
     atom(M), !,
     assertion_records(Decl, Records, M, Dict).
-assertion_records(doc(Key, Doc), assertions:doc_db(Key, M, Doc, Dict), M, Dict) :- !.
+assertion_records(doc(Key, Doc), assrt_lib:doc_db(Key, M, Doc, Dict), M, Dict) :- !.
 assertion_records(Assertions, Records, CM, Dict) :-
     Match=(Assertions-Dict),
-    findall(Match-(assertions:assertion_db(Head, M, Status, Type, Cp, Ca,
-					   Su, Gl, Co, Dict)),
+    findall(Match-(assrt_lib:assertion_db(Head, M, Status, Type, Cp, Ca,
+					  Su, Gl, Co, Dict)),
 	    ( normalize_assertions(Assertions, CM, M:Head, Status,
 				   Type, Cp0, Ca0, Su0, Gl0, Co),
 	      once(maplist(maplist(compact_module_call(M)),
