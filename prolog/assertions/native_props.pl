@@ -58,7 +58,8 @@
 		throws/2,
 		throw/2,
 		nsh/2,
-		user_output/2
+		user_output/2,
+		test_throw_2/4
 		% intervals/2 %[LD]
 		% , user_error/2
 	    ],
