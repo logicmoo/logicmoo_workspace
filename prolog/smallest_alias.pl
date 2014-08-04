@@ -1,4 +1,4 @@
-:- module(smallest_alias, [smallest_alias/2, current_alias/2]).
+:- module(smallest_alias, [smallest_alias/2, current_alias/2, pretty_path/2]).
 
 smallest_alias(File, CAlias) :-
     findall(s(Size1,Size2)-Alias,
@@ -16,4 +16,12 @@ current_alias(File, Alias) :-
     absolute_file_name(ADir, Dir, [file_type(directory), solutions(all)]),
     directory_file_path(Dir, Base, File),
     file_name_extension(Name, _Ext, Base),
-    Alias =.. [A0, Name].
+    pretty_path(Name, Path),
+    Alias =.. [A0, Path].
+
+pretty_path(Name0, Path/F) :-
+    directory_file_path(Dir, F, Name0),
+    Dir \= '.',
+    !,
+    pretty_path(Dir, Path).
+pretty_path(Name, Name).
