@@ -181,10 +181,10 @@ inline_db(_, _, _, _) :- fail.
 
 :- if(current_prolog_flag(dialect, swi)).
 
-:- multifile rtchecks:nortchecked/1.
+:- multifile nortchecked/1.
 
 :- multifile ciao:declaration_hook/2.
-ciao:declaration_hook(nortchecked, rtchecks:nortchecked(M)) :-
+ciao:declaration_hook(nortchecked, rtchecks_tr:nortchecked(M)) :-
     '$set_source_module'(M, M).
 
 rel_file_name(ASrc, Src) :-
@@ -319,7 +319,7 @@ proc_remaining_assertions(Preds, Clauses, M, Dict) :-
 
 :- if(current_prolog_flag(dialect, swi)).
 runtime_checkable(M) :-
-	\+ rtchecks:nortchecked(M),
+	\+ nortchecked(M),
 	current_prolog_flag(runtime_checks, yes).
 :- else.
 runtime_checkable(_) :-
