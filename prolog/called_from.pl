@@ -79,6 +79,6 @@ print_call_point(L-A) :-
 % than the imported predicates.
 %
 used_predicates(Module, Context, PIL) :-
-    collect_called_from(Module:_, Context:_, [source(false)]),
+    collect_called_from(Module:_, _, [module(Context), source(false)]),
     findall(PI, current_called_from(Module:_, _, PI, _), PIU),
     sort(PIU, PIL).
