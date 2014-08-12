@@ -42,7 +42,7 @@ check_trivial_fails(Ref0, FileChk, OptionL0, Pairs) :-
 		from_location(From, Loc)
 	      ), Pairs)
     ),
-    cleanup_locations(_, _, dynamic(_, _), _).
+    cleanup_locations(_, _, dynamic(_, _, _), _).
 
 prolog:message(acheck(trivial_fails)) -->
     ['-------------',nl,
@@ -139,7 +139,7 @@ collect_trivial_fail(MGoal0, Caller, From) :-
 
 dyn_defined(M:Head) :-
     implementation_module(M:Head, IM),
-    declaration_location(Head, IM, dynamic(def, _), _).
+    declaration_location(Head, IM, dynamic(def, _, _), _).
 		 
 qualify_meta_goal(M:Goal0, Meta, M:Goal) :-
     functor(Goal0, F, N),

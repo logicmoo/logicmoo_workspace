@@ -24,7 +24,7 @@ implemented_in(MGoal0, From, Args) :-
     sort(UML, ML),
     member(M, ML),
     ( declaration_location(Goal, M, Declaration, From),
-      Declaration \= dynamic(query, _),
+      Declaration \= dynamic(query, _, _),
       Args = [Declaration]
     ;
       Counter=c(1),

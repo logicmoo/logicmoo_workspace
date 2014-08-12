@@ -3,7 +3,7 @@
 			called_from/5,
 			collect_called_from/5,
 			collect_called_from/6,
-			current_called_from/6,
+			current_called_from/5,
 			used_predicates/2,
 			used_predicates/3]).
 
@@ -28,23 +28,24 @@ called_from(Ref) :-
 called_from(Ref, Caller) :-
     called_from(Ref, _CM, Caller, [], Sorted),
     maplist(print_call_point, Sorted),
-    cleanup_locations(_, _, dynamic(_, _), _),
+    cleanup_locations(_, _, dynamic(_, _, _), _),
     retractall(called_from_db(_, _, _, _, _)).
 
 called_from(Ref0, CM, Caller, OptionL, Pairs) :-
     normalize_head(Ref0, M:H),
     collect_called_from(H, M, CM, Caller, OptionL, Pairs).
 
-collect_called_from(Ref, M, CM, Caller, OptionL, Sorted) :-
-    collect_called_from(Ref, M, CM, Caller, OptionL),
-    findall(L-[M:PI, CPI], ( current_called_from(Ref, M, CM, F, PI, C),
-			     normalize_pi(C, CPI),
-			     from_location(F, L)
-			   ), Pairs),
+collect_called_from(H, M, CM, Caller, OptionL, Sorted) :-
+    collect_called_from(H, M, CM, Caller, OptionL),
+    findall(Loc-[M:F/A, CPI], ( current_called_from(H, M, CM, From, C),
+				functor(H, F, A),
+				normalize_pi(C, CPI),
+				from_location(From, Loc)
+			      ), Pairs),
     keysort(Pairs, Sorted).
 
 collect_called_from(Ref, M, CM, Caller, OptionL0) :-
-    cleanup_locations(_, _, dynamic(_, _), _),
+    cleanup_locations(_, _, dynamic(_, _, _), _),
     retractall(called_from_db(_, _, _, _, _)),
     merge_options([infer_meta_predicates(false),
 		   autoload(false),
@@ -55,14 +56,11 @@ collect_called_from(Ref, M, CM, Caller, OptionL0) :-
 		  OptionL0, OptionL),
     prolog_walk_code(OptionL).
 
-current_called_from(H, M, CM, From, PI, Caller) :-
+current_called_from(H, M, CM, From, Caller) :-
     ( called_from_db(H, M, CM, From, Caller)
-    ; declaration_location(H, M, dynamic(Type, Caller), From),
-      M = CM,
+    ; declaration_location(H, M, dynamic(Type, CM, Caller), From),
       memberchk(Type, [retract, query])
-    ),
-    functor(H, F, A),
-    PI = F/A.
+    ).
 
 :- public collect_call_point/6.
 collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
@@ -82,11 +80,17 @@ print_call_point(L-A) :-
 %
 used_predicates(Module, Context, PIL) :-
     collect_called_from(_, Module, Context, _, [source(false)]),
-    findall(PI, current_called_from(_, Module, Context, _, PI, _), PIU),
+    findall(F/A,
+	    ( current_called_from(H, Module, Context, _, _),
+	      functor(H, F, A)
+	    ), PIU),
     sort(PIU, PIL).
 
 used_predicates(Module, Groups) :-
     collect_called_from(_, Module, _, _, [source(false)]),
-    findall(Context-PI, current_called_from(_, Module, Context, _, PI, _), Pairs),
+    findall(Context-(F/A),
+	    ( current_called_from(H, Module, Context, _, _),
+	      functor(H, F, A)
+	    ), Pairs),
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Groups).

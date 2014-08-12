@@ -35,7 +35,7 @@ hide_wrong_dynamic(user:prolog_trace_interception/4).
 cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _)),
     retractall(check_var_dynamic_db(_, _, _)),
-    cleanup_locations(_, _, dynamic(_, _), _).
+    cleanup_locations(_, _, dynamic(_, _, _), _).
 
 audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
@@ -153,7 +153,7 @@ collect_wrong_dynamic(MGoal, Caller, From) :-
 			 record_location_wd(Caller)).
 
 record_location_wd(Caller, M:Fact, Def, From) :-
-    Def = dynamic(Type, MGoal),
+    Def = dynamic(Type, _CM, MGoal),
     normalize_pi(MGoal, MPI),
     ( atom(M),
       callable(Fact)

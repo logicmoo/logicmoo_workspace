@@ -208,14 +208,14 @@ record_location(Head, M, Type, From) :-
 
 record_location_meta_each(MCall, From, FactBuilder, Recorder) :-
     implementation_module(MCall, IM),
-    MCall = SM:Call,
+    MCall = CM:Call,
     call(FactBuilder, Def, IM:Call, Fact),
     ( (var(Fact) ; Fact = _:_) ->
       MFact = Fact
-    ; implementation_module(SM:Fact, M),
+    ; implementation_module(CM:Fact, M),
       MFact = M:Fact
     ),
-    call(Recorder, MFact, dynamic(Def, IM:Call), From).
+    call(Recorder, MFact, dynamic(Def, CM, IM:Call), From).
 
 :- meta_predicate record_location_meta(+,+,3,3).
 record_location_meta(MCall, From, FactBuilder, Recorder) :-
