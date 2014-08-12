@@ -64,8 +64,7 @@ current_called_from(H, M, CM, From, Caller) :-
 
 :- public collect_call_point/6.
 collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
-    implementation_module(MGoal, IM),
-    record_location_dynamic(MGoal, From),
+    record_location_dynamic(MGoal, IM, From),
     MGoal = M:Goal,
     assertz(called_from_db(Goal, IM, M, From, Caller)).
 

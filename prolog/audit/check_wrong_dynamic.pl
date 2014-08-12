@@ -20,7 +20,7 @@
 hide_var_dynamic(check:list_strings/1).
 hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
 hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
-hide_var_dynamic(check_trivial_fails:collect_trivial_fail/3).
+hide_var_dynamic(check_trivial_fails:collect_trivial_fail/4).
 hide_var_dynamic(implemented_in:implemented_in/3).
 hide_var_dynamic(implemented_in:implemented_in/3).
 hide_var_dynamic(ntabling:tabling/2).
@@ -41,18 +41,18 @@ audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
     check_wrong_dynamic(Ref, FileChk, OptionL, Result).
 
-check_wrong_dynamic(Ref0, FileChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, Ref),
+check_wrong_dynamic(Ref, FileChk, OptionL0, Pairs) :-
+    normalize_head(Ref, M:H),
     merge_options(OptionL0,
 		  [source(false),
 		   infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(Ref),
-		   on_trace(collect_wrong_dynamic(FileChk))],
+		   trace_reference(_:H),
+		   on_trace(collect_wrong_dynamic(M, FileChk))],
 		  OptionL),
     prolog_walk_code(OptionL),
-    collect_result(Ref, Pairs),
+    collect_result(M:H, Pairs),
     cleanup_dynamic_db.
 
 collect_result(Ref, Pairs) :-
@@ -139,17 +139,17 @@ prolog:message(acheck(wrong_dynamic)) -->
      'a variable argument in a database predicate, making it', nl,
      'difficult to analyze.', nl, nl].
 
-:- public collect_wrong_dynamic/4.
-:- meta_predicate collect_wrong_dynamic(+,:,+,+).
-collect_wrong_dynamic(FileChk, MGoal, Caller, From) :-
+:- public collect_wrong_dynamic/5.
+:- meta_predicate collect_wrong_dynamic(?,1,+,+,+).
+collect_wrong_dynamic(M, FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    collect_wrong_dynamic(MGoal, Caller, From),
+    collect_wrong_dynamic(MGoal, M, Caller, From),
     fail.
-collect_wrong_dynamic(_, _, _, _). % avoid side effects
+collect_wrong_dynamic(_, _, _, _, _). % avoid side effects
 
-collect_wrong_dynamic(MGoal, Caller, From) :-
-    record_location_meta(MGoal, From, database_fact_ort,
+collect_wrong_dynamic(MGoal, M, Caller, From) :-
+    record_location_meta(MGoal, M, From, database_fact_ort,
 			 record_location_wd(Caller)).
 
 record_location_wd(Caller, M:Fact, Def, From) :-

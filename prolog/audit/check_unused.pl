@@ -34,13 +34,13 @@ check_pred_file(PI, FileChk) :-
     call(FileChk, File),
     !.
 
-:- public collect_unused/4.
-:- meta_predicate collect_unused(1, +, +, +).
-
-collect_unused(FileChk, MGoal, Caller, From) :-
+:- public collect_unused/5.
+:- meta_predicate collect_unused(?,1,+,+,+).
+collect_unused(M, FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    record_location_meta(MGoal, From, cu_callee_hook, cu_caller_hook(Caller)).
+    record_location_meta(MGoal, M, From, cu_callee_hook,
+			 cu_caller_hook(Caller)).
 
 audit:check(unused, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
@@ -48,14 +48,14 @@ audit:check(unused, Ref, Result, OptionL0) :-
 
 :- meta_predicate check_unused(?, ?, +, -).
 check_unused(Ref0, FileChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, Ref),
+    normalize_head(Ref0, M:H),
     merge_options(OptionL0,
 		  [source(false),
 		   infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(Ref),
-		   on_trace(collect_unused(FileChk))
+		   trace_reference(_:H),
+		   on_trace(collect_unused(M, FileChk))
 		  ], OptionL),
     prolog_walk_code(OptionL),
     mark(Ref),

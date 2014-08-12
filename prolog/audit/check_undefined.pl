@@ -11,20 +11,23 @@
     audit:check/4,
     prolog:message//1.
 
-audit:check(undefined, Ref0, Results, OptionL) :-
+audit:check(undefined, Ref, Results, OptionL) :-
     option_allchk(OptionL, _, FileChk),
-    normalize_head(Ref0, Ref),
-    check_undefined(collect_undef(FileChk, Ref), Results).
+    check_undefined(Ref, FileChk, OptionL, Results).
 
-:- meta_predicate check_undefined(3,-).
-check_undefined(Collect, Pairs) :-
-    prolog_walk_code([source(false),
-		      infer_meta_predicates(false),
-		      autoload(false),
-		      undefined(trace),
-		      evaluate(false),
-		      % module_class([system, library, user]),
-		      on_trace(Collect)]),
+:- meta_predicate check_undefined(?,1,+,-).
+check_undefined(Ref, FileChk, OptionL0, Pairs) :-
+    normalize_head(Ref, M:H),
+    merge_options(OptionL0,
+		  [source(false),
+		   infer_meta_predicates(false),
+		   autoload(false),
+		   undefined(trace),
+		   evaluate(false),
+		   %% module_class([system, library, user]),
+		   on_trace(collect_undef(H, M, FileChk))],
+		  OptionL),
+    prolog_walk_code(OptionL),
     findall(warning-(PI-(Loc/CI)),
 	    ( retract(check:undef(PI, From)),
 	      from_location(From, Loc),
@@ -44,12 +47,15 @@ found_undef(To, _Caller, From) :-
 
 goal_pi(M:H, M:F/A) :- functor(H, F, A).
 
-collect_undef(FileChk, Ref, Ref, Caller, From) :-
+:- public collect_undef/6.
+:- meta_predicate collect_undef(?,?,1,+,+,+).
+collect_undef(H, M, FileChk, MCall, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    record_location_dynamic(Ref, From),
-    found_undef(Ref, Caller, From),
-    fail. % prevent Ref unification
+    _:H=MCall,
+    record_location_dynamic(MCall, M, From),
+    found_undef(MCall, Caller, From),
+    fail. % prevent unexpected unification
 
 prolog:message(acheck(undefined)) -->
     ['--------------------',nl,

@@ -18,24 +18,24 @@ audit:check(trivial_fails, Ref, Result, OptionL0) :-
     check_trivial_fails(Ref, FileChk, OptionL, Result).
 
 check_trivial_fails(Ref0, FileChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, Ref),
+    normalize_head(Ref0, M:H),
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(Ref)
+		   trace_reference(_:H)
 		  ], OptionL),
     prolog_walk_code([source(false),
-		      on_trace(collect_trivial_fail_1r(FileChk))
+		      on_trace(collect_trivial_fail_1r(M, FileChk))
 		     |OptionL]),
     prolog_walk_code([source(false),
-		      on_trace(collect_trivial_fail_2r(FileChk))
+		      on_trace(collect_trivial_fail_2r(M, FileChk))
 		     |OptionL]),
     findall(CRef, retract(trivial_fail(clause(CRef), _)), Clauses),
     ( Clauses==[]
     ->Pairs=[]
     ; prolog_walk_code([clauses(Clauses),
-			on_trace(collect_trivial_fail)
+			on_trace(collect_trivial_fail(M))
 		       |OptionL]),
       findall(warning-(Loc-Args),
 	      ( retract(trivial_fail(From, Args)),
@@ -86,24 +86,24 @@ ignore_predicate(pce_expansion:pce_class(_, _, template, _, _, _)).
 ignore_predicate(pce_host:property(system_source_prefix(_))).
 
 :- public
-    collect_trivial_fail_1r/4,
-    collect_trivial_fail_2r/4.
+    collect_trivial_fail_1r/5,
+    collect_trivial_fail_2r/5.
 
-:- meta_predicate collect_trivial_fail_1r(1,+,+,+).
-collect_trivial_fail_1r(FileChk, MGoal, _, From) :-
+:- meta_predicate collect_trivial_fail_1r(+,1,+,+,+).
+collect_trivial_fail_1r(M, FileChk, MGoal, _, From) :-
     nonvar(MGoal),
     from_to_file(From, File),
     call(FileChk, File),
-    record_location_dynamic(MGoal, From).
+    record_location_dynamic(MGoal, M, From).
 
-:- meta_predicate collect_trivial_fail_2r(1,+,+,+).
-collect_trivial_fail_2r(FileChk, MGoal, Caller, From) :-
+:- meta_predicate collect_trivial_fail_2r(+,1,+,+,+).
+collect_trivial_fail_2r(M, FileChk, MGoal, Caller, From) :-
     nonvar(MGoal),
     from_to_file(From, File),
     call(FileChk, File),
-    collect_trivial_fail(MGoal, Caller, From).
+    collect_trivial_fail(M, MGoal, Caller, From).
 
-collect_trivial_fail(MGoal0, Caller, From) :-
+collect_trivial_fail(IM, MGoal0, Caller, From) :-
     nonvar(MGoal0 ),
     MGoal0 = M:Goal,
     atom(M),
@@ -140,7 +140,7 @@ collect_trivial_fail(MGoal0, Caller, From) :-
 dyn_defined(M:Head) :-
     implementation_module(M:Head, IM),
     declaration_location(Head, IM, dynamic(def, _, _), _).
-		 
+
 qualify_meta_goal(M:Goal0, Meta, M:Goal) :-
     functor(Goal0, F, N),
     functor(Goal, F, N),
