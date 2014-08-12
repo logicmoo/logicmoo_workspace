@@ -3,6 +3,7 @@
 			called_from/5,
 			collect_called_from/5,
 			collect_called_from/6,
+			current_called_from/6,
 			used_predicates/2,
 			used_predicates/3]).
 
