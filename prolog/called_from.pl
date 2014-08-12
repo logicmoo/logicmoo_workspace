@@ -1,8 +1,9 @@
 :- module(called_from, [called_from/1,
 			called_from/2,
-			called_from/4,
-			collect_called_from/3,
-			collect_called_from/4,
+			called_from/5,
+			collect_called_from/5,
+			collect_called_from/6,
+			used_predicates/2,
 			used_predicates/3]).
 
 :- use_module(library(normalize_head)).
@@ -14,7 +15,7 @@
 :- multifile
     prolog:message//1.
 
-:- dynamic called_from_db/4.
+:- dynamic called_from_db/5.
 
 prolog:message(acheck(called_from(MsgLoc, Args))) -->
 	MsgLoc,
@@ -24,50 +25,50 @@ called_from(Ref) :-
 	called_from(Ref, _).
 
 called_from(Ref, Caller) :-
-    called_from(Ref, Caller, [], Sorted),
+    called_from(Ref, _CM, Caller, [], Sorted),
     maplist(print_call_point, Sorted),
     cleanup_locations(_, _, dynamic(_, _), _),
-    retractall(called_from_db(_, _, _, _)).
+    retractall(called_from_db(_, _, _, _, _)).
 
-called_from(Ref0, Caller, OptionL, Pairs) :-
-    normalize_head(Ref0, Ref),
-    collect_called_from(Ref, Caller, OptionL, Pairs).
+called_from(Ref0, CM, Caller, OptionL, Pairs) :-
+    normalize_head(Ref0, M:H),
+    collect_called_from(H, M, CM, Caller, OptionL, Pairs).
 
-collect_called_from(Ref, Caller, OptionL, Sorted) :-
+collect_called_from(Ref, M, CM, Caller, OptionL, Sorted) :-
     collect_called_from(Ref, Caller, OptionL),
-    findall(L-[M:PI, CPI], ( Ref = M:_,
-			   current_called_from(Ref, F, PI, C),
-			   normalize_pi(C, CPI),
-			   from_location(F, L)
-			 ), Pairs),
+    findall(L-[M:PI, CPI], ( current_called_from(Ref, M, CM, F, PI, C),
+			     normalize_pi(C, CPI),
+			     from_location(F, L)
+			   ), Pairs),
     keysort(Pairs, Sorted).
 
-collect_called_from(Ref, Caller, OptionL0) :-
+collect_called_from(Ref, M, CM, Caller, OptionL0) :-
     cleanup_locations(_, _, dynamic(_, _), _),
-    retractall(called_from_db(_, _, _, _)),
+    retractall(called_from_db(_, _, _, _, _)),
     merge_options([infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(Ref),
+		   trace_reference(_:Ref),
 		   module_class([user, system, library]),
-		   on_trace(collect_call_point(Caller))],
+		   on_trace(collect_call_point(M, CM, Caller))],
 		  OptionL0, OptionL),
     prolog_walk_code(OptionL).
 
-current_called_from(M:H, From, PI, Caller) :-
-    ( called_from_db(H, M, From, Caller)
+current_called_from(H, M, CM, From, PI, Caller) :-
+    ( called_from_db(H, M, CM, From, Caller)
     ; declaration_location(H, M, dynamic(Type, Caller), From),
+      M = CM,
       memberchk(Type, [retract, query])
     ),
     functor(H, F, A),
     PI = F/A.
 
-:- public collect_call_point/4.
-collect_call_point(Caller, MGoal, Caller, From) :-
+:- public collect_call_point/6.
+collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
     implementation_module(MGoal, IM),
     record_location_dynamic(MGoal, From),
-    MGoal = _M:Goal,
-    assertz(called_from_db(Goal, IM, From, Caller)).
+    MGoal = M:Goal,
+    assertz(called_from_db(Goal, IM, M, From, Caller)).
 
 print_call_point(L-A) :-
     print_message(information, acheck(called_from(L, A))).
@@ -79,6 +80,12 @@ print_call_point(L-A) :-
 % than the imported predicates.
 %
 used_predicates(Module, Context, PIL) :-
-    collect_called_from(Module:_, _, [module(Context), source(false)]),
-    findall(PI, current_called_from(Module:_, _, PI, _), PIU),
+    collect_called_from(_, Module, Context, _, [source(false)]),
+    findall(PI, current_called_from(_, Module, Context, _, PI, _), PIU),
     sort(PIU, PIL).
+
+used_predicates(Module, Groups) :-
+    collect_called_from(_, Module, _, _, [source(false)]),
+    findall(Context-PI, current_called_from(_, Module, Context, _, PI, _), Pairs),
+    sort(Pairs, Sorted),
+    group_pairs_by_key(Sorted, Groups).
