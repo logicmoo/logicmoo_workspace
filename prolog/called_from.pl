@@ -35,7 +35,7 @@ called_from(Ref0, CM, Caller, OptionL, Pairs) :-
     collect_called_from(H, M, CM, Caller, OptionL, Pairs).
 
 collect_called_from(Ref, M, CM, Caller, OptionL, Sorted) :-
-    collect_called_from(Ref, Caller, OptionL),
+    collect_called_from(Ref, M, CM, Caller, OptionL),
     findall(L-[M:PI, CPI], ( current_called_from(Ref, M, CM, F, PI, C),
 			     normalize_pi(C, CPI),
 			     from_location(F, L)
