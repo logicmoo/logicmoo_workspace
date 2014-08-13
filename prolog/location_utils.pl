@@ -219,7 +219,7 @@ record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
 	FH = Fact
       ),
       implementation_module(FM:FH, M),
-      MFact = M:Fact
+      MFact = M:FH
     ),
     call(Recorder, MFact, dynamic(Def, FM, IM:Call), From).
 
