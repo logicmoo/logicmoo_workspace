@@ -206,26 +206,32 @@ record_location(Head, M, Type, From) :-
     ; assertz(declaration_location(Head, M, Type, From))
     ).
 
-record_location_meta_each(MCall, IM, From, FactBuilder, Recorder) :-
+record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
+    implementation_module(MCall, IM),
     MCall = CM:Call,
     call(FactBuilder, Def, IM:Call, Fact),
-    ( (var(Fact) ; Fact = _:_) ->
-      MFact = Fact
-    ; implementation_module(CM:Fact, M),
+    ( var(Fact)
+    ->MFact = Fact,
+      FM = CM
+    ; ( Fact = FM:FH
+      ->true
+      ; FM = CM,
+	FH = Fact
+      ),
+      implementation_module(FM:FH, M),
       MFact = M:Fact
     ),
-    call(Recorder, MFact, dynamic(Def, CM, IM:Call), From).
+    call(Recorder, MFact, dynamic(Def, FM, IM:Call), From).
 
 :- meta_predicate record_location_meta(+,?,+,3,3).
-record_location_meta(MCall, IM, From, FactBuilder, Recorder) :-
-    implementation_module(MCall, IM),
-    ( record_location_meta_each(MCall, IM, From, FactBuilder, Recorder),
+record_location_meta(MCall, M, From, FactBuilder, Recorder) :-
+    ( record_location_meta_each(MCall, M, From, FactBuilder, Recorder),
       fail
     ; true
     ).
 
-record_location_dynamic(MCall, IM, From) :-
-    record_location_meta(MCall, IM, From, database_fact_ort, record_location_goal).
+record_location_dynamic(MCall, M, From) :-
+    record_location_meta(MCall, M, From, database_fact_ort, record_location_goal).
 
 cleanup_locations(Head, M, Type, From) :-
     retractall(declaration_location(Head, M, Type, From)).
