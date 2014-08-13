@@ -66,6 +66,7 @@ current_called_from(H, M, CM, From, Caller) :-
 collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
     record_location_dynamic(MGoal, IM, From),
     MGoal = M:Goal,
+    implementation_module(MGoal, IM),
     assertz(called_from_db(Goal, IM, M, From, Caller)).
 
 print_call_point(L-A) :-
