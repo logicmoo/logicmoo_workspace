@@ -214,11 +214,15 @@ record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
     ->MFact = Fact,
       FM = CM
     ; ( Fact = FM:FH
-      ->true
+      ->( atom(FM),
+	  callable(FH)
+	->implementation_module(FM:FH, M)
+	; M = FM
+	)
       ; FM = CM,
-	FH = Fact
+	FH = Fact,
+	implementation_module(FM:FH, M)
       ),
-      implementation_module(FM:FH, M),
       MFact = M:FH
     ),
     call(Recorder, MFact, dynamic(Def, FM, IM:Call), From).
