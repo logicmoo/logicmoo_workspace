@@ -47,8 +47,8 @@ audit:check(unused, Ref, Result, OptionL0) :-
     check_unused(Ref, FileChk, OptionL, Result).
 
 :- meta_predicate check_unused(?, ?, +, -).
-check_unused(Ref0, FileChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, M:H),
+check_unused(Ref, FileChk, OptionL0, Pairs) :-
+    normalize_head(Ref, M:H),
     merge_options(OptionL0,
 		  [source(false),
 		   infer_meta_predicates(false),
