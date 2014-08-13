@@ -976,7 +976,6 @@ collapse_dups3([Comp0|Comps0], Comp, [Comp|Comps]) :-
 	collapse_dups2(Comp0, Comps0, Comps).
 
 comps_to_comp_lit(PropValues, Comp, Body0, Body) :-
-	!,
 	comps_parts_to_comp_lit(PropValues, Comp, Body1, Body),
 	lists_to_lits(Body1, Body0).
 
