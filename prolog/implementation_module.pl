@@ -11,4 +11,3 @@ implementation_module(MGoal, IM) :-
     ->IM = M	   %% Allow usage as test
     ; IM:_ = MGoal %% Asume that if not imported, it is defined here
     ).
-
