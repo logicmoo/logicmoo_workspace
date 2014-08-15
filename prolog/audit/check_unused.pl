@@ -106,8 +106,17 @@ sweep(Ref, FileChk, Pairs) :-
     nodes_arcs_sccs(Nodes, Arcs, SU),
     sort(SU, SL),
     % memberchk(arc(Node1, Node2), Arcs),
-    maplist(adjacency(SL, dependent_scc_el), SL, AL),
-    maplist(add_adj_key, AL, Pairs).
+    % maplist(adjacency(SL, dependent_scc_el), SL, AL),
+    findall(S-D, ( member(S, SL),
+		   ( member(D, SL),
+		     D \= S,
+		     dependent_scc_el(S, D)
+		   *->true
+		   ; D = []
+		   )
+		 ),
+	    DL),
+    maplist(add_adj_key, DL, Pairs).
 
 /*
 sweep(Ref, Pairs) :-
@@ -118,9 +127,11 @@ sweep(Ref, Pairs) :-
 add_warning_key(L, warning-L).
 
 audit:prepare_results(unused, Pairs, Results) :-
-    maplist(add_adj_key, AL, Pairs),
-    partial_dependency_tree(dependent_scc_al, AL, DL),
-    add_location_info(add_location_al(Pairs), DL, PIR),
+    maplist(add_adj_key, DU, Pairs),
+    sort(DU, DL),
+    group_pairs_by_key(DL, AL),
+    partial_dependency_tree(dependent_scc_al, AL, PL),
+    add_location_info(add_location_al(Pairs), PL, PIR),
     maplist(add_warning_key, PIR, Results).
 
 add_location_al(AL, PI, L) :-
@@ -141,14 +152,15 @@ prop_loc_desc(PI, PI/LocDL) :-
 add_adj_key(PIL-L, warning-(PILocDL/L)) :-
     maplist(prop_loc_desc, PIL, PILocDL).
 
+/*
 :- meta_predicate adjacency(+, 2, +, -).
 adjacency(SL, Dependent, S, S-L) :-
-    findall(S2, ( member(S2, SL),
-		  S2 \= S,
-		  call(Dependent, S, S2)
-		),
-	    U),
-    sort(U, L).
+    findall(D, ( member(D, SL),
+		 D \= S,
+		 call(Dependent, S, D)
+	       ),
+	    L).
+*/
 
 :- public dependent_scc_el/2.
 
