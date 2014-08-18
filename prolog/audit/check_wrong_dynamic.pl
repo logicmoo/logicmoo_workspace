@@ -56,15 +56,15 @@ check_wrong_dynamic(Ref, FileChk, OptionL0, Pairs) :-
     cleanup_dynamic_db.
 
 collect_result(Ref, Pairs) :-
-    findall(Type-(static_as_dynamic-((Loc/PI)-(MLoc/MPI))),
-	    current_static_as_dynamic(Type, Loc, PI, MLoc, MPI), Pairs, Pairs1),
+    findall(Type-(as_dynamic(DType)-((Loc/PI)-(MLoc/MPI))),
+	    current_static_as_dynamic(Type, DType, Loc, PI, MLoc, MPI), Pairs, Pairs1),
     findall(warning-(dynamic_as_static-(Loc-PI)),
 	    current_dynamic_as_static(Ref, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
 	    (retract(check_var_dynamic_db(PI, CI, From)),
 	     from_location(From, Loc)), Pairs2, []).
 
-current_static_as_dynamic(Type, Loc, PI, MLoc, MPI) :-
+current_static_as_dynamic(Type, DType, Loc, PI, MLoc, MPI) :-
     wrong_dynamic_db(TypeDB, PI, MPI-MFrom),
     memberchk(TypeDB,[def,retract]),
     PI = M:F/A,
@@ -75,8 +75,10 @@ current_static_as_dynamic(Type, Loc, PI, MLoc, MPI) :-
     ( predicate_property(Ref, number_of_clauses(N)),
       N > 0 ->
       Type = error,
+      DType = static,
       predicate_location(Ref, Loc)
     ; Type = warning,
+      DType  = unknown,
       once(property_location(PI, _, Loc))      
     ),
     from_location(MFrom, MLoc).
@@ -102,8 +104,8 @@ current_dynamic_as_static(Ref, Loc, PI) :-
 prolog:message(acheck(wrong_dynamic, Type-List)) -->
     wrong_dynamic_message(Type, List).
 
-static_as_dynamic(Loc/PI-MLocPIs) -->
-    ['\t'|Loc], ['~w modified by'-[PI], nl],
+as_dynamic(DType, Loc/PI-MLocPIs) -->
+    ['\t'|Loc], ['~w ~q modified by'-[DType, PI], nl],
     maplist_dcg(show_locpi, MLocPIs).
 
 show_locpi(Loc/PI) --> ['\t\t'|Loc], check:predicate(PI), [nl].
@@ -114,9 +116,9 @@ dynamic_as_static(Loc-PIs) -->
     {compact_pi_list(PIs, CPIs)},
     ['\t'|Loc], ['predicates ~w'-[CPIs], nl].
 
-wrong_dynamic_message(static_as_dynamic, LocPIs) -->
-    ['Predicates never declared dynamic, but modified:', nl],
-    maplist_dcg(static_as_dynamic, LocPIs).
+wrong_dynamic_message(as_dynamic(DType), LocPIs) -->
+    ['Predicates are ~w, but never declared dynamic and modified:'-DType, nl],
+    maplist_dcg(as_dynamic(DType), LocPIs).
 wrong_dynamic_message(dynamic_as_static, LocPIs) -->
     ['Predicates declared dynamic, but never modified:', nl],
     maplist_dcg(dynamic_as_static, LocPIs).
