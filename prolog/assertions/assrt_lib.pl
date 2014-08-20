@@ -99,7 +99,7 @@ normalize_assertion_body((PD            is GP   ), g, PD, true, true, true, GP, 
 normalize_assertion_body((BO                 #CO), P, PD, DP,   CP,   AP,   GP,   CO) :-
     normalize_assertion_body(BO, P, PD, DP, CP, AP, GP, ""), !. %00001%N
 normalize_assertion_body((PD                 #CO), p, PD, true, true, true, true, CO) :- !. %00001%N
-normalize_assertion_body((PD                    ), t, PD, true, true, true, true, "") :- !. %00000
+normalize_assertion_body((PD                    ), t, (PD                    ), true, true, true, true, ""). %00000
 %% ---------------------------------------------------------------------------------------- %% ----
 
 fix_format_global(p, p).
