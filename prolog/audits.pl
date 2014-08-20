@@ -4,6 +4,7 @@
 
 :- use_module(library(audit/check_undefined)).
 :- use_module(library(audit/check_unused)).
+:- use_module(library(audit/check_dupnames)).
 :- use_module(library(audit/check_deprecated)).
 :- use_module(library(audit/check_meta_decls)).
 :- use_module(library(audit/check_non_loaded)).
