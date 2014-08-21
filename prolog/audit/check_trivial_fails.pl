@@ -103,39 +103,33 @@ collect_trivial_fail_2r(M, FileChk, MGoal, Caller, From) :-
     call(FileChk, File),
     collect_trivial_fail(M, MGoal, Caller, From).
 
-collect_trivial_fail(IM, MGoal0, Caller, From) :-
-    nonvar(MGoal0 ),
-    MGoal0 = M:Goal,
+cu_callee_hook(use, Goal, Goal).
+cu_callee_hook(use, Goal, Fact) :-
+    database_use_fact(Goal, Fact).
+
+collect_trivial_fail(M, MCall, Caller, From) :-
+    record_location_meta(MCall, M, From, cu_callee_hook, cu_caller_hook(Caller)).
+
+cu_caller_hook(Caller, MGoal0, _, From) :-
+    nonvar(MGoal0),
+    M:H = MGoal0,
     atom(M),
-    callable(Goal),
-    implementation_module(MGoal0, IM),
-    ( MGoal1 = MGoal0
-    ; database_use_fact(IM:Goal, Fact0 ),
-      nonvar(Fact0 ),
-      ( Fact0 = FM:Fact1
-      ->atom(FM),
-	callable(Fact1),
-	MGoal1 = Fact0
-      ; callable(Fact0 )
-      ->MGoal1 = M:Fact0
-      )
-    ),
-    ( predicate_property(MGoal1, interpreted),
-      %% \+ predicate_property(MGoal1, dynamic),
-      \+ predicate_property(MGoal1, multifile),
-      \+ ignore_predicate(MGoal1)
-    ->( predicate_property(MGoal1, meta_predicate(Meta)) ->
-	qualify_meta_goal(MGoal1, Meta, MGoal)
-      ; MGoal = MGoal1
+    callable(H),
+    ( predicate_property(MGoal0, interpreted),
+      %% \+ predicate_property(MGoal0, dynamic),
+      \+ predicate_property(MGoal0, multifile),
+      \+ ignore_predicate(MGoal0)
+    ->( predicate_property(MGoal0, meta_predicate(Meta)) ->
+	qualify_meta_goal(MGoal0, Meta, MGoal)
+      ; MGoal = MGoal0
       ),
       ( \+ ( clause(MGoal, _)
 	   ; dyn_defined(MGoal)
 	   )
-      ->assertz(trivial_fail(From, [Caller, MGoal0]))
+      ->assertz(trivial_fail(From, [Caller, MGoal]))
       ; true
       )
-    ),
-    fail.
+    ).
 
 dyn_defined(M:Head) :-
     implementation_module(M:Head, IM),
