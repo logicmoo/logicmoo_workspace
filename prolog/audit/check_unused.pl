@@ -74,7 +74,8 @@ is_entry_caller(F, A, M) :- entry_caller(F, A, M, _).
 entry_caller(F, A, M, H) :-
     functor(H, F, A),
     ( hide_unused(M:F/A) -> true
-    ; is_entry_point(M:H)
+    ; is_entry_point(M:H) -> true
+    ; declaration_location(H, M, goal, _)
     ).
 
 entry_point(M:H, CM:CF/CA) :-

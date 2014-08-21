@@ -4,8 +4,10 @@
 			collect_called_from/5,
 			collect_called_from/6,
 			current_called_from/5,
+			current_used_from/6,
 			used_predicates/2,
-			used_predicates/3]).
+			used_predicates/3
+		       ]).
 
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
@@ -57,9 +59,14 @@ collect_called_from(Ref, M, CM, Caller, OptionL0) :-
     prolog_walk_code(OptionL).
 
 current_called_from(H, M, CM, From, Caller) :-
+    current_used_from([retract, query], H, M, CM, From, Caller).
+
+current_used_from(DynTypes, H, M, CM, From, Caller) :-
     ( called_from_db(H, M, CM, From, Caller)
     ; declaration_location(H, M, dynamic(Type, CM, Caller), From),
-      memberchk(Type, [retract, query])
+      memberchk(Type, DynTypes)
+    ; declaration_location(H, CM, goal, From),
+      implementation_module(CM:H, M)
     ).
 
 :- public collect_call_point/6.
