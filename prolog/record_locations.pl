@@ -28,7 +28,12 @@ record_location_term((:- include(U)))        :- assert_declaration(include(U)).
 record_location_term((:- use_module(A)))     :- assert_declaration(use_module(A)).
 record_location_term((:- use_module(A, L)))  :- assert_declaration(use_module(A, L)).
 record_location_term((:- initialization(_))).
-record_location_term((:- _))                 :- retractall(rl_tmp(_, _)).
+record_location_term((:- G)) :-
+    nonvar(G),
+    '$set_source_module'(M, M),
+    functor(G, F, A),
+    current_predicate(M:F/A),
+    retractall(rl_tmp(_, _)).
 
 :- meta_predicate mapsequence(+, 1).
 mapsequence(A, _) :-
