@@ -25,6 +25,7 @@ implemented_in(MGoal0, From, Args) :-
     member(M, ML),
     ( declaration_location(Goal, M, Declaration, From),
       Declaration \= dynamic(query, _, _),
+      Declaration \= goal,
       Args = [Declaration]
     ;
       Counter=c(1),
