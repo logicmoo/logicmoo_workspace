@@ -4,6 +4,7 @@
 		      comps_to_goal/3,
 		      comps_to_goal/4,
 		      assertion_records/2,
+		      a_fake_body/5,
 		      assertion_db/10]).
 
 :- use_module(library(assertions_op)).
@@ -16,24 +17,59 @@
 % Assertion reader for SWI-Prolog
 
 :- multifile
-    assrt_lib:assertion_db/10,
+    assrt_lib:assertion_head/6,
     assrt_lib:doc_db/4,
     assrt_lib:nodirective_error_hook/1.
 
 % :- volatile
-%     assrt_lib:assertion_db/10,
+%     assrt_lib:assertion_head/6,
 %     assrt_lib:doc_db/4.
 
 add_arg(H, M:G0, M:G) :- !,
     add_arg(H, G0, G).
 add_arg(H, G0, G) :-
-    G0 =.. [F|L],
-    G  =.. [F,H|L].
+    ( nonvar(G0)
+    ->G0 =.. [F|L],
+      G  =.. [F,H|L]
+    ; G  =.. [F,H|L],
+      G0 =.. [F|L]
+    ).
+
+list_conj([],     true).
+list_conj([E|EL], (E, CL)) :-
+    list_conj_2(EL, E, CL).
+
+list_conj_2([E|L], E0, (E0, S)) :- list_conj_2(L, E, S).
+list_conj_2([], E, E).
+
+% conj_list(V) --> {var(V)}, !, [V].
+% conj_list((A, B)) --> !,
+%     conj_list(A),
+%     conj_list(B).
+% conj_list(A) --> [A].
+
+a_fake_body(CompL, CallL, SuccL, GlobL0, (call(Comp), call(Call), call(Succ), call(Glob))) :-
+    list_conj(CompL, Comp),
+    list_conj(CallL, Call),
+    list_conj(SuccL, Succ),
+    ( nonvar(Glob)
+    ->list_conj(GlobL, Glob),
+      maplist(add_arg(_), GlobL0, GlobL)
+    ; maplist(add_arg(_), GlobL0, GlobL),
+      list_conj(GlobL, Glob)
+    ).
+
+% Note: assertion_db/10 encapsulates the nasty call to clause/2, leaving it
+% encapsulated.
+%
+assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict) :-
+    clause(assertion_head(Head, M, Status, Type, Comm, Dict), _:FBody),
+    once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
 
 % For Compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line, Line) :-
-    clause(assrt_lib:assertion_db(Head, M, Status, Type, Comp, Call,
-				  Succ, Glob0, Comm, Dict), true, Ref),
+    clause(assrt_lib:assertion_head(Head, M, Status, Type, Comm, Dict), _:FBody, Ref),
+    once(a_fake_body(Comp, Call, Succ, Glob0, FBody)),
     maplist(add_arg(Head), Glob0, Glob),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
     clause_property(Ref, file(File)),
@@ -460,13 +496,14 @@ assertion_records(M:Decl, Records, _, Dict) :-
 assertion_records(doc(Key, Doc), assrt_lib:doc_db(Key, M, Doc, Dict), M, Dict) :- !.
 assertion_records(Assertions, Records, CM, Dict) :-
     Match=(Assertions-Dict),
-    findall(Match-(assrt_lib:assertion_db(Head, M, Status, Type, Cp, Ca,
-					  Su, Gl, Co, Dict)),
+    findall(Match-(assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict) :- FBody),
 	    ( normalize_assertions(Assertions, CM, M:Head, Status,
 				   Type, Cp0, Ca0, Su0, Gl0, Co),
 	      once(maplist(maplist(compact_module_call(M)),
-			   [Cp0, Ca0, Su0, Gl0],
-			   [Cp,  Ca,  Su,  Gl]))),
+			   [Cp0, Ca0, Su0, Gl0 ],
+			   [Cp,  Ca,  Su,  Gl])),
+	      a_fake_body(Cp, Ca, Su, Gl, FBody)
+	    ),
 	    ARecords),
     ARecords \= [], % Is a valid assertion if it defines at least one Record
     maplist(assertion_records_helper(Match), ARecords, Records).
