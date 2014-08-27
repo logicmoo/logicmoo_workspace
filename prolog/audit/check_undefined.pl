@@ -42,7 +42,7 @@ found_undef(To, _Caller, From) :-
     goal_pi(To, PI),
     ( hide_undef(To) -> true
     ; check:undef(PI, From) -> true
-    ; assertz(check:undef(PI,From))
+    ; assertz(check:undef(PI, From))
     ).
 
 goal_pi(M:H, M:F/A) :- functor(H, F, A).
@@ -66,5 +66,3 @@ prolog:message(acheck(undefined, PI-LocCIList)) -->
     check:predicate(PI),
     [ ' undefined, which is referenced by', nl ],
     referenced_by(LocCIList).
-
-% prolog:message(check(undefined(PI, LocList))).
