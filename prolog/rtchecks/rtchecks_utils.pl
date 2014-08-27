@@ -1,7 +1,8 @@
 :- module(rtchecks_utils,
 	  [handle_rtcheck/1, pretty_messages/1, rtcheck_to_messages/3,
 	   ctcheck_to_messages/3, check_to_messages/4, call_rtc/1,
-	   save_rtchecks/1, load_rtchecks/1, rtcheck_error/1],
+	   save_rtchecks/1, load_rtchecks/1, rtcheck_error/1,
+	   ctime_t/1, message_info_t/1],
 	  [assertions, basicmodes, nativeprops, regtypes, hiord]).
 
 :- use_module(library(aggregates)).
@@ -60,6 +61,12 @@ pretty_messages(_) :-
 	pop_prolog_flag(write_strings).
 :- endif.
 
+:- regtype message_info_t/1.
+
+message_info_t(message_lns(_, _, _, _, _)).
+message_info_t(message(_, _)).
+message_info_t(message(_)).
+
 :- if(current_prolog_flag(dialect, swi)).
 
 pretty_messages(Messages0) :-
@@ -93,6 +100,8 @@ prolog:message(acheck(checks(Time), RTChecks)) -->
 	map(Messages, ciao_message).
 
 swi_message(Text) --> map(Text, message_to_swi), [nl].
+
+:- pred ciao_message(+Message:message_info_t).
 
 ciao_message(message_lns(Src, Ln, Pos, _, Text)) -->
     { \+integer(Pos) ->
@@ -163,7 +172,7 @@ select_defined(Term, SDict0, SDict) :-
 	).
 
 :- regtype ctime_t/1.
-:- public  ctime_t/1.
+
 ctime_t(ctcheck).
 ctime_t(rtcheck).
 
@@ -174,8 +183,8 @@ check_time_msg(ctcheck, 'Compile-Time').
 
 :- pred check_to_messages(+RTCheck   :rtcheck_error,
 			  +Time      :ctime_t,
-			  ?Messages0 :list(message_info),
-			  ?Messages  :list(message_info))
+			  ?Messages0 :list(message_info_t),
+			  ?Messages  :list(message_info_t))
 # "Converts a run-time check in a message or a list of messages.
    @var{Messages} is the tail.".
 
@@ -194,16 +203,16 @@ check_to_messages(rtcheck(Type, Pred0, Dict, PropValues0, Positions0),
 	Text = [TimeMsg, ' failure in assertion for ', ''({Pred}), '.', '\n',
 		'\tIn *', Type, '*, unsatisfied properties: ', '\n',
 		'\t\t', ''({Props}), '.'|Text0],
-	( Values = [] -> Text0 = Text1
+	( Values = []
+	->Text0 = Text1
 	; Text0 = ['\n', '\tBecause: ','\n',
 		   '\t\t', ''({Values}), '.'|Text1]
 	),
 	( select(message_lns(S, Ln0, Ln1, MessageType, Text2),
-		 PosMessages, PosMessages1) ->
-	  (Text2 == [] -> Text1 = [] ; Text1 = [' ', '\n'|Text2]),
+		 PosMessages, PosMessages1)
+	->(Text2 == [] -> Text1 = [] ; Text1 = [' ', '\n'|Text2]),
 	  Message = message_lns(S, Ln0, Ln1, MessageType, Text)
-	;
-	  Text1 = [],
+	; Text1 = [],
 	  Message = message(error, Text),
 	  PosMessages1 = PosMessages
 	),
