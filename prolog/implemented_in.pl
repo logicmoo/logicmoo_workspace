@@ -26,13 +26,13 @@ implemented_in(MGoal0, From, Args) :-
     ( declaration_location(Goal, M, Declaration, From),
       Declaration \= dynamic(query, _, _),
       Declaration \= goal,
-      Args = [Declaration]
+      Args = [M:F/A-Declaration]
     ;
       Counter=c(1),
       From = clause(ClauseRef),
       catch(clause(M:Goal, _, ClauseRef), _, fail),
       arg(1, Counter, N),
-      Args = [M:F/A/N],
+      Args = [M:F/A-N],
       N1 is N + 1,
       nb_setarg(1, Counter, N1)
     ).
