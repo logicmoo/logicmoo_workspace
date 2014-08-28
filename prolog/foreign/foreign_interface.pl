@@ -34,11 +34,11 @@ term_expansion(end_of_file, (:- Decl)) :-
     !,
     gen_foreign_library(M, AliasSO),
     generate_library(M, AliasSO, File),
-    ( forall(read_foreign_properties(Head, Module, _, _, _, _, _, _),
-	     ( predicate_property(Module:Head, number_of_clauses(X)),
+    ( forall(read_foreign_properties(Head, M, _, _, _, _, _, _),
+	     ( predicate_property(M:Head, number_of_clauses(X)),
 	       X>0
 	     ))
-    ->atom_concat(Module, '$impl', IModule),
+    ->atom_concat(M, '$impl', IModule),
       Decl = IModule:use_foreign_library(AliasSO)
     ; Decl = use_foreign_library(AliasSO)
     ).
