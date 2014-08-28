@@ -1,14 +1,13 @@
-:- module(assrt_lib, [normalize_assertions/10,
-		      assertion_read/9,
+:- module(assrt_lib, [assertion_read/9,
 		      assertion_body/7,
 		      comps_to_goal/3,
 		      comps_to_goal/4,
-		      assertion_records/2,
+		      assertion_records/4,
 		      a_fake_body/5,
-		      assertion_db/10]).
+		      assertion_db/10,
+		      assrt_lib_tr/4]).
 
 :- use_module(library(assertions_op)).
-:- use_module(library(sequence_list)).
 
 :- expects_dialect(swi).
 
@@ -17,12 +16,12 @@
 % Assertion reader for SWI-Prolog
 
 :- multifile
-    assrt_lib:assertion_head/6,
+    assrt_lib:assertion_head/7,
     assrt_lib:doc_db/4,
     assrt_lib:nodirective_error_hook/1.
 
 % :- volatile
-%     assrt_lib:assertion_head/6,
+%     assrt_lib:assertion_head/7,
 %     assrt_lib:doc_db/4.
 
 add_arg(H, M:G0, M:G) :- !,
@@ -36,7 +35,7 @@ add_arg(H, G0, G) :-
     ).
 
 list_conj([],     true).
-list_conj([E|EL], (E, CL)) :-
+list_conj([E|EL], CL) :-
     list_conj_2(EL, E, CL).
 
 list_conj_2([E|L], E0, (E0, S)) :- list_conj_2(L, E, S).
@@ -63,17 +62,31 @@ a_fake_body(CompL, CallL, SuccL, GlobL0, (call(Comp), call(Call), call(Succ), ca
 % encapsulated.
 %
 assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict) :-
-    clause(assertion_head(Head, M, Status, Type, Comm, Dict), _:FBody),
+    clause(assertion_head(Head, M, Status, Type, Comm, Dict, _Pos), _:FBody),
     once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
 
-% For Compatibility with Ciao Libraries
-assertion_read(Head, M, Status, Type, Body, Dict, File, Line, Line) :-
-    clause(assrt_lib:assertion_head(Head, M, Status, Type, Comm, Dict), _:FBody, Ref),
+filepos_line(File, CharPos, Line, LinePos) :-
+    setup_call_cleanup('$push_input_context'(filepos),
+		       prolog_codewalk:filepos_line(File, CharPos, Line, LinePos),
+		       '$pop_input_context').
+
+% For compatibility with Ciao Libraries
+assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
+    clause(assrt_lib:assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody, Ref),
     once(a_fake_body(Comp, Call, Succ, Glob0, FBody)),
     maplist(add_arg(Head), Glob0, Glob),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
     clause_property(Ref, file(File)),
-    clause_property(Ref, line_count(Line)).
+    ( nonvar(Pos),
+      arg(1, Pos, From),
+      arg(2, Pos, To),
+      integer(From),
+      integer(To)
+    ->filepos_line(File, From, Line0, _),
+      filepos_line(File, To,   Line1, _)
+    ; clause_property(Ref, line_count(Line0)),
+      Line1 = Line0
+    ).
 
 % ---------------------------------------------------------------------------
 % :- pred normalize_assertion_body(B,F,NB)
@@ -185,28 +198,42 @@ default_assrt_status(X,       check) :-
     assrt_type(X),
     !.
 
-normalize_status_and_type(Ass, AssrtStatus, AssrtType, UBody) :-
-    Ass =.. [AssrtType, UBody],
-    assrt_type(AssrtType),
-    default_assrt_status(AssrtType, AssrtStatus).
-normalize_status_and_type(Ass, AssrtStatus, AssrtType, UBody) :-
-    Ass =.. [AssrtType, AssrtStatus, UBody],
+normalize_status_and_type(Assertions, APos, AssrtStatus, AssrtType, UBody, BPos) :-
+    normalize_status_and_type_1(Assertions, APos, AssrtStatus, AssrtType, UBody, BPos),
+    status_and_type(AssrtStatus, AssrtType).
+
+normalize_status_and_type_1(Assertions, term_position(_, _, _, _, [BPos]),
+			  _, AssrtType, UBody, BPos) :-
+    Assertions =.. [AssrtType, UBody].
+normalize_status_and_type_1(Assertions, term_position(_, _, _, _, [_, BPos]),
+			  AssrtStatus, AssrtType, UBody, BPos) :-
+    Assertions =.. [AssrtType, AssrtStatus, UBody].
+
+status_and_type(AssrtStatus, AssrtType) :-
     assrt_type(AssrtType),
     ( default_assrt_status(AssrtType, AssrtStatus)
     ; assrt_status(AssrtStatus)
     ).
 
-:- discontiguous term_expansion/2.
 term_expansion(generate_nodirective_error, Clauses) :-
-    findall(Clause,
+    expand_nodirective_error(Clauses).
+
+expand_nodirective_error(Clauses) :-
+    findall((:- export(Type/Arity)),
 	    ( assrt_type(Type),
-	      normalize_status_and_type(Assr, _, Type, _),
+	      member(Arity, [1, 2])
+	    ), Clauses, ClauseT),
+    findall((Assr :-Body),
+	    ( assrt_type(Type),
+	      normalize_status_and_type_1(Assr, _, Status, Type, _, _),
 	      functor(Assr, Type, Arity),
-	      ( Clause = (:- export(Type/Arity))
-	      ; Clause = (Assr :- ignore(assrt_lib:nodirective_error_hook(Assr)))
+	      Body0 = ignore(assrt_lib:nodirective_error_hook(Assr)),
+	      ( Arity = 1
+	      ->Body = Body0
+	      ; Body = (assrt_lib:assrt_status(Status), Body0 )
 	      )
 	    ),
-	    Clauses).
+	    ClauseT).
 
 % To Avoid attempts to execute asertions (must be declarations):
 generate_nodirective_error.
@@ -255,39 +282,57 @@ assrt_format_code(t).
 
 % EMM: Support for grouped global properties
 
-current_body(M:BodyS, _, Body, Gl0, Gl) :-
+current_body(M:BodyS, _, term_position(_, _, _, _, [_, PosS]), Body, BPos, Gl0, Gl) :-
     atom(M), !,
-    current_body(BodyS, M, Body,  Gl0, Gl).
-current_body(BodyS  + PGl, M, Body, Gl0, Gl) :- !,
+    current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl).
+current_body(BodyS + PGl, M, term_position(_, _, _, _, [PosS, _]),
+	     Body, BPos, Gl0, Gl) :- !,
     propdef(PGl, M, Gl0, Gl1),
-    current_body(BodyS, M, Body, Gl1, Gl).
-current_body(BodyS is PGl#Co, M, Body, Gl0, Gl) :- !,
+    current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
+current_body(BodyS is PGl#Co, M,
+	     term_position(From, To, _, _,
+			   [PosS, term_position(_, _, FFrom, FTo, [_, PosCo])]),
+	     Body, BPos, Gl0, Gl) :- !,
     propdef(PGl, M, Gl0, Gl1),
-    current_body(BodyS#Co, M, Body, Gl1, Gl).
-current_body(BodyS is PGl, M, Body, Gl0, Gl) :- !,
+    current_body(BodyS#Co, M, term_position(From, To, FFrom, FTo, [PosS, PosCo]),
+		 Body, BPos, Gl1, Gl).
+current_body(BodyS is PGl, M, term_position(_, _, _, _, [PosS, _]),
+	     Body, BPos, Gl0, Gl) :- !,
     propdef(PGl, M, Gl0, Gl1),
-    current_body(BodyS, M, Body, Gl1, Gl).
-current_body(BodyS, M, Body, Gl0, Gl) :-
-    sequence_list(BodyS, BodyL, []),
-    ( BodyL == [BodyS] ->
-      Body = M:BodyS,
-      Gl = Gl0
-    ; member(Body0, BodyL),
-      current_body(Body0, M, Body, Gl0, Gl)
+    current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
+current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
+    ( body_member(BodyS, PosS, Lit, LPos)
+    *->
+      current_body(Lit, M, LPos, Body, BPos, Gl0, Gl)
+    ; Body = M:BodyS,
+      Gl = Gl0,
+      BPos = PosS
     ).
 
-:- export(normalize_assertions/10).
+body_member(Body, _, _, _) :-
+    var(Body), !, fail.
+body_member([], _, _, _) :- !, fail.
+body_member([A|B], list_position(From, To, [APos|EPos], TPos), Lit, LPos) :- !,
+    ( Lit=A, LPos=APos
+    ; Lit=B, LPos=list_position(From, To, EPos, TPos)
+    ).
+body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
+    ( Lit=A, LPos=APos
+    ; Lit=B, LPos=BPos
+    ).
 
-normalize_assertions(Assertions  + PGl, M, Pred, Status, Type, Cp, Ca, Su, Gl, Co) :- !,
+normalize_assertions(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
+		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
     propdef(PGl, M, Gl, Gl0),
-    normalize_assertions(Assertions, M, Pred, Status, Type, Cp, Ca, Su, Gl0, Co).
-normalize_assertions(Assertions is PGl, M, Pred, Status, Type, Cp, Ca, Su, Gl, Co) :- !,
+    normalize_assertions(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
+normalize_assertions(Assertions is PGl, M, term_position(_, _, _, _, [APos, _]),
+		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
     propdef(PGl, M, Gl, Gl0),
-    normalize_assertions(Assertions, M, Pred, Status, Type, Cp, Ca, Su, Gl0, Co).
-normalize_assertions(Assertions, M, Pred, Status, Type, Cp, Ca, Su, Gl, Co) :-
-    once(normalize_status_and_type(Assertions, Status, Type, BodyS)),
-    current_body(BodyS, M, Body, Gl, Gl0),
-    normalize_assertion_head_body(Body, M, Pred, Format, Cp, Ca, Su, Gl0, Co),
+    normalize_assertions(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
+normalize_assertions(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :-
+    once(normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS)),
+    current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
+    normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, RPos),
     (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
     assertion_format(Type, GFormat).
 
@@ -298,36 +343,41 @@ normalize_assertion(Assr, Pred, Status, Type, Cp, Ca, Su, Gl, Co) :-
     assertion_format(Type, Format).
 */
 
-normalize_assertion_head_body(M:Body, _, Pred, Format, Cp, Ca, Su, Gl, Co) :-
-    atom(M), !,
-    normalize_assertion_head_body(Body, M, Pred, Format, Cp, Ca, Su, Gl, Co).
-normalize_assertion_head_body(Body, M, Pred, Format, Cp, Ca, Su, Gl, Co) :-
+:- use_module(library(prolog_codewalk), []).
+
+normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, RPos) :-
     normalize_assertion_body(Body, Format, Head, PCp, PCa, PSu, PGl, Co),
-    normalize_assertion_head(Head, M, Pred, Cp0, Ca0, Su0, Gl0),
+    ignore(prolog_codewalk:subterm_pos(Head, Body, BPos, HPos)),
+    normalize_assertion_head(Head, M, HPos, Pred, Cp0, Ca0, Su0, Gl0, RPos),
     apropdef(Pred, M, PCp, Cp, Cp0),
     apropdef(Pred, M, PCa, Ca, Ca0),
     apropdef(Pred, M, PSu, Su, Su0),
     propdef(PGl, M, Gl, Gl0).
 
-:- export(normalize_assertion_head/7).
-normalize_assertion_head((H1,H2), M, P, Cp, Ca, Su, Gl) :- !,
-    ( normalize_assertion_head(H1, M, P, Cp, Ca, Su, Gl)
-    ; normalize_assertion_head(H2, M, P, Cp, Ca, Su, Gl)).
-normalize_assertion_head([H1|H2], M, P, Cp, Ca, Su, Gl) :- !,
-    ( normalize_assertion_head(H1, M, P, Cp, Ca, Su, Gl)
-    ; normalize_assertion_head(H2, M, P, Cp, Ca, Su, Gl)).
-normalize_assertion_head(M:H, _, P, Cp, Ca, Su, Gl) :-
+normalize_assertion_head((H1,H2), M, term_position(_, _, _, _, [P1, P2]),
+			 P, Cp, Ca, Su, Gl, RP) :- !,
+    ( normalize_assertion_head(H1, M, P1, P, Cp, Ca, Su, Gl, RP)
+    ; normalize_assertion_head(H2, M, P2, P, Cp, Ca, Su, Gl, RP)
+    ).
+normalize_assertion_head([H1|H2], M, list_position(From, To, [P1|E], TP),
+			 P, Cp, Ca, Su, Gl, RP) :- !,
+    ( normalize_assertion_head(H1, M, P1, P, Cp, Ca, Su, Gl, RP)
+    ; normalize_assertion_head(H2, M, list_position(From, To, E, TP),
+			       P, Cp, Ca, Su, Gl, RP)
+    ).
+normalize_assertion_head(M:H, _, term_position(_, _, _, _, [_, HP]),
+			 P, Cp, Ca, Su, Gl, RP) :-
     atom(M), !,
-    normalize_assertion_head(H, M, P, Cp, Ca, Su, Gl).
-normalize_assertion_head(F/A, M, M:Pred, [], [], [], []) :- !,
+    normalize_assertion_head(H, M, HP, P, Cp, Ca, Su, Gl, RP).
+normalize_assertion_head(F/A, M, Pos, M:Pred, [], [], [], [], Pos) :- !,
     functor(Pred, F, A).
-normalize_assertion_head(Head, M, M:Pred, Cp, Ca, Su, Gl) :-
+normalize_assertion_head(Head, M, Pos, M:Pred, Cp, Ca, Su, Gl, Pos) :-
     compound(Head),
     !,
     functor(Head, F, A),
     functor(Pred, F, A),
     normalize_args(1, Head, M, Pred, Cp, Ca, Su, Gl).
-normalize_assertion_head(Head, M, M:Head, [], [], [], []) :-
+normalize_assertion_head(Head, M, Pos, M:Head, [], [], [], [], Pos) :-
     atom(Head).
 
 normalize_args(N0, Head, M, Pred, Cp0, Ca0, Su0, Gl0) :-
@@ -484,21 +534,36 @@ comps_to_goal2([Check|Checks], Check0, Goal) -->
     call(Goal, Check0),
     comps_to_goal2(Checks, Check, Goal).
 
-:- export(assrt_lib_tr/4).
 assrt_lib_tr((:- Decl), Records, M, Dict) :-
-    assertion_records(Decl, Records, M, Dict).
+    assertion_records(M, Dict, Decl, _, Records, _).
 
-assertion_records_helper(Match, Match-Record, Record).
+assertion_records_helper(Match, a(Match, Record, Pos), Record, Pos).
 
-assertion_records(M:Decl, Records, _, Dict) :-
+assertion_records(_, Dict, M:Decl, term_position(_, _, _, _, [_, DPos]),
+		  Records, RPos) :-
     atom(M), !,
-    assertion_records(Decl, Records, M, Dict).
-assertion_records(doc(Key, Doc), assrt_lib:doc_db(Key, M, Doc, Dict), M, Dict) :- !.
-assertion_records(Assertions, Records, CM, Dict) :-
+    assertion_records(M, Dict, Decl, DPos, Records, RPos).
+assertion_records(M, Dict, doc(Key, Doc),
+		  term_position(From, To, FFrom, FTo, [KPos, DPos]),
+		  assrt_lib:doc_db(Key, M, Doc, Dict),
+		  term_position(0, 0, 0, 0,
+				[0-0,
+				 term_position(From, To, FFrom, FTo,
+					       [KPos, 0-0, DPos, 0-0 ])])) :- !.
+assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
-    findall(Match-(assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict) :- FBody),
-	    ( normalize_assertions(Assertions, CM, M:Head, Status,
-				   Type, Cp0, Ca0, Su0, Gl0, Co),
+    source_location(File, Line0),
+    Clause = ('$source_location'(File, Line)
+	     :(assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, HPos) :- FBody)),
+    findall(a(Match, Clause, HPos),
+	    ( normalize_assertions(Assertions, CM, APos, M:Head, Status,
+				   Type, Cp0, Ca0, Su0, Gl0, Co, HPos),
+	      ( nonvar(HPos),
+		arg(1, HPos, HFrom),
+		integer(HFrom)
+	      ->prolog_codewalk:filepos_line(File, HFrom, Line, _)
+	      ; Line = Line0
+	      ),
 	      once(maplist(maplist(compact_module_call(M)),
 			   [Cp0, Ca0, Su0, Gl0 ],
 			   [Cp,  Ca,  Su,  Gl])),
@@ -506,7 +571,12 @@ assertion_records(Assertions, Records, CM, Dict) :-
 	    ),
 	    ARecords),
     ARecords \= [], % Is a valid assertion if it defines at least one Record
-    maplist(assertion_records_helper(Match), ARecords, Records).
+    maplist(assertion_records_helper(Match), ARecords, RecordL, PosL),
+    ( [Records] = RecordL
+    ->[RPos]    = PosL
+    ;  Records  = RecordL,
+       RPos     = PosL
+    ).
 
 :- public compact_module_call/3.
 compact_module_call(M, M:C, C) :- !.
@@ -519,16 +589,11 @@ compact_module_call(_, C, C).
 :- multifile ciao:declaration_hook/2.
 
 ciao:declaration_hook(Decl, Records) :-
-    assertion_records(Decl, Records).
+    assertion_records(Decl, _, Records, _).
 
-assertion_records(Decl, Records) :-
+assertion_records(Decl, DPos, Records, RPos) :-
     '$set_source_module'(M, M),
-    assertion_records(Decl, Records, M, Dict),
-    %% ciao:get_dictionary/3 Must be after assertion_records/4
+    assertion_records(M, Dict, Decl, DPos, Records, RPos),
+    %% ciao:get_dictionary/3 Must be after assertion_records/6
     %% to improve performance: --EMM
     ciao:get_dictionary((:- Decl), M, Dict).
-
-:- multifile ciao:declaration_hook/2.
-
-ciao:declaration_hook(Decl, Records) :-
-    assertion_records(Decl, Records).
