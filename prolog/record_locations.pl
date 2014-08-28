@@ -5,8 +5,8 @@
     declaration_location/4.
 
 :- multifile
-    user:term_expansion/2,
-    user:goal_expansion/2,
+    system:term_expansion/4,
+    system:goal_expansion/4,
     declaration_location/4.
 
 :- discontiguous
@@ -15,20 +15,20 @@
 :- volatile rl_tmp/2.
 :- dynamic rl_tmp/2. % trick to detect if term_expansion was applied
 
-record_location_term((:- module(_, L)))      :- assert_declaration(export, L).
-record_location_term((:- volatile(L)))       :- assert_declaration(volatile, L).
-record_location_term((:- dynamic(L)))        :- assert_declaration(dynamic, L).
-record_location_term((:- reexport(U, L)))    :- assert_declaration(reexport(U), L).
-record_location_term((:- export(L)))         :- assert_declaration(export, L).
-record_location_term((:- public(L)))         :- assert_declaration(public, L).
-record_location_term((:- multifile(L)))      :- assert_declaration(multifile, L).
-record_location_term((:- discontiguous(L)))  :- assert_declaration(discontiguous, L).
-record_location_term((:- meta_predicate(L))) :- assert_declaration(meta_predicate, L).
-record_location_term((:- include(U)))        :- assert_declaration(include(U)).
-record_location_term((:- use_module(A)))     :- assert_declaration(use_module(A)).
-record_location_term((:- use_module(A, L)))  :- assert_declaration(use_module(A, L)).
-record_location_term((:- initialization(_))).
-record_location_term((:- G)) :-
+record_term_location((:- module(_, L)))      :- assert_declaration(export, L).
+record_term_location((:- volatile(L)))       :- assert_declaration(volatile, L).
+record_term_location((:- dynamic(L)))        :- assert_declaration(dynamic, L).
+record_term_location((:- reexport(U, L)))    :- assert_declaration(reexport(U), L).
+record_term_location((:- export(L)))         :- assert_declaration(export, L).
+record_term_location((:- public(L)))         :- assert_declaration(public, L).
+record_term_location((:- multifile(L)))      :- assert_declaration(multifile, L).
+record_term_location((:- discontiguous(L)))  :- assert_declaration(discontiguous, L).
+record_term_location((:- meta_predicate(L))) :- assert_declaration(meta_predicate, L).
+record_term_location((:- include(U)))        :- assert_declaration(include(U)).
+record_term_location((:- use_module(A)))     :- assert_declaration(use_module(A)).
+record_term_location((:- use_module(A, L)))  :- assert_declaration(use_module(A, L)).
+record_term_location((:- initialization(_))).
+record_term_location((:- G)) :-
     nonvar(G),
     '$set_source_module'(M, M),
     functor(G, F, A),
@@ -89,11 +89,11 @@ assert_reexport_declaration_2(except(_),   _, _, _).
 assert_location(H, M, Declaration, Loc) :-
     compile_aux_clauses(record_locations:declaration_location(H, M, Declaration, Loc)).
 
-user:term_expansion(Term, _) :-
+system:term_expansion(Term, _, _, _) :-
     source_location(File, Line),
     retractall(rl_tmp(_, _)),
     asserta(rl_tmp(File, Line)),
-    once(record_location_term(Term)),
+    once(record_term_location(Term)),
     fail.
 
 redundant((_,_)).
@@ -108,6 +108,6 @@ rl_goal_expansion(Goal) :-
     assert_location(Goal, goal),
     !.
 
-user:goal_expansion(Goal, _) :-
+system:goal_expansion(Goal, _, _, _) :-
     rl_goal_expansion(Goal),
     fail.
