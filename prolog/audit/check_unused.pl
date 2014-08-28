@@ -55,6 +55,7 @@ check_unused(Ref, FileChk, OptionL0, Pairs) :-
 		   autoload(false),
 		   evaluate(false),
 		   trace_reference(_:H),
+		   module_class([user,system,library]),
 		   on_trace(collect_unused(M, FileChk))
 		  ], OptionL),
     prolog_walk_code(OptionL),
