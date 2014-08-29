@@ -20,7 +20,7 @@ prolog:message(acheck(meta_decls)) -->
 
 prolog:message(acheck(meta_decls, (Loc/M)-Specs)) -->
     Loc,
-    ['(~w):'-M, nl],
+    ['(~w):'-M],
     meta_decls(Specs).
 
 meta_decls([]) --> [].
@@ -55,7 +55,7 @@ audit:check(meta_decls, MSpec, Pairs, OptionL) :-
 	      functor(Spec, F, A),
 	      PI = M:F/A,
 	      \+ hide_missing_meta_pred(PI),
-	      property_from(PI, _, From),
+	      once(property_from(PI, _, From)), % once: only first occurrence
 	      ( from_to_file(From, File)
 	      ->call(FileChk, File)
 	      ; true
