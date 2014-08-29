@@ -76,7 +76,7 @@ entry_caller(F, A, M, H) :-
     functor(H, F, A),
     ( hide_unused(M:F/A) -> true
     ; is_entry_point(M:H) -> true
-    ; declaration_location(H, M, goal, _)
+    ; extra_location(H, M, goal, _)
     ).
 
 entry_point(M:H, CM:CF/CA) :-
@@ -219,7 +219,7 @@ unmarked(Ref, FileChk, MPI) :-
     ( current_defined_predicate(MPI),
       functor(H, F, A),
       auditable_predicate(Ref)
-    ; declaration_location(H, M, dynamic(def, _, _), _),
+    ; extra_location(H, M, dynamic(def, _, _), _),
       functor(H, F, A)
     ),
     \+ entry_caller(F, A, M, H),

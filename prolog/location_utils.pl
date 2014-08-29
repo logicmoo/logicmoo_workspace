@@ -148,10 +148,10 @@ property_from(Head, Declaration, From) :-
 
 dec_location(Head0/0, Declaration, From) :-
     normalize_head(Head0, M:Head),
-    declaration_location(Head, M, Declaration, From).
+    extra_location(Head, M, Declaration, From).
 dec_location(M:Head0, Declaration, From) :-
     normalize_head(M:Head0, M:Head),
-    declaration_location(Head, M, Declaration, From).
+    extra_location(Head, M, Declaration, From).
 
 clause_from(Ref, clause(Ref)).
 
@@ -201,9 +201,9 @@ record_location_goal(Goal, Type, From) :-
     record_location(Head, M, Type, From).
 
 record_location(Head, M, Type, From) :-
-    ( declaration_location(Head, M, Type, From)
+    ( extra_location(Head, M, Type, From)
     ->true
-    ; assertz(declaration_location(Head, M, Type, From))
+    ; assertz(extra_location(Head, M, Type, From))
     ).
 
 record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
@@ -238,4 +238,4 @@ record_location_dynamic(MCall, M, From) :-
     record_location_meta(MCall, M, From, database_fact_ort, record_location_goal).
 
 cleanup_locations(Head, M, Type, From) :-
-    retractall(declaration_location(Head, M, Type, From)).
+    retractall(extra_location(Head, M, Type, From)).

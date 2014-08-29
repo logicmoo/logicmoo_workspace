@@ -133,7 +133,7 @@ cu_caller_hook(Caller, MGoal0, _, From) :-
 
 dyn_defined(M:Head) :-
     implementation_module(M:Head, IM),
-    declaration_location(Head, IM, dynamic(def, _, _), _).
+    extra_location(Head, IM, dynamic(def, _, _), _).
 
 qualify_meta_goal(M:Goal0, Meta, M:Goal) :-
     functor(Goal0, F, N),

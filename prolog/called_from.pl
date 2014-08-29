@@ -63,9 +63,9 @@ current_called_from(H, M, CM, From, Caller) :-
 
 current_used_from(DynTypes, H, M, CM, From, Caller) :-
     ( called_from_db(H, M, CM, From, Caller)
-    ; declaration_location(H, M, dynamic(Type, CM, Caller), From),
+    ; extra_location(H, M, dynamic(Type, CM, Caller), From),
       memberchk(Type, DynTypes)
-    ; declaration_location(H, CM, goal, From),
+    ; extra_location(H, CM, goal, From),
       implementation_module(CM:H, M)
     ).
 
