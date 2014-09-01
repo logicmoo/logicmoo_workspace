@@ -52,7 +52,7 @@ goal_pi(M:H, M:F/A) :- functor(H, F, A).
 collect_undef(H, M, FileChk, MCall, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    _:H=MCall,
+    M:H=MCall,
     record_location_dynamic(MCall, M, From),
     found_undef(MCall, Caller, From),
     fail. % prevent unexpected unification
