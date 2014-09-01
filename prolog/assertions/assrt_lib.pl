@@ -552,9 +552,11 @@ assertion_records(M, Dict, doc(Key, Doc),
 					       [KPos, 0-0, DPos, 0-0 ])])) :- !.
 assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
-    source_location(File, Line0),
-    Clause = ('$source_location'(File, Line)
-	     :(assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, HPos) :- FBody)),
+    Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, HPos) :- FBody),
+    ( source_location(File, Line0)
+    ->Clause = ('$source_location'(File, Line):Clause0)
+    ; Clause = Clause0
+    ),
     findall(a(Match, Clause, HPos),
 	    ( normalize_assertions(Assertions, CM, APos, M:Head, Status,
 				   Type, Cp0, Ca0, Su0, Gl0, Co, HPos),
@@ -571,12 +573,7 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
 	    ),
 	    ARecords),
     ARecords \= [], % Is a valid assertion if it defines at least one Record
-    maplist(assertion_records_helper(Match), ARecords, RecordL, PosL),
-    ( [Records] = RecordL
-    ->[RPos]    = PosL
-    ;  Records  = RecordL,
-       RPos     = PosL
-    ).
+    maplist(assertion_records_helper(Match), ARecords, Records, RPos).
 
 :- public compact_module_call/3.
 compact_module_call(M, M:C, C) :- !.
