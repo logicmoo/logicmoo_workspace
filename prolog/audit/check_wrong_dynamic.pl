@@ -22,7 +22,6 @@ hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
 hide_var_dynamic(check_non_mutually_exclusive:mutually_exclusive/3).
 hide_var_dynamic(check_trivial_fails:cu_caller_hook/4).
 hide_var_dynamic(implemented_in:implemented_in/3).
-hide_var_dynamic(implemented_in:implemented_in/3).
 hide_var_dynamic(ntabling:tabling/2).
 hide_var_dynamic(ref_scenarios:unfold_goal/2).
 
