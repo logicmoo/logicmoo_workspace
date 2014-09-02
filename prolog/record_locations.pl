@@ -17,9 +17,7 @@
 
 % Extra location for assertions of a given predicate
 extra_location(Head, M, assertion(Status, Type), From) :-
-    clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, TermPos), _, Ref),
-    clause_property(Ref, file(File)),
-    From = file_term_position(File, TermPos).
+    clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
 
 record_extra_location((:- module(_, L)))      :- assert_declaration(export, L).
 record_extra_location((:- volatile(L)))       :- assert_declaration(volatile, L).
