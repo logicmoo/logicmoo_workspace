@@ -554,13 +554,14 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
     Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, HPos) :- FBody),
     ( source_location(File, Line0)
-    ->Clause = ('$source_location'(File, Line):Clause0)
+    ->Clause = ('$source_location'(File, Line):Clause0 )
     ; Clause = Clause0
     ),
     findall(a(Match, Clause, HPos),
 	    ( normalize_assertions(Assertions, CM, APos, M:Head, Status,
 				   Type, Cp0, Ca0, Su0, Gl0, Co, HPos),
-	      ( nonvar(HPos),
+	      ( nonvar(File),
+		nonvar(HPos),
 		arg(1, HPos, HFrom),
 		integer(HFrom)
 	      ->prolog_codewalk:filepos_line(File, HFrom, Line, _)
