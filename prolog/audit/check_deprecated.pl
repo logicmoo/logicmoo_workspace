@@ -19,21 +19,21 @@ audit:check(deprecated, Ref, Result, OptionL0) :-
     check_deprecated(Ref, FileChk, OptionL, Result).
 
 check_deprecated(Ref0, FileChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, Ref),
+    normalize_head(Ref0, M:H),
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(Ref)
+		   trace_reference(_:H)
 		  ], OptionL),
     prolog_walk_code([source(false),
-		      on_trace(have_deprecated(FileChk))
+		      on_trace(have_deprecated(M, FileChk))
 		     |OptionL]),
     findall(CRef, retract(deprecated_db(clause(CRef))), Clauses),
     ( Clauses==[]
     ->Pairs=[]
     ; prolog_walk_code([clauses(Clauses),
-			on_trace(collect_deprecated)
+			on_trace(collect_deprecated(M))
 		       |OptionL]),
       findall(information-(Call/Alt-(Loc/CI)),
 	      ( retract(deprecated_db(Call, Alt, From)),
@@ -66,21 +66,25 @@ prolog:message(acheck(deprecated, PI/Alt-LocCIs)) -->
 
 :- dynamic deprecated_db/1, deprecated_db/3.
 
-:- public have_deprecated/4.
-:- meta_predicate have_deprecated(1, +, +, +).
+:- public have_deprecated/5.
+:- meta_predicate have_deprecated(?, 1, +, +, +).
 
-have_deprecated(FileChk, MGoal, _, From) :-
+have_deprecated(M, FileChk, MGoal, _, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    deprecated_predicate(MGoal, _),
+    implementation_module(MGoal, M),
+    MGoal = _:Goal,
+    deprecated_predicate(M:Goal, _),
     assertz(deprecated_db(From)),
     fail.
-have_deprecated(_, _, _, _).
+have_deprecated(_, _, _, _, _).
 
-:- public collect_deprecated/3.
+:- public collect_deprecated/4.
 
-collect_deprecated(MGoal, _, From) :-
-    deprecated_predicate(MGoal, Alt),
-    assertz(deprecated_db(MGoal, Alt, From)),
+collect_deprecated(M, MGoal, _, From) :-
+    implementation_module(MGoal, M),
+    MGoal = _:Goal,
+    deprecated_predicate(M:Goal, Alt),
+    assertz(deprecated_db(M:Goal, Alt, From)),
     fail.
-collect_deprecated(_, _, _).
+collect_deprecated(_, _, _, _).
