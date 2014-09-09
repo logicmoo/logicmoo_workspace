@@ -151,20 +151,22 @@ collect_wrong_dynamic(_, _, _, _, _). % avoid side effects
 
 collect_wrong_dynamic(MGoal, M, Caller, From) :-
     record_location_meta(MGoal, M, From, database_fact_ort,
-			 record_location_wd(Caller)).
+			 record_location_wd(M, Caller)).
 
-record_location_wd(Caller, M:Fact, Def, From) :-
-    Def = dynamic(Type, _CM, MGoal),
+record_location_wd(CM, Caller, MFact, Def, From) :-
+    Def = dynamic(Type, _, MGoal),
     normalize_pi(MGoal, MPI),
-    ( atom(M),
+    ( nonvar(MFact),
+      MFact = M:Fact,
+      atom(M),
       callable(Fact)
     ->functor(Fact, F, A),
       record_location(Fact, M, Def, From),
       \+ hide_wrong_dynamic(M:F/A),
       assertz(wrong_dynamic_db(Type, M:F/A, MPI-From))
     ; \+ database_fact(Caller) ->
-      normalize_pi(Caller, HPI),
-      \+ hide_var_dynamic(HPI),
+      normalize_pi(Caller, CM:PI),
+      \+ hide_var_dynamic(CM:PI),
       check:predicate_indicator(From, HCI, []),
       assertz(check_var_dynamic_db(MPI, HCI, From))
     ; true
