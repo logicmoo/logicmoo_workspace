@@ -19,7 +19,7 @@
 extra_location(Head, M, assertion(Status, Type), From) :-
     clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
 
-record_extra_location((:- module(_, L)))      :- assert_declaration(export, L).
+record_extra_location((:- module(M, L)))      :- assert_declaration(export, M, L).
 record_extra_location((:- volatile(L)))       :- assert_declaration(volatile, L).
 record_extra_location((:- dynamic(L)))        :- assert_declaration(dynamic, L).
 record_extra_location((:- reexport(U, L)))    :- assert_declaration(reexport(U), L).
@@ -55,8 +55,11 @@ mapsequence(A, G) :-
     call(G, A).
 
 assert_declaration(Declaration, Sequence) :-
-    source_location(File, Line),
     '$set_source_module'(M, M),
+    assert_declaration(Declaration, M, Sequence).
+
+assert_declaration(Declaration, M, Sequence) :-
+    source_location(File, Line),
     L = file(File, Line, -1, 0),
     mapsequence(Sequence, assert_declaration_one(Declaration, L, M)).
 
