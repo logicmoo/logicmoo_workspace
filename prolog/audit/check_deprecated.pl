@@ -35,8 +35,8 @@ check_deprecated(Ref0, FileChk, OptionL0, Pairs) :-
     ; prolog_walk_code([clauses(Clauses),
 			on_trace(collect_deprecated(M))
 		       |OptionL]),
-      findall(information-(Call/Alt-(Loc/CI)),
-	      ( retract(deprecated_db(Call, Alt, From)),
+      findall(information-(IM:Call/Alt-(Loc/CI)),
+	      ( retract(deprecated_db(Call, IM, Alt, From)),
 		from_location(From, Loc),
 		check:predicate_indicator(From, CI, [])
 	      ), Pairs)
@@ -64,7 +64,7 @@ prolog:message(acheck(deprecated, PI/Alt-LocCIs)) -->
     [' deprecated, use ~q instead. Referenced by'-[Alt], nl],
     referenced_by(LocCIs).
 
-:- dynamic deprecated_db/1, deprecated_db/3.
+:- dynamic deprecated_db/1, deprecated_db/4.
 
 :- public have_deprecated/5.
 :- meta_predicate have_deprecated(?, 1, +, +, +).
@@ -85,6 +85,6 @@ collect_deprecated(M, MGoal, _, From) :-
     implementation_module(MGoal, M),
     MGoal = _:Goal,
     deprecated_predicate(M:Goal, Alt),
-    assertz(deprecated_db(M:Goal, Alt, From)),
+    assertz(deprecated_db(Goal, M, Alt, From)),
     fail.
 collect_deprecated(_, _, _, _).
