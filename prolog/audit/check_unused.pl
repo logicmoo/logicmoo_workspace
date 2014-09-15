@@ -96,10 +96,11 @@ mark_rec(M:F/A) :-
     ).
 
 % Tarjan's scc algorithm:
-:- use_module(library(audit/sccs)).
+:- use_module(library(scc)).
 
 sweep(Ref, FileChk, Pairs) :-
-    findall(PI, unmarked(Ref, FileChk, PI), Nodes),
+    findall(PI, unmarked(Ref, FileChk, PI), UNodes),
+    sort(UNodes, Nodes),
     findall(arc(X, Y), ( member(X, Nodes),
 			 X = M:F/A,
 			 calls_to(F, A, M, Y),
