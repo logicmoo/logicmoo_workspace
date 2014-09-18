@@ -3,6 +3,7 @@
 :- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(compound_expand)).
 :- use_module(library(compact_pi_list)).
+:- use_module(library(assertions/assrt_lib)).
 :- reexport(library(swi/rtchecks)).
 
 :- multifile prolog:message/3.
@@ -100,12 +101,21 @@ report_issues(Pairs) :-
     group_pairs_by_key(TSorted, TGrouped),
     maplist(property_issue, TGrouped).
 
+is_location(file(_, _, _, _)).
+is_location(file_term_positon(_, _)).
+
 curr_location(Pos, Loc) :-
-    rtchecks_tr:location(Loc0),
-    ( nonvar(Pos) ->
-      Loc0 = loc(Src, Ln0, _),
-      Loc  = loc(Src, Ln0, Pos)
-    ; Loc = Loc0
+    ( var(Pos)
+    ->rtchecks_tr:location(Loc)
+    ; is_location(Pos)
+    ->Loc = Pos
+    ; rtchecks_tr:location(loc(Src, _, _)),
+      ( var(Src)
+      ->source_location(File, _),
+	rtchecks_tr:rel_file_name(File, Src)
+      ; true
+      ),
+      Loc = file_term_position(Src, Pos)
     ).
 
 check_property(defined, H, M, _, M:F/A) :-
@@ -124,18 +134,20 @@ check_property(ctcheck, H, M, Pos, CTChecks) :-
     CTChecks \= [].
 
 verif_is_property(_, call, N) :- N > 0, !. % meta checks not supported yet --EMM
+verif_is_property(system, true, 0) :- !.   % ignore true (identity)
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
-    assrt_lib:assertion_db(H, AM, _, prop, _, _, _, _, _, _),
+    assertion_db(H, AM, _, prop, _, _, _, _, _, _),
     ( AM = IM -> true
     ; predicate_property(AM:H, imported_from(IM))
     ).
 
-term_expansion(assrt_lib:assertion_db(Head, M, _Status, Type, Cp, Ca,
-				       Su, Gl, _Co, _), Pos, _, _) :-
+term_expansion((assrt_lib:assertion_head(Head, M, _Status, Type, _, _, Pos)
+	      :- Body), _, _, _) :-
     !,
     current_prolog_flag(check_assertions, Issues),
     Issues \== [],
+    a_fake_body(Cp, Ca, Su, Gl, Body),
     check_properties(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues),
     fail.
 

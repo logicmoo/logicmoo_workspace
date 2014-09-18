@@ -189,7 +189,7 @@ ciao:declaration_hook(nortchecked, rtchecks_tr:nortchecked(M)) :-
 
 rel_file_name(ASrc, Src) :-
     ( working_directory(Dir, Dir),
-      atom_concat(Dir, Src, ASrc)
+      directory_file_path(Dir, Src, ASrc)
     ->true
     ; Src = ASrc
     ).

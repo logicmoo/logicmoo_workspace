@@ -63,7 +63,7 @@ pretty_messages(_) :-
 
 :- regtype message_info_t/1.
 
-message_info_t(message_lns(_, _, _, _, _)).
+message_info_t(message_lns(_, _, _)).
 message_info_t(message(_, _)).
 message_info_t(message(_)).
 
@@ -103,13 +103,13 @@ swi_message(Text) --> map(Text, message_to_swi), [nl].
 
 :- pred ciao_message(+Message:message_info_t).
 
-ciao_message(message_lns(Src, Ln, Pos, _, Text)) -->
-    { \+integer(Pos) ->
-      Location = file_term_position(Src, Pos)
-    ; Location = file(Src, Ln, -1, _)
+ciao_message(message_lns(Pos, _, Text)) -->
+    { Pos = loc(Src, Ln, _)
+    ->Loc = file(Src, Ln, -1, _)
+    ; Loc = Pos
     },
     {'$push_input_context'(rtchecks)},
-    prolog:message_location(Location),
+    prolog:message_location(Loc),
     {'$pop_input_context'},
     swi_message(Text).
 ciao_message(message(_, Text)) --> swi_message(Text).
@@ -127,20 +127,19 @@ message_to_swi([](M))   --> !, map(M, message_to_swi).
 message_to_swi(T)       --> !, ['~w'-[T]].
 :- endif.
 
-position_to_message(predloc(Pred, loc(S, Ln0, Ln1)),
-	    message_lns(S, Ln0, Ln1, error,
-		['Failed in ', ''(Pred), '.'])).
-position_to_message(callloc(Pred, loc(S, Ln0, Ln1)),
-	    message_lns(S, Ln0, Ln1, error,
-		['Failed during invocation of ', ''(Pred)])).
-position_to_message(litloc(Lit, loc(S, Ln0, Ln1)-(Pred)),
-	    message_lns(S, Ln0, Ln1, error,
-		['Failed when invocation of ', ''(Pred),
-		    ' called ', ''(Lit), ' in its body.'])).
-position_to_message(asrloc(loc(S, Ln0, Ln1)),
-	    message_lns(S, Ln0, Ln1, error, [])).
-position_to_message(pploc(loc(S, Ln0, Ln1)),
-	    message_lns(S, Ln0, Ln1, error, [])).
+position_to_message(predloc(Pred, Loc),
+		    message_lns(Loc, error, ['Failed in ', ''(Pred), '.'])).
+position_to_message(callloc(Pred, Loc),
+		    message_lns(Loc, error, ['Failed during invocation of ',
+					     ''(Pred)])).
+position_to_message(litloc(Lit, Loc-(Pred)),
+		    message_lns(Loc, error,
+				['Failed when invocation of ', ''(Pred),
+				 ' called ', ''(Lit), ' in its body.'])).
+position_to_message(asrloc(Loc),
+		    message_lns(Loc, error, [])).
+position_to_message(pploc(Loc),
+		    message_lns(Loc, error, [])).
 
 :- use_module(library(varnames(apply_dict))).
 :- use_module(library(varnames(complete_dict))).
@@ -208,10 +207,10 @@ check_to_messages(rtcheck(Type, Pred0, Dict, PropValues0, Positions0),
 	; Text0 = ['\n', '\tBecause: ','\n',
 		   '\t\t', ''({Values}), '.'|Text1]
 	),
-	( select(message_lns(S, Ln0, Ln1, MessageType, Text2),
+	( select(message_lns(Loc, MessageType, Text2),
 		 PosMessages, PosMessages1)
 	->(Text2 == [] -> Text1 = [] ; Text1 = [' ', '\n'|Text2]),
-	  Message = message_lns(S, Ln0, Ln1, MessageType, Text)
+	  Message = message_lns(Loc, MessageType, Text)
 	; Text1 = [],
 	  Message = message(error, Text),
 	  PosMessages1 = PosMessages
