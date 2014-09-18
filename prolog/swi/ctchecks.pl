@@ -3,7 +3,6 @@
 :- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(compound_expand)).
 :- use_module(library(compact_pi_list)).
-:- use_module(library(assertions/assrt_lib)).
 :- reexport(library(swi/rtchecks)).
 
 :- multifile prolog:message/3.
@@ -127,17 +126,16 @@ check_property(ctcheck, H, M, Pos, CTChecks) :-
 verif_is_property(_, call, N) :- N > 0, !. % meta checks not supported yet --EMM
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
-    assertion_db(H, AM, _, prop, _, _, _, _, _, _),
+    assrt_lib:assertion_db(H, AM, _, prop, _, _, _, _, _, _),
     ( AM = IM -> true
     ; predicate_property(AM:H, imported_from(IM))
     ).
 
-term_expansion((assrt_lib:assertion_head(Head, M, _Status, Type, _, _, Pos)
-	      :- Body), _, _, _) :-
+term_expansion(assrt_lib:assertion_db(Head, M, _Status, Type, Cp, Ca,
+				       Su, Gl, _Co, _), Pos, _, _) :-
     !,
     current_prolog_flag(check_assertions, Issues),
     Issues \== [],
-    a_fake_body(Cp, Ca, Su, Gl, Body),
     check_properties(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues),
     fail.
 
