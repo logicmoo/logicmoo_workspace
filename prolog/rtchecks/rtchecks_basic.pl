@@ -89,7 +89,6 @@ get_checkc(call, Props, PropValues, CheckC) :-
 	compound_check_props(instance, Props, CheckProps0),
 	compound_checkc(CheckProps0, PropValues, CheckC).
 
-
 compound_check_props(Check, Props, CheckProps) :-
 	maplist(compound_check_prop(Check), Props, CheckProps).
 
