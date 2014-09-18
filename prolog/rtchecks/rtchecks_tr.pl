@@ -14,7 +14,7 @@
      fail
    ; true
    ).
-
+:- use_module(library(filesex)).
 :- use_module(engine(basic_props)).
 % For simplicity, for SWI-Prolog we only support tr_library:
 :- use_package(rtchecks(rtchecks_tr_library)).
