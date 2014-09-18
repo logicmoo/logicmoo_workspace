@@ -17,13 +17,7 @@
 
 % Extra location for assertions of a given predicate
 extra_location(Head, M, assertion(Status, Type), From) :-
-    clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, Pos), _, Ref),
-    clause_property(Ref, file(File)),
-    ( nonvar(Pos)
-    ->From = file_term_position(File, Pos)
-    ; clause_property(Ref, line_count(Line)),
-      From = file(File, Line, -1, _)
-    ).
+    clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
 
 record_extra_location((:- module(M, L)))      :- assert_declaration(export, M, L).
 record_extra_location((:- volatile(L)))       :- assert_declaration(volatile, L).
@@ -75,14 +69,11 @@ assert_location(G, T) :-
     L = file(File, Line, -1, 0),
     assert_location(G, M, T, L).
 
-assert_declaration_one(reexport(U), L, M, PI) :-
-    !,
+assert_declaration_one(reexport(U), L, M, PI) :- !,
     assert_reexport_declaration_2(PI, U, L, M).
-assert_declaration_one(Declaration, L, _, M:PI) :-
-    !,
+assert_declaration_one(Declaration, L, _, M:PI) :- !,
     assert_declaration_one(Declaration, L, M, PI).
-assert_declaration_one(Declaration, L, M, F/A) :-
-    !,
+assert_declaration_one(Declaration, L, M, F/A) :- !,
     functor(H, F, A),
     assert_location(H, M, Declaration, L).
 assert_declaration_one(Declaration, L, M, H) :-
