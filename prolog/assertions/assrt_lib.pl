@@ -77,14 +77,18 @@ assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
     maplist(add_arg(Head), Glob0, Glob),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
     ( nonvar(Loc),
-      Loc = file_term_position(File, Pos),
-      nonvar(Pos),
-      arg(1, Pos, From),
-      arg(2, Pos, To),
-      integer(From),
-      integer(To)
-    ->filepos_line(File, From, Line0, _),
-      filepos_line(File, To,   Line1, _)
+      ( Loc = file_term_position(File, Pos),
+	nonvar(Pos),
+	arg(1, Pos, From),
+	arg(2, Pos, To),
+	integer(From),
+	integer(To)
+      ->filepos_line(File, From, Line0, _),
+	filepos_line(File, To,   Line1, _)
+      ; Loc = file(File, Line0, -1, _),
+	Line1 = Line0
+      )
+    ->true
     ; clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line0 )),
       Line1 = Line0
@@ -552,16 +556,15 @@ assertion_records(M, Dict, doc(Key, Doc),
 				[0-0,
 				 term_position(From, To, FFrom, FTo,
 					       [KPos, 0-0, DPos, 0-0 ])])) :- !.
+% Note: We MUST save the full location (File, HPos), because later we will not
+% have access to source_location/2, due to it will fails for further created
+% clauses --EMM
 assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
     Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, Loc) :- FBody),
-    ( source_location(File, Line0)
+    ( source_location(File, Line0 )
     ->Clause = ('$source_location'(File, Line):Clause0 )
     ; Clause = Clause0
-    ),
-    ( nonvar(File)
-    ->Loc = file_term_position(File, HPos)
-    ; true
     ),
     findall(a(Match, Clause, HPos),
 	    ( normalize_assertions(Assertions, CM, APos, M:Head, Status,
@@ -570,8 +573,14 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
 		nonvar(HPos),
 		arg(1, HPos, HFrom),
 		integer(HFrom)
-	      ->prolog_codewalk:filepos_line(File, HFrom, Line, _)
-	      ; Line = Line0
+	      ->Loc = file_term_position(File, HPos),
+		filepos_line(File, HFrom, Line, _)
+	      ; ( nonvar(File),
+		  nonvar(Line0 )
+		->Loc = file(File, Line0, -1, _)
+		; true
+		),
+		Line = Line0
 	      ),
 	      once(maplist(maplist(compact_module_call(M)),
 			   [Cp0, Ca0, Su0, Gl0 ],
