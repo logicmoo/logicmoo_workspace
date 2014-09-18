@@ -72,22 +72,17 @@ filepos_line(File, CharPos, Line, LinePos) :-
 
 % For compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
-    clause(assrt_lib:assertion_head(Head, M, Status, Type, Comm, Dict, Loc), _:FBody, Ref),
+    clause(assrt_lib:assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody, Ref),
     once(a_fake_body(Comp, Call, Succ, Glob0, FBody)),
     maplist(add_arg(Head), Glob0, Glob),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
-    ( nonvar(Loc),
-      Loc = file_term_position(File, Pos),
-      nonvar(Pos),
-      arg(1, Pos, From),
+    clause_property(Ref, file(File)),
+    clause_property(Ref, line_count(Line0 )),
+    ( nonvar(Pos),
       arg(2, Pos, To),
-      integer(From),
       integer(To)
-    ->filepos_line(File, From, Line0, _),
-      filepos_line(File, To,   Line1, _)
-    ; clause_property(Ref, file(File)),
-      clause_property(Ref, line_count(Line0 )),
-      Line1 = Line0
+    ->filepos_line(File, To,   Line1, _)
+    ; Line1 = Line0
     ).
 
 % ---------------------------------------------------------------------------
@@ -554,14 +549,10 @@ assertion_records(M, Dict, doc(Key, Doc),
 					       [KPos, 0-0, DPos, 0-0 ])])) :- !.
 assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
-    Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, Loc) :- FBody),
+    Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, HPos) :- FBody),
     ( source_location(File, Line0)
     ->Clause = ('$source_location'(File, Line):Clause0 )
     ; Clause = Clause0
-    ),
-    ( nonvar(File)
-    ->Loc = file_term_position(File, HPos)
-    ; true
     ),
     findall(a(Match, Clause, HPos),
 	    ( normalize_assertions(Assertions, CM, APos, M:Head, Status,
