@@ -3,6 +3,7 @@
 % A wrapper from library(check) to tools(audit)
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(normalize_head)).
 :- use_module(library(referenced_by)).
 :- use_module(library(check), []).
@@ -51,8 +52,8 @@ goal_pi(M:H, M:F/A) :- functor(H, F, A).
 :- meta_predicate collect_undef(?,?,1,+,+,+).
 collect_undef(H, M, FileChk, MCall, Caller, From) :-
     from_to_file(From, File),
+    M:H = MCall,
     call(FileChk, File),
-    M:H=MCall,
     record_location_dynamic(MCall, M, From),
     found_undef(MCall, Caller, From),
     fail. % prevent unexpected unification

@@ -7,6 +7,7 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(normalize_head)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(referenced_by)).
 
 :- multifile

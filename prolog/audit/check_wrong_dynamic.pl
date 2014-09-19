@@ -8,6 +8,7 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(database_fact)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
 

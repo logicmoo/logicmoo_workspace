@@ -17,6 +17,7 @@
 :- use_module(library(is_entry_point)).
 :- use_module(library(record_locations)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).

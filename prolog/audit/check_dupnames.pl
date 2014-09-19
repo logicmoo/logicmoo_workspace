@@ -2,6 +2,7 @@
 
 :- use_module(library(check), []).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(normalize_head)).
 
 :- multifile

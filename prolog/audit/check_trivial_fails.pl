@@ -2,6 +2,7 @@
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(record_locations)).
 :- use_module(library(database_fact)).
 :- use_module(library(maplist_dcg)).

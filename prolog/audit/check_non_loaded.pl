@@ -6,13 +6,14 @@
 :- use_module(library(included_files)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 
 :- multifile
     prolog:message//1.
 
 audit:check(non_loaded, _, Results, OptionL) :-
-    option_dirchk(OptionL, _, in_dir(DirL)),
-    findall(Result, check_non_loaded(DirL, Result), ResultL),
+    option_dirchk(OptionL, _, GenDir),
+    findall(Result, check_non_loaded(GenDir, Result), ResultL),
     append(ResultL, Results).
 
 loaded_files(Dir, Loaded) :-
@@ -31,8 +32,8 @@ remainder_files(Dir, Remainder) :-
     existing_files(Dir, Exists),
     ord_subtract(Exists, Loaded, Remainder).
 
-check_non_loaded(DirL, Pairs) :-
-    member(Dir, DirL),
+check_non_loaded(GenDir, Pairs) :-
+    call(GenDir, Dir),
     loaded_files(Dir, Loaded),
     existing_files(Dir, Exists),
     ord_subtract(Exists, Loaded, Remainder),

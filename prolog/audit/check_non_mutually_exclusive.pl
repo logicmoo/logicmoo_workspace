@@ -1,6 +1,7 @@
 :- module(check_non_mutually_exclusive, []).
 
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(referenced_by)).
