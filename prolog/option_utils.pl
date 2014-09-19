@@ -103,9 +103,7 @@ check_module(M, File) :-
 		   
 option_module(M, File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(module(M), OptionL0, OptionL, M),
-    ( var(M)
-    ->FileGen0 = FileGen
-    ; M = (-)
+    ( nonvar(M), M = (-)
     ->FileGen0 = FileGen
     ; FileGen0 = ( check_module(M, File),
 		   FileGen
