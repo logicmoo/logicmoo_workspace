@@ -11,6 +11,7 @@
 
 check_alias(Type, Alias, File) :-
     absolute_file_name(Alias, Pattern, [file_type(Type),
+					access(exist),
 					solutions(all)]),
     expand_file_name(Pattern, FileL),
     member(File, FileL).
@@ -18,7 +19,7 @@ check_alias(Type, Alias, File) :-
 option_alias(File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(alias(Alias), OptionL0, OptionL, Alias),
     ( nonvar(Alias)
-    ->FileGen0 = ( check_alias(directory, Alias, File),
+    ->FileGen0 = ( check_alias(prolog, Alias, File),
 		   FileGen
 		 )
     ; FileGen0 = FileGen
@@ -28,7 +29,7 @@ option_aliases(File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(aliases(AliasL), OptionL0, OptionL, AliasL),
     ( nonvar(AliasL)
     ->FileGen0 = ( member(Alias, AliasL),
-		   check_alias(directory, Alias, File),
+		   check_alias(prolog, Alias, File),
 		   FileGen
 		 )
     ; FileGen0 = FileGen
