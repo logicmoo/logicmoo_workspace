@@ -31,8 +31,8 @@
 :- use_module(library(assoc)).
 
 nodes_arcs_sccs(Ns, As, Ss) :-
-        must_be(list(ground), Ns),
-        must_be(list(ground), As),
+        % must_be(list(ground), Ns),
+        % must_be(list(ground), As),
         catch((maplist(node_var_pair, Ns, Vs, Ps),
                list_to_assoc(Ps, Assoc),
                maplist(attach_arc(Assoc), As),

@@ -22,15 +22,17 @@
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(referenced_by)).
+:- use_module(library(qualify_meta_goal)).
+:- use_module(library(implementation_module)).
 
 :- multifile
     prolog:message//1,
     audit:check/4.
 
-:- dynamic marked/3, calls_to/4.
+:- dynamic marked/3, calls_to/2.
 
-check_pred_file(PI, FileChk) :-
-    property_from(PI, _, From),
+check_pred_file(Ref, FileChk) :-
+    property_from(Ref, _, From),
     from_to_file(From, File),
     call(FileChk, File),
     !.
@@ -40,8 +42,7 @@ check_pred_file(PI, FileChk) :-
 collect_unused(M, FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    record_location_meta(MGoal, M, From, cu_callee_hook,
-			 cu_caller_hook(Caller)).
+    record_location_meta(MGoal, M, From, cu_callee_hook, cu_caller_hook(Caller)).
 
 audit:check(unused, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
@@ -65,34 +66,95 @@ check_unused(Ref, FileChk, OptionL0, Pairs) :-
     cleanup_unused.
 
 cleanup_unused :-
-    retractall(calls_to(_, _, _, _)),
+    retractall(calls_to(_, _)),
     retractall(marked(_, _, _)),
     cleanup_locations(_, _, dynamic(_, _, _), _).
 
-:- meta_predicate is_entry_caller(+,+,+).
-is_entry_caller('<initialization>', _, _) :- !.
-is_entry_caller(F, A, M) :- entry_caller(F, A, M, _).
+is_entry_caller('<initialization>') :- !.
+is_entry_caller(Ref) :- !,
+    nth_clause(M:H, _, Ref),
+    entry_caller(M, H).
 
-entry_caller(F, A, M, H) :-
-    functor(H, F, A),
-    ( hide_unused(M:F/A) -> true
+entry_caller(M, H) :-
+    ( hide_unused(H, M) -> true
     ; is_entry_point(M:H) -> true
     ; extra_location(H, M, goal, _)
     ).
 
-entry_point(M:H, CM:CF/CA) :-
-    calls_to(CF, CA, CM, M:F/A),
-    is_entry_caller(CF, CA, CM),
-    functor(H, F, A).
+entry_point(M:H, Caller) :-
+    calls_to(Caller, M:H),
+    is_entry_caller(Caller).
 
 mark(Ref) :-
-    forall(entry_point(Ref, PI),
-	   mark_rec(PI)).
+    forall(entry_point(Ref, Caller), put_mark(Caller)).
 
-mark_rec(M:F/A) :-
-    ( \+ marked(F, A, M) ->
-      assertz(marked(F, A, M)),
-      forall(calls_to(F, A, M, Callee), mark_rec(Callee))
+mark_rec(M:H) :-
+    ( H == '<initialization>'
+    ->forall(calls_to(H, Callee), mark_rec(Callee))
+    ; predicate_property(M:H, interpreted)
+    ->mark_caller(M:H)
+    ; true
+    ).
+
+resolve_meta_goal(H, M, G) :-
+    ( predicate_property(M:H, meta_predicate(Meta))
+    ->qualify_meta_goal(M:H, Meta, M:G)
+    ; G = H
+    ).
+
+put_mark(H, M) :-
+    retractall(marked(H, M, _)),
+    assertz(marked(H, M, _)),
+    forall(( nth_clause(M:H, _, CRef),
+	     calls_to(CRef, Callee)
+	   ),
+	   mark_rec(Callee)).
+
+match_all(G) :-
+    functor(G, F, A),
+    functor(H, F, A),
+    G =@= H.
+
+mark_caller(M:H) :-
+    marked(H, M, I),
+    var(I),
+    !.
+mark_caller(M:H) :-
+    match_all(H),
+    !,
+    put_mark(H, M).
+mark_caller(M:H) :-
+    resolve_meta_goal(H, M, G),
+    forall(( clause(M:G, _, CRef),
+	     clause_property(CRef, file(_)) % Static clauses only
+	   ), put_mark(CRef)),		    % Widening
+    put_narrow_mark(M:G).
+
+put_narrow_mark(M:G) :-
+    ( functor(G, F, A),
+      functor(P, F, A),
+      ( marked(P, M, 0 ),
+	subsumes_term(P, G)
+      ->true
+      ; forall(( clause(marked(P, M, 0 ), true, CRef),
+		 subsumes_term(G, P)
+	       ),
+	       erase(CRef)),	    % Cleaning up
+	assertz(marked(G, M, 0 ))   % Preserve narrow findings
+      )
+    ).
+
+%% Generalization step, we lose precision but avoid loops --EMM
+mark_to_head('<initialization>', _:'<initialization>'-0) :- !.
+mark_to_head(CRef, M:H-I) :-
+    clause(M:H, _, CRef),
+    nth_clause(M:H, I, CRef).
+
+put_mark(CRef) :-
+    mark_to_head(CRef, M:H-I),
+    ( \+ marked(H, M, I)
+    ->assertz(marked(H, M, I)),
+      forall(calls_to(CRef, Callee), mark_rec(Callee))
     ; true
     ).
 
@@ -100,27 +162,75 @@ mark_rec(M:F/A) :-
 :- use_module(library(scc)).
 
 sweep(Ref, FileChk, Pairs) :-
-    findall(PI, unmarked(Ref, FileChk, PI), UNodes),
+    findall(Node, unmarked(Ref, FileChk, Node), UNodes),
     sort(UNodes, Nodes),
-    findall(arc(X, Y), ( member(X, Nodes),
-			 X = M:F/A,
-			 calls_to(F, A, M, Y),
-			 memberchk(Y, Nodes)),
+    findall(arc(X, Y),
+	    ( PI = M:F/A,
+	      member(X, Nodes),
+	      ( X = PI
+	      ->functor(H, F, A),
+		clause(M:H, _, CRef)
+	      ; X = PI/I,
+		I > 0
+	      ->functor(H, F, A),
+		nth_clause(M:H, I, CRef)
+	      ),
+	      calls_to(CRef, M2:H2),
+	      functor(H2, F2, A2),
+	      PI2 = M2:F2/A2,
+	      ( Y = PI2,
+		memberchk(Y, Nodes)
+	      ; predicate_property(M2:H2, interpreted),
+		( clause(M2:H2, _, YRef),
+		  nth_clause(_, I2, YRef),
+		  Y = PI2/I2
+		; %% extra_location(H2, M2, dynamic(use, _, _), _),
+		  Y = PI2/0
+		),
+		memberchk(Y, Nodes)
+	      )
+	    ),
 	    Arcs),
     nodes_arcs_sccs(Nodes, Arcs, SU),
     sort(SU, SL),
-    % memberchk(arc(Node1, Node2), Arcs),
-    % maplist(adjacency(SL, dependent_scc_el), SL, AL),
-    findall(S-D, ( member(S, SL),
-		   ( member(D, SL),
-		     D \= S,
-		     dependent_scc_el(S, D)
-		   *->true
-		   ; D = []
-		   )
-		 ),
-	    DL),
+    table_sccs(SL),
+    table_arcs(Arcs),
+    findall(I1-I2,
+	    ( node_scc(Node1, I1),
+	      ( arc(Node1, Node2),
+		node_scc(Node2, I2),
+		I2 \= I1
+	      *->true
+	      ; I2 = []
+	      )
+	    ), IU),
+    sort(IU, IL),
+    maplist(ipairs_scc, IL, DU),
+    sort(DU, DL),
     maplist(add_adj_key, DL, Pairs).
+
+ipairs_scc(I-[], SCC-[]) :- !,
+    scc1(I, SCC).
+ipairs_scc(I1-I2, SCC1-SCC2) :-
+    scc1(I1, SCC1),
+    scc1(I2, SCC2).
+
+% Note: although is not nice, we are using dynamic predicates to cache partial
+% results for performance reasons, otherwise the analysis takes 20 times more
+% --EMM
+
+:- dynamic arc/2, scc1/2, node_scc/2.
+
+table_arcs(Arcs) :-
+    retractall(arc(_, _)),
+    maplist(assertz, Arcs).
+
+table_sccs(SCCL) :-
+    forall(nth1(Idx, SCCL, SCC),
+	   ( assertz(scc1(Idx, SCC)),
+	     forall(member(Node, SCC),
+		    assertz(node_scc(Node, Idx)))
+	   )).
 
 /*
 sweep(Ref, Pairs) :-
@@ -141,9 +251,7 @@ audit:prepare_results(unused, Pairs, Results) :-
 add_location_al(AL, PI, L) :-
     member(warning-(PILocDL/_), AL),
     member(PI/LocDL, PILocDL),
-    findall(Loc-((PI)/D),
-	    member(Loc/D, LocDL),
-	    U),
+    findall(Loc-(PI/D), member(Loc/D, LocDL), U),
     sort(U, L).
 
 prop_loc_desc(PI, PI/LocDL) :-
@@ -153,8 +261,8 @@ prop_loc_desc(PI, PI/LocDL) :-
       sort(LocDU, LocDL)
     ).
 
-add_adj_key(PIL-L, warning-(PILocDL/L)) :-
-    maplist(prop_loc_desc, PIL, PILocDL).
+add_adj_key(HL-L, warning-(PILocDL/L)) :-
+    maplist(prop_loc_desc, HL, PILocDL). 
 
 /*
 :- meta_predicate adjacency(+, 2, +, -).
@@ -165,19 +273,6 @@ adjacency(SL, Dependent, S, S-L) :-
 	       ),
 	    L).
 */
-
-:- public dependent_scc_el/2.
-
-dependent_scc_el(SCC1, SCC2) :-
-    ( member(Node1, SCC1) *->
-      member(Node2, SCC2),
-      dependent(Node1, Node2)
-    ; true
-    ),
-    !.
-
-dependent(M:F/A, Node2) :-
-    calls_to(F, A, M, Node2).
 
 dependent_scc_al(SCC1-AL, SCC2-_) :-
     ( SCC1 \= []
@@ -214,20 +309,38 @@ add_location_info_(A-B, LI, C-D) :-
     add_location_info_(B, LI, D).
 add_location_info_(M:PI, LI, L) :-
     call(LI, M:PI, L).
+add_location_info_(H/I, LI, L) :-
+    call(LI, H/I, L).
 
-unmarked(Ref, FileChk, MPI) :-
+unmarked(Ref, FileChk, Node) :-
     Ref = M:H,
     MPI = M:F/A,
     ( current_defined_predicate(MPI),
       functor(H, F, A),
-      auditable_predicate(Ref)
+      auditable_predicate(Ref),
+      \+ entry_caller(M, H),
+      ( \+ marked(H, M, _)
+      ->Node = MPI
+      ; ( clause(M:H, _, CRef),
+	  clause_property(CRef, file(_)), % Static clauses only
+	  nth_clause(M:H, I, CRef),
+	  \+ marked(H, M, I),
+	  Node = MPI/I
+	; extra_location(H, M, dynamic(def, _, _), _),
+	  \+ marked(H, M, 0 ),
+	  Node = MPI/0
+	)
+      )
     ; extra_location(H, M, dynamic(def, _, _), _),
-      functor(H, F, A)
+      functor(H, F, A),
+      \+ current_defined_predicate(MPI),
+      auditable_predicate(Ref),
+      \+ entry_caller(M, H),
+      \+ marked(H, M, 0 ),
+      Node = MPI/0
     ),
-    \+ entry_caller(F, A, M, H),
-    \+ marked(F, A, M),
-    check_pred_file(MPI, FileChk).
-
+    check_pred_file(Ref, FileChk).
+    
 prolog:message(acheck(unused)) -->
     ['-----------------',nl,
      'Unused Predicates',nl,
@@ -265,23 +378,22 @@ message_unused(Level, Loc-(PI/D)) -->
     ['unused ~w: ~w'-[D, PI], nl].
 
 % Hook to hide unused messages:
-:- multifile hide_unused/1.
+:- multifile hide_unused/2.
 
-hide_unused(_:'$exported_op'/3).
-hide_unused(predopts_analysis:attr_unify_hook/2).
-hide_unused(shlib:loading/1).
-hide_unused(pce_global:'pce catcher'/2).
-hide_unused(_:term_expansion/2).
-hide_unused(_:goal_expansion/2).
-hide_unused(_:term_expansion/4).
-hide_unused(_:goal_expansion/4).
-hide_unused(plunit:_).
-hide_unused(ciao:_).
-hide_unused(user:thread_message_hook/3).
-hide_unused(user:prolog_trace_interception/4).
-hide_unused(M:F/A) :-
-    unused_mo_clpfd(M),
-    unused_pi_clpfd(F, A).
+hide_unused('$exported_op'(_,_,_), _).
+hide_unused(attr_unify_hook(_, _), predopts_analysis).
+hide_unused(loading(_), shlib).
+hide_unused('pce catcher'(_, _), pce_global).
+hide_unused(term_expansion(_, _), _).
+hide_unused(goal_expansion(_, _), _).
+hide_unused(term_expansion(_, _, _, _), _).
+hide_unused(goal_expansion(_, _, _, _), _).
+hide_unused(thread_message_hook(_, _, _), user).
+hide_unused(prolog_trace_interception(_, _, _, _), user).
+hide_unused(attribute_goals(_, _, _), M) :- unused_mo_clpfd(M).
+hide_unused(attr_unify_hook(_, _),    M) :- unused_mo_clpfd(M).
+hide_unused(_, plunit).
+hide_unused(_, ciao).
 
 unused_mo_clpfd(clpfd_original).
 unused_mo_clpfd(clpfd_relation).
@@ -291,27 +403,31 @@ unused_mo_clpfd(clpfd_gcc_vs).
 unused_mo_clpfd(clpfd_gcc_aux).
 unused_mo_clpfd(clpfd_aux).
 
-unused_pi_clpfd(attribute_goals, 3).
-unused_pi_clpfd(attr_unify_hook, 2).
-
 prop_t(use).
 prop_t(def).
 
 :- multifile cu_callee_hook/3.
 
-cu_callee_hook(use,  Goal, Goal).
+cu_callee_hook(lit,  Goal, Goal).
 cu_callee_hook(Prop, Goal, Fact) :-
     prop_t(Prop),
     database_fact(Prop, Goal, Fact).
 
-cu_caller_hook(Caller, MGoal, dynamic(use, _, _), _From) :-
-    normalize_pi(MGoal, MPI),
-    ground(MPI),
-    CPI = M:F/A,
-    normalize_pi(Caller, CPI),
-    (calls_to(F, A, M, MPI) -> true ; assertz(calls_to(F, A, M, MPI))).
-cu_caller_hook(_Caller, MGoal, dynamic(def, CM, Goal), From) :-
-    normalize_head(MGoal, M:Head),
+caller_ptr('<initialization>', _, '<initialization>') :- !.
+caller_ptr(_, clause(Ptr), Ptr).
+
+cu_caller_hook(Caller, M:Head, Type, From) :-
     nonvar(M),
     callable(Head),
-    record_location(Head, M, dynamic(def, CM, Goal), From).
+    (Type \= dynamic(lit, _, _) -> record_location(Head, M, Type, From) ; true),
+    record_calls_to(Type, Caller, Head, M, From).
+
+record_calls_to(dynamic(Type, _, _), Caller, Head, M, From) :-
+    ( memberchk(Type, [use, lit])
+    ->caller_ptr(Caller, From, Ptr),
+      ( \+ calls_to(Ptr, M:Head)
+      ->assertz(calls_to(Ptr, M:Head))
+      ; true
+      )
+    ; true
+    ).
