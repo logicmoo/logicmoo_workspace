@@ -29,7 +29,7 @@
     prolog:message//1,
     audit:check/4.
 
-:- dynamic marked/3, calls_to/2.
+:- dynamic marked/3, calls_to/2, arc/2, scc1/2, node_scc/2.
 
 check_pred_file(Ref, FileChk) :-
     property_from(Ref, _, From),
@@ -68,7 +68,10 @@ check_unused(Ref, FileChk, OptionL0, Pairs) :-
 cleanup_unused :-
     retractall(calls_to(_, _)),
     retractall(marked(_, _, _)),
-    cleanup_locations(_, _, dynamic(_, _, _), _).
+    cleanup_locations(_, _, dynamic(_, _, _), _),
+    retractall(arc(_, _)),
+    retractall(scc1(_, _)),
+    retractall(node_scc(_, _)).
 
 is_entry_caller('<initialization>') :- !.
 is_entry_caller(Ref) :- !,
@@ -161,40 +164,45 @@ put_mark(CRef) :-
 % Tarjan's scc algorithm:
 :- use_module(library(scc)).
 
+current_arc(Nodes, X, Y) :-
+    ( PI = M:F/A,
+      member(X, Nodes),
+      ( X = PI
+      ->functor(H, F, A),
+	clause(M:H, _, CRef)
+      ; X = PI/I,
+	I > 0
+      ->functor(H, F, A),
+	nth_clause(M:H, I, CRef)
+      ),
+      calls_to(CRef, M2:H2),
+      functor(H2, F2, A2),
+      PI2 = M2:F2/A2,
+      ( Y = PI2,
+	memberchk(Y, Nodes)
+      ; predicate_property(M2:H2, interpreted),
+	( clause(M2:H2, _, YRef),
+	  nth_clause(_, I2, YRef),
+	  Y = PI2/I2
+	; %% extra_location(H2, M2, dynamic(use, _, _), _),
+	  Y = PI2/0
+	),
+	memberchk(Y, Nodes)
+      )
+    ).
+
+% Note: although is not nice, we are using dynamic predicates to cache partial
+% results for performance reasons (arc/2, node_scc/2, scc1/2), otherwise the
+% analysis will take 20 times more --EMM
+%
 sweep(Ref, FileChk, Pairs) :-
     findall(Node, unmarked(Ref, FileChk, Node), UNodes),
     sort(UNodes, Nodes),
-    findall(arc(X, Y),
-	    ( PI = M:F/A,
-	      member(X, Nodes),
-	      ( X = PI
-	      ->functor(H, F, A),
-		clause(M:H, _, CRef)
-	      ; X = PI/I,
-		I > 0
-	      ->functor(H, F, A),
-		nth_clause(M:H, I, CRef)
-	      ),
-	      calls_to(CRef, M2:H2),
-	      functor(H2, F2, A2),
-	      PI2 = M2:F2/A2,
-	      ( Y = PI2,
-		memberchk(Y, Nodes)
-	      ; predicate_property(M2:H2, interpreted),
-		( clause(M2:H2, _, YRef),
-		  nth_clause(_, I2, YRef),
-		  Y = PI2/I2
-		; %% extra_location(H2, M2, dynamic(use, _, _), _),
-		  Y = PI2/0
-		),
-		memberchk(Y, Nodes)
-	      )
-	    ),
-	    Arcs),
+    forall(current_arc(Nodes, X, Y), assertz(arc(X, Y))),
+    findall(arc(X, Y), arc(X, Y), Arcs),
     nodes_arcs_sccs(Nodes, Arcs, SU),
     sort(SU, SL),
     table_sccs(SL),
-    table_arcs(Arcs),
     findall(I1-I2,
 	    ( node_scc(Node1, I1),
 	      ( arc(Node1, Node2),
@@ -214,16 +222,6 @@ ipairs_scc(I-[], SCC-[]) :- !,
 ipairs_scc(I1-I2, SCC1-SCC2) :-
     scc1(I1, SCC1),
     scc1(I2, SCC2).
-
-% Note: although is not nice, we are using dynamic predicates to cache partial
-% results for performance reasons, otherwise the analysis takes 20 times more
-% --EMM
-
-:- dynamic arc/2, scc1/2, node_scc/2.
-
-table_arcs(Arcs) :-
-    retractall(arc(_, _)),
-    maplist(assertz, Arcs).
 
 table_sccs(SCCL) :-
     forall(nth1(Idx, SCCL, SCC),
