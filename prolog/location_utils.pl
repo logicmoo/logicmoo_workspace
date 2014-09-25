@@ -107,26 +107,24 @@ record_location(Head, M, Type, From) :-
     ; assertz(extra_location(Head, M, Type, From))
     ).
 
+%% static_strip_module(+Call, -Head, -Module, +ContextModule) is det.
+%
+% Like strip_module/4, but assume as Module the ContextModule if Call is
+% uninstantiated
+%
+static_strip_module(T, T, M, M) :-
+    var(T), !.
+static_strip_module(Module:RT, T, M, _) :- !,
+    static_strip_module(RT, T, M, Module).
+static_strip_module(T, T, M, M).
+
 record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
+    static_strip_module(MCall, Call, CM, M),
     implementation_module(MCall, IM),
-    MCall = CM:Call,
-    call(FactBuilder, Def, IM:Call, Fact),
-    ( var(Fact)
-    ->MFact = Fact,
-      FM = CM
-    ; ( Fact = FM:FH
-      ->( atom(FM),
-	  callable(FH)
-	->implementation_module(FM:FH, M)
-	; M = FM
-	)
-      ; FM = CM,
-	FH = Fact,
-	implementation_module(FM:FH, M)
-      ),
-      MFact = M:FH
-    ),
-    call(Recorder, MFact, dynamic(Def, FM, IM:Call), From).
+    call(FactBuilder, Def, IM:Call, MFact),
+    static_strip_module(MFact, Fact, FM, CM),
+    implementation_module(FM:Fact, M),
+    call(Recorder, M:Fact, dynamic(Def, FM, IM:Call), From).
 
 :- meta_predicate record_location_meta(+,?,+,3,3).
 record_location_meta(MCall, M, From, FactBuilder, Recorder) :-
