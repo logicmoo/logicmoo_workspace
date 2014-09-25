@@ -6,8 +6,9 @@
 % defined, can report the wrong implementation module pointing at the
 % libraries. Work around: Never use names that are already being used
 % in the libraries. --EMM
-implementation_module(MGoal, IM) :-
-    ( predicate_property(MGoal, imported_from(M))
-    ->IM = M	   %% Allow usage as test
-    ; IM:_ = MGoal %% Asume that if not imported, it is defined here
+implementation_module(M:Goal, IM) :-
+    ( atom(M),
+      predicate_property(M:Goal, imported_from(IM0))
+    ->IM = IM0 %% Allow usage as test
+    ; IM = M   %% Asume that if not imported, it is defined here
     ).
