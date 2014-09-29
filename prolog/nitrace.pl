@@ -50,25 +50,22 @@ skip_trace(M:_) :-
 
 :- public trace_port/5.
 
-trace_port(Port, Frame, PC, Path, Stream) :-
-    % Module qualification to skip local predicates:
-    prolog_frame_attribute(Frame, predicate_indicator, M:PI),
-    \+ skip_trace(M:PI), !,
-    trace_port_(Port, Frame, PC, Path, Stream).
-trace_port(_, _, _, _, _).
-
-trace_port_(redo(_), Frame, PC, Path, Stream) :- !,
+trace_port(redo(_), Frame, PC, Path, Stream) :- !,
     trace_port(redo, Frame, PC, Path, Stream).
-trace_port_(exception(Ex), Frame, PC, Path, Stream) :- !,
+trace_port(exception(Ex), Frame, PC, Path, Stream) :- !,
     trace_port(exception, Frame, PC, Path, Stream),
     print_message(stream(Stream, []), Ex).
-trace_port_(Port, Frame, PC0, Path, Stream) :-
+trace_port(Port, Frame, PC0, Path, Stream) :-
     ( find_frame_clause(Frame, PC0, PC, CS, Cl)
-    ->clause_stream_loc(Cl, Path, Stream, CS, StreamLoc)
-    ; StreamLoc = stream(Stream, [])
-    ), !,
+    ->clause_stream_loc(Cl, Path, Stream, CS, StreamLoc),
+      clause_property(Cl, predicate(M:PI))
+    ; StreamLoc = stream(Stream, []),
+      %% Module qualification to skip local predicates:
+      prolog_frame_attribute(Frame, predicate_indicator, M:PI)
+    ),
+    \+ skip_trace(M:PI), !,
     print_message(StreamLoc, frame(Frame, Port, PC)).
-trace_port_(_, _, _, _, _).
+trace_port(_, _, _, _, _).
 
 find_frame_clause(Frame, PC, PC, [], Cl) :-
     prolog_frame_attribute(Frame, clause, Cl), !.
