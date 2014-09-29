@@ -47,19 +47,26 @@ user:message_property(stream(_, File, Line, CS),
 
 skip_trace(M:_) :-
     \+ module_property(M, class(user)). % trace only user predicates
-skip_trace(nitrace:_).
 
-trace_port(redo(_), Frame, PC, Path, Stream) :- !,
+trace_port(Port, Frame, PC, Path, Stream) :-
+    % Module qualification to skip local predicates:
+    prolog_frame_attribute(Frame, predicate_indicator, M:PI),
+    \+ skip_trace(M:PI), !,
+    trace_port_(Port, Frame, PC, Path, Stream).
+trace_port(_, _, _, _, _).
+
+trace_port_(redo(_), Frame, PC, Path, Stream) :- !,
     trace_port(redo, Frame, PC, Path, Stream).
-trace_port(Port, Frame, PC0, Path, Stream) :-
-    prolog_frame_attribute(Frame, predicate_indicator, MPI),
-    \+ skip_trace(MPI),
+trace_port_(exception(Ex), Frame, PC, Path, Stream) :- !,
+    trace_port(exception, Frame, PC, Path, Stream),
+    print_message(stream(Stream, []), Ex).
+trace_port_(Port, Frame, PC0, Path, Stream) :-
     ( find_frame_clause(Frame, PC0, PC, CS, Cl)
     ->clause_stream_loc(Cl, Path, Stream, CS, StreamLoc)
     ; StreamLoc = stream(Stream, [])
     ), !,
     print_message(StreamLoc, frame(Frame, Port, PC)).
-trace_port(_, _, _, _, _).
+trace_port_(_, _, _, _, _).
 
 find_frame_clause(Frame, PC, PC, [], Cl) :-
     prolog_frame_attribute(Frame, clause, Cl), !.
