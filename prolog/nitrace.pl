@@ -48,6 +48,8 @@ user:message_property(stream(_, File, Line, CS),
 skip_trace(M:_) :-
     \+ module_property(M, class(user)). % trace only user predicates
 
+:- public trace_port/5.
+
 trace_port(Port, Frame, PC, Path, Stream) :-
     % Module qualification to skip local predicates:
     prolog_frame_attribute(Frame, predicate_indicator, M:PI),
@@ -82,21 +84,6 @@ find_frame_clause_rec(Frame, PC, [PI|CS], Cl) :-
     ; prolog_frame_attribute(Parent, predicate_indicator, PI),
       find_frame_clause_rec(Parent, PC, CS, Cl)
     ).
-
-find_frame(N, Start, _, PC, Frame) :-
-	N > 0,
-	prolog_frame_attribute(Start, pc, PC0),
-	prolog_frame_attribute(Start, parent, Frame0),
-	NN is N - 1,
-	find_frame2(NN, Frame0, PC0, Frame, PC).
-find_frame(_, Frame, Port, Port, Frame).
-
-find_frame2(0, F, PC, F, PC).
-find_frame2(N, F0, _, F, PC) :-
-	prolog_frame_attribute(F0, parent, F1),
-	prolog_frame_attribute(F0, pc, PC1),
-	NN is N - 1,
-	find_frame2(NN, F1, PC1, F, PC).
 
 clause_stream_loc(Cl, Path, Stream, CS, StreamLoc) :-
     ( clause_property(Cl, file(AFile)),
