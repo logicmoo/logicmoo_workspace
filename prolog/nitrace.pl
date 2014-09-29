@@ -34,11 +34,13 @@ setup_trace(state(Visible, Leash, Ref), Path, Stream) :-
 
 :- multifile user:message_property/2.
 
-user:message_property(stream(Stream),          stream(Stream)) :- !.
+user:message_property(stream(Stream, _),       stream(Stream)) :- !.
 user:message_property(stream(Stream, _, _, _), stream(Stream)) :- !.
-user:message_property(stream(_, File, Line, 0), prefix('~N~w:~d:'-[File, Line])) :- !.
-user:message_property(stream(_, File, Line, N),
-		      prefix('~N~w:~d: +~d'-[File, Line, N])) :- !.
+user:message_property(stream(_, []), prefix('~N')) :- !.
+user:message_property(stream(_, CS), prefix('~N ~w ->'-[CS])) :- !.
+user:message_property(stream(_, File, Line, []), prefix('~N~w:~d:'-[File, Line])) :- !.
+user:message_property(stream(_, File, Line, CS),
+		      prefix('~N~w:~d: ~w ->'-[File, Line, CS])) :- !.
 
 :- multifile skip_trace/1.
 :- dynamic skip_trace/1.
@@ -52,25 +54,26 @@ trace_port(redo(_), Frame, PC, Path, Stream) :- !,
 trace_port(Port, Frame, PC0, Path, Stream) :-
     prolog_frame_attribute(Frame, predicate_indicator, MPI),
     \+ skip_trace(MPI),
-    ( find_frame_clause(Frame, PC0, PC, 0, N, Cl)
-    ->clause_stream_loc(Cl, Path, Stream, N, StreamLoc)
-    ; StreamLoc = stream(Stream)
+    ( find_frame_clause(Frame, PC0, PC, CS, Cl)
+    ->clause_stream_loc(Cl, Path, Stream, CS, StreamLoc)
+    ; StreamLoc = stream(Stream, [])
     ), !,
     print_message(StreamLoc, frame(Frame, Port, PC)).
 trace_port(_, _, _, _, _).
 
-find_frame_clause(Frame, PC, PC, N, N, Cl) :-
+find_frame_clause(Frame, PC, PC, [], Cl) :-
     prolog_frame_attribute(Frame, clause, Cl), !.
-find_frame_clause(Frame, _, PC, N0, N, Cl) :-
-    find_frame_clause_rec(Frame, PC, N0, N, Cl).
+find_frame_clause(Frame, _, PC, CS, Cl) :-
+    find_frame_clause_rec(Frame, PC, CS, Cl).
 
-find_frame_clause_rec(Frame, PC, N0, N, Cl) :-
+find_frame_clause_rec(Frame, PC, [PI|CS], Cl) :-
     prolog_frame_attribute(Frame, parent, Parent),
     ( prolog_frame_attribute(Frame, pc, PC)
     ->prolog_frame_attribute(Parent, clause, Cl),
-      succ(N0, N)
-    ; succ(N0, N1),
-      find_frame_clause_rec(Parent, PC, N1, N, Cl)
+      prolog_frame_attribute(Parent, predicate_indicator, PI),
+      CS = []
+    ; prolog_frame_attribute(Parent, predicate_indicator, PI),
+      find_frame_clause_rec(Parent, PC, CS, Cl)
     ).
 
 find_frame(N, Start, _, PC, Frame) :-
@@ -88,12 +91,12 @@ find_frame2(N, F0, _, F, PC) :-
 	NN is N - 1,
 	find_frame2(NN, F1, PC1, F, PC).
 
-clause_stream_loc(Cl, Path, Stream, N, StreamLoc) :-
+clause_stream_loc(Cl, Path, Stream, CS, StreamLoc) :-
     ( clause_property(Cl, file(AFile)),
       clause_property(Cl, line_count(Line))
     ->directory_file_path(Path, File, AFile), % trace only files in Path
-      StreamLoc = stream(Stream, File, Line, N)
-    ; StreamLoc = stream(Stream)
+      StreamLoc = stream(Stream, File, Line, CS)
+    ; StreamLoc = stream(Stream, CS)
     ).
 
 cleanup_trace(state(Visible, Leash, Ref)) :-
