@@ -56,23 +56,23 @@ option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
     ; FileGen0 = FileGen
     ).
 
-option_dir(Dir, FileGen0-OptionL0, FileGen-OptionL) :-
+option_dir(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
     select_option(dir(Alias), OptionL0, OptionL, Alias),
     ( nonvar(Alias)
-    ->FileGen0 = ( check_alias(directory, Alias, Dir),
-		   FileGen
+    ->DirGen0 = ( check_alias(directory, Alias, Dir),
+		   DirGen
 		 )
-    ; FileGen0 = FileGen
+    ; DirGen0 = DirGen
     ).
 
-option_dirs(Dir, FileGen0-OptionL0, FileGen-OptionL) :-
+option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
     select_option(dirs(AliasL), OptionL0, OptionL, []),
     ( AliasL \= []
-    ->FileGen0 = ( member(Alias, AliasL),
+    ->DirGen0 = ( member(Alias, AliasL),
 		   check_alias(directory, Alias, Dir),
-		   FileGen
+		   DirGen
 		 )
-    ; FileGen0 = FileGen
+    ; DirGen0 = DirGen
     ).
 
 check_pred(Head, File) :-
@@ -149,9 +149,9 @@ option_filechk(File) -->
     option_fdir(File),
     option_fdirs(File).
 
-option_dir_dirs(File) -->
-    option_dir(File),
-    option_dirs(File).
+option_dir_dirs(Dir) -->
+    option_dir(Dir),
+    option_dirs(Dir).
 
 :- meta_predicate call_2(0,?,?).
 call_2(Goal, File, File) :- call(Goal).
@@ -159,5 +159,5 @@ call_2(Goal, File, File) :- call(Goal).
 option_allchk(OptionL1, OptionL, call_2(FileGen, File)) :-
     option_filechk(File, FileGen-OptionL1, true-OptionL).
 
-option_dirchk(OptionL1, OptionL, call_2(FileGen, File)) :-
-    option_dir_dirs(File, FileGen-OptionL1, true-OptionL).
+option_dirchk(OptionL1, OptionL, call_2(DirGen, Dir)) :-
+    option_dir_dirs(Dir, DirGen-OptionL1, true-OptionL).
