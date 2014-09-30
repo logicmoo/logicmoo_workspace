@@ -47,6 +47,7 @@ user:message_property(stream(_, File, Line, CS),
 
 skip_trace(M:_) :-
     \+ module_property(M, class(user)). % trace only user predicates
+skip_trace(nitrace:_).
 
 :- public trace_port/5.
 
