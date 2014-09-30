@@ -12,8 +12,12 @@
     prolog:message//1.
 
 audit:check(non_loaded, _, Results, OptionL) :-
-    option_dirchk(OptionL, _, GenDir),
-    findall(Result, check_non_loaded(GenDir, Result), ResultL),
+    option_dirchk(OptionL, _, DirGen0),
+    ( DirGen0 = call_2(true, _) ->
+      DirGen = call_2(working_directory(Dir, Dir), Dir)
+    ; DirGen = DirGen0
+    ),
+    findall(Result, check_non_loaded(DirGen, Result), ResultL),
     append(ResultL, Results).
 
 loaded_files(Dir, Loaded) :-
@@ -32,8 +36,8 @@ remainder_files(Dir, Remainder) :-
     existing_files(Dir, Exists),
     ord_subtract(Exists, Loaded, Remainder).
 
-check_non_loaded(GenDir, Pairs) :-
-    call(GenDir, Dir),
+check_non_loaded(DirGen, Pairs) :-
+    call(DirGen, Dir),
     loaded_files(Dir, Loaded),
     existing_files(Dir, Exists),
     ord_subtract(Exists, Loaded, Remainder),
