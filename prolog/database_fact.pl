@@ -11,6 +11,10 @@
 
 :- use_module(library(normalize_pi)).
 
+% help analyzers to track indirect calls via prolog database manipulation:
+%
+prolog:called_by(H, IM, _, [F]) :- database_use_fact(IM:H, F).
+
 :- multifile
 	database_var_fact/1,
 	database_def_fact/2,
