@@ -10,10 +10,15 @@
 	  ]).
 
 :- use_module(library(normalize_pi)).
+:- use_module(library(static_strip_module)).
 
 % help analyzers to track indirect calls via prolog database manipulation:
 %
-prolog:called_by(H, IM, _, [F]) :- database_use_fact(IM:H, F).
+prolog:called_by(H, IM, CM, [F]) :-
+    database_use_fact(IM:H, F),
+    static_strip_module(F, C, M, CM),
+    callable(C),
+    nonvar(M).
 
 :- multifile
 	database_var_fact/1,
