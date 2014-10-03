@@ -11,6 +11,7 @@
 :- use_module(library(implemented_in)).
 :- use_module(library(implementation_module)).
 :- use_module(library(record_locations)).
+:- use_module(library(static_strip_module)).
 
 from_location(From, Location) :-
 	prolog:message_location(From, Location, []),
@@ -106,17 +107,6 @@ record_location(Head, M, Type, From) :-
     ->true
     ; assertz(extra_location(Head, M, Type, From))
     ).
-
-%% static_strip_module(+Call, -Head, -Module, +ContextModule) is det.
-%
-% Like strip_module/4, but assume as Module the ContextModule if Call is
-% uninstantiated
-%
-static_strip_module(T, T, M, M) :-
-    var(T), !.
-static_strip_module(Module:RT, T, M, _) :- !,
-    static_strip_module(RT, T, M, Module).
-static_strip_module(T, T, M, M).
 
 record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
     static_strip_module(MCall, Call, CM, M),
