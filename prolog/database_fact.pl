@@ -12,9 +12,12 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(static_strip_module)).
 
+:- create_prolog_flag(check_database_preds, false, [type(boolean)]).
+
 % help analyzers to track indirect calls via prolog database manipulation:
 %
 prolog:called_by(H, IM, CM, [F]) :-
+    current_prolog_flag(check_database_preds, true),
     database_use_fact(IM:H, F),
     static_strip_module(F, C, M, CM),
     callable(C),
