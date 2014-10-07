@@ -997,7 +997,7 @@ comps_parts_to_comp_lit(PropValues, Comp0, Body0, Body) :-
 
 comp_no_signal(Comp, M) :-
 	implementation_module(M:Comp, IM),
-	assrt_lib:assertion_db(Comp, IM, true, prop, [], [], [], [no_signal], _, _).
+	assrt_lib:assertion_db(Comp, IM, true, prop, [], [], [], [no_signal], _, _, _).
 
 get_chkcomp(Comp, PropValues, Pred, M, PredName, Dict, PosLoc, Body0, Body) :-
 	comps_to_comp_lit(PropValues, Comp, Body1, Body),

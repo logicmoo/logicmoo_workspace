@@ -137,7 +137,7 @@ verif_is_property(_, call, N) :- N > 0, !. % meta checks not supported yet --EMM
 verif_is_property(system, true, 0) :- !.   % ignore true (identity)
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
-    assertion_db(H, AM, _, prop, _, _, _, _, _, _),
+    assertion_db(H, AM, _, prop, _, _, _, _, _, _, _),
     ( AM = IM -> true
     ; predicate_property(AM:H, imported_from(IM))
     ).
