@@ -166,7 +166,7 @@ apply_dict(Head, Dict) :-
     numbervars(Head, 0, _, [singletons(false)]).
 
 current_type_props(M, Type, ADict) :-
-    assrt_lib:assertion_db(Type, M, _, prop, _, _, _, Glob, _, ADict),
+    assrt_lib:assertion_db(Type, M, _, prop, _, _, _, Glob, _, ADict, _),
     once(( member(TType, [type, regtype]),
 	   memberchk(TType, Glob)
 	 )).
@@ -395,7 +395,7 @@ register_foreign_bind(CN/A as PN) :-
 
 read_foreign_properties(Head, Module, Comp, Call, Succ, Glob, Dict, CN/A as PN) :-
     assrt_lib:assertion_db(Head, Module, check, pred, Comp, Call, Succ, Glob,
-			   _Comm, Dict),
+			   _Comm, Dict, _),
     functor(Head, PN, A),
     ( memberchk(foreign,     Glob) -> CN = PN
     ; memberchk(foreign(CN), Glob) -> true

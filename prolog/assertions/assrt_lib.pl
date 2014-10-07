@@ -4,7 +4,7 @@
 		      comps_to_goal/4,
 		      assertion_records/4,
 		      a_fake_body/5,
-		      assertion_db/10,
+		      assertion_db/11,
 		      assrt_lib_tr/4]).
 
 :- use_module(library(assertions_op)).
@@ -58,11 +58,10 @@ a_fake_body(CompL, CallL, SuccL, GlobL0, (call(Comp), call(Call), call(Succ), ca
       list_conj(GlobL, Glob)
     ).
 
-% Note: assertion_db/10 encapsulates the nasty call to clause/2, leaving it
-% encapsulated.
+% Note: assertion_db/11 encapsulates the nasty call to clause/2.
 %
-assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict) :-
-    clause(assertion_head(Head, M, Status, Type, Comm, Dict, _Pos), _:FBody),
+assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Pos) :-
+    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody),
     once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
 
 filepos_line(File, CharPos, Line, LinePos) :-
