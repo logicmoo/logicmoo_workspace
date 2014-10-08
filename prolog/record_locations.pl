@@ -63,12 +63,6 @@ assert_declaration(Declaration, M, Sequence) :-
     L = file(File, Line, -1, 0),
     mapsequence(Sequence, assert_declaration_one(Declaration, L, M)).
 
-assert_location(G, T) :-
-    source_location(File, Line),
-    '$set_source_module'(M, M),
-    L = file(File, Line, -1, 0),
-    assert_location(G, M, T, L).
-
 assert_declaration_one(reexport(U), L, M, PI) :- !,
     assert_reexport_declaration_2(PI, U, L, M).
 assert_declaration_one(Declaration, L, _, M:PI) :- !,
@@ -89,7 +83,10 @@ assert_reexport_declaration_2(op(_, _, _), _, _, _).
 assert_reexport_declaration_2(except(_),   _, _, _).
 
 assert_location(H, M, Type, Loc) :-
-    compile_aux_clauses(record_locations:extra_location(H, M, Type, Loc)).
+    ( \+ extra_location(H, M, Type, Loc) ->
+      compile_aux_clauses(record_locations:extra_location(H, M, Type, Loc))
+    ; true
+    ).
 
 system:term_expansion(Term, _, _, _) :-
     source_location(File, Line),
@@ -101,15 +98,26 @@ system:term_expansion(Term, _, _, _) :-
 redundant((_,_)).
 redundant((_;_)).
 redundant((_:_)).
+redundant(true).
+redundant(!).
 
-rl_goal_expansion(Goal) :-
+assert_location(G, Pos, T) :-
+    source_location(File, Line),
+    '$set_source_module'(M, M),
+    ( nonvar(Pos)
+    ->L = file_term_position(File, Pos)
+    ; L = file(File, Line, -1, 0)
+    ),
+    assert_location(G, M, T, L).
+
+rl_goal_expansion(Goal, Pos) :-
     callable(Goal),
     \+ redundant(Goal),
     source_location(File, Line),
     \+ rl_tmp(File, Line),
-    assert_location(Goal, goal),
+    assert_location(Goal, Pos, goal),
     !.
 
-system:goal_expansion(Goal, _, _, _) :-
-    rl_goal_expansion(Goal),
+system:goal_expansion(Goal, Pos, _, _) :-
+    rl_goal_expansion(Goal, Pos),
     fail.
