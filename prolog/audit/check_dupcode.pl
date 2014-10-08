@@ -12,8 +12,8 @@
     audit:audit/4.
 
 dupcode_type(name).
-dupcode_type(clause).
-dupcode_type(predicate).
+% dupcode_type(clause).
+% dupcode_type(predicate).
 
 ignore_dupcode(_, _, refactor,       name).
 ignore_dupcode(_, _, i18n_refactor,  name).
