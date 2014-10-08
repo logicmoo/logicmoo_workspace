@@ -11,11 +11,15 @@
     ignore_dupgroup/3,
     audit:audit/4.
 
-:- dynamic dupcode_type/1.
+:- dynamic duptype/1.
 
-dupcode_type(name).
-dupcode_type(clause).
-% dupcode_type(predicate).
+duptype(predicate).
+duptype(clause).
+duptype(name).
+
+duptype_o(1, predicate).
+duptype_o(2, clause).
+duptype_o(3, name).
 
 ignore_dupcode(_, _, refactor,       name).
 ignore_dupcode(_, _, i18n_refactor,  name).
@@ -28,6 +32,10 @@ ignore_dupcode('$exported_op', 3, _, _).
 ignore_dupcode('$included', 4, system, _).
 ignore_dupcode('$load_context_module', 3, system, _).
 
+element_group(name,      _:F/A,   F/A).
+element_group(clause,    _:F/A-_, F/A).
+element_group(predicate, _:F/A,   F/A).
+
 audit:check(dupcode, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, _OptionL, FileChk),
     check_dupcode(Ref, FileChk, Result).
@@ -37,9 +45,8 @@ audit:check(dupcode, Ref, Result, OptionL0 ) :-
 % For a given Element of the language, returns a duplication key and an
 % associated value
 %
-duptype_elem(name,      H, M, F/A,   M:F/A) :- functor(H, F, A).
-duptype_elem(clause,    H, M, DupId, M:F/A-Idx)
-:-
+duptype_elem(name,   H, M, F/A,   M:F/A) :- functor(H, F, A).
+duptype_elem(clause, H, M, DupId, M:F/A-Idx) :-
     nth_clause(M:H, Idx, Ref),
     clause(M:H, Body, Ref),
     functor(H, F, A),
@@ -69,7 +76,7 @@ check_dupcode(Ref0, FileChk, Result) :-
 	    ( current_predicate(M:F/A),
 	      functor(H, F, A),
 	      \+predicate_property(M:H, imported_from(_)),
-	      dupcode_type(DupType),
+	      duptype(DupType),
 	      \+ ignore_dupcode(F, A, M, DupType),
 	      predicate_property(M:H, file(File)),
 	      call(FileChk, File),
@@ -84,26 +91,16 @@ check_dupcode(Ref0, FileChk, Result) :-
     maplist(add_location, Pairs, Result).
 
 elem_location(name, PI, Loc/D) :- property_location(PI, D, Loc).
-elem_location(clause, M:F/A-Idx, Loc/D)
-:-
+elem_location(clause, M:F/A-Idx, Loc/D) :-
     functor(H, F, A),
     property_location((M:H)/Idx, D, Loc).
-elem_location(predicate, M:F/A, Loc/D)
-:-
+elem_location(predicate, M:F/A, Loc/D) :-
     functor(H, F, A),
     property_location(M:H, D, Loc).
 
 add_location((DupType-DupId)-Elem, warning-((DupType/DupId)-(LocDL/Elem))) :-
     findall(LocD, elem_location(DupType, Elem, LocD), LocDU),
     sort(LocDU, LocDL).
-
-element_group(name,      _:F/A,   F/A).
-element_group(clause,    _:F/A-_, F/A).
-element_group(predicate, _:F/A,   F/A).
-
-dupid_name(name,      M,       M).
-dupid_name(clause,    M:_/_-_, M).
-dupid_name(predicate, M,       M).
 
 prolog:message(acheck(dupcode)) -->
     ['---------------',nl,
