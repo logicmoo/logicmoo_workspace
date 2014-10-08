@@ -66,7 +66,7 @@ IMPORTANT NOTE: This package has been made compatible with SWI-Prolog
 at source/level, via an improved ciao dialect support in SWI, the
 usage of a customized assertion reader library (assrt_lib.pl) and
 some conditional compiler declarations.  Any change to this code must
-be done in such a way that the compability do not be compromised.
+be done in such a way that the compability is not compromised.
 
 ").
 
