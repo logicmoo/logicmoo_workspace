@@ -1,9 +1,11 @@
 :- module(check_dupcode, []).
 
 :- use_module(library(check), []).
+:- use_module(library(group_pairs_or_sort)).
 :- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
+:- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
+:- use_module(library(option_utils)).
 
 :- multifile
     prolog:message//1,
@@ -13,13 +15,18 @@
 
 :- dynamic duptype/1.
 
+% Note: the order of clauses is important, to allow remove redundant information,
+% that is, 'predicate' implies 'clause' implies 'name' duplication.
+%
 duptype(predicate).
 duptype(clause).
 duptype(name).
 
-duptype_o(1, predicate).
-duptype_o(2, clause).
-duptype_o(3, name).
+% Use the same group key to allow filtering of redundant messages.
+%
+element_group(predicate, _:F/A,   F/A).
+element_group(clause,    _:F/A-_, F/A).
+element_group(name,      _:F/A,   F/A).
 
 ignore_dupcode(_, _, refactor,       name).
 ignore_dupcode(_, _, i18n_refactor,  name).
@@ -31,10 +38,6 @@ ignore_dupcode('$exported_op', 3, _, _).
 ignore_dupcode('$exported_op', 3, _, _).
 ignore_dupcode('$included', 4, system, _).
 ignore_dupcode('$load_context_module', 3, system, _).
-
-element_group(name,      _:F/A,   F/A).
-element_group(clause,    _:F/A-_, F/A).
-element_group(predicate, _:F/A,   F/A).
 
 audit:check(dupcode, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, _OptionL, FileChk),
@@ -88,7 +91,23 @@ check_dupcode(Ref0, FileChk, Result) :-
 		 \+ ignore_dupgroup(G)
 	       ), Groups),
     group_pairs_by_key(Pairs, Groups),
-    maplist(add_location, Pairs, Result).
+    clean_redundants(Pairs, CPairs),
+    maplist(add_location, CPairs, Result).
+
+pair_group(Pair, GKey-(DupType-(DupId/Elem))) :-
+    Pair = (DupType-DupId)-Elem,
+    element_group(DupType, Elem, GKey).
+
+clean_redundants(Pairs, CPairs) :-
+    maplist(pair_group, Pairs, GPairs),
+    sort(GPairs, GSorted),
+    group_pairs_or_sort(GSorted, Groups),
+    maplist(clean_redundant_group, Groups, CGroups),
+    group_pairs_by_key(CPairs, CGroups).
+
+clean_redundant_group(GKey-Group, (DupType/GKey)-List) :-
+    duptype(DupType),
+    memberchk(DupType-List, Group), !.
 
 elem_location(name, PI, Loc/D) :- property_location(PI, D, Loc).
 elem_location(clause, M:F/A-Idx, Loc/D) :-
@@ -98,7 +117,8 @@ elem_location(predicate, M:F/A, Loc/D) :-
     functor(H, F, A),
     property_location(M:H, D, Loc).
 
-add_location((DupType-DupId)-Elem, warning-((DupType/DupId)-(LocDL/Elem))) :-
+add_location(DupType/GKey-DupId/Elem,
+	     warning-(DupType/GKey-(DupId-(LocDL/Elem)))) :-
     findall(LocD, elem_location(DupType, Elem, LocD), LocDU),
     sort(LocDU, LocDL).
 
@@ -112,15 +132,16 @@ prolog:message(acheck(dupcode)) -->
      'making difficult to import it in other modules without clash risk.', nl,
      'This can be fixed by merging the duplicated code, or by refactoring', nl,
      'one of the duplicated to aovid this warning.', nl, nl].
-prolog:message(acheck(dupcode, (DupType/_)-LocDL)) -->
-    { memberchk(_/Elem, LocDL), % Pick any element, all belongs to the same group
-      element_group(DupType, Elem, Group)
-    },
-    ['~w ~w is duplicated:'-[DupType, Group], nl],
+prolog:message(acheck(dupcode, (DupType/GKey)-LocDL)) -->
+    ['~w ~w is duplicated:'-[DupType, GKey], nl],
     maplist_dcg(message_duplicated, LocDL).
 
-message_duplicated(LocDL/Elem) -->
-    maplist_dcg(message_duplicated_each(Elem), LocDL).
+message_duplicated(_-[LocD|LocDL]) -->
+    message_duplicated('* ', LocD),
+    maplist_dcg(message_duplicated('  '), LocDL).
 
-message_duplicated_each(Elem, Loc/D) -->
-    ['  '], Loc, ['duplicated ~w: ~w'-[D, Elem], nl].
+message_duplicated(Pre, LocDL/Elem) -->
+    maplist_dcg(message_duplicated(Pre, Elem), LocDL).
+
+message_duplicated(Pre, Elem, Loc/D) -->
+    [Pre], Loc, ['duplicated ~w: ~w'-[D, Elem], nl].
