@@ -28,10 +28,12 @@ called_from(Ref) :-
 	called_from(Ref, _).
 
 called_from(Ref, Caller) :-
-    called_from(Ref, _CM, Caller, [], Sorted),
-    maplist(print_call_point, Sorted),
-    cleanup_locations(_, _, dynamic(_, _, _), _),
-    retractall(called_from_db(_, _, _, _, _)).
+    ( called_from(Ref, _CM, Caller, [], Sorted),
+      maplist(print_call_point, Sorted),
+      fail
+    ; cleanup_locations(_, _, dynamic(_, _, _), _),
+      retractall(called_from_db(_, _, _, _, _))
+    ).
 
 called_from(Ref0, CM, Caller, OptionL, Pairs) :-
     normalize_head(Ref0, M:H),
