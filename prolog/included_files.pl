@@ -1,4 +1,4 @@
-/*  Part of Refactoring Tools for SWI-Prolog
+/*  Part of XTools for SWI-Prolog
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
@@ -29,6 +29,8 @@
 
 :- module(included_files, [included_files/3]).
 
+:- use_module(library(remove_dups)).
+
 includes([])           --> [].
 includes([File|Files]) -->
     findall(I, source_file_property(File, includes(I, _))),
@@ -37,7 +39,7 @@ includes([File|Files]) -->
 included_files(Files, List, Tail) :-
     includes(Files, Included, []),
     ( Included = [] -> List = Tail
-    ; sort(Included, Sorted),
-      List = [Sorted|List1],
-      included_files(Sorted, List1, Tail)
+    ; remove_dups(Included, Nodups),
+      List = [Nodups|List1],
+      included_files(Nodups, List1, Tail)
     ).
