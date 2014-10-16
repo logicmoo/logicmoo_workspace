@@ -3,6 +3,7 @@
 			 option_allchk/4,
 			 call_2/3,
 			 check_alias/3,
+			 check_dir_file/2,
 			 check_pred/2,
 			 check_module/2]).
 
@@ -14,6 +15,14 @@ check_alias(Type, Alias, File) :-
 					access(exist),
 					solutions(all)]),
     expand_file_name(Pattern, FileL),
+    member(File, FileL).
+
+check_dir_file(Dir, File) :-
+    nonvar(Dir),
+    nonvar(File), !,
+    directory_file_path(Dir, _, File).
+check_dir_file(Dir, File) :-
+    directory_source_files(Dir, FileL, [recursive(true), if(false)]),
     member(File, FileL).
 
 option_alias(File, FileGen0-OptionL0, FileGen-OptionL) :-
@@ -39,7 +48,7 @@ option_fdir(File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(dir(Alias), OptionL0, OptionL, Alias),
     ( nonvar(Alias)
     ->FileGen0 = ( check_alias(directory, Alias, Dir),
-		   directory_file_path(Dir, _, File),
+		   check_dir_file(Dir, File),
 		   FileGen
 		 )
     ; FileGen0 = FileGen
@@ -50,7 +59,7 @@ option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
     ( AliasL \= []
     ->FileGen0 = ( member(Alias, AliasL),
 		   check_alias(directory, Alias, Dir),
-		   directory_file_path(Dir, _, File),
+		   check_dir_file(Dir, File),
 		   FileGen
 		 )
     ; FileGen0 = FileGen
@@ -60,8 +69,8 @@ option_dir(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
     select_option(dir(Alias), OptionL0, OptionL, Alias),
     ( nonvar(Alias)
     ->DirGen0 = ( check_alias(directory, Alias, Dir),
-		   DirGen
-		 )
+		  DirGen
+		)
     ; DirGen0 = DirGen
     ).
 
@@ -69,9 +78,9 @@ option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
     select_option(dirs(AliasL), OptionL0, OptionL, []),
     ( AliasL \= []
     ->DirGen0 = ( member(Alias, AliasL),
-		   check_alias(directory, Alias, Dir),
-		   DirGen
-		 )
+		  check_alias(directory, Alias, Dir),
+		  DirGen
+		)
     ; DirGen0 = DirGen
     ).
 
@@ -104,7 +113,7 @@ check_module(M, File) :-
 		   
 option_module(M, File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(module(M), OptionL0, OptionL, M),
-    ( nonvar(M), M = (-)
+    ( nonvar(M), M = []
     ->FileGen0 = FileGen
     ; FileGen0 = ( check_module(M, File),
 		   FileGen
