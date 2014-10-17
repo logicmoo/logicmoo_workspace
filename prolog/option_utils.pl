@@ -8,7 +8,7 @@
 			 check_module/2]).
 
 :- use_module(library(location_utils)).
-:- use_module(library(module_files)).
+:- reexport(library(module_files)).
 
 check_alias(Type, Alias, File) :-
     absolute_file_name(Alias, Pattern, [file_type(Type),
@@ -22,6 +22,8 @@ check_dir_file(Dir, File) :-
     nonvar(File), !,
     directory_file_path(Dir, _, File).
 check_dir_file(Dir, File) :-
+    % here, we need all the files, even if the option specifies only loaded
+    % files, because if not, included files without clauses will be ignored
     directory_source_files(Dir, FileL, [recursive(true), if(false)]),
     member(File, FileL).
 
@@ -112,11 +114,18 @@ check_module(M, File) :-
     member(File, FileL).
 		   
 option_module(M, File, FileGen0-OptionL0, FileGen-OptionL) :-
-    select_option(module(M), OptionL0, OptionL, M),
-    ( nonvar(M), M = []
-    ->FileGen0 = FileGen
-    ; FileGen0 = ( check_module(M, File),
+    select_option(module(M), OptionL0, OptionL1, M),
+    select_option(if(Loaded), OptionL1, OptionL, false),
+    ( nonvar(M)
+    ->FileGen0 = ( module_file(M, File),
 		   FileGen
+		 )
+    ; Loaded = false
+    ->FileGen0 = ( FileGen,
+		   ignore(module_file(M, File))
+		 )
+    ; FileGen0 = ( FileGen,
+		   once(module_file(M, File))
 		 )
     ).
 
@@ -137,10 +146,6 @@ option_mod_prop(M, FileGen0-OptionL0, FileGen-OptionL) :-
     ->FileGen0 = ( module_property(M, Prop),
 		   FileGen
 		 )
-    ; var(M)
-    ->FileGen0 = ( current_module(M),
-		   FileGen
-		 )		% TODO: allow unknown module
     ; FileGen0 = FileGen
     ).
 
