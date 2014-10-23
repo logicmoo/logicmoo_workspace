@@ -1,0 +1,4 @@
+#: plunit_i18n_2
+msgid "hello"
+msgstr "hola"
+
