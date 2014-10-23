@@ -6,6 +6,7 @@
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(option_utils)).
+:- use_module(library(ungroup_keys_values)).
 
 :- multifile
     prolog:message//1,
@@ -90,7 +91,7 @@ check_dupcode(Ref0, FileChk, Result) :-
     findall(G, ( member(G, GL),
 		 \+ ignore_dupgroup(G)
 	       ), Groups),
-    group_pairs_by_key(Pairs, Groups),
+    ungroup_keys_values(Groups, Pairs),
     clean_redundants(Pairs, CPairs),
     maplist(add_location, CPairs, Result).
 
@@ -103,7 +104,7 @@ clean_redundants(Pairs, CPairs) :-
     sort(GPairs, GSorted),
     group_pairs_or_sort(GSorted, Groups),
     maplist(clean_redundant_group, Groups, CGroups),
-    group_pairs_by_key(CPairs, CGroups).
+    ungroup_keys_values(CGroups, CPairs).
 
 clean_redundant_group(GKey-Group, (DupType/GKey)-List) :-
     duptype(DupType),
