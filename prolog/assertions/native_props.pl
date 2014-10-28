@@ -92,7 +92,7 @@
 :- use_module(library(system)).
 :- use_module(library(odd)).
 :- use_module(library(assertions(send_check))).
-:- use_module(engine(internals), ['$setarg'/4]).
+:- use_module(engine(internals)).
 
 % --------------------------------------------------------------------------
 :- doc(title, "Properties which are native to analyzers").
