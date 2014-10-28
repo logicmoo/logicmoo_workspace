@@ -3,7 +3,7 @@
 :- use_module(library(varnames(dict_types)),    [varnamesl/1]).
 :- use_module(library(varnames(complete_dict)), [complete_dict/4]).
 :- use_module(library(varnames(apply_dict)),    [apply_dict/3]).
-:- use_module(library(lists),                   [append/3]).
+:- use_module(library(lists)).
 
 :- pred pretty_names(+varnamesl, ?term, ?term).
 

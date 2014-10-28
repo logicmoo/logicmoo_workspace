@@ -30,7 +30,7 @@
 :- use_module(library(varnames(apply_dict))).
 :- use_module(library(varnames(pretty_names))).
 :- use_module(library(varnames(complete_dict))).
-:- use_module(library(lists), [append/3]).
+:- use_module(library(lists)).
 :- use_module(rtchecks(term_list)).
 
 :- doc(author, "Edison Mera").

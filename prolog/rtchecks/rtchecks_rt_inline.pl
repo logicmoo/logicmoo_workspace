@@ -5,7 +5,7 @@
 
 :- use_module(library(terms_vars), [varset/2]).
 :- use_module(library(freeze),     [freeze/2]).
-:- use_module(engine(internals),   ['$setarg'/4]).
+:- use_module(engine(internals)).
 :- use_module(library(terms_check)).
 
 :- unfold checkif_comp(yes, yes, yes, yes).
