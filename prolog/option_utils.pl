@@ -112,7 +112,7 @@ option_preds(File, FileGen0-OptionL0, FileGen-OptionL) :-
 check_module(M, File) :-
     module_files(M, FileL),
     member(File, FileL).
-		   
+
 option_module(M, File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(module(M), OptionL0, OptionL1, M),
     select_option(if(Loaded), OptionL1, OptionL, false),
