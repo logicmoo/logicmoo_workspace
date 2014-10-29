@@ -31,7 +31,6 @@
 			   compact_intervals/2,
 			   repack_list/2]).
 
-:- use_module(library(sort)).
 
 %% list_intervals(+list,-list(pairs)) is det.
 %% list_intervals(-list,+list(pairs)) is det.
