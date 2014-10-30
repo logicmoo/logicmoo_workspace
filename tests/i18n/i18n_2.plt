@@ -13,10 +13,6 @@ i18n_support:i18n_resource_dir(Dir) :-
     current_module(M, F),
     directory_file_path(Dir, _, F).
 
-:- i18n_support:i18n_resource_dir(WD),
-    write(user_error, wd(WD)),
-    nl(user_error).
-
 i18n_support:language(es).	% Spanish
 
 :- init_i18n.
