@@ -57,30 +57,33 @@ trace_port(exception(Ex), Frame, PC, Path, Stream) :- !,
     trace_port(exception, Frame, PC, Path, Stream),
     print_message(stream(Stream, []), Ex).
 trace_port(Port, Frame, PC0, Path, Stream) :-
-    ( find_frame_clause(Frame, PC0, PC, CS, Cl)
-    ->clause_stream_loc(Cl, Path, Stream, CS, StreamLoc),
-      clause_property(Cl, predicate(M:PI))
+    ( find_frame_clause(Frame, PC0, PC, CS, Cl, M:H)
+    ->clause_stream_loc(Cl, Path, Stream, CS, StreamLoc)
+      % clause_property(Cl, predicate(M:PI))
     ; StreamLoc = stream(Stream, []),
       %% Module qualification to skip local predicates:
-      prolog_frame_attribute(Frame, predicate_indicator, M:PI)
+      prolog_frame_attribute(Frame, goal, M:H)
     ),
-    \+ skip_trace(M:PI), !,
+    \+ skip_trace(M:H), !,
     print_message(StreamLoc, frame(Frame, Port, PC)).
 trace_port(_, _, _, _, _).
 
-find_frame_clause(Frame, PC, PC, [], Cl) :-
-    prolog_frame_attribute(Frame, clause, Cl), !.
-find_frame_clause(Frame, _, PC, CS, Cl) :-
-    find_frame_clause_rec(Frame, PC, CS, Cl).
+find_frame_clause(Frame, PC, PC, [], Cl, M:H) :-
+    prolog_frame_attribute(Frame, clause, Cl), !,
+    clause_property(Cl, predicate(M:F/A)),
+    functor(H, F, A).
+find_frame_clause(Frame, _, PC, CS, Cl, G) :-
+    find_frame_clause_rec(Frame, PC, CS, Cl, G).
 
-find_frame_clause_rec(Frame, PC, [PI|CS], Cl) :-
+find_frame_clause_rec(Frame, PC, [PI|CS], Cl, G) :-
     prolog_frame_attribute(Frame, parent, Parent),
     ( prolog_frame_attribute(Frame, pc, PC)
     ->prolog_frame_attribute(Parent, clause, Cl),
       prolog_frame_attribute(Parent, predicate_indicator, PI),
+      prolog_frame_attribute(Frame, goal, G),
       CS = []
     ; prolog_frame_attribute(Parent, predicate_indicator, PI),
-      find_frame_clause_rec(Parent, PC, CS, Cl)
+      find_frame_clause_rec(Parent, PC, CS, Cl, G)
     ).
 
 clause_stream_loc(Cl, Path, Stream, CS, StreamLoc) :-
