@@ -30,14 +30,14 @@ hide_var_dynamic(check_unused:unmarked/3).
 hide_var_dynamic(check_dupcode:duptype_elem/5).
 
 :- dynamic
-    wrong_dynamic_db/3,
-    check_var_dynamic_db/3.
+    wrong_dynamic_db/4,
+    var_dynamic_db/2.
 
 hide_wrong_dynamic(user:prolog_trace_interception/4).
 
 cleanup_dynamic_db :-
-    retractall(wrong_dynamic_db(_, _, _)),
-    retractall(check_var_dynamic_db(_, _, _)),
+    retractall(wrong_dynamic_db(_, _, _, _)),
+    retractall(var_dynamic_db(_, _)),
     cleanup_locations(_, _, dynamic(_, _, _), _).
 
 audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
@@ -47,28 +47,38 @@ audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
 check_wrong_dynamic(Ref, FileChk, OptionL0, Pairs) :-
     normalize_head(Ref, M:H),
     merge_options(OptionL0,
-		  [source(false),
-		   infer_meta_predicates(false),
+		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_:H),
-		   on_trace(collect_wrong_dynamic(M, FileChk))],
+		   trace_reference(_:H)],
 		  OptionL),
-    prolog_walk_code(OptionL),
-    collect_result(M:H, Pairs),
+    prolog_walk_code([source(false),
+		      on_trace(collect_wrong_dynamic(M, FileChk))|OptionL]),
+    findall(CRef, ( current_static_as_dynamic(_, _, _, _, clause(CRef), _),
+		    retractall(wrong_dynamic_db(clause(CRef), _, _, _))
+		  ; retract(var_dynamic_db(clause(CRef), _))
+		  ), Clauses),
+    ( Clauses==[]
+    ->Pairs=[]
+    ; prolog_walk_code([clauses(Clauses),
+			on_trace(collect_wrong_dynamic(M))|OptionL]),
+      collect_result(M:H, Pairs)
+    ),
     cleanup_dynamic_db.
 
 collect_result(Ref, Pairs) :-
     findall(Type-(as_dynamic(DType)-((Loc/PI)-(MLoc/MPI))),
-	    current_static_as_dynamic(Type, DType, Loc, PI, MLoc, MPI), Pairs, Pairs1),
+	    ( current_static_as_dynamic(Type, DType, Loc, PI, From, MPI),
+	      from_location(From, MLoc)), Pairs, Pairs1),
     findall(warning-(dynamic_as_static-(Loc-PI)),
 	    current_dynamic_as_static(Ref, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
-	    (retract(check_var_dynamic_db(PI, CI, From)),
-	     from_location(From, Loc)), Pairs2, []).
+	    ( retract(var_dynamic_db(From, PI)),
+	      check:predicate_indicator(From, CI, []),
+	      from_location(From, Loc)), Pairs2, []).
 
-current_static_as_dynamic(Type, DType, Loc, PI, MLoc, MPI) :-
-    wrong_dynamic_db(TypeDB, PI, MPI-MFrom),
+current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
+    wrong_dynamic_db(MFrom, TypeDB, PI, MPI),
     memberchk(TypeDB,[def,retract]),
     PI = M:F/A,
     functor(H,F,A),
@@ -83,8 +93,7 @@ current_static_as_dynamic(Type, DType, Loc, PI, MLoc, MPI) :-
     ; Type = warning,
       DType  = unknown,
       once(property_location(PI, _, Loc))      
-    ),
-    from_location(MFrom, MLoc).
+    ).
 
 current_dynamic_as_static(Ref, Loc, PI) :-
     Ref = M:H,
@@ -99,7 +108,7 @@ current_dynamic_as_static(Ref, Loc, PI) :-
     predicate_property(Ref, dynamic),
     %% if multifile, would be modified externally
     \+ predicate_property(Ref, multifile),
-    \+ ( wrong_dynamic_db(Type, PI, _),
+    \+ ( wrong_dynamic_db(_, Type, PI, _),
 	 memberchk(Type,[def,retract])
        ),
     property_location(PI, dynamic, Loc).
@@ -149,13 +158,13 @@ prolog:message(acheck(wrong_dynamic)) -->
 collect_wrong_dynamic(M, FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    collect_wrong_dynamic(MGoal, M, Caller, From),
-    fail.
-collect_wrong_dynamic(_, _, _, _, _). % avoid side effects
+    collect_wrong_dynamic(M, MGoal, Caller, From).
 
-collect_wrong_dynamic(MGoal, M, Caller, From) :-
+collect_wrong_dynamic(M, MGoal, Caller, From) :-
     record_location_meta(MGoal, M, From, database_fact_ort,
-			 record_location_wd(M, Caller)).
+			 record_location_wd(M, Caller)),
+    fail.
+collect_wrong_dynamic(_, _, _, _). % avoid side effects
 
 record_location_wd(CM, Caller, MFact, Def, From) :-
     Def = dynamic(Type, _, MGoal),
@@ -167,11 +176,10 @@ record_location_wd(CM, Caller, MFact, Def, From) :-
     ->functor(Fact, F, A),
       record_location(Fact, M, Def, From),
       \+ hide_wrong_dynamic(M:F/A),
-      assertz(wrong_dynamic_db(Type, M:F/A, MPI-From))
+      assertz(wrong_dynamic_db(From, Type, M:F/A, MPI))
     ; \+ database_fact(Caller) ->
       normalize_pi(Caller, CM:PI),
       \+ hide_var_dynamic(CM:PI),
-      check:predicate_indicator(From, HCI, []),
-      assertz(check_var_dynamic_db(MPI, HCI, From))
+      assertz(var_dynamic_db(From, MPI))
     ; true
     ).
