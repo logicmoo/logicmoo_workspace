@@ -137,6 +137,8 @@ generate_foreign_h(Module) :-
     write_header(Module),
     forall(current_type_props(Module, Type, _),
 	   declare_type_converters(Module, Type)),
+    forall(current_type_props(Module, Type, _),
+	   declare_struct(Module, Type)),
     collect_bind_head(Module, BindHeadL),
     maplist(declare_wrapper_bind, BindHeadL),
     nl,
@@ -174,20 +176,28 @@ current_type_props(M, Type, ADict) :-
 	   memberchk(TType, Glob)
 	 )).
 
-declare_typedef_struct(func(Term), CSpecL, Name) :-
-    format('typedef struct {~n', []),
-    declare_type_members_each(1, CSpecL, Term),
-    format('} ~w;~n', [Name]).
-declare_typedef_struct(atom(_Term), [Spec], Name) :-
+declare_typedef_struct(func(_), _, Name) :-
+    format('typedef struct ~w ~w;~n', [Name, Name]).
+declare_typedef_struct(atom(_), [Spec], Name) :-
     format('typedef ', []),
     c_get_ctype_decl(Spec),
     format(' ~w;~n', [Name]).
+
+declare_struct(func(Term), CSpecL, Name) :-
+    format('struct ~w {~n', [Name]),
+    declare_type_members_each(1, CSpecL, Term),
+    format('}; /* ~w */~n', [Name]).
+declare_struct(atom(_), _, _).
 
 declare_type_converters(M, Type) :-
     get_type_component_props(M, Type, Name, CSpecL, Result),
     declare_typedef_struct(Result, CSpecL, Name),
     format('int PL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
     format('int PL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
+
+declare_struct(M, Type) :-
+    get_type_component_props(M, Type, Name, CSpecL, Result),
+    declare_struct(Result, CSpecL, Name).
 
 declare_type_members_each(N, [Spec|CSpecL], Term) :-
     arg(N, Term, Arg),
