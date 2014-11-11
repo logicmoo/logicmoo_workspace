@@ -6,6 +6,7 @@
 :- use_module(library(swi/assertions)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(foreign/foreign_props)).
+:- use_module(library(camel_snake)).
 
 :- multifile
     gen_foreign_library/2,
@@ -159,7 +160,9 @@ write_header(Module) :-
     write('#include <SWI-Prolog.h>\n'),
     write('#include <foreign_interface.h>\n\n').
 
-apply_name(Name=Value) :- ignore(Value='$VAR'(Name)).
+apply_name(Name=Value) :-
+    camel_snake(Name, Arg),
+    ignore(Value=Arg).
 
 apply_dict(Head, Dict) :-
     maplist(apply_name, Dict),
@@ -215,7 +218,8 @@ get_type_component_props(M, Type, Name, CSpecL, Result) :-
     once(clause(M:Head, Body, Ref)),
     ( clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line)),
-      get_dictionary(Head :- Body, File, Line, M, Dict) -> true
+      get_dictionary(Head :- Body, File, Line, M, Dict)
+    ->true
     ; Dict = []
     ),
     ( nonvar(Term) ->
@@ -567,28 +571,28 @@ get_dictionary(Term, File, Line, M, Dict) :-
     ; Dict = []
     ).
 
-
 match_known_type(M, Prop, Spec, Arg) :-
-    match_known_type_(Prop, M, Spec, Arg).
+    match_known_type_(Prop, M, Spec, Arg), !.
 
-match_known_type_(atm(A),           _, atom_chars-'char*', A) :- !.
-match_known_type_(atom(A),          _, atom_chars-'char*', A) :- !.
-match_known_type_(pointer(A),       _, pointer   -'void*', A) :- !.
-% match_known_type_(pointer(A, Type), _, pointer   -PType,   A) :- !,
-%     atom_concat(Type, '*', PType).
-match_known_type_(int(A),           _, integer   -int,     A) :- !.
-match_known_type_(integer(A),       _, integer   -int,     A) :- !.
-match_known_type_(num(A),           _, float     -double,  A) :- !.
-match_known_type_(number(A),        _, float     -double,  A) :- !.
-match_known_type_(term(A),          _, term,               A) :- !.
-match_known_type_(list(A, Type), M, list(Spec),         A) :- !,
+match_known_type_(atm(A),           _, atom_chars  -'char*', A).
+match_known_type_(atom(A),          _, atom_chars  -'char*', A).
+% match_known_type_(string(A),        _, string_chars-'char*', A).
+match_known_type_(pointer(A),       _, pointer     -'void*', A).
+match_known_type_(int(A),           _, integer     -int,     A).
+match_known_type_(integer(A),       _, integer     -int,     A).
+match_known_type_(num(A),           _, float       -double,  A).
+match_known_type_(number(A),        _, float       -double,  A).
+match_known_type_(term(A),          _, term,                 A).
+match_known_type_(list(A, Type),    M, list(Spec),           A) :-
     nonvar(Type),
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
+match_known_type_(pointer(A, Type), _, pointer-PType, A) :-
+    (atom(Type) ; atom(PType)),
+    atom_concat(Type, '*', PType).
 match_known_type_(Type, M, type(Name), A) :-
     current_type_props(M, Type, _),
-    !,
     functor(Type, Name, _),
     arg(1, Type, A).
 
