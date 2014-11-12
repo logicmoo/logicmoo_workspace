@@ -36,3 +36,14 @@ pointer(I) :- int(I).
 
 :- prop pointer/2 + type.
 pointer(I, A) :- int(I), atm(A).
+
+:- prop dict_t/2 + type.
+:- meta_predicate dict_t(?, :).
+dict_t(Term, M:Desc) :-
+    is_dict(Desc, Tag),
+    dict_pairs(Term, Tag, Pairs),
+    maplist(dict_kv(Desc, M), Pairs).
+
+dict_kv(Desc, M, Key-Value) :-
+    Type =Desc.Key,
+    call(M:Type, Value).

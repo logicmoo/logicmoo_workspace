@@ -36,16 +36,17 @@ fortran_command(Command) :-
     atomic_list_concat([gfortran|ValueL], ' ', Command).
 
 intermediate_obj(DirSO, Source, Object) -->
-    {file_name_extension(Base, for, Source)},
-    !,
-    { file_base_name(Base, Name),
-      file_name_extension(Name, o, NameO),
-      directory_file_path(DirSO, NameO, Object),
-      fortran_command(Fortran)
-    },
-    {atomic_list_concat([Fortran, '-c', Source, '-o', Object], ' ', Command)},
+    {intermediate_obj(DirSO, Source, Object, Command)}, !,
     [Command].
 intermediate_obj(_, Source, Source) --> [].
+
+intermediate_obj(DirSO, Source, Object, Command) :- 
+    file_name_extension(Base, for, Source),
+    file_base_name(Base, Name),
+    file_name_extension(Name, o, NameO),
+    directory_file_path(DirSO, NameO, Object),
+    fortran_command(Fortran),
+    atomic_list_concat([Fortran, '-c', Source, '-o', Object], ' ', Command).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -103,7 +104,8 @@ do_generate_library(M, FileSO, FSourceL) :-
 		  ),
 	    IDirL),
     atomic_list_concat(IDirL, ' ', IDirs),
-    format(atom(CommandT), "swipl-ld -shared ~w~w ~w ~w.c ~w -o ~w", [COpts, IDirs, FSources, BaseFile, CLibs, FileSO]),
+    format(atom(CommandT), "swipl-ld -shared ~w~w ~w ~w.c ~w -o ~w",
+	   [COpts, IDirs, FSources, BaseFile, CLibs, FileSO]),
     CommandsT = [CommandT],
     forall(member(Command, Commands),
 	   ( shell(Command, Status),
@@ -135,10 +137,8 @@ generate_foreign_c(Module, Base, File_c, File_h) :-
 
 generate_foreign_h(Module) :-
     write_header(Module),
-    forall(current_type_props(Module, Type, _),
-	   declare_type_converters(Module, Type)),
-    forall(current_type_props(Module, Type, _),
-	   declare_struct(Module, Type)),
+    forall_type_props(Module, declare_typedef),
+    forall_type_props(Module, declare_struct),
     collect_bind_head(Module, BindHeadL),
     maplist(declare_wrapper_bind, BindHeadL),
     nl,
@@ -152,9 +152,89 @@ add_autogen_note(Module) :-
 generate_foreign_c(Module, Base, File_h) :-
     add_autogen_note(Module),
     format('#include "~w"\n\n', [File_h]),
-    implement_type_converters(Module),
+    forall_type_props(Module, implement_type_getter),
+    forall_type_props(Module, implement_type_unifier),
     generate_foreign_register(Module, Base),
     generate_foreign_wrapper(Module).
+
+forall_type_props(Module, Call) :-
+    forall(current_type_props(Module, Type),
+	   ( bind_type_names(Module, Type, PropL),
+	     type_component_props(Module, Type, PropL, Call)
+	   )).
+
+implement_type_getter_ini(PName, CName, Arg) :-
+    format('int PL_get_~w(void** __root, term_t ~w, ~w *~w) {~n',
+	   [Arg, PName, Arg, CName]).
+
+implement_type_getter(func_ini, Term, Arg) :-
+    functor(Term, Func, _),
+    camel_snake(PName, Func),
+    c_var_name(Func, CName),
+    implement_type_getter_ini(PName, CName, Arg).
+implement_type_getter(func_rec(N, Term), Spec, Arg) :-
+    functor(Term, Func, _),
+    camel_snake(PName, Func),
+    c_var_name(Func, CName),
+    format(atom(CNameArg), '~w->~w', [CName, Arg]),
+    camel_snake(PArg, Arg),
+    format(atom(PNameArg), '~w_~w', [PName, PArg]),
+    format('    term_t ~w=PL_new_term_ref();~n', [PNameArg]),
+    format('    __rtcheck(PL_get_arg(~w,~w,~w));~n', [N, PName, PNameArg]),
+    format('    ', []),
+    (Spec = type(_) -> Mode = inout ; Mode = in),
+    c_get_argument(Spec, Mode, deref, CNameArg, PNameArg),
+    format(';~n', []).
+implement_type_getter(func_end, _, _) :-
+    implement_type_end.
+implement_type_getter(atom(Name), Spec, Term) :-
+    functor(Term, Func, _),
+    camel_snake(PName, Func),
+    c_var_name(Func, CName),
+    implement_type_getter_ini(PName, CName, Name),
+    format('    ', []),
+    c_get_argument(Spec, inout, deref, CName, PName),
+    format(';~n', []),
+    implement_type_end.
+
+implement_type_end :-
+    format('    return TRUE;~n}~n~n', []).
+
+implement_type_unifier(func_ini, Term, Arg) :-
+    functor(Term, Func, Arity),
+    camel_snake(PName, Func),
+    c_var_name(Func, CName),
+    implement_type_unifier_ini(PName, CName, Arg),
+    format('    __rtcheck(PL_unify_functor(~w, PL_new_functor(PL_new_atom("~w"), ~d)));~n',
+	   [PName, Func, Arity]).
+implement_type_unifier(func_rec(N, Term), Spec, Arg) :-
+    functor(Term, Func, _),
+    camel_snake(PName, Func),
+    c_var_name(Func, CName),
+    format(atom(CNameArg), '~w->~w', [CName, Arg]),
+    camel_snake(PArg, Arg),
+    format(atom(PNameArg), '~w_~w', [PName, PArg]),
+    format('    term_t ~w=PL_new_term_ref();~n', [PNameArg]),
+    format('    __rtcheck(PL_get_arg(~w,~w,~w));~n', [N, PName, PNameArg]),
+    format('    ', []),
+    (Spec = type(_) -> Mode = inout ; Mode = out),
+    c_set_argument(Spec, Mode, CNameArg, PNameArg),
+    format(';~n', []).
+implement_type_unifier(func_end, _, _) :-
+    implement_type_end.
+implement_type_unifier(atom(Name), Spec, Term) :-
+    functor(Term, Func, _),
+    camel_snake(PName, Func),
+    c_var_name(Func, CName),
+    implement_type_unifier_ini(PName, CName, Name),
+    format('    ', []),
+    c_set_argument(Spec, inout, CName, PName),
+    format(';~n', []),
+    implement_type_end.
+
+implement_type_unifier_ini(PName, CName, Arg) :-
+    format('int PL_unify_~w(term_t ~w, ~w * const ~w) {~n',
+	   [Arg, PName, Arg, CName]).
 
 write_header(Module) :-
     add_autogen_note(Module),
@@ -170,135 +250,72 @@ apply_dict(Head, Dict) :-
     maplist(apply_name, Dict),
     numbervars(Head, 0, _, [singletons(false)]).
 
-current_type_props(M, Type, ADict) :-
-    assrt_lib:assertion_db(Type, M, _, prop, _, _, _, Glob, _, ADict, _),
+current_type_props(M, Type) :-
+    assrt_lib:assertion_db(Type, M, _, prop, _, _, _, Glob, _, _, _),
     once(( member(TType, [type, regtype]),
 	   memberchk(TType, Glob)
 	 )).
 
-declare_typedef_struct(func(_), _, Name) :-
-    format('typedef struct ~w ~w;~n', [Name, Name]).
-declare_typedef_struct(atom(_), [Spec], Name) :-
-    format('typedef ', []),
-    c_get_ctype_decl(Spec),
-    format(' ~w;~n', [Name]).
-
-declare_struct(func(Term), CSpecL, Name) :-
-    format('struct ~w {~n', [Name]),
-    declare_type_members_each(1, CSpecL, Term),
-    format('}; /* ~w */~n', [Name]).
-declare_struct(atom(_), _, _).
-
-declare_type_converters(M, Type) :-
-    get_type_component_props(M, Type, Name, CSpecL, Result),
-    declare_typedef_struct(Result, CSpecL, Name),
-    format('int PL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
-    format('int PL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
-
-declare_struct(M, Type) :-
-    get_type_component_props(M, Type, Name, CSpecL, Result),
-    declare_struct(Result, CSpecL, Name).
-
-declare_type_members_each(N, [Spec|CSpecL], Term) :-
-    arg(N, Term, Arg),
-    !,
-    write('    '),
-    c_get_ctype_decl(Spec),
-    ( Spec = type(_) -> write('*') ; true),
-    format(' ~w;~n', [Arg]),
-    N1 is N + 1,
-    declare_type_members_each(N1, CSpecL, Term).
-declare_type_members_each(_, _, _).
-
-implement_type_converters(M) :-
-    forall(current_type_props(M, Type, ADict),
-	   implement_type_converter(M, Type, ADict)).
-
-implement_type_converter(M, Type, ADict) :-
-    get_type_component_props(M, Type, Name, CSpecL, Result),
-    apply_dict(Type, ADict),
-    arg(1, Type, Arg),
-    c_var_name(Arg, CArg),
-    implement_type_getter( Name, CSpecL, Result, CArg, Arg),
-    implement_type_unifier(Name, CSpecL, Result, CArg, Arg).
-
-get_type_component_props(M, Type, Name, CSpecL, Result) :-
-    Type =.. [Name, _   |Params],
-    Head =.. [Name, Term|Params],
-    once(clause(M:Head, Body, Ref)),
+bind_type_names(M, Type, PropL) :-
+    once(clause(M:Type, Body, Ref)),
     ( clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line)),
-      get_dictionary(Head :- Body, File, Line, M, Dict)
+      get_dictionary(Type :- Body, File, Line, M, Dict)
     ->true
     ; Dict = []
     ),
-    ( nonvar(Term) ->
-      Term =.. [_F|ArgL],
-      Result = func(Term)
-    ; ArgL = [Term],
-      Result = atom(Term)
-    ),
-    sequence_list(Body, BodyL, []),
-    apply_dict(Head, Dict),
-    maplist(match_known_type(M), BodyL, CSpecL, ArgL).
+    apply_dict((Type :- Body), Dict),
+    sequence_list(Body, PropL, []).
 
-implement_type_getter(Name, CSpecL, Term, CArg, Arg) :-
-    format('int PL_get_~w(void** __root, term_t ~w, ~w *~w) {~n',
-	   [Name, Arg, Name, CArg]),
-    implement_type_getter_struct(Term, CArg, Arg, CSpecL),
-    format('    return TRUE;~n}~n~n', []).
+declare_struct(atom(_),  _,    _).
+declare_struct(func_ini, Term, _) :-
+    functor(Term, Name, _),
+    format('struct ~w {~n', [Name]).
+declare_struct(func_end, _, _) :- format('};~n', []).
+declare_struct(func_rec(_, _), Spec, Name) :-
+    write('    '),
+    c_get_ctype_decl(Spec),
+    (Spec = type(_) -> write('*') ; true),
+    format(' ~w;~n', [Name]).
 
-implement_type_getter_struct(func(Term), CArg, Arg, CSpecL) :-
-    implement_type_getter_member(1, CArg, Arg, CSpecL, Term).
-implement_type_getter_struct(atom(_Var), CArg, Arg, [Spec]) :-
-    format('    ', []),
-    c_get_argument(Spec, inout, deref, CArg, Arg),
-    format(';~n', []).
+declare_typedef(atom(Name), Spec, _) :-
+    format('typedef ', []),
+    c_get_ctype_decl(Spec),
+    format(' ~w;~n', [Name]),
+    declare_type_converters(Name).
+declare_typedef(func_ini, Term, Name) :-
+    functor(Term, Spec, _),
+    format('typedef struct ~w ~w;~n', [Spec, Name]),
+    declare_type_converters(Name).
+declare_typedef(func_end, _, _).
+declare_typedef(func_rec(_, _), _, _).
 
-implement_type_getter_member(N, CArg0, Arg0, [Spec|CSpecL], Term) :-
-    arg(N, Term, MArg),
-    !,
-    format(atom(CArg), '~w->~w', [CArg0, MArg]),
-    format(atom( Arg), '~w_~w', [ Arg0, MArg]),
-    format('    term_t ~w=PL_new_term_ref();~n', [Arg]),
-    format('    __rtcheck(PL_get_arg(~w,~w,~w));~n', [N, Arg0, Arg]),
-    format('    ', []),
-    (Spec = type(_) -> Mode = inout ; Mode = in),
-    c_get_argument(Spec, Mode, deref, CArg, Arg),
-    format(';~n', []),
-    N1 is N + 1,
-    implement_type_getter_member(N1, CArg0, Arg0, CSpecL, Term).
-implement_type_getter_member(_, _, _, _, _).
+declare_type_converters(Name) :-
+    format('int PL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
+    format('int PL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
 
-implement_type_unifier(Name, CSpecL, Term, CArg, Arg) :-
-    format('int PL_unify_~w(term_t ~w, ~w * const ~w) {~n', [Name, Arg, Name, CArg]),
-    implement_type_unifier_(Term, CSpecL, CArg, Arg),
-    format('    return TRUE;~n}~n~n', []).
-
-implement_type_unifier_(func(Term), CSpecL, CArg, Arg) :-
-    functor(Term, F, A),
-    format('    __rtcheck(PL_unify_functor(~w, PL_new_functor(PL_new_atom("~w"), ~d)));~n',
-	   [Arg, F, A]),
-    implement_type_unifier_member(1, CArg, Arg, CSpecL, Term).
-implement_type_unifier_(atom(_Var), [Spec], CArg, Arg) :-
-    format('    ', []),
-    c_set_argument(Spec, inout, CArg, Arg),
-    format(';~n', []).    
-
-implement_type_unifier_member(N, CArg0, Arg0, [Spec|CSpecL], Term) :-
-    arg(N, Term, MArg),
-    !,
-    format(atom(CArg), '~w->~w', [CArg0, MArg]),
-    format(atom( Arg), '~w_~w', [ Arg0, MArg]),
-    format('    term_t ~w=PL_new_term_ref();~n', [Arg]),
-    format('    __rtcheck(PL_get_arg(~w,~w,~w));~n', [N, Arg0, Arg]),
-    format('    ', []),
-    (Spec = type(_) -> Mode = inout ; Mode = out),
-    c_set_argument(Spec, Mode, CArg, Arg),
-    format(';~n', []),
-    N1 is N + 1,
-    implement_type_unifier_member(N1, CArg0, Arg0, CSpecL, Term).
-implement_type_unifier_member(_, _, _, _, _).
+:- meta_predicate type_component_props(?,+,+,3).
+type_component_props(M, Type, PropL, Call) :-
+    functor(Type, Name, _),
+    arg(1, Type, Term),
+    ( compound(Term)
+    ->call(Call, func_ini, Term, Name),
+      forall(arg(N, Term, Arg),
+	     ( member(Body, PropL),
+	       match_known_type_(Body, M, Spec, Arg),
+	       call(Call, func_rec(N, Term), Spec, Arg)
+	     )
+	    ),
+      call(Call, func_end, Term, Name)
+    ; member(in_dict(Term, _Dict), PropL)
+    ->true
+    ; member(Body, PropL),
+      match_known_type_(Body, M, Spec, Term),
+      call(Call, atom(Name), Spec, Term)
+    ), !.
+type_component_props(M, Type, PropL, Call) :-
+    print_message(error, format("~w failed",
+				[type_component_props(M, Type, PropL, Call)])).
 
 collect_bind_head(Module, BindHeadL) :-
     findall(Bind-Head,
@@ -602,7 +619,7 @@ match_known_type_(pointer(A, Type), _, pointer-PType, A) :-
     (atom(Type) ; atom(PType)),
     atom_concat(Type, '*', PType).
 match_known_type_(Type, M, type(Name), A) :-
-    current_type_props(M, Type, _),
+    current_type_props(M, Type),
     functor(Type, Name, _),
     arg(1, Type, A).
 
