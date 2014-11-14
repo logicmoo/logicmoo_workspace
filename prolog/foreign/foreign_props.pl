@@ -5,7 +5,8 @@
 	   returns_state/1,
 	   memory_root/1,
 	   pointer/1,
-	   pointer/2]).
+	   pointer/2,
+	   dict_t/2]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -40,9 +41,9 @@ pointer(I, A) :- int(I), atm(A).
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).
 dict_t(Term, M:Desc) :-
-    is_dict(Desc, Tag),
+    dict_create(Dict, Tag, Desc),
     dict_pairs(Term, Tag, Pairs),
-    maplist(dict_kv(Desc, M), Pairs).
+    maplist(dict_kv(Dict, M), Pairs).
 
 dict_kv(Desc, M, Key-Value) :-
     Type =Desc.Key,
