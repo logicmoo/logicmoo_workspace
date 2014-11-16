@@ -124,50 +124,63 @@ do_generate_library(M, FileSO, FSourceL) :-
 					       [Command, Status]))
 	   )).
 
+:- meta_predicate with_output_to_file(+,0).
+
+with_output_to_file(File, Goal) :- setup_call_cleanup(tell(File), Goal, told).
+
 generate_foreign_interface(Module, BaseFile) :-
-    file_name_extension(BaseFile, h, File_h),
+    atom_concat(BaseFile, '_intf', BaseFileIntf),
+    file_name_extension(BaseFileIntf, h, FileIntf_h),
+    atom_concat(BaseFile, '_impl', BaseFileImpl),
+    file_name_extension(BaseFileImpl, h, FileImpl_h),
     file_name_extension(BaseFile, c, File_c),
     directory_file_path(_, Base, BaseFile),
-    generate_foreign_h(Module, File_h),
-    generate_foreign_c(Module, Base, File_c, File_h).
+    with_output_to_file(FileImpl_h, generate_foreign_impl_h(Module)),
+    with_output_to_file(FileIntf_h, generate_foreign_intf_h(Module, FileImpl_h)),
+    with_output_to_file(File_c,     generate_foreign_c(     Module, Base, FileIntf_h)).
 
 c_var_name(Arg, CArg) :-
     format(atom(CArg), '_c_~w', [Arg]).
 
-generate_foreign_h(Module, File) :-
-    setup_call_cleanup(tell(File), generate_foreign_h(Module), told).
+generate_foreign_intf_h(Module, FileImpl_h) :-
+    add_autogen_note(Module),
+    format('#ifndef __~w_INTF_H~n#define __~w_INTF_H~n~n', [Module, Module]),
+    format('#include <foreign_swipl.h>~n', []),
+    format('#include "~w"~n~n', [FileImpl_h]),
+    forall_type_props(Module, declare_typeconv),
+    collect_bind_head(Module, BindHeadL),
+    maplist(declare_intf_bind, BindHeadL),
+    format('~n#endif /* __~w_INTF_H */~n', [Module]).
 
-generate_foreign_c(Module, Base, File_c, File_h) :-
-    setup_call_cleanup(tell(File_c),
-		       generate_foreign_c(Module, Base, File_h),
-		       told).
-
-generate_foreign_h(Module) :-
-    write_header(Module),
+generate_foreign_impl_h(Module) :-
+    add_autogen_note(Module),
+    format('#ifndef __~w_IMPL_H~n#define __~w_IMPL_H~n~n', [Module, Module]),
     forall_type_props(Module, declare_typedef),
     forall_type_props(Module, declare_struct),
     collect_bind_head(Module, BindHeadL),
-    maplist(declare_wrapper_bind, BindHeadL),
-    nl,
     maplist(declare_foreign_bind(Module), BindHeadL),
-    nl,
-    format('#endif /* __~w_H */~n', [Module]).
+    format('~n#endif /* __~w_IMPL_H */~n', [Module]).
 
 add_autogen_note(Module) :-
     format('/* NOTE: File generated automatically from ~w */~n~n', [Module]).
 
-generate_foreign_c(Module, Base, File_h) :-
+generate_foreign_c(Module, Base, FileIntf_h) :-
     add_autogen_note(Module),
-    format('#include "~w"\n\n', [File_h]),
+    forall(use_foreign_header(Module, HAlias),
+	   ( absolute_file_name(HAlias, File_h),
+	     format('#include "~w"~n', [File_h])
+	   )),
+    format('#include "~w"~n~n', [FileIntf_h]),
     forall_type_props(Module, implement_type_getter),
     forall_type_props(Module, implement_type_unifier),
     generate_foreign_register(Module, Base),
-    generate_foreign_wrapper(Module).
+    generate_foreign_intf(Module).
 
 forall_type_props(Module, Call) :-
     forall(current_type_props(Module, Type),
-	   ( bind_type_names(Module, Type, PropL),
-	     type_component_props(Module, Type, PropL, Call)
+	   ( bind_type_names(Module, Type, PropL)
+	   ->type_component_props(Module, Type, PropL, Call)
+	   ; true
 	   )).
 
 implement_type_getter_ini(PName, CName, Arg) :-
@@ -314,12 +327,6 @@ implement_type_unifier_ini(PName, CName, Arg) :-
     format('int PL_unify_~w(term_t ~w, ~w * const ~w) {~n',
 	   [Arg, PName, Arg, CName]).
     
-write_header(Module) :-
-    add_autogen_note(Module),
-    format('#ifndef __~w_H~n#define __~w_H~n~n', [Module, Module]),
-    write('#include <SWI-Prolog.h>\n'),
-    write('#include <foreign_interface.h>\n\n').
-
 apply_name(Name=Value) :-
     camel_snake(Name, Arg),
     ignore(Value=Arg).
@@ -374,22 +381,30 @@ declare_struct(dict_rec(_, _), Spec, Name) :-
 declare_typedef(atom(Name), Spec, _) :-
     format('typedef ', []),
     c_get_ctype_decl(Spec),
-    format(' ~w;~n', [Name]),
-    declare_type_converters(Name).
+    format(' ~w;~n', [Name]).
 declare_typedef(func_ini, Term, Name) :-
     functor(Term, Spec, _),
-    format('typedef struct ~w ~w;~n', [Spec, Name]),
-    declare_type_converters(Name).
+    format('typedef struct ~w ~w;~n', [Spec, Name]).
 declare_typedef(func_end, _, _).
 declare_typedef(func_rec(_, _), _, _).
 declare_typedef(dict_ini(_, Spec), _, Name) :-
     format('typedef struct ~w ~w;~n', [Spec, Name]),
-    format('typedef enum key_~w key_~w;~n', [Spec, Name]),
-    declare_type_converters(Name).
+    format('typedef enum key_~w key_~w;~n', [Spec, Name]).
 declare_typedef(dict_end, _, _).
 declare_typedef(dict_rec(_, _), _, _).
 
-declare_type_converters(Name) :-
+declare_typeconv(atom(Name), _, _) :-
+    declare_typeconv(Name).
+declare_typeconv(func_ini, _, Name) :-
+    declare_typeconv(Name).
+declare_typeconv(func_end, _, _).
+declare_typeconv(func_rec(_, _), _, _).
+declare_typeconv(dict_ini(_, _), _, Name) :-
+    declare_typeconv(Name).
+declare_typeconv(dict_end, _, _).
+declare_typeconv(dict_rec(_, _), _, _).
+
+declare_typeconv(Name) :-
     format('int PL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
     format('int PL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
 
@@ -403,6 +418,8 @@ type_component_props(M, Type, PropL, Call) :-
 	     ( member(Prop, PropL),
 	       match_known_type_(Prop, M, Spec, Arg),
 	       call(Call, func_rec(N, Term), Spec, Arg)
+	     ->true
+	     ; print_message(warning, format("~w->~w ignored", [Name, Arg]))
 	     )
 	    ),
       call(Call, func_end, Term, Name)
@@ -440,29 +457,29 @@ collect_bind_head(Module, BindHeadL) :-
 	    ), BindHeadUL),
     sort(BindHeadUL, BindHeadL).
 
-declare_wrapper_bind(BindHead) :-
-    declare_wrapper_head(BindHead),
+declare_intf_bind(BindHead) :-
+    declare_intf_head(BindHead),
     format(';~n', []).
     
-declare_wrapper_head((CN/_A as _PN)-Head) :-
+declare_intf_head((CN/_A as _PN)-Head) :-
     format('foreign_t pl_~w(', [CN]),
     ( compound(Head)
-    ->declare_wrapper_bind_(1, Head)
+    ->declare_intf_bind_(1, Head)
     ; true
     ),
     format(')', []).
 
-declare_wrapper_bind_arg(Arg) :-
+declare_intf_bind_arg(Arg) :-
     format('term_t ~w', [Arg]).
 
-declare_wrapper_bind_(N, Head) :-
+declare_intf_bind_(N, Head) :-
     arg(N, Head, Arg),
     (N \= 1 -> write(', ') ; true),
-    declare_wrapper_bind_arg(Arg),
+    declare_intf_bind_arg(Arg),
     N1 is N + 1,
     !,
-    declare_wrapper_bind_(N1, Head).
-declare_wrapper_bind_(_, _).
+    declare_intf_bind_(N1, Head).
+declare_intf_bind_(_, _).
 
 declare_foreign_bind(M, Bind-Head) :-
     read_foreign_properties(Head, M, Comp, Call, Succ, Glob, _, Bind),
@@ -528,6 +545,8 @@ c_get_ctype_decl(type(Name)) :-
     format('~w', Name).
 c_get_ctype_decl(chrs(Name)) :-
     format('~w', Name).
+c_get_ctype_decl(pointer(Name)) :-
+    format('~w *', Name).
 c_get_ctype_decl(term) :-
     format('term_t', []).
 c_get_ctype_decl(_-CType) :-
@@ -551,12 +570,12 @@ read_foreign_properties(Head, Module, Comp, Call, Succ, Glob, Dict, CN/A as PN) 
     ; memberchk(foreign(CN), Glob) -> true
     ).
 
-generate_foreign_wrapper(Module) :-
+generate_foreign_intf(Module) :-
     collect_bind_head(Module, BindHeadL),
-    maplist(declare_wrapper_impl(Module), BindHeadL).
+    maplist(declare_intf_impl(Module), BindHeadL).
 
-declare_wrapper_impl(Module, BindHead) :-
-    declare_wrapper_head(BindHead),
+declare_intf_impl(Module, BindHead) :-
+    declare_intf_head(BindHead),
     format(' {~n', []),
     format('    __mkroot(__root);~n'),
     bind_arguments(Module, BindHead, Return),
@@ -568,6 +587,7 @@ declare_wrapper_impl(Module, BindHead) :-
 c_set_argument(list(Spec), _,    CArg, Arg) :- c_set_argument_list(Spec, CArg, Arg).
 c_set_argument(type(Type), Mode, CArg, Arg) :- c_set_argument_type(Mode, Type, CArg, Arg).
 c_set_argument(chrs(_),    Mode, CArg, Arg) :- c_set_argument_chrs(Mode, CArg, Arg).
+c_set_argument(pointer(Type), Mode, CArg, Arg) :- c_set_argument_one(Mode, Type, CArg, Arg).
 c_set_argument(Type-_,     Mode, CArg, Arg) :- c_set_argument_one( Mode, Type, CArg, Arg).
 c_set_argument(term,       _,    CArg, Arg) :- format('~w=~w', [Arg, CArg]).
 
@@ -601,6 +621,8 @@ c_get_argument(term, _, _, CArg, Arg) :-
     format('~w=PL_copy_term_ref(~w)', [CArg, Arg]).
 c_get_argument(Trans-_, Mode, Deref, CArg, Arg) :-
     c_get_argument_one(Deref, Mode, Trans, CArg, Arg).
+c_get_argument(pointer(Name), Mode, Deref, CArg, Arg) :-
+    c_get_argument_one(Deref, Mode, Name, CArg, Arg).
 c_get_argument(type(Name), Mode, Deref, CArg, Arg) :-
     c_get_argument_type(Deref, Mode, Name, CArg, Arg).
 
@@ -730,6 +752,7 @@ match_known_type(M, Prop, Spec, Arg) :-
 
 match_known_type_(atm(A),           _, chrs('char*'), A).
 match_known_type_(atom(A),          _, chrs('char*'), A).
+match_known_type_(pointer(A, Type), _, pointer(Type), A).
 % match_known_type_(string(A),        _, string_chars-'char*', A).
 match_known_type_(pointer(A),       _, pointer     -'void*', A).
 match_known_type_(int(A),           _, integer     -int,     A).
@@ -742,9 +765,6 @@ match_known_type_(list(A, Type),    M, list(Spec),           A) :-
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
-match_known_type_(pointer(A, Type), _, pointer-PType, A) :-
-    (atom(Type) ; atom(PType)),
-    atom_concat(Type, '*', PType).
 match_known_type_(Type, M, type(Name), A) :-
     current_type_props(M, Type),
     functor(Type, Name, _),
