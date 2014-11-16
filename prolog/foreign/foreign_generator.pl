@@ -112,7 +112,7 @@ do_generate_library(M, FileSO, FSourceL) :-
 		  ),
 	    IDirL),
     atomic_list_concat(IDirL, ' ', IDirs),
-    format(atom(CommandT), "swipl-ld -shared ~w~w ~w ~w.c ~w -o ~w",
+    format(atom(CommandT), "swipl-ld -shared ~w~w ~w ~w_intf.c ~w -o ~w",
 	   [COpts, IDirs, FSources, BaseFile, CLibs, FileSO]),
     CommandsT = [CommandT],
     forall(member(Command, Commands),
@@ -130,15 +130,15 @@ do_generate_library(M, FileSO, FSourceL) :-
 with_output_to_file(File, Goal) :- setup_call_cleanup(tell(File), Goal, told).
 
 generate_foreign_interface(Module, BaseFile) :-
-    atom_concat(BaseFile, '_intf', BaseFileIntf),
-    file_name_extension(BaseFileIntf, h, FileIntf_h),
     atom_concat(BaseFile, '_impl', BaseFileImpl),
     file_name_extension(BaseFileImpl, h, FileImpl_h),
-    file_name_extension(BaseFile, c, File_c),
+    atom_concat(BaseFile, '_intf', BaseFileIntf),
+    file_name_extension(BaseFileIntf, h, FileIntf_h),
+    file_name_extension(BaseFileIntf, c, FileIntf_c),
     directory_file_path(_, Base, BaseFile),
     with_output_to_file(FileImpl_h, generate_foreign_impl_h(Module)),
     with_output_to_file(FileIntf_h, generate_foreign_intf_h(Module, FileImpl_h)),
-    with_output_to_file(File_c,     generate_foreign_c(     Module, Base, FileIntf_h)).
+    with_output_to_file(FileIntf_c, generate_foreign_c(     Module, Base, FileIntf_h)).
 
 c_var_name(Arg, CArg) :-
     format(atom(CArg), '_c_~w', [Arg]).
