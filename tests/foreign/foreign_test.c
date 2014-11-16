@@ -1,14 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <foreign_interface.h>
-#include "foreign_test_i.h"
+#include "foreign_test_i_impl.h"
 
 int c_f(field_t ** field) {
     __rtcheck(field!=NULL);
-    //__rtcheck(*field->Sum==NULL);
-    //FI_new_value(*field->Sum);
-    (*field)->Sum = malloc(sizeof(*(*field)->Sum));
-    *(*field)->Sum = (*field)->A + (*field)->B;
-    printf("NOTE: Sum=%d\n", *(*field)->Sum);
+    (*field)->sum = malloc(sizeof(*(*field)->sum));
+    *(*field)->sum = (*field)->a + (*field)->b;
+    printf("NOTE: Sum=%d\n", *(*field)->sum);
     return TRUE;
 }
 
@@ -17,20 +16,20 @@ void c_a(position_t * const list_position, position_t * const position) {
 }
 
 void c_aa(position_t * const ip, position_t *op) {
-    printf("position(%d, %d)\n", ip->X, ip->Y);
-    op->X = 10*ip->X;
-    op->Y = 10*ip->Y;
+    printf("position(%d, %d)\n", ip->x, ip->y);
+    op->x = 10*ip->x;
+    op->y = 10*ip->y;
 }
 
-void c_p(int I) {
-    printf("%d\n", I);
+void c_eq(int i, int *o) {
+  *o = i;
 }
 
-void c_q(double * const A, int const B, double *C) {
+void c_idx(double * const A, int const B, double *C) {
     *C = A[B];
 }
 
-void c_r(void **__root, int const A, double ** B) {
+void c_numl(void **__root, int const A, double ** B) {
     int index;
     FI_new_array(A, *B);
     for (index = 0; index < A; index++) {
@@ -39,12 +38,11 @@ void c_r(void **__root, int const A, double ** B) {
     // nothing to do yet
 }
 
-void c_s(void **__root, double ****A, int ***B, int **C, int *D) {
-    int index1, index2, index3, size = 5;
+void c_get_arrays(void **__root, int const size, double ****A, int ***B, int **C) {
+    int index1, index2, index3;
     FI_new_array(size, *A);
     FI_new_array(size, *B);
     FI_new_array(size, *C);
-    *D = size;
     for (index1 = 0; index1 < size; index1++) {
 	FI_new_array(size, (*A)[index1]);
 	FI_new_array(size, (*B)[index1]);
@@ -59,7 +57,7 @@ void c_s(void **__root, double ****A, int ***B, int **C, int *D) {
     }
 }
 
-void c_t(double *** const A, int ** const B, int * const C, int  const D) {
+void show_arrays(double *** const A, int ** const B, int * const C) {
     int index1, index2, index3;
     for (index1 = 0; index1 < FI_array_length(A); index1 ++) {
 	for (index2 = 0; index2 < FI_array_length(A[index1]); index2++)
@@ -73,11 +71,9 @@ void c_t(double *** const A, int ** const B, int * const C, int  const D) {
     for (index1 = 0; index1 < FI_array_length(C); index1 ++) {
 	printf("C[%d]=%d\n",index1,C[index1]);
     }
-    printf("D=%d\n", D);
 }
 
 void c_io(int ** I) {
-	printf("NOTE: io/1:\n");
     if (*I==NULL) {
 	printf("NOTE: io/1 called with a null\n");
     } else {
@@ -92,4 +88,8 @@ int c_sio(void **__root, int **I) {
 	return TRUE;
     } else
 	return FALSE;    
+}
+
+void  c_pq(position_t** A) {
+  // nothing to do
 }

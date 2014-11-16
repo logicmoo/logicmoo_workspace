@@ -1,11 +1,12 @@
-:- module(foreign_test_i, [aa/2, p/1, q/3, r/2, s/4, t/4, io/1, sio/1, f/1]).
+:- module(foreign_test_i, [aa/2, eq/2, idx/3, numl/2, get_arrays/4, show_arrays/3, io/1, sio/1, f/1]).
 
 :- use_module(library(swi/assertions)).
+:- use_module(library(swi/basicprops)).
+:- use_module(library(swi/plprops)).
 :- use_module(library(foreign/foreign_interface)).
+:- use_module(library(foreign/foreign_props)).
 :- gen_foreign_library('foreign_test_i.so').
 :- use_foreign_source('foreign_test.c').
-
-%:- use_module(xif4(xif4)).
 
 :- prop flag_t/1 is type.
 
@@ -29,18 +30,18 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 
 :- pred a(+list(position_t), +position_t) is foreign(c_a).
 
-:- pred p(+int) is foreign(c_p).
-:- pred q(+list(num), +int, -num) is foreign(c_q).
-:- pred r(+int, -list(num)) is (foreign(c_r), memory_root).
+:- pred eq(+int, -int) is foreign(c_eq).
+:- pred idx(+list(num), +int, -num) is foreign(c_idx).
+:- pred numl(+int, -list(num)) is (foreign(c_numl), memory_root).
 
 :- pred f(?field_t) is (foreign(c_f), returns_state).
 :- pred pq(?position_t) is foreign(c_pq).
 
-:- pred s(-list(list(list(num))), -list(list(int)), -list(int), -int)
-    is (foreign(c_s), memory_root).
+:- pred get_arrays(+int,-list(list(list(num))), -list(list(int)), -list(int))
+    is (foreign(c_get_arrays), memory_root).
 
-:- pred t(+list(list(list(num))), +list(list(int)), +list(int), +int)
-    is foreign(c_t).
+:- pred show_arrays(+list(list(list(num))), +list(list(int)), +list(int))
+    is foreign.
 
 :- pred io(int) is foreign(c_io).
 

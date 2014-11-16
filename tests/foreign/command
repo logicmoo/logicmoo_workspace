@@ -1,1 +1,0 @@
-./foreign_test.sh > $CMD_STDOUT 2>$CMD_STDERR
