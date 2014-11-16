@@ -1,4 +1,5 @@
-:- module(foreign_test_i, [aa/2, eq/2, idx/3, numl/2, get_arrays/4, show_arrays/3, io/1, sio/1, f/1]).
+:- module(foreign_test_i, [fce/2, aa/2, eq/2, idx/3, numl/2, get_arrays/4,
+			   show_arrays/3, io/1, sio/1, f/1, positive_t/1]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -6,7 +7,17 @@
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
 :- gen_foreign_library('foreign_test_i.so').
+:- use_foreign_header('foreign_test.h').
 :- use_foreign_source('foreign_test.c').
+
+:- prop positive_t(?int) is (type, foreign(is_positive_t)).
+
+:- prop contain_extern_t/1 is type.
+contain_extern_t(contain_extern(Idx, Value)) :-
+    int(Idx),
+    positive_t(Value).
+
+:- pred fce(+contain_extern_t, -contain_extern_t) is foreign.
 
 :- prop flag_t/1 is type.
 

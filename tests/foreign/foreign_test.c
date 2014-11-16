@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <foreign_interface.h>
+#include "foreign_test.h"
 #include "foreign_test_i_impl.h"
 
 int c_f(field_t ** field) {
@@ -92,4 +93,15 @@ int c_sio(void **__root, int **I) {
 
 void  c_pq(position_t** A) {
   // nothing to do
+}
+
+int is_positive_t(int const A) {
+  return A>0;
+}
+
+void  fce(contain_extern_t* const A, contain_extern_t* B) {
+  B->idx=A->idx;
+  B->value=malloc(sizeof(*(B->value)));
+  *(B->value)=*(A->value) - 2;
+  printf("ce[%d, %d]\n", A->idx, *(A->value));
 }

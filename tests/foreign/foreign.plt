@@ -43,4 +43,16 @@ test(foreign_fields) :-
     f(field(2,3,Sum)),
     assertion(Sum==5).
 
+test(foreign_type) :-
+    positive_t(_),
+    positive_t(2),
+    \+positive_t(-2).
+
+test(foreign_cmptype) :-
+    fce(contain_extern(1,3),B),
+    assertion(B==contain_extern(1, 1)).
+
+test(foreign_typeex, [error(type_error(positive_t, 0 ))]) :-
+    fce(contain_extern(1,2),_).
+
 :- end_tests(foreign).
