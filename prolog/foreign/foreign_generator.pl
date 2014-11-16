@@ -4,6 +4,7 @@
 			      read_foreign_properties/8]).
 
 :- use_module(library(swi/assertions)).
+:- use_module(library(assertions/assrt_lib)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(camel_snake)).
@@ -177,9 +178,9 @@ generate_foreign_c(Module, Base, FileIntf_h) :-
     generate_foreign_intf(Module).
 
 forall_type_props(Module, Call) :-
-    forall(current_type_props(Module, Type),
+    forall(current_type_props(Module, Type, Pos),
 	   ( bind_type_names(Module, Type, PropL)
-	   ->type_component_props(Module, Type, PropL, Call)
+	   ->type_components(Module, Type, PropL, Call, Pos)
 	   ; true
 	   )).
 
@@ -226,7 +227,7 @@ implement_type_getter(dict_end, _, _) :-
     implement_type_end.
 implement_type_getter(atom(Name), Spec, Term) :-
     term_pcname(Term, PName, CName),
-    implement_type_unifier_ini(PName, CName, Name),
+    implement_type_getter_ini(PName, CName, Name),
     format('    ', []),
     c_set_argument(Spec, inout, CName, PName),
     format(';~n', []),
@@ -261,6 +262,13 @@ func_pcname(Func, PName, CName) :-
     camel_snake(PName, Func),
     c_var_name(Func, CName).
 
+implement_type_unifier(atom(Name), Spec, Term) :-
+    term_pcname(Term, PName, CName),
+    implement_type_unifier_ini(PName, CName, Name),
+    format('    ', []),
+    c_set_argument(Spec, inout, CName, PName),
+    format(';~n', []),
+    implement_type_end.
 implement_type_unifier(func_ini, Term, Arg) :-
     term_pcname(Term, PName, CName),
     functor(Term, Func, Arity),    
@@ -335,8 +343,8 @@ apply_dict(Head, Dict) :-
     maplist(apply_name, Dict),
     numbervars(Head, 0, _, [singletons(false)]).
 
-current_type_props(M, Type) :-
-    assrt_lib:assertion_db(Type, M, _, prop, _, _, _, Glob, _, _, _),
+current_type_props(M, Type, Pos) :-
+    assertion_db(Type, M, _, prop, _, _, _, Glob, _, _, Pos),
     once(( member(TType, [type, regtype]),
 	   memberchk(TType, Glob)
 	 )).
@@ -408,8 +416,20 @@ declare_typeconv(Name) :-
     format('int PL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
     format('int PL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
 
-:- meta_predicate type_component_props(?,+,+,3).
-type_component_props(M, Type, PropL, Call) :-
+:- multifile
+    prolog:message//1,
+    prolog:message_location//1.
+
+prolog:message(ignored_type(Loc, Name, Arg)) -->
+    prolog:message_location(Loc),
+    ['~w->~w ignored'-[Name, Arg]].
+
+prolog:message(failed_binding(Loc, TypeComponents)) -->
+    prolog:message_location(Loc),
+    ['~w failed'-[TypeComponents]].
+
+:- meta_predicate type_components(?,+,+,3,+).
+type_components(M, Type, PropL, Call, Loc) :-
     functor(Type, Name, _),
     arg(1, Type, Term),
     ( compound(Term)
@@ -419,7 +439,7 @@ type_component_props(M, Type, PropL, Call) :-
 	       match_known_type_(Prop, M, Spec, Arg),
 	       call(Call, func_rec(N, Term), Spec, Arg)
 	     ->true
-	     ; print_message(warning, format("~w->~w ignored", [Name, Arg]))
+	     ; print_message(warning, ignored_type(Loc, Name, Arg))
 	     )
 	    ),
       call(Call, func_end, Term, Name)
@@ -439,9 +459,8 @@ type_component_props(M, Type, PropL, Call) :-
       match_known_type_(Body, M, Spec, Term),
       call(Call, atom(Name), Spec, Term)
     ), !.
-type_component_props(M, Type, PropL, Call) :-
-    print_message(error, format("~w failed",
-				[type_component_props(M, Type, PropL, Call)])).
+type_components(M, Type, PropL, Call, Loc) :-
+    print_message(error, failed_binding(Loc, type_components(M, Type, PropL, Call, '_'))).
 
 fetch_kv_prop_arg(Key, Value, PropL, Prop) :-
     ( member(Prop, PropL),
@@ -613,8 +632,8 @@ c_set_argument_list(Spec, CArg, Arg) :-
     c_set_argument(Spec, out, CArg_, Arg_),
     format(', ~w, ~w)', [Arg, CArg]).
 
-c_get_argument(list(Spec), _, _, CArg, Arg) :-
-    c_get_argument_list(Spec, CArg, Arg).
+c_get_argument(list(Spec), _, Deref, CArg, Arg) :-
+    c_get_argument_list(Deref, Spec, CArg, Arg).
 c_get_argument(chrs(_), Mode, Deref, CArg, Arg) :-
     c_get_argument_chrs(Deref, Mode, CArg, Arg).
 c_get_argument(term, _, _, CArg, Arg) :-
@@ -656,7 +675,13 @@ c_get_argument_type_deref(in, Type, CArg, Arg) :-
 c_get_argument_type_deref(inout, Type, CArg, Arg) :-
     format('PL_get_inout_t(~w, ~w, ~w)', [Type, Arg, CArg]).
 
-c_get_argument_list(Spec, CArg, Arg) :-
+c_get_argument_list(deref, Spec, CArg, Arg) :-
+    format('PL_get_array(',[]),
+    format(atom(Arg_),   '~w_', [Arg]),
+    c_var_name(Arg_, CArg_),
+    c_get_argument(Spec, in, noder, CArg_, Arg_),
+    format(', ~w, &~w)', [Arg, CArg]).
+c_get_argument_list(noder, Spec, CArg, Arg) :-
     format('PL_get_array(',[]),
     format(atom(Arg_), '~w_',   [Arg]),
     c_var_name(Arg_, CArg_),
@@ -766,7 +791,7 @@ match_known_type_(list(A, Type),    M, list(Spec),           A) :-
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
 match_known_type_(Type, M, type(Name), A) :-
-    current_type_props(M, Type),
+    current_type_props(M, Type, _),
     functor(Type, Name, _),
     arg(1, Type, A).
 

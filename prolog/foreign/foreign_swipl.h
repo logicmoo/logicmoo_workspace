@@ -54,8 +54,8 @@
 	size_t __length = 0;						\
 	while( PL_get_list(__tail, __term##_, __tail) ) __length++;	\
 	__tail = PL_copy_term_ref(__term);				\
-	FI_new_array(__length, __value);				\
-	typeof (__value) _c_##__term##_ = __value;			\
+	FI_new_array(__length, *__value);				\
+	typeof (*__value) _c_##__term##_ = *__value;			\
 	while(PL_get_list(__tail, __term##_, __tail)) {			\
 	    __PL_get_elem;						\
 	    _c_##__term##_++;						\

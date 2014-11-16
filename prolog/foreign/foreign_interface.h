@@ -6,6 +6,11 @@
 
 #define __RTCHECK__
 
+#ifndef TRUE
+#define TRUE 1
+#define FALSE 0
+#endif
+
 #if (defined(__RTCHECK__))
 #define __rtcheck(__call) {						\
 	int __result = (__call);					\
