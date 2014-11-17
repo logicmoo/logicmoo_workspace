@@ -1,5 +1,4 @@
-:- module(foreign_generator, [generate_foreign_interface/2,
-			      generate_library/3,
+:- module(foreign_generator, [generate_library/3,
 			      gen_foreign_library/2,
 			      read_foreign_properties/8]).
 
@@ -57,32 +56,42 @@ is_newer(File1, File2) :-
     Time1 > Time2.
 
 generate_library(M, AliasSO, File) :-
-    absolute_file_name(AliasSO, FileSO),
+    absolute_file_name(AliasSO, FileSO, [file_type(executable),
+					 relative_to(File)]),
     findall(FSource, ( use_foreign_source(M, FAlias),
-		       absolute_file_name(FAlias, FSource)
+		       absolute_file_name(FAlias, FSource,
+					  [extensions(['.c','']),
+					   access(read),
+					   relative_to(File)])
 		     ), FSourceL),
     ( forall(( member(Dep, [File|FSourceL])
 	     ; ( use_foreign_header(M, HAlias)
 	       ; HAlias = library('foreign/foreign_interface.h')
 	       ),
-	       absolute_file_name(HAlias, Dep)
+	       absolute_file_name(HAlias, Dep,
+				  [extensions(['.h','']),
+				   access(exist),
+				   relative_to(File)])
 	     ; member(Alias, [library(foreign/foreign_generator),
 			      library(foreign/foreign_props),
 			      library(foreign/foreign_interface)
 			     ]),
-	       absolute_file_name(Alias, Dep, [file_type(prolog), access(exist)])
+	       absolute_file_name(Alias, Dep, [file_type(prolog),
+					       access(read),
+					       relative_to(File)])
 	     ),
 	     is_newer(FileSO, Dep))
     ->print_message(informational,
 		    format('Skipping build of ~w: is up to date', [FileSO]))
-    ; do_generate_library(M, FileSO, FSourceL)
+    ; do_generate_library(M, FileSO, File, FSourceL)
     ).
 
-do_generate_library(M, FileSO, FSourceL) :-
+do_generate_library(M, FileSO, File, FSourceL) :-
     file_name_extension(BaseFile, so, FileSO),
-    generate_foreign_interface(M, BaseFile),
-    absolute_file_name(library(foreign/foreign_interface), IntfPl,
-		       [file_type(prolog), access(read)]),
+    generate_foreign_interface(M, File, BaseFile),
+    absolute_file_name(library(foreign/foreign_interface),
+		       IntfPl,
+		       [file_type(prolog), access(read), relative_to(File)]),
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
     maplist_dcg(intermediate_obj(DirSO), FSourceL, FTargetL, Commands, CommandsT),
@@ -106,7 +115,8 @@ do_generate_library(M, FileSO, FSourceL) :-
     findall(IDir, ( ( Dir = DirSO
 		    ; Dir = DirIntf
 		    ; include_foreign_dir(M, DAlias),
-		      absolute_file_name(DAlias, Dir, [file_type(directory)])
+		      absolute_file_name(DAlias, Dir, [file_type(directory),
+						       relative_to(File)])
 		    ),
 		    atom_concat('-I', Dir, IDir)
 		  ),
@@ -129,7 +139,7 @@ do_generate_library(M, FileSO, FSourceL) :-
 
 with_output_to_file(File, Goal) :- setup_call_cleanup(tell(File), Goal, told).
 
-generate_foreign_interface(Module, BaseFile) :-
+generate_foreign_interface(Module, FilePl, BaseFile) :-
     atom_concat(BaseFile, '_impl', BaseFileImpl),
     file_name_extension(BaseFileImpl, h, FileImpl_h),
     atom_concat(BaseFile, '_intf', BaseFileIntf),
@@ -138,7 +148,7 @@ generate_foreign_interface(Module, BaseFile) :-
     directory_file_path(_, Base, BaseFile),
     with_output_to_file(FileImpl_h, generate_foreign_impl_h(Module)),
     with_output_to_file(FileIntf_h, generate_foreign_intf_h(Module, FileImpl_h)),
-    with_output_to_file(FileIntf_c, generate_foreign_c(     Module, Base, FileIntf_h)).
+    with_output_to_file(FileIntf_c, generate_foreign_c(Module, Base, FilePl, FileIntf_h)).
 
 c_var_name(Arg, CArg) :-
     format(atom(CArg), '_c_~w', [Arg]).
@@ -165,10 +175,12 @@ generate_foreign_impl_h(Module) :-
 add_autogen_note(Module) :-
     format('/* NOTE: File generated automatically from ~w */~n~n', [Module]).
 
-generate_foreign_c(Module, Base, FileIntf_h) :-
+generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
     add_autogen_note(Module),
     forall(use_foreign_header(Module, HAlias),
-	   ( absolute_file_name(HAlias, File_h),
+	   ( absolute_file_name(HAlias, File_h, [extensions(['.h', '']),
+						 access(read),
+						 relative_to(FilePl)]),
 	     format('#include "~w"~n', [File_h])
 	   )),
     format('#include "~w"~n~n', [FileIntf_h]),
