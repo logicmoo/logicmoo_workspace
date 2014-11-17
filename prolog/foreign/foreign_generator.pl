@@ -518,7 +518,7 @@ declare_foreign_bind(M, Bind-Head) :-
       format('int '), % int to avoid SWI-Prolog.h dependency at this level
       CHead = Head
     ; member(returns(Var), Glob) ->
-      bind_argument(M, Comp, Call, Succ, Glob, Var, Spec, Mode),
+      bind_argument(Head, M, Comp, Call, Succ, Glob, Var, Spec, Mode),
       c_get_ctype_decl(Spec, Mode),
       Head =.. Args,
       once(select(Var, Args, CArgs)),
@@ -541,15 +541,15 @@ declare_foreign_head((CN/_A as _PN + _), M, Head, Comp, Call, Succ, Glob) :-
 declare_foreign_bind_(N, M, Head, Comp, Call, Succ, Glob) :-
     arg(N, Head, Arg),
     ( N \= 1 -> write(', ') ; true ),
-    declare_foreign_bind_arg(M, Comp, Call, Succ, Glob, Arg),
+    declare_foreign_bind_arg(Head, M, Comp, Call, Succ, Glob, Arg),
     format(' ~w', [Arg]),
     N1 is N + 1,
     !,
     declare_foreign_bind_(N1, M, Head, Comp, Call, Succ, Glob).
 declare_foreign_bind_(_, _, _, _, _, _, _).
 
-declare_foreign_bind_arg(M, Comp, Call, Succ, Glob, Arg) :-
-    bind_argument(M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+declare_foreign_bind_arg(Head, M, Comp, Call, Succ, Glob, Arg) :-
+    bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
     c_get_ctype_decl(Spec, Mode),
     (Mode = in, Spec \= type(_) ->true ; write('*')),
     (Mode = in -> write(' const') ; true). % Ensure const correctness
@@ -601,8 +601,8 @@ read_foreign_properties(Head, Module, Comp, Call, Succ, Glob, Dict, CN/A as PN +
     ; memberchk(foreign(CN), Glob) -> true
     ),
     ( memberchk(type, Glob)
-    ->CheckMode=compat
-    ; CheckMode=error
+    ->CheckMode=type
+    ; CheckMode=pred
     ).
 
 generate_foreign_intf(Module) :-
@@ -613,7 +613,7 @@ declare_intf_impl(Module, BindHead) :-
     declare_intf_head(BindHead),
     format(' {~n', []),
     BindHead = (PI as _ + CheckMode)-Head,
-    ( CheckMode==compat	   % If is variable then succeed (because is compatible)
+    ( CheckMode==type	   % If is variable then succeed (because is compatible)
     ->forall(arg(_, Head, Arg),
 	     format('    if(PL_is_variable(~w)) return TRUE;~n', [Arg]))
     ; true
@@ -713,14 +713,14 @@ bind_arguments(M, Bind-Head, Return) :-
     read_foreign_properties(Head, M, Comp, Call, Succ, Glob, _, Bind),
     ( compound(Head)
     ->forall(( arg(_, Head, Arg),
-	       bind_argument(M, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
+	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
 	     ( write('    '),
 	       c_get_ctype_decl(Spec, Mode),
 	       c_var_name(Arg, CArg),
 	       format(' ~w;~n', [CArg])
 	     )),
       forall(( arg(_, Head, Arg),
-	       bind_argument(M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	       memberchk(Mode, [in, inout])
 	     ),
 	     ( c_var_name(Arg, CArg),
@@ -733,7 +733,7 @@ bind_arguments(M, Bind-Head, Return) :-
     generate_foreign_call(Bind-Head, M, Comp, Call, Succ, Glob, Return),
     ( compound(Head) ->
       forall(( arg(_, Head, Arg),
-	       bind_argument(M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	       memberchk(Mode, [out, inout])
 	     ),
 	     ( write('    '),
@@ -775,7 +775,7 @@ generate_foreign_call((CN/_A as _PN + _)-Head, M, Comp, Call, Succ, Glob, Return
 generate_foreign_call_(N, M, Head, Comp, Call, Succ, Glob) :-
     arg(N, Head, Arg),
     ( N \= 1 -> write(', ') ; true ),
-    bind_argument(M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+    bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
     c_var_name(Arg, CArg),
     (Mode = in, Spec \= type(_)->true ; write('&')),
     format('~w', [CArg]),
@@ -820,7 +820,7 @@ match_known_type_(Type, M, type(Name), A) :-
     functor(Type, Name, _),
     arg(1, Type, A).
 
-bind_argument(M, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
+bind_argument(Head, M, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
     ( member(Comp, CompL),
       match_known_type(M, Comp, Spec, Arg0),
       Arg0 == Arg
@@ -840,7 +840,9 @@ bind_argument(M, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
     ; true
     ),
     ( memberchk(type, GlobL)
-    ->Mode = in
+    ->Mode = in,
+      functor(Head, Name, _),
+      ignore(Spec = type(Name))
     ; true
     ),
     ignore(Mode = inout),

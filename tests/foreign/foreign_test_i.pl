@@ -1,5 +1,5 @@
-:- module(foreign_test_i, [fce/2, aa/2, eq/2, idx/3, numl/2, get_arrays/4,
-			   show_arrays/3, io/1, sio/1, f/1, positive_t/1]).
+:- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
+			   get_arrays/4, show_arrays/3, sio/1, positive_t/1]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -17,12 +17,21 @@ user:file_search_path('.', Dir) :-
 
 :- prop positive_t(?int) is (type, foreign(is_positive_t)).
 
+:- prop negative_t/1 is (type, foreign(is_negative_t)).
+
 :- prop contain_extern_t/1 is type.
 contain_extern_t(contain_extern(Idx, Value)) :-
     int(Idx),
     positive_t(Value).
 
+:- prop contain_opaque_t/1 is type.
+contain_opaque_t(contain_opaque(Idx, Value)) :-
+    int(Idx),
+    negative_t(Value).
+
 :- pred fce(+contain_extern_t, -contain_extern_t) is foreign.
+
+:- pred fco(+contain_opaque_t, -contain_opaque_t) is foreign.
 
 :- prop flag_t/1 is type.
 

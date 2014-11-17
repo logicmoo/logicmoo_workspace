@@ -53,6 +53,13 @@ test(foreign_cmptype) :-
     assertion(B==contain_extern(1, 1)).
 
 test(foreign_typeex, [error(type_error(positive_t, 0 ))]) :-
-    fce(contain_extern(1,2),_).
+    fce(contain_extern(1,2), _).
+
+test(foreign_opaque) :-
+    fco(contain_opaque(1,-3),B),
+    assertion(B==contain_opaque(1, -1)).
+
+test(foreign_opaqueex, [error(type_error(negative_t, 1))]) :-
+    fco(contain_opaque(1,-1), _).
 
 :- end_tests(foreign).
