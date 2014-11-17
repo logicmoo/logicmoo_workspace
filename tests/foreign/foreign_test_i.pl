@@ -6,9 +6,14 @@
 :- use_module(library(swi/plprops)).
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
-:- gen_foreign_library('foreign_test_i.so').
-:- use_foreign_header('foreign_test.h').
-:- use_foreign_source('foreign_test.c').
+:- gen_foreign_library(.(foreign_test_i)).
+:- use_foreign_header(foreign_test).
+:- use_foreign_source(foreign_test).
+
+user:file_search_path('.', Dir) :-
+    context_module(M),
+    current_module(M, Path),
+    directory_file_path(Dir, _, Path).
 
 :- prop positive_t(?int) is (type, foreign(is_positive_t)).
 
