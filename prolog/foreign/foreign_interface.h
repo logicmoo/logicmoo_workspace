@@ -1,6 +1,7 @@
 #ifndef __FOREIGN_INTERFACE_H__
 #define __FOREIGN_INTERFACE_H__
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
