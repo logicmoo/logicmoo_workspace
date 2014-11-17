@@ -144,6 +144,14 @@
  /* 	    return PL_unify(__term, m);					\ */
  /*    } */
 
+#define PL_get_keyid_index(__module, __name, __keyid, __index) {	\
+	term_t __args = PL_new_term_refs(2);				\
+	static predicate_t __pred;					\
+	module_t __m = PL_new_module(PL_new_atom(__module));		\
+	__rtcheck((__pred = PL_predicate(__name, 2, __module))!=NULL);	\
+	PL_put_term(__args, __keyid);					\
+	__rtcheck(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args)); \
+	__rtcheck(PL_get_integer(__args+1, &__index));			\
+    }
+
 #endif // __FOREIGN_SWIPL_H__
-
-

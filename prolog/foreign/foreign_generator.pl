@@ -1,4 +1,5 @@
 :- module(foreign_generator, [generate_library/3,
+			      generate_aux_clauses/1,
 			      gen_foreign_library/2,
 			      read_foreign_properties/8]).
 
@@ -85,6 +86,9 @@ generate_library(M, AliasSO, File) :-
 		    format('Skipping build of ~w: is up to date', [FileSO]))
     ; do_generate_library(M, FileSO, File, FSourceL)
     ).
+
+generate_aux_clauses(Module) :-
+    forall_type_props(Module, generate_aux_clauses).
 
 do_generate_library(M, FileSO, File, FSourceL) :-
     file_name_extension(BaseFile, so, FileSO),
@@ -223,10 +227,10 @@ implement_type_getter(atom(Name), Spec, Term) :-
     c_get_argument(Spec, inout, deref, CName, PName),
     format(';~n', []),
     implement_type_end.
-implement_type_getter(dict_ini(_, Name), _, Arg) :-
+implement_type_getter(dict_ini(M, _, Name), _, Arg) :-
     term_pcname(Name, PName, CName),
-    implement_type_getter_dict_ini(PName, CName, Arg).
-implement_type_getter(dict_rec(_N, Name), Spec, Arg) :-
+    implement_type_getter_dict_ini(M, PName, CName, Arg).
+implement_type_getter(dict_rec(_, _, _, Name), Spec, Arg) :-
     term_pcname(Name, _, CName),
     format('        case ~w__~w:~n', [Name, Arg]),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
@@ -245,7 +249,7 @@ implement_type_getter(atom(Name), Spec, Term) :-
     format(';~n', []),
     implement_type_end.
 				    
-implement_type_getter_dict_ini(PName, CName, Arg) :-
+implement_type_getter_dict_ini(Module, PName, CName, Arg) :-
     format('static int~n', []),
     format('get_pair_~w(term_t __keyid, term_t __value, void **__root, ~w *);~n',
 	   [Arg, Arg]),
@@ -256,9 +260,10 @@ implement_type_getter_dict_ini(PName, CName, Arg) :-
     format('static int~n', []),
     format('get_pair_~w(term_t __keyid, term_t __value, void **__root, ~w *~w){~n',
 	   [Arg, Arg, CName]),
-    format('    int index;~n', []),
-    format('    __rtcheck(PL_get_integer(__keyid, &index));~n', []),
-    format('    switch (index) {~n', []).
+    format('    int __index;~n', []),
+    format('    PL_get_keyid_index("~w", "__aux_keyid_index_~w", __keyid, __index);~n',
+	   [Module, Arg]),
+    format('    switch (__index) {~n', []).
 
 implement_type_end :-
     format('    return TRUE;~n}~n~n', []).
@@ -300,14 +305,14 @@ implement_type_unifier(func_rec(N, Term), Spec, Arg) :-
     format(';~n', []).
 implement_type_unifier(func_end, _, _) :-
     implement_type_end.
-implement_type_unifier(dict_ini(_, _), _, _).
-implement_type_unifier(dict_rec(_, _), _, _).
+implement_type_unifier(dict_ini(_, _, _), _, _).
+implement_type_unifier(dict_rec(_, _, _, _), _, _).
 implement_type_unifier(dict_end, _, _).
 /*
-implement_type_unifier(dict_ini(_, Name), _, Arg) :-
+implement_type_unifier(dict_ini(M, _, Name), _, Arg) :-
     term_pcname(Name, PName, CName),
-    implement_type_unifier_dict_ini(PName, CName, Arg).
-implement_type_unifier(dict_rec(N, Name), Spec, Arg) :-
+    implement_type_unifier_dict_ini(M, PName, CName, Arg).
+implement_type_unifier(dict_rec(M, _, N, Name), Spec, Arg) :-
     term_pcname(Name, _, CName),
     format('        case ~w__~w:~n', [Name, Arg]),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
@@ -382,7 +387,7 @@ declare_struct(func_rec(_, _), Spec, Name) :-
     c_get_ctype_decl(Spec),
     (Spec = type(_) -> write('*') ; true),
     format(' ~w;~n', [Name]).
-declare_struct(dict_ini(Pairs, Spec), _, _) :-
+declare_struct(dict_ini(_, Pairs, Spec), _, _) :-
     format('enum key_~w {~n    ', [Spec]),
     pairs_keys(Pairs, Keys),
     atom_concat(Spec, '__', Prefix),
@@ -392,7 +397,7 @@ declare_struct(dict_ini(Pairs, Spec), _, _) :-
     format('~n};~n', [EKey]),
     format('struct ~w {~n', [Spec]).
 declare_struct(dict_end, _, _) :- format('};~n', []).
-declare_struct(dict_rec(_, _), Spec, Name) :-
+declare_struct(dict_rec(_, _, _, _), Spec, Name) :-
     write('    '),
     c_get_ctype_decl(Spec),
     (Spec = type(_) -> write('*') ; true),
@@ -407,11 +412,11 @@ declare_typedef(func_ini, Term, Name) :-
     format('typedef struct ~w ~w;~n', [Spec, Name]).
 declare_typedef(func_end, _, _).
 declare_typedef(func_rec(_, _), _, _).
-declare_typedef(dict_ini(_, Spec), _, Name) :-
+declare_typedef(dict_ini(_, _, Spec), _, Name) :-
     format('typedef struct ~w ~w;~n', [Spec, Name]),
     format('typedef enum key_~w key_~w;~n', [Spec, Name]).
 declare_typedef(dict_end, _, _).
-declare_typedef(dict_rec(_, _), _, _).
+declare_typedef(dict_rec(_, _, _, _), _, _).
 
 declare_typeconv(atom(Name), _, _) :-
     declare_typeconv(Name).
@@ -419,14 +424,25 @@ declare_typeconv(func_ini, _, Name) :-
     declare_typeconv(Name).
 declare_typeconv(func_end, _, _).
 declare_typeconv(func_rec(_, _), _, _).
-declare_typeconv(dict_ini(_, _), _, Name) :-
+declare_typeconv(dict_ini(_, _, _), _, Name) :-
     declare_typeconv(Name).
 declare_typeconv(dict_end, _, _).
-declare_typeconv(dict_rec(_, _), _, _).
+declare_typeconv(dict_rec(_, _, _, _), _, _).
 
 declare_typeconv(Name) :-
     format('int PL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
     format('int PL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
+
+% This will create an efficient index to convert keys to indexes in the C side,
+% avoiding string comparisons.
+generate_aux_clauses(dict_ini(M, _, _), _, Name) :- !,
+    atom_concat('__aux_keyid_index_', Name, F),
+    compile_aux_clauses((:- discontiguous M:F/2)).
+generate_aux_clauses(dict_rec(M, Name, N, _), _, Key) :- !,
+    atom_concat('__aux_keyid_index_', Name, F),
+    Pred =.. [F, Key, N],
+    compile_aux_clauses(M:Pred).
+generate_aux_clauses(_, _, _).
 
 :- multifile
     prolog:message//1,
@@ -458,11 +474,11 @@ type_components(M, Type, PropL, Call, Loc) :-
     ; select(dict_t(Term, Desc), PropL, PropL1)
     ->dict_create(Dict, Tag, Desc),
       dict_pairs(Dict, Tag, Pairs),
-      call(Call, dict_ini(Pairs, Tag), Term, Name),
+      call(Call, dict_ini(M, Pairs, Tag), Term, Name),
       forall(nth0(N, Pairs, Arg-Value),
 	     ( fetch_kv_prop_arg(Arg, Value, PropL1, Prop),
 	       match_known_type_(Prop, M, Spec, Arg),
-	       call(Call, dict_rec(N, Tag), Spec, Arg)
+	       call(Call, dict_rec(M, Name, N, Tag), Spec, Arg)
 	     )
 	    ),
       call(Call, dict_end, Term, Name)

@@ -34,6 +34,7 @@ term_expansion(end_of_file, (:- Decl)) :-
     !,
     gen_foreign_library(M, AliasSO),
     generate_library(M, AliasSO, File),
+    generate_aux_clauses(M),
     ( forall(read_foreign_properties(Head, M, _, _, _, _, _, _),
 	     ( predicate_property(M:Head, number_of_clauses(X)),
 	       X>0
