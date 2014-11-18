@@ -1,5 +1,6 @@
 :- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
-			   get_arrays/4, show_arrays/3, sio/1, positive_t/1]).
+			   get_arrays/4, show_arrays/3, sio/1, positive_t/1,
+			   fd1/4, fd2/4, fd3/4]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -14,6 +15,20 @@ user:file_search_path('.', Dir) :-
     context_module(M),
     current_module(M, Path),
     directory_file_path(Dir, _, Path).
+
+:- prop d_t/1 is type.
+
+d_t(Dict) :-
+    dict_t(Dict,
+	   d{value1:atm,
+	     value2:atm,
+	     listv:list(int)
+	    }).
+
+:- pred [fd1(+d_t,atm,atm,int),
+	 fd2(-d_t,+atm,+atm,+int)+memory_root,
+	 fd3(d_t,atm,atm,list(int))+memory_root
+	] is foreign.
 
 :- prop positive_t(?int) is (type, foreign(is_positive_t)).
 

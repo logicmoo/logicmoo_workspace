@@ -62,4 +62,20 @@ test(foreign_opaque) :-
 test(foreign_opaqueex, [error(type_error(negative_t, 1))]) :-
     fco(contain_opaque(1,-1), _).
 
+test(foreign_dict1) :-
+    fd1(d{listv:[2, 4], value1:a, value2:b},A,B,C),
+    assertion([A,B,C]==[a,b,4]).
+
+test(foreign_dict2) :-
+    fd2(A, a, b, 2),
+    assertion(A==d{listv:[2,4],value1:a,value2:b}).
+
+test(foreign_dict3) :-
+    fd3(A,a,b,[1,2,3]),
+    assertion(A==d{listv:[1, 2, 3], value1:a, value2:b}).
+
+test(foreign_dict4) :-
+    fd3(A,_,_,_),
+    assertion(A==d{}).
+
 :- end_tests(foreign).
