@@ -57,7 +57,7 @@
 	term_t __term##_ = PL_new_term_ref();				\
 	term_t __tail = PL_copy_term_ref(__term);			\
 	size_t __length = 0;						\
-	while( PL_get_list(__tail, __term##_, __tail) ) __length++;	\
+	while(PL_get_list(__tail, __term##_, __tail)) __length++;	\
 	__tail = PL_copy_term_ref(__term);				\
 	FI_new_array(__length, *__value);				\
 	typeof (*__value) _c_##__term##_ = *__value;			\
@@ -66,6 +66,15 @@
 	    _c_##__term##_++;						\
 	};								\
 	__rtcheck(PL_get_nil(__tail));					\
+    }
+
+#define PL_get_inout_array(__PL_get_elem, __term, __value) {	\
+	if(PL_is_variable(__term)) {				\
+	    *__value = NULL;					\
+	}							\
+	else {							\
+	    PL_get_array(__PL_get_elem, __term, __value);	\
+	}							\
     }
 
 #define PL_unify_array(__PL_unify_elem, __term, __value) {		\
@@ -79,6 +88,12 @@
 	    __PL_unify_elem;						\
 	}								\
 	__rtcheck(PL_unify_nil(l));					\
+    }
+
+#define PL_unify_inout_array(__PL_unify_elem, __term, __value) {	\
+	if (__value!=NULL) {						\
+	    PL_unify_array(__PL_unify_elem, __term, __value);		\
+	}								\
     }
 
 #define PL_get_inout(__getter, __term, __value) {	\

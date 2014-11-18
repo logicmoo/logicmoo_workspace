@@ -632,7 +632,7 @@ declare_intf_impl(Module, BindHead) :-
     format('    return ~w;~n', [Return]),
     format('} /* ~w */~n~n', [PI]).
 
-c_set_argument(list(Spec), _,    CArg, Arg) :- c_set_argument_list(Spec, CArg, Arg).
+c_set_argument(list(Spec), Mode, CArg, Arg) :- c_set_argument_list(Mode, Spec, CArg, Arg).
 c_set_argument(type(Type), Mode, CArg, Arg) :- c_set_argument_type(Mode, Type, CArg, Arg).
 c_set_argument(chrs(_),    Mode, CArg, Arg) :- c_set_argument_chrs(Mode, CArg, Arg).
 c_set_argument(pointer(Type), Mode, CArg, Arg) :- c_set_argument_one(Mode, Type, CArg, Arg).
@@ -654,15 +654,16 @@ c_set_argument_chrs(out,   CArg, Arg) :-
 c_set_argument_chrs(inout, CArg, Arg) :-
     format('PL_unify_inout_chrs(~w, ~w)', [Arg, CArg]).
 
-c_set_argument_list(Spec, CArg, Arg) :-
-    format('PL_unify_array(', []),
+c_set_argument_list(Mode, Spec, CArg, Arg) :-
+    list_mode_sym(Mode, MSym),
+    format('PL_unify~a_array(', [MSym]),
     format(atom(Arg_), '~w_', [Arg]),
     c_var_name(Arg_, CArg_),
     c_set_argument(Spec, out, CArg_, Arg_),
     format(', ~w, ~w)', [Arg, CArg]).
 
-c_get_argument(list(Spec), _, Deref, CArg, Arg) :-
-    c_get_argument_list(Deref, Spec, CArg, Arg).
+c_get_argument(list(Spec), Mode, Deref, CArg, Arg) :-
+    c_get_argument_list(Deref, Mode, Spec, CArg, Arg).
 c_get_argument(chrs(_), Mode, Deref, CArg, Arg) :-
     c_get_argument_chrs(Deref, Mode, CArg, Arg).
 c_get_argument(term, _, _, CArg, Arg) :-
@@ -694,28 +695,27 @@ c_get_argument_one_deref(in, Type, CArg, Arg) :-
 c_get_argument_one_deref(inout, Type, CArg, Arg) :-
     format('PL_get_inout(~w, ~w, ~w)', [Type, Arg, CArg]).
 
-c_get_argument_type(deref, Mode, Type, CArg, Arg) :-
-    c_get_argument_type_deref(Mode, Type, CArg, Arg).
-c_get_argument_type(noder,  _, Type, CArg, Arg) :-
-    format('__rtc_PL_get_t(~w, ~w, ~w)', [Type, Arg, CArg]).
-
-c_get_argument_type_deref(in, Type, CArg, Arg) :-
-    format('__rtc_PL_get_t(~w, ~w, &~w)', [Type, Arg, CArg]).
-c_get_argument_type_deref(inout, Type, CArg, Arg) :-
+c_get_argument_type(deref, inout, Type, CArg, Arg) :- !,
     format('PL_get_inout_t(~w, ~w, ~w)', [Type, Arg, CArg]).
+c_get_argument_type(Deref, _, Type, CArg, Arg) :-
+    deref_sym(Deref, DSym),
+    format('__rtc_PL_get_t(~w, ~w, ~w~w)', [Type, Arg, DSym, CArg]).
 
-c_get_argument_list(deref, Spec, CArg, Arg) :-
-    format('PL_get_array(',[]),
-    format(atom(Arg_),   '~w_', [Arg]),
-    c_var_name(Arg_, CArg_),
-    c_get_argument(Spec, in, noder, CArg_, Arg_),
-    format(', ~w, &~w)', [Arg, CArg]).
-c_get_argument_list(noder, Spec, CArg, Arg) :-
-    format('PL_get_array(',[]),
+c_get_argument_list(Deref, Mode, Spec, CArg, Arg) :-
+    list_mode_sym(Mode, MSym),
+    format('PL_get~a_array(',[MSym]),
     format(atom(Arg_), '~w_',   [Arg]),
     c_var_name(Arg_, CArg_),
+    deref_sym(Deref, DSym),
     c_get_argument(Spec, in, noder, CArg_, Arg_),
-    format(', ~w, ~w)', [Arg, CArg]).
+    format(', ~w, ~w~w)', [Arg, DSym, CArg]).
+
+list_mode_sym(in,    '').
+list_mode_sym(out,   '').
+list_mode_sym(inout, '_inout').
+
+deref_sym(deref, '&').
+deref_sym(noder, '').
 
 bind_arguments(M, Bind-Head, Return) :-
     read_foreign_properties(Head, M, Comp, Call, Succ, Glob, _, Bind),
