@@ -4,6 +4,11 @@
 #include <foreign_interface.h>
 #include <SWI-Prolog.h>
 
+
+#ifndef PL_KERNEL
+#define ATOM_dict	(_PL_atoms()[2]) /* <dict> */
+#endif /*PL_KERNEL*/
+
 #if (defined(__RTCHECK__))
 #define __rtcheck_type(__call, __term, __type) {		\
 	int __result = (__call);				\
@@ -121,28 +126,16 @@
 #define PL_unify_chrs(__term, __value) PL_unify_atom_chars(__term, __value)
 
 #define PL_get_dict_t(__unifier, __term, __value) {			\
-	if ( PL_is_variable(__term) ) {					\
-	    __value = NULL;						\
-	}								\
-	else {								\
-	    int index, arity, pairs;					\
-	    __rtcheck(PL_get_name_arity(__term, NULL, &arity));		\
-            for(index=1; index < arity;) {				\
-		term_t __k = PL_new_term_ref();				\
-		term_t __v = PL_new_term_ref();				\
-		__rtcheck(PL_get_arg(++index, __term, __k));		\
-		__rtcheck(PL_get_arg(++index, __term, __v));		\
-		__rtcpass(get_pair_##__unifier(__k, __v, __root, __value)); \
-	    }								\
+	int index, arity, pairs;					\
+	__rtcheck(PL_get_name_arity(__term, NULL, &arity));		\
+	for(index=1; index < arity;) {					\
+	    term_t __k = PL_new_term_ref();				\
+	    term_t __v = PL_new_term_ref();				\
+	    __rtcheck(PL_get_arg(++index, __term, __k));		\
+	    __rtcheck(PL_get_arg(++index, __term, __v));		\
+	    __rtcpass(get_pair_##__unifier(__root, __k, __v, __value)); \
 	}								\
     }
-
- /* else {								\ */
- /* 	term_t m = PL_new_term_ref();					\ */
- /* 	term_t tag  = PL_new_term_ref();				\ */
- /* 	if ( PL_get_dict_ex(__term, tag, m, DICT_GET_PAIRS) )		\ */
- /* 	    return PL_unify(__term, m);					\ */
- /*    } */
 
 #define PL_get_keyid_index(__module, __name, __keyid, __index) {	\
 	term_t __args = PL_new_term_refs(2);				\
@@ -152,6 +145,32 @@
 	PL_put_term(__args, __keyid);					\
 	__rtcheck(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args)); \
 	__rtcheck(PL_get_integer(__args+1, &__index));			\
+    }
+
+#define PL_unify_dict_t(__module, __name, __term, __tag) {		\
+	int length=index;						\
+	__rtcheck(PL_unify_functor(__term, PL_new_functor(ATOM_dict, 2*length+1))); \
+	term_t __tag_t = PL_new_term_ref();				\
+	__rtcheck(PL_unify_atom(__tag_t, PL_new_atom(__tag)));		\
+	__rtcheck(PL_unify_arg(1, __term, __tag_t));			\
+	for(index=0; index < length;) {					\
+	    term_t __k;							\
+	    term_t __v=dict_args+index;					\
+	    PL_get_index_keyid(__module, __name, indexes[index], __k);	\
+	    index++;							\
+	    __rtcheck(PL_unify_arg(2*index,   __term, __k));		\
+	    __rtcheck(PL_unify_arg(2*index+1, __term, __v));		\
+	}								\
+    }
+
+#define PL_get_index_keyid(__module, __name, __index, __keyid) {	\
+	term_t __args = PL_new_term_refs(2);				\
+	static predicate_t __pred;					\
+	module_t __m = PL_new_module(PL_new_atom(__module));		\
+	__rtcheck((__pred = PL_predicate(__name, 2, __module))!=NULL);	\
+	__rtcheck(PL_unify_integer(__args+1, __index));			\
+	__rtcheck(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args)); \
+	__keyid = __args;						\
     }
 
 #endif // __FOREIGN_SWIPL_H__
