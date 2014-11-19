@@ -10,7 +10,7 @@ void fd1(d_t* const A, char **B, char **C, int **D) {
     *D=A->listv+1;
 }
 
-void  fd2(void** __root, d_t* A, char* const B, char* const C, int const D) {
+void fd2(void** __root, d_t* A, char* const B, char* const C, int const D) {
     A->value1 = B;
     A->value2 = C;
     FI_new_array(2, A->listv);
@@ -18,7 +18,7 @@ void  fd2(void** __root, d_t* A, char* const B, char* const C, int const D) {
     A->listv[1] = D*D;
 }
 
-void  fd3(void** __root, d_t** A, char** B, char** C, int** D) {
+void fd3(void** __root, d_t** A, char** B, char** C, int** D) {
     FI_new_value(*A);
     (*A)->value1 = *B;
     (*A)->value2 = *C;
