@@ -100,12 +100,12 @@ do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
     atom_concat(M, '$impl', IModule),
     absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
 					     relative_to(File)]),
-    tell(FileSOPl),
-    add_autogen_note(M),
-    portray_clause((:- module(IModule, IntfPIL))),
-    nl,
-    portray_clause((:- use_foreign_library(AliasSO))),
-    told.
+    with_output_to_file(FileSOPl,
+			( add_autogen_note(M),
+			  portray_clause((:- module(IModule, IntfPIL))),
+			  nl,
+			  portray_clause((:- use_foreign_library(AliasSO)))
+			)).
 
 do_generate_library(M, FileSO, File, FSourceL) :-
     file_name_extension(BaseFile, _, FileSO),
@@ -213,8 +213,13 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
     generate_foreign_intf(Module).
 
 forall_type_props(Module, Call) :-
-    forall(current_type_props(Module, Type, Pos),
-	   ( bind_type_names(Module, Type, PropL)
+    forall(current_type_props(Module, Type, TPropL, TDict, Pos),
+	   ( ( TPropL \= []
+	     ->PropL = TPropL,
+	       Dict = TDict
+	     ; bind_type_names(Module, Type, PropL, Dict)
+	     ),
+	     apply_dict(Type-PropL, Dict)
 	   ->type_components(Module, Type, PropL, Call, Pos)
 	   ; true
 	   )).
@@ -382,13 +387,13 @@ fg_numbervars([V|Vs], N, Dict) :-
       fg_numbervars(Vs, N1, Dict)
     ).
 
-current_type_props(M, Type, Pos) :-
-    assertion_db(Type, M, _, prop, _, _, _, Glob, _, _, Pos),
+current_type_props(M, Type, PropL, Dict, Pos) :-
+    assertion_db(Type, M, check, prop, PropL, _, _, Glob, _, Dict, Pos),
     once(( member(TType, [type, regtype]),
 	   memberchk(TType, Glob)
 	 )).
 
-bind_type_names(M, Type, PropL) :-
+bind_type_names(M, Type, PropL, Dict) :-
     once(catch(clause(M:Type, Body, Ref),_,fail)),
     ( clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line)),
@@ -396,12 +401,7 @@ bind_type_names(M, Type, PropL) :-
     ->true
     ; Dict = []
     ),
-    apply_dict((Type :- Body), Dict),
     sequence_list(Body, PropL, []).
-bind_type_names(M, Type, PropL) :-
-    assertion_db(Type, M, check, prop, PropL, _, _, _, _, Dict, _),
-    PropL \= [], !,
-    apply_dict((Type, PropL), Dict).
 
 declare_struct(atom(_),  _,    _).
 declare_struct(func_ini, Term, _) :-
@@ -432,8 +432,7 @@ declare_typedef(func_ini, Term, Name) :-
 declare_typedef(func_end, _, _).
 declare_typedef(func_rec(_, _), _, _).
 declare_typedef(dict_ini(_, _, Spec), _, Name) :-
-    format('typedef struct ~w ~w;~n', [Spec, Name]),
-    format('typedef enum key_~w key_~w;~n', [Spec, Name]).
+    format('typedef struct ~w ~w;~n', [Spec, Name]).
 declare_typedef(dict_end(_, _), _, _).
 declare_typedef(dict_rec(_, _, _, _), _, _).
 
@@ -885,13 +884,14 @@ match_known_type_(list(A, Type),     M, list(Spec),      A) :-
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
-match_known_type_(Type, M, type(Name), A) :-
-    current_type_props(M, Type, _),
-    predicate_property(M:Type, number_of_clauses(X)), X>0,
+match_known_type_(Type, M, Name-Name, A) :-
+    current_type_props(M, Type, PropL, _, _),
+    PropL \= [],
     functor(Type, Name, _),
     arg(1, Type, A).
-match_known_type_(Type, M, Name-Name, A) :-
-    current_type_props(M, Type, _),
+match_known_type_(Type, M, type(Name), A) :-
+    current_type_props(M, Type, PropL, _, _),
+    PropL = [],
     functor(Type, Name, _),
     arg(1, Type, A).
 
