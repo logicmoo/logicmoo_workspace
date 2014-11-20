@@ -1,5 +1,6 @@
 :- module(foreign_interface, []).
 
+:- use_module(library(change_alias)).
 :- use_module(library(compound_expand)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(foreign/foreign_props)).
@@ -27,19 +28,16 @@ term_expansion((:- link_foreign_library(Lib)),
 	       foreign_generator:link_foreign_library(M, Lib)) :-
     '$set_source_module'(M, M).
 
-term_expansion(end_of_file, (:- Decl)) :-
+term_expansion(end_of_file, Decl) :-
     '$set_source_module'(M, M),
     current_module(M, File),
-    prolog_load_context(file, File),
-    !,
+    prolog_load_context(file, File), !,
     gen_foreign_library(M, AliasSO),
-    generate_library(M, AliasSO, File),
-    generate_aux_clauses(M),
-    ( forall(read_foreign_properties(Head, M, _, _, _, _, _, _),
-	     ( predicate_property(M:Head, number_of_clauses(X)),
-	       X>0
-	     ))
-    ->atom_concat(M, '$impl', IModule),
-      Decl = IModule:use_foreign_library(AliasSO)
-    ; Decl = use_foreign_library(AliasSO)
-    ).
+    change_alias(add_suffix('_so'), AliasSO, AliasSOPl),
+    generate_library(M, AliasSO, AliasSOPl, File),
+    generate_aux_clauses(M, Clauses),
+    Decl = [(:- use_module(AliasSOPl))|Clauses].
+
+add_suffix(Suffix, Name0, Name) :-
+    file_name_extension(Name1, _, Name0),
+    atom_concat(Name1, Suffix, Name).

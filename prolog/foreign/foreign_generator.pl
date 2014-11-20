@@ -1,7 +1,7 @@
-:- module(foreign_generator, [generate_library/3,
-			      generate_aux_clauses/1,
+:- module(foreign_generator, [generate_library/4,
+			      generate_aux_clauses/2,
 			      gen_foreign_library/2,
-			      read_foreign_properties/8]).
+			      current_foreign_prop/11]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(assertions/assrt_lib)).
@@ -56,7 +56,7 @@ is_newer(File1, File2) :-
     time_file(File2, Time2),
     Time1 > Time2.
 
-generate_library(M, AliasSO, File) :-
+generate_library(M, AliasSO, AliasSOPl, File) :-
     absolute_file_name(AliasSO, FileSO, [file_type(executable),
 					 relative_to(File)]),
     findall(FSource, ( use_foreign_source(M, FAlias),
@@ -72,7 +72,7 @@ generate_library(M, AliasSO, File) :-
 	       ),
 	       absolute_file_name(HAlias, Dep,
 				  [extensions(['.h','']),
-				   access(exist),
+				   access(read),
 				   relative_to(File)])
 	     ; member(Alias, [library(foreign/foreign_generator),
 			      library(foreign/foreign_props),
@@ -85,14 +85,30 @@ generate_library(M, AliasSO, File) :-
 	     is_newer(FileSO, Dep))
     ->print_message(informational,
 		    format('Skipping build of ~w: is up to date', [FileSO]))
-    ; do_generate_library(M, FileSO, File, FSourceL)
+    ; do_generate_library(M, FileSO, File, FSourceL),
+      do_generate_wrapper(M, AliasSO, AliasSOPl, File)
     ).
 
-generate_aux_clauses(Module) :-
-    forall_type_props(Module, generate_aux_clauses).
+do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
+    findall(F/A, ( current_foreign_prop(Head, M, _, _, _, _, _, _, _, _, _),
+		   \+ ( predicate_property(M:Head, number_of_clauses(X)),
+			X>0
+		      ),
+		   functor(Head, F, A)
+		 ), IntfPIU),
+    sort(IntfPIU, IntfPIL),
+    atom_concat(M, '$impl', IModule),
+    absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
+					     relative_to(File)]),
+    tell(FileSOPl),
+    add_autogen_note(M),
+    portray_clause((:- module(IModule, IntfPIL))),
+    nl,
+    portray_clause((:- use_foreign_library(AliasSO))),
+    told.
 
 do_generate_library(M, FileSO, File, FSourceL) :-
-    file_name_extension(BaseFile, so, FileSO),
+    file_name_extension(BaseFile, _, FileSO),
     generate_foreign_interface(M, File, BaseFile),
     absolute_file_name(library(foreign/foreign_interface),
 		       IntfPl,
@@ -164,8 +180,10 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
     format('#include <foreign_swipl.h>~n', []),
     format('#include "~w"~n~n', [FileImpl_h]),
     forall_type_props(Module, declare_typeconv),
-    forall(current_foreign_prop(Head, Module, _, _, _, _, _, _, _, BindName, _),
-	   ( declare_intf_head(BindName, Head),
+    forall(current_foreign_prop(Head, Module, _, _, _, _, Dict, _, _, BindName, _),
+	   ( apply_dict(Head, Dict),
+	     format('extern ', []),
+	     declare_intf_head(BindName, Head),
 	     format(';~n', []))),
     format('~n#endif /* __~w_INTF_H */~n', [Module]).
 
@@ -331,7 +349,7 @@ implement_type_unifier(dict_rec(_, _, N, Name), Spec, Arg) :-
     format('    }~n', []).
 implement_type_unifier(dict_end(M, Name), _, Arg) :-
     func_pcname(Name, PName, _),
-    format('    PL_unify_dict_t("~w", "__aux_keyid_index_~w", ~w, "~w");~n',
+    format('    FL_unify_dict_t("~w", "__aux_keyid_index_~w", ~w, "~w");~n',
 	   [M, Arg, PName, Name]),
     implement_type_end.
 
@@ -342,7 +360,7 @@ spec_pointer(list(_)).
 % spec_pointer(type(_)).
 
 implement_type_unifier_ini(PName, CName, Arg) :-
-    format('int PL_unify_~w(term_t ~w, ~w * const ~w) {~n',
+    format('int FL_unify_~w(term_t ~w, ~w * const ~w) {~n',
 	   [Arg, PName, Arg, CName]).
     
 apply_name(Name=Value) :-
@@ -351,7 +369,18 @@ apply_name(Name=Value) :-
 
 apply_dict(Head, Dict) :-
     maplist(apply_name, Dict),
-    numbervars(Head, 0, _, [singletons(false)]).
+    term_variables(Head, Vars),
+    fg_numbervars(Vars, 1, Dict).
+
+fg_numbervars([], _, _).
+fg_numbervars([V|Vs], N, Dict) :-
+    format(atom(T), 'var_~d', [N]),
+    succ(N, N1),
+    ( memberchk(_=T, Dict)
+    ->fg_numbervars([V|Vs], N1, Dict)
+    ; V=T,
+      fg_numbervars(Vs, N1, Dict)
+    ).
 
 current_type_props(M, Type, Pos) :-
     assertion_db(Type, M, _, prop, _, _, _, Glob, _, _, Pos),
@@ -369,6 +398,10 @@ bind_type_names(M, Type, PropL) :-
     ),
     apply_dict((Type :- Body), Dict),
     sequence_list(Body, PropL, []).
+bind_type_names(M, Type, PropL) :-
+    assertion_db(Type, M, check, prop, PropL, _, _, _, _, Dict, _),
+    PropL \= [], !,
+    apply_dict((Type, PropL), Dict).
 
 declare_struct(atom(_),  _,    _).
 declare_struct(func_ini, Term, _) :-
@@ -419,15 +452,20 @@ declare_typeconv(Name) :-
     format('int FL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
     format('int FL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
 
-% This will create an efficient index to convert keys to indexes in the C side,
+:- volatile aux_keyid_index_db/1.
+:- dynamic  aux_keyid_index_db/1.
+
+generate_aux_clauses(Module, Clauses) :-
+    retractall(aux_keyid_index_db(_)),
+    forall_type_props(Module, generate_aux_clauses),
+    findall(Clause, retract(aux_keyid_index_db(Clause)), Clauses).
+
+% This will create an efficient method to convert keys to indexes in the C side,
 % avoiding string comparisons.
-generate_aux_clauses(dict_ini(M, _, _), _, Name) :- !,
-    atom_concat('__aux_keyid_index_', Name, F),
-    compile_aux_clauses((:- discontiguous M:F/2)).
 generate_aux_clauses(dict_rec(M, Name, N, _), _, Key) :- !,
     atom_concat('__aux_keyid_index_', Name, F),
     Pred =.. [F, Key, N],
-    compile_aux_clauses(M:Pred).
+    assertz(aux_keyid_index_db(M:Pred)).
 generate_aux_clauses(_, _, _).
 
 :- multifile
@@ -650,14 +688,14 @@ c_set_argument(Type-_,     Mode, CArg, Arg) :- c_set_argument_one(Mode, Type, CA
 c_set_argument(term,       _,    CArg, Arg) :- format('~w=~w', [Arg, CArg]).
 
 c_set_argument_one(out,   Type, CArg, Arg) :-
-    format('__rtc_PL_unify(~w, ~w, ~w)', [Type, Arg, CArg]).
+    format('__rtc_FL_unify(~w, ~w, ~w)', [Type, Arg, CArg]).
 c_set_argument_one(inout, Type, CArg, Arg) :-
-    format('PL_unify_inout(~w, ~w, ~w)', [Type, Arg, CArg]).
+    format('FL_unify_inout(~w, ~w, ~w)', [Type, Arg, CArg]).
 
 c_set_argument_type(out,   Type, CArg, Arg) :-
-    format('__rtc_PL_unify(~w, ~w, &~w)', [Type, Arg, CArg]).
+    format('__rtc_FL_unify(~w, ~w, &~w)', [Type, Arg, CArg]).
 c_set_argument_type(inout, Type, CArg, Arg) :-
-    format('PL_unify_inout(~w, ~w, &~w)', [Type, Arg, CArg]).
+    format('FL_unify_inout(~w, ~w, &~w)', [Type, Arg, CArg]).
 
 % spec_deref(_-_, '') :- !.
 % spec_deref(_,  '&').
@@ -667,13 +705,13 @@ list_mode_sym(out,   '').
 list_mode_sym(inout, '_inout').
 
 c_set_argument_chrs(out,   CArg, Arg) :-
-    format('__rtc_PL_unify(chrs, ~w, ~w)', [Arg, CArg]).
+    format('__rtc_FL_unify(chrs, ~w, ~w)', [Arg, CArg]).
 c_set_argument_chrs(inout, CArg, Arg) :-
-    format('PL_unify_inout_chrs(~w, ~w)', [Arg, CArg]).
+    format('FL_unify_inout_chrs(~w, ~w)', [Arg, CArg]).
 
 c_set_argument_list(Mode, Spec, CArg, Arg) :-
     list_mode_sym(Mode, MSym),
-    format('PL_unify~a_array(', [MSym]),
+    format('FL_unify~a_array(', [MSym]),
     format(atom(Arg_), '~w_', [Arg]),
     c_var_name(Arg_, CArg_),
     c_set_argument(Spec, out, CArg_, Arg_),
@@ -835,18 +873,24 @@ match_known_type_(pointer(A, Type), M, pointer(Spec), A) :-
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
 % match_known_type_(string(A),        _, string_chars-'char*', A).
-match_known_type_(pointer(A),       _, pointer-'void*', A).
-match_known_type_(int(A),           _, integer-int,     A).
-match_known_type_(integer(A),       _, integer-int,     A).
-match_known_type_(num(A),           _, float-double,  A).
-match_known_type_(number(A),        _, float-double,  A).
-match_known_type_(term(A),          _, term,            A).
-match_known_type_(list(A, Type),    M, list(Spec),      A) :-
+match_known_type_(pointer(A),        _, pointer-'void*', A).
+match_known_type_(int(A),            _, integer-int,     A).
+match_known_type_(character_code(A), _, char-char,       A).
+match_known_type_(integer(A),        _, integer-int,     A).
+match_known_type_(num(A),            _, float-double,  A).
+match_known_type_(number(A),         _, float-double,  A).
+match_known_type_(term(A),           _, term,            A).
+match_known_type_(list(A, Type),     M, list(Spec),      A) :-
     nonvar(Type),
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
 match_known_type_(Type, M, type(Name), A) :-
+    current_type_props(M, Type, _),
+    predicate_property(M:Type, number_of_clauses(X)), X>0,
+    functor(Type, Name, _),
+    arg(1, Type, A).
+match_known_type_(Type, M, Name-Name, A) :-
     current_type_props(M, Type, _),
     functor(Type, Name, _),
     arg(1, Type, A).
