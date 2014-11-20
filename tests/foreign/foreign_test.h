@@ -10,7 +10,7 @@ typedef int negative_t;
       is_positive_t(*__value);				\
   }
 
-#define PL_unify_positive_t(__term, __value) {		\
+#define FL_unify_positive_t(__term, __value) {		\
     PL_unify_integer(__term, *__value) &&		\
       is_positive_t(*__value);				\
   }
@@ -20,7 +20,7 @@ typedef int negative_t;
       is_negative_t(__value);				\
   }
 
-#define PL_unify_negative_t(__term, __value) {		\
+#define FL_unify_negative_t(__term, __value) {		\
     PL_unify_integer(__term, *__value) &&		\
       is_negative_t(__value);				\
   }

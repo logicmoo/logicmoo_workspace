@@ -126,9 +126,8 @@ int is_negative_t(negative_t* const A) {
 
 void  fce(contain_extern_t* const A, contain_extern_t* B) {
   B->idx=A->idx;
-  B->value=malloc(sizeof(*(B->value)));
-  *(B->value)=*(A->value) - 2;
-  printf("ce[%d, %d]\n", A->idx, *(A->value));
+  B->value=A->value - 2;
+  printf("ce[%d, %d]\n", A->idx, A->value);
 }
 
 void  fco(contain_opaque_t* const A, contain_opaque_t* B) {

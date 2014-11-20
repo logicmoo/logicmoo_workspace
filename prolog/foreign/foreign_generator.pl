@@ -143,7 +143,7 @@ do_generate_library(M, FileSO, File, FSourceL) :-
 		  ),
 	    IDirL),
     atomic_list_concat(IDirL, ' ', IDirs),
-    format(atom(CommandT), "swipl-ld -shared ~w~w ~w ~w_intf.c ~w -o ~w",
+    format(atom(CommandT), "swipl-ld -shared ~w ~w ~w ~w_intf.c ~w -o ~w",
 	   [COpts, IDirs, FSources, BaseFile, CLibs, FileSO]),
     CommandsT = [CommandT],
     forall(member(Command, Commands),
@@ -179,7 +179,7 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
     format('#ifndef __~w_INTF_H~n#define __~w_INTF_H~n~n', [Module, Module]),
     format('#include <foreign_swipl.h>~n', []),
     format('#include "~w"~n~n', [FileImpl_h]),
-    forall_type_props(Module, declare_typeconv),
+    forall_tp(Module, type_props_nf, declare_typeconv),
     forall(current_foreign_prop(Head, Module, _, _, _, _, Dict, _, _, BindName, _),
 	   ( apply_dict(Head, Dict),
 	     format('extern ', []),
@@ -190,8 +190,8 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
 generate_foreign_impl_h(Module) :-
     add_autogen_note(Module),
     format('#ifndef __~w_IMPL_H~n#define __~w_IMPL_H~n~n', [Module, Module]),
-    forall_type_props(Module, declare_typedef),
-    forall_type_props(Module, declare_struct),
+    forall_tp(Module, type_props, declare_typedef),
+    forall_tp(Module, type_props, declare_struct),
     declare_foreign_bind(Module),
     format('~n#endif /* __~w_IMPL_H */~n', [Module]).
 
@@ -207,13 +207,15 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
 	     format('#include "~w"~n', [File_h])
 	   )),
     format('#include "~w"~n~n', [FileIntf_h]),
-    forall_type_props(Module, implement_type_getter),
-    forall_type_props(Module, implement_type_unifier),
+    forall_tp(Module, type_props_nf, implement_type_getter),
+    forall_tp(Module, type_props_nf, implement_type_unifier),
     generate_foreign_register(Module, Base),
     generate_foreign_intf(Module).
 
-forall_type_props(Module, Call) :-
-    forall(current_type_props(Module, Type, TPropL, TDict, Pos),
+:- meta_predicate forall_tp(+,5,3).
+
+forall_tp(Module, TypeProps, Call) :-
+    forall(call(TypeProps, Module, Type, TPropL, TDict, Pos),
 	   ( ( TPropL \= []
 	     ->PropL = TPropL,
 	       Dict = TDict
@@ -224,6 +226,19 @@ forall_type_props(Module, Call) :-
 	   ; true
 	   )).
 
+type_props(M, Type, PropL, Dict, Pos) :-
+    type_props(M, Type, PropL, _, Dict, Pos).
+
+type_props(M, Type, PropL, GlobL, Dict, Pos) :-
+    assertion_db(Type, M, check, prop, PropL, _, _, GlobL, _, Dict, Pos),
+    once(( member(TType, [type, regtype]),
+	   memberchk(TType, GlobL)
+	 )).
+
+type_props_nf(Module, Type, PropL, Dict, Pos) :-
+    type_props(Module, Type, PropL, GlobL, Dict, Pos),
+    \+ memberchk(foreign(_), GlobL).
+    
 implement_type_getter_ini(PName, CName, Arg) :-
     format('int FL_get_~w(void** __root, term_t ~w, ~w *~w) {~n',
 	   [Arg, PName, Arg, CName]).
@@ -311,7 +326,7 @@ implement_type_unifier(atom(Name), Spec, Term) :-
     implement_type_end.
 implement_type_unifier(func_ini, Term, Arg) :-
     term_pcname(Term, PName, CName),
-    functor(Term, Func, Arity),    
+    functor(Term, Func, Arity),
     implement_type_unifier_ini(PName, CName, Arg),
     format('    __rtcheck(PL_unify_functor(~w, PL_new_functor(PL_new_atom("~w"), ~d)));~n',
 	   [PName, Func, Arity]).
@@ -359,13 +374,13 @@ implement_type_unifier(dict_end(M, Name), _, Arg) :-
     implement_type_end.
 
 spec_pointer(chrs(_)).
-spec_pointer(pointer(_)).
+spec_pointer(ptr(_)).
 spec_pointer(pointer-_).
 spec_pointer(list(_)).
 % spec_pointer(type(_)).
 
 implement_type_unifier_ini(PName, CName, Arg) :-
-    format('int FL_unify_~w(term_t ~w, ~w * const ~w) {~n',
+    format('int FL_unify_~w(term_t ~w, ~w* const ~w) {~n',
 	   [Arg, PName, Arg, CName]).
     
 apply_name(Name=Value) :-
@@ -386,12 +401,6 @@ fg_numbervars([V|Vs], N, Dict) :-
     ; V=T,
       fg_numbervars(Vs, N1, Dict)
     ).
-
-current_type_props(M, Type, PropL, Dict, Pos) :-
-    assertion_db(Type, M, check, prop, PropL, _, _, Glob, _, Dict, Pos),
-    once(( member(TType, [type, regtype]),
-	   memberchk(TType, Glob)
-	 )).
 
 bind_type_names(M, Type, PropL, Dict) :-
     once(catch(clause(M:Type, Body, Ref),_,fail)),
@@ -448,7 +457,7 @@ declare_typeconv(dict_end(_, _), _, _).
 declare_typeconv(dict_rec(_, _, _, _), _, _).
 
 declare_typeconv(Name) :-
-    format('int FL_get_~w(void**__root, term_t, ~w*);~n', [Name, Name]),
+    format('int FL_get_~w(void** __root, term_t, ~w*);~n', [Name, Name]),
     format('int FL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
 
 :- volatile aux_keyid_index_db/1.
@@ -456,7 +465,7 @@ declare_typeconv(Name) :-
 
 generate_aux_clauses(Module, Clauses) :-
     retractall(aux_keyid_index_db(_)),
-    forall_type_props(Module, generate_aux_clauses),
+    forall_tp(Module, type_props, generate_aux_clauses),
     findall(Clause, retract(aux_keyid_index_db(Clause)), Clauses).
 
 % This will create an efficient method to convert keys to indexes in the C side,
@@ -614,10 +623,12 @@ c_get_ref_level(inout, _) :- format('*', []).
 c_get_ctype_decl(list(Spec)) :-
     c_get_ctype_decl(Spec),
     format('*', []).
-c_get_ctype_decl(pointer(Spec)) :-
+c_get_ctype_decl(ptr(Spec)) :-
     c_get_ctype_decl(Spec),
     format('*', []).
 c_get_ctype_decl(type(Name)) :-
+    format('~w', Name).
+c_get_ctype_decl(equiv(Name)) :-
     format('~w', Name).
 c_get_ctype_decl(chrs(Name)) :-
     format('~w', Name).
@@ -679,12 +690,13 @@ declare_intf_impl(Module, BindHead) :-
     format('    return ~w;~n', [Return]),
     format('} /* ~w */~n~n', [PI]).
 
-c_set_argument(list(Spec), Mode, CArg, Arg) :- c_set_argument_list(Mode, Spec, CArg, Arg).
-c_set_argument(type(Type), Mode, CArg, Arg) :- c_set_argument_type(Mode, Type, CArg, Arg).
-c_set_argument(chrs(_),    Mode, CArg, Arg) :- c_set_argument_chrs(Mode, CArg, Arg).
-c_set_argument(pointer(Spec), Mode, CArg, Arg) :- c_set_argument_list(Mode, Spec, CArg, Arg).
-c_set_argument(Type-_,     Mode, CArg, Arg) :- c_set_argument_one(Mode, Type, CArg, Arg).
-c_set_argument(term,       _,    CArg, Arg) :- format('~w=~w', [Arg, CArg]).
+c_set_argument(list(Spec),  Mode, CArg, Arg) :- c_set_argument_list(Mode, Spec, CArg, Arg).
+c_set_argument(type(Type),  Mode, CArg, Arg) :- c_set_argument_type(Mode, Type, CArg, Arg).
+c_set_argument(equiv(Type), Mode, CArg, Arg) :- c_set_argument_type(Mode, Type, CArg, Arg).
+c_set_argument(chrs(_),     Mode, CArg, Arg) :- c_set_argument_chrs(Mode, CArg, Arg).
+c_set_argument(ptr(Spec),   Mode, CArg, Arg) :- c_set_argument_list(Mode, Spec, CArg, Arg).
+c_set_argument(Type-_,      Mode, CArg, Arg) :- c_set_argument_one(Mode, Type, CArg, Arg).
+c_set_argument(term,        _,    CArg, Arg) :- format('~w=~w', [Arg, CArg]).
 
 c_set_argument_one(out,   Type, CArg, Arg) :-
     format('__rtc_FL_unify(~w, ~w, ~w)', [Type, Arg, CArg]).
@@ -724,8 +736,10 @@ c_get_argument(term, _, _, CArg, Arg) :-
     format('~w=PL_copy_term_ref(~w)', [CArg, Arg]).
 c_get_argument(Trans-_, Mode, Deref, CArg, Arg) :-
     c_get_argument_one(Deref, Mode, Trans, CArg, Arg).
-c_get_argument(pointer(Spec), Mode, Deref, CArg, Arg) :-
+c_get_argument(ptr(Spec), Mode, Deref, CArg, Arg) :-
     c_get_argument_list(Deref, Mode, Spec, CArg, Arg).
+c_get_argument(equiv(Name), Mode, Deref, CArg, Arg) :-
+    c_get_argument_one(Deref, Mode, Name, CArg, Arg).
 c_get_argument(type(Name), Mode, Deref, CArg, Arg) :-
     c_get_argument_type(Deref, Mode, Name, CArg, Arg).
 
@@ -866,7 +880,7 @@ match_known_type(M, Prop, Spec, Arg) :-
 
 match_known_type_(atm(A),           _, chrs('char*'), A).
 match_known_type_(atom(A),          _, chrs('char*'), A).
-match_known_type_(pointer(A, Type), M, pointer(Spec), A) :-
+match_known_type_(pointer(A, Type), M, ptr(Spec),     A) :-
     nonvar(Type),
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
@@ -876,21 +890,21 @@ match_known_type_(pointer(A),        _, pointer-'void*', A).
 match_known_type_(int(A),            _, integer-int,     A).
 match_known_type_(character_code(A), _, char-char,       A).
 match_known_type_(integer(A),        _, integer-int,     A).
-match_known_type_(num(A),            _, float-double,  A).
-match_known_type_(number(A),         _, float-double,  A).
+match_known_type_(num(A),            _, float-double,    A).
+match_known_type_(number(A),         _, float-double,    A).
 match_known_type_(term(A),           _, term,            A).
 match_known_type_(list(A, Type),     M, list(Spec),      A) :-
     nonvar(Type),
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
-match_known_type_(Type, M, Name-Name, A) :-
-    current_type_props(M, Type, PropL, _, _),
+match_known_type_(Type, M, equiv(Name), A) :-
+    type_props(M, Type, PropL, _, _, _),
     PropL \= [],
     functor(Type, Name, _),
     arg(1, Type, A).
 match_known_type_(Type, M, type(Name), A) :-
-    current_type_props(M, Type, PropL, _, _),
+    type_props(M, Type, PropL, _, _, _),
     PropL = [],
     functor(Type, Name, _),
     arg(1, Type, A).

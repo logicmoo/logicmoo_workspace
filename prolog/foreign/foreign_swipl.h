@@ -63,7 +63,7 @@
 #define FL_unify_char(t, c) PL_unify_integer(t, c)
 
 #define __rtc_FL_unify(__type, __term, __value)				\
-    __rtcheck_type(PL_unify_##__type(__term, __value), __term, __type)
+    __rtcheck_type(FL_unify_##__type(__term, __value), __term, __type)
 
 #define __rtc_FL_get(__type, __term, __value)				\
     __rtcheck_type(FL_get_##__type(__root, __term, __value), __term, __type)
@@ -144,7 +144,9 @@
 
 #define FL_get_dict_t(__unifier, __term, __value) {			\
 	int index, arity, pairs;					\
-	__rtcheck(PL_get_name_arity(__term, NULL, &arity));		\
+	atom_t name;							\
+	__rtcheck(PL_get_name_arity(__term, &name, &arity));		\
+	__doifrtc(name==ATOM_dict);					\
 	for(index=1; index < arity;) {					\
 	    term_t __k = PL_new_term_ref();				\
 	    term_t __v = PL_new_term_ref();				\

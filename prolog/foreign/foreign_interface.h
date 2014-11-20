@@ -22,6 +22,8 @@
 	}								\
     }
 
+#define __doifrtc(__call) __rtcheck(__call)
+
 #define __rtcwarn(__call) {						\
 	if (!(__call)) {						\
 	    fprintf(stderr, "Warning: %s:%d: (%s) run-time check failure: " # __call "\n", \
@@ -35,11 +37,10 @@
 	    return __result;		\
     }
 
-#define __rtcheck_prop(__call) __rtcheck(__call)
-
 #else
 #pragma GCC diagnostic ignored "-Wunused-result"
 #define __rtcheck(__call) __call
+#define __doifrtc(__call)
 #define __rtcheck_prop(__call)
 #endif
 
