@@ -737,7 +737,7 @@ c_get_argument(term, _, _, CArg, Arg) :-
 c_get_argument(Trans-_, Mode, Deref, CArg, Arg) :-
     c_get_argument_one(Deref, Mode, Trans, CArg, Arg).
 c_get_argument(ptr(Spec), Mode, Deref, CArg, Arg) :-
-    c_get_argument_list(Deref, Mode, Spec, CArg, Arg).
+    c_get_argument_ptr(Deref, Mode, Spec, CArg, Arg).
 c_get_argument(equiv(Name), Mode, Deref, CArg, Arg) :-
     c_get_argument_one(Deref, Mode, Name, CArg, Arg).
 c_get_argument(type(Name), Mode, Deref, CArg, Arg) :-
@@ -772,6 +772,15 @@ c_get_argument_type(Deref, _, Type, CArg, Arg) :-
 c_get_argument_list(Deref, Mode, Spec, CArg, Arg) :-
     list_mode_sym(Mode, MSym),
     format('FL_get~a_array(',[MSym]),
+    format(atom(Arg_), '~w_',   [Arg]),
+    c_var_name(Arg_, CArg_),
+    deref_sym(Deref, DSym),
+    c_get_argument(Spec, in, noder, CArg_, Arg_),
+    format(', ~w, ~w~w)', [Arg, DSym, CArg]).
+
+c_get_argument_ptr(Deref, Mode, Spec, CArg, Arg) :-
+    list_mode_sym(Mode, MSym),
+    format('FL_get~a_ptr(',[MSym]),
     format(atom(Arg_), '~w_',   [Arg]),
     c_var_name(Arg_, CArg_),
     deref_sym(Deref, DSym),

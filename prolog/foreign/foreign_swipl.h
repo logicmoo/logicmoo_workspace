@@ -92,6 +92,21 @@
 	}							\
     }
 
+#define FL_get_ptr(__FL_get_elem, __term, __value) {	\
+	FI_new_value(*__value);				\
+	typeof (*__value) _c_##__term##_ = (*__value);	\
+	__FL_get_elem;					\
+}
+
+#define FL_get_inout_ptr(__FL_get_elem, __term, __value) {	\
+	if(PL_is_variable(__term)) {				\
+	    *__value = NULL;					\
+	}							\
+	else {							\
+	    FL_get_ptr(__FL_get_elem, __term, __value);		\
+	}							\
+    }
+
 #define FL_get_inout_chrs(__term, __value) {		\
 	if(PL_is_variable(__term)) {			\
 	    *__value = NULL;				\
