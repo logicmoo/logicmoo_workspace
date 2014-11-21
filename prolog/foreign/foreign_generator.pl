@@ -215,25 +215,24 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
 :- meta_predicate forall_tp(+,5,3).
 
 forall_tp(Module, TypeProps, Call) :-
-    forall(call(TypeProps, Module, Type, TPropL, TDict, Pos),
-	   ( ( TPropL \= []
-	     ->PropL = TPropL,
-	       Dict = TDict
-	     ; bind_type_names(Module, Type, PropL, Dict)
-	     ),
-	     apply_dict(Type-PropL, Dict)
-	   ->type_components(Module, Type, PropL, Call, Pos)
-	   ; true
+    forall(call(TypeProps, Module, Type, PropL, Dict, Pos),
+	   ( apply_dict(Type-PropL, Dict),
+	     type_components(Module, Type, PropL, Call, Pos)
 	   )).
 
 type_props(M, Type, PropL, Dict, Pos) :-
     type_props(M, Type, PropL, _, Dict, Pos).
 
 type_props(M, Type, PropL, GlobL, Dict, Pos) :-
-    assertion_db(Type, M, check, prop, PropL, _, _, GlobL, _, Dict, Pos),
+    assertion_db(Type, M, check, prop, TPropL, _, _, GlobL, _, TDict, Pos),
     once(( member(TType, [type, regtype]),
 	   memberchk(TType, GlobL)
-	 )).
+	 )),
+    ( TPropL \= []
+    ->PropL = TPropL,
+      Dict = TDict
+    ; bind_type_names(M, Type, PropL, Dict)
+    ).
 
 type_props_nf(Module, Type, PropL, Dict, Pos) :-
     type_props(Module, Type, PropL, GlobL, Dict, Pos),
@@ -352,17 +351,12 @@ implement_type_unifier(dict_rec(_, _, N, Name), Spec, Arg) :-
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
     camel_snake(PArg, Arg),
     format(atom(PNameArg), '~w_~w', [PName, PArg]),
-    ( spec_pointer(Spec)
-    ->format('    if(~w)~n', [CNameArg])
-    ; true
-    ),
-    format('    {~n', []),
+    (spec_pointer(Spec)->format('    if(~w) {~n', [CNameArg]);true),
     format('        term_t ~w=dict_args+index;~n        ', [PNameArg]),
     c_set_argument(Spec, out, CNameArg, PNameArg),
     format(';~n', []),
-    format('        indexes[index]=~w;~n', [N]),
-    format('        index++;~n', []),
-    format('    }~n', []).
+    format('        indexes[index++]=~w;~n', [N]),
+    (spec_pointer(Spec)->format('    }~n', []);true).
 implement_type_unifier(dict_end(M, Name), _, Arg) :-
     func_pcname(Name, PName, _),
     format('    FL_unify_dict_t("~w", "__aux_keyid_index_~w", ~w, "~w");~n',
@@ -602,15 +596,15 @@ declare_foreign_bind_arg(Head, M, Comp, Call, Succ, Glob, Arg) :-
 
 c_get_ctype_decl(Spec, Mode) :-
     c_get_ctype_decl(Spec),
-    c_get_ref_level(Mode, Spec).
+    (is_ref(Mode, Spec) -> true ; write('*')).
 
-c_get_ref_level(_,     term)    :- !.
-c_get_ref_level(_,     list(_)) :- !. % Always ref
-c_get_ref_level(_,     ptr(_))  :- !. % Always ref
-c_get_ref_level(_,     chrs(_)) :- !.
-c_get_ref_level(in,    _).
-c_get_ref_level(out,   _).
-c_get_ref_level(inout, _) :- format('*', []).
+is_ref(_,   term)    :- !.
+is_ref(_,   list(_)) :- !.	% Always ref
+is_ref(_,   ptr(_))  :- !.	% Always ref
+is_ref(_,   chrs(_)) :- !.
+is_ref(in,  _).
+is_ref(out, _).
+				% is_ref(inout, _) :- fail.
 				% Allow pointer to NULL,
 				% the equivalent to free
 				% variables in imperative
@@ -686,13 +680,13 @@ declare_intf_impl(Module, BindHead) :-
     format('    return ~w;~n', [Return]),
     format('} /* ~w */~n~n', [PI]).
 
-c_set_argument(list(Spec),  _,    CArg, Arg) :- c_set_argument_rec(list, Spec, CArg, Arg).
-c_set_argument(ptr( Spec),  _,    CArg, Arg) :- c_set_argument_rec(ptr,  Spec, CArg, Arg).
-c_set_argument(type(Type),  Mode, CArg, Arg) :- c_set_argument_type(Mode, Type, CArg, Arg).
-c_set_argument(equiv(Type), Mode, CArg, Arg) :- c_set_argument_type(Mode, Type, CArg, Arg).
-c_set_argument(chrs(_),     Mode, CArg, Arg) :- c_set_argument_chrs(Mode, CArg, Arg).
-c_set_argument(Type-_,      Mode, CArg, Arg) :- c_set_argument_one(Mode, Type, CArg, Arg).
-c_set_argument(term,        _,    CArg, Arg) :- format('~w=~w', [Arg, CArg]).
+c_set_argument(list(S),  _, C, A) :- c_set_argument_rec(list, S, C, A).
+c_set_argument(ptr( S),  _, C, A) :- c_set_argument_rec(ptr,  S, C, A).
+c_set_argument(type( T), M, C, A) :- c_set_argument_type(M, T, C, A).
+c_set_argument(equiv(T), M, C, A) :- c_set_argument_type(M, T, C, A).
+c_set_argument(T-_,      M, C, A) :- c_set_argument_one( M, T, C, A).
+c_set_argument(chrs(_),  M, C, A) :- c_set_argument_chrs(M, C, A).
+c_set_argument(term,     _, C, A) :- format('~w=~w', [A, C]).
 
 c_set_argument_one(out,   Type, CArg, Arg) :-
     format('__rtc_FL_unify(~w, ~w, ~w)', [Type, Arg, CArg]).
@@ -888,12 +882,17 @@ match_known_type_(list(A, Type),     M, list(Spec),      A) :-
     match_known_type_(Prop, M, Spec, E).
 match_known_type_(Type, M, equiv(Name), A) :-
     type_props(M, Type, PropL, _, _, _),
-    PropL \= [],
+    PropL = [Prop],
+    arg(1, Prop, A),
+    match_known_type_(Prop, M, _Spec, A),
     functor(Type, Name, _),
     arg(1, Type, A).
 match_known_type_(Type, M, type(Name), A) :-
     type_props(M, Type, PropL, _, _, _),
-    PropL = [],
+    \+ ( PropL = [Prop],
+	 arg(1, Prop, A),
+	 match_known_type_(Prop, M, _Spec, A)
+       ),
     functor(Type, Name, _),
     arg(1, Type, A).
 
