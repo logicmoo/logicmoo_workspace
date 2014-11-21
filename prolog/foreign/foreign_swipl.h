@@ -93,8 +93,9 @@
     }
 
 #define FL_get_ptr(__FL_get_elem, __term, __value) {	\
+	term_t __term##_ = __term;			\
 	FI_new_value(*__value);				\
-	typeof (*__value) _c_##__term##_ = (*__value);	\
+	typeof (*__value) _c_##__term##_ = *__value;	\
 	__FL_get_elem;					\
 }
 
