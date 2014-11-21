@@ -7,7 +7,8 @@
 :- use_module(library(swi/plprops)).
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
-:- gen_foreign_library(.(foreign_test_i)).
+:- extra_compiler_opts('-O2 -gdwarf-2 -g3').
+:- gen_foreign_library(.('foreign_test_i.so')).
 :- use_foreign_header(foreign_test).
 :- use_foreign_source(foreign_test).
 
@@ -44,6 +45,19 @@ contain_opaque_t(contain_opaque(Idx, Value)) :-
     int(Idx),
     negative_t(Value).
 
+:- prop example_t/1 is type.
+example_t(example(Name, Value)) :-
+    atm(Name),
+    num(Value).
+
+:- prop compound_t/1 is type.
+compound_t(compound(Idx, Value, Example, Name, PExample)) :-
+    int(Idx),
+    ptr(Value, int),
+    example_t(Example),
+    ptr(Name, atm),
+    ptr(PExample, example_t).
+
 :- pred fce(+contain_extern_t, -contain_extern_t) is foreign.
 
 :- pred fco(+contain_opaque_t, -contain_opaque_t) is foreign.
@@ -54,7 +68,7 @@ flag_t(Value) :- int(Value).
 
 :- prop field_t/1 is type.
 
-field_t(field(A, B, Sum)) :- int(A), int(B), flag_t(Sum).
+field_t(field(A, B, Sum)) :- int(A), int(B), ptr(Sum,flag_t).
 
 :- prop position_t/1 is type.
 
@@ -74,7 +88,7 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 :- pred idx(+list(num), +int, -num) is foreign(c_idx).
 :- pred numl(+int, -list(num)) is (foreign(c_numl), memory_root).
 
-:- pred f(?field_t) is (foreign(c_f), returns_state).
+:- pred f(?field_t) is (foreign(c_f), returns_state, memory_root).
 :- pred pq(?position_t) is foreign(c_pq).
 
 :- pred get_arrays(+int,-list(list(list(num))), -list(list(int)), -list(int))

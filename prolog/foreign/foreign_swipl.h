@@ -68,28 +68,25 @@
 #define __rtc_FL_get(__type, __term, __value)				\
     __rtcheck_type(FL_get_##__type(__root, __term, __value), __term, __type)
 
-#define FL_get_array(__FL_get_elem, __term, __value) {			\
-	term_t __term##_ = PL_new_term_ref();				\
-	term_t __tail = PL_copy_term_ref(__term);			\
-	size_t __length = 0;						\
-	while(PL_get_list(__tail, __term##_, __tail)) __length++;	\
-	__tail = PL_copy_term_ref(__term);				\
-	FI_new_array(__length, *__value);				\
-	typeof (*__value) _c_##__term##_ = *__value;			\
-	while(PL_get_list(__tail, __term##_, __tail)) {			\
-	    __FL_get_elem;						\
-	    _c_##__term##_++;						\
-	};								\
-	__rtcheck(PL_get_nil(__tail));					\
-    }
-
-#define FL_get_inout_array(__FL_get_elem, __term, __value) {	\
-	if(PL_is_variable(__term)) {				\
-	    *__value = NULL;					\
-	}							\
-	else {							\
-	    FL_get_array(__FL_get_elem, __term, __value);	\
-	}							\
+#define FL_get_list(__FL_get_elem, __term, __value) {			\
+	if(PL_is_variable(__term)) {					\
+	    *__value = NULL;						\
+	}								\
+	else {								\
+	    term_t __term##_ = PL_new_term_ref();			\
+		term_t __tail = PL_copy_term_ref(__term);		\
+		size_t __length = 0;					\
+		while(PL_get_list(__tail, __term##_, __tail))		\
+		    __length++;						\
+		__tail = PL_copy_term_ref(__term);			\
+		FI_new_array(__length, *__value);			\
+		typeof (*__value) _c_##__term##_ = *__value;		\
+		    while(PL_get_list(__tail, __term##_, __tail)) {	\
+			__FL_get_elem;					\
+			_c_##__term##_++;				\
+		    };							\
+		    __rtcheck(PL_get_nil(__tail));			\
+	}								\
     }
 
 #define FL_get_ptr(__FL_get_elem, __term, __value) {	\
@@ -117,23 +114,27 @@
 	}						\
     }
 
-#define FL_unify_array(__FL_unify_elem, __term, __value) {		\
-	term_t l = PL_copy_term_ref(__term);				\
-	term_t __term##_ = PL_new_term_ref();				\
-	size_t __index;							\
-	size_t __length = FI_array_length(__value);			\
-	for(__index = 0; __index < __length; __index++)	{		\
-	    typeof (*__value) _c_##__term##_ = __value[__index];	\
-	    __rtcheck(PL_unify_list(l, __term##_, l));			\
-	    __FL_unify_elem;						\
+#define FL_unify_list(__FL_unify_elem, __term, __value) {		\
+	if (__value!=NULL) {						\
+	    term_t l = PL_copy_term_ref(__term);			\
+	    term_t __term##_ = PL_new_term_ref();			\
+		size_t __index;						\
+		size_t __length = FI_array_length(__value);		\
+		for(__index = 0; __index < __length; __index++)	{	\
+		    typeof (*__value) _c_##__term##_ = __value[__index]; \
+			__rtcheck(PL_unify_list(l, __term##_, l));	\
+			__FL_unify_elem;				\
+		}							\
+		__rtcheck(PL_unify_nil(l));				\
 	}								\
-	__rtcheck(PL_unify_nil(l));					\
     }
 
-#define FL_unify_inout_array(__FL_unify_elem, __term, __value) {	\
-	if (__value!=NULL) {						\
-	    FL_unify_array(__FL_unify_elem, __term, __value);		\
-	}								\
+#define FL_unify_ptr(__FL_unify_elem, __term, __value) {	\
+	if(__value!=NULL) {					\
+	    term_t __term##_ = __term;				\
+	    typeof (*__value) _c_##__term##_ = *__value;	\
+	    __FL_unify_elem;					\
+	}							\
     }
 
 #define FL_get_inout(__getter, __term, __value) {	\

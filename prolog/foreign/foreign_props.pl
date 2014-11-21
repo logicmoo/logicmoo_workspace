@@ -4,8 +4,8 @@
 	   returns/2,
 	   returns_state/1,
 	   memory_root/1,
-	   pointer/1,
-	   pointer/2,
+	   ptr/1,
+	   ptr/2,
 	   dict_t/2]).
 
 :- use_module(library(swi/assertions)).
@@ -32,11 +32,12 @@ returns_state(G) :- call(G).
 :- meta_predicate memory_root(0).
 memory_root(G) :- call(G).
 
-:- prop pointer/1 + type.
-pointer(I) :- int(I).
+:- prop ptr/1 + type.
+ptr(I) :- int(I).
 
-:- prop pointer/2 + type.
-pointer(I, A) :- int(I), atm(A).
+:- prop ptr/2 + type.
+:- meta_predicate ptr(?,1).
+ptr(I, A) :- call(A, I).
 
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).

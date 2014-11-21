@@ -5,8 +5,8 @@
 #include "foreign_test_i_impl.h"
 
 void fd1(d_t* const A, char **B, char **C, int **D) {
-    *B=(A->value1);
-    *C=(A->value2);
+    *B=A->value1;
+    *C=A->value2;
     *D=A->listv+1;
 }
 
@@ -25,9 +25,9 @@ void fd3(void** __root, d_t** A, char** B, char** C, int** D) {
     (*A)->listv = *D;
 }
 
-int c_f(field_t ** field) {
+int c_f(void** __root, field_t ** field) {
     __rtcheck(field!=NULL);
-    (*field)->sum = malloc(sizeof(*(*field)->sum));
+    FI_new_value((*field)->sum);
     *(*field)->sum = (*field)->a + (*field)->b;
     printf("NOTE: Sum=%d\n", *(*field)->sum);
     return TRUE;
@@ -132,7 +132,6 @@ void  fce(contain_extern_t* const A, contain_extern_t* B) {
 
 void  fco(contain_opaque_t* const A, contain_opaque_t* B) {
   B->idx=A->idx;
-  B->value=malloc(sizeof(*(B->value)));
-  *(B->value)=*(A->value) + 2;
-  printf("co[%d, %d]\n", A->idx, *(A->value));
+  B->value=A->value + 2;
+  printf("co[%d, %d]\n", A->idx, A->value);
 }
