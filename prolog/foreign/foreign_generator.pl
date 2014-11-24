@@ -684,12 +684,12 @@ declare_intf_impl(Module, BindHead) :-
     format('    return ~w;~n', [Return]),
     format('} /* ~w */~n~n', [PI]).
 
-c_set_argument(list(S),  _, C, A) :- c_set_argument_rec(list, S, C, A).
-c_set_argument(ptr( S),  _, C, A) :- c_set_argument_rec(ptr,  S, C, A).
-c_set_argument(type( T), M, C, A) :- c_set_argument_type(M, T, C, A).
-c_set_argument(T-_,      M, C, A) :- c_set_argument_one( M, T, C, A).
-c_set_argument(chrs(_),  M, C, A) :- c_set_argument_chrs(M, C, A).
-c_set_argument(term,     _, C, A) :- format('~w=~w', [A, C]).
+c_set_argument(list(S), _, C, A) :- c_set_argument_rec(list, S, C, A).
+c_set_argument(ptr( S), _, C, A) :- c_set_argument_rec(ptr,  S, C, A).
+c_set_argument(type(T), M, C, A) :- c_set_argument_type(M, T, C, A).
+c_set_argument(T-_,     M, C, A) :- c_set_argument_one( M, T, C, A).
+c_set_argument(chrs(_), M, C, A) :- c_set_argument_chrs(M, C, A).
+c_set_argument(term,    _, C, A) :- format('~w=~w', [A, C]).
 
 c_set_argument_one(out,   Type, CArg, Arg) :-
     format('__rtc_FL_unify(~w, ~w, ~w)', [Type, Arg, CArg]).
