@@ -1,8 +1,6 @@
 #ifndef __foreign_test_H
 #define __foreign_test_H
 
-typedef int positive_t;
-
 typedef int negative_t;
 
 #define FL_get_positive_t(__root, __term, __value) {	\
