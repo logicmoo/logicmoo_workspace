@@ -626,8 +626,6 @@ c_get_ctype_decl(chrs(Name)) :-
     format('~w', Name).
 c_get_ctype_decl(type(Name)) :-
     format('~w', [Name]).
-c_get_ctype_decl(equiv(Name)) :-
-    format('~w', [Name]).
 c_get_ctype_decl(term) :-
     format('term_t', []).
 c_get_ctype_decl(_-CType) :-
@@ -689,7 +687,6 @@ declare_intf_impl(Module, BindHead) :-
 c_set_argument(list(S),  _, C, A) :- c_set_argument_rec(list, S, C, A).
 c_set_argument(ptr( S),  _, C, A) :- c_set_argument_rec(ptr,  S, C, A).
 c_set_argument(type( T), M, C, A) :- c_set_argument_type(M, T, C, A).
-c_set_argument(equiv(T), M, C, A) :- c_set_argument_type(M, T, C, A).
 c_set_argument(T-_,      M, C, A) :- c_set_argument_one( M, T, C, A).
 c_set_argument(chrs(_),  M, C, A) :- c_set_argument_chrs(M, C, A).
 c_set_argument(term,     _, C, A) :- format('~w=~w', [A, C]).
@@ -722,8 +719,6 @@ c_get_argument(ptr(Spec), _, Deref, CArg, Arg) :-
     c_get_argument_rec(Deref, ptr,  Spec, CArg, Arg).
 c_get_argument(type(Name), Mode, Deref, CArg, Arg) :-
     c_get_argument_type(Deref, Mode, Name, CArg, Arg).
-c_get_argument(equiv(Name), Mode, Deref, CArg, Arg) :-
-    c_get_argument_one(Deref, Mode, Name, CArg, Arg).
 c_get_argument(chrs(_), Mode, Deref, CArg, Arg) :-
     c_get_argument_chrs(Deref, Mode, CArg, Arg).
 c_get_argument(term, _, _, CArg, Arg) :-
@@ -886,13 +881,6 @@ match_known_type_(list(A, Type),     M, list(Spec),      A) :-
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
     match_known_type_(Prop, M, Spec, E).
-match_known_type_(Type, M, equiv(Name), A) :-
-    type_props(M, Type, PropL, _, _, _),
-    PropL = [Prop],
-    arg(1, Prop, A),
-    match_known_type_(Prop, M, _Spec, A), !,
-    functor(Type, Name, _),
-    arg(1, Type, A).
 match_known_type_(Type, M, type(Name), A) :-
     type_props(M, Type),
     functor(Type, Name, _),
