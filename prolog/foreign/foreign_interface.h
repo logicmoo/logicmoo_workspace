@@ -93,6 +93,7 @@
 	void *__mem = __alloc(sizeof(void *) + __size);		\
 	*((void **)__mem) = *__root;				\
 	*__root = (void **)__mem + 1;				\
+	memset(*__root, 0, __size);				\
 	__value = *__root;					\
     }
 

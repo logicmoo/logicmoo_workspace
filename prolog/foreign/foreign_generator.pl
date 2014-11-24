@@ -224,15 +224,21 @@ type_props(M, Type, PropL, Dict, Pos) :-
     type_props(M, Type, PropL, _, Dict, Pos).
 
 type_props(M, Type, PropL, GlobL, Dict, Pos) :-
-    assertion_db(Type, M, check, prop, TPropL, _, _, GlobL, _, TDict, Pos),
-    once(( member(TType, [type, regtype]),
-	   memberchk(TType, GlobL)
-	 )),
+    type_props_(M, Type, TPropL, GlobL, TDict, Pos),
     ( TPropL \= []
     ->PropL = TPropL,
       Dict = TDict
     ; bind_type_names(M, Type, PropL, Dict)
     ).
+
+type_props_(M, Type, PropL, GlobL, Dict, Pos) :-
+    assertion_db(Type, M, check, prop, PropL, _, _, GlobL, _, Dict, Pos),
+    once(( member(TType, [type, regtype]),
+	   memberchk(TType, GlobL)
+	 )).
+
+type_props(M, Type) :-
+    type_props_(M, Type, _, _, _, _).
 
 type_props_nf(Module, Type, PropL, Dict, Pos) :-
     type_props(Module, Type, PropL, GlobL, Dict, Pos),
@@ -487,8 +493,7 @@ type_components(M, Type, PropL, Call, Loc) :-
 	       match_known_type_(Prop, M, Spec, Arg),
 	       call(Call, func_rec(N, Term), Spec, Arg)
 	     ->true
-	     ; gtrace,
-	       print_message(warning, ignored_type(Loc, Name, Arg))
+	     ; print_message(warning, ignored_type(Loc, Name, Arg))
 	     )
 	    ),
       call(Call, func_end, Term, Name)
@@ -515,6 +520,7 @@ type_components(M, Type, PropL, Call, Loc) :-
       call(Call, atom(Name), Spec, Term)
     ), !.
 type_components(M, Type, PropL, Call, Loc) :-
+    gtrace,
     print_message(error, failed_binding(Loc, type_components(M, Type, PropL, Call, '_'))).
 
 fetch_kv_prop_arg(Key, Value, PropL, Prop) :-
@@ -884,15 +890,11 @@ match_known_type_(Type, M, equiv(Name), A) :-
     type_props(M, Type, PropL, _, _, _),
     PropL = [Prop],
     arg(1, Prop, A),
-    match_known_type_(Prop, M, _Spec, A),
+    match_known_type_(Prop, M, _Spec, A), !,
     functor(Type, Name, _),
     arg(1, Type, A).
 match_known_type_(Type, M, type(Name), A) :-
-    type_props(M, Type, PropL, _, _, _),
-    \+ ( PropL = [Prop],
-	 arg(1, Prop, A),
-	 match_known_type_(Prop, M, _Spec, A)
-       ),
+    type_props(M, Type),
     functor(Type, Name, _),
     arg(1, Type, A).
 

@@ -8,9 +8,9 @@
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
 :- extra_compiler_opts('-O2 -gdwarf-2 -g3').
-:- gen_foreign_library(.('foreign_test_i.so')).
 :- use_foreign_header(foreign_test).
 :- use_foreign_source(foreign_test).
+:- gen_foreign_library(.('foreign_test_i.so')).
 
 user:file_search_path('.', Dir) :-
     context_module(M),
