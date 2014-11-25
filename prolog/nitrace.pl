@@ -96,6 +96,8 @@ trace_port(Port, Frame, PC0, OnTrace) :-
     call(OnTrace, Frame, Port, PC, CS, Cl).
 trace_port(_, _, _, _).
 
+:- public nitrace_port/7.
+
 nitrace_port(Path, Stream, Frame, Port, PC, CS, Cl) :-
     ( nonvar(Cl),
       clause_property(Cl, file(AFile)),
