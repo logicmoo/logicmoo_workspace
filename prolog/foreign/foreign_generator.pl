@@ -1,5 +1,4 @@
 :- module(foreign_generator, [generate_library/4,
-			      generate_aux_clauses/2,
 			      gen_foreign_library/2,
 			      current_foreign_prop/11]).
 
@@ -103,6 +102,7 @@ do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
     with_output_to_file(FileSOPl,
 			( add_autogen_note(M),
 			  portray_clause((:- module(IModule, IntfPIL))),
+			  generate_aux_clauses(M),
 			  nl,
 			  portray_clause((:- use_foreign_library(AliasSO)))
 			)).
@@ -273,6 +273,8 @@ implement_type_getter(atom(Name), Spec, Term) :-
 implement_type_getter(dict_ini(M, _, Name), _, Arg) :-
     term_pcname(Name, PName, CName),
     implement_type_getter_dict_ini(M, PName, CName, Arg).
+implement_type_getter(dict_key_value(Dict, _, _, N), Key, Value) :-
+    key_value_from_dict(Dict, N, Key, Value).
 implement_type_getter(dict_rec(_, _, N, Name), Spec, Arg) :-
     term_pcname(Name, _, CName),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
@@ -302,7 +304,7 @@ implement_type_getter_dict_ini(Module, PName, CName, Arg) :-
     format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~w *~w){~n',
 	   [Arg, Arg, CName]),
     format('    int __index;~n', []),
-    format('    FL_get_keyid_index("~w", "__aux_keyid_index_~w", __keyid, __index);~n',
+    format('    FL_get_keyid_index("~w$impl", "__aux_keyid_index_~w", __keyid, __index);~n',
 	   [Module, Arg]),
     format('    switch (__index) {~n', []).
 
@@ -352,6 +354,8 @@ implement_type_unifier(dict_ini(_M, Dict, Name), _, Arg) :-
     N is Arity//2,
     format('    term_t dict_args=PL_new_term_refs(~w);~n', [N]),
     format('    int index=0, indexes[~w];~n', [N]).
+implement_type_unifier(dict_key_value(Dict, _, _, N), Key, Value) :-
+    key_value_from_dict(Dict, N, Key, Value). % Placed in 'dict' order
 implement_type_unifier(dict_rec(_, _, N, Name), Spec, Arg) :-
     func_pcname(Name, PName, CName),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
@@ -365,7 +369,7 @@ implement_type_unifier(dict_rec(_, _, N, Name), Spec, Arg) :-
     (spec_pointer(Spec)->format('    }~n', []);true).
 implement_type_unifier(dict_end(M, Name), _, Arg) :-
     func_pcname(Name, PName, _),
-    format('    FL_unify_dict_t("~w", "__aux_keyid_index_~w", ~w, "~w");~n',
+    format('    FL_unify_dict_t("~w$impl", "__aux_keyid_index_~w", ~w, "~w");~n',
 	   [M, Arg, PName, Name]),
     implement_type_end.
 
@@ -417,13 +421,16 @@ declare_struct(func_rec(_, _), Spec, Name) :-
     write('    '),
     c_get_ctype_decl(Spec),
     format(' ~w;~n', [Name]).
+%%
 declare_struct(dict_ini(_, _, Spec), _, _) :-
     format('~nstruct ~w {~n', [Spec]).
-declare_struct(dict_end(_, _), _, _) :- format('};~n', []).
+declare_struct(dict_key_value(Dict, Desc, Tag, N), Key, Value) :-
+    key_value_from_desc(Dict, Desc, Tag, N, Key, Value).
 declare_struct(dict_rec(_, _, _, _), Spec, Name) :-
     write('    '),
     c_get_ctype_decl(Spec),
     format(' ~w;~n', [Name]).
+declare_struct(dict_end(_, _), _, _) :- format('};~n', []).
 
 declare_typedef(atom(Name), Spec, _) :-
     format('typedef ', []),
@@ -454,20 +461,17 @@ declare_typeconv(Name) :-
     format('int FL_get_~w(void** __root, term_t, ~w*);~n', [Name, Name]),
     format('int FL_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
 
-:- volatile aux_keyid_index_db/1.
-:- dynamic  aux_keyid_index_db/1.
-
-generate_aux_clauses(Module, Clauses) :-
-    retractall(aux_keyid_index_db(_)),
-    forall_tp(Module, type_props, generate_aux_clauses),
-    findall(Clause, retract(aux_keyid_index_db(Clause)), Clauses).
+generate_aux_clauses(Module) :-
+    forall_tp(Module, type_props, generate_aux_clauses).
 
 % This will create an efficient method to convert keys to indexes in the C side,
 % avoiding string comparisons.
-generate_aux_clauses(dict_rec(M, Name, N, _), _, Key) :- !,
+generate_aux_clauses(dict_key_value(Dict, _, _, N), Key, Value) :- !,
+    key_value_from_dict(Dict, N, Key, Value).
+generate_aux_clauses(dict_rec(_, Name, N, _), _, Key) :- !,
     atom_concat('__aux_keyid_index_', Name, F),
     Pred =.. [F, Key, N],
-    assertz(aux_keyid_index_db(M:Pred)).
+    portray_clause(Pred).
 generate_aux_clauses(_, _, _).
 
 :- multifile
@@ -497,21 +501,17 @@ type_components(M, Type, PropL, Call, Loc) :-
 	     )
 	    ),
       call(Call, func_end, Term, Name)
-    ; select(dict_t(Term, Desc), PropL, PropL1),
-      ( is_dict(Desc, Tag)
-      ->Dict=Desc
-      ; Tag = Name,
-	dict_create(Dict, Tag, Desc)
+    ; ( select(dict_t(Term, Desc), PropL, PropL1)
+      ; select(dict_t(Term, Tag, Desc), PropL, PropL1)
       )
-    ->call(Call, dict_ini(M, Dict, Tag), Term, Name),
-      S = s(0),
-      forall(Value=Dict.Arg,
+    ->dict_pairs(Dict, Tag, Desc),
+      is_dict(Dict, Tag),
+      ignore(Tag = Name),
+      call(Call, dict_ini(M, Dict, Tag), Term, Name),
+      forall(call(Call, dict_key_value(Dict, Desc, Tag, N), Arg, Value),
 	     ( fetch_kv_prop_arg(Arg, Value, PropL1, Prop),
 	       match_known_type_(Prop, M, Spec, Arg),
-	       arg(1, S, N),
-	       call(Call, dict_rec(M, Name, N, Tag), Spec, Arg),
-	       succ(N, N2),
-	       nb_setarg(1, S, N2)
+	       call(Call, dict_rec(M, Name, N, Tag), Spec, Arg)
 	     )
 	    ),
       call(Call, dict_end(M, Tag), Term, Name)
@@ -520,8 +520,29 @@ type_components(M, Type, PropL, Call, Loc) :-
       call(Call, atom(Name), Spec, Term)
     ), !.
 type_components(M, Type, PropL, Call, Loc) :-
-    gtrace,
     print_message(error, failed_binding(Loc, type_components(M, Type, PropL, Call, '_'))).
+
+key_value_from_dict(Dict, N, Key, Value) :-
+    S = s(0),
+    Value=Dict.Key,
+    S = s(N),
+    succ(N, N2),
+    nb_setarg(1, S, N2).
+
+key_value_from_list(Desc, N, Key, Value) :-
+    nth0(N, Desc, KeyValue),
+    key_value(KeyValue, Key, Value).
+
+key_value_from_desc(_, Desc, _, N, Key, Value) :-
+    is_list(Desc), !,
+    key_value_from_list(Desc, N, Key, Value).
+key_value_from_desc(Dict, _, _, N, Key, Value) :-
+    key_value_from_dict(Dict, N, Key, Value).
+
+key_value(KV,  K, V) :- functor(KV, K, 1), arg(1, KV, V), !.
+key_value(K:V, K, V).
+key_value(K-V, K, V).
+key_value(K=V, K, V).
 
 fetch_kv_prop_arg(Key, Value, PropL, Prop) :-
     ( member(Prop, PropL),
@@ -872,7 +893,6 @@ match_known_type_(ptr(A),            _, pointer-'void*', A).
 match_known_type_(int(A),            _, integer-int,     A).
 match_known_type_(integer(A),        _, integer-int,     A).
 match_known_type_(character_code(A), _, char-char,       A).
-match_known_type_(integer(A),        _, integer-int,     A).
 match_known_type_(num(A),            _, float-double,    A).
 match_known_type_(number(A),         _, float-double,    A).
 match_known_type_(term(A),           _, term,            A).

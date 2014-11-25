@@ -35,8 +35,7 @@ term_expansion(end_of_file, Decl) :-
     gen_foreign_library(M, AliasSO),
     change_alias(add_suffix('_so'), AliasSO, AliasSOPl),
     generate_library(M, AliasSO, AliasSOPl, File),
-    generate_aux_clauses(M, Clauses),
-    Decl = [(:- use_module(AliasSOPl))|Clauses].
+    Decl = [(:- use_module(AliasSOPl))].
 
 add_suffix(Suffix, Name0, Name) :-
     file_name_extension(Name1, _, Name0),

@@ -6,7 +6,8 @@
 	   memory_root/1,
 	   ptr/1,
 	   ptr/2,
-	   dict_t/2]).
+	   dict_t/2,
+	   dict_t/3]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -41,7 +42,12 @@ ptr(I, A) :- call(A, I).
 
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).
-dict_t(Term, M:Desc) :-
+dict_t(Term, Desc) :-
+    dict_t(Term, _, Desc).
+    
+:- prop dict_t/3 + type.
+:- meta_predicate dict_t(?, ?, :).
+dict_t(Term, Tag, M:Desc) :-
     dict_create(Dict, Tag, Desc),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict, M), Pairs).

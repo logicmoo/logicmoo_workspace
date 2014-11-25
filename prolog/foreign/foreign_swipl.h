@@ -159,9 +159,15 @@
 	}						\
     }
 
-#define FL_get_dict_t(__unifier, __term, __value) {			\
+#define FL_get_dict_t(__unifier, __desc, __value) {			\
 	int index, arity, pairs;					\
 	atom_t name;							\
+	term_t __term = PL_new_term_refs(3);				\
+	predicate_t __pred;						\
+	module_t __m = PL_new_module(PL_new_atom("system"));		\
+	__rtcheck((__pred = PL_predicate("dict_create", 3, __m))!=NULL); \
+	__rtcheck(PL_unify(__term+2, __desc));				\
+	__rtcheck(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __term)); \
 	__rtcheck(PL_get_name_arity(__term, &name, &arity));		\
 	__doifrtc(name==ATOM_dict);					\
 	for(index=1; index < arity;) {					\
@@ -201,7 +207,7 @@
 
 #define FL_get_index_keyid(__module, __name, __index, __keyid) {	\
 	term_t __args = PL_new_term_refs(2);				\
-	static predicate_t __pred;					\
+	predicate_t __pred;						\
 	module_t __m = PL_new_module(PL_new_atom(__module));		\
 	__rtcheck((__pred = PL_predicate(__name, 2, __module))!=NULL);	\
 	__rtcheck(PL_unify_integer(__args+1, __index));			\
