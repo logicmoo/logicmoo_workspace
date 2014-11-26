@@ -15,6 +15,10 @@ test(foreign_idx) :-
 	     assertion(D=:=E)
 	   )).
 
+test(foreign_extend) :-
+    extend([1,2,3],X),
+    assertion(X==[1,2,3,2,4,6]).
+
 test(foreign_numl) :-
     numl(5, L),
     assertion(L==[1.0,2.0,3.0,4.0,5.0]).

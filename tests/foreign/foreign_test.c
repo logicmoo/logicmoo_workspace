@@ -4,6 +4,14 @@
 #include "foreign_test.h"
 #include "foreign_test_i_impl.h"
 
+void  extend(int* const in, int** out) {
+    int i, n = FI_array_length(in);
+    *out = in;
+    FI_resize_array(n*2, *out);
+    for (i=0;i<n;i++) {
+	in[n+i] = in[i] * 2;
+    }
+}
 void fd1(d_t* const A, char **B, char **C, int **D) {
     *B=A->value1;
     *C=A->value2;

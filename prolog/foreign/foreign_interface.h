@@ -8,7 +8,7 @@
 #define __RTCHECK__
 
 #ifndef TRUE
-#define TRUE 1
+#define TRUE  1
 #define FALSE 0
 #endif
 
@@ -47,30 +47,123 @@
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
 /* #define __REGION_BASED_MEMORY_MANAGEMENT__ */
 
+#define __DEBUG_MALLOC__
+
+#ifdef __DEBUG_MALLOC__
+
+#include <assert.h>
+
+#define _malloc  debug_malloc
+#define _realloc debug_realloc
+#define _free    debug_free
+#define _noleaks assert(__balance==0)
+int __balance;
+
+#define debug_malloc(__size) ({				\
+	    void *__result=malloc(__size);		\
+	    fprintf(stderr, "%d malloc(%ld)=%p\n",	\
+		    __balance, __size, __result);	\
+	    __balance++;				\
+	    __result;					\
+	})
+
+#define debug_realloc(__value, __size) ({			\
+	    void *__result=realloc(__value, __size);		\
+	    fprintf(stderr, "%d realloc(%p, %ld)=%p\n",		\
+		    __balance, __value, __size, __result);	\
+	    __result;						\
+	})
+
+#define debug_free(__value) ({						\
+	    free(__value);						\
+	    __balance--;						\
+	    fprintf(stderr, "%d free(%p)\n", __balance, __value);	\
+	})
+
+#else
+#define _malloc  malloc
+#define _realloc realloc
+#define _free    free
+#define _noleaks
+#endif
+
 #define __LINKED_NODES_MEMORY_MANAGEMENT__
 
 #ifdef __LINKED_NODES_MEMORY_MANAGEMENT__
-#define __realloc(__root, size, value) FI_realloc_mc(__root, realloc, size, value)
-#define __malloc( __root, size, value) FI_malloc_mc( __root,  malloc, size, value)
-#define __mkroot(__root)  void *__root_h=NULL, **__root = &__root_h
-#define __delroot(__root) FI_destroy_mc(__root, free)
+#define __realloc(__root, size, value) FI_realloc_mc(__root, _realloc, size, value)
+#define __malloc( __root, size, value) FI_malloc_mc( __root,  _malloc, size, value)
+
+#ifdef __GLOBAL_ROOT__
+void *__root_h;
+void **__root;
+#define __mkroot(__root)
 #else
-#define __realloc(__root, size, value) {value = realloc(value, size);}
-#define __malloc( __root, size, value) {value = malloc(size);}
+#define __mkroot(__root)  void *__root_h=NULL, **__root = &__root_h
+
+#endif
+
+#define __delroot(__root) FI_destroy_mc(__root, _free)
+
+#else
+#define __realloc(__root, size, value) {value = _realloc(value, size);}
+#define __malloc( __root, size, value) {value = _malloc(size);}
 #define __mkroot(__root)
 #define __delroot(__root)
 #endif
 
-#define FI_prev_mc_ptr(value) ((void **)value - 1)
-#define FI_prev_mc(value)     (*FI_prev_mc_ptr(value))
+#define __PARENT_NODES__
+
+#ifdef __PARENT_NODES__
+
+typedef struct __leaf_s __leaf_t;
+
+struct __leaf_s {
+    __leaf_t *parent;
+    void *value;
+};
+
+// TODO: delete memset/3 when finish debugging
+
+#define FI_malloc_mc(__root, __alloc, __size, __value) { \
+	__leaf_t *__leaf = __alloc(sizeof(__leaf_t));	 \
+	void *__mem = __alloc(sizeof(void *) + __size);	 \
+	__leaf->value = __mem;				 \
+	*((void **)__mem) = &(__leaf->value);		 \
+	__leaf->parent = *__root;			 \
+	*__root = __leaf;				 \
+	__value = __leaf->value + 1;			 \
+	memset(__value, 0, __size);			 \
+    }
+
+#define FI_realloc_mc(__root, __realloc, __size, __value) {		\
+	void **__leaf_value = (((void *)__value) - 1);			\
+	*__leaf_value = __realloc(__leaf_value, sizeof(void *) + __size); \
+	__value = *__leaf_value + 1;					\
+    }
+
+#define FI_destroy_mc(__root, __free) {		\
+	__leaf_t *__leaf;			\
+	while (*__root) {			\
+	    __leaf = *__root;			\
+	    __free(__leaf->value);		\
+	    *__root = __leaf->parent;		\
+	    __free(__leaf);			\
+	}					\
+	_noleaks;				\
+    }
+
+#else
+
+#define FI_prev_node(value) ((void **)value - 1)
 
 #define FI_destroy_mc(__root, __free) {		\
 	void *__prev_mc;			\
 	while(*__root) {			\
-	    __prev_mc = FI_prev_mc(*__root);	\
-	    __free(FI_prev_mc_ptr(*__root));	\
+	    __prev_mc = *FI_prev_node(*__root);	\
+	    __free(FI_prev_node(*__root));	\
 	    *__root = __prev_mc;		\
 	}					\
+	_noleaks;				\
     }
 
 #define FI_realloc_mc(__root, __realloc, __size, __value) {		\
@@ -78,13 +171,13 @@
 	void * __mem = NULL;						\
 	while(*__curr_mc_ptr) {						\
 	    if (*__curr_mc_ptr == __value) {				\
-		void * __mem = __realloc(FI_prev_mc_ptr(*__curr_mc_ptr), \
+		void * __mem = __realloc(FI_prev_node(*__curr_mc_ptr),	\
 					 sizeof(void *) + __size)	\
 		    + sizeof(void *);					\
 		*__curr_mc_ptr = __mem;					\
 		break;							\
 	    }								\
-	    __curr_mc_ptr = FI_prev_mc_ptr(*__curr_mc_ptr);		\
+	    __curr_mc_ptr = FI_prev_node(*__curr_mc_ptr);		\
 	}								\
 	__value = __mem;						\
     }
@@ -93,9 +186,11 @@
 	void *__mem = __alloc(sizeof(void *) + __size);		\
 	*((void **)__mem) = *__root;				\
 	*__root = (void **)__mem + 1;				\
-	memset(*__root, 0, __size);				\
 	__value = *__root;					\
+	memset(__value, 0, __size);				\
     }
+
+#endif
 
 #define FI_alloc_array(__root, __alloc, __length, __value) {		\
 	void *__mem_a=NULL;						\

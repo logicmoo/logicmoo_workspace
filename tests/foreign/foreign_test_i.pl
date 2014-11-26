@@ -1,6 +1,6 @@
 :- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
 			   get_arrays/4, show_arrays/3, sio/1, positive_t/1,
-			   fd1/4, fd2/4, fd3/4]).
+			   fd1/4, fd2/4, fd3/4, extend/2]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -84,8 +84,12 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 
 :- pred a(+list(position_t), +position_t) is foreign(c_a).
 
+:- pred extend(+list(int),-list(int)) is foreign.
+
 :- pred eq(+int, -int) is foreign(c_eq).
+
 :- pred idx(+list(num), +int, -num) is foreign(c_idx).
+
 :- pred numl(+int, -list(num)) is (foreign(c_numl), memory_root).
 
 :- pred f(?field_t) is (foreign(c_f), returns_state, memory_root).

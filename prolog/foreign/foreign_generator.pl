@@ -58,7 +58,9 @@ is_newer(File1, File2) :-
 generate_library(M, AliasSO, AliasSOPl, File) :-
     absolute_file_name(AliasSO, FileSO, [file_type(executable),
 					 relative_to(File)]),
-    findall(FSource, ( use_foreign_source(M, FAlias),
+    findall(FSource, ( ( use_foreign_source(M, FAlias)
+		       ; FAlias = library('foreign/foreign_interface.c')
+		       ),
 		       absolute_file_name(FAlias, FSource,
 					  [extensions(['.c', '']),
 					   access(read),
@@ -504,8 +506,10 @@ type_components(M, Type, PropL, Call, Loc) :-
     ; ( select(dict_t(Term, Desc), PropL, PropL1)
       ; select(dict_t(Term, Tag, Desc), PropL, PropL1)
       )
-    ->dict_pairs(Dict, Tag, Desc),
-      is_dict(Dict, Tag),
+    ->( is_dict(Desc, Tag)
+      ->Dict=Desc
+      ; dict_create(Dict, Tag, Desc)
+      ),
       ignore(Tag = Name),
       call(Call, dict_ini(M, Dict, Tag), Term, Name),
       forall(call(Call, dict_key_value(Dict, Desc, Tag, N), Arg, Value),
