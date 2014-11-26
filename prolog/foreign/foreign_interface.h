@@ -109,13 +109,12 @@ void **__root;
 #define __delroot(__root)
 #endif
 
-#ifdef __PARENT_NODES__
-
 typedef struct __leaf_s __leaf_t;
 
 struct __leaf_s {
     __leaf_t *parent;
     void *value;
+    size_t size;
 };
 
 // TODO: delete memset/3 when finish debugging
@@ -124,18 +123,24 @@ struct __leaf_s {
 	__leaf_t *__leaf = __alloc(sizeof(__leaf_t));		\
 	void **__mem = __alloc(sizeof(void *)+(__size));	\
 	__leaf->value = __mem;					\
-	*(__mem) = &(__leaf->value);				\
+	__leaf->size  = (__size);				\
+	*__mem = __leaf;					\
 	__leaf->parent = *__root;				\
 	*__root = __leaf;					\
-	__value = (void *)(__mem + 1);				\
+	__value = (void *)(__mem+1);				\
 	memset(__value, 0, (__size));				\
     }
 
-#define FI_realloc_mc(__root, __realloc, __size, __value) {	\
-	void **__mem=(void **)__value-1;			\
-	__mem = __realloc(__mem, sizeof(void *)+(__size));	\
-	*((void **)*__mem) = __mem;				\
-	__value = (void *)(__mem + 1);				\
+#define FI_realloc_mc(__root, __realloc, __size, __value) {		\
+	void **__mem=(void **)__value-1;				\
+	__leaf_t *__leaf = *__mem;					\
+	__mem = __realloc(__mem, sizeof(void *)+(__size));		\
+	__leaf->value = __mem;						\
+	__value = (void *)(__mem+1);					\
+	if (__leaf->size < (__size)) {					\
+	    memset((void *)__value+__leaf->size, 0, (__size)-__leaf->size); \
+	}								\
+	__leaf->size = (__size);					\
     }
 
 #define FI_destroy_mc(__root, __free) {		\
@@ -148,46 +153,6 @@ struct __leaf_s {
 	}					\
 	_noleaks;				\
     }
-
-#else
-
-#define FI_prev_node(value) ((void **)value - 1)
-
-#define FI_destroy_mc(__root, __free) {		\
-	void *__prev_mc;			\
-	while(*__root) {			\
-	    __prev_mc = *FI_prev_node(*__root);	\
-	    __free(FI_prev_node(*__root));	\
-	    *__root = __prev_mc;		\
-	}					\
-	_noleaks;				\
-    }
-
-#define FI_realloc_mc(__root, __realloc, __size, __value) {		\
-	void **__curr_mc_ptr = __root;					\
-	void * __mem = NULL;						\
-	while(*__curr_mc_ptr) {						\
-	    if (*__curr_mc_ptr == __value) {				\
-		void * __mem = __realloc(FI_prev_node(*__curr_mc_ptr),	\
-					 sizeof(void *) + (__size))	\
-		    + sizeof(void *);					\
-		*__curr_mc_ptr = __mem;					\
-		break;							\
-	    }								\
-	    __curr_mc_ptr = FI_prev_node(*__curr_mc_ptr);		\
-	}								\
-	__value = __mem;						\
-    }
-
-#define FI_malloc_mc(__root, __alloc, __size, __value) {	\
-	void *__mem = __alloc(sizeof(void *) + (__size));	\
-	*((void **)__mem) = *__root;				\
-	*__root = (void **)__mem + 1;				\
-	__value = *__root;					\
-	memset(__value, 0, (__size));				\
-    }
-
-#endif
 
 #define FI_alloc_array(__root, __alloc, __length, __value) {		\
 	void *__mem_a=NULL;						\
