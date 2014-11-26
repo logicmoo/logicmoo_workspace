@@ -7,7 +7,7 @@
 :- use_module(library(swi/plprops)).
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
-:- extra_compiler_opts('-O2 -gdwarf-2 -g3').
+:- extra_compiler_opts('-O2 -gdwarf-2 -g3 -D__DEBUG_MALLOC__ -D__PARENT_NODES__').
 :- use_foreign_header(foreign_test).
 :- use_foreign_source(foreign_test).
 :- gen_foreign_library(.('foreign_test_i.so')).
@@ -84,7 +84,7 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 
 :- pred a(+list(position_t), +position_t) is foreign(c_a).
 
-:- pred extend(+list(int),-list(int)) is foreign.
+:- pred extend(+list(int),-list(int)) is (foreign, memory_root).
 
 :- pred eq(+int, -int) is foreign(c_eq).
 
