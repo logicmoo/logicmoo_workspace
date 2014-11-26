@@ -47,8 +47,6 @@
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
 /* #define __REGION_BASED_MEMORY_MANAGEMENT__ */
 
-#define __DEBUG_MALLOC__
-
 #ifdef __DEBUG_MALLOC__
 
 #include <assert.h>
@@ -111,7 +109,7 @@ void **__root;
 #define __delroot(__root)
 #endif
 
-#define __PARENT_NODES__
+/* #define __PARENT_NODES__ */
 
 #ifdef __PARENT_NODES__
 
@@ -136,9 +134,10 @@ struct __leaf_s {
     }
 
 #define FI_realloc_mc(__root, __realloc, __size, __value) {		\
-	void **__leaf_value = (((void *)__value) - 1);			\
-	*__leaf_value = __realloc(__leaf_value, sizeof(void *) + __size); \
-	__value = *__leaf_value + 1;					\
+	void **__mem = (((void *)__value) - 1);				\
+	void **__p_leaf_value = *__mem;					\
+	*__p_leaf_value = __realloc(__mem, sizeof(void *) + __size);	\
+	__value = *__p_leaf_value + 1;					\
     }
 
 #define FI_destroy_mc(__root, __free) {		\
