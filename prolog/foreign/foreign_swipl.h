@@ -183,9 +183,11 @@
 	term_t __args = PL_new_term_refs(2);				\
 	static predicate_t __pred;					\
 	module_t __m = PL_new_module(PL_new_atom(__module));		\
-	__rtcheck((__pred = PL_predicate(__name, 2, __module))!=NULL);	\
+	__rtcheck((__pred = PL_predicate("__aux_keyid_index_" # __name, \
+					 2, __module))!=NULL);		\
 	PL_put_term(__args, __keyid);					\
-	__rtcheck(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args)); \
+	__rtcheck(__rtctype(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args), \
+			    __keyid, "valid key of " # __name));	\
 	__rtcheck(PL_get_integer(__args+1, &__index));			\
     }
 
@@ -209,7 +211,8 @@
 	term_t __args = PL_new_term_refs(2);				\
 	predicate_t __pred;						\
 	module_t __m = PL_new_module(PL_new_atom(__module));		\
-	__rtcheck((__pred = PL_predicate(__name, 2, __module))!=NULL);	\
+	__rtcheck((__pred = PL_predicate("__aux_keyid_index_" # __name, \
+					 2, __module))!=NULL);		\
 	__rtcheck(PL_unify_integer(__args+1, __index));			\
 	__rtcheck(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args)); \
 	__keyid = __args;						\

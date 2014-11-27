@@ -302,7 +302,7 @@ implement_type_getter_dict_ini(Module, PName, CName, Arg) :-
     format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~w *~w){~n',
 	   [Arg, Arg, CName]),
     format('    int __index;~n', []),
-    format('    FL_get_keyid_index("~w$impl", "__aux_keyid_index_~w", __keyid, __index);~n',
+    format('    FL_get_keyid_index("~w$impl", ~w, __keyid, __index);~n',
 	   [Module, Arg]),
     format('    switch (__index) {~n', []).
 
@@ -367,7 +367,7 @@ implement_type_unifier(dict_rec(_, _, N, Name), Spec, Arg) :-
     (spec_pointer(Spec)->format('    }~n', []);true).
 implement_type_unifier(dict_end(M, Name), _, Arg) :-
     func_pcname(Name, PName, _),
-    format('    FL_unify_dict_t("~w$impl", "__aux_keyid_index_~w", ~w, "~w");~n',
+    format('    FL_unify_dict_t("~w$impl", ~w, ~w, "~w");~n',
 	   [M, Arg, PName, Name]),
     implement_type_end.
 

@@ -31,15 +31,15 @@
 	}								\
     }
 
-#define __rtcpass(__call) {	\
+#define __rtcpass(__call) {		\
 	int __result = (__call);	\
 	if (!__result)			\
 	    return __result;		\
     }
 
-#define __rtcvoid(__call) {			\
-	if (!__call)				\
-	    return;				\
+#define __rtcvoid(__call) {	\
+	if (!__call)		\
+	    return;		\
     }
 
 #else
