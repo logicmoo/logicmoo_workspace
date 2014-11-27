@@ -10,7 +10,7 @@
 #endif /*PL_KERNEL*/
 
 #if (defined(__RTCHECK__))
-#define __rtcheck_type(__call, __term, __type) {		\
+#define __rtctype(__call, __term, __type) ({			\
 	int __result = (__call);				\
 	if (!(__result)) {					\
 	    if (!PL_exception(0)) {				\
@@ -33,15 +33,15 @@
 				  PL_CHARS, __FUNCTION__,	\
 				  PL_CHARS, # __call		\
 		       ))					\
-		    return FALSE;				\
-		return PL_raise_exception(__except);		\
+		    __result =  FALSE;				\
+		__result = PL_raise_exception(__except);	\
 	    }							\
-	    return __result;					\
 	}							\
-    }
+	__result;						\
+    })
 
 #else
-#define __rtcheck_type(__call, __term, __type) __call
+#define __rtctype(__call, __term, __type) __call
 #endif
 
 #define FL_get_integer(_, t, i) PL_get_integer(t, i)
@@ -60,13 +60,13 @@
 #define FL_unify_float(t, p)    PL_unify_float(t, p)
 #define FL_unify_pointer(t, p)  PL_unify_pointer(t, p)
 #define FL_unify_chrs(t, v)     PL_unify_atom_chars(t, v)
-#define FL_unify_char(t, c) PL_unify_integer(t, c)
+#define FL_unify_char(t, c)     PL_unify_integer(t, c)
 
 #define __rtc_FL_unify(__type, __term, __value)				\
-    __rtcheck_type(FL_unify_##__type(__term, __value), __term, __type)
+    __rtcpass(__rtctype(FL_unify_##__type(__term, __value), __term, __type))
 
 #define __rtc_FL_get(__type, __term, __value)				\
-    __rtcheck_type(FL_get_##__type(__root, __term, __value), __term, __type)
+    __rtcpass(__rtctype(FL_get_##__type(__root, __term, __value), __term, __type))
 
 #define FL_get_list(__FL_get_elem, __term, __value) {			\
 	if(PL_is_variable(__term)) {					\

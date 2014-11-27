@@ -37,6 +37,11 @@
 	    return __result;		\
     }
 
+#define __rtcvoid(__call) {			\
+	if (!__call)				\
+	    return;				\
+    }
+
 #else
 #pragma GCC diagnostic ignored "-Wunused-result"
 #define __rtcheck(__call) __call
@@ -170,6 +175,15 @@ struct __leaf_s {
 
 #define FI_alloc_value(__root, __alloc, __value) {	\
 	__alloc(__root, sizeof(*__value), __value);	\
+    }
+
+#define FI_foreach(__value, __array, __sentence) {		\
+	size_t __index, __count = FI_array_length(__array);	\
+	typeof (__array) __value;				\
+	for (__index = 0; __index < __count; __index++) {	\
+	    __value = &(__array)[__index];			\
+	    __sentence;						\
+	}							\
     }
 
 #define FI_new_value(value)            FI_alloc_value(  __root, __malloc,          value)
