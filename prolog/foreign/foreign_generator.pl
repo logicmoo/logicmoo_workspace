@@ -150,12 +150,8 @@ do_generate_library(M, FileSO, File, FSourceL) :-
     CommandsT = [CommandT],
     forall(member(Command, Commands),
 	   ( shell(Command, Status),
-	     ( Status==0
-	     ->MessageType=informational
-	     ; MessageType=error
-	     ),
-	     print_message(MessageType, format('`~w\' exited with status ~w',
-					       [Command, Status]))
+	     print_message(informational, format('~w', [Command])),
+	     assertion(Status==0)
 	   )).
 
 :- meta_predicate with_output_to_file(+,0).
