@@ -21,12 +21,12 @@ nitrace(Goal, Path, Stream) :-
 	cleanup_trace(State)).
 
 :- meta_predicate call_inout(0, 0, 0).
-call_inout(Goal, OnInp, OnOut) :-
-    (OnInp;OnOut,fail),
+call_inout(Goal, OnIn, OnOut) :-
+    (OnIn;OnOut,fail),
     prolog_current_choice(C0),
     catch(Goal, E, (OnOut, throw(E))),
     prolog_current_choice(C1),
-    (OnOut;OnInp,fail),
+    (OnOut;OnIn,fail),
     (C0==C1 -> ! ;true).
 
 %% setup_trace(!State, +Path, +Stream) is det.
