@@ -1,60 +1,54 @@
-:- module(nitrace, [nitrace_file/3,
-		    nitrace/3]).
+:- module(nitrace, [nitrace_file/2,
+		    nitrace/2]).
 
 :- use_module(library(maplist_dcg)).
 :- use_module(library(ontrace)).
+:- use_module(library(prolog_clause), []).
 
-
-:- meta_predicate nitrace_file(0, +, +).
-
-nitrace_file(Goal, Path, Alias) :-
+:- meta_predicate nitrace_file(0,+).
+nitrace_file(Goal, Alias) :-
     absolute_file_name(Alias, File),
     setup_call_cleanup(
 	open(File, write, Stream),
-	nitrace(Goal, Path, Stream),
+	nitrace(Goal, Stream),
 	close(Stream)).
 
-:- meta_predicate nitrace(0, +, +).
+:- meta_predicate nitrace(0,+).
+nitrace(Goal, Stream) :-
+    ontrace(Goal, nitrace_port(Stream)).
 
-nitrace(Goal, Path, Stream) :-
-    ontrace(Goal, nitrace_port(Path, Stream)).
+frame_pi(Frame, PI) :-
+    prolog_frame_attribute(Frame, predicate_indicator, PI).
 
-nitrace_port(Path, Stream, Frame, Port, PC, CS, Cl) :-
-    ( nonvar(Cl),
-      clause_property(Cl, file(AFile)),
-      clause_property(Cl, line_count(Line))
-    ->directory_file_path(Path, File, AFile), % trace only files in Path
-      StreamLoc = stream(Stream, File, Line, CS)
-    ; StreamLoc = stream(Stream, CS)
-    ),
-    print_message(StreamLoc, frame(Frame, Port, PC)).
+nitrace_port(Stream, Port, Frame, PC, ParentL, SubLoc) :-
+    maplist(frame_pi, ParentL, CS),
+    print_message(stream(Stream, SubLoc), frame(Frame, Port, PC, CS)).
 
-port_mask(Port, Mask0, Mask) :- '$syspreds':port_name(Port, Bit),
-    Mask is Mask0\/Bit.
+unify_term(Sub, Term) :-
+    subsumes_term(Term, Sub),
+    nonvar(Term),
+    Term = Sub.
 
 :- multifile
     user:message_property/2,
+    prolog:message_location//1,
     prolog:message//1.
 
-user:message_property(stream(Stream, _),       stream(Stream)) :- !.
-user:message_property(stream(Stream, _, _, _), stream(Stream)) :- !.
-user:message_property(stream(_, []), prefix('~N')) :- !.
-user:message_property(stream(_, CS), prefix('~N ~w ->'-[CS])) :- !.
-user:message_property(stream(_, File, Line, []), prefix('~N~w:~d:'-[File, Line])) :- !.
-user:message_property(stream(_, File, Line, CS),
-		      prefix('~N~w:~d: ~w ->'-[File, Line, CS])) :- !.
+user:message_property(stream(Stream, _), stream(Stream)) :- !.
+user:message_property(stream(_, Loc), prefix(F-A)) :- !,
+    prolog:message_location(Loc, [F0-A], []),
+    atomic_list_concat(['~N', F0, '\t'], F).
 
-prolog:message(frame(Frame, redo(Redo), PC)) -->
-    '$messages':translate_message(frame(Frame, redo, PC)),
-    [' - ~w'-[Redo]].
-prolog:message(frame(Frame, exception(Ex), PC)) -->
-    '$messages':translate_message(frame(Frame, exception, PC)),
+prolog:message(frame(Frame, redo(Redo), PC, CS)) --> !,
+    '$messages':translate_message(frame(Frame, redo, PC, CS)),
+    [' - redo(~w)'-[Redo]].
+prolog:message(frame(Frame, exception(Ex), PC, CS)) --> !,
+    '$messages':translate_message(frame(Frame, exception, PC, CS)),
     [nl],
     '$messages':translate_message(Ex).
-
-:- multifile skip_trace/1.
-:- dynamic skip_trace/1.
-
-skip_trace(M:_) :-
-    \+ module_property(M, class(user)). % trace only user predicates
-skip_trace(nitrace:_).
+prolog:message(frame(Frame, Port, PC, CS)) -->
+    '$messages':translate_message(frame(Frame, Port, PC)),
+    ( {CS = []}
+    ->[]
+    ; [' (caller: ~q)'-[CS]]
+    ).
