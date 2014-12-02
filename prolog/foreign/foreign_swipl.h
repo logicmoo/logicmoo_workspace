@@ -44,31 +44,30 @@
 #define __rtctype(__call, __term, __type) __call
 #endif
 
-#define FL_get_integer(_, t, i) PL_get_integer(t, i)
-#define FL_get_float(_, t, f)   PL_get_float(t, f)
-#define FL_get_pointer(_, t, p) PL_get_pointer(t, p)
-#define FL_get_chrs(_, t, v)    PL_get_atom_chars(t, v)
-
-#define FL_get_char(_, t, c)    {		\
+#define FI_get_integer(_, t, i) PL_get_integer(t, i)
+#define FI_get_float(_, t, f)   PL_get_float(t, f)
+#define FI_get_pointer(_, t, p) PL_get_pointer(t, p)
+#define FI_get_chrs(_, t, v)    PL_get_atom_chars(t, v)
+#define FI_get_char(_, t, c)    {		\
 	int i;					\
 	int __result = PL_get_integer(t, &i);	\
 	*c = (char)i;				\
 	__result;				\
     }
 
-#define FL_unify_integer(t, p)  PL_unify_integer(t, p)
-#define FL_unify_float(t, p)    PL_unify_float(t, p)
-#define FL_unify_pointer(t, p)  PL_unify_pointer(t, p)
-#define FL_unify_chrs(t, v)     PL_unify_atom_chars(t, v)
-#define FL_unify_char(t, c)     PL_unify_integer(t, c)
+#define FI_unify_integer(t, p)  PL_unify_integer(t, p)
+#define FI_unify_float(t, p)    PL_unify_float(t, p)
+#define FI_unify_pointer(t, p)  PL_unify_pointer(t, p)
+#define FI_unify_chrs(t, v)     PL_unify_atom_chars(t, v)
+#define FI_unify_char(t, c)     PL_unify_integer(t, c)
 
-#define __rtc_FL_unify(__type, __term, __value)				\
-    __rtcpass(__rtctype(FL_unify_##__type(__term, __value), __term, __type))
+#define __rtc_FI_unify(__type, __term, __value)				\
+    __rtcpass(__rtctype(FI_unify_##__type(__term, __value), __term, __type))
 
-#define __rtc_FL_get(__type, __term, __value)				\
-    __rtcpass(__rtctype(FL_get_##__type(__root, __term, __value), __term, __type))
+#define __rtc_FI_get(__type, __term, __value)				\
+    __rtcpass(__rtctype(FI_get_##__type(__root, __term, __value), __term, __type))
 
-#define FL_get_list(__FL_get_elem, __term, __value) {			\
+#define FI_get_list(__FI_get_elem, __term, __value) {			\
 	if(PL_is_variable(__term)) {					\
 	    *__value = NULL;						\
 	}								\
@@ -82,39 +81,39 @@
 		FI_new_array(__length, *__value);			\
 		typeof (*__value) _c_##__term##_ = *__value;		\
 		    while(PL_get_list(__tail, __term##_, __tail)) {	\
-			__FL_get_elem;					\
+			__FI_get_elem;					\
 			_c_##__term##_++;				\
 		    };							\
 		    __rtcheck(PL_get_nil(__tail));			\
 	}								\
     }
 
-#define FL_get_ptr(__FL_get_elem, __term, __value) {	\
+#define FI_get_ptr(__FI_get_elem, __term, __value) {	\
 	term_t __term##_ = __term;			\
 	FI_new_value(*__value);				\
 	typeof (*__value) _c_##__term##_ = *__value;	\
-	__FL_get_elem;					\
+	__FI_get_elem;					\
 }
 
-#define FL_get_inout_ptr(__FL_get_elem, __term, __value) {	\
+#define FI_get_inout_ptr(__FI_get_elem, __term, __value) {	\
 	if(PL_is_variable(__term)) {				\
 	    *__value = NULL;					\
 	}							\
 	else {							\
-	    FL_get_ptr(__FL_get_elem, __term, __value);		\
+	    FI_get_ptr(__FI_get_elem, __term, __value);		\
 	}							\
     }
 
-#define FL_get_inout_chrs(__term, __value) {		\
+#define FI_get_inout_chrs(__term, __value) {		\
 	if(PL_is_variable(__term)) {			\
 	    *__value = NULL;				\
 	}						\
 	else {						\
-	    __rtc_FL_get(chrs, __term, __value);	\
+	    __rtc_FI_get(chrs, __term, __value);	\
 	}						\
     }
 
-#define FL_unify_list(__FL_unify_elem, __term, __value) {		\
+#define FI_unify_list(__FI_unify_elem, __term, __value) {		\
 	if (__value!=NULL) {						\
 	    term_t l = PL_copy_term_ref(__term);			\
 	    term_t __term##_ = PL_new_term_ref();			\
@@ -123,43 +122,43 @@
 		for(__index = 0; __index < __length; __index++)	{	\
 		    typeof (*__value) _c_##__term##_ = __value[__index]; \
 			__rtcheck(PL_unify_list(l, __term##_, l));	\
-			__FL_unify_elem;				\
+			__FI_unify_elem;				\
 		}							\
 		__rtcheck(PL_unify_nil(l));				\
 	}								\
     }
 
-#define FL_unify_ptr(__FL_unify_elem, __term, __value) {	\
+#define FI_unify_ptr(__FI_unify_elem, __term, __value) {	\
 	if(__value!=NULL) {					\
 	    term_t __term##_ = __term;				\
 	    typeof (*__value) _c_##__term##_ = *__value;	\
-	    __FL_unify_elem;					\
+	    __FI_unify_elem;					\
 	}							\
     }
 
-#define FL_get_inout(__getter, __term, __value) {	\
+#define FI_get_inout(__getter, __term, __value) {	\
 	if(PL_is_variable(__term)) {			\
 	    __value = NULL;				\
 	}						\
 	else {						\
 	    FI_new_value(__value);			\
-	    __rtc_FL_get(__getter, __term, __value);	\
+	    __rtc_FI_get(__getter, __term, __value);	\
 	}						\
     }
 
-#define FL_unify_inout(__unifier, __term, __value) {		\
+#define FI_unify_inout(__unifier, __term, __value) {		\
 	if (__value!=NULL) {					\
-	    __rtc_FL_unify(__unifier, __term, *__value);	\
+	    __rtc_FI_unify(__unifier, __term, *__value);	\
 	}							\
     }
 
-#define FL_unify_inout_chrs(__term, __value) {		\
+#define FI_unify_inout_chrs(__term, __value) {		\
 	if (__value!=NULL) {				\
-	    __rtc_FL_unify(chrs, __term, __value);	\
+	    __rtc_FI_unify(chrs, __term, __value);	\
 	}						\
     }
 
-#define FL_get_dict_t(__unifier, __desc, __value) {			\
+#define FI_get_dict_t(__unifier, __desc, __value) {			\
 	int index, arity, pairs;					\
 	atom_t name;							\
 	term_t __term = PL_new_term_refs(3);				\
@@ -179,7 +178,7 @@
 	}								\
     }
 
-#define FL_get_keyid_index(__module, __name, __keyid, __index) {	\
+#define FI_get_keyid_index(__module, __name, __keyid, __index) {	\
 	term_t __args = PL_new_term_refs(2);				\
 	static predicate_t __pred;					\
 	module_t __m = PL_new_module(PL_new_atom(__module));		\
@@ -191,7 +190,7 @@
 	__rtcheck(PL_get_integer(__args+1, &__index));			\
     }
 
-#define FL_unify_dict_t(__module, __name, __term, __tag) {		\
+#define FI_unify_dict_t(__module, __name, __term, __tag) {		\
 	int length=index;						\
 	__rtcheck(PL_unify_functor(__term, PL_new_functor(ATOM_dict, 2*length+1))); \
 	term_t __tag_t = PL_new_term_ref();				\
@@ -200,14 +199,14 @@
 	for(index=0; index < length;) {					\
 	    term_t __k;							\
 	    term_t __v=dict_args+index;					\
-	    FL_get_index_keyid(__module, __name, indexes[index], __k);	\
+	    FI_get_index_keyid(__module, __name, indexes[index], __k);	\
 	    index++;							\
 	    __rtcheck(PL_unify_arg(2*index,   __term, __k));		\
 	    __rtcheck(PL_unify_arg(2*index+1, __term, __v));		\
 	}								\
     }
 
-#define FL_get_index_keyid(__module, __name, __index, __keyid) {	\
+#define FI_get_index_keyid(__module, __name, __index, __keyid) {	\
 	term_t __args = PL_new_term_refs(2);				\
 	predicate_t __pred;						\
 	module_t __m = PL_new_module(PL_new_atom(__module));		\

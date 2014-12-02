@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 #define __RTCHECK__
 
@@ -46,7 +47,7 @@
 #pragma GCC diagnostic ignored "-Wunused-result"
 #define __rtcheck(__call) __call
 #define __doifrtc(__call)
-#define __rtcheck_prop(__call)
+#define __rtcwarn(__call)
 #endif
 
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
@@ -95,7 +96,7 @@ int __balance;
 #ifdef __LINKED_NODES_MEMORY_MANAGEMENT__
 #define __realloc(__root, size, value) FI_realloc_mc(__root, _realloc, size, value)
 #define __malloc( __root, size, value) FI_malloc_mc( __root,  _malloc, size, value)
-
+#define __size(value) FI_size_mc(value)
 #ifdef __GLOBAL_ROOT__
 void *__root_h;
 void **__root;
@@ -110,6 +111,7 @@ void **__root;
 #else
 #define __realloc(__root, size, value) {value = _realloc(value, size);}
 #define __malloc( __root, size, value) {value = _malloc(size);}
+#define __size(value) ((size_t)-1)
 #define __mkroot(__root)
 #define __delroot(__root)
 #endif
@@ -148,6 +150,8 @@ struct __leaf_s {
 	__leaf->size = (__size);					\
     }
 
+#define FI_size_mc(__value) ((*((__leaf_t **)__value-1))->size)
+
 #define FI_destroy_mc(__root, __free) {		\
 	__leaf_t *__leaf;			\
 	while (*__root) {			\
@@ -166,11 +170,17 @@ struct __leaf_s {
 	__value = __mem_a + sizeof(size_t);				\
     }
 
-#define FI_realloc_array(__root, __realloc, __length, __value) {	\
+#define FI_realloc_array_(__root, __realloc, __length, __value) {	\
 	void *__mem_a = FI_array_length_ptr(__value);			\
 	__realloc(__root, sizeof(size_t)+(__length)*sizeof(*__value), __mem_a); \
 	*((size_t *)__mem_a) = (__length);				\
 	__value = __mem_a + sizeof(size_t);				\
+    }
+
+#define FI_resize_array_(__root, __realloc, __size, __length, __value) { \
+	void *__mem_a = FI_array_length_ptr(__value);			\
+	assert(sizeof(size_t)+(__length)*sizeof(*__value)<=__size(__mem_a)); \
+	*((size_t *)__mem_a) = (__length);				\
     }
 
 #define FI_alloc_value(__root, __alloc, __value) {	\
@@ -186,9 +196,10 @@ struct __leaf_s {
 	}							\
     }
 
-#define FI_new_value(value)            FI_alloc_value(  __root, __malloc,          value)
-#define FI_new_array(length, value)    FI_alloc_array(  __root, __malloc,  length, value)
-#define FI_resize_array(length, value) FI_realloc_array(__root, __realloc, length, value)
+#define FI_new_value(value)             FI_alloc_value(  __root, __malloc,          value)
+#define FI_new_array(length, value)     FI_alloc_array(  __root, __malloc,  length, value)
+#define FI_realloc_array(length, value) FI_realloc_array_(__root, __realloc, length, value)
+#define FI_resize_array(length, value)  FI_resize_array_( __root, __realloc, __size, length, value)
 
 #define FI_array_length_ptr(__value)   ((size_t *)__value-1)
 #define FI_array_length(__value)       (*FI_array_length_ptr(__value))
