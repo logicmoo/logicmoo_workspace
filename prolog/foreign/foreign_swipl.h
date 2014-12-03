@@ -55,7 +55,6 @@
 	__result;				\
     }
 #define FI_get_char(_, t, c) {				\
-	fprintf(stderr, "c=%p\n", c);			\
 	char *s;					\
 	int __result = PL_get_atom_chars(t, &s);	\
 	if (__result) {					\
