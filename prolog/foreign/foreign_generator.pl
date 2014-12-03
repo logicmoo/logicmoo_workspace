@@ -709,7 +709,7 @@ c_set_argument(type(T),    M, C, A) :- c_set_argument_type(M, T, C, A).
 c_set_argument(tdef(_, S), M, C, A) :- c_set_argument(S, M, C, A).
 c_set_argument(T-_,        M, C, A) :- c_set_argument_one( M, T, C, A).
 c_set_argument(chrs(_),    M, C, A) :- c_set_argument_chrs(M, C, A).
-c_set_argument(term,       _, C, A) :- format('~w=~w', [A, C]).
+c_set_argument(term,       _, C, A) :- format('__rtcheck(PL_unify(~w, ~w))', [A, C]).
 
 c_set_argument_one(out,   Type, CArg, Arg) :-
     format('__rtc_FI_unify(~w, ~w, ~w)', [Type, Arg, CArg]).
@@ -793,7 +793,10 @@ bind_arguments(M, Bind-Head, Return) :-
 	     ( write('    '),
 	       c_get_ctype_decl(Spec, Mode),
 	       c_var_name(Arg, CArg),
-	       format(' ~w;~n', [CArg])
+	       ( Spec = term
+	       ->format(' ~w=PL_new_term_ref();~n', [CArg])
+	       ; format(' ~w;~n', [CArg])
+	       )
 	     )),
       forall(( arg(_, Head, Arg),
 	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
