@@ -36,7 +36,6 @@ ignore_dupcode(term_expansion, 4, _, name).
 ignore_dupcode(goal_expansion, 2, _, name).
 ignore_dupcode(goal_expansion, 4, _, name).
 ignore_dupcode('$exported_op', 3, _, _).
-ignore_dupcode('$exported_op', 3, _, _).
 ignore_dupcode('$included', 4, system, _).
 ignore_dupcode('$load_context_module', 3, system, _).
 
