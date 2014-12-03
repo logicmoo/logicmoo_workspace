@@ -1,4 +1,4 @@
-:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1]).
+:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, char/1]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/nativeprops)).
@@ -10,6 +10,9 @@
 :- true prop type/1.
 :- meta_predicate type(0).
 type(Goal) :- call(Goal).
+
+:- true prop char/1 is type/1.
+char(A) :- atm(A). % size(A)=1
 
 :- prop det(X) + equiv(not_fails(is_det(X))).
 :- meta_predicate det(0).

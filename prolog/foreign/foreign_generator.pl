@@ -1,6 +1,7 @@
 :- module(foreign_generator, [generate_library/4,
 			      gen_foreign_library/2,
-			      current_foreign_prop/11]).
+			      current_foreign_prop/11,
+			      key_value/3]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(assertions/assrt_lib)).
