@@ -456,7 +456,7 @@ generate_aux_clauses(Module) :-
 % avoiding string comparisons.
 generate_aux_clauses(dict_key_value(Dict, _, N), Key, Value) :- !,
     key_value_from_dict(Dict, N, Key, Value).
-generate_aux_clauses(dict_rec(_, Name, N, _), _, Key) :- !,
+generate_aux_clauses(dict_rec(_, _, N, Name), _, Key) :- !,
     atom_concat('__aux_keyid_index_', Name, F),
     Pred =.. [F, Key, N],
     portray_clause(Pred).
@@ -501,7 +501,7 @@ type_components(M, Type, PropL, Call, Loc) :-
       forall(call(Call, dict_key_value(Dict, Desc, N), Arg, Value),
 	     ( fetch_kv_prop_arg(Arg, Value, PropL1, Prop),
 	       match_known_type_(Prop, M, Spec, Arg),
-	       call(Call, dict_rec(M, Term, N, Tag), Spec, Arg)
+	       call(Call, dict_rec(M, Term, N, Name), Spec, Arg)
 	     )
 	    ),
       call(Call, dict_end(M, Tag), Term, Name)
