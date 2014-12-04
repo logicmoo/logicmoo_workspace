@@ -11,7 +11,7 @@
 :- meta_predicate type(0).
 type(Goal) :- call(Goal).
 
-:- true prop char/1 is type/1.
+:- true prop char/1 is type.
 char(A) :- atm(A). % size(A)=1
 
 :- prop det(X) + equiv(not_fails(is_det(X))).

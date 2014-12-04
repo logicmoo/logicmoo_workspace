@@ -189,7 +189,6 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
 generate_foreign_impl_h(Module) :-
     add_autogen_note(Module),
     format('#ifndef __~w_IMPL_H~n#define __~w_IMPL_H~n~n', [Module, Module]),
-    forall_tp(Module, type_props, declare_typedef),
     forall_tp(Module, type_props, declare_struct),
     declare_foreign_bind(Module),
     format('~n#endif /* __~w_IMPL_H */~n', [Module]).
@@ -228,6 +227,9 @@ type_props(M, Type, PropL, GlobL, Dict, Pos) :-
     ->PropL = TPropL,
       Dict = TDict
     ; bind_type_names(M, Type, PropL, Dict)
+    ->true
+    ; PropL = [],
+      Dict = TDict
     ).
 
 type_props_(M, Type, PropL, GlobL, Dict, Pos) :-
@@ -246,13 +248,14 @@ type_props_nf(Module, Type, PropL, Dict, Pos) :-
     \+ type_is_tdef(Module, Type, PropL, _, _),
     \+ memberchk(foreign(_), GlobL).
 
-implement_type_getter_ini(PName, CName, Arg) :-
-    format('int FI_get_~w(void** __root, term_t ~w, ~w *~w) {~n',
-	   [Arg, PName, Arg, CName]).
+implement_type_getter_ini(PName, CName, Spec, Name) :-
+    ctype_decl(Spec, Decl, []),
+    format('int FI_get_~w(void** __root, term_t ~w, ~s *~w) {~n',
+	   [Name, PName, Decl, CName]).
 
-implement_type_getter(func_ini, Term, Arg) :-
+implement_type_getter(func_ini(Name), Spec, Term) :-
     term_pcname(Term, PName, CName),
-    implement_type_getter_ini(PName, CName, Arg).
+    implement_type_getter_ini(PName, CName, Spec, Name).
 implement_type_getter(func_rec(N, Term), Spec, Arg) :-
     term_pcname(Term, PName, CName),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
@@ -267,18 +270,18 @@ implement_type_getter(func_end, _, _) :-
     implement_type_end.
 implement_type_getter(atom(Name), Spec, Term) :-
     term_pcname(Term, PName, CName),
-    implement_type_getter_ini(PName, CName, Name),
+    implement_type_getter_ini(PName, CName, Spec, Name),
     format('    ', []),
     c_get_argument(Spec, in, deref, CName, PName),
     format(';~n', []),
     implement_type_end.
-implement_type_getter(dict_ini(M, _, Name), _, Arg) :-
-    term_pcname(Name, PName, CName),
-    implement_type_getter_dict_ini(M, PName, CName, Arg).
-implement_type_getter(dict_key_value(Dict, _, _, N), Key, Value) :-
+implement_type_getter(dict_ini(Name, M, _), Spec, Arg) :-
+    term_pcname(Arg, PName, CName),
+    implement_type_getter_dict_ini(M, PName, CName, Spec, Name).
+implement_type_getter(dict_key_value(Dict, _, N), Key, Value) :-
     key_value_from_dict(Dict, N, Key, Value).
-implement_type_getter(dict_rec(_, _, N, Name), Spec, Arg) :-
-    term_pcname(Name, _, CName),
+implement_type_getter(dict_rec(_, Term, N, _), Spec, Arg) :-
+    term_pcname(Term, _, CName),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
     format('        case ~w: ', [N]),
     c_get_argument(Spec, in, deref, CNameArg, '__value'),
@@ -286,21 +289,22 @@ implement_type_getter(dict_rec(_, _, N, Name), Spec, Arg) :-
 implement_type_getter(dict_end(_, _), _, _) :-
     format('        }~n', []),
     implement_type_end.
-				    
-implement_type_getter_dict_ini(Module, PName, CName, Arg) :-
+
+implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) :-
+    ctype_decl(Spec, Decl, []),
     format('static int~n', []),
-    format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~w *);~n',
-	   [Arg, Arg]),
-    implement_type_getter_ini(PName, CName, Arg),
-    format('    memset(~w, 0, sizeof(~w));~n', [CName, Arg]),
-    format('    FI_get_dict_t(~w, ~w, ~w);~n', [Arg, PName, CName]),
+    format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~s *);~n~n',
+	   [Name, Decl]),
+    implement_type_getter_ini(PName, CName, Spec, Name),
+    format('    memset(~w, 0, sizeof(~s));~n', [CName, Decl]),
+    format('    FI_get_dict_t(~w, ~w, ~w);~n', [Name, PName, CName]),
     implement_type_end,
     format('static int~n', []),
-    format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~w *~w){~n',
-	   [Arg, Arg, CName]),
+    format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~s *~w){~n',
+	   [Name, Decl, CName]),
     format('    int __index;~n', []),
     format('    FI_get_keyid_index("~w$impl", ~w, __keyid, __index);~n',
-	   [Module, Arg]),
+	   [Module, Name]),
     format('    switch (__index) {~n', []).
 
 implement_type_end :-
@@ -319,15 +323,15 @@ func_pcname(Func, PName, CName) :-
 
 implement_type_unifier(atom(Name), Spec, Term) :-
     term_pcname(Term, PName, CName),
-    implement_type_unifier_ini(PName, CName, Name),
+    implement_type_unifier_ini(PName, CName, Name, Spec),
     format('    ', []),
     c_set_argument(Spec, inout, CName, PName),
     format(';~n', []),
     implement_type_end.
-implement_type_unifier(func_ini, Term, Arg) :-
+implement_type_unifier(func_ini(Name), Spec, Term) :-
     term_pcname(Term, PName, CName),
     functor(Term, Func, Arity),
-    implement_type_unifier_ini(PName, CName, Arg),
+    implement_type_unifier_ini(PName, CName, Name, Spec),
     format('    __rtcheck(PL_unify_functor(~w, PL_new_functor(PL_new_atom("~w"), ~d)));~n',
 	   [PName, Func, Arity]).
 implement_type_unifier(func_rec(N, Term), Spec, Arg) :-
@@ -342,17 +346,17 @@ implement_type_unifier(func_rec(N, Term), Spec, Arg) :-
     format(';~n', []).
 implement_type_unifier(func_end, _, _) :-
     implement_type_end.
-implement_type_unifier(dict_ini(_M, Dict, Name), _, Arg) :-
-    func_pcname(Name, PName, CName),
-    implement_type_unifier_ini(PName, CName, Arg),
+implement_type_unifier(dict_ini(Name, _, Dict), Spec, Term) :-
+    func_pcname(Term, PName, CName),
+    implement_type_unifier_ini(PName, CName, Name, Spec),
     functor(Dict, _, Arity),
     N is Arity//2,
     format('    term_t dict_args=PL_new_term_refs(~w);~n', [N]),
     format('    int index=0, indexes[~w];~n', [N]).
-implement_type_unifier(dict_key_value(Dict, _, _, N), Key, Value) :-
+implement_type_unifier(dict_key_value(Dict, _, N), Key, Value) :-
     key_value_from_dict(Dict, N, Key, Value). % Placed in 'dict' order
-implement_type_unifier(dict_rec(_, _, N, Name), Spec, Arg) :-
-    func_pcname(Name, PName, CName),
+implement_type_unifier(dict_rec(_, Term, N, _), Spec, Arg) :-
+    func_pcname(Term, PName, CName),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
     camel_snake(PArg, Arg),
     format(atom(PNameArg), '~w_~w', [PName, PArg]),
@@ -362,10 +366,10 @@ implement_type_unifier(dict_rec(_, _, N, Name), Spec, Arg) :-
     format(';~n', []),
     format('        indexes[index++]=~w;~n', [N]),
     (spec_pointer(Spec)->format('    }~n', []);true).
-implement_type_unifier(dict_end(M, Name), _, Arg) :-
-    func_pcname(Name, PName, _),
+implement_type_unifier(dict_end(M, Tag), Term, Name) :-
+    func_pcname(Term, PName, _),
     format('    FI_unify_dict_t("~w$impl", ~w, ~w, "~w");~n',
-	   [M, Arg, PName, Name]),
+	   [M, Name, PName, Tag]),
     implement_type_end.
 
 spec_pointer(chrs(_)).
@@ -374,10 +378,11 @@ spec_pointer(pointer-_).
 spec_pointer(list(_)).
 % spec_pointer(type(_)).
 
-implement_type_unifier_ini(PName, CName, Arg) :-
-    format('int FI_unify_~w(term_t ~w, ~w* const ~w) {~n',
-	   [Arg, PName, Arg, CName]).
-    
+implement_type_unifier_ini(PName, CName, Term, Spec) :-
+    ctype_decl(Spec, Decl, []),
+    format('int FI_unify_~w(term_t ~w, ~s* const ~w) {~n',
+	   [Term, PName, Decl, CName]).
+
 apply_name(Name=Value) :-
     camel_snake(Name, Arg),
     ignore(Value=Arg).
@@ -407,61 +412,49 @@ bind_type_names(M, Type, PropL, Dict) :-
     ),
     sequence_list(Body, PropL, []).
 
-declare_struct(atom(_),  _,    _).
-declare_struct(func_ini, Term, _) :-
-    functor(Term, Name, _),
-    format('struct ~w {~n', [Name]).
+declare_struct(atom(Name), Spec, _) :-
+    ctype_decl(Spec, Decl, []),
+    format('typedef ~s ~w;~n', [Decl, Name]).
+declare_struct(func_ini(_), Spec, _) :-
+    ctype_decl(Spec, Decl, []),
+    format('~s {~n', [Decl]).
 declare_struct(func_end, _, _) :- format('};~n', []).
 declare_struct(func_rec(_, _), Spec, Name) :-
-    write('    '),
-    c_get_ctype_decl(Spec),
-    format(' ~w;~n', [Name]).
+    ctype_decl(Spec, Decl, []),
+    format('    ~s ~w;~n', [Decl, Name]).
 %%
-declare_struct(dict_ini(_, _, Spec), _, _) :-
-    format('~nstruct ~w {~n', [Spec]).
-declare_struct(dict_key_value(Dict, Desc, Tag, N), Key, Value) :-
-    key_value_from_desc(Dict, Desc, Tag, N, Key, Value).
+declare_struct(dict_ini(_, _, _), Spec, _) :-
+    ctype_decl(Spec, Decl, []),
+    format('~n~s {~n', [Decl]).
+declare_struct(dict_key_value(Dict, Desc, N), Key, Value) :-
+    key_value_from_desc(Dict, Desc, N, Key, Value).
 declare_struct(dict_rec(_, _, _, _), Spec, Name) :-
-    write('    '),
-    c_get_ctype_decl(Spec),
-    format(' ~w;~n', [Name]).
+    ctype_decl(Spec, Decl, []),
+    format('    ~s ~w;~n', [Decl, Name]).
 declare_struct(dict_end(_, _), _, _) :- format('};~n', []).
 
-declare_typedef(atom(Name), Spec, _) :-
-    format('typedef ', []),
-    c_get_ctype_decl(Spec),
-    format(' ~w;~n', [Name]).
-declare_typedef(func_ini, Term, Name) :-
-    functor(Term, Spec, _),
-    format('typedef struct ~w ~w;~n', [Spec, Name]).
-declare_typedef(func_end, _, _).
-declare_typedef(func_rec(_, _), _, _).
-declare_typedef(dict_ini(_, _, Spec), _, Name) :-
-    format('typedef struct ~w ~w;~n', [Spec, Name]).
-declare_typedef(dict_end(_, _), _, _).
-declare_typedef(dict_rec(_, _, _, _), _, _).
-
-declare_type_getter_unifier(atom(Name), _, _) :-
-    declare_type_getter_unifier(Name).
-declare_type_getter_unifier(func_ini, _, Name) :-
-    declare_type_getter_unifier(Name).
+declare_type_getter_unifier(atom(Name), Spec, _) :-
+    declare_type_getter_unifier(Name, Spec).
+declare_type_getter_unifier(func_ini(Name), Spec, _) :-
+    declare_type_getter_unifier(Name, Spec).
 declare_type_getter_unifier(func_end, _, _).
 declare_type_getter_unifier(func_rec(_, _), _, _).
-declare_type_getter_unifier(dict_ini(_, _, _), _, Name) :-
-    declare_type_getter_unifier(Name).
+declare_type_getter_unifier(dict_ini(Name, _, _), Spec, _) :-
+    declare_type_getter_unifier(Name, Spec).
 declare_type_getter_unifier(dict_end(_, _), _, _).
 declare_type_getter_unifier(dict_rec(_, _, _, _), _, _).
 
-declare_type_getter_unifier(Name) :-
-    format('int FI_get_~w(void** __root, term_t, ~w*);~n', [Name, Name]),
-    format('int FI_unify_~w(term_t, ~w* const);~n~n', [Name, Name]).
+declare_type_getter_unifier(Name, Spec) :-
+    ctype_decl(Spec, Decl, []),
+    format('int FI_get_~w(void** __root, term_t, ~s*);~n', [Name, Decl]),
+    format('int FI_unify_~w(term_t, ~s* const);~n~n', [Name, Decl]).
 
 generate_aux_clauses(Module) :-
     forall_tp(Module, type_props, generate_aux_clauses).
 
 % This will create an efficient method to convert keys to indexes in the C side,
 % avoiding string comparisons.
-generate_aux_clauses(dict_key_value(Dict, _, _, N), Key, Value) :- !,
+generate_aux_clauses(dict_key_value(Dict, _, N), Key, Value) :- !,
     key_value_from_dict(Dict, N, Key, Value).
 generate_aux_clauses(dict_rec(_, Name, N, _), _, Key) :- !,
     atom_concat('__aux_keyid_index_', Name, F),
@@ -486,7 +479,7 @@ type_components(M, Type, PropL, Call, Loc) :-
     functor(Type, Name, _),
     arg(1, Type, Term),
     ( compound(Term)
-    ->call(Call, func_ini, Term, Name),
+    ->call(Call, func_ini(Name), type(Name), Term),
       forall(arg(N, Term, Arg),
 	     ( member(Prop, PropL),
 	       match_known_type_(Prop, M, Spec, Arg),
@@ -504,17 +497,19 @@ type_components(M, Type, PropL, Call, Loc) :-
       ; dict_create(Dict, Tag, Desc)
       ),
       ignore(Tag = Name),
-      call(Call, dict_ini(M, Dict, Tag), Term, Name),
-      forall(call(Call, dict_key_value(Dict, Desc, Tag, N), Arg, Value),
+      call(Call, dict_ini(Name, M, Dict), type(Name), Term),
+      forall(call(Call, dict_key_value(Dict, Desc, N), Arg, Value),
 	     ( fetch_kv_prop_arg(Arg, Value, PropL1, Prop),
 	       match_known_type_(Prop, M, Spec, Arg),
-	       call(Call, dict_rec(M, Name, N, Tag), Spec, Arg)
+	       call(Call, dict_rec(M, Term, N, Tag), Spec, Arg)
 	     )
 	    ),
       call(Call, dict_end(M, Tag), Term, Name)
     ; member(Prop, PropL),
-      match_known_type_(Prop, M, Spec, Term),
-      call(Call, atom(Name), Spec, Term)
+      match_known_type_(Prop, M, Spec, Term)
+    ->call(Call, atom(Name), Spec, Term)
+    ; PropL = []
+    ->true
     ), !.
 type_components(M, Type, PropL, Call, Loc) :-
     print_message(error, failed_binding(Loc, type_components(M, Type, PropL, Call, '_'))).
@@ -530,10 +525,10 @@ key_value_from_list(Desc, N, Key, Value) :-
     nth0(N, Desc, KeyValue),
     key_value(KeyValue, Key, Value).
 
-key_value_from_desc(_, Desc, _, N, Key, Value) :-
+key_value_from_desc(_, Desc, N, Key, Value) :-
     is_list(Desc), !,
     key_value_from_list(Desc, N, Key, Value).
-key_value_from_desc(Dict, _, _, N, Key, Value) :-
+key_value_from_desc(Dict, _, N, Key, Value) :-
     key_value_from_dict(Dict, N, Key, Value).
 
 key_value(KV,  K, V) :- functor(KV, K, 1), arg(1, KV, V), !.
@@ -580,7 +575,7 @@ declare_foreign_bind(M) :-
 	CHead = Head
       ; member(returns(Var), Glob) ->
 	bind_argument(Head, M, Comp, Call, Succ, Glob, Var, Spec, Mode),
-	c_get_ctype_decl(Spec, Mode),
+	ctype_decl(Spec, Mode),
 	Head =.. Args,
 	once(select(Var, Args, CArgs)),
 	CHead =.. CArgs
@@ -614,42 +609,50 @@ declare_foreign_bind_(_, _, _, _, _, _, _).
 
 declare_foreign_bind_arg(Head, M, Comp, Call, Succ, Glob, Arg) :-
     bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-    c_get_ctype_decl(Spec, Mode),
-    (Mode = in, Spec \= type(_) ->true ; write('*')),
-    (Mode = in -> write(' const') ; true). % Ensure const correctness
+    (Spec \= type(gtkWidget)->true;gtrace),
+    ctype_barg_decl(Spec, Mode, Decl, []),
+    format('~s', [Decl]).
 
-c_get_ctype_decl(Spec, Mode) :-
-    c_get_ctype_decl(Spec),
-    (is_ref(Mode, Spec) -> true ; write('*')).
+ctype_barg_decl(Spec, Mode) -->
+    ctype_arg_decl(Spec, Mode),
+    ({Mode = in, \+ is_type(Spec)} -> [] ; "*"),
+    ({Mode = in} -> " const" ; []). % Ensure const correctness
 
-is_ref(_,   term)    :- !.
-is_ref(_,   list(_)) :- !.	% Always ref
-is_ref(_,   ptr(_))  :- !.	% Always ref
-is_ref(_,   chrs(_)) :- !.
-is_ref(in,  _).
-is_ref(out, _).
+ctype_decl(Spec, Mode) :-
+    ctype_arg_decl(Spec, Mode, Decl, []),
+    format('~s', [Decl]).
+
+ctype_arg_decl(Spec, Mode) -->
+    ctype_decl(Spec),
+    ({is_ref(Spec, Mode)} -> [] ; "*").
+
+is_ref(term,    _) :- !.
+is_ref(list(_), _) :- !.	% Always ref
+is_ref(ptr(_),  _) :- !.	% Always ref
+is_ref(chrs(_), _) :- !.
+is_ref(_, in).
+is_ref(_, out).
 				% is_ref(inout, _) :- fail.
 				% Allow pointer to NULL,
 				% the equivalent to free
 				% variables in imperative
 				% languages --EMM
 
-c_get_ctype_decl(list(Spec)) :-
-    c_get_ctype_decl(Spec),
-    format('*', []).
-c_get_ctype_decl(ptr(Spec)) :-
-    c_get_ctype_decl(Spec),
-    format('*', []).
-c_get_ctype_decl(chrs(Name)) :-
-    format('~w', Name).
-c_get_ctype_decl(type(Name)) :-
-    format('~w', [Name]).
-c_get_ctype_decl(term) :-
-    format('term_t', []).
-c_get_ctype_decl(tdef(Name, _)) :-
-    format('~w', [Name]).
-c_get_ctype_decl(_-CType) :-
-    format('~w', [CType]).
+is_type(type(_)).
+is_type(tdef(_, Spec)) :- is_type(Spec).
+
+ctype_decl(list(Spec))    --> ctype_decl(Spec), "*".
+ctype_decl(ptr(Spec))     --> ctype_decl(Spec), "*".
+ctype_decl(chrs(Name))    --> acodes(Name).
+ctype_decl(type(Name))    --> "struct ", acodes(Name).
+ctype_decl(term)          --> "term_t".
+ctype_decl(tdef(Name, _)) --> acodes(Name).
+ctype_decl(cdef(Name))    --> acodes(Name).
+ctype_decl(_-CType)       --> acodes(CType).
+
+acodes(Atom, List, Tail) :-
+    atom_codes(Atom, Codes),
+    append(Codes, Tail, List).
 
 generate_foreign_register(Module, Base) :-
     format('install_t install_~w() {~n', [Base]),
@@ -707,6 +710,7 @@ declare_intf_impl(Module, BindHead) :-
 c_set_argument(list(S),    _, C, A) :- c_set_argument_rec(list, S, C, A).
 c_set_argument(ptr( S),    _, C, A) :- c_set_argument_rec(ptr,  S, C, A).
 c_set_argument(type(T),    M, C, A) :- c_set_argument_type(M, T, C, A).
+c_set_argument(cdef(T),    M, C, A) :- c_set_argument_type(M, T, C, A).
 c_set_argument(tdef(_, S), M, C, A) :- c_set_argument(S, M, C, A).
 c_set_argument(T-_,        M, C, A) :- c_set_argument_one( M, T, C, A).
 c_set_argument(chrs(_),    M, C, A) :- c_set_argument_chrs(M, C, A).
@@ -739,6 +743,8 @@ c_get_argument(list(Spec), _, Deref, CArg, Arg) :-
 c_get_argument(ptr(Spec), _, Deref, CArg, Arg) :-
     c_get_argument_rec(Deref, ptr,  Spec, CArg, Arg).
 c_get_argument(type(Name), Mode, Deref, CArg, Arg) :-
+    c_get_argument_type(Deref, Mode, Name, CArg, Arg).
+c_get_argument(cdef(Name), Mode, Deref, CArg, Arg) :-
     c_get_argument_type(Deref, Mode, Name, CArg, Arg).
 c_get_argument(chrs(_), Mode, Deref, CArg, Arg) :-
     c_get_argument_chrs(Deref, Mode, CArg, Arg).
@@ -792,7 +798,7 @@ bind_arguments(M, Bind-Head, Return) :-
     ->forall(( arg(_, Head, Arg),
 	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
 	     ( write('    '),
-	       c_get_ctype_decl(Spec, Mode),
+	       ctype_decl(Spec, Mode),
 	       c_var_name(Arg, CArg),
 	       ( Spec = term
 	       ->format(' ~w=PL_new_term_ref();~n', [CArg])
@@ -860,7 +866,7 @@ generate_foreign_call_(N, M, Head, Comp, Call, Succ, Glob) :-
     ( N \= 1 -> write(', ') ; true ),
     bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
     c_var_name(Arg, CArg),
-    ( Mode = in, Spec \= type(_)
+    ( Mode = in, \+ is_type(Spec)
     ->true
     ; write('&')
     ),
@@ -912,10 +918,16 @@ match_known_type_(Type, M, tdef(Name, Spec), A) :-
     type_is_tdef(M, Type, PropL, Spec, A),
     functor(Type, Name, _),
     !.
-match_known_type_(Type, M, type(Name), A) :-
-    type_props(M, Type),
-    functor(Type, Name, _),
-    arg(1, Type, A).
+match_known_type_(Type, M, Spec, A) :-
+    arg(1, Type, A),
+    functor(Type, Name, Arity),
+    functor(Head, Name, Arity),
+    type_props(M, Head, PropL, _, _, _),
+    ( PropL = []
+    ->Spec=cdef(Name)
+    ; Spec=type(Name)
+    ),
+    !.
 
 type_is_tdef(M, Type, PropL, Spec, A) :-
     arg(1, Type, A),
@@ -943,10 +955,10 @@ bind_argument(Head, M, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
     ->Mode = out
     ; true
     ),
-    ( memberchk(type, GlobL)
-    ->Mode = in,
-      functor(Head, Name, _),
-      ignore(Spec = type(Name))
+    ( memberchk(type, GlobL),
+      match_known_type(M, Head, Spec, Arg0),
+      Arg0 == Arg
+    ->Mode = in
     ; true
     ),
     ignore(Mode = inout),
