@@ -187,14 +187,17 @@ struct __leaf_s {
 	__alloc(__root, sizeof(*__value), __value);	\
     }
 
-#define FI_foreach(__value, __array, __sentence) {		\
-	size_t __index, __count = FI_array_length(__array);	\
-	typeof (__array) __value;				\
-	for (__index = 0; __index < __count; __index++) {	\
-	    __value = &(__array)[__index];			\
-	    __sentence;						\
-	}							\
-    }
+#define FI_foreachi(__index, __value, __array, __sentence) ({	\
+	    size_t __index, __count = FI_array_length(__array);	\
+	    typeof (__array) __value;				\
+	    for (__index = 0; __index < __count; __index++) {	\
+		__value = &(__array)[__index];			\
+		__sentence;					\
+	    }							\
+	})
+
+#define FI_foreach(__value, __array, __sentence) \
+    FI_foreachi(__index, __value, __array, __sentence)
 
 #define FI_new_value(value)             FI_alloc_value(  __root, __malloc,          value)
 #define FI_new_array(length, value)     FI_alloc_array(  __root, __malloc,  length, value)
