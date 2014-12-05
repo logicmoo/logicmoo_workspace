@@ -1,6 +1,6 @@
 :- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
-			   get_arrays/4, show_arrays/3, sio/1, positive_t/1,
-			   fd1/4, fd2/4, fd3/4, extend/2]).
+			   get_arrays/4, show_arrays/3, sio/1, negative_t/1,
+			   positive_t/1, fd1/4, fd2/4, fd3/4, extend/2]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -31,7 +31,8 @@ d_t(Dict) :-
 	 fd3(d_t,atm,atm,list(int))+memory_root
 	] is foreign.
 
-:- prop positive_t(?int) is (type, foreign(is_positive_t)).
+:- prop positive_t/1 is type.
+positive_t(N) :- int(N).
 
 :- prop negative_t/1 is (type, foreign(is_negative_t)).
 

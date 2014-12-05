@@ -48,23 +48,22 @@ test(foreign_fields) :-
     assertion(Sum==5).
 
 test(foreign_type) :-
-    positive_t(_),
-    positive_t(2),
-    \+positive_t(-2).
+    once(negative_t(_)),
+    negative_t(-2),
+    \+negative_t(2).
 
 test(foreign_cmptype) :-
     fce(contain_extern(1,3),B),
     assertion(B==contain_extern(1, 1)).
 
-test(foreign_typeex, [error(type_error(positive_t, 0 ))]) :-
-    fce(contain_extern(1,2), _).
-
 test(foreign_opaque) :-
     fco(contain_opaque(1,-3),B),
     assertion(B==contain_opaque(1, -1)).
 
+/*
 test(foreign_opaqueex, [error(type_error(negative_t, 1))]) :-
     fco(contain_opaque(1,-1), _).
+*/
 
 test(foreign_dict1) :-
     fd1(d{listv:[2, 4], value1:a, value2:b},A,B,C),

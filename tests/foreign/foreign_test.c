@@ -8,17 +8,17 @@ void  extend(void **__root, int* const in, int** out) {
     int i, n = FI_array_length(in);
     *out = in;
     for (i=0;i<n;i++) {
-	FI_resize_array(n+i+1, *out);
+	FI_realloc_array(n+i+1, *out);
 	(*out)[n+i] = in[i] * 2;
     }
 }
-void fd1(d_t* const A, char **B, char **C, int **D) {
+void fd1(struct d_t* const A, char **B, char **C, int **D) {
     *B=A->value1;
     *C=A->value2;
     *D=A->listv+1;
 }
 
-void fd2(void** __root, d_t* A, char* const B, char* const C, int const D) {
+void fd2(void** __root, struct d_t* A, char* const B, char* const C, int const D) {
     A->value1 = B;
     A->value2 = C;
     FI_new_array(2, A->listv);
@@ -26,14 +26,14 @@ void fd2(void** __root, d_t* A, char* const B, char* const C, int const D) {
     A->listv[1] = D*D;
 }
 
-void fd3(void** __root, d_t** A, char** B, char** C, int** D) {
+void fd3(void** __root, struct d_t** A, char** B, char** C, int** D) {
     FI_new_value(*A);
     (*A)->value1 = *B;
     (*A)->value2 = *C;
     (*A)->listv = *D;
 }
 
-int c_f(void** __root, field_t ** field) {
+int c_f(void** __root, struct field_t ** field) {
     __rtcheck(field!=NULL);
     FI_new_value((*field)->sum);
     *(*field)->sum = (*field)->a + (*field)->b;
@@ -41,11 +41,11 @@ int c_f(void** __root, field_t ** field) {
     return TRUE;
 }
 
-void c_a(position_t * const list_position, position_t * const position) {
+void c_a(struct position_t * const list_position, struct position_t * const position) {
     // nothing to do
 }
 
-void c_aa(position_t * const ip, position_t *op) {
+void c_aa(struct position_t * const ip, struct position_t *op) {
     printf("position(%d, %d)\n", ip->x, ip->y);
     op->x = 10*ip->x;
     op->y = 10*ip->y;
@@ -120,7 +120,7 @@ int c_sio(void **__root, int **I) {
 	return FALSE;    
 }
 
-void  c_pq(position_t** A) {
+void  c_pq(struct position_t** A) {
   // nothing to do
 }
 
@@ -128,17 +128,17 @@ int is_positive_t(int const A) {
   return A>0;
 }
 
-int is_negative_t(negative_t* const A) {
-  return *A<0;
+int is_negative_t(negative_t const A) {
+    return A<0;
 }
 
-void  fce(contain_extern_t* const A, contain_extern_t* B) {
+void  fce(struct contain_extern_t* const A, struct contain_extern_t* B) {
   B->idx=A->idx;
   B->value=A->value - 2;
   printf("ce[%d, %d]\n", A->idx, A->value);
 }
 
-void  fco(contain_opaque_t* const A, contain_opaque_t* B) {
+void  fco(struct contain_opaque_t* const A, struct contain_opaque_t* B) {
   B->idx=A->idx;
   B->value=A->value + 2;
   printf("co[%d, %d]\n", A->idx, A->value);

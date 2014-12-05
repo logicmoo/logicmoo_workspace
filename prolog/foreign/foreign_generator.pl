@@ -543,13 +543,6 @@ fetch_kv_prop_arg(Key, Value, PropL, Prop) :-
       Prop  =.. [A, Key|AL]
     ).
 
-collect_bind_head(Module, BindHeadL) :-
-    findall(Bind-Head,
-	    ( read_foreign_properties(Head, Module, _, _, _, _, Dict, Bind),
-	      apply_dict(Head, Dict)
-	    ), BindHeadUL),
-    sort(BindHeadUL, BindHeadL).
-
 declare_intf_head((CN/_A as _PN + _)-Head) :-
     atom_concat('pl_', CN, PCN),
     declare_intf_head(PCN, Head).
@@ -688,6 +681,13 @@ read_foreign_properties(Head, Module, Comp, Call, Succ, Glob, Dict, CN/A as PN +
     ; CheckMode=pred
     ).
 
+collect_bind_head(Module, BindHeadL) :-
+    findall(Bind-Head,
+	    ( read_foreign_properties(Head, Module, _, _, _, _, Dict, Bind),
+	      apply_dict(Head, Dict)
+	    ), BindHeadUL),
+    sort(BindHeadUL, BindHeadL).
+
 generate_foreign_intf(Module) :-
     collect_bind_head(Module, BindHeadL),
     maplist(declare_intf_impl(Module), BindHeadL).
@@ -710,7 +710,7 @@ declare_intf_impl(Module, BindHead) :-
 c_set_argument(list(S),    _, C, A) :- c_set_argument_rec(list, S, C, A).
 c_set_argument(ptr( S),    _, C, A) :- c_set_argument_rec(ptr,  S, C, A).
 c_set_argument(type(T),    M, C, A) :- c_set_argument_type(M, T, C, A).
-c_set_argument(cdef(T),    M, C, A) :- c_set_argument_type(M, T, C, A).
+c_set_argument(cdef(T),    M, C, A) :- c_set_argument_one(M, T, C, A).
 c_set_argument(tdef(_, S), M, C, A) :- c_set_argument(S, M, C, A).
 c_set_argument(T-_,        M, C, A) :- c_set_argument_one( M, T, C, A).
 c_set_argument(chrs(_),    M, C, A) :- c_set_argument_chrs(M, C, A).
