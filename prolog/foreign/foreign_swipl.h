@@ -118,15 +118,6 @@
 	}							\
     }
 
-#define FI_get_inout_chrs(__term, __value) {		\
-	if(PL_is_variable(__term)) {			\
-	    *__value = NULL;				\
-	}						\
-	else {						\
-	    __rtc_FI_get(chrs, __term, __value);	\
-	}						\
-    }
-
 #define FI_unify_list(__FI_unify_elem, __term, __value) {		\
 	if (__value!=NULL) {						\
 	    term_t l = PL_copy_term_ref(__term);			\
@@ -152,18 +143,33 @@
 
 #define FI_get_inout(__getter, __term, __value) {	\
 	if(PL_is_variable(__term)) {			\
-	    __value = NULL;				\
+	    *__value = NULL;				\
 	}						\
 	else {						\
-	    FI_new_value(__value);			\
-	    __rtc_FI_get(__getter, __term, __value);	\
+	    FI_new_value(*__value);			\
+	    __rtc_FI_get(__getter, __term, *__value);	\
 	}						\
     }
 
-#define FI_unify_inout(__unifier, __term, __value) {		\
-	if (__value!=NULL) {					\
-	    __rtc_FI_unify(__unifier, __term, *__value);	\
-	}							\
+#define FI_unify_inout(__unifier, __term, __value) {	 \
+	if (__value!=NULL) {				 \
+	    __rtc_FI_unify(__unifier, __term, *__value); \
+	}						 \
+    }
+
+#define FI_unify_inout_type(__unifier, __term, __value) { \
+	if (__value!=NULL) {				  \
+	    __rtc_FI_unify(__unifier, __term, __value);	  \
+	}						  \
+    }
+
+#define FI_get_inout_chrs(__term, __value) {		\
+	if(PL_is_variable(__term)) {			\
+	    *__value = NULL;				\
+	}						\
+	else {						\
+	    __rtc_FI_get(chrs, __term, __value);	\
+	}						\
     }
 
 #define FI_unify_inout_chrs(__term, __value) {		\
