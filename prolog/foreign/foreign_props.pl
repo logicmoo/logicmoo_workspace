@@ -7,7 +7,10 @@
 	   ptr/1,
 	   ptr/2,
 	   dict_t/2,
-	   dict_t/3]).
+	   dict_t/3,
+	   dict_join_t/4,
+	   dict_extend_t/4,
+	   join_dict_types/4]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -34,11 +37,11 @@ returns_state(G) :- call(G).
 memory_root(G) :- call(G).
 
 :- prop ptr/1 + type.
-ptr(I) :- int(I).
+ptr(Ptr) :- int(Ptr).
 
 :- prop ptr/2 + type.
 :- meta_predicate ptr(?,1).
-ptr(I, A) :- call(A, I).
+ptr(Ptr, Type) :- call(Type, Ptr).
 
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).
@@ -48,10 +51,61 @@ dict_t(Term, Desc) :-
 :- prop dict_t/3 + type.
 :- meta_predicate dict_t(?, ?, :).
 dict_t(Term, Tag, M:Desc) :-
-    dict_create(Dict, Tag, Desc),
+    dict_mq(Desc, M, Tag, Dict),
     dict_pairs(Term, Tag, Pairs),
-    maplist(dict_kv(Dict, M), Pairs).
+    maplist(dict_kv(Dict), Pairs).
 
-dict_kv(Desc, M, Key-Value) :-
-    Type =Desc.Key,
-    call(M:Type, Value).
+:- prop dict_join_t/4 + type.
+:- meta_predicate dict_join_t(?, ?, 1, 1).
+dict_join_t(Term, Tag, Type1, Type2) :-
+    join_dict_types(Type1, Type2, Tag, Dict),
+    dict_pairs(Term, Tag, Pairs),
+    maplist(dict_kv(Dict), Pairs).
+
+:- prop dict_extend_t/4 + type.
+:- meta_predicate dict_extend_t(?, 1, ?, +).
+dict_extend_t(Term, Type, Tag, Desc) :-
+    join_type_desc(Type, Tag, Desc, Dict),
+    dict_pairs(Term, Tag, Pairs),
+    maplist(dict_kv(Dict), Pairs).
+
+join_type_desc(M:Type, Tag, Desc2, Dict) :-
+    type_desc(M:Type, Desc1),
+    join_dict_descs(M:Desc1, M:Desc2, Tag, Dict).
+
+dict_mq(M:Desc, _, Tag, Dict) :- !,
+    dict_mq(Desc, M, Tag, Dict).
+dict_mq(Desc, M, Tag, Dict) :-
+    dict_create(Dict, Tag, Desc),
+    forall(Value=Dict.Key, nb_set_dict(Key, Dict, M:Value)).
+
+dict_kv(Dict, Key-Value) :-
+    Type=Dict.Key,
+    call(Type, Value).
+
+type_desc(M:Type, Desc) :-
+    extend_term(Type, [_], Call),
+    clause(M:Call, dict_t(_, _, Desc)).
+
+join_dict_types(M1:Type1, M2:Type2, Tag, Dict) :-
+    type_desc(M1:Type1, Desc1),
+    type_desc(M2:Type2, Desc2),
+    join_dict_descs(M1:Desc1, M2:Desc2, Tag, Dict).
+
+join_dict_descs(M1:Desc1, M2:Desc2, Tag, Dict) :-
+    dict_mq(Desc1, M1, Tag, Dict1),
+    dict_mq(Desc2, M2, Tag, Dict2),
+    Dict=Dict1.put(Dict2),
+    assertion(Dict=Dict2.put(Dict1)).
+
+extend_term(Term, _, Term) :-
+    var(Term), !.
+extend_term(M:Term0, Extra, M:Term) :- !,
+    extend_term(Term0, Extra, Term).
+extend_term(Atom, Extra, Term) :-
+    atom(Atom), !,
+    Term =.. [Atom|Extra].
+extend_term(Term0, Extra, Term) :-
+    compound_name_arguments(Term0, Name, Args0),
+    '$append'(Args0, Extra, Args),
+    compound_name_arguments(Term, Name, Args).

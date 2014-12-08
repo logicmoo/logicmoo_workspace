@@ -498,6 +498,10 @@ type_components(M, Type, PropL, Call, Loc) :-
       call(Call, func_end, Term, Name)
     ; ( select(dict_t(Term, Desc), PropL, PropL1)
       ; select(dict_t(Term, Tag, Desc), PropL, PropL1)
+      ; select(dict_join_t(Term, Tag, Type1, Type2), PropL, PropL1),
+	join_dict_types(M:Type1, M:Type2, Tag, Desc)
+      ; select(dict_extend_t(Term, Type, Tag, Desc2), PropL, PropL1),
+	join_type_desc(M:Type, Tag, Desc2, Desc)
       )
     ->( is_dict(Desc, Tag)
       ->Dict=Desc
