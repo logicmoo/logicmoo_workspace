@@ -178,6 +178,7 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
     format('#ifndef __~w_INTF_H~n#define __~w_INTF_H~n~n', [Module, Module]),
     format('#include <foreign_swipl.h>~n', []),
     format('#include "~w"~n~n', [FileImpl_h]),
+    format('extern module_t __~w_impl;~n', [Module]),
     forall_tp(Module, type_props_nf, declare_type_getter_unifier),
     forall(current_foreign_prop(Head, Module, _, _, _, _, Dict, _, _, BindName, _),
 	   ( apply_dict(Head, Dict),
@@ -205,10 +206,19 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
 	     format('#include "~w"~n', [File_h])
 	   )),
     format('#include "~w"~n~n', [FileIntf_h]),
+    format('module_t __~w_impl;~n', [Module]),
     forall_tp(Module, type_props_nf, implement_type_getter),
     forall_tp(Module, type_props_nf, implement_type_unifier),
     generate_foreign_register(Module, Base),
     generate_foreign_intf(Module).
+
+generate_foreign_register(Module, Base) :-
+    format('install_t install_~w() {~n', [Base]),
+    format('    __~w_impl=PL_new_module(PL_new_atom("~w$impl"));~n', [Module, Module]),
+    forall(current_foreign_prop(_, Module, _, _, _, _, _, _, PredName, BindName, Arity),
+	   format('    PL_register_foreign(\"~w\", ~w, ~w, 0);~n',
+		  [PredName, Arity, BindName])),
+    format('} /* install_~w */~n~n', [Base]).
 
 :- meta_predicate forall_tp(+,5,3).
 
@@ -304,7 +314,7 @@ implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) :-
     format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~s *~w){~n',
 	   [Name, Decl, CName]),
     format('    int __index;~n', []),
-    format('    FI_get_keyid_index("~w$impl", ~w, __keyid, __index);~n',
+    format('    FI_get_keyid_index(__~w_impl, ~w, __keyid, __index);~n',
 	   [Module, Name]),
     format('    switch (__index) {~n', []).
 
@@ -369,7 +379,7 @@ implement_type_unifier(dict_rec(_, Term, N, _), Spec, Arg) :-
     (spec_pointer(Spec)->format('    }~n', []);true).
 implement_type_unifier(dict_end(M, Tag), Term, Name) :-
     func_pcname(Term, PName, _),
-    format('    FI_unify_dict_t("~w$impl", ~w, ~w, "~w");~n',
+    format('    FI_unify_dict_t(__~w_impl, ~w, ~w, "~w");~n',
 	   [M, Name, PName, Tag]),
     implement_type_end.
 
@@ -582,7 +592,7 @@ declare_foreign_bind(M) :-
       ; member(returns(Var), Glob) ->
 	bind_argument(Head, M, Comp, Call, Succ, Glob, Var, Spec, Mode),
 	ctype_arg_decl(Spec, Mode, Decl, []),
-	format('~s ', [Decl]).
+	format('~s ', [Decl]),
 	Head =.. Args,
 	once(select(Var, Args, CArgs)),
 	CHead =.. CArgs
@@ -660,13 +670,6 @@ ctype_decl(_-CType)       --> acodes(CType).
 acodes(Atom, List, Tail) :-
     atom_codes(Atom, Codes),
     append(Codes, Tail, List).
-
-generate_foreign_register(Module, Base) :-
-    format('install_t install_~w() {~n', [Base]),
-    forall(current_foreign_prop(_, Module, _, _, _, _, _, _, PredName, BindName, Arity),
-	   format('    PL_register_foreign(\"~w\", ~w, ~w, 0);~n',
-		  [PredName, Arity, BindName])),
-    format('} /* install_~w */~n~n', [Base]).
 
 current_foreign_prop(Head, Module, Comp, Call, Succ, Glob, Dict,
 		     FuncName, PredName, BindName, Arity) :-

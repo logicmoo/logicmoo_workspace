@@ -198,19 +198,18 @@
 	}								\
     }
 
-#define FI_get_keyid_index(__module, __name, __keyid, __index) {	\
+#define FI_get_keyid_index(__m, __name, __keyid, __index) {		\
 	term_t __args = PL_new_term_refs(2);				\
 	static predicate_t __pred;					\
-	module_t __m = PL_new_module(PL_new_atom(__module));		\
-	__rtcheck((__pred = PL_predicate("__aux_keyid_index_" # __name, \
-					 2, __module))!=NULL);		\
+	__rtcheck((__pred = PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_" # __name), \
+						2), __m))!=NULL);	\
 	PL_put_term(__args, __keyid);					\
 	__rtcheck(__rtctype(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args), \
 			    __keyid, "valid key of " # __name));	\
 	__rtcheck(PL_get_integer(__args+1, &__index));			\
     }
 
-#define FI_unify_dict_t(__module, __name, __term, __tag) {		\
+#define FI_unify_dict_t(__m, __name, __term, __tag) {			\
 	int length=index;						\
 	__rtcheck(PL_unify_functor(__term, PL_new_functor(ATOM_dict, 2*length+1))); \
 	term_t __tag_t = PL_new_term_ref();				\
@@ -219,19 +218,18 @@
 	for(index=0; index < length;) {					\
 	    term_t __k;							\
 	    term_t __v=dict_args+index;					\
-	    FI_get_index_keyid(__module, __name, indexes[index], __k);	\
+	    FI_get_index_keyid(__m, __name, indexes[index], __k); \
 	    index++;							\
 	    __rtcheck(PL_unify_arg(2*index,   __term, __k));		\
 	    __rtcheck(PL_unify_arg(2*index+1, __term, __v));		\
 	}								\
     }
 
-#define FI_get_index_keyid(__module, __name, __index, __keyid) {	\
+#define FI_get_index_keyid(__m, __name, __index, __keyid) {		\
 	term_t __args = PL_new_term_refs(2);				\
 	predicate_t __pred;						\
-	module_t __m = PL_new_module(PL_new_atom(__module));		\
-	__rtcheck((__pred = PL_predicate("__aux_keyid_index_" # __name, \
-					 2, __module))!=NULL);		\
+	__rtcheck((__pred = PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_" # __name), \
+							2), __m))!=NULL); \
 	__rtcheck(PL_unify_integer(__args+1, __index));			\
 	__rtcheck(PL_call_predicate(__m, PL_Q_NORMAL, __pred, __args)); \
 	__keyid = __args;						\
