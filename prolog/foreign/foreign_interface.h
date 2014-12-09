@@ -171,14 +171,14 @@ struct __leaf_s {
     }
 
 #define FI_realloc_array_(__root, __realloc, __length, __value) {	\
-	void *__mem_a = FI_array_length_ptr(__value);			\
+	void *__mem_a = FI_ptr(__value);				\
 	__realloc(__root, sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
 	*((size_t *)__mem_a) = (__length);				\
 	(__value) = __mem_a + sizeof(size_t);				\
     }
 
 #define FI_resize_array_(__root, __realloc, __size, __length, __value) { \
-	void *__mem_a = FI_array_length_ptr(__value);			\
+	void *__mem_a = FI_ptr(__value);				\
 	assert(sizeof(size_t)+(__length)*sizeof(*(__value))<=__size(__mem_a)); \
 	*((size_t *)__mem_a) = (__length);				\
     }
@@ -204,7 +204,8 @@ struct __leaf_s {
 #define FI_realloc_array(length, value) FI_realloc_array_(__root, __realloc, length, value)
 #define FI_resize_array(length, value)  FI_resize_array_( __root, __realloc, __size, length, value)
 
-#define FI_array_length_ptr(__value)   ((size_t *)__value-1)
+#define FI_ptr(__value)                ((size_t *)__value-1)
+#define FI_array_length_ptr(__value)   FI_ptr(__value)
 #define FI_array_length(__value)       (*FI_array_length_ptr(__value))
 
 #endif // __FOREIGN_INTERFACE_H__
