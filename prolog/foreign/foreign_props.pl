@@ -10,7 +10,8 @@
 	   dict_t/3,
 	   dict_join_t/4,
 	   dict_extend_t/4,
-	   join_dict_types/4]).
+	   join_dict_types/4,
+	   join_type_desc/4]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
