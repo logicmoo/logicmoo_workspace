@@ -513,6 +513,8 @@ type_components(M, Type, PropL, Call, Loc) :-
 	     ( fetch_kv_prop_arg(Arg, Value, PropL1, Prop),
 	       match_known_type_(Prop, M, Spec, Arg),
 	       call(Call, dict_rec(M, Term, N, Name), Spec, Arg)
+	     ->true
+	     ; print_message(warning, ignored_type(Loc, Name, Arg))
 	     )
 	    ),
       call(Call, dict_end(M, Tag), Term, Name)
