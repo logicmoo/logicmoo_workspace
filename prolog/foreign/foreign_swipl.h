@@ -179,7 +179,7 @@
     }
 
 #define FI_get_dict_t(__unifier, __desc, __value) {			\
-	int index, arity, pairs;					\
+	int index, arity;						\
 	atom_t name;							\
 	term_t __term = PL_new_term_refs(3);				\
 	predicate_t __pred;						\

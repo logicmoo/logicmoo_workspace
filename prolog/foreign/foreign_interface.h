@@ -126,17 +126,17 @@ struct __leaf_s {
 
 // TODO: delete memset/3 when finish debugging
 
-#define FI_malloc_mc(__root, __alloc, __size, __value) {	\
-	__leaf_t *__leaf = __alloc(sizeof(__leaf_t));		\
-	void **__mem = __alloc(sizeof(void *)+(__size));	\
-	__leaf->value = __mem;					\
-	__leaf->size  = (__size);				\
-	*__mem = __leaf;					\
-	__leaf->parent = *__root;				\
-	*__root = __leaf;					\
-	__value = (void *)(__mem+1);				\
-	memset(__value, 0, (__size));				\
-    }
+#define FI_malloc_mc(__root, __alloc, __size, __value) ({	\
+	    __leaf_t *__leaf = __alloc(sizeof(__leaf_t));	\
+	    void **__mem = __alloc(sizeof(void *)+(__size));	\
+	    __leaf->value = __mem;				\
+	    __leaf->size  = (__size);				\
+	    *__mem = __leaf;					\
+	    __leaf->parent = *__root;				\
+	    *__root = __leaf;					\
+	    __value = (void *)(__mem+1);			\
+	    (typeof (__value))memset(__value, 0, (__size));	\
+	})
 
 #define FI_realloc_mc(__root, __realloc, __size, __value) {		\
 	void **__mem=(void **)__value-1;				\

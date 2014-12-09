@@ -581,7 +581,8 @@ declare_foreign_bind(M) :-
 	CHead = Head
       ; member(returns(Var), Glob) ->
 	bind_argument(Head, M, Comp, Call, Succ, Glob, Var, Spec, Mode),
-	ctype_decl(Spec, Mode),
+	ctype_arg_decl(Spec, Mode, Decl, []),
+	format('~s ', [Decl]).
 	Head =.. Args,
 	once(select(Var, Args, CArgs)),
 	CHead =.. CArgs
@@ -595,7 +596,7 @@ declare_foreign_bind(M) :-
     ).
 
 declare_foreign_head((CN/_A as _PN + _), M, Head, Comp, Call, Succ, Glob) :-
-    format(' ~w(', [CN]),
+    format('~w(', [CN]),
     (memberchk(memory_root, Glob) -> format('void** __root, ', []) ; true),
     ( compound(Head) ->
       declare_foreign_bind_(1, M, Head, Comp, Call, Succ, Glob)
