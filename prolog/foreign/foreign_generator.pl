@@ -61,6 +61,7 @@ generate_library(M, AliasSO, AliasSOPl, File) :-
 					 relative_to(File)]),
     findall(FSource, ( ( use_foreign_source(M, FAlias)
 		       ; FAlias = library('foreign/foreign_interface.c')
+		       ; FAlias = library('foreign/foreign_swipl.c')
 		       ),
 		       absolute_file_name(FAlias, FSource,
 					  [extensions(['.c', '']),
@@ -214,7 +215,9 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
 
 generate_foreign_register(Module, Base) :-
     format('install_t install_~w() {~n', [Base]),
+    format('    __system_dict_create=PL_predicate("dict_create", 3, "system");~n', []),
     format('    __~w_impl=PL_new_module(PL_new_atom("~w$impl"));~n', [Module, Module]),
+    forall_tp(Module, type_props_nf, define_aux_variables),
     forall(current_foreign_prop(_, Module, _, _, _, _, _, _, PredName, BindName, Arity),
 	   format('    PL_register_foreign(\"~w\", ~w, ~w, 0);~n',
 		  [PredName, Arity, BindName])),
@@ -258,6 +261,12 @@ type_props_nf(Module, Type, PropL, Dict, Pos) :-
     \+ type_is_tdef(Module, Type, PropL, _, _),
     \+ memberchk(foreign(_), GlobL).
 
+define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
+    format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',
+    	   [M, Name, Name, M]).
+define_aux_variables(dict_key_value(_, _, _), _, _) :- !, fail.
+define_aux_variables(_, _, _).
+
 implement_type_getter_ini(PName, CName, Spec, Name) :-
     ctype_decl(Spec, Decl, []),
     format('int FI_get_~w(void** __root, term_t ~w, ~s *~w) {~n',
@@ -287,6 +296,7 @@ implement_type_getter(atom(Name), Spec, Term) :-
     format(';~n', []),
     implement_type_end.
 implement_type_getter(dict_ini(Name, M, _), Spec, Arg) :-
+    format('predicate_t __~w_aux_keyid_index_~w;~n', [M, Name]),
     term_pcname(Arg, PName, CName),
     implement_type_getter_dict_ini(M, PName, CName, Spec, Name).
 implement_type_getter(dict_key_value(Dict, _, N), Key, Value) :-
@@ -314,7 +324,7 @@ implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) :-
     format('get_pair_~w(void **__root, term_t __keyid, term_t __value, ~s *~w){~n',
 	   [Name, Decl, CName]),
     format('    int __index;~n', []),
-    format('    FI_get_keyid_index(__~w_impl, ~w, __keyid, __index);~n',
+    format('    FI_get_keyid_index(__~w_aux_keyid_index_~w, __keyid, __index);~n',
 	   [Module, Name]),
     format('    switch (__index) {~n', []).
 
@@ -379,7 +389,7 @@ implement_type_unifier(dict_rec(_, Term, N, _), Spec, Arg) :-
     (spec_pointer(Spec)->format('    }~n', []);true).
 implement_type_unifier(dict_end(M, Tag), Term, Name) :-
     func_pcname(Term, PName, _),
-    format('    FI_unify_dict_t(__~w_impl, ~w, ~w, "~w");~n',
+    format('    FI_unify_dict_t(__~w_aux_keyid_index_~w, ~w, "~w");~n',
 	   [M, Name, PName, Tag]),
     implement_type_end.
 
@@ -456,7 +466,8 @@ declare_type_getter_unifier(func_ini(Name), Spec, _) :-
     declare_type_getter_unifier(Name, Spec).
 declare_type_getter_unifier(func_end, _, _).
 declare_type_getter_unifier(func_rec(_, _), _, _).
-declare_type_getter_unifier(dict_ini(Name, _, _), Spec, _) :-
+declare_type_getter_unifier(dict_ini(Name, M, _), Spec, _) :-
+    format('predicate_t __~w_aux_keyid_index_~w;~n', [M, Name]),
     declare_type_getter_unifier(Name, Spec).
 declare_type_getter_unifier(dict_end(_, _), _, _).
 declare_type_getter_unifier(dict_rec(_, _, _, _), _, _).
