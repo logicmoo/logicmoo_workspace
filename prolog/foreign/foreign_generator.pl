@@ -769,16 +769,21 @@ c_set_argument_rec(Type, Spec, CArg, Arg) :-
 
 c_get_argument(list(S), _, C, A)    :- c_get_argument_rec(list, S, C, A).
 c_get_argument(ptr(S),  _, C, A)    :- c_get_argument_rec(ptr,  S, C, A).
-c_get_argument(type(T), M, C, A)    :- c_get_argument_one(M, T, C, A).
+c_get_argument(type(T), M, C, A)    :- c_get_argument_type(M, T, C, A).
 c_get_argument(cdef(T), M, C, A)    :- c_get_argument_one(M, T, C, A).
 c_get_argument(T-_,     M, C, A)    :- c_get_argument_one(M, T, C, A).
 c_get_argument(chrs(_), M, C, A)    :- c_get_argument_chrs(M, C, A).
 c_get_argument(tdef(_, S), M, C, A) :- c_get_argument(S, M, C, A).
-c_get_argument(term, _, C, A) :- format('~w=PL_copy_term_ref(~w)', [C, A]).
+c_get_argument(term, _, C, A) :- format('*~w=PL_copy_term_ref(~w)', [C, A]).
 
 c_get_argument_one(in, Type, CArg, Arg) :-
     format('__rtc_FI_get(~w, ~w, ~w)', [Type, Arg, CArg]).
 c_get_argument_one(inout, Type, CArg, Arg) :-
+    format('FI_get_inout(~w, ~w, ~w)', [Type, Arg, CArg]).
+
+c_get_argument_type(in, Type, CArg, Arg) :-
+    format('__rtc_FI_get(~w, ~w, ~w)', [Type, Arg, CArg]).
+c_get_argument_type(inout, Type, CArg, Arg) :-
     format('FI_get_inout(~w, ~w, ~w)', [Type, Arg, CArg]).
 
 c_get_argument_chrs(in, CArg, Arg) :-
