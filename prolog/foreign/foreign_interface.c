@@ -12,8 +12,10 @@ void debug_free(void * __value) {
 #endif
 
 #ifdef __GLOBAL_ROOT__
-void *__root_h=NULL;
-void **__root=&__root_h;
+/* __leaf_t   __root_v={NULL,NULL,NULL}; */
+/* __leaf_t  *__root_p=&__root_v; */
+__leaf_t  *__root_p=NULL;
+__leaf_t **__root=&__root_p;
 #endif
 
 #ifdef __LINKED_NODES_MEMORY_MANAGEMENT__
@@ -23,7 +25,6 @@ void __FI_free(void *__value, void (*__free_)(void *)) {
     __leaf_t **__mem=(__leaf_t **)__value-2;
     __FI_destroy(__mem+1, __free_);
     (*__mem)->value = NULL;
-    (*__mem)->size  = 0;
     __free_(__mem);
 }
 
@@ -39,7 +40,7 @@ void __FI_destroy(__leaf_t **ptr, void (*__free_)(void *)) {
 	    /* __FI_free((void **)(__leaf->value)+2, __free_); */
 	    /* fprintf(stderr, "+__FI_free(%p)\n", __leaf->value+2); */
 	}
-	__tmp_leaf = __leaf->parent;
+	__tmp_leaf = __leaf->prev;
 	fprintf(stderr, "+__free_(%p)\n", __leaf);
 	__free_(__leaf);
 	__leaf = __tmp_leaf;

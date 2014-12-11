@@ -101,11 +101,16 @@ void __FI_destroy(__leaf_t **, void (*)(void *));
 #define __free(value)                 __FI_free(value, _free)
 #define __size(value)                 FI_size_mc(value)
 #ifdef __GLOBAL_ROOT__
-void *__root_h;
-void **__root;
+__leaf_t   __root_v;
+__leaf_t  *__root_p;
+__leaf_t **__root;
 #define __mkroot(__root)
 #else
-#define __mkroot(__root)  __leaf_t *__root_h=NULL; void **__root = (void *)&__root_h
+#define __mkroot(__root)		\
+    __leaf_t __root_v={NULL,NULL,NULL}, \
+	*__root_p=&__root_v,		\
+	**__root=&__root_p;
+
 /* #define __mkroot(__root)  void **__root = NULL; */
 
 #endif
@@ -122,9 +127,10 @@ void **__root;
 #endif
 
 struct __leaf_s {
-    __leaf_t *parent;
+    __leaf_t *prev;
+    __leaf_t *next;
     void *value;
-    size_t size;
+    /* size_t size; */
 };
 
 // TODO: delete memset/3 when finish debugging
@@ -133,10 +139,11 @@ struct __leaf_s {
 	    __leaf_t *__leaf = __alloc(sizeof(__leaf_t));	\
 	    void **__mem = __alloc(2*sizeof(void *)+(__size));	\
 	    __leaf->value = __mem;				\
-	    __leaf->size  = (__size);				\
 	    __mem[0] = __leaf;					\
 	    __mem[1] = NULL;					\
-	    __leaf->parent = *__root;				\
+	    __leaf->prev = *__root;				\
+	    __leaf->next = NULL;				\
+	    /* (*__root)->next = __leaf; */			\
 	    *__root = __leaf;					\
 	    __value = (void *)(__mem+2);			\
 	    fprintf(stderr, "FI_malloc_mc(%p, %p) (__leaf=%p, __mem=%p)\n", __root, __value, __leaf, __mem); \
@@ -146,16 +153,16 @@ struct __leaf_s {
 #define FI_realloc_mc(__realloc, __size, __value) {			\
 	void **__mem=(void **)__value-2;				\
 	__leaf_t *__leaf = __mem[0];					\
+	size_t __old_size = FI_size_mc(__mem +2);			\
 	__mem = __realloc(__mem, 2*sizeof(void *)+(__size));		\
 	__leaf->value = __mem;						\
 	__value = (void *)(__mem+2);					\
-	if (__leaf->size < (__size)) {					\
-	    memset((void *)__value+__leaf->size, 0, (__size)-__leaf->size); \
+	if (__old_size < (__size)) {					\
+	    memset((void *)__value+__old_size, 0, (__size)-__old_size); \
 	}								\
-	__leaf->size = (__size);					\
     }
 
-#define FI_size_mc(__value) ((*((__leaf_t **)__value-2))->size)
+#define FI_size_mc(__value) malloc_usable_size((__leaf_t **)(__value)-2)
 
 #define FI_alloc_value(__root, __alloc, __value) ({	\
 	    __alloc(__root, sizeof(*__value), __value);	\
