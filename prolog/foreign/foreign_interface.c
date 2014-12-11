@@ -19,11 +19,13 @@ __leaf_t  *__root=&__root_v;
 #ifdef __LINKED_NODES_MEMORY_MANAGEMENT__
 
 void __FI_free(void *__value, void (*__free_)(void *)) {
+    __leaf_t *__leaf=(__leaf_t *)__value-1;
+    __FI_destroy_childs(__leaf->root, __free_);
     fprintf(stderr, "-__FI_free(%p)\n", __value);
-    __leaf_t **__mem=(void *)__value-2;
-    __FI_destroy(*((__leaf_t **)(__mem+1)), __free_);
-    (*__mem)->value = NULL;
-    __free_(__mem);
+    __leaf_t *prev = __leaf->prev;
+    prev->next = __leaf->next;
+    __leaf->next->prev = prev;
+    __free_(__leaf);
 }
 
 void __FI_destroy(__leaf_t *ptr, void (*__free_)(void *)) {
