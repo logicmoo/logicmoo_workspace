@@ -108,8 +108,7 @@ __leaf_t  *__root;
 #else
 #define __mkroot(__root)		\
     __leaf_t __root_v={NULL,NULL,NULL}, \
-	*__root_p=&__root_v,		\
-	**__root=&__root_p;
+	*__root=&__root_v;
 
 /* #define __mkroot(__root)  void **__root = NULL; */
 
@@ -134,16 +133,21 @@ struct __leaf_s {
 };
 
 #ifndef __GLOBAL_ROOT__
-#define __FI_destroy_childs(__value, __free) __FI_destroy(__value, __free)
+#define __FI_destroy_childs(__value, __free) {	\
+	__FI_destroy(__value, __free);		\
+	__free(__value);			\
+    }
 #else
-#define __FI_destroy_childs(__value, __free)
+#define __FI_destroy_childs(__value, __free) { \
+	__free(__value);		       \
+    }
 #endif
 
 #define FI_destroy(__way, __p, __free) {			\
 	__leaf_t *__tmp_leaf, *__leaf;				\
 	__leaf = (__p)->__way;					\
 	while(__leaf) {						\
-	    __FI_destroy_childs(__leaf, __free);		\
+	    __FI_destroy_childs(__leaf->root, __free);		\
 	    __tmp_leaf = __leaf->__way;				\
 	    __free(__leaf);					\
 	    __leaf = __tmp_leaf;				\
@@ -156,10 +160,18 @@ struct __leaf_s {
 #define FI_malloc_mc(__mate, __alloc, __size, __value) ({		\
 	    __leaf_t *__leaf = __alloc(sizeof(__leaf_t) + (__size));	\
 	    __leaf->next = (__mate);					\
-	    __leaf->prev = (__mate)->prev;				\
-	    __leaf->root = NULL;					\
-	    if ((__mate)->prev) (__mate)->prev->next=__leaf;		\
-	    (__mate)->prev = __leaf;					\
+	    __leaf->root = __alloc(sizeof(__leaf_t));			\
+	    __leaf->root->next=NULL;					\
+	    __leaf->root->prev=NULL;					\
+	    __leaf->root->root=NULL;					\
+	    if (__mate) {						\
+		__leaf->prev = (__mate)->prev;				\
+		if ((__mate)->prev) (__mate)->prev->next=__leaf;	\
+		(__mate)->prev = __leaf;				\
+	    } else {							\
+		__leaf->prev = NULL;					\
+		__mate = __leaf;					\
+	    }								\
 	    __value = (typeof (__value))(__leaf->value);		\
 	    fprintf(stderr, "FI_malloc_mc(%p, %p) (__leaf=%p)\n", __mate, __value, __leaf); \
 	    (typeof (__value))memset(__value, 0, (__size));		\
@@ -220,12 +232,16 @@ struct __leaf_s {
 #define FI_new_child_array(parent, length, value) FI_new_array(length, value)
 #else
 
-#define FI_new_child_value(parent, value) \
-    FI_alloc_value(((void **)(parent)-1), __malloc, value)
+#define FI_new_child_value(parent, value) {			\
+	__leaf_t *__root = ((__leaf_t *)(parent)-1)->root;	\
+	FI_new_value(value);					\
+    }
 
-#define FI_new_child_array(parent, length, value) \
-    FI_alloc_array(((void **)FI_ptr(parent)-1), __malloc, length, value)
-
+#define FI_new_child_array(parent, length, value) {			\
+	__leaf_t *__root = ((__leaf_t *)FI_ptr(parent)-1)->root;	\
+	FI_new_array(length, value);					\
+    }
+    
 #endif
 
 #define FI_new_value(value)              FI_alloc_value(__root, __malloc,          value)
