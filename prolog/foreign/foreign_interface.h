@@ -95,7 +95,7 @@ void debug_free(void *);
 typedef struct __leaf_s __leaf_t;
 
 void __FI_free(void *, void (*)(void *));
-void __FI_destroy(__leaf_t **, void (*)(void *));
+void __FI_destroy(__leaf_t *, void (*)(void *));
 
 #define __realloc(size, value)        FI_realloc_mc(_realloc, size, value)
 #define __malloc(__root, size, value) FI_malloc_mc( __root,  _malloc, size, value)
@@ -103,8 +103,7 @@ void __FI_destroy(__leaf_t **, void (*)(void *));
 #define __size(value)                 FI_size_mc(value)
 #ifdef __GLOBAL_ROOT__
 __leaf_t   __root_v;
-__leaf_t  *__root_p;
-__leaf_t **__root;
+__leaf_t  *__root;
 #define __mkroot(__root)
 #else
 #define __mkroot(__root)		\
@@ -116,7 +115,7 @@ __leaf_t **__root;
 
 #endif
 
-#define __delroot(__root) { __FI_destroy((__leaf_t **)(__root), _free); _noleaks; }
+#define __delroot(__root) { __FI_destroy(__root, _free); _noleaks; }
 
 #else
 #define __realloc(size, value) {value = _realloc(value, size);}
@@ -128,26 +127,51 @@ __leaf_t **__root;
 #endif
 
 struct __leaf_s {
-    __leaf_t *prev;
     __leaf_t *next;
+    __leaf_t *prev;
     void *value;
     /* size_t size; */
 };
 
+#ifndef __GLOBAL_ROOT__
+#define __FI_destroy_childs(__value, __free) __FI_destroy((__leaf_t **)(__value)+1, __free)
+#else
+#define __FI_destroy_childs(__value, __free)
+#endif
+
+#define FI_destroy(__way, __p, __free) {			\
+	__leaf_t *__tmp_leaf, *__leaf;				\
+	__leaf = (__p)->__way;					\
+	while(__leaf) {						\
+	    if(__leaf->value!=NULL) {				\
+		__FI_destroy_childs(__leaf->value, __free);	\
+		__free(__leaf->value);				\
+	    }							\
+	    __tmp_leaf = __leaf->__way;				\
+	    __free(__leaf);					\
+	    __leaf = __tmp_leaf;				\
+	}							\
+	(__p)->__way=NULL;					\
+    }
+
 // TODO: delete memset/3 when finish debugging
 
-#define FI_malloc_mc(__root, __alloc, __size, __value) ({	\
+#define FI_malloc_mc(__mate, __alloc, __size, __value) ({	\
 	    __leaf_t *__leaf = __alloc(sizeof(__leaf_t));	\
 	    void **__mem = __alloc(2*sizeof(void *)+(__size));	\
 	    __leaf->value = __mem;				\
 	    __mem[0] = __leaf;					\
 	    __mem[1] = NULL;					\
-	    __leaf->prev = *__root;				\
-	    __leaf->next = NULL;				\
-	    /* (*__root)->next = __leaf; */			\
-	    *__root = __leaf;					\
+	    __leaf->next = (__mate);				\
+	    if (__mate) {					\
+		__leaf->prev = (__mate)->prev;			\
+	    } else {						\
+		__leaf->prev = NULL;				\
+	    }							\
+	    if ((__mate)->prev) (__mate)->prev->next=__leaf;	\
+	    (__mate)->prev = __leaf;				\
 	    __value = (void *)(__mem+2);			\
-	    fprintf(stderr, "FI_malloc_mc(%p, %p) (__leaf=%p, __mem=%p)\n", __root, __value, __leaf, __mem); \
+	    fprintf(stderr, "FI_malloc_mc(%p, %p) (__leaf=%p, __mem=%p)\n", __mate, __value, __leaf, __mem); \
 	    (typeof (__value))memset(__value, 0, (__size));	\
 	})
 
