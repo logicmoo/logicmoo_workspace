@@ -12,10 +12,13 @@
 :- use_foreign_source(foreign_test).
 :- gen_foreign_library(.('foreign_test_i.so')).
 
-user:file_search_path('.', Dir) :-
+this_dir(Dir) :-
     context_module(M),
     current_module(M, Path),
     directory_file_path(Dir, _, Path).
+
+:- this_dir(Dir),
+    asserta(user:file_search_path('.', Dir)).
 
 :- prop d_t/1 is type.
 
