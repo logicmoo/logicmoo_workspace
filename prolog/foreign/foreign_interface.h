@@ -64,22 +64,22 @@
 #define _noleaks {fprintf(stderr, "balance=%d\n", __balance);assert(__balance==0);}
 int __balance;
 
-#define debug_malloc(__size) ({				\
-	    void *__result=malloc(__size);		\
-	    fprintf(stderr, "%d malloc(%ld)=%p\n",	\
-		    __balance, __size, __result);	\
-	    __balance++;				\
-	    __result;					\
+#define debug_malloc(__size) ({						\
+	    void *__result=malloc(__size);				\
+	    fprintf(stderr, "%s:%d: %d malloc(%ld)=%p\n",		\
+		    __FILE__, __LINE__, __balance, __size, __result);	\
+	    __balance++;						\
+	    __result;							\
 	})
 
-#define debug_realloc(__value, __size) ({			\
-	    void *__result=realloc(__value, __size);		\
-	    fprintf(stderr, "%d realloc(%p, %ld)=%p\n",		\
-		    __balance, __value, __size, __result);	\
-	    __result;						\
+#define debug_realloc(__value, __size) ({				\
+	    void *__result=realloc(__value, __size);			\
+	    fprintf(stderr, "%s:%d: %d realloc(%p, %ld)=%p\n",		\
+		    __FILE__, __LINE__, __balance, __value, __size, __result); \
+	    __result;							\
 	})
 
-void debug_free(void *);
+void debug_free(void * __value);
 
 #else
 #define _malloc  malloc
@@ -106,15 +106,16 @@ __leaf_t   __root_v;
 __leaf_t  *__root;
 #define __mkroot(__root)
 #else
-#define __mkroot(__root)		\
-    __leaf_t __root_v={NULL,NULL,NULL}, \
+#define __mkroot(__root)	   \
+    __leaf_t __root_v={NULL,NULL}, \
 	*__root=&__root_v;
-
-/* #define __mkroot(__root)  void **__root = NULL; */
 
 #endif
 
-#define __delroot(__root) { __FI_destroy(__root, _free); _noleaks; }
+#define __delroot(__root) {	\
+   __FI_destroy(__root, _free);	\
+   _noleaks;			\
+    }
 
 #else
 #define __realloc(size, value) {value = _realloc(value, size);}
@@ -128,83 +129,93 @@ __leaf_t  *__root;
 struct __leaf_s {
     __leaf_t *next;
     __leaf_t *prev;
-    __leaf_t *root;
-    void *value[];
+    void *data[];
 };
 
+#define LF_ROOT(__leaf) ((__leaf_t *)&((__leaf)->data))
+#define LF_DATA(__leaf) ((void *)(LF_ROOT(__leaf)+1))
+#define LF_PTR(__value) ((__leaf_t *)(__value)-2)
+#define RESERVE_LEAFS 2
+
 #ifndef __GLOBAL_ROOT__
-#define __FI_destroy_childs(__value, __free) {	\
-	__FI_destroy(__value, __free);		\
-	__free(__value);			\
-    }
+#define __FI_destroy_childs(__leaf, __free) __FI_destroy(LF_ROOT(__leaf), __free)
 #else
-#define __FI_destroy_childs(__value, __free) { \
-	__free(__value);		       \
-    }
+#define __FI_destroy_childs(__leaf, __free)
 #endif
 
-#define FI_destroy(__way, __p, __free) {			\
-	__leaf_t *__tmp_leaf, *__leaf;				\
-	__leaf = (__p)->__way;					\
-	while(__leaf) {						\
-	    __FI_destroy_childs(__leaf->root, __free);		\
-	    __tmp_leaf = __leaf->__way;				\
-	    __free(__leaf);					\
-	    __leaf = __tmp_leaf;				\
-	}							\
-	(__p)->__way=NULL;					\
+#define FI_destroy(__way, __p, __free) {		\
+	__leaf_t *__tmp_leaf, *__leaf;			\
+	__leaf = (__p)->__way;				\
+	while(__leaf) {					\
+	    __FI_destroy_childs(__leaf, __free);	\
+	    __tmp_leaf = __leaf->__way;			\
+	    __free(__leaf);				\
+	    __leaf = __tmp_leaf;			\
+	}						\
+	(__p)->__way=NULL;				\
     }
 
 // TODO: delete memset/3 when finish debugging
 
 #define FI_malloc_mc(__head, __alloc, __size, __value) ({		\
-	    __leaf_t *__leaf = __alloc(sizeof(__leaf_t) + (__size));	\
-	    __leaf->prev = (__head);					\
-	    __leaf->root = __alloc(sizeof(__leaf_t));			\
-	    __leaf->root->prev=NULL;					\
-	    __leaf->root->next=NULL;					\
-	    __leaf->root->root=NULL;					\
-	    __leaf->next = (__head)->next;				\
-	    if ((__head)->next) (__head)->next->prev=__leaf;		\
-	    (__head)->next = __leaf;					\
-	    __value = (typeof (__value))(__leaf->value);		\
+	    __leaf_t *__leaf = __alloc(RESERVE_LEAFS*sizeof(__leaf_t) + (__size)); \
+	    LF_ROOT(__leaf)->prev=NULL;					\
+	    LF_ROOT(__leaf)->next=NULL;					\
+	    __value = (typeof (__value))(LF_DATA(__leaf));		\
+	    FI_link(__head, __leaf);					\
 	    (typeof (__value))memset(__value, 0, (__size));		\
 	})
 
-#define FI_realloc_mc(__realloc, __size, __value) {			\
-	__leaf_t *__leaf=(__leaf_t *)__value-1;				\
-	size_t __old_size = FI_size_mc(__value);			\
-	__leaf = __realloc(__leaf, sizeof(__leaf_t) + (__size));	\
-	if (__leaf->next) __leaf->next->prev = __leaf;			\
-	if (__leaf->prev) __leaf->prev->next = __leaf;			\
-	__value = __leaf->value;					\
-	if (__old_size < (__size)) {					\
-	    memset((void *)__leaf+__old_size, 0, (__size)-__old_size);	\
-	}								\
-    }
+#define FI_link(__head, __leaf) ({				\
+	    __leaf->prev = (__head);				\
+	    __leaf->next = (__head)->next;			\
+	    if ((__head)->next) (__head)->next->prev=__leaf;	\
+	    (__head)->next = __leaf;				\
+	})
 
-#define FI_size_mc(__value) (malloc_usable_size((__leaf_t *)(__value)-1)-sizeof(__leaf_t))
+#define FI_ulink(__leaf) ({			\
+	    __leaf_t *next = __leaf->next;	\
+	    next->prev = __leaf->prev;		\
+	    __leaf->prev->next = next;		\
+	})
+
+#define FI_realloc_mc(__realloc, __size, __value) ({			\
+	    __leaf_t *__leaf=LF_PTR(__value);				\
+	    size_t __old_size = FI_size_mc(__value);			\
+	    __leaf = __realloc(__leaf, RESERVE_LEAFS*sizeof(__leaf_t) + (__size)); \
+	    if (__leaf->next) __leaf->next->prev = __leaf;		\
+	    if (__leaf->prev) __leaf->prev->next = __leaf;		\
+	    if (LF_ROOT(__leaf)->next) LF_ROOT(__leaf)->next->prev=LF_ROOT(__leaf); \
+	    if (LF_ROOT(__leaf)->prev) LF_ROOT(__leaf)->prev->next=LF_ROOT(__leaf); \
+	    __value = (typeof (__value))(LF_DATA(__leaf));		\
+	    if (__old_size < (__size)) {				\
+		memset((void *)__value+__old_size, 0, (__size)-__old_size); \
+	    }								\
+	    __value;							\
+	})
+
+#define FI_size_mc(__value) (malloc_usable_size(LF_PTR(__value))-RESERVE_LEAFS*sizeof(__leaf_t))
 
 #define FI_alloc_value(__root, __alloc, __value) ({	\
 	    __alloc(__root, sizeof(*__value), __value);	\
 	})
 
-#define FI_alloc_array(__root, __alloc, __length, __value) {		\
+#define FI_alloc_array(__head, __alloc, __length, __value) {		\
 	void *__mem_a=NULL;						\
-	__alloc(__root, sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
+	__alloc(__head, sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
 	*((size_t *)__mem_a) = (__length);				\
 	(__value) = __mem_a + sizeof(size_t);				\
     }
 
 #define FI_realloc_array_(__realloc, __length, __value) {		\
-	void *__mem_a = FI_ptr(__value);				\
+	void *__mem_a = FI_array_ptr(__value);				\
 	__realloc(sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
 	*((size_t *)__mem_a) = (__length);				\
 	(__value) = __mem_a + sizeof(size_t);				\
     }
 
 #define FI_resize_array_(__size, __length, __value) {			\
-	void *__mem_a = FI_ptr(__value);				\
+	void *__mem_a = FI_array_ptr(__value);				\
 	assert(sizeof(size_t)+(__length)*sizeof(*(__value))<=__size(__mem_a)); \
 	*((size_t *)__mem_a) = (__length);				\
     }
@@ -226,27 +237,29 @@ struct __leaf_s {
 #define FI_new_child_array(parent, length, value) FI_new_array(length, value)
 #else
 
-#define FI_new_child_value(parent, value) {			\
-	__leaf_t *__root = ((__leaf_t *)(parent)-1)->root;	\
-	FI_new_value(value);					\
-    }
+#define FI_new_child_value(parent, value) ({		\
+	    __leaf_t *__r = LF_ROOT(LF_PTR(parent));	\
+	    FI_alloc_value(__r, __malloc, value);	\
+	    value;							\
+	})
 
-#define FI_new_child_array(parent, length, value) {			\
-	__leaf_t *__root = ((__leaf_t *)FI_ptr(parent)-1)->root;	\
-	FI_new_array(length, value);					\
-    }
-    
+#define FI_new_child_array(parent, length, value) ({			\
+	    __leaf_t *__r = LF_ROOT(LF_PTR(FI_array_ptr(parent)));	\
+	    FI_alloc_array(__r, __malloc,  length, value);		\
+	    value;							\
+	})
+
 #endif
 
-#define FI_new_value(value)              FI_alloc_value(__root, __malloc,          value)
-#define FI_new_array(length, value)      FI_alloc_array(__root, __malloc,  length, value)
+#define FI_new_value(value)              FI_new_array(1, value)
+#define FI_new_array(length, value)      FI_alloc_array(__root, __malloc, length, value)
 #define FI_realloc_array(length, value)  FI_realloc_array_(__realloc, length, value)
 #define FI_resize_array(length, value)   FI_resize_array_(__size, length, value)
-#define FI_delete_value(value)           __free(value)
+#define FI_delete_value(value)           FI_delete_array(value)
 #define FI_delete_array(__free, __value) __free(FI_ptr(__value))
 
-#define FI_ptr(__value)                ((size_t *)__value-1)
-#define FI_array_length_ptr(__value)   FI_ptr(__value)
-#define FI_array_length(__value)       (*FI_array_length_ptr(__value))
+#define FI_array_ptr(__value)            ((size_t *)__value-1)
+#define FI_array_length_ptr(__value)     FI_array_ptr(__value)
+#define FI_array_length(__value)         (*FI_array_length_ptr(__value))
 
 #endif // __FOREIGN_INTERFACE_H__
