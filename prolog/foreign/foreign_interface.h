@@ -157,23 +157,17 @@ struct __leaf_s {
 
 // TODO: delete memset/3 when finish debugging
 
-#define FI_malloc_mc(__mate, __alloc, __size, __value) ({		\
+#define FI_malloc_mc(__head, __alloc, __size, __value) ({		\
 	    __leaf_t *__leaf = __alloc(sizeof(__leaf_t) + (__size));	\
-	    __leaf->next = (__mate);					\
+	    __leaf->prev = (__head);					\
 	    __leaf->root = __alloc(sizeof(__leaf_t));			\
-	    __leaf->root->next=NULL;					\
 	    __leaf->root->prev=NULL;					\
+	    __leaf->root->next=NULL;					\
 	    __leaf->root->root=NULL;					\
-	    if (__mate) {						\
-		__leaf->prev = (__mate)->prev;				\
-		if ((__mate)->prev) (__mate)->prev->next=__leaf;	\
-		(__mate)->prev = __leaf;				\
-	    } else {							\
-		__leaf->prev = NULL;					\
-		__mate = __leaf;					\
-	    }								\
+	    __leaf->next = (__head)->next;				\
+	    if ((__head)->next) (__head)->next->prev=__leaf;		\
+	    (__head)->next = __leaf;					\
 	    __value = (typeof (__value))(__leaf->value);		\
-	    fprintf(stderr, "FI_malloc_mc(%p, %p) (__leaf=%p)\n", __mate, __value, __leaf); \
 	    (typeof (__value))memset(__value, 0, (__size));		\
 	})
 
@@ -181,8 +175,8 @@ struct __leaf_s {
 	__leaf_t *__leaf=(__leaf_t *)__value-1;				\
 	size_t __old_size = FI_size_mc(__value);			\
 	__leaf = __realloc(__leaf, sizeof(__leaf_t) + (__size));	\
-	if (__leaf->prev) __leaf->prev->next = __leaf;			\
 	if (__leaf->next) __leaf->next->prev = __leaf;			\
+	if (__leaf->prev) __leaf->prev->next = __leaf;			\
 	__value = __leaf->value;					\
 	if (__old_size < (__size)) {					\
 	    memset((void *)__leaf+__old_size, 0, (__size)-__old_size);	\
