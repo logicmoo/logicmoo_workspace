@@ -233,7 +233,7 @@ struct __leaf_s {
     FI_foreachi(__index, __value, __array, __sentence)
 
 #ifdef __GLOBAL_ROOT__
-#define FI_new_child_value(parent, value) FI_new_value(value)
+#define FI_new_child_value(parent, value)         FI_new_value(value)
 #define FI_new_child_array(parent, length, value) FI_new_array(length, value)
 #else
 

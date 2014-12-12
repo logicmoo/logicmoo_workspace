@@ -37,12 +37,16 @@ returns_state(G) :- call(G).
 :- meta_predicate memory_root(0).
 memory_root(G) :- call(G).
 
-:- prop ptr/1 + type.
+:- prop ptr/1 + type # "Defines a void pointer".
 ptr(Ptr) :- int(Ptr).
 
-:- prop ptr/2 + type.
-:- meta_predicate ptr(?,1).
-ptr(Ptr, Type) :- call(Type, Ptr).
+:- prop ptr/2 + type # "Defines a typed pointer. Note that if the value was
+    allocated dinamically by foreign_interface, it allows its usage as parent in
+    FI_new_child_value/array in the C side to perform semi-automatic memory
+    management".
+
+:- meta_predicate ptr(?,1).  ptr(Ptr, Type) :-
+call(Type, Ptr).
 
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).
