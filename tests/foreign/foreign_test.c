@@ -4,7 +4,7 @@
 #include "foreign_test.h"
 #include "foreign_test_i_impl.h"
 
-void  extend(void **__root, int* const in, int** out) {
+void  extend(int* const in, int** out) {
     int i, n = FI_array_length(in);
     *out = in;
     for (i=0;i<n;i++) {
@@ -18,7 +18,7 @@ void fd1(struct d_t* const A, char **B, char **C, int **D) {
     *D=A->listv+1;
 }
 
-void fd2(void** __root, struct d_t* A, char* const B, char* const C, int const D) {
+void fd2(__leaf_t * __root, struct d_t* A, char* const B, char* const C, int const D) {
     A->value1 = B;
     A->value2 = C;
     FI_new_array(2, A->listv);
@@ -26,14 +26,14 @@ void fd2(void** __root, struct d_t* A, char* const B, char* const C, int const D
     A->listv[1] = D*D;
 }
 
-void fd3(void** __root, struct d_t** A, char** B, char** C, int** D) {
+void fd3(__leaf_t * __root, struct d_t** A, char** B, char** C, int** D) {
     FI_new_value(*A);
     (*A)->value1 = *B;
     (*A)->value2 = *C;
     (*A)->listv = *D;
 }
 
-int c_f(void** __root, struct field_t ** field) {
+int c_f(__leaf_t * __root, struct field_t ** field) {
     __rtcheck(field!=NULL);
     FI_new_value((*field)->sum);
     *(*field)->sum = (*field)->a + (*field)->b;
@@ -59,7 +59,7 @@ void c_idx(double * const A, int const B, double *C) {
     *C = A[B];
 }
 
-void c_numl(void **__root, int const A, double ** B) {
+void c_numl(__leaf_t * __root, int const A, double ** B) {
     int index;
     FI_new_array(A, *B);
     for (index = 0; index < A; index++) {
@@ -68,7 +68,7 @@ void c_numl(void **__root, int const A, double ** B) {
     // nothing to do yet
 }
 
-void c_get_arrays(void **__root, int const size, double ****A, int ***B, int **C) {
+void c_get_arrays(__leaf_t *__root, int const size, double ****A, int ***B, int **C) {
     int index1, index2, index3;
     FI_new_array(size, *A);
     FI_new_array(size, *B);
@@ -111,7 +111,7 @@ void c_io(int ** I) {
     }
 }
 
-int c_sio(void **__root, int **I) {
+int c_sio(__leaf_t *__root, int **I) {
     if (*I==NULL) {
 	FI_new_value(*I);
 	**I = 510;

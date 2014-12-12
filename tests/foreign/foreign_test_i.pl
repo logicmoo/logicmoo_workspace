@@ -85,7 +85,7 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 
 :- pred a(+list(position_t), +position_t) is foreign(c_a).
 
-:- pred extend(+list(int),-list(int)) is (foreign, memory_root).
+:- pred extend(+list(int),-list(int)) is foreign.
 
 :- pred eq(+int, -int) is foreign(c_eq).
 
