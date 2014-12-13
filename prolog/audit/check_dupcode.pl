@@ -67,9 +67,12 @@ ignore_dupgroup(name, PIL) :-
     ignore_dupname(PIL).
 
 ignore_dupname(PIL) :-
-    \+ ( member(M:F/A, PIL),
+    \+ ( append(_, [M:F/A|PIL2], PIL),
 	 functor(H, F, A),
-	 predicate_property(M:H, exported)
+	 predicate_property(M:H, exported),
+	 member(M2:F2/A2, PIL2),
+	 functor(H2, F2, A2),
+	 predicate_property(M2:H2, exported)
        ), !.
 
 check_dupcode(Ref0, FileChk, Result) :-
@@ -128,10 +131,10 @@ prolog:message(acheck(dupcode)) -->
      '---------------',nl,
      'The elements below has been implemented in different modules,', nl,
      'but are duplicates.  Would be a symptom of duplicated functionality.', nl,
-     'In the case of predicate names, at least one has been exported,', nl,
+     'In the case of predicate names, at least two has been exported,', nl,
      'making difficult to import it in other modules without clash risk.', nl,
      'This can be fixed by merging the duplicated code, or by refactoring', nl,
-     'one of the duplicated to aovid this warning.', nl, nl].
+     'one of the duplicated to avoid this warning.', nl, nl].
 prolog:message(acheck(dupcode, (DupType/GKey)-LocDL)) -->
     ['~w ~w is duplicated:'-[DupType, GKey], nl],
     maplist_dcg(message_duplicated, LocDL).

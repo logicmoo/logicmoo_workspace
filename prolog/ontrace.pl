@@ -106,7 +106,7 @@ clause_subloc(Module, Cl, List, SubLoc) :-
       ->( ( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
 	    match_clause(Cl, ClauseL, Module, List2, List),
 	    nonvar(ClausePos)
-	  ->( find_subgoal(List2, ClausePos, SubPos),
+	  ->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos),
 	      nonvar(SubPos)
 	    ->SubLoc = file_term_position(File, SubPos)
 	    ; SubLoc = file_term_position(File, ClausePos)
@@ -124,13 +124,11 @@ clause_subloc(Module, Cl, List, SubLoc) :-
 list_pos(term_position(_, _, _, _, PosL), PosL).
 list_pos(list_position(_, _, PosL, _), PosL).
 
-find_subgoal([A|T], TermPos, SPos) :-
+find_subgoal(A, TermPos, Pos) :-
     list_pos(TermPos, PosL),
     is_list(PosL),
     nth1(A, PosL, Pos),
-    nonvar(Pos), !,
-    find_subgoal(T, Pos, SPos).
-find_subgoal([], Pos, Pos).
+    nonvar(Pos), !.
 
 match_clause(Ref, ClauseL, Module, List, Tail) :-
     % format(user_error, '~N~w',[match_clause(Ref, ClauseL, Module, List, Tail)]),

@@ -24,11 +24,6 @@ nitrace_port(Stream, Port, Frame, PC, ParentL, SubLoc) :-
     maplist(frame_pi, ParentL, CS),
     print_message(stream(Stream, SubLoc), frame(Frame, Port, PC, CS)).
 
-unify_term(Sub, Term) :-
-    subsumes_term(Term, Sub),
-    nonvar(Term),
-    Term = Sub.
-
 :- multifile
     user:message_property/2,
     prolog:message_location//1,

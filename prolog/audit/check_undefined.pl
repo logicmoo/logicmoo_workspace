@@ -40,13 +40,11 @@ check_undefined(Ref, FileChk, OptionL0, Pairs) :-
 :- multifile hide_undef/1.
 
 found_undef(To, _Caller, From) :-
-    goal_pi(To, PI),
+    check:goal_pi(To, PI),
     ( hide_undef(To) -> true
     ; check:undef(PI, From) -> true
     ; assertz(check:undef(PI, From))
     ).
-
-goal_pi(M:H, M:F/A) :- functor(H, F, A).
 
 :- public collect_undef/6.
 :- meta_predicate collect_undef(?,?,1,+,+,+).

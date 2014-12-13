@@ -62,6 +62,7 @@ show_trivial_fail(Arg) -->
 :- multifile ignore_predicate/1.
 ignore_predicate(pce_expansion:pce_class(_, _, template, _, _, _)).
 ignore_predicate(pce_host:property(system_source_prefix(_))).
+ignore_predicate(pce_expansion:verbose).
 
 :- public
     collect_trivial_fail_1r/5,

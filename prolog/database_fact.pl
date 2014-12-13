@@ -58,7 +58,6 @@ database_fact(G, F) :- database_fact_ort(_, G, F).
 database_def_fact(ifprolog:asserta_with_names(A, _), F) :- clause_head(A, F).
 database_def_fact(ifprolog:assertz_with_names(A, _), F) :- clause_head(A, F).
 database_def_fact(pce_config:lasserta(A),            F) :- clause_head(A, F).
-database_def_fact(pce_config:lasserta(A),            F) :- clause_head(A, F).
 database_def_fact(plunit:assert_cyclic(A),           F) :- clause_head(A, F).
 database_def_fact(system:abolish(F, A),              H) :- fa_to_head(F, A, H).
 database_def_fact(system:abolish(PI),                H) :- pi_to_head(PI, H).
@@ -88,7 +87,6 @@ database_var_fact(prolog_listing:list_clauserefs/1).
 database_var_fact(prolog_listing:list_clauses/2).
 database_var_fact(prolog_metainference:meta_pred_args_in_clause/3).
 database_var_fact(shlib:abolish_foreign/1).
-database_var_fact(shlib:unload_foreign/1).
 database_var_fact(shlib:unload_foreign/1).
 database_var_fact(user:prolog_clause_name/2).
 database_var_fact(user:prolog_list_goal/1).
