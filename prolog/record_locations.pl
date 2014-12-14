@@ -19,6 +19,8 @@
 extra_location(Head, M, assertion(Status, Type), From) :-
     clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
 
+:- public record_extra_location/1.
+
 record_extra_location((:- module(M, L)))      :- assert_declaration(export, M, L).
 record_extra_location((:- volatile(L)))       :- assert_declaration(volatile, L).
 record_extra_location((:- dynamic(L)))        :- assert_declaration(dynamic, L).
@@ -110,6 +112,7 @@ assert_location(G, Pos, T) :-
     ),
     assert_location(G, M, T, L).
 
+:- public rl_goal_expansion/2.
 rl_goal_expansion(Goal, Pos) :-
     callable(Goal),
     \+ redundant(Goal),

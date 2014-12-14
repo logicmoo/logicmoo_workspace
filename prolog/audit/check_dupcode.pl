@@ -36,6 +36,8 @@ ignore_dupcode(term_expansion, 4, _, name).
 ignore_dupcode(goal_expansion, 2, _, name).
 ignore_dupcode(goal_expansion, 4, _, name).
 ignore_dupcode('$exported_op', 3, _, _).
+ignore_dupcode('$mode', 2, _, _).
+ignore_dupcode('$pred_option', 4, system, _).
 ignore_dupcode('$included', 4, system, _).
 ignore_dupcode('$load_context_module', 3, system, _).
 
@@ -73,7 +75,7 @@ ignore_dupname(PIL) :-
 	 member(M2:F2/A2, PIL2),
 	 functor(H2, F2, A2),
 	 predicate_property(M2:H2, exported)
-       ), !.
+       ).
 
 check_dupcode(Ref0, FileChk, Result) :-
     normalize_head(Ref0, Ref),

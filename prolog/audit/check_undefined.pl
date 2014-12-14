@@ -36,8 +36,11 @@ check_undefined(Ref, FileChk, OptionL0, Pairs) :-
 	    ), Pairs),
     cleanup_locations(_, _, dynamic(_, _, _), _).
 
+hide_undef(M:H) :- hide_undef(H, M).
+
 % Hook to hide undef messages:
-:- multifile hide_undef/1.
+:- multifile hide_undef/2.
+hide_undef(assertion_head(_,_,_,_,_,_,_), assrt_lib).
 
 found_undef(To, _Caller, From) :-
     check:goal_pi(To, PI),

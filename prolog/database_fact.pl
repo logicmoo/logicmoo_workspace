@@ -55,19 +55,21 @@ database_fact_ort(query,   G, F) :- database_query_fact(G, F).
 
 database_fact(G, F) :- database_fact_ort(_, G, F).
 
-database_def_fact(ifprolog:asserta_with_names(A, _), F) :- clause_head(A, F).
-database_def_fact(ifprolog:assertz_with_names(A, _), F) :- clause_head(A, F).
-database_def_fact(pce_config:lasserta(A),            F) :- clause_head(A, F).
-database_def_fact(plunit:assert_cyclic(A),           F) :- clause_head(A, F).
-database_def_fact(system:abolish(F, A),              H) :- fa_to_head(F, A, H).
-database_def_fact(system:abolish(PI),                H) :- pi_to_head(PI, H).
-database_def_fact(system:assert(A),                  F) :- clause_head(A, F).
-database_def_fact(system:assert(A, _),               F) :- clause_head(A, F).
-database_def_fact(system:asserta(A),                 F) :- clause_head(A, F).
-database_def_fact(system:asserta(A, _),              F) :- clause_head(A, F).
-database_def_fact(system:assertz(A),                 F) :- clause_head(A, F).
-database_def_fact(system:assertz(A, _),              F) :- clause_head(A, F).
-database_def_fact(system:retractall(F),              F).
+database_def_fact(M:H, F) :- database_def_fact(H, M, F).
+
+database_def_fact(asserta_with_names(A, _), ifprolog,   F) :- clause_head(A, F).
+database_def_fact(assertz_with_names(A, _), ifprolog,   F) :- clause_head(A, F).
+database_def_fact(lasserta(A),              pce_config, F) :- clause_head(A, F).
+database_def_fact(assert_cyclic(A),         plunit,     F) :- clause_head(A, F).
+database_def_fact(abolish(F, A),            system,     H) :- fa_to_head(F, A, H).
+database_def_fact(abolish(PI),              system,     H) :- pi_to_head(PI, H).
+database_def_fact(assert(A),                system,     F) :- clause_head(A, F).
+database_def_fact(assert(A, _),             system,     F) :- clause_head(A, F).
+database_def_fact(asserta(A),               system,     F) :- clause_head(A, F).
+database_def_fact(asserta(A, _),            system,     F) :- clause_head(A, F).
+database_def_fact(assertz(A),               system,     F) :- clause_head(A, F).
+database_def_fact(assertz(A, _),            system,     F) :- clause_head(A, F).
+database_def_fact(retractall(F),            system,     F).
 
 database_var_fact(check:check_trivial_fail/3).
 database_var_fact(prolog_codewalk:walk_clauses/2).
@@ -100,9 +102,9 @@ database_query_fact(system:clause(A, _),         F) :- clause_head(A, F).
 database_query_fact(system:clause(A, _, _),      F) :- clause_head(A, F).
 database_query_fact(refactor:unfold_goal(_,A,_), F) :- clause_head(A, F).
 
-pi_to_head(PI, H) :- nonvar(PI) -> PI=F/A, fa_to_head(F, A, H).
+pi_to_head(PI, H) :- nonvar(PI) -> PI=F/A, fa_to_head(F, A, H) ; true.
 
-fa_to_head(M:F, A, M:H) :- !, (atomic(M) -> fa_to_head_(F, A, H) ; true).
+fa_to_head(M:F, A, M:H) :- atomic(M) -> fa_to_head_(F, A, H), !.
 fa_to_head(F,   A, H) :- fa_to_head_(F, A, H).
 
 fa_to_head_(F, A, H) :- atomic(F), integer(A) -> functor(H, F, A) ; true.
