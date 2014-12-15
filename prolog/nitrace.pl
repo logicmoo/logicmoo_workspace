@@ -1,21 +1,21 @@
-:- module(nitrace, [nitrace_file/2,
-		    nitrace/2]).
+:- module(nitrace, [nitrace_file/3,
+		    nitrace/3]).
 
 :- use_module(library(maplist_dcg)).
 :- use_module(library(ontrace)).
 :- use_module(library(prolog_clause), []).
 
-:- meta_predicate nitrace_file(0,+).
-nitrace_file(Goal, Alias) :-
+:- meta_predicate nitrace_file(0,+,+).
+nitrace_file(Goal, Alias, OptL) :-
     absolute_file_name(Alias, File),
     setup_call_cleanup(
 	open(File, write, Stream),
-	nitrace(Goal, Stream),
+	nitrace(Goal, Stream, OptL),
 	close(Stream)).
 
-:- meta_predicate nitrace(0,+).
-nitrace(Goal, Stream) :-
-    ontrace(Goal, nitrace_port(Stream)).
+:- meta_predicate nitrace(0,+,+).
+nitrace(Goal, Stream, OptL) :-
+    ontrace(Goal, nitrace_port(Stream), OptL).
 
 frame_pi(Frame, PI) :-
     prolog_frame_attribute(Frame, predicate_indicator, PI).
