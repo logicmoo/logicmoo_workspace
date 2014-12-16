@@ -222,15 +222,22 @@ struct __leaf_s {
 
 #define FI_foreachi(__index, __value, __array, __sentence) ({	\
 	    size_t __index, __count = FI_array_length(__array);	\
-	    typeof (__array) __value;				\
-	    for (__index = 0; __index < __count; __index++) {	\
-		__value = &(__array)[__index];			\
+	    typeof (__array) __value, __pointer;		\
+	    for (__index = 0, __pointer = (__array);		\
+		 __index < __count; __index++) {		\
+		__value = __array + __index;			\
 		__sentence;					\
 	    }							\
 	})
 
-#define FI_foreach(__value, __array, __sentence) \
-    FI_foreachi(__index, __value, __array, __sentence)
+#define FI_foreach(__value, __array, __sentence) ({			\
+	    size_t __count = FI_array_length(__array);			\
+	    typeof (__array) __value, __upper;				\
+	    for (__value = (__array), __upper = __value + __count;	\
+		 __value < __upper; __value++) {			\
+		__sentence;						\
+	    }								\
+	})
 
 #ifdef __GLOBAL_ROOT__
 #define FI_new_child_value(parent, value)         FI_new_value(value)
@@ -250,6 +257,22 @@ struct __leaf_s {
 	})
 
 #endif
+
+#ifdef __DEBUG_ARRAY_BOUNDS__
+#define FI_array_item(__array, __index) ({				\
+	    if (!((__index)>=0&&(__index)<FI_array_length(__array)))	\
+		fprintf(stderr, "%s:%d: Warning: Array index out of bounds (%zd)\n", \
+			__FILE__, __LINE__, (ssize_t)(__index));	\
+	    assert((__index)>=0);					\
+	    assert((__index)<FI_array_length(__array));			\
+	    (__array)+(__index);					\
+	})
+#else
+#define FI_array_item(__array, __index) ((__array)+(__index))
+#endif
+
+#define FI_array_frst(__array) FI_array_item(__array, 0)
+#define FI_array_last(__array) FI_array_item(__array, FI_array_length(__array) - 1)
 
 #define FI_new_value(value)              FI_new_array(1, value)
 #define FI_new_array(length, value)      FI_alloc_array(__root, __malloc, length, value)
