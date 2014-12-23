@@ -36,7 +36,7 @@ check_deprecated(Ref0, FileChk, OptionL0, Pairs) :-
     ; prolog_walk_code([clauses(Clauses),
 			on_trace(collect_deprecated(M))
 		       |OptionL]),
-      findall(information-(IM:Call/Alt-(Loc/CI)),
+      findall(information-(((IM:Call)/Alt)-(Loc/CI)),
 	      ( retract(deprecated_db(Call, IM, Alt, From)),
 		from_location(From, Loc),
 		check:predicate_indicator(From, CI, [])
