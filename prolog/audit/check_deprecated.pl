@@ -60,7 +60,7 @@ prolog:message(acheck(deprecated)) -->
      '---------------------',nl,
      'The predicates below are marked as deprecated, so you have to', nl,
      'avoid its usage in new code, and to refactorize old code.', nl, nl].
-prolog:message(acheck(deprecated, PI/Alt-LocCIs)) -->
+prolog:message(acheck(deprecated, (PI/Alt)-LocCIs)) -->
     predicate_head(PI),
     [' deprecated, use ~q instead. Referenced by'-[Alt], nl],
     referenced_by(LocCIs).
