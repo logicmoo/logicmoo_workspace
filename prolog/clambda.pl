@@ -14,10 +14,11 @@ remove_hats(G0, G, EL) :-
     
 cgoal_args(G0, G, AL, EL) :-
     G0 =.. [F|Args],
-    cgoal_args(F, Args, G, AL, EL).
+    cgoal_args(F, Args, G, Fr, EL),
+    term_variables(Fr, AL).
 
 cgoal_args(\,  [G1|EL],    G, [], EL) :- remove_hats(G1, G, EL).
-cgoal_args(+\, [AL,G1|EL], G, AL, EL) :- remove_hats(G1, G, EL).
+cgoal_args(+\, [Fr,G1|EL], G, Fr, EL) :- remove_hats(G1, G, EL).
 
 lambdaize_args(A0, M, VL, Ex, A) :-
     ( '$member'(E1, Ex),
