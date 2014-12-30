@@ -217,6 +217,8 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
 generate_foreign_register(Module, Base) :-
     format('install_t install_~w() {~n', [Base]),
     format('    __system_dict_create=PL_predicate("dict_create", 3, "system");~n', []),
+    format('    __system_get_dict   =PL_predicate("get_dict",    3, "system");~n', []),
+    format('    __system_put_dict   =PL_predicate("put_dict",    4, "system");~n', []),
     format('    __~w_impl=PL_new_module(PL_new_atom("~w$impl"));~n', [Module, Module]),
     forall_tp(Module, type_props_nf, define_aux_variables),
     forall(current_foreign_prop(_, Module, _, _, _, _, _, _, PredName, BindName, Arity),
@@ -368,30 +370,30 @@ implement_type_unifier(func_rec(N, Term), Spec, Arg) :-
     format(';~n', []).
 implement_type_unifier(func_end, _, _) :-
     implement_type_end.
-implement_type_unifier(dict_ini(Name, _, Dict), Spec, Term) :-
+implement_type_unifier(dict_ini(Name, _, _), Spec, Term) :-
     func_pcname(Term, PName, CName),
     implement_type_unifier_ini(PName, CName, Name, Spec),
-    functor(Dict, _, Arity),
-    N is Arity//2,
-    format('    term_t dict_args=PL_new_term_refs(~w);~n', [N]),
-    format('    int index=0, indexes[~w];~n', [N]).
+    format('    term_t __desc=PL_new_term_ref();~n', []),
+    format('    term_t __tail=PL_copy_term_ref(__desc);~n', []).
 implement_type_unifier(dict_key_value(Dict, _, N), Key, Value) :-
     key_value_from_dict(Dict, N, Key, Value). % Placed in 'dict' order
-implement_type_unifier(dict_rec(_, Term, N, _), Spec, Arg) :-
+implement_type_unifier(dict_rec(_, Term, _N, _), Spec, Arg) :-
     func_pcname(Term, PName, CName),
     format(atom(CNameArg), '~w->~w', [CName, Arg]),
     camel_snake(PArg, Arg),
     format(atom(PNameArg), '~w_~w', [PName, PArg]),
-    (spec_pointer(Spec)->format('    if(~w) {~n', [CNameArg]);true),
-    format('        term_t ~w=dict_args+index;~n        ', [PNameArg]),
+    format('    ', []),
+    (spec_pointer(Spec)->format('if(~w) ', [CNameArg]);true),
+    format('{~n', []),
+    format('        term_t ~w=PL_new_term_ref();~n        ', [PNameArg]),
     c_set_argument(Spec, out, CNameArg, PNameArg),
     format(';~n', []),
-    format('        indexes[index++]=~w;~n', [N]),
-    (spec_pointer(Spec)->format('    }~n', []);true).
-implement_type_unifier(dict_end(M, Tag), Term, Name) :-
+    format('        FI_put_desc(__tail, "~w", ~w);~n', [Arg, PNameArg]),
+    format('    }~n', []).
+implement_type_unifier(dict_end(_, Tag), Term, _) :-
     func_pcname(Term, PName, _),
-    format('    FI_unify_dict_t(__~w_aux_keyid_index_~w, ~w, "~w");~n',
-	   [M, Name, PName, Tag]),
+    format('    __rtcheck(PL_unify_nil(__tail));~n', []),
+    format('    FI_dict_create(~w, "~w", __desc);~n', [PName, Tag]),
     implement_type_end.
 
 is_ptr(ptr(_)).

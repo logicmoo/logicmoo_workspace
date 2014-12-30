@@ -33,6 +33,13 @@
 	}								\
     }
 
+#else
+#pragma GCC diagnostic ignored "-Wunused-result"
+#define __rtcheck(__call) __call
+#define __doifrtc(__call)
+#define __rtcwarn(__call)
+#endif
+
 #define __rtcpass(__call) {		\
 	int __result = (__call);	\
 	if (!__result)			\
@@ -43,13 +50,6 @@
 	if (!__call)		\
 	    return;		\
     }
-
-#else
-#pragma GCC diagnostic ignored "-Wunused-result"
-#define __rtcheck(__call) __call
-#define __doifrtc(__call)
-#define __rtcwarn(__call)
-#endif
 
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
 /* #define __REGION_BASED_MEMORY_MANAGEMENT__ */

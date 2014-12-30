@@ -179,53 +179,59 @@
     }
 
 extern predicate_t __system_dict_create;
+extern predicate_t __system_put_dict;
+extern predicate_t __system_get_dict;
 
-#define FI_get_dict_t(__unifier, __desc, __value) {			\
-	int index, arity;						\
-	atom_t name;							\
-	term_t __term = PL_new_term_refs(3);				\
-	__rtcheck(PL_unify(__term+2, __desc));				\
-	__rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL, __system_dict_create, __term)); \
-	__rtcheck(PL_get_name_arity(__term, &name, &arity));		\
-	__doifrtc(name==ATOM_dict);					\
-	for(index=1; index < arity;) {					\
-	    term_t __k = PL_new_term_ref();				\
-	    term_t __v = PL_new_term_ref();				\
-	    __rtcheck(PL_get_arg(++index, __term, __k));		\
-	    __rtcheck(PL_get_arg(++index, __term, __v));		\
-	    __rtcpass(get_pair_##__unifier(__root, __k, __v, __value)); \
+#define FI_get_dict_t(__unifier, __data, __value) {			\
+	term_t __dict = PL_new_term_refs(3);				\
+	PL_put_term(__dict+2, __data);					\
+	__rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL,	\
+					      __system_dict_create, __dict), \
+			    __data, "valid data for " # __unifier));	\
+	term_t __args = PL_new_term_refs(3);				\
+	PL_put_term(__args+1, __dict);					\
+	qid_t __p = PL_open_query(NULL, PL_Q_NORMAL, __system_get_dict, \
+				  __args);				\
+	term_t __k = __args+0;						\
+	term_t __v = __args+2;						\
+	while (PL_next_solution(__p)) {					\
+	    __rtcpass(get_pair_##__unifier(__root, __k, __v, __value));	\
 	}								\
+	PL_close_query(__p);						\
     }
 
 #define FI_get_keyid_index(__pred, __keyid, __index) {			\
 	term_t __args = PL_new_term_refs(2);				\
 	PL_put_term(__args, __keyid);					\
 	__rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL, __pred, __args), \
-			    __keyid, "valid key of " # __pred));		\
+			    __keyid, "valid key of " # __pred));	\
 	__rtcheck(PL_get_integer(__args+1, &__index));			\
     }
 
-#define FI_unify_dict_t(__pred, __term, __tag) {			\
-	int length=index;						\
-	__rtcheck(PL_unify_functor(__term, PL_new_functor(ATOM_dict, 2*length+1))); \
-	term_t __tag_t = PL_new_term_ref();				\
-	__rtcheck(PL_unify_atom(__tag_t, PL_new_atom(__tag)));		\
-	__rtcheck(PL_unify_arg(1, __term, __tag_t));			\
-	for(index=0; index < length;) {					\
-	    term_t __k;							\
-	    term_t __v=dict_args+index;					\
-	    FI_get_index_keyid(__pred, indexes[index], __k);		\
-	    index++;							\
-	    __rtcheck(PL_unify_arg(2*index,   __term, __k));		\
-	    __rtcheck(PL_unify_arg(2*index+1, __term, __v));		\
-	}								\
+#define FI_init_dict_t(__dict, __tag) {					\
+	term_t __args = PL_new_term_refs(3);				\
+	PL_put_atom_chars(__args+1, __tag);				\
+	PL_put_nil(__args+2);						\
+	__rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL,			\
+				    __system_dict_create, __args));	\
+	__dict = __args;						\
     }
 
-#define FI_get_index_keyid(__pred, __index, __keyid) {			\
-	term_t __args = PL_new_term_refs(2);				\
-	__rtcheck(PL_unify_integer(__args+1, __index));			\
-	__rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL, __pred, __args)); \
-	__keyid = __args;						\
+#define FI_put_desc(__tail, __key, __value) {				\
+	term_t __kv = PL_new_term_ref();				\
+	__rtcheck(PL_unify_list(__tail, __kv, __tail));			\
+	__rtcheck(PL_unify_term(__kv, PL_FUNCTOR_CHARS, "-", 2,		\
+				PL_CHARS, __key,			\
+				PL_TERM,  __value));			\
+    }
+
+#define FI_dict_create(__dict, __tag, __desc) {				\
+	term_t __args = PL_new_term_refs(3);				\
+	PL_put_atom_chars(__args+1, __tag);				\
+	PL_put_term(__args+2, __desc);					\
+	__rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL,			\
+				    __system_dict_create, __args));	\
+	__rtcheck(PL_unify(__dict, __args));				\
     }
 
 #endif // __FOREIGN_SWIPL_H__
