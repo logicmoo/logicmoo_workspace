@@ -29,6 +29,7 @@ element_group(predicate, _:F/A,   F/A).
 element_group(clause,    _:F/A-_, F/A).
 element_group(name,      _:F/A,   F/A).
 
+ignore_dupcode(Name, _, _, _) :- atom_concat('__aux_wrapper_', _, Name).
 ignore_dupcode(_, _, refactor,       name).
 ignore_dupcode(_, _, i18n_refactor,  name).
 ignore_dupcode(term_expansion, 2, _, name).
