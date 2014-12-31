@@ -8,6 +8,8 @@
 			 i18n_entry/4,
 			 reference/2,
 			 language/1,
+			 i18n_entry_exact/4,
+			 show_i18n_terms/1,
 			 dictionary/1,
 			 variable_name/1,
 			 get_lang_file/2,
@@ -16,9 +18,11 @@
 			 '~='/2,
 			 '=~~'/2]).
 
+:- use_module(library(apply)).
+:- use_module(library(lists)).
+:- use_module(library(clambda)).
 :- use_module(library(i18n/i18n_op)).
 :- use_module(library(i18n/i18n_parser)).
-:- use_module(library(lambda)).
 
 /*
   
@@ -62,6 +66,22 @@
 :- multifile variable_name/1. % Name of variable names that set the language
 :- dynamic variable_name/1.
 
+% Meta predicate declarations should be placed before its usage to allow correct
+% expansion
+
+:- meta_predicate
+    i18n_process_term(3,+,?,?),
+    '=~'(-,:),
+    '~='(-,:),
+    '=~~'(-,:),
+    i18n_entry(1,+,?,?),
+    i18n_entry_exact(1,+,?,?),
+    i18n_entry_partial(1,+,?,?),
+    expand_i18n_term_trans(4,+,?,-),
+    expand_i18n_term_rtrans(4,+,?,-),
+    expand_i18n_term(4,+,?,-),
+    expand_i18n_term_arg(+,2,+,?,?).
+
 % Some standard places where the language is defined:
 variable_name('LC_MESSAGES').
 variable_name('LANG').
@@ -86,17 +106,13 @@ language(Lang) :-
 
 % Operator that Allows Run-Time language translation:
 
-:- meta_predicate '=~'(-,:).
-
 (Engl =~ M:Lang) :-
     i18n_process_term(i18n_entry(language), M, Lang, Engl).
 
 % Run-Time language reverse translation:
-:- meta_predicate '~='(-,:).
 (Engl ~= M:Dict) :-
     i18n_process_term(\X^D^E^i18n_entry(dictionary, X, E, D), M, Dict, Engl).
 
-:- meta_predicate '=~~'(-,:).
 (Term =~~ M:Term0) :-
     i18n_process_term(i18n_entry_dl, M, Term0, Term).
 
@@ -120,23 +136,19 @@ reference(Term, Ref) :-
 
 reference(M, [Ref]) :- atom_codes(M, Ref).
 
-:- meta_predicate i18n_entry(1,+,?,?).
 
 i18n_entry(GLang, M, MsgId, MsgStr) :-
     ( i18n_entry_exact(GLang, M, MsgId, MsgStr) -> true
     ; i18n_entry_partial(GLang, M, MsgId, MsgStr)
     ).
 
-:- export(i18n_entry_exact/4).
-:- meta_predicate i18n_entry_exact(1,+,?,?).
 i18n_entry_exact(GLang, M, MsgId, MsgStr) :-
     ( call(GLang, Lang),
       i18n_record_2(M, Lang, MsgId, MsgStr) -> true % 1. full translation
     ; call(GLang, Lang),	% 2. full list translation
-      maplist(\X^Y^once(i18n_record_2(M, Lang, [X], [Y])), MsgId, MsgStr) -> true
+      maplist([Lang,M]+\X^Y^once(i18n_record_2(M, Lang, [X], [Y])), MsgId, MsgStr) -> true
     ).
 
-:- meta_predicate i18n_entry_partial(1,+,?,?).
 i18n_entry_partial(GLang, M, MsgId, MsgStr) :- % 3. partial translation
     maplist(i18n_record_3(M, GLang), MsgId, MsgStr).
 
@@ -150,7 +162,6 @@ i18n_record_3(M, GLang, MsgId, MsgStr) :-
     ; MsgStr = MsgId
     ).
 
-:- export(show_i18n_terms/1).
 show_i18n_terms(M:Term) :-
     expand_i18n_term(show_i18n_term, M, Term, _).
 
@@ -168,8 +179,6 @@ i18n_entry_expander((~), M, MsgId, MsgStr) :-
 i18n_entry_expander((~~), M, MsgId, MsgStr) :-
     i18n_entry_dl(M, MsgId, MsgStr).
 
-:- meta_predicate expand_i18n_term_trans(4, +, ?, -).
-
 expand_i18n_term_trans(_, _, Var0, ~Var1) :-
     var(Var0),
     var(Var1),
@@ -180,8 +189,6 @@ expand_i18n_term_trans(Proc, _, M:Term, Translation) :- !,
 expand_i18n_term_trans(Proc, M, Term, Translation) :- !,
     i18n_process_term(call(Proc, (~)), M, Term, Translation).
 
-:- meta_predicate expand_i18n_term_rtrans(4, +, ?, -).
-
 expand_i18n_term_rtrans(_, _, Var0, ~~Var1) :-
     var(Var0),
     var(Var1),
@@ -191,8 +198,6 @@ expand_i18n_term_rtrans(Proc, _, M:Term, Translation) :- !,
     expand_i18n_term_rtrans(Proc, M, Term, Translation).
 expand_i18n_term_rtrans(Proc, M, Term, Translation) :-
     i18n_process_term(call(Proc, (~~)), M, Term, Translation).
-
-:- meta_predicate expand_i18n_term(4, +, ?, -).
 
 expand_i18n_term(_, _, Var0, Var1) :-
     var(Var0),
@@ -215,8 +220,6 @@ expand_i18n_term(Proc, M, Term0, Term) :-
     expand_i18n_term_arg(1, Proc, M, Term0, Term).
 expand_i18n_term(_, _, Term, Term).
 
-:- meta_predicate expand_i18n_term_arg(+, 2, +, ?, ?).
-
 expand_i18n_term_arg(N0, Proc, M, Term0, Term) :-
     arg(N0, Term0, Arg0),
     !,
@@ -231,8 +234,6 @@ code(Code) :-
     Code >= 0,
     Code =< 0x7FFFFFFF,
     code_type(Code, _).
-
-:- meta_predicate i18n_process_term(3,+,?,?).
 
 % i18n_process_term(_, Var, Var) :- % TODO: Optimize predicate, too many duplicated steps
 %     var(Var),
