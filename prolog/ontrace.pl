@@ -2,6 +2,7 @@
 
 :- use_module(library(maplist_dcg)).
 :- use_module(library(prolog_clause), []).
+:- use_module(library(prolog_source), []).
 :- use_module(library(prolog_codewalk), []).
 
 :- meta_predicate ontrace(0,5,+).
@@ -29,11 +30,11 @@ r_true(_).
 
 %% setup_trace(!State, :OnTrace, +OptL) is det.
 setup_trace(State, M:OnTrace, OptL) :-
-    select_option(goal(SkipGoal), OptL,  OptL1, ontrace:r_true),
-    select_option(file(SkipFile), OptL1, _,     ontrace:r_true),
+    select_option(goal(ValidGoal), OptL,  OptL1, ontrace:r_true),
+    select_option(file(ValidFile), OptL1, _,     ontrace:r_true),
     asserta((user:prolog_trace_interception(Port, Frame, PC, continue)
-	    :- ignore(\+trace_port(Port, Frame, PC, M:OnTrace, M:SkipGoal,
-				   M:SkipFile))),
+	    :- ignore(\+trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
+				   M:ValidFile))),
 	    Ref),
     maplist_dcg(port_mask, [call, exit, fail, redo, unify, exception], 0, Mask),
     '$visible'(Visible, Mask),
@@ -63,17 +64,17 @@ user_defined_module(M) :-
 
 :- public trace_port/6.
 :- meta_predicate trace_port(+,+,+,5,1,1).
-trace_port(Port, Frame, PC, OnTrace, SkipGoal, SkipFile) :-
+trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile) :-
     prolog_frame_attribute(Frame,  goal, M:H), % M:H to skip local predicates
-    \+ \+ call(SkipGoal, M:H),
-    find_parent_subloc(Port, Frame, M, SkipFile, ParentL, SubLoc),
+    \+ \+ call(ValidGoal, M:H),
+    find_parent_subloc(Port, Frame, M, ValidFile, ParentL, SubLoc),
     once(( member(F, [Frame|ParentL]),
     	   ( prolog_frame_attribute(F, goal, PM:_),
     	     user_defined_module(PM)
     	   ))),
     call(OnTrace, Port, Frame, PC, ParentL, SubLoc).
 
-find_parent_subloc(Port, Frame, Module, SkipFile, ParentL, SubLoc) :-
+find_parent_subloc(Port, Frame, Module, ValidFile, ParentL, SubLoc) :-
     ( % Due to a bug in SWI-Prolog, we can not rely on redo(PC) +
       % $clause_term_position(Cl,PC,List), in any case, the coverage of builtins
       % is not big deal, compared to the coverage of custom predicates --EMM
@@ -91,7 +92,7 @@ find_parent_subloc(Port, Frame, Module, SkipFile, ParentL, SubLoc) :-
       ; List = []
       )
     ),
-    clause_subloc(Module, SkipFile, Cl, List, SubLoc).
+    clause_subloc(Module, ValidFile, Cl, List, SubLoc).
 
 find_parent_with_pc(Frame, PC, List0, List) :-
     prolog_frame_attribute(Frame, parent, Parent),
@@ -105,11 +106,11 @@ find_parent_with_pc(Frame, PC, List0, List) :-
 % We need to use the TermPos as far as possible, that is why we call this method
 % even setting List=[] in its caller, and should not be simplified earlier.
 %
-clause_subloc(Module, SkipFile, Cl, List, SubLoc) :-
+clause_subloc(Module, ValidFile, Cl, List, SubLoc) :-
     ( clause_property(Cl, file(File)),
       clause_property(Cl, line_count(Line))
-    -> \+ \+ call(SkipFile, File),
-      ( prolog_clause:read_term_at_line(File, Line, Module, Term, TermPos, _)
+    -> \+ \+ call(ValidFile, File),
+      ( read_term_at_line(File, Line, Module, Term, TermPos)
       ->( ( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
 	    match_clause(Cl, ClauseL, Module, List2, List),
 	    nonvar(ClausePos)
@@ -125,6 +126,24 @@ clause_subloc(Module, SkipFile, Cl, List, SubLoc) :-
       )
     ; SubLoc = clause(Cl)
     ).
+
+read_term_at_line(File, Line, Module, Clause, TermPos) :-
+    setup_call_cleanup(
+	'$push_input_context'(trace_info),
+	read_term_at_line_2(File, Line, Module, Clause, TermPos),
+	'$pop_input_context').
+
+read_term_at_line_2(File, Line, Module, Clause, TermPos) :-
+    catch(open(File, read, In), _, fail),
+    set_stream(In, newline(detect)),
+    call_cleanup(
+	read_source_term_at_location(
+	    In, Clause,
+	    [ line(Line),
+	      module(Module),
+	      subterm_positions(TermPos)
+	    ]),
+	close(In)).
 
 list_pos(term_position(_, _, _, _, PosL), PosL).
 list_pos(list_position(_, _, PosL, _), PosL).
