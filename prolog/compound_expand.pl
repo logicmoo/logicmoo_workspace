@@ -18,12 +18,13 @@
 
 :- meta_predicate no_duplicates(0, ?).
 no_duplicates(Goal, Term) :-
-    S = nd([]),
-    Goal,
-    arg(1, S, X),
-    ( memberchk(Term, X) -> fail
-    ; nb_setarg(1, S, [Term|X])
-    ).
+    setup_call_cleanup(S = nd([]),
+		       Goal,
+		       ( arg(1, S, X),
+			 ( memberchk(Term, X) -> fail
+			 ; nb_setarg(1, S, [Term|X])
+			 )
+		       )).
 
 % Kludge: using swipl internals. Perhaps is not a good idea --EMM
 :- public expansion_module/2.
