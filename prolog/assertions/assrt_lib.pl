@@ -7,6 +7,7 @@
 		      assertion_db/11,
 		      assrt_lib_tr/4]).
 
+:- use_module(library(lists)).
 :- use_module(library(assertions_op)).
 
 :- expects_dialect(swi).
