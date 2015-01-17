@@ -2,7 +2,6 @@
 
 :- use_module(library(maplist_dcg)).
 :- use_module(library(module_files)).
-:- use_module(library(pldoc/doc_htmlsrc)).
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_open)).
@@ -19,13 +18,6 @@ browse_server(Port) :-
 :- multifile
     fetch_module_files_hook/2,
     show_source_hook/2.
-
-fetch_module_files_hook(live, ModuleFiles) :-
-    findall(M-Files,
-	    ( current_module(M),
-	      module_files(M, Files)
-	    ), ModuleFilesU),
-    sort(ModuleFilesU, ModuleFiles).
 
 list_files(Request) :-
     print_message(information, format('Preparing to list files', [])),
@@ -51,10 +43,6 @@ show_source(Request) :-
                     ]),
     show_source_hook(Method, File),
     print_message(information, format('done', [])).
-
-show_source_hook(live, File) :-
-    format('Content-type: text/html~n~n', []),
-    source_to_html(File, stream(current_output), [format_comments(false)]).
 
 header -->
     html(tr([td(b('Module')),
