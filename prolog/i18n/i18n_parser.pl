@@ -1,5 +1,7 @@
 :- module(i18n_parser, [parse_po_entry/3, parse_po_entries/3]).
 
+:- use_module(library(lists)).
+
 tr_text(A,B,T) :- append(A,T,B).
 
 comment(Text) --> "#", tr_text(Text), "\n".

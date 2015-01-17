@@ -8,7 +8,7 @@
 
 i18n_support:i18n_resource_dir(Dir) :-
     context_module(M),
-    current_module(M, F),
+    module_property(M, file(F)),
     directory_file_path(Dir, _, F).
 
 i18n_support:language(es).	% Spanish
