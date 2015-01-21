@@ -5,14 +5,14 @@
 %rule_n(0).
 
 compute_prob(Expl,Prob):-
-  writeln('test'),
-  init_test(_,Env),
   %writeln('retract'),
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
   %writeln('assert'),
   assert(rule_n(0)),
+  %writeln('test'),
+  init_test(_,Env),
   %writeln('build_bdd'),
   build_bdd(Env,Expl,BDD),
   %writeln('ret_prob'),
@@ -25,7 +25,7 @@ compute_prob(Expl,Prob):-
 
 build_bdd(Env,[X],BDD):- !,
   %write('1'),nl,
-  writel(X),nl,
+  %writel(X),nl,
   bdd_and(Env,X,BDD).
   
 build_bdd(Env, [H|T],BDD):-
