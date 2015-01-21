@@ -72,6 +72,7 @@ goal_expansion(G0, G) :-
     '$set_source_module'(M, M),
     expand_goal(G1, G2),
     lambdaize_args(G2, M, AL, EL, G3),
+    % '$expand':wrap_meta_arguments(G2, M, AL, EL, G3), % Use this to debug
     G3 =.. [AuxName|VL],
     append(VL, EL, AV),
     G =.. [AuxName|AV].
