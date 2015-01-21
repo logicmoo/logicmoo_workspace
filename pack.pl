@@ -1,4 +1,4 @@
 name(trill).
-title('trill package').
+title('A prolog tableau probabilistic reasoner').
 version('1.0').
 author('Riccardo Zese', 'zsercr@unife.it').
