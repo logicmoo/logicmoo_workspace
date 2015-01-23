@@ -88,7 +88,7 @@ get_var_n(Env,R,S,Probs,V):-
 
 get_prob_ax((Ax,_Ind),N,Prob):- !,
   pengine_property(_Pengine1,self(Name)),
-  Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/bundle#probability',Ax,literal(ProbA)),
+  Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbA)),
   atom_number(ProbA,Prob),
   ( na(Ax,N) -> 
       true
@@ -101,7 +101,7 @@ get_prob_ax((Ax,_Ind),N,Prob):- !,
   ).
 get_prob_ax(Ax,N,Prob):- !,
   pengine_property(_Pengine1,self(Name)),
-  Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/bundle#probability',Ax,literal(ProbA)),
+  Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbA)),
   atom_number(ProbA,Prob),
   ( na(Ax,N) -> 
       true 
