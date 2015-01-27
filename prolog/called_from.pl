@@ -35,8 +35,8 @@ called_from(Ref, Caller) :-
       retractall(called_from_db(_, _, _, _, _))
     ).
 
-called_from(Ref0, CM, Caller, OptionL, Pairs) :-
-    normalize_head(Ref0, M:H),
+called_from(Ref, CM, Caller, OptionL, Pairs) :-
+    normalize_head(Ref, M:H),
     collect_called_from(H, M, CM, Caller, OptionL, Pairs).
 
 collect_called_from(H, M, CM, Caller, OptionL, Sorted) :-
