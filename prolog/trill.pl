@@ -5,6 +5,7 @@
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
                  load_theory/1] ).
 
+:- set_prolog_flag(unknow,fail).
 
 /*:- use_module(library('thea2/owl2_io')).
 :- use_module(library('thea2/owl2_model')).*/
@@ -280,9 +281,9 @@ apply_nondet_rules([],ABox,ABox1):-
 
 apply_nondet_rules([H|_],ABox,ABox1):-
   C=..[H,ABox,L],
-  call(C),
+  call(C),!,
   member(ABox1,L),
-  ABox \= ABox1,!.
+  ABox \= ABox1.
 
 apply_nondet_rules([_|T],ABox,ABox1):-
   apply_nondet_rules(T,ABox,ABox1).
