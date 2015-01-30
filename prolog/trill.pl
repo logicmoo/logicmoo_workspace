@@ -5,7 +5,7 @@
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
                  load_theory/1] ).
 
-:- set_prolog_flag(unknow,fail).
+%:- set_prolog_flag(unknow,fail).
 
 /*:- use_module(library('thea2/owl2_io')).
 :- use_module(library('thea2/owl2_model')).*/
