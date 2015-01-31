@@ -5,16 +5,16 @@
 test(rtcompile) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
     expects_dialect(ciao),
-    [library(rtchecks/examples/rtc_external)],
-    use_module(library(rtchecks/examples/rtchecks_disc), []),
-    [library(rtchecks/examples/rtchecks_example2)],
-    use_module(library(rtchecks/examples/rtchecks_example), []),
-    [library(rtchecks/examples/rtchecks_inline)],
+    [rtchecks/examples/rtc_external],
+    use_module(rtchecks/examples/rtchecks_disc, []),
+    [rtchecks/examples/rtchecks_example2],
+    use_module(rtchecks/examples/rtchecks_example, []),
+    [rtchecks/examples/rtchecks_inline],
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
 test(rtexec3) :-
-    [library(rtchecks/examples/rtchecks_example3)],
+    [rtchecks/examples/rtchecks_example3],
     catch(test1,E,true),
     assertion(E=error(unintercepted_signal(rtcheck(pp_check, square(_, _),
 						   ['X'=0, 'X2'=0 ],

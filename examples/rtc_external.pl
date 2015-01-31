@@ -12,7 +12,7 @@
 :- test functor(A,B,C) : (A=0) => (nonvar * atom * nnegint) + fails.
 
 :- true prop patata/1 + no_signal.
-
+:- meta_predicate patata(goal).
 patata(G) :- call(G).
 
 :- pred display/1 + patata.
