@@ -33,8 +33,7 @@ check_undefined(Ref, FileChk, OptionL0, Pairs) :-
 	    ( retract(check:undef(PI, From)),
 	      from_location(From, Loc),
 	      check:predicate_indicator(From, CI, [])
-	    ), Pairs),
-    cleanup_locations(_, _, dynamic(_, _, _), _).
+	    ), Pairs).
 
 hide_undef(M:H) :- hide_undef(H, M).
 
@@ -55,7 +54,6 @@ collect_undef(H, M, FileChk, MCall, Caller, From) :-
     from_to_file(From, File),
     M:H = MCall,
     call(FileChk, File),
-    record_location_dynamic(MCall, M, From),
     found_undef(MCall, Caller, From),
     fail. % prevent unexpected unification
 

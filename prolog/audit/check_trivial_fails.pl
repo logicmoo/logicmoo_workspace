@@ -43,8 +43,7 @@ check_trivial_fails(Ref0, FileChk, OptionL0, Pairs) :-
 	      ( retract(trivial_fail(From, Args)),
 		from_location(From, Loc)
 	      ), Pairs)
-    ),
-    cleanup_locations(_, _, dynamic(_, _, _), _).
+    ).
 
 prolog:message(acheck(trivial_fails)) -->
     ['-------------',nl,

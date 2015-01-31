@@ -68,7 +68,6 @@ check_unused(Ref, FileChk, OptionL0, Pairs) :-
 cleanup_unused :-
     retractall(calls_to(_, _)),
     retractall(marked(_, _, _)),
-    cleanup_locations(_, _, dynamic(_, _, _), _),
     retractall(arc(_, _)),
     retractall(scc1(_, _)),
     retractall(node_scc(_, _)).

@@ -32,6 +32,7 @@ hide_var_dynamic(foreign_generator:bind_type_names/4).
 hide_var_dynamic(check_unused:mark_to_head/2).
 hide_var_dynamic(check_unused:current_arc/3).
 hide_var_dynamic(ontrace:match_clause/5).
+hide_var_dynamic(foreign_props:type_desc/2).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -41,8 +42,7 @@ hide_wrong_dynamic(user:prolog_trace_interception/4).
 
 cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _, _)),
-    retractall(var_dynamic_db(_, _)),
-    cleanup_locations(_, _, dynamic(_, _, _), _).
+    retractall(var_dynamic_db(_, _)).
 
 audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),

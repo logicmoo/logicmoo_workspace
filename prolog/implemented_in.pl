@@ -1,8 +1,8 @@
 :- module(implemented_in, [implemented_in/1, implemented_in/3]).
 
+:- use_module(library(record_locations)).
 :- use_module(library(prolog_codewalk), []). % for message_location//1
 :- use_module(library(normalize_head)).
-:- use_module(library(record_locations)).
 
 :- multifile
     prolog:message//1,
