@@ -254,9 +254,6 @@ type_props_(M, Type, PropL, GlobL, Dict, Pos) :-
 	   memberchk(TType, GlobL)
 	 )).
 
-type_props(M, Type) :-
-    type_props_(M, Type, _, _, _, _).
-
 type_props_nf(Module, Type, PropL, Dict, Pos) :-
     type_props(Module, Type, PropL, GlobL, Dict, Pos),
 				% Don't create getters and unifiers for
@@ -396,11 +393,6 @@ implement_type_unifier(dict_end(_, Tag), Term, _) :-
     format('    FI_dict_create(~w, "~w", __desc);~n', [PName, Tag]),
     implement_type_end.
 
-is_ptr(ptr(_)).
-is_ptr(pointer-_).
-is_ptr(list(_)).
-is_ptr(tdef(_, Spec)) :- is_ptr(Spec).
-
 spec_pointer(chrs(_)).
 spec_pointer(ptr(_)).
 spec_pointer(pointer-_).
@@ -523,9 +515,9 @@ type_components(M, Type, PropL, Call, Loc) :-
     ; ( select(dict_t(Term, Desc), PropL, PropL1)
       ; select(dict_t(Term, Tag, Desc), PropL, PropL1)
       ; select(dict_join_t(Term, Tag, Type1, Type2), PropL, PropL1),
-	join_dict_types(M:Type1, M:Type2, Tag, Desc)
+	join_dict_types(Type1, M, Type2, M, Tag, Desc)
       ; select(dict_extend_t(Term, Type, Tag, Desc2), PropL, PropL1),
-	join_type_desc(M:Type, Tag, Desc2, Desc)
+	join_type_desc(Type, M, Tag, Desc2, Desc)
       )
     ->( is_dict(Desc, Tag)
       ->Dict=Desc

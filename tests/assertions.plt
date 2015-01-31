@@ -112,16 +112,16 @@ test(assrt_lib_oddity_2) :-
 
 test(assrt_lib_abridged_notation) :-
     assrt_lib:assertion_records(rt, [], pred check_to_messages(+Time      :ctime_t,
-						       +RTCheck   :rtcheck_error,
-						       ?Messages0 :list(message_info),
-						       ?Messages  :list(message_info))#"c", _, R, _),
+							       +RTCheck   :rtcheck_error,
+							       ?Messages0 :list(message_info),
+							       ?Messages  :list(message_info))#"c", _, R, _),
     assertion(R=[(assrt_lib:assertion_head(check_to_messages(Time,
 							     RTCheck,
 							     Messages0,
 							     Messages),
 					   rt, check, pred, "c", [], _) :-
 		 call((list(Messages0, message_info),
-		       list(Messages, message_info))),
+		       list(Messages,  message_info))),
 		  call((ctime_t(Time),
 			rtcheck_error(RTCheck))),
 		  call(true),

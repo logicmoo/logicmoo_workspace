@@ -10,8 +10,8 @@
 	   dict_t/3,
 	   dict_join_t/4,
 	   dict_extend_t/4,
-	   join_dict_types/4,
-	   join_type_desc/4]).
+	   join_dict_types/6,
+	   join_type_desc/5]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -62,19 +62,19 @@ dict_t(Term, Tag, M:Desc) :-
 
 :- prop dict_join_t/4 + type.
 :- meta_predicate dict_join_t(?, ?, 1, 1).
-dict_join_t(Term, Tag, Type1, Type2) :-
-    join_dict_types(Type1, Type2, Tag, Dict),
+dict_join_t(Term, Tag, M1:Type1, M2:Type2) :-
+    join_dict_types(Type1, M1, Type2, M2, Tag, Dict),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict), Pairs).
 
 :- prop dict_extend_t/4 + type.
 :- meta_predicate dict_extend_t(?, 1, ?, +).
-dict_extend_t(Term, Type, Tag, Desc) :-
-    join_type_desc(Type, Tag, Desc, Dict),
+dict_extend_t(Term, M:Type, Tag, Desc) :-
+    join_type_desc(Type, M, Tag, Desc, Dict),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict), Pairs).
 
-join_type_desc(M:Type, Tag, Desc2, Dict) :-
+join_type_desc(Type, M, Tag, Desc2, Dict) :-
     type_desc(M:Type, Desc1),
     join_dict_descs(M:Desc1, M:Desc2, Tag, Dict).
 
@@ -92,7 +92,7 @@ type_desc(M:Type, Desc) :-
     extend_term(Type, [_], Call),
     clause(M:Call, dict_t(_, _, Desc)).
 
-join_dict_types(M1:Type1, M2:Type2, Tag, Dict) :-
+join_dict_types(Type1, M1, Type2, M2, Tag, Dict) :-
     type_desc(M1:Type1, Desc1),
     type_desc(M2:Type2, Desc2),
     join_dict_descs(M1:Desc1, M2:Desc2, Tag, Dict).
