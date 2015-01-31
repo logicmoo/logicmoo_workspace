@@ -26,6 +26,7 @@ call_inout(Goal, OnIn, OnOut) :-
     (OnOut;OnIn,fail),
     (C0==C1 -> ! ;true).
 
+:- public r_true/1.
 r_true(_).
 
 %% setup_trace(!State, :OnTrace, +OptL) is det.

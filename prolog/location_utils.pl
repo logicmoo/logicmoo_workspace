@@ -1,7 +1,7 @@
 :- module(location_utils,
 	[property_location/3, predicate_location/2, property_from/3,
 	 record_location_dynamic/3, predicate_from/2, cleanup_locations/4,
-	 from_location/2, from_to_file/2, in_set/2, in_dir/2, r_true/1,
+	 from_location/2, from_to_file/2, in_set/2, in_dir/2,
 	 record_location_meta/5, record_location/4]).
 
 :- use_module(library(lists)).
@@ -32,8 +32,6 @@ in_dir(DirL, File) :-
     member(Dir, DirL),
     directory_file_path(Dir, _, File),
     !.
-
-r_true(_).
 
 % For preds + decls
 property_location(Prop, Declaration, Location) :-
