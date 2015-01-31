@@ -9,7 +9,6 @@ test(rtcompile) :-
     use_module(rtchecks/examples/rtchecks_disc, []),
     [rtchecks/examples/rtchecks_example2],
     use_module(rtchecks/examples/rtchecks_example, []),
-    [rtchecks/examples/rtchecks_inline],
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 

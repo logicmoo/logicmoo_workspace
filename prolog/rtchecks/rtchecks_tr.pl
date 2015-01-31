@@ -16,11 +16,10 @@
    ).
 :- use_module(library(filesex)).
 :- use_module(engine(basic_props)).
-% For simplicity, for SWI-Prolog we only support tr_library:
-:- use_package(rtchecks(rtchecks_tr_library)).
-:- else.
-% You can test the inliner package with this module
-:- use_package(rtchecks(rtchecks_tr_inline)).
+:- use_module(library(hiordlib), [map/3]).
+:- use_module(library(lists)).
+:- use_module(rtchecks(rtchecks_basic)).
+:- use_module(rtchecks(rtchecks_meta)).
 :- endif.
 :- use_module(library(assertions(assrt_lib)),
 	      [assertion_read/9, assertion_body/7,

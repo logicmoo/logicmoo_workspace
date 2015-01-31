@@ -1,3 +1,5 @@
+% TODO: migrate this to SWI-Prolog --EMM
+
 :- use_package(assertions).
 :- doc(nodoc, assertions).
 
@@ -79,20 +81,6 @@ explanation of the meaning:
    @item @code{no}     : Disable rtchecks for test assertions. Default.
    @item @code{yes}    : Enable  rtchecks for test assertions. Used for
                  debugging purposes, but is better to use the unittest library.
-  @end{itemize}
-
-@item @code{rtchecks_inline}
-  @begin{itemize}
-   @item @code{no}     : Instrument rtchecks using call to library
-			 predicates present in @lib{rtchecks_rt.pl},
-			 @lib{nativeprops.pl} and @lib{basic_props.pl}.
-			 In this way, space is saved, but sacrifying
-			 performance due to usage of meta calls and
-			 external methods in the libraries. Default.
-   @item @code{yes}    : Expand library predicates inline as far as possible.
-			 In this way, the code is faster, because its avoids
-			 metacalls and usage of external methods, but the final
-			 executable could be bigger.
   @end{itemize}
 
 @item @code{rtchecks_asrloc}
