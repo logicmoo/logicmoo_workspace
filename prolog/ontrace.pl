@@ -1,6 +1,7 @@
 :- module(ontrace, [ontrace/3]).
 
 :- use_module(library(maplist_dcg)).
+:- use_module(library(clambda)).
 :- use_module(library(prolog_clause), []).
 :- use_module(library(prolog_source), []).
 :- use_module(library(prolog_codewalk), []).
@@ -26,13 +27,15 @@ call_inout(Goal, OnIn, OnOut) :-
     (OnOut;OnIn,fail),
     (C0==C1 -> ! ;true).
 
-:- public r_true/1.
-r_true(_).
+% Kludge to get an anonymous true/1 predicate:
+:- meta_predicate true_1(1,-).
+true_1(G, G).
 
 %% setup_trace(!State, :OnTrace, +OptL) is det.
 setup_trace(State, M:OnTrace, OptL) :-
-    select_option(goal(ValidGoal), OptL,  OptL1, ontrace:r_true),
-    select_option(file(ValidFile), OptL1, _,     ontrace:r_true),
+    true_1(\_^true, True1),
+    select_option(goal(ValidGoal), OptL,  OptL1, True1),
+    select_option(file(ValidFile), OptL1, _,     True1),
     asserta((user:prolog_trace_interception(Port, Frame, PC, continue)
 	    :- ignore(\+trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
 				   M:ValidFile))),
