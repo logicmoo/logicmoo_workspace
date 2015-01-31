@@ -50,14 +50,12 @@ check_results(Analysis, Result) :-
     check_results(Analysis, _, Result, []).
 
 checkall :-
-    available_checker(Checker),
-    print_message(information, format('Running Checker ~w', [Checker])),
-    showcheck(Checker),
-    fail.
-checkall.
+    checkall(_, []).
 
 checkall(Ref, OptionL) :-
-    showcheck(_, Ref, OptionL),
+    available_checker(Checker),
+    print_message(information, format('Running Checker ~w', [Checker])),
+    showcheck(Checker, Ref, OptionL),
     fail.
 checkall(_, _).
 
