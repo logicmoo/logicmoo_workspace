@@ -115,17 +115,17 @@ clean_redundant_group(GKey-Group, (DupType/GKey)-List) :-
     duptype(DupType),
     memberchk(DupType-List, Group), !.
 
-elem_location(name, PI, Loc/D) :- property_location(PI, D, Loc).
-elem_location(clause, M:F/A-Idx, Loc/D) :-
-    functor(H, F, A),
-    property_location((M:H)/Idx, D, Loc).
-elem_location(predicate, M:F/A, Loc/D) :-
-    functor(H, F, A),
-    property_location(M:H, D, Loc).
+elem_property(name,      PI,        PI).
+elem_property(clause,    M:F/A-Idx, (M:H)/Idx) :- functor(H, F, A).
+elem_property(predicate, M:F/A,     M:H)       :- functor(H, F, A).
+
+elem_location(DupType, Elem, D, Loc) :-
+    elem_property(DupType, Elem, Prop),
+    property_location(Prop, D, Loc).
 
 add_location(DupType/GKey-DupId/Elem,
 	     warning-(DupType/GKey-(DupId-(LocDL/Elem)))) :-
-    findall(LocD, elem_location(DupType, Elem, LocD), LocDU),
+    findall(Loc/D, (elem_location(DupType, Elem, D, Loc), D \= goal), LocDU),
     sort(LocDU, LocDL).
 
 prolog:message(acheck(dupcode)) -->
