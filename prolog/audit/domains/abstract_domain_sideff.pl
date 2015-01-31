@@ -1,6 +1,6 @@
 :- module(abstract_domain_sideff, []).
 
-:- include(library(audit/abstract_domain_decls)).
+:- use_module(library(audit/abstract_domain)).
 
 % DOMAIN: Side-effects [free, soft, hard, top]
 abstract_domain:abstract_domain(sideff).

@@ -1,6 +1,6 @@
 :- module(abstract_domain_fail, []).
 
-:- include(library(audit/abstract_domain_decls)).
+:- use_module(library(audit/abstract_domain)).
 
 % DOMAIN: fail [true, fail, top]
 
