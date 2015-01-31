@@ -1,4 +1,11 @@
-:- module(_, _, [assertions, regtypes, nativeprops, rtchecks, expander]).
+:- module(rtchecks_example3, [nullasr/2,
+			      square/2,
+			      test1/0,
+			      animal/1,
+			      family/1,
+			      fullasr/2],
+	  [assertions, regtypes, nativeprops, rtchecks
+	  ]).
 
 :- pred nullasr(A, B).
 

@@ -1,7 +1,6 @@
-:- module(_, _, [assertions, nativeprops, rtchecks]).
-
-:- use_package(expander).
-
+:- module(rtchecks_inline,
+	  [disc1/1, disc2/1, disc3/1],
+	  [assertions, nativeprops, rtchecks]).
 
 :- pred disc1(A) : (A=a).
 :- pred disc1(A) : (A=b).

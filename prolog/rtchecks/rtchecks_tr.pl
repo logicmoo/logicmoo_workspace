@@ -309,11 +309,11 @@ add_declarations(F, A, M, H) -->
 proc_remaining_assertions(Preds, Clauses, M, Dict) :-
 	member(F/A, Preds),
 	add_declarations(F, A, M, Head, Clauses, Clauses1),
-	Body = '$orig_call'(Head),
 	current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	setup_call_cleanup(
 	    set_prolog_flag(rtchecks_predloc, no),
-	    transform_sentence_body(Dict, Head, F, A, M, Body, Body, Clauses0),
+	    transform_sentence_body(Dict, Head, F, A, M, original,
+				    '$orig_call'(Head), Clauses0),
 	    set_prolog_flag(rtchecks_predloc, UsePredLoc)),
 	insert_inline_declarations(F, A, M, Head, Clauses0, Clauses1).
 
@@ -413,13 +413,13 @@ module_qualifier_i(M, Goal, RM) :-
 	; RM = M
 	).
 
-needs_posponed_definition(Goal) :- is_discontiguous(Goal).
-
 is_discontiguous(M:Head) :-
 	functor(Head, F, A),
 	discontiguous(F, A, Base),
 	defines_module(Base, M).
 :- endif.
+
+needs_posponed_definition(Goal) :- is_discontiguous(Goal).
 
 :- if(current_prolog_flag(dialect, swi)).
 
@@ -435,9 +435,8 @@ module_qualifier_i(M, Goal, RM) :-
     ).
 */
 
-needs_posponed_definition(_) :- fail. % is_discontiguous(Goal).
+is_discontiguous(Pred) :- '$get_predicate_attribute'(Pred, (discontiguous), 1).
 
-% is_discontiguous(Pred) :- '$get_predicate_attribute'(Pred, (discontiguous), 1).
 :- endif.
 
 qualify_goal(M, Goal0, Goal) :-
@@ -489,14 +488,15 @@ head_body_clause(Head, Body, Clause) :-
 	).
 
 :- if(current_prolog_flag(dialect, swi)).
-mark_generated_rtchecks(F, A, M, C, [rtchecks_tr:generated_rtchecks_db(F, A, M)|C]).
+mark_generated_rtchecks(F, A, M) :-
+    compile_aux_clauses(rtchecks_tr:generated_rtchecks_db(F, A, M)).
 :- endif.
 :- if(current_prolog_flag(dialect, ciao)).
-mark_generated_rtchecks(F, A, M, C, C) :-
+mark_generated_rtchecks(F, A, M) :-
     assertz_fact(generated_rtchecks_db(F, A, M)).
 :- endif.
 
-transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
+transform_sentence_body(Dict, Head, F, A, M, Flag, Body, Clauses) :-
 	( generated_rtchecks_db(F, A, M) ->
 	  head_alias_db(Head, Head1, M),
 	  Clauses = (Head1 :- Body)
@@ -508,8 +508,10 @@ transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
 	    current_prolog_flag(rtchecks_asrloc,  UseAsrLoc),
 	    current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	    generate_rtchecks(F, A, M, Assertions, Pred, Dict, PLoc,
-			      (UsePredLoc, UseAsrLoc), _, Head, Body0, Body, Clauses0, []) ->
-	    mark_generated_rtchecks(F, A, M, Clauses0, Clauses)
+			      (UsePredLoc, UseAsrLoc), _, Head, Flag,
+			      Body, Clauses0, [])
+	  ->mark_generated_rtchecks(F, A, M),
+	    Clauses0 = Clauses
 	  ; head_body_clause(Head, Body, Clause),
 	    Clauses = [Clause]
 	  )
@@ -520,7 +522,7 @@ transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses) :-
 transform_sentence(F, A, Head, Body0, Body, Clauses, M, Dict) :-
 	current_prolog_flag(runtime_checks, yes),
 	process_body(Dict, Head, F, A, M, Body0, Body),
-	transform_sentence_body(Dict, Head, F, A, M, Body0, Body, Clauses).
+	transform_sentence_body(Dict, Head, F, A, M, transform, Body, Clauses).
 transform_sentence(_, _, Head, Body, Body, Clause, _, _) :-
 	head_body_clause(Head, Body, Clause).
 
@@ -676,7 +678,7 @@ generate_common_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs,
 generate_step1_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, Goal0, Goal) :-
 	do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc,
 	    PosLocs0, Goal1, Goal),
-	(reverse(PosLocs0, PosLocs1) -> true),
+	once(reverse(PosLocs0, PosLocs1)),
 	collapse_terms(Goal1, PosLocs1, PosLocs2),
 	reverse(PosLocs2, PosLocs),
 	append(PosLocs, Goal1, Goal0).
@@ -791,13 +793,13 @@ generate_ctchecks(Pred, M, Loc, Lits) :-
     lists_to_lits(Goal0, Lits).
 
 generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
-		  Head, Body0, Body) -->
-	{generate_step1_rtchecks(Assrs, Pred, M, PLoc, UsePosLoc, Body0, Body01)},
-	( {Body0 \== Body01} ->
+		  Head, Flag, Body) -->
+	{generate_step1_rtchecks(Assrs, Pred, M, PLoc, UsePosLoc, Body00, Body01)},
+	( {Body00 \== Body01} ->
 	  { rename_head('1', A, Pred, Pred1),
 	    record_goal_alias(Pred, Pred1, M),
 	    Body01 = Pred1,
-	    lists_to_lits(Body0, Lits0)
+	    lists_to_lits(Body00, Lits0)
 	  },
 	  add_use_inline(F, A),
 	  [(Pred :- Lits0)]
@@ -806,7 +808,7 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
 	{generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc,
 				 Body1, Body12)},
 	( {Body1 \== Body12} ->
-	  ( { var(Body0) ; Body0 \= '$orig_call'(_) } ->
+	  ( {Flag = transform} ->
 	    { rename_head('2', A, Pred, Pred2),
 	      Body12 = Pred2,
 	      functor(Pred1, F1, A1)
@@ -820,7 +822,7 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
 	  [(Pred1 :- Lits1)]
 	; {Pred1 = Pred2}
 	),
-	( { var(Body0) ; Body0 \= '$orig_call'(_) } ->
+	( {Flag = transform} ->
 	  { record_head_alias(Pred, Pred2, M), % TODO: Optimize this literal
 	    head_alias_db(Head, Head1, M)
 	  },

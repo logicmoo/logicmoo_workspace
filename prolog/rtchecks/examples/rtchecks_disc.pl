@@ -1,6 +1,5 @@
-:- module(_, _, [assertions, nativeprops, rtchecks]).
-
-:- use_package(expander).
+:- module(rtchecks_disc, [disc1/1],
+	  [assertions, nativeprops, rtchecks]).
 
 :- discontiguous(disc1/1).
 

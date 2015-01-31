@@ -21,7 +21,7 @@
 		test_det/2,
 		test_det2/1],
 	    [assertions, basicmodes, isomodes, nativeprops, hiord,
-		regtypes, rtchecks, expander]).
+		regtypes, rtchecks]).
 
 :- use_module(library(aggregates)).
 

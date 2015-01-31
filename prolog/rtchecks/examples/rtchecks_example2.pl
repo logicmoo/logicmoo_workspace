@@ -1,8 +1,7 @@
-:- module(_, [pred1/2, pred2/2, pred3/1, pred4/2, concat/3, bad_concat/3, ppp1/0,
+:- module(_, [pred1/2, pred2/2, pred3/1, pred4/2, aconcat/3, bad_concat/3, ppp1/0,
 		test_all/2, test_atm/1], [assertions, nativeprops]).
 
 :- use_package(rtchecks).
-:- use_package(expander).
 
 :- doc(author, "Edison Mera").
 
@@ -43,11 +42,11 @@ pred5(a, b).
 
 :- check success concat(A, B, X) : (A = [1, 2], B = [3]) => (X == [1, 2, 4]).
 
-:- check exit concat/3 : (list * list * var) => (list * list * list).
+:- check exit aconcat/3 : (list * list * var) => (list * list * list).
 
-concat([],    X, X).
-concat([X|Y], Z, [X|T]) :-
-	concat(Y, Z, T).
+aconcat([],    X, X).
+aconcat([X|Y], Z, [X|T]) :-
+	aconcat(Y, Z, T).
 
 :- check exit bad_concat(A, B, C)
 	: (list * list * var) => (list * list * list).
