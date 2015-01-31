@@ -66,7 +66,6 @@ trusted_result_fail(catch(_, _, _),              _, top).
 trusted_result_fail((_>_),                       _, top).
 trusted_result_fail((_=<_),                      _, top).
 trusted_result_fail((_<_),                       _, top).
-trusted_result_fail((_<_),                       _, top).
 trusted_result_fail((_ =:= _),                   _, top).
 trusted_result_fail((_ \== _),                   _, top).
 trusted_result_fail((_ == _),                    _, top).

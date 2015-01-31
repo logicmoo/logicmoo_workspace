@@ -29,7 +29,6 @@ loaded_files(Dir, Loaded) :-
 existing_files(Dir, Exists) :-
     directory_source_files(Dir, UExists, [recursive(true), if(true)]),
     sort(UExists, Exists).
-existing_files(r_true, []).
 
 remainder_files(Dir, Remainder) :-
     loaded_files(Dir, Loaded),

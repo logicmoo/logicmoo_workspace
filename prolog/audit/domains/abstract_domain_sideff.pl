@@ -47,7 +47,6 @@ trusted_result_sideff((_>=_),                      _, free).
 trusted_result_sideff((_>_),                       _, free).
 trusted_result_sideff((_=<_),                      _, free).
 trusted_result_sideff((_<_),                       _, free).
-trusted_result_sideff((_<_),                       _, free).
 trusted_result_sideff((_ =:= _),                   _, free).
 trusted_result_sideff((_ == _),                    _, free).
 trusted_result_sideff((_ \== _),                   _, free).
