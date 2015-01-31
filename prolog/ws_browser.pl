@@ -16,13 +16,15 @@ browse_server(Port) :-
     http_server(http_dispatch, [port(Port)]).
 
 :- multifile
+    provides_method/1,
     fetch_module_files_hook/2,
     show_source_hook/2.
 
 list_files(Request) :-
     print_message(information, format('Preparing to list files', [])),
+    once(provides_method(DMethod)),
     http_parameters(Request,
-                    [ meth(Method, [default(live)])
+                    [ meth(Method, [default(DMethod)])
                     ]),
     fetch_module_files_hook(Method, ModuleFiles),
     reply_html_page([% style(Style),
@@ -37,8 +39,9 @@ list_files(Request) :-
     print_message(information, format('done', [])).
 
 show_source(Request) :-
+    once(provides_method(DMethod)),
     http_parameters(Request,
-                    [meth(Method, [default(live)]),
+                    [meth(Method, [default(DMethod)]),
 		     file(File, [])
                     ]),
     show_source_hook(Method, File),

@@ -52,8 +52,11 @@ header -->
     html(tr(HCols)).
 
 :- multifile
-    ws_browse_code:fetch_module_files_hook/2,
-    ws_browse_code:show_source_hook/2.
+    ws_browser:provides_method/1,
+    ws_browser:fetch_module_files_hook/2,
+    ws_browser:show_source_hook/2.
+
+ws_browser:provides_method(gcover).
 
 ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     findall(M-File,
@@ -63,15 +66,16 @@ ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     sort(MFileU, MFileS),
     group_pairs_by_key(MFileS, ModuleFiles).
 
-port_color(call,      rgb(0xFF,0xFF,0x00)). % yellow
-% port_color(call,      0x000000). % black
-port_color(exception, rgb(0xFF,0x00,0x00)). % red.
-port_color(exit,      rgb(0x00,0xFF,0x00)). % green
-port_color(fail,      rgb(0xFF,0x00,0xFF)). % fuchsia
-port_color(redo(0),   rgb(0x00,0x00,0xFF)) :- !. % blue.
-port_color(redo(_),   rgb(0xFF,0xFF,0xFF)). % ignore, white, but show in hint
-port_color(redo,      rgb(0x00,0x00,0xFF)). % blue.
-port_color(unify,     rgb(0xA9,0xA9,0xA9)). % gray.
+port_color(call,         rgb(0xFF,0xFF,0x00)). % yellow
+% port_color(call,        0x000000). % black
+port_color(exception,    rgb(0xFF,0x00,0x00)). % red.
+port_color(exception(_), rgb(0xFF,0x00,0x00)). % red.
+port_color(exit,         rgb(0x00,0xFF,0x00)). % green
+port_color(fail,         rgb(0xFF,0x00,0xFF)). % fuchsia
+port_color(redo(0),      rgb(0x00,0x00,0xFF)) :- !. % blue.
+port_color(redo(_),      rgb(0xFF,0xFF,0xFF)). % ignore, white, but show in hint
+port_color(redo,         rgb(0x00,0x00,0xFF)). % blue.
+port_color(unify,        rgb(0xA9,0xA9,0xA9)). % gray.
 
 % port_text(call, call).
 % port_text(exception, exception).
