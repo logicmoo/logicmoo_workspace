@@ -79,9 +79,6 @@
 
 :- set_prolog_flag(multi_arity_warnings, off).
 
-:- reexport(library(terms_check), [instance/2]).
-:- doc(doinclude, [instance/2]).
-
 :- use_module(library(terms_vars)).
 :- use_module(library(hiordlib)).
 % :- use_module(library(sort), [sort/2]).
@@ -1189,28 +1186,15 @@ succeeds(Prop) :- Prop.
 attach_cut_fail(V, C) :- attach_attribute(V, '$cut_fail'(V, C)).
 
 :- prop instance(Prop) + no_rtcheck
-# "Use Prop as an instantiation property. Verify that execution of
+# "Uses Prop as an instantiation property. Verifies that execution of
    @var{Prop} does not produce bindings for the argument variables.".
+
 :- meta_predicate instance(goal).
 :- if(current_prolog_flag(dialect, ciao)).
-instance(var(A))      :- !, var(A).
-instance(nonvar(A))   :- !, nonvar(A).
-instance(term(A))     :- !.
-instance(gnd(A))      :- !, ground(A).
-instance(int(A))      :- !, integer(A).
-instance(num(A))      :- !, number(A).
-instance(atm(A))      :- !, atom(A).
-instance(constant(A)) :- !, atom(A).
+instance(Goal) :- instancec(Goal, Checker), !, Checker.
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
-instance(_:var(A))      :- !, var(A).
-instance(_:nonvar(A))   :- !, nonvar(A).
-instance(_:term(A))     :- !.
-instance(_:gnd(A))      :- !, ground(A).
-instance(_:int(A))      :- !, integer(A).
-instance(_:num(A))      :- !, number(A).
-instance(_:atm(A))      :- !, atom(A).
-instance(_:constant(A)) :- !, atomic(A).
+instance(_:Goal) :- instancec(Goal, Checker), !, Checker.
 :- endif.
 instance(Goal) :-
 	varset(Goal, VS),
@@ -1221,45 +1205,31 @@ instance(Goal) :-
 	list(VS, detach_attribute),
 	!.
 
+instancec(var(A),      var(A)).
+instancec(nonvar(A),   nonvar(A)).
+instancec(term(A),     true).
+instancec(gnd(A),      ground(A)).
+instancec(int(A),      integer(A)).
+instancec(num(A),      number(A)).
+instancec(atm(A),      atom(A)).
+instancec(constant(A), atomic(A)).
+
 freeze_metacut(V, C) :- freeze(V, '$metacut'(C)).
 
 :- prop compat(Prop) + no_rtcheck
-# "Use @var{Prop} as a compatibility property.".
+# "Uses @var{Prop} as a compatibility property.".
 
 :- meta_predicate compat(goal).
 :- if(current_prolog_flag(dialect, ciao)).
 clean_freezed(V) :- detach_attribute(V).
 
-compat(var(A))     :- !.
-compat(nonvar(A))  :- !.
-compat(term(A))    :- !.
-compat(gnd(A))     :- !.
-compat(atm(A))     :- !, atm(A).
-compat(int(A))     :- !, int(A).
-compat(nnegint(A)) :- !, nnegint(A).
-compat(num(A))     :- !, num(A).
-compat(atom(A))    :- !, atm(A).
-compat(number(A))  :- !, num(A).
-compat(integer(A)) :- !, int(A).
-compat(ground(A))  :- !, gnd(A).
-compat(atomic(A))  :- !, constant(A).
+compat(Goal) :- compatc(Goal, Checker), !, Checker.
+
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
 clean_freezed(V) :- del_attr(V, freeze).
 
-compat(_:var(A))     :- !.
-compat(_:nonvar(A))  :- !.
-compat(_:term(A))    :- !.
-compat(_:gnd(A))     :- !.
-compat(_:atm(A))     :- !, atm(A).
-compat(_:int(A))     :- !, int(A).
-compat(_:nnegint(A)) :- !, nnegint(A).
-compat(_:num(A))     :- !, num(A).
-compat(_:atom(A))    :- !, atm(A).
-compat(_:number(A))  :- !, num(A).
-compat(_:integer(A)) :- !, int(A).
-compat(_:ground(A))  :- !, gnd(A).
-compat(_:atomic(A))  :- !, constant(A).
+compat(_:Goal) :- compatc(Goal, Checker), !, Checker.
 compat(_:H) :-
     functor(H, F, 1),
     arg(1, H, A),
@@ -1276,6 +1246,20 @@ compat(Goal) :-
 	% varset(VS1, VS2),
 	list(VS, clean_freezed),
 	!.
+
+compatc(var(A),     true).
+compatc(nonvar(A),  true).
+compatc(term(A),    true).
+compatc(gnd(A),     true).
+compatc(atm(A),     atm(A)).
+compatc(int(A),     int(A)).
+compatc(nnegint(A), nnegint(A)).
+compatc(num(A),     num(A)).
+compatc(atom(A),    atm(A)).
+compatc(number(A),  num(A)).
+compatc(integer(A), int(A)).
+compatc(ground(A),  gnd(A)).
+compatc(atomic(A),  constant(A)).
 
 :- if(current_prolog_flag(dialect, swi)).
 % TODO: compat/1 should be moved to basic_props.pl to avoid odd error
