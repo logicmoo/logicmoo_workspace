@@ -31,7 +31,13 @@
         unionOf/1,
         propertyRange/2,
         propertyDomain/2,
-        annotationAssertion/3.
+        annotationAssertion/3,
+        exactCardinality/2,
+        exactCardinality/3,
+        maxCardinality/2,
+        maxCardinality/3,
+        minCardinality/2,
+        minCardinality/3.
 
 load_theory(Name):-
   [Name].
