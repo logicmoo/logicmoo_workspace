@@ -24,10 +24,10 @@
 :- use_module(library(referenced_by)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(implementation_module)).
+:- use_module(library(audit/audit)).
 
 :- multifile
-    prolog:message//1,
-    audit:check/4.
+    prolog:message//1.
 
 :- dynamic marked/3, calls_to/2, arc/2, scc1/2, node_scc/2.
 

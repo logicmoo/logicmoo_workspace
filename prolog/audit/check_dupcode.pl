@@ -8,6 +8,7 @@
 :- use_module(library(normalize_head)).
 :- use_module(library(option_utils)).
 :- use_module(library(ungroup_keys_values)).
+:- use_module(library(clambda)).
 
 :- multifile
     prolog:message//1,
@@ -20,14 +21,17 @@
 % Note: the order of clauses is important, to allow remove redundant information,
 % that is, 'predicate' implies 'clause' implies 'name' duplication.
 %
-duptype(meta_predicate).
+% duptype(meta_predicate).
+duptype(declaration).
 duptype(predicate).
 duptype(clause).
 duptype(name).
 
 % Use the same group key to allow filtering of redundant messages.
 %
-element_group(meta_predicate, M:H,     M:F/A) :- functor(H, F, A).
+% element_group(meta_predicate, M:H,   M:F/A) :- functor(H, F, A).
+element_group(declaration,    T-M:PI, T-M:F/A) :-
+    (PI = F/A->true ; functor(PI, F, A)).
 element_group(predicate,      _:F/A,   F/A).
 element_group(clause,         _:F/A-_, F/A).
 element_group(name,           _:F/A,   F/A).
@@ -49,24 +53,35 @@ audit:check(dupcode, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, _OptionL, FileChk),
     check_dupcode(Ref, FileChk, Result).
 
-%% duptype_elem(+DupType, +Head, +Module, -Elem, -DupId) is multi
+%% duptype_elem(+DupType, +Head, +Module, :FileChk, -DupId, -Elem) is multi
 %
 % For a given Element of the language, returns a duplication key and an
 % associated value
 %
-duptype_elem(name,   H, M, F/A,   M:F/A) :- functor(H, F, A).
-duptype_elem(clause, H, M, DupId, M:F/A-Idx) :-
+duptype_elem(name,   H, M, FileChk, F/A, M:F/A) :-
+    predicate_property(M:H, file(File)),
+    call(FileChk, File),
+    functor(H, F, A).
+duptype_elem(clause, H, M, FileChk, DupId, M:F/A-Idx) :-
     nth_clause(M:H, Idx, Ref),
     clause(M:H, Body, Ref),
+    clause_property(Ref, file(File)),
+    call(FileChk, File),
     functor(H, F, A),
     variant_sha1((H :- Body), DupId).
-duptype_elem(predicate, H, M, DupId, M:F/A) :-
+duptype_elem(predicate, H, M, FileChk, DupId, M:F/A) :-
+    predicate_property(M:H, file(File)),
+    call(FileChk, File),
     findall((H :- B), clause(M:H, B), ClauseL),
     variant_sha1(ClauseL, DupId),
     functor(H, F, A).
-duptype_elem(meta_predicate, H, M, M:F/A, M:H) :-
-    extra_location(H, M, meta_predicate, _),
-    functor(H, F, A).
+duptype_elem(declaration, H, M, FileChk, T-M:F/A, T-M:PI) :-
+    extra_location(H, M, T, From),
+    from_to_file(From, File),
+    call(FileChk, File),
+    \+ memberchk(T, [goal, assertion(_,_)]),
+    functor(H, F, A),
+    (T = (meta_predicate) -> PI = H ; PI=F/A).
 
 ignore_dupgroup(_-[_]) :- !.	% no duplicates
 ignore_dupgroup((DupType-_)-ElemL) :-
@@ -93,11 +108,9 @@ check_dupcode(Ref0, FileChk, Result) :-
 	      \+predicate_property(M:H, imported_from(_)),
 	      duptype(DupType),
 	      \+ ignore_dupcode(F, A, M, DupType),
-	      predicate_property(M:H, file(File)),
-	      call(FileChk, File),
-	      duptype_elem(DupType, H, M, DupId, Elem)
+	      duptype_elem(DupType, H, M, FileChk, DupId, Elem)
 	    ), PU),
-    sort(PU, PL),
+    keysort(PU, PL),
     group_pairs_by_key(PL, GL),
     findall(G, ( member(G, GL),
 		 \+ ignore_dupgroup(G)
@@ -121,14 +134,15 @@ clean_redundant_group(GKey-Group, (DupType/GKey)-List) :-
     duptype(DupType),
     memberchk(DupType-List, Group), !.
 
-elem_property(name,           PI,        PI,        _).
-elem_property(clause,         M:F/A-Idx, (M:H)/Idx, _) :- functor(H, F, A).
-elem_property(predicate,      M:F/A,     M:H,       _) :- functor(H, F, A).
-elem_property(meta_predicate, M:H,       (M:H)/0,   meta_predicate).
+elem_property(name,           PI,        PI,        T, T).
+elem_property(clause,         M:F/A-Idx, (M:H)/Idx, T, T) :- functor(H, F, A).
+elem_property(predicate,      M:F/A,     M:H,       T, T) :- functor(H, F, A).
+elem_property(declaration,    T-M:PI,    (M:H)/0,   T, declaration) :-
+    (PI = F/A->functor(H, F, A) ; PI = H).
 
 elem_location(DupType, Elem, D, Loc) :-
-    elem_property(DupType, Elem, Prop, D),
-    property_location(Prop, D, Loc).
+    elem_property(DupType, Elem, Prop, T, D),
+    property_location(Prop, T, Loc).
 
 add_location(DupType/GKey-DupId/Elem,
 	     warning-(DupType/GKey-(DupId-(LocDL/Elem)))) :-
@@ -157,4 +171,9 @@ message_duplicated(Pre, LocDL/Elem) -->
     maplist_dcg(message_duplicated(Pre, Elem), LocDL).
 
 message_duplicated(Pre, Elem, Loc/D) -->
-    [Pre], Loc, ['duplicated ~w: ~w'-[D, Elem], nl].
+    [Pre], Loc, ['duplicated '-[D]],
+    message_elem(D, Elem),
+    [nl].
+
+message_elem(declaration, T-M:PI) --> !, [':- ~w ~w.'-[T, M:PI]].
+message_elem(Type, Elem) --> ['~w ~w'-[Type, Elem]].

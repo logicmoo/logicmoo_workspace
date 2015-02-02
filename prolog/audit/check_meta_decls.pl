@@ -7,8 +7,7 @@
 :- use_module(library(option_utils)).
 
 :- multifile
-	prolog:message//1,
-	audit:check/4.
+	prolog:message//1.
 
 prolog:message(acheck(meta_decls)) -->
     ['-----------------------------------',nl,

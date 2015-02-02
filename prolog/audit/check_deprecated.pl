@@ -9,11 +9,11 @@
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(referenced_by)).
+:- use_module(library(audit/audit)).
 
 :- multifile
     prolog:message//1,
-    deprecated_predicate/2,
-    audit:check/4.
+    deprecated_predicate/2.
 
 audit:check(deprecated, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),

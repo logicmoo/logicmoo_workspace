@@ -9,7 +9,6 @@
 
 :- multifile
     prolog:message//1,
-    audit:check/4,
     mutually_exclusive_predicate/1.
 
 :- dynamic mutually_exclusive_db/1.

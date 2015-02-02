@@ -14,7 +14,6 @@
 
 :- multifile
     prolog:message//1,
-    audit:check/4,
     hide_wrong_dynamic/1,
     hide_var_dynamic/1.
 

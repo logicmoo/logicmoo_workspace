@@ -9,7 +9,6 @@
 :- use_module(library(check), []).
 
 :- multifile
-    audit:check/4,
     prolog:message//1.
 
 audit:check(undefined, Ref, Results, OptionL) :-

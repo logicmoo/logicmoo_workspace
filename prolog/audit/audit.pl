@@ -8,8 +8,8 @@
 :- use_module(library(location_utils)).
 
 :- multifile
-    audit:prepare_results/3,	% Custom preparation method
-    audit:check/4.		% Hook to a new analysis
+    prepare_results/3,	% Custom preparation method
+    check/4.		% Hook to a new analysis
 
 cleanup_db :-
     cleanup_locations(_, _, dynamic(_, _, _), _).
