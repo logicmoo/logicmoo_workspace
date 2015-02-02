@@ -19,15 +19,17 @@
 % Note: the order of clauses is important, to allow remove redundant information,
 % that is, 'predicate' implies 'clause' implies 'name' duplication.
 %
+duptype(meta_predicate).
 duptype(predicate).
 duptype(clause).
 duptype(name).
 
 % Use the same group key to allow filtering of redundant messages.
 %
-element_group(predicate, _:F/A,   F/A).
-element_group(clause,    _:F/A-_, F/A).
-element_group(name,      _:F/A,   F/A).
+element_group(meta_predicate, M:H,     M:F/A) :- functor(H, F, A).
+element_group(predicate,      _:F/A,   F/A).
+element_group(clause,         _:F/A-_, F/A).
+element_group(name,           _:F/A,   F/A).
 
 ignore_dupcode(Name, _, _, _) :- atom_concat('__aux_wrapper_', _, Name).
 ignore_dupcode(_, _, refactor,       name).
@@ -60,6 +62,9 @@ duptype_elem(clause, H, M, DupId, M:F/A-Idx) :-
 duptype_elem(predicate, H, M, DupId, M:F/A) :-
     findall((H :- B), clause(M:H, B), ClauseL),
     variant_sha1(ClauseL, DupId),
+    functor(H, F, A).
+duptype_elem(meta_predicate, H, M, M:F/A, M:H) :-
+    record_locations:extra_location(H, M, meta_predicate, _),
     functor(H, F, A).
 
 ignore_dupgroup(_-[_]) :- !.	% no duplicates
@@ -115,12 +120,13 @@ clean_redundant_group(GKey-Group, (DupType/GKey)-List) :-
     duptype(DupType),
     memberchk(DupType-List, Group), !.
 
-elem_property(name,      PI,        PI).
-elem_property(clause,    M:F/A-Idx, (M:H)/Idx) :- functor(H, F, A).
-elem_property(predicate, M:F/A,     M:H)       :- functor(H, F, A).
+elem_property(name,           PI,        PI,        _).
+elem_property(clause,         M:F/A-Idx, (M:H)/Idx, _) :- functor(H, F, A).
+elem_property(predicate,      M:F/A,     M:H,       _) :- functor(H, F, A).
+elem_property(meta_predicate, M:H,       (M:H)/0,   meta_predicate).
 
 elem_location(DupType, Elem, D, Loc) :-
-    elem_property(DupType, Elem, Prop),
+    elem_property(DupType, Elem, Prop, D),
     property_location(Prop, D, Loc).
 
 add_location(DupType/GKey-DupId/Elem,
@@ -132,7 +138,7 @@ prolog:message(acheck(dupcode)) -->
     ['---------------',nl,
      'Duplicated Code',nl,
      '---------------',nl,
-     'The elements below has been implemented in different modules,', nl,
+     'The elements below would has been implemented in different modules,', nl,
      'but are duplicates.  Would be a symptom of duplicated functionality.', nl,
      'In the case of predicate names, at least two has been exported,', nl,
      'making difficult to import it in other modules without clash risk.', nl,
