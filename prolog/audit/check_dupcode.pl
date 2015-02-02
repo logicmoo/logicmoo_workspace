@@ -3,6 +3,7 @@
 :- use_module(library(check), []).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(location_utils)).
+:- use_module(library(record_locations)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(option_utils)).
@@ -64,7 +65,7 @@ duptype_elem(predicate, H, M, DupId, M:F/A) :-
     variant_sha1(ClauseL, DupId),
     functor(H, F, A).
 duptype_elem(meta_predicate, H, M, M:F/A, M:H) :-
-    record_locations:extra_location(H, M, meta_predicate, _),
+    extra_location(H, M, meta_predicate, _),
     functor(H, F, A).
 
 ignore_dupgroup(_-[_]) :- !.	% no duplicates
