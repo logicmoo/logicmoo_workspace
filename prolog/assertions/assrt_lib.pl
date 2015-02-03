@@ -599,7 +599,6 @@ compact_module_call(M, (A0;B0), (A;B)) :- !,
 compact_module_call(_, C, C).
 
 :- use_module(library(dialect/ciao), []).
-:- multifile ciao:declaration_hook/2.
 
 ciao:declaration_hook(Decl, Records) :-
     assertion_records(Decl, _, Records, _).
