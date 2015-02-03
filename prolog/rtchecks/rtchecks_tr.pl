@@ -182,7 +182,6 @@ inline_db(_, _, _, _) :- fail.
 
 :- multifile nortchecked/1.
 
-:- multifile ciao:declaration_hook/2.
 ciao:declaration_hook(nortchecked, rtchecks_tr:nortchecked(M)) :-
     '$set_source_module'(M, M).
 
@@ -416,9 +415,10 @@ is_discontiguous(M:Head) :-
 	functor(Head, F, A),
 	discontiguous(F, A, Base),
 	defines_module(Base, M).
-:- endif.
 
 needs_posponed_definition(Goal) :- is_discontiguous(Goal).
+
+:- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
 
@@ -435,6 +435,8 @@ module_qualifier_i(M, Goal, RM) :-
 */
 
 is_discontiguous(Pred) :- '$get_predicate_attribute'(Pred, (discontiguous), 1).
+
+needs_posponed_definition(Goal) :- false.
 
 :- endif.
 

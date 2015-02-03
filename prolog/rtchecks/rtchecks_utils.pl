@@ -151,7 +151,6 @@ pretty_prop(Prop, Dict0, PrettyProp) :-
 
 :- use_module(engine(attributes)).
 :- use_module(library(terms_vars)).
-:- use_module(library(lists)).
 
 pretty_attributes(Term, Attrs) :-
 	varset(Term, Vars),
