@@ -29,9 +29,8 @@ duptype(name).
 
 % Use the same group key to allow filtering of redundant messages.
 %
-% element_group(meta_predicate, M:H,   M:F/A) :- functor(H, F, A).
-element_group(declaration,    T-M:PI, T-M:F/A) :-
-    (PI = F/A->true ; functor(PI, F, A)).
+element_group(declaration,    T-M:H, T-M:G) :-
+    (T = (meta_predicate) -> functor(H, F, A), G=F/A ; G = H).
 element_group(predicate,      _:F/A,   F/A).
 element_group(clause,         _:F/A-_, F/A).
 element_group(name,           _:F/A,   F/A).
@@ -48,6 +47,7 @@ ignore_dupcode('$mode', 2, _, _).
 ignore_dupcode('$pred_option', 4, system, _).
 ignore_dupcode('$included', 4, system, _).
 ignore_dupcode('$load_context_module', 3, system, _).
+ignore_dupcode(_, _, prolog, declaration).
 
 audit:check(dupcode, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, _OptionL, FileChk),
@@ -75,13 +75,29 @@ duptype_elem(predicate, H, M, FileChk, DupId, M:F/A) :-
     findall((H :- B), clause(M:H, B), ClauseL),
     variant_sha1(ClauseL, DupId),
     functor(H, F, A).
-duptype_elem(declaration, H, M, FileChk, T-M:F/A, T-M:PI) :-
+
+duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-
     extra_location(H, M, T, From),
+    functor(H, F, A),
+    \+ ignore_dupcode(F, A, M, declaration),
     from_to_file(From, File),
     call(FileChk, File),
     \+ memberchk(T, [goal, assertion(_,_)]),
-    functor(H, F, A),
-    (T = (meta_predicate) -> PI = H ; PI=F/A).
+    once(dtype_dupid_elem(T, T, H, M, DupId, Elem)).
+
+dtype_dupid_elem(meta_predicate, T, H, M, T-M:F/A, T-M:H) :- functor(H, F, A).
+dtype_dupid_elem(use_module,     T, H, M, T-M:H,  T-M:H).
+% dtype_dupid_elem(use_module_2,   T, H, M, T-M:H,  T-M:H).
+dtype_dupid_elem(T,              T, H, M, T-M:PI, T-M:G) :-
+    ( H =.. [_|Vars1],
+      term_variables(H, Vars2),
+      Vars1==Vars2
+    ->functor(H, F, A),
+      PI=F/A,
+      G =F/A
+    ; PI=H,
+      G =H
+    ).
 
 ignore_dupgroup(_-[_]) :- !.	% no duplicates
 ignore_dupgroup((DupType-_)-ElemL) :-
@@ -99,17 +115,21 @@ ignore_dupname(PIL) :-
 	 predicate_property(M2:H2, exported)
        ).
 
+curr_duptype_elem(M:H, FileChk, DupType, DupId, Elem) :-
+    current_predicate(M:F/A),
+    functor(H, F, A),
+    \+predicate_property(M:H, imported_from(_)),
+    duptype(DupType),
+    \+ ignore_dupcode(F, A, M, DupType),
+    duptype_elem(DupType, H, M, FileChk, DupId, Elem).
+curr_duptype_elem(M:_, FileChk, declaration, DupId, Elem) :-
+    duptype_elem_declaration(_, M, FileChk, DupId, Elem).
+
 check_dupcode(Ref0, FileChk, Result) :-
     normalize_head(Ref0, Ref),
     Ref = M:H,
     findall((DupType-DupId)-Elem,
-	    ( current_predicate(M:F/A),
-	      functor(H, F, A),
-	      \+predicate_property(M:H, imported_from(_)),
-	      duptype(DupType),
-	      \+ ignore_dupcode(F, A, M, DupType),
-	      duptype_elem(DupType, H, M, FileChk, DupId, Elem)
-	    ), PU),
+	    curr_duptype_elem(M:H, FileChk, DupType, DupId, Elem), PU),
     keysort(PU, PL),
     group_pairs_by_key(PL, GL),
     findall(G, ( member(G, GL),
