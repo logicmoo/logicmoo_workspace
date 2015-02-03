@@ -12,7 +12,7 @@
 
 :- multifile
     prolog:message//1,
-    ignore_dupcode/4,
+    ignore_dupcode/3,
     ignore_dupgroup/3,
     audit:audit/4.
 
@@ -35,19 +35,22 @@ element_group(predicate,      _:F/A,   F/A).
 element_group(clause,         _:F/A-_, F/A).
 element_group(name,           _:F/A,   F/A).
 
-ignore_dupcode(Name, _, _, _) :- atom_concat('__aux_wrapper_', _, Name).
-ignore_dupcode(_, _, refactor,       name).
-ignore_dupcode(_, _, i18n_refactor,  name).
-ignore_dupcode(term_expansion, 2, _, name).
-ignore_dupcode(term_expansion, 4, _, name).
-ignore_dupcode(goal_expansion, 2, _, name).
-ignore_dupcode(goal_expansion, 4, _, name).
-ignore_dupcode('$exported_op', 3, _, _).
-ignore_dupcode('$mode', 2, _, _).
-ignore_dupcode('$pred_option', 4, system, _).
-ignore_dupcode('$included', 4, system, _).
-ignore_dupcode('$load_context_module', 3, system, _).
-ignore_dupcode(_, _, prolog, declaration).
+ignore_dupcode(H, _, _) :-
+    functor(H, Name, _),
+    atom_concat('__aux_wrapper_', _, Name).
+ignore_dupcode(_,                             refactor, name).
+ignore_dupcode(_,                        i18n_refactor, name).
+ignore_dupcode(term_expansion(_, _),            _,      name).
+ignore_dupcode(term_expansion(_, _, _, _),      _,      name).
+ignore_dupcode(goal_expansion(_, _),            _,      name).
+ignore_dupcode(goal_expansion(_, _, _, _),      _,      name).
+ignore_dupcode('$exported_op'(_, _, _),         _,      _).
+ignore_dupcode('$mode'(_, _),                   _,      _).
+ignore_dupcode('$pred_option'(_, _, _, _),      system, _).
+ignore_dupcode('$included'(_, _, _, _),         system, _).
+ignore_dupcode('$load_context_module'(_, _, _), system, _).
+ignore_dupcode(_,                               prolog, declaration(_)).
+ignore_dupcode(_,                               user,   declaration(use_module)).
 
 audit:check(dupcode, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, _OptionL, FileChk),
@@ -78,8 +81,7 @@ duptype_elem(predicate, H, M, FileChk, DupId, M:F/A) :-
 
 duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-
     extra_location(H, M, T, From),
-    functor(H, F, A),
-    \+ ignore_dupcode(F, A, M, declaration),
+    \+ ignore_dupcode(H, M, declaration(T)),
     from_to_file(From, File),
     call(FileChk, File),
     \+ memberchk(T, [goal, assertion(_,_)]),
@@ -120,7 +122,7 @@ curr_duptype_elem(M:H, FileChk, DupType, DupId, Elem) :-
     functor(H, F, A),
     \+predicate_property(M:H, imported_from(_)),
     duptype(DupType),
-    \+ ignore_dupcode(F, A, M, DupType),
+    \+ ignore_dupcode(H, M, DupType),
     duptype_elem(DupType, H, M, FileChk, DupId, Elem).
 curr_duptype_elem(M:_, FileChk, declaration, DupId, Elem) :-
     duptype_elem_declaration(_, M, FileChk, DupId, Elem).
