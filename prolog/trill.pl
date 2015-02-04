@@ -1922,4 +1922,4 @@ compute_prob_ax1([Prob1 | T],Prob):-
   
 /**************/
 get_pengine_current_module(Name):-
-  pengine_property(_Pengine1,self(Name)).
+  pengine_self(Name).
