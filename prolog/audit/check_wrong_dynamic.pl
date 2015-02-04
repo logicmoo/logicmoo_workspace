@@ -26,7 +26,7 @@ hide_var_dynamic(ntabling:tabling/2).
 hide_var_dynamic(ref_scenarios:unfold_goal/2).
 hide_var_dynamic(check_unused:mark_caller/1).
 hide_var_dynamic(check_unused:unmarked/3).
-hide_var_dynamic(check_dupcode:duptype_elem/5).
+hide_var_dynamic(check_dupcode:duptype_elem/6).
 hide_var_dynamic(foreign_generator:bind_type_names/4).
 hide_var_dynamic(check_unused:mark_to_head/2).
 hide_var_dynamic(check_unused:current_arc/3).

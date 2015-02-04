@@ -19,7 +19,7 @@ abstract_domain:bot(product(D1, D2), Bot) :-
 	abstract_domain:bot(D2, Bot2),
 	product(Bot1, Bot2, Bot).
 
-:- multifile abstract_domain_product:eval_product/4.
+:- multifile eval_product/4.
 
 abstract_domain:eval(product(D1, D2), Expr, Value) :-
 	( eval_product(D1, D2, Expr, Value) -> true

@@ -23,24 +23,17 @@ extra_location(Head, M, assertion(Status, Type), From) :-
 
 :- public record_extra_location/2.
 
-% record_extra_location((:- module(M, L)),
-% 		      term_position(_, _, _, _,
-% 				    [term_position(_, _, _, _,
-% 						   [_, list_position(_,_,PosL,_)])]))
-% :- !,
-%     maplist(assert_declaration(export, M), L, PosL).
 record_extra_location((:- Decl),
-		      term_position(_, _, _, _,
-				    [DPos])) :-
+		      term_position(_, _, _, _, [DPos])) :-
     record_extra_location_d(Decl, DPos).
 
-record_extra_location_d(initialization(_)) :- !.
+record_extra_location_d(initialization(_), _) :- !.
 record_extra_location_d(Decl, DPos) :-
     '$set_source_module'(SM, SM),
     forall(declaration_pos(Decl, DPos, Id, SM, M, Arg, Pos),
 	   assert_declaration(Id, M, Arg, Pos)),
     !.
-record_extra_location(G) :-
+record_extra_location_d(G, _) :-
     nonvar(G),
     '$set_source_module'(M, M),
     functor(G, F, A),
@@ -92,13 +85,6 @@ mapsequence(G, (A, B), term_position(_, _, _, _, [PA, PB])) :- !,
     mapsequence(G, B, PB).
 mapsequence(G, A, PA) :-
     call(G, A, PA).
-
-assert_declaration(Declaration, Sequence) :-
-    assert_declaration(Declaration, Sequence, _).
-
-assert_declaration(Declaration, Sequence, Pos) :-
-    '$set_source_module'(M, M),
-    assert_declaration(Declaration, M, Sequence, Pos).
 
 assert_declaration(Declaration, M, Sequence, Pos) :-
     mapsequence(assert_declaration_one(Declaration, M), Sequence, Pos).

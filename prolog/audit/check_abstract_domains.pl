@@ -6,13 +6,15 @@
 :- use_module(library(location_utils)).
 :- use_module(library(audit/abstract_domain)).
 
+:- use_module(domains(abstract_domain_fail)).
+:- use_module(domains(abstract_domain_sideff)).
+:- use_module(domains(abstract_domain_product)). % this always at the end
+
 :- multifile
 	prolog:message//1,
 	prolog:message_location//1.
 
 current_abstract_domain(product(fail, sideff)).
-
-:- multifile abstract_domain_product:eval_product/4.
 
 abstract_domain_product:eval_product(fail, sideff, (product(fail, A2), _),
 				     product(fail, A2)).
@@ -185,10 +187,6 @@ remove_all(_, TraceCalls, TraceCalls).
 % Limitations: Loops are not analyzed
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-:- use_module(domains(abstract_domain_fail)).
-:- use_module(domains(abstract_domain_sideff)).
-:- use_module(domains(abstract_domain_product)). % this always at the end
 
 closed_list(Var) :- var(Var), !, fail.
 closed_list([]).

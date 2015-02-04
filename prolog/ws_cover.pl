@@ -51,11 +51,6 @@ header -->
 	     ), HCols, [td(b(color))])},
     html(tr(HCols)).
 
-:- multifile
-    ws_browser:provides_method/1,
-    ws_browser:fetch_module_files_hook/2,
-    ws_browser:show_source_hook/2.
-
 ws_browser:provides_method(gcover).
 
 ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
