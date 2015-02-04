@@ -434,9 +434,9 @@ module_qualifier_i(M, Goal, RM) :-
     ).
 */
 
-is_discontiguous(Pred) :- '$get_predicate_attribute'(Pred, (discontiguous), 1).
+% is_discontiguous(Pred) :- '$get_predicate_attribute'(Pred, (discontiguous), 1).
 
-needs_posponed_definition(Goal) :- false.
+needs_posponed_definition(Goal) :- false. % is_discontiguous(Goal).
 
 :- endif.
 
