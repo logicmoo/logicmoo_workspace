@@ -51,7 +51,7 @@ audit:check(meta_decls, MSpec, Pairs, OptionL) :-
 	      prolog_metainference:inferred_meta_pred(_, M, Spec),
 	      %% Only exported predicates would require qualification
 	      %% of meta-arguments -- EMM after JW talk
-	      is_entry_point(M:Spec),
+	      is_entry_point(Spec, M),
 	      functor(Spec, F, A),
 	      PI = M:F/A,
 	      \+ hide_missing_meta_pred(PI),

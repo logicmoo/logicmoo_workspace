@@ -78,8 +78,7 @@ is_entry_caller(Ref) :- !,
     entry_caller(M, H).
 
 entry_caller(M, H) :-
-    ( hide_unused(H, M) -> true
-    ; is_entry_point(M:H) -> true
+    ( is_entry_point(H, M) -> true
     ; extra_location(H, M, goal, _)
     ).
 
@@ -336,6 +335,7 @@ unmarked(Ref, FileChk, Node) :-
       \+ marked(H, M, 0 ),
       Node = MPI/0
     ),
+    \+ hide_unused(H, M),
     check_pred_file(Ref, FileChk).
     
 prolog:message(acheck(unused)) -->
@@ -381,12 +381,6 @@ hide_unused('$exported_op'(_,_,_), _).
 hide_unused(attr_unify_hook(_, _), predopts_analysis).
 hide_unused(loading(_), shlib).
 hide_unused('pce catcher'(_, _), pce_global).
-hide_unused(term_expansion(_, _), _).
-hide_unused(goal_expansion(_, _), _).
-hide_unused(term_expansion(_, _, _, _), _).
-hide_unused(goal_expansion(_, _, _, _), _).
-hide_unused(thread_message_hook(_, _, _), user).
-hide_unused(prolog_trace_interception(_, _, _, _), user).
 hide_unused(attribute_goals(_, _, _), M) :- unused_mo_clpfd(M).
 hide_unused(attr_unify_hook(_, _),    M) :- unused_mo_clpfd(M).
 hide_unused(_, plunit).
