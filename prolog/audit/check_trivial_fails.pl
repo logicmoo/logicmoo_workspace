@@ -81,15 +81,14 @@ collect_trivial_fail_2r(M, FileChk, MGoal, Caller, From) :-
     call(FileChk, File),
     collect_trivial_fail(M, MGoal, Caller, From).
 
-cu_callee_hook(use, Goal, Goal).
-cu_callee_hook(use, Goal, Fact) :-
-    database_use_fact(Goal, Fact).
+cu_callee_hook(use, Goal,  _, CM, CM:Goal).
+cu_callee_hook(use, Goal, IM, CM, CM:Fact) :-
+    database_use_fact(IM:Goal, Fact).
 
 collect_trivial_fail(M, MCall, Caller, From) :-
     record_location_meta(MCall, M, From, cu_callee_hook, cu_caller_hook(Caller)).
 
-cu_caller_hook(Caller, MGoal0, _, From) :-
-    nonvar(MGoal0),
+cu_caller_hook(Caller, MGoal0, _, _, _, _, From) :-
     M:H = MGoal0,
     atom(M),
     callable(H),

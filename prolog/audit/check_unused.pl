@@ -397,23 +397,24 @@ unused_mo_clpfd(clpfd_aux).
 prop_t(use).
 prop_t(def).
 
-:- multifile cu_callee_hook/3.
-
-cu_callee_hook(lit,  Goal, Goal).
-cu_callee_hook(Prop, Goal, Fact) :-
+cu_callee_hook(lit,  Goal, _,  CM, CM:Goal).
+cu_callee_hook(Prop, Goal, IM, CM, CM:Fact) :-
     prop_t(Prop),
-    database_fact(Prop, Goal, Fact).
+    database_fact(Prop, IM:Goal, Fact).
 
 caller_ptr('<initialization>', _, '<initialization>') :- !.
 caller_ptr(_, clause(Ptr), Ptr).
 
-cu_caller_hook(Caller, M:Head, Type, From) :-
+cu_caller_hook(Caller, M:Head, CM, Type, Goal, _, From) :-
     nonvar(M),
     callable(Head),
-    (Type \= dynamic(lit, _, _) -> record_location(Head, M, Type, From) ; true),
+    ( Type \= lit
+    ->record_location(Head, M, dynamic(Type, CM, Goal), From)
+    ; true
+    ),
     record_calls_to(Type, Caller, Head, M, From).
 
-record_calls_to(dynamic(Type, _, _), Caller, Head, M, From) :-
+record_calls_to(Type, Caller, Head, M, From) :-
     ( memberchk(Type, [use, lit])
     ->caller_ptr(Caller, From, Ptr),
       ( \+ calls_to(Ptr, M:Head)

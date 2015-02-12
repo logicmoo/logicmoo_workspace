@@ -1,7 +1,7 @@
 :- module(database_fact,
 	  [database_fact/1,
 	   database_fact/3,
-	   database_fact_ort/3,
+	   database_fact_ort/4,
 	   database_def_fact/2,
 	   database_mod_fact/2,
 	   database_use_fact/2,
@@ -25,18 +25,18 @@ prolog:called_by(H, IM, CM, [F]) :-
 
 :- multifile
 	database_var_fact/1,
-	database_def_fact/2,
-	database_retract_fact/2,
-	database_query_fact/2.
+	database_def_fact/3,
+	database_retract_fact/3,
+	database_query_fact/3.
 
 database_fact(G) :- database_fact(G, _).
 database_fact(G) :- normalize_pi(G, PI), database_var_fact(PI).
 
-database_mod_fact(G, F) :- database_def_fact(G, F).
-database_mod_fact(G, F) :- database_retract_fact(G, F).
+database_mod_fact(M:G, F) :- database_def_fact(    G, M, F).
+database_mod_fact(M:G, F) :- database_retract_fact(G, M, F).
 
-database_use_fact(G, F) :- database_query_fact(G, F).
-database_use_fact(G, F) :- database_retract_fact(G, F).
+database_use_fact(M:G, F) :- database_query_fact(  G, M, F).
+database_use_fact(M:G, F) :- database_retract_fact(G, M, F).
 
 clause_head(A,          A) :- var(A), !.
 clause_head(M:A,        M:A) :- var(A), !.
@@ -49,11 +49,11 @@ database_fact(use, Goal, Fact) :- database_use_fact(Goal, Fact).
 database_fact(mod, Goal, Fact) :- database_mod_fact(Goal, Fact).
 
 % ortogonal operations:
-database_fact_ort(def,     G, F) :- database_def_fact(G, F).
-database_fact_ort(retract, G, F) :- database_retract_fact(G, F).
-database_fact_ort(query,   G, F) :- database_query_fact(G, F).
+database_fact_ort(def,     G, M, F) :- database_def_fact(G, M, F).
+database_fact_ort(retract, G, M, F) :- database_retract_fact(G, M, F).
+database_fact_ort(query,   G, M, F) :- database_query_fact(G, M, F).
 
-database_fact(G, F) :- database_fact_ort(_, G, F).
+database_fact(M:G, F) :- database_fact_ort(_, G, M, F).
 
 database_def_fact(M:H, F) :- database_def_fact(H, M, F).
 
@@ -95,12 +95,12 @@ database_var_fact(user:prolog_list_goal/1).
 database_var_fact(prolog_trace_utils:list_clauses/3).
 database_var_fact(prolog_term_view:print_clause_properties/2).
 
-database_retract_fact(system:retract(A),      F) :- clause_head(A, F).
-database_retract_fact(pce_config:lretract(A), F) :- clause_head(A, F).
+database_retract_fact(retract(A),  system,     F) :- clause_head(A, F).
+database_retract_fact(lretract(A), pce_config, F) :- clause_head(A, F).
 
-database_query_fact(system:clause(A, _),         F) :- clause_head(A, F).
-database_query_fact(system:clause(A, _, _),      F) :- clause_head(A, F).
-database_query_fact(refactor:unfold_goal(_,A,_), F) :- clause_head(A, F).
+database_query_fact(clause(A, _),       system,   F) :- clause_head(A, F).
+database_query_fact(clause(A, _, _),    system,   F) :- clause_head(A, F).
+database_query_fact(unfold_goal(_,A,_), refactor, F) :- clause_head(A, F).
 
 pi_to_head(PI, H) :- nonvar(PI) -> PI=F/A, fa_to_head(F, A, H) ; true.
 

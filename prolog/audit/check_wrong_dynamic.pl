@@ -2,6 +2,7 @@
 
 :- use_module(library(check), []).
 :- use_module(library(prolog_codewalk)).
+:- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
@@ -20,7 +21,7 @@
 hide_var_dynamic(check:list_strings/1).
 hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
 hide_var_dynamic(check_non_mutually_exclusive:mutually_exclusive/3).
-hide_var_dynamic(check_trivial_fails:cu_caller_hook/4).
+hide_var_dynamic(check_trivial_fails:cu_caller_hook/7).
 hide_var_dynamic(implemented_in:implemented_in/3).
 hide_var_dynamic(ntabling:tabling/2).
 hide_var_dynamic(ref_scenarios:unfold_goal/2).
@@ -164,17 +165,16 @@ collect_wrong_dynamic(M, FileChk, MGoal, Caller, From) :-
     collect_wrong_dynamic(M, MGoal, Caller, From).
 
 collect_wrong_dynamic(M, MGoal, Caller, From) :-
-    record_location_meta(MGoal, M, From, database_fact_ort,
-			 record_location_wd(M, Caller)),
+    record_location_meta(MGoal, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
+			 record_location_wd(Caller)),
     fail.
 collect_wrong_dynamic(_, _, _, _). % avoid side effects
 
-record_location_wd(CM, Caller, MFact, Def, From) :-
+record_location_wd(Caller, M:Fact, _, Type, IM:Goal, _, From) :-
+    MGoal = IM:Goal,
     Def = dynamic(Type, _, MGoal),
     normalize_pi(MGoal, MPI),
-    ( nonvar(MFact),
-      MFact = M:Fact,
-      atom(M),
+    ( atom(M),
       callable(Fact)
     ->functor(Fact, F, A),
       record_location(Fact, M, Def, From),

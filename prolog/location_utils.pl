@@ -5,6 +5,7 @@
 	 record_location_meta/5, record_location/4]).
 
 :- use_module(library(lists)).
+:- use_module(library(clambda)).
 :- use_module(library(database_fact)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
@@ -94,11 +95,11 @@ predicate_from(P, file(File, Line, -1, 0)) :-
 	predicate_property(P, file(File)),
 	predicate_property(P, line_count(Line)).
 
-record_location_goal(Goal, Type, From) :-
-    normalize_head(Goal, M:Head),
+record_location_goal(MGoal, CM, Type, Call, _, From) :-
+    normalize_head(MGoal, M:Head),
     ground(M),
     callable(Head),
-    record_location(Head, M, Type, From).
+    record_location(Head, M, dynamic(Type, CM, Call), From).
 
 record_location(Head, M, Type, From) :-
     ( extra_location(Head, M, Type, From)
@@ -109,12 +110,12 @@ record_location(Head, M, Type, From) :-
 record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
     static_strip_module(MCall, Call, CM, M),
     implementation_module(MCall, IM),
-    call(FactBuilder, Def, IM:Call, MFact),
+    call(FactBuilder, Type, Call, IM, CM, MFact),
     static_strip_module(MFact, Fact, FM, CM),
     implementation_module(FM:Fact, M),
-    call(Recorder, M:Fact, dynamic(Def, FM, IM:Call), From).
+    call(Recorder, M:Fact, FM, Type, IM:Call, CM, From).
 
-:- meta_predicate record_location_meta(+,?,+,3,3).
+:- meta_predicate record_location_meta(+,?,+,5,6).
 record_location_meta(MCall, M, From, FactBuilder, Recorder) :-
     ( record_location_meta_each(MCall, M, From, FactBuilder, Recorder),
       fail
@@ -122,7 +123,8 @@ record_location_meta(MCall, M, From, FactBuilder, Recorder) :-
     ).
 
 record_location_dynamic(MCall, M, From) :-
-    record_location_meta(MCall, M, From, database_fact_ort, record_location_goal).
+    record_location_meta(MCall, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
+			 record_location_goal).
 
 cleanup_locations(Head, M, Type, From) :-
     retractall(extra_location(Head, M, Type, From)).
