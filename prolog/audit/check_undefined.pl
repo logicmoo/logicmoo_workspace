@@ -28,13 +28,23 @@ check_undefined(Ref, FileChk, OptionL0, Pairs) :-
 		   on_trace(collect_undef(H, M, FileChk))],
 		  OptionL),
     prolog_walk_code(OptionL),
-    findall(warning-(PI-(Loc/CI)),
+    findall(warning-(PIAL-(Loc/CI)),
 	    ( retract(check:undef(PI, From)),
+	      find_alternatives(PI, AL),
+	      PIAL=PI/AL,
 	      from_location(From, Loc),
 	      check:predicate_indicator(From, CI, [])
 	    ), Pairs).
 
 hide_undef(M:H) :- hide_undef(H, M).
+
+find_alternatives(M:F/A, AL) :-
+    functor(H, F, A),
+    findall(AM, ( current_predicate(AM:F/A),
+		  AM \= M,
+		  \+ predicate_property(AM:H, imported_from(_))
+		), AU),
+    sort(AU, AL).
 
 % Hook to hide undef messages:
 :- multifile hide_undef/2.
@@ -61,7 +71,17 @@ prolog:message(acheck(undefined)) -->
      'Undefined Predicates',nl,
      '--------------------',nl],
     prolog:message(check(undefined_predicates)).
-prolog:message(acheck(undefined, PI-LocCIList)) -->
+prolog:message(acheck(undefined, PIAL-LocCIList)) -->
+    { PIAL = PI/AL
+    ->true
+    ; PI = PIAL,
+      AL = []
+    },
     check:predicate(PI),
-    [ ' undefined, which is referenced by', nl ],
+    [ ' undefined, ' ],
+    show_alternatives(AL),
+    [ 'referenced by', nl ],
     referenced_by(LocCIList).
+
+show_alternatives([]) --> !.
+show_alternatives(AL) --> ['but modules ~w have definitions for it, '-[AL]].
