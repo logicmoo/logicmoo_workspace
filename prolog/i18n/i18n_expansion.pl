@@ -1,7 +1,6 @@
 :- module(i18n_expansion, []).
 
 :- reexport(library(i18n/i18n_op)).
-:- use_module(library(ntabling)).
 :- use_module(library(compound_expand)).
 :- use_module(library(i18n/i18n_support)).
 

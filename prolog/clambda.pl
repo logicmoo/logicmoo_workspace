@@ -39,7 +39,6 @@ performance.
 
 :- use_module(library(lists)).
 :- use_module(library(compound_expand)).
-:- use_module(library(maplist_dcg)).
 
 remove_hats(^(H, G0), G) -->
     [H], !,
