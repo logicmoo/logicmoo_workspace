@@ -1,6 +1,7 @@
 :- module(check_imports, []).
 
 :- use_module(library(clambda)).
+:- use_module(library(expansion_module)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(implementation_module)).
 :- use_module(library(record_locations)).
@@ -50,7 +51,7 @@ check_imports(Ref, FileChk, OptionL0, Pairs) :-
 		   autoload(false),
 		   evaluate(false),
 		   trace_reference(_:H),
-		   module_class([user]),
+		   module_class([user, system, library]),
 		   on_trace(collect_imports(M, FileChk))
 		  ], OptionL),
     cleanup_imports,
@@ -92,6 +93,7 @@ collect_usemods(M, Pairs, Tail) :-
 	     absolute_file_name(U, UFile, [file_type(prolog), access(exist),
 					   file_errors(fail)]),
 	     current_module(UM, UFile),
+	     \+ expansion_module(M, UM),
 	     module_property(UM, exports(EL)),
 	     EL \= [],
 	     \+ ( module_property(UM, exported_operators(OL)),
