@@ -25,13 +25,13 @@ prolog:message(acheck(imports)) -->
      'empty import list. If they have desirable side effects and still', nl,
      'needs to be imported, you can refactorize you program so that', nl,
      'such side effects are not required anymore.', nl, nl].
-prolog:message(acheck(imports, (U/T)-PILocL)) -->
-    ['~w have unused ~w:'-[U, T], nl],
-    maplist_dcg(unused_import, PILocL).
+prolog:message(acheck(imports, c(Class, Type, Name)-LocElemL)) -->
+    ['~w ~w have unused ~w:'-[Class, Name, Type], nl],
+    maplist_dcg(unused_import(Type), LocElemL).
 
-unused_import(PI/Loc) -->
+unused_import(Type, Loc/Elem) -->
     Loc,
-    [': unused import ~w'-[PI], nl].
+    ['unused ~w ~w'-[Type, Elem], nl].
 
 :- dynamic
     used_import/1,
@@ -62,7 +62,7 @@ check_imports(Ref, FileChk, OptionL0, Pairs) :-
     cleanup_imports.
 
 collect_imports(M, Pairs, Tail) :-
-    findall(warning-((use_module(U)/imports)-((F/A)/Loc)),
+    findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
 	    ( clause(extra_location(Head, M, import(U), From), _, CRef),
 	      M \= user,
 	      \+ memberchk(Head, [term_expansion(_,_),
@@ -80,7 +80,7 @@ collect_imports(M, Pairs, Tail) :-
 	    Pairs, Tail).
 
 collect_usemods(M, Pairs, Tail) :-
-    findall(warning-((module(M)/use_module)-(U/Loc)),
+    findall(warning-(c(module, use_module, M)-(Loc/U)),
 	    [M,U,Loc] +\
 	   ( extra_location(U, M, use_module, From),
 	     M \= user,
