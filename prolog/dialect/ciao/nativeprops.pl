@@ -29,4 +29,4 @@
 
 :- package(nativeprops).
 
-:- use_module(library(assertions(native_props))).
+:- use_module(library(assertions/native_props)).

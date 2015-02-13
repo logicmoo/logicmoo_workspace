@@ -88,7 +88,7 @@
 :- use_module(library(strings)).
 :- use_module(library(system)).
 :- use_module(library(odd)).
-:- use_module(library(assertions(send_check))).
+:- use_module(library(assertions/send_check)).
 :- use_module(engine(internals)).
 
 % --------------------------------------------------------------------------
