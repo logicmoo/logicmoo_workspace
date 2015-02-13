@@ -80,6 +80,10 @@ collect_imports(M, Pairs, Tail) :-
 	    ),
 	    Pairs, Tail).
 
+:- multifile ignore_import/2.
+
+ignore_import(M, IM) :- expansion_module(M, IM).
+
 collect_usemods(M, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
 	    [M,U,Loc] +\
@@ -93,7 +97,7 @@ collect_usemods(M, Pairs, Tail) :-
 	     absolute_file_name(U, UFile, [file_type(prolog), access(exist),
 					   file_errors(fail)]),
 	     current_module(UM, UFile),
-	     \+ expansion_module(M, UM),
+	     \+ ignore_import(M, UM),
 	     module_property(UM, exports(EL)),
 	     EL \= [],
 	     \+ ( module_property(UM, exported_operators(OL)),
