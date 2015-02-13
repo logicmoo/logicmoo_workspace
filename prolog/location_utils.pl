@@ -2,14 +2,12 @@
 	[property_location/3, predicate_location/2, property_from/3,
 	 record_location_dynamic/3, predicate_from/2, cleanup_locations/4,
 	 from_location/2, from_to_file/2, in_set/2, in_dir/2,
-	 record_location_meta/5, record_location/4]).
+	 all_call_refs/5, record_location_meta/5, record_location/4]).
 
 :- use_module(library(lists)).
 :- use_module(library(clambda)).
 :- use_module(library(database_fact)).
 :- use_module(library(normalize_head)).
-:- use_module(library(normalize_pi)).
-:- use_module(library(implemented_in)).
 :- use_module(library(implementation_module)).
 :- use_module(library(record_locations)).
 :- use_module(library(static_strip_module)).
@@ -94,6 +92,14 @@ predicate_properties(P, List) :-
 predicate_from(P, file(File, Line, -1, 0)) :-
 	predicate_property(P, file(File)),
 	predicate_property(P, line_count(Line)).
+
+prop_t(use).
+prop_t(def).
+
+all_call_refs(lit,  Goal,  _, CM, CM:Goal).
+all_call_refs(Prop, Goal, IM, CM, CM:Fact) :-
+    prop_t(Prop),
+    database_fact(Prop, IM:Goal, Fact).
 
 record_location_goal(MGoal, CM, Type, Call, _, From) :-
     normalize_head(MGoal, M:Head),

@@ -4,11 +4,11 @@
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(record_locations)).
-:- use_module(library(database_fact)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
+:- use_module(library(audit/audit)).
 
 :- multifile
     prolog:message//1.
@@ -81,12 +81,8 @@ collect_trivial_fail_2r(M, FileChk, MGoal, Caller, From) :-
     call(FileChk, File),
     collect_trivial_fail(M, MGoal, Caller, From).
 
-cu_callee_hook(use, Goal,  _, CM, CM:Goal).
-cu_callee_hook(use, Goal, IM, CM, CM:Fact) :-
-    database_use_fact(IM:Goal, Fact).
-
 collect_trivial_fail(M, MCall, Caller, From) :-
-    record_location_meta(MCall, M, From, cu_callee_hook, cu_caller_hook(Caller)).
+    record_location_meta(MCall, M, From, all_call_refs, cu_caller_hook(Caller)).
 
 cu_caller_hook(Caller, MGoal0, _, _, _, _, From) :-
     M:H = MGoal0,

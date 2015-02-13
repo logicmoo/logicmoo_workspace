@@ -2,8 +2,6 @@
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(check), []).
-:- use_module(library(auditable_predicate)).
-:- use_module(library(current_defined_predicate)).
 :- use_module(library(implementation_module)).
 :- use_module(library(normalize_head)).
 :- use_module(library(location_utils)).

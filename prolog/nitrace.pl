@@ -1,7 +1,6 @@
 :- module(nitrace, [nitrace_file/3,
 		    nitrace/3]).
 
-:- use_module(library(maplist_dcg)).
 :- use_module(library(ontrace)).
 :- use_module(library(prolog_clause), []).
 

@@ -5,8 +5,8 @@
 
 :- use_module(library(included_files)).
 :- use_module(library(maplist_dcg)).
-:- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
+:- use_module(library(audit/audit)).
 
 :- multifile
     prolog:message//1.

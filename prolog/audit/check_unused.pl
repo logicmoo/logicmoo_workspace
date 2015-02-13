@@ -13,17 +13,13 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
-:- use_module(library(database_fact)).
 :- use_module(library(is_entry_point)).
 :- use_module(library(record_locations)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
-:- use_module(library(normalize_pi)).
-:- use_module(library(referenced_by)).
 :- use_module(library(qualify_meta_goal)).
-:- use_module(library(implementation_module)).
 :- use_module(library(audit/audit)).
 
 :- multifile
@@ -42,9 +38,9 @@ check_pred_file(Ref, FileChk) :-
 collect_unused(M, FileChk, MGoal, Caller, From) :-
     from_to_file(From, File),
     call(FileChk, File),
-    record_location_meta(MGoal, M, From, cu_callee_hook, cu_caller_hook(Caller)).
+    record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
-audit:check(unused, Ref, Result, OptionL0) :-
+audit:check(unused, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, OptionL, FileChk),
     check_unused(Ref, FileChk, OptionL, Result).
 
@@ -393,14 +389,6 @@ unused_mo_clpfd(clpfd_gcc_num).
 unused_mo_clpfd(clpfd_gcc_vs).
 unused_mo_clpfd(clpfd_gcc_aux).
 unused_mo_clpfd(clpfd_aux).
-
-prop_t(use).
-prop_t(def).
-
-cu_callee_hook(lit,  Goal, _,  CM, CM:Goal).
-cu_callee_hook(Prop, Goal, IM, CM, CM:Fact) :-
-    prop_t(Prop),
-    database_fact(Prop, IM:Goal, Fact).
 
 caller_ptr('<initialization>', _, '<initialization>') :- !.
 caller_ptr(_, clause(Ptr), Ptr).
