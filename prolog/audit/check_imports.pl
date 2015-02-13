@@ -56,7 +56,7 @@ check_imports(Ref, FileChk, OptionL0, Pairs) :-
     cleanup_imports,
     prolog_walk_code(OptionL),
     forall(extra_location(Head, CM, goal, From),
-	   collect_imports(M, FileChk, CM:Head, _, From)),
+	   ignore(collect_imports(M, FileChk, CM:Head, _, From))),
     collect_imports(M, Pairs, Tail),
     collect_usemods(M, Tail, []),
     cleanup_imports.
