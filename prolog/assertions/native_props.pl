@@ -86,10 +86,13 @@
 :- use_module(library(streams)).
 :- use_module(library(file_utils)).
 :- use_module(library(strings)).
-:- use_module(library(system)).
 :- use_module(library(odd)).
 :- use_module(library(assertions/send_check)).
+
+:- if(current_prolog_flag(dialect, ciao)).
+:- use_module(library(system)).
 :- use_module(engine(internals)).
+:- endif.
 
 % --------------------------------------------------------------------------
 :- doc(title, "Properties which are native to analyzers").

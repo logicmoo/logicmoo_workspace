@@ -878,7 +878,7 @@ generate_foreign_call_(N, M, Head, Comp, Call, Succ, Glob) :-
 generate_foreign_call_(_, _, _, _, _, _, _).
 
 :- use_module(library(sequence_list)).
-:- use_module(library(prolog_clause)).
+:- use_module(library(prolog_clause), []).
 
 get_dictionary(Term, File, Line, M, Dict) :-
     ( prolog_clause:read_term_at_line(File, Line, M, RawTerm0, _TermPos, Dict),

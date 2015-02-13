@@ -3,7 +3,6 @@
 :- use_module(library(change_alias)).
 :- use_module(library(compound_expand)).
 :- use_module(library(swi/assertions)).
-:- use_module(library(foreign/foreign_props)).
 :- use_module(library(foreign/foreign_generator)).
 
 term_expansion((:- gen_foreign_library(AliasSO)),
