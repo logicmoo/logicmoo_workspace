@@ -30,8 +30,8 @@ record_extra_location((:- Decl),
 record_extra_location_d(initialization(_), _) :- !.
 record_extra_location_d(Decl, DPos) :-
     '$set_source_module'(SM, SM),
-    forall(declaration_pos(Decl, DPos, Id, SM, M, Arg, Pos),
-	   assert_declaration(Id, M, Arg, Pos)),
+    declaration_pos(Decl, DPos, SM, M, IdL, ArgL, PosL),
+    maplist(assert_declaration(M), IdL, ArgL, PosL),
     !.
 record_extra_location_d(G, _) :-
     nonvar(G),
@@ -40,37 +40,33 @@ record_extra_location_d(G, _) :-
     current_predicate(M:F/A),
     retractall(rl_tmp(_, _)).
 
-declaration_pos(module(M, L), DPos, module_2, _, M, module(M, L), DPos).
-declaration_pos(module(M, L),
-		term_position(_, _, _, _, [_, Pos]),
-		export, _, M, L, Pos).
-declaration_pos(volatile(L),
-		term_position(_, _, _, _, [Pos]),
-		volatile, M, M, L, Pos).
-declaration_pos(dynamic(L),
-		term_position(_, _, _, _, [Pos]),
-		dynamic, M, M, L, Pos).
-declaration_pos(reexport(U, L),
-		term_position(_, _, _, _, [_, Pos]),
-		reexport(U), M, M, L, Pos).
-declaration_pos(public(L),
-		term_position(_, _, _, _, [Pos]),
-		pulic, M, M, L, Pos).
-declaration_pos(multifile(L),
-		term_position(_, _, _, _, [Pos]),
-		multifile, M, M, L, Pos).
-declaration_pos(discontiguous(L),
-		term_position(_, _, _, _, [Pos]),
-		discontiguous, M, M, L, Pos).
-declaration_pos(meta_predicate(L),
-		term_position(_, _, _, _, [Pos]),
-		meta_predicate, M, M, L, Pos).
-declaration_pos(include(U),       DPos, include,      M, M, U, DPos).
-declaration_pos(use_module(U),    DPos, use_module,   M, M, U, DPos).
-declaration_pos(consult(U),       DPos, consult,      M, M, U, DPos).
-declaration_pos(use_module(U, L), DPos, use_module_2, M, M, use_module(U, L), DPos).
-declaration_pos(use_module(U, L), term_position(_, _, _, _, [_, Pos]),
-		import(U), M, M, L, Pos).
+declaration_pos(module(M, L), DPos,
+		_, M, [module_2, export], [module(M, L), L], [DPos, Pos]) :-
+    DPos = term_position(_, _, _, _, [_, Pos]).
+declaration_pos(volatile(L), term_position(_, _, _, _, PosL),
+		M, M, [volatile], [L], PosL).
+declaration_pos(dynamic(L), term_position(_, _, _, _, PosL),
+		M, M, [dynamic], [L], PosL).
+declaration_pos(reexport(U, L), term_position(_, _, _, _, [_, Pos]),
+		M, M, [reexport(U)], [L], [Pos]).
+declaration_pos(public(L), term_position(_, _, _, _, PosL),
+		M, M, [pulic], [L], PosL).
+declaration_pos(multifile(L), term_position(_, _, _, _, PosL),
+		M, M, [multifile], [L], PosL).
+declaration_pos(discontiguous(L), term_position(_, _, _, _, PosL),
+		M, M, [discontiguous], [L], PosL).
+declaration_pos(meta_predicate(L), term_position(_, _, _, _, PosL),
+		M, M, [meta_predicate], [L], PosL).
+declaration_pos(use_module(SM:DU),  DPos,  _, M, ID, U, Pos) :- !,
+    declaration_pos(use_module(DU), DPos, SM, M, ID, U, Pos).
+declaration_pos(use_module(SM:DU, L), DPos, ID, _, M, U, Pos) :- !,
+    declaration_pos(use_module(DU, L), DPos, ID, SM, M, U, Pos).
+declaration_pos(include(U),    DPos, M, M, [include],    [U], [DPos]).
+declaration_pos(use_module(U), DPos, M, M, [use_module], [U], [DPos]).
+declaration_pos(consult(U),    DPos, M, M, [consult],    [U], [DPos]).
+declaration_pos(use_module(U, L), DPos, M, M,
+		[use_module_2, import(U)], [use_module(U, L), L], [DPos, Pos]) :-
+    DPos = term_position(_, _, _, _, [_, Pos]).
 
 :- meta_predicate mapsequence(2,?,?).
 mapsequence(_, A, _) :-
@@ -86,7 +82,7 @@ mapsequence(G, (A, B), term_position(_, _, _, _, [PA, PB])) :- !,
 mapsequence(G, A, PA) :-
     call(G, A, PA).
 
-assert_declaration(Declaration, M, Sequence, Pos) :-
+assert_declaration(M, Declaration, Sequence, Pos) :-
     mapsequence(assert_declaration_one(Declaration, M), Sequence, Pos).
 
 assert_declaration_one(reexport(U), M, PI, Pos) :- !,
