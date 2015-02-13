@@ -59,9 +59,11 @@ cgoal_args(\,  [G1|EL],    G, [], EL) :- remove_hats(G1, G, EL).
 cgoal_args(+\, [Fr,G1|EL], G, Fr, EL) :- remove_hats(G1, G, EL).
 
 lambdaize_args(A0, M, VL, Ex, A) :-
-    ( '$member'(E1, Ex),
-      '$member'(E2, VL),
-      E1==E2
+    ( ( Ex==[]
+      ; '$member'(E1, Ex),
+	'$member'(E2, VL),
+	E1==E2
+      )
     ->'$expand':wrap_meta_arguments(A0, M, VL, Ex, A)
     ; '$expand':remove_arg_pos(A0, _, M, VL, Ex, A, _)
     ).
