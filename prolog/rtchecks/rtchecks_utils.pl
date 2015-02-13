@@ -8,14 +8,13 @@
 :- use_module(library(aggregates)).
 :- use_module(library(hiordlib)).
 :- use_module(library(lists)).
-:- use_module(library(sort)).
+:- use_module(library(sort), [keylist/1]).
 :- if(current_prolog_flag(dialect, ciao)).
 :- use_module(library(write), []).
 :- use_module(library(debugger(debugger_lib))).
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
-:- use_module(library(assertions/native_props)).
 tracertc :- backtrace(40).	% gtrace
 :- endif.
 :- use_module(rtchecks(compact_list)).
@@ -149,7 +148,6 @@ pretty_prop(Prop, Dict0, PrettyProp) :-
 	append(Dict0, EDict, Dict),
 	apply_dict(Prop, Dict, yes, PrettyProp).
 
-:- use_module(engine(attributes)).
 :- use_module(library(terms_vars)).
 
 pretty_attributes(Term, Attrs) :-

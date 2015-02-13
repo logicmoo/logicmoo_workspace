@@ -30,12 +30,12 @@
 	     location/3]).
 :- use_module(library(inliner(inliner_tr)), [in_inline_module_db/2, inline_db/4,
 					     lit_clause_arity/4]).
+:- use_module(library(sort)).
 :- endif.
 % see formulae, conj_to_list/2, list_to_conj/2
 :- use_module(library(llists)).
 :- use_module(library(aggregates)).
 :- use_module(library(terms)).
-:- use_module(library(sort)).
 :- use_module(rtchecks(term_list)).
 
 :- doc(author, "Edison Mera").

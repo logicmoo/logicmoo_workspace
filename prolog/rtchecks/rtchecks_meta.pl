@@ -8,7 +8,9 @@
 	    ], [assertions, dcg, hiord]).
 
 :- use_module(library(lists)).
+:- if(current_prolog_flag(dialect, ciao)).
 :- use_module(library(sort)).
+:- endif.
 :- use_module(library(hiordlib), [map/3]).
 :- use_module(rtchecks(rtchecks_basic)).
 
