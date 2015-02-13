@@ -2,7 +2,7 @@
 		select_applicable/4],
 	    [assertions, basicmodes, dcg, hiord, unittestprops]).
 
-:- use_module(library(varnames(dict_types))).
+:- use_module(library(varnames/dict_types)).
 
 sel_member(E, Applicable) -->
 	{member(E0, Applicable)},
@@ -47,7 +47,7 @@ select_applicable_args(N, Term, Dict) -->
 apply_dict(Term, Dict, PrettyTerm) :-
 	apply_dict(Term, Dict, no, PrettyTerm).
 
-:- load_test_module(library(varnames(dict_types))).
+:- load_test_module(library(varnames/dict_types)).
 
 :- test apply_dict(T, D, Idemp, _) : (T=f(A, B), Idemp=yes, D=['C'=A, 'D'=B]).
 

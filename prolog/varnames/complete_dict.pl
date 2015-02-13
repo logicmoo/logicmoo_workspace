@@ -1,7 +1,7 @@
 :- module(complete_dict, [complete_dict/4, set_undefined_names/3],
 	  [assertions, basicmodes]).
 
-:- use_module(library(varnames(dict_types)), [varnamesl/1]).
+:- use_module(library(varnames/dict_types), [varnamesl/1]).
 
 :- pred complete_dict(?(term), +list(var), +varnamesl, -varnamesl).
 

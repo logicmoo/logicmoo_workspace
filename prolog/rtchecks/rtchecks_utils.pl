@@ -141,8 +141,8 @@ position_to_message(asrloc(Loc),
 position_to_message(pploc(Loc),
 		    message_lns(Loc, error, [])).
 
-:- use_module(library(varnames(apply_dict))).
-:- use_module(library(varnames(complete_dict))).
+:- use_module(library(varnames/apply_dict)).
+:- use_module(library(varnames/complete_dict)).
 :- export(pretty_prop/3).
 pretty_prop(Prop, Dict0, PrettyProp) :-
 	complete_dict(Prop, Dict0, [], EDict),

@@ -27,9 +27,9 @@
 :- use_module(library(terms_vars)).
 :- use_module(library(hiordlib)).
 :- use_module(library(apply)).
-:- use_module(library(varnames(apply_dict))).
-:- use_module(library(varnames(pretty_names))).
-:- use_module(library(varnames(complete_dict))).
+:- use_module(library(varnames/apply_dict)).
+:- use_module(library(varnames/pretty_names)).
+:- use_module(library(varnames/complete_dict)).
 :- use_module(library(lists)).
 :- use_module(rtchecks(term_list)).
 
