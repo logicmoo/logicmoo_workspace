@@ -1,13 +1,10 @@
 :- module(ws_browser, [browse_server/1]).
 
 :- use_module(library(maplist_dcg)).
-:- use_module(library(module_files)).
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
-:- use_module(library(http/http_open)).
 :- use_module(library(http/html_write)).
 :- use_module(library(http/http_parameters)).
-:- use_module(library(uri)).
 
 :- http_handler(root(.),           list_files,  []). % /
 :- http_handler(root(show_source), show_source, []). % /module?file=<file>

@@ -1,9 +1,7 @@
 :- module(ws_cover, []).
 
 :- reexport(library(ws_browser)).
-:- use_module(library(http/http_parameters)).
 :- use_module(library(http/html_write)).
-:- use_module(library(location_utils)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(gcover)).
