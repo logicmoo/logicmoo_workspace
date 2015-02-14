@@ -14,7 +14,7 @@
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(is_entry_point)).
-:- use_module(library(record_locations)).
+:- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(maplist_dcg)).
@@ -27,25 +27,23 @@
 
 :- dynamic marked/3, calls_to/2, arc/2, scc1/2, node_scc/2.
 
-check_pred_file(Ref, FileChk) :-
+check_pred_file(Ref, FromChk) :-
     property_from(Ref, _, From),
-    from_to_file(From, File),
-    call(FileChk, File),
+    from_chk(FromChk, From),
     !.
 
 :- public collect_unused/5.
 :- meta_predicate collect_unused(?,1,+,+,+).
-collect_unused(M, FileChk, MGoal, Caller, From) :-
-    from_to_file(From, File),
-    call(FileChk, File),
+collect_unused(M, FromChk, MGoal, Caller, From) :-
+    call(FromChk, From),
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
 audit:check(unused, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_unused(Ref, FileChk, OptionL, Result).
+    check_unused(Ref, from_chk(FileChk), OptionL, Result).
 
 :- meta_predicate check_unused(?, ?, +, -).
-check_unused(Ref, FileChk, OptionL0, Pairs) :-
+check_unused(Ref, FromChk, OptionL0, Pairs) :-
     normalize_head(Ref, M:H),
     merge_options(OptionL0,
 		  [source(false),
@@ -54,11 +52,11 @@ check_unused(Ref, FileChk, OptionL0, Pairs) :-
 		   evaluate(false),
 		   trace_reference(_:H),
 		   module_class([user, system, library]),
-		   on_trace(collect_unused(M, FileChk))
+		   on_trace(collect_unused(M, FromChk))
 		  ], OptionL),
     prolog_walk_code(OptionL),
     mark(Ref),
-    sweep(Ref, FileChk, Pairs),
+    sweep(Ref, FromChk, Pairs),
     cleanup_unused.
 
 cleanup_unused :-
@@ -189,8 +187,8 @@ current_arc(Nodes, X, Y) :-
 % results for performance reasons (arc/2, node_scc/2, scc1/2), otherwise the
 % analysis will take 20 times more --EMM
 %
-sweep(Ref, FileChk, Pairs) :-
-    findall(Node, unmarked(Ref, FileChk, Node), UNodes),
+sweep(Ref, FromChk, Pairs) :-
+    findall(Node, unmarked(Ref, FromChk, Node), UNodes),
     sort(UNodes, Nodes),
     forall(current_arc(Nodes, X, Y), assertz(arc(X, Y))),
     findall(arc(X, Y), arc(X, Y), Arcs),
@@ -304,7 +302,7 @@ add_location_info_(M:PI, LI, L) :-
 add_location_info_(H/I, LI, L) :-
     call(LI, H/I, L).
 
-unmarked(Ref, FileChk, Node) :-
+unmarked(Ref, FromChk, Node) :-
     Ref = M:H,
     MPI = M:F/A,
     ( current_defined_predicate(MPI),
@@ -332,7 +330,7 @@ unmarked(Ref, FileChk, Node) :-
       Node = MPI/0
     ),
     \+ hide_unused(H, M),
-    check_pred_file(Ref, FileChk).
+    check_pred_file(Ref, FromChk).
     
 prolog:message(acheck(unused)) -->
     ['-----------------',nl,

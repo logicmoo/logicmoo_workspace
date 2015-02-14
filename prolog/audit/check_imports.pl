@@ -4,7 +4,7 @@
 :- use_module(library(expansion_module)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(implementation_module)).
-:- use_module(library(record_locations)).
+:- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(normalize_head)).
@@ -40,10 +40,10 @@ unused_import(Type, Loc/Elem) -->
 
 audit:check(imports, Ref, Result, OptionL0 ) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_imports(Ref, FileChk, OptionL, Result).
+    check_imports(Ref, from_chk(FileChk), OptionL, Result).
 
-:- meta_predicate check_imports(?, ?, +, -).
-check_imports(Ref, FileChk, OptionL0, Pairs) :-
+:- meta_predicate check_imports(?, 1, +, -).
+check_imports(Ref, FromChk, OptionL0, Pairs) :-
     normalize_head(Ref, M:H),
     merge_options(OptionL0,
 		  [source(false),
@@ -52,12 +52,12 @@ check_imports(Ref, FileChk, OptionL0, Pairs) :-
 		   evaluate(false),
 		   trace_reference(_:H),
 		   module_class([user, system, library]),
-		   on_trace(collect_imports(M, FileChk))
+		   on_trace(collect_imports(M, FromChk))
 		  ], OptionL),
     cleanup_imports,
     prolog_walk_code(OptionL),
     forall(extra_location(Head, CM, goal, From),
-	   ignore(collect_imports(M, FileChk, CM:Head, _, From))),
+	   ignore(collect_imports(M, FromChk, CM:Head, _, From))),
     collect_imports(M, Pairs, Tail),
     collect_usemods(M, Tail, []),
     cleanup_imports.
@@ -111,9 +111,9 @@ collect_usemods(M, Pairs, Tail) :-
 	     from_location(From, Loc)
 	   ), Pairs, Tail).
 
-collect_imports(M, FileChk, MGoal, Caller, From) :-
-    from_to_file(From, File),
-    call(FileChk, File),
+:- meta_predicate collect_imports(?,1,+,+,+).
+collect_imports(M, FromChk, MGoal, Caller, From) :-
+    call(FromChk, From),
     record_location_meta(MGoal, M, From, all_call_refs, mark_import),
     ( nonvar(Caller),
       Caller = MCaller:_,

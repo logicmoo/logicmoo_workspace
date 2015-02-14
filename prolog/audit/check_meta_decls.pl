@@ -57,8 +57,5 @@ audit:check(meta_decls, MSpec, Pairs, OptionL) :-
 	      PI = M:F/A,
 	      \+ hide_missing_meta_pred(PI),
 	      once(property_from(PI, _, From)), % once: only first occurrence
-	      ( from_to_file(From, File)
-	      ->call(FileChk, File)
-	      ; true
-	      ),
+	      from_chk(FileChk, From),
 	      from_location(From, Loc)), Pairs).

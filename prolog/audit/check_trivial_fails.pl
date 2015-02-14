@@ -3,7 +3,7 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
-:- use_module(library(record_locations)).
+:- use_module(library(extra_location)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(implementation_module)).
@@ -17,9 +17,9 @@
 
 audit:check(trivial_fails, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_trivial_fails(Ref, FileChk, OptionL, Result).
+    check_trivial_fails(Ref, from_chk(FileChk), OptionL, Result).
 
-check_trivial_fails(Ref0, FileChk, OptionL0, Pairs) :-
+check_trivial_fails(Ref0, FromChk, OptionL0, Pairs) :-
     normalize_head(Ref0, M:H),
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
@@ -28,10 +28,10 @@ check_trivial_fails(Ref0, FileChk, OptionL0, Pairs) :-
 		   trace_reference(_:H)
 		  ], OptionL),
     prolog_walk_code([source(false),
-		      on_trace(collect_trivial_fail_1r(M, FileChk))
+		      on_trace(collect_trivial_fail_1r(M, FromChk))
 		     |OptionL]),
     prolog_walk_code([source(false),
-		      on_trace(collect_trivial_fail_2r(M, FileChk))
+		      on_trace(collect_trivial_fail_2r(M, FromChk))
 		     |OptionL]),
     findall(CRef, retract(trivial_fail(clause(CRef), _)), Clauses),
     ( Clauses==[]
@@ -68,17 +68,15 @@ ignore_predicate(pce_expansion:verbose).
     collect_trivial_fail_2r/5.
 
 :- meta_predicate collect_trivial_fail_1r(+,1,+,+,+).
-collect_trivial_fail_1r(M, FileChk, MGoal, _, From) :-
+collect_trivial_fail_1r(M, FromChk, MGoal, _, From) :-
     nonvar(MGoal),
-    from_to_file(From, File),
-    call(FileChk, File),
+    call(FromChk, From),
     record_location_dynamic(MGoal, M, From).
 
 :- meta_predicate collect_trivial_fail_2r(+,1,+,+,+).
-collect_trivial_fail_2r(M, FileChk, MGoal, Caller, From) :-
+collect_trivial_fail_2r(M, FromChk, MGoal, Caller, From) :-
     nonvar(MGoal),
-    from_to_file(From, File),
-    call(FileChk, File),
+    call(FromChk, From),
     collect_trivial_fail(M, MGoal, Caller, From).
 
 collect_trivial_fail(M, MCall, Caller, From) :-

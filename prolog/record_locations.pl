@@ -1,24 +1,18 @@
-:- module(record_locations,
-	  [extra_location/4]).
+:- module(record_locations, []).
 
 :- use_module(library(apply)).
-
-:- dynamic
-    extra_location/4.
+:- use_module(library(location_utils)).
+:- use_module(library(extra_location)).
 
 :- multifile
     system:term_expansion/4,
-    system:goal_expansion/4,
-    extra_location/4.
-
-:- discontiguous
-    extra_location/4.
+    system:goal_expansion/4.
 
 :- volatile rl_tmp/2.
 :- dynamic rl_tmp/2. % trick to detect if term_expansion was applied
 
 % Extra location for assertions of a given predicate
-extra_location(Head, M, assertion(Status, Type), From) :-
+extra_location:extra_location(Head, M, assertion(Status, Type), From) :-
     clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
 
 :- public record_extra_location/2.
@@ -57,12 +51,15 @@ declaration_pos(discontiguous(L), term_position(_, _, _, _, PosL),
 		M, M, [discontiguous], [L], PosL).
 declaration_pos(meta_predicate(L), term_position(_, _, _, _, PosL),
 		M, M, [meta_predicate], [L], PosL).
+declaration_pos(reexport(SM:DU),  DPos,  _, M, ID, U, Pos) :- !,
+    declaration_pos(reexport(DU), DPos, SM, M, ID, U, Pos).
 declaration_pos(use_module(SM:DU),  DPos,  _, M, ID, U, Pos) :- !,
     declaration_pos(use_module(DU), DPos, SM, M, ID, U, Pos).
 declaration_pos(use_module(SM:DU, L), DPos, ID, _, M, U, Pos) :- !,
     declaration_pos(use_module(DU, L), DPos, ID, SM, M, U, Pos).
 declaration_pos(include(U),    DPos, M, M, [include],    [U], [DPos]).
 declaration_pos(use_module(U), DPos, M, M, [use_module], [U], [DPos]).
+declaration_pos(reexport(U),   DPos, M, M, [reexport],   [U], [DPos]).
 declaration_pos(consult(U),    DPos, M, M, [consult],    [U], [DPos]).
 declaration_pos(use_module(U, L), DPos, M, M,
 		[use_module_2, import(U)], [use_module(U, L), L], [DPos, Pos]) :-
@@ -112,16 +109,23 @@ assert_reexport_declaration_2(except(_),   _, _, _).
 assert_position(H, M, Type, Pos) :-
     source_location(File, Line),
     ( nonvar(Pos)
-    ->Loc = file_term_position(File, Pos)
-    ; Loc = file(File, Line, -1, 0)
+    ->From = file_term_position(File, Pos)
+    ; From = file(File, Line, -1, 0)
     ),
-    assert_location(H, M, Type, Loc).
+    assert_location(H, M, Type, From).
 
-assert_location(H, M, Type, Loc) :-
-    ( \+ extra_location(H, M, Type, Loc) ->
-      compile_aux_clauses(record_locations:extra_location(H, M, Type, Loc))
+assert_location(H, M, Type, From) :-
+    ( \+ have_extra_location(From, H, M, Type)
+    ->compile_aux_clauses(extra_location:extra_location(H, M, Type, From))
     ; true
     ).
+
+have_extra_location(file(File, Line, _, _), H, M, Type) :- !,
+    extra_location(H, M, Type, From),
+    from_to_file(From, File),
+    from_to_line(From, Line).
+have_extra_location(From, H, M, Type) :-
+    extra_location(H, M, Type, From).
 
 system:term_expansion(Term, Pos, _, _) :-
     source_location(File, Line),

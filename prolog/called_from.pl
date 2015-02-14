@@ -13,7 +13,7 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(implementation_module)).
 :- use_module(library(location_utils)).
-:- use_module(library(record_locations)).
+:- use_module(library(extra_location)).
 
 :- multifile
     prolog:message//1.

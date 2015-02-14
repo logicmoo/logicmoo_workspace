@@ -3,7 +3,7 @@
 :- use_module(library(check), []).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(location_utils)).
-:- use_module(library(record_locations)).
+:- use_module(library(extra_location)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_head)).
 :- use_module(library(option_utils)).
@@ -83,8 +83,7 @@ duptype_elem(predicate, H, M, FileChk, DupId, M:F/A) :-
 duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-
     extra_location(H, M, T, From),
     \+ ignore_dupcode(H, M, declaration(T)),
-    from_to_file(From, File),
-    call(FileChk, File),
+    from_chk(FileChk, From),
     \+ memberchk(T, [goal, assertion(_,_)]),
     once(dtype_dupid_elem(T, T, H, M, DupId, Elem)).
 

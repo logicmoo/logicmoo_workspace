@@ -1,6 +1,6 @@
 :- module(audit, [showcheck/1, showcheck/2, showcheck/3, checkall/0, checkall/2,
 		  checkallc/2, check_results/2, check_results/4, report_list/2,
-		  full_report/1, simple_report/1, available_checker/1]).
+		  full_report/1, simple_report/1, available_checker/1, from_chk/2]).
 
 :- use_module(library(thread)).
 :- use_module(library(clambda)).
@@ -10,6 +10,8 @@
 :- multifile
     prepare_results/3,	% Custom preparation method
     check/4.		% Hook to a new analysis
+
+:- meta_predicate from_chk(1,?).
 
 cleanup_db :-
     cleanup_locations(_, _, dynamic(_, _, _), _).
@@ -63,21 +65,29 @@ check_results(Checker, Result) :-
 checkall :-
     checkall(_, []).
 
-infocheck(Checker) :-
+infocheck(Checker, T) :-
+    get_time(T),
     print_message(information, format('Running Checker ~w', [Checker])).
+
+donecheck(Checker, T) :-
+    get_time(T2),
+    DT is T2-T,
+    print_message(information, format('Done ~w (~3f s)', [Checker, DT])).
 
 checkall(Ref, OptionL) :-
     available_checker(Checker),
-    infocheck(Checker),
+    infocheck(Checker, T),
     showcheck(Checker, Ref, OptionL),
+    donecheck(Checker, T),
     fail.
 checkall(_, _) :-
     cleanup_db.
 
 checkallc(Ref, OptionL) :-
     findall(C, available_checker(C), CL),
-    concurrent_maplist([Ref, OptionL]+\ C^ ( infocheck(C),
-					     showcheck(C, Ref, OptionL)
+    concurrent_maplist([Ref, OptionL]+\ C^ ( infocheck(C, T),
+					     showcheck(C, Ref, OptionL),
+					     donecheck(C, T)
 					   ), CL),
     cleanup_db.
 
@@ -87,3 +97,10 @@ check_results(Checker, Ref, Results, OptionL) :-
 	set_prolog_flag(check_database_preds, true),
 	check(Checker, Ref, Results, OptionL),
 	set_prolog_flag(check_database_preds, F)).
+
+from_chk(FileChk, From) :-
+    ( nonvar(From)
+    ->from_to_file(From, File),
+      call(FileChk, File)
+    ; true
+    ).

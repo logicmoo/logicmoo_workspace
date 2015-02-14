@@ -84,7 +84,10 @@ find_parent_subloc(Port, Frame, Module, ValidFile, ParentL, SubLoc) :-
       % is not big deal, compared to the coverage of custom predicates --EMM
       member(Port, [redo(_PC), unify /*, exit*/]) % TODO: if exit placed here,
                                                   % then it is marked in the
-                                                  % clause, else in the literal
+                                                  % clause, else in the literal,
+                                                  % perhaps would be good to
+                                                  % have exit_clause and
+                                                  % exit_lit
     ->ParentL = [],
       prolog_frame_attribute(Frame, clause, Cl),
       List = []
@@ -118,7 +121,7 @@ clause_subloc(Module, ValidFile, Cl, List, SubLoc) :-
       ->( ( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
 	    match_clause(Cl, ClauseL, Module, List2, List),
 	    nonvar(ClausePos)
-	  ->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos),
+	  ->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos), % Expensive
 	      nonvar(SubPos)
 	    ->SubLoc = file_term_position(File, SubPos)
 	    ; SubLoc = file_term_position(File, ClausePos)
@@ -185,3 +188,37 @@ normalize_cl(Head, M, CM, NClause) :-
 strip_mod(M:Term, _, MTerm) :-
     strip_mod(Term, M, MTerm).
 strip_mod(Term, M, M:Term).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- meta_predicate terr(0,5,+).
+:- export(terr/3).
+terr(Goal, OnTrace, OptionL) :-
+    State=state(_, _, _),	% Allow destructive assignment
+    call_inoutex(Goal,
+	setup_trace_(State, OnTrace, OptionL),
+	cleanup_trace(State)).
+
+%% setup_trace(!State, :OnTrace, +OptL) is det.
+setup_trace_(State, M:OnTrace, OptL) :-
+    true_1(\_^true, True1),
+    select_option(goal(ValidGoal), OptL,  OptL1, True1),
+    select_option(file(ValidFile), OptL1, _,     True1),
+    asserta((user:prolog_trace_interception(Port, Frame, PC, continue)
+	    :- ignore(\+trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
+				   M:ValidFile))),
+	    Ref),
+    maplist_dcg(port_mask, [call,
+			    exit,
+			    fail,
+			    redo,
+			    unify,
+			    exception
+			   ], 0, Mask),
+    '$visible'(Visible, Mask),
+    '$leash'(Leash, Mask),
+    nb_setarg(1, State, Visible),
+    nb_setarg(2, State, Leash),
+    nb_setarg(3, State, Ref),
+    trace.
+
