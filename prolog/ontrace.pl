@@ -84,7 +84,10 @@ find_parent_subloc(Port, Frame, Module, ValidFile, ParentL, SubLoc) :-
       % is not big deal, compared to the coverage of custom predicates --EMM
       member(Port, [redo(_PC), unify /*, exit*/]) % TODO: if exit placed here,
                                                   % then it is marked in the
-                                                  % clause, else in the literal
+                                                  % clause, else in the literal,
+                                                  % perhaps would be good to
+                                                  % have exit_clause and
+                                                  % exit_lit
     ->ParentL = [],
       prolog_frame_attribute(Frame, clause, Cl),
       List = []
@@ -118,7 +121,7 @@ clause_subloc(Module, ValidFile, Cl, List, SubLoc) :-
       ->( ( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
 	    match_clause(Cl, ClauseL, Module, List2, List),
 	    nonvar(ClausePos)
-	  ->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos),
+	  ->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos), % Expensive
 	      nonvar(SubPos)
 	    ->SubLoc = file_term_position(File, SubPos)
 	    ; SubLoc = file_term_position(File, ClausePos)

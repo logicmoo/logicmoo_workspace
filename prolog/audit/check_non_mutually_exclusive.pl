@@ -15,20 +15,19 @@
 
 audit:check(non_mutually_exclusive, Ref, Result, OptionL) :-
     option_allchk(OptionL, _, FileChk),
-    findall(Pairs, check_non_mutually_exclusive(FileChk, Ref, Pairs), Result).
+    findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
 
-check_non_mutually_exclusive(FileChk, Ref0, warning-(Ref-LocIdxs)) :-
+check_non_mutually_exclusive(FromChk, Ref0, warning-(Ref-LocIdxs)) :-
     mutually_exclusive_predicate(Ref0),
     normalize_head(Ref0, Ref),
-    collect_non_mutually_exclusive(FileChk, Ref),
+    collect_non_mutually_exclusive(FromChk, Ref),
     retract(mutually_exclusive_db(LocIdxs0)),
     sort(LocIdxs0, LocIdxs).
 
-collect_non_mutually_exclusive(FileChk, Ref) :-
+collect_non_mutually_exclusive(FromChk, Ref) :-
     nth_clause(Ref, Index, ClauseRef),
     From = clause(ClauseRef),
-    from_to_file(From, File),
-    call(FileChk, File),
+    call(FromChk, From),
     from_location(From, Loc),
     clause(Ref, _, ClauseRef),
     findall(LocIdx, mutually_exclusive(Ref, Index, LocIdx), LocIdxs0),

@@ -12,6 +12,7 @@
 :- use_module(library(option_utils)).
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
+:- use_module(library(audit/audit)).
 
 :- multifile
     prolog:message//1,
@@ -46,9 +47,9 @@ cleanup_dynamic_db :-
 
 audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_wrong_dynamic(Ref, FileChk, OptionL, Result).
+    check_wrong_dynamic(Ref, from_chk(FileChk), OptionL, Result).
 
-check_wrong_dynamic(Ref, FileChk, OptionL0, Pairs) :-
+check_wrong_dynamic(Ref, FromChk, OptionL0, Pairs) :-
     normalize_head(Ref, M:H),
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
@@ -57,7 +58,7 @@ check_wrong_dynamic(Ref, FileChk, OptionL0, Pairs) :-
 		   trace_reference(_:H)],
 		  OptionL),
     prolog_walk_code([source(false),
-		      on_trace(collect_wrong_dynamic(M, FileChk))|OptionL]),
+		      on_trace(collect_wrong_dynamic(M, FromChk))|OptionL]),
     findall(CRef, ( current_static_as_dynamic(_, _, _, _, clause(CRef), _),
 		    retractall(wrong_dynamic_db(clause(CRef), _, _, _))
 		  ; retract(var_dynamic_db(clause(CRef), _))
@@ -159,9 +160,8 @@ prolog:message(acheck(wrong_dynamic)) -->
 
 :- public collect_wrong_dynamic/5.
 :- meta_predicate collect_wrong_dynamic(?,1,+,+,+).
-collect_wrong_dynamic(M, FileChk, MGoal, Caller, From) :-
-    from_to_file(From, File),
-    call(FileChk, File),
+collect_wrong_dynamic(M, FromChk, MGoal, Caller, From) :-
+    call(FromChk, From),
     collect_wrong_dynamic(M, MGoal, Caller, From).
 
 collect_wrong_dynamic(M, MGoal, Caller, From) :-

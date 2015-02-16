@@ -7,16 +7,17 @@
 :- use_module(library(normalize_head)).
 :- use_module(library(referenced_by)).
 :- use_module(library(check), []).
+:- use_module(library(audit/audit)).
 
 :- multifile
     prolog:message//1.
 
 audit:check(undefined, Ref, Results, OptionL) :-
     option_allchk(OptionL, _, FileChk),
-    check_undefined(Ref, FileChk, OptionL, Results).
+    check_undefined(Ref, from_chk(FileChk), OptionL, Results).
 
 :- meta_predicate check_undefined(?,1,+,-).
-check_undefined(Ref, FileChk, OptionL0, Pairs) :-
+check_undefined(Ref, FromChk, OptionL0, Pairs) :-
     normalize_head(Ref, M:H),
     merge_options(OptionL0,
 		  [source(false),
@@ -25,7 +26,7 @@ check_undefined(Ref, FileChk, OptionL0, Pairs) :-
 		   undefined(trace),
 		   evaluate(false),
 		   %% module_class([system, library, user]),
-		   on_trace(collect_undef(H, M, FileChk))],
+		   on_trace(collect_undef(H, M, FromChk))],
 		  OptionL),
     prolog_walk_code(OptionL),
     findall(warning-(PIAL-(Loc/CI)),
@@ -59,10 +60,9 @@ found_undef(To, _Caller, From) :-
 
 :- public collect_undef/6.
 :- meta_predicate collect_undef(?,?,1,+,+,+).
-collect_undef(H, M, FileChk, MCall, Caller, From) :-
-    from_to_file(From, File),
+collect_undef(H, M, FromChk, MCall, Caller, From) :-
+    call(FromChk, From),
     M:H = MCall,
-    call(FileChk, File),
     found_undef(MCall, Caller, From),
     fail. % prevent unexpected unification
 
