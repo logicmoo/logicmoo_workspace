@@ -3,37 +3,22 @@
 % A wrapper from library(check) to tools(audit)
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
-:- use_module(library(extra_location)).
-:- use_module(library(option_utils)).
 :- use_module(library(referenced_by)).
 :- use_module(library(check), []).
 :- use_module(library(audit/audit)).
+:- use_module(library(audit/audit_codewalk)).
 
 :- multifile
     prolog:message//1.
 
-audit:check(undefined, Results, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
-    check_undefined(from_chk(FileChk), OptionL, Results).
+audit:check(undefined, Results, OptionL) :-
+    check_undefined(OptionL, Results).
 
-:- meta_predicate check_undefined(1,+,-).
-check_undefined(FromChk, OptionL0, Pairs) :-
-    select_option(module(M), OptionL0, OptionL1, M),
-    merge_options(OptionL1,
-		  [source(false),
-		   infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   undefined(trace),
-		   %% module_class([user, system, library]),
-		   on_trace(collect_undef(M, FromChk))],
-		  OptionL),
-    prolog_walk_code(OptionL),
-    forall(( extra_location(Head, CM, goal, From),
-	     functor(Head, F, A),
-	     \+ current_predicate(CM:F/A)
-	   ),
-	   ignore(collect_undef(M, FromChk, CM:Head, _, From))),
+check_undefined(OptionL0, Pairs) :-
+    audit_wcsetup([trace_reference(-), undefined(trace)|OptionL0],
+		  OptionL, M, FromChk),
+    prolog_walk_code([on_trace(collect_undef(M, FromChk))|OptionL]),
+    decl_walk_code(extra_undef(M, FromChk), M),
     findall(warning-(PIAL-(Loc/CI)),
 	    ( retract(check:undef(PI, From)),
 	      find_alternatives(PI, AL),
@@ -41,6 +26,11 @@ check_undefined(FromChk, OptionL0, Pairs) :-
 	      from_location(From, Loc),
 	      check:predicate_indicator(From, CI, [])
 	    ), Pairs).
+
+extra_undef(M, FromChk, M:Head, Caller, From) :-
+    functor(Head, F, A),
+    \+ current_predicate(M:F/A),
+    collect_undef(M, FromChk, M:Head, Caller, From).
 
 hide_undef(M:H) :- hide_undef(H, M).
 

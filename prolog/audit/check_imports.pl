@@ -42,7 +42,7 @@ audit:check(imports, Result, OptionL) :-
     check_imports(OptionL, Result).
 
 check_imports(OptionL, Pairs) :-
-    audit_walk_code(OptionL, collect_imports(M, FromChk), M, FromChk),
+    audit_walk_code([source(false)|OptionL], collect_imports(M, FromChk), M, FromChk),
     collect_imports(M, FromChk, Pairs, Tail),
     collect_usemods(M, FromChk, Tail, []),
     cleanup_imports.
