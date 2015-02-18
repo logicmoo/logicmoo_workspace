@@ -1,8 +1,8 @@
 :- module(location_utils,
 	[property_location/3, predicate_location/2, property_from/3,
 	 record_location_dynamic/3, predicate_from/2, cleanup_locations/4,
-	 from_location/2, from_to_file/2, from_to_line/2, in_set/2, in_dir/2,
-	 all_call_refs/5, record_location_meta/5, record_location/4]).
+	 from_location/2, in_set/2, in_dir/2, all_call_refs/5,
+	 record_location_meta/5, record_location/4]).
 
 :- use_module(library(lists)).
 :- use_module(library(prolog_codewalk), []).
@@ -17,25 +17,6 @@ from_location(From, Location) :-
     prolog:message_location(From, Location, []),
     !.
 from_location(From, From).
-
-from_to_file(clause_term_position(ClauseRef, _), File) :-
-    clause_property(ClauseRef, file(File)).
-from_to_file(clause(ClauseRef), File) :-
-    clause_property(ClauseRef, file(File)).
-from_to_file(file_term_position(File, _), File).
-from_to_file(file(File, _, _, _), File).
-
-from_to_line(clause_term_position(ClauseRef, _), Line) :-
-    clause_property(ClauseRef, line_count(Line)).
-from_to_line(clause(ClauseRef), Line) :-
-    clause_property(ClauseRef, line_count(Line)).
-from_to_line(file_term_position(File, TermPos), Line) :-
-    arg(1, TermPos, CharCount),
-    setup_call_cleanup(
-       '$push_input_context'(file_line),
-       prolog_codewalk:filepos_line(File, CharCount, Line, _),
-       '$pop_input_context').
-from_to_line(file(_, Line, _, _), Line).
 
 in_set(FileL, File) :-
     memberchk(File, FileL).
@@ -106,7 +87,7 @@ predicate_from(P, file(File, Line, -1, 0)) :-
 	predicate_property(P, file(File)),
 	predicate_property(P, line_count(Line)).
 
-prop_t(use).
+prop_t(use). % In some cases is already tracked by prolog:called_by/4@database_fact
 prop_t(def).
 
 all_call_refs(lit,  Goal,  _, CM, CM:Goal).

@@ -16,6 +16,7 @@
 
 % help analyzers to track indirect calls via prolog database manipulation:
 %
+
 prolog:called_by(H, IM, CM, [F]) :-
     current_prolog_flag(check_database_preds, true),
     database_use_fact(IM:H, F),

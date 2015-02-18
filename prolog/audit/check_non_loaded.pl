@@ -11,7 +11,7 @@
 :- multifile
     prolog:message//1.
 
-audit:check(non_loaded, _, Results, OptionL) :-
+audit:check(non_loaded, Results, OptionL) :-
     option_dirchk(OptionL, _, DirGen0),
     ( DirGen0 = call_2(true, _) ->
       DirGen = call_2(working_directory(Dir, Dir), Dir)

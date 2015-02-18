@@ -3,8 +3,8 @@
 % A wrapper from library(check) to tools(audit)
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
+:- use_module(library(extra_location)).
 :- use_module(library(option_utils)).
-:- use_module(library(normalize_head)).
 :- use_module(library(referenced_by)).
 :- use_module(library(check), []).
 :- use_module(library(audit/audit)).
@@ -12,23 +12,28 @@
 :- multifile
     prolog:message//1.
 
-audit:check(undefined, Ref, Results, OptionL) :-
-    option_allchk(OptionL, _, FileChk),
-    check_undefined(Ref, from_chk(FileChk), OptionL, Results).
+audit:check(undefined, Results, OptionL0) :-
+    option_allchk(OptionL0, OptionL, FileChk),
+    check_undefined(from_chk(FileChk), OptionL, Results).
 
-:- meta_predicate check_undefined(?,1,+,-).
-check_undefined(Ref, FromChk, OptionL0, Pairs) :-
-    normalize_head(Ref, M:H),
-    merge_options(OptionL0,
+:- meta_predicate check_undefined(1,+,-).
+check_undefined(FromChk, OptionL0, Pairs) :-
+    select_option(module(M), OptionL0, OptionL1, M),
+    merge_options(OptionL1,
 		  [source(false),
 		   infer_meta_predicates(false),
 		   autoload(false),
-		   undefined(trace),
 		   evaluate(false),
-		   %% module_class([system, library, user]),
-		   on_trace(collect_undef(H, M, FromChk))],
+		   undefined(trace),
+		   %% module_class([user, system, library]),
+		   on_trace(collect_undef(M, FromChk))],
 		  OptionL),
     prolog_walk_code(OptionL),
+    forall(( extra_location(Head, CM, goal, From),
+	     functor(Head, F, A),
+	     \+ current_predicate(CM:F/A)
+	   ),
+	   ignore(collect_undef(M, FromChk, CM:Head, _, From))),
     findall(warning-(PIAL-(Loc/CI)),
 	    ( retract(check:undef(PI, From)),
 	      find_alternatives(PI, AL),
@@ -58,11 +63,11 @@ found_undef(To, _Caller, From) :-
     ; assertz(check:undef(PI, From))
     ).
 
-:- public collect_undef/6.
-:- meta_predicate collect_undef(?,?,1,+,+,+).
-collect_undef(H, M, FromChk, MCall, Caller, From) :-
+:- public collect_undef/5.
+:- meta_predicate collect_undef(?,1,+,+,+).
+collect_undef(M, FromChk, MCall, Caller, From) :-
     call(FromChk, From),
-    M:H = MCall,
+    M:_ = MCall,
     found_undef(MCall, Caller, From),
     fail. % prevent unexpected unification
 

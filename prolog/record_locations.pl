@@ -1,38 +1,50 @@
 :- module(record_locations, []).
 
 :- use_module(library(apply)).
-:- use_module(library(location_utils)).
 :- use_module(library(extra_location)).
+:- use_module(library(from_utils)).
 
 :- multifile
     system:term_expansion/4,
     system:goal_expansion/4.
 
-:- volatile rl_tmp/2.
-:- dynamic rl_tmp/2. % trick to detect if term_expansion was applied
+:- volatile rl_tmp/3.
+:- dynamic rl_tmp/3. % trick to detect if term_expansion was applied
 
 % Extra location for assertions of a given predicate
 extra_location:extra_location(Head, M, assertion(Status, Type), From) :-
     clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
 
+:- multifile skip_record_decl/1.
+
+skip_record_decl(initialization(_)) :- !.
+skip_record_decl(Decl) :-
+    nonvar(Decl),
+    '$set_source_module'(M, M),
+    predicate_property(M:Decl, imported_from(assrt_lib)),
+    functor(Decl, Type, Arity),
+    memberchk(Arity, [1, 2]),
+    assrt_lib:assrt_type(Type), !.
+
 :- public record_extra_location/2.
 
 record_extra_location((:- Decl),
 		      term_position(_, _, _, _, [DPos])) :-
-    record_extra_location_d(Decl, DPos).
+    ( \+ skip_record_decl(Decl)
+    ->record_extra_decl(Decl, DPos)
+    ; true
+    ).
 
-record_extra_location_d(initialization(_), _) :- !.
-record_extra_location_d(Decl, DPos) :-
+record_extra_decl(Decl, DPos) :-
     '$set_source_module'(SM, SM),
     declaration_pos(Decl, DPos, SM, M, IdL, ArgL, PosL),
     maplist(assert_declaration(M), IdL, ArgL, PosL),
     !.
-record_extra_location_d(G, _) :-
+record_extra_decl(G, _) :-
     nonvar(G),
-    '$set_source_module'(M, M),
-    functor(G, F, A),
-    current_predicate(M:F/A),
-    retractall(rl_tmp(_, _)).
+    source_location(File, Line),
+    retractall(rl_tmp(File, Line, _)),
+    asserta(rl_tmp(File, Line, 1)).
 
 declaration_pos(module(M, L), DPos,
 		_, M, [module_2, export], [module(M, L), L], [DPos, Pos]) :-
@@ -71,8 +83,8 @@ mapsequence(_, A, _) :-
     !.
     % call(G, A).
 mapsequence(_, [], _) :- !.
-mapsequence(G, L, list_position(_, _, PosL, _)) :- !,
-    maplist(mapsequence(G), L, PosL).
+mapsequence(G, [E|L], list_position(_, _, PosL, _)) :- !,
+    maplist(mapsequence(G), [E|L], PosL).
 mapsequence(G, (A, B), term_position(_, _, _, _, [PA, PB])) :- !,
     mapsequence(G, A, PA),
     mapsequence(G, B, PB).
@@ -120,18 +132,28 @@ assert_location(H, M, Type, From) :-
     ; true
     ).
 
+/*
 have_extra_location(file(File, Line, _, _), H, M, Type) :- !,
     extra_location(H, M, Type, From),
     from_to_file(From, File),
     from_to_line(From, Line).
 have_extra_location(From, H, M, Type) :-
     extra_location(H, M, Type, From).
+*/
+
+have_extra_location(From0, H, M, Type) :-
+    extra_location(H, M, Type, From),
+    subsumes_from(From0, From).
 
 system:term_expansion(Term, Pos, _, _) :-
+    % format(user_error, '~q~n',[Term]),
     source_location(File, Line),
-    retractall(rl_tmp(_, _)),
-    asserta(rl_tmp(File, Line)),
-    once(record_extra_location(Term, Pos)),
+    ( rl_tmp(File, Line, _)
+    ->true
+    ; retractall(rl_tmp(_, _, _)),
+      asserta(rl_tmp(File, Line, 0 )),
+      record_extra_location(Term, Pos)
+    ),
     fail.
 
 redundant((_,_)).
@@ -149,7 +171,11 @@ rl_goal_expansion(Goal, Pos) :-
     callable(Goal),
     \+ redundant(Goal),
     source_location(File, Line),
-    \+ rl_tmp(File, Line),
+    ( rl_tmp(File, Line, Flag)
+    ->Flag == 1
+    ; true
+    ),
+    \+ clause(declaration_pos(Goal, _, _, _, _, _, _), _),
     assert_position(Goal, Pos, goal),
     !.
 

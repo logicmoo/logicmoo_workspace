@@ -7,7 +7,7 @@
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
-:- use_module(library(normalize_head)).
+:- use_module(library(from_utils)).
 :- use_module(library(audit/audit)).
 
 :- multifile
@@ -38,33 +38,46 @@ unused_import(Type, Loc/Elem) -->
     used_import/1,
     used_usemod/2.
 
-audit:check(imports, Ref, Result, OptionL0 ) :-
+audit:check(imports, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_imports(Ref, from_chk(FileChk), OptionL, Result).
+    check_imports(from_chk(FileChk), OptionL, Result).
 
-:- meta_predicate check_imports(?, 1, +, -).
-check_imports(Ref, FromChk, OptionL0, Pairs) :-
-    normalize_head(Ref, M:H),
-    merge_options(OptionL0,
+:- meta_predicate check_imports(1, +, -).
+check_imports(FromChk, OptionL0, Pairs) :-
+    cleanup_imports,
+    select_option(module(M), OptionL0, OptionL1, M),
+    merge_options(OptionL1,
 		  [source(false),
 		   infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_:H),
+		   trace_reference(_),
 		   module_class([user, system, library]),
 		   on_trace(collect_imports(M, FromChk))
 		  ], OptionL),
-    cleanup_imports,
     prolog_walk_code(OptionL),
-    forall(extra_location(Head, CM, goal, From),
-	   ignore(collect_imports(M, FromChk, CM:Head, _, From))),
-    collect_imports(M, Pairs, Tail),
-    collect_usemods(M, Tail, []),
-    cleanup_imports.
+    forall(extra_location(Head, M, goal, From),
+	   ignore(collect_imports(M, FromChk, M:Head, _, From))),
+    collect_imports(M, FromChk, Pairs, Tail),
+    collect_usemods(M, FromChk, Tail, []).
+    % cleanup_imports.
 
-collect_imports(M, Pairs, Tail) :-
+:- meta_predicate collect_imports(?,1,+,+,+).
+collect_imports(M, FromChk, M:Goal, Caller, From) :-
+    call(FromChk, From),
+    record_location_meta(M:Goal, _, From, all_call_refs, mark_import),
+    ( nonvar(Caller),
+      Caller = MC:_,
+      M \= MC,
+      \+ used_usemod(M, MC)
+    ->assertz(used_usemod(M, MC))
+    ; true
+    ).
+
+collect_imports(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
 	    ( clause(extra_location(Head, M, import(U), From), _, CRef),
+	      call(FromChk, From),
 	      M \= user,
 	      \+ memberchk(Head, [term_expansion(_,_),
 				  term_expansion(_,_,_,_),
@@ -84,10 +97,11 @@ collect_imports(M, Pairs, Tail) :-
 
 ignore_import(M, IM) :- expansion_module(M, IM).
 
-collect_usemods(M, Pairs, Tail) :-
+collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
-	    [M,U,Loc] +\
+	    [M,FromChk,U,Loc] +\
 	   ( extra_location(U, M, use_module, From),
+	     call(FromChk, From),
 	     M \= user,
 	     module_property(M, class(Class)),
 	     memberchk(Class, [user]),
@@ -110,19 +124,6 @@ collect_usemods(M, Pairs, Tail) :-
 		),
 	     from_location(From, Loc)
 	   ), Pairs, Tail).
-
-:- meta_predicate collect_imports(?,1,+,+,+).
-collect_imports(M, FromChk, MGoal, Caller, From) :-
-    call(FromChk, From),
-    record_location_meta(MGoal, M, From, all_call_refs, mark_import),
-    ( nonvar(Caller),
-      Caller = MCaller:_,
-      MGoal  = CM:_,
-      CM \= MCaller,
-      \+ used_usemod(CM, MCaller)
-    ->assertz(used_usemod(CM, MCaller))
-    ; true
-    ).
 
 mark_import(M:Head, CM, _, _, _, _) :-
     nonvar(M),

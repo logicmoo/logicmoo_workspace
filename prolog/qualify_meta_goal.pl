@@ -1,7 +1,7 @@
 :- module(qualify_meta_goal, [qualify_meta_goal/3]).
 
 :- use_module(library(check), []). % for add_module/3
-qualify_meta_goal(M:Goal0, Meta, M:Goal) :-
+qualify_meta_goal(M:Goal0, Meta, Goal) :-
     functor(Goal0, F, N),
     functor(Goal, F, N),
     meta_goal(1, M, Meta, Goal0, Goal).
@@ -19,5 +19,5 @@ meta_goal(N, M, Meta, Goal0, Goal) :-
       check:add_module(Arg0, M, Arg)
     ; Arg = Arg0
     ),
-    meta_goal(N1, Meta, Goal0, Goal).
-meta_goal(_, _, _, _).
+    meta_goal(N1, M, Meta, Goal0, Goal).
+meta_goal(_, _, _, _, _).

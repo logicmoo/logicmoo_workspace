@@ -7,7 +7,7 @@
 			 check_pred/2,
 			 check_module/2]).
 
-:- use_module(library(location_utils)).
+:- use_module(library(from_utils)).
 :- use_module(library(implemented_in)).
 :- reexport(library(module_files)).
 

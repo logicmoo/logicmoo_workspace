@@ -43,13 +43,13 @@ cleanup_metainference :-
 
 hide_missing_meta_pred(prolog:generated_predicate/1).
 
-audit:check(meta_decls, MSpec, Pairs, OptionL) :-
-    option_allchk(OptionL, _, FileChk),
+audit:check(meta_decls, Pairs, OptionL0 ) :-
+    option_allchk(OptionL0, OptionL1, FileChk),
+    select_option(module(M), OptionL1, _, M),
     cleanup_metainference,
     prolog_walk_code([autoload(false)]),
     findall(information-((Loc/M)-Spec),
-	    ( MSpec=M:Spec,
-	      prolog_metainference:inferred_meta_pred(_, M, Spec),
+	    ( prolog_metainference:inferred_meta_pred(_, M, Spec),
 	      %% Only exported predicates would require qualification
 	      %% of meta-arguments -- EMM after JW talk
 	      is_entry_point(Spec, M),

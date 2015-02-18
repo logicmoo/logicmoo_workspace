@@ -2,11 +2,10 @@
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(location_utils)).
+:- use_module(library(from_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(extra_location)).
 :- use_module(library(maplist_dcg)).
-:- use_module(library(normalize_head)).
-:- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(audit/audit)).
 
@@ -15,17 +14,17 @@
 
 :- dynamic trivial_fail/2.
 
-audit:check(trivial_fails, Ref, Result, OptionL0) :-
+audit:check(trivial_fails, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_trivial_fails(Ref, from_chk(FileChk), OptionL, Result).
+    check_trivial_fails(from_chk(FileChk), OptionL, Result).
 
-check_trivial_fails(Ref0, FromChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, M:H),
-    merge_options(OptionL0,
+check_trivial_fails(FromChk, OptionL0, Pairs) :-
+    select_option(module(M), OptionL0, OptionL1, M),
+    merge_options(OptionL1,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_:H)
+		   trace_reference(_)
 		  ], OptionL),
     prolog_walk_code([source(false),
 		      on_trace(collect_trivial_fail_1r(M, FromChk))
@@ -33,7 +32,9 @@ check_trivial_fails(Ref0, FromChk, OptionL0, Pairs) :-
     prolog_walk_code([source(false),
 		      on_trace(collect_trivial_fail_2r(M, FromChk))
 		     |OptionL]),
-    findall(CRef, retract(trivial_fail(clause(CRef), _)), Clauses),
+    findall(CRef, retract(trivial_fail(clause(CRef), _)), ClausesU),
+    sort(ClausesU, Clauses),
+    retractall(trivial_fail(_,_)),
     ( Clauses==[]
     ->Pairs=[]
     ; prolog_walk_code([clauses(Clauses),
@@ -43,7 +44,8 @@ check_trivial_fails(Ref0, FromChk, OptionL0, Pairs) :-
 	      ( retract(trivial_fail(From, Args)),
 		from_location(From, Loc)
 	      ), Pairs)
-    ).
+    ),
+    !.
 
 prolog:message(acheck(trivial_fails)) -->
     ['-------------',nl,
@@ -82,26 +84,35 @@ collect_trivial_fail_2r(M, FromChk, MGoal, Caller, From) :-
 collect_trivial_fail(M, MCall, Caller, From) :-
     record_location_meta(MCall, M, From, all_call_refs, cu_caller_hook(Caller)).
 
-cu_caller_hook(Caller, MGoal0, _, _, _, _, From) :-
-    M:H = MGoal0,
-    atom(M),
+cu_caller_hook(Caller, M:H, CM, _, _, _, From) :-
+    atom(CM),
     callable(H),
-    ( predicate_property(MGoal0, interpreted),
-      %% \+ predicate_property(MGoal0, dynamic),
-      \+ predicate_property(MGoal0, multifile),
-      \+ ignore_predicate(MGoal0)
-    ->( predicate_property(MGoal0, meta_predicate(Meta)) ->
-	qualify_meta_goal(MGoal0, Meta, MGoal)
-      ; MGoal = MGoal0
+    ( predicate_property(CM:H, interpreted),
+      %% \+ predicate_property(CM:H, dynamic),
+      \+ predicate_property(CM:H, multifile),
+      \+ ignore_predicate(M:H)
+    ->( predicate_property(CM:H, meta_predicate(Meta)) ->
+	qualify_meta_goal(CM:H, Meta, Goal)
+      ; Goal = H
       ),
+      Args = [Caller, MGoal],
+      MGoal = M:Goal,
       ( \+ ( clause(MGoal, _)
 	   ; dyn_defined(MGoal)
 	   )
-      ->assertz(trivial_fail(From, [Caller, MGoal]))
+      ->( \+ ( trivial_fail(From0, Args),
+	       subsumes_from(From, From0 )
+	     )
+	->forall(( trivial_fail(From0, Args), 
+		   subsumes_from(From0, From)
+		 ),
+		 retract(trivial_fail(From0, Args))), % Clean up the less precise pointers
+	  assertz(trivial_fail(From, Args))
+	; true
+	)
       ; true
       )
     ).
 
 dyn_defined(M:Head) :-
-    implementation_module(M:Head, IM),
-    extra_location(Head, IM, dynamic(def, _, _), _).
+    extra_location(Head, M, dynamic(def, _, _), _).

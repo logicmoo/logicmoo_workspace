@@ -5,7 +5,6 @@
 :- use_module(library(location_utils)).
 :- use_module(library(extra_location)).
 :- use_module(library(maplist_dcg)).
-:- use_module(library(normalize_head)).
 :- use_module(library(option_utils)).
 :- use_module(library(ungroup_keys_values)).
 :- use_module(library(clambda)).
@@ -53,9 +52,9 @@ ignore_dupcode(_,                               prolog, declaration(_)).
 ignore_dupcode(_,                               user,   declaration(use_module)).
 ignore_dupcode(_,                               _,      declaration(dynamic(_,_,_))).
 
-audit:check(dupcode, Ref, Result, OptionL0 ) :-
-    option_allchk(OptionL0, _OptionL, FileChk),
-    check_dupcode(Ref, FileChk, Result).
+audit:check(dupcode, Result, OptionL0) :-
+    option_allchk(OptionL0, OptionL, FileChk),
+    check_dupcode(OptionL, FileChk, Result).
 
 %% duptype_elem(+DupType, +Head, +Module, :FileChk, -DupId, -Elem) is multi
 %
@@ -117,21 +116,20 @@ ignore_dupname(PIL) :-
 	 predicate_property(M2:H2, exported)
        ).
 
-curr_duptype_elem(M:H, FileChk, DupType, DupId, Elem) :-
+curr_duptype_elem(M, FileChk, DupType, DupId, Elem) :-
     current_predicate(M:F/A),
     functor(H, F, A),
     \+predicate_property(M:H, imported_from(_)),
     duptype(DupType),
     \+ ignore_dupcode(H, M, DupType),
     duptype_elem(DupType, H, M, FileChk, DupId, Elem).
-curr_duptype_elem(M:_, FileChk, declaration, DupId, Elem) :-
+curr_duptype_elem(M, FileChk, declaration, DupId, Elem) :-
     duptype_elem_declaration(_, M, FileChk, DupId, Elem).
 
-check_dupcode(Ref0, FileChk, Result) :-
-    normalize_head(Ref0, Ref),
-    Ref = M:H,
+check_dupcode(OptionL, FileChk, Result) :-
+    select_option(module(M), OptionL, _, M),
     findall((DupType-DupId)-Elem,
-	    curr_duptype_elem(M:H, FileChk, DupType, DupId, Elem), PU),
+	    curr_duptype_elem(M, FileChk, DupType, DupId, Elem), PU),
     keysort(PU, PL),
     group_pairs_by_key(PL, GL),
     findall(G, ( member(G, GL),

@@ -1,35 +1,33 @@
-:- module(audit, [showcheck/1, showcheck/2, showcheck/3, checkall/0, checkall/2,
-		  checkallc/2, check_results/2, check_results/4, report_list/2,
-		  full_report/1, simple_report/1, available_checker/1, from_chk/2]).
+:- module(audit, [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
+		  check_results/2, check_results/3, report_list/2, full_report/1,
+		  simple_report/1, available_checker/1, from_chk/2]).
 
 :- use_module(library(thread)).
 :- use_module(library(clambda)).
 :- use_module(library(group_pairs_or_sort)).
+:- use_module(library(from_utils)).
 :- use_module(library(location_utils)).
 
 :- multifile
     prepare_results/3,	% Custom preparation method
-    check/4.		% Hook to a new analysis
+    check/3.		% Hook to a new analysis
 
 :- meta_predicate from_chk(1,?).
 
 cleanup_db :-
     cleanup_locations(_, _, dynamic(_, _, _), _).
 
-showcheck(Checker, OptionL) :-
-    showcheck(Checker, _, OptionL),
+showcheck(Checker) :-
+    showcheck(Checker, []),
     cleanup_db.
 
-showcheck(Checker) :-
-    showcheck(Checker, []).
-
 available_checker(Checker) :-
-    clause(check(Checker, _, _, _), _).
+    clause(check(Checker, _, _), _).
 
 % TODO: Ref argument is odd, may is better to pass only the context module that
 % we want to analyze, and may be in OptionL instead of in an extra argument.
-showcheck(Checker, Ref, OptionL) :-
-    check_results(Checker, Ref, Results, OptionL),
+showcheck(Checker, OptionL) :-
+    check_results(Checker, Results, OptionL),
     full_report(Checker-Results).
 
 full_report(Checker-Pairs) :-
@@ -60,10 +58,10 @@ report_list(Pairs, PrintMethod) :-
     maplist(PrintMethod, Results).
 
 check_results(Checker, Result) :-
-    check_results(Checker, _, Result, []).
+    check_results(Checker, Result, []).
 
 checkall :-
-    checkall(_, []).
+    checkall([]).
 
 infocheck(Checker, T) :-
     get_time(T),
@@ -74,28 +72,28 @@ donecheck(Checker, T) :-
     DT is T2-T,
     print_message(information, format('Done ~w (~3f s)', [Checker, DT])).
 
-checkall(Ref, OptionL) :-
+checkall(OptionL) :-
     available_checker(Checker),
     infocheck(Checker, T),
-    showcheck(Checker, Ref, OptionL),
+    showcheck(Checker, OptionL),
     donecheck(Checker, T),
     fail.
-checkall(_, _) :-
+checkall(_) :-
     cleanup_db.
 
-checkallc(Ref, OptionL) :-
+checkallc(OptionL) :-
     findall(C, available_checker(C), CL),
-    concurrent_maplist([Ref, OptionL]+\ C^ ( infocheck(C, T),
-					     showcheck(C, Ref, OptionL),
-					     donecheck(C, T)
-					   ), CL),
+    concurrent_maplist([OptionL]+\ C^ ( infocheck(C, T),
+					showcheck(C, OptionL),
+					donecheck(C, T)
+				      ), CL),
     cleanup_db.
 
-check_results(Checker, Ref, Results, OptionL) :-
+check_results(Checker, Results, OptionL) :-
     current_prolog_flag(check_database_preds, F),
     setup_call_cleanup(
 	set_prolog_flag(check_database_preds, true),
-	check(Checker, Ref, Results, OptionL),
+	check(Checker, Results, OptionL),
 	set_prolog_flag(check_database_preds, F)).
 
 from_chk(FileChk, From) :-

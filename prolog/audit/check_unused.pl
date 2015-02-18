@@ -18,7 +18,6 @@
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(maplist_dcg)).
-:- use_module(library(normalize_head)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(audit/audit)).
 
@@ -29,7 +28,7 @@
 
 check_pred_file(Ref, FromChk) :-
     property_from(Ref, _, From),
-    from_chk(FromChk, From),
+    call(FromChk, From),
     !.
 
 :- public collect_unused/5.
@@ -38,25 +37,25 @@ collect_unused(M, FromChk, MGoal, Caller, From) :-
     call(FromChk, From),
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
-audit:check(unused, Ref, Result, OptionL0 ) :-
+audit:check(unused, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_unused(Ref, from_chk(FileChk), OptionL, Result).
+    check_unused(from_chk(FileChk), OptionL, Result).
 
-:- meta_predicate check_unused(?, ?, +, -).
-check_unused(Ref, FromChk, OptionL0, Pairs) :-
-    normalize_head(Ref, M:H),
-    merge_options(OptionL0,
+:- meta_predicate check_unused(?, +, -).
+check_unused(FromChk, OptionL0, Pairs) :-
+    select_option(module(M), OptionL0, OptionL1, M),
+    merge_options(OptionL1,
 		  [source(false),
 		   infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_:H),
+		   trace_reference(_),
 		   module_class([user, system, library]),
 		   on_trace(collect_unused(M, FromChk))
 		  ], OptionL),
     prolog_walk_code(OptionL),
-    mark(Ref),
-    sweep(Ref, FromChk, Pairs),
+    mark(M),
+    sweep(M, FromChk, Pairs),
     cleanup_unused.
 
 cleanup_unused :-
@@ -76,12 +75,12 @@ entry_caller(M, H) :-
     ; extra_location(H, M, goal, _)
     ).
 
-entry_point(M:H, Caller) :-
-    calls_to(Caller, M:H),
+entry_point(M, Caller) :-
+    calls_to(Caller, M:_),
     is_entry_caller(Caller).
 
-mark(Ref) :-
-    forall(entry_point(Ref, Caller), put_mark(Caller)).
+mark(M) :-
+    forall(entry_point(M, Caller), put_mark(Caller)).
 
 mark_rec(M:H) :-
     ( H == '<initialization>'
@@ -93,7 +92,7 @@ mark_rec(M:H) :-
 
 resolve_meta_goal(H, M, G) :-
     ( predicate_property(M:H, meta_predicate(Meta))
-    ->qualify_meta_goal(M:H, Meta, M:G)
+    ->qualify_meta_goal(M:H, Meta, G)
     ; G = H
     ).
 
@@ -187,8 +186,8 @@ current_arc(Nodes, X, Y) :-
 % results for performance reasons (arc/2, node_scc/2, scc1/2), otherwise the
 % analysis will take 20 times more --EMM
 %
-sweep(Ref, FromChk, Pairs) :-
-    findall(Node, unmarked(Ref, FromChk, Node), UNodes),
+sweep(M, FromChk, Pairs) :-
+    findall(Node, unmarked(M, FromChk, Node), UNodes),
     sort(UNodes, Nodes),
     forall(current_arc(Nodes, X, Y), assertz(arc(X, Y))),
     findall(arc(X, Y), arc(X, Y), Arcs),
@@ -302,7 +301,7 @@ add_location_info_(M:PI, LI, L) :-
 add_location_info_(H/I, LI, L) :-
     call(LI, H/I, L).
 
-unmarked(Ref, FromChk, Node) :-
+unmarked(M, FromChk, Node) :-
     Ref = M:H,
     MPI = M:F/A,
     ( current_defined_predicate(MPI),

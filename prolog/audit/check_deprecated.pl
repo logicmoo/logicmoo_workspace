@@ -3,7 +3,6 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(check), []).
 :- use_module(library(implementation_module)).
-:- use_module(library(normalize_head)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(referenced_by)).
@@ -13,17 +12,17 @@
     prolog:message//1,
     deprecated_predicate/2.
 
-audit:check(deprecated, Ref, Result, OptionL0) :-
+audit:check(deprecated, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_deprecated(Ref, from_chk(FileChk), OptionL, Result).
+    check_deprecated(from_chk(FileChk), OptionL, Result).
 
-check_deprecated(Ref0, FromChk, OptionL0, Pairs) :-
-    normalize_head(Ref0, M:H),
-    merge_options(OptionL0,
+check_deprecated(FromChk, OptionL0, Pairs) :-
+    select_option(module(M), OptionL0, OptionL1, M),
+    merge_options(OptionL1,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_:H)
+		   trace_reference(_)
 		  ], OptionL),
     prolog_walk_code([source(false),
 		      on_trace(have_deprecated(M, FromChk))

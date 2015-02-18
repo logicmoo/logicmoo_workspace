@@ -13,11 +13,13 @@
 
 :- dynamic mutually_exclusive_db/1.
 
-audit:check(non_mutually_exclusive, Ref, Result, OptionL) :-
-    option_allchk(OptionL, _, FileChk),
-    findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
+audit:check(non_mutually_exclusive, Result, OptionL0 ) :-
+    option_allchk(OptionL0, OptionL1, FileChk),
+    select_option(module(M), OptionL1, _, M),
+    findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), M, Pairs), Result).
 
-check_non_mutually_exclusive(FromChk, Ref0, warning-(Ref-LocIdxs)) :-
+check_non_mutually_exclusive(FromChk, M, warning-(Ref-LocIdxs)) :-
+    Ref0 = M:_,
     mutually_exclusive_predicate(Ref0),
     normalize_head(Ref0, Ref),
     collect_non_mutually_exclusive(FromChk, Ref),

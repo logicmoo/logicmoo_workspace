@@ -5,7 +5,6 @@
 :- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(maplist_dcg)).
-:- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(database_fact)).
 :- use_module(library(location_utils)).
@@ -45,17 +44,17 @@ cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _, _)),
     retractall(var_dynamic_db(_, _)).
 
-audit:check(wrong_dynamic, Ref, Result, OptionL0) :-
+audit:check(wrong_dynamic, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
-    check_wrong_dynamic(Ref, from_chk(FileChk), OptionL, Result).
+    check_wrong_dynamic(from_chk(FileChk), OptionL, Result).
 
-check_wrong_dynamic(Ref, FromChk, OptionL0, Pairs) :-
-    normalize_head(Ref, M:H),
-    merge_options(OptionL0,
+check_wrong_dynamic(FromChk, OptionL0, Pairs) :-
+    select_option(module(M), OptionL0, OptionL1, M),
+    merge_options(OptionL1,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_:H)],
+		   trace_reference(_)],
 		  OptionL),
     prolog_walk_code([source(false),
 		      on_trace(collect_wrong_dynamic(M, FromChk))|OptionL]),
@@ -67,7 +66,7 @@ check_wrong_dynamic(Ref, FromChk, OptionL0, Pairs) :-
     ->Pairs=[]
     ; prolog_walk_code([clauses(Clauses),
 			on_trace(collect_wrong_dynamic(M))|OptionL]),
-      collect_result(M:H, Pairs)
+      collect_result(M:_, Pairs)
     ),
     cleanup_dynamic_db.
 
