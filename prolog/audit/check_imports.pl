@@ -59,8 +59,8 @@ check_imports(FromChk, OptionL0, Pairs) :-
     forall(extra_location(Head, M, goal, From),
 	   ignore(collect_imports(M, FromChk, M:Head, _, From))),
     collect_imports(M, FromChk, Pairs, Tail),
-    collect_usemods(M, FromChk, Tail, []).
-    % cleanup_imports.
+    collect_usemods(M, FromChk, Tail, []),
+    cleanup_imports.
 
 :- meta_predicate collect_imports(?,1,+,+,+).
 collect_imports(M, FromChk, M:Goal, Caller, From) :-
