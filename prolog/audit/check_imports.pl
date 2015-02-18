@@ -6,9 +6,9 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(audit/audit)).
+:- use_module(library(audit/audit_codewalk)).
 
 :- multifile
     prolog:message//1.
@@ -38,26 +38,11 @@ unused_import(Type, Loc/Elem) -->
     used_import/1,
     used_usemod/2.
 
-audit:check(imports, Result, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
-    check_imports(from_chk(FileChk), OptionL, Result).
+audit:check(imports, Result, OptionL) :-
+    check_imports(OptionL, Result).
 
-:- meta_predicate check_imports(1, +, -).
-check_imports(FromChk, OptionL0, Pairs) :-
-    cleanup_imports,
-    select_option(module(M), OptionL0, OptionL1, M),
-    merge_options(OptionL1,
-		  [source(false),
-		   infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   trace_reference(_),
-		   module_class([user, system, library]),
-		   on_trace(collect_imports(M, FromChk))
-		  ], OptionL),
-    prolog_walk_code(OptionL),
-    forall(extra_location(Head, M, goal, From),
-	   ignore(collect_imports(M, FromChk, M:Head, _, From))),
+check_imports(OptionL, Pairs) :-
+    audit_walk_code(OptionL, collect_imports(M, FromChk), M, FromChk),
     collect_imports(M, FromChk, Pairs, Tail),
     collect_usemods(M, FromChk, Tail, []),
     cleanup_imports.

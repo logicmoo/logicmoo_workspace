@@ -10,16 +10,15 @@
 
 */
 
-:- use_module(library(prolog_codewalk)).
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(is_entry_point)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(audit/audit)).
+:- use_module(library(audit/audit_codewalk)).
 
 :- multifile
     prolog:message//1.
@@ -37,23 +36,11 @@ collect_unused(M, FromChk, MGoal, Caller, From) :-
     call(FromChk, From),
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
-audit:check(unused, Result, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
-    check_unused(from_chk(FileChk), OptionL, Result).
+audit:check(unused, Result, OptionL) :-
+    check_unused(OptionL, Result).
 
-:- meta_predicate check_unused(?, +, -).
-check_unused(FromChk, OptionL0, Pairs) :-
-    select_option(module(M), OptionL0, OptionL1, M),
-    merge_options(OptionL1,
-		  [source(false),
-		   infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   trace_reference(_),
-		   module_class([user, system, library]),
-		   on_trace(collect_unused(M, FromChk))
-		  ], OptionL),
-    prolog_walk_code(OptionL),
+check_unused(OptionL, Pairs) :-
+    audit_walk_code(OptionL, collect_unused(M, FromChk), M, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.

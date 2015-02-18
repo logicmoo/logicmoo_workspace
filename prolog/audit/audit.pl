@@ -1,18 +1,16 @@
-:- module(audit, [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
-		  check_results/2, check_results/3, report_list/2, full_report/1,
-		  simple_report/1, available_checker/1, from_chk/2]).
+:- module(audit,
+	  [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
+	  check_results/2, check_results/3, report_list/2, full_report/1,
+	  simple_report/1, available_checker/1]).
 
 :- use_module(library(thread)).
 :- use_module(library(clambda)).
 :- use_module(library(group_pairs_or_sort)).
-:- use_module(library(from_utils)).
 :- use_module(library(location_utils)).
 
 :- multifile
     prepare_results/3,	% Custom preparation method
     check/3.		% Hook to a new analysis
-
-:- meta_predicate from_chk(1,?).
 
 cleanup_db :-
     cleanup_locations(_, _, dynamic(_, _, _), _).
@@ -95,10 +93,3 @@ check_results(Checker, Results, OptionL) :-
 	set_prolog_flag(check_database_preds, true),
 	check(Checker, Results, OptionL),
 	set_prolog_flag(check_database_preds, F)).
-
-from_chk(FileChk, From) :-
-    ( nonvar(From)
-    ->from_to_file(From, File),
-      call(FileChk, File)
-    ; true
-    ).

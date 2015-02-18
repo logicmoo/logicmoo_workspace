@@ -1,11 +1,14 @@
 :- module(option_utils, [option_allchk/3,
 			 option_dirchk/3,
 			 option_allchk/4,
+			 option_fromchk/3,
 			 call_2/3,
 			 check_alias/3,
 			 check_dir_file/2,
 			 check_pred/2,
-			 check_module/2]).
+			 check_module/2,
+			 from_chk/2,
+			 from_chk/3]).
 
 :- use_module(library(from_utils)).
 :- use_module(library(implemented_in)).
@@ -171,8 +174,27 @@ option_dir_dirs(Dir) -->
 :- meta_predicate call_2(0,?,?).
 call_2(Goal, File, File) :- call(Goal).
 
-option_allchk(OptionL1, OptionL, call_2(FileGen, File)) :-
+:- meta_predicate from_chk(1,?).
+from_chk(FileChk, From) :-
+    ( nonvar(From)
+    ->from_to_file(From, File),
+      call(FileChk, File)
+    ; true
+    ).
+
+:- meta_predicate from_chk(0,?,?).
+from_chk(Goal, File, From) :-
+    ( nonvar(From)
+    ->from_to_file(From, File),
+      call(Goal)
+    ; true
+    ).
+
+option_allchk(OptionL1, OptionL, option_utils:call_2(FileGen, File)) :-
     option_filechk(File, FileGen-OptionL1, true-OptionL).
 
-option_dirchk(OptionL1, OptionL, call_2(DirGen, Dir)) :-
+option_fromchk(OptionL1, OptionL, option_utils:from_chk(FileGen, File)) :-
+    option_filechk(File, FileGen-OptionL1, true-OptionL).
+
+option_dirchk(OptionL1, OptionL, option_utils:call_2(DirGen, Dir)) :-
     option_dir_dirs(Dir, DirGen-OptionL1, true-OptionL).

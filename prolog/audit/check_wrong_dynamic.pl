@@ -12,6 +12,7 @@
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(audit/audit)).
+:- use_module(library(audit/audit_codewalk)).
 
 :- multifile
     prolog:message//1,
@@ -66,6 +67,7 @@ check_wrong_dynamic(FromChk, OptionL0, Pairs) :-
     ->Pairs=[]
     ; prolog_walk_code([clauses(Clauses),
 			on_trace(collect_wrong_dynamic(M))|OptionL]),
+      decl_walk_code(collect_wrong_dynamic(M, FromChk), M),
       collect_result(M:_, Pairs)
     ),
     cleanup_dynamic_db.
