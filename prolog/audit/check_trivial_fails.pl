@@ -34,7 +34,6 @@ check_trivial_fails(FromChk, OptionL0, Pairs) :-
 		     |OptionL]),
     findall(CRef, retract(trivial_fail(clause(CRef), _)), ClausesU),
     sort(ClausesU, Clauses),
-    retractall(trivial_fail(_,_)),
     ( Clauses==[]
     ->Pairs=[]
     ; prolog_walk_code([clauses(Clauses),
@@ -95,8 +94,8 @@ cu_caller_hook(Caller, M:H, CM, _, _, _, From) :-
 	qualify_meta_goal(CM:H, Meta, Goal)
       ; Goal = H
       ),
-      Args = [Caller, MGoal],
       MGoal = M:Goal,
+      Args = [Caller, MGoal],
       ( \+ ( clause(MGoal, _)
 	   ; dyn_defined(MGoal)
 	   )
@@ -106,7 +105,7 @@ cu_caller_hook(Caller, M:H, CM, _, _, _, From) :-
 	->forall(( trivial_fail(From0, Args), 
 		   subsumes_from(From0, From)
 		 ),
-		 retract(trivial_fail(From0, Args))), % Clean up the less precise pointers
+		 retract(trivial_fail(From0, Args))), % Clean up less precise facts
 	  assertz(trivial_fail(From, Args))
 	; true
 	)
