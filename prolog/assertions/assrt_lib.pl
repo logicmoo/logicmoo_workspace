@@ -229,7 +229,7 @@ expand_nodirective_error(Clauses) :-
 	    ( assrt_type(Type),
 	      member(Arity, [1, 2])
 	    ), Clauses, ClauseT),
-    findall((Assr :-Body),
+    findall((Assr :- Body),
 	    ( assrt_type(Type),
 	      normalize_status_and_type_1(Assr, _, Status, Type, _, _),
 	      functor(Assr, Type, Arity),
