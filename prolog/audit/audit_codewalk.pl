@@ -6,7 +6,8 @@
 :- use_module(library(option_utils)).
 :- use_module(library(prolog_codewalk)).
 
-:- dynamic issues/1.
+:- thread_local
+    issues/1.
 
 :- meta_predicate
     decl_walk_code(3,-),
