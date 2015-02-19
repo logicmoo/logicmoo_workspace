@@ -64,12 +64,12 @@ check_wrong_dynamic(FromChk, OptionL0, Pairs) :-
 		  ; retract(var_dynamic_db(clause(CRef), _))
 		  ), Clauses),
     ( Clauses==[]
-    ->Pairs=[]
+    ->true
     ; prolog_walk_code([clauses(Clauses),
-			on_trace(collect_wrong_dynamic(M))|OptionL]),
-      decl_walk_code(collect_wrong_dynamic(M, FromChk), M),
-      collect_result(M:_, Pairs)
+			on_trace(collect_wrong_dynamic(M))|OptionL])
     ),
+    decl_walk_code(collect_wrong_dynamic(M, FromChk), M),
+    collect_result(M:_, Pairs),
     cleanup_dynamic_db.
 
 collect_result(Ref, Pairs) :-
