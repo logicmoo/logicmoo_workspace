@@ -1,6 +1,7 @@
 :- module(audit_codewalk, [audit_walk_code/4,
 			   audit_wcsetup/4,
-			   decl_walk_code/2]).
+			   decl_walk_code/2,
+			   record_issues/1]).
 
 :- use_module(library(extra_location)).
 :- use_module(library(option_utils)).
@@ -43,3 +44,6 @@ audit_wcsetup(OptionL0, OptionL, M, FromChk) :-
 decl_walk_code(Tracer, M) :-
     forall(extra_location(Head, M, goal, From),
 	   ignore(call(Tracer, M:Head, _:'<declaration>', From))).
+
+record_issues(CRef) :-
+    assertz(issues(CRef)).
