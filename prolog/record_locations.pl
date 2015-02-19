@@ -53,8 +53,8 @@ declaration_pos(volatile(L), term_position(_, _, _, _, PosL),
 		M, M, [volatile], [L], PosL).
 declaration_pos(dynamic(L), term_position(_, _, _, _, PosL),
 		M, M, [dynamic], [L], PosL).
-declaration_pos(reexport(U, L), term_position(_, _, _, _, [_, Pos]),
-		M, M, [reexport(U)], [L], [Pos]).
+declaration_pos(thread_local(L), term_position(_, _, _, _, PosL),
+		M, M, [thread_local], [L], PosL).
 declaration_pos(public(L), term_position(_, _, _, _, PosL),
 		M, M, [pulic], [L], PosL).
 declaration_pos(multifile(L), term_position(_, _, _, _, PosL),
@@ -69,10 +69,15 @@ declaration_pos(use_module(SM:DU),  DPos,  _, M, ID, U, Pos) :- !,
     declaration_pos(use_module(DU), DPos, SM, M, ID, U, Pos).
 declaration_pos(use_module(SM:DU, L), DPos, ID, _, M, U, Pos) :- !,
     declaration_pos(use_module(DU, L), DPos, ID, SM, M, U, Pos).
+declaration_pos(reexport(SM:DU, L), DPos, ID, _, M, U, Pos) :- !,
+    declaration_pos(reexport(DU, L), DPos, ID, SM, M, U, Pos).
 declaration_pos(include(U),    DPos, M, M, [include],    [U], [DPos]).
 declaration_pos(use_module(U), DPos, M, M, [use_module], [U], [DPos]).
 declaration_pos(reexport(U),   DPos, M, M, [reexport],   [U], [DPos]).
 declaration_pos(consult(U),    DPos, M, M, [consult],    [U], [DPos]).
+declaration_pos(reexport(U, L), DPos, M, M,
+		[reexport_2, reexport(U)], [reexport(U, L), L], [DPos, Pos]) :-
+    DPos = term_position(_, _, _, _, [_, Pos]).
 declaration_pos(use_module(U, L), DPos, M, M,
 		[use_module_2, import(U)], [use_module(U, L), L], [DPos, Pos]) :-
     DPos = term_position(_, _, _, _, [_, Pos]).
