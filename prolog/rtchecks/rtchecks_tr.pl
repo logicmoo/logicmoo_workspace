@@ -337,9 +337,8 @@ proper_warning_flags(C,
 		     [(:- pop_prolog_flag(discontiguous_warnings)),
 		      (:- pop_prolog_flag(multi_arity_warnings)),
 		      end_of_file]).
-		     
-rtchecks_sentence_tr(0, _, _, _) :- !.
 :- endif.
+rtchecks_sentence_tr(0, _, _, _) :- !.
 rtchecks_sentence_tr(end_of_file, Clauses, M, _) :-
 	!,
 	runtime_checkable(M),
