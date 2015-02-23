@@ -1,31 +1,41 @@
 :- module(infer_alias,
-	  [fastest_alias/2,
+	  [infer_alias/3,
+	   fastest_alias/2,
+	   library_alias/2,
 	   smallest_alias/2,
 	   current_alias/2,
 	   pretty_path/2
 	  ]).
 
-fastest_alias(File, CAlias) :-
-    findall(s(Size1,Size2)-Alias,
+infer_alias(File, CAlias, OptionL) :-
+    select_option(sort(SortL), OptionL, _, []),
+    findall(SortTerm-Alias,
 	    ( current_alias(File, Alias),
-	      Alias =.. [A0, _],
-	      findall(A0, user:file_search_path(A0, _), L),
-	      length(L, Size1),
-	      term_to_atom(Alias, A1),
-	      atom_length(A1, Size2)
+	      Alias =.. [AName, _],
+	      maplist(sort_field(Alias, AName), SortL, SortTerm)
 	    ), SA),
     sort(SA, [_-CAlias|_]).
 
-smallest_alias(File, CAlias) :-
-    findall(s(Size2,Size1)-Alias,
-	    ( current_alias(File, Alias),
-	      Alias =.. [A0, _],
-	      findall(A0, user:file_search_path(A0, _), L),
-	      length(L, Size1),
-	      term_to_atom(Alias, A1),
-	      atom_length(A1, Size2)
-	    ), SA),
-    sort(SA, [_-CAlias|_]).
+sort_field(_, A, alias(L), N) :-
+    ( nth0(N, L, A)
+    ->true
+    ; length(L, N)
+    ).
+sort_field(_, A,       sols, N) :-
+    findall(A, user:file_search_path(A, _), L),
+    length(L, N).
+sort_field(Alias, _, size, N) :-
+    term_to_atom(Alias, Atom),
+    atom_length(Atom, N).
+
+fastest_alias(File, Alias) :-
+    infer_alias(File, Alias, [sort([sols, size])]).
+
+library_alias(File, Alias) :-
+    infer_alias(File, Alias, [sort([alias([library]), sols, size])]).
+
+smallest_alias(File, Alias) :-
+    infer_alias(File, Alias, [sort([size, sols])]).
 
 current_alias(File, Alias) :-
     user:file_search_path(A0, ADir),
