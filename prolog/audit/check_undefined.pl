@@ -2,6 +2,7 @@
 
 % A wrapper from library(check) to tools(audit)
 :- use_module(library(prolog_codewalk)).
+:- use_module(library(infer_alias)).
 :- use_module(library(location_utils)).
 :- use_module(library(referenced_by)).
 :- use_module(library(check), []).
@@ -36,9 +37,16 @@ hide_undef(M:H) :- hide_undef(H, M).
 
 find_alternatives(M:F/A, AL) :-
     functor(H, F, A),
-    findall(AM, ( current_predicate(AM:F/A),
+    findall(AA, ( current_predicate(AM:F/A),
 		  AM \= M,
-		  \+ predicate_property(AM:H, imported_from(_))
+		  \+ predicate_property(AM:H, imported_from(_)),
+		  ( module_property(AM, file(AF))
+		  ->( library_alias(AF, AA)
+		    ->true
+		    ; AA = AF
+		    )
+		  ; AA=AM
+		  )
 		), AU),
     sort(AU, AL).
 
