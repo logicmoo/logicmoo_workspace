@@ -557,8 +557,8 @@ assertion_records(M, Dict, doc(Key, Doc),
 				 term_position(From, To, FFrom, FTo,
 					       [KPos, 0-0, DPos, 0-0 ])])) :- !.
 % Note: We MUST save the full location (File, HPos), because later we will not
-% have access to source_location/2, because it will fails for further
-% created clauses --EMM
+% have access to source_location/2, and it will fails for further created
+% clauses --EMM
 assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
     Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, Loc) :- FBody),
