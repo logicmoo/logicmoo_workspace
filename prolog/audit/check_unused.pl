@@ -12,6 +12,9 @@
 
 :- use_module(library(auditable_predicate)).
 :- use_module(library(current_defined_predicate)).
+:- use_module(library(apply)).
+:- use_module(library(clambda)).
+:- use_module(library(commited_retract)).
 :- use_module(library(is_entry_point)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
@@ -23,7 +26,7 @@
 :- multifile
     prolog:message//1.
 
-:- dynamic marked/3, calls_to/2, arc/2, scc1/2, node_scc/2.
+:- dynamic marked/3, calls_to/2, edge/2, node/3, scc1/2, node_scc/2.
 
 check_pred_file(Ref, FromChk) :-
     property_from(Ref, _, From),
@@ -48,7 +51,7 @@ check_unused(OptionL, Pairs) :-
 cleanup_unused :-
     retractall(calls_to(_, _)),
     retractall(marked(_, _, _)),
-    retractall(arc(_, _)),
+    retractall(edge(_, _)),
     retractall(scc1(_, _)),
     retractall(node_scc(_, _)).
 
@@ -139,10 +142,7 @@ put_mark(CRef) :-
     ; true
     ).
 
-% Tarjan's scc algorithm:
-:- use_module(library(scc)).
-
-current_arc(Nodes, X, Y) :-
+current_edge(Nodes, X, Y) :-
     ( PI = M:F/A,
       member(X, Nodes),
       ( X = PI
@@ -170,123 +170,61 @@ current_arc(Nodes, X, Y) :-
     ).
 
 % Note: although is not nice, we are using dynamic predicates to cache partial
-% results for performance reasons (arc/2, node_scc/2, scc1/2), otherwise the
+% results for performance reasons (edge/2, node_scc/2, scc1/2), otherwise the
 % analysis will take 20 times more --EMM
 %
 sweep(M, FromChk, Pairs) :-
     findall(Node, unmarked(M, FromChk, Node), UNodes),
     sort(UNodes, Nodes),
-    forall(current_arc(Nodes, X, Y), assertz(arc(X, Y))),
-    findall(arc(X, Y), arc(X, Y), Arcs),
-    nodes_arcs_sccs(Nodes, Arcs, SU),
-    sort(SU, SL),
-    table_sccs(SL),
-    findall(I1-I2,
-	    ( node_scc(Node1, I1),
-	      ( arc(Node1, Node2),
-		node_scc(Node2, I2),
-		I2 \= I1
-	      *->true
-	      ; I2 = []
-	      )
-	    ), IU),
-    sort(IU, IL),
-    maplist(ipairs_scc, IL, DU),
-    sort(DU, DL),
-    maplist(add_adj_key, DL, Pairs).
+    forall(current_edge(Nodes, X, Y), assertz(edge(X, Y))),
+    findall(warning-edge(X, Y), edge(X, Y), Pairs, Tail),
+    findall(warning-Row,
+	    [Nodes, Row] +\ 
+	    ( member(Node, Nodes),
+	      findall(Loc/D, property_location(Node, D, Loc), LocDL),
+	      findall(Caller, ( edge(Caller, Node),
+				Caller \= Node
+			      ), L),
+	      findall(Caller, edge(Node, Node), T),
+	      length(L, NCaller),
+	      length(T, NLoop),
+	      findall(Callee, edge(Node, Callee), N),
+	      length(N, NCallee),
+	      Row = node(sort_by(NCaller, NLoop, NCallee), Node, LocDL)),
+	    Tail).
 
-ipairs_scc(I-[], SCC-[]) :- !,
-    scc1(I, SCC).
-ipairs_scc(I1-I2, SCC1-SCC2) :-
-    scc1(I1, SCC1),
-    scc1(I2, SCC2).
+% Due to the nature of this algorithm, its 'declarative' equivalent is by far
+% more difficult to understand, maintain and much slower, instead it is
+% implemented using dynamic facts.
+audit:prepare_results(unused, Pairs, Results) :-
+    maplist(\ (warning-Value)^Value^true, Pairs, Values),
+    sort(Values, Sorted),
+    partition(\ node(_, _, _)^true, Sorted, Nodes, Edges),
+    retractall(node(_, _, _)),
+    retractall(edge(_, _)),
+    maplist(assertz, Nodes),
+    maplist(assertz, Edges),
+    compact_results(Compact),
+    maplist(\ Result^(warning-Result)^true, Compact, Results).
 
-table_sccs(SCCL) :-
-    forall(nth1(Idx, SCCL, SCC),
-	   ( assertz(scc1(Idx, SCC)),
-	     forall(member(Node, SCC),
-		    assertz(node_scc(Node, Idx)))
-	   )).
+compact_results(Results) :-
+    findall(Result, compact_result(_, Result), Results).
+
+compact_result(Node, node(SortBy, Node, LocDL, EdgeL)-Results) :-
+    commited_retract(node(SortBy, Node, LocDL)),
+    findall(Edge, ( clause(edge(Node, Edge), _, Ref),
+		    \+ node(_, Edge, _),
+		    erase(Ref)
+		  ), EdgeL),	% Edges to already reported nodes
+    findall(Result, ( commited_retract(edge(Node, Edge)),
+		      compact_result(Edge, Result)
+		    ), Results).
 
 /*
 sweep(Ref, Pairs) :-
     findall(warning-(Loc-(PI/D)), ( unmarked(Ref, PI),
 				    property_location(PI, D, Loc)), Pairs).
 */
-
-add_warning_key(L, warning-L).
-
-audit:prepare_results(unused, Pairs, Results) :-
-    maplist(add_adj_key, DU, Pairs),
-    sort(DU, DL),
-    group_pairs_by_key(DL, AL),
-    partial_dependency_tree(dependent_scc_al, AL, PL),
-    add_location_info(add_location_al(Pairs), PL, PIR),
-    maplist(add_warning_key, PIR, Results).
-
-add_location_al(AL, PI, L) :-
-    member(warning-(PILocDL/_), AL),
-    member(PI/LocDL, PILocDL),
-    findall(Loc-(PI/D), member(Loc/D, LocDL), U),
-    sort(U, L).
-
-prop_loc_desc(PI, PI/LocDL) :-
-    ( nonvar(LocDL)		% allow reversibility
-    ->true
-    ; findall(Loc/D, property_location(PI, D, Loc), LocDU),
-      sort(LocDU, LocDL)
-    ).
-
-add_adj_key(HL-L, warning-(PILocDL/L)) :-
-    maplist(prop_loc_desc, HL, PILocDL). 
-
-/*
-:- meta_predicate adjacency(+, 2, +, -).
-adjacency(SL, Dependent, S, S-L) :-
-    findall(D, ( member(D, SL),
-		 D \= S,
-		 call(Dependent, S, D)
-	       ),
-	    L).
-*/
-
-dependent_scc_al(SCC1-AL, SCC2-_) :-
-    ( SCC1 \= []
-    ->memberchk(SCC2, AL)
-    ; true
-    ).
-
-root_node(Dependent, SL, S0, S) :-
-    call(Dependent, S0, S),
-    \+ ( member(S2, SL),
-	 S2 \= S,
-	 call(Dependent, S2, S)
-       ).
-
-:- meta_predicate partial_dependency_tree(2,+,-).
-
-partial_dependency_tree(Dependent, SL, L) :-
-    partial_dependency_tree(Dependent, []-[], []-L, SL, []).
-
-partial_dependency_tree(Dependent, S-A, S-L, SL0, SL) :-
-    partition(root_node(Dependent, SL0, S-A), SL0, RL, SL1),
-    maplist_dcg(partial_dependency_tree(Dependent), RL, L, SL1, SL).
-
-:- meta_predicate add_location_info(2, +, -).
-add_location_info(LI, L, R) :- add_location_info_(L, LI, R).
-
-add_location_info_(L, LI, R) :-
-    is_list(L),
-    !,
-    maplist(add_location_info(LI), L, U),
-    sort(U, R).
-add_location_info_(A-B, LI, C-D) :-
-    add_location_info_(A, LI, C),
-    add_location_info_(B, LI, D).
-add_location_info_(M:PI, LI, L) :-
-    call(LI, M:PI, L).
-add_location_info_(H/I, LI, L) :-
-    call(LI, H/I, L).
 
 unmarked(M, FromChk, Node) :-
     Ref = M:H,
@@ -329,30 +267,38 @@ prolog:message(acheck(unused)) -->
      'meta_predicate declaration.  In any case this represents a', nl,
      'bad design and must be fixed, either completing the program,',nl,
      'or exporting/removing the unreferenced predicates.', nl, nl].
-prolog:message(acheck(unused, PIDL-PIL)) -->
-    message_unused_scc(PIDL, ['*', ' ']),
-    maplist_dcg(maplist_dcg(message_unused_rec([' ', ' ', ' ', ' '])), PIL).
+prolog:message(acheck(unused, Node-EdgeLL)) -->
+    message_unused_node(Node, ['*', ' ']),
+    maplist_dcg(maplist_dcg(message_unused_rec([' ', ' ', ' ', ' '])), EdgeLL).
 
-message_unused_one([], Level, Level) --> [].
-message_unused_one([PID|PIDL], Level0, Level) -->
-    message_unused(Level0, PID),
-    { Level0 = [_, _|Level1],
-      Level  = [' ', ' '|Level1]
+message_unused_node(node(sort_by(N, L, _), PI, LocDL, _ARL), Level) -->
+    { R is N + L,
+      unused_type(R, T)
     },
-    maplist_dcg(message_unused(Level), PIDL).
+    /* Uncomment to help debugging:
+    ( { Level = ['*'|_],
+	N \= 0
+      }
+    ->( {ARL \= []}
+      ->['In ~w ~w, called from ~w: calls to unused ~w already reported'-[T, PI, L, ARL], nl]
+      ; ['In ~w ~w: called from ~w'-[T, PI, L], nl]
+      )
+    ; []
+    ),
+    */
+    maplist_dcg(message_unused(T, Level, PI), LocDL).
 
-message_unused_scc([PIDL|PIDLL], Level0) -->
-    message_unused_one(PIDL, Level0, Level),
-    maplist_dcg(maplist_dcg(message_unused([' ', ' '|Level])), PIDLL).
+message_unused_rec(Level, Node-EdgeL) -->
+    message_unused_node(Node, Level),
+    maplist_dcg(message_unused_rec([' ', ' '|Level]), EdgeL).
 
-message_unused_rec(Level, PIDL-PIL) -->
-    message_unused_scc(PIDL, Level),
-    maplist_dcg(message_unused_rec([' ', ' '|Level]), PIL).
-
-message_unused(Level, Loc-(PI/D)) -->
+message_unused(T, Level, PI, Loc/D) -->
     Level,
     Loc,
-    ['unused ~w: ~w'-[D, PI], nl].
+    ['~w ~w: ~w'-[T, D, PI], nl].
+
+unused_type(0, 'unreferenced') :- !.
+unused_type(_, 'unreachable' ).
 
 % Hook to hide unused messages:
 :- multifile hide_unused/2.
