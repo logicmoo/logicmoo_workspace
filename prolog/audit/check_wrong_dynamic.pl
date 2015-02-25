@@ -34,6 +34,9 @@ hide_var_dynamic(check_unused:mark_to_head/2).
 hide_var_dynamic(check_unused:current_arc/3).
 hide_var_dynamic(ontrace:match_clause/5).
 hide_var_dynamic(foreign_props:type_desc/2).
+hide_var_dynamic(audit:prepare_results/3).
+hide_var_dynamic(check_unused:current_edge/3).
+hide_var_dynamic(commited_retract:commited_retract/1).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -69,15 +72,15 @@ check_wrong_dynamic(FromChk, OptionL0, Pairs) :-
 			on_trace(collect_wrong_dynamic(M))|OptionL])
     ),
     decl_walk_code(collect_wrong_dynamic(M, FromChk), M),
-    collect_result(M:_, Pairs),
+    collect_result(M:_, FromChk, Pairs),
     cleanup_dynamic_db.
 
-collect_result(Ref, Pairs) :-
+collect_result(Ref, FromChk, Pairs) :-
     findall(Type-(as_dynamic(DType)-((Loc/PI)-(MLoc/MPI))),
 	    ( current_static_as_dynamic(Type, DType, Loc, PI, From, MPI),
 	      from_location(From, MLoc)), Pairs, Pairs1),
     findall(warning-(dynamic_as_static-(Loc-PI)),
-	    current_dynamic_as_static(Ref, Loc, PI), Pairs1, Pairs2),
+	    current_dynamic_as_static(Ref, FromChk, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
 	    ( retract(var_dynamic_db(From, PI)),
 	      check:predicate_indicator(From, CI, []),
@@ -101,7 +104,8 @@ current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
       once(property_location(PI, _, Loc))      
     ).
 
-current_dynamic_as_static(Ref, Loc, PI) :-
+:- meta_predicate current_dynamic_as_static(?, 1, -, ?).
+current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     Ref = M:H,
     PI = M:F/A,
     ( var(H) ->
@@ -112,12 +116,14 @@ current_dynamic_as_static(Ref, Loc, PI) :-
     ),
     auditable_predicate(Ref),
     predicate_property(Ref, dynamic),
+    property_from(PI, dynamic, From),
+    call(FromChk, From),
     %% if multifile, would be modified externally
     \+ predicate_property(Ref, multifile),
     \+ ( wrong_dynamic_db(_, Type, PI, _),
 	 memberchk(Type,[def,retract])
        ),
-    property_location(PI, dynamic, Loc).
+    from_location(From, Loc).
 
 prolog:message(acheck(wrong_dynamic, Type-List)) -->
     wrong_dynamic_message(Type, List).
