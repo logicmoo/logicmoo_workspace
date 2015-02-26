@@ -632,7 +632,6 @@ declare_foreign_bind_(_, _, _, _, _, _, _).
 
 declare_foreign_bind_arg(Head, M, Comp, Call, Succ, Glob, Arg) :-
     bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-    (Spec \= type(gtkWidget)->true;gtrace),
     ctype_barg_decl(Spec, Mode, Decl, []),
     format('~s', [Decl]).
 
