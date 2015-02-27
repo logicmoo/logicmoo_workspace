@@ -83,6 +83,8 @@ collect_trivial_fail_2r(M, FromChk, MGoal, Caller, From) :-
 collect_trivial_fail(M, MCall, Caller, From) :-
     record_location_meta(MCall, M, From, all_call_refs, cu_caller_hook(Caller)).
 
+:- use_module(library(abstract_interpreter)).
+
 cu_caller_hook(Caller, M:H, CM, _, _, _, From) :-
     atom(CM),
     callable(H),
@@ -96,9 +98,7 @@ cu_caller_hook(Caller, M:H, CM, _, _, _, From) :-
       ),
       MGoal = M:Goal,
       Args = [Caller, MGoal],
-      ( \+ ( clause(MGoal, _)
-	   ; dyn_defined(MGoal)
-	   )
+      ( \+ abstract_interpreter(CM:Goal, head_abstraction)
       ->( \+ ( trivial_fail(From0, Args),
 	       subsumes_from(From, From0 )
 	     )
