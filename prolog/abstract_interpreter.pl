@@ -8,7 +8,7 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(solution_sequences)).
-:- use_module(library(tabling)).
+% :- use_module(library(tabling)).
 
 :- dynamic inferred/6.
 
@@ -25,7 +25,7 @@ abstract_interpreter(M:Goal, Abstraction) :-
     abstract_interpreter(Goal, M, Abstraction, [], [], _).
 
 abstract_interpreter_body(Goal, M, Abs, State, R0, R) :-
-    distinct_result(abstract_interpreter_body(Goal, M, Abs, State, R0, R)).
+    distinct_result(abstract_interpreter_body_(Goal, M, Abs, State, R0, R)).
 
 :- meta_predicate distinct_result(0).
 distinct_result(Goal) :-
@@ -91,6 +91,10 @@ cut_if_no_bottom(CP) --> {prolog_cut_to(CP)}.
 abstract_interpreter(H, M, Abs, State, R0, R) :-
     distinct_result(abstract_interpreter_(H, M, Abs, State, R0, R)).
 
+:- meta_predicate catch(2, ?, ?, ?, ?).
+catch(DCG, Ex, H, S0, S) :-
+    catch(call(DCG, S0, S), Ex, H).
+
 abstract_interpreter_(H, M, Abs, State0 ) --> 
     { predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(M:H, Meta, Goal)
@@ -102,9 +106,6 @@ abstract_interpreter_(H, M, Abs, State0 ) -->
     ; {get_context_body(Goal, M, CM)},
       catch(abstract_interpreter_body(Body, CM, Abs, State), fail_branch, fail)
     ).
-
-catch(DCG, Ex, H, S0, S) :-
-    catch(call(DCG, S0, S), Ex, H).
 
 get_context_body(Goal, M, CM) :-
       ( predicate_property(M:Goal, transparent)
