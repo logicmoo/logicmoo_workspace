@@ -7,66 +7,72 @@
 :- use_module(library(term_size)).
 :- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
+:- use_module(library(solution_sequences)).
+:- use_module(library(tabling)).
 
 :- dynamic inferred/6.
 
 :- meta_predicate abstract_interpreter(+,+,7,-).
-abstract_interpreter(Goal, M, Abstraction, data(N, S, Result)) :-
-    setup_call_cleanup(
-       nb_setval(ai_data, 0-[]),
-       ( ( abstract_interpreter(Goal, M, Abstraction, [], [], Result)
-	 *->true
-	 ; Result = fail
-	 ),
-	 nb_getval(ai_data, N-S)
-       ),
-       nb_delete(ai_data)).
+abstract_interpreter(Goal, M, Abstraction, data(0, [], Result)) :-
+    ( abstract_interpreter(Goal, M, Abstraction, [], [], Result)
+    *->true
+    ; Result = fail
+    ).
 
 abstract_interpreter(M:Goal, Abstraction) :-
     abstract_interpreter(Goal, M, Abstraction, [], [], _).
 
-abstract_interpreter_body(Goal, M, _, _) -->
+abstract_interpreter_body(Goal, M, Abs, State, R0, R) :-
+    distinct_result(abstract_interpreter_body(Goal, M, Abs, State, R0, R)).
+
+:- meta_predicate distinct_result(0).
+distinct_result(Goal) :-
+    distinct(H, ((Goal),variant_sha1(Goal,H))).
+
+abstract_interpreter_body_(Goal, M, _, _) -->
     {var(Goal) ; var(M)}, bottom, !.
-abstract_interpreter_body(M:Goal, _, Abs, State) --> !,
+abstract_interpreter_body_(M:Goal, _, Abs, State) --> !,
     abstract_interpreter_body(Goal, M, Abs, State).
-abstract_interpreter_body(call(Goal), M, Abs, State) --> !,
+abstract_interpreter_body_(call(Goal), M, Abs, State) --> !,
     abstract_interpreter_body(Goal, M, Abs, State).
-abstract_interpreter_body(\+ A, M, Abs, State) --> !,
+abstract_interpreter_body_(\+ A, M, Abs, State) --> !,
     ( abstract_interpreter_body(A, M, Abs, State)
     ->bottom %% We can not say that is always true
     ; []
     ).
-abstract_interpreter_body((A, B), M, Abs, State) --> !,
-    { terms_share(A, B)
-    ->CutOnFail = fail
-    ; CutOnFail = true
+abstract_interpreter_body_((A, B), M, Abs, State) --> !,
+    { \+ terms_share(A, B)
+    ->CutOnFail = true
+    ; CutOnFail = fail
     },
     abstract_interpreter_body(A, M, Abs, State),
     ( abstract_interpreter_body(B, M, Abs, State)
     *->[]
-    ; { CutOnFail = true
+    ; { CutOnFail == true
       ->!, fail			% The whole body will fail
       }
     ).
-abstract_interpreter_body((A;B), M, Abs, State) --> !,
-    ( abstract_interpreter_body(A, M, Abs, State)
+abstract_interpreter_body_((A;B), M, Abs, State) --> !,
+    ( catch(abstract_interpreter_body(A, M, Abs, State), fail_branch, fail)
     ; abstract_interpreter_body(B, M, Abs, State)
     ).
-abstract_interpreter_body(A->B, M, Abs, State) --> !,
+abstract_interpreter_body_(A->B, M, Abs, State) --> !,
     {prolog_current_choice(CP)},
-    { terms_share(A, B)
-    ->CutOnFail = fail
-    ; CutOnFail = true
+    { \+ terms_share(A, B)
+    ->CutOnFail = true
+    ; CutOnFail = fail
     },
     abstract_interpreter_body(A, M, Abs, State),
     cut_if_no_bottom(CP),	% loose of precision
-    ( abstract_interpreter_body(B, M, Abs, State)
+    ( catch(abstract_interpreter_body(B, M, Abs, State),
+	    fail_branch,
+	    CutOnFail = true)
     *->[]
-    ; { CutOnFail = true
+    ; { CutOnFail == true
       ->!, fail
       }
     ).
-abstract_interpreter_body(H, M, Abs, State) -->
+abstract_interpreter_body_(H, M, Abs, State) -->
     abstract_interpreter(H, M, Abs, State).
 
 terms_share(A, B) :-
@@ -80,7 +86,10 @@ terms_share(A, B) :-
 cut_if_no_bottom(_, bottom, bottom) :- !.
 cut_if_no_bottom(CP) --> {prolog_cut_to(CP)}.
 
-abstract_interpreter(H, M, Abs, State0 ) --> 
+abstract_interpreter(H, M, Abs, State, R0, R) :-
+    distinct_result(abstract_interpreter_(H, M, Abs, State, R0, R)).
+
+abstract_interpreter_(H, M, Abs, State0 ) --> 
     { predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
@@ -89,8 +98,11 @@ abstract_interpreter(H, M, Abs, State0 ) -->
     ( {Body = true}
     ->[]
     ; {get_context_body(Goal, M, CM)},
-      abstract_interpreter_body(Body, CM, Abs, State)
+      catch(abstract_interpreter_body(Body, CM, Abs, State), fail_branch, fail)
     ).
+
+catch(DCG, Ex, H, S0, S) :-
+    catch(call(DCG, S0, S), Ex, H).
 
 get_context_body(Goal, M, CM) :-
       ( predicate_property(M:Goal, transparent)
@@ -113,12 +125,15 @@ match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).
 
 match_head(Goal, M, true, _, _) -->
     {predicate_property(M:Goal, interpreted)}, !,
-    {match_head_body(Goal, M, Body)},
+    { match_head_body(Goal, M, Body)
+    *->true
+    ; throw(fail_branch)
+    },
     ( {Body = true}
     ->[]
     ; bottom %% loose of precision
     ).
-match_head(fail, _, _,    _, _) --> !, {fail}.
+match_head(fail, _, _,    _, _) --> !, {throw(fail_branch)}.
 match_head(true, _, true, _, _) --> !, [].
 match_head(!,    _, true, _, _) --> !, [].
 match_head(_,    _, true, _, _) --> bottom.
@@ -158,12 +173,7 @@ match_noloops(Goal, M, Body, S, [M:F/A-Size|S]) -->
       []
     ; bottom %% loose of precision
     ).
-match_noloops(fail, _, _,    S, _) --> !,
-    { nb_getval(ai_data, L-_),
-      length(S, N),
-      ( N > L -> nb_setval(ai_data, N-S) ; true ),
-      fail
-    }.
+match_noloops(fail, _, _,    _, _) --> !, {throw(fail_branch)}.
 match_noloops(true, _, true, S, S) --> !, [].
 match_noloops(!,    _, true, S, S) --> !, [].
 match_noloops(_,    _, true, S, S) --> bottom.
