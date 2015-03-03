@@ -14,7 +14,9 @@
 
 :- meta_predicate abstract_interpreter(+,+,7,-).
 abstract_interpreter(Goal, M, Abstraction, data(0, [], Result)) :-
-    ( abstract_interpreter(Goal, M, Abstraction, [], [], Result)
+    ( catch(abstract_interpreter(Goal, M, Abstraction, [], [], Result),
+	    fail_branch,
+	    fail)
     *->true
     ; Result = fail
     ).
