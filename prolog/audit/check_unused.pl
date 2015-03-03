@@ -181,7 +181,8 @@ sweep(M, FromChk, Pairs) :-
     findall(warning-Row,
 	    [Nodes, Row] +\ 
 	    ( member(Node, Nodes),
-	      findall(Loc/D, property_location(Node, D, Loc), LocDL),
+	      findall(Loc/D, property_location(Node, D, Loc), LocDU),
+	      sort(LocDU, LocDL),
 	      findall(Caller, ( edge(Caller, Node),
 				Caller \= Node
 			      ), L),
