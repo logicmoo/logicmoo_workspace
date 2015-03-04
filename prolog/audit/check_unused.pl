@@ -26,7 +26,7 @@
 :- multifile
     prolog:message//1.
 
-:- dynamic marked/3, calls_to/2, edge/2, node/3, scc1/2, node_scc/2.
+:- dynamic marked/3, calls_to/2, edge/2, node/3.
 
 check_pred_file(Ref, FromChk) :-
     property_from(Ref, _, From),
@@ -51,9 +51,7 @@ check_unused(OptionL, Pairs) :-
 cleanup_unused :-
     retractall(calls_to(_, _)),
     retractall(marked(_, _, _)),
-    retractall(edge(_, _)),
-    retractall(scc1(_, _)),
-    retractall(node_scc(_, _)).
+    retractall(edge(_, _)).
 
 is_entry_caller('<initialization>') :- !.
 is_entry_caller(Ref) :- !,
@@ -170,8 +168,8 @@ current_edge(Nodes, X, Y) :-
     ).
 
 % Note: although is not nice, we are using dynamic predicates to cache partial
-% results for performance reasons (edge/2, node_scc/2, scc1/2), otherwise the
-% analysis will take 20 times more --EMM
+% results for performance reasons (edge/2), otherwise the analysis will take 20
+% times more --EMM
 %
 sweep(M, FromChk, Pairs) :-
     findall(Node, unmarked(M, FromChk, Node), UNodes),
