@@ -184,7 +184,7 @@ sweep(M, FromChk, Pairs) :-
 	      findall(Caller, ( edge(Caller, Node),
 				Caller \= Node
 			      ), L),
-	      findall(Caller, edge(Node, Node), T),
+	      findall(Node, edge(Node, Node), T),
 	      length(L, NCaller),
 	      length(T, NLoop),
 	      findall(Callee, edge(Node, Callee), N),
