@@ -3,7 +3,8 @@
 		       from_to_file_line_pos/5,
 		       subsumes_from/2]).
 
-:- use_module(library(prolog_clause), []).
+:- use_module(library(prolog_clause),   []).
+:- use_module(library(prolog_codewalk), []).
 
 from_to_file_line_pos(clause_term_position(ClauseRef, TermPos), File, CLine, TLine, Pos) :-
     clause_property(ClauseRef, file(File)),
