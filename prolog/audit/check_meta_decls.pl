@@ -14,9 +14,9 @@ prolog:message(acheck(meta_decls)) -->
     ['-----------------------------------',nl,
      'Missing Meta Predicate Declarations',nl,
      '-----------------------------------',nl,
-     'The predicates below requires a missing meta_predicate declaration.', nl,
+     'The predicates below require a missing meta_predicate declaration.', nl,
      'They have been automatically inferred. Although is not required, it', nl,
-     'is recommented to add them by hand or to fix the predicate in order', nl,
+     'is recommended to add them by hand or to fix the predicate in order', nl,
      'to facilitate static analysis and refactoring.', nl, nl].
 
 prolog:message(acheck(meta_decls, (Loc/M)-Specs)) -->
