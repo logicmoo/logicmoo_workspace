@@ -136,6 +136,11 @@ match_head(Goal, M, true, _, _) -->
     ->[]
     ; bottom %% loose of precision
     ).
+match_head(A=B,  _, true, _, _) --> !,
+    { A=B
+    ->true
+    ; throw(fail_branch)
+    }.
 match_head(fail, _, _,    _, _) --> !, {throw(fail_branch)}.
 match_head(true, _, true, _, _) --> !, [].
 match_head(!,    _, true, _, _) --> !, [].

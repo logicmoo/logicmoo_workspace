@@ -71,6 +71,7 @@ show_trivial_fail(failure(Caller, MGoal, S)) -->
     ['In ~q, failure for ~q, biggest failure chain was ~q'-[Caller, MGoal, S], nl].
 
 :- multifile ignore_predicate/2.
+ignore_predicate(_=_, _) :- !, fail.
 ignore_predicate(H, M) :-
     predicate_property(M:H, built_in),
     \+ predicate_property(M:H, dynamic), !.
@@ -101,7 +102,6 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, _, _, _, From) :-
     atom(CM),
     MGoal = M:H,
     callable(H),
-    predicate_property(M:H, interpreted),
     \+ ignore_predicate(H, M),
     variant_sha1(ai(H, CM), Hash),
     ( ai_cache_result(Hash, Data) -> true
