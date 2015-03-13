@@ -57,7 +57,34 @@ cgoal_args(G0, G, AL, EL) :-
 cgoal_args(\,  [G1|EL],    G, [], EL) :- remove_hats(G1, G, EL).
 cgoal_args(+\, [Fr,G1|EL], G, Fr, EL) :- remove_hats(G1, G, EL).
 
-lambdaize_args(A0, M, VL, Ex, A) :-
+singleton(T, _=V) :- occurrences_of_var(V, T, 1).
+
+have_name(VarL, _=Value) :-
+    member(Var, VarL),
+    Var==Value, !.
+
+bind_name(Name=_, Name).
+
+check_singletons(Goal, Term) :-
+    term_variables(Term, VarL),
+    ( b_getval('$variable_names', Bindings)
+    ->true
+    ; Bindings = []
+    ),
+    include(have_name(VarL), Bindings, VarN),
+    include(singleton(Term), VarN, VarSN),
+    ( VarSN \= []
+    ->maplist(bind_name, VarSN, Names),
+      print_message(warning, local_variables_outside(Names, Goal, Bindings))
+    ; true
+    ).
+
+prolog:message(local_variables_outside(Names, Goal, Bindings)) -->
+    [ 'Local variables ~w should not occurs outside lambda expression: ~W'
+    -[Names, Goal, [variable_names(Bindings)]] ].
+
+lambdaize_args(G, A0, M, VL, Ex, A) :-
+    check_singletons(G, h(VL, Ex, A0 )),
     ( ( Ex==[]
       ; '$member'(E1, Ex),
 	'$member'(E2, VL),
@@ -72,7 +99,7 @@ goal_expansion(G0, G) :-
     cgoal_args(G0, G1, AL, EL),
     '$set_source_module'(M, M),
     expand_goal(G1, G2),
-    lambdaize_args(G2, M, AL, EL, G3),
+    lambdaize_args(G0, G2, M, AL, EL, G3),
     % '$expand':wrap_meta_arguments(G2, M, AL, EL, G3), % Use this to debug
     G3 =.. [AuxName|VL],
     append(VL, EL, AV),
