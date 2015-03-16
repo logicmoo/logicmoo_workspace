@@ -57,7 +57,9 @@ cgoal_args(G0, G, AL, EL) :-
 cgoal_args(\,  [G1|EL],    G, [], EL) :- remove_hats(G1, G, EL).
 cgoal_args(+\, [Fr,G1|EL], G, Fr, EL) :- remove_hats(G1, G, EL).
 
-singleton(T, _=V) :- occurrences_of_var(V, T, 1).
+singleton(T, Name=V) :-
+    occurrences_of_var(V, T, 1),
+    \+ atom_concat('_', _, Name).
 
 have_name(VarL, _=Value) :-
     member(Var, VarL),
