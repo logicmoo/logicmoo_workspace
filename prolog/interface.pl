@@ -42,9 +42,8 @@ bind_interface(Interface, Implementation) :-
       ; existence_error(binding, Interface->Implementation)
       )
     ),
-    module_property(Implementation, file(File)),
     maplist(Interface:abolish, DIL),
-    Interface:use_module(File, DIL),
+    '$import_from_loaded_module'(Implementation, Interface, [imports(DIL)]),
     atom_concat(Interface, '$impl', II),
     maplist(II:abolish, IIL),
-    II:use_module(File, IIL).
+    '$import_from_loaded_module'(Implementation, II, [imports(IIL)]).
