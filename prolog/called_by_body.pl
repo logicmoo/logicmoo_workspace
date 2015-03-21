@@ -1,5 +1,7 @@
 :- module(called_by_body, [called_by_body/4]).
 
+:- use_module(library(implementation_module)).
+
 called_by_body(Body, CM, Body, CM) :- var(Body), !, fail.
 called_by_body(CM:Body, _, H, M) :- called_by_body(Body, CM, H, M).
 called_by_body((A,B),  CM, H, M) :- !,

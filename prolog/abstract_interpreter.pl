@@ -1,6 +1,7 @@
 :- module(abstract_interpreter, [abstract_interpreter/2,
 				 abstract_interpreter/4,
 				 match_head/7,
+				 match_ai/8,
 				 match_noloops/7]).
 
 :- use_module(library(extra_location)).
@@ -21,6 +22,7 @@ abstract_interpreter(Goal, M, Abstraction, data(0, [], Result)) :-
     ; Result = fail
     ).
 
+:- meta_predicate abstract_interpreter(?,7).
 abstract_interpreter(M:Goal, Abstraction) :-
     abstract_interpreter(Goal, M, Abstraction, [], [], _).
 
@@ -121,7 +123,7 @@ get_context_body(Goal, M, CM) :-
 
 bottom(_, bottom).
 
-:- multifile match_ai/7.
+:- multifile match_ai/8.
 
 match_ai(head,    G, M, Body, S0, S) --> match_head(   G, M, Body, S0, S).
 match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).

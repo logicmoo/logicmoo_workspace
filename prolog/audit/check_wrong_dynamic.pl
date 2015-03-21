@@ -36,6 +36,8 @@ hide_var_dynamic(foreign_props:type_desc/2).
 hide_var_dynamic(audit:prepare_results/3).
 hide_var_dynamic(check_unused:current_edge/3).
 hide_var_dynamic(commited_retract:commited_retract/1).
+hide_var_dynamic(ntabling:tabling/2).
+hide_var_dynamic(abstract_interpreter:match_head_body/3).
 
 :- dynamic
     wrong_dynamic_db/4,
