@@ -16,11 +16,13 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- comment_data:enable.
 
 /* $ctcex$
+
 ERROR: In assertions for [ctcex:a/2]
 ERROR: ctcex.pl:13: Compile-Time failure in assertion for ctcex:a(a,b).
 ERROR: 	In *compat*, unsatisfied properties: 
 ERROR: 		[int(a),list(b)].
 ERROR: ctcex.pl:16:0: Failed in ctcex:a(a,b).
+
 ERROR: In assertions for [ctcex:a/2]
 ERROR: ctcex.pl:13: Compile-Time failure in assertion for ctcex:a(1,b).
 ERROR: 	In *compat*, unsatisfied properties: 
