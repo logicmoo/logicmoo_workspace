@@ -4,6 +4,7 @@
 :- reexport(library(swi/rtchecks_lib)).
 :- use_module(library(compound_expand)).
 :- expects_dialect(ciao).
+:- use_package(rtchecks).
 :- use_module(rtchecks(rtchecks_tr)).
 :- set_prolog_flag(runtime_checks, yes).
 
