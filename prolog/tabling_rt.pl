@@ -1,75 +1,116 @@
-:- module(tabling, [tabling/1,
-		    cleanup_tabling_db/0,
-		    cleanup_tabling_db/1
-		   ]).
+:- module(tabling_rt, [(table)/2,
+		       abolish_table/1,
+		       abolish_all_tables/0
+		      ]).
 
 % Implementation of tabling using a separated thread for the goal continuation,
-% while its fetched results are memoized, they can be accesed in further calls
+% while its fetched results are memoized, they can be accessed in further calls
 % of the tabled goal.
+
+% TODO: implement yap interface:
+% show_table(+P)
+% table_statistics(+P)
+% tabling_statistics/0
+
+% This should not support dynamic predicates
+
+:- use_module(library(implementation_module)).
 
 :- dynamic
     tabling_db/2,
     tabled_db/1,
-    table_db/3.
+    table_db/4.
 
 cleanup_tabling_db :- cleanup_tabling_db(_).
 
 cleanup_tabling_db(Hash) :-
+    retractall(goal_table_db(_, _, Hash)),
     retractall(tabling_db(Hash, _)),
     retractall(tabled_db(Hash)),
-    retractall(table_db(Hash, _, _)).
+    retractall(table_db(Hash, _, _, _)).
 
-:- meta_predicate tabling(0).
+strip_goal_module(M0:Goal0, Goal, M) :-
+    strip_goal_module(Goal0, M0, Goal, M).
 
-tabling(MGoal) :-
-    variant_sha1(MGoal, Hash),
-    ( tabled_db(Hash)
-    ->table_db(Hash, _, MGoal)
-    ; \+ tabling_db(Hash, _)
-    ->install_goal_fetcher(MGoal, Hash)
-    ; fetch_goal_result(MGoal, Hash)
+strip_goal_module(CM:Goal0, _, Goal, M) :- !,
+    strip_goal_module(Goal0, CM, Goal, M).
+strip_goal_module(Goal, CM, Goal, M) :-
+    implementation_module(CM:Goal, IM),
+    ( predicate_property(CM:Goal, transparent)
+    ->M = CM
+    ; M = IM
     ).
 
-install_goal_fetcher(MGoal, Hash) :-
-    thread_create(do_install_goal_fetcher(MGoal, Hash), Id, []),
-    assertz(tabling_db(Hash, Id)),
-    fetch_goal_result(MGoal, Hash).
+:- meta_predicate abolish_table(0).
+abolish_table(CM:H) :-
+    strip_goal_module(H, CM, Goal, M),
+    forall(retract(goal_table_db(Goal, M, Hash)),
+	   ( abort_fetcher(Hash),
+	     cleanup_tabling_db(Hash)
+	   )).
 
-do_install_goal_fetcher(MGoal, Hash) :-
-    setup_call_cleanup(M=m(_),
-		       setup_goal_fetcher(MGoal, Hash, M),
+abort_fetcher(Hash) :-
+    forall(tabling_db(Hash, Id),
+	   thread_send_message(Id, c(a, Id))).
+    
+abolish_all_tables :-
+    abort_fetcher(_),
+    cleanup_tabling_db(_).
+
+:- meta_predicate table(+, 0).
+
+table(HKey, CM:H) :-
+    strip_goal_module(H, CM, Goal, M),
+    variant_sha1(M:HKey, Hash),
+    ( tabled_db(Hash)
+    ->table_db(Hash, _, HKey, M)
+    ; ( \+ tabling_db(Hash, _)
+      ->setup_fetcher(HKey, Goal, M, Hash)
+      ; true
+      ),
+      fetch_result(HKey, M, Hash)
+    ).
+
+setup_fetcher(HKey, Goal, M, Hash) :-
+    assertz(goal_table_db(HKey, M, Hash)),
+    thread_create(do_setup_fetcher(HKey, Goal, M, Hash), Id, []),
+    assertz(tabling_db(Hash, Id)).
+
+do_setup_fetcher(HKey, Goal, M, Hash) :-
+    setup_call_cleanup(IdH=m(_),
+		       run_fetcher(HKey, Goal, M, Hash, IdH),
 		       ( retractall(tabling_db(Hash, _)),
 			 assertz(tabled_db(Hash)),
-			 M = m(CId1),
-			 thread_send_message(CId1, end))).
+			 IdH = m(Id),
+			 thread_send_message(Id, end))).
 
-mini_shell(MGoal, M) :-
-    thread_get_message(c(Action, CId)),
+mini_shell(MGoal, IdH) :-
+    thread_get_message(c(Action, Id)),
     ( Action = c
-    ->nb_setarg(1, M, CId),
+    ->nb_setarg(1, IdH, Id),
       MGoal
     ; Action = a
     ->thread_exit(abort)
     ).
 
-setup_goal_fetcher(MGoal, Hash, M) :-
+run_fetcher(HKey, Goal, M, Hash, IdH) :-
     S = s(1),
-    mini_shell(MGoal, M),
+    mini_shell(M:Goal, IdH),
     ( S = s(N),
-      M = m(CId),
-      assertz(table_db(Hash, N, MGoal)),
-      thread_send_message(CId, done),
+      IdH = m(Id),
+      assertz(table_db(Hash, N, HKey, M)),
+      thread_send_message(Id, done),
       succ(N, N2),
       nb_setarg(1, S, N2)
     ),
-    mini_shell(fail, M).
+    mini_shell(fail, IdH).
 
 count(1).
 count(N) :- count(N1), N is N1 + 1.
 
-fetch_goal_result(MGoal, Hash) :-
+fetch_result(HKey, M, Hash) :-
     count(N),
-    ( table_db(Hash, N, MGoal)
+    ( table_db(Hash, N, HKey, M)
     ->true
     ; tabling_db(Hash, Id)
     ->thread_self(CId),
@@ -80,7 +121,7 @@ fetch_goal_result(MGoal, Hash) :-
       %% thread_join(Id, _Status)
       ; true
       ),
-      table_db(Hash, N, MGoal)
+      table_db(Hash, N, HKey, M)
     ; !,
       fail
     ).
