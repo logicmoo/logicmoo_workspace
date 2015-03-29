@@ -237,33 +237,23 @@ code(Code) :-
     Code =< 0x7FFFFFFF,
     code_type(Code, _).
 
-% i18n_process_term(_, Var, Var) :- % TODO: Optimize predicate, too many duplicated steps
-%     var(Var),
-%     !.
-i18n_process_term(Proc, M, Term, Translation) :-
-    nonvar(Term),
-    var(Translation),
-    !,
-    i18n_to_translate(Term, Translation, KeyValues, []),
-    pairs_keys_values(KeyValues, Keys, Values),
+i18n_process_term(Proc, M, Term, Tran) :-
+    translation_keys_values(Term, Tran, Keys, Values),
     call(Proc, M, Keys, Values).
-i18n_process_term(Proc, M, Term, Translation) :-
-    var(Term),
-    nonvar(Translation),
-    !,
-    i18n_to_translate(Translation, Term, ValueKeys, []),
-    pairs_keys_values(ValueKeys, Values, Keys),
-    call(Proc, M, Keys, Values).
-i18n_process_term(Proc, M, Term, Translation) :-
-    % nonvar(Term),
-    % nonvar(Translation),
-    % !,
-    i18n_to_translate(Term, Translation, KeyValues, []),
-    i18n_to_translate(Translation, Term, ValueKeys, []),
-    pairs_keys_values(KeyValues, Keys, Values),
-    pairs_keys_values(ValueKeys, Values, Keys),
-    call(Proc, M, Keys, Values).
-		  
+
+translation_keys_values(Term, Tran, Keys, Values) :-
+    ( nonvar(Tran)->NVTran=true ; NVTran=fail ),
+    ( nonvar(Term)
+    ->i18n_to_translate(Term, Tran, KeyValues, []),
+      pairs_keys_values(KeyValues, Keys, Values)
+    ; true
+    ),
+    ( NVTran==true
+    ->i18n_to_translate(Tran, Term, ValueKeys, []),
+      pairs_keys_values(ValueKeys, Values, Keys)
+    ; true
+    ).
+
 i18n_to_translate(Var, Var) -->
     {var(Var)},
     !.
