@@ -27,7 +27,7 @@ check_dir_file(Dir, File) :-
     directory_file_path(Dir, _, File).
 check_dir_file(Dir, File) :-
     % here, we need all the files, even if the option specifies only loaded
-    % files, because if not, included files without clauses will be ignored
+    % files, otherwise included files without clauses will be ignored
     directory_source_files(Dir, FileL, [recursive(true), if(false)]),
     member(File, FileL).
 
