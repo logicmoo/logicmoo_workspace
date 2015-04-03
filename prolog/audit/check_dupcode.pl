@@ -80,7 +80,7 @@ duptype_elem(predicate, H, M, FileChk, DupId, M:F/A) :-
     functor(H, F, A).
 
 duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-
-    extra_location(H, M, T, From),
+    loc_declaration(H, M, T, From),
     \+ ignore_dupcode(H, M, declaration(T)),
     from_chk(FileChk, From),
     \+ memberchk(T, [goal, assertion(_,_)]),

@@ -61,7 +61,7 @@ collect_imports(M, FromChk, M:Goal, Caller, From) :-
 
 collect_imports(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
-	    ( clause(extra_location(Head, M, import(U), From), _, CRef),
+	    ( clause(loc_declaration(Head, M, import(U), From), _, CRef),
 	      call(FromChk, From),
 	      M \= user,
 	      \+ memberchk(Head, [term_expansion(_,_),
@@ -70,7 +70,7 @@ collect_imports(M, FromChk, Pairs, Tail) :-
 				  goal_expansion(_,_,_,_)
 				 ]),
 	      \+ used_import(CRef),
-	      \+ extra_location(Head, M, goal, _),
+	      \+ loc_declaration(Head, M, goal, _),
 	      module_property(M, class(Class)),
 	      memberchk(Class, [user]),
 	      functor(Head, F, A),
@@ -85,7 +85,7 @@ ignore_import(M, IM) :- expansion_module(M, IM).
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
 	    [M,FromChk,U,Loc] +\
-	   ( extra_location(U, M, use_module, From),
+	   ( loc_declaration(U, M, use_module, From),
 	     call(FromChk, From),
 	     M \= user,
 	     module_property(M, class(Class)),
@@ -116,7 +116,7 @@ mark_import(M:Head, CM, _, _, _, _) :-
     mark_import(Head, M, CM).
 
 mark_import(Head, M, CM) :-
-    forall(( clause(extra_location(Head, CM, import(_), _), _, CRef),
+    forall(( clause(loc_declaration(Head, CM, import(_), _), _, CRef),
 	     \+ used_import(CRef)),
 	   assertz(used_import(CRef))),
     ( M \= CM,

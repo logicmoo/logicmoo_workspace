@@ -12,7 +12,7 @@
 :- dynamic rl_tmp/3. % trick to detect if term_expansion was applied
 
 % Extra location for assertions of a given predicate
-extra_location:extra_location(Head, M, assertion(Status, Type), From) :-
+extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
     clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
 
 :- multifile skip_record_decl/1.
@@ -133,7 +133,7 @@ assert_position(H, M, Type, Pos) :-
 
 assert_location(H, M, Type, From) :-
     ( \+ have_extra_location(From, H, M, Type)
-    ->compile_aux_clauses(extra_location:extra_location(H, M, Type, From))
+    ->compile_aux_clauses(extra_location:loc_declaration(H, M, Type, From))
     ; true
     ).
 

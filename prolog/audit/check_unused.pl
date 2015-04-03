@@ -60,7 +60,7 @@ is_entry_caller(Ref) :- !,
 
 entry_caller(M, H) :-
     ( is_entry_point(H, M) -> true
-    ; extra_location(H, M, goal, _)
+    ; loc_declaration(H, M, goal, _)
     ).
 
 entry_point(M, Caller) :-
@@ -239,12 +239,12 @@ unmarked(M, FromChk, Node) :-
 	  nth_clause(M:H, I, CRef),
 	  \+ marked(H, M, I),
 	  Node = MPI/I
-	; extra_location(H, M, dynamic(def, _, _), _),
+	; loc_dynamic(H, M, dynamic(def, _, _), _),
 	  \+ marked(H, M, 0 ),
 	  Node = MPI/0
 	)
       )
-    ; extra_location(H, M, dynamic(def, _, _), _),
+    ; loc_dynamic(H, M, dynamic(def, _, _), _),
       functor(H, F, A),
       \+ current_defined_predicate(MPI),
       auditable_predicate(Ref),
