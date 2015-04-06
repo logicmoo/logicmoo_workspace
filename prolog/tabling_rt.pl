@@ -1,3 +1,32 @@
+/*  Part of Extended libraries for Prolog
+
+    Author:        Edison Mera Menendez
+    E-mail:        efmera@gmail.com
+    WWW:           https://github.com/edisonm/xlibrary
+    Copyright (C): 2014, Process Design Center, Breda, The Netherlands.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+    As a special exception, if you link this library with other files,
+    compiled with a Free Software compiler, to produce an executable, this
+    library does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however
+    invalidate any other reasons why the executable file might be covered by
+    the GNU General Public License.
+*/
+
 :- module(tabling_rt, [(table)/2,
 		       abolish_table/1,
 		       abolish_all_tables/0
@@ -7,16 +36,26 @@
 % while its fetched results are memoized, they can be accessed in further calls
 % of the tabled goal.
 
+% Tabling should not support dynamic predicates, because is inconsistent to what
+% it is intended for.
+
+% While we can not save a suspended goal into the saved state, we can only have
+% volatile facts to store the results.
+
 % TODO: implement yap interface:
 % show_table(+P)
 % table_statistics(+P)
 % tabling_statistics/0
 
-% This should not support dynamic predicates
-
 :- use_module(library(implementation_module)).
 
 :- dynamic
+    goal_table_db/3,
+    tabling_db/2,
+    tabled_db/1,
+    table_db/4.
+
+:- volatile
     goal_table_db/3,
     tabling_db/2,
     tabled_db/1,
@@ -57,7 +96,7 @@ abolish_all_tables :-
 
 table(HKey, CM:H) :-
     strip_goal_module(H, CM, Goal, M),
-    variant_sha1(M:HKey, Hash),
+    '$expand':variant_sha1_nat(M:HKey, Hash),
     ( tabled_db(Hash)
     ->table_db(Hash, _, HKey, M)
     ; ( \+ tabling_db(Hash, _)
