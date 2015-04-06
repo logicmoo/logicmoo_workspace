@@ -29,7 +29,7 @@ term_expansion((:- link_foreign_library(Lib)),
 
 term_expansion(end_of_file, Decl) :-
     '$set_source_module'(M, M),
-    current_module(M, File),
+    module_property(M, file(File)),
     prolog_load_context(file, File), !,
     gen_foreign_library(M, AliasSO),
     change_alias(add_suffix('_so'), AliasSO, AliasSOPl),
