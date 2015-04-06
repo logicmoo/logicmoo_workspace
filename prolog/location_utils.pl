@@ -1,6 +1,6 @@
 :- module(location_utils,
 	[property_location/3, predicate_location/2, property_from/3,
-	 record_location_dynamic/3, predicate_from/2, cleanup_locations/4,
+	 record_location_dynamic/3, predicate_from/2, cleanup_loc_dynamic/4,
 	 from_location/2, in_set/2, in_dir/2, all_call_refs/5,
 	 record_location_meta/5, record_location/4]).
 
@@ -126,5 +126,5 @@ record_location_dynamic(MCall, M, From) :-
     record_location_meta(MCall, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
 			 record_location_goal).
 
-cleanup_locations(Head, M, Type, From) :-
+cleanup_loc_dynamic(Head, M, Type, From) :-
     retractall(loc_dynamic(Head, M, Type, From)).

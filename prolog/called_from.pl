@@ -31,7 +31,7 @@ called_from(Ref, Caller) :-
     ( called_from(Ref, _CM, Caller, [], Sorted),
       maplist(print_call_point, Sorted),
       fail
-    ; cleanup_locations(_, _, dynamic(_, _, _), _),
+    ; cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
       retractall(called_from_db(_, _, _, _, _))
     ).
 
@@ -49,7 +49,7 @@ collect_called_from(H, M, CM, Caller, OptionL, Sorted) :-
     keysort(Pairs, Sorted).
 
 collect_called_from(Ref, M, CM, Caller, OptionL0) :-
-    cleanup_locations(_, _, dynamic(_, _, _), _),
+    cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
     retractall(called_from_db(_, _, _, _, _)),
     merge_options([infer_meta_predicates(false),
 		   autoload(false),

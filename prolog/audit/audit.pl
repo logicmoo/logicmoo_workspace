@@ -13,7 +13,7 @@
     check/3.		% Hook to a new analysis
 
 cleanup_db :-
-    cleanup_locations(_, _, dynamic(_, _, _), _).
+    cleanup_loc_dynamic(_, _, dynamic(_, _, _), _).
 
 showcheck(Checker) :-
     showcheck(Checker, []),
