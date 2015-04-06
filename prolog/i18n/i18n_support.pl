@@ -3,7 +3,6 @@
 			 i18n_process_term/4,
 			 expand_i18n_term/4,
 			 i18n_record/4,
-			 current_i18n_record/4,
 			 i18n_entry_expander/4,
 			 i18n_entry/4,
 			 reference/2,
@@ -25,6 +24,7 @@
 :- use_module(library(clambda)).
 :- use_module(library(i18n/i18n_op)).
 :- use_module(library(i18n/i18n_parser)).
+:- use_module(library(tabling)).
 
 /*
   
@@ -217,17 +217,15 @@ expand_i18n_term(Proc, M, ~~(Term), Translation) :- !,
 expand_i18n_term(Proc, M, Term0, Term) :-
     compound(Term0),
     functor(Term0, F, A),
-    functor(Term, F, A),
-    !,
+    functor(Term, F, A), !,
     expand_i18n_term_arg(1, Proc, M, Term0, Term).
 expand_i18n_term(_, _, Term, Term).
 
 expand_i18n_term_arg(N0, Proc, M, Term0, Term) :-
-    arg(N0, Term0, Arg0),
-    !,
-    arg(N0, Term, Arg),
+    arg(N0, Term0, Arg0 ), !,
+    arg(N0, Term,  Arg),
     expand_i18n_term(Proc, M, Arg0, Arg),
-    N is N0 + 1,
+    succ(N0, N),
     expand_i18n_term_arg(N, Proc, M, Term0, Term).
 expand_i18n_term_arg(_, _, _, _, _).
 
@@ -307,15 +305,15 @@ i18n_to_translate_arg(_, _, _) --> [].
 % resource string, even if it don't appears in a ~/1 operator.
 
 :- multifile user:prolog_file_type/2.
-:- dynamic user:prolog_file_type/2.
+:- dynamic   user:prolog_file_type/2.
 
 user:prolog_file_type(pot, pot).
 
 % Performance bug: this reads the file every time the predicate is
 % consulted, tabling would be useful for this case. --EMM
 
-% :- table i18n_record/4.
-current_i18n_record(M, Lang, MsgId, MsgStr) :-
+:- table i18n_record/4.
+i18n_record(M, Lang, MsgId, MsgStr) :-
     ( language(Lang)
     ; dictionary(Lang),
       \+ language(Lang)
@@ -331,12 +329,6 @@ current_i18n_record(M, Lang, MsgId, MsgStr) :-
     member(Entry, Entries),
     valid_entry(Ref, M, Entry),
     Entry = entry(_, _, _, _, MsgId, MsgStr).
-    % ;
-    %   append(MsgId, MsgIdS),
-    %   ignore(source_location(Src, Loc)),
-    %   format(user_error, 'Warning: ~w:~w: Unable to translate ~w:"~s"~n',
-    % 	     [Src, Loc, M, MsgIdS]),
-    %   fail
 
 valid_entry(Ref, M, Entry) :-
     Entry \= entry(_, _, _, _, _, [""]),
