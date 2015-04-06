@@ -127,4 +127,4 @@ record_location_dynamic(MCall, M, From) :-
 			 record_location_goal).
 
 cleanup_locations(Head, M, Type, From) :-
-    retractall(loc_declaration(Head, M, Type, From)).
+    retractall(loc_dynamic(Head, M, Type, From)).
