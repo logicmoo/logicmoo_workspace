@@ -1,6 +1,7 @@
 :- module(goalstub, [register_stub/1,
 		     stub_term_expansion/5]).
 
+:- use_module(library(lists)).
 :- use_module(library(sequence_list)).
 
 :- dynamic

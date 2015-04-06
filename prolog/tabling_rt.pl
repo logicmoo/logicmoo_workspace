@@ -17,20 +17,16 @@
 :- use_module(library(implementation_module)).
 
 :- dynamic
+    goal_table_db/3,
     tabling_db/2,
     tabled_db/1,
     table_db/4.
-
-cleanup_tabling_db :- cleanup_tabling_db(_).
 
 cleanup_tabling_db(Hash) :-
     retractall(goal_table_db(_, _, Hash)),
     retractall(tabling_db(Hash, _)),
     retractall(tabled_db(Hash)),
     retractall(table_db(Hash, _, _, _)).
-
-strip_goal_module(M0:Goal0, Goal, M) :-
-    strip_goal_module(Goal0, M0, Goal, M).
 
 strip_goal_module(CM:Goal0, _, Goal, M) :- !,
     strip_goal_module(Goal0, CM, Goal, M).
