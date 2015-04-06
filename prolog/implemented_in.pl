@@ -23,9 +23,11 @@ implemented_in(MGoal0, From, Args) :-
 		), UML),
     sort(UML, ML),
     member(M, ML),
-    ( extra_location(Goal, M, Declaration, From),
-      Declaration \= dynamic(query, _, _),
-      Declaration \= goal,
+    ( ( loc_declaration(Goal, M, Declaration, From),
+	Declaration \= goal
+      ; loc_dynamic(Goal, M, Declaration, From),
+	Declaration \= dynamic(query, _, _)
+      ),
       Args = [M:F/A-Declaration]
     ;
       Counter=c(1),

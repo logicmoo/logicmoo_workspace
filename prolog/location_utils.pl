@@ -102,9 +102,9 @@ record_location_goal(MGoal, CM, Type, Call, _, From) :-
     record_location(Head, M, dynamic(Type, CM, Call), From).
 
 record_location(Head, M, Type, From) :-
-    ( extra_location(Head, M, Type, From)
+    ( loc_dynamic(Head, M, Type, From)
     ->true
-    ; assertz(extra_location(Head, M, Type, From))
+    ; assertz(loc_dynamic(Head, M, Type, From))
     ).
 
 record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
@@ -127,4 +127,4 @@ record_location_dynamic(MCall, M, From) :-
 			 record_location_goal).
 
 cleanup_locations(Head, M, Type, From) :-
-    retractall(extra_location(Head, M, Type, From)).
+    retractall(loc_declaration(Head, M, Type, From)).

@@ -160,7 +160,7 @@ match_head_body(Goal, M, Body) :-
 extra_clauses(Goal, CM, true) :-
     predicate_property(M:Goal, dynamic),
     implementation_module(CM:Goal, M),
-    extra_location(Goal, M, dynamic(def, _, _), _).
+    loc_dynamic(Goal, M, dynamic(def, _, _), _).
 extra_clauses(Goal, CM, I:Goal) :-
     implementation_module(CM:Goal, M),
     functor(Goal, F, A),

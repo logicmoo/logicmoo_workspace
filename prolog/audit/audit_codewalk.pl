@@ -42,7 +42,7 @@ audit_wcsetup(OptionL0, OptionL, M, FromChk) :-
 		  ], OptionL).
 
 decl_walk_code(Tracer, M) :-
-    forall(extra_location(Head, M, goal, From),
+    forall(loc_declaration(Head, M, goal, From),
 	   ignore(call(Tracer, M:Head, _:'<declaration>', From))).
 
 record_issues(CRef) :-
