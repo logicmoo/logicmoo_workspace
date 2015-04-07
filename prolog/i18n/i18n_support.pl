@@ -78,7 +78,6 @@
 
 :- dynamic
     i18n_resource_dir/1,      % Global directory where the resources are stored.
-    i18n_record/4,
     language/1,
     dictionary/1.
 
@@ -86,13 +85,9 @@
     i18n_resource_dir/1,
     i18n_resourceterm/2,
     i18n_resource/2,
-    i18n_record/4,
     language/1,
     dictionary/1.		% for reverse translations, you can use more
                  		% than one dictionary
-
-:- volatile i18n_record/4.  % Only useful during compilation and debugging, save
-                            % space in the final binary.
 
 :- multifile variable_name/1. % Name of variable names that set the language
 :- dynamic variable_name/1.
@@ -142,7 +137,7 @@ language(Lang) :-
 
 % Run-Time language reverse translation:
 (Engl ~= M:Dict) :-
-    i18n_process_term(\X^D^E^i18n_entry(dictionary, X, E, D), M, Dict, Engl).
+    i18n_process_term(\ X^D^E^i18n_entry(dictionary, X, E, D), M, Dict, Engl).
 
 (Term =~~ M:Term0) :-
     i18n_process_term(i18n_entry_dl, M, Term0, Term).
@@ -338,11 +333,14 @@ i18n_to_translate_arg(_, _, _) --> [].
 
 user:prolog_file_type(pot, pot).
 
-% Performance bug: this reads the file every time the predicate is
-% consulted, tabling would be useful for this case. --EMM
-
-:- table i18n_record/4.
+:- table i18n_record/4.		% Speed up, decrease complexity
 i18n_record(M, Lang, MsgId, MsgStr) :-
+    ( current_module(M) *->true ; true ),
+    current_i18n_record(M, Lang0, MsgId0, MsgStr0 ),
+    Lang = Lang0, MsgId = MsgId0, MsgStr = MsgStr0.
+
+:- table current_i18n_record/4.
+current_i18n_record(M, Lang, MsgId, MsgStr) :-
     ( language(Lang)
     ; dictionary(Lang),
       \+ language(Lang)
