@@ -65,12 +65,27 @@ translate_term_meta(_, Term0, M:Term) :-
 translate_term_meta(M, Term0, Term) :-
     translate_term(M, Term0, Term).
 
+gtabling(Elem, Goal) :-
+    ( \+ Elem->
+      ( Goal,
+	compile_aux_clauses(Elem),
+	fail
+      ; true
+      )
+    ; true
+    ).
+
+tabulate_i18n_records(M) :-
+    gtabling(i18n_support:i18n_record(M, L, I, S),
+	     current_i18n_record(M, L, I, S)).
+
 translate_term(Term0, Term) :-
     '$set_source_module'(M, M),
     translate_term(M, Term0, Term),
     Term0 \== Term.
 
 translate_term(M, Term0, Term) :-
+    tabulate_i18n_records(M),
     expand_i18n_term(i18n_entry_expander, M, Term0, Term).
 
 goal_expansion(V:Goal0, M, V:Goal) :-
@@ -121,6 +136,12 @@ term_expansion((:- i18n_resource(PoAlias)),
 term_expansion((:- resourceterm(Term)),
 	       i18n_support:i18n_resourceterm(M, Term)) :- !,
     '$set_source_module'(M, M).
+term_expansion((:- init_i18n),
+	       []) :- !,
+    '$set_source_module'(M, M),
+    tabulate_i18n_records(M).
+term_expansion((:- M:init_i18n), [])  :- !, tabulate_i18n_records(M).
+term_expansion((:- init_i18n(M)), []) :- !, tabulate_i18n_records(M).
 term_expansion((:- _), _) :- !, fail. % Skip declarations
 term_expansion((Term0 :- Body), (Term :- Body)) :- !,
     translate_term(Term0, Term).

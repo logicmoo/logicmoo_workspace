@@ -32,6 +32,7 @@
 			 i18n_process_term/4,
 			 expand_i18n_term/4,
 			 i18n_record/4,
+			 current_i18n_record/4,
 			 i18n_entry_expander/4,
 			 i18n_entry/4,
 			 reference/2,
@@ -53,7 +54,7 @@
 :- use_module(library(clambda)).
 :- use_module(library(i18n/i18n_op)).
 :- use_module(library(i18n/i18n_parser)).
-:- use_module(library(tabling)).
+% :- use_module(library(tabling)).
 
 /*
   
@@ -78,6 +79,7 @@
 
 :- dynamic
     i18n_resource_dir/1,      % Global directory where the resources are stored.
+    i18n_record/4,
     language/1,
     dictionary/1.
 
@@ -85,9 +87,13 @@
     i18n_resource_dir/1,
     i18n_resourceterm/2,
     i18n_resource/2,
+    i18n_record/4,
     language/1,
     dictionary/1.		% for reverse translations, you can use more
                  		% than one dictionary
+
+:- volatile i18n_record/4.  % Only useful during compilation and debugging, save
+                            % space in the final binary.
 
 :- multifile variable_name/1. % Name of variable names that set the language
 :- dynamic variable_name/1.
@@ -333,6 +339,10 @@ i18n_to_translate_arg(_, _, _) --> [].
 
 user:prolog_file_type(pot, pot).
 
+/*
+% Performance bug: this reads the file every time the predicate is
+% consulted, tabling would be useful for this case. --EMM
+
 :- table i18n_record/4.		% Speed up, decrease complexity
 i18n_record(M, Lang, MsgId, MsgStr) :-
     ( current_module(M) *->true ; true ),
@@ -340,6 +350,7 @@ i18n_record(M, Lang, MsgId, MsgStr) :-
     Lang = Lang0, MsgId = MsgId0, MsgStr = MsgStr0.
 
 :- table current_i18n_record/4.
+*/
 current_i18n_record(M, Lang, MsgId, MsgStr) :-
     ( language(Lang)
     ; dictionary(Lang),
