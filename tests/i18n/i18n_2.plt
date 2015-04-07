@@ -44,8 +44,6 @@ i18n_support:i18n_resource_dir(Dir) :-
 
 i18n_support:language(es).	% Spanish
 
-:- init_i18n.
-
 test(t1) :- test_t1.
 
 test(t2) :- test_t2.
