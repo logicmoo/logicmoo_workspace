@@ -363,6 +363,8 @@ proper_warning_flags(C,
 rtchecks_sentence_tr(0, _, M, _) :- !, cleanup_db(M).
 rtchecks_sentence_tr(end_of_file, Clauses, M, _) :- !,
 	runtime_checkable(M),
+	module_property(M, file(File)),
+	prolog_load_context(file, File), % This is the main file
 	findall(Clauses0, proc_posponed_sentence(Clauses0, M), ClausesL0,
 	    ClausesL1),
 	remaining_preds(Preds, M),
@@ -404,12 +406,11 @@ rtchecks_goal_tr(end_of_file, _,         M) :- !, cleanup_db(M).
 rtchecks_goal_tr(PPAssertion, PPRTCheck, _) :-
 	proc_ppassertion(PPAssertion, PredName, [], Loc, PPRTCheck),
 	location(Loc),
-	PredName = PPAssertion,
-	!.
-rtchecks_goal_tr('$orig_call'(Goal0), Goal, M) :-
+	PredName = PPAssertion, !.
+rtchecks_goal_tr('$orig_call'(Goal0), Goal, M) :- !,
 	qualify_goal(M, Goal0, Goal). % TODO: doesn't work with builtins (swi) --EMM
 :- if(current_prolog_flag(dialect, ciao)).
-rtchecks_goal_tr('$meta$rtc'(Goal, MG), MG=RM:Goal, M) :-
+rtchecks_goal_tr('$meta$rtc'(Goal, MG), MG=RM:Goal, M) :- !,
 	module_qualifier_i(M, Goal, RM).
 :- endif.
 rtchecks_goal_tr(Goal, Goal1, M) :-
@@ -803,7 +804,7 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
 	    lists_to_lits(Body00, Lits0)
 	  },
 	  add_use_inline(F, A),
-	  [(Pred :- Lits0)]
+	  [(Pred :- Lits0 )]
 	; {Pred = Pred1}
 	),
 	{generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc,
