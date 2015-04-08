@@ -17,7 +17,9 @@ goal_expansion(Goal0, Goal) :-
 
 term_expansion((:- include(library(nativeprops))),
 	       (:- use_module(library(assertions/native_props)))) :- !.
+term_expansion((:- module(M, L)), (:- module(M, L))
+	      ) :- !,
+    rtchecks_sentence_tr(0, _, M, []).
 term_expansion(Term0, Term) :-
     '$set_source_module'(M, M),
-    rtchecks_sentence_tr(Term0, Term, M, []),
-    !.
+    rtchecks_sentence_tr(Term0, Term, M, []), !.

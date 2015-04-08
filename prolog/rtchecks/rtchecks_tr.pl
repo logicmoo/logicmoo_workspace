@@ -117,15 +117,37 @@ be done in such a way that the compability is not compromised.
 	that in CiaoPP compat properties are currently ignored
 	(?). --EMM").
 
-:- data head_alias_db/3.
-:- data goal_alias_db/3.
 :- if(current_prolog_flag(dialect, swi)).
-:- multifile generated_rtchecks_db/3.
+:- multifile
+    generated_rtchecks_db/3,
+    head_alias_db/3,
+    goal_alias_db/3,
+    posponed_sentence_db/7.
+
+% BUG: In SWI modules are extensible, and therefore, we should not clean up
+% rtchecks information at the end (multifiles, consult/1 in the same context,
+% etc...) however, this is not working yet --EMM
+%
+
 :- endif.
-:- data generated_rtchecks_db/3.
+
+:- data
+    generated_rtchecks_db/3,
+    head_alias_db/3,
+    goal_alias_db/3,
+    posponed_sentence_db/7.
+
+cleanup_db(M) :-
+	retractall_fact(goal_alias_db(_, _, M)),
+	cleanup_db_0(M).
+
+cleanup_db_0(M) :-
+	retractall_fact(head_alias_db(_, _, M)),
+	retractall_fact(posponed_sentence_db(_, _, _, _, _, M, _)),
+	retractall_fact(generated_rtchecks_db(_, _, M)).
+
 % :- data rtchecks_db/3.
 % :- data nortchecks_db/3.
-:- data posponed_sentence_db/7.
 
 valid_assertions(Status, Type) :-
 	rtcheck_assr_type(Type),
@@ -338,9 +360,8 @@ proper_warning_flags(C,
 		      (:- pop_prolog_flag(multi_arity_warnings)),
 		      end_of_file]).
 :- endif.
-rtchecks_sentence_tr(0, _, _, _) :- !.
-rtchecks_sentence_tr(end_of_file, Clauses, M, _) :-
-	!,
+rtchecks_sentence_tr(0, _, M, _) :- !, cleanup_db(M).
+rtchecks_sentence_tr(end_of_file, Clauses, M, _) :- !,
 	runtime_checkable(M),
 	findall(Clauses0, proc_posponed_sentence(Clauses0, M), ClausesL0,
 	    ClausesL1),
@@ -449,33 +470,11 @@ qualify_goal(M, Goal0, Goal) :-
 	  Goal = IM:Goal0 % Last opportunity: define Goal0 in IM
 	).
 
-cleanup_db_0(M) :-
-	cleanup_head_alias_db(M),
-	retractall_fact(posponed_sentence_db(_, _, _, _, _, M, _)),
-	cleanup_generated_rtchecks_db(M).
-
-cleanup_db(M) :-
-	cleanup_goal_alias_db(M),
-	cleanup_db_0(M).
-
-cleanup_head_alias_db(M) :-
-	retractall_fact(head_alias_db(_, _, M)).
-
-cleanup_goal_alias_db(M) :-
-	retractall_fact(goal_alias_db(_, _, M)).
-
-:- if(current_prolog_flag(dialect, swi)).
-cleanup_generated_rtchecks_db(_).
-:- else.
-cleanup_generated_rtchecks_db(M) :-
-	retractall_fact(generated_rtchecks_db(_, _, M)).
-:- endif.
-
 process_sentence(Head, Body0, Clauses, M, Dict) :-
 	functor(Head, F, A),
 	( needs_posponed_definition(M:Head) ->
 	  location(Loc),
-	  assertz_fact(posponed_sentence_db(F, A, Head, Body0, Loc, M, Dict)),
+	  assertz_ct(posponed_sentence_db(F, A, Head, Body0, Loc, M, Dict)),
 	  Clauses = []
 	; transform_sentence(F, A, Head, Body0, Body, Clauses0, M, Dict),
 	  add_cond_use_inline(Body0, Body, F, A, Clauses0, Clauses)
@@ -488,13 +487,15 @@ head_body_clause(Head, Body, Clause) :-
 	).
 
 :- if(current_prolog_flag(dialect, swi)).
-mark_generated_rtchecks(F, A, M) :-
-    compile_aux_clauses(rtchecks_tr:generated_rtchecks_db(F, A, M)).
+:- meta_predicate assertz_ct(:).
+assertz_ct(Fact) :- compile_aux_clauses(Fact).
 :- endif.
 :- if(current_prolog_flag(dialect, ciao)).
-mark_generated_rtchecks(F, A, M) :-
-    assertz_fact(generated_rtchecks_db(F, A, M)).
+assertz_ct(Fact) :- assertz_fact(Fact).
 :- endif.
+
+mark_generated_rtchecks(F, A, M) :-
+    assertz_ct(generated_rtchecks_db(F, A, M)).
 
 transform_sentence_body(Dict, Head, F, A, M, Flag, Body, Clauses) :-
 	( generated_rtchecks_db(F, A, M) ->
@@ -616,7 +617,7 @@ record_head_alias(Head0, Head, M) :-
 	Pred0 =.. [_|Args],
 	functor(Head, F, _),
 	Pred =.. [F|Args],
-	assertz_fact(head_alias_db(Pred0, Pred, M)).
+	assertz_ct(head_alias_db(Pred0, Pred, M)).
 
 record_goal_alias(Head0, Head, M) :-
 	functor(Head0, F0, A),
@@ -624,7 +625,7 @@ record_goal_alias(Head0, Head, M) :-
 	Pred0 =.. [_|Args],
 	functor(Head, F, _),
 	Pred =.. [F|Args],
-	assertz_fact(goal_alias_db(Pred0, Pred, M)).
+	assertz_ct(goal_alias_db(Pred0, Pred, M)).
 
 
 /*
