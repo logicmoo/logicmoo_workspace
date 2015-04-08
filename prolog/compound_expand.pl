@@ -42,6 +42,7 @@
 */
 
 :- use_module(library(expansion_module)).
+:- use_module(library(remove_dups)).
 
 :- multifile
     system:term_expansion/4,
@@ -65,14 +66,24 @@ system:goal_expansion(Goal0, Pos0, Goal, Pos) :-
     Goal0 \== Goal,
     !.
 
+:- dynamic
+    lock_expansion/0.
+
+call_lock(Goal) :-
+    setup_call_cleanup(( \+ lock_expansion,
+			 assertz(lock_expansion)),
+		       Goal,
+		       retract(lock_expansion)).
+
 system:term_expansion(Term0, Pos0, Term, Pos) :-
     '$set_source_module'(M, M),
     findall(EM-PI, ( expansion_module(M, EM),
 		     ( implemented_pi(EM:term_expansion/4)
 		     ->PI=[term_expansion/4]
 		     ; PI=[term_expansion/2]
-		     )), ML),
-    ML \= [],
-    '$expand':call_term_expansion(ML, Term0, Pos0, Term, Pos),
+		     )), MD),
+    MD \= [],
+    remove_dups(MD, ML),
+    call_lock('$expand':call_term_expansion(ML, Term0, Pos0, Term, Pos)),
     Term0 \== Term,
     [Term0] \== Term.		% Fail to try other expansions
