@@ -80,6 +80,7 @@ collect_imports(M, FromChk, Pairs, Tail) :-
 
 :- multifile ignore_import/2.
 
+ignore_import(_, rtchecks_rt).
 ignore_import(M, IM) :- expansion_module(M, IM).
 
 collect_usemods(M, FromChk, Pairs, Tail) :-
