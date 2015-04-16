@@ -5,9 +5,6 @@
   This analyzer is based on the Mark-and-Sweep Algorithm:
   http://www.brpreiss.com/books/opus5/html/page424.html
 
-  Also uses the Tarjan's scc algorithm to show the output
-  grouped by scc and hierarchically.
-
 */
 
 :- use_module(library(auditable_predicate)).
@@ -183,13 +180,13 @@ sweep(M, FromChk, Pairs) :-
 	      sort(LocDU, LocDL),
 	      findall(Caller, ( edge(Caller, Node),
 				Caller \= Node
-			      ), L),
-	      findall(Node, edge(Node, Node), T),
-	      length(L, NCaller),
-	      length(T, NLoop),
-	      findall(Callee, edge(Node, Callee), N),
-	      length(N, NCallee),
-	      Row = node(sort_by(NCaller, NLoop, NCallee), Node, LocDL)),
+			      ), CallerL),
+	      findall(Node, edge(Node, Node), LoopL),
+	      length(CallerL, CallerN),
+	      length(LoopL, LoopN),
+	      findall(Callee, edge(Node, Callee), CalleeL),
+	      length(CalleeL, NCallee),
+	      Row = node(sort_by(CallerN, LoopN, NCallee), LocDL, Node)),
 	    Tail).
 
 % Due to the nature of this algorithm, its 'declarative' equivalent is by far
@@ -209,10 +206,10 @@ audit:prepare_results(unused, Pairs, Results) :-
 compact_results(Results) :-
     findall(Result, compact_result(_, Result), Results).
 
-compact_result(Node, node(SortBy, Node, LocDL, EdgeL)-Results) :-
-    commited_retract(node(SortBy, Node, LocDL)),
+compact_result(Node, node(SortBy, LocDL, Node, EdgeL)-Results) :-
+    commited_retract(node(SortBy, LocDL, Node)),
     findall(Edge, ( clause(edge(Node, Edge), _, Ref),
-		    \+ node(_, Edge, _),
+		    \+ node(_, _, Edge),
 		    erase(Ref)
 		  ), EdgeL),	% Edges to already reported nodes
     findall(Result, ( commited_retract(edge(Node, Edge)),
@@ -270,7 +267,7 @@ prolog:message(acheck(unused, Node-EdgeLL)) -->
     message_unused_node(Node, ['*', ' ']),
     maplist_dcg(maplist_dcg(message_unused_rec([' ', ' ', ' ', ' '])), EdgeLL).
 
-message_unused_node(node(sort_by(N, L, _), PI, LocDL, _ARL), Level) -->
+message_unused_node(node(sort_by(N, L, _), LocDL, PI, _ARL), Level) -->
     { R is N + L,
       unused_type(R, T)
     },
