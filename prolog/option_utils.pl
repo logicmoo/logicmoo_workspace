@@ -15,11 +15,10 @@
 :- reexport(library(module_files)).
 
 check_alias(Type, Alias, File) :-
-    absolute_file_name(Alias, Pattern, [file_type(Type),
-					access(exist),
-					solutions(all)]),
+    absolute_file_name(Alias, Pattern, [file_type(Type), solutions(all)]),
     expand_file_name(Pattern, FileL),
-    member(File, FileL).
+    member(File, FileL),
+    access_file(File, exist). % exist checked at the end to avoid premature fail
 
 check_dir_file(Dir, File) :-
     nonvar(Dir),
