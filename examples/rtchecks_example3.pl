@@ -4,7 +4,7 @@
 			      animal/1,
 			      family/1,
 			      fullasr/2],
-	  [assertions, regtypes, nativeprops, rtchecks
+	  [assertions, nativeprops, rtchecks
 	  ]).
 
 :- pred nullasr(A, B).
@@ -21,11 +21,11 @@ test1 :-
 	display(X2),
 	nl.
 
-:- regtype animal/1.
+:- prop animal/1 is type.
 
 animal(A) :- atm(A).
 
-:- regtype family/1.
+:- prop family/1 is type.
 
 family(B) :- atm(B).
 

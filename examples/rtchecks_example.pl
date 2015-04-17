@@ -21,7 +21,7 @@
 		test_det/2,
 		test_det2/1],
 	    [assertions, basicmodes, isomodes, nativeprops, hiord,
-		regtypes, rtchecks]).
+		rtchecks]).
 
 :- use_module(library(aggregates)).
 
@@ -81,14 +81,14 @@ must_fail(aaa) :-
 must_not_fail :-
 	display('not fail\n').
 
-:- regtype animal/1.
+:- prop animal/1 is type.
 
 animal(dog).
 animal(cat).
 animal(tiger).
 animal(lion).
 
-:- regtype animal_type/1.
+:- prop animal_type/1 is type.
 
 animal_type(wild).
 animal_type(domestic).
