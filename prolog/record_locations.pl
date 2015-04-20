@@ -1,4 +1,4 @@
-:- module(record_locations, []).
+:- module(record_locations, [record_location/0]).
 
 :- use_module(library(apply)).
 :- use_module(library(extra_location)).
@@ -7,6 +7,9 @@
 :- multifile
     system:term_expansion/4,
     system:goal_expansion/4.
+
+:- dynamic record_location/0.
+record_location. % Enable recording of locations
 
 :- volatile rl_tmp/3.
 :- dynamic rl_tmp/3. % trick to detect if term_expansion was applied
@@ -151,6 +154,7 @@ have_extra_location(From0, H, M, Type) :-
     subsumes_from(From0, From).
 
 system:term_expansion(Term, Pos, _, _) :-
+    record_location,
     % format(user_error, '~q~n',[Term]),
     source_location(File, Line),
     ( rl_tmp(File, Line, _)
@@ -185,5 +189,6 @@ rl_goal_expansion(Goal, Pos) :-
     !.
 
 system:goal_expansion(Goal, Pos, _, _) :-
+    record_location,
     rl_goal_expansion(Goal, Pos),
     fail.
