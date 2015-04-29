@@ -59,7 +59,10 @@
 		throw/2,
 		nsh/2,
 		user_output/2,
-		test_throw_2/4
+		test_throw_2/4,
+		is_pred/2,
+		mod_qual/1,
+		mod_qual/2
 		% intervals/2 %[LD]
 		% , user_error/2
 	    ],
@@ -1314,3 +1317,18 @@ check_nsh(_:Goal, Arg) :-
       )
     ; true
     ).
+
+:- true prop is_pred(P, N) + no_rtcheck
+    # "check that @var{P} is a defined predicate with @var{N} extra arguments.".
+
+is_pred(M:Pred, N) :-
+    functor(Pred, F, A1),
+    A is A1 + N,
+    current_predicate(M:F/A).
+
+:- true prop mod_qual(M) + no_rtcheck.
+mod_qual(_:_).
+
+:- true prop mod_qual(V, T) + no_rtcheck.
+:- meta_predicate mod_qual(?, pred(1)).
+mod_qual(_:V, T) :- call(T, V).

@@ -28,11 +28,11 @@
 add_arg(H, M:G0, M:G) :- !,
     add_arg(H, G0, G).
 add_arg(H, G0, G) :-
-    ( nonvar(G0)
-    ->G0 =.. [F|L],
-      G  =.. [F,H|L]
-    ; G  =.. [F,H|L],
+    ( var(G0)
+    ->G  =.. [F,H|L],
       G0 =.. [F|L]
+    ; G0 =.. [F|L],
+      G  =.. [F,H|L]
     ).
 
 list_conj([],     true).
@@ -418,27 +418,33 @@ do_modedef(A0, A1, A, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
     A2 =.. [A0, A],
     modedef(A2, A1, A, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
     !.
+do_modedef(A0, A1, A, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
+    integer(A0),
+    modedef(is_pred(A, A0), A1, A, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
+    !.
 do_modedef(A0, A0, _, Cp0, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp0, Cp).
 
 % Support for modes are hard-wired here:
 % ISO Modes
-modedef(+(A),   A, B, Cp,                Ca0,  Su,         Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :-
+modedef(+(A),         A, B, Cp,                Ca0,  Su,         Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :-
     (var(A), var(Ca1) -> Ca0 = [nonvar(B)|Ca1] ; Ca0 = Ca1). % A bit confuse hack, Ca1 come instantiated to optimize the expression
-modedef(-(A),   A, B, Cp,        [var(B)|Ca],  Su0,        Gl,  Cp, Ca, Su, Gl, Su0, Su).
-modedef(?(A),   A, _, Cp0,               Ca,   Su,         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
-modedef(@(A),   A, B, Cp0,               Ca,   Su, [nfi(B)|Gl], Cp, Ca, Su, Gl, Cp0, Cp).
+modedef(-(A),         A, B, Cp,        [var(B)|Ca],  Su0,        Gl,  Cp, Ca, Su, Gl, Su0, Su).
+modedef(?(A),         A, _, Cp0,               Ca,   Su,         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
+modedef(@(A),         A, B, Cp0,               Ca,   Su, [nfi(B)|Gl], Cp, Ca, Su, Gl, Cp0, Cp).
 % PlDoc (SWI) Modes
-modedef(':'(A), A, B, Cp,   [callable(B)|Ca0], Su, Gl, Cp, Ca, Su, Gl, Ca0, Ca).
-modedef('!'(A), A, B, Cp0,  [compound(B)|Ca],  Su, Gl, Cp, Ca, Su, Gl, Cp0, Cp). % May be modified using setarg/3 or nb_setarg/3 (mutable)
+modedef(:(A0 ),         A, B, Cp,                Ca0,  Su,         Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :-
+    (var(A0 ), var(Ca1) -> Ca0 = [mod_qual(B)|Ca1], A0 = A ; Ca0 = Ca1, A = mod_qual(B, A0 )).
+modedef(is_pred(A,N), A, B, Cp, [is_pred(B,N)|Ca0],  Su, Gl, Cp, Ca, Su, Gl, Ca0, Ca).
+modedef('!'(A),       A, B, Cp0,  [compound(B)|Ca],  Su, Gl, Cp, Ca, Su, Gl, Cp0, Cp). % May be modified using setarg/3 or nb_setarg/3 (mutable)
 % Ciao Modes:
-modedef(in(A),  A, B, Cp,     [ground(B)|Ca0],            Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
-modedef(out(A), A, B, Cp,        [var(B)|Ca],  [ground(B)|Su0],        Gl,  Cp, Ca, Su, Gl, Su0, Su).
-modedef(go(A),  A, B, Cp0, Ca,                 [ground(B)|Su],         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
+modedef(in(A),        A, B, Cp,     [ground(B)|Ca0],            Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
+modedef(out(A),       A, B, Cp,        [var(B)|Ca],  [ground(B)|Su0],        Gl,  Cp, Ca, Su, Gl, Su0, Su).
+modedef(go(A),        A, B, Cp0, Ca,                 [ground(B)|Su],         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
 % Additional Modes (See Coding Guidelines for Prolog, Michael A. Covington, 2009):
-modedef('*'(A), A, B, Cp,     [ground(B)|Ca0],            Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
-modedef('='(A), A, B, Cp0,               Ca,              Su,  [nfi(B)|Gl], Cp, Ca, Su, Gl, Cp0, Cp). % The state of A is preserved
-modedef('/'(A), A, B, Cp,        [var(B)|Ca],             Su0, [nsh(B)|Gl], Cp, Ca, Su, Gl, Su0, Su). % Like '-' but also A don't share with any other argument
-modedef('>'(A), A, _, Cp, Ca,                             Su0,         Gl,  Cp, Ca, Su, Gl, Su0, Su). % Like output but A might be nonvar on entry
+modedef('*'(A),       A, B, Cp,     [ground(B)|Ca0],            Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
+modedef('='(A),       A, B, Cp0,               Ca,              Su,  [nfi(B)|Gl], Cp, Ca, Su, Gl, Cp0, Cp). % The state of A is preserved
+modedef('/'(A),       A, B, Cp,        [var(B)|Ca],             Su0, [nsh(B)|Gl], Cp, Ca, Su, Gl, Su0, Su). % Like '-' but also A don't share with any other argument
+modedef('>'(A),       A, _, Cp, Ca,                             Su0,         Gl,  Cp, Ca, Su, Gl, Su0, Su). % Like output but A might be nonvar on entry
 
 				% nfi == not_further_inst
 				% nsh == not_shared
@@ -606,6 +612,6 @@ ciao:declaration_hook(Decl, Records) :-
 assertion_records(Decl, DPos, Records, RPos) :-
     '$set_source_module'(M, M),
     assertion_records(M, Dict, Decl, DPos, Records, RPos),
-    %% ciao:get_dictionary/3 Must be after assertion_records/6
-    %% to improve performance: --EMM
-    ciao:get_dictionary((:- Decl), M, Dict).
+    %% Dict Must be assigned after assertion_records/6 to avoid performance
+    %% issues --EMM
+    b_getval('$variable_names', Dict).

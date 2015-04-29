@@ -21,4 +21,5 @@
 			  op(500,  yfx, (#)),
 			  %% From basicmodes:
 			  op(500, fx, (?)),
+			  op(500, fx, (:)),
 			  op(500, fx, (@))]).
