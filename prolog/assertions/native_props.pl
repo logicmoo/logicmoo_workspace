@@ -1322,13 +1322,22 @@ check_nsh(_:Goal, Arg) :-
     # "check that @var{P} is a defined predicate with @var{N} extra arguments.".
 
 is_pred(M:Pred, N) :-
-    functor(Pred, F, A1),
-    A is A1 + N,
-    current_predicate(M:F/A).
+    nnegint(N),
+    ( var(Pred)
+    ->current_predicate(M:F/A),
+      A1 is A - N,
+      functor(Pred, F, A1)
+    ; functor(Pred, F, A1),
+      A is A1 + N,
+      current_predicate(M:F/A)
+    ).
 
-:- true prop mod_qual(M) + no_rtcheck.
-mod_qual(_:_).
+:- true prop mod_qual(MQ) + no_rtcheck.
+mod_qual(M:_) :-
+    current_module(M).
 
 :- true prop mod_qual(V, T) + no_rtcheck.
 :- meta_predicate mod_qual(?, pred(1)).
-mod_qual(_:V, T) :- call(T, V).
+mod_qual(M:V, T) :-
+    current_module(M),
+    call(T, V).
