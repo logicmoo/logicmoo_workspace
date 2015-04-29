@@ -15,6 +15,7 @@ user:file_search_path(assertions, library(assertions)).
 term_expansion((:- meta_predicate Assr), MPos, [(:- meta_predicate Assr)|Records],
 	       [MPos|RPos]) :- !,
     current_prolog_flag(assrt_meta_pred, Status),
+    Status \= none,
     MPos = term_position(DF, DT, FF, FT,
 			 [term_position(_,  _,  GF, GT, [APos])]),
     % Note: MPos reassembled in the way assertion_records expect
