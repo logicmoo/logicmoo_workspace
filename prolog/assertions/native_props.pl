@@ -1325,6 +1325,7 @@ is_pred(M:Pred, N) :-
     nnegint(N),
     ( var(Pred)
     ->current_predicate(M:F/A),
+      A >= N,
       A1 is A - N,
       functor(Pred, F, A1)
     ; functor(Pred, F, A1),
