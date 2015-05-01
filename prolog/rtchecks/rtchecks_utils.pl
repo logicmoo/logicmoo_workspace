@@ -15,7 +15,7 @@
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
-tracertc :- backtrace(40).	% gtrace
+tracertc :- backtrace(80).	% gtrace
 :- endif.
 :- use_module(rtchecks(compact_list)).
 

@@ -122,7 +122,7 @@ be done in such a way that the compability is not compromised.
     generated_rtchecks_db/3,
     head_alias_db/3,
     goal_alias_db/3,
-    posponed_sentence_db/7.
+    posponed_sentence_db/8.
 
 % BUG: In SWI modules are extensible, and therefore, we should not clean up
 % rtchecks information at the end (multifiles, consult/1 in the same context,
@@ -135,7 +135,7 @@ be done in such a way that the compability is not compromised.
     generated_rtchecks_db/3,
     head_alias_db/3,
     goal_alias_db/3,
-    posponed_sentence_db/7.
+    posponed_sentence_db/8.
 
 cleanup_db(M) :-
 	retractall_fact(goal_alias_db(_, _, M)),
@@ -143,7 +143,7 @@ cleanup_db(M) :-
 
 cleanup_db_0(M) :-
 	retractall_fact(head_alias_db(_, _, M)),
-	retractall_fact(posponed_sentence_db(_, _, _, _, _, M, _)),
+	retractall_fact(posponed_sentence_db(_, _, _, _, _, _, M, _)),
 	retractall_fact(generated_rtchecks_db(_, _, M)).
 
 % :- data rtchecks_db/3.
@@ -241,9 +241,9 @@ exported_predicate(M:F/A) :-
 :- endif.
 
 proc_posponed_sentence(Clauses0, M) :-
-	posponed_sentence_db(F, A, Head, Body0, loc(S, LB, LE), M, Dict),
+	posponed_sentence_db(F, A, Head, Op, Body0, loc(S, LB, LE), M, Dict),
 	asserta_fact(location(S, LB, LE), Ref),
-	transform_sentence(F, A, Head, Body0, Body, Clauses, M, Dict),
+	transform_sentence(F, A, Head, Op, Body0, Body, Clauses, M, Dict),
 	add_cond_use_inline(Body0, Body, F, A, Clauses0, Clauses),
 	erase(Ref).
 
@@ -332,7 +332,7 @@ proc_remaining_assertions(Preds, Clauses, M, Dict) :-
 	current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	setup_call_cleanup(
 	    set_prolog_flag(rtchecks_predloc, no),
-	    transform_sentence_body(Dict, Head, F, A, M, original,
+	    transform_sentence_body(Dict, Head, (:-), F, A, M, original,
 				    '$orig_call'(Head), Clauses0),
 	    set_prolog_flag(rtchecks_predloc, UsePredLoc)),
 	insert_inline_declarations(F, A, M, Head, Clauses0, Clauses1).
@@ -382,15 +382,17 @@ rtchecks_sentence_tr(_, _, M, _) :-
 rtchecks_sentence_tr(Sentence0, Sentence, M, Dict) :-
 	do_rtchecks_sentence_tr(Sentence0, Sentence, M, Dict).
 
-do_rtchecks_sentence_tr((_ --> _), _, _, _) :- !, fail. % TODO: dcg support here
+do_rtchecks_sentence_tr((Head --> Body), Clauses, M, Dict) :-
+	!,
+	process_sentence(Head, Body, (-->), Clauses, M, Dict).
 do_rtchecks_sentence_tr((Head :- Body), Clauses, M, Dict) :-
 	!,
-	process_sentence(Head, Body, Clauses, M, Dict).
+	process_sentence(Head, Body, (:-), Clauses, M, Dict).
 do_rtchecks_sentence_tr((:- _Decl), _, _, _) :-
 	!,
 	fail.
 do_rtchecks_sentence_tr(Head, Clauses, M, Dict) :-
-	process_sentence(Head, true, Clauses, M, Dict).
+	process_sentence(Head, true, (:-), Clauses, M, Dict).
 
 proc_ppassertion(check(Goal), PredName, Dict, Loc,
 		 rtcheck(Goal, PredName, Dict, Loc)).
@@ -471,21 +473,35 @@ qualify_goal(M, Goal0, Goal) :-
 	  Goal = IM:Goal0 % Last opportunity: define Goal0 in IM
 	).
 
-process_sentence(Head, Body0, Clauses, M, Dict) :-
+extend_head((:-),  Head,  Head) :- !.
+extend_head((-->), Head0, Head) :-
+	Head0 =.. ArgL0,
+	append(ArgL0, [_, _], ArgL),
+	Head =.. ArgL.
+
+process_sentence(Head0, Body0, Op, Clauses, M, Dict) :-
+	extend_head(Op, Head0, Head),
 	functor(Head, F, A),
 	( needs_posponed_definition(M:Head) ->
 	  location(Loc),
-	  assertz_ct(posponed_sentence_db(F, A, Head, Body0, Loc, M, Dict)),
+	  assertz_ct(posponed_sentence_db(F, A, Head, Op, Body0, Loc, M, Dict)),
 	  Clauses = []
-	; transform_sentence(F, A, Head, Body0, Body, Clauses0, M, Dict),
+	; transform_sentence(F, A, Head, Op, Body0, Body, Clauses0, M, Dict),
 	  add_cond_use_inline(Body0, Body, F, A, Clauses0, Clauses)
 	).
 
-head_body_clause(Head, Body, Clause) :-
+reduce_head(Head0, Head) :-
+	Head0 =.. ArgL0,
+	append(ArgL, [_, _], ArgL0),
+	Head =.. ArgL.
+
+head_body_clause((:-), Head, Body, Clause) :- !,
 	( Body == true ->
 	  Clause = Head
 	; Clause = (Head :- Body)
 	).
+head_body_clause((-->), Head0, Body, (Head --> Body)) :-
+	reduce_head(Head0, Head).
 
 :- if(current_prolog_flag(dialect, swi)).
 :- meta_predicate assertz_ct(:).
@@ -498,10 +514,11 @@ assertz_ct(Fact) :- assertz_fact(Fact).
 mark_generated_rtchecks(F, A, M) :-
     assertz_ct(generated_rtchecks_db(F, A, M)).
 
-transform_sentence_body(Dict, Head, F, A, M, Flag, Body, Clauses) :-
+transform_sentence_body(Dict, Head, Op, F, A, M, Flag, Body, Clauses) :-
 	( generated_rtchecks_db(F, A, M) ->
 	  head_alias_db(Head, Head1, M),
-	  Clauses = (Head1 :- Body)
+	  head_body_clause(Op, Head1, Body, Clause),
+	  Clauses = [Clause]
 	;
 	  location(PLoc),
 	  functor(Pred, F, A),
@@ -510,23 +527,23 @@ transform_sentence_body(Dict, Head, F, A, M, Flag, Body, Clauses) :-
 	    current_prolog_flag(rtchecks_asrloc,  UseAsrLoc),
 	    current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	    generate_rtchecks(F, A, M, Assertions, Pred, Dict, PLoc,
-			      (UsePredLoc, UseAsrLoc), _, Head, Flag,
-			      Body, Clauses0, [])
+			      (UsePredLoc, UseAsrLoc), _, Head, Op,
+			      Body, Flag, Clauses0, [])
 	  ->mark_generated_rtchecks(F, A, M),
 	    Clauses0 = Clauses
-	  ; head_body_clause(Head, Body, Clause),
+	  ; head_body_clause(Op, Head, Body, Clause),
 	    Clauses = [Clause]
 	  )
 	),
 	!.
 % transform_sentence_body(_, Head, _, _, _, Body, [(Head :- Body)]).
 
-transform_sentence(F, A, Head, Body0, Body, Clauses, M, Dict) :-
+transform_sentence(F, A, Head, Op, Body0, Body, Clauses, M, Dict) :-
 	current_prolog_flag(runtime_checks, yes),
-	process_body(Dict, Head, F, A, M, Body0, Body),
-	transform_sentence_body(Dict, Head, F, A, M, transform, Body, Clauses).
-transform_sentence(_, _, Head, Body, Body, Clause, _, _) :-
-	head_body_clause(Head, Body, Clause).
+	process_body(Dict, Head, Op, F, A, M, Body0, Body),
+	transform_sentence_body(Dict, Head, Op, F, A, M, transform, Body, Clauses).
+transform_sentence(_, _, Head, Op, Body, Body, Clause, _, _) :-
+	head_body_clause(Op, Head, Body, Clause).
 
 :- export(body_expansion/3).
 :- meta_predicate body_expansion(?, pred(2), ?).
@@ -569,10 +586,17 @@ ppassr_expansion(Goal, _, _, _, Goal) :-
 ppassr_expansion(PPAssertion, PredName, Dict, Loc, Goal) :-
 	proc_ppassertion(PPAssertion, PredName, Dict, Loc, Goal).
 
-process_body(Dict, Pred, F, A, M, Body0, Body) :-
-	( current_prolog_flag(rtchecks_callloc, literal) ->
-	  body_expansion(Body0, calllit_expansion(Dict, PredName0, Loc0), Body1)
-	; body_expansion(Body0, ppassr_expansion(PredName0, Dict, Loc0), Body1)
+process_body(Dict, Pred, Op, F, A, M, Body0, Body) :-
+	(
+	    Op = (-->) -> % TODO: program point assertions dcg support here
+	    Body0 = Body1
+	;
+	    (
+		current_prolog_flag(rtchecks_callloc, literal) ->
+		body_expansion(Body0, calllit_expansion(Dict, PredName0, Loc0), Body1)
+	    ;
+		body_expansion(Body0, ppassr_expansion(PredName0, Dict, Loc0), Body1)
+	    )
 	),
 	(
 	    Body0 == Body1 ->
@@ -795,7 +819,7 @@ generate_ctchecks(Pred, M, Loc, Lits) :-
     lists_to_lits(Goal0, Lits).
 
 generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
-		  Head, Flag, Body) -->
+		  Head, Op, Body, Flag) -->
 	{generate_step1_rtchecks(Assrs, Pred, M, PLoc, UsePosLoc, Body00, Body01)},
 	( {Body00 \== Body01} ->
 	  { rename_head('1', A, Pred, Pred1),
@@ -826,9 +850,10 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
 	),
 	( {Flag = transform} ->
 	  { record_head_alias(Pred, Pred2, M), % TODO: Optimize this literal
-	    head_alias_db(Head, Head1, M)
+	    head_alias_db(Head, Head1, M),
+	    head_body_clause(Op, Head1, Body, Clause)
 	  },
-	  [(Head1 :- Body)]
+	  [Clause]
 	; []
 	).
 
