@@ -5,6 +5,7 @@
 		      assertion_records/4,
 		      a_fake_body/5,
 		      assertion_db/11,
+		      normalize_assertion_head/9,
 		      assrt_lib_tr/4]).
 
 :- use_module(library(lists)).
@@ -59,8 +60,10 @@ a_fake_body(CompL, CallL, SuccL, GlobL0, (call(Comp), call(Call), call(Succ), ca
       list_conj(GlobL, Glob)
     ).
 
-% Note: assertion_db/11 encapsulates the nasty call to clause/2.
+% Note: assertion_db/11 encapsulates the nasty call to clause/2 and can be
+% extended to fetch assertions from extra places.
 %
+:- multifile assertion_db/11.
 assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Pos) :-
     clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody),
     once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
@@ -72,25 +75,18 @@ filepos_line(File, CharPos, Line, LinePos) :-
 
 % For compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
-    clause(assrt_lib:assertion_head(Head, M, Status, Type, Comm, Dict, Loc), _:FBody, Ref),
-    once(a_fake_body(Comp, Call, Succ, Glob0, FBody)),
+    assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob0, Comm, Dict, Loc),
     maplist(add_arg(Head), Glob0, Glob),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
-    ( nonvar(Loc),
-      ( Loc = file_term_position(File, Pos),
-	nonvar(Pos),
-	arg(1, Pos, From),
-	arg(2, Pos, To),
-	integer(From),
-	integer(To)
-      ->filepos_line(File, From, Line0, _),
-	filepos_line(File, To,   Line1, _)
-      ; Loc = file(File, Line0, -1, _),
-	Line1 = Line0
-      )
-    ->true
-    ; clause_property(Ref, file(File)),
-      clause_property(Ref, line_count(Line0 )),
+    ( Loc = file_term_position(File, Pos),
+      nonvar(Pos),
+      arg(1, Pos, From),
+      arg(2, Pos, To),
+      integer(From),
+      integer(To)
+    ->filepos_line(File, From, Line0, _),
+      filepos_line(File, To,   Line1, _)
+    ; Loc = file(File, Line0, -1, _),
       Line1 = Line0
     ).
 
@@ -327,15 +323,23 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
     ; Lit=B, LPos=BPos
     ).
 
-normalize_assertions(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
+current_normalized_assertion(Assertions, CM, APos, M:Head, Status, Type,
+			     Cp, Ca, Su, Gl, Co, HPos) :-
+    current_unfold_assertion(Assertions, CM, APos, M:Head, Status, Type,
+			     Cp0, Ca0, Su0, Gl0, Co, HPos),
+    once(maplist(maplist(compact_module_call(M)),
+		 [Cp0, Ca0, Su0, Gl0 ],
+		 [Cp,  Ca,  Su,  Gl])).
+
+current_unfold_assertion(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
     propdef(PGl, M, Gl, Gl0),
-    normalize_assertions(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
-normalize_assertions(Assertions is PGl, M, term_position(_, _, _, _, [APos, _]),
+    current_unfold_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
+current_unfold_assertion(Assertions is PGl, M, term_position(_, _, _, _, [APos, _]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
     propdef(PGl, M, Gl, Gl0),
-    normalize_assertions(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
-normalize_assertions(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :-
+    current_unfold_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
+current_unfold_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :-
     once(normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS)),
     current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
     normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, RPos),
@@ -574,31 +578,32 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     ; Clause = Clause0
     ),
     findall(a(Match, Clause, HPos),
-	    ( normalize_assertions(Assertions, CM, APos, M:Head, Status,
-				   Type, Cp0, Ca0, Su0, Gl0, Co, HPos),
+	    ( ( nonvar(APos) ->NonVarAPos=true ; NonVarAPos = fail ),
+	      current_normalized_assertion(Assertions, CM, APos, M:Head, Status,
+					   Type, Cp, Ca, Su, Gl, Co, HPos),
 	      ( nonvar(File),
-		nonvar(HPos),
-		arg(1, HPos, HFrom),
-		integer(HFrom)
-	      ->Loc = file_term_position(File, HPos),
-		filepos_line(File, HFrom, Line, _)
-	      ; ( nonvar(File),
-		  nonvar(Line0 )
-		->Loc = file(File, Line0, -1, _)
-		; true
-		),
-		Line = Line0
+		( nonvar(HPos),
+		  arg(1, HPos, HFrom),
+		  integer(HFrom)
+		->Loc = file_term_position(File, HPos),
+		  filepos_line(File, HFrom, Line, _)
+		; ( NonVarAPos=true
+		  ->Loc = file_term_position(File, APos)
+		  ; nonvar(Line0 )
+		  ->Loc = file(File, Line0, -1, _)
+		  ),
+		  Line = Line0
+		)
+	      ->true
+	      ; print_message(warning, format("No location for assertion ~q",
+					      [Assertions]))
 	      ),
-	      once(maplist(maplist(compact_module_call(M)),
-			   [Cp0, Ca0, Su0, Gl0 ],
-			   [Cp,  Ca,  Su,  Gl])),
 	      a_fake_body(Cp, Ca, Su, Gl, FBody)
 	    ),
 	    ARecords),
     ARecords \= [], % Is a valid assertion if it defines at least one Record
     maplist(assertion_records_helper(Match), ARecords, Records, RPos).
 
-:- public compact_module_call/3.
 compact_module_call(M, M:C, C) :- !.
 compact_module_call(M, (A0;B0), (A;B)) :- !,
     maplist(compact_module_call(M), A0, A),
