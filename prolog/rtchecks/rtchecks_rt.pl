@@ -12,7 +12,11 @@
 :- use_module(library(lists)).
 :- use_module(library(terms_vars)).
 :- use_module(library(freeze)).
-
+:- if(current_prolog_flag(dialect, swi)).
+:-  abolish(send_signal/1),
+    abolish(intercept/3).
+:- use_module(library(intercept)).
+:- endif.
 :- reexport(rtchecks(rtchecks_send)).
 
 :- doc(author, "Edison Mera").

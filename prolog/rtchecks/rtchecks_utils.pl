@@ -14,6 +14,9 @@
 :- use_module(library(debugger(debugger_lib))).
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
+:-  abolish(send_signal/1),
+    abolish(intercept/3).
+:- use_module(library(intercept)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
 tracertc :- backtrace(80).	% gtrace
 :- endif.
