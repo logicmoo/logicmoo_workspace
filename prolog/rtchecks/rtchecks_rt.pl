@@ -5,7 +5,11 @@
 			add_info_rtsignal/6,
 			call_stack/2,
 			'$meta$rtc'/2,
-			with_goal/2
+			with_goal/2,
+			check/1,
+			trust/1,
+			true/1,
+			false/1
 		       ],
 	  [assertions, nortchecks, hiord]).
 
@@ -97,3 +101,15 @@ call_stack(Goal, Pos) :-
 	    send_rtcheck(PropNames, Type, PredName, Dict, [Pos|Poss])).
 % :- meta_predicate '$meta$rtc'(0, -).
 '$meta$rtc'(Goal, Goal).
+
+:- meta_predicate check(goal).
+check(_).
+
+:- meta_predicate trust(goal).
+trust(_).
+
+:- meta_predicate true(goal).
+true(_).
+
+:- meta_predicate false(goal).
+false(_).

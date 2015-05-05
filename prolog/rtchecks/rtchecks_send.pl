@@ -5,7 +5,6 @@
     abolish(intercept/3).
 :- use_module(library(intercept)).
 :- endif.
-:- use_module(rtchecks(rtchecks_utils)).
 
 send_rtcheck([], _, _, _, _) :- !.
 send_rtcheck(Props, ErrType, PredName, Dict, AsrLocs) :-

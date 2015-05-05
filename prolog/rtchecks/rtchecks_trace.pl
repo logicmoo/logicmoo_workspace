@@ -1,6 +1,5 @@
 :- module(rtchecks_trace, [trace_rtc/1]).
 
-:- use_module(library(listing)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(ontrace)).
 :- use_module(rtchecks(rtchecks_rt)).
@@ -51,6 +50,10 @@ black_list_module(expansion_module).
 
 skip_predicate(rtchecks_utils:handle_rtcheck(_)).
 
+pp_assr(check(_), _).
+pp_assr(trust(_), _) .
+
+:- public rtcheck_port/3.
 rtcheck_port(unify, Frame, _) :-
     prolog_frame_attribute(Frame, context_module, CM),
     \+ black_list_module(CM),
@@ -61,7 +64,9 @@ rtcheck_port(unify, Frame, _) :-
     ( memberchk(TInstr, [i_call(PI), i_depart(PI)]),
       \+ black_list_module(M),
       functor(Goal, F, A),
-      current_assertion(Goal, M, rtcheck, _)
+      ( pp_assr(Goal, M)
+      ; current_assertion(Goal, M, rtcheck, _)
+      )
     ->'$break_at'(Clause, PC, true),
       fail
     ).
@@ -77,7 +82,8 @@ clause_location(Clause, PC, Loc) :-
     ontrace:clause_subloc(Clause, List, Loc).
 
 :- multifile
-    prolog:message_location//1.
+    prolog:message_location//1,
+    prolog:break_hook/6.
 
 prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_location(Clause, PC, Loc)},

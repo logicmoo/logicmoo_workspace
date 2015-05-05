@@ -8,9 +8,6 @@
 :- doc(module, "Examples of assertions for processing by the
 	run-time checker.").
 
-:- set_prolog_flag(rtchecks_predloc, yes).
-:- set_prolog_flag(rtchecks_callloc, predicate).
-
 :- entry pred1/2 : (int * int).
 :- entry pred1/2 : (atm * atm).
 

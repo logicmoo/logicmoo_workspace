@@ -1,6 +1,7 @@
 :- module(rtchecks_tr, [rtchecks_sentence_tr/4, valid_commands/1,
 			rtchecks_goal_tr/3, collect_assertions/4,
-			current_assertion/4, generate_rtchecks/8],
+			current_assertion/4, generate_rtchecks/7,
+			proc_ppassertion/5],
 	  [assertions, nortchecks, nativeprops, isomodes, dcg, hiord]).
 
 :- multifile have_inline/0.
@@ -14,7 +15,6 @@
      fail
    ; true
    ).
-:- use_module(library(filesex)).
 :- use_module(engine(basic_props)).
 :- use_module(library(hiordlib), [map/3]).
 :- use_module(library(lists)).
@@ -173,14 +173,6 @@ rtcheck_assr_type(success).
 
 :- if(have_inline).
 
-add_cond_decl(Body0, Body, Decl, Clauses0, Clauses) :-
-	( Body0 == Body -> Clauses = Clauses0
-	; Clauses = [(:- Decl)|Clauses0]
-	).
-
-add_cond_use_inline(Body0, Body, F, A, Clauses0, Clauses) :-
-	add_cond_decl(Body0, Body, use_inline(F/A), Clauses0, Clauses).
-
 add_use_inline(F, A, Clauses, [(:- use_inline(F/A))|Clauses]).
 
 insert_inline_declarations(F, A, M, Head, Clauses,
@@ -189,8 +181,6 @@ insert_inline_declarations(F, A, M, Head, Clauses,
 	functor(Head1, F1, A1).
 
 :- else.
-
-add_cond_use_inline(_, _, _, _, Clauses, Clauses).
 
 add_use_inline(_, _, Clauses, Clauses).
 
@@ -207,20 +197,12 @@ inline_db(_, _, _, _) :- fail.
 ciao:declaration_hook(nortchecked, rtchecks_tr:nortchecked(M)) :-
     '$set_source_module'(M, M).
 
-rel_file_name(ASrc, Src) :-
-    ( working_directory(Dir, Dir),
-      directory_file_path(Dir, Src, ASrc)
-    ->true
-    ; Src = ASrc
-    ).
-
 :- dynamic location/3.
 location(Loc) :-
-	ignore((( location(ASrc, Ln0, Ln1)
-		; source_location(ASrc, Ln0 ),
+	ignore((( location(Src, Ln0, Ln1)
+		; source_location(Src, Ln0 ),
 		  Ln0 = Ln1
 		),
-		rel_file_name(ASrc, Src),
 		Loc = loc(Src, Ln0, Ln1)
 	       )).
 
@@ -240,11 +222,10 @@ exported_predicate(M:F/A) :-
 	).
 :- endif.
 
-proc_posponed_sentence(Clauses0, M) :-
-	posponed_sentence_db(F, A, Head, Op, Body0, loc(S, LB, LE), M, Dict),
+proc_posponed_sentence(Clauses, M) :-
+	posponed_sentence_db(F, A, Head, Op, Body, loc(S, LB, LE), M, Dict),
 	asserta_fact(location(S, LB, LE), Ref),
-	transform_sentence(F, A, Head, Op, Body0, Body, Clauses, M, Dict),
-	add_cond_use_inline(Body0, Body, F, A, Clauses0, Clauses),
+	transform_sentence(F, A, Head, Op, Body, Clauses, M, Dict),
 	erase(Ref).
 
 remaining_preds(Preds, M) :-
@@ -329,12 +310,8 @@ add_declarations(F, A, M, H) -->
 proc_remaining_assertions(Preds, Clauses, M, Dict) :-
 	member(F/A, Preds),
 	add_declarations(F, A, M, Head, Clauses, Clauses1),
-	current_prolog_flag(rtchecks_predloc, UsePredLoc),
-	setup_call_cleanup(
-	    set_prolog_flag(rtchecks_predloc, no),
-	    transform_sentence_body(Dict, Head, (:-), F, A, M, original,
-				    '$orig_call'(Head), Clauses0),
-	    set_prolog_flag(rtchecks_predloc, UsePredLoc)),
+	transform_sentence_body(Dict, Head, (:-), F, A, M, original,
+				'$orig_call'(Head), Clauses0),
 	insert_inline_declarations(F, A, M, Head, Clauses0, Clauses1).
 
 :- if(current_prolog_flag(dialect, swi)).
@@ -402,11 +379,13 @@ proc_ppassertion(true(_),  _, _, _, true).
 proc_ppassertion(false(_), _, _, _, true).
 
 rtchecks_goal_tr(end_of_file, _,         M) :- !, cleanup_db(M).
+/*
 rtchecks_goal_tr(PPAssertion, PPRTCheck, _) :-
 	proc_ppassertion(PPAssertion, PredName, Dict, Loc, PPRTCheck),
 	b_getval('$variable_names', Dict),
 	location(Loc),
 	PredName = PPAssertion, !.
+*/
 rtchecks_goal_tr('$orig_call'(Goal0), Goal, M) :- !,
 	qualify_goal(M, Goal0, Goal). % TODO: doesn't work with builtins (swi) --EMM
 :- if(current_prolog_flag(dialect, ciao)).
@@ -477,15 +456,14 @@ extend_head((-->), Head0, Head) :-
 	append(ArgL0, [_, _], ArgL),
 	Head =.. ArgL.
 
-process_sentence(Head0, Body0, Op, Clauses, M, Dict) :-
+process_sentence(Head0, Body, Op, Clauses, M, Dict) :-
 	extend_head(Op, Head0, Head),
 	functor(Head, F, A),
 	( needs_posponed_definition(M:Head) ->
 	  location(Loc),
-	  assertz_ct(posponed_sentence_db(F, A, Head, Op, Body0, Loc, M, Dict)),
+	  assertz_ct(posponed_sentence_db(F, A, Head, Op, Body, Loc, M, Dict)),
 	  Clauses = []
-	; transform_sentence(F, A, Head, Op, Body0, Body, Clauses0, M, Dict),
-	  add_cond_use_inline(Body0, Body, F, A, Clauses0, Clauses)
+	; transform_sentence(F, A, Head, Op, Body, Clauses, M, Dict)
 	).
 
 reduce_head(Head0, Head) :-
@@ -522,11 +500,8 @@ transform_sentence_body(Dict, Head, Op, F, A, M, Flag, Body, Clauses) :-
 	  functor(Pred, F, A),
 	  collect_assertions(Pred, M, rtcheck, Assertions),
 	  ( Assertions \= [] ->
-	    current_prolog_flag(rtchecks_asrloc,  UseAsrLoc),
-	    current_prolog_flag(rtchecks_predloc, UsePredLoc),
 	    generate_rtchecks(F, A, M, Assertions, Pred, Dict, PLoc,
-			      (UsePredLoc, UseAsrLoc), _, Head, Op,
-			      Body, Flag, Clauses0, [])
+			      _, Head, Op, Body, Flag, Clauses0, [])
 	  ->mark_generated_rtchecks(F, A, M),
 	    Clauses0 = Clauses
 	  ; head_body_clause(Op, Head, Body, Clause),
@@ -536,97 +511,11 @@ transform_sentence_body(Dict, Head, Op, F, A, M, Flag, Body, Clauses) :-
 	!.
 % transform_sentence_body(_, Head, _, _, _, Body, [(Head :- Body)]).
 
-transform_sentence(F, A, Head, Op, Body0, Body, Clauses, M, Dict) :-
+transform_sentence(F, A, Head, Op, Body, Clauses, M, Dict) :-
 	current_prolog_flag(runtime_checks, yes),
-	process_body(Dict, Head, Op, F, A, M, Body0, Body),
 	transform_sentence_body(Dict, Head, Op, F, A, M, transform, Body, Clauses).
-transform_sentence(_, _, Head, Op, Body, Body, Clause, _, _) :-
+transform_sentence(_, _, Head, Op, Body, Clause, _, _) :-
 	head_body_clause(Op, Head, Body, Clause).
-
-:- export(body_expansion/3).
-:- meta_predicate body_expansion(?, pred(2), ?).
-
-body_expansion(Goal0, P, Goal) :-
-	var(Goal0),
-	!,
-	call(P, Goal0, Goal).
-body_expansion((A, B), P, (NA, NB)) :-
-	!,
-	body_expansion(A, P, NA),
-	body_expansion(B, P, NB).
-body_expansion((A; B), P, (NA; NB)) :-
-	!,
-	body_expansion(A, P, NA),
-	body_expansion(B, P, NB).
-body_expansion((A->B), P, (NA->NB)) :-
-	!,
-	body_expansion(A, P, NA),
-	body_expansion(B, P, NB).
-body_expansion((X^A), P, (X^NA)) :-
-	!,
-	body_expansion(A, P, NA).
-body_expansion((\+ A), P, (\+ NA)) :-
-	!,
-	body_expansion(A, P, NA).
-body_expansion(if(A, B, C), P, if(NA, NB, NC)) :-
-	!,
-	body_expansion(A, P, NA),
-	body_expansion(B, P, NB),
-	body_expansion(C, P, NC).
-body_expansion(Goal0, P, Goal) :-
-	call(P, Goal0, Goal),
-	!.
-body_expansion(Goal, _, Goal).
-
-ppassr_expansion(Goal, _, _, _, Goal) :-
-	var(Goal),
-	!.
-ppassr_expansion(PPAssertion, PredName, Dict, Loc, Goal) :-
-	proc_ppassertion(PPAssertion, PredName, Dict, Loc, Goal).
-
-process_body(Dict, Pred, Op, F, A, M, Body0, Body) :-
-	(
-	    Op = (-->) -> % TODO: program point assertions dcg support here
-	    Body0 = Body1
-	;
-	    (
-		current_prolog_flag(rtchecks_callloc, literal) ->
-		body_expansion(Body0, calllit_expansion(Dict, PredName0, Loc0), Body1)
-	    ;
-		body_expansion(Body0, ppassr_expansion(PredName0, Dict, Loc0), Body1)
-	    )
-	),
-	(
-	    Body0 == Body1 ->
-	    Body = Body1
-	;
-	    location(Loc),
-	    current_prolog_flag(rtchecks_namefmt, NameFmt),
-	    get_predname(NameFmt, Dict, Pred, PredName),
-	    collapse_terms(Body1, [Loc = Loc0, PredName = PredName0], Terms),
-	    lists_to_lits([Terms, Body1], Body),
-	    functor(Pred, F, A)
-	).
-
-put_call_stack(Goal0, Pos, Goal) :- Goal = call_stack(Goal0, Pos).
-
-calllit_expansion(Goal0, PDict, PredName, Loc, Goal) :-
-	var(Goal0),
-	!,
-	current_prolog_flag(rtchecks_namefmt, NameFmt),
-	get_predname(NameFmt, PDict, Goal0, LitName),
-	put_call_stack(Goal0, litloc(LitName, Loc-PredName), Goal).
-calllit_expansion(!,           _,     _,        _,   !) :- !.
-calllit_expansion(true,        _,     _,        _,   true) :- !.
-calllit_expansion(A =.. B,     _,     _,        _,   A =.. B) :- !.
-calllit_expansion(call(Goal0), _,     _,        _,   call(Goal0)) :- !.
-calllit_expansion(PPAssertion, PDict, PredName, Loc, PPRTCheck) :-
-	proc_ppassertion(PPAssertion, PredName, PDict, Loc, PPRTCheck),
-	!.
-calllit_expansion(Goal0, PDict, PredName, Loc, Goal) :-
-	current_prolog_flag(rtchecks_namefmt, NameFmt),
-	get_predname(NameFmt, PDict, Goal0, LitName),
-	put_call_stack(Goal0, litloc(LitName, Loc-PredName), Goal).
 
 rename_head(Tag, A, Head, Head1) :-
 	Head =.. [F|Args],
@@ -686,28 +575,23 @@ order to simplify the generated code as far as possible.
 
 */
 
-generate_common_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs,
-	    CompatAssrt, CallAssrt, SuccAssrt, CompAssrt) -->
-	compat_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs,
-	    CompatAssrt, [], ChkCompatL0),
-	calls_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs,
-	    CallAssrt, [], CheckedL0),
-	success_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs,
-	    SuccAssrt, CheckedL0, CheckedL1),
-	compatpos_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs,
-	    CompatAssrt, ChkCompatL0),
-	comp_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs,
-	    CompAssrt, CheckedL1).
+generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt,
+			 CallAssrt, SuccAssrt, CompAssrt) -->
+	compat_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt, [], ChkCompatL0),
+	calls_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CallAssrt, [], CheckedL0),
+	success_rtchecks(Assertions, Pred, M, PLoc, PosLocs, SuccAssrt, CheckedL0, CheckedL1),
+	compatpos_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt, ChkCompatL0),
+	comp_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompAssrt, CheckedL1).
 
-generate_step1_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, Goal0, Goal) :-
-	do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc,
-	    PosLocs0, Goal1, Goal),
+generate_step1_rtchecks(Assertions, Pred, M, PLoc, Goal0, Goal) :-
+	do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, PosLocs0,
+				   Goal1, Goal),
 	once(reverse(PosLocs0, PosLocs1)),
 	collapse_terms(Goal1, PosLocs1, PosLocs2),
 	reverse(PosLocs2, PosLocs),
 	append(PosLocs, Goal1, Goal0).
 
-do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs) -->
+do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, PosLocs) -->
 	{
 	    current_prolog_flag(rtchecks_level, Level0),
 	    neg_level(Level0, Level),
@@ -716,28 +600,19 @@ do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs) -->
 	    succ_assrt(Level, [exit, success, pred], SuccAssrt, []),
 	    comp_assrt(Level, [comp, pred], CompAssrt, [])
 	},
-	generate_common_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs,
+	generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs,
 	    CompatAssrt, CallAssrt, SuccAssrt, CompAssrt).
 
-generate_step2_rtchecks(Assertions, Pred, M, PDict, PLoc, UsePosLoc, Goal0,
+generate_step2_rtchecks(Assertions, Pred, M, PDict, PLoc, Goal0,
 	    Goal) :-
-	do_generate_step2_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs0,
-	    Goal1, Goal2),
-	(
-	    Goal1 == Goal2 ->
-	    Goal = Goal2
-	;
-	    current_prolog_flag(rtchecks_namefmt, NameFmt),
-	    current_prolog_flag(rtchecks_callloc, CallLoc),
-	    generate_callloc(CallLoc, UsePosLoc, PDict, PLoc, PosLocs0, Pred,
-		NameFmt, Goal2, Goal)
-	),
+	do_generate_step2_rtchecks(Assertions, Pred, M, PLoc, PosLocs0,
+				   Goal1, Goal),
 	once(reverse(PosLocs0, PosLocs1)),
 	collapse_terms(Goal1, PosLocs1, PosLocs2),
 	reverse(PosLocs2, PosLocs),
 	append(PosLocs, Goal1, Goal0).
 
-do_generate_step2_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs) -->
+do_generate_step2_rtchecks(Assertions, Pred, M, PLoc, PosLocs) -->
 	{
 	    current_prolog_flag(rtchecks_level, Level),
 	    compat_assrt(Level, [], CompatAssrt, []),
@@ -745,7 +620,7 @@ do_generate_step2_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs) -->
 	    succ_assrt(Level, [test, success, pred], SuccAssrt, []),
 	    comp_assrt(Level, [test, comp, pred], CompAssrt, [])
 	},
-	generate_common_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs,
+	generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs,
 	    CompatAssrt, CallAssrt, SuccAssrt, CompAssrt).
 
 % ----------------------------------------------------------------------------
@@ -769,23 +644,12 @@ comp_assrt(inner, BL) -->
 	findall((A, B), (valid_assertions(A,B), memberchk(B, BL))).
 % ----------------------------------------------------------------------------
 
-generate_callloc2(Dict, PLoc, PosLocs, Pred, NameFmt, Body0, Body) :-
-	get_predname(NameFmt, Dict, Pred, PredName),
-	push_term(PLoc, PosLocs, Loc),
-	!,
-	put_call_stack(Body, callloc(PredName, Loc), Body0).
-
-generate_callloc(predicate, (yes, _), Dict, Loc, PosLocs, Pred, NameFmt) -->
-	!,
-	generate_callloc2(Dict, Loc, PosLocs, Pred, NameFmt).
-generate_callloc(_, _, _, _, _, _, _) --> [].
-
-generate_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc, Lits, CM:G) :-
+generate_rtchecks(Assrs, Pred, M, PDict, PLoc, Lits, CM:G) :-
 	( M \= CM
-	->generate_step1_rtchecks(Assrs, Pred, M, PLoc, UsePosLoc, G0, G1)
+	->generate_step1_rtchecks(Assrs, Pred, M, PLoc, G0, G1)
 	; G0 = G1
 	),
-	generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc, G1, CM:G),
+	generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, G1, CM:G),
 	lists_to_lits(G0, Lits),
 	!.
 
@@ -808,9 +672,7 @@ generate_ctchecks(Pred, M, Loc, Lits) :-
 				% Abstraction step, here we lose precision
 				% but we gain computability of checks at
 				% earlier, even compile-time. --EMM
-    current_prolog_flag(rtchecks_asrloc,  UseAsrLoc),
-    current_prolog_flag(rtchecks_predloc, UsePredLoc),
-    compat_rtchecks(Assertions, Pred, Loc, (UsePredLoc, UseAsrLoc), PosLocs0, _,
+    compat_rtchecks(Assertions, Pred, M, Loc, PosLocs0, _,
 		    [], _, Goal1, []),
     once(reverse(PosLocs0, PosLocs1)),
     collapse_terms(Goal1, PosLocs1, PosLocs2),
@@ -819,9 +681,9 @@ generate_ctchecks(Pred, M, Loc, Lits) :-
     Goal0 \= [],
     lists_to_lits(Goal0, Lits).
 
-generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
+generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, Pred2,
 		  Head, Op, Body, Flag) -->
-	{generate_step1_rtchecks(Assrs, Pred, M, PLoc, UsePosLoc, Body00, Body01)},
+	{generate_step1_rtchecks(Assrs, Pred, M, PLoc, Body00, Body01)},
 	( {Body00 \== Body01} ->
 	  { rename_head('1', A, Pred, Pred1),
 	    record_goal_alias(Pred, Pred1, M),
@@ -832,8 +694,7 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, UsePosLoc, Pred2,
 	  [(Pred :- Lits0 )]
 	; {Pred = Pred1}
 	),
-	{generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc,
-				 Body1, Body12)},
+	{generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, Body1, Body12)},
 	( {Body1 \== Body12} ->
 	  ( {Flag = transform} ->
 	    { rename_head('2', A, Pred, Pred2),
@@ -879,10 +740,8 @@ remaining_pred(F, A, M) :-
 current_assertion(Pred0, M, TimeCheck,
 		  assr(Pred, Status, Type, Compat, Call, Succ, Comp, Loc, PredName,
 		       CompatName, CallName, SuccName, CompName, Dict)) :-
-	working_directory(Dir, Dir),
 	current_assertion_2(Pred0, TimeCheck, Status, Type, Pred, Compat, Call,
-			    Succ, Comp0, Dict0, AS, LB, LE, _F, _A, M),
-	rel_file_name(AS, S),
+			    Succ, Comp0, Dict0, S, LB, LE, _F, _A, M),
 	Loc = loc(S, LB, LE),
 	collapse_dups(Comp0, Comp),
 	current_prolog_flag(rtchecks_namefmt, NameFmt),
@@ -902,35 +761,33 @@ pre_fails(pre(_, _, _, PropValues), cui(PropValues, _, (PropValues \= []))).
 pre_error(pre(_, _, Error, PropValues), cui(PropValues, _, Error)).
 
 compat_rtcheck(assr(Pred, Status, Type, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
-	       UsePosLoc, Pred, PLoc, PosLocs, StatusTypes,
+	       Pred, M, PLoc, PosLocs, StatusTypes,
 	       pre(ChkCompat, Compat,
 		   send_rtcheck(PropValues, compat, PredName, Dict, PosLoc),
 		   PropValues)) :-
 	memberchk((Status, Type), StatusTypes),
 	\+(Compat == []),
-	insert_posloc(UsePosLoc, PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(compat, Compat, CompatNames, PropValues, ChkCompat).
+	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
+	get_checkc(compat, M, Compat, CompatNames, PropValues, ChkCompat).
 
-compat_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs,
-	    StatusTypes, CheckedL0, CheckedL) -->
-	{collect_checks(Assertions, compat_rtcheck(UsePosLoc, Pred,
+compat_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, CheckedL) -->
+	{collect_checks(Assertions, compat_rtcheck(Pred, M,
 		    PLoc, PosLocs, StatusTypes), ChkCalls)},
 	body_check_pre(ChkCalls, pre_lit, pre_fails, pre_error, collapse_prop,
 	    CheckedL0, CheckedL).
 
 calls_rtcheck(assr(Pred, Status, Type, _, Call, _, _, ALoc, PName, _, CallNames, _, _, Dict),
-	      UsePosLoc, Pred, PLoc, PosLocs, StatusTypes,
+	      Pred, M, PLoc, PosLocs, StatusTypes,
 	      pre(ChkCall, Call,
 		  send_rtcheck(PropValues, calls, PredName, Dict, PosLoc),
 		  PropValues)) :-
 	memberchk((Status, Type), StatusTypes),
 	\+(Call == []),
-	insert_posloc(UsePosLoc, PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(call, Call, CallNames, PropValues, ChkCall).
+	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
+	get_checkc(call, M, Call, CallNames, PropValues, ChkCall).
 
-calls_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
-	    CheckedL0, CheckedL) -->
-	{collect_checks(Assertions, calls_rtcheck(UsePosLoc, Pred,
+calls_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, CheckedL) -->
+	{collect_checks(Assertions, calls_rtcheck(Pred, M,
 		    PLoc, PosLocs, StatusTypes), ChkCalls)},
 	body_check_pre(ChkCalls, pre_lit, pre_fails, pre_error, collapse_prop,
 	    CheckedL0, CheckedL).
@@ -941,27 +798,25 @@ success_call_lit(succ(ChkCall, Call, PropValues, _, _),
 success_succ_lit(succ(_, _, PropValues, ChkSucc, Succ),
 	    cui(Succ - PropValues, _, ChkSucc)).
 
-:- pred success_rtchecks/10 + not_fails.
+:- pred success_rtchecks/11 + not_fails.
 
-success_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
-	    CheckedL0, CheckedL) -->
-	{collect_checks(Assertions, success_rtcheck(UsePosLoc, Pred,
+success_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, CheckedL) -->
+	{collect_checks(Assertions, success_rtcheck(Pred, M,
 		    PLoc, PosLocs, StatusTypes), CheckSuccs)},
 	body_check_pos(CheckSuccs, success_call_lit, success_succ_lit,
-	    collapse_prop, pos(Pred, success), CheckedL0,
+	    collapse_prop, pos(Pred, M, success), CheckedL0,
 	    CheckedL).
 
 check_poscond(PosLoc, PredName, Dict, Prop, PropNames, PropValues,
 	    i(PosLoc, PredName, Dict, Prop, PropNames, PropValues)).
 
-success_rtcheck(
-	    assr(Pred, Status, Type, _, Call, Succ, _, ALoc, PName, _, _, SuccNames, _, Dict),
-	    UsePosLoc, Pred, PLoc, PosLocs, StatusTypes,
-	    succ(ChkCall, Call, PropValues, ChkSucc, Succ)) :-
+success_rtcheck(assr(Pred, Status, Type, _, Call, Succ, _, ALoc, PName, _, _, SuccNames, _, Dict),
+		Pred, M, PLoc, PosLocs, StatusTypes,
+		succ(ChkCall, Call, PropValues, ChkSucc, Succ)) :-
 	member((Status, Type), StatusTypes),
 	\+(Succ == []),
-	insert_posloc(UsePosLoc, PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(call, Call, PropValues, ChkCall),
+	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
+	get_checkc(call, M, Call, PropValues, ChkCall),
 	check_poscond(PosLoc, PredName, Dict, Succ, SuccNames, PropValues, ChkSucc).
 
 compatpos_compat_lit(compatpos(ChkCompat, _, Compat, PropValues),
@@ -970,21 +825,20 @@ compatpos_compat_lit(compatpos(ChkCompat, _, Compat, PropValues),
 compatpos_lit(compatpos(_, ChkCompatPos, Compat, PropValues),
 	    cui(Compat - PropValues, _, ChkCompatPos)).
 
-compatpos_rtchecks(Assertions, Pred, PLoc, UsePosLoc, PosLocs, StatusTypes,
+compatpos_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes,
 	    CheckedL0) -->
-	{collect_checks(Assertions, compatpos_rtcheck(UsePosLoc, Pred,
-		    PLoc, PosLocs, StatusTypes), CheckSuccs)},
+	{collect_checks(Assertions, compatpos_rtcheck(Pred, M,
+		PLoc, PosLocs, StatusTypes), CheckSuccs)},
 	body_check_pos(CheckSuccs, compatpos_compat_lit, compatpos_lit,
-	    collapse_prop, pos(Pred, compatpos), CheckedL0, _).
+	    collapse_prop, pos(Pred, M, compatpos), CheckedL0, _).
 
-compatpos_rtcheck(
-	    assr(Pred, Status, Type, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
-	    UsePosLoc, Pred, PLoc, PosLocs, StatusTypes,
-	    compatpos(ChkCompat, ChkCompatPos, Compat, PropValues)) :-
+compatpos_rtcheck(assr(Pred, Status, Type, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
+		  Pred, M, PLoc, PosLocs, StatusTypes,
+		  compatpos(ChkCompat, ChkCompatPos, Compat, PropValues)) :-
 	member((Status, Type), StatusTypes),
 	\+(Compat == []),
-	insert_posloc(UsePosLoc, PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(compat, Compat, PropValues, ChkCompat),
+	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
+	get_checkc(compat, M, Compat, PropValues, ChkCompat),
 	check_poscond(PosLoc, PredName, Dict, Compat, CompatNames, PropValues,
 	    ChkCompatPos).
 
@@ -1038,14 +892,13 @@ get_chkcomp(Comp, PropValues, Pred, M, PredName, Dict, PosLoc, Body0, Body) :-
 	; Body0 = Body1 % PredName and Dict are less relevant than PosLoc
 	).
 
-comp_rtcheck(assr(Pred, Status, Type, _, Call, _, Comp, ALoc, PName, _,
-		  _CallNames, _, CompNames, Dict),
-	    UsePosLoc, Pred, PLoc, PosLocs, StatusTypes,
-	    comp(ChkCall, Call, PropValues, ChkComp, Comp)) :-
+comp_rtcheck(assr(Pred, Status, Type, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames, Dict),
+	     Pred, M, PLoc, PosLocs, StatusTypes,
+	     comp(ChkCall, Call, PropValues, ChkComp, Comp)) :-
 	member((Status, Type), StatusTypes),
 	\+(Comp == []),
-	get_checkc(call, Call, PropValues, ChkCall),
-	insert_posloc(UsePosLoc, PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
+	get_checkc(call, M, Call, PropValues, ChkCall),
+	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
 	check_poscond(PosLoc, PredName, Dict, Comp, CompNames, PropValues, ChkComp).
 
 comp_call_lit(comp(ChkCall, Call, PropValues, _, _),
@@ -1067,10 +920,11 @@ body_check_comp(ChkComps, CheckedL0, GlobName, Pred, M, Body0, Body) :-
 	comps_to_goal([with_goal(G, Pred)-G|ChkComp1], compound_comp, CompBody, Body),
 	Body0 = [CompCall, CompBody].
 
-comp_rtchecks(Assertions, Pred, M, PLoc, UsePosLoc, PosLocs, StatusTypes,
+comp_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes,
 	    CheckedL) -->
-	{collect_checks(Assertions, comp_rtcheck(UsePosLoc, Pred,
-		    PLoc, PosLocs, StatusTypes), ChkComps),
+	{collect_checks(Assertions,
+			comp_rtcheck(Pred, M, PLoc, PosLocs, StatusTypes),
+			ChkComps),
 	 current_prolog_flag(rtchecks_namefmt, NameFmt),
 	 get_globname(NameFmt, Pred, GlobName)},
 	body_check_comp(ChkComps, CheckedL, GlobName, Pred, M).

@@ -129,15 +129,13 @@ message_to_swi([](M))   --> !, map(M, message_to_swi).
 message_to_swi(T)       --> !, ['~w'-[T]].
 :- endif.
 
-position_to_message(predloc(Pred, Loc),
-		    message_lns(Loc, error, ['Failed in ', ''(Pred), '.'])).
-position_to_message(callloc(Pred, Loc),
-		    message_lns(Loc, error, ['Failed during invocation of ',
-					     ''(Pred)])).
-position_to_message(litloc(Lit, Loc-(Pred)),
-		    message_lns(Loc, error,
-				['Failed when invocation of ', ''(Pred),
-				 ' called ', ''(Lit), ' in its body.'])).
+position_to_message(posloc(Pred, Loc),
+		    message_lns(Loc, error, ['Failure of ', ''(Pred)|Tail])) :-
+    ( Loc = clause_pc(Clause, PC)
+    ->clause_property(Clause, predicate(Caller)),
+      Tail = [' in ', ''(Caller), '.']
+    ; Tail = ['.']
+    ).
 position_to_message(asrloc(Loc),
 		    message_lns(Loc, error, [])).
 position_to_message(pploc(Loc),
