@@ -1,6 +1,14 @@
-:- module(qualify_meta_goal, [qualify_meta_goal/3]).
+:- module(qualify_meta_goal, [qualify_meta_goal/2,
+			      qualify_meta_goal/3]).
 
 :- use_module(library(check), []). % for add_module/3
+
+:- meta_predicate qualify_meta_goal(0, -).
+qualify_meta_goal(Goal0, Goal) :-
+    predicate_property(Goal0, meta_predicate(Meta)), !,
+    qualify_meta_goal(Goal0, Meta, Goal).
+qualify_meta_goal(_:Goal, Goal).
+
 qualify_meta_goal(M:Goal0, Meta, Goal) :-
     functor(Goal0, F, N),
     functor(Goal, F, N),
