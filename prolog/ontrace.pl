@@ -1,12 +1,16 @@
-:- module(ontrace, [ontrace/3]).
+:- module(ontrace, [ontrace/3,
+		    call_inoutex/3]).
 
+:- use_module(library(edinburgh)).
+:- use_module(library(lists)).
+:- use_module(library(option)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(clambda)).
 :- use_module(library(prolog_clause), []).
-:- use_module(library(prolog_source), []).
+:- use_module(library(prolog_source)).
 :- use_module(library(prolog_codewalk), []).
 
-:- meta_predicate ontrace(0,5,+).
+:- meta_predicate ontrace(0,6,+).
 
 ontrace(Goal, OnTrace, OptionL) :-
     State=state(_, _, _),	% Allow destructive assignment
@@ -36,9 +40,9 @@ setup_trace(State, M:OnTrace, OptL) :-
     true_1(\_^true, True1),
     select_option(goal(ValidGoal), OptL,  OptL1, True1),
     select_option(file(ValidFile), OptL1, _,     True1),
-    asserta((user:prolog_trace_interception(Port, Frame, PC, continue)
-	    :- ignore(\+trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
-				   M:ValidFile))),
+    asserta((user:prolog_trace_interception(Port, Frame, PC, Action)
+	    :- ignore(trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
+			  M:ValidFile, Action))),
 	    Ref),
     maplist_dcg(port_mask, [call, exit, fail, redo, unify, exception], 0, Mask),
     '$visible'(Visible, Mask),
@@ -66,28 +70,35 @@ user_defined_module(M) :-
     M \= ontrace,
     module_property(M, class(user)).
 
-:- public trace_port/6.
-:- meta_predicate trace_port(+,+,+,5,1,1).
-trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile) :-
+:- public trace_port/7.
+:- meta_predicate trace_port(+,+,+,5,1,1,-).
+trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
+    do_trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action).
+
+do_trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
     prolog_frame_attribute(Frame,  goal, M:H), % M:H to skip local predicates
     \+ \+ call(ValidGoal, M:H),
-    find_parent_subloc(Port, Frame, M, ValidFile, ParentL, SubLoc),
+    find_parents(Port, Frame, ParentL, Cl, List),
+    ( clause_property(Cl, file(File))
+    -> \+ \+ call(ValidFile, File)
+    ; true
+    ),
+    clause_subloc(Cl, List, SubLoc),
     once(( member(F, [Frame|ParentL]),
     	   ( prolog_frame_attribute(F, goal, PM:_),
     	     user_defined_module(PM)
     	   ))),
-    call(OnTrace, Port, Frame, PC, ParentL, SubLoc).
+    !,
+    call(OnTrace, Port, Frame, PC, ParentL, SubLoc, Action).
+do_trace_port(_, _, _, _, _, _, continue).
 
-find_parent_subloc(Port, Frame, Module, ValidFile, ParentL, SubLoc) :-
+find_parents(Port, Frame, ParentL, Cl, List) :-
     ( % Due to a bug in SWI-Prolog, we can not rely on redo(PC) +
       % $clause_term_position(Cl,PC,List), in any case, the coverage of builtins
       % is not big deal, compared to the coverage of custom predicates --EMM
-      member(Port, [redo(_PC), unify /*, exit*/]) % TODO: if exit placed here,
-                                                  % then it is marked in the
-                                                  % clause, else in the literal,
-                                                  % perhaps would be good to
-                                                  % have exit_clause and
-                                                  % exit_lit
+      member(Port, [redo(_PC), unify /*, exit*/])
+    % TODO: if exit placed here, then it is marked in the clause, else in the
+    % literal, perhaps would be good to have exit_clause and exit_lit
     ->ParentL = [],
       prolog_frame_attribute(Frame, clause, Cl),
       List = []
@@ -98,8 +109,7 @@ find_parent_subloc(Port, Frame, Module, ValidFile, ParentL, SubLoc) :-
       ->true
       ; List = []
       )
-    ),
-    clause_subloc(Module, ValidFile, Cl, List, SubLoc).
+    ).
 
 find_parent_with_pc(Frame, PC, List0, List) :-
     prolog_frame_attribute(Frame, parent, Parent),
@@ -108,27 +118,25 @@ find_parent_with_pc(Frame, PC, List0, List) :-
     ; find_parent_with_pc(Parent, PC, [Parent|List0 ], List)
     ).
 
-%% clause_subloc(+Module, :SkipFile, +ClauseRef, +List, -SubLoc) is det.
+%% clause_subloc(+ClauseRef, +List, -SubLoc) is det.
 %
-% We need to use the TermPos as far as possible, that is why we call this method
-% even setting List=[] in its caller, and should not be simplified earlier.
-%
-clause_subloc(Module, ValidFile, Cl, List, SubLoc) :-
+clause_subloc(Cl, List, SubLoc) :-
     ( clause_property(Cl, file(File)),
-      clause_property(Cl, line_count(Line))
-    -> \+ \+ call(ValidFile, File),
-      ( read_term_at_line(File, Line, Module, Term, TermPos)
-      ->( ( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
-	    match_clause(Cl, ClauseL, Module, List2, List),
-	    nonvar(ClausePos)
-	  ->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos), % Expensive
-	      nonvar(SubPos)
-	    ->SubLoc = file_term_position(File, SubPos)
-	    ; SubLoc = file_term_position(File, ClausePos)
-	    )
-	  ; SubLoc = file_term_position(File, TermPos)
+      clause_property(Cl, line_count(Line)),
+      clause_property(Cl, module(Module))
+    ->( read_term_at_line(File, Line, Module, Term, TermPos)
+      % Usage of term positions has priority
+      ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
+	  match_clause(Cl, ClauseL, Module, List2, List),
+	  nonvar(ClausePos)
+	->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos), % Expensive
+	    nonvar(SubPos)
+	  ->true
+	  ; SubPos = ClausePos
 	  )
-	)
+	; SubPos = TermPos
+	),
+	SubLoc = file_term_position(File, SubPos)
       ; SubLoc = file(File, Line, -1, _)
       )
     ; SubLoc = clause(Cl)

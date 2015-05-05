@@ -10,7 +10,7 @@ gcover(Goal, OptL0 ) :-
 
 :- dynamic covered_db/6.
 
-gcover_port(Tag, Port, _Frame, _PC, _ParentL, Loc) :-
+gcover_port(Tag, Port, _Frame, _PC, _ParentL, Loc, continue) :-
     record_cover(Loc, Port, Tag).
 
 loc_file_range(file_term_position(File, TermPos), File, Fr, To) :-

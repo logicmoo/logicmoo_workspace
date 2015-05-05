@@ -19,7 +19,7 @@ nitrace(Goal, Stream, OptL) :-
 frame_pi(Frame, PI) :-
     prolog_frame_attribute(Frame, predicate_indicator, PI).
 
-nitrace_port(Stream, Port, Frame, PC, ParentL, SubLoc) :-
+nitrace_port(Stream, Port, Frame, PC, ParentL, SubLoc, continue) :-
     maplist(frame_pi, ParentL, CS),
     print_message(stream(Stream, SubLoc), frame(Frame, Port, PC, CS)).
 
