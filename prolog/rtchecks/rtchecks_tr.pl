@@ -1,6 +1,6 @@
 :- module(rtchecks_tr, [rtchecks_sentence_tr/4, valid_commands/1,
 			rtchecks_goal_tr/3, collect_assertions/4,
-			generate_rtchecks/8],
+			current_assertion/4, generate_rtchecks/8],
 	  [assertions, nortchecks, nativeprops, isomodes, dcg, hiord]).
 
 :- multifile have_inline/0.
@@ -396,17 +396,15 @@ do_rtchecks_sentence_tr(Head, Clauses, M, Dict) :-
 
 proc_ppassertion(check(Goal), PredName, Dict, Loc,
 		 rtcheck(Goal, PredName, Dict, Loc)).
-proc_ppassertion(trust(Goal), PredName, Dict, Loc, RTCheck) :-
-	( current_prolog_flag(rtchecks_trust, yes) ->
-	  RTCheck = rtcheck(Goal, PredName, Dict, Loc)
-	; RTCheck = true
-	).
+proc_ppassertion(trust(Goal), PredName, Dict, Loc,
+		 rttrust(Goal, PredName, Dict, Loc)).
 proc_ppassertion(true(_),  _, _, _, true).
 proc_ppassertion(false(_), _, _, _, true).
 
 rtchecks_goal_tr(end_of_file, _,         M) :- !, cleanup_db(M).
 rtchecks_goal_tr(PPAssertion, PPRTCheck, _) :-
-	proc_ppassertion(PPAssertion, PredName, [], Loc, PPRTCheck),
+	proc_ppassertion(PPAssertion, PredName, Dict, Loc, PPRTCheck),
+	b_getval('$variable_names', Dict),
 	location(Loc),
 	PredName = PPAssertion, !.
 rtchecks_goal_tr('$orig_call'(Goal0), Goal, M) :- !,
@@ -512,7 +510,7 @@ assertz_ct(Fact) :- assertz_fact(Fact).
 :- endif.
 
 mark_generated_rtchecks(F, A, M) :-
-    assertz_ct(generated_rtchecks_db(F, A, M)).
+	assertz_ct(generated_rtchecks_db(F, A, M)).
 
 transform_sentence_body(Dict, Head, Op, F, A, M, Flag, Body, Clauses) :-
 	( generated_rtchecks_db(F, A, M) ->
@@ -782,15 +780,18 @@ generate_callloc(predicate, (yes, _), Dict, Loc, PosLocs, Pred, NameFmt) -->
 	generate_callloc2(Dict, Loc, PosLocs, Pred, NameFmt).
 generate_callloc(_, _, _, _, _, _, _) --> [].
 
-generate_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc, Lits, G) :-
-	generate_step1_rtchecks(Assrs, Pred, M, PLoc, UsePosLoc, G0, G1),
-	generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc, G1, G),
+generate_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc, Lits, CM:G) :-
+	( M \= CM
+	->generate_step1_rtchecks(Assrs, Pred, M, PLoc, UsePosLoc, G0, G1)
+	; G0 = G1
+	),
+	generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, UsePosLoc, G1, CM:G),
 	lists_to_lits(G0, Lits),
 	!.
 
 %% Trivial abstraction: Check for compatibility issues in properties,
 %% compatibility is an abstraction that makes static check decidable.
-%% The pay-off is a lost of precision. TBD: Formal demostration. --EMM
+%% The pay-off is a lose of precision. TBD: Formal demostration. --EMM
 abstract_assertions(assr(Pred, Status, Type, Compat0, Call, Succ, _Comp,
 			 Loc, PredName, CompatName0, CallName, SuccName, _CompName, Dict),
 		    assr(Pred, Status, Type, Compat, [], [], [],
