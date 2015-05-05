@@ -1,6 +1,7 @@
 :- module(rtchecks_rt, [condition/1,
 			checkif_comp/4,
 			rtcheck/4,
+			rttrust/4,
 			add_info_rtsignal/6,
 			call_stack/2,
 			'$meta$rtc'/2,
@@ -65,6 +66,13 @@ partiton(_1,_2,_3,_4) is called.".
 :- meta_predicate checkif_comp(?, goal, ?, goal).
 checkif_comp([],    Comp, Goal, Goal) :- call(Comp).
 checkif_comp([_|_], _,    _,    Goal) :- call(Goal).
+
+:- meta_predicate rttrust(goal, ?, ?, ?).
+rttrust(Check, PredName, Dict, Loc) :-
+    ( current_prolog_flag(rtchecks_trust, yes)
+    ->rtcheck(Check, PredName, Dict, Loc)
+    ; true
+    ).
 
 :- meta_predicate rtcheck(goal, ?, ?, ?).
 rtcheck(Check, PredName, Dict, Loc) :-
