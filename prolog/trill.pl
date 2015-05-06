@@ -3,7 +3,7 @@
                  instanceOf/2, instanceOf/3, prob_instanceOf/3,
                  unsat/1, unsat/2, prob_unsat/2,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
-                 load_theory/1] ).
+                 load_theory/1, check_query_args/1] ).
 
 %:- set_prolog_flag(unknow,fail).
 
@@ -42,19 +42,30 @@
 load_theory(Name):-
   [Name].
 
+check_query_args([H|T]) :-
+  axiom(A),
+  A =.. [_|L],
+  flatten(L,L1),
+  member(H,L1),
+  check_query_args(T).
+
+check_query_args([]).
 
 /***********
   Queries
   - with and without explanations -
  ***********/
 sub_class(Class,SupClass,Expl):-
+  check_query_args([Class,SupClass]),
   unsat(intersectionOf([Class,complementOf(SupClass)]),Expl).
   %subClassOf(Class,SupClass).
 
 sub_class(Class,SupClass):-
+  check_query_args([Class,SupClass]),
   unsat(intersectionOf([Class,complementOf(SupClass)])).
 
 instanceOf(Class,Ind,Expl):-
+  check_query_args([Class,Ind]),
   retractall(ind(_)),
   assert(ind(1)),
   build_abox((ABox,Tabs)),
@@ -68,6 +79,7 @@ instanceOf(_,_,_):-
   write('Inconsistent ABox').
 
 instanceOf(Class,Ind):-
+  check_query_args([Class,Ind]),
   retractall(ind(_)),
   assert(ind(1)),
   build_abox((ABox,Tabs)),
@@ -125,6 +137,7 @@ inconsistent_theory:-
   write('Inconsistent!').
 
 prob_instanceOf(Class,Ind,P):-
+  check_query_args([Class,Ind]),
   all_instanceOf(Class,Ind,Exps),
 %  (Exps \= [] ->
 %    build_formula(Exps,FormulaE,[],VarE),
@@ -140,6 +153,7 @@ prob_instanceOf(Class,Ind,P):-
   compute_prob(Exps,P).
 
 prob_sub_class(Class,SupClass,P):-
+  check_query_args([Class,SupClass]),
   all_sub_class(Class,SupClass,Exps),
 %  (Exps \= [] ->
 %    build_formula(Exps,FormulaE,[],VarE),
