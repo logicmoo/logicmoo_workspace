@@ -60,7 +60,7 @@ sub_class(Class,SupClass,Expl):-
   ( check_query_args([Class,SupClass]) ->
 	unsat(intersectionOf([Class,complementOf(SupClass)]),Expl)
     ;
-    	Expl = ["Error in query's arguments"]
+    	Expl = ["Error in query's arguments"],!
   ).
   %subClassOf(Class,SupClass).
 
@@ -79,7 +79,7 @@ instanceOf(Class,Ind,Expl):-
   	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
   	find_expls(L,[],Expl)
     ;
-    	Expl = ["Error in query's arguments"]
+    	Expl = ["Error in query's arguments"],!
   ).
 
 instanceOf(_,_,_):-
@@ -159,7 +159,7 @@ prob_instanceOf(Class,Ind,P):-
 %  writel(Exps),nl,
   	compute_prob(Exps,P)
   ;
-  	P = ["Error in query's arguments"]
+  	P = ["Error in query's arguments"],!
   ).
 
 prob_sub_class(Class,SupClass,P):-
@@ -176,7 +176,7 @@ prob_sub_class(Class,SupClass,P):-
 %    P = 0).
   	compute_prob(Exps,P)
   ;
-  	P = ["Error in query's arguments"]
+  	P = ["Error in query's arguments"],!
   ).
   
 prob_unsat(Concept,P):-
