@@ -57,47 +57,52 @@ check_query_args([]).
   - with and without explanations -
  ***********/
 sub_class(Class,SupClass,Expl):-
-  check_query_args([Class,SupClass]),
-  unsat(intersectionOf([Class,complementOf(SupClass)]),Expl).
+  ( check_query_args([Class,SupClass]) ->
+	unsat(intersectionOf([Class,complementOf(SupClass)]),Expl)
+    ;
+    	Expl = ["Error in query's arguments"]
+  ).
   %subClassOf(Class,SupClass).
 
 sub_class(Class,SupClass):-
-  check_query_args([Class,SupClass]),
-  unsat(intersectionOf([Class,complementOf(SupClass)])).
+  ( check_query_args([Class,SupClass]) ->
+	unsat(intersectionOf([Class,complementOf(SupClass)]))
+    ;
+    	Expl = ["Error in query's arguments"]
+  ).
 
 instanceOf(Class,Ind,Expl):-
-  retractall(ind(_)),
-  assert(ind(1)),
-  build_abox((ABox,Tabs)),
-  \+ clash((ABox,Tabs),_),!,
-  add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
-  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,[],Expl).
+  ( check_query_args([Class,SupClass]) ->
+	retractall(ind(_)),
+  	assert(ind(1)),
+  	build_abox((ABox,Tabs)),
+  	\+ clash((ABox,Tabs),_),!,
+  	add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
+  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+  	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
+  	find_expls(L,[],Expl)
+    ;
+    	Expl = ["Error in query's arguments"]
+  ).
 
 instanceOf(_,_,_):-
-  retractall(ind(_)),
-  assert(ind(1)),
-  build_abox((ABox,Tabs)),
-  clash((ABox,Tabs),_),
   write('Inconsistent ABox').
 
 instanceOf(Class,Ind):-
-  check_query_args([Class,Ind]),
-  retractall(ind(_)),
-  assert(ind(1)),
-  build_abox((ABox,Tabs)),
-  \+ clash((ABox,Tabs),_),!,
-  add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
-  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
-  clash((ABox1,Tabs1),_).
+  ( check_query_args([Class,SupClass]) ->
+	retractall(ind(_)),
+  	assert(ind(1)),
+  	build_abox((ABox,Tabs)),
+  	\+ clash((ABox,Tabs),_),!,
+  	add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
+  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+  	apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
+  	clash((ABox1,Tabs1),_)
+    ;
+    	Expl = ["Error in query's arguments"]
+  ).
 
 instanceOf(_,_):-
-  retractall(ind(_)),
-  assert(ind(1)),
-  build_abox((ABox,Tabs)),
-  clash((ABox,Tabs),_),
   write('Inconsistent ABox').
 
 unsat(Concept,Expl):-
