@@ -43,7 +43,8 @@ load_theory(Name):-
   [Name].
 
 check_query_args([H|T]) :-
-  axiom(A),
+  get_pengine_current_module(Name),
+  Name:axiom(A),
   A =.. [_|L],
   flatten(L,L1),
   member(H,L1),
