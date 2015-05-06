@@ -43,11 +43,11 @@ load_theory(Name):-
   [Name].
 
 check_query_args([H|T]) :-
-  get_pengine_current_module(Name),
-  Name:axiom(A),
+  axiom(A),
   A =.. [_|L],
   flatten(L,L1),
-  member(H,L1),
+  member(H,L1),!,
+  write(A),
   check_query_args(T).
 
 check_query_args([]).
@@ -66,7 +66,6 @@ sub_class(Class,SupClass):-
   unsat(intersectionOf([Class,complementOf(SupClass)])).
 
 instanceOf(Class,Ind,Expl):-
-  check_query_args([Class,Ind]),
   retractall(ind(_)),
   assert(ind(1)),
   build_abox((ABox,Tabs)),
@@ -77,6 +76,10 @@ instanceOf(Class,Ind,Expl):-
   find_expls(L,[],Expl).
 
 instanceOf(_,_,_):-
+  retractall(ind(_)),
+  assert(ind(1)),
+  build_abox((ABox,Tabs)),
+  clash((ABox,Tabs),_),
   write('Inconsistent ABox').
 
 instanceOf(Class,Ind):-
@@ -91,6 +94,10 @@ instanceOf(Class,Ind):-
   clash((ABox1,Tabs1),_).
 
 instanceOf(_,_):-
+  retractall(ind(_)),
+  assert(ind(1)),
+  build_abox((ABox,Tabs)),
+  clash((ABox,Tabs),_),
   write('Inconsistent ABox').
 
 unsat(Concept,Expl):-
