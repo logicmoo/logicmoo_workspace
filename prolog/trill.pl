@@ -65,14 +65,11 @@ sub_class(Class,SupClass,Expl):-
   %subClassOf(Class,SupClass).
 
 sub_class(Class,SupClass):-
-  ( check_query_args([Class,SupClass]) ->
-	unsat(intersectionOf([Class,complementOf(SupClass)]))
-    ;
-    	Expl = ["Error in query's arguments"]
-  ).
+  check_query_args([Class,SupClass]),
+  unsat(intersectionOf([Class,complementOf(SupClass)])).
 
 instanceOf(Class,Ind,Expl):-
-  ( check_query_args([Class,SupClass]) ->
+  ( check_query_args([Class,Ind]) ->
 	retractall(ind(_)),
   	assert(ind(1)),
   	build_abox((ABox,Tabs)),
@@ -89,18 +86,15 @@ instanceOf(_,_,_):-
   write('Inconsistent ABox').
 
 instanceOf(Class,Ind):-
-  ( check_query_args([Class,SupClass]) ->
-	retractall(ind(_)),
-  	assert(ind(1)),
-  	build_abox((ABox,Tabs)),
-  	\+ clash((ABox,Tabs),_),!,
-  	add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
-  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
-  	clash((ABox1,Tabs1),_)
-    ;
-    	Expl = ["Error in query's arguments"]
-  ).
+  check_query_args([Class,Ind]),
+  retractall(ind(_)),
+  assert(ind(1)),
+  build_abox((ABox,Tabs)),
+  \+ clash((ABox,Tabs),_),!,
+  add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
+  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+  apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
+  clash((ABox1,Tabs1),_).
 
 instanceOf(_,_):-
   write('Inconsistent ABox').
@@ -150,8 +144,8 @@ inconsistent_theory:-
   write('Inconsistent!').
 
 prob_instanceOf(Class,Ind,P):-
-  check_query_args([Class,Ind]),
-  all_instanceOf(Class,Ind,Exps),
+  ( check_query_args([Class,Ind]) ->
+  	all_instanceOf(Class,Ind,Exps),
 %  (Exps \= [] ->
 %    build_formula(Exps,FormulaE,[],VarE),
 %    (FormulaE \= [] -> 
@@ -163,11 +157,14 @@ prob_instanceOf(Class,Ind,P):-
 %  ;
 %    P = 0).  
 %  writel(Exps),nl,
-  compute_prob(Exps,P).
+  	compute_prob(Exps,P)
+  ;
+  	P = ["Error in query's arguments"]
+  ).
 
 prob_sub_class(Class,SupClass,P):-
-  check_query_args([Class,SupClass]),
-  all_sub_class(Class,SupClass,Exps),
+  ( check_query_args([Class,SupClass]) ->
+  	all_sub_class(Class,SupClass,Exps),
 %  (Exps \= [] ->
 %    build_formula(Exps,FormulaE,[],VarE),
 %    (FormulaE \= [] -> 
@@ -177,7 +174,10 @@ prob_sub_class(Class,SupClass,P):-
 %      P = 1)
 %  ;
 %    P = 0).
-  compute_prob(Exps,P).
+  	compute_prob(Exps,P)
+  ;
+  	P = ["Error in query's arguments"]
+  ).
   
 prob_unsat(Concept,P):-
   all_unsat(Concept,Exps),
