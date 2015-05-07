@@ -44,7 +44,6 @@ load_theory(Name):-
 
 check_query_args([H|T]) :-
   atomic(H),!,
-  write('atomic '),write(H),nl,
   get_pengine_current_module(Name),
   Name:axiom(A),
   A =.. [_|L],
@@ -54,7 +53,6 @@ check_query_args([H|T]) :-
   
 check_query_args([H|T]) :-
   \+ atomic(H),!,
-  write('not atomic '),write(H),nl,
   H =.. [_|L],
   flatten(L,L1),
   check_query_args(L1),
@@ -70,7 +68,7 @@ sub_class(Class,SupClass,Expl):-
   ( check_query_args([Class,SupClass]) ->
 	unsat(intersectionOf([Class,complementOf(SupClass)]),Expl)
     ;
-    	Expl = ["Error in query's arguments"],!
+    	Expl = ["IRIs not existent"],!
   ).
   %subClassOf(Class,SupClass).
 
@@ -87,9 +85,10 @@ instanceOf(Class,Ind,Expl):-
   	add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	find_expls(L,[],Expl)
+  	find_expls(L,[],Expl),
+  	Expl \= []
     ;
-    	Expl = ["Error in query's arguments"],!
+    	Expl = ["IRIs not existent"],!
   ).
 
 instanceOf(_,_,_):-
@@ -117,7 +116,8 @@ unsat(Concept,Expl):-
   add(ABox,(classAssertion(Concept,1),[]),ABox0),
   %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,[],Expl).
+  find_expls(L,[],Expl),
+  Expl \= [].
 
 unsat(_,_):-
   write('Inconsistent ABox').
@@ -140,7 +140,8 @@ inconsistent_theory(Expl):-
   assert(ind(1)),
   build_abox((ABox,Tabs)),
   findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,[],Expl).
+  find_expls(L,[],Expl),
+  Expl \= [].
 
 inconsistent_theory:-
   retractall(ind(_)),
@@ -169,7 +170,7 @@ prob_instanceOf(Class,Ind,P):-
 %  writel(Exps),nl,
   	compute_prob(Exps,P)
   ;
-  	P = ["Error in query's arguments"],!
+  	P = ["IRIs not existent"],!
   ).
 
 prob_sub_class(Class,SupClass,P):-
@@ -186,7 +187,7 @@ prob_sub_class(Class,SupClass,P):-
 %    P = 0).
   	compute_prob(Exps,P)
   ;
-  	P = ["Error in query's arguments"],!
+  	P = ["IRIs not existent"],!
   ).
   
 prob_unsat(Concept,P):-
