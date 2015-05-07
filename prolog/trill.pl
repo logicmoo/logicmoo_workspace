@@ -43,11 +43,21 @@ load_theory(Name):-
   [Name].
 
 check_query_args([H|T]) :-
+  atomic(H),!,
+  write('atomic '),write(H),nl,
   get_pengine_current_module(Name),
   Name:axiom(A),
   A =.. [_|L],
   flatten(L,L1),
   member(H,L1),!,
+  check_query_args(T).
+  
+check_query_args([H|T]) :-
+  \+ atomic(H),!,
+  write('not atomic '),write(H),nl,
+  H =.. [_|L],
+  flatten(L,L1),
+  check_query_args(L1),
   check_query_args(T).
 
 check_query_args([]).
