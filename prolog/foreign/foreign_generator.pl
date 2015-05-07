@@ -760,8 +760,8 @@ c_set_argument_rec(Type, Spec, CArg, Arg) :-
     c_set_argument(Spec, out, CArg_, Arg_),
     format(', ~w, ~w)', [Arg, CArg]).
 
-c_get_argument(list(S), _, C, A)    :- c_get_argument_rec(list, S, C, A).
-c_get_argument(ptr(S),  _, C, A)    :- c_get_argument_rec(ptr,  S, C, A).
+c_get_argument(list(S), M, C, A)    :- c_get_argument_rec(M, list, S, C, A).
+c_get_argument(ptr(S),  M, C, A)    :- c_get_argument_rec(M, ptr,  S, C, A).
 c_get_argument(type(T), M, C, A)    :- c_get_argument_type(M, T, C, A).
 c_get_argument(cdef(T), M, C, A)    :- c_get_argument_one(M, T, C, A).
 c_get_argument(T-_,     M, C, A)    :- c_get_argument_one(M, T, C, A).
@@ -784,8 +784,8 @@ c_get_argument_chrs(in, CArg, Arg) :-
 c_get_argument_chrs(inout, CArg, Arg) :-
     format('FI_get_inout_chrs(~w, ~w)', [Arg, CArg]).
 
-c_get_argument_rec(Type, Spec, CArg, Arg) :-
-    format('FI_get_~w(',[Type]),
+c_get_argument_rec(Mode, Type, Spec, CArg, Arg) :-
+    format('FI_get_~w_~w(',[Mode, Type]),
     format(atom(Arg_), '~w_',   [Arg]),
     c_var_name(Arg_, CArg_),
     c_get_argument(Spec, in, CArg_, Arg_),

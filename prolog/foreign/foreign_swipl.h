@@ -82,40 +82,54 @@
     __rtcpass(__rtctype(FI_get_##__type(__root, __term, __value), __term, __type))
 
 #define FI_get_list(__FI_get_elem, __term, __value) {			\
+	term_t __term##_ = PL_new_term_ref();				\
+	    term_t __tail = PL_copy_term_ref(__term);			\
+	    size_t __length = 0;					\
+	    while(PL_get_list(__tail, __term##_, __tail))		\
+		__length++;						\
+	    __rtcheck(PL_get_nil(__tail));				\
+	    __tail = PL_copy_term_ref(__term);				\
+	    FI_new_array(__length, *__value);				\
+	    typeof (*__value) _c_##__term##_ = *__value;		\
+		while(PL_get_list(__tail, __term##_, __tail)) {		\
+		    __FI_get_elem;					\
+		    _c_##__term##_++;					\
+		};							\
+    }
+
+#define FI_get_inout_list(__FI_get_elem, __term, __value) {		\
 	if(PL_is_variable(__term)) {					\
 	    *__value = NULL;						\
 	}								\
 	else {								\
-	    term_t __term##_ = PL_new_term_ref();			\
-		term_t __tail = PL_copy_term_ref(__term);		\
-		size_t __length = 0;					\
-		while(PL_get_list(__tail, __term##_, __tail))		\
-		    __length++;						\
-		__tail = PL_copy_term_ref(__term);			\
-		FI_new_array(__length, *__value);			\
-		typeof (*__value) _c_##__term##_ = *__value;		\
-		    while(PL_get_list(__tail, __term##_, __tail)) {	\
-			__FI_get_elem;					\
-			_c_##__term##_++;				\
-		    };							\
-		    __rtcheck(PL_get_nil(__tail));			\
+	    FI_get_list(__FI_get_elem, __term, __value);		\
 	}								\
     }
 
-#define FI_get_ptr_nv(__FI_get_elem, __term, __value) {	\
+#define FI_get_in_list(__FI_get_elem, __term, __value) {		\
+	__rtcpass(__rtctype(!PL_is_variable(__term), __term, list));	\
+	FI_get_list(__FI_get_elem, __term, __value);			\
+    }
+
+#define FI_get_ptr(__FI_get_elem, __term, __value) {	\
 	term_t __term##_ = __term;			\
 	FI_new_value(*__value);				\
 	typeof (*__value) _c_##__term##_ = *__value;	\
 	__FI_get_elem;					\
 }
 
-#define FI_get_ptr(__FI_get_elem, __term, __value) {		\
+#define FI_get_inout_ptr(__FI_get_elem, __term, __value) {	\
 	if(PL_is_variable(__term)) {				\
 	    *__value = NULL;					\
 	}							\
 	else {							\
-	    FI_get_ptr_nv(__FI_get_elem, __term, __value);	\
+	    FI_get_ptr(__FI_get_elem, __term, __value);		\
 	}							\
+    }
+
+#define FI_get_in_ptr(__FI_get_elem, __term, __value) {			\
+	__rtcpass(__rtctype(!PL_is_variable(__term), __term, ptr));	\
+	FI_get_ptr(__FI_get_elem, __term, __value);			\
     }
 
 #define FI_unify_list(__FI_unify_elem, __term, __value) {		\
