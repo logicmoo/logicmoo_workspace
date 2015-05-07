@@ -113,6 +113,6 @@ get_prob_ax(Ax,N,Prob):- !,
       assert(rule_n(N1))
   ).
   
-get_trill_current_module(Name):-
-  pengine_self(Name),!.
-get_trill_current_module('owl2_model'):- !.
+%get_trill_current_module(Name):-
+%  pengine_self(Name),!.
+%get_trill_current_module('owl2_model'):- !.
