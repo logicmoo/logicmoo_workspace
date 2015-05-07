@@ -19,6 +19,7 @@
 :-['trillProbComputation'].
 
 %:- yap_flag(unknown,fail).
+
 :- multifile
         owl2_model:classAssertion/2,
         owl2_model:propertyAssertion/3,
@@ -39,6 +40,25 @@
         owl2_model:minCardinality/2,
         owl2_model:minCardinality/3.
 
+:- dynamic
+	owl2_model:classAssertion/2,
+        owl2_model:propertyAssertion/3,
+        owl2_model:subPropertyOf/2,
+        owl2_model:subClassOf/2,
+        owl2_model:equivalentClasses/1,
+        owl2_model:differentIndividuals/1,
+        owl2_model:sameIndividual/1,
+        owl2_model:intersectionOf/1,
+        owl2_model:unionOf/1,
+        owl2_model:propertyRange/2,
+        owl2_model:propertyDomain/2,
+        owl2_model:annotationAssertion/3,
+        owl2_model:exactCardinality/2,
+        owl2_model:exactCardinality/3,
+        owl2_model:maxCardinality/2,
+        owl2_model:maxCardinality/3,
+        owl2_model:minCardinality/2,
+        owl2_model:minCardinality/3.
 
 load_theory(Name):-
   get_trill_current_module(N),
