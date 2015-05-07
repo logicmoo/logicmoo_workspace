@@ -87,7 +87,7 @@ get_var_n(Env,R,S,Probs,V):-
 
 
 get_prob_ax((Ax,_Ind),N,Prob):- !,
-  pengine_property(_Pengine1,self(Name)),
+  get_trill_current_module(Name),
   Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbA)),
   atom_number(ProbA,Prob),
   ( na(Ax,N) -> 
@@ -100,7 +100,7 @@ get_prob_ax((Ax,_Ind),N,Prob):- !,
       assert(rule_n(N1))
   ).
 get_prob_ax(Ax,N,Prob):- !,
-  pengine_property(_Pengine1,self(Name)),
+  get_trill_current_module(Name),
   Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbA)),
   atom_number(ProbA,Prob),
   ( na(Ax,N) -> 
@@ -112,3 +112,7 @@ get_prob_ax(Ax,N,Prob):- !,
       N1 is N + 1,
       assert(rule_n(N1))
   ).
+  
+get_trill_current_module(Name):-
+  pengine_self(Name),!.
+get_trill_current_module('owl2_model'):- !.
