@@ -19,32 +19,34 @@
 :-['trillProbComputation'].
 
 %:- yap_flag(unknown,fail).
-:- dynamic
-        classAssertion/2,
-        propertyAssertion/3,
-        subPropertyOf/2,
-        subClassOf/2,
-        equivalentClasses/1,
-        differentIndividuals/1,
-        sameIndividual/1,
-        intersectionOf/1,
-        unionOf/1,
-        propertyRange/2,
-        propertyDomain/2,
-        annotationAssertion/3,
-        exactCardinality/2,
-        exactCardinality/3,
-        maxCardinality/2,
-        maxCardinality/3,
-        minCardinality/2,
-        minCardinality/3.
+:- multifile
+        owl2_model:classAssertion/2,
+        owl2_model:propertyAssertion/3,
+        owl2_model:subPropertyOf/2,
+        owl2_model:subClassOf/2,
+        owl2_model:equivalentClasses/1,
+        owl2_model:differentIndividuals/1,
+        owl2_model:sameIndividual/1,
+        owl2_model:intersectionOf/1,
+        owl2_model:unionOf/1,
+        owl2_model:propertyRange/2,
+        owl2_model:propertyDomain/2,
+        owl2_model:annotationAssertion/3,
+        owl2_model:exactCardinality/2,
+        owl2_model:exactCardinality/3,
+        owl2_model:maxCardinality/2,
+        owl2_model:maxCardinality/3,
+        owl2_model:minCardinality/2,
+        owl2_model:minCardinality/3.
+
 
 load_theory(Name):-
-  [Name].
+  get_trill_current_module(N),
+  N:axiom(Name).
 
 check_query_args([H|T]) :-
   atomic(H),!,
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:axiom(A),
   A =.. [_|L],
   flatten(L,L1),
@@ -459,12 +461,12 @@ add_exists_rule((ABox,Tabs),([(classAssertion(someValuesFrom(R,C),Ind1),Expl)|AB
   absent(classAssertion(someValuesFrom(R,C),Ind1),Expl,(ABox,Tabs)).
   
 existsInKB(R,C):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:subClassOf(A,B),
   member(someValuesFrom(R,C),[A,B]).
   
 existsInKB(R,C):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(someValuesFrom(R,C),L).
 /* *************** */ 
@@ -599,12 +601,12 @@ forall_plus_rule((ABox,Tabs),([(classAssertion(allValuesFrom(R,C),Ind2),Expl)| A
   
 % --------------
 find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S),transitive(R)]):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:subPropertyOf(R,S),
   Name:transitiveProperty(R).
 
 find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S)]):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:subPropertyOf(R,S),
   \+ Name:transitiveProperty(R).
 /* ************ */
@@ -719,24 +721,24 @@ find_class_prop_range_domain(Ind,D,[propertyRange(R,D)|ExplPA],(ABox,_Tabs)):-
   find((propertyAssertion(R,_,IndL),ExplPA),ABox),
   indAsList(IndL,L),
   member(Ind,L),
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:propertyRange(R,D).
 
 find_class_prop_range_domain(Ind,D,[propertyDomain(R,D)|ExplPA],(ABox,_Tabs)):-
   find((propertyAssertion(R,IndL,_),ExplPA),ABox),
   indAsList(IndL,L),
   member(Ind,L),
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:propertyDomain(R,D).
 	
 
 %-----------------
 find_sub_sup_class(C,D,subClassOf(C,D)):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:subClassOf(C,D).
 
 find_sub_sup_class(C,D,equivalentClasses(L)):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(C,L),
   member(D,L),
@@ -788,35 +790,35 @@ find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
 %--------------------
 
 find_not_atomic(C,intersectionOf(L1),L1):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:subClassOf(A,B),
   member(intersectionOf(L1),[A,B]),
   member(C,L1).
 
 find_not_atomic(C,unionOf(L1),L1):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:subClassOf(A,B),
   member(unionOf(L1),[A,B]),
   member(C,L1).
 
 find_not_atomic(C,intersectionOf(L),L):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:intersectionOf(L),
   member(C,L).
 
 find_not_atomic(C,unionOf(L),L):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:unionOf(L),
   member(C,L).
 
 find_not_atomic(C,intersectionOf(L1),L1):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(intersectionOf(L1),L),
   member(C,L1).
 
 find_not_atomic(C,unionOf(L1),L1):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(unionOf(L1),L),
   member(C,L1).
@@ -846,13 +848,13 @@ ce_rule((ABox0,(T,RBN,RBR)),(ABox,(T,RBN,RBR))):-
 
 % ------------------
 find_not_sub_sup_class(subClassOf(C,D),unionOf(complementOf(C),D)):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:subClassOf(C,D),
   \+ atomic(C).
 
 
 find_not_sub_sup_class(equivalentClasses(L),unionOf(L1)):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(C,L),
   \+ atomic(C),
@@ -1030,7 +1032,7 @@ notDifferentIndividuals(X,Y,ABox):-
 
 inAssertDifferentIndividuals(differentIndividuals(X),differentIndividuals(Y)):-
   !,
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:differentIndividuals(LI),
   member(X0,X),
   member(X0,LI),
@@ -1039,7 +1041,7 @@ inAssertDifferentIndividuals(differentIndividuals(X),differentIndividuals(Y)):-
 
 inAssertDifferentIndividuals(X,sameIndividual(Y)):-
   !,
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:differentIndividuals(LI),
   member(X,LI),
   member(Y0,Y),
@@ -1047,14 +1049,14 @@ inAssertDifferentIndividuals(X,sameIndividual(Y)):-
 
 inAssertDifferentIndividuals(sameIndividual(X),Y):-
   !,
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:differentIndividuals(LI),
   member(X0,X),
   member(X0,LI),
   member(Y,LI).
 
 inAssertDifferentIndividuals(X,Y):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:differentIndividuals(LI),
   member(X,LI),
   member(Y,LI).
@@ -1269,7 +1271,7 @@ writeABox((ABox,_)):-
 */
 
 build_abox((ABox,Tabs)):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),Name:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),Name:propertyAssertion(Property,Subject, Object),LPA),
   findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
@@ -1815,7 +1817,7 @@ s_neighbours2(SN,[H|T],T1,ABox):-
 
 %-----------------
 same_ind(SN,H,_ABox):-
-  get_pengine_current_module(Name),
+  get_trill_current_module(Name),
   Name:sameIndividual(SI),
   member(H,SI),
   member(H2,SI),
@@ -1959,5 +1961,6 @@ compute_prob_ax1([Prob1 | T],Prob):-
   
   
 /**************/
-get_pengine_current_module(Name):-
-  pengine_self(Name).
+%get_trill_current_module(Name):-
+  %pengine_self(Name),!.
+get_trill_current_module('owl2_model'):- !.
