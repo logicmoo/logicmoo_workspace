@@ -42,8 +42,7 @@
 
 
 load_theory(Name):-
-  get_trill_current_module(N),
-  N:axiom(Name).
+  [Name].
 
 check_query_args([H|T]) :-
   atomic(H),!,
