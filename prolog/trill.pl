@@ -20,6 +20,7 @@
 
 %:- yap_flag(unknown,fail).
 :- multifile
+	owl2_model:axiom/1,
         owl2_model:classAssertion/2,
         owl2_model:propertyAssertion/3,
         owl2_model:subPropertyOf/2,
