@@ -104,6 +104,7 @@ do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
     atom_concat(M, '$impl', IModule),
     absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
 					     relative_to(File)]),
+    % assertion(file_name_extension(_, pl, FileSOPl)),
     with_output_to_file(FileSOPl,
 			( add_autogen_note(M),
 			  portray_clause((:- module(IModule, IntfPIL))),
@@ -270,6 +271,9 @@ implement_type_getter_ini(PName, CName, Spec, Name) :-
     format('int FI_get_~w(__leaf_t *__root, term_t ~w, ~s *~w) {~n',
 	   [Name, PName, Decl, CName]).
 
+c_get_argument_getter(Spec, CNameArg, PNameArg) :-
+    c_get_argument(Spec, in, CNameArg, PNameArg).
+
 implement_type_getter(func_ini(Name), Spec, Term) :-
     term_pcname(Term, PName, CName),
     implement_type_getter_ini(PName, CName, Spec, Name).
@@ -281,7 +285,7 @@ implement_type_getter(func_rec(N, Term), Spec, Arg) :-
     format('    term_t ~w=PL_new_term_ref();~n', [PNameArg]),
     format('    __rtcheck(PL_get_arg(~w,~w,~w));~n', [N, PName, PNameArg]),
     format('    ', []),
-    c_get_argument(Spec, in, CNameArg, PNameArg),
+    c_get_argument_getter(Spec, CNameArg, PNameArg),
     format(';~n', []).
 implement_type_getter(func_end, _, _) :-
     implement_type_end.
@@ -290,7 +294,7 @@ implement_type_getter(atom(Name), Spec, Term) :-
     implement_type_getter_ini(PName, CName, Spec, Name),
     format('    ', []),
     (\+is_type(Spec)->atom_concat('&', CName, CArg);CArg=CName),
-    c_get_argument(Spec, in, CArg, PName),
+    c_get_argument_getter(Spec, CArg, PName),
     format(';~n', []),
     implement_type_end.
 implement_type_getter(dict_ini(Name, M, _), Spec, Arg) :-
@@ -303,7 +307,7 @@ implement_type_getter(dict_rec(_, Term, N, _), Spec, Arg) :-
     term_pcname(Term, _, CName),
     format(atom(CNameArg), '&~w->~w', [CName, Arg]),
     format('        case ~w: ', [N]),
-    c_get_argument(Spec, in, CNameArg, '__value'),
+    c_get_argument_getter(Spec, CNameArg, '__value'),
     format('; break;~n', []).
 implement_type_getter(dict_end(_, _), _, _) :-
     format('        }~n', []),
@@ -783,7 +787,7 @@ c_get_argument_chrs(inout, CArg, Arg) :-
     format('FI_get_inout_chrs(~w, ~w)', [Arg, CArg]).
 
 c_get_argument_rec(Mode, Type, Spec, CArg, Arg) :-
-    format('FI_get_~w_~w(',[Mode, Type]),
+    format('FI_get_~w_~w(', [Mode, Type]),
     format(atom(Arg_), '~w_',   [Arg]),
     c_var_name(Arg_, CArg_),
     c_get_argument(Spec, in, CArg_, Arg_),

@@ -45,8 +45,9 @@ ptr(Ptr) :- int(Ptr).
     FI_new_child_value/array in the C side to perform semi-automatic memory
     management".
 
-:- meta_predicate ptr(?,1).  ptr(Ptr, Type) :-
-call(Type, Ptr).
+:- meta_predicate ptr(?,1).
+ptr(Ptr, Type) :-
+    call(Type, Ptr).
 
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).
