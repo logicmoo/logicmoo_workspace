@@ -127,10 +127,15 @@
 	}							\
     }
 
+#define FI_get_in_ptr(__FI_get_elem, __term, __value) \
+    FI_get_inout_ptr(__FI_get_elem, __term, __value)
+
+/*
 #define FI_get_in_ptr(__FI_get_elem, __term, __value) {			\
 	__rtcpass(__rtctype(!PL_is_variable(__term), __term, ptr));	\
 	FI_get_ptr(__FI_get_elem, __term, __value);			\
     }
+*/
 
 #define FI_unify_list(__FI_unify_elem, __term, __value) {		\
 	if (__value!=NULL) {						\
