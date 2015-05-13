@@ -23,7 +23,7 @@ command_to_atom(Command, Args, Atom) :-
     read_stream_to_codes(Out, String),
     string_to_atom(String, Atom).
 
-fortran_command(Command) :-
+fortran_command(M, Command) :-
     command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
     atomic_list_concat(AtomL, ';\n', Atom),
     findall(Value, ( member(NameValue, AtomL),
@@ -31,22 +31,23 @@ fortran_command(Command) :-
 		     memberchk(Name, ['PLCFLAGS', 'PLLDFLAGS']),
 		     atomic_list_concat(ValueL, '=', CValueC),
 		     atom_concat('"', ValueC, CValueC),
-		     atom_concat(Value, '"', ValueC)		     
+		     atom_concat(Value, '"', ValueC)
+		   ; extra_compiler_opts(M, Value)
 		   ),
 	    ValueL),
     atomic_list_concat([gfortran|ValueL], ' ', Command).
 
-intermediate_obj(DirSO, Source, Object) -->
-    {intermediate_obj(DirSO, Source, Object, Command)}, !,
+intermediate_obj(M, DirSO, Source, Object) -->
+    {intermediate_obj(M, DirSO, Source, Object, Command)}, !,
     [Command].
-intermediate_obj(_, Source, Source) --> [].
+intermediate_obj(_, _, Source, Source) --> [].
 
-intermediate_obj(DirSO, Source, Object, Command) :- 
+intermediate_obj(M, DirSO, Source, Object, Command) :- 
     file_name_extension(Base, for, Source),
     file_base_name(Base, Name),
     file_name_extension(Name, o, NameO),
     directory_file_path(DirSO, NameO, Object),
-    fortran_command(Fortran),
+    fortran_command(M, Fortran),
     atomic_list_concat([Fortran, '-c', Source, '-o', Object], ' ', Command).
 
 is_newer(File1, File2) :-
@@ -119,7 +120,7 @@ do_generate_library(M, FileSO, File, FSourceL) :-
 		       [file_type(prolog), access(read), relative_to(File)]),
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
-    maplist_dcg(intermediate_obj(DirSO), FSourceL, FTargetL, Commands, CommandsT),
+    maplist_dcg(intermediate_obj(M, DirSO), FSourceL, FTargetL, Commands, CommandsT),
     atomic_list_concat(FTargetL, ' ', FSources),
     findall(CLib, ( link_foreign_library(M, Lib),
 		    atom_concat('-l', Lib, CLib)
@@ -133,10 +134,7 @@ do_generate_library(M, FileSO, File, FSourceL) :-
 		    command_to_atom('pkg-config', ['--cflags', Package], COpt0),
 		    atom_concat(COpt, '\n', COpt0)
 		  ), COptL),
-    ( COptL = []
-    ->COpts = ''
-    ; atomic_list_concat(COptL, ' ', COpts)
-    ),
+    atomic_list_concat(COptL, ' ', COpts),
     findall(IDir, ( ( Dir = DirSO
 		    ; Dir = DirIntf
 		    ; include_foreign_dir(M, DAlias),
