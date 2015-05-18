@@ -12,6 +12,8 @@
 user:message_property(_, location_prefix(_, '', 'ERROR: ')).
 user:message_property(_, stream(current_output)) :- user:error_on_co.
 
+:- set_prolog_flag(runtime_checks, yes).
+
 test(rtcompile) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
     expects_dialect(ciao),
@@ -31,7 +33,7 @@ test(rtexec3) :-
 			( ['../examples/rtchecks_example3'],
 			  catch(test1,E,true))),
     expects_dialect(swi),
-    assertion(E=error(unintercepted_signal(rtcheck(pp_check, square(_, _),
+    assertion(E=error(unintercepted_signal(rtcheck(pp_check, _, % square(_, _),
 						   ['X'=0, 'X2'=0 ],
 						   [(rtchecks_example3: (0>0 ))-[]],
 						   _)), signal/1-1)),
