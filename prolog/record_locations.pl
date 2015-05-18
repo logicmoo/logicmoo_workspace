@@ -16,7 +16,7 @@ record_location. % Enable recording of locations
 
 % Extra location for assertions of a given predicate
 extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
-    clause(assrt_lib:assertion_head(Head, M, Status, Type, _, _, From), _).
+    assrt_lib:assertion_head_body_loc(Head, M, Status, Type, _, _, _, From).
 
 :- multifile skip_record_decl/1.
 
