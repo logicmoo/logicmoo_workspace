@@ -1,13 +1,10 @@
-:- module(rtchecks_tr, [rtchecks_sentence_tr/4, valid_commands/1,
-			rtchecks_goal_tr/3, collect_assertions/4,
-			current_assertion/4, generate_rtchecks/7,
-			proc_ppassertion/5],
+:- module(rtchecks_tr, [rtchecks_sentence_tr/4,
+			rtchecks_goal_tr/3],
 	  [assertions, nortchecks, nativeprops, isomodes, dcg, hiord]).
 
 :- multifile have_inline/0.
 
 :- if(current_prolog_flag(dialect, swi)).
-:- use_module(library(swi/nativeprops)).
 % runtime-checks related flags:
 :- include(rtchecks(rtchecks_flags)).
 :- ( define_flag(Flag, _Values, Default),
@@ -15,29 +12,22 @@
      fail
    ; true
    ).
-:- use_module(engine(basic_props)).
-:- use_module(library(hiordlib), [map/3]).
 :- use_module(library(lists)).
 :- use_module(rtchecks(rtchecks_basic)).
-:- use_module(rtchecks(rtchecks_meta)).
 :- endif.
-:- use_module(library(assertions(assrt_lib)),
-	      [assertion_read/9, assertion_body/7,
-	       comps_to_goal/3, comps_to_goal/4]).
 :- if(current_prolog_flag(dialect, ciao)).
 :- use_module(library(compiler(c_itf_internal)),
 	    [(discontiguous)/3, defines_module/2, exports_pred/3, location/1,
 	     location/3]).
-:- use_module(library(inliner(inliner_tr)), [in_inline_module_db/2, inline_db/4,
-					     lit_clause_arity/4]).
+:- use_module(library(inliner(inliner_tr)), [in_inline_module_db/2]).
 :- use_module(library(sort)).
 :- endif.
 % see formulae, conj_to_list/2, list_to_conj/2
 :- use_module(library(llists)).
 :- use_module(library(aggregates)).
 :- use_module(library(terms)).
-:- use_module(rtchecks(term_list)).
-
+:- use_module(rtchecks(rtchecks_gen)).
+    
 :- doc(author, "Edison Mera").
 
 :- doc(module, "This module provides and implements the run-time
@@ -145,31 +135,8 @@ cleanup_db_0(M) :-
 	retractall_fact(head_alias_db(_, _, M)),
 	retractall_fact(posponed_sentence_db(_, _, _, _, _, _, M, _)),
 	retractall_fact(generated_rtchecks_db(_, _, M)).
-
 % :- data rtchecks_db/3.
 % :- data nortchecks_db/3.
-
-valid_assertions(Status, Type) :-
-	rtcheck_assr_type(Type),
-	( Type = (entry)
-	->Status = true
-	; rtcheck_assr_status(Status)
-	).
-
-% rtcheck_assr_status(true) :- current_prolog_flag(rtchecks_true, yes).
-rtcheck_assr_status(trust) :- current_prolog_flag(rtchecks_trust, yes).
-rtcheck_assr_status(debug) :- current_prolog_flag(rtchecks_debug, yes).
-rtcheck_assr_status(trace) :- current_prolog_flag(rtchecks_trace, yes).
-rtcheck_assr_status(check) :- current_prolog_flag(rtchecks_check, yes).
-
-rtcheck_assr_type(calls).
-rtcheck_assr_type(entry) :- current_prolog_flag(rtchecks_entry, yes).
-rtcheck_assr_type(pred).
-rtcheck_assr_type(prop).
-rtcheck_assr_type(test) :- current_prolog_flag(rtchecks_test, yes).
-rtcheck_assr_type(comp).
-rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
-rtcheck_assr_type(success).
 
 :- if(have_inline).
 
@@ -185,8 +152,6 @@ insert_inline_declarations(F, A, M, Head, Clauses,
 add_use_inline(_, _, Clauses, Clauses).
 
 insert_inline_declarations(_, _, _, _, Clauses, Clauses).
-
-inline_db(_, _, _, _) :- fail.
 
 :- endif.
 
@@ -206,20 +171,6 @@ location(Loc) :-
 		Loc = loc(Src, Ln0, Ln1)
 	       )).
 
-lit_clause_arity(_, _, A, A).
-
-:- meta_predicate exported_predicate(spec).
-exported_predicate(M:F/A) :-
-	functor(H, F, A),
-	predicate_property(M:H, export).
-:- endif.
-
-:- if(current_prolog_flag(dialect, ciao)).
-exported_predicate(M:F/A) :- 
-	defines_module(Base, M),
-	( exports_pred(Base, all, all)
-	; exports_pred(Base, F, A)
-	).
 :- endif.
 
 proc_posponed_sentence(Clauses, M) :-
@@ -228,49 +179,13 @@ proc_posponed_sentence(Clauses, M) :-
 	transform_sentence(F, A, Head, Op, Body, Clauses, M, Dict),
 	erase(Ref).
 
+remaining_pred(F, A, M) :-
+	current_assertion(_, rtcheck, _, _, _, _, _, _, _, _, _, _, _, F, A, M),
+	\+ generated_rtchecks_db(F, A, M).
+
 remaining_preds(Preds, M) :-
 	findall(F/A, remaining_pred(F, A, M), Preds0),
 	sort(Preds0, Preds).
-
-/*
-  Combination of status and rtcheck indicators, to control the compile
-  and run-time checking:
-
-  ===========+============++===========+==========
-  Status     | + Command  || ctchecked | rtchecked
-  ===========+============++===========+==========
-  true/trust | -          || no        | no
-  true/trust | rtcheck    || no        | yes
-  check      | no_rtcheck || yes       | no
-  check      | -          || yes       | yes
-  ===========+============++===========+==========
-  Note: Is weird to preserve ciao-compatibility
-*/
-
-assertion_is_valid(ctcheck, Status, Type, _) :-
-    valid_ctcheck_assertions(Status, Type).
-assertion_is_valid(rtcheck, Status, Type, Comp) :-
-	( \+ memberchk(_:rtcheck(_), Comp) ->
-	  valid_assertions(Status, Type),
-	  \+ memberchk(_:no_rtcheck(_), Comp)
-	; true % Force run-time checking
-	).
-
-valid_ctcheck_assertions(Status, Type) :-
-    ctcheck_assr_status(Status),
-    ctcheck_assr_type(Type).
-
-ctcheck_assr_status(trust).
-ctcheck_assr_status(check).
-
-ctcheck_assr_type(calls).
-ctcheck_assr_type(entry).
-ctcheck_assr_type(pred).
-ctcheck_assr_type(prop).
-ctcheck_assr_type(exit).
-ctcheck_assr_type(success).
-
-black_list_pred('=', 2).
 
 :- if(current_prolog_flag(dialect, swi)).
 add_redefine_declaration(_, _, H) -->
@@ -337,6 +252,7 @@ proper_warning_flags(C,
 		      (:- pop_prolog_flag(multi_arity_warnings)),
 		      end_of_file]).
 :- endif.
+
 rtchecks_sentence_tr(0, _, M, _) :- !, cleanup_db(M).
 rtchecks_sentence_tr(end_of_file, Clauses, M, _) :- !,
 	runtime_checkable(M),
@@ -370,13 +286,6 @@ do_rtchecks_sentence_tr((:- _Decl), _, _, _) :-
 	fail.
 do_rtchecks_sentence_tr(Head, Clauses, M, Dict) :-
 	process_sentence(Head, true, (:-), Clauses, M, Dict).
-
-proc_ppassertion(check(Goal), PredName, Dict, Loc,
-		 rtcheck(Goal, PredName, Dict, Loc)).
-proc_ppassertion(trust(Goal), PredName, Dict, Loc,
-		 rttrust(Goal, PredName, Dict, Loc)).
-proc_ppassertion(true(_),  _, _, _, true).
-proc_ppassertion(false(_), _, _, _, true).
 
 rtchecks_goal_tr(end_of_file, _,         M) :- !, cleanup_db(M).
 rtchecks_goal_tr(PPAssertion, PPRTCheck, _) :-
@@ -537,162 +446,20 @@ record_goal_alias(Head0, Head, M) :-
 	Pred =.. [F|Args],
 	assertz_ct(goal_alias_db(Pred0, Pred, M)).
 
-
-/*
-
-Algorithm:
-
-pred :- body.
-
-is transformed in:
-
-pred :-                        \
-	"check entry...",       \___________ STEP
-	"check exit...",        /            ONE
-	'pred$rtc1'.           /
-
-'pred$rtc1' :-                            \
-	"check compat pre..."              \
-	"check calls...",                   \
-	"check success pre",                 \__________ STEP
-	"check comp..."(                     /           TWO
-	call_stack('pred$rtc2', Loc)),      /
-	"check success pos",               /
-	"check compat pos..."             /
-
-call_stack(Goal, Loc) :-
-	intercept(Goal,
-	    rtcheck(LocStack, ...),
-	    send_signal(rtcheck([Loc|LockStack], ...))).
-
-'pred$rtc2' :-
-	body.
-
-And goals preds are renamed to 'pred$rtc1'.  There are other steps in
-order to simplify the generated code as far as possible.
-
-*/
-
-generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt,
-			 CallAssrt, SuccAssrt, CompAssrt) -->
-	compat_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt, [], ChkCompatL0),
-	calls_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CallAssrt, [], CheckedL0),
-	success_rtchecks(Assertions, Pred, M, PLoc, PosLocs, SuccAssrt, CheckedL0, CheckedL1),
-	compatpos_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt, ChkCompatL0),
-	comp_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompAssrt, CheckedL1).
-
-generate_step1_rtchecks(Assertions, Pred, M, PLoc, Goal0, Goal) :-
-	do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, PosLocs0,
-				   Goal1, Goal),
-	once(reverse(PosLocs0, PosLocs1)),
-	collapse_terms(Goal1, PosLocs1, PosLocs2),
-	reverse(PosLocs2, PosLocs),
-	append(PosLocs, Goal1, Goal0).
-
-do_generate_step1_rtchecks(Assertions, Pred, M, PLoc, PosLocs) -->
-	{
-	    current_prolog_flag(rtchecks_level, Level0),
-	    neg_level(Level0, Level),
-	    compat_assrt(Level, [test], CompatAssrt, []),
-	    call_assrt(Level, [entry], CallAssrt, []),
-	    succ_assrt(Level, [exit, success, pred], SuccAssrt, []),
-	    comp_assrt(Level, [comp, pred], CompAssrt, [])
-	},
-	generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs,
-	    CompatAssrt, CallAssrt, SuccAssrt, CompAssrt).
-
-generate_step2_rtchecks(Assertions, Pred, M, PDict, PLoc, Goal0,
-	    Goal) :-
-	do_generate_step2_rtchecks(Assertions, Pred, M, PLoc, PosLocs0,
-				   Goal1, Goal),
-	once(reverse(PosLocs0, PosLocs1)),
-	collapse_terms(Goal1, PosLocs1, PosLocs2),
-	reverse(PosLocs2, PosLocs),
-	append(PosLocs, Goal1, Goal0).
-
-do_generate_step2_rtchecks(Assertions, Pred, M, PLoc, PosLocs) -->
-	{
-	    current_prolog_flag(rtchecks_level, Level),
-	    compat_assrt(Level, [], CompatAssrt, []),
-	    call_assrt(Level, [], CallAssrt, []),
-	    succ_assrt(Level, [test, success, pred], SuccAssrt, []),
-	    comp_assrt(Level, [test, comp, pred], CompAssrt, [])
-	},
-	generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs,
-	    CompatAssrt, CallAssrt, SuccAssrt, CompAssrt).
-
-% ----------------------------------------------------------------------------
-neg_level(inner,   exports).
-neg_level(exports, inner).
-
-compat_assrt(exports, _) --> [].
-compat_assrt(inner,  AL) -->
-	findall((A,pred), (valid_assertions(A,pred), \+ memberchk(A, AL))).
-
-call_assrt(Level, BL0) -->
-	{Level = exports -> BL = BL0 ; BL= [calls, pred|BL0]},
-	findall((A, B), (valid_assertions(A,B), memberchk(B, BL))).
-
-succ_assrt(Level, BL0) -->
-	{Level = exports -> subtract(BL0, [test, success, pred], BL);BL = BL0},
-	findall((A, B), (valid_assertions(A,B), memberchk(B, BL))).
-
-comp_assrt(exports, _) --> [].
-comp_assrt(inner, BL) -->
-	findall((A, B), (valid_assertions(A,B), memberchk(B, BL))).
-% ----------------------------------------------------------------------------
-
-generate_rtchecks(Assrs, Pred, M, PDict, PLoc, Lits, CM:G) :-
-	( M \= CM
-	->generate_step1_rtchecks(Assrs, Pred, M, PLoc, G0, G1)
-	; G0 = G1
-	),
-	generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, G1, CM:G),
-	lists_to_lits(G0, Lits),
-	!.
-
-%% Trivial abstraction: Check for compatibility issues in properties,
-%% compatibility is an abstraction that makes static check decidable.
-%% The pay-off is a lose of precision. TBD: Formal demostration. --EMM
-abstract_assertions(assr(Pred, Status, Type, Compat0, Call, Succ, _Comp,
-			 Loc, PredName, CompatName0, CallName, SuccName, _CompName, Dict),
-		    assr(Pred, Status, Type, Compat, [], [], [],
-			 Loc, PredName, CompatName, [], [], [], Dict)) :-
-    append([CompatName0, CallName, SuccName], CompatName),
-    append([Compat0, Call, Succ], Compat).
-
-% Generate compile-time checks, currently only compatibility is checked,
-% fails if no ctchecks can be applied to Pred
-:- export(generate_ctchecks/4).
-generate_ctchecks(Pred, M, Loc, Lits) :-
-    collect_assertions(Pred, M, ctcheck, Assertions0),
-    maplist(abstract_assertions, Assertions0, Assertions),
-				% Abstraction step, here we lose precision
-				% but we gain computability of checks at
-				% earlier, even compile-time. --EMM
-    compat_rtchecks(Assertions, Pred, M, Loc, PosLocs0, _,
-		    [], _, Goal1, []),
-    once(reverse(PosLocs0, PosLocs1)),
-    collapse_terms(Goal1, PosLocs1, PosLocs2),
-    reverse(PosLocs2, PosLocs),
-    append(PosLocs, Goal1, Goal0),
-    Goal0 \= [],
-    lists_to_lits(Goal0, Lits).
-
 generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, Pred2,
 		  Head, Op, Body, Flag) -->
-	{generate_step1_rtchecks(Assrs, Pred, M, PLoc, Body00, Body01)},
+	{generate_step_rtchecks(step1, Assrs, Pred, M, PLoc, Body00, Body01)},
 	( {Body00 \== Body01} ->
 	  { rename_head('1', A, Pred, Pred1),
 	    record_goal_alias(Pred, Pred1, M),
 	    Body01 = Pred1,
-	    lists_to_lits(Body00, Lits0)
+	    lists_to_lits(Body00, Lits0 )
 	  },
 	  add_use_inline(F, A),
 	  [(Pred :- Lits0 )]
 	; {Pred = Pred1}
 	),
-	{generate_step2_rtchecks(Assrs, Pred, M, PDict, PLoc, Body1, Body12)},
+	{generate_step_rtchecks(step2, Assrs, Pred, M, PLoc, Body1, Body12)},
 	( {Body1 \== Body12} ->
 	  ( {Flag = transform} ->
 	    { rename_head('2', A, Pred, Pred2),
@@ -716,216 +483,3 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, Pred2,
 	  [Clause]
 	; []
 	).
-
-current_assertion_2(Pred0, TimeCheck, Status, Type, Pred, Compat,
-		    Call, Succ, Comp, Dict0, S, LB, LE, F, A, M) :-
-	assertion_read(Pred0, M, Status, Type, ABody, Dict0, S, LB, LE),
-	assertion_body(Pred, Compat, Call, Succ, Comp, _Comm, ABody),
-	assertion_is_valid(TimeCheck, Status, Type, Comp),
-	functor(Pred, F, CA),
-	lit_clause_arity(M, F, A, CA),
-	\+ inline_db(F, A, _, M),
-	( current_prolog_flag(rtchecks_level, inner) -> true
-	; current_prolog_flag(rtchecks_level, exports),
-	  exported_predicate(M:F/A) -> true
-	),
-	\+ black_list_pred(F, A).
-
-remaining_pred(F, A, M) :-
-	current_assertion_2(_, rtcheck, _, _, _, _, _, _, _, _, _, _, _, F, A, M),
-	\+ generated_rtchecks_db(F, A, M).
-
-current_assertion(Pred0, M, TimeCheck,
-		  assr(Pred, Status, Type, Compat, Call, Succ, Comp, Loc, PredName,
-		       CompatName, CallName, SuccName, CompName, Dict)) :-
-	current_assertion_2(Pred0, TimeCheck, Status, Type, Pred, Compat, Call,
-			    Succ, Comp0, Dict0, S, LB, LE, _F, _A, M),
-	Loc = loc(S, LB, LE),
-	collapse_dups(Comp0, Comp),
-	current_prolog_flag(rtchecks_namefmt, NameFmt),
-	get_pretty_names(NameFmt, n(Pred, Compat, Call, Succ, Comp), Dict0, TermName, Dict),
-	TermName = n(PredName, CompatName, CallName, SuccName, CompName).
-
-assertion_pred(assr(Pred, _, _, _, _, _, _, _, _, _, _, _, _, _), Pred).
-
-collect_assertions(Pred, M, TimeCheck, Assertions) :-
-	findall(Assertion, current_assertion(Pred, M, TimeCheck, Assertion), Assertions),
-	list(Assertions, assertion_pred(Pred)).
-
-pre_lit(pre(ChkProp, Prop, _, PropValues), cui(Prop - [], PropValues, ChkProp)).
-
-pre_fails(pre(_, _, _, PropValues), cui(PropValues, _, (PropValues \= []))).
-
-pre_error(pre(_, _, Error, PropValues), cui(PropValues, _, Error)).
-
-compat_rtcheck(assr(Pred, Status, Type, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
-	       Pred, M, PLoc, PosLocs, StatusTypes,
-	       pre(ChkCompat, Compat,
-		   send_rtcheck(PropValues, compat, PredName, Dict, PosLoc),
-		   PropValues)) :-
-	memberchk((Status, Type), StatusTypes),
-	\+(Compat == []),
-	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(compat, M, Compat, CompatNames, PropValues, ChkCompat).
-
-compat_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, CheckedL) -->
-	{collect_checks(Assertions, compat_rtcheck(Pred, M,
-		    PLoc, PosLocs, StatusTypes), ChkCalls)},
-	body_check_pre(ChkCalls, pre_lit, pre_fails, pre_error, collapse_prop,
-	    CheckedL0, CheckedL).
-
-calls_rtcheck(assr(Pred, Status, Type, _, Call, _, _, ALoc, PName, _, CallNames, _, _, Dict),
-	      Pred, M, PLoc, PosLocs, StatusTypes,
-	      pre(ChkCall, Call,
-		  send_rtcheck(PropValues, calls, PredName, Dict, PosLoc),
-		  PropValues)) :-
-	memberchk((Status, Type), StatusTypes),
-	\+(Call == []),
-	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(call, M, Call, CallNames, PropValues, ChkCall).
-
-calls_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, CheckedL) -->
-	{collect_checks(Assertions, calls_rtcheck(Pred, M,
-		    PLoc, PosLocs, StatusTypes), ChkCalls)},
-	body_check_pre(ChkCalls, pre_lit, pre_fails, pre_error, collapse_prop,
-	    CheckedL0, CheckedL).
-
-success_call_lit(succ(ChkCall, Call, PropValues, _, _),
-	    cui(Call - [], PropValues, ChkCall)).
-
-success_succ_lit(succ(_, _, PropValues, ChkSucc, Succ),
-	    cui(Succ - PropValues, _, ChkSucc)).
-
-:- pred success_rtchecks/11 + not_fails.
-
-success_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, CheckedL) -->
-	{collect_checks(Assertions, success_rtcheck(Pred, M,
-		    PLoc, PosLocs, StatusTypes), CheckSuccs)},
-	body_check_pos(CheckSuccs, success_call_lit, success_succ_lit,
-	    collapse_prop, pos(Pred, M, success), CheckedL0,
-	    CheckedL).
-
-check_poscond(PosLoc, PredName, Dict, Prop, PropNames, PropValues,
-	    i(PosLoc, PredName, Dict, Prop, PropNames, PropValues)).
-
-success_rtcheck(assr(Pred, Status, Type, _, Call, Succ, _, ALoc, PName, _, _, SuccNames, _, Dict),
-		Pred, M, PLoc, PosLocs, StatusTypes,
-		succ(ChkCall, Call, PropValues, ChkSucc, Succ)) :-
-	member((Status, Type), StatusTypes),
-	\+(Succ == []),
-	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(call, M, Call, PropValues, ChkCall),
-	check_poscond(PosLoc, PredName, Dict, Succ, SuccNames, PropValues, ChkSucc).
-
-compatpos_compat_lit(compatpos(ChkCompat, _, Compat, PropValues),
-	    cui(Compat - [], PropValues, ChkCompat)).
-
-compatpos_lit(compatpos(_, ChkCompatPos, Compat, PropValues),
-	    cui(Compat - PropValues, _, ChkCompatPos)).
-
-compatpos_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes,
-	    CheckedL0) -->
-	{collect_checks(Assertions, compatpos_rtcheck(Pred, M,
-		PLoc, PosLocs, StatusTypes), CheckSuccs)},
-	body_check_pos(CheckSuccs, compatpos_compat_lit, compatpos_lit,
-	    collapse_prop, pos(Pred, M, compatpos), CheckedL0, _).
-
-compatpos_rtcheck(assr(Pred, Status, Type, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
-		  Pred, M, PLoc, PosLocs, StatusTypes,
-		  compatpos(ChkCompat, ChkCompatPos, Compat, PropValues)) :-
-	member((Status, Type), StatusTypes),
-	\+(Compat == []),
-	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	get_checkc(compat, M, Compat, PropValues, ChkCompat),
-	check_poscond(PosLoc, PredName, Dict, Compat, CompatNames, PropValues,
-	    ChkCompatPos).
-
-:- pred collapse_dups(+list, ?list) # "Unifies duplicated terms.".
-
-collapse_dups([],            []).
-collapse_dups([Comp|Comps0], Comps) :-
-	collapse_dups2(Comp, Comps0, Comps).
-
-collapse_dups2(Comp0, Comps0, Comps) :-
-	select(Comp, Comps0, Comps1),
-	Comp==Comp0 ->
-	collapse_dups2(Comp, Comps1, Comps)
-    ;
-	collapse_dups3(Comps0, Comp0, Comps).
-
-collapse_dups3([],             Comp, [Comp]).
-collapse_dups3([Comp0|Comps0], Comp, [Comp|Comps]) :-
-	collapse_dups2(Comp0, Comps0, Comps).
-
-comps_to_comp_lit(PropValues, Comp, Body0, Body) :-
-	comps_parts_to_comp_lit(PropValues, Comp, Body1, Body),
-	lists_to_lits(Body1, Body0).
-
-valid_commands([times(_, _), try_sols(_, _)]).
-
-comps_parts_to_comp_lit(PropValues, Comp0, Body0, Body) :-
-	valid_commands(VC),
-	difference(Comp0, VC, Comp),
-	comps_to_goal(Comp, Body1, Body2),
-	( Body1 == Body2 ->
-	  Body0 = Body
-	; PropValues == [] ->
-	  Body2 = Body,
-	  Body0 = Body1
-	; Body0 = checkif_comp(PropValues, Body1, Body2, Body)
-	).
-
-:- use_module(library(implementation_module)).
-
-comp_no_signal(Comp, M) :-
-	implementation_module(M:Comp, IM),
-	assrt_lib:assertion_db(Comp, IM, true, prop, [], [], [], [no_signal], _, _, _).
-
-get_chkcomp(Comp, PropValues, Pred, M, PredName, Dict, PosLoc, Body0, Body) :-
-	comps_to_comp_lit(PropValues, Comp, Body1, Body),
-	( PosLoc \= [],
-	  \+ maplist(comp_no_signal(M), Comp)
-	->Body0 = add_info_rtsignal(Body1, PropValues, Pred,
-				    PredName, Dict, PosLoc)
-	; Body0 = Body1 % PredName and Dict are less relevant than PosLoc
-	).
-
-comp_rtcheck(assr(Pred, Status, Type, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames, Dict),
-	     Pred, M, PLoc, PosLocs, StatusTypes,
-	     comp(ChkCall, Call, PropValues, ChkComp, Comp)) :-
-	member((Status, Type), StatusTypes),
-	\+(Comp == []),
-	get_checkc(call, M, Call, PropValues, ChkCall),
-	insert_posloc(PName, PLoc, ALoc, PosLocs, PredName, PosLoc),
-	check_poscond(PosLoc, PredName, Dict, Comp, CompNames, PropValues, ChkComp).
-
-comp_call_lit(comp(ChkCall, Call, PropValues, _, _),
-	      cui(Call - [], PropValues, ChkCall)).
-
-comp_comp_lit(comp(_, _, PropValues, ChkComp, Comp), cui(Comp - PropValues, _, ChkComp)).
-
-compound_comp(Goal0-Goal, Goal0, Goal).
-
-:- discontiguous body_check_comp/7.
-body_check_comp([],       _,         _,        _,    _, Body,  Body) :- !.
-body_check_comp(ChkComps, CheckedL0, GlobName, Pred, M, Body0, Body) :-
-	compound_rtchecks_end(comp_call_lit, collapse_prop,
-	    ChkComps, CheckedL0, CompCall),
-	compound_rtchecks_end(comp_comp_lit, collapse_prop,
-	    ChkComps, [],        CompCompL),
-	map(CompCompL, comp_to_lit(GlobName, M), ChkComp0),
-	sort(ChkComp0, ChkComp1),
-	comps_to_goal([with_goal(G, Pred)-G|ChkComp1], compound_comp, CompBody, Body),
-	Body0 = [CompCall, CompBody].
-
-comp_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes,
-	    CheckedL) -->
-	{collect_checks(Assertions,
-			comp_rtcheck(Pred, M, PLoc, PosLocs, StatusTypes),
-			ChkComps),
-	 current_prolog_flag(rtchecks_namefmt, NameFmt),
-	 get_globname(NameFmt, Pred, GlobName)},
-	body_check_comp(ChkComps, CheckedL, GlobName, Pred, M).
-
-comp_to_lit(i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues), GlobName, M, ChkComp-Goal) :-
-	get_chkcomp(Comp, PropValues, GlobName, M, PredName, Dict, PosLoc, ChkComp, Goal).

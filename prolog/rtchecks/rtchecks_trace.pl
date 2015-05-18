@@ -3,11 +3,16 @@
 :- use_module(library(maplist_dcg)).
 :- use_module(library(ontrace)).
 :- use_module(rtchecks(rtchecks_rt)).
-:- use_module(rtchecks(rtchecks_tr)).
+:- use_module(rtchecks(rtchecks_gen)).
 :- use_module(rtchecks(rtchecks_eval)).
+:- use_module(rtchecks(rtchecks_utils)).
 
 :- meta_predicate trace_rtc(0).
+
 trace_rtc(Goal) :-
+    call_rtc(do_trace_rtc(Goal)).
+
+do_trace_rtc(Goal) :-
     State=state(_, _, _), % Allow destructive assignment
     call_inoutex(Goal,
 		 setup_trace(State),
@@ -89,7 +94,8 @@ prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_location(Clause, PC, Loc)},
     prolog:message_location(Loc).
 
-prolog:break_hook(Clause, PC, FR, _, call(Goal), call(RTChecks)) :-
+prolog:break_hook(Clause, PC, FR, _, call(Goal),
+		  rtchecks_eval:call_rtchecks(RTChecks, Goal)) :-
     prolog_frame_attribute(FR, context_module, M),
     generate_rtchecks(clause_pc(Clause, PC), M:Goal, RTChecks),
     '$break_at'(Clause, PC, false).
