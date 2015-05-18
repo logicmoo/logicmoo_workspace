@@ -1,5 +1,6 @@
 :- module(assrt_lib, [assertion_read/9,
 		      assertion_body/7,
+		      assertion_head_body_loc/8,
 		      comps_to_goal/3,
 		      comps_to_goal/4,
 		      assertion_records/4,
@@ -64,9 +65,28 @@ a_fake_body(CompL, CallL, SuccL, GlobL0, (call(Comp), call(Call), call(Succ), ca
 % extended to fetch assertions from extra places.
 %
 :- multifile assertion_db/11.
-assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Pos) :-
-    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody),
+assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
+    assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, Loc),
     once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
+
+assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, Loc) :-
+    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody, Ref),
+    clause_pos_location(Ref, Pos, Loc).
+
+clause_pos_location(Ref, Pos, Loc) :-
+    ( clause_property(Ref, file(File))
+    ->( var(Pos)
+      ->( clause_property(Ref, line_count(Line))
+	->Loc = file(File, Line, -1, _)
+	; true
+	)
+      ; Loc = file_term_position(File, Pos)
+      )
+    ; ( var(Pos)
+      ->Loc = clause(Ref)
+      ; Loc = clause_term_position(Ref, Pos)
+      )
+    ).
 
 filepos_line(File, CharPos, Line, LinePos) :-
     setup_call_cleanup('$push_input_context'(filepos),
@@ -86,8 +106,13 @@ assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
       integer(To)
     ->filepos_line(File, From, Line0, _),
       filepos_line(File, To,   Line1, _)
-    ; Loc = file(File, Line0, -1, _),
-      Line1 = Line0
+    ; Loc = file(File, Line0, -1, _)
+    ->Line1 = Line0
+    ; Loc = clause(Ref),
+      clause_property(Ref, file(File)),
+      clause_property(Ref, line_count(Line0 ))
+    ->Line1 = Line0
+    ; true
     ).
 
 % ---------------------------------------------------------------------------
@@ -572,7 +597,7 @@ assertion_records(M, Dict, doc(Key, Doc),
 % clauses --EMM
 assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
-    Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, Loc) :- FBody),
+    Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, Pos) :- FBody),
     ( source_location(File, Line0 )
     ->Clause = ('$source_location'(File, Line):Clause0 )
     ; Clause = Clause0
@@ -581,22 +606,19 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
 	    ( ( nonvar(APos) ->NonVarAPos=true ; NonVarAPos = fail ),
 	      current_normalized_assertion(Assertions, CM, APos, M:Head, Status,
 					   Type, Cp, Ca, Su, Gl, Co, HPos),
-	      ( nonvar(File),
-		( nonvar(HPos),
+	      ( nonvar(File)
+	      ->( nonvar(HPos),
 		  arg(1, HPos, HFrom),
 		  integer(HFrom)
-		->Loc = file_term_position(File, HPos),
+		->Pos = HPos,
 		  filepos_line(File, HFrom, Line, _)
 		; ( NonVarAPos=true
-		  ->Loc = file_term_position(File, APos)
-		  ; nonvar(Line0 )
-		  ->Loc = file(File, Line0, -1, _)
+		  ->Pos = APos
+		  ; true
 		  ),
 		  Line = Line0
 		)
-	      ->true
-	      ; print_message(warning, format("No location for assertion ~q",
-					      [Assertions]))
+	      ; true		% Loc will be instantiated later
 	      ),
 	      a_fake_body(Cp, Ca, Su, Gl, FBody)
 	    ),
