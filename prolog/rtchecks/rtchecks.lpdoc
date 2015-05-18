@@ -83,36 +83,6 @@ explanation of the meaning:
                  debugging purposes, but is better to use the unittest library.
   @end{itemize}
 
-@item @code{rtchecks_asrloc}
-  Controls the usage of locators for the assertions in the error messages.
-  The locator says the file and lines that contains the assertion that had
-    failed. Valid values are:
-  @begin{itemize}
-   @item @code{no}     : Disabled.
-   @item @code{yes}    : Enabled. Default.
-  @end{itemize}
-
-@item @code{rtchecks_predloc}
-    Controls the usage of locators for the predicate that caused the run-time
-    check error.  The locator says the first clause of the predicate that
-    the violated assertion refers to.
-  @begin{itemize}
-   @item @code{no}     : Disabled.
-   @item @code{yes}    : Enabled, Default.
-  @end{itemize}
-
-@item @code{rtchecks_callloc}
-  @begin{itemize}
-   @item @code{no}       : Do not show the stack of predicates that caused
-			   the failure
-   @item @code{predicate}: Show the stack of predicates that caused the
-			   failure. Instrument it in the predicate. Default.
-   @item @code{literal}  : Show the stack of predicates that caused the
-			   failure. Instrument it in the literal. This mode
-			   provides more information, because reports also
-			   the literal in the body of the predicate.
-  @end{itemize}
-
 @item @code{rtchecks_namefmt}
   @begin{itemize}
    @item @code{long}   : Show the name of predicates, properties and the

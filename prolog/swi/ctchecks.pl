@@ -1,5 +1,6 @@
 :- module(ctchecks, []).
 
+:- use_module(library(lists)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(compound_expand)).
 :- use_module(library(compact_pi_list)).
@@ -111,8 +112,7 @@ curr_location(Pos, Loc) :-
     ->Loc = Pos
     ; rtchecks_tr:location(loc(Src, _, _)),
       ( var(Src)
-      ->source_location(File, _),
-	rtchecks_tr:rel_file_name(File, Src)
+      ->source_location(Src, _)
       ; true
       ),
       Loc = file_term_position(Src, Pos)

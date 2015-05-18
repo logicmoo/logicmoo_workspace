@@ -6,11 +6,11 @@
 		get_propnames/2,
 		get_pretty_names/5,
 		checkif_to_lit/3,
-		get_checkc/4,
 		get_checkc/5,
-		get_checkif/8,
+		get_checkc/6,
+		get_checkif/9,
 		get_prop_args/3,
-		insert_posloc/7,
+		insert_posloc/6,
 		is_member_prop/2,
 		is_same_prop/2,
 		list_to_lits/2,
@@ -37,17 +37,16 @@
 
 :- doc(module, "Basic predicates used in rtchecks expansion.").
 
-insert_posloc((UsePredLoc, UseAsrLoc), PredName0, PLoc0, ALoc,
-	    PosLocs, PredName, PosLoc) :-
+insert_posloc(PredName0, PLoc0, ALoc, PosLocs, PredName, PosLoc) :-
 	push_meta(PredName0, PosLocs, PredName),
-	( UsePredLoc == yes, nonvar(PLoc0) ->
-	  push_term(PLoc0,                   PosLocs, PLoc),
-	  push_term(predloc(PredName, PLoc), PosLocs, PosPLoc),
+	( nonvar(PLoc0)
+	->push_term(PLoc0,                   PosLocs, PLoc),
+	  push_term(posloc(PredName, PLoc), PosLocs, PosPLoc),
 	  PosLoc = [PosPLoc|PosLoc1]
 	; PosLoc = PosLoc1
 	),
-	( UseAsrLoc == yes, nonvar(ALoc) ->
-	  push_term(asrloc(ALoc), PosLocs, PosALoc),
+	( nonvar(ALoc)
+	->push_term(asrloc(ALoc), PosLocs, PosALoc),
 	  PosLoc1 = [PosALoc]
 	; PosLoc1 = []
 	).
@@ -64,13 +63,13 @@ compound_checkc(CheckProps0, Name, Props, CheckC) :-
 	list_to_disj(CheckProps0, CheckProps),
 	CheckC = findall(Name, CheckProps, Props).
 
-get_checkc(_,      [],    _,     [],         true) :- !.
-get_checkc(compat, Props, Names, PropValues, CheckC) :-
-	compound_check_props(compat, Props, CheckProps0),
+get_checkc(_, _, [], _, [], true) :- !.
+get_checkc(compat, M, Props, Names, PropValues, CheckC) :-
+	compound_check_props(compat, M, Props, CheckProps0),
 	maplist(check_props_names(Name), CheckProps0, Names, CheckProps),
 	compound_checkc(CheckProps, Name, PropValues, CheckC).
-get_checkc(call, Props, Names, PropValues, CheckC) :-
-	compound_check_props(instance, Props, CheckProps0),
+get_checkc(call, M, Props, Names, PropValues, CheckC) :-
+	compound_check_props(instance, M, Props, CheckProps0),
 	maplist(check_props_names(Name), CheckProps0, Names, CheckProps),
 	compound_checkc(CheckProps, Name, PropValues, CheckC).
 
@@ -81,25 +80,27 @@ compound_checkc(CheckProps0, PropValues, CheckC) :-
 	list_to_lits(CheckProps0, CheckProps),
 	explicit_fail(CheckProps, PropValues, CheckC).
 
-get_checkc(_,      [],    [],         true) :- !.
-get_checkc(compat, Props, PropValues, CheckC) :-
-	compound_check_props(compat, Props, CheckProps0),
+get_checkc(_, _, [], [], true) :- !.
+get_checkc(compat, M, Props, PropValues, CheckC) :-
+	compound_check_props(compat, M, Props, CheckProps0),
 	compound_checkc(CheckProps0, PropValues, CheckC).
-get_checkc(call, Props, PropValues, CheckC) :-
-	compound_check_props(instance, Props, CheckProps0),
+get_checkc(call, M, Props, PropValues, CheckC) :-
+	compound_check_props(instance, M, Props, CheckProps0),
 	compound_checkc(CheckProps0, PropValues, CheckC).
 
 
-compound_check_props(Check, Props, CheckProps) :-
-	maplist(compound_check_prop(Check), Props, CheckProps).
+compound_check_props(Check, M, Props, CheckProps) :-
+	maplist(compound_check_prop(Check, M), Props, CheckProps).
 
-compound_check_prop(compat(Prop), _, CheckProp) :- !,
-	compound_check_prop(Prop, compat, CheckProp).
-compound_check_prop(instance(Prop), _, CheckProp) :- !,
-	compound_check_prop(Prop, instance, CheckProp).
-compound_check_prop(succeeds(Prop), _, Prop) :- !.
-compound_check_prop(Prop, Check, CheckProp) :-
-	CheckProp =.. [Check, Prop].
+compound_check_prop(compat(Prop), _, M, CheckProp) :- !,
+	compound_check_prop(Prop, compat, M, CheckProp).
+compound_check_prop(instance(Prop), _, M, CheckProp) :- !,
+	compound_check_prop(Prop, instance, M, CheckProp).
+compound_check_prop(succeeds(Prop), _, M, Prop) :- !.
+compound_check_prop(M:Prop, Check, _, CheckProp) :- !,
+	compound_check_prop(Prop, Check, M, CheckProp).
+compound_check_prop(Prop, Check, M, native_props:CheckProp) :-
+	CheckProp =.. [Check, M:Prop].
 
 compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, AsrLocs, PropValue,
 		 ( IfValues == [] ->
@@ -110,15 +111,15 @@ compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, AsrLocs, PropVal
 
 % TODO: fail: Exit \= [].  true: Exit == [].
 
-get_checkif(_, _,    _, _, [], _, _, true) :- !.
-get_checkif(_, Exit, _, _, _,  _, _, true) :- Exit \= [], !.
-get_checkif(success, Exit, PredName, Dict, Props, Names, AsrLoc, CheckIf) :-
-	compound_check_props(instance, Props, CheckProps0),
+get_checkif(_, _,    _, _, _, [], _, _, true) :- !.
+get_checkif(_, Exit, _, _, _, _,  _, _, true) :- Exit \= [], !.
+get_checkif(success, Exit, PredName, Dict, M, Props, Names, AsrLoc, CheckIf) :-
+	compound_check_props(instance, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
 	compound_checkif(Exit, success, PredName, Dict, CheckProps, AsrLoc, NameProp, CheckIf).
-get_checkif(compatpos, Exit, PredName, Dict, Props, Names, AsrLoc, CheckIf) :-
-	compound_check_props(compat, Props, CheckProps0),
+get_checkif(compatpos, Exit, PredName, Dict, M, Props, Names, AsrLoc, CheckIf) :-
+	compound_check_props(compat, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
 	compound_checkif(Exit, success, PredName, Dict, CheckProps, AsrLoc, NameProp, CheckIf).
@@ -242,8 +243,9 @@ lists_to_disj(A0, L) :-
 	remove_element(A1, fail, A2),
 	list_to_disj(A2, L).
 
-checkif_to_lit(i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit), pos(_Pred, PType), CheckPos) :-
-	get_checkif(PType, Exit, PredName, Dict, Compat, CompatNames, AsrLoc,
+checkif_to_lit(i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit),
+	       pos(_Pred, M, PType), CheckPos) :-
+	get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames, AsrLoc,
 		    CheckPos).
 
 push_flags(inline) --> [].

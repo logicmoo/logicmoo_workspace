@@ -1,17 +1,26 @@
 :- module(rtchecks_rt, [condition/1,
 			checkif_comp/4,
 			rtcheck/4,
+			rttrust/4,
 			add_info_rtsignal/6,
 			call_stack/2,
 			'$meta$rtc'/2,
-			with_goal/2
+			with_goal/2,
+			check/1,
+			trust/1,
+			true/1,
+			false/1
 		       ],
 	  [assertions, nortchecks, hiord]).
 
 :- use_module(library(lists)).
 :- use_module(library(terms_vars)).
 :- use_module(library(freeze)).
-
+:- if(current_prolog_flag(dialect, swi)).
+:-  abolish(send_signal/1),
+    abolish(intercept/3).
+:- use_module(library(intercept)).
+:- endif.
 :- reexport(rtchecks(rtchecks_send)).
 
 :- doc(author, "Edison Mera").
@@ -66,6 +75,13 @@ partiton(_1,_2,_3,_4) is called.".
 checkif_comp([],    Comp, Goal, Goal) :- call(Comp).
 checkif_comp([_|_], _,    _,    Goal) :- call(Goal).
 
+:- meta_predicate rttrust(goal, ?, ?, ?).
+rttrust(Check, PredName, Dict, Loc) :-
+    ( current_prolog_flag(rtchecks_trust, yes)
+    ->rtcheck(Check, PredName, Dict, Loc)
+    ; true
+    ).
+
 :- meta_predicate rtcheck(goal, ?, ?, ?).
 rtcheck(Check, PredName, Dict, Loc) :-
 	rtcheck_(Check, PredName, Dict, Loc),
@@ -85,3 +101,15 @@ call_stack(Goal, Pos) :-
 	    send_rtcheck(PropNames, Type, PredName, Dict, [Pos|Poss])).
 % :- meta_predicate '$meta$rtc'(0, -).
 '$meta$rtc'(Goal, Goal).
+
+:- meta_predicate check(goal).
+check(_).
+
+:- meta_predicate trust(goal).
+trust(_).
+
+:- meta_predicate true(goal).
+true(_).
+
+:- meta_predicate false(goal).
+false(_).
