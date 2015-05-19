@@ -70,7 +70,7 @@ multi(Goal) :-
     # "Represents an arithmetic expression, i.e., a term that could be
     an argument for an arithmetic predicate.".
 
-arithexpression(X) :- numeric(X), !. % Optimization
+arithexpression(X) :- number(X), !. % Optimization
 arithexpression(X) :- num(X).
 arithexpression(X) :-
     current_arithmetic_function(X),
