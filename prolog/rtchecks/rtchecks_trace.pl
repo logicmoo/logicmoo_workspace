@@ -1,5 +1,6 @@
 :- module(rtchecks_trace, [trace_rtc/1]).
 
+:- use_module(library(swi/rtchecks)). % Proper load of ciao dialect modules
 :- use_module(library(maplist_dcg)).
 :- use_module(library(ontrace)).
 :- use_module(rtchecks(rtchecks_rt)).
@@ -10,7 +11,7 @@
 :- meta_predicate trace_rtc(0).
 
 trace_rtc(Goal) :-
-    call_rtc(do_trace_rtc(Goal)).
+    do_trace_rtc(call_rtc(Goal)).
 
 do_trace_rtc(Goal) :-
     State=state(_, _, _), % Allow destructive assignment
@@ -38,6 +39,7 @@ black_list_module(rtchecks_trace).
 black_list_module(rtchecks_utils).
 black_list_module(rtchecks_basic).
 black_list_module(rtchecks_send).
+black_list_module(rtchecks_trace).
 black_list_module('$expand').
 black_list_module(complete_dict).
 black_list_module(native_props).
@@ -94,8 +96,7 @@ prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_location(Clause, PC, Loc)},
     prolog:message_location(Loc).
 
-prolog:break_hook(Clause, PC, FR, _, call(Goal),
-		  rtchecks_eval:call_rtchecks(RTChecks, Goal)) :-
+prolog:break_hook(Clause, PC, FR, _, call(Goal), call(RTChecks)) :-
     prolog_frame_attribute(FR, context_module, M),
     generate_rtchecks(clause_pc(Clause, PC), M:Goal, RTChecks),
     '$break_at'(Clause, PC, false).

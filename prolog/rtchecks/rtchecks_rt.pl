@@ -2,7 +2,6 @@
 			checkif_comp/4,
 			rtcheck/4,
 			rttrust/4,
-			add_info_rtsignal/6,
 			call_stack/2,
 			'$meta$rtc'/2,
 			with_goal/2,
@@ -34,12 +33,6 @@
 
 condition(true).
 condition(fail).
-
-:- meta_predicate add_info_rtsignal(goal, ?, ?, ?, ?, ?).
-add_info_rtsignal(Goal, Props0, Pred, PredName, Dict, Pos) :-
-	intercept(Goal, rtcheck(comp, Pred, _, Props1, []),
-		  ( append(Props0, Props1, Props),
-		    send_rtcheck(Props, comp, PredName, Dict, Pos))).
 
 :- meta_predicate with_goal(0, ?).
 with_goal(Comp, Goal) :-

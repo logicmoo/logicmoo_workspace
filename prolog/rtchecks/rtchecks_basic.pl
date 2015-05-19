@@ -105,7 +105,7 @@ compound_check_prop(Prop, Check, M, native_props:CheckProp) :-
 compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, AsrLocs, PropValue,
 		 ( IfValues == [] ->
 		   findall(PropValue, CheckProps, Props),
-		   send_rtcheck(Props, ErrType, PredName, Dict, AsrLocs)
+		   rtchecks_send:send_rtcheck(Props, ErrType, PredName, Dict, AsrLocs)
 		 ; true
 		 )).
 

@@ -1,7 +1,7 @@
 :- module(rtchecks_gen, [valid_commands/1,
 			 collect_assertions/4,
 			 current_assertion/4,
-			 generate_rtchecks/7,
+			 generate_rtchecks/8,
 			 generate_ctchecks/4,
 			 proc_ppassertion/5,
 			 generate_step_rtchecks/7,
@@ -205,7 +205,7 @@ pre_error(pre(_, _, Error, PropValues), cui(PropValues, _, Error)).
 compat_rtcheck(assr(Pred, Status, Type, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
 	       Pred, M, PLoc, PosLocs, StatusTypes,
 	       pre(ChkCompat, Compat,
-		   send_rtcheck(PropValues, compat, PredName, Dict, PosLoc),
+		   rtchecks_send:send_rtcheck(PropValues, compat, PredName, Dict, PosLoc),
 		   PropValues)) :-
 	memberchk((Status, Type), StatusTypes),
 	\+(Compat == []),
@@ -221,7 +221,7 @@ compat_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, Chec
 calls_rtcheck(assr(Pred, Status, Type, _, Call, _, _, ALoc, PName, _, CallNames, _, _, Dict),
 	      Pred, M, PLoc, PosLocs, StatusTypes,
 	      pre(ChkCall, Call,
-		  send_rtcheck(PropValues, calls, PredName, Dict, PosLoc),
+		  rtchecks_send:send_rtcheck(PropValues, calls, PredName, Dict, PosLoc),
 		  PropValues)) :-
 	memberchk((Status, Type), StatusTypes),
 	\+(Call == []),
@@ -301,13 +301,13 @@ collapse_dups3([],             Comp, [Comp]).
 collapse_dups3([Comp0|Comps0], Comp, [Comp|Comps]) :-
 	collapse_dups2(Comp0, Comps0, Comps).
 
-comps_to_comp_lit(PropValues, Comp, Body0, Body) :-
-	comps_parts_to_comp_lit(PropValues, Comp, Body1, Body),
+comps_to_comp_lit(PropValues, Comp, M, Body0, Body) :-
+	comps_parts_to_comp_lit(PropValues, Comp, M, Body1, Body),
 	lists_to_lits(Body1, Body0).
 
 valid_commands([times(_, _), try_sols(_, _)]).
 
-comps_parts_to_comp_lit(PropValues, Comp0, Body0, Body) :-
+comps_parts_to_comp_lit(PropValues, Comp0, M, Body0, Body) :-
 	valid_commands(VC),
 	difference(Comp0, VC, Comp),
 	comps_to_goal(Comp, Body1, Body2),
@@ -316,7 +316,7 @@ comps_parts_to_comp_lit(PropValues, Comp0, Body0, Body) :-
 	; PropValues == [] ->
 	  Body2 = Body,
 	  Body0 = Body1
-	; Body0 = checkif_comp(PropValues, Body1, Body2, Body)
+	; Body0 = @(rtchecks_rt:checkif_comp(PropValues, Body1, Body2, Body), M)
 	).
 
 :- use_module(library(implementation_module)).
@@ -324,15 +324,6 @@ comps_parts_to_comp_lit(PropValues, Comp0, Body0, Body) :-
 comp_no_signal(Comp, M) :-
 	implementation_module(M:Comp, IM),
 	assrt_lib:assertion_db(Comp, IM, true, prop, [], [], [], [no_signal], _, _, _).
-
-get_chkcomp(Comp, PropValues, Pred, M, PredName, Dict, PosLoc, Body0, Body) :-
-	comps_to_comp_lit(PropValues, Comp, Body1, Body),
-	( PosLoc \= [],
-	  \+ maplist(comp_no_signal(M), Comp)
-	->Body0 = add_info_rtsignal(Body1, PropValues, Pred,
-				    PredName, Dict, PosLoc)
-	; Body0 = Body1 % PredName and Dict are less relevant than PosLoc
-	).
 
 comp_rtcheck(assr(Pred, Status, Type, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames, Dict),
 	     Pred, M, PLoc, PosLocs, StatusTypes,
@@ -350,30 +341,25 @@ comp_comp_lit(comp(_, _, PropValues, ChkComp, Comp), cui(Comp - PropValues, _, C
 
 compound_comp(Goal0-Goal, Goal0, Goal).
 
-:- discontiguous body_check_comp/7.
-body_check_comp([],       _,         _,        _,    _, Body,  Body) :- !.
-body_check_comp(ChkComps, CheckedL0, GlobName, Pred, M, Body0, Body) :-
-	compound_rtchecks_end(comp_call_lit, collapse_prop,
-	    ChkComps, CheckedL0, CompCall),
-	compound_rtchecks_end(comp_comp_lit, collapse_prop,
-	    ChkComps, [],        CompCompL),
-	map(CompCompL, comp_to_lit(GlobName, M), ChkComp0),
+body_check_comp([],       _,         _,    _, Body,  Body) :- !.
+body_check_comp(ChkComps, CheckedL0, Pred, M, Body0, Body) :-
+	compound_rtchecks_end(comp_call_lit, collapse_prop, ChkComps, CheckedL0, CompCall),
+	compound_rtchecks_end(comp_comp_lit, collapse_prop, ChkComps, [],        CompComp),
+	map(CompComp, comp_to_lit(M), ChkComp0),
 	sort(ChkComp0, ChkComp1),
-	comps_to_goal([with_goal(G, Pred)-G|ChkComp1], compound_comp, CompBody, Body),
+	comps_to_goal([(rtchecks_rt:with_goal(M:G, Pred))-G|ChkComp1],
+		      compound_comp, CompBody, Body),
 	Body0 = [CompCall, CompBody].
 
-comp_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes,
-	    CheckedL) -->
-	{collect_checks(Assertions,
-			comp_rtcheck(Pred, M, PLoc, PosLocs, StatusTypes),
-			ChkComps),
-	 current_prolog_flag(rtchecks_namefmt, NameFmt),
-	 get_globname(NameFmt, Pred, GlobName)},
-	body_check_comp(ChkComps, CheckedL, GlobName, Pred, M).
+comp_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL) -->
+	{ collect_checks(Assertions,
+			 comp_rtcheck(Pred, M, PLoc, PosLocs, StatusTypes),
+			 ChkComps)
+	},
+	body_check_comp(ChkComps, CheckedL, Pred, M).
 
-comp_to_lit(i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues), GlobName, M, ChkComp-Goal) :-
-	get_chkcomp(Comp, PropValues, GlobName, M, PredName, Dict, PosLoc, ChkComp, Goal).
-
+comp_to_lit(i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues), M, ChkComp-Goal) :-
+	comps_to_comp_lit(PropValues, Comp, M, ChkComp, Goal).
 
 proc_ppassertion(check(Goal), PredName, Dict, Loc,
 		 rtcheck(Goal, PredName, Dict, Loc)).
@@ -382,9 +368,9 @@ proc_ppassertion(trust(Goal), PredName, Dict, Loc,
 proc_ppassertion(true(_),  _, _, _, true).
 proc_ppassertion(false(_), _, _, _, true).
 
-generate_rtchecks(Assrs, Pred, M, PLoc, G1, G2, G) :-
+generate_rtchecks(Assrs, Pred, M, PLoc, G1, G2, G3, G) :-
 	generate_step_rtchecks(step1, Assrs, Pred, M, PLoc, G1, G2),
-	generate_step_rtchecks(step2, Assrs, Pred, M, PLoc, G2, G).
+	generate_step_rtchecks(step2, Assrs, Pred, M, PLoc, G3, G).
 
 % Generate compile-time checks, currently only compatibility is checked,
 % fails if no ctchecks can be applied to Pred
