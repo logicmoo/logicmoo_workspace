@@ -1,5 +1,7 @@
-:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, char/1]).
+:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, char/1,
+		    arithexpression/1]).
 
+:- use_module(library(apply)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/nativeprops)).
 :- use_module(library(swi/basicprops)).
@@ -64,3 +66,13 @@ multi(Goal) :-
 	; nb_setarg(1, Solved, yes)
 	).
 
+:- prop arithexpression/1 is type
+    # "Represents an arithmetic expression, i.e., a term that could be
+    an argument for an arithmetic predicate.".
+
+arithexpression(X) :- numeric(X), !. % Optimization
+arithexpression(X) :- num(X).
+arithexpression(X) :-
+    current_arithmetic_function(X),
+    X =.. [_|Args],
+    maplist(arithexpression, Args).
