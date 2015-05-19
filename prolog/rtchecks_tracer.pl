@@ -8,28 +8,40 @@
 :- use_module(rtchecks(rtchecks_eval)).
 :- use_module(rtchecks(rtchecks_utils)).
 
+:- dynamic
+    rtc_scanned/1,
+    rtc_break/2.
+
 :- meta_predicate trace_rtc(0).
 
 trace_rtc(Goal) :-
-    do_trace_rtc(call_rtc(Goal)).
+    setup_call_cleanup(setup_trace,
+		       do_trace_rtc(call_rtc(Goal)),
+		       cleanup_trace).
 
 do_trace_rtc(Goal) :-
-    State=state(_, _, _), % Allow destructive assignment
     call_inoutex(Goal,
-		 setup_trace(State),
-		 ontrace:cleanup_trace(State)).
+		 setup_trace,
+		 cleanup_trace).
 
-setup_trace(State) :-
-    asserta((user:prolog_trace_interception(Port, Frame, _, Action)
-	    :- rtcheck_port(Port, Frame, Action)),
-	    Ref),
+:- multifile user:prolog_trace_interception/4.
+
+setup_trace :-
     maplist_dcg(ontrace:port_mask, [unify], 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
-    nb_setarg(1, State, Visible),
-    nb_setarg(2, State, Leash),
-    nb_setarg(3, State, Ref),
+    asserta((user:prolog_trace_interception(Port, Frame, _, Action) :-
+	    rtcheck_port(Port, Frame, Action)),
+	    Ref),
+    asserta(rtc_state(Visible, Leash, Ref)),
     trace.
+
+cleanup_trace :-
+    forall(retract(rtc_state(Visible, Leash, Ref)),
+	   ontrace:cleanup_trace(state(Visible, Leash, Ref))),
+    retractall(rtc_scanned(_)),
+    forall(retract(rtc_break(Clause, PC)),
+	   ignore('$break_at'(Clause, PC, false))).
 
 black_list_module(assrt_lib).
 black_list_module(rtchecks_tr).
@@ -57,26 +69,42 @@ black_list_module(expansion_module).
 skip_predicate(rtchecks_utils:handle_rtcheck(_)).
 
 pp_assr(check(_), _).
-pp_assr(trust(_), _) .
+pp_assr(trust(_), _).
 
-:- public rtcheck_port/3.
-rtcheck_port(unify, Frame, _) :-
-    prolog_frame_attribute(Frame, context_module, CM),
-    \+ black_list_module(CM),
-    prolog_frame_attribute(Frame, clause, Clause),
-    PI=M:F/A,
-    '$break_pc'(Clause, PC, _NextPC1),
-    '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
-    ( memberchk(TInstr, [i_call(PI), i_depart(PI)]),
-      \+ black_list_module(M),
-      functor(Goal, F, A),
-      ( pp_assr(Goal, M)
-      ; current_assertion(Goal, M, rtcheck, _)
-      )
-    ->'$break_at'(Clause, PC, true),
-      fail
+:- public rtcheck_port/4.
+
+rtcheck_port(Port, Frame, Action) :-
+    ( current_prolog_flag(gui_tracer, true)
+    ->print_message(information,
+		    format("gui_tracer activated, rtchecks tracer will be disabled", [])),
+      cleanup_trace,
+      visible(+cut_call),
+      Action = up
+    ; rtcheck_port_(Port, Frame, Action)
     ).
-rtcheck_port(_, Frame, Action) :-
+
+rtcheck_port_(unify, Frame, Action) :-
+    prolog_frame_attribute(Frame, clause, Clause),
+    ( rtc_scanned(Clause)
+    ->Action = skip
+    ; assertz(rtc_scanned(Clause)),
+      prolog_frame_attribute(Frame, context_module, CM),
+      \+ black_list_module(CM),
+      PI=M:F/A,
+      '$break_pc'(Clause, PC, _NextPC1),
+      '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
+      ( memberchk(TInstr, [i_call(PI), i_depart(PI)]),
+	\+ black_list_module(M),
+	functor(Goal, F, A),
+	( pp_assr(Goal, M)
+	; current_assertion(Goal, M, rtcheck, _)
+	)
+      ->'$break_at'(Clause, PC, true),
+	assertz(rtc_break(Clause, PC)),
+	fail
+      )
+    ).
+rtcheck_port_(_, Frame, Action) :-
     ( prolog_frame_attribute(Frame, goal, Goal),
       \+ skip_predicate(Goal)
     ->Action = continue
@@ -96,6 +124,7 @@ prolog:message_location(clause_pc(Clause, PC)) -->
     prolog:message_location(Loc).
 
 prolog:break_hook(Clause, PC, FR, _, call(Goal), call(RTChecks)) :-
+    \+ current_prolog_flag(gui_tracer, true),
+    rtc_break(Clause, PC),
     prolog_frame_attribute(FR, context_module, M),
-    generate_rtchecks(clause_pc(Clause, PC), M:Goal, RTChecks),
-    '$break_at'(Clause, PC, false).
+    generate_rtchecks(clause_pc(Clause, PC), M:Goal, RTChecks).
