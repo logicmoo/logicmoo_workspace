@@ -22,7 +22,7 @@ meta_goal(N, M, Meta, Goal0, Goal) :-
     !,
     arg(N, Goal0, Arg0),
     arg(N, Goal,  Arg),
-    N1 is N + 1,
+    succ(N, N1),
     ( module_qualified(ArgM) ->
       check:add_module(Arg0, M, Arg)
     ; Arg = Arg0
