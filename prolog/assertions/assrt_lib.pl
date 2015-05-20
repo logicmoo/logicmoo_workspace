@@ -1,5 +1,6 @@
 :- module(assrt_lib, [assertion_read/9,
 		      assertion_body/7,
+		      assertion_head_body/9,
 		      assertion_head_body_loc/8,
 		      comps_to_goal/3,
 		      comps_to_goal/4,
@@ -69,8 +70,11 @@ assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
     assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, Loc),
     once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
 
+assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, Ref) :-
+    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody, Ref).
+
 assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, Loc) :-
-    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody, Ref),
+    assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, Ref),
     clause_pos_location(Ref, Pos, Loc).
 
 clause_pos_location(Ref, Pos, Loc) :-
