@@ -12,7 +12,6 @@
 		       ],
 	  [assertions, nortchecks, hiord]).
 
-:- use_module(library(lists)).
 :- use_module(library(terms_vars)).
 :- use_module(library(freeze)).
 :- if(current_prolog_flag(dialect, swi)).

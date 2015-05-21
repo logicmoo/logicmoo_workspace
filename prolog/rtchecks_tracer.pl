@@ -13,14 +13,13 @@
 
 :- dynamic
     rtc_scanned/1,
-    rtc_break/2.
+    rtc_break/2,
+    rtc_state/3.
 
 :- meta_predicate trace_rtc(0).
 
 trace_rtc(Goal) :-
-    setup_call_cleanup(setup_trace,
-		       do_trace_rtc(call_rtc(Goal)),
-		       cleanup_trace).
+    call_rtc(do_trace_rtc(Goal)).
 
 do_trace_rtc(Goal) :-
     call_inoutex(Goal,
