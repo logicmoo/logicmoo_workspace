@@ -3,6 +3,7 @@
 :- use_module(library(check), []).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(location_utils)).
+:- use_module(library(from_utils)).
 :- use_module(library(extra_location)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(option_utils)).
@@ -84,10 +85,13 @@ duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-
     \+ ignore_dupcode(H, M, declaration(T)),
     from_chk(FileChk, From),
     \+ memberchk(T, [goal, assertion(_,_)]),
-    once(dtype_dupid_elem(T, T, H, M, DupId, Elem)).
+    once(dtype_dupid_elem(T, T, From, H, M, DupId, Elem)).
 
-dtype_dupid_elem(meta_predicate, T, H, M, T-M:F/A, T-M:H) :- functor(H, F, A).
-dtype_dupid_elem(use_module,     T, H, M, T-M:H,  T-M:H).
+dtype_dupid_elem(meta_predicate, T, _, H, M, T-M:F/A,    T-M:H) :- functor(H, F, A).
+dtype_dupid_elem(use_module,     T, F, H, M, T-File:M:H, T-File:M:H) :-
+    from_to_file(F, File). % Ignore duplicated use_module's from different files
+dtype_dupid_elem(consult,        T, F, H, M, T-File:M:H, T-File:M:H) :-
+    from_to_file(F, File). % Ignore duplicated consult's    from different files
 % dtype_dupid_elem(use_module_2,   T, H, M, T-M:H,  T-M:H).
 dtype_dupid_elem(T,              T, H, M, T-M:PI, T-M:G) :-
     ( H =.. [_|Vars1],
