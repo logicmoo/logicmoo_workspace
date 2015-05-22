@@ -93,7 +93,7 @@ dtype_dupid_elem(use_module,     T, F, H, M, T-File:M:H, T-File:M:H) :-
 dtype_dupid_elem(consult,        T, F, H, M, T-File:M:H, T-File:M:H) :-
     from_to_file(F, File). % Ignore duplicated consult's    from different files
 % dtype_dupid_elem(use_module_2,   T, H, M, T-M:H,  T-M:H).
-dtype_dupid_elem(T,              T, H, M, T-M:PI, T-M:G) :-
+dtype_dupid_elem(T,              T, _, H, M, T-M:PI,     T-M:G) :-
     ( H =.. [_|Vars1],
       term_variables(H, Vars2),
       Vars1==Vars2
