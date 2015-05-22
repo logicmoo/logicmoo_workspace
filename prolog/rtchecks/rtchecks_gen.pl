@@ -321,10 +321,6 @@ comps_parts_to_comp_lit(PropValues, Comp0, M, Body0, Body) :-
 
 :- use_module(library(implementation_module)).
 
-comp_no_signal(Comp, M) :-
-	implementation_module(M:Comp, IM),
-	assrt_lib:assertion_db(Comp, IM, true, prop, [], [], [], [no_signal], _, _, _).
-
 comp_rtcheck(assr(Pred, Status, Type, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames, Dict),
 	     Pred, M, PLoc, PosLocs, StatusTypes,
 	     comp(ChkCall, Call, PropValues, ChkComp, Comp)) :-

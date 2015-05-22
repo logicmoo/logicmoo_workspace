@@ -73,7 +73,7 @@ skip_predicate(rtchecks_utils:handle_rtcheck(_)).
 pp_assr(check(_), _).
 pp_assr(trust(_), _).
 
-:- public rtcheck_port/4.
+:- public rtcheck_port/3.
 
 rtcheck_port(Port, Frame, Action) :-
     ( current_prolog_flag(gui_tracer, true)
