@@ -15,8 +15,9 @@ prolog:message(acheck(implemented_in(From, Args))) -->
     prolog:message_location(From),
     ['Implements ~w'-Args].
 
-implemented_in(MGoal, From, Args) :-
-    MGoal = M:Goal,
+implemented_in(MGoal0, From, Args) :-
+    normalize_head(MGoal0, MGoal),
+    M:Goal = MGoal,
     functor(Goal, F, A),
     findall(MI, ( current_module(M),
 		  \+ predicate_property(MGoal, imported_from(_)),
@@ -55,9 +56,7 @@ prepare :-
     retractall(prepared),
     assertz(prepared).
 
-implemented_in(MGoal0 ) :-
+implemented_in(MGoal) :-
     ( prepared -> true ; prepare ),
-    normalize_head(MGoal0, MGoal),
-    M:Goal = MGoal,
-    forall(implemented_in(M:Goal, From, Args),
+    forall(implemented_in(MGoal, From, Args),
 	   print_message(information, acheck(implemented_in(From, Args)))).
