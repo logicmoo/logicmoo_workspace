@@ -59,7 +59,9 @@ declaration_pos(dynamic(L), term_position(_, _, _, _, PosL),
 declaration_pos(thread_local(L), term_position(_, _, _, _, PosL),
 		M, M, [thread_local], [L], PosL).
 declaration_pos(public(L), term_position(_, _, _, _, PosL),
-		M, M, [pulic], [L], PosL).
+		M, M, [public], [L], PosL).
+declaration_pos(export(L), term_position(_, _, _, _, PosL),
+		M, M, [export], [L], PosL).
 declaration_pos(multifile(L), term_position(_, _, _, _, PosL),
 		M, M, [multifile], [L], PosL).
 declaration_pos(discontiguous(L), term_position(_, _, _, _, PosL),
