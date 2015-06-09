@@ -47,7 +47,7 @@ cleanup_unused :-
 
 is_entry_caller('<initialization>') :- !.
 is_entry_caller(Ref) :- !,
-    nth_clause(M:H, _, Ref),
+    clause(M:H, _, Ref), % Unify head
     entry_caller(M, H).
 
 entry_caller(M, H) :-
