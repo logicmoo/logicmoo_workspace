@@ -12,6 +12,18 @@
     prepare_results/3,	% Custom preparation method
     check/3.		% Hook to a new analysis
 
+/*
+user:prolog_clause_name(Ref, Name) :-
+    nth_clause(M:H, N, Ref), !,
+    functor(H, F, A),
+    Name = M:F/A-N.
+user:prolog_clause_name(Ref, Name) :-
+    clause_property(Ref, erased), !,
+    clause_property(Ref, predicate(M:PI)),
+    Name = erased(M:PI).
+user:prolog_clause_name(_, '<meta-call>').
+*/
+
 cleanup_db :-
     cleanup_loc_dynamic(_, _, dynamic(_, _, _), _).
 
