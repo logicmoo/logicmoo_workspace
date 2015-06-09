@@ -25,11 +25,6 @@
 
 :- dynamic marked/3, calls_to/2, edge/2, node/3.
 
-check_pred_file(Ref, FromChk) :-
-    property_from(Ref, _, From),
-    call(FromChk, From),
-    !.
-
 :- public collect_unused/5.
 :- meta_predicate collect_unused(?,1,+,+,+).
 collect_unused(M, FromChk, MGoal, Caller, From) :-
@@ -176,7 +171,10 @@ sweep(M, FromChk, Pairs) :-
     findall(warning-Row,
 	    [Nodes, Row] +\ 
 	    ( member(Node, Nodes),
-	      findall(Loc/D, property_location(Node, D, Loc), LocDU),
+	      findall(Loc/D, ( property_from(Node, D, From),
+			       \+ hide_unused(Node, D, From),
+			       from_location(From, Loc)
+			     ), LocDU),
 	      sort(LocDU, LocDL),
 	      findall(Caller, ( edge(Caller, Node),
 				Caller \= Node
@@ -249,9 +247,14 @@ unmarked(M, FromChk, Node) :-
       \+ marked(H, M, 0 ),
       Node = MPI/0
     ),
-    \+ hide_unused(H, M),
     check_pred_file(Ref, FromChk).
-    
+
+check_pred_file(Ref, FromChk) :-
+    property_from(Ref, Decl, From),
+    \+ hide_unused(Ref, Decl, From),
+    call(FromChk, From),
+    !.
+
 prolog:message(acheck(unused)) -->
     ['-----------------',nl,
      'Unused Predicates',nl,
@@ -297,7 +300,9 @@ unused_type(0, 'unreferenced') :- !.
 unused_type(_, 'unreachable' ).
 
 % Hook to hide unused messages:
-:- multifile hide_unused/2.
+:- multifile
+    hide_unused/2,
+    hide_unused/3.
 
 hide_unused('$exported_op'(_,_,_), _).
 hide_unused(attr_unify_hook(_, _), predopts_analysis).
@@ -307,6 +312,9 @@ hide_unused(attribute_goals(_, _, _), M) :- unused_mo_clpfd(M).
 hide_unused(attr_unify_hook(_, _),    M) :- unused_mo_clpfd(M).
 hide_unused(_, plunit).
 hide_unused(_, ciao).
+
+hide_unused(M:H, _, _) :-
+    hide_unused(H, M).
 
 unused_mo_clpfd(clpfd_original).
 unused_mo_clpfd(clpfd_relation).
