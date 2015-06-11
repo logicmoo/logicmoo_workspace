@@ -23,7 +23,9 @@
 		pop_flags/3
 	    ], [assertions, nortchecks, dcg, hiord]).
 
+:- if(current_prolog_flag(dialect, ciao)).
 :- use_module(library(llists)).
+:- endif.
 :- use_module(library(terms_vars)).
 :- use_module(library(hiordlib)).
 :- use_module(library(apply)).
