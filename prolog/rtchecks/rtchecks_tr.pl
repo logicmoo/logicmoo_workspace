@@ -6,12 +6,7 @@
 
 :- if(current_prolog_flag(dialect, swi)).
 % runtime-checks related flags:
-:- include(rtchecks(rtchecks_flags)).
-:- ( define_flag(Flag, _Values, Default),
-     create_prolog_flag(Flag, Default, [type(atom)]),
-     fail
-   ; true
-   ).
+:- use_module(rtchecks(rtchecks_flags)).
 :- use_module(library(lists)).
 :- use_module(rtchecks(rtchecks_basic)).
 :- endif.
@@ -21,10 +16,10 @@
 	     location/3]).
 :- use_module(library(inliner(inliner_tr)), [in_inline_module_db/2]).
 :- use_module(library(sort)).
-:- endif.
-% see formulae, conj_to_list/2, list_to_conj/2
 :- use_module(library(llists)).
 :- use_module(library(aggregates)).
+:- endif.
+% see formulae, conj_to_list/2, list_to_conj/2
 :- use_module(library(terms)).
 :- use_module(rtchecks(rtchecks_gen)).
     
