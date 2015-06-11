@@ -97,6 +97,12 @@
 :- use_module(engine(internals)).
 :- endif.
 
+:- if(current_prolog_flag(dialect, swi)).
+:-  abolish(send_signal/1),
+    abolish(intercept/3).
+:- use_module(library(intercept)).
+:- endif.
+
 % --------------------------------------------------------------------------
 :- doc(title, "Properties which are native to analyzers").
 

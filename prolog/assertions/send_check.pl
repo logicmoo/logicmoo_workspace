@@ -1,7 +1,11 @@
 :- module(send_check, [send_comp_rtcheck/3,
 		       get_root_goal/2]).
 
-:- use_module(engine(exceptions)).
+:- if(current_prolog_flag(dialect, swi)).
+:-  abolish(send_signal/1),
+    abolish(intercept/3).
+:- use_module(library(intercept)).
+:- endif.
 
 get_root_goal(Goal, Goal0) :-
 	( nb_current(rtchecks_goal, Goal0)
