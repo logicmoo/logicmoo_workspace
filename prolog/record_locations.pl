@@ -50,7 +50,7 @@ record_extra_decl(G, _) :-
     asserta(rl_tmp(File, Line, 1)).
 
 declaration_pos(DM:Decl, term_position(_, _, _, _, [_, DPos]), _, M, ID, U, Pos) :-
-    declaration_pos(Decl, DPos, ID, DM, M, U, Pos).
+    declaration_pos(Decl, DPos, DM, M, ID, U, Pos).
 declaration_pos(module(M, L), DPos,
 		_, M, [module_2, export], [module(M, L), L], [DPos, Pos]) :-
     DPos = term_position(_, _, _, _, [_, Pos]).
