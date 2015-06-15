@@ -1,6 +1,6 @@
 :- use_foreign_library(foreign(bddem),install).
 
-%:-dynamic rule_n/1.
+:- thread_local rule_n/1.
 
 %rule_n(0).
 
@@ -87,9 +87,7 @@ get_var_n(Env,R,S,Probs,V):-
 
 
 get_prob_ax((Ax,_Ind),N,Prob):- !,
-  get_trill_current_module(Name),
-  Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbA)),
-  atom_number(ProbA,Prob),
+  compute_prob_ax(Ax,Prob),
   ( na(Ax,N) -> 
       true
     ;
@@ -100,9 +98,7 @@ get_prob_ax((Ax,_Ind),N,Prob):- !,
       assert(rule_n(N1))
   ).
 get_prob_ax(Ax,N,Prob):- !,
-  get_trill_current_module(Name),
-  Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbA)),
-  atom_number(ProbA,Prob),
+  compute_prob_ax(Ax,Prob),  
   ( na(Ax,N) -> 
       true 
     ; 
@@ -113,6 +109,21 @@ get_prob_ax(Ax,N,Prob):- !,
       assert(rule_n(N1))
   ).
   
+compute_prob_ax(Ax,Prob):-
+  get_trill_current_module(Name),
+  findall(ProbA, (Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbAT)),atom_number(ProbAT,ProbA)),Probs),
+  compute_prob_ax1(Probs,Prob).
+  
+compute_prob_ax1([Prob],Prob):-!.
+
+compute_prob_ax1([Prob1,Prob2],Prob):-!,
+  Prob is Prob1+Prob2-(Prob1*Prob2).
+  
+compute_prob_ax1([Prob1 | T],Prob):-
+  compute_prob_ax1(T,Prob0),
+  Prob is Prob1 + Prob0 - (Prob1*Prob0).  
+
+
 %get_trill_current_module(Name):-
 %  pengine_self(Name),!.
 %get_trill_current_module('owl2_model'):- !.

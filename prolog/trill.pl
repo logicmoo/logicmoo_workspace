@@ -5,7 +5,7 @@
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
                  load_theory/1, check_query_args/1] ).
 
-%:- set_prolog_flag(unknown,fail).
+%:- set_prolog_flag(unknow,fail).
 
 /*:- use_module(library('thea2/owl2_io')).
 :- use_module(library('thea2/owl2_model')).*/
@@ -17,6 +17,9 @@
 %:- load_foreign_files(['cplint-swi'],[],init_my_predicates).
 %:-use_foreign_library(bddem,install).
 :-['trillProbComputation'].
+
+:- thread_local
+	ind/1.
 
 %:- yap_flag(unknown,fail).
 :- multifile
@@ -39,27 +42,6 @@
         owl2_model:maxCardinality/3,
         owl2_model:minCardinality/2,
         owl2_model:minCardinality/3.
-        
-/*:- dynamic
-	axiom/1,
-        classAssertion/2,
-        propertyAssertion/3,
-        subPropertyOf/2,
-        subClassOf/2,
-        equivalentClasses/1,
-        differentIndividuals/1,
-        sameIndividual/1,
-        intersectionOf/1,
-        unionOf/1,
-        propertyRange/2,
-        propertyDomain/2,
-        annotationAssertion/3,
-        exactCardinality/2,
-        exactCardinality/3,
-        maxCardinality/2,
-        maxCardinality/3,
-        minCardinality/2,
-        minCardinality/3.*/
 
 
 load_theory(Name):-
@@ -67,7 +49,8 @@ load_theory(Name):-
 
 check_query_args([H|T]) :-
   atomic(H),!,
-  trill_get_axiom(A),
+  get_trill_current_module(Name),
+  Name:axiom(A),
   A =.. [_|L],
   flatten(L,L1),
   member(H,L1),!,
@@ -481,11 +464,13 @@ add_exists_rule((ABox,Tabs),([(classAssertion(someValuesFrom(R,C),Ind1),Expl)|AB
   absent(classAssertion(someValuesFrom(R,C),Ind1),Expl,(ABox,Tabs)).
   
 existsInKB(R,C):-
-  trill_get_subClassOf(A,B),
+  get_trill_current_module(Name),
+  Name:subClassOf(A,B),
   member(someValuesFrom(R,C),[A,B]).
   
 existsInKB(R,C):-
-  trill_get_equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(someValuesFrom(R,C),L).
 /* *************** */ 
 
@@ -619,12 +604,14 @@ forall_plus_rule((ABox,Tabs),([(classAssertion(allValuesFrom(R,C),Ind2),Expl)| A
   
 % --------------
 find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S),transitive(R)]):-
-  trill_get_subPropertyOf(R,S),
-  trill_get_transitiveProperty(R).
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S),
+  Name:transitiveProperty(R).
 
 find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S)]):-
-  trill_get_subPropertyOf(R,S),
-  \+ trill_get_transitiveProperty(R).
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S),
+  \+ Name:transitiveProperty(R).
 /* ************ */
 
 /*
@@ -737,21 +724,25 @@ find_class_prop_range_domain(Ind,D,[propertyRange(R,D)|ExplPA],(ABox,_Tabs)):-
   find((propertyAssertion(R,_,IndL),ExplPA),ABox),
   indAsList(IndL,L),
   member(Ind,L),
-  trill_get_propertyRange(R,D).
+  get_trill_current_module(Name),
+  Name:propertyRange(R,D).
 
 find_class_prop_range_domain(Ind,D,[propertyDomain(R,D)|ExplPA],(ABox,_Tabs)):-
   find((propertyAssertion(R,IndL,_),ExplPA),ABox),
   indAsList(IndL,L),
   member(Ind,L),
-  trill_get_propertyDomain(R,D).
+  get_trill_current_module(Name),
+  Name:propertyDomain(R,D).
 	
 
 %-----------------
 find_sub_sup_class(C,D,subClassOf(C,D)):-
-  trill_get_subClassOf(C,D).
+  get_trill_current_module(Name),
+  Name:subClassOf(C,D).
 
 find_sub_sup_class(C,D,equivalentClasses(L)):-
-  trill_get_equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(C,L),
   member(D,L),
   C\==D.
@@ -802,30 +793,36 @@ find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
 %--------------------
 
 find_not_atomic(C,intersectionOf(L1),L1):-
-  trill_get_subClassOf(A,B),
+  get_trill_current_module(Name),
+  Name:subClassOf(A,B),
   member(intersectionOf(L1),[A,B]),
   member(C,L1).
 
 find_not_atomic(C,unionOf(L1),L1):-
-  trill_get_subClassOf(A,B),
+  get_trill_current_module(Name),
+  Name:subClassOf(A,B),
   member(unionOf(L1),[A,B]),
   member(C,L1).
 
 find_not_atomic(C,intersectionOf(L),L):-
-  trill_get_intersectionOf(L),
+  get_trill_current_module(Name),
+  Name:intersectionOf(L),
   member(C,L).
 
 find_not_atomic(C,unionOf(L),L):-
-  trill_get_unionOf(L),
+  get_trill_current_module(Name),
+  Name:unionOf(L),
   member(C,L).
 
 find_not_atomic(C,intersectionOf(L1),L1):-
-  trill_get_equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(intersectionOf(L1),L),
   member(C,L1).
 
 find_not_atomic(C,unionOf(L1),L1):-
-  trill_get_equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(unionOf(L1),L),
   member(C,L1).
 
@@ -854,12 +851,14 @@ ce_rule((ABox0,(T,RBN,RBR)),(ABox,(T,RBN,RBR))):-
 
 % ------------------
 find_not_sub_sup_class(subClassOf(C,D),unionOf(complementOf(C),D)):-
-  trill_get_subClassOf(C,D),
+  get_trill_current_module(Name),
+  Name:subClassOf(C,D),
   \+ atomic(C).
 
 
 find_not_sub_sup_class(equivalentClasses(L),unionOf(L1)):-
-  trill_get_equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(C,L),
   \+ atomic(C),
   copy_neg_c(C,L,L1).
@@ -1036,7 +1035,8 @@ notDifferentIndividuals(X,Y,ABox):-
 
 inAssertDifferentIndividuals(differentIndividuals(X),differentIndividuals(Y)):-
   !,
-  trill_get_differentIndividuals(LI),
+  get_trill_current_module(Name),
+  Name:differentIndividuals(LI),
   member(X0,X),
   member(X0,LI),
   member(Y0,Y),
@@ -1044,20 +1044,23 @@ inAssertDifferentIndividuals(differentIndividuals(X),differentIndividuals(Y)):-
 
 inAssertDifferentIndividuals(X,sameIndividual(Y)):-
   !,
-  trill_get_differentIndividuals(LI),
+  get_trill_current_module(Name),
+  Name:differentIndividuals(LI),
   member(X,LI),
   member(Y0,Y),
   member(Y0,LI).
 
 inAssertDifferentIndividuals(sameIndividual(X),Y):-
   !,
-  trill_get_differentIndividuals(LI),
+  get_trill_current_module(Name),
+  Name:differentIndividuals(LI),
   member(X0,X),
   member(X0,LI),
   member(Y,LI).
 
 inAssertDifferentIndividuals(X,Y):-
-  trill_get_differentIndividuals(LI),
+  get_trill_current_module(Name),
+  Name:differentIndividuals(LI),
   member(X,LI),
   member(Y,LI).
 
@@ -1271,10 +1274,11 @@ writeABox((ABox,_)):-
 */
 
 build_abox((ABox,Tabs)):-
-  findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),trill_get_classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),trill_get_propertyAssertion(Property,Subject, Object),LPA),
-  findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(SubProperty,Property,Subject,Object),LSPA),
-  findall(nominal(NominalIndividual),trill_get_classAssertion(oneOf(_),NominalIndividual),LNA),
+  get_trill_current_module(Name),
+  findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),Name:classAssertion(Class,Individual),LCA),
+  findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),Name:propertyAssertion(Property,Subject, Object),LPA),
+  findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
+  findall(nominal(NominalIndividual),Name:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
@@ -1282,19 +1286,19 @@ build_abox((ABox,Tabs)):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[differentIndividuals(Ld)]),trill_get_differentIndividuals(Ld),LDIA),
+  findall((differentIndividuals(Ld),[differentIndividuals(Ld)]),Name:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),[sameIndividual(L)]),trill_get_sameIndividual(L),LSIA),
+  findall((sameIndividual(L),[sameIndividual(L)]),Name:sameIndividual(L),LSIA),
   merge_all(LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
   !.
 
 %---------------
-subProp(SubProperty,Property,Subject,Object):-
-  trill_get_subPropertyOf(SubProperty,Property),trill_get_propertyAssertion(SubProperty,Subject,Object).
+subProp(Name,SubProperty,Property,Subject,Object):-
+  Name:subPropertyOf(SubProperty,Property),Name:propertyAssertion(SubProperty,Subject,Object).
 
 %--------------
 
@@ -1816,7 +1820,8 @@ s_neighbours2(SN,[H|T],T1,ABox):-
 
 %-----------------
 same_ind(SN,H,_ABox):-
-  trill_get_sameIndividual(SI),
+  get_trill_current_module(Name),
+  Name:sameIndividual(SI),
   member(H,SI),
   member(H2,SI),
   member(H2,SN),
@@ -1871,6 +1876,7 @@ s_predecessors2(SN,[H|T],T1,ABox):-
    
    ************* */
 
+/*
 build_formula([],[],Var,Var).
 
 build_formula([D|TD],TF,VarIn,VarOut):-
@@ -1918,12 +1924,14 @@ build_term([Ax|TC],F0,F,VarIn,VarOut):-!,
   ;
     build_term(TC,F0,F,VarIn,VarOut)
   ).
-
+*/
 
 /* nth0_eq(PosIn,PosOut,List,El) takes as input a List,
 an element El and an initial position PosIn and returns in PosOut
 the position in the List that contains an element exactly equal to El
 */
+
+/*
 nth0_eq(N,N,[H|_T],El):-
         H==El,!.
 
@@ -1931,9 +1939,11 @@ nth0_eq(NIn,NOut,[_H|T],El):-
         N1 is NIn+1,
         nth0_eq(N1,NOut,T,El).
 
+*/
 /* var2numbers converts a list of couples (Rule,Substitution) into a list
 of triples (N,NumberOfHeadsAtoms,ListOfProbabilities), where N is an integer
 starting from 0 */
+/*
 var2numbers([],_N,[]).
 
 var2numbers([(R,_S)|T],N,[[N,2,[Prob,Prob1,0.3,0.7]]|TNV]):-
@@ -1942,7 +1952,8 @@ var2numbers([(R,_S)|T],N,[[N,2,[Prob,Prob1,0.3,0.7]]|TNV]):-
         Prob1 is 1-Prob,
         N1 is N+1,
         var2numbers(T,N1,TNV).
-        
+
+     
 compute_prob_ax(R,Prob):-
   findall(P, p(R,P),Probs),
   compute_prob_ax1(Probs,Prob).
@@ -1955,130 +1966,43 @@ compute_prob_ax1([Prob1,Prob2],Prob):-!,
 compute_prob_ax1([Prob1 | T],Prob):-
   compute_prob_ax1(T,Prob0),
   Prob is Prob1 + Prob0 - (Prob1*Prob0).
-  
+
+*/  
   
   
 /**************/
-get_trill_current_module(Name):-
-  pengine_self(Name),!.
+get_trill_current_module('translate_rdf'):-
+  pengine_self(_Name),!.
 get_trill_current_module('owl2_model'):- !.
+/**************/
+
+:- multifile sandbox:safe_primitive/1.
+
+sandbox:safe_primitive(trill:init_test(_,_)).
+sandbox:safe_primitive(trill:ret_prob(_,_,_)).
+sandbox:safe_primitive(trill:end_test(_)).
+sandbox:safe_primitive(trill:one(_,_)).
+sandbox:safe_primitive(trill:zero(_,_)).
+sandbox:safe_primitive(trill:and(_,_,_,_)).
+sandbox:safe_primitive(trill:or(_,_,_,_)).
+%sandbox:safe_primitive(trill:bdd_not(_,_,_)).
+sandbox:safe_primitive(trill:get_var_n(_,_,_,_,_)).
+sandbox:safe_primitive(trill:add_var(_,_,_,_,_)).
+sandbox:safe_primitive(trill:equality(_,_,_,_)).
 
 
-
-trill_get_axiom(A):-
-  get_trill_current_module(Name),
-  Name:axiom(A).
-%trill_get_axiom(A):-
-%  axiom(A).
-  
-trill_get_classAssertion(A,B):-
-  get_trill_current_module(Name),
-  Name:classAssertion(A,B).
-%trill_get_classAssertion(A,B):-
-%  write('2'),nl,
-%  classAssertion(A,B),write(A),write(B).
-
-trill_get_propertyAssertion(A,B,C):-
-  get_trill_current_module(Name),
-  Name:propertyAssertion(A,B,C).
-%trill_get_propertyAssertion(A,B,C):-
-%  propertyAssertion(A,B,C).
-
-trill_get_subPropertyOf(A,B):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(A,B).
-%trill_get_subPropertyOf(A,B):-
-%  subPropertyOf(A,B).
-  
-trill_get_subClassOf(A,B):-
-  get_trill_current_module(Name),
-  Name:subClassOf(A,B).
-%trill_get_subClassOf(A,B):-
-%  subClassOf(A,B).
-
-trill_get_equivalentClasses(L):-
-  get_trill_current_module(Name),
-  Name:equivalentClasses(L).
-%trill_get_equivalentClasses(L):-
-%  equivalentClasses(L).
-
-trill_get_differentIndividuals(L):-
-  get_trill_current_module(Name),
-  Name:differentIndividuals(L).
-%trill_get_differentIndividuals(L):-
-%  differentIndividuals(L).
-  
-trill_get_sameIndividual(L):-
-  get_trill_current_module(Name),
-  Name:sameIndividual(L),!.
-%trill_get_sameIndividual(L):-
-%  sameIndividual(L).
-  
-trill_get_intersectionOf(L):-
-  get_trill_current_module(Name),
-  Name:intersectionOf(L).
-%trill_get_intersectionOf(L):-
-%  intersectionOf(L).
-  
-trill_get_unionOf(L):-
-  get_trill_current_module(Name),
-  Name:unionOf(L).
-%trill_get_unionOf(L):-
-%  unionOf(L).
-  
-trill_get_propertyRange(A,B):-
-  get_trill_current_module(Name),
-  Name:propertyRange(A,B).
-%trill_get_propertyRange(A,B):-
-%  propertyRange(A,B).
-
-trill_get_propertyDomain(A,B):-
-  get_trill_current_module(Name),
-  Name:propertyDomain(A,B).
-%trill_get_propertyDomain(A,B):-
-%  propertyDomain(A,B).
-  
-trill_get_annotationAssertion(A,B,C):-
-  get_trill_current_module(Name),
-  Name:annotationAssertion(A,B,C).
-%trill_get_annotationAssertion(A,B,C):-
-%  annotationAssertion(A,B,C).
-
-trill_get_exactCardinality(A,B):-
-  get_trill_current_module(Name),
-  Name:exactCardinality(A,B).
-%trill_get_exactCardinality(A,B):-
-%  exactCardinality(A,B).
-
-trill_get_exactCardinality(A,B,C):-
-  get_trill_current_module(Name),
-  Name:exactCardinality(A,B,C).
-%trill_get_exactCardinality(A,B,C):-
-%  exactCardinality(A,B,C).
-
-trill_get_maxCardinality(A,B):-
-  get_trill_current_module(Name),
-  Name:maxCardinality(A,B).
-%trill_get_maxCardinality(A,B):-
-%  maxCardinality(A,B).
-
-trill_get_maxCardinality(A,B,C):-
-  get_trill_current_module(Name),
-  Name:maxCardinality(A,B,C).
-%trill_get_maxCardinality(A,B,C):-
-%  maxCardinality(A,B,C).
-
-trill_get_minCardinality(A,B):-
-  get_trill_current_module(Name),
-  Name:minCardinality(A,B).
-%trill_get_minCardinality(A,B):-
-%  minCardinality(A,B).
-  
-trill_get_minCardinality(A,B,C):-
-  get_trill_current_module(Name),
-  Name:minCardinality(A,B,C).
-%trill_get_minCardinality(A,B,C):-
-%  minCardinality(A,B,C).
-
-
+sandbox:safe_primitive(trill:sub_class(_,_)).
+sandbox:safe_primitive(trill:sub_class(_,_,_)).
+sandbox:safe_primitive(trill:prob_sub_class(_,_,_)).
+sandbox:safe_primitive(trill:instanceOf(_,_)).
+sandbox:safe_primitive(trill:instanceOf(_,_,_)).
+sandbox:safe_primitive(trill:prob_instanceOf(_,_,_)).
+sandbox:safe_primitive(trill:unsat(_)).
+sandbox:safe_primitive(trill:unsat(_,_)).
+sandbox:safe_primitive(trill:prob_unsat(_,_)).
+sandbox:safe_primitive(trill:inconsistent_theory).
+sandbox:safe_primitive(trill:inconsistent_theory(_)).
+sandbox:safe_primitive(trill:prob_inconsistent_theory(_)).
+sandbox:safe_primitive(trill:load_theory(_)).
+sandbox:safe_primitive(trill:check_query_args(_)).
 
