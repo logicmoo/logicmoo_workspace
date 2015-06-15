@@ -1971,8 +1971,10 @@ compute_prob_ax1([Prob1 | T],Prob):-
   
   
 /**************/
-get_trill_current_module('translate_rdf'):-
-  pengine_self(_Name),!.
+/*get_trill_current_module('translate_rdf'):-
+  pengine_self(_Name),!.*/
+get_trill_current_module(Name):-
+  pengine_self(Name),!.
 get_trill_current_module('owl2_model'):- !.
 /**************/
 
