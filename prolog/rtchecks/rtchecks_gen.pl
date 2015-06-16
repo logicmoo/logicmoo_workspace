@@ -240,7 +240,7 @@ success_call_lit(succ(ChkCall, Call, PropValues, _, _),
 success_succ_lit(succ(_, _, PropValues, ChkSucc, Succ),
 	    cui(Succ - PropValues, _, ChkSucc)).
 
-:- pred success_rtchecks/11 + not_fails.
+:- pred success_rtchecks/10 + not_fails.
 
 success_rtchecks(Assertions, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL0, CheckedL) -->
 	{collect_checks(Assertions, success_rtcheck(Pred, M,

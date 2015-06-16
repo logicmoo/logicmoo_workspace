@@ -103,7 +103,7 @@ prolog:message(acheck(checks(Time), RTChecks)) -->
 
 swi_message(Text) --> map(Text, message_to_swi), [nl].
 
-:- pred ciao_message(+Message:message_info_t).
+:- pred ciao_message(+Message:message_info_t, list, list).
 
 ciao_message(message_lns(Pos, _, Text)) -->
     { Pos = loc(Src, Ln, _)
