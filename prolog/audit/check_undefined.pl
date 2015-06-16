@@ -4,13 +4,17 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(infer_alias)).
 :- use_module(library(location_utils)).
+:- use_module(library(normalize_pi)).
 :- use_module(library(referenced_by)).
-:- use_module(library(check), []).
 :- use_module(library(audit/audit)).
 :- use_module(library(audit/audit_codewalk)).
+:- use_module(library(assertions/assrt_lib)).
 
 :- multifile
     prolog:message//1.
+
+:- dynamic
+    undef/3.
 
 audit:check(undefined, Results, OptionL) :-
     check_undefined(OptionL, Results).
@@ -20,12 +24,12 @@ check_undefined(OptionL0, Pairs) :-
 		  OptionL, M, FromChk),
     prolog_walk_code([on_trace(collect_undef(M, FromChk))|OptionL]),
     decl_walk_code(extra_undef(M, FromChk), M),
-    findall(warning-(PIAL-(Loc/CI)),
-	    ( retract(check:undef(PI, From)),
+    found_undef_assr(M, FromChk),
+    findall(warning-(PIAL-(Loc/['~w'-[CI]])),
+	    ( retract(undef(PI, CI, From)),
 	      find_alternatives(PI, AL),
 	      PIAL=PI/AL,
-	      from_location(From, Loc),
-	      check:predicate_indicator(From, CI, [])
+	      from_location(From, Loc)
 	    ), Pairs).
 
 extra_undef(M, FromChk, M:Head, Caller, From) :-
@@ -54,12 +58,20 @@ find_alternatives(M:F/A, AL) :-
 :- multifile hide_undef/2.
 hide_undef(assertion_head(_,_,_,_,_,_,_), assrt_lib).
 
-found_undef(To, _Caller, From) :-
-    check:goal_pi(To, PI),
+found_undef(To, Caller, From) :-
+    normalize_pi(To, PI),
+    normalize_pi(Caller, CI),
     ( hide_undef(To) -> true
-    ; check:undef(PI, From) -> true
-    ; assertz(check:undef(PI, From))
+    ; undef(PI, CI, From) -> true
+    ; assertz(undef(PI, CI, From))
     ).
+
+found_undef_assr(M, FromChk) :-
+    forall(( assertion_head_body_loc(Head, M, _, _, _, _, _, From),
+	     functor(Head, F, A),
+	     \+ current_predicate(M:F/A),
+	     call(FromChk, From)),
+	   found_undef(M:Head, assrt_lib:assertion_head/7, From)).
 
 :- public collect_undef/5.
 :- meta_predicate collect_undef(?,1,+,+,+).
@@ -80,8 +92,7 @@ prolog:message(acheck(undefined, PIAL-LocCIList)) -->
     ; PI = PIAL,
       AL = []
     },
-    check:predicate(PI),
-    [ ' undefined, ' ],
+    [ '~w undefined, '-[PI]],
     show_alternatives(AL),
     [ 'referenced by', nl ],
     referenced_by(LocCIList).
