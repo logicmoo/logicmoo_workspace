@@ -1,6 +1,4 @@
-:- module(rtchecks_flags,
-	  [ define_flag/3
-	  ]).
+:- module(rtchecks_flags, []).
 
 define_flag(runtime_checks,          [yes, no],        no).
 define_flag(rtchecks_level,          [inner, exports], inner).

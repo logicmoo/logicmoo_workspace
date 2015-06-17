@@ -6,7 +6,7 @@
 
 :- if(current_prolog_flag(dialect, swi)).
 % runtime-checks related flags:
-:- use_module(rtchecks(rtchecks_flags)).
+:- use_module(rtchecks(rtchecks_flags), []).
 :- use_module(library(lists)).
 :- use_module(rtchecks(rtchecks_basic)).
 :- endif.

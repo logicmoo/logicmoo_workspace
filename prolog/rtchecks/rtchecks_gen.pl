@@ -319,8 +319,6 @@ comps_parts_to_comp_lit(PropValues, Comp0, M, Body0, Body) :-
 	; Body0 = @(rtchecks_rt:checkif_comp(PropValues, Body1, Body2, Body), M)
 	).
 
-:- use_module(library(implementation_module)).
-
 comp_rtcheck(assr(Pred, Status, Type, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames, Dict),
 	     Pred, M, PLoc, PosLocs, StatusTypes,
 	     comp(ChkCall, Call, PropValues, ChkComp, Comp)) :-
