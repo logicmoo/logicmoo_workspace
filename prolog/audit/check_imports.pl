@@ -67,7 +67,8 @@ collect_imports(M, FromChk, Pairs, Tail) :-
 	      \+ memberchk(Head, [term_expansion(_,_),
 				  term_expansion(_,_,_,_),
 				  goal_expansion(_,_),
-				  goal_expansion(_,_,_,_)
+				  goal_expansion(_,_,_,_),
+				  except(_)
 				 ]),
 	      \+ used_import(CRef),
 	      \+ loc_declaration(Head, M, goal, _),
@@ -86,7 +87,10 @@ ignore_import(M, IM) :- expansion_module(M, IM).
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
 	    [M,FromChk,U,Loc] +\
-	   ( loc_declaration(U, M, use_module, From),
+	   ( ( loc_declaration(U, M, use_module, From),
+	       ExL = []
+	     ; loc_declaration(use_module(U, except(ExL)), M, use_module_2, From)
+	     ),
 	     call(FromChk, From),
 	     M \= user,
 	     module_property(M, class(Class)),
@@ -100,10 +104,11 @@ collect_usemods(M, FromChk, Pairs, Tail) :-
 	     \+ ignore_import(M, UM),
 	     module_property(UM, exports(EL)),
 	     EL \= [],
+	     subtract(EL, ExL, PIL),
 	     \+ ( module_property(UM, exported_operators(OL)),
 		  OL \= []
 		),
-	     \+ ( member(F/A, EL),
+	     \+ ( member(F/A, PIL),
 		  functor(Head, F, A),
 		  implementation_module(UM:Head, IM),
 		  used_usemod(M, IM)
