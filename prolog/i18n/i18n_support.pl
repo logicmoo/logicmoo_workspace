@@ -36,6 +36,7 @@
 			 i18n_entry_expander/4,
 			 i18n_entry/4,
 			 reference/2,
+			 language_t/1,
 			 language/1,
 			 i18n_entry_exact/4,
 			 show_i18n_terms/1,
@@ -52,6 +53,7 @@
 :- use_module(library(readutil)).
 :- use_module(library(pairs)).
 :- use_module(library(clambda)).
+:- use_module(library(language_iso)).
 :- use_module(library(i18n/i18n_op)).
 :- use_module(library(i18n/i18n_parser)).
 % :- use_module(library(tabling)).
@@ -118,7 +120,10 @@
 variable_name('LC_MESSAGES').
 variable_name('LANG').
 
-%% language(+Lang) is multi.
+language_t(Lang) :-
+    language_iso(_, _, _, _, Lang, _, _, _, _, _).
+
+%% language(+language_t(Lang)) is multi.
 %
 % if not defined, assume the system language or English. Although is
 % not recommended, you can use several languages to look for
