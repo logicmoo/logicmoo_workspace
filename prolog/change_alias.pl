@@ -29,13 +29,22 @@
 
 :- module(change_alias, [change_alias/3]).
 
+:- use_module(library(aggregate)).
+:- use_module(library(clambda)).
+
 :- meta_predicate change_alias(2,+,-).
 change_alias(Changer, Alias0, Alias) :-
     compound(Alias0), !,
     functor(Alias0, F, A),
     functor(Alias, F, A),
-    arg(1, Alias0, Arg0),
-    arg(1, Alias, Arg),
+    succ(N, A),
+    foreach(between(1, N, I),
+	    [I, Alias0, Alias] +\
+	    ( arg(I, Alias0, ArgI),
+	      arg(I, Alias,  ArgI)
+	    )),
+    arg(A, Alias0, Arg0),
+    arg(A, Alias, Arg),
     change_alias(Changer, Arg0, Arg).
 change_alias(Changer, Alias0, Alias) :-
     call(Changer, Alias0, Alias).
