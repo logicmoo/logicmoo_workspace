@@ -12,13 +12,24 @@
 :- if(current_prolog_flag(dialect, ciao)).
 :- use_module(library(write), []).
 :- use_module(library(debugger(debugger_lib))).
+tracertc.
 :- endif.
 :- if(current_prolog_flag(dialect, swi)).
 :-  abolish(send_signal/1),
     abolish(intercept/3).
 :- use_module(library(intercept)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
-tracertc :- backtrace(80).	% gtrace
+:- use_module(library(filtered_backtrace)).
+
+filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
+filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_send).
+filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
+filtered_backtrace:no_backtrace_clause_hook(_, intercept).
+filtered_backtrace:no_backtrace_clause_hook(_, native_props).
+
+tracertc :-
+    filtered_backtrace(100).
+
 :- endif.
 :- use_module(rtchecks(compact_list)).
 
