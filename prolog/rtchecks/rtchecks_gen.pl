@@ -60,7 +60,7 @@ generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt,
     compatpos_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompatAssrt, ChkCompatL0),
     comp_rtchecks(Assertions, Pred, M, PLoc, PosLocs, CompAssrt, CheckedL1).
 
-generate_step_rtchecks(Step, Assertions, Pred, M, PLoc, Goal0, Goal) :- 
+generate_step_rtchecks(Step, Assertions, Pred, M, PLoc, Goal0, Goal) :-
     step_rtchecks_options(Step, CompatAssrt, CallAssrt, SuccAssrt, CompAssrt),
     generate_common_rtchecks(Assertions, Pred, M, PLoc, PosLocs0, CompatAssrt,
 			     CallAssrt, SuccAssrt, CompAssrt, Goal1, Goal),

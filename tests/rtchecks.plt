@@ -13,6 +13,7 @@ user:message_property(_, location_prefix(_, '', 'ERROR: ')).
 user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 :- set_prolog_flag(runtime_checks, yes).
+:- set_prolog_flag(rtchecks_check, yes).
 
 test(rtcompile) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
