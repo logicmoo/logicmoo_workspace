@@ -6,6 +6,7 @@
 :- use_module(library(compact_pi_list)).
 :- use_module(library(maplist_dcg)).
 :- use_module(library(normalize_pi)).
+:- use_module(library(normalize_head)).
 :- use_module(library(database_fact)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
@@ -16,35 +17,35 @@
 
 :- multifile
     prolog:message//1,
-    hide_wrong_dynamic/1,
-    hide_var_dynamic/1.
+    hide_wrong_dynamic/2,
+    hide_var_dynamic/2.
 
-hide_var_dynamic(check:list_strings/1).
-hide_var_dynamic(check_non_mutually_exclusive:collect_non_mutually_exclusive/2).
-hide_var_dynamic(check_non_mutually_exclusive:mutually_exclusive/3).
-hide_var_dynamic(check_trivial_fails:cu_caller_hook/7).
-hide_var_dynamic(implemented_in:implemented_in/3).
-hide_var_dynamic(ref_scenarios:unfold_goal/2).
-hide_var_dynamic(check_unused:mark_caller/1).
-hide_var_dynamic(check_unused:unmarked/3).
-hide_var_dynamic(check_dupcode:duptype_elem/6).
-hide_var_dynamic(foreign_generator:bind_type_names/4).
-hide_var_dynamic(filtered_backtrace:no_backtrace_entry/1).
-hide_var_dynamic(check_unused:mark_to_head/2).
-hide_var_dynamic(check_unused:current_arc/3).
-hide_var_dynamic(ontrace:match_clause/5).
-hide_var_dynamic(foreign_props:type_desc/2).
-hide_var_dynamic(audit:prepare_results/3).
-hide_var_dynamic(check_unused:current_edge/3).
-hide_var_dynamic(commited_retract:commited_retract/1).
-hide_var_dynamic(ntabling:tabling/2).
-hide_var_dynamic(abstract_interpreter:match_head_body/3).
+hide_var_dynamic(list_strings(_), check).
+hide_var_dynamic(collect_non_mutually_exclusive(_, _), check_non_mutually_exclusive).
+hide_var_dynamic(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
+hide_var_dynamic(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
+hide_var_dynamic(implemented_in(_, _, _), implemented_in).
+hide_var_dynamic(unfold_goal(_, _), ref_scenarios).
+hide_var_dynamic(mark_caller(_), check_unused).
+hide_var_dynamic(unmarked(_, _, _), check_unused).
+hide_var_dynamic(duptype_elem(_, _, _, _, _, _), check_dupcode).
+hide_var_dynamic(bind_type_names(_, _, _, _), foreign_generator).
+hide_var_dynamic(no_backtrace_entry(_), filtered_backtrace).
+hide_var_dynamic(mark_to_head(_, _), check_unused).
+hide_var_dynamic(current_arc(_, _, _), check_unused).
+hide_var_dynamic(match_clause(_, _, _, _, _), ontrace).
+hide_var_dynamic(type_desc(_, _), foreign_props).
+hide_var_dynamic(prepare_results(_, _, _), audit).
+hide_var_dynamic(current_edge(_, _, _), check_unused).
+hide_var_dynamic(commited_retract(_), commited_retract).
+hide_var_dynamic(tabling(_, _), ntabling).
+hide_var_dynamic(match_head_body(_, _, _), abstract_interpreter).
 
 :- dynamic
     wrong_dynamic_db/4,
     var_dynamic_db/2.
 
-hide_wrong_dynamic(user:prolog_trace_interception/4).
+hide_wrong_dynamic(prolog_trace_interception(_, _, _, _), user).
 
 cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _, _)),
@@ -120,8 +121,10 @@ current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     predicate_property(Ref, dynamic),
     property_from(PI, dynamic, From),
     call(FromChk, From),
-    %% if multifile, would be modified externally
+    %% if multifile, exported or public, it would be modified externally
     \+ predicate_property(Ref, multifile),
+    \+ predicate_property(Ref, exported),
+    \+ predicate_property(Ref, public),
     \+ ( wrong_dynamic_db(_, Type, PI, _),
 	 memberchk(Type,[def,retract])
        ),
@@ -187,11 +190,11 @@ record_location_wd(Caller, M:Fact, _, Type, IM:Goal, _, From) :-
       callable(Fact)
     ->functor(Fact, F, A),
       record_location(Fact, M, Def, From),
-      \+ hide_wrong_dynamic(M:F/A),
+      \+ hide_wrong_dynamic(Fact, M),
       assertz(wrong_dynamic_db(From, Type, M:F/A, MPI))
     ; \+ database_fact(Caller) ->
-      normalize_pi(Caller, CM:PI),
-      \+ hide_var_dynamic(CM:PI),
+      normalize_head(Caller, CM:HC),
+      \+ hide_var_dynamic(HC, CM),
       assertz(var_dynamic_db(From, MPI))
     ; true
     ).
