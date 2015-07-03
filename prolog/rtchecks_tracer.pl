@@ -150,7 +150,14 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       static_strip_module(Goal1, Goal, M, CM),
       ( black_list_module(M)
       ->Action = continue
-      ; generate_rtchecks(clause_pc(Clause, PC), M:Goal, RTChecks),
+      ; \+ current_assertion(Goal, rtcheck, _, _, _, _,
+			     _, _, _, _, _, _, _, _, _, M),
+	\+ pp_assr(Goal, M)
+      ->Action = continue
+      ; assertion_head_body(Goal, M, _, prop, _, _, _, _, _)
+      ->Action = continue
+      ; % print_message(error, trace_call_to(M:Goal, clause_pc(Clause, PC))),
+	generate_rtchecks(clause_pc(Clause, PC), M:Goal, RTChecks),
 	Action = call(RTChecks)
       )
     ).
