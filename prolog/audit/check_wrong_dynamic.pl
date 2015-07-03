@@ -121,9 +121,9 @@ current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     predicate_property(Ref, dynamic),
     property_from(PI, dynamic, From),
     call(FromChk, From),
-    %% if multifile, exported or public, it would be modified externally
+    %% ignore predicates with the following properties:
     \+ predicate_property(Ref, multifile),
-    \+ predicate_property(Ref, exported),
+    % \+ predicate_property(Ref, exported),
     \+ predicate_property(Ref, public),
     \+ ( wrong_dynamic_db(_, Type, PI, _),
 	 memberchk(Type,[def,retract])
