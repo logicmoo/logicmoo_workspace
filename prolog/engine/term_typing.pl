@@ -128,5 +128,6 @@ var(X) :- var(X).
 :- trust comp type/2 + is_det.
 :- true comp type/2 + (sideff(free), native).
 :- true comp type(X, Y) : nonvar(X) + eval.
+:- meta_predicate type(pred(1), ?).
 
 type(X, Y) :- call(Y, X).
