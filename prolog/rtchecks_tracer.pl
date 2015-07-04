@@ -2,6 +2,7 @@
 			    do_trace_rtc/1]).
 
 :- use_module(library(swi/rtchecks)). % Proper load of ciao dialect modules
+:- use_module(library(extend_args)).
 :- use_module(library(implementation_module)).
 :- use_module(library(static_strip_module)).
 :- use_module(library(maplist_dcg)).
@@ -174,10 +175,3 @@ resolve_meta_call(Meta, Goal) :-
     Meta =.. [call, Call|Args],
     extend_args(Call, Args, Goal).
 resolve_meta_call(Goal, Goal).
-
-extend_args(M:Call, Args, M:Goal) :- !,
-    extend_args(Call, Args, Goal).
-extend_args(Call, Args, Goal) :-
-    Call =.. CArgs,
-    append(CArgs, Args, GArgs),
-    Goal =.. GArgs.
