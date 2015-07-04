@@ -341,7 +341,7 @@ body_check_comp(ChkComps, CheckedL0, Pred, M, Body0, Body) :-
 	compound_rtchecks_end(comp_comp_lit, collapse_prop, ChkComps, [],        CompComp),
 	map(CompComp, comp_to_lit(M), ChkComp0),
 	sort(ChkComp0, ChkComp1),
-	comps_to_goal([(rtchecks_rt:with_goal(M:G, Pred))-G|ChkComp1],
+	comps_to_goal([(rtchecks_rt:with_goal(@(G, M), Pred))-G|ChkComp1],
 		      compound_comp, CompBody, Body),
 	Body0 = [CompCall, CompBody].
 
