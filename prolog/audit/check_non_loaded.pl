@@ -12,10 +12,10 @@
     prolog:message//1.
 
 audit:check(non_loaded, Results, OptionL) :-
-    option_dirchk(OptionL, _, DirGen0),
-    ( DirGen0 = call_2(true, _) ->
-      DirGen = call_2(working_directory(Dir, Dir), Dir)
-    ; DirGen = DirGen0
+    option_dirchk(OptionL, _, DirGen0 ),
+    ( DirGen0 = option_utils:call_2(true, _) ->
+      DirGen  = option_utils:call_2(working_directory(Dir, Dir), Dir)
+    ; DirGen  = DirGen0
     ),
     findall(Result, check_non_loaded(DirGen, Result), ResultL),
     append(ResultL, Results).
