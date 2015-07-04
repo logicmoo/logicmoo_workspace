@@ -94,6 +94,9 @@
     dictionary/1.		% for reverse translations, you can use more
                  		% than one dictionary
 
+:- public
+    i18n_resourceterm/2.
+
 :- volatile i18n_record/4.  % Only useful during compilation and debugging, save
                             % space in the final binary.
 
