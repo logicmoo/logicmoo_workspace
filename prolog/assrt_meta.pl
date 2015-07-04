@@ -1,7 +1,6 @@
 :- module(assrt_meta, []).
 
 :- use_module(library(location_utils)).
-:- use_module(library(qualify_meta_goal)).
 :- use_module(library(assertions_op)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(rtchecks/rtchecks_basic)).
