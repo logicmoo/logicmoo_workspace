@@ -1,4 +1,5 @@
-:- module(rtchecks_tracer, [trace_rtc/1]).
+:- module(rtchecks_tracer, [trace_rtc/1,
+			    do_trace_rtc/1]).
 
 :- use_module(library(swi/rtchecks)). % Proper load of ciao dialect modules
 :- use_module(library(implementation_module)).
@@ -16,7 +17,9 @@
     rtc_break/2,
     rtc_state/3.
 
-:- meta_predicate trace_rtc(0).
+:- meta_predicate
+    trace_rtc(0),
+    do_trace_rtc(0).
 
 trace_rtc(Goal) :-
     call_rtc(do_trace_rtc(Goal)).
