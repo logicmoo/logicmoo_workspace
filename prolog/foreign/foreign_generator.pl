@@ -151,7 +151,8 @@ do_generate_library(M, FileSO, File, FSourceL) :-
     CommandsT = [CommandT],
     forall(member(Command, Commands),
 	   ( shell(Command, Status),
-	     print_message(informational, format('~w', [Command])),
+	     (Status = 0 -> MessageType = informational ; MessageType = error),
+	     print_message(MessageType, format('~w', [Command])),
 	     assertion(Status==0)
 	   )).
 
@@ -794,7 +795,7 @@ c_get_argument_rec(Mode, Type, Spec, CArg, Arg) :-
     format(', ~w, ~w)', [Arg, CArg]).
 
 bind_arguments(M, Bind-Head, Return) :-
-    read_foreign_properties(Head, M, Comp, Call, Succ, Glob, _, Bind),
+    once(read_foreign_properties(Head, M, Comp, Call, Succ, Glob, _, Bind)),
     ( compound(Head)
     ->forall(( arg(_, Head, Arg),
 	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
