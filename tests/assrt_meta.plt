@@ -1,7 +1,7 @@
 :- begin_tests(assrt_meta).
 
-:- use_module(rtchecks(rtchecks_utils)).
 :- use_module(library(rtchecks_tracer)).
+:- use_module(library(rtchecks/rtchecks_utils)).
 
 :- use_module(assrt_meta_ex).
 
