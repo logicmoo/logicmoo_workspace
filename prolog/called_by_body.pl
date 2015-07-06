@@ -1,6 +1,7 @@
 :- module(called_by_body, [called_by_body/4]).
 
 :- use_module(library(implementation_module)).
+:- use_module(library(extend_args)).
 
 called_by_body(Body, CM, Body, CM) :- var(Body), !, fail.
 called_by_body(CM:Body, _, H, M) :- called_by_body(Body, CM, H, M).
@@ -27,15 +28,6 @@ called_by_arg(0, Goal, CM, H, M) :- !, called_by_body(Goal, CM, H, M).
 called_by_arg(^, Goal, CM, H, M) :- !, called_by_body(Goal, CM, H, M).
 called_by_arg(N, Goal, CM, H, M) :-
     integer(N),
-    extend_args(Goal, N, Goal1),
-    called_by_body(Goal1, CM, H, M).
-
-extend_args(Goal, _, Goal) :- var(Goal), !, fail.
-extend_args(M:Goal0, N, M:Goal) :- !,
-    extend_args(Goal0, N, Goal).
-extend_args(Goal, N, GoalEx) :-
-    callable(Goal), !,
-    Goal =.. List,
     length(Extra, N),
-    append(List, Extra, ListEx),
-    GoalEx =.. ListEx.
+    extend_args(Goal, Extra, Goal1),
+    called_by_body(Goal1, CM, H, M).

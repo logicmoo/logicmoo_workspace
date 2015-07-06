@@ -12,9 +12,7 @@
 
 :- multifile
     prolog:message//1,
-    ignore_dupcode/3,
-    ignore_dupgroup/3,
-    audit:audit/4.
+    ignore_dupcode/3.
 
 :- dynamic duptype/1.
 

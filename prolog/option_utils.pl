@@ -10,6 +10,7 @@
 			 from_chk/2,
 			 from_chk/3]).
 
+:- use_module(library(lists)).
 :- use_module(library(from_utils)).
 :- use_module(library(implemented_in)).
 :- reexport(library(module_files)).
@@ -31,29 +32,42 @@ check_dir_file(Dir, File) :-
     member(File, FileL).
 
 option_files(File, FileGen0-OptionL0, FileGen-OptionL) :-
-    select_option(files(Files), OptionL0, OptionL, Files),
-    ( is_list(Files)
-    ->FileGen0 = ( member(Alias, Files),
+    select_option(files(Files), OptionL0, OptionL1, Files),
+    select_option(file( AFile), OptionL1, OptionL,  AFile),
+    ( nonvar(Files)
+    ->( nonvar(AFile)
+      ->flatten([AFile|Files], FileL)
+      ; AFile = File,
+	flatten(Files, FileL)
+      ),
+      FileGen0 = ( member(Alias, FileL),
 		   check_alias(prolog, Alias, File),
 		   FileGen
 		 )
-    ; nonvar(Files)
-    ->FileGen0 = ( check_alias(prolog, Files, File),
+    ; nonvar(AFile)
+    ->FileGen0 = ( check_alias(prolog, AFile, File),
 		   FileGen
 		 )
-    ; FileGen0 = FileGen
+    ; AFile = File,
+      FileGen0 = FileGen
     ).
 
 option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
-    select_option(dirs(Dirs), OptionL0, OptionL, Dirs),
-    ( is_list(Dirs)
-    ->FileGen0 = ( member(Alias, Dirs),
+    select_option(dirs(Dirs), OptionL0, OptionL1, Dirs),
+    select_option(dir( ADir), OptionL1, OptionL,  ADir),
+    ( nonvar(Dirs)
+    ->( nonvar(ADir)
+      ->flatten([ADir|Dirs], DirL)
+      ; ADir = Dir,
+	flatten(Dirs, DirL)
+      ),
+      FileGen0 = ( member(Alias, DirL),
 		   check_alias(directory, Alias, Dir),
 		   check_dir_file(Dir, File),
 		   FileGen
 		 )
-    ; nonvar(Dirs)
-    ->FileGen0 = ( check_alias(directory, Dirs, Dir),
+    ; nonvar(ADir)
+    ->FileGen0 = ( check_alias(directory, ADir, Dir),
 		   check_dir_file(Dir, File),
 		   FileGen
 		 )
@@ -61,17 +75,24 @@ option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
     ).
 
 option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
-    select_option(dirs(Dirs), OptionL0, OptionL, Dirs),
-    ( is_list(Dirs)
-    ->DirGen0 = ( member(Alias, Dirs),
+    select_option(dirs(Dirs), OptionL0, OptionL1, Dirs),
+    select_option(dir( ADir), OptionL1, OptionL,  ADir),
+    ( nonvar(Dirs)
+    ->( nonvar(ADir)
+      ->flatten([ADir|Dirs], DirL)
+      ; ADir = Dir,
+	flatten(Dirs, DirL)
+      ),
+      DirGen0 = ( member(Alias, DirL),
 		  check_alias(directory, Alias, Dir),
 		  DirGen
 		)
-    ; nonvar(Dirs)
-    ->DirGen0 = ( check_alias(directory, Dirs, Dir),
+    ; nonvar(ADir)
+    ->DirGen0 = ( check_alias(directory, ADir, Dir),
 		  DirGen
 		)
-    ; DirGen0 = DirGen
+    ; ADir = Dir,
+      DirGen0 = DirGen
     ).
 
 check_pred(Head, File) :-
