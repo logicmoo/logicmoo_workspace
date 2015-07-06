@@ -86,7 +86,7 @@ ignore_import(M, IM) :- expansion_module(M, IM).
 
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
-	    [M,FromChk,U,Loc] +\
+%	    [M,FromChk,U,Loc] +\
 	   ( ( loc_declaration(U, M, use_module, From),
 	       ExL = []
 	     ; loc_declaration(use_module(U, except(ExL)), M, use_module_2, From)
