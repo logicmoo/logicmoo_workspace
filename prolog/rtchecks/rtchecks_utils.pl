@@ -26,6 +26,8 @@ filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_send).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
 filtered_backtrace:no_backtrace_clause_hook(_, intercept).
 filtered_backtrace:no_backtrace_clause_hook(_, native_props).
+filtered_backtrace:no_backtrace_clause_hook(_, send_check).
+filtered_backtrace:no_backtrace_clause_hook(_, plprops).
 
 tracertc :-
     filtered_backtrace(100).
