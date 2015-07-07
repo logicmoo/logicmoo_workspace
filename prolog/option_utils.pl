@@ -33,7 +33,7 @@ check_dir_file(Dir, File) :-
 
 option_files(File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(files(Files), OptionL0, OptionL1, Files),
-    select_option(file( AFile), OptionL1, OptionL,  AFile),
+    select_option(file( AFile), OptionL1, OptionL2, AFile),
     ( nonvar(Files)
     ->( nonvar(AFile)
       ->flatten([AFile|Files], FileL)
@@ -42,19 +42,28 @@ option_files(File, FileGen0-OptionL0, FileGen-OptionL) :-
       ),
       FileGen0 = ( member(Alias, FileL),
 		   check_alias(prolog, Alias, File),
-		   FileGen
+		   FileGen1
 		 )
     ; nonvar(AFile)
     ->FileGen0 = ( check_alias(prolog, AFile, File),
-		   FileGen
+		   FileGen1
 		 )
     ; AFile = File,
-      FileGen0 = FileGen
+      FileGen0 = FileGen1
+    ),
+    select_option(exclude_files(ExFileL), OptionL2, OptionL, []),
+    ( ExFileL = []
+    ->FileGen1 = FileGen
+    ; FileGen1 = ( \+ ( member(ExAlias, ExFileL),
+		       check_alias(prolog, ExAlias, File)
+		     ),
+		  FileGen
+		)
     ).
 
 option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
     select_option(dirs(Dirs), OptionL0, OptionL1, Dirs),
-    select_option(dir( ADir), OptionL1, OptionL,  ADir),
+    select_option(dir( ADir), OptionL1, OptionL2, ADir),
     ( nonvar(Dirs)
     ->( nonvar(ADir)
       ->flatten([ADir|Dirs], DirL)
@@ -64,19 +73,29 @@ option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
       FileGen0 = ( member(Alias, DirL),
 		   check_alias(directory, Alias, Dir),
 		   check_dir_file(Dir, File),
-		   FileGen
+		   FileGen1
 		 )
     ; nonvar(ADir)
     ->FileGen0 = ( check_alias(directory, ADir, Dir),
 		   check_dir_file(Dir, File),
+		   FileGen1
+		 )
+    ; FileGen0 = FileGen1
+    ),
+    select_option(exclude_dirs(ExDirL), OptionL2, OptionL, []),
+    ( ExDirL = []
+    ->FileGen1 = FileGen
+    ; FileGen1 = ( \+ ( member(ExAlias, ExDirL),
+			check_alias(directory, ExAlias, ExDir),
+			check_dir_file(ExDir, File)
+		      ),
 		   FileGen
 		 )
-    ; FileGen0 = FileGen
     ).
 
 option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
     select_option(dirs(Dirs), OptionL0, OptionL1, Dirs),
-    select_option(dir( ADir), OptionL1, OptionL,  ADir),
+    select_option(dir( ADir), OptionL1, OptionL2,  ADir),
     ( nonvar(Dirs)
     ->( nonvar(ADir)
       ->flatten([ADir|Dirs], DirL)
@@ -85,14 +104,23 @@ option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
       ),
       DirGen0 = ( member(Alias, DirL),
 		  check_alias(directory, Alias, Dir),
-		  DirGen
+		  DirGen1
 		)
     ; nonvar(ADir)
     ->DirGen0 = ( check_alias(directory, ADir, Dir),
-		  DirGen
+		  DirGen1
 		)
     ; ADir = Dir,
-      DirGen0 = DirGen
+      DirGen0 = DirGen1
+    ),
+    select_option(exclude_dirs(ExDirL), OptionL2, OptionL, []),
+    ( ExDirL = []
+    ->DirGen1 = DirGen
+    ; DirGen1 = ( \+ ( member(ExAlias, ExDirL),
+		       check_alias(directory, ExAlias, Dir)
+		     ),
+		  DirGen
+		)
     ).
 
 check_pred(Head, File) :-

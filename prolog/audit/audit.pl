@@ -10,7 +10,7 @@
 
 :- multifile
     prepare_results/3,	% Custom preparation method
-    check/3.		% Hook to a new analysis
+    check/3.		% Hook to define new analyses
 
 /*
 user:prolog_clause_name(Ref, Name) :-

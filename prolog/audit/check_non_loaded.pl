@@ -1,7 +1,4 @@
-:- module(check_non_loaded, [loaded_files/2,
-			     existing_files/2,
-			     remainder_files/2
-			    ]).
+:- module(check_non_loaded, []).
 
 :- use_module(library(included_files)).
 :- use_module(library(maplist_dcg)).
@@ -12,43 +9,33 @@
     prolog:message//1.
 
 audit:check(non_loaded, Results, OptionL) :-
-    option_dirchk(OptionL, _, DirGen0 ),
-    ( DirGen0 = option_utils:call_2(true, _) ->
-      DirGen  = option_utils:call_2(working_directory(Dir, Dir), Dir)
-    ; DirGen  = DirGen0
+    option_allchk(OptionL, _, FileChk0 ),
+    ( FileChk0 = option_utils:call_2(true, _) ->
+      FileChk = option_utils:call_2(( working_directory(Dir, Dir),
+				      check_dir_file(Dir, File)), File)
+    ; FileChk  = FileChk0
     ),
-    findall(Result, check_non_loaded(DirGen, Result), ResultL),
-    append(ResultL, Results).
+    check_non_loaded(FileChk, Results).
 
-loaded_files(Dir, Loaded) :-
-    directory_source_files(Dir, Used, [recursive(true)]),
-    included_files(Used, LoadedL, [Used]),
-    append(LoadedL, ULoaded),
-    sort(ULoaded, Loaded).
-
-existing_files(Dir, Exists) :-
-    directory_source_files(Dir, UExists, [recursive(true), if(true)]),
-    sort(UExists, Exists).
-
-remainder_files(Dir, Remainder) :-
-    loaded_files(Dir, Loaded),
-    existing_files(Dir, Exists),
-    ord_subtract(Exists, Loaded, Remainder).
-
-check_non_loaded(DirGen, Pairs) :-
-    call(DirGen, Dir),
-    loaded_files(Dir, Loaded),
-    existing_files(Dir, Exists),
-    ord_subtract(Exists, Loaded, Remainder),
-    ( Remainder \== []
-    ->length(Exists, E),
-      intersection(Exists, Loaded, Differ),
-      length(Differ, L),
-      maplist(add_warning_key(load_info(Dir, L, E)), Remainder, Pairs)
-    ; Pairs = []
-    ).
-
-add_warning_key(I, F, warning-(I-F)).
+check_non_loaded(FileChk, Pairs) :-
+    findall(Dir-Name,
+	    ( call(FileChk, File),
+	      directory_file_path(Dir, Name, File)
+	    ), DirNameU),
+    sort(DirNameU, DirName),
+    group_pairs_by_key(DirName, DirNameG),
+    findall(warning-(load_info(Dir, L, N)-Excluded),
+	    ( member(Dir-NameL, DirNameG),
+	      findall(Name, ( member(Name, NameL),
+			      directory_file_path(Dir, Name, File),
+			      \+ source_file_property(File, modified(_))
+			    ), ExcludedL),
+	      ExcludedL \= [],
+	      length(NameL, N),
+	      length(ExcludedL, ExN),
+	      L is N - ExN,
+	      member(Excluded, ExcludedL)
+	    ), Pairs).
 
 prolog:message(acheck(non_loaded)) -->
     ['----------',nl,
@@ -56,8 +43,9 @@ prolog:message(acheck(non_loaded)) -->
      '----------',nl,
      'The following files are not being loaded, which', nl,
      'means you are not testing them statically', nl, nl].
-prolog:message(acheck(non_loaded, load_info(Dir,L,E)-MsgL)) -->
-    ['At directory ~w, loaded ~w/~w:'-[Dir, L, E],nl],
-    maplist_dcg(non_loaded, MsgL).
+prolog:message(acheck(non_loaded, load_info(Dir, L, N)-ExcludedL)) -->
+    ['At directory ~w, loaded ~w/~w:'-[Dir, L, N],nl],
+    maplist_dcg(non_loaded(Dir), ExcludedL).
 
-non_loaded(File) --> ['\t~w:1: non loaded'-[File],nl].
+non_loaded(Dir, Excluded) -->
+    ['\t~w/~w:1: non loaded'-[Dir, Excluded], nl].
