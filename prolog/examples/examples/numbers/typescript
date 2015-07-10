@@ -1,0 +1,253 @@
+Script started on Fri 15 Nov 2002 16:58:22 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/numbers
+[1m~/aleph/test/examples/numbers[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161856 bytes in 0.47 seconds ]
+
+yes
+   ?- read_all(guess).
+ [ reconsulting guess.b... ]
+ [ guess.b reconsulted 2752 bytes in 0.0 seconds ]
+[consulting pos examples] [guess.f]
+[consulting neg examples] [guess.n]
+
+yes
+   ?- sat(1).
+[sat] [1]
+[p(3)]
+
+[bottom clause]
+p(A) :-
+   gteq(A,9), gteq(A,6), gteq(A,3).
+[literals] [4]
+[saturation time] [0.0]
+
+yes
+   ?- reduce.
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+p(A).
+[5/4]
+p(A) :-
+   gteq(A,9).
+[2/0]
+[-------------------------------------]
+[found clause]
+p(A) :-
+   gteq(A,9).
+[pos-neg] [2]
+[clause label] [[2,0,2,2]]
+[clauses constructed] [2]
+[-------------------------------------]
+p(A) :-
+   gteq(A,6).
+[3/1]
+p(A) :-
+   gteq(A,3).
+[5/2]
+p(A) :-
+   gteq(A,6), gteq(A,3).
+[3/1]
+[clauses constructed] [5]
+[search time] [0.0]
+[best clause]
+p(A) :-
+   gteq(A,9).
+[pos-neg] [2]
+
+yes
+   ?- [1m~/aleph/test/examples/numbers[43]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161856 bytes in 0.46 seconds ]
+
+yes
+   ?- read_all(ineq).
+ [ reconsulting ineq.b... ]
+ [ ineq.b reconsulted 12624 bytes in 0.01 seconds ]
+[consulting pos examples] [ineq.f]
+[consulting neg examples] [ineq.n]
+
+yes
+   ?- sat(1).
+[sat] [1]
+[p(3)]
+
+[bottom clause]
+p(A) :-
+   gteq(A,3).
+[literals] [2]
+[saturation time] [0.0]
+
+yes
+   ?- reduce.
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+p(A).
+[5/4]
+[lazy evaluation] [gteq]
+[completed]
+p(A) :-
+   gteq(A,8).
+[3/0]
+[-------------------------------------]
+[found clause]
+p(A) :-
+   gteq(A,8).
+[pos-neg] [3]
+[clause label] [[3,0,2,3]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.0]
+[best clause]
+p(A) :-
+   gteq(A,8).
+[pos-neg] [3]
+
+yes
+   ?- [1m~/aleph/test/examples/numbers[44]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161856 bytes in 0.47 seconds ]
+
+yes
+   ?- read_all(line).
+ [ reconsulting line.b... ]
+ [ line.b reconsulted 7180 bytes in 0.0 seconds ]
+[consulting pos examples] [line.f]
+[consulting neg examples] [line.n]
+
+yes
+   ?- sat(1).
+[sat] [1]
+[p(1,2)]
+
+[bottom clause]
+p(A,B) if:
+   B is 0.0 * A + 2 +/- 0.0.
+[literals] [2]
+[saturation time] [0.01]
+
+yes
+   ?- reduce.
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+p(A,B).
+[4/3]
+[lazy evaluation] [lin_regress1]
+[completed]
+p(A,B) if:
+   B is 2.0 * A + 0.0 +/- 0.0.
+[4/0]
+[-------------------------------------]
+[found clause]
+p(A,B) if:
+   B is 2.0 * A + 0.0 +/- 0.0.
+[pos-neg] [4]
+[clause label] [[4,0,2,4]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.0]
+[best clause]
+p(A,B) if:
+   B is 2.0 * A + 0.0 +/- 0.0.
+[pos-neg] [4]
+
+yes
+   ?- [1m~/aleph/test/examples/numbers[45]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+rA L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161856 bytes in 0.48 seconds ]
+
+yes
+   ?- read_all(miline).
+ [ reconsulting miline.b... ]
+ [ miline.b reconsulted 16144 bytes in 0.01 seconds ]
+[consulting pos examples] [miline.f]
+[consulting neg examples] [miline.n]
+
+yes
+   ?- sat(1).
+[sat] [1]
+[p(b1,1,2)]
+
+[bottom clause]
+p(A,B,C) if:
+    exists B in bag A such that C is 0.0 * B + 2 +/- 0.0.
+[literals] [2]
+[saturation time] [0.0]
+
+yes
+   ?- reduce.
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+p(A,B,C).
+[6/3]
+[lazy evaluation] [lin_regress1]
+[completed]
+p(A,B,C) if:
+    exists B in bag A such that C is 2.0 * B + 0.0 +/- 0.0.
+[4/0]
+[-------------------------------------]
+[found clause]
+p(A,B,C) if:
+    exists B in bag A such that C is 2.0 * B + 0.0 +/- 0.0.
+[pos-neg] [4]
+[clause label] [[4,0,2,4]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.0]
+[best clause]
+p(A,B,C) if:
+    exists B in bag A such that C is 2.0 * B + 0.0 +/- 0.0.
+[pos-neg] [4]
+
+yes
+   ?- [1m~/aleph/test/examples/numbers[46]>[m exit
+exit
+
+script done on Fri 15 Nov 2002 16:59:41 GMT

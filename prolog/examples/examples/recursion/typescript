@@ -1,0 +1,125 @@
+Script started on Wed 20 Nov 2002 16:39:18 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/recursion
+[1m~/aleph/test/examples/recursion[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161880 bytes in 0.46 seconds ]
+
+yes
+   ?- read_all(mem).
+ [ reconsulting mem.b... ]
+ [ mem.b reconsulted 1740 bytes in 0.0 seconds ]
+[consulting pos examples] [mem.f]
+[consulting neg examples] [mem.n]
+
+yes
+   ?- induce.
+[select example] [1]
+[sat] [1]
+[mem(0,[0])]
+
+[bottom clause]
+mem(A,B) :-
+   B=[A|C].
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+mem(A,B).
+[19/6]
+mem(A,B) :-
+   B=[A|C].
+[12/0]
+[-------------------------------------]
+[found clause]
+mem(A,B) :-
+   B=[A|C].
+[pos-neg] [12]
+[clause label] [[12,0,1,12]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.0]
+[best clause]
+mem(A,B) :-
+   B=[A|C].
+[pos-neg] [12]
+[atoms left] [7]
+[select example] [9]
+[sat] [9]
+[mem(1,[0,1])]
+
+[bottom clause]
+mem(A,B) :-
+   B=[C|D], mem(A,D), mem(C,B), D=[A|E].
+[literals] [5]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+mem(A,B).
+[7/6]
+mem(A,B) :-
+   B=[C|D].
+[7/4]
+mem(A,B) :-
+   B=[C|D], mem(A,D).
+[7/0]
+[-------------------------------------]
+[found clause]
+mem(A,B) :-
+   B=[C|D], mem(A,D).
+[pos-neg] [7]
+[clause label] [[7,0,2,7]]
+[clauses constructed] [3]
+[-------------------------------------]
+mem(A,B) :-
+   B=[C|D], mem(C,B).
+mem(A,B) :-
+   B=[C|D], D=[A|E].
+[clauses constructed] [5]
+[search time] [0.0]
+[best clause]
+mem(A,B) :-
+   B=[C|D], mem(A,D).
+[pos-neg] [7]
+[atoms left] [0]
+
+[theory]
+
+[Rule 1] [Pos cover = 12 Neg cover = 0]
+mem(A,B) :-
+   B=[A|C].
+
+[Rule 2] [Pos cover = 10 Neg cover = 0]
+mem(A,B) :-
+   B=[C|D], mem(A,D).
+
+[Training set performance]
+          Actual
+       +        - 
+     + 19        0        19 
+Pred 
+     - 0        6        6 
+
+       19        6        25 
+
+Accuracy = 1.0
+[Training set summary] [[19,0,0,6]]
+[time taken] [0.01]
+[total clauses constructed] [7]
+
+yes
+   ?- [1m~/aleph/test/examples/recursion[43]>[m exit
+exit
+
+script done on Wed 20 Nov 2002 16:40:05 GMT

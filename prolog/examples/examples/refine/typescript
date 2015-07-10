@@ -1,0 +1,95 @@
+Script started on Wed 20 Nov 2002 16:40:41 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/refine
+[1m~/aleph/test/examples/refine[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161880 bytes in 0.47 seconds ]
+
+yes
+   ?- read_all(train).
+ [ reconsulting train.b... ]
+ [ train.b reconsulted 48728 bytes in 0.02 seconds ]
+[consulting pos examples] [train.f]
+[consulting neg examples] [train.n]
+
+yes
+   ?- sat(1).
+[sat] [1]
+[eastbound(east1)]
+
+[bottom clause]
+eastbound(A) :-
+   has_car(A,B), has_car(A,C), has_car(A,D), has_car(A,E), 
+   short(B), short(D), closed(D), long(C), 
+   long(E), open_car(B), open_car(C), open_car(E), 
+   shape(B,rectangle), shape(C,rectangle), shape(D,rectangle), shape(E,rectangle), 
+   wheels(B,2), wheels(C,3), wheels(D,2), wheels(E,2), 
+   load(B,circle,1), load(C,hexagon,1), load(D,triangle,1), load(E,rectangle,3).
+[literals] [25]
+[saturation time] [0.01]
+
+yes
+   ?- reduce.
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+[new refinement]
+eastbound(A).
+[5/5]
+[new refinement]
+eastbound(A) :-
+   has_car(A,B).
+[5/5]
+[new refinement]
+eastbound(A) :-
+   has_car(A,B).
+[5/5]
+[new refinement]
+eastbound(A) :-
+   has_car(A,B).
+[5/5]
+[new refinement]
+eastbound(A) :-
+   has_car(A,B).
+[5/5]
+[new refinement]
+eastbound(A) :-
+   has_car(A,B), short(B).
+[5/5]
+[new refinement]
+eastbound(A) :-
+   has_car(A,B), short(B).
+[5/5]
+[new refinement]
+eastbound(A) :-
+   has_car(A,B), short(B), closed(B).
+[5/0]
+[-------------------------------------]
+[found clause]
+eastbound(A) :-
+   has_car(A,B), short(B), closed(B).
+[pos-neg] [5]
+[clause label] [[5,0,4,5]]
+[clauses constructed] [8]
+[-------------------------------------]
+[clauses constructed] [8]
+[search time] [0.01]
+[best clause]
+eastbound(A) :-
+   has_car(A,B), short(B), closed(B).
+[pos-neg] [5]
+
+yes
+   ?- [1m~/aleph/test/examples/refine[43]>[m exit
+exit
+
+script done on Wed 20 Nov 2002 16:41:14 GMT
