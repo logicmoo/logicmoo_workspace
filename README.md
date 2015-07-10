@@ -7,6 +7,8 @@ http://www.cs.ox.ac.uk/activities/machlearn/Aleph/
 
 This  pack is a porting of Aleph version 5 to SWI-Prolog. The porting was done  by [Fabrizio Riguzzi](http://ds.ing.unife.it/~friguzzi/).
 
+The same code still runs also under Yap.
+
 Example of use
 ---------------
 
