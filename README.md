@@ -1,11 +1,11 @@
 # aleph
 Porting of Aleph for SWI-Prolog.
 
-Aleph is an Inductive Logic Programming system developed by Ashwin Srinivasan:
+Aleph is an Inductive Logic Programming system developed by [Ashwin Srinivasan](https://www.iiitd.edu.in/~ashwin/):
 
 http://www.cs.ox.ac.uk/activities/machlearn/Aleph/
 
-This  pack is a porting of Aleph version 5 to SWI-Prolog. The porting was done  by Fabrizio Riguzzi.
+This  pack is a porting of Aleph version 5 to SWI-Prolog. The porting was done  by [Fabrizio Riguzzi](http://ds.ing.unife.it/~friguzzi/).
 
 Example of use
 ---------------
