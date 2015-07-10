@@ -1,4 +1,4 @@
-:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, char/1,
+:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, tlist/2, char/1,
 		    arithexpression/1]).
 
 :- use_module(library(apply)).
@@ -12,6 +12,11 @@
 :- true prop type/1.
 :- meta_predicate type(0).
 type(Goal) :- call(Goal).
+
+:- true prop tlist/2 + type # "@var{L} is a list or a value of @var{T}s".
+:- meta_predicate tlist(?, 1).
+tlist(L, T) :- list(L, T).
+tlist(E, T) :- call(T, E).
 
 :- true prop char/1 is type.
 char(A) :- atm(A). % size(A)=1
