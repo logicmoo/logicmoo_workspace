@@ -12,7 +12,7 @@ Example of use
 
     $ cd <pack>/aleph/prolog/examples/trains
     $ swipl
-    ?- use_module(library(aleph)).
+    ?- [library(aleph)].
     ?- read_all(train).
     ?- induce.
 
