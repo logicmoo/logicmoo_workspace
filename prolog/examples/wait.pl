@@ -1,7 +1,7 @@
 #!/usr/local/bin/yap -L --
 
 % called with
-% mpirun -np 2 gowait.
+% mpirun -np 2 swipl wait.pl
 % prints
 % ------
 % main
