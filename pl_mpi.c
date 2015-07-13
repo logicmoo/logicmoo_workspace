@@ -20,9 +20,16 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 Last rev: $Id: yap_mpi.c,v 1.4 2006-09-28 11:42:51 vsc Exp $
 Comments: YAP interface to LAM/MPI
 */
-#include "config.h"
 #include <stdlib.h>
 #include <stdio.h>
+#define HAVE_STRING_H 1
+#define HAVE_MALLOC_H 1
+#define HAVE_UNISTD_H 1
+#define HAVE_SYS_TIMES_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_STDBOOL_H 1
+#define HAVE_MPI_H 1
+
 #if HAVE_STRING_H
 #include <string.h>
 #endif
@@ -36,11 +43,7 @@ Comments: YAP interface to LAM/MPI
 #include <sys/times.h>
 #endif
 typedef unsigned long uintptr_t;
-#if _WIN64
-typedef unsigned long long YAP_CELL;
-#else
 typedef uintptr_t YAP_CELL;
-#endif
 #define CELL YAP_CELL
 #ifndef YAP_Bool
 #define YAP_Bool foreign_t
