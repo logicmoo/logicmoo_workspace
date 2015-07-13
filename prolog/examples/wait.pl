@@ -29,7 +29,7 @@ main:-
 	 mpi_send(ciao,1,201),
 	 write(after_send),nl
 	;
-	 mpi_irecv(0,_201,H),
+	 mpi_irecv(0,_Tag,H),
 	 write(irecv),nl,
 	 test(H)
 	),
