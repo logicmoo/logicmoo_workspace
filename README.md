@@ -7,7 +7,7 @@ The authors of LAMMPI are [Nuno A. Fonseca](http://www.ebi.ac.uk/about/people/nu
 To compile and run the library you need an MPI framework, such as [OpenMPI](http://www.open-mpi.org/), installed in your system. 
 
 ## Example of use
-    $ cd <pack>/mpi/prolog/examples/trains
+    $ cd <pack>/mpi/prolog/examples
     $ mpirun -np 2 swipl wait.pl
 
 ## Examples
