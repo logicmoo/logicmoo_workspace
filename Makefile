@@ -44,7 +44,7 @@ pl_mpi.so: $(OBJS)
 check:
 install: all 
 	mkdir -p  $(LIBDIR)
-	$(INSTALL) $(LIBDIR) pl_mpi.so 
+	cp  pl_mpi.so $(LIBDIR)
 
 clean:
 	rm -f *.o *~ $(OBJS) $(SOBJS) *.BAK
