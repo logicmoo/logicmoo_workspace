@@ -8,7 +8,7 @@ To compile and run the library you need an MPI framework, such as [OpenMPI](http
 
 ## Example of use
     $ cd <pack>/mpi/prolog/examples
-    $ mpirun -np 2 swipl wait.pl
+    $ mpirun -np 4 swipl hello.pl
 
 ## Examples
 The directory `prolog/examples` contains the examples of use available in Yap.
