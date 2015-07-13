@@ -43,6 +43,7 @@ pl_mpi.so: $(OBJS)
 
 check:
 install: all 
+	mkdir -p  $(LIBDIR)
 	$(INSTALL) $(LIBDIR) pl_mpi.so 
 
 clean:
