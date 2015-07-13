@@ -14,8 +14,7 @@
 % wait_end
 % after_send
 % c(535755152,)
-
-:- use_module(lam_mpi).
+:- use_module(library(lam_mpi)).
 :- use_module(library(system)).
 main:-
 	write(main),nl,

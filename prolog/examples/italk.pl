@@ -1,4 +1,4 @@
-:- use_module(lam_mpi).
+:- use_module(library(lam_mpi)).
 
 
 main :-
