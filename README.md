@@ -1,2 +1,16 @@
-# lam_mpi
-Porting of the LAMMPI library of Yap Prolog to SWI-Prolog
+# mpi
+Porting of the [LAMMPI library](http://sourceforge.net/p/yap/yap-6.3/ci/master/tree/library/lammpi/) of Yap Prolog to SWI-Prolog
+
+## Requirements
+To compile and run the library you need an MPI framework, such as [OpenMPI](http://www.open-mpi.org/), installed in your system. 
+
+## Example of use
+    $ cd <pack>/mpi/prolog/examples/trains
+    $ mpirun -np 2 swipl wait.pl
+
+## Examples
+The directory `prolog/examples` contains the examples of use available in Yap.
+
+## Manual
+Besides the examples, you can look at http://www.dcc.fc.up.pt/~vsc/yap/d4/dca/group___l_a_m.html.
+
