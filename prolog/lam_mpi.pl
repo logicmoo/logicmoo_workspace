@@ -212,7 +212,8 @@ message and  _Data_ with the message itself.
 		  mpi_default_buffer_size/2
           ]).
 
-:- use_foreign_library(pl_mpi,init_mpi).
+:- use_foreign_library(foreign(pl_mpi),init_mpi).
+
 
 mpi_msg_size(Term, Size) :-
 	terms:export_term(Term, Buf, Size),
