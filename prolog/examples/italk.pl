@@ -1,3 +1,7 @@
+% command to call
+% mpirun -np 2 swipl italk.pl
+% only two processes
+
 :- use_module(library(lam_mpi)).
 
 

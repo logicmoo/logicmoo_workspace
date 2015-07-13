@@ -1,3 +1,5 @@
+% command to call
+% mpirun -np 2 swipl bcast.pl
 
 :- use_module(library(lam_mpi)).
 
