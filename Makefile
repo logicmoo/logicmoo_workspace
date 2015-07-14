@@ -4,7 +4,7 @@ LIBDIR=lib/$(SWIARCH)
 #
 CC=gcc
 MPI_CC=mpicc
-CFLAGSMPI= $(CFLAGS) -shared -fPIC -O3 -fomit-frame-pointer -Wall -Wstrict-prototypes -Wmissing-prototypes -g -O2  -I/home/rzf/usr/local/lib/swipl-7.1.28/include -I/home/rzf/usr/local/lib/swipl-7.1.28/include/Yap -I/home/rzf/yap-6.3rwnew/archmpi
+CFLAGSMPI= $(CFLAGS)/Yap -shared -fPIC -O3 -fomit-frame-pointer -Wall -Wstrict-prototypes -Wmissing-prototypes -g -O2  
 
 LDFLAGS= $(LDSOFLAGS)
 #
