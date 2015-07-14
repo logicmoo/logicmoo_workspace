@@ -11,6 +11,7 @@
 		      assrt_lib_tr/4]).
 
 :- use_module(library(lists)).
+:- use_module(library(extra_messages), []).
 :- use_module(library(assertions_op)).
 
 :- expects_dialect(swi).
@@ -78,18 +79,13 @@ assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, Loc) :-
     clause_pos_location(Ref, Pos, Loc).
 
 clause_pos_location(Ref, Pos, Loc) :-
-    ( clause_property(Ref, file(File))
+    ( clause_property(Ref, file(File)),
+      clause_property(Ref, line_count(Line))
     ->( var(Pos)
-      ->( clause_property(Ref, line_count(Line))
-	->Loc = file(File, Line, -1, _)
-	; true
-	)
-      ; Loc = file_term_position(File, Pos)
+      ->Loc = file(File, Line, -1, _)
+      ; Loc = file_line_pos(File, Line, Pos)
       )
-    ; ( var(Pos)
-      ->Loc = clause(Ref)
-      ; Loc = clause_term_position(Ref, Pos)
-      )
+    ; Loc = clause(Ref)
     ).
 
 filepos_line(File, CharPos, Line, LinePos) :-
@@ -614,13 +610,13 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
 	      ->( nonvar(HPos),
 		  arg(1, HPos, HFrom),
 		  integer(HFrom)
-		->Pos = HPos,
-		  filepos_line(File, HFrom, Line, _)
-		; ( NonVarAPos=true
-		  ->Pos = APos
-		  ; true
-		  ),
-		  Line = Line0
+		->filepos_line(File, HFrom, Line, Pos)
+		; ( NonVarAPos=true,
+		    arg(1, APos, AFrom),
+		    integer(AFrom)
+		  ->filepos_line(File, AFrom, Line, Pos)
+		  ; Line = Line0
+		  )
 		)
 	      ; true		% Loc will be instantiated later
 	      ),
