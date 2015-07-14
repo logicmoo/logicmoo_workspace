@@ -4,7 +4,7 @@ LIBDIR=lib/$(SWIARCH)
 #
 CC=gcc
 MPI_CC=mpicc
-CFLAGSMPI= $(CFLAGS) -I$(PATH)/include/Yap -shared -fPIC -O3 -fomit-frame-pointer -Wall -Wstrict-prototypes -Wmissing-prototypes -g -O2  
+CFLAGSMPI= $(CFLAGS) $(CFLAGS)/Yap -shared -fPIC -O3 -fomit-frame-pointer -Wall -Wstrict-prototypes -Wmissing-prototypes -g -O2  
 
 LDFLAGS= $(LDSOFLAGS)
 #
