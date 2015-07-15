@@ -758,6 +758,10 @@ mpi_test_recv(term_t YAP_ARG1,...) {
     PAUSE_TIMER();
     return false;
   }
+  if( flag != true ) {
+    PAUSE_TIMER();
+    return false;
+  }
   s=(char*)get_request(handle);
   len=strlen(s);
   out = string2term(s,(size_t*)&len);
