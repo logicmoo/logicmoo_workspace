@@ -27,4 +27,4 @@ test(H):-
     test(H)
   ).
 
-:-main.
+:-main,halt.
