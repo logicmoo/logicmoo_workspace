@@ -112,6 +112,8 @@ assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
       clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line0 ))
     ->Line1 = Line0
+    ; Loc = file_line_pos(File, Line0, _)
+    ->Line1 = Line0
     ; true
     ).
 
