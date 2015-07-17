@@ -1,6 +1,6 @@
 :- begin_tests(assrt_meta).
 
-:- use_module(rtchecks(rtchecks_utils)).
+:- use_module(library(swi/rtchecks_lib)).
 :- use_module(library(rtchecks_tracer)).
 :- use_module(library(assrt_meta)).
 :- set_prolog_flag(rtchecks_check,  yes).
