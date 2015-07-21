@@ -131,15 +131,16 @@ assert_reexport_declaration_2(op(_, _, _), _, _, _).
 assert_reexport_declaration_2(except(_),   _, _, _).
 
 assert_position(H, M, Type, TermPos) :-
-    source_location(File, Line),
+    source_location(File, Line0 ),
     ( nonvar(TermPos)
-    ->file_termpos_line(File, TermPos, Line, LinePos),
+    ->arg(1, TermPos, CharCount),
+      filepos_line(File, CharCount, Line, LinePos)
       % Meld TermPos because later the source code will not be available and
       % therefore we will not be able to get LinePos
-      From = file_line_pos(File, Line, LinePos)
-    ; From = file(File, Line, -1, 0 )
+    ; Line = Line0,
+      LinePos = -1
     ),
-    assert_location(H, M, Type, From).
+    assert_location(H, M, Type, file(File, Line, LinePos, CharCount)).
 
 assert_location(H, M, Type, From) :-
     ( \+ have_extra_location(From, H, M, Type)

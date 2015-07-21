@@ -2,7 +2,8 @@
 		       from_to_line/2,
 		       from_to_file_line_pos/5,
 		       file_termpos_line/4,
-		       subsumes_from/2]).
+		       subsumes_from/2,
+		       filepos_line/4]).
 
 :- use_module(library(prolog_clause),   []).
 :- use_module(library(prolog_codewalk), []).
@@ -24,13 +25,15 @@ from_to_file_line_pos(clause_term_position(ClauseRef, TermPos),
 from_to_file_line_pos(clause(ClauseRef), File, CLine, _, _) :-
     clause_property(ClauseRef, file(File)),
     clause_property(ClauseRef, line_count(CLine)).
-from_to_file_line_pos(file_line_pos(File, Line, Pos), File, _, Line, Pos).
+from_to_file_line_pos(file(File, Line, Pos, _), File, _, Line, Pos).
 from_to_file_line_pos(file_term_position(File, TermPos), File, _, Line, Pos) :-
     file_termpos_line(File, TermPos, Line, Pos).
-from_to_file_line_pos(file(File, Line, _, _), File, Line, _, _).
 
 file_termpos_line(File, TermPos, Line, Pos) :-
     arg(1, TermPos, CharCount),
+    filepos_line(File, CharCount, Line, Pos).
+
+filepos_line(File, CharCount, Line, Pos) :-
     setup_call_cleanup('$push_input_context'(file_line),
 		       prolog_codewalk:filepos_line(File, CharCount, Line, Pos),
 		       '$pop_input_context').
@@ -47,7 +50,6 @@ from_to_file(clause(ClauseRef), File) :-
     clause_property(ClauseRef, file(File)).
 from_to_file(file_term_position(File, _), File).
 from_to_file(file(File, _, _, _), File).
-from_to_file(file_line_pos(File, _, _), File).
 
 from_to_line(clause_term_position(ClauseRef, _), Line) :-
     clause_property(ClauseRef, line_count(Line)).
@@ -56,4 +58,3 @@ from_to_line(clause(ClauseRef), Line) :-
 from_to_line(file_term_position(File, TermPos), Line) :-
     file_termpos_line(File, TermPos, Line, _).
 from_to_line(file(_, Line, _, _), Line).
-from_to_line(file_line_pos(_, Line, _), Line).
