@@ -2,7 +2,6 @@
 			    do_trace_rtc/1]).
 
 :- use_module(library(swi/rtchecks)). % Proper load of ciao dialect modules
-:- use_module(library(extend_args)).
 :- use_module(library(implementation_module)).
 :- use_module(library(static_strip_module)).
 :- use_module(library(maplist_dcg)).
@@ -150,28 +149,15 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     prolog_frame_attribute(FR, context_module, CM),
     ( black_list_module(CM)
     ->Action = continue
-    ; resolve_meta_call(Goal0, Goal1),
-      static_strip_module(Goal1, Goal, M, CM),
+    ; static_strip_module(Goal0, Goal, M, CM),
       ( black_list_module(M)
       ->Action = continue
-      ; \+ current_assertion(Goal, rtcheck, _, _, _, _,
-			     _, _, _, _, _, _, _, _, _, M),
-	\+ pp_assr(Goal, M)
-      ->Action = continue
-      ; assertion_head_body(Goal, M, _, prop, _, _, _, _, _)
-      ->Action = continue
-      ; % print_message(error, trace_call_to(M:Goal, clause_pc(Clause, PC))),
-	generate_rtchecks(clause_pc(Clause, PC), M:Goal, RTChecks),
-	Action = call(RTChecks)
+      ; generate_rtchecks(clause_pc(Clause, PC), M, Goal, RTChecks),
+	( Goal == RTChecks
+	->Action = continue
+	; M \= CM
+	->Action = call(M:RTChecks)
+	; Action = call(RTChecks)
+	)
       )
     ).
-
-% May be this is slow, but it works:
-resolve_meta_call(M:Meta, M:Goal) :- !,
-    resolve_meta_call(Meta, Goal).
-resolve_meta_call(Meta, Goal) :-
-    functor(Meta, call, A),
-    A >= 2, !,
-    Meta =.. [call, Call|Args],
-    extend_args(Call, Args, Goal).
-resolve_meta_call(Goal, Goal).
