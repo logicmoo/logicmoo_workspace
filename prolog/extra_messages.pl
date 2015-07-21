@@ -32,5 +32,7 @@
 :- multifile
 	prolog:message_location//1.
 
-prolog:message_location(file_line_pos(File, Line, LinePos)) -->
-    [ '~w:~d:~d: '-[File, Line, LinePos] ].
+prolog:message_location(file(Path, Line, -1, _CharNo)) --> !,
+	[ '~w:~d: '-[Path, Line] ].
+prolog:message_location(file(Path, Line, LinePos, _CharNo)) -->
+	[ '~w:~d:~d: '-[Path, Line, LinePos] ].
