@@ -83,7 +83,7 @@ clause_pos_location(Ref, Pos, Loc) :-
       clause_property(Ref, line_count(Line))
     ->( var(Pos)
       ->Loc = file(File, Line, -1, _)
-      ; Loc = file_line_pos(File, Line, Pos)
+      ; Loc = file(File, Line, Pos, _)
       )
     ; Loc = clause(Ref)
     ).
@@ -106,13 +106,11 @@ assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
       integer(To)
     ->filepos_line(File, From, Line0, _),
       filepos_line(File, To,   Line1, _)
-    ; Loc = file(File, Line0, -1, _)
+    ; Loc = file(File, Line0, _, _)
     ->Line1 = Line0
     ; Loc = clause(Ref),
       clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line0 ))
-    ->Line1 = Line0
-    ; Loc = file_line_pos(File, Line0, _)
     ->Line1 = Line0
     ; true
     ).
