@@ -22,6 +22,7 @@ builtin_spec(G, S) :-
     predicate_property(system:G, meta_predicate(S)),
     once(arg(_, S, 0 )).
 
+:- meta_predicate apply_body(3, ?, ?, ?).
 apply_body(_, _, G, G) :- var(G), !.
 apply_body(Apply, _, M:G, M:R) :- !,
     apply_body(Apply, M, G, R).
@@ -37,6 +38,7 @@ apply_meta_arg(Apply, M, 0, G, R) :- !,
     apply_body(Apply, M, G, R).
 apply_meta_arg(_, _, _, R, R).
 
+:- meta_predicate maparg(3, +, +, +, +).
 maparg(Apply, N, S, G, R) :-
     arg(N, S, AS), !,
     arg(N, G, AG),
