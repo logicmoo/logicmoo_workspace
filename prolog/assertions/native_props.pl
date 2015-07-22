@@ -72,13 +72,13 @@
 :- doc(doinclude, indep/1).
 :- doc(doinclude, indep/2).
 
-%% :- reexport(engine(term_typing),[ground/1,nonvar/1,var/1]).
-%% :- doc(doinclude,ground/1).
-%% :- doc(doinclude,nonvar/1).
-%% :- doc(doinclude,var/1).
-%% 
-%% :- reexport(engine(basic_props),[regtype/1, native/2, native/1, sideff/2,
-%%         term/1, int/1, nnegint/1, flt/1, num/1, atm/1, struct/1, gnd/1]).
+% :- reexport(engine(term_typing),[ground/1,nonvar/1,var/1]).
+% :- doc(doinclude,ground/1).
+% :- doc(doinclude,nonvar/1).
+% :- doc(doinclude,var/1).
+% 
+% :- reexport(engine(basic_props),[regtype/1, native/2, native/1, sideff/2,
+%         term/1, int/1, nnegint/1, flt/1, num/1, atm/1, struct/1, gnd/1]).
 
 :- set_prolog_flag(multi_arity_warnings, off).
 
