@@ -330,9 +330,9 @@ apply_nondet_rules([],ABox,ABox1):-
 
 apply_nondet_rules([H|_],ABox,ABox1):-
   C=..[H,ABox,L],
-  call(C),!,
+  call(C),
   member(ABox1,L),
-  ABox \= ABox1.
+  ABox \= ABox1,!.
 
 apply_nondet_rules([_|T],ABox,ABox1):-
   apply_nondet_rules(T,ABox,ABox1).
