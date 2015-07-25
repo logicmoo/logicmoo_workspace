@@ -27,7 +27,7 @@ check_non_loaded(FileChk, Pairs) :-
 	    ( member(Dir-NameL, DirNameG),
 	      findall(Name, ( member(Name, NameL),
 			      directory_file_path(Dir, Name, File),
-			      \+ source_file_property(File, modified(_))
+			      \+ source_file_property(File, _)
 			    ), ExcludedL),
 	      ExcludedL \= [],
 	      length(NameL, N),
@@ -41,7 +41,7 @@ prolog:message(acheck(non_loaded)) -->
      'Non Loaded',nl,
      '----------',nl,
      'The following files are not being loaded, which', nl,
-     'means you are not testing them statically', nl, nl].
+     'means you are not analyzing them statically', nl, nl].
 prolog:message(acheck(non_loaded, load_info(Dir, L, N)-ExcludedL)) -->
     ['At directory ~w, loaded ~w/~w:'-[Dir, L, N],nl],
     maplist_dcg(non_loaded(Dir), ExcludedL).
