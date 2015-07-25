@@ -7,6 +7,7 @@
 :- use_module(library(clambda)).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(location_utils)).
+:- use_module(library(infer_meta_if_required)).
 
 :- multifile
     prepare_results/3,	% Custom preparation method
@@ -82,22 +83,22 @@ donecheck(Checker, T) :-
     DT is T2-T,
     print_message(information, format('Done ~w (~3f s)', [Checker, DT])).
 
-checkall(OptionL) :-
-    available_checker(Checker),
-    infocheck(Checker, T),
-    showcheck(Checker, OptionL),
-    donecheck(Checker, T),
-    fail.
-checkall(_) :-
-    cleanup_db.
+checkall(OptionL) :- checkall(maplist, OptionL).
 
-checkallc(OptionL) :-
+checkallc(OptionL) :- checkall(concurrent_maplist, OptionL).
+
+:- meta_predicate checkall(2, +).
+checkall(Mapper, OptionL) :-
     findall(C, available_checker(C), CL),
-    concurrent_maplist([OptionL]+\ C^ ( infocheck(C, T),
-					showcheck(C, OptionL),
-					donecheck(C, T)
-				      ), CL),
-    cleanup_db.
+    setup_call_cleanup(infer_meta_if_required,
+		       call(Mapper, checkeach(OptionL), CL),
+		       cleanup_db).
+
+:- public checkeach/2.
+checkeach(OptionL, Checker) :-
+     infocheck(Checker, T),
+     showcheck(Checker, OptionL),
+     donecheck(Checker, T).
 
 check_results(Checker, Results, OptionL) :-
     current_prolog_flag(check_database_preds, F),

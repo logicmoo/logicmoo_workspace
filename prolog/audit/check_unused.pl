@@ -19,6 +19,7 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(audit/audit)).
 :- use_module(library(audit/audit_codewalk)).
+:- use_module(library(prolog_metainference)).
 
 :- multifile
     prolog:message//1.
@@ -71,7 +72,9 @@ mark_rec(M:H) :-
     ).
 
 resolve_meta_goal(H, M, G) :-
-    ( predicate_property(M:H, meta_predicate(Meta))
+    ( ( predicate_property(M:H, meta_predicate(Meta))
+      ; inferred_meta_predicate(M:H, Meta)
+      )
     ->qualify_meta_goal(M:H, Meta, G)
     ; G = H
     ).
