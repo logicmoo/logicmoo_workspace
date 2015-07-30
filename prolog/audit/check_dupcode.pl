@@ -1,6 +1,7 @@
 :- module(check_dupcode, []).
 
 :- use_module(library(check), []).
+:- use_module(library(apply)).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
@@ -85,7 +86,7 @@ duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-
     \+ memberchk(T, [goal, assertion(_,_)]),
     once(dtype_dupid_elem(T, T, From, H, M, DupId, Elem)).
 
-dtype_dupid_elem(meta_predicate, T, _, H, M, T-M:F/A,    T-M:H) :- functor(H, F, A).
+dtype_dupid_elem(meta_predicate, T, _, H, M, T-M:F/A, T-M:H) :- functor(H, F, A).
 dtype_dupid_elem(use_module,     T, F, H, M, T-File:M:H, T-File:M:H) :-
     from_to_file(F, File). % Ignore duplicated use_module's from different files
 dtype_dupid_elem(consult,        T, F, H, M, T-File:M:H, T-File:M:H) :-
@@ -102,21 +103,43 @@ dtype_dupid_elem(T,              T, _, H, M, T-M:PI,     T-M:G) :-
       G =H
     ).
 
-ignore_dupgroup(_-[_]) :- !.	% no duplicates
-ignore_dupgroup((DupType-_)-ElemL) :-
-    ignore_dupgroup(DupType, ElemL).
+ignore_dupgroup((DupType-_)-ElemL, GL) :-
+    ignore_dupgroup(DupType, ElemL, GL).
 
-ignore_dupgroup(name, PIL) :-
-    ignore_dupname(PIL).
+ignore_dupgroup(name, PIL, _) :-
+    \+ consider_dupname(name, PIL).
+ignore_dupgroup(clause, CIL, GL) :-
+    ignore_dupname_clause(CIL, GL),
+    \+ consider_dupname(clause, CIL).
 
-ignore_dupname(PIL) :-
-    \+ ( append(_, [M:F/A|PIL2], PIL),
-	 functor(H, F, A),
-	 predicate_property(M:H, exported),
-	 member(M2:F2/A2, PIL2),
-	 functor(H2, F2, A2),
-	 predicate_property(M2:H2, exported)
-       ).
+ignore_dupname_clause(CIL, GL) :-
+    CIL = [CI|_],
+    element_group(clause, CI, GKey),
+    maplist(\ (M:_/_-_)^M^true, CIL, MU),
+    sort(MU, ML),
+    element_group(clause, CI, GKey),
+    partition([GKey, ML] +\ ((clause-_)-CIL1)
+	     ^ ( CIL1 = [CI1|_],
+		 element_group(clause, CI1, GKey),
+		 maplist(\ (M:_/_-_)^M^true, CIL1, MU1),
+		 sort(MU1, ML)
+	       ),
+	      GL, [_], _).
+    % GI, GE).
+    % length(GI,NI),
+    % length(GE,NE),
+    % writeln(user_error, GKey:NI-NE).
+
+consider_dupname(DupType, CIL) :-
+    append(_, [CI|PIL2], CIL),
+    element_head(DupType, CI, MH),
+    predicate_property(MH, exported),
+    member(CI2, PIL2),
+    element_head(DupType, CI2, MH2),
+    predicate_property(MH2, exported).
+
+element_head(predicate, M:F/A,   M:H) :- functor(H, F, A).
+element_head(clause,    M:F/A-_, M:H) :- functor(H, F, A).
 
 curr_duptype_elem(M, FileChk, DupType, DupId, Elem) :-
     current_predicate(M:F/A),
@@ -132,10 +155,11 @@ check_dupcode(OptionL, FileChk, Result) :-
     select_option(module(M), OptionL, _, M),
     findall((DupType-DupId)-Elem,
 	    curr_duptype_elem(M, FileChk, DupType, DupId, Elem), PU),
-    keysort(PU, PL),
+    sort(PU, PL),
     group_pairs_by_key(PL, GL),
-    findall(G, ( member(G, GL),
-		 \+ ignore_dupgroup(G)
+    partition(\ (_-[_])^true, GL, _, GD), % Consider duplicates
+    findall(G, ( member(G, GD),
+		 \+ ignore_dupgroup(G, GD)
 	       ), Groups),
     ungroup_keys_values(Groups, Pairs),
     clean_redundants(Pairs, CPairs),
