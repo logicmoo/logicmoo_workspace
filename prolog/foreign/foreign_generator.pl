@@ -1,8 +1,8 @@
 :- module(foreign_generator, [generate_library/4,
 			      gen_foreign_library/2,
-			      current_foreign_prop/11,
-			      key_value/3]).
+			      current_foreign_prop/11]).
 
+:- use_module(library(key_value)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(assertions/assrt_lib)).
 :- use_module(library(maplist_dcg)).
@@ -562,11 +562,6 @@ key_value_from_desc(_, Desc, N, Key, Value) :-
     key_value_from_list(Desc, N, Key, Value).
 key_value_from_desc(Dict, _, N, Key, Value) :-
     key_value_from_dict(Dict, N, Key, Value).
-
-key_value(KV,  K, V) :- functor(KV, K, 1), arg(1, KV, V), !.
-key_value(K:V, K, V).
-key_value(K-V, K, V).
-key_value(K=V, K, V).
 
 fetch_kv_prop_arg(Key, Value, PropL, Prop) :-
     ( member(Prop, PropL),
