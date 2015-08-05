@@ -65,15 +65,25 @@
 
 #define FI_unify_integer(t, p)   PL_unify_integer(t, p)
 #define FI_unify_float(t, p)     PL_unify_float(t, p)
-#define FI_unify_pointer(t, p)   PL_unify_pointer(t, p)
-#define FI_unify_chrs(t, v)      PL_unify_atom_chars(t, v)
+#define FI_unify_pointer(t, p) ({			\
+	    int __result = TRUE;			\
+	    if (p!=NULL)				\
+		__result = PL_unify_pointer(t, p);	\
+	    __result;					\
+	})
+#define FI_unify_chrs(t, v) ({				\
+	    int __result = TRUE;			\
+	    if (v!=NULL)				\
+		__result = PL_unify_atom_chars(t, v);	\
+	    __result;					\
+	})
 #define FI_unify_char_code(t, c) PL_unify_integer(t, c)
-#define FI_unify_char(t, c) {		\
-	char s[2];			\
-	s[0] = c;			\
-	s[1] = '\0';			\
-	PL_unify_atom_chars(t, s);	\
-    }
+#define FI_unify_char(t, c) ({		\
+	    char s[2];			\
+	    s[0] = c;			\
+	    s[1] = '\0';		\
+	    PL_unify_atom_chars(t, s);	\
+	})
 
 #define __rtc_FI_unify(__type, __term, __value)				\
     __rtcpass(__rtctype(FI_unify_##__type(__term, __value), __term, __type))

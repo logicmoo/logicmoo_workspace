@@ -46,9 +46,18 @@
 	    return __result;		\
     }
 
-#define __rtcvoid(__call) {	\
-	if (!__call)		\
-	    return;		\
+#define __rtcvoid(__call) {						\
+	if (!(__call))							\
+	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+		    __FILE__, __LINE__, __FUNCTION__);			\
+	return;								\
+    }
+
+#define __rtcnull(__call) {						\
+	if (!(__call))							\
+	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+		    __FILE__, __LINE__, __FUNCTION__);			\
+	return NULL;							\
     }
 
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
