@@ -7,7 +7,7 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(rtchecks(rtchecks_gen)).
 :- use_module(rtchecks(rtchecks_basic)).
-:- use_module(library(extend_args)).
+:- use_module(library(resolve_meta_call)).
 
 :- expects_dialect(swi).
 :- meta_predicate rtchecks_eval(0).
@@ -47,16 +47,6 @@ maparg(Apply, N, S, G, R) :-
     succ(N, N1),
     maparg(Apply, N1, S, G, R).
 maparg(_, _, _, _, _).
-
-% May be this is slow, but it works:
-resolve_meta_call(M:Meta, M:Goal) :- !,
-    resolve_meta_call(Meta, Goal).
-resolve_meta_call(Meta, Goal) :-
-    functor(Meta, call, A),
-    A >= 2, !,
-    Meta =.. [call, Call|Args],
-    extend_args(Call, Args, Goal).
-resolve_meta_call(Goal, Goal).
 
 generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
     resolve_meta_call(Goal0, Goal),
