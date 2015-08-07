@@ -24,6 +24,31 @@
 	}								\
     }
 
+#define __rtcvoid(__call) {						\
+	if (!(__call)) {						\
+	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+		    __FILE__, __LINE__, __FUNCTION__);			\
+	    return;							\
+	}								\
+    }
+
+#define __rtcnull(__call) {						\
+	if (!(__call)) {						\
+	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+		    __FILE__, __LINE__, __FUNCTION__);			\
+	    return NULL;						\
+	}								\
+    }
+
+#define __rtcexit(__call) {						\
+	int __result = (__call);					\
+	if (!__result) {						\
+	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+		    __FILE__, __LINE__, __FUNCTION__);			\
+	}								\
+	return __result;						\
+    }
+
 #define __doifrtc(__call) __rtcheck(__call)
 
 #define __rtcwarn(__call) {						\
@@ -35,7 +60,10 @@
 
 #else
 #pragma GCC diagnostic ignored "-Wunused-result"
-#define __rtcheck(__call) __call
+#define __rtcheck(__call) (__call)
+#define __rtcvoid(__call) (__call)
+#define __rtcnull(__call) (__call)
+#define __rtcexit(__call) {return (__call);}
 #define __doifrtc(__call)
 #define __rtcwarn(__call)
 #endif
@@ -44,20 +72,6 @@
 	int __result = (__call);	\
 	if (!__result)			\
 	    return __result;		\
-    }
-
-#define __rtcvoid(__call) {						\
-	if (!(__call))							\
-	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
-		    __FILE__, __LINE__, __FUNCTION__);			\
-	return;								\
-    }
-
-#define __rtcnull(__call) {						\
-	if (!(__call))							\
-	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
-		    __FILE__, __LINE__, __FUNCTION__);			\
-	return NULL;							\
     }
 
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
