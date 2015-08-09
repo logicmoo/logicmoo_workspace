@@ -257,7 +257,6 @@ call_rtc(Goal) :-
 	run-time check exceptions thrown by the goal.".
 
 save_rtchecks(Goal) :-
-	retractall_fact(rtcheck_db(_)),
 	RTError = rtcheck(_Type, _Pred, _Dict, _PropValues, _Poss),
 	intercept(Goal, RTError, assertz_fact(rtcheck_db(RTError))).
 
