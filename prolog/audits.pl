@@ -31,6 +31,7 @@
 
 :- reexport(library(audit/audit)).
 
+:- use_module(library(audit/check_assertions)).
 :- use_module(library(audit/check_imports)).
 :- use_module(library(audit/check_undefined)).
 :- use_module(library(audit/check_unused)).

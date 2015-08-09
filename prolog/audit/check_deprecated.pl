@@ -37,6 +37,10 @@
 :- use_module(library(referenced_by)).
 :- use_module(library(audit/audit)).
 
+:- dynamic
+    deprecated_db/1,
+    deprecated_db/4.
+
 :- multifile
     prolog:message//1,
     deprecated_predicate/2.
@@ -89,8 +93,6 @@ prolog:message(acheck(deprecated, (PI/Alt)-LocCIs)) -->
     predicate_head(PI),
     [' deprecated, use ~q instead. Referenced by'-[Alt], nl],
     referenced_by(LocCIs).
-
-:- dynamic deprecated_db/1, deprecated_db/4.
 
 :- public have_deprecated/5.
 :- meta_predicate have_deprecated(?, 1, +, +, +).

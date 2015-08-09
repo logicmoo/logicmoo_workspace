@@ -70,6 +70,7 @@ hide_var_dynamic(commited_retract(_), commited_retract).
 hide_var_dynamic(tabling(_, _), ntabling).
 hide_var_dynamic(match_head_body(_, _, _), abstract_interpreter).
 hide_var_dynamic(is_entry_caller(_), check_unused).
+hide_var_dynamic(head_ctcheck(_, _), check_assertions).
 
 :- dynamic
     wrong_dynamic_db/4,
