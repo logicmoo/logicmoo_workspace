@@ -29,14 +29,21 @@
 %     assrt_lib:assertion_head/7,
 %     assrt_lib:doc_db/4.
 
+add_arg(_, G1, G2) :-
+    var(G1),
+    var(G2),
+    !,
+    assertion(fail),
+    fail.
 add_arg(H, M:G0, M:G) :- !,
     add_arg(H, G0, G).
 add_arg(H, G0, G) :-
-    ( var(G0)
+    ( nonvar(G0)
+    ->G0 =.. [F|L],
+      G  =.. [F,H|L]
+    ; nonvar(G)
     ->G  =.. [F,H|L],
       G0 =.. [F|L]
-    ; G0 =.. [F|L],
-      G  =.. [F,H|L]
     ).
 
 list_conj([],     true).
@@ -418,9 +425,9 @@ normalize_assertion_head(Head, M, Pos, M:Head, [], [], [], [], Pos) :-
 normalize_args(N0, Head, M, Pred, Cp0, Ca0, Su0, Gl0) :-
     arg(N0, Head, HArg),
     !,
-    arg(N0, Pred, PArg),
     resolve_types_modes(HArg, M, PArg, Cp0, Ca0, Su0, Gl0, Cp1, Ca1, Su1, Gl1),
-    N is N0 + 1,
+    arg(N0, Pred, PArg),
+    succ(N0, N),
     normalize_args(N, Head, M, Pred, Cp1, Ca1, Su1, Gl1).
 normalize_args(_, _, _, _, [], [], [], []).
 
@@ -434,7 +441,7 @@ resolve_types_modes(A0, M, A, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl) :-
     do_modedef(A0, A1, A, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
     do_propdef(A1, M, A, Pr0, Pr).
 
-do_propdef(A,  _, A, Cp,  Cp) :- var(A), !.
+do_propdef(A, _, A, Cp,  Cp) :- var(A), !.
 do_propdef(A1, M, A, Cp1, Cp) :-
     hpropdef(A1, M, A, Cp1, Cp).
 
@@ -503,6 +510,7 @@ apropdef_2(N0, Head, M, (P * A)) -->
     apropdef_2(N, Head, M, P),
     hpropdef(A, M, V).
 
+apropdef(Var, _, _) --> {var(Var), !, fail}.
 apropdef(_:Head, M, A) -->
     {functor(Head, _, N)},
     apropdef_2(N, Head, M, A), !.
@@ -632,14 +640,14 @@ compact_module_call(M, (A0;B0), (A;B)) :- !,
     maplist(compact_module_call(M), B0, B).
 compact_module_call(_, C, C).
 
-:- use_module(library(dialect/ciao), []).
-
-ciao:declaration_hook(Decl, Records) :-
-    assertion_records(Decl, _, Records, _).
-
 assertion_records(Decl, DPos, Records, RPos) :-
     '$set_source_module'(M, M),
     assertion_records(M, Dict, Decl, DPos, Records, RPos),
     %% Dict Must be assigned after assertion_records/6 to avoid performance
     %% issues --EMM
     b_getval('$variable_names', Dict).
+
+:- use_module(library(dialect/ciao), []).
+
+ciao:declaration_hook(Decl, Records) :-
+    assertion_records(Decl, _, Records, _).
