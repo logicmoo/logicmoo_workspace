@@ -36,6 +36,7 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(option_utils)).
 :- use_module(library(location_utils)).
+:- use_module(library(assertions/assrt_lib)).
 :- use_module(library(swi/ctchecks)).
 :- use_module(library(rtchecks/rtchecks_gen)).
 :- use_module(library(audit/audit)).
