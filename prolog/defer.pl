@@ -3,7 +3,7 @@
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/refactor, http://www.swi-prolog.org
-    Copyright (C): 2013, Process Design Center, Breda, The Netherlands.
+    Copyright (C): 2015, Process Design Center, Breda, The Netherlands.
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License

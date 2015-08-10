@@ -27,46 +27,15 @@
     the GNU General Public License.
 */
 
-:- module(comment_data, [comment_data/2, enable/0, disable/0]).
+:- module(infer_meta_if_required,
+	  [ infer_meta_if_required/0
+	  ]).
 
-:- dynamic comment_data/2.
+:- use_module(library(prolog_codewalk)).
 
-%% process_comment_data(+Comments, +Term) is semidet
-%
-% This comment_hook hack allow us to write copy-pasteable data as
-% comment, to facilitate output comparisons:
-
-process_comment_data(Comments, Term) :-
-    Term = (test(_Test) :- _),
-    ( member(_-Comment, Comments),
-      get_comment_data(Comment, Name, Out),
-      retractall(comment_data(Name, _)),
-      assertz(comment_data(Name, Out)),
-      fail
+infer_meta_if_required :-
+    ( predicate_property(prolog_metainference:inferred_meta_pred(_, _, _),
+			 number_of_clauses(0 ))
+    ->prolog_walk_code([autoload(false)])
     ; true
     ).
-
-get_comment_data(Comment, Name, Out) :-
-    string_concat("/* $", Out0, Comment),
-    sub_string(Out0, Before, Length, After, "$\n"),
-    sub_string(Out0, 0, Before, _, SName),
-    atom_string(Name, SName),
-    OutPos is Before + Length,
-    sub_string(Out0, OutPos, After, _, Out1),
-    string_concat(Out, "*/", Out1).
-
-:- dynamic enabled/0.
-
-enable :-
-    retractall(enabled),
-    assertz(enabled).
-
-disable :-
-    retractall(enabled).
-
-:- multifile prolog:comment_hook/3.
-% :- dynamic prolog:comment_hook/3.
-
-prolog:comment_hook(Comments, _TermPos, Term) :-
-    enabled,
-    process_comment_data(Comments, Term).
