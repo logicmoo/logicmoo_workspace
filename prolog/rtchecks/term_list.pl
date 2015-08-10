@@ -21,12 +21,7 @@ push_meta(E, L, V) :-
 	!.
 :- else.
 push_meta(E, L, V) :-
-    '$set_source_module'(M, M),
-    ( predicate_property(M:E, imported_from(IM)) ->
-      true
-    ; IM = M
-    ),
-    push_term(IM:E, L, V).
+    push_term(E, L, V).
 :- endif.
 
 collapse_terms(G, L0, L) :-
