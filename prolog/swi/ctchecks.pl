@@ -7,8 +7,8 @@
 :- use_module(library(compact_pi_list)).
 :- use_module(library(implementation_module)).
 :- use_module(library(assertions/assrt_lib)).
-:- use_module(library(rtchecks/rtchecks_gen)).
 :- reexport(library(swi/rtchecks)).
+:- use_module(library(rtchecks/rtchecks_gen)).
 
 :- multifile prolog:message/3.
 
