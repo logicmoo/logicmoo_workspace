@@ -8,7 +8,6 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(assertions/assrt_lib)).
 :- reexport(library(swi/rtchecks)).
-:- use_module(library(rtchecks/rtchecks_gen)).
 
 :- multifile prolog:message/3.
 
