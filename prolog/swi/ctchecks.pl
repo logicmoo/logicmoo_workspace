@@ -1,10 +1,13 @@
 :- module(ctchecks, []).
 
 :- use_module(library(lists)).
+:- use_module(library(maplist_dcg)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(compound_expand)).
 :- use_module(library(compact_pi_list)).
+:- use_module(library(implementation_module)).
 :- use_module(library(assertions/assrt_lib)).
+:- use_module(library(rtchecks/rtchecks_gen)).
 :- reexport(library(swi/rtchecks)).
 
 :- multifile prolog:message/3.
@@ -20,15 +23,10 @@ issue_message(Issue-Props) -->
      issue_format(Issue, Format)},
     [Format -[Compacted], nl].
 
-issue_messages([]) --> [].
-issue_messages([IssuePIs|IssuePIsL]) -->
-    issue_message(IssuePIs),
-    issue_messages(IssuePIsL).
-
 prolog:message(acheck(prop_issue(Heads, IssuePIsL))) -->
     {sort(Heads, Sorted), compact_pi_list(Sorted, Compacted)},
     ['In assertions for ~w'-[Compacted], nl],
-    issue_messages(IssuePIsL).
+    maplist_dcg(issue_message, IssuePIsL).
 
 ctcheck_head(((M:T --> B)), M, P) :- !, ctcheck_head(((T --> B)), M, P).
 ctcheck_head(((H0  --> _)), M, P) :- !,
@@ -83,7 +81,7 @@ current_property(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues, PI-(Issue-Values)) 
     ),
     member(Issue, Issues),
     checker_t(Issue),
-    (predicate_property(N:H, imported_from(IM)) -> true ; IM = N),
+    implementation_module(N:H, IM),
     check_property(Issue, H, IM, Pos, Values).
 
 check_properties(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues) :-
@@ -95,15 +93,17 @@ check_properties(Head, M, Type, Cp, Ca, Su, Gl, Pos, Issues) :-
 group_pairs_2(K-L, G-K) :- group_pairs_by_key(L, G).
 
 report_issues(Pairs) :-
+    trans_group(Pairs, TGrouped),
+    maplist(property_issue, TGrouped).
+
+trans_group(Pairs, TGrouped) :-
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Grouped),
     maplist(group_pairs_2, Grouped, Trans),
     keysort(Trans, TSorted),
-    group_pairs_by_key(TSorted, TGrouped),
-    maplist(property_issue, TGrouped).
+    group_pairs_by_key(TSorted, TGrouped).
 
-is_location(file(_, _, _, _)).
-is_location(file_term_positon(_, _)).
+is_location(Loc) :- clause(prolog:message_location(Loc, _, _), _).
 
 curr_location(Pos, Loc) :-
     ( var(Pos)
@@ -128,7 +128,7 @@ check_property(ctcheck, H, M, Pos, CTChecks) :-
 				% compile-time checks. Currently only
 				% compatibility checks.
     curr_location(Pos, Loc),
-    rtchecks_tr:generate_ctchecks(H, M, Loc, Goal),
+    generate_ctchecks(H, M, Loc, Goal),
     save_rtchecks(M:Goal),	% Now execute the checks
     load_rtchecks(CTChecks),	% and collect the failures
     CTChecks \= [].
@@ -166,6 +166,6 @@ goal_expansion(Goal, Pos, _, _) :-
     memberchk(ctcheck, Issues),
     '$set_source_module'(M, M),
     \+ ct_black_list(M),
-    (predicate_property(M:Goal, imported_from(IM)) -> true ; IM = M),
+    implementation_module(M:Goal, IM),
     ctcheck_goal(Goal, IM, Pos),
     fail.
