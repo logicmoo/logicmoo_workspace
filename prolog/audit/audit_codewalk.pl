@@ -53,7 +53,8 @@ optimized_walk_code(false, OptionL) :-
     prolog_walk_code([source(false)|OptionL]).
 optimized_walk_code(true, OptionL) :-
     prolog_walk_code([source(false)|OptionL]),
-    findall(CRef, retract(issues(CRef)), Clauses),
+    findall(CRef, retract(issues(CRef)), ClausesU),
+    sort(ClausesU, Clauses),
     ( Clauses==[]
     ->true
     ; prolog_walk_code([clauses(Clauses)|OptionL])

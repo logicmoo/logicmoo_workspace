@@ -6,7 +6,6 @@
 :- use_module(library(edinburgh)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/rtchecks)).
-:- use_module(library(swi/ctchecks)).
 :- use_module(library(swi/basicprops)).
 :- use_module(library(swi/nativeprops)).
 
