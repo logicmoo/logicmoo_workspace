@@ -154,13 +154,13 @@ property_issue(is_prop, PropL) -->
     {compact_pi_list(PropL, PropC)},
     ["\t~w are not properties"-[PropC], nl].
 
-type_message(body(Loc-PI)) --> Loc, [' In the body of  ~q:'-[PI], nl].
-type_message(head(Loc-PI)) --> Loc, [' In the head of  ~q:'-[PI], nl].
+type_message(body(Loc-PI)) --> Loc, ['In the body of ~q:'-[PI], nl].
+type_message(head(Loc-PI)) --> Loc, ['In the head of ~q:'-[PI], nl].
 type_message(prop(LocPIL)) --> maplist_dcg(type_message_prop, LocPIL).
 
 type_message_prop(Loc-PIL) -->
     {compact_pi_list(PIL, PIC)},
-    Loc, [' In assertions of ~q:'-[PIC], nl].
+    Loc, ['In assertions of ~q:'-[PIC], nl].
 
 black_list(assertion_head(_, _, _, _, _, _, _), assrt_lib).
 				% Issues in the assertion body will be reported

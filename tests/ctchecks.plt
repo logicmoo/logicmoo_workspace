@@ -23,19 +23,19 @@ Warning: ---------------------
 Warning: The predicates below contains assertions that are inconsistent
 Warning: with the  implementation. The reason is explained there.
 Warning: 
-ERROR: ctcex.pl:17:  In the body of  ctcex:q/0:
+ERROR: ctcex.pl:18:4: In the body of ctcex:q/0:
 ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(1,b).
 ERROR: 	In *compat*, unsatisfied properties: 
 ERROR: 		[list(b)].
-ERROR: ctcex.pl:15:  In the head of  ctcex:a/2:
+ERROR: ctcex.pl:15: In the head of ctcex:a/2:
 ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(a,b).
 ERROR: 	In *compat*, unsatisfied properties: 
 ERROR: 		[int(a),list(b)].
-ERROR: ctcex.pl:30:8:  In assertions of [ctcex:b/2]:
+ERROR: ctcex.pl:30:8: In assertions of [ctcex:b/2]:
 ERROR: 	[ctcex:is_3/1] are not properties
-ERROR: ctcex.pl:32:8:  In assertions of [ctcex:b/2]:
+ERROR: ctcex.pl:32:8: In assertions of [ctcex:b/2]:
 ERROR: 	[ctcex:is_2/1] are not properties
-ERROR: ctcex.pl:36:8:  In assertions of [ctcex:b/2]:
+ERROR: ctcex.pl:36:8: In assertions of [ctcex:b/2]:
 ERROR: ctcex.pl:26: Compile-Time failure in assertion for is_num(_1,a).
 ERROR: 	In *compat*, unsatisfied properties: 
 ERROR: 		[int(a)].
