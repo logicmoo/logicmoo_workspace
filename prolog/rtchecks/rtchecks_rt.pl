@@ -18,6 +18,7 @@
 :-  abolish(send_signal/1),
     abolish(intercept/3).
 :- use_module(library(intercept)).
+:- use_module(library(engine/term_typing)).
 :- endif.
 :- reexport(rtchecks(rtchecks_send)).
 

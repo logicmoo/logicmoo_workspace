@@ -3,7 +3,7 @@
 
 :- use_module(library(varnames/dict_types), [varnamesl/1]).
 
-:- pred complete_dict(?(term), +list(var), +varnamesl, -varnamesl).
+:- pred complete_dict(?(term), ?varnamesl, +varnamesl, -varnamesl).
 
 complete_dict(Term, Dict, Exclude, EDict) :-
 	complete_dict_arg(Term, Dict, Exclude, 1, _, [], EDict).
@@ -32,12 +32,14 @@ complete_dict_arg(Arg, Dict, Exclude, Idx0, Idx, EDict0, EDict) :-
 	!,
 	(
 	    ( member(Value, Exclude)
-	    ; nonvar(Dict), member(Name = Value, Dict)
-	    ; member(Name = Value, EDict0) ),
+	    ; nonvar(Dict),
+	      member(Name = Value, Dict)
+	    ; member(Name = Value, EDict0)
+	    ),
 	    Arg == Value ->
 	    EDict = EDict0,
 	    ( var(Name) ->
-		new_name(Dict, Name, Idx0, Idx)
+	      new_name(Dict, Name, Idx0, Idx)
 	    ; Idx = Idx0
 	    )
 	;

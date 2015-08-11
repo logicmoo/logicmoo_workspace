@@ -186,7 +186,7 @@ select_defined(Term, SDict0, SDict) :-
 ctime_t(ctcheck).
 ctime_t(rtcheck).
 
-:- pred check_time_msg(+ctime_t, ?atom).
+:- pred check_time_msg(+ctime_t, ?atm).
 
 check_time_msg(rtcheck, 'Run-Time').
 check_time_msg(ctcheck, 'Compile-Time').
