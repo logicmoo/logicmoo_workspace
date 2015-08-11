@@ -28,7 +28,8 @@
 */
 
 :- module(audit_codewalk, [audit_walk_code/4,
-			   audit_wcsetup/4,
+			   audit_wcsetup/3,
+			   audit_walk_module_body/2,
 			   decl_walk_code/2,
 			   record_issues/1]).
 
@@ -43,11 +44,29 @@
     decl_walk_code(3,-),
     audit_walk_code(+,3,-,-).
 
+audit_walk_module_body(M, OptionL0 ) :-
+    select_option(module(M), OptionL0, OptionL1, M),
+    ( nonvar(M)
+    ->findall(Ref, current_clause_module_body(M, Ref), RefU),
+      sort(RefU, RefL),
+      prolog_walk_code([source(false), clauses(RefL)|OptionL1])
+    ; true
+    ).
+
 audit_walk_code(OptionL0, Tracer, M, FromChk) :-
-    audit_wcsetup(OptionL0, OptionL1, M, FromChk),
+    audit_wcsetup(OptionL0, OptionL1, FromChk),
     select_option(source(S), OptionL1, OptionL, false),
+    audit_walk_module_body(M, [on_trace(Tracer)|OptionL]),
     optimized_walk_code(S, [on_trace(Tracer)|OptionL]),
     decl_walk_code(Tracer, M).
+
+current_clause_module_body(CM, Ref) :-
+    current_predicate(M:F/A),
+    M \= CM,
+    functor(H, F, A),
+    \+ predicate_property(M:H,imported_from(_)),
+    nth_clause(M:H, _I, Ref),
+    clause_property(Ref, module(CM)).
 
 optimized_walk_code(false, OptionL) :-
     prolog_walk_code([source(false)|OptionL]).
@@ -60,10 +79,9 @@ optimized_walk_code(true, OptionL) :-
     ; prolog_walk_code([clauses(Clauses)|OptionL])
     ).
 
-audit_wcsetup(OptionL0, OptionL, M, FromChk) :-
+audit_wcsetup(OptionL0, OptionL, FromChk) :-
     option_fromchk(OptionL0, OptionL1, FromChk),
-    select_option(module(M), OptionL1, OptionL2, M),
-    merge_options(OptionL2,
+    merge_options(OptionL1,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),

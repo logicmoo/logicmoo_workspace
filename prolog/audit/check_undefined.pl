@@ -50,7 +50,8 @@ audit:check(undefined, Results, OptionL) :-
 
 check_undefined(OptionL0, Pairs) :-
     audit_wcsetup([trace_reference(-), undefined(trace)|OptionL0],
-		  OptionL, M, FromChk),
+		  OptionL, FromChk),
+    ignore(option(module(M), OptionL)),
     prolog_walk_code([on_trace(collect_undef(M, FromChk))|OptionL]),
     decl_walk_code(extra_undef(M, FromChk), M),
     found_undef_assr(M, FromChk),

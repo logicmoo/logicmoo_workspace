@@ -22,6 +22,7 @@ q :-
 is_3(3).
 
 is_2(2).
+
 :- prop is_num(int, int).
 
 is_num(X, X).

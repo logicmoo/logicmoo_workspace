@@ -70,7 +70,7 @@ hide_var_dynamic(commited_retract(_), commited_retract).
 hide_var_dynamic(tabling(_, _), ntabling).
 hide_var_dynamic(match_head_body(_, _, _), abstract_interpreter).
 hide_var_dynamic(is_entry_caller(_), check_unused).
-hide_var_dynamic(head_ctcheck(_, _), check_assertions).
+hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -87,8 +87,8 @@ audit:check(wrong_dynamic, Result, OptionL0) :-
     check_wrong_dynamic(from_chk(FileChk), OptionL, Result).
 
 check_wrong_dynamic(FromChk, OptionL0, Pairs) :-
-    select_option(module(M), OptionL0, OptionL1, M),
-    merge_options(OptionL1,
+    ignore(option(module(M), OptionL0 )),
+    merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),

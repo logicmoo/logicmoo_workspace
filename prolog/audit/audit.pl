@@ -42,6 +42,10 @@
     prepare_results/3,	% Custom preparation method
     check/3.		% Hook to define new analyses
 
+:- public
+    prepare_results/3,
+    check/3.
+
 /*
 user:prolog_clause_name(Ref, Name) :-
     nth_clause(M:H, N, Ref), !,
@@ -78,7 +82,7 @@ full_report(Checker-Pairs) :-
     ).
 
 simple_report(Checker-Pairs) :-
-    ( audit:prepare_results(Checker, Pairs, Prepared)
+    ( prepare_results(Checker, Pairs, Prepared)
     ->true
     ; Prepared = Pairs
     ),

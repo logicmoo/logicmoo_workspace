@@ -102,6 +102,8 @@ predicate_properties(P, List) :-
 		( predicate_property(P, Prop),
 		  \+ memberchk(Prop, [interpreted,
 				      visible,
+				      built_in,
+				      nodebug,
 				      number_of_rules(_),
 				      number_of_clauses(_),
 				      imported_from(_),
