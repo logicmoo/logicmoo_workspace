@@ -184,7 +184,7 @@ have_assertions(M, FromChk, CM:Goal, From) :-
     assertz(assertions_db(From)).
 
 :- public collect_violations/4.
-
+:- meta_predicate collect_violations(?, 0, +, +).
 collect_violations(M, MGoal, Caller, From) :-
     \+ \+ collect_violations_(M, MGoal, Caller, From).
 
