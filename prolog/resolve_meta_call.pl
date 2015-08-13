@@ -10,5 +10,6 @@ resolve_meta_call(Meta, Goal) :-
     functor(Meta, call, A),
     A >= 2, !,
     Meta =.. [call, Call|Args],
-    extend_args(Call, Args, Goal).
+    extend_args(Call, Args, Meta2),
+    resolve_meta_call(Meta2, Goal).
 resolve_meta_call(Goal, Goal).
