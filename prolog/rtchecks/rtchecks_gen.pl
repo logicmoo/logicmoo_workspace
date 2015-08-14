@@ -381,7 +381,6 @@ generate_ctchecks(Pred, M, Loc, Lits) :-
     collapse_terms(Goal1, PosLocs1, PosLocs2),
     reverse(PosLocs2, PosLocs),
     append(PosLocs, Goal1, Goal0),
-    Goal0 \= [],
     lists_to_lits(Goal0, Lits).
 
 %% Trivial abstraction: Check for compatibility issues in properties,
