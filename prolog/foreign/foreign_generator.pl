@@ -428,6 +428,7 @@ fg_numbervars([V|Vs], N, Dict) :-
     ).
 
 bind_type_names(M, Type, PropL, Dict) :-
+    predicate_property(M:Type, interpreted),
     once(catch(clause(M:Type, Body, Ref),_,fail)),
     ( clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line)),
