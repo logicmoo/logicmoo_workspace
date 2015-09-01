@@ -15,48 +15,48 @@
 #endif
 
 #if (defined(__RTCHECK__))
-#define __rtcheck(__call) {						\
-	int __result = (__call);					\
-	if (!__result) {						\
-	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
-		    __FILE__, __LINE__, __FUNCTION__);			\
+#define __rtcheck(__call) ({						\
+	    int __result = (__call);					\
+	    if (!__result) {						\
+		fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+			__FILE__, __LINE__, __FUNCTION__);		\
+		return __result;					\
+	    }								\
+	})
+
+#define __rtcvoid(__call) ({						\
+	    if (!(__call)) {						\
+		fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+			__FILE__, __LINE__, __FUNCTION__);		\
+		return;							\
+	    }								\
+	})
+
+#define __rtcnull(__call) ({						\
+	    if (!(__call)) {						\
+		fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+			__FILE__, __LINE__, __FUNCTION__);		\
+		return NULL;						\
+	    }								\
+	})
+
+#define __rtcexit(__call) ({						\
+	    int __result = (__call);					\
+	    if (!__result) {						\
+		fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
+			__FILE__, __LINE__, __FUNCTION__);		\
+	    }								\
 	    return __result;						\
-	}								\
-    }
-
-#define __rtcvoid(__call) {						\
-	if (!(__call)) {						\
-	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
-		    __FILE__, __LINE__, __FUNCTION__);			\
-	    return;							\
-	}								\
-    }
-
-#define __rtcnull(__call) {						\
-	if (!(__call)) {						\
-	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
-		    __FILE__, __LINE__, __FUNCTION__);			\
-	    return NULL;						\
-	}								\
-    }
-
-#define __rtcexit(__call) {						\
-	int __result = (__call);					\
-	if (!__result) {						\
-	    fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
-		    __FILE__, __LINE__, __FUNCTION__);			\
-	}								\
-	return __result;						\
-    }
+	})
 
 #define __doifrtc(__call) __rtcheck(__call)
 
-#define __rtcwarn(__call) {						\
-	if (!(__call)) {						\
-	    fprintf(stderr, "Warning: %s:%d: (%s) run-time check failure: " # __call "\n", \
-		    __FILE__, __LINE__, __FUNCTION__);			\
-	}								\
-    }
+#define __rtcwarn(__call) ({						\
+	    if (!(__call)) {						\
+		fprintf(stderr, "Warning: %s:%d: (%s) run-time check failure: " # __call "\n", \
+			__FILE__, __LINE__, __FUNCTION__);		\
+	    }								\
+	})
 
 #else
 #pragma GCC diagnostic ignored "-Wunused-result"
@@ -68,11 +68,11 @@
 #define __rtcwarn(__call)
 #endif
 
-#define __rtcpass(__call) {		\
-	int __result = (__call);	\
-	if (!__result)			\
-	    return __result;		\
-    }
+#define __rtcpass(__call) ({		\
+	    int __result = (__call);	\
+	    if (!__result)		\
+		return __result;	\
+	})
 
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
 /* #define __REGION_BASED_MEMORY_MANAGEMENT__ */
@@ -141,8 +141,8 @@ __leaf_t  *__root;
     }
 
 #else
-#define __realloc(size, value) {value = _realloc(value, size);}
-#define __malloc( __root, size, value) {value = _malloc(size);}
+#define __realloc(size, value) ({value = _realloc(value, size);})
+#define __malloc( __root, size, value) ({value = _malloc(size);})
 #define __free(value) _free(value)
 #define __size(value) malloc_usable_size(value)
 #define __mkroot(__root)
@@ -166,17 +166,17 @@ struct __leaf_s {
 #define __FI_destroy_childs(__leaf, __free)
 #endif
 
-#define FI_destroy(__way, __p, __free) {		\
-	__leaf_t *__tmp_leaf, *__leaf;			\
-	__leaf = (__p)->__way;				\
-	while(__leaf) {					\
-	    __FI_destroy_childs(__leaf, __free);	\
-	    __tmp_leaf = __leaf->__way;			\
-	    __free(__leaf);				\
-	    __leaf = __tmp_leaf;			\
-	}						\
-	(__p)->__way=NULL;				\
-    }
+#define FI_destroy(__way, __p, __free) ({		\
+	    __leaf_t *__tmp_leaf, *__leaf;		\
+	    __leaf = (__p)->__way;			\
+	    while(__leaf) {				\
+		__FI_destroy_childs(__leaf, __free);	\
+		__tmp_leaf = __leaf->__way;		\
+		__free(__leaf);				\
+		__leaf = __tmp_leaf;			\
+	    }						\
+	    (__p)->__way=NULL;				\
+	})
 
 // TODO: delete memset/3 when finish debugging
 
@@ -223,25 +223,25 @@ struct __leaf_s {
 	    __alloc(__root, sizeof(*__value), __value);	\
 	})
 
-#define FI_alloc_array(__head, __alloc, __length, __value) {		\
-	void *__mem_a=NULL;						\
-	__alloc(__head, sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
-	*((size_t *)__mem_a) = (__length);				\
-	(__value) = __mem_a + sizeof(size_t);				\
-    }
+#define FI_alloc_array(__head, __alloc, __length, __value) ({		\
+	    void *__mem_a=NULL;						\
+	    __alloc(__head, sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
+	    *((size_t *)__mem_a) = (__length);				\
+	    (__value) = __mem_a + sizeof(size_t);			\
+	})
 
-#define FI_realloc_array_(__realloc, __length, __value) {		\
-	void *__mem_a = FI_array_ptr(__value);				\
-	__realloc(sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
-	*((size_t *)__mem_a) = (__length);				\
-	(__value) = __mem_a + sizeof(size_t);				\
-    }
+#define FI_realloc_array_(__realloc, __length, __value) ({		\
+	    void *__mem_a = FI_array_ptr(__value);			\
+	    __realloc(sizeof(size_t)+(__length)*sizeof(*(__value)), __mem_a); \
+	    *((size_t *)__mem_a) = (__length);				\
+	    (__value) = __mem_a + sizeof(size_t);			\
+	})
 
-#define FI_resize_array_(__size, __length, __value) {			\
-	void *__mem_a = FI_array_ptr(__value);				\
-	assert(sizeof(size_t)+(__length)*sizeof(*(__value))<=__size(__mem_a)); \
-	*((size_t *)__mem_a) = (__length);				\
-    }
+#define FI_resize_array_(__size, __length, __value) ({			\
+	    void *__mem_a = FI_array_ptr(__value);			\
+	    assert(sizeof(size_t)+(__length)*sizeof(*(__value))<=__size(__mem_a)); \
+	    *((size_t *)__mem_a) = (__length);				\
+	})
 
 #define FI_foreachi(__index, __value, __array, __sentence) ({	\
 	    size_t __index, __count = FI_array_length(__array);	\
