@@ -11,6 +11,7 @@
 :- use_module(rtchecks(rtchecks_gen)).
 :- use_module(rtchecks(rtchecks_eval)).
 :- use_module(rtchecks(rtchecks_utils)).
+:- use_module(library(intercept)).
 
 :- dynamic
     rtc_scanned/1,
@@ -155,9 +156,17 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       ; generate_rtchecks(clause_pc(Clause, PC), M, Goal, RTChecks),
 	( Goal == RTChecks
 	->Action = continue
-	; M \= CM
-	->Action = call(M:RTChecks)
-	; Action = call(RTChecks)
+	; % Action = call(M:RTChecks)
+	  Action = call(rtchecks_tracer:rat_trap(M:RTChecks, Clause, PC))
 	)
       )
     ).
+
+rat_trap(Goal, Clause, PC) :-
+    intercept(Goal, Error,
+	      ( ( retract(rtc_break(Clause, PC))
+		->ignore('$break_at'(Clause, PC, false))
+		; true
+		),
+		send_signal(Error)
+	      )).
