@@ -52,17 +52,20 @@ call_handler(IFrame, Handler) :-
 
 find_parent_handler(Frame, Signal, IFrame, Handler, SFrameL) :-
     prolog_frame_attribute(Frame, parent, Parent),
-    \+ member(Parent, SFrameL),
-    prolog_frame_attribute(Frame, goal, Goal),
-    ( Goal \= call_handler(_, _)
-    ->( Goal \= intercept(_, Signal, Handler)
-      ->find_parent_handler(Parent, Signal, IFrame, Handler, SFrameL)
-      ; copy_term(Goal, intercept(_, Signal, Handler)),
-	IFrame = Parent
+    ( member(Parent, SFrameL)
+    ->find_parent_handler(Parent, Signal, IFrame, Handler, SFrameL)
+    ; prolog_frame_attribute(Frame, goal, Goal),
+      ( Goal \= call_handler(_, _)
+      ->( Goal \= intercept(_, Signal, Handler)
+	->find_parent_handler(Parent, Signal, IFrame, Handler, SFrameL)
+	; copy_term(Goal, intercept(_, Signal, Handler)),
+	  IFrame = Parent
+	)
+      ; Goal = call_handler(SkipFrame, _),
+	find_parent_handler(Parent, Signal, IFrame, Handler,
+			    [SkipFrame|SFrameL])
       )
-    ; Goal = call_handler(SkipFrame, _),
-    find_parent_handler(Parent, Signal, IFrame, Handler,
-			[SkipFrame|SFrameL])
-    ), keep_on_frame(Parent), !.
+    ),
+    keep_on_frame(Parent), !.
 find_parent_handler(_, Signal, _, _, _) :-
     throw(error(unintercepted_signal(Signal), signal/1 -1)).
