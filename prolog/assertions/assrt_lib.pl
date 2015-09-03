@@ -476,7 +476,7 @@ modedef('!'(A),       A, B, Cp0,  [compound(B)|Ca],             Su,          Gl,
 % Ciao Modes:
 modedef(in(A),        A, B, Cp,     [ground(B)|Ca0],            Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
 modedef(out(A),       A, B, Cp,        [var(B)|Ca],  [ground(B)|Su0],        Gl,  Cp, Ca, Su, Gl, Su0, Su).
-modedef(go(A),        A, B, Cp0, Ca,                 [ground(B)|Su],         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
+modedef(go(A),        A, B, Cp0,               Ca,   [ground(B)|Su],         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
 % Additional Modes (See Coding Guidelines for Prolog, Michael A. Covington, 2009):
 modedef('*'(A),       A, B, Cp,     [ground(B)|Ca0],            Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
 modedef('='(A),       A, B, Cp0,               Ca,              Su,  [native_props:nfi(B)|Gl], Cp, Ca, Su, Gl, Cp0, Cp). % The state of A is preserved
@@ -532,9 +532,11 @@ props_args((A, B), M, V) --> !,
     props_args(A, M, V),
     props_args(B, M, V).
 props_args((A; B), M, V) --> !,
-    {props_args(A, M, V, P1, [])},
-    {props_args(B, M, V, P2, [])},
-    [(P1;P2)].
+    {props_args(A, M, V, P1, []),
+     list_conj(P1, C1)},
+    {props_args(B, M, V, P2, []),
+     list_conj(P2, C2)},
+    [(C1;C2)].
 props_args(M:A, _, V) -->
     {atom(M)}, !,
     props_args(A, M, V).
@@ -634,10 +636,17 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     ARecords \= [], % Is a valid assertion if it defines at least one Record
     maplist(assertion_records_helper(Match), ARecords, Records, RPos).
 
+%% compact_module_call(+, +, -) is det.
+%
+% Reduce redundant modules in nested lists and sequences:
+%
 compact_module_call(M, M:C, C) :- !.
 compact_module_call(M, (A0;B0), (A;B)) :- !,
-    maplist(compact_module_call(M), A0, A),
-    maplist(compact_module_call(M), B0, B).
+    compact_module_call(M, A0, A),
+    compact_module_call(M, B0, B).
+compact_module_call(M, [A0|B0], [A|B]) :- !,
+    compact_module_call(M, A0, A),
+    compact_module_call(M, B0, B).
 compact_module_call(_, C, C).
 
 assertion_records(Decl, DPos, Records, RPos) :-
