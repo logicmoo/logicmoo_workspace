@@ -128,6 +128,18 @@ var(X) :- var(X).
 :- trust comp type/2 + is_det.
 :- true comp type/2 + (sideff(free), native).
 :- true comp type(X, Y) : nonvar(X) + eval.
-:- meta_predicate type(pred(1), ?).
+:- meta_predicate type(?, :).
 
-type(X, Y) :- call(Y, X).
+type(A, M:T) :-
+    add_1st_arg(T, A, P),
+    call(M:P).
+
+add_1st_arg(T, A, P) :-
+    T =.. [F|Args],
+    P =.. [F, A|Args].
+
+% Help analyzers to identify this call:
+prolog:called_by(type(A, MT), term_typing, CM, [M:P]) :-
+    strip_module(CM:MT, M, T),
+    nonvar(T),
+    add_1st_arg(T, A, P).
