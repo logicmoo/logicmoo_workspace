@@ -25,6 +25,11 @@
     assrt_lib:doc_db/4,
     assrt_lib:nodirective_error_hook/1.
 
+:- dynamic
+    assrt_lib:assertion_head/7,
+    assrt_lib:doc_db/4,
+    assrt_lib:nodirective_error_hook/1.
+
 % :- volatile
 %     assrt_lib:assertion_head/7,
 %     assrt_lib:doc_db/4.
