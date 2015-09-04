@@ -37,7 +37,8 @@
     loc_declaration/4.
 
 :- dynamic
-     loc_dynamic/4.
+    loc_declaration/4, % Kludge to allow cleaning up
+    loc_dynamic/4.
 
 extra_location(Head, M, Decl, From) :- loc_declaration(Head, M, Decl, From).
 extra_location(Head, M, Decl, From) :- loc_dynamic(    Head, M, Decl, From).
