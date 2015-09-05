@@ -269,7 +269,7 @@ define_aux_variables(_, _, _).
 
 implement_type_getter_ini(PName, CName, Spec, Name) :-
     ctype_decl(Spec, Decl, []),
-    format('int FI_get_~w(__leaf_t *__root, term_t ~w, ~s *~w) {~n',
+    format('int FI_get_~w(root_t __root, term_t ~w, ~s *~w) {~n',
 	   [Name, PName, Decl, CName]).
 
 c_get_argument_getter(Spec, CNameArg, PNameArg) :-
@@ -317,14 +317,14 @@ implement_type_getter(dict_end(_, _), _, _) :-
 implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) :-
     ctype_decl(Spec, Decl, []),
     format('static int~n', []),
-    format('get_pair_~w(__leaf_t *__root, term_t __keyid, term_t __value, ~s *);~n~n',
+    format('get_pair_~w(root_t __root, term_t __keyid, term_t __value, ~s *);~n~n',
 	   [Name, Decl]),
     implement_type_getter_ini(PName, CName, Spec, Name),
     format('    memset(~w, 0, sizeof(~s));~n', [CName, Decl]),
     format('    FI_get_dict_t(~w, ~w, ~w);~n', [Name, PName, CName]),
     implement_type_end,
     format('static int~n', []),
-    format('get_pair_~w(__leaf_t *__root, term_t __keyid, term_t __value, ~s *~w){~n',
+    format('get_pair_~w(root_t __root, term_t __keyid, term_t __value, ~s *~w){~n',
 	   [Name, Decl, CName]),
     format('    int __index;~n', []),
     format('    FI_get_keyid_index(__~w_aux_keyid_index_~w, __keyid, __index);~n',
@@ -473,7 +473,7 @@ declare_type_getter_unifier(dict_rec(_, _, _, _), _, _).
 
 declare_type_getter_unifier(Name, Spec) :-
     ctype_decl(Spec, Decl, []),
-    format('int FI_get_~w(__leaf_t *__root, term_t, ~s*);~n', [Name, Decl]),
+    format('int FI_get_~w(root_t __root, term_t, ~s*);~n', [Name, Decl]),
     format('int FI_unify_~w(term_t, ~s* const);~n~n', [Name, Decl]).
 
 generate_aux_clauses(Module) :-
@@ -612,7 +612,7 @@ declare_foreign_bind(M) :-
 
 declare_foreign_head((CN/_A as _PN + _), M, Head, Comp, Call, Succ, Glob) :-
     format('~w(', [CN]),
-    (memberchk(memory_root, Glob) -> format('__leaf_t *__root, ', []) ; true),
+    (memberchk(memory_root, Glob) -> format('root_t __root, ', []) ; true),
     ( compound(Head) ->
       declare_foreign_bind_(1, M, Head, Comp, Call, Succ, Glob)
     ; true
