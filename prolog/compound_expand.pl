@@ -52,6 +52,7 @@
 :- meta_predicate implemented_pi(:).
 implemented_pi(M:F/A) :-
     functor(H, F, A),
+    % Can not use current_module/1 at this stage: --EMM
     once(predicate_property(M:H, visible)),
     \+ predicate_property(M:H, imported_from(_)).
 
@@ -77,6 +78,7 @@ call_lock(Goal) :-
 
 system:term_expansion(Term0, Pos0, Term, Pos) :-
     '$set_source_module'(M, M),
+    M \= user, % Compound expansions not supported in user module
     findall(EM-PI, ( expansion_module(M, EM),
 		     ( implemented_pi(EM:term_expansion/4)
 		     ->PI=[term_expansion/4]
