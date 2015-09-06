@@ -111,7 +111,7 @@ void debug_free(void * __value);
 /* TODO: http://en.wikipedia.org/wiki/Region-based_memory_management */
 /* #define __REGION_BASED_MEMORY_MANAGEMENT__ */
 
-//#define __LINKED_NODES_MEMORY_MANAGEMENT__
+#define __LINKED_NODES_MEMORY_MANAGEMENT__
 
 #ifdef __LINKED_NODES_MEMORY_MANAGEMENT__
 

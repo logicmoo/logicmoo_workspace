@@ -3,9 +3,11 @@
 			      current_foreign_prop/11]).
 
 :- use_module(library(key_value)).
+:- use_module(library(remove_dups)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(assertions/assrt_lib)).
 :- use_module(library(maplist_dcg)).
+:- use_module(library(clpfd), [transpose/2]).
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(camel_snake)).
 
@@ -675,20 +677,43 @@ acodes(Atom, List, Tail) :-
     atom_codes(Atom, Codes),
     append(Codes, Tail, List).
 
-current_foreign_prop(Head, Module, Comp, Call, Succ, Glob, Dict,
+current_foreign_prop(Head, Module, CompL, CallL, SuccL, GlobL, DictL,
 		     FuncName, PredName, BindName, Arity) :-
-    assertion_db(Head, Module, check, Type, Comp, Call, Succ, Glob, _, Dict, _),
+    assertion_db(Head, Module, check, Type, _, _, _, Glob1, _, _, _),
     memberchk(Type, [pred, prop]),
+    ( member(KeyProp, [foreign, foreign(_)]),
+      memberchk(KeyProp, Glob1)
+    ->true
+    ; member(KeyProp, [native, native(_)]),
+      memberchk(KeyProp, Glob1)
+    ->true
+    ),
+    findall(Head-[Comp, Call, Succ, Glob, Dict],
+	    assertion_db(Head, Module, check, Type, Comp, Call, Succ, Glob, _, Dict, _),
+	    KPropLL),
+    maplist(=(Head-_), KPropLL),
+    pairs_values(KPropLL, PropLL),
+    transpose(PropLL, PropTL),
+    maplist(append, PropTL, [CompU, CallU, SuccU, GlobU, DictD]),
+    maplist(sort, [CompU, CallU, SuccU, GlobU], [CompL, CallL, SuccL, GlobL]),
+    remove_dups(DictD, DictL),
+    ( memberchk(KeyProp, [native, native(_)])
+    ->% Already considered
+      \+( member(KeyProp2, [foreign, foreign(_)]),
+	  memberchk(KeyProp2, GlobL)
+	)
+    ; true
+    ),
     functor(Head, PredName, Arity),
-    ( memberchk(foreign,     Glob)
+    ( memberchk(foreign,     GlobL)
     ->FuncName = PredName
-    ; memberchk(foreign(FuncName), Glob)
+    ; memberchk(foreign(FuncName), GlobL)
     ->true
     ; true
     ),
-    ( memberchk(native, Glob)
+    ( memberchk(native, GlobL)
     ->BindName = PredName
-    ; memberchk(native(BindName), Glob)
+    ; memberchk(native(BindName), GlobL)
     ->true
     ; nonvar(FuncName)
     ->atom_concat('pl_', FuncName, BindName)
