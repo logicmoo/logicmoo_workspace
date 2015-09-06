@@ -363,10 +363,10 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
 current_normalized_assertion(Assertions, CM, APos, M:Head, Status, Type,
 			     Cp, Ca, Su, Gl, Co, HPos) :-
     current_unfold_assertion(Assertions, CM, APos, M:Head, Status, Type,
-			     Cp0, Ca0, Su0, Gl0, Co, HPos),
-    once(maplist(maplist(compact_module_call(M)),
-		 [Cp0, Ca0, Su0, Gl0 ],
-		 [Cp,  Ca,  Su,  Gl])).
+			     Cp, Ca, Su, Gl, Co, HPos).
+    % once(maplist(maplist(compact_module_call(M)),
+    % 		 [Cp0, Ca0, Su0, Gl0 ],
+    % 		 [Cp,  Ca,  Su,  Gl])).
 
 current_unfold_assertion(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
@@ -645,6 +645,7 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
 %
 % Reduce redundant modules in nested lists and sequences:
 %
+/*
 compact_module_call(M, M:C, C) :- !.
 compact_module_call(M, (A0;B0), (A;B)) :- !,
     compact_module_call(M, A0, A),
@@ -653,6 +654,7 @@ compact_module_call(M, [A0|B0], [A|B]) :- !,
     compact_module_call(M, A0, A),
     compact_module_call(M, B0, B).
 compact_module_call(_, C, C).
+*/
 
 assertion_records(Decl, DPos, Records, RPos) :-
     '$set_source_module'(M, M),

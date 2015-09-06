@@ -11,10 +11,10 @@ test(assrt_lib_1) :-
 				=>(gnd(A), gnd(B))
 				+ (not_fails,is_det)), _, R, _),
     assertion(R=[(assrt_lib:assertion_head(p(A, B), m, check, pred, "", [], _):-
-		 call(int(A)),
-		  call((gnd(A), var(B))),
-		  call((gnd(A), gnd(B))),
-		  call((not_fails(_), is_det(_))))]).
+		 call(m:int(A)),
+		  call((m:gnd(A), m:var(B))),
+		  call((m:gnd(A), m:gnd(B))),
+		  call((m:not_fails(_), m:is_det(_))))]).
 
 test(assrt_lib_2) :-
     assrt_lib:assertion_records(m, [], (pred system:p(A, B)
@@ -27,7 +27,7 @@ test(assrt_lib_2) :-
 		  call((m:gnd(A), m:gnd(B))),
 		  call(m:not_fails(_)))]).
 
-				% for a normal expression without syntax sugar:
+% for a normal expression without syntax sugar:
 test(assrt_lib_simple) :-
     assrt_lib:assrt_lib_tr((:- pred atomic_list_concat(A, B)
 			   :: (list(A, ground), atom(B))
@@ -37,10 +37,10 @@ test(assrt_lib_simple) :-
 			   Record, a, Dict),
     assertion(Record=[(assrt_lib:assertion_head(atomic_list_concat(A, B), a, check,
 						pred, "Write live comments here", Dict, _):-
-		      call((list(A, ground), atom(B))),
-		       call((list(A, atom), term(B))),
-		       call((list(A, atom), atom(B))),
-		       call((is_det(_), iso(_))))]).
+		      call((a:list(A, ground), a:atom(B))),
+		       call((a:list(A, atom), a:term(B))),
+		       call((a:list(A, atom), a:atom(B))),
+		       call((a:is_det(_), a:iso(_))))]).
 
 test(assrt_lib_comp) :-
     assrt_lib:assertion_records(m, [], true comp nfi(G,V) + (sideff(free), no_rtcheck), _, R, _),
@@ -48,9 +48,9 @@ test(assrt_lib_comp) :-
 		 call(true),
 		  call(true),
 		  call(true),
-		  call((sideff(_, free), no_rtcheck(_))))]).
+		  call((m:sideff(_, free), m:no_rtcheck(_))))]).
 
-				% for a complex expression with syntax sugar:
+% for a complex expression with syntax sugar:
 test(assrt_lib_sugar) :-
     assrt_lib:assrt_lib_tr((:- pred atomic_list_concat/2
 			   :: list(ground) * atom
@@ -60,30 +60,30 @@ test(assrt_lib_sugar) :-
 			   Record, a, Dict),
     assertion(Record=[(assrt_lib:assertion_head(atomic_list_concat(A, B), a, check,
 						pred, "Write live comments here", Dict, _):-
-		      call((list(A, ground), atom(B))),
-		       call((list(A, atom), term(B))),
-		       call((list(A, atom), atom(B))),
-		       call((is_det(_), iso(_))))]).
+		      call((a:list(A, ground), a:atom(B))),
+		       call((a:list(A, atom), a:term(B))),
+		       call((a:list(A, atom), a:atom(B))),
+		       call((a:is_det(_), a:iso(_))))]).
 
-				% a complex expression that compact multiple assertions:
+% a complex expression that compact multiple assertions:
 test(assrt_lib_multi) :-
     assrt_lib:assrt_lib_tr((:- pred [(q:a/1+kbmask([+])), b/2+hidden]+kbrule), Records, m, []),
     assertion(Records=[(assrt_lib:assertion_head(a(A), q, check, pred, "", [], _) :-
 		       call(true),
 			call(true),
 			call(true),
-			call((m:kbrule(_), kbmask(_, [ (+)])))),
+			call((m:kbrule(_), q:kbmask(_, [ (+)])))),
 		       (assrt_lib:assertion_head(b(A, _B), m, check, pred, "", [], _) :-
 		       call(true),
 			call(true),
 			call(true),
-			call((kbrule(_), hidden(_))))]).
+			call((m:kbrule(_), m:hidden(_))))]).
 
 test(assrt_lib_mode1) :-
     assrt_lib:assertion_records(u, [], pred dict(+int), _, Re, _),
     assertion(Re=[(assrt_lib:assertion_head(dict(A), u, check, pred, "", [], _) :-
 		  call(true),
-		   call(int(A)),
+		   call(u:int(A)),
 		   call(true),
 		   call(true))]).
 
@@ -98,9 +98,9 @@ test(assrt_lib_oddity_1) :-
     assrt_lib:assertion_records(m, [], (pred a:b/2 : e * l + n), _, R, _),
     assertion(R=[(assrt_lib:assertion_head(b(A, B), a, check, pred, "", [], _) :-
 		 call(true),
-		  call((e(A), l(B))),
+		  call((a:e(A), a:l(B))),
 		  call(true),
-		  call(n(_)))]).
+		  call(a:n(_)))]).
 
 test(assrt_lib_oddity_2) :-
     assrt_lib:assertion_records(m, [], (pred (a:b/2) : e * l + n), _, R, _),
@@ -120,10 +120,10 @@ test(assrt_lib_abridged_notation) :-
 							     Messages0,
 							     Messages),
 					   rt, check, pred, "c", [], _) :-
-		 call((list(Messages0, message_info),
-		       list(Messages,  message_info))),
-		  call((ctime_t(Time),
-			rtcheck_error(RTCheck))),
+		 call((rt:list(Messages0, message_info),
+		       rt:list(Messages,  message_info))),
+		  call((rt:ctime_t(Time),
+			rt:rtcheck_error(RTCheck))),
 		  call(true),
 		  call(true))]).
 
