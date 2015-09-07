@@ -7,7 +7,7 @@
 :- use_module(library(swi/assertions)).
 :- use_module(library(assertions/assrt_lib)).
 :- use_module(library(maplist_dcg)).
-:- use_module(library(clpfd), [transpose/2]).
+:- use_module(library(transpose)).
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(camel_snake)).
 
