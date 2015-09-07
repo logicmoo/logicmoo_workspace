@@ -29,10 +29,13 @@
 
 :- module(assrt_interface, []).
 
+:- use_module(library(assertions/assrt_lib), []).
+:- use_module(library(interface), []).
+
 % Propagate assertions in an interface to the implementation
 
 assrt_lib:assertion_db(Head, Implementation, Status, Type, Comp, Call, Succ,
 		       Glob, Comm, Dict, Loc) :-
-    '$implementation'(Implementation, Interface),
+    interface:'$implementation'(Implementation, Interface),
     assrt_lib:assertion_db(Head, Interface, Status, Type, Comp, Call, Succ,
 			   Glob, Comm, Dict, Loc).
