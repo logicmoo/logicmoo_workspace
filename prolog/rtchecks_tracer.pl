@@ -142,6 +142,7 @@ prolog:message_location(clause_pc(Clause, PC)) -->
     prolog:message_location(Loc).
 
 :- public rat_trap/3.
+:- meta_predicate rat_trap(0, +, +).
 rat_trap(Goal, Clause, PC) :-
     intercept(Goal, Error,
 	      ( ( retract(rtc_break(Clause, PC))
