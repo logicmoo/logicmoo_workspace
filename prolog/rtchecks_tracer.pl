@@ -141,6 +141,16 @@ prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_location(Clause, PC, Loc)},
     prolog:message_location(Loc).
 
+:- public rat_trap/3.
+rat_trap(Goal, Clause, PC) :-
+    intercept(Goal, Error,
+	      ( ( retract(rtc_break(Clause, PC))
+		->ignore('$break_at'(Clause, PC, false))
+		; true
+		),
+		send_signal(Error)
+	      )).
+
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
 %     writeln(user_error, prolog:break_hook(Clause, PC, FR, FBR, Expr, _)),
 %     fail.
@@ -161,12 +171,3 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
 	)
       )
     ).
-
-rat_trap(Goal, Clause, PC) :-
-    intercept(Goal, Error,
-	      ( ( retract(rtc_break(Clause, PC))
-		->ignore('$break_at'(Clause, PC, false))
-		; true
-		),
-		send_signal(Error)
-	      )).
