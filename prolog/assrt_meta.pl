@@ -37,9 +37,9 @@
 
 :- create_prolog_flag(assrt_meta_pred, check, [type(atom)]).
 
-% Extends assertion_db/11 to get assertions from meta predicate declarations.
+% Extends assertion_db/12 to get assertions from meta predicate declarations.
 
-assrt_lib:assertion_db(Head, M, Status, (comp), [], [], [],
+assrt_lib:assertion_db(Head, M, M, Status, (comp), [], [], [],
 		       [assrt_meta:rtc_stub(RTChecks, Goal)], "", [], Pos) :-
     current_prolog_flag(assrt_meta_pred, Status),
     Status \= none,

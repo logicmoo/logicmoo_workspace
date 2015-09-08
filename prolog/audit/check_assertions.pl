@@ -118,7 +118,7 @@ prop_ctcheck(M, FromChk, Trans) :-
 	   ^group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
-    assertion_db(Head, M, _, Type, Cp, Ca, Su, Gl, _, _, From),
+    assertion_db(Head, M, _CM, _, Type, Cp, Ca, Su, Gl, _, _, From),
     Type \= (test),
     call(FromChk, From),
     functor(Head, HF,HA),
@@ -252,7 +252,7 @@ resolve_head(H, M, M:H).
 verif_is_property(system, true, 0) :- !.   % ignore true (identity)
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
-    assertion_db(H, AM, _, prop, _, _, _, _, _, _, _),
+    assertion_db(H, AM, _, _, prop, _, _, _, _, _, _, _),
     ( AM = IM -> true
     ; predicate_property(AM:H, imported_from(IM))
     ).

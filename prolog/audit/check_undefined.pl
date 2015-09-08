@@ -97,7 +97,7 @@ found_undef(To, Caller, From) :-
     ).
 
 found_undef_assr(M, FromChk) :-
-    forall(( assertion_head_body_loc(Head, M, _, _, _, _, _, From),
+    forall(( assertion_head_body_loc(Head, M, _, _, _, _, _, _, From),
 	     functor(Head, F, A),
 	     \+ current_predicate(M:F/A),
 	     call(FromChk, From)),
