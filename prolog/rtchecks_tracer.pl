@@ -109,7 +109,7 @@ setup_clause_bpt(Clause, Action) :-
       '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
       ( ( memberchk(TInstr, [i_usercall0, i_usercalln(_N)])
 	->nth_clause(M:Goal, _, Clause),
-	  \+ assertion_head_body(Goal, M, _, prop, _, _, _, _, _)
+	  \+ assertion_head_body(Goal, M, _, prop, _, _, _, _, _, _)
 	; memberchk(TInstr, [i_call(PI), i_depart(PI)]),
 	  ( PI=M:F/A
 	  ->functor(Goal, F, A)

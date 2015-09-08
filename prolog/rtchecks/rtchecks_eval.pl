@@ -53,7 +53,7 @@ generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
     ( proc_ppassertion(Goal, _, [], Loc, RTChecks)
     ->true
     ; implementation_module(CM:Goal, M),
-      ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _)
+      ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _CM, _)
       ->RTChecks = Goal0
       ; functor(Goal, F, A),
 	functor(Head, F, A),
