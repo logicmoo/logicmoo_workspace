@@ -497,7 +497,7 @@ modedef(@(A),         _, A, B, Cp0,                Ca,                Su, [nativ
 modedef(:(A0 ),       _, A, B, Cp,                 Ca0,               Su,          Gl, Cp, Ca, Su, Gl, Ca1, Ca) :-
      % The first part of this check is not redundant if we forgot the meta_predicate declaration
     (var(A0 ), var(Ca1) -> Ca0 = [native_props:mod_qual(B)|Ca1], A0 = A ; Ca0 = Ca1, A = native_props:mod_qual(B, A0 )).
-modedef(is_pred(A,N), _, A, B, Cp,  [native_props:is_pred(B,N)|Ca0],            Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
+modedef(is_pred(A,N), _, A, B, Cp,  [native_props:is_pred(B,N)|Ca0],  Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
 modedef('!'(A),       M, A, B, Cp0, [M:compound(B)|Ca],               Su,          Gl,  Cp, Ca, Su, Gl, Cp0, Cp). % May be modified using setarg/3 or nb_setarg/3 (mutable)
 % Ciao Modes:
 modedef(in(A),        M, A, B, Cp,    [M:ground(B)|Ca0],              Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).

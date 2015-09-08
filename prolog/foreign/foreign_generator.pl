@@ -546,8 +546,10 @@ type_components(M, Type, PropL, Call, Loc) :-
     ; PropL = []
     ->true
     ), !.
-type_components(Type, PropL, Call, Loc) :-
-    print_message(error, failed_binding(Loc, type_components(Type, PropL, Call, '_'))).
+type_components(M, Type, PropL, Call, Loc) :-
+    print_message(error,
+		  failed_binding(Loc,
+				 type_components(M, Type, PropL, Call, '_'))).
 
 key_value_from_dict(Dict, N, Key, Value) :-
     S = s(0),

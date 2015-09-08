@@ -90,6 +90,7 @@
 :- use_module(library(file_utils)).
 :- use_module(library(strings)).
 :- use_module(library(odd)).
+:- use_module(library(engine/term_typing)).
 :- use_module(library(assertions/send_check)).
 
 :- if(current_prolog_flag(dialect, ciao)).
@@ -1324,13 +1325,14 @@ check_nsh(_:Goal, Arg) :-
     ; true
     ).
 
+
 % BUG: if the trace have all the ports active, we can not use ';'/2 in is_pred/2
 % and some variables becomes uninstantiated. That is an SWI-Prolog bug but I
 % don't have time to isolate it --EMM
 
 :- true prop is_pred(P, N) + no_rtcheck
     # "check that @var{P} is a defined predicate with @var{N} extra arguments.".
-:- meta_predicate is_pred(goal, ?).
+:- meta_predicate is_pred(:, ?).
 is_pred(Pred, N) :-
     nnegint(N),
     is_pred_2(Pred, N).
@@ -1351,7 +1353,7 @@ mod_qual(M:_) :-
     current_module(M).
 
 :- true prop mod_qual(V, T) + no_rtcheck.
-:- meta_predicate mod_qual(?, pred(1)).
+:- meta_predicate mod_qual(?, :).
 mod_qual(M:V, T) :-
     current_module(M),
-    call(T, V).
+    type(V, T).
