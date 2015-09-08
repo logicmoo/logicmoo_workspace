@@ -1,9 +1,7 @@
-:- module(term_typing, [
-		var/1, nonvar/1,
-		atom/1, integer/1, float/1, number/1, atomic/1,
-		ground/1, type/2
-		       ],
-	    [assertions, nortchecks, nativeprops, isomodes]).
+:- module(term_typing,
+	  [var/1, nonvar/1, atom/1, integer/1, float/1, number/1, atomic/1,
+	   ground/1, type/2, add_1st_arg/3],
+	  [assertions, nortchecks, nativeprops, isomodes]).
 
 :- doc(title, "Extra-logical properties for typing").
 
