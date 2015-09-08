@@ -22,7 +22,7 @@
 % otherwise the ciao emulation in SWI-Prolog will not longer work --EMM
 
 :- true prop list/2 + regtype.
-:- meta_predicate list(?, 1).
+:- meta_predicate list(?, :).
 
 list([],_).
 list([X|Xs], T) :-
@@ -30,7 +30,7 @@ list([X|Xs], T) :-
         list(Xs, T).
 
 :- true prop nlist/2 + regtype.
-:- meta_predicate nlist(?, 1).
+:- meta_predicate nlist(?, :).
 
 nlist([], _).
 nlist([X|Xs], T) :-
@@ -39,19 +39,24 @@ nlist([X|Xs], T) :-
 nlist(X, T) :-
 	type(X, T).
 
+:- true prop sequence/2 + regtype.
+:- meta_predicate sequence(?, :).
+
 sequence(E, T) :- type(E, T).
 sequence((E,S), T) :-
         type(E, T),
         sequence(S,T).
 
 :- true prop compat/2.
-:- meta_predicate compat(?, 1).
+:- meta_predicate compat(?, :).
+
 compat(T, P) :- \+ \+ type(P, T).
 
 :- true prop inst/2.
+:- meta_predicate inst(?, :).
 
-inst(X, Prop) :-
-	A = type(X, Prop),
+inst(X, P) :-
+	A = type(X, P),
 	copy_term(A, AC),
 	AC,
 	instance(A, AC).
