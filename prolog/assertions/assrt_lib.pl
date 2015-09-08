@@ -1,14 +1,15 @@
 :- module(assrt_lib, [assertion_read/9,
 		      assertion_body/7,
-		      assertion_head_body/9,
-		      assertion_head_body_loc/8,
+		      assertion_head_body/10,
+		      assertion_head_body_loc/9,
 		      comps_to_goal/3,
 		      comps_to_goal/4,
 		      assertion_records/4,
 		      a_fake_body/5,
-		      assertion_db/11,
+		      assertion_db/12,
 		      normalize_assertion_head/9,
-		      assrt_lib_tr/4]).
+		      assrt_lib_tr/4,
+		      qualify_with/3]).
 
 :- use_module(library(lists)).
 :- use_module(library(extra_messages), []).
@@ -75,19 +76,19 @@ a_fake_body(CompL, CallL, SuccL, GlobL0, (call(Comp), call(Call), call(Succ), ca
       list_conj(GlobL, Glob)
     ).
 
-% Note: assertion_db/11 encapsulates the nasty call to clause/2 and can be
+% Note: assertion_db/12 encapsulates the nasty call to clause/2 and can be
 % extended to fetch assertions from extra places.
 %
-:- multifile assertion_db/11.
-assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
-    assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, Loc),
+:- multifile assertion_db/12.
+assertion_db(Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
+    assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, CM, Loc),
     once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
 
-assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, Ref) :-
-    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), _:FBody, Ref).
+assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, CM, Ref) :-
+    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), CM:FBody, Ref).
 
-assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, Loc) :-
-    assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, Ref),
+assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, CM, Loc) :-
+    assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, CM, Ref),
     clause_pos_location(Ref, Pos, Loc).
 
 clause_pos_location(Ref, Pos, Loc) :-
@@ -105,10 +106,24 @@ filepos_line(File, CharPos, Line, LinePos) :-
 		       prolog_codewalk:filepos_line(File, CharPos, Line, LinePos),
 		       '$pop_input_context').
 
+qualify_with(CM, MProp, MProp) :-
+    strip_module(CM:MProp, M, Prop),
+    ( CM = M
+    ->MProp = Prop
+    ; MProp = M:Prop
+    ).
+
 % For compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
-    assertion_db(Head, M, Status, Type, Comp, Call, Succ, Glob0, Comm, Dict, Loc),
-    maplist(add_arg(Head), Glob0, Glob),
+    assertion_db(Head, M, CM, Status, Type, Comp0, Call0, Succ0, Glob0,
+		 Comm, Dict, Loc),
+    maplist(add_arg(Head), Glob0, Glob1),
+    ( M \= CM
+    ->maplist(maplist(qualify_with(CM)),
+	      [Comp0, Call0, Succ0, Glob1],
+	      [Comp,  Call,  Succ,  Glob ])
+    ; [Comp0, Call0, Succ0, Glob1] = [Comp, Call, Succ, Glob]
+    ),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
     ( Loc = file_term_position(File, Pos),
       nonvar(Pos),
@@ -363,10 +378,23 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
 current_normalized_assertion(Assertions, CM, APos, M:Head, Status, Type,
 			     Cp, Ca, Su, Gl, Co, HPos) :-
     current_unfold_assertion(Assertions, CM, APos, M:Head, Status, Type,
-			     Cp, Ca, Su, Gl, Co, HPos).
-    % once(maplist(maplist(compact_module_call(M)),
-    % 		 [Cp0, Ca0, Su0, Gl0 ],
-    % 		 [Cp,  Ca,  Su,  Gl])).
+			     Cp0, Ca0, Su0, Gl0, Co, HPos),
+    once(maplist(maplist(compact_module_call(CM)),
+    		 [Cp0, Ca0, Su0, Gl0 ],
+    		 [Cp,  Ca,  Su,  Gl])).
+
+%% compact_module_call(+, +, -) is det.
+%
+% Reduce redundant modules in nested lists and sequences:
+%
+compact_module_call(M, M:C, C) :- !.
+compact_module_call(M, (A0;B0), (A;B)) :- !,
+    compact_module_call(M, A0, A),
+    compact_module_call(M, B0, B).
+compact_module_call(M, [A0|B0], [A|B]) :- !,
+    compact_module_call(M, A0, A),
+    compact_module_call(M, B0, B).
+compact_module_call(_, C, C).
 
 current_unfold_assertion(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
@@ -382,13 +410,6 @@ current_unfold_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl
     normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, RPos),
     (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
     assertion_format(Type, GFormat).
-
-/*
-normalize_assertion(Assr, Pred, Status, Type, Cp, Ca, Su, Gl, Co) :-
-    once(normalize_status_and_type(Assr, Status, Type, Body)),
-    normalize_assertion_head_body(Body, M, Pred, Format, Cp, Ca, Su, Gl, Co),
-    assertion_format(Type, Format).
-*/
 
 :- use_module(library(prolog_codewalk), []).
 
@@ -640,21 +661,6 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
 	    ARecords),
     ARecords \= [], % Is a valid assertion if it defines at least one Record
     maplist(assertion_records_helper(Match), ARecords, Records, RPos).
-
-%% compact_module_call(+, +, -) is det.
-%
-% Reduce redundant modules in nested lists and sequences:
-%
-/*
-compact_module_call(M, M:C, C) :- !.
-compact_module_call(M, (A0;B0), (A;B)) :- !,
-    compact_module_call(M, A0, A),
-    compact_module_call(M, B0, B).
-compact_module_call(M, [A0|B0], [A|B]) :- !,
-    compact_module_call(M, A0, A),
-    compact_module_call(M, B0, B).
-compact_module_call(_, C, C).
-*/
 
 assertion_records(Decl, DPos, Records, RPos) :-
     '$set_source_module'(M, M),

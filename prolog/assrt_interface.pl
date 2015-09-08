@@ -34,8 +34,8 @@
 
 % Propagate assertions in an interface to the implementation
 
-assrt_lib:assertion_db(Head, Implementation, Status, Type, Comp, Call, Succ,
-		       Glob, Comm, Dict, Loc) :-
+assrt_lib:assertion_db(Head, Implementation, Context, Status, Type, Comp, Call,
+		       Succ, Glob, Comm, Dict, Loc) :-
     interface:'$implementation'(Implementation, Interface),
-    assrt_lib:assertion_db(Head, Interface, Status, Type, Comp, Call, Succ,
-			   Glob, Comm, Dict, Loc).
+    assrt_lib:assertion_db(Head, Interface, Context, Status, Type, Comp, Call,
+			   Succ, Glob, Comm, Dict, Loc).

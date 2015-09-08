@@ -1,6 +1,5 @@
 :- module(foreign_generator, [generate_library/4,
-			      gen_foreign_library/2,
-			      current_foreign_prop/11]).
+			      gen_foreign_library/2]).
 
 :- use_module(library(key_value)).
 :- use_module(library(remove_dups)).
@@ -96,7 +95,7 @@ generate_library(M, AliasSO, AliasSOPl, File) :-
     ).
 
 do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
-    findall(F/A, ( current_foreign_prop(Head, M, _, _, _, _, _, _, _, _, _),
+    findall(F/A, ( current_foreign_prop(Head, M, _, _, _, _, _, _, _, _, _, _),
 		   \+ ( predicate_property(M:Head, number_of_clauses(X)),
 			X>0
 		      ),
@@ -183,7 +182,7 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
     format('#include "~w"~n~n', [FileImpl_h]),
     format('extern module_t __~w_impl;~n', [Module]),
     forall_tp(Module, type_props_nf, declare_type_getter_unifier),
-    forall(current_foreign_prop(Head, Module, _, _, _, _, Dict, _, _, BindName, _),
+    forall(current_foreign_prop(Head, Module, _, _, _, _, _, Dict, _, _, BindName, _),
 	   ( apply_dict(Head, Dict),
 	     format('extern ', []),
 	     declare_intf_head(BindName, Head),
@@ -223,7 +222,7 @@ generate_foreign_register(Module, Base) :-
     format('    __system_put_dict   =PL_predicate("put_dict",    4, "system");~n', []),
     format('    __~w_impl=PL_new_module(PL_new_atom("~w$impl"));~n', [Module, Module]),
     forall_tp(Module, type_props_nf, define_aux_variables),
-    forall(current_foreign_prop(_, Module, _, _, _, _, _, _, PredName, BindName, Arity),
+    forall(current_foreign_prop(_, Module, _, _, _, _, _, _, _, PredName, BindName, Arity),
 	   format('    PL_register_foreign(\"~w\", ~w, ~w, 0);~n',
 		  [PredName, Arity, BindName])),
     format('} /* install_~w */~n~n', [Base]).
@@ -233,7 +232,7 @@ generate_foreign_register(Module, Base) :-
 forall_tp(Module, TypeProps, Call) :-
     forall(call(TypeProps, Module, Type, PropL, Dict, Pos),
 	   ( apply_dict(Type-PropL, Dict),
-	     type_components(Type, PropL, Call, Pos)
+	     type_components(Module, Type, PropL, Call, Pos)
 	   )).
 
 type_props(M, Type, PropL, Dict, Pos) :-
@@ -251,17 +250,17 @@ type_props(M, Type, PropL, GlobL, Dict, Pos) :-
     ).
 
 type_props_(M, Type, PropL, GlobL, Dict, Pos) :-
-    assertion_db(Type, M, check, prop, PropL, _, _, GlobL, _, Dict, Pos),
+    assertion_db(Type, M, _CM, check, prop, PropL, _, _, GlobL, _, Dict, Pos),
     once(( member(TType, [type, regtype]),
-	   memberchk(_:TType, GlobL)
+	   memberchk(TType, GlobL)
 	 )).
 
 type_props_nf(Module, Type, PropL, Dict, Pos) :-
     type_props(Module, Type, PropL, GlobL, Dict, Pos),
 				% Don't create getters and unifiers for
 				% typedefs, they are just casts:
-    \+ type_is_tdef(Type, PropL, _, _),
-    \+ memberchk(_:foreign(_), GlobL).
+    \+ type_is_tdef(Module, Type, PropL, _, _),
+    \+ memberchk(foreign(_), GlobL).
 
 define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
     format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',
@@ -438,11 +437,9 @@ bind_type_names(M, Type, MPropL, Dict) :-
     ->true
     ; Dict = []
     ),
+    clause_property(Ref, module(CM)),
     sequence_list(Body, PropL, []),
-    maplist(qualify_with(M), PropL, MPropL).
-
-qualify_with(CM, MProp, M:Prop) :-
-    strip_module(CM:MProp, M, Prop).
+    maplist(qualify_with(CM), PropL, MPropL).
 
 declare_struct(atom(Name), Spec, _) :-
     ctype_decl(Spec, Decl, []),
@@ -507,26 +504,26 @@ prolog:message(failed_binding(Loc, TypeComponents)) -->
     prolog:message_location(Loc),
     ['~w failed'-[TypeComponents]].
 
-:- meta_predicate type_components(+,+,3,+).
-type_components(Type, PropL, Call, Loc) :-
+:- meta_predicate type_components(+,+,+,3,+).
+type_components(M, Type, PropL, Call, Loc) :-
     functor(Type, Name, _),
     arg(1, Type, Term),
     ( compound(Term)
     ->call(Call, func_ini(Name), type(Name), Term),
       forall(arg(N, Term, Arg),
 	     ( member(Prop, PropL),
-	       match_known_type_(Prop, Spec, Arg),
+	       match_known_type_(Prop, M, Spec, Arg),
 	       call(Call, func_rec(N, Term), Spec, Arg)
 	     ->true
 	     ; print_message(warning, ignored_type(Loc, Name, Arg))
 	     )
 	    ),
       call(Call, func_end, Term, Name)
-    ; ( select(M:dict_t(Term, Desc), PropL, PropL1)
-      ; select(M:dict_t(Term, Tag, Desc), PropL, PropL1)
-      ; select(M:dict_join_t(Term, Tag, Type1, Type2), PropL, PropL1),
+    ; ( select(dict_t(Term, Desc), PropL, PropL1)
+      ; select(dict_t(Term, Tag, Desc), PropL, PropL1)
+      ; select(dict_join_t(Term, Tag, Type1, Type2), PropL, PropL1),
 	join_dict_types(Type1, M, Type2, M, Tag, Desc)
-      ; select(M:dict_extend_t(Term, Type, Tag, Desc2), PropL, PropL1),
+      ; select(dict_extend_t(Term, Type, Tag, Desc2), PropL, PropL1),
 	join_type_desc(Type, M, Tag, Desc2, Desc)
       )
     ->( is_dict(Desc, Tag)
@@ -537,14 +534,14 @@ type_components(Type, PropL, Call, Loc) :-
       call(Call, dict_ini(Name, M, Dict), type(Name), Term),
       forall(call(Call, dict_key_value(Dict, Desc, N), Arg, Value),
 	     ( fetch_kv_prop_arg(Arg,  M, Value, PropL1, Prop),
-	       match_known_type_(Prop, Spec, Arg),
+	       match_known_type_(Prop, M, Spec, Arg),
 	       call(Call, dict_rec(M, Term, N, Name), Spec, Arg)
 	     ->true
 	     ; print_message(warning, ignored_type(Loc, Name, Arg))
 	     )),
       call(Call, dict_end(M, Tag), Term, Name)
     ; member(Prop, PropL),
-      match_known_type_(Prop, Spec, Term)
+      match_known_type_(Prop, M, Spec, Term)
     ->call(Call, atom(Name), Spec, Term)
     ; PropL = []
     ->true
@@ -595,14 +592,14 @@ declare_intf_head(PCN, Head) :-
     format(')', []).
 
 declare_foreign_bind(M) :-
-    ( read_foreign_properties(Head, M, Comp, Call, Succ, Glob, Dict, Bind),
+    ( read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, Dict, Bind),
       apply_dict(Head, Dict),
       ( member(RS, [returns_state, type]),
-	memberchk(_:RS, Glob)
+	memberchk(RS, Glob)
       ->format('int '),	    % int to avoid SWI-Prolog.h dependency at this level
 	CHead = Head
-      ; member(_:returns(Var), Glob)
-      ->bind_argument(Head, M, Comp, Call, Succ, Glob, Var, Spec, Mode),
+      ; member(returns(Var), Glob)
+      ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Var, Spec, Mode),
 	ctype_arg_decl(Spec, Mode, Decl, []),
 	format('~s ', [Decl]),
 	Head =.. Args,
@@ -611,33 +608,33 @@ declare_foreign_bind(M) :-
       ; format('void '),
 	CHead = Head
       ),
-      declare_foreign_head(Bind, M, CHead, Comp, Call, Succ, Glob),
+      declare_foreign_head(Bind, CHead, M, CM, Comp, Call, Succ, Glob),
       format(';~n', []),
       fail
     ; true
     ).
 
-declare_foreign_head((CN/_A as _PN + _), M, Head, Comp, Call, Succ, Glob) :-
+declare_foreign_head((CN/_A as _PN + _), Head, M, CM, Comp, Call, Succ, Glob) :-
     format('~w(', [CN]),
-    (memberchk(_:memory_root, Glob) -> format('root_t __root, ', []) ; true),
+    (memberchk(memory_root, Glob) -> format('root_t __root, ', []) ; true),
     ( compound(Head) ->
-      declare_foreign_bind_(1, M, Head, Comp, Call, Succ, Glob)
+      declare_foreign_bind_(1, M, CM, Head, Comp, Call, Succ, Glob)
     ; true
     ),
     format(')', []).
 
-declare_foreign_bind_(N, M, Head, Comp, Call, Succ, Glob) :-
+declare_foreign_bind_(N, M, CM, Head, Comp, Call, Succ, Glob) :-
     arg(N, Head, Arg),
     ( N \= 1 -> write(', ') ; true ),
-    declare_foreign_bind_arg(Head, M, Comp, Call, Succ, Glob, Arg),
+    declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg),
     format(' ~w', [Arg]),
     N1 is N + 1,
     !,
-    declare_foreign_bind_(N1, M, Head, Comp, Call, Succ, Glob).
-declare_foreign_bind_(_, _, _, _, _, _, _).
+    declare_foreign_bind_(N1, M, CM, Head, Comp, Call, Succ, Glob).
+declare_foreign_bind_(_, _, _, _, _, _, _, _).
 
-declare_foreign_bind_arg(Head, M, Comp, Call, Succ, Glob, Arg) :-
-    bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg) :-
+    bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
     ctype_barg_decl(Spec, Mode, Decl, []),
     format('~s', [Decl]).
 
@@ -682,20 +679,24 @@ acodes(Atom, List, Tail) :-
     atom_codes(Atom, Codes),
     append(Codes, Tail, List).
 
-current_foreign_prop(Head, Module, CompL, CallL, SuccL, GlobL, DictL,
+current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
 		     FuncName, PredName, BindName, Arity) :-
-    assertion_db(Head, Module, check, Type, _, _, _, Glob1, _, _, _),
+    assertion_db(Head, Module, Context, check, Type, _, _, _, Glob1, _, _, _),
     memberchk(Type, [pred, prop]),
     ( member(KeyProp, [foreign, foreign(_)]),
-      memberchk(_:KeyProp, Glob1)
+      memberchk(KeyProp, Glob1)
     ->true
     ; member(KeyProp, [native, native(_)]),
-      memberchk(_:KeyProp, Glob1)
+      memberchk(KeyProp, Glob1)
     ->true
     ),
-    findall(Head-[Comp, Call, Succ, Glob, Dict],
-	    assertion_db(Head, Module, check, Type, Comp, Call, Succ, Glob, _, Dict, _),
-	    KPropLL),
+    findall(Head-[MComp, MCall, MSucc, MGlob, Dict],
+	    ( assertion_db(Head, Module, CM, check, Type, Comp, Call, Succ,
+			   Glob, _, Dict, _),
+	      maplist(maplist(qualify_with(CM)),
+		      [ Comp,  Call,  Succ,  Glob],
+		      [MComp, MCall, MSucc, MGlob])
+	    ), KPropLL),
     maplist(=(Head-_), KPropLL),
     pairs_values(KPropLL, PropLL),
     transpose(PropLL, PropTL),
@@ -704,37 +705,37 @@ current_foreign_prop(Head, Module, CompL, CallL, SuccL, GlobL, DictL,
     remove_dups(DictD, DictL),
     ( memberchk(KeyProp, [native, native(_)])
     ->% Already considered
-      \+( member(KeyProp2, [foreign, foreign(_)]),
-	  memberchk(_:KeyProp2, GlobL)
-	)
+      \+ ( member(KeyProp2, [foreign, foreign(_)]),
+	   memberchk(KeyProp2, GlobL)
+	 )
     ; true
     ),
     functor(Head, PredName, Arity),
-    ( memberchk(_:foreign,     GlobL)
+    ( memberchk(foreign, GlobL)
     ->FuncName = PredName
-    ; memberchk(_:foreign(FuncName), GlobL)
+    ; memberchk(foreign(FuncName), GlobL)
     ->true
     ; true
     ),
-    ( memberchk(_:native, GlobL)
+    ( memberchk(native, GlobL)
     ->BindName = PredName
-    ; memberchk(_:native(BindName), GlobL)
+    ; memberchk(native(BindName), GlobL)
     ->true
     ; nonvar(FuncName)
     ->atom_concat('pl_', FuncName, BindName)
     ).
 
-read_foreign_properties(Head, Module, Comp, Call, Succ, Glob, Dict, CN/A as PN + CheckMode) :-
-    current_foreign_prop(Head, Module, Comp, Call, Succ, Glob, Dict, CN, PN, _, A),
+read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, Dict, CN/A as PN + CheckMode) :-
+    current_foreign_prop(Head, M, CM, Comp, Call, Succ, Glob, Dict, CN, PN, _, A),
     nonvar(CN),
-    ( memberchk(_:type, Glob)
+    ( memberchk(type, Glob)
     ->CheckMode=type
     ; CheckMode=pred
     ).
 
 collect_bind_head(Module, BindHeadL) :-
     findall(Bind-Head,
-	    ( read_foreign_properties(Head, Module, _, _, _, _, Dict, Bind),
+	    ( read_foreign_properties(Head, Module, _, _, _, _, _, Dict, Bind),
 	      apply_dict(Head, Dict)
 	    ), BindHeadUL),
     sort(BindHeadUL, BindHeadL).
@@ -821,10 +822,10 @@ c_get_argument_rec(Mode, Type, Spec, CArg, Arg) :-
     format(', ~w, ~w)', [Arg, CArg]).
 
 bind_arguments(M, Bind-Head, Return) :-
-    once(read_foreign_properties(Head, M, Comp, Call, Succ, Glob, _, Bind)),
+    once(read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, _, Bind)),
     ( compound(Head)
     ->forall(( arg(_, Head, Arg),
-	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
+	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
 	     ( write('    '),
 	       ctype_decl(Spec, Mode),
 	       c_var_name(Arg, CArg),
@@ -834,7 +835,7 @@ bind_arguments(M, Bind-Head, Return) :-
 	       )
 	     )),
       forall(( arg(_, Head, Arg),
-	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	       memberchk(Mode, [in, inout])
 	     ),
 	     ( c_var_name(Arg, CArg0),
@@ -845,10 +846,10 @@ bind_arguments(M, Bind-Head, Return) :-
 	     ))
     ; true
     ),
-    generate_foreign_call(Bind-Head, M, Comp, Call, Succ, Glob, Return),
+    generate_foreign_call(Bind-Head, M, CM, Comp, Call, Succ, Glob, Return),
     ( compound(Head) ->
       forall(( arg(_, Head, Arg),
-	       bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	       memberchk(Mode, [out, inout])
 	     ),
 	     ( write('    '),
@@ -859,14 +860,14 @@ bind_arguments(M, Bind-Head, Return) :-
     ; true
     ).
 
-generate_foreign_call((CN/_A as _PN + _)-Head, M, Comp, Call, Succ, Glob, Return) :-
+generate_foreign_call((CN/_A as _PN + _)-Head, M, CM, Comp, Call, Succ, Glob, Return) :-
     format('    ', []),
     ( member(RS, [returns_state, type]),
-      memberchk(_:RS, Glob)
+      memberchk(RS, Glob)
     ->format('foreign_t __result='),
       CHead = Head,
       Return = '__result'
-    ; ( member(_:returns(Var), Glob)
+    ; ( member(returns(Var), Glob)
       ->c_var_name(Var, CVar),
 	format('~w=', [CVar]),
 	Head =.. Args,
@@ -874,26 +875,26 @@ generate_foreign_call((CN/_A as _PN + _)-Head, M, Comp, Call, Succ, Glob, Return
 	CHead =.. CArgs
       ; CHead = Head
       ),
-      ( member(_:no_exception, Glob)
+      ( member(no_exception, Glob)
       ->Return = 'TRUE'
       ; Return = '!PL_exception(0)'
       )
     ),
     format('~w(', [CN]),
-    ( memberchk(_:memory_root, Glob)
+    ( memberchk(memory_root, Glob)
     ->format('__root, ')
     ; true
     ),
     ( compound(CHead)
-    ->generate_foreign_call_(1, M, CHead, Comp, Call, Succ, Glob)
+    ->generate_foreign_call_(1, CHead, M, CM, Comp, Call, Succ, Glob)
     ; true
     ),
     format(');~n', []).
 
-generate_foreign_call_(N, M, Head, Comp, Call, Succ, Glob) :-
+generate_foreign_call_(N, Head, M, CM, Comp, Call, Succ, Glob) :-
     arg(N, Head, Arg),
     ( N \= 1 -> write(', ') ; true ),
-    bind_argument(Head, M, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+    bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
     c_var_name(Arg, CArg),
     ( Mode = in, \+ is_type(Spec)
     ->true
@@ -902,8 +903,8 @@ generate_foreign_call_(N, M, Head, Comp, Call, Succ, Glob) :-
     format('~w', [CArg]),
     N1 is N + 1,
     !,
-    generate_foreign_call_(N1, M, Head, Comp, Call, Succ, Glob).
-generate_foreign_call_(_, _, _, _, _, _, _).
+    generate_foreign_call_(N1, Head, M, CM, Comp, Call, Succ, Glob).
+generate_foreign_call_(_, _, _, _, _, _, _, _).
 
 :- use_module(library(sequence_list)).
 :- use_module(library(prolog_clause), []).
@@ -921,12 +922,8 @@ get_dictionary(Term, File, Line, M, Dict) :-
 match_known_type(Prop, M, Spec, Arg) :-
     match_known_type_(Prop, M, Spec, Arg), !.
 
-match_known_type(M:Prop, Spec, Arg) :-
+match_known_type_(M:Prop,       _, Spec, Arg) :-
     match_known_type(Prop, M, Spec, Arg).
-
-match_known_type_(M:Prop, Spec, Arg) :-
-    match_known_type_(Prop, M, Spec, Arg).
-
 match_known_type_(atm(A),       _, chrs('char*'), A).
 match_known_type_(atom(A),      _, chrs('char*'), A).
 match_known_type_(ptr(A, Type), M, ptr(Spec), A) :-
@@ -950,7 +947,7 @@ match_known_type_(list(A, Type),     M, list(Spec),      A) :-
     match_known_type_(Prop, M, Spec, E).
 match_known_type_(Type, M, tdef(Name, Spec), A) :-
     type_props(M, Type, PropL, _, _, _),
-    type_is_tdef(Type, PropL, Spec, A),
+    type_is_tdef(M, Type, PropL, Spec, A),
     functor(Type, Name, _),
     !.
 match_known_type_(Type, M, Spec, A) :-
@@ -964,33 +961,33 @@ match_known_type_(Type, M, Spec, A) :-
     ),
     !.
 
-type_is_tdef(Type, PropL, Spec, A) :-
+type_is_tdef(M, Type, PropL, Spec, A) :-
     arg(1, Type, A),
     member(Prop, PropL),
-    match_known_type_(Prop, Spec, B),
+    match_known_type_(Prop, M, Spec, B),
     A==B,
     !.
 
-bind_argument(Head, M, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
+bind_argument(Head, M, CM, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
     ( member(Comp, CompL),
-      match_known_type(Comp, Spec, Arg0),
+      match_known_type(Comp, CM, Spec, Arg0),
       Arg0 == Arg
     ->true
     ; true
     ),
     ( member(Call, CallL),
-      match_known_type(Call, Spec, Arg0),
+      match_known_type(Call, CM, Spec, Arg0),
       Arg0 == Arg
     ->Mode = in
     ; true
     ),
     ( member(Succ, SuccL),
-      match_known_type(Succ, Spec, Arg0),
+      match_known_type(Succ, CM, Spec, Arg0),
       Arg0 == Arg
     ->Mode = out
     ; true
     ),
-    ( memberchk(_:type, GlobL),
+    ( memberchk(type, GlobL),
       match_known_type(Head, M, Spec, Arg0),
       Arg0 == Arg
     ->Mode = in
