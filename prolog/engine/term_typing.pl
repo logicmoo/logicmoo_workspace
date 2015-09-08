@@ -124,7 +124,6 @@ var(X) :- var(X).
 :- true prop type(X, Y) + native
 # "@var{X} is internally of type @var{Y} (@tt{var}, @tt{attv}, @tt{float},
       @tt{integer}, @tt{structure}, @tt{atom} or @tt{list}).".
-:- trust success type(X, Y) => atm(Y).
 :- trust comp type/2 + is_det.
 :- true comp type/2 + (sideff(free), native).
 :- true comp type(X, Y) : nonvar(X) + eval.
