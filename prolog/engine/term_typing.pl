@@ -127,10 +127,12 @@ var(X) :- var(X).
 :- true comp type(X, Y) : nonvar(X) + eval.
 :- meta_predicate type(?, :).
 
-type(A, M:T) :-
+type(A, T) :-
     add_1st_arg(T, A, P),
-    call(M:P).
+    call(P).
 
+add_1st_arg(M:T, A, M:P) :- !,
+    add_1st_arg(T, A, P).
 add_1st_arg(T, A, P) :-
     T =.. [F|Args],
     P =.. [F, A|Args].
