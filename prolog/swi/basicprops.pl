@@ -8,6 +8,7 @@
 %% A wrapper for the Ciao basic_props library
 
 :- expects_dialect(ciao).
+:- use_module(library(implementation_module)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(engine/term_typing), [type/2]).
 :- reexport(engine(basic_props),
@@ -62,18 +63,14 @@ inst(X, P) :-
 
 :- use_module(library(unfold_calls)).
 
+unfoldable(list(_, _),     basicprops).
+unfoldable(nlist(_, _),    basicprops).
+unfoldable(sequence(_, _), basicprops).
+unfoldable(compat(_, _),   basicprops).
+unfoldable(inst(_, _),     basicprops).
+
 prolog:called_by(Goal, basicprops, CM, CL) :-
     nonvar(Goal),
-    memberchk(Goal,
-	      [list(_, _),
-	       nlist(_, _),
-	       sequence(_, _),
-	       compat(_, _),
-	       inst(_, _)]),
-    unfold_calls(CM:Goal,
-		 [basicprops:list(_,_),
-		  basicprops:nlist(_, _),
-		  basicprops:sequence(_, _),
-		  basicprops:compat(_, _),
-		  basicprops:inst(_, _)], CL).
-
+    implementation_module(CM:Goal, M),
+    unfoldable(Goal, M),
+    unfold_calls(Goal, CM, unfoldable, CL).
