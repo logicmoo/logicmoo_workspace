@@ -118,7 +118,7 @@ prop_ctcheck(M, FromChk, Trans) :-
 	   ^group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
-    assertion_db(Head, M, _CM, _, Type, Cp, Ca, Su, Gl, _, _, From),
+    assertion_db(Head, M, CM, _, Type, Cp, Ca, Su, Gl, _, _, From),
     Type \= (test),
     call(FromChk, From),
     functor(Head, HF,HA),
@@ -127,9 +127,9 @@ current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
       ; member(Prop, Ca)
       ; member(Prop, Su)
       ),
-      resolve_head(Prop, M, N:H)
+      resolve_head(Prop, CM, N:H)
     ; member(Glob, Gl),
-      resolve_head(Glob, M, N:H0 ),
+      resolve_head(Glob, CM, N:H0 ),
       H0 =.. [F|Args],
       H =.. [F, Head|Args]
     ),
