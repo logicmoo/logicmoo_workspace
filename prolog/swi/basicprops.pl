@@ -10,7 +10,6 @@
 :- expects_dialect(ciao).
 :- use_module(library(swi/assertions)).
 :- use_module(library(engine/term_typing), [type/2]).
-:- use_module(library(terms_check), [instance/2]).
 :- reexport(engine(basic_props),
 	    except([list/2,
 		    nlist/2,
@@ -59,4 +58,22 @@ inst(X, P) :-
 	A = type(X, P),
 	copy_term(A, AC),
 	AC,
-	instance(A, AC).
+	subsumes_term(A, AC).
+
+:- use_module(library(unfold_calls)).
+
+prolog:called_by(Goal, basicprops, CM, CL) :-
+    nonvar(Goal),
+    memberchk(Goal,
+	      [list(_, _),
+	       nlist(_, _),
+	       sequence(_, _),
+	       compat(_, _),
+	       inst(_, _)]),
+    unfold_calls(CM:Goal,
+		 [basicprops:list(_,_),
+		  basicprops:nlist(_, _),
+		  basicprops:sequence(_, _),
+		  basicprops:compat(_, _),
+		  basicprops:inst(_, _)], CL).
+

@@ -140,3 +140,11 @@ prolog:called_by(type(A, MT), term_typing, CM, [M:P]) :-
     strip_module(CM:MT, M, T),
     nonvar(T),
     add_1st_arg(T, A, P).
+
+:- multifile
+    unfold_calls:unfold_call_hook/4.
+
+unfold_calls:unfold_call_hook(type(A, MT), term_typing, CM, M:P) :-
+    strip_module(CM:MT, M, T),
+    nonvar(T),
+    add_1st_arg(T, A, P).
