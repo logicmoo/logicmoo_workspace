@@ -71,6 +71,7 @@ hide_var_dynamic(tabling(_, _), ntabling).
 hide_var_dynamic(match_head_body(_, _, _), abstract_interpreter).
 hide_var_dynamic(is_entry_caller(_), check_unused).
 hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
+hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
 
 :- dynamic
     wrong_dynamic_db/4,
