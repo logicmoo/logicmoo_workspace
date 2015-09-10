@@ -31,7 +31,7 @@
 
 :- use_module(library(tabling)).
 
-:- table f/1.
+:- table(f/1).
 
 f(X) :-
     display('X=?'),
