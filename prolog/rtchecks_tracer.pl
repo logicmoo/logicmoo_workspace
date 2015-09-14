@@ -4,7 +4,7 @@
 :- use_module(library(swi/rtchecks)). % Proper load of ciao dialect modules
 :- use_module(library(implementation_module)).
 :- use_module(library(static_strip_module)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(ontrace)).
 :- use_module(library(assertions/assrt_lib)).
 :- use_module(rtchecks(rtchecks_rt)).
@@ -33,7 +33,7 @@ do_trace_rtc(Goal) :-
 :- multifile user:prolog_trace_interception/4.
 
 setup_trace :-
-    maplist_dcg(ontrace:port_mask, [unify], 0, Mask),
+    foldl(ontrace:port_mask, [unify], 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
     asserta((user:prolog_trace_interception(Port, Frame, _, Action) :-
@@ -69,7 +69,6 @@ black_list_module(exceptions_db).
 black_list_module(hiordlib).
 black_list_module(system).
 black_list_module(ontrace).
-black_list_module(maplist_dcg).
 black_list_module(expansion_module).
 
 skip_predicate(rtchecks_utils:handle_rtcheck(_)).
