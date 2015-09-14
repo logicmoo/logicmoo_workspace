@@ -32,7 +32,7 @@
 :- reexport(library(ws_browser)).
 :- use_module(library(lists)).
 :- use_module(library(http/html_write)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(gcover)).
 :- use_module(library(module_files)).
@@ -55,7 +55,7 @@ enum_colors -->
     { findall(Port, port_color(Port, _), PortL),
       oset_power(PortL, PortLL)
     },
-    maplist_dcg(enum_colors_row(PortL), PortLL).
+    foldl(enum_colors_row(PortL), PortLL).
 
 enum_colors_row(PortL, SubPortL) -->
     { maplist(enum_colors_cell(SubPortL), PortL, TDL),
@@ -136,7 +136,7 @@ ports_color(PortL, Color) :-
     port_color(Port, RGB),
     rgb_color(RGB, Color).
 ports_color(PortL, Color) :-
-    maplist_dcg(add_port_colors, PortL, rgb(0,0,0), ColorT),
+    foldl(add_port_colors, PortL, rgb(0,0,0), ColorT),
     length(PortL, N),
     ( N \= 0
     ->ColorT=rgb(RT,GT,BT),
@@ -173,7 +173,7 @@ gcover_format(Pos-CovL,
     ->HTML=span([], HTML0 )
     ; ctx(CtxC, HTML0, HTML)
     ),
-    maplist_dcg(context_port, CovL, CtxC, CtxL).
+    foldl(context_port, CovL, CtxC, CtxL).
 
 enum_lines(Text, HTML) :-
     ( sub_string(Text, Before, L, After, '\n')
@@ -198,7 +198,7 @@ ws_browser:show_source_hook(gcover, File) :-
     sort(CovU, CovL),
     group_pairs_or_sort(CovL, CovG0),
     append(CovG0, [Length-[]], CovG),
-    maplist_dcg(gcover_format, CovG, gf(0, [], Raw, Text), gf(Length, [], "", "")),
+    foldl(gcover_format, CovG, gf(0, [], Raw, Text), gf(Length, [], "", "")),
     reply_html_page([title(Name),
 		     style('pre.code { counter-reset: listing; }\n\c
 			  .code i:before { counter-increment: listing; content: counter(listing) ". "; color: gray;}\n\c

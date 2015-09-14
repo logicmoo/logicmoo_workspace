@@ -33,7 +33,7 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(normalize_head)).
 :- use_module(library(database_fact)).
@@ -167,7 +167,7 @@ prolog:message(acheck(wrong_dynamic, Type-List)) -->
 
 as_dynamic(DType, Loc/PI-MLocPIs) -->
     ['\t'|Loc], ['~w ~q modified by'-[DType, PI], nl],
-    maplist_dcg(show_locpi, MLocPIs).
+    foldl(show_locpi, MLocPIs).
 
 show_locpi(Loc/PI) --> ['\t\t'|Loc], check:predicate(PI), [nl].
 
@@ -179,17 +179,17 @@ dynamic_as_static(Loc-PIs) -->
 
 wrong_dynamic_message(as_dynamic(DType), LocPIs) -->
     ['Predicates are ~w, but never declared dynamic and modified:'-DType, nl],
-    maplist_dcg(as_dynamic(DType), LocPIs).
+    foldl(as_dynamic(DType), LocPIs).
 wrong_dynamic_message(dynamic_as_static, LocPIs) -->
     ['Predicates declared dynamic, but never modified:', nl],
-    maplist_dcg(dynamic_as_static, LocPIs).
+    foldl(dynamic_as_static, LocPIs).
 wrong_dynamic_message(var_as_dynamic, PILocCIs) -->
     ['Predicates called with a variable in a module-sensitive argument:', nl],
-    maplist_dcg(var_as_dynamic, PILocCIs).
+    foldl(var_as_dynamic, PILocCIs).
 
 var_as_dynamic(PI-LocCIs) -->
     ['\t~w called with a variable in'-[PI], nl],
-    maplist_dcg(show_locci, LocCIs).
+    foldl(show_locci, LocCIs).
 
 prolog:message(acheck(wrong_dynamic)) -->
     ['--------------------------', nl,

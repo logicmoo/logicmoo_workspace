@@ -31,7 +31,7 @@
 
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(normalize_head)).
 :- use_module(library(referenced_by)).
 :- use_module(library(check), []).
@@ -93,7 +93,7 @@ prolog:message(acheck(non_mutually_exclusive)) -->
 prolog:message(acheck(non_mutually_exclusive, PI-LocCIs)) -->
     check:predicate(PI),
     [' have non mutually exclusive clauses:', nl],
-    maplist_dcg(group_non_mut_ex, LocCIs).
+    foldl(group_non_mut_ex, LocCIs).
 
 locindex_index(_/I, I).
 

@@ -29,7 +29,7 @@
 
 :- module(check_non_loaded, []).
 
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(option_utils)).
 :- use_module(library(audit/audit)).
 
@@ -73,7 +73,7 @@ prolog:message(acheck(non_loaded)) -->
      'means you are not analyzing them statically', nl, nl].
 prolog:message(acheck(non_loaded, load_info(Dir, L, N)-ExcludedL)) -->
     ['At directory ~w, loaded ~w/~w:'-[Dir, L, N],nl],
-    maplist_dcg(non_loaded(Dir), ExcludedL).
+    foldl(non_loaded(Dir), ExcludedL).
 
 non_loaded(Dir, Excluded) -->
     ['\t~w/~w:1: non loaded'-[Dir, Excluded], nl].

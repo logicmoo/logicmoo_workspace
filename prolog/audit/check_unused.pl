@@ -44,7 +44,7 @@
 :- use_module(library(is_entry_point)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(audit/audit)).
 :- use_module(library(audit/audit_codewalk)).
@@ -300,7 +300,7 @@ prolog:message(acheck(unused)) -->
      'or exporting/removing the unreferenced predicates.', nl, nl].
 prolog:message(acheck(unused, Node-EdgeLL)) -->
     message_unused_node(Node, ['*', ' ']),
-    maplist_dcg(maplist_dcg(message_unused_rec([' ', ' ', ' ', ' '])), EdgeLL).
+    foldl(foldl(message_unused_rec([' ', ' ', ' ', ' '])), EdgeLL).
 
 message_unused_node(node(sort_by(N, L, _), LocDL, PI, _ARL), Level) -->
     { R is N + L,
@@ -317,11 +317,11 @@ message_unused_node(node(sort_by(N, L, _), LocDL, PI, _ARL), Level) -->
     ; []
     ),
     */
-    maplist_dcg(message_unused(T, Level, PI), LocDL).
+    foldl(message_unused(T, Level, PI), LocDL).
 
 message_unused_rec(Level, Node-EdgeL) -->
     message_unused_node(Node, Level),
-    maplist_dcg(message_unused_rec([' ', ' '|Level]), EdgeL).
+    foldl(message_unused_rec([' ', ' '|Level]), EdgeL).
 
 message_unused(T, Level, PI, Loc/D) -->
     Level,

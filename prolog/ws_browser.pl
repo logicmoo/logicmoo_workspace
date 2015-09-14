@@ -29,7 +29,7 @@
 
 :- module(ws_browser, [browse_server/1]).
 
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/html_write)).
@@ -59,7 +59,7 @@ list_files(Request) :-
 		    [h1('Modules'),
 		     table([border(1)],
 			   [\header,
-			    \maplist_dcg(html_module_files(Method), ModuleFiles)
+			    \foldl(html_module_files(Method), ModuleFiles)
 			   ])
 		    ]),
     print_message(information, format('done', [])).
@@ -78,7 +78,7 @@ header -->
 	     td(b('File'))])).
 
 html_module_files(Method, Module-Files) -->
-    html(tr([td(Module),td(table([\maplist_dcg(html_file(Method), Files)]))])).
+    html(tr([td(Module),td(table([\foldl(html_file(Method), Files)]))])).
 
 html_file(Method, File) -->
     html(tr([td(\html_link(Method, File))])).

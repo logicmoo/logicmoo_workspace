@@ -36,7 +36,7 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(check), []).
 :- use_module(library(implementation_module)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(option_utils)).
 :- use_module(library(location_utils)).
@@ -147,7 +147,7 @@ prolog:message(acheck(assertions)) -->
 prolog:message(acheck(assertions, Type-IssueL)) -->
     type_message(Type),
     {type_issue_t(Type, IssueT)},
-    maplist_dcg(prop_issue(IssueT), IssueL).
+    foldl(prop_issue(IssueT), IssueL).
 
 type_issue_t(body(_), ctchecks).
 type_issue_t(head(_), ctchecks).
@@ -170,7 +170,7 @@ property_issue(is_prop, PropL) -->
 
 type_message(body(Loc-PI)) --> Loc, ['In the body of ~q:'-[PI], nl].
 type_message(head(Loc-PI)) --> Loc, ['In the head of ~q:'-[PI], nl].
-type_message(prop(LocPIL)) --> maplist_dcg(type_message_prop, LocPIL).
+type_message(prop(LocPIL)) --> foldl(type_message_prop, LocPIL).
 
 type_message_prop(Loc-PIL) -->
     {compact_pi_list(PIL, PIC)},

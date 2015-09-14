@@ -41,7 +41,7 @@
 			 from_chk/3]).
 
 :- use_module(library(lists)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(from_utils)).
 :- use_module(library(implemented_in)).
 :- reexport(library(module_files)).
@@ -66,7 +66,7 @@ check_dir_file(Dir, File) :-
     member(File, FileL).
 
 option_files(File, FileGen0-OptionL0, FileGen-OptionL) :-
-    maplist_dcg(select_option_default,
+    foldl(select_option_default,
 		[files(Files)-Files,
 		 file( AFile)-AFile
 		], OptionL0, OptionL),
@@ -89,7 +89,7 @@ option_files(File, FileGen0-OptionL0, FileGen-OptionL) :-
     ).
 
 option_exclude_files(File, FG-OptionL0, FG-OptionL) :-
-    maplist_dcg(select_option_default,
+    foldl(select_option_default,
 		[exclude_files(ExFileL)-[]
 		], OptionL0, OptionL),
     ( ExFileL = []
@@ -100,7 +100,7 @@ option_exclude_files(File, FG-OptionL0, FG-OptionL) :-
     ).
 
 option_exclude_fdirs(File, FG-OptionL0, FG-OptionL) :-
-    maplist_dcg(select_option_default,
+    foldl(select_option_default,
 		[exclude_dirs(ExDirL)-[]
 		], OptionL0, OptionL),
     ( ExDirL = []
@@ -112,7 +112,7 @@ option_exclude_fdirs(File, FG-OptionL0, FG-OptionL) :-
     ).
 
 option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
-    maplist_dcg(select_option_default,
+    foldl(select_option_default,
 		[dirs(Dirs)-Dirs,
 		 dir( ADir)-ADir
 		],
@@ -137,7 +137,7 @@ option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
     ).
 
 option_exclude_dirs(Dir, DG-OptionL0, DG-OptionL) :-
-    maplist_dcg(select_option_default,
+    foldl(select_option_default,
 		[exclude_dirs(ExDirL)-[]
 		], OptionL0, OptionL),
     ( ExDirL = []
@@ -148,7 +148,7 @@ option_exclude_dirs(Dir, DG-OptionL0, DG-OptionL) :-
     ).
 
 option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
-    maplist_dcg(select_option_default,
+    foldl(select_option_default,
 		[dirs(Dirs)-Dirs,
 		 dir( ADir)-ADir
 		],

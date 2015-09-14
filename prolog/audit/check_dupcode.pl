@@ -35,7 +35,7 @@
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(extra_location)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(option_utils)).
 :- use_module(library(ungroup_keys_values)).
 :- use_module(library(clambda)).
@@ -238,14 +238,14 @@ prolog:message(acheck(dupcode)) -->
      'one of the duplicated to avoid this warning.', nl, nl].
 prolog:message(acheck(dupcode, (DupType/GKey)-LocDL)) -->
     ['~w ~w is duplicated:'-[DupType, GKey], nl],
-    maplist_dcg(message_duplicated, LocDL).
+    foldl(message_duplicated, LocDL).
 
 message_duplicated(_-[LocD|LocDL]) -->
     message_duplicated('* ', LocD),
-    maplist_dcg(message_duplicated('  '), LocDL).
+    foldl(message_duplicated('  '), LocDL).
 
 message_duplicated(Pre, LocDL/Elem) -->
-    maplist_dcg(message_duplicated(Pre, Elem), LocDL).
+    foldl(message_duplicated(Pre, Elem), LocDL).
 
 message_duplicated(Pre, Elem, Loc/D) -->
     [Pre], Loc, ['duplicated '-[D]],

@@ -33,7 +33,7 @@
 :- use_module(library(edinburgh)).
 :- use_module(library(lists)).
 :- use_module(library(option)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(clambda)).
 :- use_module(library(prolog_clause), []).
 :- use_module(library(prolog_source)).
@@ -73,7 +73,7 @@ setup_trace(State, M:OnTrace, OptL) :-
 	    :- ignore(trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
 			  M:ValidFile, Action))),
 	    Ref),
-    maplist_dcg(port_mask, [call, exit, fail, redo, unify, exception], 0, Mask),
+    foldl(port_mask, [call, exit, fail, redo, unify, exception], 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
     nb_setarg(1, State, Visible),
@@ -158,7 +158,7 @@ clause_subloc(Cl, List, SubLoc) :-
       ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
 	  match_clause(Cl, ClauseL, Module, List2, List),
 	  nonvar(ClausePos)
-	->( maplist_dcg(find_subgoal, List2, ClausePos, SubPos), % Expensive
+	->( foldl(find_subgoal, List2, ClausePos, SubPos), % Expensive
 	    nonvar(SubPos)
 	  ->true
 	  ; SubPos = ClausePos

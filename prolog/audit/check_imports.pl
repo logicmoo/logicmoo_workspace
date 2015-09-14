@@ -31,7 +31,7 @@
 
 :- use_module(library(clambda)).
 :- use_module(library(expansion_module)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(implementation_module)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
@@ -57,7 +57,7 @@ prolog:message(acheck(imports)) -->
      'such side effects are not required anymore.', nl, nl].
 prolog:message(acheck(imports, c(Class, Type, Name)-LocElemL)) -->
     ['~w ~w have unused ~w:'-[Class, Name, Type], nl],
-    maplist_dcg(unused_import(Type), LocElemL).
+    foldl(unused_import(Type), LocElemL).
 
 unused_import(Type, Loc/Elem) -->
     Loc,

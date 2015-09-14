@@ -33,7 +33,7 @@
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(option_utils)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(audit/audit)).
 
 :- multifile
@@ -92,7 +92,7 @@ prolog:message(acheck(trivial_fails)) -->
      'biggest failure chain found', nl, nl].
 prolog:message(acheck(trivial_fails, Loc-Args)) -->
     Loc,
-    maplist_dcg(show_trivial_fail, Args).
+    foldl(show_trivial_fail, Args).
 
 show_trivial_fail(trivial_fail(Caller, MGoal)) -->
     ['In ~q, trivial fail for ~q'-[Caller, MGoal], nl].
