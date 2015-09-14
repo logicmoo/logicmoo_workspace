@@ -5,7 +5,7 @@
 :- use_module(library(remove_dups)).
 :- use_module(library(swi/assertions)).
 :- use_module(library(assertions/assrt_lib)).
-:- use_module(library(maplist_dcg)).
+:- use_module(library(apply)).
 :- use_module(library(transpose)).
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(camel_snake)).
@@ -122,7 +122,7 @@ do_generate_library(M, FileSO, File, FSourceL) :-
 		       [file_type(prolog), access(read), relative_to(File)]),
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
-    maplist_dcg(intermediate_obj(M, DirSO), FSourceL, FTargetL, Commands, CommandsT),
+    foldl(intermediate_obj(M, DirSO), FSourceL, FTargetL, Commands, CommandsT),
     atomic_list_concat(FTargetL, ' ', FSources),
     findall(CLib, ( link_foreign_library(M, Lib),
 		    atom_concat('-l', Lib, CLib)
