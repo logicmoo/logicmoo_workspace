@@ -32,13 +32,13 @@
 	   ungroup_keys_values/3
 	  ]).
 
-% :- use_module(library(maplist_dcg)).
+% :- use_module(library(apply)).
 
 % ungroup_keys_values(Groups) -->
-%     maplist_dcg(ungroup_key_values, Groups).
+%     foldl(ungroup_key_values, Groups).
 
 % ungroup_key_values(K-VL) -->
-%     maplist_dcg(ungroup_key_value(K), VL).
+%     foldl(ungroup_key_value(K), VL).
 
 % ungroup_key_value(K, V) --> [K-V].
 
