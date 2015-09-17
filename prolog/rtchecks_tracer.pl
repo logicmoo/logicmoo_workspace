@@ -49,6 +49,21 @@ cleanup_trace :-
     forall(retract(rtc_break(Clause, PC)),
 	   ignore('$break_at'(Clause, PC, false))).
 
+black_list_caller(M:F/A) :-
+    functor(H, F, A),
+    black_list_caller(H, M).
+
+black_list_caller(M, _) :- black_list_module(M).
+
+black_list_callee(M, _) :- black_list_module(M).
+black_list_callee(system, Call) :- black_list_callee_system(Call).
+
+black_list_callee_system(catch(_, _, _)).
+black_list_callee_system(setup_call_cleanup(_, _, _)).
+black_list_callee_system(setup_call_catcher_cleanup(_, _, _, _)).
+black_list_callee_system(callable(_)).
+black_list_callee_system(atom(_)).
+
 black_list_module(assrt_lib).
 black_list_module(rtchecks_tr).
 black_list_module(rtchecks_rt).
@@ -67,9 +82,10 @@ black_list_module(intercept).
 black_list_module(compact_list).
 black_list_module(exceptions_db).
 black_list_module(hiordlib).
-black_list_module(system).
 black_list_module(ontrace).
 black_list_module(expansion_module).
+
+white_list_meta(system, Call) :- \+ functor(Call, call, _).
 
 skip_predicate(rtchecks_utils:handle_rtcheck(_)).
 
@@ -110,16 +126,20 @@ setup_clause_bpt(Clause, Action) :-
 	->nth_clause(M:Goal, _, Clause),
 	  \+ assertion_head_body(Goal, M, _, prop, _, _, _, _, _, _)
 	; memberchk(TInstr, [i_call(PI), i_depart(PI)]),
-	  ( PI=M:F/A
-	  ->functor(Goal, F, A)
+	  ( PI=LM:F/A
+	  ->functor(Goal, F, A),
+	    implementation_module(LM:Goal, M)
 	  ; PI=F/A
 	  ->functor(Goal, F, A),
 	    implementation_module(CM:Goal, M)
 	  ),
-	  \+ black_list_module(M),
+	  \+ black_list_callee(M, Goal),
 	  once(( pp_assr(Goal, M)
 	       ; current_assertion(Goal, rtcheck, _, _, _, _,
 				   _, _, _, _, _, _, _, _, _, M)
+	       ; white_list_meta(M, Goal),
+	       	 predicate_property(M:Goal, meta_predicate(S)),
+	       	 once(arg(_, S, 0 ))
 	       ))
 	)
       ->'$break_at'(Clause, PC, true),
@@ -152,22 +172,25 @@ rat_trap(Goal, Clause, PC) :-
 	      )).
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
-%     writeln(user_error, prolog:break_hook(Clause, PC, FR, FBR, Expr, _)),
+%     clause_property(Clause, predicate(PI)),
+%     writeln(user_error, prolog:break_hook(Clause:PI, PC, FR, FBR, Expr, _)),
 %     fail.
 prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     \+ current_prolog_flag(gui_tracer, true),
     rtc_break(Clause, PC),
     prolog_frame_attribute(FR, context_module, CM),
-    ( black_list_module(CM)
-    ->Action = continue
-    ; static_strip_module(Goal0, Goal, M, CM),
-      ( black_list_module(M)
-      ->Action = continue
-      ; generate_rtchecks(clause_pc(Clause, PC), M, Goal, RTChecks),
+    clause_property(Clause, predicate(PI)),
+    ( \+ black_list_caller(PI)
+    ->static_strip_module(Goal0, Goal, M, CM),
+      implementation_module(M:Goal, IM),
+      ( \+ black_list_callee(IM, Goal)
+      ->generate_rtchecks(clause_pc(Clause, PC), M, Goal, RTChecks),
 	( Goal == RTChecks
 	->Action = continue
 	; % Action = call(M:RTChecks)
 	  Action = call(rtchecks_tracer:rat_trap(M:RTChecks, Clause, PC))
 	)
+      ; Action = continue
       )
+    ; Action = continue
     ).
