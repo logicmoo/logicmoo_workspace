@@ -8,10 +8,10 @@
 		      a_fake_body/5,
 		      assertion_db/12,
 		      normalize_assertion_head/9,
-		      assrt_lib_tr/4,
-		      qualify_with/3]).
+		      assrt_lib_tr/4]).
 
 :- use_module(library(lists)).
+:- use_module(library(implementation_module)).
 :- use_module(library(extra_messages), []).
 :- use_module(library(assertions_op)).
 
@@ -106,12 +106,8 @@ filepos_line(File, CharPos, Line, LinePos) :-
 		       prolog_codewalk:filepos_line(File, CharPos, Line, LinePos),
 		       '$pop_input_context').
 
-qualify_with(CM, MProp, MProp) :-
-    strip_module(CM:MProp, M, Prop),
-    ( CM = M
-    ->MProp = Prop
-    ; MProp = M:Prop
-    ).
+qualify_with(CM, MProp, M:Prop) :-
+    strip_module(CM:MProp, M, Prop).
 
 % For compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
@@ -640,8 +636,9 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     ),
     findall(a(Match, Clause, HPos),
 	    ( ( nonvar(APos) ->NonVarAPos=true ; NonVarAPos = fail ),
-	      current_normalized_assertion(Assertions, CM, APos, M:Head, Status,
+	      current_normalized_assertion(Assertions, CM, APos, HM:Head, Status,
 					   Type, Cp, Ca, Su, Gl, Co, HPos),
+	      implementation_module(HM:Head, M),
 	      ( nonvar(File)
 	      ->( nonvar(HPos),
 		  arg(1, HPos, HFrom),

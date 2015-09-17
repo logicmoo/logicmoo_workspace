@@ -439,7 +439,7 @@ bind_type_names(M, Type, MPropL, Dict) :-
     ),
     clause_property(Ref, module(CM)),
     sequence_list(Body, PropL, []),
-    maplist(qualify_with(CM), PropL, MPropL).
+    maplist(cond_qualify_with(CM), PropL, MPropL).
 
 declare_struct(atom(Name), Spec, _) :-
     ctype_decl(Spec, Decl, []),
@@ -681,6 +681,13 @@ acodes(Atom, List, Tail) :-
     atom_codes(Atom, Codes),
     append(Codes, Tail, List).
 
+cond_qualify_with(CM, MProp, MProp) :-
+    strip_module(CM:MProp, M, Prop),
+    ( CM = M
+    ->MProp = Prop
+    ; MProp = M:Prop
+    ).
+
 current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
 		     FuncName, PredName, BindName, Arity) :-
     assertion_db(Head, Module, Context, check, Type, _, _, _, Glob1, _, _, _),
@@ -695,7 +702,7 @@ current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
     findall(Head-[MComp, MCall, MSucc, MGlob, Dict],
 	    ( assertion_db(Head, Module, CM, check, Type, Comp, Call, Succ,
 			   Glob, _, Dict, _),
-	      maplist(maplist(qualify_with(CM)),
+	      maplist(maplist(cond_qualify_with(CM)),
 		      [ Comp,  Call,  Succ,  Glob],
 		      [MComp, MCall, MSucc, MGlob])
 	    ), KPropLL),
