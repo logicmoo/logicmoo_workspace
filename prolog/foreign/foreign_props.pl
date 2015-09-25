@@ -6,6 +6,7 @@
 	   memory_root/1,
 	   ptr/1,
 	   ptr/2,
+	   float_t/1,
 	   dict_t/2,
 	   dict_t/3,
 	   dict_join_t/4,
@@ -36,6 +37,9 @@ returns_state(G) :- call(G).
 :- prop memory_root/1 + no_rtcheck.
 :- meta_predicate memory_root(0).
 memory_root(G) :- call(G).
+
+:- prop float_t/1 + type # "Defines a float".
+float_t(Num) :- num(Num).
 
 :- prop ptr/1 + type # "Defines a void pointer".
 ptr(Ptr) :- int(Ptr).

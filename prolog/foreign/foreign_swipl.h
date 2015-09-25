@@ -46,25 +46,32 @@
 
 #define FI_get_integer(_, t, i) PL_get_integer(t, i)
 #define FI_get_float(_, t, f)   PL_get_float(t, f)
+#define FI_get_float_t(_, t, f) ({			\
+	    double d;					\
+	    int __result = PL_get_float(t, &d);		\
+	    *f = (float)d;				\
+	    __result;					\
+	})
 #define FI_get_pointer(_, t, p) PL_get_pointer(t, p)
 #define FI_get_chrs(_, t, v)    PL_get_atom_chars(t, v)
-#define FI_get_char_code(_, t, c) {		\
-	int i;					\
-	int __result = PL_get_integer(t, &i);	\
-	*c = (char)i;				\
-	__result;				\
-    }
-#define FI_get_char(_, t, c) {				\
-	char *s;					\
-	int __result = PL_get_atom_chars(t, &s);	\
-	if (__result) {					\
-	    *c = s[0];					\
-	}						\
-	__result;					\
-    }
+#define FI_get_char_code(_, t, c) ({			\
+	    int i;					\
+	    int __result = PL_get_integer(t, &i);	\
+	    *c = (char)i;				\
+	    __result;					\
+	})
+#define FI_get_char(_, t, c) ({				\
+	    char *s;					\
+	    int __result = PL_get_atom_chars(t, &s);	\
+	    if (__result) {				\
+		*c = s[0];				\
+	    }						\
+	    __result;					\
+	})
 
 #define FI_unify_integer(t, p)   PL_unify_integer(t, p)
 #define FI_unify_float(t, p)     PL_unify_float(t, p)
+#define FI_unify_float_t(t, p)   PL_unify_float(t, (double)(p))
 #define FI_unify_pointer(t, p) ({			\
 	    int __result = TRUE;			\
 	    if (p!=NULL)				\

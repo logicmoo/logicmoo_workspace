@@ -943,10 +943,12 @@ match_known_type_(ptr(A, Type), M, ptr(Spec), A) :-
 % match_known_type_(string(A),        _, string_chars-'char*', A).
 match_known_type_(ptr(A),            _, pointer-'void*', A).
 match_known_type_(int(A),            _, integer-int,     A).
+match_known_type_(nnegint(A),        _, integer-'unsigned int', A).
 match_known_type_(integer(A),        _, integer-int,     A).
 match_known_type_(character_code(A), _, char_code-char,  A).
 match_known_type_(char(A),           _, char-char,       A).
 match_known_type_(num(A),            _, float-double,    A).
+match_known_type_(float_t(A),        _, float_t-float,   A).
 match_known_type_(number(A),         _, float-double,    A).
 match_known_type_(term(A),           _, term,            A).
 match_known_type_(list(A, Type),     M, list(Spec),      A) :-
