@@ -24,24 +24,32 @@ Warning: The predicates below contains assertions that are inconsistent
 Warning: with the  implementation. The reason is explained there.
 Warning: 
 ERROR: ctcex.pl:18:4: In the body of ctcex:q/0:
-ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(1,b).
+ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(_1,_2).
 ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[list(b)].
+ERROR: 		[list(_2)].
+ERROR: 	Because: 
+ERROR: 		['_2'=b].
 ERROR: ctcex.pl:15: In the head of ctcex:a/2:
-ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(a,b).
+ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(_1,_2).
 ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[int(a),list(b)].
+ERROR: 		[int(_1),list(_2)].
+ERROR: 	Because: 
+ERROR: 		['_1'=a,'_2'=b].
 ERROR: ctcex.pl:30:8: In assertions of [ctcex:b/2]:
 ERROR: 	[ctcex:is_3/1] are not properties
 ERROR: ctcex.pl:32:8: In assertions of [ctcex:b/2]:
 ERROR: 	[ctcex:is_2/1] are not properties
 ERROR: ctcex.pl:36:8: In assertions of [ctcex:b/2]:
-ERROR: ctcex.pl:26: Compile-Time failure in assertion for is_num(_1,a).
+ERROR: ctcex.pl:26: Compile-Time failure in assertion for is_num(_1,_2).
 ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[int(a)].
-ERROR: ctcex.pl:26: Compile-Time failure in assertion for is_num(_1,b).
+ERROR: 		[int(_2)].
+ERROR: 	Because: 
+ERROR: 		['_2'=a].
+ERROR: ctcex.pl:26: Compile-Time failure in assertion for is_num(_1,_2).
 ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[int(b)].
+ERROR: 		[int(_2)].
+ERROR: 	Because: 
+ERROR: 		['_2'=b].
 */
 
 test(ctcex) :-
