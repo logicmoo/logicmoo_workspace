@@ -58,7 +58,8 @@ audit_walk_code(OptionL0, Tracer, M, FromChk) :-
     select_option(source(S), OptionL1, OptionL, false),
     audit_walk_module_body(M, [on_trace(Tracer)|OptionL]),
     optimized_walk_code(S, [on_trace(Tracer)|OptionL]),
-    decl_walk_code(Tracer, M).
+    decl_walk_code(Tracer, M),
+    assr_walk_code(Tracer, M).
 
 current_clause_module_body(CM, Ref) :-
     current_predicate(M:F/A),
@@ -92,6 +93,10 @@ audit_wcsetup(OptionL0, OptionL, FromChk) :-
 decl_walk_code(Tracer, M) :-
     forall(loc_declaration(Head, M, goal, From),
 	   ignore(call(Tracer, M:Head, _:'<declaration>', From))).
+
+assr_walk_code(Tracer, M) :-
+    forall(assertion_db(Head, _, M, _, _, _, _, _, _, _, _, From),
+	   ignore(call(Tracer, M:Head, _:'<assertion>', From))).
 
 record_issues(CRef) :-
     assertz(issues(CRef)).
