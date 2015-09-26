@@ -1,5 +1,5 @@
-:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, tlist/2, char/1,
-		    arithexpression/1]).
+:- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, tlist/2,
+		    char/1, keypair/1, keylist/1, arithexpression/1]).
 
 :- use_module(library(apply)).
 :- use_module(library(swi/assertions)).
@@ -12,6 +12,12 @@
 :- true prop type/1.
 :- meta_predicate type(0).
 type(Goal) :- call(Goal).
+
+:- true prop keypair/1 + type.
+keypair(_-_).
+
+:- true prop keylist/1 + type.
+keylist(KL) :- list(KL, keypair).
 
 :- true prop tlist/2 + type # "@var{L} is a list or a value of @var{T}s".
 :- meta_predicate tlist(?, 1).

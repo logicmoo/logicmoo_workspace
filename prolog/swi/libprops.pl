@@ -4,8 +4,7 @@
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
-:- use_module(library(swi/nativeprops)).
-:- use_module(library(swi/termtyping)).
+:- use_module(library(swi/termtyping), []).
 :- use_module(library(swi/plprops)).
 
 :- pred functor(+, -atm, -nnegint) is det.
@@ -19,8 +18,8 @@
 :- pred (+arithexpression=< +arithexpression) is semidet.
 :- pred (+arithexpression=\= +arithexpression) is semidet.
 :- pred (+arithexpression=:= +arithexpression) is semidet.
-:- pred (-num is +arithmexpression) is det.
-:- pred (+num is +arithmexpression) is semidet.
+:- pred ((is)/2) : (var*arithexpression) => (num*arithexpression) is det.
+:- pred ((is)/2) : (num*arithexpression) is semidet.
 
 :- pred atomic_list_concat(+list(constant), +constant).
 :- pred atomic_list_concat(+list(constant), -constant).
@@ -49,5 +48,4 @@
 :- pred maplist(A, list, list, list)       : callable(call(A, _, _, _)).
 :- pred maplist(A, list, list, list, list) : callable(call(A, _, _, _, _)).
 
-:- use_module(library(lists)).
 :- pred memberchk(?, ?list) is semidet.
