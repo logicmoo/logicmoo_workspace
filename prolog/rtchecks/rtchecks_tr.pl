@@ -2,8 +2,6 @@
 			rtchecks_goal_tr/3],
 	  [assertions, nortchecks, nativeprops, isomodes, dcg, hiord]).
 
-:- multifile have_inline/0.
-
 :- if(current_prolog_flag(dialect, swi)).
 % runtime-checks related flags:
 :- use_module(rtchecks(rtchecks_flags), []).
@@ -14,7 +12,6 @@
 :- use_module(library(compiler(c_itf_internal)),
 	    [(discontiguous)/3, defines_module/2, exports_pred/3, location/1,
 	     location/3]).
-:- use_module(library(inliner(inliner_tr)), [in_inline_module_db/2]).
 :- use_module(library(sort)).
 :- use_module(library(llists)).
 :- use_module(library(aggregates)).
@@ -130,25 +127,6 @@ cleanup_db_0(M) :-
 	retractall_fact(head_alias_db(_, _, M)),
 	retractall_fact(posponed_sentence_db(_, _, _, _, _, _, M, _)),
 	retractall_fact(generated_rtchecks_db(_, _, M)).
-% :- data rtchecks_db/3.
-% :- data nortchecks_db/3.
-
-:- if(have_inline).
-
-add_use_inline(F, A, Clauses, [(:- use_inline(F/A))|Clauses]).
-
-insert_inline_declarations(F, A, M, Head, Clauses,
-	                   [(:- inline(F/A)), (:- inline(F1/A1))|Clauses]) :-
-	head_alias_db(Head, Head1, M),
-	functor(Head1, F1, A1).
-
-:- else.
-
-add_use_inline(_, _, Clauses, Clauses).
-
-insert_inline_declarations(_, _, _, _, Clauses, Clauses).
-
-:- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
 
@@ -221,8 +199,7 @@ proc_remaining_assertions(Preds, Clauses, M, Dict) :-
 	member(F/A, Preds),
 	add_declarations(F, A, M, Head, Clauses, Clauses1),
 	transform_sentence_body(Dict, Head, (:-), F, A, M, original,
-				'$orig_call'(Head), Clauses0),
-	insert_inline_declarations(F, A, M, Head, Clauses0, Clauses1).
+				'$orig_call'(Head), Clauses1).
 
 :- if(current_prolog_flag(dialect, swi)).
 runtime_checkable(M) :-
@@ -261,12 +238,7 @@ rtchecks_sentence_tr(end_of_file, Clauses, M, _) :- !,
 	proper_warning_flags(ClausesL0, ClausesL2, Tail),
 	flatten(ClausesL2, Clauses),
 	cleanup_db_0(M).
-:- if(current_prolog_flag(dialect, ciao)).
-rtchecks_sentence_tr(_, _, M, _) :-
-	in_inline_module_db(_, M),
-	!,
-	fail.
-:- endif.
+
 rtchecks_sentence_tr(Sentence0, Sentence, M, Dict) :-
 	do_rtchecks_sentence_tr(Sentence0, Sentence, M, Dict).
 
@@ -450,7 +422,6 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, Pred2,
 	    Body01 = Pred1,
 	    lists_to_lits(Body00, Lits0 )
 	  },
-	  add_use_inline(F, A),
 	  [(Pred :- Lits0 )]
 	; {Pred = Pred1}
 	),
@@ -460,8 +431,7 @@ generate_rtchecks(F, A, M, Assrs, Pred, PDict, PLoc, Pred2,
 	    { rename_head('2', A, Pred, Pred2),
 	      Body12 = Pred2,
 	      functor(Pred1, F1, A1)
-	    },
-	    add_use_inline(F1, A1)
+	    }
 	  ; { Head = Pred,
 	      Body12 = Body
 	    }

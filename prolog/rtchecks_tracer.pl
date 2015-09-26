@@ -22,8 +22,9 @@
     trace_rtc(0),
     do_trace_rtc(0).
 
-trace_rtc(Goal) :-
-    call_rtc(do_trace_rtc(Goal)).
+trace_rtc(M:Goal) :-
+    generate_rtchecks(_, M, Goal, RTChecks),
+    call_rtc(do_trace_rtc(M:RTChecks)).
 
 do_trace_rtc(Goal) :-
     call_inoutex(Goal,

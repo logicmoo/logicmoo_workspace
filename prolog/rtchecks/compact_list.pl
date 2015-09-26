@@ -1,4 +1,4 @@
-:- module(compact_list, [compact_list/2], [assertions, nativeprops]).
+:- module(compact_list, [compact_list/2]).
 
 :- use_module(library(lists)).
 
@@ -18,12 +18,12 @@ compact_list_n_(L, L1, R1, N, R) :-
 	    (compact_list_n(L0, N, R0) -> R = [E|R0] ; R = L)
 	).
 
-:- test compact_list(A, B) :
-	(A = [1, 2, 2, 2, 2, 3, 3, 4, 3, 4, 3, 4, 3, 4, 1, 5, 7, 1, 5, 7])
-	=> (B = [1, 2, 3, 4, 1, 5, 7]) + not_fails.
+% :- test compact_list(A, B) :
+% 	(A = [1, 2, 2, 2, 2, 3, 3, 4, 3, 4, 3, 4, 3, 4, 1, 5, 7, 1, 5, 7])
+% 	=> (B = [1, 2, 3, 4, 1, 5, 7]) + not_fails.
 
-:- pred compact_list(L, R) : list(L) => list(R)
-	# "Predicate that delete repeated sequences in a list.".
+% :- pred compact_list(L, R) : list(L) => list(R)
+% 	# "Predicate that delete repeated sequences in a list.".
 
 compact_list(L, R) :-
 	compact_list_(L, 1, R).

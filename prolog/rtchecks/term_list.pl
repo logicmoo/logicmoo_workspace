@@ -1,9 +1,11 @@
-:- module(term_list, [eq/1, push_term/3, push_meta/3, collapse_terms/3],
-	  [assertions, regtypes]).
+:- module(term_list, [eq/1, push_term/3, push_meta/3, collapse_terms/3]).
 
+:- use_module(library(swi/assertions)).
+:- use_module(library(swi/basicprops)).
+:- use_module(library(swi/plprops)).
 :- use_module(library(lists)).
 
-:- regtype eq/1.
+:- prop eq/1 + type.
 
 eq(_=_).
 

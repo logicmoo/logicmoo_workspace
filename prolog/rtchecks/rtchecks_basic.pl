@@ -1,37 +1,23 @@
 :- module(rtchecks_basic, [
 		collapse_prop/4,
 		diff_props/3,
-		get_predname/4,
-		get_globname/3,
-		get_propnames/2,
 		get_pretty_names/5,
 		checkif_to_lit/3,
 		get_checkc/5,
 		get_checkc/6,
 		get_checkif/9,
-		get_prop_args/3,
 		insert_posloc/6,
 		is_member_prop/2,
 		is_same_prop/2,
-		list_to_lits/2,
 		lists_to_lits/2,
-		list_to_disj/2,
-		lists_to_disj/2,
-		remove_element/3,
-		inliner_decl/4,
-		push_flags/3,
-		pop_flags/3
-	    ], [assertions, nortchecks, dcg, hiord]).
+		remove_element/3
+	    ]).
 
-:- if(current_prolog_flag(dialect, ciao)).
-:- use_module(library(llists)).
-:- endif.
-:- use_module(library(terms_vars)).
-:- use_module(library(hiordlib)).
+:- expects_dialect(swi).
+
+:- use_module(library(swi/assertions)).
+:- use_module(library(swi/basicprops)).
 :- use_module(library(apply)).
-:- use_module(library(varnames/apply_dict)).
-:- use_module(library(varnames/pretty_names)).
-:- use_module(library(varnames/complete_dict)).
 :- use_module(library(lists)).
 :- use_module(rtchecks(term_list)).
 
@@ -53,13 +39,7 @@ insert_posloc(PredName0, PLoc0, ALoc, PosLocs, PredName, PosLoc) :-
 	; PosLoc1 = []
 	).
 
-get_prop_args(Props, Pred, PropArgs) :-
-	varset(Pred, Vars),
-	map(Props,    varset,               PropVars),
-	map(PropVars, intersect_vars(Vars), PropArgs),
-	!.
-
-check_props_names(Check, Name, Value, (\+Check, Name=Value)).
+check_props_names(Name, Check, Value, (\+Check, Name=Value)).
 
 compound_checkc(CheckProps0, Name, Props, CheckC) :-
 	list_to_disj(CheckProps0, CheckProps),
@@ -94,14 +74,14 @@ get_checkc(call, M, Props, PropValues, CheckC) :-
 compound_check_props(Check, M, Props, CheckProps) :-
 	maplist(compound_check_prop(Check, M), Props, CheckProps).
 
-compound_check_prop(compat(Prop), _, M, CheckProp) :- !,
-	compound_check_prop(Prop, compat, M, CheckProp).
-compound_check_prop(instance(Prop), _, M, CheckProp) :- !,
-	compound_check_prop(Prop, instance, M, CheckProp).
-compound_check_prop(succeeds(Prop), _, M, Prop) :- !.
-compound_check_prop(M:Prop, Check, _, CheckProp) :- !,
-	compound_check_prop(Prop, Check, M, CheckProp).
-compound_check_prop(Prop, Check, M, native_props:CheckProp) :-
+compound_check_prop(_, M, compat(Prop), CheckProp) :- !,
+	compound_check_prop(compat, M, Prop, CheckProp).
+compound_check_prop(_, M, instance(Prop), CheckProp) :- !,
+	compound_check_prop(instance, M, Prop, CheckProp).
+compound_check_prop(_, _, succeeds(Prop), Prop) :- !.
+compound_check_prop(Check, _, M:Prop, CheckProp) :- !,
+	compound_check_prop(Check, M, Prop, CheckProp).
+compound_check_prop(Check, M, Prop, native_props:CheckProp) :-
 	CheckProp =.. [Check, M:Prop].
 
 compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, AsrLocs, PropValue,
@@ -126,14 +106,6 @@ get_checkif(compatpos, Exit, PredName, Dict, M, Props, Names, AsrLoc, CheckIf) :
 	list_to_disj(CNs, CheckProps),
 	compound_checkif(Exit, success, PredName, Dict, CheckProps, AsrLoc, NameProp, CheckIf).
 
-get_predname(short, _,   Pred, F/A)  :- functor(Pred, F, A).
-get_predname(long, Dict, Pred, Name) :- pretty_names(Dict, Pred, Name).
-
-get_globname(short, Pred, F/A) :- functor(Pred, F, A).
-get_globname(long,  Pred, Pred).
-
-get_propnames(Prop, Prop).
-
 short_prop_name(Prop, Name-[]) :-
 	callable(Prop),
 	compound(Prop),
@@ -146,16 +118,21 @@ short_prop_name(Prop, Name-[]) :-
 	Name = Prop.
 
 short_prop_names(Props, Names) :-
-	map(Props, short_prop_name, Names).
+	maplist(short_prop_name, Props, Names).
 
-propname_name(Name, Name-_).
+select_applicable(Dict, Prop, PropDict) :-
+    exclude(not_aplicable(Prop), Dict, PropDict).
 
-propdict_name(PropDict, _-PropDict).
+not_aplicable(Prop, _=Var) :-
+    not_occurrences(Prop, Var).
+
+not_occurrences(Term, Var) :-
+    occurrences_of_var(Var, Term, 0).
 
 long_prop_names(Props, PropNames, Dict, Names) :-
-	map(Props,     select_applicable(Dict), PropDicts),
-	map(PropNames, propname_name,           Names),
-	map(PropDicts, propdict_name,           Names).
+    maplist(select_applicable(Dict), Props, PropDicts),
+    pairs_keys(  Names, PropNames),
+    pairs_values(Names, PropDicts).
 
 % in this predicate, PredName and the name of each property must be ground
 % to avoid undesired unifications.
@@ -167,18 +144,26 @@ get_pretty_names(short, n(Pred, Compat, Call, Succ, Comp), Dict, TermName, Dict)
 	short_prop_names(Comp,   CompName),
 	TermName = n(F/A, CompatName, CallName, SuccName, CompName).
 get_pretty_names(long, Term, Dict0, TermName, Dict) :-
-	Term = n(_Pred, Compat, Call, Succ, Comp),
-	complete_dict(Term, Dict0, [], CDict),
-	append(Dict0, CDict, Dict),
-	apply_dict(Term, Dict, TermName0),
-	TermName0 = n(PredName, CompatName0, CallName0, SuccName0, CompName0),
-	long_prop_names(Compat, CompatName0, Dict, CompatName),
-	long_prop_names(Call,   CallName0,   Dict, CallName),
-	long_prop_names(Succ,   SuccName0,   Dict, SuccName),
-	long_prop_names(Comp,   CompName0,   Dict, CompName),
-	TermName = n(PredName, CompatName, CallName, SuccName, CompName).
+    Term = n(_Pred, Compat, Call, Succ, Comp),
+    term_variables(Term, Vars),
+    include(not_occurrences(Dict0), Vars, NVars),
+    copy_term(t(Term, NVars, Dict0), t(TermName0, Names, Dict1)),
+    maplist(varnamep, NVars, Names, CDict),
+    numbervars(Names, 0, _),
+    append(Dict0, CDict, Dict),
+    maplist(apply_varname, Dict1),
+    TermName0 = n(PredName, CompatName0, CallName0, SuccName0, CompName0),
+    long_prop_names(Compat, CompatName0, Dict, CompatName),
+    long_prop_names(Call,   CallName0,   Dict, CallName),
+    long_prop_names(Succ,   SuccName0,   Dict, SuccName),
+    long_prop_names(Comp,   CompName0,   Dict, CompName),
+    TermName = n(PredName, CompatName, CallName, SuccName, CompName).
 
-% note that the following predicates make partial unification, and comparison
+apply_varname(Name='$VAR'(Name)).
+
+varnamep(Var, Name, Name=Var).
+
+% note that the following predicates do partial unification, and comparison
 % over the given term: cui(Compare, Unify, Ignore)
 
 diff_props(L,      [], L) :- !. % Minor optimization
@@ -240,41 +225,7 @@ list_to_disj2([],     X,  X).
 list_to_disj2([X|Xs], X0, (X0 ; Lits)) :-
 	list_to_disj2(Xs, X, Lits).
 
-lists_to_disj(A0, L) :-
-	flatten(A0, A1),
-	remove_element(A1, fail, A2),
-	list_to_disj(A2, L).
-
 checkif_to_lit(i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit),
 	       pos(_Pred, M, PType), CheckPos) :-
 	get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames, AsrLoc,
 		    CheckPos).
-
-push_flags(inline) --> [].
-push_flags(yes) --> [(:- push_prolog_flag(single_var_warnings, off))].
-
-pop_flags(inline) --> [].
-pop_flags(yes) --> [(:- pop_prolog_flag(single_var_warnings))].
-
-inliner_decl(yes,    _) --> [].
-inliner_decl(inline, Pred) -->
-	{functor(Pred, F, A)},
-	inline_decl(F, A),
-	unfold_decl(F, A).
-
-inline_decl(F, A) -->
-	[(:- inline(F/A))].
-
-unfold_decl(F, A) -->
-	{
-	    functor(Unfold, F, A),
-	    (compound(Unfold) -> fill_struct(1, Unfold, yes) ; true)
-	},
-	[(:- unfold(Unfold))].
-
-fill_struct(N, Unfold, Value) :-
-	arg(N, Unfold, Value) ->
-	N1 is N + 1,
-	fill_struct(N1, Unfold, Value)
-    ;
-	true.
