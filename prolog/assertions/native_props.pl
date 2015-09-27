@@ -1,73 +1,77 @@
-:- module(native_props, [
-		nfi/2,
-		fi/2,
-		clique/1,
-		clique_1/1,
-		compat/1,
-		constraint/1,
-		covered/1,
-		covered/2,
-		exception/1,
-		exception/2,
-		fails/1,
-		finite_solutions/1,
-		have_choicepoints/1,
-		indep/1,
-		indep/2,
-		instance/1,
-		is_det/1,
-		linear/1,
-		mshare/1,
-		mut_exclusive/1,
-		no_choicepoints/1,
-		no_exception/1,
-		no_exception/2,
-		no_signal/1,
-		no_signal/2,
-		non_det/1,
-		nonground/1,
-		not_covered/1,
-		not_fails/1,
-		not_mut_exclusive/1,
-		num_solutions/2,
-		solutions/2,
-		possibly_fails/1,
-		possibly_nondet/1,
-		relations/2,
-		sideff_hard/1,
-		sideff_pure/1,
-		sideff_soft/1,
-		signal/1,
-		signal/2,
-		signals/2,
-		size/2,
-		size/3,
-		size_lb/2,
-		size_o/2,
-		size_ub/2,
-		size_metric/3,
-		size_metric/4,
-		succeeds/1,
-		steps/2,
-		steps_lb/2,
-		steps_o/2,
-		steps_ub/2,
-		tau/1,
-		terminates/1,
-		test_type/2,
-		throws/2,
-		throw/2,
-		nsh/2,
-		user_output/2,
-		test_throw_2/4,
-		is_pred/2,
-		mod_qual/1,
-		mod_qual/2
-		% intervals/2 %[LD]
-		% , user_error/2
-	    ],
-	    [assertions, hiord]).
-
+:- module(native_props,
+	  [nfi/2,
+	   fi/2,
+	   clique/1,
+	   clique_1/1,
+	   compat/1,
+	   constraint/1,
+	   covered/1,
+	   covered/2,
+	   exception/1,
+	   exception/2,
+	   fails/1,
+	   finite_solutions/1,
+	   have_choicepoints/1,
+	   indep/1,
+	   indep/2,
+	   instance/1,
+	   is_det/1,
+	   linear/1,
+	   mshare/1,
+	   mut_exclusive/1,
+	   no_choicepoints/1,
+	   no_exception/1,
+	   no_exception/2,
+	   no_signal/1,
+	   no_signal/2,
+	   non_det/1,
+	   nonground/1,
+	   not_covered/1,
+	   not_fails/1,
+	   not_mut_exclusive/1,
+	   num_solutions/2,
+	   solutions/2,
+	   possibly_fails/1,
+	   possibly_nondet/1,
+	   relations/2,
+	   sideff_hard/1,
+	   sideff_pure/1,
+	   sideff_soft/1,
+	   signal/1,
+	   signal/2,
+	   signals/2,
+	   size/2,
+	   size/3,
+	   size_lb/2,
+	   size_o/2,
+	   size_ub/2,
+	   size_metric/3,
+	   size_metric/4,
+	   succeeds/1,
+	   steps/2,
+	   steps_lb/2,
+	   steps_o/2,
+	   steps_ub/2,
+	   tau/1,
+	   terminates/1,
+	   test_type/2,
+	   throws/2,
+	   throw/2,
+	   nsh/2,
+	   user_output/2,
+	   test_throw_2/4,
+	   is_pred/2,
+	   mod_qual/1,
+	   mod_qual/2,
+	   
+	   check/1,
+	   trust/1,
+	   true/1,
+	   false/1
+	   % intervals/2 %[LD]
+	   % user_error/2
+	  ],
+	  [assertions, hiord]).
 
 :- doc(doinclude, indep/1).
 :- doc(doinclude, indep/2).
@@ -83,8 +87,6 @@
 :- set_prolog_flag(multi_arity_warnings, off).
 
 :- use_module(library(terms_vars)).
-:- use_module(library(hiordlib)).
-% :- use_module(library(sort), [sort/2]).
 :- use_module(library(lists)).
 :- use_module(library(streams)).
 :- use_module(library(file_utils)).
@@ -271,7 +273,7 @@ linear(T) :-
 # "The sharing pattern is @tt{@var{X}}.".
 
 mshare(L) :-
-	map(L, term_variables, V),
+	maplist(term_variables, L, V),
 	\+ not_mshare(V).
 
 % try to find a counter-example:
@@ -1357,3 +1359,15 @@ mod_qual(M:_) :-
 mod_qual(M:V, T) :-
     current_module(M),
     type(V, T).
+
+:- meta_predicate check(0).
+check(_).
+
+:- meta_predicate trust(0).
+trust(_).
+
+:- meta_predicate true(0).
+true(_).
+
+:- meta_predicate false(0).
+false(_).
