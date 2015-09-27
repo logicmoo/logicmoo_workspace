@@ -3,8 +3,6 @@
 	   call_rtc/1, save_rtchecks/1, load_rtchecks/1, rtcheck_error/1,
 	   ctime_t/1]).
 
-:- expects_dialect(swi).
-
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
 :- use_module(library(swi/plprops)).

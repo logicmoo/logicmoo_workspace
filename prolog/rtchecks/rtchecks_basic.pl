@@ -13,8 +13,6 @@
 		remove_element/3
 	    ]).
 
-:- expects_dialect(swi).
-
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
 :- use_module(library(apply)).
@@ -225,7 +223,8 @@ list_to_disj2([],     X,  X).
 list_to_disj2([X|Xs], X0, (X0 ; Lits)) :-
 	list_to_disj2(Xs, X, Lits).
 
-checkif_to_lit(i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit),
-	       pos(_Pred, M, PType), CheckPos) :-
+checkif_to_lit(pos(_Pred, M, PType),
+	       i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit),
+	       CheckPos) :-
 	get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames, AsrLoc,
 		    CheckPos).

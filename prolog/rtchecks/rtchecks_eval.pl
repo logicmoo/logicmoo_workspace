@@ -9,7 +9,6 @@
 :- use_module(rtchecks(rtchecks_basic)).
 :- use_module(library(resolve_meta_call)).
 
-:- expects_dialect(swi).
 :- meta_predicate rtchecks_eval(0).
 rtchecks_eval(M:Goal) :-
     generate_rtchecks(_, M, Goal, RTChecks),

@@ -1,10 +1,6 @@
-:- module(rtchecks_send, [send_rtcheck/5], [assertions, nortchecks, dcg]).
+:- module(rtchecks_send, [send_rtcheck/5]).
 
-:- if(current_prolog_flag(dialect, swi)).
-:-  abolish(send_signal/1),
-    abolish(intercept/3).
 :- use_module(library(intercept)).
-:- endif.
 
 send_rtcheck([], _, _, _, _) :- !.
 send_rtcheck(Props, ErrType, PredName, Dict, AsrLocs) :-
