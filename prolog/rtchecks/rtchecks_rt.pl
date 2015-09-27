@@ -1,19 +1,14 @@
 :- module(rtchecks_rt, [condition/1,
-			checkif_comp/4,
-			rtcheck/4,
-			rttrust/4,
+			checkif_comp/5,
+			rtcheck/3,
 			call_stack/2,
-			'$meta$rtc'/2,
-			with_goal/2,
-			check/1,
-			trust/1,
-			true/1,
-			false/1
+			'$meta$rtc'/2
 		       ]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(intercept)).
 :- use_module(library(engine/term_typing), []). % assertions about builtins
+:- use_module(library(context_values)).
 :- reexport(rtchecks(rtchecks_send)).
 
 :- doc(author, "Edison Mera").
@@ -28,13 +23,7 @@
 condition(true).
 condition(fail).
 
-:- meta_predicate with_goal(0, ?).
-with_goal(Comp, Goal) :-
-    setup_call_cleanup(b_setval(rtchecks_goal, Goal),
-		       Comp,
-		       nb_delete(rtchecks_goal)).
-
-:- pred checkif_comp(Condition, CompGoal, CompGoalArg, Head)
+:- pred checkif_comp(Condition, _, CompGoal, CompGoalArg, Head)
 
 # "If ~w is @tt{true} then the ~w containing
 the nested comp predicate calls is called with ~w as
@@ -59,29 +48,41 @@ partiton(_1,_2,_3,_4) is called."-[Condition, CompGoal, Head, CompGoalArg,
 :- doc(bug, "checkif_comp/4 generates a unnecessary run-time
 	module expansion").
 
-:- meta_predicate checkif_comp(?, 0, ?, 0).
-checkif_comp([],    Comp, Goal, Goal) :- call(Comp).
-checkif_comp([_|_], _,    _,    Goal) :- call(Goal).
+:- meta_predicate checkif_comp(?, ?, 0, ?, 0).
+checkif_comp([], Info, Comp, Goal, Goal) :- with_info(Comp, Info).
+checkif_comp([_|_], _, _,    _,    Goal) :- call(Goal).
 
-:- meta_predicate rttrust(0, ?, ?, ?).
-rttrust(Check, PredName, Dict, Loc) :-
-    ( current_prolog_flag(rtchecks_trust, yes)
-    ->rtcheck(Check, PredName, Dict, Loc)
+:- meta_predicate with_info(0, ?).
+with_info(Comp, Info) :-
+    with_context_value(Comp, comp_info, Info).
+
+rtcheck_ifnot(Check, PredName, Loc) :-
+    rtcheck_cond(\+ Check, Check, PredName, Loc).
+
+rtcheck_cond(Cond, Check, PredName, Loc) :-
+    ( Cond
+    ->send_rtcheck([Check-[]], pp_check, PredName, [], [pploc(Loc)])
     ; true
     ).
+    
 
-:- meta_predicate rtcheck(0, ?, ?, ?).
-rtcheck(Check, PredName, Dict, Loc) :-
-	rtcheck_(Check, PredName, Dict, Loc),
-	fail.
-rtcheck(_, _, _, _).
+:- meta_predicate rtcheck(+, 0, ?).
 
-:- meta_predicate rtcheck_(0, ?, ?, ?).
-rtcheck_(Check, _, _, _) :-
-	Check,
-	!.
-rtcheck_(Check, PredName, Dict, Loc) :-
-	send_rtcheck([Check-[]], pp_check, PredName, Dict, [pploc(Loc)]).
+rtcheck(Type, Check, Loc) :-
+    ignore(do_rtcheck(Type, Check, Loc)).
+
+do_rtcheck(check, Check, Loc) :-
+    rtcheck_ifnot(Check, check/1, Loc).
+do_rtcheck(trust, Check, Loc) :-
+    current_prolog_flag(rtchecks_trust, yes),
+    rtcheck_ifnot(Check, trust/1, Loc).
+do_rtcheck(true, Check, Loc) :-
+    current_prolog_flag(rtchecks_true, yes),
+    rtcheck_ifnot(Check, true/1, Loc).
+do_rtcheck(false, Check, Loc) :-
+    current_prolog_flag(rtchecks_false, yes),
+    rtcheck_cond(Check, Check, false/1, Loc),
+    fail.
 
 :- meta_predicate call_stack(0, ?).
 call_stack(Goal, Pos) :-
@@ -89,15 +90,3 @@ call_stack(Goal, Pos) :-
 	    send_rtcheck(PropNames, Type, PredName, Dict, [Pos|Poss])).
 % :- meta_predicate '$meta$rtc'(0, -).
 '$meta$rtc'(Goal, Goal).
-
-:- meta_predicate check(0).
-check(_).
-
-:- meta_predicate trust(0).
-trust(_).
-
-:- meta_predicate true(0).
-true(_).
-
-:- meta_predicate false(0).
-false(_).

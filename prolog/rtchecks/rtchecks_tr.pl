@@ -256,10 +256,8 @@ do_rtchecks_sentence_tr(Head, Clauses, M, Dict) :-
 
 rtchecks_goal_tr(end_of_file, _,         M) :- !, cleanup_db(M).
 rtchecks_goal_tr(PPAssertion, PPRTCheck, _) :-
-	proc_ppassertion(PPAssertion, PredName, Dict, Loc, PPRTCheck),
-	b_getval('$variable_names', Dict),
-	location(Loc),
-	PredName = PPAssertion, !.
+	proc_ppassertion(PPAssertion, Loc, PPRTCheck),
+	location(Loc), !.
 rtchecks_goal_tr('$orig_call'(Goal0), Goal, M) :- !,
 	qualify_goal(M, Goal0, Goal). % TODO: doesn't work with builtins (swi) --EMM
 :- if(current_prolog_flag(dialect, ciao)).

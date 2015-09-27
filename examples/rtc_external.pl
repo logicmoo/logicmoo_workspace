@@ -1,4 +1,8 @@
-:- module(rtc_external, [test_ex/0], [assertions, nativeprops, rtchecks]).
+:- module(rtc_external, [test_ex/0]).
+
+:- use_module(library(swi/assertions)).
+:- use_module(library(swi/basicprops)).
+:- use_module(library(swi/nativeprops)).
 
 :- doc(author, "Edison Mera").
 
@@ -9,10 +13,10 @@
 
 :- pred functor/3 : (nonvar * var * var) => (nonvar * atom * nnegint) + fails.
 
-:- test functor(A,B,C) : (A=0) => (nonvar * atom * nnegint) + fails.
+:- test functor(A, _, _) : (A=0) => (nonvar * atom * nnegint) + fails.
 
 :- true prop patata/1 + no_signal.
-:- meta_predicate patata(goal).
+:- meta_predicate patata(0).
 patata(G) :- call(G).
 
 :- pred display/1 + patata.

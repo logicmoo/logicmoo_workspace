@@ -49,7 +49,7 @@ maparg(_, _, _, _, _).
 
 generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
     resolve_meta_call(Goal0, Goal),
-    ( proc_ppassertion(Goal, _, [], Loc, RTChecks)
+    ( proc_ppassertion(Goal, Loc, RTChecks)
     ->true
     ; implementation_module(CM:Goal, M),
       ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _CM, _)
@@ -60,6 +60,8 @@ generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
 	  Assertions \= []
 	->generate_rtchecks(Assertions, Head, M, Loc, G1, G2, G3, CM:Head),
 	  qualify_meta_goal(CM:Goal, Head),
+	  % TODO: Be careful if you want to refactorize this part, now CM is
+	  % static:
 	  (M \= CM -> G0 = G1, G2 = G3 ; G0 = G3),
 	  lists_to_lits(G0, RTChecks)
 	; RTChecks = Goal0

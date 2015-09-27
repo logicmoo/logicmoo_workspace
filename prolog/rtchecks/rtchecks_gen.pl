@@ -3,7 +3,7 @@
 			 current_assertion/4,
 			 generate_rtchecks/8,
 			 generate_ctchecks/4,
-			 proc_ppassertion/5,
+			 proc_ppassertion/3,
 			 generate_step_rtchecks/7,
 			 current_assertion/16]).
 
@@ -151,7 +151,7 @@ valid_assertions(Status, Type) :-
 	; rtcheck_assr_status(Status)
 	).
 
-% rtcheck_assr_status(true) :- current_prolog_flag(rtchecks_true, yes).
+rtcheck_assr_status(true)  :- current_prolog_flag(rtchecks_true,  yes).
 rtcheck_assr_status(trust) :- current_prolog_flag(rtchecks_trust, yes).
 rtcheck_assr_status(debug) :- current_prolog_flag(rtchecks_debug, yes).
 rtcheck_assr_status(trace) :- current_prolog_flag(rtchecks_trace, yes).
@@ -252,7 +252,7 @@ compatpos_rtchecks(Assertions0, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL) -
 		  Assertions0, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL, _).
 
 comp_rtchecks(Assertions0, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL) -->
-    prop_rtchecks(comp, body_check_comp(Pred, M),
+    prop_rtchecks(comp, body_check_comp(M),
 		  Assertions0, Pred, M, PLoc, PosLocs, StatusTypes, CheckedL, []).
 
 prop_rtchecks(PType, BodyCheckProp, Assertions0, Pred, M, PLoc, PosLocs,
@@ -262,14 +262,13 @@ prop_rtchecks(PType, BodyCheckProp, Assertions0, Pred, M, PLoc, PosLocs,
     },
     call(BodyCheckProp, ChkCalls, CheckedL0, CheckedL).
 
-body_check_comp(_,    _, [],       _,  _, Body,  Body) :- !.
-body_check_comp(Pred, M, ChkComps, CheckedL0, CheckedL, Body0, Body) :-
+body_check_comp(_, [],       _,  _, Body,  Body) :- !.
+body_check_comp(M, ChkComps, CheckedL0, CheckedL, Body0, Body) :-
 	compound_rtchecks_end(comp_call_lit, collapse_prop, ChkComps, CheckedL0, CompCall),
 	compound_rtchecks_end(comp_comp_lit, collapse_prop, ChkComps, CheckedL,  CompComp),
 	maplist(comp_to_lit(M), CompComp, ChkComp0),
 	sort(ChkComp0, ChkComp1),
-	comps_to_goal([@(rtchecks_rt:with_goal(G, Pred), M)-G|ChkComp1],
-		      compound_comp, CompBody, Body),
+	comps_to_goal(ChkComp1, compound_comp, CompBody, Body),
 	Body0 = [CompCall, CompBody].
 
 pre_lit(pre(ChkProp, Prop, _, PropValues), cui(Prop - [], PropValues, ChkProp)).
@@ -312,13 +311,13 @@ collapse_dups3([],             Comp, [Comp]).
 collapse_dups3([Comp0|Comps0], Comp, [Comp|Comps]) :-
 	collapse_dups2(Comp0, Comps0, Comps).
 
-comps_to_comp_lit(PropValues, Comp, M, Body0, Body) :-
-	comps_parts_to_comp_lit(PropValues, Comp, M, Body1, Body),
+comps_to_comp_lit(PropValues, Comp, M, Info, Body0, Body) :-
+	comps_parts_to_comp_lit(PropValues, Comp, M, Info, Body1, Body),
 	lists_to_lits(Body1, Body0).
 
 valid_commands([times(_, _), try_sols(_, _)]).
 
-comps_parts_to_comp_lit(PropValues, Comp0, M, Body0, Body) :-
+comps_parts_to_comp_lit(PropValues, Comp0, M, Info, Body0, Body) :-
 	valid_commands(VC),
 	subtract(Comp0, VC, Comp),
 	comps_to_goal(Comp, Body1, Body2),
@@ -327,7 +326,7 @@ comps_parts_to_comp_lit(PropValues, Comp0, M, Body0, Body) :-
 	; PropValues == [] ->
 	  Body2 = Body,
 	  Body0 = Body1
-	; Body0 = @(rtchecks_rt:checkif_comp(PropValues, Body1, Body2, Body), M)
+	; Body0 = @(rtchecks_rt:checkif_comp(PropValues, Info, Body1, Body2, Body), M)
 	).
 
 comp_call_lit(comp(ChkCall, Call, PropValues, _, _),
@@ -337,15 +336,16 @@ comp_comp_lit(comp(_, _, PropValues, ChkComp, Comp), cui(Comp - PropValues, _, C
 
 compound_comp(Goal0-Goal, Goal0, Goal).
 
-comp_to_lit(M, i(_, _, _, Comp, _CompNames, PropValues), ChkComp-Goal) :-
-    comps_to_comp_lit(PropValues, Comp, M, ChkComp, Goal).
+comp_to_lit(M, i(PosLoc, PredName, Dict, Comp, _CompNames, PropValues), ChkComp-Goal) :-
+    comps_to_comp_lit(PropValues, Comp, M, info(PredName, Dict, PosLoc), ChkComp, Goal).
 
-proc_ppassertion(check(Goal), PredName, Dict, Loc,
-		 rtcheck(Goal, PredName, Dict, Loc)).
-proc_ppassertion(trust(Goal), PredName, Dict, Loc,
-		 rttrust(Goal, PredName, Dict, Loc)).
-proc_ppassertion(true(_),  _, _, _, true).
-proc_ppassertion(false(_), _, _, _, true).
+ppassertion_type_goal(check(Goal), check, Goal).
+ppassertion_type_goal(trust(Goal), trust, Goal).
+ppassertion_type_goal(true( Goal), true,  Goal).
+ppassertion_type_goal(false(Goal), false, Goal).
+
+proc_ppassertion(PPAssertion, Loc, rtcheck(Type, Goal, Loc)) :-
+    ppassertion_type_goal(PPAssertion, Type, Goal).
 
 generate_rtchecks(Assrs, Pred, M, PLoc, G1, G2, G3, G) :-
 	generate_step_rtchecks(step1, Assrs, Pred, M, PLoc, G1, G2),

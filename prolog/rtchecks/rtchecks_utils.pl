@@ -1,7 +1,6 @@
 :- module(rtchecks_utils,
-	  [handle_rtcheck/1,
-	   call_rtc/1, save_rtchecks/1, load_rtchecks/1, rtcheck_error/1,
-	   ctime_t/1]).
+	  [handle_rtcheck/1, call_rtc/1, save_rtchecks/1, load_rtchecks/1,
+	   rtcheck_error/1, ctime_t/1]).
 
 :- use_module(library(swi/assertions)).
 :- use_module(library(swi/basicprops)).
@@ -52,8 +51,8 @@ rtcheck_type(calls).
 :- pred handle_rtcheck/1 : rtcheck_error.
 
 handle_rtcheck(RTCheck) :-
-	check_to_messages(rtcheck, RTCheck, Messages, []),
-	pretty_messages(Messages).
+    check_to_messages(rtcheck, RTCheck, Messages, []),
+    pretty_messages(Messages).
 
 pretty_messages(Messages0) :-
 	compact_list(Messages0, Messages),
@@ -86,7 +85,7 @@ rtc_message_location(Pos) -->
     {'$push_input_context'(rtchecks)},
     prolog:message_location(Loc),
     {'$pop_input_context'}.
-    
+
 position_to_message(posloc(Pred, Loc)) -->
     rtc_message_location(Loc),
     ['Failure of ~q'-[Pred]],
@@ -94,13 +93,15 @@ position_to_message(posloc(Pred, Loc)) -->
     ->{clause_property(Clause, predicate(Caller))},
       [' in ~q.'-[Caller]]
     ; ['.']
-    ).
+    ),
+    [nl].
 position_to_message(asrloc(Loc)) -->
     rtc_message_location(Loc).
 position_to_message(pploc(Loc)) -->
     rtc_message_location(Loc).
 
-select_defined(_=V) :- nonvar(V).
+select_defined(_=V) :- !, nonvar(V).
+select_defined(_).
 
 :- prop ctime_t/1 is type.
 
@@ -120,13 +121,11 @@ check_time_msg(ctcheck, 'Compile-Time').
 ~w is the tail."-[Messages].
 
 check_to_messages(Time,
-		  rtcheck(Type, Pred, Dict, PropValues0, Positions)) -->
-    { gtrace,
-      pairs_keys_values(PropValues0, Props, Values0),
+		  rtcheck(Type, Pred, _Dict, PropValues0, Positions)) -->
+    { pairs_keys_values(PropValues0, Props, Values0),
       append(Values0, Values1),
       include(select_defined, Values1, Values2),
-      sort(Values2, Values),
-      writeln(user_error, Dict)
+      sort(Values2, Values)
     },
     foldl(position_to_message, Positions),
     {check_time_msg(Time, TimeMsg)},

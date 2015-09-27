@@ -22,12 +22,12 @@
     trace_rtc(0),
     do_trace_rtc(0).
 
-trace_rtc(M:Goal) :-
-    generate_rtchecks(_, M, Goal, RTChecks),
-    call_rtc(do_trace_rtc(M:RTChecks)).
+trace_rtc(Goal) :-
+    call_rtc(do_trace_rtc(Goal)).
 
-do_trace_rtc(Goal) :-
-    call_inoutex(Goal,
+do_trace_rtc(M:Goal) :-
+    generate_rtchecks(_, M, Goal, RTCGoal),
+    call_inoutex(M:RTCGoal,
 		 setup_trace,
 		 cleanup_trace).
 
@@ -55,9 +55,12 @@ black_list_caller(M:F/A) :-
     black_list_caller(H, M).
 
 black_list_caller(M, _) :- black_list_module(M).
+black_list_caller(native_props, _).
 
 black_list_callee(M, _) :- black_list_module(M).
 black_list_callee(system, Call) :- black_list_callee_system(Call).
+black_list_callee(native_props, Call) :-
+    \+ memberchk(Call, [check(_), trust(_), true(_), false(_)]).
 
 black_list_callee_system(catch(_, _, _)).
 black_list_callee_system(setup_call_cleanup(_, _, _)).
@@ -75,7 +78,6 @@ black_list_module(rtchecks_basic).
 black_list_module(rtchecks_send).
 black_list_module('$expand').
 black_list_module(complete_dict).
-black_list_module(native_props).
 black_list_module(basic_props).
 black_list_module(apply_dict).
 black_list_module(exceptions).
@@ -92,6 +94,8 @@ skip_predicate(rtchecks_utils:handle_rtcheck(_)).
 
 pp_assr(check(_), _).
 pp_assr(trust(_), _).
+pp_assr(true( _), _).
+pp_assr(false(_), _).
 
 :- public rtcheck_port/3.
 
