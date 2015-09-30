@@ -148,17 +148,8 @@ setup_clause_bpt(Clause, Action) :-
       )
     ).
 
-clause_location(Clause, PC, Loc) :-
-    '$clause_term_position'(Clause, PC, List),
-    ontrace:clause_subloc(Clause, List, Loc).
-
 :- multifile
-    prolog:message_location//1,
     prolog:break_hook/6.
-
-prolog:message_location(clause_pc(Clause, PC)) -->
-    {clause_location(Clause, PC, Loc)},
-    prolog:message_location(Loc).
 
 :- public rat_trap/3.
 :- meta_predicate rat_trap(0, +, +).
