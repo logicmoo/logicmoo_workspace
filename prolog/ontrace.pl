@@ -68,12 +68,15 @@ true_1(G, G).
 setup_trace(State, M:OnTrace, OptL) :-
     true_1(\_^true, True1),
     select_option(goal(ValidGoal), OptL,  OptL1, True1),
-    select_option(file(ValidFile), OptL1, _,     True1),
+    select_option(file(ValidFile), OptL1, OptL2, True1),
+    %% redo port have weird bugs, ignoring it for now:
+    select_option(ports(PortList), OptL2, _,
+		  [call, exit, fail, unify, exception]),
     asserta((user:prolog_trace_interception(Port, Frame, PC, Action)
 	    :- ignore(trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
-			  M:ValidFile, Action))),
+				 M:ValidFile, Action))),
 	    Ref),
-    foldl(port_mask, [call, exit, fail, redo, unify, exception], 0, Mask),
+    foldl(port_mask, PortList, 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
     nb_setarg(1, State, Visible),
@@ -107,21 +110,24 @@ trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
 do_trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
     prolog_frame_attribute(Frame,  goal, M:H), % M:H to skip local predicates
     \+ \+ call(ValidGoal, M:H),
-    find_parents(Port, Frame, ParentL, Cl, List),
-    ( clause_property(Cl, file(File))
+    find_parents(Port, Frame, ParentL, RFrame, Cl, SubLoc),
+    prolog_frame_attribute(RFrame, goal, CM:CH),
+    ( ( clause_property(Cl, file(File))
+      ; module_property(CM, file(File))
+      )
     -> \+ \+ call(ValidFile, File)
     ; true
     ),
-    clause_subloc(Cl, List, SubLoc),
-    once(( member(F, [Frame|ParentL]),
-    	   ( prolog_frame_attribute(F, goal, PM:_),
-    	     user_defined_module(PM)
-    	   ))),
+    \+ \+ call(ValidGoal, CM:CH),
+    \+ \+ ( member(F, [Frame|ParentL]),
+	    prolog_frame_attribute(F, goal, PM:_),
+	    user_defined_module(PM)
+	  ),
     !,
     call(OnTrace, Port, Frame, PC, ParentL, SubLoc, Action).
 do_trace_port(_, _, _, _, _, _, continue).
 
-find_parents(Port, Frame, ParentL, Cl, List) :-
+find_parents(Port, Frame, ParentL, RFrame, Cl, Loc) :-
     ( % Due to a bug in SWI-Prolog, we can not rely on redo(PC) +
       % $clause_term_position(Cl,PC,List), in any case, the coverage of builtins
       % is not big deal, compared to the coverage of custom predicates --EMM
@@ -130,14 +136,13 @@ find_parents(Port, Frame, ParentL, Cl, List) :-
     % literal, perhaps would be good to have exit_clause and exit_lit
     ->ParentL = [],
       prolog_frame_attribute(Frame, clause, Cl),
-      List = []
+      RFrame = Frame,
+      Loc = clause(Cl)
     ; find_parent_with_pc(Frame, PC, [], ParentL),
       [Parent|_] = ParentL,
       prolog_frame_attribute(Parent, clause, Cl),
-      ('$clause_term_position'(Cl, PC, List)
-      ->true
-      ; List = []
-      )
+      RFrame = Parent,
+      Loc = clause_pc(Cl, PC)
     ).
 
 find_parent_with_pc(Frame, PC, List0, List) :-
@@ -146,6 +151,27 @@ find_parent_with_pc(Frame, PC, List0, List) :-
     ->List = [Parent|List0 ]
     ; find_parent_with_pc(Parent, PC, [Parent|List0 ], List)
     ).
+
+:- multifile
+    prolog:message_location//1.
+
+:- dynamic
+    clause_location_cache/3.
+:- volatile
+    clause_location_cache/3.
+
+clause_pc_location(Clause, PC, Loc) :-
+    clause_location_cache(Clause, PC, Loc), !.
+clause_pc_location(Clause, PC, Loc) :-
+    ( '$clause_term_position'(Clause, PC, List)
+    ->clause_subloc(Clause, List, Loc)
+    ; Loc = clause(Clause)
+    ),
+    assertz(clause_location_cache(Clause, PC, Loc)).
+
+prolog:message_location(clause_pc(Clause, PC)) -->
+    {clause_pc_location(Clause, PC, Loc)},
+    prolog:message_location(Loc).
 
 %% clause_subloc(+ClauseRef, +List, -SubLoc) is det.
 %
