@@ -4,10 +4,10 @@
 	   metapred/4]).
 
 :- use_module(library(edinburgh)).
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/rtchecks)).
-:- use_module(library(swi/basicprops)).
-:- use_module(library(swi/nativeprops)).
+:- use_module(library(assertions)).
+:- use_module(library(rtchecks)).
+:- use_module(library(basicprops)).
+:- use_module(library(nativeprops)).
 
 :- meta_predicate metapred(+,-,?,1).
 

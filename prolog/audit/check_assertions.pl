@@ -42,9 +42,9 @@
 :- use_module(library(location_utils)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(qualify_meta_goal)).
-:- use_module(library(assertions/assrt_lib)).
-:- use_module(library(swi/rtchecks)).
-:- use_module(library(rtchecks/rtchecks_gen)).
+:- use_module(assertions(assrt_lib)).
+:- use_module(library(rtchecks)).
+:- use_module(rtchecks(rtchecks_gen)).
 :- use_module(library(audit/audit)).
 
 :- dynamic

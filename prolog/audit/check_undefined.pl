@@ -37,7 +37,7 @@
 :- use_module(library(referenced_by)).
 :- use_module(library(audit/audit)).
 :- use_module(library(audit/audit_codewalk)).
-:- use_module(library(assertions/assrt_lib)).
+:- use_module(assertions(assrt_lib)).
 
 :- multifile
     prolog:message//1.

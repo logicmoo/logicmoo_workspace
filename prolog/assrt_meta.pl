@@ -31,9 +31,9 @@
 
 :- use_module(library(location_utils)).
 :- use_module(library(assertions_op)).
-:- use_module(library(swi/assertions)).
-:- use_module(library(rtchecks/rtchecks_basic)).
-:- use_module(library(rtchecks/rtchecks_gen)).
+:- use_module(library(assertions)).
+:- use_module(rtchecks(rtchecks_basic)).
+:- use_module(rtchecks(rtchecks_gen)).
 
 :- create_prolog_flag(assrt_meta_pred, check, [type(atom)]).
 
