@@ -205,13 +205,13 @@ do_prop_rtcheck(PType, Pred, M, PLoc, PosLocs, Assertion, ChkCall) :-
 do_prop_rtcheck(compat, M, PredName, PosLoc,
 		assr(_, _, _, Compat, _, _, _, _, _, CompatNames, _, _, _, Dict),
 		pre(ChkCompat, Compat,
-		    rtchecks_send:send_rtcheck(PropValues, compat, PredName, Dict, PosLoc),
+		    send_rtcheck(PropValues, compat, PredName, Dict, PosLoc),
 		    PropValues)) :-
     get_checkc(compat, M, Compat, CompatNames, PropValues, ChkCompat).
 do_prop_rtcheck(calls, M, PredName, PosLoc,
 		assr(_, _, _, _, Call, _, _, _, _, _, CallNames, _, _, Dict),
 		pre(ChkCall, Call,
-		    rtchecks_send:send_rtcheck(PropValues, calls, PredName, Dict, PosLoc),
+		    send_rtcheck(PropValues, calls, PredName, Dict, PosLoc),
 		    PropValues)) :-
     get_checkc(call, M, Call, CallNames, PropValues, ChkCall).
 do_prop_rtcheck(success, M, PredName, PosLoc,
@@ -317,7 +317,7 @@ comps_to_comp_lit(PropValues, Comp, M, Info, Body0, Body) :-
 
 valid_commands([times(_, _), try_sols(_, _)]).
 
-comps_parts_to_comp_lit(PropValues, Comp0, M, Info, Body0, Body) :-
+comps_parts_to_comp_lit(PropValues, Comp0, _M, Info, Body0, Body) :-
 	valid_commands(VC),
 	subtract(Comp0, VC, Comp),
 	comps_to_goal(Comp, Body1, Body2),
@@ -326,7 +326,7 @@ comps_parts_to_comp_lit(PropValues, Comp0, M, Info, Body0, Body) :-
 	; PropValues == [] ->
 	  Body2 = Body,
 	  Body0 = Body1
-	; Body0 = @(rtchecks_rt:checkif_comp(PropValues, Info, Body1, Body2, Body), M)
+	; Body0 = checkif_comp(PropValues, Info, Body1, Body2, Body)
 	).
 
 comp_call_lit(comp(ChkCall, Call, PropValues, _, _),
@@ -344,7 +344,7 @@ ppassertion_type_goal(trust(Goal), trust, Goal).
 ppassertion_type_goal(true( Goal), true,  Goal).
 ppassertion_type_goal(false(Goal), false, Goal).
 
-proc_ppassertion(PPAssertion, CM, Loc, rtchecks_rt:rtcheck(Type, CM:Goal, Loc)) :-
+proc_ppassertion(PPAssertion, CM, Loc, rtcheck(Type, CM:Goal, Loc)) :-
     ppassertion_type_goal(PPAssertion, Type, Goal).
 
 generate_rtchecks(Assrs, Pred, M, PLoc, G1, G2, G3, G) :-

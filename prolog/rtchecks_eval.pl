@@ -7,12 +7,12 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(rtchecks(rtchecks_gen)).
 :- use_module(rtchecks(rtchecks_basic)).
-:- use_module(library(resolve_meta_call)).
+:- use_module(library(resolve_calln)).
 
 :- meta_predicate rtchecks_eval(0).
 rtchecks_eval(M:Goal) :-
     generate_rtchecks(_, M, Goal, RTChecks),
-    call(M:RTChecks).
+    call(RTChecks).
 
 generate_rtchecks(Loc, M, Goal, RTChecks) :-
     apply_body(generate_literal_rtchecks(Loc), M, Goal, RTChecks).
@@ -47,24 +47,35 @@ maparg(Apply, N, S, G, R) :-
     maparg(Apply, N1, S, G, R).
 maparg(_, _, _, _, _).
 
-generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
-    resolve_meta_call(Goal0, Goal),
+generate_literal_rtchecks(Loc, CM, Goal0, rtchecks_rt:RTChecks) :-
+    resolve_calln(Goal0, Goal),
     ( proc_ppassertion(Goal, CM, Loc, RTChecks)
     ->true
     ; implementation_module(CM:Goal, M),
-      ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _CM, _)
-      ->RTChecks = Goal0
-      ; functor(Goal, F, A),
-	functor(Head, F, A),
-	( collect_assertions(Head, M, rtcheck, Assertions),
-	  Assertions \= []
-	->generate_rtchecks(Assertions, Head, M, Loc, G1, G2, G3, CM:Head),
-	  qualify_meta_goal(CM:Goal, Head),
-	  % TODO: Be careful if you want to refactorize this part, now CM is
-	  % static:
-	  (M \= CM -> G0 = G1, G2 = G3 ; G0 = G3),
-	  lists_to_lits(G0, RTChecks)
-	; RTChecks = Goal0
+      generate_pred_rtchecks(Loc, Goal, M, RTChecks, Pred, PM),
+      PM:Pred = CM:Goal
+    ).
+
+generate_pred_rtchecks(Loc, Goal, M, RTChecks, Pred, PM) :-
+    ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _, _)
+    ->RTChecks = PM:Pred
+    ; functor(Goal, F, A),
+      functor(Head, F, A),
+      ( collect_assertions(Head, M, rtcheck, Assertions),
+	Assertions \= []
+      ->generate_rtchecks(Assertions, Head, M, Loc, G1, G2, G3, PM:Pred),
+	functor(Pred, F, A),
+	qualify_meta_goal(PM:Pred, Head),
+	% TODO: Be careful if you want to refactorize this part, now CM is
+	% static:
+	lists_to_lits(G3, R3),
+	( G1 == G2
+	->RTChecks = R3
+	; lists_to_lits(G1, R1),
+	  RTChecks = checkif_modl(M, PM, R1, G2, R3)
 	)
+	% (M \= CM -> G0 = G1, G2 = G3 ; G0 = G3),
+	% lists_to_lits(G0, RTChecks)
+      ; RTChecks = PM:Pred
       )
     ).

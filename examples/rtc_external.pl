@@ -13,7 +13,9 @@
 
 :- pred functor/3 : (nonvar * var * var) => (nonvar * atom * nnegint) + fails.
 
-:- test functor(A, _, _) : (A=0) => (nonvar * atom * nnegint) + fails.
+:- test functor(H, _, _) : (H=0) => (nonvar * atom * nnegint) + fails.
+
+%functor_(A,B,C) :- functor(A,B,C).
 
 :- true prop patata/1 + no_signal.
 :- meta_predicate patata(0).

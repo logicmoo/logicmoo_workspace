@@ -61,87 +61,149 @@ test(rtexec) :-
 			 [pploc(clause_pc(_,_))])]).
 
 test(rtgen) :-
-    generate_rtchecks(_Loc, rtchecks_example3, fullasr(A,B), RTChecks),
+    generate_rtchecks(_Loc, rtchecks_example3, fullasr(A,C), RTChecks),
     % portray_clause(true :- RTChecks), % Uncomment this if you want to update this test
-    assertion(RTChecks
-	     = ( fullasr(_, _)=F,
-		 asrloc(loc(_, _, _))=N,
-		 asrloc(loc(_, _, _))=G,
-		 asrloc(loc(_, _, _))=I,
-		 findall(A,
-			 ( \+ nativeprops:compat(rtchecks_example3:atm(B)),
-			   A=atm(_)-['A'=B]
-			 ),
-			 D),
-		 findall(C,
-			 ( \+ nativeprops:compat(rtchecks_example3:int(B)),
-			   C=int(_)-['A'=B]
-			 ),
-			 E),
-		 (   D\=[],
-		     E\=[]
-		 ->  rtchecks_send:send_rtcheck(D, compat, F, ['A'=B, 'B'=H], [G]),
-		     rtchecks_send:send_rtcheck(E, compat, F, ['A'=B, 'B'=H], [I])
-		 ;   true
-		 ),
-		 findall(J,
-			 ( \+ nativeprops:instance(rtchecks_example3:animal(B)),
-			   J=animal(_)-['A'=B]
-			 ),
-			 M),
-		 findall(K,
-			 (   \+ nativeprops:instance(rtchecks_example3:animal(B)),
-			     K=animal(_)-['A'=B]
-			 ;   \+ nativeprops:instance(rtchecks_example3:atm(B)),
-			     K=atm(_)-['A'=B]
-			 ),
-			 L),
-		 (   L\=[],
-		     M\=[]
-		 ->  rtchecks_send:send_rtcheck(L, calls, F, ['A'=B, 'B'=H], [N]),
-		     rtchecks_send:send_rtcheck(M, calls, F, ['A'=B, 'B'=H], [I])
-		 ;   true
-		 ),
-		 @(rtchecks_rt:checkif_comp(L, info(F, ['A'=B, 'B'=H], [N]), not_fails(O), O,
-					    @(rtchecks_rt:checkif_comp(M, info(F, ['A'=B, 'B'=H], [I]), is_det(P), P,
-								       rtchecks_example3:fullasr(B, H)), rtchecks_example3)),
-	  rtchecks_example3),
-		 (   D==[]
-		 ->  findall(Q,
-			     ( \+ nativeprops:compat(rtchecks_example3:atm(B)),
-			       Q=atm(_)-['A'=B]
-			     ),
-			     R),
-		     rtchecks_send:send_rtcheck(R, success, F, ['A'=B, 'B'=H], [G])
-		 ;   true
-		 ),
-		 (   E==[]
-		 ->  findall(S,
-			     ( \+ nativeprops:compat(rtchecks_example3:int(B)),
-			       S=int(_)-['A'=B]
-			     ),
-			     T),
-		     rtchecks_send:send_rtcheck(T, success, F, ['A'=B, 'B'=H], [I])
-		 ;   true
-		 ),
-		 (   L==[]
-		 ->  findall(U,
-			     ( \+ nativeprops:instance(rtchecks_example3:family(H)),
-			       U=family(_)-['B'=H]
-			     ),
-			     V),
-		     rtchecks_send:send_rtcheck(V, success, F, ['A'=B, 'B'=H], [N])
-		 ;   true
-		 ),
-		 (   M==[]
-		 ->  findall(W,
-			     ( \+ nativeprops:instance(rtchecks_example3:family(H)),
-			       W=family(_)-['B'=H]
-			     ),
-			     X),
-		     rtchecks_send:send_rtcheck(X, success, F, ['A'=B, 'B'=H], [I])
-		 ;   true
-		 )
-	       )).
+    assertion(RTChecks = rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
+	( 
+	  findall(B,
+		  (   \+ instance(rtchecks_example3:animal(A)),
+		      B=animal(A)-['A'=A]
+		  ;   \+ instance(rtchecks_example3:var(C)),
+		      B=var(B)-['B'=C]
+		  ),
+		  D),
+	  (   D\=[]
+	  ->  send_rtcheck(D,
+			   (calls),
+			   fullasr(A, B),
+			   ['A'=A, 'B'=C],
+			   
+			   [ asrloc(loc('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl',
+					34,
+				      34))
+			   ])
+	  ;   true
+	  ),
+	  E
+	),
+	E,
+	( fullasr(_, _)=J,
+	  asrloc(loc(_, _, _))=Q,
+	  asrloc(loc(_, _, _))=K,
+	  asrloc(loc(_, _, _))=L,
+	  findall(F,
+		  ( \+ compat(rtchecks_example3:atm(A)),
+		    F=atm(A)-['A'=A]
+		  ),
+		  H),
+	  findall(G,
+		  ( \+ compat(rtchecks_example3:int(A)),
+		    G=int(A)-['A'=A]
+		  ),
+		  I),
+	  (   H\=[],
+	      I\=[]
+	  ->  send_rtcheck(H,
+			   compat,
+			   J,
+			   ['A'=A, 'B'=C],
+			   [K]),
+	      send_rtcheck(I,
+			   compat,
+			   J,
+			   ['A'=A, 'B'=C],
+			   [L])
+	  ;   true
+	  ),
+	  findall(M,
+		  ( \+ instance(rtchecks_example3:animal(A)),
+		    M=animal(A)-['A'=A]
+		  ),
+		  P),
+	  findall(N,
+		  (   \+ instance(rtchecks_example3:animal(A)),
+		      N=animal(A)-['A'=A]
+		  ;   \+ instance(rtchecks_example3:atm(A)),
+		      N=atm(A)-['A'=A]
+		  ),
+		  O),
+	  (   O\=[],
+	      P\=[]
+	  ->  send_rtcheck(O,
+			   (calls),
+			   J,
+			   ['A'=A, 'B'=C],
+			   [Q]),
+	      send_rtcheck(P,
+			   (calls),
+			   J,
+			   ['A'=A, 'B'=C],
+			   [L])
+	  ;   true
+	  ),
+	  checkif_comp(O,
+		       info(J, ['A'=A, 'B'=C], [Q]),
+		       not_fails(R),
+		       R,
+		       checkif_comp(P,
+				    info(J,
+					 ['A'=A, 'B'=C],
+					 [L]),
+				    is_det(S),
+				    S,
+				    rtchecks_example3:fullasr(A, C))),
+	  (   H==[]
+	  ->  findall(T,
+		      ( \+ compat(rtchecks_example3:atm(A)),
+			T=atm(A)-['A'=A]
+		      ),
+		      U),
+	      send_rtcheck(U,
+			   (success),
+			   J,
+			   ['A'=A, 'B'=C],
+			   [K])
+	  ;   true
+	  ),
+	  (   I==[]
+	  ->  findall(V,
+		      ( \+ compat(rtchecks_example3:int(A)),
+			V=int(A)-['A'=A]
+		      ),
+		      W),
+	      send_rtcheck(W,
+			   (success),
+			   J,
+			   ['A'=A, 'B'=C],
+			   [L])
+	  ;   true
+	  ),
+	  (   O==[]
+	  ->  findall(X,
+		      ( \+ instance(rtchecks_example3:family(C)),
+			X=family(B)-['B'=C]
+		      ),
+		      Y),
+	      send_rtcheck(Y,
+			   (success),
+			   J,
+			   ['A'=A, 'B'=C],
+			   [Q])
+	  ;   true
+	  ),
+	  (   P==[]
+	  ->  findall(Z,
+		      ( \+ instance(rtchecks_example3:family(C)),
+			Z=family(B)-['B'=C]
+		      ),
+		      A1),
+	      send_rtcheck(A1,
+			   (success),
+			   J,
+			   ['A'=A, 'B'=C],
+			   [L])
+	  ;   true
+	  )
+	))).
 
 :- end_tests(rtchecks).

@@ -79,13 +79,13 @@ compound_check_prop(_, M, instance(Prop), CheckProp) :- !,
 compound_check_prop(_, _, succeeds(Prop), Prop) :- !.
 compound_check_prop(Check, _, M:Prop, CheckProp) :- !,
 	compound_check_prop(Check, M, Prop, CheckProp).
-compound_check_prop(Check, M, Prop, nativeprops:CheckProp) :-
+compound_check_prop(Check, M, Prop, CheckProp) :-
 	CheckProp =.. [Check, M:Prop].
 
 compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, AsrLocs, PropValue,
 		 ( IfValues == [] ->
 		   findall(PropValue, CheckProps, Props),
-		   rtchecks_send:send_rtcheck(Props, ErrType, PredName, Dict, AsrLocs)
+		   send_rtcheck(Props, ErrType, PredName, Dict, AsrLocs)
 		 ; true
 		 )).
 

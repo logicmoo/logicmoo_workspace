@@ -24,9 +24,9 @@
 trace_rtc(Goal) :-
     call_rtc(do_trace_rtc(Goal)).
 
-do_trace_rtc(M:Goal) :-
-    generate_rtchecks(_, M, Goal, RTCGoal),
-    call_inoutex(M:RTCGoal,
+do_trace_rtc(CM:Goal) :-
+    generate_rtchecks(_, CM, Goal, RTCGoal),
+    call_inoutex(RTCGoal,
 		 setup_trace,
 		 cleanup_trace).
 
@@ -77,7 +77,7 @@ black_list_module(rtchecks_basic).
 black_list_module(rtchecks_send).
 black_list_module('$expand').
 black_list_module(complete_dict).
-black_list_module(basic_props).
+black_list_module(basicprops).
 black_list_module(apply_dict).
 black_list_module(exceptions).
 black_list_module(intercept).
@@ -98,6 +98,7 @@ pp_assr(false(_), _).
 
 :- public rtcheck_port/3.
 
+% rtcheck_port(_,_,skip) :- !.
 rtcheck_port(Port, Frame, Action) :-
     ( current_prolog_flag(gui_tracer, true)
     ->print_message(information,
@@ -118,6 +119,12 @@ rtcheck_port_(_, Frame, Action) :-
     ; Action = skip
     ).
 
+call_instr(i_usercall0 ).
+call_instr(i_usercalln(_)).
+
+call_instr_param(i_call(  PI), PI).
+call_instr_param(i_depart(PI), PI).
+
 setup_clause_bpt(Clause, Action) :-
     ( rtc_scanned(Clause)
     ->Action = skip
@@ -126,10 +133,10 @@ setup_clause_bpt(Clause, Action) :-
       \+ black_list_module(CM),
       '$break_pc'(Clause, PC, _NextPC1),
       '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
-      ( ( memberchk(TInstr, [i_usercall0, i_usercalln(_N)])
+      ( ( call_instr(TInstr)
 	->nth_clause(M:Goal, _, Clause),
 	  \+ assertion_head_body(Goal, M, _, prop, _, _, _, _, _, _)
-	; memberchk(TInstr, [i_call(PI), i_depart(PI)]),
+	; call_instr_param(TInstr, PI),
 	  ( PI=LM:F/A
 	  ->functor(Goal, F, A),
 	    implementation_module(LM:Goal, M)
@@ -138,7 +145,7 @@ setup_clause_bpt(Clause, Action) :-
 	    implementation_module(CM:Goal, M)
 	  ),
 	  \+ black_list_callee(M, Goal),
-	  once(( pp_assr(Goal, M)
+	  once(( rtchecks_tracer:pp_assr(Goal, M)
 	       ; current_assertion(Goal, rtcheck, _, _, _, _,
 				   _, _, _, _, _, _, _, _, _, M)
 	       ; white_list_meta(M, Goal),
@@ -182,17 +189,17 @@ rat_trap(Goal, Clause, PC) :-
 prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     \+ current_prolog_flag(gui_tracer, true),
     rtc_break(Clause, PC),
-    prolog_frame_attribute(FR, context_module, CM),
+    prolog_frame_attribute(FR, context_module, FCM),
     clause_property(Clause, predicate(PI)),
     ( \+ black_list_caller(PI)
-    ->static_strip_module(Goal0, Goal, M, CM),
-      implementation_module(M:Goal, IM),
+    ->static_strip_module(Goal0, Goal, CM, FCM),
+      implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
-      ->generate_rtchecks(clause_pc(Clause, PC), M, Goal, RTChecks),
+      ->generate_rtchecks(clause_pc(Clause, PC), CM, Goal, RTChecks),
 	( Goal == RTChecks
 	->Action = continue
 	; % Action = call(M:RTChecks)
-	  Action = call(rtchecks_tracer:rat_trap(M:RTChecks, Clause, PC))
+	  Action = call(rtchecks_tracer:rat_trap(RTChecks, Clause, PC))
 	)
       ; Action = continue
       )

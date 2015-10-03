@@ -1,4 +1,5 @@
 :- module(rtchecks_rt, [condition/1,
+			checkif_modl/5,
 			checkif_comp/5,
 			rtcheck/3,
 			call_stack/2,
@@ -6,11 +7,12 @@
 		       ]).
 
 :- use_module(library(assertions)).
+:- reexport(library(nativeprops)).
+:- reexport(rtchecks(rtchecks_send)).
 :- use_module(assertions(termtyping), []). % assertions about builtins
 :- use_module(library(plprops)).
 :- use_module(library(intercept)).
 :- use_module(library(context_values)).
-:- reexport(rtchecks(rtchecks_send)).
 
 :- doc(author, "Edison Mera").
 
@@ -52,6 +54,10 @@ partiton(_1,_2,_3,_4) is called."-[Condition, CompGoal, Head, CompGoalArg,
 :- meta_predicate checkif_comp(?, ?, 0, ?, 0).
 checkif_comp([], Info, Comp, Goal, Goal) :- with_info(Comp, Info).
 checkif_comp([_|_], _, _,    _,    Goal) :- call(Goal).
+
+:- meta_predicate checkif_modl(?, ?, 0, ?, 0).
+checkif_modl(M, M,    _,    _, Goal) :- !, call(Goal).
+checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 
 :- meta_predicate with_info(0, ?).
 with_info(Comp, Info) :-
