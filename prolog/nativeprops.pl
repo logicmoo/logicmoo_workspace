@@ -3,7 +3,6 @@
 	   fi/2,
 	   clique/1,
 	   clique_1/1,
-	   compat/1,
 	   constraint/1,
 	   covered/1,
 	   covered/2,
@@ -1147,25 +1146,6 @@ instance(Goal) :-
     ; !,
       fail
     ).
-
-:- prop compat(Prop) + no_rtcheck
-# "Uses ~w as a compatibility property."-[Prop].
-
-:- meta_predicate compat(0).
-
-compat(_:H) :-
-    % This first clause allows usage of atom/atomic and other test predicates as
-    % compatibility check
-    compound(H),
-    arg(1, H, A),
-    var(A), !.
-compat(Goal) :- \+ \+ Goal.
-
-:- if(current_prolog_flag(dialect, swi)).
-% TODO: compat/1 should be moved to basic_props.pl to avoid odd error
-% messages fixed with this kludge:
-:- basic_props:import(native_props:compat/1).
-:- endif.
 
 :- true prop nfi(_,V)
     # "~w is not further instantiated."-[V].

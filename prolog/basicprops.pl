@@ -421,6 +421,19 @@ atm_or_atm_list(T) :- list(T, atm).
 
 compat(T, P) :- \+ \+ type(T, P).
 
+:- prop compat(Prop) + no_rtcheck
+# "Uses ~w as a compatibility property."-[Prop].
+
+:- meta_predicate compat(0).
+
+compat(_:H) :-
+    % This first clause allows usage of atom/atomic and other test predicates as
+    % compatibility check
+    compound(H),
+    arg(1, H, A),
+    var(A), !.
+compat(Goal) :- \+ \+ Goal.
+
 % No comment necessary: it is taken care of specially anyway in the
 % automatic documenter. (PBC: I guess this comment refers to compat/2)
 
