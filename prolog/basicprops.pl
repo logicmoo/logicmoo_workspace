@@ -61,7 +61,7 @@
 
 :- doc(term/1, "The most general type (includes all possible terms).").
 
-:- true prop term(X) + (regtype, native) # "@var{X} is any term.".
+:- true prop term(X) + (regtype, native) # "~w is any term."-[X].
 :- true comp term(X) + sideff(free).
 :- true comp term(X) + eval.
 :- true comp term(X) + equiv(true).
@@ -74,7 +74,7 @@ term(_).
         @tt{[-2^2147483616, 2^2147483616)}.  Thus for all practical
         purposes, the range of integers can be considered infinite.").
 
-:- true prop int(T) + (regtype, native) # "@var{T} is an integer.".
+:- true prop int(T) + (regtype, native) # "~w is an integer."-[T].
 :- true comp int(T) + sideff(free).
 :- true comp int(T) : nonvar(T) + (eval, is_det).
 :- trust success int(T) => int(T).
@@ -97,7 +97,7 @@ give_sign(P, N) :- N is -P.
 	natural numbers.").
 
 :- true prop nnegint(T) + ( regtype, native )
-	# "@var{T} is a non-negative integer.".
+	# "~w is a non-negative integer."-[T].
 :- true comp nnegint(T) + sideff(free).
 :- true comp nnegint(T) : nonvar(T) + eval.
 :- trust success nnegint(T) => nnegint(T).
@@ -119,7 +119,7 @@ nnegint(N) :- posint(N).
         Not-a-number, which arises as the result of indeterminate
         operations, represented as @tt{0.Nan}").
 
-:- true prop flt(T) + (regtype, native) # "@var{T} is a float.".
+:- true prop flt(T) + (regtype, native) # "~w is a float."-[T].
 :- true comp flt(T) + sideff(free).
 :- true comp flt(T) : nonvar(T) + (eval, is_det).
 :- trust success flt(T) => flt(T).
@@ -130,7 +130,7 @@ flt(T) :- int(N), T is N/10.
 
 :- doc(num/1, "The type of numbers, that is, integer or floating-point.").
 
-:- true prop num(T) + (regtype, native) # "@var{T} is a number.".
+:- true prop num(T) + (regtype, native) # "~w is a number."-[T].
 :- true comp num(T) + (sideff(free),bind_ins).
 :- true comp num(T) : nonvar(T) + (eval, is_det).
 :- trust success num(T) => num(T).
@@ -143,7 +143,7 @@ num(T) :- int(T).
 :- doc(atm/1, "The type of atoms, or non-numeric constants.  The
         size of atoms is unbound.").
 
-:- true prop atm(T) + (regtype, native) # "@var{T} is an atom.".
+:- true prop atm(T) + (regtype, native) # "~w is an atom."-[T].
 :- true comp atm(T) + sideff(free).
 :- true comp atm(T) : nonvar(T) + (eval, is_det).
 :- trust success atm(T) => atm(T).
@@ -156,7 +156,7 @@ atm(a).
 :- doc(struct/1, "The type of compound terms, or terms with
 non-zeroary functors. By now there is a limit of 255 arguments.").
 
-:- true prop struct(T) + (regtype, native) # "@var{T} is a compound term.".
+:- true prop struct(T) + (regtype, native) # "~w is a compound term."-[T].
 :- true comp struct(T) + sideff(free).
 :- true comp struct(T) : nonvar(T) + eval.
 :- trust success struct(T) => struct(T).
@@ -166,7 +166,7 @@ struct(T) :- functor(T, _, A), A>0. % compound(T).
 
 :- doc(gnd/1, "The type of all terms without variables.").
 
-:- true prop gnd(T) + (regtype, native) # "@var{T} is ground.".
+:- true prop gnd(T) + (regtype, native) # "~w is ground."-[T].
 :- true comp gnd(T) + sideff(free).
 :- true comp gnd(T) : ground(T) + (eval, is_det).
 :- trust success gnd(T) => gnd(T).
@@ -175,7 +175,7 @@ struct(T) :- functor(T, _, A), A>0. % compound(T).
 gnd([]) :- !.
 gnd(T) :- functor(T, _, A), grnd_args(A, T).
 
-:- true prop gndstr(T) + (regtype, native) # "@var{T} is a ground compound term.".
+:- true prop gndstr(T) + (regtype, native) # "~w is a ground compound term."-[T].
 :- true comp gndstr(T) + sideff(free).
 :- true comp gndstr(T) : ground(T) + (eval, is_det).
 :- trust success gndstr(T) => gndstr(T).
@@ -190,7 +190,7 @@ grnd_args(N, T) :-
         grnd_args(N1, T).
 
 :- true prop constant(T) + regtype
-   # "@var{T} is an atomic term (an atom or a number).".
+   # "~w is an atomic term (an atom or a number)."-[T].
 :- true comp constant(T) + sideff(free).
 :- true comp constant(T) : nonvar(T) + (eval, is_det).
 :- trust success constant(T) => constant(T).
@@ -199,8 +199,7 @@ constant(T) :- atm(T).
 constant(T) :- num(T).
 
 :- true prop callable(T) + regtype
-   # "@var{T} is a term which represents a goal, i.e.,
-        an atom or a structure.".
+   # "~w is a term which represents a goal, i.e.,\n        an atom or a structure."-[T].
 :- true comp callable(T) + sideff(free).
 :- true comp callable(T) : nonvar(T) + (eval, is_det).
 :- trust success callable(T) => nonvar(T).
@@ -239,8 +238,7 @@ way around.
 @end{description}
 ").
 
-:- true prop operator_specifier(X) + regtype # "@var{X} specifies the type and
-        associativity of an operator.".
+:- true prop operator_specifier(X) + regtype # "~w specifies the type and\n        associativity of an operator."-[X].
 :- true comp operator_specifier(X) + sideff(free).
 :- true comp operator_specifier(X) : nonvar(X) + (eval, is_det, relations(7)).
 :- trust success operator_specifier(T) => operator_specifier(T).
@@ -257,7 +255,7 @@ operator_specifier(xf).
    functor @tt{'.'/2}, and its end is the atom @tt{[]}.  Defined as
    @includedef{list/1}").
 
-:- true prop list(L) + regtype # "@var{L} is a list.".
+:- true prop list(L) + regtype # "~w is a list."-[L].
 :- true comp list(L) + sideff(free).
 :- true comp list(L) : ground(L) + (eval, is_det).
 :- trust success list(T) => list(T).
@@ -268,7 +266,7 @@ list([_|L]) :- list(L).
 :- doc(list(L,T), "@var{L} is a list, and for all its elements,
    @var{T} holds.").
 
-:- true prop list(L,T) + regtype # "@var{L} is a list of @var{T}s.".
+:- true prop list(L,T) + regtype # "~w is a list of ~ws."-[L, T].
 :- true comp list(L,T) + sideff(free).
 :- meta_predicate list(?, 1).
 :- true comp list(L,T) : (ground(L),ground(T)) + eval.
@@ -280,9 +278,7 @@ list([X|Xs], T) :-
         list(Xs, T).
 
 :- true prop nlist(L,T) + regtype #
-	"@var{L} is @var{T} or a nested list of @var{T}s.  Note that
-	if @var{T} is term, this type is equivalent to term, this
-	fact explain why we do not have a @pred{nlist/1} type".
+	"~w is ~w or a nested list of ~ws.  Note that\n\tif ~w is term, this type is equivalent to term, this\n\tfact explain why we do not have a @pred{nlist/1} type"-[L, T, T, T].
 :- true comp nlist(L,T) + sideff(free).
 :- meta_predicate nlist(?, 1).
 :- true comp nlist(L,T) : (ground(L),ground(T)) + eval.
@@ -295,7 +291,7 @@ nlist([X|Xs], T) :-
 nlist(X, T) :-
 	type(X, T).
 
-:- true prop member(X,L) # "@var{X} is an element of @var{L}.".
+:- true prop member(X,L) # "~w is an element of ~w."-[X, L].
 :- true comp member(X,L) + (sideff(free), bind_ins).
 :- true comp member(X,L) : list(L) + eval.
 :- trust success member(_X,L) => list(L).
@@ -308,7 +304,7 @@ nlist(X, T) :-
    occurrences of the operator @op{','/2}.  For example, @tt{a, b, c} is
    a sequence of three atoms, @tt{a} is a sequence of one atom.").
 
-:- true prop sequence(S,T) + regtype # "@var{S} is a sequence of @var{T}s.".
+:- true prop sequence(S,T) + regtype # "~w is a sequence of ~ws."-[S, T].
 :- true comp sequence(S,T) + sideff(free).
 
 :- meta_predicate sequence(?, 1).
@@ -321,7 +317,7 @@ sequence((E,S), T) :-
         sequence(S,T).
 
 :- true prop sequence_or_list(S,T) + regtype
-   # "@var{S} is a sequence or list of @var{T}s.".
+   # "~w is a sequence or list of ~ws."-[S, T].
 :- true comp sequence_or_list(S,T) + sideff(free).
 :- meta_predicate sequence_or_list(?, 1).
 :- true comp sequence_or_list(S,T) : (ground(S),ground(T)) + eval.
@@ -331,7 +327,7 @@ sequence_or_list(E, T) :- list(E,T).
 sequence_or_list(E, T) :- sequence(E, T).
 
 :- true prop character_code(T) + regtype
-   # "@var{T} is an integer which is a character code.".
+   # "~w is an integer which is a character code."-[T].
 :- true comp character_code(T) + sideff(free).
 :- true comp character_code(T) : nonvar(T) + eval.
 :- trust success character_code(I) => character_code(I).
@@ -382,8 +378,7 @@ num_code(0'-).
    # "@var{P} is a predicate name spec @tt{atm}/@tt{int}.".
 */
 :- true prop predname(P) + regtype
-   # "@var{P} is a Name/Arity structure denoting
-	a predicate name: @includedef{predname/1}".
+   # "~w is a Name/Arity structure denoting\n\ta predicate name: @includedef{predname/1}"-[P].
 :- true comp predname(P) + sideff(free).
 :- true comp predname(P) : ground(P) + eval.
 :- trust success predname(P) => predname(P).
@@ -393,7 +388,7 @@ predname(P/A) :-
 	nnegint(A).
 
 :- true prop atm_or_atm_list(T) + regtype
-   # "@var{T} is an atom or a list of atoms.".
+   # "~w is an atom or a list of atoms."-[T].
 :- true comp atm_or_atm_list(T) + sideff(free).
 :- true comp atm_or_atm_list(T) : ground(T) + eval.
 :- trust success atm_or_atm_list(T) => atm_or_atm_list(T).
@@ -412,7 +407,7 @@ atm_or_atm_list(T) :- list(T, atm).
    and @tt{[1|2]} are not.").
 
 :- true prop compat(Term,Prop)
-   # "@var{Term} is @em{compatible} with @var{Prop}".
+   # "~w is @em{compatible} with ~w"-[Term, Prop].
 :- meta_predicate compat(?, 1).
 % not complety sure that assertiong below is completely correct,
 % unless side effects analysis understand pred(1) (metacalls).
@@ -425,7 +420,7 @@ compat(T, P) :- \+ \+ type(T, P).
 % automatic documenter. (PBC: I guess this comment refers to compat/2)
 
 :- true prop inst(Term,Prop)
-	# "@var{Term} is instantiated enough to satisfy @var{Prop}.".
+	# "~w is instantiated enough to satisfy ~w."-[Term, Prop].
 :- true comp inst(Term,Prop) + sideff(free).
 :- true comp inst(Term,Prop) : (ground(Term),ground(Prop)) + eval.
 
@@ -485,8 +480,7 @@ rtc_status(unknown).
 rtc_status(exhaustive).
 rtc_status(impossible).
 
-:- true prop rtcheck(G, Status) : callable * rtc_status # "The runtime
-	check of the property have the status @var{Status}.".
+:- true prop rtcheck(G, Status) : callable * rtc_status # "The runtime\n\tcheck of the property have the status ~w."-[_].
 
 :- true comp rtcheck(G, Status) + sideff(free).
 
@@ -511,7 +505,7 @@ rtcheck(Goal) :- rtcheck(Goal, complete).
 no_rtcheck(Goal) :- rtcheck(Goal, impossible).
 
 :- true prop not_further_inst(G,V)
-        # "@var{V} is not further instantiated.". % by the predicate
+        # "~w is not further instantiated."-[V]. % by the predicate
 :- true comp not_further_inst(G,V) + (sideff(free), no_rtcheck).
 
 :- meta_predicate not_further_inst(0, ?).
@@ -519,7 +513,7 @@ not_further_inst(Goal, _) :- call(Goal).
 
 :- true comp sideff(G,X) + (native, sideff(free), no_rtcheck).
 :- true prop sideff(G,X) : (callable(G), member(X,[free,soft,hard]))
-# "@var{G} is side-effect @var{X}.".
+# "~w is side-effect ~w."-[G, X].
 :- doc(sideff(G,X),"Declares that @var{G} is side-effect free
    (if its execution has no observable result other than its success,
    its failure, or its abortion), soft (if its execution may have other
@@ -538,7 +532,7 @@ regtype(Goal) :- call(Goal).
 
 % Built-in in CiaoPP
 :- true prop native(Pred,Key)
-   # "This predicate is understood natively by CiaoPP as @var{Key}.".
+   # "This predicate is understood natively by CiaoPP as ~w."-[Key].
 %%   # "Predicate @var{Pred} is understood natively by CiaoPP as @var{Key}.".
 :- true comp native(P,K) + sideff(free).
 :- meta_predicate native(0,?).
@@ -554,35 +548,34 @@ native(Goal, _) :- call(Goal).
 
 native(X) :- native(X, X).
 
-:- true prop eval(Goal) # "@var{Goal} is evaluable at compile-time.".
+:- true prop eval(Goal) # "~w is evaluable at compile-time."-[Goal].
 
 :- meta_predicate eval(0).
 eval(Goal) :- call(Goal).
 
 :- true prop equiv(Goal1,Goal2)
-	# "@var{Goal1} is equivalent to @var{Goal2}.".
+	# "~w is equivalent to ~w."-[Goal1, Goal2].
 
 :- meta_predicate equiv(0,0).
 
 equiv(Goal, _) :- call(Goal).
 
-:- true prop bind_ins(Goal) # "@var{Goal} is binding insensitive.".
+:- true prop bind_ins(Goal) # "~w is binding insensitive."-[Goal].
 
 :- meta_predicate bind_ins(0).
 bind_ins(Goal) :- call(Goal).
 
-:- true prop error_free(Goal) # "@var{Goal} is error free.".
+:- true prop error_free(Goal) # "~w is error free."-[Goal].
 
 :- meta_predicate error_free(0).
 error_free(Goal) :- call(Goal).
 
-:- true prop memo(Goal) # "@var{Goal} should be memoized (not unfolded).".
+:- true prop memo(Goal) # "~w should be memoized (not unfolded)."-[Goal].
 
 :- meta_predicate memo(0).
 memo(Goal) :- call(Goal).
 
-:- true prop filter(Goal, Vars) # "@var{Vars} should be filtered during
-	global control).".
+:- true prop filter(Goal, Vars) # "~w should be filtered during\n\tglobal control)."-[Vars].
 
 :- meta_predicate filter(0, ?).
 filter(Goal, _) :- call(Goal).
@@ -593,9 +586,7 @@ flag_values(atom).
 flag_values(integer).
 flag_values(L):- list(L,atm).
 
-:- true prop pe_type(Goal) # "@var{Goal} will be filtered in partial
-	evaluation time according to the PE types defined in the
-	assertion.".
+:- true prop pe_type(Goal) # "~w will be filtered in partial\n\tevaluation time according to the PE types defined in the\n\tassertion."-[Goal].
 
 :- meta_predicate pe_type(0).
 pe_type(Goal) :- call(Goal).
