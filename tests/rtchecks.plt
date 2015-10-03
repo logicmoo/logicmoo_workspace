@@ -69,12 +69,12 @@ test(rtgen) :-
 		 asrloc(loc(_, _, _))=G,
 		 asrloc(loc(_, _, _))=I,
 		 findall(A,
-			 ( \+ native_props:compat(rtchecks_example3:atm(B)),
+			 ( \+ nativeprops:compat(rtchecks_example3:atm(B)),
 			   A=atm(_)-['A'=B]
 			 ),
 			 D),
 		 findall(C,
-			 ( \+ native_props:compat(rtchecks_example3:int(B)),
+			 ( \+ nativeprops:compat(rtchecks_example3:int(B)),
 			   C=int(_)-['A'=B]
 			 ),
 			 E),
@@ -85,14 +85,14 @@ test(rtgen) :-
 		 ;   true
 		 ),
 		 findall(J,
-			 ( \+ native_props:instance(rtchecks_example3:animal(B)),
+			 ( \+ nativeprops:instance(rtchecks_example3:animal(B)),
 			   J=animal(_)-['A'=B]
 			 ),
 			 M),
 		 findall(K,
-			 (   \+ native_props:instance(rtchecks_example3:animal(B)),
+			 (   \+ nativeprops:instance(rtchecks_example3:animal(B)),
 			     K=animal(_)-['A'=B]
-			 ;   \+ native_props:instance(rtchecks_example3:atm(B)),
+			 ;   \+ nativeprops:instance(rtchecks_example3:atm(B)),
 			     K=atm(_)-['A'=B]
 			 ),
 			 L),
@@ -108,7 +108,7 @@ test(rtgen) :-
 	  rtchecks_example3),
 		 (   D==[]
 		 ->  findall(Q,
-			     ( \+ native_props:compat(rtchecks_example3:atm(B)),
+			     ( \+ nativeprops:compat(rtchecks_example3:atm(B)),
 			       Q=atm(_)-['A'=B]
 			     ),
 			     R),
@@ -117,7 +117,7 @@ test(rtgen) :-
 		 ),
 		 (   E==[]
 		 ->  findall(S,
-			     ( \+ native_props:compat(rtchecks_example3:int(B)),
+			     ( \+ nativeprops:compat(rtchecks_example3:int(B)),
 			       S=int(_)-['A'=B]
 			     ),
 			     T),
@@ -126,7 +126,7 @@ test(rtgen) :-
 		 ),
 		 (   L==[]
 		 ->  findall(U,
-			     ( \+ native_props:instance(rtchecks_example3:family(H)),
+			     ( \+ nativeprops:instance(rtchecks_example3:family(H)),
 			       U=family(_)-['B'=H]
 			     ),
 			     V),
@@ -135,7 +135,7 @@ test(rtgen) :-
 		 ),
 		 (   M==[]
 		 ->  findall(W,
-			     ( \+ native_props:instance(rtchecks_example3:family(H)),
+			     ( \+ nativeprops:instance(rtchecks_example3:family(H)),
 			       W=family(_)-['B'=H]
 			     ),
 			     X),

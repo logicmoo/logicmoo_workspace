@@ -54,11 +54,11 @@ black_list_caller(M:F/A) :-
     black_list_caller(H, M).
 
 black_list_caller(M, _) :- black_list_module(M).
-black_list_caller(native_props, _).
+black_list_caller(nativeprops, _).
 
 black_list_callee(M, _) :- black_list_module(M).
 black_list_callee(system, Call) :- black_list_callee_system(Call).
-black_list_callee(native_props, Call) :-
+black_list_callee(nativeprops, Call) :-
     \+ memberchk(Call, [check(_), trust(_), true(_), false(_)]).
 
 black_list_callee_system(catch(_, _, _)).

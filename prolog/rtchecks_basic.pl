@@ -79,7 +79,7 @@ compound_check_prop(_, M, instance(Prop), CheckProp) :- !,
 compound_check_prop(_, _, succeeds(Prop), Prop) :- !.
 compound_check_prop(Check, _, M:Prop, CheckProp) :- !,
 	compound_check_prop(Check, M, Prop, CheckProp).
-compound_check_prop(Check, M, Prop, native_props:CheckProp) :-
+compound_check_prop(Check, M, Prop, nativeprops:CheckProp) :-
 	CheckProp =.. [Check, M:Prop].
 
 compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, AsrLocs, PropValue,
