@@ -29,12 +29,12 @@
 
 %% Migrated from Ciao to SWI-Prolog
 
-:- module(basic_props,
+:- module(basicprops,
         [term/1, int/1, nnegint/1, flt/1, num/1, atm/1, struct/1,
-	 gnd/1, gndstr/1, constant/1, % callable/1,
+	 gnd/1, gndstr/1, constant/1, inst/2, % callable/1,
 	 operator_specifier/1, list/1, list/2, nlist/2, % member/2,
 	 sequence/2, sequence_or_list/2, character_code/1, % string/1,
-	 num_code/1, predname/1, atm_or_atm_list/1, compat/2, inst/2,
+	 num_code/1, predname/1, atm_or_atm_list/1, compat/2, compat/1,
 	 iso/1, deprecated/1, not_further_inst/2, sideff/2, regtype/1,
 	 native/1, native/2, rtcheck/1, rtcheck/2, no_rtcheck/1, eval/1,
 	 equiv/2, bind_ins/1, error_free/1,memo/1,filter/2, flag_values/1,

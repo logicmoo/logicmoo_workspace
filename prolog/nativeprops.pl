@@ -1,4 +1,4 @@
-:- module(native_props,
+:- module(nativeprops,
 	  [nfi/2,
 	   fi/2,
 	   clique/1,
@@ -114,7 +114,7 @@
 %%    @end{itemize}
 
 
-:- doc(usage, "@tt{:- use_module(library(assertions(native_props)))}
+:- doc(usage, "@tt{:- use_module(library(assertions(nativeprops)))}
 
    or also as a package @tt{:- use_package(nativeprops)}.
 
@@ -1035,7 +1035,7 @@ output_check(FileName, Goal, S) :-
 
 :- meta_predicate user_error(goal, ?).
 user_error(Goal, S) :-
-	mktemp_in_tmp('native_props_XXXXXX', FileName),
+	mktemp_in_tmp('nativeprops_XXXXXX', FileName),
 	open_error(FileName, SO),
 	call(Goal),
 	close_error(SO),
