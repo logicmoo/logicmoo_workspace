@@ -1,6 +1,6 @@
 :- begin_tests(assertions).
 
-:- use_module(library(swi/assertions), except([(test)/1])).
+:- use_module(library(assertions), except([(test)/1])).
 				% :- use_module(library(assertions/assrt_lib)).
 
 				% Test the assertion reader:

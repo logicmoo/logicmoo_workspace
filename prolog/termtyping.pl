@@ -21,7 +21,7 @@
 # "~w is currently ground (it contains no variables)."-[X].
 :- trust success ground(X) => gnd(X).
 :- trust comp ground/1 + (is_det, test_type(meta)).
-:- true comp ground(@X) + (sideff(free), native).
+:- true comp ground(@) + (sideff(free), native).
 :- true comp ground(X) : ground(X) + eval.
 :- true comp ground(X) : var(X) + equiv(fail).
 :- true comp ground(X) : ground(X) + equiv(true).
@@ -32,7 +32,7 @@
 # "~w is currently instantiated to an atom."-[X].
 :- trust success atom(X) => atm(X).
 :- trust comp atom/1 + (is_det, test_type(arithmetic)).
-:- true comp atom(@X) + (sideff(free), native).
+:- true comp atom(@) + (sideff(free), native).
 :- true comp atom(X) : nonvar(X) + eval.
 :- true comp atom(T) : var(T) + equiv(fail).
 
@@ -40,7 +40,7 @@
 # "~w is currently instantiated to an atom or a number."-[X].
 :- trust success atomic(T) => constant(T).
 :- trust comp atomic/1 + (is_det, test_type(meta)).
-:- true comp atomic(@X) + (sideff(free), native).
+:- true comp atomic(@) + (sideff(free), native).
 :- true comp atomic(X) : nonvar(X) + eval.
 :- true comp atomic(T) : var(T) + equiv(fail).
 
@@ -48,7 +48,7 @@
 # "~w is currently instantiated to a float."-[X].
 :- trust success float(X) => flt(X).
 :- trust comp float/1 + (is_det, test_type(meta)).
-:- true comp float(@X) + (sideff(free), native).
+:- true comp float(@) + (sideff(free), native).
 :- true comp float(X) : nonvar(X) + eval.
 :- true comp float(T) : var(T) + equiv(fail).
 
@@ -56,14 +56,14 @@
 # "~w is currently instantiated to an integer."-[X].
 :- trust success integer(X) => int(X).
 :- trust comp integer/1 + (is_det, test_type(arithmetic)).
-:- true comp integer(@X) + (sideff(free), native).
+:- true comp integer(@) + (sideff(free), native).
 :- true comp integer(X) : nonvar(X) + eval.
 :- true comp integer(T) : var(T) + equiv(fail).
 
 :- true prop nonvar(X) + native(not_free(X))
 # "~w is currently a term which is not a free variable."-[X].
 :- trust comp nonvar/1 + is_det.
-:- true comp nonvar(@X) + (sideff(free), native).
+:- true comp nonvar(@) + (sideff(free), native).
 :- true comp nonvar(X) : nonvar(X) + eval.
 :- true comp nonvar(T) : var(T) + equiv(fail).
 :- true comp nonvar(T) : nonvar(T) + equiv(true).
@@ -72,23 +72,24 @@
 # "~w is currently instantiated to a number."-[X].
 :- trust success number(X) => num(X).
 :- trust comp number/1 + (is_det, test_type(arithmetic)).
-:- true comp number(@X) + (sideff(free), native).
+:- true comp number(@) + (sideff(free), native).
 :- true comp number(X) : nonvar(X) + eval.
 :- true comp number(T) : var(T) + equiv(fail).
 
 :- true prop var(X) + native(free(X))
 # "~w is a free variable."-[X].
 :- trust comp var/1 + (is_det, test_type(meta)).
-:- true comp var(@X) + (native, sideff(free)).
+:- true comp var(@) + (native, sideff(free)).
 :- true comp var(X) : nonvar(X) + eval.
 :- true comp var(X) : nonvar(X) + equiv(fail).
 :- true comp var(X) : var(X) + equiv(true).
 
 :- true prop type(X, Y) + native
-# "~w is internally of type ~w (@tt{var}, @tt{attv}, @tt{float},\n      @tt{integer}, @tt{structure}, @tt{atom} or @tt{list})."-[X, Y].
+# "~w is internally of type ~w (@tt{var}, @tt{attv}, @tt{float},
+      @tt{integer}, @tt{structure}, @tt{atom} or @tt{list})."-[X, Y].
 :- trust comp type/2 + is_det.
 :- true comp type/2 + (sideff(free), native).
-:- true comp type(X, Y) : nonvar(X) + eval.
+:- true comp type(X, _) : nonvar(X) + eval.
 :- meta_predicate type(?, :).
 
 type(A, T) :-

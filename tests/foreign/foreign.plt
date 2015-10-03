@@ -1,5 +1,5 @@
 
-:- use_module(library(swi/assertions), except([(test)/1])).
+:- use_module(library(assertions), except([(test)/1])).
 :- use_module(foreign_test_i).
 
 :- begin_tests(foreign).

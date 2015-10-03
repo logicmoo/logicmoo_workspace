@@ -123,16 +123,16 @@
 
 % --------------------------------------------------------------------------
 
-:- doc(tau(Types), "@var{Types} contains a list with the type associations
+:- doc(tau(Types), "~w contains a list with the type associations
    for each variable, in the form @tt{V/[T1,..,TN]}. Note that tau is used
-   in object-oriented programs only").
+   in object-oriented programs only"-[Types]).
 
 % TODO: Improve documentation saying if the run-time checks of some
 % TODO: properties are complete (exhaustive), incomplete, not possible
 % TODO: or unimplemented --EMM.
 
 :- true prop tau(TypeInfo) + native
-# "@var{Types} is a list of associations between variables and list of types".
+# "~w is a list of associations between variables and list of types"-[TypeInfo].
 
 tau([]).
 tau([Var/Type|R]) :-
@@ -149,10 +149,10 @@ valid_type([Type|Rest]) :-
 
 
 
-:- doc(constraint(C), "@var{C} contains a list of linear (in)equalities
+:- doc(constraint(C), "~w contains a list of linear (in)equalities
    that relate variables and @tt{int} values. For example,  @tt{[A < B + 4]} 
    is a constraint while @tt{[A < BC + 4]} or @tt{[A = 3.4, B >= C]} are
-   not.").
+   not."-[C]).
 
 :- true prop constraint(C) + native
 # "~w is a list of linear equations"-[C].
@@ -208,8 +208,8 @@ coefficient(Coeff) :-
 	int(Coeff).
 
 
-:- doc(covered(X, Y), "All variables occuring in @var{X} occur also
-   in @var{Y}.").
+:- doc(covered(X, Y), "All variables occuring in ~w occur also
+   in ~w."-[X, Y]).
 
 :- true prop covered(X, Y) + native # "~w is covered by ~w."-[X, Y].
 
@@ -221,10 +221,10 @@ covered(X, Y) :-
 	     V==VY
 	   )).
 
-:- doc(linear(X), "@var{X} is bound to a term which is linear,
+:- doc(linear(X), "~w is bound to a term which is linear,
    i.e., if it contains any variables, such variables appear only once
    in the term. For example, @tt{[1,2,3]} and @tt{f(A,B)} are linear
-   terms, while @tt{f(A,A)} is not.").
+   terms, while @tt{f(A,A)} is not."-[X]).
 
 :- true prop linear(X) + native
 # "~w is instantiated to a linear term."-[X].
@@ -235,7 +235,7 @@ linear(T) :-
 
 occurrs_one(T, Var) :- occurrences_of_var(Var, T, 1).
 
-:- doc(mshare(X), "@var{X} contains all @index{sharing sets}
+:- doc(mshare(X), "~w contains all @index{sharing sets}
    @cite{jacobs88,abs-int-naclp89} which specify the possible variable
    occurrences in the terms to which the variables involved in the
    clause may be bound. Sharing sets are a compact way of representing
@@ -243,10 +243,10 @@ occurrs_one(T, Var) :- occurrences_of_var(Var, T, 1).
    representation is however generally difficult to read for
    humans. For this reason, this information is often translated to
    @prop{ground/1}, @prop{indep/1} and @prop{indep/2} properties,
-   which are easier to read.").
+   which are easier to read."-[X]).
 
 :- test mshare(L) : (L = [[A], [p(A)]]) + fails.
-:- test mshare(L) : (L = [[A], [p(B)]]) + not_fails.
+:- test mshare(L) : (L = [[_], [p(_)]]) + not_fails.
 
 :- prop mshare(X) + (native(sharing(X)), no_rtcheck)
 # "The sharing pattern is @tt{~w}."-[X].
@@ -264,22 +264,22 @@ not_mshare([V1|L]) :-
     ;
 	not_mshare(L).
 
-:- doc(clique(X), "@var{X} is a set of variables of interest, much the
-   same as a sharing group but @var{X} represents all the sharing groups in
+:- doc(clique(X), "~w is a set of variables of interest, much the
+   same as a sharing group but ~w represents all the sharing groups in
    the powerset of those variables. Similar to a sharing group, a clique is
    often translated to @prop{ground/1}, @prop{indep/1}, and @prop{indep/2}
-   properties.").
+   properties."-[X, X]).
 
 :- prop clique(X) + (native(clique(X)), no_rtcheck)
 # "The clique pattern is @tt{~w}."-[X].
 
 clique(_).
 
-:- doc(clique_1(X), "@var{X} is a set of variables of interest, much
-   the same as a sharing group but @var{X} represents all the sharing
+:- doc(clique_1(X), "~w is a set of variables of interest, much
+   the same as a sharing group but ~w represents all the sharing
    groups in the powerset of those variables but disregarding the
    singletons. Similar to a sharing group, a clique_1 is often translated
-   to @prop{ground/1}, @prop{indep/1}, and @prop{indep/2} properties.").
+   to @prop{ground/1}, @prop{indep/1}, and @prop{indep/2} properties."-[X, X]).
 
 :- prop clique_1(X) + (native(clique_1(X)), no_rtcheck)
 # "The 1-clique pattern is @tt{~w}."-[X].
@@ -292,7 +292,7 @@ clique_1(_).
 nonground(X) :- \+ ground(X).
 
 
-:- doc(fails(X), "Calls of the form @var{X} fail.").
+:- doc(fails(X), "Calls of the form ~w fail."-[X]).
 
 :- true prop fails(X) + native
 # "Calls of the form ~w fail."-[X].
@@ -314,8 +314,8 @@ fails(Goal) :-
 :- doc(bug, "A missing property is succeeds (not_fails = succeeds
 	or not_terminates. -- EMM").
 
-:- doc(not_fails(X), "Calls of the form @var{X} produce at least
-   one solution, or do not terminate @cite{non-failure-iclp97}.").
+:- doc(not_fails(X), "Calls of the form ~w produce at least
+   one solution, or do not terminate @cite{non-failure-iclp97}."-[X]).
 %
 :- true prop not_fails(X) + native
 # "All the calls of the form ~w do not fail."-[X].
@@ -343,9 +343,9 @@ not_fails(Goal) :-
 	; nb_setarg(1, Solved, yes) ).
 
 :- doc(possibly_fails(X), "Non-failure is not ensured for any call
-   of the form @var{X} @cite{non-failure-iclp97}. In other words,
+   of the form ~w @cite{non-failure-iclp97}. In other words,
    nothing can be ensured about non-failure nor termination of such
-   calls.").
+   calls."-[X]).
 
 :- prop possibly_fails(X) + no_rtcheck
 # "Non-failure is not ensured for calls of the form ~w."-[X].
@@ -355,9 +355,9 @@ not_fails(Goal) :-
 possibly_fails(Goal) :- call(Goal).
 
 
-:- doc(covered(X), "For any call of the form @var{X} there is at
+:- doc(covered(X), "For any call of the form ~w there is at
    least one clause whose test succeeds (i.e., all the calls of the
-   form @var{X} are covered) @cite{non-failure-iclp97}.").
+   form ~w are covered) @cite{non-failure-iclp97}."-[X, X]).
 
 :- prop covered(X) + rtcheck(unimplemented)
 # "All the calls of the form ~w are covered."-[X].
@@ -366,9 +366,9 @@ possibly_fails(Goal) :- call(Goal).
 
 covered(Goal) :- call(Goal).
 
-:- doc(not_covered(X), "There is some call of the form @var{X} for
+:- doc(not_covered(X), "There is some call of the form ~w for
    which there is no clause whose test succeeds
-   @cite{non-failure-iclp97}.").
+   @cite{non-failure-iclp97}."-[X]).
 
 :- prop not_covered(X) + rtcheck(unimplemented)
 # "Not all of the calls of the form ~w are covered."-[X].
@@ -377,12 +377,12 @@ covered(Goal) :- call(Goal).
 
 not_covered(Goal) :- call(Goal).
 
-:- doc(is_det(X), "All calls of the form @var{X} are
+:- doc(is_det(X), "All calls of the form ~w are
    deterministic, i.e., produce at most one solution, or do not
-   terminate.  In other words, if @var{X} succeeds, it can only
+   terminate.  In other words, if ~w succeeds, it can only
    succeed once. It can still leave choice points after its execution,
    but when backtracking into these, it can only fail or go into an
-   infinite loop.").
+   infinite loop."-[X, X]).
 
 :- prop is_det(X)
 # "All calls of the form ~w are deterministic."-[X].
@@ -402,8 +402,8 @@ is_det(Goal) :-
 	),
 	nb_setarg(1, Solved, yes).
 
-:- doc(non_det(X), "All calls of the form @var{X} are
-   non-deterministic, i.e., produce several solutions.").
+:- doc(non_det(X), "All calls of the form ~w are
+   non-deterministic, i.e., produce several solutions."-[X]).
 
 :- prop non_det(X)
 # "All calls of the form ~w are non-deterministic."-[X].
@@ -461,8 +461,8 @@ have_choicepoints(Goal) :-
 	; true ).
 
 :- doc(possibly_nondet(X), "Non-determinism is not ensured for all
-   calls of the form @var{X}. In other words, nothing can be ensured
-   about determinacy nor termination of such calls.").
+   calls of the form ~w. In other words, nothing can be ensured
+   about determinacy nor termination of such calls."-[X]).
 
 :- prop possibly_nondet(X) + no_rtcheck
 # "Non-determinism is not ensured for calls of the form ~w."-[X].
@@ -471,7 +471,7 @@ have_choicepoints(Goal) :-
 
 possibly_nondet(Goal) :- call(Goal).
 
-:- prop test_type(X, T) # "Indicates the type of test that a predicate
+:- prop test_type/2 # "Indicates the type of test that a predicate
 	performs.  Required by the nonfailure analyisis.".
 
 :- meta_predicate test_type(0, ?).
@@ -481,8 +481,8 @@ test_type(Goal, _) :- call(Goal).
 %% disjoint(X)
 %% # "Calls of the form @var{X} select at most one clause.".
 
-:- doc(mut_exclusive(X), "For any call of the form @var{X} at most
-   one clause succeeds, i.e., clauses are pairwise exclusive.").
+:- doc(mut_exclusive(X), "For any call of the form ~w at most
+   one clause succeeds, i.e., clauses are pairwise exclusive."-[X]).
 
 :- prop mut_exclusive(X) + rtcheck(unimplemented)
 # "For any call of the form ~w at most one clause succeeds."-[X].
@@ -491,25 +491,26 @@ test_type(Goal, _) :- call(Goal).
 
 mut_exclusive(Goal) :- call(Goal).
 
-:- doc(not_mut_exclusive(X), "For calls of the form @var{X} more
+:- doc(not_mut_exclusive(X), "For calls of the form ~w more
    than one clause may succeed. I.e., clauses are not disjoint for
-   some call.").
+   some call."-[X]).
 
 %% For any call of the form @var{X} at most one
 %% clause succeeds, i.e. clauses are pairwise exclusive.").
 
 :- prop not_mut_exclusive(X) + rtcheck(unimplemented)
-# "For some calls of the form ~w more than one clause\nmay succeed."-[X].
+# "For some calls of the form ~w more than one clause
+may succeed."-[X].
 
 :- meta_predicate not_mut_exclusive(0).
 
 not_mut_exclusive(Goal) :- call(Goal).
 
 :- doc(size_lb(X, Y), "The minimum size of the terms to which the
-   argument @var{Y} is bound is given by the expression
-   @var{Y}. Various measures can be used to determine the size of an
+   argument ~w is bound is given by the expression
+   ~w. Various measures can be used to determine the size of an
    argument, e.g., list-length, term-size, term-depth, integer-value,
-   etc. @cite{caslog,granularity-jsc}.").
+   etc. @cite{caslog,granularity-jsc}."-[X, Y]).
 
 :- prop size_lb(X, Y) + no_rtcheck
 # "~w is a lower bound on the size of argument ~w."-[X, Y].
@@ -517,10 +518,10 @@ not_mut_exclusive(Goal) :- call(Goal).
 size_lb(_, _).
 
 :- doc(size_ub(X, Y), "The maximum size of the terms to which the
-   argument @var{Y} is bound is given by the expression
-   @var{Y}. Various measures can be used to determine the size of an
+   argument ~w is bound is given by the expression
+   ~w. Various measures can be used to determine the size of an
    argument, e.g., list-length, term-size, term-depth, integer-value,
-   etc. @cite{caslog,granularity-jsc}.").
+   etc. @cite{caslog,granularity-jsc}."-[X, Y]).
 
 :- prop size_ub(X, Y) + no_rtcheck
 # "~w is a upper bound on the size of argument ~w."-[X, Y].
@@ -538,26 +539,31 @@ size_o(_, _).
 
 :- meta_predicate size_metric(0, ?, ?, ?).
 
-:- prop size_metric(Head, Approx, Var, Metric) + no_rtcheck
-# "~w is the metric of the variable ~w, for the\n   approximation ~w. Currently, ~w can be:\n   @tt{int/1}, @tt{size/1}, @tt{length/1}, @tt{depth/2}, and\n   @tt{void/1}."-[Approx, Var, Metric, Metric].
+:- prop size_metric(_, Approx, Var, Metric) + no_rtcheck
+# "~w is the metric of the variable ~w, for the
+   approximation ~w. Currently, ~w can be:
+   @tt{int/1}, @tt{size/1}, @tt{length/1}, @tt{depth/2}, and
+   @tt{void/1}."-[Approx, Var, Metric, Metric].
 
 size_metric(Goal, _, _, _) :- call(Goal).
 
 :- meta_predicate size_metric(0, ?, ?).
 
-:- prop size_metric(Head, Var, Metric) + no_rtcheck
-# "~w is the metric of the variable ~w, for any\n   approximation."-[Var, Metric].
+:- prop size_metric(_, Var, Metric) + no_rtcheck
+# "~w is the metric of the variable ~w, for any
+   approximation."-[Var, Metric].
 
 size_metric(Goal, _, _) :- call(Goal).
 
 % ------------------------------------------------------------------
 
 :- doc(steps_lb(X, Y), "The minimum computation time (in
-   resolution steps) spent by any call of the form @var{X} is given by
-   the expression @var{Y} @cite{low-bounds-ilps97,granularity-jsc}").
+   resolution steps) spent by any call of the form ~w is given by
+   the expression ~w @cite{low-bounds-ilps97,granularity-jsc}"-[X, Y]).
 
 :- prop steps_lb(X, Y) + no_rtcheck
-# "~w is a lower bound on the cost of any call of the form\n~w."-[X, Y].
+# "~w is a lower bound on the cost of any call of the form
+~w."-[X, Y].
 
 :- meta_predicate steps_lb(0, ?).
 steps_lb(Goal, _) :- call(Goal).
@@ -567,11 +573,12 @@ steps_lb(Goal, _) :- call(Goal).
 %%    given by the expression @var{Y}.".
 
 :- doc(steps_ub(X, Y), "The maximum computation time (in
-   resolution steps) spent by any call of the form @var{X} is given by
-   the expression @var{Y} @cite{caslog,granularity-jsc}.").
+   resolution steps) spent by any call of the form ~w is given by
+   the expression ~w @cite{caslog,granularity-jsc}."-[X, Y]).
 
 :- prop steps_ub(X, Y) + no_rtcheck
-# "~w is a upper bound on the cost of any call of the form\n~w."-[X, Y].
+# "~w is a upper bound on the cost of any call of the form
+~w."-[X, Y].
 
 :- meta_predicate steps_ub(0, ?).
 steps_ub(Goal, _) :- call(Goal).
@@ -581,16 +588,18 @@ steps_ub(Goal, _) :- call(Goal).
 %%    given by the expression @var{Y}.".
 
 :- doc(steps(X, Y), "The time (in resolution steps) spent by any
-   call of the form @var{X} is given by the expression @var{Y}").
+   call of the form ~w is given by the expression ~w"-[X, Y]).
 
 :- prop steps(X, Y) + no_rtcheck
-# "~w is the cost (number of resolution steps) of any call of the form\n~w."-[X, Y].
+# "~w is the cost (number of resolution steps) of any call of the form
+~w."-[X, Y].
 
 :- meta_predicate steps(0, ?).
 steps(Goal, _) :- call(Goal).
 
 :- prop steps_o(X, Y) + no_rtcheck
-# "~w is the complexity order of the cost of any call of the form\n~w."-[X, Y].
+# "~w is the complexity order of the cost of any call of the form
+~w."-[X, Y].
 
 :- meta_predicate steps_o(0, ?).
 steps_o(Goal, _) :- call(Goal).
@@ -644,28 +653,31 @@ indep([[X, Y]|L]) :- indep(X, Y), indep(L).
 sideff_pure(Goal) :- call(Goal).
 
 :- prop sideff_soft(X) + no_rtcheck
-# "~w has @index{soft side-effects}, i.e., those not affecting\n   program execution (e.g., input/output)."-[X].
+# "~w has @index{soft side-effects}, i.e., those not affecting
+   program execution (e.g., input/output)."-[X].
 
 :- meta_predicate sideff_soft(0).
 sideff_soft(Goal) :- call(Goal).
 
 :- prop sideff_hard(X) + no_rtcheck
-# "~w has @index{hard side-effects}, i.e., those that might affect\n   program execution (e.g., assert/retract)."-[X].
+# "~w has @index{hard side-effects}, i.e., those that might affect
+   program execution (e.g., assert/retract)."-[X].
 
 :- meta_predicate sideff_hard(0).
 sideff_hard(Goal) :- call(Goal).
 
-:- doc(finite_solutions(X), "Calls of the form @var{X} produce a
-   finite number of solutions @cite{non-failure-iclp97}.").
+:- doc(finite_solutions(X), "Calls of the form ~w produce a
+   finite number of solutions @cite{non-failure-iclp97}."-[X]).
 
 :- prop finite_solutions(X) + no_rtcheck
-# "All the calls of the form ~w have a finite number of\n   solutions."-[X].
+# "All the calls of the form ~w have a finite number of
+   solutions."-[X].
 
 :- meta_predicate finite_solutions(0).
 finite_solutions(Goal) :- call(Goal).
 
 :- prop num_solutions_eq(X, N) : callable * int
-# "All the calls of the form ~w have ~w solutions."-[_, _].
+# "All the calls of the form ~w have ~w solutions."-[X, N].
 
 :- meta_predicate num_solutions_eq(0, ?).
 num_solutions_eq(Goal, N) :-
@@ -711,7 +723,8 @@ num_solutions_eq(Goal, N) :-
 	).
 
 :- prop num_solutions(Goal, Check) : callable * callable
-# "For a call to ~w, @pred{Check(X)} succeeds, where @var{X} is\n   the number of solutions."-[_].
+# "For a call to ~w, @pred{~w(X)} succeeds, where @var{X} is
+   the number of solutions."-[Goal, Check].
 
 :- meta_predicate num_solutions(0, 1).
 
@@ -747,7 +760,7 @@ num_solutions(Goal, Check) :-
 	).
 
 :- prop solutions(Goal, Sols) : callable * list
-# "Goal ~w produces the solutions listed in ~w."-[_, _].
+# "~w produces the solutions listed in ~w."-[Goal, Sols].
 
 :- meta_predicate solutions(0, ?).
 
@@ -798,9 +811,9 @@ solutions(Goal, Sols) :-
 	    )
 	).
 
-:- doc(relations(X, N), "The goal @var{X} produces @var{N}
-   solutions. In other words, @var{N} is the cardinality of the
-   solution set of @var{X}.").
+:- doc(relations(X, N), "The goal ~w produces ~w
+   solutions. In other words, ~w is the cardinality of the
+   solution set of ~w."-[X, X, N, N]).
 
 :- prop relations(X, N) + rtcheck(unimplemented)
 # "Goal ~w produces ~w solutions."-[X, N].
@@ -808,8 +821,8 @@ solutions(Goal, Sols) :-
 :- meta_predicate relations(0, ?).
 relations(Goal, _) :- call(Goal).
 
-:- doc(terminates(X), "Calls of the form @var{X} always
-   terminate @cite{non-failure-iclp97}.").
+:- doc(terminates(X), "Calls of the form ~w always
+   terminate @cite{non-failure-iclp97}."-[X]).
 
 :- prop terminates(X) + no_rtcheck
 # "All calls of the form ~w terminate."-[X].
@@ -903,7 +916,7 @@ exception(Goal) :-
 	Goal,
 	send_comp_rtcheck(Goal, exception, no_exception).
 
-:- prop throw(Goal, E).
+:- prop throw/2.
 :- meta_predicate throw(0, ?).
 throw(Goal, E) :-
 	test_throw_2(Goal, throw(E), F, F\=E).
@@ -923,7 +936,8 @@ test_throw_2(Goal, Prop, F, Test) :-
 		throw(F)
 	    )).
 
-:- prop exception(Goal, E) # "Calls of the form ~w throw an\n\texception that unifies with ~w."-[Goal, E].
+:- prop exception(Goal, E) # "Calls of the form ~w throw an
+	exception that unifies with ~w."-[Goal, E].
 % exception(Goal, E) :- exception(throw(Goal, E)).
 :- meta_predicate exception(0, ?).
 
@@ -938,21 +952,24 @@ exception(Goal, E) :-
 
 no_exception(Goal) :- test_throw_2(Goal, no_exception, _, true).
 
-:- prop no_exception(Goal, E) # "Calls of the form ~w do not\n\tthrow exception ~w."-[Goal, E].
+:- prop no_exception(Goal, E) # "Calls of the form ~w do not
+	throw exception ~w."-[Goal, E].
 
 :- meta_predicate no_exception(0, ?).
 
 no_exception(Goal, E) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 
 :- prop throws(Goal, Es)
-# "Calls of the form ~w can throw only the exceptions that\n   unify with the terms listed in ~w."-[Goal, Es].
+# "Calls of the form ~w can throw only the exceptions that
+   unify with the terms listed in ~w."-[Goal, Es].
 
 :- meta_predicate throws(0, ?).
 
 throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 
 :- prop signals(Goal, Es) + rtcheck(unimplemented)
-# "Calls of the form ~w can generate only the signals that\n   unify with the terms listed in ~w."-[Goal, Es].
+# "Calls of the form ~w can generate only the signals that
+   unify with the terms listed in ~w."-[Goal, Es].
 
 :- meta_predicate signals(0, ?).
 
@@ -990,7 +1007,7 @@ asserta_user_output_check(FileName, Goal, S) :-
     output_check(FileName, Goal, S),
     fail.
 
-retract_user_output_check(FileName, Goal, S) :-
+retract_user_output_check(_, _, _) :-
     told.
 retract_user_output_check(FileName, _, _) :-
     open_memory_file(FileName, append, Stream),
@@ -1117,7 +1134,8 @@ size(_, _).
 succeeds(Prop) :- Prop.
 
 :- prop instance(Prop) + no_rtcheck
-# "Uses Prop as an instantiation property. Verifies that execution of\n   ~w does not produce bindings for the argument variables."-[Prop].
+# "Uses Prop as an instantiation property. Verifies that execution of
+   ~w does not produce bindings for the argument variables."-[Prop].
 
 :- meta_predicate instance(0).
 instance(Goal) :-
@@ -1149,9 +1167,9 @@ compat(Goal) :- \+ \+ Goal.
 :- basic_props:import(native_props:compat/1).
 :- endif.
 
-:- true prop nfi(G,V)
+:- true prop nfi(_,V)
     # "~w is not further instantiated."-[V].
-:- true comp nfi(G,V) + (sideff(free), no_rtcheck).
+:- true comp nfi/2 + (sideff(free), no_rtcheck).
 
 :- meta_predicate nfi(0, ?).
 nfi(Goal, V) :-
@@ -1161,9 +1179,9 @@ nfi(Goal, V) :-
     ; send_comp_rtcheck(Goal, nfi, fi)
     ).
 
-:- true prop fi(G,V)
+:- true prop fi(_, V)
     # "~w is further instantiated."-[V].
-:- true comp fi(G,V) + (sideff(free), no_rtcheck).
+:- true comp fi/2 + (sideff(free), no_rtcheck).
 
 :- meta_predicate fi(0, ?).
 fi(Goal, V) :-
@@ -1217,11 +1235,11 @@ is_pred_2(M:Pred, N) :-
     A is A1 + N,
     current_predicate(M:F/A).
 
-:- true prop mod_qual(MQ) + no_rtcheck.
+:- true prop mod_qual/1 + no_rtcheck.
 mod_qual(M:_) :-
     current_module(M).
 
-:- true prop mod_qual(V, T) + no_rtcheck.
+:- true prop mod_qual/2 + no_rtcheck.
 :- meta_predicate mod_qual(?, :).
 mod_qual(M:V, T) :-
     current_module(M),
