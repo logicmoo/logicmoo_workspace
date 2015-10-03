@@ -3,18 +3,18 @@
 			 current_assertion/4,
 			 generate_rtchecks/8,
 			 generate_ctchecks/4,
-			 proc_ppassertion/3,
+			 proc_ppassertion/4,
 			 generate_step_rtchecks/7,
 			 current_assertion/16]).
 
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/nativeprops)).
-:- use_module(library(swi/basicprops)).
+:- use_module(library(assertions)).
+:- use_module(library(nativeprops)).
+:- use_module(library(basicprops)).
 :- use_module(library(lists)).
 :- use_module(rtchecks(rtchecks_basic)).
 :- use_module(rtchecks(rtchecks_meta)).
 :- use_module(rtchecks(term_list)).
-:- use_module(library(assertions/assrt_lib),
+:- use_module(assertions(assrt_lib),
 	      [assertion_read/9, assertion_body/7,
 	       comps_to_goal/3, comps_to_goal/4]).
 
@@ -344,7 +344,7 @@ ppassertion_type_goal(trust(Goal), trust, Goal).
 ppassertion_type_goal(true( Goal), true,  Goal).
 ppassertion_type_goal(false(Goal), false, Goal).
 
-proc_ppassertion(PPAssertion, Loc, rtcheck(Type, Goal, Loc)) :-
+proc_ppassertion(PPAssertion, CM, Loc, rtchecks_rt:rtcheck(Type, CM:Goal, Loc)) :-
     ppassertion_type_goal(PPAssertion, Type, Goal).
 
 generate_rtchecks(Assrs, Pred, M, PLoc, G1, G2, G3, G) :-

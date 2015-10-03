@@ -7,9 +7,9 @@
     user:error_on_co/0.
 
 :- use_module(library(call_in_module_file)).
-:- use_module(library(rtchecks/rtchecks_eval)).
-:- use_module(library(rtchecks/rtchecks_utils)).
-:- use_module(library(rtchecks_tracer)).
+:- use_module(rtchecks(rtchecks_eval)).
+:- use_module(rtchecks(rtchecks_utils)).
+:- use_module(rtchecks(rtchecks_tracer)).
 
 user:message_property(_, location_prefix(_, '', 'ERROR: ')).
 user:message_property(_, stream(current_output)) :- user:error_on_co.

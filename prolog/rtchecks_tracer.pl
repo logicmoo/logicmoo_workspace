@@ -1,12 +1,11 @@
 :- module(rtchecks_tracer, [trace_rtc/1,
 			    do_trace_rtc/1]).
 
-:- use_module(library(swi/rtchecks)). % Proper load of ciao dialect modules
 :- use_module(library(implementation_module)).
 :- use_module(library(static_strip_module)).
 :- use_module(library(apply)).
 :- use_module(library(ontrace)).
-:- use_module(library(assertions/assrt_lib)).
+:- use_module(assertions(assrt_lib)).
 :- use_module(rtchecks(rtchecks_rt)).
 :- use_module(rtchecks(rtchecks_gen)).
 :- use_module(rtchecks(rtchecks_eval)).

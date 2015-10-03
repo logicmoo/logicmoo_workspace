@@ -3,9 +3,9 @@
 			  collapse_redundants/3,
 			  compound_rtchecks/6,
 			  compound_rtchecks_end/5
-			 ], []).
+			 ]).
 
-:- use_module(library(swi/assertions)).
+:- use_module(library(assertions)).
 :- use_module(library(lists)).
 :- use_module(rtchecks(rtchecks_basic)).
 

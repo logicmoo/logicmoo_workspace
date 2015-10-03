@@ -3,7 +3,7 @@
 	   generate_rtchecks/4]).
 
 :- use_module(library(implementation_module)).
-:- use_module(library(assertions/assrt_lib)).
+:- use_module(assertions(assrt_lib)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(rtchecks(rtchecks_gen)).
 :- use_module(rtchecks(rtchecks_basic)).
@@ -49,7 +49,7 @@ maparg(_, _, _, _, _).
 
 generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
     resolve_meta_call(Goal0, Goal),
-    ( proc_ppassertion(Goal, Loc, RTChecks)
+    ( proc_ppassertion(Goal, CM, Loc, RTChecks)
     ->true
     ; implementation_module(CM:Goal, M),
       ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _CM, _)

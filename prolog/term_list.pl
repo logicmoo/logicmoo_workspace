@@ -1,8 +1,8 @@
 :- module(term_list, [eq/1, push_term/3, push_meta/3, collapse_terms/3]).
 
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/basicprops)).
-:- use_module(library(swi/plprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(plprops)).
 :- use_module(library(lists)).
 
 :- prop eq/1 + type.

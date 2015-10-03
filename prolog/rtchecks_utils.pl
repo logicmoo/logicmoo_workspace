@@ -2,9 +2,9 @@
 	  [handle_rtcheck/1, call_rtc/1, save_rtchecks/1, load_rtchecks/1,
 	   rtcheck_error/1, ctime_t/1]).
 
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/basicprops)).
-:- use_module(library(swi/plprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(plprops)).
 :- use_module(library(lists)).
 :- use_module(library(intercept)).
 :- use_module(library(prolog_codewalk),  []). % for message_location

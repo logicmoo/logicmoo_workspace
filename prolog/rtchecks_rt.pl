@@ -5,9 +5,10 @@
 			'$meta$rtc'/2
 		       ]).
 
-:- use_module(library(swi/assertions)).
+:- use_module(library(assertions)).
+:- use_module(assertions(termtyping), []). % assertions about builtins
+:- use_module(library(plprops)).
 :- use_module(library(intercept)).
-:- use_module(library(engine/term_typing), []). % assertions about builtins
 :- use_module(library(context_values)).
 :- reexport(rtchecks(rtchecks_send)).
 
@@ -18,7 +19,7 @@
 :- doc(module, "This module contains the predicates that are
 	required to implement run-time checks.").
 
-:- prop condition/1 + regtype.
+:- prop condition/1 + type.
 
 condition(true).
 condition(fail).

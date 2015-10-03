@@ -21,9 +21,9 @@
 	   test_det/2,
 	   test_det2/1]).
 
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/basicprops)).
-:- use_module(library(swi/nativeprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(nativeprops)).
 
 :- doc(author, "Edison Mera").
 

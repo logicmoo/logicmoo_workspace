@@ -13,8 +13,8 @@
 		remove_element/3
 	    ]).
 
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/basicprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
 :- use_module(library(apply)).
 :- use_module(library(lists)).
 :- use_module(rtchecks(term_list)).
