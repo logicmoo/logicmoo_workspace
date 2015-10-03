@@ -666,7 +666,9 @@ assertion_records(Decl, DPos, Records, RPos) :-
     %% issues --EMM
     b_getval('$variable_names', Dict).
 
+/*
 :- use_module(library(dialect/ciao), []).
 
 ciao:declaration_hook(Decl, Records) :-
     assertion_records(Decl, _, Records, _).
+*/

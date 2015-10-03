@@ -1,7 +1,9 @@
 :- module(term_typing,
-	  [var/1, nonvar/1, atom/1, integer/1, float/1, number/1, atomic/1,
-	   ground/1, type/2, add_1st_arg/3],
-	  [assertions, nortchecks, nativeprops, isomodes]).
+	  [type/2, add_1st_arg/3]).
+
+:- use_module(library(assertions)).
+:- use_module(library(nativeprops)).
+:- use_module(library(basicprops)).
 
 :- doc(title, "Extra-logical properties for typing").
 
@@ -24,22 +26,6 @@
 :- true comp ground(X) : var(X) + equiv(fail).
 :- true comp ground(X) : ground(X) + equiv(true).
 
-/* % jfran: Now implemented in C 
-ground(Term):-
-	nonvar(Term),
-	functor(Term,_,N),
-	ground_(N,Term).
-
-ground_(0,_) :- !.
-ground_(N,Term):-
-	N > 0,
-	arg(N,Term,Arg),
-	ground(Arg),
-	N1 is N-1,
-	ground_(N1,Term).
-*/
-:- impl_defined([ground/1]).
-
 % Compiled inline -- these are hooks for the interpreter.
 
 :- true prop atom(X) + native
@@ -50,8 +36,6 @@ ground_(N,Term):-
 :- true comp atom(X) : nonvar(X) + eval.
 :- true comp atom(T) : var(T) + equiv(fail).
 
-atom(X) :- atom(X).
-
 :- true prop atomic(X) + native
 # "@var{X} is currently instantiated to an atom or a number.".
 :- trust success atomic(T) => constant(T).
@@ -59,8 +43,6 @@ atom(X) :- atom(X).
 :- true comp atomic(@X) + (sideff(free), native).
 :- true comp atomic(X) : nonvar(X) + eval.
 :- true comp atomic(T) : var(T) + equiv(fail).
-
-atomic(X) :- atomic(X).
 
 :- true prop float(X) + native
 # "@var{X} is currently instantiated to a float.".
@@ -70,8 +52,6 @@ atomic(X) :- atomic(X).
 :- true comp float(X) : nonvar(X) + eval.
 :- true comp float(T) : var(T) + equiv(fail).
 
-float(X) :- float(X).
-
 :- true prop integer(X) + native
 # "@var{X} is currently instantiated to an integer.".
 :- trust success integer(X) => int(X).
@@ -79,8 +59,6 @@ float(X) :- float(X).
 :- true comp integer(@X) + (sideff(free), native).
 :- true comp integer(X) : nonvar(X) + eval.
 :- true comp integer(T) : var(T) + equiv(fail).
-
-integer(X) :- integer(X).
 
 :- true prop nonvar(X) + native(not_free(X))
 # "@var{X} is currently a term which is not a free variable.".
@@ -90,15 +68,6 @@ integer(X) :- integer(X).
 :- true comp nonvar(T) : var(T) + equiv(fail).
 :- true comp nonvar(T) : nonvar(T) + equiv(true).
 
-nonvar(X) :- nonvar(X).
-
-% :- true prop nv(T) + regtype.
-
-% nv(T) :- atm(T).
-% nv(T) :- num(T).
-% nv(T) :- struct(T).
-
-
 :- true prop number(X) + native
 # "@var{X} is currently instantiated to a number.".
 :- trust success number(X) => num(X).
@@ -107,8 +76,6 @@ nonvar(X) :- nonvar(X).
 :- true comp number(X) : nonvar(X) + eval.
 :- true comp number(T) : var(T) + equiv(fail).
 
-number(X) :- number(X).
-
 :- true prop var(X) + native(free(X))
 # "@var{X} is a free variable.".
 :- trust comp var/1 + (is_det, test_type(meta)).
@@ -116,8 +83,6 @@ number(X) :- number(X).
 :- true comp var(X) : nonvar(X) + eval.
 :- true comp var(X) : nonvar(X) + equiv(fail).
 :- true comp var(X) : var(X) + equiv(true).
-
-var(X) :- var(X).
 
 :- true prop type(X, Y) + native
 # "@var{X} is internally of type @var{Y} (@tt{var}, @tt{attv}, @tt{float},

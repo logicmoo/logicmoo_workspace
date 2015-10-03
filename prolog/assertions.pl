@@ -1,8 +1,8 @@
 :- module(assertions, []).
 
 :- use_module(library(compound_expand)).
-:- reexport(library(assertions_op)).
-:- reexport(library(assertions/assrt_lib)).
+:- reexport(assertions(assertions_op)).
+:- reexport(assertions(assrt_lib)).
 
 :- multifile user:file_search_path/2.
 

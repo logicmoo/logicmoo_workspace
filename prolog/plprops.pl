@@ -2,10 +2,10 @@
 		    char/1, keypair/1, keylist/1, arithexpression/1]).
 
 :- use_module(library(apply)).
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/nativeprops)).
-:- use_module(library(swi/basicprops)).
-:- use_module(library(assertions/send_check)).
+:- use_module(library(assertions)).
+:- use_module(library(nativeprops)).
+:- use_module(library(basicprops)).
+:- use_module(assertions(send_check)).
 
 % SWI-Like Properties:
 

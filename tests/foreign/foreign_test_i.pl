@@ -2,9 +2,9 @@
 			   get_arrays/4, show_arrays/3, sio/1, negative_t/1,
 			   positive_t/1, fd1/4, fd2/4, fd3/4, extend/2]).
 
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/basicprops)).
-:- use_module(library(swi/plprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(plprops)).
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
 :- extra_compiler_opts('-O2 -gdwarf-2 -g3 -D__DEBUG_MALLOC__').

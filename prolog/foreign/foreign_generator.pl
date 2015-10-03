@@ -3,8 +3,8 @@
 
 :- use_module(library(key_value)).
 :- use_module(library(remove_dups)).
-:- use_module(library(swi/assertions)).
-:- use_module(library(assertions/assrt_lib)).
+:- use_module(library(assertions)).
+:- use_module(assertions(assrt_lib)).
 :- use_module(library(apply)).
 :- use_module(library(transpose)).
 :- use_module(library(foreign/foreign_props)).

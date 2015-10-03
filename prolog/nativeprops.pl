@@ -30,6 +30,7 @@
 	   not_fails/1,
 	   not_mut_exclusive/1,
 	   num_solutions/2,
+	   num_solutions_eq/2,
 	   solutions/2,
 	   possibly_fails/1,
 	   possibly_nondet/1,
@@ -70,42 +71,17 @@
 	   false/1
 	   % intervals/2 %[LD]
 	   % user_error/2
-	  ],
-	  [assertions, hiord]).
+	  ]).
 
-:- doc(doinclude, indep/1).
-:- doc(doinclude, indep/2).
-
-% :- reexport(engine(term_typing),[ground/1,nonvar/1,var/1]).
-% :- doc(doinclude,ground/1).
-% :- doc(doinclude,nonvar/1).
-% :- doc(doinclude,var/1).
-% 
-% :- reexport(engine(basic_props),[regtype/1, native/2, native/1, sideff/2,
-%         term/1, int/1, nnegint/1, flt/1, num/1, atm/1, struct/1, gnd/1]).
-
-:- set_prolog_flag(multi_arity_warnings, off).
-
-:- use_module(library(terms_vars)).
 :- use_module(library(lists)).
-:- use_module(library(streams)).
-:- use_module(library(file_utils)).
-:- use_module(library(strings)).
-:- use_module(library(odd)).
-:- use_module(library(engine/term_typing)).
-:- use_module(library(assertions/send_check)).
-
-:- if(current_prolog_flag(dialect, ciao)).
-:- use_module(library(system)).
-:- use_module(engine(internals)).
-:- endif.
-
-:- if(current_prolog_flag(dialect, swi)).
-:-  abolish(send_signal/1),
-    abolish(intercept/3).
+:- use_module(library(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(termtyping)).
+:- use_module(assertions(send_check)).
 :- use_module(library(intercept)).
-:- endif.
 
+% :- doc(doinclude, indep/1).
+% :- doc(doinclude, indep/2).
 % --------------------------------------------------------------------------
 :- doc(title, "Properties which are native to analyzers").
 
@@ -238,9 +214,12 @@ coefficient(Coeff) :-
 :- true prop covered(X, Y) + native # "@var{X} is covered by @var{Y}.".
 
 covered(X, Y) :-
-	varsbag(X, VarsX, []),
-	varsbag(Y, VarsY, []),
-	sublist(VarsX, VarsY).
+    term_variables(X, VarsX),
+    term_variables(Y, VarsY),
+    forall(member(V, VarsX),
+	   ( member(VY, VarsY),
+	     V==VY
+	   )).
 
 :- doc(linear(X), "@var{X} is bound to a term which is linear,
    i.e., if it contains any variables, such variables appear only once
@@ -251,10 +230,10 @@ covered(X, Y) :-
 # "@var{X} is instantiated to a linear term.".
 
 linear(T) :-
-	varsbag(T, VarsBag, []),
-	sort(VarsBag, VarsSet),
-	length(VarsBag, N),
-	length(VarsSet, N).
+    term_variables(T, Vars),
+    maplist(occurrs_one(T), Vars).
+
+occurrs_one(T, Var) :- occurrences_of_var(Var, T, 1).
 
 :- doc(mshare(X), "@var{X} contains all @index{sharing sets}
    @cite{jacobs88,abs-int-naclp89} which specify the possible variable
@@ -294,7 +273,7 @@ not_mshare([V1|L]) :-
 :- prop clique(X) + (native(clique(X)), no_rtcheck)
 # "The clique pattern is @tt{@var{X}}.".
 
-:- impl_defined(clique/1).
+clique(_).
 
 :- doc(clique_1(X), "@var{X} is a set of variables of interest, much
    the same as a sharing group but @var{X} represents all the sharing
@@ -305,9 +284,7 @@ not_mshare([V1|L]) :-
 :- prop clique_1(X) + (native(clique_1(X)), no_rtcheck)
 # "The 1-clique pattern is @tt{@var{X}}.".
 
-:- impl_defined(clique_1/1).
-
-
+clique_1(_).
 
 :- prop nonground(X) + native(not_ground(X))
 # "@tt{@var{X}} is not ground.".
@@ -315,14 +292,12 @@ not_mshare([V1|L]) :-
 nonground(X) :- \+ ground(X).
 
 
-%%%%%%%%%%%%%%%%%%%%%% FAILS
-%
 :- doc(fails(X), "Calls of the form @var{X} fail.").
 
 :- true prop fails(X) + native
 # "Calls of the form @var{X} fail.".
 
-:- meta_predicate fails(goal).
+:- meta_predicate fails(0).
 
 fails(Goal) :-
 	Solved = solved(no),
@@ -330,14 +305,11 @@ fails(Goal) :-
 	(
 	    arg(1, Solved, no) ->
 	    send_comp_rtcheck(Goal, fails, not_fails),
-	    '$setarg'(1, Solved, yes, true)
+	    nb_setarg(1, Solved, yes)
 	;
 	    true
 	).
 
-
-%%%%%%%%%%%%%%%%%%%%%% NOT_FAILS
-%
 
 :- doc(bug, "A missing property is succeeds (not_fails = succeeds
 	or not_terminates. -- EMM").
@@ -353,7 +325,7 @@ fails(Goal) :-
 % not_fails( X ) :-
 % 	if( X , true , throw( rtcheck( nf , fail , X  ) ) ).
 
-:- meta_predicate not_fails(goal).
+:- meta_predicate not_fails(0).
 
 not_fails(Goal) :-
 	Solved = solved(no),
@@ -364,11 +336,11 @@ not_fails(Goal) :-
 	    send_comp_rtcheck(Goal, not_fails, fails),
 	    fail
 	),
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	test_throw_2(Goal, not_fails, _, true),
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	( C0 == C1 -> !
-	; '$setarg'(1, Solved, yes, true) ).
+	; nb_setarg(1, Solved, yes) ).
 
 :- doc(possibly_fails(X), "Non-failure is not ensured for any call
    of the form @var{X} @cite{non-failure-iclp97}. In other words,
@@ -378,7 +350,7 @@ not_fails(Goal) :-
 :- prop possibly_fails(X) + no_rtcheck
 # "Non-failure is not ensured for calls of the form @var{X}.".
 
-:- meta_predicate possibly_fails(goal).
+:- meta_predicate possibly_fails(0).
 
 possibly_fails(Goal) :- call(Goal).
 
@@ -390,7 +362,7 @@ possibly_fails(Goal) :- call(Goal).
 :- prop covered(X) + rtcheck(unimplemented)
 # "All the calls of the form @var{X} are covered.".
 
-:- meta_predicate covered(goal).
+:- meta_predicate covered(0).
 
 covered(Goal) :- call(Goal).
 
@@ -401,7 +373,7 @@ covered(Goal) :- call(Goal).
 :- prop not_covered(X) + rtcheck(unimplemented)
 # "Not all of the calls of the form @var{X} are covered.".
 
-:- meta_predicate not_covered(goal).
+:- meta_predicate not_covered(0).
 
 not_covered(Goal) :- call(Goal).
 
@@ -415,7 +387,7 @@ not_covered(Goal) :- call(Goal).
 :- prop is_det(X)
 # "All calls of the form @var{X} are deterministic.".
 
-:- meta_predicate is_det(goal).
+:- meta_predicate is_det(0).
 
 is_det(Goal) :-
 	Solved = solved(no),
@@ -428,7 +400,7 @@ is_det(Goal) :-
 	    send_comp_rtcheck(Goal, is_det, non_det)
 	    % more than one solution!
 	),
-	'$setarg'(1, Solved, yes, true).
+	nb_setarg(1, Solved, yes).
 
 :- doc(non_det(X), "All calls of the form @var{X} are
    non-deterministic, i.e., produce several solutions.").
@@ -436,7 +408,7 @@ is_det(Goal) :-
 :- prop non_det(X)
 # "All calls of the form @var{X} are non-deterministic.".
 
-:- meta_predicate non_det(goal).
+:- meta_predicate non_det(0).
 
 non_det(Goal) :-
 	Solved = solved(no),
@@ -447,9 +419,9 @@ non_det(Goal) :-
 	    send_comp_rtcheck(Goal, non_det, is_det),
 	    fail
 	),
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	Goal,
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	(
 	    arg(1, Solved, no) ->
 	    (
@@ -457,21 +429,21 @@ non_det(Goal) :-
 		!,
 		send_comp_rtcheck(Goal, non_det, no_choicepoints)
 	    ;
-		'$setarg'(1, Solved, one, true)
+		nb_setarg(1, Solved, one)
 	    )
 	;
-	    '$setarg'(1, Solved, yes, true)
+	    nb_setarg(1, Solved, yes)
 	).
 
 :- prop no_choicepoints(X)
 # "A call to @var{X} does not create choicepoints.".
 
-:- meta_predicate no_choicepoints(goal).
+:- meta_predicate no_choicepoints(0).
 
 no_choicepoints(Goal) :-
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	Goal,
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	( C1 == C0 -> true
 	; send_comp_rtcheck(Goal, no_choicepoints, have_choicepoints)
 	).
@@ -479,11 +451,11 @@ no_choicepoints(Goal) :-
 :- prop have_choicepoints(X)
 # "A call to @var{X} creates choicepoints.".
 
-:- meta_predicate have_choicepoints(goal).
+:- meta_predicate have_choicepoints(0).
 have_choicepoints(Goal) :-
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	Goal,
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	( C1 == C0 ->
 	    send_comp_rtcheck(Goal, have_choicepoints, no_choicepoints)
 	; true ).
@@ -495,14 +467,14 @@ have_choicepoints(Goal) :-
 :- prop possibly_nondet(X) + no_rtcheck
 # "Non-determinism is not ensured for calls of the form @var{X}.".
 
-:- meta_predicate possibly_nondet(goal).
+:- meta_predicate possibly_nondet(0).
 
 possibly_nondet(Goal) :- call(Goal).
 
 :- prop test_type(X, T) # "Indicates the type of test that a predicate
 	performs.  Required by the nonfailure analyisis.".
 
-:- meta_predicate test_type(goal, ?).
+:- meta_predicate test_type(0, ?).
 
 test_type(Goal, _) :- call(Goal).
 
@@ -515,7 +487,7 @@ test_type(Goal, _) :- call(Goal).
 :- prop mut_exclusive(X) + rtcheck(unimplemented)
 # "For any call of the form @var{X} at most one clause succeeds.".
 
-:- meta_predicate mut_exclusive(goal).
+:- meta_predicate mut_exclusive(0).
 
 mut_exclusive(Goal) :- call(Goal).
 
@@ -530,7 +502,7 @@ mut_exclusive(Goal) :- call(Goal).
 # "For some calls of the form @var{X} more than one clause
 may succeed.".
 
-:- meta_predicate not_mut_exclusive(goal).
+:- meta_predicate not_mut_exclusive(0).
 
 not_mut_exclusive(Goal) :- call(Goal).
 
@@ -543,7 +515,7 @@ not_mut_exclusive(Goal) :- call(Goal).
 :- prop size_lb(X, Y) + no_rtcheck
 # "@var{Y} is a lower bound on the size of argument @var{X}.".
 
-:- impl_defined(size_lb/2).
+size_lb(_, _).
 
 :- doc(size_ub(X, Y), "The maximum size of the terms to which the
    argument @var{Y} is bound is given by the expression
@@ -554,7 +526,7 @@ not_mut_exclusive(Goal) :- call(Goal).
 :- prop size_ub(X, Y) + no_rtcheck
 # "@var{Y} is a upper bound on the size of argument @var{X}.".
 
-:- impl_defined(size_ub/2).
+size_ub(_, _).
 
 %% upper_size(X,Y)
 %% # "The maximum size of arguments of calls of the form @var{X} are
@@ -563,9 +535,9 @@ not_mut_exclusive(Goal) :- call(Goal).
 :- prop size_o(X, Y) + no_rtcheck
 # "The size of argument @var{X} is in the order of @var{Y}.".
 
-:- impl_defined(size_o/2).
+size_o(_, _).
 
-:- meta_predicate size_metric(goal, ?, ?, ?).
+:- meta_predicate size_metric(0, ?, ?, ?).
 
 :- prop size_metric(Head, Approx, Var, Metric) + no_rtcheck
 # "@var{Metric} is the metric of the variable @var{Var}, for the
@@ -575,7 +547,7 @@ not_mut_exclusive(Goal) :- call(Goal).
 
 size_metric(Goal, _, _, _) :- call(Goal).
 
-:- meta_predicate size_metric(goal, ?, ?).
+:- meta_predicate size_metric(0, ?, ?).
 
 :- prop size_metric(Head, Var, Metric) + no_rtcheck
 # "@var{Metric} is the metric of the variable @var{Var}, for any
@@ -593,7 +565,7 @@ size_metric(Goal, _, _) :- call(Goal).
 # "@var{Y} is a lower bound on the cost of any call of the form
 @var{X}.".
 
-:- meta_predicate steps_lb(goal, ?).
+:- meta_predicate steps_lb(0, ?).
 steps_lb(Goal, _) :- call(Goal).
 
 %% lower_time(X,Y)
@@ -608,7 +580,7 @@ steps_lb(Goal, _) :- call(Goal).
 # "@var{Y} is a upper bound on the cost of any call of the form
 @var{X}.".
 
-:- meta_predicate steps_ub(goal, ?).
+:- meta_predicate steps_ub(0, ?).
 steps_ub(Goal, _) :- call(Goal).
 
 %% upper_time(X,Y)
@@ -622,14 +594,14 @@ steps_ub(Goal, _) :- call(Goal).
 # "@var{Y} is the cost (number of resolution steps) of any call of the form
 @var{X}.".
 
-:- meta_predicate steps(goal, ?).
+:- meta_predicate steps(0, ?).
 steps(Goal, _) :- call(Goal).
 
 :- prop steps_o(X, Y) + no_rtcheck
 # "@var{Y} is the complexity order of the cost of any call of the form
 @var{X}.".
 
-:- meta_predicate steps_o(goal, ?).
+:- meta_predicate steps_o(0, ?).
 steps_o(Goal, _) :- call(Goal).
 
 %%%%%%%%%%%%%%%%%%%%
@@ -677,21 +649,21 @@ indep([[X, Y]|L]) :- indep(X, Y), indep(L).
 :- prop sideff_pure(X) + no_rtcheck
 # "@var{X} is pure, i.e., has no side-effects.".
 
-:- meta_predicate sideff_pure(goal).
+:- meta_predicate sideff_pure(0).
 sideff_pure(Goal) :- call(Goal).
 
 :- prop sideff_soft(X) + no_rtcheck
 # "@var{X} has @index{soft side-effects}, i.e., those not affecting
    program execution (e.g., input/output).".
 
-:- meta_predicate sideff_soft(goal).
+:- meta_predicate sideff_soft(0).
 sideff_soft(Goal) :- call(Goal).
 
 :- prop sideff_hard(X) + no_rtcheck
 # "@var{X} has @index{hard side-effects}, i.e., those that might affect
    program execution (e.g., assert/retract).".
 
-:- meta_predicate sideff_hard(goal).
+:- meta_predicate sideff_hard(0).
 sideff_hard(Goal) :- call(Goal).
 
 :- doc(finite_solutions(X), "Calls of the form @var{X} produce a
@@ -701,10 +673,13 @@ sideff_hard(Goal) :- call(Goal).
 # "All the calls of the form @var{X} have a finite number of
    solutions.".
 
-:- meta_predicate finite_solutions(goal).
+:- meta_predicate finite_solutions(0).
 finite_solutions(Goal) :- call(Goal).
 
-:- meta_predicate num_solutions_eq(goal, ?).
+:- prop num_solutions_eq(X, N) : callable * int
+# "All the calls of the form @var{X} have @var{N} solutions.".
+
+:- meta_predicate num_solutions_eq(0, ?).
 num_solutions_eq(Goal, N) :-
 	Sols = solutions(0),
 	(
@@ -714,13 +689,13 @@ num_solutions_eq(Goal, N) :-
 	    (
 		(A == done ; A == N) -> fail
 	    ;
-		send_comp_rtcheck(Goal, num_solutions(N), Sols),
+		send_comp_rtcheck(Goal, num_solutions_eq(N), Sols),
 		fail
 	    )
 	),
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	call(Goal),
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	arg(1, Sols, A),
 	(
 	    A == done -> true
@@ -732,35 +707,28 @@ num_solutions_eq(Goal, N) :-
 		(
 		    N1 == N -> true
 		;
-		    send_comp_rtcheck(Goal, num_solutions(N),
-			num_solutions(N1))
+		    send_comp_rtcheck(Goal, num_solutions_eq(N),
+			num_solutions_eq(N1))
 		)
 	    ;
 		(
 		    N1 > N ->
-		    send_comp_rtcheck(Goal, num_solutions(N),
-			num_solutions('>'(N))),
-		    '$setarg'(1, Sols, done, true)
+		    send_comp_rtcheck(Goal, num_solutions_eq(N),
+			num_solutions(>(N))),
+		    nb_setarg(1, Sols, done)
 		;
-		    '$setarg'(1, Sols, N1, true)
+		    nb_setarg(1, Sols, N1)
 		)
 	    )
 	).
-
-:- prop num_solutions(X, N) : callable * int
-# "All the calls of the form @var{X} have @var{N} solutions.".
 
 :- prop num_solutions(Goal, Check) : callable * callable
 # "For a call to @var{Goal}, @pred{Check(X)} succeeds, where @var{X} is
    the number of solutions.".
 
-:- meta_predicate num_solutions(goal, addterm(pred(1))).
+:- meta_predicate num_solutions(0, 1).
 
-num_solutions(Goal, _, N) :-
-	int(N),
-	!,
-	num_solutions_eq(Goal, N).
-num_solutions(Goal, Check, Term) :-
+num_solutions(Goal, Check) :-
 	Sols = num_solutions(0),
 	(
 	    true
@@ -769,14 +737,14 @@ num_solutions(Goal, Check, Term) :-
 	    (
 		call(Check, N0) -> fail
 	    ;
-		send_comp_rtcheck(Goal, num_solutions(Term),
+		send_comp_rtcheck(Goal, num_solutions(Check),
 		    num_solutions(N0)),
 		fail
 	    )
 	),
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	call(Goal),
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	arg(1, Sols, N0),
 	N1 is N0 + 1,
 	(
@@ -785,18 +753,19 @@ num_solutions(Goal, Check, Term) :-
 	    (
 		call(Check, N1) -> true
 	    ;
-		send_comp_rtcheck(Goal, num_solutions(Term), num_solutions(N0))
+		send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N0))
 	    )
 	;
-	    '$setarg'(1, Sols, N1, true)
+	    nb_setarg(1, Sols, N1)
 	).
 
 :- prop solutions(Goal, Sols) : callable * list
 # "Goal @var{Goal} produces the solutions listed in @var{Sols}.".
 
-:- meta_predicate solutions(addterm(goal), ?).
+:- meta_predicate solutions(0, ?).
 
-solutions(Goal, Sol, Sols) :-
+solutions(Goal, Sols) :-
+	Goal = _:Sol,
 	Remaining = solutions(Sols),
 	(
 	    true
@@ -810,9 +779,9 @@ solutions(Goal, Sol, Sols) :-
 		fail
 	    )
 	),
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	call(Goal),
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	arg(1, Remaining, Sols0),
 	(
 	    Sols0 == done -> true
@@ -835,9 +804,9 @@ solutions(Goal, Sol, Sols) :-
 		    append(Curr, Sols0,   Sols),
 		    append(Curr, [Sol|_], Sols2),
 		    send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
-		    '$setarg'(1, Remaining, done, true)
+		    nb_setarg(1, Remaining, done)
 		;
-		    '$setarg'(1, Remaining, Sols1, true)
+		    nb_setarg(1, Remaining, Sols1)
 		)
 	    )
 	).
@@ -849,7 +818,7 @@ solutions(Goal, Sol, Sols) :-
 :- prop relations(X, N) + rtcheck(unimplemented)
 # "Goal @var{X} produces @var{N} solutions.".
 
-:- meta_predicate relations(goal, ?).
+:- meta_predicate relations(0, ?).
 relations(Goal, _) :- call(Goal).
 
 :- doc(terminates(X), "Calls of the form @var{X} always
@@ -858,101 +827,101 @@ relations(Goal, _) :- call(Goal).
 :- prop terminates(X) + no_rtcheck
 # "All calls of the form @var{X} terminate.".
 
-:- meta_predicate terminates(goal).
+:- meta_predicate terminates(0).
 terminates(Goal) :- call(Goal).
 
-% Built-in in CiaoPP
-:- export(entry_point_name/2).
-:- prop entry_point_name/2 + no_rtcheck.
-% if you change this declaration, you have to change ciaoPP:
-:- meta_predicate entry_point_name(goal, ?).
-:- impl_defined(entry_point_name/2).
-:- doc(hide, entry_point_name/2).
+% % Built-in in CiaoPP
+% :- export(entry_point_name/2).
+% :- prop entry_point_name/2 + no_rtcheck.
+% % if you change this declaration, you have to change ciaoPP:
+% :- meta_predicate entry_point_name(0, ?).
+% :- impl_defined(entry_point_name/2).
+% :- doc(hide, entry_point_name/2).
 
-:- data signal_db/3.
+:- dynamic signal_db/3.
 
 asserta_signal_check(Choice, _, E, _) :-
-	asserta_fact(signal_db(Choice, no, E)).
+	asserta(signal_db(Choice, no, E)).
 asserta_signal_check(Choice, Goal, _, CheckThrown) :-
 	end_signal_check(Choice, Goal, CheckThrown), fail.
 
 retract_signal_check(Choice, Goal, _, CheckThrown) :-
 	end_signal_check(Choice, Goal, CheckThrown).
 retract_signal_check(Choice, _, E, _) :-
-	asserta_fact(signal_db(Choice, no, E)),
+	asserta(signal_db(Choice, no, E)),
 	fail.
 
 signal_prop(yes, E, signal(yes, E), signal(no,  E)).
 signal_prop(no,  E, signal(no,  E), signal(yes, E)).
 
 end_signal_check(Choice, Goal, CheckThrown) :-
-	retract_fact_nb(signal_db(Choice, Thrown, E)),
+	retract(signal_db(Choice, Thrown, E)),
 	signal_prop(CheckThrown, E, EP, EV),
 	( Thrown = CheckThrown -> true
 	; send_comp_rtcheck(Goal, EP, EV)
 	).
 
 emit_signal(Choice, E) :-
-	retract_fact_nb(signal_db(Choice, _, _)),
-	assertz_fact(signal_db(Choice, yes, E)).
+	retract(signal_db(Choice, _, _)),
+	assertz(signal_db(Choice, yes, E)).
 
 :- prop signal(Goal)
 # "Calls of the form @var{Goal} throw a signal.".
 
-:- meta_predicate signal(goal).
+:- meta_predicate signal(0).
 
 signal(Goal) :- signal(Goal, _).
 
 :- prop signal(Goal, E)
 # "A call to @var{Goal} sends a signal that unifies with @var{E}.".
 
-:- meta_predicate signal(goal, ?).
+:- meta_predicate signal(0, ?).
 
 signal(Goal, E) :-
-	'$metachoice'(Choice),
+	prolog_current_choice(Choice),
 	asserta_signal_check(Choice, Goal, E, yes),
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	intercept(Goal, E, (emit_signal(Choice, E), send_signal(E))),
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	retract_signal_check(Choice, Goal, E, yes),
 	(C0 == C1 -> ! ; true).
 
 :- prop no_signal(Goal)
 # "Calls of the form @var{Goal} do not send any signal.".
 
-:- meta_predicate no_signal(goal).
+:- meta_predicate no_signal(0).
 
 no_signal(Goal) :- no_signal(Goal, _).
 
 :- prop no_signal(Goal, E)
 # "Calls of the form @var{Goal} do not send the signal @var{E}.".
 
-:- meta_predicate no_signal(goal, ?).
+:- meta_predicate no_signal(0, ?).
 
 no_signal(Goal, E) :-
-	'$metachoice'(Choice),
+	prolog_current_choice(Choice),
 	asserta_signal_check(Choice, Goal, E, no),
-	'$metachoice'(C0),
+	prolog_current_choice(C0),
 	intercept(Goal, E, (emit_signal(Choice, E), throw(E))),
-	'$metachoice'(C1),
+	prolog_current_choice(C1),
 	retract_signal_check(Choice, Goal, E, no),
 	(C0 == C1 -> ! ; true).
 
 :- prop exception(Goal)
 # "Calls of the form @var{Goal} throw an exception.".
 
-:- meta_predicate exception(goal).
+:- meta_predicate exception(0).
 
 exception(Goal) :-
 	Goal,
 	send_comp_rtcheck(Goal, exception, no_exception).
 
 :- prop throw(Goal, E).
-:- meta_predicate throw(goal, ?).
+:- meta_predicate throw(0, ?).
 throw(Goal, E) :-
 	test_throw_2(Goal, throw(E), F, F\=E).
 
-:- meta_predicate test_throw_2(goal, ?, ?, goal).
+:- meta_predicate test_throw_2(0, ?, ?, 0).
 test_throw_2(Goal, Prop, F, Test) :-
 	catch(Goal, F,
 	    (
@@ -970,7 +939,7 @@ test_throw_2(Goal, Prop, F, Test) :-
 :- prop exception(Goal, E) # "Calls of the form @var{Goal} throw an
 	exception that unifies with @var{E}.".
 % exception(Goal, E) :- exception(throw(Goal, E)).
-:- meta_predicate exception(goal, ?).
+:- meta_predicate exception(0, ?).
 
 exception(Goal, E) :-
 	test_throw_2(Goal, exception(E), F, F\=E),
@@ -979,14 +948,14 @@ exception(Goal, E) :-
 :- prop no_exception(Goal) #
 	"Calls of the form @var{Goal} do not throw any exception.".
 
-:- meta_predicate no_exception(goal).
+:- meta_predicate no_exception(0).
 
 no_exception(Goal) :- test_throw_2(Goal, no_exception, _, true).
 
 :- prop no_exception(Goal, E) # "Calls of the form @var{Goal} do not
 	throw exception @var{E}.".
 
-:- meta_predicate no_exception(goal, ?).
+:- meta_predicate no_exception(0, ?).
 
 no_exception(Goal, E) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 
@@ -994,7 +963,7 @@ no_exception(Goal, E) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 # "Calls of the form @var{Goal} can throw only the exceptions that
    unify with the terms listed in @var{Es}.".
 
-:- meta_predicate throws(goal, ?).
+:- meta_predicate throws(0, ?).
 
 throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 
@@ -1002,48 +971,56 @@ throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 # "Calls of the form @var{Goal} can generate only the signals that
    unify with the terms listed in @var{Es}.".
 
-:- meta_predicate signals(goal, ?).
+:- meta_predicate signals(0, ?).
 
 signals(Goal, _E) :- call(Goal).
 
 :- prop user_output(Goal, S) #
 	"Calls of the form @var{Goal} write @var{S} to standard output.".
 
-:- meta_predicate user_output(goal, ?).
+:- meta_predicate user_output(0, ?).
 user_output(Goal, S) :-
-	'$metachoice'(Choice),
-	mktemp_in_tmp('native_props_XXXXXX', FileName),
-	asserta_user_output_check(Choice, FileName, Goal, S),
-	'$metachoice'(C0),
-	catch(Goal, E,
-	    (end_output_check(Choice, FileName, Goal, S), throw(E))),
-	'$metachoice'(C1),
-	retract_user_output_check(Choice, FileName, Goal, S),
-	(C0 == C1 -> ! ; true).
+    setup_call_cleanup(new_memory_file(FileName),
+		       use_output_mf(Goal, S, FileName),
+		       free_memory_file(FileName)).
 
-:- data output_db/2.
+use_output_mf(Goal, S, FileName) :-
+    asserta_user_output_check(FileName, Goal, S),
+    prolog_current_choice(C0),
+    catch(Goal, E,
+	  ( end_output_check(FileName, Goal, S),
+	    throw(E)
+	  )),
+    prolog_current_choice(C1),
+    retract_user_output_check(FileName, Goal, S),
+    ( C0 == C1
+    ->!,
+      output_check(FileName, Goal, S)
+    ; true
+    ).
 
-asserta_user_output_check(Choice, FileName, _, _) :-
-	ini_output_check(Choice, FileName).
-asserta_user_output_check(Choice, FileName, Goal, S) :-
-	end_output_check(Choice, FileName, Goal, S), fail.
+asserta_user_output_check(FileName, _, _) :-
+    open_memory_file(FileName, write, Stream),
+    tell(Stream).
+asserta_user_output_check(FileName, Goal, S) :-
+    told,
+    output_check(FileName, Goal, S),
+    fail.
 
-retract_user_output_check(Choice, FileName, Goal, S) :-
-	end_output_check(Choice, FileName, Goal, S).
-retract_user_output_check(Choice, FileName, _, _) :-
-	ini_output_check(Choice, FileName), fail.
+retract_user_output_check(FileName, Goal, S) :-
+    told.
+retract_user_output_check(FileName, _, _) :-
+    open_memory_file(FileName, append, Stream),
+    append(Stream),
+    fail.
 
-ini_output_check(Choice, FileName) :-
-	open_output(FileName, SO),
-	assertz_fact(output_db(Choice, SO)),
-	!.
+end_output_check(FileName, Goal, S) :-
+    told,
+    output_check(FileName, Goal, S).
 
-end_output_check(Choice, FileName, Goal, S) :-
-	retract_fact(output_db(Choice, SO)),
-	close_output(SO),
-	file_to_string(FileName, S1),
-	delete_file(FileName),
-	write_string(S1),
+output_check(FileName, Goal, S) :-
+	memory_file_to_string(FileName, S1),
+	format("~s", [S1]),
 	(
 	    S \== S1 ->
 	    send_comp_rtcheck(Goal, user_output(S), user_output(S1))
@@ -1138,14 +1115,12 @@ not_fails_non_det(Goal) :-
 # "@var{Y} is the size of argument @var{X}, for the approximation @var{A}.".
 
 size(_, _, _).
-% :- impl_defined(size/3).
 
 
 :- prop size(X, Y) + no_rtcheck
 # "@var{Y} is the size of argument @var{X}, for any approximation.".
 
 size(_, _).
-% :- impl_defined(size/2).
 
 %% Note: succeeds/1, compat/1 and instance/2 would bind variables, so
 %% they have to be negated in the caller to undo bindings.  They are
@@ -1154,127 +1129,37 @@ size(_, _).
 :- doc(bug, "compat/1 and instance/1 are incompatible with attributed
       variables, due to the usage of the freeze/2 predicate.").
 
-:- use_module(engine(attributes)).
-
-:- if(current_prolog_flag(dialect, ciao)).
-:- multifile verify_attribute/2.
-verify_attribute('$cut_fail'(Var, C), _) :-
-	detach_attribute(Var),
-	'$metacut'(C),
-	fail.
-
-:- multifile combine_attributes/2.
-combine_attributes('$cut_fail'(V1, C), '$cut_fail'(V2, C)) :-
-	detach_attribute(V1),
-	detach_attribute(V2),
-	V1 = V2,
-	'$metacut'(C),
-	fail.
-
-:- redefining(detach_attribute/1).
-detach_attribute(V) :-
-	( get_attribute(V, _) ->
-	  attributes:detach_attribute(V)
-	; true
-	).
-
-:- endif.
-
-:- if(current_prolog_flag(dialect, swi)).
-attributes:attr_unify_hook('$cut_fail'(_, C), V) :-
-	nonvar(V),
-	!,
-	'$metacut'(C),
-	fail.
-
-attributes:attr_unify_hook('$cut_fail'(_, C), V) :-
-	get_attribute(V, '$cut_fail'(_, C)),
-	detach_attribute(V),
-	'$metacut'(C),
-	fail.
-:- endif.
-
 :- prop succeeds(Prop) + no_rtcheck # "A call to @var{Prop} succeeds.".
-:- meta_predicate succeeds(goal).
+:- meta_predicate succeeds(0).
 succeeds(Prop) :- Prop.
-
-attach_cut_fail(V, C) :- attach_attribute(V, '$cut_fail'(V, C)).
 
 :- prop instance(Prop) + no_rtcheck
 # "Uses Prop as an instantiation property. Verifies that execution of
    @var{Prop} does not produce bindings for the argument variables.".
 
-:- meta_predicate instance(goal).
-:- if(current_prolog_flag(dialect, ciao)).
-instance(Goal) :- instancec(Goal, Checker), !, Checker.
-:- endif.
-:- if(current_prolog_flag(dialect, swi)).
-instance(_:Goal) :- instancec(Goal, Checker), !, Checker.
-:- endif.
+:- meta_predicate instance(0).
 instance(Goal) :-
-	varset(Goal, VS),
-	'$metachoice'(C),
-	list(VS, detach_attribute),
-	list(VS, attach_cut_fail(C)),
-	Goal,
-	list(VS, detach_attribute),
-	!.
-
-instancec(var(A),      var(A)).
-instancec(nonvar(A),   nonvar(A)).
-instancec(term(A),     true).
-instancec(gnd(A),      ground(A)).
-instancec(int(A),      integer(A)).
-instancec(num(A),      number(A)).
-instancec(atm(A),      atom(A)).
-instancec(constant(A), atomic(A)).
-
-freeze_metacut(V, C) :- freeze(V, '$metacut'(C)).
+    term_variables(Goal, VS),
+    Goal,
+    term_variables(Goal, VO),
+    ( VS == VO
+    ->true
+    ; !,
+      fail
+    ).
 
 :- prop compat(Prop) + no_rtcheck
 # "Uses @var{Prop} as a compatibility property.".
 
-:- meta_predicate compat(goal).
-:- if(current_prolog_flag(dialect, ciao)).
-clean_freezed(V) :- detach_attribute(V).
+:- meta_predicate compat(0).
 
-compat(Goal) :- compatc(Goal, Checker), !, Checker.
-
-:- endif.
-:- if(current_prolog_flag(dialect, swi)).
-clean_freezed(V) :- del_attr(V, freeze).
-
-compat(_:Goal) :- compatc(Goal, Checker), !, Checker.
 compat(_:H) :-
-    functor(H, F, 1),
+    % This first clause allows usage of atom/atomic and other test predicates as
+    % compatibility check
+    compound(H),
     arg(1, H, A),
-    var(A),
-    !.
-:- endif.
-compat(Goal) :-
-	varset(Goal, VS),
-	'$metachoice'(C),
-	list(VS, clean_freezed),
-	list(VS, freeze_metacut(C)),
-	Goal,
-	% selectvars(Args, VS1),
-	% varset(VS1, VS2),
-	list(VS, clean_freezed),
-	!.
-
-compatc(var(A),     true).
-compatc(nonvar(A),  true).
-compatc(term(A),    true).
-compatc(gnd(A),     true).
-compatc(atm(A),     atm(A)).
-compatc(int(A),     int(A)).
-compatc(nnegint(A), nnegint(A)).
-compatc(num(A),     num(A)).
-compatc(atom(A),    atm(A)).
-compatc(number(A),  num(A)).
-compatc(integer(A), int(A)).
-compatc(ground(A),  gnd(A)).
-compatc(atomic(A),  constant(A)).
+    var(A), !.
+compat(Goal) :- \+ \+ Goal.
 
 :- if(current_prolog_flag(dialect, swi)).
 % TODO: compat/1 should be moved to basic_props.pl to avoid odd error
@@ -1286,7 +1171,7 @@ compatc(atomic(A),  constant(A)).
     # "@var{V} is not further instantiated.".
 :- true comp nfi(G,V) + (sideff(free), no_rtcheck).
 
-:- meta_predicate nfi(goal, ?).
+:- meta_predicate nfi(0, ?).
 nfi(Goal, V) :-
     copy_term(V, X),
     call(Goal),
@@ -1298,7 +1183,7 @@ nfi(Goal, V) :-
     # "@var{V} is further instantiated.".
 :- true comp fi(G,V) + (sideff(free), no_rtcheck).
 
-:- meta_predicate fi(goal, ?).
+:- meta_predicate fi(0, ?).
 fi(Goal, V) :-
     copy_term(V, X),
     call(Goal),
@@ -1307,7 +1192,7 @@ fi(Goal, V) :-
     ).
 
 :- true prop nsh/2.
-:- meta_predicate nsh(goal, ?).
+:- meta_predicate nsh(0, ?).
 nsh(Goal, Arg) :-
     check_nsh(Goal, Arg),
     call(Goal).
