@@ -5,8 +5,6 @@
 		checkif_to_lit/3,
 		get_checkc/5,
 		get_checkc/6,
-		get_checkif/9,
-		insert_posloc/6,
 		is_member_prop/2,
 		is_same_prop/2,
 		lists_to_lits/2,
@@ -17,25 +15,10 @@
 :- use_module(library(basicprops)).
 :- use_module(library(apply)).
 :- use_module(library(lists)).
-:- use_module(rtchecks(term_list)).
 
 :- doc(author, "Edison Mera").
 
 :- doc(module, "Basic predicates used in rtchecks expansion.").
-
-insert_posloc(PredName0, PLoc0, ALoc, PosLocs, PredName, PosLoc) :-
-	push_meta(PredName0, PosLocs, PredName),
-	( nonvar(PLoc0)
-	->push_term(PLoc0,                   PosLocs, PLoc),
-	  push_term(posloc(PredName, PLoc), PosLocs, PosPLoc),
-	  PosLoc = [PosPLoc|PosLoc1]
-	; PosLoc = PosLoc1
-	),
-	( nonvar(ALoc)
-	->push_term(asrloc(ALoc), PosLocs, PosALoc),
-	  PosLoc1 = [PosALoc]
-	; PosLoc1 = []
-	).
 
 check_props_names(Name, Check, Value, (\+Check, Name=Value)).
 
@@ -82,27 +65,27 @@ compound_check_prop(Check, _, M:Prop, CheckProp) :- !,
 compound_check_prop(Check, M, Prop, CheckProp) :-
 	CheckProp =.. [Check, M:Prop].
 
-compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, AsrLocs, PropValue,
-		 ( IfValues == [] ->
-		   findall(PropValue, CheckProps, Props),
-		   send_rtcheck(Props, ErrType, PredName, Dict, AsrLocs)
+compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, PLoc, ALoc, PropValue,
+		 ( IfValues = []
+		 ->findall(PropValue, CheckProps, Props),
+		   send_rtcheck(Props, ErrType, PredName, Dict, PLoc, ALoc)
 		 ; true
 		 )).
 
 % TODO: fail: Exit \= [].  true: Exit == [].
 
-get_checkif(_, _,    _, _, _, [], _, _, true) :- !.
-get_checkif(_, Exit, _, _, _, _,  _, _, true) :- Exit \= [], !.
-get_checkif(success, Exit, PredName, Dict, M, Props, Names, AsrLoc, CheckIf) :-
+get_checkif(_, _,    _, _, _, [], _, _, _, true) :- !.
+get_checkif(_, Exit, _, _, _, _,  _, _, _, true) :- Exit \= [], !.
+get_checkif(success, Exit, PredName, Dict, M, Props, Names, PLoc, ALoc, CheckIf) :-
 	compound_check_props(instance, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
-	compound_checkif(Exit, success, PredName, Dict, CheckProps, AsrLoc, NameProp, CheckIf).
-get_checkif(compatpos, Exit, PredName, Dict, M, Props, Names, AsrLoc, CheckIf) :-
+	compound_checkif(Exit, success, PredName, Dict, CheckProps, PLoc, ALoc, NameProp, CheckIf).
+get_checkif(compatpos, Exit, PredName, Dict, M, Props, Names, PLoc, ALoc, CheckIf) :-
 	compound_check_props(compat, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
-	compound_checkif(Exit, success, PredName, Dict, CheckProps, AsrLoc, NameProp, CheckIf).
+	compound_checkif(Exit, success, PredName, Dict, CheckProps, PLoc, ALoc, NameProp, CheckIf).
 
 short_prop_name(Prop, Name-[]) :-
 	callable(Prop),
@@ -223,8 +206,8 @@ list_to_disj2([],     X,  X).
 list_to_disj2([X|Xs], X0, (X0 ; Lits)) :-
 	list_to_disj2(Xs, X, Lits).
 
-checkif_to_lit(pos(_Pred, M, PType),
-	       i(AsrLoc, PredName, Dict, Compat, CompatNames, Exit),
+checkif_to_lit(pos(M, PType),
+	       infl(PLoc, ALoc, PredName, Dict, Compat, CompatNames, Exit),
 	       CheckPos) :-
-	get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames, AsrLoc,
-		    CheckPos).
+    get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames,
+		PLoc, ALoc, CheckPos).

@@ -2,12 +2,12 @@
 			checkif_modl/5,
 			checkif_comp/5,
 			rtcheck/3,
-			call_stack/2,
 			'$meta$rtc'/2
 		       ]).
 
 :- use_module(library(assertions)).
 :- reexport(library(nativeprops)).
+:- reexport(library(basicprops)).
 :- reexport(rtchecks(rtchecks_send)).
 :- use_module(assertions(termtyping), []). % assertions about builtins
 :- use_module(library(plprops)).
@@ -63,12 +63,12 @@ checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 with_info(Comp, Info) :-
     with_context_value(Comp, comp_info, Info).
 
-rtcheck_ifnot(Check, PredName, Loc) :-
-    rtcheck_cond(\+ Check, Check, PredName, Loc).
+rtcheck_ifnot(Check, PredName, ALoc) :-
+    rtcheck_cond(\+ Check, Check, PredName, ALoc).
 
-rtcheck_cond(Cond, Check, PredName, Loc) :-
+rtcheck_cond(Cond, Check, PredName, ALoc) :-
     ( Cond
-    ->send_rtcheck([Check-[]], pp_check, PredName, [], [pploc(Loc)])
+    ->send_rtcheck([Check-[]], pp_check, PredName, [], _, ALoc)
     ; true
     ).
     
@@ -78,22 +78,18 @@ rtcheck_cond(Cond, Check, PredName, Loc) :-
 rtcheck(Type, Check, Loc) :-
     ignore(do_rtcheck(Type, Check, Loc)).
 
-do_rtcheck(check, Check, Loc) :-
-    rtcheck_ifnot(Check, check/1, Loc).
-do_rtcheck(trust, Check, Loc) :-
+do_rtcheck(check, Check, ALoc) :-
+    rtcheck_ifnot(Check, check/1, ALoc).
+do_rtcheck(trust, Check, ALoc) :-
     current_prolog_flag(rtchecks_trust, yes),
-    rtcheck_ifnot(Check, trust/1, Loc).
-do_rtcheck(true, Check, Loc) :-
+    rtcheck_ifnot(Check, trust/1, ALoc).
+do_rtcheck(true, Check, ALoc) :-
     current_prolog_flag(rtchecks_true, yes),
-    rtcheck_ifnot(Check, true/1, Loc).
-do_rtcheck(false, Check, Loc) :-
+    rtcheck_ifnot(Check, true/1, ALoc).
+do_rtcheck(false, Check, ALoc) :-
     current_prolog_flag(rtchecks_false, yes),
-    rtcheck_cond(Check, Check, false/1, Loc),
+    rtcheck_cond(Check, Check, false/1, ALoc),
     fail.
 
-:- meta_predicate call_stack(0, ?).
-call_stack(Goal, Pos) :-
-	intercept(Goal, rtcheck(Type, PredName, Dict, PropNames, Poss),
-	    send_rtcheck(PropNames, Type, PredName, Dict, [Pos|Poss])).
 % :- meta_predicate '$meta$rtc'(0, -).
 '$meta$rtc'(Goal, Goal).

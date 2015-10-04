@@ -11,10 +11,10 @@
 
 :- meta_predicate rtchecks_eval(0).
 rtchecks_eval(M:Goal) :-
-    generate_rtchecks(_, M, Goal, RTChecks),
+    generate_rtchecks(Goal, M, _, RTChecks),
     call(RTChecks).
 
-generate_rtchecks(Loc, M, Goal, RTChecks) :-
+generate_rtchecks(Goal, M, Loc, RTChecks) :-
     apply_body(generate_literal_rtchecks(Loc), M, Goal, RTChecks).
 
 builtin_spec(G, S) :-
@@ -63,7 +63,7 @@ generate_pred_rtchecks(Loc, Goal, M, RTChecks, Pred, PM) :-
       functor(Head, F, A),
       ( collect_assertions(Head, M, rtcheck, Assertions),
 	Assertions \= []
-      ->generate_rtchecks(Assertions, Head, M, Loc, G1, G2, G3, PM:Pred),
+      ->generate_rtchecks(Assertions, M, Loc, G1, G2, G3, PM:Pred),
 	functor(Pred, F, A),
 	qualify_meta_goal(PM:Pred, Head),
 	% TODO: Be careful if you want to refactorize this part, now CM is

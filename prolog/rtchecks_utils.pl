@@ -77,29 +77,6 @@ prolog:message(ciao_messages(Messages)) -->
 prolog:message(acheck(checks(Time), RTChecks)) -->
 	foldl(check_to_messages(Time), RTChecks).
 
-rtc_message_location(Pos) -->
-    { Pos = loc(Src, Ln, _)
-    ->Loc = file(Src, Ln, -1, _)
-    ; Loc = Pos
-    },
-    {'$push_input_context'(rtchecks)},
-    prolog:message_location(Loc),
-    {'$pop_input_context'}.
-
-position_to_message(posloc(Pred, Loc)) -->
-    rtc_message_location(Loc),
-    ['Failure of ~q'-[Pred]],
-    ( {Loc = clause_pc(Clause, _PC)}
-    ->{clause_property(Clause, predicate(Caller))},
-      [' in ~q.'-[Caller]]
-    ; ['.']
-    ),
-    [nl].
-position_to_message(asrloc(Loc)) -->
-    rtc_message_location(Loc).
-position_to_message(pploc(Loc)) -->
-    rtc_message_location(Loc).
-
 select_defined(_=V) :- !, nonvar(V).
 select_defined(_).
 
@@ -121,20 +98,34 @@ check_time_msg(ctcheck, 'Compile-Time').
 ~w is the tail."-[Messages].
 
 check_to_messages(Time,
-		  rtcheck(Type, Pred, _Dict, PropValues0, Positions)) -->
+		  rtcheck(Type, Pred, _Dict, PropValues0, PLoc, ALoc)) -->
     { pairs_keys_values(PropValues0, Props, Values0),
       append(Values0, Values1),
       include(select_defined, Values1, Values2),
       sort(Values2, Values)
     },
-    foldl(position_to_message, Positions),
     {check_time_msg(Time, TimeMsg)},
+    prolog:message_location(ALoc),
     ['~w failure in assertion for ~q.~n'-[TimeMsg, Pred],
      '\tIn *~w*, unsatisfied properties: ~n\t\t~q.'-[Type, Props]
     ],
     ( {Values = []}
     ->[]
     ; ['~n\tBecause: ~n\t\t~q.'-[Values]]
+    ),
+    [nl],
+    ( {nonvar(PLoc)}
+    ->prolog:message_location(PLoc),
+      ['Failure of ~q'-[Pred]],
+      ( { PLoc = clause_pc(Clause, _PC)
+	; PLoc = clause(Clause)
+	}
+      ->{clause_property(Clause, predicate(Caller))},
+	[' in ~q.'-[Caller]]
+      ; ['.']
+      ),
+      [nl]
+    ; []
     ).
 
 :- meta_predicate call_rtc(0).
@@ -146,7 +137,7 @@ check_to_messages(Time,
 	value.".
 
 call_rtc(Goal) :-
-	Error = rtcheck(_Type, _Pred, _Dict, _PropValues, _Poss),
+	Error = rtcheck(_Type, _Pred, _Dict, _PropValues, _PLoc, _ALoc),
 	( current_prolog_flag(rtchecks_abort_on_error, yes) ->
 	  intercept(Goal, Error, throw(Error)) % rethrow signal as exception
 	; intercept(Goal, Error, (handle_rtcheck(Error), tracertc))
@@ -160,7 +151,7 @@ call_rtc(Goal) :-
 	run-time check exceptions thrown by the goal.".
 
 save_rtchecks(Goal) :-
-	RTError = rtcheck(_Type, _Pred, _Dict, _PropValues, _Poss),
+	RTError = rtcheck(_Type, _Pred, _Dict, _PropValues, _PLoc, _ALoc),
 	intercept(Goal, RTError, assertz(rtcheck_db(RTError))).
 
 :- pred load_rtchecks/1 => list(rtcheck_error) # "retract the

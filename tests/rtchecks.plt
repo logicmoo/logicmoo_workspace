@@ -29,16 +29,14 @@ test(rtc_external) :-
 			   functor(A,B,C),
 			   [A=0,B=0,C=0 ],
 			   [fails-[not_fails(functor(A,B,C))]],
-			   [posloc(functor(A,B,C),
-				   clause_pc(_,_)),
-			    asrloc(loc(_,_,_))]),
+			   _,
+			   _),
 		   rtcheck(success,
 			   functor(A, B, C),
 			   [A=0, B=0, C=0 ],
 			   [(rtc_external:atom(B))-[B=0 ]],
-			   [posloc(functor(A, B, C),
-				   clause_pc(_, _)),
-			    asrloc(loc(_, _, _))])]).
+			   _,
+			   _)]).
 
 test(rtcompile) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
@@ -58,127 +56,150 @@ test(rtexec) :-
     load_rtchecks(E),
     assertion(E=[rtcheck(pp_check, check/1, [],
 			 [(rtchecks_example3: (0>0 ))-[]],
-			 [pploc(clause_pc(_,_))])]).
+			 _,
+			 _)]).
+
+pretty_display(RTChecks) :-
+    RTChecks = rtchecks_rt:checkif_modl(M1, M2, G1, G2, G),
+    numbervars(RTChecks, 20, _,
+	       [ singletons(true)
+	       ]),
+    with_output_to(string(S1),
+		   prolog_listing:portray_body(G1, 10, noindent, 1200, current_output, [])),
+    with_output_to(string(S2),
+		   prolog_listing:portray_body(G2, 10, noindent, 1200, current_output, [])),
+    with_output_to(string(S),
+		   prolog_listing:portray_body(G,  10, noindent, 1200, current_output, [])),
+    format("rtchecks_rt:checkif_modl(~w, ~w,~n       (~s),~n       ~s,~n       (~s))",
+	   [M1, M2, S1, S2, S]),fail.
+pretty_display(_).
 
 test(rtgen) :-
-    generate_rtchecks(_Loc, rtchecks_example3, fullasr(A,C), RTChecks),
-    % portray_clause(true :- RTChecks), % Uncomment this if you want to update this test
-    assertion(RTChecks = rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
-	( 
-	  findall(B,
-		  (   \+ instance(rtchecks_example3:animal(A)),
-		      B=animal(A)-['A'=A]
-		  ;   \+ instance(rtchecks_example3:var(C)),
-		      B=var(B)-['B'=C]
-		  ),
-		  D),
+    generate_rtchecks(fullasr(_X,_Y), rtchecks_example3, _Loc, RTChecks),
+    rtc_expected(ERTChecks),
+    ( RTChecks \= ERTChecks
+    ->pretty_display(RTChecks)
+    ; true
+    ),
+    assertion(RTChecks = ERTChecks).
+
+rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
+       (findall(A,
+	(   \+ instance(rtchecks_example3:animal(B)),
+	    A=animal(A)-['A'=B]
+	;   \+ instance(rtchecks_example3:var(C)),
+	    A=var(B)-['B'=C]
+	),
+	D),
 	  (   D\=[]
 	  ->  send_rtcheck(D,
 			   (calls),
 			   fullasr(A, B),
-			   ['A'=A, 'B'=C],
-			   
-			   [ asrloc(loc('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl',
-					34,
-				      34))
-			   ])
+			   ['A'=B, 'B'=C],
+			   J,
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 34, 9, _))
 	  ;   true
 	  ),
-	  E
+	  E),
+       E,
+       (findall(F,
+	( \+ compat(rtchecks_example3:atm(B)),
+	  F=atm(A)-['A'=B]
 	),
-	E,
-	( fullasr(_, _)=J,
-	  asrloc(loc(_, _, _))=Q,
-	  asrloc(loc(_, _, _))=K,
-	  asrloc(loc(_, _, _))=L,
-	  findall(F,
-		  ( \+ compat(rtchecks_example3:atm(A)),
-		    F=atm(A)-['A'=A]
-		  ),
-		  H),
+	H),
 	  findall(G,
-		  ( \+ compat(rtchecks_example3:int(A)),
-		    G=int(A)-['A'=A]
+		  ( \+ compat(rtchecks_example3:int(B)),
+		    G=int(A)-['A'=B]
 		  ),
 		  I),
 	  (   H\=[],
 	      I\=[]
 	  ->  send_rtcheck(H,
 			   compat,
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [K]),
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 37, 8, U)),
 	      send_rtcheck(I,
 			   compat,
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [L])
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
 	  ;   true
 	  ),
-	  findall(M,
-		  ( \+ instance(rtchecks_example3:animal(A)),
-		    M=animal(A)-['A'=A]
+	  findall(K,
+		  ( \+ instance(rtchecks_example3:animal(B)),
+		    K=animal(A)-['A'=B]
 		  ),
-		  P),
-	  findall(N,
-		  (   \+ instance(rtchecks_example3:animal(A)),
-		      N=animal(A)-['A'=A]
-		  ;   \+ instance(rtchecks_example3:atm(A)),
-		      N=atm(A)-['A'=A]
+		  N),
+	  findall(L,
+		  (   \+ instance(rtchecks_example3:animal(B)),
+		      L=animal(A)-['A'=B]
+		  ;   \+ instance(rtchecks_example3:atm(B)),
+		      L=atm(A)-['A'=B]
 		  ),
-		  O),
-	  (   O\=[],
-	      P\=[]
-	  ->  send_rtcheck(O,
+		  M),
+	  (   M\=[],
+	      N\=[]
+	  ->  send_rtcheck(M,
 			   (calls),
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [Q]),
-	      send_rtcheck(P,
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 36, 8, P)),
+	      send_rtcheck(N,
 			   (calls),
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [L])
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
 	  ;   true
 	  ),
-	  checkif_comp(O,
-		       info(J, ['A'=A, 'B'=C], [Q]),
-		       not_fails(R),
-		       R,
-		       checkif_comp(P,
-				    info(J,
-					 ['A'=A, 'B'=C],
-					 [L]),
-				    is_det(S),
-				    S,
-				    rtchecks_example3:fullasr(A, C))),
-	  (   H==[]
-	  ->  findall(T,
-		      ( \+ compat(rtchecks_example3:atm(A)),
-			T=atm(A)-['A'=A]
+	  checkif_comp(M,
+		       info(fullasr(A, B),
+			    ['A'=B, 'B'=C],
+			    J,
+			    file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 36, 8, P)),
+		       not_fails(Q),
+		       Q,
+		       checkif_comp(N,
+				    info(fullasr(A, B),
+					 ['A'=B, 'B'=C],
+					 J,
+					 file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O)),
+				    is_det(R),
+				    R,
+				    rtchecks_example3:fullasr(B, C))),
+	  (   H=[]
+	  ->  findall(S,
+		      ( \+ compat(rtchecks_example3:atm(B)),
+			S=atm(A)-['A'=B]
 		      ),
-		      U),
-	      send_rtcheck(U,
+		      T),
+	      send_rtcheck(T,
 			   (success),
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [K])
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 37, 8, U))
 	  ;   true
 	  ),
-	  (   I==[]
+	  (   I=[]
 	  ->  findall(V,
-		      ( \+ compat(rtchecks_example3:int(A)),
-			V=int(A)-['A'=A]
+		      ( \+ compat(rtchecks_example3:int(B)),
+			V=int(A)-['A'=B]
 		      ),
 		      W),
 	      send_rtcheck(W,
 			   (success),
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [L])
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
 	  ;   true
 	  ),
-	  (   O==[]
+	  (   M=[]
 	  ->  findall(X,
 		      ( \+ instance(rtchecks_example3:family(C)),
 			X=family(B)-['B'=C]
@@ -186,12 +207,13 @@ test(rtgen) :-
 		      Y),
 	      send_rtcheck(Y,
 			   (success),
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [Q])
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 36, 8, P))
 	  ;   true
 	  ),
-	  (   P==[]
+	  (   N=[]
 	  ->  findall(Z,
 		      ( \+ instance(rtchecks_example3:family(C)),
 			Z=family(B)-['B'=C]
@@ -199,11 +221,11 @@ test(rtgen) :-
 		      A1),
 	      send_rtcheck(A1,
 			   (success),
+			   fullasr(A, B),
+			   ['A'=B, 'B'=C],
 			   J,
-			   ['A'=A, 'B'=C],
-			   [L])
+			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
 	  ;   true
-	  )
-	))).
+	  )))).
 
 :- end_tests(rtchecks).

@@ -25,7 +25,7 @@ trace_rtc(Goal) :-
     call_rtc(do_trace_rtc(Goal)).
 
 do_trace_rtc(CM:Goal) :-
-    generate_rtchecks(_, CM, Goal, RTCGoal),
+    generate_rtchecks(Goal, CM, _, RTCGoal),
     call_inoutex(RTCGoal,
 		 setup_trace,
 		 cleanup_trace).
@@ -146,8 +146,8 @@ setup_clause_bpt(Clause, Action) :-
 	  ),
 	  \+ black_list_callee(M, Goal),
 	  once(( rtchecks_tracer:pp_assr(Goal, M)
-	       ; current_assertion(Goal, rtcheck, _, _, _, _,
-				   _, _, _, _, _, _, _, _, _, M)
+	       ; current_assertion(Goal, M, _, rtcheck, _, _, _, _, _, _,
+				   _, _)
 	       ; white_list_meta(M, Goal),
 	       	 predicate_property(M:Goal, meta_predicate(S)),
 	       	 once(arg(_, S, 0 ))
@@ -195,7 +195,8 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     ->static_strip_module(Goal0, Goal, CM, FCM),
       implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
-      ->generate_rtchecks(clause_pc(Clause, PC), CM, Goal, RTChecks),
+      ->generate_rtchecks(Goal, CM, Loc, RTChecks),
+	Loc = clause_pc(Clause, PC),
 	( Goal == RTChecks
 	->Action = continue
 	; % Action = call(M:RTChecks)
