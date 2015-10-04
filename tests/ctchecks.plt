@@ -10,6 +10,7 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 :- use_module(library(comment_data)).
 :- use_module(library(call_in_module_file)).
+:- use_module(library(audit/audit)).
 
 :- comment_data:enable.
 
@@ -43,7 +44,8 @@ ctcex.pl:26: Compile-Time failure in assertion for is_num(A,B).
 	In *compat*, unsatisfied properties: 
 		[int(B)].
 	Because: 
-		[B=b].ctcex.pl:26: Compile-Time failure in assertion for is_num(A,B).
+		[B=b].
+ctcex.pl:26: Compile-Time failure in assertion for is_num(A,B).
 	In *compat*, unsatisfied properties: 
 		[int(B)].
 	Because: 
@@ -62,6 +64,10 @@ test(ctcex) :-
     atom_string(AD, SD),
     replace_substrings(Result, SD, "", AResult1),
     replace_substrings(AResult1, "ERROR: ", "", AResult),
+    ( Pattern \== AResult
+    ->format("~s", [AResult])
+    ; true
+    ),
     assertion(Pattern == AResult),
     set_prolog_flag(verbose, normal),
     %set_prolog_flag(check_assertions, []).
