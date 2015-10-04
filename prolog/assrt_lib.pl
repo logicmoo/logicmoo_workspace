@@ -8,6 +8,8 @@
 		      a_fake_body/5,
 		      assertion_db/12,
 		      normalize_assertion_head/9,
+		      add_arg/3,
+		      qualify_with/3,
 		      assrt_lib_tr/4]).
 
 :- use_module(library(lists)).
