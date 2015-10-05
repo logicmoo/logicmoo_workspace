@@ -32,55 +32,84 @@
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(apply)).
+:- use_module(library(clambda)).
 :- use_module(library(normalize_head)).
 :- use_module(library(referenced_by)).
+:- use_module(library(ordsets)).
 :- use_module(library(check), []).
 
 :- multifile
     prolog:message//1,
-    mutually_exclusive_predicate/1.
+    mutually_exclusive_predicate/2,
+    mutually_exclusive_predicate_key/3.
 
 :- dynamic mutually_exclusive_db/1.
 
+option_allmchk(OptionL0, OptionL, option_utils:call_2(FileGen, File)) :-
+    option_allchk(_M, File, FileGen-OptionL0, true-OptionL).
+
 audit:check(non_mutually_exclusive, Result, OptionL0 ) :-
-    option_allchk(OptionL0, OptionL1, FileChk),
-    select_option(module(M), OptionL1, _, M),
-    findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), M, Pairs), Result).
+    option_allmchk(OptionL0, OptionL1, FileChk),
+    select_option(predicate(Ref), OptionL1, _, Ref),
+    findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
 
-check_non_mutually_exclusive(FromChk, M, warning-(Ref-LocIdxs)) :-
-    Ref0 = M:_,
-    mutually_exclusive_predicate(Ref0),
-    normalize_head(Ref0, Ref),
-    collect_non_mutually_exclusive(FromChk, Ref),
-    retract(mutually_exclusive_db(LocIdxs0)),
-    sort(LocIdxs0, LocIdxs).
+check_non_mutually_exclusive(FromChk, Ref, warning-(Ref-LocIdx)) :-
+    normalize_head(Ref, M:H),
+    mutually_exclusive_predicate(H, M),
+    collect_non_mutually_exclusive(FromChk, H, M, LocIdxL),
+    member(LocIdx, LocIdxL).
 
-collect_non_mutually_exclusive(FromChk, Ref) :-
-    nth_clause(Ref, Index, ClauseRef),
-    From = clause(ClauseRef),
-    call(FromChk, From),
-    from_location(From, Loc),
-    clause(Ref, _, ClauseRef),
-    findall(LocIdx, mutually_exclusive(Ref, Index, LocIdx), LocIdxs0),
-    LocIdxs0 \= [],
-    ( mutually_exclusive_db(LocIdxs1),
-      intersection(LocIdxs0, LocIdxs1, LocIdxs2),
-      LocIdxs2 \= []
-    ->
-      retract(mutually_exclusive_db(LocIdxs1)),
-      union(LocIdxs0, LocIdxs1, LocIdxs3)
-    ; LocIdxs3 = LocIdxs0
-    ),
-    assertz(mutually_exclusive_db([Loc/Index|LocIdxs3])),
-    fail.
-collect_non_mutually_exclusive(_, _).
+cleanup_redundant_groups([], _, []).
+cleanup_redundant_groups([Key-Clause-ClauseNME|ClauseKeyU], ClauseKeyI, ClauseKeyR) :-
+       ( \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyU),
+	      subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2]),
+	      \+subset([Key2-Clause2|ClauseNME2], [Key-Clause|ClauseNME])
+	    ),
+	 \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyI),
+	      subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2])
+	    )
+       ->ClauseKeyR=[Key-Clause-ClauseNME|ClauseKeyR2],
+	 ClauseKeyI2=[Key-Clause-ClauseNME|ClauseKeyI]
+       ; ClauseKeyR=ClauseKeyR2,
+	 ClauseKeyI2=ClauseKeyI
+       ),
+       cleanup_redundant_groups(ClauseKeyU, ClauseKeyI2, ClauseKeyR2).
 
-mutually_exclusive(Ref, Index, Loc/MutExcl) :-
-    clause(Ref, _, ClauseRef),
-    nth_clause(Ref, MutExcl, ClauseRef),
-    MutExcl < Index,
-    From = clause(ClauseRef),
-    from_location(From, Loc).
+collect_non_mutually_exclusive(FromChk, H, M, LocPL) :-
+    findall(I-(Key-Clause),
+	    ( nth_clause(M:H, I, Clause),
+	      From = clause(Clause),
+	      call(FromChk, From),
+	      clause(M:P, _, Clause),
+	      ( mutually_exclusive_predicate_key(P, M, Key)
+	      ->true
+	      ; Key = M:P
+	      )
+	    ),
+	    ClauseKeyU),
+    ClauseKeyU \= [],
+    list_to_ord_set(ClauseKeyU, ClauseKeyL),
+    findall(Key-Clause-ClauseNME,
+	    [Clause, Key, ClauseNME, ClauseKeyL] +\
+	    ( select(_-(Key-Clause), ClauseKeyL, ClauseKeyS),
+	      exclude([Key] +\ (_-(SKey-_)) ^ (SKey\=Key), ClauseKeyS, ClauseKeyNME),
+	      ClauseKeyNME \= [],
+	      pairs_values(ClauseKeyNME, ClauseNME)
+	    ),
+	    ClausePR),
+    cleanup_redundant_groups(ClausePR, [], ClausePL),
+    maplist(\ (Key1-Clause1-ClauseNME1)^((Loc1-Idx1/Key1)/LocL)
+	   ^( nth_clause(_, Idx1, Clause1),
+	      from_location(clause(Clause1), Loc1),
+	      maplist(\ (Key2-Clause2)^(Loc2-Idx2/Key2)
+		     ^( nth_clause(_, Idx2, Clause2),
+			from_location(clause(Clause2), Loc2)
+		      ),
+		      ClauseNME1,
+		      LocU),
+	      sort(LocU, LocL)
+	    ), ClausePL, LocPU),
+    sort(LocPU, LocPL).
 
 prolog:message(acheck(non_mutually_exclusive)) -->
     ['---------------------------------',nl,
@@ -95,12 +124,12 @@ prolog:message(acheck(non_mutually_exclusive, PI-LocCIs)) -->
     [' have non mutually exclusive clauses:', nl],
     foldl(group_non_mut_ex, LocCIs).
 
-locindex_index(_/I, I).
+locindex_index(_-I/_, I).
 
-locindex_loccl(Loc/I, Loc/[' clause ~w'-[I]]).
+locindex_loccl(Loc-I/K, Loc/[' clause ~w'-[I, K]]).
 
-group_non_mut_ex(LocIdxs) -->
-    {maplist(locindex_index, LocIdxs, Idxs)},
-    {maplist(locindex_loccl, LocIdxs, LCIs)},
-    ['    ', 'Match between clauses ~w at'-[Idxs], nl],
+group_non_mut_ex((Loc-Idx/Key)/LocIdxL) -->
+    {maplist(locindex_index, LocIdxL, Idxs)},
+    {maplist(locindex_loccl, LocIdxL, LCIs)},
+    Loc, ['Clause ~w (key ~w) match with clauses ~w at'-[Idx, Key, Idxs], nl],
     referenced_by(LCIs).
