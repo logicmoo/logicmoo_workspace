@@ -33,7 +33,10 @@
 	   trim/2,
 	   atom_left_trim/2,
 	   atom_right_trim/2,
-	   atom_trim/2
+	   atom_trim/2,
+	   string_left_trim/2,
+	   string_right_trim/2,
+	   string_trim/2
 	   ]).
 
 :- use_module(library(lists)).
@@ -68,3 +71,18 @@ atom_trim(Atom, Trim) :-
     atom_codes(Atom, Codes),
     trim(Codes, CTrim),
     atom_codes(Trim, CTrim).
+
+string_left_trim(String, LTrim) :-
+    string_codes(String, Codes),
+    left_trim(Codes, CTrim),
+    string_codes(LTrim, CTrim).
+
+string_right_trim(String, RTrim) :-
+    string_codes(String, Codes),
+    right_trim(Codes, CTrim),
+    string_codes(RTrim, CTrim).
+
+string_trim(String, Trim) :-
+    string_codes(String, Codes),
+    trim(Codes, CTrim),
+    string_codes(Trim, CTrim).
