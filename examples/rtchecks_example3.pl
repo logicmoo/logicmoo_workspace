@@ -5,9 +5,9 @@
 			      family/1,
 			      fullasr/2]).
 
-:- use_module(library(assertions)).
-:- use_module(library(nativeprops)).
-:- use_module(library(basicprops)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(nativeprops)).
 
 :- pred nullasr/2.
 

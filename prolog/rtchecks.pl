@@ -1,4 +1,4 @@
-:- module(rtchecks_lib, []).
+:- module(rtchecks, []).
 
 :- use_module(rtchecks(rtchecks_flags)).
 :- reexport(rtchecks(rtchecks_utils)).

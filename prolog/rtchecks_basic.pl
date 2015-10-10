@@ -11,8 +11,8 @@
 		remove_element/3
 	    ]).
 
-:- use_module(library(assertions)).
-:- use_module(library(basicprops)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
 :- use_module(library(apply)).
 :- use_module(library(lists)).
 

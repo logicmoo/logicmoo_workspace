@@ -1,6 +1,6 @@
 :- module(rtchecks_send, [send_rtcheck/6]).
 
-:- use_module(library(intercept)).
+:- use_module(xlibrary(intercept)).
 
 send_rtcheck([], _, _, _, _, _) :- !.
 send_rtcheck(Props, ErrType, PredName, Dict, PLoc, ALoc) :-

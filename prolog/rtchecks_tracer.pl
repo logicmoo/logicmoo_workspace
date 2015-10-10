@@ -1,16 +1,16 @@
 :- module(rtchecks_tracer, [trace_rtc/1,
 			    do_trace_rtc/1]).
 
-:- use_module(library(implementation_module)).
-:- use_module(library(static_strip_module)).
-:- use_module(library(apply)).
-:- use_module(library(ontrace)).
 :- use_module(assertions(assrt_lib)).
-:- use_module(rtchecks(rtchecks_rt)).
-:- use_module(rtchecks(rtchecks_gen)).
+:- use_module(library(apply)).
 :- use_module(rtchecks(rtchecks_eval)).
+:- use_module(rtchecks(rtchecks_gen)).
+:- use_module(rtchecks(rtchecks_rt)).
 :- use_module(rtchecks(rtchecks_utils)).
-:- use_module(library(intercept)).
+:- use_module(xlibrary(implementation_module)).
+:- use_module(xlibrary(intercept)).
+:- use_module(xtools(ontrace)).
+:- use_module(xtools(static_strip_module)).
 
 :- dynamic
     rtc_scanned/1,

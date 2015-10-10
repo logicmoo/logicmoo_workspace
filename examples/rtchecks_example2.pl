@@ -2,8 +2,8 @@
 	  [pred1/2, pred2/2, pred3/1, pred4/2, aconcat/3,
 	   bad_concat/3, ppp1/0, test_all/2, test_atm/1]).
 
-:- use_module(library(assertions)).
-:- use_module(library(nativeprops)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(nativeprops)).
 
 :- doc(author, "Edison Mera").
 

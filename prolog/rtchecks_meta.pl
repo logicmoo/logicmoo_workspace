@@ -5,7 +5,7 @@
 			  compound_rtchecks_end/5
 			 ]).
 
-:- use_module(library(assertions)).
+:- use_module(assertions(assertions)).
 :- use_module(library(lists)).
 :- use_module(rtchecks(rtchecks_basic)).
 

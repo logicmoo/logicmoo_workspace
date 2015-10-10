@@ -6,14 +6,13 @@
 			 proc_ppassertion/4,
 			 current_assertion/12]).
 
-:- use_module(library(assertions)).
-:- use_module(library(basicprops)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(assrt_lib)).
+:- use_module(assertions(basicprops)).
 :- use_module(library(lists)).
-:- use_module(library(qualify_meta_goal)).
 :- use_module(rtchecks(rtchecks_basic)).
 :- use_module(rtchecks(rtchecks_meta)).
-:- use_module(assertions(assrt_lib),
-	      [comps_to_goal/3, comps_to_goal/4, add_arg/3]).
+:- use_module(xlibrary(qualify_meta_goal)).
 
 /*
 

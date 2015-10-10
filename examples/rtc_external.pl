@@ -1,8 +1,8 @@
 :- module(rtc_external, [test_ex/0]).
 
-:- use_module(library(assertions)).
-:- use_module(library(basicprops)).
-:- use_module(library(nativeprops)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(nativeprops)).
 
 :- doc(author, "Edison Mera").
 
