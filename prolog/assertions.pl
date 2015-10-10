@@ -1,6 +1,6 @@
 :- module(assertions, []).
 
-:- use_module(library(compound_expand)).
+:- use_module(xlibrary(compound_expand)).
 :- reexport(assertions(assertions_op)).
 :- reexport(assertions(assrt_lib)).
 

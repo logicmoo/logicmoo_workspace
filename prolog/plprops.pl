@@ -1,11 +1,11 @@
 :- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, tlist/2,
 		    char/1, keypair/1, keylist/1, arithexpression/1]).
 
-:- use_module(library(apply)).
-:- use_module(library(assertions)).
-:- use_module(library(nativeprops)).
-:- use_module(library(basicprops)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(nativeprops)).
 :- use_module(assertions(send_check)).
+:- use_module(library(apply)).
 
 % SWI-Like Properties:
 

@@ -12,11 +12,11 @@
 		      qualify_with/3,
 		      assrt_lib_tr/4]).
 
-:- use_module(library(lists)).
+:- use_module(assertions(assertions_op)).
 :- use_module(library(apply)).
-:- use_module(library(implementation_module)).
 :- use_module(library(extra_messages), []).
-:- use_module(library(assertions_op)).
+:- use_module(library(lists)).
+:- use_module(xlibrary(implementation_module)).
 
 :- expects_dialect(swi).
 

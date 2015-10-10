@@ -1,14 +1,14 @@
 :- module(foreign_generator, [generate_library/4,
 			      gen_foreign_library/2]).
 
-:- use_module(library(key_value)).
-:- use_module(library(remove_dups)).
-:- use_module(library(assertions)).
+:- use_module(assertions(assertions)).
 :- use_module(assertions(assrt_lib)).
+:- use_module(assertions(foreign/foreign_props)).
 :- use_module(library(apply)).
-:- use_module(library(transpose)).
-:- use_module(library(foreign/foreign_props)).
-:- use_module(library(camel_snake)).
+:- use_module(xlibrary(camel_snake)).
+:- use_module(xlibrary(key_value)).
+:- use_module(xlibrary(remove_dups)).
+:- use_module(xlibrary(transpose)).
 
 :- multifile
     gen_foreign_library/2,
@@ -915,7 +915,7 @@ generate_foreign_call_(N, Head, M, CM, Comp, Call, Succ, Glob) :-
     generate_foreign_call_(N1, Head, M, CM, Comp, Call, Succ, Glob).
 generate_foreign_call_(_, _, _, _, _, _, _, _).
 
-:- use_module(library(sequence_list)).
+:- use_module(xlibrary(sequence_list)).
 :- use_module(library(prolog_clause), []).
 
 get_dictionary(Term, File, Line, M, Dict) :-
