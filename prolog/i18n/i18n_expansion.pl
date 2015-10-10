@@ -30,8 +30,8 @@
 :- module(i18n_expansion, []).
 
 :- reexport(library(i18n/i18n_op)).
-:- use_module(library(compound_expand)).
-:- use_module(library(i18n/i18n_support)).
+:- use_module(xlibrary(compound_expand)).
+:- use_module(xlibrary(i18n/i18n_support)).
 
 translate_args(Meta, M, Goal0, Goal) :-
     functor(Meta, F, A),

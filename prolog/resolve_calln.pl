@@ -1,7 +1,7 @@
 :- module(resolve_calln,
 	  [resolve_calln/2]).
 
-:- use_module(library(extend_args)).
+:- use_module(xlibrary(extend_args)).
 
 % May be this is slow, but it works:
 resolve_calln(M:CallN, M:Goal) :- !,

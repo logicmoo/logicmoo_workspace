@@ -29,7 +29,7 @@
 
 :- module(tab1, [f/1, tab1/0]).
 
-:- use_module(library(tabling)).
+:- use_module(xlibrary(tabling)).
 
 :- table(f/1).
 

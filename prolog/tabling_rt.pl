@@ -47,7 +47,7 @@
 % table_statistics(+P)
 % tabling_statistics/0
 
-:- use_module(library(implementation_module)).
+:- use_module(xlibrary(implementation_module)).
 
 :- dynamic
     goal_table_db/3,

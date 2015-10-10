@@ -37,10 +37,10 @@ performance.
   
 */
 
-:- use_module(library(lists)).
 :- use_module(library(apply)).
+:- use_module(library(lists)).
 :- use_module(library(occurs)).
-:- use_module(library(compound_expand)).
+:- use_module(xlibrary(compound_expand)).
 
 remove_hats(^(H, G0), G) -->
     [H], !,

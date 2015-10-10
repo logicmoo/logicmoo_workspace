@@ -41,8 +41,8 @@
    requires the Ciao dialect.
 */
 
-:- use_module(library(expansion_module)).
-:- use_module(library(remove_dups)).
+:- use_module(xlibrary(expansion_module)).
+:- use_module(xlibrary(remove_dups)).
 
 :- multifile
     system:term_expansion/4,

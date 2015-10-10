@@ -29,8 +29,8 @@
 
 :- module(tabling, [op(1150, fx, table)]).
 
-:- use_module(library(compound_expand)).
-:- use_module(library(goalstub)).
+:- use_module(xlibrary(compound_expand)).
+:- use_module(xlibrary(goalstub)).
 :- reexport(library(tabling_rt)).
 
 :- register_stub(table).
