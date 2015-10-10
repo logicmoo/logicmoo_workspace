@@ -104,6 +104,10 @@ goal_expansion(Goal0, Goal) :-
     callable(Goal0),
     '$set_source_module'(M, M),
     goal_expansion(Goal0, M, Goal).
+
+/* Commented out due to this cause cyclic terms when clause_info is
+ * executed over this predicate itself:
+   
 goal_expansion(A=~B0, A=B) :-
     nonvar(B0), !,
     translate_term(~B0, B).
@@ -129,6 +133,7 @@ goal_expansion(A = IB, G) :- % A bit complex due to static optimizations:
     ->G = (A = B)
     ; G = (A=~~B)
     ).
+*/
 
 term_expansion((:- i18n_resource(PoAlias)),
 	       i18n_support:i18n_resource(M, PoAlias)) :- !,
