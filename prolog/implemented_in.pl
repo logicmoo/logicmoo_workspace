@@ -31,10 +31,10 @@
 			   implemented_in/3]).
 
 :- use_module(library(lists)).
-:- use_module(library(extra_location)).
+:- use_module(xtools(extra_location)).
 :- use_module(library(prolog_codewalk), []). % for message_location//1
-:- use_module(library(normalize_head)).
-:- use_module(library(audit/audit_codewalk)).
+:- use_module(xlibrary(normalize_head)).
+:- use_module(xtools(extra_codewalk)).
 
 :- multifile
     prolog:message//1,
@@ -73,7 +73,7 @@ implemented_in(MGoal0, From, Args) :-
 :- public prepare/0.
 
 prepare :-
-    audit_walk_code([source(false),
+    extra_walk_code([source(false),
 		     infer_meta_predicates(false),
 		     autoload(false),
 		     evaluate(false),

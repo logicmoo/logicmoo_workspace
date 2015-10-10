@@ -29,14 +29,14 @@
 
 :- module(check_non_loaded, []).
 
+:- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(option_utils)).
-:- use_module(library(audit/audit)).
+:- use_module(xtools(option_utils)).
 
 :- multifile
     prolog:message//1.
 
-audit:check(non_loaded, Results, OptionL) :-
+checker:check(non_loaded, Results, OptionL) :-
     option_allchk(OptionL, _, FileChk0 ),
     ( FileChk0 = option_utils:call_2(true, _) ->
       FileChk = option_utils:call_2(( working_directory(Dir, Dir),

@@ -29,20 +29,20 @@
 
 :- module(check_wrong_dynamic, []).
 
+:- use_module(checkers(checker)).
+:- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(prolog_codewalk)).
-:- use_module(library(clambda)).
-:- use_module(library(compact_pi_list)).
-:- use_module(library(apply)).
-:- use_module(library(normalize_pi)).
-:- use_module(library(normalize_head)).
-:- use_module(library(database_fact)).
-:- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
-:- use_module(library(auditable_predicate)).
-:- use_module(library(current_defined_predicate)).
-:- use_module(library(audit/audit)).
-:- use_module(library(audit/audit_codewalk)).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(compact_pi_list)).
+:- use_module(xlibrary(normalize_head)).
+:- use_module(xlibrary(normalize_pi)).
+:- use_module(xtools(checkable_predicate)).
+:- use_module(xtools(current_defined_predicate)).
+:- use_module(xtools(database_fact)).
+:- use_module(xtools(extra_codewalk)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
 
 :- multifile
     prolog:message//1,
@@ -64,7 +64,7 @@ hide_var_dynamic(mark_to_head(_, _), check_unused).
 hide_var_dynamic(current_arc(_, _, _), check_unused).
 hide_var_dynamic(match_clause(_, _, _, _, _), ontrace).
 hide_var_dynamic(type_desc(_, _), foreign_props).
-hide_var_dynamic(prepare_results(_, _, _), audit).
+hide_var_dynamic(prepare_results(_, _, _), checker).
 hide_var_dynamic(current_edge(_, _, _), check_unused).
 hide_var_dynamic(commited_retract(_), commited_retract).
 hide_var_dynamic(tabling(_, _), ntabling).
@@ -83,7 +83,7 @@ cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _, _)),
     retractall(var_dynamic_db(_, _)).
 
-audit:check(wrong_dynamic, Result, OptionL0) :-
+checker:check(wrong_dynamic, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
     check_wrong_dynamic(from_chk(FileChk), OptionL, Result).
 
@@ -149,7 +149,7 @@ current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     ; functor(H, F, A),
       current_defined_predicate(PI)
     ),
-    auditable_predicate(Ref),
+    checkable_predicate(Ref),
     predicate_property(Ref, dynamic),
     property_from(PI, dynamic, From),
     call(FromChk, From),

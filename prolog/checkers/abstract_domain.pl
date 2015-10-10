@@ -27,18 +27,25 @@
     the GNU General Public License.
 */
 
-:- module(audits, []).
+:- module(abstract_domain, [abstract_domain/1,
+			    top/2,
+			    bot/2,
+			    eval/3,
+			    trusted_result/4]).
 
-:- reexport(library(audit/audit)).
+user:file_search_path(domains, library(checkers/domains)).
 
-:- use_module(library(audit/check_assertions)).
-:- use_module(library(audit/check_imports)).
-:- use_module(library(audit/check_undefined)).
-:- use_module(library(audit/check_unused)).
-:- use_module(library(audit/check_dupcode)).
-:- use_module(library(audit/check_deprecated)).
-:- use_module(library(audit/check_meta_decls)).
-:- use_module(library(audit/check_non_loaded), []).
-:- use_module(library(audit/check_non_mutually_exclusive)).
-:- use_module(library(audit/check_trivial_fails)).
-:- use_module(library(audit/check_wrong_dynamic)).
+%% abstract_domain(?Domain).
+:- multifile abstract_domain:abstract_domain/1.
+
+%% top(+Domain:abstract_domain,-Top).
+:- multifile abstract_domain:top/2.
+
+%% bot(+Domain:abstract_domain,-Bot).
+:- multifile abstract_domain:bot/2.
+
+%% eval(+Domain:abstract_domain,+Expr,-Value).
+:- multifile abstract_domain:eval/3.
+
+%% trusted_result(+Domain:abstract_domain,:Goal,+Module,-Result).
+:- multifile abstract_domain:trusted_result/4.

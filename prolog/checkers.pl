@@ -27,25 +27,17 @@
     the GNU General Public License.
 */
 
-:- module(abstract_domain, [abstract_domain/1,
-			    top/2,
-			    bot/2,
-			    eval/3,
-			    trusted_result/4]).
+:- module(checkers, []).
 
-user:file_search_path(domains, library(audit/domains)).
-
-%% abstract_domain(?Domain).
-:- multifile abstract_domain:abstract_domain/1.
-
-%% top(+Domain:abstract_domain,-Top).
-:- multifile abstract_domain:top/2.
-
-%% bot(+Domain:abstract_domain,-Bot).
-:- multifile abstract_domain:bot/2.
-
-%% eval(+Domain:abstract_domain,+Expr,-Value).
-:- multifile abstract_domain:eval/3.
-
-%% trusted_result(+Domain:abstract_domain,:Goal,+Module,-Result).
-:- multifile abstract_domain:trusted_result/4.
+:- reexport(library(checkers/checker)).
+:- use_module(checkers(check_assertions)).
+:- use_module(checkers(check_deprecated)).
+:- use_module(checkers(check_dupcode)).
+:- use_module(checkers(check_imports)).
+:- use_module(checkers(check_meta_decls)).
+:- use_module(checkers(check_non_loaded), []).
+:- use_module(checkers(check_non_mutually_exclusive)).
+:- use_module(checkers(check_trivial_fails)).
+:- use_module(checkers(check_undefined)).
+:- use_module(checkers(check_unused)).
+:- use_module(checkers(check_wrong_dynamic)).

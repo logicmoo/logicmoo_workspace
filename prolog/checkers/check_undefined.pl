@@ -29,15 +29,15 @@
 
 :- module(check_undefined, []).
 
-% A wrapper from library(check) to tools(audit)
-:- use_module(library(prolog_codewalk)).
-:- use_module(library(infer_alias)).
-:- use_module(library(location_utils)).
-:- use_module(library(normalize_pi)).
-:- use_module(library(referenced_by)).
-:- use_module(library(audit/audit)).
-:- use_module(library(audit/audit_codewalk)).
+% A wrapper from library(check)
 :- use_module(assertions(assrt_lib)).
+:- use_module(checkers(checker)).
+:- use_module(library(prolog_codewalk)).
+:- use_module(xlibrary(infer_alias)).
+:- use_module(xlibrary(normalize_pi)).
+:- use_module(xtools(extra_codewalk)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(referenced_by)).
 
 :- multifile
     prolog:message//1.
@@ -45,11 +45,11 @@
 :- dynamic
     undef/3.
 
-audit:check(undefined, Results, OptionL) :-
+checker:check(undefined, Results, OptionL) :-
     check_undefined(OptionL, Results).
 
 check_undefined(OptionL0, Pairs) :-
-    audit_wcsetup([trace_reference(-), undefined(trace)|OptionL0],
+    extra_wcsetup([trace_reference(-), undefined(trace)|OptionL0],
 		  OptionL, FromChk),
     ignore(option(module(M), OptionL)),
     prolog_walk_code([on_trace(collect_undef(M, FromChk))|OptionL]),

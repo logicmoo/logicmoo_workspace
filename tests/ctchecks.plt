@@ -10,7 +10,7 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 :- use_module(library(comment_data)).
 :- use_module(library(call_in_module_file)).
-:- use_module(library(audit/audit)).
+:- use_module(checkers(checker)).
 
 :- comment_data:enable.
 

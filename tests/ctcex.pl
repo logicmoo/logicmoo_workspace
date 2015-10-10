@@ -1,8 +1,8 @@
 :- module(ctcex, [a/2, q/0]).
 
-:- use_module(library(assertions)).
-:- use_module(library(nativeprops)).
-:- use_module(library(basicprops)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(nativeprops)).
 
 :- set_prolog_flag(check_assertions, [defined,
 				      is_prop,

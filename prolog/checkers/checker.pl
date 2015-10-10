@@ -27,16 +27,18 @@
     the GNU General Public License.
 */
 
-:- module(audit,
+:- module(checker,
 	  [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
 	  check_results/2, check_results/3, report_list/2, full_report/1,
 	  simple_report/1, available_checker/1]).
 
 :- use_module(library(thread)).
-:- use_module(library(clambda)).
-:- use_module(library(group_pairs_or_sort)).
-:- use_module(library(location_utils)).
-:- use_module(library(infer_meta_if_required)).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(group_pairs_or_sort)).
+:- use_module(xtools(infer_meta_if_required)).
+:- use_module(xtools(location_utils)).
+
+user:file_search_path(checkers, xtools(checkers)).
 
 :- multifile
     prepare_results/3,	% Custom preparation method

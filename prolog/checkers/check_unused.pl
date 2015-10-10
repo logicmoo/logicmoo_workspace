@@ -36,19 +36,18 @@
 
 */
 
-:- use_module(library(auditable_predicate)).
-:- use_module(library(current_defined_predicate)).
+:- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(clambda)).
-:- use_module(library(commited_retract)).
-:- use_module(library(is_entry_point)).
-:- use_module(library(extra_location)).
-:- use_module(library(location_utils)).
-:- use_module(library(apply)).
-:- use_module(library(qualify_meta_goal)).
-:- use_module(library(audit/audit)).
-:- use_module(library(audit/audit_codewalk)).
 :- use_module(library(prolog_metainference)).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(commited_retract)).
+:- use_module(xlibrary(qualify_meta_goal)).
+:- use_module(xtools(checkable_predicate)).
+:- use_module(xtools(current_defined_predicate)).
+:- use_module(xtools(extra_codewalk)).
+:- use_module(xtools(extra_location)).
+:- use_module(xtools(is_entry_point)).
+:- use_module(xtools(location_utils)).
 
 :- multifile
     prolog:message//1.
@@ -61,11 +60,11 @@ collect_unused(M, FromChk, MGoal, Caller, From) :-
     call(FromChk, From),
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
-audit:check(unused, Result, OptionL) :-
+checker:check(unused, Result, OptionL) :-
     check_unused(OptionL, Result).
 
 check_unused(OptionL, Pairs) :-
-    audit_walk_code(OptionL, collect_unused(M, FromChk), M, FromChk),
+    extra_walk_code(OptionL, collect_unused(M, FromChk), M, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.
@@ -222,7 +221,7 @@ sweep(M, FromChk, Pairs) :-
 % Due to the nature of this algorithm, its 'declarative' equivalent is by far
 % more difficult to understand, maintain and much slower, instead it is
 % implemented using dynamic facts.
-audit:prepare_results(unused, Pairs, Results) :-
+checker:prepare_results(unused, Pairs, Results) :-
     maplist(\ (warning-Value)^Value^true, Pairs, Values),
     sort(Values, Sorted),
     partition(\ node(_, _, _)^true, Sorted, Nodes, Edges),
@@ -257,7 +256,7 @@ unmarked(M, FromChk, Node) :-
     MPI = M:F/A,
     ( current_defined_predicate(MPI),
       functor(H, F, A),
-      auditable_predicate(Ref),
+      checkable_predicate(Ref),
       \+ entry_caller(M, H),
       ( \+ marked(H, M, _)
       ->Node = MPI
@@ -274,7 +273,7 @@ unmarked(M, FromChk, Node) :-
     ; loc_dynamic(H, M, dynamic(def, _, _), _),
       functor(H, F, A),
       \+ current_defined_predicate(MPI),
-      auditable_predicate(Ref),
+      checkable_predicate(Ref),
       \+ entry_caller(M, H),
       \+ marked(H, M, 0 ),
       Node = MPI/0

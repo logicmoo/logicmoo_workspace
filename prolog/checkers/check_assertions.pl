@@ -29,23 +29,22 @@
 
 :- module(check_assertions, []).
 
-:- use_module(library(lists)).
-:- use_module(library(apply)).
-:- use_module(library(clambda)).
-:- use_module(library(resolve_calln)).
-:- use_module(library(prolog_codewalk)).
-:- use_module(library(check), []).
-:- use_module(library(implementation_module)).
-:- use_module(library(apply)).
-:- use_module(library(normalize_pi)).
-:- use_module(library(option_utils)).
-:- use_module(library(location_utils)).
-:- use_module(library(compact_pi_list)).
-:- use_module(library(intercept)).
 :- use_module(assertions(assrt_lib)).
-:- use_module(library(rtchecks)).
+:- use_module(checkers(checker)).
+:- use_module(library(apply)).
+:- use_module(library(check), []).
+:- use_module(library(lists)).
+:- use_module(library(prolog_codewalk)).
+:- use_module(rtchecks(rtchecks)).
 :- use_module(rtchecks(rtchecks_gen)).
-:- use_module(library(audit/audit)).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(compact_pi_list)).
+:- use_module(xlibrary(implementation_module)).
+:- use_module(xlibrary(intercept)).
+:- use_module(xlibrary(normalize_pi)).
+:- use_module(xlibrary(resolve_calln)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
 
 :- dynamic
     tablecheck_db/4,
@@ -57,7 +56,7 @@
 :- multifile
     prolog:message//1.
 
-audit:check(assertions, Result, OptionL0) :-
+checker:check(assertions, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
     cleanup_db,
     check_assertions(from_chk(FileChk), OptionL, Result).

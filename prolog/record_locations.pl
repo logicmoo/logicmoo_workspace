@@ -30,8 +30,8 @@
 :- module(record_locations, [record_location/0]).
 
 :- use_module(library(apply)).
-:- use_module(library(extra_location)).
-:- use_module(library(from_utils)).
+:- use_module(xtools(extra_location)).
+:- use_module(xtools(from_utils)).
 
 :- multifile
     system:term_expansion/4,

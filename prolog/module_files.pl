@@ -29,7 +29,7 @@
 
 :- module(module_files, [module_files/2, file_modules/2, module_file/2]).
 
-:- use_module(library(remove_dups)).
+:- use_module(xlibrary(remove_dups)).
 
 % NOTE: Files are not unique, and the first must be the main one
 module_files(M, Files) :-

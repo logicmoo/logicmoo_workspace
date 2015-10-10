@@ -29,12 +29,12 @@
 
 :- module(check_non_mutually_exclusive, []).
 
-:- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
 :- use_module(library(apply)).
-:- use_module(library(normalize_head)).
-:- use_module(library(referenced_by)).
 :- use_module(library(check), []).
+:- use_module(xlibrary(normalize_head)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
+:- use_module(xtools(referenced_by)).
 
 :- multifile
     prolog:message//1,
@@ -42,7 +42,7 @@
 
 :- dynamic mutually_exclusive_db/1.
 
-audit:check(non_mutually_exclusive, Result, OptionL0 ) :-
+checker:check(non_mutually_exclusive, Result, OptionL0 ) :-
     option_allchk(OptionL0, OptionL1, FileChk),
     select_option(module(M), OptionL1, _, M),
     findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), M, Pairs), Result).
