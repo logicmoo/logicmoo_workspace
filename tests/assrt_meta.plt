@@ -18,7 +18,7 @@ test(assrt_meta_f) :-
 	  true),
     assertion(E=error(existence_error(procedure,
 				      assrt_meta_ex:undefined_proc/1),
-		      context(assrt_meta_ex:metapred/4,_))),
+		      context(_,_))),
     load_rtchecks(RTChecks),
     assertion(RTChecks = [_, _]).
 
