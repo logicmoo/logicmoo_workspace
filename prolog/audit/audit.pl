@@ -68,8 +68,6 @@ showcheck(Checker) :-
 available_checker(Checker) :-
     clause(check(Checker, _, _), _).
 
-% TODO: Ref argument is odd, may is better to pass only the context module that
-% we want to analyze, and may be in OptionL instead of in an extra argument.
 showcheck(Checker, OptionL) :-
     check_results(Checker, Results, OptionL),
     full_report(Checker-Results).
