@@ -11,7 +11,6 @@
 :- reexport(rtchecks(rtchecks_send)).
 :- use_module(assertions(termtyping), []). % assertions about builtins
 :- use_module(library(plprops)).
-:- use_module(library(intercept)).
 :- use_module(library(context_values)).
 
 :- doc(author, "Edison Mera").

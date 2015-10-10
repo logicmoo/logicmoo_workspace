@@ -47,13 +47,17 @@ maparg(Apply, N, S, G, R) :-
     maparg(Apply, N1, S, G, R).
 maparg(_, _, _, _, _).
 
-generate_literal_rtchecks(Loc, CM, Goal0, rtchecks_rt:RTChecks) :-
+generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
     resolve_calln(Goal0, Goal),
-    ( proc_ppassertion(Goal, CM, Loc, RTChecks)
-    ->true
+    ( proc_ppassertion(Goal, CM, Loc, RTChecks0 )
+    ->RTChecks =rtchecks_rt:RTChecks0
     ; implementation_module(CM:Goal, M),
-      generate_pred_rtchecks(Loc, Goal, M, RTChecks, Pred, PM),
-      PM:Pred = CM:Goal
+      generate_pred_rtchecks(Loc, Goal, M, RTChecks0, Pred, PM),
+      ( RTChecks0 == PM:Pred
+      ->RTChecks = CM:Goal
+      ; PM:Pred  = CM:Goal,
+	RTChecks = rtchecks_rt:RTChecks0
+      )
     ).
 
 generate_pred_rtchecks(Loc, Goal, M, RTChecks, Pred, PM) :-

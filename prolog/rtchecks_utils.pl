@@ -30,14 +30,18 @@ tracertc :-
 
 :- doc(handle_rtcheck/1, "Predicate that processes a rtcheck exception.").
 
+:- prop location_t/1 + type.
+location_t(Loc) :- clause(prolog:message_location(Loc, _, _), _).
+
 :- prop rtcheck_error/1 + type #
 	"Specifies the format of a run-time check exception.".
 
-rtcheck_error(rtcheck(Type, _Pred, Dict, PropValues, Locs)) :-
+rtcheck_error(rtcheck(Type, _Pred, Dict, PropValues, PLoc, ALoc)) :-
 	rtcheck_type(Type),
 	list(Dict),
 	keylist(PropValues),
-	list(Locs).
+	location_t(PLoc),
+	location_t(ALoc).
 
 :- prop rtcheck_type/1 + type # "Specifies the type of run-time errors.".
 

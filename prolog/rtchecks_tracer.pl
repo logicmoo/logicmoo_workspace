@@ -197,7 +197,7 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       ( \+ black_list_callee(IM, Goal)
       ->generate_rtchecks(Goal, CM, Loc, RTChecks),
 	Loc = clause_pc(Clause, PC),
-	( Goal == RTChecks
+	( CM:Goal == RTChecks
 	->Action = continue
 	; % Action = call(M:RTChecks)
 	  Action = call(rtchecks_tracer:rat_trap(RTChecks, Clause, PC))

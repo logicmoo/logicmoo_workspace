@@ -7,14 +7,13 @@
 			 current_assertion/12]).
 
 :- use_module(library(assertions)).
-:- use_module(library(nativeprops)).
 :- use_module(library(basicprops)).
 :- use_module(library(lists)).
+:- use_module(library(qualify_meta_goal)).
 :- use_module(rtchecks(rtchecks_basic)).
 :- use_module(rtchecks(rtchecks_meta)).
 :- use_module(assertions(assrt_lib),
-	      [assertion_read/9, assertion_body/7, comps_to_goal/3,
-	       comps_to_goal/4, add_arg/3]).
+	      [comps_to_goal/3, comps_to_goal/4, add_arg/3]).
 
 /*
 
@@ -343,12 +342,15 @@ generate_rtchecks(Assrs, M, PLoc, G1, G2, G3, G) :-
 % fails if no ctchecks can be applied to Pred
 %
 generate_ctchecks(Pred, M, Loc, rtchecks_rt:Lits) :-
-    collect_assertions(Pred, M, ctcheck, Assertions0),
+    functor(Pred, F, A),
+    functor(Head, F, A),
+    collect_assertions(Head, M, ctcheck, Assertions0),
     maplist(abstract_assertions, Assertions0, Assertions),
 				% Abstraction step, here we lose precision
 				% but we gain computability of checks at
 				% earlier, even compile-time. --EMM
     compat_rtchecks(Assertions, M, Loc, _, [], _, Goal0, []),
+    qualify_meta_goal(M:Pred, Head), % ???
     lists_to_lits(Goal0, Lits).
 
 %% Trivial abstraction: Check for compatibility issues in properties,
