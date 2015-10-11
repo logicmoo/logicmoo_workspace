@@ -47,11 +47,11 @@
 :- use_module(xtools(option_utils)).
 
 :- dynamic
-    tablecheck_db/4,
+    tablecheck_db/3,
     assertions_db/1,
     violations_db/1,
-    rtcheck_db_1/4,
-    rtcheck_db/4.
+    rtcheck_db_1/3,
+    rtcheck_db/3.
 
 :- multifile
     prolog:message//1.
@@ -62,7 +62,7 @@ checker:check(assertions, Result, OptionL0) :-
     check_assertions(from_chk(FileChk), OptionL, Result).
 
 cleanup_db :-
-        retractall(tablecheck_db(_, _, _, _)),
+        retractall(tablecheck_db(_, _, _)),
 	retractall(assertions_db(_)),
 	retractall(violations_db(_)).
 
@@ -92,7 +92,7 @@ check_assertions(FromChk, OptionL0, Pairs) :-
       prop_ctcheck(M, FromChk, Props)
     ).
 
-current_head_ctcheck(M, FromChk, head(Loc-PI)-CTErrorL) :-
+current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     PI=M:F/A,
     current_predicate(M:F/A),
     functor(H, F, A),
@@ -103,11 +103,11 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-CTErrorL) :-
     From = clause(Clause),
     call(FromChk, From),
     clause(M:H, _, Clause),
-    do_check_property_ctcheck(H, M, _, CTCheck, CTErrorL),
+    do_check_property_ctcheck(H, M, CTCheck, AssrErrorL),
     % Although we have duplicated logic, we don't call check_property_ctcheck/3
     % here because is too slow:
     % check_property_ctcheck(H, M, CTChecks),
-    CTErrorL \= [],
+    AssrErrorL \= [],
     from_location(From, Loc).
 
 prop_ctcheck(M, FromChk, Trans) :-
@@ -154,7 +154,7 @@ type_issue_t(head(_), ctchecks).
 type_issue_t(prop(_), property).
 
 prop_issue(ctchecks, CTChecks) -->
-    prolog:message(acheck(checks(ctcheck), CTChecks)).
+    prolog:message(acheck(checks, CTChecks)).
 prop_issue(property, Checker-IssueL) -->
     property_issue(Checker, IssueL).
 
@@ -202,32 +202,29 @@ collect_violations(M, CM:Goal, Caller, From) :-
     from_location(From, Loc),
     assertz(violations_db(body(Loc-CPI)-CTChecks)).
 
-check_property_ctcheck(Goal, M, CTErrorL) :-
-    check_property_ctcheck(Goal, M, _, CTErrorL).
-
-check_property_ctcheck(Goal, M, Loc, CTErrorL) :-
-    tabled_generate_ctchecks(Goal, M, Loc, CTCheck),
+check_property_ctcheck(Goal, M, AssrErrorL) :-
+    tabled_generate_ctchecks(Goal, M, CTCheck),
     CTCheck \= _:true, % Skip lack of assertions or assertions that will not
                        % trigger violations
-    do_check_property_ctcheck(Goal, M, Loc, CTCheck, CTErrorL).
+    do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL).
 
-do_check_property_ctcheck(Goal, M, Loc, CTCheck, CTErrorL) :-
+do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL) :-
     ( copy_term_nat(Goal, Goal2),
-      rtcheck_db(Goal, M, Loc, CTErrorL),
+      rtcheck_db(Goal, M, AssrErrorL),
       Goal =@= Goal2
     ->true
-    ; check_property_ctcheck_1st_time(Goal, M, Loc, CTCheck, CTErrorL)
+    ; check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL)
     ).
 
-check_property_ctcheck_1st_time(Goal, M, Loc, CTCheck, CTErrorL) :- 
-    assertz(rtcheck_db_1(Goal, M, Loc, [])),
-    CTError = rtcheck(_, _, _, _, Loc, _),
-    intercept(CTCheck, CTError, % Now execute the checks
-	      ( retract(rtcheck_db_1(Goal, M, Loc, CTErrorL)),
-		assertz(rtcheck_db_1(Goal, M, Loc, [CTError|CTErrorL]))
+check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL) :- 
+    assertz(rtcheck_db_1(Goal, M, [])),
+    AssrError = assrchk(_, _),
+    intercept(CTCheck, AssrError, % Now execute the checks
+	      ( retract(rtcheck_db_1(Goal, M, AssrErrorL)),
+		assertz(rtcheck_db_1(Goal, M, [AssrError|AssrErrorL]))
 	      )),
-    retract(rtcheck_db_1(Goal, M, Loc, CTErrorL)),
-    assertz(rtcheck_db(Goal, M, Loc, CTErrorL)).
+    retract(rtcheck_db_1(Goal, M, AssrErrorL)),
+    assertz(rtcheck_db(Goal, M, AssrErrorL)).
 
 checker_t(defined).
 checker_t(is_prop).
@@ -250,17 +247,13 @@ check_property(ctcheck, H, M, CTChecks) :- % compile-time checks. Currently only
 %% tabled_generate_ctchecks(+, +, -) is det
 %
 tabled_generate_ctchecks(H, M, Goal) :-
-    % We don't want to pass the location here
-    tabled_generate_ctchecks(H, M, _, Goal).
-
-tabled_generate_ctchecks(H, M, Loc, Goal) :-
-    ( tablecheck_db(H, M, Loc, Goal)
+    ( tablecheck_db(H, M, Goal)
     ->true
     ; functor(H, F, A),
       functor(P, F, A),
-      generate_ctchecks(P, M, L, Goal),
-      assertz(tablecheck_db(P, M, L, Goal)),
-      P = H, L = Loc
+      generate_ctchecks(P, M, Goal),
+      assertz(tablecheck_db(P, M, Goal)),
+      P = H
     ).
 
 resolve_head(M:H0, _, H) :- !,

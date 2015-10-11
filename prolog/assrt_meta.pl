@@ -60,12 +60,10 @@ assrt_lib:assertion_db(Head, M, M, Status, (comp), [], [], [],
     assertion(nonvar(Pos)),
     normalize_assertion_head(Spec, M, _, Pred, Comp, Call, Succ, Glob, _),
     current_prolog_flag(rtchecks_namefmt, NameFmt),
-    get_pretty_names(NameFmt, n(Head, Comp, Call, Succ, Glob), [], TName, Dict),
+    get_pretty_names(NameFmt, n(Head, Comp, Call, Succ, Glob), [], TName),
     TName = n(HeadName, CompName, CallName, SuccName, GlobName),
-    AssrL = [assr(Head, Status, (pred),
-		  Comp, Call, Succ, Glob, Pos, HeadName,
-		  CompName, CallName, SuccName, GlobName, Dict)],
-    generate_rtchecks(AssrL, M, Pos, RTChecksL, G, G, Goal),
+    AssrL = [assr(Head, Status, (pred), Comp, Call, Succ, Glob, Pos, HeadName, CompName, CallName, SuccName, GlobName)],
+    generate_rtchecks(AssrL, M, RTChecksL, G, G, Goal),
     lists_to_lits(RTChecksL, RTChecks).
 
 :- true prop rtc_stub/3.
