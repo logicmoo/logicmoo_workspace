@@ -6,11 +6,11 @@
 get_comp_rtcheck_info(Goal, Info) :-
     ( current_context_value(rtchecks_rt:comp_info, Info)
     ->true
-    ; Info = info(Goal, [], _)
+    ; Info = info(Goal, _)
     ).
 
 send_comp_rtcheck(Goal, PropName, FailName) :-
     FailName =.. [F|Args],
     FailProp =.. [F, PredName|Args],
-    get_comp_rtcheck_info(Goal, info(PredName, Dict, ALoc)),
-    send_signal(rtcheck(asr, comp, PredName, Dict, [PropName-[FailProp]], ALoc)).
+    get_comp_rtcheck_info(Goal, info(PredName, ALoc)),
+    send_signal(assrchk(asr, error(comp, PredName, [PropName-[FailProp]], ALoc))).
