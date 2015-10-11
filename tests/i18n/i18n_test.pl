@@ -43,9 +43,9 @@ i18n_support:i18n_resource_dir(Dir) :-
 i18n_support:language(es).	% Spanish
 
 i18n_test(t1) :-
-    A = ~hello,
+    A = ~(hello),
     assertion(A == hola).
 
 i18n_test(t2) :-
     A = hola,
-    assertion(A == ~hello).
+    assertion(A == ~(hello)).
