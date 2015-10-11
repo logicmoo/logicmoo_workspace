@@ -925,7 +925,7 @@ test_throw_2(Goal, Prop, F, Test) :-
 	catch(Goal, F,
 	    (
 		(
-		    F \= rtcheck(_, _, _, _, _),
+		    F \= rtcheck(_, _, _, _, _, _),
 		    Test
 		->
 		    send_comp_rtcheck(Goal, Prop, exception(F))
