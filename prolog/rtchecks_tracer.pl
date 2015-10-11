@@ -174,14 +174,13 @@ prolog:message_location(clause_pc(Clause, PC)) -->
 :- public rat_trap/4.
 :- meta_predicate rat_trap(0, +, +, +).
 rat_trap(RTChecks, Caller, Clause, PC) :-
-    ChkError = rtcheck(asr, Type, Pred, Dict, PropValues, ALoc),
-    intercept(RTChecks, ChkError,
+    AssrChk = assrchk(asr, Error),
+    intercept(RTChecks, AssrChk,
 	      ( ( retract(rtc_break(Clause, PC))
 		->ignore('$break_at'(Clause, PC, false))
 		; true
 		),
-		send_signal(rtcheck(ppt(Caller, clause_pc(Clause, PC)),
-				    Type, Pred, Dict, PropValues, ALoc))
+		send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error))
 	      )).
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-

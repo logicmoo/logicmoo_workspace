@@ -1,7 +1,7 @@
 :- module(rtchecks_basic, [
 		collapse_prop/4,
 		diff_props/3,
-		get_pretty_names/5,
+		get_pretty_names/4,
 		checkif_to_lit/3,
 		get_checkc/5,
 		get_checkc/6,
@@ -65,26 +65,26 @@ compound_check_prop(Check, _, M:Prop, CheckProp) :- !,
 compound_check_prop(Check, M, Prop, CheckProp) :-
 	CheckProp =.. [Check, M:Prop].
 
-compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, ALoc, PropValue, ( IfValues = []
+compound_checkif(IfValues, ErrType, PredName, CheckProps, ALoc, PropValue, ( IfValues = []
 		 ->findall(PropValue, CheckProps, Props),
-		   send_rtcheck(Props, ErrType, PredName, Dict, ALoc)
+		   send_rtcheck(Props, ErrType, PredName, ALoc)
 		 ; true
 		 )).
 
 % TODO: fail: Exit \= [].  true: Exit == [].
 
-get_checkif(_, _, _, _, _, [], _, _, true) :- !.
-get_checkif(_, Exit, _, _, _, _, _, _, true) :- Exit \= [], !.
-get_checkif(success, Exit, PredName, Dict, M, Props, Names, ALoc, CheckIf) :-
+get_checkif(_, _, _, _, [], _, _, true) :- !.
+get_checkif(_, Exit, _, _, _, _, _, true) :- Exit \= [], !.
+get_checkif(success, Exit, PredName, M, Props, Names, ALoc, CheckIf) :-
 	compound_check_props(instance, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
-	compound_checkif(Exit, success, PredName, Dict, CheckProps, ALoc, NameProp, CheckIf).
-get_checkif(compatpos, Exit, PredName, Dict, M, Props, Names, ALoc, CheckIf) :-
+	compound_checkif(Exit, success, PredName, CheckProps, ALoc, NameProp, CheckIf).
+get_checkif(compatpos, Exit, PredName, M, Props, Names, ALoc, CheckIf) :-
 	compound_check_props(compat, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
-	compound_checkif(Exit, success, PredName, Dict, CheckProps, ALoc, NameProp, CheckIf).
+	compound_checkif(Exit, success, PredName, CheckProps, ALoc, NameProp, CheckIf).
 
 short_prop_name(Prop, Name-[]) :-
 	callable(Prop),
@@ -116,14 +116,14 @@ long_prop_names(Props, PropNames, Dict, Names) :-
 
 % in this predicate, PredName and the name of each property must be ground
 % to avoid undesired unifications.
-get_pretty_names(short, n(Pred, Compat, Call, Succ, Comp), Dict, TermName, Dict) :-
+get_pretty_names(short, n(Pred, Compat, Call, Succ, Comp), _, TermName) :-
 	functor(Pred, F, A),
 	short_prop_names(Compat, CompatName),
 	short_prop_names(Call,   CallName),
 	short_prop_names(Succ,   SuccName),
 	short_prop_names(Comp,   CompName),
 	TermName = n(F/A, CompatName, CallName, SuccName, CompName).
-get_pretty_names(long, Term, Dict0, TermName, Dict) :-
+get_pretty_names(long, Term, Dict0, TermName) :-
     Term = n(_Pred, Compat, Call, Succ, Comp),
     term_variables(Term, Vars),
     include(not_occurrences(Dict0), Vars, NVars),
@@ -206,6 +206,6 @@ list_to_disj2([X|Xs], X0, (X0 ; Lits)) :-
 	list_to_disj2(Xs, X, Lits).
 
 checkif_to_lit(pos(M, PType),
-	       infl(ALoc, PredName, Dict, Compat, CompatNames, Exit),
+	       infl(ALoc, PredName, Compat, CompatNames, Exit),
 	       CheckPos) :-
-    get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames, ALoc, CheckPos).
+    get_checkif(PType, Exit, PredName, M, Compat, CompatNames, ALoc, CheckPos).

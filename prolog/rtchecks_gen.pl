@@ -168,8 +168,7 @@ current_assertion(Pred, M, CM, TimeCheck, Status, Type, Comp, Call, Succ, Glob,
     \+ black_list_pred(Pred).
 
 current_assertion(Pred, M, TimeCheck,
-		  assr(Pred, Status, Type, Comp, Call, Succ, Glob, Loc, PredName,
-		       CompName, CallName, SuccName, GlobName, Dict)) :-
+		  assr(Pred, Status, Type, Comp, Call, Succ, Glob, Loc, PredName, CompName, CallName, SuccName, GlobName)) :-
     current_assertion(Pred, M, CM, TimeCheck, Status, Type, Comp0, Call0,
 		      Succ0, Glob0, Dict0, Loc),
     collapse_dups(Glob0, Glob1),
@@ -181,44 +180,44 @@ current_assertion(Pred, M, TimeCheck,
     ; [Comp0, Call0, Succ0, Glob2] = [Comp,  Call,  Succ,  Glob ]
     ),
     current_prolog_flag(rtchecks_namefmt, NameFmt),
-    get_pretty_names(NameFmt, n(Pred, Comp, Call, Succ, Glob), Dict0, TermName, Dict),
+    get_pretty_names(NameFmt, n(Pred, Comp, Call, Succ, Glob), Dict0, TermName),
     TermName = n(PredName, CompName, CallName, SuccName, GlobName).
 
-assertion_pred(Pred, assr(Pred, _, _, _, _, _, _, _, _, _, _, _, _, _)).
+assertion_pred(Pred, assr(Pred, _, _, _, _, _, _, _, _, _, _, _, _)).
 
 collect_assertions(Pred, M, TimeCheck, Assertions) :-
     findall(Assertion, current_assertion(Pred, M, TimeCheck, Assertion), Assertions),
     maplist(assertion_pred(Pred), Assertions).
 
 do_prop_rtcheck(compat, M,
-		assr(_, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
+		assr(_, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _),
 		pre(ChkCompat, Compat,
-		    send_rtcheck(PropValues, compat, PName, Dict, ALoc),
+		    send_rtcheck(PropValues, compat, PName, ALoc),
 		    PropValues)) :-
     get_checkc(compat, M, Compat, CompatNames, PropValues, ChkCompat).
 do_prop_rtcheck(calls, M,
-		assr(_, _, _, _, Call, _, _, ALoc, PName, _, CallNames, _, _, Dict),
+		assr(_, _, _, _, Call, _, _, ALoc, PName, _, CallNames, _, _),
 		pre(ChkCall, Call,
-		    send_rtcheck(PropValues, calls, PName, Dict, ALoc),
+		    send_rtcheck(PropValues, calls, PName, ALoc),
 		    PropValues)) :-
     get_checkc(call, M, Call, CallNames, PropValues, ChkCall).
 do_prop_rtcheck(success, M,
-		assr(_, _, _, _, Call, Succ, _, ALoc, PName, _, _, SuccNames, _, Dict),
+		assr(_, _, _, _, Call, Succ, _, ALoc, PName, _, _, SuccNames, _),
 		succ(ChkCall, Call, PropValues, ChkSucc, Succ)) :-
     get_checkc(call, M, Call, PropValues, ChkCall),
-    check_poscond(ALoc, PName, Dict, Succ, SuccNames, PropValues, ChkSucc).
+    check_poscond(ALoc, PName, Succ, SuccNames, PropValues, ChkSucc).
 do_prop_rtcheck(compatpos, M,
-		assr(_, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _, Dict),
+		assr(_, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _),
 		compatpos(ChkCompat, ChkCompatPos, Compat, PropValues)) :-
     get_checkc(compat, M, Compat, PropValues, ChkCompat),
-    check_poscond(ALoc, PName, Dict, Compat, CompatNames, PropValues, ChkCompatPos).
+    check_poscond(ALoc, PName, Compat, CompatNames, PropValues, ChkCompatPos).
 do_prop_rtcheck(comp, M,
-		assr(_, _, _, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames, Dict),
+		assr(_, _, _, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames),
 		comp(ChkCall, Call, PropValues, ChkComp, Comp)) :-
     get_checkc(call, M, Call, PropValues, ChkCall),
-    check_poscond(ALoc, PName, Dict, Comp, CompNames, PropValues, ChkComp).
+    check_poscond(ALoc, PName, Comp, CompNames, PropValues, ChkComp).
 
-is_prop_rtcheck(StatusTypes, assr(_, Status, Type, _, _, _, _, _, _, _, _, _, _, _)) :-
+is_prop_rtcheck(StatusTypes, assr(_, Status, Type, _, _, _, _, _, _, _, _, _, _)) :-
     memberchk((Status, Type), StatusTypes).
 
 compat_rtchecks(Assertions, M, StatusTypes, CheckedL0, CheckedL) -->
@@ -270,8 +269,7 @@ success_call_lit(succ(ChkCall, Call, PropValues, _, _),
 success_succ_lit(succ(_, _, PropValues, ChkSucc, Succ),
 		 cui(Succ - PropValues, _, ChkSucc)).
 
-check_poscond(ALoc, PredName, Dict, Prop, PropNames, PropValues,
-	      infl(ALoc, PredName, Dict, Prop, PropNames, PropValues)).
+check_poscond(ALoc, PredName, Prop, PropNames, PropValues, infl(ALoc, PredName, Prop, PropNames, PropValues)).
 
 compatpos_compat_lit(compatpos(ChkCompat, _, Compat, PropValues),
 	    cui(Compat - [], PropValues, ChkCompat)).
@@ -321,8 +319,8 @@ comp_comp_lit(comp(_, _, PropValues, ChkComp, Comp), cui(Comp - PropValues, _, C
 
 compound_comp(Goal0-Goal, Goal0, Goal).
 
-comp_to_lit(M, infl(ALoc, PredName, Dict, Comp, _CompNames, PropValues), ChkComp-Goal) :-
-    comps_to_comp_lit(PropValues, Comp, M, info(PredName, Dict, ALoc), ChkComp, Goal).
+comp_to_lit(M, infl(ALoc, PredName, Comp, _CompNames, PropValues), ChkComp-Goal) :-
+    comps_to_comp_lit(PropValues, Comp, M, info(PredName, ALoc), ChkComp, Goal).
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
@@ -354,9 +352,7 @@ generate_ctchecks(Pred, M, rtchecks_rt:Lits) :-
 %% Trivial abstraction: Check for compatibility issues in properties,
 %% compatibility is an abstraction that makes static check decidable.
 %% The pay-off is a lose of precision. TBD: Formal demostration. --EMM
-abstract_assertions(assr(Pred, Status, Type, Compat0, Call, Succ, _Comp,
-			 ALoc, PredName, CompatName0, CallName, SuccName, _CompName, Dict),
-		    assr(Pred, Status, Type, Compat, [], [], [],
-			 ALoc, PredName, CompatName, [], [], [], Dict)) :-
+abstract_assertions(assr(Pred, Status, Type, Compat0, Call, Succ, _Comp, ALoc, PredName, CompatName0, CallName, SuccName, _CompName),
+		    assr(Pred, Status, Type, Compat, [], [], [], ALoc, PredName, CompatName, [], [], [])) :-
     append([CompatName0, CallName, SuccName], CompatName),
     append([Compat0, Call, Succ], Compat).

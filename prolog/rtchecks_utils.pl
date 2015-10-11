@@ -1,6 +1,6 @@
 :- module(rtchecks_utils,
 	  [handle_rtcheck/1, call_rtc/1, save_rtchecks/1, load_rtchecks/1,
-	   rtcheck_error/1, ctime_t/1]).
+	   assrchk_error/1]).
 
 :- use_module(assertions(assertions)).
 :- use_module(assertions(basicprops)).
@@ -32,13 +32,12 @@ tracertc :-
 :- prop location_t/1 + type.
 location_t(Loc) :- clause(prolog:message_location(Loc, _, _), _).
 
-:- prop rtcheck_error/1 + type #
-	"Specifies the format of a run-time check exception.".
+:- prop assrchk_error/1 + type #
+	"Specifies the format of an assertion check error.".
 
-rtcheck_error(rtcheck(Level, Type, _Pred, Dict, PropValues, ALoc)) :-
+assrchk_error(assrchk(Level, error(Type, _Pred, PropValues, ALoc))) :-
     rtcheck_level(Level),
     rtcheck_type(Type),
-    list(Dict),
     keylist(PropValues),
     location_t(ALoc).
 
@@ -58,7 +57,7 @@ rtcheck_type(compat).
 rtcheck_type(compatpos).
 rtcheck_type(calls).
 
-:- pred handle_rtcheck/1 : rtcheck_error.
+:- pred handle_rtcheck/1 : assrchk_error.
 
 handle_rtcheck(RTCheck) :-
     print_message(error, RTCheck).
@@ -82,17 +81,16 @@ prolog:message(acheck(checks, RTChecks)) -->
 select_defined(_=V) :- !, nonvar(V).
 select_defined(_).
 
-:- prop ctime_t/1 is type.
-
-ctime_t(ctcheck).
-ctime_t(rtcheck).
-
-level_message(asr) --> [].
-level_message(ppt(Caller, Loc)) -->
+assr_level_message(asr) --> [].
+assr_level_message(ppt(Caller, Loc)) -->
     prolog:message_location(Loc),
-    [' at program point in ~q.'-[Caller], nl].
+    ['At program point in ~q:'-[Caller], nl].
 
-prolog:message(rtcheck(Level, Type, Pred, _Dict, PropValues, ALoc)) -->
+prolog:message(assrchk(Level, Error)) -->
+    assr_level_message(Level),
+    assr_error_message(Error).
+
+assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
     { pairs_keys_values(PropValues, Props, ValuesL),
       append(ValuesL, Values1),
       include(select_defined, Values1, Values2),
@@ -100,7 +98,6 @@ prolog:message(rtcheck(Level, Type, Pred, _Dict, PropValues, ALoc)) -->
     },
     prolog:message_location(ALoc),
     ['Assertion failure for ~q.'-[Pred], nl],
-    level_message(Level),
     ['\tIn *~w*, unsatisfied properties: ~n\t\t~q.'-[Type, Props]
     ],
     ( {Values = []}
@@ -118,7 +115,7 @@ prolog:message(rtcheck(Level, Type, Pred, _Dict, PropValues, ALoc)) -->
 	value.".
 
 call_rtc(Goal) :-
-	Error = rtcheck(_, _, _, _, _, _),
+	Error = assrchk(_, _),
 	( current_prolog_flag(rtchecks_abort_on_error, yes) ->
 	  intercept(Goal, Error, throw(Error)) % rethrow signal as exception
 	; intercept(Goal, Error, (handle_rtcheck(Error), tracertc))
@@ -132,10 +129,10 @@ call_rtc(Goal) :-
 	run-time check exceptions thrown by the goal.".
 
 save_rtchecks(Goal) :-
-	RTError = rtcheck(_, _, _, _, _, _),
+	RTError = assrchk(_, _),
 	intercept(Goal, RTError, assertz(rtcheck_db(RTError))).
 
-:- pred load_rtchecks/1 => list(rtcheck_error) # "retract the
+:- pred load_rtchecks/1 => list(assrchk_error) # "retract the
 	rtcheck_db/1 facts and return them in a list.".
 
 load_rtchecks(RTChecks) :-

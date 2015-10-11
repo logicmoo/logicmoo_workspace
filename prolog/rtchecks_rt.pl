@@ -67,7 +67,7 @@ rtcheck_ifnot(Check, PredName) :-
 
 rtcheck_cond(Cond, Check, PredName) :-
     ( Cond
-    ->send_rtcheck([Check-[]], pp_check, PredName, [], _)
+    ->send_rtcheck([Check-[]], pp_check, PredName, _)
     ; true
     ).
     
