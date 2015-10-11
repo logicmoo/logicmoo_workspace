@@ -65,27 +65,26 @@ compound_check_prop(Check, _, M:Prop, CheckProp) :- !,
 compound_check_prop(Check, M, Prop, CheckProp) :-
 	CheckProp =.. [Check, M:Prop].
 
-compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, PLoc, ALoc, PropValue,
-		 ( IfValues = []
+compound_checkif(IfValues, ErrType, PredName, Dict, CheckProps, ALoc, PropValue, ( IfValues = []
 		 ->findall(PropValue, CheckProps, Props),
-		   send_rtcheck(Props, ErrType, PredName, Dict, PLoc, ALoc)
+		   send_rtcheck(Props, ErrType, PredName, Dict, ALoc)
 		 ; true
 		 )).
 
 % TODO: fail: Exit \= [].  true: Exit == [].
 
-get_checkif(_, _,    _, _, _, [], _, _, _, true) :- !.
-get_checkif(_, Exit, _, _, _, _,  _, _, _, true) :- Exit \= [], !.
-get_checkif(success, Exit, PredName, Dict, M, Props, Names, PLoc, ALoc, CheckIf) :-
+get_checkif(_, _, _, _, _, [], _, _, true) :- !.
+get_checkif(_, Exit, _, _, _, _, _, _, true) :- Exit \= [], !.
+get_checkif(success, Exit, PredName, Dict, M, Props, Names, ALoc, CheckIf) :-
 	compound_check_props(instance, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
-	compound_checkif(Exit, success, PredName, Dict, CheckProps, PLoc, ALoc, NameProp, CheckIf).
-get_checkif(compatpos, Exit, PredName, Dict, M, Props, Names, PLoc, ALoc, CheckIf) :-
+	compound_checkif(Exit, success, PredName, Dict, CheckProps, ALoc, NameProp, CheckIf).
+get_checkif(compatpos, Exit, PredName, Dict, M, Props, Names, ALoc, CheckIf) :-
 	compound_check_props(compat, M, Props, CheckProps0),
 	maplist(check_props_names(NameProp), CheckProps0, Names, CNs),
 	list_to_disj(CNs, CheckProps),
-	compound_checkif(Exit, success, PredName, Dict, CheckProps, PLoc, ALoc, NameProp, CheckIf).
+	compound_checkif(Exit, success, PredName, Dict, CheckProps, ALoc, NameProp, CheckIf).
 
 short_prop_name(Prop, Name-[]) :-
 	callable(Prop),
@@ -207,7 +206,6 @@ list_to_disj2([X|Xs], X0, (X0 ; Lits)) :-
 	list_to_disj2(Xs, X, Lits).
 
 checkif_to_lit(pos(M, PType),
-	       infl(PLoc, ALoc, PredName, Dict, Compat, CompatNames, Exit),
+	       infl(ALoc, PredName, Dict, Compat, CompatNames, Exit),
 	       CheckPos) :-
-    get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames,
-		PLoc, ALoc, CheckPos).
+    get_checkif(PType, Exit, PredName, Dict, M, Compat, CompatNames, ALoc, CheckPos).

@@ -7,7 +7,6 @@
 :- use_module(assertions(plprops)).
 :- use_module(library(lists)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
-:- use_module(rtchecks(compact_list)).
 :- use_module(xlibrary(filtered_backtrace)).
 :- use_module(xlibrary(intercept)).
 
@@ -36,12 +35,19 @@ location_t(Loc) :- clause(prolog:message_location(Loc, _, _), _).
 :- prop rtcheck_error/1 + type #
 	"Specifies the format of a run-time check exception.".
 
-rtcheck_error(rtcheck(Type, _Pred, Dict, PropValues, PLoc, ALoc)) :-
-	rtcheck_type(Type),
-	list(Dict),
-	keylist(PropValues),
-	location_t(PLoc),
-	location_t(ALoc).
+rtcheck_error(rtcheck(Level, Type, _Pred, Dict, PropValues, ALoc)) :-
+    rtcheck_level(Level),
+    rtcheck_type(Type),
+    list(Dict),
+    keylist(PropValues),
+    location_t(ALoc).
+
+:- prop rtcheck_level/1 + type.
+
+rtcheck_level(asr).
+rtcheck_level(ppt(Caller, Loc)) :-
+    term(Caller),
+    location_t(Loc).
 
 :- prop rtcheck_type/1 + type # "Specifies the type of run-time errors.".
 
@@ -55,12 +61,7 @@ rtcheck_type(calls).
 :- pred handle_rtcheck/1 : rtcheck_error.
 
 handle_rtcheck(RTCheck) :-
-    check_to_messages(rtcheck, RTCheck, Messages, []),
-    pretty_messages(Messages).
-
-pretty_messages(Messages0) :-
-	compact_list(Messages0, Messages),
-	print_message(error, ciao_messages(Messages)).
+    print_message(error, RTCheck).
 
 :- multifile
 	prolog:error_message_signal//1,
@@ -68,18 +69,15 @@ pretty_messages(Messages0) :-
 	prolog:message//1.
 
 prolog:error_message_signal(RTCheck) -->
-    check_to_messages(rtcheck, RTCheck).
+    prolog:message(RTCheck).
 
 prolog:error_message(unintercepted_signal(Signal)) -->
 	( prolog:error_message_signal(Signal) -> []
 	; ['unintercepted signal: ~p'-[Signal]]
 	).
 
-prolog:message(ciao_messages(Messages)) -->
-	Messages.
-
-prolog:message(acheck(checks(Time), RTChecks)) -->
-	foldl(check_to_messages(Time), RTChecks).
+prolog:message(acheck(checks, RTChecks)) -->
+    foldl(prolog:message, RTChecks).
 
 select_defined(_=V) :- !, nonvar(V).
 select_defined(_).
@@ -89,48 +87,27 @@ select_defined(_).
 ctime_t(ctcheck).
 ctime_t(rtcheck).
 
-:- pred check_time_msg(+ctime_t, ?atm).
+level_message(asr) --> [].
+level_message(ppt(Caller, Loc)) -->
+    prolog:message_location(Loc),
+    [' at program point in ~q.'-[Caller], nl].
 
-check_time_msg(rtcheck, 'Run-Time').
-check_time_msg(ctcheck, 'Compile-Time').
-
-:- pred check_to_messages(+ctime_t,
-			  +rtcheck_error,
-			  ?list,
-			  ?Messages:list) #
-"Converts a run-time check in a message or a list of messages.
-~w is the tail."-[Messages].
-
-check_to_messages(Time,
-		  rtcheck(Type, Pred, _Dict, PropValues0, PLoc, ALoc)) -->
-    { pairs_keys_values(PropValues0, Props, Values0),
-      append(Values0, Values1),
+prolog:message(rtcheck(Level, Type, Pred, _Dict, PropValues, ALoc)) -->
+    { pairs_keys_values(PropValues, Props, ValuesL),
+      append(ValuesL, Values1),
       include(select_defined, Values1, Values2),
       sort(Values2, Values)
     },
-    {check_time_msg(Time, TimeMsg)},
     prolog:message_location(ALoc),
-    ['~w failure in assertion for ~q.~n'-[TimeMsg, Pred],
-     '\tIn *~w*, unsatisfied properties: ~n\t\t~q.'-[Type, Props]
+    ['Assertion failure for ~q.'-[Pred], nl],
+    level_message(Level),
+    ['\tIn *~w*, unsatisfied properties: ~n\t\t~q.'-[Type, Props]
     ],
     ( {Values = []}
     ->[]
     ; ['~n\tBecause: ~n\t\t~q.'-[Values]]
     ),
-    [nl],
-    ( {nonvar(PLoc)}
-    ->prolog:message_location(PLoc),
-      ['Failure of ~q'-[Pred]],
-      ( { PLoc = clause_pc(Clause, _PC)
-	; PLoc = clause(Clause)
-	}
-      ->{clause_property(Clause, predicate(Caller))},
-	[' in ~q.'-[Caller]]
-      ; ['.']
-      ),
-      [nl]
-    ; []
-    ).
+    [nl].
 
 :- meta_predicate call_rtc(0).
 
@@ -141,7 +118,7 @@ check_to_messages(Time,
 	value.".
 
 call_rtc(Goal) :-
-	Error = rtcheck(_Type, _Pred, _Dict, _PropValues, _PLoc, _ALoc),
+	Error = rtcheck(_, _, _, _, _, _),
 	( current_prolog_flag(rtchecks_abort_on_error, yes) ->
 	  intercept(Goal, Error, throw(Error)) % rethrow signal as exception
 	; intercept(Goal, Error, (handle_rtcheck(Error), tracertc))
@@ -155,7 +132,7 @@ call_rtc(Goal) :-
 	run-time check exceptions thrown by the goal.".
 
 save_rtchecks(Goal) :-
-	RTError = rtcheck(_Type, _Pred, _Dict, _PropValues, _PLoc, _ALoc),
+	RTError = rtcheck(_, _, _, _, _, _),
 	intercept(Goal, RTError, assertz(rtcheck_db(RTError))).
 
 :- pred load_rtchecks/1 => list(rtcheck_error) # "retract the

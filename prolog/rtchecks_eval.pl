@@ -1,6 +1,6 @@
 :- module(rtchecks_eval,
 	  [rtchecks_eval/1,
-	   generate_rtchecks/4]).
+	   generate_rtchecks/3]).
 
 :- use_module(assertions(assrt_lib)).
 :- use_module(rtchecks(rtchecks_basic)).
@@ -11,11 +11,11 @@
 
 :- meta_predicate rtchecks_eval(0).
 rtchecks_eval(M:Goal) :-
-    generate_rtchecks(Goal, M, _, RTChecks),
+    generate_rtchecks(Goal, M, RTChecks),
     call(RTChecks).
 
-generate_rtchecks(Goal, M, Loc, RTChecks) :-
-    apply_body(generate_literal_rtchecks(Loc), M, Goal, RTChecks).
+generate_rtchecks(Goal, M, RTChecks) :-
+    apply_body(generate_literal_rtchecks, M, Goal, RTChecks).
 
 builtin_spec(G, S) :-
     predicate_property(system:G, meta_predicate(S)),
@@ -47,12 +47,12 @@ maparg(Apply, N, S, G, R) :-
     maparg(Apply, N1, S, G, R).
 maparg(_, _, _, _, _).
 
-generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
+generate_literal_rtchecks(CM, Goal0, RTChecks) :-
     resolve_calln(Goal0, Goal),
-    ( proc_ppassertion(Goal, CM, Loc, RTChecks0 )
+    ( proc_ppassertion(Goal, CM, RTChecks0)
     ->RTChecks =rtchecks_rt:RTChecks0
     ; implementation_module(CM:Goal, M),
-      generate_pred_rtchecks(Loc, Goal, M, RTChecks0, Pred, PM),
+      generate_pred_rtchecks(Goal, M, RTChecks0, Pred, PM),
       ( RTChecks0 == PM:Pred
       ->RTChecks = CM:Goal
       ; PM:Pred  = CM:Goal,
@@ -60,16 +60,16 @@ generate_literal_rtchecks(Loc, CM, Goal0, RTChecks) :-
       )
     ).
 
-generate_pred_rtchecks(Loc, Goal, M, RTChecks, Pred, PM) :-
+generate_pred_rtchecks(Goal, M, RTChecks, Pred, PM) :-
     ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _, _)
     ->RTChecks = PM:Pred
     ; functor(Goal, F, A),
       functor(Head, F, A),
       ( collect_assertions(Head, M, rtcheck, Assertions),
 	Assertions \= []
-      ->generate_rtchecks(Assertions, M, Loc, G1, G2, G3, PM:Pred),
+      ->generate_rtchecks(Assertions, M, G1, G2, G3, PM:Pred),
 	functor(Pred, F, A),
-	qualify_meta_goal(PM:Pred, Head),
+	qualify_meta_goal(Pred, M, PM, Head),
 	% TODO: Be careful if you want to refactorize this part, now CM is
 	% static:
 	lists_to_lits(G3, R3),

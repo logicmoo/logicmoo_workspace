@@ -1,7 +1,7 @@
 :- module(rtchecks_rt, [condition/1,
 			checkif_modl/5,
 			checkif_comp/5,
-			rtcheck/3,
+			rtc_call/2,
 			'$meta$rtc'/2
 		       ]).
 
@@ -62,32 +62,32 @@ checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 with_info(Comp, Info) :-
     with_context_value(Comp, comp_info, Info).
 
-rtcheck_ifnot(Check, PredName, ALoc) :-
-    rtcheck_cond(\+ Check, Check, PredName, ALoc).
+rtcheck_ifnot(Check, PredName) :-
+    rtcheck_cond(\+ Check, Check, PredName).
 
-rtcheck_cond(Cond, Check, PredName, ALoc) :-
+rtcheck_cond(Cond, Check, PredName) :-
     ( Cond
-    ->send_rtcheck([Check-[]], pp_check, PredName, [], _, ALoc)
+    ->send_rtcheck([Check-[]], pp_check, PredName, [], _)
     ; true
     ).
     
 
-:- meta_predicate rtcheck(+, 0, ?).
+:- meta_predicate rtc_call(+, 0).
 
-rtcheck(Type, Check, Loc) :-
-    ignore(do_rtcheck(Type, Check, Loc)).
+rtc_call(Type, Check) :-
+    ignore(do_rtcheck(Type, Check)).
 
-do_rtcheck(check, Check, ALoc) :-
-    rtcheck_ifnot(Check, check/1, ALoc).
-do_rtcheck(trust, Check, ALoc) :-
+do_rtcheck(check, Check) :-
+    rtcheck_ifnot(Check, check/1).
+do_rtcheck(trust, Check) :-
     current_prolog_flag(rtchecks_trust, yes),
-    rtcheck_ifnot(Check, trust/1, ALoc).
-do_rtcheck(true, Check, ALoc) :-
+    rtcheck_ifnot(Check, trust/1).
+do_rtcheck(true, Check) :-
     current_prolog_flag(rtchecks_true, yes),
-    rtcheck_ifnot(Check, true/1, ALoc).
-do_rtcheck(false, Check, ALoc) :-
+    rtcheck_ifnot(Check, true/1).
+do_rtcheck(false, Check) :-
     current_prolog_flag(rtchecks_false, yes),
-    rtcheck_cond(Check, Check, false/1, ALoc),
+    rtcheck_cond(Check, Check, false/1),
     fail.
 
 % :- meta_predicate '$meta$rtc'(0, -).

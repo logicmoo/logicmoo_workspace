@@ -25,7 +25,7 @@ trace_rtc(Goal) :-
     call_rtc(do_trace_rtc(Goal)).
 
 do_trace_rtc(CM:Goal) :-
-    generate_rtchecks(Goal, CM, _, RTCGoal),
+    generate_rtchecks(Goal, CM, RTCGoal),
     call_inoutex(RTCGoal,
 		 setup_trace,
 		 cleanup_trace).
@@ -171,15 +171,17 @@ prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_location(Clause, PC, Loc)},
     prolog:message_location(Loc).
 
-:- public rat_trap/3.
-:- meta_predicate rat_trap(0, +, +).
-rat_trap(Goal, Clause, PC) :-
-    intercept(Goal, Error,
+:- public rat_trap/4.
+:- meta_predicate rat_trap(0, +, +, +).
+rat_trap(RTChecks, Caller, Clause, PC) :-
+    ChkError = rtcheck(asr, Type, Pred, Dict, PropValues, ALoc),
+    intercept(RTChecks, ChkError,
 	      ( ( retract(rtc_break(Clause, PC))
 		->ignore('$break_at'(Clause, PC, false))
 		; true
 		),
-		send_signal(Error)
+		send_signal(rtcheck(ppt(Caller, clause_pc(Clause, PC)),
+				    Type, Pred, Dict, PropValues, ALoc))
 	      )).
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
@@ -190,17 +192,15 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     \+ current_prolog_flag(gui_tracer, true),
     rtc_break(Clause, PC),
     prolog_frame_attribute(FR, context_module, FCM),
-    clause_property(Clause, predicate(PI)),
-    ( \+ black_list_caller(PI)
+    clause_property(Clause, predicate(Caller)),
+    ( \+ black_list_caller(Caller)
     ->static_strip_module(Goal0, Goal, CM, FCM),
       implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
-      ->generate_rtchecks(Goal, CM, Loc, RTChecks),
-	Loc = clause_pc(Clause, PC),
+      ->generate_rtchecks(Goal, CM, RTChecks),
 	( CM:Goal == RTChecks
 	->Action = continue
-	; % Action = call(M:RTChecks)
-	  Action = call(rtchecks_tracer:rat_trap(RTChecks, Clause, PC))
+	; Action = call(rtchecks_tracer:rat_trap(RTChecks, Caller, Clause, PC))
 	)
       ; Action = continue
       )
