@@ -29,7 +29,7 @@
 
 :- module(abstract_domain_product, []).
 
-:- use_module(library(audit/abstract_domain)).
+:- use_module(checkers(abstract_domain)).
 
 % DOMAIN: Cartesian product of two domains D1xD2
 % WARNING: do not use this predicate to list the available domains,

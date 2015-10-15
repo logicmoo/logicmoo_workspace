@@ -29,12 +29,12 @@
 
 :- module(check_meta_decls, []).
 
+:- use_module(checkers(checker)).
 :- use_module(library(prolog_metainference), []).
-:- use_module(library(is_entry_point)).
-:- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
-:- use_module(library(infer_meta_if_required)).
-:- use_module(library(audit/audit)).
+:- use_module(xtools(infer_meta_if_required)).
+:- use_module(xtools(is_entry_point)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
 
 :- multifile
 	prolog:message//1.
@@ -72,7 +72,7 @@ meta_decls2([H|T]) -->
 
 hide_missing_meta_pred(prolog:generated_predicate/1).
 
-audit:check(meta_decls, Pairs, OptionL0 ) :-
+checker:check(meta_decls, Pairs, OptionL0 ) :-
     option_allchk(OptionL0, OptionL1, FileChk),
     select_option(module(M), OptionL1, _, M),
     infer_meta_if_required,

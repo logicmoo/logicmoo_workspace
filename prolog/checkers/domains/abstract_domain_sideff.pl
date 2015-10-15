@@ -29,7 +29,7 @@
 
 :- module(abstract_domain_sideff, []).
 
-:- use_module(library(audit/abstract_domain)).
+:- use_module(checkers(abstract_domain)).
 
 % DOMAIN: Side-effects [free, soft, hard, top]
 abstract_domain:abstract_domain(sideff).

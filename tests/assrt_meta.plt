@@ -1,6 +1,6 @@
 :- begin_tests(assrt_meta).
 
-:- use_module(library(swi/rtchecks_lib)).
+:- use_module(library(rtchecks)).
 :- use_module(library(rtchecks_tracer)).
 :- use_module(library(assrt_meta)).
 :- set_prolog_flag(rtchecks_check,  yes).
@@ -18,7 +18,7 @@ test(assrt_meta_f) :-
 	  true),
     assertion(E=error(existence_error(procedure,
 				      assrt_meta_ex:undefined_proc/1),
-		      context(assrt_meta_ex:metapred/4,_))),
+		      context(_,_))),
     load_rtchecks(RTChecks),
     assertion(RTChecks = [_, _]).
 

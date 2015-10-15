@@ -3,11 +3,11 @@
 	   amtestf/0,
 	   metapred/4]).
 
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(nativeprops)).
 :- use_module(library(edinburgh)).
-:- use_module(library(swi/assertions)).
-:- use_module(library(swi/rtchecks)).
-:- use_module(library(swi/basicprops)).
-:- use_module(library(swi/nativeprops)).
+:- use_module(rtchecks(rtchecks)).
 
 :- meta_predicate metapred(+,-,?,1).
 

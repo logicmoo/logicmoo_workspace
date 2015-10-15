@@ -40,11 +40,11 @@
 			 from_chk/2,
 			 from_chk/3]).
 
-:- use_module(library(lists)).
-:- use_module(library(apply)).
-:- use_module(library(from_utils)).
-:- use_module(library(implemented_in)).
 :- reexport(library(module_files)).
+:- use_module(library(apply)).
+:- use_module(library(lists)).
+:- use_module(xtools(from_utils)).
+:- use_module(xtools(implemented_in)).
 
 select_option_default(Holder-Default, OptionL0, OptionL) :-
     select_option(Holder, OptionL0, OptionL, Default).

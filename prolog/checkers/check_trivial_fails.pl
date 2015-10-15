@@ -29,12 +29,12 @@
 
 :- module(check_trivial_fails, []).
 
-:- use_module(library(prolog_codewalk)).
-:- use_module(library(location_utils)).
-:- use_module(library(from_utils)).
-:- use_module(library(option_utils)).
+:- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(audit/audit)).
+:- use_module(library(prolog_codewalk)).
+:- use_module(xtools(from_utils)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
 
 :- multifile
     prolog:message//1.
@@ -43,7 +43,7 @@
     trivial_fail/2,
     ai_cache_result/2.
 
-audit:check(trivial_fails, Result, OptionL0) :-
+checker:check(trivial_fails, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
     check_trivial_fails(from_chk(FileChk), OptionL, Result).
 
@@ -125,7 +125,7 @@ collect_trivial_fails(M, FromChk, MatchAI, M:Goal, Caller, From) :-
     record_location_meta(M:Goal, _, From, all_call_refs,
 			 cu_caller_hook(MatchAI, Caller)).
 
-:- use_module(library(abstract_interpreter)).
+:- use_module(xtools(abstract_interpreter)).
 
 cu_caller_hook(MatchAI, Caller, MGoal, CM, _, _, _, From) :-
     atom(CM),

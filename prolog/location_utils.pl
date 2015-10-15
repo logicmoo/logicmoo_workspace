@@ -35,12 +35,12 @@
 
 :- use_module(library(lists)).
 :- use_module(library(prolog_codewalk), []).
-:- use_module(library(clambda)).
-:- use_module(library(database_fact)).
-:- use_module(library(extra_location)).
-:- use_module(library(implementation_module)).
-:- use_module(library(normalize_head)).
-:- use_module(library(static_strip_module)).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(implementation_module)).
+:- use_module(xlibrary(normalize_head)).
+:- use_module(xtools(database_fact)).
+:- use_module(xtools(extra_location)).
+:- use_module(xtools(static_strip_module)).
 
 from_location(From, Location) :-
     prolog:message_location(From, Location, []),

@@ -30,10 +30,10 @@
 :- module(ws_browser, [browse_server/1]).
 
 :- use_module(library(apply)).
-:- use_module(library(http/thread_httpd)).
-:- use_module(library(http/http_dispatch)).
 :- use_module(library(http/html_write)).
+:- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_parameters)).
+:- use_module(library(http/thread_httpd)).
 
 :- http_handler(root(.),           list_files,  []). % /
 :- http_handler(root(show_source), show_source, []). % /module?file=<file>

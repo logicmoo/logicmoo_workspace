@@ -30,14 +30,13 @@
 :- module(check_abstract_domains, [list_abstract_domains/0,
 				   list_abstract_domains/1]).
 
-% TODO: Update it to be integrated in audit_common.pl
+% TODO: Update it to be integrated in checker.pl
 
-:- use_module(library(location_utils)).
-:- use_module(library(audit/abstract_domain)).
-
+:- use_module(checkers(abstract_domain)).
 :- use_module(domains(abstract_domain_fail)).
-:- use_module(domains(abstract_domain_sideff)).
 :- use_module(domains(abstract_domain_product)). % this always at the end
+:- use_module(domains(abstract_domain_sideff)).
+:- use_module(xtools(location_utils)).
 
 :- multifile
 	prolog:message//1,

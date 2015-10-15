@@ -29,15 +29,15 @@
 
 :- module(check_imports, []).
 
-:- use_module(library(clambda)).
-:- use_module(library(expansion_module)).
+:- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(implementation_module)).
-:- use_module(library(extra_location)).
-:- use_module(library(location_utils)).
-:- use_module(library(from_utils)).
-:- use_module(library(audit/audit)).
-:- use_module(library(audit/audit_codewalk)).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(expansion_module)).
+:- use_module(xlibrary(implementation_module)).
+:- use_module(xtools(extra_codewalk)).
+:- use_module(xtools(extra_location)).
+:- use_module(xtools(from_utils)).
+:- use_module(xtools(location_utils)).
 
 :- multifile
     prolog:message//1.
@@ -67,11 +67,11 @@ unused_import(Type, Loc/Elem) -->
     used_import/1,
     used_usemod/2.
 
-audit:check(imports, Result, OptionL) :-
+checker:check(imports, Result, OptionL) :-
     check_imports(OptionL, Result).
 
 check_imports(OptionL, Pairs) :-
-    audit_walk_code([source(false)|OptionL], collect_imports(M, FromChk), M, FromChk),
+    extra_walk_code([source(false)|OptionL], collect_imports(M, FromChk), M, FromChk),
     collect_imports(M, FromChk, Pairs, Tail),
     collect_usemods(M, FromChk, Tail, []),
     cleanup_imports.

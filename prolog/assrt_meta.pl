@@ -29,18 +29,18 @@
 
 :- module(assrt_meta, []).
 
-:- use_module(library(location_utils)).
-:- use_module(library(assertions_op)).
-:- use_module(library(swi/assertions)).
-:- use_module(library(rtchecks/rtchecks_basic)).
-:- use_module(library(rtchecks/rtchecks_gen)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(assertions_op)).
+:- use_module(rtchecks(rtchecks_basic)).
+:- use_module(rtchecks(rtchecks_gen)).
+:- use_module(xtools(location_utils)).
 
-:- create_prolog_flag(assrt_meta_pred, check, [type(atom)]).
+:- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
 
 % Extends assertion_db/12 to get assertions from meta predicate declarations.
 
 assrt_lib:assertion_db(Head, M, M, Status, (comp), [], [], [],
-		       [assrt_meta:rtc_stub(RTChecks, Goal)], "", [], Pos) :-
+		       [assrt_meta:rtc_stub(rtchecks_rt:RTChecks, Goal)], "", [], Pos) :-
     current_prolog_flag(assrt_meta_pred, Status),
     Status \= none,
     Pred = M:Head,
@@ -60,12 +60,10 @@ assrt_lib:assertion_db(Head, M, M, Status, (comp), [], [], [],
     assertion(nonvar(Pos)),
     normalize_assertion_head(Spec, M, _, Pred, Comp, Call, Succ, Glob, _),
     current_prolog_flag(rtchecks_namefmt, NameFmt),
-    get_pretty_names(NameFmt, n(Head, Comp, Call, Succ, Glob), [], TName, Dict),
+    get_pretty_names(NameFmt, n(Head, Comp, Call, Succ, Glob), [], TName),
     TName = n(HeadName, CompName, CallName, SuccName, GlobName),
-    AssrL = [assr(Head, Status, (pred),
-		  Comp, Call, Succ, Glob, Pos, HeadName,
-		  CompName, CallName, SuccName, GlobName, Dict)],
-    generate_rtchecks(AssrL, Head, M, Pos, RTChecksL, G, G, Goal),
+    AssrL = [assr(Head, Status, (pred), Comp, Call, Succ, Glob, Pos, HeadName, CompName, CallName, SuccName, GlobName)],
+    generate_rtchecks(AssrL, M, RTChecksL, G, G, Goal),
     lists_to_lits(RTChecksL, RTChecks).
 
 :- true prop rtc_stub/3.

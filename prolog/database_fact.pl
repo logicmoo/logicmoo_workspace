@@ -38,8 +38,8 @@
 	   fa_to_head/3
 	  ]).
 
-:- use_module(library(normalize_pi)).
-:- use_module(library(static_strip_module)).
+:- use_module(xlibrary(normalize_pi)).
+:- use_module(xtools(static_strip_module)).
 
 :- create_prolog_flag(check_database_preds, false, [type(boolean)]).
 

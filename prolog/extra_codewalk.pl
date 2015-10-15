@@ -27,24 +27,24 @@
     the GNU General Public License.
 */
 
-:- module(audit_codewalk, [audit_walk_code/4,
-			   audit_wcsetup/3,
-			   audit_walk_module_body/2,
+:- module(extra_codewalk, [extra_walk_code/4,
+			   extra_wcsetup/3,
+			   extra_walk_module_body/2,
 			   decl_walk_code/2,
 			   record_issues/1]).
 
-:- use_module(library(extra_location)).
-:- use_module(library(option_utils)).
 :- use_module(library(prolog_codewalk)).
+:- use_module(xtools(extra_location)).
+:- use_module(xtools(option_utils)).
 
 :- thread_local
     issues/1.
 
 :- meta_predicate
     decl_walk_code(3,-),
-    audit_walk_code(+,3,-,-).
+    extra_walk_code(+,3,-,-).
 
-audit_walk_module_body(M, OptionL0 ) :-
+extra_walk_module_body(M, OptionL0 ) :-
     select_option(module(M), OptionL0, OptionL1, M),
     ( nonvar(M)
     ->findall(Ref, current_clause_module_body(M, Ref), RefU),
@@ -53,12 +53,13 @@ audit_walk_module_body(M, OptionL0 ) :-
     ; true
     ).
 
-audit_walk_code(OptionL0, Tracer, M, FromChk) :-
-    audit_wcsetup(OptionL0, OptionL1, FromChk),
+extra_walk_code(OptionL0, Tracer, M, FromChk) :-
+    extra_wcsetup(OptionL0, OptionL1, FromChk),
     select_option(source(S), OptionL1, OptionL, false),
-    audit_walk_module_body(M, [on_trace(Tracer)|OptionL]),
+    extra_walk_module_body(M, [on_trace(Tracer)|OptionL]),
     optimized_walk_code(S, [on_trace(Tracer)|OptionL]),
-    decl_walk_code(Tracer, M).
+    decl_walk_code(Tracer, M),
+    assr_walk_code(Tracer, M).
 
 current_clause_module_body(CM, Ref) :-
     current_predicate(M:F/A),
@@ -79,7 +80,7 @@ optimized_walk_code(true, OptionL) :-
     ; prolog_walk_code([clauses(Clauses)|OptionL])
     ).
 
-audit_wcsetup(OptionL0, OptionL, FromChk) :-
+extra_wcsetup(OptionL0, OptionL, FromChk) :-
     option_fromchk(OptionL0, OptionL1, FromChk),
     merge_options(OptionL1,
 		  [infer_meta_predicates(false),
@@ -92,6 +93,10 @@ audit_wcsetup(OptionL0, OptionL, FromChk) :-
 decl_walk_code(Tracer, M) :-
     forall(loc_declaration(Head, M, goal, From),
 	   ignore(call(Tracer, M:Head, _:'<declaration>', From))).
+
+assr_walk_code(Tracer, M) :-
+    forall(assertion_db(Head, _, M, _, _, _, _, _, _, _, _, From),
+	   ignore(call(Tracer, M:Head, _:'<assertion>', From))).
 
 record_issues(CRef) :-
     assertz(issues(CRef)).

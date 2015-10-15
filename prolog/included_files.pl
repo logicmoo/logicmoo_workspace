@@ -29,7 +29,7 @@
 
 :- module(included_files, [included_files/3]).
 
-:- use_module(library(remove_dups)).
+:- use_module(xlibrary(remove_dups)).
 
 includes([])           --> [].
 includes([File|Files]) -->

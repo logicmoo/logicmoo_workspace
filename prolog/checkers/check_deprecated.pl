@@ -29,13 +29,13 @@
 
 :- module(check_deprecated, []).
 
-:- use_module(library(prolog_codewalk)).
+:- use_module(checkers(checker)).
 :- use_module(library(check), []).
-:- use_module(library(implementation_module)).
-:- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
-:- use_module(library(referenced_by)).
-:- use_module(library(audit/audit)).
+:- use_module(library(prolog_codewalk)).
+:- use_module(xlibrary(implementation_module)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
+:- use_module(xtools(referenced_by)).
 
 :- dynamic
     deprecated_db/1,
@@ -45,7 +45,7 @@
     prolog:message//1,
     deprecated_predicate/2.
 
-audit:check(deprecated, Result, OptionL0) :-
+checker:check(deprecated, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
     check_deprecated(from_chk(FileChk), OptionL, Result).
 

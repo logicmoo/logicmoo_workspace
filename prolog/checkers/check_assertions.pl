@@ -29,33 +29,34 @@
 
 :- module(check_assertions, []).
 
-:- use_module(library(lists)).
+:- use_module(assertions(assrt_lib)).
+:- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(clambda)).
-:- use_module(library(resolve_meta_call)).
-:- use_module(library(prolog_codewalk)).
 :- use_module(library(check), []).
-:- use_module(library(implementation_module)).
-:- use_module(library(apply)).
-:- use_module(library(normalize_pi)).
-:- use_module(library(option_utils)).
-:- use_module(library(location_utils)).
-:- use_module(library(compact_pi_list)).
-:- use_module(library(qualify_meta_goal)).
-:- use_module(library(assertions/assrt_lib)).
-:- use_module(library(swi/rtchecks)).
-:- use_module(library(rtchecks/rtchecks_gen)).
-:- use_module(library(audit/audit)).
+:- use_module(library(lists)).
+:- use_module(library(prolog_codewalk)).
+:- use_module(rtchecks(rtchecks)).
+:- use_module(rtchecks(rtchecks_gen)).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(compact_pi_list)).
+:- use_module(xlibrary(implementation_module)).
+:- use_module(xlibrary(intercept)).
+:- use_module(xlibrary(normalize_pi)).
+:- use_module(xlibrary(resolve_calln)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
 
 :- dynamic
     tablecheck_db/3,
     assertions_db/1,
-    violations_db/1.
+    violations_db/1,
+    rtcheck_db_1/3,
+    rtcheck_db/3.
 
 :- multifile
     prolog:message//1.
 
-audit:check(assertions, Result, OptionL0) :-
+checker:check(assertions, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
     cleanup_db,
     check_assertions(from_chk(FileChk), OptionL, Result).
@@ -91,23 +92,22 @@ check_assertions(FromChk, OptionL0, Pairs) :-
       prop_ctcheck(M, FromChk, Props)
     ).
 
-current_head_ctcheck(M, FromChk, head(Loc-PI)-CTChecks) :-
+current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     PI=M:F/A,
     current_predicate(M:F/A),
     functor(H, F, A),
     \+ predicate_property(M:H, imported_from(_)),
-    tabled_generate_ctchecks(H, M, Goal),
-    Goal \= true,
+    tabled_generate_ctchecks(H, M, CTCheck),
+    CTCheck \= _:true,
     nth_clause(M:H, _, Clause),
     From = clause(Clause),
     call(FromChk, From),
     clause(M:H, _, Clause),
-    save_rtchecks(M:Goal),
-    load_rtchecks(CTChecks),
-    % Although we have duplicated logic, we don't call check_property/4
+    do_check_property_ctcheck(H, M, CTCheck, AssrErrorL),
+    % Although we have duplicated logic, we don't call check_property_ctcheck/3
     % here because is too slow:
-    % check_property(ctcheck, H, M, CTChecks),
-    CTChecks \= [],
+    % check_property_ctcheck(H, M, CTChecks),
+    AssrErrorL \= [],
     from_location(From, Loc).
 
 prop_ctcheck(M, FromChk, Trans) :-
@@ -154,7 +154,7 @@ type_issue_t(head(_), ctchecks).
 type_issue_t(prop(_), property).
 
 prop_issue(ctchecks, CTChecks) -->
-    prolog:message(acheck(checks(ctcheck), CTChecks)).
+    prolog:message(acheck(checks, CTChecks)).
 prop_issue(property, Checker-IssueL) -->
     property_issue(Checker, IssueL).
 
@@ -188,44 +188,60 @@ record_checks(M, FromChk, CM:Goal, Caller, From) :-
     \+ black_list(Caller),
     call(FromChk, From),
     implementation_module(CM:Goal, M),
-    functor(Goal, F, A),
-    functor(Head, F, A),
-    tabled_generate_ctchecks(Head, M, CTCheck),
-    CTCheck \= true,	   % Skip lack of assertions or assertions
-                    	   % that will not trigger violations
+    check_property_ctcheck(Goal, M, CTChecks),
+    CTChecks \= [],
     assertz(assertions_db(From)).
 
 :- public collect_violations/4.
 :- meta_predicate collect_violations(?, 0, +, +).
-collect_violations(M, MGoal, Caller, From) :-
-    \+ \+ collect_violations_(M, MGoal, Caller, From).
-
-collect_violations_(M, MGoal, Caller, From) :-
-    qualify_meta_goal(MGoal, Goal),
-    implementation_module(MGoal, M),
-    check_property(ctcheck, Goal, M, CTChecks),
+collect_violations(M, CM:Goal, Caller, From) :-
+    implementation_module(CM:Goal, M),
+    check_property_ctcheck(Goal, M, CTChecks),
+    CTChecks \= [],
     normalize_pi(Caller, CPI),
     from_location(From, Loc),
     assertz(violations_db(body(Loc-CPI)-CTChecks)).
+
+check_property_ctcheck(Goal, M, AssrErrorL) :-
+    tabled_generate_ctchecks(Goal, M, CTCheck),
+    CTCheck \= _:true, % Skip lack of assertions or assertions that will not
+                       % trigger violations
+    do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL).
+
+do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL) :-
+    ( copy_term_nat(Goal, Goal2),
+      rtcheck_db(Goal, M, AssrErrorL),
+      Goal =@= Goal2
+    ->true
+    ; check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL)
+    ).
+
+check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL) :- 
+    assertz(rtcheck_db_1(Goal, M, [])),
+    AssrError = assrchk(_, _),
+    intercept(CTCheck, AssrError, % Now execute the checks
+	      ( retract(rtcheck_db_1(Goal, M, AssrErrorL)),
+		assertz(rtcheck_db_1(Goal, M, [AssrError|AssrErrorL]))
+	      )),
+    retract(rtcheck_db_1(Goal, M, AssrErrorL)),
+    assertz(rtcheck_db(Goal, M, AssrErrorL)).
 
 checker_t(defined).
 checker_t(is_prop).
 checker_t(ctcheck).
 
-check_property(defined, H, M, M:F/A) :-	% This will also be reported by
-                                       	% check_undefined, but is here to avoid
-                                       	% dependency with other analysis.
+check_property(defined, H, M, M:F/A) :- % This will also be reported by
+                                        % check_undefined, but is here to avoid
+                                        % dependency with other analysis.
     functor(H, F, A),
     \+ current_predicate(M:F/A).
 check_property(is_prop, H, M, M:F/A) :-
-    resolve_meta_call(M:H, M:G),
+    resolve_calln(M:H, M:G),
     functor(G, F, A),
     \+ verif_is_property(M, F, A).
 check_property(ctcheck, H, M, CTChecks) :- % compile-time checks. Currently only
                                            % compatibility checks.
-    tabled_generate_ctchecks(H, M, Goal),
-    save_rtchecks(M:Goal),	% Now execute the checks
-    load_rtchecks(CTChecks),	% and collect the failures
+    check_property_ctcheck(H, M, CTChecks),
     CTChecks \= [].
 
 %% tabled_generate_ctchecks(+, +, -) is det
@@ -233,8 +249,11 @@ check_property(ctcheck, H, M, CTChecks) :- % compile-time checks. Currently only
 tabled_generate_ctchecks(H, M, Goal) :-
     ( tablecheck_db(H, M, Goal)
     ->true
-    ; generate_ctchecks(H, M, _, Goal),
-      assertz(tablecheck_db(H, M, Goal))
+    ; functor(H, F, A),
+      functor(P, F, A),
+      generate_ctchecks(P, M, Goal),
+      assertz(tablecheck_db(P, M, Goal)),
+      P = H
     ).
 
 resolve_head(M:H0, _, H) :- !,

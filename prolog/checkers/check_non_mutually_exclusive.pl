@@ -29,14 +29,13 @@
 
 :- module(check_non_mutually_exclusive, []).
 
-:- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
 :- use_module(library(apply)).
-:- use_module(library(clambda)).
-:- use_module(library(normalize_head)).
-:- use_module(library(referenced_by)).
-:- use_module(library(ordsets)).
 :- use_module(library(check), []).
+:- use_module(xlibrary(clambda)).
+:- use_module(xlibrary(normalize_head)).
+:- use_module(xtools(location_utils)).
+:- use_module(xtools(option_utils)).
+:- use_module(xtools(referenced_by)).
 
 :- multifile
     prolog:message//1,
@@ -48,7 +47,7 @@
 option_allmchk(OptionL0, OptionL, option_utils:call_2(FileGen, File)) :-
     option_allchk(_M, File, FileGen-OptionL0, true-OptionL).
 
-audit:check(non_mutually_exclusive, Result, OptionL0 ) :-
+checker:check(non_mutually_exclusive, Result, OptionL0 ) :-
     option_allmchk(OptionL0, OptionL1, FileChk),
     select_option(predicate(Ref), OptionL1, _, Ref),
     findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).

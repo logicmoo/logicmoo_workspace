@@ -6,11 +6,11 @@
 :- dynamic
     user:error_on_co/0.
 
-user:message_property(_, location_prefix(_, '', 'ERROR: ')).
 user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 :- use_module(library(comment_data)).
 :- use_module(library(call_in_module_file)).
+:- use_module(checkers(checker)).
 
 :- comment_data:enable.
 
@@ -23,33 +23,33 @@ Warning: ---------------------
 Warning: The predicates below contains assertions that are inconsistent
 Warning: with the  implementation. The reason is explained there.
 Warning: 
-ERROR: ctcex.pl:18:4: In the body of ctcex:q/0:
-ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(_1,_2).
-ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[list(_2)].
-ERROR: 	Because: 
-ERROR: 		['_2'=b].
-ERROR: ctcex.pl:15: In the head of ctcex:a/2:
-ERROR: ctcex.pl:12: Compile-Time failure in assertion for a(_1,_2).
-ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[int(_1),list(_2)].
-ERROR: 	Because: 
-ERROR: 		['_1'=a,'_2'=b].
-ERROR: ctcex.pl:30:8: In assertions of [ctcex:b/2]:
-ERROR: 	[ctcex:is_3/1] are not properties
-ERROR: ctcex.pl:32:8: In assertions of [ctcex:b/2]:
-ERROR: 	[ctcex:is_2/1] are not properties
-ERROR: ctcex.pl:36:8: In assertions of [ctcex:b/2]:
-ERROR: ctcex.pl:26: Compile-Time failure in assertion for is_num(_1,_2).
-ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[int(_2)].
-ERROR: 	Because: 
-ERROR: 		['_2'=a].
-ERROR: ctcex.pl:26: Compile-Time failure in assertion for is_num(_1,_2).
-ERROR: 	In *compat*, unsatisfied properties: 
-ERROR: 		[int(_2)].
-ERROR: 	Because: 
-ERROR: 		['_2'=b].
+ctcex.pl:18:4: In the body of ctcex:q/0:
+ctcex.pl:12: Assertion failure for a(A,B).
+	In *compat*, unsatisfied properties: 
+		[list(B)].
+	Because: 
+		[B=b].
+ctcex.pl:15: In the head of ctcex:a/2:
+ctcex.pl:12: Assertion failure for a(A,B).
+	In *compat*, unsatisfied properties: 
+		[int(A),list(B)].
+	Because: 
+		[A=a,B=b].
+ctcex.pl:30: In assertions of [ctcex:b/2]:
+	[ctcex:is_3/1] are not properties
+ctcex.pl:32: In assertions of [ctcex:b/2]:
+	[ctcex:is_2/1] are not properties
+ctcex.pl:36: In assertions of [ctcex:b/2]:
+ctcex.pl:26: Assertion failure for is_num(A,B).
+	In *compat*, unsatisfied properties: 
+		[int(B)].
+	Because: 
+		[B=b].
+ctcex.pl:26: Assertion failure for is_num(A,B).
+	In *compat*, unsatisfied properties: 
+		[int(B)].
+	Because: 
+		[B=a].
 */
 
 test(ctcex) :-
@@ -62,18 +62,24 @@ test(ctcex) :-
     directory_file_path(Dir, _, File),
     directory_file_path(Dir, '', AD),
     atom_string(AD, SD),
-    remove_substrings(Result, SD, AResult),
+    replace_substrings(Result, SD, "", AResult1),
+    replace_substrings(AResult1, "ERROR: ", "", AResult),
+    ( Pattern \== AResult
+    ->format("~s", [AResult])
+    ; true
+    ),
     assertion(Pattern == AResult),
     set_prolog_flag(verbose, normal),
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
-remove_substrings(String, SubS, Result) :-
+replace_substrings(String, SubS, Repl, Result) :-
     ( sub_string(String, Before, _, After, SubS)
     ->sub_string(String, 0, Before, _, BeforeS),
       sub_string(String, _, After, 0, AfterS),
-      remove_substrings(AfterS, SubS, Tail),
-      string_concat(BeforeS, Tail, Result)
+      replace_substrings(AfterS, SubS, Repl, Tail),
+      string_concat(BeforeS, Repl, ResultHead),
+      string_concat(ResultHead, Tail, Result)
     ; Result = String
     ).
 

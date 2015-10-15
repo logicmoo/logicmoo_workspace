@@ -29,7 +29,7 @@
 
 :- module(abstract_domain_fail, []).
 
-:- use_module(library(audit/abstract_domain)).
+:- use_module(checkers(abstract_domain)).
 
 % DOMAIN: fail [true, fail, top]
 
