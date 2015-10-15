@@ -50,7 +50,7 @@
     hide_var_dynamic/2.
 
 hide_var_dynamic(list_strings(_), check).
-hide_var_dynamic(collect_non_mutually_exclusive(_, _), check_non_mutually_exclusive).
+hide_var_dynamic(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
 hide_var_dynamic(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
 hide_var_dynamic(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
 hide_var_dynamic(implemented_in(_, _, _), implemented_in).
