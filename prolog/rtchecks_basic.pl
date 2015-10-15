@@ -65,7 +65,8 @@ compound_check_prop(Check, _, M:Prop, CheckProp) :- !,
 compound_check_prop(Check, M, Prop, CheckProp) :-
 	CheckProp =.. [Check, M:Prop].
 
-compound_checkif(IfValues, ErrType, PredName, CheckProps, ALoc, PropValue, ( IfValues = []
+compound_checkif(IfValues, ErrType, PredName, CheckProps, ALoc, PropValue,
+		 ( IfValues = []
 		 ->findall(PropValue, CheckProps, Props),
 		   send_rtcheck(Props, ErrType, PredName, ALoc)
 		 ; true

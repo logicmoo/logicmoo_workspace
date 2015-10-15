@@ -241,6 +241,7 @@ comp_rtchecks(Assertions0, M, StatusTypes, CheckedL) -->
     prop_rtchecks(comp, body_check_comp(M),
 		  Assertions0, M, StatusTypes, CheckedL, []).
 
+:- meta_predicate prop_rtchecks(+, 5, +, +, +, +, -, ?, ?).
 prop_rtchecks(PType, BodyCheckProp, Assertions0, M, StatusTypes,
 	      CheckedL0, CheckedL) -->
     { include(is_prop_rtcheck(StatusTypes), Assertions0, Assertions),
@@ -300,16 +301,16 @@ comps_to_comp_lit(PropValues, Comp, M, Info, Body0, Body) :-
 
 valid_commands([times(_, _), try_sols(_, _)]).
 
-comps_parts_to_comp_lit(PropValues, Comp0, _M, Info, Body0, Body) :-
+comps_parts_to_comp_lit(PropValues, Comp0, M, Info, Body0, Body) :-
 	valid_commands(VC),
 	subtract(Comp0, VC, Comp),
 	comps_to_goal(Comp, Body1, Body2),
-	( Body1 == Body2 ->
-	  Body0 = Body
+	( Body1 == Body2
+	->Body0 = Body
 	; PropValues == [] ->
 	  Body2 = Body,
-	  Body0 = Body1
-	; Body0 = checkif_comp(PropValues, Info, Body1, Body2, Body)
+	  Body0 = M:Body1
+	; Body0 = checkif_comp(PropValues, Info, M:Body1, Body2, M:Body)
 	).
 
 comp_call_lit(comp(ChkCall, Call, PropValues, _, _),
@@ -337,7 +338,7 @@ generate_rtchecks(Assrs, M, G1, G2, G3, G) :-
 % Generate compile-time checks, currently only compatibility is checked,
 % fails if no ctchecks can be applied to Pred
 %
-generate_ctchecks(Pred, M, rtchecks_rt:Lits) :-
+generate_ctchecks(Pred, M, Lits) :-
     functor(Pred, F, A),
     functor(Head, F, A),
     collect_assertions(Head, M, ctcheck, Assertions0),

@@ -17,8 +17,13 @@ rtchecks_eval(M:Goal) :-
 generate_rtchecks(Goal, M, RTChecks) :-
     apply_body(generate_literal_rtchecks, M, Goal, RTChecks).
 
+rtcheck_lib(rtchecks_rt).
+rtcheck_lib(nativeprops).
+
 builtin_spec(G, S) :-
     predicate_property(system:G, meta_predicate(S)),
+    predicate_property(system:G, imported_from(M)),
+    \+ rtcheck_lib(M),
     once(arg(_, S, 0 )).
 
 :- meta_predicate apply_body(3, ?, ?, ?).
@@ -50,13 +55,13 @@ maparg(_, _, _, _, _).
 generate_literal_rtchecks(CM, Goal0, RTChecks) :-
     resolve_calln(Goal0, Goal),
     ( proc_ppassertion(Goal, CM, RTChecks0)
-    ->RTChecks =rtchecks_rt:RTChecks0
+    ->RTChecks = RTChecks0
     ; implementation_module(CM:Goal, M),
       generate_pred_rtchecks(Goal, M, RTChecks0, Pred, PM),
       ( RTChecks0 == PM:Pred
       ->RTChecks = CM:Goal
       ; PM:Pred  = CM:Goal,
-	RTChecks = rtchecks_rt:RTChecks0
+	RTChecks = RTChecks0
       )
     ).
 
@@ -76,7 +81,7 @@ generate_pred_rtchecks(Goal, M, RTChecks, Pred, PM) :-
 	( G1 == G2
 	->RTChecks = R3
 	; lists_to_lits(G1, R1),
-	  RTChecks = checkif_modl(M, PM, R1, G2, R3)
+	  RTChecks = checkif_modl(M, PM, M:R1, G2, M:R3)
 	)
 	% (M \= CM -> G0 = G1, G2 = G3 ; G0 = G3),
 	% lists_to_lits(G0, RTChecks)

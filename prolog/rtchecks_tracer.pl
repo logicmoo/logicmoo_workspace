@@ -5,7 +5,7 @@
 :- use_module(library(apply)).
 :- use_module(rtchecks(rtchecks_eval)).
 :- use_module(rtchecks(rtchecks_gen)).
-:- use_module(rtchecks(rtchecks_rt)).
+:- use_module(system:rtchecks(rtchecks_rt)).
 :- use_module(rtchecks(rtchecks_utils)).
 :- use_module(xlibrary(implementation_module)).
 :- use_module(xlibrary(intercept)).
@@ -162,28 +162,17 @@ setup_clause_bpt(Clause, Action) :-
 :- multifile
     prolog:break_hook/6.
 
-:- public rat_trap/3.
-:- meta_predicate rat_trap(0, +, +).
-rat_trap(Goal, Clause, PC) :-
-    intercept(Goal, Error,
-	      ( ( retract(rtc_break(Clause, PC))
-		->ignore('$break_at'(Clause, PC, false))
-		; true
-		),
-		send_signal(Error)
-	      )).
-
-:- public rat_trap/4.
-:- meta_predicate rat_trap(0, +, +, +).
-rat_trap(RTChecks, Caller, Clause, PC) :-
-    AssrChk = assrchk(asr, Error),
-    intercept(RTChecks, AssrChk,
-	      ( ( retract(rtc_break(Clause, PC))
-		->ignore('$break_at'(Clause, PC, false))
-		; true
-		),
-		send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error))
-	      )).
+:- public system:rat_trap/4.
+:- meta_predicate system:rat_trap(0, +, +, +).
+system:( rat_trap(RTChecks, Caller, Clause, PC) :-
+         rtchecks_tracer:( AssrChk = assrchk(asr, Error),
+			   intercept(RTChecks, AssrChk,
+				     ( ( retract(rtc_break(Clause, PC))
+				       ->ignore('$break_at'(Clause, PC, false))
+				       ; true
+				       ),
+				       send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error))
+				     )))).
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
 %     clause_property(Clause, predicate(PI)),
@@ -201,7 +190,7 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       ->generate_rtchecks(Goal, CM, RTChecks),
 	( CM:Goal == RTChecks
 	->Action = continue
-	; Action = call(rtchecks_tracer:rat_trap(RTChecks, Caller, Clause, PC))
+	; Action = call(rat_trap(RTChecks, Caller, Clause, PC))
 	)
       ; Action = continue
       )

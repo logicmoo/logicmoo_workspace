@@ -7,6 +7,7 @@
     user:error_on_co/0.
 
 :- use_module(library(call_in_module_file)).
+:- use_module(xlibrary(substitute)).
 :- use_module(rtchecks(rtchecks_eval)).
 :- use_module(rtchecks(rtchecks_utils)).
 :- use_module(rtchecks(rtchecks_tracer)).
@@ -57,8 +58,13 @@ test(rtexec) :-
 			       [(rtchecks_example3: (0>0 ))-[]],
 			       _))]).
 
-pretty_display(RTChecks) :-
-    RTChecks = checkif_modl(M1, M2, G1, G2, G),
+substitute_file_4(File4, _) :-
+    nonvar(File4),
+    File4 = file(_, _, _, _).
+
+pretty_display(RTChecks0 ) :-
+    substitute(substitute_file_4, RTChecks0, RTChecks),
+    RTChecks = checkif_modl(M1, M2, MG1:G1, G2, MG2:G),
     numbervars(RTChecks, 20, _,
 	       [ singletons(true)
 	       ]),
@@ -68,8 +74,8 @@ pretty_display(RTChecks) :-
 		   prolog_listing:portray_body(G2, 10, noindent, 1200, current_output, [])),
     with_output_to(string(S),
 		   prolog_listing:portray_body(G,  10, noindent, 1200, current_output, [])),
-    format("checkif_modl(~w, ~w,~n       (~s),~n       ~s,~n       (~s))~n",
-	   [M1, M2, S1, S2, S]),fail.
+    format("checkif_modl(~w, ~w,~n       ~a:(~s),~n       ~s,~n       ~a:(~s))~n",
+	   [M1, M2, MG1, S1, S2, MG2, S]),fail.
 pretty_display(_).
 
 test(rtgen) :-
@@ -82,7 +88,7 @@ test(rtgen) :-
     assertion(RTChecks = ERTChecks).
 
 rtc_expected(checkif_modl(rtchecks_example3, rtchecks_example3,
-       (findall(A,
+       rtchecks_example3:(findall(A,
 	(   \+ instance(rtchecks_example3:animal(B)),
 	    A=animal(A)-['A'=B]
 	;   \+ instance(rtchecks_example3:var(C)),
@@ -90,15 +96,12 @@ rtc_expected(checkif_modl(rtchecks_example3, rtchecks_example3,
 	),
 	D),
 	  (   D\=[]
-	  ->  send_rtcheck(D,
-			   (calls),
-			   fullasr(A, B),
-			   file(_, _, _, _))
+	  ->  send_rtcheck(D, calls, fullasr(A, B), _)
 	  ;   true
 	  ),
 	  E),
        E,
-       (findall(F,
+       rtchecks_example3:(findall(F,
 	( \+ compat(rtchecks_example3:atm(B)),
 	  F=atm(A)-['A'=B]
 	),
@@ -110,97 +113,67 @@ rtc_expected(checkif_modl(rtchecks_example3, rtchecks_example3,
 		  I),
 	  (   H\=[],
 	      I\=[]
-	  ->  send_rtcheck(H,
-			   compat,
-			   fullasr(A, B),
-			   file(_, _, _, _)),
-	      send_rtcheck(I,
-			   compat,
-			   fullasr(A, B),
-			   file(_, _, _, _))
+	  ->  send_rtcheck(H, compat, fullasr(A, B), _),
+	      send_rtcheck(I, compat, fullasr(A, B), _)
 	  ;   true
 	  ),
-	  findall(K,
+	  findall(J,
 		  ( \+ instance(rtchecks_example3:animal(B)),
-		    K=animal(A)-['A'=B]
-		  ),
-		  N),
-	  findall(L,
-		  (   \+ instance(rtchecks_example3:animal(B)),
-		      L=animal(A)-['A'=B]
-		  ;   \+ instance(rtchecks_example3:atm(B)),
-		      L=atm(A)-['A'=B]
+		    J=animal(A)-['A'=B]
 		  ),
 		  M),
-	  (   M\=[],
-	      N\=[]
-	  ->  send_rtcheck(M,
-			   (calls),
-			   fullasr(A, B),
-			   file(_, _, _, _)),
-	      send_rtcheck(N,
-			   (calls),
-			   fullasr(A, B),
-			   file(_, _, _, _))
+	  findall(K,
+		  (   \+ instance(rtchecks_example3:animal(B)),
+		      K=animal(A)-['A'=B]
+		  ;   \+ instance(rtchecks_example3:atm(B)),
+		      K=atm(A)-['A'=B]
+		  ),
+		  L),
+	  (   L\=[],
+	      M\=[]
+	  ->  send_rtcheck(L, calls, fullasr(A, B), _),
+	      send_rtcheck(M, calls, fullasr(A, B), _)
 	  ;   true
 	  ),
-	  checkif_comp(M,
-		       info(fullasr(A, B),
-			    file(_, _, _, _)),
-		       not_fails(Q),
-		       Q,
-		       checkif_comp(N,
-				    info(fullasr(A, B),
-					 file(_, _, _, _)),
-				    is_det(R),
-				    R,
-				    rtchecks_example3:fullasr(B, C))),
+	  checkif_comp(L,
+		       info(fullasr(A, B), _),
+		       rtchecks_example3:not_fails(N),
+		       N,
+		       rtchecks_example3:checkif_comp(M, info(fullasr(A, B), _), rtchecks_example3:is_det(O), O, rtchecks_example3:rtchecks_example3:fullasr(B, C))),
 	  (   H=[]
-	  ->  findall(S,
+	  ->  findall(P,
 		      ( \+ compat(rtchecks_example3:atm(B)),
-			S=atm(A)-['A'=B]
+			P=atm(A)-['A'=B]
 		      ),
-		      T),
-	      send_rtcheck(T,
-			   (success),
-			   fullasr(A, B),
-			   file(_, _, _, _))
+		      Q),
+	      send_rtcheck(Q, success, fullasr(A, B), _)
 	  ;   true
 	  ),
 	  (   I=[]
-	  ->  findall(V,
+	  ->  findall(R,
 		      ( \+ compat(rtchecks_example3:int(B)),
-			V=int(A)-['A'=B]
+			R=int(A)-['A'=B]
 		      ),
-		      W),
-	      send_rtcheck(W,
-			   (success),
-			   fullasr(A, B),
-			   file(_, _, _, _))
+		      S),
+	      send_rtcheck(S, success, fullasr(A, B), _)
+	  ;   true
+	  ),
+	  (   L=[]
+	  ->  findall(T,
+		      ( \+ instance(rtchecks_example3:family(C)),
+			T=family(B)-['B'=C]
+		      ),
+		      U),
+	      send_rtcheck(U, success, fullasr(A, B), _)
 	  ;   true
 	  ),
 	  (   M=[]
-	  ->  findall(X,
+	  ->  findall(V,
 		      ( \+ instance(rtchecks_example3:family(C)),
-			X=family(B)-['B'=C]
+			V=family(B)-['B'=C]
 		      ),
-		      Y),
-	      send_rtcheck(Y,
-			   (success),
-			   fullasr(A, B),
-			   file(_, _, _, _))
-	  ;   true
-	  ),
-	  (   N=[]
-	  ->  findall(Z,
-		      ( \+ instance(rtchecks_example3:family(C)),
-			Z=family(B)-['B'=C]
-		      ),
-		      A1),
-	      send_rtcheck(A1,
-			   (success),
-			   fullasr(A, B),
-			   file(_, _, _, _))
+		      W),
+	      send_rtcheck(W, success, fullasr(A, B), _)
 	  ;   true
 	  )))).
 

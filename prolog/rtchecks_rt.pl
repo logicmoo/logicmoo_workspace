@@ -70,7 +70,6 @@ rtcheck_cond(Cond, Check, PredName) :-
     ->send_rtcheck([Check-[]], pp_check, PredName, _)
     ; true
     ).
-    
 
 :- meta_predicate rtc_call(+, 0).
 
