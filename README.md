@@ -1,7 +1,7 @@
 rtchecks
 ========
 
-Run-Time Checking of Assertions for Ciao and SWI-Prolog
+Run-Time Checking of Assertions for SWI-Prolog
 
 Installation
 ============
@@ -13,5 +13,9 @@ commands in your SWI-Prolog shell:
   ?- pack_install('https://github.com/edisonm/rtchecks.git').
   true.
 
-In Ciao the Run-Time checker is already part of the system so you
-don't need extra steps to install it.
+Based on the run-time checker of Ciao Prolog.
+
+The semantic of run-time checks is explained in the paper, although is out of
+date:
+
+http://clip.dia.fi.upm.es/papers/assert-lang-disciplbook_bitmap.pdf

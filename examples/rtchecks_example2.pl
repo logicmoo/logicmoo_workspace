@@ -1,7 +1,9 @@
-:- module(_, [pred1/2, pred2/2, pred3/1, pred4/2, aconcat/3, bad_concat/3, ppp1/0,
-		test_all/2, test_atm/1], [assertions, nativeprops]).
+:- module(rtchecks_example2,
+	  [pred1/2, pred2/2, pred3/1, pred4/2, aconcat/3,
+	   bad_concat/3, ppp1/0, test_all/2, test_atm/1]).
 
-:- use_package(rtchecks).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(nativeprops)).
 
 :- doc(author, "Edison Mera").
 
@@ -31,7 +33,7 @@ pred4(X, Y) :-
 	display(p(X, Y)),
 	nl.
 
-:- entry pred5(A, B).
+:- entry pred5/2.
 
 :- export(pred5/2).
 
@@ -45,7 +47,7 @@ aconcat([],    X, X).
 aconcat([X|Y], Z, [X|T]) :-
 	aconcat(Y, Z, T).
 
-:- check exit bad_concat(A, B, C)
+:- check exit bad_concat/3
 	: (list * list * var) => (list * list * list).
 
 bad_concat(_A, _X, a).

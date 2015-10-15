@@ -3,11 +3,13 @@
 			      test1/0,
 			      animal/1,
 			      family/1,
-			      fullasr/2],
-	  [assertions, nativeprops, rtchecks
-	  ]).
+			      fullasr/2]).
 
-:- pred nullasr(A, B).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(nativeprops)).
+
+:- pred nullasr/2.
 
 nullasr(_, _).
 

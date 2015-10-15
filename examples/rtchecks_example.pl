@@ -1,48 +1,45 @@
-:- module(rtchecks_example, [
-		is_animal/1,
-		animal/1,
-		animals/1,
-		tcollapse/2,
-		create_pairwise_mutex_classes/3,
-		call_mf/0,
-		must_fail/1,
-		must_not_fail/0,
-		animal_type/1,
-		what_kind/2,
-		show_if_domestic/1,
-		display_any/1,
-		get_domestic_list/1,
-		display_any2/1,
-		test_any/1,
-		test2/2,
-		test3/2,
-		test4/2,
-		test5/2,
-		test_det/2,
-		test_det2/1],
-	    [assertions, basicmodes, isomodes, nativeprops, hiord,
-		rtchecks]).
+:- module(rtchecks_example,
+	  [is_animal/1,
+	   animal/1,
+	   animals/1,
+	   tcollapse/2,
+	   create_pairwise_mutex_classes/3,
+	   call_mf/0,
+	   must_fail/1,
+	   must_not_fail/0,
+	   animal_type/1,
+	   what_kind/2,
+	   show_if_domestic/1,
+	   display_any/1,
+	   get_domestic_list/1,
+	   display_any2/1,
+	   test_any/1,
+	   test2/2,
+	   test3/2,
+	   test4/2,
+	   test5/2,
+	   test_det/2,
+	   test_det2/1]).
 
-:- use_module(library(aggregates)).
+:- use_module(assertions(assertions)).
+:- use_module(assertions(basicprops)).
+:- use_module(assertions(nativeprops)).
 
 :- doc(author, "Edison Mera").
 
 :- doc(module, "Examples of assertions that can be processed by
 	the run-time checker.").
 
-%:- check pred is_animal(+animal(A)).
-
 :- check pred is_animal(-Animal) :: animal(Animal) + (not_fails, non_det)
 	# "This is a way to call is_animal/1".
 
-:- check pred is_animal(+Anim) :: animal(Anim) + (not_fails, is_det).
-% :- check pred is_animal(+Anim) :: animal(Anim) + (not_fails).
+:- check pred is_animal(+Animal) :: animal(Animal) + (not_fails, is_det).
 
 :- test is_animal(An) : (An = dogg) + not_fails.
 
 is_animal(An) :- animal(An).
 
-:- check pred animals(+Anim) : list(animal).
+:- check pred animals(+_) : list(animal).
 
 animals(Animals) :- list(Animals, animal).
 
@@ -113,7 +110,6 @@ get_domestic_list(A) :-
 	findall(Animal, what_kind(Animal, domestic), A).
 
 :- check pred display_any(A) : animal(A) + not_fails.
-% :- check pred display_any(A) : animal_type(A) + not_fails.
 
 display_any(A) :-
 	display(A),
@@ -138,7 +134,7 @@ test_any(A) :-
 :- pred test2(+A, +B) :: (animal(A), animal(B)) => (animal(A), animal(B)).
 :- pred test2(+A, +B) : (animal(A), animal(B)).
 :- pred test2(-, -).
-:- pred test2(-, _B).
+:- pred test2(-, _).
 
 :- pred test2(+A, +B) :: (animal(A), animal(B)) + not_fails.
 
@@ -148,8 +144,8 @@ test2(A, B) :-
 	display('A='(A)), nl,
 	display('B='(B)), nl.
 
-:- pred test3(_A, B) => gnd(B).
-:- pred test3(_A, B) => gnd(B).
+:- pred test3(_, B) => gnd(B).
+:- pred test3(_, B) => gnd(B).
 
 test3(a, b).
 
@@ -176,7 +172,7 @@ test4(A, B) :-
 	display('B='(B)), nl.
 
 :- check calls test5(A, B) : (var(A), var(B)).
-:- check calls test5(A, B) : var(A).
+:- check calls test5(A, _) : var(A).
 :- check calls test5(A, B) : (nonvar(A), nonvar(B)).
 
 test5(A, B) :-
@@ -184,7 +180,7 @@ test5(A, B) :-
 	display('B='(B)), nl.
 
 
-:- pred p(+A) + no_choicepoints.
+:- pred p(+) + no_choicepoints.
 :- export(p/1).
 
 p(a).
@@ -192,7 +188,7 @@ p(a).
 p(b).
 p(c).
 
-:- pred q(+A) + is_det.
+:- pred q(+) + is_det.
 :- export(q/1).
 
 q(a).
