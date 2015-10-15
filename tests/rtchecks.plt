@@ -58,7 +58,7 @@ test(rtexec) :-
 			       _))]).
 
 pretty_display(RTChecks) :-
-    RTChecks = rtchecks_rt:checkif_modl(M1, M2, G1, G2, G),
+    RTChecks = checkif_modl(M1, M2, G1, G2, G),
     numbervars(RTChecks, 20, _,
 	       [ singletons(true)
 	       ]),
@@ -68,7 +68,7 @@ pretty_display(RTChecks) :-
 		   prolog_listing:portray_body(G2, 10, noindent, 1200, current_output, [])),
     with_output_to(string(S),
 		   prolog_listing:portray_body(G,  10, noindent, 1200, current_output, [])),
-    format("rtchecks_rt:checkif_modl(~w, ~w,~n       (~s),~n       ~s,~n       (~s))",
+    format("checkif_modl(~w, ~w,~n       (~s),~n       ~s,~n       (~s))~n",
 	   [M1, M2, S1, S2, S]),fail.
 pretty_display(_).
 
@@ -81,7 +81,7 @@ test(rtgen) :-
     ),
     assertion(RTChecks = ERTChecks).
 
-rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
+rtc_expected(checkif_modl(rtchecks_example3, rtchecks_example3,
        (findall(A,
 	(   \+ instance(rtchecks_example3:animal(B)),
 	    A=animal(A)-['A'=B]
@@ -93,7 +93,7 @@ rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
 	  ->  send_rtcheck(D,
 			   (calls),
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 34, 9, _))
+			   file(_, _, _, _))
 	  ;   true
 	  ),
 	  E),
@@ -113,11 +113,11 @@ rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
 	  ->  send_rtcheck(H,
 			   compat,
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 37, 8, U)),
+			   file(_, _, _, _)),
 	      send_rtcheck(I,
 			   compat,
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
+			   file(_, _, _, _))
 	  ;   true
 	  ),
 	  findall(K,
@@ -137,21 +137,21 @@ rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
 	  ->  send_rtcheck(M,
 			   (calls),
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 36, 8, P)),
+			   file(_, _, _, _)),
 	      send_rtcheck(N,
 			   (calls),
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
+			   file(_, _, _, _))
 	  ;   true
 	  ),
 	  checkif_comp(M,
 		       info(fullasr(A, B),
-			    file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 36, 8, P)),
+			    file(_, _, _, _)),
 		       not_fails(Q),
 		       Q,
 		       checkif_comp(N,
 				    info(fullasr(A, B),
-					 file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O)),
+					 file(_, _, _, _)),
 				    is_det(R),
 				    R,
 				    rtchecks_example3:fullasr(B, C))),
@@ -164,7 +164,7 @@ rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
 	      send_rtcheck(T,
 			   (success),
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 37, 8, U))
+			   file(_, _, _, _))
 	  ;   true
 	  ),
 	  (   I=[]
@@ -176,7 +176,7 @@ rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
 	      send_rtcheck(W,
 			   (success),
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
+			   file(_, _, _, _))
 	  ;   true
 	  ),
 	  (   M=[]
@@ -188,7 +188,7 @@ rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
 	      send_rtcheck(Y,
 			   (success),
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 36, 8, P))
+			   file(_, _, _, _))
 	  ;   true
 	  ),
 	  (   N=[]
@@ -200,7 +200,7 @@ rtc_expected(rtchecks_rt:checkif_modl(rtchecks_example3, rtchecks_example3,
 	      send_rtcheck(A1,
 			   (success),
 			   fullasr(A, B),
-			   file('/home/edison/apps/pl-tests/rtchecks/examples/rtchecks_example3.pl', 38, 8, O))
+			   file(_, _, _, _))
 	  ;   true
 	  )))).
 
