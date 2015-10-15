@@ -23,7 +23,7 @@ Warning: ---------------------
 Warning: The predicates below contains assertions that are inconsistent
 Warning: with the  implementation. The reason is explained there.
 Warning: 
-ctcex.pl:18:4: In the body of ctcex:q/0:
+ctcex.pl:18: In the body of ctcex:q/0:
 ctcex.pl:12: Assertion failure for a(A,B).
 	In *compat*, unsatisfied properties: 
 		[list(B)].
@@ -44,12 +44,12 @@ ctcex.pl:26: Assertion failure for is_num(A,B).
 	In *compat*, unsatisfied properties: 
 		[int(B)].
 	Because: 
-		[B=b].
+		[B=a].
 ctcex.pl:26: Assertion failure for is_num(A,B).
 	In *compat*, unsatisfied properties: 
 		[int(B)].
 	Because: 
-		[B=a].
+		[B=b].
 */
 
 test(ctcex) :-
@@ -62,8 +62,7 @@ test(ctcex) :-
     directory_file_path(Dir, _, File),
     directory_file_path(Dir, '', AD),
     atom_string(AD, SD),
-    replace_substrings(Result, SD, "", AResult1),
-    replace_substrings(AResult1, "ERROR: ", "", AResult),
+    replace_noisy_strings(SD, Result, AResult),
     ( Pattern \== AResult
     ->format("~s", [AResult])
     ; true
@@ -73,11 +72,21 @@ test(ctcex) :-
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
-replace_substrings(String, SubS, Repl, Result) :-
+replace_noisy_strings(SD) -->
+        replace_substrings(SD, ""),
+	replace_substrings("ERROR: ", ""),
+	replace_substrings("ctcex.pl:12:8:", "ctcex.pl:12:"),
+	replace_substrings("ctcex.pl:18:4:", "ctcex.pl:18:"),
+	replace_substrings("ctcex.pl:26:8:", "ctcex.pl:26:"),
+	replace_substrings("ctcex.pl:30:8:", "ctcex.pl:30:"),
+	replace_substrings("ctcex.pl:36:8:", "ctcex.pl:36:"),
+	replace_substrings("ctcex.pl:32:8:", "ctcex.pl:32:").
+
+replace_substrings(SubS, Repl, String, Result) :-
     ( sub_string(String, Before, _, After, SubS)
     ->sub_string(String, 0, Before, _, BeforeS),
       sub_string(String, _, After, 0, AfterS),
-      replace_substrings(AfterS, SubS, Repl, Tail),
+      replace_substrings(SubS, Repl, AfterS, Tail),
       string_concat(BeforeS, Repl, ResultHead),
       string_concat(ResultHead, Tail, Result)
     ; Result = String
