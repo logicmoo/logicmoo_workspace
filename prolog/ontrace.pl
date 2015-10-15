@@ -76,11 +76,7 @@ setup_trace(State, M:OnTrace, OptL) :-
 	    :- ignore(trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
 				 M:ValidFile, Action))),
 	    Ref),
-<<<<<<< HEAD
     foldl(port_mask, PortList, 0, Mask),
-=======
-    foldl(port_mask, [call, exit, fail, redo, unify, exception], 0, Mask),
->>>>>>> 2ce42fdc8f2bf5eead604144d9e4dfa2e7030cf5
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
     nb_setarg(1, State, Visible),
