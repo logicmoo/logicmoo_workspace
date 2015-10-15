@@ -40,7 +40,7 @@
 % Extends assertion_db/12 to get assertions from meta predicate declarations.
 
 assrt_lib:assertion_db(Head, M, M, Status, (comp), [], [], [],
-		       [assrt_meta:rtc_stub(rtchecks_rt:RTChecks, Goal)], "", [], Pos) :-
+		       [assrt_meta:rtc_stub(RTChecks, Goal)], "", [], Pos) :-
     current_prolog_flag(assrt_meta_pred, Status),
     Status \= none,
     Pred = M:Head,

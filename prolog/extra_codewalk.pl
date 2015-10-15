@@ -34,6 +34,7 @@
 			   record_issues/1]).
 
 :- use_module(library(prolog_codewalk)).
+:- use_module(assertions(assrt_lib)).
 :- use_module(xtools(extra_location)).
 :- use_module(xtools(option_utils)).
 
