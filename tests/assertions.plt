@@ -43,8 +43,8 @@ test(assrt_lib_simple) :-
 		       call((is_det(_), iso(_))))]).
 
 test(assrt_lib_comp) :-
-    assrt_lib:assertion_records(m, [], true comp nfi(G,V) + (sideff(free), no_rtcheck), _, R, _),
-    assertion(R=[(assrt_lib:assertion_head(nfi(G, V), m, true, comp, "", [], _) :-
+    assrt_lib:assertion_records(m, [], true comp nfi1(G,V) + (sideff(free), no_rtcheck), _, R, _),
+    assertion(R=[(assrt_lib:assertion_head(nfi1(G, V), m, true, comp, "", [], _) :-
 		 call(true),
 		  call(true),
 		  call(true),

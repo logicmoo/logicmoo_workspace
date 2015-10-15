@@ -430,9 +430,17 @@ compat(_:H) :-
     % This first clause allows usage of atom/atomic and other test predicates as
     % compatibility check
     compound(H),
+    compatc(H), !.
+compat(Goal) :- \+ \+ Goal.
+
+compatc(H) :-
     arg(1, H, A),
     var(A), !.
-compat(Goal) :- \+ \+ Goal.
+compatc(var(_)).
+compatc(nonvar(_)).
+compatc(term(_)).
+compatc(gnd(_)).
+compatc(ground(_)).
 
 % No comment necessary: it is taken care of specially anyway in the
 % automatic documenter. (PBC: I guess this comment refers to compat/2)

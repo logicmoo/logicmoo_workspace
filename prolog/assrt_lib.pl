@@ -493,20 +493,20 @@ modedef(-(A),         M, A, B, Cp,       [M:var(B)|Ca],               Su0,      
 modedef(?(A),         _, A, _, Cp0,                Ca,                Su,         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
 modedef(@(A),         _, A, B, Cp0,                Ca,                Su, [nativeprops:nfi(B)|Gl], Cp, Ca, Su, Gl, Cp0, Cp).
 % PlDoc (SWI) Modes
-modedef(:(A0 ),       _, A, B, Cp,                 Ca0,               Su,          Gl, Cp, Ca, Su, Gl, Ca1, Ca) :-
+modedef(:(A0 ),       _, A, B, Cp,                 Ca0,               Su,         Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :-
      % The first part of this check is not redundant if we forgot the meta_predicate declaration
     (var(A0 ), var(Ca1) -> Ca0 = [nativeprops:mod_qual(B)|Ca1], A0 = A ; Ca0 = Ca1, A = nativeprops:mod_qual(B, A0 )).
-modedef(is_pred(A,N), _, A, B, Cp,  [nativeprops:is_pred(B,N)|Ca0],  Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
-modedef('!'(A),       M, A, B, Cp0, [M:compound(B)|Ca],               Su,          Gl,  Cp, Ca, Su, Gl, Cp0, Cp). % May be modified using setarg/3 or nb_setarg/3 (mutable)
+modedef(is_pred(A,N), _, A, B, Cp,  [nativeprops:is_pred(B,N)|Ca0],   Su,         Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
+modedef('!'(A),       M, A, B, Cp0, [M:compound(B)|Ca],               Su,         Gl,  Cp, Ca, Su, Gl, Cp0, Cp). % May be modified using setarg/3 or nb_setarg/3 (mutable)
 % Ciao Modes:
-modedef(in(A),        M, A, B, Cp,    [M:ground(B)|Ca0],              Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
-modedef(out(A),       M, A, B, Cp,       [M:var(B)|Ca],  [M:ground(B)|Su0],        Gl,  Cp, Ca, Su, Gl, Su0, Su).
-modedef(go(A),        M, A, B, Cp0,                Ca,   [M:ground(B)|Su],         Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
+modedef(in(A),        M, A, B, Cp,    [M:ground(B)|Ca0],              Su,         Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
+modedef(out(A),       M, A, B, Cp,       [M:var(B)|Ca],  [M:gnd(B)|Su0],          Gl,  Cp, Ca, Su, Gl, Su0, Su).
+modedef(go(A),        M, A, B, Cp0,                Ca,   [M:gnd(B)|Su],           Gl,  Cp, Ca, Su, Gl, Cp0, Cp).
 % Additional Modes (See Coding Guidelines for Prolog, Michael A. Covington, 2009):
-modedef('*'(A),       M, A, B, Cp,    [M:ground(B)|Ca0],              Su,          Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
+modedef('*'(A),       M, A, B, Cp,    [M:ground(B)|Ca0],              Su,         Gl,  Cp, Ca, Su, Gl, Ca0, Ca).
 modedef('='(A),       _, A, B, Cp0,                Ca,                Su,  [nativeprops:nfi(B)|Gl], Cp, Ca, Su, Gl, Cp0, Cp). % The state of A is preserved
 modedef('/'(A),       M, A, B, Cp,       [M:var(B)|Ca],               Su0, [nativeprops:nsh(B)|Gl], Cp, Ca, Su, Gl, Su0, Su). % Like '-' but also A don't share with any other argument
-modedef('>'(A),       _, A, _, Cp, Ca,                                Su0,         Gl,  Cp, Ca, Su, Gl, Su0, Su). % Like output but A might be nonvar on entry
+modedef('>'(A),       _, A, _, Cp, Ca,                                Su0,        Gl,  Cp, Ca, Su, Gl, Su0, Su). % Like output but A might be nonvar on entry
 
 				% nfi == not_further_inst
 				% nsh == not_shared

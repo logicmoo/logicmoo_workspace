@@ -1,4 +1,5 @@
-:- module(send_check, [send_comp_rtcheck/3]).
+:- module(send_check, [get_comp_rtcheck_info/2,
+		       send_comp_rtcheck/3]).
 
 :- use_module(xlibrary(context_values)).
 :- use_module(xlibrary(intercept)).
