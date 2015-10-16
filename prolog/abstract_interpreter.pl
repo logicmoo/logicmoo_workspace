@@ -33,7 +33,6 @@
 				 match_ai/8,
 				 match_noloops/7]).
 
-:- use_module(library(solution_sequences)).
 :- use_module(xlibrary(implementation_module)).
 :- use_module(xlibrary(qualify_meta_goal)).
 :- use_module(xtools(extra_location)).
