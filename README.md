@@ -9,13 +9,21 @@
 
 Regular expression support for Prolog.
 
-When Prologers want to match a string against a pattern, they typically write a DCG.  DCGs are powerful and flexible.  For medium to large patterns, they are also easier to read and maintain.  However, for small and local patterns the overhead of writing and naming auxiliary predicates can be too much.  In those circumastances, one might prefer a regular expression.  This pack makes it possible.
+When Prologers want to match a string against a pattern, they typically write a
+DCG.  DCGs are powerful and flexible.  For medium to large patterns, they are
+also easier to read and maintain.  However, for small and local patterns the
+overhead of writing and naming auxiliary predicates can be too much.  In those
+circumastances, one might prefer a regular expression.  This pack makes it
+possible.
 
-The `=~` operator matches a string (on the left side) against a regular expression (on the right side).  Either side can be an atom or a list of codes.  The `\~` operator succeeds if the string does _not_ match the pattern.
+The `=~` operator matches a string (on the left side) against a regular
+expression (on the right side).  Either side can be an atom or a list of codes.
+The `\~` operator succeeds if the string does _not_ match the pattern.
 
 # Syntax Reference
 
-This section lists the regular expression syntax accepted by library(regex).  Syntax not listed here is not yet supported.  Patches welcome.
+This section lists the regular expression syntax accepted by library(regex).
+Syntax not listed here is not yet supported.  Patches welcome.
 
 ## Single characters
 
@@ -73,7 +81,9 @@ This section lists the regular expression syntax accepted by library(regex).  Sy
 
 # Acknowledgements
 
-Rob Cameron for his [lecture notes](http://www.cs.sfu.ca/~cameron/Teaching/384/99-3/regexp-plg.html) on which the original implementation was based.
+Rob Cameron for his
+[lecture notes](http://www.cs.sfu.ca/~cameron/Teaching/384/99-3/regexp-plg.html)
+on which the original implementation was based.
 
 # Installation
 
