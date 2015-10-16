@@ -13,7 +13,7 @@ When Prologers want to match a string against a pattern, they typically write a
 DCG.  DCGs are powerful and flexible.  For medium to large patterns, they are
 also easier to read and maintain.  However, for small and local patterns the
 overhead of writing and naming auxiliary predicates can be too much.  In those
-circumastances, one might prefer a regular expression.  This pack makes it
+circumstances, one might prefer a regular expression.  This pack makes it
 possible.
 
 The `=~` operator matches a string (on the left side) against a regular
