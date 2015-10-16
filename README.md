@@ -1,9 +1,8 @@
 # Synopsis
 
     :- use_module(library(regex)).
-    main :-
-        '99 Bottles of Beer' =~ '[0-9]+ bottles'/i,
-        writeln('Take one down...').
+    ?- '99 Bottles of Beer' =~ '[0-9]+ bottles'/i.
+    true.
 
 # Description
 
