@@ -3,13 +3,13 @@
 :- use_module(library(tap)).
 
 'one two' =~ '\\s'.
-'^ with \\S'(todo) :- 'one two' =~ '^\\S'.
+'^ with \\S' :- 'one two' =~ '^\\S'.
 
-'^ with \\d'(todo) :- '123 main' =~ '^\\d+'.
-'^ with \\D'(todo) :- '123 main' \~ '^\\D+'.
+'^ with \\d' :- '123 main' =~ '^\\d+'.
+'^ with \\D' :- '123 main' \~ '^\\D+'.
 
 '123 main' =~ '\\w'.
-'^ with \\W'(todo) :- '123 main' \~ '^\\W'.
+'^ with \\W' :- '123 main' \~ '^\\W'.
 
 '9876' =~ '\\d'.
 '9876' \~ '\\D'.

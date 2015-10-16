@@ -98,14 +98,19 @@ Text \~ Pattern :-
 regex(Pattern,Options,Text,Captures) :-
     % normalize text representations
     text_codes(Text, T),
-    text_codes(Pattern, P),
+    text_codes(Pattern, P0),
+    starts_with_caret(P0,P,StartingCaret),
 
     % normalize options and captures into a state value
     new_state(Options, Captures, State0),
 
     % compile Pattern
     ( phrase(re(State0,Re),P) ->
-        once(regex_no_sugar(Re, State0, State, T, _)),
+        ( StartingCaret=yes ->
+            once(engine_match(Re, State0, State, T, _))
+        ; otherwise ->
+            once(regex_no_sugar(Re, State0, State, T, _))
+        ),
         ( var(Captures) ->
             numbered_captures(State, Captures)
         ; % captures already bound ->
@@ -115,6 +120,11 @@ regex(Pattern,Options,Text,Captures) :-
         atom_codes(A, P),
         domain_error(regex, A)
     ).
+
+
+starts_with_caret([0'^|P],P,yes) :- % ' syntax highlighter
+    !.
+starts_with_caret(P,P,no).
 
 
 % the heart and soul of regex/4
@@ -137,4 +147,3 @@ text_codes(String, Codes) :-
     !,
     string_codes(String, Codes).
 text_codes(Codes, Codes).
-
