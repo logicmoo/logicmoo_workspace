@@ -59,6 +59,7 @@ Syntax not listed here is not yet supported.  Patches welcome.
 
 ## Empty strings
 
+  * `^` - at start of text
   * `$` - at end of text
 
 ## Character class elements
