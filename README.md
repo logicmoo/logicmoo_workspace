@@ -75,10 +75,6 @@ Syntax not listed here is not yet supported.  Patches welcome.
   * `\w` - word characters (same as `[0-9A-Za-z_]`)
   * `\W` - not word characters (same as `[^0-9A-Za-z_]`)
 
-# Changes in this Version
-
-  * Support literal dash in character classes
-
 # Acknowledgements
 
 Rob Cameron for his
