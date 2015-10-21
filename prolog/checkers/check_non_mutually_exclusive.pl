@@ -120,7 +120,7 @@ prolog:message(acheck(non_mutually_exclusive)) -->
      'predicates.', nl, nl].
 prolog:message(acheck(non_mutually_exclusive, PI-LocCIs)) -->
     check:predicate(PI),
-    [' have non mutually exclusive clauses:', nl],
+    [' has non mutually exclusive clauses:', nl],
     foldl(group_non_mut_ex, LocCIs).
 
 locindex_index(_-I/_, I).
