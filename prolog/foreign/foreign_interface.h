@@ -304,7 +304,7 @@ typedef void * root_t;
 #define FI_new_array(length, value)      FI_alloc_array(__root, __malloc, length, value)
 #define FI_realloc_array(length, value)  FI_realloc_array_(__realloc, length, value)
 #define FI_resize_array(length, value)   FI_resize_array_(__size, length, value)
-#define FI_delete_value(value)           FI_delete_array(value)
+#define FI_delete_value(value)           FI_delete_array(__free, value)
 #define FI_delete_array(__free, __value) __free(FI_ptr(__value))
 
 #define FI_array_ptr(__value)            ((size_t *)__value-1)
