@@ -98,11 +98,11 @@ assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
     },
     prolog:message_location(ALoc),
     ['Assertion failure for ~q.'-[Pred], nl],
-    ['\tIn *~w*, unsatisfied properties: ~n\t\t~q.'-[Type, Props]
-    ],
+    ['\tIn *~w*, unsatisfied properties: '-[Type], nl],
+    ['\t\t~q.'-[Props]],
     ( {Values = []}
     ->[]
-    ; ['~n\tBecause: ~n\t\t~q.'-[Values]]
+    ; [nl, '\tBecause: ', nl, '\t\t~q.'-[Values]]
     ),
     [nl].
 
