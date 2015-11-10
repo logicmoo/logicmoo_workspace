@@ -104,6 +104,8 @@ add_1st_arg(T, A, P) :-
 
 % Help analyzers to identify this call:
 prolog:called_by(type(A, MT), term_typing, CM, [M:P]) :-
+    nonvar(A),
+    nonvar(MT),
     strip_module(CM:MT, M, T),
     nonvar(T),
     add_1st_arg(T, A, P).
