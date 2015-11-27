@@ -49,7 +49,7 @@ remove_hats(G, G) --> [].
 
 remove_hats(G0, G, EL) :-
     remove_hats(G0, G1, EL, T),
-    '$expand':extend_arg_pos(G1, _, _, T, G, _).
+    '$expand':extend_arg_pos(G1, _, T, G, _).
     
 cgoal_args(G0, G, AL, EL) :-
     G0 =.. [F|Args],
