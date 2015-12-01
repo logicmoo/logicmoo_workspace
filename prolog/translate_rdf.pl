@@ -2880,7 +2880,7 @@ query_expand(CQ):-
   %pengine_property(Self,module(M)),
   get_module(M),
   M:ns4query(NSList),!,
-  retract(M:ns4query(NSList)),
+  %retract(M:ns4query(NSList)),
   expand_all_ns(Args,NSList,NewArgs),!,
   NQ =.. [P|NewArgs],
   set_new_query(CQArgs,PosQ,NQ,CQNewArgs),
@@ -2893,7 +2893,7 @@ query_expand(Q):-
   %pengine_property(Self,module(M)),
   get_module(M),
   M:ns4query(NSList),!,
-  retract(M:ns4query(NSList)),
+  %retract(M:ns4query(NSList)),
   expand_all_ns(Args,NSList,NewArgs),!,
   NQ =.. [P|NewArgs],
   call(NQ).
