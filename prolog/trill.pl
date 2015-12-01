@@ -94,7 +94,7 @@ instanceOf(Class,Ind,Expl):-
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
   	find_expls(L,[],Expl),
-  	Expl \= []
+  	dif(Expl,[])
     ;
     	Expl = ["IRIs not existent"],!
   ).
@@ -125,7 +125,7 @@ unsat(Concept,Expl):-
   %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
   find_expls(L,[],Expl),
-  Expl \= [].
+  dif(Expl,[]).
 
 unsat(_,_):-
   write('Inconsistent ABox').
@@ -149,7 +149,7 @@ inconsistent_theory(Expl):-
   build_abox((ABox,Tabs)),
   findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
   find_expls(L,[],Expl),
-  Expl \= [].
+  dif(Expl,[]).
 
 inconsistent_theory:-
   retractall(ind(_)),
@@ -335,7 +335,7 @@ apply_nondet_rules([H|_],ABox0,ABox):-
   %C=..[H,ABox,L],
   call(H,ABox0,L),
   member(ABox,L),
-  ABox0 \= ABox,!.
+  dif(ABox0,ABox),!.
 
 apply_nondet_rules([_|T],ABox0,ABox):-
   apply_nondet_rules(T,ABox0,ABox).
@@ -489,7 +489,7 @@ and_rule((ABox0,Tabs0),(ABox,Tabs0)):-
 
 %----------------
 scan_and_list([],_Ind,_Expl,ABox,_Tabs,ABox,Mod):-
-  Mod\=0.
+  dif(Mod,0).
 
 scan_and_list([C|T],Ind,Expl,ABox0, Tabs0,[(classAssertion(C,Ind),Expl)|ABox],_Mod):-
   absent(classAssertion(C,Ind),Expl,(ABox0,Tabs0)),!,
@@ -507,7 +507,7 @@ or_rule((ABox0,Tabs0),L):-
   find((classAssertion(unionOf(LC),Ind),Expl),ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   findall((ABox1,Tabs0),scan_or_list(LC,Ind,Expl,ABox0,Tabs0, ABox1),L),
-  L\=[],!.
+  dif(L,[]),!.
 
 %---------------
 scan_or_list([],_Ind,_Expl,ABox,_Tabs,ABox).
@@ -958,7 +958,7 @@ max_rule((ABox0,Tabs0),L):-
   length(SNC,LSS),
   LSS @> N,
   findall((ABox1,Tabs1),scan_max_list(S,SNC,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
-  L\=[],
+  dif(L,[]),
   !.
 
 max_rule((ABox0,Tabs0),L):-
@@ -968,7 +968,7 @@ max_rule((ABox0,Tabs0),L):-
   length(SN,LSS),
   LSS @> N,
   findall((ABox1,Tabs1),scan_max_list(S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
-  L\=[],
+  dif(L,[]),
   !.
 %---------------------
 
