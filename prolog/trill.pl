@@ -13,6 +13,9 @@
 :- use_module(library(ugraphs)).
 :- use_module(library(rbtrees)).
 :- use_module(library(pengines)).
+
+:- use_module(library(dif)).
+
 %:- use_module(library(tries)).
 %:- load_foreign_files(['cplint-swi'],[],init_my_predicates).
 %:-use_foreign_library(bddem,install).
@@ -251,7 +254,7 @@ clash((ABox,_),Expl):-
   member(Y,LS),
   member(X,LD),
   member(Y,LD),
-  X\==Y,
+  dif(X,Y),
   append(Expl1,Expl2,Expl).
 
 clash((ABox,_),Expl):-
@@ -308,34 +311,34 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 % -------------
 % rules application
 % -------------
-apply_all_rules(ABox0,ABox2):-
+apply_all_rules(ABox0,ABox):-
   apply_nondet_rules([or_rule,max_rule],
                   ABox0,ABox1), 
   (ABox0=ABox1 -> 
-  ABox2=ABox1;
-  apply_all_rules(ABox1,ABox2)).
+  ABox=ABox1;
+  apply_all_rules(ABox1,ABox)).
   
 apply_det_rules([],ABox,ABox).
 
-apply_det_rules([H|_],ABox,ABox1):-
-  C=..[H,ABox,ABox1],
-  call(C),!.
+apply_det_rules([H|_],ABox0,ABox):-
+  %C=..[H,ABox,ABox1],
+  call(H,ABox0,ABox),!.
 
-apply_det_rules([_|T],ABox,ABox1):-
-  apply_det_rules(T,ABox,ABox1).
+apply_det_rules([_|T],ABox0,ABox):-
+  apply_det_rules(T,ABox0,ABox).
 
 
-apply_nondet_rules([],ABox,ABox1):-
-  apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox,ABox1).
+apply_nondet_rules([],ABox0,ABox):-
+  apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox0,ABox).
 
-apply_nondet_rules([H|_],ABox,ABox1):-
-  C=..[H,ABox,L],
-  call(C),
-  member(ABox1,L),
-  ABox \= ABox1,!.
+apply_nondet_rules([H|_],ABox0,ABox):-
+  %C=..[H,ABox,L],
+  call(H,ABox0,L),
+  member(ABox,L),
+  ABox0 \= ABox,!.
 
-apply_nondet_rules([_|T],ABox,ABox1):-
-  apply_nondet_rules(T,ABox,ABox1).
+apply_nondet_rules([_|T],ABox0,ABox):-
+  apply_nondet_rules(T,ABox0,ABox).
   
 
 /**********************
@@ -745,7 +748,7 @@ find_sub_sup_class(C,D,equivalentClasses(L)):-
   Name:equivalentClasses(L),
   member(C,L),
   member(D,L),
-  C\==D.
+  dif(C,D).
   
 /*******************
  managing the concept (C subclassOf Thing)
@@ -981,7 +984,7 @@ scan_max_list(S,SN,Ind,Expl,ABox0,Tabs0,ABox,Tabs):-
 
 %--------------------
 check_individuals_not_equal(X,Y,ABox):-
-  X\==Y,
+  dif(X,Y),
   \+ same_ind([X],Y,ABox).
 %--------------------
 individual_class_C([],_,_,[]).
@@ -1004,7 +1007,7 @@ o_rule((ABox0,Tabs0),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
   find((classAssertion(oneOf([C]),X),ExplX),ABox0),
   find((classAssertion(oneOf([D]),Y),ExplY),ABox0),
   containsCommon(C,D),
-  X\==Y,
+  dif(X,Y),
   notDifferentIndividuals(X,Y,ABox0),
   nominal(C,(ABox0,Tabs0)),
   indAsList(X,LX),
@@ -1414,7 +1417,7 @@ remove_node_to_tree(P,S,O,RB0,RB1):-
   rb_lookup((S,O),V,RB0),
   member(P,V),
   remove(V,P,V1),
-  V1\==[],
+  dif(V1,[]),
   rb_update(RB0,(S,O),V1,RB1).
 
 remove_node_to_tree(P,S,O,RB0,RB1):-
@@ -1439,7 +1442,7 @@ remove_role_to_tree(P,S,O,RB0,RB1):-
   rb_lookup(P,V,RB0),
   member((S,O),V),
   delete(V,(S,O),V1),
-  V1\==[],
+  dif(V1,[]),
   rb_update(RB0,P,V1,RB1).
 
 remove_role_to_tree(P,S,O,RB0,RB1):-
@@ -1545,7 +1548,7 @@ merge_all([],ABox,Tabs,ABox,Tabs).
 
 merge_all([(sameIndividual(H),Expl)|T],ABox0,Tabs0,ABox,Tabs):-
   find_same(H,ABox0,L,ExplL),
-  L\==[],!,
+  dif(L,[]),!,
   merge_all1(H,L,ABox0,Tabs0,ABox1,Tabs1),
   flatten([H,L],L0),
   list_to_set(L0,L1),
@@ -1805,7 +1808,7 @@ s_neighbours1(Ind1,[(Ind1,Y)|T],[Y|T1]):-
   s_neighbours1(Ind1,T,T1).
 
 s_neighbours1(Ind1,[(X,_Y)|T],T1):-
-  X\==Ind1,
+  dif(X,Ind1),
   s_neighbours1(Ind1,T,T1).
   
 s_neighbours2(_,[],[],_).
@@ -1825,14 +1828,14 @@ same_ind(SN,H,_ABox):-
   member(H,SI),
   member(H2,SI),
   member(H2,SN),
-  H\==H2.
+  dif(H,H2).
 
 same_ind(SN,H,ABox):-
   find((sameIndividual(SI),_),ABox),
   member(H,SI),
   member(H2,SI),
   member(H2,SN),
-  H\==H2.
+  dif(H,H2).
 
 /* ************* */
 
@@ -1856,7 +1859,7 @@ s_predecessors1(Ind1,[(Y,Ind1)|T],[Y|T1]):-
   s_predecessors1(Ind1,T,T1).
 
 s_predecessors1(Ind1,[(_X,Y)|T],T1):-
-  Y\==Ind1,
+  dif(Y,Ind1),
   s_predecessors1(Ind1,T,T1).
 
 s_predecessors2(_,[],[],_).
