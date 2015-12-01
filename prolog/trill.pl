@@ -73,7 +73,7 @@ check_query_args([]).
   - with and without explanations -
  ***********/
 sub_class(Class,SupClass,Expl):-
-  ( check_query_args([Class,SupClass]) ->
+  ( check_query_args([Class,SupClass]) *->
 	unsat(intersectionOf([Class,complementOf(SupClass)]),Expl)
     ;
     	Expl = ["IRIs not existent"],!
@@ -85,7 +85,7 @@ sub_class(Class,SupClass):-
   unsat(intersectionOf([Class,complementOf(SupClass)])).
 
 instanceOf(Class,Ind,Expl):-
-  ( check_query_args([Class,Ind]) ->
+  ( check_query_args([Class,Ind]) *->
 	retractall(ind(_)),
   	assert(ind(1)),
   	build_abox((ABox,Tabs)),
@@ -163,11 +163,11 @@ inconsistent_theory:-
   write('Inconsistent!').
 
 prob_instanceOf(Class,Ind,P):-
-  ( check_query_args([Class,Ind]) ->
+  ( check_query_args([Class,Ind]) *->
   	all_instanceOf(Class,Ind,Exps),
-%  (Exps \= [] ->
+%  (Exps \= [] *->
 %    build_formula(Exps,FormulaE,[],VarE),
-%    (FormulaE \= [] -> 
+%    (FormulaE \= [] *-> 
 %      var2numbers(VarE,0,NewVarE),
 %      write(NewVarE),nl,write(FormulaE),
 %      compute_prob(NewVarE,FormulaE,P,0)
@@ -182,11 +182,11 @@ prob_instanceOf(Class,Ind,P):-
   ).
 
 prob_sub_class(Class,SupClass,P):-
-  ( check_query_args([Class,SupClass]) ->
+  ( check_query_args([Class,SupClass]) *->
   	all_sub_class(Class,SupClass,Exps),
-%  (Exps \= [] ->
+%  (Exps \= [] *->
 %    build_formula(Exps,FormulaE,[],VarE),
-%    (FormulaE \= [] -> 
+%    (FormulaE \= [] *-> 
 %      var2numbers(VarE,0,NewVarE),
 %      compute_prob(NewVarE,FormulaE,P,0)
 %    ;
@@ -314,7 +314,7 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 apply_all_rules(ABox0,ABox):-
   apply_nondet_rules([or_rule,max_rule],
                   ABox0,ABox1), 
-  (ABox0=ABox1 -> 
+  (ABox0=ABox1 *-> 
   ABox=ABox1;
   apply_all_rules(ABox1,ABox)).
   
@@ -669,7 +669,7 @@ unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[complementOf(C)|Expl])|ABox],
 add_nominal(D,Ind,ABox0,ABox):-
   ((D = oneOf(_),
     \+ member(nominal(Ind),ABox0))
-    ->
+    *->
    ABox = [nominal(Ind)|ABox0]
     ;
    ABox = ABox0
@@ -1153,7 +1153,7 @@ nominal(Inds,(ABox,_)):-
 
 blockable(Ind,(ABox,_)):-
   ( find((nominal(Ind)),ABox)
-    ->
+    *->
     false
     ;
     true ).
@@ -1467,11 +1467,11 @@ remove_node_to_table(S,T0,T1):-
  */
 
 merge_tabs(X,Y,(T0,RBN0,RBR0),(T,RBN,RBR)):-
-  (neighbours(X,T0,LSX0)->assign(LSX0,LSX);assign([],LSX)),
-  (neighbours(Y,T0,LSY0)->assign(LSY0,LSY);assign([],LSY)),
+  (neighbours(X,T0,LSX0)*->assign(LSX0,LSX);assign([],LSX)),
+  (neighbours(Y,T0,LSY0)*->assign(LSY0,LSY);assign([],LSY)),
   transpose(T0,TT),
-  (neighbours(X,TT,LPX0)->assign(LPX0,LPX);assign([],LPX)),
-  (neighbours(Y,TT,LPY0)->assign(LPY0,LPY);assign([],LPY)),
+  (neighbours(X,TT,LPX0)*->assign(LPX0,LPX);assign([],LPX)),
+  (neighbours(Y,TT,LPY0)*->assign(LPY0,LPY);assign([],LPY)),
   flatten([X,Y],L0),
   list_to_set(L0,L),
   set_predecessor(L,X,LPX,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),!,
@@ -1485,12 +1485,12 @@ remove_nodes(X,Y,Tabs0,Tabs):-
   remove_node(Y,Tabs1,Tabs).
 
 remove_node(X,(T0,RBN0,RBR0),(T,RBN,RBR)):-
-  (neighbours(X,T0,LS0)->assign(LS0,LS);assign([],LS)),
+  (neighbours(X,T0,LS0)*->assign(LS0,LS);assign([],LS)),
   transpose(T0,TT),
-  (neighbours(X,TT,LP0)->assign(LP0,LP);assign([],LP)),
+  (neighbours(X,TT,LP0)*->assign(LP0,LP);assign([],LP)),
   remove_node1(X,LS,RBN0,RBR0,RBN1,RBR1),
   remove_node2(X,LP,RBN1,RBR1,RBN,RBR),
-  (vertices(T0,VS),member(X,VS)->del_vertices(T0,[X],T);assign(T0,T)).
+  (vertices(T0,VS),member(X,VS)*->del_vertices(T0,[X],T);assign(T0,T)).
 
 remove_node1(_,[],RBN,RBR,RBN,RBR).
 
@@ -1741,7 +1741,7 @@ min_length([H|T],MP):-
   min_length(T,P),
   length(H,N),
   length(P,NP), 
-  (N<NP ->
+  (N<NP *->
      MP= H
    ;
      MP= P).
@@ -1893,8 +1893,8 @@ build_formula([D|TD],[F|TF],VarIn,VarOut):-
 build_term([],F,F,Var,Var).
 
 build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
-  (p_x(Ax,_)->
-    (nth0_eq(0,NVar,VarIn,(Ax,S))->
+  (p_x(Ax,_)*->
+    (nth0_eq(0,NVar,VarIn,(Ax,S))*->
       Var1=VarIn
     ;
       append(VarIn,[(Ax,S)],Var1),
@@ -1902,8 +1902,8 @@ build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
     ),
     build_term(TC,[[NVar,0]|F0],F,Var1,VarOut)
   ;
-    (p(Ax,_)->
-      (nth0_eq(0,NVar,VarIn,(Ax,[]))->
+    (p(Ax,_)*->
+      (nth0_eq(0,NVar,VarIn,(Ax,[]))*->
         Var1=VarIn
       ;
         append(VarIn,[(Ax,[])],Var1),
@@ -1916,8 +1916,8 @@ build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
   ).
 
 build_term([Ax|TC],F0,F,VarIn,VarOut):-!,
-  (p(Ax,_)->
-    (nth0_eq(0,NVar,VarIn,(Ax,[]))->
+  (p(Ax,_)*->
+    (nth0_eq(0,NVar,VarIn,(Ax,[]))*->
       Var1=VarIn
     ;
       append(VarIn,[(Ax,[])],Var1),
