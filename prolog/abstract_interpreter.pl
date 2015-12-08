@@ -180,7 +180,7 @@ match_head_body(Goal, M, Body) :-
     ; clause(M:Goal, Body)
     ).
 
-:- use_module(library(interface), []).
+:- use_module(xlibrary(interface), []).
 
 :- multifile extra_clauses/3.
 
