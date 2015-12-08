@@ -49,15 +49,23 @@ implements(Implementation:Alias) :-
     maplist(Implementation:export, PIL).
 
 direct_interface(M, F/A) :-
-    \+ current_predicate(M:F/A).
-		 
+    \+ ( current_predicate(M:F/A),
+	 functor(H, F, A),
+	 predicate_property(M:H, defined),
+	 \+ predicate_property(M:H, imported_from(_))
+       ).
+
 :- module_transparent end_interface/0.
 end_interface :-
     context_module(Interface),
+    end_interface(Interface).
+
+end_interface(Interface) :-
     module_property(Interface, exports(PIL)),
     partition(interface:direct_interface(Interface), PIL, DIL, IIL),
     compile_aux_clauses(interface:'$interface'(Interface, DIL, IIL)),
-    maplist(Interface:multifile, DIL). % Just to avoid warnings, will be abolished
+    %% multifile used to avoid warnings, will be abolished:
+    forall(member(DI, DIL), compile_aux_clauses((:- multifile(DI)))).
 
 bind_interface(Interface, Implementation) :-
     ( '$interface'(Interface, DIL, IIL)
