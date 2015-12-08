@@ -64,8 +64,10 @@ end_interface(Interface) :-
     module_property(Interface, exports(PIL)),
     partition(interface:direct_interface(Interface), PIL, DIL, IIL),
     compile_aux_clauses(interface:'$interface'(Interface, DIL, IIL)),
-    %% multifile used to avoid warnings, will be abolished:
-    forall(member(DI, DIL), compile_aux_clauses((:- multifile(DI)))).
+    forall(( member(F/A, DIL),
+	     functor(H, F, A)),
+	   compile_aux_clauses([(Interface:H
+				:- existence_error(binding, Interface:F/A))])).
 
 bind_interface(Interface, Implementation) :-
     ( '$interface'(Interface, DIL, IIL)
