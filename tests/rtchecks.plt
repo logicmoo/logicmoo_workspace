@@ -6,7 +6,7 @@
 :- dynamic
     user:error_on_co/0.
 
-:- use_module(library(call_in_module_file)).
+:- use_module(xlibrary(call_in_dir)).
 :- use_module(xlibrary(substitute)).
 :- use_module(rtchecks(rtchecks_eval)).
 :- use_module(rtchecks(rtchecks_utils)).
@@ -19,12 +19,12 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- set_prolog_flag(rtchecks_check, yes).
 
 test(rtc_external) :-
-    call_in_module_file(plunit_rtchecks,
-			( ['../examples/rtc_external'],
-			  save_rtchecks(do_trace_rtc(test_ex)),
-			  load_rtchecks(E),
-			  % Unload it to avoid further problems with format/3:
-			  unload_file('../examples/rtc_external')
+    call_in_module_dir(plunit_rtchecks,
+		       ( ['../examples/rtc_external'],
+			 save_rtchecks(do_trace_rtc(test_ex)),
+			 load_rtchecks(E),
+			 % Unload it to avoid further problems with format/3:
+			 unload_file('../examples/rtc_external')
 			)),
     assertion(E = [assrchk(ppt(_,_),
 			   error(comp,
@@ -39,12 +39,12 @@ test(rtc_external) :-
 
 test(rtcompile) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
-    call_in_module_file(plunit_rtchecks,
-			( 
-			  use_module('../examples/rtchecks_disc', []),
-			  ['../examples/rtchecks_example2'],
-			  use_module('../examples/rtchecks_example', [])
-			)),
+    call_in_module_dir(plunit_rtchecks,
+		       ( 
+			 use_module('../examples/rtchecks_disc', []),
+			 ['../examples/rtchecks_example2'],
+			 use_module('../examples/rtchecks_example', [])
+		       )),
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
