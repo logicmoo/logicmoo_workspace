@@ -27,14 +27,19 @@
     the GNU General Public License.
 */
 
-:- module(call_in_module_file, [call_in_module_file/2]).
+:- module(call_in_dir, [call_in_module_dir/2,
+			call_in_dir/2]).
 
 :- use_module(library(filesex)).
 :- use_module(library(shell)).
 
-:- meta_predicate call_in_module_file(+,0).
-call_in_module_file(M, G) :-
+:- meta_predicate call_in_module_dir(+,0).
+call_in_module_dir(M, G) :-
     module_property(M, file(Path)),
-    working_directory(WD, WD),
     directory_file_path(Dir, _, Path),
+    call_in_dir(Dir, G).
+
+:- meta_predicate call_in_dir(+,0).
+call_in_dir(Dir, G) :-
+    working_directory(WD, WD),
     setup_call_cleanup(cd(Dir), G, cd(WD)).
