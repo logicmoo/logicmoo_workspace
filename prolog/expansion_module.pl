@@ -29,21 +29,18 @@
 
 :- module(expansion_module, [expansion_module/2]).
 
-:- meta_predicate no_duplicates(0, ?).
-no_duplicates(Goal, Term) :-
-    setup_call_cleanup(S = nd([]),
-		       Goal,
-		       ( arg(1, S, X),
-			 ( memberchk(Term, X) -> fail
-			 ; nb_setarg(1, S, [Term|X])
-			 )
-		       )).
-
+%% expansion_module(?, ?)
 % Kludge: using swipl internals. Perhaps is not a good idea --EMM
+% Warning: could report duplicate solutions
+%
 expansion_module(M, EM) :-
     CM = compound_expand,
     module_property(CM, file(CF)),
-    no_duplicates('$load_context_module'(CF, EM, _), CF-EM),
-    module_property(EM, file(EF)),
-    no_duplicates('$load_context_module'(EF, M, _), EF-M).
-
+    ( nonvar(M)
+    ->'$load_context_module'(EF, M, _),
+      module_property(EM, file(EF)),
+      '$load_context_module'(CF, EM, _)
+    ; '$load_context_module'(CF, EM, _),
+      module_property(EM, file(EF)),
+      '$load_context_module'(EF, M, _)
+    ).

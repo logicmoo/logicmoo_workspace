@@ -56,36 +56,41 @@ implemented_pi(M:F/A) :-
     once(predicate_property(M:H, visible)),
     \+ predicate_property(M:H, imported_from(_)).
 
-system:goal_expansion(Goal0, Pos0, Goal, Pos) :-
-    '$set_source_module'(M, M),
-    expansion_module(M, EM),
-    ( implemented_pi(EM:goal_expansion/4) ->
-      EM:goal_expansion(Goal0, Pos0, Goal, Pos)
-    ; EM:goal_expansion(Goal0, Goal),
-      Pos = Pos0
-    ),
-    Goal0 \== Goal,
-    !.
+collect_expansors(M, ExpansorName, ML) :-
+    findall(EM-PI,
+	    ( expansion_module(M, EM),
+	      ( implemented_pi(EM:ExpansorName/4)
+	      ->PI=[ExpansorName/4]
+	      ; PI=[ExpansorName/2]
+	      )), MD),
+    remove_dups(MD, ML).
 
 :- dynamic
-    lock_expansion/0.
+    lock_expansion/1.
 
-call_lock(Goal) :-
-    setup_call_cleanup(( \+ lock_expansion,
-			 assertz(lock_expansion)),
+call_lock(Goal, ID) :-
+    \+ lock_expansion(ID),
+    setup_call_cleanup(assertz(lock_expansion(ID), Ref),
 		       Goal,
-		       retract(lock_expansion)).
+		       erase(Ref)).
 
-system:term_expansion(Term0, Pos0, Term, Pos) :-
+type_expansors(term, term_expansion, call_term_expansion).
+type_expansors(goal, goal_expansion, call_goal_expansion).
+
+do_compound_expansion(Type, Term0, Pos0, Term, Pos) :-
     '$set_source_module'(M, M),
     M \= user, % Compound expansions not supported in user module
-    findall(EM-PI, ( expansion_module(M, EM),
-		     ( implemented_pi(EM:term_expansion/4)
-		     ->PI=[term_expansion/4]
-		     ; PI=[term_expansion/2]
-		     )), MD),
-    MD \= [],
-    remove_dups(MD, ML),
-    call_lock('$expand':call_term_expansion(ML, Term0, Pos0, Term, Pos)),
+    type_expansors(Type, Expansor, Closure),
+    collect_expansors(M, Expansor, ML),
+    call('$expand':Closure, ML, Term0, Pos0, Term, Pos), !.
+
+compound_expansion(Type, Term0, Pos0, Term, Pos) :-
+    call_lock(do_compound_expansion(Type, Term0, Pos0, Term, Pos), Type).
+
+system:goal_expansion(Goal0, Pos0, Goal, Pos) :-
+    compound_expansion(goal, Goal0, Pos0, Goal, Pos).
+
+system:term_expansion(Term0, Pos0, Term, Pos) :-
+    compound_expansion(term, Term0, Pos0, Term, Pos),
     Term0 \== Term,
     [Term0] \== Term.		% Fail to try other expansions
