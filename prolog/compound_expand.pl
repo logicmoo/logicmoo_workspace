@@ -88,7 +88,7 @@ compound_expansion(Type, Term0, Pos0, Term, Pos) :-
     call_lock(do_compound_expansion(Type, Term0, Pos0, Term, Pos), Type).
 
 system:goal_expansion(Goal0, Pos0, Goal, Pos) :-
-    compound_expansion(goal, Goal0, Pos0, Goal, Pos).
+    do_compound_expansion(goal, Goal0, Pos0, Goal, Pos).
 
 system:term_expansion(Term0, Pos0, Term, Pos) :-
     compound_expansion(term, Term0, Pos0, Term, Pos),
