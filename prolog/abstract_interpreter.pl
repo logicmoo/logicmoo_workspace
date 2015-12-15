@@ -30,6 +30,7 @@
 :- module(abstract_interpreter, [abstract_interpreter/2,
 				 abstract_interpreter/4,
 				 match_head/7,
+				 match_head_body/3,
 				 match_ai/8,
 				 match_noloops/7]).
 
@@ -137,12 +138,12 @@ abstract_interpreter_(H, M, Abs, State0 ) -->
     ).
 
 get_context_body(Goal, M, CM) :-
-      ( predicate_property(M:Goal, transparent)
-      ->CM = M
-      ; predicate_property(M:Goal, imported_from(IM))
-      ->CM = IM
-      ; CM = M
-      ).
+    ( predicate_property(M:Goal, transparent)
+    ->CM = M
+    ; predicate_property(M:Goal, imported_from(IM))
+    ->CM = IM
+    ; CM = M
+    ).
 
 % top: empty set
 % bottom: I don't know, universe set.
