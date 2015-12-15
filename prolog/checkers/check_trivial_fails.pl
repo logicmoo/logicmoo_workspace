@@ -32,6 +32,7 @@
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
 :- use_module(library(prolog_codewalk)).
+:- use_module(xlibrary(abstract_interpreter)).
 :- use_module(xtools(from_utils)).
 :- use_module(xtools(location_utils)).
 :- use_module(xtools(option_utils)).
@@ -124,8 +125,6 @@ collect_trivial_fails(M, FromChk, MatchAI, M:Goal, Caller, From) :-
     call(FromChk, From),
     record_location_meta(M:Goal, _, From, all_call_refs,
 			 cu_caller_hook(MatchAI, Caller)).
-
-:- use_module(xtools(abstract_interpreter)).
 
 cu_caller_hook(MatchAI, Caller, MGoal, CM, _, _, _, From) :-
     atom(CM),
