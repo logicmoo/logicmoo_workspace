@@ -65,6 +65,9 @@ element_group(name,           _:F/A,   F/A).
 ignore_dupcode(H, _, _) :-
     functor(H, Name, _),
     atom_concat('__aux_wrapper_', _, Name).
+ignore_dupcode(H, _, _) :-
+    current_module(apply_macros),
+    apply_macros:maplist_expansion(H).
 ignore_dupcode(_,                             refactor, name).
 ignore_dupcode(_,                        i18n_refactor, name).
 ignore_dupcode(term_expansion(_, _),            _,      name).

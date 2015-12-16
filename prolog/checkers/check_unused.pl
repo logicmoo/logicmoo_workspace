@@ -344,6 +344,9 @@ hide_unused(attr_unify_hook(_, _),    M) :- unused_mo_clpfd(M).
 hide_unused(_, plunit).
 hide_unused(_, ciao).
 hide_unused(Call, _) :-
+    functor(Call, Name, _),
+    atom_concat('__aux_wrapper_', _, Name).
+hide_unused(Call, _) :-
     current_module(apply_macros),
     apply_macros:maplist_expansion(Call).
 
