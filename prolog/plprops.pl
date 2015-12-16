@@ -5,7 +5,6 @@
 :- use_module(assertions(basicprops)).
 :- use_module(assertions(nativeprops)).
 :- use_module(assertions(send_check)).
-:- use_module(library(apply)).
 
 % SWI-Like Properties:
 
