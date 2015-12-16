@@ -33,7 +33,8 @@
 				 match_head_body/3,
 				 bottom/2,
 				 match_ai/8,
-				 match_noloops/7]).
+				 match_noloops/7,
+				 terms_share/2]).
 
 :- use_module(xlibrary(implementation_module)).
 :- use_module(xlibrary(qualify_meta_goal)).
@@ -41,42 +42,65 @@
 :- use_module(xtools(extra_location)).
 :- use_module(xtools(term_size)).
 
-:- meta_predicate abstract_interpreter(+,+,7,-).
+:- meta_predicate
+    match_head_body(*,*,*),
+    match_ai(*,*,*,*,*,*,*,*),
+    match_noloops(*,*,*,*,*,*,*),
+    abstract_interpreter(+,+,7,-),
+    abstract_interpreter(?,7).
+
 abstract_interpreter(Goal, M, Abstraction, data(0, [], Result)) :-
-    ( catch(abstract_interpreter(Goal, M, Abstraction, [], [], Result),
-	    fail_branch,
-	    fail)
+    ( abstract_interpreter(Goal, M, Abstraction, [], [], Result)
     *->true
     ; Result = fail
     ).
 
-:- meta_predicate abstract_interpreter(?,7).
+/*
+:- meta_predicate catch(2, ?, ?, ?, ?).
+catch(DCG, Ex, H, S0, S) :-
+    catch(call(DCG, S0, S), Ex, H).
+
+cut_to(Goal) --> catch(Goal, cut_from, true).
+
+cut_from.
+cut_from :- throw(cut_from).
+*/
+
+% alternative (and more efficient) implementation follows:
+:- use_module(xlibrary(intercept)).
+
+:- meta_predicate intercept(2, ?, ?, ?, ?).
+intercept(DCG, Ex, H, S0, S) :-
+    intercept(call(DCG, S0, S), Ex, H).
+
+cut_to(Goal) -->
+    {prolog_current_choice(CP)},
+    intercept(Goal, cut_from, prolog_cut_to(CP)).
+
+cut_from :- send_signal(cut_from).
+
 abstract_interpreter(M:Goal, Abstraction) :-
-    abstract_interpreter(Goal, M, Abstraction, [], [], _).
+    cut_to(abstract_interpreter_body(Goal, M, Abstraction, []), [], _).
 
-abstract_interpreter_body(Goal, M, Abs, State, R0, R) :-
-    distinct_result(abstract_interpreter_body_(Goal, M, Abs, State, R0, R)).
-
-:- meta_predicate distinct_result(0).
-distinct_result(Goal) :-
-    Goal.
-    % distinct(H, ((Goal),variant_sha1(Goal,H))).
-
-abstract_interpreter_body_(Goal, M, _, _) -->
+abstract_interpreter_body(Goal, M, _, _) -->
     {var(Goal) ; var(M)}, bottom, !.
-abstract_interpreter_body_(M:Goal, _, Abs, State) --> !,
+abstract_interpreter_body(M:Goal, _, Abs, State) --> !,
     abstract_interpreter_body(Goal, M, Abs, State).
-abstract_interpreter_body_(call(Goal), M, Abs, State) --> !,
-    abstract_interpreter_body(Goal, M, Abs, State).
-abstract_interpreter_body_(CallN, M, Abs, State) -->
+abstract_interpreter_body(call(Goal), M, Abs, State) --> !,
+    cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
+abstract_interpreter_body(CallN, M, Abs, State) -->
     {do_resolve_calln(CallN, Goal)}, !,
-    abstract_interpreter_body(Goal, M, Abs, State).
-abstract_interpreter_body_(\+ A, M, Abs, State) --> !,
-    ( abstract_interpreter_body(A, M, Abs, State)
-    ->bottom %% We can not say that is always true
-    ; []
-    ).
-abstract_interpreter_body_((A, B), M, Abs, State) --> !,
+    cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
+abstract_interpreter_body(\+ A, M, Abs, State) --> !,
+    \+ cut_to(abstract_interpreter_body(A, M, Abs, State)).
+abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S0, S) :- !,
+    setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S0, S1),
+		       abstract_interpreter_body(C, M, Abs, State, S1, S2),
+		       abstract_interpreter_body(E, M, Abs, State, S2, S)).
+abstract_interpreter_body(call_cleanup(C, E), M, Abs, State, S0, S) :- !,
+    call_cleanup(abstract_interpreter_body(C, M, Abs, State, S0, S1),
+		 abstract_interpreter_body(E, M, Abs, State, S1, S)).
+abstract_interpreter_body((A, B), M, Abs, State) --> !,
     { \+ terms_share(A, B)
     ->CutOnFail = true
     ; CutOnFail = fail
@@ -88,28 +112,32 @@ abstract_interpreter_body_((A, B), M, Abs, State) --> !,
       ->!, fail			% The whole body will fail
       }
     ).
-abstract_interpreter_body_((A;B), M, Abs, State) --> !,
-    ( catch(abstract_interpreter_body(A, M, Abs, State), fail_branch, fail)
+abstract_interpreter_body((A;B), M, Abs, State) --> !,
+    ( abstract_interpreter_body(A, M, Abs, State)
     ; abstract_interpreter_body(B, M, Abs, State)
     ).
-abstract_interpreter_body_(A->B, M, Abs, State) --> !,
-    {prolog_current_choice(CP)},
+abstract_interpreter_body(A->B, M, Abs, State) --> !,
     { \+ terms_share(A, B)
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    abstract_interpreter_body(A, M, Abs, State),
-    cut_if_no_bottom(CP),	% loose of precision
-    ( catch(abstract_interpreter_body(B, M, Abs, State),
-	    fail_branch,
-	    CutOnFail = true)
+    cut_to(abstract_interpreter_body(A, M, Abs, State)), % loose of precision
+    ( \+ is_bottom
+    ->!
+    ; []
+    ),
+    ( abstract_interpreter_body(B, M, Abs, State)
     *->[]
     ; { CutOnFail == true
       ->!, fail
       }
     ).
-abstract_interpreter_body_(H, M, Abs, State) -->
-    abstract_interpreter(H, M, Abs, State).
+abstract_interpreter_body(!, _, _, _) --> cut_if_no_bottom.
+abstract_interpreter_body(A=B, _, _, _) --> !, {A=B}.
+abstract_interpreter_body(true, _, _, _) --> !.
+abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
+abstract_interpreter_body(H, M, Abs, State) -->
+    cut_to(abstract_interpreter(H, M, Abs, State)).
 
 terms_share(A, B) :-
     term_variables(A, VarsA),
@@ -119,35 +147,21 @@ terms_share(A, B) :-
       VA==VB
     ), !.
 
-cut_if_no_bottom(_, bottom, bottom) :- !.
-cut_if_no_bottom(CP) --> {prolog_cut_to(CP)}.
+is_bottom(bottom, bottom).
 
-abstract_interpreter(H, M, Abs, State, R0, R) :-
-    distinct_result(abstract_interpreter_(H, M, Abs, State, R0, R)).
+cut_if_no_bottom -->
+    (\+ is_bottom
+    ->{cut_from}
+    ; []
+    ).
 
-:- meta_predicate catch(2, ?, ?, ?, ?).
-catch(DCG, Ex, H, S0, S) :-
-    catch(call(DCG, S0, S), Ex, H).
-
-abstract_interpreter_(H, M, Abs, State0 ) --> 
+abstract_interpreter(H, M, Abs, State0 ) -->
     { predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
     },
-    call(Abs, Goal, M, Body, State0, State),
-    ( {Body = true}
-    ->[]
-    ; {get_context_body(Goal, M, CM)},
-      catch(abstract_interpreter_body(Body, CM, Abs, State), fail_branch, fail)
-    ).
-
-get_context_body(Goal, M, CM) :-
-    ( predicate_property(M:Goal, transparent)
-    ->CM = M
-    ; predicate_property(M:Goal, imported_from(IM))
-    ->CM = IM
-    ; CM = M
-    ).
+    call(Abs, Goal, M, CM:Body, State0, State),
+    abstract_interpreter_body(Body, CM, Abs, State).
 
 % top: empty set
 % bottom: I don't know, universe set.
@@ -160,37 +174,31 @@ bottom(_, bottom).
 match_ai(head,    G, M, Body, S0, S) --> match_head(   G, M, Body, S0, S).
 match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).
 
-match_head(Goal, M, true, _, _) -->
+match_head(Goal, M, M:true, _, _) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { match_head_body(Goal, M, Body)
     *->true
-    ; throw(fail_branch)
+    ; fail
     },
-    ( {Body = true}
+    ( {Body = _:true}
     ->[]
     ; bottom %% loose of precision
     ).
-match_head(A=B,  _, true, _, _) --> !,
-    { A=B
-    ->true
-    ; throw(fail_branch)
-    }.
-match_head(fail, _, _,    _, _) --> !, {throw(fail_branch)}.
-match_head(true, _, true, _, _) --> !, [].
-match_head(!,    _, true, _, _) --> !, [].
-match_head(_,    _, true, _, _) --> bottom.
+match_head(_,    M, M:true, _, _) --> bottom.
 
-match_head_body(Goal, M, Body) :-
-    ( extra_clauses(Goal, M, Body)
-    ; clause(M:Goal, Body)
+match_head_body(Goal, M, CMBody) :-
+    ( extra_clauses(Goal, M, CMBody)
+    ; clause(M:Goal, Body, Ref),
+      clause_property(Ref, module(CM)),
+      CMBody = CM:Body
     ).
 
 :- use_module(xlibrary(interface), []).
 
 :- multifile extra_clauses/3.
 
-extra_clauses(Goal, CM, true) :-
-    predicate_property(M:Goal, dynamic),
+extra_clauses(Goal, CM, CM:true) :-
+    predicate_property(CM:Goal, dynamic),
     implementation_module(CM:Goal, M),
     loc_dynamic(Goal, M, dynamic(def, _, _), _).
 extra_clauses(Goal, CM, I:Goal) :-
@@ -215,7 +223,4 @@ match_noloops(Goal, M, Body, S, [M:F/A-Size|S]) -->
       []
     ; bottom %% loose of precision
     ).
-match_noloops(fail, _, _,    _, _) --> !, {throw(fail_branch)}.
-match_noloops(true, _, true, S, S) --> !, [].
-match_noloops(!,    _, true, S, S) --> !, [].
-match_noloops(_,    _, true, S, S) --> bottom.
+match_noloops(_,    M, M:true, S, S) --> bottom.

@@ -29,37 +29,59 @@
 
 :- module(abstract_slicer, [abstract_slice/2]).
 
-:- use_module(library(abstract_interpreter)).
+:- use_module(xlibrary(implementation_module)).
+:- use_module(xlibrary(abstract_interpreter)).
+
+:- multifile
+    evaluable_goal_hook/2.
+:- dynamic
+    evaluable_goal_hook/2.
 
 :- meta_predicate abstract_slice(0, +).
 
+evaluable_goal_hook(absolute_file_name(A, _, O), _) :-
+    ground(A),
+    ground(O).
+evaluable_goal_hook(memberchk(E, L), _) :-
+    is_list(L),
+    nonvar(E).
+evaluable_goal_hook(option(O, L), _) :-
+    is_list(L),
+    nonvar(O).
+
 abstract_slice(M:Call, Mode) :-
-    abstract_interpreter(M:Call, slicer_abstraction(Call, Mode)).
+    apply_mode(Call, Mode, Spec),
+    abstract_interpreter(M:Call, slicer_abstraction(Spec)).
 
-slicer_abstraction(Call, Mode, Goal, M, Body, _, _) -->
-    {predicate_property(M:Goal, interpreted)}, !,
-    { match_head_body(Goal, M, Body0 )
-    *->true
-    ; throw(fail_branch)
-    },
-    { call_mode(Call, Mode)
-    ->Body = true
-    ; Body = Body0
+apply_mode(Call, Mode, Spec) :-
+    functor(Call, F, A),
+    functor(Spec, F, A),
+    apply_mode_arg(1, Call, Mode, Spec).
+
+apply_mode_arg(N0, Call, Mode, Spec) :-
+    arg(N0, Call, Arg), !,
+    arg(N0, Mode, MSp),
+    arg(N0, Spec, ASp),
+    ( MSp = -
+    ->ASp = Arg
+    ; true
+    ),
+    succ(N0, N),
+    apply_mode_arg(N, Call, Mode, Spec).
+apply_mode_arg(_, _, _, _).
+
+slicer_abstraction(_, Goal, M, M:true, _, _) -->
+    { implementation_module(M:Goal, IM),
+      evaluable_goal_hook(Goal, IM), !,
+      call(M:Goal)
     }.
-slicer_abstraction(_, _, fail, _, true, _, _) --> !, {throw(fail_branch)}.
-slicer_abstraction(_, _, true, _, true, _, _) --> !, [].
-slicer_abstraction(_, _, !,    _, true, _, _) --> !, [].
-slicer_abstraction(_, _, _,    _, true, _, _) --> bottom.
-
-call_mode(Call, Mode) :-
-    forall(arg(N, Mode, Spec),
-	   ( arg(N, Call, Arg),
-	     mode_arg(Spec, Arg)
-	   )).
-
-mode_arg(?,   _  ).
-mode_arg(*,   _  ).
-mode_arg(-,   Arg) :- ground(Arg).
-mode_arg(+,   Arg) :- var(Arg).
-mode_arg(in,  Arg) :- nonvar(Arg).
-mode_arg(out, Arg) :- \+ ground(Arg).
+slicer_abstraction(Spec, Goal, M, CMBody, _, _) -->
+    { predicate_property(M:Goal, interpreted), !,
+      ( terms_share(Spec, Goal)
+      ->match_head_body(Goal, M, CMBody)
+      ;	% check if the body trivially fails:
+	once(match_head_body(Goal, M, _Body)),
+	CMBody = M:true
+      )
+    }.
+slicer_abstraction(_, _, M, M:true, _, _) --> bottom.
