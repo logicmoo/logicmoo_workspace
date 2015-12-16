@@ -343,6 +343,9 @@ hide_unused(attribute_goals(_, _, _), M) :- unused_mo_clpfd(M).
 hide_unused(attr_unify_hook(_, _),    M) :- unused_mo_clpfd(M).
 hide_unused(_, plunit).
 hide_unused(_, ciao).
+hide_unused(Call, _) :-
+    current_module(apply_macros),
+    apply_macros:maplist_expansion(Call).
 
 hide_unused(M:H, _, _) :-
     hide_unused(H, M).
