@@ -10,7 +10,7 @@ Proceedings of the 23rd international conference on Machine learning. ACM, 2006.
 @license Artistic License 2.0
 */
 
-:- module(auc,[compute_areas/6,compute_areas_diagrams/6]).
+:- module(auc,[compute_areas/7,compute_areas_diagrams/7]).
 
 /**
 compute_areas(+LE:list,+Pos:int,+Neg:int,-AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
