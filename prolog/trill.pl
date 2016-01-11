@@ -311,6 +311,37 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 % -------------
 % rules application
 % -------------
+
+apply_all_rules(ABox0,ABox):-
+  apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox0,ABox1),
+  (ABox0=ABox1 *-> 
+  ABox=ABox1;
+  apply_all_rules(ABox1,ABox)).
+  
+apply_det_rules([],ABox0,ABox):-
+  apply_nondet_rules([or_rule,max_rule],ABox0,ABox).
+  
+apply_det_rules([H|_],ABox0,ABox):-
+  %C=..[H,ABox,ABox1],
+  call(H,ABox0,ABox),!.
+
+apply_det_rules([_|T],ABox0,ABox):-
+  apply_det_rules(T,ABox0,ABox).
+
+
+apply_nondet_rules([],ABox,ABox).
+
+apply_nondet_rules([H|_],ABox0,ABox):-
+  %C=..[H,ABox,L],
+  call(H,ABox0,L),!,
+  member(ABox,L),
+  dif(ABox0,ABox).
+
+apply_nondet_rules([_|T],ABox0,ABox):-
+  apply_nondet_rules(T,ABox0,ABox).
+
+
+/*
 apply_all_rules(ABox0,ABox):-
   apply_nondet_rules([or_rule,max_rule],
                   ABox0,ABox1), 
@@ -339,7 +370,8 @@ apply_nondet_rules([H|_],ABox0,ABox):-
 
 apply_nondet_rules([_|T],ABox0,ABox):-
   apply_nondet_rules(T,ABox0,ABox).
-  
+
+*/
 
 /**********************
    old version for the rules application
@@ -1848,7 +1880,7 @@ same_ind(SN,H,ABox):-
 s_predecessors(Ind1,S,(ABox,(_,_,RBR)),SN):-
   rb_lookup(S,VN,RBR),
   s_predecessors1(Ind1,VN,SN1),
-  s_predecessors2(SN1,SN1,SN,ABox).
+  s_predecessors2(SN1,SN,ABox).
 
 s_predecessors(_Ind1,S,(_ABox,(_,_,RBR)),[]):-
   \+ rb_lookup(S,_VN,RBR).
@@ -1862,14 +1894,14 @@ s_predecessors1(Ind1,[(_X,Y)|T],T1):-
   dif(Y,Ind1),
   s_predecessors1(Ind1,T,T1).
 
-s_predecessors2(_,[],[],_).
+s_predecessors2([],[],_).
 
-s_predecessors2(SN,[H|T],[H|T1],ABox):-
-  s_predecessors2(SN,T,T1,ABox),
+s_predecessors2([H|T],[H|T1],ABox):-
+  s_predecessors2(T,T1,ABox),
   \+ same_ind(T1,H,ABox).
 
-s_predecessors2(SN,[H|T],T1,ABox):-
-  s_predecessors2(SN,T,T1,ABox),
+s_predecessors2([H|T],T1,ABox):-
+  s_predecessors2(T,T1,ABox),
   same_ind(T1,H,ABox).
 
 /* ********** */
