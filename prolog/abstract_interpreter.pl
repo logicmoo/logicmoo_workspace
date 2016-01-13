@@ -93,6 +93,8 @@ abstract_interpreter_body(CallN, M, Abs, State) -->
     cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
 abstract_interpreter_body(\+ A, M, Abs, State) --> !,
     \+ cut_to(abstract_interpreter_body(A, M, Abs, State)).
+abstract_interpreter_body(once(Goal), M, Abs, State, S0, S) :- !,
+    once(abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
 abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S0, S) :- !,
     setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S0, S1),
 		       abstract_interpreter_body(C, M, Abs, State, S1, S2),
