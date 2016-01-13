@@ -227,36 +227,38 @@ generate_foreign_register(Module, Base) :-
 		  [PredName, Arity, BindName])),
     format('} /* install_~w */~n~n', [Base]).
 
-:- meta_predicate forall_tp(+,5,3).
+:- meta_predicate forall_tp(+,4,3).
 
 forall_tp(Module, TypeProps, Call) :-
-    forall(call(TypeProps, Module, Type, PropL, Dict, Pos),
-	   ( apply_dict(Type-PropL, Dict),
+    forall(call(TypeProps, Module, Type, PropLDictL, Pos),
+	   ( maplist(apply_dict_tp(Type), PropLDictL, PropLL),
+	     PropLL = [PropL],
 	     type_components(Module, Type, PropL, Call, Pos)
 	   )).
 
-type_props(M, Type, PropL, Dict, Pos) :-
-    type_props(M, Type, PropL, _, Dict, Pos).
+apply_dict_tp(Type, PropL-Dict, PropL) :-
+    apply_dict(Type-PropL, Dict).
 
-type_props(M, Type, PropL, GlobL, Dict, Pos) :-
-    type_props_(M, Type, TPropL, GlobL, TDict, Pos),
+type_props(M, Type, PropLDictL, Pos) :-
+    type_props(M, Type, _, PropLDictL, Pos).
+
+type_props(M, Type, GlobL, PropLDictL, Pos) :-
+    type_props_(M, Type, GlobL, TPropL, TDict, Pos),
     ( TPropL \= []
-    ->PropL = TPropL,
-      Dict = TDict
-    ; bind_type_names(M, Type, PropL, Dict)
+    ->PropLDictL = [TPropL-TDict]
+    ; bind_type_names(M, Type, PropLDictL)
     ->true
-    ; PropL = [],
-      Dict = TDict
+    ; PropLDictL = [[]-TDict]
     ).
 
-type_props_(M, Type, PropL, GlobL, Dict, Pos) :-
+type_props_(M, Type, GlobL, PropL, Dict, Pos) :-
     assertion_db(Type, M, _CM, check, prop, PropL, _, _, GlobL, _, Dict, Pos),
     once(( member(TType, [type, regtype]),
 	   memberchk(TType, GlobL)
 	 )).
 
-type_props_nf(Module, Type, PropL, Dict, Pos) :-
-    type_props(Module, Type, PropL, GlobL, Dict, Pos),
+type_props_nf(Module, Type, PropLDictL, Pos) :-
+    type_props(Module, Type, GlobL, PropLDictL, Pos),
 				% Don't create getters and unifiers for
 				% typedefs, they are just casts:
     \+ type_is_tdef(Module, Type, _, _),
@@ -440,9 +442,14 @@ fg_numbervars([V|Vs], N, Dict) :-
       fg_numbervars(Vs, N1, Dict)
     ).
 
-bind_type_names(M, Type, MPropL, Dict) :-
+bind_type_names(M, Type, MPropLDictL) :-
     predicate_property(M:Type, interpreted),
-    once(catch(clause(M:Type, Body, Ref),_,fail)),
+    bagof(MPropL-Dict,
+	  bind_tn_clause(M, Type, MPropL, Dict),
+	  MPropLDictL).
+
+bind_tn_clause(M, Type, MPropL, Dict) :-
+    catch(clause(M:Type, Body, Ref), _, fail),
     ( clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line)),
       get_dictionary(Type :- Body, File, Line, M, Dict)
@@ -976,8 +983,8 @@ match_known_type_(Type, M, Spec, A) :-
     arg(1, Type, A),
     functor(Type, Name, Arity),
     functor(Head, Name, Arity),
-    type_props(M, Head, PropL, _, _, _),
-    ( PropL = []
+    type_props(M, Head, _, PropLDictL, _),
+    ( PropLDictL = [[]-_]
     ->Spec=cdef(Name)
     ; Spec=type(Name)
     ),
@@ -987,9 +994,9 @@ type_is_tdef(M, Type, type(Name), A) :-
     arg(1, Type, A),
     functor(Type, TName, Arity),
     functor(Head, TName, Arity),
-    type_props_(M, Head, [], _, _, _),
-    bind_type_names(M, Head, PropL, _),
-    PropL = [Prop],
+    type_props_(M, Head, _, [], _, _),
+    bind_type_names(M, Head, MPropLDictL),
+    MPropLDictL = [[Prop]-_],
     arg(1, Head, A),
     arg(1, Prop, B),
     A==B,
