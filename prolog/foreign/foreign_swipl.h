@@ -218,6 +218,8 @@
 extern predicate_t __system_dict_create;
 extern predicate_t __system_put_dict;
 extern predicate_t __system_get_dict;
+extern predicate_t __system_clause;
+extern predicate_t __foreign_generator_call_idx;
 
 #define FI_get_dict_t(__unifier, __data, __value) {			\
 	term_t __dict = PL_new_term_refs(3);				\
