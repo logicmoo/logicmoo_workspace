@@ -114,6 +114,11 @@ abstract_interpreter_body((A, B), M, Abs, State) --> !,
       ->!, fail			% The whole body will fail
       }
     ).
+abstract_interpreter_body((A->B;C), M, Abs, State) --> !,
+    ( abstract_interpreter_body(A->B, M, Abs, State)
+    *->[]
+    ; abstract_interpreter_body(C, M, Abs, State)
+    ).
 abstract_interpreter_body((A;B), M, Abs, State) --> !,
     ( abstract_interpreter_body(A, M, Abs, State)
     ; abstract_interpreter_body(B, M, Abs, State)
@@ -130,7 +135,7 @@ abstract_interpreter_body(A->B, M, Abs, State) --> !,
     ),
     ( abstract_interpreter_body(B, M, Abs, State)
     *->[]
-    ; { CutOnFail == true
+    ; { CutOnFail = true
       ->!, fail
       }
     ).
