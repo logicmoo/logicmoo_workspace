@@ -278,10 +278,10 @@ c_get_argument_getter(Spec, CNameArg, PNameArg) :-
     c_get_argument(Spec, in, CNameArg, PNameArg).
 
 implement_type_getter(union_ini(Spec, L), _Term, Name) :-
-    func_pcname(Name, PName, CName),
-    implement_type_getter_ini(PName, CName, Spec, Name),
     ( L = [_, _|_]
-    ->format('    term_t __args = PL_new_term_refs(2);~n', []),
+    ->func_pcname(Name, PName, CName),
+      implement_type_getter_ini(PName, CName, Spec, Name),
+      format('    term_t __args = PL_new_term_refs(2);~n', []),
       format('    int __utype;~n', []),
       format('    PL_put_term(__args, ~w);~n', [PName]),
       format('    __rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL,~n', []),
@@ -300,11 +300,12 @@ implement_type_getter(union_end(L), _, _) :-
     ; true
     ),
     implement_type_end.
-implement_type_getter(func_ini(_, L), Term, Name) :-
-    functor(Term, TName, _),
+implement_type_getter(func_ini(Spec, L), Term, Name) :-
     ( L = [_, _|_]
-    ->format('    case ~s_~s:~n', [Name, TName])
-    ; true
+    ->functor(Term, TName, _),
+      format('    case ~s_~s:~n', [Name, TName])
+    ; func_pcname(Name, PName, CName),
+      implement_type_getter_ini(PName, CName, Spec, Name)
     ).
 implement_type_getter(func_rec(N, Term, Name, L), Spec, Arg) :-
     func_pcname(Name, PName, CName),
@@ -360,8 +361,7 @@ implement_type_getter(dict_rec(_, Term, N, Name), Spec, Arg) :-
     c_get_argument_getter(Spec, CNameArg, '__value'),
     format('; break;~n', []).
 implement_type_getter(dict_end(_, _), _, _) :-
-    format('        }~n', []),
-    implement_type_end.
+    format('        }~n', []).
 
 implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) :-
     ctype_decl(Spec, Decl, []),
@@ -417,9 +417,9 @@ implement_type_unifier(atom(Name, _), Spec, Term) :-
     implement_type_end.
 implement_type_unifier(union_ini(Spec, TPDL), _Term, Name) :-
     func_pcname(Name, PName, CName),
-    implement_type_unifier_ini(PName, CName, Name, Spec),
     ( TPDL = [_, _|_]
-    ->format('    switch (~w->~w_utype) {~n', [CName, Name])
+    ->implement_type_unifier_ini(PName, CName, Name, Spec),
+      format('    switch (~w->~w_utype) {~n', [CName, Name])
     ; true
     ).
 implement_type_unifier(union_end(TPDL), _, _) :-
@@ -430,12 +430,12 @@ implement_type_unifier(union_end(TPDL), _, _) :-
     ; true
     ),
     implement_type_end.
-implement_type_unifier(func_ini(_, L), Term, Name) :-
-    func_pcname(Name, PName, _),
+implement_type_unifier(func_ini(Spec, L), Term, Name) :-
+    func_pcname(Name, PName, CName),
     ( L = [_, _|_]
     ->functor(Term, TName, _),
       format('    case ~s_~s:~n', [Name, TName])
-    ; true
+    ; implement_type_unifier_ini(PName, CName, Name, Spec)
     ),
     functor(Term, Func, Arity),
     format('    __rtcheck(PL_unify_functor(~w, PL_new_functor(PL_new_atom("~w"), ~d)));~n',
@@ -487,8 +487,7 @@ implement_type_unifier(dict_rec(_, Term, _N, Name), Spec, Arg) :-
 implement_type_unifier(dict_end(_, Tag), Term, _) :-
     func_pcname(Term, PName, _),
     format('    __rtcheck(PL_unify_nil(__tail));~n', []),
-    format('    FI_dict_create(~w, "~w", __desc);~n', [PName, Tag]),
-    implement_type_end.
+    format('    FI_dict_create(~w, "~w", __desc);~n', [PName, Tag]).
 
 spec_pointer(chrs(_)).
 spec_pointer(ptr(_)).
@@ -594,10 +593,17 @@ declare_struct(dict_end(_, _), _, _) :- format('};~n', []).
 
 declare_type_getter_unifier(atom(_, _), _, _).
     % declare_type_getter_unifier(Name, Spec).
-declare_type_getter_unifier(union_ini(Spec, _), _, Name) :-
-    declare_type_getter_unifier(Name, Spec).
+declare_type_getter_unifier(union_ini(Spec, L), _, Name) :-
+    ( L = [_, _|_]
+    ->declare_type_getter_unifier(Name, Spec)
+    ; true
+    ).
 declare_type_getter_unifier(union_end(_), _, _).
-declare_type_getter_unifier(func_ini(_, _), _, _).
+declare_type_getter_unifier(func_ini(Spec, L), _, Name) :-
+    ( L = [_, _|_]
+    ->true
+    ; declare_type_getter_unifier(Name, Spec)
+    ).
 declare_type_getter_unifier(func_end(_), _, _).
 declare_type_getter_unifier(func_rec(_, _, _, _), _, _).
 declare_type_getter_unifier(dict_ini(Name, M, _), _, _) :-
@@ -684,10 +690,10 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
     ; PropL = []
     ->true
     ), !.
-type_components_one(M, Name, Call, Loc, TypePropLDict) :-
+type_components_one(M, Name, Call, TPLDL, Loc, TypePropLDict) :-
     print_message(error,
 		  failed_binding(Loc,
-				 type_components_one(M, Name, Call, Loc, TypePropLDict))).
+				 type_components_one(M, Name, Call, TPLDL, Loc, TypePropLDict))).
 
 key_value_from_dict(Dict, N, Key, Value) :-
     S = s(0),
