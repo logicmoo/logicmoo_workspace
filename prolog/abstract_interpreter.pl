@@ -191,6 +191,11 @@ match_head(Goal, M, M:true, _, _) -->
     ->[]
     ; bottom %% loose of precision
     ).
+match_head(Goal, M, _, _, _) -->
+    { \+ predicate_property(M:Goal, defined),
+      !,
+      fail
+    }.
 match_head(_,    M, M:true, _, _) --> bottom.
 
 match_head_body(Goal, M, CMBody) :-
@@ -230,4 +235,9 @@ match_noloops(Goal, M, Body, S, [M:F/A-Size|S]) -->
       []
     ; bottom %% loose of precision
     ).
+match_noloops(Goal, M, _, _, _) -->
+    { \+ predicate_property(M:Goal, defined),
+      !,
+      fail
+    }.
 match_noloops(_,    M, M:true, S, S) --> bottom.

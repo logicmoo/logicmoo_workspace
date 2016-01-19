@@ -84,4 +84,9 @@ slicer_abstraction(Spec, Goal, M, CMBody, _, _) -->
 	CMBody = M:true
       )
     }.
+slicer_abstraction(_, Goal, M, _, _, _) -->
+    { \+ predicate_property(M:Goal, defined),
+      !,
+      fail
+    }.
 slicer_abstraction(_, _, M, M:true, _, _) --> bottom.
