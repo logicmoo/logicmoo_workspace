@@ -59,6 +59,8 @@ hide_var_dynamic(mark_caller(_), check_unused).
 hide_var_dynamic(unmarked(_, _, _), check_unused).
 hide_var_dynamic(duptype_elem(_, _, _, _, _, _), check_dupcode).
 hide_var_dynamic(bind_type_names(_, _, _, _), foreign_generator).
+hide_var_dynamic(bind_tn_clause(_, _, _, _), foreign_generator).
+hide_var_dynamic(call_ref(_, _), foreign_generator).
 hide_var_dynamic(no_backtrace_entry(_), filtered_backtrace).
 hide_var_dynamic(mark_to_head(_, _), check_unused).
 hide_var_dynamic(current_arc(_, _, _), check_unused).
