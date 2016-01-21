@@ -33,7 +33,9 @@ compute_areas(LG,AUCROC,ROC,AUCPR,PR):-
   length(LG,NEx),
   length(Neg,NNeg),
   NPos is NEx-NNeg,
-  compute_pointsroc(LG,+1e20,0,0,NPos,NNeg,[],ROC),
+  keysort(LG,LG1),
+  reverse(LG1,LG2),
+  compute_pointsroc(LG2,+1e20,0,0,NPos,NNeg,[],ROC),
   hull(ROC,0,0,0,AUCROC),
   compute_aucpr(LG,NPos,NNeg,AUCPR,PR).
 
