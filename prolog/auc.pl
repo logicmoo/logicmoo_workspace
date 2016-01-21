@@ -13,14 +13,13 @@ Proceedings of the 23rd international conference on Machine learning. ACM, 2006.
 :- module(auc,[compute_areas/7,compute_areas_diagrams/7]).
 
 /**
-compute_areas(+LE:list,+Pos:int,+Neg:int,-AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
+compute_areas(+LE:list,-AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
  
  The predicate takes as input 
- * a list LE of pairs -probability-literal in asceding order on probability
+ * a list LE of pairs probability-literal in asceding order on probability
  where the litaral can be an Atom (incading a positive example) or \+ Atom, 
  indicating a negative example while the probability is the probability of
- Atom of buing true
- * the numbers Pos and Neg of positive and negative examples
+ Atom of being true
  The predicate returns
  * AUCROC: the size of area under the ROC curve
  * ROC: the ROC curve as a list of points that are couples of the form x-y
@@ -29,20 +28,23 @@ compute_areas(+LE:list,+Pos:int,+Neg:int,-AUCROC:float,-ROC:list,-AUCPR:float,-P
  */
 
 
-compute_areas(LG,Pos,Neg,AUCROC,ROC,AUCPR,PR):-
-  compute_pointsroc(LG,+1e20,0,0,Pos,Neg,[],ROC),
+compute_areas(LG,AUCROC,ROC,AUCPR,PR):-
+  findall(E,member(_- \+(E),LG,Neg),
+  length(LG,NEx),
+  length(Neg,NNeg),
+  NPos is NEx-NNeg,
+  compute_pointsroc(LG,+1e20,0,0,NPos,NNeg,[],ROC),
   hull(ROC,0,0,0,AUCROC),
-  compute_aucpr(LG,Pos,Neg,AUCPR,PR).
+  compute_aucpr(LG,NPos,NNeg,AUCPR,PR).
 
 /**
-compute_areas_diagrams(+LE:list,+Pos:int,+Neg:int,-AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
+compute_areas_diagrams(+LE:list,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
  
  The predicate takes as input 
- * a list LE of pairs -probability-literal in asceding order on probability
+ * a list LE of pairs probability-literal in asceding order on probability
  where the litaral can be an Atom (incading a positive example) or \+ Atom, 
  indicating a negative example while the probability is the probability of
- Atom of buing true
- * the numbers Pos and Neg of positive and negative examples
+ Atom of being true
  The predicate returns
  * AUCROC: the size of the area under the ROC curve
  * ROC: the ROC curve as a dict that can be visualized with the c3 renderer of
@@ -50,11 +52,12 @@ compute_areas_diagrams(+LE:list,+Pos:int,+Neg:int,-AUCROC:float,-ROC:list,-AUCPR
  * AUCPR: the size of the area under the PR curve
  * PR: the PR curve as a dict that can be visualized with the c3 renderer of
    SWISH
+ See http://cplint.lamping.unife.it/example/auc.pl for an example
  */
 
 
-compute_areas_diagrams(LG,Pos,Neg,AUCROC,ROC,AUCPR,PR):-
-  compute_areas(LG,Pos,Neg,AUCROC,ROC0,AUCPR,PR0),
+compute_areas_diagrams(LG,AUCROC,ROC,AUCPR,PR):-
+  compute_areas(LG,AUCROC,ROC0,AUCPR,PR0),
   ROC = c3{data:_{x:x, rows:[x-'ROC'|ROC0]},
     axis:_{x:_{min:0.0,max:1.0,padding:0.0,
         tick:_{values:[0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]}},
