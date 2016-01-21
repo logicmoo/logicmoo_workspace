@@ -52,7 +52,7 @@ compute_areas_diagrams(+LE:list,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) i
  * AUCPR: the size of the area under the PR curve
  * PR: the PR curve as a dict that can be visualized with the c3 renderer of
    SWISH
- See http://cplint.lamping.unife.it/example/auc.pl for an example
+ See http://cplint.lamping.unife.it/example/exauc.pl for an example
  */
 
 
