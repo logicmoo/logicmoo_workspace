@@ -29,7 +29,7 @@ compute_areas(+LE:list,-AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
 
 
 compute_areas(LG,AUCROC,ROC,AUCPR,PR):-
-  findall(E,member(_- \+(E),LG,Neg),
+  findall(E,member(_- \+(E),LG),Neg),
   length(LG,NEx),
   length(Neg,NNeg),
   NPos is NEx-NNeg,
