@@ -1,4 +1,4 @@
-/** <module> AUC
+/** <module> auc
 
 This module computes the Area Under the Receiving Operating Charactersitics and 
 Precision Recall curves using the method of
