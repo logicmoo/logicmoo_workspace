@@ -2828,13 +2828,13 @@ load_owl(String):-
   %pengine_property(Self,module(M)),
   %get_module(M),
   open(String,read,S),
-  load_owl(S).
+  load_owl_from_stream(S).
   
 load_owl_from_string(String):-
   %pengine_self(Self),
   %pengine_property(Self,module(M)),
   open_chars_stream(String,S),
-  load_owl(S).
+  load_owl_from_stream(S).
   
 load_owl_from_stream(S):-
   get_module(M),
