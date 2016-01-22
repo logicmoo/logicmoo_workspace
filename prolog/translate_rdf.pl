@@ -1,4 +1,4 @@
-:- module(owl2_model, [load_owl/1, query_expand/1]).
+:- module(owl2_model, [load_owl/1, load_owl_from_string/1, query_expand/1]).
 
 
 :- multifile
@@ -2826,8 +2826,18 @@ The file owl2_from_rdf.plt has some examples
 load_owl(String):-
   %pengine_self(Self),
   %pengine_property(Self,module(M)),
-  get_module(M),
+  %get_module(M),
   open(String,read,S),
+  load_owl(S).
+  
+load_owl_from_string(String):-
+  %pengine_self(Self),
+  %pengine_property(Self,module(M)),
+  open_chars_stream(String,S),
+  load_owl(S).
+  
+load_owl_from stream(S):-
+  get_module(M),
   process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
   rdf_register_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#',[keep(true)]),
   assert(M:ns4query(NSList)),
@@ -2949,5 +2959,7 @@ expand_ns4query(NS_URL, [_|T],Full_URL):-
   expand_ns4query(NS_URL, T,Full_URL),!.
 expand_ns4query(URL,_, URL).
 
-
+get_module(M):-
+  pengine_self(Self),
+  pengine_property(Self,module(M)),!.  
 get_module('owl2_model'):- !.
