@@ -27,12 +27,12 @@ unfold_call(Goal0, CM, IsUnfold, NonUnfoldL, Call) :-
     *->
       unfold_call(Goal2, CM, IsUnfold, NonUnfoldL, Call)
     ; \+ \+ memberchk(M:Goal, NonUnfoldL)
-    ->Call = M:Goal
+    ->Call = CM:Goal
     ; \+ call(IsUnfold, Goal, M),
       \+ ( predicate_property(CM:Goal, meta_predicate(S)),
 	   arg(_, S, 0 )
 	 )
-    ->Call = M:Goal
+    ->Call = CM:Goal
     ; ( nth_clause(CM:Goal, _Idx, Ref),
 	clause(M:Head, Body, Ref),
 	Body \== call(Head)
