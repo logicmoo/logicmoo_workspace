@@ -22,7 +22,7 @@
         owl2_model:minCardinality/3.
 
 :- use_module(library(lists),[member/2]).
-%:- use_module(library(pengines)).
+:- use_module(library(pengines)).
 %:- use_module(library(trill_on_swish/trill/trill)).
 
 
