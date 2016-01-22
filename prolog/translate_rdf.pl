@@ -2836,7 +2836,7 @@ load_owl_from_string(String):-
   open_chars_stream(String,S),
   load_owl(S).
   
-load_owl_from stream(S):-
+load_owl_from_stream(S):-
   get_module(M),
   process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
   rdf_register_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#',[keep(true)]),
