@@ -32,11 +32,14 @@
 % A wrapper from library(check)
 :- use_module(assertions(assrt_lib)).
 :- use_module(checkers(checker)).
+:- use_module(library(apply)).
 :- use_module(library(prolog_codewalk)).
+:- use_module(xlibrary(clambda)).
 :- use_module(xlibrary(infer_alias)).
 :- use_module(xlibrary(normalize_pi)).
 :- use_module(xtools(extra_codewalk)).
 :- use_module(xtools(location_utils)).
+:- use_module(xtools(from_utils)).
 :- use_module(xtools(referenced_by)).
 
 :- multifile
@@ -55,11 +58,11 @@ check_undefined(OptionL0, Pairs) :-
     prolog_walk_code([on_trace(collect_undef(M, FromChk))|OptionL]),
     decl_walk_code(extra_undef(M, FromChk), M),
     found_undef_assr(M, FromChk),
-    findall(warning-(PIAL-(Loc/['~w'-[CI]])),
+    findall(warning-(File-(AL-(PI-(Loc/['~w'-[CI]])))),
 	    ( retract(undef(PI, CI, From)),
 	      find_alternatives(PI, AL),
-	      PIAL=PI/AL,
-	      from_location(From, Loc)
+	      from_location(From, Loc),
+	      from_to_file(From, File)
 	    ), Pairs).
 
 extra_undef(M, FromChk, M:Head, Caller, From) :-
@@ -116,16 +119,28 @@ prolog:message(acheck(undefined)) -->
      'Undefined Predicates',nl,
      '--------------------',nl],
     prolog:message(check(undefined_predicates)).
-prolog:message(acheck(undefined, PIAL-LocCIList)) -->
-    { PIAL = PI/AL
-    ->true
-    ; PI = PIAL,
-      AL = []
-    },
-    [ '~w undefined, '-[PI]],
-    show_alternatives(AL),
-    [ 'referenced by', nl ],
-    referenced_by(LocCIList).
+prolog:message(acheck(undefined, File-ALPILocCIList)) -->
+    [ 'Undefined predicates in ~w:'-[File], nl],
+    foldl(show_alternatives, ALPILocCIList),
+    { pairs_values(ALPILocCIList, PILocCIList) },
+    foldl(foldl(show_undefined), PILocCIList).
 
-show_alternatives([]) --> !.
-show_alternatives(AL) --> ['but modules ~w have definitions for it, '-[AL]].
+show_alternatives(AL-PILocCIList) -->
+    {maplist(\ ((_:F/A)-_)^(F/A)^true, PILocCIList, PIL)},
+    ( {AL = []}
+    ->[]
+    ; ['  Can be fixed by adding '],
+      ( {AL = [_]}
+      ->{Spc=''},
+	[]
+      ; {Spc='\t'},
+	['one of these:', nl]
+      ),
+      foldl(show_alternative(PIL, Spc), AL)
+    ).
+
+show_alternative(PIL, Spc, A) --> ['~a:- use_module(~w, ~w).'-[Spc, A, PIL], nl].
+
+show_undefined(PI-LocCIList) -->
+    [ '    ~w undefined, '-[PI], 'referenced by', nl],
+    referenced_by(LocCIList).
