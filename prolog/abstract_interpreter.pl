@@ -139,8 +139,8 @@ abstract_interpreter_body(A->B, M, Abs, State) --> !,
       ->!, fail
       }
     ).
-abstract_interpreter_body(!, _, _, _) --> cut_if_no_bottom.
-abstract_interpreter_body(A=B, _, _, _) --> !, {A=B}.
+abstract_interpreter_body(!,    _, _, _) --> cut_if_no_bottom.
+abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
 abstract_interpreter_body(true, _, _, _) --> !.
 abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
 abstract_interpreter_body(H, M, Abs, State) -->

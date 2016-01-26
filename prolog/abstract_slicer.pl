@@ -48,6 +48,8 @@ evaluable_goal_hook(memberchk(E, L), _) :-
 evaluable_goal_hook(option(O, L), _) :-
     is_list(L),
     nonvar(O).
+evaluable_goal_hook(var(V),    _) :- nonvar(V).
+evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
 
 abstract_slice(M:Call, Mode) :-
     apply_mode(Call, Mode, Spec),
