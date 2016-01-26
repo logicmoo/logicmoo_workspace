@@ -74,18 +74,31 @@ hide_undef(M:H) :- hide_undef(H, M).
 
 find_alternatives(M:F/A, AL) :-
     functor(H, F, A),
-    findall(AA, ( current_predicate(AM:F/A),
-		  AM \= M,
-		  \+ predicate_property(AM:H, imported_from(_)),
-		  ( module_property(AM, file(AF))
-		  ->( library_alias(AF, AA)
-		    ->true
-		    ; AA = AF
-		    )
-		  ; AA=AM
-		  )
-		), AU),
+    findall(AA-EL, ( current_predicate(AM:F/A),
+		     AM \= M,
+		     \+ predicate_property(AM:H, imported_from(_)),
+		     ( module_property(AM, file(AF))
+		     ->( library_alias(AF, AA)
+		       ->true
+		       ; AA = AF
+		       )
+		     ; AA=AM
+		     ),
+		     exclude_list(M, AM, EL)
+		   ), AU),
     sort(AU, AL).
+
+exclude_list(M, AM, ex(ML, EL)) :-
+    module_property(AM, exports(MU)),
+    sort(MU, ML),
+    findall(F/A,
+	    ( member(F/A, ML),
+	      functor(H, F, A),
+	      predicate_property(M:H, defined),
+	      \+ predicate_property(M:H, imported_from(AM))
+	    ), EU),
+    sort(EU, EL).
+	      
 
 % Hook to hide undef messages:
 :- multifile hide_undef/2.
@@ -139,7 +152,23 @@ show_alternatives(AL-PILocCIList) -->
       foldl(show_alternative(PIL, Spc), AL)
     ).
 
-show_alternative(PIL, Spc, A) --> ['~a:- use_module(~w, ~w).'-[Spc, A, PIL], nl].
+show_alternative(PIL, Spc, A-ex(EM, EL)) -->
+    { EL = []
+    ->Decl = use_module(A)
+    ; length(EL,  EN),
+      length(PIL, IN),
+      ( EN < IN
+      ->Decl = use_module(A, exclude(EL))
+      ; Decl = use_module(A, PIL)
+      )
+    },
+    ['~a:- ~w.'-[Spc, Decl]],
+    { subtract(PIL, EM, FL) },	% Force import
+    ( {FL = []}
+    ->[]
+    ; [' % add exports: ~w'-[FL, A], nl]
+    ),
+    [nl].
 
 show_undefined(PI-LocCIList) -->
     [ '    ~w undefined, '-[PI], 'referenced by', nl],
