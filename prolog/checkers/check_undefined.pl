@@ -166,7 +166,7 @@ show_alternative(PIL, Spc, A-ex(EM, EL)) -->
     { subtract(PIL, EM, FL) },	% Force import
     ( {FL = []}
     ->[]
-    ; [' % add exports: ~w'-[FL, A], nl]
+    ; [' % add exports: ~w'-[FL, A]]
     ),
     [nl].
 
