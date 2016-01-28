@@ -49,6 +49,9 @@
     abstract_interpreter(+,+,7,-),
     abstract_interpreter(?,7).
 
+:- discontiguous
+    abstract_interpreter_body/6.
+
 abstract_interpreter(Goal, M, Abstraction, data(0, [], Result)) :-
     ( abstract_interpreter(Goal, M, Abstraction, [], [], Result)
     *->true
@@ -110,13 +113,13 @@ abstract_interpreter_body((A, B), M, Abs, State) --> !,
     abstract_interpreter_body(A, M, Abs, State),
     ( abstract_interpreter_body(B, M, Abs, State)
     *->[]
-    ; { CutOnFail == true
+    ; { CutOnFail = true
       ->!, fail			% The whole body will fail
       }
     ).
 abstract_interpreter_body((A->B;C), M, Abs, State) --> !,
-    ( abstract_interpreter_body(A->B, M, Abs, State)
-    *->[]
+    ( interpret_local_cut(A, B, M, Abs, State, CutElse)
+    *->{ CutElse = no }
     ; abstract_interpreter_body(C, M, Abs, State)
     ).
 abstract_interpreter_body((A;B), M, Abs, State) --> !,
@@ -124,6 +127,10 @@ abstract_interpreter_body((A;B), M, Abs, State) --> !,
     ; abstract_interpreter_body(B, M, Abs, State)
     ).
 abstract_interpreter_body(A->B, M, Abs, State) --> !,
+    interpret_local_cut(A, B, M, Abs, State, no).
+
+% CutElse make the failure explicit wrt. B
+interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     { \+ terms_share(A, B)
     ->CutOnFail = true
     ; CutOnFail = fail
@@ -134,10 +141,13 @@ abstract_interpreter_body(A->B, M, Abs, State) --> !,
     ; []
     ),
     ( abstract_interpreter_body(B, M, Abs, State)
-    *->[]
+    *->
+      { CutElse = no  }
     ; { CutOnFail = true
-      ->!, fail
-      }
+      ->!
+      ; true
+      },
+      { CutElse = yes }
     ).
 abstract_interpreter_body(!,    _, _, _) --> cut_if_no_bottom.
 abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
