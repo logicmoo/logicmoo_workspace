@@ -126,14 +126,14 @@ collect_trivial_fails(M, FromChk, MatchAI, M:Goal, Caller, From) :-
     record_location_meta(M:Goal, _, From, all_call_refs,
 			 cu_caller_hook(MatchAI, Caller)).
 
-cu_caller_hook(MatchAI, Caller, MGoal, CM, _, _, _, From) :-
+cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
     atom(CM),
     MGoal = M:H,
     callable(H),
     \+ ignore_predicate(H, M),
     variant_sha1(ai(H, CM), Hash),
     ( ai_cache_result(Hash, Data) -> true
-    ; once(abstract_interpreter(H, CM, MatchAI, Data)),
+    ; once(abstract_interpreter(H, CM, MatchAI, [location(From)], Data)),
       assertz(ai_cache_result(Hash, Data))
     ),
     Data = data(N, S, fail),
@@ -148,6 +148,7 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, _, _, _, From) :-
 	       subsumes_from(From0, From)
 	     ),
 	     retract(trivial_fail(From0, Args))), % Clean up less precise facts
+      memberchk(Type, [lit, use]),
       assertz(trivial_fail(From, Args))
     ; true
     ).
