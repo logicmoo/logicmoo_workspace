@@ -29,7 +29,6 @@
 
 :- module(abstract_slicer, [abstract_slice/3]).
 
-:- use_module(xlibrary(implementation_module)).
 :- use_module(xlibrary(abstract_interpreter)).
 
 :- meta_predicate abstract_slice(0, +, ?).
