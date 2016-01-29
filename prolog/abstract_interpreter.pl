@@ -27,10 +27,10 @@
     the GNU General Public License.
 */
 
-:- module(abstract_interpreter, [abstract_interpreter/2,
-				 abstract_interpreter/4,
+:- module(abstract_interpreter, [abstract_interpreter/3,
+				 abstract_interpreter/5,
 				 match_head/7,
-				 match_head_body/3,
+				 match_head_body/4,
 				 bottom/2,
 				 match_ai/8,
 				 match_noloops/7,
@@ -43,20 +43,46 @@
 :- use_module(xtools(term_size)).
 
 :- meta_predicate
-    match_head_body(*,*,*),
+    match_head(*,*,*,*,*, *,*),
+    match_head_body(*,*,*,*),
     match_ai(*,*,*,*,*,*,*,*),
     match_noloops(*,*,*,*,*,*,*),
-    abstract_interpreter(+,+,7,-),
-    abstract_interpreter(?,7).
+    abstract_interpreter(+,+,7,+,-),
+    abstract_interpreter(?,7,?).
+
+:- multifile
+    evaluable_goal_hook/2.
+
+:- dynamic
+    evaluable_goal_hook/2.
 
 :- discontiguous
     abstract_interpreter_body/6.
 
-abstract_interpreter(Goal, M, Abstraction, data(0, [], Result)) :-
-    ( abstract_interpreter(Goal, M, Abstraction, [], [], Result)
-    *->true
+evaluable_goal_hook(absolute_file_name(A, _, O), _) :-
+    ground(A),
+    ground(O).
+evaluable_goal_hook(memberchk(E, L), _) :-
+    is_list(L),
+    nonvar(E).
+evaluable_goal_hook(option(O, L), _) :-
+    is_list(L),
+    nonvar(O).
+evaluable_goal_hook(var(V),    _) :- nonvar(V).
+evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
+
+abstract_interpreter(Goal, M, Abstraction, OptionL, data(0, [], Result)) :-
+    option(location(Loc),    OptionL, context(toplevel, Goal)),
+    option(evaluable(Eval), OptionL, []),
+    ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
+    ( abstract_interpreter(Goal, M, Abstraction, state(Loc, EvalL, []), [], Out)
+    *->
+      Result = true(Out)
     ; Result = fail
     ).
+
+abstract_interpreter(M:Goal, Abstraction, OptionL) :-
+    abstract_interpreter(Goal, M, Abstraction, OptionL, data(_, _, true(_))).
 
 /*
 :- meta_predicate catch(2, ?, ?, ?, ?).
@@ -81,9 +107,6 @@ cut_to(Goal) -->
     intercept(Goal, cut_from, prolog_cut_to(CP)).
 
 cut_from :- send_signal(cut_from).
-
-abstract_interpreter(M:Goal, Abstraction) :-
-    cut_to(abstract_interpreter_body(Goal, M, Abstraction, []), [], _).
 
 abstract_interpreter_body(Goal, M, _, _) -->
     {var(Goal) ; var(M)}, bottom, !.
@@ -177,7 +200,23 @@ abstract_interpreter(H, M, Abs, State0 ) -->
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
     },
-    call(Abs, Goal, M, CM:Body, State0, State),
+    { State0 = state(Loc, EvalL, _) },
+    ( { implementation_module(M:Goal, IM),
+	( evaluable_goal_hook(Goal, IM)
+	; functor(Goal, F, A),
+	  memberchk(IM:F/A, EvalL)
+	)
+      }
+    ->{ State = State0,
+	call(M:Goal)
+      }
+    ; { \+ predicate_property(M:Goal, defined) }
+    ->{ print_message(information, error(existence_error(procedure, M:Goal), Loc)),
+	% TBD: information to error
+	fail
+      }
+    ; call(Abs, Goal, M, CM:Body, State0, State)
+    ),
     abstract_interpreter_body(Body, CM, Abs, State).
 
 % top: empty set
@@ -191,39 +230,35 @@ bottom(_, bottom).
 match_ai(head,    G, M, Body, S0, S) --> match_head(   G, M, Body, S0, S).
 match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).
 
-match_head(Goal, M, M:true, _, _) -->
+match_head(Goal, M, M:true, state(_, EvalL, D), S) -->
     {predicate_property(M:Goal, interpreted)}, !,
-    { match_head_body(Goal, M, Body)
-    *->true
+    { match_head_body(Goal, M, Body, Loc)
+    *->S = state(Loc, EvalL, D)
     ; fail
     },
     ( {Body = _:true}
     ->[]
     ; bottom %% loose of precision
     ).
-match_head(Goal, M, _, _, _) -->
-    { \+ predicate_property(M:Goal, defined),
-      !,
-      fail
-    }.
-match_head(_,    M, M:true, _, _) --> bottom.
+match_head(_,    M, M:true, S, S) --> bottom.
 
-match_head_body(Goal, M, CMBody) :-
-    ( extra_clauses(Goal, M, CMBody)
-    ; clause(M:Goal, Body, Ref),
+match_head_body(Goal, M, CMBody, From) :-
+    ( extra_clauses(Goal, M, CMBody, From)
+    ; From = clause(Ref),
+      clause(M:Goal, Body, Ref),
       clause_property(Ref, module(CM)),
       CMBody = CM:Body
     ).
 
 :- use_module(xlibrary(interface), []).
 
-:- multifile extra_clauses/3.
+:- multifile extra_clauses/4.
 
-extra_clauses(Goal, CM, CM:true) :-
+extra_clauses(Goal, CM, CM:true, From) :-
     predicate_property(CM:Goal, dynamic),
     implementation_module(CM:Goal, M),
-    loc_dynamic(Goal, M, dynamic(def, _, _), _).
-extra_clauses(Goal, CM, I:Goal) :-
+    loc_dynamic(Goal, M, dynamic(def, _, _), From).
+extra_clauses(Goal, CM, I:Goal, _From) :-
     implementation_module(CM:Goal, M),
     functor(Goal, F, A),
     ( interface:'$interface'(M, DIL, IIL),
@@ -233,7 +268,7 @@ extra_clauses(Goal, CM, I:Goal) :-
     ->interface:'$implementation'(I, M)
     ).
 
-match_noloops(Goal, M, Body, S, [M:F/A-Size|S]) -->
+match_noloops(Goal, M, Body, state(Loc0, EvalL, S), state(Loc, EvalL, [M:F/A-Size|S])) -->
     {predicate_property(M:Goal, interpreted)}, !,
     ( { functor(Goal, F, A),
 	term_size(Goal, Size),
@@ -241,13 +276,9 @@ match_noloops(Goal, M, Body, S, [M:F/A-Size|S]) -->
 	     Size1=<Size
 	   )
       }
-    ->{ match_head_body(Goal, M, Body) },
+    ->{ match_head_body(Goal, M, Body, Loc) },
       []
-    ; bottom %% loose of precision
+    ; { Loc = Loc0 },
+      bottom %% loose of precision
     ).
-match_noloops(Goal, M, _, _, _) -->
-    { \+ predicate_property(M:Goal, defined),
-      !,
-      fail
-    }.
 match_noloops(_,    M, M:true, S, S) --> bottom.

@@ -27,33 +27,16 @@
     the GNU General Public License.
 */
 
-:- module(abstract_slicer, [abstract_slice/2]).
+:- module(abstract_slicer, [abstract_slice/3]).
 
 :- use_module(xlibrary(implementation_module)).
 :- use_module(xlibrary(abstract_interpreter)).
 
-:- multifile
-    evaluable_goal_hook/2.
-:- dynamic
-    evaluable_goal_hook/2.
+:- meta_predicate abstract_slice(0, +, ?).
 
-:- meta_predicate abstract_slice(0, +).
-
-evaluable_goal_hook(absolute_file_name(A, _, O), _) :-
-    ground(A),
-    ground(O).
-evaluable_goal_hook(memberchk(E, L), _) :-
-    is_list(L),
-    nonvar(E).
-evaluable_goal_hook(option(O, L), _) :-
-    is_list(L),
-    nonvar(O).
-evaluable_goal_hook(var(V),    _) :- nonvar(V).
-evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
-
-abstract_slice(M:Call, Mode) :-
+abstract_slice(M:Call, Mode, OptL) :-
     apply_mode(Call, Mode, Spec),
-    abstract_interpreter(M:Call, slicer_abstraction(Spec)).
+    abstract_interpreter(M:Call, slicer_abstraction(Spec), OptL).
 
 apply_mode(Call, Mode, Spec) :-
     functor(Call, F, A),
@@ -72,23 +55,14 @@ apply_mode_arg(N0, Call, Mode, Spec) :-
     apply_mode_arg(N, Call, Mode, Spec).
 apply_mode_arg(_, _, _, _).
 
-slicer_abstraction(_, Goal, M, M:true, _, _) -->
-    { implementation_module(M:Goal, IM),
-      evaluable_goal_hook(Goal, IM), !,
-      call(M:Goal)
+slicer_abstraction(Spec, Goal, M, Body,
+		   state(_,   EvalL, Data),
+		   state(Loc, EvalL, Data)) -->
+    {predicate_property(M:Goal, interpreted)}, !,
+    { terms_share(Spec, Goal)
+    ->match_head_body(Goal, M, Body, Loc)
+    ; % check if the body trivially fails:
+      once(match_head_body(Goal, M, _Body, Loc)),
+      Body = M:true
     }.
-slicer_abstraction(Spec, Goal, M, CMBody, _, _) -->
-    { predicate_property(M:Goal, interpreted), !,
-      ( terms_share(Spec, Goal)
-      ->match_head_body(Goal, M, CMBody)
-      ;	% check if the body trivially fails:
-	once(match_head_body(Goal, M, _Body)),
-	CMBody = M:true
-      )
-    }.
-slicer_abstraction(_, Goal, M, _, _, _) -->
-    { \+ predicate_property(M:Goal, defined),
-      !,
-      fail
-    }.
-slicer_abstraction(_, _, M, M:true, _, _) --> bottom.
+slicer_abstraction(_, _, M, M:true, S, S) --> bottom.
