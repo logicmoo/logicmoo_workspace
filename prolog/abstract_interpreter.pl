@@ -72,10 +72,11 @@ evaluable_goal_hook(var(V),    _) :- nonvar(V).
 evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
 
 abstract_interpreter(Goal, M, Abstraction, OptionL, data(0, [], Result)) :-
-    option(location(Loc),    OptionL, context(toplevel, Goal)),
+    option(location(Loc),   OptionL, context(toplevel, Goal)),
     option(evaluable(Eval), OptionL, []),
+    option(on_error(OnErr), OptionL, print_message(informational)),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
-    ( abstract_interpreter(Goal, M, Abstraction, state(Loc, EvalL, []), [], Out)
+    ( abstract_interpreter(Goal, M, Abstraction, state(Loc, EvalL, M:OnErr, []), [], Out)
     *->
       Result = true(Out)
     ; Result = fail
@@ -200,7 +201,7 @@ abstract_interpreter(H, M, Abs, State0 ) -->
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
     },
-    { State0 = state(Loc, EvalL, _) },
+    { State0 = state(Loc, EvalL, OnError, _) },
     ( { implementation_module(M:Goal, IM),
 	( evaluable_goal_hook(Goal, IM)
 	; functor(Goal, F, A),
@@ -211,7 +212,7 @@ abstract_interpreter(H, M, Abs, State0 ) -->
 	call(M:Goal)
       }
     ; { \+ predicate_property(M:Goal, defined) }
-    ->{ print_message(information, error(existence_error(procedure, M:Goal), Loc)),
+    ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
 	% TBD: information to error
 	fail
       }
@@ -230,10 +231,10 @@ bottom(_, bottom).
 match_ai(head,    G, M, Body, S0, S) --> match_head(   G, M, Body, S0, S).
 match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).
 
-match_head(Goal, M, M:true, state(_, EvalL, D), S) -->
+match_head(Goal, M, M:true, state(_, EvalL, OnErr, D), S) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { match_head_body(Goal, M, Body, Loc)
-    *->S = state(Loc, EvalL, D)
+    *->S = state(Loc, EvalL, OnErr, D)
     ; fail
     },
     ( {Body = _:true}
@@ -268,7 +269,8 @@ extra_clauses(Goal, CM, I:Goal, _From) :-
     ->interface:'$implementation'(I, M)
     ).
 
-match_noloops(Goal, M, Body, state(Loc0, EvalL, S), state(Loc, EvalL, [M:F/A-Size|S])) -->
+match_noloops(Goal, M, Body, state(Loc0, EvalL, OnErr, S),
+	      state(Loc, EvalL, OnErr, [M:F/A-Size|S])) -->
     {predicate_property(M:Goal, interpreted)}, !,
     ( { functor(Goal, F, A),
 	term_size(Goal, Size),

@@ -55,8 +55,8 @@ apply_mode_arg(N0, Call, Mode, Spec) :-
 apply_mode_arg(_, _, _, _).
 
 slicer_abstraction(Spec, Goal, M, Body,
-		   state(_,   EvalL, Data),
-		   state(Loc, EvalL, Data)) -->
+		   state(_,   EvalL, OnErr, Data),
+		   state(Loc, EvalL, OnErr, Data)) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { terms_share(Spec, Goal)
     ->match_head_body(Goal, M, Body, Loc)
