@@ -70,6 +70,7 @@ evaluable_goal_hook(option(O, L), _) :-
     nonvar(O).
 evaluable_goal_hook(var(V),    _) :- nonvar(V).
 evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
+evaluable_goal_hook(atomic(A), _) :- nonvar(A).
 
 abstract_interpreter(Goal, M, Abstraction, OptionL, data(0, [], Result)) :-
     option(location(Loc),   OptionL, context(toplevel, Goal)),
