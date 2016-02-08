@@ -64,4 +64,8 @@ slicer_abstraction(Spec, Goal, M, Body,
       once(match_head_body(Goal, M, _Body, Loc)),
       Body = M:true
     }.
-slicer_abstraction(_, _, M, M:true, S, S) --> bottom.
+slicer_abstraction(_, Goal, M, M:true, S, S) -->
+    { S = state(Loc, _, OnError, _),
+      call(OnError, error(existence_error(evaluation_rule, M:Goal), Loc))
+    },
+    bottom.
