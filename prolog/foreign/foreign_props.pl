@@ -1,6 +1,8 @@
 :- module(foreign_props,
 	  [foreign/1,
 	   foreign/2,
+	   fimport/1,
+	   fimport/2,
 	   returns/2,
 	   returns_state/1,
 	   memory_root/1,
@@ -25,6 +27,14 @@ foreign(G) :- call(G).
 :- prop foreign/2 + no_rtcheck.
 :- meta_predicate foreign(0,?).
 foreign(G, _) :- call(G).
+
+:- prop fimport/1 + no_rtcheck.
+:- meta_predicate fimport(0).
+fimport(G) :- call(G).
+
+:- prop fimport/2 + no_rtcheck.
+:- meta_predicate fimport(0,?).
+fimport(G, _) :- call(G).
 
 :- prop returns/2 + no_rtcheck.
 :- meta_predicate returns(0,?).
