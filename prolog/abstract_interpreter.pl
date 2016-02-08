@@ -51,6 +51,7 @@
     abstract_interpreter(?,7,?).
 
 :- multifile
+    replace_goal_hook/3,
     evaluable_goal_hook/2.
 
 :- dynamic
@@ -73,6 +74,12 @@ evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
 evaluable_goal_hook(atomic(A), _) :- nonvar(A).
 evaluable_goal_hook(format(Out, Format, Args), _) :-
     nonvar(Out), nonvar(Format), ground(Args).
+evaluable_goal_hook(_ is B, _) :- ground(B).
+
+replace_goal_hook(retractall(_), _, true).
+replace_goal_hook(assertz(_),    _, true).
+replace_goal_hook(asserta(_),    _, true).
+replace_goal_hook(assert( _),    _, true).
 
 abstract_interpreter(Goal, M, Abstraction, OptionL, data(0, [], Result)) :-
     option(location(Loc),   OptionL, context(toplevel, Goal)),
@@ -207,22 +214,24 @@ abstract_interpreter(H, M, Abs, State0 ) -->
     },
     { State0 = state(Loc, EvalL, OnError, _) },
     ( { implementation_module(M:Goal, IM),
-	( evaluable_goal_hook(Goal, IM)
-	; functor(Goal, F, A),
-	  memberchk(IM:F/A, EvalL)
+	( ( evaluable_goal_hook(Goal, IM)
+	  ; functor(Goal, F, A),
+	    memberchk(IM:F/A, EvalL)
+	  ),
+	  MRepl = M:Goal
+	; replace_goal_hook(Goal, IM, Repl),
+	  MRepl = M:Repl
 	)
       }
-    ->{ State = State0,
-	call(M:Goal)
-      }
+    ->{call(MRepl)}
     ; { \+ predicate_property(M:Goal, defined) }
     ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
 	% TBD: information to error
 	fail
       }
-    ; call(Abs, Goal, M, CM:Body, State0, State)
-    ),
-    abstract_interpreter_body(Body, CM, Abs, State).
+    ; call(Abs, Goal, M, CM:Body, State0, State),
+      abstract_interpreter_body(Body, CM, Abs, State)
+    ).
 
 % top: empty set
 % bottom: I don't know, universe set.
