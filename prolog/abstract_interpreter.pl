@@ -71,6 +71,8 @@ evaluable_goal_hook(option(O, L), _) :-
 evaluable_goal_hook(var(V),    _) :- nonvar(V).
 evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
 evaluable_goal_hook(atomic(A), _) :- nonvar(A).
+evaluable_goal_hook(format(Out, Format, Args), _) :-
+    nonvar(Out), nonvar(Format), ground(Args).
 
 abstract_interpreter(Goal, M, Abstraction, OptionL, data(0, [], Result)) :-
     option(location(Loc),   OptionL, context(toplevel, Goal)),
@@ -174,7 +176,7 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
       },
       { CutElse = yes }
     ).
-abstract_interpreter_body(!,    _, _, _) --> cut_if_no_bottom.
+abstract_interpreter_body(!,    _, _, _) --> !, cut_if_no_bottom.
 abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
 abstract_interpreter_body(A\=B, _, _, _) --> !, {A\=B}.
 abstract_interpreter_body(true, _, _, _) --> !.
@@ -193,7 +195,7 @@ terms_share(A, B) :-
 is_bottom(bottom, bottom).
 
 cut_if_no_bottom -->
-    (\+ is_bottom
+    ( \+ is_bottom
     ->{cut_from}
     ; []
     ).
