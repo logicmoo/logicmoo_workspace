@@ -77,6 +77,11 @@ evaluable_goal_hook(atomic(A), _) :- nonvar(A).
 evaluable_goal_hook(format(Out, Format, Args), _) :-
     nonvar(Out), nonvar(Format), ground(Args).
 evaluable_goal_hook(_ is B, _) :- ground(B).
+evaluable_goal_hook(atom_concat(A, B, C), _) :-
+    once(( nonvar(A), nonvar(B)
+	 ; nonvar(A), nonvar(C)
+	 ; nonvar(B), nonvar(C)
+	 )).
 
 replace_goal_hook(retractall(_), _, true).
 replace_goal_hook(retract(_),    _, true).
