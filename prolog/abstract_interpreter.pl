@@ -66,6 +66,8 @@ evaluable_goal_hook(absolute_file_name(A, _, O), _) :-
 evaluable_goal_hook(memberchk(E, L), _) :-
     is_list(L),
     nonvar(E).
+evaluable_goal_hook(member(_, L), _) :-
+    is_list(L).
 evaluable_goal_hook(option(O, L), _) :-
     is_list(L),
     nonvar(O).
@@ -77,6 +79,7 @@ evaluable_goal_hook(format(Out, Format, Args), _) :-
 evaluable_goal_hook(_ is B, _) :- ground(B).
 
 replace_goal_hook(retractall(_), _, true).
+replace_goal_hook(retract(_),    _, true).
 replace_goal_hook(assertz(_),    _, true).
 replace_goal_hook(asserta(_),    _, true).
 replace_goal_hook(assert( _),    _, true).

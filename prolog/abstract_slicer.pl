@@ -58,7 +58,8 @@ slicer_abstraction(Spec, Goal, M, Body,
 		   state(_,   EvalL, OnErr, Data),
 		   state(Loc, EvalL, OnErr, Data)) -->
     {predicate_property(M:Goal, interpreted)}, !,
-    { terms_share(Spec, Goal)
+    { terms_share(Spec, Goal) % BUG: the sharing should be done wrt all the
+                              % body, and not only the current literal --EMM
     ->match_head_body(Goal, M, Body, Loc)
     ; % check if the body trivially fails:
       once(match_head_body(Goal, M, _Body, Loc)),
