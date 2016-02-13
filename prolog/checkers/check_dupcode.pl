@@ -66,7 +66,7 @@ ignore_dupcode(H, _, _) :-
     functor(H, Name, _),
     atom_concat('__aux_wrapper_', _, Name).
 ignore_dupcode(H, _, _) :-
-    current_module(apply_macros),
+    current_predicate(apply_macros:maplist_expansion/1),
     apply_macros:maplist_expansion(H).
 ignore_dupcode(_,                             refactor, name).
 ignore_dupcode(_,                        i18n_refactor, name).
