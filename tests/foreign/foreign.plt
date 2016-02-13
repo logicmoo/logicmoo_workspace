@@ -81,4 +81,12 @@ test(foreign_dict4) :-
     fd3(A,_,_,_),
     assertion(A==d{}).
 
+test(fimport1) :-
+    test_ireverse1([1,2,3], Y),
+    assertion(Y==[3,2,1]).
+
+test(fimport2) :-
+    test_ireverse2([1,2,3], Y),
+    assertion(Y==[3,2,1]).
+
 :- end_tests(foreign).

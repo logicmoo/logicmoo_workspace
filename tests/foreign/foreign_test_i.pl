@@ -1,6 +1,7 @@
 :- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
 			   get_arrays/4, show_arrays/3, sio/1, negative_t/1,
-			   positive_t/1, fd1/4, fd2/4, fd3/4, extend/2]).
+			   positive_t/1, fd1/4, fd2/4, fd3/4, extend/2,
+			   test_ireverse1/2, test_ireverse2/2]).
 
 :- use_module(assertions(assertions)).
 :- use_module(assertions(basicprops)).
@@ -111,6 +112,15 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 :- pred io(int) is foreign(c_io).
 
 :- pred sio(int) is (foreign(c_sio), returns_state, memory_root).
+
+:- pred [ireverse1(     +list(int), -list(int)) is (fimport, returns_state, memory_root),
+	 test_ireverse1(+list(int), -list(int)) is (foreign, memory_root),
+	 ireverse2(+list(int):LIn,  -list(int)) is (fimport, returns_state, parent(LIn)),
+	 test_ireverse2(+list(int), -list(int)) is (foreign)].
+
+ireverse1(X,Y) :- reverse(X, Y).
+
+ireverse2(X,Y) :- reverse(X, Y).
 
 % :- pred u(list(list(list(num))), list(list(int)), list(int), int)
 %     is foreign(c_u).

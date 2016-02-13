@@ -143,3 +143,12 @@ void  fco(struct contain_opaque_t* const A, struct contain_opaque_t* B) {
   B->value=A->value + 2;
   printf("co[%d, %d]\n", A->idx, A->value);
 }
+
+void test_ireverse1(root_t __root, int* const var_1, int** var_2) {
+  ireverse1(__root, var_1, var_2);
+}
+
+
+void test_ireverse2(int* const var_1, int** var_2) {
+  ireverse2(var_1, var_2);
+}

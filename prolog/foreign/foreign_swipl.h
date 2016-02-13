@@ -93,57 +93,59 @@
 	    PL_unify_atom_chars(t, s);	\
 	})
 
-#define __rtc_FI_unify(__type, __term, __value)				\
-    __rtcpass(__rtctype(FI_unify_##__type(__term, __value), __term, __type))
+#define __rtc_FI_unify(__type, __term, __value)	({			\
+      __rtcpass(__rtctype(FI_unify_##__type(__term, __value), __term, __type)); \
+    })
 
-#define __rtc_FI_get(__type, __term, __value)				\
-    __rtcpass(__rtctype(FI_get_##__type(__root, __term, __value), __term, __type))
+#define __rtc_FI_get(__type, __term, __value) ({			\
+      __rtcpass(__rtctype(FI_get_##__type(__root, __term, __value), __term, __type)); \
+    })
 
-#define FI_get_list(__FI_get_elem, __term, __value) {			\
-	term_t __term##_ = PL_new_term_ref();				\
-	    term_t __tail = PL_copy_term_ref(__term);			\
-	    size_t __length = 0;					\
-	    while(PL_get_list(__tail, __term##_, __tail))		\
-		__length++;						\
-	    __rtcheck(PL_get_nil(__tail));				\
-	    __tail = PL_copy_term_ref(__term);				\
-	    FI_new_array(__length, *__value);				\
-	    typeof (*__value) _c_##__term##_ = *__value;		\
-		while(PL_get_list(__tail, __term##_, __tail)) {		\
-		    __FI_get_elem;					\
-		    _c_##__term##_++;					\
-		};							\
-    }
+#define FI_get_list(__FI_get_elem, __term, __value) ({	\
+      term_t __term##_ = PL_new_term_ref();			\
+      term_t __tail = PL_copy_term_ref(__term);			\
+      size_t __length = 0;					\
+      while(PL_get_list(__tail, __term##_, __tail))		\
+	__length++;						\
+      __rtcheck(PL_get_nil(__tail));				\
+      __tail = PL_copy_term_ref(__term);			\
+      FI_new_array(__length, *__value);				\
+      typeof (*__value) _c_##__term##_ = *__value;		\
+      while(PL_get_list(__tail, __term##_, __tail)) {		\
+	__FI_get_elem;						\
+	_c_##__term##_++;					\
+      };							\
+    })
 
-#define FI_get_inout_list(__FI_get_elem, __term, __value) {		\
-	if(PL_is_variable(__term)) {					\
-	    *__value = NULL;						\
-	}								\
-	else {								\
-	    FI_get_list(__FI_get_elem, __term, __value);		\
-	}								\
-    }
+#define FI_get_inout_list(__FI_get_elem, __term, __value) ({	\
+      if(PL_is_variable(__term)) {				\
+	*__value = NULL;					\
+      }								\
+      else {							\
+	FI_get_list(__FI_get_elem, __term, __value);		\
+      }								\
+    })
 
-#define FI_get_in_list(__FI_get_elem, __term, __value) {		\
-	__rtcpass(__rtctype(!PL_is_variable(__term), __term, list));	\
-	FI_get_list(__FI_get_elem, __term, __value);			\
-    }
+#define FI_get_in_list(__FI_get_elem, __term, __value) ({		\
+      __rtcpass(__rtctype(!PL_is_variable(__term), __term, list));	\
+      FI_get_list(__FI_get_elem, __term, __value);			\
+    })
 
-#define FI_get_ptr(__FI_get_elem, __term, __value) {	\
-	term_t __term##_ = __term;			\
-	FI_new_value(*__value);				\
-	typeof (*__value) _c_##__term##_ = *__value;	\
-	__FI_get_elem;					\
-}
+#define FI_get_ptr(__FI_get_elem, __term, __value) ({	\
+      term_t __term##_ = __term;			\
+      FI_new_value(*__value);				\
+      typeof (*__value) _c_##__term##_ = *__value;	\
+      __FI_get_elem;					\
+    })
 
-#define FI_get_inout_ptr(__FI_get_elem, __term, __value) {	\
-	if(PL_is_variable(__term)) {				\
-	    *__value = NULL;					\
-	}							\
-	else {							\
-	    FI_get_ptr(__FI_get_elem, __term, __value);		\
-	}							\
-    }
+#define FI_get_inout_ptr(__FI_get_elem, __term, __value) ({	\
+      if(PL_is_variable(__term)) {				\
+	*__value = NULL;					\
+      }								\
+      else {							\
+	FI_get_ptr(__FI_get_elem, __term, __value);		\
+      }								\
+    })
 
 #define FI_get_in_ptr(__FI_get_elem, __term, __value) \
     FI_get_inout_ptr(__FI_get_elem, __term, __value)
@@ -155,38 +157,38 @@
     }
 */
 
-#define FI_unify_list(__FI_unify_elem, __term, __value) {		\
-	if (__value!=NULL) {						\
-	    term_t l = PL_copy_term_ref(__term);			\
-	    term_t __term##_ = PL_new_term_ref();			\
-		size_t __index;						\
-		size_t __length = FI_array_length(__value);		\
-		for(__index = 0; __index < __length; __index++)	{	\
-		    typeof (*__value) _c_##__term##_ = __value[__index]; \
-			__rtcheck(PL_unify_list(l, __term##_, l));	\
-			__FI_unify_elem;				\
-		}							\
-		__rtcheck(PL_unify_nil(l));				\
-	}								\
-    }
-
-#define FI_unify_ptr(__FI_unify_elem, __term, __value) {	\
-	if(__value!=NULL) {					\
-	    term_t __term##_ = __term;				\
-	    typeof (*__value) _c_##__term##_ = *__value;	\
-	    __FI_unify_elem;					\
+#define FI_unify_list(__FI_unify_elem, __term, __value) ({	\
+      if (__value!=NULL) {					\
+	term_t l = PL_copy_term_ref(__term);			\
+	term_t __term##_ = PL_new_term_ref();			\
+	size_t __index;						\
+	size_t __length = FI_array_length(__value);		\
+	for(__index = 0; __index < __length; __index++)	{	\
+	  typeof (*__value) _c_##__term##_ = __value[__index];	\
+	  __rtcheck(PL_unify_list(l, __term##_, l));		\
+	  __FI_unify_elem;					\
 	}							\
-    }
+	__rtcheck(PL_unify_nil(l));				\
+      }								\
+    })
 
-#define FI_get_inout(__getter, __term, __value) {	\
-	if(PL_is_variable(__term)) {			\
-	    *__value = NULL;				\
-	}						\
-	else {						\
-	    FI_new_value(*__value);			\
-	    __rtc_FI_get(__getter, __term, *__value);	\
-	}						\
-    }
+#define FI_unify_ptr(__FI_unify_elem, __term, __value) ({	\
+      if(__value!=NULL) {					\
+	term_t __term##_ = __term;				\
+	typeof (*__value) _c_##__term##_ = *__value;		\
+	__FI_unify_elem;					\
+      }								\
+    })
+
+#define FI_get_inout(__getter, __term, __value) ({	\
+      if(PL_is_variable(__term)) {			\
+	*__value = NULL;				\
+      }							\
+      else {						\
+	FI_new_value(*__value);				\
+	__rtc_FI_get(__getter, __term, *__value);	\
+      }							\
+    })
 
 #define FI_unify_inout(__unifier, __term, __value) {	 \
 	if (__value!=NULL) {				 \
@@ -239,38 +241,38 @@ extern predicate_t __foreign_generator_call_idx;
 	PL_close_query(__p);						\
     }
 
-#define FI_get_keyid_index(__pred, __keyid, __index) {			\
-	term_t __args = PL_new_term_refs(2);				\
-	PL_put_term(__args, __keyid);					\
-	__rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL, __pred, __args), \
-			    __keyid, "valid key of " # __pred));	\
-	__rtcheck(PL_get_integer(__args+1, &__index));			\
-    }
+#define FI_get_keyid_index(__pred, __keyid, __index) ({			\
+      term_t __args = PL_new_term_refs(2);				\
+      PL_put_term(__args, __keyid);					\
+      __rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL, __pred, __args), \
+			__keyid, "valid key of " # __pred));		\
+      __rtcheck(PL_get_integer(__args+1, &__index));			\
+    })
 
-#define FI_init_dict_t(__dict, __tag) {					\
-	term_t __args = PL_new_term_refs(3);				\
-	PL_put_atom_chars(__args+1, __tag);				\
-	PL_put_nil(__args+2);						\
-	__rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL,			\
-				    __system_dict_create, __args));	\
-	__dict = __args;						\
-    }
+#define FI_init_dict_t(__dict, __tag) ({			\
+      term_t __args = PL_new_term_refs(3);			\
+      PL_put_atom_chars(__args+1, __tag);			\
+      PL_put_nil(__args+2);					\
+      __rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL,		\
+				__system_dict_create, __args));	\
+      __dict = __args;						\
+    })
 
-#define FI_put_desc(__tail, __key, __value) {				\
+#define FI_put_desc(__tail, __key, __value) ({				\
 	term_t __kv = PL_new_term_ref();				\
 	__rtcheck(PL_unify_list(__tail, __kv, __tail));			\
 	__rtcheck(PL_unify_term(__kv, PL_FUNCTOR_CHARS, "-", 2,		\
 				PL_CHARS, __key,			\
 				PL_TERM,  __value));			\
-    }
+    })
 
-#define FI_dict_create(__dict, __tag, __desc) {				\
-	term_t __args = PL_new_term_refs(3);				\
-	PL_put_atom_chars(__args+1, __tag);				\
-	PL_put_term(__args+2, __desc);					\
-	__rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL,			\
-				    __system_dict_create, __args));	\
-	__rtcheck(PL_unify(__dict, __args));				\
-    }
+#define FI_dict_create(__dict, __tag, __desc) ({			\
+      term_t __args = PL_new_term_refs(3);				\
+      PL_put_atom_chars(__args+1, __tag);				\
+      PL_put_term(__args+2, __desc);					\
+      __rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL,			\
+				  __system_dict_create, __args));	\
+      __rtcheck(PL_unify(__dict, __args));				\
+    })
 
 #endif // __FOREIGN_SWIPL_H__

@@ -84,7 +84,7 @@
 # define _noleaks {fprintf(stderr, "balance=%d\n", __balance);assert(__balance==0);}
 int __balance;
 
-# define debug_malloc(__size) ({						\
+# define debug_malloc(__size) ({					\
 	    void *__result=malloc(__size);				\
 	    fprintf(stderr, "%s:%d: %d malloc(%ld)=%p\n",		\
 		    __FILE__, __LINE__, __balance, __size, __result);	\

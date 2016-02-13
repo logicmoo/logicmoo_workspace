@@ -934,6 +934,10 @@ declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) :-
     declare_impl_head(Head, M, Module, Comp, Call, Succ, Glob, Bind),
     format(' {~n', []),
     format('    term_t ~w_args = PL_new_term_refs(~w);~n', [BN, A]),
+    ( memberchk(parent(Var), Glob)
+    ->format('    __leaf_t *__root = LF_ROOT(LF_PTR(FI_array_ptr(~w)));~n', [Var])
+    ; true
+    ),
     bind_outs_arguments(Head, M, Module, Comp, Call, Succ, Glob, Bind),
     format('} /* ~w */~n~n', [PN/A]).
 
@@ -1074,13 +1078,14 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
 	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	       memberchk(Mode, [in, inout])
 	     ),
-	     ( write('    '),
-	       invert_mode(Mode, InvM),
+	     ( invert_mode(Mode, InvM),
 	       ( Mode = inout
 	       ->atom_concat('*', Arg, CArg)
 	       ; CArg = Arg
 	       ),
-	       format(atom(PArg), '~w_args + ~d', [BN, Idx-1]),
+	       format(atom(PArg), '_p_~w', [Arg]),
+	       format('    term_t ~w=~w_args + ~d;~n', [PArg, BN, Idx-1]),
+	       write('    '),
 	       c_set_argument(Spec, InvM, CArg, PArg),
 	       write(';\n')
 	     ))
@@ -1092,13 +1097,14 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
 	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	       memberchk(Mode, [out, inout])
 	     ),
-	     ( write('    '),
-	       invert_mode(Mode, InvM),
+	     ( invert_mode(Mode, InvM),
 	       ( memberchk(returns(Arg), Glob)
 	       ->atom_concat('&', Arg, CArg)
 	       ; CArg = Arg
 	       ),
-	       format(atom(PArg), '~w_args + ~d', [BN, Idx - 1]),
+	       format(atom(PArg), '_p_~w', [Arg]),
+	       format('    term_t ~w=~w_args + ~d;~n', [PArg, BN, Idx-1]),
+	       write('    '),
 	       c_get_argument(Spec, InvM, CArg, PArg),
 	       write(';\n')
 	     )),

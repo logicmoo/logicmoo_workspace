@@ -4,6 +4,7 @@
 	   fimport/1,
 	   fimport/2,
 	   returns/2,
+	   parent/2,
 	   returns_state/1,
 	   memory_root/1,
 	   ptr/1,
@@ -39,6 +40,10 @@ fimport(G, _) :- call(G).
 :- prop returns/2 + no_rtcheck.
 :- meta_predicate returns(0,?).
 returns(G,_) :- call(G).
+
+:- prop parent/2 + no_rtcheck.
+:- meta_predicate parent(0,?).
+parent(G,_) :- call(G).
 
 :- prop returns_state/1 + no_rtcheck.
 :- meta_predicate returns_state(0).
