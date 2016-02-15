@@ -347,7 +347,7 @@ hide_unused(Call, _) :-
     functor(Call, Name, _),
     atom_concat('__aux_wrapper_', _, Name).
 hide_unused(Call, _) :-
-    current_module(apply_macros),
+    current_predicate(apply_macros:maplist_expansion/1),
     apply_macros:maplist_expansion(Call).
 
 hide_unused(M:H, _, _) :-
