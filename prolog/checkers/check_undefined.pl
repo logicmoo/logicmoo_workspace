@@ -158,7 +158,7 @@ show_alternative(PIL, Spc, A-ex(EM, EL)) -->
     ; length(EL,  EN),
       length(PIL, IN),
       ( EN < IN
-      ->Decl = use_module(A, exclude(EL))
+      ->Decl = use_module(A, except(EL))
       ; Decl = use_module(A, PIL)
       )
     },
