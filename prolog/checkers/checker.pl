@@ -33,10 +33,10 @@
 	  simple_report/1, available_checker/1]).
 
 :- use_module(library(thread)).
-:- use_module(xlibrary(clambda)).
-:- use_module(xlibrary(group_pairs_or_sort)).
-:- use_module(xtools(infer_meta_if_required)).
-:- use_module(xtools(location_utils)).
+:- use_module(library(clambda)).
+:- use_module(library(group_pairs_or_sort)).
+:- use_module(library(infer_meta_if_required)).
+:- use_module(library(location_utils)).
 
 user:file_search_path(checkers, xtools(checkers)).
 

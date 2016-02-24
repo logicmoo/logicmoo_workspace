@@ -37,7 +37,7 @@
 :- use_module(library(prolog_clause), []).
 :- use_module(library(prolog_codewalk), []).
 :- use_module(library(prolog_source)).
-:- use_module(xlibrary(clambda)).
+:- use_module(library(clambda)).
 
 :- meta_predicate ontrace(0,6,+).
 

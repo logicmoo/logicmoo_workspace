@@ -31,13 +31,13 @@
 
 :- use_module(library(apply)).
 :- use_module(library(check), []).
-:- use_module(xlibrary(clambda)).
-:- use_module(xlibrary(group_pairs_or_sort)).
-:- use_module(xlibrary(ungroup_keys_values)).
-:- use_module(xtools(extra_location)).
-:- use_module(xtools(from_utils)).
-:- use_module(xtools(location_utils)).
-:- use_module(xtools(option_utils)).
+:- use_module(library(clambda)).
+:- use_module(library(group_pairs_or_sort)).
+:- use_module(library(ungroup_keys_values)).
+:- use_module(library(extra_location)).
+:- use_module(library(from_utils)).
+:- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 
 :- multifile
     prolog:message//1,

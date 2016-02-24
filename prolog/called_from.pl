@@ -38,11 +38,11 @@
 			used_predicates/3
 		       ]).
 
-:- use_module(xlibrary(implementation_module)).
-:- use_module(xlibrary(normalize_head)).
-:- use_module(xlibrary(normalize_pi)).
-:- use_module(xtools(extra_location)).
-:- use_module(xtools(location_utils)).
+:- use_module(library(implementation_module)).
+:- use_module(library(normalize_head)).
+:- use_module(library(normalize_pi)).
+:- use_module(library(extra_location)).
+:- use_module(library(location_utils)).
 
 :- multifile
     prolog:message//1.

@@ -29,11 +29,11 @@
 
 :- module(assrt_meta, []).
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(assertions_op)).
-:- use_module(rtchecks(rtchecks_basic)).
-:- use_module(rtchecks(rtchecks_gen)).
-:- use_module(xtools(location_utils)).
+:- use_module(library(assertions)).
+:- use_module(library(assertions_op)).
+:- use_module(library(rtchecks_basic)).
+:- use_module(library(rtchecks_gen)).
+:- use_module(library(location_utils)).
 
 :- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
 

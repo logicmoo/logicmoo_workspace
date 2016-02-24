@@ -33,9 +33,9 @@
 :- use_module(library(apply)).
 :- use_module(library(lists)).
 :- use_module(library(http/html_write)).
-:- use_module(xlibrary(group_pairs_or_sort)).
-:- use_module(xtools(gcover)).
-:- use_module(xtools(module_files)).
+:- use_module(library(group_pairs_or_sort)).
+:- use_module(library(gcover)).
+:- use_module(library(module_files)).
 
 :- http_handler(root(colors_code), colors_code, []). % /module?file=<file>
 

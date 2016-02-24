@@ -29,8 +29,8 @@
 
 :- module(called_by_body, [called_by_body/4]).
 
-:- use_module(xlibrary(extend_args)).
-:- use_module(xlibrary(implementation_module)).
+:- use_module(library(extend_args)).
+:- use_module(library(implementation_module)).
 
 called_by_body(Body, CM, Body, CM) :- var(Body), !, fail.
 called_by_body(CM:Body, _, H, M) :- called_by_body(Body, CM, H, M).

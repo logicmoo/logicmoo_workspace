@@ -31,7 +31,7 @@
 
 :- reexport(library(ws_browser)).
 :- use_module(library(pldoc/doc_htmlsrc)).
-:- use_module(xtools(module_files)).
+:- use_module(library(module_files)).
 
 ws_browser:provides_method(live).
 

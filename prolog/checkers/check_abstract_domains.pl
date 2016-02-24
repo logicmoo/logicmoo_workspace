@@ -36,7 +36,7 @@
 :- use_module(domains(abstract_domain_fail)).
 :- use_module(domains(abstract_domain_product)). % this always at the end
 :- use_module(domains(abstract_domain_sideff)).
-:- use_module(xtools(location_utils)).
+:- use_module(library(location_utils)).
 
 :- multifile
 	prolog:message//1,

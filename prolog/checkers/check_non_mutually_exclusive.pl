@@ -31,11 +31,11 @@
 
 :- use_module(library(apply)).
 :- use_module(library(check), []).
-:- use_module(xlibrary(clambda)).
-:- use_module(xlibrary(normalize_head)).
-:- use_module(xtools(location_utils)).
-:- use_module(xtools(option_utils)).
-:- use_module(xtools(referenced_by)).
+:- use_module(library(clambda)).
+:- use_module(library(normalize_head)).
+:- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
+:- use_module(library(referenced_by)).
 
 :- multifile
     prolog:message//1,
