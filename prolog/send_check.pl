@@ -1,8 +1,8 @@
 :- module(send_check, [get_comp_rtcheck_info/2,
 		       send_comp_rtcheck/3]).
 
-:- use_module(xlibrary(context_values)).
-:- use_module(xlibrary(intercept)).
+:- use_module(library(context_values)).
+:- use_module(library(intercept)).
 
 get_comp_rtcheck_info(Goal, Info) :-
     ( current_context_value(rtchecks_rt:comp_info, Info)

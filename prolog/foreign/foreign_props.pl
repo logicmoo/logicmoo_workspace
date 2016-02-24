@@ -17,9 +17,9 @@
 	   join_dict_types/6,
 	   join_type_desc/5]).
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(basicprops)).
-:- use_module(assertions(plprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(plprops)).
 
 :- prop foreign/1 + no_rtcheck.
 :- meta_predicate foreign(0).

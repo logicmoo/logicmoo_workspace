@@ -3,11 +3,11 @@
 			   positive_t/1, fd1/4, fd2/4, fd3/4, extend/2,
 			   test_ireverse1/2, test_ireverse2/2]).
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(basicprops)).
-:- use_module(assertions(plprops)).
-:- use_module(assertions(foreign/foreign_interface)).
-:- use_module(assertions(foreign/foreign_props)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(plprops)).
+:- use_module(library(foreign/foreign_interface)).
+:- use_module(library(foreign/foreign_props)).
 :- extra_compiler_opts('-O2 -gdwarf-2 -g3 -D__DEBUG_MALLOC__').
 :- use_foreign_header(foreign_test).
 :- use_foreign_source(foreign_test).

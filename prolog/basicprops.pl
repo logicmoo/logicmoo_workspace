@@ -40,9 +40,9 @@
 	 equiv/2, bind_ins/1, error_free/1,memo/1,filter/2, flag_values/1,
 	 pe_type/1]).
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(nativeprops)).
-:- use_module(assertions(termtyping)).
+:- use_module(library(assertions)).
+:- use_module(library(nativeprops)).
+:- use_module(library(termtyping)).
 
 :- doc(title,"Basic data types and properties").
 
@@ -622,8 +622,8 @@ flag_values(L):- list(L,atm).
 pe_type(Goal) :- call(Goal).
 
 
-:- use_module(xlibrary(implementation_module)).
-:- use_module(xlibrary(unfold_calls)).
+:- use_module(library(implementation_module)).
+:- use_module(library(unfold_calls)).
 
 unfoldable(list(_, _),     basicprops).
 unfoldable(nlist(_, _),    basicprops).

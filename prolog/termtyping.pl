@@ -1,9 +1,9 @@
 :- module(term_typing,
 	  [type/2, add_1st_arg/3]).
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(basicprops)).
-:- use_module(assertions(nativeprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(nativeprops)).
 
 :- doc(title, "Extra-logical properties for typing").
 

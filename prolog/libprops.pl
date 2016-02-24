@@ -2,10 +2,10 @@
 
 % Properties of library predicates
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(basicprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
 :- use_module(assertions(termtyping), []).
-:- use_module(assertions(plprops)).
+:- use_module(library(plprops)).
 
 :- pred functor(+, -atm, -nnegint) is det.
 :- pred functor(-, +atm, +nnegint) is det.

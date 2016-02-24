@@ -72,12 +72,12 @@
 	   % user_error/2
 	  ]).
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(basicprops)).
-:- use_module(assertions(send_check)).
-:- use_module(assertions(termtyping)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(send_check)).
+:- use_module(library(termtyping)).
 :- use_module(library(lists)).
-:- use_module(xlibrary(intercept)).
+:- use_module(library(intercept)).
 
 % :- doc(doinclude, indep/1).
 % :- doc(doinclude, indep/2).
