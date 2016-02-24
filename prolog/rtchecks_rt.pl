@@ -5,13 +5,13 @@
 			'$meta$rtc'/2
 		       ]).
 
-:- use_module(assertions(assertions)).
+:- use_module(library(assertions)).
 :- reexport(library(nativeprops)).
 :- reexport(library(basicprops)).
 :- reexport(rtchecks(rtchecks_send)).
 :- use_module(assertions(termtyping), []). % assertions about builtins
-:- use_module(assertions(plprops)).
-:- use_module(xlibrary(context_values)).
+:- use_module(library(plprops)).
+:- use_module(library(context_values)).
 
 :- doc(author, "Edison Mera").
 

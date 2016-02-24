@@ -2,12 +2,12 @@
 	  [rtchecks_eval/1,
 	   generate_rtchecks/3]).
 
-:- use_module(assertions(assrt_lib)).
-:- use_module(rtchecks(rtchecks_basic)).
-:- use_module(rtchecks(rtchecks_gen)).
-:- use_module(xlibrary(implementation_module)).
-:- use_module(xlibrary(qualify_meta_goal)).
-:- use_module(xlibrary(resolve_calln)).
+:- use_module(library(assrt_lib)).
+:- use_module(library(rtchecks_basic)).
+:- use_module(library(rtchecks_gen)).
+:- use_module(library(implementation_module)).
+:- use_module(library(qualify_meta_goal)).
+:- use_module(library(resolve_calln)).
 
 :- meta_predicate rtchecks_eval(0).
 rtchecks_eval(M:Goal) :-

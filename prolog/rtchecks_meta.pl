@@ -5,9 +5,9 @@
 			  compound_rtchecks_end/5
 			 ]).
 
-:- use_module(assertions(assertions)).
+:- use_module(library(assertions)).
 :- use_module(library(lists)).
-:- use_module(rtchecks(rtchecks_basic)).
+:- use_module(library(rtchecks_basic)).
 
 :- doc(author, "Edison Mera").
 

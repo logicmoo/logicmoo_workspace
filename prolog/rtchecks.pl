@@ -1,6 +1,6 @@
 :- module(rtchecks, []).
 
-:- use_module(rtchecks(rtchecks_flags)).
+:- use_module(library(rtchecks_flags)).
 :- reexport(rtchecks(rtchecks_utils)).
 :- reexport(rtchecks(rtchecks_gen)).
 :- reexport(rtchecks(rtchecks_eval)).

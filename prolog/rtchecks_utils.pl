@@ -2,13 +2,13 @@
 	  [handle_rtcheck/1, call_rtc/1, save_rtchecks/1, load_rtchecks/1,
 	   assrchk_error/1]).
 
-:- use_module(assertions(assertions)).
-:- use_module(assertions(basicprops)).
-:- use_module(assertions(plprops)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
+:- use_module(library(plprops)).
 :- use_module(library(lists)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
-:- use_module(xlibrary(filtered_backtrace)).
-:- use_module(xlibrary(intercept)).
+:- use_module(library(filtered_backtrace)).
+:- use_module(library(intercept)).
 
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer).
