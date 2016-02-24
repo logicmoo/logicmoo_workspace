@@ -29,8 +29,8 @@
 
 :- module(i18n_test, [i18n_test/1]).
 
-:- use_module(xlibrary(i18n/i18n_expansion)).
-:- use_module(xlibrary(i18n/i18n_support)).
+:- use_module(library(i18n/i18n_expansion)).
+:- use_module(library(i18n/i18n_support)).
 
 :- retractall(i18n_support:language(_)).	  % overriding language
 :- retractall(i18n_support:i18n_resource_dir(_)). % overriding resource dir

@@ -1,8 +1,8 @@
 :- module(unfold_calls,
 	  [unfold_calls/4]).
 
-:- use_module(xlibrary(implementation_module)).
-:- use_module(xlibrary(qualify_meta_goal)).
+:- use_module(library(implementation_module)).
+:- use_module(library(qualify_meta_goal)).
 
 :- multifile
     unfold_call_hook/4.

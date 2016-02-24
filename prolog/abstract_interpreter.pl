@@ -36,11 +36,11 @@
 				 match_noloops/7,
 				 terms_share/2]).
 
-:- use_module(xlibrary(implementation_module)).
-:- use_module(xlibrary(qualify_meta_goal)).
-:- use_module(xlibrary(resolve_calln)).
-:- use_module(xtools(extra_location)).
-:- use_module(xtools(term_size)).
+:- use_module(library(implementation_module)).
+:- use_module(library(qualify_meta_goal)).
+:- use_module(library(resolve_calln)).
+:- use_module(library(extra_location)).
+:- use_module(library(term_size)).
 
 :- meta_predicate
     match_head(*,*,*,*,*, *,*),
@@ -115,7 +115,7 @@ cut_from :- throw(cut_from).
 */
 
 % alternative (and more efficient) implementation follows:
-:- use_module(xlibrary(intercept)).
+:- use_module(library(intercept)).
 
 :- meta_predicate intercept(2, ?, ?, ?, ?).
 intercept(DCG, Ex, H, S0, S) :-

@@ -30,7 +30,7 @@
 :- module(change_alias, [change_alias/3]).
 
 :- use_module(library(aggregate)).
-:- use_module(xlibrary(clambda)).
+:- use_module(library(clambda)).
 
 :- meta_predicate change_alias(2,+,-).
 change_alias(Changer, Alias0, Alias) :-

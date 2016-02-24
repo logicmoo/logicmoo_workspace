@@ -29,7 +29,7 @@
 
 :- module(normalize_head, [normalize_head/2]).
 
-:- use_module(xlibrary(implementation_module)).
+:- use_module(library(implementation_module)).
 
 current_predicate_ext(M:F/A) :-
     ( nonvar(M) ->

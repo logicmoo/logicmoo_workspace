@@ -51,10 +51,10 @@
 :- use_module(library(lists)).
 :- use_module(library(pairs)).
 :- use_module(library(readutil)).
-:- use_module(xlibrary(clambda)).
-:- use_module(xlibrary(language_iso)).
-:- use_module(xlibrary(i18n/i18n_op)).
-:- use_module(xlibrary(i18n/i18n_parser)).
+:- use_module(library(clambda)).
+:- use_module(library(language_iso)).
+:- use_module(library(i18n/i18n_op)).
+:- use_module(library(i18n/i18n_parser)).
 
 /*
   

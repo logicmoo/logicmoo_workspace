@@ -31,7 +31,7 @@
 		     stub_term_expansion/5]).
 
 :- use_module(library(lists)).
-:- use_module(xlibrary(sequence_list)).
+:- use_module(library(sequence_list)).
 
 :- dynamic
     stub/2,
