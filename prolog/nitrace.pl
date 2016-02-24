@@ -30,7 +30,7 @@
 :- module(nitrace, [nitrace_file/3,
 		    nitrace/3]).
 
-:- use_module(xtools(ontrace)).
+:- use_module(library(ontrace)).
 :- use_module(library(prolog_clause), []).
 
 :- meta_predicate nitrace_file(0,+,+).

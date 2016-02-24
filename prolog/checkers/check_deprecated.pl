@@ -32,10 +32,10 @@
 :- use_module(checkers(checker)).
 :- use_module(library(check), []).
 :- use_module(library(prolog_codewalk)).
-:- use_module(xlibrary(implementation_module)).
-:- use_module(xtools(location_utils)).
-:- use_module(xtools(option_utils)).
-:- use_module(xtools(referenced_by)).
+:- use_module(library(implementation_module)).
+:- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
+:- use_module(library(referenced_by)).
 
 :- dynamic
     deprecated_db/1,

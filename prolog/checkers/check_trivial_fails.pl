@@ -32,10 +32,10 @@
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
 :- use_module(library(prolog_codewalk)).
-:- use_module(xlibrary(abstract_interpreter)).
-:- use_module(xtools(from_utils)).
-:- use_module(xtools(location_utils)).
-:- use_module(xtools(option_utils)).
+:- use_module(library(abstract_interpreter)).
+:- use_module(library(from_utils)).
+:- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 
 :- multifile
     prolog:message//1.

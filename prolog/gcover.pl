@@ -29,7 +29,7 @@
 
 :- module(gcover, [gcover/2, covered_db/6, reset_cover/0, reset_cover/1]).
 
-:- use_module(xtools(ontrace)).
+:- use_module(library(ontrace)).
 
 :- meta_predicate gcover(0,+).
 

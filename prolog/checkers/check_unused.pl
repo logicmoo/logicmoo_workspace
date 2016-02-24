@@ -39,15 +39,15 @@
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
 :- use_module(library(prolog_metainference)).
-:- use_module(xlibrary(clambda)).
-:- use_module(xlibrary(commited_retract)).
-:- use_module(xlibrary(qualify_meta_goal)).
-:- use_module(xtools(checkable_predicate)).
-:- use_module(xtools(current_defined_predicate)).
-:- use_module(xtools(extra_codewalk)).
-:- use_module(xtools(extra_location)).
-:- use_module(xtools(is_entry_point)).
-:- use_module(xtools(location_utils)).
+:- use_module(library(clambda)).
+:- use_module(library(commited_retract)).
+:- use_module(library(qualify_meta_goal)).
+:- use_module(library(checkable_predicate)).
+:- use_module(library(current_defined_predicate)).
+:- use_module(library(extra_codewalk)).
+:- use_module(library(extra_location)).
+:- use_module(library(is_entry_point)).
+:- use_module(library(location_utils)).
 
 :- multifile
     prolog:message//1.

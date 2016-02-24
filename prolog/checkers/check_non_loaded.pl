@@ -31,7 +31,7 @@
 
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(xtools(option_utils)).
+:- use_module(library(option_utils)).
 
 :- multifile
     prolog:message//1.

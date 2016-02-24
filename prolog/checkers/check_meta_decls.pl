@@ -31,10 +31,10 @@
 
 :- use_module(checkers(checker)).
 :- use_module(library(prolog_metainference), []).
-:- use_module(xtools(infer_meta_if_required)).
-:- use_module(xtools(is_entry_point)).
-:- use_module(xtools(location_utils)).
-:- use_module(xtools(option_utils)).
+:- use_module(library(infer_meta_if_required)).
+:- use_module(library(is_entry_point)).
+:- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 
 :- multifile
 	prolog:message//1.

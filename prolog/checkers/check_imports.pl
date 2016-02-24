@@ -31,13 +31,13 @@
 
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(xlibrary(clambda)).
-:- use_module(xlibrary(expansion_module)).
-:- use_module(xlibrary(implementation_module)).
-:- use_module(xtools(extra_codewalk)).
-:- use_module(xtools(extra_location)).
-:- use_module(xtools(from_utils)).
-:- use_module(xtools(location_utils)).
+:- use_module(library(clambda)).
+:- use_module(library(expansion_module)).
+:- use_module(library(implementation_module)).
+:- use_module(library(extra_codewalk)).
+:- use_module(library(extra_location)).
+:- use_module(library(from_utils)).
+:- use_module(library(location_utils)).
 
 :- multifile
     prolog:message//1.

@@ -31,10 +31,10 @@
 			   implemented_in/3]).
 
 :- use_module(library(lists)).
-:- use_module(xtools(extra_location)).
+:- use_module(library(extra_location)).
 :- use_module(library(prolog_codewalk), []). % for message_location//1
-:- use_module(xlibrary(normalize_head)).
-:- use_module(xtools(extra_codewalk)).
+:- use_module(library(normalize_head)).
+:- use_module(library(extra_codewalk)).
 
 :- multifile
     prolog:message//1,

@@ -33,16 +33,16 @@
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(prolog_codewalk)).
-:- use_module(xlibrary(clambda)).
-:- use_module(xlibrary(compact_pi_list)).
-:- use_module(xlibrary(normalize_head)).
-:- use_module(xlibrary(normalize_pi)).
-:- use_module(xtools(checkable_predicate)).
-:- use_module(xtools(current_defined_predicate)).
-:- use_module(xtools(database_fact)).
-:- use_module(xtools(extra_codewalk)).
-:- use_module(xtools(location_utils)).
-:- use_module(xtools(option_utils)).
+:- use_module(library(clambda)).
+:- use_module(library(compact_pi_list)).
+:- use_module(library(normalize_head)).
+:- use_module(library(normalize_pi)).
+:- use_module(library(checkable_predicate)).
+:- use_module(library(current_defined_predicate)).
+:- use_module(library(database_fact)).
+:- use_module(library(extra_codewalk)).
+:- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 
 :- multifile
     prolog:message//1,
