@@ -141,14 +141,14 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
     ->Args = trivial_fail(Caller, MGoal)
     ; Args = failure(Caller, MGoal, S)
     ),
+    memberchk(Type, [lit, use]),
+    forall(( trivial_fail(From0, Args), 
+	     subsumes_from(From0, From)
+	   ),
+	   retract(trivial_fail(From0, Args))), % Clean up less precise facts
     ( \+ ( trivial_fail(From0, Args),
 	   subsumes_from(From, From0 )
-	 )
-    ->forall(( trivial_fail(From0, Args), 
-	       subsumes_from(From0, From)
-	     ),
-	     retract(trivial_fail(From0, Args))), % Clean up less precise facts
-      memberchk(Type, [lit, use]),
-      assertz(trivial_fail(From, Args))
+	 )			% Assert if no more precise
+    ->assertz(trivial_fail(From, Args))
     ; true
     ).

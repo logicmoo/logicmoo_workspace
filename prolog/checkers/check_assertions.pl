@@ -44,12 +44,13 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(location_utils)).
+:- use_module(library(from_utils)).
 :- use_module(library(option_utils)).
 
 :- dynamic
     tablecheck_db/4,
     assertions_db/1,
-    violations_db/1,
+    violations_db/3,
     rtcheck_db_1/3,
     rtcheck_db/3.
 
@@ -64,7 +65,7 @@ checker:check(assertions, Result, OptionL0) :-
 cleanup_db :-
         retractall(tablecheck_db(_, _, _, _)),
 	retractall(assertions_db(_)),
-	retractall(violations_db(_)).
+	retractall(violations_db(_, _, _)).
 
 check_assertions(FromChk, OptionL0, Pairs) :-
     ignore(option(module(M), OptionL0 )),
@@ -85,7 +86,9 @@ check_assertions(FromChk, OptionL0, Pairs) :-
 			on_trace(collect_violations(M))
 		       |OptionL]),
       findall(error-Issue,
-	      ( retract(violations_db(Issue))
+	      ( retract(violations_db(From, CPI, CTChecks)),
+		from_location(From, Loc),
+		Issue = body(Loc-CPI)-CTChecks
 	      ; current_head_ctcheck(M, FromChk, Issue)
 	      ),
 	      Pairs, Props),
@@ -199,8 +202,16 @@ collect_violations(M, CM:Goal, Caller, From) :-
     check_property_ctcheck(Goal, M, CM, CTChecks),
     CTChecks \= [],
     normalize_pi(Caller, CPI),
-    from_location(From, Loc),
-    assertz(violations_db(body(Loc-CPI)-CTChecks)).
+    forall(( clause(violations_db(From0, CPI, CTChecks), _, Ref),
+	     subsumes_from(From0, From)
+	   ),			% Erase less precise facts
+	   erase(Ref)),
+    ( \+ ( violations_db(From0, CPI, CTChecks),
+	   subsumes_from(From, From0 )
+	 )			% Assert if no more precise
+    ->assertz(violations_db(From, CPI, CTChecks))
+    ; true
+    ).
 
 check_property_ctcheck(Goal, M, CM, AssrErrorL) :-
     tabled_generate_ctchecks(Goal, M, CM, CTCheck),
