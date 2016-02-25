@@ -47,7 +47,7 @@
 :- use_module(library(option_utils)).
 
 :- dynamic
-    tablecheck_db/3,
+    tablecheck_db/4,
     assertions_db/1,
     violations_db/1,
     rtcheck_db_1/3,
@@ -62,7 +62,7 @@ checker:check(assertions, Result, OptionL0) :-
     check_assertions(from_chk(FileChk), OptionL, Result).
 
 cleanup_db :-
-        retractall(tablecheck_db(_, _, _)),
+        retractall(tablecheck_db(_, _, _, _)),
 	retractall(assertions_db(_)),
 	retractall(violations_db(_)).
 
@@ -97,7 +97,7 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     current_predicate(M:F/A),
     functor(H, F, A),
     \+ predicate_property(M:H, imported_from(_)),
-    tabled_generate_ctchecks(H, M, CTCheck),
+    tabled_generate_ctchecks(H, M, _CM, CTCheck), % Keep _CM uninstantiated
     CTCheck \= _:true,
     nth_clause(M:H, _, Clause),
     From = clause(Clause),
@@ -135,7 +135,7 @@ current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
     ),
     checker_t(Checker),
     implementation_module(N:H, IM),
-    check_property(Checker, H, IM, Issues),
+    check_property(Checker, H, IM, CM, Issues),
     from_location(From, Loc).
 
 prolog:message(acheck(assertions)) -->
@@ -188,7 +188,7 @@ record_checks(M, FromChk, CM:Goal, Caller, From) :-
     \+ black_list(Caller),
     call(FromChk, From),
     implementation_module(CM:Goal, M),
-    check_property_ctcheck(Goal, M, CTChecks),
+    check_property_ctcheck(Goal, M, CM, CTChecks),
     CTChecks \= [],
     assertz(assertions_db(From)).
 
@@ -196,14 +196,14 @@ record_checks(M, FromChk, CM:Goal, Caller, From) :-
 :- meta_predicate collect_violations(?, 0, +, +).
 collect_violations(M, CM:Goal, Caller, From) :-
     implementation_module(CM:Goal, M),
-    check_property_ctcheck(Goal, M, CTChecks),
+    check_property_ctcheck(Goal, M, CM, CTChecks),
     CTChecks \= [],
     normalize_pi(Caller, CPI),
     from_location(From, Loc),
     assertz(violations_db(body(Loc-CPI)-CTChecks)).
 
-check_property_ctcheck(Goal, M, AssrErrorL) :-
-    tabled_generate_ctchecks(Goal, M, CTCheck),
+check_property_ctcheck(Goal, M, CM, AssrErrorL) :-
+    tabled_generate_ctchecks(Goal, M, CM, CTCheck),
     CTCheck \= _:true, % Skip lack of assertions or assertions that will not
                        % trigger violations
     do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL).
@@ -216,7 +216,7 @@ do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL) :-
     ; check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL)
     ).
 
-check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL) :- 
+check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL) :-
     assertz(rtcheck_db_1(Goal, M, [])),
     AssrError = assrchk(_, _),
     intercept(CTCheck, AssrError, % Now execute the checks
@@ -230,29 +230,31 @@ checker_t(defined).
 checker_t(is_prop).
 checker_t(ctcheck).
 
-check_property(defined, H, M, M:F/A) :- % This will also be reported by
-                                        % check_undefined, but is here to avoid
-                                        % dependency with other analysis.
+check_property(defined, H, M, _, M:F/A) :-
+				% Also reported by check_undefined, but is here
+				% to avoid dependency with other analysis.
     functor(H, F, A),
     \+ current_predicate(M:F/A).
-check_property(is_prop, H, M, M:F/A) :-
+check_property(is_prop, H, M, _, M:F/A) :-
     resolve_calln(M:H, M:G),
     functor(G, F, A),
     \+ verif_is_property(M, F, A).
-check_property(ctcheck, H, M, CTChecks) :- % compile-time checks. Currently only
-                                           % compatibility checks.
-    check_property_ctcheck(H, M, CTChecks),
+check_property(ctcheck, H, M, CM, CTChecks) :-
+				% compile-time checks. Currently only
+				% compatibility checks.
+    check_property_ctcheck(H, M, CM, CTChecks),
     CTChecks \= [].
 
-%% tabled_generate_ctchecks(+, +, -) is det
+%% tabled_generate_ctchecks(+, +, ?, -) is det
 %
-tabled_generate_ctchecks(H, M, Goal) :-
-    ( tablecheck_db(H, M, Goal)
+tabled_generate_ctchecks(H, M, CM, Goal) :-
+    ( tablecheck_db(H, M, CM, Goal)
     ->true
     ; functor(H, F, A),
       functor(P, F, A),
-      generate_ctchecks(P, M, Goal),
-      assertz(tablecheck_db(P, M, Goal)),
+      generate_ctchecks(P, M, CM0, Goal),
+      assertz(tablecheck_db(P, M, CM0, Goal)),
+      CM0 = CM,
       P = H
     ).
 
