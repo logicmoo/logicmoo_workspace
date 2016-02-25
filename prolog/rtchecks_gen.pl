@@ -2,7 +2,7 @@
 			 collect_assertions/4,
 			 current_assertion/4,
 			 generate_rtchecks/6,
-			 generate_ctchecks/3,
+			 generate_ctchecks/4,
 			 proc_ppassertion/3,
 			 current_assertion/12]).
 
@@ -338,7 +338,7 @@ generate_rtchecks(Assrs, M, G1, G2, G3, G) :-
 % Generate compile-time checks, currently only compatibility is checked,
 % fails if no ctchecks can be applied to Pred
 %
-generate_ctchecks(Pred, M, Lits) :-
+generate_ctchecks(Pred, M, CM, Lits) :-
     functor(Pred, F, A),
     functor(Head, F, A),
     collect_assertions(Head, M, ctcheck, Assertions0),
@@ -347,7 +347,7 @@ generate_ctchecks(Pred, M, Lits) :-
 				% but we gain computability of checks at
 				% earlier, even compile-time. --EMM
     compat_rtchecks(Assertions, M, _, [], _, Goal0, []),
-    qualify_meta_goal(Pred, M, M, Head), % ???
+    qualify_meta_goal(Pred, M, CM, Head), % ???
     lists_to_lits(Goal0, Lits).
 
 %% Trivial abstraction: Check for compatibility issues in properties,
