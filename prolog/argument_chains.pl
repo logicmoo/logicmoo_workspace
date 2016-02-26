@@ -32,6 +32,7 @@
 	   argument_chain/2,
 	   unlinked_arg/4,
 	   arg_id/6,
+	   lead_to_root/1,
 	   linked_arg/2]).
 
 :- use_module(library(extra_codewalk)).
@@ -172,3 +173,16 @@ argument_chain_rec(Id, [M:F/A-Idx/Pos|Chain]) :-
     linked_arg(Ref, Id),
     argument_chain_rec(Ref, Chain).
 argument_chain_rec(_, []).
+
+lead_to_root(Chain) :-
+    lead_to_root([], Chain).
+
+lead_to_root(Chain0, Chain) :-
+    linked_arg(0, Id),
+    lead_to_root(Id, Chain0, Chain).
+
+lead_to_root(Id, Chain, [Id|Chain]).
+lead_to_root(Id, Chain0, Chain) :-
+    linked_arg(Id, Id2),
+    \+ memberchk(Id2, [Id|Chain0 ]),
+    lead_to_root(Id2, [Id|Chain0 ], Chain).
