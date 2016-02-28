@@ -39,6 +39,7 @@
 :- use_module(library(implementation_module)).
 
 :- dynamic
+    clause_db/1,
     unlinked_arg/4,
     linked_arg/2,
     arg_id/6,
@@ -89,7 +90,7 @@ check_argument_fixpoint(Stage, OptionL) :-
 propagate_argument_1(Stage, NStage, FromChk, MGoal, MCaller, From) :-
     propagate_argument(argument_cond_1(Id), record_callee_1(Id), Stage, NStage, FromChk, MGoal, MCaller, From).
 
-argument_cond_1(Id, Goal, M, Pos, Stage, _, _, _, _, _) :-
+argument_cond_1(Id, Goal, M, Pos, Stage, _, _) :-
     arg_id(Goal, M, _, Pos, Stage, Id),
     \+ ( arg_id(Goal, M, _, Pos, PStage, _),
 	 PStage < Stage
@@ -100,7 +101,7 @@ record_callee_1(Id, _, _, _, Ref, Id) :- assertz(clause_db(Ref)).
 propagate_argument_2(Stage, NStage, FromChk, MGoal, MCaller, From) :-
     propagate_argument(argument_cond_2, record_callee_2, Stage, NStage, FromChk, MGoal, MCaller, From).
 
-argument_cond_2(Goal, M, Pos, _, NStage, H, CM, Idx, CPos) :-
+argument_cond_2(Goal, M, Pos, _, NStage, CM:H-Idx/CPos) :-
     \+ arg_id(Goal, M, _, Pos, _, _),
     arg_id(H, CM, Idx, CPos, NStage, _).
 
@@ -147,7 +148,7 @@ propagate_argument(GoalCondition, RecordCallee, Stage, NStage, FromChk, MGoal, M
 	 predicate_property(MGoal, meta_predicate(Meta)),
          arg(Pos, Meta, 0 )
        ),
-    call(GoalCondition, Goal, IM, Pos, Stage, NStage, H, CM, Idx, CPos),
+    call(GoalCondition, Goal, IM, Pos, Stage, NStage, CM:H-Idx/CPos),
     arg(CPos, Caller, CArg),
     \+ ( arg_id(H, CM, Idx, CPos, PStage, _),
 	 PStage < NStage

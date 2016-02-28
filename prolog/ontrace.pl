@@ -60,15 +60,13 @@ call_inout(Goal, OnIn, OnOut) :-
     (OnOut;OnIn,fail),
     (C0==C1 -> ! ;true).
 
-% Kludge to get an anonymous true/1 predicate:
-:- meta_predicate true_1(1,-).
-true_1(G, G).
+:- public true_1/1.
+true_1(_).
 
 %% setup_trace(!State, :OnTrace, +OptL) is det.
 setup_trace(State, M:OnTrace, OptL) :-
-    true_1(\_^true, True1),
-    select_option(goal(ValidGoal), OptL,  OptL1, True1),
-    select_option(file(ValidFile), OptL1, OptL2, True1),
+    select_option(goal(ValidGoal), OptL,  OptL1, ontrace:true_1(_)),
+    select_option(file(ValidFile), OptL1, OptL2, ontrace:true_1(_)),
     %% redo port have weird bugs, ignoring it for now:
     select_option(ports(PortList), OptL2, _,
 		  [call, exit, fail, unify, exception]),
@@ -128,10 +126,14 @@ do_trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
 do_trace_port(_, _, _, _, _, _, continue).
 
 find_parents(Port, Frame, ParentL, RFrame, Cl, Loc) :-
-    ( % Due to a bug in SWI-Prolog, we can not rely on redo(PC) +
-      % $clause_term_position(Cl,PC,List), in any case, the coverage of builtins
-      % is not big deal, compared to the coverage of custom predicates --EMM
-      member(Port, [redo(_PC), unify /*, exit*/])
+    ( Port = redo(RPC)
+    ->ParentL = [],
+      writeln(user_error, prolog_frame_attribute(Frame, clause, Cl)),
+      RFrame = Frame,
+      prolog_frame_attribute(Frame, clause, Cl),
+      '$fetch_vm'(Cl, RPC, PC, _VMI),
+      Loc = clause_pc(Cl, PC)
+    ; member(Port, [unify /*, exit*/])
     % TODO: if exit placed here, then it is marked in the clause, else in the
     % literal, perhaps would be good to have exit_clause and exit_lit
     ->ParentL = [],
@@ -163,11 +165,14 @@ find_parent_with_pc(Frame, PC, List0, List) :-
 clause_pc_location(Clause, PC, Loc) :-
     clause_location_cache(Clause, PC, Loc), !.
 clause_pc_location(Clause, PC, Loc) :-
+    get_clause_pc_location(Clause, PC, Loc),
+    assertz(clause_location_cache(Clause, PC, Loc)).
+
+get_clause_pc_location(Clause, PC, Loc) :-
     ( '$clause_term_position'(Clause, PC, List)
     ->clause_subloc(Clause, List, Loc)
     ; Loc = clause(Clause)
-    ),
-    assertz(clause_location_cache(Clause, PC, Loc)).
+    ).
 
 prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_pc_location(Clause, PC, Loc)},
