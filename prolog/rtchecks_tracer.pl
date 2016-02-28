@@ -190,7 +190,8 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       ->generate_rtchecks(Goal, CM, RTChecks),
 	( CM:Goal == RTChecks
 	->Action = continue
-	; Action = call(rat_trap(RTChecks, Caller, Clause, PC))
+	; '$fetch_vm'(Clause, PC, NPC, _VMI),
+	  Action = call(rat_trap(RTChecks, Caller, Clause, NPC))
 	)
       ; Action = continue
       )
