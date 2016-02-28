@@ -95,7 +95,10 @@ assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
       include(select_defined, Values1, Values2),
       sort(Values2, Values)
     },
-    prolog:message_location(ALoc),
+    ( {nonvar(ALoc)}
+    ->prolog:message_location(ALoc)
+    ; []
+    ),
     ['Assertion failure for ~q.'-[Pred], nl],
     ['\tIn *~w*, unsatisfied properties: '-[Type], nl],
     ['\t\t~q.'-[Props]],
