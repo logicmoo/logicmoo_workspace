@@ -12,7 +12,6 @@
 
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer).
-filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_send).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
 filtered_backtrace:no_backtrace_clause_hook(_, intercept).
 filtered_backtrace:no_backtrace_clause_hook(_, nativeprops).

@@ -68,13 +68,13 @@ black_list_callee_system(callable(_)).
 black_list_callee_system(atom(_)).
 
 black_list_module(assrt_lib).
+black_list_module(send_check).
 black_list_module(rtchecks_tr).
 black_list_module(rtchecks_rt).
 black_list_module(rtchecks_eval).
 black_list_module(rtchecks_tracer).
 black_list_module(rtchecks_utils).
 black_list_module(rtchecks_basic).
-black_list_module(rtchecks_send).
 black_list_module('$expand').
 black_list_module(complete_dict).
 black_list_module(basicprops).
