@@ -11,6 +11,7 @@
 :- use_module(library(rtchecks_eval)).
 :- use_module(library(rtchecks_utils)).
 :- use_module(library(rtchecks_tracer)).
+:- use_module(library(intercept)).
 
 user:message_property(_, location_prefix(_, '', 'ERROR: ')).
 user:message_property(_, stream(current_output)) :- user:error_on_co.
@@ -40,8 +41,7 @@ test(rtc_external) :-
 test(rtcompile) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
     call_in_module_dir(plunit_rtchecks,
-		       ( 
-			 use_module('../examples/rtchecks_disc', []),
+		       ( use_module('../examples/rtchecks_disc', []),
 			 ['../examples/rtchecks_example2'],
 			 use_module('../examples/rtchecks_example', [])
 		       )),
@@ -50,13 +50,27 @@ test(rtcompile) :-
 
 :- ['../examples/rtchecks_example3'].
 
-test(rtexec) :-
+test(rtexec1) :-
     save_rtchecks(do_trace_rtc(test1)),
     load_rtchecks(E),
     assertion(E=[assrchk(ppt(_,_),
 			 error(pp_check, check/1,
 			       [(rtchecks_example3: (0>0 ))-[]],
 			       _))]).
+
+test(rtexec2) :-
+    intercept(do_trace_rtc(test1), Error, print_message(information, Error)).
+
+test(rtexec3) :-
+    ignore(save_rtchecks(do_trace_rtc(p(_)))),
+    load_rtchecks(E),
+    assertion(E=[assrchk(ppt(rtchecks_example3:r/0,
+			     clause_pc(_, 7)), error(comp, qq, [not_fails-[fails(qq)]],
+						     file(_, _, _, _))),
+		 assrchk(ppt(rtchecks_example3:p/1,
+			     clause_pc(_, 3)), error(comp, r, [det-[fails(r)]],
+						     file(_, _, _, _)))]).
+
 
 substitute_file_4(File4, _) :-
     nonvar(File4),

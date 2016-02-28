@@ -3,11 +3,13 @@
 			      test1/0,
 			      animal/1,
 			      family/1,
-			      fullasr/2]).
+			      fullasr/2,
+			      p/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
 :- use_module(library(nativeprops)).
+:- use_module(library(plprops)).
 
 :- pred nullasr/2.
 
@@ -38,3 +40,18 @@ family(B) :- atm(B).
 :- pred fullasr(A, B) :: int(A) : animal(A) => family(B) + is_det.
 
 fullasr(_, _).
+
+:- pred p/1 is semidet.
+
+p(_) :-
+    r.
+
+:- pred r/0 is det.
+r :-
+    display(2),
+    qq,
+    display(1).
+
+:- pred qq/0 + not_fails.
+
+qq :- fail.
