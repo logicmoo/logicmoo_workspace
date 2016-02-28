@@ -29,7 +29,7 @@
 
 :- module(assrt_interface, []).
 
-:- use_module(assertions(assrt_lib), []).
+:- use_module(library(assrt_lib), []).
 :- use_module(library(interface), []).
 
 % Propagate assertions in an interface to the implementation

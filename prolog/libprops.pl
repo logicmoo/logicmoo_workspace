@@ -4,7 +4,7 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
-:- use_module(assertions(termtyping), []).
+:- use_module(library(termtyping), []).
 :- use_module(library(plprops)).
 
 :- pred functor(+, -atm, -nnegint) is det.
