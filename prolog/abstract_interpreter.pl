@@ -272,7 +272,7 @@ match_head_body(Goal, M, CMBody, From) :-
       CMBody = CM:Body
     ).
 
-:- use_module(xlibrary(interface), []).
+:- use_module(library(interface), []).
 
 :- multifile extra_clauses/4.
 
