@@ -38,7 +38,7 @@
 :- use_module(library(infer_meta_if_required)).
 :- use_module(library(location_utils)).
 
-user:file_search_path(checkers, xtools(checkers)).
+user:file_search_path(checkers, library(checkers)).
 
 :- multifile
     prepare_results/3,	% Custom preparation method
