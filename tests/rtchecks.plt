@@ -6,11 +6,11 @@
 :- dynamic
     user:error_on_co/0.
 
-:- use_module(xlibrary(call_in_dir)).
-:- use_module(xlibrary(substitute)).
-:- use_module(rtchecks(rtchecks_eval)).
-:- use_module(rtchecks(rtchecks_utils)).
-:- use_module(rtchecks(rtchecks_tracer)).
+:- use_module(library(call_in_dir)).
+:- use_module(library(substitute)).
+:- use_module(library(rtchecks_eval)).
+:- use_module(library(rtchecks_utils)).
+:- use_module(library(rtchecks_tracer)).
 
 user:message_property(_, location_prefix(_, '', 'ERROR: ')).
 user:message_property(_, stream(current_output)) :- user:error_on_co.

@@ -6,12 +6,12 @@
 		       ]).
 
 :- use_module(library(assertions)).
-:- reexport(library(nativeprops)).
-:- reexport(library(basicprops)).
-:- reexport(rtchecks(rtchecks_send)).
-:- use_module(assertions(termtyping), []). % assertions about builtins
+:- use_module(library(termtyping), []). % assertions about builtins
 :- use_module(library(plprops)).
 :- use_module(library(context_values)).
+:- reexport(library(send_check)).
+:- reexport(library(nativeprops)).
+:- reexport(library(basicprops)).
 
 :- doc(author, "Edison Mera").
 

@@ -1,7 +1,7 @@
 :- module(rtchecks, []).
 
 :- use_module(library(rtchecks_flags)).
-:- reexport(rtchecks(rtchecks_utils)).
-:- reexport(rtchecks(rtchecks_gen)).
-:- reexport(rtchecks(rtchecks_eval)).
-:- reexport(rtchecks(rtchecks_rt)).
+:- reexport(library(rtchecks_utils)).
+:- reexport(library(rtchecks_gen)).
+:- reexport(library(rtchecks_eval)).
+:- reexport(library(rtchecks_rt)).

@@ -5,7 +5,7 @@
 :- use_module(library(apply)).
 :- use_module(library(rtchecks_eval)).
 :- use_module(library(rtchecks_gen)).
-:- use_module(system:rtchecks(rtchecks_rt)).
+:- use_module(system:library(rtchecks_rt)).
 :- use_module(library(rtchecks_utils)).
 :- use_module(library(implementation_module)).
 :- use_module(library(intercept)).
