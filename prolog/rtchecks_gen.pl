@@ -307,9 +307,6 @@ comps_parts_to_comp_lit(PropValues, Comp0, M, Info, Body0, Body) :-
 	comps_to_goal(Comp, Body1, Body2),
 	( Body1 == Body2
 	->Body0 = Body
-	; PropValues == [] ->
-	  Body2 = Body,
-	  Body0 = M:Body1
 	; Body0 = checkif_comp(PropValues, Info, M:Body1, Body2, M:Body)
 	).
 
