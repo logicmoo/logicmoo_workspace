@@ -41,6 +41,7 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
+:- use_module(library(extra_codewalk)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
 
@@ -84,10 +85,9 @@ collect_called_from(Ref, M, CM, Caller, OptionL0) :-
 		   autoload(false),
 		   evaluate(false),
 		   trace_reference(_:Ref),
-		   module_class([user, system, library]),
-		   on_trace(collect_call_point(M, CM, Caller))],
+		   module_class([user, system, library])],
 		  OptionL0, OptionL),
-    prolog_walk_code(OptionL).
+    extra_walk_code(OptionL, collect_call_point(M, CM, Caller, FromChk), M, FromChk).
 
 current_called_from(H, M, CM, From, Caller) :-
     current_used_from([retract, query], H, M, CM, From, Caller).
@@ -101,7 +101,8 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
     ).
 
 :- public collect_call_point/6.
-collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
+collect_call_point(IM, M, Caller, FromChk, MGoal, Caller, From) :-
+    call(FromChk, From),
     record_location_dynamic(MGoal, IM, From),
     MGoal = M:Goal,
     implementation_module(MGoal, IM),

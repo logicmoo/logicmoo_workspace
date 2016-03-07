@@ -113,11 +113,11 @@ found_undef(To, Caller, From) :-
     ).
 
 found_undef_assr(M, FromChk) :-
-    forall(( assertion_head_body_loc(Head, M, _, _, _, _, _, _, From),
+    forall(( head_prop_asr(Head, M, _, _, _, _, From, _),
 	     functor(Head, F, A),
 	     \+ current_predicate(M:F/A),
 	     call(FromChk, From)),
-	   found_undef(M:Head, assrt_lib:assertion_head/7, From)).
+	   found_undef(M:Head, assrt_lib:head_prop_asr/8, From)).
 
 :- public collect_undef/5.
 :- meta_predicate collect_undef(?,1,+,+,+).

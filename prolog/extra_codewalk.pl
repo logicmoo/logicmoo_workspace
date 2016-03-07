@@ -96,8 +96,19 @@ decl_walk_code(Tracer, M) :-
 	   ignore(call(Tracer, M:Head, _:'<declaration>', From))).
 
 assr_walk_code(Tracer, M) :-
-    forall(assertion_db(Head, _, M, _, _, _, _, _, _, _, _, From),
-	   ignore(call(Tracer, M:Head, _:'<assertion>', From))).
+    head_prop_asr(Head, M, _, _, _, _, Loc, Idx),
+    ( call(Tracer, M:Head, _:'<assertion>', Loc)
+    ; ( ( asr_comp(Idx, PM, Prop)
+	; asr_call(Idx, PM, Prop)
+	; asr_succ(Idx, PM, Prop)
+	)
+      ; asr_glob(Idx, PM, Prop1),
+	add_arg(_, Prop1, Prop)
+      ),
+      call(Tracer, PM:Prop, M:Head, Loc)
+    ),
+    fail.
+assr_walk_code(_, _).
 
 record_issues(CRef) :-
     assertz(issues(CRef)).

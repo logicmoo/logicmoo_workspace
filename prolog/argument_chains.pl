@@ -132,6 +132,7 @@ record_linked(H, M, Idx, Pos, Stage, Id) :-
     ; assertz(linked_arg(Id, Ref))
     ).
 
+:- meta_predicate propagate_argument(6,5,?,?,1,?,?,?).
 propagate_argument(GoalCondition, RecordCallee, Stage, NStage, FromChk, MGoal, MCaller, From) :-
     call(FromChk, From),
     MGoal = _:Goal,

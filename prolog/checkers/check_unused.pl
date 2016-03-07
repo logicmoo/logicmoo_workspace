@@ -75,7 +75,9 @@ cleanup_unused :-
     retractall(edge(_, _)).
 
 is_entry_caller('<initialization>') :- !.
-is_entry_caller(Ref) :- !,
+is_entry_caller('<assertion>') :- !, fail.
+is_entry_caller(M:H) :- !, entry_caller(M, H).
+is_entry_caller(Ref) :-
     clause(M:H, _, Ref), % Unify head
     entry_caller(M, H).
 
@@ -151,6 +153,8 @@ put_narrow_mark(M:G) :-
 
 %% Generalization step, we lose precision but avoid loops --EMM
 mark_to_head('<initialization>', _:'<initialization>'-0) :- !.
+mark_to_head('<assertion>', _:'<assertion>'-0) :- !.
+mark_to_head(M:H, M:H-_) :- !.
 mark_to_head(CRef, M:H-I) :-
     clause(M:H, _, CRef),
     nth_clause(M:H, I, CRef).
@@ -362,7 +366,13 @@ unused_mo_clpfd(clpfd_gcc_aux).
 unused_mo_clpfd(clpfd_aux).
 
 caller_ptr('<initialization>', _, '<initialization>') :- !.
-caller_ptr(_, clause(Ptr), Ptr).
+caller_ptr('<assertion>',      _, '<assertion>') :- !.
+caller_ptr(_, clause(Ptr), Ptr) :- !.
+caller_ptr(M:H, _, Ptr) :-
+    ( \+ predicate_property(M:H, built_in)
+    ->clause(M:H, _, Ptr)
+    ; Ptr = M:H
+    ).
 
 cu_caller_hook(Caller, M:Head, CM, Type, Goal, _, From) :-
     nonvar(M),
