@@ -66,7 +66,7 @@ generate_literal_rtchecks(CM, Goal0, RTChecks) :-
     ).
 
 generate_pred_rtchecks(Goal, M, RTChecks, Pred, PM) :-
-    ( assertion_head_body(Goal, M, _, prop, _, _, _, _, _, _)
+    ( head_prop_asr(Goal, M, _, prop, _, _, _, _)
     ->RTChecks = PM:Pred
     ; functor(Goal, F, A),
       functor(Head, F, A),
