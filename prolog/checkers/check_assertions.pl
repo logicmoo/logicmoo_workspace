@@ -52,7 +52,7 @@
     assertions_db/1,
     violations_db/3,
     rtcheck_db_1/3,
-    rtcheck_db/3.
+    rtcheck_db/4.
 
 :- multifile
     prolog:message//1.
@@ -80,32 +80,30 @@ check_assertions(FromChk, OptionL0, Pairs) :-
 		     |OptionL]),
     findall(CRef, retract(assertions_db(clause(CRef))), ClausesU),
     sort(ClausesU, Clauses),
-    ( Clauses==[]
-    ->Pairs=[]
-    ; prolog_walk_code([clauses(Clauses),
+    prolog_walk_code([clauses(Clauses),
 			on_trace(collect_violations(M))
-		       |OptionL]),
-      findall(error-Issue,
-	      ( retract(violations_db(From, CPI, CTChecks)),
-		from_location(From, Loc),
-		Issue = body(Loc-CPI)-CTChecks
-	      ; current_head_ctcheck(M, FromChk, Issue)
-	      ),
-	      Pairs, Props),
-      prop_ctcheck(M, FromChk, Props)
-    ).
+		     |OptionL]),
+    findall(error-Issue,
+	    ( retract(violations_db(From, CPI, CTChecks)),
+	      from_location(From, Loc),
+	      Issue = body(Loc-CPI)-CTChecks
+	    ; current_head_ctcheck(M, FromChk, Issue)
+	    ),
+	    Pairs, Props),
+    prop_ctcheck(M, FromChk, Props).
 
 current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     PI=M:F/A,
     current_predicate(M:F/A),
     functor(H, F, A),
     \+ predicate_property(M:H, imported_from(_)),
+    \+ predicate_property(M:H, built_in),
+    \+ predicate_property(M:H, foreign),
     tabled_generate_ctchecks(H, M, _CM, CTCheck), % Keep _CM uninstantiated
     CTCheck \= _:true,
-    nth_clause(M:H, _, Clause),
+    clause(M:H, _, Clause),
     From = clause(Clause),
     call(FromChk, From),
-    clause(M:H, _, Clause),
     do_check_property_ctcheck(H, M, CTCheck, AssrErrorL),
     % Although we have duplicated logic, we don't call check_property_ctcheck/3
     % here because is too slow:
@@ -220,14 +218,14 @@ check_property_ctcheck(Goal, M, CM, AssrErrorL) :-
     do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL).
 
 do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL) :-
-    ( copy_term_nat(Goal, Goal2),
-      rtcheck_db(Goal, M, AssrErrorL),
-      Goal =@= Goal2
+    ( variant_sha1(Goal, SHA1),
+      rtcheck_db(SHA1, Goal, M, AssrErrorL)
     ->true
     ; check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL)
     ).
 
 check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL) :-
+    variant_sha1(Goal, SHA1),
     assertz(rtcheck_db_1(Goal, M, [])),
     AssrError = assrchk(_, _),
     intercept(CTCheck, AssrError, % Now execute the checks
@@ -235,7 +233,7 @@ check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL) :-
 		assertz(rtcheck_db_1(Goal, M, [AssrError|AssrErrorL]))
 	      )),
     retract(rtcheck_db_1(Goal, M, AssrErrorL)),
-    assertz(rtcheck_db(Goal, M, AssrErrorL)).
+    assertz(rtcheck_db(SHA1, Goal, M, AssrErrorL)).
 
 checker_t(defined).
 checker_t(is_prop).
