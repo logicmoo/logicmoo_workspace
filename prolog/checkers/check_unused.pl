@@ -369,7 +369,8 @@ caller_ptr('<initialization>', _, '<initialization>') :- !.
 caller_ptr('<assertion>',      _, '<assertion>') :- !.
 caller_ptr(_, clause(Ptr), Ptr) :- !.
 caller_ptr(M:H, _, Ptr) :-
-    ( \+ predicate_property(M:H, built_in)
+    ( \+ predicate_property(M:H, built_in),
+      \+ predicate_property(M:H, foreign)
     ->clause(M:H, _, Ptr)
     ; Ptr = M:H
     ).
