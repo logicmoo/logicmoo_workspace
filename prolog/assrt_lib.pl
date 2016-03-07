@@ -1,12 +1,14 @@
 :- module(assrt_lib, [assertion_read/9,
 		      assertion_body/7,
-		      assertion_head_body/10,
-		      assertion_head_body_loc/9,
 		      comps_to_goal/3,
 		      comps_to_goal/4,
 		      assertion_records/4,
-		      a_fake_body/5,
 		      assertion_db/12,
+		      head_prop_asr/8,
+		      asr_glob/3,
+		      asr_comp/3,
+		      asr_call/3,
+		      asr_succ/3,
 		      normalize_assertion_head/9,
 		      add_arg/3,
 		      qualify_with/3,
@@ -25,14 +27,17 @@
 % Assertion reader for SWI-Prolog
 
 :- multifile
-    assrt_lib:assertion_head/7,
-    assrt_lib:doc_db/4,
-    assrt_lib:nodirective_error_hook/1.
+    head_prop_asr/8,
+    asr_glob/3,
+    asr_comp/3,
+    asr_call/3,
+    asr_succ/3,
+    doc_db/4,
+    nodirective_error_hook/1.
 
 :- dynamic
-    assrt_lib:assertion_head/7,
-    assrt_lib:doc_db/4,
-    assrt_lib:nodirective_error_hook/1.
+    doc_db/4,
+    nodirective_error_hook/1.
 
 % :- volatile
 %     assrt_lib:assertion_head/7,
@@ -68,41 +73,33 @@ list_conj_2([], E, E).
 %     conj_list(B).
 % conj_list(A) --> [A].
 
-a_fake_body(CompL, CallL, SuccL, GlobL0, (call(Comp), call(Call), call(Succ), call(Glob))) :-
-    list_conj(CompL, Comp),
-    list_conj(CallL, Call),
-    list_conj(SuccL, Succ),
-    ( nonvar(Glob)
-    ->list_conj(GlobL, Glob),
-      maplist(add_arg(_), GlobL0, GlobL)
-    ; maplist(add_arg(_), GlobL0, GlobL),
-      list_conj(GlobL, Glob)
-    ).
+:- meta_predicate collect(?,^,-).
+collect(Tmpl, Goal, List) :-
+    (bagof(Tmpl, Goal, List) *-> true ; List = []).
+
+collect_props(Idx, CM, CompL, CallL, SuccL, GlobL) :-
+    collect_prop(asr_comp(Idx), CM, CompL),
+    collect_prop(asr_call(Idx), CM, CallL),
+    collect_prop(asr_succ(Idx), CM, SuccL),
+    collect_prop(asr_glob(Idx), CM, GlobL).
+
+collect_prop(GenProp, CM, PropL) :- 
+    collect(MProp,
+	    M^Prop^( call(GenProp, M, Prop),
+		     ( M \= CM
+		     ->MProp = M:Prop
+		     ; MProp = Prop
+		     )
+		   ), PropL).
 
 % Note: assertion_db/12 encapsulates the nasty call to clause/2 and can be
 % extended to fetch assertions from extra places.
 %
 :- multifile assertion_db/12.
 assertion_db(Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
-    assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, CM, Loc),
-    once(a_fake_body(Comp, Call, Succ, Glob, FBody)).
-
-assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, CM, Ref) :-
-    clause(assertion_head(Head, M, Status, Type, Comm, Dict, Pos), CM:FBody, Ref).
-
-assertion_head_body_loc(Head, M, Status, Type, Comm, Dict, FBody, CM, Loc) :-
-    assertion_head_body(Head, M, Status, Type, Comm, Dict, Pos, FBody, CM, Ref),
-    clause_pos_location(Ref, Pos, Loc).
-
-clause_pos_location(Ref, Pos, Loc) :-
-    ( clause_property(Ref, file(File)),
-      clause_property(Ref, line_count(Line))
-    ->( var(Pos)
-      ->Loc = file(File, Line, -1, _)
-      ; Loc = file(File, Line, Pos, _)
-      )
-    ; Loc = clause(Ref)
-    ).
+    head_prop_asr(Head, CM, Status, Type, Comm, Dict, Loc, Idx),
+    implementation_module(CM:Head, M),
+    collect_props(Idx, CM, Comp, Call, Succ, Glob).
 
 filepos_line(File, CharPos, Line, LinePos) :-
     setup_call_cleanup('$push_input_context'(filepos),
@@ -628,39 +625,52 @@ assertion_records(M, Dict, doc(Key, Doc),
 				 term_position(From, To, FFrom, FTo,
 					       [KPos, 0-0, DPos, 0-0 ])])) :- !.
 % Note: We MUST save the full location (File, HPos), because later we will not
-% have access to source_location/2, and it will fails for further created
+% have access to source_location/2, and this will fails for further created
 % clauses --EMM
 assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
-    Clause0 = (assrt_lib:assertion_head(Head, M, Status, Type, Co, Dict, Pos) :- FBody),
-    ( source_location(File, Line0 )
-    ->Clause = ('$source_location'(File, Line):Clause0 )
-    ; Clause = Clause0
-    ),
     findall(a(Match, Clause, HPos),
-	    ( ( nonvar(APos) ->NonVarAPos=true ; NonVarAPos = fail ),
-	      current_normalized_assertion(Assertions, CM, APos, HM:Head, Status,
-					   Type, Cp, Ca, Su, Gl, Co, HPos),
-	      implementation_module(HM:Head, M),
-	      ( nonvar(File)
-	      ->( nonvar(HPos),
-		  arg(1, HPos, HFrom),
-		  integer(HFrom)
-		->filepos_line(File, HFrom, Line, Pos)
-		; ( NonVarAPos=true,
-		    arg(1, APos, AFrom),
-		    integer(AFrom)
-		  ->filepos_line(File, AFrom, Line, Pos)
-		  ; Line = Line0
-		  )
-		)
-	      ; true		% Loc will be instantiated later
-	      ),
-	      a_fake_body(Cp, Ca, Su, Gl, FBody)
-	    ),
+	    assertion_record_each(CM, Dict, Assertions, APos, Clause, HPos),
 	    ARecords),
-    ARecords \= [], % Is a valid assertion if it defines at least one Record
+    ARecords \= [],
     maplist(assertion_records_helper(Match), ARecords, Records, RPos).
+
+assertion_record_each(CM, Dict, Assertions, APos, Clause, HPos) :-
+    ignore(source_location(File, Line0 )),
+    ( nonvar(APos) ->NonVarAPos=true ; NonVarAPos = fail ),
+    current_normalized_assertion(Assertions, CM, APos, M:Head, Status,
+				 Type, CpL, CaL, SuL, GlL, Co, HPos),
+    ( nonvar(File)
+    ->( nonvar(HPos),
+	arg(1, HPos, HFrom),
+	integer(HFrom)
+      ->filepos_line(File, HFrom, Line, Pos)
+      ; ( NonVarAPos=true,
+	  arg(1, APos, AFrom),
+	  integer(AFrom)
+	->filepos_line(File, AFrom, Line, Pos)
+	; Line = Line0,
+	  Pos = -1
+	)
+      ),
+      Loc = file(File, Line, Pos, _)
+    ; true % Loc will be instantiated later
+    ),
+    get_sequence_and_inc(Count),
+    term_variables(t(CpL, CaL, SuL, GlL), ShareL),
+    atom_number(AIdx, Count),
+    Idx =.. [AIdx|ShareL], % Idx also contains variable bindings
+    Clause = assrt_lib:AClause,
+    ( AClause = head_prop_asr(Head, M, Status, Type, Co, Dict, Loc, Idx)
+    ; member(AClause-PrL,
+	     [asr_comp(Idx, PM, Pr)-CpL,
+	      asr_call(Idx, PM, Pr)-CaL,
+	      asr_succ(Idx, PM, Pr)-SuL,
+	      asr_glob(Idx, PM, Pr)-GlL
+	     ]),
+      member(MPr, PrL),
+      strip_module(CM:MPr, PM, Pr)
+    ).
 
 assertion_records(Decl, DPos, Records, RPos) :-
     '$set_source_module'(M, M),
@@ -668,6 +678,14 @@ assertion_records(Decl, DPos, Records, RPos) :-
     %% Dict Must be assigned after assertion_records/6 to avoid performance
     %% issues --EMM
     b_getval('$variable_names', Dict).
+
+:- dynamic sequence/1.
+sequence(1).
+
+get_sequence_and_inc(S) :-
+    retract(sequence(S)),
+    succ(S, S2),
+    assertz(sequence(S2)).
 
 /*
 :- use_module(library(dialect/ciao), []).
