@@ -37,8 +37,6 @@
 
 :- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
 
-% Extends assertion_db/12 to get assertions from meta predicate declarations.
-
 assrt_lib:asr_glob(am_idx(M, Head), assrt_meta, rtc_stub(RTChecks, Goal)) :-
     am_head_prop_idx(Head, M, Status, Spec, Pos),
     Pred = M:Head,

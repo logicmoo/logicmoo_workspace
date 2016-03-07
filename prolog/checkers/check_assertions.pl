@@ -119,24 +119,25 @@ prop_ctcheck(M, FromChk, Trans) :-
 	   ^group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
-    assertion_db(Head, M, CM, _, Type, Cp, Ca, Su, Gl, _, _, From),
+    head_prop_asr(Head, CM, _, Type, _, _, From, Asr),
     Type \= (test),
+    implementation_module(CM:Head, M),
     call(FromChk, From),
     functor(Head, HF,HA),
     PI=M:HF/HA,
-    ( ( member(Prop, Cp)
-      ; member(Prop, Ca)
-      ; member(Prop, Su)
+    ( ( asr_comp(Asr, PM, Prop)
+      ; asr_call(Asr, PM, Prop)
+      ; asr_succ(Asr, PM, Prop)
       ),
-      resolve_head(Prop, CM, N:H)
-    ; member(Glob, Gl),
-      resolve_head(Glob, CM, N:H0 ),
-      H0 =.. [F|Args],
+      resolve_head(Prop, PM, N:H)
+    ; asr_glob(Asr, PM, Glob),
+      resolve_head(Glob, PM, N:G),
+      G =.. [F|Args],
       H =.. [F, Head|Args]
     ),
     checker_t(Checker),
     implementation_module(N:H, IM),
-    check_property(Checker, H, IM, CM, Issues),
+    check_property(Checker, H, IM, PM, Issues),
     from_location(From, Loc).
 
 prolog:message(acheck(assertions)) -->
@@ -282,7 +283,8 @@ resolve_head(H, M, M:H).
 verif_is_property(system, true, 0) :- !.   % ignore true (identity)
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
-    assertion_db(H, AM, _, _, prop, _, _, _, _, _, _, _),
+    head_prop_asr(H, CM, _, prop, _, _, _, _),
+    implementation_module(CM:H, AM),
     ( AM = IM -> true
-    ; predicate_property(AM:H, imported_from(IM))
+    ; predicate_property(IM:H, imported_from(AM))
     ).
