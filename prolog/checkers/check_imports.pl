@@ -76,8 +76,8 @@ check_imports(OptionL, Pairs) :-
     collect_usemods(M, FromChk, Tail, []),
     cleanup_imports.
 
-:- meta_predicate collect_imports(?,1,+,+,+).
-collect_imports(M, FromChk, M:Goal, Caller, From) :-
+:- meta_predicate collect_imports(?,+,1,+,+,+).
+collect_imports(M, FromChk, _, M:Goal, Caller, From) :-
     call(FromChk, From),
     record_location_meta(M:Goal, _, From, all_call_refs, mark_import),
     ( nonvar(Caller),

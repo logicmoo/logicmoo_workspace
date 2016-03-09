@@ -31,6 +31,7 @@
 
 :- use_module(library(apply)).
 :- use_module(library(extra_location)).
+:- use_module(library(implementation_module)).
 :- use_module(library(from_utils)).
 
 :- multifile
@@ -45,7 +46,8 @@ record_location. % Enable recording of locations
 
 % Extra location for assertions of a given predicate
 extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
-    assrt_lib:head_prop_asr(Head, M, Status, Type, _, _, From, _).
+    assrt_lib:head_prop_asr(Head, CM, Status, Type, _, _, From, _),
+    implementation_module(CM:Head, M).
 
 :- multifile skip_record_decl/1.
 
@@ -162,18 +164,18 @@ assert_reexport_declaration_2(except(_),   _, _, _).
 assert_position(H, M, Type, TermPos) :-
     source_location(File, Line0 ),
     ( nonvar(TermPos)
-    ->arg(1, TermPos, CharCount),
-      filepos_line(File, CharCount, Line, LinePos)
+    ->arg(1, TermPos, Chars),
+      filepos_line(File, Chars, Line, LinePos)
       % Meld TermPos because later the source code will not be available and
       % therefore we will not be able to get LinePos
     ; Line = Line0,
       LinePos = -1
     ),
-    assert_location(H, M, Type, file(File, Line, LinePos, CharCount)).
+    assert_location(H, M, Type, File, Line, file(File, Line, LinePos, Chars)).
 
-assert_location(H, M, Type, From) :-
+assert_location(H, M, Type, File, Line, From) :-
     ( \+ have_extra_location(From, H, M, Type)
-    ->compile_aux_clauses(extra_location:loc_declaration(H, M, Type, From))
+    ->compile_aux_clauses('$source_location'(File, Line):extra_location:loc_declaration(H, M, Type, From))
     ; true
     ).
 

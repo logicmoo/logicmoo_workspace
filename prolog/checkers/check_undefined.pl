@@ -30,10 +30,8 @@
 :- module(check_undefined, []).
 
 % A wrapper from library(check)
-:- use_module(library(assrt_lib)).
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(prolog_codewalk)).
 :- use_module(library(clambda)).
 :- use_module(library(infer_alias)).
 :- use_module(library(normalize_pi)).
@@ -51,24 +49,15 @@
 checker:check(undefined, Results, OptionL) :-
     check_undefined(OptionL, Results).
 
-check_undefined(OptionL0, Pairs) :-
-    extra_wcsetup([trace_reference(-), undefined(trace)|OptionL0],
-		  OptionL, FromChk),
-    ignore(option(module(M), OptionL)),
-    prolog_walk_code([on_trace(collect_undef(M, FromChk))|OptionL]),
-    decl_walk_code(extra_undef(M, FromChk), M),
-    found_undef_assr(M, FromChk),
+check_undefined(OptionL, Pairs) :-
+    extra_walk_code([trace_reference(-), undefined(trace)|OptionL],
+		    collect_undef(M, FromChk), M, FromChk),
     findall(warning-(File-(AL-(PI-(Loc/['~w'-[CI]])))),
 	    ( retract(undef(PI, CI, From)),
 	      find_alternatives(PI, AL),
 	      from_location(From, Loc),
 	      from_to_file(From, File)
 	    ), Pairs).
-
-extra_undef(M, FromChk, M:Head, Caller, From) :-
-    functor(Head, F, A),
-    \+ current_predicate(M:F/A),
-    collect_undef(M, FromChk, M:Head, Caller, From).
 
 hide_undef(M:H) :- hide_undef(H, M).
 
@@ -99,10 +88,9 @@ exclude_list(M, AM, ex(ML, EL)) :-
 	    ), EU),
     sort(EU, EL).
 	      
-
 % Hook to hide undef messages:
 :- multifile hide_undef/2.
-hide_undef(assertion_head(_,_,_,_,_,_,_), assrt_lib).
+hide_undef(head_prop_asr(_,_,_,_, _,_,_), assrt_lib).
 
 found_undef(To, Caller, From) :-
     normalize_pi(To, PI),
@@ -112,16 +100,8 @@ found_undef(To, Caller, From) :-
     ; assertz(undef(PI, CI, From))
     ).
 
-found_undef_assr(M, FromChk) :-
-    forall(( head_prop_asr(Head, M, _, _, _, _, From, _),
-	     functor(Head, F, A),
-	     \+ current_predicate(M:F/A),
-	     call(FromChk, From)),
-	   found_undef(M:Head, assrt_lib:head_prop_asr/8, From)).
-
-:- public collect_undef/5.
-:- meta_predicate collect_undef(?,1,+,+,+).
-collect_undef(M, FromChk, MCall, Caller, From) :-
+:- meta_predicate collect_undef(?,1,+,+,+,+).
+collect_undef(M, FromChk, _Stage, MCall, Caller, From) :-
     call(FromChk, From),
     M:_ = MCall,
     found_undef(MCall, Caller, From),

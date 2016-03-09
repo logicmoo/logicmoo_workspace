@@ -31,11 +31,10 @@
 
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(prolog_codewalk)).
 :- use_module(library(abstract_interpreter)).
 :- use_module(library(from_utils)).
 :- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
+:- use_module(library(extra_codewalk)).
 
 :- multifile
     prolog:message//1.
@@ -44,12 +43,10 @@
     trivial_fail/2,
     ai_cache_result/2.
 
-checker:check(trivial_fails, Result, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
-    check_trivial_fails(from_chk(FileChk), OptionL, Result).
+checker:check(trivial_fails, Result, OptionL) :-
+    check_trivial_fails(OptionL, Result).
 
-check_trivial_fails(FromChk, OptionL0, Pairs) :-
-    select_option(module(M), OptionL0, OptionL1, M),
+check_trivial_fails(OptionL1, Pairs) :-
     select_option(match_ai(MatchAI), OptionL1, OptionL2, match_head),
     merge_options(OptionL2,
 		  [infer_meta_predicates(false),
@@ -58,24 +55,14 @@ check_trivial_fails(FromChk, OptionL0, Pairs) :-
 		   trace_reference(_),
 		   module_class([user, system, library])
 		  ], OptionL),
-    prolog_walk_code([source(false),
-		      on_trace(collect_dynamic_locations(M, FromChk))
-		     |OptionL]),
-    prolog_walk_code([source(false),
-		      on_trace(collect_trivial_fails(M, FromChk, MatchAI))
-		     |OptionL]),
-    findall(CRef, retract(trivial_fail(clause(CRef), _)), ClausesU),
-    sort(ClausesU, Clauses),
-    ( Clauses==[]
-    ->Pairs=[]
-    ; prolog_walk_code([clauses(Clauses),
-			on_trace(collect_trivial_fails(M, FromChk, MatchAI))
-		       |OptionL]),
-      findall(warning-(Loc-Args),
-	      ( retract(trivial_fail(From, Args)),
-		from_location(From, Loc)
-	      ), Pairs)
-    ),
+    extra_walk_code([source(false)|OptionL],
+		    collect_dynamic_locations(M, FromChk), M, FromChk),
+    extra_walk_code(OptionL,
+		    collect_trivial_fails(M, FromChk, MatchAI), _, _),
+    findall(warning-(Loc-Args),
+	    ( retract(trivial_fail(From, Args)),
+	      from_location(From, Loc)
+	    ), Pairs),
     cleanup_f,
     !.
 
@@ -102,6 +89,7 @@ show_trivial_fail(failure(Caller, MGoal, S)) -->
 
 :- multifile ignore_predicate/2.
 ignore_predicate(_=_, _) :- !, fail.
+ignore_predicate(H, M) :- \+ predicate_property(M:H, defined), !.
 ignore_predicate(H, M) :-
     predicate_property(M:H, built_in),
     \+ predicate_property(M:H, dynamic), !.
@@ -110,18 +98,14 @@ ignore_predicate(pce_class(_, _, template, _, _, _), pce_expansion).
 ignore_predicate(property(system_source_prefix(_)), pce_host).
 ignore_predicate(verbose, pce_expansion).
 
-:- public
-    collect_dynamic_locations/5,
-    collect_trivial_fails/6.
-
-:- meta_predicate collect_dynamic_locations(+,1,+,+,+).
-collect_dynamic_locations(M, FromChk, MGoal, _, From) :-
+:- meta_predicate collect_dynamic_locations(+,1,+,+,+,+).
+collect_dynamic_locations(M, FromChk, _Stage, MGoal, _, From) :-
     nonvar(MGoal),
     call(FromChk, From),
     record_location_dynamic(MGoal, M, From).
 
-:- meta_predicate collect_trivial_fails(+,1,+,+,+,+).
-collect_trivial_fails(M, FromChk, MatchAI, M:Goal, Caller, From) :-
+:- meta_predicate collect_trivial_fails(+,1,+,+,+,+,+).
+collect_trivial_fails(M, FromChk, MatchAI, _Stage, M:Goal, Caller, From) :-
     call(FromChk, From),
     record_location_meta(M:Goal, _, From, all_call_refs,
 			 cu_caller_hook(MatchAI, Caller)).

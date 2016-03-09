@@ -36,7 +36,9 @@ is_entry_property(imported_from(_)).
 :- dynamic http_dispatch:handler/4.
 :- multifile http_dispatch:handler/4.
 
-:- multifile is_entry_point_hook/2.
+:- multifile
+    is_entry_point_hook/2,
+    not_entry_point_hook/2.
 
 is_entry_point_hook(term_expansion(_, _), _).
 is_entry_point_hook(goal_expansion(_, _), _).
@@ -50,7 +52,10 @@ is_entry_point_hook(prolog_trace_interception(_, _, _, _), user).
 is_entry_point_hook(_, prolog).
 is_entry_point_hook(doc_db(_, _, _, _), assrt_lib).
 
+% not_entry_point_hook(head_prop_asr(_, _, _, _, _, _, _, _), assrt_lib).
+
 is_entry_point(H, M) :- is_entry_point_hook(H, M), !.
+% is_entry_point(H, M) :- not_entry_point_hook(H, M), !, fail.
 is_entry_point(H, M) :-
     functor(H, Name, A),
     A>0,

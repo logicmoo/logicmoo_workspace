@@ -39,6 +39,7 @@
 		       ]).
 
 :- use_module(library(implementation_module)).
+:- use_module(library(assrt_lib)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(extra_codewalk)).
@@ -98,10 +99,12 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
       memberchk(Type, DynTypes)
     ; loc_declaration(H, CM, goal, From),
       implementation_module(CM:H, M)
+    ; head_prop_asr(H, CM, _, _, _, _, From, _),
+      implementation_module(CM:H, M),
+      Caller = '<assertion>'(M:H)
     ).
 
-:- public collect_call_point/6.
-collect_call_point(IM, M, Caller, FromChk, MGoal, Caller, From) :-
+collect_call_point(IM, M, Caller, FromChk, _Stage, MGoal, Caller, From) :-
     call(FromChk, From),
     record_location_dynamic(MGoal, IM, From),
     MGoal = M:Goal,

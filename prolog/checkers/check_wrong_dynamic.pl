@@ -32,7 +32,6 @@
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
-:- use_module(library(prolog_codewalk)).
 :- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(normalize_head)).
@@ -42,7 +41,6 @@
 :- use_module(library(database_fact)).
 :- use_module(library(extra_codewalk)).
 :- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
 
 :- multifile
     prolog:message//1,
@@ -55,8 +53,8 @@ hide_var_dynamic(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
 hide_var_dynamic(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
 hide_var_dynamic(implemented_in(_, _, _), implemented_in).
 hide_var_dynamic(unfold_goal(_, _), ref_scenarios).
-hide_var_dynamic(mark_caller(_), check_unused).
-hide_var_dynamic(unmarked(_, _, _), check_unused).
+hide_var_dynamic(mark_caller(_, _), check_unused).
+hide_var_dynamic(unmarked(_, _, _, _, _), check_unused).
 hide_var_dynamic(duptype_elem(_, _, _, _, _, _), check_dupcode).
 hide_var_dynamic(bind_type_names(_, _, _, _), foreign_generator).
 hide_var_dynamic(bind_tn_clause(_, _, _, _), foreign_generator).
@@ -75,6 +73,7 @@ hide_var_dynamic(is_entry_caller(_), check_unused).
 hide_var_dynamic(caller_ptr(_, _, _), check_unused).
 hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
 hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
+hide_var_dynamic(walk_from_assertion(_, _, _), extra_codewalk).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -86,20 +85,21 @@ cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _, _)),
     retractall(var_dynamic_db(_, _)).
 
-checker:check(wrong_dynamic, Result, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
-    check_wrong_dynamic(from_chk(FileChk), OptionL, Result).
+checker:check(wrong_dynamic, Result, OptionL) :-
+    check_wrong_dynamic(OptionL, Result).
 
-check_wrong_dynamic(FromChk, OptionL0, Pairs) :-
-    ignore(option(module(M), OptionL0 )),
+check_wrong_dynamic(OptionL0, Pairs) :-
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
 		   trace_reference(_)],
 		  OptionL),
-    prolog_walk_code([source(false),
-		      on_trace(collect_wrong_dynamic(M, FromChk))|OptionL]),
+    extra_walk_code([source(false)|OptionL],
+		    collect_wrong_dynamic(M, FromChk), M, FromChk),
+    collect_result(M:_, FromChk, Pairs),
+    cleanup_dynamic_db.
+/*
     findall(CRef, ( current_static_as_dynamic(_, _, _, _, clause(CRef), _),
 		    retractall(wrong_dynamic_db(clause(CRef), _, _, _))
 		  ; retract(var_dynamic_db(clause(CRef), _))
@@ -112,6 +112,7 @@ check_wrong_dynamic(FromChk, OptionL0, Pairs) :-
     decl_walk_code(collect_wrong_dynamic(M, FromChk), M),
     collect_result(M:_, FromChk, Pairs),
     cleanup_dynamic_db.
+*/
 
 collect_result(Ref, FromChk, Pairs) :-
     findall(Type-(as_dynamic(DType)-((Loc/PI)-(MLoc/MPI))),
@@ -205,9 +206,8 @@ prolog:message(acheck(wrong_dynamic)) -->
      'a variable argument in a database predicate, making it', nl,
      'difficult to analyze.', nl, nl].
 
-:- public collect_wrong_dynamic/5.
-:- meta_predicate collect_wrong_dynamic(?,1,+,+,+).
-collect_wrong_dynamic(M, FromChk, MGoal, Caller, From) :-
+:- meta_predicate collect_wrong_dynamic(?,1,+, +,+,+).
+collect_wrong_dynamic(M, FromChk, _Stage, MGoal, Caller, From) :-
     call(FromChk, From),
     collect_wrong_dynamic(M, MGoal, Caller, From).
 

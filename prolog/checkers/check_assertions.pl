@@ -34,7 +34,7 @@
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(lists)).
-:- use_module(library(prolog_codewalk)).
+:- use_module(library(extra_codewalk)).
 :- use_module(library(rtchecks)).
 :- use_module(library(rtchecks_gen)).
 :- use_module(library(clambda)).
@@ -45,7 +45,6 @@
 :- use_module(library(resolve_calln)).
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
-:- use_module(library(option_utils)).
 
 :- dynamic
     tablecheck_db/4,
@@ -57,32 +56,23 @@
 :- multifile
     prolog:message//1.
 
-checker:check(assertions, Result, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
+checker:check(assertions, Result, OptionL) :-
     cleanup_db,
-    check_assertions(from_chk(FileChk), OptionL, Result).
+    check_assertions(OptionL, Result).
 
 cleanup_db :-
         retractall(tablecheck_db(_, _, _, _)),
 	retractall(assertions_db(_)),
 	retractall(violations_db(_, _, _)).
 
-check_assertions(FromChk, OptionL0, Pairs) :-
-    ignore(option(module(M), OptionL0 )),
+check_assertions(OptionL0, Pairs) :-
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
 		   trace_reference(_)
 		  ], OptionL),
-    prolog_walk_code([source(false),
-		      on_trace(record_checks(M, FromChk))
-		     |OptionL]),
-    findall(CRef, retract(assertions_db(clause(CRef))), ClausesU),
-    sort(ClausesU, Clauses),
-    prolog_walk_code([clauses(Clauses),
-			on_trace(collect_violations(M))
-		     |OptionL]),
+    extra_walk_code(OptionL, collect_violations(M, FromChk), M, FromChk),
     findall(error-Issue,
 	    ( retract(violations_db(From, CPI, CTChecks)),
 	      from_location(From, Loc),
@@ -183,23 +173,26 @@ black_list(assertion_head(_, _, _, _, _, _, _), assrt_lib).
 				% when checking properties.
 black_list(M:Call) :- black_list(Call, M).
 
-:- public record_checks/5.
-:- meta_predicate record_checks(?, 1, +, +, +).
-
-record_checks(M, FromChk, CM:Goal, Caller, From) :-
+check_cv(1, Goal, M, CM, Caller, FromChk, From, CTChecks) :-
     \+ black_list(Caller),
     call(FromChk, From),
-    implementation_module(CM:Goal, M),
-    check_property_ctcheck(Goal, M, CM, CTChecks),
-    CTChecks \= [],
-    assertz(assertions_db(From)).
+    check_cv_2(Goal, M, CM, CTChecks),
+    ( From = clause(CRef)
+    ->record_issues(CRef)
+    ; true
+    ).
+check_cv(2, Goal, M, CM, _, _, _, CTChecks) :-
+    check_cv_2(Goal, M, CM, CTChecks).
 
-:- public collect_violations/4.
-:- meta_predicate collect_violations(?, 0, +, +).
-collect_violations(M, CM:Goal, Caller, From) :-
+check_cv_2(Goal, M, CM, CTChecks) :-
     implementation_module(CM:Goal, M),
     check_property_ctcheck(Goal, M, CM, CTChecks),
-    CTChecks \= [],
+    CTChecks \= [].
+
+:- public collect_violations/6.
+:- meta_predicate collect_violations(?, 1, +, 0, +, +).
+collect_violations(M, FromChk, Stage, CM:Goal, Caller, From) :-
+    check_cv(Stage, Goal, M, CM, Caller, FromChk, From, CTChecks),
     normalize_pi(Caller, CPI),
     forall(( clause(violations_db(From0, CPI, CTChecks), _, Ref),
 	     subsumes_from(From0, From)
@@ -267,18 +260,6 @@ tabled_generate_ctchecks(H, M, CM, Goal) :-
       CM0 = CM,
       P = H
     ).
-
-resolve_head(M:H0, _, H) :- !,
-    resolve_head(H0, M, H).
-resolve_head((A,B), M, H) :- !,
-    ( resolve_head(A, M, H)
-    ; resolve_head(B, M, H)
-    ).
-resolve_head((A;B), M, H) :- !,
-    ( resolve_head(A, M, H)
-    ; resolve_head(B, M, H)
-    ).
-resolve_head(H, M, M:H).
 
 verif_is_property(system, true, 0) :- !.   % ignore true (identity)
 verif_is_property(IM, F, A) :-
