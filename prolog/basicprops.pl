@@ -40,6 +40,7 @@
 	 equiv/2, bind_ins/1, error_free/1,memo/1,filter/2, flag_values/1,
 	 pe_type/1]).
 
+:- use_module(library(lists)).
 :- use_module(library(assertions)).
 :- use_module(library(nativeprops)).
 :- use_module(library(termtyping)).

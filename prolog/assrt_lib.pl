@@ -36,6 +36,11 @@
     nodirective_error_hook/1.
 
 :- dynamic
+    head_prop_asr/8,
+    asr_glob/3,
+    asr_comp/3,
+    asr_call/3,
+    asr_succ/3,
     doc_db/4,
     nodirective_error_hook/1.
 
@@ -665,11 +670,17 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, HPos) :-
     ; member(AClause-PrL,
 	     [asr_comp(Idx, PM, Pr)-CpL,
 	      asr_call(Idx, PM, Pr)-CaL,
-	      asr_succ(Idx, PM, Pr)-SuL,
-	      asr_glob(Idx, PM, Pr)-GlL
+	      asr_succ(Idx, PM, Pr)-SuL
 	     ]),
       member(MPr, PrL),
-      strip_module(CM:MPr, PM, Pr)
+      expand_goal(CM:MPr, EPr),
+      strip_module(EPr, PM, Pr)
+    ; AClause = asr_glob(Idx, PM, Gl),
+      member(MGl, GlL),
+      add_arg(_, MGl, MPr),
+      expand_goal(CM:MPr, EPr),
+      add_arg(_, EGl, EPr),
+      strip_module(EGl, PM, Gl)
     ).
 
 assertion_records(Decl, DPos, Records, RPos) :-
