@@ -16,6 +16,10 @@ unfold_calls(Goal, CM, IsUnfold, Calls) :-
 
 unfold_call(Goal, _, _, _, _) :- var(Goal), !, fail.
 unfold_call(true, _, _, _, _) :- !, fail.
+unfold_call(call(Goal), CM, IsUnfold, NonUnfoldL, Call) :- !,
+    unfold_call(Goal, CM, IsUnfold, NonUnfoldL, Call).
+unfold_call(\+ Goal, CM, IsUnfold, NonUnfoldL, Call) :- !,
+    unfold_call(Goal, CM, IsUnfold, NonUnfoldL, Call).
 unfold_call(CM:Goal, _, IsUnfold, NonUnfoldL, Call) :-
     nonvar(Goal), !,
     unfold_call(Goal, CM, IsUnfold, NonUnfoldL, Call).
