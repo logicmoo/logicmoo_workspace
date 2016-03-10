@@ -67,9 +67,13 @@ current_clause_module_body(CM, Ref) :-
     current_predicate(M:F/A),
     M \= CM,
     functor(H, F, A),
-    \+ predicate_property(M:H,imported_from(_)),
-    nth_clause(M:H, _I, Ref),
-    clause_property(Ref, module(CM)).
+    \+ predicate_property(M:H, imported_from(_)),
+    \+ predicate_property(M:H, built_in),
+    \+ predicate_property(M:H, foreign),
+    ( clause(M:H, Body, Ref),
+      clause_property(Ref, module(HM)),
+      strip_module(HM:Body, CM, _)
+    ).
 
 optimized_walk_code(false, Tracer, OptionL) :-
     prolog_walk_code([source(false), on_trace(call(Tracer, 1))|OptionL]).
