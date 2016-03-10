@@ -38,7 +38,7 @@
 	 iso/1, deprecated/1, not_further_inst/2, sideff/2, regtype/1,
 	 native/1, native/2, rtcheck/1, rtcheck/2, no_rtcheck/1, eval/1,
 	 equiv/2, bind_ins/1, error_free/1,memo/1,filter/2, flag_values/1,
-	 pe_type/1]).
+	 pe_type/1, rtc_status/1]).
 
 :- use_module(library(lists)).
 :- use_module(library(assertions)).
@@ -503,6 +503,7 @@ deprecated(Goal) :- call(Goal).
 
 rtc_status(unimplemented).
 rtc_status(incomplete).
+rtc_status(complete).
 rtc_status(unknown).
 rtc_status(exhaustive).
 rtc_status(impossible).
