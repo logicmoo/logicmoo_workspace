@@ -65,8 +65,8 @@ true_1(_).
 
 %% setup_trace(!State, :OnTrace, +OptL) is det.
 setup_trace(State, M:OnTrace, OptL) :-
-    select_option(goal(ValidGoal), OptL,  OptL1, ontrace:true_1(_)),
-    select_option(file(ValidFile), OptL1, OptL2, ontrace:true_1(_)),
+    select_option(goal(ValidGoal), OptL,  OptL1, ontrace:true_1),
+    select_option(file(ValidFile), OptL1, OptL2, ontrace:true_1),
     %% redo port have weird bugs, ignoring it for now:
     select_option(ports(PortList), OptL2, _,
 		  [call, exit, fail, unify, exception]),
