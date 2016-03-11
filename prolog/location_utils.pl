@@ -148,10 +148,11 @@ record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
 
 :- meta_predicate record_location_meta(+,?,+,5,6).
 record_location_meta(MCall, M, From, FactBuilder, Recorder) :-
-    ( record_location_meta_each(MCall, M, From, FactBuilder, Recorder),
-      fail
-    ; true
-    ).
+    \+ ( record_location_meta_each(MCall, M, From, FactBuilder, Recorder)
+       *->
+	 fail
+       ; true
+       ).
 
 record_location_dynamic(MCall, M, From) :-
     record_location_meta(MCall, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
