@@ -56,12 +56,16 @@ extra_walk_module_body(M, OptionL0 ) :-
 
 extra_walk_code(OptionL0, Tracer, M, FromChk) :-
     extra_wcsetup(OptionL0, OptionL1, FromChk),
-    select_option(source(S), OptionL1, OptionL, false),
+    select_option(source(S), OptionL1, OptionL2, false),
+    select_option(walkextras(Extras), OptionL2, OptionL,
+		  [declaration, asrparts([body])]),
     extra_walk_module_body(M, [on_trace(call(Tracer, 1))|OptionL]),
     optimized_walk_code(S, Tracer, OptionL),
     prolog_codewalk:make_walk_option([on_trace(call(Tracer, 1))|OptionL], OTerm),
-    walk_from_loc_declaration(OTerm, M, FromChk),
-    walk_from_assertion(OTerm, M, FromChk).
+    maplist(walk_extras(OTerm, M, FromChk), Extras).
+
+walk_extras(OTerm, M, FromChk, declaration) :- walk_from_loc_declaration(OTerm, M, FromChk).
+walk_extras(OTerm, M, FromChk, asrparts(L)) :- walk_from_assertion(OTerm, M, FromChk, L).
 
 current_clause_module_body(CM, Ref) :-
     current_predicate(M:F/A),
@@ -109,21 +113,26 @@ walk_from_goal(Head, M, Ref, OTerm) :-
 		      walk_called_by_body(no_positions, Head, M, OTerm)
 		    ).
 
-walk_from_assertion(OTerm, M, FromChk) :-
+walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
     forall(( AHead = assrt_lib:head_prop_asr(Head, HM, _, _, _, _, From, Asr),
 	     call(FromChk, From),
 	     implementation_module(HM:Head, M),
 	     prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
 	     clause(AHead, _, Ref),
-	     ( asr_comp(Asr, PM, Prop)
-	     ; asr_call(Asr, PM, Prop)
-	     ; asr_succ(Asr, PM, Prop)
-	     ; asr_glob(Asr, PM, Glob),
-	       % _Arg = HM:Head, but keep it uninstantiated for optimization:
-	       add_arg(_Arg, Glob, Prop)
-	     )
+	     member(AsrPart, AsrPartL),
+	     assertion_goal(AsrPart, Head, HM, Asr, Goal, CM)
 	   ),
-	   walk_from_goal(Prop, PM, Ref, OTerm)).
+	   walk_from_goal(Goal, CM, Ref, OTerm)).
+
+assertion_goal(head, Head, HM, _, Head, HM).
+assertion_goal(body, _, _, Asr, Prop, PM) :-
+    ( asr_comp(Asr, PM, Prop)
+    ; asr_call(Asr, PM, Prop)
+    ; asr_succ(Asr, PM, Prop)
+    ; asr_glob(Asr, PM, Glob),
+      %% _Arg = HM:Head, but keep it uninstantiated for optimization:
+      add_arg(_Arg, Glob, Prop)
+    ).
 
 resolve_head(M:H0, _, H) :- !,
     resolve_head(H0, M, H).

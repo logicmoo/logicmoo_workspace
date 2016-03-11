@@ -38,7 +38,6 @@
 
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
-:- use_module(library(prolog_metainference)).
 :- use_module(library(clambda)).
 :- use_module(library(commited_retract)).
 :- use_module(library(qualify_meta_goal)).

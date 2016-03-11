@@ -71,7 +71,9 @@ checker:check(imports, Result, OptionL) :-
     check_imports(OptionL, Result).
 
 check_imports(OptionL, Pairs) :-
-    extra_walk_code([source(false)|OptionL], collect_imports(M, FromChk), M, FromChk),
+    extra_walk_code([source(false),
+		     walkextras([declaration, asrparts([body, head])])|OptionL],
+		    collect_imports(M, FromChk), M, FromChk),
     collect_imports(M, FromChk, Pairs, Tail),
     collect_usemods(M, FromChk, Tail, []),
     cleanup_imports.

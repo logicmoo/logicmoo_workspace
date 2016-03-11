@@ -53,7 +53,7 @@ hide_var_dynamic(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
 hide_var_dynamic(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
 hide_var_dynamic(implemented_in(_, _, _), implemented_in).
 hide_var_dynamic(unfold_goal(_, _), ref_scenarios).
-hide_var_dynamic(mark_caller(_, _), check_unused).
+hide_var_dynamic(match_head_clause(_, _), check_unused).
 hide_var_dynamic(unmarked(_, _, _, _, _), check_unused).
 hide_var_dynamic(duptype_elem(_, _, _, _, _, _), check_dupcode).
 hide_var_dynamic(bind_type_names(_, _, _, _), foreign_generator).
@@ -74,6 +74,7 @@ hide_var_dynamic(caller_ptr(_, _, _), check_unused).
 hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
 hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
 hide_var_dynamic(walk_from_assertion(_, _, _), extra_codewalk).
+hide_var_dynamic(current_clause_module_body(_, _), extra_codewalk).
 
 :- dynamic
     wrong_dynamic_db/4,
