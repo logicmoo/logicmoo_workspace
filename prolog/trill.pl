@@ -19,7 +19,10 @@
 %:- use_module(library(tries)).
 %:- load_foreign_files(['cplint-swi'],[],init_my_predicates).
 %:-use_foreign_library(bddem,install).
-:-['trillProbComputation'].
+
+:- use_foreign_library(foreign(bddem),install).
+%:- use_foreign_library('bddem.so',install).
+%:-['trillProbComputation'].
 
 :- thread_local
 	ind/1.
@@ -53,10 +56,7 @@ load_theory(Name):-
 check_query_args([H|T]) :-
   atomic(H),!,
   get_trill_current_module(Name),
-  Name:axiom(A),
-  A =.. [_|L],
-  flatten(L,L1),
-  member(H,L1),!,
+  find_atom_in_axioms(Name,H),%!,
   check_query_args(T).
   
 check_query_args([H|T]) :-
@@ -67,6 +67,41 @@ check_query_args([H|T]) :-
   check_query_args(T).
 
 check_query_args([]).
+
+find_atom_in_axioms(Name,H):-
+  Name:axiom(A),
+  A =.. [_|L],
+  flatten(L,L1),
+  member(H,L1),!.
+  
+find_atom_in_axioms(Name,H):-
+  (
+    ( 
+      ( Name:classAssertion(A,B) ; Name:subPropertyOf(A,B) ; Name:subClassOf(A,B) ; Name:propertyRange(A,B) ;
+        Name:propertyDomain(A,B) ; Name:exactCardinality(A,B) ; Name:maxCardinality(A,B) ; Name:minCardinality(A,B)
+      ),
+      L=[A,B]
+    )
+   ;
+    (
+      ( Name:propertyAssertion(A,B,C) ; Name:annotationAssertion(A,B,C) ; Name:exactCardinality(A,B,C) ; 
+        Name:maxCardinality(A,B,C) ; Name:minCardinality(A,B,C)
+      ),
+      L=[A,B,C]
+    )
+   ;
+    Name:equivalentClasses(L)
+   ;
+    Name:differentIndividuals(L)
+   ;
+    Name:sameIndividual(L)
+   ;
+    Name:intersectionOf(L)
+   ;
+    Name:unionOf(L)    
+  ),  
+  flatten(L,L1),
+  member(H,L1),!.
 
 /***********
   Queries
@@ -82,7 +117,7 @@ sub_class(Class,SupClass,Expl):-
 
 sub_class(Class,SupClass):-
   check_query_args([Class,SupClass]),
-  unsat(intersectionOf([Class,complementOf(SupClass)])).
+  unsat(intersectionOf([Class,complementOf(SupClass)])),!.
 
 instanceOf(Class,Ind,Expl):-
   ( check_query_args([Class,Ind]) *->
@@ -111,7 +146,7 @@ instanceOf(Class,Ind):-
   add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
   %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
-  clash((ABox1,Tabs1),_).
+  clash((ABox1,Tabs1),_),!.
 
 instanceOf(_,_):-
   write('Inconsistent ABox').
@@ -138,7 +173,7 @@ unsat(Concept):-
   add(ABox,(classAssertion(Concept,1),[]),ABox0),
   %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
-  clash((ABox1,Tabs1),_).
+  clash((ABox1,Tabs1),_),!.
 
 unsat(_):-
   write('Inconsistent ABox').
@@ -157,7 +192,7 @@ inconsistent_theory:-
   build_abox((ABox,Tabs)),
   \+ clash((ABox,Tabs),_),!,
   apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),!,
-  clash((ABox1,Tabs1),_).
+  clash((ABox1,Tabs1),_),!.
 
 inconsistent_theory:-
   write('Inconsistent!').
@@ -2003,6 +2038,140 @@ compute_prob_ax1([Prob1 | T],Prob):-
   Prob is Prob1 + Prob0 - (Prob1*Prob0).
 
 */  
+
+/**********************
+
+TRILL COMPUTEPROB
+
+***********************/
+
+:- thread_local rule_n/1.
+
+%rule_n(0).
+
+compute_prob(Expl,Prob):-
+  %writeln('retract'),
+  retractall(v(_,_,_)),
+  retractall(na(_,_)),
+  retractall(rule_n(_)),
+  %writeln('assert'),
+  assert(rule_n(0)),
+  %writeln('test'),
+  init_test(50,Env),
+  %writeln('build_bdd'),%trace,
+  build_bdd(Env,Expl,BDD),
+  %writeln('ret_prob'),
+  ret_prob(Env,BDD,Prob),
+  %writeln('end'),
+  end_test(Env), !.
+  
+  
+
+
+build_bdd(Env,[X],BDD):- !,
+  %write('1'),nl,
+  %writel(X),nl,
+  bdd_and(Env,X,BDD).
+  
+build_bdd(Env, [H|T],BDD):-
+  %write('2'),nl,
+  build_bdd(Env,T,BDDT),
+  bdd_and(Env,H,BDDH),
+  or(Env,BDDH,BDDT,BDD).
+  
+build_bdd(Env,[],BDD):- !,
+  %write('3'),nl,
+  zero(Env,BDD).
+  
+  
+bdd_and(Env,[X],BDDX):-
+  %write('bdd_and-1: '),write(X),nl,
+  get_prob_ax(X,AxN,Prob),!,
+  %write('   '),write(Prob),nl,
+  ProbN is 1-Prob,
+  get_var_n(Env,AxN,[],[Prob,ProbN],VX),
+  equality(Env,VX,0,BDDX),!.
+bdd_and(Env,[_X],BDDX):- !,
+  %write('bdd_and-1: no-prob'),nl,write('   1'),nl,
+  one(Env,BDDX).
+  
+bdd_and(Env,[H|T],BDDAnd):-
+  %write('bdd_and-2: '),write(H),nl, 
+  get_prob_ax(H,AxN,Prob),!,
+  %write('   '),write(Prob),nl,
+  ProbN is 1-Prob,
+  %write('bdd_and-2: ProbN'),nl,
+  get_var_n(Env,AxN,[],[Prob,ProbN],VH),
+  %write('bdd_and-2: get_var_n'),nl, 
+  equality(Env,VH,0,BDDH),
+  %write('bdd_and-2: equality'),nl,
+  bdd_and(Env,T,BDDT),
+  %write('bdd_and-2: bdd_and'),nl,
+  and(Env,BDDH,BDDT,BDDAnd).
+  
+bdd_and(Env,[_H|T],BDDAnd):- !,
+  %write('bdd_and-2: no-prob'),nl,write('   1'),nl,
+  one(Env,BDDH),
+  bdd_and(Env,T,BDDT),
+  and(Env,BDDH,BDDT,BDDAnd).
+
+
+
+  
+get_var_n(Env,R,S,Probs,V):-
+  ( 
+    v(R,S,V) -> 
+      true
+    ; 
+      length(Probs,L),
+      %trace,
+      add_var(Env,L,Probs,R,V),
+      %notrace,
+      assert(v(R,S,V))
+  ).
+
+
+get_prob_ax((Ax,_Ind),N,Prob):- !,
+  compute_prob_ax(Ax,Prob),
+  ( na(Ax,N) -> 
+      true
+    ;
+      rule_n(N),
+      assert(na(Ax,N)),
+      retract(rule_n(N)),
+      N1 is N + 1,
+      assert(rule_n(N1))
+  ).
+get_prob_ax(Ax,N,Prob):- !,
+  compute_prob_ax(Ax,Prob),  
+  ( na(Ax,N) -> 
+      true 
+    ; 
+      rule_n(N),
+      assert(na(Ax,N)),
+      retract(rule_n(N)),
+      N1 is N + 1,
+      assert(rule_n(N1))
+  ).
+  
+compute_prob_ax(Ax,Prob):-
+  get_trill_current_module(Name),
+  findall(ProbA, (Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbAT)),atom_number(ProbAT,ProbA)),Probs),
+  compute_prob_ax1(Probs,Prob).
+  
+compute_prob_ax1([Prob],Prob):-!.
+
+compute_prob_ax1([Prob1,Prob2],Prob):-!,
+  Prob is Prob1+Prob2-(Prob1*Prob2).
+  
+compute_prob_ax1([Prob1 | T],Prob):-
+  compute_prob_ax1(T,Prob0),
+  Prob is Prob1 + Prob0 - (Prob1*Prob0).  
+
+
+%get_trill_current_module(Name):-
+%  pengine_self(Name),!.
+%get_trill_current_module('owl2_model'):- !.
   
   
 /**************/

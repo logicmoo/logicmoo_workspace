@@ -417,6 +417,9 @@ static foreign_t add_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4, term_t
     p0=p0*(1-p/p0);
   }
   env->boolVars=env->boolVars+v->nVal-1;
+  if (env->nRules < v->nRule) {
+    env->rules= (int *) realloc(env->rules, ((((v->nRule)+1) * sizeof(int))));
+  }
   env->rules[v->nRule]= v->nVal; 
 
   PL_put_integer(out,env->nVars-1);
