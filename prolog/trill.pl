@@ -30,6 +30,11 @@
 %:- yap_flag(unknown,fail).
 :- multifile
 	owl2_model:axiom/1,
+	owl2_model:class/1,
+	owl2_model:annotationProperty/1,
+	owl2_model:namedIndividual/1,
+	owl2_model:objectProperty/1,
+	owl2_model:dataProperty/1,
         owl2_model:classAssertion/2,
         owl2_model:propertyAssertion/3,
         owl2_model:subPropertyOf/2,
@@ -77,6 +82,12 @@ find_atom_in_axioms(Name,H):-
 find_atom_in_axioms(Name,H):-
   (
     ( 
+      ( Name:class(A) ; Name:annotationProperty(A) ; Name:namedIndividual(A) ; Name:objectProperty(A) ;
+        Name:dataProperty(A)
+      ),
+      L=[A]
+    )
+   ;( 
       ( Name:classAssertion(A,B) ; Name:subPropertyOf(A,B) ; Name:subClassOf(A,B) ; Name:propertyRange(A,B) ;
         Name:propertyDomain(A,B) ; Name:exactCardinality(A,B) ; Name:maxCardinality(A,B) ; Name:minCardinality(A,B)
       ),
