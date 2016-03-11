@@ -78,10 +78,8 @@ prepare :-
 		     autoload(false),
 		     evaluate(false),
 		     trace_reference(_),
-		     module_class([user, system, library])],
-		    check_trivial_fails:collect_dynamic_locations(M, FromChk),
-		    M,
-		    FromChk),
+		     module_class([user, system, library]),
+		     on_etrace(collect_dynamic_locations(M))], M, _),
     retractall(prepared),
     assertz(prepared).
 

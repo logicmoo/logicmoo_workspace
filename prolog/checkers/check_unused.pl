@@ -66,17 +66,15 @@
     edge/2,
     node/3.
 
-:- public collect_unused/6.
-:- meta_predicate collect_unused(?,1,+,+,+,+).
-collect_unused(M, FromChk, _Stage, MGoal, Caller, From) :-
-    call(FromChk, From),
+:- public collect_unused/4.
+collect_unused(M, MGoal, Caller, From) :-
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
 checker:check(unused, Result, OptionL) :-
     check_unused(OptionL, Result).
 
 check_unused(OptionL, Pairs) :-
-    extra_walk_code([source(false)|OptionL], collect_unused(M, FromChk), M, FromChk),
+    extra_walk_code([source(false), on_etrace(collect_unused(M))|OptionL], M, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.

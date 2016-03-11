@@ -27,7 +27,8 @@
     the GNU General Public License.
 */
 
-:- module(extra_codewalk, [extra_walk_code/4,
+:- module(extra_codewalk, [extra_walk_code/1,
+			   extra_walk_code/3,
 			   extra_wcsetup/3,
 			   extra_walk_module_body/2,
 			   resolve_head/3,
@@ -43,26 +44,49 @@
     issues/1.
 
 :- meta_predicate
-    extra_walk_code(+,4,-,-).
+    extra_walk_code(:),
+    extra_walk_code(:,+,-).
 
+%% extra_walk_module_body(-, +) :-
 extra_walk_module_body(M, OptionL0 ) :-
-    select_option(module(M), OptionL0, OptionL1, M),
+    select_option(module(M), OptionL0, OptionL, M),
     ( nonvar(M)
     ->findall(Ref, current_clause_module_body(M, Ref), RefU),
       sort(RefU, RefL),
-      prolog_walk_code([source(false), clauses(RefL)|OptionL1])
+      prolog_walk_code([source(false), clauses(RefL)|OptionL])
     ; true
     ).
 
-extra_walk_code(OptionL0, Tracer, M, FromChk) :-
+%% extra_walk_code(:) is det.
+extra_walk_code(OptionL) :-
+    extra_walk_code(OptionL, _, _).
+
+%% extra_walk_code(:, -, -) is det.
+extra_walk_code(CM:OptionL0, M, FromChk) :-
     extra_wcsetup(OptionL0, OptionL1, FromChk),
-    select_option(source(S), OptionL1, OptionL2, false),
-    select_option(walkextras(Extras), OptionL2, OptionL,
-		  [declaration, asrparts([body])]),
-    extra_walk_module_body(M, [on_trace(call(Tracer, 1))|OptionL]),
-    optimized_walk_code(S, Tracer, OptionL),
-    prolog_codewalk:make_walk_option([on_trace(call(Tracer, 1))|OptionL], OTerm),
+    foldl(select_option_default,
+	  [source(S)-false,
+	   walkextras(Extras)-[declaration, asrparts([body])],
+	   on_etrace(ETracer)-ETracer
+	  ], OptionL1, OptionL2),
+    OptionL = [on_trace(extra_codewalk:pcw_trace(1, CM:ETracer, FromChk))|OptionL2],
+    extra_walk_module_body(M, OptionL),
+    optimized_walk_code(S, Stage, extra_codewalk:pcw_trace(Stage, CM:ETracer, FromChk), OptionL2),
+    prolog_codewalk:meta_options(is_meta, CM:OptionL, QOptions),
+    prolog_codewalk:make_walk_option(QOptions, OTerm),
     maplist(walk_extras(OTerm, M, FromChk), Extras).
+
+:- public pcw_trace/6.
+
+pcw_trace(1, ETracer, FromChk, Goal, Caller, From) :-
+    call(FromChk, From),
+    call(ETracer, Goal, Caller, From),
+    ( From = clause(CRef)
+    ->record_issues(CRef)
+    ; true
+    ).
+pcw_trace(2, ETracer, _, Goal, Caller, From) :-
+    call(ETracer, Goal, Caller, From).
 
 walk_extras(OTerm, M, FromChk, declaration) :- walk_from_loc_declaration(OTerm, M, FromChk).
 walk_extras(OTerm, M, FromChk, asrparts(L)) :- walk_from_assertion(OTerm, M, FromChk, L).
@@ -72,22 +96,25 @@ current_clause_module_body(CM, Ref) :-
     M \= CM,
     functor(H, F, A),
     \+ predicate_property(M:H, imported_from(_)),
-    \+ predicate_property(M:H, built_in),
-    \+ predicate_property(M:H, foreign),
-    ( clause(M:H, Body, Ref),
+    ( catch(clause(M:H, Body, Ref), _, fail),
       clause_property(Ref, module(HM)),
       strip_module(HM:Body, CM, _)
     ).
 
-optimized_walk_code(false, Tracer, OptionL) :-
-    prolog_walk_code([source(false), on_trace(call(Tracer, 1))|OptionL]).
-optimized_walk_code(true, Tracer, OptionL) :-
-    prolog_walk_code([source(false), on_trace(call(Tracer, 1))|OptionL]),
+optimized_walk_code(false, 1, Tracer, OptionL) :-
+    prolog_walk_code([source(false), on_trace(Tracer)|OptionL]).
+optimized_walk_code(true, Stage, Tracer, OptionL) :-
+    optimized_walk_code_true(Stage, Tracer, OptionL).
+
+optimized_walk_code_true(1, Tracer, OptionL) :-
+    prolog_walk_code([source(false), on_trace(Tracer)|OptionL]),
+    fail.
+optimized_walk_code_true(2, Tracer, OptionL) :-
     findall(CRef, retract(issues(CRef)), ClausesU),
     sort(ClausesU, Clauses),
     ( Clauses==[]
     ->true
-    ; prolog_walk_code([clauses(Clauses), on_trace(call(Tracer, 2))|OptionL])
+    ; prolog_walk_code([clauses(Clauses), on_trace(Tracer)|OptionL])
     ).
 
 extra_wcsetup(OptionL0, OptionL, FromChk) :-

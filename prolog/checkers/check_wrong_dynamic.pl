@@ -73,7 +73,7 @@ hide_var_dynamic(is_entry_caller(_), check_unused).
 hide_var_dynamic(caller_ptr(_, _, _), check_unused).
 hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
 hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
-hide_var_dynamic(walk_from_assertion(_, _, _), extra_codewalk).
+hide_var_dynamic(walk_from_assertion(_, _, _, _), extra_codewalk).
 hide_var_dynamic(current_clause_module_body(_, _), extra_codewalk).
 
 :- dynamic
@@ -94,33 +94,19 @@ check_wrong_dynamic(OptionL0, Pairs) :-
 		  [infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_)],
+		   trace_reference(_),
+		   on_etrace(collect_wrong_dynamic(M))],
 		  OptionL),
-    extra_walk_code([source(false)|OptionL],
-		    collect_wrong_dynamic(M, FromChk), M, FromChk),
-    collect_result(M:_, FromChk, Pairs),
+    extra_walk_code(OptionL, M, FromChk),
+    collect_result(M, FromChk, Pairs),
     cleanup_dynamic_db.
-/*
-    findall(CRef, ( current_static_as_dynamic(_, _, _, _, clause(CRef), _),
-		    retractall(wrong_dynamic_db(clause(CRef), _, _, _))
-		  ; retract(var_dynamic_db(clause(CRef), _))
-		  ), Clauses),
-    ( Clauses==[]
-    ->true
-    ; prolog_walk_code([clauses(Clauses),
-			on_trace(collect_wrong_dynamic(M))|OptionL])
-    ),
-    decl_walk_code(collect_wrong_dynamic(M, FromChk), M),
-    collect_result(M:_, FromChk, Pairs),
-    cleanup_dynamic_db.
-*/
 
-collect_result(Ref, FromChk, Pairs) :-
+collect_result(M, FromChk, Pairs) :-
     findall(Type-(as_dynamic(DType)-((Loc/PI)-(MLoc/MPI))),
 	    ( current_static_as_dynamic(Type, DType, Loc, PI, From, MPI),
 	      from_location(From, MLoc)), Pairs, Pairs1),
     findall(warning-(dynamic_as_static-(Loc-PI)),
-	    current_dynamic_as_static(Ref, FromChk, Loc, PI), Pairs1, Pairs2),
+	    current_dynamic_as_static(M:_, FromChk, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
 	    ( retract(var_dynamic_db(From, PI)),
 	      check:predicate_indicator(From, CI, []),
@@ -207,16 +193,10 @@ prolog:message(acheck(wrong_dynamic)) -->
      'a variable argument in a database predicate, making it', nl,
      'difficult to analyze.', nl, nl].
 
-:- meta_predicate collect_wrong_dynamic(?,1,+, +,+,+).
-collect_wrong_dynamic(M, FromChk, _Stage, MGoal, Caller, From) :-
-    call(FromChk, From),
-    collect_wrong_dynamic(M, MGoal, Caller, From).
-
+:- public collect_wrong_dynamic/4.
 collect_wrong_dynamic(M, MGoal, Caller, From) :-
     record_location_meta(MGoal, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
-			 record_location_wd(Caller)),
-    fail.
-collect_wrong_dynamic(_, _, _, _). % avoid side effects
+			 record_location_wd(Caller)).
 
 record_location_wd(Caller, M:Fact, _, Type, IM:Goal, _, From) :-
     MGoal = IM:Goal,

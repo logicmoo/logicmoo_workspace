@@ -86,9 +86,10 @@ collect_called_from(Ref, M, CM, Caller, OptionL0) :-
 		   autoload(false),
 		   evaluate(false),
 		   trace_reference(_:Ref),
-		   module_class([user, system, library])],
+		   module_class([user, system, library]),
+		   on_etrace(collect_call_point(M, CM, Caller))],
 		  OptionL0, OptionL),
-    extra_walk_code(OptionL, collect_call_point(M, CM, Caller, FromChk), M, FromChk).
+    extra_walk_code(OptionL, M, _).
 
 current_called_from(H, M, CM, From, Caller) :-
     current_used_from([retract, query], H, M, CM, From, Caller).
@@ -104,8 +105,8 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
       Caller = '<assertion>'(M:H)
     ).
 
-collect_call_point(IM, M, Caller, FromChk, _Stage, MGoal, Caller, From) :-
-    call(FromChk, From),
+:- public collect_call_point/6.
+collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
     record_location_dynamic(MGoal, IM, From),
     MGoal = M:Goal,
     implementation_module(MGoal, IM),

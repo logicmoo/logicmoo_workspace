@@ -57,7 +57,7 @@ test(ctcex) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
     set_prolog_flag(verbose, silent),
     assert(user:error_on_co),
-    with_output_to(string(Result), showcheck(assertions, [module(ctcex)])),
+    with_output_to(string(Result), showcheck(assertions, [module(ctcex), source(true)])),
     comment_data(ctcex, Pattern),
     module_property(ctcex, file(File)),
     directory_file_path(Dir, _, File),

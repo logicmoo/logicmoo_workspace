@@ -77,18 +77,20 @@ check_argument_fixpoint(Stage, OptionL) :-
 	       ), L),
     length(L, N),
     print_message(information, format("Stage ~w: Checking ~w argument positions", [NStage, N])),
-    extra_walk_code(OptionL, propagate_argument_1(Stage, NStage, FromChk), _, FromChk),
+    extra_walk_code([source(false), on_etrace(propagate_argument_1(Stage, NStage))|OptionL]),
     print_message(information, format("Stage ~w: Collecting unlinked arguments", [NStage])),
     findall(Clause, retract(clause_db(Clause)), ClauseU),
     sort(ClauseU, ClauseL),
-    extra_walk_code([clauses(ClauseL)|OptionL], propagate_argument_2(Stage, NStage, FromChk), _, FromChk),
+    extra_walk_code([source(false),
+		     clauses(ClauseL),
+		     on_etrace(propagate_argument_2(Stage, NStage))|OptionL]),
     ( \+ arg_id(_, _, _, _, NStage, _)
     ->true
     ; check_argument_fixpoint(NStage, OptionL)
     ).
 
-propagate_argument_1(Stage, NStage, FromChk, MGoal, MCaller, From) :-
-    propagate_argument(argument_cond_1(Id), record_callee_1(Id), Stage, NStage, FromChk, MGoal, MCaller, From).
+propagate_argument_1(Stage, NStage, MGoal, MCaller, From) :-
+    propagate_argument(argument_cond_1(Id), record_callee_1(Id), Stage, NStage, MGoal, MCaller, From).
 
 argument_cond_1(Id, Goal, M, Pos, Stage, _, _) :-
     arg_id(Goal, M, _, Pos, Stage, Id),
@@ -98,8 +100,8 @@ argument_cond_1(Id, Goal, M, Pos, Stage, _, _) :-
 
 record_callee_1(Id, _, _, _, Ref, Id) :- assertz(clause_db(Ref)).
 
-propagate_argument_2(Stage, NStage, FromChk, MGoal, MCaller, From) :-
-    propagate_argument(argument_cond_2, record_callee_2, Stage, NStage, FromChk, MGoal, MCaller, From).
+propagate_argument_2(Stage, NStage, MGoal, MCaller, From) :-
+    propagate_argument(argument_cond_2, record_callee_2, Stage, NStage, MGoal, MCaller, From).
 
 argument_cond_2(Goal, M, Pos, _, NStage, CM:H-Idx/CPos) :-
     \+ arg_id(Goal, M, _, Pos, _, _),
@@ -132,9 +134,8 @@ record_linked(H, M, Idx, Pos, Stage, Id) :-
     ; assertz(linked_arg(Id, Ref))
     ).
 
-:- meta_predicate propagate_argument(6,5,?,?,1,?,?,?).
-propagate_argument(GoalCondition, RecordCallee, Stage, NStage, FromChk, MGoal, MCaller, From) :-
-    call(FromChk, From),
+:- meta_predicate propagate_argument(6,5,?,?,?,?,?).
+propagate_argument(GoalCondition, RecordCallee, Stage, NStage, MGoal, MCaller, From) :-
     MGoal = _:Goal,
     compound(Goal),
     implementation_module(MGoal, IM),

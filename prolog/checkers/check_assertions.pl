@@ -67,12 +67,10 @@ cleanup_db :-
 
 check_assertions(OptionL0, Pairs) :-
     merge_options(OptionL0,
-		  [infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   trace_reference(_)
+		  [on_etrace(collect_violations(M)),
+		   walkextras([declaration]) % TODO: use asrparts([head, body])
 		  ], OptionL),
-    extra_walk_code(OptionL, collect_violations(M, FromChk), M, FromChk),
+    extra_walk_code(OptionL, M, FromChk),
     findall(error-Issue,
 	    ( retract(violations_db(From, CPI, CTChecks)),
 	      from_location(From, Loc),
@@ -173,26 +171,12 @@ black_list(assertion_head(_, _, _, _, _, _, _), assrt_lib).
 				% when checking properties.
 black_list(M:Call) :- black_list(Call, M).
 
-check_cv(1, Goal, M, CM, Caller, FromChk, From, CTChecks) :-
+:- public collect_violations/4.
+collect_violations(M, CM:Goal, Caller, From) :-
     \+ black_list(Caller),
-    call(FromChk, From),
-    check_cv_2(Goal, M, CM, CTChecks),
-    ( From = clause(CRef)
-    ->record_issues(CRef)
-    ; true
-    ).
-check_cv(2, Goal, M, CM, _, _, _, CTChecks) :-
-    check_cv_2(Goal, M, CM, CTChecks).
-
-check_cv_2(Goal, M, CM, CTChecks) :-
     implementation_module(CM:Goal, M),
     check_property_ctcheck(Goal, M, CM, CTChecks),
-    CTChecks \= [].
-
-:- public collect_violations/6.
-:- meta_predicate collect_violations(?, 1, +, 0, +, +).
-collect_violations(M, FromChk, Stage, CM:Goal, Caller, From) :-
-    check_cv(Stage, Goal, M, CM, Caller, FromChk, From, CTChecks),
+    CTChecks \= [],
     normalize_pi(Caller, CPI),
     forall(( clause(violations_db(From0, CPI, CTChecks), _, Ref),
 	     subsumes_from(From0, From)

@@ -50,8 +50,8 @@ checker:check(undefined, Results, OptionL) :-
     check_undefined(OptionL, Results).
 
 check_undefined(OptionL, Pairs) :-
-    extra_walk_code([trace_reference(-), undefined(trace)|OptionL],
-		    collect_undef(M, FromChk), M, FromChk),
+    extra_walk_code([trace_reference(-), undefined(trace),
+		     on_etrace(collect_undef(M))|OptionL], M, _),
     findall(warning-(File-(AL-(PI-(Loc/['~w'-[CI]])))),
 	    ( retract(undef(PI, CI, From)),
 	      find_alternatives(PI, AL),
@@ -100,9 +100,8 @@ found_undef(To, Caller, From) :-
     ; assertz(undef(PI, CI, From))
     ).
 
-:- meta_predicate collect_undef(?,1,+,+,+,+).
-collect_undef(M, FromChk, _Stage, MCall, Caller, From) :-
-    call(FromChk, From),
+:- public collect_undef/4.
+collect_undef(M, MCall, Caller, From) :-
     M:_ = MCall,
     found_undef(MCall, Caller, From),
     fail. % prevent unexpected unification

@@ -55,10 +55,8 @@ check_trivial_fails(OptionL1, Pairs) :-
 		   trace_reference(_),
 		   module_class([user, system, library])
 		  ], OptionL),
-    extra_walk_code([source(false)|OptionL],
-		    collect_dynamic_locations(M, FromChk), M, FromChk),
-    extra_walk_code(OptionL,
-		    collect_trivial_fails(M, FromChk, MatchAI), _, _),
+    extra_walk_code([source(false), on_etrace(collect_dynamic_locations(M))|OptionL], M, _),
+    extra_walk_code([on_etrace(collect_trivial_fails(M, MatchAI))|OptionL], M, _),
     findall(warning-(Loc-Args),
 	    ( retract(trivial_fail(From, Args)),
 	      from_location(From, Loc)
@@ -98,15 +96,12 @@ ignore_predicate(pce_class(_, _, template, _, _, _), pce_expansion).
 ignore_predicate(property(system_source_prefix(_)), pce_host).
 ignore_predicate(verbose, pce_expansion).
 
-:- meta_predicate collect_dynamic_locations(+,1,+,+,+,+).
-collect_dynamic_locations(M, FromChk, _Stage, MGoal, _, From) :-
-    nonvar(MGoal),
-    call(FromChk, From),
+:- public collect_dynamic_locations/4.
+collect_dynamic_locations(M, MGoal, _, From) :-
     record_location_dynamic(MGoal, M, From).
 
-:- meta_predicate collect_trivial_fails(+,1,+,+,+,+,+).
-collect_trivial_fails(M, FromChk, MatchAI, _Stage, M:Goal, Caller, From) :-
-    call(FromChk, From),
+:- public collect_trivial_fails/5.
+collect_trivial_fails(M, MatchAI, M:Goal, Caller, From) :-
     record_location_meta(M:Goal, _, From, all_call_refs,
 			 cu_caller_hook(MatchAI, Caller)).
 
