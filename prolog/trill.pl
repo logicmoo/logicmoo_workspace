@@ -127,8 +127,11 @@ sub_class(Class,SupClass,Expl):-
   %subClassOf(Class,SupClass).
 
 sub_class(Class,SupClass):-
-  check_query_args([Class,SupClass]),
-  unsat(intersectionOf([Class,complementOf(SupClass)])),!.
+  ( check_query_args([Class,SupClass]) *->
+        unsat(intersectionOf([Class,complementOf(SupClass)])),!
+    ;
+        write("IRIs not existent"),!
+  ).
 
 instanceOf(Class,Ind,Expl):-
   ( check_query_args([Class,Ind]) *->
@@ -149,15 +152,19 @@ instanceOf(_,_,_):-
   write('Inconsistent ABox').
 
 instanceOf(Class,Ind):-
-  check_query_args([Class,Ind]),
-  retractall(ind(_)),
-  assert(ind(1)),
-  build_abox((ABox,Tabs)),
-  \+ clash((ABox,Tabs),_),!,
-  add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
-  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
-  clash((ABox1,Tabs1),_),!.
+  (  check_query_args([Class,Ind]) *->
+	(  retractall(ind(_)),
+	  assert(ind(1)),
+	  build_abox((ABox,Tabs)),
+	  \+ clash((ABox,Tabs),_),!,
+	  add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
+	  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+	  apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
+	  clash((ABox1,Tabs1),_),!
+	)
+    ;
+        write("IRIs not existent"),!
+  ).        
 
 instanceOf(_,_):-
   write('Inconsistent ABox').
