@@ -28,6 +28,7 @@
 */
 
 :- module(nitrace, [nitrace_file/3,
+		    nitrace/1,
 		    nitrace/3]).
 
 :- use_module(library(ontrace)).
@@ -44,6 +45,10 @@ nitrace_file(Goal, Alias, OptL) :-
 :- meta_predicate nitrace(0,+,+).
 nitrace(Goal, Stream, OptL) :-
     ontrace(Goal, nitrace_port(Stream), OptL).
+
+:- meta_predicate nitrace(0).
+nitrace(Goal) :-
+    nitrace(Goal, user_output, []).
 
 frame_pi(Frame, PI) :-
     prolog_frame_attribute(Frame, predicate_indicator, PI).
