@@ -19,6 +19,7 @@
 :- use_module(library(extra_messages), []).
 :- use_module(library(lists)).
 :- use_module(library(implementation_module)).
+:- use_module(library(subpos_utils)).
 
 :- expects_dialect(swi).
 
@@ -143,6 +144,44 @@ assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
     ; true
     ).
 
+var_location(Term, Pos, Var, Loc) :-
+    ( var(Var),
+      subterm_location_eq(L, Var, Term)
+    ->subpos_location(L, Pos, Loc)
+    ; true
+    ).
+
+term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :- Body),
+	       (normalize_assertion_body(Assertion, Format, Pos,
+					 PD,  DP,  CP,  AP,  GP,  CO,
+					 PDP, DPP, CPP, APP, GPP, COP) :- Body)) :-
+    memberchk(Body, [!, (valid_cp(CP), !)]), !,
+    maplist(var_location(Assertion, Pos),
+	    [PD,  DP,  CP,  AP,  GP,  CO],
+	    [PDP, DPP, CPP, APP, GPP, COP]).
+
+term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO)),
+	       (normalize_assertion_body(Assertion, Format, Pos,
+					 PD,  DP,  CP,  AP,  GP,  CO,
+					 PDP, DPP, CPP, APP, GPP, COP))) :-
+    maplist(var_location(Assertion, Pos),
+	    [PD,  DP,  CP,  AP,  GP,  CO],
+	    [PDP, DPP, CPP, APP, GPP, COP]).
+term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :-
+	            normalize_assertion_body(BO, Format, PD, DP, CP, AP, GP, ""), !),
+	       (normalize_assertion_body(Assertion, Format, Pos,
+					 PD,  DP,  CP,  AP,  GP,  CO,
+					 PDP, DPP, CPP, APP, GPP, COP) :-
+	            normalize_assertion_body(BO, Format, BOP,
+					     PD,  DP,  CP,  AP,  GP,  "",
+					     PDP, DPP, CPP, APP, GPP, _), !)) :-
+    Assertion = BO#CO,
+    maplist(var_location(Assertion, Pos), [BO, CO], [BOP, COP]).
+
+% Without Pos information:
+% normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :-
+%     normalize_assertion_body(Assertion, Format, _, PD, DP, CP, AP, GP, CO, _, _, _, _, _, _).
+
 % ---------------------------------------------------------------------------
 % :- pred normalize_assertion_body(B,F,NB)
 %    # "@var{NB} is a normalized assertion body corresponding to the
@@ -203,7 +242,7 @@ normalize_assertion_body((PD            is GP   ), g, PD, true, true, true, GP, 
 normalize_assertion_body((BO                 #CO), P, PD, DP,   CP,   AP,   GP,   CO) :-
     normalize_assertion_body(BO, P, PD, DP, CP, AP, GP, ""), !. %00001%N
 normalize_assertion_body((PD                 #CO), p, PD, true, true, true, true, CO) :- !. %00001%N
-normalize_assertion_body((PD                    ), t, (PD                    ), true, true, true, true, ""). %00000
+normalize_assertion_body((PD                    ), t, PD, true, true, true, true, ""). %00000
 %% ---------------------------------------------------------------------------------------- %% ----
 
 fix_format_global(p, p).
@@ -266,7 +305,8 @@ normalize_status_and_type_1(Assertions, term_position(_, _, _, _, [_, BPos]),
 
 status_and_type(AssrtStatus, AssrtType) :-
     assrt_type(AssrtType),
-    ( default_assrt_status(AssrtType, AssrtStatus)
+    ( var(AssrtStatus)
+    ->default_assrt_status(AssrtType, AssrtStatus)
     ; assrt_status(AssrtStatus)
     ).
 
@@ -376,47 +416,25 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
     ; Lit=B, LPos=BPos
     ).
 
-current_normalized_assertion(Assertions, CM, APos, M:Head, Status, Type,
-			     Cp, Ca, Su, Gl, Co, HPos) :-
-    current_unfold_assertion(Assertions, CM, APos, M:Head, Status, Type,
-			     Cp0, Ca0, Su0, Gl0, Co, HPos),
-    once(maplist(maplist(compact_module_call(CM)),
-    		 [Cp0, Ca0, Su0, Gl0 ],
-    		 [Cp,  Ca,  Su,  Gl])).
-
-%% compact_module_call(+, +, -) is det.
-%
-% Reduce redundant modules in nested lists and sequences:
-%
-compact_module_call(M, M:C, C) :- !.
-compact_module_call(M, (A0;B0), (A;B)) :- !,
-    compact_module_call(M, A0, A),
-    compact_module_call(M, B0, B).
-compact_module_call(M, [A0|B0], [A|B]) :- !,
-    compact_module_call(M, A0, A),
-    compact_module_call(M, B0, B).
-compact_module_call(_, C, C).
-
-current_unfold_assertion(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
+current_normalized_assertion(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
     propdef(PGl, M, Gl, Gl0),
-    current_unfold_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
-current_unfold_assertion(Assertions is PGl, M, term_position(_, _, _, _, [APos, _]),
+    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
+current_normalized_assertion(Assertions is PGl, M, term_position(_, _, _, _, [APos, _]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
     propdef(PGl, M, Gl, Gl0),
-    current_unfold_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
-current_unfold_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :-
-    once(normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS)),
+    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
+current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :-
+    normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS),
     current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
     normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, RPos),
     (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
     assertion_format(Type, GFormat).
 
-:- use_module(library(prolog_codewalk), []).
-
 normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, RPos) :-
-    normalize_assertion_body(Body, Format, Head, PCp, PCa, PSu, PGl, Co),
-    ignore(prolog_codewalk:subterm_pos(Head, Body, BPos, HPos)),
+    normalize_assertion_body(Body, Format, BPos,
+    			     Head, PCp, PCa, PSu, PGl, Co,
+    			     HPos, _, _, _, _, _),
     normalize_assertion_head(Head, M, HPos, Pred, Cp0, Ca0, Su0, Gl0, RPos),
     apropdef(Pred, M, PCp, Cp, Cp0),
     apropdef(Pred, M, PCa, Ca, Ca0),
