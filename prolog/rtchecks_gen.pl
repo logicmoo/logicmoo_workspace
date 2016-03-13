@@ -167,6 +167,23 @@ current_assertion(Pred, M, CM, TimeCheck, Status, Type, Comp, Call, Succ, Glob,
     ),
     \+ black_list_pred(Pred).
 
+add_arg(_, G1, G2) :-
+    var(G1),
+    var(G2),
+    !,
+    assertion(fail),
+    fail.
+add_arg(H, M:G0, M:G) :- !,
+    add_arg(H, G0, G).
+add_arg(H, G0, G) :-
+    ( nonvar(G0)
+    ->G0 =.. [F|L],
+      G  =.. [F,H|L]
+    ; nonvar(G)
+    ->G  =.. [F,H|L],
+      G0 =.. [F|L]
+    ).
+
 current_assertion(Pred, M, TimeCheck,
 		  assr(Pred, Status, Type, Comp, Call, Succ, Glob, Loc, PredName, CompName, CallName, SuccName, GlobName)) :-
     current_assertion(Pred, M, CM, TimeCheck, Status, Type, Comp0, Call0,
