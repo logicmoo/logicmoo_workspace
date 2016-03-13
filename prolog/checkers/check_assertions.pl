@@ -113,12 +113,12 @@ current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
     call(FromChk, From),
     functor(Head, HF,HA),
     PI=M:HF/HA,
-    ( ( asr_comp(Asr, PM, Prop)
-      ; asr_call(Asr, PM, Prop)
-      ; asr_succ(Asr, PM, Prop)
+    ( ( asr_comp(Asr, PM, Prop, _)
+      ; asr_call(Asr, PM, Prop, _)
+      ; asr_succ(Asr, PM, Prop, _)
       ),
       resolve_head(Prop, PM, N:H)
-    ; asr_glob(Asr, PM, Glob),
+    ; asr_glob(Asr, PM, Glob, _),
       resolve_head(Glob, PM, N:G),
       G =.. [F|Args],
       H =.. [F, Head|Args]

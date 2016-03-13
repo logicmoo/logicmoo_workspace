@@ -29,7 +29,7 @@
 
 :- module(check_trivial_fails, [collect_dynamic_locations/1]).
 
-:- use_module(checkers(checker)).
+:- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
 :- use_module(library(abstract_interpreter)).
 :- use_module(library(from_utils)).

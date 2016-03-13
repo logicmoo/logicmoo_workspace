@@ -156,12 +156,12 @@ walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
 
 assertion_goal(head, Head, HM, _, Head, HM).
 assertion_goal(body, _, _, Asr, Prop, PM) :-
-    ( asr_comp(Asr, PM, Prop)
-    ; asr_call(Asr, PM, Prop)
-    ; asr_succ(Asr, PM, Prop)
-    ; asr_glob(Asr, PM, Glob),
+    ( asr_comp(Asr, PM, Prop, _)
+    ; asr_call(Asr, PM, Prop, _)
+    ; asr_succ(Asr, PM, Prop, _)
+    ; asr_glob(Asr, PM, Glob, _),
       %% _Arg = HM:Head, but keep it uninstantiated for optimization:
-      add_arg(_Arg, Glob, Prop)
+      rtchecks_gen:add_arg(_Arg, Glob, Prop)
     ).
 
 resolve_head(M:H0, _, H) :- !,
