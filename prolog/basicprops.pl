@@ -30,7 +30,7 @@
 %% Migrated from Ciao to SWI-Prolog
 
 :- module(basicprops,
-        [term/1, int/1, nnegint/1, flt/1, num/1, atm/1, struct/1,
+        [term/1, int/1, nnegint/1, flt/1, num/1, atm/1, str/1, struct/1,
 	 gnd/1, gndstr/1, constant/1, inst/2, % callable/1,
 	 operator_specifier/1, list/1, list/2, nlist/2, % member/2,
 	 sequence/2, sequence_or_list/2, character_code/1, % string/1,
@@ -151,8 +151,24 @@ num(T) :- int(T).
 :- trust comp atm/1 + test_type(arithmetic).
 
 % Should be current_atom/1
-atm(T) :- atom(T), !.
-atm(a).
+atm(T) :- nonvar(T), !, atom(T).
+atm(A) :-
+    list(L, character_code),
+    atom_codes(A, L).
+
+:- doc(str/1, "The type of atoms, or non-numeric constants.  The
+        size of atoms is unbound.").
+
+:- true prop str(T) + (regtype, native) # "~w is a string."-[T].
+:- true comp str/1 + sideff(free).
+:- true comp str(T) : nonvar(T) + (eval, is_det).
+:- trust success str(T) => str(T).
+:- trust comp str/1 + test_type(arithmetic).
+
+str(T) :- nonvar(T), !, string(T).
+str(S) :-
+    list(L, character_code),
+    string_codes(S, L).
 
 :- doc(struct/1, "The type of compound terms, or terms with
 non-zeroary functors. By now there is a limit of 255 arguments.").
@@ -198,6 +214,7 @@ grnd_args(N, T) :-
 
 constant(T) :- atm(T).
 constant(T) :- num(T).
+constant(T) :- str(T).
 
 :- true prop callable(T) + regtype
    # "~w is a term which represents a goal, i.e.,
@@ -277,8 +294,8 @@ list([_|L]) :- list(L).
 
 list([],_).
 list([X|Xs], T) :-
-        type(X, T),
-        list(Xs, T).
+    type(X, T),
+    list(Xs, T).
 
 :- true prop nlist(L,T) + regtype #
 	"~w is ~w or a nested list of ~ws.  Note that
@@ -337,7 +354,7 @@ sequence_or_list(E, T) :- sequence(E, T).
 :- true comp character_code(T) : nonvar(T) + eval.
 :- trust success character_code(I) => character_code(I).
 
-character_code(I) :- int(I).
+character_code(I) :- between(0, 255, I).
 
 % :- doc(string/1, "A string is a list of character codes.  The usual
 %         syntax for strings @tt{\"string\"} is allowed, which is
