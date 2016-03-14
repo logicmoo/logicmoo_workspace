@@ -224,6 +224,7 @@ rl_goal_expansion(Goal, Pos) :-
     ; true
     ),
     \+ clause(declaration_pos(Goal, _, _, _, _, _, _), _),
+    \+ skip_record_decl(Goal),
     assert_position(Goal, Pos, goal),
     !.
 
