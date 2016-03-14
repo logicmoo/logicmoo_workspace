@@ -27,7 +27,7 @@
     the GNU General Public License.
 */
 
-:- module(check_trivial_fails, []).
+:- module(check_trivial_fails, [collect_dynamic_locations/4]).
 
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
@@ -96,7 +96,6 @@ ignore_predicate(pce_class(_, _, template, _, _, _), pce_expansion).
 ignore_predicate(property(system_source_prefix(_)), pce_host).
 ignore_predicate(verbose, pce_expansion).
 
-:- public collect_dynamic_locations/4.
 collect_dynamic_locations(M, MGoal, _, From) :-
     record_location_dynamic(MGoal, M, From).
 

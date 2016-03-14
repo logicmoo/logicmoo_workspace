@@ -35,6 +35,7 @@
 :- use_module(library(prolog_codewalk), []). % for message_location//1
 :- use_module(library(normalize_head)).
 :- use_module(library(extra_codewalk)).
+:- use_module(library(checkers/check_trivial_fails)).
 
 :- multifile
     prolog:message//1,
