@@ -244,8 +244,8 @@ sweep(M, FromChk, Pairs) :-
     findall(warning-Row,
 	    [Nodes, Row] +\ 
 	    ( member(node(Node, D, From), Nodes),
-	      findall(Loc/D, ( \+ hide_unused_from(Node, From),
-			       from_location(From, Loc)
+	      \+ hide_unused_from(Node, From),
+	      findall(Loc/D, ( from_location(From, Loc)
 			     ), LocDU),
 	      sort(LocDU, LocDL),
 	      findall(Caller, ( edge(Caller, Node),
@@ -277,7 +277,15 @@ compact_results(Results) :-
     findall(Result, compact_result(_, Result), Results).
 
 compact_result(Node, node(SortBy, LocDL, Node, EdgeL)-Results) :-
-    commited_retract(node(SortBy, LocDL, Node)),
+    ( findall(Node, ( edge(Node, Edge),
+		      \+ node(_, _, Node)
+		    ), NodeU),	% edges from nodes that for some reason are gone
+      sort(NodeU, NodeL),
+      SortBy = sort_by(0, 0, 0 ),
+      LocDL = [],
+      member(Node, NodeL)
+    ; commited_retract(node(SortBy, LocDL, Node))
+    ),
     findall(Edge, ( clause(edge(Node, Edge), _, Ref),
 		    \+ node(_, _, Edge),
 		    erase(Ref)
@@ -352,7 +360,7 @@ prolog:message(acheck(unused, Node-EdgeLL)) -->
     message_unused_node(Node, ['*', ' ']),
     foldl(foldl(message_unused_rec([' ', ' ', ' ', ' '])), EdgeLL).
 
-message_unused_node(node(sort_by(N, L, _), LocDL, PI, _ARL), Level) -->
+message_unused_node(node(sort_by(N, L, _), LocDL, PI, _), Level) -->
     { R is N + L,
       unused_type(R, T)
     },
@@ -367,7 +375,10 @@ message_unused_node(node(sort_by(N, L, _), LocDL, PI, _ARL), Level) -->
     ; []
     ),
     */
-    foldl(message_unused(T, Level, PI), LocDL).
+    ( {LocDL = []}
+    ->message_unused(T, Level, PI, []/predicate)
+    ; foldl(message_unused(T, Level, PI), LocDL)
+    ).
 
 message_unused_rec(Level, Node-EdgeL) -->
     message_unused_node(Node, Level),

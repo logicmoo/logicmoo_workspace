@@ -30,7 +30,7 @@
 :- module(checker,
 	  [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
 	  check_results/2, check_results/3, report_list/2, full_report/1,
-	  simple_report/1, available_checker/1]).
+	  simple_report/1, prepare_results/2, available_checker/1]).
 
 :- use_module(library(thread)).
 :- use_module(library(clambda)).
@@ -81,11 +81,13 @@ full_report(Checker-Pairs) :-
       simple_report(Checker-Pairs)
     ).
 
-simple_report(Checker-Pairs) :-
+prepare_results(Checker-Pairs, Checker-Prepared) :-
     ( prepare_results(Checker, Pairs, Prepared)
     ->true
     ; Prepared = Pairs
-    ),
+    ).
+
+simple_report(Checker-Prepared) :-
     group_pairs_or_sort(Prepared, Results),
     maplist(report_analysis_results(Checker), Results).
 
