@@ -72,7 +72,7 @@ check_assertions(OptionL0, Pairs) :-
 		  ], OptionL),
     extra_walk_code(OptionL, M, FromChk),
     findall(error-Issue,
-	    ( retract(violations_db(From, CPI, CTChecks)),
+	    ( retract(violations_db(CPI, CTChecks, From)),
 	      from_location(From, Loc),
 	      Issue = body(Loc-CPI)-CTChecks
 	    ; current_head_ctcheck(M, FromChk, Issue)
@@ -178,16 +178,7 @@ collect_violations(M, CM:Goal, Caller, From) :-
     check_property_ctcheck(Goal, M, CM, CTChecks),
     CTChecks \= [],
     normalize_pi(Caller, CPI),
-    forall(( clause(violations_db(From0, CPI, CTChecks), _, Ref),
-	     subsumes_from(From0, From)
-	   ),			% Erase less precise facts
-	   erase(Ref)),
-    ( \+ ( violations_db(From0, CPI, CTChecks),
-	   subsumes_from(From, From0 )
-	 )			% Assert if no more precise
-    ->assertz(violations_db(From, CPI, CTChecks))
-    ; true
-    ).
+    update_fact_from(violations_db(CPI, CTChecks), From).
 
 check_property_ctcheck(Goal, M, CM, AssrErrorL) :-
     tabled_generate_ctchecks(Goal, M, CM, CTCheck),

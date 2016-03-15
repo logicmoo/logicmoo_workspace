@@ -45,6 +45,7 @@
 :- use_module(library(extra_codewalk)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
+:- use_module(library(from_utils)).
 
 :- multifile
     prolog:message//1.
@@ -82,7 +83,8 @@ collect_called_from(H, M, CM, Caller, OptionL, Sorted) :-
 collect_called_from(Ref, M, CM, Caller, OptionL0) :-
     cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
     retractall(called_from_db(_, _, _, _, _)),
-    merge_options([infer_meta_predicates(false),
+    merge_options([source(true),
+		   infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
 		   trace_reference(_:Ref),
@@ -95,7 +97,7 @@ current_called_from(H, M, CM, From, Caller) :-
     current_used_from([retract, query], H, M, CM, From, Caller).
 
 current_used_from(DynTypes, H, M, CM, From, Caller) :-
-    ( called_from_db(H, M, CM, From, Caller)
+    ( called_from_db(H, M, CM, Caller, From)
     ; loc_dynamic(H, M, dynamic(Type, CM, Caller), From),
       memberchk(Type, DynTypes)
     ; loc_declaration(H, CM, goal, From),
@@ -107,10 +109,10 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
 
 :- public collect_call_point/6.
 collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
-    record_location_dynamic(MGoal, IM, From),
+    ignore(record_location_dynamic(MGoal, IM, From)),
     MGoal = M:Goal,
     implementation_module(MGoal, IM),
-    assertz(called_from_db(Goal, IM, M, From, Caller)).
+    update_fact_from(called_from_db(Goal, IM, M, Caller), From).
 
 print_call_point(L-A) :-
     print_message(information, acheck(called_from(L, A))).

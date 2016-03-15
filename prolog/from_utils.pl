@@ -31,12 +31,14 @@
 		       from_to_line/2,
 		       from_to_file_line_pos/5,
 		       file_termpos_line/4,
+		       update_fact_from/2,
 		       subsumes_from/2,
 		       filepos_line/4]).
 
 :- use_module(library(prolog_clause),   []).
 :- use_module(library(prolog_codewalk), []).
 :- use_module(library(extra_messages),  []).
+:- use_module(library(resolve_calln)).
 
 from_to_file_line_pos(clause_term_position(ClauseRef, TermPos),
 		      File, CLine, TLine, Pos) :-
@@ -87,3 +89,18 @@ from_to_line(clause(ClauseRef), Line) :-
 from_to_line(file_term_position(File, TermPos), Line) :-
     file_termpos_line(File, TermPos, Line, _).
 from_to_line(file(_, Line, _, _), Line).
+
+:- meta_predicate update_fact_from(1, ?).
+update_fact_from(Fact, From) :-
+    resolve_calln(call(Fact, From0), FactFrom0),
+    forall(( clause(FactFrom0, _, Ref),
+	     subsumes_from(From0, From)
+	   ),
+	   erase(Ref)),
+    ( \+ ( call(FactFrom0 ),
+	   subsumes_from(From, From0 )
+	 )
+    ->resolve_calln(call(Fact, From), FactFrom),
+      assertz(FactFrom)
+    ; true
+    ).

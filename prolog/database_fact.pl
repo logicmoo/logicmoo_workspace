@@ -100,6 +100,7 @@ database_def_fact(asserta(A, _),            system,     F) :- clause_head(A, F).
 database_def_fact(assertz(A),               system,     F) :- clause_head(A, F).
 database_def_fact(assertz(A, _),            system,     F) :- clause_head(A, F).
 database_def_fact(retractall(F),            system,     F).
+database_def_fact(update_fact_from(A),      from_utils, F) :- clause_head(A, F).
 
 database_var_fact(check:check_trivial_fail/3).
 database_var_fact(prolog_codewalk:walk_clauses/2).
@@ -124,6 +125,7 @@ database_var_fact(user:prolog_clause_name/2).
 database_var_fact(user:prolog_list_goal/1).
 database_var_fact(prolog_trace_utils:list_clauses/3).
 database_var_fact(prolog_term_view:print_clause_properties/2).
+database_var_fact(from_utils:update_fact_from/1).
 
 database_retract_fact(retract(A),  system,     F) :- clause_head(A, F).
 database_retract_fact(lretract(A), pce_config, F) :- clause_head(A, F).
