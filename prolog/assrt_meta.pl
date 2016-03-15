@@ -34,26 +34,27 @@
 :- use_module(library(rtchecks_basic)).
 :- use_module(library(rtchecks_gen)).
 :- use_module(library(location_utils)).
+:- use_module(library(implementation_module)).
 
 :- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
 
 assrt_lib:asr_glob(am_idx(M, Head), assrt_meta, rtc_stub(RTChecks, Goal)) :-
-    am_head_prop_idx(Head, M, Status, Spec, Pos),
+    am_head_prop_idx(Head, M, Spec, Pos),
     Pred = M:Head,
     normalize_assertion_head(Spec, M, _, Pred, Comp, Call, Succ, Glob, _),
     current_prolog_flag(rtchecks_namefmt, NameFmt),
     get_pretty_names(NameFmt, n(Head, Comp, Call, Succ, Glob), [], TName),
     TName = n(HeadName, CompName, CallName, SuccName, GlobName),
-    AssrL = [assr(Head, Status, (pred), Comp, Call, Succ, Glob, Pos, HeadName, CompName, CallName, SuccName, GlobName)],
+    AssrL = [assr(Head, check, (pred), Comp, Call, Succ, Glob, Pos, HeadName, CompName, CallName, SuccName, GlobName)],
     generate_rtchecks(AssrL, M, RTChecksL, G, G, Goal),
     lists_to_lits(RTChecksL, RTChecks).
 
-assrt_lib:head_prop_asr(Head, M, Status, (comp), "", [], Pos, am_idx(M, Head)) :-
-    am_head_prop_idx(Head, M, Status, _, Pos).
+assrt_lib:head_prop_asr(Head, M, check, (comp), "", [], Pos, am_idx(M, Head)) :-
+    am_head_prop_idx(Head, M, _, Pos).
 
-am_head_prop_idx(Head, M, Status, Spec, Pos) :-
-    current_prolog_flag(assrt_meta_pred, Status),
-    Status \= none,
+am_head_prop_idx(Head, M, Spec, Pos) :-
+    current_prolog_flag(assrt_meta_pred, Flag),
+    Flag \= none,
     Pred = M:Head,
     ( var(Head)
     ->current_predicate(M:F/A),
@@ -62,8 +63,22 @@ am_head_prop_idx(Head, M, Status, Spec, Pos) :-
       current_predicate(M:F/A) % Narrow answer set for M
     ),
     \+ predicate_property(Pred, imported_from(_)),
-    % if something can not be debugged, can not be rtchecked either
+    % if something can not be debugged, can not be rtchecked either:
     \+ predicate_property(Pred, nodebug),
+    ( Flag = all
+    ->
+      \+ ( freeze(Asr, (Asr \= am_idx(_, _))),
+	   head_prop_asr(Head, CM, check, _, _, _, _, Asr),
+	   implementation_module(CM:Head, M),
+	   asr_glob(Asr, CM, no_meta_modes)
+	 )
+    ; Flag = specific
+    ->once(( freeze(Asr, (Asr \= am_idx(_, _))),
+	     head_prop_asr(Head, CM, check, _, _, _, _, Asr),
+	     implementation_module(CM:Head, M),
+	     asr_glob(Asr, CM, meta_modes)
+	   ))
+    ),
     '$predicate_property'(meta_predicate(Spec), Pred),
     % predicate_property(Pred, meta_predicate(Spec)),
     ( property_from(M:Spec, meta_predicate, Pos)

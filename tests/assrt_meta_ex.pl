@@ -13,6 +13,8 @@
 
 :- pred metapred(+atm, ?, ?, ?).
 
+:- comp metapred/4 + meta_modes.
+
 amtest :-
     metapred(patata, Output, IO, display),
     display(Output-IO).

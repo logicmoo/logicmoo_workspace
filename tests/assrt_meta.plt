@@ -4,7 +4,6 @@
 :- use_module(library(rtchecks_tracer)).
 :- use_module(library(assrt_meta)).
 :- set_prolog_flag(rtchecks_check,  yes).
-:- set_prolog_flag(assrt_meta_pred, check).
 :- use_module(assrt_meta_ex).
 
 test(assrt_meta) :-
@@ -12,14 +11,28 @@ test(assrt_meta) :-
     load_rtchecks(RTChecks),
     assertion(RTChecks == []).
 
-test(assrt_meta_f) :-
+run_amt(RTChecks) :-
     catch(save_rtchecks(do_trace_rtc(amtestf)),
 	  E,
 	  true),
     assertion(E=error(existence_error(procedure,
 				      assrt_meta_ex:undefined_proc/1),
 		      context(_,_))),
-    load_rtchecks(RTChecks),
+    load_rtchecks(RTChecks).
+
+test(assrt_meta_f_1) :-
+    set_prolog_flag(assrt_meta_pred, none),
+    run_amt(RTChecks),
+    assertion(RTChecks = [_]).
+
+test(assrt_meta_f_2) :-
+    set_prolog_flag(assrt_meta_pred, all),
+    run_amt(RTChecks),
+    assertion(RTChecks = [_, _]).
+
+test(assrt_meta_f_3) :-
+    set_prolog_flag(assrt_meta_pred, specific),
+    run_amt(RTChecks),
     assertion(RTChecks = [_, _]).
 
 :- end_tests(assrt_meta).
