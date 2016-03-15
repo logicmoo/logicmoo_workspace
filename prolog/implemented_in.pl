@@ -74,13 +74,17 @@ implemented_in(MGoal0, From, Args) :-
 :- public prepare/0.
 
 prepare :-
+    prepare(collect_dynamic_locations(M), M).
+
+:- meta_predicate prepare(3,?).
+prepare(OnETrace, M) :-
     extra_walk_code([source(false),
 		     infer_meta_predicates(false),
 		     autoload(false),
 		     evaluate(false),
 		     trace_reference(_),
 		     module_class([user, system, library]),
-		     on_etrace(collect_dynamic_locations(M))], M, _),
+		     on_etrace(OnETrace)], M, _),
     retractall(prepared),
     assertz(prepared).
 

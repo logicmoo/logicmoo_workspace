@@ -37,7 +37,7 @@
 :- use_module(checkers(check_meta_decls)).
 :- use_module(checkers(check_non_loaded), []).
 :- use_module(checkers(check_non_mutually_exclusive)).
-:- use_module(checkers(check_trivial_fails)).
+:- use_module(checkers(check_trivial_fails), []).
 :- use_module(checkers(check_undefined)).
 :- use_module(checkers(check_unused)).
 :- use_module(checkers(check_wrong_dynamic)).
