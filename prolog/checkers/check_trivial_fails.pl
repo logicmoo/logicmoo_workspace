@@ -27,7 +27,7 @@
     the GNU General Public License.
 */
 
-:- module(check_trivial_fails, [collect_dynamic_locations/4]).
+:- module(check_trivial_fails, [collect_dynamic_locations/1]).
 
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
@@ -55,7 +55,7 @@ check_trivial_fails(OptionL1, Pairs) :-
 		   trace_reference(_),
 		   module_class([user, system, library])
 		  ], OptionL),
-    extra_walk_code([source(false), on_etrace(collect_dynamic_locations(M))|OptionL], M, _),
+    collect_dynamic_locations(OptionL),
     extra_walk_code([on_etrace(collect_trivial_fails(M, MatchAI))|OptionL], M, _),
     findall(warning-(Loc-Args),
 	    ( retract(trivial_fail(From, Args)),
@@ -63,6 +63,9 @@ check_trivial_fails(OptionL1, Pairs) :-
 	    ), Pairs),
     cleanup_f,
     !.
+
+collect_dynamic_locations(OptionL) :-
+    extra_walk_code([source(false), on_etrace(collect_dynamic_locations(M))|OptionL], M, _).
 
 cleanup_f :-
     retractall(ai_cache_result(_, _)).

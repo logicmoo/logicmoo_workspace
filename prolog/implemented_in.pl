@@ -34,7 +34,6 @@
 :- use_module(library(extra_location)).
 :- use_module(library(prolog_codewalk), []). % for message_location//1
 :- use_module(library(normalize_head)).
-:- use_module(library(extra_codewalk)).
 :- use_module(library(checkers/check_trivial_fails)).
 
 :- multifile
@@ -71,24 +70,20 @@ implemented_in(MGoal0, From, Args) :-
 
 :- dynamic prepared/0.
 
-:- public prepare/0.
-
 prepare :-
-    prepare(collect_dynamic_locations(M), M).
-
-:- meta_predicate prepare(3,?).
-prepare(OnETrace, M) :-
-    extra_walk_code([source(false),
-		     infer_meta_predicates(false),
-		     autoload(false),
-		     evaluate(false),
-		     trace_reference(_),
-		     module_class([user, system, library]),
-		     on_etrace(OnETrace)], M, _),
+    collect_dynamic_locations([source(false),
+			       infer_meta_predicates(false),
+			       autoload(false),
+			       evaluate(false),
+			       trace_reference(_),
+			       module_class([user, system, library])]),
     retractall(prepared),
     assertz(prepared).
 
 implemented_in(MGoal) :-
-    ( prepared -> true ; prepare ),
+    ( prepared
+    ->true
+    ; prepare
+    ),
     forall(implemented_in(MGoal, From, Args),
 	   print_message(information, acheck(implemented_in(From, Args)))).

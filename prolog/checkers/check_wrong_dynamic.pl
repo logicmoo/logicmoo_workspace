@@ -75,6 +75,7 @@ hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
 hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
 hide_var_dynamic(walk_from_assertion(_, _, _, _), extra_codewalk).
 hide_var_dynamic(current_clause_module_body(_, _), extra_codewalk).
+hide_var_dynamic(update_fact_from(_, _), from_utils).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -208,8 +209,8 @@ record_location_wd(Caller, M:Fact, _, Type, IM:Goal, _, From) :-
       record_location(Fact, M, Def, From),
       \+ hide_wrong_dynamic(Fact, M),
       assertz(wrong_dynamic_db(From, Type, M:F/A, MPI))
-    ; \+ database_fact(Caller) ->
-      normalize_head(Caller, CM:HC),
+    ; \+ database_fact(Caller)
+    ->normalize_head(Caller, CM:HC),
       \+ hide_var_dynamic(HC, CM),
       assertz(var_dynamic_db(From, MPI))
     ; true

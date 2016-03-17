@@ -38,6 +38,7 @@
 	   fa_to_head/3
 	  ]).
 
+:- use_module(library(extend_args)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(static_strip_module)).
 
@@ -87,20 +88,23 @@ database_fact(M:G, F) :- database_fact_ort(_, G, M, F).
 
 database_def_fact(M:H, F) :- database_def_fact(H, M, F).
 
-database_def_fact(asserta_with_names(A, _), ifprolog,   F) :- clause_head(A, F).
-database_def_fact(assertz_with_names(A, _), ifprolog,   F) :- clause_head(A, F).
-database_def_fact(lasserta(A),              pce_config, F) :- clause_head(A, F).
-database_def_fact(assert_cyclic(A),         plunit,     F) :- clause_head(A, F).
-database_def_fact(abolish(F, A),            system,     H) :- fa_to_head(F, A, H).
-database_def_fact(abolish(PI),              system,     H) :- pi_to_head(PI, H).
-database_def_fact(assert(A),                system,     F) :- clause_head(A, F).
-database_def_fact(assert(A, _),             system,     F) :- clause_head(A, F).
-database_def_fact(asserta(A),               system,     F) :- clause_head(A, F).
-database_def_fact(asserta(A, _),            system,     F) :- clause_head(A, F).
-database_def_fact(assertz(A),               system,     F) :- clause_head(A, F).
-database_def_fact(assertz(A, _),            system,     F) :- clause_head(A, F).
-database_def_fact(retractall(F),            system,     F).
-database_def_fact(update_fact_from(A),      from_utils, F) :- clause_head(A, F).
+database_def_fact(asserta_with_names(A, _),  ifprolog,   F) :- clause_head(A, F).
+database_def_fact(assertz_with_names(A, _),  ifprolog,   F) :- clause_head(A, F).
+database_def_fact(lasserta(A),               pce_config, F) :- clause_head(A, F).
+database_def_fact(assert_cyclic(A),          plunit,     F) :- clause_head(A, F).
+database_def_fact(abolish(F, A),             system,     H) :- fa_to_head(F, A, H).
+database_def_fact(abolish(PI),               system,     H) :- pi_to_head(PI, H).
+database_def_fact(assert(A),                 system,     F) :- clause_head(A, F).
+database_def_fact(assert(A, _),              system,     F) :- clause_head(A, F).
+database_def_fact(asserta(A),                system,     F) :- clause_head(A, F).
+database_def_fact(asserta(A, _),             system,     F) :- clause_head(A, F).
+database_def_fact(assertz(A),                system,     F) :- clause_head(A, F).
+database_def_fact(assertz(A, _),             system,     F) :- clause_head(A, F).
+database_def_fact(retractall(F),             system,     F).
+database_def_fact(update_fact_from(A, From), from_utils, F) :-
+    nonvar(A),
+    extend_args(A, [From], H),
+    clause_head(H, F).
 
 database_var_fact(check:check_trivial_fail/3).
 database_var_fact(prolog_codewalk:walk_clauses/2).
