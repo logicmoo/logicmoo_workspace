@@ -39,6 +39,7 @@
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(referenced_by)).
+:- use_module(library(group_pairs_or_sort)).
 
 :- multifile
     prolog:message//1.
@@ -49,17 +50,38 @@
 checker:check(undefined, Results, OptionL) :-
     check_undefined(OptionL, Results).
 
-check_undefined(OptionL, Pairs) :-
+check_undefined(OptionL, Results) :-
     extra_walk_code([source(true),
 		     trace_reference(-),
 		     undefined(trace),
 		     on_etrace(collect_undef(M))|OptionL], M, _),
-    findall(warning-(File-(AL-(PI-(Loc/['~w'-[CI]])))),
+    findall(File-(AL-(PI-(Loc/['~w'-[CI]]))),
 	    ( retract(undef(PI, CI, From)),
 	      find_alternatives(PI, AL),
 	      from_location(From, Loc),
 	      from_to_file(From, File)
-	    ), Pairs).
+	    ), Pairs),
+    group_pairs_or_sort(Pairs, Grouped),
+    findall(warning-(File-(Decl-(PI-LocCI))),
+	    ( member(File-ALPILocCIList, Grouped),
+	      member(AL-PILocCIList, ALPILocCIList),
+	      maplist(\ ((_:F/A)-_)^(F/A)^true, PILocCIList, PIL),
+	      maplist(alternative_decl(PIL), AL, Decl),
+	      member(PI-LocCIList, PILocCIList),
+	      member(LocCI, LocCIList)
+	    ), Results).
+
+alternative_decl(PIL, A-EM/EL, Decl/FL) :-
+    ( EL = []
+    ->Decl = use_module(A)
+    ; length(EL,  EN),
+      length(PIL, IN),
+      ( EN < IN
+      ->Decl = use_module(A, except(EL))
+      ; Decl = use_module(A, PIL)
+      )
+    ),
+    subtract(PIL, EM, FL).
 
 hide_undef(M:H) :- hide_undef(H, M).
 
@@ -79,7 +101,7 @@ find_alternatives(M:F/A, AL) :-
 		   ), AU),
     sort(AU, AL).
 
-exclude_list(M, AM, ex(ML, EL)) :-
+exclude_list(M, AM, ML/EL) :-
     module_property(AM, exports(MU)),
     sort(MU, ML),
     findall(F/A,
@@ -89,7 +111,7 @@ exclude_list(M, AM, ex(ML, EL)) :-
 	      \+ predicate_property(M:H, imported_from(AM))
 	    ), EU),
     sort(EU, EL).
-	      
+
 % Hook to hide undef messages:
 :- multifile hide_undef/2.
 hide_undef(head_prop_asr(_,_,_,_, _,_,_), assrt_lib).
@@ -116,8 +138,7 @@ prolog:message(acheck(undefined, File-ALPILocCIList)) -->
     { pairs_values(ALPILocCIList, PILocCIList) },
     foldl(foldl(show_undefined), PILocCIList).
 
-show_alternatives(AL-PILocCIList) -->
-    {maplist(\ ((_:F/A)-_)^(F/A)^true, PILocCIList, PIL)},
+show_alternatives(AL-_) -->
     ( {AL = []}
     ->[]
     ; ['  Can be fixed by adding '],
@@ -127,24 +148,14 @@ show_alternatives(AL-PILocCIList) -->
       ; {Spc='\t'},
 	['one of these:', nl]
       ),
-      foldl(show_alternative(PIL, Spc), AL)
+      foldl(show_alternative(Spc), AL)
     ).
 
-show_alternative(PIL, Spc, A-ex(EM, EL)) -->
-    { EL = []
-    ->Decl = use_module(A)
-    ; length(EL,  EN),
-      length(PIL, IN),
-      ( EN < IN
-      ->Decl = use_module(A, except(EL))
-      ; Decl = use_module(A, PIL)
-      )
-    },
+show_alternative(Spc, Decl/FL) -->
     ['~a:- ~w.'-[Spc, Decl]],
-    { subtract(PIL, EM, FL) },	% Force import
     ( {FL = []}
     ->[]
-    ; [' % add exports: ~w'-[FL, A]]
+    ; [' % add exports: ~w'-[FL]]
     ),
     [nl].
 
