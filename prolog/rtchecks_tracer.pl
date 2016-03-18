@@ -162,9 +162,9 @@ setup_clause_bpt(Clause, Action) :-
 :- multifile
     prolog:break_hook/6.
 
-:- public system:rat_trap/4.
-:- meta_predicate system:rat_trap(0, +, +, +).
-system:( rat_trap(RTChecks, Caller, Clause, PC) :-
+:- public system:'$rat_trap'/4.
+:- meta_predicate system:'$rat_trap'(0, +, +, +).
+system:( '$rat_trap'(RTChecks, Caller, Clause, PC) :-
          rtchecks_tracer:( AssrChk = assrchk(asr, Error),
 			   intercept(RTChecks, AssrChk,
 				     ( ( retract(rtc_break(Clause, PC))
@@ -191,7 +191,7 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
 	( CM:Goal == RTChecks
 	->Action = continue
 	; '$fetch_vm'(Clause, PC, NPC, _VMI),
-	  Action = call(rat_trap(RTChecks, Caller, Clause, NPC))
+	  Action = call('$rat_trap'(RTChecks, Caller, Clause, NPC))
 	)
       ; Action = continue
       )

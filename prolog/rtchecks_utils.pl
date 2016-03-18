@@ -17,6 +17,7 @@ filtered_backtrace:no_backtrace_clause_hook(_, intercept).
 filtered_backtrace:no_backtrace_clause_hook(_, nativeprops).
 filtered_backtrace:no_backtrace_clause_hook(_, send_check).
 filtered_backtrace:no_backtrace_clause_hook(_, plprops).
+filtered_backtrace:no_backtrace_clause_hook('$rat_trap'(_, _, _, _), _).
 
 tracertc :-
     filtered_backtrace(100).
