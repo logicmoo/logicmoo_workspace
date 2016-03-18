@@ -37,7 +37,8 @@
 :- true comp atom(T) : var(T) + equiv(fail).
 
 :- true prop atomic(X) + native
-# "~w is currently instantiated to an atom or a number."-[X].
+# "~w is currently instantiated to an atom, a number.
+In SWI-Prolog also to a string or the empty list."-[X].
 :- trust success atomic(T) => constant(T).
 :- trust comp atomic/1 + (is_det, test_type(meta)).
 :- true comp atomic(@) + (sideff(free), native).

@@ -212,6 +212,7 @@ grnd_args(N, T) :-
 :- true comp constant(T) : nonvar(T) + (eval, is_det).
 :- trust success constant(T) => constant(T).
 
+constant([]).
 constant(T) :- atm(T).
 constant(T) :- num(T).
 constant(T) :- str(T).
