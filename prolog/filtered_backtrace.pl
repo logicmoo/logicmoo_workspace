@@ -34,7 +34,7 @@
 
 filtered_backtrace(Max) :-
     get_prolog_backtrace(Max, Stack, []),
-    exclude(no_backtrace_entry, Stack, Filtered),
+    include(no_backtrace_entry, Stack, Filtered),
     print_prolog_backtrace(user_error, Filtered).
 
 :- multifile no_backtrace_clause_hook/2.
@@ -44,4 +44,4 @@ no_backtrace_clause_hook(_, prolog_stack).
 
 no_backtrace_entry(frame(_, clause(Clause, _), _)) :-
     clause(M:Head, _Body, Clause),
-    no_backtrace_clause_hook(Head, M).
+    \+ no_backtrace_clause_hook(Head, M).
