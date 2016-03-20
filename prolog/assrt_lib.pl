@@ -80,11 +80,11 @@ add_arg(H, G0, G,
 collect(Tmpl, Goal, List) :-
     (bagof(Tmpl, Goal, List) *-> true ; List = []).
 
-collect_props(Idx, CM, CompL, CallL, SuccL, GlobL) :-
-    collect_prop(asr_comp(Idx), CM, CompL),
-    collect_prop(asr_call(Idx), CM, CallL),
-    collect_prop(asr_succ(Idx), CM, SuccL),
-    collect_prop(asr_glob(Idx), CM, GlobL).
+collect_props(Asr, CM, CompL, CallL, SuccL, GlobL) :-
+    collect_prop(asr_comp(Asr), CM, CompL),
+    collect_prop(asr_call(Asr), CM, CallL),
+    collect_prop(asr_succ(Asr), CM, SuccL),
+    collect_prop(asr_glob(Asr), CM, GlobL).
 
 collect_prop(GenProp, CM, PropL) :- 
     collect(MProp,
@@ -100,9 +100,9 @@ collect_prop(GenProp, CM, PropL) :-
 %
 :- multifile assertion_db/12.
 assertion_db(Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
-    head_prop_asr(Head, CM, Status, Type, Comm, Dict, Loc, Idx),
+    head_prop_asr(Head, CM, Status, Type, Comm, Dict, Loc, Asr),
     implementation_module(CM:Head, M),
-    collect_props(Idx, CM, Comp, Call, Succ, Glob).
+    collect_props(Asr, CM, Comp, Call, Succ, Glob).
 
 filepos_line(File, CharPos, Line, LinePos) :-
     setup_call_cleanup('$push_input_context'(filepos),
@@ -688,9 +688,9 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     get_sequence_and_inc(Count),
     term_variables(t(CpL, CaL, SuL, GlL), ShareL),
     atom_number(AIdx, Count),
-    Idx =.. [AIdx|ShareL], % Idx also contains variable bindings
+    Asr =.. [AIdx|ShareL], % Idx also contains variable bindings
     Clause = assrt_lib:AClause,
-    ( AClause = head_prop_asr(Head, M, Status, Type, Co, Dict, Loc, Idx),
+    ( AClause = head_prop_asr(Head, M, Status, Type, Co, Dict, Loc, Asr),
       SubPos = HPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
@@ -700,13 +700,13 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
       ; true
       )
     ; ( member(AClause-PrL,
-	       [asr_comp(Idx, PM, Pr, Loc)-CpL,
-		asr_call(Idx, PM, Pr, Loc)-CaL,
-		asr_succ(Idx, PM, Pr, Loc)-SuL
+	       [asr_comp(Asr, PM, Pr, Loc)-CpL,
+		asr_call(Asr, PM, Pr, Loc)-CaL,
+		asr_succ(Asr, PM, Pr, Loc)-SuL
 	       ]),
 	member(MPr-SubPos, PrL),
 	strip_module(MPr, PM, Pr)
-      ; AClause = asr_glob(Idx, PM, Gl, Loc),
+      ; AClause = asr_glob(Asr, PM, Gl, Loc),
 	member(MGl-SubPos, GlL),
 	strip_module(MGl, PM, Gl)
       ),
