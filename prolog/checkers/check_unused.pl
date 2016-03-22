@@ -48,6 +48,7 @@
 :- use_module(library(extra_location)).
 :- use_module(library(is_entry_point)).
 :- use_module(library(location_utils)).
+:- use_module(library(ungroup_keys_values)).
 
 :- multifile
     prolog:message//1.
@@ -63,8 +64,7 @@
     marked_clause/1,
     marked_initialization/0,
     marked_declaration/0,
-    edge/2,
-    node/3.
+    edge/5.
 
 :- public collect_unused/4.
 collect_unused(M, MGoal, Caller, From) :-
@@ -90,7 +90,7 @@ cleanup_unused :-
     retractall(marked_predid(_, _)),
     retractall(marked_initialization),
     retractall(marked_declaration),
-    retractall(edge(_, _)),
+    retractall(edge(_, _, _, _, _)),
     retractall(node(_, _, _)).
 
 marked('<assertion>'(M:H)) :- marked_assertion(H, M).
@@ -196,39 +196,35 @@ not_marked(H, M) :-
 match_head_clause(MH, Clause) :-
     catch(clause(MH, _, Clause), _, fail).
 
-current_edge(Nodes, X, Y) :-
-    ( PI = M:F/A,
-      member(node(X, _, _), Nodes),
-      ( X = PI
-      ->functor(H, F, A),
-	( CRef = M:H
-	; match_head_clause(M:H, Clause),
-	  CRef = clause(Clause)
-	)
-      ; X = PI/I,
-	I > 0
-      ->functor(H, F, A),
-	nth_clause(M:H, I, Clause),
+current_edge(X, Y) :-
+    PI = M:F/A,
+    ( X = PI
+    ->functor(H, F, A),
+      ( CRef = M:H
+      ; match_head_clause(M:H, Clause),
 	CRef = clause(Clause)
-      ; X = PI/(-1)
-      ->functor(H, F, A),
-	CRef = '<assertion>'(M:H)
-      ; X = PI/0
-      ->functor(H, F, A),
-	CRef = M:H
-      ),
-      calls_to(CRef, M2, H2),
-      functor(H2, F2, A2),
-      PI2 = M2:F2/A2,
-      ( Y = PI2,
-	memberchk(node(Y, _, _), Nodes)
-      ; ( match_head_clause(M2:H2, YRef),
-	  nth_clause(_, I2, YRef),
-	  Y = PI2/I2
-	; %% extra_location(H2, M2, dynamic(use, _, _), _),
-	  Y = PI2/0
-	),
-	memberchk(node(Y, _, _), Nodes)
+      )
+    ; X = PI/I,
+      I > 0
+    ->functor(H, F, A),
+      nth_clause(M:H, I, Clause),
+      CRef = clause(Clause)
+    ; X = PI/(-1)
+    ->functor(H, F, A),
+      CRef = '<assertion>'(M:H)
+    ; X = PI/0
+    ->functor(H, F, A),
+      CRef = M:H
+    ),
+    calls_to(CRef, M2, H2),
+    functor(H2, F2, A2),
+    PI2 = M2:F2/A2,
+    ( Y = PI2
+    ; ( match_head_clause(M2:H2, YRef),
+	nth_clause(_, I2, YRef),
+	Y = PI2/I2
+      ; %% extra_location(H2, M2, dynamic(use, _, _), _),
+	Y = PI2/0
       )
     ).
 
@@ -239,25 +235,31 @@ current_edge(Nodes, X, Y) :-
 sweep(M, FromChk, Pairs) :-
     findall(node(Node, D, From), unmarked(M, FromChk, Node, D, From), UNodes),
     sort(UNodes, Nodes),
-    forall(current_edge(Nodes, X, Y), assertz(edge(X, Y))),
-    findall(warning-edge(X, Y), edge(X, Y), Pairs, Tail),
-    findall(warning-Row,
-	    [Nodes, Row] +\ 
-	    ( member(node(Node, D, From), Nodes),
-	      \+ hide_unused_from(Node, From),
-	      findall(Loc/D, ( from_location(From, Loc)
-			     ), LocDU),
-	      sort(LocDU, LocDL),
-	      findall(Caller, ( edge(Caller, Node),
-				Caller \= Node
-			      ), CallerL),
-	      findall(Node, edge(Node, Node), LoopL),
-	      length(CallerL, CallerN),
-	      length(LoopL, LoopN),
-	      findall(Callee, edge(Node, Callee), CalleeL),
-	      length(CalleeL, NCallee),
-	      Row = node(sort_by(CallerN, LoopN, NCallee), LocDL, Node)),
-	    Tail).
+    findall(node(X, DX, LX)-NodeY,
+	    ( member(node(X, DX, FX), Nodes),
+	      from_location(FX, LX),
+	      ( NodeY=node(Y, DY, LY),
+	        current_edge(X, Y),
+		memberchk(node(Y, DY, FY), Nodes),
+		\+ hide_unused_from(Y, FY)
+	      *->
+		from_location(FY, LY)
+	      ; NodeY=[]
+	      )
+	    ), EdgeU),
+    sort(EdgeU, EdgeL),
+    group_pairs_by_key(EdgeL, AdjL),
+    maplist(add_sort_by(EdgeL), AdjL, AdjSG),
+    ungroup_keys_values(AdjSG, AdjSL),
+    ungroup_keys_values([warning-AdjSL], Pairs).
+
+add_sort_by(EdgeL, Node-CalleeL, sort_by(InclN, LoopN, CalleeN)/Node-CalleeL) :-
+    findall(_, member(_-Node, EdgeL), CallerL),
+    ( partition(\=(Node), CallerL, InclL, LoopL),
+      length(InclL, InclN),
+      length(LoopL, LoopN)
+    ),
+    length(CalleeL, CalleeN).
 
 % Due to the nature of this algorithm, its 'declarative' equivalent is by far
 % more difficult to understand, maintain and much slower, instead it is
@@ -265,34 +267,29 @@ sweep(M, FromChk, Pairs) :-
 checker:prepare_results(unused, Pairs, Results) :-
     maplist(\ (warning-Value)^Value^true, Pairs, Values),
     sort(Values, Sorted),
-    partition(\ node(_, _, _)^true, Sorted, Nodes, Edges),
-    retractall(node(_, _, _)),
-    retractall(edge(_, _)),
-    maplist(assertz, Nodes),
-    maplist(assertz, Edges),
+    maplist(assert_edge, Sorted),
     compact_results(Compact),
     maplist(\ Result^(warning-Result)^true, Compact, Results).
+
+assert_edge(SortBy/node(X, D, L)-Node) :-
+    assert(edge(SortBy, X, D, L, Node)).
 
 compact_results(Results) :-
     findall(Result, compact_result(_, Result), Results).
 
-compact_result(Node, node(SortBy, LocDL, Node, EdgeL)-Results) :-
-    ( findall(Node, ( edge(Node, Edge),
-		      \+ node(_, _, Node)
-		    ), NodeU),	% edges from nodes that for some reason are gone
-      sort(NodeU, NodeL),
-      SortBy = sort_by(0, 0, 0 ),
-      LocDL = [],
-      member(Node, NodeL)
-    ; commited_retract(node(SortBy, LocDL, Node))
-    ),
-    findall(Edge, ( clause(edge(Node, Edge), _, Ref),
-		    \+ node(_, _, Edge),
-		    erase(Ref)
-		  ), EdgeL),	% Edges to already reported nodes
-    findall(Result, ( commited_retract(edge(Node, Edge)),
-		      compact_result(Edge, Result)
-		    ), Results).
+compact_result(node(X, D, L), node(SortBy, L, D, X)-ResultL) :-
+    repeat,
+      ( edge(SortBy, X, D, L, _)
+      ->true
+      ; !,
+	fail
+      ),
+      findall(Result,
+	      ( commited_retract(edge(_, X, D, L, Edge)),
+		Edge \= node(X, D, L), % loop
+		compact_result(Edge, Result)
+	      ), ResultU),
+      sort(ResultU, ResultL).
 
 /*
 sweep(Ref, Pairs) :-
@@ -360,7 +357,7 @@ prolog:message(acheck(unused, Node-EdgeLL)) -->
     message_unused_node(Node, ['*', ' ']),
     foldl(foldl(message_unused_rec([' ', ' ', ' ', ' '])), EdgeLL).
 
-message_unused_node(node(sort_by(N, L, _), LocDL, PI, _), Level) -->
+message_unused_node(node(sort_by(N, L, _), F, D, PI), Level) -->
     { R is N + L,
       unused_type(R, T)
     },
@@ -375,10 +372,7 @@ message_unused_node(node(sort_by(N, L, _), LocDL, PI, _), Level) -->
     ; []
     ),
     */
-    ( {LocDL = []}
-    ->message_unused(T, Level, PI, []/predicate)
-    ; foldl(message_unused(T, Level, PI), LocDL)
-    ).
+    message_unused(T, Level, PI, F/D).
 
 message_unused_rec(Level, Node-EdgeL) -->
     message_unused_node(Node, Level),
