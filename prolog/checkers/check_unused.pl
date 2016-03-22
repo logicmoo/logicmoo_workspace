@@ -90,8 +90,7 @@ cleanup_unused :-
     retractall(marked_predid(_, _)),
     retractall(marked_initialization),
     retractall(marked_declaration),
-    retractall(edge(_, _, _, _, _)),
-    retractall(node(_, _, _)).
+    retractall(edge(_, _, _, _, _)).
 
 marked('<assertion>'(M:H)) :- marked_assertion(H, M).
 marked(M:H)                :- marked_predid(H, M).
