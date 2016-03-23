@@ -11,6 +11,7 @@
 :- use_module(library(intercept)).
 :- use_module(library(ontrace)).
 :- use_module(library(static_strip_module)).
+:- use_module(library(resolve_calln)).
 
 :- dynamic
     rtc_scanned/1,
@@ -71,11 +72,13 @@ black_list_module(assrt_lib).
 black_list_module(send_check).
 black_list_module(rtchecks_tr).
 black_list_module(rtchecks_rt).
+black_list_module(rtchecks_gen).
 black_list_module(rtchecks_eval).
 black_list_module(rtchecks_tracer).
 black_list_module(rtchecks_utils).
 black_list_module(rtchecks_basic).
 black_list_module('$expand').
+black_list_module('$messages').
 black_list_module(complete_dict).
 black_list_module(basicprops).
 black_list_module(apply_dict).
@@ -184,7 +187,8 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     prolog_frame_attribute(FR, context_module, FCM),
     clause_property(Clause, predicate(Caller)),
     ( \+ black_list_caller(Caller)
-    ->static_strip_module(Goal0, Goal, CM, FCM),
+    ->resolve_calln(Goal0, Goal1),
+      static_strip_module(Goal1, Goal, CM, FCM),
       implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
       ->generate_rtchecks(Goal, CM, RTChecks),
