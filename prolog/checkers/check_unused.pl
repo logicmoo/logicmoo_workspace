@@ -74,7 +74,8 @@ checker:check(unused, Result, OptionL) :-
     check_unused(OptionL, Result).
 
 check_unused(OptionL, Pairs) :-
-    extra_walk_code([source(false), on_etrace(collect_unused(M))|OptionL], M, FromChk),
+    extra_walk_code([source(false), % False, otherwise this will not work
+		     on_etrace(collect_unused(M))|OptionL], M, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.
@@ -234,16 +235,15 @@ current_edge(X, Y) :-
 sweep(M, FromChk, Pairs) :-
     findall(node(Node, D, From), unmarked(M, FromChk, Node, D, From), UNodes),
     sort(UNodes, Nodes),
-    findall(node(X, DX, LX)-NodeY,
+    findall(node(X, DX, LX)-Y,
 	    ( member(node(X, DX, FX), Nodes),
 	      from_location(FX, LX),
-	      ( NodeY=node(Y, DY, LY),
-	        current_edge(X, Y),
-		memberchk(node(Y, DY, FY), Nodes),
+	      ( current_edge(X, Y),
+		memberchk(node(Y, _, FY), Nodes),
 		\+ hide_unused_from(Y, FY)
 	      *->
-		from_location(FY, LY)
-	      ; NodeY=[]
+		true
+	      ; Y=[]
 	      )
 	    ), EdgeU),
     sort(EdgeU, EdgeL),
@@ -253,7 +253,8 @@ sweep(M, FromChk, Pairs) :-
     ungroup_keys_values([warning-AdjSL], Pairs).
 
 add_sort_by(EdgeL, Node-CalleeL, sort_by(InclN, LoopN, CalleeN)/Node-CalleeL) :-
-    findall(_, member(_-Node, EdgeL), CallerL),
+    Node = node(X, _, _),
+    findall(Caller, member(Caller-X, EdgeL), CallerL),
     ( partition(\=(Node), CallerL, InclL, LoopL),
       length(InclL, InclN),
       length(LoopL, LoopN)
@@ -261,8 +262,8 @@ add_sort_by(EdgeL, Node-CalleeL, sort_by(InclN, LoopN, CalleeN)/Node-CalleeL) :-
     length(CalleeL, CalleeN).
 
 % Due to the nature of this algorithm, its 'declarative' equivalent is by far
-% more difficult to understand, maintain and much slower, instead it is
-% implemented using dynamic facts.
+% more difficult to understand, maintain and slower, instead it is implemented
+% using dynamic facts.
 checker:prepare_results(unused, Pairs, Results) :-
     maplist(\ (warning-Value)^Value^true, Pairs, Values),
     sort(Values, Sorted),
@@ -270,13 +271,17 @@ checker:prepare_results(unused, Pairs, Results) :-
     compact_results(Compact),
     maplist(\ Result^(warning-Result)^true, Compact, Results).
 
-assert_edge(SortBy/node(X, D, L)-Node) :-
-    assert(edge(SortBy, X, D, L, Node)).
+assert_edge(SortBy/node(X, D, L)-Y) :-
+    ( Y = node(NY, _, _)
+    ->true
+    ; NY = Y
+    ),
+    assert(edge(SortBy, X, D, L, NY)).
 
 compact_results(Results) :-
     findall(Result, compact_result(_, Result), Results).
 
-compact_result(node(X, D, L), node(SortBy, L, D, X)-ResultL) :-
+compact_result(X, node(SortBy, L, D, X)-ResultL) :-
     repeat,
       ( edge(SortBy, X, D, L, _)
       ->true
@@ -284,9 +289,9 @@ compact_result(node(X, D, L), node(SortBy, L, D, X)-ResultL) :-
 	fail
       ),
       findall(Result,
-	      ( commited_retract(edge(_, X, D, L, Edge)),
-		Edge \= node(X, D, L), % loop
-		compact_result(Edge, Result)
+	      ( commited_retract(edge(_, X, D, L, Y)),
+		Y \= X, % loop
+		compact_result(Y, Result)
 	      ), ResultU),
       sort(ResultU, ResultL).
 
