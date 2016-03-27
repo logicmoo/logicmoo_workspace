@@ -45,8 +45,7 @@ assrt_lib:asr_glob(am_asr(M, Head), assrt_meta, rtc_stub(RTChecks, Goal), Pos) :
     current_prolog_flag(rtchecks_namefmt, NameFmt),
     get_pretty_names(NameFmt, n(Head, Comp, Call, Succ, Glob), [], TName),
     TName = n(HeadName, CompName, CallName, SuccName, GlobName),
-    AssrL = [assr(Head, check, (pred), Comp, Call, Succ, Glob, Pos,
-		  HeadName, CompName, CallName, SuccName, GlobName)],
+    AssrL = [assr(CAsr, Head, check, (pred), Comp, Call, Succ, Glob, Pos, HeadName, CompName, CallName, SuccName, GlobName)],
     generate_rtchecks(AssrL, M, RTChecksL, G, G, Goal),
     lists_to_lits(RTChecksL, RTChecks).
 
