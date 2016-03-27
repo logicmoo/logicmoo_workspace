@@ -8,3 +8,5 @@
 
 term_expansion((:- Decl), term_position(_, _, _, _, [DPos]), Records, RPos) :-
     assertion_records(Decl, DPos, Records, RPos).
+
+:- true pred assertion_db/13 is deprecated.

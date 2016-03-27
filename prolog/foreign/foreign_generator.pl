@@ -9,6 +9,7 @@
 :- use_module(library(key_value)).
 :- use_module(library(remove_dups)).
 :- use_module(library(transpose)).
+:- use_module(library(implementation_module)).
 
 :- multifile
     gen_foreign_library/2,
@@ -95,7 +96,7 @@ generate_library(M, AliasSO, AliasSOPl, File) :-
     ).
 
 do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
-    findall(F/A, ( current_foreign_prop(Head, M, _, _, _, _, _, _, _, _, _, _),
+    findall(F/A, ( current_foreign_prop(_, Head, M, _, _, _, _, _, _, _, _, _, _),
 		   \+ ( predicate_property(M:Head, number_of_clauses(X)),
 			X>0
 		      ),
@@ -182,7 +183,7 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
     format('#include "~w"~n~n', [FileImpl_h]),
     format('extern module_t __~w_impl;~n', [Module]),
     forall_tp(Module, type_props_nf, declare_type_getter_unifier),
-    forall(( current_foreign_prop(Head, _, Module, _, _, _, _, Dict, _, _, BindName, _, Type),
+    forall(( current_foreign_prop(_, Head, _, Module, _, _, _, _, Dict, _, _, BindName, _, Type),
 	     apply_dict(Head, Dict)
 	   ),
 	   ( format('extern ', []),
@@ -232,7 +233,7 @@ generate_foreign_register(Module, Base) :-
     format('    __~w     =PL_new_module(PL_new_atom("~w"));~n',      [Module, Module]),
     format('    __~w_impl=PL_new_module(PL_new_atom("~w$impl"));~n', [Module, Module]),
     forall_tp(Module, type_props_nf, define_aux_variables),
-    forall(current_foreign_prop(_, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
+    forall(current_foreign_prop(_, _, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
 	   write_register_sentence(Type, M, PredName, Arity, BindName)),
     format('} /* install_~w */~n~n', [Base]).
 
@@ -248,21 +249,19 @@ write_register_sentence(_, _, PredName, Arity, BindName) :-
 write_init_fimport_binding(M, PN, A, BN) :-
     format('    ~w = PL_predicate("~w", ~w, "~w");~n', [BN, PN, A, M]).
 
-:- meta_predicate forall_tp(+,4,3).
+:- meta_predicate forall_tp(+,5,3).
 
 forall_tp(Module, TypeProps, Call) :-
-    forall(call(TypeProps, Module, Type, TypePropLDictL, Pos),
+    forall(call(TypeProps, Module, Type, TypePropLDictL, Pos, _Asr),
 	   ( maplist(apply_dict_tp, TypePropLDictL),
 	     type_components(Module, Type, TypePropLDictL, Call, Pos)
 	   )).
 
 apply_dict_tp(t(Type, PropL, Dict)) :- apply_dict(Type-PropL, Dict).
 
-type_props(M, Type, TypePropLDictL, Pos) :-
-    type_props(M, Type, _, TypePropLDictL, Pos).
-
-type_props(M, Type, GlobL, TypePropLDictL, Pos) :-
-    type_props_(M, Type, GlobL, TPropL, TDict, Pos),
+type_props(M, Type, TypePropLDictL, Pos, Asr) :-
+    type_props_(M, Type, TDict, Pos, Asr),
+    collect_prop(asr_comp(Asr), M, TPropL),
     ( TPropL \= []
     ->TypePropLDictL = [t(Type, TPropL, TDict)]
     ; bind_type_names(M, Type, TypePropLDictL)
@@ -270,18 +269,18 @@ type_props(M, Type, GlobL, TypePropLDictL, Pos) :-
     ; TypePropLDictL = [t(Type, [], TDict)]
     ).
 
-type_props_(CM, Type, GlobL, PropL, Dict, Pos) :-
-    assertion_db(Type, _, CM, check, prop, PropL, _, _, GlobL, _, Dict, Pos),
+type_props_(CM, Type, Dict, Pos, Asr) :-
+    head_prop_asr(Type, CM, check, prop, _, Dict, Pos, Asr),
     once(( member(TType, [type, regtype]),
-	   memberchk(TType, GlobL)
+	   asr_glob(Asr, _, TType, _)
 	 )).
 
-type_props_nf(Module, Type, TypePropLDictL, Pos) :-
-    type_props(Module, Type, GlobL, TypePropLDictL, Pos),
+type_props_nf(Module, Type, TypePropLDictL, Pos, Asr) :-
+    type_props(Module, Type, TypePropLDictL, Pos, Asr),
 				% Don't create getters and unifiers for
 				% typedefs, they are just casts:
     \+ type_is_tdef(Module, Type, _, _),
-    \+ memberchk(foreign(_), GlobL).
+    \+ asr_glob(Asr, _, foreign(_), _).
 
 define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
     format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',
@@ -819,11 +818,9 @@ is_ref(ptr(_),  _) :- !.	% Always ref
 is_ref(chrs(_), _) :- !.
 is_ref(_, in).
 is_ref(_, out).
-				% is_ref(inout, _) :- fail.
-				% Allow pointer to NULL,
-				% the equivalent to free
-				% variables in imperative
-				% languages --EMM
+% is_ref(inout, _) :- fail.
+% Allow pointer to NULL, the equivalent to free variables in imperative
+% languages --EMM
 
 is_type(type(_)).
 is_type(tdef(_, Spec)) :- is_type(Spec).
@@ -848,28 +845,32 @@ cond_qualify_with(CM, MProp, MProp) :-
     ; MProp = M:Prop
     ).
 
-current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-		     FuncName, PredName, BindName, Arity) :-
-    current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-			 FuncName, PredName, BindName, Arity, KeyProp),
-    memberchk(KeyProp, [foreign, foreign(_), native, native(_)]).
+foreign_native(foreign,    foreign_props).
+foreign_native(foreign(_), foreign_props).
+foreign_native(native,     basicprops).
+foreign_native(native(_),  basicprops).
 
-current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-		     FuncName, PredName, BindName, Arity, KeyProp) :-
-    assertion_db(Head, Module, Context, check, Type, _, _, _, Glob1, _, _, _),
+current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
+		     FuncName, PredName, BindName, Arity) :-
+    current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
+			 FuncName, PredName, BindName, Arity, foreign_native, _).
+
+current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
+		     FuncName, PredName, BindName, Arity, Type) :-
+    current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
+			 FuncName, PredName, BindName, Arity, foreign_native_fimport, Type).
+
+current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
+		     FuncName, PredName, BindName, Arity, GenKeyProp, KeyProp) :-
+    head_prop_asr(Head, Context, check, Type, _, _, _, Asr),
     memberchk(Type, [pred, prop]),
-    ( member(KeyProp, [foreign, foreign(_)]),
-      memberchk(KeyProp, Glob1)
-    ->true
-    ; member(KeyProp, [native, native(_)]),
-      memberchk(KeyProp, Glob1)
-    ->true
-    ; member(KeyProp, [fimport, fimport(_)]),
-      memberchk(KeyProp, Glob1)
-    ->true
-    ),
+    implementation_module(Context:Head, Module),
+    once(( call(GenKeyProp, KeyProp, _KI),
+	   asr_glob(Asr, _KM, KeyProp, _)
+	   % implementation_module(KM:KeyProp+1_extra_argument, KI)
+	 )),
     findall(Head-[MComp, MCall, MSucc, MGlob, Dict],
-	    ( assertion_db(Head, Module, CM, check, Type, Comp, Call, Succ,
+	    ( assertion_db(_, Head, Module, CM, check, Type, Comp, Call, Succ,
 			   Glob, _, Dict, _),
 	      maplist(maplist(cond_qualify_with(CM)),
 		      [ Comp,  Call,  Succ,  Glob],
@@ -881,8 +882,10 @@ current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
     maplist(append, PropTL, [CompU, CallU, SuccU, GlobU, DictD]),
     maplist(sort, [CompU, CallU, SuccU, GlobU], [CompL, CallL, SuccL, GlobL]),
     remove_dups(DictD, DictL),
-    ( memberchk(KeyProp, [native, native(_)])
-    ->% Already considered
+    ( ( asr_glob(Asr, basicprops, native,    _)
+      ; asr_glob(Asr, basicprops, native(_), _)
+      )
+    -> % Already considered
       \+ ( member(KeyProp2, [foreign, foreign(_)]),
 	   memberchk(KeyProp2, GlobL)
 	 )
@@ -907,8 +910,12 @@ current_foreign_prop(Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
     ->atom_concat('pl_', FuncName, BindName)
     ).
 
+foreign_native_fimport(M, H) :- foreign_native(M, H).
+foreign_native_fimport(fimport,    foreign_props).
+foreign_native_fimport(fimport(_), foreign_props).
+
 read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, CN/A as PN/BN + CheckMode, T) :-
-    current_foreign_prop(Head, M, CM, Comp, Call, Succ, Glob, Dict, CN, PN, BN, A, T),
+    current_foreign_prop(_Asr, Head, M, CM, Comp, Call, Succ, Glob, Dict, CN, PN, BN, A, T),
     nonvar(CN),
     ( memberchk(type, Glob)
     ->CheckMode=type
@@ -1211,7 +1218,7 @@ match_known_type_(Type, M, Spec, A) :-
     arg(1, Type, A),
     functor(Type, Name, Arity),
     functor(Head, Name, Arity),
-    type_props(M, Head, _, TypePropLDictL, _),
+    type_props(M, Head, TypePropLDictL, _, _),
     ( TypePropLDictL = [t(_, [], _)]
     ->Spec=cdef(Name)
     ; Spec=type(Name)
@@ -1223,7 +1230,8 @@ type_is_tdef(M, Type, Spec, A) :-
     arg(1, Type, A),
     functor(Type, TName, Arity),
     functor(Head, TName, Arity),
-    type_props_(M, Head, _, [], _, _),
+    type_props_(M, Head, _, _, Asr),
+    \+ asr_comp(Asr, _, _, _),
     bind_type_names(M, Head, TypeMPropLDictL),
     TypeMPropLDictL = [t(Head, [Prop], _)],
     arg(1, Head, A),

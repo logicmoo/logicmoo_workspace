@@ -3,12 +3,16 @@
 		      comps_to_goal/3,
 		      comps_to_goal/4,
 		      assertion_records/4,
-		      assertion_db/12,
+		      assertion_db/13,
 		      head_prop_asr/8,
+		      head_prop_asr/7,
 		      asr_glob/4,
 		      asr_comp/4,
 		      asr_call/4,
 		      asr_succ/4,
+		      prop_asr/5,
+		      prop_asr/6,
+		      collect_prop/3,
 		      normalize_assertion_head/7,
 		      qualify_with/3,
 		      assrt_lib_tr/4]).
@@ -44,14 +48,36 @@
     doc_db/4,
     nodirective_error_hook/1.
 
+:- discontiguous
+    term_expansion/2.
+
+head_prop_asr(Head, CM, Status, Type, Dict, Loc, Asr) :-
+    head_prop_asr(Head, CM, Status, Type, _, Dict, Loc, Asr).
+
+% Accessibility predicates:
+prop_asr(head, P, M, From, Asr) :- head_prop_asr(P, M, _, _, _, _, From, Asr).
+prop_asr(stat, P, M, From, Asr) :- head_prop_asr(_, M, P, _, _, _, From, Asr).
+prop_asr(type, P, M, From, Asr) :- head_prop_asr(_, M, _, P, _, _, From, Asr).
+prop_asr(comm, P, M, From, Asr) :- head_prop_asr(_, M, _, _, P, _, From, Asr).
+prop_asr(dict, P, M, From, Asr) :- head_prop_asr(_, M, _, _, _, P, From, Asr).
+prop_asr(call, P, M, From, Asr) :- asr_call(Asr, M, P, From, Asr).
+prop_asr(succ, P, M, From, Asr) :- asr_succ(Asr, M, P, From, Asr).
+prop_asr(comp, P, M, From, Asr) :- asr_comp(Asr, M, P, From, Asr).
+prop_asr(glob, P, M, From, Asr) :-
+    asr_glob(Asr, M, P1, From, Asr),
+    add_arg(_, P1, P, _, _).
+
+prop_asr(Key, P, IM, M, From, Asr) :-
+    prop_asr(Key, P, M, From, Asr),
+    implementation_module(M:P, IM).
+
 % :- volatile
 %     assrt_lib:assertion_head/7,
 %     assrt_lib:doc_db/4.
 
 add_arg(_, G1, G2, _, _) :-
     var(G1),
-    var(G2),
-    !,
+    var(G2), !,
     assertion(fail),
     fail.
 add_arg(H, M:G0, M:G,
@@ -86,6 +112,7 @@ collect_props(Asr, CM, CompL, CallL, SuccL, GlobL) :-
     collect_prop(asr_succ(Asr), CM, SuccL),
     collect_prop(asr_glob(Asr), CM, GlobL).
 
+:- meta_predicate collect_prop(3,+,-).
 collect_prop(GenProp, CM, PropL) :- 
     collect(MProp,
 	    (M,Prop,From)^( call(GenProp, M, Prop, From),
@@ -95,11 +122,7 @@ collect_prop(GenProp, CM, PropL) :-
 			    )
 			  ), PropL).
 
-% Note: assertion_db/12 encapsulates the nasty call to clause/2 and can be
-% extended to fetch assertions from extra places.
-%
-:- multifile assertion_db/12.
-assertion_db(Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
+assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
     head_prop_asr(Head, CM, Status, Type, Comm, Dict, Loc, Asr),
     implementation_module(CM:Head, M),
     collect_props(Asr, CM, Comp, Call, Succ, Glob).
@@ -114,9 +137,9 @@ qualify_with(CM, MProp, M:Prop) :-
 
 % For compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
-    assertion_db(Head, M, CM, Status, Type, Comp0, Call0, Succ0, Glob0,
+    assertion_db(_, Head, M, CM, Status, Type, Comp0, Call0, Succ0, Glob0,
 		 Comm, Dict, Loc),
-    maplist(add_arg(Head), Glob0, Glob1),
+    maplist(add_arg(Head), Glob0, Glob1, _, _),
     ( M \= CM
     ->maplist(maplist(qualify_with(CM)),
 	      [Comp0, Call0, Succ0, Glob1],
@@ -413,13 +436,13 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
     ; Lit=B, LPos=BPos
     ).
 
-current_normalized_assertion(Assertions  + PGl, M, term_position(_, _, _, _, [APos, _]),
+current_normalized_assertion(Assertions  + BGl, M, term_position(_, _, _, _, [APos, PGl]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
-    propdef(PGl, M, Gl, Gl0),
+    propdef(BGl, M, PGl, Gl, Gl0),
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
-current_normalized_assertion(Assertions is PGl, M, term_position(_, _, _, _, [APos, _]),
+current_normalized_assertion(Assertions is BGl, M, term_position(_, _, _, _, [APos, PGl]),
 		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
-    propdef(PGl, M, Gl, Gl0),
+    propdef(BGl, M, PGl, Gl, Gl0),
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
 current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :-
     normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS),

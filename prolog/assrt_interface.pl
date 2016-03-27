@@ -34,8 +34,24 @@
 
 % Propagate assertions in an interface to the implementation
 
-assrt_lib:assertion_db(Head, Implementation, Context, Status, Type, Comp, Call,
-		       Succ, Glob, Comm, Dict, Loc) :-
-    interface:'$implementation'(Implementation, Interface),
-    assrt_lib:assertion_db(Head, Interface, Context, Status, Type, Comp, Call,
-			   Succ, Glob, Comm, Dict, Loc).
+assrt_lib:head_prop_asr(Head, IM, Status, Type, Comm, Dict, Loc, in_asr(Asr, IM)) :-
+    interface:'$implementation'(IM, Interface),
+    freeze(Asr, Asr \= in_asr(_)),
+    assrt_lib:head_prop_asr(Head, Interface, Status, Type, Comm, Dict, Loc, Asr).
+
+assrt_lib:asr_comp(in_asr(Asr, IM), IM, Comp, Loc) :-
+    interface:'$implementation'(IM, Interface),
+    freeze(Asr, Asr \= in_asr(_)),
+    assrt_lib:asr_comp(Asr, Interface, Comp, Loc).
+assrt_lib:asr_call(in_asr(Asr, IM), IM, Call, Loc) :-
+    interface:'$implementation'(IM, Interface),
+    freeze(Asr, Asr \= in_asr(_)),
+    assrt_lib:asr_call(Asr, Interface, Call, Loc).
+assrt_lib:asr_succ(in_asr(Asr, IM), IM, Succ, Loc) :-
+    interface:'$implementation'(IM, Interface),
+    freeze(Asr, Asr \= in_asr(_)),
+    assrt_lib:asr_succ(Asr, Interface, Succ, Loc).
+assrt_lib:asr_glob(in_asr(Asr, IM), IM, Glob, Loc) :-
+    interface:'$implementation'(IM, Interface),
+    freeze(Asr, Asr \= in_asr(_)),
+    assrt_lib:asr_glob(Asr, Interface, Glob, Loc).
