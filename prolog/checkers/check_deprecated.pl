@@ -36,52 +36,48 @@
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(referenced_by)).
+:- use_module(library(assrt_lib)).
+:- use_module(library(extra_codewalk)).
+:- use_module(library(from_utils)).
 
 :- dynamic
-    deprecated_db/1,
-    deprecated_db/4.
+    deprecated_db/6.
 
 :- multifile
     prolog:message//1,
     deprecated_predicate/2.
 
-checker:check(deprecated, Result, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
-    check_deprecated(from_chk(FileChk), OptionL, Result).
+deprecated_predicate(Goal, M, Comment, DFrom, CFrom) :-
+    head_prop_asr(Goal, CM, true, _, _, Comment, DFrom, Asr),
+    implementation_module(CM:Goal, M),
+    asr_glob(Asr, DM, deprecated), CFrom = DFrom,
+    implementation_module(DM:deprecated(_), basicprops).
+deprecated_predicate(Goal, M, " Use ~q instead."-[Alt], [], []) :-
+    deprecated_predicate(M:Goal, Alt).
 
-check_deprecated(FromChk, OptionL0, Pairs) :-
-    select_option(module(M), OptionL0, OptionL1, M),
-    merge_options(OptionL1,
-		  [infer_meta_predicates(false),
+checker:check(deprecated, Result, OptionL) :-
+    check_deprecated(OptionL, Result).
+
+check_deprecated(OptionL0, Pairs) :-
+    merge_options(OptionL0,
+		  [source(true),
+		   infer_meta_predicates(false),
 		   autoload(false),
 		   evaluate(false),
-		   trace_reference(_)
-		  ], OptionL),
-    prolog_walk_code([source(false),
-		      on_trace(have_deprecated(M, FromChk))
-		     |OptionL]),
-    findall(CRef, retract(deprecated_db(clause(CRef))), Clauses),
-    ( Clauses==[]
-    ->Pairs=[]
-    ; prolog_walk_code([clauses(Clauses),
-			on_trace(collect_deprecated(M))
-		       |OptionL]),
-      findall(information-(((IM:Call)/Alt)-(Loc/CI)),
-	      ( retract(deprecated_db(Call, IM, Alt, From)),
-		from_location(From, Loc),
-		check:predicate_indicator(From, CI, [])
-	      ), Pairs)
-    ).
+		   trace_reference(_),
+		   on_etrace(collect_deprecated)],
+		  OptionL),
+    extra_walk_code(OptionL),
+    findall(information-((DLoc/(M:F/A))-((CLoc/Comment)-(Loc/CI))),
+	    ( retract(deprecated_db(Call, M, Comment, DFrom, CFrom, From)),
+	      functor(Call, F, A),
+	      from_location(DFrom, DLoc),
+	      from_location(CFrom, CLoc),
+	      from_location(From, Loc),
+	      check:predicate_indicator(From, CI, [])
+	    ), Pairs).
 
-predicate_head(Module:Head) -->
-    { nonvar(Head),
-      arg(_, Head, Arg),
-      nonvar(Arg)
-    },
-    !,
-    ['~w'-[Module:Head]].
-predicate_head(Head) -->
-    check:predicate(Head).
+predicate_head(Head) --> check:predicate(Head).
 
 prolog:message(acheck(deprecated)) -->
     ['---------------------',nl,
@@ -89,29 +85,19 @@ prolog:message(acheck(deprecated)) -->
      '---------------------',nl,
      'The predicates below are marked as deprecated, so you have to', nl,
      'avoid its usage in new code, and to refactorize old code.', nl, nl].
-prolog:message(acheck(deprecated, (PI/Alt)-LocCIs)) -->
-    predicate_head(PI),
-    [' deprecated, use ~q instead. Referenced by'-[Alt], nl],
-    referenced_by(LocCIs).
+prolog:message(acheck(deprecated, (Loc/PI)-CommentLocCIL)) -->
+    Loc,
+    ["~w deprecated."-[PI], nl],
+    foldl(comment_referenced_by, CommentLocCIL).
 
-:- public have_deprecated/5.
-:- meta_predicate have_deprecated(?, 1, +, +, +).
+comment_referenced_by((Loc/Comment)-LocCIL) -->
+    ["    "], Loc, [Comment, " Referenced by", nl],
+    referenced_by(LocCIL).
 
-have_deprecated(M, FromChk, MGoal, _, From) :-
-    call(FromChk, From),
+:- public collect_deprecated/3.
+
+collect_deprecated(MGoal, _, From) :-
     MGoal = _:Goal,
     implementation_module(MGoal, M),
-    deprecated_predicate(M:Goal, _),
-    assertz(deprecated_db(From)),
-    fail.
-have_deprecated(_, _, _, _, _).
-
-:- public collect_deprecated/4.
-
-collect_deprecated(M, MGoal, _, From) :-
-    MGoal = _:Goal,
-    implementation_module(MGoal, M),
-    deprecated_predicate(M:Goal, Alt),
-    assertz(deprecated_db(Goal, M, Alt, From)),
-    fail.
-collect_deprecated(_, _, _, _).
+    deprecated_predicate(Goal, M, Comment, DFrom, CFrom),
+    update_fact_from(deprecated_db(Goal, M, Comment, DFrom, CFrom), From).
