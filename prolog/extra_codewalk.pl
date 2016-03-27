@@ -78,6 +78,7 @@ extra_walk_code(CM:OptionL0, M, FromChk) :-
 
 :- public pcw_trace/6.
 
+:- meta_predicate pcw_trace(+,3,1,+,+,+).
 pcw_trace(1, ETracer, FromChk, Goal, Caller, From) :-
     call(FromChk, From),
     call(ETracer, Goal, Caller, From),
@@ -88,8 +89,10 @@ pcw_trace(1, ETracer, FromChk, Goal, Caller, From) :-
 pcw_trace(2, ETracer, _, Goal, Caller, From) :-
     call(ETracer, Goal, Caller, From).
 
-walk_extras(OTerm, M, FromChk, declaration) :- walk_from_loc_declaration(OTerm, M, FromChk).
-walk_extras(OTerm, M, FromChk, asrparts(L)) :- walk_from_assertion(OTerm, M, FromChk, L).
+walk_extras(OTerm, M, FromChk, Extra) :- walk_extras_(Extra, OTerm, M, FromChk).
+
+walk_extras_(declaration, OTerm, M, FromChk) :- walk_from_loc_declaration(OTerm, M, FromChk).
+walk_extras_(asrparts(L), OTerm, M, FromChk) :- walk_from_assertion(OTerm, M, FromChk, L).
 
 current_clause_module_body(CM, Ref) :-
     current_predicate(M:F/A),
