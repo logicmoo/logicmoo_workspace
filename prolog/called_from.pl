@@ -102,7 +102,7 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
       memberchk(Type, DynTypes)
     ; loc_declaration(H, CM, goal, From),
       implementation_module(CM:H, M)
-    ; head_prop_asr(H, CM, _, _, _, _, From, _),
+    ; head_prop_asr(H, CM, _, _, _, From, _),
       implementation_module(CM:H, M),
       Caller = '<assertion>'(M:H)
     ).

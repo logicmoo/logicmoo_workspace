@@ -144,7 +144,7 @@ walk_from_goal(Head, M, Ref, OTerm) :-
 		    ).
 
 walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
-    forall(( AHead = assrt_lib:head_prop_asr(Head, HM, _, _, _, _, From, Asr),
+    forall(( AHead = assrt_lib:head_prop_asr(Head, HM, _, _, _, From, Asr),
 	     call(FromChk, From),
 	     implementation_module(HM:Head, M),
 	     prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
@@ -159,9 +159,8 @@ assertion_goal(body, _, _, Asr, Prop, PM) :-
     ( asr_comp(Asr, PM, Prop, _)
     ; asr_call(Asr, PM, Prop, _)
     ; asr_succ(Asr, PM, Prop, _)
-    ; asr_glob(Asr, PM, Glob, _),
-      %% _Arg = HM:Head, but keep it uninstantiated for optimization:
-      rtchecks_gen:add_arg(_Arg, Glob, Prop)
+    ; asr_glob(Asr, PM, Prop, _)
+      %% arg(1, Prop, HM:Head), but keep it uninstantiated for optimization
     ).
 
 resolve_head(M:H0, _, H) :- !,

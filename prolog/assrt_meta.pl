@@ -38,7 +38,7 @@
 
 :- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
 % :- check comp pred Head + rtc_stub(RTChecks, Goal).
-assrt_lib:asr_glob(am_asr(M, Head), assrt_meta, rtc_stub(RTChecks, Goal), Pos) :-
+assrt_lib:asr_glob(am_asr(M, Head), assrt_meta, rtc_stub(_, RTChecks, Goal), Pos) :-
     am_head_prop_idx(Head, M, Meta, Pos),
     Pred = M:Head,
     normalize_assertion_head(Meta, M, Pred, Comp, Call, Succ, Glob),
@@ -49,7 +49,7 @@ assrt_lib:asr_glob(am_asr(M, Head), assrt_meta, rtc_stub(RTChecks, Goal), Pos) :
     generate_rtchecks(AssrL, M, RTChecksL, G, G, Goal),
     lists_to_lits(RTChecksL, RTChecks).
 
-assrt_lib:head_prop_asr(Head, M, check, (comp), "", [], Pos, am_asr(M, Head)) :-
+assrt_lib:head_prop_asr(Head, M, check, (comp), [], Pos, am_asr(M, Head)) :-
     am_head_prop_idx(Head, M, _, Pos).
 
 am_head_prop_idx(Head, M, Meta, Pos) :-
@@ -68,15 +68,15 @@ am_head_prop_idx(Head, M, Meta, Pos) :-
     ( Flag = all
     ->
       \+ ( freeze(Asr, (Asr \= am_asr(_, _))),
-	   head_prop_asr(Head, CM, check, _, _, _, _, Asr),
+	   head_prop_asr(Head, CM, check, _, _, _, Asr),
 	   implementation_module(CM:Head, M),
-	   asr_glob(Asr, CM, no_meta_modes, _)
+	   asr_glob(Asr, CM, no_meta_modes(_), _)
 	 )
     ; Flag = specific
     ->once(( freeze(Asr, (Asr \= am_asr(_, _))),
-	     head_prop_asr(Head, CM, check, _, _, _, _, Asr),
+	     head_prop_asr(Head, CM, check, _, _, _, Asr),
 	     implementation_module(CM:Head, M),
-	     asr_glob(Asr, CM, meta_modes, _)
+	     asr_glob(Asr, CM, meta_modes(_), _)
 	   ))
     ),
     '$predicate_property'(meta_predicate(Meta), Pred),

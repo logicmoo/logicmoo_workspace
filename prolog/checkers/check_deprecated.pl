@@ -45,13 +45,13 @@
     prolog:message//1,
     deprecated_predicate/2.
 
-deprecated_predicate(Goal, M, Comment, DFrom, CFrom) :-
-    head_prop_asr(Goal, CM, true, _, _, Comment, DFrom, Asr),
-    implementation_module(CM:Goal, M),
-    asr_glob(Asr, DM, deprecated, CFrom),
-    implementation_module(DM:deprecated(_), basicprops).
-deprecated_predicate(Goal, M, " Use ~q instead."-[Alt], [], []) :-
-    deprecated_predicate(M:Goal, Alt).
+deprecated_predicate(MGoal, M, Comment, DFrom, CFrom) :-
+    prop_asr(head, MGoal, M, DFrom, Asr),
+    prop_asr(glob, basicprops:deprecated(_), _, _GFrom, Asr),
+    asr_comm(Asr, Comment, CFrom).
+deprecated_predicate(M:Goal, IM, " Use ~q instead."-[Alt], [], []) :-
+    implementation_module(M:Goal, IM),
+    deprecated_predicate(IM:Goal, Alt).
 
 checker:check(deprecated, Result, OptionL) :-
     check_deprecated(OptionL, Result).
@@ -75,8 +75,6 @@ check_deprecated(OptionL0, Pairs) :-
 	      check:predicate_indicator(From, CI, [])
 	    ), Pairs).
 
-predicate_head(Head) --> check:predicate(Head).
-
 prolog:message(acheck(deprecated)) -->
     ['---------------------',nl,
      'Deprecated Predicates',nl,
@@ -96,6 +94,5 @@ comment_referenced_by((Loc/Comment)-LocCIL) -->
 
 collect_deprecated(MGoal, _, From) :-
     MGoal = _:Goal,
-    implementation_module(MGoal, M),
-    deprecated_predicate(Goal, M, Comment, DFrom, CFrom),
+    deprecated_predicate(MGoal, M, Comment, DFrom, CFrom),
     update_fact_from(deprecated_db(Goal, M, Comment, DFrom, CFrom), From).
