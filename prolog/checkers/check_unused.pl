@@ -240,8 +240,7 @@ sweep(M, FromChk, Pairs) :-
 	    ( member(node(X, DX, FX), Nodes),
 	      from_location(FX, LX),
 	      ( current_edge(X, Y),
-		memberchk(node(Y, _, FY), Nodes),
-		\+ hide_unused_from(Y, FY)
+		memberchk(node(Y, _, _), Nodes)
 	      *->
 		true
 	      ; Y=[]
@@ -403,6 +402,7 @@ unused_type(_, 'unreachable' ).
     hide_unused_from/2.
 
 hide_unused('$exported_op'(_, _, _), _).
+hide_unused('$pldoc'(_, _, _, _), _).
 hide_unused(attr_unify_hook(_, _), predopts_analysis).
 hide_unused(loading(_), shlib).
 hide_unused('pce catcher'(_, _), pce_global).
@@ -417,8 +417,7 @@ hide_unused(Call, _) :-
     current_predicate(apply_macros:maplist_expansion/1),
     apply_macros:maplist_expansion(Call).
 
-hide_unused_from( M:F/A,    _) :- functor(H, F, A), hide_unused(H, M).
-hide_unused_from((M:F/A)/_, _) :- functor(H, F, A), hide_unused(H, M).
+hide_unused_from(M:H, _) :- hide_unused(H, M).
 
 unused_mo_clpfd(clpfd_original).
 unused_mo_clpfd(clpfd_relation).
