@@ -46,10 +46,14 @@ ungroup_keys_values(Groups, Pairs) :-
     ungroup_keys_values(Groups, Pairs, []).
 
 ungroup_keys_values([]) --> [].
-ungroup_keys_values([M-[N|TN]|T]) -->
-    [M-N],
-    same_key(TN, M),
+ungroup_keys_values([M-G|T]) -->
+    ungroup_keys_values(G, M),
     ungroup_keys_values(T).
+
+ungroup_keys_values([N|TN], M) -->
+    [M-N],
+    same_key(TN, M).
+ungroup_keys_values([], _) --> [].
 
 same_key([N|TN], M) -->
     [M-N],
