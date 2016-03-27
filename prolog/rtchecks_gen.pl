@@ -4,7 +4,8 @@
 			 generate_rtchecks/6,
 			 generate_ctchecks/4,
 			 proc_ppassertion/3,
-			 current_assertion/12]).
+			 current_assertion/8,
+			 current_assertion/13]).
 
 :- use_module(library(assertions)).
 :- use_module(library(assrt_lib)).
@@ -148,21 +149,26 @@ black_list_pred(_=_).
 
 assertion_is_valid(ctcheck, Status, Type, _) :-
     valid_ctcheck_assertions(Status, Type).
-assertion_is_valid(rtcheck, Status, Type, Comp) :-
-	( \+ memberchk(rtcheck, Comp) ->
+assertion_is_valid(rtcheck, Status, Type, Asr) :-
+	( \+ asr_glob(Asr, _, rtcheck, _) ->
 	  valid_assertions(Status, Type),
-	  \+ memberchk(no_rtcheck, Comp)
+	  \+ asr_glob(Asr, _, no_rtcheck, _)
 	; true % Force run-time checking
 	).
 
-current_assertion(Pred, M, CM, TimeCheck, Status, Type, Comp, Call, Succ, Glob,
+:- true pred current_assertion/13 is deprecated # "current_assertion/8".
+current_assertion(Asr, Pred, M, CM, TimeCheck, Status, Type, Comp, Call, Succ, Glob,
 		  Dict, Loc) :-
-    assertion_db(Pred, M, CM, Status, Type, Comp, Call, Succ, Glob, _, Dict, Loc),
-    assertion_is_valid(TimeCheck, Status, Type, Glob),
+    current_assertion(Asr, Pred, CM, TimeCheck, Status, Type, Dict, Loc),
+    assertion_db(Asr, Pred, M, CM, Status, Type, Comp, Call, Succ, Glob, _, Dict, Loc).
+
+current_assertion(Asr, Pred, CM, TimeCheck, Status, Type, Dict, Loc) :-
+    head_prop_asr(Pred, CM, Status, Type, _, Dict, Loc, Asr),
+    assertion_is_valid(TimeCheck, Status, Type, Asr),
     ( current_prolog_flag(rtchecks_level, inner)
     ->true
     ; current_prolog_flag(rtchecks_level, exports),
-      predicate_property(M:Pred, export)
+      predicate_property(CM:Pred, export)
     ->true
     ),
     \+ black_list_pred(Pred).
@@ -185,8 +191,9 @@ add_arg(H, G0, G) :-
     ).
 
 current_assertion(Pred, M, TimeCheck,
-		  assr(Pred, Status, Type, Comp, Call, Succ, Glob, Loc, PredName, CompName, CallName, SuccName, GlobName)) :-
-    current_assertion(Pred, M, CM, TimeCheck, Status, Type, Comp0, Call0,
+		  assr(Asr, Pred, Status, Type, Comp, Call, Succ, Glob, Loc,
+		       PredName, CompName, CallName, SuccName, GlobName)) :-
+    current_assertion(Asr, Pred, M, CM, TimeCheck, Status, Type, Comp0, Call0,
 		      Succ0, Glob0, Dict0, Loc),
     collapse_dups(Glob0, Glob1),
     maplist(add_arg(Pred), Glob1, Glob2),
@@ -200,41 +207,41 @@ current_assertion(Pred, M, TimeCheck,
     get_pretty_names(NameFmt, n(Pred, Comp, Call, Succ, Glob), Dict0, TermName),
     TermName = n(PredName, CompName, CallName, SuccName, GlobName).
 
-assertion_pred(Pred, assr(Pred, _, _, _, _, _, _, _, _, _, _, _, _)).
+assertion_pred(Pred, assr(_, Pred, _, _, _, _, _, _, _, _, _, _, _, _)).
 
 collect_assertions(Pred, M, TimeCheck, Assertions) :-
     findall(Assertion, current_assertion(Pred, M, TimeCheck, Assertion), Assertions),
     maplist(assertion_pred(Pred), Assertions).
 
 do_prop_rtcheck(compat, M,
-		assr(_, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _),
+		assr(Asr, _, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _),
 		pre(ChkCompat, Compat,
 		    send_rtcheck(PropValues, compat, PName, ALoc),
 		    PropValues)) :-
     get_checkc(compat, M, Compat, CompatNames, PropValues, ChkCompat).
 do_prop_rtcheck(calls, M,
-		assr(_, _, _, _, Call, _, _, ALoc, PName, _, CallNames, _, _),
+		assr(Asr, _, _, _, _, Call, _, _, ALoc, PName, _, CallNames, _, _),
 		pre(ChkCall, Call,
 		    send_rtcheck(PropValues, calls, PName, ALoc),
 		    PropValues)) :-
     get_checkc(call, M, Call, CallNames, PropValues, ChkCall).
 do_prop_rtcheck(success, M,
-		assr(_, _, _, _, Call, Succ, _, ALoc, PName, _, _, SuccNames, _),
+		assr(Asr, _, _, _, _, Call, Succ, _, ALoc, PName, _, _, SuccNames, _),
 		succ(ChkCall, Call, PropValues, ChkSucc, Succ)) :-
     get_checkc(call, M, Call, PropValues, ChkCall),
     check_poscond(ALoc, PName, Succ, SuccNames, PropValues, ChkSucc).
 do_prop_rtcheck(compatpos, M,
-		assr(_, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _),
+		assr(Asr, _, _, _, Compat, _, _, _, ALoc, PName, CompatNames, _, _, _),
 		compatpos(ChkCompat, ChkCompatPos, Compat, PropValues)) :-
     get_checkc(compat, M, Compat, PropValues, ChkCompat),
     check_poscond(ALoc, PName, Compat, CompatNames, PropValues, ChkCompatPos).
 do_prop_rtcheck(comp, M,
-		assr(_, _, _, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames),
+		assr(Asr, _, _, _, _, Call, _, Comp, ALoc, PName, _, _, _, CompNames),
 		comp(ChkCall, Call, PropValues, ChkComp, Comp)) :-
     get_checkc(call, M, Call, PropValues, ChkCall),
     check_poscond(ALoc, PName, Comp, CompNames, PropValues, ChkComp).
 
-is_prop_rtcheck(StatusTypes, assr(_, Status, Type, _, _, _, _, _, _, _, _, _, _)) :-
+is_prop_rtcheck(StatusTypes, assr(Asr, _, Status, Type, _, _, _, _, _, _, _, _, _, _)) :-
     memberchk((Status, Type), StatusTypes).
 
 compat_rtchecks(Assertions, M, StatusTypes, CheckedL0, CheckedL) -->
@@ -367,7 +374,7 @@ generate_ctchecks(Pred, M, CM, Lits) :-
 %% Trivial abstraction: Check for compatibility issues in properties,
 %% compatibility is an abstraction that makes static check decidable.
 %% The pay-off is a lose of precision. TBD: Formal demostration. --EMM
-abstract_assertions(assr(Pred, Status, Type, Compat0, Call, Succ, _Comp, ALoc, PredName, CompatName0, CallName, SuccName, _CompName),
-		    assr(Pred, Status, Type, Compat, [], [], [], ALoc, PredName, CompatName, [], [], [])) :-
+abstract_assertions(assr(Asr, Pred, Status, Type, Compat0, Call, Succ, _Comp, ALoc, PredName, CompatName0, CallName, SuccName, _CompName),
+		    assr(Asr, Pred, Status, Type, Compat, [], [], [], ALoc, PredName, CompatName, [], [], [])) :-
     append([CompatName0, CallName, SuccName], CompatName),
     append([Compat0, Call, Succ], Compat).

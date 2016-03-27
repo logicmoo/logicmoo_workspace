@@ -149,8 +149,8 @@ setup_clause_bpt(Clause, Action) :-
 	  ),
 	  \+ black_list_callee(M, Goal),
 	  once(( rtchecks_tracer:pp_assr(Goal, M)
-	       ; current_assertion(Goal, M, _, rtcheck, _, _, _, _, _, _,
-				   _, _)
+	       ; current_assertion(_, Goal, AM, rtcheck, _, _, _, _),
+		 implementation_module(AM:Goal, M)
 	       ; white_list_meta(M, Goal),
 	       	 predicate_property(M:Goal, meta_predicate(S)),
 	       	 once(arg(_, S, 0 ))
