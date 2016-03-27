@@ -191,9 +191,9 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
 	     format(';~n', []))),
     format('~n#endif /* __~w_INTF_H */~n', [Module]).
 
-declare_intf_head(fimport,    BindName, _) :- !, declare_intf_fimp_head(BindName).
-declare_intf_head(fimport(_), BindName, _) :- !, declare_intf_fimp_head(BindName).
-declare_intf_head(_,          BindName, Head) :- declare_intf_head(BindName, Head).
+declare_intf_head(fimport(_),    BindName, _) :- !, declare_intf_fimp_head(BindName).
+declare_intf_head(fimport(_, _), BindName, _) :- !, declare_intf_fimp_head(BindName).
+declare_intf_head(_,             BindName, Head) :- declare_intf_head(BindName, Head).
 
 declare_intf_fimp_head(BindName) :- format("predicate_t ~w", [BindName]).
 
@@ -238,9 +238,9 @@ generate_foreign_register(Module, Base) :-
     format('} /* install_~w */~n~n', [Base]).
 
 
-write_register_sentence(fimport,    M, PredName, Arity, BindName) :- !,
+write_register_sentence(fimport(_),    M, PredName, Arity, BindName) :- !,
     write_init_fimport_binding(M, PredName, Arity, BindName).
-write_register_sentence(fimport(_), M, PredName, Arity, BindName) :- !,
+write_register_sentence(fimport(_, _), M, PredName, Arity, BindName) :- !,
     write_init_fimport_binding(M, PredName, Arity, BindName).
 write_register_sentence(_, _, PredName, Arity, BindName) :-
     format('    PL_register_foreign(\"~w\", ~w, ~w, 0);~n',
@@ -270,8 +270,8 @@ type_props(M, Type, TypePropLDictL, Pos, Asr) :-
     ).
 
 type_props_(CM, Type, Dict, Pos, Asr) :-
-    head_prop_asr(Type, CM, check, prop, _, Dict, Pos, Asr),
-    once(( member(TType, [type, regtype]),
+    head_prop_asr(Type, CM, check, prop, Dict, Pos, Asr),
+    once(( member(TType, [type(_), regtype(_)]),
 	   asr_glob(Asr, _, TType, _)
 	 )).
 
@@ -280,7 +280,7 @@ type_props_nf(Module, Type, TypePropLDictL, Pos, Asr) :-
 				% Don't create getters and unifiers for
 				% typedefs, they are just casts:
     \+ type_is_tdef(Module, Type, _, _),
-    \+ asr_glob(Asr, _, foreign(_), _).
+    \+ asr_glob(Asr, _, foreign(_, _), _).
 
 define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
     format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',
@@ -759,11 +759,11 @@ declare_foreign_bind(CM) :-
 	   )).
 
 declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind) :-
-    ( member(RS, [returns_state, type]),
+    ( member(RS, [returns_state(_), type(_)]),
       memberchk(RS, Glob)
     ->format('int '),	    % int to avoid SWI-Prolog.h dependency at this level
       CHead = Head
-    ; member(returns(Var), Glob)
+    ; member(returns(_, Var), Glob)
     ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Var, Spec, Mode),
       ctype_arg_decl(Spec, Mode, Decl, []),
       format('~s ', [Decl]),
@@ -777,7 +777,7 @@ declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind) :-
 
 declare_foreign_head(Head, M, CM, Comp, Call, Succ, Glob, (CN/_ as _ + _)) :-
     format('~w(', [CN]),
-    (memberchk(memory_root, Glob) -> format('root_t __root, ', []) ; true),
+    (memberchk(memory_root(_), Glob) -> format('root_t __root, ', []) ; true),
     ( compound(Head) ->
       declare_foreign_bind_(1, M, CM, Head, Comp, Call, Succ, Glob)
     ; true
@@ -845,10 +845,10 @@ cond_qualify_with(CM, MProp, MProp) :-
     ; MProp = M:Prop
     ).
 
-foreign_native(foreign,    foreign_props).
-foreign_native(foreign(_), foreign_props).
-foreign_native(native,     basicprops).
-foreign_native(native(_),  basicprops).
+foreign_native(foreign(_),    foreign_props).
+foreign_native(foreign(_, _), foreign_props).
+foreign_native(native(_),     basicprops).
+foreign_native(native(_, _),  basicprops).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
 		     FuncName, PredName, BindName, Arity) :-
@@ -862,7 +862,7 @@ current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, Dic
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
 		     FuncName, PredName, BindName, Arity, GenKeyProp, KeyProp) :-
-    head_prop_asr(Head, Context, check, Type, _, _, _, Asr),
+    head_prop_asr(Head, Context, check, Type, _, _, Asr),
     memberchk(Type, [pred, prop]),
     implementation_module(Context:Head, Module),
     once(( call(GenKeyProp, KeyProp, _KI),
@@ -882,42 +882,42 @@ current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, Dic
     maplist(append, PropTL, [CompU, CallU, SuccU, GlobU, DictD]),
     maplist(sort, [CompU, CallU, SuccU, GlobU], [CompL, CallL, SuccL, GlobL]),
     remove_dups(DictD, DictL),
-    ( ( asr_glob(Asr, basicprops, native,    _)
-      ; asr_glob(Asr, basicprops, native(_), _)
+    ( ( asr_glob(Asr, basicprops, native(_),    _)
+      ; asr_glob(Asr, basicprops, native(_, _), _)
       )
     -> % Already considered
-      \+ ( member(KeyProp2, [foreign, foreign(_)]),
+      \+ ( member(KeyProp2, [foreign(_), foreign(_, _)]),
 	   memberchk(KeyProp2, GlobL)
 	 )
     ; true
     ),
     functor(Head, PredName, Arity),
-    ( memberchk(foreign, GlobL)
+    ( memberchk(foreign(_), GlobL)
     ->FuncName = PredName
-    ; memberchk(foreign(FuncName), GlobL)
+    ; memberchk(foreign(_, FuncName), GlobL)
     ->true
-    ; memberchk(fimport, GlobL)
+    ; memberchk(fimport(_), GlobL)
     ->FuncName = PredName
-    ; memberchk(fimport(FuncName), GlobL)
+    ; memberchk(fimport(_, FuncName), GlobL)
     ->true
     ; true
     ),
-    ( memberchk(native, GlobL)
+    ( memberchk(native(_), GlobL)
     ->BindName = PredName
-    ; memberchk(native(BindName), GlobL)
+    ; memberchk(native(_, BindName), GlobL)
     ->true
     ; nonvar(FuncName)
     ->atom_concat('pl_', FuncName, BindName)
     ).
 
 foreign_native_fimport(M, H) :- foreign_native(M, H).
-foreign_native_fimport(fimport,    foreign_props).
-foreign_native_fimport(fimport(_), foreign_props).
+foreign_native_fimport(fimport(_),    foreign_props).
+foreign_native_fimport(fimport(_, _), foreign_props).
 
 read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, CN/A as PN/BN + CheckMode, T) :-
     current_foreign_prop(_Asr, Head, M, CM, Comp, Call, Succ, Glob, Dict, CN, PN, BN, A, T),
     nonvar(CN),
-    ( memberchk(type, Glob)
+    ( memberchk(type(_), Glob)
     ->CheckMode=type
     ; CheckMode=pred
     ),
@@ -927,9 +927,9 @@ generate_foreign_intf(Module) :-
     forall(read_foreign_properties(Head, M, Module, Comp, Call, Succ, Glob, Bind, Type),
 	   declare_intf_impl(Type, Head, M, Module, Comp, Call, Succ, Glob, Bind)).
 
-declare_intf_impl(fimport, Head, M, Module, Comp, Call, Succ, Glob, Bind) :- !,
-    declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind).
 declare_intf_impl(fimport(_), Head, M, Module, Comp, Call, Succ, Glob, Bind) :- !,
+    declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind).
+declare_intf_impl(fimport(_, _), Head, M, Module, Comp, Call, Succ, Glob, Bind) :- !,
     declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind).
 declare_intf_impl(_, Head, M, Module, Comp, Call, Succ, Glob, Bind) :-
     declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind).
@@ -941,7 +941,7 @@ declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) :-
     declare_impl_head(Head, M, Module, Comp, Call, Succ, Glob, Bind),
     format(' {~n', []),
     format('    term_t ~w_args = PL_new_term_refs(~w);~n', [BN, A]),
-    ( memberchk(parent(Var), Glob)
+    ( memberchk(parent(_, Var), Glob)
     ->format('    __leaf_t *__root = LF_ROOT(LF_PTR(FI_array_ptr(~w)));~n', [Var])
     ; true
     ),
@@ -1069,7 +1069,7 @@ invert_mode(out, in).
 invert_mode(inout, inout).
 
 bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
-    \+ ( memberchk(returns(Arg), Glob)
+    \+ ( memberchk(returns(_, Arg), Glob)
        ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	 memberchk(Mode, [out, inout]),
 	 write('    '),
@@ -1105,7 +1105,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
 	       memberchk(Mode, [out, inout])
 	     ),
 	     ( invert_mode(Mode, InvM),
-	       ( memberchk(returns(Arg), Glob)
+	       ( memberchk(returns(_, Arg), Glob)
 	       ->atom_concat('&', Arg, CArg)
 	       ; CArg = Arg
 	       ),
@@ -1115,7 +1115,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
 	       c_get_argument(Spec, InvM, CArg, PArg),
 	       write(';\n')
 	     )),
-      ( memberchk(returns(Arg), Glob)
+      ( memberchk(returns(_, Arg), Glob)
       ->format('    return ~w;~n;', [Arg])
       ; true
       )
@@ -1124,12 +1124,12 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
 
 generate_foreign_call((CN/_A as _ + _)-Head, M, CM, Comp, Call, Succ, Glob, Return) :-
     format('    ', []),
-    ( member(RS, [returns_state, type]),
+    ( member(RS, [returns_state(_), type(_)]),
       memberchk(RS, Glob)
     ->format('foreign_t __result='),
       CHead = Head,
       Return = '__result'
-    ; ( member(returns(Var), Glob)
+    ; ( member(returns(_, Var), Glob)
       ->c_var_name(Var, CVar),
 	format('~w=', [CVar]),
 	Head =.. Args,
@@ -1143,7 +1143,7 @@ generate_foreign_call((CN/_A as _ + _)-Head, M, CM, Comp, Call, Succ, Glob, Retu
       )
     ),
     format('~w(', [CN]),
-    ( memberchk(memory_root, Glob)
+    ( memberchk(memory_root(_), Glob)
     ->format('__root, ')
     ; true
     ),
@@ -1259,7 +1259,7 @@ bind_argument(Head, M, CM, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
     ->Mode = out
     ; true
     ),
-    ( memberchk(type, GlobL),
+    ( memberchk(type(_), GlobL),
       match_known_type(Head, M, Spec, Arg0),
       Arg0 == Arg
     ->Mode = in

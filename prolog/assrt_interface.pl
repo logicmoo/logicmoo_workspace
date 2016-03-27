@@ -34,24 +34,26 @@
 
 % Propagate assertions in an interface to the implementation
 
-assrt_lib:head_prop_asr(Head, IM, Status, Type, Comm, Dict, Loc, in_asr(Asr, IM)) :-
-    interface:'$implementation'(IM, Interface),
-    freeze(Asr, Asr \= in_asr(_)),
-    assrt_lib:head_prop_asr(Head, Interface, Status, Type, Comm, Dict, Loc, Asr).
+assrt_lib:head_prop_asr(Head, IM, Status, Type, Dict, Loc, in_asr(Asr, IM)) :-
+    head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr).
 
-assrt_lib:asr_comp(in_asr(Asr, IM), IM, Comp, Loc) :-
+head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr) :-
     interface:'$implementation'(IM, Interface),
     freeze(Asr, Asr \= in_asr(_)),
-    assrt_lib:asr_comp(Asr, Interface, Comp, Loc).
-assrt_lib:asr_call(in_asr(Asr, IM), IM, Call, Loc) :-
-    interface:'$implementation'(IM, Interface),
-    freeze(Asr, Asr \= in_asr(_)),
-    assrt_lib:asr_call(Asr, Interface, Call, Loc).
-assrt_lib:asr_succ(in_asr(Asr, IM), IM, Succ, Loc) :-
-    interface:'$implementation'(IM, Interface),
-    freeze(Asr, Asr \= in_asr(_)),
-    assrt_lib:asr_succ(Asr, Interface, Succ, Loc).
-assrt_lib:asr_glob(in_asr(Asr, IM), IM, Glob, Loc) :-
-    interface:'$implementation'(IM, Interface),
-    freeze(Asr, Asr \= in_asr(_)),
-    assrt_lib:asr_glob(Asr, Interface, Glob, Loc).
+    assrt_lib:head_prop_asr(Head, Interface, Status, Type, Dict, Loc, Asr).
+
+assrt_lib:asr_comm(in_asr(Asr, IM), Comm, Loc) :-
+    head_prop_asr_intf(_, IM, _, _, _, _, Asr),
+    assrt_lib:asr_comm(Asr, Comm, Loc).
+assrt_lib:asr_comp(in_asr(Asr, IM), M, Comp, Loc) :-
+    head_prop_asr_intf(_, IM, _, _, _, _, Asr),
+    assrt_lib:asr_comp(Asr, M, Comp, Loc).
+assrt_lib:asr_call(in_asr(Asr, IM), M, Call, Loc) :-
+    head_prop_asr_intf(_, IM, _, _, _, _, Asr),
+    assrt_lib:asr_call(Asr, M, Call, Loc).
+assrt_lib:asr_succ(in_asr(Asr, IM), M, Succ, Loc) :-
+    head_prop_asr_intf(_, IM, _, _, _, _, Asr),
+    assrt_lib:asr_succ(Asr, M, Succ, Loc).
+assrt_lib:asr_glob(in_asr(Asr, IM), M, Glob, Loc) :-
+    head_prop_asr_intf(_, IM, _, _, _, _, Asr),
+    assrt_lib:asr_glob(Asr, M, Glob, Loc).

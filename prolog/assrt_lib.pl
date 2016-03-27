@@ -10,8 +10,9 @@
 		      asr_comp/4,
 		      asr_call/4,
 		      asr_succ/4,
+		      asr_comm/3,
+		      prop_asr/4,
 		      prop_asr/5,
-		      prop_asr/6,
 		      collect_prop/3,
 		      normalize_assertion_head/7,
 		      qualify_with/3,
@@ -31,7 +32,8 @@
 % Assertion reader for SWI-Prolog
 
 :- multifile
-    head_prop_asr/8,
+    head_prop_asr/7,
+    asr_comm/3,
     asr_glob/4,
     asr_comp/4,
     asr_call/4,
@@ -40,7 +42,8 @@
     nodirective_error_hook/1.
 
 :- dynamic
-    head_prop_asr/8,
+    head_prop_asr/7,
+    asr_comm/3,
     asr_glob/4,
     asr_comp/4,
     asr_call/4,
@@ -51,25 +54,25 @@
 :- discontiguous
     term_expansion/2.
 
-head_prop_asr(Head, CM, Status, Type, Dict, Loc, Asr) :-
-    head_prop_asr(Head, CM, Status, Type, _, Dict, Loc, Asr).
+head_prop_asr(Head, CM, Status, Type, Comm, Dict, Loc, Asr) :-
+    head_prop_asr(Head, CM, Status, Type, Dict, Loc, Asr),
+    asr_comm(Asr, Comm, _).
 
 % Accessibility predicates:
-prop_asr(head, P, M, From, Asr) :- head_prop_asr(P, M, _, _, _, _, From, Asr).
-prop_asr(stat, P, M, From, Asr) :- head_prop_asr(_, M, P, _, _, _, From, Asr).
-prop_asr(type, P, M, From, Asr) :- head_prop_asr(_, M, _, P, _, _, From, Asr).
-prop_asr(comm, P, M, From, Asr) :- head_prop_asr(_, M, _, _, P, _, From, Asr).
-prop_asr(dict, P, M, From, Asr) :- head_prop_asr(_, M, _, _, _, P, From, Asr).
-prop_asr(call, P, M, From, Asr) :- asr_call(Asr, M, P, From, Asr).
-prop_asr(succ, P, M, From, Asr) :- asr_succ(Asr, M, P, From, Asr).
-prop_asr(comp, P, M, From, Asr) :- asr_comp(Asr, M, P, From, Asr).
-prop_asr(glob, P, M, From, Asr) :-
-    asr_glob(Asr, M, P1, From, Asr),
-    add_arg(_, P1, P, _, _).
+prop_asr(head, M:P, From, Asr) :- head_prop_asr(P, M, _, _, _, From, Asr).
+prop_asr(stat,   P, From, Asr) :- head_prop_asr(_, _, P, _, _, From, Asr).
+prop_asr(type,   P, From, Asr) :- head_prop_asr(_, _, _, P, _, From, Asr).
+prop_asr(dict,   D, From, Asr) :- head_prop_asr(_, _, _, _, D, From, Asr).
+prop_asr(comm,   C, From, Asr) :- asr_comm(Asr,    C, From).
+prop_asr(comp, M:P, From, Asr) :- asr_comp(Asr, M, P, From).
+prop_asr(call, M:P, From, Asr) :- asr_call(Asr, M, P, From).
+prop_asr(succ, M:P, From, Asr) :- asr_succ(Asr, M, P, From).
+prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 
-prop_asr(Key, P, IM, M, From, Asr) :-
-    prop_asr(Key, P, M, From, Asr),
-    implementation_module(M:P, IM).
+prop_asr(Key, M:P, IM, From, Asr) :-
+    implementation_module(M:P, IM),
+    prop_asr(Key, C:P, From, Asr),
+    implementation_module(C:P, IM).
 
 % :- volatile
 %     assrt_lib:assertion_head/7,
@@ -113,7 +116,7 @@ collect_props(Asr, CM, CompL, CallL, SuccL, GlobL) :-
     collect_prop(asr_glob(Asr), CM, GlobL).
 
 :- meta_predicate collect_prop(3,+,-).
-collect_prop(GenProp, CM, PropL) :- 
+collect_prop(GenProp, CM, PropL) :-
     collect(MProp,
 	    (M,Prop,From)^( call(GenProp, M, Prop, From),
 			    ( M \= CM
@@ -123,7 +126,11 @@ collect_prop(GenProp, CM, PropL) :-
 			  ), PropL).
 
 assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
-    head_prop_asr(Head, CM, Status, Type, Comm, Dict, Loc, Asr),
+    head_prop_asr(Head, CM, Status, Type, Dict, Loc, Asr),
+    ( asr_comm(Asr, Comm, _)
+    ->true
+    ; Comm = ""
+    ),
     implementation_module(CM:Head, M),
     collect_props(Asr, CM, Comp, Call, Succ, Glob).
 
@@ -135,16 +142,19 @@ filepos_line(File, CharPos, Line, LinePos) :-
 qualify_with(CM, MProp, M:Prop) :-
     strip_module(CM:MProp, M, Prop).
 
+
+set_arg_1(Head, Glob) :- arg(1, Glob, Head).
+
 % For compatibility with Ciao Libraries
 assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
     assertion_db(_, Head, M, CM, Status, Type, Comp0, Call0, Succ0, Glob0,
 		 Comm, Dict, Loc),
-    maplist(add_arg(Head), Glob0, Glob1, _, _),
+    maplist(set_arg_1(Head), Glob0),
     ( M \= CM
     ->maplist(maplist(qualify_with(CM)),
-	      [Comp0, Call0, Succ0, Glob1],
+	      [Comp0, Call0, Succ0, Glob0],
 	      [Comp,  Call,  Succ,  Glob ])
-    ; [Comp0, Call0, Succ0, Glob1] = [Comp, Call, Succ, Glob]
+    ; [Comp0, Call0, Succ0, Glob0] = [Comp, Call, Succ, Glob]
     ),
     assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
     ( Loc = file_term_position(File, Pos),
@@ -276,8 +286,8 @@ valid_cp(CP) :- \+ invalid_cp(CP).
 
 invalid_cp(_/_).
 
-assertion_body(Pred,Compat,Call,Succ,Comp,Comm,
-	       (Pred::Compat:Call=>Succ+Comp#Comm)).
+assertion_body( Pred, Comp,Call, Succ,Glob,Comm,
+	       (Pred::Comp:Call=>Succ+Glob#Comm)).
 
 assrt_type(pred).
 assrt_type(prop).
@@ -437,24 +447,24 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
     ).
 
 current_normalized_assertion(Assertions  + BGl, M, term_position(_, _, _, _, [APos, PGl]),
-		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
+		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
     propdef(BGl, M, PGl, Gl, Gl0),
-    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
+    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, CoPos, RPos).
 current_normalized_assertion(Assertions is BGl, M, term_position(_, _, _, _, [APos, PGl]),
-		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :- !,
+		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
     propdef(BGl, M, PGl, Gl, Gl0),
-    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, RPos).
-current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, RPos) :-
+    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, CoPos, RPos).
+current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS),
     current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
-    normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, RPos),
+    normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, CoPos, RPos),
     (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
     assertion_format(Type, GFormat).
 
-normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, RPos) :-
+normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     normalize_assertion_body(Body, Format, BPos,
-    			     Head, BCp, BCa, BSu, BGl, Co,
-    			     HPos, PCp, PCa, PSu, PGl, _),
+			     Head, BCp, BCa, BSu, BGl, Co,
+			     HPos, PCp, PCa, PSu, PGl, CoPos),
     normalize_assertion_head(Head, M, HPos, Pred, Cp0, Ca0, Su0, Gl0, RPos),
     apropdef(Pred, M, BCp, PCp, Cp, Cp0),
     apropdef(Pred, M, BCa, PCa, Ca, Ca0),
@@ -707,19 +717,28 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ; true
     ),
     current_normalized_assertion(Assertions, CM, APos, M:Head, Status,
-				 Type, CpL, CaL, SuL, GlL, Co, HPos),
+				 Type, CpL, CaL, SuL, GlL, Co, CoPos, HPos),
     get_sequence_and_inc(Count),
-    term_variables(t(CpL, CaL, SuL, GlL), ShareL),
+    term_variables(t(Co, CpL, CaL, SuL, GlL), ShareL),
     atom_number(AIdx, Count),
     Asr =.. [AIdx|ShareL], % Idx also contains variable bindings
     Clause = assrt_lib:AClause,
-    ( AClause = head_prop_asr(Head, M, Status, Type, Co, Dict, Loc, Asr),
+    ( AClause = head_prop_asr(Head, M, Status, Type, Dict, Loc, Asr),
       SubPos = HPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
 	arg(2, SubPos, To),
 	TermPos = term_position(From, To, From, To,
-				[SubPos, 0-0, 0-0, 0-0, 0-0, _, _, _])
+				[SubPos, 0-0, 0-0, 0-0, _, _, _])
+      ; true
+      )
+    ; Co \= "",
+      AClause = asr_comm(Asr, Co, Loc),
+      SubPos = CoPos,
+      ( nonvar(SubPos)
+      ->arg(1, SubPos, From),
+	arg(2, SubPos, To),
+	TermPos = term_position(From, To, From, To, [_, SubPos, _])
       ; true
       )
     ; ( member(AClause-PrL,
@@ -729,9 +748,10 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
 	       ]),
 	member(MPr-SubPos, PrL),
 	strip_module(MPr, PM, Pr)
-      ; AClause = asr_glob(Asr, PM, Gl, Loc),
-	member(MGl-SubPos, GlL),
-	strip_module(MGl, PM, Gl)
+      ; AClause = asr_glob(Asr, PM, Pr, Loc),
+	member(MGl-GPos, GlL),
+	strip_module(MGl, PM, Gl),
+	add_arg(_, Gl, Pr, GPos, SubPos)
       ),
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
@@ -740,7 +760,6 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
       ; true
       )
     ),
-
     ( var(Pos),
       nonvar(File)
     ->( nonvar(SubPos),
