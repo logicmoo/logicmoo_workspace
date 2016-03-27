@@ -153,42 +153,43 @@ rtc_expected(checkif_modl(rtchecks_example3, rtchecks_example3,
 		       info(fullasr(A, B), _),
 		       rtchecks_example3:not_fails(N),
 		       N,
-		       rtchecks_example3:checkif_comp(M, info(fullasr(A, B), _), rtchecks_example3:is_det(O), O, rtchecks_example3:rtchecks_example3:fullasr(B, C))),
+		       rtchecks_example3:checkif_comp(M, info(fullasr(A, B), _), rtchecks_example3:is_det(O), O, rtchecks_example3:checkif_comp(M, info(fullasr(A, B), _), rtchecks_example3:is_det(P), P, rtchecks_example3:rtchecks_example3:fullasr(B, C)))),
 	  (   H=[]
-	  ->  findall(P,
+	  ->  findall(Q,
 		      ( \+ compat(rtchecks_example3:atm(B)),
-			P=atm(A)-['A'=B]
+			Q=atm(A)-['A'=B]
 		      ),
-		      Q),
-	      send_rtcheck(Q, success, fullasr(A, B), _)
+		      R),
+	      send_rtcheck(R, success, fullasr(A, B), _)
 	  ;   true
 	  ),
 	  (   I=[]
-	  ->  findall(R,
+	  ->  findall(S,
 		      ( \+ compat(rtchecks_example3:int(B)),
-			R=int(A)-['A'=B]
+			S=int(A)-['A'=B]
 		      ),
-		      S),
-	      send_rtcheck(S, success, fullasr(A, B), _)
+		      T),
+	      send_rtcheck(T, success, fullasr(A, B), _)
 	  ;   true
 	  ),
 	  (   L=[]
-	  ->  findall(T,
+	  ->  findall(U,
 		      ( \+ instance(rtchecks_example3:family(C)),
-			T=family(B)-['B'=C]
+			U=family(B)-['B'=C]
 		      ),
-		      U),
-	      send_rtcheck(U, success, fullasr(A, B), _)
+		      V),
+	      send_rtcheck(V, success, fullasr(A, B), _)
 	  ;   true
 	  ),
 	  (   M=[]
-	  ->  findall(V,
+	  ->  findall(W,
 		      ( \+ instance(rtchecks_example3:family(C)),
-			V=family(B)-['B'=C]
+			W=family(B)-['B'=C]
 		      ),
-		      W),
-	      send_rtcheck(W, success, fullasr(A, B), _)
+		      X),
+	      send_rtcheck(X, success, fullasr(A, B), _)
 	  ;   true
-	  )))).
+	  )))
+	    ).
 
 :- end_tests(rtchecks).

@@ -138,7 +138,7 @@ setup_clause_bpt(Clause, Action) :-
       '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
       ( ( call_instr(TInstr)
 	->nth_clause(M:Goal, _, Clause),
-	  \+ head_prop_asr(Goal, M, _, prop, _, _, _, _)
+	  \+ head_prop_asr(Goal, M, _, prop, _, _, _)
 	; call_instr_param(TInstr, PI),
 	  ( PI=LM:F/A
 	  ->functor(Goal, F, A),

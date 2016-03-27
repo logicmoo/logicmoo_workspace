@@ -150,20 +150,20 @@ black_list_pred(_=_).
 assertion_is_valid(ctcheck, Status, Type, _) :-
     valid_ctcheck_assertions(Status, Type).
 assertion_is_valid(rtcheck, Status, Type, Asr) :-
-	( \+ asr_glob(Asr, _, rtcheck, _) ->
+	( \+ asr_glob(Asr, _, rtcheck(_), _) ->
 	  valid_assertions(Status, Type),
-	  \+ asr_glob(Asr, _, no_rtcheck, _)
+	  \+ asr_glob(Asr, _, no_rtcheck(_), _)
 	; true % Force run-time checking
 	).
 
-:- true pred current_assertion/13 is deprecated # "current_assertion/8".
+:- true pred current_assertion/13 is deprecated # "Use current_assertion/8 instead.".
 current_assertion(Asr, Pred, M, CM, TimeCheck, Status, Type, Comp, Call, Succ, Glob,
 		  Dict, Loc) :-
     current_assertion(Asr, Pred, CM, TimeCheck, Status, Type, Dict, Loc),
     assertion_db(Asr, Pred, M, CM, Status, Type, Comp, Call, Succ, Glob, _, Dict, Loc).
 
 current_assertion(Asr, Pred, CM, TimeCheck, Status, Type, Dict, Loc) :-
-    head_prop_asr(Pred, CM, Status, Type, _, Dict, Loc, Asr),
+    head_prop_asr(Pred, CM, Status, Type, Dict, Loc, Asr),
     assertion_is_valid(TimeCheck, Status, Type, Asr),
     ( current_prolog_flag(rtchecks_level, inner)
     ->true
@@ -173,35 +173,16 @@ current_assertion(Asr, Pred, CM, TimeCheck, Status, Type, Dict, Loc) :-
     ),
     \+ black_list_pred(Pred).
 
-add_arg(_, G1, G2) :-
-    var(G1),
-    var(G2),
-    !,
-    assertion(fail),
-    fail.
-add_arg(H, M:G0, M:G) :- !,
-    add_arg(H, G0, G).
-add_arg(H, G0, G) :-
-    ( nonvar(G0)
-    ->G0 =.. [F|L],
-      G  =.. [F,H|L]
-    ; nonvar(G)
-    ->G  =.. [F,H|L],
-      G0 =.. [F|L]
-    ).
-
 current_assertion(Pred, M, TimeCheck,
 		  assr(Asr, Pred, Status, Type, Comp, Call, Succ, Glob, Loc,
 		       PredName, CompName, CallName, SuccName, GlobName)) :-
     current_assertion(Asr, Pred, M, CM, TimeCheck, Status, Type, Comp0, Call0,
 		      Succ0, Glob0, Dict0, Loc),
-    collapse_dups(Glob0, Glob1),
-    maplist(add_arg(Pred), Glob1, Glob2),
     ( M \= CM
     ->maplist(maplist(qualify_with(CM)),
-	      [Comp0, Call0, Succ0, Glob2],
+	      [Comp0, Call0, Succ0, Glob0],
 	      [Comp,  Call,  Succ,  Glob ])
-    ; [Comp0, Call0, Succ0, Glob2] = [Comp,  Call,  Succ,  Glob ]
+    ; [Comp0, Call0, Succ0, Glob0] = [Comp,  Call,  Succ,  Glob ]
     ),
     current_prolog_flag(rtchecks_namefmt, NameFmt),
     get_pretty_names(NameFmt, n(Pred, Comp, Call, Succ, Glob), Dict0, TermName),
@@ -301,23 +282,6 @@ compatpos_compat_lit(compatpos(ChkCompat, _, Compat, PropValues),
 
 compatpos_lit(compatpos(_, ChkCompatPos, Compat, PropValues),
 	    cui(Compat - PropValues, _, ChkCompatPos)).
-
-:- pred collapse_dups(+list, ?list) # "Unifies duplicated terms.".
-
-collapse_dups([],            []).
-collapse_dups([Comp|Comps0], Comps) :-
-	collapse_dups2(Comp, Comps0, Comps).
-
-collapse_dups2(Comp0, Comps0, Comps) :-
-	select(Comp, Comps0, Comps1),
-	Comp==Comp0 ->
-	collapse_dups2(Comp, Comps1, Comps)
-    ;
-	collapse_dups3(Comps0, Comp0, Comps).
-
-collapse_dups3([],             Comp, [Comp]).
-collapse_dups3([Comp0|Comps0], Comp, [Comp|Comps]) :-
-	collapse_dups2(Comp0, Comps0, Comps).
 
 comps_to_comp_lit(PropValues, Comp, M, Info, Body0, Body) :-
 	comps_parts_to_comp_lit(PropValues, Comp, M, Info, Body1, Body),
