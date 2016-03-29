@@ -55,15 +55,17 @@ prolog:called_by(H, IM, CM, [F]) :-
     nonvar(M).
 
 :- multifile
-	database_var_fact/1,
-	database_def_fact/3,
-	database_retract_fact/3,
-	database_query_fact/3.
+    database_var_fact/1,
+    database_def_fact/3,
+    database_dec_fact/3,
+    database_retract_fact/3,
+    database_query_fact/3.
 
 database_fact(G) :- database_fact(G, _).
 database_fact(G) :- normalize_pi(G, PI), database_var_fact(PI).
 
 database_mod_fact(M:G, F) :- database_def_fact(    G, M, F).
+database_mod_fact(M:G, F) :- database_dec_fact(    G, M, F).
 database_mod_fact(M:G, F) :- database_retract_fact(G, M, F).
 
 database_use_fact(M:G, F) :- database_query_fact(  G, M, F).
@@ -76,11 +78,13 @@ clause_head(M:(A :- _), M:A) :- !.
 clause_head(A,          A).
 
 database_fact(def, Goal, Fact) :- database_def_fact(Goal, Fact).
+database_fact(dec, Goal, Fact) :- database_dec_fact(Goal, Fact).
 database_fact(use, Goal, Fact) :- database_use_fact(Goal, Fact).
 database_fact(mod, Goal, Fact) :- database_mod_fact(Goal, Fact).
 
 % ortogonal operations:
 database_fact_ort(def,     G, M, F) :- database_def_fact(G, M, F).
+database_fact_ort(dec,     G, M, F) :- database_dec_fact(G, M, F).
 database_fact_ort(retract, G, M, F) :- database_retract_fact(G, M, F).
 database_fact_ort(query,   G, M, F) :- database_query_fact(G, M, F).
 
@@ -92,15 +96,21 @@ database_def_fact(asserta_with_names(A, _),  ifprolog,   F) :- clause_head(A, F)
 database_def_fact(assertz_with_names(A, _),  ifprolog,   F) :- clause_head(A, F).
 database_def_fact(lasserta(A),               pce_config, F) :- clause_head(A, F).
 database_def_fact(assert_cyclic(A),          plunit,     F) :- clause_head(A, F).
-database_def_fact(abolish(F, A),             system,     H) :- fa_to_head(F, A, H).
-database_def_fact(abolish(PI),               system,     H) :- pi_to_head(PI, H).
 database_def_fact(assert(A),                 system,     F) :- clause_head(A, F).
 database_def_fact(assert(A, _),              system,     F) :- clause_head(A, F).
 database_def_fact(asserta(A),                system,     F) :- clause_head(A, F).
 database_def_fact(asserta(A, _),             system,     F) :- clause_head(A, F).
 database_def_fact(assertz(A),                system,     F) :- clause_head(A, F).
 database_def_fact(assertz(A, _),             system,     F) :- clause_head(A, F).
-database_def_fact(retractall(F),             system,     F).
+
+database_dec_fact(M:H, F) :- database_dec_fact(H, M, F).
+
+database_dec_fact(abolish(F, A),             system,     H) :- fa_to_head(F, A, H).
+database_dec_fact(abolish(PI),               system,     H) :- pi_to_head(PI, H).
+database_dec_fact(retractall(F),             system,     F).
+database_dec_fact(forall(retract(F), true),  system,     F).
+database_dec_fact(\+ (retract(F), \+ true),  system,     F).
+
 database_def_fact(update_fact_from(A, From), from_utils, F) :-
     nonvar(A),
     extend_args(A, [From], H),

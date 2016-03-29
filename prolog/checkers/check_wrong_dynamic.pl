@@ -115,7 +115,7 @@ collect_result(M, FromChk, Pairs) :-
 
 current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
     wrong_dynamic_db(MFrom, TypeDB, PI, MPI),
-    memberchk(TypeDB,[def,retract]),
+    memberchk(TypeDB,[def,dec,retract]),
     PI = M:F/A,
     functor(H,F,A),
     Ref = M:H,
@@ -150,7 +150,7 @@ current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     % \+ predicate_property(Ref, exported),
     \+ predicate_property(Ref, public),
     \+ ( wrong_dynamic_db(_, Type, PI, _),
-	 memberchk(Type,[def,retract])
+	 memberchk(Type,[def,dec,retract])
        ),
     from_location(From, Loc).
 
