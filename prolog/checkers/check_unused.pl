@@ -49,6 +49,7 @@
 :- use_module(library(is_entry_point)).
 :- use_module(library(location_utils)).
 :- use_module(library(ungroup_keys_values)).
+:- use_module(library(compact_goal)).
 
 :- multifile
     prolog:message//1.
@@ -301,9 +302,15 @@ sweep(Ref, Pairs) :-
 				    property_location(PI, D, Loc)), Pairs).
 */
 
-semantic_head(H, M, 0, Dynamic, M:H, From) :-
-    Dynamic = dynamic(def, _, _),
-    loc_dynamic(H, M, Dynamic, From).
+semantic_head(H, M, 0, dynamic(Type, CM, Call), Caller, From) :-
+    loc_dynamic(H, M, dynamic(Type, CM, Call), From),
+    ( Type = def
+    ->Caller = M:H
+    ; Type = dec
+    ->functor(H, F, A),
+      functor(P, F, A),
+      Caller = M:P
+    ).
 semantic_head(H, M, -1, assertion(S, T), '<assertion>'(M:H), From) :-
     assrt_lib:head_prop_asr(H, CM, S, T, _, _, From, _),
     implementation_module(CM:H, M).
@@ -431,7 +438,8 @@ cu_caller_hook(Caller, M:Head, CM, Type, Goal, _, From) :-
     nonvar(M),
     callable(Head),
     ( Type \= lit
-    ->record_location(Head, M, dynamic(Type, CM, Goal), From)
+    ->compact_goal(Goal, Comp),
+      record_location_goal(Head, M, Type, CM, Comp, From)
     ; true
     ),
     record_calls_to(Type, Caller, Head, M, From).

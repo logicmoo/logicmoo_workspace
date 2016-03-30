@@ -31,7 +31,7 @@
 	[property_location/3, predicate_location/2, property_from/3,
 	 record_location_dynamic/3, predicate_from/2, cleanup_loc_dynamic/4,
 	 from_location/2, in_set/2, in_dir/2, all_call_refs/5,
-	 record_location_meta/5, record_location/4]).
+	 record_location_meta/5, record_location/4, record_location_goal/6]).
 
 :- use_module(library(lists)).
 :- use_module(library(prolog_codewalk), []).
@@ -41,6 +41,7 @@
 :- use_module(library(database_fact)).
 :- use_module(library(extra_location)).
 :- use_module(library(static_strip_module)).
+:- use_module(library(compact_goal)).
 
 from_location(From, Location) :-
     prolog:message_location(From, Location, []),
@@ -120,16 +121,21 @@ predicate_from(P, file(File, Line, -1, 0)) :-
 
 prop_t(use). % In some cases is already tracked by prolog:called_by/4@database_fact
 prop_t(def).
+prop_t(dec).
 
 all_call_refs(lit,  Goal,  _, CM, CM:Goal).
 all_call_refs(Prop, Goal, IM, CM, CM:Fact) :-
     prop_t(Prop),
     database_fact(Prop, IM:Goal, Fact).
 
-record_location_goal(MGoal, CM, Type, Call, _, From) :-
+record_location_callable(MGoal, CM, Type, Call, _, From) :-
     normalize_head(MGoal, M:Head),
     ground(M),
     callable(Head),
+    compact_goal(Call, Comp),
+    record_location_goal(Head, M, Type, CM, Comp, From).
+    
+record_location_goal(Head, M, Type, CM, Call, From) :-
     record_location(Head, M, dynamic(Type, CM, Call), From).
 
 record_location(Head, M, Type, From) :-
@@ -156,7 +162,7 @@ record_location_meta(MCall, M, From, FactBuilder, Recorder) :-
 
 record_location_dynamic(MCall, M, From) :-
     record_location_meta(MCall, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
-			 record_location_goal).
+			 record_location_callable).
 
 cleanup_loc_dynamic(Head, M, Type, From) :-
     retractall(loc_dynamic(Head, M, Type, From)).
