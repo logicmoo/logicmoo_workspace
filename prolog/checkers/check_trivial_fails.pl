@@ -104,6 +104,7 @@ collect_dynamic_locations(M, MGoal, _, From) :-
     record_location_dynamic(MGoal, M, From).
 
 :- public collect_trivial_fails/5.
+:- meta_predicate collect_trivial_fails(?,7,+,+,+).
 collect_trivial_fails(M, MatchAI, M:Goal, Caller, From) :-
     record_location_meta(M:Goal, _, From, all_call_refs,
 			 cu_caller_hook(MatchAI, Caller)).

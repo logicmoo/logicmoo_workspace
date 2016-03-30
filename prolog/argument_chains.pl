@@ -89,6 +89,8 @@ check_argument_fixpoint(Stage, OptionL) :-
     ; check_argument_fixpoint(NStage, OptionL)
     ).
 
+:- public propagate_argument_1/5.
+
 propagate_argument_1(Stage, NStage, MGoal, MCaller, From) :-
     propagate_argument(argument_cond_1(Id), record_callee_1(Id), Stage, NStage, MGoal, MCaller, From).
 
@@ -99,6 +101,8 @@ argument_cond_1(Id, Goal, M, Pos, Stage, _, _) :-
        ).
 
 record_callee_1(Id, _, _, _, Ref, Id) :- assertz(clause_db(Ref)).
+
+:- public propagate_argument_2/5.
 
 propagate_argument_2(Stage, NStage, MGoal, MCaller, From) :-
     propagate_argument(argument_cond_2, record_callee_2, Stage, NStage, MGoal, MCaller, From).
