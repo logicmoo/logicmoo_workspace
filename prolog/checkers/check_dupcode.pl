@@ -100,15 +100,19 @@ duptype_elem(name,   H, M, FileChk, F/A, M:F/A) :-
 % analysis outputs:
 duptype_elem(clause, H, M, FileChk, hash(DupId), M:F/A-Idx) :-
     nth_clause(M:H, Idx, Ref),
-    clause(M:H, Body, Ref),
+    clause(M:H, MBody, Ref),
     clause_property(Ref, file(File)),
     call(FileChk, File),
     functor(H, F, A),
+    strip_module(MBody, _C, Body),
     variant_sha1((H :- Body), DupId).
 duptype_elem(predicate, H, M, FileChk, hash(DupId), M:F/A) :-
     predicate_property(M:H, file(File)),
     call(FileChk, File),
-    findall((H :- B), clause(M:H, B), ClauseL),
+    findall((H :- B),
+	    ( clause(M:H, MB),
+	      strip_module(MB, _, B)
+	    ), ClauseL),
     variant_sha1(ClauseL, DupId),
     functor(H, F, A).
 
