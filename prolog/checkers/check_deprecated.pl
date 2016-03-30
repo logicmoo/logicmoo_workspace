@@ -31,10 +31,8 @@
 
 :- use_module(checkers(checker)).
 :- use_module(library(check), []).
-:- use_module(library(prolog_codewalk)).
 :- use_module(library(implementation_module)).
 :- use_module(library(location_utils)).
-:- use_module(library(option_utils)).
 :- use_module(library(referenced_by)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(extra_codewalk)).
