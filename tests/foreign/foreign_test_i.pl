@@ -18,7 +18,7 @@ this_dir(Dir) :-
     current_module(M, Path),
     directory_file_path(Dir, _, Path).
 
-:-  ( \+ user:file_search_path('.', _)
+:- ( \+ user:file_search_path('.', _)
     ->this_dir(Dir),
     asserta(user:file_search_path('.', Dir))
     ; true

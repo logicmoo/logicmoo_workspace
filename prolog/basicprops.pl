@@ -376,7 +376,7 @@ character_code(I) :- between(0, 255, I).
 	decimal representation of floating point and integer numbers, 
 	including scientific notation and fractionary part.").
 
-:-  true prop num_code/1 + regtype.
+:- true prop num_code/1 + regtype.
 
 num_code(0'0).
 num_code(0'1).
