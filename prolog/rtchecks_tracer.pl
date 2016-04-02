@@ -93,6 +93,7 @@ black_list_module(expansion_module).
 white_list_meta(system, Call) :- \+ functor(Call, call, _).
 
 skip_predicate(rtchecks_utils:handle_rtcheck(_)).
+skip_predicate(rtchecks_rt:_).
 
 pp_assr(check(_), _).
 pp_assr(trust(_), _).
@@ -116,11 +117,12 @@ rtcheck_port_(unify, Frame, Action) :-
     prolog_frame_attribute(Frame, clause, Clause),
     setup_clause_bpt(Clause, Action), !.
 rtcheck_port_(_, Frame, Action) :-
-    ( prolog_frame_attribute(Frame, goal, Goal),
-      \+ skip_predicate(Goal)
-    ->Action = continue
-    ; Action = skip
+    prolog_frame_attribute(Frame, goal, Goal),
+    ( skip_predicate(Goal)
+    ->Action = skip
+    ; Action = continue
     ).
+%    writeln(user_error, rtcheck_port_(Action->Goal)).
 
 call_instr(i_usercall0 ).
 call_instr(i_usercalln(_)).
@@ -138,7 +140,7 @@ setup_clause_bpt(Clause, Action) :-
       '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
       ( ( call_instr(TInstr)
 	->nth_clause(M:Goal, _, Clause),
-	  \+ head_prop_asr(Goal, M, _, prop, _, _, _)
+	  \+ asr_head_prop(_, M, Goal, _, prop, _, _)
 	; call_instr_param(TInstr, PI),
 	  ( PI=LM:F/A
 	  ->functor(Goal, F, A),
@@ -168,14 +170,16 @@ setup_clause_bpt(Clause, Action) :-
 :- public system:'$rat_trap'/4.
 :- meta_predicate system:'$rat_trap'(0, +, +, +).
 system:( '$rat_trap'(RTChecks, Caller, Clause, PC) :-
-         rtchecks_tracer:( AssrChk = assrchk(asr, Error),
-			   intercept(RTChecks, AssrChk,
-				     ( ( retract(rtc_break(Clause, PC))
-				       ->ignore('$break_at'(Clause, PC, false))
-				       ; true
-				       ),
-				       send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error))
-				     )))).
+       rtchecks_tracer:( intercept(RTChecks, assrchk(asr, Error),
+				   '$rat_trap_handle'(Caller, Clause, PC, Error)))).
+
+:- '$hide'('$rat_trap_handle'/4).
+'$rat_trap_handle'(Caller, Clause, PC, Error) :-
+    ( retract(rtc_break(Clause, PC))
+    ->ignore('$break_at'(Clause, PC, false))
+    ; true
+    ),
+    send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error)).
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
 %     clause_property(Clause, predicate(PI)),

@@ -1,8 +1,5 @@
-:- module(rtchecks_rt, [condition/1,
-			checkif_modl/5,
-			checkif_comp/5,
-			rtc_call/2,
-			'$meta$rtc'/2
+:- module(rtchecks_rt, [rtcheck_goal/4,
+			rtc_call/2
 		       ]).
 
 :- use_module(library(assertions)).
@@ -20,50 +17,14 @@
 :- doc(module, "This module contains the predicates that are
 	required to implement run-time checks.").
 
-:- prop condition/1 + type.
-
-condition(true).
-condition(fail).
-
-:- pred checkif_comp(Condition, _, CompGoal, CompGoalArg, Head)
-
-# "If ~w is @tt{true} then the ~w containing
-the nested comp predicate calls is called with ~w as
-argument. To allow efficient implementation, ~w is the
-last nested argument of ~w, so unifiying with ~w
-we have the comp check, and calling directly to ~w we skip the
-test. An example call could be:
-
-@begin{verbatim}
-checkif_comp(C,not_fails(is_det(A)),A,partition(_1,_2,_3,_4))
-@end{verbatim}
-
-so if C is true (it should come from @pred{get_checkc/N} predicate), then
-A is unified with partition(_1,_2,_3,_4) and
-not_fails(is_det(partition(_1,_2,_3,_4))) is called. Else, just
-partiton(_1,_2,_3,_4) is called."-[Condition, CompGoal, Head, CompGoalArg,
-	 CompGoal, Head, Head].
-
-% :- trust pred checkif_comp(Condition, CompGoal, CompGoalArg, Head)
-% 	:: condition * callable * term * callable.
-
-:- doc(bug, "checkif_comp/4 generates a unnecessary run-time
-	module expansion").
-
-:- meta_predicate checkif_comp(?, ?, 0, ?, 0).
-checkif_comp([], Info, Comp, Goal, Goal) :- with_info(Comp, Info).
-checkif_comp([_|_], _, _,    _,    Goal) :- call(Goal).
-
 :- meta_predicate checkif_modl(?, ?, 0, ?, 0).
 checkif_modl(M, M,    _,    _, Goal) :- !, call(Goal).
 checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 
-:- meta_predicate with_info(0, ?).
-with_info(Comp, Info) :-
-    with_context_value(Comp, comp_info, Info).
-
-rtcheck_ifnot(Check, PredName) :-
-    rtcheck_cond(\+ Check, Check, PredName).
+:- public with_assertion/2.
+:- meta_predicate with_assertion(0, ?).
+with_assertion(Comp, Asr) :-
+    with_value(Comp, '$with_assertion', Asr).
 
 rtcheck_cond(Cond, Check, PredName) :-
     ( Cond
@@ -71,10 +32,182 @@ rtcheck_cond(Cond, Check, PredName) :-
     ; true
     ).
 
+check_asr_props(Asr, Part, Check, Mult, PropValues) :-
+    findall(PropN-NVL,
+	    ( prop_asr(Part, Prop, _, Asr),
+	      \+ check_prop(Check, Prop),
+	      no_bindings_asr(Asr, AsrN),
+	      prop_asr(Part, PropN, _, AsrN),
+	      term_variables(PropN, NL),
+	      copy_term(PropN-NL, Prop-VL),
+	      maplist(varnamep, VL, NL, NVL),
+	      (Mult = once -> ! ; true)
+	    ),
+	    PropValues).
+
+varnamep(Var, Name, Name=Var).
+
+check_prop(compat,   Prop) :- compat(  Prop).
+check_prop(instance, Prop) :- instance(Prop).
+
+type_part_check_call(compat,    comp, compat,   call).
+type_part_check_call(calls,     call, instance, call).
+type_part_check_call(success,   call, instance, once).
+type_part_check_call(compatpos, comp, compat,   once).
+type_part_check_call(comp,      call, instance, once).
+
+check_asrs_props(PType, AsrPVL) :-
+    type_part_check_call(PType, Part, Check, Call),
+    maplist(check_asr_props(Part, Check, Call), AsrPVL),
+    ( maplist(\=(_-[]), AsrPVL)
+    ->maplist(send_rtcheck_asr(PType), AsrPVL)
+    ; true
+    ).
+
+typeif_part_check_call(compat,  comp, compat,   call).
+typeif_part_check_call(success, succ, instance, call).
+
+checkif_asrs_props(PType, AsrPVL) :-
+    typeif_part_check_call(PType, Part, Check, Call),
+    maplist(checkif_asr_props(PType, Part, Check, Call), AsrPVL).
+
+checkif_asr_props(PType, Part, Check, Call, Asr-CondValues) :-
+    checkif_asr_props(CondValues, Asr, PType, Part, Check, Call).
+
+check_asr_props(Part, Check, Call, Asr-PropValues) :-
+    check_asr_props(Asr, Part, Check, Call, PropValues).
+
+send_rtcheck_asr(PType, Asr-PropValues) :-
+    asr_head_prop(Asr, _, Pred, _, _, _, ALoc),
+    send_rtcheck(PropValues, PType, Pred, ALoc).
+
+:- meta_predicate checkif_asr_props(+,+,+,+,+,1).
+checkif_asr_props([_|_], _, _, _, _, _).
+checkif_asr_props([], Asr, PType, Part, Check, Call) :-
+    check_asr_props(Asr, Part, Check, Call, PropValues),
+    send_rtcheck_asr(PType, Asr-PropValues).
+
+:- meta_predicate checkif_asrs_comp(+, 0).
+checkif_asrs_comp([], Goal) :- call(Goal).
+checkif_asrs_comp([Asr-PVL|AsrL], Goal1) :-
+    notrace(checkif_asr_comp(PVL, Asr, Goal1, Goal)),
+    checkif_asrs_comp(AsrL, Goal).
+
+valid_commands([_:times(_, _), _:try_sols(_, _)]). % Legacy
+
+checkif_asr_comp([_|_], _, Goal,  Goal).
+checkif_asr_comp([],  Asr, Goal1, with_assertion(Goal, Asr)) :-
+    collect_prop(asr_glob(Asr), user, GlobL1),
+    valid_commands(CommL),
+    subtract(GlobL1, CommL, GlobL),
+    comps_to_goal(GlobL, Goal, Goal1).
+
+rtcheck_goal(Goal, M, CM, AsrL) :-
+    checkif_modl(M, CM,
+		 check_asrs(step1, AsrL, G2), G2,
+		 check_asrs(step2, AsrL, CM:Goal)).
+
+check_asrs(Step, AsrL, Goal) :-
+    step_rtchecks_options(Step, CompST, CallST, SuccST, GlobST),
+    check_asrs(AsrL, CompST, CallST, SuccST, GlobST, Goal).
+
+% ----------------------------------------------------------------------------
+step_rtchecks_options(step1, comp_assrt1, call_assrt1, succ_assrt1, glob_assrt1).
+step_rtchecks_options(step2, comp_assrt2, call_assrt2, succ_assrt2, glob_assrt2).
+
+neg_level(inner,   exports).
+neg_level(exports, inner).
+
+comp_assrt1(exports, pred).
+
+comp_assrt2(inner, pred).
+
+call_assrt1(_,       entry).
+call_assrt1(exports, calls).
+call_assrt1(exports, pred).
+
+call_assrt2(inner, calls).
+call_assrt2(inner, pred).
+
+succ_assrt1(_,     exit).
+succ_assrt1(exports, success).
+succ_assrt1(exports, pred).
+
+succ_assrt2(inner, test).
+succ_assrt2(inner, success).
+succ_assrt2(inner, pred).
+
+glob_assrt1(exports, comp).
+glob_assrt1(exports, pred).
+
+glob_assrt2(inner, test).
+glob_assrt2(inner, comp).
+glob_assrt2(inner, pred).
+
+is_valid_status_type(true, entry) :- current_prolog_flag(rtchecks_entry, yes).
+is_valid_status_type(Status, Type) :-
+	rtcheck_assr_type(Type),
+	rtcheck_assr_status(Status).
+
+rtcheck_assr_status(true)  :- current_prolog_flag(rtchecks_true,  yes).
+rtcheck_assr_status(trust) :- current_prolog_flag(rtchecks_trust, yes).
+rtcheck_assr_status(debug) :- current_prolog_flag(rtchecks_debug, yes).
+rtcheck_assr_status(trace) :- current_prolog_flag(rtchecks_trace, yes).
+rtcheck_assr_status(check) :- current_prolog_flag(rtchecks_check, yes).
+
+rtcheck_assr_type(calls).
+rtcheck_assr_type(pred).
+rtcheck_assr_type(prop).
+rtcheck_assr_type(test) :- current_prolog_flag(rtchecks_test, yes).
+rtcheck_assr_type(comp).
+rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
+rtcheck_assr_type(success).
+% ----------------------------------------------------------------------------
+
+check_asrs(AsrL, CompST, CallST, SuccST, GlobST, Goal) :-
+    notrace(check_asrs_pre(AsrL, CompST, CallST, SuccST, GlobST,
+			   AsrGlobL, AsrCompL, AsrSuccL)),
+    checkif_asrs_comp(AsrGlobL, Goal),
+    notrace(check_asrs_pos(AsrCompL, AsrSuccL)).
+
+check_asrs_pos(AsrCompL, AsrSuccL) :-
+    checkif_asrs_props(compat,  AsrCompL),
+    checkif_asrs_props(success, AsrSuccL).
+
+check_asrs_pre(AsrL, CompST, CallST, SuccST, GlobST,
+	       AsrGlobL, AsrCompL, AsrSuccL) :-
+    current_prolog_flag(rtchecks_level, Level),
+    prop_rtchecks(AsrL, CompST,   Level, AsrCompL ),
+    prop_rtchecks(AsrL, CallST,   Level, AsrCallL ),
+    prop_rtchecks(AsrL, SuccST,   Level, AsrSuccL ),
+    subtract(AsrSuccL,  AsrCallL, DAsrSuccL),
+    prop_rtchecks(AsrL, GlobST,   Level, AsrGlobL ),
+    subtract(AsrGlobL,  AsrCallL, DAsrGlobL),
+    check_asrs_props(compat,    AsrCompL ),
+    check_asrs_props(calls,     AsrCallL ),
+    check_asrs_props(success,   DAsrSuccL),
+    check_asrs_props(comp,      DAsrGlobL).
+
+prop_rtchecks(AsrL0, IsStatusType, Level, AsrPVL) :-
+    include(is_prop_rtcheck(IsStatusType, Level), AsrL0, AsrL),
+    pairs_keys_values(AsrPVL, AsrL, _PValuesL).
+
+is_prop_rtcheck(IsValidType, Level, Asr) :-
+    asr_head_prop(Asr, _, _, Status, Type, _, _),
+    call(IsValidType, Level, Type),
+    is_valid_status_type(Status, Type).
+
+no_bindings_asr(Asr, AsrN) :-
+    functor(Asr,  I, N),
+    functor(AsrN, I, N).
+
 :- meta_predicate rtc_call(+, 0).
 
 rtc_call(Type, Check) :-
     ignore(do_rtcheck(Type, Check)).
+
+rtcheck_ifnot(Check, PredName) :-
+    rtcheck_cond(\+ Check, Check, PredName).
 
 do_rtcheck(check, Check) :-
     rtcheck_ifnot(Check, check/1).
@@ -88,6 +221,3 @@ do_rtcheck(false, Check) :-
     current_prolog_flag(rtchecks_false, yes),
     rtcheck_cond(Check, Check, false/1),
     fail.
-
-% :- meta_predicate '$meta$rtc'(0, -).
-'$meta$rtc'(Goal, Goal).

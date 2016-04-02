@@ -3,7 +3,6 @@
 	   generate_rtchecks/3]).
 
 :- use_module(library(assrt_lib)).
-:- use_module(library(rtchecks_basic)).
 :- use_module(library(rtchecks_gen)).
 :- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
@@ -54,37 +53,19 @@ maparg(_, _, _, _, _).
 
 generate_literal_rtchecks(CM, Goal0, RTChecks) :-
     resolve_calln(Goal0, Goal),
-    ( proc_ppassertion(Goal, CM, RTChecks0)
-    ->RTChecks = RTChecks0
+    ( proc_ppassertion(Goal, CM, RTChecks)
+    ->true
     ; implementation_module(CM:Goal, M),
-      generate_pred_rtchecks(Goal, M, RTChecks0, Pred, PM),
-      ( RTChecks0 == PM:Pred
-      ->RTChecks = CM:Goal
-      ; PM:Pred  = CM:Goal,
-	RTChecks = RTChecks0
-      )
+      generate_pred_rtchecks(Goal, M, CM, RTChecks)
     ).
 
-generate_pred_rtchecks(Goal, M, RTChecks, Pred, PM) :-
-    ( head_prop_asr(Goal, M, _, prop, _, _, _)
-    ->RTChecks = PM:Pred
-    ; functor(Goal, F, A),
-      functor(Head, F, A),
-      ( collect_assertions(Head, M, rtcheck, Assertions),
-	Assertions \= []
-      ->generate_rtchecks(Assertions, M, G1, G2, G3, PM:Pred),
-	functor(Pred, F, A),
-	qualify_meta_goal(Pred, M, PM, Head),
-	% TODO: Be careful if you want to refactorize this part, now CM is
-	% static:
-	lists_to_lits(G3, R3),
-	( G1 == G2
-	->RTChecks = R3
-	; lists_to_lits(G1, R1),
-	  RTChecks = checkif_modl(M, PM, M:R1, G2, M:R3)
-	)
-	% (M \= CM -> G0 = G1, G2 = G3 ; G0 = G3),
-	% lists_to_lits(G0, RTChecks)
-      ; RTChecks = PM:Pred
+generate_pred_rtchecks(Goal, M, CM, RTChecks) :-
+    ( asr_head_prop(_, AM, Goal, _, prop, _, _),
+      implementation_module(AM:Goal, M)
+    ->RTChecks = CM:Goal
+    ; ( collect_assertions(Goal, M, rtcheck, AsrL),
+	AsrL \= []
+      ->RTChecks = rtchecks_rt:rtcheck_goal(Goal, M, CM, AsrL)
+      ; RTChecks = CM:Goal
       )
     ).

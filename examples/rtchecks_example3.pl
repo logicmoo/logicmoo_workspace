@@ -35,9 +35,12 @@ family(B) :- atm(B).
 
 :- entry fullasr(A, B) : (animal(A), var(B)).
 
+:- pred fullasr(A, _) :: atm(A) : atm(A) => atm(A).
 :- pred fullasr(A, B) :: atm(A) : (animal(A), atm(A)) => family(B) + not_fails.
 :- pred fullasr(A, B) :: atm(A) : animal(A) => family(B) + is_det.
-:- pred fullasr(A, B) :: int(A) : animal(A) => family(B) + is_det.
+:- pred fullasr(A, B) :: (num(A), int(A)) : animal(A) => family(B) + is_det.
+:- calls fullasr(A, _) :: str(A).
+:- success fullasr(A, _) : int(A) => nnegint(A).
 
 fullasr(_, _).
 
