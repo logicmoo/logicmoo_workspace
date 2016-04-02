@@ -107,7 +107,7 @@ prop_ctcheck(M, FromChk, Trans) :-
 	   ^group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
-    head_prop_asr(Head, CM, _, Type, _, From, Asr),
+    asr_head_prop(Asr, CM, Head, _, Type, _, From),
     Type \= (test),
     implementation_module(CM:Head, M),
     call(FromChk, From),
@@ -236,7 +236,7 @@ tabled_generate_ctchecks(H, M, CM, Goal) :-
 verif_is_property(system, true, 0) :- !.   % ignore true (identity)
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
-    head_prop_asr(H, CM, _, prop, _, _, _),
+    asr_head_prop(_, CM, H, _, prop, _, _),
     implementation_module(CM:H, AM),
     ( AM = IM -> true
     ; predicate_property(IM:H, imported_from(AM))

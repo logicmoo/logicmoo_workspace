@@ -144,7 +144,7 @@ walk_from_goal(Head, M, Ref, OTerm) :-
 		    ).
 
 walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
-    forall(( AHead = assrt_lib:head_prop_asr(Head, HM, _, _, _, From, Asr),
+    forall(( AHead = assrt_lib:asr_head_prop(Asr, HM, Head, _, _, _, From),
 	     call(FromChk, From),
 	     implementation_module(HM:Head, M),
 	     prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),

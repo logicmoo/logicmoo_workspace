@@ -46,7 +46,7 @@ record_location. % Enable recording of locations
 
 % Extra location for assertions of a given predicate
 extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
-    assrt_lib:head_prop_asr(Head, CM, Status, Type, _, From, _),
+    assrt_lib:asr_head_prop(_, CM, Head, Status, Type, _, From),
     implementation_module(CM:Head, M).
 
 :- multifile skip_record_decl/1.

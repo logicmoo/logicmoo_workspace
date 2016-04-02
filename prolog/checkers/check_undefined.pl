@@ -114,7 +114,7 @@ exclude_list(M, AM, ML/EL) :-
 
 % Hook to hide undef messages:
 :- multifile hide_undef/2.
-hide_undef(head_prop_asr(_,_,_,_, _,_,_), assrt_lib).
+hide_undef(asr_head_prop(_,_,_,_, _,_,_), assrt_lib).
 
 found_undef(To, Caller, From) :-
     \+ hide_undef(To),
