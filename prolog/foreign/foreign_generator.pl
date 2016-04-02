@@ -20,6 +20,8 @@
     link_foreign_library/2,
     pkg_foreign_config/2.
 
+:- meta_predicate current_foreign_prop(2,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?).
+
 command_to_atom(Command, Args, Atom) :-
     process_create(path(Command), Args, [stdout(pipe(Out))]),
     read_stream_to_codes(Out, String),
@@ -270,7 +272,7 @@ type_props(M, Type, TypePropLDictL, Pos, Asr) :-
     ).
 
 type_props_(CM, Type, Dict, Pos, Asr) :-
-    head_prop_asr(Type, CM, check, prop, Dict, Pos, Asr),
+    asr_head_prop(Asr, CM, Type, check, prop, Dict, Pos),
     once(( member(TType, [type(_), regtype(_)]),
 	   asr_glob(Asr, _, TType, _)
 	 )).
@@ -852,17 +854,17 @@ foreign_native(native(_, _),  basicprops).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
 		     FuncName, PredName, BindName, Arity) :-
-    current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-			 FuncName, PredName, BindName, Arity, foreign_native, _).
+    current_foreign_prop(foreign_native, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
+			 DictL, FuncName, PredName, BindName, Arity, _).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
 		     FuncName, PredName, BindName, Arity, Type) :-
-    current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-			 FuncName, PredName, BindName, Arity, foreign_native_fimport, Type).
+    current_foreign_prop(foreign_native_fimport, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
+			 DictL, FuncName, PredName, BindName, Arity, Type).
 
-current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-		     FuncName, PredName, BindName, Arity, GenKeyProp, KeyProp) :-
-    head_prop_asr(Head, Context, check, Type, _, _, Asr),
+current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
+		     DictL, FuncName, PredName, BindName, Arity, KeyProp) :-
+    asr_head_prop(Asr, Context, Head, check, Type, _, _),
     memberchk(Type, [pred, prop]),
     implementation_module(Context:Head, Module),
     once(( call(GenKeyProp, KeyProp, _KI),

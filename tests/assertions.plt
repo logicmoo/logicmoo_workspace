@@ -11,7 +11,7 @@ test(assrt_lib_1) :-
 				::int(A):(gnd(A),var(B))
 				=>(gnd(A), gnd(B))
 				+ (not_fails,is_det)), _, R, _),
-    assertion(R=[assrt_lib:head_prop_asr(p(A, B), m, check, pred, [], _, Idx),
+    assertion(R=[assrt_lib:asr_head_prop(Idx, m, p(A, B), check, pred, [], _),
 		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_comp(Idx, m, int(A), _),
 		 assrt_lib:asr_call(Idx, m, gnd(A), _),
@@ -27,7 +27,7 @@ test(assrt_lib_2) :-
 				::int(A):(gnd(A), var(B))
 				=>(gnd(A), gnd(B))
 				+ not_fails), _, R, _),
-    assertion(R=[assrt_lib:head_prop_asr(p(A, B), system, check, pred, [],_, Idx),
+    assertion(R=[assrt_lib:asr_head_prop(Idx, system, p(A, B), check, pred,[], _),
 		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_comp(Idx, m, int(A), _),
 		 assrt_lib:asr_call(Idx, m, gnd(A), _),
@@ -45,7 +45,7 @@ test(assrt_lib_simple) :-
 			   => (list(A, atom),   atom(B))
 			   +  (is_det, iso) # "Write live comments here"),
 			   Record, a, Dict),
-    assertion(Record=[assrt_lib:head_prop_asr(atomic_list_concat(A, B), a, check, pred, Dict, _, Idx),
+    assertion(Record=[assrt_lib:asr_head_prop(Idx, a, atomic_list_concat(A, B), check, pred, Dict, _),
 		      assrt_lib:asr_comm(Idx, "Write live comments here", _),
 		      assrt_lib:asr_comp(Idx, a, list(A, ground), _),
 		      assrt_lib:asr_comp(Idx, a, atom(B), _),
@@ -59,7 +59,7 @@ test(assrt_lib_simple) :-
 
 test(assrt_lib_comp) :-
     assrt_lib:assertion_records(m, [], true comp nfi1(G,V) + (sideff(free), no_rtcheck), _, R, _),
-    assertion(R=[assrt_lib:head_prop_asr(nfi1(G, V), m, true, comp, [], _, Idx),
+    assertion(R=[assrt_lib:asr_head_prop(Idx, m, nfi1(G, V), true, comp, [], _),
 		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_glob(Idx, m, sideff(_, free), _),
 		 assrt_lib:asr_glob(Idx, m, no_rtcheck(_), _)
@@ -73,7 +73,7 @@ test(assrt_lib_sugar) :-
 			   => list(atom)   * atom
 			   +  (is_det, iso) # "Write live comments here"),
 			   Record, a, Dict),
-    assertion(Record=[assrt_lib:head_prop_asr(atomic_list_concat(A, B), a, check, pred, Dict, _, Idx),
+    assertion(Record=[assrt_lib:asr_head_prop(Idx, a, atomic_list_concat(A, B), check, pred, Dict, _),
 		      assrt_lib:asr_comm(Idx, "Write live comments here", _),
 		      assrt_lib:asr_comp(Idx, a, list(A, ground), _),
 		      assrt_lib:asr_comp(Idx, a, atom(B), _),
@@ -88,11 +88,11 @@ test(assrt_lib_sugar) :-
 % a complex expression that compact multiple assertions:
 test(assrt_lib_multi) :-
     assrt_lib:assrt_lib_tr((:- pred [(q:a/1+kbmask([+])), b/2+hidden]+kbrule), Records, m, []),
-    assertion(Records=[assrt_lib:head_prop_asr(a(_), q, check, pred, [], _, Idx1),
+    assertion(Records=[assrt_lib:asr_head_prop(Idx1, q, a(_), check, pred, [], _),
 		       assrt_lib:asr_comm(Idx1, "", _),
 		       assrt_lib:asr_glob(Idx1, m, kbrule(_), _),
 		       assrt_lib:asr_glob(Idx1, q, kbmask(_, [(+)]), _),
-		       assrt_lib:head_prop_asr(b(_, _), m, check, pred, [], _, Idx2),
+		       assrt_lib:asr_head_prop(Idx2, m, b(_, _), check, pred, [], _),
 		       assrt_lib:asr_comm(Idx2, "", _),
 		       assrt_lib:asr_glob(Idx2, m, kbrule(_), _),
 		       assrt_lib:asr_glob(Idx2, m, hidden(_), _)
@@ -100,7 +100,7 @@ test(assrt_lib_multi) :-
 
 test(assrt_lib_mode1) :-
     assrt_lib:assertion_records(u, [], pred dict(+int), _, Re, _),
-    assertion(Re=[assrt_lib:head_prop_asr(dict(A), u, check, pred, [], _, Idx),
+    assertion(Re=[assrt_lib:asr_head_prop(Idx, u, dict(A), check, pred, [], _),
 		  assrt_lib:asr_comm(Idx, "", _),
 		  assrt_lib:asr_call(Idx, u, int(A), _)]).
 
@@ -119,7 +119,7 @@ substitute_idx(Idx1, Idx2, Term, Idx2) :-
 
 test(assrt_lib_oddity_1) :-
     assrt_lib:assertion_records(m, [], (pred a:b/2 : e * l + n), _, R, _),
-    assertion(R=[assrt_lib:head_prop_asr(b(A, B), a, check, pred, [], _, Idx),
+    assertion(R=[assrt_lib:asr_head_prop(Idx, a, b(A, B), check, pred, [], _),
 		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_call(Idx, a, e(A), _),
 		 assrt_lib:asr_call(Idx, a, l(B), _),
@@ -128,7 +128,7 @@ test(assrt_lib_oddity_1) :-
 
 test(assrt_lib_oddity_2) :-
     assrt_lib:assertion_records(m, [], (pred (a:b/2) : e * l + n), _, R, _),
-    assertion(R=[assrt_lib:head_prop_asr(b(A, B), a, check, pred, [], _, Idx),
+    assertion(R=[assrt_lib:asr_head_prop(Idx, a, b(A, B), check, pred, [], _),
 		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_call(Idx, m, e(A), _),
 		 assrt_lib:asr_call(Idx, m, l(B), _),
@@ -140,11 +140,11 @@ test(assrt_lib_abridged_notation) :-
 							       +RTCheck   :rtcheck_error,
 							       ?Messages0 :list(message_info),
 							       ?Messages  :list(message_info))#"c", _, R, _),
-    assertion(R=[assrt_lib:head_prop_asr(check_to_messages(Time,
+    assertion(R=[assrt_lib:asr_head_prop(Idx,
+					 rt, check_to_messages(Time,
 							   RTCheck,
 							   Messages0,
-							   Messages),
-					 rt, check, pred, [], _, Idx),
+							   Messages), check, pred, [], _),
 		 assrt_lib:asr_comm(Idx, "c", _),
 		 assrt_lib:asr_comp(Idx, rt, list(Messages0, message_info), _),
 		 assrt_lib:asr_comp(Idx, rt, list(Messages,  message_info), _),

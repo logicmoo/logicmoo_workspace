@@ -34,13 +34,13 @@
 
 % Propagate assertions in an interface to the implementation
 
-assrt_lib:head_prop_asr(Head, IM, Status, Type, Dict, Loc, in_asr(Asr, IM)) :-
+assrt_lib:asr_head_prop(in_asr(Asr, IM), IM, Head, Status, Type, Dict, Loc) :-
     head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr).
 
 head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr) :-
     interface:'$implementation'(IM, Interface),
     freeze(Asr, Asr \= in_asr(_)),
-    assrt_lib:head_prop_asr(Head, Interface, Status, Type, Dict, Loc, Asr).
+    assrt_lib:asr_head_prop(Asr, Interface, Head, Status, Type, Dict, Loc).
 
 assrt_lib:asr_comm(in_asr(Asr, IM), Comm, Loc) :-
     head_prop_asr_intf(_, IM, _, _, _, _, Asr),

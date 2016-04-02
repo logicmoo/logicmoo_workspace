@@ -1,22 +1,23 @@
-:- module(assrt_lib, [assertion_read/9,
-		      assertion_body/7,
-		      comps_to_goal/3,
-		      comps_to_goal/4,
-		      assertion_records/4,
-		      assertion_db/13,
-		      head_prop_asr/8,
-		      head_prop_asr/7,
-		      asr_glob/4,
-		      asr_comp/4,
-		      asr_call/4,
-		      asr_succ/4,
-		      asr_comm/3,
-		      prop_asr/4,
-		      prop_asr/5,
-		      collect_prop/3,
-		      normalize_assertion_head/7,
-		      qualify_with/3,
-		      assrt_lib_tr/4]).
+:- module(assrt_lib,
+	  [assertion_read/9,
+	   assertion_body/7,
+	   comps_to_goal/3,
+	   comps_to_goal/4,
+	   assertion_records/4,
+	   assertion_db/13,
+	   asr_head_prop/8,
+	   asr_head_prop/7,
+	   asr_glob/4,
+	   asr_comp/4,
+	   asr_call/4,
+	   asr_succ/4,
+	   asr_comm/3,
+	   prop_asr/4,
+	   prop_asr/5,
+	   collect_prop/3,
+	   normalize_assertion_head/7,
+	   qualify_with/3,
+	   assrt_lib_tr/4]).
 
 :- use_module(library(assertions_op)).
 :- use_module(library(apply)).
@@ -32,7 +33,7 @@
 % Assertion reader for SWI-Prolog
 
 :- multifile
-    head_prop_asr/7,
+    asr_head_prop/7,
     asr_comm/3,
     asr_glob/4,
     asr_comp/4,
@@ -42,7 +43,7 @@
     nodirective_error_hook/1.
 
 :- dynamic
-    head_prop_asr/7,
+    asr_head_prop/7,
     asr_comm/3,
     asr_glob/4,
     asr_comp/4,
@@ -54,15 +55,15 @@
 :- discontiguous
     term_expansion/2.
 
-head_prop_asr(Head, CM, Status, Type, Comm, Dict, Loc, Asr) :-
-    head_prop_asr(Head, CM, Status, Type, Dict, Loc, Asr),
+asr_head_prop(Asr, CM, Head, Status, Type, Comm, Dict, Loc) :-
+    asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
     asr_comm(Asr, Comm, _).
 
 % Accessibility predicates:
-prop_asr(head, M:P, From, Asr) :- head_prop_asr(P, M, _, _, _, From, Asr).
-prop_asr(stat,   P, From, Asr) :- head_prop_asr(_, _, P, _, _, From, Asr).
-prop_asr(type,   P, From, Asr) :- head_prop_asr(_, _, _, P, _, From, Asr).
-prop_asr(dict,   D, From, Asr) :- head_prop_asr(_, _, _, _, D, From, Asr).
+prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
+prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
+prop_asr(type,   P, From, Asr) :- asr_head_prop(Asr, _, _, _, P, _, From).
+prop_asr(dict,   D, From, Asr) :- asr_head_prop(Asr, _, _, _, _, D, From).
 prop_asr(comm,   C, From, Asr) :- asr_comm(Asr,    C, From).
 prop_asr(comp, M:P, From, Asr) :- asr_comp(Asr, M, P, From).
 prop_asr(call, M:P, From, Asr) :- asr_call(Asr, M, P, From).
@@ -126,7 +127,7 @@ collect_prop(GenProp, CM, PropL) :-
 			  ), PropL).
 
 assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
-    head_prop_asr(Head, CM, Status, Type, Dict, Loc, Asr),
+    asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
     ( asr_comm(Asr, Comm, _)
     ->true
     ; Comm = ""
@@ -723,7 +724,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     atom_number(AIdx, Count),
     Asr =.. [AIdx|ShareL], % Idx also contains variable bindings
     Clause = assrt_lib:AClause,
-    ( AClause = head_prop_asr(Head, M, Status, Type, Dict, Loc, Asr),
+    ( AClause = asr_head_prop(Asr, M, Head, Status, Type, Dict, Loc),
       SubPos = HPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
