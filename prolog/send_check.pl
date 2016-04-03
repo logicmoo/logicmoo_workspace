@@ -1,21 +1,20 @@
-:- module(send_check, [get_comp_rtcheck_info/2,
+:- module(send_check, [get_comp_rtcheck_info/3,
 		       send_rtcheck/4,
 		       send_comp_rtcheck/3]).
 
-:- use_module(library(context_values)).
+:- use_module(library(assrt_lib)).
 :- use_module(library(intercept)).
 
-get_comp_rtcheck_info(Goal, Info) :-
-    ( current_context_value(rtchecks_rt:comp_info, Info)
-    ->true
-    ; Info = info(Goal, _)
+get_comp_rtcheck_info(Goal, Name, From) :-
+    ( nb_current('$with_assertion', Asr)
+    ->asr_head_prop(Asr, _, Name, _, _, _, _, From)
+    ; Name = Goal
     ).
 
-send_comp_rtcheck(Goal, PropName, FailName) :-
-    FailName =.. [F|Args],
-    FailProp =.. [F, PredName|Args],
-    get_comp_rtcheck_info(Goal, info(PredName, ALoc)),
-    send_rtcheck([PropName-[FailProp]], comp, PredName, ALoc).
+send_comp_rtcheck(Goal, Prop, Fail) :-
+    get_comp_rtcheck_info(Goal, PredName, ALoc),
+    ignore(nb_current('$with_gloc', GLoc)),
+    send_rtcheck([GLoc/Prop-[Fail]], comp, PredName, ALoc).
 
 send_rtcheck([], _, _, _) :- !.
 send_rtcheck(Props, ErrType, PredName, ALoc) :-

@@ -32,6 +32,10 @@
 
 % Assertion reader for SWI-Prolog
 
+% asr_* declared multifile to allow extensibility. At this point you extend
+% concrete assertions (not abstractions nor fake ones, since they will be
+% collected by the run-time checker, for instance)
+
 :- multifile
     asr_head_prop/7,
     asr_comm/3,
@@ -42,6 +46,7 @@
     doc_db/4,
     nodirective_error_hook/1.
 
+% asr_* declared dynamic to facilitate cleaning
 :- dynamic
     asr_head_prop/7,
     asr_comm/3,
@@ -59,7 +64,11 @@ asr_head_prop(Asr, CM, Head, Status, Type, Comm, Dict, Loc) :-
     asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
     asr_comm(Asr, Comm, _).
 
-% Accessibility predicates:
+% prop_asr/4 is declared multifile to allow extensibility.  Note that at this
+% level you can extend it to define ancillary assertions, (see module
+% assrt_meta.pl for an example).
+%
+:- multifile prop_asr/4.
 prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
 prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
 prop_asr(type,   P, From, Asr) :- asr_head_prop(Asr, _, _, _, P, _, From).
