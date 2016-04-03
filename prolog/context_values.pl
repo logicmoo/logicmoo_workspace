@@ -28,6 +28,8 @@
 */
 
 :- module(context_values, [context_name/2,
+			   with_value/3,
+			   with_value/4,
 			   get_context_value/2,
 			   set_context_value/2,
 			   current_context_value/2,
