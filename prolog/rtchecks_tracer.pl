@@ -5,6 +5,7 @@
 :- use_module(library(apply)).
 :- use_module(library(rtchecks_eval)).
 :- use_module(library(rtchecks_gen)).
+:- use_module(library(context_values)).
 :- use_module(system:library(rtchecks_rt)).
 :- use_module(library(rtchecks_utils)).
 :- use_module(library(implementation_module)).
@@ -77,6 +78,7 @@ black_list_module(rtchecks_eval).
 black_list_module(rtchecks_tracer).
 black_list_module(rtchecks_utils).
 black_list_module(rtchecks_basic).
+% black_list_module(context_values).
 black_list_module('$expand').
 black_list_module('$messages').
 black_list_module(complete_dict).
@@ -167,10 +169,11 @@ setup_clause_bpt(Clause, Action) :-
 :- multifile
     prolog:break_hook/6.
 
-:- public system:'$rat_trap'/4.
-:- meta_predicate system:'$rat_trap'(0, +, +, +).
-system:( '$rat_trap'(RTChecks, Caller, Clause, PC) :-
-       rtchecks_tracer:( intercept(RTChecks, assrchk(asr, Error),
+:- public system:'$rat_trap'/5.
+:- meta_predicate system:'$rat_trap'(0, +, +, +, +).
+system:( '$rat_trap'(RTChecks, Goal, Caller, Clause, PC) :-
+       rtchecks_tracer:( intercept(with_value(RTChecks, '$current_goal', Goal),
+				   assrchk(asr, Error),
 				   '$rat_trap_handle'(Caller, Clause, PC, Error)))).
 
 :- '$hide'('$rat_trap_handle'/4).
@@ -184,6 +187,7 @@ system:( '$rat_trap'(RTChecks, Caller, Clause, PC) :-
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
 %     clause_property(Clause, predicate(PI)),
 %     writeln(user_error, prolog:break_hook(Clause:PI, PC, FR, FBR, Expr, _)),
+%     % backtrace(50),
 %     fail.
 prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     \+ current_prolog_flag(gui_tracer, true),
@@ -195,11 +199,15 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       static_strip_module(Goal1, Goal, CM, FCM),
       implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
-      ->generate_rtchecks(Goal, CM, RTChecks),
-	( CM:Goal == RTChecks
+      ->( nb_current('$current_goal', CurrGoal),
+	  CurrGoal =@= CM:Goal
 	->Action = continue
-	; '$fetch_vm'(Clause, PC, NPC, _VMI),
-	  Action = call('$rat_trap'(RTChecks, Caller, Clause, NPC))
+	; generate_rtchecks(Goal, CM, RTChecks),
+	  ( CM:Goal == RTChecks
+	  ->Action = continue
+	  ; '$fetch_vm'(Clause, PC, NPC, _VMI),
+	    Action = call('$rat_trap'(RTChecks, CM:Goal, Caller, Clause, NPC))
+	  )
 	)
       ; Action = continue
       )

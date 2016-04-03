@@ -96,11 +96,12 @@ current_assertion(Pred, M, TimeCheck, Asr) :-
     current_assertion(Asr, Pred, CM, TimeCheck, _, _, _, _),
     implementation_module(CM:Pred, M).
 
-pred_assertion(Pred, Pred-Asr, Asr).
+pred_assertion(ctcheck, Pred, Pred-Asr, ctcheck(Asr)).
+pred_assertion(rtcheck, Pred, Pred-Asr, rtcheck(Asr)).
 
 collect_assertions(Pred, M, TimeCheck, AsrL) :-
     findall(Pred-Asr, current_assertion(Pred, M, TimeCheck, Asr), Pairs),
-    maplist(pred_assertion(Pred), Pairs, AsrL).
+    maplist(pred_assertion(TimeCheck, Pred), Pairs, AsrL).
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
@@ -116,19 +117,24 @@ proc_ppassertion(PPAssertion, CM, rtc_call(Type, CM:Goal)) :-
 generate_ctchecks(Pred, M, CM, Lits) :-
     functor(Pred, F, A),
     functor(Head, F, A),
-    collect_assertions(Head, M, ctcheck, Assertions0),
-    maplist(abstract_assertions, Assertions0, Assertions),
-				% Abstraction step, here we lose precision
-				% but we gain computability of checks at
-				% earlier, even compile-time. --EMM
-    compat_rtchecks(Assertions, _, [], _, [], _, Lits, []),
+    collect_assertions(Head, M, ctcheck, AsrL),
+    compat_rtchecks(AsrL, _, [], _, [], _, Lits, []),
     qualify_meta_goal(Pred, M, CM, Head). % ???
 
-/*
-%% Trivial abstraction: Check for compatibility issues in properties,
-%% compatibility is an abstraction that makes static check decidable.
-%% The pay-off is a lose of precision. TBD: Formal demostration. --EMM
-abstract_assertions(assr(Asr, Pred, Status, Type, Compat0, Call, Succ, _Comp, ALoc, PredName),
-		    assr(Asr, Pred, Status, Type, Compat, [], [], [], ALoc, PredName)) :-
-    append([Compat0, Call, Succ], Compat).
-*/
+% Trivial abstraction: Check for compatibility issues in properties,
+% compatibility is an abstraction that makes static check decidable.
+% Abstraction step, here we lose precision but we gain computability of checks
+% at earlier, even compile-time. TBD: Formal demostration. --EMM
+:- multifile rtchecks_rt:aprop_asr/4.
+rtchecks_rt:aprop_asr(Key, Prop, From, ctcheck(Asr)) :-
+    prop_abstraction(Key, Abst),
+    prop_asr(Abst, Prop, From, Asr).
+
+prop_abstraction(head, head).
+prop_abstraction(stat, stat).
+prop_abstraction(type, type).
+prop_abstraction(dict, dict).
+prop_abstraction(comm, comm).
+prop_abstraction(comp, comp).
+prop_abstraction(comp, call).
+prop_abstraction(comp, succ).

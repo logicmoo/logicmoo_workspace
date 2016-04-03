@@ -91,21 +91,24 @@ prolog:message(assrchk(Level, Error)) -->
     assr_error_message(Error).
 
 assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
-    { pairs_keys_values(PropValues, Props, ValuesL),
-      append(ValuesL, Values1),
-      include(select_defined, Values1, Values2),
-      sort(Values2, Values)
-    },
     ( {nonvar(ALoc)}
     ->prolog:message_location(ALoc)
     ; []
     ),
     ['Assertion failure for ~q.'-[Pred], nl],
     ['\tIn *~w*, unsatisfied properties: '-[Type], nl],
-    ['\t\t~q.'-[Props]],
+    foldl(prop_values, PropValues).
+
+prop_values(From/Prop-Values) -->
+    ['\t\t'],
+    ( {nonvar(From)}
+    ->prolog:message_location(From)
+    ; []
+    ),
+    ['~q'-[Prop]],
     ( {Values = []}
-    ->[]
-    ; [nl, '\tBecause: ', nl, '\t\t~q.'-[Values]]
+    ->['.']
+    ; [', because: ~q.'-[Values]]
     ),
     [nl].
 

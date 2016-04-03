@@ -30,18 +30,18 @@ test(rtc_external) :-
 		       )),
     assertion(E = [assrchk(ppt(_,_),
 			   error(comp,
-				 functor(A, B, C),
-				 [fails-[not_fails(functor(A, B, C))]],
+				 functor(0, 0, 0),
+				 [_/fails-[not_fails]],
 				 _)),
 		   assrchk(ppt(_,_),
 		   	   error(success,
-		   		 functor(A, B, C),
-		   		 [(libprops:atm(B))-[B=0 ]],
+		   		 functor(0, 0, 0),
+		   		 [_/(libprops:atm(0))-[]],
 		   		 _)),
 		   assrchk(ppt(_,_),
 			   error(success,
-				 functor(A, B, C),
-				 [(rtc_external:atom(B))-[B=0 ]],
+				 functor(0, 0, 0),
+				 [_/(rtc_external:atom(0))-[]],
 				 _))]).
 
 test(rtcompile) :-
@@ -61,7 +61,7 @@ test(rtexec1) :-
     load_rtchecks(E),
     assertion(E=[assrchk(ppt(_,_),
 			 error(pp_check, check/1,
-			       [(rtchecks_example3: (0>0 ))-[]], _))]).
+			       [_/(rtchecks_example3: (0>0 ))-[]], _))]).
 
 test(rtexec2) :-
     intercept(do_trace_rtc(test1), Error, print_message(information, Error)).
@@ -70,10 +70,10 @@ test(rtexec3) :-
     ignore(save_rtchecks(do_trace_rtc(p(_)))),
     load_rtchecks(E),
     assertion(E=[assrchk(ppt(rtchecks_example3:r/0,
-			     clause_pc(_, 7)), error(comp, qq, [not_fails-[fails(qq)]],
+			     clause_pc(_, 7)), error(comp, qq, [file(_, _, _, _)/not_fails-[fails]],
 						     file(_, _, _, _))),
 		 assrchk(ppt(rtchecks_example3:p/1,
-			     clause_pc(_, 3)), error(comp, r, [det-[fails(r)]],
+			     clause_pc(_, 3)), error(comp, r, [file(_, _, _, _)/det-[fails]],
 						     file(_, _, _, _)))]).
 
 test(rtgen) :-

@@ -1,4 +1,5 @@
-:- module(rtchecks_rt, [rtcheck_goal/4,
+:- module(rtchecks_rt, [rtcheck_goal/3,
+			rtcheck_goal/4,
 			rtc_call/2
 		       ]).
 
@@ -17,35 +18,41 @@
 :- doc(module, "This module contains the predicates that are
 	required to implement run-time checks.").
 
+:- multifile
+    aprop_asr/4.
+
+% Extensible accessor to assertion properties, ideal to have different views of
+% assertions, or to extend the assertions
+aprop_asr(Key, Prop, From, rtcheck(Asr)) :-
+    prop_asr(Key, Prop, From, Asr).
+
 :- meta_predicate checkif_modl(?, ?, 0, ?, 0).
 checkif_modl(M, M,    _,    _, Goal) :- !, call(Goal).
 checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 
 :- public with_assertion/2.
 :- meta_predicate with_assertion(0, ?).
-with_assertion(Comp, Asr) :-
+with_assertion(Comp, rtcheck(Asr)) :-
     with_value(Comp, '$with_assertion', Asr).
+
+:- public with_gloc/2.
+:- meta_predicate with_gloc(0, ?).
+with_gloc(Comp, GLoc) :-
+    with_value(Comp, '$with_gloc', GLoc).
 
 rtcheck_cond(Cond, Check, PredName) :-
     ( Cond
-    ->send_rtcheck([Check-[]], pp_check, PredName, _)
+    ->send_rtcheck([_/Check-[]], pp_check, PredName, _)
     ; true
     ).
 
 check_asr_props(Asr, Part, Check, Mult, PropValues) :-
-    findall(PropN-NVL,
-	    ( prop_asr(Part, Prop, _, Asr),
+    findall(From/Prop-[],
+	    ( aprop_asr(Part, Prop, From, Asr),
 	      \+ check_prop(Check, Prop),
-	      no_bindings_asr(Asr, AsrN),
-	      prop_asr(Part, PropN, _, AsrN),
-	      term_variables(PropN, NL),
-	      copy_term(PropN-NL, Prop-VL),
-	      maplist(varnamep, VL, NL, NVL),
 	      (Mult = once -> ! ; true)
 	    ),
 	    PropValues).
-
-varnamep(Var, Name, Name=Var).
 
 check_prop(compat,   Prop) :- compat(  Prop).
 check_prop(instance, Prop) :- instance(Prop).
@@ -78,7 +85,7 @@ check_asr_props(Part, Check, Call, Asr-PropValues) :-
     check_asr_props(Asr, Part, Check, Call, PropValues).
 
 send_rtcheck_asr(PType, Asr-PropValues) :-
-    asr_head_prop(Asr, _, Pred, _, _, _, ALoc),
+    aprop_asr(head, _:Pred, ALoc, Asr),
     send_rtcheck(PropValues, PType, Pred, ALoc).
 
 :- meta_predicate checkif_asr_props(+,+,+,+,+,1).
@@ -90,17 +97,26 @@ checkif_asr_props([], Asr, PType, Part, Check, Call) :-
 :- meta_predicate checkif_asrs_comp(+, 0).
 checkif_asrs_comp([], Goal) :- call(Goal).
 checkif_asrs_comp([Asr-PVL|AsrL], Goal1) :-
-    notrace(checkif_asr_comp(PVL, Asr, Goal1, Goal)),
+    %notrace
+    (checkif_asr_comp(PVL, Asr, Goal1, Goal)),
     checkif_asrs_comp(AsrL, Goal).
 
-valid_commands([_:times(_, _), _:try_sols(_, _)]). % Legacy
+valid_command(times(_, _)).
+valid_command(try_sols(_, _)). % Legacy
 
 checkif_asr_comp([_|_], _, Goal,  Goal).
 checkif_asr_comp([],  Asr, Goal1, with_assertion(Goal, Asr)) :-
-    collect_prop(asr_glob(Asr), user, GlobL1),
-    valid_commands(CommL),
-    subtract(GlobL1, CommL, GlobL),
-    comps_to_goal(GlobL, Goal, Goal1).
+    findall(g(Asr, M, Glob, Loc),
+	    ( aprop_asr(glob, M:Glob, Loc, Asr),
+	      \+ valid_command(Glob)
+	    ), GlobL),
+    comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal, Goal1).
+
+comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), with_gloc(M:Glob, Loc), Goal) :-
+    arg(1, Glob, Goal).
+
+:- meta_predicate rtcheck_goal(0, +, +).
+rtcheck_goal(CM:Goal, M, AsrL) :- rtcheck_goal(Goal, M, CM, AsrL).
 
 rtcheck_goal(Goal, M, CM, AsrL) :-
     checkif_modl(M, CM,
@@ -183,17 +199,18 @@ check_asrs_pre(AsrL, CompST, CallST, SuccST, GlobST,
     subtract(AsrSuccL,  AsrCallL, DAsrSuccL),
     prop_rtchecks(AsrL, GlobST,   Level, AsrGlobL ),
     subtract(AsrGlobL,  AsrCallL, DAsrGlobL),
-    check_asrs_props(compat,    AsrCompL ),
-    check_asrs_props(calls,     AsrCallL ),
-    check_asrs_props(success,   DAsrSuccL),
-    check_asrs_props(comp,      DAsrGlobL).
+    check_asrs_props(compat,  AsrCompL ),
+    check_asrs_props(calls,   AsrCallL ),
+    check_asrs_props(success, DAsrSuccL),
+    check_asrs_props(comp,    DAsrGlobL).
 
 prop_rtchecks(AsrL0, IsStatusType, Level, AsrPVL) :-
     include(is_prop_rtcheck(IsStatusType, Level), AsrL0, AsrL),
     pairs_keys_values(AsrPVL, AsrL, _PValuesL).
 
 is_prop_rtcheck(IsValidType, Level, Asr) :-
-    asr_head_prop(Asr, _, _, Status, Type, _, _),
+    aprop_asr(stat, Status, _, Asr),
+    aprop_asr(type, Type,   _, Asr),
     call(IsValidType, Level, Type),
     is_valid_status_type(Status, Type).
 
