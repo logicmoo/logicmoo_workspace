@@ -367,7 +367,7 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 
 apply_all_rules(ABox0,ABox):-
   apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox0,ABox1),
-  (ABox0=ABox1 *-> 
+  (ABox0=ABox1 -> 
   ABox=ABox1;
   apply_all_rules(ABox1,ABox)).
   
@@ -376,7 +376,7 @@ apply_det_rules([],ABox0,ABox):-
   
 apply_det_rules([H|_],ABox0,ABox):-
   %C=..[H,ABox,ABox1],
-  call(H,ABox0,ABox),!.
+  once(call(H,ABox0,ABox)).
 
 apply_det_rules([_|T],ABox0,ABox):-
   apply_det_rules(T,ABox0,ABox).
@@ -386,7 +386,7 @@ apply_nondet_rules([],ABox,ABox).
 
 apply_nondet_rules([H|_],ABox0,ABox):-
   %C=..[H,ABox,L],
-  call(H,ABox0,L),!,
+  once(call(H,ABox0,L)),
   member(ABox,L),
   dif(ABox0,ABox).
 
@@ -406,7 +406,7 @@ apply_det_rules([],ABox,ABox).
 
 apply_det_rules([H|_],ABox0,ABox):-
   %C=..[H,ABox,ABox1],
-  call(H,ABox0,ABox),!.
+  once(call(H,ABox0,ABox)).
 
 apply_det_rules([_|T],ABox0,ABox):-
   apply_det_rules(T,ABox0,ABox).
@@ -417,9 +417,9 @@ apply_nondet_rules([],ABox0,ABox):-
 
 apply_nondet_rules([H|_],ABox0,ABox):-
   %C=..[H,ABox,L],
-  call(H,ABox0,L),
+  once(call(H,ABox0,L)),
   member(ABox,L),
-  dif(ABox0,ABox),!.
+  dif(ABox0,ABox).
 
 apply_nondet_rules([_|T],ABox0,ABox):-
   apply_nondet_rules(T,ABox0,ABox).
@@ -2075,7 +2075,9 @@ compute_prob(Expl,Prob):-
   %writeln('assert'),
   assert(rule_n(0)),
   %writeln('test'),
-  init_test(50,Env),
+  get_trill_current_module(Name),
+  findall(1,Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
+  init_test(NV,Env),
   %writeln('build_bdd'),%trace,
   build_bdd(Env,Expl,BDD),
   %writeln('ret_prob'),
