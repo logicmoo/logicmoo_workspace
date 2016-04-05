@@ -25,7 +25,8 @@
 %:-['trillProbComputation'].
 
 :- thread_local
-	ind/1.
+	ind/1,
+	exp_found/1.
 
 %:- yap_flag(unknown,fail).
 :- multifile
@@ -35,6 +36,7 @@
 	owl2_model:namedIndividual/1,
 	owl2_model:objectProperty/1,
 	owl2_model:dataProperty/1,
+	owl2_model:transitiveProperty/1,
         owl2_model:classAssertion/2,
         owl2_model:propertyAssertion/3,
         owl2_model:subPropertyOf/2,
@@ -135,6 +137,7 @@ sub_class(Class,SupClass):-
 
 instanceOf(Class,Ind,Expl):-
   ( check_query_args([Class,Ind]) *->
+	retractall(exp_found(_)),
 	retractall(ind(_)),
   	assert(ind(1)),
   	build_abox((ABox,Tabs)),
@@ -142,7 +145,7 @@ instanceOf(Class,Ind,Expl):-
   	add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	find_expls(L,[],Expl),
+  	find_expls(L,Expl),
   	dif(Expl,[])
     ;
     	Expl = ["IRIs not existent"],!
@@ -153,7 +156,9 @@ instanceOf(_,_,_):-
 
 instanceOf(Class,Ind):-
   (  check_query_args([Class,Ind]) *->
-	(  retractall(ind(_)),
+	(  
+	  retractall(exp_found(_)),
+	  retractall(ind(_)),
 	  assert(ind(1)),
 	  build_abox((ABox,Tabs)),
 	  \+ clash((ABox,Tabs),_),!,
@@ -170,6 +175,7 @@ instanceOf(_,_):-
   write('Inconsistent ABox').
 
 unsat(Concept,Expl):-
+  retractall(exp_found(_)),
   retractall(ind(_)),
   assert(ind(2)),
   build_abox((ABox,Tabs)),
@@ -177,13 +183,14 @@ unsat(Concept,Expl):-
   add(ABox,(classAssertion(Concept,1),[]),ABox0),
   %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,[],Expl),
+  find_expls(L,Expl),
   dif(Expl,[]).
 
 unsat(_,_):-
   write('Inconsistent ABox').
 
 unsat(Concept):-
+  retractall(exp_found(_)),
   retractall(ind(_)),
   assert(ind(2)),
   build_abox((ABox,Tabs)),
@@ -197,14 +204,16 @@ unsat(_):-
   write('Inconsistent ABox').
 
 inconsistent_theory(Expl):-
+  retractall(exp_found(_)),
   retractall(ind(_)),
   assert(ind(1)),
   build_abox((ABox,Tabs)),
   findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,[],Expl),
+  find_expls(L,Expl),
   dif(Expl,[]).
 
 inconsistent_theory:-
+  retractall(exp_found(_)),
   retractall(ind(_)),
   assert(ind(1)),
   build_abox((ABox,Tabs)),
@@ -259,12 +268,31 @@ prob_inconsistent_theory(P):-
   all_inconsistent_theory(Exps),
   compute_prob(Exps,P).
 
-find_expls([],Expl,Expl).
+find_expls([],[]).
 
-find_expls([ABox|T],Expl0,Expl):-
+find_expls([ABox|_T],E):-
   clash(ABox,E),
-  append(Expl0,E,Expl1),
-  find_expls(T,Expl1,Expl).
+  findall(Exp,exp_found(Exp),Expl),
+  not_already_found(Expl,E),
+  assert(exp_found(E)).
+
+find_expls([_ABox|T],Expl):-
+  \+ length(T,0),
+  find_expls(T,Expl).
+
+not_already_found([],_E):-!.
+
+not_already_found([H|_T],E):-
+  subset(H,E),!,
+  fail.
+  
+not_already_found([H|_T],E):-
+  subset(E,H),!,
+  retract(exp_found(H)).
+
+not_already_found([_H|T],E):-
+  not_already_found(T,E).
+
 
 
 all_sub_class(Class,SupClass,LE):-
@@ -591,17 +619,20 @@ scan_and_list([_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
 or_rule((ABox0,Tabs0),L):-
   find((classAssertion(unionOf(LC),Ind),Expl),ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
-  findall((ABox1,Tabs0),scan_or_list(LC,Ind,Expl,ABox0,Tabs0, ABox1),L),
+  length(LC,NClasses),
+  findall((ABox1,Tabs0),scan_or_list(LC,NClasses,Ind,Expl,ABox0,Tabs0, ABox1),L),
   dif(L,[]),!.
 
 %---------------
-scan_or_list([],_Ind,_Expl,ABox,_Tabs,ABox).
+scan_or_list([C],1,Ind,Expl,ABox, Tabs, [(classAssertion(C,Ind),Expl)|ABox]):-
+  absent(classAssertion(C,Ind),Expl,(ABox,Tabs)),!.
 
-scan_or_list([C|_T],Ind,Expl,ABox, Tabs, [(classAssertion(C,Ind),Expl)|ABox]):-
+scan_or_list([C|_T],_NClasses,Ind,Expl,ABox, Tabs, [(classAssertion(C,Ind),Expl)|ABox]):-
   absent(classAssertion(C,Ind),Expl,(ABox,Tabs)).
 
-scan_or_list([_C|T],Ind,Expl,ABox0,Tabs, ABox):-
-  scan_or_list(T,Ind,Expl,ABox0, Tabs,ABox).
+scan_or_list([_C|T],NClasses,Ind,Expl,ABox0,Tabs, ABox):-
+  NC is NClasses - 1,
+  scan_or_list(T,NC,Ind,Expl,ABox0, Tabs,ABox).
 /* ***************+ */
 
 /*
@@ -842,38 +873,47 @@ find_sub_sup_class(C,D,equivalentClasses(L)):-
  *******************
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  subClassOf(A,B),
+  get_trill_current_module(Name),
+  Name:subClassOf(A,B),
   member(C,[A,B]),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  classAssertion(C,_),!.
+  get_trill_current_module(Name),
+  Name:classAssertion(C,_),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(C,L),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  unionOf(L),
+  get_trill_current_module(Name),
+  Name:unionOf(L),
   member(C,L),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(someValuesFrom(_,C),L),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(allValuesFrom(_,C),L),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(minCardinality(_,_,C),L),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(maxCardinality(_,_,C),L),!.
 
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
-  equivalentClasses(L),
+  get_trill_current_module(Name),
+  Name:equivalentClasses(L),
   member(exactCardinality(_,_,C),L),!.
 
 */
