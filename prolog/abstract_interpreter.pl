@@ -29,6 +29,7 @@
 
 :- module(abstract_interpreter, [abstract_interpreter/3,
 				 abstract_interpreter/5,
+				 abstract_interpreter/6,
 				 match_head/7,
 				 match_head_body/4,
 				 bottom/2,
@@ -48,6 +49,7 @@
     match_ai(*,*,*,*,*,*,*,*),
     match_noloops(*,*,*,*,*,*,*),
     abstract_interpreter(+,+,7,+,-),
+    abstract_interpreter(+,+,7,+,+,-),
     abstract_interpreter(?,7,?).
 
 :- multifile
@@ -133,9 +135,6 @@ abstract_interpreter_body(M:Goal, _, Abs, State) --> !,
     abstract_interpreter_body(Goal, M, Abs, State).
 abstract_interpreter_body(call(Goal), M, Abs, State) --> !,
     cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
-abstract_interpreter_body(CallN, M, Abs, State) -->
-    {do_resolve_calln(CallN, Goal)}, !,
-    cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
 abstract_interpreter_body(\+ A, M, Abs, State) --> !,
     \+ cut_to(abstract_interpreter_body(A, M, Abs, State)).
 abstract_interpreter_body(once(Goal), M, Abs, State, S0, S) :- !,
@@ -160,16 +159,22 @@ abstract_interpreter_body((A, B), M, Abs, State) --> !,
       }
     ).
 abstract_interpreter_body((A->B;C), M, Abs, State) --> !,
-    ( interpret_local_cut(A, B, M, Abs, State, CutElse)
-    *->{ CutElse = no }
-    ; abstract_interpreter_body(C, M, Abs, State)
+    {SCE = s(no)},
+    ( interpret_local_cut(A, B, M, Abs, State, CutElse),
+      {nb_setarg(1, SCE, CutElse)}
+    ; ( {SCE = s(no)}
+      ->abstract_interpreter_body(C, M, Abs, State)
+      )
     ).
 abstract_interpreter_body((A;B), M, Abs, State) --> !,
     ( abstract_interpreter_body(A, M, Abs, State)
     ; abstract_interpreter_body(B, M, Abs, State)
     ).
 abstract_interpreter_body(A->B, M, Abs, State) --> !,
-    interpret_local_cut(A, B, M, Abs, State, no).
+    interpret_local_cut(A, B, M, Abs, State, _).
+abstract_interpreter_body(CallN, M, Abs, State) -->
+    {do_resolve_calln(CallN, Goal)}, !,
+    cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
 
 % CutElse make the failure explicit wrt. B
 interpret_local_cut(A, B, M, Abs, State, CutElse) -->
@@ -179,21 +184,21 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     },
     cut_to(abstract_interpreter_body(A, M, Abs, State)), % loose of precision
     ( \+ is_bottom
-    ->!
+    ->!,
+      { CutElse = yes }
     ; []
     ),
     ( abstract_interpreter_body(B, M, Abs, State)
     *->
-      { CutElse = no  }
+      []
     ; { CutOnFail = true
-      ->!
+      ->cut_if_no_bottom
       ; true
-      },
-      { CutElse = yes }
+      }
     ).
 abstract_interpreter_body(!,    _, _, _) --> !, cut_if_no_bottom.
 abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
-abstract_interpreter_body(A\=B, _, _, _) --> !, {A\=B}.
+abstract_interpreter_body(A\=B, _, _, _) --> !, ( \+ is_bottom -> {A\=B} ; {A\==B} ).
 abstract_interpreter_body(true, _, _, _) --> !.
 abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
 abstract_interpreter_body(H, M, Abs, State) -->
@@ -238,7 +243,7 @@ abstract_interpreter(H, M, Abs, State0 ) -->
 	fail
       }
     ; call(Abs, Goal, M, CM:Body, State0, State),
-      abstract_interpreter_body(Body, CM, Abs, State)
+      cut_to(abstract_interpreter_body(Body, CM, Abs, State))
     ).
 
 % top: empty set

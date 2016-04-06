@@ -27,7 +27,8 @@
     the GNU General Public License.
 */
 
-:- module(abstract_slicer, [abstract_slice/3]).
+:- module(abstract_slicer, [abstract_slice/3,
+			    slicer_abstraction/9]).
 
 :- use_module(library(abstract_interpreter)).
 
@@ -35,7 +36,8 @@
 
 abstract_slice(M:Call, Mode, OptL) :-
     apply_mode(Call, Mode, Spec),
-    abstract_interpreter(M:Call, slicer_abstraction(Spec), OptL).
+    option(eval_scope(Scope), OptL, body),
+    abstract_interpreter(M:Call, slicer_abstraction(Spec, Scope), OptL).
 
 apply_mode(Call, Mode, Spec) :-
     functor(Call, F, A),
@@ -54,18 +56,31 @@ apply_mode_arg(N0, Call, Mode, Spec) :-
     apply_mode_arg(N, Call, Mode, Spec).
 apply_mode_arg(_, _, _, _).
 
-slicer_abstraction(Spec, Goal, M, Body,
+slicer_abstraction(Spec, Scope, Goal, M, Body,
 		   state(_,   EvalL, OnErr, Data),
 		   state(Loc, EvalL, OnErr, Data)) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { terms_share(Spec, Goal) % BUG: the sharing should be done wrt all the
                               % body, and not only the current literal --EMM
-    ->match_head_body(Goal, M, Body, Loc)
+    ->match_head_body(Goal, M, Body1, Loc),
+      ( Scope = body
+      ->Body = Body1
+      ;	terms_share(Spec, Goal)
+      ->Body = Body1
+      ; Body = M:true
+      )
     ; % check if the body trivially fails:
-      once(match_head_body(Goal, M, _Body, Loc)),
+      ( Scope = body
+      ->once(match_head_body(Goal, M, _Body, Loc))
+      ; true
+      ),
       Body = M:true
-    }.
-slicer_abstraction(_, Goal, M, M:true, S, S) -->
+    },
+    ( {Scope = head}
+    ->bottom			% Kludge to avoid cut remove solutions
+    ; []
+    ).
+slicer_abstraction(_, _, Goal, M, M:true, S, S) -->
     { S = state(Loc, _, OnError, _),
       call(OnError, error(existence_error(evaluation_rule, M:Goal), Loc))
     },
