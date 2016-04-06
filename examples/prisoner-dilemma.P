@@ -1,0 +1,134 @@
+% prisoner-dilemma.P v 3.0 March 2016
+% jacinto.davila@gmail.com with indications by Fariba Sadri, Miguel Calejo and Bob Kowalski
+
+initial_state([arrested(i), arrested(o)]).
+
+l_timeless(lps_diff(X, Y), [X \== Y]).
+l_timeless(lps_number(People, Size), [length(People, Size)]).
+l_timeless(lps_same(X, Y), [X == Y]).
+l_timeless(lps_diff(X, Y), [X \== Y]).
+l_timeless(lps_less(X, Y), [X < Y]).
+l_timeless(lps_more(X, Y), [X > Y]).
+l_timeless(lps_leq(X, Y), [X =< Y]).
+l_timeless(lps_geq(X, Y), [X >= Y]).
+l_timeless(lps_inc(X, X1), [X1 is X + 1]).
+l_timeless(lps_dec(X, X1), [X1 is X - 1]).
+l_timeless(lps_write(X), [write(X),nl]).
+
+
+reactive_rule(
+	 [happens(start, 0, 1)], 
+    	 [happens(refuse(i), 0, 2)]
+).
+
+%reactive_rule(
+%	 [happens(start, 0, 1)], 
+%    	 [happens(refuse(o), 0, 2)]
+%).
+
+
+%	If the other prisoner refuses at time T, then I refuse at time T+1.
+
+reactive_rule(
+	 [happens(refuse(O), T1, T2), holds(arrested(I), T2), lps_diff(I, O)], 
+    	 [happens(refuse(I), T3, T4), tc(T2 =< T3)]
+).
+
+%	If the other prisoner bears witness at time T, then I bear witness at time T+1.
+
+reactive_rule(
+	[happens(bear_witness(O), T1, T2), holds(arrested(I), T2), lps_diff(I, O)], 
+    	[happens(bear_witness(I), T3, T4), tc(T2 =< T3)]
+).
+
+% I get 0 years jail if I bear witness and the other prisoner refuses.
+
+l_int(holds(get(I, 0), T),
+[
+holds(arrested(I), T),
+holds(arrested(O), T),
+holds(bore_witness(I), T),
+holds(refused(O), T),
+lps_diff(I, O)
+]
+).
+
+% I get 3 years jail if I refuse and the other prisoner bears witness.
+
+l_int(holds(get(I, 3), T),
+[
+holds(arrested(I), T),
+holds(arrested(O), T), 
+holds(refused(I), T),
+holds(bore_witness(O), T), 
+lps_diff(I, O)
+]
+).
+
+% I get 2 years jail if I bear witness and the other prisoner bears witness.
+
+l_int(holds(get(I, 2), T),
+[
+holds(arrested(I), T),
+holds(arrested(O), T), 
+holds(bore_witness(I), T),
+holds(bore_witness(O), T), 
+lps_diff(I, O)
+]
+).
+
+% I get 1 year   jail if I refuse and the other prisoner refuses. 
+
+l_int(holds(get(I, 1), T),
+[
+holds(arrested(I), T),
+holds(arrested(O), T), 
+holds(refused(I), T),
+holds(refused(O), T),
+lps_diff(I, O)
+]
+).
+
+initiated(happens(bear_witness(I), T1, T2), bore_witness(I), []).
+initiated(happens(refuse(I), T1, T2), refused(I), []).
+
+terminated(happens(bear_witness(I), T1, T2), arrested(I), [
+lps_diff(I, O),
+holds(arrested(I), T),
+holds(arrested(O), T),
+holds(refused(O), T)
+]).
+
+l_events(
+happens(arrest(i), T1, T2),
+[]
+).
+
+d_pre([happens(refuse(X), T1, T2), happens(bear_witness(X), T1, T2)]).
+
+% where bore_witness is a fluent initiated by the action bear_witness, and refused is a fluent initiated by the action refuse.
+
+fluent(arrested(_)).
+fluent(bore_witness(_)). 
+fluent(refused(_)). 
+
+action(refuse(_)).
+action(bear_witness(_)).
+
+event(arrest(_)). 
+event(start). 
+
+observe([start], 1).
+observe([], 2).
+observe([], 3).
+observe([], 4).
+observe([], 5).
+observe([], 6).
+
+
+
+
+
+
+
+
