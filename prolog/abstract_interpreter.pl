@@ -191,10 +191,10 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     ( abstract_interpreter_body(B, M, Abs, State)
     *->
       []
-    ; { CutOnFail = true
+    ; ( {CutOnFail = true}
       ->cut_if_no_bottom
-      ; true
-      }
+      ; []
+      )
     ).
 abstract_interpreter_body(!,    _, _, _) --> !, cut_if_no_bottom.
 abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
