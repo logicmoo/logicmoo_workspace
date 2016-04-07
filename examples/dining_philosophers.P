@@ -52,12 +52,7 @@ observe(
 	],
 	1
 ).
-
-observe([], 2).
-observe([], 3).
-observe([], 4).
-observe([], 5).
-observe([], 6).
+observe([], Cycle) :- Cycle>1, Cycle<12. % currently LPS stops when no further obervations exist
 
 fluent(available(_)).
 event(time_to_eat(_)).

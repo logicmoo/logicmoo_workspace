@@ -1640,19 +1640,7 @@ next_time() :-
 
 % go(+File)
 %
-go(File) :-
-    datime_setrand,
-    load_dyn(File),
-    check_syntax,
-    initial_state(IS), assert_list(IS),
-    %check_syntax,
-    expand_reactive_rules,
-    assertz(current_time(1)),
-    assertz(succ_t(0, 1)),
-    assertz(steps(1000)),
-    assertz(current_goal(0)),
-    assertz(depth(0)),
-    (cycle([], [], []); cleanup).
+go(File) :- go(File, []).
 
 go(File, OptionsList) :-
     parse_options(OptionsList),
@@ -1684,22 +1672,22 @@ read_obs(Obs) :-
 
 %
 %
-parse_options([]).
-parse_options([manual|Rest]) :-
+parse_options([]) :- !.
+parse_options([manual|Rest]) :- !, 
     assertz(option(manual)),
     parse_options(Rest).
-parse_options([verbose|Rest]) :-
+parse_options([verbose|Rest]) :- !,
     assertz(option(verbose)),
     parse_options(Rest).
-parse_options([goal_strat(breadth)|Rest]) :-
+parse_options([goal_strat(breadth)|Rest]) :- !,
     assertz(option(breadth)),
     parse_options(Rest).
-parse_options([goal_strat(depth)|Rest]) :-
+parse_options([goal_strat(depth)|Rest]) :- !,
     parse_options(Rest).
-parse_options([priority|Rest]) :-
+parse_options([priority|Rest]) :- !,
     assertz(option(priority)),
     parse_options(Rest).
-parse_options([_|Rest]) :-
+parse_options([O|Rest]) :- write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
     parse_options(Rest).
 
 write_verbose(What) :-
@@ -1768,40 +1756,6 @@ cleanup :-
     retractall(used(_)),
     retractall(this_initiated(_)).
 
-cycle(CAi, Ri, Gi) :-
-    current_time(Time),
-    retractall(happens(_, _, _)),
-    nl,
-    write('===================='),nl,
-    write('Cycle '),write(Time),nl,
-    write('===================='),nl,nl,
-    %datime(Date),
-    %write(Date),nl,
-    %write('Partial reactive rules:'),nl,write(Ri),nl,nl,
-    write('Candidate actions:'),nl,write(CAi),nl,nl,
-    sort(CAi, SortedCAi),
-    select_actions(SortedCAi, [], Actions),
-    write('Selected actions:'),nl,write(Actions),nl,nl,
-    observe(Observations, Time),
-    write('Observations:'),nl,write(Observations),nl,nl,
-    update_all(Observations),
-    findall(Fl, state(Fl), State),
-    write('Database state:'),nl,write(State),nl,nl,
-    process(Ri, NRi, Gi, NGi),
-    write('New partial reactive rules:'),nl,write(NRi),nl,nl,
-    write('New goals:'),nl,pprint_goal(NGi),nl,
-    write('********************'),nl,nl,
-    resolve_tree_breadth(NGi, [], NextGi, [], CA),
-    write('********************'),nl,nl,
-    ( NextGi = [] ->
-        write('Resolved goals:'),nl,write(NextGi),nl
-    ;
-        write('Resolved goals:'),nl,pprint_goal(NextGi)
-    ),
-    !,
-    next_time,
-    cycle(CA, NRi, NextGi).
-
 cycle_options(CAi, Ri, Gi) :-
     current_time(Time),
     retractall(happens(_, _, _)),
@@ -1835,6 +1789,7 @@ cycle_options(CAi, Ri, Gi) :-
     ),
     write_verbose(['New partial reactive rules:',nl,NRi,nl,nl]),
     write_verbose(['New goals:',nl,pprint_goal(NGi),nl]),
+    write('********************'),nl,nl,
     ( option(priority) ->
         ( option(breadth) ->
             resolve_tree_breadth_prio(NGi, [], NewGi, [], CA)
@@ -1849,6 +1804,7 @@ cycle_options(CAi, Ri, Gi) :-
             resolve_tree(NGi, [], NextGi, [], CA)
         )
     ),
+    write('********************'),nl,nl,
     ( NextGi = [] ->
         write('Resolved goals:'),nl,write(NextGi),nl
     ;
