@@ -36,6 +36,8 @@
 	   pretty_path/2
 	  ]).
 
+:- use_module(library(term_size)).
+
 infer_alias(File, CAlias, OptionL) :-
     select_option(sort(SortL), OptionL, _, []),
     findall(SortTerm-Alias,
@@ -53,18 +55,20 @@ sort_field(_, A, alias(L), N) :-
 sort_field(_, A,       sols, N) :-
     findall(A, user:file_search_path(A, _), L),
     length(L, N).
-sort_field(Alias, _, size, N) :-
+sort_field(Alias, _, size, S) :-
+    term_size(Alias, S).
+sort_field(Alias, _, length, N) :-
     term_to_atom(Alias, Atom),
     atom_length(Atom, N).
 
 fastest_alias(File, Alias) :-
-    infer_alias(File, Alias, [sort([sols, size])]).
+    infer_alias(File, Alias, [sort([sols, size, length])]).
 
 library_alias(File, Alias) :-
-    infer_alias(File, Alias, [sort([alias([library]), sols, size])]).
+    infer_alias(File, Alias, [sort([alias([library]), sols, size, length])]).
 
 smallest_alias(File, Alias) :-
-    infer_alias(File, Alias, [sort([size, sols])]).
+    infer_alias(File, Alias, [sort([length, size, sols])]).
 
 current_alias(File, Alias) :-
     user:file_search_path(A0, ADir),
