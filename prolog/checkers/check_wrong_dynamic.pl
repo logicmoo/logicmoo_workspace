@@ -73,6 +73,7 @@ hide_var_dynamic(tabling(_, _), ntabling).
 hide_var_dynamic(match_head_body(_, _, _, _), abstract_interpreter).
 hide_var_dynamic(is_entry_caller(_), check_unused).
 hide_var_dynamic(caller_ptr(_, _, _), check_unused).
+hide_var_dynamic(match_head_1st_arg(_, _, _), check_text).
 hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
 hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
 hide_var_dynamic(walk_from_assertion(_, _, _, _), extra_codewalk).
