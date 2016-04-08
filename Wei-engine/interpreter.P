@@ -12,6 +12,7 @@
 :- import concat_atom/2 from string.
 :- import datime/1 from standard.
 :- import conget/2, conset/2 from machine.
+:- import list_directory/2 from shell.
 
 :- import reactive_conjunct/1, l_int_body/1, l_events_body/1 from preprocessor.
 :- import d_head/1, d_event/1, d_body/1 from preprocessor.
@@ -25,9 +26,13 @@
 
 :- import lps_test_result/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
 :- dynamic lps_test_result/3, lps_test_options/1, lps_failed_test/2.
+% This fact will contain this file's directory:
+:- dynamic lps_engine_directory/1.
 
 :- [bounds].
 :- consult:add_this_lib_dir.
+:- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
+
 ?- load_dyn(db). 
 
 % query(+P)
@@ -1790,6 +1795,19 @@ test(Stage,Cycle,Term) :- option(run_test), !,
 		assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),Test)),
 		fail).
 test(_,_,_).
+
+% test all programs in the LPS examples directory which have a .lpst file present
+test_examples :- 
+	lps_engine_directory(D), 
+	concat_atom([D,'/../examples'], E), expand_filename(E,ED),
+	findall( ProgramFile, (
+		list_directory(ED,F), atom_codes(F,FC), 
+		append(PFcodes,".lpst",FC), atom_codes(PF,PFcodes),
+		concat_atom([ED,'/',PF],ProgramFile)
+		),
+		Files),
+	do_test_suite(Files,[run_test]).
+	
 
 % do_test_suite(Files,Options)  
 %  Options must contain make_test or run_test, optionally more; Files are either LPS or test result files resp.
