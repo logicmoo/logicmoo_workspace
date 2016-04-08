@@ -7,6 +7,10 @@
 :- import (in)/2, (#>)/2, (#<)/2, (#>=)/2, (#=<)/2, (#=)/2, labeling/2 from bounds.
 
 :- import datime_setrand/0, random/3 from random.
+:- import variant/2 from subsumes.
+:- import concat_atom/2 from string.
+:- import datime/1 from standard.
+:- import conget/2, conset/2 from machine.
 
 :- import reactive_conjunct/1, l_int_body/1, l_events_body/1 from preprocessor.
 :- import d_head/1, d_event/1, d_body/1 from preprocessor.
@@ -17,7 +21,10 @@
 :- import steps/1, succ_t/2, susp/1, terminated/3, used/1 from usermod.
 :- import current_goal/1, depth/1, tried/3, failed/3, option/1 from usermod.
 :- import expanded_consequent/2, this_initiated/1 from usermod.
- 
+
+:- import lps_test_result/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
+:- dynamic lps_test_result/3, lps_test_options/1.
+
 :- [bounds].
 :- consult:add_this_lib_dir.
 ?- load_dyn(db). 
@@ -92,12 +99,21 @@ update_all([Ev|Evs]) :-
 % generate_id(GoalId)
 %
 generate_id(GoalId) :-
-    random(10000, 100000, RandN),
-    ( used(RandN) ->
+    % random(10000, 100000, RandN), 
+    % Miguel sees no need for non determinism here, which is bad for tests, so:
+    increment_goal_id(Id) ,
+    ( used(Id) ->
         generate_id(GoalId)
     ;
-        GoalId = RandN
+        GoalId = Id
     ).
+
+increment_goal_id(Id) :- 
+	conget(lps_goal_id_counter,Id), 
+	New is Id+1, conset(lps_goal_id_counter,New).
+
+reset_goal_ids :- 
+	conset(lps_goal_id_counter,10000).
 
 % process(+Ri, -NextRi, +Gi, -NextGi)
 %   Process reactive rules, both partially resolved from previous cycles Ri and
@@ -1643,7 +1659,9 @@ next_time() :-
 go(File) :- go(File, []).
 
 go(File, OptionsList) :-
+    cleanup,
     parse_options(OptionsList),
+    init_test_file(File),
     datime_setrand,
     load_dyn(File),
     check_syntax,
@@ -1659,7 +1677,7 @@ go(File, OptionsList) :-
     assertz(steps(1000)),
     assertz(current_goal(0)),
     assertz(depth(0)),
-    (cycle_options([], [], []); cleanup).
+    (cycle_options([], [], []); close_test_file(File)).
 
 read_obs(Obs) :-
     read(user_input, Obs),
@@ -1670,25 +1688,45 @@ read_obs(Obs) :-
         true
     ).
 
+% parse_options(OptionsList)
 %
-%
-parse_options([]) :- !.
-parse_options([manual|Rest]) :- !, 
+parse_options(Options) :- 
+	% when running a test the options will be imposed by the test file:
+	(member(run_test,Options) -> Options=[_]; true),
+	parse_options_(Options).
+
+parse_options_([]) :- !.
+parse_options_([manual|Rest]) :- !, 
     assertz(option(manual)),
-    parse_options(Rest).
-parse_options([verbose|Rest]) :- !,
+    parse_options_(Rest).
+parse_options_([verbose|Rest]) :- !,
     assertz(option(verbose)),
-    parse_options(Rest).
-parse_options([goal_strat(breadth)|Rest]) :- !,
+    parse_options_(Rest).
+parse_options_([goal_strat(breadth)|Rest]) :- !,
     assertz(option(breadth)),
-    parse_options(Rest).
-parse_options([goal_strat(depth)|Rest]) :- !,
-    parse_options(Rest).
-parse_options([priority|Rest]) :- !,
+    parse_options_(Rest).
+parse_options_([goal_strat(depth)|Rest]) :- !,
+    parse_options_(Rest).
+parse_options_([priority|Rest]) :- !,
     assertz(option(priority)),
-    parse_options(Rest).
-parse_options([O|Rest]) :- write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
-    parse_options(Rest).
+    parse_options_(Rest).
+parse_options_([make_test|Rest]) :- !,
+	(member(run_test,Rest) ->  
+		writeln(user_error, 'ERROR in options: either make_test or runtest.'), fail
+		; true),
+	assertz(option(make_test)),
+	parse_options_(Rest).
+parse_options_([run_test|Rest]) :- !,
+	(member(make_test,Rest) ->  
+		writeln(user_error, 'ERROR in options: either make_test or runtest.'), fail
+		; true),
+	(member(manual,Rest) ->  
+		writeln(user_error, 'ERROR in options: with runtest you can not use ''manual''.'), fail
+		; true),
+	assertz(option(run_test)),
+	parse_options_(Rest).
+parse_options_([O|Rest]) :- write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
+    parse_options_(Rest).
 
 write_verbose(What) :-
     ( option(verbose) ->
@@ -1696,6 +1734,59 @@ write_verbose(What) :-
     ;
         true
     ).
+
+% init_test_file(Filename)
+% Load test file for this program file  
+% if not running tests does nothing
+init_test_file(F) :- option(run_test), !, % guaranteed to be the only option
+	test_filename(F,TF),
+	catch(load_dyn(TF),E,true),
+	(nonvar(E) -> 
+		write(user_error, 'ERROR: could not load test file '), writeln(user_error,TF), fail
+		; true),
+	lps_test_options(Options),
+	% add the options:
+	parse_options(Options).
+init_test_file(_F).
+
+% close_test_file(ProgramFile)
+close_test_file(F) :- option(make_test), !,
+	test_filename(F,TF),
+	telling(Old), tell(TF),
+	datime(Date), fmt_write_string(D,"%d-%02d-%02d at %02d:%02d:%02d",Date),
+	writeln('/*'), write('  LPS test results file generated on '), write(D), writeln(' for program file:'),
+	write('  '), writeln(F), writeln('*/'), nl,
+	writeln('% LPS options prior to the test:'),
+	setof(O,option(O),Options),
+	select(make_test,Options,RealOptions),
+	write(lps_test_options(RealOptions)), writeln('.'), nl,
+	writeln('% lps_test_result(Stage,Cycle,TestTerm)'),
+	G = lps_test_result(_,_,_),
+	(G, writeq(G), writeln('.'), fail ; true),
+	told, tell(Old).
+close_test_file(F) :- option(run_test), !,  
+	test_filename(F,TF),
+	nl,
+	write('*** Tests succeeded with '), write(TF), writeln(' :-) ****').
+close_test_file(_F).
+
+% test_filename(+ProgramFile,-TestFile)
+% Names the test file as the programs's plus '.lpst' (LPS test file)
+test_filename(PF,TF) :- 
+	expand_filename(PF,Path),
+	concat_atom([Path,'.lpst'],TF).
+	
+% test(Stage,Cycle,Term)
+% Remembers or checks that at this Stage and Cycle, Term is obtained
+test(Stage,Cycle,Term) :- option(make_test), !,
+	assert(lps_test_result(Stage,Cycle,Term)).
+test(Stage,Cycle,Term) :- option(run_test), !,
+	% fails if the test fails:
+	( lps_test_result(Stage,Cycle,Test) -> true 
+	  ; write('FAILED test '), writeln(Stage/Cycle/Term), writeln('Missing test fact.'), fail),
+	( variant(Term,Test) -> true
+		; write('FAILED test '), writeln(Stage/Cycle/Term), write('Expected '), writeln(Test), fail).
+test(_,_,_).
 
 do_write([]).
 
@@ -1754,7 +1845,9 @@ cleanup :-
     retractall(terminated(_, _, _)),
     retractall(tried(_, _, _)),
     retractall(used(_)),
-    retractall(this_initiated(_)).
+    reset_goal_ids,
+    retractall(this_initiated(_)),
+    retractall(lps_test_result(_,_,_)).
 
 cycle_options(CAi, Ri, Gi) :-
     current_time(Time),
@@ -1763,20 +1856,24 @@ cycle_options(CAi, Ri, Gi) :-
     write_verbose(['====================',nl]),
     write('* Cycle '),write(Time),write(' *'),nl,
     write_verbose(['====================',nl,nl]),
-    write_verbose(['Candidate actions:',nl,CAi,nl,nl]),
+    StageCA='Candidate actions:',
+    write_verbose([StageCA,nl,CAi,nl,nl]), test(StageCA,Time,CAi),
     sort(CAi, SortedCAi),
     select_actions(SortedCAi, [], Actions),
     retractall(this_initiated(_)),
-    write_verbose(['Selected actions:',nl,Actions,nl,nl]),
+    StageSA='Selected actions:',
+    write_verbose([StageSA,nl,Actions,nl,nl]), test(StageSA,Time,Actions),
     ( option(manual) ->
         read_obs(Observations)
     ;
         observe(Observations, Time)
     ),
-    write_verbose(['Observations:',nl,Observations,nl,nl]),
+    StageO='Observations:',
+    write_verbose([StageO,nl,Observations,nl,nl]), test(StageO,Time,Observations),
     update_all(Observations),
     findall(Fl, state(Fl), State),
-    write_verbose(['Database state:',nl,State,nl,nl]),
+    StageDS='Database state:',
+    write_verbose([StageDS,nl,State,nl,nl]), test(StageDS,Time,State),
     ( option(priority) ->
         process_priority(Ri, NRi, Gi, NGi_P)
     ;
@@ -1787,8 +1884,10 @@ cycle_options(CAi, Ri, Gi) :-
     ;
         true
     ),
-    write_verbose(['New partial reactive rules:',nl,NRi,nl,nl]),
-    write_verbose(['New goals:',nl,pprint_goal(NGi),nl]),
+    StageNPRR='New partial reactive rules:',
+    write_verbose([StageNPRR,nl,NRi,nl,nl]), test(StageNPRR,Time,NRi),
+    StageNG = 'New goals:',
+    write_verbose([StageNG,nl,pprint_goal(NGi),nl]), test(StageNG,Time,NGi),
     write('********************'),nl,nl,
     ( option(priority) ->
         ( option(breadth) ->
@@ -1805,11 +1904,13 @@ cycle_options(CAi, Ri, Gi) :-
         )
     ),
     write('********************'),nl,nl,
+    StageRG='Resolved goals:',
     ( NextGi = [] ->
-        write('Resolved goals:'),nl,write(NextGi),nl
+        write(StageRG),nl,write(NextGi),nl
     ;
-        write('Resolved goals:'),nl,pprint_goal(NextGi),nl
+        write(StageRG),nl,pprint_goal(NextGi),nl
     ),
+    test(StageRG,Time,NextGi),
     !,
     next_time,
     cycle_options(CA, NRi, NextGi).
