@@ -8,6 +8,7 @@
 
 :- import datime_setrand/0, random/3 from random.
 :- import variant/2 from subsumes.
+:- import numbervars/1 from num_vars.
 :- import concat_atom/2 from string.
 :- import datime/1 from standard.
 :- import conget/2, conset/2 from machine.
@@ -1775,7 +1776,7 @@ test_filename(PF,TF) :-
 % test(Stage,Cycle,Term)
 % Remembers or checks that at this Stage and Cycle, Term is obtained
 test(Stage,Cycle,Term) :- option(make_test), !,
-	assert(lps_test_result(Stage,Cycle,Term)).
+	\+ \+ (( numbervars(Term), assert(lps_test_result(Stage,Cycle,Term)) )).
 test(Stage,Cycle,Term) :- option(run_test), !,
 	% fails if the test fails:
 	( lps_test_result(Stage,Cycle,Test) -> true 
