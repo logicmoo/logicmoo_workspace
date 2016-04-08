@@ -1660,6 +1660,12 @@ next_time() :-
     retract(steps(_)),
     assertz(steps(1000)).
 
+% go_lps(File,Options)  Same as go/2; for the sake of compatibility with Wei's thesis
+go_lps(File,Options) :- go(File,Options).
+
+% go_lps(File,Options)  Same as go/1
+go_lps(File) :- go(File).
+
 % go(+File)
 %
 go(File) :- go(File, []).
