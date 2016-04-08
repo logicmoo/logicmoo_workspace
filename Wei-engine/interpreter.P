@@ -23,7 +23,7 @@
 :- import expanded_consequent/2, this_initiated/1 from usermod.
 
 :- import lps_test_result/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
-:- dynamic lps_test_result/3, lps_test_options/1.
+:- dynamic lps_test_result/3, lps_test_options/1, lps_failed_test/2.
 
 :- [bounds].
 :- consult:add_this_lib_dir.
@@ -1711,21 +1711,16 @@ parse_options_([priority|Rest]) :- !,
     assertz(option(priority)),
     parse_options_(Rest).
 parse_options_([make_test|Rest]) :- !,
-	(member(run_test,Rest) ->  
-		writeln(user_error, 'ERROR in options: either make_test or runtest.'), fail
+	(member(manual,Rest) ->  
+		writeln(user_error, 'ERROR in options: with make_test you can not use ''manual''.'), fail
 		; true),
 	assertz(option(make_test)),
 	parse_options_(Rest).
 parse_options_([run_test|Rest]) :- !,
-	(member(make_test,Rest) ->  
-		writeln(user_error, 'ERROR in options: either make_test or runtest.'), fail
-		; true),
-	(member(manual,Rest) ->  
-		writeln(user_error, 'ERROR in options: with runtest you can not use ''manual''.'), fail
-		; true),
 	assertz(option(run_test)),
 	parse_options_(Rest).
-parse_options_([O|Rest]) :- write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
+parse_options_([O|Rest]) :- 
+    write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
     parse_options_(Rest).
 
 write_verbose(What) :-
@@ -1767,7 +1762,8 @@ close_test_file(F) :- option(make_test), !,
 close_test_file(F) :- option(run_test), !,  
 	test_filename(F,TF),
 	nl,
-	write('*** Tests succeeded with '), write(TF), writeln(' :-) ****').
+	( \+ lps_failed_test(_,_) -> Result=' (ok)'; Result=' (FAILED)'),
+	write('*** Tests ended with '), write(TF), write(Result), writeln(' ****').
 close_test_file(_F).
 
 % test_filename(+ProgramFile,-TestFile)
@@ -1783,10 +1779,40 @@ test(Stage,Cycle,Term) :- option(make_test), !,
 test(Stage,Cycle,Term) :- option(run_test), !,
 	% fails if the test fails:
 	( lps_test_result(Stage,Cycle,Test) -> true 
-	  ; write('FAILED test '), writeln(Stage/Cycle/Term), writeln('Missing test fact.'), fail),
+	  ; 
+	  	write('FAILED test '), writeln(Stage/Cycle/Term), 
+	  	writeln('Missing test fact.'), assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),missing_fact)), 
+	  	fail),
 	( variant(Term,Test) -> true
-		; write('FAILED test '), writeln(Stage/Cycle/Term), write('Expected '), writeln(Test), fail).
+		; 
+		write('FAILED test '), writeln(Stage/Cycle/Term), write('Expected '), writeln(Test), 
+		assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),Test)),
+		fail).
 test(_,_,_).
+
+% do_test_suite(Files,Options)  
+%  Options must contain make_test or run_test, optionally more; Files are either LPS or test result files resp.
+
+do_test_suite(Files,Options) :-
+	(member(run_test,Options);member(make_test,Options)), 
+	!,
+	writeln('*** Starting test suite, will report at the end...'),
+	do_test_suite(Files,Options,Results),
+	nl, write('*** Test suite ended ('), write(Options), writeln('):'),
+	( member(F-R,Results), write(F), write(': '), writeln(R), fail; true),
+	writeln('*** End of test suite results').
+
+% do_test_suite(Files,Options,Results)  Results is a list of File - ok/failed
+do_test_suite([],_Option,[]) :- !.
+do_test_suite([F|Files],Options,[F-R|Results]) :- 
+	expand_filename(F,Path),
+	go(Path,Options),
+	( \+ lps_failed_test(_,_) -> R=ok 
+	; 
+	findall(LPSR/Expected,lps_failed_test(LPSR,Expected),Failures), R=failed(Failures) 
+	),
+	do_test_suite(Files,Options,Results).
+	
 
 do_write([]).
 
@@ -1847,6 +1873,7 @@ cleanup :-
     retractall(used(_)),
     reset_goal_ids,
     retractall(this_initiated(_)),
+    retractall(lps_failed_test(_,_)),
     retractall(lps_test_result(_,_,_)).
 
 cycle_options(CAi, Ri, Gi) :-
