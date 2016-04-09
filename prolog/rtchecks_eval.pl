@@ -5,8 +5,8 @@
 :- use_module(library(assrt_lib)).
 :- use_module(library(rtchecks_gen)).
 :- use_module(library(implementation_module)).
-:- use_module(library(qualify_meta_goal)).
 :- use_module(library(resolve_calln)).
+:- use_module(library(qualify_meta_goal)).
 
 :- meta_predicate rtchecks_eval(0).
 rtchecks_eval(M:Goal) :-
@@ -63,9 +63,10 @@ generate_pred_rtchecks(Goal, M, CM, RTChecks) :-
     ( asr_head_prop(_, AM, Goal, _, prop, _, _),
       implementation_module(AM:Goal, M)
     ->RTChecks = CM:Goal
-    ; ( collect_assertions(Goal, M, rtcheck, AsrL),
+    ; ( qualify_meta_goal(Goal, M, CM, Pred),
+        collect_assertions(Pred, M, rtcheck, AsrL),
 	AsrL \= []
-      ->RTChecks = rtchecks_rt:rtcheck_goal(Goal, M, CM, AsrL)
+      ->RTChecks = rtchecks_rt:rtcheck_goal(Pred, M, CM, AsrL)
       ; RTChecks = CM:Goal
       )
     ).

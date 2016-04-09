@@ -6,10 +6,8 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(assrt_lib)).
-:- use_module(library(basicprops)).
-:- use_module(library(lists)).
-:- use_module(library(qualify_meta_goal)).
 :- use_module(library(implementation_module)).
+:- use_module(library(qualify_meta_goal)).
 
 /*
 
@@ -96,12 +94,12 @@ current_assertion(Pred, M, TimeCheck, Asr) :-
     current_assertion(Asr, Pred, CM, TimeCheck, _, _, _, _),
     implementation_module(CM:Pred, M).
 
-pred_assertion(ctcheck, Pred, Pred-Asr, ctcheck(Asr)).
-pred_assertion(rtcheck, Pred, Pred-Asr, rtcheck(Asr)).
+pred_assertion(ctcheck, Pred, Pred-Asr) --> [ctcheck(Asr)].
+pred_assertion(rtcheck, Pred, Pred-Asr) --> [rtcheck(Asr)].
 
 collect_assertions(Pred, M, TimeCheck, AsrL) :-
     findall(Pred-Asr, current_assertion(Pred, M, TimeCheck, Asr), Pairs),
-    maplist(pred_assertion(TimeCheck, Pred), Pairs, AsrL).
+    foldl(pred_assertion(TimeCheck, Pred), Pairs, AsrL, []).
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
@@ -111,22 +109,28 @@ ppassertion_type_goal(false(Goal), false, Goal).
 proc_ppassertion(PPAssertion, CM, rtc_call(Type, CM:Goal)) :-
     ppassertion_type_goal(PPAssertion, Type, Goal).
 
-% Generate compile-time checks, currently only compatibility is checked,
-% fails if no ctchecks can be applied to Pred
+% Generate compile-time checks, currently only compatibility is checked, fails
+% if no ctchecks can be applied to Pred. Note that CM can be a variable, to
+% allow tabling of the result and CM to be instantiated later.
 %
-generate_ctchecks(Pred, M, CM, Lits) :-
-    functor(Pred, F, A),
-    functor(Head, F, A),
-    collect_assertions(Head, M, ctcheck, AsrL),
-    compat_rtchecks(AsrL, _, [], _, [], _, Lits, []),
-    qualify_meta_goal(Pred, M, CM, Head). % ???
+generate_ctchecks(Goal, M, CM, CTChecks) :-
+    qualify_meta_goal(Goal, M, CM, Pred),
+    collect_assertions(Pred, M, ctcheck, AsrL),
+    ( AsrL \= []
+    ->CTChecks = rtchecks_gen:ctcheck_goal(AsrL)
+    ; CTChecks = rtchecks_rt:true
+    ).
+
+:- public ctcheck_goal/1.
+ctcheck_goal(AsrL) :-
+    pairs_keys_values(AsrPVL, AsrL, _),
+    rtchecks_rt:check_asrs_props(compat, AsrPVL).
 
 % Trivial abstraction: Check for compatibility issues in properties,
 % compatibility is an abstraction that makes static check decidable.
 % Abstraction step, here we lose precision but we gain computability of checks
 % at earlier, even compile-time. TBD: Formal demostration. --EMM
-:- multifile rtchecks_rt:aprop_asr/4.
-rtchecks_rt:aprop_asr(Key, Prop, From, ctcheck(Asr)) :-
+assrt_lib:asr_aprop(ctcheck(Asr), Key, Prop, From) :-
     prop_abstraction(Key, Abst),
     prop_asr(Abst, Prop, From, Asr).
 

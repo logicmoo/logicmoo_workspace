@@ -78,7 +78,7 @@ black_list_module(rtchecks_eval).
 black_list_module(rtchecks_tracer).
 black_list_module(rtchecks_utils).
 black_list_module(rtchecks_basic).
-% black_list_module(context_values).
+black_list_module(context_values).
 black_list_module('$expand').
 black_list_module('$messages').
 black_list_module(complete_dict).

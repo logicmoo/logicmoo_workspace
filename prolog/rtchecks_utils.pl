@@ -5,7 +5,6 @@
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
 :- use_module(library(plprops)).
-:- use_module(library(lists)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(filtered_backtrace)).
 :- use_module(library(intercept)).
@@ -77,9 +76,6 @@ prolog:error_message(unintercepted_signal(Signal)) -->
 
 prolog:message(acheck(checks, RTChecks)) -->
     foldl(prolog:message, RTChecks).
-
-select_defined(_=V) :- !, nonvar(V).
-select_defined(_).
 
 assr_level_message(asr) --> [].
 assr_level_message(ppt(Caller, Loc)) -->

@@ -1,12 +1,14 @@
-:- module(rtchecks_rt, [rtcheck_goal/3,
+:- module(rtchecks_rt, [rtcheck_goal/2,
 			rtcheck_goal/4,
 			rtc_call/2
 		       ]).
 
 :- use_module(library(assertions)).
 :- use_module(library(termtyping), []). % assertions about builtins
-:- use_module(library(plprops)).
 :- use_module(library(context_values)).
+:- use_module(library(qualify_meta_goal)).
+:- use_module(library(implementation_module)).
+
 :- reexport(library(send_check)).
 :- reexport(library(nativeprops)).
 :- reexport(library(basicprops)).
@@ -18,21 +20,13 @@
 :- doc(module, "This module contains the predicates that are
 	required to implement run-time checks.").
 
-:- multifile
-    aprop_asr/4.
-
-% Extensible accessor to assertion properties, ideal to have different views of
-% assertions, or to extend the assertions
-aprop_asr(Key, Prop, From, rtcheck(Asr)) :-
-    prop_asr(Key, Prop, From, Asr).
-
 :- meta_predicate checkif_modl(?, ?, 0, ?, 0).
 checkif_modl(M, M,    _,    _, Goal) :- !, call(Goal).
 checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 
 :- public with_assertion/2.
 :- meta_predicate with_assertion(0, ?).
-with_assertion(Comp, rtcheck(Asr)) :-
+with_assertion(Comp, Asr) :-
     with_value(Comp, '$with_assertion', Asr).
 
 :- public with_gloc/2.
@@ -48,7 +42,7 @@ rtcheck_cond(Cond, Check, PredName) :-
 
 check_asr_props(Asr, Part, Check, Mult, PropValues) :-
     findall(From/Prop-[],
-	    ( aprop_asr(Part, Prop, From, Asr),
+	    ( asr_aprop(Asr, Part, Prop, From),
 	      \+ check_prop(Check, Prop),
 	      (Mult = once -> ! ; true)
 	    ),
@@ -85,7 +79,7 @@ check_asr_props(Part, Check, Call, Asr-PropValues) :-
     check_asr_props(Asr, Part, Check, Call, PropValues).
 
 send_rtcheck_asr(PType, Asr-PropValues) :-
-    aprop_asr(head, _:Pred, ALoc, Asr),
+    asr_aprop(Asr, head, _:Pred, ALoc), !,
     send_rtcheck(PropValues, PType, Pred, ALoc).
 
 :- meta_predicate checkif_asr_props(+,+,+,+,+,1).
@@ -97,8 +91,7 @@ checkif_asr_props([], Asr, PType, Part, Check, Call) :-
 :- meta_predicate checkif_asrs_comp(+, 0).
 checkif_asrs_comp([], Goal) :- call(Goal).
 checkif_asrs_comp([Asr-PVL|AsrL], Goal1) :-
-    %notrace
-    (checkif_asr_comp(PVL, Asr, Goal1, Goal)),
+    notrace(checkif_asr_comp(PVL, Asr, Goal1, Goal)),
     checkif_asrs_comp(AsrL, Goal).
 
 valid_command(times(_, _)).
@@ -107,7 +100,7 @@ valid_command(try_sols(_, _)). % Legacy
 checkif_asr_comp([_|_], _, Goal,  Goal).
 checkif_asr_comp([],  Asr, Goal1, with_assertion(Goal, Asr)) :-
     findall(g(Asr, M, Glob, Loc),
-	    ( aprop_asr(glob, M:Glob, Loc, Asr),
+	    ( asr_aprop(Asr, glob, M:Glob, Loc),
 	      \+ valid_command(Glob)
 	    ), GlobL),
     comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal, Goal1).
@@ -115,50 +108,37 @@ checkif_asr_comp([],  Asr, Goal1, with_assertion(Goal, Asr)) :-
 comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), with_gloc(M:Glob, Loc), Goal) :-
     arg(1, Glob, Goal).
 
-:- meta_predicate rtcheck_goal(0, +, +).
-rtcheck_goal(CM:Goal, M, AsrL) :- rtcheck_goal(Goal, M, CM, AsrL).
+:- meta_predicate rtcheck_goal(0, +).
+rtcheck_goal(CM:Goal, AsrL) :-
+    implementation_module(CM:Goal, M),
+    rtcheck_goal(Goal, M, CM, AsrL).
 
 rtcheck_goal(Goal, M, CM, AsrL) :-
     checkif_modl(M, CM,
 		 check_asrs(step1, AsrL, G2), G2,
 		 check_asrs(step2, AsrL, CM:Goal)).
 
-check_asrs(Step, AsrL, Goal) :-
-    step_rtchecks_options(Step, CompST, CallST, SuccST, GlobST),
-    check_asrs(AsrL, CompST, CallST, SuccST, GlobST, Goal).
-
 % ----------------------------------------------------------------------------
-step_rtchecks_options(step1, comp_assrt1, call_assrt1, succ_assrt1, glob_assrt1).
-step_rtchecks_options(step2, comp_assrt2, call_assrt2, succ_assrt2, glob_assrt2).
+% assrt_op(Part, Step, Level, Type).
 
-neg_level(inner,   exports).
-neg_level(exports, inner).
-
-comp_assrt1(exports, pred).
-
-comp_assrt2(inner, pred).
-
-call_assrt1(_,       entry).
-call_assrt1(exports, calls).
-call_assrt1(exports, pred).
-
-call_assrt2(inner, calls).
-call_assrt2(inner, pred).
-
-succ_assrt1(_,     exit).
-succ_assrt1(exports, success).
-succ_assrt1(exports, pred).
-
-succ_assrt2(inner, test).
-succ_assrt2(inner, success).
-succ_assrt2(inner, pred).
-
-glob_assrt1(exports, comp).
-glob_assrt1(exports, pred).
-
-glob_assrt2(inner, test).
-glob_assrt2(inner, comp).
-glob_assrt2(inner, pred).
+assrt_op(comp, step1, exports, pred).
+assrt_op(comp, step2, inner,   pred).
+assrt_op(call, step1, _,       entry).
+assrt_op(call, step1, exports, calls).
+assrt_op(call, step1, exports, pred).
+assrt_op(call, step2, inner,   calls).
+assrt_op(call, step2, inner,   pred).
+assrt_op(succ, step1, _,       exit).
+assrt_op(succ, step1, exports, success).
+assrt_op(succ, step1, exports, pred).
+assrt_op(succ, step2, inner,   test).
+assrt_op(succ, step2, inner,   success).
+assrt_op(succ, step2, inner,   pred).
+assrt_op(glob, step1, exports, comp).
+assrt_op(glob, step1, exports, pred).
+assrt_op(glob, step2, inner,   test).
+assrt_op(glob, step2, inner,   comp).
+assrt_op(glob, step2, inner,   pred).
 
 is_valid_status_type(true, entry) :- current_prolog_flag(rtchecks_entry, yes).
 is_valid_status_type(Status, Type) :-
@@ -180,8 +160,8 @@ rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
 rtcheck_assr_type(success).
 % ----------------------------------------------------------------------------
 
-check_asrs(AsrL, CompST, CallST, SuccST, GlobST, Goal) :-
-    notrace(check_asrs_pre(AsrL, CompST, CallST, SuccST, GlobST,
+check_asrs(Step, AsrL, Goal) :-
+    notrace(check_asrs_pre(Step, AsrL,
 			   AsrGlobL, AsrCompL, AsrSuccL)),
     checkif_asrs_comp(AsrGlobL, Goal),
     notrace(check_asrs_pos(AsrCompL, AsrSuccL)).
@@ -190,33 +170,28 @@ check_asrs_pos(AsrCompL, AsrSuccL) :-
     checkif_asrs_props(compat,  AsrCompL),
     checkif_asrs_props(success, AsrSuccL).
 
-check_asrs_pre(AsrL, CompST, CallST, SuccST, GlobST,
-	       AsrGlobL, AsrCompL, AsrSuccL) :-
+check_asrs_pre(Step, AsrL, AsrGlobL, AsrCompL, AsrSuccL) :-
     current_prolog_flag(rtchecks_level, Level),
-    prop_rtchecks(AsrL, CompST,   Level, AsrCompL ),
-    prop_rtchecks(AsrL, CallST,   Level, AsrCallL ),
-    prop_rtchecks(AsrL, SuccST,   Level, AsrSuccL ),
+    prop_rtchecks(AsrL, comp, Step, Level, AsrCompL),
+    prop_rtchecks(AsrL, call, Step, Level, AsrCallL),
+    prop_rtchecks(AsrL, succ, Step, Level, AsrSuccL),
     subtract(AsrSuccL,  AsrCallL, DAsrSuccL),
-    prop_rtchecks(AsrL, GlobST,   Level, AsrGlobL ),
+    prop_rtchecks(AsrL, glob, Step, Level, AsrGlobL),
     subtract(AsrGlobL,  AsrCallL, DAsrGlobL),
     check_asrs_props(compat,  AsrCompL ),
     check_asrs_props(calls,   AsrCallL ),
     check_asrs_props(success, DAsrSuccL),
     check_asrs_props(comp,    DAsrGlobL).
 
-prop_rtchecks(AsrL0, IsStatusType, Level, AsrPVL) :-
-    include(is_prop_rtcheck(IsStatusType, Level), AsrL0, AsrL),
+prop_rtchecks(AsrL0, Part, Step, Level, AsrPVL) :-
+    include(is_prop_rtcheck(Part, Step, Level), AsrL0, AsrL),
     pairs_keys_values(AsrPVL, AsrL, _PValuesL).
 
-is_prop_rtcheck(IsValidType, Level, Asr) :-
-    aprop_asr(stat, Status, _, Asr),
-    aprop_asr(type, Type,   _, Asr),
-    call(IsValidType, Level, Type),
-    is_valid_status_type(Status, Type).
-
-no_bindings_asr(Asr, AsrN) :-
-    functor(Asr,  I, N),
-    functor(AsrN, I, N).
+is_prop_rtcheck(Part, Step, Level, Asr) :-
+    asr_aprop(Asr, stat, Status, _),
+    asr_aprop(Asr, type,   Type, _),
+    assrt_op(Part, Step, Level, Type),
+    is_valid_status_type(Status, Type), !.
 
 :- meta_predicate rtc_call(+, 0).
 
