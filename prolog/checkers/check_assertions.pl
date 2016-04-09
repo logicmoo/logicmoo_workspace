@@ -33,7 +33,6 @@
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
-:- use_module(library(lists)).
 :- use_module(library(extra_codewalk)).
 :- use_module(library(rtchecks)).
 :- use_module(library(rtchecks_gen)).
@@ -106,23 +105,25 @@ prop_ctcheck(M, FromChk, Trans) :-
     maplist(\ (K-L)^(error-(prop(G)-K))
 	   ^group_pairs_by_key(L, G), Groups, Trans).
 
-current_prop_ctcheck(M, FromChk, (Checker-Issues)-(Loc-PI)) :-
+current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     asr_head_prop(Asr, CM, Head, _, Type, _, From),
     Type \= (test),
     implementation_module(CM:Head, M),
     call(FromChk, From),
     functor(Head, HF,HA),
     PI=M:HF/HA,
-    ( ( asr_comp(Asr, PM, Prop, _)
-      ; asr_call(Asr, PM, Prop, _)
-      ; asr_succ(Asr, PM, Prop, _)
-      ; asr_glob(Asr, PM, Prop, _)
+    ( ( asr_comp(Asr, PM, Prop, PFrom)
+      ; asr_call(Asr, PM, Prop, PFrom)
+      ; asr_succ(Asr, PM, Prop, PFrom)
+      ; asr_glob(Asr, PM, Prop, PFrom)
       ),
       resolve_head(Prop, PM, N:H)
     ),
     checker_t(Checker),
     implementation_module(N:H, IM),
     check_property(Checker, H, IM, PM, Issues),
+    numbervars(Issues, 0, _),
+    from_location(PFrom, PLoc),
     from_location(From, Loc).
 
 prolog:message(acheck(assertions)) -->
@@ -143,17 +144,15 @@ type_issue_t(prop(_), property).
 prop_issue(ctchecks, CTChecks) -->
     prolog:message(acheck(checks, CTChecks)).
 prop_issue(property, Checker-IssueL) -->
-    property_issue(Checker, IssueL).
+    foldl(property_issue(Checker), IssueL).
 
-property_issue(ctcheck, CTChecksL) -->
-    {append(CTChecksL, CTChecks)},
+property_issue(ctcheck, Loc/(PI-CTChecks)) -->
+    ["\t"], Loc, ["In call to ~w:"-[PI], nl],
     prop_issue(ctchecks, CTChecks).
-property_issue(defined, PropL) -->
-    {compact_pi_list(PropL, PropC)},
-    ["\t~w are undefined"-[PropC], nl].
-property_issue(is_prop, PropL) -->
-    {compact_pi_list(PropL, PropC)},
-    ["\t~w are not properties"-[PropC], nl].
+property_issue(defined, Loc/Prop) -->
+    ["\t"], Loc, ["~w is undefined"-[Prop], nl].
+property_issue(is_prop, Loc/Prop) -->
+    ["\t"], Loc, ["~w is not a property"-[Prop], nl].
 
 type_message(body(Loc-PI)) --> Loc, ['In the body of ~q:'-[PI], nl].
 type_message(head(Loc-PI)) --> Loc, ['In the head of ~q:'-[PI], nl].
@@ -214,11 +213,13 @@ check_property(is_prop, H, M, _, M:F/A) :-
     resolve_calln(M:H, M:G),
     functor(G, F, A),
     \+ verif_is_property(M, F, A).
-check_property(ctcheck, H, M, CM, CTChecks) :-
+check_property(ctcheck, H, M, CM, (M:F/A)-CTChecks) :-
 				% compile-time checks. Currently only
 				% compatibility checks.
     check_property_ctcheck(H, M, CM, CTChecks),
-    CTChecks \= [].
+    CTChecks \= [],
+    resolve_calln(M:H, M:G),
+    functor(G, F, A).
 
 %% tabled_generate_ctchecks(+, +, ?, -) is det
 %
