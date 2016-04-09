@@ -2,9 +2,9 @@
 
 :- use_module(library(rtchecks)).
 :- use_module(library(rtchecks_tracer)).
+:- use_module(assrt_meta_ex).
 :- use_module(library(assrt_meta)).
 :- set_prolog_flag(rtchecks_check,  yes).
-:- use_module(assrt_meta_ex).
 
 test(assrt_meta) :-
     save_rtchecks(do_trace_rtc(amtest)),
