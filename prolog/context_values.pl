@@ -62,6 +62,7 @@ current_context_value(Name, Value) :-
     context_name(Name, ContextName),
     nb_current(ContextName, Value).
 
+:- meta_predicate with_value(0, +, +).
 with_value(Goal, Name, NewValue) :-
     with_value(Goal, Name, _, NewValue).
 
@@ -75,6 +76,7 @@ with_context_value(Goal, Name, OldValue, NewValue) :-
     context_name(Name, ContextName),
     with_value(Goal, ContextName, OldValue, NewValue).
 
+:- meta_predicate with_value(0, +, ?, +).
 with_value(Goal, Name, OldValue0, NewValue) :-
     ( nb_current(Name, OldValue) ->
       OldValue0 = OldValue,
