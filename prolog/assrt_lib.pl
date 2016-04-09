@@ -13,6 +13,7 @@
 	   asr_succ/4,
 	   asr_comm/3,
 	   prop_asr/4,
+	   asr_aprop/4,
 	   prop_asr/5,
 	   collect_prop/3,
 	   normalize_assertion_head/7,
@@ -64,11 +65,6 @@ asr_head_prop(Asr, CM, Head, Status, Type, Comm, Dict, Loc) :-
     asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
     asr_comm(Asr, Comm, _).
 
-% prop_asr/4 is declared multifile to allow extensibility.  Note that at this
-% level you can extend it to define ancillary assertions, (see module
-% assrt_meta.pl for an example).
-%
-:- multifile prop_asr/4.
 prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
 prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
 prop_asr(type,   P, From, Asr) :- asr_head_prop(Asr, _, _, _, P, _, From).
@@ -78,6 +74,15 @@ prop_asr(comp, M:P, From, Asr) :- asr_comp(Asr, M, P, From).
 prop_asr(call, M:P, From, Asr) :- asr_call(Asr, M, P, From).
 prop_asr(succ, M:P, From, Asr) :- asr_succ(Asr, M, P, From).
 prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
+
+% Extensible accessor to assertion properties, ideal to have different views of
+% assertions, to extend the assertions or to create ancillary assertions (see
+% module assrt_meta.pl for an example). The first argument is wrapped to
+% facilitate indexing.  Note that it is recommended that multiple clauses of
+% this predicate be mutually exclusive.
+:- multifile asr_aprop/4.
+asr_aprop(rtcheck(Asr), Key, Prop, From) :-
+    prop_asr(Key, Prop, From, Asr).
 
 prop_asr(Key, M:P, IM, From, Asr) :-
     implementation_module(M:P, IM),
