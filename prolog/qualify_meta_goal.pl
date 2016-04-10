@@ -32,7 +32,7 @@
 			      qualify_meta_goal/4]).
 
 :- use_module(library(check), []). % for add_module/3
-
+%% qualify_meta_goal(+,+,?,-) is det.
 qualify_meta_goal(Goal0, M, CM, Goal) :-
     predicate_property(M:Goal0, meta_predicate(Meta)), !,
     qualify_meta_goal(CM:Goal0, Meta, Goal).
