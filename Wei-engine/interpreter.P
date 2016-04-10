@@ -1,4 +1,8 @@
 %%
+
+:- export go/1, go/2, go_lps/1, go_lps/2.
+:- export test_examples, do_test_suite/2.
+
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
 % :- use_module(standard, [datime/1]).
 
@@ -19,10 +23,12 @@
 
 :- import action/1, /*cacts/1,*/ current_time/1, d_pre/1 /*,event/1*/ from usermod.
 :- import /*fluent/1,*/ happens/3, initiated/3, l_events/2, l_int/2 from usermod.
-:- import l_timeless/2, observe/2, reactive_rule/2, state/1 from usermod.
+:- import l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1 from usermod.
 :- import steps/1, succ_t/2, /*susp/1,*/ terminated/3, used/1 from usermod.
 :- import current_goal/1, depth/1, tried/3, failed/3, option/1 from usermod.
-:- import expanded_consequent/2, this_initiated/1 from usermod.
+:- import expanded_consequent/2 from usermod.
+
+:- import initial_state/1 from usermod.
 
 :- import lps_test_result/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
 :- dynamic lps_test_result/3, lps_test_options/1, lps_failed_test/2.
@@ -462,8 +468,9 @@ update_action(Ev) :-
     findall(Fl, (terminated(Ev, Fl, Cond), holds_all(Cond)), Terms),
     findall(Fl, (initiated(Ev, Fl, Cond), holds_all(Cond)), Inits),
     forall((member(Fl, Terms),state(Fl)), retract(state(Fl))),
-    forall((member(Fl, Inits),\+ state(Fl)), (assertz(state(Fl)),assertz(this_initiated(Fl)))).
+    forall((member(Fl, Inits),\+ state(Fl)), (assertz(state(Fl)))).
 
+/* Dead code:
 select_actions_concurrent([ca(_,A)|As], AllAs, AccA, SAs) :-
     % Pre-conds
     findall(
@@ -507,6 +514,7 @@ conflict_term(Fl, [ca(_,A)|As]) :-
     ;
         conflict_term(Fl, As)
     ).
+*/
 
 % all_fail(Conditions,Result) Result is [] or failed (some succeeded)
 % TODO
@@ -1237,7 +1245,7 @@ try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
 find_deadline([], []).
 
 find_deadline([tc(<(X,Y))|T], [Z|Res]) :-
-    \+ no_vars(X), no_vars(Y),
+    \+ ground(X), ground(Y),
     bind_vars(X),
     #=(X,Z),
     #<(Z,Y),
@@ -1254,7 +1262,7 @@ find_deadline([tc(<(X,Y))|T], [Z|Res]) :-
 */
 
 find_deadline([tc(=<(X,Y))|T], [Z|Res]) :-
-    \+ no_vars(X), no_vars(Y),
+    \+ ground(X), ground(Y),
     bind_vars(X),
     #=(X,Z),
     #=<(Z,Y),
@@ -1295,6 +1303,7 @@ satisfy_all([Y|Rest]) :-
     Y \= tc(_),
     satisfy_all(Rest).
 
+/* Dead code:
 % satisfy_upper
 %
 satisfy_upper(L) :-
@@ -1360,31 +1369,11 @@ do_satisfy_upper([tc(=<(X,Y))|Rest]) :-
 do_satisfy_upper([H|Rest]) :-
     H \= tc(_),
     do_satisfy_upper(Rest).
+*/
 
-%
-%
-no_vars(Exp) :-
-    nonvar(Exp),
-    Exp =.. L,
-    check_vars(L).
+% no_vars(Exp) Exp was replaced ground(Exp)
 
-%
-%
-check_vars([]).
 
-check_vars([H|T]) :-
-    compound(H),
-    H =.. L,
-    check_vars(L),
-    check_vars(T).
-
-check_vars([H|T]) :-
-    atomic(H),
-    check_vars(T).
-
-check_vars([H|_]) :-
-    var(H),
-    fail.
 
 bind_vars(Exp) :-
     var(Exp),
@@ -1446,39 +1435,39 @@ parse(Exp, Res) :-
 %
 %
 satisfy(<(X,Y)) :-
-    \+ no_vars(X), no_vars(Y),
+    \+ ground(X), ground(Y),
     bind_vars(X),
     #<(X, Y).
 
 satisfy(<(X,Y)) :-
-    no_vars(X), \+ no_vars(Y),
+    ground(X), \+ ground(Y),
     bind_vars(Y),
     #<(X, Y).
 
 satisfy(<(X,Y)) :-
-    \+ no_vars(X), \+ no_vars(Y).
+    \+ ground(X), \+ ground(Y).
 
 satisfy(<(X,Y)) :-
-    no_vars(X), no_vars(Y),
+    ground(X), ground(Y),
     parse(X, RX), parse(Y, RY),
     RX < RY.
 
 satisfy(=<(X,Y)) :-
-    \+ no_vars(X), no_vars(Y),
+    \+ ground(X), ground(Y),
     bind_vars(X),
     #=<(X, Y).
 
 satisfy(=<(X,Y)) :-
-    no_vars(X), \+ no_vars(Y),
+    ground(X), \+ ground(Y),
     bind_vars(Y),
     #=<(X, Y).
 
 satisfy(=<(X,Y)) :-
-    \+ no_vars(X),
-    \+ no_vars(Y).
+    \+ ground(X),
+    \+ ground(Y).
 
 satisfy(=<(X,Y)) :-
-    no_vars(X), no_vars(Y),
+    ground(X), ground(Y),
     parse(X, RX), parse(Y, RY),
     RX =< RY.
 
@@ -1893,7 +1882,7 @@ cleanup :-
     retractall(tried(_, _, _)),
     retractall(used(_)),
     reset_goal_ids,
-    retractall(this_initiated(_)),
+    % retractall(this_initiated(_)),
     retractall(lps_failed_test(_,_)),
     retractall(lps_test_result(_,_,_)).
 
@@ -1908,7 +1897,7 @@ cycle_options(CAi, Ri, Gi) :-
     write_verbose([StageCA,nl,CAi,nl,nl]), test(StageCA,Time,CAi),
     sort(CAi, SortedCAi),
     select_actions(SortedCAi, [], Actions),
-    retractall(this_initiated(_)),
+    % retractall(this_initiated(_)),
     StageSA='Selected actions:',
     write_verbose([StageSA,nl,Actions,nl,nl]), test(StageSA,Time,Actions),
     ( option(manual) ->

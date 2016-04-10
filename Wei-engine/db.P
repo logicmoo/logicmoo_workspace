@@ -26,7 +26,7 @@
 :- dynamic terminated/3.
 :- dynamic tried/3.
 :- dynamic used/1.
-:- dynamic this_initiated/1.
+% :- dynamic this_initiated/1.
 
 event(X) :-
     action(X).
