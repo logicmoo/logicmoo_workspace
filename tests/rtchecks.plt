@@ -8,7 +8,6 @@
 
 :- use_module(library(call_in_dir)).
 :- use_module(library(substitute)).
-:- use_module(library(rtchecks_eval)).
 :- use_module(library(rtchecks_utils)).
 :- use_module(library(rtchecks_tracer)).
 :- use_module(library(intercept)).
@@ -75,12 +74,5 @@ test(rtexec3) :-
 		 assrchk(ppt(rtchecks_example3:p/1,
 			     clause_pc(_, 3)), error(comp, r, [file(_, _, _, _)/det-[fails]],
 						     file(_, _, _, _)))]).
-
-test(rtgen) :-
-    generate_rtchecks(fullasr(_X, _Y), rtchecks_example3, RTChecks),
-    assertion(RTChecks = rtchecks_rt:rtcheck_goal(fullasr(_A, _B),
-						  rtchecks_example3,
-						  rtchecks_example3,
-						  [_, _, _, _, _, _])).
 
 :- end_tests(rtchecks).
