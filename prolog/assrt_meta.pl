@@ -31,7 +31,6 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(assertions_op)).
-:- use_module(library(rtchecks_gen)).
 :- use_module(library(location_utils)).
 :- use_module(library(implementation_module)).
 

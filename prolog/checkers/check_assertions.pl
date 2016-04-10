@@ -35,7 +35,6 @@
 :- use_module(library(check), []).
 :- use_module(library(extra_codewalk)).
 :- use_module(library(rtchecks)).
-:- use_module(library(rtchecks_gen)).
 :- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(implementation_module)).
@@ -44,6 +43,7 @@
 :- use_module(library(resolve_calln)).
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
+:- use_module(library(qualify_meta_goal)).
 
 :- dynamic
     tablecheck_db/4,
@@ -234,11 +234,50 @@ tabled_generate_ctchecks(H, M, CM, Goal) :-
       P = H
     ).
 
+% Generate compile-time checks, currently only compatibility is checked, fails
+% if no ctchecks can be applied to Pred. Note that CM can be a variable, to
+% allow tabling of the result and CM to be instantiated later.
+%
+generate_ctchecks(Goal, M, CM, CTChecks) :-
+    qualify_meta_goal(Goal, M, CM, Pred),
+    collect_assertions(Pred, M, ctcheck, AsrL),
+    ( AsrL \= []
+    ->
+      maplist(wrap_asr_ctcheck, AsrL, PAsrL),
+      CTChecks = check_assertions:ctcheck_goal(PAsrL)
+    ; CTChecks = check_assertions:true
+    ).
+
+wrap_asr_ctcheck(Asr, ctcheck(Asr)).
+
+:- public ctcheck_goal/1.
+ctcheck_goal(AsrL) :-
+    pairs_keys_values(AsrPVL, AsrL, _),
+    rtchecks_rt:check_asrs_props(compat, AsrPVL).
+
+% Trivial abstraction: Check for compatibility issues in properties,
+% compatibility is an abstraction that makes static check decidable.  Here we
+% lose precision but we gain computability of checks at earlier, even
+% compile-time. TBD: Formal demostration. --EMM
+assrt_lib:asr_aprop(ctcheck(Asr), Key, Prop, From) :-
+    prop_abstraction(Key, Abst),
+    prop_asr(Abst, Prop, From, Asr).
+
+prop_abstraction(head, head).
+prop_abstraction(stat, stat).
+prop_abstraction(type, type).
+prop_abstraction(dict, dict).
+prop_abstraction(comm, comm).
+prop_abstraction(comp, comp).
+prop_abstraction(comp, call).
+prop_abstraction(comp, succ).
+
 verif_is_property(system, true, 0) :- !.   % ignore true (identity)
 verif_is_property(IM, F, A) :-
     functor(H, F, A),
     asr_head_prop(_, CM, H, _, prop, _, _),
     implementation_module(CM:H, AM),
-    ( AM = IM -> true
+    ( AM = IM
+    ->true
     ; predicate_property(IM:H, imported_from(AM))
     ).
