@@ -11,7 +11,6 @@ define_flag(rtchecks_trust,          [yes, no],        yes).
 define_flag(rtchecks_entry,          [yes, no],        yes).
 define_flag(rtchecks_exit,           [yes, no],        yes).
 define_flag(rtchecks_test,           [yes, no],        no).
-define_flag(rtchecks_namefmt,        [short, long],    long).
 define_flag(rtchecks_abort_on_error, [yes, no],        no).
 
 :- ( define_flag(Flag, _Values, Default),

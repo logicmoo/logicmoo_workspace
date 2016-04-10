@@ -83,14 +83,6 @@ explanation of the meaning:
                  debugging purposes, but is better to use the unittest library.
   @end{itemize}
 
-@item @code{rtchecks_namefmt}
-  @begin{itemize}
-   @item @code{long}   : Show the name of predicates, properties and the
-			 values of the variables
-   @item @code{short}  : Only show the name of the predicate in a reduced
-			 format. Default.
-  @end{itemize}
-
 @item @code{rtchecks_abort_on_error}
 
   Controls if run time checks must abort the execution of a program

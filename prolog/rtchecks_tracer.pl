@@ -1,10 +1,9 @@
 :- module(rtchecks_tracer, [trace_rtc/1,
 			    do_trace_rtc/1]).
 
+:- use_module(library(mapargs)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(apply)).
-:- use_module(library(rtchecks_eval)).
-:- use_module(library(rtchecks_gen)).
 :- use_module(library(context_values)).
 :- use_module(system:library(rtchecks_rt)).
 :- use_module(library(rtchecks_utils)).
@@ -26,11 +25,37 @@
 trace_rtc(Goal) :-
     call_rtc(do_trace_rtc(Goal)).
 
-do_trace_rtc(CM:Goal) :-
-    generate_rtchecks(Goal, CM, RTCGoal),
-    call_inoutex(RTCGoal,
+do_trace_rtc(Goal) :-
+    get_rtcheck_body(Goal, RTChecks),
+    call_inoutex(RTChecks,
 		 setup_trace,
 		 cleanup_trace).
+
+rtcheck_lib(rtchecks_rt).
+rtcheck_lib(nativeprops).
+
+builtin_spec(G, S) :-
+    predicate_property(system:G, meta_predicate(S)),
+    predicate_property(system:G, imported_from(M)),
+    \+ rtcheck_lib(M),
+    once(arg(_, S, 0 )).
+
+:- meta_predicate get_rtcheck_body(0, -).
+get_rtcheck_body(M:Call, RTChecks) :-
+    rtcheck_body(M, Call, RTChecks).
+
+rtcheck_body(_, G, G) :- var(G), !.
+rtcheck_body(_, M:G, M:R) :- !,
+    rtcheck_body(M, G, R).
+rtcheck_body(M, G, R) :-
+    builtin_spec(G, S), !,
+    functor(G, F, A),
+    functor(R, F, A),
+    mapargs(rtcheck_body_meta_arg(M), S, G, R).
+rtcheck_body(M, G, rtcheck_goal(M:G)).
+
+rtcheck_body_meta_arg(M, _, 0, G, R) :- !, rtcheck_body(M, G, R).
+rtcheck_body_meta_arg(_, _, _, R, R).
 
 :- multifile user:prolog_trace_interception/4.
 
@@ -73,8 +98,6 @@ black_list_module(assrt_lib).
 black_list_module(send_check).
 black_list_module(rtchecks_tr).
 black_list_module(rtchecks_rt).
-black_list_module(rtchecks_gen).
-black_list_module(rtchecks_eval).
 black_list_module(rtchecks_tracer).
 black_list_module(rtchecks_utils).
 black_list_module(rtchecks_basic).
@@ -153,8 +176,7 @@ setup_clause_bpt(Clause, Action) :-
 	  ),
 	  \+ black_list_callee(M, Goal),
 	  once(( rtchecks_tracer:pp_assr(Goal, M)
-	       ; current_assertion(_, Goal, AM, rtcheck, _, _, _, _),
-		 implementation_module(AM:Goal, M)
+	       ; current_assertion(Goal, M, rtcheck, _)
 	       ; white_list_meta(M, Goal),
 	       	 predicate_property(M:Goal, meta_predicate(S)),
 	       	 once(arg(_, S, 0 ))
@@ -202,12 +224,9 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       ->( nb_current('$current_goal', CurrGoal),
 	  CurrGoal =@= CM:Goal
 	->Action = continue
-	; generate_rtchecks(Goal, CM, RTChecks),
-	  ( CM:Goal == RTChecks
-	  ->Action = continue
-	  ; '$fetch_vm'(Clause, PC, NPC, _VMI),
-	    Action = call('$rat_trap'(RTChecks, CM:Goal, Caller, Clause, NPC))
-	  )
+	; get_rtcheck_body(CM:Goal, RTChecks),
+	  '$fetch_vm'(Clause, PC, NPC, _VMI),
+	  Action = call('$rat_trap'(RTChecks, CM:Goal, Caller, Clause, NPC))
 	)
       ; Action = continue
       )
