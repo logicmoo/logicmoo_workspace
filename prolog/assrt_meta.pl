@@ -39,7 +39,6 @@
 
 assrt_lib:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
     notrace(am_head_prop_idx(H, M, S, F)).
-% assrt_lib:asr_glob(am_asr(M, _, S, F), assrt_meta, rtc_stub(_, M, S, F), F).
 assrt_lib:asr_glob(am_asr(M, H, S, F), assrt_meta,
 		   rtcheck_goal(_, M, [rtcheck(am_asr2(M, H, S, F))]), F).
 

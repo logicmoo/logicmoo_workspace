@@ -68,6 +68,39 @@ test(ctcex) :-
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
+:- use_module(p1).
+
+/* $p1$
+Warning: -----------------
+Warning: Check asssertions
+Warning: ---------------------
+Warning: The predicates below contains assertions that are inconsistent
+Warning: with the  implementation. The reason is explained there.
+Warning: 
+p1.pl:16:4: In the body of p1:p0/0:
+p1.pl:9:8: Assertion failure for p1(p1:q2).
+	In *compat*, unsatisfied properties: 
+		p1.pl:9:11: nativeprops:is_pred(p1:q2,0).
+*/
+test(ctmeta) :-
+    set_prolog_flag(verbose, silent),
+    assert(user:error_on_co),
+    with_output_to(string(Result), showcheck(assertions, [module(p1), source(true), walkextras([])])),
+    comment_data(p1, Pattern),
+    module_property(ctcex, file(File)),
+    directory_file_path(Dir, _, File),
+    directory_file_path(Dir, '', AD),
+    atom_string(AD, SD),
+    replace_noisy_strings(SD, Result, AResult),
+    ( Pattern \== AResult
+    ->format("~s", [AResult])
+    ; true
+    ),
+    assertion(Pattern == AResult),
+    set_prolog_flag(verbose, normal),
+    %set_prolog_flag(check_assertions, []).
+    retractall(user:error_on_co).
+
 replace_noisy_strings(SD) -->
         replace_substrings(SD, ""),
 	replace_substrings("ERROR: ", ""),
