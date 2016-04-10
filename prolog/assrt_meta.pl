@@ -40,7 +40,7 @@
 assrt_lib:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
     notrace(am_head_prop_idx(H, M, S, F)).
 assrt_lib:asr_glob(am_asr(M, H, S, F), assrt_meta,
-		   rtcheck_goal(_, M, [rtcheck(am_asr2(M, H, S, F))]), F).
+		   rtcheck_goal(_, [am_asr2(M, H, S, F)]), F).
 
 am_head_prop_idx(Head, M, Meta, From) :-
     var(Meta), !,
@@ -80,10 +80,10 @@ am_head_prop_idx(Head, M, Meta, From) :-
     assertion(nonvar(From)).
 am_head_prop_idx(_, _, _, _).
 
-assrt_lib:prop_asr(head, M:H,   From, am_asr2(M, H, _, From)).
-assrt_lib:prop_asr(stat, check, From, am_asr2(_, _, _, From)).
-assrt_lib:prop_asr(type, pred,  From, am_asr2(_, _, _, From)).
-assrt_lib:prop_asr(call, Prop,  From, am_asr2(M, H, Meta, From)) :-
+assrt_lib:asr_aprop(am_asr2(M, H, _, From), head,   M:H, From).
+assrt_lib:asr_aprop(am_asr2(_, _, _, From), stat, check, From).
+assrt_lib:asr_aprop(am_asr2(_, _, _, From), type,  pred, From).
+assrt_lib:asr_aprop(am_asr2(M, H, Meta, From), call,  Prop, From) :-
     assrt_lib:current_normalized_assertion(pred Meta, M, _, M:H, _,
 					   _, _, CaL, _, _, _, _, _),
     member(Prop-_, CaL).
