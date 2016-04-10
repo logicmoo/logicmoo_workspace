@@ -1212,6 +1212,7 @@ resolve2([], [], [], none).
 %
 %
 try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
+    maximum_time(MaxTime),
     (
         action(Ev),
         current_time(T1), T2 is T1 + 1,
@@ -1233,7 +1234,7 @@ try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
             true
         ;
             % Earliest = 9999999999999999999
-            Earliest = 999999999
+            Earliest = MaxTime
         ),
         CA = ca(Earliest, happens(Ev, T1, T2)),
         write_verbose(['Adding candidate action ',Ev,'.',nl])
@@ -1373,12 +1374,10 @@ do_satisfy_upper([H|Rest]) :-
 
 % no_vars(Exp) Exp was replaced ground(Exp)
 
-
-
 bind_vars(Exp) :-
     var(Exp),
     current_time(Now),
-    current_prolog_flag(max_integer, Max),
+    maximum_time(Max),
     in(Exp, ..(Now,Max)).
 
 bind_vars(Exp) :-
@@ -1401,7 +1400,7 @@ do_bind_vars([H|T]) :-
 do_bind_vars([H|T]) :-
     var(H),
     current_time(Now),
-    current_prolog_flag(max_integer, Max),
+    maximum_time(Max),
     in(H, ..(Now,Max)),
     do_bind_vars(T).
 
@@ -1645,6 +1644,8 @@ next_time() :-
     assertz(succ_t(This, Next)),
     retract(steps(_)),
     assertz(steps(1000)).
+
+maximum_time(Max) :- current_prolog_flag(max_integer, Max).
 
 % go_lps(File,Options)  Same as go/2; for the sake of compatibility with Wei's thesis
 go_lps(File,Options) :- go(File,Options).
