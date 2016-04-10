@@ -4,9 +4,9 @@
 
 % :- import unifiable/3 from constraintLib.
 
-:- import (in)/2, (#>)/2, (#<)/2, (#>=)/2, (#=<)/2, (#=)/2, labeling/2 from bounds.
+:- import (in)/2, /* unused: (#>)/2, (#>=)/2, */ (#<)/2, (#=<)/2, (#=)/2, labeling/2 from bounds.
 
-:- import datime_setrand/0, random/3 from random.
+% no longer used: :- import datime_setrand/0 , random/3 from random.
 :- import variant/2 from subsumes.
 :- import numbervars/1 from num_vars.
 :- import concat_atom/2 from string.
@@ -17,10 +17,10 @@
 :- import reactive_conjunct/1, l_int_body/1, l_events_body/1 from preprocessor.
 :- import d_head/1, d_event/1, d_body/1 from preprocessor.
 
-:- import action/1, cacts/1, current_time/1, d_pre/1, event/1 from usermod.
-:- import fluent/1, happens/3, initiated/3, l_events/2, l_int/2 from usermod.
+:- import action/1, /*cacts/1,*/ current_time/1, d_pre/1 /*,event/1*/ from usermod.
+:- import /*fluent/1,*/ happens/3, initiated/3, l_events/2, l_int/2 from usermod.
 :- import l_timeless/2, observe/2, reactive_rule/2, state/1 from usermod.
-:- import steps/1, succ_t/2, susp/1, terminated/3, used/1 from usermod.
+:- import steps/1, succ_t/2, /*susp/1,*/ terminated/3, used/1 from usermod.
 :- import current_goal/1, depth/1, tried/3, failed/3, option/1 from usermod.
 :- import expanded_consequent/2, this_initiated/1 from usermod.
 
@@ -138,7 +138,7 @@ process(Ri, NextRi, Gi, NextGi) :-
     append(NRi, NRs, NextRi),
     append(NGi, NGs, NextGi).
 
-% Unused, seems obsolete:
+/* Unused, seems obsolete:
 processx(Ri, NextRi, Gi, NextGi) :-
     ( setof([[HA|TA], C], (reactive_rule([HA|TA], C), query(HA)), Rs)
     ; Rs = []
@@ -151,7 +151,7 @@ processx(Ri, NextRi, Gi, NextGi) :-
 do_processx([[A, C]|_Ris], _NewRi, _Gi, _NewGi) :-
     processx2([A, C], _Foo).
 
-/*
+
 processx2([[HA|TA], C], Foo) :-
     findall(, (query(HA),), Rs)
 */
@@ -360,7 +360,7 @@ expand_reactive_rules() :-
             ;
                 true
             ),
-            assertz(reactive_rule(EA, C))
+            assertz(reactive_rule(EA, C)) % TODO: should probably be a different "work" predicate
         )
     ).
 
@@ -448,13 +448,7 @@ select_actions([ca(_,A)|As], AccA, SAs) :-
     ),
     all_fail(AllConds, Ret),
     % Post-conds
-    %TODO: Seems buggy:
-    findall(
-        Fl,
-        (terminated(A, Fl, Cond), holds_all(Cond)),
-        Terms
-    ),
-    % ??? forall(terminated(A, Fl, Cond),holds_all(Cond)),
+    forall(terminated(A, _Fl, Cond),holds_all(Cond)),
     ( Ret = [] ->
         update_action(A),
         append(AccA, [A], NAccA),
@@ -514,7 +508,7 @@ conflict_term(Fl, [ca(_,A)|As]) :-
         conflict_term(Fl, As)
     ).
 
-% all_fail
+% all_fail(Conditions,Result) Result is [] or failed (some succeeded)
 % TODO
 %
 all_fail([], []).
@@ -571,6 +565,7 @@ resolve_goal_breadth([TLG|[]], NextGoal, CandActs) :-
         NextGoal = [TLG],
         CandActs = []
     ; find_unused(ec(TLGC), EC) ->
+    	% TODO: seems buggy, GoalId..???
         assertz(tried(GoalId, 0, expanded_consequent(TLGC, EC))),
         resolve_goal_breadth_end([EC,TLG], NG, CA),
         ( NG == nosusp ->
@@ -595,7 +590,7 @@ resolve_goal_breadth([B1,TLG], NextGoal, CandActs) :-
     ;
         resolve_goal_breadth([TLG], NextGoal, CandActs)
     ).
-resolve_goal_breadth_end([B1,TLG], NextGoal, CandActs) :-
+resolve_goal_breadth_end([B1,_TLG], NextGoal, CandActs) :-
     ( resolveb(B1, NB, CA) ->
         NextGoal = NB, % [] or [happens(...]
         ( CA == none ->
@@ -630,6 +625,7 @@ resolveb([happens(Ev, T1, T2)|Rest], NB, CA) :-
     ).
     % CA is none or ca(Earliest, happens)
 
+/* Dead code, threads not used:
 resolve_tree_threads([goal(GoalId, G)|Gs], NG, CA) :-
     retract(current_goal(_)),
     assertz(current_goal(GoalId)),
@@ -653,6 +649,7 @@ join_threads([]).
 join_threads([TId|Rest]) :-
     thread_join(TId, _),
     join_threads(Rest).
+*/
 
 % resolve_tree
 %
@@ -980,7 +977,7 @@ resolve2_holds([holds(Fl, T)|_], cont, [], none) :-
     write_verbose([holds(Fl, T),' does not hold.',nl,'Backtracking.',nl]),
     reduce_step.
 
-resolve2_holds([holds(_, T)|_], cont, [], none) :-
+resolve2_holds([holds(Fl, T)|_], cont, [], none) :-
     number(T), current_time(Now), T < Now,
     write_verbose([holds(Fl, T),' was in the past!',nl,'Backtracking',nl]),
     reduce_step.
@@ -1076,10 +1073,10 @@ resolve2_happens([happens(Ev, T1, T2)|Ls], cont, [], none) :-
     reduce_step.
 
 % TODO 22 Aug 18:11 Test
-resolve2_happens([happens(Ev, T1, T2)|Ls], cont, [], none) :-
+resolve2_happens([happens(Ev, T1, T2)|_Ls], cont, [], none) :-
     number(T1), current_time(Now), Prev is Now - 1, T1 = Prev,
-    copy_term([happens(Ev, T1, T2)|Ls], [happens(CEv, CT1, CT2)|CLs]),
-    \+ query(happens(CEv, CT1, CT2)),
+    % unnecessary: copy_term([happens(Ev, T1, T2)|Ls], [happens(CEv, CT1, CT2)|CLs]),
+    \+ query(happens(Ev, T1, T2)),
     write_verbose([happens(Ev, T1, T2),' did not happen!',nl,'Backtracking.',nl]),
     reduce_step.
 
@@ -1211,7 +1208,7 @@ try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
         action(Ev),
         current_time(T1), T2 is T1 + 1,
         satisfy_all(Bs),
-        T3 is T1 - 1,
+        % T3 is T1 - 1,
         findall(
             NewConds,
             (
@@ -1228,7 +1225,7 @@ try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
             true
         ;
             % Earliest = 9999999999999999999
-            Earliest = 9999999999999999
+            Earliest = 999999999
         ),
         CA = ca(Earliest, happens(Ev, T1, T2)),
         write_verbose(['Adding candidate action ',Ev,'.',nl])
@@ -1273,7 +1270,7 @@ find_deadline([tc(=<(X,Y))|T], [Z|Res]) :-
     find_deadline(T, Res).
 */
 
-find_deadline([H|T], Res) :-
+find_deadline([_H|T], Res) :-
     find_deadline(T, Res).
 
 %
@@ -1674,7 +1671,7 @@ go(File, OptionsList) :-
     cleanup,
     parse_options(OptionsList),
     init_test_file(File),
-    datime_setrand,
+    % no longer needed: datime_setrand,
     load_dyn(File),
     check_syntax,
     initial_state(IS), assert_list(IS),
@@ -1768,8 +1765,7 @@ close_test_file(F) :- option(make_test), !,
 	select(make_test,Options,RealOptions),
 	write(lps_test_options(RealOptions)), writeln('.'), nl,
 	writeln('% lps_test_result(Stage,Cycle,TestTerm)'),
-	G = lps_test_result(_,_,_),
-	(G, writeq(G), writeln('.'), fail ; true),
+	(lps_test_result(S,C,T), writeq(lps_test_result(S,C,T)), writeln('.'), fail ; true),
 	told, tell(Old).
 close_test_file(F) :- option(run_test), !,  
 	test_filename(F,TF),
@@ -1872,15 +1868,15 @@ pick_highest_tier2(Lower, [goal(P, GoalId, G)|OtherGoals], [], [goal(P, GoalId, 
 %
 cleanup :-
     retractall(action(_)),
-    retractall(cacts(_)),
+    % retractall(cacts(_)),
     retractall(current_goal(_)),
     retractall(current_time(_)),
     retractall(d_pre(_)),
     retractall(depth(_)),
-    retractall(event(_)),
+    % retractall(event(_)),
     retractall(expanded_consequent(_,_)),
     retractall(failed(_, _, _)),
-    retractall(fluent(_)),
+    % retractall(fluent(_)),
     retractall(happens(_, _, _)),
     retractall(initiated(_, _, _)),
     retractall(l_events(_, _)),
@@ -1892,7 +1888,7 @@ cleanup :-
     retractall(state(_)),
     retractall(steps(_)),
     retractall(succ_t(_, _)),
-    retractall(susp(_)),
+    % retractall(susp(_)),
     retractall(terminated(_, _, _)),
     retractall(tried(_, _, _)),
     retractall(used(_)),
