@@ -18,10 +18,10 @@ compact_goal(Goal, Compact) :-
     ; Compact = Goal
     ).
 
-prolog:called_by(\+ (F, \+ E), system, M, CL) :-
-    nonvar(F),
-    F = retract(Fact),
-    E==true,
+prolog:called_by(\+ Goal, system, M, CL) :-
+    nonvar(Goal),
+    subsumes_term((retract(Fact), \+ true), Goal),
+    Goal = (retract(Fact), \+ true),
     ( prolog:called_by(retractall(Fact), system, M, CL)
     ->true
     ; CL = [true]		% Skip walk meta arguments
