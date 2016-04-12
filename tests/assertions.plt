@@ -12,7 +12,6 @@ test(assrt_lib_1) :-
 				=>(gnd(A), gnd(B))
 				+ (not_fails,is_det)), _, R, _),
     assertion(R=[assrt_lib:asr_head_prop(Idx, m, p(A, B), check, pred, [], _),
-		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_comp(Idx, m, int(A), _),
 		 assrt_lib:asr_call(Idx, m, gnd(A), _),
 		 assrt_lib:asr_call(Idx, m, var(B), _),
@@ -28,7 +27,6 @@ test(assrt_lib_2) :-
 				=>(gnd(A), gnd(B))
 				+ not_fails), _, R, _),
     assertion(R=[assrt_lib:asr_head_prop(Idx, system, p(A, B), check, pred,[], _),
-		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_comp(Idx, m, int(A), _),
 		 assrt_lib:asr_call(Idx, m, gnd(A), _),
 		 assrt_lib:asr_call(Idx, m, var(B), _),
@@ -60,7 +58,6 @@ test(assrt_lib_simple) :-
 test(assrt_lib_comp) :-
     assrt_lib:assertion_records(m, [], true comp nfi1(G,V) + (sideff(free), no_rtcheck), _, R, _),
     assertion(R=[assrt_lib:asr_head_prop(Idx, m, nfi1(G, V), true, comp, [], _),
-		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_glob(Idx, m, sideff(_, free), _),
 		 assrt_lib:asr_glob(Idx, m, no_rtcheck(_), _)
 		]).
@@ -89,11 +86,9 @@ test(assrt_lib_sugar) :-
 test(assrt_lib_multi) :-
     assrt_lib:assrt_lib_tr((:- pred [(q:a/1+kbmask([+])), b/2+hidden]+kbrule), Records, m, []),
     assertion(Records=[assrt_lib:asr_head_prop(Idx1, q, a(_), check, pred, [], _),
-		       assrt_lib:asr_comm(Idx1, "", _),
 		       assrt_lib:asr_glob(Idx1, m, kbrule(_), _),
 		       assrt_lib:asr_glob(Idx1, q, kbmask(_, [(+)]), _),
 		       assrt_lib:asr_head_prop(Idx2, m, b(_, _), check, pred, [], _),
-		       assrt_lib:asr_comm(Idx2, "", _),
 		       assrt_lib:asr_glob(Idx2, m, kbrule(_), _),
 		       assrt_lib:asr_glob(Idx2, m, hidden(_), _)
 		      ]).
@@ -101,7 +96,6 @@ test(assrt_lib_multi) :-
 test(assrt_lib_mode1) :-
     assrt_lib:assertion_records(u, [], pred dict(+int), _, Re, _),
     assertion(Re=[assrt_lib:asr_head_prop(Idx, u, dict(A), check, pred, [], _),
-		  assrt_lib:asr_comm(Idx, "", _),
 		  assrt_lib:asr_call(Idx, u, int(A), _)]).
 
 test(assrt_lib_is_plus) :-
@@ -120,7 +114,6 @@ substitute_idx(Idx1, Idx2, Term, Idx2) :-
 test(assrt_lib_oddity_1) :-
     assrt_lib:assertion_records(m, [], (pred a:b/2 : e * l + n), _, R, _),
     assertion(R=[assrt_lib:asr_head_prop(Idx, a, b(A, B), check, pred, [], _),
-		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_call(Idx, a, e(A), _),
 		 assrt_lib:asr_call(Idx, a, l(B), _),
 		 assrt_lib:asr_glob(Idx, a, n(_), _)
@@ -129,7 +122,6 @@ test(assrt_lib_oddity_1) :-
 test(assrt_lib_oddity_2) :-
     assrt_lib:assertion_records(m, [], (pred (a:b/2) : e * l + n), _, R, _),
     assertion(R=[assrt_lib:asr_head_prop(Idx, a, b(A, B), check, pred, [], _),
-		 assrt_lib:asr_comm(Idx, "", _),
 		 assrt_lib:asr_call(Idx, m, e(A), _),
 		 assrt_lib:asr_call(Idx, m, l(B), _),
 		 assrt_lib:asr_glob(Idx, m, n(_), _)
