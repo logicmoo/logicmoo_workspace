@@ -35,9 +35,9 @@ initiated(happens(putdown_forks(F1, philosopher(N), F2), T1, T2), available(F1),
 initiated(happens(putdown_forks(F1, philosopher(N), F2), T1, T2), available(F2), []).
 
 d_pre([happens(pickup_forks(F1, philosopher(N), F2), T1, T2),
-	holds(not(available(F1)), T2)]).
+	holds(not(available(F1)), T1)]).
 d_pre([happens(pickup_forks(F1, philosopher(N), F2), T1, T2),
-	holds(not(available(F2)), T2)]).
+	holds(not(available(F2)), T1)]).
 
 d_pre([happens(pickup_forks(F1, philosopher(N), F), T1, T2),
 	happens(pickup_forks(F, philosopher(K), F2), T1, T2)]).

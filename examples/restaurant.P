@@ -79,10 +79,8 @@ reactive_rule(
 event(sign_out(_)).
 
 action(leave_duty(_)).
-terminated(happens(leave_duty(Staff), T1, T2),
-on_duty(Staff), [holds(on_duty(Staff), T2)]).
-terminated(happens(leave_duty(Staff), T1, T2),
-staff_status(Staff, Status), [holds(staff_status(Staff, available), T2)]).
+terminated(happens(leave_duty(Staff), T1, T2),on_duty(Staff), [holds(on_duty(Staff), T1)]).
+terminated(happens(leave_duty(Staff), T1, T2),staff_status(Staff, Status), [holds(staff_status(Staff, available), T1)]).
 
 reactive_rule(
 	[
@@ -130,12 +128,9 @@ d_pre([
 ]).
 
 action(guide(_,_,_)).
-terminated(happens(guide(Staff, People, TId), T1, T2),
-free(TId), [holds(table(TId, _), T2)]).
-terminated(happens(guide(Staff, People, TId), T1, T2),
-staff_status(Staff, available), []).
-initiated(happens(guide(Staff, People, TId), T1, T2),
-staff_status(Staff, busy), []).
+terminated(happens(guide(Staff, People, TId), T1, T2),free(TId), [holds(table(TId, _), T1)]).
+terminated(happens(guide(Staff, People, TId), T1, T2),staff_status(Staff, available), []).
+initiated(happens(guide(Staff, People, TId), T1, T2),staff_status(Staff, busy), []).
 
 reactive_rule(
 	[
@@ -182,8 +177,7 @@ d_pre([
 ]).
 
 action(reserve(_, _, _)).
-terminated(happens(reserve(Person, TId, Time), T1, T2),
-free(TId), [holds(table(TId, _), T2)]).
+terminated(happens(reserve(Person, TId, Time), T1, T2),free(TId), [holds(table(TId, _), T1)]).
 initiated(happens(reserve(Person, TId, Time), T1, T2),
 reserved(TId, Person, Time), [holds(table(TId, _), T2)]).
 
@@ -302,7 +296,7 @@ d_pre([
 
 event(return_errand_boy(_,_,_)).
 terminated(happens(return_errand_boy(Boy, What, Amount), T1, T2),
-	portion(What, _), [holds(portion(What, N), T2), lps_less(N, 1)]).
+	portion(What, _), [holds(portion(What, N), T1), lps_less(N, 1)]).
 initiated(happens(return_errand_boy(Boy, What, Amount), T1, T2),
 	portion(What, Amount), []).
 

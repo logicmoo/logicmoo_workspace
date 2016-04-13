@@ -45,11 +45,15 @@
 %   True if P holds in the augmented state {S*_i, ev*_i, L_int, L_timeless}.
 % 
 query(holds(not(P), Now)) :-
-    current_time(Now),
+    current_time(Now_),
+    % a little hack to allow access to the (still available) previous state,
+    % because at step 0 of the OS Cycle we already incremented time:
+    ( lps_updating_current_state -> succ_t(Now, Now_) ; Now=Now_),
     \+ l_int(holds(P, Now), _),
     \+ state(P).
 query(holds(P, Now)) :-
-    current_time(Now),
+    current_time(Now_),
+    ( lps_updating_current_state -> succ_t(Now, Now_) ; Now=Now_),
     \+ l_int(holds(P, Now), _), 
     state(P).
 query(happens(P, Prev, Now)) :-
@@ -57,11 +61,13 @@ query(happens(P, Prev, Now)) :-
     succ_t(Prev, Now), 
     happens(P, Prev, Now).
 query(holds(not(P), Now)) :-
-    current_time(Now),
+    current_time(Now_),
+    ( lps_updating_current_state -> succ_t(Now, Now_) ; Now=Now_),
     l_int(holds(P, Now), B),
     \+ holds_all(B).
 query(holds(P, Now)) :-
-    current_time(Now),
+    current_time(Now_),
+    ( lps_updating_current_state -> succ_t(Now, Now_) ; Now=Now_),
     l_int(holds(P, Now), B),
     holds_all(B).
 query(P) :-
@@ -87,6 +93,11 @@ holds_all([]).
 holds_all([P|Rest]) :-
     query(P),
     holds_all(Rest).
+
+:- dynamic lps_updating_current_state/0.
+
+enter_step_0 :- assert(lps_updating_current_state).
+leave_step_0 :- retractall(lps_updating_current_state).
 
 % update(+Ev)
 %   Destructively update the state for a single event Ev.
@@ -182,6 +193,7 @@ do_process_new([[A, C]|Ris], NewRi, Gi, NewGi) :-
         do_process_new(Ris, NewRi, Gi, NxtGi)
     ; NA = nosusp ->
         do_process_new(Ris, NewRi, Gi, NewGi)
+    % TODO: Bug?? Unchanged antecedent can not be discarded:
     ; NA = A ->
         do_process_new(Ris, NewRi, Gi, NewGi)
     ;
@@ -236,7 +248,7 @@ do_process_prio_exi([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
         do_process_prio_exi(Ris, NxtRi, Gi, NewGi)
     ).
 
-% do_process_new(+Ri, -NRi, +Gi, -NGi)
+% do_process_exi(+Ri, -NRi, +Gi, -NGi)
 %   Process a list of existing partially resolved reactive rules. Output a
 %   partially resolved list of reactive rules NRi and a list of goals NGi.
 %
@@ -275,6 +287,7 @@ process2([holds(Fl, T)|Ls], NB) :-
 
 process2([holds(Fl, T)|Ls], [holds(Fl, T)|Ls]) :-
     var(T),
+    % TODO: seems a bug! can't evaluate yet, right? : 
     query(holds(Fl, T)),
     \+ satisfy_all(Ls).
 
@@ -339,7 +352,7 @@ process2([TL|Ls], NB) :-
     process2(Ls, NB).
 
 process2([TL|Ls], [TL|Ls]) :-
-    l_timeless(TL, _),
+    l_timeless(TL, _), % TODO: shouldn't we return nosusp here??
     \+ query(TL).
 
 process2([tc(X)|Rest], NB) :-
@@ -438,7 +451,7 @@ expand_consequent([A|As], Acc, EC) :-
     append(Acc, [A], NewAcc),
     expand_consequent(As, NewAcc, EC).
 
-% select_actions(+Actions, +Acc, -SelectedActions)
+% select_actions(+Actions, +AccumulatedActions, -SelectedActions)
 %   Select actions from a list Actions that satisfy all the preconditions in
 %   the domain theory.
 %
@@ -448,13 +461,14 @@ select_actions([ca(_,A)|As], AccA, SAs) :-
     findall(
         NewConds,
         (
-            d_pre(Conds), member(A, Conds), select(A, Conds, NewConds)
+            d_pre(Conds), select(A, Conds, NewConds)
         ),
         AllConds
     ),
     all_fail(AllConds, Ret),
     % Post-conds
-    forall(terminated(A, _Fl, Cond),holds_all(Cond)),
+    % what's the point, as update_action does it below?? Seems buggy as this must never fail:
+    % forall(terminated(A, _Fl, Cond),holds_all(Cond)),
     ( Ret = [] ->
         update_action(A),
         append(AccA, [A], NAccA),
@@ -1290,18 +1304,18 @@ reduce_step() :-
     retract(steps(C)),
     assertz(steps(NC)).
 
-% satisfy_all(+L)
-%
+% satisfy_all(+L) 
+% check that all time constraints are not known to be unsatisfiable...
+% TODO: this or some other predicate should check antecedents "solvability" properly
 satisfy_all([]).
 
 satisfy_all([tc(X)|Rest]) :-
-    copy_term(X, XC),
-    satisfy(XC),
-    %write(XC),nl,
+    !,
+    \+ \+ satisfy(X),
     satisfy_all(Rest).
 
-satisfy_all([Y|Rest]) :-
-    Y \= tc(_),
+satisfy_all([_Y|Rest]) :-
+    % This won't do, we need a query(..) less eager to evaluate: \+ \+ query(Y),
     satisfy_all(Rest).
 
 /* Dead code:
@@ -1431,7 +1445,7 @@ parse(Exp, Res) :-
         Res is abs(RE)
     ).
 
-%
+% satisfy a temporal constraint
 %
 satisfy(<(X,Y)) :-
     \+ ground(X), ground(Y),
@@ -1890,6 +1904,7 @@ cleanup :-
 cycle_options(CAi, Ri, Gi) :-
     current_time(Time),
     retractall(happens(_, _, _)),
+    enter_step_0, % during "Update the current state" we need a hack to query the previous state
     nl,
     write_verbose(['====================',nl]),
     write('* Cycle '),write(Time),write(' *'),nl,
@@ -1901,14 +1916,12 @@ cycle_options(CAi, Ri, Gi) :-
     % retractall(this_initiated(_)),
     StageSA='Selected actions:',
     write_verbose([StageSA,nl,Actions,nl,nl]), test(StageSA,Time,Actions),
-    ( option(manual) ->
-        read_obs(Observations)
-    ;
-        observe(Observations, Time)
-    ),
+    ( (option(manual) ->read_obs(Observations);observe(Observations, Time)) -> true 
+      ; writeln('* No more observations, terminating.'), fail ),
     StageO='Observations:',
     write_verbose([StageO,nl,Observations,nl,nl]), test(StageO,Time,Observations),
     update_all(Observations),
+    leave_step_0,
     findall(Fl, state(Fl), State),
     StageDS='Database state:',
     write_verbose([StageDS,nl,State,nl,nl]), test(StageDS,Time,State),
