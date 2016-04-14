@@ -23,7 +23,7 @@
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
-:- use_module(library(trill)).
+:- use_module(trill).
 
 
 :- discontiguous(valid_axiom/1).
