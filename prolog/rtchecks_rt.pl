@@ -2,6 +2,8 @@
 			rtcheck_goal/2,
 			rtcheck_goal/4,
 			rtc_call/2,
+			with_gloc/2,
+			with_assertion/2,
 			collect_assertions/4,
 			current_assertion/4
 		       ]).
