@@ -1,7 +1,7 @@
 %%
 
 :- export go/1, go/2, go_lps/1, go_lps/2.
-:- export test_examples, do_test_suite/2.
+:- export test_examples, do_test_suite/2, load_test_file_for/1.
 
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
 % :- use_module(standard, [datime/1]).
@@ -1747,15 +1747,20 @@ write_verbose(What) :-
 % Load test file for this program file  
 % if not running tests does nothing
 init_test_file(F) :- option(run_test), !, % guaranteed to be the only option
-	test_filename(F,TF),
-	catch(load_dyn(TF),E,true),
-	(nonvar(E) -> 
-		write(user_error, 'ERROR: could not load test file '), writeln(user_error,TF), fail
-		; true),
+	load_test_file_for(F),
 	lps_test_options(Options),
 	% add the options:
 	parse_options(Options).
 init_test_file(_F).
+
+load_test_file_for(F) :-
+	test_filename(F,TF),
+	catch(load_dyn(TF),E,true),
+	(nonvar(E) -> 
+		write(user_error, 'ERROR: could not load test file '), writeln(user_error,TF), 
+		writeln(user_error,' To obtain a test file you need to execute your program with the make_test option: go(YourFile,[make_test])'),
+		fail
+		; true).
 
 % close_test_file(ProgramFile)
 close_test_file(F) :- option(make_test), !,

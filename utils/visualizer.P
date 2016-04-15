@@ -1,0 +1,74 @@
+:- export visual/1.
+
+:- import load_test_file_for/1 from interpreter.
+:- import lps_test_result/3 from usermod. 
+:- import member/2,append/3 from basics.
+:- import term_to_atom/2, concat_atom/2 from string.
+:- import variant/2 from subsumes.
+:- import java/3, term2json/2, create_counter/1, get_increment_counter/2 from interprolog.
+:- import xjShowURL/1 from usermod. % xj2.P
+
+% visual(TestResultsFile)  This needs to be in sync with test/3 calls in interpreter.P
+visual(File) :- 
+	load_dyn(File), % we need the meta info about events
+	load_test_file_for(File),
+	% Collect all <T1-T2,Group,Term>
+	% For events and actions times T1 and T2 are the usual; for fluents, they are time of initiation and termination
+	% OFF BY ONE BUG HERE???
+	findall(t(X,T1-T2,G), (
+		lps_test_result('Observations:',T2,Terms), T1 is T2-1, G=observation, member(X,Terms) ;
+		lps_test_result('Selected actions:',T2,Terms), member(happens(X,T1,T2),Terms), (action(X)->G=action;G=event) ;
+		lps_test_result('Database state:',T1,Terms), T2 is T1+1, member(X,Terms), functor(X,F,N), G=F/N % fluent
+	), Tuples),
+	% Find groups
+	setof(G, T^X^member(t(X,T,G),Tuples), GroupIds),
+	findall({id:Gatom,content:Gsignature},(
+		member(F/N,GroupIds), 
+		term_to_atom(F/N,Gatom), functor(GG,F,N), term_to_atom(GG,Gsignature)
+	), FluentGroups),
+	append( 
+		[{id:observation,content:'Observations'},{id:event,content:'Events'}|FluentGroups], 
+		[{id:action,content:'Actions'}],
+		Groups ),
+	% term2json(Groups,GroupsJSON),
+	% Aggregate fluent ranges
+	sort(Tuples,Sorted),
+	join_fluent_ranges(Sorted,Ranged),
+	create_counter(IDs),
+	% Render fluents
+	findall({id:ID,content:Atom,start:T1,end:T2,group:Gatom},(
+		member(t(X,T1-T2,F/N),Ranged),  
+		term_to_atom(F/N,Gatom), term_to_atom(X,Atom),
+		get_increment_counter(IDs,ID)
+	), Fluents),
+	%... and the rest:
+	findall({id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S},(
+		member(t(X,T1-T2,G),Sorted),  
+		\+ functor(G,/,2), % not a fluent
+		term_to_atom(G,Gatom), term_to_atom(X,Atom),
+		(G==observation->S='color:Peru';S='color:green'),
+		get_increment_counter(IDs,ID)
+	), Others),
+	append(Fluents,Others,Items),
+	% render to JSON:
+	term2json({groups:Groups,items:Items},JSON),
+	concat_atom([File,'-timeline.json'],JSONfile),
+	tell(JSONfile),
+	forall(member(Char,JSON),put(Char)),
+	told,
+	concat_atom(['Fluent and event timeline for LPS program ',File],Subtitle),
+	concat_atom([File,'-timeline.html'],HTMLfile),
+	java( 'com.declarativa.fiji.reporting.VisjsUtils',
+		string(F),
+		generateTimeline(string('LPS program timeline'),string(Subtitle),string(JSONfile),string(HTMLfile))
+		),
+	concat_atom(['file://',F],URL),
+	xjShowURL(URL).
+
+% join_fluent_ranges(Sorted,Ranged)
+join_fluent_ranges([t(X,T,G)|S],[t(X,T,G)|R]) :- \+ functor(G,/,2), !, % not a fluent
+	join_fluent_ranges(S,R).
+join_fluent_ranges([t(X,T1-T2,G),t(XX,T2-T3,G)|S],R) :- variant(X,XX), !, 	
+	join_fluent_ranges([t(X,T1-T3,G)|S],R).
+join_fluent_ranges([T|S],[T|R]) :- !, join_fluent_ranges(S,R).
+join_fluent_ranges([],[]).
