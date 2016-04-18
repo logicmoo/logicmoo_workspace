@@ -36,17 +36,19 @@ visual(File) :-
 	join_fluent_ranges(Sorted,Ranged),
 	create_counter(IDs),
 	% Render fluents
-	findall({id:ID,content:Atom,start:T1,end:T2,group:Gatom},(
+	findall({id:ID,content:Atom,start:T1,end:T2,group:Gatom,title:Tip},(
 		member(t(X,T1-T2,F/N),Ranged),  
 		term_to_atom(F/N,Gatom), term_to_atom(X,Atom),
+		concat_atom(['Fluent initiated at ',T1,' and terminated at ',T2],Tip),
 		get_increment_counter(IDs,ID)
 	), Fluents),
 	%... and the rest:
-	findall({id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S},(
+	findall({id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip},(
 		member(t(X,T1-T2,G),Sorted),  
 		\+ functor(G,/,2), % not a fluent
 		term_to_atom(G,Gatom), term_to_atom(X,Atom),
 		(G==observation->S='color:Peru';S='color:green'),
+		term_to_atom(happens(X,T1,T2),Tip),
 		get_increment_counter(IDs,ID)
 	), Others),
 	append(Fluents,Others,Items),
@@ -62,9 +64,23 @@ visual(File) :-
 		string(F),
 		generateTimeline(string('LPS program timeline'),string(Subtitle),string(JSONfile),string(HTMLfile))
 		),
-	concat_atom(['file://',F],URL),
-	xjShowURL(URL).
+	replace_backslashes(F,FF), str_replace(FF, ' ', '%20', FFF),
+	concat_atom(['file:///',FFF],FFFF),
+	xjShowURL(FFFF).
 
+replace_backslashes(P,NP) :- atom(P), str_replace(P,'\\','/',NP).
+
+str_replace(A, X, Y, B) :-
+    atom_chars(A, Ac), atom_chars(X, Xc), atom_chars(Y, Yc),
+    str_replace1(Ac, Xc, Yc, Bc), concat_atom(Bc, B).
+
+str_replace1([], _, _, []).
+str_replace1(Ac, Xc, Yc, [B|C]) :-
+    (append(Xc, Zc, Ac)
+     -> B = Yc, str_replace1(Zc, Xc, Yc, C)
+     ;  Ac = [A|Acs], B = A, str_replace1(Acs, Xc, Yc, C)
+    ).
+    
 % join_fluent_ranges(Sorted,Ranged)
 join_fluent_ranges([t(X,T,G)|S],[t(X,T,G)|R]) :- \+ functor(G,/,2), !, % not a fluent
 	join_fluent_ranges(S,R).
