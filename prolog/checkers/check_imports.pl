@@ -80,17 +80,18 @@ check_imports(OptionL, Pairs) :-
 
 :- public collect_imports_wc/3.
 collect_imports_wc(M:Goal, Caller, From) :-
-    record_location_meta(M:Goal, From, all_call_refs, mark_import),
+    record_location_meta(M:Goal, _, From, all_call_refs, mark_import),
     ( nonvar(Caller),
-      caller_module(Caller, MC),
+      caller_module(Caller, From, MC),
       M \= MC,
       \+ used_usemod(M, MC)
     ->assertz(used_usemod(M, MC))
     ; true
     ).
 
-caller_module(M:_, M).
-caller_module('<assertion>'(M:_), M).
+caller_module(M:_,                _, M) :- !.
+caller_module('<assertion>'(M:_), _, M) :- !.
+caller_module(_, clause(Ptr), M) :- clause_property(Ptr, module(M)).
 
 collect_imports(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
