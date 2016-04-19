@@ -16,8 +16,12 @@ visual(File) :-
 	% For events and actions times T1 and T2 are the usual; for fluents, they are time of initiation and termination
 	% OFF BY ONE BUG HERE???
 	findall(t(X,T1-T2,G), (
-		lps_test_result('Observations:',T2,Terms), T1 is T2-1, G=observation, member(X,Terms) ;
-		lps_test_result('Selected actions:',T2,Terms), member(happens(X,T1,T2),Terms), (action(X)->G=action;G=event) ;
+		lps_test_result('Observations:',T2,Terms), T1 is T2-1, G=observation, member(X,Terms) 
+		;
+		lps_test_result('Selected actions:',TT2,Terms), member(happens(XX,TT1,TT2),Terms), 
+		(action(XX)->G=action;G=event),
+		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
+		;
 		lps_test_result('Database state:',T1,Terms), T2 is T1+1, member(X,Terms), functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
@@ -43,11 +47,13 @@ visual(File) :-
 		get_increment_counter(IDs,ID)
 	), Fluents),
 	%... and the rest:
-	findall({id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip},(
+	findall(Item,(
 		member(t(X,T1-T2,G),Sorted),  
 		\+ functor(G,/,2), % not a fluent
 		term_to_atom(G,Gatom), term_to_atom(X,Atom),
-		(G==observation->S='color:Peru';S='color:green'),
+		(G==observation -> S='color:Peru'; G==action -> S='color:green' ; S='color:orange'),
+		(T2 is T1+1 -> Item={id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip} ;
+			Item = {id:ID,content:Atom,start:T1,end:T2,group:Gatom,type:range,style:'background-color: lightGray; color:orange',title:Tip}),
 		term_to_atom(happens(X,T1,T2),Tip),
 		get_increment_counter(IDs,ID)
 	), Others),

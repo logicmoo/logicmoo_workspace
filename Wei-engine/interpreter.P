@@ -1678,6 +1678,7 @@ go(File, OptionsList) :-
     % no longer needed: datime_setrand,
     load_dyn(File),
     check_syntax,
+    (option(meta_actions) -> add_meta_reactive_rules ; true),
     initial_state(IS), assert_list(IS),
     expand_reactive_rules,
     ( option(breadth) ->
@@ -1731,6 +1732,9 @@ parse_options_([make_test|Rest]) :- !,
 	parse_options_(Rest).
 parse_options_([run_test|Rest]) :- !,
 	assertz(option(run_test)),
+	parse_options_(Rest).
+parse_options_([meta_actions|Rest]) :- !,
+	assertz(option(meta_actions)),
 	parse_options_(Rest).
 parse_options_([O|Rest]) :- 
     write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
@@ -1873,6 +1877,11 @@ pick_highest_tier2(Lower, [goal(P, GoalId, G)|OtherGoals], [goal(P, GoalId, G)|N
 pick_highest_tier2(Lower, [goal(P, GoalId, G)|OtherGoals], [], [goal(P, GoalId, G)|OtherGoals]) :-
     P < Lower.
 
+% add rules to trigger "meta" actions which document the occurrence of composite events
+add_meta_reactive_rules :-
+	forall(l_events(E,_), assert( reactive_rule([E],[happens(lps_meta(E),_,_)]) )),
+	assert(action(lps_meta(_))).
+	
 % cleanup
 %
 cleanup :-
