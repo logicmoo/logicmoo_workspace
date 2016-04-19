@@ -54,7 +54,7 @@ check_undefined(OptionL, Results) :-
     extra_walk_code([source(true),
 		     trace_reference(-),
 		     undefined(trace),
-		     on_etrace(collect_undef(M))|OptionL], M, _),
+		     on_etrace(collect_undef)|OptionL]),
     findall(File-(AL-(PI-(Loc/['~w'-[CI]]))),
 	    ( retract(undef(PI, CI, From)),
 	      find_alternatives(PI, AL),
@@ -116,16 +116,12 @@ exclude_list(M, AM, ML/EL) :-
 :- multifile hide_undef/2.
 hide_undef(asr_head_prop(_,_,_,_, _,_,_), assrt_lib).
 
-found_undef(To, Caller, From) :-
-    \+ hide_undef(To),
-    normalize_pi(To, PI),
+:- public collect_undef/3.
+collect_undef(MCall, Caller, From) :-
+    \+ hide_undef(MCall),
+    normalize_pi(MCall, PI),
     normalize_pi(Caller, CI),
     update_fact_from(undef(PI, CI), From).
-
-:- public collect_undef/4.
-collect_undef(M, MCall, Caller, From) :-
-    M:_ = MCall,
-    found_undef(MCall, Caller, From).
 
 prolog:message(acheck(undefined)) -->
     ['--------------------',nl,
