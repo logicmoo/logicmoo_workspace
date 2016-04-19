@@ -6,7 +6,7 @@
 :- use_module(library(intercept)).
 
 get_comp_rtcheck_info(Goal, Name, From) :-
-    ( nb_current('$with_assertion', Asr)
+    ( nb_current('$with_asr_head', Asr-Name)
     ->asr_aprop(Asr, head, _:Name, From)
     ; Name = Goal
     ).
