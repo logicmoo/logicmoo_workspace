@@ -1,12 +1,13 @@
-:- module(rtchecks_rt, [rtcheck_goal/1,
-			rtcheck_goal/2,
-			rtcheck_goal/4,
-			rtc_call/2,
-			with_gloc/2,
-			with_assertion/2,
-			collect_assertions/4,
-			current_assertion/4
-		       ]).
+:- module(rtchecks_rt,
+	  [rtcheck_goal/1,
+	   rtcheck_goal/2,
+	   rtcheck_goal/4,
+	   rtc_call/2,
+	   '$with_gloc'/2,
+	   '$with_asr_head'/2,
+	   collect_assertions/4,
+	   current_assertion/4
+	  ]).
 
 :- use_module(library(assertions)).
 :- use_module(library(termtyping), []). % assertions about builtins
@@ -14,7 +15,6 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(implementation_module)).
 :- use_module(library(resolve_calln)).
-
 :- reexport(library(send_check)).
 :- reexport(library(nativeprops)).
 :- reexport(library(basicprops)).
@@ -60,14 +60,12 @@ order to simplify the generated code as far as possible.
 checkif_modl(M, M,    _,    _, Goal) :- !, call(Goal).
 checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 
-:- public with_assertion/2.
-:- meta_predicate with_assertion(0, ?).
-with_assertion(Comp, Asr) :-
-    with_value(Comp, '$with_assertion', Asr).
+:- meta_predicate '$with_asr_head'(0, ?).
+'$with_asr_head'(Comp, AsrHead) :-
+    with_value(Comp, '$with_asr_head', AsrHead).
 
-:- public with_gloc/2.
-:- meta_predicate with_gloc(0, ?).
-with_gloc(Comp, GLoc) :-
+:- meta_predicate '$with_gloc'(0, ?).
+'$with_gloc'(Comp, GLoc) :-
     with_value(Comp, '$with_gloc', GLoc).
 
 rtcheck_cond(Cond, Check, PredName) :-
@@ -125,23 +123,23 @@ checkif_asr_props([], Asr, PType, Part, Check, Call) :-
     send_rtcheck_asr(PType, Asr-PropValues).
 
 :- meta_predicate checkif_asrs_comp(+, 0).
-checkif_asrs_comp([], Goal) :- call(Goal).
-checkif_asrs_comp([Asr-PVL|AsrL], Goal1) :-
-    notrace(checkif_asr_comp(PVL, Asr, Goal1, Goal)),
-    checkif_asrs_comp(AsrL, Goal).
+checkif_asrs_comp([], _, Goal) :- call(Goal).
+checkif_asrs_comp([Asr-PVL|AsrL], Head, Goal1) :-
+    notrace(checkif_asr_comp(PVL, Asr, Head, Goal1, Goal)),
+    checkif_asrs_comp(AsrL, Head, Goal).
 
 valid_command(times(_, _)).
 valid_command(try_sols(_, _)). % Legacy
 
-checkif_asr_comp([_|_], _, Goal,  Goal).
-checkif_asr_comp([],  Asr, Goal1, with_assertion(Goal, Asr)) :-
+checkif_asr_comp([_|_], _, _, Goal,  Goal).
+checkif_asr_comp([], Asr, Head, Goal1, '$with_asr_head'(Goal, Asr-Head)) :-
     findall(g(Asr, M, Glob, Loc),
 	    ( asr_aprop(Asr, glob, M:Glob, Loc),
 	      \+ valid_command(Glob)
 	    ), GlobL),
     comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal, Goal1).
 
-comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), with_gloc(M:Glob, Loc), Goal) :-
+comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
     arg(1, Glob, Goal).
 
 
@@ -152,8 +150,8 @@ rtcheck_goal(CM:Goal, AsrL) :-
 
 rtcheck_goal(Goal, M, CM, AsrL) :-
     checkif_modl(M, CM,
-		 check_asrs(step1, AsrL, G2), G2,
-		 check_asrs(step2, AsrL, CM:Goal)).
+		 check_asrs(step1, AsrL, Goal, G2), G2,
+		 check_asrs(step2, AsrL, Goal, CM:Goal)).
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
@@ -219,10 +217,10 @@ rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
 rtcheck_assr_type(success).
 % ----------------------------------------------------------------------------
 
-check_asrs(Step, AsrL, Goal) :-
+check_asrs(Step, AsrL, Head, Goal) :-
     notrace(check_asrs_pre(Step, AsrL,
 			   AsrGlobL, AsrCompL, AsrSuccL)),
-    checkif_asrs_comp(AsrGlobL, Goal),
+    checkif_asrs_comp(AsrGlobL, Head, Goal),
     notrace(check_asrs_pos(AsrCompL, AsrSuccL)).
 
 check_asrs_pos(AsrCompL, AsrSuccL) :-
