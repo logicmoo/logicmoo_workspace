@@ -374,11 +374,12 @@ expand_reactive_rules() :-
     forall(
         member([A, C, EA], NewRRs),
         (
-            ( reactive_rule(A, C) ->
+            /*( reactive_rule(A, C) ->
                 retract(reactive_rule(A, C))
             ;
                 true
-            ),
+            ), the following is safer: */
+            retractall(reactive_rule(A, C)),
             assertz(reactive_rule(EA, C)) % TODO: should probably be a different "work" predicate
         )
     ).
@@ -1761,7 +1762,7 @@ load_test_file_for(F) :-
 	test_filename(F,TF),
 	catch(load_dyn(TF),E,true),
 	(nonvar(E) -> 
-		write(user_error, 'ERROR: could not load test file '), writeln(user_error,TF), 
+		write(user_error, 'ERROR: could not load test file '), writeln(user_error,TF), writeln(user_error,E),
 		writeln(user_error,' To obtain a test file you need to execute your program with the make_test option: go(YourFile,[make_test])'),
 		fail
 		; true).
@@ -1879,7 +1880,8 @@ pick_highest_tier2(Lower, [goal(P, GoalId, G)|OtherGoals], [], [goal(P, GoalId, 
 
 % add rules to trigger "meta" actions which document the occurrence of composite events
 add_meta_reactive_rules :-
-	forall(l_events(E,_), assert( reactive_rule([E],[happens(lps_meta(E),_,_)]) )),
+	forall( l_events(E,_), 
+		assert( reactive_rule([E],[happens(lps_meta(E),_T3,_)]) ) ),
 	assert(action(lps_meta(_))).
 	
 % cleanup
@@ -1915,6 +1917,8 @@ cleanup :-
     retractall(lps_failed_test(_,_)),
     retractall(lps_test_result(_,_,_)).
 
+% cycle_options(CandidateActions,PartialReactiveRules,GoalState)
+%  GoalState is a list (conjunction) of goal(Id,Tree)
 cycle_options(CAi, Ri, Gi) :-
     current_time(Time),
     retractall(happens(_, _, _)),
