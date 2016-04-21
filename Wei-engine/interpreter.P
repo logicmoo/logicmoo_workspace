@@ -1697,7 +1697,7 @@ go(File, OptionsList) :-
     load_dyn(File),
     check_syntax,
     (option(meta_actions) -> add_meta_reactive_rules ; true),
-    initial_state(IS), assert_list(IS),
+    ( initial_state(IS) -> assert_list(IS) ; true),
     expand_reactive_rules,
     ( option(breadth) ->
         expand_consequents
@@ -1916,6 +1916,7 @@ cleanup :-
     retractall(failed(_, _, _)),
     % retractall(fluent(_)),
     retractall(happens(_, _, _)),
+    retractall(initial_state(_)),
     retractall(initiated(_, _, _)),
     retractall(l_events(_, _)),
     retractall(l_int(_, _)),
