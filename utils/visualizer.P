@@ -1,4 +1,4 @@
-:- export visual/1, gov/1.
+:- export visual/1, gov/1, gov/2.
 
 :- import load_test_file_for/1, go/2 from interpreter.
 :- import lps_test_result/3 from usermod. 
@@ -9,7 +9,11 @@
 :- import xjShowURL/1 from usermod. % xj2.P
 
 % gov(ProgramFile) "go visual": executes generating results file and displays its timeline
-gov(File) :- go(File,[make_test]), visual(File).
+gov(File) :- gov(File,[]).
+
+% gov(ProgramFile,Options)
+gov(File,Options) :- go(File,[make_test|Options]), visual(File).
+
 
 % visual(TestResultsFile)  This needs to be in sync with test/3 calls in interpreter.P
 visual(File) :- 
@@ -33,10 +37,9 @@ visual(File) :-
 		member(F/N,GroupIds), 
 		term_to_atom(F/N,Gatom), functor(GG,F,N), term_to_atom(GG,Gsignature)
 	), FluentGroups),
-	append( 
-		[{id:observation,content:'Observations'},{id:event,content:'Events'}|FluentGroups], 
-		[{id:action,content:'Actions'}],
-		Groups ),
+	( member(t(_,_,event),Tuples) -> G1 = [{id:observation,content:'Observations'},{id:event,content:'Events'}|FluentGroups]
+		; G1 = [{id:observation,content:'Observations'}|FluentGroups]),
+	append(G1, [{id:action,content:'Actions'}], Groups ),
 	% term2json(Groups,GroupsJSON),
 	% Aggregate fluent ranges
 	sort(Tuples,Sorted),
