@@ -75,12 +75,13 @@ rtcheck_cond(Cond, Check, PredName) :-
     ).
 
 check_asr_props(Asr, Part, Check, Mult, PropValues) :-
-    findall(From/Prop-[],
+    findall(Asr-(From/Prop-[]),
 	    ( asr_aprop(Asr, Part, Prop, From),
 	      \+ check_prop(Check, Prop),
 	      (Mult = once -> ! ; true)
 	    ),
-	    PropValues).
+	    AsrPropValues),
+    maplist(unify_common(Asr), AsrPropValues, PropValues).
 
 check_prop(compat,   Prop) :- compat(  Prop).
 check_prop(instance, Prop) :- instance(Prop).
@@ -327,8 +328,8 @@ current_assertion(Pred, M, TimeCheck, Asr) :-
     \+ black_list_pred(Pred),
     implementation_module(CM:Pred, M).
 
-pred_assertion(Pred, Pred-Asr, Asr).
+unify_common(Common, Common-Term, Term).
 
 collect_assertions(Pred, M, TimeCheck, AsrL) :-
     findall(Pred-Asr, current_assertion(Pred, M, TimeCheck, Asr), Pairs),
-    maplist(pred_assertion(Pred), Pairs, AsrL).
+    maplist(unify_common(Pred), Pairs, AsrL).

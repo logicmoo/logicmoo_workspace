@@ -16,7 +16,8 @@ filtered_backtrace:no_backtrace_clause_hook(_, intercept).
 filtered_backtrace:no_backtrace_clause_hook(_, nativeprops).
 filtered_backtrace:no_backtrace_clause_hook(_, send_check).
 filtered_backtrace:no_backtrace_clause_hook(_, plprops).
-filtered_backtrace:no_backtrace_clause_hook('$rat_trap'(_, _, _, _), _).
+filtered_backtrace:no_backtrace_clause_hook(_, context_values).
+filtered_backtrace:no_backtrace_clause_hook('$rat_trap'(_, _, _, _, _), _).
 
 tracertc :-
     filtered_backtrace(100).
@@ -59,7 +60,10 @@ rtcheck_type(calls).
 :- pred handle_rtcheck/1 : assrchk_error.
 
 handle_rtcheck(RTCheck) :-
-    print_message(error, RTCheck).
+    \+ ( numbervars(RTCheck, 0, _),
+	 print_message(error, RTCheck),
+	 fail
+       ).
 
 :- multifile
 	prolog:error_message_signal//1,
