@@ -18,13 +18,13 @@ l_timeless(lps_write(X), [write(X),nl]).
 
 reactive_rule(
 	 [happens(start, 0, 1)], 
-    	 [happens(refuse(i), 0, 2)]
+    	 [happens(refuse(i), 1, 2)]
 ).
 
-%reactive_rule(
-%	 [happens(start, 0, 1)], 
-%    	 [happens(refuse(o), 0, 2)]
-%).
+reactive_rule(
+	 [happens(start, 0, 1)], 
+    	 [happens(refuse(o), 1, 2)]
+).
 
 
 %	If the other prisoner refuses at time T, then I refuse at time T+1.
@@ -124,11 +124,3 @@ observe([], 3).
 observe([], 4).
 observe([], 5).
 observe([], 6).
-
-
-
-
-
-
-
-

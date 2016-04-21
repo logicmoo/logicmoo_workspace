@@ -185,7 +185,7 @@ do_process_new([[[], C]|Ris], NewRi, Gi, [goal(GoalId, [C])|NewGi]) :-
 
 do_process_new([[A, C]|Ris], NewRi, Gi, NewGi) :-
     %write('A: '),write(A),nl,
-    process2(A, NA),!,
+    process2_(A, NA),!,
     %write('NA: '),write(NA),nl,nl,
     ( NA = [] ->
         generate_id(GoalId),
@@ -219,7 +219,7 @@ do_process_prio_new([[[], C, P]|Ris], NewRi, Gi, [goal(P, GoalId, [C])|NewGi]) :
     do_process_prio_new(Ris, NewRi, Gi, NewGi).
 
 do_process_prio_new([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
-    process2(A, NA),!,
+    process2_(A, NA),!,
     ( NA = [] ->
         generate_id(GoalId),
         NewGi = [goal(P, GoalId, [C])|NxtGi],
@@ -236,7 +236,7 @@ do_process_prio_new([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
 do_process_prio_exi([], [], Gi, Gi).
 
 do_process_prio_exi([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
-    process2(A, NA),!,
+    process2_(A, NA),!,
     ( NA = [] ->
         generate_id(GoalId),
         NewGi = [goal(P, GoalId, [C])|NxtGi],
@@ -255,7 +255,7 @@ do_process_prio_exi([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
 do_process_exi([], [], Gi, Gi).
 
 do_process_exi([[A, C]|Ris], NewRi, Gi, NewGi) :-
-    process2(A, NA),!,
+    process2_(A, NA),!,
     ( NA = [] ->
         generate_id(GoalId),
         NewGi = [goal(GoalId, [C])|NxtGi],
@@ -267,18 +267,25 @@ do_process_exi([[A, C]|Ris], NewRi, Gi, NewGi) :-
         do_process_exi(Ris, NxtRi, Gi, NewGi)
     ).
 
-% process2(+A, -NA)
+% process2_(+A, -NA)
 %   Resolve an antecedent A according to the operational semantics by querying
 %   the augmented state without making temporal constraints false.
 %
 %   If nothing can be resolved, NA is unified with A.
 %   If the antecedent can never be resolved, NA is unified with 'nosusp' to
 %   indicate failure.
-%
+process2_(A, NA) :- process2(A,NA), !. 
+	% One solution only?? 
+	% TODO: probable bug above! OS step 1 seems to require generation of resolvents here...
+process2_(_A, nosusp).
+	
+% process2(+A, -NA)
+% Similar to process2_ but fails instead of succeeding with 'nosusp'
+% This is necessary to execute search over fluents, timeles predicates etc
+
 process2([], []).
 
-process2([L|Ls], nosusp) :-
-    \+ satisfy_all([L|Ls]).
+process2([L|Ls], _nosusp) :- \+ satisfy_all([L|Ls]), !, fail. % seems redundant
 
 process2([holds(Fl, T)|Ls], NB) :-
     query(holds(Fl, T)),
@@ -291,20 +298,24 @@ process2([holds(Fl, T)|Ls], [holds(Fl, T)|Ls]) :-
     query(holds(Fl, T)),
     \+ satisfy_all(Ls).
 
-process2([holds(Fl, T)|Ls], nosusp) :-
+process2([holds(Fl, T)|Ls], _nosusp) :-
     number(T), current_time(Now), T == Now,
     query(holds(Fl, T)),
-    \+ satisfy_all(Ls).
+    \+ satisfy_all(Ls),
+    !, fail.
 
-process2([holds(_, T)|_], nosusp) :-
-    number(T), current_time(Now), T < Now.
+process2([holds(_, T)|_], _nosusp) :-
+    number(T), current_time(Now), T < Now,
+    !, fail.
 
-process2([holds(Fl, T)|_], nosusp) :-
+process2([holds(Fl, T)|_], _nosusp) :-
     number(T), current_time(Now), T == Now,
-    \+ query(holds(Fl, T)).
+    \+ query(holds(Fl, T)),
+    !, fail.
 
 process2([holds(Fl, T)|Ls], [holds(Fl, T)|Ls]) :-
     number(T), current_time(Now), T > Now.
+
 
 process2([happens(Ev, T1, T2)|Ls], NB) :-
     query(happens(Ev, T1, T2)),
@@ -318,42 +329,48 @@ process2([happens(Ev, T1, T2)|Ls], [happens(Ev, T1, T2)|Ls]) :-
     write('Ls: '),write(Ls),nl,
     \+ satisfy_all(Ls).
 
-process2([happens(Ev, T1, T2)|Ls], nosusp) :-
+process2([happens(Ev, T1, T2)|Ls], _nosusp) :-
     (number(T1);number(T2)),
     query(happens(Ev, T1, T2)),
-    \+ satisfy_all(Ls).
+    \+ satisfy_all(Ls),
+    !, fail.
 
 process2([happens(Ev, T1, T2)|Ls], [happens(Ev, T1, T2)|Ls]) :-
     (var(T1);var(T2)),
     \+ query(happens(Ev, T1, T2)).
 
-process2([happens(_, _, T2)|_], nosusp) :-
-    number(T2), current_time(Now), T2 < Now.
+process2([happens(_, _, T2)|_], _nosusp) :-
+    number(T2), current_time(Now), T2 < Now,
+    !, fail.
 
-process2([happens(Ev, T1, T2)|_], nosusp) :-
+process2([happens(Ev, T1, T2)|_], _nosusp) :-
     number(T2), current_time(Now), T2 == Now,
-    \+ query(happens(Ev, T1, T2)).
+    \+ query(happens(Ev, T1, T2)),
+    !, fail.
 
 process2([happens(Ev, T1, T2)|Ls], [happens(Ev, T1, T2)|Ls]) :-
     number(T2), current_time(Now), T2 > Now.
 
-process2([happens(_, T1, _)|_], nosusp) :-
-    number(T1), current_time(Now), T1 < Now.
+process2([happens(_, T1, _)|_], _nosusp) :-
+    number(T1), current_time(Now), T1 < Now,
+    !, fail.
 
-process2([happens(_, T1, _)|_], nosusp) :-
-    number(T1), current_time(Now), T1 == Now.
+process2([happens(_, T1, _)|_], _nosusp) :-
+    number(T1), current_time(Now), T1 == Now,
+    !, fail.
 
 process2([happens(Ev, T1, T2)|Ls], [happens(Ev, T1, T2)|Ls]) :-
     number(T1), current_time(Now), T1 > Now.
+
 
 process2([TL|Ls], NB) :-
     l_timeless(TL, _),
     query(TL),
     process2(Ls, NB).
 
-process2([TL|Ls], [TL|Ls]) :-
-    l_timeless(TL, _), % TODO: shouldn't we return nosusp here??
-    \+ query(TL).
+%process2([TL|Ls], [TL|Ls]) :-
+%    l_timeless(TL, _), % why should we "delay" TL ???
+%    \+ query(TL).
 
 process2([tc(X)|Rest], NB) :-
     ground(X),
@@ -1796,6 +1813,7 @@ test_filename(PF,TF) :-
 	
 % test(Stage,Cycle,Term)
 % Remembers or checks that at this Stage and Cycle, Term is obtained
+% Possible TODO: if term sizes increase too much, use machine:term_hash/3 and persist/compare hashes instead
 test(Stage,Cycle,Term) :- option(make_test), !,
 	\+ \+ (( numbervars(Term), assert(lps_test_result(Stage,Cycle,Term)) )).
 test(Stage,Cycle,Term) :- option(run_test), !,
