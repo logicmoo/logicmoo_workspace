@@ -1945,6 +1945,11 @@ cycle_options(CAi, Ri, Gi) :-
     write_verbose(['====================',nl]),
     write('* Cycle '),write(Time),write(' *'),nl,
     write_verbose(['====================',nl,nl]),
+    StageO='Observations:',
+    ( (option(manual) ->read_obs(Observations);observe(Observations, Time)) -> true 
+      ; writeln('* No more observations, terminating.'), fail ),
+    write_verbose([StageO,nl,Observations,nl,nl]), test(StageO,Time,Observations),
+    update_all(Observations),
     StageCA='Candidate actions:',
     write_verbose([StageCA,nl,CAi,nl,nl]), test(StageCA,Time,CAi),
     sort(CAi, SortedCAi),
@@ -1952,11 +1957,6 @@ cycle_options(CAi, Ri, Gi) :-
     % retractall(this_initiated(_)),
     StageSA='Selected actions:',
     write_verbose([StageSA,nl,Actions,nl,nl]), test(StageSA,Time,Actions),
-    ( (option(manual) ->read_obs(Observations);observe(Observations, Time)) -> true 
-      ; writeln('* No more observations, terminating.'), fail ),
-    StageO='Observations:',
-    write_verbose([StageO,nl,Observations,nl,nl]), test(StageO,Time,Observations),
-    update_all(Observations),
     leave_step_0,
     findall(Fl, state(Fl), State),
     StageDS='Database state:',

@@ -1,12 +1,15 @@
-:- export visual/1.
+:- export visual/1, gov/1.
 
-:- import load_test_file_for/1 from interpreter.
+:- import load_test_file_for/1, go/2 from interpreter.
 :- import lps_test_result/3 from usermod. 
 :- import member/2,append/3 from basics.
 :- import term_to_atom/2, concat_atom/2 from string.
 :- import variant/2 from subsumes.
 :- import java/3, term2json/2, create_counter/1, get_increment_counter/2 from interprolog.
 :- import xjShowURL/1 from usermod. % xj2.P
+
+% gov(ProgramFile) "go visual": executes generating results file and displays its timeline
+gov(File) :- go(File,[make_test]), visual(File).
 
 % visual(TestResultsFile)  This needs to be in sync with test/3 calls in interpreter.P
 visual(File) :- 
