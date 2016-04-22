@@ -26,6 +26,7 @@
 :- use_module(library(lists)).
 :- use_module(library(implementation_module)).
 :- use_module(library(subpos_utils)).
+:- use_module(library(prolog_codewalk), []).
 
 :- expects_dialect(swi).
 
