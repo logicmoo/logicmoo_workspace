@@ -58,7 +58,7 @@ check_trivial_fails(OptionL1, Pairs) :-
     collect_dynamic_locations(OptionL),
     extra_walk_code([on_etrace(collect_trivial_fails(MatchAI))|OptionL]),
     findall(warning-(Loc-Args),
-	    ( retract(trivial_fail(From, Args)),
+	    ( retract(trivial_fail(Args, From)),
 	      from_location(From, Loc)
 	    ), Pairs),
     cleanup_f,
@@ -124,13 +124,4 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
     ; Args = failure(Caller, MGoal, S)
     ),
     memberchk(Type, [lit, use]),
-    forall(( trivial_fail(From0, Args), 
-	     subsumes_from(From0, From)
-	   ),
-	   retract(trivial_fail(From0, Args))), % Clean up less precise facts
-    ( \+ ( trivial_fail(From0, Args),
-	   subsumes_from(From, From0 )
-	 )			% Assert if no more precise
-    ->assertz(trivial_fail(From, Args))
-    ; true
-    ).
+    update_fact_from(trivial_fail(Args), From).
