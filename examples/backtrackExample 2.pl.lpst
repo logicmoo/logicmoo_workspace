@@ -1,0 +1,51 @@
+/*
+  LPS test results file generated on 2016-04-22 at 17:13:31 for program file:
+  /Users/mc/git/lps_corner/examples/backtrackExample 2.pl
+*/
+
+% LPS options prior to the test:
+lps_test_options([verbose]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result('Observations:',1,[e1]).
+lps_test_result('Candidate actions:',1,[]).
+lps_test_result('Selected actions:',1,[]).
+lps_test_result('Database state:',1,[p(1),p(2),c(1,1),c(1,2),r(2)]).
+lps_test_result('New partial reactive rules:',1,[]).
+lps_test_result('New goals:',1,[goal(10000,[[happens(m(1),A,B),tc(1 =< A)]])]).
+lps_test_result('Resolved goals:',1,[goal(10000,[[happens(a1(2),1,A),tc(1 =< 1)],[holds(c(1,B),C),happens(a1(B),C,D),tc(1 =< C)],[happens(m(1),C,D),tc(1 =< C)]])]).
+lps_test_result('Observations:',2,[]).
+lps_test_result('Candidate actions:',2,[ca(9223372036854775807,happens(a1(2),1,2))]).
+lps_test_result('Selected actions:',2,[happens(a1(2),1,2)]).
+lps_test_result('Database state:',2,[c(1,1),c(1,2),r(2)]).
+lps_test_result('New partial reactive rules:',2,[]).
+lps_test_result('New goals:',2,[goal(10000,[[happens(a1(2),1,A),tc(1 =< 1)],[holds(c(1,B),C),happens(a1(B),C,D),tc(1 =< C)],[happens(m(1),C,D),tc(1 =< C)]])]).
+lps_test_result('Resolved goals:',2,[]).
+lps_test_result('Observations:',3,[]).
+lps_test_result('Candidate actions:',3,[]).
+lps_test_result('Selected actions:',3,[]).
+lps_test_result('Database state:',3,[c(1,1),c(1,2),r(2)]).
+lps_test_result('New partial reactive rules:',3,[]).
+lps_test_result('New goals:',3,[]).
+lps_test_result('Resolved goals:',3,[]).
+lps_test_result('Observations:',4,[e2]).
+lps_test_result('Candidate actions:',4,[]).
+lps_test_result('Selected actions:',4,[]).
+lps_test_result('Database state:',4,[c(1,1),c(1,2),r(2),d(2,2)]).
+lps_test_result('New partial reactive rules:',4,[]).
+lps_test_result('New goals:',4,[]).
+lps_test_result('Resolved goals:',4,[]).
+lps_test_result('Observations:',5,[]).
+lps_test_result('Candidate actions:',5,[]).
+lps_test_result('Selected actions:',5,[]).
+lps_test_result('Database state:',5,[c(1,1),c(1,2),r(2),d(2,2)]).
+lps_test_result('New partial reactive rules:',5,[]).
+lps_test_result('New goals:',5,[]).
+lps_test_result('Resolved goals:',5,[]).
+lps_test_result('Observations:',6,[]).
+lps_test_result('Candidate actions:',6,[]).
+lps_test_result('Selected actions:',6,[]).
+lps_test_result('Database state:',6,[c(1,1),c(1,2),r(2),d(2,2)]).
+lps_test_result('New partial reactive rules:',6,[]).
+lps_test_result('New goals:',6,[]).
+lps_test_result('Resolved goals:',6,[]).

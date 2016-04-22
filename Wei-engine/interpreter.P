@@ -1254,7 +1254,6 @@ try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
             NewConds,
             (
                 d_pre(Conds),
-                member(happens(Ev, T1, T2), Conds),
                 select(happens(Ev, T1, T2), Conds, NewConds)
             ),
             AllConds
