@@ -1708,7 +1708,16 @@ go(File, OptionsList) :-
     assertz(steps(1000)),
     assertz(current_goal(0)),
     assertz(depth(0)),
-    (cycle_options([], [], []); close_test_file(File)).
+    (option(ultra_verbose)->
+    		current_prolog_flag(write_depth,Old), 
+    		set_xsb_flag(write_depth,10000)
+   	;true),
+    (
+	cycle_options([], [], [])
+	; 
+	close_test_file(File),
+	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true)
+    	).
 
 read_obs(Obs) :-
     read(user_input, Obs),
@@ -1732,6 +1741,11 @@ parse_options_([manual|Rest]) :- !,
     parse_options_(Rest).
 parse_options_([verbose|Rest]) :- !,
     assertz(option(verbose)),
+    parse_options_(Rest).
+% Increase the default maximum written term depth, to avoid '...' output
+parse_options_([ultra_verbose|Rest]) :- !,
+    assertz(option(verbose)),
+    assertz(option(ultra_verbose)),
     parse_options_(Rest).
 parse_options_([goal_strat(breadth)|Rest]) :- !,
     assertz(option(breadth)),
