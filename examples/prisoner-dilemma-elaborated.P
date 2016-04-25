@@ -1,0 +1,99 @@
+% prisoner-dilemma-simplified.P Bob, 25 April 2016
+% The transition from T to T+1 represents the paassage of time involved in the two prisoners getting arrested once
+% and serving their time in jail
+
+initial_state([
+	total_years_in_jail(i, 0),
+	total_years_in_jail(o, 0)
+]).
+
+observe([refuse(i),bear_witness(o)], 1).
+
+
+observe([], 2).
+observe([], 3).
+observe([], 4).
+observe([], 5).
+observe([], 6).
+
+%	If the other prisoner refuses at time T, then I refuse at time T+1.
+reactive_rule(
+	 [happens(refuse(O), T1, T2), other(I, O)], 
+    	 [happens(refuse(I), T2, T3)]
+).
+
+%	If the other prisoner bears witness at time T, then I bear witness at time T+1.
+reactive_rule(
+	[happens(bear_witness(O), T1, T2), other(I, O)], 
+    	[happens(bear_witness(I), T2, T3)]
+).
+
+%	Update total years in jail.
+reactive_rule(
+	[holds(get(I, N), T1), holds(total_years_in_jail(I, Y), T1)], 
+    	[lps_plus(N, Y, NewY), happens(update(total_years_in_jail(I, NewY)), T1, T2)]
+). 
+
+% I get 0 years jail if I bear witness and the other prisoner refuses.
+l_int(holds(get(I, 0), T),
+[
+	holds(bore_witness(I), T),
+	holds(refused(O), T),
+	other(I, O)
+]
+).
+
+% I get 3 years jail if I refuse and the other prisoner bears witness.
+l_int(holds(get(I, 3), T),
+[
+	holds(refused(I), T),
+	holds(bore_witness(O), T), 
+	other(I, O)
+]
+).
+
+% I get 2 years jail if I bear witness and the other prisoner bears witness.
+l_int(holds(get(I, 2), T),
+[
+	holds(bore_witness(I), T),
+	holds(bore_witness(O), T), 
+	other(I, O)
+]
+).
+
+% I get 1 year   jail if I refuse and the other prisoner refuses. 
+l_int(holds(get(I, 1), T),
+[
+	holds(refused(I), T),
+	holds(refused(O), T),
+	other(I, O)
+]
+).
+
+initiated(happens(bear_witness(I), T1, T2), bore_witness(I), []).
+initiated(happens(refuse(I), T1, T2), refused(I), []).
+
+terminated(happens(bear_witness(I), T1, T2), refused(I), []).
+terminated(happens(refuse(I), T1, T2), bore_witness(I), []).
+
+initiated(happens(update(total_years_in_jail(I, NewY)), T1, T2), total_years_in_jail(I, NewY), []).
+terminated(happens(update(total_years_in_jail(I, NewY)), T1, T2), total_years_in_jail(I, _), []).
+
+% where bore_witness is a fluent initiated by the action bear_witness, and refused is a fluent initiated by the action refuse.
+
+fluent(bore_witness(_)). 
+fluent(refused(_)). 
+fluent(total_years_in_jail(_, _)).
+fluent(get(_,_)).
+
+action(refuse(_)).
+action(bear_witness(_)).
+action(update(total_years_in_jail(I, NewY))).
+
+
+l_timeless(other(o, i), []).
+l_timeless(other(i, o), []).
+l_timeless(lps_plus(N, Y, NewY), [NewY is N + Y]).
+
+
+

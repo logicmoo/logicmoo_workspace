@@ -1,0 +1,51 @@
+/*
+  LPS test results file generated on 2016-04-25 at 10:05:54 for program file:
+  /Users/mc/git/lps_corner/examples/prisoner-dilemma-elaborated.P
+*/
+
+% LPS options prior to the test:
+lps_test_options([]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result('Observations:',1,[refuse(i),bear_witness(o)]).
+lps_test_result('Candidate actions:',1,[]).
+lps_test_result('Selected actions:',1,[]).
+lps_test_result('Database state:',1,[total_years_in_jail(i,0),total_years_in_jail(o,0),refused(i),bore_witness(o)]).
+lps_test_result('New partial reactive rules:',1,[]).
+lps_test_result('New goals:',1,[goal(10000,[[lps_plus(3,0,A),happens(update(total_years_in_jail(i,A)),1,B)]]),goal(10001,[[lps_plus(0,0,C),happens(update(total_years_in_jail(o,C)),1,D)]]),goal(10002,[[happens(bear_witness(i),1,E)]]),goal(10003,[[happens(refuse(o),1,F)]])]).
+lps_test_result('Resolved goals:',1,[goal(10000,[[happens(update(total_years_in_jail(i,3)),1,A)],[lps_plus(3,0,B),happens(update(total_years_in_jail(i,B)),1,C)]]),goal(10001,[[happens(update(total_years_in_jail(o,0)),1,D)],[lps_plus(0,0,E),happens(update(total_years_in_jail(o,E)),1,F)]]),goal(10002,[[happens(bear_witness(i),1,G)]]),goal(10003,[[happens(refuse(o),1,H)]])]).
+lps_test_result('Observations:',2,[]).
+lps_test_result('Candidate actions:',2,[ca(9223372036854775807,happens(update(total_years_in_jail(i,3)),1,2)),ca(9223372036854775807,happens(update(total_years_in_jail(o,0)),1,2)),ca(9223372036854775807,happens(bear_witness(i),1,2)),ca(9223372036854775807,happens(refuse(o),1,2))]).
+lps_test_result('Selected actions:',2,[happens(bear_witness(i),1,2),happens(refuse(o),1,2),happens(update(total_years_in_jail(i,3)),1,2),happens(update(total_years_in_jail(o,0)),1,2)]).
+lps_test_result('Database state:',2,[bore_witness(i),refused(o),total_years_in_jail(i,3),total_years_in_jail(o,0)]).
+lps_test_result('New partial reactive rules:',2,[]).
+lps_test_result('New goals:',2,[goal(10000,[[happens(update(total_years_in_jail(i,3)),1,A)],[lps_plus(3,0,B),happens(update(total_years_in_jail(i,B)),1,C)]]),goal(10001,[[happens(update(total_years_in_jail(o,0)),1,D)],[lps_plus(0,0,E),happens(update(total_years_in_jail(o,E)),1,F)]]),goal(10002,[[happens(bear_witness(i),1,G)]]),goal(10003,[[happens(refuse(o),1,H)]]),goal(10004,[[lps_plus(0,3,I),happens(update(total_years_in_jail(i,I)),2,J)]]),goal(10005,[[lps_plus(3,0,K),happens(update(total_years_in_jail(o,K)),2,L)]]),goal(10006,[[happens(bear_witness(o),2,M)]]),goal(10007,[[happens(refuse(i),2,N)]])]).
+lps_test_result('Resolved goals:',2,[goal(10004,[[happens(update(total_years_in_jail(i,3)),2,A)],[lps_plus(0,3,B),happens(update(total_years_in_jail(i,B)),2,C)]]),goal(10005,[[happens(update(total_years_in_jail(o,3)),2,D)],[lps_plus(3,0,E),happens(update(total_years_in_jail(o,E)),2,F)]]),goal(10006,[[happens(bear_witness(o),2,G)]]),goal(10007,[[happens(refuse(i),2,H)]])]).
+lps_test_result('Observations:',3,[]).
+lps_test_result('Candidate actions:',3,[ca(9223372036854775807,happens(update(total_years_in_jail(i,3)),2,3)),ca(9223372036854775807,happens(update(total_years_in_jail(o,3)),2,3)),ca(9223372036854775807,happens(bear_witness(o),2,3)),ca(9223372036854775807,happens(refuse(i),2,3))]).
+lps_test_result('Selected actions:',3,[happens(bear_witness(o),2,3),happens(refuse(i),2,3),happens(update(total_years_in_jail(i,3)),2,3),happens(update(total_years_in_jail(o,3)),2,3)]).
+lps_test_result('Database state:',3,[bore_witness(o),refused(i),total_years_in_jail(i,3),total_years_in_jail(o,3)]).
+lps_test_result('New partial reactive rules:',3,[]).
+lps_test_result('New goals:',3,[goal(10004,[[happens(update(total_years_in_jail(i,3)),2,A)],[lps_plus(0,3,B),happens(update(total_years_in_jail(i,B)),2,C)]]),goal(10005,[[happens(update(total_years_in_jail(o,3)),2,D)],[lps_plus(3,0,E),happens(update(total_years_in_jail(o,E)),2,F)]]),goal(10006,[[happens(bear_witness(o),2,G)]]),goal(10007,[[happens(refuse(i),2,H)]]),goal(10008,[[lps_plus(3,3,I),happens(update(total_years_in_jail(i,I)),3,J)]]),goal(10009,[[lps_plus(0,3,K),happens(update(total_years_in_jail(o,K)),3,L)]]),goal(10010,[[happens(bear_witness(i),3,M)]]),goal(10011,[[happens(refuse(o),3,N)]])]).
+lps_test_result('Resolved goals:',3,[goal(10008,[[happens(update(total_years_in_jail(i,6)),3,A)],[lps_plus(3,3,B),happens(update(total_years_in_jail(i,B)),3,C)]]),goal(10009,[[happens(update(total_years_in_jail(o,3)),3,D)],[lps_plus(0,3,E),happens(update(total_years_in_jail(o,E)),3,F)]]),goal(10010,[[happens(bear_witness(i),3,G)]]),goal(10011,[[happens(refuse(o),3,H)]])]).
+lps_test_result('Observations:',4,[]).
+lps_test_result('Candidate actions:',4,[ca(9223372036854775807,happens(update(total_years_in_jail(i,6)),3,4)),ca(9223372036854775807,happens(update(total_years_in_jail(o,3)),3,4)),ca(9223372036854775807,happens(bear_witness(i),3,4)),ca(9223372036854775807,happens(refuse(o),3,4))]).
+lps_test_result('Selected actions:',4,[happens(bear_witness(i),3,4),happens(refuse(o),3,4),happens(update(total_years_in_jail(i,6)),3,4),happens(update(total_years_in_jail(o,3)),3,4)]).
+lps_test_result('Database state:',4,[bore_witness(i),refused(o),total_years_in_jail(i,6),total_years_in_jail(o,3)]).
+lps_test_result('New partial reactive rules:',4,[]).
+lps_test_result('New goals:',4,[goal(10008,[[happens(update(total_years_in_jail(i,6)),3,A)],[lps_plus(3,3,B),happens(update(total_years_in_jail(i,B)),3,C)]]),goal(10009,[[happens(update(total_years_in_jail(o,3)),3,D)],[lps_plus(0,3,E),happens(update(total_years_in_jail(o,E)),3,F)]]),goal(10010,[[happens(bear_witness(i),3,G)]]),goal(10011,[[happens(refuse(o),3,H)]]),goal(10012,[[lps_plus(0,6,I),happens(update(total_years_in_jail(i,I)),4,J)]]),goal(10013,[[lps_plus(3,3,K),happens(update(total_years_in_jail(o,K)),4,L)]]),goal(10014,[[happens(bear_witness(o),4,M)]]),goal(10015,[[happens(refuse(i),4,N)]])]).
+lps_test_result('Resolved goals:',4,[goal(10012,[[happens(update(total_years_in_jail(i,6)),4,A)],[lps_plus(0,6,B),happens(update(total_years_in_jail(i,B)),4,C)]]),goal(10013,[[happens(update(total_years_in_jail(o,6)),4,D)],[lps_plus(3,3,E),happens(update(total_years_in_jail(o,E)),4,F)]]),goal(10014,[[happens(bear_witness(o),4,G)]]),goal(10015,[[happens(refuse(i),4,H)]])]).
+lps_test_result('Observations:',5,[]).
+lps_test_result('Candidate actions:',5,[ca(9223372036854775807,happens(update(total_years_in_jail(i,6)),4,5)),ca(9223372036854775807,happens(update(total_years_in_jail(o,6)),4,5)),ca(9223372036854775807,happens(bear_witness(o),4,5)),ca(9223372036854775807,happens(refuse(i),4,5))]).
+lps_test_result('Selected actions:',5,[happens(bear_witness(o),4,5),happens(refuse(i),4,5),happens(update(total_years_in_jail(i,6)),4,5),happens(update(total_years_in_jail(o,6)),4,5)]).
+lps_test_result('Database state:',5,[bore_witness(o),refused(i),total_years_in_jail(i,6),total_years_in_jail(o,6)]).
+lps_test_result('New partial reactive rules:',5,[]).
+lps_test_result('New goals:',5,[goal(10012,[[happens(update(total_years_in_jail(i,6)),4,A)],[lps_plus(0,6,B),happens(update(total_years_in_jail(i,B)),4,C)]]),goal(10013,[[happens(update(total_years_in_jail(o,6)),4,D)],[lps_plus(3,3,E),happens(update(total_years_in_jail(o,E)),4,F)]]),goal(10014,[[happens(bear_witness(o),4,G)]]),goal(10015,[[happens(refuse(i),4,H)]]),goal(10016,[[lps_plus(3,6,I),happens(update(total_years_in_jail(i,I)),5,J)]]),goal(10017,[[lps_plus(0,6,K),happens(update(total_years_in_jail(o,K)),5,L)]]),goal(10018,[[happens(bear_witness(i),5,M)]]),goal(10019,[[happens(refuse(o),5,N)]])]).
+lps_test_result('Resolved goals:',5,[goal(10016,[[happens(update(total_years_in_jail(i,9)),5,A)],[lps_plus(3,6,B),happens(update(total_years_in_jail(i,B)),5,C)]]),goal(10017,[[happens(update(total_years_in_jail(o,6)),5,D)],[lps_plus(0,6,E),happens(update(total_years_in_jail(o,E)),5,F)]]),goal(10018,[[happens(bear_witness(i),5,G)]]),goal(10019,[[happens(refuse(o),5,H)]])]).
+lps_test_result('Observations:',6,[]).
+lps_test_result('Candidate actions:',6,[ca(9223372036854775807,happens(update(total_years_in_jail(i,9)),5,6)),ca(9223372036854775807,happens(update(total_years_in_jail(o,6)),5,6)),ca(9223372036854775807,happens(bear_witness(i),5,6)),ca(9223372036854775807,happens(refuse(o),5,6))]).
+lps_test_result('Selected actions:',6,[happens(bear_witness(i),5,6),happens(refuse(o),5,6),happens(update(total_years_in_jail(i,9)),5,6),happens(update(total_years_in_jail(o,6)),5,6)]).
+lps_test_result('Database state:',6,[bore_witness(i),refused(o),total_years_in_jail(i,9),total_years_in_jail(o,6)]).
+lps_test_result('New partial reactive rules:',6,[]).
+lps_test_result('New goals:',6,[goal(10016,[[happens(update(total_years_in_jail(i,9)),5,A)],[lps_plus(3,6,B),happens(update(total_years_in_jail(i,B)),5,C)]]),goal(10017,[[happens(update(total_years_in_jail(o,6)),5,D)],[lps_plus(0,6,E),happens(update(total_years_in_jail(o,E)),5,F)]]),goal(10018,[[happens(bear_witness(i),5,G)]]),goal(10019,[[happens(refuse(o),5,H)]]),goal(10020,[[lps_plus(0,9,I),happens(update(total_years_in_jail(i,I)),6,J)]]),goal(10021,[[lps_plus(3,6,K),happens(update(total_years_in_jail(o,K)),6,L)]]),goal(10022,[[happens(bear_witness(o),6,M)]]),goal(10023,[[happens(refuse(i),6,N)]])]).
+lps_test_result('Resolved goals:',6,[goal(10020,[[happens(update(total_years_in_jail(i,9)),6,A)],[lps_plus(0,9,B),happens(update(total_years_in_jail(i,B)),6,C)]]),goal(10021,[[happens(update(total_years_in_jail(o,9)),6,D)],[lps_plus(3,6,E),happens(update(total_years_in_jail(o,E)),6,F)]]),goal(10022,[[happens(bear_witness(o),6,G)]]),goal(10023,[[happens(refuse(i),6,H)]])]).
