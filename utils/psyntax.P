@@ -1,0 +1,143 @@
+/* Implement a surface syntax closer to that used on papers (.LPSP extension), 
+mapping to/from "Wei syntax" (.P or .pl extension) as assumed in the engine .
+The syntax is as follows:
+
+Antecedent ---> Consequent.
+myEvent(X,T1,T2) :- 
+   whatever(T1), blah(X), ev(T1,Tx),  tc(Tx>T1), anotherEvent(Tx,T2).
+intensional(A,T) :- some_fluent(B,T), timelessP(A,B).
+false :- pickup_forks(F1, philosopher(N), F2,T1,T2),   not available(F1,T1).
+initiated available(F2) :- 
+  putdown_forks(F1, philosopher(N), F2,T1,T2).
+terminated available(F2) :- 
+  putdown_forks(F1, philosopher(N), F2,T1,T2).
+
+Prolog facts in general are not transformed.
+
+*/
+
+:- op(1200,xfx,--->). % for reactive rules
+:- op(900,fy,terminated).
+:- op(900,fy,initiated).
+
+:- export lpsp2p_file/3, gol/2, gol/1.
+
+:- import append/3 from basics.
+:- import concat_atom/2 from string.
+:- import file_read/3 from xsb_read.
+:- import go/2 from interpreter.
+
+% Convert a file in LPSP into Wei syntax and execute it 
+gol(LPSP_file,Options) :-
+	concat_atom([LPSP_file,'_.P'],Pfile),
+	lpsp2p_file(LPSP_file,Pfile,true),
+	go(Pfile,Options).
+
+gol(LPSP_file) :- gol(LPSP_file,[]).
+
+
+% lpsp2p_file(+LPSPfile,+Pfile,+ToWei)
+% If ToWei==true it generates a .P file from the first file, else vice-versa
+lpsp2p_file(Lfile,Pfile,ToWei) :-
+	(ToWei==true -> 
+		file_exists(Lfile), open(Lfile,read,IStr), open(Pfile,write,OStr), 
+		Convert = lpsp2p(Term,Vars,NewTerm)
+		; 
+		file_exists(Pfile), open(Pfile,read,IStr), open(Lfile,write,OStr),
+		Convert = lpsp2p(NewTerm,Vars,Term)
+		),
+	IStr >= 0, OStr>=0,
+	repeat,
+	file_read(IStr,Term,Vars),
+	( Term==end_of_file -> true
+	;  Convert, bindAllVars(Vars), write(OStr,NewTerm), writeln(OStr,'.'), fail),
+	!,
+	close(OStr),close(IStr).
+
+
+% lpsp2p(?LPSPterm,+Vars,?Pterm) Vars is a (closed tail) list of some_functor(Name,Variable)
+% Either LPSPterm or Pterm must be bound; the other should be unbound
+% Probably needs to evolve to return error messages
+lpsp2p(L,_,PT) :- var(L), var(PT), !, fail.
+lpsp2p((A--->C),Vars,reactive_rule(NA,NC)) :- !, 
+	lpsp2p_sequence(A,Vars,NA), lpsp2p_sequence(C,Vars,NC).
+lpsp2p((H:-B),_,PT) :- var(PT), (var(H);var(B)), !, fail.
+lpsp2p((H:-B),_,(H:-B)) :- do_not_transform(H,B), !.
+lpsp2p((false:-B),Vars,d_pre(IC)) :- !, 
+	lpsp2p_sequence(B,Vars,IC).
+lpsp2p((IT:-B),Vars,PT) :- % LPSP -> Wei term
+	var(PT),
+	IT=..[F,H], ((F==terminated) ; (F==initiated)), 
+	!,
+	lpsp2p_sequence(B,Vars,[NB1|NBn]), % should be strictier wrt NB1 ?
+	PT=..[F,NB1,H,NBn].
+lpsp2p(L,Vars,PT) :- % LPSP <- Wei term
+	var(L), PT=..[F,NB1,H,NBn], 
+	((F==terminated) ; (F==initiated)), 
+	!,
+	LH=..[F,H], L = (LH:-B),
+	lpsp2p_sequence(B,Vars,[NB1|NBn]). % should be strictier wrt NB1 ?
+lpsp2p(L,Vars,PT) :- 
+	(var(PT) -> ToWei=true; ToWei=false),
+	L = (LH:-LB), 
+	(ToWei==true -> lpsp2p_literal(LH,Vars,NH); true),
+	( 
+	PT = l_events(NH,NB), NH=happens(H,_,_) ;
+	PT = l_int(NH,NB), NH = holds(H,_) ;
+	PT = l_timeless(NH,NB), \+ (NH = holds(_,_) ; NH = happens(_,_,_))  
+	),
+	!,
+	(ToWei==false -> lpsp2p_literal(LH,Vars,NH) ; true),
+	lpsp2p_sequence(LB,Vars,NB).
+
+lpsp2p(Fact, _, Fact). % pass through for Wei terms or other Prolog facts
+
+lpsp2p_sequence((L1,L2),Vars,[PT1|PT2]) :- PT2 \== [], !,
+	lpsp2p_literal(L1,Vars,PT1), lpsp2p_sequence(L2,Vars,PT2).
+lpsp2p_sequence(L,Vars,[PT]) :- !, lpsp2p_literal(L,Vars,PT).
+lpsp2p_sequence(true,_,[]).
+
+lpsp2p_literal(tc(TC),_Vars,tc(TC)) :- !. %TODO: check Vars for (some) Ts!!!
+lpsp2p_literal(L,Vars,happens(NL,T1,T2)) :- 
+	nonvar(L),
+	L=..LL, append(Tless,[T1,T2],LL),  Tless=[_|_], % last 2 args of term 
+	is_time_var(Vars,T1), is_time_var(Vars,T2),	
+	!,
+	NL=..Tless.
+lpsp2p_literal(L,_Vars,happens(NL,T1,T2)) :- 
+	var(L),
+	!,
+	NL=..NLL, append(NLL,[T1,T2],Tplus),  
+	!,
+	L=..Tplus.
+lpsp2p_literal(not(L),Vars,holds(not(NL),T)) :- 
+	% Wei syntax seems to preclude 'not' elsewhere!
+	!,
+	lpsp2p_literal(L,Vars,holds(NL,T)).
+lpsp2p_literal(L,Vars,holds(NL,T)) :- 
+	nonvar(L),
+	L=..LL, LL=[_,_|_], append(Tless,[T],LL), 
+	is_time_var(Vars,T),
+	!,
+	NL=..Tless.
+lpsp2p_literal(L,_Vars,holds(NL,T)) :- 
+	var(L),
+	!,
+	NL=..NLL, append(NLL,[T],Tplus),
+	L=..Tplus.
+lpsp2p_literal(L,_,L). % some timeless literal
+
+% Accepting any Txxx variable as time variable
+is_time_var([],_T) :-!, fail.
+is_time_var([VV|_Vars], T) :- arg(2,VV,V), V==T, !,
+	arg(1,VV,Name), atom_codes(Name,Codes), append("T",_Rest,Codes).
+is_time_var([_VV|Vars], T) :- is_time_var(Vars, T).
+
+% also closes var tailed lists
+bindAllVars([]) :- !.
+bindAllVars([VV|Vars]) :- 
+	arg(1,VV,Name), arg(2,VV,Value), 
+	(var(Value) -> Value=Name ; true), bindAllVars(Vars).
+
+% Declare here predicates you wish to keep unchanged accross the transform
+do_not_transform(observe(_,_),_). % to cater for observe/2 rules (in addition to facts)

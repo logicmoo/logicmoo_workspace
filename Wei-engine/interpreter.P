@@ -22,9 +22,9 @@
 :- import d_head/1, d_event/1, d_body/1 from preprocessor.
 
 :- import action/1, /*cacts/1,*/ current_time/1, d_pre/1 /*,event/1*/ from usermod.
-:- import /*fluent/1,*/ happens/3, initiated/3, l_events/2, l_int/2 from usermod.
+:- import /*fluent/1,*/ happens/3, (initiated)/3, l_events/2, l_int/2 from usermod.
 :- import l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1 from usermod.
-:- import steps/1, succ_t/2, /*susp/1,*/ terminated/3, used/1 from usermod.
+:- import steps/1, succ_t/2, /*susp/1,*/ (terminated)/3, used/1 from usermod.
 :- import current_goal/1, depth/1, tried/3, failed/3, option/1 from usermod.
 :- import expanded_consequent/2 from usermod.
 
@@ -728,7 +728,7 @@ resolve_tree_prio([goal(P, GoalId, G)|Gs], AccG, NG, AccA, CA) :-
 %
 resolve_goal([], [], []) :- fail.
 resolve_goal([B1|Bs], NextGoal, CandActs) :-
-    \+ satisfy_all(B1),
+    \+ satisfy_all(B1), % TODO: Shouldn't we CUT here?
     length([B1|Bs], Depth),
     retractall(depth(_)),
     assertz(depth(Depth)),

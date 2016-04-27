@@ -1,0 +1,24 @@
+/* Variant in experimental syntax, cf. utils/psyntax */
+initial_state([available(fork(0)),available(fork(1)),available(fork(2)),available(fork(3)),available(fork(4))]).
+(time_to_eat(philosopher(N),T1,T2) ---> dine(philosopher(N),T3,T4),tc(T2 =< T3)).
+(adjacent(fork(1),philosopher(1),fork(2)) :- true).
+(adjacent(fork(3),philosopher(3),fork(4)) :- true).
+(adjacent(fork(0),philosopher(0),fork(1)) :- true).
+(adjacent(fork(2),philosopher(2),fork(3)) :- true).
+(adjacent(fork(4),philosopher(4),fork(0)) :- true).
+(dine(philosopher(N),T1,T6) :- think(philosopher(N),T1,T2),adjacent(F1,philosopher(N),F2),pickup_forks(F1,philosopher(N),F2,T3,T4),tc(T2 =< T3),eat(philosopher(N),T4,T5),putdown_forks(F1,philosopher(N),F2,T5,T6)).
+(terminated available(F1) :- pickup_forks(F1,philosopher(N),F2,T1,T2)).
+(terminated available(F2) :- pickup_forks(F1,philosopher(N),F2,T1,T2)).
+(initiated available(F1) :- putdown_forks(F1,philosopher(N),F2,T1,T2)).
+(initiated available(F2) :- putdown_forks(F1,philosopher(N),F2,T1,T2)).
+(false :- pickup_forks(F1,philosopher(N),F2,T1,T2),not available(F1,T1)).
+(false :- pickup_forks(F1,philosopher(N),F2,T1,T2),not available(F2,T1)).
+(false :- pickup_forks(F1,philosopher(N),F,T1,T2),pickup_forks(F,philosopher(K),F2,T1,T2)).
+observe([time_to_eat(philosopher(0)),time_to_eat(philosopher(1)),time_to_eat(philosopher(2)),time_to_eat(philosopher(3)),time_to_eat(philosopher(4))],1).
+(observe([],Cycle) :- Cycle > 1,Cycle < 12).
+fluent(available(_)).
+event(time_to_eat(_)).
+action(think(_)).
+action(pickup_forks(_,_,_)).
+action(eat(_)).
+action(putdown_forks(_,_,_)).
