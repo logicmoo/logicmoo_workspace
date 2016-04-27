@@ -1,5 +1,5 @@
 /*
-  LPS test results file generated on 2016-04-27 at 16:24:26 for program file:
+  LPS test results file generated on 2016-04-27 at 18:54:30 for program file:
   /Users/mc/git/lps_corner/examples/prisoner-dilemma-simplified.P
 */
 
@@ -7,45 +7,114 @@
 lps_test_options([verbose]).
 
 % lps_test_result(Stage,Cycle,TestTerm)
-lps_test_result('Observations:',1,[refuse(i),bear_witness(o)]).
-lps_test_result('Candidate actions:',1,[]).
-lps_test_result('Selected actions:',1,[]).
-lps_test_result('Database state:',1,[refused(i),bore_witness(o)]).
-lps_test_result('New partial reactive rules:',1,[]).
-lps_test_result('New goals:',1,[goal(10001,[[happens(refuse(o),1,A)]]),goal(10000,[[happens(bear_witness(i),1,B)]])]).
-lps_test_result('Resolved goals:',1,[goal(10001,[[happens(refuse(o),1,A)]]),goal(10000,[[happens(bear_witness(i),1,B)]])]).
-lps_test_result('Observations:',2,[]).
-lps_test_result('Candidate actions:',2,[ca(9223372036854775807,happens(refuse(o),1,2)),ca(9223372036854775807,happens(bear_witness(i),1,2))]).
-lps_test_result('Selected actions:',2,[happens(bear_witness(i),1,2),happens(refuse(o),1,2)]).
-lps_test_result('Database state:',2,[bore_witness(i),refused(o)]).
-lps_test_result('New partial reactive rules:',2,[]).
-lps_test_result('New goals:',2,[goal(10001,[[happens(refuse(o),1,A)]]),goal(10000,[[happens(bear_witness(i),1,B)]]),goal(10003,[[happens(refuse(i),2,C)]]),goal(10002,[[happens(bear_witness(o),2,D)]])]).
-lps_test_result('Resolved goals:',2,[goal(10003,[[happens(refuse(i),2,A)]]),goal(10002,[[happens(bear_witness(o),2,B)]])]).
-lps_test_result('Observations:',3,[]).
-lps_test_result('Candidate actions:',3,[ca(9223372036854775807,happens(refuse(i),2,3)),ca(9223372036854775807,happens(bear_witness(o),2,3))]).
-lps_test_result('Selected actions:',3,[happens(bear_witness(o),2,3),happens(refuse(i),2,3)]).
-lps_test_result('Database state:',3,[bore_witness(o),refused(i)]).
-lps_test_result('New partial reactive rules:',3,[]).
-lps_test_result('New goals:',3,[goal(10003,[[happens(refuse(i),2,A)]]),goal(10002,[[happens(bear_witness(o),2,B)]]),goal(10005,[[happens(refuse(o),3,C)]]),goal(10004,[[happens(bear_witness(i),3,D)]])]).
-lps_test_result('Resolved goals:',3,[goal(10005,[[happens(refuse(o),3,A)]]),goal(10004,[[happens(bear_witness(i),3,B)]])]).
-lps_test_result('Observations:',4,[]).
-lps_test_result('Candidate actions:',4,[ca(9223372036854775807,happens(refuse(o),3,4)),ca(9223372036854775807,happens(bear_witness(i),3,4))]).
-lps_test_result('Selected actions:',4,[happens(bear_witness(i),3,4),happens(refuse(o),3,4)]).
-lps_test_result('Database state:',4,[bore_witness(i),refused(o)]).
-lps_test_result('New partial reactive rules:',4,[]).
-lps_test_result('New goals:',4,[goal(10005,[[happens(refuse(o),3,A)]]),goal(10004,[[happens(bear_witness(i),3,B)]]),goal(10007,[[happens(refuse(i),4,C)]]),goal(10006,[[happens(bear_witness(o),4,D)]])]).
-lps_test_result('Resolved goals:',4,[goal(10007,[[happens(refuse(i),4,A)]]),goal(10006,[[happens(bear_witness(o),4,B)]])]).
-lps_test_result('Observations:',5,[]).
-lps_test_result('Candidate actions:',5,[ca(9223372036854775807,happens(refuse(i),4,5)),ca(9223372036854775807,happens(bear_witness(o),4,5))]).
-lps_test_result('Selected actions:',5,[happens(bear_witness(o),4,5),happens(refuse(i),4,5)]).
-lps_test_result('Database state:',5,[bore_witness(o),refused(i)]).
-lps_test_result('New partial reactive rules:',5,[]).
-lps_test_result('New goals:',5,[goal(10007,[[happens(refuse(i),4,A)]]),goal(10006,[[happens(bear_witness(o),4,B)]]),goal(10009,[[happens(refuse(o),5,C)]]),goal(10008,[[happens(bear_witness(i),5,D)]])]).
-lps_test_result('Resolved goals:',5,[goal(10009,[[happens(refuse(o),5,A)]]),goal(10008,[[happens(bear_witness(i),5,B)]])]).
-lps_test_result('Observations:',6,[]).
-lps_test_result('Candidate actions:',6,[ca(9223372036854775807,happens(refuse(o),5,6)),ca(9223372036854775807,happens(bear_witness(i),5,6))]).
-lps_test_result('Selected actions:',6,[happens(bear_witness(i),5,6),happens(refuse(o),5,6)]).
-lps_test_result('Database state:',6,[bore_witness(i),refused(o)]).
-lps_test_result('New partial reactive rules:',6,[]).
-lps_test_result('New goals:',6,[goal(10009,[[happens(refuse(o),5,A)]]),goal(10008,[[happens(bear_witness(i),5,B)]]),goal(10011,[[happens(refuse(i),6,C)]]),goal(10010,[[happens(bear_witness(o),6,D)]])]).
-lps_test_result('Resolved goals:',6,[goal(10011,[[happens(refuse(i),6,A)]]),goal(10010,[[happens(bear_witness(o),6,B)]])]).
+lps_test_result('Observations:',1,2).
+lps_test_result('Candidate actions:',1,0).
+lps_test_result('Selected actions:',1,0).
+lps_test_result('Database state:',1,2).
+lps_test_result('New partial reactive rules:',1,0).
+lps_test_result('New goals:',1,2).
+lps_test_result('Resolved goals:',1,2).
+lps_test_result('Observations:',2,0).
+lps_test_result('Candidate actions:',2,2).
+lps_test_result('Selected actions:',2,2).
+lps_test_result('Database state:',2,2).
+lps_test_result('New partial reactive rules:',2,0).
+lps_test_result('New goals:',2,4).
+lps_test_result('Resolved goals:',2,2).
+lps_test_result('Observations:',3,0).
+lps_test_result('Candidate actions:',3,2).
+lps_test_result('Selected actions:',3,2).
+lps_test_result('Database state:',3,2).
+lps_test_result('New partial reactive rules:',3,0).
+lps_test_result('New goals:',3,4).
+lps_test_result('Resolved goals:',3,2).
+lps_test_result('Observations:',4,0).
+lps_test_result('Candidate actions:',4,2).
+lps_test_result('Selected actions:',4,2).
+lps_test_result('Database state:',4,2).
+lps_test_result('New partial reactive rules:',4,0).
+lps_test_result('New goals:',4,4).
+lps_test_result('Resolved goals:',4,2).
+lps_test_result('Observations:',5,0).
+lps_test_result('Candidate actions:',5,2).
+lps_test_result('Selected actions:',5,2).
+lps_test_result('Database state:',5,2).
+lps_test_result('New partial reactive rules:',5,0).
+lps_test_result('New goals:',5,4).
+lps_test_result('Resolved goals:',5,2).
+lps_test_result('Observations:',6,0).
+lps_test_result('Candidate actions:',6,2).
+lps_test_result('Selected actions:',6,2).
+lps_test_result('Database state:',6,2).
+lps_test_result('New partial reactive rules:',6,0).
+lps_test_result('New goals:',6,4).
+lps_test_result('Resolved goals:',6,2).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item('Observations:',1,refuse(i)).
+lps_test_result_item('Observations:',1,bear_witness(o)).
+lps_test_result_item('Database state:',1,refused(i)).
+lps_test_result_item('Database state:',1,bore_witness(o)).
+lps_test_result_item('New goals:',1,goal(10001,[[happens(refuse(o),1,A)]])).
+lps_test_result_item('New goals:',1,goal(10000,[[happens(bear_witness(i),1,B)]])).
+lps_test_result_item('Resolved goals:',1,goal(10001,[[happens(refuse(o),1,A)]])).
+lps_test_result_item('Resolved goals:',1,goal(10000,[[happens(bear_witness(i),1,B)]])).
+lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(refuse(o),1,2))).
+lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(bear_witness(i),1,2))).
+lps_test_result_item('Selected actions:',2,happens(bear_witness(i),1,2)).
+lps_test_result_item('Selected actions:',2,happens(refuse(o),1,2)).
+lps_test_result_item('Database state:',2,bore_witness(i)).
+lps_test_result_item('Database state:',2,refused(o)).
+lps_test_result_item('New goals:',2,goal(10001,[[happens(refuse(o),1,A)]])).
+lps_test_result_item('New goals:',2,goal(10000,[[happens(bear_witness(i),1,B)]])).
+lps_test_result_item('New goals:',2,goal(10003,[[happens(refuse(i),2,C)]])).
+lps_test_result_item('New goals:',2,goal(10002,[[happens(bear_witness(o),2,D)]])).
+lps_test_result_item('Resolved goals:',2,goal(10003,[[happens(refuse(i),2,A)]])).
+lps_test_result_item('Resolved goals:',2,goal(10002,[[happens(bear_witness(o),2,B)]])).
+lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(refuse(i),2,3))).
+lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(bear_witness(o),2,3))).
+lps_test_result_item('Selected actions:',3,happens(bear_witness(o),2,3)).
+lps_test_result_item('Selected actions:',3,happens(refuse(i),2,3)).
+lps_test_result_item('Database state:',3,bore_witness(o)).
+lps_test_result_item('Database state:',3,refused(i)).
+lps_test_result_item('New goals:',3,goal(10003,[[happens(refuse(i),2,A)]])).
+lps_test_result_item('New goals:',3,goal(10002,[[happens(bear_witness(o),2,B)]])).
+lps_test_result_item('New goals:',3,goal(10005,[[happens(refuse(o),3,C)]])).
+lps_test_result_item('New goals:',3,goal(10004,[[happens(bear_witness(i),3,D)]])).
+lps_test_result_item('Resolved goals:',3,goal(10005,[[happens(refuse(o),3,A)]])).
+lps_test_result_item('Resolved goals:',3,goal(10004,[[happens(bear_witness(i),3,B)]])).
+lps_test_result_item('Candidate actions:',4,ca(9223372036854775807,happens(refuse(o),3,4))).
+lps_test_result_item('Candidate actions:',4,ca(9223372036854775807,happens(bear_witness(i),3,4))).
+lps_test_result_item('Selected actions:',4,happens(bear_witness(i),3,4)).
+lps_test_result_item('Selected actions:',4,happens(refuse(o),3,4)).
+lps_test_result_item('Database state:',4,bore_witness(i)).
+lps_test_result_item('Database state:',4,refused(o)).
+lps_test_result_item('New goals:',4,goal(10005,[[happens(refuse(o),3,A)]])).
+lps_test_result_item('New goals:',4,goal(10004,[[happens(bear_witness(i),3,B)]])).
+lps_test_result_item('New goals:',4,goal(10007,[[happens(refuse(i),4,C)]])).
+lps_test_result_item('New goals:',4,goal(10006,[[happens(bear_witness(o),4,D)]])).
+lps_test_result_item('Resolved goals:',4,goal(10007,[[happens(refuse(i),4,A)]])).
+lps_test_result_item('Resolved goals:',4,goal(10006,[[happens(bear_witness(o),4,B)]])).
+lps_test_result_item('Candidate actions:',5,ca(9223372036854775807,happens(refuse(i),4,5))).
+lps_test_result_item('Candidate actions:',5,ca(9223372036854775807,happens(bear_witness(o),4,5))).
+lps_test_result_item('Selected actions:',5,happens(bear_witness(o),4,5)).
+lps_test_result_item('Selected actions:',5,happens(refuse(i),4,5)).
+lps_test_result_item('Database state:',5,bore_witness(o)).
+lps_test_result_item('Database state:',5,refused(i)).
+lps_test_result_item('New goals:',5,goal(10007,[[happens(refuse(i),4,A)]])).
+lps_test_result_item('New goals:',5,goal(10006,[[happens(bear_witness(o),4,B)]])).
+lps_test_result_item('New goals:',5,goal(10009,[[happens(refuse(o),5,C)]])).
+lps_test_result_item('New goals:',5,goal(10008,[[happens(bear_witness(i),5,D)]])).
+lps_test_result_item('Resolved goals:',5,goal(10009,[[happens(refuse(o),5,A)]])).
+lps_test_result_item('Resolved goals:',5,goal(10008,[[happens(bear_witness(i),5,B)]])).
+lps_test_result_item('Candidate actions:',6,ca(9223372036854775807,happens(refuse(o),5,6))).
+lps_test_result_item('Candidate actions:',6,ca(9223372036854775807,happens(bear_witness(i),5,6))).
+lps_test_result_item('Selected actions:',6,happens(bear_witness(i),5,6)).
+lps_test_result_item('Selected actions:',6,happens(refuse(o),5,6)).
+lps_test_result_item('Database state:',6,bore_witness(i)).
+lps_test_result_item('Database state:',6,refused(o)).
+lps_test_result_item('New goals:',6,goal(10009,[[happens(refuse(o),5,A)]])).
+lps_test_result_item('New goals:',6,goal(10008,[[happens(bear_witness(i),5,B)]])).
+lps_test_result_item('New goals:',6,goal(10011,[[happens(refuse(i),6,C)]])).
+lps_test_result_item('New goals:',6,goal(10010,[[happens(bear_witness(o),6,D)]])).
+lps_test_result_item('Resolved goals:',6,goal(10011,[[happens(refuse(i),6,A)]])).
+lps_test_result_item('Resolved goals:',6,goal(10010,[[happens(bear_witness(o),6,B)]])).

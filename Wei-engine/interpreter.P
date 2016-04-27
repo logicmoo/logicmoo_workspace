@@ -15,7 +15,7 @@
 :- import numbervars/1 from num_vars.
 :- import concat_atom/2 from string.
 :- import datime/1 from standard.
-:- import conget/2, conset/2 from machine.
+:- import conget/2, conset/2, term_hash/3 from machine.
 :- import list_directory/2 from shell.
 
 :- import reactive_conjunct/1, l_int_body/1, l_events_body/1 from preprocessor.
@@ -30,8 +30,8 @@
 
 :- import initial_state/1 from usermod.
 
-:- import lps_test_result/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
-:- dynamic lps_test_result/3, lps_test_options/1, lps_failed_test/2.
+:- import lps_test_result/3, lps_test_result_item/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
+:- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_options/1, lps_failed_test/2.
 % This fact will contain this file's directory:
 :- dynamic lps_engine_directory/1.
 
@@ -1744,6 +1744,8 @@ close_test_file(F) :- option(make_test), !,
 	write(lps_test_options(RealOptions)), writeln('.'), nl,
 	writeln('% lps_test_result(Stage,Cycle,TestTerm)'),
 	(lps_test_result(S,C,T), writeq(lps_test_result(S,C,T)), writeln('.'), fail ; true),
+	writeln('% lps_test_result_item(Stage,Cycle,TestTerm)'),
+	(lps_test_result_item(S,C,T), writeq(lps_test_result_item(S,C,T)), writeln('.'), fail ; true),
 	told, tell(Old).
 close_test_file(F) :- option(run_test), !,  
 	test_filename(F,TF),
@@ -1760,23 +1762,46 @@ test_filename(PF,TF) :-
 	
 % test(Stage,Cycle,Term)
 % Remembers or checks that at this Stage and Cycle, Term is obtained
-% Possible TODO: if term sizes increase too much, use machine:term_hash/3 and persist/compare hashes instead
+% Requires the Term to be a LIST
+% if term size is too big an abstraction is stored, and it is NOT verified
 test(Stage,Cycle,Term) :- option(make_test), !,
-	\+ \+ (( numbervars(Term), assert(lps_test_result(Stage,Cycle,Term)) )).
+	is_list(Term),
+	\+ \+ (( 
+		numbervars(Term), length(Term,N), assert(lps_test_result(Stage,Cycle,N)),
+		forall(member(Item,Term),assert_lps_test_result_item(Stage,Cycle,Item))
+		)).
 test(Stage,Cycle,Term) :- option(run_test), !,
 	% fails if the test fails:
-	( lps_test_result(Stage,Cycle,Test) -> true 
+	( lps_test_result(Stage,Cycle,N) -> true 
 	  ; 
 	  	write('FAILED test '), writeln(Stage/Cycle/Term), 
-	  	writeln('Missing test fact.'), assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),missing_fact)), 
+	  	writeln('Missing test fact.'), 
+	  	assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),missing_fact)), 
 	  	fail),
-	( variant(Term,Test) -> true
+	findall(Item,lps_test_result_item(Stage,Cycle,Item),Test), 
+	( (length(Term,N), test_items_ok(Term,Test))
+		-> true
 		; 
 		write('FAILED test '), writeln(Stage/Cycle/Term), write('Expected '), writeln(Test), 
 		assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),Test)),
 		fail).
 test(_,_,_).
 
+% test_items_ok(Actual,Test)
+test_items_ok([A|An],[lps_gigantic(Size,H)|Tn]) :- !,
+	term_size(A,Size), term_hash(A,100000,H),
+	test_items_ok(An,Tn).
+test_items_ok([A|An],[T|Tn]) :- !,
+	variant(A,T),
+	test_items_ok(An,Tn).
+test_items_ok([],[]).
+
+% assert_lps_test_result_item(Stage,Cycle,Item) Gigantic terms are abstracted as lps_gigantic(Size,Hash)
+assert_lps_test_result_item(Stage,Cycle,Item) :- 
+	term_size(Item,Size), 
+	( Size > 1000 -> term_hash(Item,100000,H), Item_=lps_gigantic(Size,H) ; Item_=Item),
+	assert(lps_test_result_item(Stage,Cycle,Item_)).
+	
 % test all programs in the LPS examples directory which have a .lpst file present
 test_examples :- 
 	lps_engine_directory(D), 
@@ -1881,7 +1906,8 @@ cleanup :-
     reset_goal_ids,
     % retractall(this_initiated(_)),
     retractall(lps_failed_test(_,_)),
-    retractall(lps_test_result(_,_,_)).
+    retractall(lps_test_result(_,_,_)),
+    retractall(lps_test_result_item(_,_,_)).
 
 % cycle_options(CandidateActions,PartialReactiveRules,GoalState)
 %  GoalState is a list (conjunction) of goal(Id,Tree)

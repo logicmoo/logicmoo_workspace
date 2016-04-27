@@ -1,7 +1,7 @@
 :- export visual/1, gov/1, gov/2.
 
 :- import load_test_file_for/1, go/2 from interpreter.
-:- import lps_test_result/3 from usermod. 
+:- import lps_test_result_item/3 from usermod. 
 :- import member/2,append/3 from basics.
 :- import term_to_atom/2, concat_atom/2 from string.
 :- import variant/2 from subsumes.
@@ -15,7 +15,9 @@ gov(File) :- gov(File,[]).
 gov(File,Options) :- go(File,[make_test|Options]), visual(File).
 
 
-% visual(TestResultsFile)  This needs to be in sync with test/3 calls in interpreter.P
+% visual(TestResultsFile)  
+% This needs to be in sync with test/3 calls in interpreter.P
+% Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
 visual(File) :- 
 	load_dyn(File), % we need the meta info about events
 	load_test_file_for(File),
@@ -23,13 +25,13 @@ visual(File) :-
 	% For events and actions times T1 and T2 are the usual; for fluents, they are time of initiation and termination
 	% OFF BY ONE BUG HERE???
 	findall(t(X,T1-T2,G), (
-		lps_test_result('Observations:',T2,Terms), T1 is T2-1, G=observation, member(X,Terms) 
+		lps_test_result_item('Observations:',T2,X), T1 is T2-1, G=observation
 		;
-		lps_test_result('Selected actions:',TT2,Terms), member(happens(XX,TT1,TT2),Terms), 
+		lps_test_result_item('Selected actions:',TT2,happens(XX,TT1,TT2)), 
 		(action(XX)->G=action;G=event),
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
-		lps_test_result('Database state:',T1,Terms), T2 is T1+1, member(X,Terms), functor(X,F,N), G=F/N % fluent
+		lps_test_result_item('Database state:',T1,X), T2 is T1+1, functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
 	setof(G, T^X^member(t(X,T,G),Tuples), GroupIds),
