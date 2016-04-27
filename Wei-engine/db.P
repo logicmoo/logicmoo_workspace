@@ -11,7 +11,7 @@
 :- dynamic fluent/1.
 :- dynamic happens/3.
 :- dynamic initial_state/1.
-:- dynamic initiated/3.
+:- dynamic (initiated)/3.
 :- dynamic l_events/2. 
 :- dynamic l_int/2.
 :- dynamic l_timeless/2.
@@ -23,7 +23,7 @@
 :- dynamic steps/1.
 :- dynamic succ_t/2.
 :- dynamic susp/1.
-:- dynamic terminated/3.
+:- dynamic (terminated)/3.
 :- dynamic tried/3.
 :- dynamic used/1.
 % :- dynamic this_initiated/1.
