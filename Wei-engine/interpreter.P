@@ -150,56 +150,38 @@ process(Ri, NextRi, Gi, NextGi) :-
     ; Rs = []
     ),
     %findall([A,C], reactive_rule(A,C), Rs),
-    do_process_new(Rs, NRs, [], NGs),
-    do_process_exi(Ri, NRi, Gi, NGi),
+    do_process(Rs, NRs, [], NGs),
+    do_process(Ri, NRi, Gi, NGi),
     append(NRi, NRs, NextRi),
     append(NGi, NGs, NextGi).
 
-/* Unused, seems obsolete:
-processx(Ri, NextRi, Gi, NextGi) :-
-    ( setof([[HA|TA], C], (reactive_rule([HA|TA], C), query(HA)), Rs)
-    ; Rs = []
-    ),
-    do_processx(Rs, NRs, [], NGs),
-    do_processx(Ri, NRi, Gi, NGi),
-    append(NRi, NRs, NextRi),
-    append(NGi, NGs, NextGi).
 
-do_processx([[A, C]|_Ris], _NewRi, _Gi, _NewGi) :-
-    processx2([A, C], _Foo).
-
-
-processx2([[HA|TA], C], Foo) :-
-    findall(, (query(HA),), Rs)
-*/
-
-% do_process_new(+Ri, -NRi, +Gi, -NGi)
-%   Process a list of all (fresh) reactive rules. Output a partially resolved
+% do_process(+Ri, -NRi, +Gi, -NGi)
+%   Process a list of (fresh or existing partially resolved) reactive rules. Output a partially resolved
 %   list of reactive rules NRi and a list of goals NGi.
-%
-do_process_new([], [], Gi, Gi).
-
-do_process_new([[[], C]|Ris], NewRi, Gi, [goal(GoalId, [C])|NewGi]) :-
+do_process([], [], Gi, Gi).
+do_process([[[], C]|Ris], NewRi, Gi, [goal(GoalId, [C])|NewGi]) :- !,
     generate_id(GoalId),
-    do_process_new(Ris, NewRi, Gi, NewGi).
-
-do_process_new([[A, C]|Ris], NewRi, Gi, NewGi) :-
+    do_process(Ris, NewRi, Gi, NewGi).
+do_process([[A, C]|Ris], TheNewRi, Gi, TheNewGi) :-
     %write('A: '),write(A),nl,
-    process2_(A, NA),!,
-    %write('NA: '),write(NA),nl,nl,
-    ( NA = [] ->
-        generate_id(GoalId),
-        NewGi = [goal(GoalId, [C])|NxtGi],
-        do_process_new(Ris, NewRi, Gi, NxtGi)
-    ; NA = nosusp ->
-        do_process_new(Ris, NewRi, Gi, NewGi)
-    % TODO: Bug?? Unchanged antecedent can not be discarded:
-    ; NA = A ->
-        do_process_new(Ris, NewRi, Gi, NewGi)
-    ;
-        NewRi = [[NA, C]|NxtRi],
-        do_process_new(Ris, NxtRi, Gi, NewGi)
-    ).
+    ( setof([NA, C], process2_(A, NA), Rs)
+    ; Rs = []
+    ), 
+    % make sure unsolvable literals remain in the resolvent:
+    ( (select([NA, _],Rs,Rs2), variant(A,NA)) -> 
+    	   TheNewRi=[[A, C]|TheNewRi2] 
+    	; Rs2=Rs, TheNewRi=TheNewRi2 ),
+    do_process2(Rs2,Ris,NewRi,Gi,NewGi),
+    do_process(NewRi,TheNewRi2,NewGi,TheNewGi).
+
+% do_process_new2(ProcessedRis,Ris,NewRi,Gi,NewGi)
+do_process2([],Ris,Ris,Gi,Gi) :- !.
+do_process2([[[], C]|PRis],Ris,NewRi,Gi,NewGi) :- !,
+	generate_id(GoalId),
+     do_process2(PRis,Ris,NewRi,[goal(GoalId, [C])|Gi],NewGi).
+do_process2([[NA,C]|PRis],Ris,NewRis,Gi,NewGi) :-
+	do_process2(PRis,[[NA,C]|Ris],NewRis,Gi,NewGi).
 
 %
 %
@@ -213,11 +195,9 @@ process_priority(Ri, NextRi, Gi, NextGi) :-
     append(NGi, NGs, NextGi).
 
 do_process_prio_new([], [], Gi, Gi).
-
 do_process_prio_new([[[], C, P]|Ris], NewRi, Gi, [goal(P, GoalId, [C])|NewGi]) :-
     generate_id(GoalId),
     do_process_prio_new(Ris, NewRi, Gi, NewGi).
-
 do_process_prio_new([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
     process2_(A, NA),!,
     ( NA = [] ->
@@ -234,7 +214,6 @@ do_process_prio_new([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
     ).
 
 do_process_prio_exi([], [], Gi, Gi).
-
 do_process_prio_exi([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
     process2_(A, NA),!,
     ( NA = [] ->
@@ -248,36 +227,19 @@ do_process_prio_exi([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
         do_process_prio_exi(Ris, NxtRi, Gi, NewGi)
     ).
 
-% do_process_exi(+Ri, -NRi, +Gi, -NGi)
-%   Process a list of existing partially resolved reactive rules. Output a
-%   partially resolved list of reactive rules NRi and a list of goals NGi.
-%
-do_process_exi([], [], Gi, Gi).
 
-do_process_exi([[A, C]|Ris], NewRi, Gi, NewGi) :-
-    process2_(A, NA),!,
-    ( NA = [] ->
-        generate_id(GoalId),
-        NewGi = [goal(GoalId, [C])|NxtGi],
-        do_process_exi(Ris, NewRi, Gi, NxtGi)
-    ; NA = nosusp ->
-        do_process_exi(Ris, NewRi, Gi, NewGi)
-    ;
-        NewRi = [[NA, C]|NxtRi],
-        do_process_exi(Ris, NxtRi, Gi, NewGi)
-    ).
-
+	
 % process2_(+A, -NA)
 %   Resolve an antecedent A according to the operational semantics by querying
 %   the augmented state without making temporal constraints false.
 %
 %   If nothing can be resolved, NA is unified with A.
 %   If the antecedent can never be resolved, NA is unified with 'nosusp' to
-%   indicate failure.
-process2_(A, NA) :- process2(A,NA), !. 
+%   indicate failure - NOT ANYMORE! Now it simply fails
+process2_(A, NA) :- process2(A,NA). 
 	% One solution only?? 
 	% TODO: probable bug above! OS step 1 seems to require generation of resolvents here...
-process2_(_A, nosusp).
+%process2_(_A, nosusp).
 	
 % process2(+A, -NA)
 % Similar to process2_ but fails instead of succeeding with 'nosusp'
