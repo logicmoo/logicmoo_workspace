@@ -150,83 +150,55 @@ process(Ri, NextRi, Gi, NextGi) :-
     ; Rs = []
     ),
     %findall([A,C], reactive_rule(A,C), Rs),
-    do_process(Rs, NRs, [], NGs),
-    do_process(Ri, NRi, Gi, NGi),
+    do_process(normal,Rs, NRs, [], NGs),
+    do_process(normal,Ri, NRi, Gi, NGi),
     append(NRi, NRs, NextRi),
     append(NGi, NGs, NextGi).
 
 
-% do_process(+Ri, -NRi, +Gi, -NGi)
+% do_process(+Mode,+Ri, -NRi, +Gi, -NGi)  Mode is normal or priority
 %   Process a list of (fresh or existing partially resolved) reactive rules. Output a partially resolved
 %   list of reactive rules NRi and a list of goals NGi.
-do_process([], [], Gi, Gi).
-do_process([[[], C]|Ris], NewRi, Gi, [goal(GoalId, [C])|NewGi]) :- !,
+do_process(_,[], [], Gi, Gi) :- !.
+do_process(normal, [[[], C]|Ris], NewRi, Gi, [goal(GoalId, [C])|NewGi]) :- !,
     generate_id(GoalId),
-    do_process(Ris, NewRi, Gi, NewGi).
-do_process([[A, C]|Ris], TheNewRi, Gi, TheNewGi) :-
+    do_process(normal,Ris, NewRi, Gi, NewGi).
+do_process(priority,[[[], C, P]|Ris], NewRi, Gi, [goal(P, GoalId, [C])|NewGi]) :-
+    generate_id(GoalId),
+    do_process(priority,Ris, NewRi, Gi, NewGi).
+do_process(Mode,[[A|Rest]|Ris], TheNewRi, Gi, TheNewGi) :-
     %write('A: '),write(A),nl,
-    ( setof([NA, C], process2_(A, NA), Rs)
+    ( setof([NA|Rest], process2_(A, NA), Rs)
     ; Rs = []
     ), 
     % make sure unsolvable literals remain in the resolvent:
     ( (select([NA, _],Rs,Rs2), variant(A,NA)) -> 
-    	   TheNewRi=[[A, C]|TheNewRi2] 
+    	   TheNewRi=[[A|Rest]|TheNewRi2] 
     	; Rs2=Rs, TheNewRi=TheNewRi2 ),
-    do_process2(Rs2,Ris,NewRi,Gi,NewGi),
-    do_process(NewRi,TheNewRi2,NewGi,TheNewGi).
+    do_process2(Mode,Rs2,Ris,NewRi,Gi,NewGi),
+    do_process(Mode,NewRi,TheNewRi2,NewGi,TheNewGi).
 
-% do_process_new2(ProcessedRis,Ris,NewRi,Gi,NewGi)
-do_process2([],Ris,Ris,Gi,Gi) :- !.
-do_process2([[[], C]|PRis],Ris,NewRi,Gi,NewGi) :- !,
+% do_process_new2(Mode,ProcessedRis,Ris,NewRi,Gi,NewGi)
+do_process2(_,[],Ris,Ris,Gi,Gi) :- !.
+do_process2(normal,[[[], C]|PRis],Ris,NewRi,Gi,NewGi) :- !,
 	generate_id(GoalId),
-     do_process2(PRis,Ris,NewRi,[goal(GoalId, [C])|Gi],NewGi).
-do_process2([[NA,C]|PRis],Ris,NewRis,Gi,NewGi) :-
-	do_process2(PRis,[[NA,C]|Ris],NewRis,Gi,NewGi).
+     do_process2(normal,PRis,Ris,NewRi,[goal(GoalId, [C])|Gi],NewGi).
+do_process2(priority,[[[], C, P]|PRis],Ris,NewRi,Gi,NewGi) :- !,
+	generate_id(GoalId),
+     do_process2(priority,PRis,Ris,NewRi,[goal(P,GoalId,[C])|Gi],NewGi).
+do_process2(Mode,[Rule|PRis],Ris,NewRis,Gi,NewGi) :-
+	do_process2(Mode,PRis,[Rule|Ris],NewRis,Gi,NewGi).
 
-%
-%
+
+% Similar to process/4, but using reactive rules with priorities
 process_priority(Ri, NextRi, Gi, NextGi) :-
     ( setof([[HA|TA], C, P], (reactive_rule([HA|TA], C, P), query(HA)), Rs)
     ; Rs = []
     ),
-    do_process_prio_new(Rs, NRs, [], NGs),
-    do_process_prio_exi(Ri, NRi, Gi, NGi),
+    do_process(priority,Rs, NRs, [], NGs),
+    do_process(priority,Ri, NRi, Gi, NGi),
     append(NRi, NRs, NextRi),
     append(NGi, NGs, NextGi).
-
-do_process_prio_new([], [], Gi, Gi).
-do_process_prio_new([[[], C, P]|Ris], NewRi, Gi, [goal(P, GoalId, [C])|NewGi]) :-
-    generate_id(GoalId),
-    do_process_prio_new(Ris, NewRi, Gi, NewGi).
-do_process_prio_new([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
-    process2_(A, NA),!,
-    ( NA = [] ->
-        generate_id(GoalId),
-        NewGi = [goal(P, GoalId, [C])|NxtGi],
-        do_process_prio_new(Ris, NewRi, Gi, NxtGi)
-    ; NA = nosusp ->
-        do_process_prio_new(Ris, NewRi, Gi, NewGi)
-    ; NA = A ->
-        do_process_prio_new(Ris, NewRi, Gi, NewGi)
-    ;
-        NewRi = [[NA, C, P]|NxtRi],
-        do_process_prio_new(Ris, NxtRi, Gi, NewGi)
-    ).
-
-do_process_prio_exi([], [], Gi, Gi).
-do_process_prio_exi([[A, C, P]|Ris], NewRi, Gi, NewGi) :-
-    process2_(A, NA),!,
-    ( NA = [] ->
-        generate_id(GoalId),
-        NewGi = [goal(P, GoalId, [C])|NxtGi],
-        do_process_prio_exi(Ris, NewRi, Gi, NxtGi)
-    ; NA = nosusp ->
-        do_process_prio_exi(Ris, NewRi, Gi, NewGi)
-    ;
-        NewRi = [[NA, C, P]|NxtRi],
-        do_process_prio_exi(Ris, NxtRi, Gi, NewGi)
-    ).
-
 
 	
 % process2_(+A, -NA)
