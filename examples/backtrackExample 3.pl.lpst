@@ -1,0 +1,79 @@
+/*
+  LPS test results file generated on 2016-04-27 at 19:09:40 for program file:
+  /Users/mc/git/lps_corner/examples/backtrackExample 3.pl
+*/
+
+% LPS options prior to the test:
+lps_test_options([verbose]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result('Observations:',1,2).
+lps_test_result('Candidate actions:',1,0).
+lps_test_result('Selected actions:',1,0).
+lps_test_result('Database state:',1,0).
+lps_test_result('New partial reactive rules:',1,0).
+lps_test_result('New goals:',1,2).
+lps_test_result('Resolved goals:',1,2).
+lps_test_result('Observations:',2,0).
+lps_test_result('Candidate actions:',2,1).
+lps_test_result('Selected actions:',2,1).
+lps_test_result('Database state:',2,0).
+lps_test_result('New partial reactive rules:',2,0).
+lps_test_result('New goals:',2,2).
+lps_test_result('Resolved goals:',2,2).
+lps_test_result('Observations:',3,0).
+lps_test_result('Candidate actions:',3,1).
+lps_test_result('Selected actions:',3,1).
+lps_test_result('Database state:',3,0).
+lps_test_result('New partial reactive rules:',3,0).
+lps_test_result('New goals:',3,2).
+lps_test_result('Resolved goals:',3,2).
+lps_test_result('Observations:',4,0).
+lps_test_result('Candidate actions:',4,1).
+lps_test_result('Selected actions:',4,1).
+lps_test_result('Database state:',4,0).
+lps_test_result('New partial reactive rules:',4,0).
+lps_test_result('New goals:',4,2).
+lps_test_result('Resolved goals:',4,1).
+lps_test_result('Observations:',5,0).
+lps_test_result('Candidate actions:',5,0).
+lps_test_result('Selected actions:',5,0).
+lps_test_result('Database state:',5,0).
+lps_test_result('New partial reactive rules:',5,0).
+lps_test_result('New goals:',5,1).
+lps_test_result('Resolved goals:',5,1).
+lps_test_result('Observations:',6,0).
+lps_test_result('Candidate actions:',6,0).
+lps_test_result('Selected actions:',6,0).
+lps_test_result('Database state:',6,0).
+lps_test_result('New partial reactive rules:',6,0).
+lps_test_result('New goals:',6,1).
+lps_test_result('Resolved goals:',6,1).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item('Observations:',1,e1).
+lps_test_result_item('Observations:',1,e2).
+lps_test_result_item('New goals:',1,goal(10001,[[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('New goals:',1,goal(10000,[[happens(m1,C,D),happens(m2,E,F),tc(1 =< C),tc(1 =< E)]])).
+lps_test_result_item('Resolved goals:',1,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',1,goal(10000,[[happens(a1,C,D),happens(a2,D,E),happens(m2,F,G),tc(1 =< C),tc(1 =< F)],[happens(m1,C,E),happens(m2,F,G),tc(1 =< C),tc(1 =< F)]])).
+lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(a1,1,2))).
+lps_test_result_item('Selected actions:',2,happens(a1,1,2)).
+lps_test_result_item('New goals:',2,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('New goals:',2,goal(10000,[[happens(a1,C,D),happens(a2,D,E),happens(m2,F,G),tc(1 =< C),tc(1 =< F)],[happens(m1,C,E),happens(m2,F,G),tc(1 =< C),tc(1 =< F)]])).
+lps_test_result_item('Resolved goals:',2,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',2,goal(10000,[[happens(a2,2,C),happens(m2,D,E),tc(1 =< 1),tc(1 =< D)],[happens(a1,F,G),happens(a2,G,H),happens(m2,I,J),tc(1 =< F),tc(1 =< I)],[happens(m1,F,H),happens(m2,I,J),tc(1 =< F),tc(1 =< I)]])).
+lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(a2,2,3))).
+lps_test_result_item('Selected actions:',3,happens(a2,2,3)).
+lps_test_result_item('New goals:',3,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('New goals:',3,goal(10000,[[happens(a2,2,C),happens(m2,D,E),tc(1 =< 1),tc(1 =< D)],[happens(a1,F,G),happens(a2,G,H),happens(m2,I,J),tc(1 =< F),tc(1 =< I)],[happens(m1,F,H),happens(m2,I,J),tc(1 =< F),tc(1 =< I)]])).
+lps_test_result_item('Resolved goals:',3,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',3,goal(10000,[[happens(a3,C,D),tc(1 =< 1),tc(1 =< C)],[happens(m2,C,E),tc(1 =< 1),tc(1 =< C)],[happens(a2,2,F),happens(m2,G,H),tc(1 =< 1),tc(1 =< G)],[happens(a1,I,J),happens(a2,J,K),happens(m2,L,M),tc(1 =< I),tc(1 =< L)],[happens(m1,I,K),happens(m2,L,M),tc(1 =< I),tc(1 =< L)]])).
+lps_test_result_item('Candidate actions:',4,ca(9223372036854775807,happens(a3,3,4))).
+lps_test_result_item('Selected actions:',4,happens(a3,3,4)).
+lps_test_result_item('New goals:',4,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('New goals:',4,goal(10000,[[happens(a3,C,D),tc(1 =< 1),tc(1 =< C)],[happens(m2,C,E),tc(1 =< 1),tc(1 =< C)],[happens(a2,2,F),happens(m2,G,H),tc(1 =< 1),tc(1 =< G)],[happens(a1,I,J),happens(a2,J,K),happens(m2,L,M),tc(1 =< I),tc(1 =< L)],[happens(m1,I,K),happens(m2,L,M),tc(1 =< I),tc(1 =< L)]])).
+lps_test_result_item('Resolved goals:',4,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('New goals:',5,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',5,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('New goals:',6,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',6,goal(10001,[[happens(b1,A,B),tc(1 =< A)],[happens(n1,A,B),tc(1 =< A)]])).
