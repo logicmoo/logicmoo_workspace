@@ -17,6 +17,7 @@ Prolog facts in general are not transformed.
 */
 
 :- op(1200,xfx,--->). % for reactive rules
+:- op(1190,xfx,priority). %... with priority
 :- op(900,fy,terminated).
 :- op(900,fy,initiated).
 
@@ -25,6 +26,7 @@ Prolog facts in general are not transformed.
 :- import append/3 from basics.
 :- import concat_atom/2 from string.
 :- import file_read/3 from xsb_read.
+
 :- import go/2 from interpreter.
 
 % Convert a file in LPSP into Wei syntax and execute it 
@@ -39,6 +41,7 @@ gol(LPSP_file) :- gol(LPSP_file,[]).
 % lpsp2p_file(+LPSPfile,+Pfile,+ToWei)
 % If ToWei==true it generates a .P file from the first file, else vice-versa
 lpsp2p_file(Lfile,Pfile,ToWei) :-
+	init_definition_newliner,
 	(ToWei==true -> 
 		file_exists(Lfile), open(Lfile,read,IStr), open(Pfile,write,OStr), 
 		Convert = lpsp2p(Term,Vars,NewTerm)
@@ -50,15 +53,21 @@ lpsp2p_file(Lfile,Pfile,ToWei) :-
 	repeat,
 	file_read(IStr,Term,Vars),
 	( Term==end_of_file -> true
-	;  Convert, bindAllVars(Vars), write(OStr,NewTerm), writeln(OStr,'.'), fail),
+	;  
+		Convert, bindAllVars(Vars), 
+		may_write_newline(NewTerm,OStr),
+		pretty_write(NewTerm,OStr), writeln(OStr,'.'), 
+		fail
+	),
 	!,
 	close(OStr),close(IStr).
-
-
+	
 % lpsp2p(?LPSPterm,+Vars,?Pterm) Vars is a (closed tail) list of some_functor(Name,Variable)
 % Either LPSPterm or Pterm must be bound; the other should be unbound
 % Probably needs to evolve to return error messages
 lpsp2p(L,_,PT) :- var(L), var(PT), !, fail.
+lpsp2p((A--->C priority P),Vars,reactive_rule(NA,NC,P)) :- !, 
+	lpsp2p_sequence(A,Vars,NA), lpsp2p_sequence(C,Vars,NC).
 lpsp2p((A--->C),Vars,reactive_rule(NA,NC)) :- !, 
 	lpsp2p_sequence(A,Vars,NA), lpsp2p_sequence(C,Vars,NC).
 lpsp2p((H:-B),_,PT) :- var(PT), (var(H);var(B)), !, fail.
@@ -141,3 +150,39 @@ bindAllVars([VV|Vars]) :-
 
 % Declare here predicates you wish to keep unchanged accross the transform
 do_not_transform(observe(_,_),_). % to cater for observe/2 rules (in addition to facts)
+
+% pretty printing
+pretty_write(Term,Stream) :- pretty_write(Term,0,Stream).
+
+% pretty_write(Term,Indent,Stream)
+pretty_write((A--->C priority P),I,S) :- !, 
+	my_tab(S,I), write(S,A), writeln(S,' --->'), 
+	NI is I+4, pretty_write(C,NI,S),
+	write(S,'    priority '), write(S,P).
+pretty_write((A--->C),I,S) :- !, 
+	my_tab(S,I), write(S,A), writeln(S,' --->'), NI is I+4, pretty_write(C,NI,S).
+pretty_write((H:-true),I,S) :- !, pretty_write(H,I,S).
+pretty_write((H:-B),I,S) :- !, 
+	my_tab(S,I), write(S,H), writeln(S,' :-'), NI is I+4, pretty_write(B,NI,S).
+pretty_write((G1,G2),I,S) :- !, 
+	my_tab(S,I), write(S,G1), writeln(S,','), pretty_write(G2,I,S).
+pretty_write(G,I,S) :- my_tab(S,I), write(S,G).
+
+my_tab(_S,0) :- !.
+my_tab(S,I) :- I>0, write(S,' '), NI is I-1, my_tab(S,NI).
+
+% predicate_for(Term,Spec)
+predicate_for(V,none) :- var(V), !.
+predicate_for((H:-_),F/A) :- !, functor(H,F,A).
+predicate_for(H,F/A) :- functor(H,F,A).
+
+:- dynamic '_currenty__defining'/1.
+
+init_definition_newliner :- set_currently_defining(none).
+
+set_currently_defining(P) :- 
+	retractall('_currenty__defining'(_)), assert('_currenty__defining'(P)).
+	
+may_write_newline(Term,S) :- 
+	predicate_for(Term,P), 
+	( '_currenty__defining'(P) -> true ; set_currently_defining(P), writeln(S,'')).
