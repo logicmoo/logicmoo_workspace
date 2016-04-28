@@ -202,7 +202,7 @@ l_timeless(increment(X, X1), [X1 is X + 1]).
 l_timeless(decrease(X, X1, N), [X1 is X - N]).
 l_timeless(increase(X, X1, N), [X1 is X + N]).
 l_timeless(calculate(N, A, B, C), [N is A * 1 + B * 3 + C * 5]).
-l_timeless(modu(T, T1), [T is mod(T1, 8)]).
+l_timeless(modu(X, X1), [X is mod(X1, 8)]).
 
 /* Defining the opposite compass direction */
 

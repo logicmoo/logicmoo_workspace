@@ -16,11 +16,9 @@ terminated available(F2) :-
 Time variables must start with T followed by _ or a digit.
 Prolog facts in general are not transformed.
 
-CURRENT LIMITATION: 
-the lpsp2p predicate is being too eager interpreting T.. args as traits of time predicates;
-so ...timeful(bla,T1), timeless_calculation(T1,T2), another_timeful(foobar,T2) will NOT work; instead:
-... timeful(bla,T1), T1=X1, timeless_calculation(X1,X2), X2=T2, another_timeful(foobar,T2)
-Can be overcome by registering predicate sorts as a file is digested
+LIMITATION: 
+If a l_timeless predicate has T variables, it's (reverse) conversion to our syntax will be wrong...
+... because on a subsequent conversion (from ours to Wei's) that predicate will become a timefull predicate
 
 */
 
@@ -51,6 +49,7 @@ gol(LPSP_file) :- gol(LPSP_file,[]).
 % If ToWei==true it generates a .P file from the first file, else vice-versa
 lpsp2p_file(Lfile,Pfile,ToWei) :-
 	init_definition_newliner,
+	retractall(head_hint(_,_)),
 	current_prolog_flag(write_depth,Old), set_xsb_flag(write_depth,10000),
 	(ToWei==true -> 
 		file_exists(Lfile), open(Lfile,read,IStr), open(Pfile,write,OStr), 
@@ -77,7 +76,14 @@ lpsp2p_file(Lfile,Pfile,ToWei) :-
 	!,
 	close(OStr),close(IStr),
 	set_xsb_flag(write_depth,Old).
-	
+
+% head_hint(HeadTemplate,Sort) Sort is l_timeless
+%  a fact means that some head was read before tagged as Sort 
+:- dynamic head_hint/2.
+remember_hint(H) :- 
+	functor(H,F,N), functor(HH,F,N),
+	( head_hint(HH,l_timeless) ->  true; assert(head_hint(HH,l_timeless) )).
+
 % lpsp2p(?LPSPterm,+Vars,?Pterm) Vars is a (closed tail) list of some_functor(Name,Variable)
 % Either LPSPterm or Pterm must be bound; the other should be unbound
 % Probably needs to evolve to return error messages
@@ -110,7 +116,8 @@ lpsp2p(L,Vars,PT) :-
 	( 
 	PT = l_events(NH,NB), NH=happens(H,_,_) ;
 	PT = l_int(NH,NB), NH = holds(H,_) ;
-	PT = l_timeless(NH,NB), \+ (NH = holds(_,_) ; NH = happens(_,_,_))  
+	% if a timeless head, remember that to override "time looks" in body if need be:
+	PT = l_timeless(NH,NB), \+ (NH = holds(_,_) ; NH = happens(_,_,_) ), remember_hint(NH)
 	),
 	!,
 	(ToWei==false -> lpsp2p_literal(LH,Vars,NH) ; true),
@@ -128,6 +135,7 @@ lpsp2p_literal(L,Vars,happens(NL,T1,T2)) :-
 	nonvar(L),
 	L=..LL, append(Tless,[T1,T2],LL),  Tless=[_|_], % last 2 args of term 
 	is_time_var(Vars,T1), is_time_var(Vars,T2),	
+	\+ head_hint(L,l_timeless),
 	!,
 	NL=..Tless.
 lpsp2p_literal(L,Vars,happens(NL,T1,T2)) :- 
@@ -142,10 +150,12 @@ lpsp2p_literal(not(L),Vars,holds(not(NL),T)) :-
 	!,
 	lpsp2p_literal(L,Vars,holds(NL,T)),
 	check_time_var(T,Vars).
+	% Should probably ...? \+ head_hint(L,l_timeless),
 lpsp2p_literal(L,Vars,holds(NL,T)) :- 
 	nonvar(L),
 	L=..LL, LL=[_,_|_], append(Tless,[T],LL), 
 	is_time_var(Vars,T),
+	\+ head_hint(L,l_timeless),
 	!,
 	NL=..Tless.
 lpsp2p_literal(L,Vars,holds(NL,T)) :- 

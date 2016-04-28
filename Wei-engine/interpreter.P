@@ -1789,7 +1789,7 @@ test(_,_,_).
 
 % test_items_ok(Actual,Test)
 test_items_ok([A|An],[lps_gigantic(Size,H)|Tn]) :- !,
-	term_size(A,Size), term_hash(A,100000,H),
+	term_size(A,Size_), Size_ == Size, term_hash(A,100000,H),
 	test_items_ok(An,Tn).
 test_items_ok([A|An],[T|Tn]) :- !,
 	variant(A,T),
