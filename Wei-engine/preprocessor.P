@@ -19,7 +19,8 @@ fluent_pred(not(Fl)) :-
     fluent(Fl).
 fluent_pred(Fl) :-
     % Intensional predicates, defined in L_int.
-    l_int(holds(Fl, _), _).
+    functor(Fl,F,N), functor(Fll,F,N),
+    l_int(holds(Fll, _), _).
 fluent_pred(not(Fl)) :-
     l_int(holds(Fl, _), _).
 
@@ -35,7 +36,8 @@ event_pred(Ev) :-
     action(Ev).
 event_pred(Ev) :-
     % Composite event predicates, defined in L_events.
-    l_events(happens(Ev, _, _), _).
+    functor(Ev,F,N), functor(Evv,F,N),
+    l_events(happens(Evv, _, _), _).
 
 
 % temp_constraint(+Term)
@@ -49,8 +51,9 @@ temp_constraint(=<(_,_)).
 %   True if Conj is a valid conjunct in the antecedent or consequent of a
 %   reactive rule.
 %
-reactive_conjunct(holds(F, _)) :-
-    fluent_pred(F).
+reactive_conjunct(holds(P, _)) :-
+    functor(P,F,N), functor(PP,F,N),
+    fluent_pred(PP).
 reactive_conjunct(X) :-
     X \= holds(_, _),
     X \= happens(_, _, _),
@@ -73,19 +76,24 @@ l_timeless_body(P) :-
 % l_int_body(+P)
 %
 l_int_body(holds(P, _)) :-
-    fluent_pred(P).
+    functor(P,F,N), functor(PP,F,N),
+    fluent_pred(PP).
 l_int_body(P) :-
-    l_timeless(P, _).
+    functor(P,F,N), functor(PP,F,N),
+    l_timeless(PP, _).
 
 
 % l_events_body(+P)
 %
 l_events_body(holds(P, _)) :-
-    fluent_pred(P).
+    functor(P,F,N), functor(PP,F,N),
+    fluent_pred(PP).
 l_events_body(P) :-
-    l_timeless(P, _).
+    functor(P,F,N), functor(PP,F,N),
+    l_timeless(PP, _).
 l_events_body(happens(P, _, _)) :-
-    event_pred(P).
+    functor(P,F,N), functor(PP,F,N),
+    event_pred(PP).
 l_events_body(tc(P)) :-
     temp_constraint(P).
 
@@ -114,4 +122,5 @@ d_body(holds(not(B), _)) :-
 d_body(holds(B, _)) :-
     fluent(B).
 d_body(B) :-
-    l_timeless(B, _).
+    functor(B,F,N), functor(BB,F,N),
+    l_timeless(BB, _).

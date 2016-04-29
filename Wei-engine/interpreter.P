@@ -1476,13 +1476,13 @@ check_syntax() :-
             ;
                 write('SYNTAX ERROR: '),
                 write('``'),write(Ev2),write(''''''),
-                write(' must be a simple event (event/action) predicate.'),nl,
+                write(' in terminated post-condition must be a simple event (event/action) predicate.'),nl,
                 fail
             )
         ;
             write('SYNTAX ERROR: '),
             write('``'),write(Ev),write(''''''),
-            write(' is not a valid domain post-condition predicate.'),nl,
+            write(' is not a valid domain initiated post-condition predicate.'),nl,
             fail
         ),
         (d_head(Fl) ->
@@ -1490,7 +1490,7 @@ check_syntax() :-
         ;
             write('SYNTAX ERROR: '),
             write('``'),write(Fl),write(''''''),
-            write(' must be an extensional fluent predicate.'),nl,
+            write(' in initiated post-condition must be an extensional fluent predicate.'),nl,
             fail
         ),
         check_d_post(B, RB),
@@ -1503,13 +1503,13 @@ check_syntax() :-
             ;
                 write('SYNTAX ERROR: '),
                 write('``'),write(Ev2),write(''''''),
-                write(' must be a simple event (event/action) predicate.'),nl,
+                write(' in terminated post-condition must be a simple event (event/action) predicate.'),nl,
                 fail
             )
         ;
             write('SYNTAX ERROR: '),
             write('``'),write(Ev),write(''''''),
-            write(' is not a valid domain post-condition predicate.'),nl,
+            write(' is not a valid domain terminated post-condition predicate.'),nl,
             fail
         ),
         (d_head(Fl) ->
@@ -1517,7 +1517,7 @@ check_syntax() :-
         ;
             write('SYNTAX ERROR: '),
             write('``'),write(Fl),write(''''''),
-            write(' must be an extensional fluent predicate.'),nl,
+            write(' in terminated post-condition must be an extensional fluent predicate.'),nl,
             fail
         ),
         check_d_post(B, RB),

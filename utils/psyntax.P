@@ -21,7 +21,7 @@ initiated available(F2) :-
 terminated available(F2) :- 
   putdown_forks(F1, philosopher(N), F2,T1,T2).
 
-Time variables must start with T followed by _ or a digit.
+Time variables must start with T or _T, followed by _ or a digit.
 Prolog facts in general are not transformed.
 
 LIMITATION: 
@@ -35,7 +35,7 @@ If a l_timeless predicate has T variables, it's (reverse) conversion to our synt
 :- op(900,fy,terminated).
 :- op(900,fy,initiated).
 
-:- export lpsp2p_file/3, gol/2, gol/1.
+:- export lpsp2p_file/3, gol/2, gol/1, golv/2, golv/1.
 
 :- import append/3 from basics.
 :- import concat_atom/2 from string.
@@ -43,6 +43,7 @@ If a l_timeless predicate has T variables, it's (reverse) conversion to our synt
 :- import closetail/1 from listutil.
 
 :- import go/2 from interpreter.
+:- import gov/2 from visualizer.
 
 % Convert a file in LPSP into Wei syntax and execute it 
 gol(LPSP_file,Options) :-
@@ -52,6 +53,12 @@ gol(LPSP_file,Options) :-
 
 gol(LPSP_file) :- gol(LPSP_file,[]).
 
+golv(LPSP_file) :- golv(LPSP_file,[]).
+
+golv(LPSP_file,Options) :-
+	concat_atom([LPSP_file,'_.P'],Pfile),
+	lpsp2p_file(LPSP_file,Pfile,true),
+	gov(Pfile,Options).
 
 % lpsp2p_file(+LPSPfile,+Pfile,+ToWei)
 % If ToWei==true it generates a .P file from the first file, else vice-versa
@@ -125,7 +132,7 @@ lpsp2p(L,Vars,PT) :-
 	PT = l_events(NH,NB), NH=happens(H,_,_) ;
 	PT = l_int(NH,NB), NH = holds(H,_) ;
 	% if a timeless head, remember that to override "time looks" in body if need be:
-	PT = l_timeless(NH,NB), \+ (NH = holds(_,_) ; NH = happens(_,_,_) ), remember_hint(NH)
+	PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), remember_hint(NH)
 	),
 	!,
 	(ToWei==false -> lpsp2p_literal(LH,Vars,NH) ; true),
@@ -135,8 +142,8 @@ lpsp2p(Fact, _, Fact). % pass through for Wei terms or other Prolog facts
 
 lpsp2p_sequence((L1,L2),Vars,[PT1|PT2]) :- PT2 \== [], !,
 	lpsp2p_literal(L1,Vars,PT1), lpsp2p_sequence(L2,Vars,PT2).
-lpsp2p_sequence(L,Vars,[PT]) :- !, lpsp2p_literal(L,Vars,PT).
-lpsp2p_sequence(true,_,[]).
+lpsp2p_sequence(true,_,[]) :- !.
+lpsp2p_sequence(L,Vars,[PT]) :- lpsp2p_literal(L,Vars,PT).
 
 lpsp2p_literal(tc(TC),_Vars,tc(TC)) :- !. %TODO: check Vars for (some) Ts!!!
 lpsp2p_literal(L,Vars,happens(NL,T1,T2)) :- 
@@ -188,7 +195,8 @@ is_time_var([_VV|Vars], T) :- is_time_var(Vars, T).
 
 is_time_var(VV) :- 
 	arg(1,VV,Name), atom_codes(Name,Codes), 
-	append("T",Rest,Codes),
+	(append("T",Rest,Codes);append("_T",Rest,Codes)),
+	!,
 	(Rest=[] -> true ; 
 		Rest=[C|_], 
 		% T_... or T0/9...
