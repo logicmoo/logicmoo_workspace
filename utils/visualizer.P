@@ -1,3 +1,13 @@
+/* 
+** Author(s): Miguel Calejo
+** Contact:   info@interprolog.com, http://interprolog.com
+** Copyright (C) InterProlog Consulting / Renting Point - Serviços de Informática Lda., Portugal 2016
+** Use and distribution, without any warranties, under the terms of the 
+** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
+*/
+
+/* Utilities for visualizing LPS executions */
+
 :- export visual/1, gov/1, gov/2.
 
 :- import load_test_file_for/1, go/2 from interpreter.

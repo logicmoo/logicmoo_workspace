@@ -1,8 +1,7 @@
 # README #
 
-NOT YET!!!
-
-This README would normally document whatever steps are necessary to get your application up and running.
+### License and Copyright (preliminary) ###
+All files in this repository are copyright Robert Kowalski and Fariba Sadri, except for files with specific copyright notices.
 
 ### What is this repository for? ###
 

@@ -1,5 +1,13 @@
+/* 
+** Author(s): Miguel Calejo
+** Contact:   info@interprolog.com, http://interprolog.com
+** Copyright (C) InterProlog Consulting / Renting Point - Serviços de Informática Lda., Portugal 2016
+** Use and distribution, without any warranties, under the terms of the 
+** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
+*/
+
 /* Implement a surface syntax closer to that used on papers (.LPSP extension), 
-mapping to/from "Wei syntax" (.P or .pl extension) as assumed in the engine .
+mapping both to/from "Wei syntax" (.P or .pl extension) as assumed in the engine .
 The syntax is as follows:
 
 Antecedent ---> Consequent.

@@ -209,12 +209,9 @@ process_priority(Ri, NextRi, Gi, NextGi) :-
 %   If the antecedent can never be resolved, NA is unified with 'nosusp' to
 %   indicate failure - NOT ANYMORE! Now it simply fails
 process2_(A, NA) :- process2(A,NA). 
-	% One solution only?? 
-	% TODO: probable bug above! OS step 1 seems to require generation of resolvents here...
-%process2_(_A, nosusp).
 	
 % process2(+A, -NA)
-% Similar to process2_ but fails instead of succeeding with 'nosusp'
+% Now fails instead of succeeding with 'nosusp' as older versions
 % This is necessary to execute search over fluents, timeles predicates etc
 
 process2([], []).
