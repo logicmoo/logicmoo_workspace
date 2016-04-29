@@ -3,7 +3,7 @@
 ** Contact:   info@interprolog.com, http://interprolog.com
 ** Copyright (C) InterProlog Consulting / Renting Point - Serviços de Informática Lda., Portugal 2016
 ** Use and distribution, without any warranties, under the terms of the 
-** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
+** Affero GPL License, readable in http://www.gnu.org/licenses/why-affero-gpl.en.html
 */
 
 /* Implement a surface syntax closer to that used on papers (.LPSP extension), 
