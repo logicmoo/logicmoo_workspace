@@ -14,6 +14,7 @@
 :- import variant/2 from subsumes.
 :- import numbervars/1 from num_vars.
 :- import concat_atom/2 from string.
+:- import format/2 from format.
 :- import datime/1 from standard.
 :- import conget/2, conset/2, term_hash/3 from machine.
 :- import list_directory/2 from shell.
@@ -1628,6 +1629,7 @@ go(File, OptionsList) :-
     check_syntax,
     (option(meta_actions) -> add_meta_reactive_rules ; true),
     ( initial_state(IS) -> assert_list(IS) ; true),
+    cputime(T0),
     expand_reactive_rules,
     ( option(breadth) ->
         expand_consequents
@@ -1643,9 +1645,12 @@ go(File, OptionsList) :-
     		current_prolog_flag(write_depth,Old), 
     		set_xsb_flag(write_depth,10000)
    	;true),
+    cputime(T1),
     (
 	cycle_options([], [], [])
 	; 
+	cputime(T2),
+	print_statistics(T0,T1,T2),
 	close_test_file(File),
 	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true)
     	).
@@ -1659,6 +1664,10 @@ read_obs(Obs) :-
         true
     ).
 
+print_statistics(T0,T1,T2) :- 
+	TI is T1-T0, TotalT is T2-T0,
+	current_time(Next), Cycles is Next-1,
+	nl, format("** ~d cycles took ~f seconds (~f expanding rules) **\n",[Cycles,TotalT,TI]).
 % parse_options(OptionsList)
 %
 parse_options(Options) :- 

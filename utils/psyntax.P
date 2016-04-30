@@ -45,6 +45,8 @@ If a l_timeless predicate has T variables, it's (reverse) conversion to our synt
 :- import go/2 from interpreter.
 :- import gov/2 from visualizer.
 
+:- consult:add_this_lib_dir.
+
 % Convert a file in LPSP into Wei syntax and execute it 
 gol(LPSP_file,Options) :-
 	concat_atom([LPSP_file,'_.P'],Pfile),
