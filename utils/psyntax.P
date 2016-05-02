@@ -24,10 +24,10 @@ terminated available(F2) :-
 Time variables must start with T or _T, followed by _ or a digit.
 Prolog facts in general are not transformed.
 
-LIMITATION: 
+LIMITATION wrt time variable convention: 
 If a l_timeless predicate has T variables, it's (reverse) conversion to our syntax will be wrong...
 ... because on a subsequent conversion (from ours to Wei's) that predicate will become a timefull predicate
-
+Ditto for "timeful" predicates with non-T variables
 */
 
 :- op(1200,xfx,--->). % for reactive rules
