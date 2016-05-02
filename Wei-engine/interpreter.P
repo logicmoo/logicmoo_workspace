@@ -4,6 +4,7 @@
 :- export test_examples, do_test_suite/2, load_test_file_for/1.
 
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
+:- import append_lists/2 from lists.
 % :- use_module(standard, [datime/1]).
 
 % :- import unifiable/3 from constraintLib.
@@ -13,7 +14,7 @@
 % no longer used: :- import datime_setrand/0 , random/3 from random.
 :- import variant/2 from subsumes.
 :- import numbervars/1 from num_vars.
-:- import concat_atom/2 from string.
+:- import concat_atom/2, term_to_codes/2 from string.
 :- import format/2 from format.
 :- import datime/1 from standard.
 :- import conget/2, conset/2, term_hash/3 from machine.
@@ -1433,147 +1434,116 @@ satisfy(=<(X,Y)) :-
     parse(X, RX), parse(Y, RY),
     RX =< RY.
 
-% check_syntax
-%
-check_syntax() :-
-    forall(reactive_rule(A, C), (
-        check_reactive_rule(A, RA),
-        (RA = no -> fail ; true),
-        check_reactive_rule(C, RC),
-        (RC = no -> fail ; true)
-    )),
-    forall(l_int(P, B), (
-        (P @= holds(_,_) ->
-            true
-        ;
-            write('SYNTAX ERROR: '),
-            write('``'),write(P),write(''''''),
-            write(' is not a valid intensional predicate.'),nl,
-            fail
-        ),
-        check_lp_int(B, RB),
-        (RB = no -> fail ; true)
-    )),
-    forall(l_events(P, B), (
-        (P @= happens(_,_,_) ->
-            true
-        ;
-            write('SYNTAX ERROR: '),
-            write('``'),write(P),write(''''''),
-            write(' is not a valid composite event predicate.'),nl,
-            fail
-        ),
-        check_lp_events(B, RB),
-        (RB = no -> fail ; true)
-    )),
-    forall(d_pre(B), (
-        check_d_pre(B, RB),
-        (RB = no -> fail ; true)
-    )),
-    forall(initiated(Ev, Fl, Cond), (
-        (Ev @= happens(Ev2, _, _) ->
-            (d_event(Ev2) ->
-                true
-            ;
-                write('SYNTAX ERROR: '),
-                write('``'),write(Ev2),write(''''''),
-                write(' in terminated post-condition must be a simple event (event/action) predicate.'),nl,
-                fail
-            )
-        ;
-            write('SYNTAX ERROR: '),
-            write('``'),write(Ev),write(''''''),
-            write(' is not a valid domain initiated post-condition predicate.'),nl,
-            fail
-        ),
-        (d_head(Fl) ->
-            true
-        ;
-            write('SYNTAX ERROR: '),
-            write('``'),write(Fl),write(''''''),
-            write(' in initiated post-condition must be an extensional fluent predicate.'),nl,
-            fail
-        ),
-        check_d_post(B, RB),
-        (RB = no -> fail ; true)
-    )),
-    forall(terminated(Ev, Fl, Cond), (
-        (Ev @= happens(Ev2, _, _) ->
-            (d_event(Ev2) ->
-                true
-            ;
-                write('SYNTAX ERROR: '),
-                write('``'),write(Ev2),write(''''''),
-                write(' in terminated post-condition must be a simple event (event/action) predicate.'),nl,
-                fail
-            )
-        ;
-            write('SYNTAX ERROR: '),
-            write('``'),write(Ev),write(''''''),
-            write(' is not a valid domain terminated post-condition predicate.'),nl,
-            fail
-        ),
-        (d_head(Fl) ->
-            true
-        ;
-            write('SYNTAX ERROR: '),
-            write('``'),write(Fl),write(''''''),
-            write(' in terminated post-condition must be an extensional fluent predicate.'),nl,
-            fail
-        ),
-        check_d_post(B, RB),
-        (RB = no -> fail ; true)
-    )).
+% check_syntax(-Notices) Returns a list of notice(Type,Message,Position)
+%  Type is 'error' or 'warning', Position is some term denoting a source file location
+%  Predicates called here typically have as second argument a notices list with a single
+% element... or they simply fail
+check_syntax_(Notices) :-
+	findall(N, 
+		(reactive_rule(A, C), (check_reactive_rule(A,[N]) ; check_reactive_rule(C,[N]))), 
+		RR),
+	findall(N, 
+		(
+			l_int(P, B), 
+			( 
+				\+ (P @= holds(_,_)), 
+				concat_terms([P,' is not a valid intensional predicate'],M), 
+				N=notice(error,M,unknown) 
+				; 
+				check_lp_int(B,[N])) ), 
+		IP), 
+	findall(N, 
+		(
+			l_events(P, B), 
+			( 
+				\+ (P @= happens(_,_,_)), 
+				concat_terms([P,' is not a valid composite event predicate'],M), 
+				N=notice(error,M,unknown) 
+				; 
+				check_lp_events(B,[N])) ), 
+		CE),
+	findall(N, (d_pre(B),check_d(B, d_pre, [N])), PC),
+	findall(N,(
+		initiated(Ev, Fl, Cond), (
+			(Ev @= happens(Ev2, _, _) -> 
+				( d_event(Ev2) -> fail 
+				; 
+				concat_terms([Ev2,' in initiated post-condition must be a simple event (event/action) predicate'],M), 
+				N=notice(error,M,unknown)
+				)
+			; 
+				concat_terms([Ev,' is not a valid domain initiated post-condition predicate'],M), 
+				N=notice(error,M,unknown)
+			)
+		;
+			\+ d_head(Fl), 
+			concat_terms([Fl,' in initiated post-condition must be an extensional fluent predicate'],M), 
+			N=notice(error,M,unknown)
+		;
+			check_d(Cond, 'D_post', [N])
+		) ), 
+		PostI),
+	findall(N,(
+		terminated(Ev, Fl, Cond), (
+			(Ev @= happens(Ev2, _, _) -> 
+				( d_event(Ev2) -> fail 
+				; 
+				concat_terms([Ev2,' in terminated post-condition must be a simple event (event/action) predicate'],M), 
+				N=notice(error,M,unknown)
+				)
+			; 
+				concat_terms([Ev,' is not a valid domain terminated post-condition predicate'],M), 
+				N=notice(error,M,unknown)
+			)
+		;
+			\+ d_head(Fl), 
+			concat_terms([Fl,' in terminated post-condition must be an extensional fluent predicate'],M), 
+			N=notice(error,M,unknown)
+		;
+			check_d(Cond, 'D_post', [N])
+		) ), 
+		PostT),
+	append_lists([RR,IP,CE,PC,PostI,PostT],Notices).
 
-check_reactive_rule([], []).
+% fails if errors occur
+print_errors :- 
+	check_syntax_(Notices), nl,
+	( 
+		member(notice(Type,M,_),Notices), 
+		write('SYNTAX '), write(Type), write(': '), writeln(M), 
+		fail 
+	; Notices=[]).
+
+concat_terms(Terms,Atom) :- concat_terms(Terms,[],Codes), atom_codes(Atom,Codes).
+
+concat_terms([T1|Tn],C,Cn) :- term_to_codes(T1,C1), append(C,C1,C2), concat_terms(Tn,C2,Cn).
+concat_terms([],C,C).
+
 check_reactive_rule([H|T], NT) :-
     reactive_conjunct(H),
+    !,
     check_reactive_rule(T, NT).
-check_reactive_rule([H|_], no) :-
-    \+ reactive_conjunct(H),
-    write('SYNTAX ERROR: '),
-    write('``'),write(H),write(''''''),
-    write(' is not a valid reactive rule conjunct.'),nl.
+check_reactive_rule([H|_], [notice(error,M,unknown)]) :-
+    concat_terms([H,' is not a valid reactive rule conjunct'],M).
 
-check_lp_int([], []).
 check_lp_int([H|T], NT) :-
-    l_int_body(H),
+    l_int_body(H), !,
     check_lp_int(T, NT).
-check_lp_int([H|_], no) :-
-    \+ l_int_body(H),
-    write('SYNTAX ERROR: '),
-    write('``'),write(H),write(''''''),
-    write(' is not a valid L_int body.'),nl.
+check_lp_int([H|_], [notice(error,M,unknown)]) :-
+    concat_terms([H,' is not a valid L_int body'],M).
 
-check_lp_events([], []).
 check_lp_events([H|T], NT) :-
-    l_events_body(H),
+    l_events_body(H), !,
     check_lp_events(T, NT).
-check_lp_events([H|_], no) :-
-    \+ l_events_body(H),
-    write('SYNTAX ERROR: '),
-    write('``'),write(H),write(''''''),
-    write(' is not a valid L_events body.'),nl.
+check_lp_events([H|_], [notice(error,M,unknown)]) :-
+    concat_terms([H,' is not a valid L_events body'],M).
 
-check_d_pre([], []).
-check_d_pre([H|T], NT) :-
-    d_body(H),
-    check_d_pre(T, NT).
-check_d_pre([H|_], no) :-
-    \+ d_body(H),
-    write('SYNTAX ERROR: '),
-    write('``'),write(H),write(''''''),
-    write(' is not a valid D_pre body.'),nl.
-
-check_d_post([], []).
-check_d_post([H|T], NT) :-
-    d_body(H),
-    check_d_post(T, NT).
-check_d_post([H|_], no) :-
-    \+ d_body(H),
-    write('SYNTAX ERROR: '),
-    write('``'),write(H),write(''''''),
-    write(' is not a valid D_post body.'),nl.
+check_d([H|T], What, NT) :-
+    d_body(H), !,
+    check_d(T, What, NT).
+check_d([H|_], What, [notice(error,M,unknown)]) :-
+    concat_terms([H,' is not a valid ',What,' body'],M).
+    
 
 % assert_list
 %
@@ -1626,7 +1596,9 @@ go(File, OptionsList) :-
     init_test_file(File),
     % no longer needed: datime_setrand,
     load_dyn(File),
-    check_syntax,
+    
+    print_errors, % fails if errors occur
+
     (option(meta_actions) -> add_meta_reactive_rules ; true),
     ( initial_state(IS) -> assert_list(IS) ; true),
     cputime(T0),
