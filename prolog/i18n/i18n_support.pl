@@ -49,7 +49,6 @@
 			 '=~~'/2]).
 
 :- use_module(library(lists)).
-:- use_module(library(apply)).
 :- use_module(library(pairs)).
 :- use_module(library(readutil)).
 :- use_module(library(clambda)).
@@ -181,11 +180,14 @@ i18n_entry(GLang, M, MsgId, MsgStr) :-
     ; i18n_entry_partial(GLang, M, MsgId, MsgStr)
     ).
 
+i18n_entry_exact_1(Lang, M, X, Y) :-
+    once(i18n_record_2(M, Lang, [X], [Y])).
+
 i18n_entry_exact(GLang, M, MsgId, MsgStr) :-
     ( call(GLang, Lang),
       i18n_record_2(M, Lang, MsgId, MsgStr) -> true % 1. full translation
     ; call(GLang, Lang),	% 2. full list translation
-      maplist([Lang,M]+\X^Y^once(i18n_record_2(M, Lang, [X], [Y])), MsgId, MsgStr) -> true
+      maplist(i18n_entry_exact_1(Lang, M), MsgId, MsgStr) -> true
     ).
 
 i18n_entry_partial(GLang, M, MsgId, MsgStr) :- % 3. partial translation
