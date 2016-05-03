@@ -30,3 +30,6 @@
 
 event(X) :-
     action(X).
+
+% lps_source_position(Term,FileWithExtension,Position); see check_syntax/1 in interpreter
+:- dynamic lps_source_position/3.

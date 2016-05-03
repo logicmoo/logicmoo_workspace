@@ -2,6 +2,7 @@
 
 :- export go/1, go/2, go_lps/1, go_lps/2.
 :- export test_examples, do_test_suite/2, load_test_file_for/1.
+:- export load_check_syntax/2.
 
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
 :- import append_lists/2 from lists.
@@ -34,8 +35,12 @@
 
 :- import lps_test_result/3, lps_test_result_item/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
 :- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_options/1, lps_failed_test/2.
-% This fact will contain this file's directory:
+:- import lps_source_position/3 from usermod.
+:- dynamic lps_source_position/3.
+
+% This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
+:- import lps_engine_directory/1 from usermod.
 
 :- [bounds].
 :- consult:add_this_lib_dir.
@@ -1434,114 +1439,136 @@ satisfy(=<(X,Y)) :-
     parse(X, RX), parse(Y, RY),
     RX =< RY.
 
-% check_syntax(-Notices) Returns a list of notice(Type,Message,Position)
+% check_syntax(+File,-Notices) Returns a list of notice(Type,Message,Position)
 %  Type is 'error' or 'warning', Position is some term denoting a source file location
+%  Position will be 'unknown'... unless our environment provides a definition for lps_source_position/2
 %  Predicates called here typically have as second argument a notices list with a single
-% element... or they simply fail
-check_syntax_(Notices) :-
+%  element... or they simply fail
+check_syntax(F,Notices) :-
 	findall(N, 
-		(reactive_rule(A, C), (check_reactive_rule(A,[N]) ; check_reactive_rule(C,[N]))), 
+		(
+			reactive_rule(A, C), 
+			(source_position(reactive_rule(A, C),F,Pos), 
+			(check_reactive_rule(A,Pos,[N]) ; check_reactive_rule(C,Pos,[N])))
+			), 
 		RR),
 	findall(N, 
 		(
 			l_int(P, B), 
+			source_position(l_int(P, B),F,Pos), 
 			( 
 				\+ (P @= holds(_,_)), 
-				concat_terms([P,' is not a valid intensional predicate'],M), 
-				N=notice(error,M,unknown) 
+				concat_terms([P,' is not a valid intensional predicate'],M),
+				N=notice(error,M,Pos) 
 				; 
-				check_lp_int(B,[N])) ), 
+				check_lp_int(B,Pos,[N])) ), 
 		IP), 
 	findall(N, 
 		(
 			l_events(P, B), 
+			source_position(l_events(P, B),F,Pos),
 			( 
 				\+ (P @= happens(_,_,_)), 
 				concat_terms([P,' is not a valid composite event predicate'],M), 
-				N=notice(error,M,unknown) 
+				N=notice(error,M,Pos) 
 				; 
-				check_lp_events(B,[N])) ), 
+				check_lp_events(B,Pos,[N])) ), 
 		CE),
-	findall(N, (d_pre(B),check_d(B, d_pre, [N])), PC),
+	findall(N, (d_pre(B),source_position(d_pre(B),F,Pos),check_d(B, d_pre, Pos, [N])), PC),
 	findall(N,(
-		initiated(Ev, Fl, Cond), (
+		initiated(Ev, Fl, Cond), 
+		source_position(initiated(Ev, Fl, Cond),F,Pos),
+		(
 			(Ev @= happens(Ev2, _, _) -> 
 				( d_event(Ev2) -> fail 
 				; 
 				concat_terms([Ev2,' in initiated post-condition must be a simple event (event/action) predicate'],M), 
-				N=notice(error,M,unknown)
+				N=notice(error,M,Pos)
 				)
 			; 
 				concat_terms([Ev,' is not a valid domain initiated post-condition predicate'],M), 
-				N=notice(error,M,unknown)
+				N=notice(error,M,Pos)
 			)
 		;
 			\+ d_head(Fl), 
 			concat_terms([Fl,' in initiated post-condition must be an extensional fluent predicate'],M), 
-			N=notice(error,M,unknown)
+			N=notice(error,M,Pos)
 		;
-			check_d(Cond, 'D_post', [N])
+			check_d(Cond, 'D_post', Pos, [N])
 		) ), 
 		PostI),
 	findall(N,(
-		terminated(Ev, Fl, Cond), (
+		terminated(Ev, Fl, Cond), 
+		source_position(terminated(Ev, Fl, Cond),F,Pos),
+		(
 			(Ev @= happens(Ev2, _, _) -> 
 				( d_event(Ev2) -> fail 
 				; 
 				concat_terms([Ev2,' in terminated post-condition must be a simple event (event/action) predicate'],M), 
-				N=notice(error,M,unknown)
+				N=notice(error,M,Pos)
 				)
 			; 
 				concat_terms([Ev,' is not a valid domain terminated post-condition predicate'],M), 
-				N=notice(error,M,unknown)
+				N=notice(error,M,Pos)
 			)
 		;
 			\+ d_head(Fl), 
 			concat_terms([Fl,' in terminated post-condition must be an extensional fluent predicate'],M), 
-			N=notice(error,M,unknown)
+			N=notice(error,M,Pos)
 		;
-			check_d(Cond, 'D_post', [N])
+			check_d(Cond, 'D_post', Pos, [N])
 		) ), 
 		PostT),
 	append_lists([RR,IP,CE,PC,PostI,PostT],Notices).
 
-% fails if errors occur
-print_errors :- 
-	check_syntax_(Notices), nl,
+% May call an external predicate hook to find the position
+source_position(Term,F,Position) :- lps_source_position(Term,F,Position), !.
+source_position(_,_,unknown).
+	
+% fails if errors occur:
+print_errors(File) :- 
+	check_syntax(File,Notices), nl,
 	( 
 		member(notice(Type,M,_),Notices), 
 		write('SYNTAX '), write(Type), write(': '), writeln(M), 
 		fail 
 	; Notices=[]).
 
+% this may be called by environment tools; see check_syntax/2
+load_check_syntax(File,Notices) :-
+	cleanup,
+	load_dyn(File),
+	check_syntax(File,Notices).
+
+	 
 concat_terms(Terms,Atom) :- concat_terms(Terms,[],Codes), atom_codes(Atom,Codes).
 
 concat_terms([T1|Tn],C,Cn) :- term_to_codes(T1,C1), append(C,C1,C2), concat_terms(Tn,C2,Cn).
 concat_terms([],C,C).
 
-check_reactive_rule([H|T], NT) :-
+check_reactive_rule([H|T], Pos, NT) :-
     reactive_conjunct(H),
     !,
-    check_reactive_rule(T, NT).
-check_reactive_rule([H|_], [notice(error,M,unknown)]) :-
+    check_reactive_rule(T, Pos, NT).
+check_reactive_rule([H|_], Pos, [notice(error,M,Pos)]) :-
     concat_terms([H,' is not a valid reactive rule conjunct'],M).
 
-check_lp_int([H|T], NT) :-
+check_lp_int([H|T], Pos, NT) :-
     l_int_body(H), !,
-    check_lp_int(T, NT).
-check_lp_int([H|_], [notice(error,M,unknown)]) :-
+    check_lp_int(T, Pos, NT).
+check_lp_int([H|_], Pos, [notice(error,M,Pos)]) :-
     concat_terms([H,' is not a valid L_int body'],M).
 
-check_lp_events([H|T], NT) :-
+check_lp_events([H|T], Pos, NT) :-
     l_events_body(H), !,
-    check_lp_events(T, NT).
-check_lp_events([H|_], [notice(error,M,unknown)]) :-
+    check_lp_events(T, Pos, NT).
+check_lp_events([H|_], Pos, [notice(error,M,Pos)]) :-
     concat_terms([H,' is not a valid L_events body'],M).
 
-check_d([H|T], What, NT) :-
+check_d([H|T], What, Pos, NT) :-
     d_body(H), !,
-    check_d(T, What, NT).
-check_d([H|_], What, [notice(error,M,unknown)]) :-
+    check_d(T, What, Pos, NT).
+check_d([H|_], What, Pos, [notice(error,M,Pos)]) :-
     concat_terms([H,' is not a valid ',What,' body'],M).
     
 
@@ -1597,7 +1624,7 @@ go(File, OptionsList) :-
     % no longer needed: datime_setrand,
     load_dyn(File),
     
-    print_errors, % fails if errors occur
+    print_errors(File), % fails if errors occur
 
     (option(meta_actions) -> add_meta_reactive_rules ; true),
     ( initial_state(IS) -> assert_list(IS) ; true),
@@ -1627,6 +1654,7 @@ go(File, OptionsList) :-
 	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true)
     	).
 
+	 
 read_obs(Obs) :-
     read(user_input, Obs),
     ( \+ is_list(Obs) ->
