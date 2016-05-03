@@ -103,6 +103,7 @@ predicate_properties(P, List) :-
 		  \+ memberchk(Prop, [interpreted,
 				      visible,
 				      built_in,
+				      defined,
 				      nodebug,
 				      number_of_rules(_),
 				      number_of_clauses(_),
