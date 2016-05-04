@@ -1458,8 +1458,8 @@ check_syntax(F,Notices) :-
 			source_position(l_int(P, B),F,Pos), 
 			( 
 				\+ (P @= holds(_,_)), 
-				concat_terms([P,' is not a valid intensional predicate'],M),
-				N=notice(error,M,Pos) 
+				buildError(P,' is not a valid intensional predicate',ET),
+				N=notice(error,ET,Pos) 
 				; 
 				check_lp_int(B,Pos,[N])) ), 
 		IP), 
@@ -1469,8 +1469,8 @@ check_syntax(F,Notices) :-
 			source_position(l_events(P, B),F,Pos),
 			( 
 				\+ (P @= happens(_,_,_)), 
-				concat_terms([P,' is not a valid composite event predicate'],M), 
-				N=notice(error,M,Pos) 
+				buildError(P,' is not a valid composite event predicate',ET), 
+				N=notice(error,ET,Pos) 
 				; 
 				check_lp_events(B,Pos,[N])) ), 
 		CE),
@@ -1482,17 +1482,17 @@ check_syntax(F,Notices) :-
 			(Ev @= happens(Ev2, _, _) -> 
 				( d_event(Ev2) -> fail 
 				; 
-				concat_terms([Ev2,' in initiated post-condition must be a simple event (event/action) predicate'],M), 
-				N=notice(error,M,Pos)
+				buildError(Ev2,' in initiated post-condition must be a simple event (event/action) predicate',ET), 
+				N=notice(error,ET,Pos)
 				)
 			; 
-				concat_terms([Ev,' is not a valid domain initiated post-condition predicate'],M), 
-				N=notice(error,M,Pos)
+				buildError(Ev,' is not a valid domain initiated post-condition predicate',ET), 
+				N=notice(error,ET,Pos)
 			)
 		;
 			\+ d_head(Fl), 
-			concat_terms([Fl,' in initiated post-condition must be an extensional fluent predicate'],M), 
-			N=notice(error,M,Pos)
+			buildError(Fl,' in initiated post-condition must be an extensional fluent predicate',ET), 
+			N=notice(error,ET,Pos)
 		;
 			check_d(Cond, 'D_post', Pos, [N])
 		) ), 
@@ -1504,22 +1504,25 @@ check_syntax(F,Notices) :-
 			(Ev @= happens(Ev2, _, _) -> 
 				( d_event(Ev2) -> fail 
 				; 
-				concat_terms([Ev2,' in terminated post-condition must be a simple event (event/action) predicate'],M), 
-				N=notice(error,M,Pos)
+				buildError(Ev2,' in terminated post-condition must be a simple event (event/action) predicate',ET), 
+				N=notice(error,ET,Pos)
 				)
 			; 
-				concat_terms([Ev,' is not a valid domain terminated post-condition predicate'],M), 
-				N=notice(error,M,Pos)
+				buildError(Ev,' is not a valid domain terminated post-condition predicate',ET), 
+				N=notice(error,ET,Pos)
 			)
 		;
 			\+ d_head(Fl), 
-			concat_terms([Fl,' in terminated post-condition must be an extensional fluent predicate'],M), 
-			N=notice(error,M,Pos)
+			buildError(Fl,' in terminated post-condition must be an extensional fluent predicate',ET), 
+			N=notice(error,ET,Pos)
 		;
 			check_d(Cond, 'D_post', Pos, [N])
 		) ), 
 		PostT),
 	append_lists([RR,IP,CE,PC,PostI,PostT],Notices).
+
+% buildError(BadSubterm,Message,NoticeSubterm)
+buildError(X,M,subterm(X,MM)) :- concat_terms([X,M],MM).
 
 % May call an external predicate hook to find the position
 source_position(Term,F,Position) :- lps_source_position(Term,F,Position), !.
@@ -1530,14 +1533,16 @@ print_errors(File) :-
 	check_syntax(File,Notices), nl,
 	( 
 		member(notice(Type,M,_),Notices), 
-		write('SYNTAX '), write(Type), write(': '), writeln(M), 
+		(M=subterm(_,M_)->true;M=M_),
+		write('SYNTAX '), write(Type), write(': '), writeln(M_), 
 		fail 
 	; Notices=[]).
 
 % this may be called by environment tools; see check_syntax/2
 load_check_syntax(File,Notices) :-
 	cleanup,
-	load_dyn(File),
+	% Let's assume Prolog syntactic errors are reported elsewhere:
+	catch(load_dyn(File),_E,true), 
 	check_syntax(File,Notices).
 
 	 
@@ -1550,26 +1555,27 @@ check_reactive_rule([H|T], Pos, NT) :-
     reactive_conjunct(H),
     !,
     check_reactive_rule(T, Pos, NT).
-check_reactive_rule([H|_], Pos, [notice(error,M,Pos)]) :-
-    concat_terms([H,' is not a valid reactive rule conjunct'],M).
+check_reactive_rule([H|_], Pos, [notice(error,ET,Pos)]) :-
+    buildError(H,' is not a valid reactive rule conjunct',ET).
 
 check_lp_int([H|T], Pos, NT) :-
     l_int_body(H), !,
     check_lp_int(T, Pos, NT).
-check_lp_int([H|_], Pos, [notice(error,M,Pos)]) :-
-    concat_terms([H,' is not a valid L_int body'],M).
+check_lp_int([H|_], Pos, [notice(error,ET,Pos)]) :-
+    buildError(H,' is not a valid L_int body',ET).
 
 check_lp_events([H|T], Pos, NT) :-
     l_events_body(H), !,
     check_lp_events(T, Pos, NT).
-check_lp_events([H|_], Pos, [notice(error,M,Pos)]) :-
-    concat_terms([H,' is not a valid L_events body'],M).
+check_lp_events([H|_], Pos, [notice(error,ET,Pos)]) :-
+    buildError(H,' is not a valid L_events body',ET).
 
 check_d([H|T], What, Pos, NT) :-
     d_body(H), !,
     check_d(T, What, Pos, NT).
-check_d([H|_], What, Pos, [notice(error,M,Pos)]) :-
-    concat_terms([H,' is not a valid ',What,' body'],M).
+check_d([H|_], What, Pos, [notice(error,ET,Pos)]) :-
+    concat_terms([' is not a valid ',What,' body'],M),
+    buildError(H,M,ET).
     
 
 % assert_list
