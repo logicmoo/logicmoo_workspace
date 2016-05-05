@@ -35,7 +35,7 @@ Ditto for "timeful" predicates with non-T variables
 :- op(900,fy,terminated).
 :- op(900,fy,initiated).
 
-:- export lpsp2p_file/3, gol/2, gol/1, golv/2, golv/1.
+:- export lpsp2p_file/3, lpsp2p_file/2, gol/2, gol/1, golv/2, golv/1.
 
 :- import append/3 from basics.
 :- import concat_atom/2 from string.
@@ -62,6 +62,16 @@ golv(LPSP_file,Options) :-
 	lpsp2p_file(LPSP_file,Pfile,true),
 	gov(Pfile,Options).
 
+% lpsp2p_file(?LPSPfile,?LPSWfile)
+lpsp2p_file(LPSPfile,LPSWfile) :- atom(LPSPfile), !,
+	(atom(LPSWfile)->true;concat_atom([LPSPfile,'_.lpsw'],LPSWfile)),
+	lpsp2p_file(LPSPfile,LPSWfile,true).
+lpsp2p_file(LPSPfile,LPSWfile) :- 
+	atom(LPSWfile), 
+	(atom(LPSPfile)->true;concat_atom([LPSWfile,'_.lpsp'],LPSPfile)),
+	lpsp2p_file(LPSPfile,LPSWfile,false).
+
+		
 % lpsp2p_file(+LPSPfile,+Pfile,+ToWei)
 % If ToWei==true it generates a .P file from the first file, else vice-versa
 lpsp2p_file(Lfile,Pfile,ToWei) :-
