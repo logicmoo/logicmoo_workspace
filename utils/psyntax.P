@@ -35,7 +35,7 @@ Ditto for "timeful" predicates with non-T variables
 :- op(900,fy,terminated).
 :- op(900,fy,initiated).
 
-:- export lpsp2p_file/3, lpsp2p_file/2, gol/2, gol/1, golv/2, golv/1.
+:- export lpsp2p_file/3, lpsp2p_file/2, lpsp2p/3, gol/2, gol/1, golv/2, golv/1.
 
 :- import append/3 from basics.
 :- import concat_atom/2 from string.
