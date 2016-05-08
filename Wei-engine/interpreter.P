@@ -1536,7 +1536,14 @@ print_errors(File) :-
 		(M=subterm(_,M_)->true;M=M_),
 		write('SYNTAX '), write(Type), write(': '), writeln(M_), 
 		fail 
-	; Notices=[]).
+	; Notices=[]),
+	((option(priority), \+ reactive_rule(_,_,_)) 
+		-> writeln('WARNING: no rules with priority present!') 
+		; true),
+	(( \+ option(priority), \+ reactive_rule(_,_))
+		-> writeln('WARNING: no priority-less reactive rules are present!')
+		; true).
+	
 
 % this may be called by environment tools; see check_syntax/2
 load_check_syntax(File,Notices) :-
