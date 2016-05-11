@@ -38,6 +38,8 @@
 :- use_module(library(from_utils)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
+:- use_module(library(assrt_lib)).
+:- use_module(library(plprops)).
 
 :- multifile
     prolog:message//1,
@@ -170,10 +172,22 @@ ignore_dupname_clause(CIL, GL) :-
 consider_dupname(DupType, CIL) :-
     append(_, [CI|PIL2], CIL),
     element_head(DupType, CI, MH),
-    predicate_property(MH, exported),
+    consider_dupname_2(DupType, MH, CompData),
     member(CI2, PIL2),
     element_head(DupType, CI2, MH2),
-    predicate_property(MH2, exported).
+    consider_dupname_3(CompData, MH2).
+
+consider_dupname_2(predicate, MH, exported) :- consider_dupname_3(exported, MH).
+consider_dupname_2(clause,    MH, CompData) :- consider_dupname_clause(MH, CompData).
+
+consider_dupname_clause(MH, exported) :- consider_dupname_3(exported, MH).
+consider_dupname_clause(MH, inter(M)) :- consider_dupname_3(inter(M), MH).
+
+consider_dupname_3(exported, MH) :- predicate_property(MH, exported).
+consider_dupname_3(inter(M), M:H) :-
+    \+ ( prop_asr(head, M:H, _, _, Asr),
+	 prop_asr(glob, dupclauses(_), _, _, Asr)
+       ).
 
 element_head(predicate, M:F/A,   M:H) :- functor(H, F, A).
 element_head(clause,    M:F/A-_, M:H) :- functor(H, F, A).
