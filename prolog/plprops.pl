@@ -1,5 +1,6 @@
 :- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, tlist/2,
-		    char/1, keypair/1, keylist/1, arithexpression/1]).
+		    char/1, keypair/1, keylist/1, arithexpression/1,
+		    dupclauses/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
@@ -75,6 +76,22 @@ multi(Goal) :-
 	( C0 == C1 -> !
 	; nb_setarg(1, Solved, yes)
 	).
+
+:- meta_predicate dupclauses(0).
+:- prop dupclauses/1 is (type, eval)
+    # "States that a predicate have repeated clauses".
+dupclauses(M:Goal) :-
+    ( functor(Goal, F, A),
+      functor(Head1, F, A),
+      functor(Head2, F, A),
+      clause(M:Head1, Body1, Ref1),
+      clause(M:Head2, Body2, Ref2),
+      Ref1 \= Ref2,
+      (M:Head1 :- Body1) =@= (M:Head2 :- Body2)
+    ->true
+    ; send_comp_rtcheck(Goal, dupclauses, not(dupclauses))
+    ),
+    call(Goal).
 
 :- prop arithexpression/1 is type
     # "Represents an arithmetic expression, i.e., a term that could be

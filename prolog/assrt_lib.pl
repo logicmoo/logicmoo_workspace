@@ -85,6 +85,8 @@ prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 asr_aprop(rtcheck(Asr), Key, Prop, From) :-
     prop_asr(Key, Prop, From, Asr).
 
+:- meta_predicate prop_asr(?, 0, -, +, +).
+
 prop_asr(Key, M:P, IM, From, Asr) :-
     implementation_module(M:P, IM),
     prop_asr(Key, C:P, From, Asr),
