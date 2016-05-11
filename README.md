@@ -27,7 +27,6 @@ To support the development of LPS, evolving the Wei implementation and complemen
 
 ### Writing tests ###
 If you add a file to the examples directory and execute it with make_test, e.g. go(MyFile,[make_test]), a test results file MyFile.lpst will be generated. If the program behaves correctly with the current version of LPS, commit this file too. When you later execute go(MyFile,[run_test]), the program behavior will be compared with the previous test results; ditto when you run all tests, with 'test_examples'.
-* Other guidelines
 
 ## Road map ##
 ### More examples ###
@@ -57,6 +56,7 @@ Examples TBD:
 
 #### Experimental "papers syntax" ####
 Currently prototyped in utils/psyntax.P
+
 * Reflect additions to internal syntax
 * Better representation of time, possibly assuming implicit time sequence in body literals
 
