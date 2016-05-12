@@ -79,6 +79,7 @@ hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
 hide_var_dynamic(walk_from_assertion(_, _, _, _), extra_codewalk).
 hide_var_dynamic(current_clause_module_body(_, _), extra_codewalk).
 hide_var_dynamic(update_fact_from(_, _), from_utils).
+hide_var_dynamic(dupclauses(_), plprops).
 
 :- dynamic
     wrong_dynamic_db/4,

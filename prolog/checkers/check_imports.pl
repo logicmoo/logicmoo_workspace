@@ -53,7 +53,7 @@ prolog:message(acheck(imports)) -->
      'reported.', nl,
      'You can silent the warnings by declaring use_module/2 with an',nl,
      'empty import list. If they have desirable side effects and still', nl,
-     'needs to be imported, you can refactorize you program so that', nl,
+     'needs to be imported, you can refactorize your program so that', nl,
      'such side effects are not required anymore.', nl, nl].
 prolog:message(acheck(imports, c(Class, Type, Name)-LocElemL)) -->
     ['~w ~w have unused ~w:'-[Class, Name, Type], nl],
