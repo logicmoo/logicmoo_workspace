@@ -28,8 +28,8 @@
 */
 
 :- module(abstract_interpreter, [abstract_interpreter/3,
+				 abstract_interpreter/4,
 				 abstract_interpreter/5,
-				 abstract_interpreter/6,
 				 match_head/7,
 				 match_head_body/4,
 				 bottom/2,
@@ -48,9 +48,9 @@
     match_head_body(*,*,*,*),
     match_ai(*,*,*,*,*,*,*,*),
     match_noloops(*,*,*,*,*,*,*),
-    abstract_interpreter(+,+,7,+,-),
-    abstract_interpreter(+,+,7,+,+,-),
-    abstract_interpreter(?,7,?).
+    abstract_interpreter(0,7,?),
+    abstract_interpreter(0,7,+,-),
+    abstract_interpreter(0,7,+,+,-).
 
 :- multifile
     replace_goal_hook/3,
@@ -91,19 +91,19 @@ replace_goal_hook(assertz(_),    _, true).
 replace_goal_hook(asserta(_),    _, true).
 replace_goal_hook(assert( _),    _, true).
 
-abstract_interpreter(Goal, M, Abstraction, OptionL, data(0, [], Result)) :-
+abstract_interpreter(M:Goal, Abstraction, OptionL, data(0, [], Result)) :-
     option(location(Loc),   OptionL, context(toplevel, Goal)),
     option(evaluable(Eval), OptionL, []),
     option(on_error(OnErr), OptionL, print_message(informational)),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
-    ( abstract_interpreter(Goal, M, Abstraction, state(Loc, EvalL, M:OnErr, []), [], Out)
+    ( abstract_interpreter(M:Goal, Abstraction, state(Loc, EvalL, M:OnErr, []), [], Out)
     *->
       Result = true(Out)
     ; Result = fail
     ).
 
-abstract_interpreter(M:Goal, Abstraction, OptionL) :-
-    abstract_interpreter(Goal, M, Abstraction, OptionL, data(_, _, true(_))).
+abstract_interpreter(MGoal, Abstraction, OptionL) :-
+    abstract_interpreter(MGoal, Abstraction, OptionL, data(_, _, true(_))).
 
 /*
 :- meta_predicate catch(2, ?, ?, ?, ?).
@@ -202,7 +202,7 @@ abstract_interpreter_body(A\=B, _, _, _) --> !, ( \+ is_bottom -> {A\=B} ; {A\==
 abstract_interpreter_body(true, _, _, _) --> !.
 abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
 abstract_interpreter_body(H, M, Abs, State) -->
-    cut_to(abstract_interpreter(H, M, Abs, State)).
+    cut_to(abstract_interpreter_lit(H, M, Abs, State)).
 
 terms_share(A, B) :-
     term_variables(A, VarsA),
@@ -220,7 +220,11 @@ cut_if_no_bottom -->
     ; []
     ).
 
-abstract_interpreter(H, M, Abs, State0 ) -->
+abstract_interpreter(MH, Abs, State) -->
+    {strip_module(MH, M, H)},
+    abstract_interpreter_lit(H, M, Abs, State).
+
+abstract_interpreter_lit(H, M, Abs, State0 ) -->
     { predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
