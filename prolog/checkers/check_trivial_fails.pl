@@ -115,7 +115,7 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
     \+ ignore_predicate(H, M),
     variant_sha1(ai(H, CM), Hash),
     ( ai_cache_result(Hash, Data) -> true
-    ; once(abstract_interpreter(H, CM, MatchAI, [location(From)], Data)),
+    ; once(abstract_interpreter(CM:H, MatchAI, [location(From)], Data)),
       assertz(ai_cache_result(Hash, Data))
     ),
     Data = data(N, S, fail),
