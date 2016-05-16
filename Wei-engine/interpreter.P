@@ -538,12 +538,8 @@ resolve_goal_breadth([B1|Bs], NextGoal, CandActs) :-
     ).
 resolve_goal_breadth([TLG|[]], NextGoal, CandActs) :-
     copy_term(TLG, TLGC),
-    ( tried_all(ec(TLGC)) ->
-        clear_tried(ec(TLGC)),
-        NextGoal = [TLG],
-        CandActs = []
-    ; find_unused(ec(TLGC), EC) ->
-    	% TODO: seems buggy, GoalId..???
+    ( find_unused(ec(TLGC), EC) ->
+    	   % TODO: seems buggy, GoalId.. should extract it out of TLG perhaps??
         assertz(tried(GoalId, 0, expanded_consequent(TLGC, EC))),
         resolve_goal_breadth_end([EC,TLG], NG, CA),
         ( NG == nosusp ->
@@ -552,7 +548,12 @@ resolve_goal_breadth([TLG|[]], NextGoal, CandActs) :-
             NextGoal = [NG,TLG],
             CandActs = CA
         )
-    ).
+       ; % was tried_all:
+       clear_tried(ec(TLGC)),
+       NextGoal = [TLG],
+       CandActs = []
+	).
+        
 resolve_goal_breadth([B1,TLG], NextGoal, CandActs) :-
     ( resolveb(B1, NB, CA) ->
         ( NB == [] ->
@@ -749,25 +750,30 @@ check_failed([happens(Ev, T1, T2)|Ls], N) :-
 find_unused(holds(Fl, T)) :-
     current_goal(GoalId),
     depth(Depth),
-    query(holds(Fl, T)),
-    \+ tried(GoalId, Depth, state(Fl)).
+    query(holds(Fl, T)), 
+    % can we assume Fl to be ground? If so, should use tried/3 instead:
+    \+ tried_variant(GoalId, Depth, state(Fl)).
 find_unused(happens(Ev, T1, T2), Body) :-
     current_goal(GoalId),
     depth(Depth),
     l_events(happens(Ev, T1, T2), Body),
-    \+ tried(GoalId, Depth, l_events(Ev, Body)).
+    \+ tried_variant(GoalId, Depth, l_events(Ev, Body)).
 find_unused(l_tl(TL), Body) :-
     current_goal(GoalId),
     depth(Depth),
     l_timeless(TL, Body),
-    \+ tried(GoalId, Depth, l_timeless(TL, Body)).
+    \+ tried_variant(GoalId, Depth, l_timeless(TL, Body)).
 find_unused(ec(C), EC) :-
     current_goal(GoalId),
     expanded_consequent(C, EC),
-    \+ tried(GoalId, 0, expanded_consequent(C, EC)).
+    \+ tried_variant(GoalId, 0, expanded_consequent(C, EC)).
+
+% we're loosing indexing here... should do something cleverer:
+tried_variant(GoalId,Depth,X) :- tried(GoalId,Depth,XX), variant(X,XX).
 
 % tried_all
-%
+% useless: tried_all(G) :- \+ find_unused(G), \+ find_unused(G,_).
+/*
 tried_all(holds(Fl, T)) :-
     current_goal(GoalId),
     depth(Depth),
@@ -803,6 +809,7 @@ tried_all(ec(C)) :-
             tried(GoalId, 0, expanded_consequent(C, EC))
         )
     ).
+*/
 
 % clear_tried
 %
@@ -869,20 +876,12 @@ resolve2([holds(Fl, T)|Ls], NB, EB, CA) :-
         )
     ).
 resolve2([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
-    l_events(happens(Ev, T1, T2), _),
-    /*
+    \+ \+ l_events(happens(Ev, T1, T2), _), % TODO: Should use copy_term here..???
+    /* old comment:
     l_events(CEH, CEB),
     unifiable(CEH, happens(Ev, T1, T2), _),
     */
-    % TODO: this seems unnecessarily unefficient, we should probably 
-    % dispense with tried_all (being effectively equivalent to \+ find_unused, right??
-    ( tried_all(happens(Ev, T1, T2)) ->
-        write_verbose(['All possible unifications for ',Ev,' failed',nl,'Backtracking.',nl]),
-        clear_tried(l_events(Ev, _)),
-        NB = cont,
-        EB = [],
-        CA = none
-    ; find_unused(happens(Ev, T1, T2), Body) ->
+    ( find_unused(happens(Ev, T1, T2), Body) ->
         write_verbose(['Bound composite event ',Ev,' to',nl,Body,nl]),
         current_goal(GoalId),
         depth(Depth),
@@ -895,10 +894,14 @@ resolve2([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
         append(Body, Ls, EB),
         CA = none
     ;
-        write('ERROR: Nothing worked!'),nl
+        write_verbose(['All possible unifications for ',Ev,' failed',nl,'Backtracking.',nl]),
+        clear_tried(l_events(Ev, _)),
+        NB = cont,
+        EB = [],
+        CA = none
     ).
     /*
-    % umm...
+    % umm...old comment here:
     % TODO this needs to be checked and cleared when it all fails...
     % need to remember which l_events have been explored, ACROSS cycles
     current_goal(GoalId),
@@ -967,14 +970,7 @@ resolve2_holds([holds(Fl, T)|Ls], NB, EB, CA) :-
     copy_term(holds(Fl, T), holds(TFl, TT)),
     query(holds(TFl, TT)),
     copy_term([holds(Fl, T)|Ls], [holds(CFl, CT)|CLs]),
-    ( tried_all(holds(CFl, CT)) ->
-        write_verbose(['All possible unifications for ',holds(Fl),' failed.',nl,'Backtracking.',nl]),
-        % TODO 22 Aug 17:42
-        clear_tried(holds(Fl, T)),
-        NB = cont,
-        EB = [],
-        CA = none
-    ; find_unused(holds(CFl, CT)) ->
+    ( find_unused(holds(CFl, CT)) ->
         satisfy_all(CLs),
         reduce_step,
         resolve2_same(CT, CLs, EB),
@@ -988,8 +984,15 @@ resolve2_holds([holds(Fl, T)|Ls], NB, EB, CA) :-
             % it doesn't actually matter what NB is, just can't be unbound, or []
             NB = [holds(Fl, T)|Ls]
         )
+        ;
+        write_verbose(['All possible unifications for ',holds(Fl),' failed.',nl,'Backtracking.',nl]),
+        % TODO 22 Aug 17:42
+        clear_tried(holds(Fl, T)),
+        NB = cont,
+        EB = [],
+        CA = none
     ).
-    /*
+    /* old comment:
     query(holds(CFl, CT)),
     */
     % check for ground here
@@ -1146,13 +1149,7 @@ resolve2([TL|Ls], NB, EB, CA) :-
 
 resolve2_timeless([TL|Ls], NB, EB, CA) :-
     copy_term([TL|Ls], [CTL|CLs]),
-    ( tried_all(l_tl(CTL)) ->
-        write_verbose(['All possible unifications for ',l_timeless(TL),' failed.',nl,'Backtracking.',nl]),
-        clear_tried(l_tl(TL)),
-        NB = cont,
-        EB = [],
-        CA = none
-    ; find_unused(l_tl(CTL), Body) ->
+    ( find_unused(l_tl(CTL), Body) ->
         satisfy_all(CLs),
         reduce_step,
         query(CTL),
@@ -1163,8 +1160,13 @@ resolve2_timeless([TL|Ls], NB, EB, CA) :-
         NB = [TL|Ls],
         EB = CLs,
         CA = none
+        ;
+        write_verbose(['All possible unifications for ',l_timeless(TL),' failed.',nl,'Backtracking.',nl]),
+        clear_tried(l_tl(TL)),
+        NB = cont,
+        EB = [],
+        CA = none
     ).
-
 /*
 % s
 resolve2([TL|Ls], [TL|Ls], [], none) :-
