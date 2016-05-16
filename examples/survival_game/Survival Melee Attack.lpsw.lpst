@@ -1,0 +1,212 @@
+/*
+  LPS test results file generated on 2016-05-16 at 09:11:35 for program file:
+  /Users/mc/git/lps_corner/examples/survival_game/Survival Melee Attack.lpsw
+*/
+
+% LPS options prior to the test:
+lps_test_options([verbose]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result('Observations:',1,2).
+lps_test_result('Candidate actions:',1,0).
+lps_test_result('Selected actions:',1,0).
+lps_test_result('Database state:',1,18).
+lps_test_result('New partial reactive rules:',1,0).
+lps_test_result('New goals:',1,0).
+lps_test_result('Resolved goals:',1,0).
+lps_test_result('Observations:',2,0).
+lps_test_result('Candidate actions:',2,0).
+lps_test_result('Selected actions:',2,0).
+lps_test_result('Database state:',2,18).
+lps_test_result('New partial reactive rules:',2,0).
+lps_test_result('New goals:',2,0).
+lps_test_result('Resolved goals:',2,0).
+lps_test_result('Observations:',3,0).
+lps_test_result('Candidate actions:',3,0).
+lps_test_result('Selected actions:',3,0).
+lps_test_result('Database state:',3,18).
+lps_test_result('New partial reactive rules:',3,0).
+lps_test_result('New goals:',3,0).
+lps_test_result('Resolved goals:',3,0).
+lps_test_result('Observations:',4,0).
+lps_test_result('Candidate actions:',4,0).
+lps_test_result('Selected actions:',4,0).
+lps_test_result('Database state:',4,18).
+lps_test_result('New partial reactive rules:',4,0).
+lps_test_result('New goals:',4,0).
+lps_test_result('Resolved goals:',4,0).
+lps_test_result('Observations:',5,0).
+lps_test_result('Candidate actions:',5,0).
+lps_test_result('Selected actions:',5,0).
+lps_test_result('Database state:',5,18).
+lps_test_result('New partial reactive rules:',5,0).
+lps_test_result('New goals:',5,0).
+lps_test_result('Resolved goals:',5,0).
+lps_test_result('Observations:',6,0).
+lps_test_result('Candidate actions:',6,0).
+lps_test_result('Selected actions:',6,0).
+lps_test_result('Database state:',6,18).
+lps_test_result('New partial reactive rules:',6,0).
+lps_test_result('New goals:',6,0).
+lps_test_result('Resolved goals:',6,0).
+lps_test_result('Observations:',7,0).
+lps_test_result('Candidate actions:',7,0).
+lps_test_result('Selected actions:',7,0).
+lps_test_result('Database state:',7,18).
+lps_test_result('New partial reactive rules:',7,0).
+lps_test_result('New goals:',7,0).
+lps_test_result('Resolved goals:',7,0).
+lps_test_result('Observations:',8,0).
+lps_test_result('Candidate actions:',8,0).
+lps_test_result('Selected actions:',8,0).
+lps_test_result('Database state:',8,18).
+lps_test_result('New partial reactive rules:',8,0).
+lps_test_result('New goals:',8,0).
+lps_test_result('Resolved goals:',8,0).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item('Observations:',1,start_game(tom)).
+lps_test_result_item('Observations:',1,start_game(alex)).
+lps_test_result_item('Database state:',1,person(tom,normal)).
+lps_test_result_item('Database state:',1,person(alex,violent)).
+lps_test_result_item('Database state:',1,position(tom,south,4,3)).
+lps_test_result_item('Database state:',1,holds_wood(tom,0)).
+lps_test_result_item('Database state:',1,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',1,health(tom,50)).
+lps_test_result_item('Database state:',1,hunger(tom,20)).
+lps_test_result_item('Database state:',1,has_shelter(tom,true)).
+lps_test_result_item('Database state:',1,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',1,turns(tom,0)).
+lps_test_result_item('Database state:',1,position(alex,east,3,3)).
+lps_test_result_item('Database state:',1,holds_wood(alex,0)).
+lps_test_result_item('Database state:',1,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',1,health(alex,50)).
+lps_test_result_item('Database state:',1,hunger(alex,20)).
+lps_test_result_item('Database state:',1,has_shelter(alex,false)).
+lps_test_result_item('Database state:',1,turns(alex,0)).
+lps_test_result_item('Database state:',1,cycles(0)).
+lps_test_result_item('Database state:',2,person(tom,normal)).
+lps_test_result_item('Database state:',2,person(alex,violent)).
+lps_test_result_item('Database state:',2,position(tom,south,4,3)).
+lps_test_result_item('Database state:',2,holds_wood(tom,0)).
+lps_test_result_item('Database state:',2,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',2,health(tom,50)).
+lps_test_result_item('Database state:',2,hunger(tom,20)).
+lps_test_result_item('Database state:',2,has_shelter(tom,true)).
+lps_test_result_item('Database state:',2,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',2,turns(tom,0)).
+lps_test_result_item('Database state:',2,position(alex,east,3,3)).
+lps_test_result_item('Database state:',2,holds_wood(alex,0)).
+lps_test_result_item('Database state:',2,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',2,health(alex,50)).
+lps_test_result_item('Database state:',2,hunger(alex,20)).
+lps_test_result_item('Database state:',2,has_shelter(alex,false)).
+lps_test_result_item('Database state:',2,turns(alex,0)).
+lps_test_result_item('Database state:',2,cycles(0)).
+lps_test_result_item('Database state:',3,person(tom,normal)).
+lps_test_result_item('Database state:',3,person(alex,violent)).
+lps_test_result_item('Database state:',3,position(tom,south,4,3)).
+lps_test_result_item('Database state:',3,holds_wood(tom,0)).
+lps_test_result_item('Database state:',3,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',3,health(tom,50)).
+lps_test_result_item('Database state:',3,hunger(tom,20)).
+lps_test_result_item('Database state:',3,has_shelter(tom,true)).
+lps_test_result_item('Database state:',3,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',3,turns(tom,0)).
+lps_test_result_item('Database state:',3,position(alex,east,3,3)).
+lps_test_result_item('Database state:',3,holds_wood(alex,0)).
+lps_test_result_item('Database state:',3,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',3,health(alex,50)).
+lps_test_result_item('Database state:',3,hunger(alex,20)).
+lps_test_result_item('Database state:',3,has_shelter(alex,false)).
+lps_test_result_item('Database state:',3,turns(alex,0)).
+lps_test_result_item('Database state:',3,cycles(0)).
+lps_test_result_item('Database state:',4,person(tom,normal)).
+lps_test_result_item('Database state:',4,person(alex,violent)).
+lps_test_result_item('Database state:',4,position(tom,south,4,3)).
+lps_test_result_item('Database state:',4,holds_wood(tom,0)).
+lps_test_result_item('Database state:',4,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',4,health(tom,50)).
+lps_test_result_item('Database state:',4,hunger(tom,20)).
+lps_test_result_item('Database state:',4,has_shelter(tom,true)).
+lps_test_result_item('Database state:',4,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',4,turns(tom,0)).
+lps_test_result_item('Database state:',4,position(alex,east,3,3)).
+lps_test_result_item('Database state:',4,holds_wood(alex,0)).
+lps_test_result_item('Database state:',4,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',4,health(alex,50)).
+lps_test_result_item('Database state:',4,hunger(alex,20)).
+lps_test_result_item('Database state:',4,has_shelter(alex,false)).
+lps_test_result_item('Database state:',4,turns(alex,0)).
+lps_test_result_item('Database state:',4,cycles(0)).
+lps_test_result_item('Database state:',5,person(tom,normal)).
+lps_test_result_item('Database state:',5,person(alex,violent)).
+lps_test_result_item('Database state:',5,position(tom,south,4,3)).
+lps_test_result_item('Database state:',5,holds_wood(tom,0)).
+lps_test_result_item('Database state:',5,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',5,health(tom,50)).
+lps_test_result_item('Database state:',5,hunger(tom,20)).
+lps_test_result_item('Database state:',5,has_shelter(tom,true)).
+lps_test_result_item('Database state:',5,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',5,turns(tom,0)).
+lps_test_result_item('Database state:',5,position(alex,east,3,3)).
+lps_test_result_item('Database state:',5,holds_wood(alex,0)).
+lps_test_result_item('Database state:',5,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',5,health(alex,50)).
+lps_test_result_item('Database state:',5,hunger(alex,20)).
+lps_test_result_item('Database state:',5,has_shelter(alex,false)).
+lps_test_result_item('Database state:',5,turns(alex,0)).
+lps_test_result_item('Database state:',5,cycles(0)).
+lps_test_result_item('Database state:',6,person(tom,normal)).
+lps_test_result_item('Database state:',6,person(alex,violent)).
+lps_test_result_item('Database state:',6,position(tom,south,4,3)).
+lps_test_result_item('Database state:',6,holds_wood(tom,0)).
+lps_test_result_item('Database state:',6,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',6,health(tom,50)).
+lps_test_result_item('Database state:',6,hunger(tom,20)).
+lps_test_result_item('Database state:',6,has_shelter(tom,true)).
+lps_test_result_item('Database state:',6,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',6,turns(tom,0)).
+lps_test_result_item('Database state:',6,position(alex,east,3,3)).
+lps_test_result_item('Database state:',6,holds_wood(alex,0)).
+lps_test_result_item('Database state:',6,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',6,health(alex,50)).
+lps_test_result_item('Database state:',6,hunger(alex,20)).
+lps_test_result_item('Database state:',6,has_shelter(alex,false)).
+lps_test_result_item('Database state:',6,turns(alex,0)).
+lps_test_result_item('Database state:',6,cycles(0)).
+lps_test_result_item('Database state:',7,person(tom,normal)).
+lps_test_result_item('Database state:',7,person(alex,violent)).
+lps_test_result_item('Database state:',7,position(tom,south,4,3)).
+lps_test_result_item('Database state:',7,holds_wood(tom,0)).
+lps_test_result_item('Database state:',7,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',7,health(tom,50)).
+lps_test_result_item('Database state:',7,hunger(tom,20)).
+lps_test_result_item('Database state:',7,has_shelter(tom,true)).
+lps_test_result_item('Database state:',7,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',7,turns(tom,0)).
+lps_test_result_item('Database state:',7,position(alex,east,3,3)).
+lps_test_result_item('Database state:',7,holds_wood(alex,0)).
+lps_test_result_item('Database state:',7,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',7,health(alex,50)).
+lps_test_result_item('Database state:',7,hunger(alex,20)).
+lps_test_result_item('Database state:',7,has_shelter(alex,false)).
+lps_test_result_item('Database state:',7,turns(alex,0)).
+lps_test_result_item('Database state:',7,cycles(0)).
+lps_test_result_item('Database state:',8,person(tom,normal)).
+lps_test_result_item('Database state:',8,person(alex,violent)).
+lps_test_result_item('Database state:',8,position(tom,south,4,3)).
+lps_test_result_item('Database state:',8,holds_wood(tom,0)).
+lps_test_result_item('Database state:',8,holds_food(tom,0,0,0,0)).
+lps_test_result_item('Database state:',8,health(tom,50)).
+lps_test_result_item('Database state:',8,hunger(tom,20)).
+lps_test_result_item('Database state:',8,has_shelter(tom,true)).
+lps_test_result_item('Database state:',8,shelter(tom,100,7,7)).
+lps_test_result_item('Database state:',8,turns(tom,0)).
+lps_test_result_item('Database state:',8,position(alex,east,3,3)).
+lps_test_result_item('Database state:',8,holds_wood(alex,0)).
+lps_test_result_item('Database state:',8,holds_food(alex,10,0,0,2)).
+lps_test_result_item('Database state:',8,health(alex,50)).
+lps_test_result_item('Database state:',8,hunger(alex,20)).
+lps_test_result_item('Database state:',8,has_shelter(alex,false)).
+lps_test_result_item('Database state:',8,turns(alex,0)).
+lps_test_result_item('Database state:',8,cycles(0)).

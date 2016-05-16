@@ -1,7 +1,7 @@
 %%
 
 :- export go/1, go/2, go_lps/1, go_lps/2.
-:- export test_examples, do_test_suite/2, load_test_file_for/1.
+:- export test_examples, build_all_test_results/0, do_test_suite/2, load_test_file_for/1.
 :- export load_check_syntax/2.
 
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
@@ -19,7 +19,7 @@
 :- import format/2 from format.
 :- import datime/1 from standard.
 :- import conget/2, conset/2, term_hash/3 from machine.
-:- import list_directory/2 from shell.
+:- import list_directory/2, is_directory/1 from shell.
 
 :- import reactive_conjunct/1, l_int_body/1, l_events_body/1 from preprocessor.
 :- import d_head/1, d_event/1, d_body/1 from preprocessor.
@@ -874,6 +874,8 @@ resolve2([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
     l_events(CEH, CEB),
     unifiable(CEH, happens(Ev, T1, T2), _),
     */
+    % TODO: this seems unnecessarily unefficient, we should probably 
+    % dispense with tried_all (being effectively equivalent to \+ find_unused, right??
     ( tried_all(happens(Ev, T1, T2)) ->
         write_verbose(['All possible unifications for ',Ev,' failed',nl,'Backtracking.',nl]),
         clear_tried(l_events(Ev, _)),
@@ -1821,18 +1823,47 @@ assert_lps_test_result_item(Stage,Cycle,Item) :-
 	( Size > 1000 -> term_hash(Item,100000,H), Item_=lps_gigantic(Size,H) ; Item_=Item),
 	assert(lps_test_result_item(Stage,Cycle,Item_)).
 	
-% test all programs in the LPS examples directory which have a .lpst file present
+% test all programs in the LPS examples directory tree which have a .lpst file present
 test_examples :- 
 	lps_engine_directory(D), 
 	concat_atom([D,'/../examples'], E), expand_filename(E,ED),
-	findall( ProgramFile, (
+	all_files_in(ED,".lpst",TFiles),
+	findall(ProgramFile,(
+		member(TFile,TFiles), atom_codes(TFile,Tcodes),
+		append(PCodes,".lpst",Tcodes),atom_codes(ProgramFile,PCodes)
+		),Files),
+	/*findall( ProgramFile, (
 		list_directory(ED,F), atom_codes(F,FC), 
 		append(PFcodes,".lpst",FC), atom_codes(PF,PFcodes),
 		concat_atom([ED,'/',PF],ProgramFile)
 		),
-		Files),
+		Files),*/
 	do_test_suite(Files,[run_test]).
-	
+
+% Suffix typically being .extension
+all_files_in(Directory,Suffix,Files) :-
+	writeln(all_files_in(Directory,Suffix,Files)),
+	(is_list(Suffix)->Suffix=SuffixCodes;atom_codes(Suffix,SuffixCodes)),
+	findall( File, (
+		list_directory(Directory,F), 
+		F \== '.', F \== '..',
+		concat_atom([Directory,'/',F],FullF),
+		(is_directory(FullF) -> 
+			all_files_in(FullF,Suffix,DFiles), member(File,DFiles) 
+			; 
+			atom_codes(F,FC), 
+			append(_PFcodes,SuffixCodes,FC), 
+			concat_atom([Directory,'/',F],File))
+		),
+		Files).
+
+% for each .lpsw file (Wei syntax), generate its test result file
+build_all_test_results :- 
+	lps_engine_directory(D), 
+	concat_atom([D,'/../examples'], E), expand_filename(E,ED),
+	all_files_in(ED,'.lpsw',Files),
+	writeln(files-Files),
+	do_test_suite(Files,[make_test,verbose]).
 
 % do_test_suite(Files,Options)  
 %  Options must contain make_test or run_test, optionally more; Files are either LPS or test result files resp.

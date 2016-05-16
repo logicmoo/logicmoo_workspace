@@ -1,10 +1,10 @@
 /*
-  LPS test results file generated on 2016-04-29 at 19:13:09 for program file:
-  /Users/mc/git/lps_corner/examples/concurrent_actions2.pl
+  LPS test results file generated on 2016-05-16 at 09:11:35 for program file:
+  /Users/mc/git/lps_corner/examples/concurrent_actions1.lpsw
 */
 
 % LPS options prior to the test:
-lps_test_options([]).
+lps_test_options([verbose]).
 
 % lps_test_result(Stage,Cycle,TestTerm)
 lps_test_result('Observations:',1,2).
@@ -16,31 +16,31 @@ lps_test_result('New goals:',1,2).
 lps_test_result('Resolved goals:',1,2).
 lps_test_result('Observations:',2,0).
 lps_test_result('Candidate actions:',2,2).
-lps_test_result('Selected actions:',2,2).
+lps_test_result('Selected actions:',2,1).
 lps_test_result('Database state:',2,1).
 lps_test_result('New partial reactive rules:',2,0).
 lps_test_result('New goals:',2,2).
-lps_test_result('Resolved goals:',2,0).
+lps_test_result('Resolved goals:',2,1).
 lps_test_result('Observations:',3,0).
 lps_test_result('Candidate actions:',3,0).
 lps_test_result('Selected actions:',3,0).
 lps_test_result('Database state:',3,1).
 lps_test_result('New partial reactive rules:',3,0).
-lps_test_result('New goals:',3,0).
-lps_test_result('Resolved goals:',3,0).
+lps_test_result('New goals:',3,1).
+lps_test_result('Resolved goals:',3,1).
 lps_test_result('Observations:',4,1).
 lps_test_result('Candidate actions:',4,0).
 lps_test_result('Selected actions:',4,0).
 lps_test_result('Database state:',4,1).
 lps_test_result('New partial reactive rules:',4,0).
-lps_test_result('New goals:',4,0).
-lps_test_result('Resolved goals:',4,0).
+lps_test_result('New goals:',4,1).
+lps_test_result('Resolved goals:',4,1).
 lps_test_result('Observations:',5,0).
-lps_test_result('Candidate actions:',5,0).
-lps_test_result('Selected actions:',5,0).
+lps_test_result('Candidate actions:',5,1).
+lps_test_result('Selected actions:',5,1).
 lps_test_result('Database state:',5,1).
 lps_test_result('New partial reactive rules:',5,0).
-lps_test_result('New goals:',5,0).
+lps_test_result('New goals:',5,1).
 lps_test_result('Resolved goals:',5,0).
 lps_test_result('Observations:',6,0).
 lps_test_result('Candidate actions:',6,0).
@@ -52,7 +52,7 @@ lps_test_result('Resolved goals:',6,0).
 % lps_test_result_item(Stage,Cycle,TestTerm)
 lps_test_result_item('Observations:',1,order(john,10)).
 lps_test_result_item('Observations:',1,order(mary,15)).
-lps_test_result_item('Database state:',1,stock(30)).
+lps_test_result_item('Database state:',1,stock(15)).
 lps_test_result_item('New goals:',1,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
 lps_test_result_item('New goals:',1,goal(10000,[[happens(dispatch(john,10),C,D),tc(1 =< C)]])).
 lps_test_result_item('Resolved goals:',1,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
@@ -60,12 +60,19 @@ lps_test_result_item('Resolved goals:',1,goal(10000,[[happens(dispatch(john,10),
 lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(dispatch(mary,15),1,2))).
 lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(dispatch(john,10),1,2))).
 lps_test_result_item('Selected actions:',2,happens(dispatch(john,10),1,2)).
-lps_test_result_item('Selected actions:',2,happens(dispatch(mary,15),1,2)).
 lps_test_result_item('Database state:',2,stock(5)).
 lps_test_result_item('New goals:',2,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
 lps_test_result_item('New goals:',2,goal(10000,[[happens(dispatch(john,10),C,D),tc(1 =< C)]])).
+lps_test_result_item('Resolved goals:',2,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
 lps_test_result_item('Database state:',3,stock(5)).
+lps_test_result_item('New goals:',3,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',3,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
 lps_test_result_item('Observations:',4,restock(20)).
 lps_test_result_item('Database state:',4,stock(25)).
-lps_test_result_item('Database state:',5,stock(25)).
-lps_test_result_item('Database state:',6,stock(25)).
+lps_test_result_item('New goals:',4,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',4,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
+lps_test_result_item('Candidate actions:',5,ca(9223372036854775807,happens(dispatch(mary,15),4,5))).
+lps_test_result_item('Selected actions:',5,happens(dispatch(mary,15),4,5)).
+lps_test_result_item('Database state:',5,stock(10)).
+lps_test_result_item('New goals:',5,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
+lps_test_result_item('Database state:',6,stock(10)).

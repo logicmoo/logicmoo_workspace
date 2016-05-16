@@ -1,0 +1,17 @@
+% test that requires l_event clauses to be properly used
+initial_state([f(1,2)]).
+observe([start],1).
+observe([],T) :- T>1, T<5.
+
+reactive_rule([happens(start,T1,T2)],[happens(composite,T2,T3)]).
+
+l_events( happens(composite, T1, T2),[
+	holds(f(X,Y),T1), happens(a(X),T1,T2)
+	]).
+l_events( happens(composite, T1, T2),[
+	holds(f(X,Y),T1), happens(a(Y),T1,T2)
+	]).
+	
+fluent(f(_,_)).
+action(a(_)).
+event(start).

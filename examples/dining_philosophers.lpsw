@@ -7,8 +7,8 @@ initial_state([
 ]).
 
 reactive_rule(
-	[happens(time_to_eat(philosopher(N)), T1, T2)],
-	[happens(dine(philosopher(N)), T3, T4), tc(T2 =< T3)]
+	[happens(time_to_eat(philosopher(N)), _T1, T2)],
+	[happens(dine(philosopher(N)), T3, _T4), tc(T2 =< T3)]
 ).
 
 l_timeless(adjacent(fork(1), philosopher(1), fork(2)), []).
@@ -29,18 +29,18 @@ l_events(
 	]
 ).
 
-terminated(happens(pickup_forks(F1, philosopher(N), F2), T1, T2), available(F1), []).
-terminated(happens(pickup_forks(F1, philosopher(N), F2), T1, T2), available(F2), []).
-initiated(happens(putdown_forks(F1, philosopher(N), F2), T1, T2), available(F1), []).
-initiated(happens(putdown_forks(F1, philosopher(N), F2), T1, T2), available(F2), []).
+terminated(happens(pickup_forks(F1, philosopher(_N), _F2), _T1, _T2), available(F1), []).
+terminated(happens(pickup_forks(_F1, philosopher(_N), F2), _T1, _T2), available(F2), []).
+initiated(happens(putdown_forks(F1, philosopher(_N), _F2), _T1, _T2), available(F1), []).
+initiated(happens(putdown_forks(_F1, philosopher(_N), F2), _T1, _T2), available(F2), []).
 
-d_pre([happens(pickup_forks(F1, philosopher(N), F2), T1, T2),
+d_pre([happens(pickup_forks(F1, philosopher(_N), _F2), T1, _T2),
 	holds(not(available(F1)), T1)]).
-d_pre([happens(pickup_forks(F1, philosopher(N), F2), T1, T2),
+d_pre([happens(pickup_forks(_F1, philosopher(_N), F2), T1, _T2),
 	holds(not(available(F2)), T1)]).
 
-d_pre([happens(pickup_forks(F1, philosopher(N), F), T1, T2),
-	happens(pickup_forks(F, philosopher(K), F2), T1, T2)]).
+d_pre([happens(pickup_forks(_F1, philosopher(_N), F), T1, T2),
+	happens(pickup_forks(F, philosopher(_K), _F2), T1, T2)]).
 
 observe(
 	[
