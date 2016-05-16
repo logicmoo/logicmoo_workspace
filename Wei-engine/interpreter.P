@@ -768,7 +768,8 @@ find_unused(ec(C), EC) :-
     expanded_consequent(C, EC),
     \+ tried_variant(GoalId, 0, expanded_consequent(C, EC)).
 
-% we're loosing indexing here... should do something cleverer:
+% TODO: we're loosing indexing here... should do something cleverer:
+% ... AND we still have no example where variant is really necessary :-(
 tried_variant(GoalId,Depth,X) :- tried(GoalId,Depth,XX), variant(X,XX).
 
 % tried_all
