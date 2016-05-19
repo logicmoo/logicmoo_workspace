@@ -3,6 +3,7 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(assrt_lib)).
+:- use_module(library(call_ref)).
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(apply)).
 :- use_module(library(camel_snake)).
@@ -1275,8 +1276,3 @@ bind_argument(Head, M, CM, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
 call_idx(Call, Idx) :-
     findall(Ref, once(call_ref(Call, Ref)), [Ref]), % avoid unifications
     nth_clause(_, Idx, Ref).
-
-call_ref(Call, Ref) :-
-    clause(Call, Body, Ref),
-    clause_property(Ref, module(M)),
-    call(M:Body).
