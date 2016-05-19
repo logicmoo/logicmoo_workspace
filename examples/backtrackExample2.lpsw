@@ -38,3 +38,4 @@ fluent( d(_,_) ) .
 action( a1(_) ).
 action( a2(_) ).
 event(e1).
+event(e2).

@@ -45,3 +45,4 @@ action( order(_, _) ).
 action( dispatch(_, _) ).
 
 event(order(C, Q)).
+event(restock(_)).
