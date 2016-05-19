@@ -1,10 +1,15 @@
 %%
-:- export fluent_pred/1, event_pred/1, temp_constraint/1, reactive_conjunct/1.
-:- export l_int_body/1, l_events_body/1, d_head/1, d_event/1, d_body/1.
+:- module(preprocessor,[
+	fluent_pred/1, event_pred/1, temp_constraint/1, reactive_conjunct/1,
+	l_int_body/1, l_events_body/1, d_head/1, d_event/1, d_body/1]).
 
-:- import action/1, /* Not needed: cacts/1, current_time/1, d_pre/1,*/ event/1 from usermod.
-:- import fluent/1, /* Not needed: happens/3, initiated/3,*/ l_events/2, l_int/2 from usermod.
-:- import l_timeless/2 from usermod.
+% if XSB...
+:- use_module(usermod,[
+	action/1, /* Not needed: cacts/1, current_time/1, d_pre/1,*/ event/1,
+	fluent/1, /* Not needed: happens/3, initiated/3,*/ l_events/2, l_int/2,
+	l_timeless/2]).
+% endif
+
 % Unused: :- import observe/2, reactive_rule/2, state/1 from usermod.
 % Unused: :- import succ_t/2, susp/1, terminated/3 from usermod.
 

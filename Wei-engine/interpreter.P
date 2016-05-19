@@ -1,48 +1,41 @@
 %%
-
-:- export go/1, go/2, go_lps/1, go_lps/2.
-:- export test_examples, build_all_test_results/0, do_test_suite/2, load_test_file_for/1.
-:- export load_check_syntax/2.
-
+:- module(interpreter, [
+	go/1, go/2, go_lps/1, go_lps/2,
+	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
+	load_check_syntax/2]).
+	
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
-:- import append_lists/2 from lists.
-% :- use_module(standard, [datime/1]).
-
+:- use_module(lists, [append_lists/2]).
 % :- import unifiable/3 from constraintLib.
-
-:- import (in)/2, /* unused: (#>)/2, (#>=)/2, */ (#<)/2, (#=<)/2, (#=)/2, labeling/2 from bounds.
-
+:- use_module(bounds,[(in)/2, /* unused: (#>)/2, (#>=)/2, */ (#<)/2, (#=<)/2, (#=)/2, labeling/2]).
 % no longer used: :- import datime_setrand/0 , random/3 from random.
-:- import variant/2 from subsumes.
-:- import numbervars/1 from num_vars.
-:- import concat_atom/2, term_to_codes/2 from string.
-:- import format/2 from format.
-:- import datime/1 from standard.
-:- import conget/2, conset/2, term_hash/3 from machine.
-:- import list_directory/2, is_directory/1 from shell.
+:- use_module(subsumes,[variant/2]).
+:- use_module(num_vars,[numbervars/1]).
+:- use_module(string,[concat_atom/2, term_to_codes/2]).
+:- use_module(format,[format/2]).
+:- use_module(standard,[datime/1]).
+:- use_module(machine,[conget/2, conset/2, term_hash/3]).
+:- use_module(shell,[list_directory/2, is_directory/1]).
 
-:- import reactive_conjunct/1, l_int_body/1, l_events_body/1 from preprocessor.
-:- import d_head/1, d_event/1, d_body/1 from preprocessor.
+:- use_module(preprocessor,[reactive_conjunct/1, l_int_body/1, l_events_body/1,d_head/1, d_event/1, d_body/1]).
 
-:- import action/1, /*cacts/1,*/ current_time/1, d_pre/1 /*,event/1*/ from usermod.
-:- import /*fluent/1,*/ happens/3, (initiated)/3, l_events/2, l_int/2 from usermod.
-:- import l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1 from usermod.
-:- import steps/1, succ_t/2, /*susp/1,*/ (terminated)/3, used/1 from usermod.
-:- import current_goal/1, depth/1, tried/3, failed/3, option/1 from usermod.
-:- import expanded_consequent/2 from usermod.
+% if XSB... current_prolog_flag(dialect, xsb); unfortunately use_module must be a sole directive
+:- use_module(usermod,[
+	action/1, /*cacts/1,*/ current_time/1, d_pre/1 /*,event/1*/,
+	/*fluent/1,*/ happens/3, (initiated)/3, l_events/2, l_int/2,
+	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	steps/1, succ_t/2, /*susp/1,*/ (terminated)/3, used/1,
+	current_goal/1, depth/1, tried/3, failed/3, option/1,
+	expanded_consequent/2, initial_state/1,
+	lps_test_result/3, lps_test_result_item/3, lps_test_options/1, lps_source_position/3,
+	lps_engine_directory/1]).
+% endif XSB
 
-:- import initial_state/1 from usermod.
-
-:- import lps_test_result/3, lps_test_result_item/3, lps_test_options/1 from usermod. % It may be loaded from a .lpst file
 :- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_options/1, lps_failed_test/2.
-:- import lps_source_position/3 from usermod.
 :- dynamic lps_source_position/3.
-
 % This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
-:- import lps_engine_directory/1 from usermod.
 
-:- [bounds].
 :- consult:add_this_lib_dir.
 :- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 
@@ -939,7 +932,33 @@ resolve2([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
             CA = none
         )
     ).
+resolve2([TL|Ls], NB, EB, CA) :-
+    l_timeless(TL, _),
+    (
+        resolve2_timeless([TL|Ls], NB, EB, CA)
+    ;
+        % derp, l_timeless(TL) failed
+        % TODO 29 Aug 08:48 - Should l_timeless be kept and retried ACROSS cycles?
+        write_verbose([l_timeless(TL),' failed.',nl,'Backtracking.',nl]),
+        NB = cont,
+        EB = [],
+        CA = none
+    ).
+/*
+% s
+resolve2([TL|Ls], [TL|Ls], [], none) :-
+    l_timeless(TL, _),
+    copy_term([TL|Ls], [CTL|_]),
+    \+ query(CTL),
+    reduce_step.
+*/
 
+% Simplify time constraints
+resolve2([tc(X)|Rest], NB, EB, CA) :-
+    ground(X),
+    resolve2(Rest, NB, EB, CA).
+resolve2([], [], [], none).
+    
 % TODO
 % if Fl in holds(Fl, T) is ground, then there's no need to actually create a
 % new branch!
@@ -1135,19 +1154,6 @@ resolve2_happens([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
         */
     ).
 
-resolve2([TL|Ls], NB, EB, CA) :-
-    l_timeless(TL, _),
-    (
-        resolve2_timeless([TL|Ls], NB, EB, CA)
-    ;
-        % derp, l_timeless(TL) failed
-        % TODO 29 Aug 08:48 - Should l_timeless be kept and retried ACROSS cycles?
-        write_verbose([l_timeless(TL),' failed.',nl,'Backtracking.',nl]),
-        NB = cont,
-        EB = [],
-        CA = none
-    ).
-
 resolve2_timeless([TL|Ls], NB, EB, CA) :-
     copy_term([TL|Ls], [CTL|CLs]),
     ( find_unused(l_tl(CTL), Body) ->
@@ -1168,21 +1174,6 @@ resolve2_timeless([TL|Ls], NB, EB, CA) :-
         EB = [],
         CA = none
     ).
-/*
-% s
-resolve2([TL|Ls], [TL|Ls], [], none) :-
-    l_timeless(TL, _),
-    copy_term([TL|Ls], [CTL|_]),
-    \+ query(CTL),
-    reduce_step.
-*/
-
-% Simplify time constraints
-resolve2([tc(X)|Rest], NB, EB, CA) :-
-    ground(X),
-    resolve2(Rest, NB, EB, CA).
-
-resolve2([], [], [], none).
 
 %
 %
