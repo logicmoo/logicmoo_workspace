@@ -204,18 +204,20 @@ current_edge(X, Y) :-
       ( CRef = M:H
       ; match_head_clause(M:H, Clause),
 	CRef = clause(Clause)
+      ),
+      freeze(PI2, PI2 \= PI)
+    ; ( X = PI/I,
+	I > 0
+      ->functor(H, F, A),
+	nth_clause(M:H, I, Clause),
+	CRef = clause(Clause)
+      ; X = PI/(-1)
+      ->functor(H, F, A),
+	CRef = '<assertion>'(M:H)
+      ; X = PI/0
+      ->functor(H, F, A),
+	CRef = M:H
       )
-    ; X = PI/I,
-      I > 0
-    ->functor(H, F, A),
-      nth_clause(M:H, I, Clause),
-      CRef = clause(Clause)
-    ; X = PI/(-1)
-    ->functor(H, F, A),
-      CRef = '<assertion>'(M:H)
-    ; X = PI/0
-    ->functor(H, F, A),
-      CRef = M:H
     ),
     calls_to(CRef, M2, H2),
     functor(H2, F2, A2),
@@ -226,7 +228,8 @@ current_edge(X, Y) :-
 	Y = PI2/I2
       ; %% extra_location(H2, M2, dynamic(use, _, _), _),
 	Y = PI2/0
-      )
+      ),
+      Y \= X
     ).
 
 % Note: although is not nice, we are using dynamic predicates to cache partial
