@@ -10,7 +10,7 @@
 
 :- export visual/1, gov/1, gov/2.
 
-:- import load_test_file_for/1, go/2 from interpreter.
+:- import load_test_file_for/1, go/2, my_load_dyn/1 from interpreter.
 :- import lps_test_result_item/3 from usermod. 
 :- import member/2,append/3 from basics.
 :- import term_to_atom/2, concat_atom/2 from string.
@@ -29,7 +29,7 @@ gov(File,Options) :- go(File,[make_test|Options]), visual(File).
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
 visual(File) :- 
-	load_dyn(File), % we need the meta info about events
+	my_load_dyn(File), % we need the meta info about events
 	load_test_file_for(File),
 	% Collect all <T1-T2,Group,Term>
 	% For events and actions times T1 and T2 are the usual; for fluents, they are time of initiation and termination

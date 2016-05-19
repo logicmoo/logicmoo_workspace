@@ -1,5 +1,5 @@
 /*
-  LPS test results file generated on 2016-05-16 at 09:11:35 for program file:
+  LPS test results file generated on 2016-05-19 at 22:56:51 for program file:
   /Users/mc/git/lps_corner/examples/prisoner-dilemma-elaborated.lpsw
 */
 
@@ -64,10 +64,10 @@ lps_test_result_item('Resolved goals:',1,goal(10003,[[happens(refuse(o),1,A)]]))
 lps_test_result_item('Resolved goals:',1,goal(10002,[[happens(bear_witness(i),1,B)]])).
 lps_test_result_item('Resolved goals:',1,goal(10001,[[happens(update(total_years_in_jail(o,0)),1,C)],[lps_plus(0,0,D),happens(update(total_years_in_jail(o,D)),1,E)]])).
 lps_test_result_item('Resolved goals:',1,goal(10000,[[happens(update(total_years_in_jail(i,3)),1,F)],[lps_plus(3,0,G),happens(update(total_years_in_jail(i,G)),1,H)]])).
-lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(refuse(o),1,2))).
-lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(bear_witness(i),1,2))).
-lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(update(total_years_in_jail(o,0)),1,2))).
-lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(update(total_years_in_jail(i,3)),1,2))).
+lps_test_result_item('Candidate actions:',2,ca(1000000000,happens(refuse(o),1,2))).
+lps_test_result_item('Candidate actions:',2,ca(1000000000,happens(bear_witness(i),1,2))).
+lps_test_result_item('Candidate actions:',2,ca(1000000000,happens(update(total_years_in_jail(o,0)),1,2))).
+lps_test_result_item('Candidate actions:',2,ca(1000000000,happens(update(total_years_in_jail(i,3)),1,2))).
 lps_test_result_item('Selected actions:',2,happens(bear_witness(i),1,2)).
 lps_test_result_item('Selected actions:',2,happens(refuse(o),1,2)).
 lps_test_result_item('Selected actions:',2,happens(update(total_years_in_jail(i,3)),1,2)).
@@ -88,10 +88,10 @@ lps_test_result_item('Resolved goals:',2,goal(10007,[[happens(refuse(i),2,A)]]))
 lps_test_result_item('Resolved goals:',2,goal(10006,[[happens(bear_witness(o),2,B)]])).
 lps_test_result_item('Resolved goals:',2,goal(10005,[[happens(update(total_years_in_jail(o,3)),2,C)],[lps_plus(3,0,D),happens(update(total_years_in_jail(o,D)),2,E)]])).
 lps_test_result_item('Resolved goals:',2,goal(10004,[[happens(update(total_years_in_jail(i,3)),2,F)],[lps_plus(0,3,G),happens(update(total_years_in_jail(i,G)),2,H)]])).
-lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(refuse(i),2,3))).
-lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(bear_witness(o),2,3))).
-lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(update(total_years_in_jail(o,3)),2,3))).
-lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(update(total_years_in_jail(i,3)),2,3))).
+lps_test_result_item('Candidate actions:',3,ca(1000000000,happens(refuse(i),2,3))).
+lps_test_result_item('Candidate actions:',3,ca(1000000000,happens(bear_witness(o),2,3))).
+lps_test_result_item('Candidate actions:',3,ca(1000000000,happens(update(total_years_in_jail(o,3)),2,3))).
+lps_test_result_item('Candidate actions:',3,ca(1000000000,happens(update(total_years_in_jail(i,3)),2,3))).
 lps_test_result_item('Selected actions:',3,happens(bear_witness(o),2,3)).
 lps_test_result_item('Selected actions:',3,happens(refuse(i),2,3)).
 lps_test_result_item('Selected actions:',3,happens(update(total_years_in_jail(i,3)),2,3)).
@@ -112,10 +112,10 @@ lps_test_result_item('Resolved goals:',3,goal(10011,[[happens(refuse(o),3,A)]]))
 lps_test_result_item('Resolved goals:',3,goal(10010,[[happens(bear_witness(i),3,B)]])).
 lps_test_result_item('Resolved goals:',3,goal(10009,[[happens(update(total_years_in_jail(o,3)),3,C)],[lps_plus(0,3,D),happens(update(total_years_in_jail(o,D)),3,E)]])).
 lps_test_result_item('Resolved goals:',3,goal(10008,[[happens(update(total_years_in_jail(i,6)),3,F)],[lps_plus(3,3,G),happens(update(total_years_in_jail(i,G)),3,H)]])).
-lps_test_result_item('Candidate actions:',4,ca(9223372036854775807,happens(refuse(o),3,4))).
-lps_test_result_item('Candidate actions:',4,ca(9223372036854775807,happens(bear_witness(i),3,4))).
-lps_test_result_item('Candidate actions:',4,ca(9223372036854775807,happens(update(total_years_in_jail(o,3)),3,4))).
-lps_test_result_item('Candidate actions:',4,ca(9223372036854775807,happens(update(total_years_in_jail(i,6)),3,4))).
+lps_test_result_item('Candidate actions:',4,ca(1000000000,happens(refuse(o),3,4))).
+lps_test_result_item('Candidate actions:',4,ca(1000000000,happens(bear_witness(i),3,4))).
+lps_test_result_item('Candidate actions:',4,ca(1000000000,happens(update(total_years_in_jail(o,3)),3,4))).
+lps_test_result_item('Candidate actions:',4,ca(1000000000,happens(update(total_years_in_jail(i,6)),3,4))).
 lps_test_result_item('Selected actions:',4,happens(bear_witness(i),3,4)).
 lps_test_result_item('Selected actions:',4,happens(refuse(o),3,4)).
 lps_test_result_item('Selected actions:',4,happens(update(total_years_in_jail(i,6)),3,4)).
@@ -136,10 +136,10 @@ lps_test_result_item('Resolved goals:',4,goal(10015,[[happens(refuse(i),4,A)]]))
 lps_test_result_item('Resolved goals:',4,goal(10014,[[happens(bear_witness(o),4,B)]])).
 lps_test_result_item('Resolved goals:',4,goal(10013,[[happens(update(total_years_in_jail(o,6)),4,C)],[lps_plus(3,3,D),happens(update(total_years_in_jail(o,D)),4,E)]])).
 lps_test_result_item('Resolved goals:',4,goal(10012,[[happens(update(total_years_in_jail(i,6)),4,F)],[lps_plus(0,6,G),happens(update(total_years_in_jail(i,G)),4,H)]])).
-lps_test_result_item('Candidate actions:',5,ca(9223372036854775807,happens(refuse(i),4,5))).
-lps_test_result_item('Candidate actions:',5,ca(9223372036854775807,happens(bear_witness(o),4,5))).
-lps_test_result_item('Candidate actions:',5,ca(9223372036854775807,happens(update(total_years_in_jail(o,6)),4,5))).
-lps_test_result_item('Candidate actions:',5,ca(9223372036854775807,happens(update(total_years_in_jail(i,6)),4,5))).
+lps_test_result_item('Candidate actions:',5,ca(1000000000,happens(refuse(i),4,5))).
+lps_test_result_item('Candidate actions:',5,ca(1000000000,happens(bear_witness(o),4,5))).
+lps_test_result_item('Candidate actions:',5,ca(1000000000,happens(update(total_years_in_jail(o,6)),4,5))).
+lps_test_result_item('Candidate actions:',5,ca(1000000000,happens(update(total_years_in_jail(i,6)),4,5))).
 lps_test_result_item('Selected actions:',5,happens(bear_witness(o),4,5)).
 lps_test_result_item('Selected actions:',5,happens(refuse(i),4,5)).
 lps_test_result_item('Selected actions:',5,happens(update(total_years_in_jail(i,6)),4,5)).
@@ -160,10 +160,10 @@ lps_test_result_item('Resolved goals:',5,goal(10019,[[happens(refuse(o),5,A)]]))
 lps_test_result_item('Resolved goals:',5,goal(10018,[[happens(bear_witness(i),5,B)]])).
 lps_test_result_item('Resolved goals:',5,goal(10017,[[happens(update(total_years_in_jail(o,6)),5,C)],[lps_plus(0,6,D),happens(update(total_years_in_jail(o,D)),5,E)]])).
 lps_test_result_item('Resolved goals:',5,goal(10016,[[happens(update(total_years_in_jail(i,9)),5,F)],[lps_plus(3,6,G),happens(update(total_years_in_jail(i,G)),5,H)]])).
-lps_test_result_item('Candidate actions:',6,ca(9223372036854775807,happens(refuse(o),5,6))).
-lps_test_result_item('Candidate actions:',6,ca(9223372036854775807,happens(bear_witness(i),5,6))).
-lps_test_result_item('Candidate actions:',6,ca(9223372036854775807,happens(update(total_years_in_jail(o,6)),5,6))).
-lps_test_result_item('Candidate actions:',6,ca(9223372036854775807,happens(update(total_years_in_jail(i,9)),5,6))).
+lps_test_result_item('Candidate actions:',6,ca(1000000000,happens(refuse(o),5,6))).
+lps_test_result_item('Candidate actions:',6,ca(1000000000,happens(bear_witness(i),5,6))).
+lps_test_result_item('Candidate actions:',6,ca(1000000000,happens(update(total_years_in_jail(o,6)),5,6))).
+lps_test_result_item('Candidate actions:',6,ca(1000000000,happens(update(total_years_in_jail(i,9)),5,6))).
 lps_test_result_item('Selected actions:',6,happens(bear_witness(i),5,6)).
 lps_test_result_item('Selected actions:',6,happens(refuse(o),5,6)).
 lps_test_result_item('Selected actions:',6,happens(update(total_years_in_jail(i,9)),5,6)).

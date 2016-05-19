@@ -1,5 +1,5 @@
 /*
-  LPS test results file generated on 2016-05-16 at 09:11:35 for program file:
+  LPS test results file generated on 2016-05-19 at 22:56:51 for program file:
   /Users/mc/git/lps_corner/examples/simple_example1.lpsw
 */
 
@@ -49,7 +49,7 @@ lps_test_result_item('New partial reactive rules:',1,[[holds(condition,2)],[happ
 lps_test_result_item('Database state:',2,condition).
 lps_test_result_item('New goals:',2,goal(10000,[[happens(action,A,B),tc(2 < B)]])).
 lps_test_result_item('Resolved goals:',2,goal(10000,[[happens(action,A,B),tc(2 < B)]])).
-lps_test_result_item('Candidate actions:',3,ca(9223372036854775807,happens(action,2,3))).
+lps_test_result_item('Candidate actions:',3,ca(1000000000,happens(action,2,3))).
 lps_test_result_item('Selected actions:',3,happens(action,2,3)).
 lps_test_result_item('Database state:',3,condition).
 lps_test_result_item('New goals:',3,goal(10000,[[happens(action,A,B),tc(2 < B)]])).

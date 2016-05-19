@@ -1,5 +1,5 @@
 /*
-  LPS test results file generated on 2016-05-16 at 09:11:35 for program file:
+  LPS test results file generated on 2016-05-19 at 22:56:51 for program file:
   /Users/mc/git/lps_corner/examples/concurrent_actions2.lpsw
 */
 
@@ -57,8 +57,8 @@ lps_test_result_item('New goals:',1,goal(10001,[[happens(dispatch(mary,15),A,B),
 lps_test_result_item('New goals:',1,goal(10000,[[happens(dispatch(john,10),C,D),tc(1 =< C)]])).
 lps_test_result_item('Resolved goals:',1,goal(10001,[[happens(dispatch(mary,15),A,B),tc(1 =< A)]])).
 lps_test_result_item('Resolved goals:',1,goal(10000,[[happens(dispatch(john,10),C,D),tc(1 =< C)]])).
-lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(dispatch(mary,15),1,2))).
-lps_test_result_item('Candidate actions:',2,ca(9223372036854775807,happens(dispatch(john,10),1,2))).
+lps_test_result_item('Candidate actions:',2,ca(1000000000,happens(dispatch(mary,15),1,2))).
+lps_test_result_item('Candidate actions:',2,ca(1000000000,happens(dispatch(john,10),1,2))).
 lps_test_result_item('Selected actions:',2,happens(dispatch(john,10),1,2)).
 lps_test_result_item('Selected actions:',2,happens(dispatch(mary,15),1,2)).
 lps_test_result_item('Database state:',2,stock(5)).
