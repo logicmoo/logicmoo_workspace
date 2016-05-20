@@ -1,11 +1,11 @@
 initial_state( [] ).
 
 
-reactive_rule( [ happens(e1, T1, T2)], 
-	       [happens(m1, T3, T4), happens(m2, T5, T6), tc(T2 =< T3), tc(T2 =< T5)] ).
+reactive_rule( [ happens(e1, _T1, T2)], 
+	       [happens(m1, T3, _T4), happens(m2, T5, _T6), tc(T2 =< T3), tc(T2 =< T5)] ).
 
-reactive_rule( [ happens(e2, T1, T2)], 
-	       [happens(n1, T3, T4), tc(T2 =< T3)] ).
+reactive_rule( [ happens(e2, _T1, T2)], 
+	       [happens(n1, T3, _T4), tc(T2 =< T3)] ).
 
 
 l_events( happens(m1, T1, T3), [happens(a1, T1, T2), happens(a2, T2, T3) ]).
@@ -13,7 +13,7 @@ l_events( happens(m1, T1, T3), [happens(a1, T1, T2), happens(a2, T2, T3) ]).
 l_events( happens(n1, T1, T2), [happens(b1, T1, T2)]).
 l_events( happens(n1, T1, T3), [happens(a1, T1, T2), happens(a3, T2, T3)]).
 
-l_events( happens(m2, T1, T3), [ happens(a3, T1, T2)]).
+l_events( happens(m2, T1, _T3), [ happens(a3, T1, _T2)]).
 
 
 

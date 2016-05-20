@@ -16,7 +16,7 @@ observe([], 6).
 
 %	If the other prisoner refuses at time T, then I refuse at time T+1.
 reactive_rule(
-	 [happens(refuse(O), T1, T2), other(I, O)], 
+	 [happens(refuse(O), _T1, T2), other(I, O)], 
     	 [happens(refuse(I), T2, _T3)]
 ).
 

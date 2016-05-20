@@ -1,7 +1,10 @@
 /*
-  LPS test results file generated on 2016-05-19 at 22:56:51 for program file:
+  LPS test results file generated on 2016-05-20 at 09:30:32
+  on Prolog xsb(3,6,,_h14892) for program file:
   /Users/mc/git/lps_corner/examples/prisoner-dilemma-elaborated.lpsw
 */
+
+(:- dynamic lps_test_result / 3,lps_test_result_item / 3,lps_test_options / 1).
 
 % LPS options prior to the test:
 lps_test_options([verbose]).

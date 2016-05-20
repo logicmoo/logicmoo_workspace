@@ -6,26 +6,26 @@
 initial_state( [stock(30)] ).
 
 
-reactive_rule( [ happens(order(C, Q), T1, T2)], 
-	       [happens(dispatch(C, Q), T3, T4), tc(T2 =< T3)] ).
+reactive_rule( [ happens(order(C, Q), _T1, T2)], 
+	       [happens(dispatch(C, Q), T3, _T4), tc(T2 =< T3)] ).
 
 
 l_timeless(lps_less(X, Y), [X < Y]).
 l_timeless(lps_subtract(X, Y, Z), [Z is X - Y]).
 l_timeless(lps_add(X, Y, Z), [Z is X + Y]).
 
-d_pre([happens(dispatch(C, Q), T1, T2), holds(stock(S), T1), lps_less(S, Q) ]).
+d_pre([happens(dispatch(_C, Q), T1, _T2), holds(stock(S), T1), lps_less(S, Q) ]).
 
 
-terminated( happens(dispatch(C, Q), T1, T2), stock(X), [holds(stock(X), T1)] ).
+terminated( happens(dispatch(_C, _Q), T1, _T2), stock(X), [holds(stock(X), T1)] ).
 
-initiated( happens(dispatch(C, Q), T1, T2), stock(Z), 
+initiated( happens(dispatch(_C, Q), T1, _T2), stock(Z), 
 	[holds(stock(X), T1), lps_subtract(X,Q,Z)]).
 
 
-terminated( happens(restock(Q), T1, T2), stock(X), [holds(stock(X), T1)] ).
+terminated( happens(restock(_Q), T1, _T2), stock(X), [holds(stock(X), T1)] ).
 
-initiated( happens(restock(Q), T1, T2), stock(Z), 
+initiated( happens(restock(Q), T1, _T2), stock(Z), 
 	[holds(stock(X), T1), lps_add(X,Q,Z)]).
 
 
@@ -43,5 +43,5 @@ fluent(stock(_)).
 action( order(_, _) ).
 action( dispatch(_, _) ).
 
-event(order(C, Q)).
+event(order(_C, _Q)).
 event(restock(_)).

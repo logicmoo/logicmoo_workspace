@@ -16,6 +16,8 @@
 :- use_module(string,[concat_atom/2, term_to_codes/2]).
 :- use_module(format,[format/2]).
 :- use_module(standard,[datime/1]).
+date_stamp(D) :- datime(Date), fmt_write_string(D,"%d-%02d-%02d at %02d:%02d:%02d",Date).
+
 :- use_module(machine,[conget/2, conset/2]).
 :- use_module(shell,[list_directory/2, is_directory/1]).
 
@@ -23,7 +25,7 @@ lps_examples_directory(ED) :-
 	lps_engine_directory(D), 
 	concat_atom([D,'/../examples'], E), expand_filename(E,ED).
 
-my_load_dyn(F) :- load_dyn(F).
+my_load_dyn(F,_) :- load_dyn(F).
 
 :- use_module(usermod,[
 	action/1, /*cacts/1,*/ current_time/1, d_pre/1 ,event/1,
@@ -55,15 +57,9 @@ term_to_codes(T,C) :- term_to_atom(T,A), atom_codes(A,C).
 concat_atom(L,A) :- atomic_list_concat(L,A).
 %:- use_module(format,[format/2]).
 :- use_module(library(dialect/sicstus/system),[datime/1]).
+date_stamp(D) :- datime(Date), Date=..[_|Args], format(atom(D),"~d-~d-~d at ~d:~d:~d",Args).
 conget(Name,Value) :- nb_getval(Name, Value).
 conset(Name,Value) :- nb_setval(Name, Value).
-
-% term_size(Item,Size)
-term_size(T,1) :- var(T), !.
-term_size([T|TT],N) :- !, term_size(T,N1), term_size(TT,N2), N is N1+N2.
-term_size([],0) :- !.
-term_size(T,1) :- atomic(T), !.
-term_size(T,N) :- T=..[_|L], term_size(L,N2), N is N2+1.
 
 list_directory(D,F) :- directory_files(D,Files), member(F,Files).
 is_directory(D) :- exists_directory(D).
@@ -75,9 +71,16 @@ lps_examples_directory(ED) :-
 	concat_atom([D,'/'],DD), % hack, don't know where to fetch OS-dependent separator
 	relative_file_name(ED,DD,'../examples').
 
-my_load_dyn(F) :- load_files([F],[module(user)]).
+my_load_dyn(F,WithWarnings) :- 
+	(style_check('?'(singleton))->Old=true;Old=false),
+	(WithWarnings==true -> style_check('+'(singleton)) ; style_check('-'(singleton))),
+	load_files([F],[module(user)]),
+	(Old==true -> style_check('+'(singleton)) ; style_check('-'(singleton))).
 
 cputime(T) :- T is cputime.
+
+% TODO: somehow runing tests a second time still originates "Clauses of interpreter:terminated/3 , etc. are not together..."
+:- discontiguous((  (initiated) /3, (terminated)/3, l_events/2, reactive_rule/3, reactive_rule/2, l_int/2, l_timeless/2 )).
 
 % no need to import user module predicates
 
@@ -86,47 +89,27 @@ cputime(T) :- T is cputime.
 %%% end of SWI and Prolog engine-specific code
 %%% From here on, generic Prolog code
 
+my_load_dyn(F) :- my_load_dyn(F,true).
+
+:- lps_engine_directory(D), concat_atom([D,'/db.P'],DB), my_load_dyn(DB).
+
 maximum_time(1000000000). % large number, hardwired so our test result files are cross-engine
 % ...otherwise these might move to the previous conditional segmnts:
 % XSB: maximum_time(Max) :- current_prolog_flag(max_integer, Max).
 % SWI: maximum_time(Max) :- current_prolog_flag(max_tagged_integer, Max).
 
+% my_term_size(Item,Size)  
+% could use XSB's native term_size, but I was having trouble aligning it with the following for SWI, so...
+my_term_size(T,1) :- var(T), !.
+my_term_size([T|TT],N) :- !, my_term_size(T,N1), my_term_size(TT,N2), N is N1+N2.
+my_term_size([],1) :- !.
+my_term_size(T,1) :- atomic(T), !.
+my_term_size(T,N) :- T=..[_|L], my_term_size(L,N2), N is N2+1.
+
 :- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_options/1, lps_failed_test/2.
 :- dynamic lps_source_position/3.
 % This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
-
-:- dynamic action/1.
-:- dynamic current_goal/1.
-:- dynamic current_time/1.
-:- dynamic d_pre/1.
-:- dynamic depth/1.
-:- dynamic event/1.
-:- dynamic expanded_consequent/2.
-:- dynamic failed/3.
-:- dynamic fluent/1.
-:- dynamic happens/3.
-:- dynamic initial_state/1.
-:- dynamic (initiated)/3.
-:- dynamic l_events/2. 
-:- dynamic l_int/2.
-:- dynamic l_timeless/2.
-:- dynamic observe/2.
-:- dynamic option/1.
-:- dynamic reactive_rule/2.
-:- dynamic reactive_rule/3. % adds priority
-:- dynamic state/1.
-:- dynamic steps/1.
-:- dynamic succ_t/2.
-:- dynamic (terminated)/3.
-:- dynamic tried/3.
-:- dynamic used/1.
-
-event(X) :-
-    action(X).
-
-% lps_source_position(Term,FileWithExtension,Position); see check_syntax/1 in interpreter
-:- dynamic lps_source_position/3.
 
 % query(+P)
 %   True if P holds in the augmented state {S*_i, ev*_i, L_int, L_timeless}.
@@ -619,7 +602,8 @@ resolve_goal_breadth([B1|Bs], NextGoal, CandActs) :-
 resolve_goal_breadth([TLG|[]], NextGoal, CandActs) :-
     copy_term(TLG, TLGC),
     ( find_unused(ec(TLGC), EC) ->
-    	   % TODO: seems buggy, GoalId.. should extract it out of TLG perhaps??
+    	   % TODO: this branch needs testing
+    	   current_goal(GoalId),
         assertz(tried(GoalId, 0, expanded_consequent(TLGC, EC))),
         resolve_goal_breadth_end([EC,TLG], NG, CA),
         ( NG == nosusp ->
@@ -851,6 +835,7 @@ find_unused(ec(C), EC) :-
 % TODO: we're loosing indexing here... should do something cleverer:
 % ... AND we still have no example where variant is really necessary :-(
 tried_variant(GoalId,Depth,X) :- tried(GoalId,Depth,XX), variant(X,XX).
+
 
 % tried_all
 % useless: tried_all(G) :- \+ find_unused(G), \+ find_unused(G,_).
@@ -1736,7 +1721,7 @@ go(File, OptionsList) :-
     assertz(depth(0)),
     (option(ultra_verbose)->
     		current_prolog_flag(write_depth,Old), 
-    		set_xsb_flag(write_depth,10000)
+    		set_xsb_flag(write_depth,10000) % ultra_verbose only remembered for xsb
    	;true),
     cputime(T1),
     (
@@ -1746,6 +1731,7 @@ go(File, OptionsList) :-
 	print_statistics(T0,T1,T2),
 	close_test_file(File),
 	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true)
+		% ultra_verbose only remembered for xsb
     	).
 
 	 
@@ -1779,7 +1765,10 @@ parse_options_([verbose|Rest]) :- !,
 % Increase the default maximum written term depth, to avoid '...' output
 parse_options_([ultra_verbose|Rest]) :- !,
     assertz(option(verbose)),
-    assertz(option(ultra_verbose)),
+    (current_prolog_flag(dialect, xsb) 
+    	-> assertz(option(ultra_verbose)) 
+    	; writeln(user_error, 'WARNING: ultra_verbose option considered only for XSB Prolog ')
+    	),
     parse_options_(Rest).
 parse_options_([goal_strat(breadth)|Rest]) :- !,
     assertz(option(breadth)),
@@ -1824,7 +1813,7 @@ init_test_file(_F).
 
 load_test_file_for(F) :-
 	test_filename(F,TF),
-	catch(my_load_dyn(TF),E,true),
+	catch(my_load_dyn(TF,false),E,true),
 	(nonvar(E) -> 
 		write(user_error, 'ERROR: could not load test file '), writeln(user_error,TF), writeln(user_error,E),
 		writeln(user_error,' To obtain a test file you need to execute your program with the make_test option: go(YourFile,[make_test])'),
@@ -1835,9 +1824,13 @@ load_test_file_for(F) :-
 close_test_file(F) :- option(make_test), !,
 	test_filename(F,TF),
 	telling(Old), tell(TF),
-	datime(Date), fmt_write_string(D,"%d-%02d-%02d at %02d:%02d:%02d",Date),
-	writeln('/*'), write('  LPS test results file generated on '), write(D), writeln(' for program file:'),
+	date_stamp(D),
+	writeln('/*'), write('  LPS test results file generated on '), writeln(D), 
+	write('  on Prolog '), current_prolog_flag(version_data,P), write(P),
+	writeln(' for program file:'),
 	write('  '), writeln(F), writeln('*/'), nl,
+	write((:- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_options/1)), writeln('.'),
+	nl,
 	writeln('% LPS options prior to the test:'),
 	setof(O,option(O),Options),
 	select(make_test,Options,RealOptions),
@@ -1879,7 +1872,8 @@ test(Stage,Cycle,Term) :- option(run_test), !,
 	  	assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),missing_fact)), 
 	  	fail),
 	findall(Item,lps_test_result_item(Stage,Cycle,Item),Test), 
-	( (length(Term,N), test_items_ok(Term,Test) )
+	% numbervars(Test),
+	( \+ \+ ((length(Term,N), /*numbervars(Term),*/ test_items_ok(Term,Test)) )
 		-> true
 		; 
 		write('FAILED test '), writeln(Stage/Cycle/Term), write('Expected '), writeln(Test), 
@@ -1889,9 +1883,8 @@ test(_,_,_).
 
 % test_items_ok(+Actual,+Test)
 test_items_ok([A|An],[lps_gigantic(Size)|Tn]) :- !,
-	term_size(A,Size_), 
-	writeln(Size/Size_), 
-	Size_ == Size,
+	% Must recalculate term size after numbervars, otherwise would be different:
+	\+ \+ (numbervars(A),my_term_size(A,Size_), Size_ == Size), 
 	test_items_ok(An,Tn).
 test_items_ok([A|An],[T|Tn]) :- !,
 	variant(A,T),
@@ -1900,7 +1893,7 @@ test_items_ok([],[]).
 
 % assert_lps_test_result_item(Stage,Cycle,Item) Gigantic terms are abstracted as lps_gigantic(Size)
 assert_lps_test_result_item(Stage,Cycle,Item) :- 
-	term_size(Item,Size), 
+	my_term_size(Item,Size), 
 	( Size > 1000 -> Item_=lps_gigantic(Size) ; Item_=Item),
 	assert(lps_test_result_item(Stage,Cycle,Item_)).
 	
@@ -1938,6 +1931,7 @@ all_files_in(Directory,Suffix,Files) :-
 		Files).
 
 % for each .lpsw file (Wei syntax), generate its test result file
+% BEWARE, this will assume the WHOLE examples subtree runs well!
 build_all_test_results :- 
 	lps_examples_directory(ED),
 	all_files_in(ED,'.lpsw',Files),
@@ -2012,10 +2006,10 @@ cleanup :-
     retractall(current_time(_)),
     retractall(d_pre(_)),
     retractall(depth(_)),
-    % retractall(event(_)),
+    retractall(event(_)),
     retractall(expanded_consequent(_,_)),
     retractall(failed(_, _, _)),
-    % retractall(fluent(_)),
+    retractall(fluent(_)),
     retractall(happens(_, _, _)),
     retractall(initial_state(_)),
     retractall(initiated(_, _, _)),
@@ -2036,8 +2030,12 @@ cleanup :-
     % retractall(this_initiated(_)),
     retractall(lps_failed_test(_,_)),
     retractall(lps_test_result(_,_,_)),
-    retractall(lps_test_result_item(_,_,_)).
+    retractall(lps_test_result_item(_,_,_)),
+    retractall(lps_test_options(_)).
 
+my_event(X) :- event(X).
+my_event(X) :- action(X).
+    
 % cycle_options(CandidateActions,PartialReactiveRules,GoalState)
 %  GoalState is a list (conjunction) of goal(Id,Tree)
 cycle_options(CAi, Ri, Gi) :-
@@ -2129,7 +2127,7 @@ fluent_pred(not(Fl)) :-
 %
 event_pred(Ev) :-
     % Simple event predicates, externally generated events.
-    event(Ev).
+    my_event(Ev).
 event_pred(Ev) :-
     % Simple event predicates, internally generated actions.
     action(Ev).
@@ -2205,17 +2203,13 @@ d_head(H) :-
 % d_event(+H)
 %
 d_event(H) :-
-    event(H).
-d_event(H) :-
-    action(H).
+    my_event(H).
 
 
 % d_body(+B)
 %
 d_body(happens(B, _, _)) :-
-    event(B).
-d_body(happens(B, _, _)) :-
-    action(B).
+    my_event(B).
 d_body(holds(not(B), _)) :-
     fluent(B).
 d_body(holds(B, _)) :-

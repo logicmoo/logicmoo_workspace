@@ -19,14 +19,14 @@ observe([], 6).
 
 %	If the other prisoner refuses at time T, then I refuse at time T+1.
 reactive_rule(
-	 [happens(refuse(O), T1, T2), other(I, O)], 
-    	 [happens(refuse(I), T2, T3)]
+	 [happens(refuse(O), _T1, T2), other(I, O)], 
+    	 [happens(refuse(I), T2, _T3)]
 ).
 
 %	If the other prisoner bears witness at time T, then I bear witness at time T+1.
 reactive_rule(
-	[happens(bear_witness(O), T1, T2), other(I, O)], 
-    	[happens(bear_witness(I), T2, T3)]
+	[happens(bear_witness(O), _T1, T2), other(I, O)], 
+    	[happens(bear_witness(I), T2, _T3)]
 ).
 
 % I get 0 years jail if I bear witness and the other prisoner refuses.
@@ -65,11 +65,11 @@ l_int(holds(get(I, 1), T),
 ]
 ).
 
-initiated(happens(bear_witness(I), T1, T2), bore_witness(I), []).
-initiated(happens(refuse(I), T1, T2), refused(I), []).
+initiated(happens(bear_witness(I), _T1, _T2), bore_witness(I), []).
+initiated(happens(refuse(I), _T1, _T2), refused(I), []).
 
-terminated(happens(bear_witness(I), T1, T2), refused(I), []).
-terminated(happens(refuse(I), T1, T2), bore_witness(I), []).
+terminated(happens(bear_witness(I), _T1, _T2), refused(I), []).
+terminated(happens(refuse(I), _T1, _T2), bore_witness(I), []).
 
 % where bore_witness is a fluent initiated by the action bear_witness, and refused is a fluent initiated by the action refuse.
 

@@ -3374,5 +3374,5 @@ observe([], 4).
 
 observe([], 5).
 
-observe([], T) :- T <30.
+observe([], T) :- T <15. % down from 30, slowing down around cycles 24 or so; future tests will deal with THAT
 

@@ -28,8 +28,8 @@ reactive_rule(
 %	If the other prisoner refused, then I refuse in the next round
 
 reactive_rule(
-	[happens(refuse(o), T1, T2)],  
-	[happens(refuse(i), T2, T3)]
+	[happens(refuse(o), _T1, T2)],  
+	[happens(refuse(i), T2, _T3)]
 ).
 
 %	If the other prisoner refuses at time T, then I refuse at time T+1.
@@ -86,11 +86,11 @@ lps_diff(I, O)
 ]
 ).
 
-initiated(happens(bear_witness(I), T1, T2), bore_witness(I), []).
-initiated(happens(refuse(I), T1, T2), refused(I), []).
+initiated(happens(bear_witness(I), _T1, _T2), bore_witness(I), []).
+initiated(happens(refuse(I), _T1, _T2), refused(I), []).
 
-terminated(happens(bear_witness(I), T1, T2), refused(I), []).
-terminated(happens(refuse(I), T1, T2), bore_witness(I), []).
+terminated(happens(bear_witness(I), _T1, _T2), refused(I), []).
+terminated(happens(refuse(I), _T1, _T2), bore_witness(I), []).
 
 d_pre([happens(refuse(X), T1, T2), happens(bear_witness(X), T1, T2)]).
 
