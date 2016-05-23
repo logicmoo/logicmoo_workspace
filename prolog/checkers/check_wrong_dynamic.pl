@@ -215,6 +215,12 @@ record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
     ; \+ database_fact(Caller)
     ->normalize_head(Caller, CM:HC),
       \+ hide_var_dynamic(HC, CM),
+      \+ ( predicate_property(CM:HC, meta_predicate(Meta)),
+	   arg(Pos, Meta, Spec),
+	   '$expand':meta_arg(Spec),
+	   arg(Pos, HC, Arg),
+	   Arg == Fact
+	 ),
       update_fact_from(var_dynamic_db(MPI), From)
     ; true
     ).
