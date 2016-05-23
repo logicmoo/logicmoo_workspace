@@ -120,7 +120,7 @@ ignore_import(M, IM) :- expansion_module(M, IM).
 
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
-%	    [M,FromChk,U,Loc] +\
+	    % [M,FromChk,U,Loc] +\
 	   ( ( loc_declaration(U, M, use_module, From),
 	       ExL = []
 	     ; loc_declaration(use_module(U, except(ExL)), M, use_module_2, From)
@@ -145,7 +145,11 @@ collect_usemods(M, FromChk, Pairs, Tail) :-
 	     \+ ( member(F/A, PIL),
 		  functor(Head, F, A),
 		  implementation_module(UM:Head, IM),
-		  used_usemod(M, IM)
+		  ( used_usemod(M, IM)			    % is used
+		  ; predicate_property(UM:Head, multifile), % is extended
+		    clause(UM:Head, _, Ref),
+		    clause_property(Ref, file(File))
+		  )
 		),
 	     from_location(From, Loc)
 	   ), Pairs, Tail).
