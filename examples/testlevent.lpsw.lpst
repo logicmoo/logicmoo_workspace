@@ -1,0 +1,49 @@
+/*
+  LPS test results file generated on 2016-05-24 at 12:58:09
+  on Prolog xsb(3,6,,_h2210) for program file:
+  /Users/mc/git/lps_corner/examples/testlevent.lpsw
+*/
+
+(:- dynamic lps_test_result / 3,lps_test_result_item / 3,lps_test_options / 1).
+
+% LPS options prior to the test:
+lps_test_options([priority,verbose]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result('Observations:',1,1).
+lps_test_result('Candidate actions:',1,0).
+lps_test_result('Selected actions:',1,0).
+lps_test_result('Database state:',1,4).
+lps_test_result('New partial reactive rules:',1,0).
+lps_test_result('New goals:',1,1).
+lps_test_result('Resolved goals:',1,1).
+lps_test_result('Observations:',2,0).
+lps_test_result('Candidate actions:',2,1).
+lps_test_result('Selected actions:',2,1).
+lps_test_result('Database state:',2,4).
+lps_test_result('New partial reactive rules:',2,0).
+lps_test_result('New goals:',2,1).
+lps_test_result('Resolved goals:',2,0).
+lps_test_result('Observations:',3,0).
+lps_test_result('Candidate actions:',3,0).
+lps_test_result('Selected actions:',3,0).
+lps_test_result('Database state:',3,4).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item('Observations:',1,start_game(unit1)).
+lps_test_result_item('Database state:',1,fact(unit1)).
+lps_test_result_item('Database state:',1,position(unit1,1,1)).
+lps_test_result_item('Database state:',1,belief(2,1)).
+lps_test_result_item('Database state:',1,object(3,1)).
+lps_test_result_item('New goals:',1,goal(95,10000,[[happens(newbelief(),A,B),tc(1 =< A)]])).
+lps_test_result_item('Resolved goals:',1,goal(95,10000,[[happens(genbelief(2,2),1,A),tc(1 =< 1)],[holds(not object(2,2),1),happens(genbelief(2,2),1,B),tc(1 =< 1)],[increment(1,C),holds(not object(2,C),1),happens(genbelief(2,C),1,D),tc(1 =< 1)],[holds(belief(E,F),G),increment(F,H),holds(not object(E,H),G),happens(genbelief(E,H),G,I),tc(1 =< G)],[happens(newbelief(),G,I),tc(1 =< G)]])).
+lps_test_result_item('Candidate actions:',2,ca(1000000000,happens(genbelief(2,2),1,2))).
+lps_test_result_item('Selected actions:',2,happens(genbelief(2,2),1,2)).
+lps_test_result_item('Database state:',2,fact(unit1)).
+lps_test_result_item('Database state:',2,position(unit1,1,1)).
+lps_test_result_item('Database state:',2,object(3,1)).
+lps_test_result_item('Database state:',2,belief(2,2)).
+lps_test_result_item('New goals:',2,goal(95,10000,[[happens(genbelief(2,2),1,A),tc(1 =< 1)],[holds(not object(2,2),1),happens(genbelief(2,2),1,B),tc(1 =< 1)],[increment(1,C),holds(not object(2,C),1),happens(genbelief(2,C),1,D),tc(1 =< 1)],[holds(belief(E,F),G),increment(F,H),holds(not object(E,H),G),happens(genbelief(E,H),G,I),tc(1 =< G)],[happens(newbelief(),G,I),tc(1 =< G)]])).
+lps_test_result_item('Database state:',3,fact(unit1)).
+lps_test_result_item('Database state:',3,position(unit1,1,1)).
+lps_test_result_item('Database state:',3,object(3,1)).
+lps_test_result_item('Database state:',3,belief(2,2)).

@@ -1,7 +1,7 @@
 :- module(interpreter, [
 	go/1, go/2, go_lps/1, go_lps/2,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
-	load_check_syntax/2, my_load_dyn/1]).
+	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
@@ -26,6 +26,18 @@ lps_examples_directory(ED) :-
 	concat_atom([D,'/../examples'], E), expand_filename(E,ED).
 
 my_load_dyn(F,_) :- load_dyn(F).
+
+my_term_to_codes(T,C) :- atomize_zero_functors(T,NT), term_to_codes(NT,C).
+
+% atomize_zero_functors(+Term,-NewTerm) replaces subterms foo() by 'foo'
+% turnaround to bug reported by Miguel to XSB folks on May 24, 2016
+atomize_zero_functors(T,NT) :- var(T), !, NT=T.
+atomize_zero_functors(T,NT) :- functor(T,F,0), atom(F), !, NT=F.
+atomize_zero_functors(T,NT) :- atomic(T), !, NT=T.
+atomize_zero_functors([T1|Tn],[NT1|NTn]) :- !, atomize_zero_functors(T1,NT1), atomize_zero_functors(Tn,NTn).
+atomize_zero_functors(T,NT) :- T=..[F|Args], atomize_zero_functors(Args,NewArgs), NT=..[F|NewArgs].
+
+my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
 :- use_module(usermod,[
 	action/1, /*cacts/1,*/ current_time/1, d_pre/1 ,event/1,
@@ -54,6 +66,7 @@ append_lists([X|Xs],L) :-
 :- use_module(library(terms),[variant/2]).
 :- use_module(library(varnumbers),[numbervars/1]).
 term_to_codes(T,C) :- term_to_atom(T,A), atom_codes(A,C).
+my_term_to_atom(T,A) :- term_to_atom(T,A).
 concat_atom(L,A) :- atomic_list_concat(L,A).
 %:- use_module(format,[format/2]).
 :- use_module(library(dialect/sicstus/system),[datime/1]).
@@ -238,7 +251,10 @@ do_process(priority,[[[], C, P]|Ris], NewRi, Gi, [goal(P, GoalId, [C])|NewGi]) :
     do_process(priority,Ris, NewRi, Gi, NewGi).
 do_process(Mode,[[A|Rest]|Ris], TheNewRi, Gi, TheNewGi) :-
     %write('A: '),write(A),nl,
-    ( setof([NA|Rest], process2_(A, NA), Rs)
+    % writeln(setof([NA|Rest], process2_(A, NA), Rs)),
+    ( % setof([NA|Rest], process2_(A, NA), Rs) %XSB crashing because of some vars in Rest
+    	% TODO: probably revert this to setof after XSB bug fix, Miguel emailed TS May 24, 2016
+    	findall([NA|Rest], process2_(A, NA), Rs)
     ; Rs = []
     ), 
     % make sure unsolvable literals remain in the resolvent:
@@ -1229,13 +1245,15 @@ resolve2_happens([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
 resolve2_timeless([TL|Ls], NB, EB, CA) :-
     copy_term([TL|Ls], [CTL|CLs]),
     ( find_unused(l_tl(CTL), Body) ->
+        copy_term(CTL-Body,CTL_-Body_), % remember the clause as found...
+        % TODO: all this brutal management of backtracking should have a lighter approach...
         satisfy_all(CLs),
         reduce_step,
         query(CTL),
         write_verbose(['Calculated ',TL,' to ',CTL,nl]),
         current_goal(GoalId),
         depth(Depth),
-        assertz(tried(GoalId, Depth, l_timeless(TL, Body))),
+        assertz(tried(GoalId, Depth, l_timeless(CTL_, Body_))),
         NB = [TL|Ls],
         EB = CLs,
         CA = none
@@ -1252,7 +1270,8 @@ resolve2_timeless([TL|Ls], NB, EB, CA) :-
 try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
     maximum_time(MaxTime),
     (
-        action(Ev),
+        (
+        	action(Ev),
         current_time(T1), T2 is T1 + 1,
         satisfy_all(Bs),
         % T3 is T1 - 1,
@@ -1265,6 +1284,7 @@ try_cand_act([happens(Ev, T1, T2)|Bs], CA) :-
             AllConds
         ),
         all_fail(AllConds, [])
+        )
     ->
         find_deadline(Bs, Deadlines),sort(Deadlines, Sorted),
         ( Sorted = [Earliest|_] ->
@@ -1515,8 +1535,9 @@ satisfy(=<(X,Y)) :-
 check_syntax(F,Notices) :-
 	findall(N, 
 		(
-			reactive_rule(A, C), 
-			(source_position(reactive_rule(A, C),F,Pos), 
+			( Rule = reactive_rule(A, C) ; Rule = reactive_rule(A,C,_)), % TODO: should check priority too
+			Rule,
+			(source_position(Rule,F,Pos), 
 			(check_reactive_rule(A,Pos,[N]) ; check_reactive_rule(C,Pos,[N])))
 			), 
 		RR),
@@ -2019,6 +2040,7 @@ cleanup :-
     retractall(observe(_, _)),
     retractall(option(_)),
     retractall(reactive_rule(_, _)),
+    retractall(reactive_rule(_, _, _)),
     retractall(state(_)),
     retractall(steps(_)),
     retractall(succ_t(_, _)),

@@ -10,10 +10,10 @@
 
 :- export visual/1, gov/1, gov/2.
 
-:- import load_test_file_for/1, go/2, my_load_dyn/1 from interpreter.
+:- import load_test_file_for/1, go/2, my_load_dyn/1, my_term_to_atom/2 from interpreter.
 :- import lps_test_result_item/3 from usermod. 
 :- import member/2,append/3 from basics.
-:- import term_to_atom/2, concat_atom/2 from string.
+:- import concat_atom/2 from string.
 :- import variant/2 from subsumes.
 :- import java/3, term2json/2, create_counter/1, get_increment_counter/2 from interprolog.
 :- import xjShowURL/1 from usermod. % xj2.P
@@ -47,7 +47,7 @@ visual(File) :-
 	setof(G, T^X^member(t(X,T,G),Tuples), GroupIds),
 	findall({id:Gatom,content:Gsignature},(
 		member(F/N,GroupIds), 
-		term_to_atom(F/N,Gatom), functor(GG,F,N), term_to_atom(GG,Gsignature)
+		my_term_to_atom(F/N,Gatom), functor(GG,F,N), my_term_to_atom(GG,Gsignature)
 	), FluentGroups),
 	( member(t(_,_,event),Tuples) -> G1 = [{id:observation,content:'Observations'},{id:event,content:'Events'}|FluentGroups]
 		; G1 = [{id:observation,content:'Observations'}|FluentGroups]),
@@ -60,7 +60,7 @@ visual(File) :-
 	% Render fluents
 	findall({id:ID,content:Atom,start:T1,end:T2,group:Gatom,title:Tip},(
 		member(t(X,T1-T2,F/N),Ranged),  
-		term_to_atom(F/N,Gatom), term_to_atom(X,Atom),
+		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom),
 		concat_atom(['Fluent initiated at ',T1,' and terminated at ',T2],Tip),
 		get_increment_counter(IDs,ID)
 	), Fluents),
@@ -68,11 +68,11 @@ visual(File) :-
 	findall(Item,(
 		member(t(X,T1-T2,G),Sorted),  
 		\+ functor(G,/,2), % not a fluent
-		term_to_atom(G,Gatom), term_to_atom(X,Atom),
+		my_term_to_atom(G,Gatom), my_term_to_atom(X,Atom),
 		(G==observation -> S='color:Peru'; G==action -> S='color:green' ; S='color:orange'),
 		(T2 is T1+1 -> Item={id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip} ;
 			Item = {id:ID,content:Atom,start:T1,end:T2,group:Gatom,type:range,style:'background-color: lightGray; color:orange',title:Tip}),
-		term_to_atom(happens(X,T1,T2),Tip),
+		my_term_to_atom(happens(X,T1,T2),Tip),
 		get_increment_counter(IDs,ID)
 	), Others),
 	append(Fluents,Others,Items),
