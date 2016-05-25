@@ -548,7 +548,6 @@ do_modedef(A0, M, A1, A, PA0, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) 
 do_modedef(A0, M, A1, A, APos, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
     atom(A0),
     A2 =.. [A0, A],
-    % ( var(From) -> gtrace ; true ),
     ( var(APos) -> true ; APos = From-To, Pos = term_position(From, To, From, To, [To-To]) ),
     modedef(A2, M, A1, A, Pos, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr), !.
 do_modedef(A0, M, A1, A, From-To, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
