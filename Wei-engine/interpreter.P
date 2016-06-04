@@ -1651,9 +1651,11 @@ check_reactive_rule([H|T], Pos, NT) :-
     reactive_conjunct(H),
     !,
     check_reactive_rule(T, Pos, NT).
-check_reactive_rule([H|_], Pos, [notice(error,ET,Pos)]) :-
+check_reactive_rule([H|_], Pos, [notice(error,ET,Pos)]) :- !,
     buildError(H,' is not a valid reactive rule conjunct',ET).
-
+check_reactive_rule(H, Pos, [notice(error,ET,Pos)]) :- \+ is_list(H),
+    buildError(H,' must be a list',ET).
+    
 check_lp_int([H|T], Pos, NT) :-
     l_int_body(H), !,
     check_lp_int(T, Pos, NT).
