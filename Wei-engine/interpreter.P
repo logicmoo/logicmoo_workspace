@@ -165,6 +165,8 @@ evaluate([P|Rest]) :-
     query(P),
     evaluate(Rest).
 evaluate([P|Rest]) :-
+    \+ l_timeless(P, _), 
+    % should rather test if system predicate... or adopt a specific notation for body, e.g. 'prolog'
     call(P),
     evaluate(Rest).
 

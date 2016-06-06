@@ -27,6 +27,9 @@ No matter the strategy (goal_strat(breadth) or not), the following generates a1,
 
 	reactive_rule( [happens(cond3,_,_)],
 	 [happens(a1,T1,T2),happens(a2,T1,T2)] ).
+### timeless predicate loops
+l_timeless(foo,[foo]).
+In this case we should probably use 'prolog' for the body.
 
 ## How to contribute ##
 * Before you commit any changes to the LPS engine or tools, make sure you execute all tests with 'test_examples'.
