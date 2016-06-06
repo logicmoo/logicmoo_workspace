@@ -725,7 +725,7 @@ resolve_tree([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
     ;
         append(AccG, [goal(GoalId, NextGoal)], NAccG),
         append(AccA, CandActs, NAccA),
-        resolve_tree(Gs, NAccG, NG, NAccA, CA)
+        resolve_tree(Gs, NAccG, NG, NAccA, CA) 
     ).
 resolve_tree_prio([], NG, NG, CA, CA).
 resolve_tree_prio([goal(P, GoalId, G)|Gs], AccG, NG, AccA, CA) :-
@@ -743,11 +743,12 @@ resolve_tree_prio([goal(P, GoalId, G)|Gs], AccG, NG, AccA, CA) :-
         resolve_tree_prio(Gs, NAccG, NG, NAccA, CA)
     ).
 
-%
+% resolve_goal(+Goal,-RemainingGoal,-CandidateActions)
 %
 resolve_goal([], [], []) :- fail.
 resolve_goal([B1|Bs], NextGoal, CandActs) :-
-    \+ satisfy_all(B1), % TODO: Shouldn't we CUT here?
+    \+ satisfy_all(B1),
+    !,
     length([B1|Bs], Depth),
     retractall(depth(_)),
     assertz(depth(Depth)),

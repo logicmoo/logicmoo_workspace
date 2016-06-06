@@ -21,6 +21,13 @@ To support the development of LPS, evolving the Wei implementation and complemen
 * Install a recent (>= April 4 2016) XSB Prolog, such as the one in the [Prolog Studio site](http://interprolog.com/wiki/index.php?title=Studio_Download_and_installation#Installing_XSB_Prolog) for Windows; or pull the latest XSB from the [Sourceforge SVN site](https://sourceforge.net/p/xsb/src/HEAD/tree/trunk/XSB/) and build it yourself - NOT the official release as of today.
 * Launch xsb and consult 'LPS_dir/Wei-Engine/interpreter.P'
 
+## Known Bugs
+### Missing candidate actions
+No matter the strategy (goal_strat(breadth) or not), the following generates a1,a1,... when it should generate only a1+a2 (simultaneous):
+
+	reactive_rule( [happens(cond3,_,_)],
+	 [happens(a1,T1,T2),happens(a2,T1,T2)] ).
+
 ## How to contribute ##
 * Before you commit any changes to the LPS engine or tools, make sure you execute all tests with 'test_examples'.
 * Please comment your code, and add appropriate copyright/license header
