@@ -1,5 +1,5 @@
 :- module(interpreter, [
-	go/1, go/2, go_lps/1, go_lps/2,
+	go/1, go/2, go/3, go_lps/1, go_lps/2,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
 	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2]).
 
@@ -55,6 +55,7 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
 :- if(current_prolog_flag(dialect, swi)).
 
+:- op(900,fy,not).
 :- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 :- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
 append_lists([],[]).
@@ -1722,9 +1723,13 @@ go_lps(File) :- go(File).
 %
 go(File) :- go(File, []).
 
-go(File, OptionsList) :-
+go(File, OptionsList) :- go(File, OptionsList,[]).
+
+% ResultFluents is a list of Fluent-Instances, obtained at the end of execution in the final state
+go(File, OptionsList, ResultFluents) :-
     cleanup,
     parse_options(OptionsList),
+    forall(member(RF,ResultFluents), (nonvar(RF), RF=_-Result, var(Result))),
     init_test_file(File),
     % no longer needed: datime_setrand,
     my_load_dyn(File),
@@ -1733,6 +1738,11 @@ go(File, OptionsList) :-
 
     (option(meta_actions) -> add_meta_reactive_rules ; true),
     ( initial_state(IS) -> assert_list(IS) ; true),
+    ( option(delta_state(State)), member(F,State),
+    	(F = + Fluent -> assert(state(Fluent)) ; F = - Fluent -> retractall(state(Fluent))),
+    	fail
+    	; true
+    ),
     cputime(T0),
     expand_reactive_rules,
     ( option(breadth) ->
@@ -1756,10 +1766,13 @@ go(File, OptionsList) :-
 	cputime(T2),
 	print_statistics(T0,T1,T2),
 	close_test_file(File),
-	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true)
+	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true),
 		% ultra_verbose only remembered for xsb
+	collect_results(ResultFluents)
     	).
 
+collect_results([]) :- !.
+collect_results([F-R|FR]) :- findall(F,state(F),R), collect_results(FR).
 	 
 read_obs(Obs) :-
     read(user_input, Obs),
@@ -1815,6 +1828,16 @@ parse_options_([run_test|Rest]) :- !,
 	parse_options_(Rest).
 parse_options_([meta_actions|Rest]) :- !,
 	assertz(option(meta_actions)),
+	parse_options_(Rest).
+parse_options_([observations(Obs)|Rest]) :- !,
+	((is_list(Obs), forall(member(observe(L,T),Obs),(is_list(L),integer(T))) ) -> true
+	; writeln(user_error, 'ERROR in options: observations must contain a list of observe(List,Time).'), fail),
+	assertz(option(observations(Obs))),
+	parse_options_(Rest).
+parse_options_([delta_state(State)|Rest]) :- !,
+	((is_list(State), forall(member(F,State), (nonvar(F), (F = + _ ; F = - _ ))) ) -> true
+	; writeln(user_error, 'ERROR in options: delta_state must contain a list of +Fluent or -Fluent.'), fail),
+	assertz(option(delta_state(State))),
 	parse_options_(Rest).
 parse_options_([O|Rest]) :- 
     write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
@@ -2074,8 +2097,11 @@ cycle_options(CAi, Ri, Gi) :-
     write('* Cycle '),write(Time),write(' *'),nl,
     write_verbose(['====================',nl,nl]),
     StageO='Observations:',
-    ( (option(manual) ->read_obs(Observations);observe(Observations, Time)) -> true 
+    ( (option(manual) ->read_obs(Observations_);observe(Observations_, Time)) -> true 
       ; writeln('* No more observations, terminating.'), fail ),
+    ( (option(observations(ExtraObs)), member(observe(EO,Time),ExtraObs)) ->
+        append(Observations_,EO,Observations)
+    ; Observations_=Observations),
     write_verbose([StageO,nl,Observations,nl,nl]), test(StageO,Time,Observations),
     update_all(Observations),
     StageCA='Candidate actions:',

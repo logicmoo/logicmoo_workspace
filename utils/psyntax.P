@@ -23,6 +23,7 @@ terminated available(F2) :-
 
 Time variables must start with T or _T, followed by _ or a digit.
 Prolog facts in general are not transformed.
+In particular, initial_state(FluentsList) and observe(EventsList,Time) should be present.
 
 LIMITATION wrt time variable convention: 
 If a l_timeless predicate has T variables, it's (reverse) conversion to our syntax will be wrong...
@@ -35,32 +36,36 @@ Ditto for "timeful" predicates with non-T variables
 :- op(900,fy,terminated).
 :- op(900,fy,initiated).
 
-:- export lpsp2p_file/3, lpsp2p_file/2, lpsp2p/3, gol/2, gol/1, golv/2, golv/1.
+:- export lpsp2p_file/3, lpsp2p_file/2, lpsp2p/3, gol/2, gol/1, golv/3, golv/2, golv/1.
 
 :- import append/3 from basics.
 :- import concat_atom/2 from string.
 :- import file_read/3 from xsb_read.
 :- import closetail/1 from listutil.
 
-:- import go/2 from interpreter.
-:- import gov/2 from visualizer.
+:- import go/3 from interpreter.
+:- import gov/3 from visualizer.
 
 :- consult:add_this_lib_dir.
 
 % Convert a file in LPSP into Wei syntax and execute it 
-gol(LPSP_file,Options) :-
+gol(LPSP_file,Options,Results) :-
 	concat_atom([LPSP_file,'_.P'],Pfile),
 	lpsp2p_file(LPSP_file,Pfile,true),
-	go(Pfile,Options).
+	go(Pfile,Options,Results).
+
+gol(LPSP_file,Options) :- gol(LPSP_file,Options,[]).
 
 gol(LPSP_file) :- gol(LPSP_file,[]).
 
 golv(LPSP_file) :- golv(LPSP_file,[]).
 
-golv(LPSP_file,Options) :-
+golv(LPSP_file,Options) :- golv(LPSP_file,Options,[]).
+
+golv(LPSP_file,Options,Results) :-
 	concat_atom([LPSP_file,'_.P'],Pfile),
 	lpsp2p_file(LPSP_file,Pfile,true),
-	gov(Pfile,Options).
+	gov(Pfile,Options,Results).
 
 % lpsp2p_file(?LPSPfile,?LPSWfile)
 lpsp2p_file(LPSPfile,LPSWfile) :- atom(LPSPfile), !,
@@ -87,7 +92,7 @@ lpsp2p_file(Lfile,Pfile,ToWei) :-
 		),
 	IStr >= 0, OStr>=0,
 	repeat,
-	file_read(IStr,Term,Vars), closetail(Vars),
+	catch(file_read(IStr,Term,Vars),_,true), closetail(Vars),
 	( Term==end_of_file -> true
 	;  
 		Convert, 
