@@ -1772,7 +1772,7 @@ go(File, OptionsList, ResultFluents) :-
     	).
 
 collect_results([]) :- !.
-collect_results([F-R|FR]) :- findall(F,state(F),R), collect_results(FR).
+collect_results([F-R|FR]) :- (setof(F,state(F),R)->true;R=[]), collect_results(FR).
 	 
 read_obs(Obs) :-
     read(user_input, Obs),
