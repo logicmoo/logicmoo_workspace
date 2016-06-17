@@ -27,6 +27,15 @@ No matter the strategy (goal_strat(breadth) or not), the following generates a1,
 
 	reactive_rule( [happens(cond3,_,_)],
 	 [happens(a1,T1,T2),happens(a2,T1,T2)] ).
+### missing solutions to fluent in composite event
+Given the following
+
+	 goFromTo(Here,There,T1,T2) :- 
+	not killed(robot,T1), something_failing.
+	 goFromTo(Here,There,T1,T3) :- 
+	not killed(robot,T1), it_never_gets_here.
+
+
 ### timeless predicate loops
 l_timeless(foo,[foo]).
 In this case we should probably use 'prolog' for the body.
