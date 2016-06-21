@@ -210,8 +210,7 @@ show_i18n_term(M, Op, MsgId, _) :-
     reference(M, Ref),
     maplist(Op+\S^format(user_error, '~w~s~n', [Op, S]), Ref),
     nl(user_error),
-    write(user_error, M),
-    nl(user_error),
+    writeln(user_error, M),
     maplist(Op+\S^format(user_error, '~w~s~n', [Op, S]), MsgId),
     nl(user_error).
 
