@@ -13,6 +13,7 @@
 :- use_module(library(ugraphs)).
 :- use_module(library(rbtrees)).
 :- use_module(library(pengines)).
+:- use_module(library(sandbox)).
 
 :- use_module(library(dif)).
 

@@ -23,6 +23,7 @@
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
+:- use_module(library(sandbox)).
 :- use_module(library(trill)).
 
 
@@ -2963,3 +2964,9 @@ get_module(M):-
   pengine_self(Self),
   pengine_property(Self,module(M)),!.  
 get_module('owl2_model'):- !.
+
+:- multifile sandbox:safe_primitive/1.
+
+sandbox:safe_primitive(translate_rdf:load_owl(_)).
+sandbox:safe_primitive(translate_rdf:load_owl_from_string(_)).
+sandbox:safe_primitive(translate_rdf:query_expand(_)).
