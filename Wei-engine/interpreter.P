@@ -1775,8 +1775,8 @@ go(File, OptionsList, ResultFluents) :-
     	).
 
 collect_results([]) :- !.
-collect_results([F-R|FR]) :- (setof(F,state(F),R)->true;R=[]), collect_results(FR).
-	 
+collect_results([F-R|FR]) :- (setof(F,query(holds(F,_)),R)->true;R=[]), collect_results(FR).
+
 read_obs(Obs) :-
     read(user_input, Obs),
     ( \+ is_list(Obs) ->
