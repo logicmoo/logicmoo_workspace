@@ -23,9 +23,9 @@
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
-:- use_module(library(sandbox)).
 :- use_module(library(trill)).
 
+:- use_module(library(sandbox)).
 
 :- discontiguous(valid_axiom/1).
 :- discontiguous(axiompred/1).
@@ -2967,6 +2967,6 @@ get_module('owl2_model'):- !.
 
 :- multifile sandbox:safe_primitive/1.
 
-sandbox:safe_primitive(translate_rdf:load_owl(_)).
-sandbox:safe_primitive(translate_rdf:load_owl_from_string(_)).
-sandbox:safe_primitive(translate_rdf:query_expand(_)).
+sandbox:safe_primitive(owl2_model:load_owl(_)).
+sandbox:safe_primitive(owl2_model:load_owl_from_string(_)).
+sandbox:safe_primitive(owl2_model:query_expand(_)).
