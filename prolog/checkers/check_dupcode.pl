@@ -39,7 +39,6 @@
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(assrt_lib)).
-:- use_module(library(plprops)).
 
 :- multifile
     prolog:message//1,
@@ -185,7 +184,7 @@ consider_dupname_2(clause, M:_, M:_).
 
 has_dupclauses(H, M) :-
     prop_asr(head, M:H, _, _, Asr),
-    prop_asr(glob, M:dupclauses(_), _, _, Asr).
+    prop_asr(glob, M:dupclauses(_), plprops, _, Asr).
 
 element_head(predicate, M:F/A,   M:H) :- functor(H, F, A).
 element_head(clause,    M:F/A-_, M:H) :- functor(H, F, A).
