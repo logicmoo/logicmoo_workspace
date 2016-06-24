@@ -171,23 +171,21 @@ ignore_dupname_clause(CIL, GL) :-
 
 consider_dupname(DupType, CIL) :-
     append(_, [CI|PIL2], CIL),
-    element_head(DupType, CI, MH),
-    consider_dupname_2(DupType, MH, CompData),
+    element_head(DupType, CI, MH1),
+    consider_dupname_1(DupType, MH1),
     member(CI2, PIL2),
     element_head(DupType, CI2, MH2),
-    consider_dupname_3(CompData, MH2).
+    consider_dupname_2(DupType, MH1, MH2).
 
-consider_dupname_2(predicate, MH, exported) :- consider_dupname_3(exported, MH).
-consider_dupname_2(clause,    MH, CompData) :- consider_dupname_clause(MH, CompData).
+consider_dupname_1(predicate, MH) :- predicate_property(MH, exported).
+consider_dupname_1(clause,   M:H) :- \+ has_dupclauses(H, M).
 
-consider_dupname_clause(MH, exported) :- consider_dupname_3(exported, MH).
-consider_dupname_clause(MH, inter(M)) :- consider_dupname_3(inter(M), MH).
+consider_dupname_2(predicate, _, _).
+consider_dupname_2(clause, M:_, M:_).
 
-consider_dupname_3(exported, MH) :- predicate_property(MH, exported).
-consider_dupname_3(inter(M), M:H) :-
-    \+ ( prop_asr(head, M:H, _, _, Asr),
-	 prop_asr(glob, dupclauses(_), _, _, Asr)
-       ).
+has_dupclauses(H, M) :-
+    prop_asr(head, M:H, _, _, Asr),
+    prop_asr(glob, M:dupclauses(_), _, _, Asr).
 
 element_head(predicate, M:F/A,   M:H) :- functor(H, F, A).
 element_head(clause,    M:F/A-_, M:H) :- functor(H, F, A).
@@ -252,7 +250,7 @@ prolog:message(acheck(dupcode)) -->
      '---------------',nl,
      'The elements below would has been implemented in different modules,', nl,
      'but are duplicates.  Would be a symptom of duplicated functionality.', nl,
-     'In the case of predicate names, at least two has been exported,', nl,
+     'In the case of predicate names, at least one has been exported,', nl,
      'making difficult to import it in other modules without clash risk.', nl,
      'This can be fixed by merging the duplicated code, or by refactoring', nl,
      'one of the duplicated to avoid this warning.', nl, nl].
