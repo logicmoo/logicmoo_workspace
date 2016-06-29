@@ -100,6 +100,7 @@ duptype_elem(name,   H, M, FileChk, F/A, M:F/A) :-
 % Note: we wrap the DupId with hash/1 to allow easy identification in saved
 % analysis outputs:
 duptype_elem(clause, H, M, FileChk, hash(DupId), M:F/A-Idx) :-
+    \+ has_dupclauses(H, M),
     nth_clause(M:H, Idx, Ref),
     clause(M:H, MBody, Ref),
     clause_property(Ref, file(File)),
@@ -177,7 +178,7 @@ consider_dupname(DupType, CIL) :-
     consider_dupname_2(DupType, MH1, MH2).
 
 consider_dupname_1(predicate, MH) :- predicate_property(MH, exported).
-consider_dupname_1(clause,   M:H) :- \+ has_dupclauses(H, M).
+consider_dupname_1(clause,     _).
 
 consider_dupname_2(predicate, _, _).
 consider_dupname_2(clause, M:_, M:_).
@@ -192,7 +193,7 @@ element_head(clause,    M:F/A-_, M:H) :- functor(H, F, A).
 curr_duptype_elem(M, FileChk, DupType, DupId, Elem) :-
     current_predicate(M:F/A),
     functor(H, F, A),
-    \+predicate_property(M:H, imported_from(_)),
+    \+ predicate_property(M:H, imported_from(_)),
     duptype(DupType),
     \+ ignore_dupcode(H, M, DupType),
     duptype_elem(DupType, H, M, FileChk, DupId, Elem).
