@@ -70,7 +70,7 @@ am_head_prop_idx(Head, M, Meta, From) :-
 	   ))
     ),
     '$predicate_property'(meta_predicate(Meta), Pred),
-    % predicate_property(Pred, meta_predicate(Spec)),
+    % predicate_property(Pred, meta_predicate(Meta)),
     ( property_from(M:Pred, meta_predicate, From),
       From \= []
     ->true
