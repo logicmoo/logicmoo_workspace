@@ -1,7 +1,7 @@
 :- module(interpreter, [
 	go/1, go/2, go/3, go_lps/1, go_lps/2,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
-	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2]).
+	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
@@ -1729,14 +1729,14 @@ go(File) :- go(File, []).
 go(File, OptionsList) :- go(File, OptionsList,[]).
 
 % ResultFluents is a list of Fluent-Instances, obtained at the end of execution in the final state
+%  Instances is a list (ordered by setof)
 go(File, OptionsList, ResultFluents) :-
-    cleanup,
-    parse_options(OptionsList),
     forall(member(RF,ResultFluents), (nonvar(RF), RF=_-_)),
+    parse_options(OptionsList),
+    cleanup,
     init_test_file(File),
     % no longer needed: datime_setrand,
     my_load_dyn(File),
-    
     print_errors(File), % fails if errors occur
 
     (option(meta_actions) -> add_meta_reactive_rules ; true),
@@ -1777,6 +1777,20 @@ go(File, OptionsList, ResultFluents) :-
 collect_results([]) :- !.
 collect_results([F-R|FR]) :- (setof(F,query(holds(F,_)),R)->true;R=[]), collect_results(FR).
 
+% collect_fluents(Fluents,Instances)
+collect_current_fluents([F|Fluents],Instances) :- !,
+	(setof(F,query(holds(F,_)),R)->true;R=[]),
+	collect_current_fluents(Fluents,Instances1),
+	append(R,Instances1,Instances).
+collect_current_fluents([],[]).
+
+% collect_actions(Actions,Instances)  actions or events
+collect_current_actions([A|Actions],Instances) :- !,
+	(setof(A, happens(A,_,_) , R)->true;R=[]),
+	collect_current_actions(Actions,Instances1),
+	append(R,Instances1,Instances).
+collect_current_actions([],[]).
+	
 read_obs(Obs) :-
     read(user_input, Obs),
     ( \+ is_list(Obs) ->
@@ -1794,10 +1808,14 @@ print_statistics(T0,T1,T2) :-
 % parse_options(OptionsList)
 %
 parse_options(Options) :- 
+	retractall(option(_)),
 	% when running a test the options will be imposed by the test file:
 	(member(run_test,Options) -> Options=[_]; true),
 	( (member(silent,Options), (member(verbose,Options);member(ultra_verbose,Options))) ->
 		writeln(user_error, 'ERROR in options: silent incompatible with verbose and ultra_verbose.'), fail
+		; true),
+	( (member(cycle_hook(_),Options), (member(make_test,Options) ; member(manual,Options))) ->
+		writeln(user_error, 'ERROR in options: cycle_hook incompatible with make_test and with manual.'), fail
 		; true),
 	parse_options_(Options).
 
@@ -1838,6 +1856,12 @@ parse_options_([run_test|Rest]) :- !,
 	parse_options_(Rest).
 parse_options_([meta_actions|Rest]) :- !,
 	assertz(option(meta_actions)),
+	parse_options_(Rest).
+parse_options_([cycle_hook(Predicate,Fluents,Actions)|Rest]) :- !,
+	% Fluents and (basic) Actions are lists of templates; the cycle hook predicate should collect all matching tuples
+	((atom(Predicate),is_list(Fluents),is_list(Actions))->true
+	; writeln(user_error, 'ERROR in options: cycle_hook first argument must be an atom, a predicate name; then fluent and action lists.'), fail),
+	assertz(option(cycle_hook(Predicate,Fluents,Actions))),
 	parse_options_(Rest).
 parse_options_([observations(Obs)|Rest]) :- !,
 	((is_list(Obs), forall(member(observe(L,T),Obs),(is_list(L),integer(T))) ) -> true
@@ -2076,7 +2100,6 @@ cleanup :-
     retractall(l_int(_, _)),
     retractall(l_timeless(_, _)),
     retractall(observe(_, _)),
-    retractall(option(_)),
     retractall(reactive_rule(_, _)),
     retractall(reactive_rule(_, _, _)),
     retractall(state(_)),
@@ -2100,6 +2123,11 @@ my_event(X) :- action(X).
 %  GoalState is a list (conjunction) of goal(Id,Tree)
 cycle_options(CAi, Ri, Gi) :-
     current_time(Time),
+    % At this point last cycle events are still available
+    ( option(cycle_hook(Predicate,_,_)) -> 
+    		HookGoal =.. [Predicate,ExternalObservations],
+		(HookGoal -> true ; writeln('* Cycle hook goal failed, terminating.'), fail)
+    	; ExternalObservations=[]),
     retractall(happens(_, _, _)),
     enter_step_0, % during "Update the current state" we need a hack to query the previous state
     (option(silent)->true;nl),
@@ -2110,8 +2138,9 @@ cycle_options(CAi, Ri, Gi) :-
     ( (option(manual) ->read_obs(Observations_);observe(Observations_, Time)) -> true 
       ; \+ option(silent), writeln('* No more observations, terminating.'), fail ),
     ( (option(observations(ExtraObs)), member(observe(EO,Time),ExtraObs)) ->
-        append(Observations_,EO,Observations)
-    ; Observations_=Observations),
+        append(Observations_,EO,Observations1)
+    ; Observations_=Observations1),
+    append(ExternalObservations,Observations1,Observations),
     write_verbose([StageO,nl,Observations,nl,nl]), test(StageO,Time,Observations),
     update_all(Observations),
     StageCA='Candidate actions:',
