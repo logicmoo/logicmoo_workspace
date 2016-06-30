@@ -1403,7 +1403,7 @@ test_use_owl(X1,Y1,Z1,named) :-
 	expand_ns(Y1,Y),
 	expand_ns(Z1,Z),
 	owl(X,Y,Z, not_used),
-	\+ sub_string(X,0,2,_,'__').
+	\+ sub_string(X,0,1,_,'_').
 
 
 %%       use_owl(+Triples:list)
@@ -1434,7 +1434,7 @@ use_owl(X1,Y1,Z1,named) :-
 	expand_ns(Y1,Y),
 	expand_ns(Z1,Z),
 	owl(X,Y,Z, not_used),
-	\+ sub_string(X,0,2,_,'__'),
+	\+ sub_string(X,0,1,_,'_'),
 	retract(owl(X,Y,Z, not_used)),
 	assert(owl(X,Y,Z,used2)).
 
@@ -1457,7 +1457,7 @@ use_owl(X1,Y1,Z1,named,Term) :-
 	expand_ns(Y1,Y),
 	expand_ns(Z1,Z),
 	owl(X,Y,Z, not_used),
-	\+ sub_string(X,0,2,_,'__'),
+	\+ sub_string(X,0,1,_,'_'),
 	retract(owl(X,Y,Z, not_used)),
 	assert(owl(X,Y,Z,used(Term))).
 
@@ -1558,7 +1558,7 @@ owl_collect_linked_nodes(_,_,List, List) :- !.
 %	subsequent uses of it will result in structure sharing.
 
 owl_get_bnode(Node,Description) :-
-	sub_string(Node,0,2,_,'__'),!,
+	sub_string(Node,0,1,_,'_'),!,
 	\+ blanknode(Node,_,_),
 	assert(blanknode(Node,Description, used)).
 
@@ -1683,7 +1683,7 @@ owl_canonical_parse_3([IRI|Rest]) :-
         % see email to JanW July-1-2009
         forall((test_use_owl(S,P,BNode),
                 atom(BNode),
-                sub_atom(BNode,0,2,_,'__'),
+                sub_atom(BNode,0,1,_,'_'),
                 test_use_owl(BNode,'http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype',literal(_))),
                (   use_owl(S,P,BNode,datatype_fix),
                    use_owl(BNode,'http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype',literal(_)),
@@ -1711,7 +1711,7 @@ owl_canonical_parse_3([IRI|Rest]) :-
 	% continue with parsing using the rules...
 	% Table 8, get the set of RIND - anonymous individuals in reification
 	findall(X, (member(Y,['owl:Axiom','owl:Annotation',
-			      'owl:AllDisjointClasses','owl:AllDisljointProperties',
+			      'owl:AllDisjointClasses','owl:AllDisjointProperties',
 			      'owl:AllDifferent','owl:NegativePropertyAssertion']),
                     test_use_owl(X,'rdf:type',Y)
                    ),
@@ -1784,7 +1784,7 @@ owl_parse_annotated_axioms(Pred/Arity) :-
 	      ),
         debug(owl_parser_detail,'[ann] Done parsing all of type: ~w',[Pred]).
 
-owl_parse_nonannotated_axioms(Pred/Arity) :-
+owl_parse_nonannotated_axioms(Pred/Arity) :- 
         debug(owl_parser_detail,'[unann] Parsing all of type: ~w',[Pred]),
         functor(Head,Pred,Arity),
 	forall(owl_parse_axiom(Head,false,_),
@@ -2073,7 +2073,7 @@ ann2(_,_,_,_).
 
 is_bnode(C) :-
 	atom(C),
-	sub_atom(C,0,2,_,'__').
+	sub_atom(C,0,1,_,'_').
 
 
 	% Table 11. Parsing Object Property Expressions
