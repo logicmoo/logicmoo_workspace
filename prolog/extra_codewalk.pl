@@ -31,8 +31,7 @@
 			   extra_walk_code/3,
 			   extra_wcsetup/3,
 			   extra_walk_module_body/2,
-			   resolve_head/3,
-			   record_issues/1]).
+			   resolve_head/3]).
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assrt_lib)).
