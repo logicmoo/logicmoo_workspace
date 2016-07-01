@@ -40,6 +40,7 @@
 :- use_module(library(apply)).
 :- use_module(library(clambda)).
 :- use_module(library(commited_retract)).
+:- use_module(library(infer_meta_if_required)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(checkable_predicate)).
 :- use_module(library(implementation_module)).
@@ -75,6 +76,7 @@ checker:check(unused, Result, OptionL) :-
     check_unused(OptionL, Result).
 
 check_unused(OptionL, Pairs) :-
+    infer_meta_if_required,
     extra_walk_code([source(false), % False, otherwise this will not work
 		     on_etrace(collect_unused(M))|OptionL], M, FromChk),
     mark(M),

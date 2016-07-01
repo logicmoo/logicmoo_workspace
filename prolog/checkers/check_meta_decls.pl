@@ -87,4 +87,3 @@ checker:check(meta_decls, Pairs, OptionL0 ) :-
 	      once(property_from(PI, _, From)), % once: only first occurrence
 	      from_chk(FileChk, From),
 	      from_location(From, Loc)), Pairs).
-
