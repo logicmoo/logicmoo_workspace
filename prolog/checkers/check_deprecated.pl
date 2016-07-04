@@ -93,5 +93,5 @@ comment_referenced_by((Loc/Comment)-LocCIL) -->
 :- public collect_deprecated/3.
 
 collect_deprecated(M:Goal, _, From) :-
-    deprecated_predicate(M:Goal, M, Comment, DFrom, CFrom),
-    update_fact_from(deprecated_db(Goal, M, Comment, DFrom, CFrom), From).
+    deprecated_predicate(M:Goal, IM, Comment, DFrom, CFrom),
+    update_fact_from(deprecated_db(Goal, IM, Comment, DFrom, CFrom), From).
