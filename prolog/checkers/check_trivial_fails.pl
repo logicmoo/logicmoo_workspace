@@ -98,6 +98,7 @@ ignore_predicate(H, M) :- predicate_property(M:H, multifile), !.
 ignore_predicate(pce_class(_, _, template, _, _, _), pce_expansion).
 ignore_predicate(property(system_source_prefix(_)), pce_host).
 ignore_predicate(verbose, pce_expansion).
+ignore_predicate(inferred_meta_pred(_, _, _), prolog_metainference).
 
 :- public collect_dynamic_locations/4.
 collect_dynamic_locations(M, MGoal, _, From) :-

@@ -38,6 +38,7 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(checkable_predicate)).
 :- use_module(library(current_defined_predicate)).
+:- use_module(library(infer_meta_if_required)).
 :- use_module(library(database_fact)).
 :- use_module(library(extra_codewalk)).
 :- use_module(library(location_utils)).
@@ -51,6 +52,7 @@
 
 hide_var_dynamic(list_strings(_), check).
 hide_var_dynamic(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
+hide_var_dynamic(current_used_use_module(_, _, _, _), check_imports).
 hide_var_dynamic(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
 hide_var_dynamic(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
 hide_var_dynamic(implemented_in(_, _, _), implemented_in).
@@ -95,6 +97,7 @@ checker:check(wrong_dynamic, Result, OptionL) :-
     check_wrong_dynamic(OptionL, Result).
 
 check_wrong_dynamic(OptionL0, Pairs) :-
+    infer_meta_if_required,
     merge_options(OptionL0,
 		  [infer_meta_predicates(false),
 		   autoload(false),
