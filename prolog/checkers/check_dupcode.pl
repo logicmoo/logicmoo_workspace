@@ -143,15 +143,15 @@ dtype_dupid_elem(T,              T, _, H, M, T-M:PI,     T-M:G) :-
     ).
 
 ignore_dupgroup((DupType-_)-ElemL, GL) :-
-    ignore_dupgroup(DupType, ElemL, GL).
+    ignore_dupgroup(DupType, ElemL, GL),
+    \+ consider_dupgroup(DupType, ElemL).
 
-ignore_dupgroup(name, PIL, _) :-
-    \+ consider_dupname(name, PIL).
+ignore_dupgroup(name, _, _).
+ignore_dupgroup(predicate, _, _).
 ignore_dupgroup(clause, CIL, GL) :-
-    ignore_dupname_clause(CIL, GL),
-    \+ consider_dupname(clause, CIL).
+    ignore_dupgroup_clause(CIL, GL).
 
-ignore_dupname_clause(CIL, GL) :-
+ignore_dupgroup_clause(CIL, GL) :-
     CIL = [CI|_],
     element_group(clause, CI, GKey),
     maplist(\ (M:_/_-_)^M^true, CIL, MU),
@@ -169,19 +169,19 @@ ignore_dupname_clause(CIL, GL) :-
     % length(GE,NE),
     % writeln(user_error, GKey:NI-NE).
 
-consider_dupname(DupType, CIL) :-
+consider_dupgroup(DupType, CIL) :-
     append(_, [CI|PIL2], CIL),
     element_head(DupType, CI, MH1),
-    consider_dupname_1(DupType, MH1),
+    consider_dupgroup_1(DupType, MH1),
     member(CI2, PIL2),
     element_head(DupType, CI2, MH2),
-    consider_dupname_2(DupType, MH1, MH2).
+    consider_dupgroup_2(DupType, MH1, MH2).
 
-consider_dupname_1(predicate, MH) :- predicate_property(MH, exported).
-consider_dupname_1(clause,     _).
+consider_dupgroup_1(predicate, MH) :- \+ predicate_property(MH, public).
+consider_dupgroup_1(clause,     _).
 
-consider_dupname_2(predicate, _, _).
-consider_dupname_2(clause, M:_, M:_).
+consider_dupgroup_2(predicate, _, _).
+consider_dupgroup_2(clause, M:_, M:_).
 
 has_dupclauses(H, M) :-
     prop_asr(head, M:H, _, _, Asr),
@@ -253,7 +253,8 @@ prolog:message(acheck(dupcode)) -->
      'In the case of predicate names, at least one has been exported,', nl,
      'making difficult to import it in other modules without clash risk.', nl,
      'This can be fixed by merging the duplicated code, or by refactoring', nl,
-     'one of the duplicated to avoid this warning.', nl, nl].
+     'one of the duplicated to avoid this warning. Note that predicates', nl,
+     'declared as public are ignored by this analysis.', nl, nl].
 prolog:message(acheck(dupcode, (DupType/GKey)-LocDL)) -->
     ['~w ~w is duplicated:'-[DupType, GKey], nl],
     foldl(message_duplicated, LocDL).
