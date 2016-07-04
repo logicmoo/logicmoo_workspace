@@ -71,12 +71,15 @@ checker:check(imports, Result, OptionL) :-
     check_imports(OptionL, Result).
 
 check_imports(OptionL, Pairs) :-
-    extra_walk_code([source(false),
-		     walkextras([declaration, asrparts([body, head])]),
-		     on_etrace(collect_imports_wc)|OptionL], M, FromChk),
+    exwalkc_imports(M, FromChk, OptionL),
     collect_imports(M, FromChk, Pairs, Tail),
     collect_usemods(M, FromChk, Tail, []),
     cleanup_imports.
+
+exwalkc_imports(M, FromChk, OptionL) :-
+    extra_walk_code([source(false),
+		     walkextras([declaration, asrparts([body, head])]),
+		     on_etrace(collect_imports_wc)|OptionL], M, FromChk).
 
 :- public collect_imports_wc/3.
 collect_imports_wc(M:Goal, Caller, From) :-
@@ -120,39 +123,41 @@ ignore_import(M, IM) :- expansion_module(M, IM).
 
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
-	    % [M,FromChk,U,Loc] +\
-	   ( ( loc_declaration(U, M, use_module, From),
-	       ExL = []
-	     ; loc_declaration(use_module(U, except(ExL)), M, use_module_2, From)
-	     ),
-	     call(FromChk, From),
-	     M \= user,
-	     module_property(M, class(Class)),
-	     memberchk(Class, [user]),
-	     from_to_file(From, File),
-	     \+ findall(I, source_file_property(File, included_in(I, _)),
-			[_, _|_]),
-	     absolute_file_name(U, UFile, [file_type(prolog), access(exist),
-					   file_errors(fail)]),
-	     current_module(UM, UFile),
-	     \+ ignore_import(M, UM),
-	     module_property(UM, exports(EL)),
-	     EL \= [],
-	     subtract(EL, ExL, PIL),
-	     \+ ( module_property(UM, exported_operators(OL)),
-		  OL \= []
-		),
-	     \+ ( member(F/A, PIL),
-		  functor(Head, F, A),
-		  implementation_module(UM:Head, IM),
-		  ( used_usemod(M, IM)			    % is used
-		  ; predicate_property(UM:Head, multifile), % is extended
-		    clause(UM:Head, _, Ref),
-		    clause_property(Ref, file(File))
-		  )
-		),
-	     from_location(From, Loc)
-	   ), Pairs, Tail).
+	    ( current_used_use_module(M, FromChk, U, From),
+	      from_location(From, Loc)
+	    ), Pairs, Tail).
+
+current_used_use_module(M, FromChk, U, From) :-
+    ( loc_declaration(U, M, use_module, From),
+      ExL = []
+    ; loc_declaration(use_module(U, except(ExL)), M, use_module_2, From)
+    ),
+    call(FromChk, From),
+    M \= user,
+    module_property(M, class(Class)),
+    memberchk(Class, [user]),
+    from_to_file(From, File),
+    \+ findall(I, source_file_property(File, included_in(I, _)),
+	       [_, _|_]),
+    absolute_file_name(U, UFile, [file_type(prolog), access(exist),
+				  file_errors(fail)]),
+    current_module(UM, UFile),
+    \+ ignore_import(M, UM),
+    module_property(UM, exports(EL)),
+    EL \= [],
+    subtract(EL, ExL, PIL),
+    \+ ( module_property(UM, exported_operators(OL)),
+	 OL \= []
+       ),
+    \+ ( member(F/A, PIL),
+	 functor(Head, F, A),
+	 implementation_module(UM:Head, IM),
+	 ( used_usemod(M, IM)			     % is used
+	 ; predicate_property(UM:Head, multifile),   % is extended
+	   clause(UM:Head, _, Ref),
+	   clause_property(Ref, file(File))
+	 )
+       ).
 
 mark_import(M:Head, CM, _, _, _, _) :-
     nonvar(M),
