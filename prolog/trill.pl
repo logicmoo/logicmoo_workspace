@@ -22,8 +22,6 @@
 %:-use_foreign_library(bddem,install).
 
 :- use_foreign_library(foreign(bddem),install).
-%:- use_foreign_library('bddem.so',install).
-%:-['trillProbComputation'].
 
 :- thread_local
 	ind/1,
@@ -393,7 +391,36 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 % -------------
 % rules application
 % -------------
+apply_all_rules(ABox0,ABox):-
+  apply_nondet_rules([or_rule,max_rule],
+                  ABox0,ABox1), 
+  (ABox0=ABox1 *-> 
+  ABox=ABox1;
+  apply_all_rules(ABox1,ABox)).
+  
+apply_det_rules([],ABox,ABox).
 
+apply_det_rules([H|_],ABox0,ABox):-
+  %C=..[H,ABox0,ABox],
+  call(H,ABox0,ABox),!.
+
+apply_det_rules([_|T],ABox0,ABox):-
+  apply_det_rules(T,ABox0,ABox).
+
+
+apply_nondet_rules([],ABox0,ABox):-
+  apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox0,ABox).
+
+apply_nondet_rules([H|_],ABox0,ABox):-
+  %C=..[H,ABox0,L],
+  call(H,ABox0,L),!,
+  member(ABox,L),
+  dif(ABox0,ABox).
+
+apply_nondet_rules([_|T],ABox0,ABox):-
+  apply_nondet_rules(T,ABox0,ABox).
+
+/*
 apply_all_rules(ABox0,ABox):-
   apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox0,ABox1),
   (ABox0=ABox1 *-> 
@@ -405,7 +432,7 @@ apply_det_rules([],ABox0,ABox):-
   
 apply_det_rules([H|_],ABox0,ABox):-
   %C=..[H,ABox,ABox1],
-  call(H,ABox0,ABox),!.
+  once(call(H,ABox0,ABox)).
 
 apply_det_rules([_|T],ABox0,ABox):-
   apply_det_rules(T,ABox0,ABox).
@@ -423,35 +450,6 @@ apply_nondet_rules([_|T],ABox0,ABox):-
   apply_nondet_rules(T,ABox0,ABox).
 
 
-/*
-apply_all_rules(ABox0,ABox):-
-  apply_nondet_rules([or_rule,max_rule],
-                  ABox0,ABox1), 
-  (ABox0=ABox1 *-> 
-  ABox=ABox1;
-  apply_all_rules(ABox1,ABox)).
-  
-apply_det_rules([],ABox,ABox).
-
-apply_det_rules([H|_],ABox0,ABox):-
-  %C=..[H,ABox,ABox1],
-  once(call(H,ABox0,ABox)).
-
-apply_det_rules([_|T],ABox0,ABox):-
-  apply_det_rules(T,ABox0,ABox).
-
-
-apply_nondet_rules([],ABox0,ABox):-
-  apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox0,ABox).
-
-apply_nondet_rules([H|_],ABox0,ABox):-
-  %C=..[H,ABox,L],
-  once(call(H,ABox0,L)),
-  member(ABox,L),
-  dif(ABox0,ABox).
-
-apply_nondet_rules([_|T],ABox0,ABox):-
-  apply_nondet_rules(T,ABox0,ABox).
 
 */
 
@@ -740,6 +738,7 @@ find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S)]):-
   unfold_rule
   ===========
 */
+
 unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[Ax|Expl])|ABox],Tabs)):-
   find((classAssertion(C,Ind),Expl),ABox0),
   find_sub_sup_class(C,D,Ax),
@@ -866,16 +865,83 @@ find_class_prop_range_domain(Ind,D,[propertyDomain(R,D)|ExplPA],(ABox,_Tabs)):-
 	
 
 %-----------------
+% subClassOf
 find_sub_sup_class(C,D,subClassOf(C,D)):-
   get_trill_current_module(Name),
   Name:subClassOf(C,D).
 
+%equivalentClasses
 find_sub_sup_class(C,D,equivalentClasses(L)):-
   get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(C,L),
   member(D,L),
   dif(C,D).
+
+%concept for concepts allValuesFrom
+find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(R,D),subClassOf(C,D)):-
+  get_trill_current_module(Name),
+  Name:subClassOf(C,D).
+
+%role for concepts allValuesFrom
+find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
+
+%concept for concepts someValuesFrom
+find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(R,D),subClassOf(C,D)):-
+  get_trill_current_module(Name),
+  Name:subClassOf(C,D).
+
+%role for concepts someValuesFrom
+find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
+
+%role for concepts exactCardinality
+find_sub_sup_class(exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
+
+%concept for concepts exactCardinality
+find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),subClassOf(C,D)):-
+  get_trill_current_module(Name),
+  Name:subClassOf(C,D).
+
+%role for concepts exactCardinality
+find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
+
+%role for concepts maxCardinality
+find_sub_sup_class(maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
+  
+%concept for concepts maxCardinality
+find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),subClassOf(C,D)):-
+  get_trill_current_module(Name),
+  Name:subClassOf(C,D).
+
+%role for concepts maxCardinality
+find_sub_sup_class(minCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
+
+%role for concepts minCardinality
+find_sub_sup_class(minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
+  
+%concept for concepts minCardinality
+find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),subClassOf(C,D)):-
+  get_trill_current_module(Name),
+  Name:subClassOf(C,D).
+
+%role for concepts minCardinality
+find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(R,S).
   
 /*******************
  managing the concept (C subclassOf Thing)
@@ -1921,10 +1987,12 @@ add_all_n([H|T],A,AN):-
  ==========
 */
 retract_sameIndividual(L):-
-  retract(sameIndividual(L)).
+  get_trill_current_module(N),
+  retract(N:sameIndividual(L)).
 
 retract_sameIndividual(L):-
-  \+ retract(sameIndividual(L)).
+  get_trill_current_module(N),
+  \+ retract(N:sameIndividual(L)).
 /* ****** */
 
 /*
@@ -2114,74 +2182,58 @@ TRILL COMPUTEPROB
 
 ***********************/
 
-:- thread_local rule_n/1.
-
+:- thread_local 
+	get_var_n/5,
+        rule_n/1,
+        na/2,
+        v/3.
+        
 %rule_n(0).
 
 compute_prob(Expl,Prob):-
-  %writeln('retract'),
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
-  %writeln('assert'),
   assert(rule_n(0)),
-  %writeln('test'),
   get_trill_current_module(Name),
   findall(1,Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
   init_test(NV,Env),
-  %writeln('build_bdd'),%trace,
   build_bdd(Env,Expl,BDD),
-  %writeln('ret_prob'),
   ret_prob(Env,BDD,Prob),
-  %writeln('end'),
   end_test(Env), !.
   
   
 
 
 build_bdd(Env,[X],BDD):- !,
-  %write('1'),nl,
-  %writel(X),nl,
   bdd_and(Env,X,BDD).
   
 build_bdd(Env, [H|T],BDD):-
-  %write('2'),nl,
   build_bdd(Env,T,BDDT),
   bdd_and(Env,H,BDDH),
   or(Env,BDDH,BDDT,BDD).
   
 build_bdd(Env,[],BDD):- !,
-  %write('3'),nl,
   zero(Env,BDD).
   
   
 bdd_and(Env,[X],BDDX):-
-  %write('bdd_and-1: '),write(X),nl,
   get_prob_ax(X,AxN,Prob),!,
-  %write('   '),write(Prob),nl,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 bdd_and(Env,[_X],BDDX):- !,
-  %write('bdd_and-1: no-prob'),nl,write('   1'),nl,
   one(Env,BDDX).
   
 bdd_and(Env,[H|T],BDDAnd):-
-  %write('bdd_and-2: '),write(H),nl, 
   get_prob_ax(H,AxN,Prob),!,
-  %write('   '),write(Prob),nl,
   ProbN is 1-Prob,
-  %write('bdd_and-2: ProbN'),nl,
   get_var_n(Env,AxN,[],[Prob,ProbN],VH),
-  %write('bdd_and-2: get_var_n'),nl, 
   equality(Env,VH,0,BDDH),
-  %write('bdd_and-2: equality'),nl,
   bdd_and(Env,T,BDDT),
-  %write('bdd_and-2: bdd_and'),nl,
   and(Env,BDDH,BDDT,BDDAnd).
   
 bdd_and(Env,[_H|T],BDDAnd):- !,
-  %write('bdd_and-2: no-prob'),nl,write('   1'),nl,
   one(Env,BDDH),
   bdd_and(Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
@@ -2195,9 +2247,7 @@ get_var_n(Env,R,S,Probs,V):-
       true
     ; 
       length(Probs,L),
-      %trace,
       add_var(Env,L,Probs,R,V),
-      %notrace,
       assert(v(R,S,V))
   ).
 
@@ -2238,13 +2288,8 @@ compute_prob_ax1([Prob1,Prob2],Prob):-!,
 compute_prob_ax1([Prob1 | T],Prob):-
   compute_prob_ax1(T,Prob0),
   Prob is Prob1 + Prob0 - (Prob1*Prob0).  
+/************************/
 
-
-%get_trill_current_module(Name):-
-%  pengine_self(Name),!.
-%get_trill_current_module('owl2_model'):- !.
-  
-  
 /**************/
 /*get_trill_current_module('translate_rdf'):-
   pengine_self(_Name),!.*/

@@ -1,4 +1,4 @@
-:- module(owl2_model, [load_owl/1, load_owl_from_string/1, query_expand/1]).
+:- module(owl2_model, [load_owl/0, load_owl/1, load_owl_from_string/1, query_expand/1]).
 
 
 :- multifile
@@ -1283,6 +1283,9 @@ We provide semi-deterministic predicates of the form
 :- use_module(library(charsio)).
 
 :- thread_local(owl/4).
+:- thread_local(owl/3).
+:- thread_local(owl/2).
+:- dynamic owl/2.
 %% blanknode(Node,Description,Used)
 % see owl_get_bnode/2
 % Node - bNodeId
@@ -1336,16 +1339,11 @@ convert(T,V,typed_value(T,V)).
 
 
 rdf_2_owl(_Base,Ont) :-
-%	debug(owl_parser, 'Removing existing owl triples',[]),
+	debug(owl_parser, 'Removing existing owl triples',[]),
 %	retractall(owl(_,_,_,Ont)),
-%  pengine_self(Self),
-%  pengine_property(Self,module(M)),
 	get_module(M),
 	debug(owl_parser,'Copying RDF triples to OWL triples for Ontology ~w',[Ont]),
-	%pengine_self(Self),
-        %pengine_property(Self,module(M)),
 	M:myrdf(X,Y,Z),
-%	owl_fix_no(X,X1), owl_fix_no(Y,Y1), owl_fix_no(Z,Z1),
 	assert(owl(X,Y,Z,Ont)), fail.
 
 rdf_2_owl(_,Ont) :-
@@ -1784,7 +1782,7 @@ owl_parse_annotated_axioms(Pred/Arity) :-
 	      ),
         debug(owl_parser_detail,'[ann] Done parsing all of type: ~w',[Pred]).
 
-owl_parse_nonannotated_axioms(Pred/Arity) :- 
+owl_parse_nonannotated_axioms(Pred/Arity) :-
         debug(owl_parser_detail,'[unann] Parsing all of type: ~w',[Pred]),
         functor(Head,Pred,Arity),
 	forall(owl_parse_axiom(Head,false,_),
@@ -2824,16 +2822,42 @@ The file owl2_from_rdf.plt has some examples
 */
 :- thread_local ns4query/1.
 
+/*
+load_owl_old:-
+  pengine_self(Self),
+  pengine_property(Self,module(M)),
+  ( M:owl_rdf(String) -> 
+     load_owl(String)
+    ;
+     true
+  ),
+  expand_and_reassert(M).
+*/
+
+load_owl:-
+  get_module(M),
+  ( M:owl_rdf(String) -> 
+     (
+       open_chars_stream(String,S),
+       process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
+       close(S),
+       rdf_2_owl('ont','ont'),
+       owl_canonical_parse_3(['ont']),
+       parse_probabilistic_annotation_assertions
+     )
+    ;
+     true
+  ),
+  add_prefixes(M), % add prefix if defined in prolog part
+  rdf_register_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#',[keep(true)]),
+  assert(M:ns4query(NSList)),
+  pl_2_owl(M,'ont').
+
 load_owl(String):-
-  %pengine_self(Self),
-  %pengine_property(Self,module(M)),
-  %get_module(M),
   open(String,read,S),
   load_owl_from_stream(S).
   
 load_owl_from_string(String):-
-  %pengine_self(Self),
-  %pengine_property(Self,module(M)),
   open_chars_stream(String,S),
   load_owl_from_stream(S).
   
@@ -2847,6 +2871,8 @@ load_owl_from_stream(S):-
   owl_canonical_parse_3(['ont']),
   parse_probabilistic_annotation_assertions.
 
+add_prefixes(M):-
+  (forall(M:prefix(A,B),rdf_register_prefix(A,B,[keep(true)]))->true;true).
 
 assert_list(_M,[], _):-!.
 assert_list(M,[H|T], Source) :-
@@ -2887,11 +2913,9 @@ query_expand(CQ):-
   member((CQP,PosQ),[(aggregate_all,1), (limit,1)]),!,
   query_is(CQArgs,PosQ,Q),
   Q =.. [P|Args],
-  %pengine_self(Self),
-  %pengine_property(Self,module(M)),
   get_module(M),
   M:ns4query(NSList),!,
-  %retract(M:ns4query(NSList)),
+  retract(M:ns4query(NSList)),
   expand_all_ns(Args,NSList,NewArgs),!,
   NQ =.. [P|NewArgs],
   set_new_query(CQArgs,PosQ,NQ,CQNewArgs),
@@ -2900,22 +2924,25 @@ query_expand(CQ):-
   
 query_expand(Q):-
   Q =.. [P|Args],
-  %pengine_self(Self),
-  %pengine_property(Self,module(M)),
   get_module(M),
   M:ns4query(NSList),!,
-  %retract(M:ns4query(NSList)),
+  retract(M:ns4query(NSList)),
   expand_all_ns(Args,NSList,NewArgs),!,
   NQ =.. [P|NewArgs],
   call(NQ).
 
 expand_all_ns([],_,[]).
 
+expand_all_ns([P|T],NSList,[P|NewArgs]):-
+  compound(P),
+  P =.. ['literal' | _],!,
+  expand_all_ns(T,NSList,NewArgs).
+
 expand_all_ns([P|T],NSList,[NP|NewArgs]):-
   compound(P),
   P =.. [N | [Args]],!,
   expand_all_ns(Args,NSList,NewPArgs),
-  NP =.. [N, [NewPArgs]],
+  NP =.. [N, NewPArgs],
   expand_all_ns(T,NSList,NewArgs).
 
 expand_all_ns([P|T],NSList,[NP|NewArgs]):-
@@ -2960,6 +2987,46 @@ expand_ns4query(NS_URL, [_|T],Full_URL):-
   expand_ns4query(NS_URL, T,Full_URL),!.
 expand_ns4query(URL,_, URL).
 
+pl_2_owl(M,O):-
+  M:ns4query(NSList),
+  (forall(M:class(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(class(AExp),O)))->true;true),
+  (forall(M:datatype(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(datatype(AExp),O)))->true;true),
+  (forall(M:objectProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(objectProperty(AExp),O)))->true;true),
+  (forall(M:dataProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(dataProperty(AExp),O)))->true;true),
+  (forall(M:annotationProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(annotationProperty(AExp),O)))->true;true),
+  (forall(M:namedIndividual(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(namedIndividual(AExp),O)))->true;true),
+  (forall(M:subClassOf(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(subClassOf(AExp,BExp),O)))->true;true),
+  (forall(M:equivalentClasses(A),(expand_all_ns(A,NSList,AExp),test_and_assert(equivalentClasses(AExp),O)))->true;true),
+  (forall(M:disjointClasses(A),(expand_all_ns(A,NSList,AExp),test_and_assert(disjointClasses(AExp),O)))->true;true),
+  (forall(M:disjointUnion(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(disjointUnion(AExp,BExp),O)))->true;true),
+  (forall(M:subPropertyOf(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(subPropertyOf(AExp,BExp),O)))->true;true),
+  (forall(M:equivalentProperties(A),(expand_all_ns(A,NSList,AExp),test_and_assert(equivalentProperties(AExp),O)))->true;true),
+  (forall(M:disjointProperties(A),(expand_all_ns(A,NSList,AExp),test_and_assert(disjointProperties(AExp),O)))->true;true),
+  (forall(M:inverseProperties(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(inverseProperties(AExp,BExp),O)))->true;true),
+  (forall(M:propertyDomain(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(propertyDomain(AExp,BExp),O)))->true;true),
+  (forall(M:propertyRange(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(propertyRange(AExp,BExp),O)))->true;true),
+  (forall(M:functionalProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(functionalProperty(AExp),O)))->true;true),
+  (forall(M:inverseFunctionalProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(inverseFunctionalProperty(AExp),O)))->true;true),
+  (forall(M:reflexiveProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(reflexiveProperty(AExp),O)))->true;true),
+  (forall(M:irreflexiveProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(irreflexiveProperty(AExp),O)))->true;true),
+  (forall(M:symmetricProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(symmetricProperty(AExp),O)))->true;true),
+  (forall(M:asymmetricProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(asymmetricProperty(AExp),O)))->true;true),
+  (forall(M:transitiveProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(transitiveProperty(AExp),O)))->true;true),
+  (forall(M:hasKey(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(hasKey(AExp,BExp),O)))->true;true),
+  (forall(M:sameIndividual(A),(expand_all_ns(A,NSList,AExp),test_and_assert(sameIndividual(AExp),O)))->true;true),
+  (forall(M:differentIndividuals(A),(expand_all_ns(A,NSList,AExp),test_and_assert(differentIndividuals(AExp),O)))->true;true),
+  (forall(M:classAssertion(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(classAssertion(AExp,BExp),O)))->true;true),
+  (forall(M:propertyAssertion(A,B,C),(expand_all_ns([A,B,C],NSList,[AExp,BExp,CExp]),test_and_assert(propertyAssertion(AExp,BExp,CExp),O)))->true;true),
+  (forall(M:negativePropertyAssertion(A,B,C),(expand_all_ns([A,B,C],NSList,[AExp,BExp,CExp]),test_and_assert(negativePropertyAssertion(AExp,BExp,CExp),O)))->true;true),%trace,
+  (forall(M:annotationAssertion(A,B,C),(expand_all_ns([A,B,C],NSList,[AExp,BExp,CExp]),test_and_assert(annotationAssertion(AExp,BExp,CExp),O)))->true;true).
+
+test_and_assert(Ax,O):-
+  (\+owl(Ax,O) ->
+    (assert(Ax), assert(owl(Ax,O)))
+   ;
+    true
+  ).
+
 get_module(M):-
   pengine_self(Self),
   pengine_property(Self,module(M)),!.  
@@ -2967,6 +3034,7 @@ get_module('owl2_model'):- !.
 
 :- multifile sandbox:safe_primitive/1.
 
+sandbox:safe_primitive(owl2_model:load_owl).
 sandbox:safe_primitive(owl2_model:load_owl(_)).
 sandbox:safe_primitive(owl2_model:load_owl_from_string(_)).
 sandbox:safe_primitive(owl2_model:query_expand(_)).
