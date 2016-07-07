@@ -229,18 +229,22 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
     },
-    { State0 = state(Loc, EvalL, OnError, _) },
-    ( { implementation_module(M:Goal, IM),
-	( ( evaluable_goal_hook(Goal, IM)
-	  ; functor(Goal, F, A),
-	    memberchk(IM:F/A, EvalL)
-	  ),
-	  MRepl = M:Goal
-	; replace_goal_hook(Goal, IM, Repl),
-	  MRepl = M:Repl
-	)
+    { State0 = state(Loc, EvalL, OnError, _),
+      implementation_module(M:Goal, IM)
+    },
+    ( { ( evaluable_goal_hook(Goal, IM)
+	; functor(Goal, F, A),
+	  memberchk(IM:F/A, EvalL)
+	),
+	MRepl = M:Goal
+      ; ( replace_goal_hook(Goal, IM, Repl)
+	; memberchk((IM:Goal as Repl), EvalL)
+	),
+	MRepl = M:Repl
       }
     ->{call(MRepl)}
+    ; {memberchk((IM:Goal :- Body), EvalL)}
+    ->cut_to(abstract_interpreter_body(Body, M, Abs, State0 ))
     ; { \+ predicate_property(M:Goal, defined) }
     ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
 	% TBD: information to error
