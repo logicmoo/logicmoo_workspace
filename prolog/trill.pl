@@ -3,7 +3,8 @@
                  instanceOf/2, instanceOf/3, prob_instanceOf/3,
                  unsat/1, unsat/2, prob_unsat/2,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
-                 load_theory/1, check_query_args/1] ).
+                 axiom/1, add_kb_prefix/2, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
+                 load_kb/0, load_kb/1, load_owl_kb/1] ).
 
 %:- set_prolog_flag(unknow,fail).
 
@@ -12,22 +13,14 @@
 :- use_module(library(lists)).
 :- use_module(library(ugraphs)).
 :- use_module(library(rbtrees)).
+:- use_module(library(dif)).
 :- use_module(library(pengines)).
 :- use_module(library(sandbox)).
 
-:- use_module(library(dif)).
-
-%:- use_module(library(tries)).
-%:- load_foreign_files(['cplint-swi'],[],init_my_predicates).
-%:-use_foreign_library(bddem,install).
+:- use_module(translate_rdf).
 
 :- use_foreign_library(foreign(bddem),install).
 
-:- thread_local
-	ind/1,
-	exp_found/1.
-
-%:- yap_flag(unknown,fail).
 :- multifile
 	owl2_model:axiom/1,
 	owl2_model:class/1,
@@ -56,24 +49,275 @@
         owl2_model:minCardinality/3.
 
 
-load_theory(Name):-
-  [Name].
+:- thread_local
+	ind/1,
+	exp_found/1.
 
-check_query_args([H|T]) :-
-  atomic(H),!,
-  get_trill_current_module(Name),
-  find_atom_in_axioms(Name,H),%!,
-  check_query_args(T).
+/********************************
+  LOAD KNOWLEDGE BASE
+*********************************/
+%loads a pl file already consulted
+load_kb :-
+  load_owl.
+
+% consults a pl file and loads the contained axioms
+load_kb(Name):-
+  [user:Name],
+  load_owl.
+
+% loads a OWL/RDF file
+load_owl_kb(Name):-
+  load_owl(Name).
   
-check_query_args([H|T]) :-
+/*****************************/
+
+/*****************************
+  UTILITY PREDICATES
+******************************/
+%defined in translate_rdf
+:- multifile add_kb_prefix/1, add_axiom/1, add_axioms/1,
+             remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1.
+
+axiom(A):-
+  get_trill_current_module(Name),
+  Name:axiom(A).
+
+/*****************************
+  MESSAGES
+******************************/
+:- multifile prolog:message/1.
+
+prolog:message(iri_not_exists) -->
+  [ 'IRIs not existent' ].
+  
+prolog:message(inconsistent) -->
+  [ 'Inconsistent ABox' ].
+
+/****************************
+  QUERY PREDICATES
+*****************************/
+
+/***********
+  Queries
+  - with and without explanations -
+ ***********/
+sub_class(Class,SupClass,Expl):-
+  ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
+	unsat_internal(intersectionOf([ClassEx,complementOf(SupClassEx)]),Expl)
+    ;
+    	Expl = ["IRIs not existent"],!
+  ).
+  %subClassOf(Class,SupClass).
+
+sub_class(Class,SupClass):-
+  ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
+        unsat_internal(intersectionOf([ClassEx,complementOf(SupClassEx)])),!
+    ;
+        print_message(warning,iri_not_exists),!
+  ).
+
+instanceOf(Class,Ind,Expl):-
+  ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
+	retractall(exp_found(_)),
+	retractall(ind(_)),
+  	assert(ind(1)),
+  	build_abox((ABox,Tabs)),
+  	(  \+ clash((ABox,Tabs),_) *->
+  	    (
+  	    	add(ABox,(classAssertion(complementOf(ClassEx),IndEx),[]),ABox0),
+	  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+  		findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
+  		find_expls(L,Expl),
+  		dif(Expl,[])
+  	    )
+  	 ;
+  	    Expl = ['Inconsistent ABox']
+  	)
+    ;
+    	Expl = ["IRIs not existent"],!
+  ).
+
+instanceOf(Class,Ind):-
+  (  check_query_args([Class,Ind],[ClassEx,IndEx]) *->
+	(  
+	  retractall(exp_found(_)),
+	  retractall(ind(_)),
+	  assert(ind(1)),
+	  build_abox((ABox,Tabs)),
+	  (  \+ clash((ABox,Tabs),_) *->
+	      (
+	        add(ABox,(classAssertion(complementOf(ClassEx),IndEx),[]),ABox0),
+	        %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+	  	apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
+	  	clash((ABox1,Tabs1),_),!
+	      )
+	    ;
+	      print_message(warning,inconsistent)
+	  )
+	)
+    ;
+        print_message(warning,iri_not_exists),!
+  ).        
+
+unsat(Concept,Expl):-
+  (check_query_args([Concept],[ConceptEx]) *->
+  	unsat_internal(ConceptEx,Expl)
+    ;
+    	Expl = ["IRIs not existent"]
+   ).
+
+% ----------- %
+unsat_internal(Concept,Expl):-
+  retractall(exp_found(_)),
+  retractall(ind(_)),
+  assert(ind(2)),
+  build_abox((ABox,Tabs)),
+  ( \+ clash((ABox,Tabs),_) *->
+     (
+     	add(ABox,(classAssertion(Concept,1),[]),ABox0),
+	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
+	find_expls(L,Expl),
+	dif(Expl,[])
+     )
+    ;
+     Expl = ['Inconsistent ABox']
+  ).
+% ----------- %
+
+unsat(Concept):-
+  (check_query_args([Concept],[ConceptEx]) *->
+  	unsat_internal(ConceptEx)
+    ;
+    	print_message(warning,iri_not_exists)
+   ).
+
+% ----------- %
+unsat_internal(Concept):-
+  retractall(exp_found(_)),
+  retractall(ind(_)),
+  assert(ind(2)),
+  build_abox((ABox,Tabs)),
+  ( \+ clash((ABox,Tabs),_) *->
+     (
+     	add(ABox,(classAssertion(Concept,1),[]),ABox0),
+  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
+  	apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
+  	clash((ABox1,Tabs1),_),!
+     )
+    ;
+     print_message(warning,inconsistent)
+  ).
+% ----------- %
+
+inconsistent_theory(Expl):-
+  retractall(exp_found(_)),
+  retractall(ind(_)),
+  assert(ind(1)),
+  build_abox((ABox,Tabs)),
+  findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
+  find_expls(L,Expl),
+  dif(Expl,[]).
+
+inconsistent_theory:-
+  retractall(exp_found(_)),
+  retractall(ind(_)),
+  assert(ind(1)),
+  build_abox((ABox,Tabs)),
+  \+ clash((ABox,Tabs),_),!,
+  apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),!,
+  clash((ABox1,Tabs1),_),!.
+
+inconsistent_theory:-
+  print_message(warning,inconsistent).
+
+prob_instanceOf(Class,Ind,P):-
+  ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
+  	all_instanceOf(ClassEx,IndEx,Exps),
+%  (Exps \= [] *->
+%    build_formula(Exps,FormulaE,[],VarE),
+%    (FormulaE \= [] *-> 
+%      var2numbers(VarE,0,NewVarE),
+%      write(NewVarE),nl,write(FormulaE),
+%      compute_prob(NewVarE,FormulaE,P,0)
+%    ;
+%      P = 1)
+%  ;
+%    P = 0).  
+%  writel(Exps),nl,
+  	compute_prob(Exps,P)
+  ;
+  	P = ["IRIs not existent"],!
+  ).
+
+prob_sub_class(Class,SupClass,P):-
+  ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
+  	all_sub_class(ClassEx,SupClassEx,Exps),
+%  (Exps \= [] *->
+%    build_formula(Exps,FormulaE,[],VarE),
+%    (FormulaE \= [] *-> 
+%      var2numbers(VarE,0,NewVarE),
+%      compute_prob(NewVarE,FormulaE,P,0)
+%    ;
+%      P = 1)
+%  ;
+%    P = 0).
+  	compute_prob(Exps,P)
+  ;
+  	P = ["IRIs not existent"],!
+  ).
+  
+prob_unsat(Concept,P):-
+  check_query_args([Concept],[ConceptEx]),
+  all_unsat(ConceptEx,Exps),
+  compute_prob(Exps,P).
+    
+prob_inconsistent_theory(P):-
+  all_inconsistent_theory(Exps),
+  compute_prob(Exps,P).
+  
+/***********
+  Utilities for queries
+ ***********/
+
+% to find all axplanations for probabilistic queries
+all_sub_class(Class,SupClass,LE):-
+  all_unsat(intersectionOf([Class,complementOf(SupClass)]),LE).
+
+all_instanceOf(Class,Ind,LE):-
+  findall(Expl,instanceOf(Class,Ind,Expl),LE).
+
+all_unsat(Concept,LE):-
+  findall(Expl,unsat_internal(Concept,Expl),LE).
+  
+
+all_inconsistent_theory(LE):-
+  findall(Expl,inconsistent_theory(Expl),LE).
+
+
+
+% expands query arguments using prefixes and checks their existence in the kb
+check_query_args(L,LEx) :-
+  get_trill_current_module(Name),
+  Name:ns4query(NSList),
+  expand_all_ns(L,NSList,LEx), %from translate_rdf module
+  check_query_args_presence(LEx,Name).
+
+check_query_args_presence([],_).
+
+check_query_args_presence([H|T],Name) :-
+  atomic(H),!,
+  find_atom_in_axioms(Name,H),%!,
+  check_query_args_presence(T,Name).
+  
+check_query_args_presence([H|T],Name) :-
   \+ atomic(H),!,
   H =.. [_|L],
   flatten(L,L1),
-  check_query_args(L1),
-  check_query_args(T).
+  check_query_args_presence(L1,Name),
+  check_query_args_presence(T,Name).
 
-check_query_args([]).
-
+% looks for presence of atoms in kb's axioms
 find_atom_in_axioms(Name,H):-
   Name:axiom(A),
   A =.. [_|L],
@@ -115,158 +359,7 @@ find_atom_in_axioms(Name,H):-
   flatten(L,L1),
   member(H,L1),!.
 
-/***********
-  Queries
-  - with and without explanations -
- ***********/
-sub_class(Class,SupClass,Expl):-
-  ( check_query_args([Class,SupClass]) *->
-	unsat(intersectionOf([Class,complementOf(SupClass)]),Expl)
-    ;
-    	Expl = ["IRIs not existent"],!
-  ).
-  %subClassOf(Class,SupClass).
-
-sub_class(Class,SupClass):-
-  ( check_query_args([Class,SupClass]) *->
-        unsat(intersectionOf([Class,complementOf(SupClass)])),!
-    ;
-        write("IRIs not existent"),!
-  ).
-
-instanceOf(Class,Ind,Expl):-
-  ( check_query_args([Class,Ind]) *->
-	retractall(exp_found(_)),
-	retractall(ind(_)),
-  	assert(ind(1)),
-  	build_abox((ABox,Tabs)),
-  	\+ clash((ABox,Tabs),_),!,
-  	add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
-  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	find_expls(L,Expl),
-  	dif(Expl,[])
-    ;
-    	Expl = ["IRIs not existent"],!
-  ).
-
-instanceOf(_,_,_):-
-  write('Inconsistent ABox').
-
-instanceOf(Class,Ind):-
-  (  check_query_args([Class,Ind]) *->
-	(  
-	  retractall(exp_found(_)),
-	  retractall(ind(_)),
-	  assert(ind(1)),
-	  build_abox((ABox,Tabs)),
-	  \+ clash((ABox,Tabs),_),!,
-	  add(ABox,(classAssertion(complementOf(Class),Ind),[]),ABox0),
-	  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-	  apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
-	  clash((ABox1,Tabs1),_),!
-	)
-    ;
-        write("IRIs not existent"),!
-  ).        
-
-instanceOf(_,_):-
-  write('Inconsistent ABox').
-
-unsat(Concept,Expl):-
-  retractall(exp_found(_)),
-  retractall(ind(_)),
-  assert(ind(2)),
-  build_abox((ABox,Tabs)),
-  \+ clash((ABox,Tabs),_),!,
-  add(ABox,(classAssertion(Concept,1),[]),ABox0),
-  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,Expl),
-  dif(Expl,[]).
-
-unsat(_,_):-
-  write('Inconsistent ABox').
-
-unsat(Concept):-
-  retractall(exp_found(_)),
-  retractall(ind(_)),
-  assert(ind(2)),
-  build_abox((ABox,Tabs)),
-  \+ clash((ABox,Tabs),_),!,
-  add(ABox,(classAssertion(Concept,1),[]),ABox0),
-  %findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
-  clash((ABox1,Tabs1),_),!.
-
-unsat(_):-
-  write('Inconsistent ABox').
-
-inconsistent_theory(Expl):-
-  retractall(exp_found(_)),
-  retractall(ind(_)),
-  assert(ind(1)),
-  build_abox((ABox,Tabs)),
-  findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,Expl),
-  dif(Expl,[]).
-
-inconsistent_theory:-
-  retractall(exp_found(_)),
-  retractall(ind(_)),
-  assert(ind(1)),
-  build_abox((ABox,Tabs)),
-  \+ clash((ABox,Tabs),_),!,
-  apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),!,
-  clash((ABox1,Tabs1),_),!.
-
-inconsistent_theory:-
-  write('Inconsistent!').
-
-prob_instanceOf(Class,Ind,P):-
-  ( check_query_args([Class,Ind]) *->
-  	all_instanceOf(Class,Ind,Exps),
-%  (Exps \= [] *->
-%    build_formula(Exps,FormulaE,[],VarE),
-%    (FormulaE \= [] *-> 
-%      var2numbers(VarE,0,NewVarE),
-%      write(NewVarE),nl,write(FormulaE),
-%      compute_prob(NewVarE,FormulaE,P,0)
-%    ;
-%      P = 1)
-%  ;
-%    P = 0).  
-%  writel(Exps),nl,
-  	compute_prob(Exps,P)
-  ;
-  	P = ["IRIs not existent"],!
-  ).
-
-prob_sub_class(Class,SupClass,P):-
-  ( check_query_args([Class,SupClass]) *->
-  	all_sub_class(Class,SupClass,Exps),
-%  (Exps \= [] *->
-%    build_formula(Exps,FormulaE,[],VarE),
-%    (FormulaE \= [] *-> 
-%      var2numbers(VarE,0,NewVarE),
-%      compute_prob(NewVarE,FormulaE,P,0)
-%    ;
-%      P = 1)
-%  ;
-%    P = 0).
-  	compute_prob(Exps,P)
-  ;
-  	P = ["IRIs not existent"],!
-  ).
-  
-prob_unsat(Concept,P):-
-  all_unsat(Concept,Exps),
-  compute_prob(Exps,P).
-    
-prob_inconsistent_theory(P):-
-  all_inconsistent_theory(Exps),
-  compute_prob(Exps,P).
-
+% checks if an explanations was already found
 find_expls([],[]).
 
 find_expls([ABox|_T],E):-
@@ -292,21 +385,11 @@ not_already_found([H|_T],E):-
 not_already_found([_H|T],E):-
   not_already_found(T,E).
 
+/****************************/
 
-
-all_sub_class(Class,SupClass,LE):-
-  all_unsat(intersectionOf([Class,complementOf(SupClass)]),LE).
-
-all_instanceOf(Class,Ind,LE):-
-  findall(Expl,instanceOf(Class,Ind,Expl),LE).
-
-all_unsat(Concept,LE):-
-  findall(Expl,unsat(Concept,Expl),LE).
-  
-
-all_inconsistent_theory(LE):-
-  findall(Expl,inconsistent_theory(Expl),LE).
-
+/****************************
+  TABLEAU ALGORITHM
+****************************/
 
 /*
 find_clash((ABox0,Tabs0),Expl2):-
@@ -566,6 +649,10 @@ apply_rules8((ABox,Tabs),(ABox,Tabs)).
 
 */
 
+
+/***********
+  rules
+************/
 /*
   add_exists_rule
   ========================
@@ -996,7 +1083,7 @@ find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
 */
 
 %--------------------
-
+% looks for not atomic concepts descriptions containing class C
 find_not_atomic(C,intersectionOf(L1),L1):-
   get_trill_current_module(Name),
   Name:subClassOf(A,B),
@@ -1032,6 +1119,7 @@ find_not_atomic(C,unionOf(L1),L1):-
   member(C,L1).
 
 % -----------------------
+% puts together the explanations of all the concepts found by find_not_atomic/3
 find_all(_,[],_,[]).
   
 find_all(Ind,[H|T],ABox,ExplT):-
@@ -1665,6 +1753,24 @@ remove_node_to_table(S,T0,T1):-
   del_vertices(T0,[S],T1).
 
 /*
+ * merge
+ */
+merge(sameIndividual(L),Y,(ABox0,Tabs0),(ABox,Tabs)):-
+  !,
+  merge_tabs(L,Y,Tabs0,Tabs),
+  merge_abox(L,Y,[],ABox0,ABox).
+
+merge(X,sameIndividual(L),(ABox0,Tabs0),(ABox,Tabs)):-
+  !,
+  merge_tabs(X,L,Tabs0,Tabs),
+  merge_abox(X,L,[],ABox0,ABox).
+
+merge(X,Y,(ABox0,Tabs0),(ABox,Tabs)):-
+  !,
+  merge_tabs(X,Y,Tabs0,Tabs),
+  merge_abox(X,Y,[],ABox0,ABox).
+
+/*
  * merge node in tableau
  */
 
@@ -1742,7 +1848,36 @@ set_successor1(_NN,_H,[],Tabs,Tabs).
 set_successor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
   add_edge(R,NN,H,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
   set_successor1(NN,H,L,(T1,RBN1,RBR1),(T,RBN,RBR)).
-	  
+
+/*
+  merge node in ABox
+*/
+
+merge_abox(_X,_Y,_,[],[]).
+
+merge_abox(X,Y,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIndividual(L)),[sameIndividual(L)|Expl])|ABox]):-
+  flatten([X,Y],L0),
+  list_to_set(L0,L),
+  member(Ind,L),!,
+  append(Expl0,ExplT,Expl),
+  merge_abox(X,Y,Expl0,T,ABox).
+
+merge_abox(X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),[sameIndividual(L)|Expl])|ABox]):-
+  flatten([X,Y],L0),
+  list_to_set(L0,L),
+  member(Ind1,L),!,
+  append(Expl0,ExplT,Expl),
+  merge_abox(X,Y,Expl0,T,ABox).
+
+merge_abox(X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),[sameIndividual(L)|Expl])|ABox]):-
+  flatten([X,Y],L0),
+  list_to_set(L0,L),
+  member(Ind2,L),!,
+  append(Expl0,ExplT,Expl),
+  merge_abox(X,Y,Expl0,T,ABox).
+
+merge_abox(X,Y,Expl0,[H|T],[H|ABox]):-
+  merge_abox(X,Y,Expl0,T,ABox).	  
 
 /* merge node in (ABox,Tabs) */
 
@@ -1791,24 +1926,6 @@ find_same(H,ABox,L,Expl):-
 
 find_same(_H,_ABox,[],[]).
 
-/*
- * merge
- */
-merge(sameIndividual(L),Y,(ABox0,Tabs0),(ABox,Tabs)):-
-  !,
-  merge_tabs(L,Y,Tabs0,Tabs),
-  merge_abox(L,Y,[],ABox0,ABox).
-
-merge(X,sameIndividual(L),(ABox0,Tabs0),(ABox,Tabs)):-
-  !,
-  merge_tabs(X,L,Tabs0,Tabs),
-  merge_abox(X,L,[],ABox0,ABox).
-
-merge(X,Y,(ABox0,Tabs0),(ABox,Tabs)):-
-  !,
-  merge_tabs(X,Y,Tabs0,Tabs),
-  merge_abox(X,Y,[],ABox0,ABox).
-
 /* abox as a list */
 
 new_abox([]).
@@ -1826,36 +1943,6 @@ find(El,ABox):-
 
 control(El,ABox):-
   \+ find(El,ABox).
-
-/*
-  merge node in ABox
-*/
-
-merge_abox(_X,_Y,_,[],[]).
-
-merge_abox(X,Y,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIndividual(L)),[sameIndividual(L)|Expl])|ABox]):-
-  flatten([X,Y],L0),
-  list_to_set(L0,L),
-  member(Ind,L),!,
-  append(Expl0,ExplT,Expl),
-  merge_abox(X,Y,Expl0,T,ABox).
-
-merge_abox(X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),[sameIndividual(L)|Expl])|ABox]):-
-  flatten([X,Y],L0),
-  list_to_set(L0,L),
-  member(Ind1,L),!,
-  append(Expl0,ExplT,Expl),
-  merge_abox(X,Y,Expl0,T,ABox).
-
-merge_abox(X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),[sameIndividual(L)|Expl])|ABox]):-
-  flatten([X,Y],L0),
-  list_to_set(L0,L),
-  member(Ind2,L),!,
-  append(Expl0,ExplT,Expl),
-  merge_abox(X,Y,Expl0,T,ABox).
-
-merge_abox(X,Y,Expl0,[H|T],[H|ABox]):-
-  merge_abox(X,Y,Expl0,T,ABox).
 
 /* end of abox a s list */
 
@@ -2183,7 +2270,7 @@ TRILL COMPUTEPROB
 ***********************/
 
 :- thread_local 
-	get_var_n/5,
+	%get_var_n/5,
         rule_n/1,
         na/2,
         v/3.
@@ -2325,6 +2412,11 @@ sandbox:safe_primitive(trill:prob_unsat(_,_)).
 sandbox:safe_primitive(trill:inconsistent_theory).
 sandbox:safe_primitive(trill:inconsistent_theory(_)).
 sandbox:safe_primitive(trill:prob_inconsistent_theory(_)).
-sandbox:safe_primitive(trill:load_theory(_)).
-sandbox:safe_primitive(trill:check_query_args(_)).
+sandbox:safe_primitive(trill:axiom(_)).
+sandbox:safe_primitive(trill:add_kb_prefix(_,_)).
+sandbox:safe_primitive(trill:add_axiom(_)).
+sandbox:safe_primitive(trill:add_axioms(_)).
+sandbox:safe_primitive(trill:load_kb).
+sandbox:safe_primitive(trill:load_kb(_)).
+sandbox:safe_primitive(trill:load_owl_kb(_)).
 
