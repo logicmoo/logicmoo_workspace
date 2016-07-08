@@ -243,7 +243,9 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
 	MRepl = M:Repl
       }
     ->{call(MRepl)}
-    ; {memberchk((IM:Goal :- Body), EvalL)}
+    ; { copy_term(EvalL, EvalC), % avoid undesirable unifications
+	memberchk((IM:Goal :- Body), EvalC)
+      }
     ->cut_to(abstract_interpreter_body(Body, M, Abs, State0 ))
     ; { \+ predicate_property(M:Goal, defined) }
     ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
