@@ -2877,15 +2877,18 @@ load_owl_old:-
 load_owl:-
   get_module(M),
   retractall(M:ns4query(_)),
-  ( M:owl_rdf(String) -> 
+  ( M:owl_rdf(_) -> 
      (
-       open_chars_stream(String,S),
-       process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
-       close(S),
-       assert(M:ns4query(NSList)),
-       rdf_2_owl('ont','ont'),
-       owl_canonical_parse_3(['ont']),
-       parse_probabilistic_annotation_assertions
+        forall(M:owl_rdf(String),
+           ( open_chars_stream(String,S),
+             process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
+             close(S),
+             merge_prefixes(NSList),
+             rdf_2_owl('ont','ont'),
+             owl_canonical_parse_3(['ont']),
+             parse_probabilistic_annotation_assertions
+           )
+        )
      )
     ;
      assert(M:ns4query([]))
@@ -2916,6 +2919,18 @@ load_owl_from_stream(S):-
 
 add_prefixes(M):-
   (forall(M:kb_prefix(A,B),trill:add_kb_prefix(A,B))->true;true).
+
+merge_prefixes(NL):-
+  get_module(M),
+  M:ns4query(OL),!,
+  append(OL,NL,TL),
+  list_to_set(TL,NTL),
+  retract(M:ns4query(OL)),
+  assert(M:ns4query(NTL)).
+  
+merge_prefixes(L):-
+  get_module(M),
+  assert(M:ns4query(L)).
 
 :- multifile trill:add_kb_prefix/2.
 
