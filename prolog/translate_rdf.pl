@@ -2891,7 +2891,7 @@ load_owl:-
         parse_probabilistic_annotation_assertions
      )
     ;
-     assert(ns4query([]))
+     assert(M:ns4query([]))
   ),
   add_prefixes(M), % add prefix if defined in prolog part
   trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#'),
