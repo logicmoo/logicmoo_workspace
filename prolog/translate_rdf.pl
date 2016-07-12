@@ -60,6 +60,7 @@
     user:owl_rdf/1,
     user:ns4query/1.
 
+:- discontiguous user:owl_rdf/1.
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
@@ -2879,19 +2880,18 @@ load_owl:-
   retractall(M:ns4query(_)),
   ( M:owl_rdf(_) -> 
      (
-        forall(M:owl_rdf(String),
-           ( open_chars_stream(String,S),
-             process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
-             close(S),
-             merge_prefixes(NSList),
-             rdf_2_owl('ont','ont'),
-             owl_canonical_parse_3(['ont']),
-             parse_probabilistic_annotation_assertions
-           )
-        )
+        findall(String,M:owl_rdf(String),LString),
+        concat_all_strings(LString,TString),
+        open_chars_stream(TString,S),
+        process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
+        close(S),
+        assert(M:ns4query(NSList)),
+        rdf_2_owl('ont','ont'),
+        owl_canonical_parse_3(['ont']),
+        parse_probabilistic_annotation_assertions
      )
     ;
-     assert(M:ns4query([]))
+     assert(ns4query([]))
   ),
   add_prefixes(M), % add prefix if defined in prolog part
   trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#'),
@@ -2917,20 +2917,14 @@ load_owl_from_stream(S):-
   owl_canonical_parse_3(['ont']),
   parse_probabilistic_annotation_assertions.
 
+concat_all_strings([],"").
+
+concat_all_strings([H|T],NS):-
+  concat_all_strings(T,NS0),
+  string_concat(H,NS0,NS).
+
 add_prefixes(M):-
   (forall(M:kb_prefix(A,B),trill:add_kb_prefix(A,B))->true;true).
-
-merge_prefixes(NL):-
-  get_module(M),
-  M:ns4query(OL),!,
-  append(OL,NL,TL),
-  list_to_set(TL,NTL),
-  retract(M:ns4query(OL)),
-  assert(M:ns4query(NTL)).
-  
-merge_prefixes(L):-
-  get_module(M),
-  assert(M:ns4query(L)).
 
 :- multifile trill:add_kb_prefix/2.
 
