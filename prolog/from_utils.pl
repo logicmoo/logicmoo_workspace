@@ -40,19 +40,19 @@
 :- use_module(library(extra_messages),  []).
 :- use_module(library(resolve_calln)).
 
+:- dynamic
+    filepos_line_db/5.
+
+:- volatile
+    filepos_line_db/5.
+
+%% from_to_file_line_pos(+, -, -, ?, ?) is semidet.
+%
 from_to_file_line_pos(clause_term_position(ClauseRef, TermPos),
 		      File, CLine, TLine, Pos) :-
     clause_property(ClauseRef, file(File)),
     clause_property(ClauseRef, line_count(CLine)),
-    ( compound(TermPos),
-      arg(1, TermPos, CharCount),
-      integer(CharCount)
-    ->setup_call_cleanup(
-	  '$push_input_context'(file_line),
-	  prolog_codewalk:filepos_line(File, CharCount, TLine, Pos),
-	  '$pop_input_context')
-    ; true
-    ).
+    file_termpos_line(File, TermPos, TLine, Pos).
 from_to_file_line_pos(clause(ClauseRef), File, CLine, _, _) :-
     clause_property(ClauseRef, file(File)),
     clause_property(ClauseRef, line_count(CLine)).
@@ -61,10 +61,24 @@ from_to_file_line_pos(file_term_position(File, TermPos), File, _, Line, Pos) :-
     file_termpos_line(File, TermPos, Line, Pos).
 
 file_termpos_line(File, TermPos, Line, Pos) :-
-    arg(1, TermPos, CharCount),
-    filepos_line(File, CharCount, Line, Pos).
+    ( compound(TermPos),
+      arg(1, TermPos, CharCount),
+      integer(CharCount)
+    ->filepos_line(File, CharCount, Line, Pos)
+    ; true
+    ).
 
+%% filepos_line(+, +, -, -) is det
+%
 filepos_line(File, CharCount, Line, Pos) :-
+    time_file(File, Time),	% Prevents usage of old tabled information
+    ( filepos_line_db(File, CharCount, Line, Pos, Time)
+    ->true
+    ; filepos_line_(File, CharCount, Line, Pos),
+      assertz(filepos_line_db(File, CharCount, Line, Pos, Time))
+    ).
+
+filepos_line_(File, CharCount, Line, Pos) :-
     setup_call_cleanup('$push_input_context'(file_line),
 		       prolog_codewalk:filepos_line(File, CharCount, Line, Pos),
 		       '$pop_input_context').
@@ -100,7 +114,7 @@ update_fact_from(Fact, From) :-
     ( \+ ( call(FactFrom0 ),
 	   subsumes_from(From, From0 )
 	 )
-    ->resolve_calln(call(Fact, From), FactFrom),
-      assertz(FactFrom)
+    ->From = From0,
+      assertz(FactFrom0)
     ; true
     ).

@@ -43,15 +43,15 @@
 
 :- multifile
     prolog:message//1,
-    deprecated_predicate/2.
+    deprecated_predicate/3.
 
-deprecated_predicate(MGoal, M, Comment, DFrom, CFrom) :-
-    prop_asr(head, MGoal, M, DFrom, Asr),
+deprecated_predicate(MGoal, Comment, DFrom, CFrom) :-
+    prop_asr(head, MGoal, _, DFrom, Asr),
     prop_asr(glob, basicprops:deprecated(_), _, _GFrom, Asr),
     asr_comm(Asr, Comment, CFrom).
-deprecated_predicate(M:Goal, IM, " Use ~q instead."-[Alt], [], []) :-
+deprecated_predicate(M:Goal, " Use ~q instead."-[Alt], [], []) :-
     implementation_module(M:Goal, IM),
-    deprecated_predicate(IM:Goal, Alt).
+    deprecated_predicate(Goal, IM, Alt).
 
 checker:check(deprecated, Result, OptionL) :-
     check_deprecated(OptionL, Result).
@@ -66,8 +66,9 @@ check_deprecated(OptionL0, Pairs) :-
 		   on_etrace(collect_deprecated)],
 		  OptionL),
     extra_walk_code(OptionL),
-    findall(information-((DLoc/(M:F/A))-((CLoc/Comment)-(Loc/CI))),
+    findall(information-((DLoc/(IM:F/A))-((CLoc/Comment)-(Loc/CI))),
 	    ( retract(deprecated_db(Call, M, Comment, DFrom, CFrom, From)),
+	      implementation_module(M:Call, IM),
 	      functor(Call, F, A),
 	      from_location(DFrom, DLoc),
 	      from_location(CFrom, CLoc),
@@ -93,5 +94,7 @@ comment_referenced_by((Loc/Comment)-LocCIL) -->
 :- public collect_deprecated/3.
 :- meta_predicate collect_deprecated(0,?,?).
 collect_deprecated(M:Goal, _, From) :-
-    deprecated_predicate(M:Goal, IM, Comment, DFrom, CFrom),
-    update_fact_from(deprecated_db(Goal, IM, Comment, DFrom, CFrom), From).
+    deprecated_predicate(M:Goal, Comment, DFrom, CFrom),
+    % counter intuitive optimization: we save M (context module) instead of
+    % implementation module since M is more discriminative
+    update_fact_from(deprecated_db(Goal, M, Comment, DFrom, CFrom), From).
