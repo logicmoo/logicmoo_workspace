@@ -1,70 +1,7 @@
-:- module(owl2_model, [load_owl/0, load_owl/1, load_owl_from_string/1, expand_all_ns/3]). %query_expand/1]).
-
-
-/*:- multifile
-        owl2_model:classAssertion/2,
-        owl2_model:propertyAssertion/3,
-        owl2_model:subPropertyOf/2,
-        owl2_model:subClassOf/2,
-        owl2_model:equivalentClasses/1,
-        owl2_model:differentIndividuals/1,
-        owl2_model:sameIndividual/1,
-        owl2_model:intersectionOf/1,
-        owl2_model:unionOf/1,
-        owl2_model:propertyRange/2,
-        owl2_model:propertyDomain/2,
-        owl2_model:annotationAssertion/3,
-        owl2_model:exactCardinality/2,
-        owl2_model:exactCardinality/3,
-        owl2_model:maxCardinality/2,
-        owl2_model:maxCardinality/3,
-        owl2_model:minCardinality/2,
-        owl2_model:minCardinality/3.
-*/
-
-/***************************************
-  DEFINITION OF AXIOMS USABLE IN PL FILES
-****************************************/
-:- dynamic
-    user:class/1,
-    user:datatype/1,
-    user:objectProperty/1,
-    user:dataProperty/1,
-    user:annotationProperty/1,
-    user:namedIndividual/1,
-    user:subClassOf/2,
-    user:equivalentClasses/1,
-    user:disjointClasses/1,
-    user:disjointUnion/2,
-    user:subPropertyOf/2,
-    user:equivalentProperties/1,
-    user:disjointProperties/1,
-    user:inverseProperties/2,
-    user:propertyDomain/2,
-    user:propertyRange/2,
-    user:functionalProperty/1,
-    user:inverseFunctionalProperty/1,
-    user:reflexiveProperty/1,
-    user:irreflexiveProperty/1,
-    user:symmetricProperty/1,
-    user:asymmetricProperty/1,
-    user:transitiveProperty/1,
-    user:hasKey/2,
-    user:sameIndividual/1,
-    user:differentIndividuals/1,
-    user:classAssertion/2,
-    user:propertyAssertion/3,
-    user:negativePropertyAssertion/3,
-    user:annotationAssertion/3,
-    user:kb_prefix/2,
-    user:owl_rdf/1,
-    user:ns4query/1.
-
-:- discontiguous user:owl_rdf/1.
+:- module(owl2_model, [load_owl/1, load_owl_from_string/1, expand_all_ns/3]).
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
-%:- use_module(trill).
 
 :- use_module(library(sandbox)).
 
@@ -1105,7 +1042,7 @@ referenced_description(unionOf(L),Y) :- member(X,L),referenced_description(X,Y).
 %
 % this also asserts ontologyAxiom/2, using nb_getval with current_ontology
 assert_axiom(Axiom) :-
-        assert_axiom_hook(Axiom),
+        Axiom,
         !.
 assert_axiom(Axiom) :-
         assert(Axiom),
@@ -1117,6 +1054,9 @@ assert_axiom(Axiom) :-
 %% assert_axiom(+Axiom:axiom,+Ontology:ontology) is det
 %
 % as assert_axiom/1, but also asserts to ontologyAxiom/2
+assert_axiom(Axiom,_) :-
+        Axiom,
+        !.
 assert_axiom(Axiom,O) :-
         assert(Axiom),
 	assert(ontologyAxiom(O,Axiom)),
@@ -2861,45 +2801,10 @@ timed_forall(Cond,Action) :-
 ---+ See Also
 The file owl2_from_rdf.plt has some examples
 */
-:- thread_local user:ns4query/1.
-
-/*
-load_owl_old:-
-  pengine_self(Self),
-  pengine_property(Self,module(M)),
-  ( M:owl_rdf(String) -> 
-     load_owl(String)
-    ;
-     true
-  ),
-  expand_and_reassert(M).
-*/
-
-load_owl:-
-  get_module(M),
-  retractall(M:ns4query(_)),
-  ( M:owl_rdf(_) -> 
-     (
-        findall(String,M:owl_rdf(String),LString),
-        concat_all_strings(LString,TString),
-        open_chars_stream(TString,S),
-        process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
-        close(S),
-        assert(M:ns4query(NSList)),
-        rdf_2_owl('ont','ont'),
-        owl_canonical_parse_3(['ont']),
-        parse_probabilistic_annotation_assertions
-     )
-    ;
-     assert(M:ns4query([]))
-  ),
-  add_prefixes(M), % add prefix if defined in prolog part
-  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#'),
-  pl_2_owl(M,'ont').
+:- thread_local ns4query/1.
 
 load_owl(String):-
-  get_module(M),
-  retractall(M:ns4query(_)),
+  retractall(ns4query(_)),
   open(String,read,S),
   load_owl_from_stream(S).
   
@@ -2911,49 +2816,44 @@ load_owl_from_stream(S):-
   get_module(M),
   process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
   close(S),
-  assert(M:ns4query(NSList)),
-  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#'),
+  add_kb_prefixes(NSList),
   rdf_2_owl('ont','ont'),
   owl_canonical_parse_3(['ont']),
   parse_probabilistic_annotation_assertions.
 
-concat_all_strings([],"").
+% Adds a list of kb prefixes into ns4query
+add_kb_prefixes([]).
+add_kb_prefixes([(H=H1)|T]):-
+  trill:add_kb_prefix(H,H1),
+  add_kb_prefixes(T).
 
-concat_all_strings([H|T],NS):-
-  concat_all_strings(T,NS0),
-  string_concat(H,NS0,NS).
-
-add_prefixes(M):-
-  (forall(M:kb_prefix(A,B),trill:add_kb_prefix(A,B))->true;true).
-
+% Adds a prefix into ns4query
 :- multifile trill:add_kb_prefix/2.
 
 trill:add_kb_prefix('',B):-
   trill:add_kb_prefix([],B).
 
 trill:add_kb_prefix(A,B):-
-  get_module(M),
-  M:ns4query(L),!,
+  ns4query(L),!,
   (\+ member((A=_),L) ->
-      (retract(M:ns4query(L)),
+      (retract(ns4query(L)),
        append(L,[(A=B)],NL),
-       assert(M:ns4query(NL))
+       assert(ns4query(NL))
       )
     ;
       true
    ).
 trill:add_kb_prefix(A,B):-
-  get_module(M),
-  assert(M:ns4query([(A=B)])).
+  assert(ns4query([(A=B)])).
 
+% Removes a prefix from ns4query
 :- multifile trill:remove_kb_prefix/2.
 trill:remove_kb_prefix(A,B):-
-  get_module(M),
-  M:ns4query(L),!,
+  ns4query(L),!,
   (member((A=B),L) ->
-      (retract(M:ns4query(L)),
+      (retract(ns4query(L)),
        delete(L,(A=B),NL),
-       assert(M:ns4query(NL))
+       assert(ns4query(NL))
       )
     ;
       true
@@ -2961,18 +2861,17 @@ trill:remove_kb_prefix(A,B):-
 
 :- multifile trill:remove_kb_prefix/1.
 trill:remove_kb_prefix(A):-
-  get_module(M),
-  M:ns4query(L),!,
+  ns4query(L),!,
   (member((A=B),L) *->
-      (retract(M:ns4query(L)),
+      (retract(ns4query(L)),
        delete(L,(A=B),NL),
-       assert(M:ns4query(NL))
+       assert(ns4query(NL))
       )
     ;
       (member((B=A),L),! *->
-        (retract(M:ns4query(L)),
+        (retract(ns4query(L)),
          delete(L,(B=A),NL),
-         assert(M:ns4query(NL))
+         assert(ns4query(NL))
         )
       ;
         true
@@ -3096,43 +2995,9 @@ expand_ns4query(NS_URL,NSList, Full_URL):-
 
 expand_ns4query(URL,_,URL).
 
-pl_2_owl(M,O):-
-  M:ns4query(NSList),
-  (forall(M:class(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(class(AExp),O)))->true;true),
-  (forall(M:datatype(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(datatype(AExp),O)))->true;true),
-  (forall(M:objectProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(objectProperty(AExp),O)))->true;true),
-  (forall(M:dataProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(dataProperty(AExp),O)))->true;true),
-  (forall(M:annotationProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(annotationProperty(AExp),O)))->true;true),
-  (forall(M:namedIndividual(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(namedIndividual(AExp),O)))->true;true),
-  (forall(M:subClassOf(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(subClassOf(AExp,BExp),O)))->true;true),
-  (forall(M:equivalentClasses(A),(expand_all_ns(A,NSList,AExp),test_and_assert(equivalentClasses(AExp),O)))->true;true),
-  (forall(M:disjointClasses(A),(expand_all_ns(A,NSList,AExp),test_and_assert(disjointClasses(AExp),O)))->true;true),
-  (forall(M:disjointUnion(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(disjointUnion(AExp,BExp),O)))->true;true),
-  (forall(M:subPropertyOf(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(subPropertyOf(AExp,BExp),O)))->true;true),
-  (forall(M:equivalentProperties(A),(expand_all_ns(A,NSList,AExp),test_and_assert(equivalentProperties(AExp),O)))->true;true),
-  (forall(M:disjointProperties(A),(expand_all_ns(A,NSList,AExp),test_and_assert(disjointProperties(AExp),O)))->true;true),
-  (forall(M:inverseProperties(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(inverseProperties(AExp,BExp),O)))->true;true),
-  (forall(M:propertyDomain(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(propertyDomain(AExp,BExp),O)))->true;true),
-  (forall(M:propertyRange(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(propertyRange(AExp,BExp),O)))->true;true),
-  (forall(M:functionalProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(functionalProperty(AExp),O)))->true;true),
-  (forall(M:inverseFunctionalProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(inverseFunctionalProperty(AExp),O)))->true;true),
-  (forall(M:reflexiveProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(reflexiveProperty(AExp),O)))->true;true),
-  (forall(M:irreflexiveProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(irreflexiveProperty(AExp),O)))->true;true),
-  (forall(M:symmetricProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(symmetricProperty(AExp),O)))->true;true),
-  (forall(M:asymmetricProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(asymmetricProperty(AExp),O)))->true;true),
-  (forall(M:transitiveProperty(A),(expand_all_ns([A],NSList,[AExp]),test_and_assert(transitiveProperty(AExp),O)))->true;true),
-  (forall(M:hasKey(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(hasKey(AExp,BExp),O)))->true;true),
-  (forall(M:sameIndividual(A),(expand_all_ns(A,NSList,AExp),test_and_assert(sameIndividual(AExp),O)))->true;true),
-  (forall(M:differentIndividuals(A),(expand_all_ns(A,NSList,AExp),test_and_assert(differentIndividuals(AExp),O)))->true;true),
-  (forall(M:classAssertion(A,B),(expand_all_ns([A,B],NSList,[AExp,BExp]),test_and_assert(classAssertion(AExp,BExp),O)))->true;true),
-  (forall(M:propertyAssertion(A,B,C),(expand_all_ns([A,B,C],NSList,[AExp,BExp,CExp]),test_and_assert(propertyAssertion(AExp,BExp,CExp),O)))->true;true),
-  (forall(M:negativePropertyAssertion(A,B,C),(expand_all_ns([A,B,C],NSList,[AExp,BExp,CExp]),test_and_assert(negativePropertyAssertion(AExp,BExp,CExp),O)))->true;true),%trace,
-  (forall(M:annotationAssertion(A,B,C),(expand_all_ns([A,B,C],NSList,[AExp,BExp,CExp]),test_and_assert(annotationAssertion(AExp,BExp,CExp),O)))->true;true).
-
 :- multifile trill:add_axiom/1.
 trill:add_axiom(Ax):-
-  get_module(M),
-  ( M:ns4query(NSList) *-> true; NSList = []),
+  ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   expand_all_ns(Args,NSList,ArgsEx),
   AxEx =.. [P|ArgsEx],
@@ -3147,8 +3012,7 @@ trill:add_axioms([H|T]) :-
 
 :- multifile trill:remove_axiom/1.
 trill:remove_axiom(Ax):-
-  get_module(M),
-  ( M:ns4query(NSList) *-> true; NSList = []),
+  ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   expand_all_ns(Args,NSList,ArgsEx),
   AxEx =.. [P|ArgsEx],
@@ -3163,8 +3027,8 @@ trill:remove_axioms([H|T]) :-
   trill:remove_axioms(T).
 
 test_and_assert(Ax,O):-
-  (\+owl(Ax,O) ->
-    (assert(Ax), assert(owl(Ax,O)))
+  (\+ owl(Ax,O) ->
+    (assert_axiom(Ax,O), assert(owl(Ax,O)))
    ;
     true
   ).
@@ -3176,8 +3040,33 @@ get_module('user'):- !.
 
 :- multifile sandbox:safe_primitive/1.
 
-sandbox:safe_primitive(owl2_model:load_owl).
 sandbox:safe_primitive(owl2_model:load_owl(_)).
 sandbox:safe_primitive(owl2_model:load_owl_from_string(_)).
 sandbox:safe_primitive(owl2_model:expand_all_ns(_,_,_)).
 %sandbox:safe_primitive(owl2_model:query_expand(_)).
+
+user:term_expansion((:- trill),[]):-
+  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#').
+
+user:term_expansion(kb_prefix(A,B),[]):-
+  trill:add_kb_prefix(A,B).
+
+user:term_expansion(owl_rdf(String),[]):-
+  get_module(M),
+  open_chars_stream(String,S),
+  process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
+  close(S),
+  add_kb_prefixes(NSList),
+  rdf_2_owl('ont','ont'),
+  owl_canonical_parse_3(['ont']),
+  parse_probabilistic_annotation_assertions.
+  
+user:term_expansion(TRILLAxiom,[]):-
+  TRILLAxiom =.. [P|Args],
+  member(P, [class,datatype,objectProperty,dataProperty,annotationProperty,namedIndividual,subClassOf,equivalentClasses,disjointClasses,disjointUnion,subPropertyOf,equivalentProperties,disjointProperties,
+inverseProperties,propertyDomain,propertyRange,functionalProperty,inverseFunctionalProperty,reflexiveProperty,irreflexiveProperty,symmetricProperty,asymmetricProperty,transitiveProperty,hasKey,
+sameIndividual,differentIndividuals,classAssertion,propertyAssertion,negativePropertyAssertion,annotationAssertion]),
+  ns4query(NSList),
+  expand_all_ns(Args,NSList,ArgsExp),
+  NewTRILLAxiom =.. [P|ArgsExp],
+  test_and_assert(NewTRILLAxiom,'ont').

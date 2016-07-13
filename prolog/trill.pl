@@ -4,7 +4,7 @@
                  unsat/1, unsat/2, prob_unsat/2,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
                  axiom/1, add_kb_prefix/2, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
-                 load_kb/0, load_kb/1, load_owl_kb/1] ).
+                 load_kb/1, load_owl_kb/1] ).
 
 %:- set_prolog_flag(unknow,fail).
 
@@ -17,9 +17,11 @@
 :- use_module(library(pengines)).
 :- use_module(library(sandbox)).
 
-:- use_module(translate_rdf).
+
 
 :- use_foreign_library(foreign(bddem),install).
+
+:- style_check(-discontiguous).
 
 :- multifile
 	owl2_model:axiom/1,
@@ -56,14 +58,9 @@
 /********************************
   LOAD KNOWLEDGE BASE
 *********************************/
-%loads a pl file already consulted
-load_kb :-
-  load_owl.
-
 % consults a pl file and loads the contained axioms
 load_kb(Name):-
-  [user:Name],
-  load_owl.
+  user:consult(Name).
 
 % loads a OWL/RDF file
 load_owl_kb(Name):-
@@ -75,7 +72,7 @@ load_owl_kb(Name):-
   UTILITY PREDICATES
 ******************************/
 %defined in translate_rdf
-:- multifile add_kb_prefix/1, add_axiom/1, add_axioms/1,
+:- multifile add_kb_prefix/2, add_axiom/1, add_axioms/1,
              remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1.
 
 axiom(A):-
@@ -2380,8 +2377,8 @@ compute_prob_ax1([Prob1 | T],Prob):-
 /**************/
 /*get_trill_current_module('translate_rdf'):-
   pengine_self(_Name),!.*/
-get_trill_current_module(Name):-
-  pengine_self(Name),!.
+%get_trill_current_module(Name):-
+%  pengine_self(Name),!.
 get_trill_current_module('owl2_model'):- !.
 /**************/
 
@@ -2416,7 +2413,11 @@ sandbox:safe_primitive(trill:axiom(_)).
 sandbox:safe_primitive(trill:add_kb_prefix(_,_)).
 sandbox:safe_primitive(trill:add_axiom(_)).
 sandbox:safe_primitive(trill:add_axioms(_)).
-sandbox:safe_primitive(trill:load_kb).
 sandbox:safe_primitive(trill:load_kb(_)).
 sandbox:safe_primitive(trill:load_owl_kb(_)).
 
+:- use_module(translate_rdf).
+
+:- if(\+pengine_self(_Name)).
+:- trill.
+:- endif.
