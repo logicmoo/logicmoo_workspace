@@ -2830,7 +2830,7 @@ add_kb_prefixes([(H=H1)|T]):-
 % Adds a prefix into ns4query
 :- multifile trill:add_kb_prefix/2.
 
-trill:add_kb_prefix('',B):-
+trill:add_kb_prefix('',B):- !,
   trill:add_kb_prefix([],B).
 
 trill:add_kb_prefix(A,B):-
@@ -3067,6 +3067,13 @@ user:term_expansion(TRILLAxiom,[]):-
 inverseProperties,propertyDomain,propertyRange,functionalProperty,inverseFunctionalProperty,reflexiveProperty,irreflexiveProperty,symmetricProperty,asymmetricProperty,transitiveProperty,hasKey,
 sameIndividual,differentIndividuals,classAssertion,propertyAssertion,negativePropertyAssertion,annotationAssertion]),
   ns4query(NSList),
-  expand_all_ns(Args,NSList,ArgsExp),
-  NewTRILLAxiom =.. [P|ArgsExp],
+  ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
+       ( expand_all_ns(IntArgs,NSList,ArgsExp),
+         NewTRILLAxiom =.. [P,ArgsExp]
+       )
+     ;
+       ( expand_all_ns(Args,NSList,ArgsExp),
+         NewTRILLAxiom =.. [P|ArgsExp]
+       )
+  ),
   test_and_assert(NewTRILLAxiom,'ont').
