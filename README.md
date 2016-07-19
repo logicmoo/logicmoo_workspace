@@ -83,6 +83,9 @@ Currently prototyped in utils/psyntax.P
 * Teleoreactive, used in Kit's report (?); perhaps adapt the Java preprocessor to internet (Wei) syntax
 * Object-oriented?, survival game case in point
 * Restricted Natural Language, tying into the linguistic nature of fluents, events, etc.
+#### Friendlier UI support ####
+* We need a term language to portray fluents (e.g. entities) and events in a web or other GUI. Inspirations: XJ gt terms, SWISH use of DCGs, ...
+* Minimal linguistic and other annotations should probably be close to the LPS code they depend on
 
 ### Engine per se ###
 * SWI Prolog version, sharing as much code as possible with XSB Prolog's
