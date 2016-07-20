@@ -837,9 +837,9 @@ unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[Ax|Expl])|ABox],Tabs)):-
    --
 */
 unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[Ax|Expl1])|ABox],Tabs)):-
-  find((classAssertion(C1,Ind),_Expl),ABox0),
+  find((classAssertion(C1,Ind),Expl),ABox0),
   find_not_atomic(C1,C,L),
-  find_all(Ind,L,ABox0,Expl1),
+  ( C = unionOf(_) -> Expl1 = Expl ; find_all(Ind,L,ABox0,Expl1)),
   find_sub_sup_class(C,D,Ax),
   absent(classAssertion(D,Ind),[Ax|Expl1],(ABox0,Tabs)),
   add_nominal(D,Ind,ABox0,ABox).
