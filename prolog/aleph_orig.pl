@@ -29,199 +29,8 @@
 %                                                                         %
 %                                                                         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
 
-:- module(aleph,
-	  [ aleph/0,
-	    my_read_all/0,
-	    induce/0,
-		induce_modes/0,
-		induce_tree/0,
-		rdhyp/0, %mah!
-		reduce/0,
-		reduce_and_show/1,
-		sat/1,
-		set/2,
-		model/1,
-		mode/2,
-		modeh/2,
-		modeb/2,
-		determination/2,
-		%theory_induce/1,
-		op(500,fy,#),
-		op(500,fy,*),
-		op(900,xfy,because)
-	  ]).
-:-set_prolog_flag(unknown,warning).
-
-/* INIT ALEPH */
-aleph :-
-	nl, nl,
-	write('A L E P H'), nl,
-	aleph_version(Version), write('Version '), write(Version), nl,
-	aleph_version_date(Date), write('Last modified: '), write(Date), nl, nl,
-	aleph_manual(Man),
-	write('Manual: '),
-	write(Man), nl, nl,
-	aleph_version(V), set(version,V), reset,
-  prolog_load_context(module, M),
-  %findall(local_setting(P,V),default_setting_sc(P,V),L),
-  %assert_all(L,M,_),
-  assert(input_mod(M)),
-  %assert(user:'$aleph_sat_terms'(_,_)),
-	%assert(user:'$aleph_sat_atom'(_,_)),
-  %retractall(M:rule_sc_n(_)),
-  %assert(M:rule_sc_n(0)),
-%assert(has_car(east1,car_11)), % 11,12
-%assert(has_car(east1,car_12)),
-%assert(has_car(east1,car_13)),
-%assert(has_car(east1,car_14)),
-	M:dynamic((pos_on/0,neg_on/0,bg_on/0,incneg/1,incpos/1,in/1,bgc/1,bg/1)),
-  /*M:dynamic((modeh/2,modeh/4,modeb/2,fixed_rule/3,banned/2,lookahead/2,
-    lookahead_cons/2,lookahead_cons_var/2,prob/2,input/1,input_cw/1,
-    ref_clause/1,ref/1,model/1,neg/1,rule/4,determination/2,
-    bg_on/0,bg/1,bgc/1,in_on/0,in/1,inc/1,int/1)),*/
-  style_check(-discontiguous),
-
-	clean_up,
-	reset.
-
-user:term_expansion((:- begin_bg), []) :-
-  input_mod(M),!,
-  assert(M:bg_on).
-
-user:term_expansion(C, M:bgc(C)) :-
-  C\= (:- end_bg),
-	
-  input_mod(M),
-  M:bg_on,!,assert(C).
-
-user:term_expansion((:- end_bg), []) :-
-  input_mod(M),!,
-  retractall(M:bg_on),
-  findall(C,M:bgc(C),L),
-  retractall(M:bgc(_)),
-  (M:bg(BG0)->
-    retract(M:bg(BG0)),
-    append(BG0,L,BG),
-    assert(M:bg(BG))
-  ;
-    assert_all(L,M,_)
-  ).
-user:term_expansion((:- begin_in_pos), []) :-
-  input_mod(M),!,
-  assert(M:pos_on),
-  clean_up_examples(pos),
-	asserta('$aleph_global'(size,size(pos,0))).
-	
-
-user:term_expansion(C, M:incpos(C)) :-
-	
-  C\= (:- end_in_pos),
-  input_mod(M),
-  M:pos_on,!,record_example(nocheck,pos,C,_).
-
-user:term_expansion((:- end_in_pos), []) :-
-  input_mod(M),!,
-  retractall(M:pos_on),
-  findall(C,M:incpos(C),L),
-  retractall(M:incpos(_)),
-	'$aleph_global'(size,size(pos,N)),
-	(N > 0 -> Ex = [1-N]; Ex = []),
-	asserta('$aleph_global'(atoms,atoms(pos,Ex))),
-	asserta('$aleph_global'(atoms_left,atoms_left(pos,Ex))),
-	asserta('$aleph_global'(last_example,last_example(pos,N))),
-  (M:in(IN0)->
-    retract(M:in(IN0)),
-	
-    append(IN0,L,IN),
-    assert(M:in(IN))
-  ;
-    assert(M:in(L))
-  ).
-
-%%%%%%
-
-user:term_expansion((:- begin_in_neg), []) :-
-  input_mod(M),!,
-  assert(M:neg_on),
-	clean_up_examples(neg),
-	asserta('$aleph_global'(size,size(neg,0))).
-
-user:term_expansion(C, M:incneg(C)) :-
-	
-  C\= (:- end_in_neg),
-  input_mod(M),
-  M:neg_on,!,record_example(nocheck,neg,C,_).
-
-user:term_expansion((:- end_in_neg), []) :-
-  input_mod(M),!,
-  retractall(M:neg_on),
-  findall(C,M:incneg(C),L),
-  retractall(M:incneg(_)),
-  '$aleph_global'(size,size(neg,N)),
-	(N > 0 -> Ex = [1-N]; Ex = []),
-	asserta('$aleph_global'(atoms,atoms(neg,Ex))),
-	asserta('$aleph_global'(atoms_left,atoms_left(neg,Ex))),
-	asserta('$aleph_global'(last_example,last_example(neg,N))),
-
-  (M:in(IN0)->
-    retract(M:in(IN0)),
-	
-    append(IN0,L,IN),
-    assert(M:in(IN))
-  ;
-    assert(M:in(L))
-  ).
-
-%%%%%%%%
-
-:- dynamic input_mod/1.
-assert_all([],_M,[]).
-
-assert_all([H|T],M,[HRef|TRef]):-
-  assertz(M:H,HRef),
-  assert_all(T,M,TRef).
-
-assert_all([],[]).
-
-assert_all([H|T],[HRef|TRef]):-
-  assertz(H,HRef),
-  assert_all(T,TRef).
-
-print_arr([]).
-print_arr([H|T]):-
-	write(H),print_arr(T),nl.
-	
-my_read_all :-
-	/*
-	clean_up,
-	reset,
-	*/
-	%broadcast(background(loaded)),
-	%read_background(Back),
-	%my_read_pos_examples(pos),
-	%my_read_neg_examples(neg),
-	%read_examples(Pos,Neg),
-	%input_mod(M),!,
-    %M:in(Pos), 	get
-	record_targetpred, 	
-	check_recursive_calls,
-	check_prune_defs,
-	check_user_search,
-	check_posonly,
-	check_auto_refine,
-	check_abducibles,
-	%Aggiunti alla fine
-	reset_counts,
-	asserta('$aleph_global'(last_clause,last_clause(0))),
-	broadcast(examples(loaded)).
-
-/*
-theory_induce(Theory):-
-	input_mod(M),
-	induce,
-	show(Theory).
-*/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % C O M P I L E R   S P E C I F I C
 
@@ -266,7 +75,7 @@ init(swi):-
 		assert((numbervars(A,B,C):- numbervars(A,'$VAR',B,C)))),
 	assert((assert_static(X):- assert(X))),
 	assert((system(X):- shell(X))),
-	assert((exists(X):- exists_file(X))), 
+	assert((exists(X):- exists_file(X))),
 	assert((aleph_reconsult(F):- consult(F))),
 	assert((aleph_consult(X):- aleph_open(X,read,S), repeat,
 			read(S,F), (F = end_of_file -> close(S), !;
@@ -282,8 +91,7 @@ init(swi):-
 		assert_static(delete_file(_))).
 :- if(current_prolog_flag(dialect,swi)). 
 :- use_module(library(arithmetic)). 
-:- arithmetic_function(inf/0).
-:- nl.
+:- arithmetic_function(inf/0). 
 :- init(swi).
 inf(1e10).
 :- else.
@@ -298,6 +106,10 @@ inf(1e10).
 aleph_version(5).
 aleph_version_date('Sun Mar 11 03:25:37 UTC 2007').
 aleph_manual('http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html').
+
+:- op(500,fy,#).
+:- op(500,fy,*).
+:- op(900,xfy,because).
 
 :- dynamic '$aleph_feature'/2.
 :- dynamic '$aleph_global'/2.
@@ -336,40 +148,6 @@ aleph_manual('http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html'
 :- thread_local('$aleph_search_expansion'/4).
 :- thread_local('$aleph_search_gain'/4).
 :- thread_local('$aleph_search_node'/8).
-:- thread_local('$aleph_sat_terms'/4). %Aggiunto per swish
-:- thread_local('$aleph_sat_atom'/2). %Aggiunto per swish
-:- thread_local('$aleph_local'/2). %Aggiunto per swish
-:- thread_local('$aleph_determination'/2). %Aggiunto per swish
-:- thread_local('$aleph_link_vars'/2). %Aggiunto per swish
-:- thread_local('$aleph_has_vars'/3). %Aggiunto per swish
-:- thread_local('$aleph_has_ovar'/4). %Aggiunto per swish
-:- thread_local('$aleph_has_ivar'/4). %Aggiunto per swish
-:- thread_local('$aleph_sat'/2).%Aggiunto per swish
-:- thread_local('$aleph_sat_atom'/2).%Aggiunto per swish
-:- thread_local('$aleph_sat_ovars'/2).%Aggiunto per swish
-:- thread_local('$aleph_sat_ivars'/2).%Aggiunto per swish
-
-:- thread_local('$aleph_sat_varsequiv'/2).%Aggiunto per swish
-:- thread_local('$aleph_sat_varscopy'/3).%Aggiunto per swish
-:- thread_local('$aleph_sat_vars'/4).%Aggiunto per swish
-:- thread_local('$aleph_sat_litinfo'/6).%Aggiunto per swish
-
-:- thread_local('$aleph_local'/2).%Aggiunto per swish
-:- thread_local('$aleph_feature'/2).%Aggiunto per swish
-:- thread_local('$aleph_global'/2).%Aggiunto per swish
-:- thread_local('$aleph_good'/3).%Aggiunto per swish
-
-:- thread_local(pos_on/0).%Aggiunto per swish
-:- thread_local(neg_on/0).%Aggiunto per swish
-:- thread_local(bg_on/0).%Aggiunto per swish
-:- thread_local(inc_neg/1).%Aggiunto per swish
-:- thread_local(in/1).%Aggiunto per swish
-:- thread_local(inc_pos/1).%Aggiunto per swish
-:- thread_local(bgc/1).%Aggiunto per swish
-:- thread_local(bg/1).%Aggiunto per swish
-
-:- thread_local input_mod/1.
-
 
 
 :- multifile false/0.
@@ -388,10 +166,6 @@ aleph_manual('http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html'
 %	MaxDepth is maximum allowed variable chain depth (i setting)
 %	Last is last atom number so far
 %	Lastlit is atom number after all atoms to MaxDepth have been generated
-
-% get_atoms(L,1,Ival,Last1,Last) che diventa
-% get_atoms([short/1,...],1,2,1,-LastLit).
-
 get_atoms([],_,_,Last,Last):- !.
 get_atoms(Preds,Depth,MaxDepth,Last,LastLit):-
 	Depth =< MaxDepth,
@@ -405,7 +179,6 @@ get_atoms(_,_,_,Last,Last).
 
 % auxiliary predicate used by get_atoms/5
 get_atoms1([],_,_,Last,Last).
-% get_atoms1([short/1|...],1,2,1,-LastLit).
 get_atoms1([Pred|Preds],Depth,MaxDepth,Last,LastLit):-
 	gen_layer(Pred,Depth),
 	flatten(Depth,MaxDepth,Last,Last1),
@@ -432,7 +205,7 @@ get_atoms1([Pred|Preds],Depth,MaxDepth,Last,LastLit):-
 flatten(Depth,MaxDepth,Last,Last1):-
 	retractall('$aleph_local'(flatten_num,_)),
 	asserta('$aleph_local'(flatten_num,Last)),
-	'$aleph_sat_atom'(_,_),!,
+	'$aleph_sat_atom'(_,_), !,
 	(setting(permute_bottom,Permute) -> true; Permute = false),
 	flatten_atoms(Permute,Depth,MaxDepth,Last1).
 flatten(_,_,_,Last):-
@@ -1240,7 +1013,7 @@ integrate_term(Depth,Term/Type):-
 %       otherwise first mode that matches is used
 split_args(Lit,Mode,Input,Output,Constants):-
         functor(Lit,Psym,Arity),
-		find_mode(mode,Psym/Arity,Mode),
+	find_mode(mode,Psym/Arity,Mode),
         functor(Template,Psym,Arity),
 	copy_modeterms(Mode,Template,Arity),
 	Template = Lit,
@@ -1705,7 +1478,7 @@ get_gain(S,Flag,Last,Best/Node,Path,C,TV,Len1,MinLen,L1,Pos,Neg,OVars,E,Best1,La
         arg(6,S,Verbosity),
         (Verbosity >= 1 ->
 		pp_dclause(Clause);
-		true),
+	true),
         get_gain1(S,Flag,Clause,CLen,EMin/ELength,Last,Best/Node,
                         Path,L1,Pos,Neg,OVars,E,Best1),
         % (Prolog = yap ->
@@ -2262,7 +2035,6 @@ lazy_ccheck(_,_,N):-
 
 % posonly formula as described by Muggleton, ILP-96
 prove_examples(S,Flag,Contradiction,Entry,Best,CL,L2,Clause,Pos,Rand,PCover,RCover,[P,B,CL,I,G]):-
-	
 	arg(4,S,_/Evalfn),
 	Evalfn = posonly, !,
         arg(11,S,LazyOnContra),
@@ -2284,21 +2056,18 @@ prove_examples(S,Flag,Contradiction,Entry,Best,CL,L2,Clause,Pos,Rand,PCover,RCov
         %  I is M - D - Sz,
         I is A - B - C.
 prove_examples(S,_,_,Entry,_,CL,_,_,Pos,Neg,Pos,Neg,[PC,NC,CL]):-
-		
         arg(10,S,LazyOnCost),
         LazyOnCost = true, !,
         prove_lazy_cached(S,Entry,Pos,Neg,Pos1,Neg1),
         interval_count(Pos1,PC),
         interval_count(Neg1,NC).
 prove_examples(S,_,true,Entry,_,CL,_,_,Pos,Neg,Pos,Neg,[PC,NC,CL]):-
-		
         arg(11,S,LazyOnContra),
         LazyOnContra = true, !,
         prove_lazy_cached(S,Entry,Pos,Neg,Pos1,Neg1),
         interval_count(Pos1,PC),
         interval_count(Neg1,NC).
 prove_examples(S,Flag,_,Ent,Best,CL,L2,Clause,Pos,Neg,PCover,NCover,[PC,NC,CL]):-
-	
 	arg(3,S,RefineOp),
 	(RefineOp = false; RefineOp = auto),
         arg(7,S,ClauseLength),
@@ -4016,13 +3785,6 @@ sat(Type,Num):-
 	rm_redundant(Last,Redundant),
 	rm_uselesslits(Last,NotConnected),
 	rm_nreduce(Last,NegReduced),
-	/* write("Last:"),nl,write(Last),nl,
-	write("Repeats:"),nl,write(Repeats),nl,
-	write("NotConnected:"),nl,write(NotConnected),nl,
-	write("Commutative:"),nl,write(Commutative),nl,
-	write("Symmetric:"),nl,write(Symmetric),nl,
-	write("Redundant:"),nl,write(Redundant),nl,
-	write("NegReduced:"),nl,write(NegReduced),nl, */
 	TotalLiterals is
 		Last-Repeats-NotConnected-Commutative-Symmetric-Redundant-NegReduced,
 	show(bottom),
@@ -4368,23 +4130,19 @@ find_clause(Search):-
         asserta('$aleph_search'(best_label,BestSoFar)),
 	p1_message('best label so far'), p_message(BestSoFar),
         arg(3,S,RefineOp),
-		
 	stopwatch(StartClock),
         (RefineOp = false ->
                 get_gains(S,0,BestSoFar,[],false,[],0,L,[1],P,N,[],1,Last,NextBest),
 		update_max_head_count(0,Last);
 		clear_cache,
-		
 		interval_count(P,MaxPC),
 		asserta('$aleph_local'(max_head_count,MaxPC)),
 		StartClause = 0-[Num,Type,[],false],
                 get_gains(S,0,BestSoFar,StartClause,_,_,_,L,[StartClause],
 				P,N,[],1,Last,NextBest)),
         asserta('$aleph_search_expansion'(1,0,1,Last)),
-		
 	get_nextbest(S,_),
 	asserta('$aleph_search'(current,current(1,Last,NextBest))),
-	
 	search(S,Nodes),
 	stopwatch(StopClock),
 	Time is StopClock - StartClock,
@@ -4743,7 +4501,6 @@ induce_clauses:-
 % constructs theories 1 clause at a time
 % does greedy cover removal after each clause found
 induce:-
-	
 	clean_up,
 	set(greedy,true),
 	retractall('$aleph_global'(search_stats,search_stats(_,_))),
@@ -4757,7 +4514,6 @@ induce:-
         stopwatch(StartClock),
         repeat,
         gen_sample(pos,S),
-
 	retractall('$aleph_global'(besthyp,besthyp(_,_,_,_,_))),
         asserta('$aleph_global'(besthyp,besthyp([-inf,0,1,-inf],0,(false),[],[]))),
         get_besthyp(Abduce),
@@ -4771,7 +4527,6 @@ induce:-
         record_theory(Time),
 	noset(greedy),
 	reinstate(portray_search),
-		
         p1_message('time taken'), p_message(Time), 
 	show_total_stats,
 	record_total_stats, !.
@@ -8121,7 +7876,7 @@ aleph_abolish(Name/Arity):-
 	(predicate_property(Pred,dynamic) ->
 		retractall(Pred);
 		abolish(Name/Arity)).
-% AXO: Tolto perché infastidisce e non serve
+
 aleph_open(File,read,Stream):-
 	!,
 	(exists(File) ->
@@ -8493,12 +8248,10 @@ index_clause((Head:-true),NextClause,(Head)):-
 	!,
 	retract('$aleph_global'(last_clause,last_clause(ClauseNum))),
 	NextClause is ClauseNum + 1,
-	write(NextClause/ClauseNum),nl,
 	asserta('$aleph_global'(last_clause,last_clause(NextClause))).
 index_clause(Clause,NextClause,Clause):-
 	retract('$aleph_global'(last_clause,last_clause(ClauseNum))),
 	NextClause is ClauseNum + 1,
-	write(NextClause/ClauseNum),nl,
 	asserta('$aleph_global'(last_clause,last_clause(NextClause))).
 
 update_backpreds(Name/Arity):-
@@ -9152,50 +8905,7 @@ read_examples(Pos,Neg):-
 	reset_counts,
 	asserta('$aleph_global'(last_clause,last_clause(0))),
 	broadcast(examples(loaded)).
-/*
-my_record_examples([]).
-my_record_examples([Ex|T]):-
-	record_example(nocheck,Type,Ex,_),
-	my_record_examples(T).
-*/
-my_read_pos_examples(Type) :-
-	broadcast(background(loaded)),
-	%input_mod(M),!,
-	clean_up_examples(Type),
-	asserta('$aleph_global'(size,size(Type,0))),
-	/*
-	record_example(nocheck,pos,eastbound(east1),_),
-	record_example(nocheck,pos,eastbound(east2),_),
-	record_example(nocheck,pos,eastbound(east3),_),
-	record_example(nocheck,pos,eastbound(east4),_),
-	record_example(nocheck,pos,eastbound(east5),N1),
-	*/
-	%write(N1),nl,
-	%my_record_examples(Type),
-	%findall(C,M:inc(C),L),
-	'$aleph_global'(size,size(Type,N)),
-	(N > 0 -> Ex = [1-N]; Ex = []),
-	asserta('$aleph_global'(atoms,atoms(Type,Ex))),
-	asserta('$aleph_global'(atoms_left,atoms_left(Type,Ex))),
-	asserta('$aleph_global'(last_example,last_example(Type,N))).
-my_read_neg_examples(Type) :-
-	%input_mod(M),!,
-	clean_up_examples(Type),
-	asserta('$aleph_global'(size,size(Type,0))),
-	/*
-	record_example(nocheck,neg,eastbound(west1),_),
-	record_example(nocheck,neg,eastbound(west2),_),
-	record_example(nocheck,neg,eastbound(west3),_),
-	record_example(nocheck,neg,eastbound(west4),_),
-	record_example(nocheck,neg,eastbound(west5),N1),
-	*/
-	%my_record_examples(Type),
-	%findall(C,M:inc(C),L),
-	'$aleph_global'(size,size(Type,N)),
-	(N > 0 -> Ex = [1-N]; Ex = []),
-	asserta('$aleph_global'(atoms,atoms(Type,Ex))),
-	asserta('$aleph_global'(atoms_left,atoms_left(Type,Ex))),
-	asserta('$aleph_global'(last_example,last_example(Type,N))).
+
 read_examples_files(Type,Name,F):-
 	clean_up_examples(Type),
 	asserta('$aleph_global'(size,size(Type,0))),
@@ -9702,13 +9412,8 @@ show(test_neg):-
 	aleph_portray(test_neg,Pretty).
 show(_).
 
-reduce_and_show(S):-
-	sat(1),
-	reduce,
-	show(S).
 settings:-
 	show(settings).
-
 
 % examples(?Type,?List)
 % show all examples numbers in List of Type
@@ -10130,13 +9835,10 @@ check_legal(float(L)-float(U),X):-
 check_legal([H|T],X):-
 	!,
 	aleph_member1(X,[H|T]).
-/* AXO: Tolto perche infastidisce e non serve */
 check_legal(read(filename),X):-
 	X \= '?',
 	!,
 	exists(X).
-/* il commento finiva qua */
-
 check_legal(_,_).
 
 number(+inf,Inf):-
@@ -10712,30 +10414,16 @@ write_profile_data([]).
         write_profile_data(SLP).
  
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % F I N A L  C O M M A N D S
 
+:-
+	nl, nl,
+	write('A L E P H'), nl,
+	aleph_version(Version), write('Version '), write(Version), nl,
+	aleph_version_date(Date), write('Last modified: '), write(Date), nl, nl,
+	aleph_manual(Man),
+	write('Manual: '),
+	write(Man), nl, nl.
 
-
-:- multifile sandbox:safe_primitive/1.
-sandbox:safe_primitive('$syspreds':current_module(_)).
-sandbox:safe_primitive('$syspreds':property_predicate(_,_)).
-sandbox:safe_primitive('$syspreds':define_or_generate(_)).
-sandbox:safe_primitive(aleph:my_read_all).
-sandbox:safe_primitive(aleph:aleph).
-sandbox:safe_primitive(aleph:induce).
-sandbox:safe_primitive(aleph:induce_modes).
-sandbox:safe_primitive(aleph:induce_tree).
-sandbox:safe_primitive(aleph:rdhyp).
-sandbox:safe_primitive(aleph:sat(_)).
-sandbox:safe_primitive(aleph:model(_)).
-sandbox:safe_primitive(aleph:reduce).
-sandbox:safe_primitive(aleph:reduce_and_show(_)).
-%sandbox:safe_primitive(aleph:theory_induce(_)).
-sandbox:safe_primitive(aleph:set(_,_)).
-sandbox:safe_primitive(aleph:mode(_,_)).
-sandbox:safe_primitive(aleph:modeh(_,_)).
-sandbox:safe_primitive(aleph:modeb(_,_)).
-sandbox:safe_primitive(aleph:determination(_,_)).
+:- aleph_version(V), set(version,V), reset.
