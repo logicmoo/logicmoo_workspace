@@ -696,10 +696,17 @@ scan_and_list([_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
 or_rule((ABox0,Tabs0),L):-
   find((classAssertion(unionOf(LC),Ind),Expl),ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
+  not_ind_intersected_union(Ind,LC,ABox0),
   length(LC,NClasses),
   findall((ABox1,Tabs0),scan_or_list(LC,NClasses,Ind,Expl,ABox0,Tabs0, ABox1),L),
   dif(L,[]),!.
 
+not_ind_intersected_union(Ind,LC,ABox):-
+  \+ ind_intersected_union(Ind,LC,ABox).
+  
+ind_intersected_union(Ind,LC,ABox) :-
+  find((classAssertion(C,Ind),_),ABox),
+  member(C,LC),!.
 %---------------
 scan_or_list([C],1,Ind,Expl,ABox, Tabs, [(classAssertion(C,Ind),Expl)|ABox]):-
   absent(classAssertion(C,Ind),Expl,(ABox,Tabs)),!.
