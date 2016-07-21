@@ -1,4 +1,4 @@
-:- module(term_typing,
+:- module(termtyping,
 	  [type/2, add_1st_arg/3]).
 
 :- use_module(library(assertions)).
@@ -104,7 +104,7 @@ add_1st_arg(T, A, P) :-
     P =.. [F, A|Args].
 
 % Help analyzers to identify this call:
-prolog:called_by(type(A, MT), term_typing, CM, [M:P]) :-
+prolog:called_by(type(A, MT), termtyping, CM, [M:P]) :-
     nonvar(A),
     nonvar(MT),
     strip_module(CM:MT, M, T),
@@ -114,7 +114,7 @@ prolog:called_by(type(A, MT), term_typing, CM, [M:P]) :-
 :- multifile
     unfold_calls:unfold_call_hook/4.
 
-unfold_calls:unfold_call_hook(type(A, MT), term_typing, CM, M:P) :-
+unfold_calls:unfold_call_hook(type(A, MT), termtyping, CM, M:P) :-
     strip_module(CM:MT, M, T),
     nonvar(T),
     add_1st_arg(T, A, P).
