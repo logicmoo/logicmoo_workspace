@@ -19,6 +19,7 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
+:- use_module(library(termtyping)).
 :- use_module(library(plprops)).
 
 :- prop foreign/1 + no_rtcheck.
@@ -67,6 +68,21 @@ ptr(Ptr) :- int(Ptr).
 :- meta_predicate ptr(?,1).
 ptr(Ptr, Type) :-
     call(Type, Ptr).
+
+prolog:called_by(dict_t(_, Desc), foreign_props, M, L) :-
+    called_by_dict_t(Desc, M, L).
+prolog:called_by(dict_t(_, _, Desc), foreign_props, M, L) :-
+    called_by_dict_t(Desc, M, L).
+
+called_by_dict_t(Desc, CM, L) :-
+    nonvar(Desc),
+    dict_create(Dict, _Tag, Desc),
+    findall(M:P,
+	    ( MType=Dict._Key,
+	      strip_module(CM:MType, M, T),
+	      nonvar(T),
+	      add_1st_arg(T, _, P)
+	    ), L).
 
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).

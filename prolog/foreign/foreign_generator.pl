@@ -288,7 +288,7 @@ type_props_nf(Module, Type, TypePropLDictL, Pos, Asr) :-
 define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
     format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',
 	   [M, Name, Name, M]).
-define_aux_variables(dict_key_value(_, _, _), _, _) :- !, fail.
+define_aux_variables(dict_key_value(_, _, _, _), _, _) :- !, fail.
 define_aux_variables(_, _, _).
 
 implement_type_getter_ini(PName, CName, Spec, Name) :-
@@ -374,7 +374,7 @@ implement_type_getter(dict_ini(Name, M, _), Spec, Arg) :-
     format('predicate_t __~w_aux_keyid_index_~w;~n', [M, Name]),
     term_pcname(Arg, Name, PName, CName),
     implement_type_getter_dict_ini(M, PName, CName, Spec, Name).
-implement_type_getter(dict_key_value(Dict, _, N), Key, Value) :-
+implement_type_getter(dict_key_value(Dict, _, N, _), Key, Value) :-
     key_value_from_dict(Dict, N, Key, Value).
 implement_type_getter(dict_rec(_, Term, N, Name), Spec, Arg) :-
     term_pcname(Term, Name, _, CName),
@@ -491,7 +491,7 @@ implement_type_unifier(dict_ini(Name, _, _), Spec, Term) :-
     implement_type_unifier_ini(PName, CName, Name, Spec),
     format('    term_t __desc=PL_new_term_ref();~n', []),
     format('    term_t __tail=PL_copy_term_ref(__desc);~n', []).
-implement_type_unifier(dict_key_value(Dict, _, N), Key, Value) :-
+implement_type_unifier(dict_key_value(Dict, _, N, _), Key, Value) :-
     key_value_from_dict(Dict, N, Key, Value). % Placed in 'dict' order
 implement_type_unifier(dict_rec(_, Term, _N, Name), Spec, Arg) :-
     term_pcname(Term, Name, PName, CName),
@@ -606,7 +606,7 @@ declare_struct(func_rec(_, _, _, _), Spec, Name) :-
 declare_struct(dict_ini(_, _, _), Spec, _) :-
     ctype_decl(Spec, Decl, []),
     format('~n~s {~n', [Decl]).
-declare_struct(dict_key_value(Dict, Desc, N), Key, Value) :-
+declare_struct(dict_key_value(Dict, Desc, N, _), Key, Value) :-
     key_value_from_desc(Dict, Desc, N, Key, Value).
 declare_struct(dict_rec(_, _, _, _), Spec, Name) :-
     ctype_decl(Spec, Decl, []),
@@ -643,7 +643,9 @@ generate_aux_clauses(Module) :-
 
 % This will create an efficient method to convert keys to indexes in the C side,
 % avoiding string comparisons.
-generate_aux_clauses(dict_key_value(Dict, _, N), Key, Value) :- !,
+generate_aux_clauses(dict_key_value(Dict, _, N, Name), Key, Value) :- !,
+    atom_concat('__aux_keyid_index_', Name, F),
+    portray_clause((:- public F/2)),
     key_value_from_dict(Dict, N, Key, Value).
 generate_aux_clauses(dict_rec(_, _, N, Name), _, Key) :- !,
     atom_concat('__aux_keyid_index_', Name, F),
@@ -698,7 +700,7 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
       ),
       ignore(Tag = Name),
       call(Call, dict_ini(Name, M, Dict), type(Name), Term),
-      forall(call(Call, dict_key_value(Dict, Desc, N), Arg, Value),
+      forall(call(Call, dict_key_value(Dict, Desc, N, Name), Arg, Value),
 	     ( fetch_kv_prop_arg(Arg,  M, Value, PropL1, Prop),
 	       match_known_type_(Prop, M, Spec, Arg),
 	       call(Call, dict_rec(M, Term, N, Name), Spec, Arg)
