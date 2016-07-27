@@ -33,6 +33,8 @@
 :- module(aleph,
 	  [ aleph/0,
 	    my_read_all/0,
+		aleph_false/0,
+		abducible/1,
 	    induce/0,
 		induce/1,
 		induce_modes/0,
@@ -253,10 +255,10 @@ init(yap):-
 		assert_static(delete_file(_))).
 
 init(swi):-
-	redefine_system_predicate(false),
+	%redefine_system_predicate(false),
 	style_check(+singleton),
 	style_check(-discontiguous),
-	dynamic(false/0),
+	dynamic(aleph_false/0),
 	dynamic(example/3),
 	assert((aleph_random(X):- I = 1000000, X is float(random(I-1))/float(I))),
 	assert((gc:- garbage_collect)),
@@ -373,7 +375,7 @@ aleph_manual('http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html'
 
 
 
-:- multifile false/0.
+:- multifile aleph_false/0.
 :- multifile prune/1.
 :- multifile refine/2.
 :- multifile cost/3.
@@ -10784,6 +10786,8 @@ sandbox:safe_primitive('$syspreds':property_predicate(_,_)).
 sandbox:safe_primitive('$syspreds':define_or_generate(_)).
 sandbox:safe_primitive(aleph:my_read_all).
 sandbox:safe_primitive(aleph:aleph).
+sandbox:safe_primitive(aleph:abducible(_)).
+sandbox:safe_primitive(aleph:aleph_false).
 sandbox:safe_primitive(aleph:induce).
 sandbox:safe_primitive(aleph:induce(_)).
 sandbox:safe_primitive(aleph:induce_modes).
