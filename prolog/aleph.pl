@@ -4809,8 +4809,8 @@ induce(Program):-
         '$aleph_global'(atoms_left,atoms_left(pos,[])),
         stopwatch(StopClock),
         Time is StopClock - StartClock,
-        show(theory),
 		copy_theory(Program),
+		show(theory),
         record_theory(Time),
 	noset(greedy),
 	reinstate(portray_search),
@@ -4824,18 +4824,43 @@ copy_theory(Program):-
         aleph_reverse(L,L1),
         aleph_member(ClauseNum,L1),
 	'$aleph_global'(theory,theory(ClauseNum,_,_,_,_)),
+	copy_theory_eval(ClauseNum,Program,_),
+	fail.
+copy_theory(_).
+copy_theory_eval(0,_,Label):-
+	'$aleph_global'(hypothesis,hypothesis(_,Clause,_,_)), !,
+	label_create(Clause,Label),
+	p_message('Rule 0'),
+	pp_dclause(Clause),
+	extract_count(pos,Label,PC),
+	extract_count(neg,Label,NC),
+	extract_length(Label,L),
+	label_print_eval([PC,NC,L]),
+	nl.
+copy_theory_eval(ClauseNum,Program,_):-
 	integer(ClauseNum),
 	ClauseNum > 0,
 	'$aleph_global'(theory,theory(ClauseNum,_,Clause,_,_)),
 	!,
-	copy_term(Clause,(Head:-Body)),
-	numbervars((Head:-Body),0,_),
+	copy_theory_eval_inner(Clause,Program).
+copy_theory_eval(_,_,_).
+copy_theory_eval_inner((H:-true),Program):-
+	!,
+	copy_theory_eval_inner(H,Program).
+copy_theory_eval_inner((H:-B),Program):-
+	!,
+    copy_term((H:-B),(Head:-Body)),
+    numbervars((Head:-Body),0,_),
 	add_lit_to_program(Body,Program).
+copy_theory_eval_inner((Lit),Program):- !,
+	copy_term(Lit,Lit1),
+    numbervars(Lit1,0,_),
+	add_lit_to_program(Lit1,Program).
 
 add_lit_to_program((Lit,Lits),Program):-
 	Program = [Lit|Program1],
 	add_lit_to_program(Lits,Program1).
-add_lit_to_program((Lit),Program):-
+add_lit_to_program((Lit),Program):- !,
 	Program = [Lit].
 
 % construct theories 1 clause at a time
