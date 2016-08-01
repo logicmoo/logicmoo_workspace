@@ -1,6 +1,7 @@
 
 :- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3,
                  instanceOf/2, instanceOf/3, prob_instanceOf/3,
+                 property_value/3, property_value/4, prob_property_value/4,
                  unsat/1, unsat/2, prob_unsat/2,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
                  axiom/1, add_kb_prefix/2, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
@@ -154,7 +155,47 @@ instanceOf(Class,Ind):-
 	)
     ;
         print_message(warning,iri_not_exists),!
-  ).        
+  ).
+
+property_value(Prop, Ind1, Ind2,Expl):-
+  ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
+	retractall(exp_found(_)),
+	retractall(ind(_)),
+  	assert(ind(1)),
+  	build_abox((ABox,Tabs)),
+  	(  \+ clash((ABox,Tabs),_) *->
+  	    (
+  	    	findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
+  		find_expls(L,[PropEx,Ind1Ex,Ind2Ex],Expl),
+  		dif(Expl,[])
+  	    )
+  	 ;
+  	    Expl = ['Inconsistent ABox']
+  	)
+    ;
+    	Expl = ["IRIs not existent"],!
+  ).
+
+property_value(Prop, Ind1, Ind2):-
+  (  check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
+	(  
+	  retractall(exp_found(_)),
+	  retractall(ind(_)),
+	  assert(ind(1)),
+	  build_abox((ABox,Tabs)),
+	  (  \+ clash((ABox,Tabs),_) *->
+	      (
+	        apply_all_rules((ABox,Tabs),(ABox1,_Tabs1)),!,
+	  	find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),_),ABox1),!
+	      )
+	    ;
+	      print_message(warning,inconsistent)
+	  )
+	)
+    ;
+        print_message(warning,iri_not_exists),!
+  ).
+
 
 unsat(Concept,Expl):-
   (check_query_args([Concept],[ConceptEx]) *->
@@ -247,6 +288,25 @@ prob_instanceOf(Class,Ind,P):-
   	P = ["IRIs not existent"],!
   ).
 
+prob_property_value(Prop, Ind1, Ind2,P):-
+  ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
+  	all_property_value(PropEx,Ind1Ex,Ind2Ex,Exps),
+%  (Exps \= [] *->
+%    build_formula(Exps,FormulaE,[],VarE),
+%    (FormulaE \= [] *-> 
+%      var2numbers(VarE,0,NewVarE),
+%      write(NewVarE),nl,write(FormulaE),
+%      compute_prob(NewVarE,FormulaE,P,0)
+%    ;
+%      P = 1)
+%  ;
+%    P = 0).  
+%  writel(Exps),nl,
+  	compute_prob(Exps,P)
+  ;
+  	P = ["IRIs not existent"],!
+  ).
+
 prob_sub_class(Class,SupClass,P):-
   ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
   	all_sub_class(ClassEx,SupClassEx,Exps),
@@ -283,6 +343,9 @@ all_sub_class(Class,SupClass,LE):-
 
 all_instanceOf(Class,Ind,LE):-
   findall(Expl,instanceOf(Class,Ind,Expl),LE).
+
+all_property_value(Prop,Ind1,Ind2,LE):-
+  findall(Expl,property_value(Prop,Ind1,Ind2,Expl),LE).
 
 all_unsat(Concept,LE):-
   findall(Expl,unsat_internal(Concept,Expl),LE).
@@ -369,6 +432,19 @@ find_expls([_ABox|T],Expl):-
   \+ length(T,0),
   find_expls(T,Expl).
 
+% checks if an explanations was already found (property_value version)
+find_expls([],_,[]).
+
+find_expls([(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
+  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E),ABox),
+  findall(Exp,exp_found(Exp),Expl),
+  not_already_found(Expl,E),
+  assert(exp_found(E)).
+
+find_expls([_ABox|T],[PropEx,Ind1Ex,Ind2Ex],Expl):-
+  \+ length(T,0),
+  find_expls(T,[PropEx,Ind1Ex,Ind2Ex],Expl).
+  
 not_already_found([],_E):-!.
 
 not_already_found([H|_T],E):-
@@ -2402,6 +2478,9 @@ sandbox:safe_primitive(trill:prob_sub_class(_,_,_)).
 sandbox:safe_primitive(trill:instanceOf(_,_)).
 sandbox:safe_primitive(trill:instanceOf(_,_,_)).
 sandbox:safe_primitive(trill:prob_instanceOf(_,_,_)).
+sandbox:safe_primitive(trill:property_value(_,_,_)).
+sandbox:safe_primitive(trill:property_value(_,_,_,_)).
+sandbox:safe_primitive(trill:prob_property_value(_,_,_,_)).
 sandbox:safe_primitive(trill:unsat(_)).
 sandbox:safe_primitive(trill:unsat(_,_)).
 sandbox:safe_primitive(trill:prob_unsat(_,_)).
