@@ -150,10 +150,10 @@ show_alternatives(AL-_) -->
     ).
 
 show_alternative(Spc, Decl/FL) -->
-    ['~a:- ~w.'-[Spc, Decl]],
+    ['~a:- ~q.'-[Spc, Decl]],
     ( {FL = []}
     ->[]
-    ; [' % add exports: ~w'-[FL]]
+    ; [' % add exports: ~q'-[FL]]
     ),
     [nl].
 
