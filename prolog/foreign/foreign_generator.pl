@@ -6,6 +6,7 @@
 :- use_module(library(call_ref)).
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(apply)).
+:- use_module(library(atomics_atom)).
 :- use_module(library(camel_snake)).
 :- use_module(library(key_value)).
 :- use_module(library(remove_dups)).
@@ -28,32 +29,30 @@ command_to_atom(Command, Args, Atom) :-
     read_stream_to_codes(Out, String),
     string_to_atom(String, Atom).
 
-fortran_command(M, Command) :-
+fortran_command(M, path(gfortran), ValueL, ValueT) :-
     command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
     atomic_list_concat(AtomL, ';\n', Atom),
-    findall(Value, ( member(NameValue, AtomL),
-		     atomic_list_concat([Name|ValueL], '=', NameValue),
-		     memberchk(Name, ['PLCFLAGS', 'PLLDFLAGS']),
-		     atomic_list_concat(ValueL, '=', CValueC),
-		     atom_concat('"', ValueC, CValueC),
-		     atom_concat(Value, '"', ValueC)
-		   ; extra_compiler_opts(M, Value)
+    findall(Value, ( ( member(NameValue, AtomL),
+		       member(NameEq, ['PLCFLAGS="', 'PLLDFLAGS="']),
+		       atomics_atom([NameEq, Values, '"'], NameValue)
+		     ; extra_compiler_opts(M, Values)
+		     ),
+		     atomic_args(Values, ValueL1),
+		     member(Value, ValueL1)
 		   ),
-	    ValueL),
-    atomic_list_concat([gfortran|ValueL], ' ', Command).
+	    ValueL, ValueT).
 
 intermediate_obj(M, DirSO, Source, Object) -->
     {intermediate_obj(M, DirSO, Source, Object, Command)}, !,
     [Command].
 intermediate_obj(_, _, Source, Source) --> [].
 
-intermediate_obj(M, DirSO, Source, Object, Command) :-
+intermediate_obj(M, DirSO, Source, Object, Fortran-Args) :-
     file_name_extension(Base, for, Source),
     file_base_name(Base, Name),
     file_name_extension(Name, o, NameO),
     directory_file_path(DirSO, NameO, Object),
-    fortran_command(M, Fortran),
-    atomic_list_concat([Fortran, '-c', Source, '-o', Object], ' ', Command).
+    fortran_command(M, Fortran, Args, ['-c', Source, '-o', Object]).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -118,6 +117,10 @@ do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
 			  portray_clause((:- use_foreign_library(AliasSO)))
 			)).
 
+atomic_args(String, ArgL) :-
+    atomic_list_concat(ArgL1, ' ', String),
+    subtract(ArgL1, [''], ArgL).
+
 do_generate_library(M, FileSO, File, FSourceL) :-
     file_name_extension(BaseFile, _, FileSO),
     generate_foreign_interface(M, File, BaseFile),
@@ -126,21 +129,25 @@ do_generate_library(M, FileSO, File, FSourceL) :-
 		       [file_type(prolog), access(read), relative_to(File)]),
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
+    atom_concat(BaseFile, '_intf.c', IntfFile),
     foldl(intermediate_obj(M, DirSO), FSourceL, FTargetL, Commands, CommandsT),
-    atomic_list_concat(FTargetL, ' ', FSources),
+    append(FTargetL, [IntfFile|CLibL], FArgsT),
     findall(CLib, ( link_foreign_library(M, Lib),
 		    atom_concat('-l', Lib, CLib)
 		  ; pkg_foreign_config(M, Package),
 		    command_to_atom('pkg-config', ['--libs', Package], CLib0),
-		    atom_concat(CLib, '\n', CLib0)
-		  ), CLibL),
-    atomic_list_concat(CLibL, ' ', CLibs),
-    findall(COpt, ( extra_compiler_opts(M, COpt)
-		  ; pkg_foreign_config(M, Package),
-		    command_to_atom('pkg-config', ['--cflags', Package], COpt0),
-		    atom_concat(COpt, '\n', COpt0)
-		  ), COptL),
-    atomic_list_concat(COptL, ' ', COpts),
+		    atom_concat(CLibs, '\n', CLib0),
+		    atomic_args(CLibs, CLibL1),
+		    member(CLib, CLibL1)
+		  ), CLibL, ['-o', FileSO]),
+    findall(COpt, ( ( extra_compiler_opts(M, COpts)
+		    ; pkg_foreign_config(M, Package),
+		      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
+		      atom_concat(COpts, '\n', COpt1)
+		    ),
+		    atomic_args(COpts, COptL1),
+		    member(COpt, COptL1)		    
+		  ), COptL, IDirL),
     findall(IDir, ( ( Dir = DirSO
 		    ; Dir = DirIntf
 		    ; include_foreign_dir(M, DAlias),
@@ -149,17 +156,32 @@ do_generate_library(M, FileSO, File, FSourceL) :-
 		    ),
 		    atom_concat('-I', Dir, IDir)
 		  ),
-	    IDirL),
-    atomic_list_concat(IDirL, ' ', IDirs),
-    format(atom(CommandT), "swipl-ld -shared ~w ~w ~w ~w_intf.c ~w -o ~w",
-	   [COpts, IDirs, FSources, BaseFile, CLibs, FileSO]),
-    CommandsT = [CommandT],
-    forall(member(Command, Commands),
-	   ( shell(Command, Status),
-	     (Status = 0 -> MessageType = informational ; MessageType = error),
-	     print_message(MessageType, format('~w', [Command])),
-	     assertion(Status==0)
-	   )).
+	    IDirL, FArgsT),
+    CommandsT = [path('swipl-ld')-['-shared'|COptL]],
+    forall(member(Command-ArgL, Commands),
+	   compile_1(Command, ArgL)).
+
+compile_1(Command, ArgL) :-
+    process_create(Command, ArgL, [stdout(pipe(Out)),
+				   stderr(pipe(Err))]),
+    read_string(Err, _, SErr),
+    read_string(Out, _, SOut),
+    close(Err),
+    command_to_string(Command, ArgL, CommandS),
+    catch(( close(Out),
+	    print_message(informational, format('~s', [CommandS]))
+	  ),
+	  Error,
+	  ( print_message(error, Error),
+	    print_message(error, format("~s~s~nCommand: ~s", [SOut, SErr, CommandS]))
+	  )).
+
+command_to_string(Command, ArgL, CommandS) :-
+    ( Command = path(RCommand)
+    ->true
+    ; RCommand = Command
+    ),
+    atomic_list_concat([RCommand|ArgL], ' ', CommandS).
 
 :- meta_predicate with_output_to_file(+,0).
 
