@@ -90,7 +90,19 @@ compound_expansion(Type, Term0, Pos0, Term, Pos) :-
 system:goal_expansion(Goal0, Pos0, Goal, Pos) :-
     do_compound_expansion(goal, Goal0, Pos0, Goal, Pos).
 
-system:term_expansion(Term0, Pos0, Term, Pos) :-
-    compound_expansion(term, Term0, Pos0, Term, Pos),
-    Term0 \== Term,
-    [Term0] \== Term.		% Fail to try other expansions
+:- dynamic compounding/0.
+:- volatile compounding/0.
+
+system:term_expansion(Term1, Pos1, Term, Pos) :-
+    \+ compounding,
+    compound_expansion(term, Term1, Pos1, Term2, Pos2),
+    Term1 \== Term2,
+    [Term1] \== Term2,
+    % continue with other expansions:
+    setup_call_cleanup(assertz(compounding),
+		       ( system:term_expansion(Term2, Pos2, Term, Pos)
+		       ->true
+		       ; Term = Term2,
+			 Pos  = Pos2
+		       ),
+		       retractall(compounding)).
