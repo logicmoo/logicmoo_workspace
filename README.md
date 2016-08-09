@@ -1,17 +1,20 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the development of LPS engines, examples and related tools.
 ## What is LPS? ##
-"Logic Production Systems" is a new agent-orientated programming language that combines reactive behaviour with goal-orientated planning. It is the result of over a decade of research led by Bob Kowalski and Fariba Sadri at Imperial College London.  BLA BLA 
+"Logic Production Systems" is a new agent-oriented programming language that combines reactive behaviour with goal-oriented planning. It is the result of over a decade of research led by Bob Kowalski and Fariba Sadri at Imperial College London.  BLA BLA 
 
 For an introduction please see [paper1](URL1) or [paper2](URL2). More references available from Bob Kowalksi's [home page] (https://www.doc.ic.ac.uk/~rak/)
 
 The implementation in this repository is an evolved version of the interpreter developed during [David Wei's Master Thesis](URL?) project at Imperial College, London, supervised by [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/).
-### License and Copyright ###
-All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
 
-Main authors include Robert Kowalski, Fariba Sadri and David Wei, and also contributions by Miguel Calejo and Jacinto Dávilla.
+### License and Copyright ###
+All files in this repository are copyright Imperial College London and open source licensed with [3-clause BSD](https://opensource.org/licenses/BSD-3-Clause), except for files with other specific copyright and licensing notices.
+
+Main authors include Robert Kowalski, Fariba Sadri and David Wei, and also contributions by Miguel Calejo and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+
 ## Installing ##
 ### Core engine ###
+
 * Pull or download this whole repository into a new folder "LPS"
 * Install Prolog:
     * Install a recent (>= April 4 2016) **XSB Prolog**, such as the one in the [Prolog Studio site](http://interprolog.com/wiki/index.php?title=Studio_Download_and_installation#Installing_XSB_Prolog) for Windows; or pull the latest XSB from the [Sourceforge SVN site](https://sourceforge.net/p/xsb/src/HEAD/tree/trunk/XSB/) and build it yourself - NOT the official release as of July 2016.
@@ -60,5 +63,3 @@ There is no support for LPS at this point. The following contacts imply no oblig
 
 * Repo owner or admin: lps@interprolog.com
 * Bugs and engine support: lps@interprolog.com
-
-
