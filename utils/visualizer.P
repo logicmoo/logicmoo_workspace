@@ -6,7 +6,7 @@
 ** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-/* Utilities for visualizing LPS executions */
+/* Utilities for visualizing LPS executions; this version depends on http://interprolog.com/interprolog-studio/ */
 
 :- export visual/1, gov/1, gov/2, gov/3.
 
