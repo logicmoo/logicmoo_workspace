@@ -98,23 +98,25 @@ caller_module(_, clause(Ptr), M) :- clause_property(Ptr, module(M)).
 
 collect_imports(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
-	    ( clause(loc_declaration(Head, M, import(U), From), _, CRef),
-	      call(FromChk, From),
-	      M \= user,
-	      \+ memberchk(Head, [term_expansion(_,_),
-				  term_expansion(_,_,_,_),
-				  goal_expansion(_,_),
-				  goal_expansion(_,_,_,_),
-				  except(_)
-				 ]),
-	      \+ used_import(CRef),
-	      \+ loc_declaration(Head, M, goal, _),
-	      module_property(M, class(Class)),
-	      memberchk(Class, [user]),
-	      functor(Head, F, A),
-	      from_location(From, Loc)
-	    ),
+	    current_unused_import(M, FromChk, U, Loc, F, A),
 	    Pairs, Tail).
+
+current_unused_import(M, FromChk, U, Loc, F, A) :-
+    clause(loc_declaration(Head, M, import(U), From), _, CRef),
+    call(FromChk, From),
+    M \= user,
+    \+ memberchk(Head, [term_expansion(_,_),
+			term_expansion(_,_,_,_),
+			goal_expansion(_,_),
+			goal_expansion(_,_,_,_),
+			except(_)
+		       ]),
+    \+ used_import(CRef),
+    \+ loc_declaration(Head, M, goal, _),
+    module_property(M, class(Class)),
+    memberchk(Class, [user]),
+    functor(Head, F, A),
+    from_location(From, Loc).
 
 :- multifile ignore_import/2.
 
