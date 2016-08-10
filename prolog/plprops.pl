@@ -100,6 +100,7 @@ dupclauses(M:Goal) :-
 arithexpression(X) :- number(X), !. % Optimization
 arithexpression(X) :- num(X).
 arithexpression(X) :-
+    callable(X),
     current_arithmetic_function(X),
     X =.. [_|Args],
     maplist(arithexpression, Args).
