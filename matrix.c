@@ -151,11 +151,11 @@ matrix_next_index(int *dims, int ndims, int* indx)
     indx[i] = 0;
   }
 }
-/*int write(IOSTREAM *s, atom_t a, int flags)
+int write_blob(FILE *s, atom_t a, int flags)
 {
-  fprintf(s,"Matrix");
+  fprintf(s,"Matrix\n");
   return TRUE;
-}*/
+}
 static YAP_Term YAP_MkBlobTerm(int size)
 {
    term_t t=PL_new_term_ref();
@@ -166,10 +166,9 @@ static YAP_Term YAP_MkBlobTerm(int size)
    matrix_type.name=mat;
    matrix_type.release=NULL;
    matrix_type.compare=NULL;
-   matrix_type.write=NULL;
+   matrix_type.write=write_blob;
    matrix_type.acquire=NULL;
 
-printf("qui\n");
    PL_put_blob(t,malloc(size),size,&matrix_type);
    return t;
 }
@@ -206,7 +205,6 @@ new_int_matrix(int ndims, int dims[], long int data[])
   }
   sz = ((MAT_DIMS+1)*sizeof(int)+ndims*sizeof(int)+nelems*sizeof(long int))/sizeof(YAP_CELL);
   blob = YAP_MkBlobTerm(sz);
-  printf("blob \n");
   mat = (int *)YAP_BlobOfTerm(blob);
   mat[MAT_TYPE] = INT_MATRIX;
   mat[MAT_BASE] = 0;
@@ -263,7 +261,6 @@ scan_dims(int ndims, YAP_Term tl, int dims[MAX_DIMS])
   for (i = 0; i < ndims; i++) {
     YAP_Term th;
     int d;
-printf("%d i\n",i);
     if (!YAP_IsPairTerm(tl)) {
       return FALSE;
     }
@@ -407,7 +404,6 @@ new_ints_matrix(term_t YAP_ARG1,...)
   int ndims = YAP_IntOfTerm(YAP_ARG1);
   YAP_Term tl = YAP_ARG2, out;
   int dims[MAX_DIMS];
- printf("prima di scan\n"); 
   if (!scan_dims(ndims, tl, dims))
     return FALSE;
   out = new_int_matrix(ndims, dims, NULL);
@@ -425,7 +421,6 @@ new_ints_matrix_set(term_t YAP_ARG1,...)
   YAP_Term tl = YAP_ARG2, out, tset = YAP_ARG3;
   int dims[MAX_DIMS];
   long int set;
- printf("prima di scan\n"); 
   
   if (!YAP_IsIntTerm(tset)) {
     return FALSE;
@@ -433,7 +428,6 @@ new_ints_matrix_set(term_t YAP_ARG1,...)
   set = YAP_IntOfTerm(tset);
   if (!scan_dims(ndims, tl, dims))
     return FALSE;
- printf("prima di new int\n"); 
   out = new_int_matrix(ndims, dims, NULL);
   if (!set_int_matrix(out,set))
     return FALSE;
@@ -3309,6 +3303,14 @@ matrix_m(term_t YAP_ARG1,...)
 }
 
 static YAP_Bool
+is_opaque(term_t YAP_ARG1,...)
+{
+  YAP_Term t = YAP_ARG1;
+    if (PL_term_type(t)==PL_BLOB) return TRUE;
+    else
+    return FALSE;
+}
+static YAP_Bool
 is_matrix(term_t YAP_ARG1,...)
 {
   YAP_Term t = YAP_ARG1;
@@ -3379,6 +3381,7 @@ init_matrix(void)
   YAP_UserCPredicate("do_matrix_op_to_cols", matrix_op_to_cols, 4);
   YAP_UserCPredicate("matrix_m", matrix_m, 2);
   YAP_UserCPredicate("matrix", is_matrix, 1);
+  YAP_UserCPredicate("opaque", is_opaque, 1);
 }
 
 #ifdef _WIN32

@@ -82,6 +82,7 @@
 	    matrix_set/2,
 	    foreach/2,
 	    foreach/4,
+	    opaque/1,
 	    op(50, yf, []),
             op(50, yf, '()'),
             op(100, xfy, '.'),
@@ -644,7 +645,7 @@ Unify  _NElems_ with the type of the elements in  _Matrix_.
 */
 
 %:- load_foreign_files([matrix], [], init_matrix).
-:- use_foreign_library(matrix,init_matrix).
+:- use_foreign_library(foreign(matrix),init_matrix).
 :- multifile rhs_opaque/1, array_extension/2.
 
 :- meta_predicate foreach(+,0), foreach(+,2, +, -).
