@@ -12,7 +12,7 @@ The implementation in this repository is an evolved version of the interpreter d
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
 
-Main authors include [Bob Kowalksi] (https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
 
 ## Installing ##
 ### Core engine ###
