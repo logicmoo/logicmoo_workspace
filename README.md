@@ -50,7 +50,7 @@ l_timeless(foo,[foo]).
 This will cause a nonterminating computation. In a future syntax we should probably use 'prolog' for the body.
 
 ## How to contribute ##
-* See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/RoadMap.md) 
+* See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/RoadMap.md) 
 * Before you commit any changes to the LPS engine or tools, make sure you execute all tests with 'test_examples'.
 * Please comment your code, and add appropriate copyright/license header
 * To edit this and other future wiki documents: [learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
