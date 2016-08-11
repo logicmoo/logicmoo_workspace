@@ -1,11 +1,19 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the development of LPS engines, examples and related tools.
 ## What is LPS? ##
-“Logic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalksi] (https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. The kernel of LPS consists of a database, together with reactive rules of the form ***if*** *antecedent* ***then*** *consequent*. The database changes destructively in response to actions and external events, according to a domain-specific causal theory. Computation consists in making the reactive rules true, by performing actions to make the *consequent* true whenever the *antecedent* becomes true. In addition, LPS includes Prolog-like logic programs both to recognise when *antecedents* become true and to generate plans of actions that make *consequents* true.Slide presentations at [RuleML 2012](http://www.slideshare.net/ruleml2012/kelps-lps-30-aug-2012) and [RuleML 2015](https://www.dropbox.com/s/yqy678k6y4k543k/KELPS%2022%20Jan%202015.ppt?dl=0) give a flavour of the language. Additional material about the kernel of LPS is available on the [RuleML wiki](http://wiki.ruleml.org/index.php/KELPS). More technical papers can be found on Bob Kowalksi's [home page] (https://www.doc.ic.ac.uk/~rak/), which also includes a copy of his 2011 book, which presents some of the philosophy underlying LPS.The implementation in this repository is an evolved version of the interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda.
+“Logic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. 
+
+The kernel of LPS consists of a database, together with reactive rules of the form ***if*** *antecedent* ***then*** *consequent*. The database changes destructively in response to actions and external events, according to a domain-specific causal theory. Computation consists in making the reactive rules true, by performing actions to make the *consequent* true whenever the *antecedent* becomes true. In addition, LPS includes Prolog-like logic programs both to recognise when *antecedents* become true and to generate plans of actions that make *consequents* true.
+
+Slide presentations at [RuleML 2012](http://www.slideshare.net/ruleml2012/kelps-lps-30-aug-2012) and [RuleML 2015](https://www.dropbox.com/s/yqy678k6y4k543k/KELPS%2022%20Jan%202015.ppt?dl=0) give a flavour of the language. Additional material about the kernel of LPS is available on the [RuleML wiki](http://wiki.ruleml.org/index.php/KELPS). More technical papers can be found on Bob Kowalski's home page (https://www.doc.ic.ac.uk/~rak/), which also includes a copy of his 2011 book, which presents some of the philosophy underlying LPS.
+
+The implementation in this repository is an evolved version of the interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda.
+
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
 
-Main authors include [Bob Kowalksi] (https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+Main authors include [Bob Kowalksi] (https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+
 ## Installing ##
 ### Core engine ###
 * Pull or download this whole repository into a new folder "LPS"
@@ -57,6 +65,5 @@ There is no support for LPS at this point. The following contacts imply no oblig
 * Bug reporting and support for this implementation: 
 	* lps@interprolog.com
 * To find out more about LPS/KELPS in general: 
-	* r.kowalski@imperial.ac.uk	* f.sadri@imperial.ac.uk
-
-
+	* r.kowalski@imperial.ac.uk
+	* f.sadri@imperial.ac.uk
