@@ -3,6 +3,10 @@
 *Drafted by Miguel Calejo, InterProlog Consulting,*
 *July 2016*
 
+### Up and running ###
+* Installing wizard
+* Wiki for the user's manual
+
 These are just preliminary thoughts, there's no concrete plan yet to develop them.
 ### More examples needed ###
 All examples should act as tests too. 
@@ -12,7 +16,7 @@ Examples TBD:
 * LPS "intersecting" Abductive Logic Programming
 * LPS "dispensing" with modal logics, cf. Bob's "Obligations" paper
 * Workflow, e.g. document routing?
-* Economics (Jacinto?)
+* Economics and the Rational Choice Theory, for instance [the case of physician-induced demand](http://webdelprofesor.ula.ve/ingenieria/jacinto/publica/2014/phdposters_template-Pedro%20Cadenas.pdf)
 * Smart house and its energy game (Bob's idea)
 * Lamport's clock
 * Kid oriented stuff
