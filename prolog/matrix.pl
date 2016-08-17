@@ -4,9 +4,21 @@
     dot_product/3,
     cholesky_decomposition/2,
     matrix_inversion/2,
-    matrix_inv_triang/2
+    matrix_inv_triang/2,
+    determinant/2
     ]).
 :- use_module(library(clpfd), [transpose/2]).
+
+% ?- determinant([[2,-1,0],[-1,2,-1],[0,-1,2]],D).
+% D = 3.999999999999999.
+determinant(A,Det):-
+  cholesky_decomposition(A,L),
+  get_diagonal(L,D),
+  foldl(prod,D,1,DetL),
+  Det is DetL*DetL.
+ 
+prod(A,P0,P):- 
+  P is P0*A.
 
 % http://www.mymathlib.com/c_source/matrices/linearsystems/unit_lower_triangular.c
 % http://www.mcs.csueastbay.edu/~malek/TeX/Triangle.pdf
