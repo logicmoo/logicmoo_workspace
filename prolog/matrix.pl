@@ -1,3 +1,24 @@
+/** <module> matrix
+
+This module performs matrix operations.
+Impemented operations:
+ - sum
+ - difference
+ - multiplication
+ - Cholesky decomposition https://en.wikipedia.org/wiki/Cholesky_decomposition
+ - determinant for positive semi-definite matrices (using Cholesky decomposition)
+ - inversion for positive semi-definite matrices (using Cholesky decomposition)
+ - inversion for lower triangular matrices
+
+The library was developed for dealing with multivariate Gaussian distributions,
+that's the reson for the focus on positive semi-definite matrices
+
+@author Fabrizio Riguzzi
+@license Artistic License 2.0
+@copyright Fabrizio Riguzzi
+*/
+
+
 :- module(matrix,
     [matrix_multiply/3,
     matrix_sum/3,
@@ -13,8 +34,10 @@
 %%  determinant(+A,-D) is det.
 % computes the determinant for a positive semi-definite matrix.
 % Uses the Cholenski decomposition
+% ==
 % ?- determinant([[2,-1,0],[-1,2,-1],[0,-1,2]],D).
 % D = 3.999999999999999.
+% ==
 determinant(A,Det):-
   cholesky_decomposition(A,L),
   get_diagonal(L,D),
@@ -27,9 +50,10 @@ prod(A,P0,P):-
 %%  matrix_inversion(+M,-IM) is det.
 % inversion of a positive semi-definite matrix. Uses the Cholenski 
 % decomposition
+% ==
 % ?- matrix_inversion([[2,-1,0],[-1,2,-1],[0,-1,2]],L).
 % L = [[0.7499999999999999, 0.5000000000000001, 0.2500000000000001], [0.5000000000000001, 1.0000000000000004, 0.5000000000000002], [0.2500000000000001, 0.5000000000000002, 0.7500000000000001]].
-% 
+% ==
 matrix_inversion(A,B):-
   cholesky_decomposition(A,L),
   matrix_inv_triang(L,LI),
@@ -42,9 +66,10 @@ matrix_inversion(A,B):-
 % http://www.mymathlib.com/c_source/matrices/linearsystems/unit_lower_triangular.c
 % http://www.mcs.csueastbay.edu/~malek/TeX/Triangle.pdf
 % code from
+% ==
 % ?- matrix_inv_triang([[2,0,0],[-1,2,0],[0,-1,2]],L).
 % L = [[0.5, 0.0, 0.0], [0.25, 0.5, 0.0], [0.125, 0.25, 0.5]].
-%
+% ==
 matrix_inv_triang(L1,L2):-
   get_diagonal(L1,D),
   maplist(inv,D,ID),
@@ -120,7 +145,10 @@ list_to_term(L,LT):-
 %%  matrix_multiply(+X,+Y,-M) is det.
 %
 %   X(N*P),Y(P*M),M(N*M)
-%
+% ==
+% ?- matrix_multiply([[1,2],[3,4],[5,6]], [[1,1,1],[1,1,1]],R).
+% R = [[3, 3, 3], [7, 7, 7], [11, 11, 11]].
+% ==
 % code from http://stackoverflow.com/questions/34206275/matrix-multiplication-with-prolog
 matrix_multiply(X,Y,M) :-
   matrix_mul(X,Y,M0),
@@ -140,31 +168,31 @@ dot_product([X|Xs],[T|Ts],M) :-
     foldl(mul,Xs,Ts,X*T,M).
 mul(X,T,M,M+X*T).
 
+%% matrix_diff(+A,+B,-C) is det
 matrix_diff(X,Y,S):-
   maplist(maplist(sum),X,Y,S).
 
 diff(A,B,C):-
   C is A-B.
+%% matrix_sum(+A,+B,-C) is det
+% ==
+% matrix_sum([[1,2],[3,4],[5,6]],[[1,2],[3,4],[5,6]],M).
+% ==
 matrix_sum(X,Y,S):-
   maplist(maplist(sum),X,Y,S).
 
 sum(A,B,C):-
   C is A+B.
-/*
-?- [matrix_multiply].
-?- matrix_multiply([[1,2],[3,4],[5,6]], [[1,1,1],[1,1,1]],R),maplist(maplist(is),C,R).
-R = [[1*1+2*1, 1*1+2*1, 1*1+2*1], [3*1+4*1, 3*1+4*1, 3*1+4*1], [5*1+6*1, 5*1+6*1, 5*1+6*1]],
-C = [[3, 3, 3], [7, 7, 7], [11, 11, 11]].
-matrix_sum([[1,2],[3,4],[5,6]],[[1,2],[3,4],[5,6]],M).
-*/
 
 %% cholesky_decomposition(+A,-L) is det.
 % computes the Cholesky decomposition of a positive semi-definite matrix
 % code from https://rosettacode.org/wiki/Cholesky_decomposition#C
+% ==
 % cholesky_decomposition([[25, 15, -5], [15, 18,  0], [-5,  0, 11]],L).
 % L = [[5.0, 0, 0], [3.0, 3.0, 0], [-1.0, 1.0, 3.0]].
 % cholesky_decomposition([[18, 22,  54,  42],[22, 70,  86,  62],[ 54, 86, 174, 134],[ 42, 62, 134, 106]],L).
 % L = [[4.242640687119285, 0, 0, 0], [5.185449728701349, 6.565905201197403, 0, 0], [12.727922061357857, 3.0460384954008553, 1.6497422479090704, 0], [9.899494936611667, 1.624553864213788, 1.8497110052313648, 1.3926212476456026]].
+% ==
 cholesky_decomposition(A,L):-
   append(A,AL),
   length(AL,NL),
