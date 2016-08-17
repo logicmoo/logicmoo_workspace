@@ -16,7 +16,6 @@ that's the reson for the focus on positive semi-definite matrices
 Example of use
 ---------------
 
-    $ 
     $ swipl
     ?- use_module(library(matrix)).
     ?- determinant([[2,-1,0],[-1,2,-1],[0,-1,2]],D).
