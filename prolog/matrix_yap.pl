@@ -653,6 +653,14 @@ Unify  _NElems_ with the type of the elements in  _Matrix_.
 :- use_module(library(apply)).
 %:- use_module(library(mapargs)).
 %:- use_module(library(lists)).
+foldl2(Goal, List, V0, V, W0, W) :-
+        foldl2_(List, Goal, V0, V, W0, W).
+
+foldl2_([], _, V, V, W, W).
+foldl2_([H|T], Goal, V0, V, W0, W) :-
+        call(Goal, H, V0, V1, W0, W1),
+        foldl2_(T, Goal, V1, V, W1, W).
+
 
 ( X <== '[]'(Dims0, array) of V ) :-
 	var(V), !,

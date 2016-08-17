@@ -153,7 +153,6 @@ matrix_next_index(int *dims, int ndims, int* indx)
 }
 int write_blob(FILE *s, atom_t a, int flags)
 {
-  fprintf(s,"Matrix\n");
   return TRUE;
 }
 static YAP_Term YAP_MkBlobTerm(int size)

@@ -1,5 +1,6 @@
 :- module(matrix_multiply,
     [matrix_multiply/3,
+    matrix_sum/3,
     dot_product/3,
     cholesky_decomposition/2
     ]).
@@ -10,6 +11,10 @@
 %   X(N*P),Y(P*M),M(N*M)
 %
 matrix_multiply(X,Y,M) :-
+  matrix_mul(X,Y,M0),
+  maplist(maplist(is),M0,M).
+
+matrix_mul(X,Y,M) :-
     transpose(Y,T),
     maplist(row_multiply(T),X,M).
 
@@ -20,11 +25,17 @@ dot_product([X|Xs],[T|Ts],M) :-
     foldl(mul,Xs,Ts,X*T,M).
 mul(X,T,M,M+X*T).
 
+matrix_sum(X,Y,S):-
+  maplist(maplist(sum),X,Y,S).
+
+sum(A,B,C):-
+  C is A+B.
 /*
 ?- [matrix_multiply].
 ?- matrix_multiply([[1,2],[3,4],[5,6]], [[1,1,1],[1,1,1]],R),maplist(maplist(is),C,R).
 R = [[1*1+2*1, 1*1+2*1, 1*1+2*1], [3*1+4*1, 3*1+4*1, 3*1+4*1], [5*1+6*1, 5*1+6*1, 5*1+6*1]],
 C = [[3, 3, 3], [7, 7, 7], [11, 11, 11]].
+matrix_sum([[1,2],[3,4],[5,6]],[[1,2],[3,4],[5,6]],M).
 */
 % https://rosettacode.org/wiki/Cholesky_decomposition#C
 /*
