@@ -1,4 +1,4 @@
-:- module(matrix_multiply,
+:- module(matrix,
     [matrix_multiply/3,
     matrix_sum/3,
     dot_product/3,
