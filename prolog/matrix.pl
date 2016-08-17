@@ -1,6 +1,7 @@
 :- module(matrix,
     [matrix_multiply/3,
     matrix_sum/3,
+    matrix_diff/3,
     dot_product/3,
     cholesky_decomposition/2,
     matrix_inversion/2,
@@ -111,6 +112,7 @@ list_to_term(L,LT):-
 %
 %   X(N*P),Y(P*M),M(N*M)
 %
+% code from http://stackoverflow.com/questions/34206275/matrix-multiplication-with-prolog
 matrix_multiply(X,Y,M) :-
   matrix_mul(X,Y,M0),
   maplist(maplist(is),M,M0).
@@ -126,6 +128,11 @@ dot_product([X|Xs],[T|Ts],M) :-
     foldl(mul,Xs,Ts,X*T,M).
 mul(X,T,M,M+X*T).
 
+matrix_diff(X,Y,S):-
+  maplist(maplist(sum),X,Y,S).
+
+diff(A,B,C):-
+  C is A-B.
 matrix_sum(X,Y,S):-
   maplist(maplist(sum),X,Y,S).
 
