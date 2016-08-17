@@ -133,6 +133,9 @@ matrix_mul(X,Y,M) :-
 row_multiply(T,X,M) :-
     maplist(dot_product(X),T,M).
 
+%%  dot_product(+X,+Y,-D) is det.
+% computes the dot produce of two vectors
+%
 dot_product([X|Xs],[T|Ts],M) :-
     foldl(mul,Xs,Ts,X*T,M).
 mul(X,T,M,M+X*T).
