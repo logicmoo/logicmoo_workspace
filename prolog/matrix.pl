@@ -23,14 +23,32 @@ that's the reson for the focus on positive semi-definite matrices
     [matrix_multiply/3,
     matrix_sum/3,
     matrix_diff/3,
+    matrix_mult_scal/3,
+    matrix_div_scal/3,
     dot_product/3,
     cholesky_decomposition/2,
     matrix_inversion/2,
     matrix_inv_triang/2,
-    determinant/2
+    determinant/2,
+    list0/2
     ]).
 :- use_module(library(clpfd), [transpose/2]).
+%%  matrix_div_scal(+A,+V,-B) is det.
+% divide matrix A by scalar V
+%
+matrix_div_scal(A,V,B):-
+  maplist(maplist(div(V)),A,B).
 
+div(A,B,C):-
+  C is B/A.
+%%  matrix_mult_scal(+A,+V,-B) is det.
+% multiply matrix A by scalar V
+%
+matrix_mult_scal(A,V,B):-
+  maplist(maplist(mult(V)),A,B).
+
+mult(A,B,C):-
+  C is A*B.
 %%  determinant(+A,-D) is det.
 % computes the determinant for a positive semi-definite matrix.
 % Uses the Cholenski decomposition
@@ -255,7 +273,8 @@ identify_rows(E,N,[R|L]):-
   append(R,Rest,E),
   identify_rows(Rest,N,L).
 
-
+%% list0(+N,-L) is det
+% returns a list of N zeros
 list0(0,[]):-!.
 
 list0(N,[0|T]):-
