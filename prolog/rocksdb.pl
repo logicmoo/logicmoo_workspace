@@ -97,6 +97,10 @@ See rocks_open/3 for details.
 %	      Maps to a Prolog integer in the range
 %	      -9223372036854775808..9223372036854775807 Stored as a 8
 %	      bytes in native byte order.
+%	    - float
+%	      Value is mapped to a 32-bit floating point number.
+%	    - double
+%	      Value is mapped to a 34-bit floating point number (double).
 %	    - term
 %	      Stores any Prolog term. Stored using PL_record_external().
 %	      The PL_record_external() function serializes the internal

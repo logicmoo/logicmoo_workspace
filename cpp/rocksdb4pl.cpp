@@ -58,6 +58,8 @@ typedef enum
   BLOB_BINARY,				/* Byte string as string */
   BLOB_INT32,				/* 32-bit native integer */
   BLOB_INT64,				/* 64-bit native integer */
+  BLOB_FLOAT32,				/* 32-bit IEEE float */
+  BLOB_FLOAT64,				/* 64-bit IEEE double */
   BLOB_TERM				/* Arbitrary term */
 } blob_type;
 
@@ -324,6 +326,12 @@ class PlSlice : public Slice
 {
 public:
   int must_free = 0;
+  union
+  { int i32;
+    int64_t i64;
+    float f32;
+    double f64;
+  } v;
 
   ~PlSlice()
   { if ( must_free )
@@ -356,21 +364,36 @@ get_slice(term_t t, PlSlice &s, blob_type type)
       }
       throw(PlException(PL_exception(0)));
     case BLOB_INT32:
-    { int i;
-
-      if ( PL_get_integer_ex(t, &i) )
-      { s.data_ = (char*)&i;
-	s.size_ = sizeof(i);
+    { if ( PL_get_integer_ex(t, &s.v.i32) )
+      { s.data_ = (char*)&s.v.i32;
+	s.size_ = sizeof(s.v.i32);
 	return;
       }
       throw(PlException(PL_exception(0)));
     }
     case BLOB_INT64:
-    { int64_t i;
+    { if ( PL_get_int64_ex(t, &s.v.i64) )
+      { s.data_ = (char*)&s.v.i64;
+	s.size_ = sizeof(s.v.i64);
+	return;
+      }
+      throw(PlException(PL_exception(0)));
+    }
+    case BLOB_FLOAT32:
+    { double d;
 
-      if ( PL_get_int64_ex(t, &i) )
-      { s.data_ = (char*)&i;
-	s.size_ = sizeof(i);
+      if ( PL_get_float_ex(t, &d) )
+      { s.v.f32 = (float)d;
+	s.data_ = (char*)&s.v.f32;
+	s.size_ = sizeof(s.v.f32);
+	return;
+      }
+      throw(PlException(PL_exception(0)));
+    }
+    case BLOB_FLOAT64:
+    { if ( PL_get_float_ex(t, &s.v.f64) )
+      { s.data_ = (char*)&s.v.f64;
+	s.size_ = sizeof(s.v.f64);
 	return;
       }
       throw(PlException(PL_exception(0)));
@@ -413,6 +436,18 @@ unify(term_t t, const Slice &s, blob_type type)
       memcpy(&i, s.data_, sizeof(i));
       return PL_unify_int64(t, i);
     }
+    case BLOB_FLOAT32:
+    { float f;
+
+      memcpy(&f, s.data_, sizeof(f));
+      return PL_unify_float(t, f);
+    }
+    case BLOB_FLOAT64:
+    { double f;
+
+      memcpy(&f, s.data_, sizeof(f));
+      return PL_unify_float(t, f);
+    }
     case BLOB_TERM:
     { PlTerm tmp;
 
@@ -438,6 +473,9 @@ unify(term_t t, const Slice *s, blob_type type)
       case BLOB_INT32:
       case BLOB_INT64:
 	return PL_unify_integer(t, 0);
+      case BLOB_FLOAT32:
+      case BLOB_FLOAT64:
+	return PL_unify_float(t, 0.0);
       case BLOB_TERM:
 	return PL_unify_nil(t);
       default:
@@ -597,6 +635,8 @@ static PlAtom ATOM_string("string");
 static PlAtom ATOM_binary("binary");
 static PlAtom ATOM_int32("int32");
 static PlAtom ATOM_int64("int64");
+static PlAtom ATOM_float("float");
+static PlAtom ATOM_double("double");
 static PlAtom ATOM_term("term");
 static PlAtom ATOM_open("open");
 static PlAtom ATOM_once("once");
@@ -611,6 +651,8 @@ get_blob_type(PlTerm t, blob_type *key_type)
     else if ( ATOM_binary == a ) *key_type = BLOB_BINARY;
     else if ( ATOM_int32  == a ) *key_type = BLOB_INT32;
     else if ( ATOM_int64  == a ) *key_type = BLOB_INT64;
+    else if ( ATOM_float  == a ) *key_type = BLOB_FLOAT32;
+    else if ( ATOM_double == a ) *key_type = BLOB_FLOAT64;
     else if ( ATOM_term   == a ) *key_type = BLOB_TERM;
     else throw PlDomainError("rocks_type", t);
 

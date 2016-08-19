@@ -42,6 +42,7 @@
 test_rocksdb :-
 	run_tests([ rocks,
 		    terms,
+		    types,
 		    merge
 		  ]).
 
@@ -91,6 +92,62 @@ test(basic, Noot-Noot1 == noot(mies)-noot(1)) :-
 	rocks_close(RocksDB).
 
 :- end_tests(terms).
+
+:- begin_tests(types, [cleanup(delete_db)]).
+
+test(int32) :-
+	Min = -100, Max = 100,
+	test_db(Dir),
+	rocks_open(Dir, RocksDB,
+		   [ key(atom),
+		     value(int32)
+		   ]),
+	forall(between(Min, Max, I),
+	       ( rocks_put(RocksDB, key, I),
+		 assertion(rocks_get(RocksDB, key, I)))),
+	rocks_close(RocksDB).
+
+test(int64) :-
+	Min = -100, Max = 100,
+	test_db(Dir),
+	rocks_open(Dir, RocksDB,
+		   [ key(atom),
+		     value(int64)
+		   ]),
+	forall(between(Min, Max, I),
+	       ( rocks_put(RocksDB, key, I),
+		 assertion(rocks_get(RocksDB, key, I)))),
+	rocks_close(RocksDB).
+
+test(float) :-
+	Min = -100, Max = 100,
+	test_db(Dir),
+	rocks_open(Dir, RocksDB,
+		   [ key(atom),
+		     value(float)
+		   ]),
+	forall(between(Min, Max, I),
+	       ( F is sin(I),
+		 rocks_put(RocksDB, key, F),
+		 rocks_get(RocksDB, key, F2),
+		 assertion(abs(F-F2) < 0.00001))),
+	rocks_close(RocksDB).
+
+test(double) :-
+	Min = -100, Max = 100,
+	test_db(Dir),
+	rocks_open(Dir, RocksDB,
+		   [ key(atom),
+		     value(double)
+		   ]),
+	forall(between(Min, Max, I),
+	       ( F is sin(I),
+		 rocks_put(RocksDB, key, F),
+		 rocks_get(RocksDB, key, F2),
+		 assertion(F=:=F2))),
+	rocks_close(RocksDB).
+
+:- end_tests(types).
 
 :- begin_tests(merge, [cleanup(delete_db)]).
 
