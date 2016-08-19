@@ -14,7 +14,7 @@ check::
 	swipl $(PLPATHS) -g test_rocksdb,halt -t 'halt(1)' test/test_rocksdb.pl
 
 distclean: clean
-	rm -f $(PACKSODIR)/rocksdb.$(SOEXT)
+	rm -f $(PACKSODIR)/rocksdb4pl.$(SOEXT)
 
 clean:
 	rm -f *~
