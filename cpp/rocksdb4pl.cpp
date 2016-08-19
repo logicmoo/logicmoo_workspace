@@ -504,8 +504,7 @@ call_merger(const dbref *ref, PlTermv av, std::string* new_value,
     pred_call6 = PL_predicate("call", 6, "system");
 
   try
-  { engine e;
-    PlQuery q(pred_call6, av);
+  { PlQuery q(pred_call6, av);
     if ( q.next_solution() )
     { PlSlice answer;
 
@@ -536,7 +535,8 @@ public:
 	    const std::deque<std::string>& operand_list,
 	    std::string* new_value,
 	    Logger* logger) const override
-  { PlTermv av(6);
+  { engine e;
+    PlTermv av(6);
     PlTail list(av[4]);
     PlTerm tmp;
 
@@ -562,7 +562,8 @@ public:
 	       const Slice& right_operand,
 	       std::string* new_value,
 	       Logger* logger) const override
-  { PlTermv av(6);
+  { engine e;
+    PlTermv av(6);
 
     if ( PL_recorded(ref->merger, av[0]) &&
 	 (av[1] = ATOM_partial) &&
