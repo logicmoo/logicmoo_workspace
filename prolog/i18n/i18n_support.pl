@@ -226,7 +226,7 @@ expand_i18n_term_trans(_, _, Var0, ~Var1) :-
     !.
 expand_i18n_term_trans(Proc, _, M:Term, Translation) :- !,
     expand_i18n_term_trans(Proc, M, Term, Translation).
-expand_i18n_term_trans(Proc, M, Term, Translation) :- !,
+expand_i18n_term_trans(Proc, M, Term, Translation) :-
     i18n_process_term(call(Proc, (~)), M, Term, Translation).
 
 expand_i18n_term_rtrans(_, _, Var0, ~~Var1) :-

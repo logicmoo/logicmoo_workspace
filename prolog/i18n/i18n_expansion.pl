@@ -152,5 +152,5 @@ term_expansion((Term0 :- Body), (Term :- Body)) :- !,
     translate_term(Term0, Term).
 term_expansion((Term0 --> Body), (Term --> Body)) :- !,
     translate_term(Term0, Term).
-term_expansion(Term0, Term) :- !,
+term_expansion(Term0, Term) :-
     translate_term(Term0, Term).
