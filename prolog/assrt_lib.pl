@@ -459,7 +459,7 @@ body_member([A|B], list_position(From, To, [APos|EPos], TPos), Lit, LPos) :- !,
     ( Lit=A, LPos=APos
     ; Lit=B, LPos=list_position(From, To, EPos, TPos)
     ).
-body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :- !,
+body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :-
     ( Lit=A, LPos=APos
     ; Lit=B, LPos=BPos
     ).
