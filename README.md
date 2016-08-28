@@ -11,7 +11,7 @@ Impemented operations:
  - inversion for lower triangular matrices 
 
 The library was developed for dealing with multivariate Gaussian distributions, 
-that's the reson for the focus on positive semi-definite matrices
+that's the reason for the focus on positive semi-definite matrices
 
 Example of use
 ---------------
