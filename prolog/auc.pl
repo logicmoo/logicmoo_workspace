@@ -37,7 +37,7 @@ compute_areas(LG,AUCROC,ROC,AUCPR,PR):-
   reverse(LG1,LG2),
   compute_pointsroc(LG2,+1e20,0,0,NPos,NNeg,[],ROC),
   hull(ROC,0,0,0,AUCROC),
-  compute_aucpr(LG,NPos,NNeg,AUCPR,PR).
+  compute_aucpr(LG2,NPos,NNeg,AUCPR,PR).
 
 /**
 compute_areas_diagrams(+LE:list,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
