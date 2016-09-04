@@ -32,14 +32,19 @@
 
 :- module(aleph,
 	  [ aleph/0,
-	    my_read_all/0,
+	    aleph_read_all/0,
 		aleph_false/0,
 		abducible/1,
 	    induce/0,
 		induce/1,
 		induce_modes/0,
 		induce_tree/0,
-		rdhyp/0, %mah!
+		induce_tree/1,
+		induce_max/0,
+		induce_max/2,
+		induce_cover/0,
+		induce_cover/1,
+		rdhyp/0,
 		reduce/0,
 		reduce_and_show/1,
 		sat/1,
@@ -49,7 +54,6 @@
 		modeh/2,
 		modeb/2,
 		determination/2,
-		%theory_induce/1,
 		op(500,fy,#),
 		op(500,fy,*),
 		op(900,xfy,because)
@@ -70,19 +74,7 @@ aleph :-
   %findall(local_setting(P,V),default_setting_sc(P,V),L),
   %assert_all(L,M,_),
   assert(input_mod(M)),
-  %assert(user:'$aleph_sat_terms'(_,_)),
-	%assert(user:'$aleph_sat_atom'(_,_)),
-  %retractall(M:rule_sc_n(_)),
-  %assert(M:rule_sc_n(0)),
-%assert(has_car(east1,car_11)), % 11,12
-%assert(has_car(east1,car_12)),
-%assert(has_car(east1,car_13)),
-%assert(has_car(east1,car_14)),
 	M:dynamic((pos_on/0,neg_on/0,bg_on/0,incneg/1,incpos/1,in/1,bgc/1,bg/1)),
-  /*M:dynamic((modeh/2,modeh/4,modeb/2,fixed_rule/3,banned/2,lookahead/2,
-    lookahead_cons/2,lookahead_cons_var/2,prob/2,input/1,input_cw/1,
-    ref_clause/1,ref/1,model/1,neg/1,rule/4,determination/2,
-    bg_on/0,bg/1,bgc/1,in_on/0,in/1,inc/1,int/1)),*/
   style_check(-discontiguous),
 
 	clean_up,
@@ -195,18 +187,7 @@ print_arr([]).
 print_arr([H|T]):-
 	write(H),print_arr(T),nl.
 	
-my_read_all :-
-	/*
-	clean_up,
-	reset,
-	*/
-	%broadcast(background(loaded)),
-	%read_background(Back),
-	%my_read_pos_examples(pos),
-	%my_read_neg_examples(neg),
-	%read_examples(Pos,Neg),
-	%input_mod(M),!,
-    %M:in(Pos), 	get
+aleph_read_all :-
 	record_targetpred, 	
 	check_recursive_calls,
 	check_prune_defs,
@@ -4821,13 +4802,25 @@ induce(Program):-
 
 copy_theory(Program):-
 	'$aleph_global'(rules,rules(L)),
-        aleph_reverse(L,L1),
-        aleph_member(ClauseNum,L1),
-	'$aleph_global'(theory,theory(ClauseNum,_,_,_,_)),
-	copy_theory_eval(ClauseNum,Program,_),
-	fail.
+		aleph_member(ClauseNum,L),
+		copy_theory_inner(ClauseNum,Program),
+        aleph_member(ClauseNum,L),
+	'$aleph_global'(theory,theory(ClauseNum,_,_,_,_)).
+	%copy_theory_eval(ClauseNum,Program,_).
 copy_theory(_).
+
+copy_theory_inner(ClauseNum,[SubProgram|TailP]):-
+	integer(ClauseNum),
+	ClauseNum > 0,!,
+	'$aleph_global'(theory,theory(ClauseNum,_,SubProgram,_,_)),	
+	ClauseNum1 is ClauseNum-1,
+	copy_theory_inner(ClauseNum1,TailP).
+
+copy_theory_inner(0,[]).
+
+% ============= UNUSED ====================
 copy_theory_eval(0,_,Label):-
+%	trace,
 	'$aleph_global'(hypothesis,hypothesis(_,Clause,_,_)), !,
 	label_create(Clause,Label),
 	p_message('Rule 0'),
@@ -4838,30 +4831,36 @@ copy_theory_eval(0,_,Label):-
 	label_print_eval([PC,NC,L]),
 	nl.
 copy_theory_eval(ClauseNum,Program,_):-
+%	trace,
 	integer(ClauseNum),
 	ClauseNum > 0,
 	'$aleph_global'(theory,theory(ClauseNum,_,Clause,_,_)),
 	!,
 	copy_theory_eval_inner(Clause,Program).
-copy_theory_eval(_,_,_).
+copy_theory_eval(_,_,_):-trace.
 copy_theory_eval_inner((H:-true),Program):-
+	trace,
 	!,
 	copy_theory_eval_inner(H,Program).
 copy_theory_eval_inner((H:-B),Program):-
+	trace,
 	!,
     copy_term((H:-B),(Head:-Body)),
     numbervars((Head:-Body),0,_),
 	add_lit_to_program(Body,Program).
-copy_theory_eval_inner((Lit),Program):- !,
+copy_theory_eval_inner((Lit),Program):- 
+	$trace,
+	!,
 	copy_term(Lit,Lit1),
     numbervars(Lit1,0,_),
 	add_lit_to_program(Lit1,Program).
 
-add_lit_to_program((Lit,Lits),Program):-
-	Program = [Lit|Program1],
+add_lit_to_program((Lit,Lits),[Lit|Program1]):-
+	trace,
 	add_lit_to_program(Lits,Program1).
-add_lit_to_program((Lit),Program):- !,
-	Program = [Lit].
+add_lit_to_program((Lit),[Lit]):-trace.
+
+% ============= /UNUSED ====================
 
 % construct theories 1 clause at a time
 % does not perform greedy cover removal after each clause found
@@ -4890,6 +4889,29 @@ induce_max:-
 	show_total_stats,
 	record_total_stats, !.
 induce_max.
+
+induce_max(program,Program):-
+	clean_up,
+	retractall('$aleph_global'(search_stats,search_stats(_,_))),
+	'$aleph_global'(atoms,atoms(pos,PosSet)),
+	PosSet \= [],
+	store(portray_search),
+	set(portray_search,false),
+	record_settings,
+	stopwatch(StartClock),
+	set(maxcover,true),
+	induce_max(PosSet),
+	stopwatch(StopClock),
+	Time is StopClock - StartClock,
+	copy_theory(Program),
+	show(theory),
+	record_theory(Time),
+	noset(maxcover),
+	reinstate(portray_search),
+	reinstate(greedy),
+	p1_message('time taken'), p_message(Time),
+	show_total_stats,
+	record_total_stats, !.
 
 induce_max([]).
 induce_max([Start-Finish|Intervals]):-
@@ -4942,6 +4964,35 @@ induce_cover:-
 	show_total_stats,
 	record_total_stats, !.
 induce_cover.
+
+induce_cover(Program):-
+	clean_up,
+	retractall('$aleph_global'(search_stats,search_stats(_,_))),
+	'$aleph_global'(atoms,atoms(pos,PosSet)),
+	PosSet \= [],
+	store(portray_search),
+	set(portray_search,false),
+	setting(samplesize,S),
+	setting(abduce,Abduce),
+	record_settings,
+	stopwatch(StartClock),
+        repeat,
+	gen_sample(pos,S),
+	asserta('$aleph_global'(besthyp,besthyp([-inf,0,1,-inf],0,
+					(false),[],[]))),
+	get_besthyp(Abduce),
+	addhyp,
+        '$aleph_global'(atoms_left,atoms_left(pos,[])),
+	stopwatch(StopClock),
+	Time is StopClock - StartClock,
+    copy_theory(Program),
+	show(theory),
+	record_theory(Time),
+	reinstate(portray_search),
+	reinstate(greedy),
+	p1_message('time taken'), p_message(Time), 
+	show_total_stats,
+	record_total_stats, !.
 
 % rudimentary version of an interactive, incremental rule learner
 % repeatedly does the following:
@@ -5165,6 +5216,26 @@ induce_tree:-
 	reinstate_values([refine]), !.
 induce_tree.
 
+induce_tree(Program):-
+	clean_up,
+	setting(tree_type,Type),
+	store_values([refine]),
+	set(refine,auto),
+	setting(mingain,MinGain),
+	(MinGain =< 0.0 ->
+		err_message('inappropriate setting for mingain'),
+		fail;
+		true
+	),
+	record_settings,
+	stopwatch(StartClock),
+	construct_tree(Type),
+	stopwatch(StopClock),
+	Time is StopClock - StartClock,
+	copy_theory(Program),
+	show(theory),
+	record_theory(Time),
+	reinstate_values([refine]), !.
 % utilities for the induce predicates
 
 
@@ -9238,33 +9309,18 @@ read_examples(Pos,Neg):-
 	reset_counts,
 	asserta('$aleph_global'(last_clause,last_clause(0))),
 	broadcast(examples(loaded)).
-/*
-my_record_examples([]).
-my_record_examples([Ex|T]):-
-	record_example(nocheck,Type,Ex,_),
-	my_record_examples(T).
-*/
-my_read_pos_examples(Type) :-
+
+aleph_read_pos_examples(Type) :-
 	broadcast(background(loaded)),
 	%input_mod(M),!,
 	clean_up_examples(Type),
 	asserta('$aleph_global'(size,size(Type,0))),
-	/*
-	record_example(nocheck,pos,eastbound(east1),_),
-	record_example(nocheck,pos,eastbound(east2),_),
-	record_example(nocheck,pos,eastbound(east3),_),
-	record_example(nocheck,pos,eastbound(east4),_),
-	record_example(nocheck,pos,eastbound(east5),N1),
-	*/
-	%write(N1),nl,
-	%my_record_examples(Type),
-	%findall(C,M:inc(C),L),
 	'$aleph_global'(size,size(Type,N)),
 	(N > 0 -> Ex = [1-N]; Ex = []),
 	asserta('$aleph_global'(atoms,atoms(Type,Ex))),
 	asserta('$aleph_global'(atoms_left,atoms_left(Type,Ex))),
 	asserta('$aleph_global'(last_example,last_example(Type,N))).
-my_read_neg_examples(Type) :-
+aleph_read_neg_examples(Type) :-
 	%input_mod(M),!,
 	clean_up_examples(Type),
 	asserta('$aleph_global'(size,size(Type,0))),
@@ -9655,9 +9711,13 @@ show(theory):-
         nl,
         '$aleph_global'(rules,rules(L)),
         aleph_reverse(L,L1),
+		write("aleph_member"),nl,
         aleph_member(ClauseNum,L1),
+		write("theory,theory"),nl,
 	'$aleph_global'(theory,theory(ClauseNum,_,_,_,_)),
+		write("Entro in eval_rule"),nl,
 	eval_rule(ClauseNum,_),
+	write("Fine di eval_rule"),nl,
 	% pp_dclause(Clause),
         fail.
 show(theory):-
@@ -10809,7 +10869,7 @@ write_profile_data([]).
 sandbox:safe_primitive('$syspreds':current_module(_)).
 sandbox:safe_primitive('$syspreds':property_predicate(_,_)).
 sandbox:safe_primitive('$syspreds':define_or_generate(_)).
-sandbox:safe_primitive(aleph:my_read_all).
+sandbox:safe_primitive(aleph:aleph_read_all).
 sandbox:safe_primitive(aleph:aleph).
 sandbox:safe_primitive(aleph:abducible(_)).
 sandbox:safe_primitive(aleph:aleph_false).
@@ -10817,6 +10877,10 @@ sandbox:safe_primitive(aleph:induce).
 sandbox:safe_primitive(aleph:induce(_)).
 sandbox:safe_primitive(aleph:induce_modes).
 sandbox:safe_primitive(aleph:induce_tree).
+sandbox:safe_primitive(aleph:induce_tree(_)).
+sandbox:safe_primitive(aleph:induce_max).
+sandbox:safe_primitive(aleph:induce_max(program,_)).
+sandbox:safe_primitive(aleph:induce_cover(_)).
 sandbox:safe_primitive(aleph:rdhyp).
 sandbox:safe_primitive(aleph:sat(_)).
 sandbox:safe_primitive(aleph:model(_)).
