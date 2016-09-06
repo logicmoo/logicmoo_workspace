@@ -125,7 +125,7 @@ intercept(DCG, Ex, H, S0, S) :-
 
 cut_to(Goal) -->
     {prolog_current_choice(CP)},
-    intercept(Goal, cut_from, prolog_cut_to(CP)).
+    intercept(Goal, cut_from, catch(prolog_cut_to(CP), _, true)).
 
 cut_from :- send_signal(cut_from).
 
