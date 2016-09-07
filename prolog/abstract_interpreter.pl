@@ -96,7 +96,7 @@ abstract_interpreter(M:Goal, Abstraction, OptionL, data(0, [], Result)) :-
     option(evaluable(Eval), OptionL, []),
     option(on_error(OnErr), OptionL, print_message(informational)),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
-    ( abstract_interpreter(M:Goal, Abstraction, state(Loc, EvalL, M:OnErr, []), [], Out)
+    ( abstract_interpreter(M:Goal, Abstraction, state(Loc, EvalL, M:OnErr, [], []), [], Out)
     *->
       Result = true(Out)
     ; Result = fail
@@ -136,7 +136,19 @@ abstract_interpreter_body(M:Goal, _, Abs, State) --> !,
 abstract_interpreter_body(call(Goal), M, Abs, State) --> !,
     cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
 abstract_interpreter_body(\+ A, M, Abs, State) --> !,
-    \+ cut_to(abstract_interpreter_body(A, M, Abs, State)).
+    abstract_interpret_body_not(A, M, Abs, State).
+
+abstract_interpret_body_not(A, M, Abs, State) -->
+    ( cut_to(abstract_interpreter_body(A, M, Abs, State))
+    ->( \+ is_bottom
+      ->!,
+	{fail}
+      ; {fail}
+      )
+    ; !
+    ).
+abstract_interpret_body_not(_, _, _, _) --> bottom.
+
 abstract_interpreter_body(once(Goal), M, Abs, State, S0, S) :- !,
     once(abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
 abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S0, S) :- !,
@@ -229,31 +241,39 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
     },
-    { State0 = state(Loc, EvalL, OnError, _),
+    { State0 = state(Loc, EvalL, OnError, CallL, Data),
       implementation_module(M:Goal, IM)
     },
-    ( { ( evaluable_goal_hook(Goal, IM)
-	; functor(Goal, F, A),
-	  memberchk(IM:F/A, EvalL)
-	),
-	MRepl = M:Goal
-      ; ( replace_goal_hook(Goal, IM, Repl)
-	; memberchk((IM:Goal as Repl), EvalL)
-	),
-	MRepl = M:Repl
+    ( {member(MCall, CallL),
+       MCall =@= IM:Goal
       }
-    ->{call(MRepl)}
-    ; { copy_term(EvalL, EvalC), % avoid undesirable unifications
-	memberchk((IM:Goal :- Body), EvalC)
-      }
-    ->cut_to(abstract_interpreter_body(Body, M, Abs, State0 ))
-    ; { \+ predicate_property(M:Goal, defined) }
-    ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
-	% TBD: information to error
-	fail
-      }
-    ; call(Abs, Goal, M, CM:Body, State0, State),
-      cut_to(abstract_interpreter_body(Body, CM, Abs, State))
+    ->bottom
+    ; { copy_term(IM:Goal, MCall),
+	State1 = state(Loc, EvalL, OnError, [MCall|CallL], Data)
+      },
+      ( { ( evaluable_goal_hook(Goal, IM)
+	  ; functor(Goal, F, A),
+	    memberchk(IM:F/A, EvalL)
+	  ),
+	  MRepl = M:Goal
+	; ( replace_goal_hook(Goal, IM, Repl)
+	  ; memberchk((IM:Goal as Repl), EvalL)
+	  ),
+	  MRepl = M:Repl
+	}
+      ->{call(MRepl)}
+      ; { copy_term(EvalL, EvalC), % avoid undesirable unifications
+	  memberchk((IM:Goal :- Body), EvalC)
+	}
+      ->cut_to(abstract_interpreter_body(Body, M, Abs, State1))
+      ; { \+ predicate_property(M:Goal, defined) }
+      ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
+				% TBD: information to error
+	  fail
+	}
+      ; call(Abs, Goal, M, CM:Body, State1, State),
+	cut_to(abstract_interpreter_body(Body, CM, Abs, State))
+      )
     ).
 
 % top: empty set
@@ -267,10 +287,10 @@ bottom(_, bottom).
 match_ai(head,    G, M, Body, S0, S) --> match_head(   G, M, Body, S0, S).
 match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).
 
-match_head(Goal, M, M:true, state(_, EvalL, OnErr, D), S) -->
+match_head(Goal, M, M:true, state(_, EvalL, OnErr, CallL, D), S) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { match_head_body(Goal, M, Body, Loc)
-    *->S = state(Loc, EvalL, OnErr, D)
+    *->S = state(Loc, EvalL, OnErr, CallL, D)
     ; fail
     },
     ( {Body = _:true}
@@ -305,8 +325,8 @@ extra_clauses(Goal, CM, I:Goal, _From) :-
     ->interface:'$implementation'(I, M)
     ).
 
-match_noloops(Goal, M, Body, state(Loc0, EvalL, OnErr, S),
-	      state(Loc, EvalL, OnErr, [M:F/A-Size|S])) -->
+match_noloops(Goal, M, Body, state(Loc0, EvalL, OnErr, CallL, S),
+	      state(Loc, EvalL, OnErr, CallL, [M:F/A-Size|S])) -->
     {predicate_property(M:Goal, interpreted)}, !,
     ( { functor(Goal, F, A),
 	term_size(Goal, Size),
