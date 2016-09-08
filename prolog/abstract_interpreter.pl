@@ -125,7 +125,21 @@ intercept(DCG, Ex, H, S0, S) :-
 
 cut_to(Goal) -->
     {prolog_current_choice(CP)},
-    intercept(Goal, cut_from, catch(prolog_cut_to(CP), _, true)).
+    intercept(Goal, cut_from, catch(safe_prolog_cut_to(CP), _, true)).
+
+safe_prolog_cut_to(CP) :-
+    prolog_current_choice(CPC),
+    safe_prolog_cut_to(CPC, CP, _).
+
+safe_prolog_cut_to(CPC, CP, CPF) :-
+    fix_choice(CPC, CP, CPF),
+    prolog_cut_to(CPF).
+
+fix_choice(CPC, CP, CPC) :-
+    CPC =< CP, !.
+fix_choice(CPC, CP, CPF) :-
+    prolog_choice_attribute(CPC, parent, CPP),
+    fix_choice(CPP, CP, CPF).
 
 cut_from :- send_signal(cut_from).
 
@@ -198,7 +212,7 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     ( \+ is_bottom
     ->!,
       { CutElse = yes }
-    ; []
+    ; { CutElse = no }
     ),
     ( abstract_interpreter_body(B, M, Abs, State)
     *->
