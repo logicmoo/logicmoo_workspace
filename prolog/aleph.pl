@@ -44,6 +44,8 @@
 		induce_max/2,
 		induce_cover/0,
 		induce_cover/1,
+		induce_incremental/0,
+		induce_incremental/1,
 		rdhyp/0,
 		reduce/0,
 		reduce_and_show/1,
@@ -84,7 +86,7 @@ user:term_expansion((:- begin_bg), []) :-
   input_mod(M),!,
   assert(M:bg_on).
 
-user:term_expansion(C, M:bgc(C)) :-
+user:term_expansion(C, []) :-
   C\= (:- end_bg),
 	
   input_mod(M),
@@ -92,16 +94,16 @@ user:term_expansion(C, M:bgc(C)) :-
 
 user:term_expansion((:- end_bg), []) :-
   input_mod(M),!,
-  retractall(M:bg_on),
-  findall(C,M:bgc(C),L),
-  retractall(M:bgc(_)),
-  (M:bg(BG0)->
-    retract(M:bg(BG0)),
-    append(BG0,L,BG),
-    assert(M:bg(BG))
-  ;
-    assert_all(L,M,_)
-  ).
+  retractall(M:bg_on).
+  %findall(C,M:bgc(C),L),
+  %retractall(M:bgc(_)),
+ % (M:bg(BG0)->
+ %   retract(M:bg(BG0)),
+ %   append(BG0,L,BG),
+ %   assert(M:bg(BG))
+ % ;
+ %   assert_all(L,M,_)
+ % ).
 user:term_expansion((:- begin_in_pos), []) :-
   input_mod(M),!,
   assert(M:pos_on),
@@ -109,7 +111,7 @@ user:term_expansion((:- begin_in_pos), []) :-
 	asserta('$aleph_global'(size,size(pos,0))).
 	
 
-user:term_expansion(C, M:incpos(C)) :-
+user:term_expansion(C, []) :-
 	
   C\= (:- end_in_pos),
   input_mod(M),
@@ -118,21 +120,21 @@ user:term_expansion(C, M:incpos(C)) :-
 user:term_expansion((:- end_in_pos), []) :-
   input_mod(M),!,
   retractall(M:pos_on),
-  findall(C,M:incpos(C),L),
-  retractall(M:incpos(_)),
+  %findall(C,M:incpos(C),L),
+  %retractall(M:incpos(_)),
 	'$aleph_global'(size,size(pos,N)),
 	(N > 0 -> Ex = [1-N]; Ex = []),
 	asserta('$aleph_global'(atoms,atoms(pos,Ex))),
 	asserta('$aleph_global'(atoms_left,atoms_left(pos,Ex))),
-	asserta('$aleph_global'(last_example,last_example(pos,N))),
-  (M:in(IN0)->
-    retract(M:in(IN0)),
-	
-    append(IN0,L,IN),
-    assert(M:in(IN))
-  ;
-    assert(M:in(L))
-  ).
+	asserta('$aleph_global'(last_example,last_example(pos,N))).
+%  (M:in(IN0)->
+%    retract(M:in(IN0)),%
+%	
+%    append(IN0,L,IN),
+%    assert(M:in(IN))
+%  ;
+%    assert(M:in(L))
+%  ).
 
 %%%%%%
 
@@ -142,7 +144,7 @@ user:term_expansion((:- begin_in_neg), []) :-
 	clean_up_examples(neg),
 	asserta('$aleph_global'(size,size(neg,0))).
 
-user:term_expansion(C, M:incneg(C)) :-
+user:term_expansion(C, []) :-
 	
   C\= (:- end_in_neg),
   input_mod(M),
@@ -151,22 +153,22 @@ user:term_expansion(C, M:incneg(C)) :-
 user:term_expansion((:- end_in_neg), []) :-
   input_mod(M),!,
   retractall(M:neg_on),
-  findall(C,M:incneg(C),L),
-  retractall(M:incneg(_)),
+  %findall(C,M:incneg(C),L),
+  %retractall(M:incneg(_)),
   '$aleph_global'(size,size(neg,N)),
 	(N > 0 -> Ex = [1-N]; Ex = []),
 	asserta('$aleph_global'(atoms,atoms(neg,Ex))),
 	asserta('$aleph_global'(atoms_left,atoms_left(neg,Ex))),
-	asserta('$aleph_global'(last_example,last_example(neg,N))),
-
-  (M:in(IN0)->
-    retract(M:in(IN0)),
+	asserta('$aleph_global'(last_example,last_example(neg,N))).
+%
+%  (M:in(IN0)->
+%    retract(M:in(IN0)),
 	
-    append(IN0,L,IN),
-    assert(M:in(IN))
-  ;
-    assert(M:in(L))
-  ).
+%    append(IN0,L,IN),
+%    assert(M:in(IN))
+%  ;
+%    assert(M:in(L))
+%  ).
 
 %%%%%%%%
 
@@ -5048,6 +5050,41 @@ induce_incremental:-
 	reinstate_values([interactive,portray_search,proof_strategy,mode]),
         p1_message('time taken'), p_message(Time).
 
+
+induce_incremental(Program):-
+	clean_up,
+	retractall('$aleph_global'(search_stats,search_stats(_,_))),
+	store_values([interactive,portray_search,proof_strategy,mode]),
+	set(portray_search,false),
+	set(proof_strategy,sld),
+	set(interactive,true),
+	record_settings,
+        stopwatch(StartClock),
+        repeat,
+	ask_example_web(E),
+	((E = end_of_file; E = none) -> true;
+		once(record_example(check,pos,E,N)),
+		retractall('$aleph_global'(example_selected,
+						example_selected(_,_))),
+        	asserta('$aleph_global'(example_selected,
+						example_selected(pos,N))),
+		once(sat(N)),
+		once(reduce),
+		once(process_hypothesis_web),
+		fail),
+	!,
+        stopwatch(StopClock),
+        Time is StopClock - StartClock,
+		copy_theory(Program),
+        show(theory),
+	show(pos),
+	show(neg),
+	show(false/0),
+	show(prune/1),
+        record_theory(Time),
+	reinstate_values([interactive,portray_search,proof_strategy,mode]),
+        p1_message('time taken'), p_message(Time).
+
 % induce_theory/0: does theory-level search
 % currently only with search = rls; and evalfn = accuracy
 induce_theory:-
@@ -5388,6 +5425,18 @@ ask_example(E):-
 	read(Response),
 	(Response = ok  -> E = E1; E = Response).
 
+ask_example_web(E):-
+	trace,
+	('$aleph_global'(example_selected,example_selected(pos,N)) ->
+		example(N,pos,E1);
+		E1 = none),
+	!,
+	show_options_web(example_selection),
+	tab(4),
+	write('Response '), p1_message(default:E1), write('?'), nl,
+	read(Response),
+	(Response = ok  -> E = E1; E = Response).
+
 process_hypothesis:-
 	show(hypothesis),
 	repeat,
@@ -5398,6 +5447,16 @@ process_hypothesis:-
 	process_hypothesis(Response),
 	(Response = end_of_file; Response = none), !.
 
+process_hypothesis_web:-
+	trace,
+	show(hypothesis),
+	repeat,
+	show_options_web(hypothesis_selection),
+	tab(4),
+	write('Response?'), nl,
+	read(Response),
+	process_hypothesis(Response),
+	(Response = end_of_file; Response = none), !.
 
 process_hypothesis(end_of_file):-
 	nl, nl, !.
@@ -5481,7 +5540,38 @@ show_options(hypothesis_selection):-
 	tab(8),
 	write('-> any Aleph command'), nl, 
 	tab(8),
-	write('-> ctrl-D or "none." to end'), nl, nl.
+	write('-> "ctrl-D or "none." to end'), nl, nl.
+
+show_options_web(example_selection):-
+	nl,
+	tab(4),
+	write('Options:'), nl,
+	tab(8),
+	write('-> "ok." to accept default example'), nl,
+	tab(8),
+	write('-> Enter an example'), nl, 
+	tab(8),
+	write('-> "none." to end'), nl, nl.
+show_options_web(hypothesis_selection):-
+	nl,
+	tab(4),
+	write('Options:'), nl,
+	tab(8),
+	write('-> "ok." to accept clause'), nl,
+	tab(8),
+    write('-> "prune." to prune clause and its refinements from the search'), nl,
+    tab(8),
+	write('-> "overgeneral." to add clause as a constraint'), nl, 
+	tab(8),
+	write('-> "overgeneral because not(E)." to add E as a negative example'), nl, 
+	tab(8),
+	write('-> "overspecific." to add clause as a positive example'), nl, 
+	tab(8),
+	write('-> "overspecific because E." to add E as a positive example'), nl, 
+	tab(8),
+	write('-> any Aleph command'), nl, 
+	tab(8),
+	write('-> "none." to end'), nl, nl.
 	
 
 get_performance:-
@@ -9711,13 +9801,9 @@ show(theory):-
         nl,
         '$aleph_global'(rules,rules(L)),
         aleph_reverse(L,L1),
-		write("aleph_member"),nl,
         aleph_member(ClauseNum,L1),
-		write("theory,theory"),nl,
 	'$aleph_global'(theory,theory(ClauseNum,_,_,_,_)),
-		write("Entro in eval_rule"),nl,
 	eval_rule(ClauseNum,_),
-	write("Fine di eval_rule"),nl,
 	% pp_dclause(Clause),
         fail.
 show(theory):-
@@ -10881,6 +10967,8 @@ sandbox:safe_primitive(aleph:induce_tree(_)).
 sandbox:safe_primitive(aleph:induce_max).
 sandbox:safe_primitive(aleph:induce_max(program,_)).
 sandbox:safe_primitive(aleph:induce_cover(_)).
+sandbox:safe_primitive(aleph:induce_incremental).
+sandbox:safe_primitive(aleph:induce_incremental(_)).
 sandbox:safe_primitive(aleph:rdhyp).
 sandbox:safe_primitive(aleph:sat(_)).
 sandbox:safe_primitive(aleph:model(_)).
