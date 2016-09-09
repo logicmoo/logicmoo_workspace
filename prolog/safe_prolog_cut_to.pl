@@ -28,9 +28,14 @@
 */
 
 :- module(safe_prolog_cut_to,
-	  [safe_prolog_cut_to/1,
-	   safe_prolog_cut_to/3,
-	   fix_choice/3]).
+	  [call_decreasing_cp/2,
+	   fix_choice/3,
+	   safe_prolog_cut_to/1,
+	   safe_prolog_cut_to/3
+	  ]).
+
+:- meta_predicate
+    call_decreasing_cp(0, ?).
 
 safe_prolog_cut_to(CP) :-
     prolog_current_choice(CPC),
@@ -45,3 +50,19 @@ fix_choice(CPC, CP, CPC) :-
 fix_choice(CPC, CP, CPF) :-
     prolog_choice_attribute(CPC, parent, CPP),
     fix_choice(CPP, CP, CPF).
+
+call_decreasing_cp(Call, Arg) :-
+    prolog_current_choice(CP1),
+    copy_term(Arg, PArg),
+    S = s([CP1-PArg]),
+    call(Call),
+    prolog_current_choice(CP2),
+    S = s(SolL1),
+    ( select(CP-Sol, SolL1, SolL),
+      Sol =@= Arg,
+      CP2 > CP
+    ->safe_prolog_cut_to(CP2, CP, CPN)
+    ; SolL = SolL1,
+      CPN = CP2
+    ),
+    nb_setarg(1, S, [CPN-Arg|SolL]).

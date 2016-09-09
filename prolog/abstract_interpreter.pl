@@ -120,6 +120,7 @@ cut_from :- throw(cut_from).
 % by a further cut operation, causing odd behavior
 %
 :- use_module(library(intercept)).
+:- use_module(library(safe_prolog_cut_to)).
 
 :- meta_predicate intercept(2, ?, ?, ?, ?).
 intercept(DCG, Ex, H, S0, S) :-
@@ -173,6 +174,7 @@ abstract_interpreter_body((A, B), M, Abs, State) --> !,
       ->!, fail			% The whole body will fail
       }
     ).
+
 abstract_interpreter_body((A->B;C), M, Abs, State) --> !,
     {SCE = s(no)},
     ( interpret_local_cut(A, B, M, Abs, State, CutElse),
