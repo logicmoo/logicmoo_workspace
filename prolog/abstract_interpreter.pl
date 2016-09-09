@@ -105,7 +105,6 @@ abstract_interpreter(M:Goal, Abstraction, OptionL, data(0, [], Result)) :-
 abstract_interpreter(MGoal, Abstraction, OptionL) :-
     abstract_interpreter(MGoal, Abstraction, OptionL, data(_, _, true(_))).
 
-/*
 :- meta_predicate catch(2, ?, ?, ?, ?).
 catch(DCG, Ex, H, S0, S) :-
     catch(call(DCG, S0, S), Ex, H).
@@ -114,9 +113,12 @@ cut_to(Goal) --> catch(Goal, cut_from, true).
 
 cut_from.
 cut_from :- throw(cut_from).
-*/
 
+/*
 % alternative (and more efficient) implementation follows:
+% Note: this does not work since the choice points could be removed
+% by a further cut operation, causing odd behavior
+%
 :- use_module(library(intercept)).
 
 :- meta_predicate intercept(2, ?, ?, ?, ?).
@@ -127,21 +129,8 @@ cut_to(Goal) -->
     {prolog_current_choice(CP)},
     intercept(Goal, cut_from, catch(safe_prolog_cut_to(CP), _, true)).
 
-safe_prolog_cut_to(CP) :-
-    prolog_current_choice(CPC),
-    safe_prolog_cut_to(CPC, CP, _).
-
-safe_prolog_cut_to(CPC, CP, CPF) :-
-    fix_choice(CPC, CP, CPF),
-    prolog_cut_to(CPF).
-
-fix_choice(CPC, CP, CPC) :-
-    CPC =< CP, !.
-fix_choice(CPC, CP, CPF) :-
-    prolog_choice_attribute(CPC, parent, CPP),
-    fix_choice(CPP, CP, CPF).
-
 cut_from :- send_signal(cut_from).
+*/
 
 abstract_interpreter_body(Goal, M, _, _) -->
     {var(Goal) ; var(M)}, bottom, !.
