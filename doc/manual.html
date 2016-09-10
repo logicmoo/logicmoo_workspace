@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>aleph module for SWI-Prolog Manual</title>
+</head>
+ <body>
+  <h1 id="aleph" class="title">
+   aleph
+  </h1>
+  <h2 id="index">
+   Index
+  </h2>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#usage-module-loading">Module loading</a></li>
+<li><a href="#usage-aleph-initialization">Aleph initialization</a></li>
+<li><a href="#directives">Directives</a></li>
+<li><a href="#usage-background">Background Knoweledge Section</a></li>
+<li><a href="#usage-positive">Positive Examples Section</a></li>
+<li><a href="#usage-negative">Negative Examples Section</a></li>
+<li><a href="#usage-end">End Section</a></li>
+</ul></li>
+<li><a href="#commands">New induction commands</a></li
+<li><a href="#manual">Manual</a></li>
+<li><a href="#examples">Examples</a></li>
+</ul>
+</div>
+  <h2 id="introduction">
+   Introduction
+  </h2>
+  <p>
+   Porting of Aleph for SWI-Prolog.
+  </p>
+  <p>
+   Aleph is an Inductive Logic Programming system developed by
+   <a href="https://www.iiitd.edu.in/~ashwin/">
+    Ashwin Srinivasan
+   </a>
+   :
+  </p>
+  <p>
+   <a href="http://www.cs.ox.ac.uk/activities/machlearn/Aleph/">
+    http://www.cs.ox.ac.uk/activities/machlearn/Aleph/
+   </a>
+  </p>
+  <p>
+   This pack contains a porting of Aleph v.5 to SWI-Prolog. The porting
+   <br/>
+   was done by
+   <a href="http://ds.ing.unife.it/~friguzzi/">
+    Fabrizio Riguzzi
+   </a>
+   .
+  </p>
+  <p>
+   Two files are included: aleph_orig.pl is a direct porting of Aleph for Yap,
+   <br/>
+   while aleph.pl
+   <br/>
+   is modoule-file that can run also under SWISH.
+   <br/>
+   aleph.pl was developed by Paolo Niccolò Giubelli.
+  </p>
+  <h2 id="usage">
+   Usage
+  </h2>
+  <p>
+   aleph_orig.pl can be used as the original Aleph.
+  </p>
+  <p>
+   aleph.pl differs because it uses a single input
+   <br/>
+   file instead of three files for background,
+   <br/>
+   positive and negative examples.
+  </p>
+  <p>
+   The input file for aleph.pl must be
+   <br/>
+   structured as follows:
+  </p>
+  <p>
+    <h3 id="usage-module-loading">
+     1. Module loading
+    </h3>
+  </p>
+  <pre><code>:- use_module(library(aleph)).
+</code></pre>
+  <p>
+    <h3 id="usage-aleph-initialization">
+     2. Aleph initialization
+    </h3>
+  </p>
+  <pre><code>:- aleph.
+</code></pre>
+  <p>
+  <h3 id="usage-directives">
+     3. Directives
+    </h3>
+   <br/>
+   Nothing has changed here, you can use
+   <em>
+    modeh/2
+   </em>
+   ,
+   <em>
+    modeb/2
+   </em>
+   ,
+   <em>
+    determination/2
+   </em>
+   as documented in the
+   <a href="manual">
+    manual
+   </a>
+  </p>
+  <pre><code>% e.g.: 
+:- modeh(*,grandparent(+person,-person)).
+:- modeh(*,parent(+person,-person)).
+
+:- modeb(*,mother(+person,-person)).
+:- modeb(*,father(+person,-person)).
+:- modeb(*,parent(+person,-person)).
+
+% ...
+</code></pre>
+  <p>
+    <h3 id="usage-background">
+     4. Background Knowledge Section
+    </h3>
+   <br/>
+   Nothing has changed here except you need to enclose this section with
+   <em>
+    begin_bg/0
+   </em>
+   and
+   <em>
+    end_bg/0
+   </em>
+   directives. Between them you can put your background clauses.
+  </p>
+  <pre><code>% Background knoweledge is delimited by begin_bg/0 and end_bg/0
+% predicates. Look at the 
+% E.g.:
+:-begin_bg.
+person(bob).
+person(dad(bob)).
+%...
+:-end_bg.
+</code></pre>
+  <p>
+    <h3 id="usage-positive">
+     5. Positive Examples Section
+    </h3>
+  </p>
+  <pre><code>% The positive examples section is delimited by begin_in_pos/0 and end_in_pos/0
+% directives.
+% E.g.:
+:-begin_in_pos.
+grandparent(dad(dad(bob)),bob).
+grandparent(dad(mum(bob)),bob).
+%...
+:-end_in_pos.
+</code></pre>
+  <p>
+    <h3 id="usage-negative">
+     6. Negative Examples Section
+    </h3>
+   </strong>
+  </p>
+  <pre><code>% The negative examples section is delimited by begin_in_neg/0 and end_in_neg/0
+% directives. Negative examples must be listed as facts.
+% E.g.:
+:-begin_in_neg.
+grandparent(bob,bob). % bob is not a grandparent of bob
+%...
+:-end_in_neg.
+</code></pre>
+  <p>
+    <h3 id="usage-end">
+     7. End Section
+    </h3>
+   <br/>
+   The file must contain the following directive at the end:
+  </p>
+  <pre><code>:-aleph_read_all.
+</code></pre>
+  <p>
+   You can start the induction process by calling the
+   <em>
+    induce/1
+   </em>
+   <br/>
+   predicate, which returns the theory as a list of clauses.
+   <em>
+    induce/1
+   </em>
+   It's
+   <em>
+    induce/0
+   </em>
+   predicate.
+  </p>
+<h2 id="commands">
+   New induction commands
+  </h2>
+  <p>
+   The following predicates were created. Their arity has been increased by one compared to the original version. Program is the (new) output argument which returns the theory as a list of predicates.<br />
+	<ul>
+		<li><em>induce(-Program)</em></li>
+		<li><em>induce_tree(-Program)</em></li>
+		<li><em>induce_cover(-Program)</em></li>
+		<li><em>induce_modes(-Program)</em></li>
+		<li><em>induce_incremental(-Program)</em></li>
+		<li><em>induce_max(program,-Program)</em></li>
+	</ul>
+  </p>
+  <h2 id="manual">
+   Manual
+  </h2>
+  <p>
+   The manual can be found at
+   <a href="http://www.cs.ox.ac.uk/activities/machlearn/Aleph/">
+    http://www.cs.ox.ac.uk/activities/machlearn/Aleph/
+   </a>
+   .
+  </p>
+  <h2 id="examples">
+   Examples
+  </h2>
+  <p>
+   The examples have been downloaded from
+   <a href="http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip">
+    http://www.comlab.ox.ac.uk/oucl/research/areas/machlearn/Aleph/misc/examples.zip
+   </a>
+   and ported to SWI-Prolog.
+  </p>
+ </body>
+</html>
