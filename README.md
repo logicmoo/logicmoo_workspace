@@ -62,7 +62,7 @@ person(dad(bob)).
 %...
 :-end_bg.
 ```
-***5. Positive Examples Section***
+*** 5. Positive Examples Section ***
 ```
 % The positive examples section is delimited by begin_in_pos/0 and end_in_pos/0
 % directives.
@@ -73,7 +73,7 @@ grandparent(dad(mum(bob)),bob).
 %...
 :-end_in_pos.
 ```
-***6. Negative Examples Section***
+*** 6. Negative Examples Section ***
 ```
 % The negative examples section is delimited by begin_in_neg/0 and end_in_neg/0
 % directives. Negative examples must be listed as facts.
@@ -83,7 +83,7 @@ grandparent(bob,bob). % bob is not a grandparent of bob
 %...
 :-end_in_neg.
 ```
-***7. End Section***
+*** 7. End Section ***
 The file must contain the following directive at the end:
 ```
 :-aleph_read_all.
