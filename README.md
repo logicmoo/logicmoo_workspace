@@ -29,15 +29,15 @@ aleph.pl differs because it uses a single input file instead of three files for 
 
 The input file for aleph.pl must be structured as follows:
 
-*** 1. Module loading *** 
+***1. Module loading*** 
 ```
 :- use_module(library(aleph)).
 ```
-*** 2. Aleph initialization ***
+***2. Aleph initialization***
 ```
 :- aleph.
 ```
-*** 3. Directives ***
+***3. Directives***
 Nothing has changed here, you can use *modeh/2*, *modeb/2*, *determination/2* as documented in the [manual](#manual)
 ```
 % e.g.: 
@@ -50,7 +50,7 @@ Nothing has changed here, you can use *modeh/2*, *modeb/2*, *determination/2* as
 
 % ...
 ```
-*** 4. Background Knowledge Section***
+***4. Background Knowledge Section***
 Nothing has changed here except you need to enclose this section with *begin_bg/0* and *end_bg/0* directives. Between them you can put your background clauses. 
 ```
 % Background knoweledge is delimited by begin_bg/0 and end_bg/0
@@ -62,7 +62,7 @@ person(dad(bob)).
 %...
 :-end_bg.
 ```
-*** 5. Positive Examples Section ***
+***5. Positive Examples Section***
 ```
 % The positive examples section is delimited by begin_in_pos/0 and end_in_pos/0
 % directives.
@@ -73,7 +73,7 @@ grandparent(dad(mum(bob)),bob).
 %...
 :-end_in_pos.
 ```
-*** 6. Negative Examples Section ***
+***6. Negative Examples Section***
 ```
 % The negative examples section is delimited by begin_in_neg/0 and end_in_neg/0
 % directives. Negative examples must be listed as facts.
@@ -83,7 +83,7 @@ grandparent(bob,bob). % bob is not a grandparent of bob
 %...
 :-end_in_neg.
 ```
-*** 7. End Section ***
+***7. End Section***
 The file must contain the following directive at the end:
 ```
 :-aleph_read_all.
