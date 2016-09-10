@@ -1,11 +1,12 @@
 # aleph
 
 ##Index
-1.[Introduction](#introduction)
-2.[Usage](#usage)
-3.[New induction commands](#new-induction-commands)
-4.[Manual](#manual)
-5.[Examples](#examples)
+
+1. [Introduction](#introduction)
+2. [Usage](#usage)
+3. [New induction commands](#new-induction-commands)
+4. [Manual](#manual)
+5. [Examples](#examples)
 
 ## Introduction
 
@@ -15,24 +16,18 @@ Aleph is an Inductive Logic Programming system developed by [Ashwin Srinivasan](
 
 http://www.cs.ox.ac.uk/activities/machlearn/Aleph/
 
-This pack contains a porting of Aleph v.5 to SWI-Prolog. The porting
-was done by [Fabrizio Riguzzi](http://ds.ing.unife.it/~friguzzi/).
+This pack contains a porting of Aleph v.5 to SWI-Prolog. The porting was done by [Fabrizio Riguzzi](http://ds.ing.unife.it/~friguzzi/).
 
-Two files are included: aleph_orig.pl is a direct porting of Aleph for Yap,
-while aleph.pl
-is modoule-file that can run also under SWISH.
+Two files are included: aleph_orig.pl is a direct porting of Aleph for Yap, while aleph.pl is modoule-file that can run also under SWISH.
 aleph.pl was developed by Paolo Niccolò Giubelli.
 
 
 ## Usage
 aleph_orig.pl can be used as the original Aleph.
 
-aleph.pl differs because it uses a single input
-file instead of three files for background,
-positive and negative examples.
+aleph.pl differs because it uses a single input file instead of three files for background, positive and negative examples.
 
-The input file for aleph.pl must be
-structured as follows:
+The input file for aleph.pl must be structured as follows:
 
 *** 1. Module loading *** 
 ```
@@ -94,8 +89,7 @@ The file must contain the following directive at the end:
 :-aleph_read_all.
 ```
 
-You can start the induction process by calling the *induce/1*
-predicate, which returns the theory as a list of clauses. *induce/1* replaces the old *induce/0* predicate.
+You can start the induction process by calling the *induce/1* predicate, which returns the theory as a list of clauses. *induce/1* replaces the old *induce/0* predicate.
 
 ## New induction commands
 The following predicates were created. Their arity has been increased by one compared to the original version. Program is the (new) output argument which returns the theory as a list of predicates.
