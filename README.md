@@ -99,7 +99,11 @@ The following predicates were created. Their arity has been increased by one com
 - induce_cover(-Program)
 - induce_modes(-Program)
 - induce_incremental(-Program)
-- induce_max(program,-Program)
+- induce_max(-Program)
+- induce_features(-Program)
+- induce_constraints(-Program)
+- induce_theory(-Program)
+- induce_clauses(-Program)
 
 ## Manual
 The manual can be found at http://www.cs.ox.ac.uk/activities/machlearn/Aleph/.

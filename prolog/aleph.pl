@@ -41,7 +41,7 @@
 		induce_tree/0,
 		induce_tree/1,
 		induce_max/0,
-		induce_max/2,
+		induce_max/1,
 		induce_cover/0,
 		induce_cover/1,
 		induce_incremental/0,
@@ -4879,7 +4879,7 @@ induce_max:-
 	record_settings,
 	stopwatch(StartClock),
 	set(maxcover,true),
-	induce_max(PosSet),
+	aleph_induce_max(PosSet),
 	stopwatch(StopClock),
 	Time is StopClock - StartClock,
 	show(theory),
@@ -4892,7 +4892,7 @@ induce_max:-
 	record_total_stats, !.
 induce_max.
 
-induce_max(program,Program):-
+induce_max(Program):-
 	clean_up,
 	retractall('$aleph_global'(search_stats,search_stats(_,_))),
 	'$aleph_global'(atoms,atoms(pos,PosSet)),
@@ -4902,7 +4902,7 @@ induce_max(program,Program):-
 	record_settings,
 	stopwatch(StartClock),
 	set(maxcover,true),
-	induce_max(PosSet),
+	aleph_induce_max(PosSet),
 	stopwatch(StopClock),
 	Time is StopClock - StartClock,
 	copy_theory(Program),
@@ -4915,11 +4915,11 @@ induce_max(program,Program):-
 	show_total_stats,
 	record_total_stats, !.
 
-induce_max([]).
-induce_max([Start-Finish|Intervals]):-
+aleph_induce_max([]).
+aleph_induce_max([Start-Finish|Intervals]):-
 	asserta('$aleph_local'(counter,Start)),
 	induce_max1(Finish),
-	induce_max(Intervals).
+	aleph_induce_max(Intervals).
 
 induce_max1(Finish):-
         '$aleph_local'(counter,S),
@@ -10965,7 +10965,7 @@ sandbox:safe_primitive(aleph:induce_modes).
 sandbox:safe_primitive(aleph:induce_tree).
 sandbox:safe_primitive(aleph:induce_tree(_)).
 sandbox:safe_primitive(aleph:induce_max).
-sandbox:safe_primitive(aleph:induce_max(program,_)).
+sandbox:safe_primitive(aleph:induce_max(_)).
 sandbox:safe_primitive(aleph:induce_cover(_)).
 sandbox:safe_primitive(aleph:induce_incremental).
 sandbox:safe_primitive(aleph:induce_incremental(_)).
