@@ -232,6 +232,8 @@ do_not_transform(fluent(_),_).
 do_not_transform(event(_),_).
 do_not_transform(action(_),_).
 do_not_transform(initial_state(_),_).
+do_not_transform(l_int(_,_),_).
+do_not_transform(l_timeless(_,_),_).
 
 % pretty printing
 pretty_write(Term,Stream) :- pretty_write(Term,0,Stream).
