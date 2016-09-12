@@ -138,7 +138,8 @@ language(Lang) :-
       atom_codes(X, C),
       SLang = [_, _],
       append(SLang, _, C),
-      atom_codes(Lang, SLang) -> true
+      atom_codes(Lang, SLang)
+    ->true
     ; Lang = en			% take English by default
     ).
 
