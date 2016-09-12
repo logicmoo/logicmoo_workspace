@@ -37,15 +37,24 @@
 		abducible/1,
 	    induce/0,
 		induce/1,
-		induce_modes/0,
 		induce_tree/0,
 		induce_tree/1,
 		induce_max/0,
-		induce_max/2,
+		induce_max/1,
 		induce_cover/0,
 		induce_cover/1,
 		induce_incremental/0,
 		induce_incremental/1,
+		induce_clauses/0,
+		induce_clauses/1,
+		induce_theory/0,
+		induce_theory/1,
+		induce_modes/0,
+		induce_modes/1,
+		induce_features/0,
+		induce_features/1,
+		induce_constraints/0,
+		induce_constraints/1,
 		rdhyp/0,
 		reduce/0,
 		reduce_and_show/1,
@@ -4725,6 +4734,12 @@ induce_clauses:-
 induce_clauses:-
 	induce.
 
+induce_clauses(Program):-
+	setting(interactive,true), !,
+	induce_incremental(Program).
+induce_clauses(Program):-
+	induce(Program).
+
 % induce/0: non-interactive theory construction
 % constructs theories 1 clause at a time
 % does greedy cover removal after each clause found
@@ -4820,6 +4835,15 @@ copy_theory_inner(ClauseNum,[SubProgram|TailP]):-
 
 copy_theory_inner(0,[]).
 
+copy_modes(Modes):-
+	findall((M,D),'$aleph_global'(mode,mode(M,D)),Modes).
+
+copy_constraints(Constraints):-
+	findall((Label,Clause),'$aleph_good'(_,Label,Clause),Constraints).
+
+copy_features(Features):-
+	findall((Id,(Head:-Body)),'$aleph_feature'(feature,feature(Id,_,_,Head,Body)),Features).
+
 % ============= UNUSED ====================
 copy_theory_eval(0,_,Label):-
 %	trace,
@@ -4879,7 +4903,7 @@ induce_max:-
 	record_settings,
 	stopwatch(StartClock),
 	set(maxcover,true),
-	induce_max(PosSet),
+	aleph_induce_max(PosSet),
 	stopwatch(StopClock),
 	Time is StopClock - StartClock,
 	show(theory),
@@ -4892,7 +4916,7 @@ induce_max:-
 	record_total_stats, !.
 induce_max.
 
-induce_max(program,Program):-
+induce_max(Program):-
 	clean_up,
 	retractall('$aleph_global'(search_stats,search_stats(_,_))),
 	'$aleph_global'(atoms,atoms(pos,PosSet)),
@@ -4902,7 +4926,7 @@ induce_max(program,Program):-
 	record_settings,
 	stopwatch(StartClock),
 	set(maxcover,true),
-	induce_max(PosSet),
+	aleph_induce_max(PosSet),
 	stopwatch(StopClock),
 	Time is StopClock - StartClock,
 	copy_theory(Program),
@@ -4915,11 +4939,11 @@ induce_max(program,Program):-
 	show_total_stats,
 	record_total_stats, !.
 
-induce_max([]).
-induce_max([Start-Finish|Intervals]):-
+aleph_induce_max([]).
+aleph_induce_max([Start-Finish|Intervals]):-
 	asserta('$aleph_local'(counter,Start)),
 	induce_max1(Finish),
-	induce_max(Intervals).
+	aleph_induce_max(Intervals).
 
 induce_max1(Finish):-
         '$aleph_local'(counter,S),
@@ -5089,7 +5113,7 @@ induce_incremental(Program):-
 % currently only with search = rls; and evalfn = accuracy
 induce_theory:-
 	setting(search,Search),
-	induce_theory(Search).
+	aleph_induce_theory(Search).
 
 % induce entire theories from batch data
 % using a randomised local search
@@ -5107,7 +5131,7 @@ induce_theory:-
 %       	the walk probability is specified by set(walk,...)
 %       	a walk probability of 0 is equivalent to doing standard GSAT
 % 	theory accuracy is the evaluation function
-induce_theory(rls):-
+aleph_induce_theory(rls):-
 	clean_up,
 	retractall('$aleph_global'(search_stats,search_stats(_,_))),
         store(evalfn),
@@ -5117,8 +5141,22 @@ induce_theory(rls):-
         reinstate(evalfn),
 	show_total_stats,
 	record_total_stats, !.
-induce_theory(_).
+aleph_induce_theory(_).
 
+aleph_induce_theory(rls,Program):-
+	clean_up,
+	retractall('$aleph_global'(search_stats,search_stats(_,_))),
+        store(evalfn),
+        set(evalfn,accuracy),
+	record_settings,
+	find_theory(rls),
+        reinstate(evalfn),
+	show_total_stats,
+	record_total_stats, !.
+
+induce_theory(Program):-
+	setting(search,Search),
+	aleph_induce_theory(Search,Program).
 
 % induce_constraints/0: search for logical constraints that
 % hold in the background knowledge
@@ -5145,12 +5183,37 @@ induce_constraints:-
 	record_total_stats, !.
 induce_constraints.
 
+induce_constraints(Constraints):-
+	clean_up,
+	retractall('$aleph_global'(search_stats,search_stats(_,_))),
+	store_values([portray_search,search,construct_bottom,good,goodfile]),
+	noset(goodfile),
+	set(portray_search,false),
+	set(construct_bottom,false),
+	set(search,ic),
+	set(good,true),
+	sat(uspec,0),
+	reduce,
+	copy_constraints(Constraints),
+	show(constraints),
+	reinstate_values([portray_search,search,construct_bottom,good,goodfile]),
+	show_total_stats,
+	record_total_stats, !.
+
 % induce_modes/0: search for an acceptable set of mode declarations
 induce_modes:-
 	clean_up,
 	store_values([typeoverlap]),
 	search_modes,
 	reinstate_values([typeoverlap]),
+	show(modes).
+
+induce_modes(Modes):-
+	clean_up,
+	store_values([typeoverlap]),
+	search_modes,
+	reinstate_values([typeoverlap]),
+	copy_modes(Modes),
 	show(modes).
 
 % induce_features/0: search for interesting boolean features
@@ -5195,6 +5258,40 @@ induce_features:-
         assertz('$aleph_global'(atoms_left,atoms_left(pos,AtomsLeft))), 
         reinstate_values([good,check_good,updateback,construct_features,samplesize,greedy,explore,lazy_on_contradiction]), !.
 induce_features.
+
+induce_features(Features):-
+	clean_up,
+	store_values([good,check_good,updateback,construct_features,samplesize,greedy,explore,lazy_on_contradiction]),
+	set(good,true),
+	set(check_good,true),
+	set(updateback,false),
+	set(construct_features,true),
+	set(lazy_on_contradiction,true),
+	(setting(feature_construction,exhaustive) -> set(explore,true);
+			true),
+	setting(max_features,FMax),
+        record_settings,
+        stopwatch(StartClock),
+        '$aleph_global'(atoms_left,atoms_left(pos,AtomsLeft)), 
+	repeat,
+        gen_sample(pos,0),
+	retractall('$aleph_global'(besthyp,besthyp(_,_,_,_,_))),
+        asserta('$aleph_global'(besthyp,besthyp([-inf,0,1,-inf],0,(false),[],[]))),
+        get_besthyp(false),
+        addhyp,
+	show_atoms_left,
+	record_atoms_left,
+        (('$aleph_search'(last_good,LastGood), LastGood >= FMax);
+        	'$aleph_global'(atoms_left,atoms_left(pos,[]))), !,
+	gen_features,
+        stopwatch(StopClock),
+        Time is StopClock - StartClock,
+	copy_features(Features),
+	show(features),
+        record_features(Time),
+        retract('$aleph_global'(atoms_left,atoms_left(pos,_))), 
+        assertz('$aleph_global'(atoms_left,atoms_left(pos,AtomsLeft))), 
+        reinstate_values([good,check_good,updateback,construct_features,samplesize,greedy,explore,lazy_on_contradiction]), !.
 
 % induce_tree/0: construct a theory using recursive partitioning
 % rules are obtained by building a tree 
@@ -10961,14 +11058,24 @@ sandbox:safe_primitive(aleph:abducible(_)).
 sandbox:safe_primitive(aleph:aleph_false).
 sandbox:safe_primitive(aleph:induce).
 sandbox:safe_primitive(aleph:induce(_)).
-sandbox:safe_primitive(aleph:induce_modes).
 sandbox:safe_primitive(aleph:induce_tree).
 sandbox:safe_primitive(aleph:induce_tree(_)).
 sandbox:safe_primitive(aleph:induce_max).
-sandbox:safe_primitive(aleph:induce_max(program,_)).
+sandbox:safe_primitive(aleph:induce_max(_)).
+sandbox:safe_primitive(aleph:induce_cover).
 sandbox:safe_primitive(aleph:induce_cover(_)).
 sandbox:safe_primitive(aleph:induce_incremental).
 sandbox:safe_primitive(aleph:induce_incremental(_)).
+sandbox:safe_primitive(aleph:induce_clauses).
+sandbox:safe_primitive(aleph:induce_clauses(_)).
+sandbox:safe_primitive(aleph:induce_theory).
+sandbox:safe_primitive(aleph:induce_theory(_)).
+sandbox:safe_primitive(aleph:induce_modes).
+sandbox:safe_primitive(aleph:induce_modes(_)).
+sandbox:safe_primitive(aleph:induce_constraints).
+sandbox:safe_primitive(aleph:induce_constraints(_)).
+sandbox:safe_primitive(aleph:induce_features).
+sandbox:safe_primitive(aleph:induce_features(_)).
 sandbox:safe_primitive(aleph:rdhyp).
 sandbox:safe_primitive(aleph:sat(_)).
 sandbox:safe_primitive(aleph:model(_)).
