@@ -2160,7 +2160,7 @@ cycle_options(CAi, Ri, Gi) :-
     % At this point last cycle events are still available
     ( option(cycle_hook(Predicate,_,_)) -> 
     		HookGoal =.. [Predicate,ExternalObservations],
-		(HookGoal -> true ; writeln('* Cycle hook goal failed, terminating.'), fail)
+		(HookGoal -> true ; writeln('* LPS cycle hook goal failed, terminating.'), fail)
     	; ExternalObservations=[]),
     retractall(happens(_, _, _)),
     enter_step_0, % during "Update the current state" we need a hack to query the previous state
