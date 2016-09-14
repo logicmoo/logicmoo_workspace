@@ -1,0 +1,61 @@
+% prisoner-dilemma.P v 4.0 Sept, 13th 2016
+% Bob Kowalski, Jacinto Dávila
+% ?- [interpreter]. 
+% ?- [preprocessor].
+% ?- go('prisoner-dilemma-simpler.P').
+
+initial_state([]).
+
+action(refuses(_)).
+action(bears_witness(_)).
+action(gets(_,_)). 
+
+%  if prisoner P bears witness at time T and prisoner Q refuses at time T and P ¹ Q
+% then P gets 0 years in jail at time T+1 and Q gets 3 years in jail at time T+1.
+
+reactive_rule(
+	[happens(bears_witness(p), T1, T2), happens(refuses(q), T1, T2)],  
+	[happens(gets(p,0), T3, T4), happens(gets(q,3), T3, T4), tc(T2 =< T3)]
+).
+ 
+% if prisoner P bears witness at time T and prisoner Q bears withness at time T and P ¹ Q
+% then P gets 2 years in jail at time T+1 and Q gets 2 years in jail at time T+1.
+
+reactive_rule(
+	[happens(bears_witness(p), T1, T2), happens(bears_witness(q), T1, T2)],  
+	[happens(gets(p,2), T3, T4), happens(gets(q,2), T3, T4), tc(T2 =< T3)]
+).
+ 
+% if prisoner P refuses at time T and prisoner Q refuses at time T and P ¹ Q
+% then P gets 1 years in jail at time T+1 and Q gets 1 years in jail at time T+1.
+
+reactive_rule(
+	[happens(refuses(p), T1, T2), happens(refuses(q), T1, T2)],  
+	[happens(gets(p,1), T3, T4), happens(gets(q,1), T3, T4), tc(T2 =< T3)]
+).
+
+observe([
+bears_witness(p),
+refuses(q)
+],
+1
+).
+
+observe([
+bears_witness(p),
+bears_witness(q)
+],
+2
+).
+
+observe([
+refuses(p),
+refuses(q)
+],
+3
+).
+
+
+
+
+
