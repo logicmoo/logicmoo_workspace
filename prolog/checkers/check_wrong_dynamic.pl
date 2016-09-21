@@ -48,40 +48,48 @@
 :- multifile
     prolog:message//1,
     hide_wrong_dynamic/2,
-    hide_var_dynamic/2.
+    hide_var_dynamic_hook/2.
 
-hide_var_dynamic(list_strings(_), check).
-hide_var_dynamic(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
-hide_var_dynamic(current_used_use_module(_, _, _, _), check_imports).
-hide_var_dynamic(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
-hide_var_dynamic(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
-hide_var_dynamic(implemented_in(_, _, _), implemented_in).
-hide_var_dynamic(unfold_goal(_, _), ref_scenarios).
-hide_var_dynamic(match_head_clause(_, _), check_unused).
-hide_var_dynamic(unmarked(_, _, _, _, _), check_unused).
-hide_var_dynamic(duptype_elem(_, _, _, _, _, _), check_dupcode).
-hide_var_dynamic(bind_type_names(_, _, _, _), foreign_generator).
-hide_var_dynamic(bind_tn_clause(_, _, _, _), foreign_generator).
-hide_var_dynamic(call_ref(_, _), foreign_generator).
-hide_var_dynamic(no_backtrace_entry(_), filtered_backtrace).
-hide_var_dynamic(mark_to_head(_, _), check_unused).
-hide_var_dynamic(current_arc(_, _, _), check_unused).
-hide_var_dynamic(match_clause(_, _, _, _, _), ontrace).
-hide_var_dynamic(type_desc(_, _), foreign_props).
-hide_var_dynamic(prepare_results(_, _, _), checker).
-hide_var_dynamic(current_edge(_, _, _), check_unused).
-hide_var_dynamic(commited_retract(_), commited_retract).
-hide_var_dynamic(tabling(_, _), ntabling).
-hide_var_dynamic(match_head_body(_, _, _, _), abstract_interpreter).
-hide_var_dynamic(is_entry_caller(_), check_unused).
-hide_var_dynamic(caller_ptr(_, _, _), check_unused).
-hide_var_dynamic(match_head_1st_arg(_, _, _), check_text).
-hide_var_dynamic(current_head_ctcheck(_, _, _), check_assertions).
-hide_var_dynamic(unfold_call(_, _, _, _, _), unfold_calls).
-hide_var_dynamic(walk_from_assertion(_, _, _, _), extra_codewalk).
-hide_var_dynamic(current_clause_module_body(_, _), extra_codewalk).
-hide_var_dynamic(update_fact_from(_, _), from_utils).
-hide_var_dynamic(dupclauses(_), plprops).
+hide_var_dynamic(Call, M) :-
+    ( Call1 = Call
+    ; Call =.. [F|Args],
+      atom_concat(F1, ' tabled', F),
+      Call1 =.. [F1|Args]
+    ),
+    hide_var_dynamic_hook(Call1, M).
+
+hide_var_dynamic_hook(list_strings(_), check).
+hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
+hide_var_dynamic_hook(current_used_use_module(_, _, _, _), check_imports).
+hide_var_dynamic_hook(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
+hide_var_dynamic_hook(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
+hide_var_dynamic_hook(implemented_in(_, _, _), implemented_in).
+hide_var_dynamic_hook(unfold_goal(_, _), ref_scenarios).
+hide_var_dynamic_hook(match_head_clause(_, _), check_unused).
+hide_var_dynamic_hook(unmarked(_, _, _, _, _), check_unused).
+hide_var_dynamic_hook(duptype_elem(_, _, _, _, _, _), check_dupcode).
+hide_var_dynamic_hook(bind_type_names(_, _, _, _), foreign_generator).
+hide_var_dynamic_hook(bind_tn_clause(_, _, _, _), foreign_generator).
+hide_var_dynamic_hook(call_ref(_, _), foreign_generator).
+hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
+hide_var_dynamic_hook(mark_to_head(_, _), check_unused).
+hide_var_dynamic_hook(current_arc(_, _, _), check_unused).
+hide_var_dynamic_hook(match_clause(_, _, _, _, _), ontrace).
+hide_var_dynamic_hook(type_desc(_, _), foreign_props).
+hide_var_dynamic_hook(prepare_results(_, _, _), checker).
+hide_var_dynamic_hook(current_edge(_, _, _), check_unused).
+hide_var_dynamic_hook(commited_retract(_), commited_retract).
+hide_var_dynamic_hook(tabling(_, _), ntabling).
+hide_var_dynamic_hook(match_head_body(_, _, _, _), abstract_interpreter).
+hide_var_dynamic_hook(is_entry_caller(_), check_unused).
+hide_var_dynamic_hook(caller_ptr(_, _, _), check_unused).
+hide_var_dynamic_hook(match_head_1st_arg(_, _, _), check_text).
+hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
+hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
+hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), extra_codewalk).
+hide_var_dynamic_hook(current_clause_module_body(_, _), extra_codewalk).
+hide_var_dynamic_hook(update_fact_from(_, _), from_utils).
+hide_var_dynamic_hook(dupclauses(_), plprops).
 
 :- dynamic
     wrong_dynamic_db/4,
