@@ -15,7 +15,10 @@ Examples TBD:
 * A refactored/cleaned up version of the Survival Melee game (although this depends partly on LPS syntax changes)
 * LPS "intersecting" Abductive Logic Programming
 * LPS "dispensing" with modal logics, cf. Bob's "Obligations" paper
+	* Use SBVR [examples](http://www.kdmanalytics.com/sbvr/
+	* Cf. Bob's May 21, 2016 email
 * Workflow, e.g. document routing?
+sbvr_intro_2.html) ?
 * Economics and the Rational Choice Theory, for instance [the case of physician-induced demand](http://webdelprofesor.ula.ve/ingenieria/jacinto/publica/2014/phdposters_template-Pedro%20Cadenas.pdf)
 * Smart house and its energy game (Bob's idea)
 * Lamport's clock
