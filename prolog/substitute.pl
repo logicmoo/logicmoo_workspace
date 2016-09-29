@@ -30,6 +30,7 @@
 :- module(substitute,
 	  [substitute/3,
 	   substitute_value/4,
+	   substitute_values/3,
 	   is_subterm/2]).
 
 :- meta_predicate substitute(2, ?, ?).
@@ -57,6 +58,12 @@ substitute_one(Value, Var, Term, Var) :-
 
 substitute_value(Value, Subs, Term0, Term) :-
     substitute(substitute_one(Value, Subs), Term0, Term).
+
+unpair_eq(V=S, V, S).
+
+substitute_values(Pairs, Term0, Term) :-
+    maplist(unpair_eq, Pairs, Values, Subss),
+    foldl(substitute_value, Values, Subss, Term0, Term).
 
 is_subterm(SubTerm, Term) :-
     substitute_value(SubTerm, Var, Term, Term1),
