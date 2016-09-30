@@ -49,8 +49,8 @@ mklinear(Term, Var, VarL) -->
 	member(Var0, VarL),
 	Term==Var0
       }
-    ->[Term=Var]
-    ; {Term=Var}
+    ->[Var=Term]
+    ; {Var=Term}
     ).
 
 mklinear(N, Term, Linear, VarL) -->
