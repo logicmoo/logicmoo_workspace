@@ -4407,7 +4407,7 @@ find_clause(_):-
 	!.
 
 % find_theory(Search) where Search is rls only at present
-find_theory(rls):-
+find_theory(rls,Program):-
 	!,
 	retractall('$aleph_search'(rls_move,_)),
 	retractall('$aleph_search'(rls_nodes,_)),
@@ -4464,6 +4464,7 @@ find_theory(rls):-
 	p1_message('nodes constructed'), p_message(Nodes),
 	p1_message('search time'), p_message(Time),
 	p_message('best theory'),
+	Program=RBest,
 	pp_dclauses(RBest),
 	show_stats(Evalfn,BestLabel),
 	record_search_stats(RBest,Nodes,Time),
@@ -5137,7 +5138,7 @@ aleph_induce_theory(rls):-
         store(evalfn),
         set(evalfn,accuracy),
 	record_settings,
-	find_theory(rls),
+	find_theory(rls,_),
         reinstate(evalfn),
 	show_total_stats,
 	record_total_stats, !.
@@ -5149,7 +5150,7 @@ aleph_induce_theory(rls,Program):-
         store(evalfn),
         set(evalfn,accuracy),
 	record_settings,
-	find_theory(rls),
+	find_theory(rls,Program),
         reinstate(evalfn),
 	show_total_stats,
 	record_total_stats, !.
@@ -11086,3 +11087,4 @@ sandbox:safe_primitive(aleph:mode(_,_)).
 sandbox:safe_primitive(aleph:modeh(_,_)).
 sandbox:safe_primitive(aleph:modeb(_,_)).
 sandbox:safe_primitive(aleph:determination(_,_)).
+
