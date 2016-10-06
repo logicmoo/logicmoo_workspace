@@ -21,4 +21,3 @@ Example of use
     ?- determinant([[2,-1,0],[-1,2,-1],[0,-1,2]],D).
     D = 3.999999999999999.
 
-The library contains also an initial port of the matrix library of Yap (matrix_yap.pl). This is currently not working.
