@@ -27,11 +27,6 @@ by entering   ['C:/your path/LPS/Wei-engine/interpreter.P']. after the prompt ?-
 * Or for more informative output, enter, for example, go('your_path/LPS/examples/dining_philosophers.lpsw',[verbose]).
 * Put any new program into the folder "LPS/examples", in order to run it.
  
-
-Or enter go('your_path/LPS/example/bubble sort.lpsw', [verbose]). 
-go('C:/Users/Bob/Desktop/LPS/examples/dining_philosophers.lpsw',[verbose]).
-
-
 ### Core Engine + Prolog Studio ###
 InterProlog Consulting's Prolog Studio adds somes facilities for LPS running over XSB Prolog: a semantic highlighting editor and a timeline visualizer. 
 To install:
