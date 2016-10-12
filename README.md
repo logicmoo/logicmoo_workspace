@@ -1,7 +1,7 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the development of LPS engines, examples and related tools.
 ## What is LPS? ##
-“Logic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. 
+â€œLogic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. 
 
 The kernel of LPS consists of a database, together with reactive rules of the form ***if*** *antecedent* ***then*** *consequent*. The database changes destructively in response to actions and external events, according to a domain-specific causal theory. Computation consists in making the reactive rules true, by performing actions to make the *consequent* true whenever the *antecedent* becomes true. In addition, LPS includes Prolog-like logic programs both to recognise when *antecedents* become true and to generate plans of actions that make *consequents* true.
 
@@ -12,7 +12,7 @@ The implementation in this repository is an evolved version of the interpreter d
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
 
-Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto DÃ¡vila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
 
 ## Installing ##
 ### Core engine ###
@@ -24,10 +24,10 @@ Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sad
 	
 ### Getting Started with a core engine ###
 
-* Launch Prolog and consult '\<your_path_to_LPS\>/Wei-Engine/interpreter.P' by entering  ['\<your_path_to_LPS\>/Wei-engine/interpreter.P']. after the prompt ?-
-* Then enter, for example, go('\<your_path_to_LPS\>/examples/dining_philosophers.lpsw'). 
-* Or for more informative output, enter, for example, go('\<your_path_to_LPS\>/examples/dining_philosophers.lpsw',[verbose]).
-* Put any new program into the folder "\<your_path_to_LPS\>/examples", in order to run it.
+* Launch Prolog and consult '<your_path_to_LPS\>/Wei-Engine/interpreter.P' by entering  ['<your_path_to_LPS\>/Wei-engine/interpreter.P']. after the prompt ?-
+* Then enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw'). 
+* Or for more informative output, enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw',[verbose]).
+* Put any new program into the folder "<your_path_to_LPS\>/examples", in order to run it.
 
 A typical session would look like this: 
 
