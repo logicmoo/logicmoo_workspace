@@ -1,7 +1,7 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the development of LPS engines, examples and related tools.
 ## What is LPS? ##
-â€œLogic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. 
+“Logic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. 
 
 The kernel of LPS consists of a database, together with reactive rules of the form ***if*** *antecedent* ***then*** *consequent*. The database changes destructively in response to actions and external events, according to a domain-specific causal theory. Computation consists in making the reactive rules true, by performing actions to make the *consequent* true whenever the *antecedent* becomes true. In addition, LPS includes Prolog-like logic programs both to recognise when *antecedents* become true and to generate plans of actions that make *consequents* true.
 
@@ -12,7 +12,7 @@ The implementation in this repository is an evolved version of the interpreter d
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
 
-Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto DÃ¡vila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
 
 ## Installing ##
 ### Core engine ###
@@ -21,12 +21,61 @@ Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sad
     * Install a recent (>= April 4 2016) **XSB Prolog**, such as the one in the [Prolog Studio site](http://interprolog.com/wiki/index.php?title=Studio_Download_and_installation#Installing_XSB_Prolog) for Windows; or pull the latest XSB from the [Sourceforge SVN site](https://sourceforge.net/p/xsb/src/HEAD/tree/trunk/XSB/) and build it yourself - NOT the official release as of July 2016.
     * ...and/or:
     * Install **SWI Prolog** from http://www.swi-prolog.org/download/stable
-* Launch Prolog and consult 'your_path/LPS/Wei-Engine/interpreter.P'
-by entering   ['C:/your path/LPS/Wei-engine/interpreter.P']. after the prompt ?-
-* Then enter, for example, go('your_path/LPS/examples/dining_philosophers.lpsw'). 
-* Or for more informative output, enter, for example, go('your_path/LPS/examples/dining_philosophers.lpsw',[verbose]).
-* Put any new program into the folder "LPS/examples", in order to run it.
- 
+	
+### Getting Started with a core engine ###
+
+* Launch Prolog and consult '\<your_path_to_LPS\>/Wei-Engine/interpreter.P' by entering  ['\<your_path_to_LPS\>/Wei-engine/interpreter.P']. after the prompt ?-
+* Then enter, for example, go('\<your_path_to_LPS\>/examples/dining_philosophers.lpsw'). 
+* Or for more informative output, enter, for example, go('\<your_path_to_LPS\>/examples/dining_philosophers.lpsw',[verbose]).
+* Put any new program into the folder "\<your_path_to_LPS\>/examples", in order to run it.
+
+A typical session would look like this: 
+
+    $ swipl
+    Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 7.2.0)
+    Copyright (c) 1990-2015 University of Amsterdam, VU Amsterdam
+    SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+    and you are welcome to redistribute it under certain conditions.
+    Please visit http://www.swi-prolog.org for details.
+
+    For help, use ?- help(Topic). or ?- apropos(Word).
+
+    ?- ['./Wei-engine/interpreter.P'].
+    true.
+
+    ?- go('./examples/dining_philosophers.lpsw').
+	
+    * Cycle 1 *
+    ********************
+    
+    ********************
+    
+    Resolved goals:
+    [happens(think(philosopher(4)),_G125,_G142),adjacent(_G148,philosopher(4),_G150),happens(pickup_forks(_G148,philosopher(4),_G150),_G155,_G156),tc(_G142=<_G155),happens(eat(philosopher(4)),_G156,_G171),happens(putdown_forks(_G148,philosopher(4),_G150),_G171,_G126),tc(1=<_G125)]
+    [happens(think(philosopher(3)),_G97,_G236),adjacent(_G242,philosopher(3),_G244),happens(pickup_forks(_G242,philosopher(3),_G244),_G249,_G250),tc(_G236=<_G249),happens(eat(philosopher(3)),_G250,_G265),happens(putdown_forks(_G242,philosopher(3),_G244),_G265,_G98),tc(1=<_G97)]
+    [happens(think(philosopher(2)),_G69,_G336),adjacent(_G342,philosopher(2),_G344),happens(pickup_forks(_G342,philosopher(2),_G344),_G349,_G350),tc(_G336=<_G349),happens(eat(philosopher(2)),_G350,_G365),happens(putdown_forks(_G342,philosopher(2),_G344),_G365,_G70),tc(1=<_G69)]
+    [happens(think(philosopher(1)),_G41,_G666),adjacent(_G675,philosopher(1),_G677),happens(pickup_forks(_G675,philosopher(1),_G677),_G685,_G686),tc(_G666=<_G685),happens(eat(philosopher(1)),_G686,_G707),happens(putdown_forks(_G675,philosopher(1),_G677),_G707,_G42),tc(1=<_G41)]
+    [happens(think(philosopher(0)),_G13,_G1058),adjacent(_G1067,philosopher(0),_G1069),happens(pickup_forks(_G1067,philosopher(0),_G1069),_G1077,_G1078),tc(_G1058=<_G1077),happens(eat(philosopher(0)),_G1078,_G1099),happens(putdown_forks(_G1067,philosopher(0),_G1069),_G1099,_G14),tc(1=<_G13)]
+
+...
+
+    * Cycle 11 *
+    ********************
+    
+    ********************
+    
+    Resolved goals:
+    []
+
+    * Cycle 12 *
+    * No more observations, terminating.
+    
+    ** 11 cycles took 0.029258 seconds (0.000112 expanding rules) **
+    true.
+
+If or when this output is too verbose, one can use some resources to catch it and store to check it later. See, for instance, in SWI-Prolog the `protocol(File)` command. 
+
+
 ### Core Engine + Prolog Studio ###
 InterProlog Consulting's Prolog Studio adds somes facilities for LPS running over XSB Prolog: a semantic highlighting editor and a timeline visualizer. 
 To install:
