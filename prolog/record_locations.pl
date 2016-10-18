@@ -54,7 +54,7 @@ extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
 skip_record_decl(initialization(_)) :- !.
 skip_record_decl(Decl) :-
     nonvar(Decl),
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     predicate_property(M:Decl, imported_from(assrt_lib)),
     functor(Decl, Type, Arity),
     memberchk(Arity, [1, 2]),
