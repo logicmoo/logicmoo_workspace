@@ -37,7 +37,7 @@ pe_arithmetic(A, A) :-
 pe_arithmetic(A, C) :-
     ground(A),
     !,
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     M:(C is A).
 pe_arithmetic(A, C) :-
     compound(A),

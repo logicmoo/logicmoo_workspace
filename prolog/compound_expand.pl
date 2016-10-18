@@ -78,7 +78,7 @@ type_expansors(term, term_expansion, call_term_expansion).
 type_expansors(goal, goal_expansion, call_goal_expansion).
 
 do_compound_expansion(Type, Term0, Pos0, Term, Pos) :-
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     M \= user, % Compound expansions not supported in user module
     type_expansors(Type, Expansor, Closure),
     collect_expansors(M, Expansor, ML),

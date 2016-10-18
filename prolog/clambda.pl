@@ -101,7 +101,7 @@ lambdaize_args(G, A0, M, VL, Ex, A) :-
 goal_expansion(G0, G) :-
     callable(G0),
     cgoal_args(G0, G1, AL, EL),
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     expand_goal(G1, G2),
     lambdaize_args(G0, G2, M, AL, EL, G3),
     % '$expand':wrap_meta_arguments(G2, M, AL, EL, G3), % Use this to debug

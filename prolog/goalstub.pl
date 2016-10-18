@@ -50,11 +50,11 @@ stub_term_expansion((:- Decl), _, EM, CL, _) :-
     Decl =.. [Stub, S],
     stub(EM, Stub), !,
     sequence_list(S, L, []),
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     findall(goalstub:requires_stub(F, A, M, Stub), member(F/A, L), CL).
 
 stub_term_expansion(end_of_file, P, _, CL, P) :- !,
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     module_property(M, file(File)),
     prolog_load_context(file, File),
     findall((H :- G),
@@ -67,7 +67,7 @@ stub_term_expansion(end_of_file, P, _, CL, P) :- !,
 	      concat_stubs(StubL, H, G, HS)
 	    ), CL, [end_of_file]).
 stub_term_expansion(Term0, P, _, Term, P) :-
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     requires_stub_rename_head(Term0, Term, M).
 
 concat_stubs([],    _, G,  G).
