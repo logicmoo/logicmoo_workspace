@@ -15,9 +15,9 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(implementation_module)).
 :- use_module(library(resolve_calln)).
-:- reexport(library(send_check)).
-:- reexport(library(nativeprops)).
-:- reexport(library(basicprops)).
+:- use_module(library(send_check)).
+:- use_module(library(nativeprops)).
+:- use_module(library(basicprops)).
 
 :- doc(author, "Edison Mera").
 
@@ -307,13 +307,13 @@ assertion_is_valid(ctcheck, Status, Type, _) :-
     valid_ctcheck_assertions(Status, Type).
 assertion_is_valid(rtcheck, Status, Type, Asr) :-
     ( \+ asr_glob(Asr, _, rtcheck(_), _)
-    ->rtchecks_rt:is_valid_status_type(Status, Type),
+    ->is_valid_status_type(Status, Type),
       \+ asr_glob(Asr, _, no_rtcheck(_), _)
     ; true % Force run-time checking
     ).
 
 current_assertion(Pred, M, TimeCheck, Asr) :-
-    \+ ( TimeCheck = rtcheck,
+    \+ ( TimeCheck = (rtcheck),
 	 asr_head_prop(_, AM, Pred, _, prop, _, _),
 	 implementation_module(AM:Pred, M)
        ),
