@@ -3,10 +3,12 @@
 	   assertion_body/7,
 	   comps_to_goal/3,
 	   comps_to_goal/4,
+	   assrt_type/1,
 	   assertion_records/4,
 	   assertion_db/13,
 	   asr_head_prop/8,
 	   asr_head_prop/7,
+	   asr_head/2,
 	   asr_glob/4,
 	   asr_comp/4,
 	   asr_call/4,
@@ -65,6 +67,13 @@
 asr_head_prop(Asr, CM, Head, Status, Type, Comm, Dict, Loc) :-
     asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
     asr_comm(Asr, Comm, _).
+
+asr_head(Asr, M:Head) :-
+    ( nonvar(Asr)
+    ->arg(1, Asr, M),
+      arg(2, Asr, Head)
+    ; true
+    ).
 
 prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
 prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
@@ -443,6 +452,26 @@ current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
 	     Body, BPos, Gl0, Gl) :- !,
     propdef(BGl, M, PGl, Gl0, Gl1),
     current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
+%% Next syntax is ambiguous, but shorter:
+%  :- det callable, is equivalent to:
+%  :- true prop callable/1 is det
+
+% but can be confused with:
+%  :- true prop det(callable)
+%  :- true prop det(A) :: callable(X).
+%
+% in any case this is syntax sugar so we can always write the long version of
+% the assertion to avoid ambiguities
+current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
+    is_global(BodyS, M),
+    BodyS =.. [F, Head|GArgL],
+    nonvar(Head), !,
+    PosS = term_position(_, _, FF, FT, [HPos|PArgL]),
+    BGl =.. [F|GArgL],
+    current_body(Head + BGl, M,
+		 term_position(_, _, _, _,
+			       [HPos, term_position(_, _, FF, FT, [PArgL])]),
+		 Body, BPos, Gl0, Gl).
 current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
     ( body_member(BodyS, PosS, Lit, LPos)
     *->
@@ -464,20 +493,35 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :-
     ; Lit=B, LPos=BPos
     ).
 
+is_global(Head, CM) :-
+    is_global(Head, _, CM).
+
+is_global(Head, Type, CM) :-
+    prop_asr(head, CM:Head,      IM,         _, Asr),
+    ( prop_asr(glob, IM:global(_, Type), basicprops, _, Asr)
+    ; Type = (pred),
+      prop_asr(glob, IM:global(_), basicprops, _, Asr)
+    ), !.
+
 current_normalized_assertion(Assertions  + BGl, M, term_position(_, _, _, _, [APos, PGl]),
-		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
+			     Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
     propdef(BGl, M, PGl, Gl, Gl0),
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, CoPos, RPos).
 current_normalized_assertion(Assertions is BGl, M, term_position(_, _, _, _, [APos, PGl]),
-		     Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
+			     Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
     propdef(BGl, M, PGl, Gl, Gl0),
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, CoPos, RPos).
 current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS),
-    current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
-    normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, CoPos, RPos),
-    (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
-    assertion_format(Type, GFormat).
+    ( is_global(Assertions, DType, M)
+    ->Term =.. [DType, true, Assertions],
+      current_normalized_assertion(Term, M, term_position(_, _, _, _, [0-0, APos]),
+				   Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos)
+    ; normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS),
+      current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
+      normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, CoPos, RPos),
+      (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
+      assertion_format(Type, GFormat)
+    ).
 
 normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     normalize_assertion_body(Body, Format, BPos,
@@ -738,9 +782,10 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     get_sequence_and_inc(Count),
     term_variables(t(Co, CpL, CaL, SuL, GlL), ShareL),
     atom_number(AIdx, Count),
-    Asr =.. [AIdx|ShareL], % Idx also contains variable bindings
-    Clause = assrt_lib:AClause,
-    ( AClause = asr_head_prop(Asr, M, Head, Status, Type, Dict, Loc),
+    Asr =.. [AIdx, M, Head|ShareL], % Asr also contains variable bindings. By
+                                    % convention, M is in the 1st position and
+                                    % Head in the 2nd, to facilitate work
+    ( Clause = assrt_lib:asr_head_prop(Asr, M, Head, Status, Type, Dict, Loc),
       SubPos = HPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
@@ -750,7 +795,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
       ; true
       )
     ; Co \= "",
-      AClause = asr_comm(Asr, Co, Loc),
+      Clause = assrt_lib:asr_comm(Asr, Co, Loc),
       SubPos = CoPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
@@ -758,17 +803,39 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
 	TermPos = term_position(From, To, From, To, [_, SubPos, _])
       ; true
       )
-    ; ( member(AClause-PrL,
+    ; ( Clause = assrt_lib:AClause,
+        member(AClause-PrL,
 	       [asr_comp(Asr, PM, Pr, Loc)-CpL,
 		asr_call(Asr, PM, Pr, Loc)-CaL,
 		asr_succ(Asr, PM, Pr, Loc)-SuL
 	       ]),
 	member(MPr-SubPos, PrL),
 	strip_module(MPr, PM, Pr)
-      ; AClause = asr_glob(Asr, PM, Pr, Loc),
+      ; Clause = assrt_lib:asr_glob(Asr, PM, Pr, Loc),
 	member(MGl-GPos, GlL),
 	strip_module(MGl, PM, Gl),
 	add_arg(_, Gl, Pr, GPos, SubPos)
+      ; once(( member(MGl-_, GlL),
+	       strip_module(MGl, PM, declaration),
+	       implementation_module(PM:declaration(_), basicprops),
+	       functor(Head, Pr, 1)
+	     )),
+	Clause = (:- '$export_ops'([op(1125, fy, Pr)], PM, File))
+      ; member(MGl-_, GlL),
+	( strip_module(MGl, PM, declaration),
+	  implementation_module(PM:declaration(_), basicprops)
+	; strip_module(MGl, PM, global(_)),
+	  implementation_module(PM:global(_, _), basicprops)
+	; strip_module(MGl, PM, global),
+	  implementation_module(PM:global(_), basicprops)
+	)
+      ->functor(Head, Pr, N),
+	( \+ predicate_property(M:Head, meta_predicate(_)),
+	  functor(Meta, Pr, N),
+	  Meta =.. [_, 0|ArgL],
+	  maplist(=(?), ArgL),
+	  Clause = (:- meta_predicate Meta)
+	)
       ),
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
@@ -789,7 +856,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ).
 
 assertion_records(Decl, DPos, Records, RPos) :-
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     assertion_records(M, Dict, Decl, DPos, Records, RPos),
     %% Dict Must be assigned after assertion_records/6 to avoid performance
     %% issues --EMM
