@@ -37,10 +37,13 @@
 substitute(Comp, Term0, Term) :-
     ( call(Comp, Term0, Subs)
     ->Term = Subs
-    ; compound(Term0)
-    ->functor(Term0, F, A),
+    ; compound(Term0),
+      functor(Term0, F, A),
       functor(Term,  F, A),
-      substitute(1, Comp, Term0, Term)
+      substitute(1, Comp, Term0, Term),
+      %% required to avoid construction of equivalent terms:
+      Term0 \== Term
+    ->true
     ; Term = Term0
     ).
 
