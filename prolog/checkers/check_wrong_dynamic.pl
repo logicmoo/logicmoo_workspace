@@ -132,7 +132,8 @@ current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
     wrong_dynamic_db(TypeDB, PI, MPI, MFrom),
     memberchk(TypeDB, [def, dec, retract]),
     PI = M:F/A,
-    functor(H,F,A),
+    functor(H, F, A),
+    \+ hide_wrong_dynamic(H, M),
     Ref = M:H,
     \+ predicate_property(Ref, dynamic),
     \+ predicate_property(Ref, volatile),
@@ -156,6 +157,7 @@ current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     ; functor(H, F, A),
       current_defined_predicate(PI)
     ),
+    \+ hide_wrong_dynamic(H, M),
     checkable_predicate(Ref),
     predicate_property(Ref, dynamic),
     property_from(PI, dynamic, From),
@@ -221,7 +223,6 @@ record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
       callable(Fact)
     ->functor(Fact, F, A),
       record_location_goal(Fact, M, Type, CM, Comp, From),
-      \+ hide_wrong_dynamic(Fact, M),
       update_fact_from(wrong_dynamic_db(Type, M:F/A, MPI), From)
     ; \+ database_fact(Caller)
     ->normalize_head(Caller, CM:HC),
