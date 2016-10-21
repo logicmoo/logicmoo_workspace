@@ -10,12 +10,12 @@ Proceedings of the 23rd international conference on Machine learning. ACM, 2006.
 @license Artistic License 2.0
 */
 
-:- module(auc,[compute_areas/5,compute_areas_diagrams/5]).
+:- module(auc,[compute_areas/5,compute_areas_diagrams/5, compute_maxacc/2]).
 
-%! compute_areas(+LE:list,-AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
+%! compute_areas(+LG:list,-AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
 % 
 % The predicate takes as input 
-%* a list LE of pairs probability-literal in asceding order on probability
+%* a list LG of pairs probability-literal in asceding order on probability
 %where the litaral can be an Atom (incading a positive example) or \+ Atom, 
 %indicating a negative example while the probability is the probability of
 %Atom of being true
@@ -42,10 +42,10 @@ compute_areas(LG,AUCROC,ROC,AUCPR,PR):-
 
 /** 
 
-compute_areas_diagrams(+LE:list,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
+compute_areas_diagrams(+LG:list,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
  
 The predicate takes as input
-* a list LE of pairs probability-literal in asceding order on probability
+* a list LG of pairs probability-literal in asceding order on probability
  where the litaral can be an Atom (incading a positive example) or \+ Atom, 
  indicating a negative example while the probability is the probability of
  Atom of being true
@@ -75,6 +75,73 @@ compute_areas_diagrams(LG,AUCROC,ROC,AUCPR,PR):-
         tick:_{values:[0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]}},
            y:_{min:0.0,max:1.0,padding:_{bottom:0.0,top:0.0},
         tick:_{values:[0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]}}}}. 
+
+/** 
+
+compute_maxacc(+LG:list,-MaxAcc) is det
+ 
+The predicate takes as input
+* a list LG of pairs probability-literal in asceding order on probability
+ where the litaral can be an Atom (incading a positive example) or \+ Atom, 
+ indicating a negative example while the probability is the probability of
+ Atom of being true
+
+The predicate returns
+* MaxAcc: the maximum obtainable accuracy
+ 
+See http://cplint.lamping.unife.it/example/exauc.pl for an example
+
+*/
+
+
+compute_maxacc(LG, MaxAcc) :-
+  findall(E,member(_- \+(E),LG),Neg), %find all the pairs that contain a negative examples
+  length(LG,NEx), 
+  length(Neg,NNeg),
+  NPos is NEx-NNeg, 
+  keysort(LG,LG1), % ascending order of the pairs on probabilities
+  reverse(LG1,LG2), % discending order of the pairs on probabilities
+  compute_acc_list(LG2, 0, 0, NPos, NNeg, [], AccList),
+  max_list(AccList, MaxAcc).
+
+/**
+
+compute_acc_list(+LG:list, +TP:int, +FP:int, +FN:int, +TN:int, +AccList0:list, -AccList:list) is det
+
+The predicate takes as input
+* LG: a list LG of pairs probability-literal in asceding order on probability
+ where the litaral can be an Atom (incading a positive example) or \+ Atom, 
+ indicating a negative example while the probability is the probability of
+ Atom of being true
+* TP: the current number of true positive examples
+* FP: the current number of false positive examples
+* FN: the current number of false negative examples
+* TN: the current number of true negative examples
+* AccList0: the current list of the possible accuracies
+
+The predicate returns
+* AccList: a list of all the possible accuracies
+
+*/
+
+compute_acc_list([], TP, FP, FN, TN, AccList0, AccList) :-
+  Acc is (TP+TN)/(TP+TN+FP+FN),
+  append(AccList0, [Acc], AccList).
+
+compute_acc_list([P- (\+ _)|T], TP, FP, FN, TN, AccList0, AccList):-!,
+  Acc is (TP+TN)/(TP+TN+FP+FN),
+  append(AccList0, [Acc], AccListNew),% append the new accuracy (it creates a new list called AccListNew)
+  FP1 is FP+1,
+  TN1 is TN-1,
+  compute_acc_list(T, TP, FP1, FN, TN1, AccListNew, AccList).
+
+compute_acc_list([P- _|T], TP, FP, FN, TN, AccList0, AccList):-!,
+  Acc is (TP+TN)/(TP+TN+FP+FN),
+  append(AccList0, [Acc], AccListNew),
+  TP1 is TP+1,
+  FN1 is FN-1,
+  compute_acc_list(T, TP1, FP, FN1, TN, AccListNew, AccList).
+
 
 
 
