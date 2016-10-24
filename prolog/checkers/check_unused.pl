@@ -452,10 +452,7 @@ cu_caller_hook(Caller, M:Head, CM, Type, Goal, _, From) :-
 record_calls_to(Type, Caller, Head, M, From) :-
     ( memberchk(Type, [use, lit])
     ->caller_ptr(Caller, From, Ptr),
-      ( \+ calls_to(Ptr, M, Head)
-      ->record_calls_to(Ptr, M, Head)
-      ; true
-      )
+      record_calls_to(Ptr, M, Head)
     ; true
     ).
 
