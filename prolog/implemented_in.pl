@@ -34,7 +34,7 @@
 :- use_module(library(extra_location)).
 :- use_module(library(prolog_codewalk), []). % for message_location//1
 :- use_module(library(normalize_head)).
-:- use_module(library(checkers/check_trivial_fails)).
+:- use_module(library(dynamic_locations)).
 
 :- multifile
     prolog:message//1,
@@ -71,12 +71,12 @@ implemented_in(MGoal0, From, Args) :-
 :- dynamic prepared/0.
 
 prepare :-
-    collect_dynamic_locations([source(false),
-			       infer_meta_predicates(false),
-			       autoload(false),
-			       evaluate(false),
-			       trace_reference(_),
-			       module_class([user, system, library])]),
+    dynamic_locations([source(false),
+		       infer_meta_predicates(false),
+		       autoload(false),
+		       evaluate(false),
+		       trace_reference(_),
+		       module_class([user, system, library])]),
     retractall(prepared),
     assertz(prepared).
 

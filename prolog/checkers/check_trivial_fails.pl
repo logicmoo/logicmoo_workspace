@@ -27,7 +27,7 @@
     the GNU General Public License.
 */
 
-:- module(check_trivial_fails, [collect_dynamic_locations/1]).
+:- module(check_trivial_fails, []).
 
 :- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
@@ -35,6 +35,7 @@
 :- use_module(library(from_utils)).
 :- use_module(library(location_utils)).
 :- use_module(library(extra_codewalk)).
+:- use_module(library(dynamic_locations)).
 
 :- multifile
     prolog:message//1.
@@ -55,7 +56,7 @@ check_trivial_fails(OptionL1, Pairs) :-
 		   trace_reference(_),
 		   module_class([user, system, library])
 		  ], OptionL),
-    collect_dynamic_locations(OptionL),
+    dynamic_locations(OptionL),
     extra_walk_code([on_etrace(collect_trivial_fails(MatchAI))|OptionL]),
     findall(warning-(Loc-Args),
 	    ( retract(trivial_fail(Args, From)),
@@ -63,9 +64,6 @@ check_trivial_fails(OptionL1, Pairs) :-
 	    ), Pairs),
     cleanup_f,
     !.
-
-collect_dynamic_locations(OptionL) :-
-    extra_walk_code([source(false), on_etrace(collect_dynamic_locations(M))|OptionL], M, _).
 
 cleanup_f :-
     retractall(ai_cache_result(_, _)).
@@ -99,10 +97,6 @@ ignore_predicate(pce_class(_, _, template, _, _, _), pce_expansion).
 ignore_predicate(property(system_source_prefix(_)), pce_host).
 ignore_predicate(verbose, pce_expansion).
 ignore_predicate(inferred_meta_pred(_, _, _), prolog_metainference).
-
-:- public collect_dynamic_locations/4.
-collect_dynamic_locations(M, MGoal, _, From) :-
-    record_location_dynamic(MGoal, M, From).
 
 :- public collect_trivial_fails/4.
 :- meta_predicate collect_trivial_fails(7,+,+,+).
