@@ -218,7 +218,7 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
     clause_property(Clause, predicate(Caller)),
     ( \+ black_list_caller(Caller)
     ->resolve_calln(Goal0, Goal1),
-      static_strip_module(Goal1, Goal, CM, FCM),
+      static_strip_module(Goal1, FCM, Goal, CM),
       implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
       ->( nb_current('$current_goal', CurrGoal),
