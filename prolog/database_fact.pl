@@ -50,7 +50,7 @@
 prolog:called_by(H, IM, CM, [F]) :-
     current_prolog_flag(check_database_preds, true),
     database_use_fact(IM:H, F),
-    static_strip_module(F, C, M, CM),
+    static_strip_module(F, CM, C, M),
     callable(C),
     nonvar(M).
 

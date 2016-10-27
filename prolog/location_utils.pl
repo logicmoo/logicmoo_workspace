@@ -145,10 +145,10 @@ record_location(Head, M, Type, From) :-
     ).
 
 record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
-    static_strip_module(MCall, Call, CM, M),
+    static_strip_module(MCall, M, Call, CM),
     implementation_module(MCall, IM),
     call(FactBuilder, Type, Call, IM, CM, MFact),
-    static_strip_module(MFact, Fact, FM, CM),
+    static_strip_module(MFact, CM, Fact, FM),
     implementation_module(FM:Fact, M),
     call(Recorder, M:Fact, FM, Type, IM:Call, CM, From).
 
