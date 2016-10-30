@@ -278,7 +278,6 @@ init(swi):-
 :- if(current_prolog_flag(dialect,swi)). 
 :- use_module(library(arithmetic)). 
 :- arithmetic_function(inf/0).
-:- nl.
 :- init(swi).
 inf(1e10).
 :- else.
