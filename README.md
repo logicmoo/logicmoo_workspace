@@ -84,6 +84,8 @@ To install:
 * Follow instructions at top of [InterProlog Studio](http://interprolog.com/wiki/index.php?title=Studio_Download_and_installation), including a recent XSB Prolog install
 
 ## Known Bugs
+### Composite events can not have zero state transitions
+In the current implementation, composite events need to transition between different states, e.g. happens(myEvent,T,T) will not work.
 ### Missing candidate actions
 No matter the strategy (goal_strat(breadth) or not), the following generates a1,a1,... when it should generate only a1+a2 (simultaneous):
 
