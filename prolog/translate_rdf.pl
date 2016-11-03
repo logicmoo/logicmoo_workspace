@@ -1,4 +1,4 @@
-:- module(owl2_model, [load_owl/1, load_owl_from_string/1, expand_all_ns/3]).
+:- module(owl2_model, [load_owl/1, load_owl_from_string/1, expand_all_ns/3, is_axiom/1]).
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
@@ -3038,6 +3038,35 @@ get_module(M):-
   pengine_property(Self,module(M)),!.  
 get_module('user'):- !.
 
+parse_rdf_from_owl_rdf_pred(String):-
+  get_module(M),
+  open_chars_stream(String,S),
+  process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
+  close(S),
+  add_kb_prefixes(NSList),
+  rdf_2_owl('ont','ont'),
+  owl_canonical_parse_3(['ont']),
+  parse_probabilistic_annotation_assertions.
+
+create_and_assert_axioms(P,Args) :-
+  ns4query(NSList),
+  ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
+       ( expand_all_ns(IntArgs,NSList,ArgsExp),
+         NewTRILLAxiom =.. [P,ArgsExp]
+       )
+     ;
+       ( expand_all_ns(Args,NSList,ArgsExp),
+         NewTRILLAxiom =.. [P|ArgsExp]
+       )
+  ),
+  test_and_assert(NewTRILLAxiom,'ont').
+
+is_axiom(Pred) :-
+	member(Pred, [class,datatype,objectProperty,dataProperty,annotationProperty,namedIndividual,subClassOf,equivalentClasses,disjointClasses,disjointUnion,subPropertyOf,equivalentProperties,disjointProperties,
+inverseProperties,propertyDomain,propertyRange,functionalProperty,inverseFunctionalProperty,reflexiveProperty,irreflexiveProperty,symmetricProperty,asymmetricProperty,transitiveProperty,hasKey,
+sameIndividual,differentIndividuals,classAssertion,propertyAssertion,negativePropertyAssertion,annotationAssertion,
+lpClassAssertion,lpPropertyAssertion]).
+
 :- multifile sandbox:safe_primitive/1.
 
 sandbox:safe_primitive(owl2_model:load_owl(_)).
@@ -3052,28 +3081,9 @@ user:term_expansion(kb_prefix(A,B),[]):-
   trill:add_kb_prefix(A,B).
 
 user:term_expansion(owl_rdf(String),[]):-
-  get_module(M),
-  open_chars_stream(String,S),
-  process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
-  close(S),
-  add_kb_prefixes(NSList),
-  rdf_2_owl('ont','ont'),
-  owl_canonical_parse_3(['ont']),
-  parse_probabilistic_annotation_assertions.
+  parse_rdf_from_owl_rdf_pred(String).
   
 user:term_expansion(TRILLAxiom,[]):-
   TRILLAxiom =.. [P|Args],
-  member(P, [class,datatype,objectProperty,dataProperty,annotationProperty,namedIndividual,subClassOf,equivalentClasses,disjointClasses,disjointUnion,subPropertyOf,equivalentProperties,disjointProperties,
-inverseProperties,propertyDomain,propertyRange,functionalProperty,inverseFunctionalProperty,reflexiveProperty,irreflexiveProperty,symmetricProperty,asymmetricProperty,transitiveProperty,hasKey,
-sameIndividual,differentIndividuals,classAssertion,propertyAssertion,negativePropertyAssertion,annotationAssertion]),
-  ns4query(NSList),
-  ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
-       ( expand_all_ns(IntArgs,NSList,ArgsExp),
-         NewTRILLAxiom =.. [P,ArgsExp]
-       )
-     ;
-       ( expand_all_ns(Args,NSList,ArgsExp),
-         NewTRILLAxiom =.. [P|ArgsExp]
-       )
-  ),
-  test_and_assert(NewTRILLAxiom,'ont').
+  is_axiom(P),
+  create_and_assert_axioms(P,Args).

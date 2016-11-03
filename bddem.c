@@ -8,18 +8,26 @@ This package uses the library cudd, see http://vlsi.colorado.edu/~fabio/CUDD/
 for the relative license.
 
 */
-
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "cuddInt.h"
+#include "cudd.h"
 #include <SWI-Prolog.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
+#define BUFSIZE 200000
 #define LOGZERO log(0.01)
 #define CACHE_SLOTS 1 
 #define UNIQUE_SLOTS 1
+#define RETURN_IF_FAIL if (ret!=TRUE) return ret;
 
-
+  
 typedef struct
 {
   int nVal,nRule;
@@ -76,7 +84,7 @@ static foreign_t add_var(term_t,term_t,term_t,term_t,term_t);
 static foreign_t init(term_t,term_t,term_t);
 static foreign_t end(term_t);
 static foreign_t EM(term_t,term_t,term_t,term_t,
-  term_t,term_t,term_t,term_t,term_t);
+  term_t,term_t,term_t,term_t);
 double ProbPath(example_data * ex_d,DdNode *node, int comp_par, int nex);
 //static int rec_deref(void);
 void Forward(example_data * ex_d,DdNode *node, int nex);
@@ -92,10 +100,11 @@ void add_or_replace_node(tablerow *tab, DdNode *node, double value);
 void add_node(tablerow *tab, DdNode *node, double value);
 void destroy_table(tablerow *tab,int varcnt);
 install_t install(void);
+void write_dot(environment * env, DdNode * bdd, FILE * file);
 
 static foreign_t init(term_t arg1,term_t arg2,term_t arg3)
 {
-  int j,i;
+  int j,i,ret;
   example_data * ex_d; 
   double ***eta;
   double ***eta_temp;
@@ -107,7 +116,8 @@ static foreign_t init(term_t arg1,term_t arg2,term_t arg3)
   ex_d=(example_data *)malloc(sizeof(example_data));
 
   ex_d->ex=0;
-  PL_get_integer(arg1,&nRules);
+  ret=PL_get_integer(arg1,&nRules);
+  RETURN_IF_FAIL
   ex_d->nRules=nRules;
   ex_d->env=NULL;
   ex_d->eta= (double ***) malloc(nRules * sizeof(double **));
@@ -119,8 +129,10 @@ static foreign_t init(term_t arg1,term_t arg2,term_t arg3)
   ex_d->nodes_probs=NULL;
   for (j=0;j<nRules;j++)  
   {
-    PL_get_list(list,head,list);
-    PL_get_integer(head,&rules[j]);
+    ret=PL_get_list(list,head,list);
+    RETURN_IF_FAIL
+    ret=PL_get_integer(head,&rules[j]);
+    RETURN_IF_FAIL
     eta[j]= (double **) malloc((rules[j]-1)*sizeof(double *));
     eta_temp[j]= (double **) malloc((rules[j]-1)*sizeof(double *));
     for (i=0;i<rules[j]-1;i++)
@@ -129,7 +141,8 @@ static foreign_t init(term_t arg1,term_t arg2,term_t arg3)
       eta_temp[j][i]=(double *) malloc(2*sizeof(double));
     }
   }
-  PL_put_integer(ex_d_t,(long) ex_d);
+  ret=PL_put_pointer(ex_d_t,(void *)ex_d);
+  RETURN_IF_FAIL
   return(PL_unify(ex_d_t,arg3));
 
 }
@@ -139,12 +152,11 @@ static foreign_t init_bdd(term_t arg1, term_t arg2)
   example_data * ex_d;
   DdManager * mgr;
   term_t env_t;
-  long ex_d_l;
-  int ex;
+  int ex,ret;
 
   env_t=PL_new_term_ref();
-  PL_get_long(arg1,&ex_d_l);
-  ex_d=(example_data *)ex_d_l;
+  ret=PL_get_pointer(arg1,(void **)&ex_d);
+  RETURN_IF_FAIL
   ex=ex_d->ex;
   ex_d->env=(environment *) realloc(ex_d->env, (ex+1)*sizeof(environment));
   ex_d->env[ex].mgr=Cudd_Init(0,0,UNIQUE_SLOTS,CACHE_SLOTS,5120);
@@ -168,18 +180,19 @@ static foreign_t init_bdd(term_t arg1, term_t arg2)
 
   ex_d->env[ex].rules=ex_d->rules;
 
-  PL_put_integer(env_t,(long) (ex_d->env+ex));
+  ret=PL_put_pointer(env_t,(void *) (ex_d->env+ex));
+  RETURN_IF_FAIL
   return(PL_unify(env_t,arg2));
  
 }
 
 static foreign_t end_bdd(term_t arg1)
 {
-  long ex_d_l;
+  int ret;
   example_data *ex_d;
 
-  PL_get_long(arg1,&ex_d_l);
-  ex_d=(example_data *) ex_d_l;
+  ret=PL_get_pointer(arg1,(void **)&ex_d);
+  RETURN_IF_FAIL
   ex_d->ex=ex_d->ex+1;
   PL_succeed;
 }
@@ -188,8 +201,9 @@ static foreign_t init_test(term_t arg1,term_t arg2)
 {
   term_t env_t;
   environment * env;
-  int nRules;
-  PL_get_integer(arg1,&nRules);
+  int nRules,ret;
+  ret=PL_get_integer(arg1,&nRules);
+  RETURN_IF_FAIL
   env_t=PL_new_term_ref();
   
   env=(environment *)malloc(sizeof(environment));
@@ -206,17 +220,18 @@ static foreign_t init_test(term_t arg1,term_t arg2)
   env->boolVars=0;
 
   env->rules= (int *) malloc(nRules * sizeof(int));
-  PL_put_integer(env_t,(long) env);
+  ret=PL_put_pointer(env_t,(void *) env);
+  RETURN_IF_FAIL
   return(PL_unify(env_t,arg2));
 }
 
 static foreign_t end_test(term_t arg1)
 {
-  long env_l;
+  int ret;
   environment *env;
 
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
   free(env->bVar2mVar);
   free(env->vars);
   Cudd_Quit(env->mgr);
@@ -267,11 +282,10 @@ static double Expectation(example_data * ex_d,DdNode **nodes_ex,int lenNodes)
 
 static foreign_t end(term_t arg1)
 {
-  int r,i;
-  long ex_d_l;
+  int r,i,ret;
   example_data * ex_d;
-  PL_get_long(arg1,&ex_d_l);
-  ex_d=(example_data *)ex_d_l;
+  ret=PL_get_pointer(arg1,(void **)&ex_d);
+  RETURN_IF_FAIL
  
   for (i=0;i<ex_d->ex;i++)
   {
@@ -303,29 +317,36 @@ static foreign_t end(term_t arg1)
 static foreign_t ret_prob(term_t arg1, term_t arg2, term_t arg3)
 {
   term_t out;
-  long nodeint,env_l;
   environment * env;
   DdNode * node;
   tablerow * table;
+  int ret;
 
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
-  PL_get_long(arg2,&nodeint);
-  node=(DdNode *)nodeint;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
+  ret=PL_get_pointer(arg2,(void **)&node);
+  RETURN_IF_FAIL
   out=PL_new_term_ref();
  
   if (!Cudd_IsConstant(node))
   {
     table=init_table(env->boolVars);
-    PL_put_float(out,Prob(node,env,table,0));
+    ret=PL_put_float(out,Prob(node,env,table,0));
+    RETURN_IF_FAIL
     destroy_table(table,env->boolVars);
   }
   else
   {
     if (node==Cudd_ReadOne(env->mgr))
-      PL_put_float(out,1.0);
-    else  
-      PL_put_float(out,0.0);
+    {
+      ret=PL_put_float(out,1.0);
+      RETURN_IF_FAIL
+    }
+    else
+    {  
+      ret=PL_put_float(out,0.0);
+      RETURN_IF_FAIL
+    }
   }
 
   return(PL_unify(out,arg3));
@@ -337,8 +358,7 @@ table is used to store nodeB for which the probability has alread been computed
 so that it is not recomputed
  */
 {
-  int index,mVarIndex,comp,pos;
-  variable v;
+  int index,comp;
   double res;
   double p,pt,pf,BChild0,BChild1;
   double * value_p;
@@ -370,8 +390,6 @@ so that it is not recomputed
       pt=Prob(T,env,table,comp);
       BChild0=pf*(1-p);
       BChild1=pt*p;
-      mVarIndex=env->bVar2mVar[index];
-      v=env->vars[mVarIndex];
       res=BChild0+BChild1;
       add_node(table,nodekey,res);
       return res;
@@ -385,22 +403,22 @@ static foreign_t add_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4, term_t
 {
   term_t out,head,probTerm;
   variable * v;
-  int i;
-  DdNode * node;
+  int i,ret;
   double p,p0;
-  long env_l;
   environment * env;
 
   head=PL_new_term_ref();
   out=PL_new_term_ref();
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
   env->nVars=env->nVars+1;
   env->vars=(variable *) realloc(env->vars,env->nVars * sizeof(variable));
 
   v=&env->vars[env->nVars-1];
-  PL_get_integer(arg2,&v->nVal);
-  PL_get_integer(arg4,&v->nRule);
+  ret=PL_get_integer(arg2,&v->nVal);
+  RETURN_IF_FAIL
+  ret=PL_get_integer(arg4,&v->nRule);
+  RETURN_IF_FAIL
 
   v->firstBoolVar=env->boolVars;
   env->probs=(double *) realloc(env->probs,(((env->boolVars+v->nVal-1)* sizeof(double))));
@@ -409,20 +427,19 @@ static foreign_t add_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4, term_t
   p0=1;
   for (i=0;i<v->nVal-1;i++)
   {
-    node=Cudd_bddIthVar(env->mgr,env->boolVars+i);
-    PL_get_list(probTerm,head,probTerm);
-    PL_get_float(head,&p);
+    ret=PL_get_list(probTerm,head,probTerm);
+    RETURN_IF_FAIL
+    ret=PL_get_float(head,&p);
+    RETURN_IF_FAIL
     env->bVar2mVar[env->boolVars+i]=env->nVars-1;
     env->probs[env->boolVars+i]=p/p0;
     p0=p0*(1-p/p0);
   }
   env->boolVars=env->boolVars+v->nVal-1;
-  if (env->nRules < v->nRule) {
-    env->rules= (int *) realloc(env->rules, ((((v->nRule)+1) * sizeof(int))));
-  }
   env->rules[v->nRule]= v->nVal; 
 
-  PL_put_integer(out,env->nVars-1);
+  ret=PL_put_integer(out,env->nVars-1);
+  RETURN_IF_FAIL
 
   return(PL_unify(out,arg5));
 }
@@ -432,17 +449,18 @@ static foreign_t equality(term_t arg1,term_t arg2,term_t arg3, term_t arg4)
   term_t out;
   int varIndex;
   int value;
-  int i;
+  int i,ret;
   variable v;
   DdNode * node, * tmp,*var;
-  long env_l;
   environment * env;
 
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
 
-  PL_get_integer(arg2,&varIndex);
-  PL_get_integer(arg3,&value);
+  ret=PL_get_integer(arg2,&varIndex);
+  RETURN_IF_FAIL
+  ret=PL_get_integer(arg3,&value);
+  RETURN_IF_FAIL
   v=env->vars[varIndex];
   i=v.firstBoolVar;
   tmp=Cudd_ReadOne(env->mgr);
@@ -464,7 +482,8 @@ static foreign_t equality(term_t arg1,term_t arg2,term_t arg3, term_t arg4)
     Cudd_RecursiveDeref(env->mgr,tmp);
   }
   out=PL_new_term_ref();
-  PL_put_integer(out,(long) node);
+  ret=PL_put_pointer(out,(void *)node);
+  RETURN_IF_FAIL
   return(PL_unify(out,arg4));
 }
 
@@ -472,17 +491,17 @@ static foreign_t one(term_t arg1, term_t arg2)
 {
   term_t out;
   DdNode * node;
-  long env_l;
   environment *env;
-  int res;
+  int res,ret;
 
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
 
   node =  Cudd_ReadOne(env->mgr);
   Cudd_Ref(node);
   out=PL_new_term_ref();
-  PL_put_integer(out,(long) node);
+  ret=PL_put_pointer(out,(void *) node);
+  RETURN_IF_FAIL
   res=PL_unify(out,arg2);
   return res;
 
@@ -493,35 +512,32 @@ static foreign_t zero(term_t arg1, term_t arg2)
 {
   term_t out;
   DdNode * node;
-  long env_l;
   environment *env;
+  int ret;
 
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
 
   node = Cudd_ReadLogicZero(env->mgr);
   Cudd_Ref(node);
   out=PL_new_term_ref();
-  PL_put_integer(out,(long) node);
+  ret=PL_put_pointer(out,(void *) node);
+  RETURN_IF_FAIL
   return(PL_unify(out,arg2));
 }
 
 static foreign_t bdd_not(term_t arg1,term_t arg2, term_t arg3)
 {
   term_t out;
-  long nodeint;
   DdNode * node;
-  long env_l;
-  environment *env;
+  int ret;
 
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
-
-  PL_get_long(arg2,&nodeint);
-  node = (DdNode *)nodeint;
+  ret=PL_get_pointer(arg2,(void **)&node);
+  RETURN_IF_FAIL
   node=Cudd_Not(node);
   out=PL_new_term_ref();
-  PL_put_integer(out,(long) node);
+  ret=PL_put_pointer(out,(void *) node);
+  RETURN_IF_FAIL
   return(PL_unify(out,arg3));
 }
 
@@ -529,21 +545,20 @@ static foreign_t and(term_t arg1,term_t arg2,term_t arg3, term_t arg4)
 {
   term_t out;
   DdNode * node1, *node2,*nodeout;
-  long node1int,node2int;
-  long env_l;
   environment *env;
-  int res;
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
+  int res,ret;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
 
-  PL_get_long(arg2,&node1int);
-  node1 = (DdNode *)node1int;
-  PL_get_long(arg3,&node2int);
-  node2 = (DdNode *)node2int;
+  ret=PL_get_pointer(arg2,(void **)&node1);
+  RETURN_IF_FAIL
+  ret=PL_get_pointer(arg3,(void **)&node2);
+  RETURN_IF_FAIL
   nodeout=Cudd_bddAnd(env->mgr,node1,node2);
   Cudd_Ref(nodeout);
   out=PL_new_term_ref();
-  PL_put_integer(out,(long) nodeout);
+  ret=PL_put_pointer(out,(void *) nodeout);
+  RETURN_IF_FAIL
   res=PL_unify(out,arg4);
   return res;
 }
@@ -552,22 +567,22 @@ static foreign_t or(term_t arg1,term_t arg2,term_t arg3, term_t arg4)
 {
   term_t out;
   DdNode * node1, *node2,*nodeout;
-  long node1int,node2int;
-  long env_l;
   environment *env;
+  int ret;
 
-  PL_get_long(arg1,&env_l);
-  env=(environment *)env_l;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
 
-  PL_get_long(arg2,&node1int);
-  node1 = (DdNode *)node1int;
-  PL_get_long(arg3,&node2int);
-  node2 = (DdNode *)node2int;
+  ret=PL_get_pointer(arg2,(void **)&node1);
+  RETURN_IF_FAIL
+  ret=PL_get_pointer(arg3,(void **)&node2);
+  RETURN_IF_FAIL
 
   nodeout=Cudd_bddOr(env->mgr,node1,node2);
   Cudd_Ref(nodeout);
   out=PL_new_term_ref();
-  PL_put_integer(out,(long) nodeout);
+  ret=PL_put_pointer(out,(void *) nodeout);
+  RETURN_IF_FAIL
   return(PL_unify(out,arg4));
 }
 
@@ -597,27 +612,88 @@ static int bdd_to_add(void)
   out=YAP_MkIntTerm((YAP_Int) node2);
   return(YAP_Unify(out,arg2));
 }
+*/
+static foreign_t create_dot(term_t arg1, term_t arg2, term_t arg3)
+{
+  DdNode * node;
+  environment *env;
+  char *filename;
+  FILE * file;
+  int ret;
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
+  ret=PL_get_pointer(arg2,(void **)&node);
+  RETURN_IF_FAIL
+  ret=PL_get_file_name(arg3,&filename,0);
+  RETURN_IF_FAIL
+  file = open_file(filename, "w");
+  write_dot(env,node,file);
+  fclose(file);
+  return TRUE; 
+}
 
-static int create_dot(void)
+static foreign_t create_dot_string(term_t arg1, term_t arg2, term_t arg3)
+{
+  term_t out;
+  DdNode * node;
+  environment *env;
+  FILE * file;
+  char *buffer=NULL;
+  int ret;
+
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
+  ret=PL_get_pointer(arg2,(void **)&node);
+  RETURN_IF_FAIL
+  out=PL_new_term_ref();
+  
+#ifndef _WIN32
+  file=tmpfile();
+#else
+  char filename[MAX_PATH];
+  GetTempFileName(".","temp",0,filename);
+  file = fopen(filename,"w+bTD");
+#endif
+  if (file==NULL) {perror("Error in temporary file opening");}
+  write_dot(env,node,file);
+  
+  if (fseek(file, 0L, SEEK_END) == 0) {
+    /* Get the size of the file. */
+    long bufsize = ftell(file);
+    if (bufsize == -1) { perror("Error in getting the size of the temporary file");}
+
+      /* Allocate our buffer to that size. */
+        buffer = malloc(sizeof(char) * (bufsize + 1));
+
+        /* Go back to the start of the file. */
+        if (fseek(file, 0L, SEEK_SET) != 0) { perror("Error going back to the start of the file");}
+
+        /* Read the entire file into memory. */
+        size_t newLen = fread(buffer, sizeof(char), bufsize, file);
+        if ( ferror( file ) != 0 ) {
+            perror("Error reading file");
+        } else {
+            buffer[newLen++] = '\0'; /* Just to be safe. */
+        }
+  }
+  fclose(file);
+  ret=PL_put_string_chars(out,buffer);
+  RETURN_IF_FAIL
+  return(PL_unify(out,arg3));
+}
+
+void write_dot(environment * env, DdNode * bdd, FILE * file)
 {
   char * onames[]={"Out"};
   char ** inames;
-   DdNode * array[1];
-  YAP_Term arg1,arg2;
   int i,b,index;
   variable v;
-  char numberVar[10],numberBit[10],filename[1000];
-  FILE * file;
-  
-  arg1=YAP_ARG1;
-  arg2=YAP_ARG2;
-
-  YAP_StringToBuffer(arg2,filename,1000);
-  inames= (char **) malloc(sizeof(char *)*(boolVars_ex[ex]));
+  char numberVar[10],numberBit[10];
+  inames= (char **) malloc(sizeof(char *)*(env->boolVars));
   index=0;
-  for (i=0;i<nVars_ex[ex];i++)
+  for (i=0;i<env->nVars;i++)
   {
-    v=vars_ex[ex][i];
+    v=env->vars[i];
     for (b=0;b<v.nVal-1;b++)
     {  
       inames[b+index]=(char *) malloc(sizeof(char)*20);
@@ -630,14 +706,11 @@ static int create_dot(void)
     }
     index=index+v.nVal-1;
   }
-  array[0]=(DdNode *)YAP_IntOfTerm(arg1);
-  file = open_file(filename, "w");
-  Cudd_DumpDot(mgr_ex[ex],1,array,inames,onames,file);
-  fclose(file);
+  Cudd_DumpDot(env->mgr,1,&bdd,(const char * const *)inames,(const char * const *)onames,file);
   index=0;
-  for (i=0;i<nVars_ex[ex];i++)
+  for (i=0;i<env->nVars;i++)
   {
-    v=vars_ex[ex][i];
+    v=env->vars[i];
     for (b=0;b<v.nVal-1;b++)
     {  
       free(inames[b+index]);
@@ -645,10 +718,9 @@ static int create_dot(void)
     index=index+v.nVal-1;
   }
   free(inames);
-  return 1;
 }
 
-
+/*
 static int rec_deref(void)
 {
   YAP_Term arg1;
@@ -784,7 +856,7 @@ void Forward(example_data * ex_d,DdNode *root, int nex)
 void UpdateForward(example_data *ex_d,DdNode *node, int nex,
   DdNode *** nodesToVisit, int * NnodesToVisit)
 {
-  int index,position,mVarIndex;
+  int index,position;
   DdNode *T,*E,*nodereg;
   double *value_p,*value_p_T,*value_p_F,p;
 
@@ -795,8 +867,6 @@ void UpdateForward(example_data *ex_d,DdNode *node, int nex,
   else
   {
     index=Cudd_NodeReadIndex(node);
-    mVarIndex=ex_d->env[nex].bVar2mVar[index];
-   // v=ex_d->env[nex].vars[mVarIndex];
     p=ex_d->env[nex].probs[index];
     nodereg=Cudd_Regular(node);
     value_p=get_value(ex_d->nodesF,nodereg);
@@ -856,7 +926,7 @@ void UpdateForward(example_data *ex_d,DdNode *node, int nex,
 
 double GetOutsideExpe(example_data * ex_d,DdNode *root,double ex_prob, int nex)
 {
-  int i,j,mVarIndex,bVarIndex;
+  int i,j,mVarIndex,bVarIndex,firstBoolVarOfRule;
   double **eta_rule;
   double theta,rootProb, T=0;
 
@@ -889,12 +959,11 @@ double GetOutsideExpe(example_data * ex_d,DdNode *root,double ex_prob, int nex)
 
       mVarIndex=ex_d->env[nex].bVar2mVar[bVarIndex];
       eta_rule=ex_d->eta_temp[ex_d->env[nex].vars[mVarIndex].nRule];
-      for (i=0; i<ex_d->env[nex].vars[mVarIndex].nVal-1;i++)
-      {
-        theta=ex_d->env[nex].probs[bVarIndex];
-        eta_rule[i][0]=eta_rule[i][0]+T*(1-theta);
-        eta_rule[i][1]=eta_rule[i][1]+T*theta;
-      }   
+      firstBoolVarOfRule=ex_d->env[nex].vars[mVarIndex].firstBoolVar;
+      i=bVarIndex-firstBoolVarOfRule;
+      theta=ex_d->env[nex].probs[bVarIndex];
+      eta_rule[i][0]=eta_rule[i][0]+T*(1-theta);
+      eta_rule[i][1]=eta_rule[i][1]+T*theta;
     }
 
     for (j=0; j<ex_d->nRules; j++)
@@ -950,15 +1019,15 @@ void Maximization(example_data * ex_d, double ** arrayprob)
 
 static foreign_t randomize(term_t arg1)
 {
-  int i,j,e,rule;
+  int i,j,e,rule,ret;
   double * theta,p0;
   double pmass,par;
   double **Theta_rules;
-  long ex_d_l;
   example_data * ex_d;
 
-  PL_get_long(arg1,&ex_d_l);
-  ex_d=(example_data *)ex_d_l;
+  ret=PL_get_pointer(arg1,(void **)&ex_d);
+  RETURN_IF_FAIL
+
    
   Theta_rules=(double **)malloc(ex_d->nRules *sizeof(double *));
 
@@ -1001,14 +1070,13 @@ static foreign_t randomize(term_t arg1)
   PL_succeed;
 }
 
-static foreign_t EM(term_t arg1,term_t arg2,term_t arg3,term_t arg4,term_t arg5,term_t arg6,term_t arg7,term_t arg8,term_t arg9)
+static foreign_t EM(term_t arg1,term_t arg2,term_t arg3,term_t arg4,term_t arg5,term_t arg6,term_t arg7,term_t arg8)
 {
   term_t pterm,nil,out1,out2,out3,nodesTerm,ruleTerm,head,tail,pair,compoundTerm;
   DdNode * node1,**nodes_ex;
-  int r,lenNodes,i,j,iter,cycle;
-  long node1int;
+  int r,i,j,iter,cycle,ret;
   long iter1;
-  long ex_d_l;
+  size_t lenNodes; 
   example_data * ex_d;
   double CLL0= -2.2*pow(10,10); //-inf
   double CLL1= -1.7*pow(10,8);  //+inf   
@@ -1016,11 +1084,15 @@ static foreign_t EM(term_t arg1,term_t arg2,term_t arg3,term_t arg4,term_t arg5,
   double ratio,diff;
   double **arrayprob; //new value of paramters after an iteration. One value ofr each rule and Bool var
 
-  PL_get_long(arg1,&ex_d_l);
-  ex_d=(example_data *)ex_d_l;
+  ret=PL_get_pointer(arg1,(void **)&ex_d);
+  RETURN_IF_FAIL
   pair=PL_new_term_ref();
   head=PL_new_term_ref();
   nodesTerm=PL_copy_term_ref(arg2);
+  
+  ret=PL_skip_list(nodesTerm,0,&lenNodes);
+  if (ret!=PL_LIST) return FALSE;
+
   out1=PL_new_term_ref();
   out2=PL_new_term_ref();
   out3=PL_new_term_ref();
@@ -1030,10 +1102,13 @@ static foreign_t EM(term_t arg1,term_t arg2,term_t arg3,term_t arg4,term_t arg5,
   nil=PL_new_term_ref();
   compoundTerm=PL_new_term_ref();  
 
-  PL_get_float(arg3,&ea);
-  PL_get_float(arg4,&er);
-  PL_get_integer(arg5,&lenNodes);  
-  PL_get_integer(arg6,&iter);
+  ret=PL_get_float(arg3,&ea);
+  RETURN_IF_FAIL
+  
+  ret=PL_get_float(arg4,&er);
+  RETURN_IF_FAIL
+  ret=PL_get_integer(arg5,&iter);
+  RETURN_IF_FAIL
   arrayprob=(double **) malloc(ex_d->nRules * sizeof(double *));
   for (j=0;j<ex_d->nRules;j++)  
   {
@@ -1046,15 +1121,17 @@ static foreign_t EM(term_t arg1,term_t arg2,term_t arg3,term_t arg4,term_t arg5,
 
   for (i=0;i<lenNodes;i++)
   {
-    PL_get_list(nodesTerm,pair,nodesTerm);
-    PL_get_list(pair,head,pair);
-    //printf("qui\n");
-    PL_get_long(head,&node1int);
-    //printf("qua\n");
-    node1=(DdNode *)node1int;
+    ret=PL_get_list(nodesTerm,pair,nodesTerm);
+    RETURN_IF_FAIL
+    ret=PL_get_list(pair,head,pair);
+    RETURN_IF_FAIL
+    ret=PL_get_pointer(head,(void **)&node1);
+    RETURN_IF_FAIL
     nodes_ex[i]=node1;
-    PL_get_list(pair,head,pair);
-    PL_get_float(head,&(ex_d->example_prob[i]));
+    ret=PL_get_list(pair,head,pair);
+    RETURN_IF_FAIL
+    ret=PL_get_float(head,&(ex_d->example_prob[i]));
+    RETURN_IF_FAIL
   }
   diff=CLL1-CLL0;
   ratio=diff/fabs(CLL0);
@@ -1081,41 +1158,58 @@ static foreign_t EM(term_t arg1,term_t arg2,term_t arg3,term_t arg4,term_t arg5,
     diff=CLL1-CLL0;
     ratio=diff/fabs(CLL0);
   }
-  PL_put_nil(out2);
+  ret=PL_put_nil(out2);
+  RETURN_IF_FAIL
   for (r=0; r<ex_d->nRules; r++)
   {
-    PL_put_nil(tail);
+    ret=PL_put_nil(tail);
+    RETURN_IF_FAIL
     p0=1;
     for (i=0;i<ex_d->rules[r]-1;i++)
     {
       p=arrayprob[r][i]*p0;
-      PL_put_float(pterm,p);
-      PL_cons_list(tail,pterm,tail);
+      ret=PL_put_float(pterm,p);
+      RETURN_IF_FAIL
+      ret=PL_cons_list(tail,pterm,tail);
+      RETURN_IF_FAIL
       p0=p0*(1-arrayprob[r][i]);
     }
-    PL_put_float(pterm,p0);
-    PL_cons_list(tail,pterm,tail);
-    PL_put_integer(ruleTerm,r);
-    PL_put_nil(nil);
-    PL_cons_list(tail,tail,nil);
-    PL_cons_list(compoundTerm,ruleTerm,tail);
-    PL_cons_list(out2,compoundTerm,out2);
+    ret=PL_put_float(pterm,p0);
+    RETURN_IF_FAIL
+    ret=PL_cons_list(tail,pterm,tail);
+    RETURN_IF_FAIL
+    ret=PL_put_integer(ruleTerm,r);
+    RETURN_IF_FAIL
+    ret=PL_put_nil(nil);
+    RETURN_IF_FAIL
+    ret=PL_cons_list(tail,tail,nil);
+    RETURN_IF_FAIL
+    ret=PL_cons_list(compoundTerm,ruleTerm,tail);
+    RETURN_IF_FAIL
+    ret=PL_cons_list(out2,compoundTerm,out2);
+    RETURN_IF_FAIL
   }
-  PL_put_nil(out3);
+  ret=PL_put_nil(out3);
+  RETURN_IF_FAIL
   for (i=0;i<lenNodes;i++)
   {
-    PL_put_float(pterm,ex_d->nodes_probs[i]);
-    PL_cons_list(out3,pterm,out3);
+    ret=PL_put_float(pterm,ex_d->nodes_probs[i]);
+    RETURN_IF_FAIL
+    ret=PL_cons_list(out3,pterm,out3);
+    RETURN_IF_FAIL
   }
-  PL_unify(out3,arg9);
+  ret=PL_unify(out3,arg8);
+  RETURN_IF_FAIL
 
-  PL_put_float(out1,CLL1);
-  PL_unify(out1,arg7);
+  ret=PL_put_float(out1,CLL1);
+  RETURN_IF_FAIL
+  ret=PL_unify(out1,arg6);
+  RETURN_IF_FAIL
   free(nodes_ex);
   free(ex_d->example_prob);
   free(ex_d->nodes_probs);
 
-  return (PL_unify(out2,arg8));
+  return (PL_unify(out2,arg7));
 }
 
 
@@ -1179,11 +1273,12 @@ install_t install()
   PL_register_foreign("zero",2,zero,0);
   PL_register_foreign("or",4,or,0);
   PL_register_foreign("bdd_not",3,bdd_not,0);
-//  PL_register_foreign("create_dot",2,create_dot,0);
+  PL_register_foreign("create_dot",3,create_dot,0);
+  PL_register_foreign("create_dot_string",3,create_dot_string,0);
   PL_register_foreign("init_test",2,init_test,0);
   PL_register_foreign("end_test",1,end_test,0);
   PL_register_foreign("ret_prob",3,ret_prob,0);
-  PL_register_foreign("em",9,EM,0);
+  PL_register_foreign("em",8,EM,0);
   PL_register_foreign("randomize",1,randomize,0);
 //  PL_register_foreign("deref",1,rec_deref,0);
 //  PL_register_foreign("garbage_collect",2,garbage_collect,0);
