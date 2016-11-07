@@ -1089,7 +1089,7 @@ find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),subClassOf(C,D)):
   Name:subClassOf(C,D).
 
 %role for concepts maxCardinality
-find_sub_sup_class(minCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
+find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S).
 
