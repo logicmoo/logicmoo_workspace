@@ -44,24 +44,25 @@
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(qualify_meta_goal)).
+:- use_module(library(tabling)).
+:- use_module(library(assertions)).
+:- use_module(library(basicprops)).
 
 :- dynamic
-    tablecheck_db/4,
-    assertions_db/1,
-    violations_db/3,
-    rtcheck_db_1/3,
-    rtcheck_db/4.
+    violations_db/3.
 
 :- multifile
     prolog:message//1.
+
+:- table
+    generate_ctchecks/4,
+    do_check_property_ctcheck/2.
 
 checker:check(assertions, Result, OptionL) :-
     cleanup_db,
     check_assertions(OptionL, Result).
 
 cleanup_db :-
-        retractall(tablecheck_db(_, _, _, _)),
-	retractall(assertions_db(_)),
 	retractall(violations_db(_, _, _)).
 
 check_assertions(OptionL0, Pairs) :-
@@ -86,12 +87,12 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     \+ predicate_property(M:H, imported_from(_)),
     \+ predicate_property(M:H, built_in),
     \+ predicate_property(M:H, foreign),
-    tabled_generate_ctchecks(H, M, _CM, CTCheck), % Keep _CM uninstantiated
+    generate_ctchecks(H, M, _CM, CTCheck), % Keep _CM uninstantiated
     CTCheck \= _:true,
     clause(M:H, _, Clause),
     From = clause(Clause),
     call(FromChk, From),
-    do_check_property_ctcheck(H, M, CTCheck, AssrErrorL),
+    do_check_property_ctcheck(CTCheck, AssrErrorL),
     % Although we have duplicated logic, we don't call check_property_ctcheck/3
     % here because is too slow:
     % check_property_ctcheck(H, M, CTChecks),
@@ -180,25 +181,16 @@ check_property_ctcheck(Goal, M, CM, AssrErrorL) :-
     tabled_generate_ctchecks(Goal, M, CM, CTCheck),
     CTCheck \= _:true, % Skip lack of assertions or assertions that will not
                        % trigger violations
-    do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL).
+    do_check_property_ctcheck(CTCheck, AssrErrorL).
 
-do_check_property_ctcheck(Goal, M, CTCheck, AssrErrorL) :-
-    ( variant_sha1(Goal, SHA1),
-      rtcheck_db(SHA1, Goal, M, AssrErrorL)
-    ->true
-    ; check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL)
-    ).
-
-check_property_ctcheck_1st_time(Goal, M, CTCheck, AssrErrorL) :-
-    variant_sha1(Goal, SHA1),
-    assertz(rtcheck_db_1(Goal, M, [])),
+do_check_property_ctcheck(CTCheck, AssrErrorL) :-
     AssrError = assrchk(_, _),
+    S = s([]),
     intercept(CTCheck, AssrError, % Now execute the checks
-	      ( retract(rtcheck_db_1(Goal, M, AssrErrorL)),
-		assertz(rtcheck_db_1(Goal, M, [AssrError|AssrErrorL]))
+	      ( S = s(AssrErrorL1),
+		nb_setarg(1, S, [AssrError|AssrErrorL1])
 	      )),
-    retract(rtcheck_db_1(Goal, M, AssrErrorL)),
-    assertz(rtcheck_db(SHA1, Goal, M, AssrErrorL)).
+    S = s(AssrErrorL).
 
 checker_t(defined).
 checker_t(is_prop).
@@ -224,15 +216,11 @@ check_property(ctcheck, H, M, CM, (M:F/A)-CTChecks) :-
 %% tabled_generate_ctchecks(+, +, ?, -) is det
 %
 tabled_generate_ctchecks(H, M, CM, Goal) :-
-    ( tablecheck_db(H, M, CM, Goal)
-    ->true
-    ; functor(H, F, A),
-      functor(P, F, A),
-      generate_ctchecks(P, M, CM0, Goal),
-      assertz(tablecheck_db(P, M, CM0, Goal)),
-      CM0 = CM,
-      P = H
-    ).
+    functor(H, F, A),
+    functor(P, F, A),
+    generate_ctchecks(P, M, CM1, Goal),
+    CM = CM1,
+    P = H.
 
 % Generate compile-time checks, currently only compatibility is checked, fails
 % if no ctchecks can be applied to Pred. Note that CM can be a variable, to
@@ -242,8 +230,7 @@ generate_ctchecks(Goal, M, CM, CTChecks) :-
     qualify_meta_goal(Goal, M, CM, Pred),
     collect_assertions(Pred, M, ctcheck, AsrL),
     ( AsrL \= []
-    ->
-      maplist(wrap_asr_ctcheck, AsrL, PAsrL),
+    ->maplist(wrap_asr_ctcheck, AsrL, PAsrL),
       CTChecks = check_assertions:ctcheck_goal(PAsrL)
     ; CTChecks = check_assertions:true
     ).
