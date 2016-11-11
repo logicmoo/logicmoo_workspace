@@ -75,6 +75,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
 :- use_module(library(send_check)).
+:- use_module(library(static_strip_module)).
 :- use_module(library(termtyping)).
 :- use_module(library(lists)).
 :- use_module(library(intercept)).
@@ -1116,14 +1117,16 @@ is_pred_2(M:Pred, N) :-
     current_predicate(M:F/A).
 
 :- true prop mod_qual/1 + no_rtcheck.
-mod_qual(M:_) :-
-    current_module(M).
+mod_qual(M:V) :-
+    static_strip_module(V, M, _, CM),
+    current_module(CM).
 
 :- true prop mod_qual/2 + no_rtcheck.
 :- meta_predicate mod_qual(?, :).
 mod_qual(M:V, T) :-
-    current_module(M),
-    type(V, T).
+    static_strip_module(V, M, C, CM),
+    current_module(CM),
+    type(C, T).
 
 :- meta_predicate check(0).
 check(_).
