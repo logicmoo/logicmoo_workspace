@@ -56,12 +56,19 @@ apply_mode_arg(N0, Call, Mode, Spec) :-
     apply_mode_arg(N, Call, Mode, Spec).
 apply_mode_arg(_, _, _, _).
 
+chain_of_dependencies(Spec, Goal, ContL) :-
+    ( terms_share(Spec, Goal)
+    ->true
+    ; select(Cont, ContL, ContL2),
+      terms_share(Goal, Cont),
+      chain_of_dependencies(Spec, Cont, ContL2)
+    ), !.
+
 slicer_abstraction(Spec, Scope, Goal, M, Body,
-		   state(_,   EvalL, OnErr, CallL, Data),
-		   state(Loc, EvalL, OnErr, CallL, Data)) -->
+		   state(_, EvalL, OnErr, CallL, Data, Cont),
+		   state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
     {predicate_property(M:Goal, interpreted)}, !,
-    { terms_share(Spec, Goal) % BUG: the sharing should be done wrt all the
-                              % body, and not only the current literal --EMM
+    { chain_of_dependencies(Spec, Goal, Cont)
     ->match_head_body(Goal, M, Body1, Loc),
       ( Scope = body
       ->Body = Body1
@@ -81,7 +88,7 @@ slicer_abstraction(Spec, Scope, Goal, M, Body,
     ; []
     ).
 slicer_abstraction(_, _, Goal, M, M:true, S, S) -->
-    { S = state(Loc, _, OnError, _, _),
+    { S = state(Loc, _, OnError, _, _, _),
       call(OnError, error(existence_error(evaluation_rule, M:Goal), Loc))
     },
     bottom.

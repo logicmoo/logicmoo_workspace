@@ -96,7 +96,7 @@ abstract_interpreter(M:Goal, Abstraction, OptionL, data(0, [], Result)) :-
     option(evaluable(Eval), OptionL, []),
     option(on_error(OnErr), OptionL, print_message(informational)),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
-    ( abstract_interpreter(M:Goal, Abstraction, state(Loc, EvalL, M:OnErr, [], []), [], Out)
+    ( abstract_interpreter(M:Goal, Abstraction, state(Loc, EvalL, M:OnErr, [], [], []), [], Out)
     *->
       Result = true(Out)
     ; Result = fail
@@ -153,6 +153,10 @@ abstract_interpret_body_not(A, M, Abs, State) -->
     ).
 abstract_interpret_body_not(_, _, _, _) --> bottom.
 
+add_cont(Cont,
+	 state(Loc, EvalL, OnErr, CallL, Data, ContL),
+	 state(Loc, EvalL, OnErr, CallL, Data, [Cont|ContL])).
+
 abstract_interpreter_body(once(Goal), M, Abs, State, S0, S) :- !,
     once(abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
 abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S0, S) :- !,
@@ -167,7 +171,8 @@ abstract_interpreter_body((A, B), M, Abs, State) --> !,
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    abstract_interpreter_body(A, M, Abs, State),
+    {add_cont(B, State, State2)},
+    abstract_interpreter_body(A, M, Abs, State2),
     ( abstract_interpreter_body(B, M, Abs, State)
     *->[]
     ; { CutOnFail = true
@@ -199,7 +204,8 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    cut_to(abstract_interpreter_body(A, M, Abs, State)), % loose of precision
+    {add_cont(B, State, State2)},
+    cut_to(abstract_interpreter_body(A, M, Abs, State2)), % loose of precision
     ( \+ is_bottom
     ->!,
       { CutElse = yes }
@@ -246,7 +252,7 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
     },
-    { State0 = state(Loc, EvalL, OnError, CallL, Data),
+    { State0 = state(Loc, EvalL, OnError, CallL, Data, Cont),
       implementation_module(M:Goal, IM)
     },
     ( {member(MCall, CallL),
@@ -254,7 +260,7 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
       }
     ->bottom
     ; { copy_term(IM:Goal, MCall),
-	State1 = state(Loc, EvalL, OnError, [MCall|CallL], Data)
+	State1 = state(Loc, EvalL, OnError, [MCall|CallL], Data, Cont)
       },
       ( { ( evaluable_goal_hook(Goal, IM)
 	  ; functor(Goal, F, A),
@@ -292,10 +298,10 @@ bottom(_, bottom).
 match_ai(head,    G, M, Body, S0, S) --> match_head(   G, M, Body, S0, S).
 match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).
 
-match_head(Goal, M, M:true, state(_, EvalL, OnErr, CallL, D), S) -->
+match_head(Goal, M, M:true, state(_, EvalL, OnErr, CallL, D, Cont), S) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { match_head_body(Goal, M, Body, Loc)
-    *->S = state(Loc, EvalL, OnErr, CallL, D)
+    *->S = state(Loc, EvalL, OnErr, CallL, D, Cont)
     ; fail
     },
     ( {Body = _:true}
@@ -330,8 +336,8 @@ extra_clauses(Goal, CM, I:Goal, _From) :-
     ->interface:'$implementation'(I, M)
     ).
 
-match_noloops(Goal, M, Body, state(Loc0, EvalL, OnErr, CallL, S),
-	      state(Loc, EvalL, OnErr, CallL, [M:F/A-Size|S])) -->
+match_noloops(Goal, M, Body, state(Loc0, EvalL, OnErr, CallL, S, Cont),
+	      state(Loc, EvalL, OnErr, CallL, [M:F/A-Size|S], Cont)) -->
     {predicate_property(M:Goal, interpreted)}, !,
     ( { functor(Goal, F, A),
 	term_size(Goal, Size),
