@@ -103,7 +103,7 @@ See rocks_open/3 for details.
 %	    - float
 %	      Value is mapped to a 32-bit floating point number.
 %	    - double
-%	      Value is mapped to a 34-bit floating point number (double).
+%	      Value is mapped to a 64-bit floating point number (double).
 %	    - term
 %	      Stores any Prolog term. Stored using PL_record_external().
 %	      The PL_record_external() function serializes the internal
