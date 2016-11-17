@@ -73,9 +73,13 @@ evaluable_goal_hook(member(_, L), _) :-
 evaluable_goal_hook(option(O, L), _) :-
     is_list(L),
     nonvar(O).
-evaluable_goal_hook(var(V),    _) :- nonvar(V).
-evaluable_goal_hook(nonvar(V), _) :- nonvar(V).
-evaluable_goal_hook(atomic(A), _) :- nonvar(A).
+evaluable_goal_hook(var(V),     _) :- nonvar(V).
+evaluable_goal_hook(nonvar(V),  _) :- nonvar(V).
+evaluable_goal_hook(atomic(A),  _) :- nonvar(A).
+evaluable_goal_hook(atom(A),    _) :- nonvar(A).
+evaluable_goal_hook(number(A),  _) :- nonvar(A).
+evaluable_goal_hook(float(A),   _) :- nonvar(A).
+evaluable_goal_hook(integer(A), _) :- nonvar(A).
 evaluable_goal_hook(format(Out, Format, Args), _) :-
     nonvar(Out), nonvar(Format), ground(Args).
 evaluable_goal_hook(_ is B, _) :- ground(B).
