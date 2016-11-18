@@ -229,6 +229,7 @@ abstract_interpreter_body(H, M, Abs, State) -->
 
 terms_share(A, B) :-
     term_variables(A, VarsA),
+    VarsA \= [], % Optimization
     term_variables(B, VarsB),
     ( member(VA, VarsA),
       member(VB, VarsB),

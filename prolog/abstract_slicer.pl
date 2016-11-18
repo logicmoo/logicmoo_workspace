@@ -50,17 +50,18 @@ apply_mode_arg(N0, Call, Mode, Spec) :-
     arg(N0, Spec, ASp),
     ( MSp = -
     ->ASp = Arg
-    ; true
+    ; ASp = +
     ),
     succ(N0, N),
     apply_mode_arg(N, Call, Mode, Spec).
 apply_mode_arg(_, _, _, _).
 
 chain_of_dependencies(Spec, Goal, ContL) :-
+    \+ ground(Goal),
     ( terms_share(Spec, Goal)
     ->true
     ; select(Cont, ContL, ContL2),
-      terms_share(Goal, Cont),
+      terms_share(Cont, Goal),
       chain_of_dependencies(Spec, Cont, ContL2)
     ), !.
 
@@ -68,7 +69,8 @@ slicer_abstraction(Spec, Scope, Goal, M, Body,
 		   state(_, EvalL, OnErr, CallL, Data, Cont),
 		   state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
     {predicate_property(M:Goal, interpreted)}, !,
-    { chain_of_dependencies(Spec, Goal, Cont)
+    { \+ ground(Spec),
+      chain_of_dependencies(Spec, Goal, Cont)
     ->match_head_body(Goal, M, Body1, Loc),
       ( Scope = body
       ->Body = Body1
