@@ -52,15 +52,16 @@ meta_call_goal(Goal, M, MCaller, Meta) :-
     mapargs(meta_call_goal_arg(Caller, CMeta), Goal, GMeta, Meta).
 
 meta_call_goal_arg(Caller, CMeta, _, Arg, Spec1, Spec) :-
-    ( compound(CMeta),
-      arg(N, CMeta, CSpec),
-      module_qualified(CSpec),
-      arg(N, Caller, CArg),
-      CArg == Arg
-    ->( module_qualified(Spec1)
-      ->Spec = +
-      ; Spec = Spec1
+    ( module_qualified(Spec1),
+      ( nonvar(Arg),
+	Arg = _:_
+      ; compound(CMeta),
+	arg(N, CMeta, CSpec),
+	module_qualified(CSpec),
+	arg(N, Caller, CArg),
+	CArg == Arg
       )
+    ->Spec = +
     ; Spec = Spec1
     ).
 
