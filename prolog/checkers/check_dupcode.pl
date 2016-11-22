@@ -184,8 +184,8 @@ consider_dupgroup_2(predicate, _, _).
 consider_dupgroup_2(clause, M:_, M:_).
 
 has_dupclauses(H, M) :-
-    prop_asr(head, M:H, _, _, Asr),
-    prop_asr(glob, M:dupclauses(_), plprops, _, Asr).
+    prop_asr(head, M:H, _, Asr),
+    prop_asr(glob, plprops:dupclauses(_), _, Asr).
 
 element_head(predicate, M:F/A,   M:H) :- functor(H, F, A).
 element_head(clause,    M:F/A-_, M:H) :- functor(H, F, A).

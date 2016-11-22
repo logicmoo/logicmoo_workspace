@@ -55,7 +55,7 @@
     prolog:message//1.
 
 :- table
-    generate_ctchecks/4,
+    generate_ctchecks/3,
     do_check_property_ctcheck/2.
 
 checker:check(assertions, Result, OptionL) :-
@@ -87,7 +87,7 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     \+ predicate_property(M:H, imported_from(_)),
     \+ predicate_property(M:H, built_in),
     \+ predicate_property(M:H, foreign),
-    generate_ctchecks(H, M, _CM, CTCheck), % Keep _CM uninstantiated
+    generate_ctchecks(H, M, CTCheck),
     CTCheck \= _:true,
     clause(M:H, _, Clause),
     From = clause(Clause),
@@ -172,13 +172,13 @@ black_list(M:Call) :- black_list(Call, M).
 collect_violations(M, CM:Goal, Caller, From) :-
     \+ black_list(Caller),
     implementation_module(CM:Goal, M),
-    check_property_ctcheck(Goal, M, CM, CTChecks),
+    check_property_ctcheck(Goal, M, CM, Caller, CTChecks),
     CTChecks \= [],
     normalize_pi(Caller, CPI),
     update_fact_from(violations_db(CPI, CTChecks), From).
 
-check_property_ctcheck(Goal, M, CM, AssrErrorL) :-
-    tabled_generate_ctchecks(Goal, M, CM, CTCheck),
+check_property_ctcheck(Goal, M, CM, Caller, AssrErrorL) :-
+    tabled_generate_ctchecks(Goal, M, CM, Caller, CTCheck),
     CTCheck \= _:true, % Skip lack of assertions or assertions that will not
                        % trigger violations
     do_check_property_ctcheck(CTCheck, AssrErrorL).
@@ -208,17 +208,21 @@ check_property(is_prop, H, M, _, M:F/A) :-
 check_property(ctcheck, H, M, CM, (M:F/A)-CTChecks) :-
 				% compile-time checks. Currently only
 				% compatibility checks.
-    check_property_ctcheck(H, M, CM, CTChecks),
+    check_property_ctcheck(H, M, CM, true, CTChecks),
     CTChecks \= [],
     resolve_calln(M:H, M:G),
     functor(G, F, A).
 
-%% tabled_generate_ctchecks(+, +, ?, -) is det
+%% tabled_generate_ctchecks(+, +, ?, +, -) is det
 %
-tabled_generate_ctchecks(H, M, CM, Goal) :-
+tabled_generate_ctchecks(H, M, CM, Caller, Goal) :-
     functor(H, F, A),
     functor(P, F, A),
-    generate_ctchecks(P, M, CM1, Goal),
+    ( meta_call_goal(H, M, Caller, Meta)
+    ->qualify_meta_goal(CM1:P, Meta, G)
+    ; G = P
+    ),
+    generate_ctchecks(G, M, Goal),
     CM = CM1,
     P = H.
 
@@ -226,9 +230,8 @@ tabled_generate_ctchecks(H, M, CM, Goal) :-
 % if no ctchecks can be applied to Pred. Note that CM can be a variable, to
 % allow tabling of the result and CM to be instantiated later.
 %
-generate_ctchecks(Goal, M, CM, CTChecks) :-
-    qualify_meta_goal(Goal, M, CM, Pred),
-    collect_assertions(Pred, M, ctcheck, AsrL),
+generate_ctchecks(Goal, M, CTChecks) :-
+    collect_assertions(Goal, M, ctcheck, AsrL),
     ( AsrL \= []
     ->maplist(wrap_asr_ctcheck, AsrL, PAsrL),
       CTChecks = check_assertions:ctcheck_goal(PAsrL)
@@ -248,7 +251,7 @@ ctcheck_goal(AsrL) :-
 % compile-time. TBD: Formal demostration. --EMM
 assrt_lib:asr_aprop(ctcheck(Asr), Key, Prop, From) :-
     prop_abstraction(Key, Abst),
-    prop_asr(Abst, Prop, From, Asr).
+    curr_prop_asr(Abst, Prop, From, Asr).
 
 prop_abstraction(head, head).
 prop_abstraction(stat, stat).
@@ -259,12 +262,7 @@ prop_abstraction(comp, comp).
 prop_abstraction(comp, call).
 prop_abstraction(comp, succ).
 
-verif_is_property(system, true, 0) :- !.   % ignore true (identity)
-verif_is_property(IM, F, A) :-
+verif_is_property(system, true, 0) :- !. % ignore true (identity)
+verif_is_property(M, F, A) :-
     functor(H, F, A),
-    asr_head_prop(_, CM, H, _, prop, _, _),
-    implementation_module(CM:H, AM),
-    ( AM = IM
-    ->true
-    ; predicate_property(IM:H, imported_from(AM))
-    ).
+    prop_asr(H, M, _, prop, _, _, _).
