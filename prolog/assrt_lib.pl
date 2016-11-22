@@ -14,9 +14,10 @@
 	   asr_call/4,
 	   asr_succ/4,
 	   asr_comm/3,
-	   prop_asr/4,
+	   curr_prop_asr/4,
 	   asr_aprop/4,
-	   prop_asr/5,
+	   prop_asr/4,
+	   prop_asr/7,
 	   collect_prop/3,
 	   normalize_assertion_head/7,
 	   qualify_with/3,
@@ -75,15 +76,15 @@ asr_head(Asr, M:Head) :-
     ; true
     ).
 
-prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
-prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
-prop_asr(type,   P, From, Asr) :- asr_head_prop(Asr, _, _, _, P, _, From).
-prop_asr(dict,   D, From, Asr) :- asr_head_prop(Asr, _, _, _, _, D, From).
-prop_asr(comm,   C, From, Asr) :- asr_comm(Asr,    C, From).
-prop_asr(comp, M:P, From, Asr) :- asr_comp(Asr, M, P, From).
-prop_asr(call, M:P, From, Asr) :- asr_call(Asr, M, P, From).
-prop_asr(succ, M:P, From, Asr) :- asr_succ(Asr, M, P, From).
-prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
+curr_prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
+curr_prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
+curr_prop_asr(type,   P, From, Asr) :- asr_head_prop(Asr, _, _, _, P, _, From).
+curr_prop_asr(dict,   D, From, Asr) :- asr_head_prop(Asr, _, _, _, _, D, From).
+curr_prop_asr(comm,   C, From, Asr) :- asr_comm(Asr,    C, From).
+curr_prop_asr(comp, M:P, From, Asr) :- asr_comp(Asr, M, P, From).
+curr_prop_asr(call, M:P, From, Asr) :- asr_call(Asr, M, P, From).
+curr_prop_asr(succ, M:P, From, Asr) :- asr_succ(Asr, M, P, From).
+curr_prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 
 % Extensible accessor to assertion properties, ideal to have different views of
 % assertions, to extend the assertions or to create ancillary assertions (see
@@ -92,13 +93,18 @@ prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 % this predicate be mutually exclusive.
 :- multifile asr_aprop/4.
 asr_aprop(rtcheck(Asr), Key, Prop, From) :-
-    prop_asr(Key, Prop, From, Asr).
+    curr_prop_asr(Key, Prop, From, Asr).
 
-:- meta_predicate prop_asr(?, 0, -, +, +).
+prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
+    implementation_module(M:H, IM),
+    asr_head_prop(Asr, C, H, Stat, Type, Dict, From),
+    implementation_module(C:H, IM).
 
-prop_asr(Key, M:P, IM, From, Asr) :-
+:- meta_predicate prop_asr(?, 0, +, +).
+
+prop_asr(Key, M:P, From, Asr) :-
     implementation_module(M:P, IM),
-    prop_asr(Key, C:P, From, Asr),
+    curr_prop_asr(Key, C:P, From, Asr),
     implementation_module(C:P, IM).
 
 % :- volatile
@@ -493,14 +499,14 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :-
     ; Lit=B, LPos=BPos
     ).
 
-is_global(Head, CM) :-
-    is_global(Head, _, CM).
+is_global(Head, M) :-
+    is_global(Head, _, M).
 
-is_global(Head, Type, CM) :-
-    prop_asr(head, CM:Head,      IM,         _, Asr),
-    ( prop_asr(glob, IM:global(_, Type), basicprops, _, Asr)
+is_global(Head, Type, M) :-
+    prop_asr(head, M:Head, _, Asr),
+    ( prop_asr(glob, basicprops:global(_, Type), _, Asr)
     ; Type = (pred),
-      prop_asr(glob, IM:global(_), basicprops, _, Asr)
+      prop_asr(glob, basicprops:global(_), _, Asr)
     ), !.
 
 current_normalized_assertion(Assertions  + BGl, M, term_position(_, _, _, _, [APos, PGl]),
