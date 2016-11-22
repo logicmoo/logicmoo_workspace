@@ -27,16 +27,48 @@
     the GNU General Public License.
 */
 
-:- module(qualify_meta_goal, [qualify_meta_goal/2,
+:- module(qualify_meta_goal, [meta_call_goal/4,
+			      qualify_meta_goal/2,
 			      qualify_meta_goal/3,
-			      qualify_meta_goal/4]).
+			      qualify_meta_goal/4,
+			      qualify_meta_call/5]).
 
+:- use_module(library(mapargs)).
 :- use_module(library(check), []). % for add_module/3
-%% qualify_meta_goal(+,+,?,-) is det.
-qualify_meta_goal(Goal0, M, CM, Goal) :-
-    predicate_property(M:Goal0, meta_predicate(Meta)), !,
-    qualify_meta_goal(CM:Goal0, Meta, Goal).
-qualify_meta_goal(Goal, _, _, Goal).
+
+qualify_meta_goal(Goal1, M, CM, Goal) :-
+    qualify_meta_call(Goal1, M, CM, true, Goal).
+
+:- meta_predicate meta_call_goal(+, +, 0, -).
+meta_call_goal(Goal, M, MCaller, Meta) :-
+    predicate_property(M:Goal,  meta_predicate(GMeta)),
+    ( predicate_property(MCaller, meta_predicate(CMeta))
+    ->true
+    ; CMeta = true
+    ),
+    functor(Goal, F, A),
+    functor(Meta, F, A),
+    strip_module(MCaller, _, Caller),
+    mapargs(meta_call_goal_arg(Caller, CMeta), Goal, GMeta, Meta).
+
+meta_call_goal_arg(Caller, CMeta, _, Arg, Spec1, Spec) :-
+    ( compound(CMeta),
+      arg(N, CMeta, CSpec),
+      module_qualified(CSpec),
+      arg(N, Caller, CArg),
+      CArg == Arg
+    ->( module_qualified(Spec1)
+      ->Spec = +
+      ; Spec = Spec1
+      )
+    ; Spec = Spec1
+    ).
+
+:- meta_predicate qualify_meta_call(+, +, ?, 0, -).
+qualify_meta_call(Goal1, M, CM, Caller, Goal) :-
+    meta_call_goal(Goal1, M, Caller, Meta), !,
+    qualify_meta_goal(CM:Goal1, Meta, Goal).
+qualify_meta_call(Goal, _, _, _, Goal).
 
 :- meta_predicate qualify_meta_goal(0, -).
 qualify_meta_goal(Goal0, Goal) :-
@@ -47,20 +79,13 @@ qualify_meta_goal(_:Goal, Goal).
 qualify_meta_goal(M:Goal0, Meta, Goal) :-
     functor(Goal0, F, N),
     functor(Goal, F, N),
-    meta_goal(1, M, Meta, Goal0, Goal).
+    mapargs(meta_goal(M), Meta, Goal0, Goal).
 
 module_qualified(:) :- !.
 module_qualified(N) :- integer(N), N >= 0.
 
-meta_goal(N, M, Meta, Goal0, Goal) :-
-    arg(N, Meta,  ArgM),
-    !,
-    arg(N, Goal0, Arg0),
-    arg(N, Goal,  Arg),
-    succ(N, N1),
-    ( module_qualified(ArgM) ->
-      check:add_module(Arg0, M, Arg)
+meta_goal(M, _, ArgM, Arg0, Arg) :-
+    ( module_qualified(ArgM)
+    ->check:add_module(Arg0, M, Arg)
     ; Arg = Arg0
-    ),
-    meta_goal(N1, M, Meta, Goal0, Goal).
-meta_goal(_, _, _, _, _).
+    ).
