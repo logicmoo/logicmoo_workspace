@@ -169,6 +169,8 @@ black_list(assertion_head(_, _, _, _, _, _, _), assrt_lib).
 black_list(M:Call) :- black_list(Call, M).
 
 :- public collect_violations/4.
+
+:- meta_predicate collect_violations(+,+,0,+).
 collect_violations(M, CM:Goal, Caller, From) :-
     \+ black_list(Caller),
     implementation_module(CM:Goal, M),
