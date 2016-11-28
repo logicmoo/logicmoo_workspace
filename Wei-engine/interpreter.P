@@ -2084,13 +2084,15 @@ do_test_suite(Files,Options) :-
 do_test_suite([],_Option,[]) :- !.
 do_test_suite([F|Files],Options,[F-R|Results]) :- 
 	expand_filename(F,Path),
+	file_exists(Path),
+	!,
 	go(Path,Options),
 	( \+ lps_failed_test(_,_) -> R=ok 
 	; 
 	findall(LPSR/Expected,lps_failed_test(LPSR,Expected),Failures), R=failed(Failures) 
 	),
 	do_test_suite(Files,Options,Results).
-	
+do_test_suite([_|Files],Options,Results) :- do_test_suite(Files,Options,Results).
 
 do_write([]).
 
