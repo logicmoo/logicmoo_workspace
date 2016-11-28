@@ -61,6 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic tried/3.
 :- dynamic used/1.
 % :- dynamic this_initiated/1.
+:- dynamic lps_test_result_item/3.
 
 % lps_source_position(Term,FileWithExtension,Position); see check_syntax/1 in interpreter
 :- dynamic lps_source_position/3.

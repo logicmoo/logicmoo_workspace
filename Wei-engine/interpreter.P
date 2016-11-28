@@ -32,13 +32,14 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+
+%%% XSB specific section:
+:- if(current_prolog_flag(dialect, xsb)).
+
 :- module(interpreter, [
 	go/1, go/2, go/3, go_lps/1, go_lps/2,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
 	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2]).
-
-%%% XSB specific section:
-:- if(current_prolog_flag(dialect, xsb)).
 
 :- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
@@ -89,6 +90,18 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
 :- if(current_prolog_flag(dialect, swi)).
 
+:- module(interpreter, [
+	go/1, go/2, go/3, go_lps/1, go_lps/2,
+	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
+	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2,
+	lps_test_result_item/3,
+	% SWI does not consider these in the user module, so they must be exported explicitly from here:
+	action/1, /*cacts/1,*/ d_pre/1 ,event/1,
+	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
+	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	(terminated)/3, initial_state/1
+	]).
+
 :- op(900,fy,not).
 :- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 :- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
@@ -137,7 +150,7 @@ cputime(T) :- T is cputime.
 %%% end of SWI and Prolog engine-specific code
 %%% From here on, generic Prolog code
 
-my_load_dyn(F) :- my_load_dyn(F,true).
+my_load_dyn(F) :- my_load_dyn(F,false).
 
 :- lps_engine_directory(D), concat_atom([D,'/db.P'],DB), my_load_dyn(DB).
 

@@ -8,32 +8,114 @@
 
 /* Utilities for visualizing LPS executions; this version depends on http://interprolog.com/interprolog-studio/ */
 
-:- export visual/1, gov/1, gov/2, gov/3.
+:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/2, gojson/4]).
 
-:- import load_test_file_for/1, go/3, my_load_dyn/1, my_term_to_atom/2 from interpreter.
-:- import lps_test_result_item/3 from usermod. 
-:- import member/2,append/3 from basics.
-:- import concat_atom/2 from string.
-:- import variant/2 from subsumes.
-:- import java/3, term2json/2, create_counter/1, get_increment_counter/2 from interprolog.
-:- import xjShowURL/1 from usermod. % xj2.P
+%%% XSB specific section:
+:- if(current_prolog_flag(dialect, xsb)).
+:- use_module(interpreter,[go/3, my_term_to_atom/2]). % assumed preloaded
+
+:- use_module(subsumes,[variant/2]).
+:- use_module(basics, [member/2, append/3, length/2]).
+:- use_module(string,[concat_atom/2]).
+% namely for use with Prolog Studio:
+:- use_module(interprolog,[java/3, term2json/2, create_counter/1, get_increment_counter/2]).
+:- use_module(usermod,[xjShowURL/1,lps_test_result_item/3]).
+
+www_open_url(URL) :- xjShowURL(URL). % xj2.P
+
+% make_json_object(PairsList,Object) Generate a JSON object in Prolog syntax from a list of Attribute:JSONValue 
+% Shame on me for the following, but I had enough of syntax idiosyncrasies...:
+make_json_object([A],{A}) :- !.
+make_json_object([A,B],{A,B}) :- !.
+make_json_object([A,B,C],{A,B,C}) :- !.
+make_json_object([A,B,C,D],{A,B,C,D}) :- !.
+make_json_object([A,B,C,D,E],{A,B,C,D,E}) :- !.
+make_json_object([A,B,C,D,E,F],{A,B,C,D,E,F}) :- !.
+make_json_object([A,B,C,D,E,F,G],{A,B,C,D,E,F,G}) :- !.
+make_json_object([A,B,C,D,E,F,G,H],{A,B,C,D,E,F,G,H}) :- !.
+make_json_object(L,_) :- length(L,N), N>8, !, writeln('*** JSON object with too many attributes in visualizer.P'), fail.
+
+
+displayTimeline(File,JSON) :-
+	concat_atom([File,'-timeline.json'],JSONfile),
+	tell(JSONfile),
+	forall(member(Char,JSON),put(Char)),
+	told,
+	concat_atom(['Fluent and event timeline for LPS program ',File],Subtitle),
+	concat_atom([File,'-timeline.html'],HTMLfile),
+	java( 'com.declarativa.fiji.reporting.VisjsUtils',
+		string(F),
+		generateTimeline(string('LPS program timeline'),string(Subtitle),string(JSONfile),string(HTMLfile))
+		),
+	replace_backslashes(F,FF), str_replace(FF, ' ', '%20', FFF),
+	concat_atom(['file:///',FFF],FFFF),
+	www_open_url(FFFF).
+	
+:- endif.
+
+%%% end of XSB specific section; now for SWI:
+
+:- if(current_prolog_flag(dialect, swi)).
+
+:- use_module(library(http/json)).
+:- use_module('../Wei-engine/interpreter.P',[
+	go/3, my_term_to_atom/2,
+	% LPS program dependent:
+	lps_test_result_item/3,
+	action/1, /*cacts/1,*/ d_pre/1 ,event/1,
+	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
+	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	(terminated)/3, initial_state/1
+	]).
+
+make_json_object(L,json(NL)) :- json_colons_to_equals(L,NL).
+
+json_colons_to_equals(V,NV) :- var(V), !, NV=V.
+json_colons_to_equals([],[]) :- !.
+json_colons_to_equals([A:V|L],[A=NV|NL]) :- !, json_colons_to_equals(V,NV), json_colons_to_equals(L,NL).
+json_colons_to_equals([X|L],[NX|NL]) :- !, json_colons_to_equals(X,NX), json_colons_to_equals(L,NL).
+json_colons_to_equals(json(L),json(NL)) :- json_colons_to_equals(L,NL), !.
+json_colons_to_equals(X,X).
+
+term2json(Term,JSONAtom) :- 
+	json_colons_to_equals(Term,SWIterm), atom_json_term(JSONAtom,SWIterm,[as(atom)]).
+
+create_counter(Dict) :- dict_create(Dict,'$_visualizer_counter',[value=0]).
+
+get_increment_counter(Dict,CurrentValue) :- 
+	get_dict(value,Dict,CurrentValue), New is CurrentValue+1, nb_set_dict(value,Dict,New).
+
+displayTimeline(_File,_JSON). 
+
+
+:- endif.
+
+%%% end of SWI and Prolog engine-specific code
+
+%%% From here on, generic Prolog code
 
 % gov(ProgramFile) "go visual": executes generating results file and displays its timeline
 gov(File) :- gov(File,[]).
 
 % gov(ProgramFile,Options)
-
 gov(File,Options) :- gov(File,Options,[]).
 
-gov(File,Options,Results) :- go(File,[make_test|Options],Results), visual(File).
+gov(File,Options,Results) :- go(File,[make_test|Options],Results), visual(File,_JSON).
+
+gojson(File,JSON) :- gojson(File,[],[],JSON).
+
+gojson(File,Options,Results,JSON) :- go(File,[silent,make_test|Options],Results), visual(File,JSON).
 
 
-% visual(TestResultsFile)  
+% visual(TestResultsFile)  This MUST be called after go(File,[...make_test,...],...)
+% Uses test facts still in memory
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
-visual(File) :- 
-	my_load_dyn(File), % we need the meta info about events
-	load_test_file_for(File),
+visual(File,JSON) :- 
+	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
+	% my_load_dyn(File), % we need the meta info about events
+	% load_test_file_for(File),
+	
 	% Collect all <T1-T2,Group,Term>
 	% For events and actions times T1 and T2 are the usual; for fluents, they are time of initiation and termination
 	% OFF BY ONE BUG HERE???
@@ -48,20 +130,29 @@ visual(File) :-
 	), Tuples),
 	% Find groups
 	setof(G, T^X^member(t(X,T,G),Tuples), GroupIds),
-	findall({id:Gatom,content:Gsignature},(
+	
+	findall(FluentGroup,(
+		make_json_object([id:Gatom,content:Gsignature],FluentGroup),
 		member(F/N,GroupIds), 
 		my_term_to_atom(F/N,Gatom), functor(GG,F,N), my_term_to_atom(GG,Gsignature)
 	), FluentGroups),
-	( member(t(_,_,event),Tuples) -> G1 = [{id:observation,content:'Observations'},{id:event,content:'Events'}|FluentGroups]
-		; G1 = [{id:observation,content:'Observations'}|FluentGroups]),
-	append(G1, [{id:action,content:'Actions'}], Groups ),
+	make_json_object([id:observation,content:'Observations'],ObsGroup),
+	( member(t(_,_,event),Tuples) -> 
+		make_json_object([id:event,content:'Events'],EventsGroup),
+		G1 = [ObsGroup,EventsGroup|FluentGroups]
+		; 
+		G1 = [ObsGroup|FluentGroups]),
+	make_json_object([id:action,content:'Actions'],ActionsGroup),
+	append(G1, [ActionsGroup], Groups ),
+	
 	% term2json(Groups,GroupsJSON),
 	% Aggregate fluent ranges
 	sort(Tuples,Sorted),
 	join_fluent_ranges(Sorted,Ranged),
 	create_counter(IDs),
 	% Render fluents
-	findall({id:ID,content:Atom,start:T1,end:T2,group:Gatom,title:Tip},(
+	findall(Fluent,(
+		make_json_object([id:ID,content:Atom,start:T1,end:T2,group:Gatom,title:Tip],Fluent),
 		member(t(X,T1-T2,F/N),Ranged),  
 		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom),
 		concat_atom(['Fluent initiated at ',T1,' and terminated at ',T2],Tip),
@@ -73,28 +164,17 @@ visual(File) :-
 		\+ functor(G,/,2), % not a fluent
 		my_term_to_atom(G,Gatom), my_term_to_atom(X,Atom),
 		(G==observation -> S='color:Peru'; G==action -> S='color:green' ; S='color:orange'),
-		(T2 is T1+1 -> Item={id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip} ;
-			Item = {id:ID,content:Atom,start:T1,end:T2,group:Gatom,type:range,style:'background-color: lightGray; color:orange',title:Tip}),
+		(T2 is T1+1 -> make_json_object([id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip],Item);
+			make_json_object([id:ID,content:Atom,start:T1,end:T2,group:Gatom,type:range,style:'background-color: lightGray; color:orange',title:Tip],Item)),
 		my_term_to_atom(happens(X,T1,T2),Tip),
 		get_increment_counter(IDs,ID)
 	), Others),
 	append(Fluents,Others,Items),
 	% render to JSON:
-	term2json({groups:Groups,items:Items},JSON),
-	concat_atom([File,'-timeline.json'],JSONfile),
-	tell(JSONfile),
-	forall(member(Char,JSON),put(Char)),
-	told,
-	concat_atom(['Fluent and event timeline for LPS program ',File],Subtitle),
-	concat_atom([File,'-timeline.html'],HTMLfile),
-	java( 'com.declarativa.fiji.reporting.VisjsUtils',
-		string(F),
-		generateTimeline(string('LPS program timeline'),string(Subtitle),string(JSONfile),string(HTMLfile))
-		),
-	replace_backslashes(F,FF), str_replace(FF, ' ', '%20', FFF),
-	concat_atom(['file:///',FFF],FFFF),
-	xjShowURL(FFFF).
-
+	make_json_object([groups:Groups,items:Items],All),
+	term2json(All,JSON),
+	displayTimeline(File,JSON). 
+	
 replace_backslashes(P,NP) :- atom(P), str_replace(P,'\\','/',NP).
 
 str_replace(A, X, Y, B) :-
