@@ -23,7 +23,6 @@
 :- use_module(library(r/r_call)).
 :- use_module(library(r/r_data)).
 :- use_module(swish(r_swish)).
-
 :- use_module(library(lists)).
 
 /*********** 
@@ -38,9 +37,41 @@
 to_pair([E]-W,E-W):- !.
 to_pair(E-W,E-W).
 
+
 key(K-_,K).
 
+
 y(_ - Y,Y).
+
+
+bin(0,_L,_Min,_BW,[]):-!.
+
+bin(N,L,Lower,BW,[V-Freq|T]):-
+  V is Lower+BW/2,
+  Upper is Lower+BW,
+  count_bin(L,Lower,Upper,0,Freq,L1),
+  N1 is N-1,
+  bin(N1,L1,Upper,BW,T).
+
+count_bin([],_L,_U,F,F,[]).
+
+count_bin([H-_W|T0],L,U,F0,F,T):-
+  H<L,!,
+  count_bin(T0,L,U,F0,F,T).
+
+count_bin([H-W|T0],L,U,F0,F,T):-
+  (H>=U->
+    F=F0,
+    T=[H-W|T0]
+  ;
+    F1 is F0+W,
+    count_bin(T0,L,U,F1,F,T)
+  ).
+
+
+bin_width(Min,Max,NBins,Width) :-
+  D is Max-Min,
+  Width is D/NBins.
 
 
 /* 
@@ -52,19 +83,6 @@ load_r_libraries :-
     /* Debug purposes */
     use_rendering(table).
 
-
-bin_width(Min,Max,NBins,Width) :-
-    nbinS <- NBins,
-    miN <- Min,
-    maX <- Max,
-    Width <- (maX - miN) / nbinS.
-
-bin_width(L0,Min,Max,NBins,Width) :-
-    l0 <- L0,
-    Min <- min(l0),
-    Max <- max(l0),
-    bin_width(Min,Max,NBins,Width).
-
 r_row(X,Y,r(X,Y)).
 
 xy_from_list(L,R) :-
@@ -74,7 +92,7 @@ xy_from_list(L,R) :-
 
 /* ggplot2 geom wrappers. */
 
-/**
+/*
  * FIXME: Change naming of Rserve.tmp.* variables,
  * this was discovered using:
  * <- df.
@@ -92,9 +110,7 @@ geom_histogram(L,NBins,BinWidth) :-
  * what I mean.
  * 
  */
-geom_density(L,NBins,BinWidth) :-
-    nbinS <- NBins,
-    binwidtH <- BinWidth,
+geom_density(L) :-
     xy_from_list(L,R),
     r_data_frame_from_rows(df, R),
     <- ggplot(data=df,aes(x='Rserve.tmp.0',y='Rserve.tmp.1',group=1)) + geom_line() + geom_point().
@@ -122,9 +138,8 @@ histogram_r(L0,NBins) :-
     load_r_libraries,
     maplist(to_pair,L0,L1),
     maplist(key,L1,L2),
-    l2 <- L2,
-    Max <- max(l2),
-    Min <- min(l2),
+    max_list(L2,Max),
+    min_list(L2,Min),
     histogram_r(L0,NBins,Min,Max),
     r_download.
 
@@ -138,10 +153,9 @@ histogram_r(L0,NBins) :-
  */
 histogram_r(L0,NBins,Min,Max) :-
     maplist(to_pair,L0,L1),
-    keysort(L1,L),
     bin_width(Min,Max,NBins,BinWidth),
+    keysort(L1,L),
     geom_histogram(L,NBins,BinWidth).
-
 
 
 /**
@@ -158,5 +172,11 @@ density_r(Post0,NBins,Min,Max) :-
     maplist(to_pair,Post0,Post),
     bin_width(Min,Max,NBins,BinWidth),
     keysort(Post,Po),
-    geom_density(Po,NBins,BinWidth),
+    bin(NBins,Po,Min,BinWidth,LPo),
+    geom_density(LPo),
     r_download.
+
+
+
+
+
