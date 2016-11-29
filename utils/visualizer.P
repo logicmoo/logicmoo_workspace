@@ -77,8 +77,12 @@ json_colons_to_equals([X|L],[NX|NL]) :- !, json_colons_to_equals(X,NX), json_col
 json_colons_to_equals(json(L),json(NL)) :- json_colons_to_equals(L,NL), !.
 json_colons_to_equals(X,X).
 
-term2json(Term,JSONAtom) :- 
-	json_colons_to_equals(Term,SWIterm), atom_json_term(JSONAtom,SWIterm,[as(atom)]).
+% converts one of our terms to a JSON dictionary 
+term2json(Term,JSONDict) :- 
+	json_colons_to_equals(Term,SWIterm), 
+	% TODO: one step too many! merge into json_colons_to_equals
+	atom_json_term(JSONAtom,SWIterm,[as(atom)]),
+	atom_json_dict(JSONAtom, JSONDict, []).
 
 create_counter(Dict) :- dict_create(Dict,'$_visualizer_counter',[value=0]).
 
@@ -107,11 +111,11 @@ gojson(File,JSON) :- gojson(File,[],[],JSON).
 gojson(File,Options,Results,JSON) :- go(File,[silent,make_test|Options],Results), visual(File,JSON).
 
 
-% visual(TestResultsFile)  This MUST be called after go(File,[...make_test,...],...)
+% visual(TestResultsFile,timeline(JSON))  This MUST be called after go(File,[...make_test,...],...)
 % Uses test facts still in memory
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
-visual(File,JSON) :- 
+visual(File,timeline(JSON)) :- 
 	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
 	% my_load_dyn(File), % we need the meta info about events
 	% load_test_file_for(File),
