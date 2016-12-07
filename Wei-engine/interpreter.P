@@ -33,15 +33,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+%%% DO NOT load this file first: you should start LPS by loading db.P instead, which loads this file automatically.
+
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 
 :- module(interpreter, [
 	go/1, go/2, go/3, go_lps/1, go_lps/2,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
-	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2]).
+	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2]).
 
-:- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
+:- use_module(db,[
+	action/1, current_time/1, d_pre/1 ,event/1,
+	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
+	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	steps/1, succ_t/2, (terminated)/3, used/1,
+	current_goal/1, depth/1, tried/3, failed/3, option/1, lps_updating_current_state/0,
+	expanded_consequent/2, initial_state/1,
+	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, lps_source_position/3,
+	lps_failed_test/2,
+	lps_engine_directory/1,
+	lps_goal_id_counter/1,
+	my_load_dyn/2]).
+
+% assert in usermod, if X imported from there... see SWI comment below
+uassert(X) :- assert(X). 
+uasserta(X) :- asserta(X). 
+uassertz(X) :- assertz(X).
+
+callprolog(G) :- G.
+
+
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
 :- use_module(lists, [append_lists/2]).
 % :- import unifiable/3 from constraintLib.
@@ -53,14 +75,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- use_module(standard,[datime/1]).
 date_stamp(D) :- datime(Date), fmt_write_string(D,"%d-%02d-%02d at %02d:%02d:%02d",Date).
 
-:- use_module(machine,[conget/2, conset/2]).
 :- use_module(shell,[list_directory/2, is_directory/1]).
 
 lps_examples_directory(ED) :- 
 	lps_engine_directory(D), 
 	concat_atom([D,'/../examples'], E), expand_filename(E,ED).
-
-my_load_dyn(F,_) :- load_dyn(F).
 
 my_term_to_codes(T,C) :- atomize_zero_functors(T,NT), term_to_codes(NT,C).
 
@@ -74,16 +93,6 @@ atomize_zero_functors(T,NT) :- T=..[F|Args], atomize_zero_functors(Args,NewArgs)
 
 my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
-:- use_module(usermod,[
-	action/1, /*cacts/1,*/ current_time/1, d_pre/1 ,event/1,
-	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
-	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
-	steps/1, succ_t/2, /*susp/1,*/ (terminated)/3, used/1,
-	current_goal/1, depth/1, tried/3, failed/3, option/1,
-	expanded_consequent/2, initial_state/1,
-	lps_test_result/3, lps_test_result_item/3, lps_test_options/1, lps_source_position/3,
-	lps_engine_directory/1]).
-	
 :- endif.
 
 %%% end of XSB specific section; now for SWI:
@@ -93,17 +102,32 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 :- module(interpreter, [
 	go/1, go/2, go/3, go_lps/1, go_lps/2,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
-	load_check_syntax/2, my_load_dyn/1, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2,
-	lps_test_result_item/3,
-	% SWI does not consider these in the user module, so they must be exported explicitly from here:
-	action/1, /*cacts/1,*/ d_pre/1 ,event/1,
-	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
-	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
-	(terminated)/3, initial_state/1
+	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2
 	]).
 
+:- use_module('db.P',[
+	action/1, current_time/1, d_pre/1 ,event/1,
+	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
+	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	steps/1, succ_t/2, (terminated)/3, used/1,
+	current_goal/1, depth/1, tried/3, failed/3, option/1, lps_updating_current_state/0,
+	expanded_consequent/2, initial_state/1,
+	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, lps_source_position/3,
+	lps_failed_test/2,
+	lps_engine_directory/1,
+	lps_goal_id_counter/1,
+	my_load_dyn/2]).
+
 :- op(900,fy,not).
-:- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
+
+% Make sure SWI asserts into the db module, namely for swish's sake
+uassert(X) :- assert(db:X). 
+uasserta(X) :- asserta(db:X). 
+uassertz(X) :- assertz(db:X).
+
+callprolog(G) :- predicate_property(G,built_in), !, G.
+callprolog(G) :- call(db:G).
+
 :- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
 append_lists([],[]).
 append_lists([X|Xs],L) :-
@@ -117,7 +141,7 @@ term_to_codes(T,C) :- term_to_atom(T,A), atom_codes(A,C).
 my_term_to_atom(T,A) :- term_to_atom(T,A).
 concat_atom(L,A) :- atomic_list_concat(L,A).
 %:- use_module(format,[format/2]).
-:- use_module(library(dialect/sicstus/system),[datime/1]).
+:- use_module(library(dialect/sicstus/system),[datime/1,file_exists/1]).
 date_stamp(D) :- datime(Date), Date=..[_|Args], format(atom(D),"~d-~d-~d at ~d:~d:~d",Args).
 conget(Name,Value) :- nb_getval(Name, Value).
 conset(Name,Value) :- nb_setval(Name, Value).
@@ -132,27 +156,16 @@ lps_examples_directory(ED) :-
 	concat_atom([D,'/'],DD), % hack, don't know where to fetch OS-dependent separator
 	relative_file_name(ED,DD,'../examples').
 
-my_load_dyn(F,WithWarnings) :- 
-	(style_check('?'(singleton))->Old=true;Old=false),
-	(WithWarnings==true -> style_check('+'(singleton)) ; style_check('-'(singleton))),
-	load_files([F],[module(user)]),
-	(Old==true -> style_check('+'(singleton)) ; style_check('-'(singleton))).
-
 cputime(T) :- T is cputime.
-
-% TODO: somehow runing tests a second time still originates "Clauses of interpreter:terminated/3 , etc. are not together..."
-:- discontiguous((  (initiated) /3, (terminated)/3, l_events/2, reactive_rule/3, reactive_rule/2, l_int/2, l_timeless/2 )).
-
-% no need to import user module predicates
 
 :- endif.
 
 %%% end of SWI and Prolog engine-specific code
 %%% From here on, generic Prolog code
 
+
 my_load_dyn(F) :- my_load_dyn(F,false).
 
-:- lps_engine_directory(D), concat_atom([D,'/db.P'],DB), my_load_dyn(DB).
 
 maximum_time(1000000000). % large number, hardwired so our test result files are cross-engine
 % ...otherwise these might move to the previous conditional segmnts:
@@ -167,10 +180,6 @@ my_term_size([],1) :- !.
 my_term_size(T,1) :- atomic(T), !.
 my_term_size(T,N) :- T=..[_|L], my_term_size(L,N2), N is N2+1.
 
-:- dynamic lps_test_result/3, lps_test_result_item/3, lps_test_options/1, lps_failed_test/2.
-:- dynamic lps_source_position/3.
-% This fact will contain this file's directory; its presence also denotes "LPS running"
-:- dynamic lps_engine_directory/1.
 
 % query(+P)
 %   True if P holds in the augmented state {S*_i, ev*_i, L_int, L_timeless}.
@@ -215,7 +224,7 @@ evaluate([P|Rest]) :-
 evaluate([P|Rest]) :-
     \+ l_timeless(P, _), 
     % should rather test if system predicate... or adopt a specific notation for body, e.g. 'prolog'
-    call(P),
+    callprolog(P),
     evaluate(Rest).
 
 % holds_all(+PL)
@@ -227,20 +236,18 @@ holds_all([P|Rest]) :-
     query(P),
     holds_all(Rest).
 
-:- dynamic lps_updating_current_state/0.
-
-enter_step_0 :- assert(lps_updating_current_state).
+enter_step_0 :- uassert(lps_updating_current_state).
 leave_step_0 :- retractall(lps_updating_current_state).
 
 % update(+Ev)
 %   Destructively update the state for a single event Ev.
 %
 update(Ev) :-
-    assertz(Ev),
+    uassertz(Ev),
     findall(Fl, (terminated(Ev, Fl, Cond), holds_all(Cond)), Terms),
     findall(Fl, (initiated(Ev, Fl, Cond), holds_all(Cond)), Inits),
     forall((member(Fl, Terms),state(Fl)), retract(state(Fl))),
-    forall((member(Fl, Inits),\+ state(Fl)), assertz(state(Fl))).
+    forall((member(Fl, Inits),\+ state(Fl)), uassertz(state(Fl))).
 
 % update_all(+Evs)
 %   Destructively update the state for a list of events Evs.
@@ -265,11 +272,12 @@ generate_id(GoalId) :-
     ).
 
 increment_goal_id(Id) :- 
-	conget(lps_goal_id_counter,Id), 
-	New is Id+1, conset(lps_goal_id_counter,New).
+	retract(lps_goal_id_counter(Id)), 
+	!,
+	New is Id+1, uasserta(lps_goal_id_counter(New)).
 
 reset_goal_ids :- 
-	conset(lps_goal_id_counter,10000).
+	retractall(lps_goal_id_counter(_)), uassert(lps_goal_id_counter(10000)).
 
 % process(+Ri, -NextRi, +Gi, -NextGi)
 %   Process reactive rules, both partially resolved from previous cycles Ri and
@@ -463,7 +471,7 @@ expand_reactive_rules() :-
                 true
             ), the following is safer: */
             retractall(reactive_rule(A, C)),
-            assertz(reactive_rule(EA, C)) % TODO: should probably be a different "work" predicate
+            uassertz(reactive_rule(EA, C)) % TODO: should probably be a different "work" predicate
         )
     ).
 
@@ -479,7 +487,7 @@ expand_consequents() :-
     forall(
         member([C, EC], ECs),
         (
-            assertz(expanded_consequent(C, EC))
+            uassertz(expanded_consequent(C, EC))
         )
     ).
 
@@ -502,7 +510,7 @@ expand_reactive_rules(foo) :-
             ;
                 true
             ),
-            assertz(reactive_rule(EA, C))
+            uassertz(reactive_rule(EA, C))
         )
     ).
 */
@@ -562,11 +570,11 @@ select_actions([ca(_,A)|As], AccA, SAs) :-
     ).
 
 update_action(Ev) :-
-    assertz(Ev),
+    uassertz(Ev),
     findall(Fl, (terminated(Ev, Fl, Cond), holds_all(Cond)), Terms),
     findall(Fl, (initiated(Ev, Fl, Cond), holds_all(Cond)), Inits),
     forall((member(Fl, Terms),state(Fl)), retract(state(Fl))),
-    forall((member(Fl, Inits),\+ state(Fl)), (assertz(state(Fl)))).
+    forall((member(Fl, Inits),\+ state(Fl)), (uassertz(state(Fl)))).
 
 /* Dead code:
 select_actions_concurrent([ca(_,A)|As], AllAs, AccA, SAs) :-
@@ -627,7 +635,7 @@ all_fail([C|_], failed) :-
 resolve_tree_breadth([], NG, NG, CA, CA).
 resolve_tree_breadth([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
     retract(current_goal(_)),
-    assertz(current_goal(GoalId)),
+    uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal_breadth(G, NextGoal, CandActs),
     retractall(tried(GoalId, 0, expanded_consequent(_, _))),
@@ -641,7 +649,7 @@ resolve_tree_breadth([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
 resolve_tree_breadth_prio([], NG, NG, CA, CA).
 resolve_tree_breadth_prio([goal(P, GoalId, G)|Gs], AccG, NG, AccA, CA) :-
     retract(current_goal(_)),
-    assertz(current_goal(GoalId)),
+    uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal_breadth(G, NextGoal, CandActs),
     retractall(tried(GoalId, 0, expanded_consequent(_, _))),
@@ -669,7 +677,7 @@ resolve_goal_breadth([TLG|[]], NextGoal, CandActs) :-
     ( find_unused(ec(TLGC), EC) ->
     	   % TODO: this branch needs testing
     	   current_goal(GoalId),
-        assertz(tried(GoalId, 0, expanded_consequent(TLGC, EC))),
+        uassertz(tried(GoalId, 0, expanded_consequent(TLGC, EC))),
         resolve_goal_breadth_end([EC,TLG], NG, CA),
         ( NG == nosusp ->
             resolve_goal_breadth([TLG], NextGoal, CandActs)
@@ -736,7 +744,7 @@ resolveb([happens(Ev, T1, T2)|Rest], NB, CA) :-
 /* Dead code, threads not used:
 resolve_tree_threads([goal(GoalId, G)|Gs], NG, CA) :-
     retract(current_goal(_)),
-    assertz(current_goal(GoalId)),
+    uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     make_threads([goal(GoalId, G)|Gs], ThreadIds, ThreadResults),
     join_threads(ThreadIds),
@@ -764,7 +772,7 @@ join_threads([TId|Rest]) :-
 resolve_tree([], NG, NG, CA, CA).
 resolve_tree([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
     retract(current_goal(_)),
-    assertz(current_goal(GoalId)),
+    uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal(G, NextGoal, CandActs),
     retractall(failed(GoalId, _, _)),
@@ -779,7 +787,7 @@ resolve_tree([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
 resolve_tree_prio([], NG, NG, CA, CA).
 resolve_tree_prio([goal(P, GoalId, G)|Gs], AccG, NG, AccA, CA) :-
     retract(current_goal(_)),
-    assertz(current_goal(GoalId)),
+    uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal(G, NextGoal, CandActs),
     retractall(failed(GoalId, _, _)),
@@ -800,7 +808,7 @@ resolve_goal([B1|Bs], NextGoal, CandActs) :-
     !,
     length([B1|Bs], Depth),
     retractall(depth(_)),
-    assertz(depth(Depth)),
+    uassertz(depth(Depth)),
     write_verbose(['Depth: ',Depth,nl,B1,' has expired.',nl]),
     ( Bs == [] ->
         write_verbose(['Top-level goal can never be achieved. Dropping.',nl,nl]),
@@ -813,7 +821,7 @@ resolve_goal([B1|Bs], NextGoal, CandActs) :-
 resolve_goal([B1|Bs], NextGoal, CandActs) :-
     length([B1|Bs], Depth),
     retractall(depth(_)),
-    assertz(depth(Depth)),
+    uassertz(depth(Depth)),
     write_verbose(['Depth: ',Depth,nl]),
     resolve2(B1, NB, EB, CA),
     ( NB == [] ->
@@ -857,10 +865,10 @@ check_failed([holds(Fl, T)|Ls], N) :-
     ( failed(GoalId, [holds(Fl, T)|Ls], N1) ->
         N2 is N1 + 1,
         retract(failed(GoalId, [holds(Fl, T)|Ls], N1)),
-        assertz(failed(GoalId, [holds(Fl, T)|Ls], N2)),
+        uassertz(failed(GoalId, [holds(Fl, T)|Ls], N2)),
         N = N1
     ;
-        assertz(failed(GoalId, [holds(Fl, T)|Ls], 1)),
+        uassertz(failed(GoalId, [holds(Fl, T)|Ls], 1)),
         N = 0
     ).
 check_failed([happens(Ev, T1, T2)|Ls], N) :-
@@ -868,10 +876,10 @@ check_failed([happens(Ev, T1, T2)|Ls], N) :-
     ( failed(GoalId, [happens(Ev, T1, T2)|Ls], N1) ->
         N2 is N1 + 1,
         retract(failed(GoalId, [happens(Ev, T1, T2)|Ls], N1)),
-        assertz(failed(GoalId, [happens(Ev, T1, T2)|Ls], N2)),
+        uassertz(failed(GoalId, [happens(Ev, T1, T2)|Ls], N2)),
         N = N1
     ;
-        assertz(failed(GoalId, [happens(Ev, T1, T2)|Ls], 1)),
+        uassertz(failed(GoalId, [happens(Ev, T1, T2)|Ls], 1)),
         N = 0
     ).
 
@@ -1019,7 +1027,7 @@ resolve2([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
         write_verbose(['Bound composite event ',Ev,' to',nl,Body,nl]),
         current_goal(GoalId),
         depth(Depth),
-        assertz(tried(GoalId, Depth, l_events(Ev, Body))),
+        uassertz(tried(GoalId, Depth, l_events(Ev, Body))),
         /*
         findall(X, tried(GoalId, Depth, l_events(Ev, X)), Foo),
         write(Foo),nl,
@@ -1040,7 +1048,7 @@ resolve2([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
     % need to remember which l_events have been explored, ACROSS cycles
     current_goal(GoalId),
     depth(Depth),
-    assertz(tried(GoalId, Depth, l_events(CEH, CEB))),
+    uassertz(tried(GoalId, Depth, l_events(CEH, CEB))),
     append(B, Ls, EB),
     reduce_step.
     */
@@ -1139,7 +1147,7 @@ resolve2_holds([holds(Fl, T)|Ls], NB, EB, CA) :-
         write_verbose(['Bound fluent ',holds(Fl),' to ',holds(CFl),nl]),
         current_goal(GoalId),
         depth(Depth),
-        assertz(tried(GoalId, Depth, state(CFl))),
+        uassertz(tried(GoalId, Depth, state(CFl))),
         ( EB = [] ->
             NB = []
         ;%EB \= [] ->
@@ -1264,7 +1272,7 @@ resolve2_happens([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
         satisfy_all(CLs),
         reduce_step,
         resolve2_same(CT2, CLs, EB),
-        assertz(tried(GoalId, Depth, happens(Ev, T1, T2))),
+        uassertz(tried(GoalId, Depth, happens(Ev, T1, T2))),
         ( EB = [] ->
             NB = []
         ;%EB \= [] ->
@@ -1307,7 +1315,7 @@ resolve2_timeless([TL|Ls], NB, EB, CA) :-
         write_verbose(['Calculated ',TL,' to ',CTL,nl]),
         current_goal(GoalId),
         depth(Depth),
-        assertz(tried(GoalId, Depth, l_timeless(CTL_, Body_))),
+        uassertz(tried(GoalId, Depth, l_timeless(CTL_, Body_))),
         NB = [TL|Ls],
         EB = CLs,
         CA = none
@@ -1398,8 +1406,8 @@ find_deadline([_H|T], Res) :-
 reduce_step() :-
     steps(C),
     NC is C-1,
-    retract(steps(C)),
-    assertz(steps(NC)).
+    retract(db:steps(C)),
+    uassertz(steps(NC)).
 
 % satisfy_all(+L) 
 % check that all time constraints are not known to be unsatisfiable...
@@ -1735,7 +1743,7 @@ check_d([H|_], What, Pos, [notice(error,ET,Pos)]) :-
 assert_list([]).
 
 assert_list([H|T]) :-
-    assertz(state(H)),
+    uassertz(state(H)),
     assert_list(T).
 
 %
@@ -1758,10 +1766,10 @@ next_time() :-
     current_time(This),
     retract(current_time(This)),
     Next is This + 1,
-    assertz(current_time(Next)),
-    assertz(succ_t(This, Next)),
-    retract(steps(_)),
-    assertz(steps(1000)).
+    uassertz(current_time(Next)),
+    uassertz(succ_t(This, Next)),
+    retract(db:steps(_)),
+    uassertz(steps(1000)).
 
 % go_lps(File,Options)  Same as go/2; for the sake of compatibility with Wei's thesis
 go_lps(File,Options) :- go(File,Options).
@@ -1780,16 +1788,22 @@ go(File, OptionsList) :- go(File, OptionsList,[]).
 go(File, OptionsList, ResultFluents) :-
     forall(member(RF,ResultFluents), (nonvar(RF), RF=_-_)),
     parse_options(OptionsList),
+    (nonvar(File) -> true; 
+    		(option(make_test) -> writeln(user_error, 'ERROR in options: make_test requires a File name'), fail 
+    		; true)),
     cleanup,
     init_test_file(File),
     % no longer needed: datime_setrand,
-    my_load_dyn(File),
-    print_errors(File), % fails if errors occur
+    (\+ option(swish) -> 
+    	my_load_dyn(File), 
+    	print_errors(File) % fails if errors occur
+    	; true),
+    
 
     (option(meta_actions) -> add_meta_reactive_rules ; true),
     ( initial_state(IS) -> assert_list(IS) ; true),
     ( option(delta_state(State)), member(F,State),
-    	(F = + Fluent -> assert(state(Fluent)) ; F = - Fluent -> retractall(state(Fluent))),
+    	(F = + Fluent -> uassert(state(Fluent)) ; F = - Fluent -> retractall(state(Fluent))),
     	fail
     	; true
     ),
@@ -1800,11 +1814,11 @@ go(File, OptionsList, ResultFluents) :-
     ;
         true
     ),
-    assertz(current_time(1)),
-    assertz(succ_t(0, 1)),
-    assertz(steps(1000)),
-    assertz(current_goal(0)),
-    assertz(depth(0)),
+    uassertz(current_time(1)),
+    uassertz(succ_t(0, 1)),
+    uassertz(steps(1000)),
+    uassertz(current_goal(0)),
+    uassertz(depth(0)),
     (option(ultra_verbose)->
     		current_prolog_flag(write_depth,Old), 
     		set_xsb_flag(write_depth,10000) % ultra_verbose only remembered for xsb
@@ -1867,58 +1881,61 @@ parse_options(Options) :-
 	parse_options_(Options).
 
 parse_options_([]) :- !.
+parse_options_([swish|Rest]) :- !, % don't cleanup db (nor load the program), the environment will do it
+    uassertz(option(swish)),
+    parse_options_(Rest).
 parse_options_([manual|Rest]) :- !, 
-    assertz(option(manual)),
+    uassertz(option(manual)),
     parse_options_(Rest).
 parse_options_([verbose|Rest]) :- !,
-    assertz(option(verbose)),
+    uassertz(option(verbose)),
     parse_options_(Rest).
 % Increase the default maximum written term depth, to avoid '...' output
 parse_options_([ultra_verbose|Rest]) :- !,
-    assertz(option(verbose)),
+    uassertz(option(verbose)),
     (current_prolog_flag(dialect, xsb) 
-    	-> assertz(option(ultra_verbose)) 
+    	-> uassertz(option(ultra_verbose)) 
     	; writeln(user_error, 'WARNING: ultra_verbose option considered only for XSB Prolog ')
     	),
     parse_options_(Rest).
 parse_options_([silent|Rest]) :- !,
-    assertz(option(silent)),
+    uassertz(option(silent)),
     parse_options_(Rest).
 parse_options_([goal_strat(breadth)|Rest]) :- !,
-    assertz(option(breadth)),
+    uassertz(option(breadth)),
     parse_options_(Rest).
 parse_options_([goal_strat(depth)|Rest]) :- !,
     parse_options_(Rest).
 parse_options_([priority|Rest]) :- !,
-    assertz(option(priority)),
+    uassertz(option(priority)),
     parse_options_(Rest).
 parse_options_([make_test|Rest]) :- !,
 	(member(manual,Rest) ->  
 		writeln(user_error, 'ERROR in options: with make_test you can not use ''manual''.'), fail
 		; true),
-	assertz(option(make_test)),
+	uassertz(option(make_test)),
 	parse_options_(Rest).
 parse_options_([run_test|Rest]) :- !,
-	assertz(option(run_test)),
+	uassertz(option(run_test)),
 	parse_options_(Rest).
 parse_options_([meta_actions|Rest]) :- !,
-	assertz(option(meta_actions)),
+	uassertz(option(meta_actions)),
 	parse_options_(Rest).
 parse_options_([cycle_hook(Predicate,Fluents,Actions)|Rest]) :- !,
 	% Fluents and (basic) Actions are lists of templates; the cycle hook predicate should collect all matching tuples
 	((atom(Predicate),is_list(Fluents),is_list(Actions))->true
 	; writeln(user_error, 'ERROR in options: cycle_hook first argument must be an atom, a predicate name; then fluent and action lists.'), fail),
-	assertz(option(cycle_hook(Predicate,Fluents,Actions))),
+	uassertz(option(cycle_hook(Predicate,Fluents,Actions))),
 	parse_options_(Rest).
 parse_options_([observations(Obs)|Rest]) :- !,
 	((is_list(Obs), forall(member(observe(L,T),Obs),(is_list(L),integer(T))) ) -> true
 	; writeln(user_error, 'ERROR in options: observations must contain a list of observe(List,Time).'), fail),
-	assertz(option(observations(Obs))),
+	uassertz(option(observations(Obs))),
 	parse_options_(Rest).
 parse_options_([delta_state(State)|Rest]) :- !,
 	((is_list(State), forall(member(F,State), (nonvar(F), (F = + _ ; F = - _ ))) ) -> true
 	; writeln(user_error, 'ERROR in options: delta_state must contain a list of +Fluent or -Fluent.'), fail),
-	assertz(option(delta_state(State))),
+	uassertz(option(delta_state(State))),
 	parse_options_(Rest).
 parse_options_([O|Rest]) :- 
     write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
@@ -1951,6 +1968,7 @@ load_test_file_for(F) :-
 		; true).
 
 % close_test_file(ProgramFile)
+close_test_file(F) :- var(F), !.
 close_test_file(F) :- option(make_test), !,
 	test_filename(F,TF),
 	telling(Old), tell(TF),
@@ -1990,7 +2008,7 @@ test_filename(PF,TF) :-
 test(Stage,Cycle,Term) :- option(make_test), !,
 	is_list(Term),
 	\+ \+ (( 
-		numbervars(Term), length(Term,N), assert(lps_test_result(Stage,Cycle,N)),
+		numbervars(Term), length(Term,N), uassert(lps_test_result(Stage,Cycle,N)),
 		forall(member(Item,Term),assert_lps_test_result_item(Stage,Cycle,Item))
 		)).
 test(Stage,Cycle,Term) :- option(run_test), !,
@@ -1999,7 +2017,7 @@ test(Stage,Cycle,Term) :- option(run_test), !,
 	  ; 
 	  	write('FAILED test '), writeln(Stage/Cycle/Term), 
 	  	writeln('Missing test fact.'), 
-	  	assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),missing_fact)), 
+	  	uassert(lps_failed_test(lps_test_result(Stage,Cycle,Term),missing_fact)), 
 	  	fail),
 	findall(Item,lps_test_result_item(Stage,Cycle,Item),Test), 
 	% numbervars(Test),
@@ -2007,7 +2025,7 @@ test(Stage,Cycle,Term) :- option(run_test), !,
 		-> true
 		; 
 		write('FAILED test '), writeln(Stage/Cycle/Term), write('Expected '), writeln(Test), 
-		assert(lps_failed_test(lps_test_result(Stage,Cycle,Term),Test)),
+		uassert(lps_failed_test(lps_test_result(Stage,Cycle,Term),Test)),
 		fail).
 test(_,_,_).
 
@@ -2025,7 +2043,7 @@ test_items_ok([],[]).
 assert_lps_test_result_item(Stage,Cycle,Item) :- 
 	my_term_size(Item,Size), 
 	( Size > 1000 -> Item_=lps_gigantic(Size) ; Item_=Item),
-	assert(lps_test_result_item(Stage,Cycle,Item_)).
+	uassert(lps_test_result_item(Stage,Cycle,Item_)).
 	
 % test all programs in the LPS examples directory tree which have a .lpst file present
 test_examples :- 
@@ -2126,14 +2144,14 @@ pick_highest_tier2(Lower, [goal(P, GoalId, G)|OtherGoals], [], [goal(P, GoalId, 
 % add rules to trigger "meta" actions which document the occurrence of composite events
 add_meta_reactive_rules :-
 	forall( l_events(E,_), 
-		assert( reactive_rule([E],[happens(lps_meta(E),_T3,_)]) ) ),
-	assert(action(lps_meta(_))).
+		uassert( reactive_rule([E],[happens(lps_meta(E),_T3,_)]) ) ),
+	uassert(action(lps_meta(_))).
 	
 % cleanup
-%
-cleanup :-
+%	
+cleanup:-
+	reset_goal_ids,
     retractall(action(_)),
-    % retractall(cacts(_)),
     retractall(current_goal(_)),
     retractall(current_time(_)),
     retractall(d_pre(_)),
@@ -2152,13 +2170,11 @@ cleanup :-
     retractall(reactive_rule(_, _)),
     retractall(reactive_rule(_, _, _)),
     retractall(state(_)),
-    retractall(steps(_)),
+    retractall(db:steps(_)),
     retractall(succ_t(_, _)),
-    % retractall(susp(_)),
     retractall(terminated(_, _, _)),
     retractall(tried(_, _, _)),
     retractall(used(_)),
-    reset_goal_ids,
     % retractall(this_initiated(_)),
     retractall(lps_failed_test(_,_)),
     retractall(lps_test_result(_,_,_)),
@@ -2360,3 +2376,4 @@ d_body(holds(B, _)) :-
 d_body(B) :-
     functor(B,F,N), functor(BB,F,N),
     l_timeless(BB, _).
+    

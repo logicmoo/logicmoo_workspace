@@ -6,20 +6,23 @@
 ** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-/* Utilities for visualizing LPS executions; this version depends on http://interprolog.com/interprolog-studio/ */
+/* Utilities for visualizing LPS executions; the XSB version depends on http://interprolog.com/interprolog-studio/ */
 
 :- module(visualizer,[ gov/1, gov/2, gov/3, gojson/2, gojson/4]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 :- use_module(interpreter,[go/3, my_term_to_atom/2]). % assumed preloaded
+:- use_module(db,[
+	lps_test_result_item/3,action/1
+	]).
 
 :- use_module(subsumes,[variant/2]).
 :- use_module(basics, [member/2, append/3, length/2]).
 :- use_module(string,[concat_atom/2]).
 % namely for use with Prolog Studio:
 :- use_module(interprolog,[java/3, term2json/2, create_counter/1, get_increment_counter/2]).
-:- use_module(usermod,[xjShowURL/1,lps_test_result_item/3]).
+:- use_module(usermod,[xjShowURL/1]).
 
 www_open_url(URL) :- xjShowURL(URL). % xj2.P
 
@@ -59,13 +62,10 @@ displayTimeline(File,JSON) :-
 
 :- use_module(library(http/json)).
 :- use_module('../Wei-engine/interpreter.P',[
-	go/3, my_term_to_atom/2,
-	% LPS program dependent:
-	lps_test_result_item/3,
-	action/1, /*cacts/1,*/ d_pre/1 ,event/1,
-	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
-	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
-	(terminated)/3, initial_state/1
+	go/3, my_term_to_atom/2
+	]).
+:- use_module('../Wei-engine/db.P',[
+	lps_test_result_item/3
 	]).
 
 make_json_object(L,json(NL)) :- json_colons_to_equals(L,NL).
