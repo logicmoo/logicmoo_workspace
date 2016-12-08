@@ -14,7 +14,7 @@
 :- if(current_prolog_flag(dialect, xsb)).
 :- use_module(interpreter,[go/3, my_term_to_atom/2]). % assumed preloaded
 :- use_module(db,[
-	lps_test_result_item/3,action/1
+	lps_test_result_item/3, action/1
 	]).
 
 :- use_module(subsumes,[variant/2]).
@@ -58,14 +58,16 @@ displayTimeline(File,JSON) :-
 
 %%% end of XSB specific section; now for SWI:
 
+% TODO: needs SWISH special case too!!
+
 :- if(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(http/json)).
-:- use_module('../Wei-engine/interpreter.P',[
-	go/3, my_term_to_atom/2
-	]).
 :- use_module('../Wei-engine/db.P',[
 	lps_test_result_item/3
+	]).
+:- use_module('../Wei-engine/interpreter.P',[
+	go/3, my_term_to_atom/2
 	]).
 
 make_json_object(L,json(NL)) :- json_colons_to_equals(L,NL).
@@ -127,7 +129,7 @@ visual(File,timeline(JSON)) :-
 		lps_test_result_item('Observations:',T2,X), T1 is T2-1, G=observation
 		;
 		lps_test_result_item('Selected actions:',TT2,happens(XX,TT1,TT2)), 
-		(action(XX)->G=action;G=event),
+		(db:action(XX)->G=action;G=event),
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
 		lps_test_result_item('Database state:',T1,X), T2 is T1+1, functor(X,F,N), G=F/N % fluent
