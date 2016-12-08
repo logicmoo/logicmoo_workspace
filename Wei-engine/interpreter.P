@@ -66,6 +66,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 uassert(X) :- assert(X). 
 uasserta(X) :- asserta(X). 
 uassertz(X) :- assertz(X).
+uretract(X) :- retract(X).
+uretractall(X) :- retractall(X).
 
 callprolog(G) :- G.
 
@@ -104,10 +106,53 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 %%% end of XSB specific section; now for SWI:
 
 
-% First a SWISH specificity - define where is our engine database state
+
 :- if((current_prolog_flag(dialect, swi), current_module(swish))).
 
+% First a SWISH specificity - rather than use the db module, will use pengine's dynamic module
 
+:- use_module(library(pengines),[pengine_self/1]).
+
+action(X) :- pengine_self(M), catch(M:action(X),_,fail).
+current_goal(X) :- pengine_self(M), M:current_goal(X).
+current_time(X) :- pengine_self(M), M:current_time(X).
+lps_updating_current_state :- pengine_self(M), M:lps_updating_current_state.
+d_pre(X) :- pengine_self(M), catch(M:d_pre(X),_,fail).
+depth(X) :- pengine_self(M), catch(M:depth(X),_,fail).
+event(X) :- pengine_self(M), catch(M:event(X),_,fail).
+expanded_consequent(X,Y) :- pengine_self(M), catch(M:expanded_consequent(X,Y),_,fail).
+failed(X,Y,Z) :- pengine_self(M), catch(M:failed(X,Y,Z),_,fail).
+fluent(X) :- pengine_self(M), catch(M:fluent(X),_,fail).
+happens(X,Y,Z) :- pengine_self(M), catch(M:happens(X,Y,Z),_,fail).
+initial_state(X) :- pengine_self(M), catch(M:initial_state(X),_,fail).
+initiated(X,Y,Z) :- pengine_self(M), catch(M:initiated(X,Y,Z),_,fail).
+l_events(X,Y) :- pengine_self(M), catch(M:l_events(X,Y),_,fail).
+l_int(X,Y) :- pengine_self(M), catch(M:l_int(X,Y),_,fail).
+l_timeless(X,Y) :- pengine_self(M), catch(M:l_timeless(X,Y),_,fail).
+observe(X,Y) :- pengine_self(M), catch(M:observe(X,Y),_,fail).
+% TODO: interference with SWI ???
+option(X) :- pengine_self(M), catch(M:option(X),_,fail).
+reactive_rule(X,Y) :- pengine_self(M), catch(M:reactive_rule(X,Y),_,fail).
+reactive_rule(X,Y,Z) :- pengine_self(M), catch(M:reactive_rule(X,Y,Z),_,fail).
+state(X) :- pengine_self(M), catch(M:state(X),_,fail).
+steps(X) :- pengine_self(M), catch(M:steps(X),_,fail).
+succ_t(X,Y) :- pengine_self(M), M:succ_t(X,Y).
+terminated(X,Y,Z) :- pengine_self(M), catch(M:terminated(X,Y,Z),_,fail).
+tried(X,Y,Z) :- pengine_self(M), catch(M:tried(X,Y,Z),_,fail).
+used(X) :- pengine_self(M), catch(M:used(X),_,fail).
+lps_test_options(X) :- pengine_self(M), catch(M:lps_tes_options(X),_,fail).
+lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
+lps_test_result(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result(X,Y,Z),_,fail).
+lps_failed_test(X,Y) :- pengine_self(M), catch(M:lps_failed_test(X,Y),_,fail).
+lps_goal_id_counter(X) :- pengine_self(M), M:lps_goal_id_counter(X).
+% probably not used:
+my_load_dyn(X,Y) :- pengine_self(M), M:my_load_dyn(X,Y).
+
+uassert(X) :- pengine_self(M), catch(assert(M:X),_,true). 
+uasserta(X) :- pengine_self(M), catch(asserta(M:X),_,true). 
+uassertz(X) :- pengine_self(M), catch(assertz(M:X),_,true).
+uretractall(X) :- pengine_self(M), catch(retractall(M:X),_,true).
+uretract(X) :- pengine_self(M), catch(retract(M:X),_,fail).
 :- endif.
 
 
@@ -128,6 +173,13 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 uassert(X) :- assert(db:X). 
 uasserta(X) :- asserta(db:X). 
 uassertz(X) :- assertz(db:X).
+uretractall(X) :- retractall(db:X).
+uretract(X) :- retract(db:X).
+
+:- endif.
+
+:- if(current_prolog_flag(dialect, swi)).
+% and now the generic SWI support
 
 :- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 
@@ -245,7 +297,7 @@ holds_all([P|Rest]) :-
     holds_all(Rest).
 
 enter_step_0 :- uassert(lps_updating_current_state).
-leave_step_0 :- retractall(lps_updating_current_state).
+leave_step_0 :- uretractall(lps_updating_current_state).
 
 % update(+Ev)
 %   Destructively update the state for a single event Ev.
@@ -254,7 +306,7 @@ update(Ev) :-
     uassertz(Ev),
     findall(Fl, (terminated(Ev, Fl, Cond), holds_all(Cond)), Terms),
     findall(Fl, (initiated(Ev, Fl, Cond), holds_all(Cond)), Inits),
-    forall((member(Fl, Terms),state(Fl)), retract(state(Fl))),
+    forall((member(Fl, Terms),state(Fl)), uretract(state(Fl))),
     forall((member(Fl, Inits),\+ state(Fl)), uassertz(state(Fl))).
 
 % update_all(+Evs)
@@ -280,12 +332,12 @@ generate_id(GoalId) :-
     ).
 
 increment_goal_id(Id) :- 
-	retract(lps_goal_id_counter(Id)), 
+	uretract(lps_goal_id_counter(Id)), 
 	!,
 	New is Id+1, uasserta(lps_goal_id_counter(New)).
 
 reset_goal_ids :- 
-	retractall(lps_goal_id_counter(_)), uassert(lps_goal_id_counter(10000)).
+	uretractall(lps_goal_id_counter(_)), uassert(lps_goal_id_counter(10000)).
 
 % process(+Ri, -NextRi, +Gi, -NextGi)
 %   Process reactive rules, both partially resolved from previous cycles Ri and
@@ -474,11 +526,11 @@ expand_reactive_rules() :-
         member([A, C, EA], NewRRs),
         (
             /*( reactive_rule(A, C) ->
-                retract(reactive_rule(A, C))
+                uretract(reactive_rule(A, C))
             ;
                 true
             ), the following is safer: */
-            retractall(reactive_rule(A, C)),
+            uretractall(reactive_rule(A, C)),
             uassertz(reactive_rule(EA, C)) % TODO: should probably be a different "work" predicate
         )
     ).
@@ -514,7 +566,7 @@ expand_reactive_rules(foo) :-
         member([A, C, EA], NewRRs),
         (
             ( reactive_rule(A, C) ->
-                retract(reactive_rule(A, C))
+                uretract(reactive_rule(A, C))
             ;
                 true
             ),
@@ -581,7 +633,7 @@ update_action(Ev) :-
     uassertz(Ev),
     findall(Fl, (terminated(Ev, Fl, Cond), holds_all(Cond)), Terms),
     findall(Fl, (initiated(Ev, Fl, Cond), holds_all(Cond)), Inits),
-    forall((member(Fl, Terms),state(Fl)), retract(state(Fl))),
+    forall((member(Fl, Terms),state(Fl)), uretract(state(Fl))),
     forall((member(Fl, Inits),\+ state(Fl)), (uassertz(state(Fl)))).
 
 /* Dead code:
@@ -642,11 +694,11 @@ all_fail([C|_], failed) :-
 
 resolve_tree_breadth([], NG, NG, CA, CA).
 resolve_tree_breadth([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
-    retract(current_goal(_)),
+    uretract(current_goal(_)),
     uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal_breadth(G, NextGoal, CandActs),
-    retractall(tried(GoalId, 0, expanded_consequent(_, _))),
+    uretractall(tried(GoalId, 0, expanded_consequent(_, _))),
     ( NextGoal = [] ->
         resolve_tree_breadth(Gs, AccG, NG, AccA, CA)
     ;
@@ -656,11 +708,11 @@ resolve_tree_breadth([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
     ).
 resolve_tree_breadth_prio([], NG, NG, CA, CA).
 resolve_tree_breadth_prio([goal(P, GoalId, G)|Gs], AccG, NG, AccA, CA) :-
-    retract(current_goal(_)),
+    uretract(current_goal(_)),
     uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal_breadth(G, NextGoal, CandActs),
-    retractall(tried(GoalId, 0, expanded_consequent(_, _))),
+    uretractall(tried(GoalId, 0, expanded_consequent(_, _))),
     ( NextGoal = [] ->
         resolve_tree_breadth_prio(Gs, AccG, NG, AccA, CA)
     ;
@@ -751,7 +803,7 @@ resolveb([happens(Ev, T1, T2)|Rest], NB, CA) :-
 
 /* Dead code, threads not used:
 resolve_tree_threads([goal(GoalId, G)|Gs], NG, CA) :-
-    retract(current_goal(_)),
+    uretract(current_goal(_)),
     uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     make_threads([goal(GoalId, G)|Gs], ThreadIds, ThreadResults),
@@ -779,12 +831,12 @@ join_threads([TId|Rest]) :-
 %
 resolve_tree([], NG, NG, CA, CA).
 resolve_tree([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
-    retract(current_goal(_)),
+    uretract(current_goal(_)),
     uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal(G, NextGoal, CandActs),
-    retractall(failed(GoalId, _, _)),
-    retractall(tried(GoalId, _, happens(_,_,_))),
+    uretractall(failed(GoalId, _, _)),
+    uretractall(tried(GoalId, _, happens(_,_,_))),
     ( NextGoal = [] ->
         resolve_tree(Gs, AccG, NG, AccA, CA)
     ;
@@ -794,12 +846,12 @@ resolve_tree([goal(GoalId, G)|Gs], AccG, NG, AccA, CA) :-
     ).
 resolve_tree_prio([], NG, NG, CA, CA).
 resolve_tree_prio([goal(P, GoalId, G)|Gs], AccG, NG, AccA, CA) :-
-    retract(current_goal(_)),
+    uretract(current_goal(_)),
     uassertz(current_goal(GoalId)),
     write_verbose(['Goal: ',GoalId,nl]),
     resolve_goal(G, NextGoal, CandActs),
-    retractall(failed(GoalId, _, _)),
-    retractall(tried(GoalId, _, happens(_,_,_))),
+    uretractall(failed(GoalId, _, _)),
+    uretractall(tried(GoalId, _, happens(_,_,_))),
     ( NextGoal = [] ->
         resolve_tree_prio(Gs, AccG, NG, AccA, CA)
     ;
@@ -815,7 +867,7 @@ resolve_goal([B1|Bs], NextGoal, CandActs) :-
     \+ satisfy_all(B1),
     !,
     length([B1|Bs], Depth),
-    retractall(depth(_)),
+    uretractall(depth(_)),
     uassertz(depth(Depth)),
     write_verbose(['Depth: ',Depth,nl,B1,' has expired.',nl]),
     ( Bs == [] ->
@@ -828,7 +880,7 @@ resolve_goal([B1|Bs], NextGoal, CandActs) :-
     ).
 resolve_goal([B1|Bs], NextGoal, CandActs) :-
     length([B1|Bs], Depth),
-    retractall(depth(_)),
+    uretractall(depth(_)),
     uassertz(depth(Depth)),
     write_verbose(['Depth: ',Depth,nl]),
     resolve2(B1, NB, EB, CA),
@@ -872,7 +924,7 @@ check_failed([holds(Fl, T)|Ls], N) :-
     current_goal(GoalId),
     ( failed(GoalId, [holds(Fl, T)|Ls], N1) ->
         N2 is N1 + 1,
-        retract(failed(GoalId, [holds(Fl, T)|Ls], N1)),
+        uretract(failed(GoalId, [holds(Fl, T)|Ls], N1)),
         uassertz(failed(GoalId, [holds(Fl, T)|Ls], N2)),
         N = N1
     ;
@@ -883,7 +935,7 @@ check_failed([happens(Ev, T1, T2)|Ls], N) :-
     current_goal(GoalId),
     ( failed(GoalId, [happens(Ev, T1, T2)|Ls], N1) ->
         N2 is N1 + 1,
-        retract(failed(GoalId, [happens(Ev, T1, T2)|Ls], N1)),
+        uretract(failed(GoalId, [happens(Ev, T1, T2)|Ls], N1)),
         uassertz(failed(GoalId, [happens(Ev, T1, T2)|Ls], N2)),
         N = N1
     ;
@@ -964,22 +1016,22 @@ tried_all(ec(C)) :-
 clear_tried(holds(Fl, _)) :-
     current_goal(GoalId),
     depth(Depth),
-    retractall(tried(GoalId, Depth, state(Fl))).
+    uretractall(tried(GoalId, Depth, state(Fl))).
 clear_tried(l_events(Ev, _)) :-
     current_goal(GoalId),
     depth(Depth),
-    retractall(tried(GoalId, Depth, l_events(Ev, _))).
+    uretractall(tried(GoalId, Depth, l_events(Ev, _))).
 clear_tried(happens(Ev, _, _)) :-
     current_goal(GoalId),
     depth(Depth),
-    retractall(tried(GoalId, Depth, happens(Ev, _, _))).
+    uretractall(tried(GoalId, Depth, happens(Ev, _, _))).
 clear_tried(l_tl(TL)) :-
     current_goal(GoalId),
     depth(Depth),
-    retractall(tried(GoalId, Depth, l_timeless(TL, _))).
+    uretractall(tried(GoalId, Depth, l_timeless(TL, _))).
 clear_tried(ec(C)) :-
     current_goal(GoalId),
-    retractall(tried(GoalId, 0, expanded_consequent(C, _))).
+    uretractall(tried(GoalId, 0, expanded_consequent(C, _))).
 
 % clear_failed
 %
@@ -987,7 +1039,7 @@ clear_failed(B) :-
     current_goal(GoalId),
     forall(
         failed(GoalId, B, _),
-        retract(failed(GoalId, B, _))
+        uretract(failed(GoalId, B, _))
     ).
 
 % resolve
@@ -1287,7 +1339,7 @@ resolve2_happens([happens(Ev, T1, T2)|Ls], NB, EB, CA) :-
             % doesn't matter what NB is
             % XXX 22 Aug 19:31 When the happens(Ev) binds, remove it from the
             % state! Only let it do this once.
-            %retract(happens(Ev, _, _)),
+            %uretract(happens(Ev, _, _)),
             NB = [happens(Ev, T1, T2)|Ls]
         )
     ;
@@ -1414,7 +1466,7 @@ find_deadline([_H|T], Res) :-
 reduce_step() :-
     steps(C),
     NC is C-1,
-    retract(db:steps(C)),
+    uretract(db:steps(C)),
     uassertz(steps(NC)).
 
 % satisfy_all(+L) 
@@ -1771,12 +1823,11 @@ pprint_goal([goal(_, _, [H|_])|Rest]) :-
 %   succ_t/2.
 %
 next_time() :-
-    current_time(This),
-    retract(current_time(This)),
+    uretract(current_time(This)),
     Next is This + 1,
     uassertz(current_time(Next)),
     uassertz(succ_t(This, Next)),
-    retract(db:steps(_)),
+    uretractall(steps(_)),
     uassertz(steps(1000)).
 
 % go_lps(File,Options)  Same as go/2; for the sake of compatibility with Wei's thesis
@@ -1797,7 +1848,7 @@ go(File, OptionsList, ResultFluents) :-
     forall(member(RF,ResultFluents), (nonvar(RF), RF=_-_)),
     parse_options(OptionsList),
     (nonvar(File) -> true; 
-    		(option(make_test) -> writeln(user_error, 'ERROR in options: make_test requires a File name'), fail 
+    		( (option(make_test), \+ option(swish)) -> writeln(user_error, 'ERROR in options: make_test requires a File name'), fail 
     		; true)),
     cleanup,
     init_test_file(File),
@@ -1811,7 +1862,7 @@ go(File, OptionsList, ResultFluents) :-
     (option(meta_actions) -> add_meta_reactive_rules ; true),
     ( initial_state(IS) -> assert_list(IS) ; true),
     ( option(delta_state(State)), member(F,State),
-    	(F = + Fluent -> uassert(state(Fluent)) ; F = - Fluent -> retractall(state(Fluent))),
+    	(F = + Fluent -> uassert(state(Fluent)) ; F = - Fluent -> uretractall(state(Fluent))),
     	fail
     	; true
     ),
@@ -1877,7 +1928,7 @@ print_statistics(T0,T1,T2) :-
 % parse_options(OptionsList)
 %
 parse_options(Options) :- 
-	retractall(option(_)),
+	uretractall(option(_)),
 	% when running a test the options will be imposed by the test file:
 	(member(run_test,Options) -> Options=[_]; true),
 	( (member(silent,Options), (member(verbose,Options);member(ultra_verbose,Options))) ->
@@ -1977,7 +2028,7 @@ load_test_file_for(F) :-
 
 % close_test_file(ProgramFile)
 close_test_file(F) :- var(F), !.
-close_test_file(F) :- option(make_test), !,
+close_test_file(F) :- option(make_test), \+ option(swish),  !,
 	test_filename(F,TF),
 	telling(Old), tell(TF),
 	date_stamp(D),
@@ -2157,37 +2208,38 @@ add_meta_reactive_rules :-
 	
 % cleanup
 %	
-cleanup:-
+cleanup:- option(swish), !, reset_goal_ids.
+cleanup:- 
 	reset_goal_ids,
-    retractall(action(_)),
-    retractall(current_goal(_)),
-    retractall(current_time(_)),
-    retractall(d_pre(_)),
-    retractall(depth(_)),
-    retractall(event(_)),
-    retractall(expanded_consequent(_,_)),
-    retractall(failed(_, _, _)),
-    retractall(fluent(_)),
-    retractall(happens(_, _, _)),
-    retractall(initial_state(_)),
-    retractall(initiated(_, _, _)),
-    retractall(l_events(_, _)),
-    retractall(l_int(_, _)),
-    retractall(l_timeless(_, _)),
-    retractall(observe(_, _)),
-    retractall(reactive_rule(_, _)),
-    retractall(reactive_rule(_, _, _)),
-    retractall(state(_)),
-    retractall(db:steps(_)),
-    retractall(succ_t(_, _)),
-    retractall(terminated(_, _, _)),
-    retractall(tried(_, _, _)),
-    retractall(used(_)),
-    % retractall(this_initiated(_)),
-    retractall(lps_failed_test(_,_)),
-    retractall(lps_test_result(_,_,_)),
-    retractall(lps_test_result_item(_,_,_)),
-    retractall(lps_test_options(_)).
+    uretractall(action(_)),
+    uretractall(current_goal(_)),
+    uretractall(current_time(_)),
+    uretractall(d_pre(_)),
+    uretractall(depth(_)),
+    uretractall(event(_)),
+    uretractall(expanded_consequent(_,_)),
+    uretractall(failed(_, _, _)),
+    uretractall(fluent(_)),
+    uretractall(happens(_, _, _)),
+    uretractall(initial_state(_)),
+    uretractall(initiated(_, _, _)),
+    uretractall(l_events(_, _)),
+    uretractall(l_int(_, _)),
+    uretractall(l_timeless(_, _)),
+    uretractall(observe(_, _)),
+    uretractall(reactive_rule(_, _)),
+    uretractall(reactive_rule(_, _, _)),
+    uretractall(state(_)),
+    uretractall(db:steps(_)),
+    uretractall(succ_t(_, _)),
+    uretractall(terminated(_, _, _)),
+    uretractall(tried(_, _, _)),
+    uretractall(used(_)),
+    % uretractall(this_initiated(_)),
+    uretractall(lps_failed_test(_,_)),
+    uretractall(lps_test_result(_,_,_)),
+    uretractall(lps_test_result_item(_,_,_)),
+    uretractall(lps_test_options(_)).
 
 my_event(X) :- event(X).
 my_event(X) :- action(X).
@@ -2201,7 +2253,7 @@ cycle_options(CAi, Ri, Gi) :-
     		HookGoal =.. [Predicate,ExternalObservations],
 		(HookGoal -> true ; writeln('* LPS cycle hook goal failed, terminating.'), fail)
     	; ExternalObservations=[]),
-    retractall(happens(_, _, _)),
+    uretractall(happens(_, _, _)),
     enter_step_0, % during "Update the current state" we need a hack to query the previous state
     (option(silent)->true;nl),
     write_verbose(['====================',nl]),
@@ -2220,7 +2272,7 @@ cycle_options(CAi, Ri, Gi) :-
     write_verbose([StageCA,nl,CAi,nl,nl]), test(StageCA,Time,CAi),
     sort(CAi, SortedCAi),
     select_actions(SortedCAi, [], Actions),
-    % retractall(this_initiated(_)),
+    % uretractall(this_initiated(_)),
     StageSA='Selected actions:',
     write_verbose([StageSA,nl,Actions,nl,nl]), test(StageSA,Time,Actions),
     leave_step_0,

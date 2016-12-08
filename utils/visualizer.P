@@ -58,14 +58,23 @@ displayTimeline(File,JSON) :-
 
 %%% end of XSB specific section; now for SWI:
 
-% TODO: needs SWISH special case too!!
+
+% SWISH special case
+:- if((current_prolog_flag(dialect, swi), current_module(swish))).
+:- use_module(library(pengines),[pengine_self/1]).
+lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
+action(X) :- pengine_self(M), catch(M:action(X),_,fail).
+:- endif.
+:- if((current_prolog_flag(dialect, swi), \+ current_module(swish) )).
+:- use_module('../Wei-engine/db.P',[
+	lps_test_result_item/3, action/1
+	]).
+:- endif.
+
 
 :- if(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(http/json)).
-:- use_module('../Wei-engine/db.P',[
-	lps_test_result_item/3
-	]).
 :- use_module('../Wei-engine/interpreter.P',[
 	go/3, my_term_to_atom/2
 	]).
@@ -108,9 +117,9 @@ gov(File,Options) :- gov(File,Options,[]).
 
 gov(File,Options,Results) :- go(File,[make_test|Options],Results), visual(File,_JSON).
 
-gojson(File,JSON) :- gojson(File,[],[],JSON).
-
-gojson(File,Options,Results,JSON) :- go(File,[silent,make_test|Options],Results), visual(File,JSON).
+% for SWISH:
+gojson(JSON) :- gojson(_File,[],[],JSON).
+gojson(File,Options,Results,JSON) :- go(File,[silent,make_test,swish|Options],Results), visual(File,JSON).
 
 
 % visual(TestResultsFile,timeline(JSON))  This MUST be called after go(File,[...make_test,...],...)
@@ -129,7 +138,7 @@ visual(File,timeline(JSON)) :-
 		lps_test_result_item('Observations:',T2,X), T1 is T2-1, G=observation
 		;
 		lps_test_result_item('Selected actions:',TT2,happens(XX,TT1,TT2)), 
-		(db:action(XX)->G=action;G=event),
+		(action(XX)->G=action;G=event),
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
 		lps_test_result_item('Database state:',T1,X), T2 is T1+1, functor(X,F,N), G=F/N % fluent
