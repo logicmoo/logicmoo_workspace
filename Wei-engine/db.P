@@ -70,8 +70,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	lps_test_result_item/3,
 	lps_test_result/3,
 	lps_failed_test/2,
-	lps_source_position/3,
-	lps_engine_directory/1,
 	my_load_dyn/2
 ]).
 
@@ -106,27 +104,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic lps_test_result/3.
 :- dynamic lps_failed_test/2.
 :- dynamic lps_test_options/1.
-% lps_source_position(Term,FileWithExtension,Position); see check_syntax/1 in interpreter
-:- dynamic lps_source_position/3.
-% This fact will contain this file's directory; its presence also denotes "LPS running"
-:- dynamic lps_engine_directory/1.
 
 :- if(current_prolog_flag(dialect, xsb)).
 
-:- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
-:- lps_engine_directory(D), string:concat_atom([D,'/interpreter.P'],I), ensure_loaded(I).
 my_load_dyn(F,_) :- load_dyn(F).
 
 :- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
 
-:- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 % TODO: somehow runing tests a second time still originates "Clauses of interpreter:terminated/3 , etc. are not together..."
 % It may be necessary to inject these declarations in the Wei syntax file...
 :- discontiguous( ((initiated) /3, (terminated)/3, l_events/2, reactive_rule/3, reactive_rule/2, l_int/2, l_timeless/2,
 	action/1, fluent/1, event/1, d_pre/1, happens/3 )).
-:- lps_engine_directory(D), atomic_list_concat([D,'/interpreter.P'],I), ensure_loaded(I).
 
 my_load_dyn(F,WithWarnings) :- 
 	(style_check('?'(singleton))->Old=true;Old=false),

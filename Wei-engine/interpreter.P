@@ -35,13 +35,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 %%% DO NOT load this file first: you should start LPS by loading db.P instead, which loads this file automatically.
 
-%%% XSB specific section:
-:- if(current_prolog_flag(dialect, xsb)).
-
 :- module(interpreter, [
 	go/1, go/2, go/3, go_lps/1, go_lps/2,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
-	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2]).
+	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2,
+	lps_engine_directory/1]).
+
+% This fact will contain this file's directory; its presence also denotes "LPS running"
+:- dynamic lps_engine_directory/1.
+
+%%% XSB specific section:
+:- if(current_prolog_flag(dialect, xsb)).
+
+:- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
+:- lps_engine_directory(D), string:concat_atom([D,'/db.P'],DB), ensure_loaded(DB).
 
 :- use_module(db,[
 	action/1, current_time/1, d_pre/1 ,event/1,
@@ -50,9 +57,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	steps/1, succ_t/2, (terminated)/3, used/1,
 	current_goal/1, depth/1, tried/3, failed/3, option/1, lps_updating_current_state/0,
 	expanded_consequent/2, initial_state/1,
-	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, lps_source_position/3,
+	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, 
 	lps_failed_test/2,
-	lps_engine_directory/1,
 	lps_goal_id_counter/1,
 	my_load_dyn/2]).
 
@@ -97,13 +103,15 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
 %%% end of XSB specific section; now for SWI:
 
-:- if(current_prolog_flag(dialect, swi)).
 
-:- module(interpreter, [
-	go/1, go/2, go/3, go_lps/1, go_lps/2,
-	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
-	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2
-	]).
+% First a SWISH specificity - define where is our engine database state
+:- if((current_prolog_flag(dialect, swi), current_module(swish))).
+
+
+:- endif.
+
+
+:- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
 
 :- use_module('db.P',[
 	action/1, current_time/1, d_pre/1 ,event/1,
@@ -112,18 +120,19 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 	steps/1, succ_t/2, (terminated)/3, used/1,
 	current_goal/1, depth/1, tried/3, failed/3, option/1, lps_updating_current_state/0,
 	expanded_consequent/2, initial_state/1,
-	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, lps_source_position/3,
+	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, 
 	lps_failed_test/2,
-	lps_engine_directory/1,
 	lps_goal_id_counter/1,
 	my_load_dyn/2]).
 
-:- op(900,fy,not).
-
-% Make sure SWI asserts into the db module, namely for swish's sake
 uassert(X) :- assert(db:X). 
 uasserta(X) :- asserta(db:X). 
 uassertz(X) :- assertz(db:X).
+
+:- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
+
+:- op(900,fy,not).
+
 
 callprolog(G) :- predicate_property(G,built_in), !, G.
 callprolog(G) :- call(db:G).
@@ -162,7 +171,6 @@ cputime(T) :- T is cputime.
 
 %%% end of SWI and Prolog engine-specific code
 %%% From here on, generic Prolog code
-
 
 my_load_dyn(F) :- my_load_dyn(F,false).
 
@@ -1591,7 +1599,7 @@ satisfy(=<(X,Y)) :-
 
 % check_syntax(+File,-Notices) Returns a list of notice(Type,Message,Position)
 %  Type is 'error' or 'warning', Position is some term denoting a source file location
-%  Position will be 'unknown'... unless our environment provides a definition for lps_source_position/2
+%  Position will be 'unknown'... unless our environment provides a definition for lps_source_position/3
 %  Predicates called here typically have as second argument a notices list with a single
 %  element... or they simply fail
 check_syntax(F,Notices) :-
@@ -1676,7 +1684,7 @@ check_syntax(F,Notices) :-
 buildError(X,M,subterm(X,MM)) :- concat_terms([X,M],MM).
 
 % May call an external predicate hook to find the position
-source_position(Term,F,Position) :- lps_source_position(Term,F,Position), !.
+source_position(Term,F,Position) :- catch(lps_source_position(Term,F,Position),_,fail), !.
 source_position(_,_,unknown).
 	
 % fails if errors occur:
