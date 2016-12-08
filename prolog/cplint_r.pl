@@ -11,7 +11,7 @@
  * details.
  *
  * You should have received a copy of the Artistic License 2.0 along the source 
- * as a COPYING file. If not, obtain it from 
+ * as a LICENSE file. If not, obtain it from 
  * http://www.perlfoundation.org/artistic_license_2_0.
  */
 
@@ -23,6 +23,10 @@
             density_r/4,
             densities_r/3
           ]).
+/* Reexport library(mcintyre) and library(pita)
+ * once I figure out how to do it.
+ */
+
 :-meta_predicate mc_sample_bar_r(:,+).
 
 /* Dependencies */

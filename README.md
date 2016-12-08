@@ -13,7 +13,7 @@ and it must be placed in the `lib` directory.
 
 ## Full Documentation
 
-https://frnmst.github.io/cplint-r
+https://frnmst.github.io/cplint_r
 
 ## License
 

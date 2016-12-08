@@ -1,0 +1,218 @@
+\input texinfo
+
+@settitle Cplint-R Manual
+@include my-bib-macros.texi
+@mybibuselist{References}
+@paragraphindent none
+
+@c DOCUMENT LICENSE FOLLOWS.
+@copying
+Copyright @copyright{} 2016 Franco Masotti @email{franco.masotti@@student.unife.it}
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+@end copying
+
+@titlepage
+@title Cplint-R Documentation
+@author Franco Masotti
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c Output the table of the contents at the beginning.
+@contents
+
+@ifnottex
+@node Top
+@top SWISH Installer
+
+This manual is for Cplint-R.
+
+@menu
+* Description::     A brief description of what this is all about
+* Installation::    Installation procedures on various systems
+* Protocol::        Formal descriprion of the protocol
+* Thanks::          People and communities
+* @mybibnode{}::    References to the technologies used
+@end menu
+@end ifnottex
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Description
+@chapter About
+@section About
+The purpose of this library is to provide an interface between
+the @footnote{@mybibcite{Cplint}} suite and @footnote{@mybibcite{R}}
+to handle graphs made with the @footnote{@mybibcite{ggplot2}} package.
+
+This means that the currently available @footnote{@mybibcite{c3js}}
+graphing functions are also available for R.
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Installation
+@chapter Installation
+@section test
+Cplint-R (will be) is provided as part of the
+@footnote{@mybibcite{Cplint on SWISH}} package.
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Protocol
+@chapter Protocol
+@section Interface
+The following is a list of exported predicates available
+for the library users'.
+
+Please refer to the --cplint help manual-- for more information.
+
+-- Only a few of them are currently inplemented and the list lack some whcih 
+have not been included in the cplint-help documentation. These will be added.
+
+TODO TOCHECK
+
+@verbatim
+prob_bar_r(:Query:atom,-Probability:dict)
+@end verbatim
+
+@verbatim
+bdd_dot_string_r(:Query:atom,-DotString:string,-LV:list)
+@end verbatim
+
+@verbatim
+mc_prob_bar_r(:Query:atom,-Probability:dict)
+@end verbatim
+
+@verbatim
+mc_sample_bar_r(:Query:atom,+Samples:int)
+@end verbatim
+
+@verbatim
+mc_sample_arg_bar_r(:Query:atom,+Samples:int,?Arg:var)
+@end verbatim
+
+@verbatim
+mc_sample_arg_first_bar_r(:Query:atom,+Samples:int,?Arg:var)
+@end verbatim
+
+@verbatim
+mc_rejection_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,?Arg:var)
+@end verbatim
+
+@verbatim
+mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Mix:int,+Lag:int,?Arg:var)
+@end verbatim
+
+@verbatim
+histogram_r(+List:list,+NBins:int)
+@end verbatim
+
+@verbatim
+density_r(+List:list,+NBins:int,+Min:float,+Max:float)
+@end verbatim
+
+@verbatim
+densities_r(+PriorList:list,+PostList:list,+NBins:int)
+@end verbatim
+
+@section Internals
+Important predicates in this library follow a common structure to avoid 
+confusion and promote standardization.
+
+@subsection Interface predicates
+@verbatim
+<cplint_graphing_predicate>_r(<input>):-
+    load_r_libraries,
+    <operations on the input>,
+    geom_<smt>(<new input, possibly lists>),
+    finalize_r_graph.
+@end verbatim
+
+@subsection Plotting predicates
+Predicates directly involving plotting all start with @code{geom_} as prefix.
+
+These predicates work with lists wich are then transformed into R data frames, 
+and, as a final instruction, a corresponding plot is generated.
+
+You can visualize the structure with te following pseudocode:
+@verbatim
+geom_<smt>(<Lists or other input>) :-
+    <handle lists>,
+    <create a new R data frame with the lists data>,
+    <rename data frame colnames to avoid default ones>,
+    <ggplot within R>.
+@end verbatim
+
+@subsubsection List handling
+@verbatim
+r_row(X,Y,r(X,Y)).
+
+get_set_from_list(L,R) :-
+    maplist(key,L,X),
+    maplist(y,L,Y),
+    maplist(r_row,X,Y,R).
+@end verbatim
+
+@subsubsection Main data frame creation
+@verbatim
+r_data_frame_from_rows(df[<#>], R),
+@end verbatim
+
+with @code{#} starting from 0...
+In case it is the last data frame then its name
+will simply be @code{df}...
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Thanks
+@chapter Thanks
+bla
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node @mybibnode{}
+@chapter References
+
+Some quotations reported here are taken directly from the respective web sites.
+@*
+
+@itemize @bullet
+
+@mybibitem{Cplint} "A suite of programs for reasoning with probabilistic
+logic programs". See @uref{https://github.com/friguzzi/cplint}
+@*
+
+@mybibitem{R} d
+@*
+
+@mybibitem{ggplot2} d
+@*
+
+@mybibitem{c3js} d
+@*
+
+@mybibitem{Cplint on SWISH} d
+@*
+
+@end itemize
+
+@bye
