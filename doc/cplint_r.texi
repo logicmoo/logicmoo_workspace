@@ -77,7 +77,7 @@ Cplint-R (will be) is provided as part of the
 The following is a list of exported predicates available
 for the library users'.
 
-Please refer to the --cplint help manual-- for more information.
+Please refer to the Cplint help manual for more information.
 
 -- Only a few of them are currently inplemented and the list lack some whcih 
 have not been included in the cplint-help documentation. These will be added.
@@ -132,6 +132,16 @@ densities_r(+PriorList:list,+PostList:list,+NBins:int)
 Important predicates in this library follow a common structure to avoid 
 confusion and promote standardization.
 
+Interface predicates are involved in the interaction between input data from a 
+program and the plot of that same data. These predicates are usable from the 
+programs.
+
+As the name suggests, plotting predicates are only involved in plotting the 
+data.
+
+Finally there are other functions which handle the lists and other types of 
+data.
+
 @subsection Interface predicates
 @verbatim
 <cplint_graphing_predicate>_r(<input>):-
@@ -147,7 +157,7 @@ Predicates directly involving plotting all start with @code{geom_} as prefix.
 These predicates work with lists wich are then transformed into R data frames, 
 and, as a final instruction, a corresponding plot is generated.
 
-You can visualize the structure with te following pseudocode:
+You can visualize the structure with the following pseudocode:
 @verbatim
 geom_<smt>(<Lists or other input>) :-
     <handle lists>,
@@ -156,7 +166,11 @@ geom_<smt>(<Lists or other input>) :-
     <ggplot within R>.
 @end verbatim
 
-@subsubsection List handling
+@subsection List handling
+The following predicates are used to transform a single list
+containing one distribution (x and y) into a list
+like @code{[r(X1,Y1), r(X2,Y2), ... , r(Xn,Yn)].}
+
 @verbatim
 r_row(X,Y,r(X,Y)).
 
@@ -166,9 +180,22 @@ get_set_from_list(L,R) :-
     maplist(r_row,X,Y,R).
 @end verbatim
 
-@subsubsection Main data frame creation
+This means that @code{R} will contain an X-Y relationship
+useful to be passed to a data frame.
+
+In case there are multiple distribution we simply have to call
+@code{get_set_from_list/2} the appropriate number of times,
+using @code{R[<#>]} ...
+
+@subsection Main data frame creation
+As descibed before, a data frame is useful to pass 
+structured information between Prolog and R.
+
+In Cplint-R in particular, we use @code{r_data_frame_from_rows/2} provided by
+the Rserve Client@footnote{@mybibcite{Rserve Client}} library, in the following
+manner:
 @verbatim
-r_data_frame_from_rows(df[<#>], R),
+r_data_frame_from_rows(df[<#>], R[<#>]),
 @end verbatim
 
 with @code{#} starting from 0...
@@ -211,6 +238,9 @@ logic programs". See @uref{https://github.com/friguzzi/cplint}
 @*
 
 @mybibitem{Cplint on SWISH} d
+@*
+
+@mybibitem{Rserve client} d
 @*
 
 @end itemize
