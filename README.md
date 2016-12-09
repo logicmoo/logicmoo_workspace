@@ -1,6 +1,6 @@
 # cplint-r
 
-R plotting predicates for cplint
+R plotting predicates for Cplint on SWISH based on ggplot2
 
 ## More
 
