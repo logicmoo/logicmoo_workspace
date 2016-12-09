@@ -22,7 +22,7 @@ default: gendocs
 
 clean:
 	@echo "Removing object files..."
-	@rm -rfv *.pdf *.toc *.aux *.log *.cp *.cps *.info manual
+	@rm -rfv *.pdf *.toc *.aux *.log *.cp *.cps *.info *.fn* *.tp* manual
 	@echo "Object files removed."
 
 pdf-clean:

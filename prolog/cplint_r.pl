@@ -119,7 +119,7 @@ geom_sample_bar(PTrue,PFalse) :-
  * a dict for rendering with c3 as a bar chart with
  * a bar for the number of successes and a bar for the number
  * of failures.
- * If Query is not ground, it considers it as an existential query
+ * If Query is not ground, it considers it as an existential query.
  */
 mc_sample_bar_r(M:Goal,S):-
     load_r_libraries,
