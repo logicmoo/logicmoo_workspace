@@ -62,7 +62,7 @@ mapnlist(Goal, I, List1, List2, List3) :-
 
 mapnlist_([], [], [], _, _).
 mapnlist_([Elem1|Tail1], [Elem2|Tail2], [Elem3|Tail3], I1, Goal) :-
-	call(Goal, Elem1, Elem2, Elem3),
+	call(Goal, I1, Elem1, Elem2, Elem3),
 	succ(I1, I),
 	mapnlist_(Tail1, Tail2, Tail3, I, Goal).
 
