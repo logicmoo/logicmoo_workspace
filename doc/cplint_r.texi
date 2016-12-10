@@ -27,7 +27,7 @@ notice and this notice are preserved.
 
 @ifnottex
 @node Top
-@top SWISH Installer
+@top Cplint-R
 
 This manual is for Cplint-R.
 
@@ -57,6 +57,10 @@ graphing functions are also available for R.
 
 @section Terminology
 Any code between @code{<} @code{>} represents pseudocode.
+
+The symbol @code{#} represents an unsigned integer.
+
+Oprional parameters are encapsuled between @code{[} @code{]}.
 
 @c ----
 @c ----
@@ -128,7 +132,7 @@ for the library users'.
 Please refer to the Cplint help manual for more information.
 
 --
-Only a few of them are currently implemented and the list lack some whcih 
+Only a few of them are currently implemented and the list lack some which
 have not been included in the cplint-help documentation. These will be added.
 --
 
@@ -137,14 +141,16 @@ TODO TOCHECK
 @deffn{Pita} prob_bar_r@
 (:@var{Query}:atom,@
 -@var{Probability}:dict)
-Draw a true-false probability bar ??normalized to 1??
+The predicate computes the probability of @var{Query}
+--and returns it as a dict for rendering with R -- as a bar chart with
+a bar for the probability of @var{Query} true and a bar for the probability of
+@var{Query} false.
 @end deffn
 
 @deffn{Pita} bdd_dot_string_r@
 (:@var{Query}:atom,@
 -@var{DotString}:string,@
 -@var{LV}:list)
-...
 @end deffn
 
 @deffn{Mcintyre} mc_prob_bar_r@
@@ -237,6 +243,17 @@ Finally there are other functions which handle the lists and other types of
 data.
 
 @subsection Interface predicates
+All interface predicates have a similar structure. Their names
+end with @code{_r} in order to distinguish them from the original cplint 
+predicates.
+
+First and last operations are always @code{load_r_libraries} and 
+@code{finalize_r_graph} respectively.
+
+Plotting is done right before the last operation with one of the @code{geom_}
+predicates.
+
+A skeleton of the structure follows.
 @verbatim
 <cplint_graphing_predicate>_r(<input>):-
     load_r_libraries,
@@ -255,9 +272,9 @@ You can visualize the structure with the following pseudocode:
 @verbatim
 geom_<smt>(<Lists or other input>) :-
     <handle lists>,
-    <create a new R data frame with the lists data>,
-    <rename data frame colnames to avoid default ones>,
-    <ggplot within R>.
+    <create one or more R data frame with the lists data>,
+    <rename data frame colnames to avoid using default ones>,
+    <- ggplot <smt>
 @end verbatim
 
 @subsection List handling
@@ -275,11 +292,11 @@ get_set_from_list(L,R) :-
 @end verbatim
 
 This means that @code{R} will contain an X-Y relationship
-useful to be passed to a data frame.
+which is then passed to an R data frame.
 
 In case there are multiple distribution we simply have to call
 @code{get_set_from_list/2} the appropriate number of times,
-using @code{R[<#>]} ...
+like: @code{get_set_from_list(<smt>,R#)}.
 
 @subsection Main data frame creation
 As descibed before, a data frame is useful to pass 
@@ -289,14 +306,17 @@ In Cplint-R in particular, we use @code{r_data_frame_from_rows/2} provided by
 the Rserve Client@footnote{@mybibcite{Rserve Client}} library, in the following
 manner:
 @verbatim
-r_data_frame_from_rows(df[<#>], R[<#>]),
+r_data_frame_from_rows(df[#], R[#])
 @end verbatim
 
-with @code{#} starting from 0...
-In case it is the last data frame then its name
-will simply be @code{df}...
+For each distribution the optional number is incremented by one.
 
-@subsection Other predicates.
+In case it is the last (or only) data frame then its name
+will simply be @code{df}.
+
+@subsection Helpers.
+What follows are some trivial predicates indicated as helpers.
+
 @verbatim
 bin_width(Min,Max,NBins,Width) :-
   D is Max-Min,
