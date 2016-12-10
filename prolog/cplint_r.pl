@@ -18,16 +18,24 @@
 /* Interface */
 
 :- module(cplint_r,
-          [ mc_sample_bar_r/2,
+          [ prob_bar_r/1,
+            mc_prob_bar_r/1,
+            mc_sample_bar_r/2,
+            mc_sample_arg_bar_r/3,
+            mc_sample_arg_first_bar_r/3,
+            mc_rejection_sample_arg_bar_r/4,
+            mc_mh_sample_arg_bar_r/5,
             histogram_r/2,
             density_r/4,
             densities_r/3
           ]).
-/* Reexport library(mcintyre) and library(pita)
+
+
+/* 
+ * Reexport library(mcintyre) and library(pita)
  * once I figure out how to do it.
  */
 
-:-meta_predicate mc_sample_bar_r(:,+).
 
 /* Dependencies */
 
@@ -38,9 +46,26 @@
 :- use_module(library(pita)).
 :- use_module(library(mcintyre)).
 
+
+/* Meta predicate definitions. */
+
+:-meta_predicate prob_bar_r(:).
+:-meta_predicate mc_prob_bar_r(:).
+:-meta_predicate mc_sample_bar_r(:,+).
+:-meta_predicate mc_sample_arg_bar_r(:,+,+).
+:-meta_predicate mc_sample_arg_first_bar_r(:,+,+).
+:-meta_predicate mc_rejection_sample_arg_bar_r(:,:,+,+).
+:-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+).
+
 /*********** 
  * Helpers *
  ***********/
+
+/* Debug purposes
+ *
+ *  use_rendering(table).
+ *  <- df. % name of a data frame.
+ */
 
 bin_width(Min,Max,NBins,Width) :-
   D is Max-Min,
@@ -48,12 +73,6 @@ bin_width(Min,Max,NBins,Width) :-
 
 load_r_libraries :-
     <- library("ggplot2").
-
-    /* Debug purposes */
-    /*
-        use_rendering(table).
-        <- df. % name of a data frame.
-    */
 
 finalize_r_graph :-
 	r_download.
@@ -67,19 +86,87 @@ get_set_from_list(L,R) :-
     maplist(r_row,X,Y,R).
 
 
-/***************************************** 
- * Plot predicates ***********************
- *****************************************
- * cd swish/examples/inference ***********
- * grep -l "prob_bar(" *.pl | less *********
- * grep -l "mc_sample_bar(" *.pl | less *********
- * grep -l "histogram(" *.pl | less *********
- * grep -l "density(" *.pl | less ***********
- * grep -l "densities(" *.pl | less *********
- *****************************************/
+/*******************************************
+ * Plot predicates *************************
+ *******************************************
+ * cd swish/examples/inference *************
+ * grep -l "<predicate_name>(" *.pl | less *
+ *******************************************/
+
+/* pita */
+
+
+/* Scale between 0 and 1 with 10 ticks (0.1,0.2,...,1) */
+geom_prob_bar(PTrue,PFalse) :-
+    L=[PTrue-1,PFalse-1],
+    get_set_from_list(L,R),
+    r_data_frame_from_rows(df1, R),
+    colnames(df1) <- c("prob", "tf"),
+    df <- data.frame(
+        ids=factor(
+            c("T","F")
+        ),
+        probabilities=c(df1$prob)
+    ),
+    <- ggplot(
+        data=df,
+        aes(
+            x=ids,
+            y=probabilities,
+            fill=ids
+        )
+    ) + geom_bar(
+        stat="identity",
+        width=0.05,
+        position=position_dodge()
+    )
+    + scale_y_continuous(
+        breaks=seq(0,1,0.1)
+    )
+    + coord_flip(ylim=c(0,1)).
+    
+
+/**
+ * prob_bar_r(:Query:atom) is nondet
+ *
+ * The predicate computes and plots the probability of Query
+ * as a bar chart with a bar for the probability of Query true and
+ * a bar for the probability of Query false.
+ * If Query is not ground, it returns in backtracking all ground
+ * instantiations of
+ * Query together with their probabilities
+ *
+ * PF is 1.0-PT i.e:
+ * Probability False = 1 - Probability True. 
+ */
+prob_bar_r(M:Goal) :-
+    load_r_libraries,
+    s(M:Goal,PT),
+    PF is 1.0-PT,
+    geom_prob_bar(PT,PF),
+    finalize_r_graph.
+
+
+geom_mc_prob_bar(PTrue,PFalse) :-
+    writeln("TODO").    
+
+/**
+ * mc_prob_bar(:Query:atom) is det
+ *
+ * The predicate computes the probability of the ground query Query
+ * and returns it as a dict for rendering with c3 as a bar chart with
+ * a bar for the probability of Query true and a bar for the probability of
+ * Query false.
+ * If Query is not ground, it considers it as an existential query
+ * and returns the probability that there is a satisfying assignment to
+ * the query.
+ */
+mc_prob_bar_r(M:Goal):-
+    writeln("TODO").
+
+
 
 /* mcintyre */
-
 
 geom_sample_bar(PTrue,PFalse) :-
     L=[PTrue-1,PFalse-1],
@@ -126,6 +213,18 @@ mc_sample_bar_r(M:Goal,S):-
     mc_sample(M:Goal,S,T,F,_P),
     geom_sample_bar(T,F),
     finalize_r_graph.
+
+
+mc_sample_arg_bar_r(A,B,C).
+
+
+mc_sample_arg_first_bar_r(A,B,C).
+
+
+mc_rejection_sample_arg_bar_r(A,B,C,D).
+
+
+mc_mh_sample_arg_bar_r(A,B,C,D,E).
 
 
 /*
@@ -269,55 +368,4 @@ densities_r(Pri0,Post0,NBins) :-
     bin(NBins,Po,Min,BinWidth,LPo),
     geom_densities(LPr,LPo),
     finalize_r_graph.
-
-
-
-
-
-
-
-
-
-/* pita */
-
-/* Build a list composed of two elements so that the predicate is consistant 
- * with all the others.
- */
-/*
-geom_prob_bar(PTrue,PFalse) :-
-    L=[PTrue-1,PFalse-1],
-    get_set_from_list(L,R),
-    r_data_frame_from_rows(df1, R),
-    colnames(df1) <- c("prob", "tf"),
-    df <- data.frame(ids=factor(c("t","f"),levels=c("t","f")),probabilities=c(df1$prob)),
-    <- ggplot(data=df,aes(x=ids,y=probabilities)) + geom_bar(stat="identity").
-*/
-
-/**
- * prob_bar(:Query:atom) is nondet
- *
- * The predicate computes the probability of Query
- * and returns it as a dict for rendering with r as a bar chart with
- * a bar for the probability of Query true and a bar for the probability of
- * Query false.
- *
- * ----
- *
- * If Query is not ground, it returns in backtracking all ground
- * instantiations of
- * Query together with their probabilities
- */
-prob_bar_r(M:Goal) :-
-    load_r_libraries.
-/*
-    s(M:Goal,P),
-    PF is 1.0-P,
-    geom_prob_bar(P,PF),
-    finalize_r_graph.
-*/
-/*
-    PF is 1.0-P == \
-    Probability False = 1 - Probability True. 
- */
-
 

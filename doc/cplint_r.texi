@@ -34,6 +34,7 @@ This manual is for Cplint-R.
 @menu
 * Description::     A brief description of what this is all about
 * Installation::    Installation procedures on various systems
+* Examples::        Trivial examples to explain how to use the library
 * Protocol::        Formal descriprion of the protocol
 * Thanks::          People and communities
 * @mybibnode{}::    References to the technologies used
@@ -72,6 +73,10 @@ Oprional parameters are encapsuled between @code{[} @code{]}.
 Cplint-R (will be) is provided as part of the
 @footnote{@mybibcite{Cplint on SWISH}} package.
 
+TODO
+
+@code{pack_install('cplint_r').}
+
 @section Dependencies
 Cplint-R has both Prolog and R dependencies:
 
@@ -91,6 +96,16 @@ Rserve Client
 @itemize @bullet
 ggplot2
 @end itemize
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Examples
+@chapter Examples
+
+TODO
 
 @c ----
 @c ----
@@ -139,12 +154,14 @@ have not been included in the cplint-help documentation. These will be added.
 TODO TOCHECK
 
 @deffn{Pita} prob_bar_r@
-(:@var{Query}:atom,@
--@var{Probability}:dict)
-The predicate computes the probability of @var{Query}
---and returns it as a dict for rendering with R -- as a bar chart with
-a bar for the probability of @var{Query} true and a bar for the probability of
-@var{Query} false.
+(:@var{Query}:atom)
+The predicate computes and plots the probability of @var{Query}
+as a bar chart with a bar for the probability of @var{Query} true and
+a bar for the probability of @var{Query} false.
+--
+If Query is not ground, it returns in backtracking all ground
+instantiations of Query together with their probabilities.
+--
 @end deffn
 
 @deffn{Pita} bdd_dot_string_r@
