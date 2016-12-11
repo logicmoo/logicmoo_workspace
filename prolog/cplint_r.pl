@@ -117,14 +117,13 @@ geom_prob_bar(PTrue,PFalse) :-
         )
     ) + geom_bar(
         stat="identity",
-        width=0.05,
-        position=position_dodge()
+        width=0.5
     )
     + scale_y_continuous(
         breaks=seq(0,1,0.1)
     )
-    + coord_flip(ylim=c(0,1)).
-    
+    + coord_flip(ylim=c(0,1))
+    + theme(aspect.ratio=1/2).
 
 /**
  * prob_bar_r(:Query:atom) is nondet
@@ -188,11 +187,10 @@ geom_sample_bar(PTrue,PFalse) :-
         )
     ) + geom_bar(
         stat="identity",
-        width=0.05,
-        position=position_dodge()
+        width=0.5
     )
-    + coord_flip().
-
+    + coord_flip()
+    + theme(aspect.ratio=1/2).
 
 /*
     df <- data.frame(ids=factor(c("T","F"),levels=c("T","F")),probabilities=c(df1$prob)),
