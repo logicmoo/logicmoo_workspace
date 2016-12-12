@@ -33,6 +33,10 @@
 	   subterm_location_eq/3
 	  ]).
 
+location_subpos(PPos, N, SPos) :-
+    nonvar(PPos),
+    PPos = parentheses_term_position(_, _, Pos), !,
+    location_subpos(Pos, N, SPos).
 location_subpos(term_position(_, _, _, _, PosL), N, Pos) :-
     nth1(N, PosL, Pos).
 location_subpos(list_position(From, To, PosL, Tail), N, Pos) :-
