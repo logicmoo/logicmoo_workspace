@@ -62,6 +62,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	lps_goal_id_counter/1,
 	my_load_dyn/2]).
 
+:- use_module(usermod,[lps_source_position/3]). % support Prolog Studio error reporting
+
 % assert in usermod, if X imported from there... see SWI comment below
 uassert(X) :- assert(X). 
 uasserta(X) :- asserta(X). 
@@ -110,6 +112,8 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 % First a SWISH specificity - rather than use the db module, will use pengine's dynamic module
 
 :- use_module(library(pengines),[pengine_self/1]).
+
+% If performance becomes bad (due to nonindexed access inside the pengine_self predicate) we should pass M as arg
 
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 current_goal(X) :- pengine_self(M), M:current_goal(X).
