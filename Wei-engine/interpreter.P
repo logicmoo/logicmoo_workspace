@@ -53,7 +53,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- use_module(db,[
 	action/1, current_time/1, d_pre/1 ,event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
-	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	l_timeless/2, observe/2, reactive_rule/2, expanded_reactive_rule/2, reactive_rule/3, expanded_reactive_rule/3, state/1,
 	steps/1, succ_t/2, (terminated)/3, used/1,
 	current_goal/1, depth/1, tried/3, failed/3, option/1, lps_updating_current_state/0,
 	expanded_consequent/2, initial_state/1,
@@ -105,8 +105,6 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
 %%% end of XSB specific section; now for SWI:
 
-
-
 :- if((current_prolog_flag(dialect, swi), current_module(swish))).
 
 % First a SWISH specificity - rather than use the db module, will use pengine's dynamic module
@@ -116,7 +114,7 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 current_goal(X) :- pengine_self(M), M:current_goal(X).
 current_time(X) :- pengine_self(M), M:current_time(X).
-lps_updating_current_state :- pengine_self(M), M:lps_updating_current_state.
+lps_updating_current_state :- pengine_self(M), catch(M:lps_updating_current_state,_,fail).
 d_pre(X) :- pengine_self(M), catch(M:d_pre(X),_,fail).
 depth(X) :- pengine_self(M), catch(M:depth(X),_,fail).
 event(X) :- pengine_self(M), catch(M:event(X),_,fail).
@@ -133,9 +131,11 @@ observe(X,Y) :- pengine_self(M), catch(M:observe(X,Y),_,fail).
 % TODO: interference with SWI ???
 option(X) :- pengine_self(M), catch(M:option(X),_,fail).
 reactive_rule(X,Y) :- pengine_self(M), catch(M:reactive_rule(X,Y),_,fail).
+expanded_reactive_rule(X,Y) :-  pengine_self(M), catch(M:expanded_reactive_rule(X,Y),_,fail).
 reactive_rule(X,Y,Z) :- pengine_self(M), catch(M:reactive_rule(X,Y,Z),_,fail).
+expanded_reactive_rule(X,Y,Z) :-  pengine_self(M), catch(M:expanded_reactive_rule(X,Y,Z),_,fail).
 state(X) :- pengine_self(M), catch(M:state(X),_,fail).
-steps(X) :- pengine_self(M), catch(M:steps(X),_,fail).
+steps(X) :- pengine_self(M), M:steps(X).
 succ_t(X,Y) :- pengine_self(M), M:succ_t(X,Y).
 terminated(X,Y,Z) :- pengine_self(M), catch(M:terminated(X,Y,Z),_,fail).
 tried(X,Y,Z) :- pengine_self(M), catch(M:tried(X,Y,Z),_,fail).
@@ -151,17 +151,19 @@ my_load_dyn(X,Y) :- pengine_self(M), M:my_load_dyn(X,Y).
 uassert(X) :- pengine_self(M), catch(assert(M:X),_,true). 
 uasserta(X) :- pengine_self(M), catch(asserta(M:X),_,true). 
 uassertz(X) :- pengine_self(M), catch(assertz(M:X),_,true).
-uretractall(X) :- pengine_self(M), catch(retractall(M:X),_,true).
-uretract(X) :- pengine_self(M), catch(retract(M:X),_,fail).
+% uretractall(X) :- pengine_self(M), catch(retractall(M:X),_,true).
+uretractall(X) :- pengine_self(M), retractall(M:X).
+uretract(X) :- pengine_self(M), retract(M:X).
+
 :- endif.
 
 
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
-
+% Now support for vanilla SWI Prolog
 :- use_module('db.P',[
 	action/1, current_time/1, d_pre/1 ,event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
-	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	l_timeless/2, observe/2, reactive_rule/2, expanded_reactive_rule/2, reactive_rule/3, expanded_reactive_rule/3, state/1,
 	steps/1, succ_t/2, (terminated)/3, used/1,
 	current_goal/1, depth/1, tried/3, failed/3, option/1, lps_updating_current_state/0,
 	expanded_consequent/2, initial_state/1,
@@ -179,7 +181,7 @@ uretract(X) :- retract(db:X).
 :- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
-% and now the generic SWI support
+% ...and finally the generic SWI support
 
 :- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 
@@ -347,7 +349,7 @@ reset_goal_ids :-
 %   consequent is added to Gi.
 %
 process(Ri, NextRi, Gi, NextGi) :-
-    ( setof([[HA|TA], C], (reactive_rule([HA|TA], C), query(HA)), Rs)
+    ( setof([[HA|TA], C], (expanded_reactive_rule([HA|TA], C), query(HA)), Rs)
     ; Rs = []
     ),
     %findall([A,C], reactive_rule(A,C), Rs),
@@ -373,7 +375,7 @@ do_process(Mode,[[A|Rest]|Ris], TheNewRi, Gi, TheNewGi) :-
     ( % setof([NA|Rest], process2_(A, NA), Rs) %XSB crashing because of some vars in Rest
     	% TODO: probably revert this to setof after XSB bug fix, Miguel emailed TS May 24, 2016
     	findall([NA|Rest], process2_(A, NA), Rs)
-    ; Rs = []
+     % ; Rs = []
     ), 
     % make sure unsolvable literals remain in the resolvent:
     ( (select([NA, _],Rs,Rs2), variant(A,NA)) -> 
@@ -396,7 +398,7 @@ do_process2(Mode,[Rule|PRis],Ris,NewRis,Gi,NewGi) :-
 
 % Similar to process/4, but using reactive rules with priorities
 process_priority(Ri, NextRi, Gi, NextGi) :-
-    ( setof([[HA|TA], C, P], (reactive_rule([HA|TA], C, P), query(HA)), Rs)
+    ( setof([[HA|TA], C, P], (expanded_reactive_rule([HA|TA], C, P), query(HA)), Rs)
     ; Rs = []
     ),
     do_process(priority,Rs, NRs, [], NGs),
@@ -522,17 +524,21 @@ expand_reactive_rules() :-
         ),
         NewRRs
     ),
+    findall(
+        [A, C, EA, P],
+        (
+            reactive_rule(A, C, P),
+            expand_antecedent(A, [], EA)
+        ),
+        NewRRsP
+    ),
     forall(
         member([A, C, EA], NewRRs),
-        (
-            /*( reactive_rule(A, C) ->
-                uretract(reactive_rule(A, C))
-            ;
-                true
-            ), the following is safer: */
-            uretractall(reactive_rule(A, C)),
-            uassertz(reactive_rule(EA, C)) % TODO: should probably be a different "work" predicate
-        )
+        uassertz(expanded_reactive_rule(EA, C))
+    ),
+    forall(
+        member([A, C, EA, P], NewRRsP),
+        uassertz(expanded_reactive_rule(EA, C, P))
     ).
 
 expand_consequents() :-
@@ -1466,7 +1472,7 @@ find_deadline([_H|T], Res) :-
 reduce_step() :-
     steps(C),
     NC is C-1,
-    uretract(db:steps(C)),
+    uretract(steps(C)),
     uassertz(steps(NC)).
 
 % satisfy_all(+L) 
@@ -1758,7 +1764,7 @@ print_errors(File) :-
 
 % this may be called by environment tools; see check_syntax/2
 load_check_syntax(File,Notices) :-
-	cleanup,
+	cleanup_program,
 	% Let's assume Prolog syntactic errors are reported elsewhere:
 	catch(my_load_dyn(File),_E,true), 
 	check_syntax(File,Notices).
@@ -1850,7 +1856,7 @@ go(File, OptionsList, ResultFluents) :-
     (nonvar(File) -> true; 
     		( (option(make_test), \+ option(swish)) -> writeln(user_error, 'ERROR in options: make_test requires a File name'), fail 
     		; true)),
-    cleanup,
+    cleanup_program, cleanup_engine,
     init_test_file(File),
     % no longer needed: datime_setrand,
     (\+ option(swish) -> 
@@ -1867,8 +1873,8 @@ go(File, OptionsList, ResultFluents) :-
     	; true
     ),
     cputime(T0),
-    expand_reactive_rules,
-    ( option(breadth) ->
+    expand_reactive_rules,    
+   ( option(breadth) ->
         expand_consequents
     ;
         true
@@ -2203,36 +2209,24 @@ pick_highest_tier2(Lower, [goal(P, GoalId, G)|OtherGoals], [], [goal(P, GoalId, 
 % add rules to trigger "meta" actions which document the occurrence of composite events
 add_meta_reactive_rules :-
 	forall( l_events(E,_), 
-		uassert( reactive_rule([E],[happens(lps_meta(E),_T3,_)]) ) ),
+		uassert( expanded_reactive_rule([E],[happens(lps_meta(E),_T3,_)]) ) ),
 	uassert(action(lps_meta(_))).
 	
 % cleanup
 %	
-cleanup:- option(swish), !, reset_goal_ids.
-cleanup:- 
-	reset_goal_ids,
-    uretractall(action(_)),
+cleanup_engine :- 
+    reset_goal_ids,
+    uretractall(expanded_reactive_rule(_,_)),
+    uretractall(expanded_reactive_rule(_,_,_)),
     uretractall(current_goal(_)),
     uretractall(current_time(_)),
-    uretractall(d_pre(_)),
     uretractall(depth(_)),
-    uretractall(event(_)),
     uretractall(expanded_consequent(_,_)),
     uretractall(failed(_, _, _)),
-    uretractall(fluent(_)),
     uretractall(happens(_, _, _)),
-    uretractall(initial_state(_)),
-    uretractall(initiated(_, _, _)),
-    uretractall(l_events(_, _)),
-    uretractall(l_int(_, _)),
-    uretractall(l_timeless(_, _)),
-    uretractall(observe(_, _)),
-    uretractall(reactive_rule(_, _)),
-    uretractall(reactive_rule(_, _, _)),
     uretractall(state(_)),
     uretractall(db:steps(_)),
     uretractall(succ_t(_, _)),
-    uretractall(terminated(_, _, _)),
     uretractall(tried(_, _, _)),
     uretractall(used(_)),
     % uretractall(this_initiated(_)),
@@ -2241,6 +2235,22 @@ cleanup:-
     uretractall(lps_test_result_item(_,_,_)),
     uretractall(lps_test_options(_)).
 
+cleanup_program :- option(swish), !. % program is loaded into dynamic module
+cleanup_program :-
+    uretractall(action(_)),
+    uretractall(d_pre(_)),
+    uretractall(event(_)),
+    uretractall(fluent(_)),
+    uretractall(initial_state(_)),
+    uretractall(initiated(_, _, _)),
+    uretractall(l_events(_, _)),
+    uretractall(l_int(_, _)),
+    uretractall(l_timeless(_, _)),
+    uretractall(observe(_, _)),
+    uretractall(reactive_rule(_, _)),
+    uretractall(reactive_rule(_, _, _)),
+    uretractall(terminated(_, _, _)).
+ 	
 my_event(X) :- event(X).
 my_event(X) :- action(X).
     

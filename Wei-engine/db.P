@@ -59,7 +59,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	observe/2,
 	option/1,
 	reactive_rule/2,
+	expanded_reactive_rule/2,
 	reactive_rule/3,
+	expanded_reactive_rule/3,
 	state/1,
 	steps/1,
 	succ_t/2,
@@ -93,7 +95,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic observe/2.
 :- dynamic option/1.
 :- dynamic reactive_rule/2.
+:- dynamic expanded_reactive_rule/2.
 :- dynamic reactive_rule/3. % adds priority
+:- dynamic expanded_reactive_rule/3.
 :- dynamic state/1.
 :- dynamic steps/1.
 :- dynamic succ_t/2.

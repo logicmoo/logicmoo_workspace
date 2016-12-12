@@ -8,7 +8,7 @@
 
 /* Utilities for visualizing LPS executions; the XSB version depends on http://interprolog.com/interprolog-studio/ */
 
-:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/2, gojson/4]).
+:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
