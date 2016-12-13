@@ -1125,9 +1125,13 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
 	     ))
     ; true
     ),
-    format('    __rtcwarn(PL_call_predicate(__~w, PL_Q_NORMAL, ~w, ~w_args));~n', [CM, BN, BN]),
-    ( compound(Head) ->
-      forall(( arg(Idx, Head, Arg),
+    format(atom(CallPred), 'PL_call_predicate(__~w, PL_Q_NORMAL, ~w, ~w_args)', [CM, BN, BN]),
+    ( memberchk(returns_state(_), Glob)
+    ->format('    int __result = ~w;', [CallPred])
+    ; format('    __rtcwarn(~w);~n', [CallPred])
+    ),
+    ( compound(Head)
+    ->forall(( arg(Idx, Head, Arg),
 	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
 	       memberchk(Mode, [out, inout])
 	     ),
@@ -1142,7 +1146,10 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
 	       c_get_argument(Spec, InvM, CArg, PArg),
 	       write(';\n')
 	     )),
-      ( memberchk(returns(_, Arg), Glob)
+      ( ( memberchk(returns(_, Arg), Glob)
+	; memberchk(returns_state(_), Glob),
+	  Arg = '__result'
+	)
       ->format('    return ~w;~n;', [Arg])
       ; true
       )
