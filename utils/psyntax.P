@@ -177,7 +177,7 @@ lps2p(LPSPterm,Vars,Pterm) :- syntax2p(LPSPterm,Vars,lps2p,Pterm).
 
 % syntax2p(?LPSPterm,+Vars,+Translator,?Pterm) 
 % Vars is a (closed tail) list of some_functor(Name,Variable)
-% Translator: see syntax2p_file/4
+% Translator: lpsp2p ("papers syntax") or lps2p ("new syntax")
 % Either LPSPterm or Pterm must be bound; the other should be unbound
 % Probably needs to evolve to return error messages
 syntax2p(L,_,TT,PT) :- var(L), var(PT), !, fail.
