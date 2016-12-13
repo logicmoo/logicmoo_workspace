@@ -96,7 +96,9 @@ get_set_from_list(L,R) :-
 /* pita */
 
 
-/* Scale between 0 and 1 with 10 ticks (0.1,0.2,...,1) */
+/* Scale between 0 and 1 with 10 ticks (0.1,0.2,...,1)
+ * This represents a probability between 0 and 1.
+ */
 geom_prob_bar(PTrue,PFalse) :-
     L=[PTrue-1,PFalse-1],
     get_set_from_list(L,R),
@@ -146,28 +148,19 @@ prob_bar_r(M:Goal) :-
     finalize_r_graph.
 
 
-geom_mc_prob_bar(PTrue,PFalse) :-
-    writeln("TODO").    
+/* mcintyre */
+
 
 /**
  * mc_prob_bar(:Query:atom) is det
  *
- * The predicate computes the probability of the ground query Query
- * and returns it as a dict for rendering with c3 as a bar chart with
- * a bar for the probability of Query true and a bar for the probability of
- * Query false.
- * If Query is not ground, it considers it as an existential query
- * and returns the probability that there is a satisfying assignment to
- * the query.
+ * Same as prob_bar... explain this better.
  */
 mc_prob_bar_r(M:Goal):-
-    writeln("TODO").
+    prob_bar_r(M:Goal).
 
 
-
-/* mcintyre */
-
-geom_sample_bar(PTrue,PFalse) :-
+geom_mc_sample_bar(PTrue,PFalse) :-
     L=[PTrue-1,PFalse-1],
     get_set_from_list(L,R),
     r_data_frame_from_rows(df1, R),
@@ -203,17 +196,71 @@ geom_sample_bar(PTrue,PFalse) :-
  * The predicate samples Query a number of Samples times and returns
  * a dict for rendering with c3 as a bar chart with
  * a bar for the number of successes and a bar for the number
- * of failures.
+- * of failures.
  * If Query is not ground, it considers it as an existential query.
  */
 mc_sample_bar_r(M:Goal,S):-
     load_r_libraries,
     mc_sample(M:Goal,S,T,F,_P),
-    geom_sample_bar(T,F),
+    geom_mc_sample_bar(T,F),
     finalize_r_graph.
 
 
-mc_sample_arg_bar_r(A,B,C).
+/* Transform names column into a string column. 
+ *
+ * The use of max/1 instead of 'NA'/0
+ * is a hack (because NA does not work).
+ *
+ * Reorder by decreasing frequency.
+ */
+geom_mc_sample_arg_bar(L) :-
+    get_set_from_list(L,R),
+    r_data_frame_from_rows(df1, R),
+    colnames(df1) <- c("names", "prob"),
+    df <- data.frame(
+        ids=as.character(df1$names),
+        probabilities=c(df1$prob)
+    ),
+    <- ggplot(
+        data=df,
+        aes(
+            x=reorder(
+                ids,
+                probabilities
+            ),
+            y=probabilities
+        )
+    ) + geom_bar(
+        stat="identity",
+        width=0.5
+    )
+    + scale_y_continuous(
+        breaks=seq(
+            0,max(df$probabilities),1
+        )
+    )
+    + coord_flip(
+        ylim=c(0,max(df$probabilities))
+    ).
+
+/**
+ * mc_sample_arg_bar_r(:Query:atom,+Samples:int,?Arg:var) is det
+ *
+ * The predicate samples Query Samples times. Arg should be a variable
+ * in Query.
+ * The predicate returns in Chart a dict for rendering with c3 as a bar chart
+ * with a bar for each possible value of L,
+ * the list of values of Arg for which Query succeeds in
+ * a world sampled at random.
+ * The size of the bar is the number of samples
+ * returning that list of values.
+ */
+mc_sample_arg_bar_r(M:Goal,S,Arg):-
+    load_r_libraries,
+    mc_sample_arg(M:Goal,S,Arg,ValList0),
+    maplist(to_atom,ValList0,ValList),
+    geom_mc_sample_arg_bar(ValList),
+    finalize_r_graph.
 
 
 mc_sample_arg_first_bar_r(A,B,C).
