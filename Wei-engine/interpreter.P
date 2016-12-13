@@ -2229,7 +2229,7 @@ cleanup_engine :-
     uretractall(failed(_, _, _)),
     uretractall(happens(_, _, _)),
     uretractall(state(_)),
-    uretractall(db:steps(_)),
+    uretractall(steps(_)),
     uretractall(succ_t(_, _)),
     uretractall(tried(_, _, _)),
     uretractall(used(_)),
