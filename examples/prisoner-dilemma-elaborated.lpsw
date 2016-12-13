@@ -89,8 +89,8 @@ action(bear_witness(_)).
 action(update(total_years_in_jail(_I, _NewY))).
 
 
-l_timeless(other(o, i), []).
-l_timeless(other(i, o), []).
+other(o, i).
+other(i, o).
 l_timeless(lps_plus(N, Y, NewY), [NewY is N + Y]).
 
 

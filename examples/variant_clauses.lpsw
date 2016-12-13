@@ -17,3 +17,5 @@ action(a(_)).
 event(start).
 
 l_timeless(different(X,Y),[X\==Y]).
+
+maxTime(5).

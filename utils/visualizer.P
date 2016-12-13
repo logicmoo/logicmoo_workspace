@@ -126,6 +126,7 @@ gojson(File,Options,Results,JSON) :- go(File,[silent,make_test,swish|Options],Re
 % Uses test facts still in memory
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
+% works on facts asserted by either Wei (Stage = 'Observations', ...) or rak interpreter (Stage = fluent,event)
 visual(File,timeline(JSON)) :- 
 	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
 	% my_load_dyn(File), % we need the meta info about events
@@ -137,21 +138,21 @@ visual(File,timeline(JSON)) :-
 	findall(t(X,T1-T2,G), (
 		lps_test_result_item('Observations:',T2,X), T1 is T2-1, G=observation
 		;
-		lps_test_result_item('Selected actions:',TT2,happens(XX,TT1,TT2)), 
+		(lps_test_result_item('Selected actions:',TT2,happens(XX,TT1,TT2)) ; lps_test_result_item(events,TT2,XX), T1 is TT2-1), 
 		(action(XX)->G=action;G=event),
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
-		lps_test_result_item('Database state:',T1,X), T2 is T1+1, functor(X,F,N), G=F/N % fluent
+		(lps_test_result_item('Database state:',T1,X) ; lps_test_result_item(fluents,T1,X)), 
+		T2 is T1+1, functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
 	setof(G, T^X^member(t(X,T,G),Tuples), GroupIds),
-	
 	findall(FluentGroup,(
 		make_json_object([id:Gatom,content:Gsignature],FluentGroup),
 		member(F/N,GroupIds), 
 		my_term_to_atom(F/N,Gatom), functor(GG,F,N), my_term_to_atom(GG,Gsignature)
 	), FluentGroups),
-	make_json_object([id:observation,content:'Observations'],ObsGroup),
+	make_json_object([id:observation,content:'Observations'],ObsGroup), % TODO: get rid of empty Observations 
 	( member(t(_,_,event),Tuples) -> 
 		make_json_object([id:event,content:'Events'],EventsGroup),
 		G1 = [ObsGroup,EventsGroup|FluentGroups]

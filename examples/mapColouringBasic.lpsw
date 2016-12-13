@@ -1,0 +1,30 @@
+% This version simply uses Prolog for defining predicates.
+
+maxTime(5).
+
+reactive_rule(
+	[country(X)],
+	[colour(C), happens(paint(X, C), 1, 2)]).
+
+
+d_pre([happens(paint(X, C), T1, T2), adjacent(X, Y), happens(paint(Y, C), T1, T2)]).
+
+ country(iz).
+ country(oz).
+ country(az).
+ country(uz).
+ colour(red).
+ colour(yellow).
+ colour(blue).
+ adjacent(az, iz).
+ adjacent(az, oz).
+ adjacent(iz, oz).
+ adjacent(iz, uz).
+ adjacent(oz, uz).
+
+
+%fluent(country).
+%fluents(colour).
+%fluent(adjacent).
+action(paint(_, _)).
+

@@ -29,3 +29,5 @@ observe([], 10).
 
 action(a).
 event(e).
+
+maxTime(10).

@@ -66,6 +66,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	(terminated)/3,
 	tried/3,
 	used/1,
+	maxTime/1,
 	lps_test_options/1,
 	lps_test_result_item/3,
 	lps_test_result/3,
@@ -102,6 +103,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic (terminated)/3.
 :- dynamic tried/3.
 :- dynamic used/1.
+:- dynamic maxTime/1.
 :- dynamic lps_test_result_item/3.
 :- dynamic lps_test_result/3.
 :- dynamic lps_failed_test/2.

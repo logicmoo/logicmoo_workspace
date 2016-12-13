@@ -1,7 +1,5 @@
 initial_state( [p(1),p(2),c(1,1),c(1,2),r(2)] ).
 
-
-
 reactive_rule( [ happens(e1, _T1, T2), holds(p(X), T2)], 
 	[happens(m(X), T3, _T4), tc(T2 =< T3)] ).
 
@@ -23,10 +21,8 @@ observe([], 3).
 observe([e2], 4).
 observe([], 5).
 observe([], 6).
-% observe([], 7).
-% observe([], 8).
-% observe([], 9).
-% observe([], 10).
+
+maxTime(10).
 
 fluent( p(_) ).
 fluent( c(_,_) ).

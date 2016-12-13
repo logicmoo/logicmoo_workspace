@@ -40,7 +40,7 @@ initiated( happens(tick(T), T1, T),
 	[holds(not(now(T)), T1) ]).
 terminated( happens(tick(T), _T1, T), 
 	now(Tp), 
-	[holds(now(Tp), Tp), tc(Tp<T) ]).
+	[holds(now(Tp), Tp) /*, tc(Tp<T)*/ ]).
 
 initial_state([now(1)]).
 observe([event1], 1).  
