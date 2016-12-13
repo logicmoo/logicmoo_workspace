@@ -33,8 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-%%% LOAD THIS FILE to start LPS
-
 %% This module acts as a data placeholder: LPS programs will be loaded over it
 %% All LPS engine state persists here
 

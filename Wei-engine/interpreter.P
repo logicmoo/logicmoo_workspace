@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-%%% DO NOT load this file first: you should start LPS by loading db.P instead, which loads this file automatically.
+%%% LOAD THIS FILE to start LPS
 
 :- module(interpreter, [
 	go/1, go/2, go/3, go_lps/1, go_lps/2,
