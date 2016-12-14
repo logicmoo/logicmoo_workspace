@@ -463,9 +463,9 @@ current_body(BodyS + BGl, M, term_position(_, _, _, _, [PosS, PGl]),
     propdef(BGl, M, PGl, Gl0, Gl1),
     current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
 current_body(BodyS is BGl#Co, M,
-	     term_position(From, To, _, _,
-			   [PosS, term_position(_, _, FFrom, FTo, [PGl, PosCo])]),
+	     term_position(From, To, _, _, [PosS, A2TermPos]),
 	     Body, BPos, Gl0, Gl) :- !,
+    f2_pos(A2TermPos, FFrom, FTo, PGl, PosCo),
     propdef(BGl, M, PGl, Gl0, Gl1),
     current_body(BodyS#Co, M, term_position(From, To, FFrom, FTo, [PosS, PosCo]),
 		 Body, BPos, Gl1, Gl).
@@ -501,6 +501,10 @@ current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
       Gl = Gl0,
       BPos = PosS
     ).
+
+f2_pos(parentheses_term_position(_, _, Pos), FFrom, FTo, PGl, PosCo) :-
+    f2_pos(Pos, FFrom, FTo, PGl, PosCo).
+f2_pos(term_position(_, _, FFrom, FTo, [PGl, PosCo]), FFrom, FTo, PGl, PosCo).
 
 body_member(Body, _, _, _) :-
     var(Body), !, fail.
