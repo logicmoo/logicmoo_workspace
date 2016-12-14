@@ -24,7 +24,8 @@ Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sad
 	
 ### Getting Started with a core engine ###
 
-* Launch Prolog and consult '<your_path_to_LPS\>/Wei-Engine/interpreter.P' by entering  ['<your_path_to_LPS\>/Wei-engine/interpreter.P']. after the prompt ?-
+* Launch Prolog and consult 'your_path_to_LPS/engine/interpreter.P' by entering  ['your_path_to_LPS/Wei-engine/interpreter.P']. after the prompt ?-
+	* This launches the "new" rak interpreter; to use the old (soon to be deprecated) Wei interpreter consult instead '<your_path_to_LPS>/Wei-Engine/interpreter.P'
 * Then enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw'). 
 * Or for more informative output, enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw',[verbose]).
 * Put any new program into the folder "<your_path_to_LPS\>/examples", in order to run it.
