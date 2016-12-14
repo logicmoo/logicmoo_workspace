@@ -136,8 +136,7 @@ geom_prob_bar(PTrue,PFalse) :-
  * as a bar chart with a bar for the probability of Query true and
  * a bar for the probability of Query false.
  * If Query is not ground, it returns in backtracking all ground
- * instantiations of
- * Query together with their probabilities
+ * instantiations of Query together with their probabilities
  *
  * PF is 1.0-PT i.e:
  * Probability False = 1 - Probability True. 
@@ -156,7 +155,7 @@ prob_bar_r(M:Goal) :-
 /**
  * mc_prob_bar(:Query:atom) is det
  *
- * Same as prob_bar... explain this better.
+ * See prob_bar.
  */
 mc_prob_bar_r(M:Goal):-
     prob_bar_r(M:Goal).
@@ -195,10 +194,9 @@ geom_mc_sample_bar(PTrue,PFalse) :-
 /**
  * mc_sample_bar_r(:Query:atom,+Samples:int) is det
  *
- * The predicate samples Query a number of Samples times and returns
- * a dict for rendering with c3 as a bar chart with
- * a bar for the number of successes and a bar for the number
-- * of failures.
+ * The predicate samples Query a number of Samples times and
+ * plots a bar chart with a bar for the number of successes and a bar for the 
+ * number of failures.
  * If Query is not ground, it considers it as an existential query.
  */
 mc_sample_bar_r(M:Goal,S):-
@@ -208,7 +206,10 @@ mc_sample_bar_r(M:Goal,S):-
     finalize_r_graph.
 
 
-/* Transform names column into a string column. 
+/* Diffs from the previous predicates:
+ * ===================================
+ *
+ * Transform names column into a string column. 
  *
  * The use of max/1 instead of 'NA'/0
  * is a hack (because NA does not work).
@@ -250,7 +251,7 @@ geom_mc_sample_arg_bar(L) :-
  *
  * The predicate samples Query Samples times. Arg should be a variable
  * in Query.
- * The predicate returns in Chart a dict for rendering with c3 as a bar chart
+ * The predicate plots a bar chart
  * with a bar for each possible value of L,
  * the list of values of Arg for which Query succeeds in
  * a world sampled at random.
@@ -293,7 +294,7 @@ geom_mc_sample_arg_first_bar(L) :-
  *
  * The predicate samples Query Samples times. Arg should be a variable
  * in Query.
- * The predicate returns in Chart a dict for rendering with c3 as a bar chart
+ * The predicate plots a bar chart
  * with a bar for each value of Arg returned as a first answer by Query in
  * a world sampled at random.
  * The size of the bar is the number of samples that returned that value.
@@ -333,10 +334,9 @@ geom_mc_rejection_sample_arg_bar(L) :-
 /**
  * mc_rejection_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,?Arg:var) is det
  *
- * The predicate calls mc_rejection_sample_arg/5 and build a c3 graph
+ * The predicate calls mc_rejection_sample_arg/5 and builds an R graph
  * of the results.
- * It returns in Chart a dict for rendering with c3 as a bar chart
- * with a bar for each possible value of L,
+ * It plots a bar chart with a bar for each possible value of L,
  * the list of values of Arg for which Query succeeds
  * given that Evidence is true
  * The size of the bar is the number of samples
@@ -376,9 +376,9 @@ geom_mc_mh_sample_arg_bar(L) :-
 /**
  * mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Mix:int,+Lag:int,?Arg:var) is det
  *
- * The predicate call mc_mh_sample_arg/7 and build a c3 graph
+ * The predicate calls mc_mh_sample_arg/7 and builds an R graph
  * of the results.
- * The predicate returns in Chart a dict for rendering with c3 as a bar chart
+ * The predicate plots a bar chart
  * with a bar for each possible value of L,
  * the list of values of Arg for which Query succeeds in
  * a world sampled at random.
@@ -396,10 +396,10 @@ mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,Mix,L,Arg):-
 /**
  * mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Lag:int,?Arg:var) is det
  *
- * The predicate call mc_mh_sample_arg/6 and build a c3 graph
+ * The predicate call mc_mh_sample_arg/6 and builds a R graph
  * of the results.
- * The predicate returns in Chart a dict for rendering with c3 as a bar chart
- * zwith a bar for each possible value of L,
+ * The predicate plots a bar chart
+ * with a bar for each possible value of L,
  * the list of values of Arg for which Query succeeds in
  * a world sampled at random.
  * The size of the bar is the number of samples
@@ -461,9 +461,6 @@ histogram_r(L0,NBins,Min,Max) :-
     geom_histogram(L,NBins,BinWidth).
 
 
-/*
- *   + scale_y_log10() 
- */
 geom_density(L) :-
     get_set_from_list(L,R),
     r_data_frame_from_rows(df, R),

@@ -146,22 +146,13 @@ for the library users'.
 
 Please refer to the Cplint help manual for more information.
 
---
-Only a few of them are currently implemented and the list lack some which
-have not been included in the cplint-help documentation. These will be added.
---
-
-TODO TOCHECK
-
 @deffn{Pita} prob_bar_r@
 (:@var{Query}:atom)
 The predicate computes and plots the probability of @var{Query}
 as a bar chart with a bar for the probability of @var{Query} true and
 a bar for the probability of @var{Query} false.
---
-If Query is not ground, it returns in backtracking all ground
-instantiations of Query together with their probabilities.
---
+If @var{Query} is not ground, it returns in backtracking all ground
+instantiations of @var{Query} together with their probabilities.
 @end deffn
 
 @deffn{Pita} bdd_dot_string_r@
@@ -173,28 +164,43 @@ instantiations of Query together with their probabilities.
 @deffn{Mcintyre} mc_prob_bar_r@
 (:@var{Query}:atom,@
 -@var{Probability}:dict)
+?? Same as prob_bar_r ??
 @end deffn
 
 @deffn{Mcintyre} mc_sample_bar_r@
 (:@var{Query}:atom,@
 +@var{Samples}:int)
-The predicate samples @var{Query} a number of @var{Samples} times and returns
-a dict for rendering with ---c3---- as a bar chart with
-a bar for the number of successes and a bar for the number
-of failures.
-If Query is not ground, it considers it as an existential query.
+The predicate samples @var{Query} a number of @var{Samples} times and
+plots a bar chart with a bar for the number of successes and a bar for the
+number of failures.
+If @var{Query} is not ground, it considers it as an existential query.
 @end deffn
 
 @deffn{Mcintyre} mc_sample_arg_bar_r@
 (:@var{Query}:atom,@
 +@var{Samples}:int,@
 ?@var{Arg}:var)
+The predicate samples @var{Query} @var{Samples} times. @var{Arg} should be a variable
+in @var{Query}.
+The predicate plots a bar chart
+with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds in
+a world sampled at random.
+The size of the bar is the number of samples
+returning that list of values.
 @end deffn
 
 @deffn{Mcintyre} mc_sample_arg_first_bar_r@
 (:@var{Query}:atom,@
 +@var{Samples}:int,@
 ?@var{Arg}:var)
+The predicate samples @var{Query} @var{Samples} times. @var{Arg} should be a variable
+in @var{Query}.
+The predicate plots a bar chart
+with a bar for each value of @var{Arg} returned as a first answer by @var{Query} in
+a world sampled at random.
+The size of the bar is the number of samples that returned that value.
+The value is failure if the query fails.
 @end deffn
 
 @deffn{Mcintyre} mc_rejection_sample_arg_bar_r@
@@ -202,6 +208,29 @@ If Query is not ground, it considers it as an existential query.
 :@var{Evidence}:atom,@
 +@var{Samples}:int,@
 ?@var{Arg}:var)
+The predicate calls @code{mc_rejection_sample_arg/5} and builds an R graph
+of the results.
+It plots a bar chart with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds
+given that @var{Evidence} is true
+The size of the bar is the number of samples
+returning that list of values.
+@end deffn
+
+@deffn{Mcintyre} mc_mh_sample_arg_bar_r@
+(:@var{Query}:atom,@
+:@var{Evidence}:atom,@
++@var{Samples}:int,@
++@var{Lag}:int,@
+?@var{Arg}:var)
+The predicate calls @code{mc_mh_sample_arg/6} and builds an R graph
+of the results.
+The predicate plots a bar chart
+with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds in
+a world sampled at random.
+The size of the bar is the number of samples
+returning that list of values.
 @end deffn
 
 @deffn{Mcintyre} mc_mh_sample_arg_bar_r@
@@ -211,6 +240,14 @@ If Query is not ground, it considers it as an existential query.
 +@var{Mix}:int,@
 +@var{Lag}:int,@
 ?@var{Arg}:var)
+The predicate calls @code{mc_mh_sample_arg/7} and builds an R graph
+of the results.
+The predicate plots a bar chart
+with a bar for each possible value of L,
+the list of values of @var{Arg} for which @var{Query} succeeds in
+a world sampled at random.
+The size of the bar is the number of samples
+returning that list of values.
 @end deffn
 
 @deffn{Mcintyre} histogram_r@
