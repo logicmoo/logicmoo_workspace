@@ -25,6 +25,7 @@
             mc_sample_arg_first_bar_r/3,
             mc_rejection_sample_arg_bar_r/4,
             mc_mh_sample_arg_bar_r/5,
+            mc_mh_sample_arg_bar_r/6,
             histogram_r/2,
             density_r/4,
             densities_r/3
@@ -56,6 +57,7 @@
 :-meta_predicate mc_sample_arg_first_bar_r(:,+,+).
 :-meta_predicate mc_rejection_sample_arg_bar_r(:,:,+,+).
 :-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+).
+:-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+,+).
 
 /*********** 
  * Helpers *
@@ -263,14 +265,152 @@ mc_sample_arg_bar_r(M:Goal,S,Arg):-
     finalize_r_graph.
 
 
-mc_sample_arg_first_bar_r(A,B,C).
+geom_mc_sample_arg_first_bar(L) :-
+    get_set_from_list(L,R),
+    r_data_frame_from_rows(df1, R),
+    colnames(df1) <- c("names", "prob"),
+    df <- data.frame(
+        ids=as.character(df1$names),
+        probabilities=c(df1$prob)
+    ),
+    <- ggplot(
+        data=df,
+        aes(
+            x=reorder(
+                ids,
+                probabilities
+            ),
+            y=probabilities
+        )
+    ) + geom_bar(
+        stat="identity",
+        width=0.5
+    )
+    + coord_flip().
+
+/**
+ * mc_sample_arg_first_bar(:Query:atom,+Samples:int,?Arg:var) is det
+ *
+ * The predicate samples Query Samples times. Arg should be a variable
+ * in Query.
+ * The predicate returns in Chart a dict for rendering with c3 as a bar chart
+ * with a bar for each value of Arg returned as a first answer by Query in
+ * a world sampled at random.
+ * The size of the bar is the number of samples that returned that value.
+ * The value is failure if the query fails.
+ */
+mc_sample_arg_first_bar_r(M:Goal,S,Arg):-
+    load_r_libraries,
+    mc_sample_arg_first(M:Goal,S,Arg,ValList0),
+    maplist(to_atom,ValList0,ValList),
+    geom_mc_sample_arg_first_bar(ValList),
+    finalize_r_graph.
+  
+
+geom_mc_rejection_sample_arg_bar(L) :-
+    get_set_from_list(L,R),
+    r_data_frame_from_rows(df1, R),
+    colnames(df1) <- c("names", "prob"),
+    df <- data.frame(
+        ids=as.character(df1$names),
+        probabilities=c(df1$prob)
+    ),
+    <- ggplot(
+        data=df,
+        aes(
+            x=reorder(
+                ids,
+                probabilities
+            ),
+            y=probabilities
+        )
+    ) + geom_bar(
+        stat="identity",
+        width=0.5
+    )
+    + coord_flip().
+
+/**
+ * mc_rejection_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,?Arg:var) is det
+ *
+ * The predicate calls mc_rejection_sample_arg/5 and build a c3 graph
+ * of the results.
+ * It returns in Chart a dict for rendering with c3 as a bar chart
+ * with a bar for each possible value of L,
+ * the list of values of Arg for which Query succeeds
+ * given that Evidence is true
+ * The size of the bar is the number of samples
+ * returning that list of values.
+ */
+mc_rejection_sample_arg_bar_r(M:Goal,M:Ev,S,Arg):-
+    load_r_libraries,
+    mc_rejection_sample_arg(M:Goal,M:Ev,S,Arg,ValList0),
+    maplist(to_atom,ValList0,ValList),
+    geom_mc_rejection_sample_arg_bar(ValList),
+    finalize_r_graph.
 
 
-mc_rejection_sample_arg_bar_r(A,B,C,D).
+geom_mc_mh_sample_arg_bar(L) :-
+    get_set_from_list(L,R),
+    r_data_frame_from_rows(df1, R),
+    colnames(df1) <- c("names", "prob"),
+    df <- data.frame(
+        ids=as.character(df1$names),
+        probabilities=c(df1$prob)
+    ),
+    <- ggplot(
+        data=df,
+        aes(
+            x=reorder(
+                ids,
+                probabilities
+            ),
+            y=probabilities
+        )
+    ) + geom_bar(
+        stat="identity",
+        width=0.5
+    )
+    + coord_flip().
+
+/**
+ * mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Mix:int,+Lag:int,?Arg:var) is det
+ *
+ * The predicate call mc_mh_sample_arg/7 and build a c3 graph
+ * of the results.
+ * The predicate returns in Chart a dict for rendering with c3 as a bar chart
+ * with a bar for each possible value of L,
+ * the list of values of Arg for which Query succeeds in
+ * a world sampled at random.
+ * The size of the bar is the number of samples
+ * returning that list of values.
+ */
+mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,Mix,L,Arg):-
+    load_r_libraries,
+    mc_mh_sample_arg(M:Goal,M:Ev,S,Mix,L,Arg,ValList0),
+    maplist(to_atom,ValList0,ValList),
+    geom_mc_mh_sample_arg_bar(ValList),
+    finalize_r_graph.
 
 
-mc_mh_sample_arg_bar_r(A,B,C,D,E).
-
+/**
+ * mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Lag:int,?Arg:var) is det
+ *
+ * The predicate call mc_mh_sample_arg/6 and build a c3 graph
+ * of the results.
+ * The predicate returns in Chart a dict for rendering with c3 as a bar chart
+ * zwith a bar for each possible value of L,
+ * the list of values of Arg for which Query succeeds in
+ * a world sampled at random.
+ * The size of the bar is the number of samples
+ * returning that list of values.
+ */
+mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,L,Arg):-
+    load_r_libraries,
+    mc_mh_sample_arg(M:Goal,M:Ev,S,L,Arg,ValList0),
+    maplist(to_atom,ValList0,ValList),
+    geom_mc_mh_sample_arg_bar(ValList),
+    finalize_r_graph.
 
 /*
  * BinWidth was added because it was recomended on the R documentation,
