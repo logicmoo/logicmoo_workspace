@@ -72,7 +72,7 @@ uassertz(X) :- assertz(X).
 uretract(X) :- retract(X).
 uretractall(X) :- retractall(X).
 u_user_predicate(X) :- functor(X,F,N), current_predicate(F/N).
-
+callprolog(G) :- G.
 
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
 :- use_module(lists, [append_lists/2]).
@@ -104,8 +104,119 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 :- endif.
 
 %%% end of XSB specific section; now for SWI:
-% TODO
+
+:- if((current_prolog_flag(dialect, swi), current_module(swish))).
+
+% First a SWISH specificity - rather than use the db module, will use pengine's dynamic module
+
+:- use_module(library(pengines),[pengine_self/1]).
+
+% If performance becomes bad (due to nonindexed access inside the pengine_self predicate) we should pass M as arg
+
+action(X) :- pengine_self(M), catch(M:action(X),_,fail).
+current_goal(X) :- pengine_self(M), M:current_goal(X).
+current_time(X) :- pengine_self(M), M:current_time(X).
+d_pre(X) :- pengine_self(M), catch(M:d_pre(X),_,fail).
+depth(X) :- pengine_self(M), catch(M:depth(X),_,fail).
+event(X) :- pengine_self(M), catch(M:event(X),_,fail).
+fluent(X) :- pengine_self(M), catch(M:fluent(X),_,fail).
+happens(X,Y,Z) :- pengine_self(M), catch(M:happens(X,Y,Z),_,fail).
+initial_state(X) :- pengine_self(M), catch(M:initial_state(X),_,fail).
+initiated(X,Y,Z) :- pengine_self(M), catch(M:initiated(X,Y,Z),_,fail).
+l_events(X,Y) :- pengine_self(M), catch(M:l_events(X,Y),_,fail).
+l_int(X,Y) :- pengine_self(M), catch(M:l_int(X,Y),_,fail).
+l_timeless(X,Y) :- pengine_self(M), catch(M:l_timeless(X,Y),_,fail).
+maxTime(X) :- pengine_self(M), catch(M:maxTime(X),_,fail).
+observe(X,Y) :- pengine_self(M), catch(M:observe(X,Y),_,fail).
+% TODO: interference with SWI ???
+option(X) :- pengine_self(M), catch(M:option(X),_,fail).
+reactive_rule(X,Y) :- pengine_self(M), catch(M:reactive_rule(X,Y),_,fail).
+reactive_rule(X,Y,Z) :- pengine_self(M), catch(M:reactive_rule(X,Y,Z),_,fail).
+state(X) :- pengine_self(M), catch(M:state(X),_,fail).
+steps(X) :- pengine_self(M), M:steps(X).
+terminated(X,Y,Z) :- pengine_self(M), catch(M:terminated(X,Y,Z),_,fail).
+tried(X,Y,Z) :- pengine_self(M), catch(M:tried(X,Y,Z),_,fail).
+used(X) :- pengine_self(M), catch(M:used(X),_,fail).
+lps_test_options(X) :- pengine_self(M), catch(M:lps_tes_options(X),_,fail).
+lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
+lps_test_result(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result(X,Y,Z),_,fail).
+lps_failed_test(X,Y) :- pengine_self(M), catch(M:lps_failed_test(X,Y),_,fail).
+% probably not used:
+my_load_dyn(X,Y) :- pengine_self(M), M:my_load_dyn(X,Y).
+
+uassert(X) :- pengine_self(M), catch(assert(M:X),_,true). 
+uassertz(X) :- pengine_self(M), catch(assertz(M:X),_,true).
+% uretractall(X) :- pengine_self(M), catch(retractall(M:X),_,true).
+uretractall(X) :- pengine_self(M), retractall(M:X).
+uretract(X) :- pengine_self(M), retract(M:X).
+u_user_predicate(X) :- functor(X,F,N),  pengine_self(M), current_predicate(M:F/N).
+callprolog(G) :- predicate_property(G,built_in), !, G.
+callprolog(G) :- pengine_self(M), call(M:G).
+
+:- endif.
+
+
+:- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
+% Now support for vanilla SWI Prolog
+:- use_module('../Wei-engine/db.P',[
+	action/1, current_time/1, d_pre/1 ,event/1,
+	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
+	l_timeless/2, observe/2, reactive_rule/2, reactive_rule/3, state/1,
+	steps/1, (terminated)/3, used/1, maxTime/1,
+	current_goal/1, depth/1, tried/3, option/1, 
+	initial_state/1,
+	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, 
+	lps_failed_test/2,
+	my_load_dyn/2]).
+
+uassert(X) :- assert(db:X). 
+uassertz(X) :- assertz(db:X).
+uretractall(X) :- retractall(db:X).
+uretract(X) :- retract(db:X).
+u_user_predicate(X) :- functor(X,F,N), current_predicate(db:F/N).
+
+callprolog(G) :- predicate_property(G,built_in), !, G.
+callprolog(G) :- call(db:G).
+
+:- endif.
+
+:- if(current_prolog_flag(dialect, swi)).
+% ...and finally the generic SWI support
+
+:- prolog_load_context(directory, D), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
+
+:- op(900,fy,not).
+
+:- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
+append_lists([],[]).
+append_lists([X|Xs],L) :-
+	append(X,T,L),
+	append_lists(Xs,T).
+:- use_module(library(terms),[variant/2]).
+:- use_module(library(varnumbers),[numbervars/1]).
+term_to_codes(T,C) :- term_to_atom(T,A), atom_codes(A,C).
+my_term_to_atom(T,A) :- term_to_atom(T,A).
+concat_atom(L,A) :- atomic_list_concat(L,A).
+%:- use_module(format,[format/2]).
+:- use_module(library(dialect/sicstus/system),[datime/1,file_exists/1]).
+date_stamp(D) :- datime(Date), Date=..[_|Args], format(atom(D),"~d-~d-~d at ~d:~d:~d",Args).
+
+list_directory(D,F) :- directory_files(D,Files), member(F,Files).
+is_directory(D) :- exists_directory(D).
+expand_filename(F,Path) :- expand_file_name(F,[Path]).
+
+:- use_module(library(filesex),[relative_file_name/3]).
+lps_examples_directory(ED) :- 
+	lps_engine_directory(D), 
+	concat_atom([D,'/'],DD), % hack, don't know where to fetch OS-dependent separator
+	relative_file_name(ED,DD,'../examples').
+
+cputime(T) :- T is cputime.
+
+:- endif.
+
 %%% end of SWI and Prolog engine-specific code
+
 %%% From here on, generic Prolog code
 
 my_load_dyn(F) :- my_load_dyn(F,false).
@@ -664,12 +775,13 @@ cycle(_Ri, Gi) :-
 
 cycle(Ri, Gi) :-
 	current_time(Time),  Previous is Time - 1 ,Next is Time +1,
-	(Time = 1 -> updateEvents(0, 1)   ; true),
-	% At this point last cycle events are still available
     	( option(cycle_hook(Predicate,_,_)) -> 
     		HookGoal =.. [Predicate,ExternalObservations],
 		(HookGoal -> true ; writeln('* LPS cycle hook goal failed, terminating.'), fail)
     	; ExternalObservations=[]),
+	(Time = 1 -> updateEvents(0, 1, ExternalObservations)   ; true),
+	% At this point last cycle events are still available
+    	% TODO: ExternaObservations to be injected as new events
 	findall(Action, happens(Action, Previous, Time), Actions),
 	write_verbose([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
 	test(events,Time,Actions),
@@ -683,7 +795,7 @@ cycle(Ri, Gi) :-
 		' Process goal tree at time ',Time, nl,' New: ',NewGi, nl]),
 	append(Gi, NewGi, NGi), % Puts new goals at the end of the queue.
 	uretractall(happens(_, _, _)),
-	updateEvents(Time, Next),
+	updateEvents(Time, Next, ExternalObservations),
 	resolve_tree(NGi, [], GoalTree),% This resolves goals in the goal state.
 	(GoalTree = end -> 
 		write_verbose([nl,' Exceeded number of steps. ',nl])	
@@ -693,9 +805,9 @@ cycle(Ri, Gi) :-
 		cycle(NRi, NextGi)
 	).
 
-% Update any observed events.
-updateEvents(Time, Next) :-  
-	observe(Evs, Next) -> forall(member(E, Evs), uassertz(happens(E, Time, Next)))
+% Update any observed events, including events injectd from the outside, e.g. Java API
+updateEvents(Time, Next, ExternalObservations) :-  
+	forall( (observe(Evs, Next),member(E, Evs) ; member(E,ExternalObservations)), uassertz(happens(E, Time, Next))) -> true
      ; true.
 
 %   Destructively update the state.
@@ -926,7 +1038,7 @@ lpsClause(happens(X, Y, Z), []) :- happens(X, Y, Z).
 lpsClause(holds(X, Y), []) :- current_time(Y), state(X).
 lpsClause(tc(_), []).  % This ignores temporal constraints completely.
 lpsClause(P, []) :- \+l_timeless(P,_),\+l_events(P,_),\+l_int(P,_),
-	\+P = happens(_,_,_), \+P= holds(_,_), call(P).
+	\+P = happens(_,_,_), \+P= holds(_,_), callprolog(P).
 
 % mustBeProcessedNow is used when unfolding atoms in antecedents of rules.
 mustBeProcessedNow(holds(_, T)) :-
@@ -1073,7 +1185,7 @@ query(holds(P, Now)) :-
 query(P) :-  
 	P \= holds(_, _), P \= happens(_,_, _),
     	% (l_timeless(P, B)-> evaluate(B); call(P)).
-    	(\+ l_timeless(P, B) -> call(P) ; l_timeless(P, B), evaluate(B)).
+    	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
 
 evaluate([]).
 evaluate([P|Rest]) :-query(P),

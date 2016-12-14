@@ -6,7 +6,8 @@
 ** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-/* Utilities for visualizing LPS executions; the XSB version depends on http://interprolog.com/interprolog-studio/ */
+/* Utilities for visualizing LPS executions; 
+the XSB version depends on http://interprolog.com/interprolog-studio , the SWI one on SWISH */
 
 :- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4]).
 
@@ -75,7 +76,7 @@ action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 :- if(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(http/json)).
-:- use_module('../Wei-engine/interpreter.P',[
+:- use_module('../engine/interpreter.P',[
 	go/3, my_term_to_atom/2
 	]).
 
