@@ -250,7 +250,7 @@ all_files_in(Directory,Suffix,Files) :-
 build_all_test_results :- 
 	lps_examples_directory(ED),
 	all_files_in(ED,'.lpsw',Files),
-	writeln(files-Files),
+	writeln('Generating test results for files:'), writeln(Files),
 	do_test_suite(Files,[make_test,verbose]).
 
 % add rules to trigger "meta" actions which document the occurrence of composite events
@@ -340,6 +340,8 @@ go(File, OptionsList, ResultFluents) :-
    	;true),
     	cputime(T1),
 	findall(reactive_rule(A, C), (reactive_rule(A, C);reactive_rule(A,C,_P)), R0), % drop priorities, if any
+	findall(S,state(S),IS_),
+	test(fluents,0,IS_),
 	cycle(R0, []),
 	!,
 	cputime(T2),
