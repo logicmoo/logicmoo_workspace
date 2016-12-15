@@ -811,12 +811,11 @@ updateEvents(Time, Next, ExternalObservations) :-
      ; true.
 
 %   Destructively update the state.
-updateFluents(Time) :-  forall(happens(E, Previous, Time), updateState(happens(E, Previous, Time))).
-updateState(Ev) :-
-    findall(Fl, (terminated(Ev, Fl, Cond), holds_all(Cond)), Terms),
-    findall(Fl, (initiated(Ev, Fl, Cond), holds_all(Cond)), Inits),
-    forall((member(Fl, Terms),state(Fl)), uretractall(state(Fl))),
-    forall((member(Fl, Inits),\+ state(Fl)), uassertz(state(Fl))).
+updateFluents(Time) :-
+	findall(Fl, (happens(Ev, Previous, Time), terminated(happens(Ev, Previous, Time), Fl, Cond), holds_all(Cond)), Terms),
+	findall(Fl, (happens(Ev, Previous, Time), initiated(happens(Ev, Previous, Time), Fl, Cond), holds_all(Cond)), Inits),
+	forall((member(Fl, Terms), state(Fl)), uretractall(state(Fl))),
+    	forall((member(Fl, Inits), \+ state(Fl)), uassertz(state(Fl))).
 
 removeSolvedGoals([], NextGi, NextGi).
 
