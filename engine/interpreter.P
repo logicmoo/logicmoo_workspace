@@ -72,7 +72,7 @@ uassertz(X) :- assertz(X).
 uretract(X) :- retract(X).
 uretractall(X) :- retractall(X).
 u_user_predicate(X) :- functor(X,F,N), current_predicate(F/N).
-callprolog(G) :- G.
+callprolog(G) :- catch(G,_,fail).
 
 :- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
 :- use_module(lists, [append_lists/2]).
@@ -151,7 +151,7 @@ uretractall(X) :- pengine_self(M), retractall(M:X).
 uretract(X) :- pengine_self(M), retract(M:X).
 u_user_predicate(X) :- functor(X,F,N),  pengine_self(M), current_predicate(M:F/N).
 callprolog(G) :- predicate_property(G,built_in), !, G.
-callprolog(G) :- pengine_self(M), call(M:G).
+callprolog(G) :- pengine_self(M), catch(call(M:G),_,fail).
 
 :- endif.
 
@@ -176,7 +176,7 @@ uretract(X) :- retract(db:X).
 u_user_predicate(X) :- functor(X,F,N), current_predicate(db:F/N).
 
 callprolog(G) :- predicate_property(G,built_in), !, G.
-callprolog(G) :- call(db:G).
+callprolog(G) :- catch(db:G,_,fail).
 
 :- endif.
 
