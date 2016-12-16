@@ -1095,7 +1095,7 @@ backtrack([goal(GoalId, [ B1]) | Gs], [NextBranch, goal(GoalId, [B1]) | Gs],
 % backtrack([goal(GoalId, [ [] | Bs]) | Gs], [goal(GoalId, Bs) | Gs], AccG, AccG):-
 
 % Pop up one level if backtracking over non-top clause.
-backtrack([goal(GoalId,[B1|Bs])|Gs], [goal(GoalId, Bs) | Gs],  AccG, AccG):-
+backtrack([goal(GoalId,[_B1|Bs])|Gs], [goal(GoalId, Bs) | Gs],  AccG, AccG):-
 	\+ Bs = [], depth(Depth), NewDepth is Depth - 1, 
 	uretract(depth(Depth)),
 	uassertz(depth(NewDepth)), uretractall(tried(GoalId,Depth, _)).
