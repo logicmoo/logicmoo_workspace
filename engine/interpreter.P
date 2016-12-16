@@ -304,7 +304,7 @@ cleanup_program :-
 %
 go(File) :- go(File, []).
 
-go :- go(_,[verbose]). % makes sense only on swish
+go :- go(_,[verbose,swish]). % makes sense only on swish
 
 go(File, OptionsList) :- go(File, OptionsList,[]).
 
