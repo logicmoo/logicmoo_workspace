@@ -40,7 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %%% LOAD THIS FILE to start LPS
 
 :- module(interpreter, [
-	go/1, go/2, go/3,
+	go/0, go/1, go/2, go/3,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
 	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2,
 	lps_engine_directory/1]).
@@ -298,11 +298,13 @@ cleanup_program :-
     uretractall(maxTime(_)).
 
 
-% obtaind from Kowalski's gorak 
+% obtained from Kowalski's gorak 
 %
 % go(+File)
 %
 go(File) :- go(File, []).
+
+go :- go(_,[verbose]). % makes sense only on swish
 
 go(File, OptionsList) :- go(File, OptionsList,[]).
 
