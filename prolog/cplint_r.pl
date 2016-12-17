@@ -19,6 +19,7 @@
 
 :- module(cplint_r,
           [ prob_bar_r/1,
+            prob_bar_r/2,
             mc_prob_bar_r/1,
             mc_sample_bar_r/2,
             mc_sample_arg_bar_r/3,
@@ -51,6 +52,7 @@
 /* Meta predicate definitions. */
 
 :-meta_predicate prob_bar_r(:).
+:-meta_predicate prob_bar_r(:,:).
 :-meta_predicate mc_prob_bar_r(:).
 :-meta_predicate mc_sample_bar_r(:,+).
 :-meta_predicate mc_sample_arg_bar_r(:,+,+).
@@ -102,14 +104,12 @@ get_set_from_list(L,R) :-
  * This represents a probability between 0 and 1.
  */
 geom_prob_bar(PTrue,PFalse) :-
-    L=[PTrue-1,PFalse-1],
+    L=['T'-PTrue,'F'-PFalse],
     get_set_from_list(L,R),
     r_data_frame_from_rows(df1, R),
-    colnames(df1) <- c("prob", "tf"),
+    colnames(df1) <- c("names", "prob"),
     df <- data.frame(
-        ids=factor(
-            c("T","F")
-        ),
+        ids=as.character(df1$names),
         probabilities=c(df1$prob)
     ),
     <- ggplot(
@@ -149,6 +149,24 @@ prob_bar_r(M:Goal) :-
     finalize_r_graph.
 
 
+/**
+ * prob_bar_r(:Query:atom,:Evidence:atom) is nondet
+ *
+ * The predicate computes the probability of the Query given Evidence
+ * as a bar chart with
+ * a bar for the probability of Query true and a bar for the probability of
+ * Query false given Evidence.
+ * If Query /Evidence are not ground, it returns in backtracking all
+ * ground instantiations of
+ * Query/Evidence together with their probabilities
+ */
+prob_bar_r(M:Goal,M:Evidence):-
+    load_r_libraries,
+    prob(M:Goal,M:Evidence,PT),
+    PF is 1.0-PT,
+    geom_prob_bar(PT,PF),
+    finalize_r_graph.
+
 /* mcintyre */
 
 
@@ -158,18 +176,20 @@ prob_bar_r(M:Goal) :-
  * See prob_bar.
  */
 mc_prob_bar_r(M:Goal):-
-    prob_bar_r(M:Goal).
+    load_r_libraries,
+    s(M:Goal,PT),
+    PF is 1.0-PT,
+    geom_prob_bar(PT,PF),
+    finalize_r_graph.
 
 
 geom_mc_sample_bar(PTrue,PFalse) :-
-    L=[PTrue-1,PFalse-1],
+    L=['T'-PTrue,'F'-PFalse],
     get_set_from_list(L,R),
     r_data_frame_from_rows(df1, R),
-    colnames(df1) <- c("prob", "tf"),
+    colnames(df1) <- c("names", "prob"),
     df <- data.frame(
-        ids=factor(
-            c("T","F")
-        ),
+        ids=as.character(df1$names),
         probabilities=c(df1$prob)
     ),
     <- ggplot(
@@ -185,11 +205,6 @@ geom_mc_sample_bar(PTrue,PFalse) :-
     )
     + coord_flip()
     + theme(aspect.ratio=1/2).
-
-/*
-    df <- data.frame(ids=factor(c("T","F"),levels=c("T","F")),probabilities=c(df1$prob)),
-    <- ggplot(data=df,aes(x=ids,y=probabilities)) + geom_bar(stat="identity",width=0.05,position="dodge") + coord_flip().
-*/
 
 /**
  * mc_sample_bar_r(:Query:atom,+Samples:int) is det
@@ -309,27 +324,7 @@ mc_sample_arg_first_bar_r(M:Goal,S,Arg):-
   
 
 geom_mc_rejection_sample_arg_bar(L) :-
-    get_set_from_list(L,R),
-    r_data_frame_from_rows(df1, R),
-    colnames(df1) <- c("names", "prob"),
-    df <- data.frame(
-        ids=as.character(df1$names),
-        probabilities=c(df1$prob)
-    ),
-    <- ggplot(
-        data=df,
-        aes(
-            x=reorder(
-                ids,
-                probabilities
-            ),
-            y=probabilities
-        )
-    ) + geom_bar(
-        stat="identity",
-        width=0.5
-    )
-    + coord_flip().
+    geom_mc_sample_arg_first_bar(L).
 
 /**
  * mc_rejection_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,?Arg:var) is det
@@ -351,27 +346,7 @@ mc_rejection_sample_arg_bar_r(M:Goal,M:Ev,S,Arg):-
 
 
 geom_mc_mh_sample_arg_bar(L) :-
-    get_set_from_list(L,R),
-    r_data_frame_from_rows(df1, R),
-    colnames(df1) <- c("names", "prob"),
-    df <- data.frame(
-        ids=as.character(df1$names),
-        probabilities=c(df1$prob)
-    ),
-    <- ggplot(
-        data=df,
-        aes(
-            x=reorder(
-                ids,
-                probabilities
-            ),
-            y=probabilities
-        )
-    ) + geom_bar(
-        stat="identity",
-        width=0.5
-    )
-    + coord_flip().
+    geom_mc_sample_arg_first_bar(L).
 
 /**
  * mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Mix:int,+Lag:int,?Arg:var) is det
@@ -465,7 +440,15 @@ geom_density(L) :-
     get_set_from_list(L,R),
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
-    <- ggplot(data=df,aes_string(x="x",y="y",group=1)) + geom_line() + geom_point().
+    <- ggplot(
+        data=df,
+        aes_string(
+            x="x",
+            y="y",
+            group=1
+        )
+    ) + geom_line()
+    + geom_point().
 
 /**
  * density_r(+List:list,+NBins:int,+Min:float,+Max:float) is det
@@ -508,21 +491,21 @@ geom_densities(LPr,LPo) :-
         group=rep(c("pre","post"))
     ),
     <- ggplot(
-    	data=df,
-    	aes(
-	    	x=x,
-		    y=y,
-    		group=group
-	    )
-	) + geom_line(
-		aes(
-			color=group
-		)
-	) + geom_point(
-		aes(
-			color=group
-		)
-	).
+        data=df,
+        aes(
+            x=x,
+            y=y,
+            group=group
+        )
+    ) + geom_line(
+        aes(
+            color=group
+        )
+    ) + geom_point(
+        aes(
+            color=group
+        )
+    ).
 
 /**
  * densities_r(+PriorList:list,+PostList:list,+NBins:int) is det

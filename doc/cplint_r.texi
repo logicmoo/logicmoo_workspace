@@ -155,6 +155,19 @@ If @var{Query} is not ground, it returns in backtracking all ground
 instantiations of @var{Query} together with their probabilities.
 @end deffn
 
+@deffn{Pita} prob_bar_r@
+(:@var{Query}:atom@
+:@var{Evidence}:atom)
+The predicate computes and plots the probability of @var{Query}
+given @var{Evidence}
+as a bar chart with a bar for the probability of @var{Query} true and
+a bar for the probability of @var{Query} false given @var{Evidence}.
+If @var{Query} / @var{Evidence} are not ground, it returns in backtracking all 
+ground
+instantiations of @var{Query} / @var{Evidence} together with their 
+probabilities.
+@end deffn
+
 @deffn{Pita} bdd_dot_string_r@
 (:@var{Query}:atom,@
 -@var{DotString}:string,@
