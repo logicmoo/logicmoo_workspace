@@ -451,10 +451,10 @@ assrt_format_code(t).
 
 % EMM: Support for grouped global properties
 
-current_body(MBodyS, PPos, Body, BPos, Gl1, Gl) :-
+current_body(MBodyS, M, PPos, Body, BPos, Gl1, Gl) :-
     nonvar(PPos),
     PPos = parentheses_term_position(_, _, Pos), !,
-    current_body(MBodyS, Pos, Body, BPos, Gl1, Gl).
+    current_body(MBodyS, M, Pos, Body, BPos, Gl1, Gl).
 current_body(M:BodyS, _, term_position(_, _, _, _, [_, PosS]), Body, BPos, Gl1, Gl) :-
     atom(M), !,
     current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
@@ -612,7 +612,7 @@ normalize_args([], _, _, _, _, [], [], [], []).
 resolve_types_modes(A,    _, A, _, Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
 resolve_types_modes(A1, M, A, PPos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
     nonvar(PPos),
-    PPos = parentheses_term_positon(_, _, Pos), !,
+    PPos = parentheses_term_position(_, _, Pos), !,
     resolve_types_modes(A1, M, A, Pos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl).
 resolve_types_modes(A0:T, M, A, term_position(_, _, _, _, [PA0, PT]), Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl) :-
     do_propdef(T, M, A, PT, Pr0, Pr1),
