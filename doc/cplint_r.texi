@@ -285,7 +285,7 @@ The lines are drawn dividing the domain in
 
 @deffn{Mcintyre} densities_r@
 (+@var{PriorList}:list,@
-+@var{PostList:list},@
++@var{PostList}:list,@
 +@var{NBins}:int)
 Draws a line chart of the density of two sets of samples, usually
 prior and post observations. The samples from the prior are in @var{PriorList}
@@ -293,6 +293,27 @@ while the samples from the posterior are in @var{PostList}
 as couples [V]-W or V-W where V is a value and W its weigth.
 The lines are drawn dividing the domain in
 @var{NBins} bins.
+@end deffn
+
+
+@deffn{Auc} compute_areas_diagrams_r@
+(+@var{LG}:list,@
+-@var{AUCROC}:float,@
+-@var{AUCPR}:float)
+The predicate takes as input
+a list @var{LG} of pairs probability-literal in asceding order on probability
+where the literal can be an Atom (incading a positive example) or \+ Atom,
+indicating a negative example while the probability is the probability of
+Atom of being true. PR and ROC diagrams are plotted.
+The predicate returns:
+@itemize
+@item
+@var{AUCROC}: the size of the area under the ROC curve
+
+@item
+@var{AUCPR}: the size of the area under the PR curve
+See @uref{http://cplint.lamping.unife.it/example/exauc.pl} for an example
+@end itemize
 @end deffn
 
 @section Internals

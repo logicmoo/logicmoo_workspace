@@ -29,7 +29,8 @@
             mc_mh_sample_arg_bar_r/6,
             histogram_r/2,
             density_r/4,
-            densities_r/3
+            densities_r/3,
+            compute_areas_diagrams_r/3
           ]).
 
 
@@ -47,6 +48,7 @@
 :- use_module(library(lists)).
 :- use_module(library(pita)).
 :- use_module(library(mcintyre)).
+:- use_module(library(auc)).
 
 
 /* Meta predicate definitions. */
@@ -532,5 +534,62 @@ densities_r(Pri0,Post0,NBins) :-
     bin(NBins,Pr,Min,BinWidth,LPr),
     bin(NBins,Po,Min,BinWidth,LPo),
     geom_densities(LPr,LPo),
+    finalize_r_graph.
+
+
+/* geom_line + geom_point + y 0,1,0.1 + x 0,1,0.1 + title */
+geom_compute_areas_diagram(L,Title) :-
+    get_set_from_list(L,R),
+    r_data_frame_from_rows(df, R),
+    titlE <- as.character(Title),
+    labelS <- labs(title = titlE),
+    colnames(df) <- c("x", "y"),
+    <- ggplot(
+        data=df,
+        aes_string(
+            x="x",
+            y="y",
+            group=1
+        )
+    ) + geom_line()
+    + geom_point()
+    + scale_x_continuous(
+        breaks=seq(0,1,0.1)
+    )
+    + scale_y_continuous(
+        breaks=seq(0,1,0.1)
+    )
+    + lims(
+        x=c(0,1),
+        y=c(0,1)
+    )
+    + labelS
+    + theme(
+        plot.title = element_text(
+            size = rel(2)
+        )
+    ).
+
+
+/**
+ * compute_areas_diagrams_r(+LG:list,-AUCROC:float,-AUCPR:float) is det
+ *
+ * The predicate takes as input
+ * a list LG of pairs probability-literal in asceding order on probability
+ * where the literal can be an Atom (incading a positive example) or \+ Atom,
+ * indicating a negative example while the probability is the probability of
+ * Atom of being true.
+ * The predicate returns
+ * AUCROC: the size of the area under the ROC curve
+ * AUCPR: the size of the area under the PR curve
+ * PR and ROC diagrams are plotted.
+ * See http://cplint.lamping.unife.it/example/exauc.pl for an example
+ */
+compute_areas_diagrams_r(LG,AUCROC,AUCPR) :-
+    load_r_libraries,
+    compute_areas(LG,AUCROC,ROC0,AUCPR,PR0),
+    geom_compute_areas_diagram(ROC0,"ROC"),
+    finalize_r_graph,
+    geom_compute_areas_diagram(PR0,"PR"),
     finalize_r_graph.
 
