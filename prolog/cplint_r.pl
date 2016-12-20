@@ -538,6 +538,7 @@ densities_r(Pri0,Post0,NBins) :-
 
 
 /* geom_line + geom_point + y 0,1,0.1 + x 0,1,0.1 + title */
+/* Fix scale: breaks(0,1,0.1) does not seem to work here. */
 geom_compute_areas_diagram(L,Title) :-
     get_set_from_list(L,R),
     r_data_frame_from_rows(df, R),
@@ -554,14 +555,12 @@ geom_compute_areas_diagram(L,Title) :-
     ) + geom_line()
     + geom_point()
     + scale_x_continuous(
+        limits=c(0,1),
         breaks=seq(0,1,0.1)
     )
     + scale_y_continuous(
+        limits=c(0,1),
         breaks=seq(0,1,0.1)
-    )
-    + lims(
-        x=c(0,1),
-        y=c(0,1)
     )
     + labelS
     + theme(
