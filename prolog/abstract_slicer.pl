@@ -35,46 +35,63 @@
 :- meta_predicate abstract_slice(0, +, ?).
 
 abstract_slice(M:Call, Mode, OptL) :-
-    apply_mode(Call, Mode, Spec),
+    apply_mode(Call, Mode, Spec, RevS),
     option(eval_scope(Scope), OptL, body),
-    abstract_interpreter(M:Call, slicer_abstraction(Spec, Scope), OptL).
+    abstract_interpreter(M:Call, slicer_abstraction(Spec, RevS, Scope), OptL).
 
-apply_mode(Call, Mode, Spec) :-
+apply_mode(Call, Mode, Spec, RevS) :-
     functor(Call, F, A),
     functor(Spec, F, A),
-    apply_mode_arg(1, Call, Mode, Spec).
+    functor(RevS, F, A),
+    apply_mode_arg(1, Call, Mode, Spec, RevS).
 
-apply_mode_arg(N0, Call, Mode, Spec) :-
+apply_mode_arg(N0, Call, Mode, Spec, RevS) :-
     arg(N0, Call, Arg), !,
     arg(N0, Mode, MSp),
     arg(N0, Spec, ASp),
+    arg(N0, RevS, ARs),
     ( MSp = -
-    ->ASp = Arg
-    ; ASp = +
+    ->ASp = Arg,
+      ARs = -
+    ; ASp = +,
+      ARs = Arg
     ),
     succ(N0, N),
-    apply_mode_arg(N, Call, Mode, Spec).
-apply_mode_arg(_, _, _, _).
+    apply_mode_arg(N, Call, Mode, Spec, RevS).
+apply_mode_arg(_, _, _, _, _).
 
-chain_of_dependencies(Spec, Goal, ContL) :-
+chain_of_dependencies(Spec, RevS, Goal, ContL) :-
     \+ ground(Goal),
-    ( terms_share(Spec, Goal)
+    ( terms_share(Spec, RevS, Goal)
     ->true
     ; select(Cont, ContL, ContL2),
-      terms_share(Cont, Goal),
-      chain_of_dependencies(Spec, Cont, ContL2)
+      terms_share(Cont, RevS, Goal),
+      chain_of_dependencies(Spec, RevS, Cont, ContL2)
     ), !.
 
-slicer_abstraction(Spec, Scope, Goal, M, Body,
+terms_share(A, R, B) :-
+    term_variables(A, VarsA),
+    VarsA \= [], % Optimization
+    term_variables(B, VarsB),
+    term_variables(R, VarsR),
+    ( member(VA, VarsA),
+      member(VB, VarsB),
+      VA==VB,
+      \+ ( member(VR, VarsR),
+	   VA == VR
+	 )
+    ), !.
+
+slicer_abstraction(Spec, RevS, Scope, Goal, M, Body,
 		   state(_, EvalL, OnErr, CallL, Data, Cont),
 		   state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { \+ ground(Spec),
-      chain_of_dependencies(Spec, Goal, Cont)
+      chain_of_dependencies(Spec, RevS, Goal, Cont)
     ->match_head_body(Goal, M, Body1, Loc),
       ( Scope = body
       ->Body = Body1
-      ;	terms_share(Spec, Goal)
+      ;	terms_share(Spec, RevS, Goal)
       ->Body = Body1
       ; Body = M:true
       )
