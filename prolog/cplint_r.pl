@@ -83,6 +83,11 @@ load_r_libraries :-
 finalize_r_graph :-
 	r_download.
 
+/* Out = [X1-Y1, X2-Y2, X*/
+assemble_list([], [], []).
+
+assemble_list([XH|XT], [YH|YT], [XH-YH|Out]) :-
+        assemble_list(XT, YT, Out).
 
 r_row(X,Y,r(X,Y)).
 
@@ -106,7 +111,9 @@ get_set_from_list(L,R) :-
  * This represents a probability between 0 and 1.
  */
 geom_prob_bar(PTrue,PFalse) :-
-    L=['T'-PTrue,'F'-PFalse],
+    X=['T','F'],
+    Y=[PTrue,PFalse],
+    assemble_list(X,Y,L),
     get_set_from_list(L,R),
     r_data_frame_from_rows(df1, R),
     colnames(df1) <- c("names", "prob"),
@@ -186,7 +193,9 @@ mc_prob_bar_r(M:Goal):-
 
 
 geom_mc_sample_bar(PTrue,PFalse) :-
-    L=['T'-PTrue,'F'-PFalse],
+    X=['T','F'],
+    Y=[PTrue,PFalse],
+    assemble_list(X,Y,L),
     get_set_from_list(L,R),
     r_data_frame_from_rows(df1, R),
     colnames(df1) <- c("names", "prob"),
