@@ -153,6 +153,8 @@ lps2p_file(LPSfile,LPSWfile) :-
 	(atom(LPSfile)->true;concat_atom([LPSWfile,'_.lps'],LPSfile)),
 	syntax2p_file(LPSfile,LPSWfile,lps2p,false).
 
+% parameter for declaration generation; 'false' may help LPS program debugging
+add_automatic_declarations(true). % 'true' will add fluent, event and action declarations guessed from usage; 
 
 % Main file to file syntax converter
 % syntax2p_file(+OtherSyntaxFile,+P_Wei_file,+Translator,+ToWei) Translator is a functor for a predicate Translate(Term,Vars,NewTerm)
@@ -186,7 +188,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		fail
 	),
 	!,
-	(ToWei==true ->
+	((ToWei==true, add_automatic_declarations(true)) ->
 		% generate missing declarations
 		forall( 
 			(head_hint(X,Type,false), Type \== timeless, Fact=..[Type,X]), 
