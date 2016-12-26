@@ -25,7 +25,7 @@ Time variables must start with T or _T, followed by _ or a digit.
 Prolog facts in general are not transformed.
 In particular, initial_state(FluentsList) and observe(EventsList,Time) should be present.
 
-LIMITATION wrt time variable convention: 
+IMPORTSNT LIMITATION wrt time variable convention: 
 If a l_timeless predicate has T variables, it's (reverse) conversion to our syntax will be wrong...
 ... because on a subsequent conversion (from ours to Wei's) that predicate will become a timefull predicate
 Ditto for "timeful" predicates with non-T variables
@@ -70,8 +70,8 @@ Prolog facts in general are not transformed.
 :- op(1200,xfx,then).
 :- op(1185,fx,if).
 :- op(1200,xfx,if).
-:- op(1050,fx,terminates).
-:- op(1050,fx,initiates).
+:- op(1050,xfx,terminates).
+:- op(1050,xfx,initiates).
 % Rejected:-( :- op(1050,fx,impossible). 
 :- op(1050,fx,false).
 :- op(995,xfx,at).
@@ -80,7 +80,7 @@ Prolog facts in general are not transformed.
 
 :- export lpsp2p_file/2, lpsp2p/3, 
 	lps2p_file/2, lps2p/3, syntax2p_file/4,
-	gol/2, gol/1, golv/3, golv/2, golv/1.
+	gol/2, gol/1, golps/2, golps/1, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1.
 
 :- import append/3, member/2 from basics.
 :- import concat_atom/2 from string.
@@ -102,6 +102,18 @@ gol(LPSP_file,Options) :- gol(LPSP_file,Options,[]).
 
 gol(LPSP_file) :- gol(LPSP_file,[]).
 
+% Convert a file in LPS (new syntax) into Wei syntax and execute it 
+golps(LPSP_file,Options,Results) :-
+	concat_atom([LPSP_file,'_.P'],Pfile),
+	syntax2p_file(LPSP_file,Pfile,lps2p,true),
+	go(Pfile,Options,Results).
+
+golps(LPSP_file,Options) :- golps(LPSP_file,Options,[]).
+
+golps(LPSP_file) :- golps(LPSP_file,[]).
+
+
+% Top level predicates to visualize timelines of a psyntax file
 golv(LPSP_file) :- golv(LPSP_file,[]).
 
 golv(LPSP_file,Options) :- golv(LPSP_file,Options,[]).
@@ -110,6 +122,18 @@ golv(LPSP_file,Options,Results) :-
 	concat_atom([LPSP_file,'_.P'],Pfile),
 	syntax2p_file(LPSP_file,Pfile,lpsp2p,true),
 	gov(Pfile,Options,Results).
+
+% Top level predicates to visualize timelines of a LPS (new syntax) file
+golpsv(LPSP_file) :- golpsv(LPSP_file,[]).
+
+golpsv(LPSP_file,Options) :- golpsv(LPSP_file,Options,[]).
+
+golpsv(LPSP_file,Options,Results) :-
+	concat_atom([LPSP_file,'_.P'],Pfile),
+	syntax2p_file(LPSP_file,Pfile,lps2p,true),
+	gov(Pfile,Options,Results).
+	
+% File converters:
 
 % lpsp2p_file(?LPSPfile,?LPSWfile) "papers syntax"
 lpsp2p_file(LPSPfile,LPSWfile) :- atom(LPSPfile), !,
@@ -120,23 +144,24 @@ lpsp2p_file(LPSPfile,LPSWfile) :-
 	(atom(LPSPfile)->true;concat_atom([LPSWfile,'_.lpsp'],LPSPfile)),
 	syntax2p_file(LPSPfile,LPSWfile,lpsp2p,false).
 
-% lpsp2p_file(?LPSPfile,?LPSWfile) "new syntax", Nov 2016
-lps2p_file(LPSPfile,LPSWfile) :- atom(LPSPfile), !,
-	(atom(LPSWfile)->true;concat_atom([LPSPfile,'_.lpsw'],LPSWfile)),
-	syntax2p_file(LPSPfile,LPSWfile,lps2p,true).
-lps2p_file(LPSPfile,LPSWfile) :- 
+% lps2p_file(?LPSfile,?LPSWfile) "new syntax", Nov-Dec 2016
+lps2p_file(LPSfile,LPSWfile) :- atom(LPSfile), !,
+	(atom(LPSWfile)->true;concat_atom([LPSfile,'_.lpsw'],LPSWfile)),
+	syntax2p_file(LPSfile,LPSWfile,lps2p,true).
+lps2p_file(LPSfile,LPSWfile) :- 
 	atom(LPSWfile), 
-	(atom(LPSPfile)->true;concat_atom([LPSWfile,'_.lpsp'],LPSPfile)),
-	syntax2p_file(LPSPfile,LPSWfile,lps2p,false).
+	(atom(LPSfile)->true;concat_atom([LPSWfile,'_.lps'],LPSfile)),
+	syntax2p_file(LPSfile,LPSWfile,lps2p,false).
 
-		
-% syntax2p_file(+LPSPfile,+Pfile,+Translator,+ToWei) Translator is a functor for a predicate Translate(Term,Vars,NewTerm)
+
+% Main file to file syntax converter
+% syntax2p_file(+OtherSyntaxFile,+P_Wei_file,+Translator,+ToWei) Translator is a functor for a predicate Translate(Term,Vars,NewTerm)
 % If ToWei==true it generates a .P file from the first file, else vice-versa
 syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	( member(Translator,[lpsp2p,lps2p]) -> true 
 		; write('*** Bad syntax translator: '), writeln(Translator), fail),
 	init_definition_newliner,
-	retractall(head_hint(_,_)),
+	retractall(head_hint(_,_,_)),
 	current_prolog_flag(write_depth,Old), set_xsb_flag(write_depth,10000),
 	(ToWei==true -> 
 		file_exists(Lfile), open(Lfile,read,IStr), open(Pfile,write,OStr), 
@@ -161,103 +186,215 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		fail
 	),
 	!,
+	(ToWei==true ->
+		% generate missing declarations
+		forall( 
+			(head_hint(X,Type,false), Type \== timeless, Fact=..[Type,X]), 
+			(may_write_newline(Fact,OStr), pretty_write(Fact,OStr), writeln(OStr,'.'))
+			)
+	; true),
 	close(OStr),close(IStr),
 	set_xsb_flag(write_depth,Old).
 
-% head_hint(HeadTemplate,Sort) Sort is currently l_timeless
-%  a fact means that some head was read before tagged as Sort 
-:- dynamic head_hint/2.
-remember_hint(H) :- 
+% head_hint(HeadTemplate,Sort,Declared) Sort maybe l_timeless,event,fluent
+%  a fact means that some head was read before and tagged as Sort
+%  used only when transforming from some nicer to Wei syntax 
+%  Declared is 'true' if a declaration (not just usage) was detected
+:- dynamic head_hint/3.
+
+head_hint(X,Sort) :- head_hint(X,Sort,_).
+
+remember_hint(Type,H) :- 
+	nonvar(Type), nonvar(H),
+	member(Type,[fluent,event,timeless]),
 	functor(H,F,N), functor(HH,F,N),
-	( head_hint(HH,l_timeless) ->  true; assert(head_hint(HH,l_timeless) )).
+	( head_hint(HH,Type,_) ->  true; assert(head_hint(HH,Type,false) )).
 
+remember_timeless_hint(TL) :- remember_hint(timeless,TL).
+remember_event_hint(TL) :- remember_hint(event,TL).
+remember_fluent_hint(TL) :- remember_hint(fluent,TL).
+
+remember_declaration(Type,H) :- 
+	nonvar(Type), nonvar(H),
+	member(Type,[fluent,event,timeless]),
+	functor(H,F,N), functor(HH,F,N),
+	( head_hint(HH,Type,true) ->  true; retractall(head_hint(HH,Type,_)), assert(head_hint(HH,Type,true) )).
+	
+% remember_hints(Type,LiteralOrList)
+remember_hints(_Type,X) :- var(X), ! . %, !, write('*** Underspecified term of sort '), writeln(Type).
+remember_hints(_Type,[]) :- !.
+remember_hints(Type,[X1|Xn]) :- !, remember_hint(Type,X1), remember_hints(Type,Xn).
+remember_hints(Type,X) :- remember_hint(Type,X).
+
+% remember_declarations(Type,LiteralOrList)
+remember_declarations(Type,X) :- var(X), !, write('*** Underspecified declared term of sort '), writeln(Type).
+remember_declarations(_Type,[]) :- !.
+remember_declarations(Type,[X1|Xn]) :- !, remember_declaration(Type,X1), remember_hints(Type,Xn).
+remember_declarations(Type,X) :- remember_declaration(Type,X).
+
+	
+% convenience predicates for environment syntax checkers:
 lpsp2p(LPSPterm,Vars,Pterm) :- syntax2p(LPSPterm,Vars,lpsp2p,Pterm).
-
 lps2p(LPSPterm,Vars,Pterm) :- syntax2p(LPSPterm,Vars,lps2p,Pterm).
 
-% syntax2p(?LPSPterm,+Vars,+Translator,?Pterm) 
+% Main term syntax converter
+%
+% syntax2p(?NicerSyntaxTerm,+Vars,+Translator,?WeiPterm) 
 % Vars is a (closed tail) list of some_functor(Name,Variable)
-% Translator: lpsp2p ("papers syntax") or lps2p ("new syntax")
+% Translator: lpsp2p ("papers syntax") or lps2p ("new syntax"); 
 % Either LPSPterm or Pterm must be bound; the other should be unbound
 % Probably needs to evolve to return error messages
-syntax2p(L,_,TT,PT) :- var(L), var(PT), !, fail.
-syntax2p((A--->C priority P),Vars,TT,reactive_rule(NA,NC,P)) :- !, 
-	syntax2p_sequence(A,Vars,TTT,NA), syntax2p_sequence(C,Vars,TTTT,NC).
-syntax2p((A--->C),Vars,TT,reactive_rule(NA,NC)) :- !, 
-	syntax2p_sequence(A,Vars,TTT,NA), syntax2p_sequence(C,Vars,TTTT,NC).
-syntax2p((H:-B),_,TT,PT) :- var(PT), (var(H);var(B)), !, fail.
-syntax2p((H:-B),_,TT,(H:-B)) :- do_not_transform(H,TTT,B), !.
-syntax2p(Fact,_,TT,Fact) :- do_not_transform(Fact,TTT,true), !.
-syntax2p((false:-B),Vars,TT,d_pre(IC)) :- !, 
-	syntax2p_sequence(B,Vars,TTT,IC).
-syntax2p((IT:-B),Vars,TT,PT) :- % LPSP -> Wei term
+syntax2p(L,_,_TT,PT) :- var(L), var(PT), !, fail.
+syntax2p((if A then C priority P), Vars,TT, reactive_rule(NA,NC,P)) :- TT=lps2p, !, % TODO: should add T3>=T1?? interpreter enforced?
+	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
+syntax2p((A--->C priority P), Vars,TT, reactive_rule(NA,NC,P)) :- TT=lpsp2p, !, 
+	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
+syntax2p((if A then C), Vars,TT, reactive_rule(NA,NC)) :- TT=lps2p, !, 
+	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
+syntax2p((A--->C),Vars,TT,reactive_rule(NA,NC)) :- TT=lpsp2p, !, 
+	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
+syntax2p((H:-B),_,_TT,PT) :- var(PT), (var(H);var(B)), !, fail.
+syntax2p((H:-B),_,TT,(H:-B)) :- do_not_transform_may_hint(H,TT,B), !.
+syntax2p(Fact,_,TT,Fact) :- do_not_transform_may_hint(Fact,TT,true), !.
+% pre-conditions:
+syntax2p((false B),Vars,lps2p,d_pre(IC)) :- !, 
+	syntax2p_sequence(B,Vars,lps2p,[_T1,_T2],single,IC).
+syntax2p((false:-B),Vars,lpsp2p,d_pre(IC)) :- !, 
+	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,IC).
+% now post-conditions:	
+syntax2p((IT:-B),Vars,lpsp2p,PT) :- % LPSP -> Wei term
 	var(PT),
 	IT=..[F,H], ((F==terminated) ; (F==initiated)), 
 	!,
-	syntax2p_sequence(B,Vars,TTT,[NB1|NBn]), % should be strictier wrt NB1 ?
+	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,[NB1|NBn]), % should be strictier wrt NB1 ?
 	PT=..[F,NB1,H,NBn].
-syntax2p(L,Vars,TT,PT) :- % LPSP <- Wei term
+syntax2p((H:-B),Vars,lps2p,PT) :- % 
+	var(PT),
+	( H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn) ; H= (Event terminates Fluent), PT=terminated(NB1,Fluent,NBn)),
+	!,
+	remember_fluent_hint(Fluent),
+	syntax2p_sequence((Event,B),Vars,lps2p,[_T1,_T2],single,[NB1|NBn]).
+syntax2p(H,Vars,lps2p,PT) :- % 
+	var(PT),
+	( H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn) ; H= (Event terminates Fluent), PT=terminated(NB1,Fluent,NBn)),
+	!,
+	remember_fluent_hint(Fluent),
+	syntax2p_sequence(Event,Vars,lps2p,[_T1,_T2],single,[NB1|NBn]).
+syntax2p(L,Vars,lpsp2p,PT) :- % LPSP <- Wei term
 	var(L), PT=..[F,NB1,H,NBn], 
 	((F==terminated) ; (F==initiated)), 
 	!,
 	LH=..[F,H], L = (LH:-B),
-	syntax2p_sequence(B,Vars,TTT,[NB1|NBn]). % should be strictier wrt NB1 ?
-syntax2p(L,Vars,TT,PT) :- 
+	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,[NB1|NBn]). % should be strictier wrt NB1 ?
+syntax2p(L,Vars,lps2p,PT) :-
+	var(L), PT=..[F,NB1,Fluent,NBn], 
+	((F==terminated), L_ = (Event terminates Fluent) ; (F==initiated), L_ = (Event initiates Fluent)), 
+	!,
+	syntax2p_sequence(Conditions,Vars,lps2p,[_T1,_T2],single,[NB1|NBn]),
+	(Conditions = (Event,Body) -> L = (L_ :- Body) ; L = L_, Conditions=Event).
+
+syntax2p(L,Vars,Translator,PT) :- 
 	(var(PT) -> ToWei=true; ToWei=false),
 	(L = (LH:-LB)->true;LH=L,LB=true), 
-	(ToWei==true -> syntax2p_literal(LH,Vars,TTT,NH); true),
+	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],NH); true),
 	( 
-	PT = l_events(NH,NB), NH=happens(H,_,_) ;
-	PT = l_int(NH,NB), NH = holds(H,_) ;
-	% if a timeless head, remember that to override "time looks" in body if need be:
-	PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), remember_hint(NH)
+		PT = l_events(NH,NB), NH=happens(H,_,_) ;
+		PT = l_int(NH,NB), NH = holds(H,_) ;
+		% if a timeless head, remember that to override "time looks" in body if need be:
+		PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), Translator=lpsp2p, remember_timeless_hint(NH)
 	),
 	!,
-	((ToWei==false) -> syntax2p_literal(LH,Vars,TTTT,NH) ; true),
-	syntax2p_sequence(LB,Vars,TTTTT,NB).
+	((ToWei==false) -> syntax2p_literal(LH,Vars,Translator,[T1,T2],NH) ; true),
+	syntax2p_sequence(LB,Vars,Translator,[T1,T2],NB).
+syntax2p(Term, _, _Translator, Term). % pass through for Wei terms or other Prolog facts
 
-syntax2p(Fact, _, TT, Fact). % pass through for Wei terms or other Prolog facts
+% syntax2p_sequence(NicerSequence,Vars,Translator,[Start,End],WeiPsequence)  [Start,End] may constrain time arguments
+syntax2p_sequence(NS,Vars,Translator,Interval,W) :-
+	syntax2p_sequence(NS,Vars,Translator,Interval,_,W).
 
-syntax2p_sequence((L1,L2),Vars,Translator,[PT1|PT2]) :- PT2 \== [], !,
-	syntax2p_literal(L1,Vars,Translator,PT1), syntax2p_sequence(L2,Vars,Translator,PT2).
-syntax2p_sequence(true,_,TT,[]) :- !.
-syntax2p_sequence(L,Vars,TT,[PT]) :- syntax2p_literal(L,Vars,TTT,PT).
+% syntax2p_sequence(NS,Vars,Translator,[T1,T2],IntervalType,W)  if  IntervalType==single, T2 must be T1+1	
+syntax2p_sequence((L1,L2),Vars,Translator,[T1,T4],IT, [PT1|PT2]) :- PT2 \== [], !,
+	syntax2p_literal(L1,Vars,Translator,[T1,T2], PT1), 
+	(IT==single -> T3=T1,T4=T2 ; T2=T3),
+	syntax2p_sequence(L2,Vars,Translator,[T3,T4],IT,PT2).
+syntax2p_sequence(true,_,_TT,[T,T],_,[]) :- !.
+syntax2p_sequence(L,Vars,Translator,Interval,_,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,PT).
 
-syntax2p_literal(tc(TC),_Vars,TT,tc(TC)) :- !. %TODO: check Vars for (some) Ts!!!
-syntax2p_literal(L,Vars,TT,happens(NL,T1,T2)) :- 
+% syntax2p_literal(NicerLiteral,Vars,Translator,[T1,T2],WeiLiteral)
+%  for events, [T1,T2] is their interval; for fluents, T1 is the time
+
+syntax2p_literal(tc(TC),_Vars,lpsp2p,_,tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
+
+% event cases first...
+syntax2p_literal(L,Vars,lpsp2p,[T1,T2],happens(NL,T1,T2)) :- 
 	nonvar(L),
 	L=..LL, append(Tless,[T1,T2],LL),  Tless=[_|_], % last 2 args of term 
 	is_time_var(Vars,T1), is_time_var(Vars,T2),	
 	\+ head_hint(L,l_timeless),
 	!,
 	NL=..Tless.
-syntax2p_literal(L,Vars,TT,happens(NL,T1,T2)) :- 
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],happens(NL,T1,T2)) :- 
+	nonvar(LT), LT = (L during [T1,T2]),
+	!,
+	remember_event_hint(L),
+	NL=L.
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],happens(NL,T1,T2)) :- 
+	nonvar(LT), head_hint(LT,event),
+	!,
+	NL=LT.
+% Bob's alternative "Event from T1 to T2" could be handled around here
+syntax2p_literal(L,Vars,lpsp2p,[T1,T2],happens(NL,T1,T2)) :- 
 	var(L),
 	!,
 	NL=..NLL, append(NLL,[T1,T2],Tplus),  
 	!,
 	check_time_var(T1,Vars), check_time_var(T2,Vars),
 	L=..Tplus.
-syntax2p_literal(not(L),Vars,TT,holds(not(NL),T)) :- 
+syntax2p_literal(L,_Vars,lps2p,[T1,T2],happens(NL,T1,T2)) :- 
+	var(L),
+	!,
+	L = (NL during [T1,T2]). % ...thus ommitting "..during..." in events is not fully supported when reversing the transform
+
+% ... now on to fluents...
+syntax2p_literal(not(L),Vars,lpsp2p,[T1,T2],holds(not(NL),T)) :- 
 	% Wei syntax seems to preclude 'not' elsewhere!
 	!,
-	syntax2p_literal(L,Vars,TT,holds(NL,T)),
+	syntax2p_literal(L,Vars,lpsp2p,[T1,T2],holds(NL,T)),
 	check_time_var(T,Vars).
 	% Should probably ...? \+ head_hint(L,l_timeless),
-syntax2p_literal(L,Vars,TT,holds(NL,T)) :- 
+syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],holds(not(NL),T)) :- % not(fluent) at T is the preferred form, but 2 others avaialable
+	( LT= (not(F) at T) ; LT= not(F at T) ; LT= not(F), head_hint(F,fluent)),
+	!,
+	NL=F,
+	remember_fluent_hint(F),
+	T1=T.	
+syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],holds(NL,T)) :- 
 	nonvar(L),
 	L=..LL, LL=[_,_|_], append(Tless,[T],LL), 
 	is_time_var(Vars,T),
 	\+ head_hint(L,l_timeless),
 	!,
-	NL=..Tless.
-syntax2p_literal(L,Vars,TT,holds(NL,T)) :- 
+	NL=..Tless, T=T1.
+syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],holds(NL,T)) :- 
+	nonvar(LT), LT = (F at T),
+	!,
+	NL=F, T=T1,
+	remember_fluent_hint(F).
+syntax2p_literal(F,_Vars,lps2p,[T1,_T2],holds(NL,T)) :- 
+	nonvar(F), head_hint(F,fluent),
+	!,
+	NL=F, T=T1.
+syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],holds(NL,T)) :- 
 	var(L),
 	!,
-	is_time_var(Vars,T),
+	is_time_var(Vars,T), T=T1,
 	NL=..NLL, append(NLL,[T],Tplus),
 	L=..Tplus.
-syntax2p_literal(L,_,TT,L). % some timeless literal
+syntax2p_literal(L,_Vars,lps2p,[T1,_T2],holds(NL,T)) :- 
+	var(L),
+	!,
+	L = (NL at T), T1=T. % ...thus ommitting "..at..." in fluents is not fully supported when reversing the transform
+syntax2p_literal(L,_,_Translator,[T,T],L). % some timeless literal
 
 check_time_var(V,Vars) :- is_time_var(Vars,V), !.
 check_time_var(V,Vars) :-
@@ -288,24 +425,51 @@ bindAllVars([VV|Vars]) :-
 	(var(Value) -> Value=Name ; true), bindAllVars(Vars).
 
 % Declare here predicates you wish to keep unchanged accross the transform
-do_not_transform(observe(_,_),TT,_). % to cater for observe/2 rules (in addition to facts)
-do_not_transform(fluent(_),TT,_).
-do_not_transform(event(_),TT,_).
-do_not_transform(action(_),TT,_).
-do_not_transform(initial_state(_),TT,_).
-do_not_transform(l_int(_,_),TT,_).
-do_not_transform(l_timeless(_,_),TT,_).
+% For some specific cases, predicate sort hints are remembered
+% Most bodies left var, as we may want to use Prolog there, for some kind of "meta-level"
+% do_not_transform_may_hint(Head,SyntaxName,Body)
+do_not_transform_may_hint(observe(Events,_),_,_) :-!, remember_hints(event,Events). 
+do_not_transform_may_hint(fluent(F),_,_) :- !, remember_declarations(fluent,F).
+do_not_transform_may_hint(event(E),_,_) :- !, remember_declarations(event,E).
+do_not_transform_may_hint(action(A),_,_) :- !, remember_declarations(event,A).
+do_not_transform_may_hint(initial_state(S),_,_) :- !, remember_hints(fluent,S).
+do_not_transform_may_hint(l_int(_,_),lpsp2p,_).
+do_not_transform_may_hint(l_timeless(_,_),lpsp2p,_).
+do_not_transform_may_hint(maxTime(_),lps2p,_).
 
-% pretty printing
+% pretty printing for all syntaxes; although not doing anything specific to the new (lps2p translator) syntax
 pretty_write(Term,Stream) :- pretty_write(Term,0,Stream).
 
 % pretty_write(Term,Indent,Stream)
+pretty_write((if A then C priority P),I,S) :- !, 
+	my_tab(S,I), write(S,'if '), writeln(S,A), 
+	my_tab(S,I), write(S,'then '), writeln(S,''), 
+	NI is I+4, pretty_write(C,NI,S), 
+	write(S,'  priority '), write(S,P).
+pretty_write((if A then C),I,S) :- !, 
+	my_tab(S,I), write(S,'if '), writeln(S,A), 
+	my_tab(S,I), write(S,'then '), writeln(S,''), 
+	NI is I+4, pretty_write(C,NI,S).
 pretty_write((A--->C priority P),I,S) :- !, 
 	my_tab(S,I), write(S,A), writeln(S,' --->'), 
 	NI is I+4, pretty_write(C,NI,S),
-	write(S,'    priority '), write(S,P).
+	write(S,'  priority '), write(S,P).
 pretty_write((A--->C),I,S) :- !, 
 	my_tab(S,I), write(S,A), writeln(S,' --->'), NI is I+4, pretty_write(C,NI,S).
+pretty_write((false C),I,S) :- !,
+	my_tab(S,I), write(S,'false'), writeln(S,' '), NI is I+4,
+	pretty_write(C,NI,S).
+pretty_write(PostCondition,I,S) :- 
+	(
+		PostCondition = (E terminates F :- C), Op=(terminates) ; 
+		PostCondition = (E initiates F :- C), Op=(initiates) ;
+		PostCondition = (E terminates F), C=true, Op=(terminates) ;
+		PostCondition = (E initiates F), C=true, Op=(initiates)
+	), !,
+	my_tab(S,I), write(S,E), write(S,' '), 
+	write(S,Op), write(S,' '), pretty_write((F:-C),I,S).
+	
+
 pretty_write((H:-true),I,S) :- !, pretty_write(H,I,S).
 pretty_write((H:-B),I,S) :- !, 
 	my_tab(S,I), write(S,H), writeln(S,' :-'), NI is I+4, pretty_write(B,NI,S).
