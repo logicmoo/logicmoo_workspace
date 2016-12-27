@@ -71,7 +71,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	lps_test_result_item/3,
 	lps_test_result/3,
 	lps_failed_test/2,
-	my_load_dyn/2
+	my_load_dyn/2,
+	% The following hosted here for psyntax:
+	'_currenty__defining'/1,
+	head_hint/3
 ]).
 
 :- dynamic lps_goal_id_counter/1.
@@ -108,6 +111,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic lps_test_result/3.
 :- dynamic lps_failed_test/2.
 :- dynamic lps_test_options/1.
+:- dynamic '_currenty__defining'/1.
+:- dynamic head_hint/3.
 
 :- if(current_prolog_flag(dialect, xsb)).
 

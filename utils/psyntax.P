@@ -67,7 +67,8 @@ Prolog facts in general are not transformed.
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 
-:- use_module(interpreter,[go/3]). % assumed preloaded
+:- use_module(interpreter,[go/3,uassert/1, uretractall/1]). % assumed preloaded
+:- use_module(db,[head_hint/3, '_currenty__defining'/1]).
 :- use_module(basics, [member/2, append/3]).
 :- use_module(string,[concat_atom/2]).
 :- consult:add_this_lib_dir. % is this needed??
@@ -92,7 +93,9 @@ my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
 %%% end of XSB specific section; now for SWI:
 :- if(current_prolog_flag(dialect, swi)).
 
-:- use_module('../engine/interpreter.P',[go/3]).
+:- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1]).
+:- use_module('../Wei-engine/db.P',[head_hint/3, '_currenty__defining'/1]).
+
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
@@ -173,7 +176,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	( member(Translator,[lpsp2p,lps2p]) -> true 
 		; write('*** Bad syntax translator: '), writeln(Translator), fail),
 	init_definition_newliner,
-	retractall(head_hint(_,_,_)),
+	uretractall(head_hint(_,_,_)),
 	( current_prolog_flag(write_depth,Old) -> set_xsb_flag(write_depth,10000) ; true), % XSB specific, ignore otherwise
 	(ToWei==true -> 
 		file_exists(Lfile), open(Lfile,read,IStr), open(Pfile,write,OStr), 
@@ -213,15 +216,13 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 %  a fact means that some head was read before and tagged as Sort
 %  used only when transforming from some nicer to Wei syntax 
 %  Declared is 'true' if a declaration (not just usage) was detected
-:- dynamic head_hint/3.
-
 head_hint(X,Sort) :- head_hint(X,Sort,_).
 
 remember_hint(Type,H) :- 
 	nonvar(Type), nonvar(H),
 	member(Type,[fluent,event,action,timeless]),
 	functor(H,F,N), functor(HH,F,N),
-	( head_hint(HH,Type,_) ->  true; assert(head_hint(HH,Type,false) )).
+	( head_hint(HH,Type,_) ->  true; uassert(head_hint(HH,Type,false) )).
 
 remember_timeless_hint(TL) :- remember_hint(timeless,TL).
 
@@ -239,7 +240,7 @@ remember_declaration(Type,H) :-
 	nonvar(Type), nonvar(H),
 	member(Type,[fluent,event,action,timeless]),
 	functor(H,F,N), functor(HH,F,N),
-	( head_hint(HH,Type,true) ->  true; retractall(head_hint(HH,Type,_)), assert(head_hint(HH,Type,true) )).
+	( head_hint(HH,Type,true) ->  true; uretractall(head_hint(HH,Type,_)), uassert(head_hint(HH,Type,true) )).
 	
 % remember_hints(Type,LiteralOrList)
 remember_hints(_Type,X) :- var(X), ! . %, !, write('*** Underspecified term of sort '), writeln(Type).
@@ -506,12 +507,10 @@ predicate_for(V,none) :- var(V), !.
 predicate_for((H:-_),F/A) :- !, functor(H,F,A).
 predicate_for(H,F/A) :- functor(H,F,A).
 
-:- dynamic '_currenty__defining'/1.
-
 init_definition_newliner :- set_currently_defining(none).
 
 set_currently_defining(P) :- 
-	retractall('_currenty__defining'(_)), assert('_currenty__defining'(P)).
+	uretractall('_currenty__defining'(_)), uassert('_currenty__defining'(P)).
 	
 may_write_newline(Term,S) :- 
 	predicate_for(Term,P), 
