@@ -51,13 +51,12 @@ putdown_forks(F1, philosopher(N), F2) initiates available(F1). % if true.
 putdown_forks(F1, philosopher(N), F2) terminates available(F1). % 
 % later addition, to base Wei syntax: fluent list, easy to implement on interpreter
 
-observations([event1(foo),event2(bar)],3).
+observe([event1(foo),event2(bar)],3).
 
-end_of_time(10).
+maxTime(10).
 
 .... T1>T2 ... ----> tc(T1>T2) 
 
-Time variables must appear in ...at T or during [T1,T2].
 Prolog facts in general are not transformed.
 */
 
@@ -317,9 +316,9 @@ syntax2p_sequence(NS,Vars,Translator,Interval,W) :-
 % syntax2p_sequence(NS,Vars,Translator,[T1,T2],IntervalType,W)  if  IntervalType==single, T2 must be T1+1	
 syntax2p_sequence((L1,L2),Vars,Translator,[T1,T4],IT, [PT1|PT2]) :- PT2 \== [], !,
 	syntax2p_literal(L1,Vars,Translator,[T1,T2], PT1), 
-	(IT==single -> T3=T1,T4=T2 ; T2=T3),
+	(IT==single -> T3=T1,T4=T2 ; T2=T3), % 'single' too strict, should probably reflect into a tc(...) ???
 	syntax2p_sequence(L2,Vars,Translator,[T3,T4],IT,PT2).
-syntax2p_sequence(true,_,_TT,[T,T],_,[]) :- !.
+syntax2p_sequence(true,_,_TT,[_T1,_T2],_,[]) :- !.
 syntax2p_sequence(L,Vars,Translator,Interval,_,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,PT).
 
 % syntax2p_literal(NicerLiteral,Vars,Translator,[T1,T2],WeiLiteral)
@@ -344,7 +343,7 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],happens(NL,T1,T2)) :-
 	nonvar(LT), head_hint(LT,event),
 	!,
 	NL=LT.
-% Bob's alternative "Event from T1 to T2" could be handled around here
+% Bob's alternative "Event from T1 to T2" syntax could be handled around here
 syntax2p_literal(L,Vars,lpsp2p,[T1,T2],happens(NL,T1,T2)) :- 
 	var(L),
 	!,
@@ -396,7 +395,7 @@ syntax2p_literal(L,_Vars,lps2p,[T1,_T2],holds(NL,T)) :-
 	var(L),
 	!,
 	L = (NL at T), T1=T. % ...thus ommitting "..at..." in fluents is not fully supported when reversing the transform
-syntax2p_literal(L,_,_Translator,[T,T],L). % some timeless literal
+syntax2p_literal(L,_,_Translator,[_T1,_T2],L). % some timeless literal
 
 check_time_var(V,Vars) :- is_time_var(Vars,V), !.
 check_time_var(V,Vars) :-
