@@ -28,7 +28,7 @@
 */
 
 :- module(abstract_slicer, [abstract_slice/3,
-			    slicer_abstraction/9]).
+			    slicer_abstraction/10]).
 
 :- use_module(library(abstract_interpreter)).
 
@@ -106,7 +106,7 @@ slicer_abstraction(Spec, RevS, Scope, Goal, M, Body,
     ->bottom			% Kludge to avoid cut remove solutions
     ; []
     ).
-slicer_abstraction(_, _, Goal, M, M:true, S, S) -->
+slicer_abstraction(_, _, _, Goal, M, M:true, S, S) -->
     { S = state(Loc, _, OnError, _, _, _),
       call(OnError, error(existence_error(evaluation_rule, M:Goal), Loc))
     },
