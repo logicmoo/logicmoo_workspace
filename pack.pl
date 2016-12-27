@@ -5,5 +5,5 @@ author('Franco Masotti','franco.masotti@student.unife.it').
 maintainer('Franco Masotti','franco.masotti@student.unife.it').
 packager('Franco Masotti','franco.masotti@student.unife.it').
 home('https://github.com/frnmst/cplint_r').
-requires('r_client').
+requires('rserve_client').
 requires('cplint').

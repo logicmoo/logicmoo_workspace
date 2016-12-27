@@ -78,7 +78,8 @@ bin_width(Min,Max,NBins,Width) :-
   Width is D/NBins.
 
 load_r_libraries :-
-    <- library("ggplot2").
+    <- library("ggplot2"),
+    <- pdf("plot.pdf").
 
 finalize_r_graph :-
 	r_download.
