@@ -4,7 +4,7 @@ initial_state([available(fork(0)),available(fork(1)),available(fork(2)),availabl
 % a little hack assuming adjacent/3 enumerates our philosophers
 observe(Desires,1) :- findall(time_to_eat(Phi),adjacent(_,Phi,_),Desires).
 
-end_of_time(10).
+maxTime(10).
 
 % Now for the agent/simulation:
 if time_to_eat(philosopher(N)) during [_T1,T2] 
