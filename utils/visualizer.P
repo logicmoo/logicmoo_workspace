@@ -9,7 +9,7 @@
 /* Utilities for visualizing LPS executions; 
 the XSB version depends on http://interprolog.com/interprolog-studio , the SWI one on SWISH */
 
-:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4]).
+:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
@@ -17,6 +17,7 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 :- use_module(db,[
 	lps_test_result_item/3, action/1
 	]).
+:- use_module(psyntax,[syntax2p_file/4]).
 
 :- use_module(subsumes,[variant/2]).
 :- use_module(basics, [member/2, append/3, length/2]).
@@ -66,19 +67,21 @@ displayTimeline(File,JSON) :-
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 :- endif.
+% now non-swish SWI...
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish) )).
 :- use_module('../Wei-engine/db.P',[
 	lps_test_result_item/3, action/1
 	]).
 :- endif.
 
-
+% ... and generic SWI:
 :- if(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(http/json)).
 :- use_module('../engine/interpreter.P',[
 	go/3, my_term_to_atom/2
 	]).
+:- use_module(psyntax,[syntax2p_file/4]).
 
 make_json_object(L,json(NL)) :- json_colons_to_equals(L,NL).
 
@@ -110,13 +113,33 @@ displayTimeline(_File,_JSON).
 
 %%% From here on, generic Prolog code
 
-% gov(ProgramFile) "go visual": executes generating results file and displays its timeline
+% gov(ProgramFile) "go visual": executes LPSW file generating results and displays its timeline
 gov(File) :- gov(File,[]).
 
 % gov(ProgramFile,Options)
 gov(File,Options) :- gov(File,Options,[]).
 
 gov(File,Options,Results) :- go(File,[make_test|Options],Results), visual(File,_JSON).
+
+% Top level predicates to visualize timelines of a psyntax file
+golv(LPSP_file) :- golv(LPSP_file,[]).
+
+golv(LPSP_file,Options) :- golv(LPSP_file,Options,[]).
+
+golv(LPSP_file,Options,Results) :-
+	concat_atom([LPSP_file,'_.P'],Pfile),
+	syntax2p_file(LPSP_file,Pfile,lpsp2p,true),
+	gov(Pfile,Options,Results).
+
+% Top level predicates to visualize timelines of a LPS (new syntax) file
+golpsv(LPSP_file) :- golpsv(LPSP_file,[]).
+
+golpsv(LPSP_file,Options) :- golpsv(LPSP_file,Options,[]).
+
+golpsv(LPSP_file,Options,Results) :-
+	concat_atom([LPSP_file,'_.P'],Pfile),
+	syntax2p_file(LPSP_file,Pfile,lps2p,true),
+	gov(Pfile,Options,Results).
 
 % for SWISH:
 gojson(JSON) :- gojson(_File,[],[],JSON).

@@ -60,36 +60,68 @@ maxTime(10).
 Prolog facts in general are not transformed.
 */
 
-:- op(1200,xfx,--->). % for reactive rules
-:- op(1190,xfx,priority). %... with priority
-:- op(900,fy,terminated).
-:- op(900,fy,initiated).
+:- module(psyntax,[ lpsp2p_file/2, lpsp2p/3, 
+	lps2p_file/2, lps2p/3, syntax2p_file/4,
+	gol/2, gol/1, golps/2, golps/1]).
+
+%%% XSB specific section:
+:- if(current_prolog_flag(dialect, xsb)).
+
+:- use_module(interpreter,[go/3]). % assumed preloaded
+:- use_module(basics, [member/2, append/3]).
+:- use_module(string,[concat_atom/2]).
+:- consult:add_this_lib_dir. % is this needed??
+:- use_module(xsb_read,[ file_read/3]).
+
+my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
 
 % New syntax .lps
 :- op(1200,xfx,then).
 :- op(1185,fx,if).
 :- op(1200,xfx,if).
-:- op(1050,xfx,terminates).
-:- op(1050,xfx,initiates).
+:- op(1050,xfx,(terminates)).
+:- op(1050,xfx,(initiates)).
 % Rejected:-( :- op(1050,fx,impossible). 
 :- op(1050,fx,false).
 :- op(995,xfx,at).
 :- op(995,xfx,during).
 :- op(1050,xfy,::).
 
-:- export lpsp2p_file/2, lpsp2p/3, 
-	lps2p_file/2, lps2p/3, syntax2p_file/4,
-	gol/2, gol/1, golps/2, golps/1, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1.
+:- endif.
 
-:- import append/3, member/2 from basics.
-:- import concat_atom/2 from string.
-:- import file_read/3 from xsb_read.
-:- import closetail/1 from listutil.
+%%% end of XSB specific section; now for SWI:
+:- if(current_prolog_flag(dialect, swi)).
 
-:- import go/3 from interpreter.
-:- import gov/3 from visualizer.
+:- use_module('../engine/interpreter.P',[go/3]).
+:- use_module(library(dialect/sicstus/system),[file_exists/1]).
+my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
-:- consult:add_this_lib_dir.
+% New syntax .lps
+:- op(900,fy,user:(not)). 
+:- op(1200,xfx,user:(then)).
+:- op(1185,fx,user:(if)).
+:- op(1200,xfx,user:(if)).
+:- op(1050,xfx,user:(terminates)).
+:- op(1050,xfx,user:(initiates)).
+% Rejected:-( :- op(1050,fx,impossible). 
+:- op(1050,fx,user:(false)).
+:- op(995,xfx,user:(at)).
+:- op(995,xfx,user:(during)).
+:- op(1050,xfy,user:(::)).
+:- endif.
+
+%%% From here on, generic Prolog code
+
+% grabbed from XSB:
+closetail([]) :- !.
+closetail([_|L]) :- closetail(L).
+
+:- op(1200,xfx,--->). % for reactive rules
+:- op(1190,xfx,priority). %... with priority
+:- op(900,fy,terminated).
+:- op(900,fy,initiated).
+
+
 
 % Convert a file in LPSP into Wei syntax and execute it 
 gol(LPSP_file,Options,Results) :-
@@ -110,27 +142,6 @@ golps(LPSP_file,Options,Results) :-
 golps(LPSP_file,Options) :- golps(LPSP_file,Options,[]).
 
 golps(LPSP_file) :- golps(LPSP_file,[]).
-
-
-% Top level predicates to visualize timelines of a psyntax file
-golv(LPSP_file) :- golv(LPSP_file,[]).
-
-golv(LPSP_file,Options) :- golv(LPSP_file,Options,[]).
-
-golv(LPSP_file,Options,Results) :-
-	concat_atom([LPSP_file,'_.P'],Pfile),
-	syntax2p_file(LPSP_file,Pfile,lpsp2p,true),
-	gov(Pfile,Options,Results).
-
-% Top level predicates to visualize timelines of a LPS (new syntax) file
-golpsv(LPSP_file) :- golpsv(LPSP_file,[]).
-
-golpsv(LPSP_file,Options) :- golpsv(LPSP_file,Options,[]).
-
-golpsv(LPSP_file,Options,Results) :-
-	concat_atom([LPSP_file,'_.P'],Pfile),
-	syntax2p_file(LPSP_file,Pfile,lps2p,true),
-	gov(Pfile,Options,Results).
 	
 % File converters:
 
@@ -163,7 +174,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		; write('*** Bad syntax translator: '), writeln(Translator), fail),
 	init_definition_newliner,
 	retractall(head_hint(_,_,_)),
-	current_prolog_flag(write_depth,Old), set_xsb_flag(write_depth,10000),
+	( current_prolog_flag(write_depth,Old) -> set_xsb_flag(write_depth,10000) ; true), % XSB specific, ignore otherwise
 	(ToWei==true -> 
 		file_exists(Lfile), open(Lfile,read,IStr), open(Pfile,write,OStr), 
 		Convert =.. [Translator,Term,Vars,NewTerm]
@@ -171,12 +182,13 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		file_exists(Pfile), open(Pfile,read,IStr), open(Lfile,write,OStr),
 		Convert =.. [Translator,NewTerm,Vars,Term]
 		),
-	IStr >= 0, OStr>=0,
+	% IStr >= 0, OStr>=0,
+	nonvar(IStr), nonvar(OStr),
 	repeat,
-	catch(file_read(IStr,Term,Vars),_,true), closetail(Vars),
+	catch(my_file_read(IStr,Term,Vars),Ex,writeln(ex-Ex)), closetail(Vars),
 	( Term==end_of_file -> true
 	;  
-		Convert, 
+		(Convert->true; write('*** failed '), writeln(Convert), fail), 
 		% When converting back to our syntax from Wei's, make sure T vars are not misinterpreted:
 		% NO! Too strong
 		% ((ToWei\==true, member(V,Vars), is_time_var(V)) -> true
@@ -195,7 +207,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 			)
 	; true),
 	close(OStr),close(IStr),
-	set_xsb_flag(write_depth,Old).
+	(nonvar(Old)->set_xsb_flag(write_depth,Old);true).
 
 % head_hint(HeadTemplate,Sort,Declared) Sort maybe l_timeless,event,fluent
 %  a fact means that some head was read before and tagged as Sort
@@ -268,7 +280,7 @@ syntax2p(Fact,_,TT,Fact) :- do_not_transform_may_hint(Fact,TT,true), !.
 % pre-conditions:
 syntax2p((false B),Vars,lps2p,d_pre(IC)) :- !, 
 	syntax2p_sequence(B,Vars,lps2p,[_T1,_T2],single,IC).
-syntax2p((false:-B),Vars,lpsp2p,d_pre(IC)) :- !, 
+syntax2p(((false):-B),Vars,lpsp2p,d_pre(IC)) :- !, 
 	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,IC).
 % now post-conditions:	
 syntax2p((IT:-B),Vars,lpsp2p,PT) :- % LPSP -> Wei term
@@ -307,8 +319,8 @@ syntax2p(L,Vars,Translator,PT) :-
 	(L = (LH:-LB)->true;LH=L,LB=true), 
 	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],NH); true),
 	( 
-		PT = l_events(NH,NB), NH=happens(H,_,_) ;
-		PT = l_int(NH,NB), NH = holds(H,_) ;
+		PT = l_events(NH,NB), NH=happens(_,_,_) ;
+		PT = l_int(NH,NB), NH = holds(_,_) ;
 		% if a timeless head, remember that to override "time looks" in body if need be:
 		PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), Translator=lpsp2p, remember_timeless_hint(NH)
 	),
