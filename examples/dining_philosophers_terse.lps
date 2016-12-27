@@ -1,13 +1,13 @@
 % First, "environmental" information
 initial_state([available(fork(0)),available(fork(1)),available(fork(2)),available(fork(3)),available(fork(4))]).
 
+% a little hack assuming adjacent/3 enumerates our philosophers
 observe(Desires,1) :- findall(time_to_eat(Phi),adjacent(_,Phi,_),Desires).
 
 end_of_time(10).
 
 % Now for the agent/simulation:
-
-if time_to_eat(philosopher(N)) during [_T1,T2]
+if time_to_eat(philosopher(N)) during [_T1,T2] 
 then 
     dine(philosopher(N)) during [T3,_T4].
 
@@ -23,7 +23,7 @@ action(eat(_)).
 action(putdown_forks(_,_,_)).
 
 dine(philosopher(N)) :-
-    think(philosopher(N)),
+    think(philosopher(N)) during _,
     adjacent(F1,philosopher(N),F2),
     pickup_forks(F1,philosopher(N),F2),
     eat(philosopher(N)),

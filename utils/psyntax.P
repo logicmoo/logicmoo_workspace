@@ -207,17 +207,25 @@ head_hint(X,Sort) :- head_hint(X,Sort,_).
 
 remember_hint(Type,H) :- 
 	nonvar(Type), nonvar(H),
-	member(Type,[fluent,event,timeless]),
+	member(Type,[fluent,event,action,timeless]),
 	functor(H,F,N), functor(HH,F,N),
 	( head_hint(HH,Type,_) ->  true; assert(head_hint(HH,Type,false) )).
 
 remember_timeless_hint(TL) :- remember_hint(timeless,TL).
+
+remember_event_hint((E during _Interval)) :- !, remember_event_hint(E).
 remember_event_hint(TL) :- remember_hint(event,TL).
+
+% Do we need events and actions??
+%remember_action_hint((E during _Interval)) :- !, remember_action_hint(E).
+%remember_action_hint(TL) :- remember_hint(action,TL).
+
+remember_fluent_hint((F at _T)) :- !, remember_fluent_hint(F).
 remember_fluent_hint(TL) :- remember_hint(fluent,TL).
 
 remember_declaration(Type,H) :- 
 	nonvar(Type), nonvar(H),
-	member(Type,[fluent,event,timeless]),
+	member(Type,[fluent,event,action,timeless]),
 	functor(H,F,N), functor(HH,F,N),
 	( head_hint(HH,Type,true) ->  true; retractall(head_hint(HH,Type,_)), assert(head_hint(HH,Type,true) )).
 	
@@ -230,7 +238,7 @@ remember_hints(Type,X) :- remember_hint(Type,X).
 % remember_declarations(Type,LiteralOrList)
 remember_declarations(Type,X) :- var(X), !, write('*** Underspecified declared term of sort '), writeln(Type).
 remember_declarations(_Type,[]) :- !.
-remember_declarations(Type,[X1|Xn]) :- !, remember_declaration(Type,X1), remember_hints(Type,Xn).
+remember_declarations(Type,[X1|Xn]) :- !, remember_declaration(Type,X1), remember_declarations(Type,Xn).
 remember_declarations(Type,X) :- remember_declaration(Type,X).
 
 	
@@ -273,7 +281,7 @@ syntax2p((H:-B),Vars,lps2p,PT) :- %
 	var(PT),
 	( H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn) ; H= (Event terminates Fluent), PT=terminated(NB1,Fluent,NBn)),
 	!,
-	remember_fluent_hint(Fluent),
+	remember_fluent_hint(Fluent), remember_event_hint(Event),
 	syntax2p_sequence((Event,B),Vars,lps2p,[_T1,_T2],single,[NB1|NBn]).
 syntax2p(H,Vars,lps2p,PT) :- % 
 	var(PT),
@@ -324,7 +332,7 @@ syntax2p_sequence(L,Vars,Translator,Interval,_,[PT]) :- syntax2p_literal(L,Vars,
 % syntax2p_literal(NicerLiteral,Vars,Translator,[T1,T2],WeiLiteral)
 %  for events, [T1,T2] is their interval; for fluents, T1 is the time
 
-syntax2p_literal(tc(TC),_Vars,lpsp2p,_,tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
+syntax2p_literal(tc(TC),_Vars,lpsp2p,[_T1,_T2],tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
 
 % event cases first...
 syntax2p_literal(L,Vars,lpsp2p,[T1,T2],happens(NL,T1,T2)) :- 
