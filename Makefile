@@ -23,6 +23,9 @@ default: doc
 all:
 	@echo "none."
 
+check:
+	@echo "none."
+
 test: doc
 
 package: doc
