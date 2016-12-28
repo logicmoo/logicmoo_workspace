@@ -26,6 +26,9 @@ all:
 check:
 	@echo "none."
 
+install:
+	@echo "none."
+
 test: doc
 
 package: doc
@@ -37,6 +40,6 @@ doc:
 
 upload: doc
 
-.PHONY: test package doc upload
+.PHONY: default all check install test package doc upload
 
 
