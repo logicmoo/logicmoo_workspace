@@ -599,6 +599,7 @@ compute_areas_diagrams_r(LG,AUCROC,AUCPR) :-
     compute_areas(LG,AUCROC,ROC0,AUCPR,PR0),
     geom_compute_areas_diagram(ROC0,"ROC"),
     finalize_r_graph,
+    load_r_libraries,
     geom_compute_areas_diagram(PR0,"PR"),
     finalize_r_graph.
 
