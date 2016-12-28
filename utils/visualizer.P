@@ -81,8 +81,12 @@ action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 :- use_module('../engine/interpreter.P',[
 	go/3, my_term_to_atom/2
 	]).
-:- use_module(psyntax,[syntax2p_file/4]).
 
+:- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
+:- use_module(lpsUtils('psyntax.P'),[
+	syntax2p_file/4
+	]).
+  
 make_json_object(L,json(NL)) :- json_colons_to_equals(L,NL).
 
 json_colons_to_equals(V,NV) :- var(V), !, NV=V.

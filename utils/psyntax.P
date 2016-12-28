@@ -449,14 +449,21 @@ bindAllVars([VV|Vars]) :-
 % Declare here predicates you wish to keep unchanged accross the transform
 % For some specific cases, predicate sort hints are remembered
 % Most bodies left var, as we may want to use Prolog there, for some kind of "meta-level"
+% Finally, we leave Wei syntax terms utnouched, so we can keep mixing them in
 % do_not_transform_may_hint(Head,SyntaxName,Body)
 do_not_transform_may_hint(observe(Events,_),_,_) :-!, remember_hints(event,Events). 
 do_not_transform_may_hint(fluent(F),_,_) :- !, remember_declarations(fluent,F).
 do_not_transform_may_hint(event(E),_,_) :- !, remember_declarations(event,E).
 do_not_transform_may_hint(action(A),_,_) :- !, remember_declarations(event,A).
 do_not_transform_may_hint(initial_state(S),_,_) :- !, remember_hints(fluent,S).
-do_not_transform_may_hint(l_int(_,_),lpsp2p,_).
-do_not_transform_may_hint(l_timeless(_,_),lpsp2p,_).
+do_not_transform_may_hint(l_int(_,_),_,_).
+do_not_transform_may_hint(l_events(_,_),_,_).
+do_not_transform_may_hint(l_timeless(_,_),_,_).
+do_not_transform_may_hint(initiated(_,_,_),_,_).
+do_not_transform_may_hint(terminated(_,_,_),_,_).
+do_not_transform_may_hint(reactive_rule(_,_,_),_,_).
+do_not_transform_may_hint(reactive_rule(_,_),_,_).
+do_not_transform_may_hint(d_pre(_),_,_).
 do_not_transform_may_hint(maxTime(_),lps2p,_).
 
 % pretty printing for all syntaxes; although not doing anything specific to the new (lps2p translator) syntax

@@ -112,6 +112,7 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 :- use_module(library(pengines),[pengine_self/1]).
 
 % If performance becomes bad (due to nonindexed access inside the pengine_self predicate) we should pass M as arg
+% Implementation note: execution specific states (cf. cleanup_engine) might be stored instead by simply using thread_local declarations
 
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 current_goal(X) :- pengine_self(M), M:current_goal(X).
@@ -178,6 +179,13 @@ u_user_predicate(X) :- functor(X,F,N), current_predicate(db:F/N).
 callprolog(G) :- predicate_property(G,built_in), !, G.
 callprolog(G) :- catch(db:G,_,fail).
 
+% returns Pos as in http://www.swi-prolog.org/pldoc/man?predicate=read_term/2 (subterm_positions)
+lps_source_position(Term,FileWithExt,Pos) :- 
+	functor(Term,F,N), functor(Term_,F,N), 
+	clause(db:Term_,_B,Ref), variant(Term,Term_),
+	!,
+	clause_info(Ref,FileWithExt,Pos,_VO).
+	
 :- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
@@ -463,6 +471,7 @@ check_syntax(F,Notices) :-
 buildError(X,M,subterm(X,MM)) :- concat_terms([X,M],MM).
 
 % May call an external predicate hook to find the position
+% position for Prolog Studio is t(CharPosition,TermIndex), for SWI / swish see lps_source_position/3 above
 source_position(Term,F,Position) :- catch(lps_source_position(Term,F,Position),_,fail), !.
 source_position(_,_,unknown).
 	
