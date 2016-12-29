@@ -67,7 +67,7 @@ Prolog facts in general are not transformed.
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 
-:- use_module(interpreter,[go/3,uassert/1, uretract/1, uretractall/1, collect_guessed_declarations/1]). % assumed preloaded
+:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1]). % assumed preloaded
 :- use_module(db,[head_hint/3, '_currenty__defining'/1]).
 :- use_module(basics, [member/2, append/3]).
 :- use_module(string,[concat_atom/2]).
@@ -84,9 +84,21 @@ my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
 :- op(1050,xfx,(initiates)).
 % Rejected:-( :- op(1050,fx,impossible). 
 :- op(1050,fx,false).
+:- op(1050,fx,initially).
+:- op(1050,fx,fluents).
+:- op(1050,fx,events).
+:- op(1050,fx,actions).
 :- op(995,xfx,at).
 :- op(995,xfx,during).
+% :- op(995,xfx,from). Already defined in XSB with higher priority... so parenthesis needed e.g. (event 1 from 1 to 2), event 2 to 3
+:- op(994,xfx,to). % from's priority higher
 :- op(1050,xfy,::).
+
+% older syntax lpsp2p:
+:- op(1200,xfx,--->). % for reactive rules
+:- op(1190,xfx,priority). %... with priority
+:- op(900,fy,terminated).
+:- op(900,fy,initiated).
 
 :- endif.
 
@@ -143,9 +155,20 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(1050,xfx,user:(initiates)).
 % Rejected:-( :- op(1050,fx,impossible). 
 :- op(1050,fx,user:(false)).
+:- op(1050,fx,user:initially).
+:- op(1050,fx,user:fluents).
+:- op(1050,fx,user:events).
+:- op(1050,fx,user:actions).
 :- op(995,xfx,user:(at)).
 :- op(995,xfx,user:(during)).
+:- op(995,xfx,user:from). 
+:- op(994,xfx,user:to). % from's priority higher
 :- op(1050,xfy,user:(::)).
+% older syntax lpsp2p:
+:- op(1200,xfx,--->). % for reactive rules
+:- op(1190,xfx,priority). %... with priority
+:- op(900,fy,terminated).
+:- op(900,fy,initiated).
 
 :- endif.
 
@@ -155,12 +178,9 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 closetail([]) :- !.
 closetail([_|L]) :- closetail(L).
 
-:- op(1200,xfx,--->). % for reactive rules
-:- op(1190,xfx,priority). %... with priority
-:- op(900,fy,terminated).
-:- op(900,fy,initiated).
-
-
+comma_to_list((One,Two),[One|Twol]):- Twol \== [], !,
+	comma_to_list(Two,Twol).
+comma_to_list(One,[One]).
 
 % Convert a file in LPSP into Wei syntax and execute it 
 gol(LPSP_file,Options,Results) :-
@@ -303,6 +323,10 @@ lps2p(LPSPterm,Vars,Pterm) :- syntax2p(LPSPterm,Vars,lps2p,Pterm).
 % Either LPSPterm or Pterm must be bound; the other should be unbound
 % Probably needs to evolve to return error messages
 syntax2p(L,_,_TT,PT) :- var(L), var(PT), !, fail.
+% convenience notation for declarations:
+syntax2p((initially States),_Vars,lps2p,initial_state(StatesList)) :- !, 
+	comma_to_list(States,StatesList).
+% reactive rules:
 syntax2p((if A then C priority P), Vars,TT, reactive_rule(NA,NC,P)) :- TT=lps2p, !, % TODO: should add T3>=T1?? interpreter enforced?
 	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
 syntax2p((A--->C priority P), Vars,TT, reactive_rule(NA,NC,P)) :- TT=lpsp2p, !, 
@@ -311,9 +335,6 @@ syntax2p((if A then C), Vars,TT, reactive_rule(NA,NC)) :- TT=lps2p, !,
 	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
 syntax2p((A--->C),Vars,TT,reactive_rule(NA,NC)) :- TT=lpsp2p, !, 
 	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
-syntax2p((H:-B),_,_TT,PT) :- var(PT), (var(H);var(B)), !, fail.
-syntax2p((H:-B),_,TT,(H:-B)) :- do_not_transform_may_hint(H,TT,B), !.
-syntax2p(Fact,_,TT,Fact) :- do_not_transform_may_hint(Fact,TT,true), !.
 % pre-conditions:
 syntax2p((false B),Vars,lps2p,d_pre(IC)) :- !, 
 	syntax2p_sequence(B,Vars,lps2p,[_T1,_T2],single,_ET,IC).
@@ -350,19 +371,38 @@ syntax2p(L,Vars,lps2p,PT) :-
 	!,
 	syntax2p_sequence(Conditions,Vars,lps2p,[_T1,_T2],single,_ET,[NB1|NBn]),
 	(Conditions = (Event,Body) -> L = (L_ :- Body) ; L = L_, Conditions=Event).
-
+% intentional fluents and composite events, and more
+syntax2p((Head if Body),Vars,lps2p,PT) :-
+	(var(PT) -> ToWei=true; ToWei=false),
+	(ToWei==true -> syntax2p_literal(Head,Vars,lps2p,[T1,T2],_,NH); true),
+	( 
+		PT = l_events(NH,NB), NH=happens(_,_,_) ;
+		PT = l_int(NH,NB), NH = holds(_,_)
+	),
+	!,
+	((ToWei==false) -> syntax2p_literal(Head,Vars,lps2p,[T1,T2],_,NH) ; true),
+	syntax2p_sequence(Body,Vars,lps2p,[T1,T2],NB).
+syntax2p((H:-B),_,_TT,PT) :- var(PT), (var(H);var(B)), !, fail.
+syntax2p(NT,_,TT,(H:-B)) :- 
+	(nonvar(NT)->ToWei=true;ToWei=false),
+	NT = (H:-B),
+	do_not_transform_may_hint(H,TT,ToWei,B), !.
+syntax2p(NT,_,TT,Fact) :- 
+	(nonvar(NT)->ToWei=true;ToWei=false),
+	NT=Fact,
+	do_not_transform_may_hint(NT,TT,ToWei,true), !.
 syntax2p(L,Vars,Translator,PT) :- 
 	(var(PT) -> ToWei=true; ToWei=false),
 	(L = (LH:-LB)->true;LH=L,LB=true), 
-	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_ET,NH); true),
+	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_,NH); true),
 	( 
 		PT = l_events(NH,NB), NH=happens(_,_,_) ;
 		PT = l_int(NH,NB), NH = holds(_,_) ;
 		% if a timeless head, remember that to override "time looks" in body if need be:
-		PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), Translator=lpsp2p, remember_timeless_hint(NH)
+		PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), remember_timeless_hint(NH)
 	),
 	!,
-	((ToWei==false) -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_ET,NH) ; true),
+	((ToWei==false) -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_,NH) ; true),
 	syntax2p_sequence(LB,Vars,Translator,[T1,T2],NB).
 syntax2p(Term, _, _Translator, Term). % pass through for Wei terms or other Prolog facts
 
@@ -397,7 +437,8 @@ syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,happens(NL,T1,T2)) :-
 	!,
 	NL=..Tless.
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,happens(NL,T1,T2)) :- 
-	nonvar(LT), LT = (L during [T1,T2]),
+	nonvar(LT), 
+	( LT = (L from T1 to T2) ; LT = (L from T1); LT = (L to T2); LT = (L during [T1,T2])),
 	!,
 	remember_event_hint(L),
 	NL=L.
@@ -405,7 +446,6 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,happens(NL,T1,T2)) :-
 	nonvar(LT), head_hint(LT,event),
 	!,
 	NL=LT.
-% Bob's alternative "Event from T1 to T2" syntax could be handled around here
 syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,happens(NL,T1,T2)) :- 
 	var(L),
 	!,
@@ -416,7 +456,8 @@ syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,happens(NL,T1,T2)) :-
 syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,happens(NL,T1,T2)) :- 
 	var(L),
 	!,
-	L = (NL during [T1,T2]). % ...thus ommitting "..during..." in events is not fully supported when reversing the transform
+	% L = (NL during [T1,T2]). % ...thus ommitting "..during..." in events is not fully supported when reversing the transform
+	L = (NL from T1 to T2). % ...thus ommitting "..during..." in events is not fully supported when reversing the transform
 
 % ... now on to fluents...
 syntax2p_literal(not(L),Vars,lpsp2p,[T1,T2],ET,holds(not(NL),T)) :- 
@@ -490,22 +531,22 @@ bindAllVars([VV|Vars]) :-
 % Declare here predicates you wish to keep unchanged accross the transform
 % For some specific cases, predicate sort hints are remembered
 % Most bodies left var, as we may want to use Prolog there, for some kind of "meta-level"
-% Finally, we leave Wei syntax terms utnouched, so we can keep mixing them in
-% do_not_transform_may_hint(Head,SyntaxName,Body)
-do_not_transform_may_hint(observe(Events,_),_,_) :-!, remember_hints(event,Events). 
-do_not_transform_may_hint(fluent(F),_,_) :- !, remember_declarations(fluent,F).
-do_not_transform_may_hint(event(E),_,_) :- !, remember_declarations(event,E).
-do_not_transform_may_hint(action(A),_,_) :- !, remember_declarations(event,A).
-do_not_transform_may_hint(initial_state(S),_,_) :- !, remember_hints(fluent,S).
-do_not_transform_may_hint(l_int(_,_),_,_).
-do_not_transform_may_hint(l_events(_,_),_,_).
-do_not_transform_may_hint(l_timeless(_,_),_,_).
-do_not_transform_may_hint(initiated(_,_,_),_,_).
-do_not_transform_may_hint(terminated(_,_,_),_,_).
-do_not_transform_may_hint(reactive_rule(_,_,_),_,_).
-do_not_transform_may_hint(reactive_rule(_,_),_,_).
-do_not_transform_may_hint(d_pre(_),_,_).
-do_not_transform_may_hint(maxTime(_),lps2p,_).
+% Finally, we leave Wei syntax terms untouched when translating TO that syntax, so we can mixing them in
+% do_not_transform_may_hint(Head,SyntaxName,ToWei,Body)
+do_not_transform_may_hint(observe(Events,_),_,_,_) :-!, remember_hints(event,Events). 
+do_not_transform_may_hint(fluent(F),_,_,_) :- !, remember_declarations(fluent,F).
+do_not_transform_may_hint(event(E),_,_,_) :- !, remember_declarations(event,E).
+do_not_transform_may_hint(action(A),_,_,_) :- !, remember_declarations(event,A).
+do_not_transform_may_hint(initial_state(S),_,true,_) :- !, remember_hints(fluent,S).
+do_not_transform_may_hint(l_int(_,_),_,true,_).
+do_not_transform_may_hint(l_events(_,_),_,true,_).
+do_not_transform_may_hint(l_timeless(_,_),_,true,_).
+do_not_transform_may_hint(initiated(_,_,_),_,_,_).
+do_not_transform_may_hint(terminated(_,_,_),_,_,_).
+do_not_transform_may_hint(reactive_rule(_,_,_),_,true,_).
+do_not_transform_may_hint(reactive_rule(_,_),_,true,_).
+do_not_transform_may_hint(d_pre(_),_,true,_).
+do_not_transform_may_hint(maxTime(_),lps2p,_,__).
 
 % pretty printing for all syntaxes; although not doing anything specific to the new (lps2p translator) syntax
 pretty_write(Term,Stream) :- pretty_write(Term,0,Stream).
@@ -520,14 +561,17 @@ pretty_write((if A then C),I,S) :- !,
 	my_tab(S,I), write(S,'if '), writeln(S,A), 
 	my_tab(S,I), write(S,'then '), writeln(S,''), 
 	NI is I+4, pretty_write(C,NI,S).
+pretty_write((H if B),I,S) :- !, 
+	my_tab(S,I), write(S,H), writeln(S,' if'), 
+	my_tab(S,I), NI is I+4, pretty_write(B,NI,S).
 pretty_write((A--->C priority P),I,S) :- !, 
 	my_tab(S,I), write(S,A), writeln(S,' --->'), 
 	NI is I+4, pretty_write(C,NI,S),
 	write(S,'  priority '), write(S,P).
 pretty_write((A--->C),I,S) :- !, 
 	my_tab(S,I), write(S,A), writeln(S,' --->'), NI is I+4, pretty_write(C,NI,S).
-pretty_write((false C),I,S) :- !,
-	my_tab(S,I), write(S,'false'), writeln(S,' '), NI is I+4,
+pretty_write(Declaration,I,S) :- Declaration=..[Op,C], member(Op,[false,initially,fluents,events,actions]), !,
+	my_tab(S,I), write(S,Op), writeln(S,''), NI is I+4,
 	pretty_write(C,NI,S).
 pretty_write(PostCondition,I,S) :- 
 	(
