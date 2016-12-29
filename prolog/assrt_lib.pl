@@ -502,7 +502,9 @@ current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
       BPos = PosS
     ).
 
-f2_pos(parentheses_term_position(_, _, Pos), FFrom, FTo, PGl, PosCo) :-
+f2_pos(PPos, FFrom, FTo, PGl, PosCo) :-
+    nonvar(PPos),
+    PPos = parentheses_term_position(_, _, Pos), !,
     f2_pos(Pos, FFrom, FTo, PGl, PosCo).
 f2_pos(term_position(_, _, FFrom, FTo, [PGl, PosCo]), FFrom, FTo, PGl, PosCo).
 
