@@ -60,14 +60,14 @@ maxTime(10).
 Prolog facts in general are not transformed.
 */
 
-:- module(psyntax,[ lpsp2p_file/2, lpsp2p/3, 
+:- module(psyntax,[ syntax2p/4, lpsp2p_file/2, lpsp2p/3, 
 	lps2p_file/2, lps2p/3, syntax2p_file/4,
 	gol/2, gol/1, golps/2, golps/1]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 
-:- use_module(interpreter,[go/3,uassert/1, uretractall/1]). % assumed preloaded
+:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1]). % assumed preloaded
 :- use_module(db,[head_hint/3, '_currenty__defining'/1]).
 :- use_module(basics, [member/2, append/3]).
 :- use_module(string,[concat_atom/2]).
@@ -91,11 +91,46 @@ my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
 :- endif.
 
 %%% end of XSB specific section; now for SWI:
-:- if(current_prolog_flag(dialect, swi)).
 
-:- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1]).
+:- if((current_prolog_flag(dialect, swi), current_module(swish))). 
+% first, SWISH specific; see comments in interpreter.P
+
+:- use_module(library(pengines),[pengine_self/1]).
+head_hint(X,Y,Z) :- pengine_self(M), catch(M:head_hint(X,Y,Z),_,fail).
+'_currenty__defining'(X) :- pengine_self(M), catch(M:'_currenty__defining'(X),_,fail).
+
+% current_syntax(Translator,ToWei)  In the future we may want to support syntax conversion on SWISH
+current_syntax(lps2p,true).
+
+:- prolog_load_context(source,File), assert('$_thisfile'(File)).
+
+:- multifile user:term_expansion/4.
+% on SWISH we'll avoid the file to file translation, by converting on a term by term basis, assuming the transform to be 1-1
+% we assume the LPS transform to preserve Prolog, so for the moment we do NOT disable it on LPS system files 
+user:term_expansion(NiceTerm,Pos,WeiTerm,Pos) :- 
+	prolog_load_context(source,File),
+	'$_thisfile'(Psyntax),
+	File \== Psyntax,
+	% \+ do_not_expand(File),
+	current_syntax(lps2p,true), 
+	% variable names probably not available here in SWI, but we don't care about lpsp2p anymore:
+	syntax2p(NiceTerm,[],lps2p,WeiTerm). 
+
+% do_not_expand(Path) :- lps_engine_directory(LPS), sub_atom(Path, 0, _, _, LPS).
+
+:- endif.
+
+:- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
+% Now support for vanilla/barebones SWI Prolog:
+
 :- use_module('../Wei-engine/db.P',[head_hint/3, '_currenty__defining'/1]).
 
+:- endif.
+
+:- if(current_prolog_flag(dialect, swi)).
+% ...and finally the generic SWI support:
+
+:- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1]).
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
@@ -111,6 +146,7 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(995,xfx,user:(at)).
 :- op(995,xfx,user:(during)).
 :- op(1050,xfy,user:(::)).
+
 :- endif.
 
 %%% From here on, generic Prolog code
@@ -166,8 +202,6 @@ lps2p_file(LPSfile,LPSWfile) :-
 	(atom(LPSfile)->true;concat_atom([LPSWfile,'_.lps'],LPSfile)),
 	syntax2p_file(LPSfile,LPSWfile,lps2p,false).
 
-% parameter for declaration generation; 'false' may help LPS program debugging
-add_automatic_declarations(true). % 'true' will add fluent, event and action declarations guessed from usage; 
 
 % Main file to file syntax converter
 % syntax2p_file(+OtherSyntaxFile,+P_Wei_file,+Translator,+ToWei) Translator is a functor for a predicate Translate(Term,Vars,NewTerm)
@@ -202,15 +236,17 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		fail
 	),
 	!,
-	((ToWei==true, add_automatic_declarations(true)) ->
-		% generate missing declarations
+	(ToWei==true ->
+		% may generate missing declarations
+		collect_guessed_declarations(Facts),
 		forall( 
-			(head_hint(X,Type,false), Type \== timeless, Fact=..[Type,X]), 
+			member(Fact,Facts), 
 			(may_write_newline(Fact,OStr), pretty_write(Fact,OStr), writeln(OStr,'.'))
 			)
 	; true),
 	close(OStr),close(IStr),
 	(nonvar(Old)->set_xsb_flag(write_depth,Old);true).
+
 
 % head_hint(HeadTemplate,Sort,Declared) Sort maybe l_timeless,event,fluent
 %  a fact means that some head was read before and tagged as Sort
@@ -337,7 +373,7 @@ syntax2p_sequence(NS,Vars,Translator,Interval,W) :-
 % syntax2p_sequence(NS,Vars,Translator,[T1,T2],IntervalType,W)  if  IntervalType==single, T2 must be T1+1	
 syntax2p_sequence((L1,L2),Vars,Translator,[T1,T4],IT, [PT1|PT2]) :- PT2 \== [], !,
 	syntax2p_literal(L1,Vars,Translator,[T1,T2], PT1), 
-	(IT==single -> T3=T1,T4=T2 ; T2=T3), % 'single' too strict, should probably reflect into a tc(...) ???
+	(IT==single -> (T3=T1,T4=T2) ; T2=T3), % 'single' too strict, should probably reflect into a tc(...) ???
 	syntax2p_sequence(L2,Vars,Translator,[T3,T4],IT,PT2).
 syntax2p_sequence(true,_,_TT,[_T1,_T2],_,[]) :- !.
 syntax2p_sequence(L,Vars,Translator,Interval,_,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,PT).

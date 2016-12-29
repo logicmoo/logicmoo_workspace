@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- module(interpreter, [
 	go/0, go/1, go/2, go/3,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
-	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2,
+	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
 	lps_engine_directory/1, uassert/1, uretractall/1]).
 
 % This fact will contain this file's directory; its presence also denotes "LPS running"
@@ -327,9 +327,11 @@ go(File, OptionsList, ResultFluents) :-
 	cleanup_program, cleanup_engine,
 	init_test_file(File),
 	(\+ option(swish) -> 
-		my_load_dyn(File), 
-		print_errors(File) % fails if errors occur
+		my_load_dyn(File)
 		; true),
+	collect_guessed_declarations(Facts),
+	forall(member(Fact,Facts),uassert(Fact)),
+	print_errors(File), % fails if errors occur
 	(option(meta_actions) -> add_meta_reactive_rules ; true),
 	( initial_state(IS) -> assert_list(IS) ; true),
 	( option(delta_state(State)), member(F,State),
@@ -360,7 +362,17 @@ go(File, OptionsList, ResultFluents) :-
 	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true),
 		% ultra_verbose only remembered for xsb
 	collect_results(ResultFluents).
-	
+
+% parameter for declaration generation by alternative syntaxes; 'false' may help LPS program debugging
+add_automatic_declarations(true). % 'true' will add fluent, event and action declarations guessed from usage; 
+
+% collect_guessed_declarations(-List). 
+%  This was originally in psyntax; it may be called more than once, but only the first run actually does anything
+collect_guessed_declarations(L) :-
+	findall(Fact,(
+		add_automatic_declarations(true), uretract(head_hint(X,Type,false)), Type \== timeless, Fact=..[Type,X]
+		), L).
+
 collect_results([]) :- !.
 collect_results([F-R|FR]) :- (setof(F,query(holds(F,_)),R)->true;R=[]), collect_results(FR).
 
