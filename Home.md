@@ -1,6 +1,10 @@
 # Welcome
 
-Welcome to your wiki! This is the default page we've installed for your convenience. Go ahead and edit it.
+## We are working out the syntax of LPS [here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax). Come and join in!
+
+--
+
+Welcome to our wiki! This is the default page we've installed for your convenience. Go ahead and edit it.
 
 ## Wiki features
 
