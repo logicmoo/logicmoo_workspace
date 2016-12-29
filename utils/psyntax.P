@@ -67,7 +67,7 @@ Prolog facts in general are not transformed.
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 
-:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1]). % assumed preloaded
+:- use_module(interpreter,[go/3,uassert/1, uretract/1, uretractall/1, collect_guessed_declarations/1]). % assumed preloaded
 :- use_module(db,[head_hint/3, '_currenty__defining'/1]).
 :- use_module(basics, [member/2, append/3]).
 :- use_module(string,[concat_atom/2]).
@@ -316,45 +316,45 @@ syntax2p((H:-B),_,TT,(H:-B)) :- do_not_transform_may_hint(H,TT,B), !.
 syntax2p(Fact,_,TT,Fact) :- do_not_transform_may_hint(Fact,TT,true), !.
 % pre-conditions:
 syntax2p((false B),Vars,lps2p,d_pre(IC)) :- !, 
-	syntax2p_sequence(B,Vars,lps2p,[_T1,_T2],single,IC).
+	syntax2p_sequence(B,Vars,lps2p,[_T1,_T2],single,_ET,IC).
 syntax2p(((false):-B),Vars,lpsp2p,d_pre(IC)) :- !, 
-	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,IC).
+	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,_ET,IC).
 % now post-conditions:	
 syntax2p((IT:-B),Vars,lpsp2p,PT) :- % LPSP -> Wei term
 	var(PT),
 	IT=..[F,H], ((F==terminated) ; (F==initiated)), 
 	!,
-	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,[NB1|NBn]), % should be strictier wrt NB1 ?
+	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,_ET,[NB1|NBn]), % should be strictier wrt NB1 ?
 	PT=..[F,NB1,H,NBn].
 syntax2p((H:-B),Vars,lps2p,PT) :- % 
 	var(PT),
 	( H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn) ; H= (Event terminates Fluent), PT=terminated(NB1,Fluent,NBn)),
 	!,
 	remember_fluent_hint(Fluent), remember_event_hint(Event),
-	syntax2p_sequence((Event,B),Vars,lps2p,[_T1,_T2],single,[NB1|NBn]).
+	syntax2p_sequence((Event,B),Vars,lps2p,[_T1,_T2],single,_ET,[NB1|NBn]).
 syntax2p(H,Vars,lps2p,PT) :- % 
 	var(PT),
 	( H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn) ; H= (Event terminates Fluent), PT=terminated(NB1,Fluent,NBn)),
 	!,
 	remember_fluent_hint(Fluent),
-	syntax2p_sequence(Event,Vars,lps2p,[_T1,_T2],single,[NB1|NBn]).
+	syntax2p_sequence(Event,Vars,lps2p,[_T1,_T2],single,_ET,[NB1|NBn]).
 syntax2p(L,Vars,lpsp2p,PT) :- % LPSP <- Wei term
 	var(L), PT=..[F,NB1,H,NBn], 
 	((F==terminated) ; (F==initiated)), 
 	!,
 	LH=..[F,H], L = (LH:-B),
-	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,[NB1|NBn]). % should be strictier wrt NB1 ?
+	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,_ET,[NB1|NBn]). % should be strictier wrt NB1 ?
 syntax2p(L,Vars,lps2p,PT) :-
 	var(L), PT=..[F,NB1,Fluent,NBn], 
 	((F==terminated), L_ = (Event terminates Fluent) ; (F==initiated), L_ = (Event initiates Fluent)), 
 	!,
-	syntax2p_sequence(Conditions,Vars,lps2p,[_T1,_T2],single,[NB1|NBn]),
+	syntax2p_sequence(Conditions,Vars,lps2p,[_T1,_T2],single,_ET,[NB1|NBn]),
 	(Conditions = (Event,Body) -> L = (L_ :- Body) ; L = L_, Conditions=Event).
 
 syntax2p(L,Vars,Translator,PT) :- 
 	(var(PT) -> ToWei=true; ToWei=false),
 	(L = (LH:-LB)->true;LH=L,LB=true), 
-	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],NH); true),
+	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_ET,NH); true),
 	( 
 		PT = l_events(NH,NB), NH=happens(_,_,_) ;
 		PT = l_int(NH,NB), NH = holds(_,_) ;
@@ -362,97 +362,102 @@ syntax2p(L,Vars,Translator,PT) :-
 		PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), Translator=lpsp2p, remember_timeless_hint(NH)
 	),
 	!,
-	((ToWei==false) -> syntax2p_literal(LH,Vars,Translator,[T1,T2],NH) ; true),
+	((ToWei==false) -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_ET,NH) ; true),
 	syntax2p_sequence(LB,Vars,Translator,[T1,T2],NB).
 syntax2p(Term, _, _Translator, Term). % pass through for Wei terms or other Prolog facts
 
 % syntax2p_sequence(NicerSequence,Vars,Translator,[Start,End],WeiPsequence)  [Start,End] may constrain time arguments
 syntax2p_sequence(NS,Vars,Translator,Interval,W) :-
-	syntax2p_sequence(NS,Vars,Translator,Interval,_,W).
+	syntax2p_sequence(NS,Vars,Translator,Interval,_IT,_ET,W).
 
-% syntax2p_sequence(NS,Vars,Translator,[T1,T2],IntervalType,W)  if  IntervalType==single, T2 must be T1+1	
-syntax2p_sequence((L1,L2),Vars,Translator,[T1,T4],IT, [PT1|PT2]) :- PT2 \== [], !,
-	syntax2p_literal(L1,Vars,Translator,[T1,T2], PT1), 
-	(IT==single -> (T3=T1,T4=T2) ; T2=T3), % 'single' too strict, should probably reflect into a tc(...) ???
-	syntax2p_sequence(L2,Vars,Translator,[T3,T4],IT,PT2).
-syntax2p_sequence(true,_,_TT,[_T1,_T2],_,[]) :- !.
-syntax2p_sequence(L,Vars,Translator,Interval,_,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,PT).
+% syntax2p_sequence(NS,Vars,Translator,[T1,T6],IntervalType,ExplicitTime,W)  if  IntervalType==single, T6 must be T1+1
+syntax2p_sequence((L1,L2),Vars,Translator,[T1,T6],IT, ET, [PT1|PT2]) :- PT2 \== [], !,
+	syntax2p_literal(L1,Vars,Translator,[T2,T3], ETL, PT1), 
+	syntax2p_sequence(L2,Vars,Translator,[T4,T5],IT,ETS,PT2),
+	% if no explicit time arguments, the literals are assumed in timely sequence with neighbors
+	 % 'single' too strict, should probably reflect into a tc(...) ???
+	( (ETL == (false), ETS == (false)) -> ET= (false) ; ET = true),
+	(IT==single -> T1=T4,T3=T6; ( (ETL == (false), ETS == (false)) -> T4=T3 ; true)),
+	T1=T2, T6=T5.
+syntax2p_sequence(true,_,_TT,[_T1,_T2],_,false,[]) :- !.
+syntax2p_sequence(L,Vars,Translator,Interval,_,ET,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,ET,PT).
 
-% syntax2p_literal(NicerLiteral,Vars,Translator,[T1,T2],WeiLiteral)
+% syntax2p_literal(NicerLiteral,+Vars,+Translator,[T1,T2],-ExplicitTime,WeiLiteral)
 %  for events, [T1,T2] is their interval; for fluents, T1 is the time
+% ExplicitTime == true if the given literal has explicit time arguments, false otherwise
 
-syntax2p_literal(tc(TC),_Vars,lpsp2p,[_T1,_T2],tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
+syntax2p_literal(tc(TC),_Vars,lpsp2p,[_T1,_T2],true,tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
 
 % event cases first...
-syntax2p_literal(L,Vars,lpsp2p,[T1,T2],happens(NL,T1,T2)) :- 
+syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,happens(NL,T1,T2)) :- 
 	nonvar(L),
 	L=..LL, append(Tless,[T1,T2],LL),  Tless=[_|_], % last 2 args of term 
 	is_time_var(Vars,T1), is_time_var(Vars,T2),	
 	\+ head_hint(L,l_timeless),
 	!,
 	NL=..Tless.
-syntax2p_literal(LT,_Vars,lps2p,[T1,T2],happens(NL,T1,T2)) :- 
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,happens(NL,T1,T2)) :- 
 	nonvar(LT), LT = (L during [T1,T2]),
 	!,
 	remember_event_hint(L),
 	NL=L.
-syntax2p_literal(LT,_Vars,lps2p,[T1,T2],happens(NL,T1,T2)) :- 
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,happens(NL,T1,T2)) :- 
 	nonvar(LT), head_hint(LT,event),
 	!,
 	NL=LT.
 % Bob's alternative "Event from T1 to T2" syntax could be handled around here
-syntax2p_literal(L,Vars,lpsp2p,[T1,T2],happens(NL,T1,T2)) :- 
+syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,happens(NL,T1,T2)) :- 
 	var(L),
 	!,
 	NL=..NLL, append(NLL,[T1,T2],Tplus),  
 	!,
 	check_time_var(T1,Vars), check_time_var(T2,Vars),
 	L=..Tplus.
-syntax2p_literal(L,_Vars,lps2p,[T1,T2],happens(NL,T1,T2)) :- 
+syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,happens(NL,T1,T2)) :- 
 	var(L),
 	!,
 	L = (NL during [T1,T2]). % ...thus ommitting "..during..." in events is not fully supported when reversing the transform
 
 % ... now on to fluents...
-syntax2p_literal(not(L),Vars,lpsp2p,[T1,T2],holds(not(NL),T)) :- 
+syntax2p_literal(not(L),Vars,lpsp2p,[T1,T2],ET,holds(not(NL),T)) :- 
 	% Wei syntax seems to preclude 'not' elsewhere!
 	!,
-	syntax2p_literal(L,Vars,lpsp2p,[T1,T2],holds(NL,T)),
+	syntax2p_literal(L,Vars,lpsp2p,[T1,T2],ET,holds(NL,T)),
 	check_time_var(T,Vars).
 	% Should probably ...? \+ head_hint(L,l_timeless),
-syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],holds(not(NL),T)) :- % not(fluent) at T is the preferred form, but 2 others avaialable
-	( LT= (not(F) at T) ; LT= not(F at T) ; LT= not(F), head_hint(F,fluent)),
+syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],ET,holds(not(NL),T)) :- % not(fluent) at T is the preferred form, but 2 others avaialable
+	( LT= (not(F) at T), ET=true ; LT= not(F at T), ET=true ; LT= not(F), head_hint(F,fluent), ET=false),
 	!,
 	NL=F,
 	remember_fluent_hint(F),
 	T1=T.	
-syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],holds(NL,T)) :- 
+syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],true,holds(NL,T)) :- 
 	nonvar(L),
 	L=..LL, LL=[_,_|_], append(Tless,[T],LL), 
 	is_time_var(Vars,T),
 	\+ head_hint(L,l_timeless),
 	!,
 	NL=..Tless, T=T1.
-syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],holds(NL,T)) :- 
+syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],true,holds(NL,T)) :- 
 	nonvar(LT), LT = (F at T),
 	!,
 	NL=F, T=T1,
 	remember_fluent_hint(F).
-syntax2p_literal(F,_Vars,lps2p,[T1,_T2],holds(NL,T)) :- 
+syntax2p_literal(F,_Vars,lps2p,[T1,_T2],false,holds(NL,T)) :- 
 	nonvar(F), head_hint(F,fluent),
 	!,
 	NL=F, T=T1.
-syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],holds(NL,T)) :- 
+syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],true,holds(NL,T)) :- 
 	var(L),
 	!,
 	is_time_var(Vars,T), T=T1,
 	NL=..NLL, append(NLL,[T],Tplus),
 	L=..Tplus.
-syntax2p_literal(L,_Vars,lps2p,[T1,_T2],holds(NL,T)) :- 
+syntax2p_literal(L,_Vars,lps2p,[T1,_T2],true,holds(NL,T)) :- 
 	var(L),
 	!,
 	L = (NL at T), T1=T. % ...thus ommitting "..at..." in fluents is not fully supported when reversing the transform
-syntax2p_literal(L,_,_Translator,[_T1,_T2],L). % some timeless literal
+syntax2p_literal(L,_,_Translator,[_T1,_T2],false,L). % some timeless literal
 
 check_time_var(V,Vars) :- is_time_var(Vars,V), !.
 check_time_var(V,Vars) :-

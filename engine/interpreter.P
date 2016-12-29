@@ -62,7 +62,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	current_goal/1, depth/1, tried/3, option/1, initial_state/1,
 	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, 
 	lps_failed_test/2,
-	my_load_dyn/2]).
+	my_load_dyn/2, head_hint/3]).
 
 :- use_module(usermod,[lps_source_position/3]). % support Prolog Studio error reporting
 
@@ -168,7 +168,8 @@ callprolog(G) :- pengine_self(M), catch(call(M:G),_,fail).
 	initial_state/1,
 	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, 
 	lps_failed_test/2,
-	my_load_dyn/2]).
+	my_load_dyn/2,
+	head_hint/3]).
 
 uassert(X) :- assert(db:X). 
 uassertz(X) :- assertz(db:X).
