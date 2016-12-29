@@ -365,7 +365,7 @@ go(File, OptionsList, ResultFluents) :-
 	collect_results(ResultFluents).
 
 % parameter for declaration generation by alternative syntaxes; 'false' may help LPS program debugging
-add_automatic_declarations(true). % 'true' will add fluent, event and action declarations guessed from usage; 
+add_automatic_declarations(false). % 'true' will add fluent, event and action declarations guessed from usage; 
 
 % collect_guessed_declarations(-List). 
 %  This was originally in psyntax; it may be called more than once, but only the first run actually does anything
