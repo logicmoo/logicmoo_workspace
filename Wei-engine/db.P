@@ -42,6 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	current_goal/1,
 	current_time/1,
 	lps_updating_current_state/0,
+	(events)/1, (fluents)/1, (actions)/1,
 	d_pre/1,
 	depth/1,
 	event/1,
@@ -54,7 +55,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	l_events/2,
 	l_int/2,
 	l_timeless/2,
-	observe/2,
+	(observe)/2,
 	option/1,
 	reactive_rule/2,
 	expanded_reactive_rule/2,
@@ -82,6 +83,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic current_goal/1.
 :- dynamic current_time/1.
 :- dynamic lps_updating_current_state/0.
+% convenience to encode a bunch of declarations in Wei or other syntaxes:
+:- dynamic (events)/1, (fluents)/1, (actions)/1.
 :- dynamic d_pre/1.
 :- dynamic depth/1.
 :- dynamic event/1.
@@ -94,7 +97,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic l_events/2. 
 :- dynamic l_int/2.
 :- dynamic l_timeless/2.
-:- dynamic observe/2.
+:- dynamic (observe)/2.
 :- dynamic option/1.
 :- dynamic reactive_rule/2.
 :- dynamic expanded_reactive_rule/2.

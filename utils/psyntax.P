@@ -83,6 +83,7 @@ my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
 :- op(1050,xfx,(terminates)).
 :- op(1050,xfx,(initiates)).
 % Rejected:-( :- op(1050,fx,impossible). 
+:- op(1050,fx,observe).
 :- op(1050,fx,false).
 :- op(1050,fx,initially).
 :- op(1050,fx,fluents).
@@ -154,6 +155,7 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(1050,xfx,user:(terminates)).
 :- op(1050,xfx,user:(initiates)).
 % Rejected:-( :- op(1050,fx,impossible). 
+:- op(1050,fx,observe).
 :- op(1050,fx,user:(false)).
 :- op(1050,fx,user:initially).
 :- op(1050,fx,user:fluents).
@@ -326,6 +328,12 @@ syntax2p(L,_,_TT,PT) :- var(L), var(PT), !, fail.
 % convenience notation for declarations:
 syntax2p((initially States),_Vars,lps2p,initial_state(StatesList)) :- !, 
 	comma_to_list(States,StatesList).
+% single observations, declared as fact declarations; more complex cases handled further below
+syntax2p((observe E from _T1 to T2),_Vars,lps2p,observe([E],T2)) :- !.
+syntax2p((observe E to T2),_Vars,lps2p,observe([E],T2)) :- !.
+syntax2p((actions A),_Vars,lps2p,actions(L)) :- !, comma_to_list(A,L), remember_declarations(event,L).
+syntax2p((events A),_Vars,lps2p,events(L)) :- !, comma_to_list(A,L), remember_declarations(event,L).
+syntax2p((fluents A),_Vars,lps2p,fluents(L)) :- !, comma_to_list(A,L), remember_declarations(fluent,L).
 % reactive rules:
 syntax2p((if A then C priority P), Vars,TT, reactive_rule(NA,NC,P)) :- TT=lps2p, !, % TODO: should add T3>=T1?? interpreter enforced?
 	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
@@ -391,7 +399,7 @@ syntax2p(NT,_,TT,Fact) :-
 	(nonvar(NT)->ToWei=true;ToWei=false),
 	NT=Fact,
 	do_not_transform_may_hint(NT,TT,ToWei,true), !.
-syntax2p(L,Vars,Translator,PT) :- 
+syntax2p(L,Vars,lpsp2p,PT) :- 
 	(var(PT) -> ToWei=true; ToWei=false),
 	(L = (LH:-LB)->true;LH=L,LB=true), 
 	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_,NH); true),
