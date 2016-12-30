@@ -184,6 +184,12 @@ comma_to_list((One,Two),[One|Twol]):- Twol \== [], !,
 	comma_to_list(Two,Twol).
 comma_to_list(One,[One]).
 
+% functor_arityze(TemplatesOrFA,TemplatesList) replaces term functor/arities by their templates; 
+% bidirectional (albeit losing information of course)
+functor_arityze([F/A|TOFAL],[G|FAL]) :- functor(G,F,A), !, functor_arityze(TOFAL,FAL).
+functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
+functor_arityze([],[]).
+
 % Convert a file in LPSP into Wei syntax and execute it 
 gol(LPSP_file,Options,Results) :-
 	concat_atom([LPSP_file,'_.P'],Pfile),
@@ -331,9 +337,12 @@ syntax2p((initially States),_Vars,lps2p,initial_state(StatesList)) :- !,
 % single observations, declared as fact declarations; more complex cases handled further below
 syntax2p((observe E from _T1 to T2),_Vars,lps2p,observe([E],T2)) :- !.
 syntax2p((observe E to T2),_Vars,lps2p,observe([E],T2)) :- !.
-syntax2p((actions A),_Vars,lps2p,actions(L)) :- !, comma_to_list(A,L), remember_declarations(event,L).
-syntax2p((events A),_Vars,lps2p,events(L)) :- !, comma_to_list(A,L), remember_declarations(event,L).
-syntax2p((fluents A),_Vars,lps2p,fluents(L)) :- !, comma_to_list(A,L), remember_declarations(fluent,L).
+syntax2p((actions A),_Vars,lps2p,actions(NL)) :- nonvar(A), !, comma_to_list(A,L), functor_arityze(L,NL), remember_declarations(event,NL).
+syntax2p((actions A),_Vars,lps2p,actions(L)) :- !, comma_to_list(A,L).
+syntax2p((events A),_Vars,lps2p,events(NL)) :- nonvar(A), !, comma_to_list(A,L), functor_arityze(L,NL), remember_declarations(event,NL).
+syntax2p((events A),_Vars,lps2p,events(L)) :- !, comma_to_list(A,L).
+syntax2p((fluents A),_Vars,lps2p,fluents(NL)) :- nonvar(A), !, comma_to_list(A,L), functor_arityze(L,NL), remember_declarations(fluent,NL).
+syntax2p((fluents A),_Vars,lps2p,fluents(L)) :- !, comma_to_list(A,L).
 % reactive rules:
 syntax2p((if A then C priority P), Vars,TT, reactive_rule(NA,NC,P)) :- TT=lps2p, !, % TODO: should add T3>=T1?? interpreter enforced?
 	syntax2p_sequence(A,Vars,TT,[_T1,_T2],NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],NC).
