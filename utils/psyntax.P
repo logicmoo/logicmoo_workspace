@@ -61,7 +61,7 @@ Prolog facts in general are not transformed.
 */
 
 :- module(psyntax,[ syntax2p/4, lpsp2p_file/2, lpsp2p/3, 
-	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4,
+	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, dumploaded/0,
 	gol/2, gol/1, golps/2, golps/1]).
 
 %%% XSB specific section:
@@ -109,8 +109,20 @@ my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
 % first, SWISH specific; see comments in interpreter.P
 
 :- use_module(library(pengines),[pengine_self/1]).
+:- use_module(library(prolog_clause),[clause_info/5]).
 head_hint(X,Y,Z) :- pengine_self(M), catch(M:head_hint(X,Y,Z),_,fail).
 '_currenty__defining'(X) :- pengine_self(M), catch(M:'_currenty__defining'(X),_,fail).
+
+:- use_module(library(pengines),[pengine_self/1]).
+dumploaded :- 
+	pengine_self(M), current_predicate(M:F/N), functor(H,F,N), 
+	clause(M:H,Body,Ref), 
+	clause_info(Ref, _File, _TermPos, _VarOffsets, [variable_names(_Vars)]), % this effectively filters out swish predicates
+	pretty_write((H:-Body)), writeln('.'),
+	%write('  '), writeln(File), % e.g. pengine://fa945952-355c-47a3-bb48-bdf8dfdb4229/src
+	%write('  '), writeln(TermPos/Vars), % e.g. term_position(384,446,416,420,[term_position(.... ])/[N=_1022]
+	fail.
+dumploaded.
 
 :- endif.
 
@@ -547,6 +559,8 @@ do_not_transform_may_hint(d_pre(_),_,true,_).
 do_not_transform_may_hint(maxTime(_),lps2p,_,__).
 
 % pretty printing for all syntaxes; although not doing anything specific to the new (lps2p translator) syntax
+pretty_write(Term) :- pretty_write(Term,0,user_output).
+
 pretty_write(Term,Stream) :- pretty_write(Term,0,Stream).
 
 % pretty_write(Term,Indent,Stream)
