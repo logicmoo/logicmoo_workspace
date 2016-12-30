@@ -148,7 +148,7 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(1050,xfx,user:(terminates)).
 :- op(1050,xfx,user:(initiates)).
 % Rejected:-( :- op(1050,fx,impossible). 
-:- op(1050,fx,observe).
+:- op(1050,fx,user:(observe)).
 :- op(1050,fx,user:(false)).
 :- op(1050,fx,user:initially).
 :- op(1050,fx,user:fluents).
