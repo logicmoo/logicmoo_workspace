@@ -505,7 +505,10 @@ check_syntax(F,Notices) :-
 		PostT),
 	append_lists([RR,IP,CE,PC,PostI,PostT],Notices).
 
-% buildError(BadSubterm,Message,NoticeSubterm)
+% buildError(BadSubterm,Message,NoticeSubterm)  Assume the new syntax to be the preferred for reporting errors:
+%  this introduces a dependency on psyntax, should probably have a hook or refactor further... oh well.
+buildError(X,M,subterm(X,MM)) :- catch(psyntax:syntax2p_literal(NicerTerm,[],lps2p,_,_,X),_,fail), !, 
+	concat_terms([NicerTerm,M],MM). % should probably use SWI's term_string and make sure M quotes do not make it to the output
 buildError(X,M,subterm(X,MM)) :- concat_terms([X,M],MM).
 
 % May call an external predicate hook to find the position
