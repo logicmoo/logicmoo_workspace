@@ -61,7 +61,7 @@ Prolog facts in general are not transformed.
 */
 
 :- module(psyntax,[ syntax2p/4, lpsp2p_file/2, lpsp2p/3, 
-	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, dumploaded/0,
+	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4,
 	gol/2, gol/1, golps/2, golps/1]).
 
 %%% XSB specific section:
@@ -117,7 +117,10 @@ head_hint(X,Y,Z) :- pengine_self(M), catch(M:head_hint(X,Y,Z),_,fail).
 dumploaded :- 
 	pengine_self(M), current_predicate(M:F/N), functor(H,F,N), 
 	clause(M:H,Body,Ref), 
+	% clause_property(Ref,line_count(LineNumber)), clause_property(Ref,file(File)),
 	clause_info(Ref, _File, _TermPos, _VarOffsets, [variable_names(_Vars)]), % this effectively filters out swish predicates
+	%_TermPos = term_position(Char,CharEnd,_,_,_),
+	%print_message(error,error(syntax_error(whatever),file(File,LineNumber,_one,_Char))),
 	pretty_write((H:-Body)), writeln('.'),
 	%write('  '), writeln(File), % e.g. pengine://fa945952-355c-47a3-bb48-bdf8dfdb4229/src
 	%write('  '), writeln(TermPos/Vars), % e.g. term_position(384,446,416,420,[term_position(.... ])/[N=_1022]

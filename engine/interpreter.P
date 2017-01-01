@@ -102,6 +102,8 @@ atomize_zero_functors(T,NT) :- T=..[F|Args], atomize_zero_functors(Args,NewArgs)
 
 my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
+print_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
+
 :- endif.
 
 %%% end of XSB specific section; now for SWI:
@@ -158,6 +160,7 @@ u_user_predicate(X) :- functor(X,F,N),  pengine_self(M), current_predicate(M:F/N
 callprolog(G) :- predicate_property(G,built_in), !, G.
 callprolog(G) :- pengine_self(M), catch(call(M:G),_,fail).
 
+u_swiclause(H,B,Ref) :- pengine_self(M), clause(M:H,B,Ref).
 :- endif.
 
 
@@ -185,13 +188,8 @@ u_user_predicate(X) :- functor(X,F,N), current_predicate(db:F/N).
 callprolog(G) :- predicate_property(G,built_in), !, G.
 callprolog(G) :- catch(db:G,_,fail).
 
-% returns Pos as in http://www.swi-prolog.org/pldoc/man?predicate=read_term/2 (subterm_positions)
-lps_source_position(Term,FileWithExt,Pos) :- 
-	functor(Term,F,N), functor(Term_,F,N), 
-	clause(db:Term_,_B,Ref), variant(Term,Term_),
-	!,
-	clause_info(Ref,FileWithExt,Pos,_VO).
-	
+u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
+
 :- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
@@ -226,6 +224,18 @@ lps_examples_directory(ED) :-
 	relative_file_name(ED,DD,'../examples').
 
 cputime(T) :- T is cputime.
+
+% NO LONGER returns Pos as in http://www.swi-prolog.org/pldoc/man?predicate=read_term/2 (subterm_positions)
+% returns Pos as file(File,LineNumber,_one,_Char) - one line is known
+lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char)) :- 
+	functor(Term,F,N), functor(Term_,F,N), 
+	u_swiclause(Term_,_B,Ref), variant(Term,Term_),
+	!,
+	% clause_info(Ref,FileWithExt,Pos,_VO).
+	clause_property(Ref,line_count(LineNumber)), 
+	clause_property(Ref,file(FileWithExt)).
+
+print_error(Type,Message,Position) :- print_message(Type,error(syntax_error(Message),Position)).
 
 :- endif.
 
@@ -507,9 +517,9 @@ source_position(_,_,unknown).
 print_errors(File) :- 
 	check_syntax(File,Notices), nl,
 	( 
-		member(notice(Type,M,_),Notices), 
+		member(notice(Type,M,Position),Notices), 
 		(M=subterm(_,M_)->true;M=M_),
-		write('SYNTAX '), write(Type), write(': '), writeln(M_), 
+		print_error(Type,M_,Position), 
 		fail 
 	; Notices=[]),
 	((option(priority), \+ reactive_rule(_,_,_)) 
@@ -518,7 +528,7 @@ print_errors(File) :-
 	(( \+ option(priority), \+ reactive_rule(_,_))
 		-> writeln('WARNING: no priority-less reactive rules are present!')
 		; true).
-	
+
 concat_terms(Terms,Atom) :- concat_terms(Terms,[],Codes), atom_codes(Atom,Codes).
 
 concat_terms([T1|Tn],C,Cn) :- term_to_codes(T1,C1), append(C,C1,C2), concat_terms(Tn,C2,Cn).
