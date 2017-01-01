@@ -360,7 +360,7 @@ syntax2p((IT:-B),Vars,lpsp2p,PT) :- % LPSP -> Wei term
 	!,
 	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,_ET,[NB1|NBn]), % should be strictier wrt NB1 ?
 	PT=..[F,NB1,H,NBn].
-syntax2p((H:-B),Vars,lps2p,PT) :- % 
+syntax2p((H if B),Vars,lps2p,PT) :- % 
 	var(PT),
 	( H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn) ; H= (Event terminates Fluent), PT=terminated(NB1,Fluent,NBn)),
 	!,
