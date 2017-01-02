@@ -116,7 +116,7 @@ head_hint(X,Y,Z) :- pengine_self(M), catch(M:head_hint(X,Y,Z),_,fail).
 :- use_module(library(pengines),[pengine_self/1]).
 dumploaded :- 
 	pengine_self(M), current_predicate(M:F/N), functor(H,F,N), 
-	clause(M:H,Body,Ref), 
+	clause(M:H,Body,_Ref), 
 	% clause_property(Ref,line_count(LineNumber)), clause_property(Ref,file(File)),
 	% clause_info(Ref, _File, _TermPos, _VarOffsets, [variable_names(_Vars)]), % this effectively filters out swish predicates
 	interpreter:lps_source_position(H,_,_,Vars), bindAllVars(Vars),
