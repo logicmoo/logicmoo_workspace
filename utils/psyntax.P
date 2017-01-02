@@ -67,7 +67,7 @@ Prolog facts in general are not transformed.
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 
-:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1]). % assumed preloaded
+:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1]). % assumed preloaded
 :- use_module(db,[head_hint/3, '_currenty__defining'/1]).
 :- use_module(basics, [member/2, append/3]).
 :- use_module(string,[concat_atom/2]).
@@ -118,7 +118,9 @@ dumploaded :-
 	pengine_self(M), current_predicate(M:F/N), functor(H,F,N), 
 	clause(M:H,Body,Ref), 
 	% clause_property(Ref,line_count(LineNumber)), clause_property(Ref,file(File)),
-	clause_info(Ref, _File, _TermPos, _VarOffsets, [variable_names(_Vars)]), % this effectively filters out swish predicates
+	% clause_info(Ref, _File, _TermPos, _VarOffsets, [variable_names(_Vars)]), % this effectively filters out swish predicates
+	interpreter:lps_source_position(H,_,_,Vars), bindAllVars(Vars),
+	% term_variables((H:-Body),VarValues),    _Vars: [Name1=VarValue1,...]
 	%_TermPos = term_position(Char,CharEnd,_,_,_),
 	%print_message(error,error(syntax_error(whatever),file(File,LineNumber,_one,_Char))),
 	pretty_write((H:-Body)), writeln('.'),
@@ -139,7 +141,7 @@ dumploaded.
 :- if(current_prolog_flag(dialect, swi)).
 % ...and finally the generic SWI support:
 
-:- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1]).
+:- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1]).
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
@@ -535,11 +537,6 @@ is_time_var(VV) :-
 		(C==95->true;C>=48,C=<57)
 	).
 	
-% also closes var tailed lists
-bindAllVars([]) :- !.
-bindAllVars([VV|Vars]) :- 
-	arg(1,VV,Name), arg(2,VV,Value), 
-	(var(Value) -> Value=Name ; true), bindAllVars(Vars).
 
 % Declare here predicates you wish to keep unchanged accross the transform
 % For some specific cases, predicate sort hints are remembered
