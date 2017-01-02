@@ -78,8 +78,8 @@ bin_width(Min,Max,NBins,Width) :-
   Width is D/NBins.
 
 load_r_libraries :-
-    <- library("ggplot2"),
-    <- pdf("plot.pdf").
+    <- library("ggplot2").
+/*    <- pdf("plot.pdf").*/
 
 finalize_r_graph :-
 	r_download.
@@ -549,11 +549,11 @@ densities_r(Pri0,Post0,NBins) :-
 
 /* geom_line + geom_point + y 0,1,0.1 + x 0,1,0.1 + title */
 /* Fix scale: breaks(0,1,0.1) does not seem to work here. */
-geom_compute_areas_diagram(L,Title) :-
+geom_compute_areas_diagram(L,Title,XName,YName) :-
     get_set_from_list(L,R),
     r_data_frame_from_rows(df, R),
     titlE <- as.character(Title),
-    labelS <- labs(title = titlE),
+    labelS <- labs(title = titlE, x=XName, y=YName),
     colnames(df) <- c("x", "y"),
     <- ggplot(
         data=df,
@@ -597,9 +597,9 @@ geom_compute_areas_diagram(L,Title) :-
 compute_areas_diagrams_r(LG,AUCROC,AUCPR) :-
     load_r_libraries,
     compute_areas(LG,AUCROC,ROC0,AUCPR,PR0),
-    geom_compute_areas_diagram(ROC0,"ROC"),
+    geom_compute_areas_diagram(ROC0,"ROC","FPR","TPR"),
     finalize_r_graph,
     load_r_libraries,
-    geom_compute_areas_diagram(PR0,"PR"),
+    geom_compute_areas_diagram(PR0,"PR","Precision","Recall"),
     finalize_r_graph.
 
