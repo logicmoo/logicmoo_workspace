@@ -406,6 +406,13 @@ syntax2p(NT,_,TT,Fact) :-
 	(nonvar(NT)->ToWei=true;ToWei=false),
 	NT=Fact,
 	do_not_transform_may_hint(NT,TT,ToWei,true), !.
+% time-dependent facts:
+syntax2p(Head,Vars,lps2p,l_int(WHead,[])) :-
+	syntax2p_literal(Head,Vars,lps2p,[_T1,_T2],_,WHead), WHead = holds(_,_),
+	!.
+syntax2p(Head,Vars,lps2p,l_events(WHead,[])) :-
+	syntax2p_literal(Head,Vars,lps2p,[_T1,_T2],_,WHead), WHead = happens(_,_,_),
+	!.
 syntax2p(L,Vars,lpsp2p,PT) :- 
 	(var(PT) -> ToWei=true; ToWei=false),
 	(L = (LH:-LB)->true;LH=L,LB=true), 
