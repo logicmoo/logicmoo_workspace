@@ -385,7 +385,7 @@ syntax2p(L,Vars,lps2p,PT) :-
 	((F==terminated), L_ = (Event terminates Fluent) ; (F==initiated), L_ = (Event initiates Fluent)), 
 	!,
 	syntax2p_sequence(Conditions,Vars,lps2p,[_T1,_T2],single,_ET,[NB1|NBn]),
-	(Conditions = (Event,Body) -> L = (L_ :- Body) ; L = L_, Conditions=Event).
+	(Conditions = (Event,Body) -> L = (L_ if Body) ; L = L_, Conditions=Event).
 % intentional fluents and composite events, and more
 syntax2p((Head if Body),Vars,lps2p,PT) :-
 	(var(PT) -> ToWei=true; ToWei=false),
