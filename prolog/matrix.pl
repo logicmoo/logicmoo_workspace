@@ -188,7 +188,7 @@ mul(X,T,M,M+X*T).
 
 %% matrix_diff(+A,+B,-C) is det
 matrix_diff(X,Y,S):-
-  maplist(maplist(sum),X,Y,S).
+  maplist(maplist(diff),X,Y,S).
 
 diff(A,B,C):-
   C is A-B.
