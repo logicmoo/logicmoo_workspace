@@ -70,12 +70,11 @@ Oprional parameters are encapsuled between @code{[} @code{]}.
 
 @node Installation
 @chapter Installation
-Cplint-R (will be) is provided as part of the
+Cplint_R is provided as part of the
 @footnote{@mybibcite{Cplint on SWISH}} package.
 
-TODO
 
-@code{pack_install('cplint_r').}
+You can install it manually with @command{pack_install('cplint_r').}
 
 @section Dependencies
 Cplint-R has both Prolog and R dependencies:
@@ -146,6 +145,29 @@ for the library users'.
 
 Please refer to the Cplint help manual for more information.
 
+@deffn{Helper} build_xy_list@
+(@var{X}:list,@
+@var{Y}:list,@
+@var{Out}:list)
+Given to lists @var{X} and @var{Y} build an output list @var{Out}
+in the form @code{[X1-Y1,X2-Y2,...,XN-YN]}.
+@end deffn
+
+@deffn{Helper} r_row@
+(@var{X}:atom,@
+@var{Y}:atom,@
+@var{r(X,Y)}:atom)
+Given two atoms @var{X} and @var{Y}, build a relationship @var{r(X,Y)}.
+@end deffn
+
+@deffn{Helper} get_set_from_xy_list@
+(@var{L}:list,@
+@var{R}:list)
+Given an input list @var{L} in the form @code{[X1-Y1,X2-Y2,...,XN-YN]},
+transform it in an output list @var{R} in the form
+@code{[r(X1,Y1),r(X2,Y2),...,r(XN,YN)]}.
+@end deffn
+
 @deffn{Pita} prob_bar_r@
 (:@var{Query}:atom)
 The predicate computes and plots the probability of @var{Query}
@@ -155,8 +177,8 @@ If @var{Query} is not ground, it returns in backtracking all ground
 instantiations of @var{Query} together with their probabilities.
 @end deffn
 
-@deffn{Pita} prob_bar_r@
-(:@var{Query}:atom@
+@deffn{Pita} prob_bar_r,@
+(:@var{Query}:atom,@
 :@var{Evidence}:atom)
 The predicate computes and plots the probability of @var{Query}
 given @var{Evidence}
@@ -168,16 +190,10 @@ instantiations of @var{Query} / @var{Evidence} together with their
 probabilities.
 @end deffn
 
-@deffn{Pita} bdd_dot_string_r@
-(:@var{Query}:atom,@
--@var{DotString}:string,@
--@var{LV}:list)
-@end deffn
-
 @deffn{Mcintyre} mc_prob_bar_r@
 (:@var{Query}:atom,@
 -@var{Probability}:dict)
-?? Same as prob_bar_r ??
+See prob_bar_r/2.
 @end deffn
 
 @deffn{Mcintyre} mc_sample_bar_r@

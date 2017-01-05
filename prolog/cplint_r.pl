@@ -18,7 +18,10 @@
 /* Interface */
 
 :- module(cplint_r,
-          [ prob_bar_r/1,
+          [ build_xy_list/3,
+            r_row/3,
+            get_set_from_xy_list/2,
+            prob_bar_r/1,
             prob_bar_r/2,
             mc_prob_bar_r/1,
             mc_sample_bar_r/2,
@@ -79,20 +82,22 @@ bin_width(Min,Max,NBins,Width) :-
 
 load_r_libraries :-
     <- library("ggplot2").
-/*    <- pdf("plot.pdf").*/
+/* To enable pdf output:
+ * <- pdf("plot.pdf").
+ */
 
 finalize_r_graph :-
 	r_download.
 
-/* Out = [X1-Y1, X2-Y2, X*/
-assemble_list([], [], []).
+/* Out = [X1-Y1, X2-Y2, XN-YN] */
+build_xy_list([], [], []).
 
-assemble_list([XH|XT], [YH|YT], [XH-YH|Out]) :-
-        assemble_list(XT, YT, Out).
+build_xy_list([XH|XT], [YH|YT], [XH-YH|Out]) :-
+        build_xy_list(XT, YT, Out).
 
 r_row(X,Y,r(X,Y)).
 
-get_set_from_list(L,R) :-
+get_set_from_xy_list(L,R) :-
     maplist(key,L,X),
     maplist(y,L,Y),
     maplist(r_row,X,Y,R).
@@ -114,8 +119,8 @@ get_set_from_list(L,R) :-
 geom_prob_bar(PTrue,PFalse) :-
     X=['T','F'],
     Y=[PTrue,PFalse],
-    assemble_list(X,Y,L),
-    get_set_from_list(L,R),
+    build_xy_list(X,Y,L),
+    get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df1, R),
     colnames(df1) <- c("names", "prob"),
     df <- data.frame(
@@ -196,8 +201,8 @@ mc_prob_bar_r(M:Goal):-
 geom_mc_sample_bar(PTrue,PFalse) :-
     X=['T','F'],
     Y=[PTrue,PFalse],
-    assemble_list(X,Y,L),
-    get_set_from_list(L,R),
+    build_xy_list(X,Y,L),
+    get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df1, R),
     colnames(df1) <- c("names", "prob"),
     df <- data.frame(
@@ -244,7 +249,7 @@ mc_sample_bar_r(M:Goal,S):-
  * Reorder by decreasing frequency.
  */
 geom_mc_sample_arg_bar(L) :-
-    get_set_from_list(L,R),
+    get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df1, R),
     colnames(df1) <- c("names", "prob"),
     df <- data.frame(
@@ -294,7 +299,7 @@ mc_sample_arg_bar_r(M:Goal,S,Arg):-
 
 
 geom_mc_sample_arg_first_bar(L) :-
-    get_set_from_list(L,R),
+    get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df1, R),
     colnames(df1) <- c("names", "prob"),
     df <- data.frame(
@@ -406,7 +411,7 @@ mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,L,Arg):-
 geom_histogram(L,NBins,BinWidth) :-
     nbinS <- NBins,
     binwidtH <- BinWidth,
-    get_set_from_list(L,R),
+    get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
     <- ggplot(
@@ -449,7 +454,7 @@ histogram_r(L0,NBins,Min,Max) :-
 
 
 geom_density(L) :-
-    get_set_from_list(L,R),
+    get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
     <- ggplot(
@@ -491,8 +496,8 @@ density_r(Post0,NBins,Min,Max) :-
  * <- ggplot(data=df,aes_string(x="x",y="y1",group=1)) + geom_line() + geom_point().
  */
 geom_densities(LPr,LPo) :-
-    get_set_from_list(LPr,R1),
-    get_set_from_list(LPo,R2),
+    get_set_from_xy_list(LPr,R1),
+    get_set_from_xy_list(LPo,R2),
     r_data_frame_from_rows(df1, R1),
     r_data_frame_from_rows(df2, R2),
     colnames(df1) <- c("x", "y1"),
@@ -550,7 +555,7 @@ densities_r(Pri0,Post0,NBins) :-
 /* geom_line + geom_point + y 0,1,0.1 + x 0,1,0.1 + title */
 /* Fix scale: breaks(0,1,0.1) does not seem to work here. */
 geom_compute_areas_diagram(L,Title,XName,YName) :-
-    get_set_from_list(L,R),
+    get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),
     titlE <- as.character(Title),
     labelS <- labs(title = titlE, x=XName, y=YName),

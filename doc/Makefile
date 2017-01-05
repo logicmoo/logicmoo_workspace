@@ -33,6 +33,8 @@ help:
 
 gendocs:
 	@./gendocs.sh --html --css-include=main.css -s cplint_r.texi --email franco.masotti@student.unife.it
+	@printf "This manual is released under a permissive license. See the sources for more-information.\n\nhttps://frnmst.github.io/cplint_r\n" > manual/README.md
+	@printf "These pages are licensed under a permissive license." > manual/LICENSE
 
 .PHONY: default pdf-clean help gendocs
 
