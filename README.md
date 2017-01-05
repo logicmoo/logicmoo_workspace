@@ -4,10 +4,10 @@ R plotting predicates for Cplint on SWISH based on ggplot2
 
 ## More
 
-This library is to be used with Cplint on SWISH
-and it must be placed in the `lib` directory.
+This library is to be used with Cplint on SWISH.
+It is included in the `swish-cplint` package.
 
-## Installation (TODO)
+## Installation
 
     pack_install('cplint-r').
 
