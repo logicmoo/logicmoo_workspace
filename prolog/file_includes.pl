@@ -29,9 +29,12 @@
 
 :- module(file_includes, [file_includes/3]).
 
+:- use_module(library(aggregate)).
+
 file_includes(File, Incl, Time) :-
-    source_file_property(File, includes(Incl0, Time0 )),
-    ( Incl = Incl0,
-      Time = Time0
-    ; file_includes(Incl0, Incl, Time)
+    aggregate_all(set(I-T), source_file_property(File, includes(I, T)), L),
+    member(I-T, L),
+    ( Incl = I,
+      Time = T
+    ; file_includes(I, Incl, Time)
     ).
