@@ -138,13 +138,13 @@ insert_pair(Name, Value, Assoc0, Assoc) :-
 numbered_captures(State, List) :-
     state_capture_count(State, N),
     state_captures(State, Captures),
-    numbered_captures(N, Captures, List).
-numbered_captures(0, _, []) :-
+    numbered_captures(0, N, Captures, List).
+numbered_captures(N, N, _, []) :-
     !.
-numbered_captures(N0, Captures, [Value|Tail]) :-
-    succ(N, N0),
-    get_assoc(N,Captures,Value),
-    numbered_captures(N,Captures,Tail).
+numbered_captures(N0, N, Captures, [Value|Tail]) :-
+    get_assoc(N0,Captures,Value),
+    succ(N0, N1),
+    numbered_captures(N1,N,Captures,Tail).
 
 
 %% adjust_case(+Options, +Code0, -Code) is det.

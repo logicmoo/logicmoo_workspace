@@ -62,6 +62,10 @@ regex('.*', [], howdy, []).
     regex('hello (\\w+)', i, 'Hello Joe', [Whom]),
     Whom == "Joe".
 
+'two captures initially unbound' :-
+    regex('(\\S+) (\\S+)', [], 'hello world', Captures),
+    Captures = ["hello", "world"].
+
 'pattern matches but captures fail unification'(fail) :-
     Whom = "Thomas",
     regex('hello ([a-z]+)', i, 'Hello Tom', [Whom]).
