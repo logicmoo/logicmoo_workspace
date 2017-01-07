@@ -82,9 +82,10 @@ bin_width(Min,Max,NBins,Width) :-
 
 load_r_libraries :-
     <- library("ggplot2").
-/* To enable pdf output:
- * <- pdf("plot.pdf").
- */
+    /* To enable pdf output instead of using the default plotting window, add 
+     * the following command
+     */
+    /* <- pdf("plot.pdf"). */
 
 finalize_r_graph :-
 	r_download.
@@ -551,6 +552,7 @@ densities_r(Pri0,Post0,NBins) :-
     geom_densities(LPr,LPo),
     finalize_r_graph.
 
+/* auc */
 
 /* geom_line + geom_point + y 0,1,0.1 + x 0,1,0.1 + title */
 /* Fix scale: breaks(0,1,0.1) does not seem to work here. */

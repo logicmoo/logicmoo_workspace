@@ -1,6 +1,6 @@
 \input texinfo @c -*-texinfo-*-
 
-@settitle Cplint-R Manual
+@settitle Cplint_R Manual
 @include my-bib-macros.texi
 @mybibuselist{References}
 @paragraphindent none
@@ -15,7 +15,7 @@ notice and this notice are preserved.
 @end copying
 
 @titlepage
-@title Cplint-R Documentation
+@title Cplint_R Documentation
 @author Franco Masotti
 @page
 @vskip 0pt plus 1filll
@@ -27,9 +27,9 @@ notice and this notice are preserved.
 
 @ifnottex
 @node Top
-@top Cplint-R
+@top Cplint_R
 
-This manual is for Cplint-R.
+This manual is for Cplint_R.
 
 @menu
 * Description::     A brief description of what this is all about
@@ -50,7 +50,9 @@ This manual is for Cplint-R.
 @chapter About
 @section About
 The purpose of this library is to provide an interface between
-the Cplint@footnote{@mybibcite{Cplint}} suite and R@footnote{@mybibcite{R}}
+the Cplint@footnote{@mybibcite{Cplint}} suite for 
+SWI Prolog@footnote{@mybibcite{SWI Prolog}}
+and R@footnote{@mybibcite{R}}
 to handle graphs made with the ggplot2@footnote{@mybibcite{ggplot2}} package.
 
 This means that the currently available C3js@footnote{@mybibcite{C3js}}
@@ -73,11 +75,11 @@ Oprional parameters are encapsuled between @code{[} @code{]}.
 Cplint_R is provided as part of the
 @footnote{@mybibcite{Cplint on SWISH}} package.
 
-
-You can install it manually with @command{pack_install('cplint_r').}
+You can also install it manually with @command{pack_install('cplint_r').}
+using the @command{swipl} command.
 
 @section Dependencies
-Cplint-R has both Prolog and R dependencies:
+Cplint_R has both Prolog and R dependencies:
 
 @subsection Prolog
 @itemize @bullet
@@ -89,10 +91,15 @@ Cplint
 
 @item
 Rserve Client
+
+@item
+SWISH R library ???
+
 @end itemize
 
 @subsection R
 @itemize @bullet
+@item
 ggplot2
 @end itemize
 
@@ -114,36 +121,25 @@ TODO
 @node Protocol
 @chapter Protocol
 @section Interface
-@subsection Data types used here
-
-See also @uref{http://www.swi-prolog.org/datatypes.html}
-
-@deftp{} atom
-@end deftp
-
-@deftp{} dict
-@end deftp
-
-@deftp{} string
-@end deftp
-
-@deftp{} list
-@end deftp
-
-@deftp{} int
-@end deftp
-
-@deftp{} float
-@end deftp
-
-@deftp{} var
-@end deftp
-
-@subsection Predicates
 The following is a list of exported predicates available
-for the library users'.
+to the library users'.
 
-Please refer to the Cplint help manual for more information.
+Each predicate corresponds to one of the following categories
+@itemize @bullet
+@item Helper: specific of this library.
+
+@item Pita: it's part of Cplint.
+
+@item Mcintyre: it's part of Cplint.
+
+@item Auc: it's part of Cplint.
+@end itemize
+
+Each argument of a predicate correponds to a data type. See
+the SWI Prolog data types manual@footnote{@mybibcite{SWI Prolog data types}} 
+and the Learn Prolog Now manual@footnote{@mybibcite{LPN}}.
+Have a look at the Cplint help manual@footnote{@mybibcite{Cplint}} to learn in 
+details about the functionality of each predicate.
 
 @deffn{Helper} build_xy_list@
 (@var{X}:list,@
@@ -166,6 +162,8 @@ Given two atoms @var{X} and @var{Y}, build a relationship @var{r(X,Y)}.
 Given an input list @var{L} in the form @code{[X1-Y1,X2-Y2,...,XN-YN]},
 transform it in an output list @var{R} in the form
 @code{[r(X1,Y1),r(X2,Y2),...,r(XN,YN)]}.
+This means that @code{R} will contain an X-Y relationship
+which can be then passed to an R data frame.
 @end deffn
 
 @deffn{Pita} prob_bar_r@
@@ -177,7 +175,7 @@ If @var{Query} is not ground, it returns in backtracking all ground
 instantiations of @var{Query} together with their probabilities.
 @end deffn
 
-@deffn{Pita} prob_bar_r,@
+@deffn{Pita} prob_bar_r@
 (:@var{Query}:atom,@
 :@var{Evidence}:atom)
 The predicate computes and plots the probability of @var{Query}
@@ -348,8 +346,8 @@ data.
 
 @subsection Interface predicates
 All interface predicates have a similar structure. Their names
-end with @code{_r} in order to distinguish them from the original cplint 
-predicates.
+end with @code{_r} (except the Helpers) in order to distinguish them from the 
+original Cplint predicates.
 
 First and last operations are always @code{load_r_libraries} and 
 @code{finalize_r_graph} respectively.
@@ -382,31 +380,20 @@ geom_<smt>(<Lists or other input>) :-
 @end verbatim
 
 @subsection List handling
-The following predicates are used to transform a single list
-containing one distribution (x and y) into a list
-like @code{[r(X1,Y1), r(X2,Y2), ... , r(Xn,Yn)].}
+List handling is useful to pass information between Prolog and
+R. This is done thanks to @command{build_xy_list/3}, @command{r_row/3} 
+and @command{get_set_from_xy_list/2} predicates, 
+described in the interface section.
 
-@verbatim
-r_row(X,Y,r(X,Y)).
-
-get_set_from_list(L,R) :-
-    maplist(key,L,X),
-    maplist(y,L,Y),
-    maplist(r_row,X,Y,R).
-@end verbatim
-
-This means that @code{R} will contain an X-Y relationship
-which is then passed to an R data frame.
-
-In case there are multiple distribution we simply have to call
-@code{get_set_from_list/2} the appropriate number of times,
-like: @code{get_set_from_list(<smt>,R#)}.
+In case there are multiple distributions we simply have to call
+@code{get_set_from_xy_list/2} the appropriate number of times,
+like: @code{get_set_from_xy_list(<smt>,R#)}.
 
 @subsection Main data frame creation
 As descibed before, a data frame is useful to pass 
 structured information between Prolog and R.
 
-In Cplint-R in particular, we use @code{r_data_frame_from_rows/2} provided by
+In Cplint_R in particular, we use @code{r_data_frame_from_rows/2} provided by
 the Rserve Client@footnote{@mybibcite{Rserve Client}} library, in the following
 manner:
 @verbatim
@@ -418,8 +405,8 @@ For each distribution the optional number is incremented by one.
 In case it is the last (or only) data frame then its name
 will simply be @code{df}.
 
-@subsection Helpers.
-What follows are some trivial predicates indicated as helpers.
+@subsection Helpers
+What follows are some trivial predicates indicated as internal helpers.
 
 @verbatim
 bin_width(Min,Max,NBins,Width) :-
@@ -461,6 +448,14 @@ logic programs". See @uref{https://github.com/friguzzi/cplint} and
 the Cplint help manual.
 @*
 
+@mybibitem{SWI Prolog} "SWI-Prolog offers a comprehensive 
+free Prolog environment.
+Since its start in 1987, SWI-Prolog development has been driven by the needs
+of real world applications. SWI-Prolog is widely used in research and
+education as well as commercial applications". See
+@uref{http://www.swi-prolog.org/}
+@*
+
 @mybibitem{R} "R is an integrated suite of software facilities for data 
 manipulation, calculation and graphical display". 
 See @uref{https://cran.r-project.org/doc/manuals/r-release/R-intro.html}
@@ -478,6 +473,14 @@ See @uref{http://ggplot2.org/}
 @mybibitem{C3js} "C3 enables deeper integration of charts into your 
 application".
 See @uref{http://c3js.org/}
+@*
+
+@mybibitem{SWI Prolog data types} See 
+@uref{http://www.swi-prolog.org/datatypes.html}.
+@*
+
+@mybibitem{LPN} "Learn Prolog Now". See 
+@uref{http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlch1}.
 @*
 
 @mybibitem{Cplint on SWISH} "A set of packages that are able to build and 
