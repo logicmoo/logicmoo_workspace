@@ -3,6 +3,8 @@ maxTime(9).
 
 initial_state([balance(bob,0),balance(fariba,100)]).
 
+fluents balance(_,_).
+
 action(transfer(From,To,Amount)). % Why is this still needed?
 
 transfer(From,To,Amount) initiates balance(To,New) :-
