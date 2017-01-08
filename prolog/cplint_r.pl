@@ -47,12 +47,13 @@
 
 :- use_module(library(r/r_call)).
 :- use_module(library(r/r_data)).
-:- use_module(swish(r_swish)).
 :- use_module(library(lists)).
 :- use_module(library(pita)).
 :- use_module(library(mcintyre)).
 :- use_module(library(auc)).
 
+/* Optional module */
+:- use_module(swish(r_swish)).
 
 /* Meta predicate definitions. */
 
@@ -70,25 +71,44 @@
  * Helpers *
  ***********/
 
+check_modules :-
+    current_module(r_call),
+    current_module(r_data),
+    current_module(lists),
+    current_module(pita),
+    current_module(mcintyre),
+    current_module(auc).
+
+check_modules :-
+    writeln("ERROR: Library/ies missing"),
+    abort.
+
 /* Debug purposes
  *
  *  use_rendering(table).
  *  <- df. % name of a data frame.
  */
 
-bin_width(Min,Max,NBins,Width) :-
-  D is Max-Min,
-  Width is D/NBins.
-
 load_r_libraries :-
+    check_modules,
+    !,
     <- library("ggplot2").
     /* To enable pdf output instead of using the default plotting window, add 
      * the following command
      */
     /* <- pdf("plot.pdf"). */
 
+/* Only do if library(r_swish) exists, otherwise return true. */
 finalize_r_graph :-
+    current_predicate(r_download/0),
 	r_download.
+
+/* Return true. */
+finalize_r_graph.
+
+bin_width(Min,Max,NBins,Width) :-
+    D is Max-Min,
+    Width is D/NBins.
 
 /* Out = [X1-Y1, X2-Y2, XN-YN] */
 build_xy_list([], [], []).

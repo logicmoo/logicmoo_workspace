@@ -326,8 +326,9 @@ The predicate returns:
 
 @item
 @var{AUCPR}: the size of the area under the PR curve
-See @uref{http://cplint.lamping.unife.it/example/exauc.pl} for an example
 @end itemize
+
+See @uref{http://cplint.lamping.unife.it/example/exauc.pl} for an example.
 @end deffn
 
 @section Internals

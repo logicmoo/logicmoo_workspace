@@ -10,13 +10,27 @@ At the moment, it is included as part of the installation process
 in the [swish-cplint](https://aur.archlinux.org/packages/swish-cplint) package
 for the Arch GNU/Linux distribution (and derivatives).
 
+## Example
+
 ## Installation
 
     pack_install('cplint_r').
 
-## Full Documentation
+## Full documentation (including API)
 
 https://frnmst.github.io/cplint_r
+
+## Tests
+
+TODO
+
+## Changelogs 
+
+2017-01-07 version 0.0.1. First release including documentation.
+
+## Bugs
+
+TODO
 
 ## License
 
