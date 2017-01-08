@@ -199,7 +199,7 @@ visual(File,timeline(JSON)) :-
 		make_json_object([id:ID,content:Atom,start:T1,end:T2,group:Gatom,title:Tip],Fluent),
 		member(t(X,T1-T2,F/N),Ranged),  
 		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom),
-		concat_atom(['Fluent initiated at ',T1,' and terminated at ',T2],Tip),
+		concat_atom(['Fluent ',Atom,' initiated at ',T1,' and terminated at ',T2],Tip),
 		get_increment_counter(IDs,ID)
 	), Fluents),
 	%... and the rest:
