@@ -91,7 +91,7 @@ my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
 :- op(1050,fx,actions).
 :- op(995,xfx,at).
 :- op(995,xfx,during).
-% :- op(995,xfx,from). Already defined in XSB with higher priority... so parenthesis needed e.g. (event 1 from 1 to 2), event 2 to 3
+:- op(995,xfx,from). % Already defined in XSB with higher priority... so parenthesis needed e.g. (event 1 from 1 to 2), event 2 to 3
 :- op(994,xfx,to). % from's priority higher
 :- op(1050,xfy,::).
 
