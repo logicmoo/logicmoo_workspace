@@ -29,7 +29,9 @@ check:
 install:
 	@echo "none."
 
-test: doc
+test:
+	@swipl -s tests/tests.pl -g run_tests,halt -t 'halt(1)'
+
 
 package: doc
 

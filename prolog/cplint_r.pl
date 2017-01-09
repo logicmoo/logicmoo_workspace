@@ -101,9 +101,8 @@ load_r_libraries :-
 /* Only do if library(r_swish) exists, otherwise return true. */
 finalize_r_graph :-
     current_predicate(r_download/0),
-	r_download.
+    r_download.
 
-/* Return true. */
 finalize_r_graph.
 
 bin_width(Min,Max,NBins,Width) :-
@@ -207,7 +206,7 @@ prob_bar_r(M:Goal,M:Evidence):-
 
 
 /**
- * mc_prob_bar(:Query:atom) is det
+ * mc_prob_bar_r(:Query:atom) is det
  *
  * See prob_bar.
  */
@@ -343,7 +342,7 @@ geom_mc_sample_arg_first_bar(L) :-
     + coord_flip().
 
 /**
- * mc_sample_arg_first_bar(:Query:atom,+Samples:int,?Arg:var) is det
+ * mc_sample_arg_first_bar_r(:Query:atom,+Samples:int,?Arg:var) is det
  *
  * The predicate samples Query Samples times. Arg should be a variable
  * in Query.
