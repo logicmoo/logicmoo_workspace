@@ -928,7 +928,7 @@ process([reactive_rule([L | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
 % Need similar case for prolog atom.
 process([reactive_rule([L | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
 	(L = not(holds(P, T)); L = (holds(not(P), T))),!,
-	copy_term(reactive_rule([holds(P, T) |Ls], C) , reactive_rule([holds(CP, CT) |CLs], CC)),
+	copy_term( reactive_rule([holds(P, T) |Ls], C), reactive_rule([holds(CP, CT) |CLs], CC) ),
 	current_time(Now),
 	(   query(holds(CP, Now)) -> (T==Now -> process(Rs, AccRi, NRi, AccG, NGi)
 				     ;	 process(Rs, [reactive_rule([L | Ls], C) | AccRi], NRi, AccG, NGi))
@@ -961,7 +961,7 @@ process([reactive_rule([L |Ls], C) | Rs], AccRi, NRi, AccG, NGi) :-
 %	'), write(AllClauses), nl, setof(reactive_rule(Resolvent,CC),
 %	(member(lpsClause(CL, Body), AllClauses), append(Body, CLs,
 %	Resolvent)), NewR ),
-	findall(reactive_rule(Resolvent,CC) ,
+	findall(reactive_rule(Resolvent,CC) , 
 	(lpsClause(CL, Body),append(Body, CLs, Resolvent)), NewR ),
 %	nl, write(' all resolvents of the head '),write(L), write(' of
 %	the reactive rule are '),
@@ -983,13 +983,13 @@ generate_id(New) :-
 % Difference lists could be used instead. Retract all tried actions is a
 % hack, to remove and tried actions not removed by clause 4 of resolve.
 % There should be a more elegant solution.
-resolve_tree([], NewAccG, FinalG) :- 
+resolve_tree([], NewAccG, FinalG) :- !,
 	reverse(NewAccG, FinalG),
 	uretractall(tried(_GoalId, _Depth, lpsClause(happens(_A,_T,_), []))).
 
 % terminate with message: “Requires too much thinking.”
 resolve_tree(_Unfinished, _AccG, end):-
-	steps(N), N < 1.
+	steps(N), N < 1, !.
 
 /*
 Alternatively, continue:
@@ -1001,7 +1001,6 @@ resolve_tree(Unfinished, AccG, NextGoals):-
 % An alternative to asserting and retracting depth is simply to compute
 % depth when necessary, or pass as a parameter of resolve.
 resolve_tree([goal(GoalId, [ [L|Ls] | Bs]) | Gs], AccG, FinalG) :-
-     steps(N), N > 1,
 	uretractall(current_goal(_)), uassertz(current_goal(GoalId)),
 	uretractall(depth(_)),length([ [L|Ls] | Bs], Depth),
 	uassertz(depth(Depth)),
@@ -1019,7 +1018,9 @@ resolve_tree([goal(GoalId, [ [L|Ls] | Bs]) | Gs], AccG, FinalG) :-
 	; (advance(Result, [goal(GoalId, [ [L|Ls] | Bs]) | Gs], NextTree, AccG, NewAccG)
 %	nl, write('advance next tree '), write(NextTree),
 %	nl, write(' new accumulated tree '), write(NewAccG), nl
-	  ))),
+	  ))
+	 
+	 ),
 	resolve_tree(NextTree, NewAccG, FinalG).
 
 
@@ -1068,9 +1069,10 @@ resolve([L|Ls], Result) :-
 	copy_term([L|Ls], [CL|_]),  %Don't need copy_term?
 	\+ (L = happens(A, _, _), action_(A)),
 	lpsClause(CL, Body),
-	!,
+	% !,
 	reduce_step,
 	current_goal(GoalId), depth(Depth),
+	!,
     	findall(lpsClause(CL, Body), lpsClause(CL, Body), AllClauses),
 %    write(' All clauses that resolve with '), write(L), write(' are '),
 %    nl, write(AllClauses), nl,
@@ -1101,6 +1103,7 @@ resolve([L|Ls], Result) :-
 %		      nl)))
         ;   candidateAction([L | Ls], Result) ).
 
+% candidateAction([CA| _], Result) Result == fail   Result==later...
 candidateAction([L| Ls], Result) :-
 	copy_term([L|Ls], [CL|CLs]),
 	current_time(Now), Next is Now+1,current_goal(GoalId),
@@ -1108,11 +1111,26 @@ candidateAction([L| Ls], Result) :-
 	depth(Depth),
 	( happens(A, Now, Next)-> true ; uassertz(happens(A, Now, Next))),
 	uassertz(tried(GoalId, Depth, lpsClause(CL, []))),
-	(( d_pre(Conds), holds_all(Conds))->
-	(uretractall(happens(A, Now, Next)), (T == Now ->  Result = fail
-		    ;  Result =  later))
+	( 
+		( d_pre(Conds), holds_all(Conds) )->
+			uretractall(happens(A, Now, Next)), 
+			(T = Now ->  % This used to be == ; with = this approximates the proposed Bob fix
+				Result = fail;  
+				Result =  later)
 	;  Result = CLs ).
 
+
+/* Bob original fix: candidateAction([L| Ls], Result) :-
+	copy_term([L|Ls], [CL|CLs]),
+	current_time(Now), Next is Now+1,current_goal(GoalId),
+	L = happens(A, _, _), CL = happens(A, Now, Next),
+	depth(Depth),
+	( happens(A, Now, Next)-> true ; uassertz(happens(A, Now, Next))),
+	uassertz(tried(GoalId, Depth, lpsClause(CL, []))),
+	( (d_pre(Conds), holds_all(Conds)) ->
+		uretractall(happens(A, Now, Next)), 
+		Result = fail
+	;  Result = CLs ). */
 
 lpsClause(Head, Body) :-  l_timeless(Head, Body).
 lpsClause(Head, Body) :-  l_events(Head, Body).
