@@ -152,8 +152,8 @@ in the form @code{[X1-Y1,X2-Y2,...,XN-YN]}.
 @deffn{Helper} r_row@
 (@var{X}:atom,@
 @var{Y}:atom,@
-@var{r(X,Y)}:atom)
-Given two atoms @var{X} and @var{Y}, build a relationship @var{r(X,Y)}.
+@var{Out}:atom)
+Given two atoms @var{X} and @var{Y}, build a relationship r(X,Y) in @var{Out}.
 @end deffn
 
 @deffn{Helper} get_set_from_xy_list@
