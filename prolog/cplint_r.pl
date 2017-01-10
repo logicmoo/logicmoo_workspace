@@ -119,8 +119,19 @@ build_xy_list([], [], []).
 build_xy_list([XH|XT], [YH|YT], [XH-YH|Out]) :-
         build_xy_list(XT, YT, Out).
 
+/**
+ * r_row(X:atom,Y:atom,Out:atom) is det
+ * Given two atoms X and Y, build a relationship r(X,Y) in Out.
+ */
 r_row(X,Y,r(X,Y)).
 
+/**
+ * get_set_from_xy_list(L:list,R:list) is det
+ * Given an input list L in the form [X1-Y1,X2-Y2,...,XN-YN], transform it in 
+ * an output list R in the form [r(X1,Y1),r(X2,Y2),...,r(XN,YN)]. This means 
+ * that R will contain an X-Y relationship which can be then passed to an R 
+ * data frame. 
+ */
 get_set_from_xy_list(L,R) :-
     maplist(key,L,X),
     maplist(y,L,Y),
