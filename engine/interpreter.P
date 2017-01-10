@@ -60,7 +60,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1,
 	steps/1, (terminated)/3, used/1, maxTime/1,
-	current_goal/1, depth/1, tried/3, option/1, initial_state/1,
+	current_goal/1, depth/1, tried/3, option/1, initial_state/1, lps_updating_current_state/0,
 	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, 
 	lps_failed_test/2,
 	(events)/1, (fluents)/1, (actions)/1,
@@ -121,6 +121,7 @@ print_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 current_goal(X) :- pengine_self(M), M:current_goal(X).
 current_time(X) :- pengine_self(M), M:current_time(X).
+lps_updating_current_state :- pengine_self(M), catch(M:lps_updating_current_state,_,fail).
 d_pre(X) :- pengine_self(M), catch(M:d_pre(X),_,fail).
 depth(X) :- pengine_self(M), catch(M:depth(X),_,fail).
 event(X) :- pengine_self(M), catch(M:event(X),_,fail).
@@ -172,7 +173,7 @@ u_swiclause(H,B,Ref) :- pengine_self(M), clause(M:H,B,Ref).
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1,
 	steps/1, (terminated)/3, used/1, maxTime/1,
-	current_goal/1, depth/1, tried/3, option/1, 
+	current_goal/1, depth/1, tried/3, option/1, lps_updating_current_state/0,
 	initial_state/1,
 	lps_test_result_item/3, lps_test_result/3, lps_test_options/1, 
 	lps_failed_test/2,
@@ -245,6 +246,59 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 
 print_error(Type,Message,Position) :- 
 	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
+
+%% Now for an implementation available only on SWI:
+
+% resolveUntilAction(Goal) Execute goal until an action is found WHICH...., then calls shift(candidateAction(A)), suspending computation
+resolveUntilAction([]) :- !.
+resolveUntilAction([G1|Gn]) :- !, 
+	resolveUntilAction(G1), resolveUntilAction(Gn).
+resolveUntilAction(not(holds(F,T))) :- !, 
+	query(not(holds(F,T))).
+resolveUntilAction(holds(F,T)) :- !, 
+	query(holds(F,T)).
+resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, 
+	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
+resolveUntilAction(happens(E,T1,T2)) :- !, 
+	writeln(suspending),
+	shift(candidateAction(happens(E,T1,T2))), % suspend and return candidate
+	writeln(resuming_after_shift),
+	happens(E,T1,T2).
+resolveUntilAction(G) :- l_timeless(G,Body), evaluate(Body).
+resolveUntilAction(G) :- writeln(callingprolog-G), callprolog(G), writeln(calledprolog-G).
+
+% dc_resolve_goals(Goals,NewGoals) NewGoals contains goals delayed because of pending actions
+% Fails if all Goals can not be solved with admissible actions
+dc_resolve_goals([],[]) :- !.
+dc_resolve_goals(_Unfinished, end):-
+	steps(N), N < 1, !.
+dc_resolve_goals([goal(G)|Goals],NewGoals) :- 
+	reset(resolveUntilAction(G),Ball,Continuation),
+	(Continuation==0 -> % resolved G completely:
+		writeln(resolved_completely-G),
+		dc_resolve_goals(Goals,NewGoals) 
+	; % we found an event/action, happening from previous cycle to NOW ??????
+		Ball = candidateAction(A),
+		A=happens(_A,T1,T2),
+		current_time(Now), Previous is Now-1,
+		((nonvar(T1),T1<Previous) -> writeln(old_event-A), fail ; true), % outdated event should fail
+		((nonvar(T1),T1>Previous) -> % it's still too soon, postpone it:
+			writeln(postponing-A),
+			dc_resolve_goals(Goals,[goal([A,Continuation])|NewGoals]) 
+		; 
+			T1=Previous, T2=Now,
+			( A-> true,writeln(used-A) ; uassertz(A), writeln(asserting-A)),
+			( (d_pre(Conds),holds_all(Conds)) -> 
+				writeln(violatesPre-A), uretractall(A), fail 
+				; 
+				% resume with asserted compatible action:
+				writeln(continuing-XX),
+				%trace,
+				dc_resolve_goals([goal(Continuation)|Goals],NewGoals),
+				writeln(hello-XX)
+			)
+		)
+	).
 
 :- endif.
 
@@ -629,6 +683,14 @@ parse_options_([]) :- !.
 parse_options_([swish|Rest]) :- !, % don't cleanup db (nor load the program), the environment will do it
     uassertz(option(swish)),
     parse_options_(Rest).
+parse_options_([dc|Rest]) :- !,
+    (current_prolog_flag(dialect, swi) 
+    	-> uassertz(option(dc)) 
+    	; 
+    	writeln(user_error, 'ERROR in options: delimited continuations are available only for SWI Prolog '),
+    	fail
+    	),
+    parse_options_(Rest).
 parse_options_([verbose|Rest]) :- !,
     uassertz(option(verbose)),
     parse_options_(Rest).
@@ -865,26 +927,31 @@ cycle(Ri, Gi) :-
     	; ExternalObservations=[]),
 	(Time = 1 -> updateEvents(0, 1, ExternalObservations)   ; true),
 	% At this point last cycle events are still available
-    	% TODO: ExternaObservations to be injected as new events
+    	% TODO: ExternalObservations to be injected as new events
 	findall(Action, happens(Action, Previous, Time), Actions),
+	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
 	write_verbose([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
 	test(events,Time,Actions),
+	enter_step_0, % during updateFluents we need a hack to query the previous state
 	updateFluents(Time),
 	findall(Fluent, state(Fluent), Fluents), % setof doesn't work.
 	write_verbose([nl,' State at time ',Time,' is ',Fluents]),
 	test(fluents,Time,Fluents),
-	process(Ri, [], NRi, [], NewGi), % This processes antecedents of rules.
+	leave_step_0,
+	% This processes antecedents of rules:
+	(option(dc) -> dc_process(Ri, [], NRi, [], NewGi) ; process(Ri, [], NRi, [], NewGi)),
 	write_verbose([nl,
-		' Process reactive rules at time ',Time, nl,' New:  ', NRi,  nl,
+		' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
 		' Process goal tree at time ',Time, nl,' New: ',NewGi, nl]),
 	append(Gi, NewGi, NGi), % Puts new goals at the end of the queue.
 	uretractall(happens(_, _, _)),
 	updateEvents(Time, Next, ExternalObservations),
-	resolve_tree(NGi, [], GoalTree),% This resolves goals in the goal state.
+	% This resolves goals in the goal state.
+	(option(dc) -> once( dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)),
 	(GoalTree = end -> 
 		write_verbose([nl,' Exceeded number of steps. ',nl])	
 		;	
-		removeSolvedGoals(GoalTree, [], NextGi),
+		(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
 		next_time, 
 		cycle(NRi, NextGi)
 	).
@@ -893,6 +960,9 @@ cycle(Ri, Gi) :-
 updateEvents(Time, Next, ExternalObservations) :-  
 	forall( (observe(Evs, Next),member(E, Evs) ; member(E,ExternalObservations)), uassertz(happens(E, Time, Next))) -> true
      ; true.
+
+enter_step_0 :- uassert(lps_updating_current_state).
+leave_step_0 :- uretractall(lps_updating_current_state).
 
 %   Destructively update the state.
 updateFluents(Time) :-
@@ -909,7 +979,7 @@ removeSolvedGoals([goal(GId, Branch) | GoalTree], AccGi, FinalGi):-
       ; removeSolvedGoals(GoalTree, [goal(GId, Branch) | AccGi], FinalGi)).
 
 % process(RulesToProcess, RulesProcessed, FinalRules, GoalsSoFar, FinalGoals).
-%
+%	
 process([], Rs, Rs, NG, NG) :- !.
 
 % Antecedent is []. Add Consequent as new goal/tree.
@@ -1141,7 +1211,8 @@ lpsClause(tc(_), []).  % This ignores temporal constraints completely.
 lpsClause(P, []) :- \+l_timeless(P,_),\+l_events(P,_),\+l_int(P,_),
 	\+P = happens(_,_,_), \+P= holds(_,_), callprolog(P).
 
-% mustBeProcessedNow is used when unfolding atoms in antecedents of rules.
+% mustBeProcessedNow(L) is used when unfolding atoms in antecedents of rules.
+% true if L is extensional fluent or basic event with known time, intensional fluent/composite event or timeless/Prolog
 mustBeProcessedNow(holds(_, T)) :-
 	ground(T), current_time(Now),  T =< Now, !.
 mustBeProcessedNow(happens(_, _, T)) :-
@@ -1159,9 +1230,7 @@ prolog(P) :- \+ P = happens(_,_,_), \+ P = holds(_,_).
 intensional(P) :-  P =.. [Pred | Args], length(Args, L),
 	length(Args2, L), Q =.. [Pred |Args2],
 	 l_int(holds(Q, _), _).
-macroaction(A):- A =.. [Pred | Args], length(Args, L),
-	length(Args2, L), Q =.. [Pred |Args2],
-       l_events(happens(Q, _,_), _).
+macroaction(A):- functor(A,F,N), functor(Q,F,N), l_events(happens(Q, _,_), _), !.
 
 %mustBeResolvedNow is used when unfolding atoms in goal clauses,
 mustBeResolvedNow(happens(X, T, _)) :-
@@ -1255,42 +1324,22 @@ holds_all([P|Rest]) :-
 % query(+P). True if P holds in the augmented state {S*_i, ev*_i, L_int,
 % L_timeless}.
 %
-query(holds(not(P), Now)) :-
-%    current_time(Now),  % Needs looking at more closely.
-    \+ l_int(holds(P, Now), _),
-    \+ state(P).
-query(holds(P, Now)) :-
-%    current_time(Now),  % Needs looking at more closely.
-    \+ l_int(holds(P, Now), _),
-    state(P).
-
-query(happens(P, X, Y)) :-
-    happens(P, X, Y).
-
-/*
-query(happens(P, Prev, Now)) :-
-    current_time(Now), % Needs looking at more closely.
-    succ_t(Prev, Now),
-    happens(P, Prev, Now).
-*/
-
-query(holds(not(P), Now)) :-
-%    current_time(Now), % Needs looking at more closely.
-    l_int(holds(P, Now), B),
-    \+ holds_all(B).
-query(holds(P, Now)) :-
- %   current_time(Now), % Needs looking at more closely.
-    l_int(holds(P, Now), B),
-    holds_all(B).
-
+query(not(holds(P, Now))) :- !, \+ query(holds(P,Now)).
+query(holds(not(P), Now)) :- !, \+ query(holds(P,Now)).
+query(holds(P, T)) :- 
+	current_time(Now),
+	( lps_updating_current_state -> RealNow is Now-1 ; RealNow=Now),
+	RealNow is Now-1,
+	( nonvar(T), T\== RealNow, throw(bad_query(holds(P, T))) ; true),
+	T=RealNow, state(P).
+query(holds(P, Now)) :- l_int(holds(P, Now), B), holds_all(B).
+query(happens(P, X, Y)) :- happens(P, X, Y).
 query(P) :-  
 	P \= holds(_, _), P \= happens(_,_, _),
-    	% (l_timeless(P, B)-> evaluate(B); call(P)).
     	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
 
 evaluate([]).
-evaluate([P|Rest]) :-query(P),
-	evaluate(Rest).
+evaluate([P|Rest]) :-query(P), evaluate(Rest).
 
 % next_time().  Succeeds to the next time point. Destructively updates current_time/1 
 next_time() :-
@@ -1399,3 +1448,57 @@ d_body(B) :-
     functor(B,F,N), functor(BB,F,N),
     l_timeless(BB, _), !.
 d_body(B) :- u_user_predicate(B).
+
+
+% Although this predicate is "generic", it works with SWI-only predicates, see resolveUntilAction etc. above
+% dc_process(RulesToProcess, RulesProcessed, FinalRules, GoalsSoFar, FinalGoals) 
+%  called as dc_process(Ri, [], NRi, [], NewGi)
+% alternative implementation of process/5 using delimited continuations (http://www.swi-prolog.org/pldoc/man?section=delcont)
+% Goals are represented as goal(G)
+dc_process([], Rs, Rs, NG, NG) :- !.
+
+% Antecedent is []. Add Consequent as new goal/tree.
+dc_process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, 
+	dc_process(Rs, AccRi, NRi, [goal(C) | AccG], NGi ).
+
+% Too late to solve, no longer relevant.
+dc_process([reactive_rule([L |_],_) | Rs], AccRi, NRi, AccG, NGi):-
+	(L = holds(_, T); L = happens(_,_, T)),
+	ground(T), current_time(Now), T < Now,
+	!,
+	dc_process(Rs, AccRi, NRi, AccG, NGi).
+
+/* dc_process([reactive_rule([E | Ls], C) | Rs], AccRi, NRi, AccG, NGi):- 
+	mustBeProcessedNow(E), 
+	!,
+	findall( reactive_rule(A, C), 
+		( query(E), A=Ls ; lpsClause(E, Body), append(Body,Ls,A) ), 
+		NewRules),
+	(NewRules==[] -> % rule antecedent fails, discard it:
+		dc_process(Rs,AccRi, NRi, AccG, NGi) 
+		; % else, consider all new rules:
+		% ( ItMust==true ->  AccRi_ = AccRi ; AccRi_ = [reactive_rule([E | Ls], C)|AccRi] ),
+		% ??
+		AccRi_ = [reactive_rule([E | Ls], C)|AccRi],
+		append(NewRules,Rs,RulesToProcess),
+		dc_process(RulesToProcess,AccRi_, NRi, AccG, NGi)
+	). */
+dc_process([reactive_rule([E | Ls], C) | Rs], AccRi, NRi, AccG, NGi):- 
+	( mustBeProcessedNow(E) -> ItMust=true; ItMust=fail),
+	findall( reactive_rule(A, C), 
+		( ItMust==true, query(E), A=Ls ; lpsClause(E, Body), append(Body,Ls,A) ), 
+		% ItMust should avoid overlap between query vs lpsClause ....? 
+		NewRules),
+	(NewRules==[] -> % rule antecedent fails, discard it or postpone it:
+		( ItMust==true -> dc_process(Rs,AccRi, NRi, AccG, NGi) ; dc_process(Rs,[reactive_rule([E | Ls], C)|AccRi], NRi, AccG, NGi))
+		; % else, consider all new rules instead of the given one:
+		( ItMust==true -> append(NewRules,Rs,RulesToProcess), AlreadyProcessed=AccRi ; RulesToProcess=Rs, append(NewRules,AccRi,AlreadyProcessed)),
+		dc_process(RulesToProcess,AlreadyProcessed, NRi, AccG, NGi)
+	).
+%dc_process([R|Rs],AccRi,NRi,AccG, NGi) :- dc_process(Rs,[R|AccRi],NRi,AccG, NGi).
+
+
+
+
+
+
