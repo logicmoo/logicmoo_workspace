@@ -7,7 +7,7 @@
 
 @c DOCUMENT LICENSE FOLLOWS.
 @copying
-Copyright @copyright{} 2016 Franco Masotti @email{franco.masotti@@student.unife.it}
+Copyright @copyright{} 2016-2017 Franco Masotti @email{franco.masotti@@student.unife.it}
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -16,6 +16,7 @@ notice and this notice are preserved.
 
 @titlepage
 @title Cplint R Documentation
+@subtitle program version 0.0.1
 @author Franco Masotti
 @page
 @vskip 0pt plus 1filll
@@ -29,7 +30,7 @@ notice and this notice are preserved.
 @node Top
 @top Cplint R
 
-This manual is for Cplint R.
+This manual is for Cplint R program version 0.0.1
 
 @menu
 * Description::     A brief description of what this is all about

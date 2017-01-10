@@ -92,7 +92,7 @@ or, if you cloned the repo:
 
 ## License
 
-Copyright (c) 2016 Franco Masotti (franco.masotti@student.unife.it)
+Copyright (c) 2016-2017 Franco Masotti (franco.masotti@student.unife.it)
 
 This is free software: you can redistribute it and/or modify it under the
 terms of the Artistic License 2.0 as published by The Perl Foundation.
