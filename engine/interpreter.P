@@ -255,17 +255,22 @@ resolveUntilAction([G1|Gn]) :- !,
 	resolveUntilAction(G1), resolveUntilAction(Gn).
 resolveUntilAction(not(holds(F,T))) :- !, 
 	query(not(holds(F,T))).
-resolveUntilAction(holds(F,T)) :- !, 
-	query(holds(F,T)).
+resolveUntilAction(holds(F,T)) :- query(holds(F,T)).
+resolveUntilAction(holds(F,T)) :- !,
+	current_time(Now), once((var(T);T>Now)),
+	shift(later), resolveUntilAction(holds(F,T)).
 resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, 
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
-resolveUntilAction(happens(E,T1,T2)) :- !, 
-	writeln(suspending),
+resolveUntilAction(happens(E,T1,T2)) :- 
 	shift(candidateAction(happens(E,T1,T2))), % suspend and return candidate
-	writeln(resuming_after_shift),
 	happens(E,T1,T2).
+resolveUntilAction(happens(E,T1,T2)) :- !,
+	current_time(Now), Next is Now+1,
+	once((var(T1),var(T2);nonvar(T1),T1>Now;nonvar(T2),T2>Next)),
+	shift(later), resolveUntilAction(happens(E,T1,T2)).
+	
 resolveUntilAction(G) :- l_timeless(G,Body), evaluate(Body).
-resolveUntilAction(G) :- writeln(callingprolog-G), callprolog(G), writeln(calledprolog-G).
+resolveUntilAction(G) :- callprolog(G).
 
 % dc_resolve_goals(Goals,NewGoals) NewGoals contains goals delayed because of pending actions
 % Fails if all Goals can not be solved with admissible actions
@@ -275,30 +280,36 @@ dc_resolve_goals(_Unfinished, end):-
 dc_resolve_goals([goal(G)|Goals],NewGoals) :- 
 	reset(resolveUntilAction(G),Ball,Continuation),
 	(Continuation==0 -> % resolved G completely:
-		writeln(resolved_completely-G),
+		% writeln(resolved_completely-G),
 		dc_resolve_goals(Goals,NewGoals) 
-	; % we found an event/action, happening from previous cycle to NOW ??????
-		Ball = candidateAction(A),
-		A=happens(_A,T1,T2),
-		current_time(Now), Previous is Now-1,
-		((nonvar(T1),T1<Previous) -> writeln(old_event-A), fail ; true), % outdated event should fail
-		((nonvar(T1),T1>Previous) -> % it's still too soon, postpone it:
-			writeln(postponing-A),
-			dc_resolve_goals(Goals,[goal([A,Continuation])|NewGoals]) 
-		; 
-			T1=Previous, T2=Now,
-			( A-> true,writeln(used-A) ; uassertz(A), writeln(asserting-A)),
-			( (d_pre(Conds),holds_all(Conds)) -> 
-				writeln(violatesPre-A), uretractall(A), fail 
-				; 
-				% resume with asserted compatible action:
-				writeln(continuing-XX),
-				%trace,
-				dc_resolve_goals([goal(Continuation)|Goals],NewGoals),
-				writeln(hello-XX)
-			)
+	; % we suspended the execution:
+		dc_resolve_goals_suspended(Goals,Ball,Continuation,NewGoals)
+	).
+
+% Decide what to do, depending on the cause of suspension: found an action, or failed something that may succeed later
+dc_resolve_goals_suspended(Goals,candidateAction(A),Continuation,NewGoals) :-
+	!,
+	A=happens(_A,T1,T2),
+	current_time(Now), Next is Now+1,
+	((nonvar(T1),T1<Now) -> fail ; true), % outdated event should fail
+	((nonvar(T1),T1>Now) -> % it's still too soon, postpone it:
+		% writeln(postponing-A),
+		dc_resolve_goals(Goals,NewGoals_),
+		NewGoals = [goal([A,Continuation])|NewGoals_]
+	; 
+		T1=Now, T2=Next,
+		( \+ A-> uassertz(A) ; true),
+		( (d_pre(Conds),holds_all(Conds)) -> 
+			uretractall(A), 
+			fail
+			; 
+			% resume with asserted compatible action:
+			dc_resolve_goals([goal(Continuation)|Goals],NewGoals)
 		)
 	).
+dc_resolve_goals_suspended(Goals,later,Continuation,[goal(Continuation)|NewGoals_]) :-
+	dc_resolve_goals(Goals,NewGoals_).
+
 
 :- endif.
 
@@ -1329,7 +1340,6 @@ query(holds(not(P), Now)) :- !, \+ query(holds(P,Now)).
 query(holds(P, T)) :- 
 	current_time(Now),
 	( lps_updating_current_state -> RealNow is Now-1 ; RealNow=Now),
-	RealNow is Now-1,
 	( nonvar(T), T\== RealNow, throw(bad_query(holds(P, T))) ; true),
 	T=RealNow, state(P).
 query(holds(P, Now)) :- l_int(holds(P, Now), B), holds_all(B).
@@ -1337,6 +1347,7 @@ query(happens(P, X, Y)) :- happens(P, X, Y).
 query(P) :-  
 	P \= holds(_, _), P \= happens(_,_, _),
     	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
+
 
 evaluate([]).
 evaluate([P|Rest]) :-query(P), evaluate(Rest).
@@ -1485,15 +1496,15 @@ dc_process([reactive_rule([L |_],_) | Rs], AccRi, NRi, AccG, NGi):-
 	). */
 dc_process([reactive_rule([E | Ls], C) | Rs], AccRi, NRi, AccG, NGi):- 
 	( mustBeProcessedNow(E) -> ItMust=true; ItMust=fail),
-	findall( reactive_rule(A, C), 
-		( ItMust==true, query(E), A=Ls ; lpsClause(E, Body), append(Body,Ls,A) ), 
-		% ItMust should avoid overlap between query vs lpsClause ....? 
+	findall( reactive_rule(Antecedent,C), 
+		( lpsClause(E,Body), append(Body,Ls,Antecedent ) ),
 		NewRules),
 	(NewRules==[] -> % rule antecedent fails, discard it or postpone it:
 		( ItMust==true -> dc_process(Rs,AccRi, NRi, AccG, NGi) ; dc_process(Rs,[reactive_rule([E | Ls], C)|AccRi], NRi, AccG, NGi))
 		; % else, consider all new rules instead of the given one:
-		( ItMust==true -> append(NewRules,Rs,RulesToProcess), AlreadyProcessed=AccRi ; RulesToProcess=Rs, append(NewRules,AccRi,AlreadyProcessed)),
-		dc_process(RulesToProcess,AlreadyProcessed, NRi, AccG, NGi)
+		%( ItMust==true -> append(NewRules,Rs,RulesToProcess), AlreadyProcessed=AccRi ; RulesToProcess=Rs, append(NewRules,AccRi,AlreadyProcessed)),
+		append(NewRules,Rs,RulesToProcess), AlreadyProcessed=AccRi,
+		dc_process(RulesToProcess,[reactive_rule([E | Ls], C)|AlreadyProcessed], NRi, AccG, NGi)
 	).
 %dc_process([R|Rs],AccRi,NRi,AccG, NGi) :- dc_process(Rs,[R|AccRi],NRi,AccG, NGi).
 
