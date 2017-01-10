@@ -1,6 +1,6 @@
 \input texinfo @c -*-texinfo-*-
 
-@settitle Cplint_R Manual
+@settitle Cplint R Manual
 @include my-bib-macros.texi
 @mybibuselist{References}
 @paragraphindent none
@@ -15,7 +15,7 @@ notice and this notice are preserved.
 @end copying
 
 @titlepage
-@title Cplint_R Documentation
+@title Cplint R Documentation
 @author Franco Masotti
 @page
 @vskip 0pt plus 1filll
@@ -27,15 +27,16 @@ notice and this notice are preserved.
 
 @ifnottex
 @node Top
-@top Cplint_R
+@top Cplint R
 
-This manual is for Cplint_R.
+This manual is for Cplint R.
 
 @menu
 * Description::     A brief description of what this is all about
 * Installation::    Installation procedures on various systems
 * Examples::        Trivial examples to explain how to use the library
 * Protocol::        Formal descriprion of the protocol
+* Development::     A thorough description on how to develop this library
 * Thanks::          People and communities
 * @mybibnode{}::    References to the technologies used
 @end menu
@@ -55,15 +56,15 @@ SWI Prolog@footnote{@mybibcite{SWI Prolog}}
 and R@footnote{@mybibcite{R}}
 to handle graphs made with the ggplot2@footnote{@mybibcite{ggplot2}} package.
 
-This means that the currently available C3js@footnote{@mybibcite{C3js}}
-graphing functions are also available for R.
+This means that most C3js@footnote{@mybibcite{C3js}}
+graphing functions of Cplint are also available for R.
 
 @section Terminology
 Any code between @code{<} @code{>} represents pseudocode.
 
 The symbol @code{#} represents an unsigned integer.
 
-Oprional parameters are encapsuled between @code{[} @code{]}.
+Optional parameters are encapsuled between @code{[} @code{]}.
 
 @c ----
 @c ----
@@ -72,28 +73,31 @@ Oprional parameters are encapsuled between @code{[} @code{]}.
 
 @node Installation
 @chapter Installation
-Cplint_R is provided as part of the
-@footnote{@mybibcite{Cplint on SWISH}} package.
+Cplint R is provided as part of the
+Cplint on SWISH@footnote{@mybibcite{Cplint on SWISH}}
+package. This is the recomended and simplest way to obtain a working
+installation without too much trouble.
 
 You can also install it manually with @command{pack_install('cplint_r').}
-using the @command{swipl} command.
+using the @command{swipl} command on UNIX-like systems. Unfortunately, doing 
+this is not enough since you need to setup an R environment with the 
+components described in the following section. For more information, have a
+look at the
+SWISH Installer Manual@footnote{@mybibcite{SWISH Installer Manual}}
 
 @section Dependencies
-Cplint_R has both Prolog and R dependencies:
+Cplint R has both Prolog and R dependencies:
 
 @subsection Prolog
 @itemize @bullet
 @item
-lists
-
-@item
 Cplint
 
 @item
-Rserve Client
+Rserve Client@footnote{@mybibcite{Rserve Client}}
 
 @item
-SWISH R library ???
+R SWISH library@footnote{@mybibcite{R SWISH}}
 
 @end itemize
 
@@ -101,6 +105,10 @@ SWISH R library ???
 @itemize @bullet
 @item
 ggplot2
+
+@item
+Rserve@footnote{@mybibcite{Rserve}}
+
 @end itemize
 
 @c ----
@@ -111,7 +119,8 @@ ggplot2
 @node Examples
 @chapter Examples
 
-TODO
+See all the files ending in "_R.pl" on 
+@uref{https://github.com/friguzzi/swish/tree/master/examples/inference}
 
 @c ----
 @c ----
@@ -128,11 +137,11 @@ Each predicate corresponds to one of the following categories
 @itemize @bullet
 @item Helper: specific of this library.
 
-@item Pita: it's part of Cplint.
+@item Pita: part of Cplint.
 
-@item Mcintyre: it's part of Cplint.
+@item Mcintyre: part of Cplint.
 
-@item Auc: it's part of Cplint.
+@item Auc: part of Cplint.
 @end itemize
 
 Each argument of a predicate correponds to a data type. See
@@ -153,7 +162,8 @@ in the form @code{[X1-Y1,X2-Y2,...,XN-YN]}.
 (@var{X}:atom,@
 @var{Y}:atom,@
 @var{Out}:atom)
-Given two atoms @var{X} and @var{Y}, build a relationship r(X,Y) in @var{Out}.
+Given two atoms @var{X} and @var{Y}, build a relationship @code{r(X,Y)}
+in @var{Out}.
 @end deffn
 
 @deffn{Helper} get_set_from_xy_list@
@@ -394,8 +404,8 @@ like: @code{get_set_from_xy_list(<smt>,R#)}.
 As descibed before, a data frame is useful to pass 
 structured information between Prolog and R.
 
-In Cplint_R in particular, we use @code{r_data_frame_from_rows/2} provided by
-the Rserve Client@footnote{@mybibcite{Rserve Client}} library, in the following
+In Cplint R in particular, we use @code{r_data_frame_from_rows/2} provided by
+the Rserve Client library, in the following
 manner:
 @verbatim
 r_data_frame_from_rows(df[#], R[#])
@@ -420,6 +430,35 @@ load_r_libraries :-
 finalize_r_graph :-
     r_download.
 @end verbatim
+
+@c ----
+@c ----
+@c ----
+@c ----
+
+@node Development
+@chapter Development
+@section Compiling this documentation
+The source of this documentation is under the @file{doc}
+directory.
+
+To be able to compile it, you have to install several tex packages
+(for example: @code{texlive-most} and @code{texi2html} if you are using
+Arch Linux) that contain the following binaries:
+
+@verbatim
+makeinfo
+texi2dvi
+docbook2html
+docbook2pdf
+docbook2txt
+texi2html
+perl
+@end verbatim
+
+After running @command{make}, a directory named @file{manual}
+is created and you can access the files by opening
+@file{index.html} with a browser.
 
 @c ----
 @c ----
@@ -489,9 +528,24 @@ install SWISH, Cplint on SWISH and an R environment".
 See @uref{https://frnmst.github.io/swish-installer/}
 @*
 
-@mybibitem{Rserve client} "Rserve client for SWI-Prolog/SWISH".
+@mybibitem{Rserve Client} "SWI-Prolog/SWISH client for Rserve".
+"The container exposes Rserve using a Unix-domain socket in 
+/home/rserve/socket".
 See @uref{https://github.com/JanWielemaker/rserve_client}
 @*
+
+@mybibitem{R SWISH} A library that talks between SWISH and Rserve.
+See @uref{https://github.com/SWI-Prolog/swish/blob/master/lib/r_swish.pl}
+@*
+
+@mybibitem{Rserve} "Rserve is a TCP/IP server which allows other programs to 
+use facilities of R (see www.r-project.org) from various languages without the 
+need to initialize R or link against R library."
+See @uref{https://www.rforge.net/Rserve/}
+@*
+
+@mybibitem{SWISH Installer Manual} See 
+@uref{https://frnmst.github.io/swish-installer/}
 
 @end itemize
 

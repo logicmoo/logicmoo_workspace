@@ -90,13 +90,13 @@ check_modules :-
  */
 
 load_r_libraries :-
-    check_modules,
-    !,
-    <- library("ggplot2").
     /* To enable pdf output instead of using the default plotting window, add 
      * the following command
      */
-    /* <- pdf("plot.pdf"). */
+    /* <- pdf("plot.pdf"), */
+    check_modules,
+    !,
+    <- library("ggplot2").
 
 /* Only do if library(r_swish) exists, otherwise return true. */
 finalize_r_graph :-
@@ -109,7 +109,11 @@ bin_width(Min,Max,NBins,Width) :-
     D is Max-Min,
     Width is D/NBins.
 
-/* Out = [X1-Y1, X2-Y2, XN-YN] */
+/**
+ * build_xy_list(X,Y,Out) is det
+ * Given to lists X and Y build an output list Out
+ * in the form @code{[X1-Y1,X2-Y2,...,XN-YN].
+ */
 build_xy_list([], [], []).
 
 build_xy_list([XH|XT], [YH|YT], [XH-YH|Out]) :-

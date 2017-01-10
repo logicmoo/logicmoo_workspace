@@ -18,20 +18,18 @@
 # http://www.perlfoundation.org/artistic_license_2_0.
 #
 
-default: doc
+test:
+	@swipl -s tests/tests.pl -g run_tests,halt -t 'halt(1)'
 
-all:
-	@echo "none."
+default: all
+
+all: test
 
 check:
 	@echo "none."
 
 install:
 	@echo "none."
-
-test:
-	@swipl -s tests/tests.pl -g run_tests,halt -t 'halt(1)'
-
 
 package: doc
 
@@ -40,8 +38,10 @@ doc:
 	@mv doc/manual .
 	@$(MAKE) -C doc clean
 
-upload: doc
+upload:
+	@echo "none."
 
-.PHONY: default all check install test package doc upload
+
+.PHONY: test default all check install package doc upload
 
 
