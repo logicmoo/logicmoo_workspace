@@ -7,9 +7,9 @@ fluents balance(_,_).
 
 action(transfer(From,To,Amount)). % Why is this still needed?
 
-transfer(From,To,Amount) initiates balance(To,New) :-
+transfer(From,To,Amount) initiates balance(To,New) if
     balance(To,Old), New is Old+Amount.
-transfer(From,To,Amount) initiates balance(From,New) :-
+transfer(From,To,Amount) initiates balance(From,New) if
     balance(From,Old),
     New is Old-Amount.
 

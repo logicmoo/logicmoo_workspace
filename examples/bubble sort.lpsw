@@ -56,38 +56,8 @@ initiated( happens(insert(X, N), _T1, _T2), location(X, N), []).
 initiated( happens(replace(X, N), _T1, _T2), location(X, N), []).
 terminated( happens(replace(X, N), _T1, _T2), location(Y, N), []).
 
-
 d_pre([happens(swap(X, N1, Y, N2), T1, T2), happens(swap(Y, N2, Z, N3), T1, T2)]).
 
-/*
-
-observe([], 1).
-observe([], 2).
-observe([], 3).
-observe([], 4).
-observe([], 5).
-observe([insert(alpha, 5)], 6).
-
-observe([], 7).
-observe([], 8).
-observe([], 9).
-observe([], 10).
-observe([swap(a, 2, d, 5)], 11).
-observe([], 12).
-observe([], 13).
-observe([], 14).
-observe([], 15).
-observe([], 16).
-observe([replace(e, 1)], 17).
-observe([], 18).
-observe([], 19).
-observe([], 20).
-observe([], 21).
-observe([], 22).
-*/
-
-
-intensional(swapped(_,_)).
 fluent(location(_, _)).
 action(swap(_,_,_,_)).
 event(insert(_, _)).
