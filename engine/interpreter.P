@@ -954,7 +954,7 @@ cycle(Ri, Gi) :-
 	test(fluents,Time,Fluents),
 	leave_step_0,
 	% This processes antecedents of rules:
-	(option(dc) -> dc_process(Ri, [], NRi, [], NewGi), nl, writeln(nRi-NRi) ; process(Ri, [], NRi, [], NewGi)),
+	(option(dc) -> dc_process(Ri, [], NRi, [], NewGi) ; process(Ri, [], NRi, [], NewGi)),
 	write_verbose([nl,
 		' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
 		' Process goal tree at time ',Time, nl,' New: ',NewGi, nl]),
