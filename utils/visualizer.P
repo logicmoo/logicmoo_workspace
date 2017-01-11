@@ -174,7 +174,7 @@ visual(File,timeline(JSON)) :-
 		T2 is T1+1, functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
-	setof(G, T^X^member(t(X,T,G),Tuples), GroupIds),
+	(setof(G, T^X^member(t(X,T,G),Tuples), GroupIds)->true;GroupIds=[]), % allow for empty timelines
 	findall(FluentGroup,(
 		make_json_object([id:Gatom,content:Gsignature],FluentGroup),
 		member(F/N,GroupIds), 
