@@ -100,7 +100,7 @@ load_r_libraries :-
 
 /* Only do if library(r_swish) exists, otherwise return true. */
 finalize_r_graph :-
-    current_predicate(r_download/0),
+/*    current_predicate(r_download/0),*/
     r_download.
 
 finalize_r_graph.
@@ -112,7 +112,7 @@ bin_width(Min,Max,NBins,Width) :-
 /**
  * build_xy_list(X,Y,Out) is det
  * Given to lists X and Y build an output list Out
- * in the form @code{[X1-Y1,X2-Y2,...,XN-YN].
+ * in the form [X1-Y1,X2-Y2,...,XN-YN].
  */
 build_xy_list([], [], []).
 
@@ -521,15 +521,6 @@ density_r(Post0,NBins,Min,Max) :-
     finalize_r_graph.
 
 
-/*
- * The numbers seem correct, although the representation slightly differs 
- * from the one made with c3js.
- *
- * Is there a more efficient way of handling the data frame(s)?
- *
- * df <- merge(df1,df2,by.x="x"),
- * <- ggplot(data=df,aes_string(x="x",y="y1",group=1)) + geom_line() + geom_point().
- */
 geom_densities(LPr,LPo) :-
     get_set_from_xy_list(LPr,R1),
     get_set_from_xy_list(LPo,R2),
@@ -539,25 +530,39 @@ geom_densities(LPr,LPo) :-
     colnames(df2) <- c("x", "y2"),
     df <- data.frame(
         x=df1$x,
-        y=c(df1$y1,df2$y2),
-        group=rep(c("pre","post"))
+        y1=df1$y1,
+        y2=df2$y2
     ),
+    
+    <- df,
+
     <- ggplot(
         data=df,
         aes(
-            x=x,
-            y=y,
-            group=group
+            x=x
         )
     ) + geom_line(
         aes(
-            color=group
+            color="pre",
+            y=y1
+        )
+    ) + geom_line(
+        aes(
+            color="post",
+            y=y2
         )
     ) + geom_point(
         aes(
-            color=group
+            color="pre",
+            y=y1
         )
-    ).
+    ) + geom_point(
+        aes(
+            color="post",
+            y=y2
+        )
+    ) + ylab("y").
+
 
 /**
  * densities_r(+PriorList:list,+PostList:list,+NBins:int) is det
