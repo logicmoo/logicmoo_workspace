@@ -95,12 +95,23 @@ replace_goal_hook(assertz(_),    _, true).
 replace_goal_hook(asserta(_),    _, true).
 replace_goal_hook(assert( _),    _, true).
 
+mod_qual(M, G as R, I:H as B:C) :- !,
+    strip_module(M:G, N, H),
+    implementation_module(N:H, I),
+    strip_module(M:R, A, C),
+    implementation_module(A:C, B).
+mod_qual(M, G, I:F/A) :-
+    strip_module(M:G, N, F/A),
+    functor(H, F, A),
+    implementation_module(N:H, I).
+
 abstract_interpreter(M:Goal, Abstraction, OptionL, data(0, [], Result)) :-
     option(location(Loc),   OptionL, context(toplevel, Goal)),
     option(evaluable(Eval), OptionL, []),
     option(on_error(OnErr), OptionL, print_message(informational)),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
-    ( abstract_interpreter(M:Goal, Abstraction, state(Loc, EvalL, M:OnErr, [], [], []), [], Out)
+    maplist(mod_qual(M), EvalL, MEvalL),
+    ( abstract_interpreter(M:Goal, Abstraction, state(Loc, MEvalL, M:OnErr, [], [], []), [], Out)
     *->
       Result = true(Out)
     ; Result = fail
