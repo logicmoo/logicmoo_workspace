@@ -83,8 +83,11 @@ or, if you cloned the repo:
 
 ## Changelogs 
 
-2017-01-07 version 0.0.1. First release including documentation.
+2017-01-13 version 0.0.3. Fixed minor issues.
+
 2017-01-13 version 0.0.2. Fixed densities_r/3. Better error handling.
+
+2017-01-07 version 0.0.1. First release including documentation.
 
 ## Bugs
 

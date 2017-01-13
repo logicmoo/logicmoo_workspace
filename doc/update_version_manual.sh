@@ -18,6 +18,7 @@
 # http://www.perlfoundation.org/artistic_license_2_0.
 #
 
-ver="$(git tag --sort=-version:refname)"
+ver="$(git tag --sort=-version:refname | head -n1)"
+echo $ver
 sed -i "/@subtitle program version/c\@subtitle program version $ver" cplint_r.texi
 sed -i "/This manual is for Cplint R program version/c\This manual is for Cplint R program version $ver" cplint_r.texi
