@@ -67,6 +67,9 @@
 :-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+).
 :-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+,+).
 
+:- multifile sandbox:safe_primitive/1.
+sandbox:safe_primitive(current_predicate(_)).
+
 /*********** 
  * Helpers *
  ***********/
@@ -100,10 +103,12 @@ load_r_libraries :-
 
 /* Only do if library(r_swish) exists, otherwise return true. */
 finalize_r_graph :-
-/*    current_predicate(r_download/0),*/
+    current_predicate(r_download/0),
+    !,
     r_download.
 
-finalize_r_graph.
+finalize_r_graph :-
+    true.
 
 bin_width(Min,Max,NBins,Width) :-
     D is Max-Min,
@@ -532,10 +537,7 @@ geom_densities(LPr,LPo) :-
         x=df1$x,
         y1=df1$y1,
         y2=df2$y2
-    ),
-    
-    <- df,
-
+    ),    
     <- ggplot(
         data=df,
         aes(
