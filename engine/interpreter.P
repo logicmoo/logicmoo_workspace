@@ -1363,7 +1363,7 @@ holds_all([P|Rest]) :-
 % L_timeless}.
 %
 
-query(L,T) :- option(dc), !, dc_query(L,T).
+query(L) :- option(dc), !, dc_query(L).
 
 query(holds(not(P), Now)) :-
 %    current_time(Now),  % Needs looking at more closely.
