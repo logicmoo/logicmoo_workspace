@@ -440,8 +440,7 @@ go(File, OptionsList, ResultFluents) :-
 	),
 	cputime(T0),
 	
-    	uassertz(current_time(1)),
-		uassertz(steps(1000)),
+    	uassertz(current_time(0)), next_time,
     	uassertz(current_goal(0)),
     	uassertz(depth(0)),
 	uassertz(used(0)),
@@ -1350,7 +1349,7 @@ continue([goal(GoalId, [B1|Bs]) | Gs], NextTree,  AccG, NewAccG):-
 reduce_step() :-
     steps(C),
     NC is C-1,
-    uretract(steps(C)),
+    uretractall(steps(C)),
     uassertz(steps(NC)).
 
 % holds_all(+PL). True if all predicates in PL hold in the augmented
@@ -1403,14 +1402,14 @@ evaluate([]).
 evaluate([P|Rest]) :-query(P), evaluate(Rest).
 
 % next_time().  Succeeds to the next time point. Destructively updates current_time/1 
-next_time() :-
+next_time :-
     current_time(This),
     uretract(current_time(This)),
     Next is This + 1,
     uassertz(current_time(Next)),
-    uretract(steps(_)),
-    uassertz(steps(30)).
- %  assertz(steps(1000)).
+    uretractall(steps(_)),
+    uassertz(steps(1000)).
+    
 
 % fluent_pred(+Fl)
 %   True if Fl is a fluent predicate symbol.
