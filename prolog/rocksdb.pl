@@ -42,9 +42,12 @@
 	    rocks_batch/2,		% +RocksDB, +Actions
 
 	    rocks_get/3,		% +RocksDB, +Key, -Value
-	    rocks_enum/3		% +RocksDB, ?Key, ?Value
+	    rocks_enum/3,		% +RocksDB, ?Key, ?Value
+
+            rocks_property/2            % +RocksDB, ?Property
 	  ]).
 :- use_module(library(option)).
+:- use_module(library(error)).
 :- use_foreign_library(foreign(rocksdb4pl)).
 
 :- meta_predicate
@@ -212,3 +215,19 @@ is_meta(merge).
 %		        put(key2, Value)
 %		      ])
 %	==
+
+
+%!  rocks_property(+RocksDB, ?Property) is nondet
+
+rocks_property(RocksDB, Property) :-
+    var(Property), !,
+    rock_property(P),
+    rocks_property(RocksDB, P, Value),
+    Property =.. [P,Value].
+rocks_property(RocksDB, Property) :-
+    Property =.. [P,Value], !,
+    rocks_property(RocksDB, P, Value).
+rocks_property(_RocksDB, Property) :-
+    type_error(property, Property).
+
+rock_property(estimate_num_keys).

@@ -905,3 +905,25 @@ PREDICATE(rocks_batch, 2)
 
   return ok(ref->db->Write(WriteOptions(), &batch));
 }
+
+
+static PlAtom ATOM_estimate_num_keys("estimate_num_keys");
+
+PREDICATE(rocks_property, 3)
+{ dbref *ref;
+  atom_t prop;
+
+  get_rocks(A1, &ref);
+
+  if ( PL_get_atom(A2, &prop) )
+  { if ( ATOM_estimate_num_keys == prop )
+    { uint64_t value;
+
+      return ( ref->db->GetIntProperty("rocksdb.estimate-num-keys", &value) &&
+	       PL_unify_int64(A3, value) );
+    } else
+      throw PlDomainError("rocks_property", A2);
+  }
+
+  throw PlTypeError("atom", A2);
+}
