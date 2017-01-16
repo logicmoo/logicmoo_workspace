@@ -44,7 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
 	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
 	lps_engine_directory/1, uassert/1, uretractall/1,
-	bindAllVars/1]).
+	bindAllVars/1, lps_welcome_message/0]).
 
 % This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
@@ -104,6 +104,8 @@ atomize_zero_functors(T,NT) :- T=..[F|Args], atomize_zero_functors(Args,NewArgs)
 my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
 print_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
+
+lps_welcome_message.
 
 :- endif.
 
@@ -246,6 +248,14 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 
 print_error(Type,Message,Position) :- 
 	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
+
+:- dynamic git_version_cache/1.
+:- use_module(library(git),[git_describe/2]).
+lps_welcome_message :-
+	lps_engine_directory(D),
+	(git_version_cache(V) -> true ; git_describe(V,[directory(D)]), assert(git_version_cache(V))),
+	concat_atom(['LPS version ',V],M), writeln(M).
+
 
 %% Now for an implementation available only on SWI:
 
