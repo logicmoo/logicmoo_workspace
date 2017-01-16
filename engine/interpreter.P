@@ -159,7 +159,7 @@ uassertz(X) :- pengine_self(M), catch(assertz(M:X),_,true).
 uretractall(X) :- pengine_self(M), retractall(M:X).
 uretract(X) :- pengine_self(M), retract(M:X).
 u_user_predicate(X) :- functor(X,F,N),  pengine_self(M), current_predicate(M:F/N).
-callprolog(G) :- predicate_property(G,built_in), !, G.
+callprolog(G) :- predicate_property(G,built_in), !, catch(G,_E,fail). % TODO: should print error message before failing
 callprolog(G) :- pengine_self(M), catch(call(M:G),_,fail).
 
 u_swiclause(H,B,Ref) :- pengine_self(M), clause(M:H,B,Ref).
@@ -187,7 +187,7 @@ uretractall(X) :- retractall(db:X).
 uretract(X) :- retract(db:X).
 u_user_predicate(X) :- functor(X,F,N), current_predicate(db:F/N).
 
-callprolog(G) :- predicate_property(G,built_in), !, G.
+callprolog(G) :- predicate_property(G,built_in), !, catch(G,_E,fail). % TODO: should print error message before failing
 callprolog(G) :- catch(db:G,_,fail).
 
 u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
@@ -332,6 +332,7 @@ my_term_size(T,1) :- atomic(T), !.
 my_term_size(T,N) :- T=..[_|L], my_term_size(L,N2), N is N2+1.
 
 % Suffix typically being .extension
+% collects all files in Directory subtree, recursively
 all_files_in(Directory,Suffix,Files) :-
 	(is_list(Suffix)->Suffix=SuffixCodes;atom_codes(Suffix,SuffixCodes)),
 	findall( File, (
@@ -440,7 +441,7 @@ go(File, OptionsList, ResultFluents) :-
 	cputime(T0),
 	
     	uassertz(current_time(1)),
-    	uassertz(steps(100)),
+		uassertz(steps(1000)),
     	uassertz(current_goal(0)),
     	uassertz(depth(0)),
 	uassertz(used(0)),
@@ -890,6 +891,8 @@ assert_lps_test_result_item(Stage,Cycle,Item) :-
 	
 
 % test all programs in the LPS examples directory tree which have a .lpst file present
+% NOTICE that .lps files are transformed into .P files, so these are used for testing!!
+% TODO: regenerate .P files first from all existing .lps files
 test_examples :- 
 	lps_examples_directory(ED),
 	all_files_in(ED,'.lpst',TFiles),
@@ -950,7 +953,7 @@ cycle(Ri, Gi) :-
 	enter_step_0, % during updateFluents we need a hack to query the previous state
 	updateFluents(Time),
 	findall(Fluent, state(Fluent), Fluents), % setof doesn't work.
-	write_verbose([nl,' State at time ',Time,' is ',Fluents]),
+	write_verbose([nl,' State at time ',Time,' is ',Fluents, nl]),
 	test(fluents,Time,Fluents),
 	leave_step_0,
 	% This processes antecedents of rules:
@@ -959,6 +962,12 @@ cycle(Ri, Gi) :-
 		' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
 		' Process goal tree at time ',Time, nl,' New: ',NewGi, nl]),
 	append(Gi, NewGi, NGi), % Puts new goals at the end of the queue.
+%	write_verbose([nl,
+%		' Process reactive rules at time ',Time, nl,' New: ',
+%		NRi, nl,
+%		' Current goal tree at time ',Time, nl,' New: ',NGi,
+%		nl]),
+	forall( action_(A), uretractall(tried(_, _, lpsClause(happens(A, _, _), [])))),
 	uretractall(happens(_, _, _)),
 	updateEvents(Time, Next, ExternalObservations),
 	% This resolves goals in the goal state.
@@ -1060,19 +1069,32 @@ process([reactive_rule([L |Ls], C) | Rs], AccRi, NRi, AccG, NGi) :-
 generate_id(New) :-
 	used(Id),New is Id+1, uretract(used(Id)), uassertz(used(New)).
 
-% resolve_tree(Goal/tree/branches still to be processed, Goals already processed, Final goals)
-% candidate actions happens(e,t, t+1) are asserted in the form happens(e,t, t+1) and,
-% if necessary, deleted on backtracking. Otherwise, they persist.
-
+/* resolve_tree.
 % Goals already processed are in reverse of the original order. Original order needs to be recovered.
 % Difference lists could be used instead. Retract all tried actions is a
 % hack, to remove and tried actions not removed by clause 4 of resolve.
 % There should be a more elegant solution.
-resolve_tree([], NewAccG, FinalG) :- !,
-	reverse(NewAccG, FinalG),
+%
+% There was a problem here, because removeSolvedGoals also reverses the goal tree
+% and better there than here. Also retracting tried clauses is better done elsewhere.
+resolve_tree([], NewAccG, FinalG) :-
+	reverse(NewAccG, FinalG),nl,
+	write('accumulated goals, and reversed goals:'), nl, write(NewAccG), nl, write(FinalG), nl,
 	uretractall(tried(_GoalId, _Depth, lpsClause(happens(_A,_T,_), []))).
 
-% terminate with message: “Requires too much thinking.”
+Notice that this assumes that atoms in goal lpsClauses B1 are written in temporal order.
+Otherwise it would be necessary to skip over L but retain L and continue to process Ls.
+This would be tricky.
+
+*/
+
+% resolve_tree(Goal/tree/branches still to be processed, Goals already processed, Final goals)
+% candidate actions happens(e,t, t+1) are asserted in the form happens(e,t, t+1) and,
+% if necessary, deleted on backtracking. Otherwise, they persist.
+%
+resolve_tree([], FinalG, FinalG).
+
+% terminate with message: Requires too much thinking.
 resolve_tree(_Unfinished, _AccG, end):-
 	steps(N), N < 1, !.
 
@@ -1086,6 +1108,7 @@ resolve_tree(Unfinished, AccG, NextGoals):-
 % An alternative to asserting and retracting depth is simply to compute
 % depth when necessary, or pass as a parameter of resolve.
 resolve_tree([goal(GoalId, [ [L|Ls] | Bs]) | Gs], AccG, FinalG) :-
+    steps(N), N > 1,
 	uretractall(current_goal(_)), uassertz(current_goal(GoalId)),
 	uretractall(depth(_)),length([ [L|Ls] | Bs], Depth),
 	uassertz(depth(Depth)),
@@ -1108,28 +1131,37 @@ resolve_tree([goal(GoalId, [ [L|Ls] | Bs]) | Gs], AccG, FinalG) :-
 	 ),
 	resolve_tree(NextTree, NewAccG, FinalG).
 
+% Clause -1. Time is earlier or later than Now: Result = fail or later.
+resolve([L|_], Result) :-
+	(L = holds(_, T); L = happens(_, T, _); L = not(holds(_, T))),
+	ground(T), current_time(Now),
+	(T > Now -> Result = later ; (T < Now -> Result = fail ; fail)),
+	!.
 
 % Clause 0. Negation of fluent P at time T = current time. If P holds
 % then fail. If P doesn't hold, then delete not P from the goal.
 % Need similar case for L the negation of a prolog atom.
 resolve([L | Ls],Result):-
 	(L = not(holds(P, T)); L = (holds(not(P), T))),!,
-	reduce_step,
-	copy_term(holds(P, T), holds(CP, _CT)),
-	current_time(Now),
-	(   query(holds(CP, Now)) -> (T==Now -> Result = fail ; Result = later)
-	;   (T=Now, Result = Ls) ).
+	reduce_step, current_time(Now),
+	current_goal(GoalId),
+	depth(Depth),
+	copy_term([holds(P)|Ls],[holds(CP)| CLs]),
+	(tried(GoalId, Depth, not(CP))
+	-> ( uretractall(tried(GoalId, Depth, not(CP))),
+	      ((ground(T), T=<Now) -> Result = fail ; Result = later))
+	   ;(query(holds(CP, Now)) -> (T==Now -> Result = fail ; Result = later)
+	    ;  ( Result = CLs,  uassertz(tried(GoalId, Depth, not(CP))) ) )).
 
-resolve([L|_], later) :- 
-	(L = holds(_, T); L = happens(_, T, _)),
-	ground(T), current_time(Now), T > Now, !.
 
 %Clause 1. No clause resolves with L.
 resolve([L|_], Result) :-
 %		copy_term([L|Ls], [CL|_]), %copy_term not needed?
+		\+ (L = happens(A, _, _), action_(A)),
 		\+ lpsClause(L, _),
 		reduce_step,
-%		nl, write(' no clause resolves with '), write(L), nl,
+		steps(S),
+		write_verbose([nl,' no clause resolves with ', L,' after ', S, ' steps', nl]),
 		\+ (L = happens(A, _, _), action_(A)),
 		(mustBeResolvedNow(L) -> Result = fail
 		; Result = later).
@@ -1141,6 +1173,8 @@ resolve([L|Ls], Result) :-
 	\+ (L = happens(A, _, _), action_(A)),
 	lpsClause(CL, Body),
 	reduce_step,
+%	steps(S),
+%	write_verbose([nl, ' Number of steps is ',S, nl]),
 	current_goal(GoalId), depth(Depth),
 	\+ tried(GoalId, Depth, lpsClause(CL, Body)),
      uassertz(tried(GoalId, Depth, lpsClause(CL, Body))),
@@ -1152,13 +1186,15 @@ resolve([L|Ls], Result) :-
 resolve([L|Ls], Result) :-
 	%current_time(Now), Next is Now+1,
 	copy_term([L|Ls], [CL|_]),  %Don't need copy_term?
-	\+ (L = happens(A, _, _), action_(A)),
-	lpsClause(CL, Body),
+	\+ (L = happens(A, _, _), action_(A)), % It seems we need something like this clause also for actions.
+	lpsClause(CL, _),
 	% !,
 	reduce_step,
-	current_goal(GoalId), depth(Depth),
-	!,
+%	steps(S),
+%	write_verbose([nl, ' Number of steps is ',S, nl]),
+	current_goal(GoalId), depth(Depth),	!,
     	findall(lpsClause(CL, Body), lpsClause(CL, Body), AllClauses),
+		%findall(lpsClause(L, Body), lpsClause(L, Body), AllClauses),
 %    write(' All clauses that resolve with '), write(L), write(' are '),
 %    nl, write(AllClauses), nl,
     	forall(member(Clause, AllClauses), tried(GoalId, Depth, Clause) ),% Problem if this fails?
@@ -1168,61 +1204,48 @@ resolve([L|Ls], Result) :-
 %				 ,
 %	 write('failed all clauses tried  '), write(L), nl
 				 )
-	; Result = later).
+	; (Result = later
+%	 , write('Try again later '), write(L), nl
+	  )
+	).
 
 % Clause 4. L is an action.
 resolve([L|Ls], Result) :-
 	L = happens(A, T, _), action_(A), current_time(Now),
-	copy_term([L|Ls], [CL|_CLs]),
+	copy_term([L|Ls], [CL|CLs]),
 	reduce_step,
 	current_goal(GoalId),
 	depth(Depth),
-	(   tried(GoalId, Depth, lpsClause(CL, [])) ->
-		    (( T == Now ->
+	(tried(GoalId, Depth, lpsClause(CL, [])) %assumes happens(A, Now, Next) asserted.
+	-> ( uretractall(tried(GoalId, Depth, lpsClause(CL, []))),
+	   ((ground(T),  T =< Now) ->
 		      Result = fail
-%		       write(' action failed  '), write(L), nl
 		    ; Result = later ),
-		    uretractall(happens(A,T,_)),
-		    uretractall(tried(GoalId, Depth, lpsClause(CL, []))))
-%		      write('clause 4. try action later '), write(L),
-%		      nl)))
-        ;   candidateAction([L | Ls], Result) ).
+	   (tried(_,_, lpsClause(CL, [])) ->
+		      true
+		    ; uretractall(happens(A,Now,_)))  )
+        ;   (happens(A, Now, _) ->
+	              (	  Result = CLs, uassertz(tried(GoalId, Depth, lpsClause(CL, []))))
+	             ;candidateAction([L | Ls], Result) )).
 
 % candidateAction([CA| _], Result) Result == fail   Result==later...
 candidateAction([L| Ls], Result) :-
-	copy_term([L|Ls], [CL|CLs]),
-	current_time(Now), Next is Now+1,current_goal(GoalId),
-	L = happens(A, T, _), CL = happens(A, Now, Next),
-	depth(Depth),
-	( happens(A, Now, Next)-> true ; uassertz(happens(A, Now, Next))),
-	uassertz(tried(GoalId, Depth, lpsClause(CL, []))),
-	( 
-		( d_pre(Conds), holds_all(Conds) )->
-			uretractall(happens(A, Now, Next)), 
-			(T = Now ->  % This used to be == ; with = this approximates the proposed Bob fix
-				Result = fail;  
-				Result =  later)
-	;  Result = CLs ).
-
-
-/* Bob original fix: candidateAction([L| Ls], Result) :-
 	copy_term([L|Ls], [CL|CLs]),
 	current_time(Now), Next is Now+1,current_goal(GoalId),
 	L = happens(A, _, _), CL = happens(A, Now, Next),
 	depth(Depth),
 	( happens(A, Now, Next)-> true ; uassertz(happens(A, Now, Next))),
 	uassertz(tried(GoalId, Depth, lpsClause(CL, []))),
-	( (d_pre(Conds), holds_all(Conds)) ->
-		uretractall(happens(A, Now, Next)), 
-		Result = fail
-	;  Result = CLs ). */
+	(( d_pre(Conds), holds_all(Conds))->
+	(uretractall(happens(A, Now, Next)), Result = fail	)
+	;  Result = CLs ).
 
 lpsClause(Head, Body) :-  l_timeless(Head, Body).
 lpsClause(Head, Body) :-  l_events(Head, Body).
 lpsClause(Head, Body) :-  l_int(Head, Body).
 lpsClause(happens(X, Y, Z), []) :- happens(X, Y, Z).
 lpsClause(holds(X, Y), []) :- current_time(Y), state(X).
-lpsClause(tc(_), []).  % This ignores temporal constraints completely.
+lpsClause(tc(P), []) :- callprolog(P).
 lpsClause(P, []) :- \+l_timeless(P,_),\+l_events(P,_),\+l_int(P,_),
 	\+P = happens(_,_,_), \+P= holds(_,_), callprolog(P).
 
@@ -1247,46 +1270,53 @@ intensional(P) :-  P =.. [Pred | Args], length(Args, L),
 	 l_int(holds(Q, _), _).
 macroaction(A):- functor(A,F,N), functor(Q,F,N), l_events(happens(Q, _,_), _), !.
 
-%mustBeResolvedNow is used when unfolding atoms in goal clauses,
+%mustBeResolvedNow is used when unfolding atoms in goal clauses.
+%
+mustBeResolvedNow(happens(_, T, _)) :- ground(T), current_time(Now), T =< Now, !.
+
+mustBeResolvedNow(holds(_, T)) :-  ground(T), current_time(Now), T =< Now, !.
+
+mustBeResolvedNow(P) :-	\+ P = happens(_, _, _), \+ P = holds(_,_).
+
+	/*
 mustBeResolvedNow(happens(X, T, _)) :-
 	action_(X), ground(T), current_time(Now), T == Now, !.
 mustBeResolvedNow(P) :- mustBeProcessedNow(P),
 	\+ (P = happens(_, _, T),ground(T), current_time(Now), T =< Now).
 
-% To be done: Top-level goal lpsClause B1 failed, and no further
-% backtracking possible.
-%  backtrack([goal(GoalId, [ B1]) | Gs], NextTree,% [], NewAccG) :-
-%  then terminate everything, and output that the goals are not
-%  satisfiable.
+*/
 
+% If top-level goal lpsClause B1 failed, Ignore failure, Continue to next goal, Save B1 to retry later cycle.
+% Else pop up one level.
+backtrack([goal(GoalId,[B1|Bs])|Gs], NextTree, AccG, NewAccG):-
+	uretractall(current_goal(_)), depth(Depth), NewDepth is Depth - 1,
+	uretractall(depth(_)),
+	uretractall(tried(GoalId, Depth, _)),
+	(Bs = [] -> ( NextTree = Gs, NewAccG = [goal(GoalId,[B1|Bs])|AccG],
+				(Gs = [] -> true ;(Gs =	[goal(GId, NextBranch) | _] ,
+							length(NextBranch,D), uassertz(depth(D)),
+							uassertz(current_goal(GId)))))
+				; (NextTree = [goal(GoalId, Bs)|Gs], NewAccG = AccG,
+				uassertz(depth(NewDepth)), uassertz(current_goal(GoalId))
+				)).
+
+/*
+We might need to reinstate something like this clause later.
 % Top-level goal lpsClause B1 failed. Backtrack to LastB. Save B1 to retry later.
 backtrack([goal(GoalId, [ B1]) | Gs], [NextBranch, goal(GoalId, [B1]) | Gs],
 	  [LastBranch | PreviousBs], PreviousBs):-
 	LastBranch = goal(GId, [LastLeaf | LastBs] ),
 	length(LastBs, Depth),
 	uretract(current_goal(_)), uassertz(current_goal(GId)),
-	uretract(depth(_)), uretractall(tried(GoalId, _, _)),
-%	((current_time(Now), Next is Now+1,
-%	  B1 = [happens(A, _, _) | _], action_(A)) % could be
-%	  risky/unnecessary
-%	-> retractall(happens(A, Now, Next)) %risky/unnecessary?
-%	; true),
+	uretract(depth(_)),
+%	uretractall(tried(GoalId, _, _)),
+	((  B1 = [happens(A, _,_) | _], action_(A))	-> true
+	;    uretractall(tried(GoalId, 1, _))),
 	(LastLeaf = []
 	->  (NextBranch = goal(GId, LastBs), uassertz(depth(Depth) ))
 	; (NextBranch = LastBranch, D is Depth+1, uassertz(depth(D)))).
 
-% Pop up one level if backtracking over empty goal lpsClause.
-% backtrack([goal(GoalId, [ [] | Bs]) | Gs], [goal(GoalId, Bs) | Gs], AccG, AccG):-
-
-% Pop up one level if backtracking over non-top clause.
-backtrack([goal(GoalId,[_B1|Bs])|Gs], [goal(GoalId, Bs) | Gs],  AccG, AccG):-
-	\+ Bs = [], depth(Depth), NewDepth is Depth - 1, 
-	uretract(depth(Depth)),
-	uassertz(depth(NewDepth)), uretractall(tried(GoalId,Depth, _)).
-%	((current_time(Now), Next is Now+1,
-%	  B1 = [happens(A, Now, Next) | _]) % could be risky/unnecessary
-%	-> retractall(happens(A, Now, Next))
-%	; true).
+*/
 
 advance([], [goal(GoalId, [B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
 	!, NextTree = Gs,
@@ -1302,24 +1332,18 @@ advance(Resolvent, [goal(GoalId, [B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
 	depth(Depth), NewDepth is Depth +1, uretract(depth(Depth)),
 	uassertz(depth(NewDepth)).
 
-% Same as advance with [].
+% Similar to advance with [].
 continue([goal(GoalId, [B1|Bs]) | Gs], NextTree,  AccG, NewAccG):-
 	NextTree = Gs,
+	uretractall(current_goal(_)), depth(Depth),
+	uretractall(depth(_)),
+	uretractall(tried(GoalId, Depth, _)),
 %	nl,write(' Next tree is  '), write(NextTree),nl,
-%	retractall(tried(GoalId, _, _)), % This was an unexplainable
-%	mistake?
-	uretract(depth(_)), uretract(current_goal(_)),
 	NewAccG = [goal(GoalId,  [B1 | Bs] ) | AccG],
 	(Gs = [] -> true ;(Gs =	[goal(GId, NextBranch) | _] ,
 	length(NextBranch,D), uassertz(depth(D)),
 	uassertz(current_goal(GId)))).
 
-/*
-Notice that this assumes that atoms in goal lpsClauses B1 are written in temporal order.
-Otherwise it would be necessary to skip over L but retain L and continue to process Ls.
-This would be tricky.Notice also that the goal tree/branches in NewAccG are reversed.
-This list will have to be reversed later, or difference lists could be used.
-*/
 
 % From Wei’s interpreter:
 
@@ -1339,19 +1363,41 @@ holds_all([P|Rest]) :-
 % query(+P). True if P holds in the augmented state {S*_i, ev*_i, L_int,
 % L_timeless}.
 %
-query(not(holds(P, Now))) :- !, \+ query(holds(P,Now)).
-query(holds(not(P), Now)) :- !, \+ query(holds(P,Now)).
-query(holds(P, T)) :- 
-	current_time(Now),
-	( lps_updating_current_state -> RealNow is Now-1 ; RealNow=Now),
-	( nonvar(T), T\== RealNow, throw(bad_query(holds(P, T))) ; true),
-	T=RealNow, state(P).
-query(holds(P, Now)) :- l_int(holds(P, Now), B), holds_all(B).
-query(happens(P, X, Y)) :- happens(P, X, Y).
+
+query(L,T) :- option(dc), !, dc_query(L,T).
+
+query(holds(not(P), Now)) :-
+%    current_time(Now),  % Needs looking at more closely.
+    \+ l_int(holds(P, Now), _),
+    \+ state(P).
+query(holds(P, Now)) :-
+%    current_time(Now),  % Needs looking at more closely.
+    \+ l_int(holds(P, Now), _),
+    state(P).
+
+query(happens(P, X, Y)) :-
+    happens(P, X, Y).
+
+/*
+query(happens(P, Prev, Now)) :-
+    current_time(Now), % Needs looking at more closely.
+    succ_t(Prev, Now),
+    happens(P, Prev, Now).
+*/
+
+query(holds(not(P), Now)) :-
+%    current_time(Now), % Needs looking at more closely.
+    l_int(holds(P, Now), B),
+    \+ holds_all(B).
+query(holds(P, Now)) :-
+ %   current_time(Now), % Needs looking at more closely.
+    l_int(holds(P, Now), B),
+    holds_all(B).
+
 query(P) :-  
 	P \= holds(_, _), P \= happens(_,_, _),
+	% (l_timeless(P, B)-> evaluate(B); call(P)).
     	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
-
 
 evaluate([]).
 evaluate([P|Rest]) :-query(P), evaluate(Rest).
@@ -1511,7 +1557,19 @@ dc_process([reactive_rule([E | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
 	).
 %dc_process([R|Rs],AccRi,NRi,AccG, NGi) :- dc_process(Rs,[R|AccRi],NRi,AccG, NGi).
 
-
+% Slightly different verion of query for 'dc' option, separated to make sure it doesn't break the other variant of the interpreter
+dc_query(not(holds(P, Now))) :- !, \+ dc_query(holds(P,Now)).
+dc_query(holds(not(P), Now)) :- !, \+ dc_query(holds(P,Now)).
+dc_query(holds(P, T)) :- 
+	current_time(Now),
+	( lps_updating_current_state -> RealNow is Now-1 ; RealNow=Now),
+	( nonvar(T), T\== RealNow, throw(bad_dc_query(holds(P, T))) ; true),
+	T=RealNow, state(P).
+dc_query(holds(P, Now)) :- l_int(holds(P, Now), B), holds_all(B).
+dc_query(happens(P, X, Y)) :- happens(P, X, Y).
+dc_query(P) :-  
+	P \= holds(_, _), P \= happens(_,_, _),
+    	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
 
 
 

@@ -121,6 +121,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 my_load_dyn(F,_) :- load_dyn(F).
 
+% convenient for user programs
+:- use_module(basics, [append/3]).
+
 :- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
@@ -129,6 +132,8 @@ my_load_dyn(F,_) :- load_dyn(F).
 % It may be necessary to inject these declarations in the Wei syntax file...
 :- discontiguous( ((initiated) /3, (terminated)/3, l_events/2, reactive_rule/3, reactive_rule/2, l_int/2, l_timeless/2,
 	action/1, fluent/1, event/1, d_pre/1, happens/3 )).
+
+:- use_module(library(lists), [append/3]).
 
 my_load_dyn(F,WithWarnings) :- 
 	(style_check('?'(singleton))->Old=true;Old=false),

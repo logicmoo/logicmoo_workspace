@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2017-01-16 at 13:04:02
-  on Prolog xsb(3,7,,_h17139) for program file:
-  /Users/mc/git/lps_corner/examples/bubble sort.lpsw
+  LPS test results file generated on 2017-01-16 at 12:52:41
+  on Prolog xsb(3,7,,_h16391) for program file:
+  /Users/mc/git/lps_corner/examples/CLOUT_workshop/bubbleSort.lps_.P
 */
 
 (:- dynamic lps_test_result / 3,lps_test_result_item / 3,lps_test_options / 1).
@@ -21,10 +21,6 @@ lps_test_result((events),4,2).
 lps_test_result((fluents),4,4).
 lps_test_result((events),5,1).
 lps_test_result((fluents),5,4).
-lps_test_result((events),6,0).
-lps_test_result((fluents),6,4).
-lps_test_result((events),7,0).
-lps_test_result((fluents),7,4).
 % lps_test_result_item(Stage,Cycle,TestTerm)
 lps_test_result_item((fluents),0,location(d,1)).
 lps_test_result_item((fluents),0,location(c,2)).
@@ -56,11 +52,3 @@ lps_test_result_item((fluents),5,location(d,4)).
 lps_test_result_item((fluents),5,location(a,1)).
 lps_test_result_item((fluents),5,location(c,3)).
 lps_test_result_item((fluents),5,location(b,2)).
-lps_test_result_item((fluents),6,location(d,4)).
-lps_test_result_item((fluents),6,location(a,1)).
-lps_test_result_item((fluents),6,location(c,3)).
-lps_test_result_item((fluents),6,location(b,2)).
-lps_test_result_item((fluents),7,location(d,4)).
-lps_test_result_item((fluents),7,location(a,1)).
-lps_test_result_item((fluents),7,location(c,3)).
-lps_test_result_item((fluents),7,location(b,2)).

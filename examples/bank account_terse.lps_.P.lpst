@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2017-01-16 at 13:03:48
-  on Prolog xsb(3,7,,_h8313) for program file:
-  /Users/mc/git/lps_corner/examples/bank account.lpsw
+  LPS test results file generated on 2017-01-16 at 13:03:32
+  on Prolog xsb(3,7,,_h8819) for program file:
+  /Users/mc/git/lps_corner/examples/bank account_terse.lps_.P
 */
 
 (:- dynamic lps_test_result / 3,lps_test_result_item / 3,lps_test_options / 1).

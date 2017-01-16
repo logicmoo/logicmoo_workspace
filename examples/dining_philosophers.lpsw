@@ -23,7 +23,9 @@ l_events(
 		happens(think(philosopher(N)), T1, T2),
 		adjacent(F1, philosopher(N), F2),
 		happens(pickup_forks(F1, philosopher(N), F2), T3, T4),
-		tc(T2 =< T3),
+		% current LPS chokes here in this example; commenting the following lets LPS
+		% execute both previous actions simulataneously:
+		tc(T2 =< T3),  
 		happens(eat(philosopher(N)), T4, T5),
 		happens(putdown_forks(F1, philosopher(N), F2), T5, T6)
 	]

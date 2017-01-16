@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2017-01-08 at 12:51:40
-  on Prolog xsb(3,7,,_h28140) for program file:
-  /Users/mc/git/lps_corner/examples/dining_philosophers.lpsw
+  LPS test results file generated on 2017-01-16 at 13:07:23
+  on Prolog xsb(3,7,,_h24672) for program file:
+  /Users/mc/git/lps_corner/examples/dining_philosophers_terse.lps_.P
 */
 
 (:- dynamic lps_test_result / 3,lps_test_result_item / 3,lps_test_options / 1).
@@ -31,36 +31,16 @@ lps_test_result((events),9,1).
 lps_test_result((fluents),9,3).
 lps_test_result((events),10,1).
 lps_test_result((fluents),10,5).
-lps_test_result((events),11,0).
-lps_test_result((fluents),11,5).
-lps_test_result((events),12,0).
-lps_test_result((fluents),12,5).
-lps_test_result((events),13,0).
-lps_test_result((fluents),13,5).
-lps_test_result((events),14,0).
-lps_test_result((fluents),14,5).
-lps_test_result((events),15,0).
-lps_test_result((fluents),15,5).
-lps_test_result((events),16,0).
-lps_test_result((fluents),16,5).
-lps_test_result((events),17,0).
-lps_test_result((fluents),17,5).
-lps_test_result((events),18,0).
-lps_test_result((fluents),18,5).
-lps_test_result((events),19,0).
-lps_test_result((fluents),19,5).
-lps_test_result((events),20,0).
-lps_test_result((fluents),20,5).
 % lps_test_result_item(Stage,Cycle,TestTerm)
 lps_test_result_item((fluents),0,available(fork(0))).
 lps_test_result_item((fluents),0,available(fork(1))).
 lps_test_result_item((fluents),0,available(fork(2))).
 lps_test_result_item((fluents),0,available(fork(3))).
 lps_test_result_item((fluents),0,available(fork(4))).
-lps_test_result_item((events),1,time_to_eat(philosopher(0))).
 lps_test_result_item((events),1,time_to_eat(philosopher(1))).
-lps_test_result_item((events),1,time_to_eat(philosopher(2))).
 lps_test_result_item((events),1,time_to_eat(philosopher(3))).
+lps_test_result_item((events),1,time_to_eat(philosopher(0))).
+lps_test_result_item((events),1,time_to_eat(philosopher(2))).
 lps_test_result_item((events),1,time_to_eat(philosopher(4))).
 lps_test_result_item((fluents),1,available(fork(0))).
 lps_test_result_item((fluents),1,available(fork(1))).
@@ -72,8 +52,8 @@ lps_test_result_item((events),2,pickup_forks(fork(4),philosopher(4),fork(0))).
 lps_test_result_item((events),2,think(philosopher(2))).
 lps_test_result_item((events),2,pickup_forks(fork(2),philosopher(2),fork(3))).
 lps_test_result_item((fluents),2,available(fork(1))).
-lps_test_result_item((events),3,eat(philosopher(2))).
 lps_test_result_item((events),3,eat(philosopher(4))).
+lps_test_result_item((events),3,eat(philosopher(2))).
 lps_test_result_item((fluents),3,available(fork(1))).
 lps_test_result_item((events),4,putdown_forks(fork(4),philosopher(4),fork(0))).
 lps_test_result_item((events),4,putdown_forks(fork(2),philosopher(2),fork(3))).
@@ -87,8 +67,8 @@ lps_test_result_item((events),5,pickup_forks(fork(0),philosopher(0),fork(1))).
 lps_test_result_item((events),5,think(philosopher(3))).
 lps_test_result_item((events),5,pickup_forks(fork(3),philosopher(3),fork(4))).
 lps_test_result_item((fluents),5,available(fork(2))).
-lps_test_result_item((events),6,eat(philosopher(3))).
 lps_test_result_item((events),6,eat(philosopher(0))).
+lps_test_result_item((events),6,eat(philosopher(3))).
 lps_test_result_item((fluents),6,available(fork(2))).
 lps_test_result_item((events),7,putdown_forks(fork(0),philosopher(0),fork(1))).
 lps_test_result_item((events),7,putdown_forks(fork(3),philosopher(3),fork(4))).
@@ -112,53 +92,3 @@ lps_test_result_item((fluents),10,available(fork(3))).
 lps_test_result_item((fluents),10,available(fork(4))).
 lps_test_result_item((fluents),10,available(fork(1))).
 lps_test_result_item((fluents),10,available(fork(2))).
-lps_test_result_item((fluents),11,available(fork(0))).
-lps_test_result_item((fluents),11,available(fork(3))).
-lps_test_result_item((fluents),11,available(fork(4))).
-lps_test_result_item((fluents),11,available(fork(1))).
-lps_test_result_item((fluents),11,available(fork(2))).
-lps_test_result_item((fluents),12,available(fork(0))).
-lps_test_result_item((fluents),12,available(fork(3))).
-lps_test_result_item((fluents),12,available(fork(4))).
-lps_test_result_item((fluents),12,available(fork(1))).
-lps_test_result_item((fluents),12,available(fork(2))).
-lps_test_result_item((fluents),13,available(fork(0))).
-lps_test_result_item((fluents),13,available(fork(3))).
-lps_test_result_item((fluents),13,available(fork(4))).
-lps_test_result_item((fluents),13,available(fork(1))).
-lps_test_result_item((fluents),13,available(fork(2))).
-lps_test_result_item((fluents),14,available(fork(0))).
-lps_test_result_item((fluents),14,available(fork(3))).
-lps_test_result_item((fluents),14,available(fork(4))).
-lps_test_result_item((fluents),14,available(fork(1))).
-lps_test_result_item((fluents),14,available(fork(2))).
-lps_test_result_item((fluents),15,available(fork(0))).
-lps_test_result_item((fluents),15,available(fork(3))).
-lps_test_result_item((fluents),15,available(fork(4))).
-lps_test_result_item((fluents),15,available(fork(1))).
-lps_test_result_item((fluents),15,available(fork(2))).
-lps_test_result_item((fluents),16,available(fork(0))).
-lps_test_result_item((fluents),16,available(fork(3))).
-lps_test_result_item((fluents),16,available(fork(4))).
-lps_test_result_item((fluents),16,available(fork(1))).
-lps_test_result_item((fluents),16,available(fork(2))).
-lps_test_result_item((fluents),17,available(fork(0))).
-lps_test_result_item((fluents),17,available(fork(3))).
-lps_test_result_item((fluents),17,available(fork(4))).
-lps_test_result_item((fluents),17,available(fork(1))).
-lps_test_result_item((fluents),17,available(fork(2))).
-lps_test_result_item((fluents),18,available(fork(0))).
-lps_test_result_item((fluents),18,available(fork(3))).
-lps_test_result_item((fluents),18,available(fork(4))).
-lps_test_result_item((fluents),18,available(fork(1))).
-lps_test_result_item((fluents),18,available(fork(2))).
-lps_test_result_item((fluents),19,available(fork(0))).
-lps_test_result_item((fluents),19,available(fork(3))).
-lps_test_result_item((fluents),19,available(fork(4))).
-lps_test_result_item((fluents),19,available(fork(1))).
-lps_test_result_item((fluents),19,available(fork(2))).
-lps_test_result_item((fluents),20,available(fork(0))).
-lps_test_result_item((fluents),20,available(fork(3))).
-lps_test_result_item((fluents),20,available(fork(4))).
-lps_test_result_item((fluents),20,available(fork(1))).
-lps_test_result_item((fluents),20,available(fork(2))).
