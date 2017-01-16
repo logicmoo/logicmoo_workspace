@@ -118,6 +118,9 @@ See rocks_open/3 for details.
 %	      library(terms).
 %	  - merge(:Goal)
 %	  Define RocksDB value merging.  See rocks_merge/3.
+%	  - mode(+Mode)
+%	  One of `read_write` (default) or `read_only`.  The latter
+%	  uses OpenForReadOnly() to open the database.
 
 rocks_open(Dir, DB, Options0) :-
 	meta_options(is_meta, Options0, Options),

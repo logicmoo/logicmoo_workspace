@@ -640,6 +640,9 @@ static PlAtom ATOM_double("double");
 static PlAtom ATOM_term("term");
 static PlAtom ATOM_open("open");
 static PlAtom ATOM_once("once");
+static PlAtom ATOM_mode("mode");
+static PlAtom ATOM_read_only("read_only");
+static PlAtom ATOM_read_write("read_write");
 
 static void
 get_blob_type(PlTerm t, blob_type *key_type)
@@ -673,6 +676,7 @@ PREDICATE(rocks_open_, 3)
   atom_t alias = NULL_ATOM;
   record_t merger = 0;
   int once = FALSE;
+  int read_only = FALSE;
 
   if ( !PL_get_file_name(A1, &fn, PL_FILE_OSPATH) )
     return FALSE;
@@ -702,6 +706,19 @@ PREDICATE(rocks_open_, 3)
 	  once = TRUE;
 	else
 	  throw PlDomainError("open_option", opt[1]);
+      } else if ( ATOM_mode == name )
+      { atom_t a;
+
+	if ( PL_get_atom(opt[1], &a) )
+	{      if ( ATOM_read_write == a )
+	    ;
+	  else if ( ATOM_read_only == a )
+	    read_only = TRUE;
+	  else
+	    PlDomainError("mode_option", opt[1]);
+	}
+
+	PlTypeError("atom", opt[1]);
       }
     } else
       PlTypeError("option", opt);
@@ -729,9 +746,14 @@ PREDICATE(rocks_open_, 3)
     ref->flags |= DB_OPEN_ONCE;
 
   try
-  { if ( ref->merger )
+  { rocksdb::Status status;
+
+    if ( ref->merger )
       options.merge_operator.reset(new PrologMergeOperator(ref));
-    rocksdb::Status status = DB::Open(options, fn, &ref->db);
+    if ( read_only )
+      status = DB::OpenForReadOnly(options, fn, &ref->db);
+    else
+      status = DB::Open(options, fn, &ref->db);
     ok(status);
     return unify_rocks(A2, ref);
   } catch(...)

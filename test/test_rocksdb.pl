@@ -57,6 +57,14 @@ test(basic, Noot == noot) :-
 	rocks_delete(RocksDB, aap),
 	assertion(\+ rocks_get(RocksDB, aap, _)),
 	rocks_close(RocksDB).
+test(basic, Noot == noot) :-
+	test_db(Dir),
+	rocks_open(Dir, RocksDB, []),
+	rocks_put(RocksDB, aap, noot),
+	rocks_close(RocksDB),
+        rocks_open(Dir, RocksDB2, [mode(read_only)]),
+	rocks_get(RocksDB2, aap, Noot),
+	rocks_close(RocksDB2).
 test(open_twice, error(rocks_error(_))) :-
 	test_db(Dir),
 	setup_call_cleanup(
