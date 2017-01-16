@@ -43,7 +43,8 @@ test_rocksdb :-
 	run_tests([ rocks,
 		    terms,
 		    types,
-		    merge
+		    merge,
+                    properties
 		  ]).
 
 :- begin_tests(rocks, [cleanup(delete_db)]).
@@ -189,6 +190,22 @@ merge(full, _Key, Initial, Additions, Result) :-
 	sort(List, Result).
 
 :- end_tests(merge).
+
+:- begin_tests(properties, [cleanup(delete_db)]).
+
+test(basic) :-
+	test_db(Dir),
+	rocks_open(Dir, RocksDB,
+		   [ key(term),
+		     value(term)
+		   ]),
+	rocks_put(RocksDB, aap, noot(mies)),
+	rocks_put(RocksDB, aap(1), noot(1)),
+	rocks_property(RocksDB, estimate_num_keys(Num)),
+        assertion(integer(Num)).
+
+:- end_tests(properties).
+
 
 		 /*******************************
 		 *	       UTIL		*
