@@ -11,13 +11,16 @@ Files have the .lps extension and (more or less) the following structure:
 ```
 #!Prolog
 
-  spec ::= statement | spec
+  spec ::= statement spec
   statement ::= setting | rules 
   setting ::= max_time | actions | fluents | initial_state | observations | events 
   rules ::= if_rules | if_then_rules | initiate_rules | terminate_rules | constraints 
-  if_rules ::= literal "." | literal "if" conjunction "." | if_rules 
-  if_then_rules ::= "if" conjunction "then" literal "." | if_then_rules
-  constraints ::= "false" conjunction | constraints 
+  if_rules ::= if_rule | if_rule if_rules
+  if_rule ::= literal "." | literal "if" conjunction "." 
+  if_then_rules ::= if_then_rule | if_then_rule if_then_rules
+  if_then_rule ::= "if" conjunction "then" literal "." 
+  constraints ::= constraint | constraint constraints
+  constraint ::= "false" conjunction | constraints 
   conjunction ::= literal | literal "," conjunction
   
 ```
