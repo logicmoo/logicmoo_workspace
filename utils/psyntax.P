@@ -332,7 +332,12 @@ syntax2p(L,_,_TT,PT) :- var(L), var(PT), !, fail.
 % convenience notation for declarations:
 syntax2p((initially States),_Vars,lps2p,initial_state(StatesList)) :- !, 
 	comma_to_list(States,StatesList).
-% single observations, declared as fact declarations; more complex cases handled further below
+% observe o1, o2, o3 from ... to ...:
+syntax2p((observe Obs),_Vars,lps2p,observe([O1,O2|On],T2)) :- (nonvar(Obs)-> functor(Obs,',',2) ; true), !,
+	((syntax2p_observations(Obs,CT2,[O1,O2|On],T2), T2=CT2, nonvar(T2)) -> true 
+	; writeln('*** Bad observations'), writeln((observe Obs)/observe([O1,O2|On],T2)), fail). 
+	% TODO: use print_message, etc.
+% single observations, declared as fact declarations; observations list case handled further below
 syntax2p((observe E from _T1 to T2),_Vars,lps2p,observe([E],T2)) :- !.
 syntax2p((observe E to T2),_Vars,lps2p,observe([E],T2)) :- !.
 syntax2p((actions A),_Vars,lps2p,actions(NL)) :- nonvar(A), !, comma_to_list(A,L), functor_arityze(L,NL), remember_declarations(event,NL).
@@ -428,6 +433,19 @@ syntax2p(L,Vars,lpsp2p,PT) :-
 	syntax2p_sequence(LB,Vars,Translator,[T1,T2],NB).
 syntax2p(Term, _, _Translator, Term). % pass through for Wei terms or other Prolog facts
 
+% syntax2p_observations(ObsCommaList,CommaT2,ObsList,ListT2) CommaT2 must be unique
+
+syntax2p_observations(CL,CommaT2,[E],CommonT2) :- (nonvar(CL)-> \+ functor(CL,',',2) ; true), !, 
+	syntax2p_one_obsservation(CL,CommaT2,E,CommonT2).
+syntax2p_observations((Ob,CL),CommaT2,[E|L],CommonT2) :- (nonvar(CL)-> \+ functor(CL,',',2) ; true), !, 
+	syntax2p_one_obsservation(Ob,CommaT2,E,CommonT2),
+	syntax2p_observations(CL,CommaT2,L,CommonT2).
+
+syntax2p_one_obsservation((E from _ to CT2),T2,E,LT2) :- !, CT2=T2,CT2=LT2.
+syntax2p_one_obsservation((E to CT2),T2,E,LT2) :- !, T2=CT2,CT2=LT2.
+syntax2p_one_obsservation(E,T2,E,T2). % assume T2 defined by another observation
+
+	
 % syntax2p_sequence(NicerSequence,Vars,Translator,[Start,End],WeiPsequence)  [Start,End] may constrain time arguments
 syntax2p_sequence(NS,Vars,Translator,Interval,W) :-
 	syntax2p_sequence(NS,Vars,Translator,Interval,_IT,_ET,W).
