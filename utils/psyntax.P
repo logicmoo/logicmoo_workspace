@@ -288,6 +288,7 @@ remember_hint(Type,H) :-
 
 remember_timeless_hint(TL) :- remember_hint(timeless,TL).
 
+remember_event_hint((E from _T1 to _T2)) :- !, remember_event_hint(E).
 remember_event_hint((E during _Interval)) :- !, remember_event_hint(E).
 remember_event_hint(TL) :- remember_hint(event,TL).
 

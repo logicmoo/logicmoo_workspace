@@ -477,14 +477,11 @@ action_(A) :- action(A) ; actions(Actions), member(A,Actions).
 event_(E) :- event(E) ; events(Events), member(E,Events).
 fluent_(F) :- fluent(F) ; fluents(Fluents), member(F,Fluents).
 
-% parameter for declaration generation by alternative syntaxes; 'false' may help LPS program debugging
-add_automatic_declarations(false). % 'true' will add fluent, event and action declarations guessed from usage; 
-
 % collect_guessed_declarations(-List). 
 %  This was originally in psyntax; it may be called more than once, but only the first run actually does anything
 collect_guessed_declarations(L) :-
 	findall(Fact,(
-		add_automatic_declarations(true), uretract(head_hint(X,Type,false)), Type \== timeless, Fact=..[Type,X]
+		option(auto_declarations), uretract(head_hint(X,Type,false)), Type \== timeless, Fact=..[Type,X]
 		), L).
 
 collect_results([]) :- !.
@@ -757,6 +754,11 @@ parse_options_([delta_state(State)|Rest]) :- !,
 	((is_list(State), forall(member(F,State), (nonvar(F), (F = + _ ; F = - _ ))) ) -> true
 	; writeln(user_error, 'ERROR in options: delta_state must contain a list of +Fluent or -Fluent.'), fail),
 	uassertz(option(delta_state(State))),
+	parse_options_(Rest).
+% parameter for declaration generation by alternative syntaxes; default (absent) may help LPS program debugging
+% auto_declarations. 'true' will add fluent, event and action declarations guessed from usage; 
+parse_options_([auto_declarations|Rest]) :- !,
+	uretractall(option(auto_declarations)), uassertz(option(auto_declarations)),
 	parse_options_(Rest).
 parse_options_([O|Rest]) :- 
     write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
