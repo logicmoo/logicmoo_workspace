@@ -171,6 +171,7 @@ visual(File,timeline(JSON)) :-
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
 		(lps_test_result_item('Database state:',T1,X) ; lps_test_result_item(fluents,T1,X)), 
+		T1 \== 0, % hack to discard irrelevant state information
 		T2 is T1+1, functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
