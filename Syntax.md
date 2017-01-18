@@ -11,10 +11,10 @@ Files have the .lps extension and (more or less) the following structure:
 ```
 #!Prolog
 
-  spec ::= statement | statement spec
-  statement ::= settings | rules 
-  settings ::= max_time | actions | fluents | initial_state | observations 
-  rules ::= if_rules | if_then_rules | initiate_rules | terminate_rules | constraints 
+  spec ::= statement 
+  statement ::= settings rules 
+  settings ::= max_time actions fluents initial_state observations 
+  rules ::= if_rules if_then_rules initiate_rules terminate_rules constraints 
   if_rules ::= if_rule | if_rule if_rules
   if_rule ::= literal "." | literal "if" conjunction "." 
   if_then_rules ::= if_then_rule | if_then_rule if_then_rules
@@ -48,10 +48,10 @@ Files have the .lpsw extension and (more or less) the following structure:
 ```
 #!Prolog
 
-  spec ::= statement | statement spec
-  statement ::= settings | rules 
-  settings ::= max_time | actions | fluents | initial_state | observations | events
-  rules ::= if_rules | reactive_rules | initiate_rules | terminate_rules | constraints 
+  spec ::= statement 
+  statement ::= settings rules 
+  settings ::= max_time  actions  fluents  initial_state  observations  events
+  rules ::= if_rules reactive_rules initiate_rules terminate_rules constraints 
   if_rules ::= if_rule | if_rule if_rules
   if_rule ::= timeless_rule | event_rule 
   timeless_rule ::= "l_timeless(" literal "," conjunction ")."
