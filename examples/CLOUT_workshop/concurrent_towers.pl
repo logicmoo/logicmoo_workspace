@@ -19,7 +19,7 @@ then make_tower([f,e,d,table]) from _T1 to _T2.
 % if true
 % then make_tower([table]) from _T1 to _T2.
 
-clear(Block) at T if Block \= table,
+clear(Block) at T if Block \= 'table',
     not location(_,Block) at T.
 /*
 clear(Block) at T if
