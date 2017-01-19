@@ -19,7 +19,7 @@ then make_tower([f,e,d,floor]) from _T1 to _T2.
 % if true
 % then make_tower([floor]) from _T1 to _T2.
 
-clear(Block) at T if Block \= 'floor',
+clear(Block) at T if Block \= floor,
     not location(_,Block) at T.
 /*
 clear(Block) at T if
