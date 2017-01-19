@@ -39,7 +39,7 @@ initially	said(turing, []), said(robot, []).
 
 say(Agent, Word)  initiates	said(Agent, NewPhrase)	if	
 		said(Agent, OldPhrase),  
-		basics:append(OldPhrase, [Word], NewPhrase).
+		append(OldPhrase, [Word], NewPhrase).
 say(Agent, _Word) terminates  said(Agent, OldPhrase)	if	 
 		said(Agent, OldPhrase).
 
