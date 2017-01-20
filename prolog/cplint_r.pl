@@ -53,7 +53,7 @@
 :- use_module(library(auc)).
 
 /* Optional module */
-:- use_module(swish(r_swish)).
+:- use_module(swish(lib/r_swish)).
 
 /* Meta predicate definitions. */
 
@@ -115,7 +115,8 @@ bin_width(Min,Max,NBins,Width) :-
     Width is D/NBins.
 
 /**
- * build_xy_list(X,Y,Out) is det
+ * build_xy_list(X:list,Y:list,Out:list) is det
+ *
  * Given to lists X and Y build an output list Out
  * in the form [X1-Y1,X2-Y2,...,XN-YN].
  */
@@ -126,12 +127,14 @@ build_xy_list([XH|XT], [YH|YT], [XH-YH|Out]) :-
 
 /**
  * r_row(X:atom,Y:atom,Out:atom) is det
- * Given two atoms X and Y, build a relationship r(X,Y) in Out.
+ *
+ * Given two atoms X and Y, build term r(X,Y) in Out.
  */
 r_row(X,Y,r(X,Y)).
 
 /**
  * get_set_from_xy_list(L:list,R:list) is det
+ *
  * Given an input list L in the form [X1-Y1,X2-Y2,...,XN-YN], transform it in 
  * an output list R in the form [r(X1,Y1),r(X2,Y2),...,r(XN,YN)]. This means 
  * that R will contain an X-Y relationship which can be then passed to an R 
@@ -448,19 +451,33 @@ mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,L,Arg):-
  * BinWidth was added because it was recomended on the R documentation,
  * see docs.ggplot2.org/current/geom_histogram.html
  */
-geom_histogram(L,NBins,BinWidth) :-
-    nbinS <- NBins,
+geom_histogram(L,BinWidth) :-
     binwidtH <- BinWidth,
     get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
-    <- ggplot(
+    <- qplot(
+        x,
         data=df,
-    	aes_string(x="x")
-    ) + geom_histogram(
-        bins=nbinS,
+        geom="histogram",
+        weight=y,
         binwidth=binwidtH
 	).
+
+geom_histogram(L,Min,Max,BinWidth) :-
+    binwidtH <- BinWidth,
+    get_set_from_xy_list(L,R),
+    r_data_frame_from_rows(df, R),
+    colnames(df) <- c("x", "y"),
+    miN <- Min,
+    maX <- Max, 
+    <- qplot(
+        x,
+        data=df,
+        geom="histogram",
+        weight=y,
+        binwidth=binwidtH
+	)+xlim(miN,maX).
 
 /**
  * histogram_r(+List:list,+NBins:int) is det
@@ -469,6 +486,13 @@ geom_histogram(L,NBins,BinWidth) :-
  * NBins bins. List must be a list of couples of the form [V]-W or V-W
  * where V is a sampled value and W is its weight.
  */
+/*histogram_r(L,NBins) :-
+  load_r_libraries,
+  df<- L,
+  nbinS <- NBins,
+  <- qplot(df,geom="histogram",bins=nbinS).
+*/
+
 histogram_r(L0,NBins) :-
     load_r_libraries,
     maplist(to_pair,L0,L1),
@@ -490,22 +514,21 @@ histogram_r(L0,NBins,Min,Max) :-
     maplist(to_pair,L0,L1),
     keysort(L1,L),
     bin_width(Min,Max,NBins,BinWidth),
-    geom_histogram(L,NBins,BinWidth).
+    geom_histogram(L,Min,Max,BinWidth).
 
 
 geom_density(L) :-
     get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
-    <- ggplot(
+   <- ggplot(
         data=df,
         aes_string(
             x="x",
             y="y",
             group=1
-        )
-    ) + geom_line()
-    + geom_point().
+        ))
+    +  geom_density().
 
 /**
  * density_r(+List:list,+NBins:int,+Min:float,+Max:float) is det
@@ -650,4 +673,22 @@ compute_areas_diagrams_r(LG,AUCROC,AUCPR) :-
     load_r_libraries,
     geom_compute_areas_diagram(PR0,"PR","Precision","Recall"),
     finalize_r_graph.
+
+sandbox:safe_primitive(cplint_r:build_xy_list(_,_,_)).
+sandbox:safe_primitive(cplint_r:r_row(_,_,_)).
+sandbox:safe_primitive(cplint_r:get_set_from_xy_list(_,_)).
+sandbox:safe_primitive(cplint_r:histogram_r(_,_)).
+sandbox:safe_primitive(cplint_r:density_r(_,_,_,_)).
+sandbox:safe_primitive(cplint_r:densities_r(_,_,_)).
+sandbox:safe_primitive(cplint_r:compute_areas_diagrams_r(_,_,_)).
+
+sandbox:safe_meta(cplint_r:prob_bar_r(_),[]).
+sandbox:safe_meta(cplint_r:prob_bar_r(_,_),[]).
+sandbox:safe_meta(cplint_r:mc_prob_bar_r(_),[]).
+sandbox:safe_meta(cplint_r:mc_sample_bar_r(_,_),[]).
+sandbox:safe_meta(cplint_r:mc_sample_arg_bar_r(_,_,_),[]).
+sandbox:safe_meta(cplint_r:mc_sample_arg_first_bar_r(_,_,_),[]).
+sandbox:safe_meta(cplint_r:mc_rejection_sample_arg_bar_r(_,_,_,_),[]).
+sandbox:safe_meta(cplint_r:mc_mh_sample_arg_bar_r(_,_,_,_,_),[]).
+sandbox:safe_meta(cplint_r:mc_mh_sample_arg_bar_r(_,_,_,_,_,_),[]).
 
