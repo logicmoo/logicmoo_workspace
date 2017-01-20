@@ -83,6 +83,8 @@ or, if you cloned the repo:
 
 ## Changelogs 
 
+2017-01-?? version 0.0.4. Improved histogram_r/?, density_r/? and denities_r/?. 
+
 2017-01-13 version 0.0.3. Fixed minor issues.
 
 2017-01-13 version 0.0.2. Fixed densities_r/3. Better error handling.

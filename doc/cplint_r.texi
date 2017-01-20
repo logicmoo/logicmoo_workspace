@@ -163,7 +163,7 @@ in the form @code{[X1-Y1,X2-Y2,...,XN-YN]}.
 (@var{X}:atom,@
 @var{Y}:atom,@
 @var{Out}:atom)
-Given two atoms @var{X} and @var{Y}, build a relationship @code{r(X,Y)}
+Given two atoms @var{X} and @var{Y}, build the term @code{r(X,Y)}
 in @var{Out}.
 @end deffn
 

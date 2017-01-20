@@ -37,12 +37,6 @@
           ]).
 
 
-/* 
- * Reexport library(mcintyre) and library(pita)
- * once I figure out how to do it.
- */
-
-
 /* Dependencies */
 
 :- use_module(library(r/r_call)).
@@ -88,7 +82,7 @@ check_modules :-
 
 /* Debug purposes
  *
- *  use_rendering(table).
+ *  use_rendering(table). % should be available by default.
  *  <- df. % name of a data frame.
  */
 
@@ -128,7 +122,7 @@ build_xy_list([XH|XT], [YH|YT], [XH-YH|Out]) :-
 /**
  * r_row(X:atom,Y:atom,Out:atom) is det
  *
- * Given two atoms X and Y, build term r(X,Y) in Out.
+ * Given two atoms X and Y, build the term r(X,Y) in Out.
  */
 r_row(X,Y,r(X,Y)).
 
@@ -447,22 +441,6 @@ mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,L,Arg):-
     geom_mc_mh_sample_arg_bar(ValList),
     finalize_r_graph.
 
-/*
- * BinWidth was added because it was recomended on the R documentation,
- * see docs.ggplot2.org/current/geom_histogram.html
- */
-geom_histogram(L,BinWidth) :-
-    binwidtH <- BinWidth,
-    get_set_from_xy_list(L,R),
-    r_data_frame_from_rows(df, R),
-    colnames(df) <- c("x", "y"),
-    <- qplot(
-        x,
-        data=df,
-        geom="histogram",
-        weight=y,
-        binwidth=binwidtH
-	).
 
 geom_histogram(L,Min,Max,BinWidth) :-
     binwidtH <- BinWidth,
@@ -470,14 +448,19 @@ geom_histogram(L,Min,Max,BinWidth) :-
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
     miN <- Min,
-    maX <- Max, 
-    <- qplot(
-        x,
+    maX <- Max,
+    <- ggplot(
         data=df,
-        geom="histogram",
-        weight=y,
+        aes_string(
+            x="x"
+        )
+    ) + geom_histogram(
+        weight="y",
         binwidth=binwidtH
-	)+xlim(miN,maX).
+    ) + xlim(
+        miN,
+        maX
+    ).
 
 /**
  * histogram_r(+List:list,+NBins:int) is det
@@ -486,13 +469,6 @@ geom_histogram(L,Min,Max,BinWidth) :-
  * NBins bins. List must be a list of couples of the form [V]-W or V-W
  * where V is a sampled value and W is its weight.
  */
-/*histogram_r(L,NBins) :-
-  load_r_libraries,
-  df<- L,
-  nbinS <- NBins,
-  <- qplot(df,geom="histogram",bins=nbinS).
-*/
-
 histogram_r(L0,NBins) :-
     load_r_libraries,
     maplist(to_pair,L0,L1),
@@ -517,18 +493,24 @@ histogram_r(L0,NBins,Min,Max) :-
     geom_histogram(L,Min,Max,BinWidth).
 
 
+/* To fix. */
 geom_density(L) :-
     get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
-   <- ggplot(
+    <- ggplot(
         data=df,
         aes_string(
             x="x",
             y="y",
             group=1
-        ))
-    +  geom_density().
+        )
+    ) +  geom_density().
+
+/*
+    <- df,
+    <- {|r||ggplot(data=df, aes_string(x="x",y="y")) + stat_density(aes(y=..density..))|}.
+*/
 
 /**
  * density_r(+List:list,+NBins:int,+Min:float,+Max:float) is det
