@@ -14,7 +14,7 @@ An overview of current LPS syntax and some improvements can be seen at [this wik
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
 
-Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/), and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
 
 ## Installing ##
 ### Core engine ###
@@ -26,7 +26,7 @@ Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sad
 	
 ### Getting Started with a core engine ###
 
-* Launch Prolog and consult 'your_path_to_LPS/engine/interpreter.P' by entering  ['your_path_to_LPS/Wei-engine/interpreter.P']. after the prompt ?-
+* Launch Prolog and consult 'your_path_to_LPS/engine/interpreter.P' by entering  ['your_path_to_LPS/engine/interpreter.P']. after the prompt ?-
 	* This launches the "new" rak interpreter; to use the old (soon to be deprecated) Wei interpreter consult instead '<your_path_to_LPS>/Wei-Engine/interpreter.P'
 * Then enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw'). 
 * Or for more informative output, enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw',[verbose]).
@@ -87,13 +87,7 @@ To install:
 * Follow instructions at top of [InterProlog Studio](http://interprolog.com/wiki/index.php?title=Studio_Download_and_installation), including a recent XSB Prolog install
 
 ## Known Bugs
-### Composite events can not have zero state transitions
-In the current implementation, composite events need to transition between different states, e.g. happens(myEvent,T,T) will not work.
-### Missing candidate actions
-No matter the strategy (goal_strat(breadth) or not), the following generates a1,a1,... when it should generate only a1+a2 (simultaneous):
 
-	reactive_rule( [happens(a3,_,_)],
-	 [happens(a1,T1,T2),happens(a2,T1,T2)] ).
 ### missing solutions to fluent in composite event
 Given the following
 
@@ -102,10 +96,6 @@ Given the following
 	 goFromTo(Here,There,T1,T3) :- 
 	not killed(robot,T1), it_never_gets_here.
 
-
-### timeless predicate looping
-l_timeless(foo,[foo]).
-This will cause a nonterminating computation. In a future syntax we should probably use 'prolog' for the body.
 
 ## How to contribute ##
 * See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/6a587ecd410fd81b8d799554dd86796af9c7e380/RoadMap.md?at=master) 
