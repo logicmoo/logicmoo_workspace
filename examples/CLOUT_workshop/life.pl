@@ -6,9 +6,6 @@ maxTime(10).
 cell(X,Y) :- 
     Range = [1,2,3,4,5,6,7,8,9,10], member(X,Range), member(Y,Range).
 
-dead(X,Y) at T if 
-	cell(X,Y), not X-Y at T.
-
 adjacent(X-Y,L) :- findall(Ax-Ay,(
 	member(Dx,[-1,0,1]), member(Dy,[-1,0,1]), not (Dx=0,Dy=0),
     Ax is X+Dx, Ay is Y+Dy
@@ -29,7 +26,7 @@ countLivingNeighbors([X-Y|Cells],N) at T if
 
 if X-Y at T, aliveNeighbors(X-Y,N) at T, N<2 then die(X-Y).
 if X-Y at T, aliveNeighbors(X-Y,N) at T, N>3 then die(X-Y).
-if dead(X,Y) at T, aliveNeighbors(X-Y,3) at T then live(X-Y).
+if cell(X,Y), aliveNeighbors(X-Y,3) at T then live(X-Y).
 
 die(X-Y) terminates X-Y.
 live(X-Y) initiates X-Y.
