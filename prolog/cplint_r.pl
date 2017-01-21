@@ -492,24 +492,20 @@ histogram_r(L0,NBins,Min,Max) :-
     bin_width(Min,Max,NBins,BinWidth),
     geom_histogram(L,Min,Max,BinWidth).
 
-
-/* To fix. */
+/*
 geom_density(L) :-
     get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),
     colnames(df) <- c("x", "y"),
+    dfs <- data.frame(
+        x<-df$x,
+        y<-abs(df$y)
+    ),
+    <- dfs,
     <- ggplot(
-        data=df,
-        aes_string(
-            x="x",
-            y="y",
-            group=1
-        )
-    ) +  geom_density().
-
-/*
-    <- df,
-    <- {|r||ggplot(data=df, aes_string(x="x",y="y")) + stat_density(aes(y=..density..))|}.
+        data=dfs,
+        aes(x)
+    ) +  geom_density(aes(weights=y)).
 */
 
 /**
@@ -521,6 +517,7 @@ geom_density(L) :-
  * The lines are drawn dividing the domain in
  * NBins bins.
  */
+/*
 density_r(Post0,NBins,Min,Max) :-
     load_r_libraries,
     maplist(to_pair,Post0,Post),
@@ -530,6 +527,40 @@ density_r(Post0,NBins,Min,Max) :-
     geom_density(LPo),
     finalize_r_graph.
 
+*/
+
+density_r(Post0,NBins,Min,Max) :-
+     load_r_libraries,
+     maplist(to_pair,Post0,Post),
+     maplist(key,Post,X),
+     maplist(y,Post,Y),
+     geom_density(X,Y),
+     finalize_r_graph.
+
+geom_density(X,Y) :-
+    x <- X,
+   y <- Y,
+   df<- data.frame(x=x,y=y),
+  <- {|r||ggplot(data=df, aes(x)) + geom_density(aes(weights=y))|}.
+
+
+/*
+density_r(Post0,NBins,Min,Max) :-
+    load_r_libraries,
+    maplist(to_pair,Post0,Post),
+    maplist(key,Post,X),
+    maplist(y,Post,Y),
+    geom_density(X,Y),
+    finalize_r_graph.
+
+geom_density(X,Y) :-
+   x <- X,
+  y <- Y,
+  df<- data.frame(x=x,y=y),
+  dfs <- stack(df),
+ <- dfs,
+ <- {|r||ggplot(data=dfs, aes(x=values)) + geom_density()|}.
+*/
 
 geom_densities(LPr,LPo) :-
     get_set_from_xy_list(LPr,R1),

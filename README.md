@@ -18,7 +18,7 @@ written by Raivo Laanemets.
 ## Example
 
 Taken from
-[here](https://github.com/friguzzi/swish/blob/master/examples/inference/gpr_R.pl)
+[here](https://github.com/friguzzi/swish/blob/master/examples/inference/gaussian_mixture_R.pl)
 
 ```
 /*
@@ -61,6 +61,14 @@ hist_uncond(Samples,NBins):-
 representing 
 % the probability density of X 
 ```
+
+The query
+
+    ?- hist_uncond(10000,40).
+
+Gives the following
+
+![histogram_r_example.png](images/histogram_r_example.png)
 
 ## Installation
 
