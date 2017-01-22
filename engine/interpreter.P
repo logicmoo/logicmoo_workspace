@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 :- module(interpreter, [
 	go/0, go/1, go/2, go/3,
-	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
+	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1,
 	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
 	lps_engine_directory/1, uassert/1, uretractall/1,
 	bindAllVars/1, lps_welcome_message/0, endTime/1]).
@@ -145,7 +145,7 @@ steps(X) :- pengine_self(M), M:steps(X).
 terminated(X,Y,Z) :- pengine_self(M), catch(M:terminated(X,Y,Z),_,fail).
 tried(X,Y,Z) :- pengine_self(M), catch(M:tried(X,Y,Z),_,fail).
 used(X) :- pengine_self(M), catch(M:used(X),_,fail).
-lps_test_options(X) :- pengine_self(M), catch(M:lps_tes_options(X),_,fail).
+lps_test_options(X) :- pengine_self(M), catch(M:lps_test_options(X),_,fail).
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
 lps_test_result(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result(X,Y,Z),_,fail).
 lps_failed_test(X,Y) :- pengine_self(M), catch(M:lps_failed_test(X,Y),_,fail).
@@ -449,7 +449,6 @@ go(File, OptionsList, ResultFluents) :-
 		; true
 	),
 	cputime(T0),
-	
     	uassertz(current_time(0)), next_time,
     	uassertz(current_goal(0)),
     	uassertz(depth(0)),
@@ -675,10 +674,11 @@ load_check_syntax(File,Notices) :-
 	catch(my_load_dyn(File),_E,true), 
 	check_syntax(File,Notices).
 
-assert_list([]).
-assert_list([H|T]) :-
+assert_list([H|T]) :- !,
     uassertz(state(H)),
     assert_list(T).
+assert_list([]).
+
 
 % last cycle
 endTime(T) :- maxTime(T), !.
@@ -850,11 +850,6 @@ test_filename(PF,TF) :-
 	expand_filename(PF,Path),
 	concat_atom([Path,'.lpst'],TF).
 	
-% test_filename(+ProgramFile,-TestFile)
-% Names the test file as the programs's plus '.lpst' (LPS test file)
-test_filename(PF,TF) :- 
-	expand_filename(PF,Path),
-	concat_atom([Path,'.lpst'],TF).
 	
 % test(Stage,Cycle,Term)
 % Remembers or checks that at this Stage and Cycle, Term is obtained
@@ -912,7 +907,19 @@ test_examples :-
 		member(TFile,TFiles), atom_codes(TFile,Tcodes),
 		append(PCodes,LPST,Tcodes),atom_codes(ProgramFile,PCodes)
 		),Files),
+	% check whether we need to regenerate some of these Files
+	regenerate(Files), !,
 	do_test_suite(Files,[run_test]).
+
+regenerate([F|Files]) :- !, 
+	atom_codes(F,Fcodes), 
+	(regenerate_file(Fcodes)->true;true), regenerate(Files).
+regenerate([]).
+
+:- multifile interpreter:regenerate_file/1.
+% regenerate(FileAtom) regenerate this file, foo.P or foo.lpsw, from foo.SomeSyntaxSpecificFileExpension, if this exists
+% alternative syntaxes should asserta a the generator
+regenerate_file(_) :- fail. % default case, do not generate (meaning, no source file exists that produced this one)
 
 % do_test_suite(Files,Options)  
 %  Options must contain make_test or run_test, optionally more; Files are either LPS or test result files resp.
@@ -1415,8 +1422,7 @@ evaluate([P|Rest]) :-query(P), evaluate(Rest).
 
 % next_time().  Succeeds to the next time point. Destructively updates current_time/1 
 next_time :-
-    current_time(This),
-    uretract(current_time(This)),
+    uretract(current_time(This)), !,
     Next is This + 1,
     uassertz(current_time(Next)),
     uretractall(steps(_)),

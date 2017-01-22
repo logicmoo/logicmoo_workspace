@@ -210,6 +210,27 @@ golps(LPSP_file) :- golps(LPSP_file,[]).
 	
 % File converters:
 
+% hook into test suite runner:
+:- multifile interpreter:regenerate_file/1.
+% regenerate_file(F) F is an existing Wei syntax file that needs to be regenerated...if a source file for it can be found
+regenerate_file(F) :- generate_file(F), !.
+
+% Fails if no source file exists
+% [46,108,112,115,119] .lpsw
+% [95,46,80] _.P
+% [46,108,112,115] .lps
+% generate_file(FilenameCodes)
+generate_file(Fcodes) :- 
+	% _.P or .lpsw?
+	(append(SourceCodes,[95,46,80],Fcodes) ; append(SourceCodes,[46,108,112,115,119],Fcodes)),
+	!,
+	(append(_,[46,108,112,115],SourceCodes) ; append(_,[46,112,108],SourceCodes)), % a LPS or pl file
+	atom_codes(Source,SourceCodes),
+	file_exists(Source),
+	atom_codes(F,Fcodes),
+	syntax2p_file(Source,F,lps2p,true).
+
+
 % lpsp2p_file(?LPSPfile,?LPSWfile) "papers syntax"
 lpsp2p_file(LPSPfile,LPSWfile) :- atom(LPSPfile), !,
 	(atom(LPSWfile)->true;concat_atom([LPSPfile,'_.lpsw'],LPSWfile)),
