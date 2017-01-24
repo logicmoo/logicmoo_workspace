@@ -31,8 +31,8 @@
             mc_mh_sample_arg_bar_r/5,
             mc_mh_sample_arg_bar_r/6,
             histogram_r/2,
-            density_r/4,
-            densities_r/3,
+            density_r/1,
+            densities_r/2,
             compute_areas_diagrams_r/3
           ]).
 
@@ -502,25 +502,25 @@ geom_density(L) :-
         aes(x)
     ) + geom_density(
             aes(
+                fill="density",
                 weights=y
-            )
+            ),
+            alpha=0.5
     ).
 
 /**
- * density_r(+List:list,+NBins:int,+Min:float,+Max:float) is det
+ * density_r(+List:list) is det
  *
+ * COMMENTS MUST BE CORRECTED
  * Draws a line chart of the density of a sets of samples.
  * The samples are in List
  * as couples [V]-W or V-W where V is a value and W its weigth.
- * The lines are drawn dividing the domain in
- * NBins bins.
  */
-density_r(Post0,NBins,Min,Max) :-
+density_r(Post0) :-
      load_r_libraries,
      maplist(to_pair,Post0,Post),
      geom_density(Post),
      finalize_r_graph.
-
 
 geom_densities(LPr,LPo) :-
     get_set_from_xy_list(LPr,R1),
@@ -533,60 +533,39 @@ geom_densities(LPr,LPo) :-
         x=df1$x,
         y1=df1$y1,
         y2=df2$y2
-    ),    
+    ),
+    alphA <- 0.5,
     <- ggplot(
         data=df,
-        aes(
-            x=x
-        )
-    ) + geom_line(
-        aes(
-            color="pre",
-            y=y1
-        )
-    ) + geom_line(
-        aes(
-            color="post",
-            y=y2
-        )
-    ) + geom_point(
-        aes(
-            color="pre",
-            y=y1
-        )
-    ) + geom_point(
-        aes(
-            color="post",
-            y=y2
-        )
-    ) + ylab("y").
-
+        aes(x)
+    ) + geom_density(
+            aes(
+                fill="pre",
+                weights=y1
+            ),
+            alpha=alphA
+    ) + geom_density(
+            aes(
+                fill="post",
+                weights=y2
+            ),
+            alpha=alphA
+    ).
 
 /**
- * densities_r(+PriorList:list,+PostList:list,+NBins:int) is det
+ * densities_r(+PriorList:list,+PostList:list) is det
  *
+ * COMMENT MUST BE CORRECTED
  * Draws a line chart of the density of two sets of samples, usually
  * prior and post observations. The samples from the prior are in PriorList
  * while the samples from the posterior are in PostList
  * as couples [V]-W or V-W where V is a value and W its weigth.
- * The lines are drawn dividing the domain in
- * NBins bins.
  */
-densities_r(Pri0,Post0,NBins) :-
+densities_r(Pri0,Post0) :-
     load_r_libraries,
     maplist(to_pair,Pri0,Pri1),
     maplist(to_pair,Post0,Post1),
-    maplist(key,Pri1,Pri),
-    maplist(key,Post1,Post),
-    append(Pri,Post,All),
-    max_list(All,Max),
-    min_list(All,Min),
-    bin_width(Min,Max,NBins,BinWidth),
-    keysort(Pri1,Pr),
-    keysort(Post0,Po),
-    bin(NBins,Pr,Min,BinWidth,LPr),
-    bin(NBins,Po,Min,BinWidth,LPo),
-    geom_densities(LPr,LPo),
+    geom_densities(Pri1,Post1),
     finalize_r_graph.
 
 /* auc */
