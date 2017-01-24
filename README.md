@@ -89,14 +89,7 @@ To install:
 
 ## Known Bugs
 
-### missing solutions to fluent in composite event
-Given the following
-
-	 goFromTo(Here,There,T1,T2) :- 
-	not killed(robot,T1), something_failing.
-	 goFromTo(Here,There,T1,T3) :- 
-	not killed(robot,T1), it_never_gets_here.
-
+* TBD
 
 ## How to contribute ##
 * See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/6a587ecd410fd81b8d799554dd86796af9c7e380/RoadMap.md?at=master) 
