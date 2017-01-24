@@ -420,7 +420,7 @@ cleanup_program :-
 %
 go(File) :- go(File, []).
 
-go :- go(_,[verbose,swish]). % makes sense only on swish
+go :- go(_,[swish]). % makes sense only on swish
 
 go(File, OptionsList) :- go(File, OptionsList,[]).
 
@@ -772,16 +772,14 @@ write_verbose(What) :-
         true
     ).
 
+do_write(_) :- option(silent), !.
 do_write([]) :- !.
-
 do_write([pprint_goal(What)|Rest]) :- !,
     pprint_goal(What),
     do_write(Rest).
-
 do_write([nl|Rest]) :- !,
     nl,
     do_write(Rest).
-
 do_write([What|Rest]) :- !,
     write(What),
     do_write(Rest).
@@ -953,7 +951,9 @@ do_test_suite([_|Files],Options,Results) :- do_test_suite(Files,Options,Results)
 %  Tree is a list representing the current branch of the tree.
 cycle(_Ri, Gi) :-
 	current_time(Time), endTime(M), M < Time,
-	!,nl, write_verbose([' Time is up. Unsolved goals: ',nl,Gi]).
+	!,nl,
+	do_write([' Time is up. Unsolved goals: ',nl,Gi]).
+%	write_verbose([' Time is up. Unsolved goals: ',nl,Gi]).
 
 cycle(Ri, Gi) :-
 	current_time(Time),  Previous is Time - 1 ,Next is Time +1,
@@ -965,13 +965,17 @@ cycle(Ri, Gi) :-
 	% At this point last cycle events are still available
     	% TODO: ExternalObservations to be injected as new events
 	findall(Action, happens(Action, Previous, Time), Actions),
-	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
-	write_verbose([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
+%	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
+%	write_verbose([nl, ' Events and actions from ', Previous, ' to
+%	', Time,' are ',Actions,nl]),
+	do_write([nl, '----- time is now ',Time,' -----',nl]),
+	do_write([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
 	test(events,Time,Actions),
 	enter_step_0, % during updateFluents we need a hack to query the previous state
 	updateFluents(Time),
 	findall(Fluent, state(Fluent), Fluents), % setof doesn't work.
-	write_verbose([nl,' State at time ',Time,' is ',Fluents, nl]),
+	do_write([nl,' State at time ',Time,' is ',Fluents, nl]),
+%	write_verbose([nl,' State at time ',Time,' is ',Fluents, nl]),
 	test(fluents,Time,Fluents),
 	leave_step_0,
 	% This processes antecedents of rules:
