@@ -527,30 +527,32 @@ geom_densities(LPr,LPo) :-
     get_set_from_xy_list(LPo,R2),
     r_data_frame_from_rows(df1, R1),
     r_data_frame_from_rows(df2, R2),
-    colnames(df1) <- c("x", "y1"),
-    colnames(df2) <- c("x", "y2"),
+    colnames(df1) <- c("x1", "y1"),
+    colnames(df2) <- c("x2", "y2"),
     df <- data.frame(
-        x=df1$x,
+        x1=df1$x1,
+        x2=df2$x2,
         y1=df1$y1,
         y2=df2$y2
     ),
     alphA <- 0.5,
     <- ggplot(
-        data=df,
-        aes(x)
+        data=df
     ) + geom_density(
             aes(
+                x=x1,
                 fill="pre",
                 weights=y1
             ),
             alpha=alphA
     ) + geom_density(
             aes(
+                x=x2,
                 fill="post",
                 weights=y2
             ),
             alpha=alphA
-    ).
+    ) + xlab("x").
 
 /**
  * densities_r(+PriorList:list,+PostList:list) is det
