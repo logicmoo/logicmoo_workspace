@@ -511,10 +511,9 @@ geom_density(L) :-
 /**
  * density_r(+List:list) is det
  *
- * COMMENTS MUST BE CORRECTED
- * Draws a line chart of the density of a sets of samples.
+ * Display a smooth density estimate of a sets of samples.
  * The samples are in List
- * as couples [V]-W or V-W where V is a value and W its weigth.
+ * as couples V-W where V is a value and W its weigth.
  */
 density_r(Post0) :-
      load_r_libraries,
@@ -557,11 +556,10 @@ geom_densities(LPr,LPo) :-
 /**
  * densities_r(+PriorList:list,+PostList:list) is det
  *
- * COMMENT MUST BE CORRECTED
- * Draws a line chart of the density of two sets of samples, usually
+ * Display a smooth density estimate of two sets of samples, usually
  * prior and post observations. The samples from the prior are in PriorList
  * while the samples from the posterior are in PostList
- * as couples [V]-W or V-W where V is a value and W its weigth.
+ * as couples V-W where V is a value and W its weigth.
  */
 densities_r(Pri0,Post0) :-
     load_r_libraries,
