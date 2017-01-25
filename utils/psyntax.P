@@ -422,8 +422,9 @@ syntax2p((Head if Body),Vars,lps2p,PT) :-
 		PT = l_int(NH,NB), NH = holds(_,_)
 	),
 	!,
+	(PT=l_int(_,_) -> IntervalType=single ; IntervalType = _),
 	((ToWei==false) -> syntax2p_literal(Head,Vars,lps2p,[T1,T2],_,NH) ; true),
-	syntax2p_sequence(Body,Vars,lps2p,[T1,T2],NB).
+	syntax2p_sequence(Body,Vars,lps2p,[T1,T2],IntervalType,_ET,NB).
 syntax2p((H:-B),_,_TT,PT) :- var(PT), (var(H);var(B)), !, fail.
 syntax2p(NT,_,TT,(H:-B)) :- 
 	(nonvar(NT)->ToWei=true;ToWei=false),
@@ -487,7 +488,6 @@ syntax2p_sequence(L,Vars,Translator,Interval,_,ET,[PT]) :- syntax2p_literal(L,Va
 % syntax2p_literal(NicerLiteral,+Vars,+Translator,[T1,T2],-ExplicitTime,WeiLiteral)
 %  for events, [T1,T2] is their interval; for fluents, T1 is the time
 % ExplicitTime == true if the given literal has explicit time arguments, false otherwise
-
 syntax2p_literal(tc(TC),_Vars,lpsp2p,[_T1,_T2],true,tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
 
 % event cases first...
