@@ -1,5 +1,69 @@
 # Syntax of LPS
 
+The current syntax of LPS uses a flexible mixture of explicit and implicit time. However, most of the top-level of an LPS “program” does not depend upon time and has the following,  mostly optional components.
+
+### Comments						
+
+```
+% 	written either in this form
+/* or in this form, which is convenient if they occupy several lines.
+*/
+```
+
+
+### Declarations:					
+
+```
+
+maxTime(_).
+fluents 		…  .	
+events   	…  .
+actions 	…  .	
+```
+
+
+### Inputs							  	
+
+```
+
+initially 	…  .	
+observe  	…   .
+
+```
+
+
+### Reactive rules					
+
+```
+
+if …  then …  .
+```
+
+
+### Clauses								
+
+```
+
+… if …  .
+… :- …  .
+```
+
+
+### Causal laws						
+
+```
+
+… initiates … if …  .
+… terminates … if …  .
+false …  .
+```
+
+
+
+
+
+
+
 Let us have fun documenting the syntax of LPS. Actually, we are working with two syntaxes for the time being. A higher level one, which follows and the lower level or Wei's syntax. Please, beware: 
 
 * * *
