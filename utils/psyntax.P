@@ -210,6 +210,27 @@ golps(LPSP_file) :- golps(LPSP_file,[]).
 	
 % File converters:
 
+% hook into test suite runner:
+:- multifile interpreter:regenerate_file/1.
+% regenerate_file(F) F is an existing Wei syntax file that needs to be regenerated...if a source file for it can be found
+regenerate_file(F) :- generate_file(F), !.
+
+% Fails if no source file exists
+% [46,108,112,115,119] .lpsw
+% [95,46,80] _.P
+% [46,108,112,115] .lps
+% generate_file(FilenameCodes)
+generate_file(Fcodes) :- 
+	% _.P or .lpsw?
+	(append(SourceCodes,[95,46,80],Fcodes) ; append(SourceCodes,[46,108,112,115,119],Fcodes)),
+	!,
+	(append(_,[46,108,112,115],SourceCodes) ; append(_,[46,112,108],SourceCodes)), % a LPS or pl file
+	atom_codes(Source,SourceCodes),
+	file_exists(Source),
+	atom_codes(F,Fcodes),
+	syntax2p_file(Source,F,lps2p,true).
+
+
 % lpsp2p_file(?LPSPfile,?LPSWfile) "papers syntax"
 lpsp2p_file(LPSPfile,LPSWfile) :- atom(LPSPfile), !,
 	(atom(LPSWfile)->true;concat_atom([LPSPfile,'_.lpsw'],LPSWfile)),
@@ -288,6 +309,7 @@ remember_hint(Type,H) :-
 
 remember_timeless_hint(TL) :- remember_hint(timeless,TL).
 
+remember_event_hint((E from _T1 to _T2)) :- !, remember_event_hint(E).
 remember_event_hint((E during _Interval)) :- !, remember_event_hint(E).
 remember_event_hint(TL) :- remember_hint(event,TL).
 
@@ -332,7 +354,12 @@ syntax2p(L,_,_TT,PT) :- var(L), var(PT), !, fail.
 % convenience notation for declarations:
 syntax2p((initially States),_Vars,lps2p,initial_state(StatesList)) :- !, 
 	comma_to_list(States,StatesList).
-% single observations, declared as fact declarations; more complex cases handled further below
+% observe o1, o2, o3 from ... to ...:
+syntax2p((observe Obs),_Vars,lps2p,observe([O1,O2|On],T2)) :- (nonvar(Obs)-> functor(Obs,',',2) ; true), !,
+	((syntax2p_observations(Obs,CT2,[O1,O2|On],T2), T2=CT2, nonvar(T2)) -> true 
+	; writeln('*** Bad observations'), writeln((observe Obs)/observe([O1,O2|On],T2)), fail). 
+	% TODO: use print_message, etc.
+% single observations, declared as fact declarations; observations list case handled further below
 syntax2p((observe E from _T1 to T2),_Vars,lps2p,observe([E],T2)) :- !.
 syntax2p((observe E to T2),_Vars,lps2p,observe([E],T2)) :- !.
 syntax2p((actions A),_Vars,lps2p,actions(NL)) :- nonvar(A), !, comma_to_list(A,L), functor_arityze(L,NL), remember_declarations(event,NL).
@@ -395,8 +422,9 @@ syntax2p((Head if Body),Vars,lps2p,PT) :-
 		PT = l_int(NH,NB), NH = holds(_,_)
 	),
 	!,
+	(PT=l_int(_,_) -> IntervalType=single ; IntervalType = _),
 	((ToWei==false) -> syntax2p_literal(Head,Vars,lps2p,[T1,T2],_,NH) ; true),
-	syntax2p_sequence(Body,Vars,lps2p,[T1,T2],NB).
+	syntax2p_sequence(Body,Vars,lps2p,[T1,T2],IntervalType,_ET,NB).
 syntax2p((H:-B),_,_TT,PT) :- var(PT), (var(H);var(B)), !, fail.
 syntax2p(NT,_,TT,(H:-B)) :- 
 	(nonvar(NT)->ToWei=true;ToWei=false),
@@ -428,6 +456,19 @@ syntax2p(L,Vars,lpsp2p,PT) :-
 	syntax2p_sequence(LB,Vars,Translator,[T1,T2],NB).
 syntax2p(Term, _, _Translator, Term). % pass through for Wei terms or other Prolog facts
 
+% syntax2p_observations(ObsCommaList,CommaT2,ObsList,ListT2) CommaT2 must be unique
+
+syntax2p_observations(CL,CommaT2,[E],CommonT2) :- (nonvar(CL)-> \+ functor(CL,',',2) ; true), !, 
+	syntax2p_one_obsservation(CL,CommaT2,E,CommonT2).
+syntax2p_observations((Ob,CL),CommaT2,[E|L],CommonT2) :- (nonvar(CL)-> \+ functor(CL,',',2) ; true), !, 
+	syntax2p_one_obsservation(Ob,CommaT2,E,CommonT2),
+	syntax2p_observations(CL,CommaT2,L,CommonT2).
+
+syntax2p_one_obsservation((E from _ to CT2),T2,E,LT2) :- !, CT2=T2,CT2=LT2.
+syntax2p_one_obsservation((E to CT2),T2,E,LT2) :- !, T2=CT2,CT2=LT2.
+syntax2p_one_obsservation(E,T2,E,T2). % assume T2 defined by another observation
+
+	
 % syntax2p_sequence(NicerSequence,Vars,Translator,[Start,End],WeiPsequence)  [Start,End] may constrain time arguments
 syntax2p_sequence(NS,Vars,Translator,Interval,W) :-
 	syntax2p_sequence(NS,Vars,Translator,Interval,_IT,_ET,W).
@@ -447,7 +488,6 @@ syntax2p_sequence(L,Vars,Translator,Interval,_,ET,[PT]) :- syntax2p_literal(L,Va
 % syntax2p_literal(NicerLiteral,+Vars,+Translator,[T1,T2],-ExplicitTime,WeiLiteral)
 %  for events, [T1,T2] is their interval; for fluents, T1 is the time
 % ExplicitTime == true if the given literal has explicit time arguments, false otherwise
-
 syntax2p_literal(tc(TC),_Vars,lpsp2p,[_T1,_T2],true,tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
 
 % event cases first...

@@ -13,7 +13,7 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
-:- use_module(interpreter,[go/3, my_term_to_atom/2]). % assumed preloaded
+:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1]). % assumed preloaded
 :- use_module(db,[
 	lps_test_result_item/3, action/1
 	]).
@@ -79,7 +79,7 @@ action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 
 :- use_module(library(http/json)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2
+	go/3, my_term_to_atom/2, endTime/1
 	]).
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
@@ -171,6 +171,7 @@ visual(File,timeline(JSON)) :-
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
 		(lps_test_result_item('Database state:',T1,X) ; lps_test_result_item(fluents,T1,X)), 
+		T1 \== 0, % hack to discard irrelevant state information
 		T2 is T1+1, functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
@@ -195,11 +196,13 @@ visual(File,timeline(JSON)) :-
 	join_fluent_ranges(Sorted,Ranged),
 	create_counter(IDs),
 	% Render fluents
+	endTime(End), LastRelevantTime is End+1,
 	findall(Fluent,(
 		make_json_object([id:ID,content:Atom,start:T1,end:T2,group:Gatom,title:Tip],Fluent),
 		member(t(X,T1-T2,F/N),Ranged),  
 		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom),
-		concat_atom(['Fluent ',Atom,' initiated at ',T1,' and terminated at ',T2],Tip),
+		(T2==LastRelevantTime -> FluentSuffix = [' (end of time)'] ; FluentSuffix = []),
+		concat_atom(['Fluent ',Atom,' initiated at ',T1,' and terminated at transition to ',T2|FluentSuffix],Tip),
 		get_increment_counter(IDs,ID)
 	), Fluents),
 	%... and the rest:

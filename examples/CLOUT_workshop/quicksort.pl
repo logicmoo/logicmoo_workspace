@@ -1,6 +1,6 @@
 % Prolog programs can be called from LPS.
 
-maxTime(3).
+maxTime(2).
 events	request(_).
 actions	announce(_).
 
@@ -14,7 +14,7 @@ quicksort([X|Xs],Ys) :-
   	partition(Xs,X,Left,Right),
   	quicksort(Left,Ls),
   	quicksort(Right,Rs),
-  	basics:append(Ls,[X|Rs],Ys). % for XSB use instead basics:append(Ls,[X|Rs],Ys)
+  	append(Ls,[X|Rs],Ys). % for XSB use instead basics:append(Ls,[X|Rs],Ys)
 
 quicksort([],[]).
 
@@ -27,7 +27,6 @@ partition([X|Xs],Y,Ls,[X|Rs]) :-
 
 partition([],Y,[],[]).
 
-% The following complication stems from a desire to execute the test suite both on SWI and XSB Prolog
-% If on SWI, you could simply use append rather than my_append:
-my_append(A,B,C) :- current_prolog_flag(dialect, xsb), !, basics:append(A,B,C).
-my_append(A,B,C) :- append(A,B,C).
+/** <examples>
+?- go(Timeline).
+*/

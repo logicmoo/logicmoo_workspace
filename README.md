@@ -5,14 +5,17 @@ Welcome to "LPS Corner", a repository to support the development of LPS engines,
 
 The kernel of LPS consists of a database, together with reactive rules of the form ***if*** *antecedent* ***then*** *consequent*. The database changes destructively in response to actions and external events, according to a domain-specific causal theory. Computation consists in making the reactive rules true, by performing actions to make the *consequent* true whenever the *antecedent* becomes true. In addition, LPS includes Prolog-like logic programs both to recognise when *antecedents* become true and to generate plans of actions that make *consequents* true.
 
-Slide presentations at [RuleML 2012](http://www.slideshare.net/ruleml2012/kelps-lps-30-aug-2012) and [RuleML 2015](https://www.dropbox.com/s/yqy678k6y4k543k/KELPS%2022%20Jan%202015.ppt?dl=0) give a flavour of the language. Additional material about the kernel of LPS is available on the [RuleML wiki](http://wiki.ruleml.org/index.php/KELPS). More technical papers can be found on Bob Kowalski's home page (https://www.doc.ic.ac.uk/~rak/), which also includes a copy of his 2011 book, which presents some of the philosophy underlying LPS.
+Slide presentation at [1st CLOUT workshop 2017](https://bitbucket.org/lpsmasters/lps_corner/raw/930d3e0b15e8477ff941ddc0ca7843083fba207e/doc/CLOUT_workshop_21Jan2017.pptx) gives a flavour of the language. 
+Additional material about the kernel of LPS is available on the [RuleML wiki](http://wiki.ruleml.org/index.php/KELPS). More technical papers can be found on Bob Kowalski's home page (https://www.doc.ic.ac.uk/~rak/), which also includes a copy of his 2011 book, which presents some of the philosophy underlying LPS.
 
 The implementation in this repository is an evolved version of the interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda.
+
+An overview of current LPS syntax and some improvements can be seen at [this wiki page](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax). 
 
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
 
-Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) and David Wei, and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
+Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/), and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
 
 ## Installing ##
 ### Core engine ###
@@ -24,11 +27,22 @@ Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sad
 	
 ### Getting Started with a core engine ###
 
-* Launch Prolog and consult 'your_path_to_LPS/engine/interpreter.P' by entering  ['your_path_to_LPS/Wei-engine/interpreter.P']. after the prompt ?-
+* Launch Prolog and consult 'your_path_to_LPS/engine/interpreter.P' by entering ['your_path_to_LPS/utils/psyntax.P']. after the prompt
+?-
 	* This launches the "new" rak interpreter; to use the old (soon to be deprecated) Wei interpreter consult instead '<your_path_to_LPS>/Wei-Engine/interpreter.P'
-* Then enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw'). 
-* Or for more informative output, enter, for example, go('<your_path_to_LPS\>/examples/dining_philosophers.lpsw',[verbose]).
-* Put any new program into the folder "<your_path_to_LPS\>/examples", in order to run it.
+* Then enter, for example, depending on your operating system, one of
+
+	golps( '<your_path_to_LPS>/examples/CLOUT_workshop/diningPhilosophers.lps') . % Mac, Linux
+	
+	golps( '<your_path_to_LPS>\\examples\\CLOUT_workshop\\diningPhilosophers.lps') . % Windows
+
+* Or for more informative output, enter, for example, one of
+
+    golps( '<your_path_to_LPS>/examples/CLOUT_workshop/diningPhilosophers.lps', [verbose]).
+	
+    golps( '<your_path_to_LPS>\examples\CLOUT_workshop\diningPhilosophers.lps', [verbose]).
+
+* Use golps(FullFilePathName). to run your programs
 
 A typical session would look like this: 
 
@@ -85,25 +99,8 @@ To install:
 * Follow instructions at top of [InterProlog Studio](http://interprolog.com/wiki/index.php?title=Studio_Download_and_installation), including a recent XSB Prolog install
 
 ## Known Bugs
-### Composite events can not have zero state transitions
-In the current implementation, composite events need to transition between different states, e.g. happens(myEvent,T,T) will not work.
-### Missing candidate actions
-No matter the strategy (goal_strat(breadth) or not), the following generates a1,a1,... when it should generate only a1+a2 (simultaneous):
 
-	reactive_rule( [happens(a3,_,_)],
-	 [happens(a1,T1,T2),happens(a2,T1,T2)] ).
-### missing solutions to fluent in composite event
-Given the following
-
-	 goFromTo(Here,There,T1,T2) :- 
-	not killed(robot,T1), something_failing.
-	 goFromTo(Here,There,T1,T3) :- 
-	not killed(robot,T1), it_never_gets_here.
-
-
-### timeless predicate looping
-l_timeless(foo,[foo]).
-This will cause a nonterminating computation. In a future syntax we should probably use 'prolog' for the body.
+* TBD
 
 ## How to contribute ##
 * See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/6a587ecd410fd81b8d799554dd86796af9c7e380/RoadMap.md?at=master) 

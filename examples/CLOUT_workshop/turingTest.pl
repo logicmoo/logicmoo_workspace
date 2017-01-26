@@ -1,3 +1,6 @@
+% for XSB only: 
+% :- import append/3 from basics.
+
 maxTime(10).
 
 fluents  said(_,_).
@@ -36,14 +39,12 @@ initially	said(turing, []), said(robot, []).
 
 say(Agent, Word)  initiates	said(Agent, NewPhrase)	if	
 		said(Agent, OldPhrase),  
-		my_append(OldPhrase, [Word], NewPhrase).
+		append(OldPhrase, [Word], NewPhrase).
 say(Agent, _Word) terminates  said(Agent, OldPhrase)	if	 
 		said(Agent, OldPhrase).
 
 false		say(Agent, Word1),  say(Agent, Word2),    Word1 \= Word2.
 
-% The following complication stems from a desire to execute the test suite both on SWI and XSB Prolog
-% If on SWI, you could simply use append rather than my_append:
-my_append(A,B,C) :- current_prolog_flag(dialect, xsb), !, basics:append(A,B,C).
-my_append(A,B,C) :- append(A,B,C).
-
+/** <examples>
+?- go(Timeline).
+*/

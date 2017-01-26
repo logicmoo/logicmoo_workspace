@@ -1,0 +1,3 @@
+// list of examples, represented as a JSON list
+
+[ "--",{ "file":"lpsExamples.swinb", "title":"LPS examples" }]

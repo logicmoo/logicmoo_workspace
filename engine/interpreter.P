@@ -41,10 +41,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 :- module(interpreter, [
 	go/0, go/1, go/2, go/3,
-	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1,
+	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1,
 	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
 	lps_engine_directory/1, uassert/1, uretractall/1,
-	bindAllVars/1]).
+	bindAllVars/1, lps_welcome_message/0, endTime/1]).
 
 % This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
@@ -105,6 +105,8 @@ my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
 print_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
 
+lps_welcome_message.
+
 :- endif.
 
 %%% end of XSB specific section; now for SWI:
@@ -143,7 +145,7 @@ steps(X) :- pengine_self(M), M:steps(X).
 terminated(X,Y,Z) :- pengine_self(M), catch(M:terminated(X,Y,Z),_,fail).
 tried(X,Y,Z) :- pengine_self(M), catch(M:tried(X,Y,Z),_,fail).
 used(X) :- pengine_self(M), catch(M:used(X),_,fail).
-lps_test_options(X) :- pengine_self(M), catch(M:lps_tes_options(X),_,fail).
+lps_test_options(X) :- pengine_self(M), catch(M:lps_test_options(X),_,fail).
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
 lps_test_result(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result(X,Y,Z),_,fail).
 lps_failed_test(X,Y) :- pengine_self(M), catch(M:lps_failed_test(X,Y),_,fail).
@@ -246,6 +248,14 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 
 print_error(Type,Message,Position) :- 
 	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
+
+:- dynamic git_version_cache/1.
+:- use_module(library(git),[git_describe/2]).
+lps_welcome_message :-
+	lps_engine_directory(D),
+	(git_version_cache(V) -> true ; git_describe(V,[directory(D)]), assert(git_version_cache(V))),
+	concat_atom(['LPS version ',V],M), writeln(M).
+
 
 %% Now for an implementation available only on SWI:
 
@@ -410,7 +420,7 @@ cleanup_program :-
 %
 go(File) :- go(File, []).
 
-go :- go(_,[verbose,swish]). % makes sense only on swish
+go :- go(_,[swish]). % makes sense only on swish
 
 go(File, OptionsList) :- go(File, OptionsList,[]).
 
@@ -439,7 +449,6 @@ go(File, OptionsList, ResultFluents) :-
 		; true
 	),
 	cputime(T0),
-	
     	uassertz(current_time(0)), next_time,
     	uassertz(current_goal(0)),
     	uassertz(depth(0)),
@@ -467,14 +476,11 @@ action_(A) :- action(A) ; actions(Actions), member(A,Actions).
 event_(E) :- event(E) ; events(Events), member(E,Events).
 fluent_(F) :- fluent(F) ; fluents(Fluents), member(F,Fluents).
 
-% parameter for declaration generation by alternative syntaxes; 'false' may help LPS program debugging
-add_automatic_declarations(false). % 'true' will add fluent, event and action declarations guessed from usage; 
-
 % collect_guessed_declarations(-List). 
 %  This was originally in psyntax; it may be called more than once, but only the first run actually does anything
 collect_guessed_declarations(L) :-
 	findall(Fact,(
-		add_automatic_declarations(true), uretract(head_hint(X,Type,false)), Type \== timeless, Fact=..[Type,X]
+		option(auto_declarations), uretract(head_hint(X,Type,false)), Type \== timeless, Fact=..[Type,X]
 		), L).
 
 collect_results([]) :- !.
@@ -668,10 +674,11 @@ load_check_syntax(File,Notices) :-
 	catch(my_load_dyn(File),_E,true), 
 	check_syntax(File,Notices).
 
-assert_list([]).
-assert_list([H|T]) :-
+assert_list([H|T]) :- !,
     uassertz(state(H)),
     assert_list(T).
+assert_list([]).
+
 
 % last cycle
 endTime(T) :- maxTime(T), !.
@@ -748,6 +755,11 @@ parse_options_([delta_state(State)|Rest]) :- !,
 	; writeln(user_error, 'ERROR in options: delta_state must contain a list of +Fluent or -Fluent.'), fail),
 	uassertz(option(delta_state(State))),
 	parse_options_(Rest).
+% parameter for declaration generation by alternative syntaxes; default (absent) may help LPS program debugging
+% auto_declarations. 'true' will add fluent, event and action declarations guessed from usage; 
+parse_options_([auto_declarations|Rest]) :- !,
+	uretractall(option(auto_declarations)), uassertz(option(auto_declarations)),
+	parse_options_(Rest).
 parse_options_([O|Rest]) :- 
     write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
     parse_options_(Rest).
@@ -760,16 +772,14 @@ write_verbose(What) :-
         true
     ).
 
+do_write(_) :- option(silent), !.
 do_write([]) :- !.
-
 do_write([pprint_goal(What)|Rest]) :- !,
     pprint_goal(What),
     do_write(Rest).
-
 do_write([nl|Rest]) :- !,
     nl,
     do_write(Rest).
-
 do_write([What|Rest]) :- !,
     write(What),
     do_write(Rest).
@@ -838,11 +848,6 @@ test_filename(PF,TF) :-
 	expand_filename(PF,Path),
 	concat_atom([Path,'.lpst'],TF).
 	
-% test_filename(+ProgramFile,-TestFile)
-% Names the test file as the programs's plus '.lpst' (LPS test file)
-test_filename(PF,TF) :- 
-	expand_filename(PF,Path),
-	concat_atom([Path,'.lpst'],TF).
 	
 % test(Stage,Cycle,Term)
 % Remembers or checks that at this Stage and Cycle, Term is obtained
@@ -900,7 +905,19 @@ test_examples :-
 		member(TFile,TFiles), atom_codes(TFile,Tcodes),
 		append(PCodes,LPST,Tcodes),atom_codes(ProgramFile,PCodes)
 		),Files),
+	% check whether we need to regenerate some of these Files
+	regenerate(Files), !,
 	do_test_suite(Files,[run_test]).
+
+regenerate([F|Files]) :- !, 
+	atom_codes(F,Fcodes), 
+	(regenerate_file(Fcodes)->true;true), regenerate(Files).
+regenerate([]).
+
+:- multifile interpreter:regenerate_file/1.
+% regenerate(FileAtom) regenerate this file, foo.P or foo.lpsw, from foo.SomeSyntaxSpecificFileExpension, if this exists
+% alternative syntaxes should asserta a the generator
+regenerate_file(_) :- fail. % default case, do not generate (meaning, no source file exists that produced this one)
 
 % do_test_suite(Files,Options)  
 %  Options must contain make_test or run_test, optionally more; Files are either LPS or test result files resp.
@@ -934,7 +951,9 @@ do_test_suite([_|Files],Options,Results) :- do_test_suite(Files,Options,Results)
 %  Tree is a list representing the current branch of the tree.
 cycle(_Ri, Gi) :-
 	current_time(Time), endTime(M), M < Time,
-	!,nl, write_verbose([' Time is up. Unsolved goals: ',nl,Gi]).
+	!,nl,
+	do_write([' Time is up. Unsolved goals: ',nl,Gi]).
+%	write_verbose([' Time is up. Unsolved goals: ',nl,Gi]).
 
 cycle(Ri, Gi) :-
 	current_time(Time),  Previous is Time - 1 ,Next is Time +1,
@@ -946,13 +965,17 @@ cycle(Ri, Gi) :-
 	% At this point last cycle events are still available
     	% TODO: ExternalObservations to be injected as new events
 	findall(Action, happens(Action, Previous, Time), Actions),
-	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
-	write_verbose([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
+%	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
+%	write_verbose([nl, ' Events and actions from ', Previous, ' to
+%	', Time,' are ',Actions,nl]),
+	do_write([nl, '----- time is now ',Time,' -----',nl]),
+	do_write([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
 	test(events,Time,Actions),
 	enter_step_0, % during updateFluents we need a hack to query the previous state
 	updateFluents(Time),
 	findall(Fluent, state(Fluent), Fluents), % setof doesn't work.
-	write_verbose([nl,' State at time ',Time,' is ',Fluents, nl]),
+	do_write([nl,' State at time ',Time,' is ',Fluents, nl]),
+%	write_verbose([nl,' State at time ',Time,' is ',Fluents, nl]),
 	test(fluents,Time,Fluents),
 	leave_step_0,
 	% This processes antecedents of rules:
@@ -1363,7 +1386,7 @@ holds_all([P|Rest]) :-
 % L_timeless}.
 %
 
-query(L,T) :- option(dc), !, dc_query(L,T).
+query(L) :- option(dc), !, dc_query(L).
 
 query(holds(not(P), Now)) :-
 %    current_time(Now),  % Needs looking at more closely.
@@ -1403,8 +1426,7 @@ evaluate([P|Rest]) :-query(P), evaluate(Rest).
 
 % next_time().  Succeeds to the next time point. Destructively updates current_time/1 
 next_time :-
-    current_time(This),
-    uretract(current_time(This)),
+    uretract(current_time(This)), !,
     Next is This + 1,
     uassertz(current_time(Next)),
     uretractall(steps(_)),
