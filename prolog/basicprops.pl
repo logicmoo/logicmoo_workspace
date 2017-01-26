@@ -210,7 +210,7 @@ nnegint(N) :- posint(N).
         @tt{[4.9e-324, 1.8e+308]} (plus or minus).  There are also three
         special values: Infinity, either positive or negative,
         represented as @tt{1.0e1000} and @tt{-1.0e1000}; and
-        Not-a-number, which arises as the result of indeterminate
+        Not-a-number, which arises as the result of undetermined
         operations, represented as @tt{0.Nan}").
 
 :- regtype native flt(T) # "~w is a float."-[T].
