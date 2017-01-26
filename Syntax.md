@@ -150,9 +150,9 @@ atomic formula.  				% n = 0.
 
 These clauses are used to define:
 
-* 1. time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
+* 1) time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
 
-* 2. intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
+* 2) intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
 
 ```
 #!
@@ -168,7 +168,7 @@ These can also be written without explicit time:
 location(Object, Place) if holding(Agent, Object), location(Agent, Place).
 ```
  
-* 3. composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
+* 3) composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
 
 
 ```
@@ -273,7 +273,7 @@ These all have their obvious intended meanings.
 
 ## Notes	
 
-* 1. Most of the components listed above are optional. To be meaningful an LPS program needs only reactive rules and actions, for example, the program:
+* 1) Most of the components listed above are optional. To be meaningful an LPS program needs only reactive rules and actions, for example, the program:
 
 
 ```
@@ -292,9 +292,9 @@ generates the sequence of actions:
 rain(1), rain(2), …, rain(20).
 ```
 	
-* 2. Literals in reactive rules and clauses are processed Prolog-like, in the order in which they are written. Processing is suspended if the time of a fluent or the start time of an event is later than the current time, or if the time is a variable and the literal cannot be made true at the current time, but might become true later.
+* 2) Literals in reactive rules and clauses are processed Prolog-like, in the order in which they are written. Processing is suspended if the time of a fluent or the start time of an event is later than the current time, or if the time is a variable and the literal cannot be made true at the current time, but might become true later.
 
-* 3. Times can be omitted from fluents and events. However, for this to work, composite events and actions need to be declared as events, and  intensional fluents need to be declared as fluents. This feature is currently under development, and is subject to change. Implicit and explicit times Timed and untimed notation can be mixed in the same sentence. Currently, the interpreter interprets untimed notation implicit times according to the following rules:
+* 3) Times can be omitted from fluents and events. However, for this to work, composite events and actions need to be declared as events, and  intensional fluents need to be declared as fluents. This feature is currently under development, and is subject to change. Implicit and explicit times Timed and untimed notation can be mixed in the same sentence. Currently, the interpreter interprets untimed notation implicit times according to the following rules:
 
 The statement
 
