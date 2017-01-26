@@ -177,6 +177,9 @@ To install:
 
 * TBD
 
+## Other projects using LPS ##
+See the robot game at [https://bobthesimplebot.github.io]()
+
 ## How to contribute ##
 * See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/6a587ecd410fd81b8d799554dd86796af9c7e380/RoadMap.md?at=master) 
 * Before you commit any changes to the LPS engine or tools, make sure you execute all tests with 'test_examples'.
