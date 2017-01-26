@@ -1,6 +1,12 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the development of LPS engines, examples and related tools.
+
+## Please notice new Syntax at
+
+[this wiki page](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
+
 ## What is LPS? ##
+
 “Logic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. 
 
 The kernel of LPS consists of a database, together with reactive rules of the form ***if*** *antecedent* ***then*** *consequent*. The database changes destructively in response to actions and external events, according to a domain-specific causal theory. Computation consists in making the reactive rules true, by performing actions to make the *consequent* true whenever the *antecedent* becomes true. In addition, LPS includes Prolog-like logic programs both to recognise when *antecedents* become true and to generate plans of actions that make *consequents* true.
@@ -10,7 +16,7 @@ Additional material about the kernel of LPS is available on the [RuleML wiki](ht
 
 The implementation in this repository is an evolved version of the interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda.
 
-An overview of current LPS syntax and some improvements can be seen at [this wiki page](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax). 
+Current LPS syntax can be seen at  
 
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
@@ -45,6 +51,75 @@ Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sad
 * Use golps(FullFilePathName). to run your programs
 
 A typical session would look like this: 
+
+    $ swipl
+    Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 7.2.0)
+    Copyright (c) 1990-2015 University of Amsterdam, VU Amsterdam
+    SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+    and you are welcome to redistribute it under certain conditions.
+    Please visit http://www.swi-prolog.org for details.
+
+    For help, use ?- help(Topic). or ?- apropos(Word).
+
+    ?- ['./utils/psyntax.P'].
+
+    ?- golps('./examples/CLOUT_workshop/prisoners.lps', [verbose]).
+
+
+
+
+     ----- time is now 1 -----
+
+      Events and actions from 0 to 1 are [refuses(you),bears_witness(me)]
+
+      State at time 1 is [total_years_in_jail(me,0),total_years_in_jail(you,0)]
+
+       Process reactive rules at time 1
+       Old:  [reactive_rule([happens(bears_witness(_G1840),_G1837,_G1838),happens(refuses(_G1849),_G1837,_G1838)],  [happens(gets(_G1840,0),_G1838,_G1856),happens(gets(_G1849,3),_G1838,_G1856)]),reactive_rule([happens(bears_witness(_G1800),_G1797,_G1798),happens(bears_witness(_G1809),_G1797,_G1798),other(_G1800,_G1809)],[happens(gets(_G1800,2),_G1798,_G1822)]),reactive_rule([happens(refuses(_G1760),_G1757,_G1758),happens(refuses(_G1769),_G1757,_G1758),other(_G1760,_G1769)],[happens(gets(_G1760,1),_G1758,_G1782)]),reactive_rule([happens(refuses(_G1730),_G1727,_G1728),other(_G1735,_G1730)],[happens(refuses(_G1735),_G1728,_G1743)]),reactive_rule([happens(bears_witness(_G1700),_G1697,_G1698),other(_G1705,_G1700)],[happens(bears_witness(_G1705),_G1698,_G1713)])]
+       New:  [reactive_rule([happens(bears_witness(_G1700),_G1697,_G1698),other(_G1705,_G1700)],[happens(bears_witness(_G1705),_G1698,_G1713)]),reactive_rule([happens(refuses(_G1730),_G1727,_G1728),other(_G1735,_G1730)],[happens(refuses(_G1735),_G1728,_G1743)]),reactive_rule([happens(refuses(_G1760),_G1757,_G1758),happens(refuses(_G1769),_G1757,_G1758),other(_G1760,_G1769)],[happens(gets(_G1760,1),_G1758,_G1782)]),reactive_rule([happens(bears_witness(_G1800),_G1797,_G1798),happens(bears_witness(_G1809),_G1797,_G1798),other(_G1800,_G1809)],[happens(gets(_G1800,2),_G1798,_G1822)]),reactive_rule([happens(bears_witness(_G1840),_G1837,_G1838),happens(refuses(_G1849),_G1837,_G1838)],[happens(gets(_G1840,0),_G1838,_G1856),happens(gets(_G1849,3),_G1838,_G1856)])]
+      Process goal tree at time 1
+      New: [goal(3,[[happens(bears_witness(you),1,_G3231)]]),goal(2,[[happens(refuses(me),1,_G3027)]]),goal(1, [[happens(gets(me,0),1,_G2380),happens(gets(you,3),1,_G2380)]])]
+      Goal is happens(bears_witness(you),1,_G3231)
+      . Result/resolvent is []
+      Goal is happens(refuses(me),1,_G3027)
+      . Result/resolvent is []
+      Goal is happens(gets(me,0),1,_G2380)
+      . Result/resolvent is [happens(gets(you,3),1,2)]
+      Goal is happens(gets(you,3),1,2)
+      . Result/resolvent is []
+
+     ----- time is now 2 -----
+
+...
+
+
+     ----- time is now 5 -----
+
+     Events and actions from 4 to 5 are [gets(you,0),gets(me,3),refuses(you),bears_witness(me)]
+
+     State at time 5 is [total_years_in_jail(you,6),total_years_in_jail(me,6)]
+
+     Process reactive rules at time 5
+     Old:  [reactive_rule([happens(bears_witness(_G117),_G114,_G115),happens(refuses(_G126),_G114,_G115)],[happens(gets(_G117,0),_G115,_G133),happens(gets(_G126,3),_G115,_G133)]),reactive_rule([happens(bears_witness(_G86),_G83,_G84),happens(bears_witness(_G95),_G83,_G84),other(_G86,_G95)],[happens(gets(_G86,2),_G84,_G108)]),reactive_rule([happens(refuses(_G55),_G52,_G53),happens(refuses(_G64),_G52,_G53),other(_G55,_G64)],[happens(gets(_G55,1),_G53,_G77)]),reactive_rule([happens(refuses(_G34),_G31,_G32),other(_G39,_G34)],[happens(refuses(_G39),_G32,_G47)]),reactive_rule([happens(bears_witness(_G13),_G10,_G11),other(_G18,_G13)],[happens(bears_witness(_G18),_G11,_G26)])]
+     New:  [reactive_rule([happens(bears_witness(_G13),_G10,_G11),other(_G18,_G13)],[happens(bears_witness(_G18),_G11,_G26)]),reactive_rule([happens(refuses(_G34),_G31,_G32),other(_G39,_G34)],[happens(refuses(_G39),_G32,_G47)]),reactive_rule([happens(refuses(_G55),_G52,_G53),happens(refuses(_G64),_G52,_G53),other(_G55,_G64)],[happens(gets(_G55,1),_G53,_G77)]),reactive_rule([happens(bears_witness(_G86),_G83,_G84),happens(bears_witness(_G95),_G83,_G84),other(_G86,_G95)],[happens(gets(_G86,2),_G84,_G108)]),reactive_rule([happens(bears_witness(_G117),_G114,_G115),happens(refuses(_G126),_G114,_G115)],[happens(gets(_G117,0),_G115,_G133),happens(gets(_G126,3),_G115,_G133)])]
+     Process goal tree at time 5
+     New: [goal(15,[[happens(bears_witness(you),5,_G4702)]]),goal(14,[[happens(refuses(me),5,_G4498)]]),goal(13,[[happens(gets(me,0),5,_G3851),happens(gets(you,3),5,_G3851)]])]
+     Goal is happens(bears_witness(you),5,_G4702)
+     . Result/resolvent is []
+     Goal is happens(refuses(me),5,_G4498)
+     . Result/resolvent is []
+     Goal is happens(gets(me,0),5,_G3851)
+     . Result/resolvent is [happens(gets(you,3),5,6)]
+     Goal is happens(gets(you,3),5,6)
+     . Result/resolvent is []
+
+      Time is up. Unsolved goals: 
+     []
+     ** 5 cycles took 0.021470 seconds **
+     true.
+
+Previous examples in the old syntax can still be executed as follows: 
+
 
     $ swipl
     Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 7.2.0)
@@ -101,9 +176,6 @@ To install:
 ## Known Bugs
 
 * TBD
-
-## Other projects using LPS ##
-See the robot game at [https://bobthesimplebot.github.io]()
 
 ## How to contribute ##
 * See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/6a587ecd410fd81b8d799554dd86796af9c7e380/RoadMap.md?at=master) 
