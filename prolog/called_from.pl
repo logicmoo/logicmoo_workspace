@@ -108,6 +108,7 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
     ).
 
 :- public collect_call_point/6.
+:- meta_predicate collect_call_point(?, ?, ?, +, +, +).
 collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
     ignore(record_location_dynamic(MGoal, IM, From)),
     MGoal = M:Goal,
