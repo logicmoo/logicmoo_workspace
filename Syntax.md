@@ -150,9 +150,9 @@ atomic formula.  				% n = 0.
 
 These clauses are used to define:
 
-1. time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
+* 1. time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
 
-2. intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
+* 2. intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
 
 ```
 #!
@@ -168,7 +168,7 @@ These can also be written without explicit time:
 location(Object, Place) if holding(Agent, Object), location(Agent, Place).
 ```
  
-3. composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
+* 3. composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
 
 
 ```
@@ -271,65 +271,173 @@ event to T2
 
 These all have their obvious intended meanings.
 
+## Notes	
+
+* 1. Most of the components listed above are optional. To be meaningful an LPS program needs only reactive rules and actions, for example, the program:
 
 
+```
+#!
+
+actions rain(_).
+if true then rain(1) from 1 to 2.
+if rain(T1) from T1 to T2  then rain(T2) from T2 to T3.
+```
+generates the sequence of actions:
 
 
+```
+#!
 
-Let us have fun documenting the syntax of LPS. Actually, we are working with two syntaxes for the time being. A higher level one, which follows and the lower level or Wei's syntax. Please, beware: 
+rain(1), rain(2), …, rain(20).
+```
+	
+* 2. Literals in reactive rules and clauses are processed Prolog-like, in the order in which they are written. Processing is suspended if the time of a fluent or the start time of an event is later than the current time, or if the time is a variable and the literal cannot be made true at the current time, but might become true later.
+
+* 3. Times can be omitted from fluents and events. However, for this to work, composite events and actions need to be declared as events, and  intensional fluents need to be declared as fluents. This feature is currently under development, and is subject to change. Implicit and explicit times Timed and untimed notation can be mixed in the same sentence. Currently, the interpreter interprets untimed notation implicit times according to the following rules:
+
+The statement
+
+```
+#!
+
+fluent1, fluent2 	
+```
+
+means 		
+
+```
+#!prolog
+
+fluent1 at T1, fluent2 at T2, T1 =< T2.
+```
+
+The statement
+
+```
+#!
+
+fluent, event	
+```
+
+means		
+
+```
+#!prolog
+
+fluent at T1, event from T2 to T3, T1 =< T2. 
+```
+
+The statement
+
+```
+#!
+
+event1, event2	
+```
+
+means		
+
+```
+#!prolog
+
+event1 from T1 to T2, event2 from T3 to T4, T2 =< T3.
+```
+
+The statement
+
+```
+#!
+
+event, fluent	
+```
+
+means		
+
+```
+#!prolog
+
+event from T1 to T2, fluent at T3, T2 =< T3.
+```
+
+The statement
+
+```
+#!
+
+event if conditions 	   
+```
+
+means 		
+
+```
+#!prolog
+
+event from T1 to Tn if conditions
+```
+
+where T1 is the earliest time in conditions and Tn is the latest time in conditions.
+
+The statement
+
+```
+#!
+
+fluent if conditions           
+```
+
+means 		
+
+```
+#!prolog
+
+fluent at T if conditions
+```
+
+where all the time variables in conditions are identical to T.
+
 
 * * *
 
-## LPS Higher level syntax ##
+## LPS syntax (tentative) summary ##
 
-Files have the .lps extension and (more or less) the following structure: 
+Files have the .lps extension and (more or less) the following structure. Please, beware, this is just a rough approximation: 
+
+
 
 ```
-#!Prolog
+#!
 
   spec ::= statement 
   statement ::= settings rules 
   settings ::= max_time actions fluents initial_state observations 
-  rules ::= if_rules if_then_rules initiate_rules terminate_rules constraints 
+  rules ::= if_then_rules if_rules  initiate_rules terminate_rules constraints 
   if_rules ::= if_rule | if_rule if_rules
-  if_rule ::= literal "." | literal "if" conjunction "." 
+  if_rule ::= literal "." | literal "if" conjunction "." | literal ":-" conjunction  "." 
   if_then_rules ::= if_then_rule | if_then_rule if_then_rules
   if_then_rule ::= "if" conjunction "then" conjunction "." 
   constraints ::= constraint | constraint constraints
   constraint ::= "false" conjunction "." 
   conjunction ::= "true" | literal | literal "," conjunction
-  
 ```
-where
 
-### Observations
 
-observed events can be written in any of the forms:
-
-```
-#!Prolog
-
-   event from T1 to T2
-   event from T1
-   event to T2
-
-```
 
 * * *
 
-## Wei's syntax ##
+## Wei's syntax (Deprecated) ##
   
 Files have the .lpsw extension and (more or less) the following structure: 
 
 ```
-#!Prolog
+#!
 
   spec ::= statement 
   statement ::= settings rules 
   settings ::= max_time  actions  fluents  initial_state  observations  events
   rules ::= if_rules reactive_rules initiate_rules terminate_rules constraints 
   if_rules ::= if_rule | if_rule if_rules
-  if_rule ::= timeless_rule | event_rule 
+  if_rule ::= timeless_rule | event_rule | prolog_clause
   timeless_rule ::= "l_timeless(" literal "," conjunction ")."
   event_rule ::= "l_events(" happens_literal "," hold_conjunction_list ")."
   reactive_rules ::= if_then_rule | if_then_rule if_then_rules
