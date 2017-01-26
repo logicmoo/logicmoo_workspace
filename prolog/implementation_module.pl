@@ -29,7 +29,7 @@
 
 :- module(implementation_module, [implementation_module/2]).
 
-:- meta_predicate implementation_module(?,?).
+:- meta_predicate implementation_module(0,?).
 % BUG: At compile time, if there exist other predicate with the same name in the
 % libraries, and it is called before such predicate be defined, it can report
 % the wrong implementation module pointing at the libraries. Work around: Never
