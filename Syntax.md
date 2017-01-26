@@ -150,9 +150,9 @@ atomic formula.  				% n = 0.
 
 These clauses are used to define:
 
-1. 1) time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
+1. time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
 
-1. 2) intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
+2. intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
 
 ```
 #!
@@ -168,7 +168,7 @@ These can also be written without explicit time:
 location(Object, Place) if holding(Agent, Object), location(Agent, Place).
 ```
  
-1. 3) composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
+3. composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
 
 
 ```
@@ -185,7 +185,7 @@ Those are clauses with if (with the implicit and explicit time advantages). Trad
 ```
 #!prolog
 
-atomic formula :- literal1, … , literaln.     	% n  0.
+atomic formula :- literal1, … , literaln.     	% n > 0.
 ```
 
 These clauses can be used to define time-independent predicates directly in Prolog.	For example, 
@@ -196,19 +196,80 @@ These clauses can be used to define time-independent predicates directly in Prol
 parent(X,Y) :- mother(X,Y) ; father(X,Y).
 ```
 
-Causal laws
+## Causal laws
 
-event initiates fluent if literal1, … , literaln.	% n  0.
-	Here event is an external event or an atomic (non-composite) action.
-	event, fluent and literals can all be written without explicit time. Implicitly, if the event takes place from T to T+1 then fluent is true at time T+1 and if all the literals are true at time T.
-Do we allow the literals be events? I don’t think so.
 
-event terminates fluent if literal1, … , literal. 	% n  0.
-	Like initiates, implicitly, if the event takes place from T to T+1 then the fluent at time T is terminated. It is possible for a fluent to be initiated and terminated at the same time, but by different events, as for example, when a subscription runs out, but is renewed at the same time.
+```
+#!
 
-We should call this one Constraints.
-false   literal1, literal2, … , literaln.   % n  1
-	These are used to constrain candidate actions, say from T to T+1. So one of the literals must be an action. Other literals can be actions or external events that also occur from T to T+1. They can also be fluents that are true at time T. Because of these restrictions on time, these constraints can be written without explicit time.
+event initiates fluent if literal1, … , literaln.	% n > 0.
+```
+
+Here event is an external event or an atomic (non-composite) action. event, fluent and literals can all be written without explicit time. Implicitly, if the event takes place from T to T+1 then fluent is true at time T+1 if all the literals are true at time T.
+
+Do we allow the literals be events? (to be answered).
+
+
+```
+#!
+
+event terminates fluent if literal1, … , literal. 	% n > 0.
+```
+
+Like initiates, implicitly, if the event takes place from T to T+1 then the fluent at time T is terminated. It is possible for a fluent to be initiated and terminated at the same time, but by different events, as for example, when a subscription runs out, but is renewed at the same time.
+
+## Constraints.
+
+```
+#!
+
+false   literal1, literal2, … , literaln.   % n > 1
+```
+
+These are used to constrain candidate actions, say from T to T+1. So one of the literals must be an action. Other literals can be actions or external events that also occur from T to T+1. They can also be fluents that are true at time T. Because of these restrictions on time, these constraints can be written without explicit time.
+
+## Literals
+
+
+```
+#!prolog
+
+predicate(term1, term2, … , termn)   % n > 0
+```
+
+Such literals are also called (untimed) atomic formulas, or simply atoms, and can be fluents, events, or time-independent. The predicate must start with a lower case letter. The terms can be variables, constants (numbers or strings starting with a lower case letter), numbers, or any expression allowed by Prolog. 
+
+Variables follow the Prolog convention of starting with an upper case letter, or with _ if their name does not matter because it does not occur elsewhere in the same sentence.
+
+
+```
+#!prolog
+
+not atom 	
+```
+
+atom can be an atomic fluent. Other uses of negation are under investigation.
+
+
+```
+#!prolog
+
+fluent at T	
+```
+
+Here T is a time variable. However, the possibility that T may be a constant time has not been excluded.
+
+
+```
+#!prolog
+
+event from T1 to T2
+event from T1
+event to T2	
+```
+
+
+These all have their obvious intended meanings.
 
 
 
