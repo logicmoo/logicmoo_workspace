@@ -40,15 +40,16 @@ if …  then …  .
 ```
 
 
-### Clauses								
+### Clauses for time-dependent predicates								
 
 ```
-
 … if …  .
+```
+
+### Clauses for timeless predicates (e.g. Prolog)
+```
 … :- …  .
 ```
-
-
 ### Causal laws						
 
 ```
@@ -132,7 +133,7 @@ if literal1, … , literaln then literaln+1, … , literaln+m.	% n >= 1 and m >=
 Each literal is a timed or untimed atomic formula or the negation of an atomic formula. (See below.) Implicitly all times after then are later than or equal to the latest time before then. Also, no time after a comma is earlier than any time before the same comma.
 
 
-## Clauses. 
+## Clauses for time-dependent predicates. 
 
 
 ```
@@ -150,9 +151,7 @@ atomic formula.  				% n = 0.
 
 These clauses are used to define:
 
-* 1) time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
-
-* 2) intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
+* 1) intensional predicates, which change as a consequence of changes to extensional predicates. For example (with explicit time) 
 
 ```
 #!
@@ -168,7 +167,7 @@ These can also be written without explicit time:
 location(Object, Place) if holding(Agent, Object), location(Agent, Place).
 ```
  
-* 3) composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
+* 2) composite actions and events, which can take place over zero or more state transitions. For example (with explicit time):
 
 
 ```
@@ -179,7 +178,9 @@ makeAt(Agent, Place) from T1 to T2 if not location(Agent, Place) at T1,
 move(Agent, Place) from T1 to T2.
 ```
 
-Those are clauses with if (with the implicit and explicit time advantages). Traditional clauses in Prolog are also allowed: 
+Those are clauses with if (with the implicit and explicit time advantages). 
+
+Traditional clauses in Prolog are also allowed: 
 
 
 ```
@@ -195,6 +196,9 @@ These clauses can be used to define time-independent predicates directly in Prol
 
 parent(X,Y) :- mother(X,Y) ; father(X,Y).
 ```
+
+Prolog predicates includes all time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
+
 
 ## Causal laws
 
