@@ -284,8 +284,8 @@ These all have their obvious intended meanings.
 #!
 
 actions rain.
-observe rain from 1 to 2.
-if rain from T1 to T2  then rain from T2 to T3.
+if true then rain.
+if rain then rain.
 ```
 generates a sequence of 19 actions:
 
