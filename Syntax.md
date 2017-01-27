@@ -283,17 +283,17 @@ These all have their obvious intended meanings.
 ```
 #!
 
-actions rain(_).
-if true then rain(1) from 1 to 2.
-if rain(T1) from T1 to T2  then rain(T2) from T2 to T3.
+actions rain.
+observe rain from 1 to 2.
+if rain from T1 to T2  then rain from T2 to T3.
 ```
-generates the sequence of actions:
+generates a sequence of 19 actions:
 
 
 ```
 #!
 
-rain(1), rain(2), …, rain(20).
+rain, rain, …, rain.
 ```
 	
 * 2) Literals in reactive rules and clauses are processed Prolog-like, in the order in which they are written. Processing is suspended if the time of a fluent or the start time of an event is later than the current time, or if the time is a variable and the literal cannot be made true at the current time, but might become true later.
