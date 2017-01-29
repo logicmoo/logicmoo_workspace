@@ -632,8 +632,8 @@ sandbox:safe_primitive(cplint_r:build_xy_list(_,_,_)).
 sandbox:safe_primitive(cplint_r:r_row(_,_,_)).
 sandbox:safe_primitive(cplint_r:get_set_from_xy_list(_,_)).
 sandbox:safe_primitive(cplint_r:histogram_r(_,_)).
-sandbox:safe_primitive(cplint_r:density_r(_,_,_,_)).
-sandbox:safe_primitive(cplint_r:densities_r(_,_,_)).
+sandbox:safe_primitive(cplint_r:density_r(_)).
+sandbox:safe_primitive(cplint_r:densities_r(_,_)).
 sandbox:safe_primitive(cplint_r:compute_areas_diagrams_r(_,_,_)).
 
 sandbox:safe_meta(cplint_r:prob_bar_r(_),[]).
