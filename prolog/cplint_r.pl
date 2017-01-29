@@ -460,6 +460,8 @@ geom_histogram(L,Min,Max,BinWidth) :-
     ) + xlim(
         miN,
         maX
+    ) + theme(
+        axis.title.x=element_blank()
     ).
 
 /**
@@ -506,6 +508,8 @@ geom_density(L) :-
                 weights=y
             ),
             alpha=0.5
+    ) + theme(
+        axis.title.x=element_blank()
     ).
 
 /**
@@ -520,6 +524,7 @@ density_r(Post0) :-
      maplist(to_pair,Post0,Post),
      geom_density(Post),
      finalize_r_graph.
+
 
 geom_densities(LPr,LPo) :-
     get_set_from_xy_list(LPr,R1),
@@ -551,7 +556,9 @@ geom_densities(LPr,LPo) :-
                 weights=y2
             ),
             alpha=alphA
-    ) + xlab("x").
+    ) + theme(
+        axis.title.x=element_blank()
+    ).
 
 /**
  * densities_r(+PriorList:list,+PostList:list) is det
