@@ -178,8 +178,12 @@ geom_prob_bar(PTrue,PFalse) :-
     + scale_y_continuous(
         breaks=seq(0,1,0.1)
     )
-    + coord_flip(ylim=c(0,1))
-    + theme(aspect.ratio=1/2).
+    + coord_flip(
+        ylim=c(0,1)
+    )
+    + theme(
+        aspect.ratio=1/2
+    ).
 
 /**
  * prob_bar_r(:Query:atom) is nondet
@@ -509,6 +513,7 @@ geom_density(L) :-
             ),
             alpha=0.5
     ) + theme(
+        legend.title = element_blank(),
         axis.title.x=element_blank()
     ).
 
@@ -557,6 +562,7 @@ geom_densities(LPr,LPo) :-
             ),
             alpha=alphA
     ) + theme(
+        legend.title = element_blank(),
         axis.title.x=element_blank()
     ).
 
@@ -604,6 +610,7 @@ geom_compute_areas_diagram(L,Title,XName,YName) :-
     )
     + labelS
     + theme(
+        legend.title = element_blank(),
         plot.title = element_text(
             size = rel(2)
         )
