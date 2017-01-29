@@ -69,7 +69,8 @@ terminology is necessary:
 Any code between @code{<} @code{>} represents pseudocode.
 
 @item
-The symbol @code{#} represents an unsigned integer.
+The symbol @code{#} represents an unsigned integer or the @code{root} user, 
+depending on the context.
 
 @item
 Optional code or parameters are encapsuled between @code{[} @code{]}.
@@ -131,8 +132,17 @@ gridExtra@footnote{@mybibcite{gridExtra}}
 
 @node Examples
 @chapter Examples
+@section Gaussian mean estimation
+The following is the content of @file{gauss_mean_est_R.pl}.
 
-See all the files ending in "_R.pl" on 
+@verbatiminclude example.pl
+
+Using @code{?- dens_lw(1000)} as query the following chart is produced:
+
+@image{example_out,5in}
+
+@section Other examples
+For other examples see all the files ending in "_R.pl" on 
 @uref{https://github.com/friguzzi/swish/tree/master/examples/inference}
 
 @c ----
@@ -377,23 +387,23 @@ A skeleton of the structure follows.
 <cplint_graphing_predicate>_r(<input>):-
     load_r_libraries,
     <operations on the input>,
-    geom_<smt>(<new input, possibly lists>),
+    geom_<something>(<new input, possibly lists>),
     finalize_r_graph.
 @end verbatim
 
 @subsection Plotting predicates
-Predicates directly involving plotting all start with @code{geom_} as prefix.
+Predicates directly involved in plotting all start with @code{geom_} as prefix.
 
-These predicates work with lists wich are then transformed into R data frames, 
+These predicates work with lists which are then transformed into R data frames, 
 and, as a final instruction, a corresponding plot is generated.
 
 You can visualize the structure with the following pseudocode:
 @verbatim
-geom_<smt>(<Lists or other input>) :-
+geom_<something>(<Lists and/or other input>) :-
     <handle lists>,
     <create one or more R data frame with the lists data>,
     <rename data frame colnames to avoid using default ones>,
-    <- ggplot <smt>
+    <- ggplot <something>
 @end verbatim
 
 @subsection List handling
@@ -404,7 +414,7 @@ described in the interface section.
 
 In case there are multiple distributions we simply have to call
 @code{get_set_from_xy_list/2} the appropriate number of times,
-like: @code{get_set_from_xy_list(<smt>,R#)}.
+like: @code{get_set_from_xy_list(<something>,R#)}.
 
 @subsection Main data frame creation
 As descibed before, a data frame is useful to pass 
@@ -423,7 +433,8 @@ In case it is the last (or only) data frame then its name
 will simply be @code{df}.
 
 @subsection Helpers
-What follows are some trivial predicates indicated as internal helpers.
+What follows are extracts of some trivial predicates indicated as internal 
+helpers.
 
 @verbatim
 bin_width(Min,Max,NBins,Width) :-
@@ -444,9 +455,19 @@ finalize_r_graph :-
 
 @node Development
 @chapter Development
+@section Changing the library
+You are welcomed to change this library. In order to test it you simply have to
+place you modified version in the correct path and restart SWISH. If you have 
+used the packages provided with SWISH Installer this can be achieved with the 
+following:
+@verbatim
+# mv <your_modified_cplint_r_library> /home/swish/lib/swipl/pack/cplint_r/prolog/cplint_r.pl
+# systemctl restart swish-cplint
+@end verbatim
+
 @section Compiling this documentation
 The source of this documentation is under the @file{doc}
-directory.
+directory of the repository.
 
 To be able to compile it, you have to install several tex packages
 (for example: @code{texlive-most} and @code{texi2html} if you are using
@@ -463,7 +484,7 @@ perl
 @end verbatim
 
 After running @command{make}, a directory named @file{manual}
-is created and you can access the files by opening
+will be created and you can access all the files by opening
 @file{index.html} with a browser.
 
 @c ----
@@ -473,7 +494,7 @@ is created and you can access the files by opening
 
 @node Thanks
 @chapter Thanks
-Fabrizio Riguzzi.
+Fabrizio Riguzzi for developement, testing and feedback.
 
 Raivo Laanemets for a blog
 article@footnote{@mybibcite{Prolog pack development experience}}
