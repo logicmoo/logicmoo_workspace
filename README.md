@@ -1,6 +1,6 @@
 # cplint_r
 
-An SWI Prolog library to plot R's ggplot2 graphs for Cplint on SWISH.
+An SWI Prolog library to plot ggplot2 charts for Cplint on SWISH.
 
 ## Description
 
@@ -68,7 +68,7 @@ The query
 
 Gives the following
 
-![histogram_r_example.png](images/histogram_r_example.png)
+<img src="images/histogram_r_example.png" alt="histogram_r_example.png" width="256"/>
 
 ## Installation
 
@@ -91,7 +91,7 @@ or, if you cloned the repo:
 
 ## Changelogs 
 
-2017-01-?? version 0.0.4. Improved histogram_r/?, density_r/? and denities_r/?. 
+2017-01-?? version 1.0.0. Improved histogram_r/?, density_r/? and denities_r/?. API change.
 
 2017-01-13 version 0.0.3. Fixed minor issues.
 
