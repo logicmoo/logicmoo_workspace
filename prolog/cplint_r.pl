@@ -109,7 +109,7 @@ bin_width(Min,Max,NBins,Width) :-
     Width is D/NBins.
 
 /**
- * build_xy_list(X:list,Y:list,Out:list) is det
+ * build_xy_list(+X:list,+Y:list,-Out:list) is det
  *
  * Given to lists X and Y build an output list Out
  * in the form [X1-Y1,X2-Y2,...,XN-YN].
@@ -120,14 +120,14 @@ build_xy_list([XH|XT], [YH|YT], [XH-YH|Out]) :-
         build_xy_list(XT, YT, Out).
 
 /**
- * r_row(X:atom,Y:atom,Out:atom) is det
+ * r_row(+X:atom,+Y:atom,-Out:atom) is det
  *
  * Given two atoms X and Y, build the term r(X,Y) in Out.
  */
 r_row(X,Y,r(X,Y)).
 
 /**
- * get_set_from_xy_list(L:list,R:list) is det
+ * get_set_from_xy_list(+L:list,-R:list) is det
  *
  * Given an input list L in the form [X1-Y1,X2-Y2,...,XN-YN], transform it in 
  * an output list R in the form [r(X1,Y1),r(X2,Y2),...,r(XN,YN)]. This means 
@@ -193,9 +193,6 @@ geom_prob_bar(PTrue,PFalse) :-
  * a bar for the probability of Query false.
  * If Query is not ground, it returns in backtracking all ground
  * instantiations of Query together with their probabilities
- *
- * PF is 1.0-PT i.e:
- * Probability False = 1 - Probability True. 
  */
 prob_bar_r(M:Goal) :-
     load_r_libraries,
@@ -203,6 +200,10 @@ prob_bar_r(M:Goal) :-
     PF is 1.0-PT,
     geom_prob_bar(PT,PF),
     finalize_r_graph.
+/*
+ * PF is 1.0-PT i.e:
+ * Probability False = 1 - Probability True. 
+ */
 
 
 /**
@@ -279,8 +280,8 @@ mc_sample_bar_r(M:Goal,S):-
     finalize_r_graph.
 
 
-/* Diffs from the previous predicates:
- * ===================================
+/* Differences from the previous predicates:
+ * =========================================
  *
  * Transform names column into a string column. 
  *
@@ -583,8 +584,6 @@ densities_r(Pri0,Post0) :-
 
 /* auc */
 
-/* geom_line + geom_point + y 0,1,0.1 + x 0,1,0.1 + title */
-/* Fix scale: breaks(0,1,0.1) does not seem to work here. */
 geom_compute_areas_diagram(L,Title,XName,YName) :-
     get_set_from_xy_list(L,R),
     r_data_frame_from_rows(df, R),

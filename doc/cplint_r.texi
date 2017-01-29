@@ -16,7 +16,7 @@ notice and this notice are preserved.
 
 @titlepage
 @title Cplint R Documentation
-@subtitle program version 0.0.2
+@subtitle program version 0.0.3
 @author Franco Masotti
 @page
 @vskip 0pt plus 1filll
@@ -30,7 +30,7 @@ notice and this notice are preserved.
 @node Top
 @top Cplint R
 
-This manual is for Cplint R program version 0.0.2
+This manual is for Cplint R program version 0.0.3
 
 @menu
 * Description::     A brief description of what this is all about
@@ -55,17 +55,26 @@ The purpose of this library is to provide an interface between
 the Cplint@footnote{@mybibcite{Cplint}} suite for 
 SWI Prolog@footnote{@mybibcite{SWI Prolog}}
 and R@footnote{@mybibcite{R}}
-to handle graphs made with the ggplot2@footnote{@mybibcite{ggplot2}} package.
+to handle charts made with the ggplot2@footnote{@mybibcite{ggplot2}} package.
 
 This means that most C3js@footnote{@mybibcite{C3js}}
-graphing functions of Cplint are also available for R.
+charting functions of Cplint are also available for R.
 
 @section Terminology
+In order to simplify the understanding of this document, a minimal set of
+terminology is necessary:
+
+@itemize @bullet
+@item
 Any code between @code{<} @code{>} represents pseudocode.
 
+@item
 The symbol @code{#} represents an unsigned integer.
 
-Optional parameters are encapsuled between @code{[} @code{]}.
+@item
+Optional code or parameters are encapsuled between @code{[} @code{]}.
+
+@end itemize
 
 @c ----
 @c ----
@@ -110,6 +119,9 @@ ggplot2
 @item
 Rserve@footnote{@mybibcite{Rserve}}
 
+@item
+gridExtra@footnote{@mybibcite{gridExtra}}
+
 @end itemize
 
 @c ----
@@ -152,24 +164,24 @@ Have a look at the Cplint help manual@footnote{@mybibcite{Cplint}} to learn in
 details about the functionality of each predicate.
 
 @deffn{Helper} build_xy_list@
-(@var{X}:list,@
-@var{Y}:list,@
-@var{Out}:list)
+(+@var{X}:list,@
++@var{Y}:list,@
+-@var{Out}:list) is det
 Given to lists @var{X} and @var{Y} build an output list @var{Out}
 in the form @code{[X1-Y1,X2-Y2,...,XN-YN]}.
 @end deffn
 
 @deffn{Helper} r_row@
-(@var{X}:atom,@
-@var{Y}:atom,@
-@var{Out}:atom)
+(+@var{X}:atom,@
++@var{Y}:atom,@
+-@var{Out}:atom) is det
 Given two atoms @var{X} and @var{Y}, build the term @code{r(X,Y)}
 in @var{Out}.
 @end deffn
 
 @deffn{Helper} get_set_from_xy_list@
-(@var{L}:list,@
-@var{R}:list)
+(+@var{L}:list,@
+-@var{R}:list) is det
 Given an input list @var{L} in the form @code{[X1-Y1,X2-Y2,...,XN-YN]},
 transform it in an output list @var{R} in the form
 @code{[r(X1,Y1),r(X2,Y2),...,r(XN,YN)]}.
@@ -178,7 +190,7 @@ which can be then passed to an R data frame.
 @end deffn
 
 @deffn{Pita} prob_bar_r@
-(:@var{Query}:atom)
+(:@var{Query}:atom) is nondet
 The predicate computes and plots the probability of @var{Query}
 as a bar chart with a bar for the probability of @var{Query} true and
 a bar for the probability of @var{Query} false.
@@ -188,7 +200,7 @@ instantiations of @var{Query} together with their probabilities.
 
 @deffn{Pita} prob_bar_r@
 (:@var{Query}:atom,@
-:@var{Evidence}:atom)
+:@var{Evidence}:atom) is nondet
 The predicate computes and plots the probability of @var{Query}
 given @var{Evidence}
 as a bar chart with a bar for the probability of @var{Query} true and
@@ -201,13 +213,13 @@ probabilities.
 
 @deffn{Mcintyre} mc_prob_bar_r@
 (:@var{Query}:atom,@
--@var{Probability}:dict)
+-@var{Probability}:dict) is det
 See prob_bar_r/2.
 @end deffn
 
 @deffn{Mcintyre} mc_sample_bar_r@
 (:@var{Query}:atom,@
-+@var{Samples}:int)
++@var{Samples}:int) is det
 The predicate samples @var{Query} a number of @var{Samples} times and
 plots a bar chart with a bar for the number of successes and a bar for the
 number of failures.
@@ -217,7 +229,7 @@ If @var{Query} is not ground, it considers it as an existential query.
 @deffn{Mcintyre} mc_sample_arg_bar_r@
 (:@var{Query}:atom,@
 +@var{Samples}:int,@
-?@var{Arg}:var)
+?@var{Arg}:var) is det
 The predicate samples @var{Query} @var{Samples} times. @var{Arg} should be a variable
 in @var{Query}.
 The predicate plots a bar chart
@@ -231,7 +243,7 @@ returning that list of values.
 @deffn{Mcintyre} mc_sample_arg_first_bar_r@
 (:@var{Query}:atom,@
 +@var{Samples}:int,@
-?@var{Arg}:var)
+?@var{Arg}:var) is det
 The predicate samples @var{Query} @var{Samples} times. @var{Arg} should be a variable
 in @var{Query}.
 The predicate plots a bar chart
@@ -245,7 +257,7 @@ The value is failure if the query fails.
 (:@var{Query}:atom,@
 :@var{Evidence}:atom,@
 +@var{Samples}:int,@
-?@var{Arg}:var)
+?@var{Arg}:var) is det
 The predicate calls @code{mc_rejection_sample_arg/5} and builds an R graph
 of the results.
 It plots a bar chart with a bar for each possible value of L,
@@ -260,7 +272,7 @@ returning that list of values.
 :@var{Evidence}:atom,@
 +@var{Samples}:int,@
 +@var{Lag}:int,@
-?@var{Arg}:var)
+?@var{Arg}:var) is det
 The predicate calls @code{mc_mh_sample_arg/6} and builds an R graph
 of the results.
 The predicate plots a bar chart
@@ -277,7 +289,7 @@ returning that list of values.
 +@var{Samples}:int,@
 +@var{Mix}:int,@
 +@var{Lag}:int,@
-?@var{Arg}:var)
+?@var{Arg}:var) is det
 The predicate calls @code{mc_mh_sample_arg/7} and builds an R graph
 of the results.
 The predicate plots a bar chart
@@ -290,41 +302,34 @@ returning that list of values.
 
 @deffn{Mcintyre} histogram_r@
 (+@var{List}:list,@
-+@var{NBins}:int)
++@var{NBins}:int) is det
 Draws a histogram of the samples in List dividing the domain in
 @var{NBins} bins. @var{List} must be a list of couples of the form [V]-W or V-W
 where V is a sampled value and W is its weight.
 @end deffn
 
 @deffn{Mcintyre} density_r@
-(+@var{List}:list,@
-+@var{NBins}:int,@
-+@var{Min}:float,@
-+@var{Max}:float)
-Draws a line chart of the density of a sets of samples.
+(+@var{List}:list) is det
+Display a smooth density estimate of a sets of samples.
 The samples are in @var{List}
-as couples [V]-W or V-W where V is a value and W its weigth.
-The lines are drawn dividing the domain in
-@var{NBins} bins.
+as couples V-W where V is a value and W its weigth.
 @end deffn
+
 
 @deffn{Mcintyre} densities_r@
 (+@var{PriorList}:list,@
-+@var{PostList}:list,@
-+@var{NBins}:int)
-Draws a line chart of the density of two sets of samples, usually
++@var{PostList}:list) is det
+Display a smooth density estimate of two sets of samples, usually
 prior and post observations. The samples from the prior are in @var{PriorList}
 while the samples from the posterior are in @var{PostList}
-as couples [V]-W or V-W where V is a value and W its weigth.
-The lines are drawn dividing the domain in
-@var{NBins} bins.
+as couples V-W where V is a value and W its weigth.
 @end deffn
 
 
 @deffn{Auc} compute_areas_diagrams_r@
 (+@var{LG}:list,@
 -@var{AUCROC}:float,@
--@var{AUCPR}:float)
+-@var{AUCPR}:float) is det
 The predicate takes as input
 a list @var{LG} of pairs probability-literal in asceding order on probability
 where the literal can be an Atom (incading a positive example) or \+ Atom,
@@ -468,7 +473,11 @@ is created and you can access the files by opening
 
 @node Thanks
 @chapter Thanks
-TODO
+Fabrizio Riguzzi.
+
+Raivo Laanemets for a blog
+article@footnote{@mybibcite{Prolog pack development experience}}
+on how to write SWI Prolog packs.
 
 @c ----
 @c ----
@@ -511,6 +520,12 @@ graphics".
 See @uref{http://ggplot2.org/}
 @*
 
+@mybibitem{gridExtra} "Miscellaneous Functions for "Grid" Graphics.
+Provides a number of user-level functions to work with "grid" graphics, 
+notably to arrange multiple grid-based plots on a page, and draw tables".
+See @uref{https://github.com/baptiste/gridextra}
+@*
+
 @mybibitem{C3js} "C3 enables deeper integration of charts into your 
 application".
 See @uref{http://c3js.org/}
@@ -547,6 +562,10 @@ See @uref{https://www.rforge.net/Rserve/}
 
 @mybibitem{SWISH Installer Manual} See 
 @uref{https://frnmst.github.io/swish-installer/}
+@*
+
+@mybibitem{Prolog pack development experience} See 
+@uref{https://rlaanemets.com/post/show/prolog-pack-development-experience}
 
 @end itemize
 
