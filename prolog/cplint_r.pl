@@ -229,7 +229,7 @@ prob_bar_r(M:Goal,M:Evidence):-
  */
 mc_prob_bar_r(M:Goal):-
     load_r_libraries,
-    s(M:Goal,PT),
+    mc_prob(M:Goal,PT),
     PF is 1.0-PT,
     geom_prob_bar(PT,PF),
     finalize_r_graph.
