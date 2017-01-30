@@ -298,6 +298,8 @@ geom_mc_sample_arg_bar(L) :-
         ids=as.character(df1$names),
         probabilities=c(df1$prob)
     ),
+    scalingthresholD <- 20,
+    {|r||xbreakS <- if(max(df$probabilities) > scalingthresholD) element_blank() else scale_y_continuous(breaks=seq(0,max(df$probabilities),1))|},
     <- ggplot(
         data=df,
         aes(
@@ -310,14 +312,10 @@ geom_mc_sample_arg_bar(L) :-
     ) + geom_bar(
         stat="identity",
         width=0.5
-    )
-    + scale_y_continuous(
-        breaks=seq(
-            0,max(df$probabilities),1
-        )
-    )
-    + coord_flip(
+    ) + xbreakS + coord_flip(
         ylim=c(0,max(df$probabilities))
+    ) + theme(
+        axis.title.y=element_blank()
     ).
 
 /**
@@ -361,7 +359,9 @@ geom_mc_sample_arg_first_bar(L) :-
         stat="identity",
         width=0.5
     )
-    + coord_flip().
+    + coord_flip() + theme(
+        axis.title.y=element_blank()
+    ).
 
 /**
  * mc_sample_arg_first_bar_r(:Query:atom,+Samples:int,?Arg:var) is det
