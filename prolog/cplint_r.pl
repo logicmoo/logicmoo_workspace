@@ -234,7 +234,7 @@ prob_bar_r(M:Goal,M:Evidence):-
  */
 mc_prob_bar_r(M:Goal):-
     load_r_libraries,
-    s(M:Goal,PT),
+    mc_prob(M:Goal,PT),
     PF is 1.0-PT,
     geom_prob_bar(PT,PF),
     finalize_r_graph.
@@ -643,8 +643,8 @@ sandbox:safe_primitive(cplint_r:build_xy_list(_,_,_)).
 sandbox:safe_primitive(cplint_r:r_row(_,_,_)).
 sandbox:safe_primitive(cplint_r:get_set_from_xy_list(_,_)).
 sandbox:safe_primitive(cplint_r:histogram_r(_,_)).
-sandbox:safe_primitive(cplint_r:density_r(_,_,_,_)).
-sandbox:safe_primitive(cplint_r:densities_r(_,_,_)).
+sandbox:safe_primitive(cplint_r:density_r(_)).
+sandbox:safe_primitive(cplint_r:densities_r(_,_)).
 sandbox:safe_primitive(cplint_r:compute_areas_diagrams_r(_,_,_)).
 
 sandbox:safe_meta(cplint_r:prob_bar_r(_),[]).
