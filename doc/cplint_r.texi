@@ -16,7 +16,7 @@ notice and this notice are preserved.
 
 @titlepage
 @title Cplint R Documentation
-@subtitle program version 0.0.3
+@subtitle program version 1.0.0
 @author Franco Masotti
 @page
 @vskip 0pt plus 1filll
@@ -30,7 +30,7 @@ notice and this notice are preserved.
 @node Top
 @top Cplint R
 
-This manual is for Cplint R program version 0.0.3
+This manual is for Cplint R program version 1.0.0
 
 @menu
 * Description::     A brief description of what this is all about

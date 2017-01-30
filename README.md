@@ -91,7 +91,8 @@ or, if you cloned the repo:
 
 ## Changelogs 
 
-2017-01-?? version 1.0.0. Improved histogram_r/?, density_r/? and denities_r/?. API change.
+2017-01-30 version 1.0.0. API change. Rendering improvement in density 
+functions. Lots of fixes.
 
 2017-01-13 version 0.0.3. Fixed minor issues.
 
