@@ -995,7 +995,7 @@ cycle(Ri, Gi) :-
 	% This resolves goals in the goal state.
 	(option(dc) -> once( dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)),
 	(GoalTree = end -> 
-		write_verbose([nl,' Exceeded number of steps. ',nl])	
+		do_write([nl,' Exceeded number of steps. ',nl])	
 		;	
 		(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
 		next_time, 
