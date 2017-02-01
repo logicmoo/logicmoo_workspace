@@ -1,5 +1,5 @@
 :- module(rtchecks_tracer, [trace_rtc/1,
-			    do_trace_rtc/1]).
+                            do_trace_rtc/1]).
 
 :- use_module(library(mapargs)).
 :- use_module(library(assrt_lib)).
@@ -28,8 +28,8 @@ trace_rtc(Goal) :-
 do_trace_rtc(Goal) :-
     get_rtcheck_body(Goal, RTChecks),
     call_inoutex(RTChecks,
-		 setup_trace,
-		 cleanup_trace).
+                 setup_trace,
+                 cleanup_trace).
 
 rtcheck_lib(rtchecks_rt).
 rtcheck_lib(nativeprops).
@@ -64,17 +64,17 @@ setup_trace :-
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
     asserta((user:prolog_trace_interception(Port, Frame, _, Action) :-
-	    rtcheck_port(Port, Frame, Action)),
-	    Ref),
+            rtcheck_port(Port, Frame, Action)),
+            Ref),
     asserta(rtc_state(Visible, Leash, Ref)),
     trace.
 
 cleanup_trace :-
     forall(retract(rtc_state(Visible, Leash, Ref)),
-	   ontrace:cleanup_trace(state(Visible, Leash, Ref))),
+           ontrace:cleanup_trace(state(Visible, Leash, Ref))),
     retractall(rtc_scanned(_)),
     forall(retract(rtc_break(Clause, PC)),
-	   ignore('$break_at'(Clause, PC, false))).
+           ignore('$break_at'(Clause, PC, false))).
 
 black_list_caller(M:F/A) :-
     functor(H, F, A),
@@ -131,7 +131,7 @@ pp_assr(false(_), _).
 rtcheck_port(Port, Frame, Action) :-
     ( current_prolog_flag(gui_tracer, true)
     ->print_message(information,
-		    format("gui_tracer activated, rtchecks tracer will be disabled", [])),
+                    format("gui_tracer activated, rtchecks tracer will be disabled", [])),
       cleanup_trace,
       visible(+cut_call),
       Action = up
@@ -164,27 +164,27 @@ setup_clause_bpt(Clause, Action) :-
       '$break_pc'(Clause, PC, _NextPC1),
       '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
       ( ( call_instr(TInstr)
-	->nth_clause(M:Goal, _, Clause),
-	  \+ asr_head_prop(_, M, Goal, _, prop, _, _)
-	; call_instr_param(TInstr, PI),
-	  ( PI=LM:F/A
-	  ->functor(Goal, F, A),
-	    implementation_module(LM:Goal, M)
-	  ; PI=F/A
-	  ->functor(Goal, F, A),
-	    implementation_module(CM:Goal, M)
-	  ),
-	  \+ black_list_callee(M, Goal),
-	  once(( rtchecks_tracer:pp_assr(Goal, M)
-	       ; current_assertion(Goal, M, rtcheck, _)
-	       ; white_list_meta(M, Goal),
-	       	 predicate_property(M:Goal, meta_predicate(S)),
-	       	 once(arg(_, S, 0 ))
-	       ))
-	)
+        ->nth_clause(M:Goal, _, Clause),
+          \+ asr_head_prop(_, M, Goal, _, prop, _, _)
+        ; call_instr_param(TInstr, PI),
+          ( PI=LM:F/A
+          ->functor(Goal, F, A),
+            implementation_module(LM:Goal, M)
+          ; PI=F/A
+          ->functor(Goal, F, A),
+            implementation_module(CM:Goal, M)
+          ),
+          \+ black_list_callee(M, Goal),
+          once(( rtchecks_tracer:pp_assr(Goal, M)
+               ; current_assertion(Goal, M, rtcheck, _)
+               ; white_list_meta(M, Goal),
+                 predicate_property(M:Goal, meta_predicate(S)),
+                 once(arg(_, S, 0 ))
+               ))
+        )
       ->'$break_at'(Clause, PC, true),
-	assertz(rtc_break(Clause, PC)),
-	fail
+        assertz(rtc_break(Clause, PC)),
+        fail
       )
     ).
 
@@ -195,8 +195,8 @@ setup_clause_bpt(Clause, Action) :-
 :- meta_predicate system:'$rat_trap'(0, +, +, +, +).
 system:( '$rat_trap'(RTChecks, Goal, Caller, Clause, PC) :-
        rtchecks_tracer:( intercept(with_value(RTChecks, '$current_goal', Goal),
-				   assrchk(asr, Error),
-				   '$rat_trap_handle'(Caller, Clause, PC, Error)))).
+                                   assrchk(asr, Error),
+                                   '$rat_trap_handle'(Caller, Clause, PC, Error)))).
 
 :- '$hide'('$rat_trap_handle'/4).
 '$rat_trap_handle'(Caller, Clause, PC, Error) :-
@@ -222,12 +222,12 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
       implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
       ->( nb_current('$current_goal', CurrGoal),
-	  CurrGoal =@= CM:Goal
-	->Action = continue
-	; get_rtcheck_body(CM:Goal, RTChecks),
-	  '$fetch_vm'(Clause, PC, NPC, _VMI),
-	  Action = call('$rat_trap'(RTChecks, CM:Goal, Caller, Clause, NPC))
-	)
+          CurrGoal =@= CM:Goal
+        ->Action = continue
+        ; get_rtcheck_body(CM:Goal, RTChecks),
+          '$fetch_vm'(Clause, PC, NPC, _VMI),
+          Action = call('$rat_trap'(RTChecks, CM:Goal, Caller, Clause, NPC))
+        )
       ; Action = continue
       )
     ; Action = continue

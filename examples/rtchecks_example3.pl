@@ -1,10 +1,10 @@
 :- module(rtchecks_example3, [nullasr/2,
-			      square/2,
-			      test1/0,
-			      animal/1,
-			      family/1,
-			      fullasr/2,
-			      p/1]).
+                              square/2,
+                              test1/0,
+                              animal/1,
+                              family/1,
+                              fullasr/2,
+                              p/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
@@ -16,14 +16,14 @@
 nullasr(_, _).
 
 square(X, X2) :-
-	X2 is X * X,
-	check(X2 > 0).
+        X2 is X * X,
+        check(X2 > 0).
 
 % this should generate a runtime-check error:
 test1 :-
-	square(0, X2),
-	display(X2),
-	nl.
+        square(0, X2),
+        display(X2),
+        nl.
 
 :- prop animal/1 is type.
 

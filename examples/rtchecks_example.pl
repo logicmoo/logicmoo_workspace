@@ -1,25 +1,25 @@
 :- module(rtchecks_example,
-	  [is_animal/1,
-	   animal/1,
-	   animals/1,
-	   tcollapse/2,
-	   create_pairwise_mutex_classes/3,
-	   call_mf/0,
-	   must_fail/1,
-	   must_not_fail/0,
-	   animal_type/1,
-	   what_kind/2,
-	   show_if_domestic/1,
-	   display_any/1,
-	   get_domestic_list/1,
-	   display_any2/1,
-	   test_any/1,
-	   test2/2,
-	   test3/2,
-	   test4/2,
-	   test5/2,
-	   test_det/2,
-	   test_det2/1]).
+          [is_animal/1,
+           animal/1,
+           animals/1,
+           tcollapse/2,
+           create_pairwise_mutex_classes/3,
+           call_mf/0,
+           must_fail/1,
+           must_not_fail/0,
+           animal_type/1,
+           what_kind/2,
+           show_if_domestic/1,
+           display_any/1,
+           get_domestic_list/1,
+           display_any2/1,
+           test_any/1,
+           test2/2,
+           test3/2,
+           test4/2,
+           test5/2,
+           test_det/2,
+           test_det2/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
@@ -28,10 +28,10 @@
 :- doc(author, "Edison Mera").
 
 :- doc(module, "Examples of assertions that can be processed by
-	the run-time checker.").
+        the run-time checker.").
 
 :- check pred is_animal(-Animal) :: animal(Animal) + (not_fails, non_det)
-	# "This is a way to call is_animal/1".
+        # "This is a way to call is_animal/1".
 
 :- check pred is_animal(+Animal) :: animal(Animal) + (not_fails, is_det).
 
@@ -48,7 +48,7 @@ ptt :- fail.
 ptt :- is_animal(a).
 
 :- pred create_pairwise_mutex_classes/3 :: (int * list * list)
-	+ (not_fails, is_det).
+        + (not_fails, is_det).
 
 create_pairwise_mutex_classes(0, L, L) :- !.
 
@@ -60,19 +60,19 @@ create_pairwise_mutex_classes(0, L, L) :- !.
 tcollapse(_A, _B).
 
 call_mf :-
-	must_fail(aaa).
+        must_fail(aaa).
 
 :- check comp must_fail/1 + not_fails.
 
 must_fail(aaa) :-
-	display('hello world'(aaa)),
-	nl,
-	fail.
+        display('hello world'(aaa)),
+        nl,
+        fail.
 
 :- true comp must_not_fail/0 + not_fails.
 
 must_not_fail :-
-	display('not fail\n').
+        display('not fail\n').
 
 :- prop animal/1 is type.
 
@@ -88,7 +88,7 @@ animal_type(domestic).
 
 % :- check pred what_kind(A, B) :: (animal(A) => animal_type(B)).
 % :- check pred what_kind(+A, -B)
-% 	:: (animal(A), var(B)) => (animal(A), animal_type(B)).
+%       :: (animal(A), var(B)) => (animal(A), animal_type(B)).
 
 :- check pred what_kind(A, B) :: (animal(A), animal_type(B)) + not_fails.
 
@@ -100,34 +100,34 @@ what_kind(lion,  wild).
 :- check pred show_if_domestic(A) : animal(A).
 
 show_if_domestic(A) :-
-	what_kind(A, domestic),
-	display(A),
-	nl.
+        what_kind(A, domestic),
+        display(A),
+        nl.
 
 :- check pred get_domestic_list(A) : var(A) => list(A, animal).
 
 get_domestic_list(A) :-
-	findall(Animal, what_kind(Animal, domestic), A).
+        findall(Animal, what_kind(Animal, domestic), A).
 
 :- check pred display_any(A) : animal(A) + not_fails.
 
 display_any(A) :-
-	display(A),
-	nl.
+        display(A),
+        nl.
 
 :- check pred display_any2(A) : animal(A) + not_fails.
 :- check pred display_any2(A) : animal_type(A) + not_fails.
 
 display_any2(A) :-
-	display(A),
-	nl,
-	fail.
+        display(A),
+        nl,
+        fail.
 
 :- check pred test_any(A) :: animal(A).
 
 test_any(A) :-
-	display(A),
-	nl.
+        display(A),
+        nl.
 
 :- pred test2(+A, +B) : (animal(A), animal_type(B)).
 :- pred test2(+A, +B) : (animal(B), animal_type(A)).
@@ -141,8 +141,8 @@ test_any(A) :-
 % repeated tests should be instrumented only once
 
 test2(A, B) :-
-	display('A='(A)), nl,
-	display('B='(B)), nl.
+        display('A='(A)), nl,
+        display('B='(B)), nl.
 
 :- pred test3(_, B) => gnd(B).
 :- pred test3(_, B) => gnd(B).
@@ -165,19 +165,19 @@ test_det2(b).
 test_det2(c).
 
 :- check calls test4(A, B)
-	: ((var(A), var(B)) ; var(A) ; (nonvar(A), nonvar(B))).
+        : ((var(A), var(B)) ; var(A) ; (nonvar(A), nonvar(B))).
 
 test4(A, B) :-
-	display('A='(A)), nl,
-	display('B='(B)), nl.
+        display('A='(A)), nl,
+        display('B='(B)), nl.
 
 :- check calls test5(A, B) : (var(A), var(B)).
 :- check calls test5(A, _) : var(A).
 :- check calls test5(A, B) : (nonvar(A), nonvar(B)).
 
 test5(A, B) :-
-	display('A='(A)), nl,
-	display('B='(B)), nl.
+        display('A='(A)), nl,
+        display('B='(B)), nl.
 
 
 :- pred p(+) + no_choicepoints.

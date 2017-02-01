@@ -1,13 +1,13 @@
 :- module(rtchecks_rt,
-	  [rtcheck_goal/1,
-	   rtcheck_goal/2,
-	   rtcheck_goal/4,
-	   rtc_call/2,
-	   '$with_gloc'/2,
-	   '$with_asr_head'/2,
-	   collect_assertions/4,
-	   current_assertion/4
-	  ]).
+          [rtcheck_goal/1,
+           rtcheck_goal/2,
+           rtcheck_goal/4,
+           rtc_call/2,
+           '$with_gloc'/2,
+           '$with_asr_head'/2,
+           collect_assertions/4,
+           current_assertion/4
+          ]).
 
 :- use_module(library(assertions)).
 :- use_module(library(termtyping), []). % assertions about builtins
@@ -24,7 +24,7 @@
 %:- doc(author, "Based on David Trallero's rtchecks package.").
 
 :- doc(module, "This module contains the predicates that are
-	required to implement run-time checks.").
+        required to implement run-time checks.").
 
 /*
 
@@ -35,21 +35,21 @@ pred :- body.
 is transformed in:
 
 pred :-                        \
-	"check entry...",       \___________ STEP
-	"check exit...",        /            ONE
-	'pred$rtc1'.           /
+        "check entry...",       \___________ STEP
+        "check exit...",        /            ONE
+        'pred$rtc1'.           /
 
 'pred$rtc1' :-                            \
-	"check compat pre..."              \
-	"check calls...",                   \
-	"check success pre",                 \__________ STEP
-	"check comp..."(                     /           TWO
-	'pred$rtc2',                        /
-	"check success pos",               /
-	"check compat pos..."             /
+        "check compat pre..."              \
+        "check calls...",                   \
+        "check success pre",                 \__________ STEP
+        "check comp..."(                     /           TWO
+        'pred$rtc2',                        /
+        "check success pos",               /
+        "check compat pos..."             /
 
 'pred$rtc2' :-
-	body.
+        body.
 
 And goals preds are renamed to 'pred$rtc1'.  There are other steps in
 order to simplify the generated code as far as possible.
@@ -76,11 +76,11 @@ rtcheck_cond(Cond, Check, PredName) :-
 
 check_asr_props(Asr, Part, Check, Mult, PropValues) :-
     findall(Asr-(From/Prop-[]),
-	    ( asr_aprop(Asr, Part, Prop, From),
-	      \+ check_prop(Check, Prop),
-	      (Mult = once -> ! ; true)
-	    ),
-	    AsrPropValues),
+            ( asr_aprop(Asr, Part, Prop, From),
+              \+ check_prop(Check, Prop),
+              (Mult = once -> ! ; true)
+            ),
+            AsrPropValues),
     maplist(unify_common(Asr), AsrPropValues, PropValues).
 
 check_prop(compat,   Prop) :- compat(  Prop).
@@ -135,9 +135,9 @@ valid_command(try_sols(_, _)). % Legacy
 checkif_asr_comp([_|_], _, _, Goal,  Goal).
 checkif_asr_comp([], Asr, Head, Goal1, '$with_asr_head'(Goal, Asr-Head)) :-
     findall(g(Asr, M, Glob, Loc),
-	    ( asr_aprop(Asr, glob, M:Glob, Loc),
-	      \+ valid_command(Glob)
-	    ), GlobL),
+            ( asr_aprop(Asr, glob, M:Glob, Loc),
+              \+ valid_command(Glob)
+            ), GlobL),
     comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal, Goal1).
 
 comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
@@ -151,8 +151,8 @@ rtcheck_goal(CM:Goal, AsrL) :-
 
 rtcheck_goal(Goal, M, CM, AsrL) :-
     checkif_modl(M, CM,
-		 check_asrs(step1, AsrL, Goal, G2), G2,
-		 check_asrs(step2, AsrL, Goal, CM:Goal)).
+                 check_asrs(step1, AsrL, Goal, G2), G2,
+                 check_asrs(step2, AsrL, Goal, CM:Goal)).
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
@@ -200,8 +200,8 @@ assrt_op(glob, step2, inner,   pred).
 
 is_valid_status_type(true, entry) :- current_prolog_flag(rtchecks_entry, yes).
 is_valid_status_type(Status, Type) :-
-	rtcheck_assr_type(Type),
-	rtcheck_assr_status(Status).
+        rtcheck_assr_type(Type),
+        rtcheck_assr_status(Status).
 
 rtcheck_assr_status(true)  :- current_prolog_flag(rtchecks_true,  yes).
 rtcheck_assr_status(trust) :- current_prolog_flag(rtchecks_trust, yes).
@@ -220,7 +220,7 @@ rtcheck_assr_type(success).
 
 check_asrs(Step, AsrL, Head, Goal) :-
     notrace(check_asrs_pre(Step, AsrL,
-			   AsrGlobL, AsrCompL, AsrSuccL)),
+                           AsrGlobL, AsrCompL, AsrSuccL)),
     checkif_asrs_comp(AsrGlobL, Head, Goal),
     notrace(check_asrs_pos(AsrCompL, AsrSuccL)).
 
@@ -314,8 +314,8 @@ assertion_is_valid(rtcheck, Status, Type, Asr) :-
 
 current_assertion(Pred, M, TimeCheck, Asr) :-
     \+ ( TimeCheck = (rtcheck),
-	 asr_head_prop(_, AM, Pred, _, prop, _, _),
-	 implementation_module(AM:Pred, M)
+         asr_head_prop(_, AM, Pred, _, prop, _, _),
+         implementation_module(AM:Pred, M)
        ),
     asr_head_prop(Asr, CM, Pred, Status, Type, _, _),
     assertion_is_valid(TimeCheck, Status, Type, Asr),

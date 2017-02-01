@@ -7,7 +7,7 @@
 :- doc(author, "Edison Mera").
 
 :- doc(module, "Example of runtime checking of an assertion about
-	an imported (or even builtin) predicate.").
+        an imported (or even builtin) predicate.").
 
 % :- pred functor(F, A, N) : nonvar(F) => (atom(A), nnegint(N)).
 
@@ -24,6 +24,6 @@ patata(G) :- call(G).
 :- pred display/1 + patata.
 
 test_ex :-
-	functor(0, A, N),
-	display(A/N),
-	nl.
+        functor(0, A, N),
+        display(A/N),
+        nl.
