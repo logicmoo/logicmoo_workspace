@@ -39,10 +39,10 @@ change_alias(Changer, Alias0, Alias) :-
     functor(Alias, F, A),
     succ(N, A),
     foreach(between(1, N, I),
-	    [I, Alias0, Alias] +\
-	    ( arg(I, Alias0, ArgI),
-	      arg(I, Alias,  ArgI)
-	    )),
+            [I, Alias0, Alias] +\
+            ( arg(I, Alias0, ArgI),
+              arg(I, Alias,  ArgI)
+            )),
     arg(A, Alias0, Arg0),
     arg(A, Alias, Arg),
     change_alias(Changer, Arg0, Arg).

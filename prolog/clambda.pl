@@ -91,8 +91,8 @@ lambdaize_args(G, A0, M, VL, Ex, A) :-
     check_singletons(G, h(VL, Ex, A0 )),
     ( ( Ex==[]
       ; '$member'(E1, Ex),
-	'$member'(E2, VL),
-	E1==E2
+        '$member'(E2, VL),
+        E1==E2
       )
     ->'$expand':wrap_meta_arguments(A0, M, VL, Ex, A)
     ; '$expand':remove_arg_pos(A0, _, M, VL, Ex, A, _)

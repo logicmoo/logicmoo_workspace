@@ -28,7 +28,7 @@
 */
 
 :- module(filtered_backtrace,
-	  [filtered_backtrace/1]).
+          [filtered_backtrace/1]).
 
 :- use_module(library(prolog_stack)).
 

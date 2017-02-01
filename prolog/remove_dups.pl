@@ -28,7 +28,7 @@
 */
 
 :- module(remove_dups, [remove_dups/2,
-			remove_dups/4]).
+                        remove_dups/4]).
 
 remove_dups(L, U) :-
     remove_dups(L, [], U, []).

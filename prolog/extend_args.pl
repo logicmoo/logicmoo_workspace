@@ -28,7 +28,7 @@
 */
 
 :- module(extend_args,
-	  [extend_args/3]).
+          [extend_args/3]).
 
 extend_args(Goal, _, Goal) :- var(Goal), !, fail.
 extend_args(M:Call, Args, M:Goal) :- !,

@@ -28,25 +28,25 @@
 */
 
 :- module(i18n_support, [current_pot_file/2,
-			 i18n_to_translate/4,
-			 i18n_process_term/4,
-			 expand_i18n_term/4,
-			 i18n_record/4,
-			 current_i18n_record/4,
-			 i18n_entry_expander/4,
-			 i18n_entry/4,
-			 reference/2,
-			 language_t/1,
-			 language/1,
-			 i18n_entry_exact/4,
-			 show_i18n_terms/1,
-			 dictionary/1,
-			 variable_name/1,
-			 get_lang_file/2,
-			 get_lang_file/3,
-			 '=~'/2,
-			 '~='/2,
-			 '=~~'/2]).
+                         i18n_to_translate/4,
+                         i18n_process_term/4,
+                         expand_i18n_term/4,
+                         i18n_record/4,
+                         current_i18n_record/4,
+                         i18n_entry_expander/4,
+                         i18n_entry/4,
+                         reference/2,
+                         language_t/1,
+                         language/1,
+                         i18n_entry_exact/4,
+                         show_i18n_terms/1,
+                         dictionary/1,
+                         variable_name/1,
+                         get_lang_file/2,
+                         get_lang_file/3,
+                         '=~'/2,
+                         '~='/2,
+                         '=~~'/2]).
 
 :- use_module(library(lists)).
 :- use_module(library(pairs)).
@@ -89,8 +89,8 @@
     i18n_resource/2,
     i18n_record/4,
     language/1,
-    dictionary/1.		% for reverse translations, you can use more
-                 		% than one dictionary
+    dictionary/1.               % for reverse translations, you can use more
+                                % than one dictionary
 
 :- public
     i18n_resourceterm/2.
@@ -133,14 +133,14 @@ language_t(Lang) :-
 language(Lang) :-
     ( %% Guess the system language using environment variables:
       variable_name(AppVariable),
-      getenv(AppVariable, X),	% Read from application specific
-				% language variable
+      getenv(AppVariable, X),   % Read from application specific
+                                % language variable
       atom_codes(X, C),
       SLang = [_, _],
       append(SLang, _, C),
       atom_codes(Lang, SLang)
     ->true
-    ; Lang = en			% take English by default
+    ; Lang = en                 % take English by default
     ).
 
 % Operator that Allows Run-Time language translation:
@@ -165,12 +165,12 @@ i18n_entry_dl(M, Dict, Lang) :-
 
 /*
 reference(Term, Ref) :-
-	'$set_source_module'(M, M),
-	( Term = (Head :- _) -> functor(Head, F, A), PI = F/A
-	; Term = (:- Decl) -> functor(Decl, F, A), PI = (:- F/A)
-	; functor(Term, F, A), PI = F/A
-	),
-	with_output_to(codes(Ref), M:PI).
+        '$set_source_module'(M, M),
+        ( Term = (Head :- _) -> functor(Head, F, A), PI = F/A
+        ; Term = (:- Decl) -> functor(Decl, F, A), PI = (:- F/A)
+        ; functor(Term, F, A), PI = F/A
+        ),
+        with_output_to(codes(Ref), M:PI).
 */
 
 reference(M, [Ref]) :- atom_codes(M, Ref).
@@ -187,7 +187,7 @@ i18n_entry_exact_1(Lang, M, X, Y) :-
 i18n_entry_exact(GLang, M, MsgId, MsgStr) :-
     ( call(GLang, Lang),
       i18n_record_2(M, Lang, MsgId, MsgStr) -> true % 1. full translation
-    ; call(GLang, Lang),	% 2. full list translation
+    ; call(GLang, Lang),        % 2. full list translation
       maplist(i18n_entry_exact_1(Lang, M), MsgId, MsgStr) -> true
     ).
 
@@ -195,7 +195,7 @@ i18n_entry_partial(GLang, M, MsgId, MsgStr) :- % 3. partial translation
     maplist(i18n_record_3(M, GLang), MsgId, MsgStr).
 
 i18n_record_2(M, Lang, MsgId, MsgStr) :-
-    (M0 = M ; true),		% Be flexible, module is not strict
+    (M0 = M ; true),            % Be flexible, module is not strict
     i18n_record(M0, Lang, MsgId, MsgStr).
 
 i18n_record_3(M, GLang, MsgId, MsgStr) :-
@@ -352,7 +352,7 @@ user:prolog_file_type(pot, pot).
 % Performance bug: this reads the file every time the predicate is
 % consulted, tabling would be useful for this case. --EMM
 
-:- table i18n_record/4.		% Speed up, decrease complexity
+:- table i18n_record/4.         % Speed up, decrease complexity
 i18n_record(M, Lang, MsgId, MsgStr) :-
     ( current_module(M) *->true ; true ),
     current_i18n_record(M, Lang0, MsgId0, MsgStr0 ),

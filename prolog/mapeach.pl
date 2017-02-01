@@ -34,8 +34,8 @@
 mapeach(Goal0, Goal, Head, Tail) :-
     S = s(Head),
     forall(Goal0,
-	   ( S = s(H),
-	     call(Goal, H, T),
-	     nb_setarg(1, S, T)
-	   )),
+           ( S = s(H),
+             call(Goal, H, T),
+             nb_setarg(1, S, T)
+           )),
     S = s(Tail).

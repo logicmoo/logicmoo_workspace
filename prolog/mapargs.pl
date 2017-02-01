@@ -28,11 +28,11 @@
 */
 
 :- module(mapargs, [mapargs/2,
-		    mapargs/3,
-		    mapargs/4,
-		    mapargs/5,
-		    mapargs/6,
-		    mapargs/7]).
+                    mapargs/3,
+                    mapargs/4,
+                    mapargs/5,
+                    mapargs/6,
+                    mapargs/7]).
 
 mapargs_(N, Goal, T) :-
     arg(N, T, A),

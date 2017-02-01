@@ -84,5 +84,5 @@ atomics_to_atom(Atomics, A, B, Atom) :-
     ->atom_concat(A, B, C),
       atomics_atom(Atomics, 1, C, Atom)
     ; throw(error(instantiation_error,
-		  context(atomics_atom:atomics_atom/2,_)))
+                  context(atomics_atom:atomics_atom/2,_)))
     ).

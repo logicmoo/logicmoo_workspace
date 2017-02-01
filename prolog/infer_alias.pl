@@ -28,23 +28,23 @@
 */
 
 :- module(infer_alias,
-	  [infer_alias/3,
-	   fastest_alias/2,
-	   library_alias/2,
-	   smallest_alias/2,
-	   current_alias/2,
-	   pretty_path/2
-	  ]).
+          [infer_alias/3,
+           fastest_alias/2,
+           library_alias/2,
+           smallest_alias/2,
+           current_alias/2,
+           pretty_path/2
+          ]).
 
 :- use_module(library(term_size)).
 
 infer_alias(File, CAlias, OptionL) :-
     select_option(sort(SortL), OptionL, _, []),
     findall(SortTerm-Alias,
-	    ( current_alias(File, Alias),
-	      Alias =.. [AName, _],
-	      maplist(sort_field(Alias, AName), SortL, SortTerm)
-	    ), SA),
+            ( current_alias(File, Alias),
+              Alias =.. [AName, _],
+              maplist(sort_field(Alias, AName), SortL, SortTerm)
+            ), SA),
     sort(SA, [_-CAlias|_]).
 
 sort_field(_, A, alias(L), N) :-

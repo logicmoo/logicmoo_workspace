@@ -28,7 +28,7 @@
 */
 
 :- module(call_in_dir, [call_in_module_dir/2,
-			call_in_dir/2]).
+                        call_in_dir/2]).
 
 :- use_module(library(filesex)).
 :- use_module(library(shell)).

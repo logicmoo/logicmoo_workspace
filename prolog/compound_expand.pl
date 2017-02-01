@@ -58,11 +58,11 @@ implemented_pi(M:F/A) :-
 
 collect_expansors(M, ExpansorName, ML) :-
     findall(EM-PI,
-	    ( expansion_module(M, EM),
-	      ( implemented_pi(EM:ExpansorName/4)
-	      ->PI=[ExpansorName/4]
-	      ; PI=[ExpansorName/2]
-	      )), MD),
+            ( expansion_module(M, EM),
+              ( implemented_pi(EM:ExpansorName/4)
+              ->PI=[ExpansorName/4]
+              ; PI=[ExpansorName/2]
+              )), MD),
     remove_dups(MD, ML).
 
 :- dynamic
@@ -71,8 +71,8 @@ collect_expansors(M, ExpansorName, ML) :-
 call_lock(Goal, ID) :-
     \+ lock_expansion(ID),
     setup_call_cleanup(assertz(lock_expansion(ID), Ref),
-		       Goal,
-		       erase(Ref)).
+                       Goal,
+                       erase(Ref)).
 
 type_expansors(term, term_expansion, call_term_expansion).
 type_expansors(goal, goal_expansion, call_goal_expansion).
@@ -100,9 +100,9 @@ system:term_expansion(Term1, Pos1, Term, Pos) :-
     [Term1] \== Term2,
     % continue with other expansions:
     setup_call_cleanup(assertz(compounding),
-		       ( system:term_expansion(Term2, Pos2, Term, Pos)
-		       ->true
-		       ; Term = Term2,
-			 Pos  = Pos2
-		       ),
-		       retractall(compounding)).
+                       ( system:term_expansion(Term2, Pos2, Term, Pos)
+                       ->true
+                       ; Term = Term2,
+                         Pos  = Pos2
+                       ),
+                       retractall(compounding)).

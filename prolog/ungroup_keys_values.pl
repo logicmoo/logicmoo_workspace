@@ -28,9 +28,9 @@
 */
 
 :- module(ungroup_keys_values,
-	  [ungroup_keys_values/2,
-	   ungroup_keys_values/3
-	  ]).
+          [ungroup_keys_values/2,
+           ungroup_keys_values/3
+          ]).
 
 % :- use_module(library(apply)).
 

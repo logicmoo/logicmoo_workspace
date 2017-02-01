@@ -28,8 +28,8 @@
 */
 
 :- module(list_intervals, [list_intervals/2,
-			   compact_intervals/2,
-			   repack_list/2]).
+                           compact_intervals/2,
+                           repack_list/2]).
 
 
 %% list_intervals(+list,-list(pairs)) is det.

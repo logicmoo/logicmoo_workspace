@@ -28,10 +28,10 @@
 */
 
 :- module(substitute,
-	  [substitute/3,
-	   substitute_value/4,
-	   substitute_values/3,
-	   is_subterm/2]).
+          [substitute/3,
+           substitute_value/4,
+           substitute_values/3,
+           is_subterm/2]).
 
 :- meta_predicate substitute(2, ?, ?).
 substitute(Comp, Term0, Term) :-

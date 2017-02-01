@@ -30,9 +30,9 @@
 :- module(extra_messages, []).
 
 :- multifile
-	prolog:message_location//1.
+        prolog:message_location//1.
 
 prolog:message_location(file(Path, Line, -1, _CharNo)) --> !,
-	[ '~w:~d: '-[Path, Line] ].
+        [ '~w:~d: '-[Path, Line] ].
 prolog:message_location(file(Path, Line, LinePos, _CharNo)) -->
-	[ '~w:~d:~d: '-[Path, Line, LinePos] ].
+        [ '~w:~d:~d: '-[Path, Line, LinePos] ].

@@ -28,10 +28,10 @@
 */
 
 :- module(qualify_meta_goal, [meta_call_goal/4,
-			      qualify_meta_goal/2,
-			      qualify_meta_goal/3,
-			      qualify_meta_goal/4,
-			      qualify_meta_call/5]).
+                              qualify_meta_goal/2,
+                              qualify_meta_goal/3,
+                              qualify_meta_goal/4,
+                              qualify_meta_call/5]).
 
 :- use_module(library(mapargs)).
 :- use_module(library(check), []). % for add_module/3
@@ -54,12 +54,12 @@ meta_call_goal(Goal, M, MCaller, Meta) :-
 meta_call_goal_arg(Caller, CMeta, _, Arg, Spec1, Spec) :-
     ( module_qualified(Spec1),
       ( nonvar(Arg),
-	Arg = _:_
+        Arg = _:_
       ; compound(CMeta),
-	arg(N, CMeta, CSpec),
-	module_qualified(CSpec),
-	arg(N, Caller, CArg),
-	CArg == Arg
+        arg(N, CMeta, CSpec),
+        module_qualified(CSpec),
+        arg(N, Caller, CArg),
+        CArg == Arg
       )
     ->Spec = +
     ; Spec = Spec1

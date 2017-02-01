@@ -28,10 +28,10 @@
 */
 
 :- module(codes_html,
-	  [code_html/3,		% ?Code,  ?Html, ?Tail
-	   codes_html/2,	% +Codes, ?Html
-	   codes_html/3		% +Codes, ?Html, ?Tail
-	  ]).
+          [code_html/3,         % ?Code,  ?Html, ?Tail
+           codes_html/2,        % +Codes, ?Html
+           codes_html/3         % +Codes, ?Html, ?Tail
+          ]).
 
 codes_html(Codes, Html) :-
     codes_html(Codes, Html, []).

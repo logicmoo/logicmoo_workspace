@@ -28,11 +28,11 @@
 */
 
 :- module(safe_prolog_cut_to,
-	  [call_decreasing_cp/2,
-	   fix_choice/3,
-	   safe_prolog_cut_to/1,
-	   safe_prolog_cut_to/3
-	  ]).
+          [call_decreasing_cp/2,
+           fix_choice/3,
+           safe_prolog_cut_to/1,
+           safe_prolog_cut_to/3
+          ]).
 
 :- meta_predicate
     call_decreasing_cp(0, ?).

@@ -28,8 +28,8 @@
 */
 
 :- module(interface, [implements/1,
-		      bind_interface/2,
-		      end_interface/0]).
+                      bind_interface/2,
+                      end_interface/0]).
 
 :- use_module(library(apply)).
 :- use_module(library(error)).
@@ -42,7 +42,7 @@
 implements(Implementation:Alias) :-
     Implementation:use_module(Alias, []), % Ensure that the module is loaded
     absolute_file_name(Alias, File,
-		       [file_type(prolog), access(read)]),
+                       [file_type(prolog), access(read)]),
     module_property(Interface, file(File)),
     module_property(Interface, exports(PIL)),
     compile_aux_clauses(interface:'$implementation'(Implementation, Interface)),
@@ -50,9 +50,9 @@ implements(Implementation:Alias) :-
 
 direct_interface(M, F/A) :-
     \+ ( current_predicate(M:F/A),
-	 functor(H, F, A),
-	 predicate_property(M:H, defined),
-	 \+ predicate_property(M:H, imported_from(_))
+         functor(H, F, A),
+         predicate_property(M:H, defined),
+         \+ predicate_property(M:H, imported_from(_))
        ).
 
 :- module_transparent end_interface/0.
@@ -65,9 +65,9 @@ end_interface(Interface) :-
     partition(interface:direct_interface(Interface), PIL, DIL, IIL),
     compile_aux_clauses(interface:'$interface'(Interface, DIL, IIL)),
     forall(( member(F/A, DIL),
-	     functor(H, F, A)),
-	   compile_aux_clauses([(Interface:H
-				:- existence_error(binding, Interface:F/A))])).
+             functor(H, F, A)),
+           compile_aux_clauses([(Interface:H
+                                :- existence_error(binding, Interface:F/A))])).
 
 bind_interface(Interface, Implementation) :-
     ( '$interface'(Interface, DIL, IIL)

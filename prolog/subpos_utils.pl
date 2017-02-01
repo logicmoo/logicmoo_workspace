@@ -28,10 +28,10 @@
 */
 
 :- module(subpos_utils,
-	  [subpos_location/3,
-	   subterm_location/3,
-	   subterm_location_eq/3
-	  ]).
+          [subpos_location/3,
+           subterm_location/3,
+           subterm_location_eq/3
+          ]).
 
 location_subpos(PPos, N, SPos) :-
     nonvar(PPos),
@@ -46,7 +46,7 @@ location_subpos(list_position(From, To, PosL, Tail), N, Pos) :-
     ->( PosL = [_]
       ->Pos = Tail
       ; PosL = [_|PosL1],
-	Pos = list_position(From, To, PosL1, Tail)
+        Pos = list_position(From, To, PosL1, Tail)
       )
     ).
 location_subpos(brace_term_position(_, _, Pos), 1, Pos).

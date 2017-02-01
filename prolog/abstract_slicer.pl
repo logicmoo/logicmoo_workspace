@@ -28,7 +28,7 @@
 */
 
 :- module(abstract_slicer, [abstract_slice/3,
-			    slicer_abstraction/10]).
+                            slicer_abstraction/10]).
 
 :- use_module(library(abstract_interpreter)).
 
@@ -78,20 +78,20 @@ terms_share(A, R, B) :-
       member(VB, VarsB),
       VA==VB,
       \+ ( member(VR, VarsR),
-	   VA == VR
-	 )
+           VA == VR
+         )
     ), !.
 
 slicer_abstraction(Spec, RevS, Scope, Goal, M, Body,
-		   state(_, EvalL, OnErr, CallL, Data, Cont),
-		   state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
+                   state(_, EvalL, OnErr, CallL, Data, Cont),
+                   state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
     {predicate_property(M:Goal, interpreted)}, !,
     { \+ ground(Spec),
       chain_of_dependencies(Spec, RevS, Goal, Cont)
     ->match_head_body(Goal, M, Body1, Loc),
       ( Scope = body
       ->Body = Body1
-      ;	terms_share(Spec, RevS, Goal)
+      ; terms_share(Spec, RevS, Goal)
       ->Body = Body1
       ; Body = M:true
       )
@@ -103,7 +103,7 @@ slicer_abstraction(Spec, RevS, Scope, Goal, M, Body,
       Body = M:true
     },
     ( {Scope = head}
-    ->bottom			% Kludge to avoid cut remove solutions
+    ->bottom                    % Kludge to avoid cut remove solutions
     ; []
     ).
 slicer_abstraction(_, _, _, Goal, M, M:true, S, S) -->

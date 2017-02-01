@@ -69,5 +69,5 @@ atomics_to_string(Atomics, A, B, String) :-
     ->string_concat(A, B, C),
       atomics_string(Atomics, 1, C, String)
     ; throw(error(instantiation_error,
-		  context(atomics_string:atomics_string/2,_)))
+                  context(atomics_string:atomics_string/2,_)))
     ).

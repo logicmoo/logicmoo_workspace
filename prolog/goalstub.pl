@@ -28,7 +28,7 @@
 */
 
 :- module(goalstub, [register_stub/1,
-		     stub_term_expansion/5]).
+                     stub_term_expansion/5]).
 
 :- use_module(library(lists)).
 :- use_module(library(sequence_list)).
@@ -58,14 +58,14 @@ stub_term_expansion(end_of_file, P, _, CL, P) :- !,
     module_property(M, file(File)),
     prolog_load_context(file, File),
     findall((H :- G),
-	    ( findall(F/A, requires_stub(F, A, M, _), PIU),
-	      sort(PIU, PIL),	% remove duplicates
-	      member(F/A, PIL),
-	      functor(H, F, A),
-	      stub_head(H, HS),
-	      findall(S, requires_stub(F, A, M, S), StubL),
-	      concat_stubs(StubL, H, G, HS)
-	    ), CL, [end_of_file]).
+            ( findall(F/A, requires_stub(F, A, M, _), PIU),
+              sort(PIU, PIL),   % remove duplicates
+              member(F/A, PIL),
+              functor(H, F, A),
+              stub_head(H, HS),
+              findall(S, requires_stub(F, A, M, S), StubL),
+              concat_stubs(StubL, H, G, HS)
+            ), CL, [end_of_file]).
 stub_term_expansion(Term0, P, _, Term, P) :-
     '$current_source_module'(M),
     requires_stub_rename_head(Term0, Term, M).
@@ -83,12 +83,12 @@ stub_head(Head0, Head) :-
 requires_stub_rename_head(M:Term0, Term, _) :- !,
     requires_stub_rename_head(Term0, Term, M).
 requires_stub_rename_head((Head0 :- Body),
-			  (Head  :- Body),
-			  M) :- !,
+                          (Head  :- Body),
+                          M) :- !,
     requires_stub_rename_head_(Head0, Head, 0, M).
 requires_stub_rename_head((Head0 --> Body),
-			  (Head  --> Body),
-			  M) :- !,
+                          (Head  --> Body),
+                          M) :- !,
     requires_stub_rename_head_(Head0, Head, 2, M).
 
 

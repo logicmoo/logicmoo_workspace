@@ -36,31 +36,31 @@ tr_text(A,B,T) :- append(A,T,B).
 comment(Text) --> "#", tr_text(Text), "\n".
 
 translator_comments([TC|TCs]) -->
-	"# ", tr_text(TC), "\n",
-	!,
-	translator_comments(TCs).
+        "# ", tr_text(TC), "\n",
+        !,
+        translator_comments(TCs).
 translator_comments([[]|TCs]) -->
-	"#\n",
-	!,
-	translator_comments(TCs).
+        "#\n",
+        !,
+        translator_comments(TCs).
 translator_comments([]) --> [].
 
 extracted_comments([EC|ECs]) -->
-	"#. ", tr_text(EC), "\n",
-	!,
-	extracted_comments(ECs).
+        "#. ", tr_text(EC), "\n",
+        !,
+        extracted_comments(ECs).
 extracted_comments([]) --> [].
 
 reference([R|Rs]) -->
-	"#: ", tr_text(R), "\n",
-	!,
-	reference(Rs).
+        "#: ", tr_text(R), "\n",
+        !,
+        reference(Rs).
 reference([]) --> [].
 
 flag([F|Fs]) -->
-	"#, ", tr_text(F), "\n",
-	!,
-	flag(Fs).
+        "#, ", tr_text(F), "\n",
+        !,
+        flag(Fs).
 flag([]) --> [].
 
 %% parse_po_entries(+Term,-Codes,?Tail).
@@ -79,34 +79,34 @@ flag([]) --> [].
 */
 
 parse_po_entry(entry(TranslatorComments, ExtractedComments,
-		     Reference, Flag, MsgId, MsgStr)) -->
-	translator_comments(TranslatorComments),
-	extracted_comments(ExtractedComments),
-	reference(Reference),
-	flag(Flag),
-	msg("msgid", MsgId),
-	msg("msgstr", MsgStr),
-	( "\n" ->[] ; [] ),
-	!.
+                     Reference, Flag, MsgId, MsgStr)) -->
+        translator_comments(TranslatorComments),
+        extracted_comments(ExtractedComments),
+        reference(Reference),
+        flag(Flag),
+        msg("msgid", MsgId),
+        msg("msgstr", MsgStr),
+        ( "\n" ->[] ; [] ),
+        !.
 parse_po_entry(comment(Text)) -->
-	comment(Text).
+        comment(Text).
 parse_po_entry(nl) -->
-	"\n".
+        "\n".
 % parse_po_entry(error(E)) --> flush(E).
 
 % flush([E|T]) --> [E], !, flush(T).
 % flush([]) --> [].
 
 parse_po_entries([Entry|Tail]) -->
-	parse_po_entry(Entry),
-	!,
-	parse_po_entries(Tail).
+        parse_po_entry(Entry),
+        !,
+        parse_po_entries(Tail).
 parse_po_entries([]) --> [].
 
 msg(Key, [Line|Lines]) -->
-	phrase(Key), " ",
-	text_line(Line),
-	text_lines(Lines), !.
+        phrase(Key), " ",
+        text_line(Line),
+        text_lines(Lines), !.
 
 text_lines([Line|Lines]) --> text_line(Line), text_lines(Lines).
 text_lines([]) --> "".

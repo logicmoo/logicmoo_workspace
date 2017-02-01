@@ -1,6 +1,6 @@
 :- module(resolve_calln,
-	  [resolve_calln/2,
-	   do_resolve_calln/2]).
+          [resolve_calln/2,
+           do_resolve_calln/2]).
 
 :- use_module(library(extend_args)).
 

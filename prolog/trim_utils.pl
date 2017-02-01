@@ -28,16 +28,16 @@
 */
 
 :- module(trim_utils,
-	  [left_trim/2,
-	   right_trim/2,
-	   trim/2,
-	   atom_left_trim/2,
-	   atom_right_trim/2,
-	   atom_trim/2,
-	   string_left_trim/2,
-	   string_right_trim/2,
-	   string_trim/2
-	   ]).
+          [left_trim/2,
+           right_trim/2,
+           trim/2,
+           atom_left_trim/2,
+           atom_right_trim/2,
+           atom_trim/2,
+           string_left_trim/2,
+           string_right_trim/2,
+           string_trim/2
+           ]).
 
 :- use_module(library(lists)).
 

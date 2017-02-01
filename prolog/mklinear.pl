@@ -46,8 +46,8 @@ mklinear(Term, Linear, VarL) -->
     mklinear(1, Term, Linear, VarL).
 mklinear(Term, Var, VarL) -->
     ( { var(Term),
-	member(Var0, VarL),
-	Term==Var0
+        member(Var0, VarL),
+        Term==Var0
       }
     ->[Var=Term]
     ; {Var=Term}

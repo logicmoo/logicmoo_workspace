@@ -68,8 +68,8 @@ translate_term_meta(M, Term0, Term) :-
 gtabling(Elem, Goal) :-
     ( \+ Elem->
       ( Goal,
-	compile_aux_clauses(Elem),
-	fail
+        compile_aux_clauses(Elem),
+        fail
       ; true
       )
     ; true
@@ -77,7 +77,7 @@ gtabling(Elem, Goal) :-
 
 tabulate_i18n_records(M) :-
     gtabling(i18n_support:i18n_record(M, L, I, S),
-	     current_i18n_record(M, L, I, S)).
+             current_i18n_record(M, L, I, S)).
 
 translate_term(Term0, Term) :-
     '$current_source_module'(M),
@@ -136,13 +136,13 @@ goal_expansion(A = IB, G) :- % A bit complex due to static optimizations:
 */
 
 term_expansion((:- i18n_resource(PoAlias)),
-	       i18n_support:i18n_resource(M, PoAlias)) :- !,
+               i18n_support:i18n_resource(M, PoAlias)) :- !,
     '$current_source_module'(M).
 term_expansion((:- resourceterm(Term)),
-	       i18n_support:i18n_resourceterm(M, Term)) :- !,
+               i18n_support:i18n_resourceterm(M, Term)) :- !,
     '$current_source_module'(M).
 term_expansion((:- init_i18n),
-	       []) :- !,
+               []) :- !,
     '$current_source_module'(M),
     tabulate_i18n_records(M).
 term_expansion((:- M:init_i18n), [])  :- !, tabulate_i18n_records(M).
