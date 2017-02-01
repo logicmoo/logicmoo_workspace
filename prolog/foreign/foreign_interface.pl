@@ -6,25 +6,25 @@
 :- use_module(library(compound_expand)).
 
 term_expansion((:- gen_foreign_library(AliasSO)),
-	       foreign_generator:gen_foreign_library(M, AliasSO)) :-
+               foreign_generator:gen_foreign_library(M, AliasSO)) :-
     '$current_source_module'(M).
 term_expansion((:- pkg_foreign_config(Package)),
-	       foreign_generator:pkg_foreign_config(M, Package)) :-
+               foreign_generator:pkg_foreign_config(M, Package)) :-
     '$current_source_module'(M).
 term_expansion((:- use_foreign_source(FAlias)),
-	       foreign_generator:use_foreign_source(M, FAlias)) :-
+               foreign_generator:use_foreign_source(M, FAlias)) :-
     '$current_source_module'(M).
 term_expansion((:- use_foreign_header(FAlias)),
-	       foreign_generator:use_foreign_header(M, FAlias)) :-
+               foreign_generator:use_foreign_header(M, FAlias)) :-
     '$current_source_module'(M).
 term_expansion((:- include_foreign_dir(DAlias)),
-	       foreign_generator:include_foreign_dir(M, DAlias)) :-
+               foreign_generator:include_foreign_dir(M, DAlias)) :-
     '$current_source_module'(M).
 term_expansion((:- extra_compiler_opts(COpt)),
-	       foreign_generator:extra_compiler_opts(M, COpt)) :-
+               foreign_generator:extra_compiler_opts(M, COpt)) :-
     '$current_source_module'(M).
 term_expansion((:- link_foreign_library(Lib)),
-	       foreign_generator:link_foreign_library(M, Lib)) :-
+               foreign_generator:link_foreign_library(M, Lib)) :-
     '$current_source_module'(M).
 
 term_expansion(end_of_file, Decl) :-

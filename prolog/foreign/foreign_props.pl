@@ -1,21 +1,21 @@
 :- module(foreign_props,
-	  [foreign/1,
-	   foreign/2,
-	   fimport/1,
-	   fimport/2,
-	   returns/2,
-	   parent/2,
-	   returns_state/1,
-	   memory_root/1,
-	   ptr/1,
-	   ptr/2,
-	   float_t/1,
-	   dict_t/2,
-	   dict_t/3,
-	   dict_join_t/4,
-	   dict_extend_t/4,
-	   join_dict_types/6,
-	   join_type_desc/5]).
+          [foreign/1,
+           foreign/2,
+           fimport/1,
+           fimport/2,
+           returns/2,
+           parent/2,
+           returns_state/1,
+           memory_root/1,
+           ptr/1,
+           ptr/2,
+           float_t/1,
+           dict_t/2,
+           dict_t/3,
+           dict_join_t/4,
+           dict_extend_t/4,
+           join_dict_types/6,
+           join_type_desc/5]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
@@ -78,11 +78,11 @@ called_by_dict_t(Desc, CM, L) :-
     nonvar(Desc),
     dict_create(Dict, _Tag, Desc),
     findall(M:P,
-	    ( MType=Dict._Key,
-	      strip_module(CM:MType, M, T),
-	      nonvar(T),
-	      add_1st_arg(T, _, P)
-	    ), L).
+            ( MType=Dict._Key,
+              strip_module(CM:MType, M, T),
+              nonvar(T),
+              add_1st_arg(T, _, P)
+            ), L).
 
 :- prop dict_t/2 + type.
 :- meta_predicate dict_t(?, :).

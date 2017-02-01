@@ -1,5 +1,5 @@
 :- module(foreign_generator, [generate_library/4,
-			      gen_foreign_library/2]).
+                              gen_foreign_library/2]).
 
 :- use_module(library(assertions)).
 :- use_module(library(assrt_lib)).
@@ -33,14 +33,14 @@ fortran_command(M, path(gfortran), ValueL, ValueT) :-
     command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
     atomic_list_concat(AtomL, ';\n', Atom),
     findall(Value, ( ( member(NameValue, AtomL),
-		       member(NameEq, ['PLCFLAGS="', 'PLLDFLAGS="']),
-		       atomics_atom([NameEq, Values, '"'], NameValue)
-		     ; extra_compiler_opts(M, Values)
-		     ),
-		     atomic_args(Values, ValueL1),
-		     member(Value, ValueL1)
-		   ),
-	    ValueL, ValueT).
+                       member(NameEq, ['PLCFLAGS="', 'PLLDFLAGS="']),
+                       atomics_atom([NameEq, Values, '"'], NameValue)
+                     ; extra_compiler_opts(M, Values)
+                     ),
+                     atomic_args(Values, ValueL1),
+                     member(Value, ValueL1)
+                   ),
+            ValueL, ValueT).
 
 intermediate_obj(M, DirSO, Source, Object) -->
     {intermediate_obj(M, DirSO, Source, Object, Command)}, !,
@@ -63,59 +63,59 @@ is_newer(File1, File2) :-
 
 generate_library(M, AliasSO, AliasSOPl, File) :-
     absolute_file_name(AliasSO, FileSO, [file_type(executable),
-					 relative_to(File)]),
+                                         relative_to(File)]),
     findall(FSource, ( ( use_foreign_source(M, FAlias)
-		       ; FAlias = library('foreign/foreign_interface.c')
-		       ; FAlias = library('foreign/foreign_swipl.c')
-		       ),
-		       absolute_file_name(FAlias, FSource,
-					  [extensions(['.c', '']),
-					   access(read),
-					   relative_to(File)])
-		     ), FSourceL),
+                       ; FAlias = library('foreign/foreign_interface.c')
+                       ; FAlias = library('foreign/foreign_swipl.c')
+                       ),
+                       absolute_file_name(FAlias, FSource,
+                                          [extensions(['.c', '']),
+                                           access(read),
+                                           relative_to(File)])
+                     ), FSourceL),
     ( forall(( member(Dep, [File|FSourceL])
-	     ; ( use_foreign_header(M, HAlias)
-	       ; HAlias = library('foreign/foreign_interface.h')
-	       ; HAlias = library('foreign/foreign_swipl.h')
-	       ),
-	       absolute_file_name(HAlias, Dep,
-				  [extensions(['.h','']),
-				   access(read),
-				   relative_to(File)])
-	     ; member(Alias, [library(foreign/foreign_generator),
-			      library(foreign/foreign_props),
-			      library(foreign/foreign_interface)
-			     ]),
-	       absolute_file_name(Alias, Dep, [file_type(prolog),
-					       access(read),
-					       relative_to(File)])
-	     ),
-	     is_newer(FileSO, Dep))
+             ; ( use_foreign_header(M, HAlias)
+               ; HAlias = library('foreign/foreign_interface.h')
+               ; HAlias = library('foreign/foreign_swipl.h')
+               ),
+               absolute_file_name(HAlias, Dep,
+                                  [extensions(['.h','']),
+                                   access(read),
+                                   relative_to(File)])
+             ; member(Alias, [library(foreign/foreign_generator),
+                              library(foreign/foreign_props),
+                              library(foreign/foreign_interface)
+                             ]),
+               absolute_file_name(Alias, Dep, [file_type(prolog),
+                                               access(read),
+                                               relative_to(File)])
+             ),
+             is_newer(FileSO, Dep))
     ->print_message(informational,
-		    format('Skipping build of ~w: is up to date', [FileSO]))
+                    format('Skipping build of ~w: is up to date', [FileSO]))
     ; do_generate_library(M, FileSO, File, FSourceL),
       do_generate_wrapper(M, AliasSO, AliasSOPl, File)
     ).
 
 do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
     findall(F/A, ( current_foreign_prop(_, Head, M, _, _, _, _, _, _, _, _, _, _),
-		   \+ ( predicate_property(M:Head, number_of_clauses(X)),
-			X>0
-		      ),
-		   functor(Head, F, A)
-		 ), IntfPIU),
+                   \+ ( predicate_property(M:Head, number_of_clauses(X)),
+                        X>0
+                      ),
+                   functor(Head, F, A)
+                 ), IntfPIU),
     sort(IntfPIU, IntfPIL),
     atom_concat(M, '$impl', IModule),
     absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
-					     relative_to(File)]),
+                                             relative_to(File)]),
     % assertion(file_name_extension(_, pl, FileSOPl)),
     with_output_to_file(FileSOPl,
-			( add_autogen_note(M),
-			  portray_clause((:- module(IModule, IntfPIL))),
-			  generate_aux_clauses(M),
-			  nl,
-			  portray_clause((:- use_foreign_library(AliasSO)))
-			)).
+                        ( add_autogen_note(M),
+                          portray_clause((:- module(IModule, IntfPIL))),
+                          generate_aux_clauses(M),
+                          nl,
+                          portray_clause((:- use_foreign_library(AliasSO)))
+                        )).
 
 atomic_args(String, ArgL) :-
     atomic_list_concat(ArgL1, ' ', String),
@@ -125,56 +125,56 @@ do_generate_library(M, FileSO, File, FSourceL) :-
     file_name_extension(BaseFile, _, FileSO),
     generate_foreign_interface(M, File, BaseFile),
     absolute_file_name(library(foreign/foreign_interface),
-		       IntfPl,
-		       [file_type(prolog), access(read), relative_to(File)]),
+                       IntfPl,
+                       [file_type(prolog), access(read), relative_to(File)]),
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
     atom_concat(BaseFile, '_intf.c', IntfFile),
     foldl(intermediate_obj(M, DirSO), FSourceL, FTargetL, Commands, CommandsT),
     append(FTargetL, [IntfFile|CLibL], FArgsT),
     findall(CLib, ( link_foreign_library(M, Lib),
-		    atom_concat('-l', Lib, CLib)
-		  ; pkg_foreign_config(M, Package),
-		    command_to_atom('pkg-config', ['--libs', Package], CLib0),
-		    atom_concat(CLibs, '\n', CLib0),
-		    atomic_args(CLibs, CLibL1),
-		    member(CLib, CLibL1)
-		  ), CLibL, ['-o', FileSO]),
+                    atom_concat('-l', Lib, CLib)
+                  ; pkg_foreign_config(M, Package),
+                    command_to_atom('pkg-config', ['--libs', Package], CLib0),
+                    atom_concat(CLibs, '\n', CLib0),
+                    atomic_args(CLibs, CLibL1),
+                    member(CLib, CLibL1)
+                  ), CLibL, ['-o', FileSO]),
     findall(COpt, ( ( extra_compiler_opts(M, COpts)
-		    ; pkg_foreign_config(M, Package),
-		      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
-		      atom_concat(COpts, '\n', COpt1)
-		    ),
-		    atomic_args(COpts, COptL1),
-		    member(COpt, COptL1)		    
-		  ), COptL, IDirL),
+                    ; pkg_foreign_config(M, Package),
+                      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
+                      atom_concat(COpts, '\n', COpt1)
+                    ),
+                    atomic_args(COpts, COptL1),
+                    member(COpt, COptL1)                    
+                  ), COptL, IDirL),
     findall(IDir, ( ( Dir = DirSO
-		    ; Dir = DirIntf
-		    ; include_foreign_dir(M, DAlias),
-		      absolute_file_name(DAlias, Dir, [file_type(directory),
-						       relative_to(File)])
-		    ),
-		    atom_concat('-I', Dir, IDir)
-		  ),
-	    IDirL, FArgsT),
+                    ; Dir = DirIntf
+                    ; include_foreign_dir(M, DAlias),
+                      absolute_file_name(DAlias, Dir, [file_type(directory),
+                                                       relative_to(File)])
+                    ),
+                    atom_concat('-I', Dir, IDir)
+                  ),
+            IDirL, FArgsT),
     CommandsT = [path('swipl-ld')-['-shared'|COptL]],
     forall(member(Command-ArgL, Commands),
-	   compile_1(Command, ArgL)).
+           compile_1(Command, ArgL)).
 
 compile_1(Command, ArgL) :-
     process_create(Command, ArgL, [stdout(pipe(Out)),
-				   stderr(pipe(Err))]),
+                                   stderr(pipe(Err))]),
     read_string(Err, _, SErr),
     read_string(Out, _, SOut),
     close(Err),
     command_to_string(Command, ArgL, CommandS),
     catch(( close(Out),
-	    print_message(informational, format('~s', [CommandS]))
-	  ),
-	  Error,
-	  ( print_message(error, Error),
-	    print_message(error, format("~s~s~nCommand: ~s", [SOut, SErr, CommandS]))
-	  )).
+            print_message(informational, format('~s', [CommandS]))
+          ),
+          Error,
+          ( print_message(error, Error),
+            print_message(error, format("~s~s~nCommand: ~s", [SOut, SErr, CommandS]))
+          )).
 
 command_to_string(Command, ArgL, CommandS) :-
     ( Command = path(RCommand)
@@ -209,11 +209,11 @@ generate_foreign_intf_h(Module, FileImpl_h) :-
     format('extern module_t __~w_impl;~n', [Module]),
     forall_tp(Module, type_props_nf, declare_type_getter_unifier),
     forall(( current_foreign_prop(_, Head, _, Module, _, _, _, _, Dict, _, _, BindName, _, Type),
-	     apply_dict(Head, Dict)
-	   ),
-	   ( format('extern ', []),
-	     declare_intf_head(Type, BindName, Head),
-	     format(';~n', []))),
+             apply_dict(Head, Dict)
+           ),
+           ( format('extern ', []),
+             declare_intf_head(Type, BindName, Head),
+             format(';~n', []))),
     format('~n#endif /* __~w_INTF_H */~n', [Module]).
 
 declare_intf_head(fimport(_),    BindName, _) :- !, declare_intf_fimp_head(BindName).
@@ -236,11 +236,11 @@ add_autogen_note(Module) :-
 generate_foreign_c(Module, Base, FilePl, FileIntf_h) :-
     add_autogen_note(Module),
     forall(use_foreign_header(Module, HAlias),
-	   ( absolute_file_name(HAlias, File_h, [extensions(['.h', '']),
-						 access(read),
-						 relative_to(FilePl)]),
-	     format('#include "~w"~n', [File_h])
-	   )),
+           ( absolute_file_name(HAlias, File_h, [extensions(['.h', '']),
+                                                 access(read),
+                                                 relative_to(FilePl)]),
+             format('#include "~w"~n', [File_h])
+           )),
     format('#include "~w"~n~n', [FileIntf_h]),
     format('module_t __~w;~n',      [Module]),
     format('module_t __~w_impl;~n', [Module]),
@@ -259,7 +259,7 @@ generate_foreign_register(Module, Base) :-
     format('    __~w_impl=PL_new_module(PL_new_atom("~w$impl"));~n', [Module, Module]),
     forall_tp(Module, type_props_nf, define_aux_variables),
     forall(current_foreign_prop(_, _, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
-	   write_register_sentence(Type, M, PredName, Arity, BindName)),
+           write_register_sentence(Type, M, PredName, Arity, BindName)),
     format('} /* install_~w */~n~n', [Base]).
 
 
@@ -269,7 +269,7 @@ write_register_sentence(fimport(_, _), M, PredName, Arity, BindName) :- !,
     write_init_fimport_binding(M, PredName, Arity, BindName).
 write_register_sentence(_, _, PredName, Arity, BindName) :-
     format('    PL_register_foreign(\"~w\", ~w, ~w, 0);~n',
-	   [PredName, Arity, BindName]).
+           [PredName, Arity, BindName]).
 
 write_init_fimport_binding(M, PN, A, BN) :-
     format('    ~w = PL_predicate("~w", ~w, "~w");~n', [BN, PN, A, M]).
@@ -278,9 +278,9 @@ write_init_fimport_binding(M, PN, A, BN) :-
 
 forall_tp(Module, TypeProps, Call) :-
     forall(call(TypeProps, Module, Type, TypePropLDictL, Pos, _Asr),
-	   ( maplist(apply_dict_tp, TypePropLDictL),
-	     type_components(Module, Type, TypePropLDictL, Call, Pos)
-	   )).
+           ( maplist(apply_dict_tp, TypePropLDictL),
+             type_components(Module, Type, TypePropLDictL, Call, Pos)
+           )).
 
 apply_dict_tp(t(Type, PropL, Dict)) :- apply_dict(Type-PropL, Dict).
 
@@ -297,26 +297,26 @@ type_props(M, Type, TypePropLDictL, Pos, Asr) :-
 type_props_(CM, Type, Dict, Pos, Asr) :-
     asr_head_prop(Asr, CM, Type, check, prop, Dict, Pos),
     once(( member(TType, [type(_), regtype(_)]),
-	   asr_glob(Asr, _, TType, _)
-	 )).
+           asr_glob(Asr, _, TType, _)
+         )).
 
 type_props_nf(Module, Type, TypePropLDictL, Pos, Asr) :-
     type_props(Module, Type, TypePropLDictL, Pos, Asr),
-				% Don't create getters and unifiers for
-				% typedefs, they are just casts:
+                                % Don't create getters and unifiers for
+                                % typedefs, they are just casts:
     \+ type_is_tdef(Module, Type, _, _),
     \+ asr_glob(Asr, _, foreign(_, _), _).
 
 define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
     format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',
-	   [M, Name, Name, M]).
+           [M, Name, Name, M]).
 define_aux_variables(dict_key_value(_, _, _, _), _, _) :- !, fail.
 define_aux_variables(_, _, _).
 
 implement_type_getter_ini(PName, CName, Spec, Name) :-
     ctype_decl(Spec, Decl, []),
     format('int FI_get_~w(root_t __root, term_t ~w, ~s *~w) {~n',
-	   [Name, PName, Decl, CName]).
+           [Name, PName, Decl, CName]).
 
 c_get_argument_getter(Spec, CNameArg, PNameArg) :-
     c_get_argument(Spec, in, CNameArg, PNameArg).
@@ -411,17 +411,17 @@ implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) :-
     ctype_decl(Spec, Decl, []),
     format('static int~n', []),
     format('get_pair_~w(root_t __root, term_t __keyid, term_t __value, ~s *);~n~n',
-	   [Name, Decl]),
+           [Name, Decl]),
     implement_type_getter_ini(PName, CName, Spec, Name),
     format('    memset(~w, 0, sizeof(~s));~n', [CName, Decl]),
     format('    FI_get_dict_t(~w, ~w, ~w);~n', [Name, PName, CName]),
     implement_type_end,
     format('static int~n', []),
     format('get_pair_~w(root_t __root, term_t __keyid, term_t __value, ~s *~w){~n',
-	   [Name, Decl, CName]),
+           [Name, Decl, CName]),
     format('    int __index;~n', []),
     format('    FI_get_keyid_index(__~w_aux_keyid_index_~w, __keyid, __index);~n',
-	   [Module, Name]),
+           [Module, Name]),
     format('    switch (__index) {~n', []).
 
 implement_type_end :-
@@ -483,7 +483,7 @@ implement_type_unifier(func_ini(Spec, L), Term, Name) :-
     ),
     functor(Term, Func, Arity),
     format('    __rtcheck(PL_unify_functor(~w, PL_new_functor(PL_new_atom("~w"), ~d)));~n',
-	   [PName, Func, Arity]).
+           [PName, Func, Arity]).
 implement_type_unifier(func_rec(N, Term, Name, L), Spec, Arg) :-
     func_pcname(Name, PName, CName),
     ( L = [_, _|_]
@@ -543,7 +543,7 @@ spec_pointer(tdef(_, Spec)) :- spec_pointer(Spec).
 implement_type_unifier_ini(PName, CName, Term, Spec) :-
     ctype_decl(Spec, Decl, []),
     format('int FI_unify_~w(term_t ~w, ~s* const ~w) {~n',
-	   [Term, PName, Decl, CName]).
+           [Term, PName, Decl, CName]).
 
 apply_name(Name=Value) :-
     camel_snake(Name, Arg),
@@ -567,8 +567,8 @@ fg_numbervars([V|Vs], N, Dict) :-
 bind_type_names(M, Type, TypeMPropLDictL) :-
     predicate_property(M:Type, interpreted),
     findall(t(Type, MPropL, Dict),
-	    bind_tn_clause(M, Type, MPropL, Dict),
-	    TypeMPropLDictL).
+            bind_tn_clause(M, Type, MPropL, Dict),
+            TypeMPropLDictL).
 
 bind_tn_clause(M, Type, MPropL, Dict) :-
     catch(clause(M:Type, Body, Ref), _, fail),
@@ -586,10 +586,10 @@ declare_struct(union_ini(_, TPDL), _, Name) :-
     ( TPDL = [_, _|_]
     ->format('typedef enum {~n', []),
       forall(nth1(Idx, TPDL, t(Type, _, _)),
-	     ( arg(1, Type, Term),
-	       functor(Term, TName, _),
-	       format('    ~s_~s = ~d,~n', [Name, TName, Idx])
-	     )),
+             ( arg(1, Type, Term),
+               functor(Term, TName, _),
+               format('    ~s_~s = ~d,~n', [Name, TName, Idx])
+             )),
       format('} ~s_utype;~n', [Name]),
       format('struct ~s {~n', [Name]),
       format('  ~s_utype utype;~n', [Name]),
@@ -693,7 +693,7 @@ type_components(M, Type, TypePropLDictL, Call, Loc) :-
     functor(Type, Name, _),
     call(Call, union_ini(type(Name), TypePropLDictL), Type, Name),
     maplist(type_components_one(M, Name, Call, TypePropLDictL, Loc),
-	    TypePropLDictL),
+            TypePropLDictL),
     call(Call, union_end(TypePropLDictL), Type, _).
 
 type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
@@ -701,20 +701,20 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
     ( compound(Term)
     ->call(Call, func_ini(type(Name), TPLDL), Term, Name),
       forall(arg(N, Term, Arg),
-	     ( member(Prop, PropL),
-	       match_known_type_(Prop, M, Spec, Arg),
-	       call(Call, func_rec(N, Term, Name, TPLDL), Spec, Arg)
-	     ->true
-	     ; print_message(warning, ignored_type(Loc, Name, Arg))
-	     )
-	    ),
+             ( member(Prop, PropL),
+               match_known_type_(Prop, M, Spec, Arg),
+               call(Call, func_rec(N, Term, Name, TPLDL), Spec, Arg)
+             ->true
+             ; print_message(warning, ignored_type(Loc, Name, Arg))
+             )
+            ),
       call(Call, func_end(TPLDL), Term, Name)
     ; ( select(dict_t(Term, Desc), PropL, PropL1)
       ; select(dict_t(Term, Tag, Desc), PropL, PropL1)
       ; select(dict_join_t(Term, Tag, Type1, Type2), PropL, PropL1),
-	join_dict_types(Type1, M, Type2, M, Tag, Desc)
+        join_dict_types(Type1, M, Type2, M, Tag, Desc)
       ; select(dict_extend_t(Term, Type, Tag, Desc2), PropL, PropL1),
-	join_type_desc(Type, M, Tag, Desc2, Desc)
+        join_type_desc(Type, M, Tag, Desc2, Desc)
       )
     ->( is_dict(Desc, Tag)
       ->Dict=Desc
@@ -723,12 +723,12 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
       ignore(Tag = Name),
       call(Call, dict_ini(Name, M, Dict), type(Name), Term),
       forall(call(Call, dict_key_value(Dict, Desc, N, Name), Arg, Value),
-	     ( fetch_kv_prop_arg(Arg,  M, Value, PropL1, Prop),
-	       match_known_type_(Prop, M, Spec, Arg),
-	       call(Call, dict_rec(M, Term, N, Name), Spec, Arg)
-	     ->true
-	     ; print_message(warning, ignored_type(Loc, Name, Arg))
-	     )),
+             ( fetch_kv_prop_arg(Arg,  M, Value, PropL1, Prop),
+               match_known_type_(Prop, M, Spec, Arg),
+               call(Call, dict_rec(M, Term, N, Name), Spec, Arg)
+             ->true
+             ; print_message(warning, ignored_type(Loc, Name, Arg))
+             )),
       call(Call, dict_end(M, Tag), Term, Name)
     ; member(Prop, PropL),
       match_known_type_(Prop, M, Spec, Term)
@@ -738,8 +738,8 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
     ), !.
 type_components_one(M, Name, Call, TPLDL, Loc, TypePropLDict) :-
     print_message(error,
-		  failed_binding(Loc,
-				 type_components_one(M, Name, Call, TPLDL, Loc, TypePropLDict))).
+                  failed_binding(Loc,
+                                 type_components_one(M, Name, Call, TPLDL, Loc, TypePropLDict))).
 
 key_value_from_dict(Dict, N, Key, Value) :-
     S = s(0),
@@ -771,8 +771,8 @@ declare_intf_head(PCN, Head) :-
     format('foreign_t ~w(', [PCN]),
     ( compound(Head)
     ->findall(Txt, ( arg(_, Head, Arg),
-		     format(atom(Txt), 'term_t ~w', [Arg])
-		   ), TxtL),
+                     format(atom(Txt), 'term_t ~w', [Arg])
+                   ), TxtL),
       atomic_list_concat(TxtL, ', ', ArgS),
       format('~a', [ArgS])
     ; true
@@ -781,14 +781,14 @@ declare_intf_head(PCN, Head) :-
 
 declare_foreign_bind(CM) :-
     forall(read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, Bind, _),
-	   ( declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind),
-	     format(';~n', [])
-	   )).
+           ( declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind),
+             format(';~n', [])
+           )).
 
 declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind) :-
     ( member(RS, [returns_state(_), type(_)]),
       memberchk(RS, Glob)
-    ->format('int '),	    % int to avoid SWI-Prolog.h dependency at this level
+    ->format('int '),       % int to avoid SWI-Prolog.h dependency at this level
       CHead = Head
     ; member(returns(_, Var), Glob)
     ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Var, Spec, Mode),
@@ -840,8 +840,8 @@ ctype_arg_decl(Spec, Mode) -->
     ({is_ref(Spec, Mode)} -> [] ; "*").
 
 is_ref(term,    _) :- !.
-is_ref(list(_), _) :- !.	% Always ref
-is_ref(ptr(_),  _) :- !.	% Always ref
+is_ref(list(_), _) :- !.        % Always ref
+is_ref(ptr(_),  _) :- !.        % Always ref
 is_ref(chrs(_), _) :- !.
 is_ref(_, in).
 is_ref(_, out).
@@ -878,31 +878,31 @@ foreign_native(native(_),     basicprops).
 foreign_native(native(_, _),  basicprops).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-		     FuncName, PredName, BindName, Arity) :-
+                     FuncName, PredName, BindName, Arity) :-
     current_foreign_prop(foreign_native, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
-			 DictL, FuncName, PredName, BindName, Arity, _).
+                         DictL, FuncName, PredName, BindName, Arity, _).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
-		     FuncName, PredName, BindName, Arity, Type) :-
+                     FuncName, PredName, BindName, Arity, Type) :-
     current_foreign_prop(foreign_native_fimport, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
-			 DictL, FuncName, PredName, BindName, Arity, Type).
+                         DictL, FuncName, PredName, BindName, Arity, Type).
 
 current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
-		     DictL, FuncName, PredName, BindName, Arity, KeyProp) :-
+                     DictL, FuncName, PredName, BindName, Arity, KeyProp) :-
     asr_head_prop(Asr, Context, Head, check, Type, _, _),
     memberchk(Type, [pred, prop]),
     implementation_module(Context:Head, Module),
     once(( call(GenKeyProp, KeyProp, _KI),
-	   asr_glob(Asr, _KM, KeyProp, _)
-	   % implementation_module(KM:KeyProp+1_extra_argument, KI)
-	 )),
+           asr_glob(Asr, _KM, KeyProp, _)
+           % implementation_module(KM:KeyProp+1_extra_argument, KI)
+         )),
     findall(Head-[MComp, MCall, MSucc, MGlob, Dict],
-	    ( assertion_db(_, Head, Module, CM, check, Type, Comp, Call, Succ,
-			   Glob, _, Dict, _),
-	      maplist(maplist(cond_qualify_with(CM)),
-		      [ Comp,  Call,  Succ,  Glob],
-		      [MComp, MCall, MSucc, MGlob])
-	    ), KPropLL),
+            ( assertion_db(_, Head, Module, CM, check, Type, Comp, Call, Succ,
+                           Glob, _, Dict, _),
+              maplist(maplist(cond_qualify_with(CM)),
+                      [ Comp,  Call,  Succ,  Glob],
+                      [MComp, MCall, MSucc, MGlob])
+            ), KPropLL),
     maplist(=(Head-_), KPropLL),
     pairs_values(KPropLL, PropLL),
     transpose(PropLL, PropTL),
@@ -914,8 +914,8 @@ current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL
       )
     -> % Already considered
       \+ ( member(KeyProp2, [foreign(_), foreign(_, _)]),
-	   memberchk(KeyProp2, GlobL)
-	 )
+           memberchk(KeyProp2, GlobL)
+         )
     ; true
     ),
     functor(Head, PredName, Arity),
@@ -952,7 +952,7 @@ read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, CN/A as PN/BN + Che
 
 generate_foreign_intf(Module) :-
     forall(read_foreign_properties(Head, M, Module, Comp, Call, Succ, Glob, Bind, Type),
-	   declare_intf_impl(Type, Head, M, Module, Comp, Call, Succ, Glob, Bind)).
+           declare_intf_impl(Type, Head, M, Module, Comp, Call, Succ, Glob, Bind)).
 
 declare_intf_impl(fimport(_), Head, M, Module, Comp, Call, Succ, Glob, Bind) :- !,
     declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind).
@@ -979,9 +979,9 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) :-
     Bind = (PI as _/PCN + CheckMode),
     declare_intf_head(PCN, Head),
     format(' {~n', []),
-    ( CheckMode==type	   % If is variable then succeed (because is compatible)
+    ( CheckMode==type      % If is variable then succeed (because is compatible)
     ->forall(arg(_, Head, Arg),
-	     format('    if(PL_is_variable(~w)) return TRUE;~n', [Arg]))
+             format('    if(PL_is_variable(~w)) return TRUE;~n', [Arg]))
     ; true
     ),
     format('    __mkroot(__root);~n'),
@@ -1056,38 +1056,38 @@ c_get_argument_rec(Mode, Type, Spec, CArg, Arg) :-
 bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) :-
     ( compound(Head)
     ->forall(( arg(_, Head, Arg),
-	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
-	     ( write('    '),
-	       ctype_decl(Spec, Mode),
-	       c_var_name(Arg, CArg),
-	       ( Spec = term
-	       ->format(' ~w=PL_new_term_ref();~n', [CArg])
-	       ; format(' ~w;~n', [CArg])
-	       )
-	     )),
+               bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode)),
+             ( write('    '),
+               ctype_decl(Spec, Mode),
+               c_var_name(Arg, CArg),
+               ( Spec = term
+               ->format(' ~w=PL_new_term_ref();~n', [CArg])
+               ; format(' ~w;~n', [CArg])
+               )
+             )),
       forall(( arg(_, Head, Arg),
-	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-	       memberchk(Mode, [in, inout])
-	     ),
-	     ( c_var_name(Arg, CArg0),
-	       atom_concat('&', CArg0, CArg),
-	       write('    '),
-	       c_get_argument(Spec, Mode, CArg, Arg),
-	       write(';\n')
-	     ))
+               bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+               memberchk(Mode, [in, inout])
+             ),
+             ( c_var_name(Arg, CArg0),
+               atom_concat('&', CArg0, CArg),
+               write('    '),
+               c_get_argument(Spec, Mode, CArg, Arg),
+               write(';\n')
+             ))
     ; true
     ),
     generate_foreign_call(Bind-Head, M, CM, Comp, Call, Succ, Glob, Return),
     ( compound(Head) ->
       forall(( arg(_, Head, Arg),
-	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-	       memberchk(Mode, [out, inout])
-	     ),
-	     ( write('    '),
-	       c_var_name(Arg, CArg),
-	       c_set_argument(Spec, Mode, CArg, Arg),
-	       write(';\n')
-	     ))
+               bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+               memberchk(Mode, [out, inout])
+             ),
+             ( write('    '),
+               c_var_name(Arg, CArg),
+               c_set_argument(Spec, Mode, CArg, Arg),
+               write(';\n')
+             ))
     ; true
     ).
 
@@ -1098,31 +1098,31 @@ invert_mode(inout, inout).
 bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
     \+ ( memberchk(returns(_, Arg), Glob)
        ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-	 memberchk(Mode, [out, inout]),
-	 write('    '),
-	 ctype_decl(Spec, Mode),
-	 ( Spec = term
-	 ->format(' ~w=PL_new_term_ref();~n', [Arg])
-	 ; format(' ~w;~n', [Arg])
-	 ),
-	 fail
+         memberchk(Mode, [out, inout]),
+         write('    '),
+         ctype_decl(Spec, Mode),
+         ( Spec = term
+         ->format(' ~w=PL_new_term_ref();~n', [Arg])
+         ; format(' ~w;~n', [Arg])
+         ),
+         fail
        ),
     ( compound(Head)
     ->forall(( arg(Idx, Head, Arg),
-	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-	       memberchk(Mode, [in, inout])
-	     ),
-	     ( invert_mode(Mode, InvM),
-	       ( Mode = inout
-	       ->atom_concat('*', Arg, CArg)
-	       ; CArg = Arg
-	       ),
-	       format(atom(PArg), '_p_~w', [Arg]),
-	       format('    term_t ~w=~w_args + ~d;~n', [PArg, BN, Idx-1]),
-	       write('    '),
-	       c_set_argument(Spec, InvM, CArg, PArg),
-	       write(';\n')
-	     ))
+               bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+               memberchk(Mode, [in, inout])
+             ),
+             ( invert_mode(Mode, InvM),
+               ( Mode = inout
+               ->atom_concat('*', Arg, CArg)
+               ; CArg = Arg
+               ),
+               format(atom(PArg), '_p_~w', [Arg]),
+               format('    term_t ~w=~w_args + ~d;~n', [PArg, BN, Idx-1]),
+               write('    '),
+               c_set_argument(Spec, InvM, CArg, PArg),
+               write(';\n')
+             ))
     ; true
     ),
     format(atom(CallPred), 'PL_call_predicate(__~w, PL_Q_NORMAL, ~w, ~w_args)', [CM, BN, BN]),
@@ -1132,24 +1132,24 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) :-
     ),
     ( compound(Head)
     ->forall(( arg(Idx, Head, Arg),
-	       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-	       memberchk(Mode, [out, inout])
-	     ),
-	     ( invert_mode(Mode, InvM),
-	       ( memberchk(returns(_, Arg), Glob)
-	       ->atom_concat('&', Arg, CArg)
-	       ; CArg = Arg
-	       ),
-	       format(atom(PArg), '_p_~w', [Arg]),
-	       format('    term_t ~w=~w_args + ~d;~n', [PArg, BN, Idx-1]),
-	       write('    '),
-	       c_get_argument(Spec, InvM, CArg, PArg),
-	       write(';\n')
-	     )),
+               bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+               memberchk(Mode, [out, inout])
+             ),
+             ( invert_mode(Mode, InvM),
+               ( memberchk(returns(_, Arg), Glob)
+               ->atom_concat('&', Arg, CArg)
+               ; CArg = Arg
+               ),
+               format(atom(PArg), '_p_~w', [Arg]),
+               format('    term_t ~w=~w_args + ~d;~n', [PArg, BN, Idx-1]),
+               write('    '),
+               c_get_argument(Spec, InvM, CArg, PArg),
+               write(';\n')
+             )),
       ( ( memberchk(returns(_, Arg), Glob)
-	; memberchk(returns_state(_), Glob),
-	  Arg = '__result'
-	)
+        ; memberchk(returns_state(_), Glob),
+          Arg = '__result'
+        )
       ->format('    return ~w;~n;', [Arg])
       ; true
       )
@@ -1165,10 +1165,10 @@ generate_foreign_call((CN/_A as _ + _)-Head, M, CM, Comp, Call, Succ, Glob, Retu
       Return = '__result'
     ; ( member(returns(_, Var), Glob)
       ->c_var_name(Var, CVar),
-	format('~w=', [CVar]),
-	Head =.. Args,
-	once(select(Var, Args, CArgs)),
-	CHead =.. CArgs
+        format('~w=', [CVar]),
+        Head =.. Args,
+        once(select(Var, Args, CArgs)),
+        CHead =.. CArgs
       ; CHead = Head
       ),
       ( member(no_exception, Glob)

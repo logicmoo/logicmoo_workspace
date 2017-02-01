@@ -1,5 +1,5 @@
 :- module(termtyping,
-	  [type/2, add_1st_arg/3]).
+          [type/2, add_1st_arg/3]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).

@@ -1,76 +1,76 @@
 :- module(nativeprops,
-	  [nfi/2,
-	   fi/2,
-	   clique/1,
-	   clique_1/1,
-	   constraint/1,
-	   covered/1,
-	   covered/2,
-	   exception/1,
-	   exception/2,
-	   fails/1,
-	   finite_solutions/1,
-	   have_choicepoints/1,
-	   indep/1,
-	   indep/2,
-	   instance/1,
-	   is_det/1,
-	   linear/1,
-	   mshare/1,
-	   mut_exclusive/1,
-	   no_choicepoints/1,
-	   no_exception/1,
-	   no_exception/2,
-	   no_signal/1,
-	   no_signal/2,
-	   non_det/1,
-	   nonground/1,
-	   not_covered/1,
-	   not_fails/1,
-	   not_mut_exclusive/1,
-	   num_solutions/2,
-	   num_solutions_eq/2,
-	   solutions/2,
-	   possibly_fails/1,
-	   possibly_nondet/1,
-	   relations/2,
-	   sideff_hard/1,
-	   sideff_pure/1,
-	   sideff_soft/1,
-	   signal/1,
-	   signal/2,
-	   signals/2,
-	   size/2,
-	   size/3,
-	   size_lb/2,
-	   size_o/2,
-	   size_ub/2,
-	   size_metric/3,
-	   size_metric/4,
-	   succeeds/1,
-	   steps/2,
-	   steps_lb/2,
-	   steps_o/2,
-	   steps_ub/2,
-	   tau/1,
-	   terminates/1,
-	   test_type/2,
-	   throws/2,
-	   throw/2,
-	   nsh/2,
-	   user_output/2,
-	   test_throw_2/4,
-	   is_pred/2,
-	   mod_qual/1,
-	   mod_qual/2,
-	   
-	   check/1,
-	   trust/1,
-	   true/1,
-	   false/1
-	   % intervals/2 %[LD]
-	   % user_error/2
-	  ]).
+          [nfi/2,
+           fi/2,
+           clique/1,
+           clique_1/1,
+           constraint/1,
+           covered/1,
+           covered/2,
+           exception/1,
+           exception/2,
+           fails/1,
+           finite_solutions/1,
+           have_choicepoints/1,
+           indep/1,
+           indep/2,
+           instance/1,
+           is_det/1,
+           linear/1,
+           mshare/1,
+           mut_exclusive/1,
+           no_choicepoints/1,
+           no_exception/1,
+           no_exception/2,
+           no_signal/1,
+           no_signal/2,
+           non_det/1,
+           nonground/1,
+           not_covered/1,
+           not_fails/1,
+           not_mut_exclusive/1,
+           num_solutions/2,
+           num_solutions_eq/2,
+           solutions/2,
+           possibly_fails/1,
+           possibly_nondet/1,
+           relations/2,
+           sideff_hard/1,
+           sideff_pure/1,
+           sideff_soft/1,
+           signal/1,
+           signal/2,
+           signals/2,
+           size/2,
+           size/3,
+           size_lb/2,
+           size_o/2,
+           size_ub/2,
+           size_metric/3,
+           size_metric/4,
+           succeeds/1,
+           steps/2,
+           steps_lb/2,
+           steps_o/2,
+           steps_ub/2,
+           tau/1,
+           terminates/1,
+           test_type/2,
+           throws/2,
+           throw/2,
+           nsh/2,
+           user_output/2,
+           test_throw_2/4,
+           is_pred/2,
+           mod_qual/1,
+           mod_qual/2,
+           
+           check/1,
+           trust/1,
+           true/1,
+           false/1
+           % intervals/2 %[LD]
+           % user_error/2
+          ]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
@@ -136,16 +136,16 @@
 
 tau([]).
 tau([Var/Type|R]) :-
-	var(Var),
-	list(Type),
-	valid_type(Type),
-	tau(R).
+        var(Var),
+        list(Type),
+        valid_type(Type),
+        tau(R).
 
 valid_type([Type]) :-
-	atom(Type).
+        atom(Type).
 valid_type([Type|Rest]) :-
-	atom(Type),
-	valid_type(Rest).
+        atom(Type),
+        valid_type(Rest).
 
 
 
@@ -159,53 +159,53 @@ valid_type([Type|Rest]) :-
 
 constraint([]).
 constraint([Cons|Rest]) :-
-	constraint_(Cons),
-	constraint(Rest).
+        constraint_(Cons),
+        constraint(Rest).
 
 constraint_(=(Lin_Expr1, Lin_Expr2)) :-
-	lin_expr(Lin_Expr1),
-	lin_expr(Lin_Expr2).
+        lin_expr(Lin_Expr1),
+        lin_expr(Lin_Expr2).
 constraint_(=<(Lin_Expr1, Lin_Expr2)) :-
-	lin_expr(Lin_Expr1),
-	lin_expr(Lin_Expr2).
+        lin_expr(Lin_Expr1),
+        lin_expr(Lin_Expr2).
 constraint_(>=(Lin_Expr1, Lin_Expr2)) :-
-	lin_expr(Lin_Expr1),
-	lin_expr(Lin_Expr2).
+        lin_expr(Lin_Expr1),
+        lin_expr(Lin_Expr2).
 constraint_(<(Lin_Expr1, Lin_Expr2)) :-
-	lin_expr(Lin_Expr1),
-	lin_expr(Lin_Expr2).
+        lin_expr(Lin_Expr1),
+        lin_expr(Lin_Expr2).
 constraint_(>(Lin_Expr1, Lin_Expr2)) :-
-	lin_expr(Lin_Expr1),
-	lin_expr(Lin_Expr2).
+        lin_expr(Lin_Expr1),
+        lin_expr(Lin_Expr2).
 
 lin_expr(PPL_Var) :-
-	ppl_var(PPL_Var), !.
+        ppl_var(PPL_Var), !.
 lin_expr(Coeff) :-
-	coefficient(Coeff).
+        coefficient(Coeff).
 % lin_expr(+(Lin_Expr), Vars, +(New_Lin_Expr)) :-
-% 	lin_expr(Lin_Expr, Vars, New_Lin_Expr).
+%       lin_expr(Lin_Expr, Vars, New_Lin_Expr).
 lin_expr(+(Lin_Expr)) :-
-	lin_expr(Lin_Expr).
+        lin_expr(Lin_Expr).
 lin_expr(-(Lin_Expr)) :-
-	lin_expr(Lin_Expr).
+        lin_expr(Lin_Expr).
 lin_expr(+(Lin_Expr1, Lin_Expr2)) :-
-	lin_expr(Lin_Expr1),
-	lin_expr(Lin_Expr2).
+        lin_expr(Lin_Expr1),
+        lin_expr(Lin_Expr2).
 lin_expr(-(Lin_Expr1, Lin_Expr2)) :-
-	lin_expr(Lin_Expr1),
-	lin_expr(Lin_Expr2).
+        lin_expr(Lin_Expr1),
+        lin_expr(Lin_Expr2).
 lin_expr(*(Coeff, Lin_Expr)) :-
-	coefficient(Coeff),
-	lin_expr(Lin_Expr).
+        coefficient(Coeff),
+        lin_expr(Lin_Expr).
 lin_expr(*(Lin_Expr, Coeff)) :-
-	coefficient(Coeff),
-	lin_expr(Lin_Expr).
+        coefficient(Coeff),
+        lin_expr(Lin_Expr).
 
 ppl_var(Var) :-
-	var(Var).
+        var(Var).
 coefficient(Coeff) :-
-	ground(Coeff),
-	int(Coeff).
+        ground(Coeff),
+        int(Coeff).
 
 
 :- doc(covered(X, Y), "All variables occuring in ~w occur also
@@ -217,9 +217,9 @@ covered(X, Y) :-
     term_variables(X, VarsX),
     term_variables(Y, VarsY),
     forall(member(V, VarsX),
-	   ( member(VY, VarsY),
-	     V==VY
-	   )).
+           ( member(VY, VarsY),
+             V==VY
+           )).
 
 :- native linear(X)
 # "~w is bound to a term which is linear, i.e., if it contains any variables,
@@ -249,17 +249,17 @@ occurrs_one(T, Var) :- occurrences_of_var(Var, T, 1).
 # "The sharing pattern is @tt{~w}."-[X].
 
 mshare(L) :-
-	maplist(term_variables, L, V),
-	\+ not_mshare(V).
+        maplist(term_variables, L, V),
+        \+ not_mshare(V).
 
 % try to find a counter-example:
 not_mshare([V1|L]) :-
-	member(V2, L),
-	member(X1, V1),
-	member(X2, V2),
-	X1 == X2 -> true
+        member(V2, L),
+        member(X1, V1),
+        member(X2, V2),
+        X1 == X2 -> true
     ;
-	not_mshare(L).
+        not_mshare(L).
 
 :- doc(clique(X), "~w is a set of variables of interest, much the
    same as a sharing group but ~w represents all the sharing groups in
@@ -295,19 +295,19 @@ nonground(X) :- \+ ground(X).
 # "Calls of the form ~w fail."-[X].
 
 fails(Goal) :-
-	Solved = solved(no),
-	test_throw_2(Goal, fails, _, true),
-	(
-	    arg(1, Solved, no) ->
-	    send_comp_rtcheck(Goal, fails, not_fails),
-	    nb_setarg(1, Solved, yes)
-	;
-	    true
-	).
+        Solved = solved(no),
+        test_throw_2(Goal, fails, _, true),
+        (
+            arg(1, Solved, no) ->
+            send_comp_rtcheck(Goal, fails, not_fails),
+            nb_setarg(1, Solved, yes)
+        ;
+            true
+        ).
 
 
 :- doc(bug, "A missing property is succeeds (not_fails = succeeds
-	or not_terminates. -- EMM").
+        or not_terminates. -- EMM").
 
 :- doc(not_fails(X), "Calls of the form ~w produce at least
    one solution, or do not terminate @cite{non-failure-iclp97}."-[X]).
@@ -318,22 +318,22 @@ fails(Goal) :-
 % :- meta_predicate not_fails( goal ).
 %
 % not_fails( X ) :-
-% 	if( X , true , throw( rtcheck( nf , fail , X  ) ) ).
+%       if( X , true , throw( rtcheck( nf , fail , X  ) ) ).
 
 not_fails(Goal) :-
-	Solved = solved(no),
-	(
-	    true
-	;
-	    arg(1, Solved, no) ->
-	    send_comp_rtcheck(Goal, not_fails, fails),
-	    fail
-	),
-	prolog_current_choice(C0),
-	test_throw_2(Goal, not_fails, _, true),
-	prolog_current_choice(C1),
-	( C0 == C1 -> !
-	; nb_setarg(1, Solved, yes) ).
+        Solved = solved(no),
+        (
+            true
+        ;
+            arg(1, Solved, no) ->
+            send_comp_rtcheck(Goal, not_fails, fails),
+            fail
+        ),
+        prolog_current_choice(C0),
+        test_throw_2(Goal, not_fails, _, true),
+        prolog_current_choice(C1),
+        ( C0 == C1 -> !
+        ; nb_setarg(1, Solved, yes) ).
 
 :- doc(possibly_fails(X), "Non-failure is not ensured for any call
    of the form ~w @cite{non-failure-iclp97}. In other words,
@@ -374,17 +374,17 @@ not_covered(Goal) :- call(Goal).
 # "All calls of the form ~w are deterministic."-[X].
 
 is_det(Goal) :-
-	Solved = solved(no),
-	Goal,
-	(
-	    arg(1, Solved, no)
-	->
-	    true
-	;
-	    send_comp_rtcheck(Goal, is_det, non_det)
-	    % more than one solution!
-	),
-	nb_setarg(1, Solved, yes).
+        Solved = solved(no),
+        Goal,
+        (
+            arg(1, Solved, no)
+        ->
+            true
+        ;
+            send_comp_rtcheck(Goal, is_det, non_det)
+            % more than one solution!
+        ),
+        nb_setarg(1, Solved, yes).
 
 :- doc(non_det(X), "All calls of the form ~w are
    non-deterministic, i.e., produce several solutions."-[X]).
@@ -393,51 +393,51 @@ is_det(Goal) :-
 # "All calls of the form ~w are non-deterministic."-[X].
 
 non_det(Goal) :-
-	Solved = solved(no),
-	(
-	    true
-	;
-	    arg(1, Solved, one) ->
-	    send_comp_rtcheck(Goal, non_det, is_det),
-	    fail
-	),
-	prolog_current_choice(C0),
-	Goal,
-	prolog_current_choice(C1),
-	(
-	    arg(1, Solved, no) ->
-	    (
-		C1 == C0 ->
-		!,
-		send_comp_rtcheck(Goal, non_det, no_choicepoints)
-	    ;
-		nb_setarg(1, Solved, one)
-	    )
-	;
-	    nb_setarg(1, Solved, yes)
-	).
+        Solved = solved(no),
+        (
+            true
+        ;
+            arg(1, Solved, one) ->
+            send_comp_rtcheck(Goal, non_det, is_det),
+            fail
+        ),
+        prolog_current_choice(C0),
+        Goal,
+        prolog_current_choice(C1),
+        (
+            arg(1, Solved, no) ->
+            (
+                C1 == C0 ->
+                !,
+                send_comp_rtcheck(Goal, non_det, no_choicepoints)
+            ;
+                nb_setarg(1, Solved, one)
+            )
+        ;
+            nb_setarg(1, Solved, yes)
+        ).
 
 :- global no_choicepoints(X)
 # "A call to ~w does not create choicepoints."-[X].
 
 no_choicepoints(Goal) :-
-	prolog_current_choice(C0),
-	Goal,
-	prolog_current_choice(C1),
-	( C1 == C0 -> true
-	; send_comp_rtcheck(Goal, no_choicepoints, have_choicepoints)
-	).
+        prolog_current_choice(C0),
+        Goal,
+        prolog_current_choice(C1),
+        ( C1 == C0 -> true
+        ; send_comp_rtcheck(Goal, no_choicepoints, have_choicepoints)
+        ).
 
 :- global have_choicepoints(X)
 # "A call to ~w creates choicepoints."-[X].
 
 have_choicepoints(Goal) :-
-	prolog_current_choice(C0),
-	Goal,
-	prolog_current_choice(C1),
-	( C1 == C0 ->
-	    send_comp_rtcheck(Goal, have_choicepoints, no_choicepoints)
-	; true ).
+        prolog_current_choice(C0),
+        Goal,
+        prolog_current_choice(C1),
+        ( C1 == C0 ->
+            send_comp_rtcheck(Goal, have_choicepoints, no_choicepoints)
+        ; true ).
 
 :- doc(possibly_nondet(X), "Non-determinism is not ensured for all
    calls of the form ~w. In other words, nothing can be ensured
@@ -449,7 +449,7 @@ have_choicepoints(Goal) :-
 possibly_nondet(Goal) :- call(Goal).
 
 :- global test_type/2 # "Indicates the type of test that a predicate
-	performs.  Required by the nonfailure analyisis.".
+        performs.  Required by the nonfailure analyisis.".
 
 test_type(Goal, _) :- call(Goal).
 
@@ -554,10 +554,10 @@ steps_o(Goal, _) :- call(Goal).
 # "~w and ~w do not have variables in common."-[X, Y].
 
 indep(A, B) :-
-	mark(A, Ground), % Ground is var if A ground
-	nonvar(Ground), % If 1st argument was ground, no need to proceed
-	marked(B), !,
-	fail.
+        mark(A, Ground), % Ground is var if A ground
+        nonvar(Ground), % If 1st argument was ground, no need to proceed
+        marked(B), !,
+        fail.
 indep(_, _).
 
 mark('$$Mark', no) :- !. % Mark the variable, signal variable found
@@ -565,23 +565,23 @@ mark(Atom,     _) :- atomic(Atom), !.
 mark(Complex,  GR) :- mark(Complex, 1, GR).
 
 mark(Args, Mth, GR) :-
-	arg(Mth, Args, ThisArg), !,
-	mark(ThisArg, GR),
-	Nth is Mth+1,
-	mark(Args, Nth, GR).
+        arg(Mth, Args, ThisArg), !,
+        mark(ThisArg, GR),
+        Nth is Mth+1,
+        mark(Args, Nth, GR).
 mark(_, _, _).
 
 marked(Term) :-
-	functor(Term, F, A),
-	( A > 0, !, marked(Term, 1)
-	; F = '$$Mark' ).
+        functor(Term, F, A),
+        ( A > 0, !, marked(Term, 1)
+        ; F = '$$Mark' ).
 
 marked(Args, Mth) :-
-	arg(Mth, Args, ThisArg), !,
-	( marked(ThisArg)
-	; Nth is Mth+1,
-	    marked(Args, Nth)
-	).
+        arg(Mth, Args, ThisArg), !,
+        ( marked(ThisArg)
+        ; Nth is Mth+1,
+            marked(Args, Nth)
+        ).
 
 :- true prop indep(X) + native(indep(X))
 # "The variables in pairs in @tt{~w} are pairwise independent."-[X].
@@ -617,46 +617,46 @@ finite_solutions(Goal) :- call(Goal).
 # "All the calls of the form ~w have ~w solutions."-[X, N].
 
 num_solutions_eq(Goal, N) :-
-	Sols = solutions(0),
-	(
-	    true
-	;
-	    arg(1, Sols, A),
-	    (
-		(A == done ; A == N) -> fail
-	    ;
-		send_comp_rtcheck(Goal, num_solutions_eq(N), Sols),
-		fail
-	    )
-	),
-	prolog_current_choice(C0),
-	call(Goal),
-	prolog_current_choice(C1),
-	arg(1, Sols, A),
-	(
-	    A == done -> true
-	;
-	    N1 is A + 1,
-	    (
-		C1 == C0 ->
-		!,
-		(
-		    N1 == N -> true
-		;
-		    send_comp_rtcheck(Goal, num_solutions_eq(N),
-			num_solutions_eq(N1))
-		)
-	    ;
-		(
-		    N1 > N ->
-		    send_comp_rtcheck(Goal, num_solutions_eq(N),
-			num_solutions(>(N))),
-		    nb_setarg(1, Sols, done)
-		;
-		    nb_setarg(1, Sols, N1)
-		)
-	    )
-	).
+        Sols = solutions(0),
+        (
+            true
+        ;
+            arg(1, Sols, A),
+            (
+                (A == done ; A == N) -> fail
+            ;
+                send_comp_rtcheck(Goal, num_solutions_eq(N), Sols),
+                fail
+            )
+        ),
+        prolog_current_choice(C0),
+        call(Goal),
+        prolog_current_choice(C1),
+        arg(1, Sols, A),
+        (
+            A == done -> true
+        ;
+            N1 is A + 1,
+            (
+                C1 == C0 ->
+                !,
+                (
+                    N1 == N -> true
+                ;
+                    send_comp_rtcheck(Goal, num_solutions_eq(N),
+                        num_solutions_eq(N1))
+                )
+            ;
+                (
+                    N1 > N ->
+                    send_comp_rtcheck(Goal, num_solutions_eq(N),
+                        num_solutions(>(N))),
+                    nb_setarg(1, Sols, done)
+                ;
+                    nb_setarg(1, Sols, N1)
+                )
+            )
+        ).
 
 :- meta_predicate num_solutions(0, 1).
 
@@ -665,85 +665,85 @@ num_solutions_eq(Goal, N) :-
    the number of solutions."-[Goal, Check].
 
 num_solutions(Goal, Check) :-
-	Sols = num_solutions(0),
-	(
-	    true
-	;
-	    arg(1, Sols, N0),
-	    (
-		call(Check, N0) -> fail
-	    ;
-		send_comp_rtcheck(Goal, num_solutions(Check),
-		    num_solutions(N0)),
-		fail
-	    )
-	),
-	prolog_current_choice(C0),
-	call(Goal),
-	prolog_current_choice(C1),
-	arg(1, Sols, N0),
-	N1 is N0 + 1,
-	(
-	    C1 == C0 ->
-	    !,
-	    (
-		call(Check, N1) -> true
-	    ;
-		send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N0))
-	    )
-	;
-	    nb_setarg(1, Sols, N1)
-	).
+        Sols = num_solutions(0),
+        (
+            true
+        ;
+            arg(1, Sols, N0),
+            (
+                call(Check, N0) -> fail
+            ;
+                send_comp_rtcheck(Goal, num_solutions(Check),
+                    num_solutions(N0)),
+                fail
+            )
+        ),
+        prolog_current_choice(C0),
+        call(Goal),
+        prolog_current_choice(C1),
+        arg(1, Sols, N0),
+        N1 is N0 + 1,
+        (
+            C1 == C0 ->
+            !,
+            (
+                call(Check, N1) -> true
+            ;
+                send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N0))
+            )
+        ;
+            nb_setarg(1, Sols, N1)
+        ).
 
 :- global solutions(Goal, Sols) : callable * list
 # "~w produces the solutions listed in ~w."-[Goal, Sols].
 
 solutions(Goal, Sols) :-
-	Goal = _:Sol,
-	Remaining = solutions(Sols),
-	(
-	    true
-	;
-	    arg(1, Remaining, Sols0),
-	    (
-		(Sols == done ; Sols0 == []) -> fail
-	    ;
-		append(Sols2, Sols0, Sols),
-		send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
-		fail
-	    )
-	),
-	prolog_current_choice(C0),
-	call(Goal),
-	prolog_current_choice(C1),
-	arg(1, Remaining, Sols0),
-	(
-	    Sols0 == done -> true
-	;
-	    [Elem|Sols1] = Sols0,
-	    (
-		C1 == C0 ->
-		!,
-		(
-		    Elem \= Sol ->
-		    append(Curr, Sols0, Sols),
-		    append(Curr, [Sol], Sols2),
-		    send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2))
-		;
-		    true
-		)
-	    ;
-		(
-		    Elem \= Sol ->
-		    append(Curr, Sols0,   Sols),
-		    append(Curr, [Sol|_], Sols2),
-		    send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
-		    nb_setarg(1, Remaining, done)
-		;
-		    nb_setarg(1, Remaining, Sols1)
-		)
-	    )
-	).
+        Goal = _:Sol,
+        Remaining = solutions(Sols),
+        (
+            true
+        ;
+            arg(1, Remaining, Sols0),
+            (
+                (Sols == done ; Sols0 == []) -> fail
+            ;
+                append(Sols2, Sols0, Sols),
+                send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
+                fail
+            )
+        ),
+        prolog_current_choice(C0),
+        call(Goal),
+        prolog_current_choice(C1),
+        arg(1, Remaining, Sols0),
+        (
+            Sols0 == done -> true
+        ;
+            [Elem|Sols1] = Sols0,
+            (
+                C1 == C0 ->
+                !,
+                (
+                    Elem \= Sol ->
+                    append(Curr, Sols0, Sols),
+                    append(Curr, [Sol], Sols2),
+                    send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2))
+                ;
+                    true
+                )
+            ;
+                (
+                    Elem \= Sol ->
+                    append(Curr, Sols0,   Sols),
+                    append(Curr, [Sol|_], Sols2),
+                    send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
+                    nb_setarg(1, Remaining, done)
+                ;
+                    nb_setarg(1, Remaining, Sols1)
+                )
+            )
+        ).
 
 :- global relations(X, N) + rtcheck(unimplemented)
 # "The goal ~w produces ~w
@@ -768,29 +768,29 @@ terminates(Goal) :- call(Goal).
 :- dynamic signal_db/3.
 
 asserta_signal_check(Choice, _, E, _) :-
-	asserta(signal_db(Choice, no, E)).
+        asserta(signal_db(Choice, no, E)).
 asserta_signal_check(Choice, Goal, _, CheckThrown) :-
-	end_signal_check(Choice, Goal, CheckThrown), fail.
+        end_signal_check(Choice, Goal, CheckThrown), fail.
 
 retract_signal_check(Choice, Goal, _, CheckThrown) :-
-	end_signal_check(Choice, Goal, CheckThrown).
+        end_signal_check(Choice, Goal, CheckThrown).
 retract_signal_check(Choice, _, E, _) :-
-	asserta(signal_db(Choice, no, E)),
-	fail.
+        asserta(signal_db(Choice, no, E)),
+        fail.
 
 signal_prop(yes, E, signal(yes, E), signal(no,  E)).
 signal_prop(no,  E, signal(no,  E), signal(yes, E)).
 
 end_signal_check(Choice, Goal, CheckThrown) :-
-	retract(signal_db(Choice, Thrown, E)),
-	signal_prop(CheckThrown, E, EP, EV),
-	( Thrown = CheckThrown -> true
-	; send_comp_rtcheck(Goal, EP, EV)
-	).
+        retract(signal_db(Choice, Thrown, E)),
+        signal_prop(CheckThrown, E, EP, EV),
+        ( Thrown = CheckThrown -> true
+        ; send_comp_rtcheck(Goal, EP, EV)
+        ).
 
 emit_signal(Choice, E) :-
-	retract(signal_db(Choice, _, _)),
-	assertz(signal_db(Choice, yes, E)).
+        retract(signal_db(Choice, _, _)),
+        assertz(signal_db(Choice, yes, E)).
 
 :- global signal(Goal)
 # "Calls of the form ~w throw a signal."-[Goal].
@@ -801,13 +801,13 @@ signal(Goal) :- signal(Goal, _).
 # "A call to ~w sends a signal that unifies with ~w."-[Goal, E].
 
 signal(Goal, E) :-
-	prolog_current_choice(Choice),
-	asserta_signal_check(Choice, Goal, E, yes),
-	prolog_current_choice(C0),
-	intercept(Goal, E, (emit_signal(Choice, E), send_signal(E))),
-	prolog_current_choice(C1),
-	retract_signal_check(Choice, Goal, E, yes),
-	(C0 == C1 -> ! ; true).
+        prolog_current_choice(Choice),
+        asserta_signal_check(Choice, Goal, E, yes),
+        prolog_current_choice(C0),
+        intercept(Goal, E, (emit_signal(Choice, E), send_signal(E))),
+        prolog_current_choice(C1),
+        retract_signal_check(Choice, Goal, E, yes),
+        (C0 == C1 -> ! ; true).
 
 :- global no_signal(Goal)
 # "Calls of the form ~w do not send any signal."-[Goal].
@@ -818,55 +818,55 @@ no_signal(Goal) :- no_signal(Goal, _).
 # "Calls of the form ~w do not send the signal ~w."-[Goal, E].
 
 no_signal(Goal, E) :-
-	prolog_current_choice(Choice),
-	asserta_signal_check(Choice, Goal, E, no),
-	prolog_current_choice(C0),
-	intercept(Goal, E, (emit_signal(Choice, E), throw(E))),
-	prolog_current_choice(C1),
-	retract_signal_check(Choice, Goal, E, no),
-	(C0 == C1 -> ! ; true).
+        prolog_current_choice(Choice),
+        asserta_signal_check(Choice, Goal, E, no),
+        prolog_current_choice(C0),
+        intercept(Goal, E, (emit_signal(Choice, E), throw(E))),
+        prolog_current_choice(C1),
+        retract_signal_check(Choice, Goal, E, no),
+        (C0 == C1 -> ! ; true).
 
 :- global exception(Goal)
 # "Calls of the form ~w throw an exception."-[Goal].
 
 exception(Goal) :-
-	Goal,
-	send_comp_rtcheck(Goal, exception, no_exception).
+        Goal,
+        send_comp_rtcheck(Goal, exception, no_exception).
 
 :- global throw/2.
 throw(Goal, E) :-
-	test_throw_2(Goal, throw(E), F, F\=E).
+        test_throw_2(Goal, throw(E), F, F\=E).
 
 :- meta_predicate test_throw_2(0, ?, ?, 0).
 test_throw_2(Goal, Prop, F, Test) :-
-	catch(Goal, F,
-	    (
-		(
-		    F \= assrchk(_, _),
-		    Test
-		->
-		    send_comp_rtcheck(Goal, Prop, exception(F))
-		;
-		    true
-		),
-		throw(F)
-	    )).
+        catch(Goal, F,
+            (
+                (
+                    F \= assrchk(_, _),
+                    Test
+                ->
+                    send_comp_rtcheck(Goal, Prop, exception(F))
+                ;
+                    true
+                ),
+                throw(F)
+            )).
 
 :- global exception(Goal, E) # "Calls of the form ~w throw an
 exception that unifies with ~w."-[Goal, E].
 % exception(Goal, E) :- exception(throw(Goal, E)).
 
 exception(Goal, E) :-
-	test_throw_2(Goal, exception(E), F, F\=E),
-	send_comp_rtcheck(Goal, exception(E), no_exception).
+        test_throw_2(Goal, exception(E), F, F\=E),
+        send_comp_rtcheck(Goal, exception(E), no_exception).
 
 :- global no_exception(Goal) #
-	"Calls of the form ~w do not throw any exception."-[Goal].
+        "Calls of the form ~w do not throw any exception."-[Goal].
 
 no_exception(Goal) :- test_throw_2(Goal, no_exception, _, true).
 
 :- global no_exception(Goal, E) # "Calls of the form ~w do not
-	throw exception ~w."-[Goal, E].
+        throw exception ~w."-[Goal, E].
 
 no_exception(Goal, E) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 
@@ -883,20 +883,20 @@ throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 signals(Goal, _E) :- call(Goal).
 
 :- global user_output(Goal, S) #
-	"Calls of the form ~w write ~w to standard output."-[Goal, S].
+        "Calls of the form ~w write ~w to standard output."-[Goal, S].
 
 user_output(Goal, S) :-
     setup_call_cleanup(new_memory_file(FileName),
-		       use_output_mf(Goal, S, FileName),
-		       free_memory_file(FileName)).
+                       use_output_mf(Goal, S, FileName),
+                       free_memory_file(FileName)).
 
 use_output_mf(Goal, S, FileName) :-
     asserta_user_output_check(FileName, Goal, S),
     prolog_current_choice(C0),
     catch(Goal, E,
-	  ( end_output_check(FileName, Goal, S),
-	    throw(E)
-	  )),
+          ( end_output_check(FileName, Goal, S),
+            throw(E)
+          )),
     prolog_current_choice(C1),
     retract_user_output_check(FileName, Goal, S),
     ( C0 == C1
@@ -935,22 +935,22 @@ output_check(FileName, Goal, S) :-
 
 /*
 :- prop user_error(Goal, S) #
-	"Calls of the form @var{Goal} write @var{S} to standard error.".
+        "Calls of the form @var{Goal} write @var{S} to standard error.".
 
 :- meta_predicate user_error(goal, ?).
 user_error(Goal, S) :-
-	mktemp_in_tmp('nativeprops_XXXXXX', FileName),
-	open_error(FileName, SO),
-	call(Goal),
-	close_error(SO),
-	file_to_string(FileName, S1),
-	display_string(S1),
-	(
-	    S \== S1 ->
-	    send_comp_rtcheck(Goal, user_error(S), user_error(S1))
-	;
-	    true
-	).
+        mktemp_in_tmp('nativeprops_XXXXXX', FileName),
+        open_error(FileName, SO),
+        call(Goal),
+        close_error(SO),
+        file_to_string(FileName, S1),
+        display_string(S1),
+        (
+            S \== S1 ->
+            send_comp_rtcheck(Goal, user_error(S), user_error(S1))
+        ;
+            true
+        ).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Collapsed properties, to improve performance of run-time checks. --EMM
@@ -961,57 +961,57 @@ user_error(Goal, S) :-
 
 :- meta_predicate not_fails_is_det(goal).
 not_fails_is_det(Goal) :-
-	Solved = solved(no),
-	(
-	    true
-	;
-	    arg(1, Solved, no) ->
-	    send_comp_rtcheck(Goal, not_fails, fails),
-	    fail
-	),
-	Goal,
-	(
-	    arg(1, Solved, no)
-	->
-	    true
-	;
-	    send_comp_rtcheck(Goal, is_det, non_det))
+        Solved = solved(no),
+        (
+            true
+        ;
+            arg(1, Solved, no) ->
+            send_comp_rtcheck(Goal, not_fails, fails),
+            fail
+        ),
+        Goal,
+        (
+            arg(1, Solved, no)
+        ->
+            true
+        ;
+            send_comp_rtcheck(Goal, is_det, non_det))
 % more than one solution!
-	),
-	'$setarg'(1, Solved, yes, true).
+        ),
+        '$setarg'(1, Solved, yes, true).
 
 :- prop not_fails_non_det/1 
 # "Collapsed property of @var{not_fails/1} and @var{non_det/1}.".
 
 :- meta_predicate not_fails_non_det(goal).
 not_fails_non_det(Goal) :-
-	Solved = solved(no),
-	(
-	    true
-	;
-	    arg(1, Solved, no) ->
-	    send_comp_rtcheck(Goal, not_fails, fails),
-	    fail
-	;
-	    arg(1, Solved, one) ->
-	    send_comp_rtcheck(Goal, non_det, is_det),
-	    fail
-	),
-	'$metachoice'(C0),
-	Goal,
-	'$metachoice'(C1),
-	(
-	    arg(1, Solved, no) ->
-	    (
-		C1 == C0 ->
-		!,
-		send_comp_rtcheck(Goal, non_det, no_choicepoints))
-	    ;
-		'$setarg'(1, Solved, one, true)
-	    )
-	;
-	    '$setarg'(1, Solved, yes, true)
-	).
+        Solved = solved(no),
+        (
+            true
+        ;
+            arg(1, Solved, no) ->
+            send_comp_rtcheck(Goal, not_fails, fails),
+            fail
+        ;
+            arg(1, Solved, one) ->
+            send_comp_rtcheck(Goal, non_det, is_det),
+            fail
+        ),
+        '$metachoice'(C0),
+        Goal,
+        '$metachoice'(C1),
+        (
+            arg(1, Solved, no) ->
+            (
+                C1 == C0 ->
+                !,
+                send_comp_rtcheck(Goal, non_det, no_choicepoints))
+            ;
+                '$setarg'(1, Solved, one, true)
+            )
+        ;
+            '$setarg'(1, Solved, yes, true)
+        ).
 */
 
 :- prop size(A, X, Y) + no_rtcheck
@@ -1081,13 +1081,13 @@ check_nsh(_:Goal, Arg) :-
       Vars \= []
     ->Goal =.. [_|Args],
       ( select(Arg0, Args, Left),
-	Arg0 == Arg		% TODO: this can be static
+        Arg0 == Arg             % TODO: this can be static
       ->term_variables(Left, GVars),
-	intersection(Vars, GVars, Shared),
-	( Shared \= []
-	->send_comp_rtcheck(Goal, nsh, shared(Shared))
-	; true
-	)
+        intersection(Vars, GVars, Shared),
+        ( Shared \= []
+        ->send_comp_rtcheck(Goal, nsh, shared(Shared))
+        ; true
+        )
       ; true
       )
     ; true

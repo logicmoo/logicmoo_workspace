@@ -1,7 +1,7 @@
 :- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
-			   get_arrays/4, show_arrays/3, sio/1, negative_t/1,
-			   positive_t/1, fd1/4, fd2/4, fd3/4, extend/2,
-			   test_ireverse1/2, test_ireverse2/2]).
+                           get_arrays/4, show_arrays/3, sio/1, negative_t/1,
+                           positive_t/1, fd1/4, fd2/4, fd3/4, extend/2,
+                           test_ireverse1/2, test_ireverse2/2]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
@@ -28,15 +28,15 @@ this_dir(Dir) :-
 
 d_t(Dict) :-
     dict_t(Dict,
-	   d{value1:atm,
-	     value2:atm,
-	     listv:list(int)
-	    }).
+           d{value1:atm,
+             value2:atm,
+             listv:list(int)
+            }).
 
 :- pred [fd1(+d_t,atm,atm,int),
-	 fd2(-d_t,+atm,+atm,+int)+memory_root,
-	 fd3(d_t,atm,atm,list(int))+memory_root
-	] is foreign.
+         fd2(-d_t,+atm,+atm,+int)+memory_root,
+         fd3(d_t,atm,atm,list(int))+memory_root
+        ] is foreign.
 
 :- prop positive_t/1 is type.
 positive_t(N) :- int(N).
@@ -114,9 +114,9 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 :- pred sio(int) is (foreign(c_sio), returns_state, memory_root).
 
 :- pred [ireverse1(     +list(int), -list(int)) is (fimport, returns_state, memory_root),
-	 test_ireverse1(+list(int), -list(int)) is (foreign, memory_root),
-	 ireverse2(+list(int):LIn,  -list(int)) is (fimport, returns_state, parent(LIn)),
-	 test_ireverse2(+list(int), -list(int)) is (foreign)].
+         test_ireverse1(+list(int), -list(int)) is (foreign, memory_root),
+         ireverse2(+list(int):LIn,  -list(int)) is (fimport, returns_state, parent(LIn)),
+         test_ireverse2(+list(int), -list(int)) is (foreign)].
 
 ireverse1(X,Y) :- reverse(X, Y).
 
@@ -128,8 +128,8 @@ ireverse2(X,Y) :- reverse(X, Y).
 /*
 :- true pred s(-list(list(list(num))):LLL, -list(list(int)):LLN, -list(int):LN, -int:N)
     is (foreign(c_s),
-	size_of(LLL, LLN),
-	size_of(LLN, LN),
-	size_of(LN, N)
+        size_of(LLL, LLN),
+        size_of(LLN, LN),
+        size_of(LN, N)
        ).
 */

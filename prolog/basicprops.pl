@@ -30,15 +30,15 @@
 %% Migrated from Ciao to SWI-Prolog
 
 :- module(basicprops,
-	  [term/1, int/1, nnegint/1, flt/1, num/1, atm/1, str/1, struct/1,
-	   gnd/1, gndstr/1, constant/1, inst/2, operator_specifier/1, list/1,
-	   list/2, nlist/2, sequence/2, sequence_or_list/2, character_code/1,
-	   (global)/1, (global)/2, (declaration)/1, num_code/1, predname/1,
-	   atm_or_atm_list/1, compat/2, compat/1, iso/1, (deprecated)/1,
-	   not_further_inst/2, sideff/2, (regtype)/1, (native)/1, (native)/2,
-	   rtcheck/1, rtcheck/2, no_rtcheck/1, eval/1, equiv/2, bind_ins/1,
-	   error_free/1,memo/1,filter/2, flag_values/1, pe_type/1, rtc_status/1,
-	   meta_modes/1, no_meta_modes/1]).
+          [term/1, int/1, nnegint/1, flt/1, num/1, atm/1, str/1, struct/1,
+           gnd/1, gndstr/1, constant/1, inst/2, operator_specifier/1, list/1,
+           list/2, nlist/2, sequence/2, sequence_or_list/2, character_code/1,
+           (global)/1, (global)/2, (declaration)/1, num_code/1, predname/1,
+           atm_or_atm_list/1, compat/2, compat/1, iso/1, (deprecated)/1,
+           not_further_inst/2, sideff/2, (regtype)/1, (native)/1, (native)/2,
+           rtcheck/1, rtcheck/2, no_rtcheck/1, eval/1, equiv/2, bind_ins/1,
+           error_free/1,memo/1,filter/2, flag_values/1, pe_type/1, rtc_status/1,
+           meta_modes/1, no_meta_modes/1]).
 
 % callable/1, member/2, string/1,
 
@@ -119,7 +119,7 @@ implementation for a given property. Valid values are:
                  that the property is violated. Default.
 
  @item impossible: The property must not be run-time checked (for
-		   theoretical or practical reasons).
+                   theoretical or practical reasons).
 
  @end{itemize}
 ".
@@ -188,10 +188,10 @@ give_sign(P, P).
 give_sign(P, N) :- N is -P.
 
 :- doc(nnegint/1, "The type of non-negative integers, i.e.,
-	natural numbers.").
+        natural numbers.").
 
 :- regtype native nnegint(T)
-	# "~w is a non-negative integer."-[T].
+        # "~w is a non-negative integer."-[T].
 :- true comp nnegint/1 + sideff(free).
 :- true comp nnegint(T) : nonvar(T) + eval.
 :- trust success nnegint(T) => nnegint(T).
@@ -200,7 +200,7 @@ give_sign(P, N) :- N is -P.
 nnegint(X) :-
         nonvar(X), !,
         integer(X),
-	X >= 0.
+        X >= 0.
 nnegint(0).
 nnegint(N) :- posint(N).
 
@@ -392,9 +392,9 @@ list([X|Xs], T) :-
     list(Xs, T).
 
 :- regtype nlist(L,T) #
-	"~w is ~w or a nested list of ~ws.  Note that
-	if ~w is term, this type is equivalent to term, this
-	fact explain why we do not have a @pred{nlist/1} type"-[L, T, T, T].
+        "~w is ~w or a nested list of ~ws.  Note that
+        if ~w is term, this type is equivalent to term, this
+        fact explain why we do not have a @pred{nlist/1} type"-[L, T, T, T].
 :- true comp nlist/2 + sideff(free).
 :- meta_predicate nlist(?, 1).
 :- true comp nlist(L,T) : (ground(L),ground(T)) + eval.
@@ -405,7 +405,7 @@ nlist([X|Xs], T) :-
         nlist(X, T),
         nlist(Xs, T).
 nlist(X, T) :-
-	type(X, T).
+        type(X, T).
 
 :- true prop member(X,L) # "~w is an element of ~w."-[X, L].
 :- true comp member/2 + (sideff(free), bind_ins).
@@ -466,8 +466,8 @@ character_code(I) :- between(0, 255, I).
 % string(T) :- list(T, character_code).
 
 :- doc(num_code/1, "These are the ASCII codes which can appear in 
-	decimal representation of floating point and integer numbers, 
-	including scientific notation and fractionary part.").
+        decimal representation of floating point and integer numbers, 
+        including scientific notation and fractionary part.").
 
 :- true prop num_code/1 + regtype.
 
@@ -489,20 +489,20 @@ num_code(0'-).
 
 /*
 :- doc(predname(P),"@var{P} is a Name/Arity structure denoting
-	a predicate name: @includedef{predname/1}").
+        a predicate name: @includedef{predname/1}").
 :- true prop predname(P) + regtype
    # "@var{P} is a predicate name spec @tt{atm}/@tt{int}.".
 */
 :- regtype predname(P)
    # "~w is a Name/Arity structure denoting
-	a predicate name: @includedef{predname/1}"-[P].
+        a predicate name: @includedef{predname/1}"-[P].
 :- true comp predname/1 + sideff(free).
 :- true comp predname(P) : ground(P) + eval.
 :- trust success predname(P) => predname(P).
 
 predname(P/A) :-
-	atm(P),
-	nnegint(A).
+        atm(P),
+        nnegint(A).
 
 :- regtype atm_or_atm_list(T)
    # "~w is an atom or a list of atoms."-[T].
@@ -558,17 +558,17 @@ compatc(ground(_)).
 % automatic documenter. (PBC: I guess this comment refers to compat/2)
 
 :- true prop inst(Term,Prop)
-	# "~w is instantiated enough to satisfy ~w."-[Term, Prop].
+        # "~w is instantiated enough to satisfy ~w."-[Term, Prop].
 :- true comp inst/2 + sideff(free).
 :- true comp inst(Term,Prop) : (ground(Term),ground(Prop)) + eval.
 
 :- meta_predicate inst(?,1).
 
 inst(X, Prop) :-
-	A = type(X, Prop),
-	copy_term(A, AC),
-	AC,
-	subsumes_term(A, AC).
+        A = type(X, Prop),
+        copy_term(A, AC),
+        AC,
+        subsumes_term(A, AC).
 
 :- global iso/1 # "@em{Complies with the ISO-Prolog standard.}".
 :- true comp iso/1 + sideff(free).
@@ -621,7 +621,7 @@ error_free(Goal) :- call(Goal).
 memo(Goal) :- call(Goal).
 
 :- global filter(_, Vars) # "~w should be filtered during
-	global control)."-[Vars].
+        global control)."-[Vars].
 
 filter(Goal, _) :- call(Goal).
 
@@ -632,8 +632,8 @@ flag_values(integer).
 flag_values(L):- list(L,atm).
 
 :- global pe_type(Goal) # "~w will be filtered in partial
-	evaluation time according to the PE types defined in the
-	assertion."-[Goal].
+        evaluation time according to the PE types defined in the
+        assertion."-[Goal].
 
 pe_type(Goal) :- call(Goal).
 

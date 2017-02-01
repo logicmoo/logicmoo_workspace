@@ -1,6 +1,6 @@
 :- module(send_check, [get_comp_rtcheck_info/3,
-		       send_rtcheck/4,
-		       send_comp_rtcheck/3]).
+                       send_rtcheck/4,
+                       send_comp_rtcheck/3]).
 
 :- use_module(library(assrt_lib)).
 :- use_module(library(intercept)).
@@ -18,4 +18,4 @@ send_comp_rtcheck(Goal, Prop, Fail) :-
 
 send_rtcheck([], _, _, _) :- !.
 send_rtcheck(Props, ErrType, PredName, ALoc) :-
-	send_signal(assrchk(asr, error(ErrType, PredName, Props, ALoc))).
+        send_signal(assrchk(asr, error(ErrType, PredName, Props, ALoc))).
