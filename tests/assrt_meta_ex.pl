@@ -1,7 +1,7 @@
 :- module(assrt_meta_ex,
-	  [amtest/0,
-	   amtestf/0,
-	   metapred/4]).
+          [amtest/0,
+           amtestf/0,
+           metapred/4]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).

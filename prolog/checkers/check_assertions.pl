@@ -63,21 +63,21 @@ checker:check(assertions, Result, OptionL) :-
     check_assertions(OptionL, Result).
 
 cleanup_db :-
-	retractall(violations_db(_, _, _)).
+        retractall(violations_db(_, _, _)).
 
 check_assertions(OptionL0, Pairs) :-
     merge_options(OptionL0,
-		  [on_etrace(collect_violations(M)),
-		   walkextras([declaration]) % TODO: use asrparts([head, body])
-		  ], OptionL),
+                  [on_etrace(collect_violations(M)),
+                   walkextras([declaration]) % TODO: use asrparts([head, body])
+                  ], OptionL),
     extra_walk_code(OptionL, M, FromChk),
     findall(error-Issue,
-	    ( retract(violations_db(CPI, CTChecks, From)),
-	      from_location(From, Loc),
-	      Issue = body(Loc-CPI)-CTChecks
-	    ; current_head_ctcheck(M, FromChk, Issue)
-	    ),
-	    Pairs, Props),
+            ( retract(violations_db(CPI, CTChecks, From)),
+              from_location(From, Loc),
+              Issue = body(Loc-CPI)-CTChecks
+            ; current_head_ctcheck(M, FromChk, Issue)
+            ),
+            Pairs, Props),
     prop_ctcheck(M, FromChk, Props).
 
 current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
@@ -104,7 +104,7 @@ prop_ctcheck(M, FromChk, Trans) :-
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Groups),
     maplist(\ (K-L)^(error-(prop(G)-K))
-	   ^group_pairs_by_key(L, G), Groups, Trans).
+           ^group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     asr_head_prop(Asr, CM, Head, _, Type, _, From),
@@ -164,8 +164,8 @@ type_message_prop(Loc-PIL) -->
     Loc, ['In assertions of ~q:'-[PIC], nl].
 
 black_list(assertion_head(_, _, _, _, _, _, _), assrt_lib).
-				% Issues in the assertion body will be reported
-				% when checking properties.
+                                % Issues in the assertion body will be reported
+                                % when checking properties.
 black_list(M:Call) :- black_list(Call, M).
 
 :- public collect_violations/4.
@@ -189,9 +189,9 @@ do_check_property_ctcheck(CTCheck, AssrErrorL) :-
     AssrError = assrchk(_, _),
     S = s([]),
     intercept(CTCheck, AssrError, % Now execute the checks
-	      ( S = s(AssrErrorL1),
-		nb_setarg(1, S, [AssrError|AssrErrorL1])
-	      )),
+              ( S = s(AssrErrorL1),
+                nb_setarg(1, S, [AssrError|AssrErrorL1])
+              )),
     S = s(AssrErrorL).
 
 checker_t(defined).
@@ -199,8 +199,8 @@ checker_t(is_prop).
 checker_t(ctcheck).
 
 check_property(defined, H, M, _, M:F/A) :-
-				% Also reported by check_undefined, but is here
-				% to avoid dependency with other analysis.
+                                % Also reported by check_undefined, but is here
+                                % to avoid dependency with other analysis.
     functor(H, F, A),
     \+ current_predicate(M:F/A).
 check_property(is_prop, H, M, _, M:F/A) :-
@@ -208,8 +208,8 @@ check_property(is_prop, H, M, _, M:F/A) :-
     functor(G, F, A),
     \+ verif_is_property(M, F, A).
 check_property(ctcheck, H, M, CM, (M:F/A)-CTChecks) :-
-				% compile-time checks. Currently only
-				% compatibility checks.
+                                % compile-time checks. Currently only
+                                % compatibility checks.
     check_property_ctcheck(H, M, CM, true, CTChecks),
     CTChecks \= [],
     resolve_calln(M:H, M:G),

@@ -28,10 +28,10 @@
 */
 
 :- module(extra_codewalk, [extra_walk_code/1,
-			   extra_walk_code/3,
-			   extra_wcsetup/3,
-			   extra_walk_module_body/2,
-			   resolve_head/3]).
+                           extra_walk_code/3,
+                           extra_wcsetup/3,
+                           extra_walk_module_body/2,
+                           resolve_head/3]).
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assrt_lib)).
@@ -64,10 +64,10 @@ extra_walk_code(OptionL) :-
 extra_walk_code(CM:OptionL0, M, FromChk) :-
     extra_wcsetup(OptionL0, OptionL1, FromChk),
     foldl(select_option_default,
-	  [source(S)-false,
-	   walkextras(Extras)-[declaration, asrparts([body])],
-	   on_etrace(ETracer)-ETracer
-	  ], OptionL1, OptionL2),
+          [source(S)-false,
+           walkextras(Extras)-[declaration, asrparts([body])],
+           on_etrace(ETracer)-ETracer
+          ], OptionL1, OptionL2),
     OptionL = [on_trace(extra_codewalk:pcw_trace(1, CM:ETracer, FromChk))|OptionL2],
     extra_walk_module_body(M, OptionL),
     optimized_walk_code(S, Stage, extra_codewalk:pcw_trace(Stage, CM:ETracer, FromChk), OptionL2),
@@ -122,36 +122,36 @@ optimized_walk_code_true(2, Tracer, OptionL) :-
 extra_wcsetup(OptionL0, OptionL, FromChk) :-
     option_fromchk(OptionL0, OptionL1, FromChk),
     merge_options(OptionL1,
-		  [infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   trace_reference(_),
-		   module_class([user, system, library])
-		  ], OptionL).
+                  [infer_meta_predicates(false),
+                   autoload(false),
+                   evaluate(false),
+                   trace_reference(_),
+                   module_class([user, system, library])
+                  ], OptionL).
 
 walk_from_loc_declaration(OTerm, M, FromChk) :-
     forall(( prolog_codewalk:walk_option_caller(OTerm, '<declaration>'),
-	     clause(loc_declaration(Head, M, goal, From), _, Ref),
-	     call(FromChk, From)
-	   ),
-	   walk_from_goal(Head, M, Ref, OTerm)).
+             clause(loc_declaration(Head, M, goal, From), _, Ref),
+             call(FromChk, From)
+           ),
+           walk_from_goal(Head, M, Ref, OTerm)).
 
 walk_from_goal(Head, M, Ref, OTerm) :-
     prolog_codewalk:( scan_module(M, OTerm), !,
-		      walk_option_clause(OTerm, Ref),
-		      walk_called_by_body(no_positions, Head, M, OTerm)
-		    ).
+                      walk_option_clause(OTerm, Ref),
+                      walk_called_by_body(no_positions, Head, M, OTerm)
+                    ).
 
 walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
     forall(( AHead = assrt_lib:asr_head_prop(Asr, HM, Head, _, _, _, From),
-	     call(FromChk, From),
-	     implementation_module(HM:Head, M),
-	     prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
-	     clause(AHead, _, Ref),
-	     member(AsrPart, AsrPartL),
-	     assertion_goal(AsrPart, Head, HM, Asr, Goal, CM)
-	   ),
-	   walk_from_goal(Goal, CM, Ref, OTerm)).
+             call(FromChk, From),
+             implementation_module(HM:Head, M),
+             prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
+             clause(AHead, _, Ref),
+             member(AsrPart, AsrPartL),
+             assertion_goal(AsrPart, Head, HM, Asr, Goal, CM)
+           ),
+           walk_from_goal(Goal, CM, Ref, OTerm)).
 
 assertion_goal(head, Head, HM, _, Head, HM).
 assertion_goal(body, _, _, Asr, Prop, PM) :-

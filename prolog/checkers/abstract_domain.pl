@@ -28,10 +28,10 @@
 */
 
 :- module(abstract_domain, [abstract_domain/1,
-			    top/2,
-			    bot/2,
-			    eval/3,
-			    trusted_result/4]).
+                            top/2,
+                            bot/2,
+                            eval/3,
+                            trusted_result/4]).
 
 user:file_search_path(domains, library(checkers/domains)).
 

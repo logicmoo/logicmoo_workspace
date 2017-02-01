@@ -5,9 +5,9 @@
 :- use_module(library(nativeprops)).
 
 :- set_prolog_flag(check_assertions, [defined,
-				      is_prop,
-				      ctcheck
-				     ]). % Now tighten the screws
+                                      is_prop,
+                                      ctcheck
+                                     ]). % Now tighten the screws
 
 :- pred a(int, list).
 

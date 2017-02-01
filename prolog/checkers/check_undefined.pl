@@ -54,24 +54,24 @@ checker:check(undefined, Results, OptionL) :-
 check_undefined(OptionL, Results) :-
     infer_meta_if_required,
     extra_walk_code([source(true),
-		     trace_reference(-),
-		     undefined(trace),
-		     on_etrace(collect_undef)|OptionL]),
+                     trace_reference(-),
+                     undefined(trace),
+                     on_etrace(collect_undef)|OptionL]),
     findall(File-(AL-(PI-(Loc/['~w'-[CI]]))),
-	    ( retract(undef(PI, CI, From)),
-	      find_alternatives(PI, AL),
-	      from_location(From, Loc),
-	      from_to_file(From, File)
-	    ), Pairs),
+            ( retract(undef(PI, CI, From)),
+              find_alternatives(PI, AL),
+              from_location(From, Loc),
+              from_to_file(From, File)
+            ), Pairs),
     group_pairs_or_sort(Pairs, Grouped),
     findall(warning-(File-(Decl-(PI-LocCI))),
-	    ( member(File-ALPILocCIList, Grouped),
-	      member(AL-PILocCIList, ALPILocCIList),
-	      maplist(\ ((_:F/A)-_)^(F/A)^true, PILocCIList, PIL),
-	      maplist(alternative_decl(PIL), AL, Decl),
-	      member(PI-LocCIList, PILocCIList),
-	      member(LocCI, LocCIList)
-	    ), Results).
+            ( member(File-ALPILocCIList, Grouped),
+              member(AL-PILocCIList, ALPILocCIList),
+              maplist(\ ((_:F/A)-_)^(F/A)^true, PILocCIList, PIL),
+              maplist(alternative_decl(PIL), AL, Decl),
+              member(PI-LocCIList, PILocCIList),
+              member(LocCI, LocCIList)
+            ), Results).
 
 alternative_decl(PIL, A-EM/EL, Decl/FL) :-
     ( EL = []
@@ -90,28 +90,28 @@ hide_undef(M:H) :- hide_undef(H, M).
 find_alternatives(M:F/A, AL) :-
     functor(H, F, A),
     findall(AA-EL, ( current_predicate(AM:F/A),
-		     AM \= M,
-		     \+ predicate_property(AM:H, imported_from(_)),
-		     ( module_property(AM, file(AF))
-		     ->( library_alias(AF, AA)
-		       ->true
-		       ; AA = AF
-		       )
-		     ; AA=AM
-		     ),
-		     exclude_list(M, AM, EL)
-		   ), AU),
+                     AM \= M,
+                     \+ predicate_property(AM:H, imported_from(_)),
+                     ( module_property(AM, file(AF))
+                     ->( library_alias(AF, AA)
+                       ->true
+                       ; AA = AF
+                       )
+                     ; AA=AM
+                     ),
+                     exclude_list(M, AM, EL)
+                   ), AU),
     sort(AU, AL).
 
 exclude_list(M, AM, ML/EL) :-
     module_property(AM, exports(MU)),
     sort(MU, ML),
     findall(F/A,
-	    ( member(F/A, ML),
-	      functor(H, F, A),
-	      predicate_property(M:H, defined),
-	      \+ predicate_property(M:H, imported_from(AM))
-	    ), EU),
+            ( member(F/A, ML),
+              functor(H, F, A),
+              predicate_property(M:H, defined),
+              \+ predicate_property(M:H, imported_from(AM))
+            ), EU),
     sort(EU, EL).
 
 % Hook to hide undef messages:
@@ -142,9 +142,9 @@ show_alternatives(AL-_) -->
     ; ['  Can be fixed by adding '],
       ( {AL = [_]}
       ->{Spc=''},
-	[]
+        []
       ; {Spc='\t'},
-	['one of these:', nl]
+        ['one of these:', nl]
       ),
       foldl(show_alternative(Spc), AL)
     ).

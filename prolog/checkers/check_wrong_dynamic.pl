@@ -107,26 +107,26 @@ checker:check(wrong_dynamic, Result, OptionL) :-
 check_wrong_dynamic(OptionL0, Pairs) :-
     infer_meta_if_required,
     merge_options(OptionL0,
-		  [infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   trace_reference(_),
-		   on_etrace(collect_wrong_dynamic(M))],
-		  OptionL),
+                  [infer_meta_predicates(false),
+                   autoload(false),
+                   evaluate(false),
+                   trace_reference(_),
+                   on_etrace(collect_wrong_dynamic(M))],
+                  OptionL),
     extra_walk_code(OptionL, M, FromChk),
     collect_result(M, FromChk, Pairs),
     cleanup_dynamic_db.
 
 collect_result(M, FromChk, Pairs) :-
     findall(Type-(as_dynamic(DType)-((Loc/PI)-(MLoc/MPI))),
-	    ( current_static_as_dynamic(Type, DType, Loc, PI, From, MPI),
-	      from_location(From, MLoc)), Pairs, Pairs1),
+            ( current_static_as_dynamic(Type, DType, Loc, PI, From, MPI),
+              from_location(From, MLoc)), Pairs, Pairs1),
     findall(warning-(dynamic_as_static-(Loc-PI)),
-	    current_dynamic_as_static(M:_, FromChk, Loc, PI), Pairs1, Pairs2),
+            current_dynamic_as_static(M:_, FromChk, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
-	    ( retract(var_dynamic_db(PI, From)),
-	      check:predicate_indicator(From, CI, []),
-	      from_location(From, Loc)), Pairs2, []).
+            ( retract(var_dynamic_db(PI, From)),
+              check:predicate_indicator(From, CI, []),
+              from_location(From, Loc)), Pairs2, []).
 
 current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
     wrong_dynamic_db(TypeDB, PI, MPI, MFrom),
@@ -167,7 +167,7 @@ current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     % \+ predicate_property(Ref, exported),
     \+ predicate_property(Ref, public),
     \+ ( wrong_dynamic_db(Type, PI, _, _),
-	 memberchk(Type, [def, dec, retract])
+         memberchk(Type, [def, dec, retract])
        ),
     from_location(From, Loc).
 
@@ -214,7 +214,7 @@ prolog:message(acheck(wrong_dynamic)) -->
 :- public collect_wrong_dynamic/4.
 collect_wrong_dynamic(M, MGoal, Caller, From) :-
     record_location_meta(MGoal, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
-			 record_location_wd(Caller)).
+                         record_location_wd(Caller)).
 
 record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
     compact_goal(MGoal, Comp),
@@ -228,11 +228,11 @@ record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
     ->normalize_head(Caller, CM:HC),
       \+ hide_var_dynamic(HC, CM),
       \+ ( predicate_property(CM:HC, meta_predicate(Meta)),
-	   arg(Pos, Meta, Spec),
-	   '$expand':meta_arg(Spec),
-	   arg(Pos, HC, Arg),
-	   Arg == Fact
-	 ),
+           arg(Pos, Meta, Spec),
+           '$expand':meta_arg(Spec),
+           arg(Pos, HC, Arg),
+           Arg == Fact
+         ),
       update_fact_from(var_dynamic_db(MPI), From)
     ; true
     ).

@@ -112,9 +112,9 @@ duptype_elem(predicate, H, M, FileChk, hash(DupId), M:F/A) :-
     predicate_property(M:H, file(File)),
     call(FileChk, File),
     findall((H :- B),
-	    ( clause(M:H, MB),
-	      strip_module(MB, _, B)
-	    ), ClauseL),
+            ( clause(M:H, MB),
+              strip_module(MB, _, B)
+            ), ClauseL),
     variant_sha1(ClauseL, DupId),
     functor(H, F, A).
 
@@ -158,12 +158,12 @@ ignore_dupgroup_clause(CIL, GL) :-
     sort(MU, ML),
     element_group(clause, CI, GKey),
     partition([GKey, ML] +\ ((clause-_)-CIL1)
-	     ^ ( CIL1 = [CI1|_],
-		 element_group(clause, CI1, GKey),
-		 maplist(\ (M:_/_-_)^M^true, CIL1, MU1),
-		 sort(MU1, ML)
-	       ),
-	      GL, [_], _).
+             ^ ( CIL1 = [CI1|_],
+                 element_group(clause, CI1, GKey),
+                 maplist(\ (M:_/_-_)^M^true, CIL1, MU1),
+                 sort(MU1, ML)
+               ),
+              GL, [_], _).
     % GI, GE).
     % length(GI,NI),
     % length(GE,NE),
@@ -203,13 +203,13 @@ curr_duptype_elem(M, FileChk, declaration, DupId, Elem) :-
 check_dupcode(OptionL, FileChk, Result) :-
     select_option(module(M), OptionL, _, M),
     findall((DupType-DupId)-Elem,
-	    curr_duptype_elem(M, FileChk, DupType, DupId, Elem), PU),
+            curr_duptype_elem(M, FileChk, DupType, DupId, Elem), PU),
     sort(PU, PL),
     group_pairs_by_key(PL, GL),
     partition(\ (_-[_])^true, GL, _, GD), % Consider duplicates
     findall(G, ( member(G, GD),
-		 \+ ignore_dupgroup(G, GD)
-	       ), Groups),
+                 \+ ignore_dupgroup(G, GD)
+               ), Groups),
     ungroup_keys_values(Groups, Pairs),
     clean_redundants(Pairs, CPairs),
     maplist(add_location, CPairs, Result).
@@ -240,7 +240,7 @@ elem_location(DupType, Elem, D, Loc) :-
     property_location(Prop, T, Loc).
 
 add_location(DupType/GKey-DupId/Elem,
-	     warning-(DupType/GKey-(DupId-(LocDL/Elem)))) :-
+             warning-(DupType/GKey-(DupId-(LocDL/Elem)))) :-
     findall(Loc/D, (elem_location(DupType, Elem, D, Loc), D \= goal), LocDU),
     sort(LocDU, LocDL).
 

@@ -28,9 +28,9 @@
 */
 
 :- module(checker,
-	  [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
-	  check_results/2, check_results/3, report_list/2, full_report/1,
-	  simple_report/1, available_checker/1]).
+          [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
+          check_results/2, check_results/3, report_list/2, full_report/1,
+          simple_report/1, available_checker/1]).
 
 :- use_module(library(thread)).
 :- use_module(library(clambda)).
@@ -41,8 +41,8 @@
 user:file_search_path(checkers, library(checkers)).
 
 :- multifile
-    prepare_results/3,	% Custom preparation method
-    check/3.		% Hook to define new analyses
+    prepare_results/3,  % Custom preparation method
+    check/3.            % Hook to define new analyses
 
 :- public
     prepare_results/3,
@@ -124,8 +124,8 @@ checkallc(OptionL) :- checkall(concurrent_maplist, OptionL).
 checkall(Mapper, OptionL) :-
     findall(C, available_checker(C), CL),
     setup_call_cleanup(infer_meta_if_required,
-		       call(Mapper, checkeach(OptionL), CL),
-		       cleanup_db).
+                       call(Mapper, checkeach(OptionL), CL),
+                       cleanup_db).
 
 :- public checkeach/2.
 checkeach(OptionL, Checker) :-
@@ -136,6 +136,6 @@ checkeach(OptionL, Checker) :-
 check_results(Checker, Results, OptionL) :-
     current_prolog_flag(check_database_preds, F),
     setup_call_cleanup(
-	set_prolog_flag(check_database_preds, true),
-	check(Checker, Results, OptionL),
-	set_prolog_flag(check_database_preds, F)).
+        set_prolog_flag(check_database_preds, true),
+        check(Checker, Results, OptionL),
+        set_prolog_flag(check_database_preds, F)).

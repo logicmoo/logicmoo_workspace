@@ -28,8 +28,8 @@
 */
 
 :- module(nitrace, [nitrace_file/3,
-		    nitrace/1,
-		    nitrace/3]).
+                    nitrace/1,
+                    nitrace/3]).
 
 :- use_module(library(ontrace)).
 :- use_module(library(prolog_clause), []).
@@ -38,9 +38,9 @@
 nitrace_file(Goal, Alias, OptL) :-
     absolute_file_name(Alias, File),
     setup_call_cleanup(
-	open(File, write, Stream),
-	nitrace(Goal, Stream, OptL),
-	close(Stream)).
+        open(File, write, Stream),
+        nitrace(Goal, Stream, OptL),
+        close(Stream)).
 
 :- meta_predicate nitrace(0,+,+).
 nitrace(Goal, Stream, OptL) :-

@@ -28,12 +28,12 @@
 */
 
 :- module(from_utils, [from_to_file/2,
-		       from_to_line/2,
-		       from_to_file_line_pos/5,
-		       file_termpos_line/4,
-		       update_fact_from/2,
-		       subsumes_from/2,
-		       filepos_line/4]).
+                       from_to_line/2,
+                       from_to_file_line_pos/5,
+                       file_termpos_line/4,
+                       update_fact_from/2,
+                       subsumes_from/2,
+                       filepos_line/4]).
 
 :- use_module(library(prolog_clause),   []).
 :- use_module(library(prolog_codewalk), []).
@@ -49,7 +49,7 @@
 %% from_to_file_line_pos(+, -, -, ?, ?) is semidet.
 %
 from_to_file_line_pos(clause_term_position(ClauseRef, TermPos),
-		      File, CLine, TLine, Pos) :-
+                      File, CLine, TLine, Pos) :-
     clause_property(ClauseRef, file(File)),
     clause_property(ClauseRef, line_count(CLine)),
     file_termpos_line(File, TermPos, TLine, Pos).
@@ -71,7 +71,7 @@ file_termpos_line(File, TermPos, Line, Pos) :-
 %% filepos_line(+, +, -, -) is det
 %
 filepos_line(File, CharCount, Line, Pos) :-
-    time_file(File, Time),	% Prevents usage of old tabled information
+    time_file(File, Time),      % Prevents usage of old tabled information
     ( filepos_line_db(File, CharCount, Line, Pos, Time)
     ->true
     ; filepos_line_(File, CharCount, Line, Pos),
@@ -80,14 +80,14 @@ filepos_line(File, CharCount, Line, Pos) :-
 
 filepos_line_(File, CharCount, Line, Pos) :-
     setup_call_cleanup('$push_input_context'(file_line),
-		       prolog_codewalk:filepos_line(File, CharCount, Line, Pos),
-		       '$pop_input_context').
+                       prolog_codewalk:filepos_line(File, CharCount, Line, Pos),
+                       '$pop_input_context').
 
 subsumes_from(From1, From2) :-
     from_to_file_line_pos(From1, File1, CLine1, TLine1, Pos1),
     from_to_file_line_pos(From2, File2, CLine2, TLine2, Pos2),
     subsumes_term(flp(File1, CLine1, TLine1, Pos1),
-		  flp(File2, CLine2, TLine2, Pos2)).
+                  flp(File2, CLine2, TLine2, Pos2)).
 
 from_to_file(clause_term_position(ClauseRef, _), File) :-
     clause_property(ClauseRef, file(File)).
@@ -108,12 +108,12 @@ from_to_line(file(_, Line, _, _), Line).
 update_fact_from(Fact, From) :-
     resolve_calln(call(Fact, From0), FactFrom0),
     forall(( clause(FactFrom0, _, Ref),
-	     subsumes_from(From0, From)
-	   ),
-	   erase(Ref)),
+             subsumes_from(From0, From)
+           ),
+           erase(Ref)),
     ( \+ ( call(FactFrom0 ),
-	   subsumes_from(From, From0 )
-	 )
+           subsumes_from(From, From0 )
+         )
     ->From = From0,
       assertz(FactFrom0)
     ; true

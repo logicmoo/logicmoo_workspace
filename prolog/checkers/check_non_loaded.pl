@@ -40,30 +40,30 @@ checker:check(non_loaded, Results, OptionL) :-
     option_allchk(OptionL, _, FileChk0 ),
     ( FileChk0 = option_utils:call_2(true, _) ->
       FileChk = option_utils:call_2(( working_directory(Dir, Dir),
-				      check_dir_file(Dir, File)), File)
+                                      check_dir_file(Dir, File)), File)
     ; FileChk  = FileChk0
     ),
     check_non_loaded(FileChk, Results).
 
 check_non_loaded(FileChk, Pairs) :-
     findall(Dir-Name,
-	    ( call(FileChk, File),
-	      directory_file_path(Dir, Name, File)
-	    ), DirNameU),
+            ( call(FileChk, File),
+              directory_file_path(Dir, Name, File)
+            ), DirNameU),
     sort(DirNameU, DirName),
     group_pairs_by_key(DirName, DirNameG),
     findall(warning-(load_info(Dir, L, N)-Excluded),
-	    ( member(Dir-NameL, DirNameG),
-	      findall(Name, ( member(Name, NameL),
-			      directory_file_path(Dir, Name, File),
-			      \+ source_file_property(File, _)
-			    ), ExcludedL),
-	      ExcludedL \= [],
-	      length(NameL, N),
-	      length(ExcludedL, ExN),
-	      L is N - ExN,
-	      member(Excluded, ExcludedL)
-	    ), Pairs).
+            ( member(Dir-NameL, DirNameG),
+              findall(Name, ( member(Name, NameL),
+                              directory_file_path(Dir, Name, File),
+                              \+ source_file_property(File, _)
+                            ), ExcludedL),
+              ExcludedL \= [],
+              length(NameL, N),
+              length(ExcludedL, ExN),
+              L is N - ExN,
+              member(Excluded, ExcludedL)
+            ), Pairs).
 
 prolog:message(acheck(non_loaded)) -->
     ['----------',nl,

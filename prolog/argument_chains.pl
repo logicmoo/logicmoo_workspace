@@ -28,12 +28,12 @@
 */
 
 :- module(argument_chains,
-	  [gen_argument_chains/2,
-	   argument_chain/2,
-	   unlinked_arg/4,
-	   arg_id/6,
-	   lead_to_root/1,
-	   linked_arg/2]).
+          [gen_argument_chains/2,
+           argument_chain/2,
+           unlinked_arg/4,
+           arg_id/6,
+           lead_to_root/1,
+           linked_arg/2]).
 
 :- use_module(library(extra_codewalk)).
 :- use_module(library(implementation_module)).
@@ -58,7 +58,7 @@ gen_argument_chains(AIL, OptionL0 ) :-
     retractall(linked_arg(_, _)),
     retractall(unlinked_arg(_, _, _, _)),
     forall(member(AI, AIL),
-	   record_linked(AI, 0 )),
+           record_linked(AI, 0 )),
     merge_options(OptionL0, [source(false)], OptionL),
     check_argument_fixpoint(0, OptionL).
 
@@ -69,12 +69,12 @@ record_linked(IM:F/A-Pos, Stage) :-
 check_argument_fixpoint(Stage, OptionL) :-
     succ(Stage, NStage),
     findall(P, ( arg_id(H, M, Idx, Pos, Stage, _),
-		 functor(H, F, A),
-		 ( nonvar(Idx)
-		 ->P = M:F/A-Idx/Pos
-		 ; P = M:F/A-Pos
-		 )
-	       ), L),
+                 functor(H, F, A),
+                 ( nonvar(Idx)
+                 ->P = M:F/A-Idx/Pos
+                 ; P = M:F/A-Pos
+                 )
+               ), L),
     length(L, N),
     print_message(information, format("Stage ~w: Checking ~w argument positions", [NStage, N])),
     extra_walk_code([source(false), on_etrace(propagate_argument_1(Stage, NStage))|OptionL]),
@@ -82,8 +82,8 @@ check_argument_fixpoint(Stage, OptionL) :-
     findall(Clause, retract(clause_db(Clause)), ClauseU),
     sort(ClauseU, ClauseL),
     extra_walk_code([source(false),
-		     clauses(ClauseL),
-		     on_etrace(propagate_argument_2(Stage, NStage))|OptionL]),
+                     clauses(ClauseL),
+                     on_etrace(propagate_argument_2(Stage, NStage))|OptionL]),
     ( \+ arg_id(_, _, _, _, NStage, _)
     ->true
     ; check_argument_fixpoint(NStage, OptionL)
@@ -97,7 +97,7 @@ propagate_argument_1(Stage, NStage, MGoal, MCaller, From) :-
 argument_cond_1(Id, Goal, M, Pos, Stage, _, _) :-
     arg_id(Goal, M, _, Pos, Stage, Id),
     \+ ( arg_id(Goal, M, _, Pos, PStage, _),
-	 PStage < Stage
+         PStage < Stage
        ).
 
 record_callee_1(Id, _, _, _, Ref, Id) :- assertz(clause_db(Ref)).
@@ -151,13 +151,13 @@ propagate_argument(GoalCondition, RecordCallee, Stage, NStage, MGoal, MCaller, F
     nth_clause(_, Idx, CRef),
     arg(Pos, Goal, Arg),
     \+ ( nonvar(Arg),
-	 predicate_property(MGoal, meta_predicate(Meta)),
+         predicate_property(MGoal, meta_predicate(Meta)),
          arg(Pos, Meta, 0 )
        ),
     call(GoalCondition, Goal, IM, Pos, Stage, NStage, CM:H-Idx/CPos),
     arg(CPos, Caller, CArg),
     \+ ( arg_id(H, CM, Idx, CPos, PStage, _),
-	 PStage < NStage
+         PStage < NStage
        ),
     ( term_variables(CArg, CVL),
       term_variables(Arg, VL),

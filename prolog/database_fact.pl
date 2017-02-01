@@ -28,15 +28,15 @@
 */
 
 :- module(database_fact,
-	  [database_fact/1,
-	   database_fact/3,
-	   database_fact_ort/4,
-	   database_def_fact/2,
-	   database_mod_fact/2,
-	   database_use_fact/2,
-	   clause_head/2,
-	   fa_to_head/3
-	  ]).
+          [database_fact/1,
+           database_fact/3,
+           database_fact_ort/4,
+           database_def_fact/2,
+           database_mod_fact/2,
+           database_use_fact/2,
+           clause_head/2,
+           fa_to_head/3
+          ]).
 
 :- use_module(library(extend_args)).
 :- use_module(library(normalize_pi)).

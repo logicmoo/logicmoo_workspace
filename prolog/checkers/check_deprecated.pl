@@ -58,23 +58,23 @@ checker:check(deprecated, Result, OptionL) :-
 
 check_deprecated(OptionL0, Pairs) :-
     merge_options(OptionL0,
-		  [source(true),
-		   infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   trace_reference(_),
-		   on_etrace(collect_deprecated)],
-		  OptionL),
+                  [source(true),
+                   infer_meta_predicates(false),
+                   autoload(false),
+                   evaluate(false),
+                   trace_reference(_),
+                   on_etrace(collect_deprecated)],
+                  OptionL),
     extra_walk_code(OptionL),
     findall(information-((DLoc/(IM:F/A))-((CLoc/Comment)-(Loc/CI))),
-	    ( retract(deprecated_db(Call, M, Comment, DFrom, CFrom, From)),
-	      implementation_module(M:Call, IM),
-	      functor(Call, F, A),
-	      from_location(DFrom, DLoc),
-	      from_location(CFrom, CLoc),
-	      from_location(From, Loc),
-	      check:predicate_indicator(From, CI, [])
-	    ), Pairs).
+            ( retract(deprecated_db(Call, M, Comment, DFrom, CFrom, From)),
+              implementation_module(M:Call, IM),
+              functor(Call, F, A),
+              from_location(DFrom, DLoc),
+              from_location(CFrom, CLoc),
+              from_location(From, Loc),
+              check:predicate_indicator(From, CI, [])
+            ), Pairs).
 
 prolog:message(acheck(deprecated)) -->
     ['---------------------',nl,

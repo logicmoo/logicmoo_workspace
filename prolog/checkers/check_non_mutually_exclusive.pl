@@ -61,53 +61,53 @@ check_non_mutually_exclusive(FromChk, Ref, warning-(Ref-LocIdx)) :-
 cleanup_redundant_groups([], _, []).
 cleanup_redundant_groups([Key-Clause-ClauseNME|ClauseKeyU], ClauseKeyI, ClauseKeyR) :-
        ( \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyU),
-	      subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2]),
-	      \+subset([Key2-Clause2|ClauseNME2], [Key-Clause|ClauseNME])
-	    ),
-	 \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyI),
-	      subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2])
-	    )
+              subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2]),
+              \+subset([Key2-Clause2|ClauseNME2], [Key-Clause|ClauseNME])
+            ),
+         \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyI),
+              subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2])
+            )
        ->ClauseKeyR=[Key-Clause-ClauseNME|ClauseKeyR2],
-	 ClauseKeyI2=[Key-Clause-ClauseNME|ClauseKeyI]
+         ClauseKeyI2=[Key-Clause-ClauseNME|ClauseKeyI]
        ; ClauseKeyR=ClauseKeyR2,
-	 ClauseKeyI2=ClauseKeyI
+         ClauseKeyI2=ClauseKeyI
        ),
        cleanup_redundant_groups(ClauseKeyU, ClauseKeyI2, ClauseKeyR2).
 
 collect_non_mutually_exclusive(FromChk, H, M, LocPL) :-
     findall(I-(Key-Clause),
-	    ( nth_clause(M:H, I, Clause),
-	      From = clause(Clause),
-	      call(FromChk, From),
-	      clause(M:P, _, Clause),
-	      ( mutually_exclusive_predicate_key(P, M, Key)
-	      ->true
-	      ; Key = M:P
-	      )
-	    ),
-	    ClauseKeyU),
+            ( nth_clause(M:H, I, Clause),
+              From = clause(Clause),
+              call(FromChk, From),
+              clause(M:P, _, Clause),
+              ( mutually_exclusive_predicate_key(P, M, Key)
+              ->true
+              ; Key = M:P
+              )
+            ),
+            ClauseKeyU),
     ClauseKeyU \= [],
     list_to_ord_set(ClauseKeyU, ClauseKeyL),
     findall(Key-Clause-ClauseNME,
-	    [Clause, Key, ClauseNME, ClauseKeyL] +\
-	    ( select(_-(Key-Clause), ClauseKeyL, ClauseKeyS),
-	      exclude([Key] +\ (_-(SKey-_)) ^ (SKey\=Key), ClauseKeyS, ClauseKeyNME),
-	      ClauseKeyNME \= [],
-	      pairs_values(ClauseKeyNME, ClauseNME)
-	    ),
-	    ClausePR),
+            [Clause, Key, ClauseNME, ClauseKeyL] +\
+            ( select(_-(Key-Clause), ClauseKeyL, ClauseKeyS),
+              exclude([Key] +\ (_-(SKey-_)) ^ (SKey\=Key), ClauseKeyS, ClauseKeyNME),
+              ClauseKeyNME \= [],
+              pairs_values(ClauseKeyNME, ClauseNME)
+            ),
+            ClausePR),
     cleanup_redundant_groups(ClausePR, [], ClausePL),
     maplist(\ (Key1-Clause1-ClauseNME1)^((Loc1-Idx1/Key1)/LocL)
-	   ^( nth_clause(_, Idx1, Clause1),
-	      from_location(clause(Clause1), Loc1),
-	      maplist(\ (Key2-Clause2)^(Loc2-Idx2/Key2)
-		     ^( nth_clause(_, Idx2, Clause2),
-			from_location(clause(Clause2), Loc2)
-		      ),
-		      ClauseNME1,
-		      LocU),
-	      sort(LocU, LocL)
-	    ), ClausePL, LocPU),
+           ^( nth_clause(_, Idx1, Clause1),
+              from_location(clause(Clause1), Loc1),
+              maplist(\ (Key2-Clause2)^(Loc2-Idx2/Key2)
+                     ^( nth_clause(_, Idx2, Clause2),
+                        from_location(clause(Clause2), Loc2)
+                      ),
+                      ClauseNME1,
+                      LocU),
+              sort(LocU, LocL)
+            ), ClausePL, LocPU),
     sort(LocPU, LocPL).
 
 prolog:message(acheck(non_mutually_exclusive)) -->

@@ -28,8 +28,8 @@
 */
 
 :- module(extra_location, [loc_declaration/4,
-			   loc_dynamic/4,
-			   extra_location/4]).
+                           loc_dynamic/4,
+                           extra_location/4]).
 
 :- multifile
     loc_declaration/4.

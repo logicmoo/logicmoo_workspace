@@ -78,8 +78,8 @@ check_imports(OptionL, Pairs) :-
 
 exwalkc_imports(M, FromChk, OptionL) :-
     extra_walk_code([source(false),
-		     walkextras([declaration, asrparts([body, head])]),
-		     on_etrace(collect_imports_wc)|OptionL], M, FromChk).
+                     walkextras([declaration, asrparts([body, head])]),
+                     on_etrace(collect_imports_wc)|OptionL], M, FromChk).
 
 :- public collect_imports_wc/3.
 collect_imports_wc(M:Goal, Caller, From) :-
@@ -98,19 +98,19 @@ caller_module(_, clause(Ptr), M) :- clause_property(Ptr, module(M)).
 
 collect_imports(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
-	    current_unused_import(M, FromChk, U, Loc, F, A),
-	    Pairs, Tail).
+            current_unused_import(M, FromChk, U, Loc, F, A),
+            Pairs, Tail).
 
 current_unused_import(M, FromChk, U, Loc, F, A) :-
     clause(loc_declaration(Head, M, import(U), From), _, CRef),
     call(FromChk, From),
     M \= user,
     \+ memberchk(Head, [term_expansion(_,_),
-			term_expansion(_,_,_,_),
-			goal_expansion(_,_),
-			goal_expansion(_,_,_,_),
-			except(_)
-		       ]),
+                        term_expansion(_,_,_,_),
+                        goal_expansion(_,_),
+                        goal_expansion(_,_,_,_),
+                        except(_)
+                       ]),
     \+ used_import(CRef),
     \+ loc_declaration(Head, M, goal, _),
     module_property(M, class(Class)),
@@ -125,9 +125,9 @@ ignore_import(M, IM) :- expansion_module(M, IM).
 
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
-	    ( current_used_use_module(M, FromChk, U, From),
-	      from_location(From, Loc)
-	    ), Pairs, Tail).
+            ( current_used_use_module(M, FromChk, U, From),
+              from_location(From, Loc)
+            ), Pairs, Tail).
 
 current_used_use_module(M, FromChk, U, From) :-
     ( loc_declaration(U, M, use_module, From),
@@ -140,25 +140,25 @@ current_used_use_module(M, FromChk, U, From) :-
     memberchk(Class, [user]),
     from_to_file(From, File),
     \+ findall(I, source_file_property(File, included_in(I, _)),
-	       [_, _|_]),
+               [_, _|_]),
     absolute_file_name(U, UFile, [file_type(prolog), access(exist),
-				  file_errors(fail)]),
+                                  file_errors(fail)]),
     current_module(UM, UFile),
     \+ ignore_import(M, UM),
     module_property(UM, exports(EL)),
     EL \= [],
     subtract(EL, ExL, PIL),
     \+ ( module_property(UM, exported_operators(OL)),
-	 OL \= []
+         OL \= []
        ),
     \+ ( member(F/A, PIL),
-	 functor(Head, F, A),
-	 implementation_module(UM:Head, IM),
-	 ( used_usemod(M, IM)			     % is used
-	 ; predicate_property(UM:Head, multifile),   % is extended
-	   clause(UM:Head, _, Ref),
-	   clause_property(Ref, file(File))
-	 )
+         functor(Head, F, A),
+         implementation_module(UM:Head, IM),
+         ( used_usemod(M, IM)                        % is used
+         ; predicate_property(UM:Head, multifile),   % is extended
+           clause(UM:Head, _, Ref),
+           clause_property(Ref, file(File))
+         )
        ).
 
 mark_import(M:Head, CM, _, _, _, _) :-
@@ -168,8 +168,8 @@ mark_import(M:Head, CM, _, _, _, _) :-
 
 mark_import(Head, M, CM) :-
     forall(( clause(loc_declaration(Head, CM, import(_), _), _, CRef),
-	     \+ used_import(CRef)),
-	   assertz(used_import(CRef))),
+             \+ used_import(CRef)),
+           assertz(used_import(CRef))),
     ( M \= CM,
       \+used_usemod(CM, M)
     ->assertz(used_usemod(CM, M))

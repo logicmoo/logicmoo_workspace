@@ -54,28 +54,28 @@ list_files(Request) :-
                     ]),
     fetch_module_files_hook(Method, ModuleFiles),
     reply_html_page([% style(Style),
-		     title('Browse Code')
-		    ],
-		    [h1('Modules'),
-		     table([border(1)],
-			   [\header,
-			    \foldl(html_module_files(Method), ModuleFiles)
-			   ])
-		    ]),
+                     title('Browse Code')
+                    ],
+                    [h1('Modules'),
+                     table([border(1)],
+                           [\header,
+                            \foldl(html_module_files(Method), ModuleFiles)
+                           ])
+                    ]),
     print_message(information, format('done', [])).
 
 show_source(Request) :-
     once(provides_method(DMethod)),
     http_parameters(Request,
                     [meth(Method, [default(DMethod)]),
-		     file(File, [])
+                     file(File, [])
                     ]),
     show_source_hook(Method, File),
     print_message(information, format('done', [])).
 
 header -->
     html(tr([td(b('Module')),
-	     td(b('File'))])).
+             td(b('File'))])).
 
 html_module_files(Method, Module-Files) -->
     html(tr([td(Module),td(table([\foldl(html_file(Method), Files)]))])).

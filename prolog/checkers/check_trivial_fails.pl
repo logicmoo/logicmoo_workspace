@@ -50,18 +50,18 @@ checker:check(trivial_fails, Result, OptionL) :-
 check_trivial_fails(OptionL1, Pairs) :-
     select_option(match_ai(MatchAI), OptionL1, OptionL2, match_head),
     merge_options(OptionL2,
-		  [infer_meta_predicates(false),
-		   autoload(false),
-		   evaluate(false),
-		   trace_reference(_),
-		   module_class([user, system, library])
-		  ], OptionL),
+                  [infer_meta_predicates(false),
+                   autoload(false),
+                   evaluate(false),
+                   trace_reference(_),
+                   module_class([user, system, library])
+                  ], OptionL),
     dynamic_locations(OptionL),
     extra_walk_code([on_etrace(collect_trivial_fails(MatchAI))|OptionL]),
     findall(warning-(Loc-Args),
-	    ( retract(trivial_fail(Args, From)),
-	      from_location(From, Loc)
-	    ), Pairs),
+            ( retract(trivial_fail(Args, From)),
+              from_location(From, Loc)
+            ), Pairs),
     cleanup_f,
     !.
 

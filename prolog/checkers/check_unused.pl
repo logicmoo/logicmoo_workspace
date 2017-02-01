@@ -78,7 +78,7 @@ checker:check(unused, Result, OptionL) :-
 check_unused(OptionL, Pairs) :-
     infer_meta_if_required,
     extra_walk_code([source(false), % False, otherwise this will not work
-		     on_etrace(collect_unused(M))|OptionL], M, FromChk),
+                     on_etrace(collect_unused(M))|OptionL], M, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.
@@ -130,9 +130,9 @@ mark(M) :-
 
 resolve_meta_goal(H, M, G) :-
     ( ( predicate_property(M:H, meta_predicate(Meta))
-				% don't use inferred_meta_predicate(M:H, Meta)
-				% since actually it is not being used by the
-				% compiler and would lead to incorrect results
+                                % don't use inferred_meta_predicate(M:H, Meta)
+                                % since actually it is not being used by the
+                                % compiler and would lead to incorrect results
       )
     ->qualify_meta_goal(M:H, Meta, G)
     ; G = H
@@ -153,14 +153,14 @@ put_mark(CRef) :-
     ( \+ is_marked(CRef)
     ->record_marked(CRef),
       forall(calls_to(CRef, CM, Callee),
-	     mark_rec(Callee, CM))
+             mark_rec(Callee, CM))
     ; true
     ).
 
 mark_rec(H, M) :-
     resolve_meta_goal(H, M, G),
     forall(gen_lit_marks(G, M, CRef), % Widening
-	   put_mark(CRef)).
+           put_mark(CRef)).
 
 % Generalization step, we lose precision but avoid loops --EMM
 %
@@ -175,10 +175,10 @@ mark_rec(H, M) :-
 %
 gen_lit_marks(G, M, '<assertion>'(M:P)) :-
     functor(G, F, A),
-    functor(P, F, A).	       % Build a fresh head without undesirable bindings
+    functor(P, F, A).          % Build a fresh head without undesirable bindings
 gen_lit_marks(G, M, clause(Clause)) :-
     match_head_clause(M:G, Clause),
-    clause_property(Clause, file(_)).	 % Static clauses only
+    clause_property(Clause, file(_)).    % Static clauses only
 gen_lit_marks(G, M, M:P) :- copy_term(G, P). % copy term to avoid undesirable bindings
 
 gen_marks(Ref, Ref).
@@ -188,12 +188,12 @@ gen_marks('<assertion>'(M:H), clause(Clause)) :-
 
 not_marked(Ref) :-
     \+ ( gen_marks(Ref, Mark),
-	 marked(Mark)
+         marked(Mark)
        ).
 
 not_marked(H, M) :-
     \+ ( gen_lit_marks(H, M, Mark),
-	 marked(Mark)
+         marked(Mark)
        ).
 
 match_head_clause(MH, Clause) :-
@@ -205,20 +205,20 @@ current_edge(X, Y) :-
     ->functor(H, F, A),
       ( CRef = M:H
       ; match_head_clause(M:H, Clause),
-	CRef = clause(Clause)
+        CRef = clause(Clause)
       ),
       freeze(PI2, PI2 \= PI)
     ; ( X = PI/I,
-	I > 0
+        I > 0
       ->functor(H, F, A),
-	nth_clause(M:H, I, Clause),
-	CRef = clause(Clause)
+        nth_clause(M:H, I, Clause),
+        CRef = clause(Clause)
       ; X = PI/(-1)
       ->functor(H, F, A),
-	CRef = '<assertion>'(M:H)
+        CRef = '<assertion>'(M:H)
       ; X = PI/0
       ->functor(H, F, A),
-	CRef = M:H
+        CRef = M:H
       )
     ),
     calls_to(CRef, M2, H2),
@@ -226,10 +226,10 @@ current_edge(X, Y) :-
     PI2 = M2:F2/A2,
     ( Y = PI2
     ; ( match_head_clause(M2:H2, YRef),
-	nth_clause(_, I2, YRef),
-	Y = PI2/I2
+        nth_clause(_, I2, YRef),
+        Y = PI2/I2
       ; %% extra_location(H2, M2, dynamic(use, _, _), _),
-	Y = PI2/0
+        Y = PI2/0
       ),
       Y \= X
     ).
@@ -242,15 +242,15 @@ sweep(M, FromChk, Pairs) :-
     findall(node(Node, D, From), unmarked(M, FromChk, Node, D, From), UNodes),
     sort(UNodes, Nodes),
     findall(node(X, DX, LX)-Y,
-	    ( member(node(X, DX, FX), Nodes),
-	      from_location(FX, LX),
-	      ( current_edge(X, Y),
-		memberchk(node(Y, _, _), Nodes)
-	      *->
-		true
-	      ; Y=[]
-	      )
-	    ), EdgeU),
+            ( member(node(X, DX, FX), Nodes),
+              from_location(FX, LX),
+              ( current_edge(X, Y),
+                memberchk(node(Y, _, _), Nodes)
+              *->
+                true
+              ; Y=[]
+              )
+            ), EdgeU),
     sort(EdgeU, EdgeL),
     group_pairs_by_key(EdgeL, AdjL),
     maplist(add_sort_by(EdgeL), AdjL, AdjSG),
@@ -291,19 +291,19 @@ compact_result(X, node(SortBy, L, D, X)-ResultL) :-
       ( edge(SortBy, X, D, L, _)
       ->true
       ; !,
-	fail
+        fail
       ),
       findall(Result,
-	      ( commited_retract(edge(_, X, D, L, Y)),
-		Y \= X, % loop
-		compact_result(Y, Result)
-	      ), ResultU),
+              ( commited_retract(edge(_, X, D, L, Y)),
+                Y \= X, % loop
+                compact_result(Y, Result)
+              ), ResultU),
       sort(ResultU, ResultL).
 
 /*
 sweep(Ref, Pairs) :-
     findall(warning-(Loc-(PI/D)), ( unmarked(Ref, PI),
-				    property_location(PI, D, Loc)), Pairs).
+                                    property_location(PI, D, Loc)), Pairs).
 */
 
 semantic_head(H, M, 0, dynamic(Type, CM, Call), Caller, From) :-
@@ -328,20 +328,20 @@ unmarked(M, FromChk, Node, D, From) :-
       \+ entry_caller(M, H),
       ( not_marked(H, M)
       ->Node = MPI,
-	property_from(Ref, D, From),
-	check_pred_file(Ref, FromChk, From)
+        property_from(Ref, D, From),
+        check_pred_file(Ref, FromChk, From)
       ; ( match_head_clause(M:H, CRef),
-	  clause_property(CRef, file(_)), % Static clauses only
-	  From = clause(CRef),
-	  not_marked(From),
-	  check_pred_file(Ref, FromChk, From),
-	  nth_clause(M:H, I, CRef),
-	  D = clause(I)
-	; semantic_head(H, M, I, D, Mark, From),
-	  not_marked(Mark),
-	  check_pred_file(Ref, FromChk, From)
-	),
-	Node = MPI/I
+          clause_property(CRef, file(_)), % Static clauses only
+          From = clause(CRef),
+          not_marked(From),
+          check_pred_file(Ref, FromChk, From),
+          nth_clause(M:H, I, CRef),
+          D = clause(I)
+        ; semantic_head(H, M, I, D, Mark, From),
+          not_marked(Mark),
+          check_pred_file(Ref, FromChk, From)
+        ),
+        Node = MPI/I
       )
     ; semantic_head(H, M, I, D, Mark, From),
       not_marked(Mark),
@@ -378,7 +378,7 @@ message_unused_node(node(sort_by(N, L, _), F, D, PI), Level) -->
     },
     /* Uncomment to help debugging:
     ( { Level = ['*'|_],
-	N \= 0
+        N \= 0
       }
     ->( {ARL \= []}
       ->['In ~w ~w, called from ~w: calls to unused ~w already reported'-[T, PI, L, ARL], nl]

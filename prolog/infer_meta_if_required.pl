@@ -28,14 +28,14 @@
 */
 
 :- module(infer_meta_if_required,
-	  [ infer_meta_if_required/0
-	  ]).
+          [ infer_meta_if_required/0
+          ]).
 
 :- use_module(library(prolog_codewalk)).
 
 infer_meta_if_required :-
     ( predicate_property(prolog_metainference:inferred_meta_pred(_, _, _),
-			 number_of_clauses(0 ))
+                         number_of_clauses(0 ))
     ->prolog_walk_code([autoload(false)])
     ; true
     ).

@@ -28,7 +28,7 @@
 */
 
 :- module(ontrace, [ontrace/3,
-		    call_inoutex/3]).
+                    call_inoutex/3]).
 
 :- use_module(library(apply)).
 :- use_module(library(edinburgh)).
@@ -42,15 +42,15 @@
 :- meta_predicate ontrace(0,6,+).
 
 ontrace(Goal, OnTrace, OptionL) :-
-    State=state(_, _, _),	% Allow destructive assignment
+    State=state(_, _, _),       % Allow destructive assignment
     call_inoutex(Goal,
-	setup_trace(State, OnTrace, OptionL),
-	cleanup_trace(State)).
+        setup_trace(State, OnTrace, OptionL),
+        cleanup_trace(State)).
 
 :- meta_predicate call_inoutex(0,0,0).
 call_inoutex(Goal, OnIn, OnOut) :-
     catch(call_inout(Goal, OnIn, OnOut),
-	  E,  (OnOut, throw(E))).
+          E,  (OnOut, throw(E))).
 
 call_inout(Goal, OnIn, OnOut) :-
     (OnIn;OnOut,fail),
@@ -69,11 +69,11 @@ setup_trace(State, M:OnTrace, OptL) :-
     select_option(file(ValidFile), OptL1, OptL2, ontrace:true_1),
     %% redo port have weird bugs, ignoring it for now:
     select_option(ports(PortList), OptL2, _,
-		  [call, exit, fail, unify, exception]),
+                  [call, exit, fail, unify, exception]),
     asserta((user:prolog_trace_interception(Port, Frame, PC, Action)
-	    :- ignore(trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
-				 M:ValidFile, Action))),
-	    Ref),
+            :- ignore(trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
+                                 M:ValidFile, Action))),
+            Ref),
     foldl(port_mask, PortList, 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
@@ -118,9 +118,9 @@ do_trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
     ),
     \+ \+ call(ValidGoal, CM:CH),
     \+ \+ ( member(F, [Frame|ParentL]),
-	    prolog_frame_attribute(F, goal, PM:_),
-	    user_defined_module(PM)
-	  ),
+            prolog_frame_attribute(F, goal, PM:_),
+            user_defined_module(PM)
+          ),
     !,
     call(OnTrace, Port, Frame, PC, ParentL, SubLoc, Action).
 do_trace_port(_, _, _, _, _, _, continue).
@@ -187,16 +187,16 @@ clause_subloc(Cl, List, SubLoc) :-
     ->( read_term_at_line(File, Line, Module, Term, TermPos)
       % Usage of term positions has priority
       ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
-	  match_clause(Cl, ClauseL, Module, List2, List),
-	  nonvar(ClausePos)
-	->( foldl(find_subgoal, List2, ClausePos, SubPos), % Expensive
-	    nonvar(SubPos)
-	  ->true
-	  ; SubPos = ClausePos
-	  )
-	; SubPos = TermPos
-	),
-	SubLoc = file_term_position(File, SubPos)
+          match_clause(Cl, ClauseL, Module, List2, List),
+          nonvar(ClausePos)
+        ->( foldl(find_subgoal, List2, ClausePos, SubPos), % Expensive
+            nonvar(SubPos)
+          ->true
+          ; SubPos = ClausePos
+          )
+        ; SubPos = TermPos
+        ),
+        SubLoc = file_term_position(File, SubPos)
       ; SubLoc = file(File, Line, -1, _)
       )
     ; SubLoc = clause(Cl)
@@ -204,21 +204,21 @@ clause_subloc(Cl, List, SubLoc) :-
 
 read_term_at_line(File, Line, Module, Clause, TermPos) :-
     setup_call_cleanup(
-	'$push_input_context'(trace_info),
-	read_term_at_line_2(File, Line, Module, Clause, TermPos),
-	'$pop_input_context').
+        '$push_input_context'(trace_info),
+        read_term_at_line_2(File, Line, Module, Clause, TermPos),
+        '$pop_input_context').
 
 read_term_at_line_2(File, Line, Module, Clause, TermPos) :-
     catch(open(File, read, In), _, fail),
     set_stream(In, newline(detect)),
     call_cleanup(
-	read_source_term_at_location(
-	    In, Clause,
-	    [ line(Line),
-	      module(Module),
-	      subterm_positions(TermPos)
-	    ]),
-	close(In)).
+        read_source_term_at_location(
+            In, Clause,
+            [ line(Line),
+              module(Module),
+              subterm_positions(TermPos)
+            ]),
+        close(In)).
 
 list_pos(term_position(_, _, _, _, PosL), PosL).
 list_pos(list_position(_, _, PosL, _), PosL).

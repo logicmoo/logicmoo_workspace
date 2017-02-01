@@ -69,7 +69,7 @@ and_fail(bot,  _, bot).
 % Trusted properties:
 
 abstract_domain:trusted_result(fail, Goal, Module, Result) :-
-	trusted_result_fail(Goal, Module, Result).
+        trusted_result_fail(Goal, Module, Result).
 
 trusted_result_fail(fail,                        _, fail).
 trusted_result_fail(true,                        _, true).
@@ -105,66 +105,66 @@ trusted_result_fail(throw(_),                    _, top).
 trusted_result_fail(current_prolog_flag(_, _),   _, top).
 trusted_result_fail((_>=_),                      _, top).
 trusted_result_fail((A is B),                    _, Result) :-
-	( ground(B) ->
-	  catch(( \+ (A is B) -> Result = fail
-		; ground(A) -> Result = true
-		; Result = top), _, Result = fail)
-	; Result = top
-	).
+        ( ground(B) ->
+          catch(( \+ (A is B) -> Result = fail
+                ; ground(A) -> Result = true
+                ; Result = top), _, Result = fail)
+        ; Result = top
+        ).
 trusted_result_fail(functor(T, F, A),            _, Result) :-
-	( atom(F), integer(A), A >= 0 ->
-	  functor(T0, F, A),
-	  ( T0 \= T ->
-	    Result = fail
-	  ; ground(T) ->
-	    Result = true
-	  ; Result = top
-	  )
-	; nonvar(T) ->
-	  functor(T, F0, A0),
-	  ( \+ (F0 = F, A0 = A) ->
-	    Result = fail
-	  ; ground(F/A) ->
-	    Result = true
-	  ; Result = top
-	  )
-	; Result = top
-	).
+        ( atom(F), integer(A), A >= 0 ->
+          functor(T0, F, A),
+          ( T0 \= T ->
+            Result = fail
+          ; ground(T) ->
+            Result = true
+          ; Result = top
+          )
+        ; nonvar(T) ->
+          functor(T, F0, A0),
+          ( \+ (F0 = F, A0 = A) ->
+            Result = fail
+          ; ground(F/A) ->
+            Result = true
+          ; Result = top
+          )
+        ; Result = top
+        ).
 trusted_result_fail(A=B, _, Result) :-
-	( A \= B ->
-	  Result = fail
-	; A == B ->
-	  Result = true
-	; Result = top 
-	).
+        ( A \= B ->
+          Result = fail
+        ; A == B ->
+          Result = true
+        ; Result = top 
+        ).
 trusted_result_fail((A\=B), _, Result) :-
-	( A \= B ->
-	  Result = true
-	; A == B ->
-	  Result = fail
-	; Result = top
-	).
+        ( A \= B ->
+          Result = true
+        ; A == B ->
+          Result = fail
+        ; Result = top
+        ).
 trusted_result_fail(nonvar(Var), _, Result) :-
-	( nonvar(Var) ->
-	  Result = true
-	; Result = top
-	).
+        ( nonvar(Var) ->
+          Result = true
+        ; Result = top
+        ).
 trusted_result_fail(var(Var), _, Result) :-
-	( var(Var) ->
-	    Result = top
-	; Result = fail
-	).
+        ( var(Var) ->
+            Result = top
+        ; Result = fail
+        ).
 trusted_result_fail(atom(Atom), _, Result) :-
-	( atom(Atom) ->
-	    Result = true
-	; var(Atom) ->
-	    Result = top
-	; Result = fail
-	).
+        ( atom(Atom) ->
+            Result = true
+        ; var(Atom) ->
+            Result = top
+        ; Result = fail
+        ).
 trusted_result_fail(integer(Atom), _, Result) :-
-	( integer(Atom) ->
-	    Result = true
-	; var(Atom) ->
-	    Result = top
-	; Result = fail
-	).
+        ( integer(Atom) ->
+            Result = true
+        ; var(Atom) ->
+            Result = top
+        ; Result = fail
+        ).

@@ -28,7 +28,7 @@
 */
 
 :- module(implemented_in, [implemented_in/1,
-			   implemented_in/3]).
+                           implemented_in/3]).
 
 :- use_module(library(lists)).
 :- use_module(library(extra_location)).
@@ -49,22 +49,22 @@ implemented_in(MGoal0, From, Args) :-
     M:Goal = MGoal,
     functor(Goal, F, A),
     findall(MI, ( current_module(M),
-		  \+ predicate_property(MGoal, imported_from(_)),
-		  MI = M
-		; predicate_property(MGoal, imported_from(MI))
-		), UML),
+                  \+ predicate_property(MGoal, imported_from(_)),
+                  MI = M
+                ; predicate_property(MGoal, imported_from(MI))
+                ), UML),
     sort(UML, ML),
     member(M, ML),
     ( ( loc_declaration(Goal, M, Declaration, From),
-	Declaration \= goal
+        Declaration \= goal
       ; loc_dynamic(Goal, M, Declaration, From),
-	Declaration \= dynamic(query, _, _)
+        Declaration \= dynamic(query, _, _)
       ),
       Args = [M:F/A-Declaration]
     ; From = clause(ClauseRef),
       catch(( clause(M:Goal, _, ClauseRef),
-	      nth_clause(M:Goal, N, ClauseRef)
-	    ), _, fail),
+              nth_clause(M:Goal, N, ClauseRef)
+            ), _, fail),
       Args = [M:F/A-N]
     ).
 
@@ -72,11 +72,11 @@ implemented_in(MGoal0, From, Args) :-
 
 prepare :-
     dynamic_locations([source(false),
-		       infer_meta_predicates(false),
-		       autoload(false),
-		       evaluate(false),
-		       trace_reference(_),
-		       module_class([user, system, library])]),
+                       infer_meta_predicates(false),
+                       autoload(false),
+                       evaluate(false),
+                       trace_reference(_),
+                       module_class([user, system, library])]),
     retractall(prepared),
     assertz(prepared).
 
@@ -86,4 +86,4 @@ implemented_in(MGoal) :-
     ; prepare
     ),
     forall(implemented_in(MGoal, From, Args),
-	   print_message(information, acheck(implemented_in(From, Args)))).
+           print_message(information, acheck(implemented_in(From, Args)))).

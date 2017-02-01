@@ -62,7 +62,7 @@ and_sideff(bot,  _,    bot).
 % Trusted properties:
 
 abstract_domain:trusted_result(sideff, Goal, Module, Result) :-
-	trusted_result_sideff(Goal, Module, Result).
+        trusted_result_sideff(Goal, Module, Result).
 
 trusted_result_sideff(fail,                        _, free).
 trusted_result_sideff(true,                        _, free).

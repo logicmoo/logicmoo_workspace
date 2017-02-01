@@ -9,8 +9,8 @@ compact_goal(M:Goal, N:Compact) :- !,
     compact_goal(Head, Compact).
 compact_goal(Goal, Compact) :-
     ( member(Pattern-Into,
-	     [(\+ (G, \+E))           -forall(G, E),
-	      forall(retract(F), true)-retractall(F)]),
+             [(\+ (G, \+E))           -forall(G, E),
+              forall(retract(F), true)-retractall(F)]),
       subsumes_term(Pattern, Goal)
     ->Goal = Pattern,
       Goal2 = Into,
@@ -24,5 +24,5 @@ prolog:called_by(\+ Goal, system, M, CL) :-
     Goal = (retract(Fact), \+ true),
     ( prolog:called_by(retractall(Fact), system, M, CL)
     ->true
-    ; CL = [true]		% Skip walk meta arguments
+    ; CL = [true]               % Skip walk meta arguments
     ).

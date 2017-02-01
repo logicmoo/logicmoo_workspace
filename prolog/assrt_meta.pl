@@ -39,7 +39,7 @@
 assrt_lib:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
     notrace(am_head_prop_idx(H, M, S, F)).
 assrt_lib:asr_glob(am_asr(M, H, S, F), assrt_meta,
-		   rtcheck_goal(_, [am_asr2(M, H, S, F)]), F).
+                   rtcheck_goal(_, [am_asr2(M, H, S, F)]), F).
 
 am_head_prop_idx(Head, M, Meta, From) :-
     var(Meta), !,
@@ -58,16 +58,16 @@ am_head_prop_idx(Head, M, Meta, From) :-
     ( Flag = all
     ->
       \+ ( freeze(Asr, (Asr \= am_asr(_, _, _, _))),
-	   asr_head_prop(Asr, CM, Head, check, _, _, _),
-	   implementation_module(CM:Head, M),
-	   asr_glob(Asr, CM, no_meta_modes(_), _)
-	 )
+           asr_head_prop(Asr, CM, Head, check, _, _, _),
+           implementation_module(CM:Head, M),
+           asr_glob(Asr, CM, no_meta_modes(_), _)
+         )
     ; Flag = specific
     ->once(( freeze(Asr, (Asr \= am_asr(_, _, _, _))),
-	     asr_head_prop(Asr, CM, Head, check, _, _, _),
-	     implementation_module(CM:Head, M),
-	     asr_glob(Asr, CM, meta_modes(_), _)
-	   ))
+             asr_head_prop(Asr, CM, Head, check, _, _, _),
+             implementation_module(CM:Head, M),
+             asr_glob(Asr, CM, meta_modes(_), _)
+           ))
     ),
     '$predicate_property'(meta_predicate(Meta), Pred),
     % predicate_property(Pred, meta_predicate(Meta)),
@@ -84,5 +84,5 @@ assrt_lib:asr_aprop(am_asr2(_, _, _, From), stat, check, From).
 assrt_lib:asr_aprop(am_asr2(_, _, _, From), type,  pred, From).
 assrt_lib:asr_aprop(am_asr2(M, H, Meta, From), call,  Prop, From) :-
     assrt_lib:current_normalized_assertion(pred Meta, M, _, M:H, _,
-					   _, _, CaL, _, _, _, _, _),
+                                           _, _, CaL, _, _, _, _, _),
     member(Prop-_, CaL).

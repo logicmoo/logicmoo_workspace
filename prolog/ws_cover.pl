@@ -41,12 +41,12 @@
 
 colors_code(_) :-
     reply_html_page([title('Colors Code')
-		    ],
-		    [table([border(1)],
-			   [\header,
-			    \enum_colors
-			   ])
-		    ]).
+                    ],
+                    [table([border(1)],
+                           [\header,
+                            \enum_colors
+                           ])
+                    ]).
 
 code_webcolor(Color, C) :-
     format(atom(C), '#~|~`0t~16R~6+', [Color]).
@@ -73,19 +73,19 @@ enum_colors_cell(SubPortL, Port, td(T)) :-
 
 header -->
     {findall(td([bgcolor=AC], b(Text)),
-	     ( port_color(Port, Color),
-	       code_webcolor(Color, AC),
-	       term_to_atom(Port, Text)
-	     ), HCols, [td(b(color))])},
+             ( port_color(Port, Color),
+               code_webcolor(Color, AC),
+               term_to_atom(Port, Text)
+             ), HCols, [td(b(color))])},
     html(tr(HCols)).
 
 ws_browser:provides_method(gcover).
 
 ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     findall(M-File,
-	    ( covered_db(_, _, File, _, _, _),
-	      module_file(M, File)
-	    ), MFileU),
+            ( covered_db(_, _, File, _, _, _),
+              module_file(M, File)
+            ), MFileU),
     sort(MFileU, MFileS),
     group_pairs_by_key(MFileS, ModuleFiles).
 
@@ -163,8 +163,8 @@ context_port(to-PortTagL, Port0, Port) :-
     subtract(Port0, PortL, Port).
 
 gcover_format(Pos-CovL,
-	      gf(Pos0, CtxC, Raw0, [HTML|Tail]),
-	      gf(Pos,  CtxL, Raw1, Tail)) :-
+              gf(Pos0, CtxC, Raw0, [HTML|Tail]),
+              gf(Pos,  CtxL, Raw1, Tail)) :-
     Length is Pos-Pos0,
     sub_string(Raw0, 0, Length, After, Text),
     enum_lines(Text, HTML0 ),
@@ -190,20 +190,20 @@ ws_browser:show_source_hook(gcover, File) :-
     read_file_to_string(File, Raw, []),
     string_length(Raw, Length),
     findall(Pos,
-	    ( covered_db(Fr, To, File, Port, Tag, _Count),
-	      ( Pos=Fr-(fr-(Port-Tag))
-	      ; Pos=To-(to-(Port-Tag))
-	      )
-	    ), CovU),
+            ( covered_db(Fr, To, File, Port, Tag, _Count),
+              ( Pos=Fr-(fr-(Port-Tag))
+              ; Pos=To-(to-(Port-Tag))
+              )
+            ), CovU),
     sort(CovU, CovL),
     group_pairs_or_sort(CovL, CovG0),
     append(CovG0, [Length-[]], CovG),
     foldl(gcover_format, CovG, gf(0, [], Raw, Text), gf(Length, [], "", "")),
     reply_html_page([title(Name),
-		     style('pre.code { counter-reset: listing; }\n\c
-			  .code i:before { counter-increment: listing; content: counter(listing) ". "; color: gray;}\n\c
-			  .code i { float: left; clear: both; min-width: 3.5em; }\n\c
-			  .code:before { counter-increment: listing; content: counter(listing) ". "; color: gray; display: inline-block; min-width: 3.5em; }\n\c
-			  ')
-		    ],
-		    [pre([class="code"], Text)]).
+                     style('pre.code { counter-reset: listing; }\n\c
+                          .code i:before { counter-increment: listing; content: counter(listing) ". "; color: gray;}\n\c
+                          .code i { float: left; clear: both; min-width: 3.5em; }\n\c
+                          .code:before { counter-increment: listing; content: counter(listing) ". "; color: gray; display: inline-block; min-width: 3.5em; }\n\c
+                          ')
+                    ],
+                    [pre([class="code"], Text)]).
