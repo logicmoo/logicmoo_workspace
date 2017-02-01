@@ -1048,7 +1048,8 @@ process([reactive_rule([L | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
 	current_time(Now),
 	(   query(holds(CP, Now)) -> (T==Now -> process(Rs, AccRi, NRi, AccG, NGi)
 				     ;	 process(Rs, [reactive_rule([L | Ls], C) | AccRi], NRi, AccG, NGi))
-	;   CT=Now, process([reactive_rule( CLs, CC) | Rs], AccRi, NRi, AccG, NGi)).
+	;   (T==Now ->  process([reactive_rule( CLs, CC) | Rs], AccRi, NRi, AccG, NGi)
+	    ;   (CT = Now, process([reactive_rule( CLs, CC)| Rs], [reactive_rule([L | Ls], C) |AccRi], NRi, AccG, NGi)))) .
 
 % Cannot be resolved now. Too late, no longer relevant.
 process([reactive_rule([L |_],_) | Rs], AccRi, NRi, AccG, NGi):-
