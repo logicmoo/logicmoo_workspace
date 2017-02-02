@@ -42,7 +42,7 @@ i18n_support:i18n_resource_dir(Dir) :-
     current_module(M, F),
     directory_file_path(Dir, _, F).
 
-i18n_support:language(es).	% Spanish
+i18n_support:language(es).      % Spanish
 
 test(t1) :- test_t1.
 
