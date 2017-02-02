@@ -1,6 +1,8 @@
 % Conway's game of life, cf. https://en.wikipedia.org/wiki/Conway's_Game_of_Life
 % cells assumed dead by default
 % x-y : cell at column x and line y is alive
+% On XSB requires: :- use_module(basics, [member/2]).
+
 initially 2-3,3-3,4-3. % blinker
 maxTime(10).
 cell(X,Y) :- 
