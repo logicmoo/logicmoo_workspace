@@ -13,11 +13,11 @@ test(assrt_meta) :-
 
 run_amt(RTChecks) :-
     catch(save_rtchecks(do_trace_rtc(amtestf)),
-	  E,
-	  true),
+          E,
+          true),
     assertion(E=error(existence_error(procedure,
-				      assrt_meta_ex:undefined_proc/1),
-		      context(_,_))),
+                                      assrt_meta_ex:undefined_proc/1),
+                      context(_,_))),
     load_rtchecks(RTChecks).
 
 test(assrt_meta_f_1) :-

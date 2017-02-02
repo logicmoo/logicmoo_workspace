@@ -26,26 +26,26 @@ Warning: with the  implementation. The reason is explained there.
 Warning: 
 ctcex.pl:18: In the body of ctcex:q/0:
 ctcex.pl:12: Assertion failure for a(1,b).
-	In *compat*, unsatisfied properties: 
-		ctcex.pl:12:15: ctcex:list(b).
+        In *compat*, unsatisfied properties: 
+                ctcex.pl:12:15: ctcex:list(b).
 ctcex.pl:15: In the head of ctcex:a/2:
 ctcex.pl:12: Assertion failure for a(a,b).
-	In *compat*, unsatisfied properties: 
-		ctcex.pl:12:10: ctcex:int(a).
-		ctcex.pl:12:15: ctcex:list(b).
+        In *compat*, unsatisfied properties: 
+                ctcex.pl:12:10: ctcex:int(a).
+                ctcex.pl:12:15: ctcex:list(b).
 ctcex.pl:30: In assertions of [ctcex:b/2]:
-	ctcex.pl:30:15: ctcex:is_3/1 is not a property
+        ctcex.pl:30:15: ctcex:is_3/1 is not a property
 ctcex.pl:32: In assertions of [ctcex:b/2]:
-	ctcex.pl:32:10: ctcex:is_2/1 is not a property
+        ctcex.pl:32:10: ctcex:is_2/1 is not a property
 ctcex.pl:36: In assertions of [ctcex:b/2]:
-	ctcex.pl:36:10: In call to ctcex:is_num/2:
+        ctcex.pl:36:10: In call to ctcex:is_num/2:
 ctcex.pl:26: Assertion failure for is_num(A,a).
-	In *compat*, unsatisfied properties: 
-		ctcex.pl:26:20: ctcex:int(a).
-	ctcex.pl:36:21: In call to ctcex:is_num/2:
+        In *compat*, unsatisfied properties: 
+                ctcex.pl:26:20: ctcex:int(a).
+        ctcex.pl:36:21: In call to ctcex:is_num/2:
 ctcex.pl:26: Assertion failure for is_num(A,b).
-	In *compat*, unsatisfied properties: 
-		ctcex.pl:26:20: ctcex:int(b).
+        In *compat*, unsatisfied properties: 
+                ctcex.pl:26:20: ctcex:int(b).
 */
 
 test(ctcex) :-
@@ -79,8 +79,8 @@ Warning: with the  implementation. The reason is explained there.
 Warning: 
 p1.pl:16:4: In the body of p1:p0/0:
 p1.pl:9:8: Assertion failure for p1(p1:q2).
-	In *compat*, unsatisfied properties: 
-		p1.pl:9:11: nativeprops:is_pred(p1:q2,0).
+        In *compat*, unsatisfied properties: 
+                p1.pl:9:11: nativeprops:is_pred(p1:q2,0).
 */
 test(ctmeta) :-
     set_prolog_flag(verbose, silent),
@@ -103,13 +103,13 @@ test(ctmeta) :-
 
 replace_noisy_strings(SD) -->
         replace_substrings(SD, ""),
-	replace_substrings("ERROR: ", ""),
-	replace_substrings("ctcex.pl:12:8:", "ctcex.pl:12:"),
-	replace_substrings("ctcex.pl:18:4:", "ctcex.pl:18:"),
-	replace_substrings("ctcex.pl:26:8:", "ctcex.pl:26:"),
-	replace_substrings("ctcex.pl:30:8:", "ctcex.pl:30:"),
-	replace_substrings("ctcex.pl:36:8:", "ctcex.pl:36:"),
-	replace_substrings("ctcex.pl:32:8:", "ctcex.pl:32:").
+        replace_substrings("ERROR: ", ""),
+        replace_substrings("ctcex.pl:12:8:", "ctcex.pl:12:"),
+        replace_substrings("ctcex.pl:18:4:", "ctcex.pl:18:"),
+        replace_substrings("ctcex.pl:26:8:", "ctcex.pl:26:"),
+        replace_substrings("ctcex.pl:30:8:", "ctcex.pl:30:"),
+        replace_substrings("ctcex.pl:36:8:", "ctcex.pl:36:"),
+        replace_substrings("ctcex.pl:32:8:", "ctcex.pl:32:").
 
 replace_substrings(SubS, Repl, String, Result) :-
     ( sub_string(String, Before, _, After, SubS)
