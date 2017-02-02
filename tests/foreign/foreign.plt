@@ -11,9 +11,9 @@ test(foreign_eq) :-
 test(foreign_idx) :-
     L=[1,5,3,4],
     forall(nth0(Idx, L, E),
-	   ( idx(L,Idx,D),
-	     assertion(D=:=E)
-	   )).
+           ( idx(L,Idx,D),
+             assertion(D=:=E)
+           )).
 
 test(foreign_extend) :-
     extend([1,2,3],X),
