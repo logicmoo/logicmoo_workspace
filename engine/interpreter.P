@@ -261,18 +261,19 @@ lps_welcome_message :-
 
 % resolveUntilAction(Goal) 
 % Execute goal until an action is found, then calls shift(candidateAction(A)), suspending computation
-% On backtracking into some goals, suspend computation with shift(later), allowing such goals a later chance
+% On backtracking into some goals, suspend computation with shift(later(G)), allowing such goals a later chance
 resolveUntilAction([]) :- !.
 resolveUntilAction([G1|Gn]) :- !, 
 	resolveUntilAction(G1), resolveUntilAction(Gn).
+% resolveUntilAction(Goal) :- writeln(g-Goal), fail.  % uncomment for debugging
 resolveUntilAction(not(holds(F,T))) :- !, 
 	query(not(holds(F,T))).
 resolveUntilAction(holds(F,T)) :- query(holds(F,T)).
 resolveUntilAction(holds(F,T)) :- !, % on failure, delay if that makes sense
 	current_time(Now), once((var(T);T>Now)),
-	shift(later), resolveUntilAction(holds(F,T)).
+	shift(later(holds(F,T))), resolveUntilAction(holds(F,T)).
 resolveUntilAction(happens(E,T1,T2)) :- nonvar(T1), current_time(Now), T1>Now, !,
-	shift(later), resolveUntilAction(happens(E,T1,T2)).
+	shift(later(happens(E,T1,T2))), resolveUntilAction(happens(E,T1,T2)).
 resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, 
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
 resolveUntilAction(happens(E,T1,T2)) :- 
@@ -282,9 +283,10 @@ resolveUntilAction(happens(E,T1,T2)) :-
 resolveUntilAction(happens(E,T1,T2)) :- !, % on failure, delay if that makes sense
 	current_time(Now), Next is Now+1,
 	once((var(T1),var(T2);nonvar(T1),T1>Now;nonvar(T2),T2>Next)),
-	shift(later), resolveUntilAction(happens(E,T1,T2)).
+	shift(later(happens(E,T1,T2))), resolveUntilAction(happens(E,T1,T2)).
 resolveUntilAction(tc(G)) :- ground(G), G.
-resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later), resolveUntilAction(tc(G)).
+resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later(tc(G))), resolveUntilAction(tc(G)).
+resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
 % deprecated! resolveUntilAction(G) :- l_timeless(G,Body), evaluate(Body).
 resolveUntilAction(G) :- 
 	findall(G,callprolog(G),Answers), Answers\=[],
@@ -299,17 +301,21 @@ dc_resolve_goals(_Unfinished, end):-
 dc_resolve_goals([goal(G)|Goals],NewGoals) :-
 	write_verbose(['Goal is ',G,'.',nl]),
 	reset(resolveUntilAction(G),Ball,Continuation),
+	!,
 	(Continuation==0 -> % resolved G completely:
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
 		dc_resolve_goals_suspended(G,Goals,Ball,Continuation,NewGoals)
 	).
-
+dc_resolve_goals([goal(G)|Goals],NewGoals) :-
+	write_verbose([G,' has failed',nl]),
+	dc_resolve_goals(Goals,NewGoals).
+	
 % Decide what to do, depending on the cause of suspension: found an action, or failed something that may succeed later
 % dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,+MoreGoals,+Ball,+Continuation,-NewGoals)
-dc_resolve_goals_suspended(G,Goals,candidateAction(A),Continuation,NewGoals) :-
+dc_resolve_goals_suspended(_G,Goals,candidateAction(A),Continuation,NewGoals) :-
 	!,
-	write_verbose(['Suspended for action ',A,' while executing ',G, nl]),
+	write_verbose(['Suspended for action ',A /*,' while executing ',_G*/, nl]),
 	A=happens(_A,T1,T2),
 	current_time(Now), Next is Now+1,
 	((nonvar(T1),T1<Now) -> fail ; true), % outdated event should fail
@@ -318,19 +324,21 @@ dc_resolve_goals_suspended(G,Goals,candidateAction(A),Continuation,NewGoals) :-
 		NewGoals = [goal([A,Continuation])|NewGoals_]
 	; 
 		T1=Now, T2=Next,
-		( \+ A-> (uassertz(A), write_verbose(['Asserting ',A,nl]);uretractall(A), write_verbose(['Retracting ',A,nl]), fail) ; true), %%% uretractall here, on failure! and then fail!!!
-		( (d_pre(Conds),holds_all(Conds)) -> fail % preconditions would be violated
-			% resume with asserted compatible action:
-			; dc_resolve_goals([goal(Continuation)|Goals],NewGoals)
-		)
+		( \+ A-> (uassertz(A), write_verbose(['Asserting ',A,nl])) ; true), 
+		( (d_pre(Conds),holds_all(Conds)) -> % preconditions would be violated
+			uretractall(A), write_verbose(['Retracting ',A,nl])
+			; true), 
+		% resume with asserted compatible action (or not...in wich case the Continuation will backtrack):
+		dc_resolve_goals([goal(Continuation)|Goals],NewGoals)
 	).
-dc_resolve_goals_suspended(G,Goals,later,Continuation,[goal(Continuation)|NewGoals_]) :- !,
-	write_verbose([' Delayed while executing ',G, nl]),
+dc_resolve_goals_suspended(_TopG,Goals,later(G),Continuation,[goal(Continuation)|NewGoals_]) :- !,
+	write_verbose([' Delayed ',G, /* ' while executing ',_TopG,*/ nl]),
 	dc_resolve_goals(Goals,NewGoals_).
 dc_resolve_goals_suspended(G,Goals,disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
-	write_verbose([' Spawning disjunctive goal ',G, nl]),
 	findall(goal(Continuation), member(SuspendedG,Answers), ExtraGoals),
-	append(ExtraGoals,Goals,NewGoals).
+	write_verbose([' Spawning disjunctive results because of ',SuspendedG, nl]),
+	append(ExtraGoals,Goals,Goals_),
+	dc_resolve_goals(Goals_,NewGoals).
 
 :- endif.
 
