@@ -285,8 +285,11 @@ resolveUntilAction(happens(E,T1,T2)) :- !, % on failure, delay if that makes sen
 	shift(later), resolveUntilAction(happens(E,T1,T2)).
 resolveUntilAction(tc(G)) :- ground(G), G.
 resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later), resolveUntilAction(tc(G)).
-resolveUntilAction(G) :- l_timeless(G,Body), evaluate(Body).
-resolveUntilAction(G) :- callprolog(G).
+% deprecated! resolveUntilAction(G) :- l_timeless(G,Body), evaluate(Body).
+resolveUntilAction(G) :- 
+	findall(G,callprolog(G),Answers), Answers\=[],
+	(Answers = [G] -> true ; shift(disjunction(G,Answers))).
+
 
 % dc_resolve_goals(Goals,NewGoals) NewGoals contains goals delayed because of pending actions
 % Fails if all Goals can not be solved with admissible actions
@@ -303,6 +306,7 @@ dc_resolve_goals([goal(G)|Goals],NewGoals) :-
 	).
 
 % Decide what to do, depending on the cause of suspension: found an action, or failed something that may succeed later
+% dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,+MoreGoals,+Ball,+Continuation,-NewGoals)
 dc_resolve_goals_suspended(G,Goals,candidateAction(A),Continuation,NewGoals) :-
 	!,
 	write_verbose(['Suspended for action ',A,' while executing ',G, nl]),
@@ -320,10 +324,13 @@ dc_resolve_goals_suspended(G,Goals,candidateAction(A),Continuation,NewGoals) :-
 			; dc_resolve_goals([goal(Continuation)|Goals],NewGoals)
 		)
 	).
-dc_resolve_goals_suspended(G,Goals,later,Continuation,[goal(Continuation)|NewGoals_]) :-
+dc_resolve_goals_suspended(G,Goals,later,Continuation,[goal(Continuation)|NewGoals_]) :- !,
 	write_verbose([' Delayed while executing ',G, nl]),
 	dc_resolve_goals(Goals,NewGoals_).
-
+dc_resolve_goals_suspended(G,Goals,disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
+	write_verbose([' Spawning disjunctive goal ',G, nl]),
+	findall(goal(Continuation), member(SuspendedG,Answers), ExtraGoals),
+	append(ExtraGoals,Goals,NewGoals).
 
 :- endif.
 
@@ -896,7 +903,6 @@ assert_lps_test_result_item(Stage,Cycle,Item) :-
 
 % test all programs in the LPS examples directory tree which have a .lpst file present
 % NOTICE that .lps files are transformed into .P files, so these are used for testing!!
-% TODO: regenerate .P files first from all existing .lps files
 test_examples :- 
 	lps_examples_directory(ED),
 	all_files_in(ED,'.lpst',TFiles),
