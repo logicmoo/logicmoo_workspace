@@ -130,7 +130,7 @@ if literal1, … , literaln then literaln+1, … , literaln+m.	% n >= 1 and m >=
 ```
 
 
-Each literal is a timed or untimed atomic formula or the negation of an atomic formula. (See below.) Implicitly all times after then are later than or equal to the latest time before then. Also, no time after a comma is earlier than any time before the same comma.
+Each literal is a timed or untimed atomic formula or the negation of an atomic formula. (See below.) Implicitly all times after "then" are later than or equal to the latest time before "then". Also, no time after a comma is earlier than any time before the same comma.
 
 
 ## Clauses for time-dependent predicates. 
@@ -174,11 +174,8 @@ location(Object, Place) if holding(Agent, Object), location(Agent, Place).
 #!
 
 makeAt(Agent, Place) from T to T if location(Agent, Place) at T.
-makeAt(Agent, Place) from T1 to T2 if not location(Agent, Place) at T1,
-move(Agent, Place) from T1 to T2.
+makeAt(Agent, Place) from T1 to T2 if not location(Agent, Place) at T1,move(Agent, Place) from T1 to T2.
 ```
-
-Those are clauses with if (with the implicit and explicit time advantages). 
 
 Traditional clauses in Prolog are also allowed: 
 
@@ -194,9 +191,19 @@ These clauses can be used to define time-independent predicates directly in Prol
 ```
 #!prolog
 
-parent(X,Y) :- mother(X,Y) ; father(X,Y).
+parent(X,Y) :- mother(X,Y).
+parent(X,Y) :- father(X,Y).
 ```
 
+The implementation does not support the logical connective for disjunction. So the following definition of parent does not work.
+
+```
+#!prolog
+
+
+parent(X,Y) :- mother(X,Y);father(X,Y).
+
+```
 Prolog predicates includes all time-independent predicates, including temporal inequalities, e.g. philosopher(hume) and  T1 < T2.
 
 
@@ -231,6 +238,8 @@ false   literal1, literal2, … , literaln.   % n > 1
 ```
 
 These are used to constrain candidate actions, say from T to T+1. So one of the literals must be an action. Other literals can be actions or external events that also occur from T to T+1. They can also be fluents that are true at time T. Because of these restrictions on time, these constraints can be written without explicit time.
+
+Fluent literals in constraints can be negative literals, but action and other event literals can not be negated.
 
 ## Literals
 
@@ -298,9 +307,8 @@ rain, rain, …, rain.
 	
 * 2) Literals in reactive rules and clauses are processed Prolog-like, in the order in which they are written. Processing is suspended if the time of a fluent or the start time of an event is later than the current time, or if the time is a variable and the literal cannot be made true at the current time, but might become true later.
 
-* 3) Times can be omitted from fluents and events. However, for this to work, composite events and actions need to be declared as events, and  intensional fluents need to be declared as fluents. This feature is currently under development, and is subject to change. Implicit and explicit times Timed and untimed notation can be mixed in the same sentence. Currently, the interpreter interprets untimed notation implicit times according to the following rules:
+* 3) Times can be omitted from fluents and events. However, for this to work, composite events and actions need to be declared as events, and  intensional fluents need to be declared as fluents. This feature is currently under development, and is subject to change. Implicit and explicit times can be mixed in the same sentence. Currently, the interpreter interprets implicit times according to the following rules:
 
-The statement
 
 ```
 #!
@@ -316,7 +324,6 @@ means
 fluent1 at T1, fluent2 at T2, T1 =< T2.
 ```
 
-The statement
 
 ```
 #!
@@ -332,7 +339,6 @@ means
 fluent at T1, event from T2 to T3, T1 =< T2. 
 ```
 
-The statement
 
 ```
 #!
@@ -348,7 +354,6 @@ means
 event1 from T1 to T2, event2 from T3 to T4, T2 =< T3.
 ```
 
-The statement
 
 ```
 #!
@@ -364,7 +369,6 @@ means
 event from T1 to T2, fluent at T3, T2 =< T3.
 ```
 
-The statement
 
 ```
 #!
@@ -382,7 +386,6 @@ event from T1 to Tn if conditions
 
 where T1 is the earliest time in conditions and Tn is the latest time in conditions.
 
-The statement
 
 ```
 #!
