@@ -309,6 +309,7 @@ rain, rain, …, rain.
 
 * 3) Times can be omitted from fluents and events. However, for this to work, composite events and actions need to be declared as events, and  intensional fluents need to be declared as fluents. This feature is currently under development, and is subject to change. Implicit and explicit times can be mixed in the same sentence. Currently, the interpreter interprets implicit times according to the following rules:
 
+The expression:
 
 ```
 #!
@@ -323,7 +324,7 @@ means
 
 fluent1 at T1, fluent2 at T2, T1 =< T2.
 ```
-
+The expression:
 
 ```
 #!
@@ -338,7 +339,7 @@ means
 
 fluent at T1, event from T2 to T3, T1 =< T2. 
 ```
-
+The expression:
 
 ```
 #!
@@ -353,7 +354,7 @@ means
 
 event1 from T1 to T2, event2 from T3 to T4, T2 =< T3.
 ```
-
+The expression:
 
 ```
 #!
@@ -369,7 +370,7 @@ means
 event from T1 to T2, fluent at T3, T2 =< T3.
 ```
 
-
+The expression:
 ```
 #!
 
@@ -386,7 +387,7 @@ event from T1 to Tn if conditions
 
 where T1 is the earliest time in conditions and Tn is the latest time in conditions.
 
-
+The expression:
 ```
 #!
 
@@ -399,6 +400,7 @@ means
 #!prolog
 
 fluent at T if conditions
+
 ```
 
 where all the time variables in conditions are identical to T.
