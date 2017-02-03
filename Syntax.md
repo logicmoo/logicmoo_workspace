@@ -56,7 +56,7 @@ if …  then …  .
 
 … initiates … if …  .
 … terminates … if …  .
-
+```
 ### Constraints					
 
 ```
