@@ -265,32 +265,31 @@ lps_welcome_message :-
 resolveUntilAction([]) :- !.
 resolveUntilAction([G1|Gn]) :- !, 
 	resolveUntilAction(G1), resolveUntilAction(Gn).
-% resolveUntilAction(Goal) :- writeln(g-Goal), fail.  % uncomment for debugging
+resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
 resolveUntilAction(not(holds(F,T))) :- !, 
 	query(not(holds(F,T))).
 resolveUntilAction(holds(F,T)) :- query(holds(F,T)).
 resolveUntilAction(holds(F,T)) :- !, % on failure, delay if that makes sense
 	current_time(Now), once((var(T);T>Now)),
 	shift(later(holds(F,T))), resolveUntilAction(holds(F,T)).
-resolveUntilAction(happens(E,T1,T2)) :- nonvar(T1), current_time(Now), T1>Now, !,
-	shift(later(happens(E,T1,T2))), resolveUntilAction(happens(E,T1,T2)).
+
+resolveUntilAction(happens(_E,T1,_T2)) :- nonvar(T1), current_time(Now), T1<Now, !, 
+	fail. % outdated
 resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, 
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
+resolveUntilAction(happens(E,T1,T2)) :- \+ \+ happens(E,T1,T2), !, happens(E,T1,T2).
 resolveUntilAction(happens(E,T1,T2)) :- 
 	action_(E), % Is this condition necessary...?
 	shift(candidateAction(happens(E,T1,T2))), % suspend and return candidate
-	happens(E,T1,T2).
-resolveUntilAction(happens(E,T1,T2)) :- !, % on failure, delay if that makes sense
-	current_time(Now), Next is Now+1,
-	once((var(T1),var(T2);nonvar(T1),T1>Now;nonvar(T2),T2>Next)),
-	shift(later(happens(E,T1,T2))), resolveUntilAction(happens(E,T1,T2)).
+	( happens(E,T1,T2) ; write_verbose(['Failing ',happens(E,T1,T2),nl]), shift(backtrack) ).
+
 resolveUntilAction(tc(G)) :- ground(G), G.
 resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later(tc(G))), resolveUntilAction(tc(G)).
 resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
 % deprecated! resolveUntilAction(G) :- l_timeless(G,Body), evaluate(Body).
 resolveUntilAction(G) :- 
 	findall(G,callprolog(G),Answers), Answers\=[],
-	(Answers = [G] -> true ; shift(disjunction(G,Answers))).
+	(Answers = [G] -> true ; shift(timeless_disjunction(G,Answers))).
 
 
 % dc_resolve_goals(Goals,NewGoals) NewGoals contains goals delayed because of pending actions
@@ -301,14 +300,14 @@ dc_resolve_goals(_Unfinished, end):-
 dc_resolve_goals([goal(G)|Goals],NewGoals) :-
 	write_verbose(['Goal is ',G,'.',nl]),
 	reset(resolveUntilAction(G),Ball,Continuation),
-	!,
+	(Ball==backtrack, !, fail; true),
 	(Continuation==0 -> % resolved G completely:
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
 		dc_resolve_goals_suspended(G,Goals,Ball,Continuation,NewGoals)
 	).
 dc_resolve_goals([goal(G)|Goals],NewGoals) :-
-	write_verbose([G,' has failed',nl]),
+	write_verbose(['resolveUntilAction for ',G,' has failed',nl]),
 	dc_resolve_goals(Goals,NewGoals).
 	
 % Decide what to do, depending on the cause of suspension: found an action, or failed something that may succeed later
@@ -321,20 +320,23 @@ dc_resolve_goals_suspended(_G,Goals,candidateAction(A),Continuation,NewGoals) :-
 	((nonvar(T1),T1<Now) -> fail ; true), % outdated event should fail
 	((nonvar(T1),T1>Now) -> % it's still too soon, postpone it:
 		dc_resolve_goals(Goals,NewGoals_),
-		NewGoals = [goal([A,Continuation])|NewGoals_]
+		% NewGoals = [goal([A,Continuation])|NewGoals_]
+		append(NewGoals_,[goal([A,Continuation])],NewGoals)
 	; 
 		T1=Now, T2=Next,
-		( \+ A-> (uassertz(A), write_verbose(['Asserting ',A,nl])) ; true), 
+		( \+ A-> (uassertz(A), write_verbose(['Asserting ',A,nl]) ; uretractall(A)) ; true), 
 		( (d_pre(Conds),holds_all(Conds)) -> % preconditions would be violated
 			uretractall(A), write_verbose(['Retracting ',A,nl])
 			; true), 
 		% resume with asserted compatible action (or not...in wich case the Continuation will backtrack):
 		dc_resolve_goals([goal(Continuation)|Goals],NewGoals)
 	).
-dc_resolve_goals_suspended(_TopG,Goals,later(G),Continuation,[goal(Continuation)|NewGoals_]) :- !,
+dc_resolve_goals_suspended(_TopG,Goals,later(G),Continuation,NewGoals) :- !,
 	write_verbose([' Delayed ',G, /* ' while executing ',_TopG,*/ nl]),
-	dc_resolve_goals(Goals,NewGoals_).
-dc_resolve_goals_suspended(G,Goals,disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
+	dc_resolve_goals(Goals,NewGoals_),
+	%NewGoals = [goal(Continuation)|NewGoals_].
+	append(NewGoals_,[goal(Continuation)],NewGoals). % push it to end of queue
+dc_resolve_goals_suspended(_G,Goals,timeless_disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
 	findall(goal(Continuation), member(SuspendedG,Answers), ExtraGoals),
 	write_verbose([' Spawning disjunctive results because of ',SuspendedG, nl]),
 	append(ExtraGoals,Goals,Goals_),
@@ -1587,9 +1589,9 @@ dc_process([reactive_rule([E | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
 		( ItMust==true -> dc_process(Rs,AccRi, NRi, AccG, NGi) ; dc_process(Rs,[reactive_rule([E | Ls], C)|AccRi], NRi, AccG, NGi))
 		; % else, consider all new rules instead of the given one:
 		%( ItMust==true -> append(NewRules,Rs,RulesToProcess), AlreadyProcessed=AccRi ; RulesToProcess=Rs, append(NewRules,AccRi,AlreadyProcessed)),
-		append(NewRules,Rs,RulesToProcess), AlreadyProcessed=AccRi,
-		dc_process(RulesToProcess,[reactive_rule([E | Ls], C)|AlreadyProcessed], NRi, AccG, NGi)		
-		% dc_process(RulesToProcess,AlreadyProcessed, NRi, AccG, NGi)
+		append(NewRules,Rs,RulesToProcess), 
+		% dc_process(RulesToProcess,[reactive_rule([E | Ls], C)|AccRi], NRi, AccG, NGi)		
+		(ItMust==true  -> dc_process(RulesToProcess,AccRi, NRi, AccG, NGi) ; dc_process(RulesToProcess,[reactive_rule([E | Ls], C)|AccRi], NRi, AccG, NGi)	)
 	).
 %dc_process([R|Rs],AccRi,NRi,AccG, NGi) :- dc_process(Rs,[R|AccRi],NRi,AccG, NGi).
 
