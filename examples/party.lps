@@ -1,5 +1,3 @@
-% This ilustrates a bug: the askMoney action is not firing because the timeless predicate parent's second solution is not being considered
-
 maxTime(5).
 events party/1.
 actions askMoney/2.
@@ -17,3 +15,4 @@ parent(X,Y) :- mother(X,Y).
 
 if party(bob), not money(bob) then 
 	parent(bob,X), money(X), askMoney(bob, X).
+

@@ -1,6 +1,6 @@
 /*
-  LPS test results file generated on 2017-01-26 at 19:01:24
-  on Prolog xsb(3,7,,_h12768) for program file:
+  LPS test results file generated on 2017-01-26 at 22:41:07
+  on Prolog xsb(3,7,,_h12494) for program file:
   /Users/mc/git/lps_corner/examples/just rains.lps_.P
 */
 
@@ -10,8 +10,6 @@
 lps_test_options([]).
 
 % lps_test_result(Stage,Cycle,TestTerm)
-lps_test_result((fluents),0,0).
-lps_test_result((events),0,0).
 lps_test_result((fluents),0,0).
 lps_test_result((events),1,0).
 lps_test_result((fluents),1,0).

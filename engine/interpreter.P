@@ -259,36 +259,59 @@ lps_welcome_message :-
 
 %% Now for an implementation available only on SWI:
 
-% resolveUntilAction(Goal) 
-% Execute goal until an action is found, then calls shift(candidateAction(A)), suspending computation
-% On backtracking into some goals, suspend computation with shift(later(G)), allowing such goals a later chance
+% resolveUntilAction(Goal) TODO: CHANGE NAME!!!!!
+% Execute goal until an action or fluent is found that needs delaying, then calls shift(later(A)), suspending computation
 resolveUntilAction([]) :- !.
 resolveUntilAction([G1|Gn]) :- !, 
 	resolveUntilAction(G1), resolveUntilAction(Gn).
+% fluents:
 resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
-resolveUntilAction(not(holds(F,T))) :- !, 
-	query(not(holds(F,T))).
+resolveUntilAction(G) :- 
+	(G = not(holds(_F,T)) ; G = holds(_F,T)), 
+	nonvar(T), current_time(Now), T>Now, % premature, delay
+	!, 
+	shift(later(G)), resolveUntilAction(G).
+resolveUntilAction(not(holds(F,T))) :- query(not(holds(F,T))).
 resolveUntilAction(holds(F,T)) :- query(holds(F,T)).
-resolveUntilAction(holds(F,T)) :- !, % on failure, delay if that makes sense
-	current_time(Now), once((var(T);T>Now)),
+resolveUntilAction(holds(F,T)) :- !, var(T), % on failure, delay if that makes sense
 	shift(later(holds(F,T))), resolveUntilAction(holds(F,T)).
-
-resolveUntilAction(happens(_E,T1,_T2)) :- nonvar(T1), current_time(Now), T1<Now, !, 
-	fail. % outdated
+% events/actions:
 resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, 
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
-resolveUntilAction(happens(E,T1,T2)) :- \+ \+ happens(E,T1,T2), !, happens(E,T1,T2).
+resolveUntilAction(happens(_E,T1,T2)) :- 
+	current_time(Now),
+	(nonvar(T1),T1<Now ; nonvar(T2),T2<Now+1), % outdated
+	!, fail. 
 resolveUntilAction(happens(E,T1,T2)) :- 
-	action_(E), % Is this condition necessary...?
-	shift(candidateAction(happens(E,T1,T2))), % suspend and return candidate
-	( happens(E,T1,T2) ; write_verbose(['Failing ',happens(E,T1,T2),nl]), shift(backtrack) ).
+	current_time(Now), 
+	(nonvar(T1), T1>Now ; nonvar(T2),T2>Now+1), % premature
+	!,
+	shift(later(happens(E,T1,T2))), 
+	resolveUntilAction(happens(E,T1,T2)). 
+	
+resolveUntilAction(happens(E,T1,T2)) :- happens(E,T1,T2).
+resolveUntilAction(happens(E,T1,T2)) :- !, % let's avoid need for \= tests below
+	\+ happens(E,T1,T2), 
+	current_time(T1), 
+	T2 is T1+1,
+	action_(E), uassertz(happens(E,T1,T2)), 
+	( (d_pre(Conds),holds_all(Conds)) -> uretractall(happens(E,T1,T2)), fail ; true),
+	(true ; uretractall(happens(E,T1,T2)), fail).
+/* delaying at his stage is not interesting:
+resolveUntilAction(happens(E,T1,T2)) :- !, 
+	\+ happens(E,T1,T2),
+	action_(E), 
+	(var(T1),var(T2)), % worth delaying
+	shift(later(happens(E,T1,T2))),
+	resolveUntilAction(happens(E,T1,T2)). */
 
+% timeless and time constraints:
 resolveUntilAction(tc(G)) :- ground(G), G.
 resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later(tc(G))), resolveUntilAction(tc(G)).
 resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
-% deprecated! resolveUntilAction(G) :- l_timeless(G,Body), evaluate(Body).
+% TODO: deprecate/remove l_timeless ?
 resolveUntilAction(G) :- 
-	findall(G,callprolog(G),Answers), Answers\=[],
+	findall(G, ( \+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)), Answers), Answers\=[],
 	(Answers = [G] -> true ; shift(timeless_disjunction(G,Answers))).
 
 
@@ -300,37 +323,17 @@ dc_resolve_goals(_Unfinished, end):-
 dc_resolve_goals([goal(G)|Goals],NewGoals) :-
 	write_verbose(['Goal is ',G,'.',nl]),
 	reset(resolveUntilAction(G),Ball,Continuation),
-	(Ball==backtrack, !, fail; true),
 	(Continuation==0 -> % resolved G completely:
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
 		dc_resolve_goals_suspended(G,Goals,Ball,Continuation,NewGoals)
 	).
-dc_resolve_goals([goal(G)|Goals],NewGoals) :-
+dc_resolve_goals([goal(G)|Goals],[goal(G)|NewGoals]) :- % retry the failed goal later
 	write_verbose(['resolveUntilAction for ',G,' has failed',nl]),
 	dc_resolve_goals(Goals,NewGoals).
 	
 % Decide what to do, depending on the cause of suspension: found an action, or failed something that may succeed later
 % dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,+MoreGoals,+Ball,+Continuation,-NewGoals)
-dc_resolve_goals_suspended(_G,Goals,candidateAction(A),Continuation,NewGoals) :-
-	!,
-	write_verbose(['Suspended for action ',A /*,' while executing ',_G*/, nl]),
-	A=happens(_A,T1,T2),
-	current_time(Now), Next is Now+1,
-	((nonvar(T1),T1<Now) -> fail ; true), % outdated event should fail
-	((nonvar(T1),T1>Now) -> % it's still too soon, postpone it:
-		dc_resolve_goals(Goals,NewGoals_),
-		% NewGoals = [goal([A,Continuation])|NewGoals_]
-		append(NewGoals_,[goal([A,Continuation])],NewGoals)
-	; 
-		T1=Now, T2=Next,
-		( \+ A-> (uassertz(A), write_verbose(['Asserting ',A,nl]) ; uretractall(A)) ; true), 
-		( (d_pre(Conds),holds_all(Conds)) -> % preconditions would be violated
-			uretractall(A), write_verbose(['Retracting ',A,nl])
-			; true), 
-		% resume with asserted compatible action (or not...in wich case the Continuation will backtrack):
-		dc_resolve_goals([goal(Continuation)|Goals],NewGoals)
-	).
 dc_resolve_goals_suspended(_TopG,Goals,later(G),Continuation,NewGoals) :- !,
 	write_verbose([' Delayed ',G, /* ' while executing ',_TopG,*/ nl]),
 	dc_resolve_goals(Goals,NewGoals_),
@@ -450,7 +453,7 @@ go(File, OptionsList, ResultFluents) :-
 			( (option(make_test), \+ option(swish)) -> writeln(user_error, 'ERROR in options: make_test requires a File name'), fail 
 			; true)),
 	cleanup_program, cleanup_engine,
-	init_test_file(File),
+	init_test_file(File,OptionsList),
 	(\+ option(swish) -> 
 		my_load_dyn(File)
 		; true),
@@ -459,7 +462,7 @@ go(File, OptionsList, ResultFluents) :-
 	% fails if errors occur:
 	print_errors(File), 
 	(option(meta_actions) -> add_meta_reactive_rules ; true),
-	( initial_state(IS) -> assert_list(IS) ; true),
+	( initial_state(IS), assert_list(IS), fail ; true),
 	( option(delta_state(State)), member(F,State),
 		(F = + Fluent -> uassert(state(Fluent)) ; F = - Fluent -> uretractall(state(Fluent))),
 		fail
@@ -706,7 +709,7 @@ endTime(20). % default duration of execution
 parse_options(Options) :- 
 	uretractall(option(_)),
 	% when running a test the options will be imposed by the test file:
-	(member(run_test,Options) -> Options=[_]; true),
+	% (member(run_test,Options) -> Options=[_]; true),  commenting this out to allow 'dc' option to be added
 	( (member(silent,Options), (member(verbose,Options);member(ultra_verbose,Options))) ->
 		writeln(user_error, 'ERROR in options: silent incompatible with verbose and ultra_verbose.'), fail
 		; true),
@@ -811,16 +814,18 @@ pprint_goal([goal(_, _, [H|_])|Rest]) :-
     write(H),nl,
     pprint_goal(Rest).
 
-% init_test_file(Filename)
+% init_test_file(+Filename,+Options)
 % Load test file for this program file  
 % if not running tests does nothing
-init_test_file(F) :- option(run_test), !, % guaranteed to be the only option
+init_test_file(F,TopOptions) :- select(run_test,TopOptions,Extra), !, 
+	nl, write('*** Testing '), write(F), write(' ('), write(TopOptions), writeln(') ****'),
 	load_test_file_for(F),
 	lps_test_options(Options),
+	append(Options,Extra,RealOptions),
 	% add the options:
-	parse_options(Options), % cleans options and loads from file...
+	parse_options(RealOptions), % cleans options and loads from file...
 	uassert(option(run_test)). %...this one not being there
-init_test_file(_F).
+init_test_file(_F,_O).
 
 load_test_file_for(F) :-
 	test_filename(F,TF),
@@ -894,15 +899,21 @@ test(Stage,Cycle,Term) :- option(run_test), !,
 		fail).
 test(_,_,_).
 
+test_items_ok(Actual,Test) :- member(lps_gigantic(_),Test), !, 
+	test_items_ok_(Actual,Test).
+% other than for the above, which is too strict (likely not worthy implementing less strict...), 
+% order doesn't matter:
+test_items_ok(Actual,Test) :- sort(Actual,A), sort(Test,T), variant(A,T).
+
 % test_items_ok(+Actual,+Test)
-test_items_ok([A|An],[lps_gigantic(Size)|Tn]) :- !,
+test_items_ok_([A|An],[lps_gigantic(Size)|Tn]) :- !,
 	% Must recalculate term size after numbervars, otherwise would be different:
 	\+ \+ (numbervars(A),my_term_size(A,Size_), Size_ == Size), 
+	test_items_ok_(An,Tn).
+test_items_ok_([A|An],[T|Tn]) :- !,
+	variant_(A,T),
 	test_items_ok(An,Tn).
-test_items_ok([A|An],[T|Tn]) :- !,
-	variant(A,T),
-	test_items_ok(An,Tn).
-test_items_ok([],[]).
+test_items_ok_([],[]).
 
 % assert_lps_test_result_item(Stage,Cycle,Item) Gigantic terms are abstracted as lps_gigantic(Size)
 assert_lps_test_result_item(Stage,Cycle,Item) :- 
@@ -913,7 +924,9 @@ assert_lps_test_result_item(Stage,Cycle,Item) :-
 
 % test all programs in the LPS examples directory tree which have a .lpst file present
 % NOTICE that .lps files are transformed into .P files, so these are used for testing!!
-test_examples :- 
+test_examples :- test_examples([]).
+
+test_examples(Options) :- 
 	lps_examples_directory(ED),
 	all_files_in(ED,'.lpst',TFiles),
 	atom_codes('.lpst',LPST),
@@ -923,7 +936,7 @@ test_examples :-
 		),Files),
 	% check whether we need to regenerate some of these Files
 	regenerate(Files), !,
-	do_test_suite(Files,[run_test]).
+	do_test_suite(Files,[run_test|Options]).
 
 regenerate([F|Files]) :- !, 
 	atom_codes(F,Fcodes), 
@@ -1307,6 +1320,7 @@ prolog(P) :- \+ P = happens(_,_,_), \+ P = holds(_,_).
 intensional(P) :-  P =.. [Pred | Args], length(Args, L),
 	length(Args2, L), Q =.. [Pred |Args2],
 	 l_int(holds(Q, _), _).
+% TODO: this should use compound_name_arity(X,F,N) to deal with e.g. newbelief(), or with (slower) A=..L, ...
 macroaction(A):- functor(A,F,N), functor(Q,F,N), l_events(happens(Q, _,_), _), !.
 
 %mustBeResolvedNow is used when unfolding atoms in goal clauses.
@@ -1559,14 +1573,14 @@ dc_process([], Rs, Rs, NG, NG) :- !.
 % Antecedent is []. Add Consequent as new goal/tree.
 dc_process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, 
 	dc_process(Rs, AccRi, NRi, [goal(C) | AccG], NGi ).
-	
+
 % Too late to solve, no longer relevant.
 dc_process([reactive_rule([L |_],_) | Rs], AccRi, NRi, AccG, NGi):-
 	current_time(Now), Next is Now+1,
 	(
 		L = holds(_, T), nonvar(T), T<Now
 		; 
-		L = happens(_,T1, T2), (nonvar(T1),T1<Now;nonvar(T2),T2<Next)
+		L = happens(_,T1, T2), (nonvar(T1),T1<Now-1;nonvar(T2),T2<Next-1)
 	),
 	!,
 	dc_process(Rs, AccRi, NRi, AccG, NGi).
@@ -1601,12 +1615,12 @@ dc_query(holds(not(P), Now)) :- !, \+ dc_query(holds(P,Now)).
 dc_query(holds(P, T)) :- 
 	current_time(Now),
 	( lps_updating_current_state -> RealNow is Now-1 ; RealNow=Now),
-	( nonvar(T), T\== RealNow, throw(bad_dc_query(holds(P, T))) ; true),
+	% ( nonvar(T), T\== RealNow, throw(bad_dc_query(holds(P, T),Now,RealNow)) ; true),
+	( nonvar(T), T<RealNow, !, fail ; true),
 	T=RealNow, state(P).
-dc_query(holds(P, Now)) :- l_int(holds(P, Now), B), holds_all(B).
-dc_query(happens(P, X, Y)) :- happens(P, X, Y).
-dc_query(P) :-  
-	P \= holds(_, _), P \= happens(_,_, _),
+dc_query(holds(P, Now)) :- !, l_int(holds(P, Now), B), holds_all(B).
+dc_query(happens(P, X, Y)) :- !, happens(P, X, Y).
+dc_query(P) :-
     	(\+ l_timeless(P, _B) -> callprolog(P) ; l_timeless(P, B), evaluate(B)).
 
 
