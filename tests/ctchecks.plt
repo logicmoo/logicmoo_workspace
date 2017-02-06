@@ -12,6 +12,8 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- use_module(library(comment_data)).
 :- use_module(library(call_in_dir)).
 :- use_module(checkers(checker)).
+:- use_module(library(listing), []).
+:- set_setting(listing:tab_distance, 0). % Use only spaces, no tabs
 
 :- comment_data:enable.
 
@@ -26,26 +28,26 @@ Warning: with the  implementation. The reason is explained there.
 Warning: 
 ctcex.pl:18: In the body of ctcex:q/0:
 ctcex.pl:12: Assertion failure for a(1,b).
-        In *compat*, unsatisfied properties: 
-                ctcex.pl:12:15: ctcex:list(b).
+    In *compat*, unsatisfied properties: 
+        ctcex.pl:12:15: ctcex:list(b).
 ctcex.pl:15: In the head of ctcex:a/2:
 ctcex.pl:12: Assertion failure for a(a,b).
-        In *compat*, unsatisfied properties: 
-                ctcex.pl:12:10: ctcex:int(a).
-                ctcex.pl:12:15: ctcex:list(b).
+    In *compat*, unsatisfied properties: 
+        ctcex.pl:12:10: ctcex:int(a).
+        ctcex.pl:12:15: ctcex:list(b).
 ctcex.pl:30: In assertions of [ctcex:b/2]:
-        ctcex.pl:30:15: ctcex:is_3/1 is not a property
+    ctcex.pl:30:15: ctcex:is_3/1 is not a property
 ctcex.pl:32: In assertions of [ctcex:b/2]:
-        ctcex.pl:32:10: ctcex:is_2/1 is not a property
+    ctcex.pl:32:10: ctcex:is_2/1 is not a property
 ctcex.pl:36: In assertions of [ctcex:b/2]:
-        ctcex.pl:36:10: In call to ctcex:is_num/2:
+    ctcex.pl:36:10: In call to ctcex:is_num/2:
 ctcex.pl:26: Assertion failure for is_num(A,a).
-        In *compat*, unsatisfied properties: 
-                ctcex.pl:26:20: ctcex:int(a).
-        ctcex.pl:36:21: In call to ctcex:is_num/2:
+    In *compat*, unsatisfied properties: 
+        ctcex.pl:26:20: ctcex:int(a).
+    ctcex.pl:36:21: In call to ctcex:is_num/2:
 ctcex.pl:26: Assertion failure for is_num(A,b).
-        In *compat*, unsatisfied properties: 
-                ctcex.pl:26:20: ctcex:int(b).
+    In *compat*, unsatisfied properties: 
+        ctcex.pl:26:20: ctcex:int(b).
 */
 
 test(ctcex) :-
@@ -79,8 +81,8 @@ Warning: with the  implementation. The reason is explained there.
 Warning: 
 p1.pl:16:4: In the body of p1:p0/0:
 p1.pl:9:8: Assertion failure for p1(p1:q2).
-        In *compat*, unsatisfied properties: 
-                p1.pl:9:11: nativeprops:is_pred(p1:q2,0).
+    In *compat*, unsatisfied properties: 
+        p1.pl:9:11: nativeprops:is_pred(p1:q2,0).
 */
 test(ctmeta) :-
     set_prolog_flag(verbose, silent),

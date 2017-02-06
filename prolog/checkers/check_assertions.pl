@@ -148,12 +148,12 @@ prop_issue(property, Checker-IssueL) -->
     foldl(property_issue(Checker), IssueL).
 
 property_issue(ctcheck, Loc/(PI-CTChecks)) -->
-    ["\t"], Loc, ["In call to ~w:"-[PI], nl],
+    ["    "], Loc, ["In call to ~w:"-[PI], nl],
     prop_issue(ctchecks, CTChecks).
 property_issue(defined, Loc/Prop) -->
-    ["\t"], Loc, ["~w is undefined"-[Prop], nl].
+    ["    "], Loc, ["~w is undefined"-[Prop], nl].
 property_issue(is_prop, Loc/Prop) -->
-    ["\t"], Loc, ["~w is not a property"-[Prop], nl].
+    ["    "], Loc, ["~w is not a property"-[Prop], nl].
 
 type_message(body(Loc-PI)) --> Loc, ['In the body of ~q:'-[PI], nl].
 type_message(head(Loc-PI)) --> Loc, ['In the head of ~q:'-[PI], nl].
