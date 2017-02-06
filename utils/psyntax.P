@@ -501,7 +501,7 @@ syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,happens(NL,T1,T2)) :-
 	NL=..Tless.
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,happens(NL,T1,T2)) :- 
 	nonvar(LT), 
-	( LT = (L from T1 to T2) ; LT = (L from T1); LT = (L to T2); LT = (L during [T1,T2])),
+	( LT = (L from T1_), (var(T1_);number(T1_)); LT = (L to T2); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
 	!,
 	remember_event_hint(L),
 	NL=L.
