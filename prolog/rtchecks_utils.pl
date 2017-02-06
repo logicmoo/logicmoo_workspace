@@ -96,11 +96,11 @@ assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
     ; []
     ),
     ['Assertion failure for ~q.'-[Pred], nl],
-    ['\tIn *~w*, unsatisfied properties: '-[Type], nl],
+    ['    In *~w*, unsatisfied properties: '-[Type], nl],
     foldl(prop_values, PropValues).
 
 prop_values(From/Prop-Values) -->
-    ['\t\t'],
+    ['        '],
     ( {nonvar(From)}
     ->prolog:message_location(From)
     ; []
