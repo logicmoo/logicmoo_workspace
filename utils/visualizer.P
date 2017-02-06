@@ -179,7 +179,7 @@ visual(File,timeline(JSON)) :-
 	findall(FluentGroup,(
 		make_json_object([id:Gatom,content:Gsignature],FluentGroup),
 		member(F/N,GroupIds), 
-		my_term_to_atom(F/N,Gatom), functor(GG,F,N), my_term_to_atom(GG,Gsignature)
+		my_term_to_atom(F/N,Gatom), functor(GG,F,N), nicer_vars(GG), my_term_to_atom(GG,Gsignature)
 	), FluentGroups),
 	make_json_object([id:observation,content:'Observations'],ObsGroup), % TODO: get rid of empty Observations 
 	( member(t(_,_,event),Tuples) -> 
@@ -198,9 +198,10 @@ visual(File,timeline(JSON)) :-
 	% Render fluents
 	endTime(End), LastRelevantTime is End+1,
 	findall(Fluent,(
-		make_json_object([id:ID,content:Atom,start:T1,end:T2,group:Gatom,title:Tip],Fluent),
+		make_json_object([id:ID,content:AtomAbridged,start:T1,end:T2,group:Gatom,title:Tip],Fluent),
 		member(t(X,T1-T2,F/N),Ranged),  
-		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom),
+		abridge_fluent(X,AtomAbridged),
+		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom), 
 		(T2==LastRelevantTime -> FluentSuffix = [' (end of time)'] ; FluentSuffix = []),
 		concat_atom(['Fluent ',Atom,' initiated at ',T1,' and terminated at transition to ',T2|FluentSuffix],Tip),
 		get_increment_counter(IDs,ID)
@@ -221,7 +222,21 @@ visual(File,timeline(JSON)) :-
 	make_json_object([groups:Groups,items:Items],All),
 	term2json(All,JSON),
 	displayTimeline(File,JSON). 
-	
+
+abridge_fluent(X,X) :- atomic(X), !.
+abridge_fluent(X,AtomAbridged) :- X=..[_|Args], abridge_fluent_args(Args,Atoms), concat_atom(Atoms,AtomAbridged).
+
+abridge_fluent_args([A1,A2|An],[Atom1, ','| Atoms]) :- !, my_term_to_atom(A1,Atom1), abridge_fluent_args([A2|An],Atoms).
+abridge_fluent_args([A],Atom) :- my_term_to_atom(A,Atom).
+
+nicer_vars(T) :- nicer_vars(T,65,_).
+
+nicer_vars(T,V1,Vn) :- var(T), !, atom_codes(T,[V1]), Vn is V1+1.
+nicer_vars([T1|Tn],V1,Vn) :- !, nicer_vars(T1,V1,V2), nicer_vars(Tn,V2,Vn).
+nicer_vars(T,V,V) :- atomic(T), !.
+nicer_vars(T,V1,Vn) :- T=..L, nicer_vars(L,V1,Vn).
+
+
 replace_backslashes(P,NP) :- atom(P), str_replace(P,'\\','/',NP).
 
 str_replace(A, X, Y, B) :-
