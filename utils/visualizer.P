@@ -227,7 +227,7 @@ abridge_fluent(X,X) :- atomic(X), !.
 abridge_fluent(X,AtomAbridged) :- X=..[_|Args], abridge_fluent_args(Args,Atoms), concat_atom(Atoms,AtomAbridged).
 
 abridge_fluent_args([A1,A2|An],[Atom1, ','| Atoms]) :- !, my_term_to_atom(A1,Atom1), abridge_fluent_args([A2|An],Atoms).
-abridge_fluent_args([A],Atom) :- my_term_to_atom(A,Atom).
+abridge_fluent_args([A],[Atom]) :- my_term_to_atom(A,Atom).
 
 nicer_vars(T) :- nicer_vars(T,65,_).
 
