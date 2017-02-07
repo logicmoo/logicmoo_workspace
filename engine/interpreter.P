@@ -943,7 +943,7 @@ regenerate([F|Files]) :- !,
 	(regenerate_file(Fcodes)->true;true), regenerate(Files).
 regenerate([]).
 
-:- multifile interpreter:regenerate_file/1.
+:- multifile regenerate_file/1.
 % regenerate(FileAtom) regenerate this file, foo.P or foo.lpsw, from foo.SomeSyntaxSpecificFileExpension, if this exists
 % alternative syntaxes should asserta a the generator
 regenerate_file(_) :- fail. % default case, do not generate (meaning, no source file exists that produced this one)
