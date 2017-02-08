@@ -213,6 +213,11 @@ abstract_interpreter_body(CallN, M, Abs, State) -->
     {do_resolve_calln(CallN, Goal)}, !,
     cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
 
+push_top(Prev, Prev, []).
+
+pop_top(bottom, _, bottom).
+pop_top([], Curr, Curr).
+
 % CutElse make the failure explicit wrt. B
 interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     { \+ terms_share(A, B)
@@ -220,12 +225,14 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     ; CutOnFail = fail
     },
     {add_cont(B, State, State2)},
+    push_top(Prev),
     cut_to(abstract_interpreter_body(A, M, Abs, State2)), % loose of precision
     ( \+ is_bottom
     ->!,
       { CutElse = yes }
-    ; { CutElse = no }
+    ; { CutElse = no  }
     ),
+    pop_top(Prev),
     ( abstract_interpreter_body(B, M, Abs, State)
     *->
       []
