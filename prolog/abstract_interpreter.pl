@@ -54,6 +54,7 @@
 
 :- multifile
     replace_goal_hook/3,
+    replace_body_hook/3,
     evaluable_goal_hook/2.
 
 :- dynamic
@@ -296,7 +297,8 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
           MRepl = M:Repl
         }
       ->{call(MRepl)}
-      ; { copy_term(EvalL, EvalC), % avoid undesirable unifications
+      ; { replace_body_hook(Goal, IM, Body)
+        ; copy_term(EvalL, EvalC), % avoid undesirable unifications
           memberchk((IM:Goal :- Body), EvalC)
         }
       ->cut_to(abstract_interpreter_body(Body, M, Abs, State1))
