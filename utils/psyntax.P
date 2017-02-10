@@ -388,11 +388,12 @@ syntax2p(NicerSyntaxTerm,Vars,Translator,Pterm) :-
 % Translator: lpsp2p ("papers syntax") or lps2p ("new syntax"); 
 % Either NicerSyntaxTerm or Pterm must be bound; the other should be unbound
 % NiceColouring is a colouring specificatin term as per SWI's prolog_colouring.pl, for the NicerSyntaxTerm
-%  null if undefined colouring
+%  null if undefined colouring, e.g. for timeless/Prolog literals (they'll be coloured elsewhere in SWI)
 % Probably needs to evolve to return error messages
 syntax2p(L,_,_TT,_,PT) :- var(L), var(PT), !, fail.
 % convenience notation for declarations:
-syntax2p((initially States),_Vars,lps2p, null, initial_state(StatesList)) :- !, 
+% not working: syntax2p((initially States),_Vars,lps2p, lps_delimiter - [body] , initial_state(StatesList)) :- !, 
+syntax2p((initially States),_Vars,lps2p, null , initial_state(StatesList)) :- !, 
 	comma_to_list(States,StatesList).
 % observe o1, o2, o3 from ... to ...:
 syntax2p((observe Obs),_Vars,lps2p,null,observe([O1,O2|On],T2)) :- (nonvar(Obs)-> functor(Obs,',',2) ; true), !,
