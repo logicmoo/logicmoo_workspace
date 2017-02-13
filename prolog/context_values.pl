@@ -78,8 +78,8 @@ with_context_value(Goal, Name, OldValue, NewValue) :-
 
 :- meta_predicate with_value(0, +, ?, +).
 with_value(Goal, Name, OldValue0, NewValue) :-
-    ( nb_current(Name, OldValue) ->
-      OldValue0 = OldValue,
+    ( nb_current(Name, OldValue)
+    ->OldValue0 = OldValue,
       b_setval(Name, NewValue),
       Goal,
       b_setval(Name, OldValue)
@@ -98,19 +98,29 @@ without_context_value(Goal, Name, Value) :-
     without_value(Goal, ContextName, Value).
 
 without_value(Goal, Name, Value) :-
-    ( nb_current(Name, Value) ->
-      setup_call_cleanup(nb_delete(Name),
+    ( nb_current(Name, Value)
+    ->setup_call_cleanup(nb_delete(Name),
                          (Goal, nb_setval(Name, Value)),
                          nb_setval(Name, Value))
     ; Goal
     ).
 
+update_value(Name, OldValue1, NewValue, Cleanup) :-
+    ( nb_current(Name, OldValue)
+    ->OldValue1 = OldValue,
+      Cleanup = set(Name, OldValue)
+    ; Cleanup = del(Name)
+    ),
+    b_setval(Name, NewValue).
+
+cleanup(set(Name, OldValue)) :- b_setval(Name, OldValue).
+cleanup(del(Name)) :- nb_delete(Name).
+
 :- meta_predicate with_values(0, +, ?, +).
 with_values(Goal, Names, OldValues, NewValues) :-
-    maplist(b_getval, Names, OldValues),
-    maplist(b_setval, Names, NewValues),
+    maplist(update_value, Names, OldValues, NewValues, Cleanups),
     Goal,
-    maplist(b_setval, Names, OldValues).
+    maplist(cleanup, Cleanups).
 
 :- meta_predicate with_context_values(0, :, ?, +).
 with_context_values(Goal, M:Names, OldValues, NewValues) :-
