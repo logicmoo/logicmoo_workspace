@@ -95,7 +95,7 @@ type_part_check_call(comp,      call, instance, once).
 check_asrs_props(PType, AsrPVL) :-
     type_part_check_call(PType, Part, Check, Call),
     maplist(check_asr_props(Part, Check, Call), AsrPVL),
-    ( maplist(\=(_-[]), AsrPVL)
+    ( \+ memberchk(_-[], AsrPVL)
     ->maplist(send_rtcheck_asr(PType), AsrPVL)
     ; true
     ).
@@ -230,14 +230,15 @@ check_asrs_pos(AsrCompL, AsrSuccL) :-
 
 check_asrs_pre(Step, AsrL, AsrGlobL, AsrCompL, AsrSuccL) :-
     current_prolog_flag(rtchecks_level, Level),
-    prop_rtchecks(AsrL, comp, Step, Level, AsrCompL),
     prop_rtchecks(AsrL, call, Step, Level, AsrCallL),
+    prop_rtchecks(AsrL, comp, Step, Level, AsrCompL),
+    subtract(AsrCompL, AsrCallL, DAsrCompL),
     prop_rtchecks(AsrL, succ, Step, Level, AsrSuccL),
-    subtract(AsrSuccL,  AsrCallL, DAsrSuccL),
+    subtract(AsrSuccL, AsrCallL, DAsrSuccL),
     prop_rtchecks(AsrL, glob, Step, Level, AsrGlobL),
-    subtract(AsrGlobL,  AsrCallL, DAsrGlobL),
-    check_asrs_props(compat,  AsrCompL ),
+    subtract(AsrGlobL, AsrCallL, DAsrGlobL),
     check_asrs_props(calls,   AsrCallL ),
+    check_asrs_props(compat,  DAsrCompL),
     check_asrs_props(success, DAsrSuccL),
     check_asrs_props(comp,    DAsrGlobL).
 
