@@ -63,7 +63,7 @@ Prolog facts in general are not transformed.
 :- module(psyntax,[ syntax2p/4, lpsp2p_file/2, lpsp2p/3, 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4,
 	gol/2, gol/1, golps/2, golps/1,
-	may_clear_hints/0,term_colours/2,goal_colours/2, timeless_ref/1]).
+	may_clear_hints/0,term_colours/2,goal_colours/2, timeless_ref/1, set_top_term/1]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
@@ -116,7 +116,8 @@ add_head_hint(HH,Type,X) :- uassert(head_hint(HH,Type,X)).
 % SWI only:
 clear_timeless_refs. 
 may_add_timeless_ref(_).
-:- dynamic timeless_ref/1. % dummy declaration to please XSB's compiler
+set_top_term(_).
+:- dynamic timeless_ref/1, current_top_term/1. % dummy declaration to please XSB's compiler
 
 :- endif.
 
@@ -158,10 +159,13 @@ dumploaded.
 clear_head_hint(HH,Type,X) :- retractall(head_hint(HH,Type,X)).
 add_head_hint(HH,Type,X) :- assert(head_hint(HH,Type,X)).
 
-:- thread_local(timeless_ref/1).
+:- thread_local((timeless_ref/1, current_top_term/1)).
 clear_timeless_refs :- retractall(timeless_ref(_)).
-may_add_timeless_ref(G) :- functor(G,F,N), ( timeless_ref(F/N) ; assert(timeless_ref(F/N))), !.
 
+may_add_timeless_ref(G) :- 
+	functor(G,F,N), ( current_top_term(F/N); timeless_ref(F/N) ; assert(timeless_ref(F/N))), !.
+
+set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; functor(T,F,N)), assert(current_top_term(F/N)).
 
 
 :- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1]).
@@ -323,6 +327,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	catch(my_file_read(IStr,Term,Vars),Ex,writeln(ex-Ex)), closetail(Vars),
 	( Term==end_of_file -> true
 	;  
+		set_top_term(Term),
 		(Convert->true; write('*** failed '), writeln(Convert), fail), 
 		% When converting back to our syntax from Wei's, make sure T vars are not misinterpreted:
 		% NO! Too strong
@@ -404,8 +409,8 @@ syntax2p(NicerSyntaxTerm,Vars,Translator,Pterm) :-
 % Translator: lpsp2p ("papers syntax") or lps2p ("new syntax"); 
 % Either NicerSyntaxTerm or Pterm must be bound; the other should be unbound
 % NiceColouring is a colouring specificatin term as per SWI's prolog_colouring.pl, for the NicerSyntaxTerm
-%  null if undefined colouring, e.g. for timeless/Prolog literals (they'll be coloured elsewhere in SWI)
-%  needs to be defined only for nonvar(NicerSyntaxTerm)
+%   null if undefined colouring, e.g. for timeless/Prolog literals (they'll be coloured elsewhere in SWI)
+%   needs to be defined only for nonvar(NicerSyntaxTerm)
 % Probably needs to evolve to return error messages
 syntax2p(L,_,_TT,_,PT) :- var(L), var(PT), !, fail.
 % convenience notation for declarations:
@@ -635,7 +640,7 @@ syntax2p_literal(L,_Vars,lps2p,[T1,_T2],true,null,holds(NL,T)) :-
 	var(L),
 	!,
 	L = (NL at T), T1=T. % ...thus ommitting "..at..." in fluents is not fully supported when reversing the transform
-syntax2p_literal(L,_,_Translator,[_T1,_T2],false,body(L),L). % some timeless literal
+syntax2p_literal(L,_,_Translator,[_T1,_T2],false,body(L),L) :- may_add_timeless_ref(L). % some timeless literal
 
 check_time_var(V,Vars) :- is_time_var(Vars,V), !.
 check_time_var(V,Vars) :-
