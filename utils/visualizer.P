@@ -203,7 +203,7 @@ visual(File,timeline(JSON)) :-
 		abridge_fluent(X,AtomAbridged),
 		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom), 
 		(T2==LastRelevantTime -> FluentSuffix = [' (end of time)'] ; FluentSuffix = []),
-		concat_atom(['Fluent ',Atom,' initiated at ',T1,' and terminated at transition to ',T2|FluentSuffix],Tip),
+		concat_atom(['Fluent ',Atom,' initiated at ',T1,'<br/>and terminated at transition to ',T2|FluentSuffix],Tip),
 		get_increment_counter(IDs,ID)
 	), Fluents),
 	%... and the rest:
