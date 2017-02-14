@@ -46,17 +46,15 @@ compute_areas_diagrams(+LE:list,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) i
  
 The predicate takes as input
 * a list LE of pairs probability-literal in asceding order on probability
- where the litaral can be an Atom (incading a positive example) or \+ Atom, 
- indicating a negative example while the probability is the probability of
- Atom of being true
+ where the literal can be an Atom (including a positive example) or \+ Atom, 
+ indicating a negative example, while the probability is the probability of the Atom being true.
 
 The predicate returns
 * AUCROC: the size of the area under the ROC curve
 * ROC: the ROC curve as a dict that can be visualized with the c3 renderer of
   SWISH
 * AUCPR: the size of the area under the PR curve
-* PR: the PR curve as a dict that can be visualized with the c3 renderer of
-  SWISH
+* PR: the PR curve as a dict that can be visualized with the c3 renderer of SWISH
  
 See http://cplint.lamping.unife.it/example/exauc.pl for an example
 
