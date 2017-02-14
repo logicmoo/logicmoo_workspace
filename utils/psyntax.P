@@ -63,7 +63,7 @@ Prolog facts in general are not transformed.
 :- module(psyntax,[ syntax2p/4, lpsp2p_file/2, lpsp2p/3, 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4,
 	gol/2, gol/1, golps/2, golps/1,
-	may_clear_hints/0,term_colours/2,goal_colours/2, timeless_ref/1, set_top_term/1]).
+	may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
@@ -198,22 +198,13 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(900,fy,initiated).
 
 
-/* This colours lps2p terms, articulated with SWI's prolog_colour.pl. examples: 
-term_colours((make_tower([Block,Place|Places]) from T1 to T3 if
-    make_tower([Place|Places]) from T1 to T2,
-    make_on(Block,Place) from T2 to T3), delimiter - [ head, delimiter - [goal(undefined,_),goal(undefined,_)] ]).
-    
-term_colours(then(if(_),_), delimiter - [ delimiter-[body], body] ).
-term_colours(if(_,_), delimiter - [ head, body] ).
-*/
+% This colours lps2p terms, articulated with SWI's prolog_colour.pl
 term_colours(T,C) :- 
 	may_clear_hints,  
 	syntax2p(T,[],lps2p,NiceC,_Pterm), NiceC \== null, 
 	!, 
 	NiceC=C.
 	
-goal_colours(_G,_C) :- fail. % ??? needed???
-
 
 % Resets the psyntax context when using a different thread, e.g. a different file tokenization
 % Controlling this elsewhere (e.g. hooking into either xref_open_source/close_source, swish_highlight:server_tokens) does not work
