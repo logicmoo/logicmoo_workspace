@@ -110,7 +110,7 @@ may_clear_hints :- throw(only_for_swi).
 % regenerate_file(F) F is an existing Wei syntax file that needs to be regenerated...if a source file for it can be found
 regenerate_file(F) :- generate_file(F), !.
 
-clear_head_hint(HH,Type,X) : uretractall(head_hint(HH,Type,X)).
+clear_head_hint(HH,Type,X) :- uretractall(head_hint(HH,Type,X)).
 add_head_hint(HH,Type,X) :- uassert(head_hint(HH,Type,X)).
 
 % SWI only:
