@@ -211,7 +211,7 @@ visual(File,timeline(JSON)) :-
 		member(t(X,T1-T2,G),Sorted),  
 		\+ functor(G,/,2), % not a fluent
 		my_term_to_atom(G,Gatom), my_term_to_atom(X,Atom),
-		(G==observation -> S='color:Peru'; G==action -> S='color:green' ; S='color:orange'),
+		(G==observation -> S='color:Peru'; G==action -> S='color:green' ; S='color:#E19735'),
 		(T2 is T1+1 -> make_json_object([id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip],Item);
 			make_json_object([id:ID,content:Atom,start:T1,end:T2,group:Gatom,type:range,style:'background-color: lightGray; color:orange',title:Tip],Item)),
 		my_term_to_atom(happens(X,T1,T2),Tip),
