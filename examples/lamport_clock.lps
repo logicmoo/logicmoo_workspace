@@ -1,0 +1,47 @@
+% Lamport's clock example in LPS
+% by Jacinto Dávila and Bob Kowalski (based on Lamport's Clock Protocol spec.)
+
+maxTime(7).
+
+%initially now(1).
+
+initially now(2).
+
+fluents now(_).
+actions tick(_), sending(_, _).
+events receiving(_M, _Stamp), to_be_sent(_), received(_,_), send(_).
+
+observe  received(m2, 3) from 1 to 2.
+observe  to_be_sent(m3) from 3 to 4.
+
+if to_be_sent(M) from T1 to T3
+then send(M) from T3 to T4.
+
+if received(M, Stamp) from T1 to T3, now(T3), maxi(Stamp, T3, Tnew)
+then receiving(M, Stamp) from T3 to Tnew.
+
+% reemplacing this with an atemporal one
+/* send(M) from T1 to T2 if
+  tick(T1) from T1 to T2,
+  sending(M, T2) from T1 to T2.
+*/
+
+send(M) if tick(T1), now(T2), sending(M,T2).
+
+receiving(_M, Stamp) from T1 to T2 if
+  tick(T1) from T1 to T2.
+
+/* These should work, but they don't and it is confusing
+maxi(X1,X2,X2) if X2>X1.
+maxi(X1,X2,X1) if X1>=X2.
+*/
+
+maxi(X1,X2,X2) :- X2>X1.
+maxi(X1,X2,X1) :- X1>=X2.
+
+incr(X, X1) :- X1 is X + 1.
+
+tick(Tp) initiates now(T) if  now(Tp), incr(Tp, T).
+tick(Tp) terminates now(Tp) if  now(Tp), incr(Tp, _T).
+
+%%%% end of file
