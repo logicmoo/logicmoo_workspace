@@ -68,7 +68,7 @@ Prolog facts in general are not transformed.
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
 
-:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1]). % assumed preloaded
+:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,macroaction/1]). % assumed preloaded
 :- use_module(db,[head_hint/3, '_currenty__defining'/1]).
 :- use_module(basics, [member/2, append/3]).
 :- use_module(string,[concat_atom/2]).
@@ -168,7 +168,7 @@ may_add_timeless_ref(G) :-
 set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; functor(T,F,N)), assert(current_top_term(F/N)).
 
 
-:- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1]).
+:- use_module('../engine/interpreter.P',[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,macroaction/1]).
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
@@ -346,8 +346,10 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 %  a fact means that some head was read before and tagged as Sort
 %  used only when transforming from some nicer to Wei syntax 
 %  Declared is 'true' if a declaration (not just usage) was detected
-head_hint(X,Sort) :- head_hint(X,Sort,_).
-
+head_hint(X,Sort) :- head_hint(X,Sort,_), !.
+head_hint(X,fluent) :- intensional(X).
+head_hint(X,event) :- macroaction(X).
+	
 remember_hint(Type,H) :- 
 	nonvar(Type), nonvar(H),
 	member(Type,[fluent,event,action,timeless]),

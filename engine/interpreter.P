@@ -43,6 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	go/0, go/1, go/2, go/3,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1,
 	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
+	intensional/1,macroaction/1,
 	lps_engine_directory/1, uassert/1, uretractall/1,
 	bindAllVars/1, lps_welcome_message/0, endTime/1]).
 
@@ -1488,8 +1489,7 @@ event_pred(Ev) :-
     action_(Ev) ; event_(Ev).
 event_pred(Ev) :-
     % Composite event predicates, defined in L_events.
-    functor(Ev,F,N), functor(Evv,F,N),
-    l_events(happens(Evv, _, _), _).
+    macroaction(Ev).
 
 % temp_constraint(+Term)
 %   True if Term is an atomic temporal constraint formula.
