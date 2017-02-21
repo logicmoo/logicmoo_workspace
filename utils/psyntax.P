@@ -229,9 +229,15 @@ closetail([_|L]) :- closetail(L).
 
 % comma_to_list(?NiceSyntax,+Syntaxclass,-Spec,?List). SyntaxClass and Spec as per SWI's Prolog_colour.pl
 comma_to_list(NS,_,_,L) :- var(NS), var(L), !, writeln('*** Bad var item'), fail.
-comma_to_list((One,Two),SC,delimiter-[SC-classify,SpecTwo],[One|Twol]):- Twol \== [], !,
+comma_to_list((One,Two),SC,delimiter-[SpecOne,SpecTwo],[One|Twol]):- Twol \== [], !,
+	spec_for_one(One,SC,SpecOne),
 	comma_to_list(Two,SC,SpecTwo,Twol).
-comma_to_list(One,SC,SC-classify,[One]).
+comma_to_list(One,SC,SpecOne,[One]) :- spec_for_one(One,SC,SpecOne).
+
+% spec_for_one(+NiceItem,+SyntaxClass,-ItemColourSpec)
+spec_for_one(_/_,SC,delimiter-[SC,classify]) :- !.
+spec_for_one(One,SC,SC) :- atom(One), !.
+spec_for_one(_One,SC,SC-classify).
 
 % functor_arityze(TemplatesOrFA,TemplatesList) replaces term functor/arities by their templates; 
 % bidirectional (albeit losing information of course)
