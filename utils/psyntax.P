@@ -229,9 +229,15 @@ closetail([_|L]) :- closetail(L).
 
 % comma_to_list(?NiceSyntax,+Syntaxclass,-Spec,?List). SyntaxClass and Spec as per SWI's Prolog_colour.pl
 comma_to_list(NS,_,_,L) :- var(NS), var(L), !, writeln('*** Bad var item'), fail.
-comma_to_list((One,Two),SC,delimiter-[SC-classify,SpecTwo],[One|Twol]):- Twol \== [], !,
+comma_to_list((One,Two),SC,delimiter-[SpecOne,SpecTwo],[One|Twol]):- Twol \== [], !,
+	spec_for_one(One,SC,SpecOne),
 	comma_to_list(Two,SC,SpecTwo,Twol).
-comma_to_list(One,SC,SC-classify,[One]).
+comma_to_list(One,SC,SpecOne,[One]) :- spec_for_one(One,SC,SpecOne).
+
+% spec_for_one(+NiceItem,+SyntaxClass,-ItemColourSpec)
+spec_for_one(_/_,SC,delimiter-[SC,classify]) :- !.
+spec_for_one(One,SC,SC) :- atom(One), !.
+spec_for_one(_One,SC,SC-classify).
 
 % functor_arityze(TemplatesOrFA,TemplatesList) replaces term functor/arities by their templates; 
 % bidirectional (albeit losing information of course)
@@ -602,7 +608,7 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],ET,Spec,holds(not(NL),T)) :- % not(flue
 		LT= not(F at T), Spec = delimiter - [delimiter - [EF,classify]], ET=true ; 
 		LT= not(F), head_hint(F,fluent), Spec = delimiter - [EF], ET=false),
 	!,
-	(atom(F) -> EF = fluent ; EF = fluent-classify),
+	simple_fluent_colour(F,EF),
 	NL=F,
 	remember_fluent_hint(F),
 	T1=T.	
@@ -613,15 +619,16 @@ syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],true,null,holds(NL,T)) :-
 	\+ head_hint(L,l_timeless),
 	!,
 	NL=..Tless, T=T1.
-syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],true,delimiter-[fluent-classify,classify],holds(NL,T)) :- 
+syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],true,delimiter-[FC,classify],holds(NL,T)) :- 
 	nonvar(LT), LT = (F at T),
 	!,
 	NL=F, T=T1,
+	simple_fluent_colour(F,FC),
 	remember_fluent_hint(F).
 syntax2p_literal(F,_Vars,lps2p,[T1,_T2],false,EF,holds(NL,T)) :- 
 	nonvar(F), head_hint(F,fluent),
 	!,
-	(atom(F) -> EF = fluent ; EF = fluent-classify),
+	simple_fluent_colour(F,EF),
 	NL=F, T=T1.
 syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],true,null,holds(NL,T)) :- 
 	var(L),

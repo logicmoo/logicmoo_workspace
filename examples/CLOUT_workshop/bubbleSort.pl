@@ -8,15 +8,17 @@ initially	location(d, 1), location(c, 2), location(b, 3),  location(a,4).
 if	location(X, N1) at T1, N2 is N1 +1,  location(Y, N2) at T1,  Y@<X
 then	swapped(X, N1, Y, N2) from T2 to T3.
 
-% swapped may not work if the order of the two clauses below is
-% reversed. Perhaps for good reasons.
+% swapped does not work if the order of the two clauses below is
+% reversed. Perhaps for good reasons, 
+% namely in the hope that positions will become swapped in the future 
+% without the need to swap them explicitly.
 
-swapped(X, N1, Y, N2) from T1 to T2 if 	
-	location(X, N1) at T1, location(Y, N2) at T1,  
+swapped(X, N1, Y, N2) from T1 to T2 
+if 	location(X, N1) at T1, location(Y, N2) at T1,  
 	Y@<X, swap(X, N1, Y, N2) from T1 to T2.
 
-swapped(X, N1, Y, N2) from T to T if
-	location(X, N1) at T, location(Y, N2) at T, X@<Y.
+swapped(X, N1, Y, N2) from T to T 
+if	location(X, N1) at T, location(Y, N2) at T, X@<Y.
 
 swap(X, N1, Y, N2)  	initiates 	location(X, N2).
 swap(X, N1, Y, N2)  	initiates 	location(Y, N1).
