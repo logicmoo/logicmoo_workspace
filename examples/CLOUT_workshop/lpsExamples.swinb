@@ -48,7 +48,7 @@ It consists simply of the top-level goal that all philosophers should dine, and 
 
   In this example, fariba and bob alternate transfering money to one another, until fariba runs out of money.
   Most of the code is in the causal laws, which update bank balances and prevent concurrent transfers that would complicate the computation of updated bank balances. In conventional database programming languages the code for transfering money incorporates implementation details that are catered for in LPS by the general-purpose implementation of LPS. 
-      - [Bank transfers](example/bankTransfer2.pl) .....
+      - [Bank transfers](example/bankTransfer.pl)
 	  
 - *Prisoner's Dilemma* 
  
@@ -56,7 +56,7 @@ It consists simply of the top-level goal that all philosophers should dine, and 
  https://en.wikipedia.org/wiki/Prisoner%27s_dilemma
  The LPS program illustrates a solution for the iterated prisoner's dilemma using the tit-for-tat stratetgy. 
  The program also includes clauses for adding up the total number of years each prisoner has to spend in jail.
-     - [Tit for tat strategy](example/prisoners.pl) ...
+     - [Tit for tat strategy](example/prisoners.pl)
 	  
 - *Sorting*
   Here are two very different sorting programs. 
