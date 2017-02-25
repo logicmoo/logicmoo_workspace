@@ -34,7 +34,7 @@ You can check this behaviour by commenting out or deleting the fact `locked(cont
  This example is motivated by the famous map colouring problem in mathematics:
  https://en.wikipedia.org/wiki/Four_color_theorem
  Adjacent countries cannot be painted with the same colour at the same time. What do you think will happen if we add an extra constraint that only one country can be painted at a time?
-   - [Five countries, three colours](example/mapColouring.pl)
+   - [Four countries, three colours](example/mapColouring.pl)
    
 - *Dining Philosophers*
 
