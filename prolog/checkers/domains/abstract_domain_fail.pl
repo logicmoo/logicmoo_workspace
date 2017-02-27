@@ -135,7 +135,7 @@ trusted_result_fail(A=B, _, Result) :-
           Result = fail
         ; A == B ->
           Result = true
-        ; Result = top 
+        ; Result = top
         ).
 trusted_result_fail((A\=B), _, Result) :-
         ( A \= B ->

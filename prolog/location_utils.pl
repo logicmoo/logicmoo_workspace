@@ -134,7 +134,7 @@ record_location_callable(MGoal, CM, Type, Call, _, From) :-
     callable(Head),
     compact_goal(Call, Comp),
     record_location_goal(Head, M, Type, CM, Comp, From).
-    
+
 record_location_goal(Head, M, Type, CM, Call, From) :-
     record_location(Head, M, dynamic(Type, CM, Call), From).
 

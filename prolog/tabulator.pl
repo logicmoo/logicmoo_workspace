@@ -66,7 +66,7 @@ align_cell(none, _, Cell, Cell).
 align_cell_left(Cell0, FillChar, Cell) :-
     discompose_cell(Cell0, FillChar, [], FillStr, Cell1),
     append(Cell1, FillStr, Cell).
-    
+
 discompose_cell([],           _,    FillStr,  FillStr, []).
 discompose_cell([Char|Cell0], Char, FillStr0, FillStr, Cell) :- !,
     discompose_cell(Cell0, Char, [Char|FillStr0], FillStr, Cell).

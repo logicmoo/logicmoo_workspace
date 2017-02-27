@@ -30,7 +30,7 @@
 :- module(check_unused, []).
 
 /*
-  
+
   This analyzer is based on the Mark-and-Sweep Algorithm:
   http://www.brpreiss.com/books/opus5/html/page424.html
 

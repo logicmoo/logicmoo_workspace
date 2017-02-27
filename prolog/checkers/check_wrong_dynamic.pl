@@ -144,7 +144,7 @@ current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
       predicate_location(Ref, Loc)
     ; Type = warning,
       DType  = unknown,
-      once(property_location(PI, _, Loc))      
+      once(property_location(PI, _, Loc))
     ).
 
 :- meta_predicate current_dynamic_as_static(?, 1, -, ?).
