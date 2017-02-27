@@ -107,7 +107,7 @@ goal_expansion(Goal0, Goal) :-
 
 /* Commented out due to this cause cyclic terms when clause_info is
  * executed over this predicate itself:
-   
+
 goal_expansion(A=~B0, A=B) :-
     nonvar(B0), !,
     translate_term(~B0, B).

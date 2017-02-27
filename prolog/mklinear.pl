@@ -31,7 +31,7 @@
 
 mklinear(Term, Linear, BindingL) :-
     term_variables(Term, VarL),
-    exclude(singleton(Term), VarL, VarM), 
+    exclude(singleton(Term), VarL, VarM),
     mklinear(Term, Linear, VarM, BindingL, []).
 
 singleton(T, V) :-

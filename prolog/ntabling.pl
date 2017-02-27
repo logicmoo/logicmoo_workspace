@@ -45,7 +45,7 @@ tabling(Elem, Goal, List) :-
 
 :- meta_predicate tabling(0, 0, -, ?).
 tabling(Elem, Goal, List, Tail) :-
-    ( \+ Elem -> 
+    ( \+ Elem ->
       findall(Elem, Goal, List, Tail)
     ; List = Tail
     ).

@@ -57,13 +57,13 @@
 :- use_module(library(i18n/i18n_parser)).
 
 /*
-  
+
   Note: For variables, use this pattern: Trans= ~Var, This will allow
   to solve ~/1 at Run-Time and unify the translation of Var with
   Trans.  To force Run-Time translation, use Trans =~ Var. Note that
   =~/2 is the predicate that performs Run-Time translation, while ~/1
   is a term that is expanded to the translation at Compile-Time.
-  
+
   The system support one po file per several modules, but one module
   can not have several po files.  If there are no user resource file
   defined, nor a custom i18n_resource/1 declaration, the system will
@@ -72,9 +72,9 @@
 
   Implementors: To extend current functionality, which nowadays is a
   minimum to cover basic needs, please read this before to start:
-  
+
   http://www.gnu.org/software/gettext/manual/gettext.html#PO-Files
-  
+
 */
 
 :- dynamic

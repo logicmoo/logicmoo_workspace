@@ -67,7 +67,7 @@ code_html(0'&) --> "hy;". % soft hyphen
 code_html(0'®) --> "&reg;". % registered trademark
 code_html(0'¯) --> "&macr;". % spacing macron
 code_html(0'°) --> "&deg;". % degree
-code_html(0'±) --> "&plusmn;". % plus-or-minus 
+code_html(0'±) --> "&plusmn;". % plus-or-minus
 code_html(0'²) --> "&sup2;". % superscript 2
 code_html(0'³) --> "&sup3;". % superscript 3
 code_html(0'´) --> "&acute;". % spacing acute

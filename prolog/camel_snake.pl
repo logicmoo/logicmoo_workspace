@@ -38,7 +38,7 @@ camel_snake(Camel, Snake) :-
     atom(Snake),
     atom_codes(Snake, SnakeS),
     camel_snake_s(CamelS, SnakeS),
-    atom_codes(Camel, CamelS).    
+    atom_codes(Camel, CamelS).
 
 camel_snake_s([U|CL], [L|SL]) :-
     ( upper_lower(U, L)
