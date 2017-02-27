@@ -465,8 +465,8 @@ character_code(I) :- between(0, 255, I).
 
 % string(T) :- list(T, character_code).
 
-:- doc(num_code/1, "These are the ASCII codes which can appear in 
-        decimal representation of floating point and integer numbers, 
+:- doc(num_code/1, "These are the ASCII codes which can appear in
+        decimal representation of floating point and integer numbers,
         including scientific notation and fractionary part.").
 
 :- true prop num_code/1 + regtype.

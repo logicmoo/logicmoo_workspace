@@ -88,7 +88,7 @@ called_by_dict_t(Desc, CM, L) :-
 :- meta_predicate dict_t(?, :).
 dict_t(Term, Desc) :-
     dict_t(Term, _, Desc).
-    
+
 :- prop dict_t/3 + type.
 :- meta_predicate dict_t(?, ?, :).
 dict_t(Term, Tag, M:Desc) :-

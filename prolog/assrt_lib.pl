@@ -512,7 +512,7 @@ body_member(Body, _, _, _) :-
     var(Body), !, fail.
 body_member([], _, _, _) :- !, fail.
 body_member(Body, PPos, Lit, Pos) :-
-    nonvar(PPos), 
+    nonvar(PPos),
     PPos = parentheses_term_position(_, _, BPos), !,
     body_member(Body, BPos, Lit, Pos).
 body_member([A|B], list_position(From, To, [APos|EPos], TPos), Lit, LPos) :- !,

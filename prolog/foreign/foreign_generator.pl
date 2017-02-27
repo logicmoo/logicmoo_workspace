@@ -146,7 +146,7 @@ do_generate_library(M, FileSO, File, FSourceL) :-
                       atom_concat(COpts, '\n', COpt1)
                     ),
                     atomic_args(COpts, COptL1),
-                    member(COpt, COptL1)                    
+                    member(COpt, COptL1)
                   ), COptL, IDirL),
     findall(IDir, ( ( Dir = DirSO
                     ; Dir = DirIntf

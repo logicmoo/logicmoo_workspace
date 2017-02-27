@@ -63,7 +63,7 @@
            is_pred/2,
            mod_qual/1,
            mod_qual/2,
-           
+
            check/1,
            trust/1,
            true/1,
@@ -98,19 +98,19 @@
 %%    Note that the implementations provided for the properties are the ones used
 %%    when run-time checks are enabled.  Run-time check for properties
 %%    @var{Prop} must be implemented following certain rules:
-%%    ** Comment: these rules are incomplete! See other documentation 
-%%                for properties. 
-%% 
+%%    ** Comment: these rules are incomplete! See other documentation
+%%                for properties.
+%%
 %%    @begin{itemize}
 %%    @item For any @var{Goal}, @pred{call(Goal)} must be equivalent to:
-%% 
+%%
 %%      intercept(Prop(Goal), rtcheck(_, _, _, _, _), true).
-%% 
+%%
 %%    @item Remove the choicepoints if the goal does not introduce new ones.
-%% 
+%%
 %%    @item Try to throw the run-time check exception as soon as the
 %%    property being validated has been violated.
-%% 
+%%
 %%    @item All the checks must be compatible among them.
 %%    @end{itemize}
 
@@ -150,7 +150,7 @@ valid_type([Type|Rest]) :-
 
 
 :- doc(constraint(C), "~w contains a list of linear (in)equalities
-   that relate variables and @tt{int} values. For example,  @tt{[A < B + 4]} 
+   that relate variables and @tt{int} values. For example,  @tt{[A < B + 4]}
    is a constraint while @tt{[A < BC + 4]} or @tt{[A = 3.4, B >= C]} are
    not."-[C]).
 
@@ -956,7 +956,7 @@ user_error(Goal, S) :-
 % Collapsed properties, to improve performance of run-time checks. --EMM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % These properties are not well implemented:
-:- prop not_fails_is_det/1 
+:- prop not_fails_is_det/1
 # "Collapsed property of @var{not_fails/1} and @var{is_det/1}.".
 
 :- meta_predicate not_fails_is_det(goal).
@@ -980,7 +980,7 @@ not_fails_is_det(Goal) :-
         ),
         '$setarg'(1, Solved, yes, true).
 
-:- prop not_fails_non_det/1 
+:- prop not_fails_non_det/1
 # "Collapsed property of @var{not_fails/1} and @var{non_det/1}.".
 
 :- meta_predicate not_fails_non_det(goal).
