@@ -173,7 +173,7 @@ collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
     qualify_meta_goal(Goal, M, CM, Pred),
     collect_assertions(Pred, M, rtcheck, AsrL),
     maplist(wrap_asr_rtcheck, AsrL, RAsrL).
-      
+
 wrap_asr_rtcheck(Asr, rtcheck(Asr)).
 
 % ----------------------------------------------------------------------------
