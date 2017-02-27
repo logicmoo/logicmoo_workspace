@@ -1,62 +1,16 @@
 <div class="notebook">
 
 <div class="nb-cell markdown">
-To be meaningful, an LPS program should have one or more reactive rules (also called goals) and one or more actions. The actions need to be declared. 
-For example:
-</div>
+# First Steps with LPS
 
-<div class="nb-cell program">
-actions rain.
-observe rain from 0 to 1.
+This is a series of short notebooks introducing LPS.
+It assumes no previous knowledge of logic or computing.
 
-% This a comment, preceeded by %. 
-% The following sentence is a reactive rule, also called a "goal".
-if rain from T1 to T2  then rain from T2 to T3.
-</div>
+The [first notebook](example/firststeps1.swinb) introduces *|computation|* as generating a  world *model* containing a timeline of states and events.
 
-<div class="nb-cell markdown">
-To run this program, put go(Timeline). into the query window.
-</div>
+The [second notebook](example/firststeps2.swinb) introduces *|reactive rules|*. In LPS, reactive rules are *goals*, which need to be made true, by generating actions, to generate a model of the world in which the goals are true.
 
-<div class="nb-cell query">
-go(Timeline).
-</div>
-
-<div class="nb-cell markdown">
-The output is a sequence of actions taking place until the end of time, which if not specified otherwise, is time 20. To change the end of time, insert a declaration, maxTime(time). at the beginning of your program. For example:
-</div>
-
-<div class="nb-cell program">
-maxTime(5).
-actions rain.
-observe rain from 0 to 1.
-if rain from T1 to T2  then rain from T2 to T3.
-</div>
-
-<div class="nb-cell query">
-go(Timeline).
-</div>
-
-<div class="nb-cell markdown">
-Having time in your program makes the meaning of the program logical.The rule/goal 
-if rain from T1 to T2  then rain from T2 to T3.
-
-for example, means for all times T1 and T2, 
-if it rains between time T1 and T2, then there exists a future time T3, 
-such that it rains between time T2 and T3.
-
-However, as a shortcut, it is possible to write the same rule without stating time explicitly:
-</div>
-
-<div class="nb-cell program">
-maxTime(5).
-actions rain.
-observe rain from 0 to 1.
-if rain  then rain.
-</div>
-
-<div class="nb-cell query">
-go(Timeline).
+The [third notebook](example/firststeps3.swinb) introduces *|logic programs|*, which can be understood as *beliefs*, which determine the space of possible models of the world.
 </div>
 
 </div>

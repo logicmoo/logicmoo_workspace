@@ -652,7 +652,7 @@ print_errors(File) :-
 		-> writeln('WARNING: no rules with priority present!') 
 		; true),
 	(( \+ option(priority), \+ reactive_rule(_,_))
-		-> writeln('WARNING: no priority-less reactive rules are present!')
+		-> writeln('WARNING: no reactive rules are present!')
 		; true).
 
 concat_terms(Terms,Atom) :- concat_terms(Terms,[],Codes), atom_codes(Atom,Codes).
