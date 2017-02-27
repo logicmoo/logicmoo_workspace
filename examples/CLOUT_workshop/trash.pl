@@ -17,12 +17,6 @@ dispose(Object, _Container) terminates 	trash(Object).
 
 false  dispose(_Object, Container), locked(Container).
 
-
-%
-if 	trash(Object) at T1, bin(Container) at T1 
-then	  dispose(Object, Container) from T2 to _T3, T1 =<T2.
-%
-
 /** <examples>
 ?- go(Timeline).
 */
