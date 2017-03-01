@@ -16,7 +16,7 @@ This notebook gives an overview of some LPS example programs.
 
 	- [Simple fire](example/fireSimple.pl)
 	
-	- [Recurrent fire](example/fire.pl)
+	- [Recurrent fire](example/fire_recurrent.pl)
 	
 - *Trash* 
 
