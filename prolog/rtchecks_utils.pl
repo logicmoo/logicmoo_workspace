@@ -60,8 +60,9 @@ rtcheck_type(calls).
 :- pred handle_rtcheck/1 : assrchk_error.
 
 handle_rtcheck(RTCheck) :-
-    \+ ( numbervars(RTCheck, 0, _),
-         print_message(error, RTCheck),
+    \+ ( copy_term_nat(RTCheck, Term),
+         numbervars(Term, 0, _),
+         print_message(error, Term),
          fail
        ).
 
