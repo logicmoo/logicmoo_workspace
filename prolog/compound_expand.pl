@@ -60,7 +60,11 @@ collect_expansors(M, ExpansorName, ML) :-
     findall(EM-PI,
             ( expansion_module(M, EM),
               ( implemented_pi(EM:ExpansorName/4)
-              ->PI=[ExpansorName/4]
+              ->PI=[ExpansorName/4|PIT],
+                ( implemented_pi(EM:ExpansorName/2)
+                ->PIT = [ExpansorName/2]
+                ; PIT = []
+                )
               ; PI=[ExpansorName/2]
               )), MD),
     remove_dups(MD, ML).
@@ -77,12 +81,15 @@ call_lock(Goal, ID) :-
 type_expansors(term, term_expansion, call_term_expansion).
 type_expansors(goal, goal_expansion, call_goal_expansion).
 
-do_compound_expansion(Type, Term0, Pos0, Term, Pos) :-
-    '$current_source_module'(M),
-    M \= user, % Compound expansions not supported in user module
+do_compound_expansion(M, Type, Term0, Pos0, Term, Pos) :-
     type_expansors(Type, Expansor, Closure),
     collect_expansors(M, Expansor, ML),
     call('$expand':Closure, ML, Term0, Pos0, Term, Pos), !.
+
+do_compound_expansion(Type, Term0, Pos0, Term, Pos) :-
+    '$current_source_module'(M),
+    M \= user, % Compound expansions not supported in user module
+    do_compound_expansion(M, Type, Term0, Pos0, Term, Pos).
 
 compound_expansion(Type, Term0, Pos0, Term, Pos) :-
     call_lock(do_compound_expansion(Type, Term0, Pos0, Term, Pos), Type).
