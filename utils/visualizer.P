@@ -13,9 +13,9 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
-:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1]). % assumed preloaded
+:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1, d_event/1]). % assumed preloaded
 :- use_module(db,[
-	lps_test_result_item/3, action/1
+	lps_test_result_item/3, action/1, d/2
 	]).
 :- use_module(psyntax,[syntax2p_file/4]).
 
@@ -25,7 +25,11 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 % namely for use with Prolog Studio:
 :- use_module(interprolog,[java/3, term2json/2, create_counter/1, get_increment_counter/2]).
 :- use_module(usermod,[xjShowURL/1]).
+:- use_module(lists,[intersect/3, list_difference_eq/3]).
 
+intersection(A,B,Common) :- intersect(A,B,Common).
+subtract(A,ToDelete,Result) :- list_difference_eq(A,ToDelete,Result).
+	
 www_open_url(URL) :- xjShowURL(URL). % xj2.P
 
 % make_json_object(PairsList,Object) Generate a JSON object in Prolog syntax from a list of Attribute:JSONValue 
@@ -66,11 +70,12 @@ displayTimeline(File,JSON) :-
 :- use_module(library(pengines),[pengine_self/1]).
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
+d(X,P) :- pengine_self(M), catch(M:d(X,P),_,fail).
 :- endif.
 % now non-swish SWI...
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish) )).
 :- use_module('../Wei-engine/db.P',[
-	lps_test_result_item/3, action/1
+	lps_test_result_item/3, action/1, d/2
 	]).
 :- endif.
 
@@ -78,8 +83,9 @@ action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 :- if(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(http/json)).
+:- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, endTime/1
+	go/3, my_term_to_atom/2, endTime/1, d_event/1
 	]).
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
@@ -171,7 +177,7 @@ visual(File,timeline(JSON)) :-
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
 		(lps_test_result_item('Database state:',T1,X) ; lps_test_result_item(fluents,T1,X)), 
-		T1 \== 0, % hack to discard irrelevant state information
+		% T1 \== 0, % hack to discard irrelevant state information
 		T2 is T1+1, functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
@@ -194,6 +200,10 @@ visual(File,timeline(JSON)) :-
 	% Aggregate fluent ranges
 	sort(Tuples,Sorted),
 	join_fluent_ranges(Sorted,Ranged),
+
+	collect_display_specs(Ranged,DS), 
+	(member(XX,DS), writeln(XX), fail;true),
+	
 	create_counter(IDs),
 	% Render fluents
 	endTime(End), LastRelevantTime is End+1,
@@ -223,6 +233,165 @@ visual(File,timeline(JSON)) :-
 	term2json(All,JSON),
 	displayTimeline(File,JSON). 
 
+% collect_display_specs(+Items,-OpItems) Each OpItem is c(Cycle,Op); 
+%  sorted by ID, start cycle; end cycle irrelevant because there are no sobrepositions)
+%  This is roughly O(N*N), can be speeded up if necessary by using a dictionary of ID -> Ops
+collect_display_specs(Items,TheOpItems_) :- 
+	prepare_item_ids(Items,WithIds), sort(WithIds,WithIds2), 
+	% ordered list of ID-di(T1-T2,X,G)
+	( (member(ID-di(T1-T2,X,G),  (member(ID-di(T1-_,Y,G)), Y\=X ; member(ID-di(_-T2,Y,G)), Y\=X))) -> 
+		writeln('*** Repeated display ID:'), writeln(ID), fail
+	 ; true),
+	retractall(id_props_cache(_,_,_)),
+	collect_display_specs2(WithIds2,OpItems,DomainBounds),
+	writeln(domainBounds-DomainBounds),
+	% list domains which no item uses yet
+	(virgin_domain(PN,DomainBounds), writeln(virgin(PN)), fail ; true), 
+
+	( (findall(PN,virgin_domain(PN,DomainBounds),VD), VD =[_,_|_]) -> 
+		writeln('*** Too many domains without values:'), writeln(VD), fail
+		; true),
+
+	% LATER: generate and inject values for virgin domain axis 
+	
+	( % check that all items have the mandatory properties (even if still not dereferenced)
+		member(c(T,{create:Props}),OpItems), mandatory_prop_name(P), 
+		\+ (domain_syn(P,PS), member(PS:_,Props)), 
+		writeln(missing-P-c(T,{create:Props})), fail 
+		; true
+	),
+
+	% at this point id_props_cache may contain props with value id(..)
+	prepare_display_specs(OpItems,TheOpItems),
+	(ground(TheOpItems)->true;writeln('*** Failed to prepare ground Ops'), writeln(TheOpItems), fail),
+	sort(TheOpItems,TheOpItems_).
+
+% temporary cache to support dereferencing ids
+:- if(current_prolog_flag(dialect, swi)).
+	:- thread_local(id_props_cache/3). % ID, Cycle, Props list
+:- else.
+	:- dynamic id_props_cache/3.
+:- endif.
+
+% collect_display_specs2(+Items,-NewItems,DomainBounds)  
+% DB is a list of prop:[Min,Max], e.g. [x:[10,200],y:[+99999,-99999]]  99999 meaning "infinity" or "unknown"
+collect_display_specs2([],[],B) :- !, unknown_bounds(B).
+collect_display_specs2([ID-DI|Items],OpItems,B) :- collect_display_specs_for([ID-DI|Items],ID, create, ItemsLeft, OpItems1,B1), 
+	collect_display_specs2(ItemsLeft,OpItems2,B2), 
+	merge_bounds(B1,B2,B), append(OpItems1,OpItems2,OpItems).
+
+% For each prop, [Min,Max]; the "unknown" values are "infinite"; only ints for now.
+% Each property must have at least one domain_syn fact
+unknown_bounds([x:[99999,-99999], y:[99999,-99999]]). 
+
+% synonims for names of domain defining properties
+domain_syn(x,x). domain_syn(x,x1). domain_syn(x,x2). 
+domain_syn(y,y). domain_syn(y,y1). domain_syn(y,y2).
+
+% Property P is undefined in Bounds
+virgin_domain(P,Bounds) :- unknown_bounds(U), member(P:UB,U), member(P:UB,Bounds).
+
+mandatory_prop_name(P) :- unknown_bounds(B), member(P:_,B).
+
+% merge_bounds(+Bounds1,+Bounds2,-Bounds)
+merge_bounds([P:[Min1,Max1]|Bounds1],[P:[Min2,Max2]|Bounds2],[P:[Min,Max]|Bounds]) :- !,
+	(Min1<Min2 -> Min=Min1 ; Min=Min2), (Max1>Max2 -> Max=Max1 ; Max=Max2),
+	merge_bounds(Bounds1,Bounds2,Bounds).
+merge_bounds([],[],[]).
+
+%collect_bounds(+Props,+CurrentBounds,-Bounds) Collect evident values
+collect_bounds(Props,Bounds) :- unknown_bounds(U), collect_bounds(U,Props,Bounds).
+
+collect_bounds([P:[Min,Max]|Bounds],Props,[NewB|NewBounds]) :- 
+	domain_syn(P,PS), member(PS:V,Props), integer(V), 
+	!, 
+	merge_bounds([P:[Min,Max]],[P:[V,V]],[NewB]),
+	collect_bounds(Bounds,Props,NewBounds).
+collect_bounds([B|Bounds],Props,[B|NewBounds]) :- !,
+	collect_bounds(Bounds,Props,NewBounds).
+collect_bounds([],_,[]).
+
+% collect_display_specs_for(+Items,ID, +Mode(create/update(LastProps)), -ItemsLeft, -OpItemsForId, -BoundsForCollected)
+% Collect display specs for an ID
+% Each OpItem is c(Cycle,Op), where Op is {kill:ID} or {create:Props} or {update:ID, oldProps:OldProps, newProps:Props}
+collect_display_specs_for([ID-di(T1-T2,X,_G)|Items],ID, Mode, Items, [c(T1,Op), c(T2,{kill:ID})], Bounds) :- 
+	(Items=[] ; Items = [OtherID-_|_], ID \== OtherID), 
+	!, % last item for this ID
+	op_for_one_enter(ID,T1,X,Mode,_,Op,Bounds).
+collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T2-T3,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op)|Ops],Bounds) :- !, 
+	% same ID, contiguous
+	op_for_one_enter(ID,T1,X,Mode,Props,Op,Bounds1),
+	collect_display_specs_for([ID-di(T2-T3,XX,GG)|Items],ID,update(Props),ItemsLeft,Ops,Bounds2),
+	merge_bounds(Bounds1,Bounds2,Bounds).
+collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T3-T4,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op1),c(T2,{kill:ID})|Ops],Bounds) :- !, 
+	% same ID, noncontiguous 
+	op_for_one_enter(ID,T1,X,Mode,_Props,Op1,Bounds1),
+	collect_display_specs_for([ID-di(T3-T4,XX,GG)|Items],ID,create,ItemsLeft,Ops,Bounds2),
+	merge_bounds(Bounds1,Bounds2,Bounds).
+collect_display_specs_for([ID_-DI_|Items],ID,_Mode,[ID_-DI_|ItemsLeft],Ops,Bounds) :- !, % skip item for different ID
+	ID_ \== ID, % just checking...
+	collect_display_specs_for(Items,ID,create,ItemsLeft,Ops,Bounds). %
+collect_display_specs_for([],_ID,_Mode,[],[],Bounds) :- unknown_bounds(Bounds).
+
+% op_for_one_enter(+ID,+Cycle,+FluentOrEvent,+Mode,-Props,-Operation, -Bounds)
+op_for_one_enter(ID,T,X,Mode,Props,Op,Bounds) :-
+	once(d(X,Props)), % TODO later: delay to evaluate id_props!
+	assert(id_props_cache(ID,T,Props)),
+	( Mode = update(OldProps) -> 
+		Op = ({update:ID, oldProps:OldProps, newProps:Props}),
+		unknown_bounds(Bounds)
+		; 
+		Mode=create, 
+		(d_event(X) -> TheProps_=[event|Props]; TheProps_=Props),
+		(member(id:_,TheProps_) -> TheProps=TheProps_ ; TheProps=[id:ID|TheProps_]),
+		Op= {create:TheProps},
+		collect_bounds(TheProps,Bounds)
+	).
+
+% prepare_item_ids(+Tuples,-Items) Each Item is ID-di(T1-T2,FluentOrEvent,Group); 
+% ID is extracted from props, or generated - right now it's the whole term, 
+% for more compactness it could be an int key into a term dictionary instead
+prepare_item_ids([t(X,T1-T2,G)|Items], [ID-di(T1-T2,X,G)|WithIds]) :- d(X,Props), !, % displayable item 
+	% TODO later: DELAY previous to support id_props??
+	(member(id:ID,Props)->true;ID=X), prepare_item_ids(Items,WithIds).
+prepare_item_ids([_|Items], WithIds) :- !, 
+	prepare_item_ids(Items,WithIds).
+prepare_item_ids([],[]).
+
+% Refine update args, resolve id(ID) props
+prepare_display_specs([c(T,Op)|OpItems],[c(T,NewOp)|NewOpItems]) :- !,
+	prepare_one_display_spec(Op,T,NewOp),
+	prepare_display_specs(OpItems,NewOpItems).
+prepare_display_specs([],[]).
+
+prepare_one_display_spec({kill:ID},_T,{kill:ID}) :- !.
+prepare_one_display_spec({create:Props},T,{create:NewProps}) :- !,
+	resolve_id_props(Props,T,NewProps).
+prepare_one_display_spec({update:ID, oldProps:OldProps, newProps:NewProps},T,{update:ID, changed:PropValuePairs}) :- !,
+	resolve_id_props(OldProps,T,OldProps_), resolve_id_props(NewProps,T,NewProps_),
+	% Keep only properties whose values vary:
+	intersection(OldProps_,NewProps_,Common),
+	subtract(OldProps_,Common,TheOldProps), subtract(NewProps_,Common,TheNewProps),
+	% now merge into a more convenient format:
+	merge_update_props(TheOldProps,TheNewProps,PropValuePairs).
+	
+resolve_id_props([P:id(ID)|Props],T,[P:Value|NewProps]) :- !,
+	( (id_props_cache(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
+		; writeln('*** Could not find property value for'), writeln(T/P:id(ID)), fail),
+	resolve_id_props(Props,T,NewProps).
+resolve_id_props([P:id(ID,OtherP)|Props],T,[P:Value|NewProps]) :- !,
+	( (id_props_cache(ID,T,IDProps), member(OtherP:Value,IDProps), Value \= id(_)) -> true
+		; writeln('*** Could not find property value for'), writeln(T/P:id(ID,OtherP)), fail),
+	resolve_id_props(Props,T,NewProps).
+resolve_id_props([Prop|Props],T,[Prop|NewProps]) :- !, resolve_id_props(Props,T,NewProps).
+resolve_id_props([],_T,[]).
+
+merge_update_props([P:Old|OldProps],[P:New|NewProps],[P:[Old,New]|PropValuePairs]) :- !,
+	merge_update_props(OldProps,NewProps,PropValuePairs).
+merge_update_props([P1:Old|_],[P2:New|_],_) :- !,
+	writeln('*** update prop out of sync'), writeln(P1:Old/P2:New), fail.
+merge_update_props([],[],[]).
+	
 abridge_fluent(X,X) :- atomic(X), !.
 abridge_fluent(X,AtomAbridged) :- X=..[_|Args], abridge_fluent_args(Args,Atoms), concat_atom(Atoms,AtomAbridged).
 

@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	go/0, go/1, go/2, go/3,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1,
 	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
-	intensional/1,macroaction/1,
+	intensional/1,macroaction/1,d_event/1,
 	lps_engine_directory/1, uassert/1, uretractall/1,
 	bindAllVars/1, lps_welcome_message/0, endTime/1]).
 
@@ -56,7 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 :- lps_engine_directory(D), string:concat_atom([D,'../Wei-engine/db.P'],DB), ensure_loaded(DB).
 
-:- use_module(db,[
+:- use_module(db,[ d/2,
 	action/1, current_time/1, d_pre/1, event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1,
@@ -121,6 +121,7 @@ lps_welcome_message.
 % If performance becomes bad (due to nonindexed access inside the pengine_self predicate) we should pass M as arg
 % Implementation note: execution specific states (cf. cleanup_engine) might be stored instead by simply using thread_local declarations
 
+d(X,Props) :- pengine_self(M), catch(M:d(X,Props),_,fail).
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 current_goal(X) :- pengine_self(M), M:current_goal(X).
 current_time(X) :- pengine_self(M), M:current_time(X).
@@ -171,7 +172,7 @@ u_swiclause(H,B,Ref) :- pengine_self(M), clause(M:H,B,Ref).
 
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
 % Now support for vanilla SWI Prolog
-:- use_module('../Wei-engine/db.P',[
+:- use_module('../Wei-engine/db.P',[d/2,
 	action/1, current_time/1, d_pre/1 ,event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1,
@@ -1561,7 +1562,6 @@ d_body(B) :-
     functor(B,F,N), functor(BB,F,N),
     l_timeless(BB, _), !.
 d_body(B) :- u_user_predicate(B).
-
 
 % Although this predicate is "generic", it works with SWI-only predicates, see resolveUntilAction etc. above
 % dc_process(RulesToProcess, RulesProcessed, FinalRules, GoalsSoFar, FinalGoals) 
