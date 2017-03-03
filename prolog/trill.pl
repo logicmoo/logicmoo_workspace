@@ -522,7 +522,7 @@ clash((ABox,_),Expl):-
   member(Ind2,L1),
   append(Expl1,Expl2,Expl).
 
-clash((ABox,Tabs),Expl):-
+clash((ABox,_),Expl):-
   %write('clash 6'),nl,
   find((classAssertion("http://www.w3.org/2002/07/owl#Nothing",_Ind),Expl),ABox).
 
