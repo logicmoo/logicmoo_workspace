@@ -117,8 +117,8 @@ sub_class(Class,SupClass):-
 instanceOf(Class,Ind,Expl):-
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
 	retractall(exp_found(_,_)),
-	retractall(ind(_)),
-  	assert(ind(1)),
+	retractall(trillan_idx(_)),
+  	assert(trillan_idx(1)),
   	build_abox((ABox,Tabs)),
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
@@ -139,8 +139,8 @@ instanceOf(Class,Ind):-
   (  check_query_args([Class,Ind],[ClassEx,IndEx]) *->
 	(
 	  retractall(exp_found(_,_)),
-	  retractall(ind(_)),
-	  assert(ind(1)),
+	  retractall(trillan_idx(_)),
+	  assert(trillan_idx(1)),
 	  build_abox((ABox,Tabs)),
 	  (  \+ clash((ABox,Tabs),_) *->
 	      (
@@ -160,8 +160,8 @@ instanceOf(Class,Ind):-
 property_value(Prop, Ind1, Ind2,Expl):-
   ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
 	retractall(exp_found(_,_)),
-	retractall(ind(_)),
-  	assert(ind(1)),
+	retractall(trillan_idx(_)),
+  	assert(trillan_idx(1)),
   	build_abox((ABox,Tabs)),
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
@@ -180,8 +180,8 @@ property_value(Prop, Ind1, Ind2):-
   (  check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
 	(
 	  retractall(exp_found(_,_)),
-	  retractall(ind(_)),
-	  assert(ind(1)),
+	  retractall(trillan_idx(_)),
+	  assert(trillan_idx(1)),
 	  build_abox((ABox,Tabs)),
 	  (  \+ clash((ABox,Tabs),_) *->
 	      (
@@ -207,8 +207,8 @@ unsat(Concept,Expl):-
 % ----------- %
 unsat_internal(Concept,Expl):-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(2)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(2)),
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
@@ -233,8 +233,8 @@ unsat(Concept):-
 % ----------- %
 unsat_internal(Concept):-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(2)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(2)),
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
@@ -250,8 +250,8 @@ unsat_internal(Concept):-
 
 inconsistent_theory(Expl):-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(1)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(1)),
   build_abox((ABox,Tabs)),
   findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
   find_expls(L,['inconsistent','kb'],Expl),
@@ -259,8 +259,8 @@ inconsistent_theory(Expl):-
 
 inconsistent_theory:-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(1)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(1)),
   build_abox((ABox,Tabs)),
   \+ clash((ABox,Tabs),_),!,
   apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),!,
@@ -1784,57 +1784,57 @@ graph_edge(Ind1,Ind2,T0):-
   remove edge from tableau
 */
 
-remove_node_to_tree(P,S,O,RB,RB):-
+remove_node_from_tree(P,S,O,RB,RB):-
   rb_lookup((S,O),V,RB),
   \+ member(P,V).
 
-remove_node_to_tree(P,S,O,RB0,RB1):-
+remove_node_from_tree(P,S,O,RB0,RB1):-
   rb_lookup((S,O),V,RB0),
   member(P,V),
   remove(V,P,V1),
   dif(V1,[]),
   rb_update(RB0,(S,O),V1,RB1).
 
-remove_node_to_tree(P,S,O,RB0,RB1):-
+remove_node_from_tree(P,S,O,RB0,RB1):-
   rb_lookup((S,O),V,RB0),
   member(P,V),
   remove(V,P,V1),
   V1==[],
   rb_delete(RB0,(S,O),RB1).
 
-remove_all_node_to_tree(_P,S,O,RB0,RB1):-
+remove_all_node_from_tree(_P,S,O,RB0,RB1):-
   rb_lookup((S,O),_,RB0),
   rb_delete(RB0,(S,O),RB1).
 
-remove_all_node_to_tree(_P,S,O,RB0,_RB1):-
+remove_all_node_from_tree(_P,S,O,RB0,_RB1):-
   \+ rb_lookup((S,O),_,RB0).
 
-remove_role_to_tree(P,S,O,RB,RB):-
+remove_role_from_tree(P,S,O,RB,RB):-
   rb_lookup(P,V,RB),
   \+ member((S,O),V).
 
-remove_role_to_tree(P,S,O,RB0,RB1):-
+remove_role_from_tree(P,S,O,RB0,RB1):-
   rb_lookup(P,V,RB0),
   member((S,O),V),
   delete(V,(S,O),V1),
   dif(V1,[]),
   rb_update(RB0,P,V1,RB1).
 
-remove_role_to_tree(P,S,O,RB0,RB1):-
+remove_role_from_tree(P,S,O,RB0,RB1):-
   rb_lookup(P,V,RB0),
   member((S,O),V),
   delete(V,(S,O),V1),
   V1==[],
   rb_delete(RB0,P,RB1).
 
-remove_edge_to_table(_P,S,O,T,T):-
+remove_edge_from_table(_P,S,O,T,T):-
   \+ graph_edge(S,O,T).
 
-remove_edge_to_table(_P,S,O,T0,T1):-
+remove_edge_from_table(_P,S,O,T0,T1):-
   graph_edge(S,O,T0),
   del_edges(T0,[S-O],T1).
 
-remove_node_to_table(S,T0,T1):-
+remove_node_from_table(S,T0,T1):-
   del_vertices(T0,[S],T1).
 
 /*
@@ -1890,7 +1890,7 @@ remove_node1(_,[],RBN,RBR,RBN,RBR).
 remove_node1(X,[H|T],RBN0,RBR0,RBN,RBR):-
   rb_lookup((X,H),V,RBN0),
   remove_edges(V,X,H,RBR0,RBR1),
-  remove_all_node_to_tree(_,X,H,RBN0,RBN1),
+  remove_all_node_from_tree(_,X,H,RBN0,RBN1),
   remove_node1(X,T,RBN1,RBR1,RBN,RBR).
 
 remove_node2(_,[],RBN,RBR,RBN,RBR).
@@ -1898,13 +1898,13 @@ remove_node2(_,[],RBN,RBR,RBN,RBR).
 remove_node2(X,[H|T],RBN0,RBR0,RBN,RBR):-
   rb_lookup((H,X),V,RBN0),
   remove_edges(V,H,X,RBR0,RBR1),
-  remove_all_node_to_tree(_,H,X,RBN0,RBN1),
+  remove_all_node_from_tree(_,H,X,RBN0,RBN1),
   remove_node1(X,T,RBN1,RBR1,RBN,RBR).
 
 remove_edges([],_,_,RBR,RBR).
 
 remove_edges([H|T],S,O,RBR0,RBR):-
-  remove_role_to_tree(H,S,O,RBR0,RBR1),
+  remove_role_from_tree(H,S,O,RBR0,RBR1),
   remove_edges(T,S,O,RBR1,RBR).
 
 
@@ -2047,10 +2047,10 @@ find((Ass,Ex),A):-
   creation of a new individual
 
 */
-new_ind(I):-
-  retract(ind(I)),
+new_ind(trillan(I)):-
+  retract(trillan_idx(I)),
   I1 is I+1,
-  assert(ind(I1)).
+  assert(trillan_idx(I1)).
 
 
 
