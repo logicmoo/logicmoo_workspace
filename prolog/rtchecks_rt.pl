@@ -75,8 +75,9 @@ rtcheck_cond(Cond, Check, PredName) :-
     ).
 
 check_asr_props(Asr, Part, Check, Mult, PropValues) :-
-    findall(Asr-(From/Prop-[]),
-            ( asr_aprop(Asr, Part, Prop, From),
+    copy_term_nat(Asr, NAsr),
+    findall(NAsr-(From/Prop-[]),
+            ( asr_aprop(NAsr, Part, Prop, From),
               \+ check_prop(Check, Prop),
               (Mult = once -> ! ; true)
             ),
@@ -134,8 +135,9 @@ valid_command(try_sols(_, _)). % Legacy
 
 checkif_asr_comp([_|_], _, _, Goal,  Goal).
 checkif_asr_comp([], Asr, Head, Goal1, '$with_asr_head'(Goal, Asr-Head)) :-
-    findall(g(Asr, M, Glob, Loc),
-            ( asr_aprop(Asr, glob, M:Glob, Loc),
+    copy_term_nat(Asr, NAsr),
+    findall(g(NAsr, M, Glob, Loc),
+            ( asr_aprop(NAsr, glob, M:Glob, Loc),
               \+ valid_command(Glob)
             ), GlobL),
     comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal, Goal1).
@@ -160,7 +162,7 @@ ppassertion_type_goal(true( Goal), true,  Goal).
 ppassertion_type_goal(false(Goal), false, Goal).
 
 :- meta_predicate rtcheck_goal(0).
-rtcheck_goal(CM:Goal0 ) :-
+rtcheck_goal(CM:Goal0) :-
     notrace(resolve_calln(Goal0, Goal)),
     ( ppassertion_type_goal(Goal, Type, Pred)
     ->rtc_call(Type, CM:Pred)
@@ -332,5 +334,6 @@ current_assertion(Pred, M, TimeCheck, Asr) :-
 unify_common(Common, Common-Term, Term).
 
 collect_assertions(Pred, M, TimeCheck, AsrL) :-
-    findall(Pred-Asr, current_assertion(Pred, M, TimeCheck, Asr), Pairs),
+    copy_term_nat(Pred, Head), % copy to avoid duplication of atributes
+    findall(Head-Asr, current_assertion(Head, M, TimeCheck, Asr), Pairs),
     maplist(unify_common(Pred), Pairs, AsrL).
