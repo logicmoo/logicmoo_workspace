@@ -1,3 +1,6 @@
+:-use_module(library(trill)).
+
+:-trill.
 
 /*
 An extract of the DBPedia ontology, it contains structured information from Wikipedia.

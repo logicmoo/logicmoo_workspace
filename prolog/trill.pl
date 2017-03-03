@@ -524,6 +524,11 @@ clash((ABox,_),Expl):-
 
 clash((ABox,Tabs),Expl):-
   %write('clash 6'),nl,
+  find((classAssertion("http://www.w3.org/2002/07/owl#Nothing",_Ind),Expl),ABox).
+
+/*
+clash((ABox,Tabs),Expl):-
+  %write('clash 7'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
   s_neighbours(Ind,S,(ABox,Tabs),SN),
   individual_class_C(SN,C,ABox,SNC),
@@ -534,7 +539,7 @@ clash((ABox,Tabs),Expl):-
   list_to_set(Expl3,Expl).
 
 clash((ABox,Tabs),Expl):-
-  %write('clash 7'),nl,
+  %write('clash 8'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
   s_neighbours(Ind,S,(ABox,Tabs),SN),
   length(SN,LSS),
@@ -542,6 +547,7 @@ clash((ABox,Tabs),Expl):-
   make_expl(Ind,S,SN,Expl1,ABox,Expl2),
   flatten(Expl2,Expl3),
   list_to_set(Expl3,Expl).
+*/
 
 % --------------
 make_expl(_,_,[],Expl1,_,Expl1).

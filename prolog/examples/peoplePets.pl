@@ -1,3 +1,6 @@
+:-use_module(library(trill)).
+
+:-trill.
 
 /*
 This knowledge base is inpired by the people+pets ontology from
