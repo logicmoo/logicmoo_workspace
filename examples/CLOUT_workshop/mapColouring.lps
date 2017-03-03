@@ -39,3 +39,7 @@ actions paint(_,_).
 fluents painted(_G2000,_G2001).
 
 paint(X, C) initiates painted(X,C).
+
+d(painted(Country,C),[id:Country,color:C,point:P,type:circle]) :- position(Country,P). % width:automatic
+position(iz,[x:100,y:100]). % ...
+

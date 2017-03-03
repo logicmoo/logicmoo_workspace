@@ -47,6 +47,14 @@ make_clear(Block) from T1 to T2 if
 move(Block,Place)  initiates location(Block,Place).
 move(Block,_)  terminates location(Block,Place).
 
+% x set by "hack"... better would be some continuous layout decision... lps teleo example...? :-)
+d(location(Top,floor),[id:Top,type:rectangle,x:id,y:0,height:10,width:50]) :-!.
+d(location(Top,Bottom),[id:Top, x:id(Bottom),y:Y|Props]) :- 
+	% implicit at NOW:
+	id_props(Bottom,[y:YB|Props]), Y is YB+1.
+d(location(Top,Bottom),[id:Top, x:XB,y:Y|Props]) :- 
+	at_t( (id_props(Bottom,[x:XB,y:YB|Props]), Y is YB+1) ). % delay...
+	
 /** <examples>
 ?- go(Timeline).
 */

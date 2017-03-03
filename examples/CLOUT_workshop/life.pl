@@ -42,7 +42,10 @@ if	not(X-Y) at T, countLivingNeighbors(Cells,N) at T.
 live(X-Y) 	initiates X-Y.	
 die(X-Y) 	terminates X-Y.
 
-
+d(X-Y,[x:X,y:Y,type:rectangle,color:black]).
+d(X-Y,[x:X,y:Y]). % use default color and type:-)
+d(live(_),[image:'..boum!']). % position by related fluent, appropriate size
+d(die(_),[image:'..skull']). % not much point in using sounds...
 /** <examples>
 ?- go(Timeline).
 */

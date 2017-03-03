@@ -28,3 +28,8 @@ eliminate terminates water.
 refill initiates water.
 
 false	eliminate, fire, not water.
+
+d(fire,[y:0, image:fire_url ]). % assumes x:auto
+d(water,[y:0, image:water_url ]).
+d(refill,[x:id(water),y:10,image:faucet_url]).
+d(ignite,[x:id(fire),y:10,image:lightning_url]).
