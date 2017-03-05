@@ -156,12 +156,12 @@ gojson(JSON) :- gojson(_File,[],[],JSON).
 gojson(File,Options,Results,JSON) :- go(File,[silent,make_test,swish|Options],Results), visual(File,JSON).
 
 
-% visual(TestResultsFile,timeline(JSON))  This MUST be called after go(File,[...make_test,...],...)
+% visual(TestResultsFile,lps_visualization(TimelineJSON,TwoD_JSON))  This MUST be called after go(File,[...make_test,...],...)
 % Uses test facts still in memory
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
 % works on facts asserted by either Wei (Stage = 'Observations', ...) or rak interpreter (Stage = fluent,event)
-visual(File,timeline(JSON)) :- 
+visual(File,lps_visualization(Timeline,[])) :- 
 	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
 	% my_load_dyn(File), % we need the meta info about events
 	% load_test_file_for(File),
@@ -201,8 +201,10 @@ visual(File,timeline(JSON)) :-
 	sort(Tuples,Sorted),
 	join_fluent_ranges(Sorted,Ranged),
 
-	collect_display_specs(Ranged,DS), 
-	(member(XX,DS), writeln(XX), fail;true),
+	(d(_,_) -> % Is there a 2D display specification?
+		collect_display_specs(Ranged,DS), 
+		(member(XX,DS), writeln(XX), fail;true)
+		; true ),
 	
 	create_counter(IDs),
 	% Render fluents
@@ -230,8 +232,8 @@ visual(File,timeline(JSON)) :-
 	append(Fluents,Others,Items),
 	% render to JSON:
 	make_json_object([groups:Groups,items:Items],All),
-	term2json(All,JSON),
-	displayTimeline(File,JSON). 
+	term2json(All,Timeline),
+	displayTimeline(File,Timeline). 
 
 % collect_display_specs(+Items,-OpItems) Each OpItem is c(Cycle,Op); 
 %  sorted by ID, start cycle; end cycle irrelevant because there are no sobrepositions)
