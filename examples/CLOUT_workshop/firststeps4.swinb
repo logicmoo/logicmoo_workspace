@@ -1,0 +1,144 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+---+++ LPS in Prolog
+
+This implementation of LPS is implemented in Prolog, and exploits the SWISH implementation of SWI Prolog. Much of the LPS syntax and some of the other features of LPS are inherited from Prolog.
+
+Consider the following, more elaborate variant of the light switch example:
+</div>
+
+<div class="nb-cell program">
+maxTime(4).
+fluents light(_,_), location(_,_).
+actions switch(_,_), goto(_,_).
+
+initially 	light(livingroom, off), light(kitchen, on), 
+			light(bedroom, on), light(bathroom, on),
+			location(bob, livingroom), location(dad, kitchen).
+
+if 		location(bob, Place) at T1, not light(Place, on) at T1
+then 	switch(bob, Place) from T1 to T2.
+
+if light(Place, on) at T1, location(dad, Place) at T1
+then switch(dad, Place) from T1 to T2.
+
+if light(Place, on) at T1, not location(dad, Place) at T1
+then goto(dad, Place) from T2 to T3,
+switch(dad, Place) from T3 to T4.
+
+switch(Person, Place) 	initiates light(Place, New)	
+if 		light(Place, Old), opposite(New, Old).
+
+opposite(off, on).
+opposite(on, off).
+
+switch(Person, Place) 	terminates light(Place, Status).
+
+goto(Person, Place) 	initiates 	location(Person, Place).
+goto(Person, _) 		terminates 	location(Person, _).
+</div>
+
+<div class="nb-cell markdown">
+Notice that in this example, the clauses:
+</div>
+
+<div class="nb-cell program">
+switch(Person, Place) 	initiates light(Place, New)	
+if 		light(Place, Old), opposite(New, Old).
+
+opposite(off, on).
+opposite(on, off).
+</div>
+
+<div class="nb-cell markdown">
+replace the two clauses in the earlier notebook:
+</div>
+
+<div class="nb-cell program">
+switch initiates 	lightOn 	if lightOff.
+switch initiates 	lightOff 	if lightOn.
+</div>
+
+<div class="nb-cell markdown">
+The two facts defining the predicate "opposite" are actually written and executed in Prolog. In general, clauses that do not depend upon time in LPS are written in Prolog.
+
+Before running the example, be aware that (as in Prolog) all occurrences of comma (",") mean "and". Also, all sentences (ending in a full stop (".") are also connected by "and".
+
+Notice too that predicate symbols and constants all begin with a lower case letter. Variables begin with an upper case letter or with an underscore "_". Underscore is used to represent a variable whose name doesn't matter (and is
+ therefore "anonymous") because it does not occur elsewhere in the same sentence.
+ 
+Underscore is useful because singleton variables are often a source of error in Prolog. In the program above the singleton variable *Person* in lines 21 and 23 is not erroneous, but is highlighted in bold font, to draw  attention to the possibility of an error. Some Prolog programmers like to indicate the intended meaning of an anonymous variable by combining underscore with a meaningful name, as for example in:
+
+	switch(_Person, Place) terminates light(Place, _Status).
+    
+Now try running the program.
+</div>
+
+<div class="nb-cell query">
+go(Timeline).
+</div>
+
+<div class="nb-cell markdown">
+Are you surprised? Who would have thought that dad could do so many things and be in so many places at the same time?
+Fortunately, we can constrain such unrealistic or unwanted behaviour by means of constraints on actions.
+
+
+---++++ Constraints on Actions
+
+We can prevent dad being in two places at once, by constraining him (and anyone else, for that matter) from going to two different places at the same time. We can also prevent him from activating a switch and going to a place at the same time. Such unrealistic behaviour can be prevented by constraints, which have the general form:
+
+	false conditions.
+    
+where conditions is a list of conditions, separated by commas. At least one condition must be an action. All actions in the constraint are assumed to take place at the same time, say from T to T+1, and all fluents are assumed to hold at the same time T.
+
+In this example, we need to add two constraints:
+
+	false goto(Person, Place1), goto(Person, Place2), Place1 \= Place2.
+    	false goto(Person, _Place1), switch(Person, _Place2).
+
+Let's also increase the length of time:
+</div>
+
+<div class="nb-cell program">
+maxTime(10).
+fluents light(_,_), location(_,_).
+actions switch(_,_), goto(_,_).
+
+initially 	light(livingroom, off), light(kitchen, on),
+			location(bob, livingroom), location(dad, kitchen).
+
+opposite(off, on).
+opposite(on, off).
+
+if 		location(bob, Place) at T1, not light(Place, on) at T1
+then 	switch(bob, Place) from T1 to T2.
+
+if light(Place, on) at T1, location(dad, Place) at T1
+then switch(dad, Place) from T1 to T2.
+
+if light(Place, on) at T1, not location(dad, Place) at T1
+then goto(dad, Place) from T2 to T3,
+switch(dad, Place) from T3 to T4.
+
+switch(Person, Place) 	initiates light(Place, New)	
+if 		light(Place, Old), opposite(New, Old).
+
+switch(Person, Place) 	terminates light(Place, Status).
+
+goto(Person, Place) 	initiates 	location(Person, Place).
+goto(Person, _) 		terminates 	location(Person, _).
+
+false goto(dad, Place1), goto(dad, Place2), Place1 \= Place2.
+false goto(Person,_), switch(Person, _).
+</div>
+
+<div class="nb-cell query">
+go(Timeline).
+</div>
+
+<div class="nb-cell markdown">
+In theory, this kind of behaviour could go on for ever. The resulting timeline would be an infinite model that  makes bob's goals and dad's goals all true.
+</div>
+
+</div>
