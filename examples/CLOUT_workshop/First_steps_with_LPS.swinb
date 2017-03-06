@@ -11,6 +11,8 @@ The [first notebook](example/firststeps1.swinb) introduces *|computation|* as ge
 The [second notebook](example/firststeps2.swinb) introduces *|reactive rules|*. In LPS, reactive rules are *goals*, which need to be made true, by generating actions, to generate a model of the world in which the goals are true.
 
 The [third notebook](example/firststeps3.swinb) introduces *|logic programs|*, which can be understood as *beliefs*, which determine the space of possible models of the world.
+
+The [fourth notebook](example/firststeps4.swinb) explains how some of the features of LPS are inherited from its implementation in *Prolog*. It also introduces *constraints*, which prevent undesirable actions.
 </div>
 
 </div>
