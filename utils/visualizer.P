@@ -42,7 +42,9 @@ make_json_object([A,B,C,D,E],{A,B,C,D,E}) :- !.
 make_json_object([A,B,C,D,E,F],{A,B,C,D,E,F}) :- !.
 make_json_object([A,B,C,D,E,F,G],{A,B,C,D,E,F,G}) :- !.
 make_json_object([A,B,C,D,E,F,G,H],{A,B,C,D,E,F,G,H}) :- !.
-make_json_object(L,_) :- length(L,N), N>8, !, writeln('*** JSON object with too many attributes in visualizer.P'), fail.
+make_json_object([A,B,C,D,E,F,G,H,I],{A,B,C,D,E,F,G,H,I}) :- !.
+make_json_object([A,B,C,D,E,F,G,H,I,J],{A,B,C,D,E,F,G,H,I,J}) :- !.
+make_json_object(L,_) :- length(L,N), N>10, !, writeln('*** JSON object with too many attributes in visualizer.P'), fail.
 
 
 displayTimeline(File,JSON) :-
@@ -161,7 +163,7 @@ gojson(File,Options,Results,JSON) :- go(File,[silent,make_test,swish|Options],Re
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
 % works on facts asserted by either Wei (Stage = 'Observations', ...) or rak interpreter (Stage = fluent,event)
-visual(File,lps_visualization(Timeline,[])) :- 
+visual(File,lps_visualization(Timeline,Sequence)) :- 
 	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
 	% my_load_dyn(File), % we need the meta info about events
 	% load_test_file_for(File),
@@ -203,10 +205,8 @@ visual(File,lps_visualization(Timeline,[])) :-
 
 	(d(_,_) -> % Is there a 2D display specification?
 		collect_display_specs(Ranged,DS), 
-		(member(XX,DS), writeln(XX), fail;true),
-		prepare_display_sequence(DS,DSarray), 
-		(member(XX,DSarray), writeln(XX), fail;true)
-		; true ),
+		prepare_display_sequence(DS,DSarray) %, (member(XX,DSarray), writeln(XX), fail;true)
+		; DSarray=[] ),
 	
 	create_counter(IDs),
 	% Render fluents
@@ -233,9 +233,9 @@ visual(File,lps_visualization(Timeline,[])) :-
 	), Others),
 	append(Fluents,Others,Items),
 	% render to JSON:
-	make_json_object([groups:Groups,items:Items],All),
-	term2json(All,Timeline),
-	displayTimeline(File,Timeline). 
+	make_json_object([groups:Groups,items:Items],All), term2json(All,Timeline),
+	displayTimeline(File,Timeline),
+	make_json_object([cycles:DSarray],Cycles), mylog(cycles-Cycles), term2json(Cycles,Sequence), mylog(sequence-Sequence).
 
 % prepare_display_sequence(+DS,-Sequence)  Returns a list of lists, one for cycle 0,... until the last; all cycles have lists
 prepare_display_sequence([c(First,Op)|Cycles],Sequence) :- prepare_display_sequence([c(First,Op)|Cycles],First,[],Sequence).
@@ -318,7 +318,7 @@ op_for_one_enter(ID,T,X,Mode,Props,Op) :-
 		Op = ({update:ID, oldProps:OldProps, newProps:Props})
 		; 
 		Mode=create, 
-		(d_event(X) -> TheProps_=[event|Props]; TheProps_=Props),
+		(d_event(X) -> TheProps_=[event:true|Props]; TheProps_=Props),
 		(member(id:_,TheProps_) -> TheProps=TheProps_ ; TheProps=[id:ID|TheProps_]),
 		Op= {create:TheProps}
 	).
@@ -339,16 +339,19 @@ prepare_display_specs([c(T,Op)|OpItems],[c(T,NewOp)|NewOpItems]) :- !,
 	prepare_display_specs(OpItems,NewOpItems).
 prepare_display_specs([],[]).
 
-prepare_one_display_spec({kill:ID},_T,{kill:ID}) :- !.
-prepare_one_display_spec({create:Props},T,{create:NewProps}) :- !,
-	resolve_id_props(Props,T,NewProps).
-prepare_one_display_spec({update:ID, oldProps:OldProps, newProps:NewProps},T,{update:ID, changed:PropValuePairs}) :- !,
+prepare_one_display_spec({kill:ID},_T,OpJSON) :- !, make_json_object([kill:ID],OpJSON).
+prepare_one_display_spec({create:Props},T,OpJSON) :- !,
+	resolve_id_props(Props,T,NewProps), 
+	make_json_object(NewProps,NewPropsJSON),
+	make_json_object([create:NewPropsJSON],OpJSON). % list to {...}
+prepare_one_display_spec({update:ID, oldProps:OldProps, newProps:NewProps},T,OpsJSON) :- !,
 	resolve_id_props(OldProps,T,OldProps_), resolve_id_props(NewProps,T,NewProps_),
 	% Keep only properties whose values vary:
 	intersection(OldProps_,NewProps_,Common),
 	subtract(OldProps_,Common,TheOldProps), subtract(NewProps_,Common,TheNewProps),
 	% now merge into a more convenient format:
-	merge_update_props(TheOldProps,TheNewProps,PropValuePairs).
+	merge_update_props(TheOldProps,TheNewProps,PropValuePairs), 
+	make_json_object(PropValuePairs,PropValuePairsJSON), make_json_object([update:ID, changed:PropValuePairsJSON],OpsJSON).
 	
 resolve_id_props([P:id(ID)|Props],T,[P:Value|NewProps]) :- !,
 	( (get_id_props(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
