@@ -29,7 +29,7 @@ refill initiates water.
 
 false	eliminate, fire, not water.
 
-d(fire,[y:0, image:fire_url ]). % assumes x:auto
-d(water,[y:0, image:water_url ]).
-d(refill,[x:id(water),y:10,image:faucet_url]).
-d(ignite,[x:id(fire),y:10,image:lightning_url]).
+d(fire,[type:raster, position:[5,0], source:fire_url ]).
+d(water,[id:water, type:raster, position:[15,0], source:water_url ]).
+d(refill,[type:raster,position:id(water),source:faucet_url]). % tweaking position seems to really require id_props...
+d(ignite,[type:raster,position:id(fire),source:lightning_url]).

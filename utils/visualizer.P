@@ -203,7 +203,9 @@ visual(File,lps_visualization(Timeline,[])) :-
 
 	(d(_,_) -> % Is there a 2D display specification?
 		collect_display_specs(Ranged,DS), 
-		(member(XX,DS), writeln(XX), fail;true)
+		(member(XX,DS), writeln(XX), fail;true),
+		prepare_display_sequence(DS,DSarray), 
+		(member(XX,DSarray), writeln(XX), fail;true)
 		; true ),
 	
 	create_counter(IDs),
@@ -235,6 +237,20 @@ visual(File,lps_visualization(Timeline,[])) :-
 	term2json(All,Timeline),
 	displayTimeline(File,Timeline). 
 
+% prepare_display_sequence(+DS,-Sequence)  Returns a list of lists, one for cycle 0,... until the last; all cycles have lists
+prepare_display_sequence([c(First,Op)|Cycles],Sequence) :- prepare_display_sequence([c(First,Op)|Cycles],First,[],Sequence).
+
+% prepare_display_sequence(+CycleOps,+CurrentCycle,+CurrentCycleSequence,-Sequence)  CycleOps already ordered by cycle
+prepare_display_sequence([c(T,Op)|Cycles],T,CS,Sequence) :- !, 
+	append(CS,[Op],NCS), % preserve order, in case we care later;  use a diff list if performance here becomes a concern...
+	prepare_display_sequence(Cycles,T,NCS,Sequence).
+prepare_display_sequence([c(NextT,Op)|Cycles],T,CS,[CS|Sequence]) :- NextT>T+1, !, % we need some empty cycle(s) sequence(s)
+	NewT is T+1,
+	prepare_display_sequence([c(NextT,Op)|Cycles],NewT,[],Sequence).
+prepare_display_sequence([c(NextT,Op)|Cycles],T,CS,[CS|Sequence]) :- NextT is T+1, !, 
+	prepare_display_sequence([c(NextT,Op)|Cycles],NextT,[],Sequence).
+prepare_display_sequence([],_,CS,[CS]).
+	
 % collect_display_specs(+Items,-OpItems) Each OpItem is c(Cycle,Op); 
 %  sorted by ID, start cycle; end cycle irrelevant because there are no sobrepositions)
 %  This is roughly O(N*N), can be speeded up if necessary by using a dictionary of ID -> Ops
@@ -252,7 +268,6 @@ collect_display_specs(Items,TheOpItems_) :-
 		writeln(missing-P-c(T,{create:Props})), fail 
 		; true
 	),
-
 	% at this point id_props_cache may contain props with value id(..)
 	prepare_display_specs(OpItems,TheOpItems),
 	(ground(TheOpItems)->true;writeln('*** Failed to prepare ground Ops'), writeln(TheOpItems), fail),
@@ -336,15 +351,19 @@ prepare_one_display_spec({update:ID, oldProps:OldProps, newProps:NewProps},T,{up
 	merge_update_props(TheOldProps,TheNewProps,PropValuePairs).
 	
 resolve_id_props([P:id(ID)|Props],T,[P:Value|NewProps]) :- !,
-	( (id_props_cache(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
+	( (get_id_props(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
 		; writeln('*** Could not find property value for'), writeln(T/P:id(ID)), fail),
 	resolve_id_props(Props,T,NewProps).
 resolve_id_props([P:id(ID,OtherP)|Props],T,[P:Value|NewProps]) :- !,
-	( (id_props_cache(ID,T,IDProps), member(OtherP:Value,IDProps), Value \= id(_)) -> true
+	( (get_id_props(ID,T,IDProps), member(OtherP:Value,IDProps), Value \= id(_)) -> true
 		; writeln('*** Could not find property value for'), writeln(T/P:id(ID,OtherP)), fail),
 	resolve_id_props(Props,T,NewProps).
 resolve_id_props([Prop|Props],T,[Prop|NewProps]) :- !, resolve_id_props(Props,T,NewProps).
 resolve_id_props([],_T,[]).
+
+% get props for ID at T, or most recent past
+get_id_props(ID,T,Props) :- id_props_cache(ID,T,Props), !.
+get_id_props(ID,T,Props) :- T>0, Past is T-1, get_id_props(ID,Past,Props).
 
 merge_update_props([P:Old|OldProps],[P:New|NewProps],[P:[Old,New]|PropValuePairs]) :- !,
 	merge_update_props(OldProps,NewProps,PropValuePairs).
