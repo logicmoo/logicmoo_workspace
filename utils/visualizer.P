@@ -245,20 +245,10 @@ collect_display_specs(Items,TheOpItems_) :-
 		writeln('*** Repeated display ID:'), writeln(ID), fail
 	 ; true),
 	retractall(id_props_cache(_,_,_)),
-	collect_display_specs2(WithIds2,OpItems,DomainBounds),
-	writeln(domainBounds-DomainBounds),
-	% list domains which no item uses yet
-	(virgin_domain(PN,DomainBounds), writeln(virgin(PN)), fail ; true), 
-
-	( (findall(PN,virgin_domain(PN,DomainBounds),VD), VD =[_,_|_]) -> 
-		writeln('*** Too many domains without values:'), writeln(VD), fail
-		; true),
-
-	% LATER: generate and inject values for virgin domain axis 
+	collect_display_specs2(WithIds2,OpItems),
 	
 	( % check that all items have the mandatory properties (even if still not dereferenced)
-		member(c(T,{create:Props}),OpItems), mandatory_prop_name(P), 
-		\+ (domain_syn(P,PS), member(PS:_,Props)), 
+		member(c(T,{create:Props}),OpItems), mandatory_prop_name(P), \+ (member(P:_,Props)), 
 		writeln(missing-P-c(T,{create:Props})), fail 
 		; true
 	),
@@ -275,79 +265,47 @@ collect_display_specs(Items,TheOpItems_) :-
 	:- dynamic id_props_cache/3.
 :- endif.
 
-% collect_display_specs2(+Items,-NewItems,DomainBounds)  
+% collect_display_specs2(+Items,-NewItems)  
 % DB is a list of prop:[Min,Max], e.g. [x:[10,200],y:[+99999,-99999]]  99999 meaning "infinity" or "unknown"
-collect_display_specs2([],[],B) :- !, unknown_bounds(B).
-collect_display_specs2([ID-DI|Items],OpItems,B) :- collect_display_specs_for([ID-DI|Items],ID, create, ItemsLeft, OpItems1,B1), 
-	collect_display_specs2(ItemsLeft,OpItems2,B2), 
-	merge_bounds(B1,B2,B), append(OpItems1,OpItems2,OpItems).
+collect_display_specs2([],[]) :- !.
+collect_display_specs2([ID-DI|Items],OpItems) :- collect_display_specs_for([ID-DI|Items],ID, create, ItemsLeft, OpItems1), 
+	collect_display_specs2(ItemsLeft,OpItems2), 
+	append(OpItems1,OpItems2,OpItems).
 
-% For each prop, [Min,Max]; the "unknown" values are "infinite"; only ints for now.
-% Each property must have at least one domain_syn fact
-unknown_bounds([x:[99999,-99999], y:[99999,-99999]]). 
+% all objects must have these:
+mandatory_prop_name(type).
 
-% synonims for names of domain defining properties
-domain_syn(x,x). domain_syn(x,x1). domain_syn(x,x2). 
-domain_syn(y,y). domain_syn(y,y1). domain_syn(y,y2).
-
-% Property P is undefined in Bounds
-virgin_domain(P,Bounds) :- unknown_bounds(U), member(P:UB,U), member(P:UB,Bounds).
-
-mandatory_prop_name(P) :- unknown_bounds(B), member(P:_,B).
-
-% merge_bounds(+Bounds1,+Bounds2,-Bounds)
-merge_bounds([P:[Min1,Max1]|Bounds1],[P:[Min2,Max2]|Bounds2],[P:[Min,Max]|Bounds]) :- !,
-	(Min1<Min2 -> Min=Min1 ; Min=Min2), (Max1>Max2 -> Max=Max1 ; Max=Max2),
-	merge_bounds(Bounds1,Bounds2,Bounds).
-merge_bounds([],[],[]).
-
-%collect_bounds(+Props,+CurrentBounds,-Bounds) Collect evident values
-collect_bounds(Props,Bounds) :- unknown_bounds(U), collect_bounds(U,Props,Bounds).
-
-collect_bounds([P:[Min,Max]|Bounds],Props,[NewB|NewBounds]) :- 
-	domain_syn(P,PS), member(PS:V,Props), integer(V), 
-	!, 
-	merge_bounds([P:[Min,Max]],[P:[V,V]],[NewB]),
-	collect_bounds(Bounds,Props,NewBounds).
-collect_bounds([B|Bounds],Props,[B|NewBounds]) :- !,
-	collect_bounds(Bounds,Props,NewBounds).
-collect_bounds([],_,[]).
-
-% collect_display_specs_for(+Items,ID, +Mode(create/update(LastProps)), -ItemsLeft, -OpItemsForId, -BoundsForCollected)
+% collect_display_specs_for(+Items,ID, +Mode(create/update(LastProps)), -ItemsLeft, -OpItemsForId)
 % Collect display specs for an ID
 % Each OpItem is c(Cycle,Op), where Op is {kill:ID} or {create:Props} or {update:ID, oldProps:OldProps, newProps:Props}
-collect_display_specs_for([ID-di(T1-T2,X,_G)|Items],ID, Mode, Items, [c(T1,Op), c(T2,{kill:ID})], Bounds) :- 
+collect_display_specs_for([ID-di(T1-T2,X,_G)|Items],ID, Mode, Items, [c(T1,Op), c(T2,{kill:ID})]) :- 
 	(Items=[] ; Items = [OtherID-_|_], ID \== OtherID), 
 	!, % last item for this ID
-	op_for_one_enter(ID,T1,X,Mode,_,Op,Bounds).
-collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T2-T3,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op)|Ops],Bounds) :- !, 
+	op_for_one_enter(ID,T1,X,Mode,_,Op).
+collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T2-T3,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op)|Ops]) :- !, 
 	% same ID, contiguous
-	op_for_one_enter(ID,T1,X,Mode,Props,Op,Bounds1),
-	collect_display_specs_for([ID-di(T2-T3,XX,GG)|Items],ID,update(Props),ItemsLeft,Ops,Bounds2),
-	merge_bounds(Bounds1,Bounds2,Bounds).
-collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T3-T4,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op1),c(T2,{kill:ID})|Ops],Bounds) :- !, 
+	op_for_one_enter(ID,T1,X,Mode,Props,Op),
+	collect_display_specs_for([ID-di(T2-T3,XX,GG)|Items],ID,update(Props),ItemsLeft,Ops).
+collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T3-T4,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op1),c(T2,{kill:ID})|Ops]) :- !, 
 	% same ID, noncontiguous 
-	op_for_one_enter(ID,T1,X,Mode,_Props,Op1,Bounds1),
-	collect_display_specs_for([ID-di(T3-T4,XX,GG)|Items],ID,create,ItemsLeft,Ops,Bounds2),
-	merge_bounds(Bounds1,Bounds2,Bounds).
-collect_display_specs_for([ID_-DI_|Items],ID,_Mode,[ID_-DI_|ItemsLeft],Ops,Bounds) :- !, % skip item for different ID
+	op_for_one_enter(ID,T1,X,Mode,_Props,Op1),
+	collect_display_specs_for([ID-di(T3-T4,XX,GG)|Items],ID,create,ItemsLeft,Ops).
+collect_display_specs_for([ID_-DI_|Items],ID,_Mode,[ID_-DI_|ItemsLeft],Ops) :- !, % skip item for different ID
 	ID_ \== ID, % just checking...
-	collect_display_specs_for(Items,ID,create,ItemsLeft,Ops,Bounds). %
-collect_display_specs_for([],_ID,_Mode,[],[],Bounds) :- unknown_bounds(Bounds).
+	collect_display_specs_for(Items,ID,create,ItemsLeft,Ops). %
+collect_display_specs_for([],_ID,_Mode,[],[]).
 
-% op_for_one_enter(+ID,+Cycle,+FluentOrEvent,+Mode,-Props,-Operation, -Bounds)
-op_for_one_enter(ID,T,X,Mode,Props,Op,Bounds) :-
+% op_for_one_enter(+ID,+Cycle,+FluentOrEvent,+Mode,-Props,-Operation)
+op_for_one_enter(ID,T,X,Mode,Props,Op) :-
 	once(d(X,Props)), % TODO later: delay to evaluate id_props!
 	assert(id_props_cache(ID,T,Props)),
 	( Mode = update(OldProps) -> 
-		Op = ({update:ID, oldProps:OldProps, newProps:Props}),
-		unknown_bounds(Bounds)
+		Op = ({update:ID, oldProps:OldProps, newProps:Props})
 		; 
 		Mode=create, 
 		(d_event(X) -> TheProps_=[event|Props]; TheProps_=Props),
 		(member(id:_,TheProps_) -> TheProps=TheProps_ ; TheProps=[id:ID|TheProps_]),
-		Op= {create:TheProps},
-		collect_bounds(TheProps,Bounds)
+		Op= {create:TheProps}
 	).
 
 % prepare_item_ids(+Tuples,-Items) Each Item is ID-di(T1-T2,FluentOrEvent,Group); 
