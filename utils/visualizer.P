@@ -234,8 +234,8 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	append(Fluents,Others,Items),
 	% render to JSON:
 	make_json_object([groups:Groups,items:Items],All), term2json(All,Timeline),
-	displayTimeline(File,Timeline),
-	make_json_object([cycles:DSarray],Cycles), mylog(cycles-Cycles), term2json(Cycles,Sequence), mylog(sequence-Sequence).
+	displayTimeline(File,Timeline), 
+	make_json_object([cycles:DSarray],Cycles), term2json(Cycles,Sequence).
 
 % prepare_display_sequence(+DS,-Sequence)  Returns a list of lists, one for cycle 0,... until the last; all cycles have lists
 prepare_display_sequence([c(First,Op)|Cycles],Sequence) :- prepare_display_sequence([c(First,Op)|Cycles],First,[],Sequence).
@@ -345,7 +345,7 @@ prepare_display_specs([c(T,Op)|OpItems],[c(T,NewOp)|NewOpItems]) :- !,
 	prepare_display_specs(OpItems,NewOpItems).
 prepare_display_specs([],[]).
 
-prepare_one_display_spec({kill:ID},_T,OpJSON) :- !, make_json_object([kill:ID],OpJSON).
+prepare_one_display_spec({kill:ID},_T,OpJSON) :- !, flatten_prop(id:ID,id:NewID), make_json_object([kill:NewID],OpJSON).
 prepare_one_display_spec({create:Props},T,OpJSON) :- !,
 	resolve_id_props(Props,T,NewProps), 
 	make_json_object(NewProps,NewPropsJSON),
@@ -367,8 +367,16 @@ resolve_id_props([P:id(ID,OtherP)|Props],T,[P:Value|NewProps]) :- !,
 	( (get_id_props(ID,T,IDProps), member(OtherP:Value,IDProps), Value \= id(_)) -> true
 		; writeln('*** Could not find property value for'), writeln(T/P:id(ID,OtherP)), fail),
 	resolve_id_props(Props,T,NewProps).
-resolve_id_props([Prop|Props],T,[Prop|NewProps]) :- !, resolve_id_props(Props,T,NewProps).
+resolve_id_props([Prop|Props],T,[FProp|NewProps]) :- !, flatten_prop(Prop,FProp), resolve_id_props(Props,T,NewProps).
 resolve_id_props([],_T,[]).
+
+% Make sure only atoms get to the JS side; this is a partial check, as points and sizes and possibly other future structured
+% terms are not checked
+flatten_prop(id:ID,id:NewID) :- (atomic(ID),ID=NewID ; my_term_to_atom(ID,NewID)), !.
+flatten_prop(label:ID,label:NewID) :- (atomic(ID),ID=NewID ; my_term_to_atom(ID,NewID)), !.
+flatten_prop(tip:ID,tip:NewID) :- (atomic(ID),ID=NewID ; my_term_to_atom(ID,NewID)), !.
+flatten_prop(P,P).
+
 
 % get props for ID at T, or most recent past
 get_id_props(ID,T,Props) :- id_props_cache(ID,T,Props), !.

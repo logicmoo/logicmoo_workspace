@@ -29,7 +29,7 @@ refill initiates water.
 
 false	eliminate, fire, not water.
 
-d(fire,[type:raster, position:[5,0], source:fire_url ]).
-d(water,[id:water, type:raster, position:[15,0], source:water_url ]).
-d(refill,[type:raster,position:id(water),source:faucet_url]). % tweaking position seems to really require id_props...
-d(ignite,[type:raster,position:id(fire),source:lightning_url]).
+d(fire,[type:raster, position:[5,0], source:'http://i3.kym-cdn.com/entries/icons/original/000/020/219/fireshit.jpg' ]).
+d(water, [id:water, type:raster, position:[15,0], source:'https://thumb7.shutterstock.com/display_pic_with_logo/516436/516436,1262989387,1/stock-photo-firefighter-holding-fire-hose-44064190.jpg' ]).
+d(refill,[type:raster,position:id(water),source:'http://www.uncommongoods.com/images/items/12700/12788_1_360px.jpg']). % tweaking position seems to really require id_props...
+d(ignite,[type:raster,position:id(fire),source:'http://l7.alamy.com/zooms/85bf7bd57d2d40b2adecf1ca108ba84d/closeup-on-wood-pellet-with-start-fire-flame-c7rnxa.jpg']).
