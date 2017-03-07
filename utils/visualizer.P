@@ -312,7 +312,8 @@ collect_display_specs_for([],_ID,_Mode,[],[]).
 
 % op_for_one_enter(+ID,+Cycle,+FluentOrEvent,+Mode,-Props,-Operation)
 op_for_one_enter(ID,T,X,Mode,Props,Op) :-
-	once(d(X,Props)), % TODO later: delay to evaluate id_props!
+	once(d(X,Props_)), % TODO later: delay to evaluate id_props!
+	ensure_all_colons(Props_,Props),
 	assert(id_props_cache(ID,T,Props)),
 	( Mode = update(OldProps) -> 
 		Op = ({update:ID, oldProps:OldProps, newProps:Props})
@@ -323,6 +324,11 @@ op_for_one_enter(ID,T,X,Mode,Props,Op) :-
 		Op= {create:TheProps}
 	).
 
+% allow boolean properties to be abbreviated, e.g. 'sendToBack'
+ensure_all_colons([P|Props],[P|NewProps]) :- (var(P);P=(_:_)), !, ensure_all_colons(Props,NewProps).
+ensure_all_colons([P|Props],[P:true|NewProps]) :- ensure_all_colons(Props,NewProps).
+ensure_all_colons([],[]).
+	
 % prepare_item_ids(+Tuples,-Items) Each Item is ID-di(T1-T2,FluentOrEvent,Group); 
 % ID is extracted from props, or generated - right now it's the whole term, 
 % for more compactness it could be an int key into a term dictionary instead

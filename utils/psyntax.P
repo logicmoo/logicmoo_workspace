@@ -63,7 +63,7 @@ Prolog facts in general are not transformed.
 :- module(psyntax,[ syntax2p/4, lpsp2p_file/2, lpsp2p/3, 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4,
 	gol/2, gol/1, golps/2, golps/1,
-	may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1]).
+	may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/0]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
@@ -114,6 +114,7 @@ clear_head_hint(HH,Type,X) :- uretractall(head_hint(HH,Type,X)).
 add_head_hint(HH,Type,X) :- uassert(head_hint(HH,Type,X)).
 
 % SWI only:
+dumploaded.
 clear_timeless_refs. 
 may_add_timeless_ref(_).
 set_top_term(_).

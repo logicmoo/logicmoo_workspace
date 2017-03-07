@@ -45,5 +45,5 @@ d(balance(P,V), [id:P, x:X, y:0, type:container /*defaults: , width:10, */, heig
 d(transfer(From,To,Amount),[label:Amount,type:arrow,x1:id(From,x),y1:50,to:id(To,x),y2:50]). 
 % d(transfer(From,To,Amount),[label:Amount]). % more futuristic: equidistant from related fluents!
 fluents background. initially background. % a little hack to avoid the need of specific "timeless" support:
-d(background,[tpe:rectangle, fillColor:lightCyan, from:[0,0], to:[150,150], sendToBack]).
+d(background,[type:rectangle, fillColor:lightCyan, from:[0,0], to:[150,150], sendToBack]).
 
