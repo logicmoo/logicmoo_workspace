@@ -258,14 +258,15 @@ prepare_display_sequence([],_,CS,[CS]).
 collect_display_specs(Items,TheOpItems_) :- 
 	prepare_item_ids(Items,WithIds), sort(WithIds,WithIds2), 
 	% ordered list of ID-di(T1-T2,X,G)
-	( (member(ID-di(T1-T2,X,G),  (member(ID-di(T1-_,Y,G)), Y\=X ; member(ID-di(_-T2,Y,G)), Y\=X))) -> 
+	( ( member(ID-di(T1-T2,X,G),WithIds2),  (member(ID-di(T1-_,Y,G),WithIds2), Y\=X ; member(ID-di(_-T2,Y,G),WithIds2), Y\=X)  )  -> 
 		print_error(error,'Repeated display ID'(ID),null), fail
 	 ; true),
 	retractall(id_props_cache(_,_,_)),
 	collect_display_specs2(WithIds2,OpItems),
 	
 	( % check that all items have the mandatory properties (even if still not dereferenced)
-		member(c(T,{create:Props}),OpItems), mandatory_prop_name(P), \+ (member(P:_,Props)), 
+		member(c(T,{create:Props}),OpItems), mandatory_prop_name(P), 
+		\+ (member(P:_,Props) ; member(Prop,Props), member(P:_,Prop)),
 		writeln(missing-P-c(T,{create:Props})), fail 
 		; true
 	),
@@ -314,19 +315,31 @@ collect_display_specs_for([],_ID,_Mode,[],[]).
 % op_for_one_enter(+ID,+Cycle,+FluentOrEvent,+Mode,-Props,-Operation)
 op_for_one_enter(ID,T,X,Mode,Props,Op) :-
 	once(d(X,Props_)), % TODO later: delay to evaluate id_props!
+	%( (member(Prop1,Props_), member(id:ID1,Prop1), member(Prop1,Props_), member(id:ID2,Prop1), ID1 \= ID2) -> 
+	%	print_error(error,'Different display ID in display object parts'(ID1),null), fail
+	% ; true),	
 	ensure_all_colons(Props_,Props),
 	assert(id_props_cache(ID,T,Props)),
 	( Mode = update(OldProps) -> 
 		Op = ({update:ID, oldProps:OldProps, newProps:Props})
 		; 
 		Mode=create, 
-		(d_event(X) -> TheProps_=[event:true|Props]; TheProps_=Props),
-		(member(id:_,TheProps_) -> TheProps=TheProps_ ; TheProps=[id:ID|TheProps_]),
+		(d_event(X) -> enforce_property(Props,event:true,TheProps_); TheProps_=Props),
+		enforce_property(TheProps_,id:ID,TheProps),
 		Op= {create:TheProps}
 	).
 
+% Considers composite objects, in which case P must be present in ALL object parts
+% enforce_property(+Props,+P,-NewProps).
+enforce_property([],_P,[]) :- !.
+enforce_property(Props,P,NewProps) :- \+ member([_|_],Props), !, % simple object
+	(member(P,Props) -> Props=NewProps ; NewProps=[P|Props]).
+enforce_property([Props1|Props],P,[NewProp1|NewProps]) :- 
+	is_list(Props1), enforce_property(Props1,P,NewProp1), enforce_property(Props,P,NewProps).
+	
 % allow boolean properties to be abbreviated, e.g. 'sendToBack'
 ensure_all_colons([P|Props],[P|NewProps]) :- (var(P);P=(_:_)), !, ensure_all_colons(Props,NewProps).
+ensure_all_colons([P|Props],[NewP|NewProps]) :- is_list(P), !, ensure_all_colons(P,NewP), ensure_all_colons(Props,NewProps).
 ensure_all_colons([P|Props],[P:true|NewProps]) :- ensure_all_colons(Props,NewProps).
 ensure_all_colons([],[]).
 	
@@ -335,7 +348,7 @@ ensure_all_colons([],[]).
 % for more compactness it could be an int key into a term dictionary instead
 prepare_item_ids([t(X,T1-T2,G)|Items], [ID-di(T1-T2,X,G)|WithIds]) :- d(X,Props), !, % displayable item 
 	% TODO later: DELAY previous to support id_props??
-	(member(id:ID,Props)->true;ID=X), prepare_item_ids(Items,WithIds).
+	(member(id:ID,Props)->true;((member(PP,Props), member(id:ID,PP))->true;ID=X)), prepare_item_ids(Items,WithIds).
 prepare_item_ids([_|Items], WithIds) :- !, 
 	prepare_item_ids(Items,WithIds).
 prepare_item_ids([],[]).
@@ -349,16 +362,28 @@ prepare_display_specs([],[]).
 prepare_one_display_spec({kill:ID},_T,OpJSON) :- !, flatten_prop(id:ID,id:NewID), make_json_object([kill:NewID],OpJSON).
 prepare_one_display_spec({create:Props},T,OpJSON) :- !,
 	resolve_id_props(Props,T,NewProps), 
-	make_json_object(NewProps,NewPropsJSON),
+	make_json_list(NewProps,NewPropsJSON),
 	make_json_object([create:NewPropsJSON],OpJSON). % list to {...}
-prepare_one_display_spec({update:ID, oldProps:OldProps, newProps:NewProps},T,OpsJSON) :- !,
-	resolve_id_props(OldProps,T,OldProps_), resolve_id_props(NewProps,T,NewProps_),
+prepare_one_display_spec({update:ID, oldProps:_OldProps, newProps:NewProps},T,OpsJSON) :- !,
+	resolve_id_props(NewProps,T,NewProps_),
+	% Unfortunately PaperJS does not ease minimal updating wrt props used at creation time; considering 
+	% this AND the convenience to represent composite object as mere arrays of props objects, commenting this for now:
+	% resolve_id_props(OldProps,T,OldProps_), 
 	% Keep only properties whose values vary:
-	intersection(OldProps_,NewProps_,Common),
-	subtract(OldProps_,Common,TheOldProps), subtract(NewProps_,Common,TheNewProps),
+	% intersection(OldProps_,NewProps_,Common),
+	% subtract(OldProps_,Common,TheOldProps), subtract(NewProps_,Common,TheNewProps),
 	% now merge into a more convenient format:
-	make_json_object(TheOldProps,OldJSON), make_json_object(TheNewProps,NewJSON),
-	make_json_object([update:ID, oldProps:OldJSON, newProps:NewJSON ],OpsJSON).
+	% make_json_object(TheOldProps,OldJSON), make_json_object(TheNewProps,NewJSON),
+	make_json_list(NewProps_,NewJSON),
+	make_json_object([update:ID, oldProps:[], newProps:NewJSON ],OpsJSON).
+
+% Makes an array if some element is a list, otherwise makes an object
+make_json_list(Props,JSON) :- member([_|_],Props), !, make_json_list2(Props,JSON).
+make_json_list(Props,JSON) :- make_json_object(Props,JSON).
+
+make_json_list2([P|Props],[J|JSON]) :- !, make_json_object(P,J), make_json_list2(Props,JSON).
+make_json_list2([],[]).
+
 	
 resolve_id_props([P:id(ID)|Props],T,[P:Value|NewProps]) :- !,
 	( (get_id_props(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
@@ -368,6 +393,7 @@ resolve_id_props([P:id(ID,OtherP)|Props],T,[P:Value|NewProps]) :- !,
 	( (get_id_props(ID,T,IDProps), member(OtherP:Value,IDProps), Value \= id(_)) -> true
 		; print_error(error,'Could not find display property value for'(T/P:id(ID,OtherP)),null), fail),
 	resolve_id_props(Props,T,NewProps).
+resolve_id_props([Prop|Props],T,[FProp|NewProps]) :- is_list(Prop), !, resolve_id_props(Prop,T,FProp), resolve_id_props(Props,T,NewProps).
 resolve_id_props([Prop|Props],T,[FProp|NewProps]) :- !, flatten_prop(Prop,FProp), resolve_id_props(Props,T,NewProps).
 resolve_id_props([],_T,[]).
 
