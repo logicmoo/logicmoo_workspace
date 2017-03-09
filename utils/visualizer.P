@@ -13,7 +13,7 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
-:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1, d_event/1]). % assumed preloaded
+:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3]). % assumed preloaded
 :- use_module(db,[
 	lps_test_result_item/3, action/1, d/2
 	]).
@@ -87,7 +87,7 @@ d(X,P) :- pengine_self(M), catch(M:d(X,P),_,fail).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, endTime/1, d_event/1
+	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3
 	]).
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
@@ -203,7 +203,7 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	sort(Tuples,Sorted),
 	join_fluent_ranges(Sorted,Ranged),
 
-	(d(_,_) -> % Is there a 2D display specification?
+	(clause(d(_,_),_) -> % Is there a 2D display specification?
 		collect_display_specs(Ranged,DS), 
 		prepare_display_sequence(DS,DSarray) %, (member(XX,DSarray), writeln(XX), fail;true)
 		; DSarray=[] ),
@@ -235,7 +235,8 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	% render to JSON:
 	make_json_object([groups:Groups,items:Items],All), term2json(All,Timeline),
 	displayTimeline(File,Timeline), 
-	make_json_object([cycles:DSarray],Cycles), term2json(Cycles,Sequence).
+	( DSarray == [] -> Cycles=[] ; make_json_object([cycles:DSarray],Cycles)), 
+	term2json(Cycles,Sequence).
 
 % prepare_display_sequence(+DS,-Sequence)  Returns a list of lists, one for cycle 0,... until the last; all cycles have lists
 prepare_display_sequence([c(First,Op)|Cycles],Sequence) :- prepare_display_sequence([c(First,Op)|Cycles],First,[],Sequence).
@@ -258,7 +259,7 @@ collect_display_specs(Items,TheOpItems_) :-
 	prepare_item_ids(Items,WithIds), sort(WithIds,WithIds2), 
 	% ordered list of ID-di(T1-T2,X,G)
 	( (member(ID-di(T1-T2,X,G),  (member(ID-di(T1-_,Y,G)), Y\=X ; member(ID-di(_-T2,Y,G)), Y\=X))) -> 
-		writeln('*** Repeated display ID:'), writeln(ID), fail
+		print_error(error,'Repeated display ID'(ID),null), fail
 	 ; true),
 	retractall(id_props_cache(_,_,_)),
 	collect_display_specs2(WithIds2,OpItems),
@@ -270,7 +271,7 @@ collect_display_specs(Items,TheOpItems_) :-
 	),
 	% at this point id_props_cache may contain props with value id(..)
 	prepare_display_specs(OpItems,TheOpItems),
-	(ground(TheOpItems)->true;writeln('*** Failed to prepare ground Ops'), writeln(TheOpItems), fail),
+	(ground(TheOpItems)->true; print_error(error, 'Failed to prepare ground display Ops',null), fail),
 	sort(TheOpItems,TheOpItems_).
 
 % temporary cache to support dereferencing ids
@@ -356,16 +357,16 @@ prepare_one_display_spec({update:ID, oldProps:OldProps, newProps:NewProps},T,Ops
 	intersection(OldProps_,NewProps_,Common),
 	subtract(OldProps_,Common,TheOldProps), subtract(NewProps_,Common,TheNewProps),
 	% now merge into a more convenient format:
-	merge_update_props(TheOldProps,TheNewProps,PropValuePairs), 
-	make_json_object(PropValuePairs,PropValuePairsJSON), make_json_object([update:ID, changed:PropValuePairsJSON],OpsJSON).
+	make_json_object(TheOldProps,OldJSON), make_json_object(TheNewProps,NewJSON),
+	make_json_object([update:ID, oldProps:OldJSON, newProps:NewJSON ],OpsJSON).
 	
 resolve_id_props([P:id(ID)|Props],T,[P:Value|NewProps]) :- !,
 	( (get_id_props(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
-		; writeln('*** Could not find property value for'), writeln(T/P:id(ID)), fail),
+		; writeln(T/P:id(ID)), print_error(error,'Could not find display property value for'(T/P:id(ID)),null), fail),
 	resolve_id_props(Props,T,NewProps).
 resolve_id_props([P:id(ID,OtherP)|Props],T,[P:Value|NewProps]) :- !,
 	( (get_id_props(ID,T,IDProps), member(OtherP:Value,IDProps), Value \= id(_)) -> true
-		; writeln('*** Could not find property value for'), writeln(T/P:id(ID,OtherP)), fail),
+		; print_error(error,'Could not find display property value for'(T/P:id(ID,OtherP)),null), fail),
 	resolve_id_props(Props,T,NewProps).
 resolve_id_props([Prop|Props],T,[FProp|NewProps]) :- !, flatten_prop(Prop,FProp), resolve_id_props(Props,T,NewProps).
 resolve_id_props([],_T,[]).
@@ -381,12 +382,6 @@ flatten_prop(P,P).
 % get props for ID at T, or most recent past
 get_id_props(ID,T,Props) :- id_props_cache(ID,T,Props), !.
 get_id_props(ID,T,Props) :- T>0, Past is T-1, get_id_props(ID,Past,Props).
-
-merge_update_props([P:Old|OldProps],[P:New|NewProps],[P:[Old,New]|PropValuePairs]) :- !,
-	merge_update_props(OldProps,NewProps,PropValuePairs).
-merge_update_props([P1:Old|_],[P2:New|_],_) :- !,
-	writeln('*** update prop out of sync'), writeln(P1:Old/P2:New), fail.
-merge_update_props([],[],[]).
 	
 abridge_fluent(X,X) :- atomic(X), !.
 abridge_fluent(X,AtomAbridged) :- X=..[_|Args], abridge_fluent_args(Args,Atoms), concat_atom(Atoms,AtomAbridged).

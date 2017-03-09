@@ -150,7 +150,7 @@ dumploaded.
 
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
 % Now support for vanilla/barebones SWI Prolog:
-
+dumploaded.
 :- endif.
 
 :- if(current_prolog_flag(dialect, swi)).

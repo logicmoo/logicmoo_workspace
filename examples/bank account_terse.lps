@@ -1,7 +1,6 @@
-
 maxTime(9).
 
-initial_state([balance(bob,0),balance(fariba,100)]).
+initially balance(bob,0),balance(fariba,100).
 
 fluents balance(_Person,_Value).
 
@@ -40,10 +39,12 @@ false
     From1\==From2.
 
 
-d(balance(P,V), [id:P, x:X, y:0, type:container /*defaults: , width:10, */, height:100, value:V]) :- % could assume x:auto
-	(P=bob,X=30;P=fariba,X=60).
-d(transfer(From,To,Amount),[label:Amount,type:arrow,x1:id(From,x),y1:50,to:id(To,x),y2:50]). 
+d(balance(P,V), [id:P, from:[X,TopY], to:[RightX,200], type:rectangle, fillColor:Col]) :- % could assume x:auto
+	(P=bob,X=50,Col=blue;P=fariba,X=150,Col=yellow), RightX is X+50, screenHeight(H), TopY is H-V-10.
+% d(transfer(From,To,Amount),[label:Amount,type:arrow,x1:id(From,x),y1:50,to:id(To,x),y2:50]). 
 % d(transfer(From,To,Amount),[label:Amount]). % more futuristic: equidistant from related fluents!
 fluents background. initially background. % a little hack to avoid the need of specific "timeless" support:
-d(background,[type:rectangle, fillColor:lightCyan, from:[0,0], to:[150,150], sendToBack]).
+d(background,[type:rectangle, fillColor:lightCyan, from:[0,0], to:[500,H], sendToBack]) :- screenHeight(H).
+
+screenHeight(200).
 
