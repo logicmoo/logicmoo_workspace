@@ -204,7 +204,7 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	join_fluent_ranges(Sorted,Ranged),
 
 	(clause(d(_,_),_) -> % Is there a 2D display specification?
-		collect_display_specs(Ranged,DS), 
+		collect_display_specs(Ranged,DS), % (member(XX,DS), writeln(XX), fail;true),
 		prepare_display_sequence(DS,DSarray) %, (member(XX,DSarray), writeln(XX), fail;true)
 		; DSarray=[] ),
 	
@@ -256,7 +256,8 @@ prepare_display_sequence([],_,CS,[CS]).
 %  sorted by ID, start cycle; end cycle irrelevant because there are no sobrepositions)
 %  This is roughly O(N*N), can be speeded up if necessary by using a dictionary of ID -> Ops
 collect_display_specs(Items,TheOpItems_) :- 
-	prepare_item_ids(Items,WithIds), sort(WithIds,WithIds2), 
+	find_max_time(Items,0,MaxTime),
+	prepare_item_ids([t(timeless,0-MaxTime,dummy)|Items],WithIds), sort(WithIds,WithIds2), 
 	% ordered list of ID-di(T1-T2,X,G)
 	( ( member(ID-di(T1-T2,X,G),WithIds2),  (member(ID-di(T1-_,Y,G),WithIds2), Y\=X ; member(ID-di(_-T2,Y,G),WithIds2), Y\=X)  )  -> 
 		print_error(error,'Repeated display ID'(ID),null), fail
@@ -274,6 +275,10 @@ collect_display_specs(Items,TheOpItems_) :-
 	prepare_display_specs(OpItems,TheOpItems),
 	(ground(TheOpItems)->true; print_error(error, 'Failed to prepare ground display Ops',null), fail),
 	sort(TheOpItems,TheOpItems_).
+
+find_max_time([t(_,_-T2,_)|Items],Max,MaxTime) :- !,
+	(T2>Max->NewMax=T2;NewMax=Max), find_max_time(Items,NewMax,MaxTime).
+find_max_time([],Max,Max).
 
 % temporary cache to support dereferencing ids
 :- if(current_prolog_flag(dialect, swi)).
