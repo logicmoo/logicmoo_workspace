@@ -39,12 +39,23 @@ false
     From1\==From2.
 
 
-d(balance(P,V), [id:P, from:[X,TopY], to:[RightX,200], type:rectangle, fillColor:Col]) :- % could assume x:auto
-	(P=bob,X=50,Col=blue;P=fariba,X=150,Col=yellow), RightX is X+50, screenHeight(H), TopY is H-V-10.
-% d(transfer(From,To,Amount),[label:Amount,type:arrow,x1:id(From,x),y1:50,to:id(To,x),y2:50]). 
-% d(transfer(From,To,Amount),[label:Amount]). % more futuristic: equidistant from related fluents!
-fluents background. initially background. % a little hack to avoid the need of specific "timeless" support:
-d(background,[type:rectangle, fillColor:lightCyan, from:[0,0], to:[500,H], sendToBack]) :- screenHeight(H).
+d(balance(Person,V), 
+	[from:[X,0], to:[RightX,V], label:(Person:V), type:rectangle,  fontSize:13, fillColor:'#85bb65'/* USD:-)*/ ]
+	) :- 
+    (Person=bob,X=50;Person=fariba,X=200),
+    RightX is X+70.
+    
+d(transfer(From,To,Amount),[type:arrow, label:Amount, from:[FX,20], to:[TX,20]]) :- 
+    (From=bob,FX=120,TX=200 ; From=fariba,FX=200,TX=120).
 
-screenHeight(200).
+d(timeless,[ 
+    % a display spec can be a list of properties (for one object) or a list of lists (4 objects here:)
+    [type:star, center:[250,150], points:9, radius1:20, radius2:25, fillColor:yellow, sendToBack],
+    [type:rectangle, fillColor:[0,0.746,1] /*R,G,B*/, from:[0,0], to:[320,200], sendToBack],
+    [type:ellipse, shadowOffset:5, shadowColor:darkGray , point:[50,150], size:[110, 40],fillColor: white],
+    [type:ellipse,  point:[20,130], size:[90, 30],fillColor: white ]
+]).
 
+/** <examples>
+?- go(Timeline).
+*/
