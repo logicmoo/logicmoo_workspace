@@ -8,6 +8,8 @@ fluents X - Y.
 actions die(_), live(_).
 
 initially 2-3,3-3,4-3. % blinker
+initially 6-3,7-3,8-3. % another
+initially 6-6,7-6,8-6. % ...
 
 %Notice that times can sometimes be omitted, as in these rules:
 %
@@ -42,10 +44,13 @@ if	not(X-Y) at T, countLivingNeighbors(Cells,N) at T.
 live(X-Y) 	initiates X-Y.	
 die(X-Y) 	terminates X-Y.
 
-d(X-Y,[x:X,y:Y,type:rectangle,color:black]).
-d(X-Y,[x:X,y:Y]). % use default color and type:-)
-d(live(_),[image:'..boum!']). % position by related fluent, appropriate size
-d(die(_),[image:'..skull']). % not much point in using sounds...
+d(X-Y,[center:[XX,YY], radius:5, type:circle, fillColor:green]) :- 
+    XX is X*10, YY is Y*10.
+d(live(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:red]) :- 
+    XX is X*10, YY is Y*10.
+d(die(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:black]) :- 
+    XX is X*10, YY is Y*10.
+
 /** <examples>
 ?- go(Timeline).
 */

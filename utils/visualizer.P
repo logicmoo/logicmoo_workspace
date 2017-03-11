@@ -205,7 +205,7 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 
 	(clause(d(_,_),_) -> % Is there a 2D display specification?
 		collect_display_specs(Ranged,DS), % (member(XX,DS), writeln(XX), fail;true),
-		prepare_display_sequence(DS,DSarray) %, (member(XX,DSarray), writeln(XX), fail;true)
+		prepare_display_sequence(DS,DSarray) % , (member(XX,DSarray), writeq(XX), nl, fail;true)
 		; DSarray=[] ),
 	
 	create_counter(IDs),
@@ -304,8 +304,9 @@ collect_display_specs_for([ID-di(T1-T2,X,_G)|Items],ID, Mode, Items, [c(T1,Op), 
 	(Items=[] ; Items = [OtherID-_|_], ID \== OtherID), 
 	!, % last item for this ID
 	op_for_one_enter(ID,T1,X,Mode,_,Op).
-collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T2-T3,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op)|Ops]) :- !, 
-	% same ID, contiguous
+collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T2-T3,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op)|Ops]) :- \+ d_event(X), !, 
+	% same ID, contiguous (EXCEPT for events, which are assumed simple and never spanning cycles)
+	% lacking this condition would cause identical events in consecutive cycles to be considered permament
 	op_for_one_enter(ID,T1,X,Mode,Props,Op),
 	collect_display_specs_for([ID-di(T2-T3,XX,GG)|Items],ID,update(Props),ItemsLeft,Ops).
 collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T3-T4,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op1),c(T2,{kill:ID})|Ops]) :- !, 
@@ -380,7 +381,8 @@ prepare_one_display_spec({update:ID, oldProps:_OldProps, newProps:NewProps},T,Op
 	% now merge into a more convenient format:
 	% make_json_object(TheOldProps,OldJSON), make_json_object(TheNewProps,NewJSON),
 	make_json_list(NewProps_,NewJSON),
-	make_json_object([update:ID, oldProps:[], newProps:NewJSON ],OpsJSON).
+	flatten_prop(id:ID,id:NewID),
+	make_json_object([update:NewID, oldProps:[], newProps:NewJSON ],OpsJSON).
 
 % Makes an array if some element is a list, otherwise makes an object
 make_json_list(Props,JSON) :- member([_|_],Props), !, make_json_list2(Props,JSON).
