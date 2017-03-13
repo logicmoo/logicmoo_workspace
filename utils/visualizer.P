@@ -27,6 +27,7 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 :- use_module(usermod,[xjShowURL/1]).
 :- use_module(lists,[intersect/3, list_difference_eq/3]).
 
+has_d_clauses :- clause(d(_,_),_), !.
 intersection(A,B,Common) :- intersect(A,B,Common).
 subtract(A,ToDelete,Result) :- list_difference_eq(A,ToDelete,Result).
 	
@@ -73,12 +74,14 @@ displayTimeline(File,JSON) :-
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 d(X,P) :- pengine_self(M), catch(M:d(X,P),_,fail).
+has_d_clauses :- pengine_self(M), catch(M:clause(d(_,_),_),_,fail), !.
 :- endif.
 % now non-swish SWI...
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish) )).
 :- use_module('../Wei-engine/db.P',[
 	lps_test_result_item/3, action/1, d/2
 	]).
+has_d_clauses :- clause(d(_,_),_), !.
 :- endif.
 
 % ... and generic SWI:
@@ -202,12 +205,10 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	% Aggregate fluent ranges
 	sort(Tuples,Sorted),
 	join_fluent_ranges(Sorted,Ranged),
-
-	(clause(d(_,_),_) -> % Is there a 2D display specification?
+	(has_d_clauses -> % Is there a 2D display specification?
 		collect_display_specs(Ranged,DS), % (member(XX,DS), writeln(XX), fail;true),
 		prepare_display_sequence(DS,DSarray) % , (member(XX,DSarray), writeq(XX), nl, fail;true)
 		; DSarray=[] ),
-	
 	create_counter(IDs),
 	% Render fluents
 	endTime(End), LastRelevantTime is End+1,
