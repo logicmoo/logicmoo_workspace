@@ -133,14 +133,14 @@ compute_acc_list([], TP, FP, FN, TN, AccList0, AccList) :-
   Acc is (TP+TN)/(TP+TN+FP+FN),
   append(AccList0, [Acc], AccList).
 
-compute_acc_list([P- (\+ _)|T], TP, FP, FN, TN, AccList0, AccList):-!,
+compute_acc_list([_P- (\+ _)|T], TP, FP, FN, TN, AccList0, AccList):-!,
   Acc is (TP+TN)/(TP+TN+FP+FN),
   append(AccList0, [Acc], AccListNew),% append the new accuracy (it creates a new list called AccListNew)
   FP1 is FP+1,
   TN1 is TN-1,
   compute_acc_list(T, TP, FP1, FN, TN1, AccListNew, AccList).
 
-compute_acc_list([P- _|T], TP, FP, FN, TN, AccList0, AccList):-!,
+compute_acc_list([_P- _|T], TP, FP, FN, TN, AccList0, AccList):-!,
   Acc is (TP+TN)/(TP+TN+FP+FN),
   append(AccList0, [Acc], AccListNew),
   TP1 is TP+1,
