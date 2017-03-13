@@ -28,6 +28,9 @@ swap(X, N1, Y, N2)  	terminates 	location(Y, N2).
 
 false 	swap(X, N1, Y, N2), swap(Y, N2, Z, N3).
 
+d(location(Value,Pos),[label:Value, fontSize:16, type:circle, center:[X,20], radius:15, strokeColor:blue]) :- X is Pos * 30.
+d(swap(_,Pos1,_,Pos2),[from:[FX,40],to:[TX,40],type:arrow,biDirectional,strokeWidth:3]) :- FX is Pos1*30, TX is Pos2*30.
+d(timeless,[type:rectangle, label:'Bubble Sort', fillColor:white, from:[0,0], to:[150,100]]).
 /** <examples>
 ?- go(Timeline).
 */

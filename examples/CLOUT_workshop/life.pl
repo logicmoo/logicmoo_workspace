@@ -3,13 +3,13 @@
 % x-y represents that the cell at column x and row y is alive
 % XSB requires: :- use_module(basics, [member/2]).
 
-maxTime(10).
+maxTime(8).
 fluents X - Y.
 actions die(_), live(_).
 
 initially 2-3,3-3,4-3. % blinker
 initially 6-3,7-3,8-3. % another
-initially 6-6,7-6,8-6. % ...
+initially 6-6,7-6,8-6. % yet another
 
 %Notice that times can sometimes be omitted, as in these rules:
 %
@@ -50,6 +50,11 @@ d(live(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColo
     XX is X*10, YY is Y*10.
 d(die(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:black]) :- 
     XX is X*10, YY is Y*10.
+
+d(timeless,[[type:raster,position:[50,120], scale:0.08, % more complicated: transform:[-0.1,0,0,0.1,0,0],
+             source:'https://upload.wikimedia.org/wikipedia/commons/0/04/John_H_Conway_2005_%28cropped%29.jpg'],
+     [type:text, point:[0,5], content:'Conway\'s Game of Life']]).
+
 
 /** <examples>
 ?- go(Timeline).
