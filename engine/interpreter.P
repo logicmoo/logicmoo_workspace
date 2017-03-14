@@ -104,7 +104,9 @@ atomize_zero_functors(T,NT) :- T=..[F|Args], atomize_zero_functors(Args,NewArgs)
 
 my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
-print_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
+print_error(Type,Message,_Position) :- write('OTHER '), write(Type), write(': '), writeln(Message).
+print_syntax_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
+
 
 lps_welcome_message.
 
@@ -253,9 +255,15 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 	bindAllVars(VarValues,Vars),
 	clause_property(Ref,line_count(LineNumber)).
 
+:- multifile prolog:message//1.
+prolog:message(lps_error(M, _)) --> [ 'LPS: ~w'-[M]].
+                
+print_syntax_error(Type,Message,Position) :- 
+	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
 
 print_error(Type,Message,Position) :- 
-	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
+	print_message(Type,lps_error(Message,Position)). % SWI's universal messaging pipeline
+
 
 :- dynamic git_version_cache/1.
 :- use_module(library(git),[git_describe/2]).
@@ -652,7 +660,7 @@ print_errors(File) :-
 	( 
 		member(notice(Type,M,Position),Notices), 
 		(M=subterm(_,M_)->true;M=M_),
-		print_error(Type,M_,Position), 
+		print_syntax_error(Type,M_,Position), 
 		fail 
 	; Notices=[]),
 	((option(priority), \+ reactive_rule(_,_,_)) 
@@ -987,11 +995,14 @@ do_test_suite([F|Files],Options,[F-R|Results]) :-
 do_test_suite([_|Files],Options,Results) :- do_test_suite(Files,Options,Results).
 
 % time_limited(+StepName,+G,?Timeout) Skips G if Timeout is true; timeout will be bound to true if time runs out; will remain unbound otherwise
-time_limited(Step,G,Timeout) :- nonvar(Timeout), !.
+time_limited(_Step,_G,Timeout) :- nonvar(Timeout), !.
 time_limited(Step,G,Timeout) :-
 	(option(timeout(MaxTime)) -> true ; MaxTime = 0.5), % by default, half second max in each of the following steps
-	catch(call_with_time_limit(MaxTime,G),time_limit_exceeded,Timeout=true),
-	(Timeout==true -> do_write(['* timeout exceeded, aborting execution at ',Step,nl]) ; true).
+	catch(call_with_time_limit(MaxTime,G),Ex,(Ex=time_limit_exceeded->Timeout=true;throw(Ex))),
+	(Timeout==true -> 
+		print_error(error,'execution timeout'(Step),null),
+		fail
+		; true).
 
 %  cycle(PartialReactiveRules,GoalState)
 %  GoalState is a list (conjunction) of goal(Id,Tree)
