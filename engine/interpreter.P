@@ -108,6 +108,11 @@ print_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '
 
 lps_welcome_message.
 
+% No time limit on XSB; may be however implementable with timed_call and friends;
+% should throw 'time_limit_exceeded' 
+% http://www.swi-prolog.org/pldoc/doc_for?object=call_with_time_limit/2 
+call_with_time_limit(_Time, Goal) :- Goal.
+
 :- endif.
 
 %%% end of XSB specific section; now for SWI:
@@ -207,6 +212,7 @@ u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
 
 :- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
 :- use_module(library(prolog_clause),[clause_info/5]).
+:- use_module(library(time)).
 
 append_lists([],[]).
 append_lists([X|Xs],L) :-
@@ -724,6 +730,10 @@ parse_options(Options) :-
 	parse_options_(Options).
 
 parse_options_([]) :- !.
+parse_options_([timeout(Max)|Rest]) :- !,
+    (number(Max)->true; writeln(user_error, 'ERROR in options: timeout must be a float (seconds) '), fail),
+    uassertz(option(timeout(Max))),
+    parse_options_(Rest).
 parse_options_([swish|Rest]) :- !, % don't cleanup db (nor load the program), the environment will do it
     uassertz(option(swish)),
     parse_options_(Rest).
@@ -976,6 +986,12 @@ do_test_suite([F|Files],Options,[F-R|Results]) :-
 	do_test_suite(Files,Options,Results).
 do_test_suite([_|Files],Options,Results) :- do_test_suite(Files,Options,Results).
 
+% time_limited(+StepName,+G,?Timeout) Skips G if Timeout is true; timeout will be bound to true if time runs out; will remain unbound otherwise
+time_limited(Step,G,Timeout) :- nonvar(Timeout), !.
+time_limited(Step,G,Timeout) :-
+	(option(timeout(MaxTime)) -> true ; MaxTime = 0.5), % by default, half second max in each of the following steps
+	catch(call_with_time_limit(MaxTime,G),time_limit_exceeded,Timeout=true),
+	(Timeout==true -> do_write(['* timeout exceeded, aborting execution at ',Step,nl]) ; true).
 
 %  cycle(PartialReactiveRules,GoalState)
 %  GoalState is a list (conjunction) of goal(Id,Tree)
@@ -993,6 +1009,7 @@ cycle(Ri, Gi) :-
 		(HookGoal -> true ; writeln('* LPS cycle hook goal failed, terminating.'), fail)
     	; ExternalObservations=[]),
 	(Time = 1 -> updateEvents(0, 1, ExternalObservations)   ; true),
+	
 	% At this point last cycle events are still available
     	% TODO: ExternalObservations to be injected as new events
 	findall(Action, happens(Action, Previous, Time), Actions),
@@ -1003,14 +1020,15 @@ cycle(Ri, Gi) :-
 	do_write([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
 	test(events,Time,Actions),
 	enter_step_0, % during updateFluents we need a hack to query the previous state
-	updateFluents(Time),
+	time_limited(updateFluents,updateFluents(Time),Timeout),
 	findall(Fluent, state(Fluent), Fluents), % setof doesn't work.
 	do_write([nl,' State at time ',Time,' is ',Fluents, nl]),
 %	write_verbose([nl,' State at time ',Time,' is ',Fluents, nl]),
 	test(fluents,Time,Fluents),
 	leave_step_0,
 	% This processes antecedents of rules:
-	(option(dc) -> dc_process(Ri, [], NRi, [], NewGi) ; process(Ri, [], NRi, [], NewGi)),
+	time_limited(process, (option(dc) -> dc_process(Ri, [], NRi, [], NewGi) ; process(Ri, [], NRi, [], NewGi)), Timeout),
+	(nonvar(Timeout) -> NRi=Ri, NewGi=[] ; true),
 	write_verbose([nl,
 		' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
 		' Process goal tree at time ',Time, nl,' New: ',NewGi, nl]),
@@ -1024,8 +1042,8 @@ cycle(Ri, Gi) :-
 	uretractall(happens(_, _, _)),
 	updateEvents(Time, Next, ExternalObservations),
 	% This resolves goals in the goal state.
-	(option(dc) -> once( dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)),
-	(GoalTree = end -> 
+	time_limited(resolve, (option(dc) -> once( dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)), Timeout),
+	(GoalTree = end -> % this will execute on timeout too
 		do_write([nl,' Exceeded number of steps. ',nl])	
 		;	
 		(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
