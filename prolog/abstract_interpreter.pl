@@ -109,7 +109,7 @@ mod_qual(M, G, I:F/A) :-
 abstract_interpreter(M:Goal, Abstraction, OptionL, data(0, [], Result)) :-
     option(location(Loc),   OptionL, context(toplevel, Goal)),
     option(evaluable(Eval), OptionL, []),
-    option(on_error(OnErr), OptionL, print_message(informational)),
+    option(on_error(OnErr), OptionL, print_message(error)),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
     maplist(mod_qual(M), EvalL, MEvalL),
     ( abstract_interpreter(M:Goal, Abstraction, state(Loc, MEvalL, M:OnErr, [], [], []), [], Out)
@@ -175,6 +175,12 @@ add_cont(Cont,
 
 abstract_interpreter_body(once(Goal), M, Abs, State, S0, S) :- !,
     once(abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
+abstract_interpreter_body(distinct(Goal), M, Abs, State, S0, S) :-
+    implementation_module(M:distinct(_), solution_sequences), !,
+    distinct(Goal, abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
+abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S0, S) :-
+    implementation_module(M:distinct(_, _), solution_sequences), !,
+    distinct(Witness, abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
 abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S0, S) :- !,
     setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S0, S1),
                        abstract_interpreter_body(C, M, Abs, State, S1, S2),
