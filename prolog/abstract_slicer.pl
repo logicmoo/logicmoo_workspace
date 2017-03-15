@@ -31,12 +31,6 @@
                             slicer_abstraction/10]).
 
 :- use_module(library(abstract_interpreter)).
-:- use_module(library(remove_dups)).
-
-not_in_list(List, Var1) :-
-    \+ ( member(Var2, List),
-         Var1 == Var2
-       ).
 
 :- meta_predicate abstract_slice(0, +, ?).
 
