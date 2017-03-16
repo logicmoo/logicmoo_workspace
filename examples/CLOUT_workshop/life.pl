@@ -8,8 +8,8 @@ fluents X - Y.
 actions die(_), live(_).
 
 initially 2-3,3-3,4-3. % blinker
-initially 6-3,7-3,8-3. % another
-initially 6-6,7-6,8-6. % yet another
+%initially 6-3,7-3,8-3. % another
+%initially 6-6,7-6,8-6. % yet another
 
 %Notice that times can sometimes be omitted, as in these rules:
 %

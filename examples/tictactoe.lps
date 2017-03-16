@@ -1,4 +1,4 @@
-maxTime(10).
+maxTime(5).
 fluents on(_,_).
 actions place(_,_).
 events place(_,_).
