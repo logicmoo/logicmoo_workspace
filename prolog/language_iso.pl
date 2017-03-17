@@ -64,7 +64,7 @@ language_iso(53, 'Indo-European', 'Greek, Modern', ελληνικά, el, ell, gr
 language_iso(54, 'Tupian', 'Guaraní', 'Avañe\'ẽ', gn, grn, grn, 'grn + 5', '', macrolanguage).
 language_iso(55, 'Indo-European', 'Gujarati', ગુજરાતી, gu, guj, guj, guj, '', '').
 language_iso(56, 'Creole', 'Haitian; Haitian Creole', 'Kreyòl ayisyen', ht, hat, hat, hat, '', '').
-language_iso(57, 'Afro-Asiatic', 'Hausa', 'Hausa, 'هَوُسَ'', ha, hau, hau, hau, '', '').
+language_iso(57, 'Afro-Asiatic', 'Hausa', 'Hausa, هَوُسَ', ha, hau, hau, hau, '', '').
 language_iso(58, 'Afro-Asiatic', 'Hebrew (modern)', 'עברית', he, heb, heb, heb, '', '').
 language_iso(59, 'Niger–Congo', 'Herero', 'Otjiherero', hz, her, her, her, '', '').
 language_iso(60, 'Indo-European', 'Hindi', 'हिन्दी, हिंदी', hi, hin, hin, hin, hins, '').
@@ -162,7 +162,7 @@ language_iso(151, 'Austronesian', 'Sundanese', 'Basa Sunda', su, sun, sun, sun, 
 language_iso(152, 'Niger–Congo', 'Swahili', 'Kiswahili', sw, swa, swa, 'swa + 2', '', macrolanguage).
 language_iso(153, 'Niger–Congo', 'Swati', 'SiSwati', ss, ssw, ssw, ssw, '', '').
 language_iso(154, 'Indo-European', 'Swedish', 'Svenska', sv, swe, swe, swe, '', '').
-language_iso(155, 'Dravidian', 'Tamil', 'தமிழ்,' ta, tam, tam, tam, '', '').
+language_iso(155, 'Dravidian', 'Tamil', 'தமிழ்' ,ta, tam, tam, tam, '', '').
 language_iso(156, 'Dravidian', 'Telugu', తెలుగు, te, tel, tel, tel, '', '').
 language_iso(157, 'Indo-European', 'Tajik', 'тоҷикӣ, toğikī, تاجیکی‎', tg, tgk, tgk, tgk, '', '').
 language_iso(158, 'Tai–Kadai', 'Thai', ไทย, th, tha, tha, tha, '', '').
@@ -180,7 +180,7 @@ language_iso(169, 'Austronesian', 'Tahitian', 'Reo Tahiti', ty, tah, tah, tah, '
 language_iso(170, 'Turkic', 'Uyghur, Uighur', 'Uyƣurqə, ئۇيغۇرچە‎', ug, uig, uig, uig, '', '').
 language_iso(171, 'Indo-European', 'Ukrainian', 'українська мова', uk, ukr, ukr, ukr, '', '').
 language_iso(172, 'Indo-European', 'Urdu', 'اردو', ur, urd, urd, urd, '', '').
-language_iso(173, 'Turkic', 'Uzbek', 'O‘zbek, 'Ўзбек', أۇزبېك‎', uz, uzb, uzb, 'uzb + 2', '', macrolanguage).
+language_iso(173, 'Turkic', 'Uzbek', 'O‘zbek, Ўзбек, أۇزبېك‎', uz, uzb, uzb, 'uzb + 2', '', macrolanguage).
 language_iso(174, 'Niger–Congo', 'Venda', 'Tshivenḓa', ve, ven, ven, ven, '', '').
 language_iso(175, 'Austroasiatic', 'Vietnamese', 'Tiếng Việt', vi, vie, vie, vie, '', '').
 language_iso(176, 'Constructed', 'Volapük', 'Volapük', vo, vol, vol, vol, '', constructed).
