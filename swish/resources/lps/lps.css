@@ -1,0 +1,8 @@
+.cm-s-prolog span.cm-lps_delimiter	       {font-weight: bold;}
+.cm-s-prolog span.cm-fluent	       {color: #1A1A1A; background: #D7DCF5; }
+/*.cm-s-prolog span.cm-fluent	       {border: 2px solid #D7DCF5;}*/
+.cm-s-prolog span.cm-event	       {color: #E19735; } /* darker */
+/*.cm-s-prolog span.cm-event	       {color: #FDA428; }*/
+/*.cm-s-prolog span.cm-event	       {border: 1px solid #FDA428;}*/
+.cm-s-prolog span.cm-time	       {color: #FDA428; }
+.cm-s-prolog span.cm-head	       {font-weight: normal;} /* keep LPS constructs bolder...*/
