@@ -40,6 +40,7 @@ if 	on(P, (1,1)) at T, on(P, (2,2)) at T, on(P, (3,3)) at T.
 all_diagonal(P) at T 
 if 	on(P, (1,3)) at T, on(P, (2,2)) at T, on(P, (3,1)) at T.
 
+
 find_slot(P, S) at T 
 if 	free_slot(S) at T, extra_consideration(P,S) at T.
 
@@ -57,3 +58,16 @@ twoFilled(P,(R,C3)) at T
 if 	on(P, (R, C1)) at T, on(P, (R, C2)) at T, C1 \= C2.
 % twoFilled(P,D3) at T if diagonal(Ds), member(D1,Ds), member(D2, Ds), member(D3, Ds),D1 \= D2, on(P, D1) at T, on(P, D2) at T.
 
+d(on(P,(L,C)), [type:text,point:[X,Y],content:P,fontSize:45]) :- 
+    X is (C-1)*50+12, Y is (L-1)*50+12.
+
+d(timeless,Lines) :- CP = [strokeColor:black, strokeWidth:3],
+    N = 3, Delta = 50, Size is N*Delta,
+    lines(N,[0,0],[Size,0],[0,Delta],CP,Lines1),
+    lines(N,[0,0],[0,Size],[Delta,0],CP,Lines2), append(Lines1,Lines2,Lines).
+
+% lines(N,ProtoFrom,ProtoTo,DelatX,DeltaY,CommonProps,-PropsList) specify display of N+1 lines
+lines(N,[FX,FY],[TX,TY],[DX,DY],_,[]) :- N<0, !.
+lines(N,[PFX,PFY],[PTX,PTY],[DX,DY],CP,[[type:line,from:[FX,FY],to:[TX,TY]|CP ]|Props]) :-
+    FX is PFX + N*DX, FY is PFY+N*DY, TX is PTX+N*DX, TY is PTY+N*DY,
+    NN is N-1, lines(NN,[PFX,PFY],[PTX,PTY],[DX,DY],CP,Props).

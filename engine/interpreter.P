@@ -42,8 +42,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- module(interpreter, [
 	go/0, go/1, go/2, go/3,
 	test_examples/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1,
-	load_check_syntax/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
-	intensional/1,macroaction/1,
+	load_check_syntax/2, print_error/3, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
+	intensional/1,macroaction/1,d_event/1,
 	lps_engine_directory/1, uassert/1, uretractall/1,
 	bindAllVars/1, lps_welcome_message/0, endTime/1]).
 
@@ -56,7 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
 :- lps_engine_directory(D), string:concat_atom([D,'../Wei-engine/db.P'],DB), ensure_loaded(DB).
 
-:- use_module(db,[
+:- use_module(db,[ d/2,
 	action/1, current_time/1, d_pre/1, event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1,
@@ -104,9 +104,16 @@ atomize_zero_functors(T,NT) :- T=..[F|Args], atomize_zero_functors(Args,NewArgs)
 
 my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
 
-print_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
+print_error(Type,Message,_Position) :- write('OTHER '), write(Type), write(': '), writeln(Message).
+print_syntax_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
+
 
 lps_welcome_message.
+
+% No time limit on XSB; may be however implementable with timed_call and friends;
+% should throw 'time_limit_exceeded' 
+% http://www.swi-prolog.org/pldoc/doc_for?object=call_with_time_limit/2 
+call_with_time_limit(_Time, Goal) :- Goal.
 
 :- endif.
 
@@ -121,6 +128,7 @@ lps_welcome_message.
 % If performance becomes bad (due to nonindexed access inside the pengine_self predicate) we should pass M as arg
 % Implementation note: execution specific states (cf. cleanup_engine) might be stored instead by simply using thread_local declarations
 
+d(X,Props) :- pengine_self(M), catch(M:d(X,Props),_,fail).
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 current_goal(X) :- pengine_self(M), M:current_goal(X).
 current_time(X) :- pengine_self(M), M:current_time(X).
@@ -171,7 +179,7 @@ u_swiclause(H,B,Ref) :- pengine_self(M), clause(M:H,B,Ref).
 
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
 % Now support for vanilla SWI Prolog
-:- use_module('../Wei-engine/db.P',[
+:- use_module('../Wei-engine/db.P',[d/2,
 	action/1, current_time/1, d_pre/1 ,event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1,
@@ -206,6 +214,7 @@ u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
 
 :- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
 :- use_module(library(prolog_clause),[clause_info/5]).
+:- use_module(library(time)).
 
 append_lists([],[]).
 append_lists([X|Xs],L) :-
@@ -246,9 +255,15 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 	bindAllVars(VarValues,Vars),
 	clause_property(Ref,line_count(LineNumber)).
 
+:- multifile prolog:message//1.
+prolog:message(lps_error(M, _)) --> [ 'LPS: ~w'-[M]].
+                
+print_syntax_error(Type,Message,Position) :- 
+	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
 
 print_error(Type,Message,Position) :- 
-	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
+	print_message(Type,lps_error(Message,Position)). % SWI's universal messaging pipeline
+
 
 :- dynamic git_version_cache/1.
 :- use_module(library(git),[git_describe/2]).
@@ -645,7 +660,7 @@ print_errors(File) :-
 	( 
 		member(notice(Type,M,Position),Notices), 
 		(M=subterm(_,M_)->true;M=M_),
-		print_error(Type,M_,Position), 
+		print_syntax_error(Type,M_,Position), 
 		fail 
 	; Notices=[]),
 	((option(priority), \+ reactive_rule(_,_,_)) 
@@ -723,6 +738,10 @@ parse_options(Options) :-
 	parse_options_(Options).
 
 parse_options_([]) :- !.
+parse_options_([timeout(Max)|Rest]) :- !,
+    (number(Max)->true; writeln(user_error, 'ERROR in options: timeout must be a float (seconds) '), fail),
+    uassertz(option(timeout(Max))),
+    parse_options_(Rest).
 parse_options_([swish|Rest]) :- !, % don't cleanup db (nor load the program), the environment will do it
     uassertz(option(swish)),
     parse_options_(Rest).
@@ -975,6 +994,15 @@ do_test_suite([F|Files],Options,[F-R|Results]) :-
 	do_test_suite(Files,Options,Results).
 do_test_suite([_|Files],Options,Results) :- do_test_suite(Files,Options,Results).
 
+% time_limited(+StepName,+G,?Timeout) Skips G if Timeout is true; timeout will be bound to true if time runs out; will remain unbound otherwise
+time_limited(_Step,_G,Timeout) :- nonvar(Timeout), !.
+time_limited(Step,G,Timeout) :-
+	(option(timeout(MaxTime)) -> true ; MaxTime = 0.5), % by default, half second max in each of the following steps
+	catch(call_with_time_limit(MaxTime,G),Ex,(Ex=time_limit_exceeded->Timeout=true;throw(Ex))),
+	(Timeout==true -> 
+		print_error(error,'execution timeout'(Step),null),
+		fail
+		; true).
 
 %  cycle(PartialReactiveRules,GoalState)
 %  GoalState is a list (conjunction) of goal(Id,Tree)
@@ -992,6 +1020,7 @@ cycle(Ri, Gi) :-
 		(HookGoal -> true ; writeln('* LPS cycle hook goal failed, terminating.'), fail)
     	; ExternalObservations=[]),
 	(Time = 1 -> updateEvents(0, 1, ExternalObservations)   ; true),
+	
 	% At this point last cycle events are still available
     	% TODO: ExternalObservations to be injected as new events
 	findall(Action, happens(Action, Previous, Time), Actions),
@@ -1002,14 +1031,15 @@ cycle(Ri, Gi) :-
 	do_write([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl]),
 	test(events,Time,Actions),
 	enter_step_0, % during updateFluents we need a hack to query the previous state
-	updateFluents(Time),
+	time_limited(updateFluents,updateFluents(Time),Timeout),
 	findall(Fluent, state(Fluent), Fluents), % setof doesn't work.
 	do_write([nl,' State at time ',Time,' is ',Fluents, nl]),
 %	write_verbose([nl,' State at time ',Time,' is ',Fluents, nl]),
 	test(fluents,Time,Fluents),
 	leave_step_0,
 	% This processes antecedents of rules:
-	(option(dc) -> dc_process(Ri, [], NRi, [], NewGi) ; process(Ri, [], NRi, [], NewGi)),
+	time_limited(process, (option(dc) -> dc_process(Ri, [], NRi, [], NewGi) ; process(Ri, [], NRi, [], NewGi)), Timeout),
+	(nonvar(Timeout) -> NRi=Ri, NewGi=[] ; true),
 	write_verbose([nl,
 		' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
 		' Process goal tree at time ',Time, nl,' New: ',NewGi, nl]),
@@ -1023,8 +1053,8 @@ cycle(Ri, Gi) :-
 	uretractall(happens(_, _, _)),
 	updateEvents(Time, Next, ExternalObservations),
 	% This resolves goals in the goal state.
-	(option(dc) -> once( dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)),
-	(GoalTree = end -> 
+	time_limited(resolve, (option(dc) -> once( dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)), Timeout),
+	(GoalTree = end -> % this will execute on timeout too
 		do_write([nl,' Exceeded number of steps. ',nl])	
 		;	
 		(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
@@ -1561,7 +1591,6 @@ d_body(B) :-
     functor(B,F,N), functor(BB,F,N),
     l_timeless(BB, _), !.
 d_body(B) :- u_user_predicate(B).
-
 
 % Although this predicate is "generic", it works with SWI-only predicates, see resolveUntilAction etc. above
 % dc_process(RulesToProcess, RulesProcessed, FinalRules, GoalsSoFar, FinalGoals) 

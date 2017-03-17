@@ -35,3 +35,17 @@ putdown(P, F)	initiates	available(F).
 
 false	pickup(P, F),    not available(F).
 false	pickup(P1, F),  pickup(P2, F), P1 \= P2.
+
+
+
+dinerPosition(socrates,10,10).
+forkPosition(fork1,20,20).
+tableCenter(50,50).
+% ... we could use some radial coordinates...compute a centroid...
+
+d(available(F),[id:F,x:X,y:Y]) :- forkPosition(F,X,Y).
+% assume eating(Philosopher,Fork1,Fork2)
+d(eating(P,F1,F2),[[id:F1,x:X,y:Y],[id:F2,x:X,y:Y]]) :- dinerPosition(P,X,Y).
+
+%...https://www.youtube.com/watch?v=H33eWKOiUJE
+% ... or add eatingWith(Philosopher,Fork) to original example; not very intuitive though;-)

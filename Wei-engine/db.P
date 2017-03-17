@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %% This module acts as a data placeholder: LPS programs will be loaded over it
 %% All LPS engine state persists here
 
-:- module(db, [
+:- module(db, [ d/2,
 	lps_goal_id_counter/1,
 	action/1,
 	current_goal/1,
@@ -79,6 +79,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]).
 
 :- dynamic lps_goal_id_counter/1.
+:- dynamic d/2.
 :- dynamic action/1.
 :- dynamic current_goal/1.
 :- dynamic current_time/1.

@@ -13,9 +13,9 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
-:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1]). % assumed preloaded
+:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3]). % assumed preloaded
 :- use_module(db,[
-	lps_test_result_item/3, action/1
+	lps_test_result_item/3, action/1, d/2
 	]).
 :- use_module(psyntax,[syntax2p_file/4]).
 
@@ -25,7 +25,12 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 % namely for use with Prolog Studio:
 :- use_module(interprolog,[java/3, term2json/2, create_counter/1, get_increment_counter/2]).
 :- use_module(usermod,[xjShowURL/1]).
+:- use_module(lists,[intersect/3, list_difference_eq/3]).
 
+has_d_clauses :- clause(d(_,_),_), !.
+intersection(A,B,Common) :- intersect(A,B,Common).
+subtract(A,ToDelete,Result) :- list_difference_eq(A,ToDelete,Result).
+	
 www_open_url(URL) :- xjShowURL(URL). % xj2.P
 
 % make_json_object(PairsList,Object) Generate a JSON object in Prolog syntax from a list of Attribute:JSONValue 
@@ -38,7 +43,9 @@ make_json_object([A,B,C,D,E],{A,B,C,D,E}) :- !.
 make_json_object([A,B,C,D,E,F],{A,B,C,D,E,F}) :- !.
 make_json_object([A,B,C,D,E,F,G],{A,B,C,D,E,F,G}) :- !.
 make_json_object([A,B,C,D,E,F,G,H],{A,B,C,D,E,F,G,H}) :- !.
-make_json_object(L,_) :- length(L,N), N>8, !, writeln('*** JSON object with too many attributes in visualizer.P'), fail.
+make_json_object([A,B,C,D,E,F,G,H,I],{A,B,C,D,E,F,G,H,I}) :- !.
+make_json_object([A,B,C,D,E,F,G,H,I,J],{A,B,C,D,E,F,G,H,I,J}) :- !.
+make_json_object(L,_) :- length(L,N), N>10, !, writeln('*** JSON object with too many attributes in visualizer.P'), fail.
 
 
 displayTimeline(File,JSON) :-
@@ -66,20 +73,24 @@ displayTimeline(File,JSON) :-
 :- use_module(library(pengines),[pengine_self/1]).
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
 action(X) :- pengine_self(M), catch(M:action(X),_,fail).
+d(X,P) :- pengine_self(M), catch(M:d(X,P),_,fail).
+has_d_clauses :- pengine_self(M), catch(M:clause(d(_,_),_),_,fail), !.
 :- endif.
 % now non-swish SWI...
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish) )).
 :- use_module('../Wei-engine/db.P',[
-	lps_test_result_item/3, action/1
+	lps_test_result_item/3, action/1, d/2
 	]).
+has_d_clauses :- clause(d(_,_),_), !.
 :- endif.
 
 % ... and generic SWI:
 :- if(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(http/json)).
+:- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, endTime/1
+	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3
 	]).
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
@@ -150,12 +161,12 @@ gojson(JSON) :- gojson(_File,[],[],JSON).
 gojson(File,Options,Results,JSON) :- go(File,[silent,make_test,swish|Options],Results), visual(File,JSON).
 
 
-% visual(TestResultsFile,timeline(JSON))  This MUST be called after go(File,[...make_test,...],...)
+% visual(TestResultsFile,lps_visualization(TimelineJSON,TwoD_JSON))  This MUST be called after go(File,[...make_test,...],...)
 % Uses test facts still in memory
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
 % works on facts asserted by either Wei (Stage = 'Observations', ...) or rak interpreter (Stage = fluent,event)
-visual(File,timeline(JSON)) :- 
+visual(File,lps_visualization(Timeline,Sequence)) :- 
 	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
 	% my_load_dyn(File), % we need the meta info about events
 	% load_test_file_for(File),
@@ -171,7 +182,7 @@ visual(File,timeline(JSON)) :-
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
 		;
 		(lps_test_result_item('Database state:',T1,X) ; lps_test_result_item(fluents,T1,X)), 
-		T1 \== 0, % hack to discard irrelevant state information
+		% T1 \== 0, % hack to discard irrelevant state information
 		T2 is T1+1, functor(X,F,N), G=F/N % fluent
 	), Tuples),
 	% Find groups
@@ -194,6 +205,10 @@ visual(File,timeline(JSON)) :-
 	% Aggregate fluent ranges
 	sort(Tuples,Sorted),
 	join_fluent_ranges(Sorted,Ranged),
+	(has_d_clauses -> % Is there a 2D display specification?
+		collect_display_specs(Ranged,DS), % (member(XX,DS), writeln(XX), fail;true),
+		prepare_display_sequence(DS,DSarray) % , (member(XX,DSarray), writeq(XX), nl, fail;true)
+		; DSarray=[] ),
 	create_counter(IDs),
 	% Render fluents
 	endTime(End), LastRelevantTime is End+1,
@@ -219,10 +234,189 @@ visual(File,timeline(JSON)) :-
 	), Others),
 	append(Fluents,Others,Items),
 	% render to JSON:
-	make_json_object([groups:Groups,items:Items],All),
-	term2json(All,JSON),
-	displayTimeline(File,JSON). 
+	make_json_object([groups:Groups,items:Items],All), term2json(All,Timeline),
+	displayTimeline(File,Timeline), 
+	( DSarray == [] -> Cycles=[] ; make_json_object([cycles:DSarray],Cycles)), 
+	term2json(Cycles,Sequence).
 
+% prepare_display_sequence(+DS,-Sequence)  Returns a list of lists, one for cycle 0,... until the last; all cycles have lists
+prepare_display_sequence([c(First,Op)|Cycles],Sequence) :- prepare_display_sequence([c(First,Op)|Cycles],First,[],Sequence).
+
+% prepare_display_sequence(+CycleOps,+CurrentCycle,+CurrentCycleSequence,-Sequence)  CycleOps already ordered by cycle
+prepare_display_sequence([c(T,Op)|Cycles],T,CS,Sequence) :- !, 
+	append(CS,[Op],NCS), % preserve order, in case we care later;  use a diff list if performance here becomes a concern...
+	prepare_display_sequence(Cycles,T,NCS,Sequence).
+prepare_display_sequence([c(NextT,Op)|Cycles],T,CS,[CS|Sequence]) :- NextT>T+1, !, % we need some empty cycle(s) sequence(s)
+	NewT is T+1,
+	prepare_display_sequence([c(NextT,Op)|Cycles],NewT,[],Sequence).
+prepare_display_sequence([c(NextT,Op)|Cycles],T,CS,[CS|Sequence]) :- NextT is T+1, !, 
+	prepare_display_sequence([c(NextT,Op)|Cycles],NextT,[],Sequence).
+prepare_display_sequence([],_,CS,[CS]).
+	
+% collect_display_specs(+Items,-OpItems) Each OpItem is c(Cycle,Op); 
+%  sorted by ID, start cycle; end cycle irrelevant because there are no sobrepositions)
+%  This is roughly O(N*N), can be speeded up if necessary by using a dictionary of ID -> Ops
+collect_display_specs(Items,TheOpItems_) :- 
+	find_max_time(Items,0,MaxTime),
+	prepare_item_ids([t(timeless,0-MaxTime,dummy)|Items],WithIds), sort(WithIds,WithIds2), 
+	% ordered list of ID-di(T1-T2,X,G)
+	( ( member(ID-di(T1-T2,X,G),WithIds2),  (member(ID-di(T1-_,Y,G),WithIds2), Y\=X ; member(ID-di(_-T2,Y,G),WithIds2), Y\=X)  )  -> 
+		print_error(error,'Repeated display ID'(ID),null), fail
+	 ; true),
+	retractall(id_props_cache(_,_,_)),
+	collect_display_specs2(WithIds2,OpItems),
+	
+	( % check that all items have the mandatory properties (even if still not dereferenced)
+		member(c(T,{create:Props}),OpItems), mandatory_prop_name(P), 
+		\+ (member(P:_,Props) ; member(Prop,Props), member(P:_,Prop)),
+		writeln(missing-P-c(T,{create:Props})), fail 
+		; true
+	),
+	% at this point id_props_cache may contain props with value id(..)
+	prepare_display_specs(OpItems,TheOpItems),
+	(ground(TheOpItems)->true; print_error(error, 'Failed to prepare ground display Ops',null), fail),
+	sort(TheOpItems,TheOpItems_).
+
+find_max_time([t(_,_-T2,_)|Items],Max,MaxTime) :- !,
+	(T2>Max->NewMax=T2;NewMax=Max), find_max_time(Items,NewMax,MaxTime).
+find_max_time([],Max,Max).
+
+% temporary cache to support dereferencing ids
+:- if(current_prolog_flag(dialect, swi)).
+	:- thread_local(id_props_cache/3). % ID, Cycle, Props list
+:- else.
+	:- dynamic id_props_cache/3.
+:- endif.
+
+% collect_display_specs2(+Items,-NewItems)  
+% DB is a list of prop:[Min,Max], e.g. [x:[10,200],y:[+99999,-99999]]  99999 meaning "infinity" or "unknown"
+collect_display_specs2([],[]) :- !.
+collect_display_specs2([ID-DI|Items],OpItems) :- collect_display_specs_for([ID-DI|Items],ID, create, ItemsLeft, OpItems1), 
+	collect_display_specs2(ItemsLeft,OpItems2), 
+	append(OpItems1,OpItems2,OpItems).
+
+% all objects must have these:
+mandatory_prop_name(type).
+
+% collect_display_specs_for(+Items,ID, +Mode(create/update(LastProps)), -ItemsLeft, -OpItemsForId)
+% Collect display specs for an ID
+% Each OpItem is c(Cycle,Op), where Op is {kill:ID} or {create:Props} or {update:ID, oldProps:OldProps, newProps:Props}
+collect_display_specs_for([ID-di(T1-T2,X,_G)|Items],ID, Mode, Items, [c(T1,Op), c(T2,{kill:ID})]) :- 
+	(Items=[] ; Items = [OtherID-_|_], ID \== OtherID), 
+	!, % last item for this ID
+	op_for_one_enter(ID,T1,X,Mode,_,Op).
+collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T2-T3,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op)|Ops]) :- \+ d_event(X), !, 
+	% same ID, contiguous (EXCEPT for events, which are assumed simple and never spanning cycles)
+	% lacking this condition would cause identical events in consecutive cycles to be considered permament
+	op_for_one_enter(ID,T1,X,Mode,Props,Op),
+	collect_display_specs_for([ID-di(T2-T3,XX,GG)|Items],ID,update(Props),ItemsLeft,Ops).
+collect_display_specs_for([ID-di(T1-T2,X,_G), ID-di(T3-T4,XX,GG)|Items],ID, Mode, ItemsLeft, [c(T1,Op1),c(T2,{kill:ID})|Ops]) :- !, 
+	% same ID, noncontiguous 
+	op_for_one_enter(ID,T1,X,Mode,_Props,Op1),
+	collect_display_specs_for([ID-di(T3-T4,XX,GG)|Items],ID,create,ItemsLeft,Ops).
+collect_display_specs_for([ID_-DI_|Items],ID,_Mode,[ID_-DI_|ItemsLeft],Ops) :- !, % skip item for different ID
+	ID_ \== ID, % just checking...
+	collect_display_specs_for(Items,ID,create,ItemsLeft,Ops). %
+collect_display_specs_for([],_ID,_Mode,[],[]).
+
+% op_for_one_enter(+ID,+Cycle,+FluentOrEvent,+Mode,-Props,-Operation)
+op_for_one_enter(ID,T,X,Mode,Props,Op) :-
+	once(d(X,Props_)), % TODO later: delay to evaluate id_props!
+	%( (member(Prop1,Props_), member(id:ID1,Prop1), member(Prop1,Props_), member(id:ID2,Prop1), ID1 \= ID2) -> 
+	%	print_error(error,'Different display ID in display object parts'(ID1),null), fail
+	% ; true),	
+	ensure_all_colons(Props_,Props),
+	assert(id_props_cache(ID,T,Props)),
+	( Mode = update(OldProps) -> 
+		Op = ({update:ID, oldProps:OldProps, newProps:Props})
+		; 
+		Mode=create, 
+		(d_event(X) -> enforce_property(Props,event:true,TheProps_); TheProps_=Props),
+		enforce_property(TheProps_,id:ID,TheProps),
+		Op= {create:TheProps}
+	).
+
+% Considers composite objects, in which case P must be present in ALL object parts
+% enforce_property(+Props,+P,-NewProps).
+enforce_property([],_P,[]) :- !.
+enforce_property(Props,P,NewProps) :- \+ member([_|_],Props), !, % simple object
+	(member(P,Props) -> Props=NewProps ; NewProps=[P|Props]).
+enforce_property([Props1|Props],P,[NewProp1|NewProps]) :- 
+	is_list(Props1), enforce_property(Props1,P,NewProp1), enforce_property(Props,P,NewProps).
+	
+% allow boolean properties to be abbreviated, e.g. 'sendToBack'
+ensure_all_colons([P|Props],[P|NewProps]) :- (var(P);P=(_:_)), !, ensure_all_colons(Props,NewProps).
+ensure_all_colons([P|Props],[NewP|NewProps]) :- is_list(P), !, ensure_all_colons(P,NewP), ensure_all_colons(Props,NewProps).
+ensure_all_colons([P|Props],[P:true|NewProps]) :- ensure_all_colons(Props,NewProps).
+ensure_all_colons([],[]).
+	
+% prepare_item_ids(+Tuples,-Items) Each Item is ID-di(T1-T2,FluentOrEvent,Group); 
+% ID is extracted from props, or generated - right now it's the whole term, 
+% for more compactness it could be an int key into a term dictionary instead
+prepare_item_ids([t(X,T1-T2,G)|Items], [ID-di(T1-T2,X,G)|WithIds]) :- d(X,Props), !, % displayable item 
+	% TODO later: DELAY previous to support id_props??
+	(member(id:ID,Props)->true;((member(PP,Props), member(id:ID,PP))->true;ID=X)), prepare_item_ids(Items,WithIds).
+prepare_item_ids([_|Items], WithIds) :- !, 
+	prepare_item_ids(Items,WithIds).
+prepare_item_ids([],[]).
+
+% Refine update args, resolve id(ID) props
+prepare_display_specs([c(T,Op)|OpItems],[c(T,NewOp)|NewOpItems]) :- !,
+	prepare_one_display_spec(Op,T,NewOp),
+	prepare_display_specs(OpItems,NewOpItems).
+prepare_display_specs([],[]).
+
+prepare_one_display_spec({kill:ID},_T,OpJSON) :- !, flatten_prop(id:ID,id:NewID), make_json_object([kill:NewID],OpJSON).
+prepare_one_display_spec({create:Props},T,OpJSON) :- !,
+	resolve_id_props(Props,T,NewProps), 
+	make_json_list(NewProps,NewPropsJSON),
+	make_json_object([create:NewPropsJSON],OpJSON). % list to {...}
+prepare_one_display_spec({update:ID, oldProps:_OldProps, newProps:NewProps},T,OpsJSON) :- !,
+	resolve_id_props(NewProps,T,NewProps_),
+	% Unfortunately PaperJS does not ease minimal updating wrt props used at creation time; considering 
+	% this AND the convenience to represent composite object as mere arrays of props objects, commenting this for now:
+	% resolve_id_props(OldProps,T,OldProps_), 
+	% Keep only properties whose values vary:
+	% intersection(OldProps_,NewProps_,Common),
+	% subtract(OldProps_,Common,TheOldProps), subtract(NewProps_,Common,TheNewProps),
+	% now merge into a more convenient format:
+	% make_json_object(TheOldProps,OldJSON), make_json_object(TheNewProps,NewJSON),
+	make_json_list(NewProps_,NewJSON),
+	flatten_prop(id:ID,id:NewID),
+	make_json_object([update:NewID, oldProps:[], newProps:NewJSON ],OpsJSON).
+
+% Makes an array if some element is a list, otherwise makes an object
+make_json_list(Props,JSON) :- member([_|_],Props), !, make_json_list2(Props,JSON).
+make_json_list(Props,JSON) :- make_json_object(Props,JSON).
+
+make_json_list2([P|Props],[J|JSON]) :- !, make_json_object(P,J), make_json_list2(Props,JSON).
+make_json_list2([],[]).
+
+	
+resolve_id_props([P:id(ID)|Props],T,[P:Value|NewProps]) :- !,
+	( (get_id_props(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
+		; writeln(T/P:id(ID)), print_error(error,'Could not find display property value for'(T/P:id(ID)),null), fail),
+	resolve_id_props(Props,T,NewProps).
+resolve_id_props([P:id(ID,OtherP)|Props],T,[P:Value|NewProps]) :- !,
+	( (get_id_props(ID,T,IDProps), member(OtherP:Value,IDProps), Value \= id(_)) -> true
+		; print_error(error,'Could not find display property value for'(T/P:id(ID,OtherP)),null), fail),
+	resolve_id_props(Props,T,NewProps).
+resolve_id_props([Prop|Props],T,[FProp|NewProps]) :- is_list(Prop), !, resolve_id_props(Prop,T,FProp), resolve_id_props(Props,T,NewProps).
+resolve_id_props([Prop|Props],T,[FProp|NewProps]) :- !, flatten_prop(Prop,FProp), resolve_id_props(Props,T,NewProps).
+resolve_id_props([],_T,[]).
+
+% Make sure only atoms get to the JS side; this is a partial check, as points and sizes and possibly other future structured
+% terms are not checked
+flatten_prop(id:ID,id:NewID) :- (atomic(ID),ID=NewID ; my_term_to_atom(ID,NewID)), !.
+flatten_prop(label:ID,label:NewID) :- (atomic(ID),ID=NewID ; my_term_to_atom(ID,NewID)), !.
+flatten_prop(tip:ID,tip:NewID) :- (atomic(ID),ID=NewID ; my_term_to_atom(ID,NewID)), !.
+flatten_prop(P,P).
+
+
+% get props for ID at T, or most recent past
+get_id_props(ID,T,Props) :- id_props_cache(ID,T,Props), !.
+get_id_props(ID,T,Props) :- T>0, Past is T-1, get_id_props(ID,Past,Props).
+	
 abridge_fluent(X,X) :- atomic(X), !.
 abridge_fluent(X,AtomAbridged) :- X=..[_|Args], abridge_fluent_args(Args,Atoms), concat_atom(Atoms,AtomAbridged).
 

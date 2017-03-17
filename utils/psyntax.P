@@ -63,7 +63,7 @@ Prolog facts in general are not transformed.
 :- module(psyntax,[ syntax2p/4, lpsp2p_file/2, lpsp2p/3, 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4,
 	gol/2, gol/1, golps/2, golps/1,
-	may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1]).
+	may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/0]).
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
@@ -114,6 +114,7 @@ clear_head_hint(HH,Type,X) :- uretractall(head_hint(HH,Type,X)).
 add_head_hint(HH,Type,X) :- uassert(head_hint(HH,Type,X)).
 
 % SWI only:
+dumploaded.
 clear_timeless_refs. 
 may_add_timeless_ref(_).
 set_top_term(_).
@@ -149,7 +150,7 @@ dumploaded.
 
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
 % Now support for vanilla/barebones SWI Prolog:
-
+dumploaded.
 :- endif.
 
 :- if(current_prolog_flag(dialect, swi)).
@@ -306,7 +307,7 @@ lps2p_file(LPSfile,LPSWfile) :-
 % syntax2p_file(+OtherSyntaxFile,+P_Wei_file,+Translator,+ToWei) Translator is a functor for a predicate Translate(Term,Vars,NewTerm)
 % If ToWei==true it generates a .P file from the first file, else vice-versa
 syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
-	( member(Translator,[lpsp2p,lps2p]) -> true 
+	( member(Translator,[/* no longer:lpsp2p,*/lps2p]) -> true 
 		; write('*** Bad syntax translator: '), writeln(Translator), fail),
 	init_definition_newliner,
 	clear_hints, clear_timeless_refs,
@@ -330,7 +331,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		% NO! Too strong
 		% ((ToWei\==true, member(V,Vars), is_time_var(V)) -> true
 		%	; 
-		bindAllVars(Vars), 
+		% This combined with writeq.... can't do: bindAllVars(Vars), 
 		may_write_newline(NewTerm,OStr),
 		pretty_write(NewTerm,OStr), writeln(OStr,'.'), 
 		fail
@@ -692,23 +693,23 @@ pretty_write(Term,Stream) :- pretty_write(Term,0,Stream).
 
 % pretty_write(Term,Indent,Stream)
 pretty_write((if A then C priority P),I,S) :- !, 
-	my_tab(S,I), write(S,'if '), writeln(S,A), 
+	my_tab(S,I), write(S,'if '), writeq(S,A), nl(S),
 	my_tab(S,I), write(S,'then '), writeln(S,''), 
 	NI is I+4, pretty_write(C,NI,S), 
-	write(S,'  priority '), write(S,P).
+	write(S,'  priority '), writeq(S,P).
 pretty_write((if A then C),I,S) :- !, 
-	my_tab(S,I), write(S,'if '), writeln(S,A), 
+	my_tab(S,I), write(S,'if '), writeq(S,A), nl(S),
 	my_tab(S,I), write(S,'then '), writeln(S,''), 
 	NI is I+4, pretty_write(C,NI,S).
 pretty_write((H if B),I,S) :- !, 
-	my_tab(S,I), write(S,H), writeln(S,' if'), 
+	my_tab(S,I), writeq(S,H), writeln(S,' if'), 
 	my_tab(S,I), NI is I+4, pretty_write(B,NI,S).
 pretty_write((A--->C priority P),I,S) :- !, 
-	my_tab(S,I), write(S,A), writeln(S,' --->'), 
+	my_tab(S,I), writeq(S,A), writeln(S,' --->'), 
 	NI is I+4, pretty_write(C,NI,S),
-	write(S,'  priority '), write(S,P).
+	write(S,'  priority '), writeq(S,P).
 pretty_write((A--->C),I,S) :- !, 
-	my_tab(S,I), write(S,A), writeln(S,' --->'), NI is I+4, pretty_write(C,NI,S).
+	my_tab(S,I), writeq(S,A), writeln(S,' --->'), NI is I+4, pretty_write(C,NI,S).
 pretty_write(Declaration,I,S) :- Declaration=..[Op,C], member(Op,[false,initially,fluents,events,actions]), !,
 	my_tab(S,I), write(S,Op), writeln(S,''), NI is I+4,
 	pretty_write(C,NI,S).
@@ -719,16 +720,16 @@ pretty_write(PostCondition,I,S) :-
 		PostCondition = (E terminates F), C=true, Op=(terminates) ;
 		PostCondition = (E initiates F), C=true, Op=(initiates)
 	), !,
-	my_tab(S,I), write(S,E), write(S,' '), 
+	my_tab(S,I), writeq(S,E), write(S,' '), 
 	write(S,Op), write(S,' '), pretty_write((F:-C),I,S).
 	
 
 pretty_write((H:-true),I,S) :- !, pretty_write(H,I,S).
 pretty_write((H:-B),I,S) :- !, 
-	my_tab(S,I), write(S,H), writeln(S,' :-'), NI is I+4, pretty_write(B,NI,S).
+	my_tab(S,I), writeq(S,H), writeln(S,' :-'), NI is I+4, pretty_write(B,NI,S).
 pretty_write((G1,G2),I,S) :- !, 
-	my_tab(S,I), write(S,G1), writeln(S,','), pretty_write(G2,I,S).
-pretty_write(G,I,S) :- my_tab(S,I), write(S,G).
+	my_tab(S,I), writeq(S,G1), writeln(S,','), pretty_write(G2,I,S).
+pretty_write(G,I,S) :- my_tab(S,I), writeq(S,G).
 
 my_tab(_S,0) :- !.
 my_tab(S,I) :- I>0, write(S,' '), NI is I-1, my_tab(S,NI).
