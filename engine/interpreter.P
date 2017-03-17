@@ -213,7 +213,7 @@ u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
 :- op(900,fy,not).
 
 :- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
-:- use_module(library(prolog_clause),[clause_info/5]).
+:- use_module(library(prolog_clause)).
 :- use_module(library(time)).
 
 append_lists([],[]).
@@ -1429,7 +1429,7 @@ continue([goal(GoalId, [B1|Bs]) | Gs], NextTree,  AccG, NewAccG):-
 	uassertz(current_goal(GId)))).
 
 
-% From Wei’s interpreter:
+% From Wei's interpreter:
 
 reduce_step() :-
     steps(C),

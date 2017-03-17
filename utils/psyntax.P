@@ -128,7 +128,7 @@ set_top_term(_).
 % first, SWISH specific; see comments in interpreter.P
 
 :- use_module(library(pengines),[pengine_self/1]).
-:- use_module(library(prolog_clause),[clause_info/5]).
+:- use_module(library(prolog_clause)).
 
 :- use_module(library(pengines),[pengine_self/1]).
 dumploaded :- 
