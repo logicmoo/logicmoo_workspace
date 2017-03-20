@@ -88,18 +88,40 @@ serve_lps_resources(Request) :- % http://localhost:3050/lps/foo/Gruntfile.js wor
         http_reply_file(lps_resources(Info), [], Request).
 
 % hack SWISH to inject our CSS
-:- use_module('../../swish/lib/page',[swish_resources//0]).
+:- use_module('../../swish/lib/page',[swish_resources//0, swish_navbar//1]).
 :- use_module(library(http/html_write)).
 :- use_module(library(http/http_path)).
 :- expand_term( ( 
 swish_page:swish_resources --> !,
-	swish_page:swish_css, swish_page:swish_js, 
+	swish_css, swish_js, 
 	% {http_absolute_location(lps_resources('lps.css'),LPScss,[])},
 	html_post(head, link([ type('text/css'),rel('stylesheet'),href('/lps/lps.css') ]))
-), Expanded), asserta(Expanded).
-:- multifile http:location/3.
-http:location(clout, clout_resources, [priority(-100)]).
-user:file_search_path(clout_resources, '../clout').
+), Expanded), swish_page:asserta(Expanded).
+
+:- expand_term( (
+swish_page:swish_navbar(Options) --> !,
+	swish_resources,
+	html(nav([ class([navbar, 'navbar-default']),
+		   role(navigation)
+		 ],
+		 [ div(class('navbar-header'),
+		       [ \collapsed_button,
+			 \swish_logos(Options), 
+			 span('with '), a([href('https://bitbucket.org/lpsmasters/lps_corner'),target('_blank')],'LPS') 
+		       ]),
+		   div([ class([collapse, 'navbar-collapse']),
+			 id(navbar)
+		       ],
+		       [ ul([class([nav, 'navbar-nav', menubar])], []),
+			 ul([class([nav, 'navbar-nav', 'navbar-right'])],
+			    [ % remove chat avatars: li(\notifications(Options)),
+			      li(\search_box(Options)),
+			      \li_login_button(Options)
+			    ])
+		       ])
+		 ]))
+), Expanded), swish_page:asserta(Expanded).
+
 
 
 :- multifile term_expansion/4. % place this at the end so we don't get this file's terms...:
