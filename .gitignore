@@ -4,3 +4,4 @@
 *.lps_.P
 swish/resources/lps/bower_components
 swish/web/lps/bower_components
+swish/data/storage
