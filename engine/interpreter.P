@@ -1177,7 +1177,7 @@ This would be tricky.
 %
 resolve_tree([], FinalG, FinalG).
 
-% terminate with message: Requires too much thinking.
+% terminate with message: Exceeded number of steps.
 resolve_tree(_Unfinished, _AccG, end):-
 	steps(N), N < 1, !.
 
@@ -1243,12 +1243,12 @@ resolve([L|_], Result) :-
 		\+ (L = happens(A, _, _), action_(A)),
 		\+ lpsClause(L, _),
 		reduce_step,
-		steps(S),
-		write_verbose([nl,' no clause resolves with ', L,' after ', S, ' steps', nl]),
+%		steps(S),
+%		write_verbose([nl,' no clause resolves with ', L,' after
+%		', S, ' steps', nl]),
 		\+ (L = happens(A, _, _), action_(A)),
 		(mustBeResolvedNow(L) -> Result = fail
 		; Result = later).
-%		  write('clause 1. try later: '), write(L), nl) ).
 
 % Clause 2. Untried clause resolves with L.
 resolve([L|Ls], Result) :-
@@ -1299,14 +1299,15 @@ resolve([L|Ls], Result) :-
 	reduce_step,
 	current_goal(GoalId),
 	depth(Depth),
-	(tried(GoalId, Depth, lpsClause(CL, [])) %assumes happens(A, Now, Next) asserted.
+%	do_write([nl, 'Trying action  ', L, nl]),
+	(tried(GoalId, Depth, lpsClause(CL, []))
 	-> ( uretractall(tried(GoalId, Depth, lpsClause(CL, []))),
 	   ((ground(T),  T =< Now) ->
 		      Result = fail
-		    ; Result = later ),
+	    ;  true),
 	   (tried(_,_, lpsClause(CL, [])) ->
-		      true
-		    ; uretractall(happens(A,Now,_)))  )
+	      Result = fail
+	   ; (Result = later, uassertz(tried(GoalId, Depth, lpsClause(CL, []))), uretractall(happens(A,Now,_))  ) )  )
         ;   (happens(A, Now, _) ->
 	              (	  Result = CLs, uassertz(tried(GoalId, Depth, lpsClause(CL, []))))
 	             ;candidateAction([L | Ls], Result) )).
@@ -1315,12 +1316,18 @@ resolve([L|Ls], Result) :-
 candidateAction([L| Ls], Result) :-
 	copy_term([L|Ls], [CL|CLs]),
 	current_time(Now), Next is Now+1,current_goal(GoalId),
-	L = happens(A, _, _), CL = happens(A, Now, Next),
+	L = happens(A, T, _), CL = happens(A, Now, Next),
 	depth(Depth),
 	( happens(A, Now, Next)-> true ; uassertz(happens(A, Now, Next))),
 	uassertz(tried(GoalId, Depth, lpsClause(CL, []))),
-	(( d_pre(Conds), holds_all(Conds))->
-	(uretractall(happens(A, Now, Next)), Result = fail	)
+%	do_write([nl, 'Trying candidate action ', L, nl]),
+	(( d_pre(Conds), holds_all(Conds)
+%	 , do_write([nl, 'Constraint ',Conds,' failed  ', nl])
+	 )->
+	(uretractall(happens(A, Now, Next)),
+	 (   T == Now -> Result = fail
+	            ;   (	 (member(happens(B,Now,Next), Conds), action_(B), B\=A) ->
+			                     Result = fail; Result = later )	) )
 	;  Result = CLs ).
 
 lpsClause(Head, Body) :-  l_timeless(Head, Body).
@@ -1370,37 +1377,29 @@ mustBeResolvedNow(P) :- mustBeProcessedNow(P),
 
 */
 
-% If top-level goal lpsClause B1 failed, Ignore failure, Continue to next goal, Save B1 to retry later cycle.
-% Else pop up one level.
-backtrack([goal(GoalId,[B1|Bs])|Gs], NextTree, AccG, NewAccG):-
-	uretractall(current_goal(_)), depth(Depth), NewDepth is Depth - 1,
-	uretractall(depth(_)),
-	uretractall(tried(GoalId, Depth, _)),
-	(Bs = [] -> ( NextTree = Gs, NewAccG = [goal(GoalId,[B1|Bs])|AccG],
-				(Gs = [] -> true ;(Gs =	[goal(GId, NextBranch) | _] ,
-							length(NextBranch,D), uassertz(depth(D)),
-							uassertz(current_goal(GId)))))
-				; (NextTree = [goal(GoalId, Bs)|Gs], NewAccG = AccG,
-				uassertz(depth(NewDepth)), uassertz(current_goal(GoalId))
-				)).
-
-/*
-We might need to reinstate something like this clause later.
 % Top-level goal lpsClause B1 failed. Backtrack to LastB. Save B1 to retry later.
+%
 backtrack([goal(GoalId, [ B1]) | Gs], [NextBranch, goal(GoalId, [B1]) | Gs],
 	  [LastBranch | PreviousBs], PreviousBs):-
 	LastBranch = goal(GId, [LastLeaf | LastBs] ),
 	length(LastBs, Depth),
 	uretract(current_goal(_)), uassertz(current_goal(GId)),
 	uretract(depth(_)),
-%	uretractall(tried(GoalId, _, _)),
-	((  B1 = [happens(A, _,_) | _], action_(A))	-> true
-	;    uretractall(tried(GoalId, 1, _))),
+	uretractall(tried(GoalId, _, _)),
 	(LastLeaf = []
 	->  (NextBranch = goal(GId, LastBs), uassertz(depth(Depth) ))
 	; (NextBranch = LastBranch, D is Depth+1, uassertz(depth(D)))).
 
-*/
+% Pop up one level.
+%
+backtrack([goal(GoalId,[_B1|Bs])|Gs], NextTree, AccG, NewAccG):-
+	Bs \= [],
+	depth(Depth), NewDepth is Depth - 1,
+	uretractall(depth(_)), uassertz(depth(NewDepth)),
+	uretractall(tried(GoalId, Depth, _)),
+	NextTree = [goal(GoalId, Bs)|Gs],
+	NewAccG = AccG.
+
 
 advance([], [goal(GoalId, [B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
 	!, NextTree = Gs,
@@ -1430,6 +1429,14 @@ continue([goal(GoalId, [B1|Bs]) | Gs], NextTree,  AccG, NewAccG):-
 
 
 % From Wei's interpreter:
+%
+% % next_time().  Succeeds to the next time point. Destructively updates current_time/1
+next_time :-
+    uretract(current_time(This)), !,
+    Next is This + 1,
+    uassertz(current_time(Next)),
+    uretractall(steps(_)),
+    uassertz(steps(1000)).
 
 reduce_step() :-
     steps(C),
@@ -1486,14 +1493,6 @@ query(P) :-
 evaluate([]).
 evaluate([P|Rest]) :-query(P), evaluate(Rest).
 
-% next_time().  Succeeds to the next time point. Destructively updates current_time/1 
-next_time :-
-    uretract(current_time(This)), !,
-    Next is This + 1,
-    uassertz(current_time(Next)),
-    uretractall(steps(_)),
-    uassertz(steps(1000)).
-    
 
 % fluent_pred(+Fl)
 %   True if Fl is a fluent predicate symbol.
