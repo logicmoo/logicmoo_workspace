@@ -162,7 +162,7 @@ language_iso(151, 'Austronesian', 'Sundanese', 'Basa Sunda', su, sun, sun, sun, 
 language_iso(152, 'Niger–Congo', 'Swahili', 'Kiswahili', sw, swa, swa, 'swa + 2', '', macrolanguage).
 language_iso(153, 'Niger–Congo', 'Swati', 'SiSwati', ss, ssw, ssw, ssw, '', '').
 language_iso(154, 'Indo-European', 'Swedish', 'Svenska', sv, swe, swe, swe, '', '').
-language_iso(155, 'Dravidian', 'Tamil', 'தமிழ்' ,ta, tam, tam, tam, '', '').
+language_iso(155, 'Dravidian', 'Tamil', 'தமிழ்', ta, tam, tam, tam, '', '').
 language_iso(156, 'Dravidian', 'Telugu', తెలుగు, te, tel, tel, tel, '', '').
 language_iso(157, 'Indo-European', 'Tajik', 'тоҷикӣ, toğikī, تاجیکی‎', tg, tgk, tgk, tgk, '', '').
 language_iso(158, 'Tai–Kadai', 'Thai', ไทย, th, tha, tha, tha, '', '').
