@@ -26,13 +26,13 @@ language_iso(15, 'Niger–Congo', 'Bambara', bamanankan, bm, bam, bam, bam, '', 
 language_iso(16, 'Turkic', 'Bashkir', 'башҡорт теле', ba, bak, bak, bak, '', '').
 language_iso(17, 'Language isolate', 'Basque', 'euskara, euskera', eu, eus, baq, eus, '', '').
 language_iso(18, 'Indo-European', 'Belarusian', 'беларуская мова', be, bel, bel, bel, '', '').
-language_iso(19, 'Indo-European', 'Bengali; Bangla', বাংলা, bn, ben, ben, ben, '', '').
-language_iso(20, 'Indo-European', 'Bihari', भोजपुरी, bh, bih, bih, '–', '', 'Collective language code for Bhojpuri, Magahi, and Maithili').
+language_iso(19, 'Indo-European', 'Bengali; Bangla', 'বাংলা', bn, ben, ben, ben, '', '').
+language_iso(20, 'Indo-European', 'Bihari', 'भोजपुरी', bh, bih, bih, '–', '', 'Collective language code for Bhojpuri, Magahi, and Maithili').
 language_iso(21, 'Creole', 'Bislama', 'Bislama', bi, bis, bis, bis, '', '').
 language_iso(22, 'Indo-European', 'Bosnian', 'bosanski jezik', bs, bos, bos, bos, boss, '').
 language_iso(23, 'Indo-European', 'Breton', brezhoneg, br, bre, bre, bre, '', '').
 language_iso(24, 'Indo-European', 'Bulgarian', 'български език', bg, bul, bul, bul, buls, '').
-language_iso(25, 'Sino-Tibetan', 'Burmese', ဗမာစာ, my, mya, bur, mya, '', '').
+language_iso(25, 'Sino-Tibetan', 'Burmese', 'ဗမာစာ', my, mya, bur, mya, '', '').
 language_iso(26, 'Indo-European', 'Catalan; Valencian', 'català, valencià', ca, cat, cat, cat, '', '').
 language_iso(27, 'Austronesian', 'Chamorro', 'Chamoru', ch, cha, cha, cha, '', '').
 language_iso(28, 'Northeast Caucasian', 'Chechen', 'нохчийн мотт', ce, che, che, che, '', '').
@@ -52,7 +52,7 @@ language_iso(41, 'Indo-European', 'English', 'English', en, eng, eng, eng, engs,
 language_iso(42, 'Constructed', 'Esperanto', 'Esperanto', eo, epo, epo, epo, '', 'constructed, initiated from L.L. Zamenhof, 1887').
 language_iso(43, 'Uralic', 'Estonian', 'eesti, eesti keel', et, est, est, 'est + 2', '', macrolanguage).
 language_iso(44, 'Niger–Congo', 'Ewe', 'Eʋegbe', ee, ewe, ewe, ewe, '', '').
-language_iso(45, 'Indo-European', 'Faroese', føroyskt, fo, fao, fao, fao, '', '').
+language_iso(45, 'Indo-European', 'Faroese', 'føroyskt', fo, fao, fao, fao, '', '').
 language_iso(46, 'Austronesian', 'Fijian', 'vosa Vakaviti', fj, fij, fij, fij, '', '').
 language_iso(47, 'Uralic', 'Finnish', 'suomi, suomen kieli', fi, fin, fin, fin, '', '').
 language_iso(48, 'Indo-European', 'French', 'français, langue française', fr, fra, fre, fra, fras, '').
@@ -60,9 +60,9 @@ language_iso(49, 'Niger–Congo', 'Fula; Fulah; Pulaar; Pular', 'Fulfulde, Pulaa
 language_iso(50, 'Indo-European', 'Galician', galego, gl, glg, glg, glg, '', '').
 language_iso(51, 'South Caucasian', 'Georgian', 'ქართული', ka, kat, geo, kat, '', '').
 language_iso(52, 'Indo-European', 'German', 'Deutsch', de, deu, ger, deu, deus, '').
-language_iso(53, 'Indo-European', 'Greek, Modern', ελληνικά, el, ell, gre, ell, ells, '').
+language_iso(53, 'Indo-European', 'Greek, Modern', 'ελληνικά', el, ell, gre, ell, ells, '').
 language_iso(54, 'Tupian', 'Guaraní', 'Avañe\'ẽ', gn, grn, grn, 'grn + 5', '', macrolanguage).
-language_iso(55, 'Indo-European', 'Gujarati', ગુજરાતી, gu, guj, guj, guj, '', '').
+language_iso(55, 'Indo-European', 'Gujarati', 'ગુજરાતી', gu, guj, guj, guj, '', '').
 language_iso(56, 'Creole', 'Haitian; Haitian Creole', 'Kreyòl ayisyen', ht, hat, hat, hat, '', '').
 language_iso(57, 'Afro-Asiatic', 'Hausa', 'Hausa, هَوُسَ', ha, hau, hau, hau, '', '').
 language_iso(58, 'Afro-Asiatic', 'Hebrew (modern)', 'עברית', he, heb, heb, heb, '', '').
@@ -83,7 +83,7 @@ language_iso(72, 'Eskimo–Aleut', 'Inuktitut', 'ᐃᓄᒃᑎᑐᑦ', iu, iku, i
 language_iso(73, 'Japonic', 'Japanese', '日本語 (にほんご)', ja, jpn, jpn, jpn, '', '').
 language_iso(74, 'Austronesian', 'Javanese', 'basa Jawa', jv, jav, jav, jav, '', '').
 language_iso(75, 'Eskimo–Aleut', 'Kalaallisut, Greenlandic', 'kalaallisut, kalaallit oqaasii', kl, kal, kal, kal, '', '').
-language_iso(76, 'Dravidian', 'Kannada', ಕನ್ನಡ, kn, kan, kan, kan, '', '').
+language_iso(76, 'Dravidian', 'Kannada', 'ಕನ್ನಡ', kn, kan, kan, kan, '', '').
 language_iso(77, 'Nilo-Saharan', 'Kanuri', 'Kanuri', kr, kau, kau, 'kau + 3', '', macrolanguage).
 language_iso(78, 'Indo-European', 'Kashmiri', 'कश्मीरी, كشميري‎', ks, kas, kas, kas, '', '').
 language_iso(79, 'Turkic', 'Kazakh', 'қазақ тілі', kk, kaz, kaz, kaz, '', '').
@@ -109,17 +109,17 @@ language_iso(98, 'Indo-European', 'Manx', 'Gaelg, Gailck', gv, glv, glv, glv, ''
 language_iso(99, 'Indo-European', 'Macedonian', 'македонски јазик', mk, mkd, mac, mkd, '', '').
 language_iso(100, 'Austronesian', 'Malagasy', 'fiteny malagasy', mg, mlg, mlg, 'mlg + 10', '', macrolanguage).
 language_iso(101, 'Austronesian', 'Malay', 'bahasa Melayu, بهاس ملايو‎', ms, msa, may, 'msa + 13', '', 'macrolanguage, Standard Malay is [zsm], Indonesian is [id/ind]').
-language_iso(102, 'Dravidian', 'Malayalam', മലയാളം, ml, mal, mal, mal, '', '').
+language_iso(102, 'Dravidian', 'Malayalam', 'മലയാളം', ml, mal, mal, mal, '', '').
 language_iso(103, 'Afro-Asiatic', 'Maltese', 'Malti', mt, mlt, mlt, mlt, '', '').
 language_iso(104, 'Austronesian', 'Māori', 'te reo Māori', mi, mri, mao, mri, '', '').
-language_iso(105, 'Indo-European', 'Marathi (Marāṭhī)', मराठी, mr, mar, mar, mar, '', '').
+language_iso(105, 'Indo-European', 'Marathi (Marāṭhī)', 'मराठी', mr, mar, mar, mar, '', '').
 language_iso(106, 'Austronesian', 'Marshallese', 'Kajin M̧ajeļ', mh, mah, mah, mah, '', '').
 language_iso(107, 'Mongolic', 'Mongolian', 'монгол', mn, mon, mon, 'mon + 2', '', macrolanguage).
 language_iso(108, 'Austronesian', 'Nauru', 'Ekakairũ Naoero', na, nau, nau, nau, '', '').
 language_iso(109, 'Dené–Yeniseian', 'Navajo, Navaho', 'Diné bizaad, Dinékʼehǰí', nv, nav, nav, nav, '', '').
 language_iso(110, 'Indo-European', 'Norwegian Bokmål', 'Norsk bokmål', nb, nob, nob, nob, '', 'Covered by macrolanguage [no/nor]').
 language_iso(111, 'Niger–Congo', 'North Ndebele', isiNdebele, nd, nde, nde, nde, '', '').
-language_iso(112, 'Indo-European', 'Nepali', नेपाली, ne, nep, nep, nep, '', '').
+language_iso(112, 'Indo-European', 'Nepali', 'नेपाली', ne, nep, nep, nep, '', '').
 language_iso(113, 'Niger–Congo', 'Ndonga', 'Owambo', ng, ndo, ndo, ndo, '', '').
 language_iso(114, 'Indo-European', 'Norwegian Nynorsk', 'Norsk nynorsk', nn, nno, nno, nno, '', 'Covered by macrolanguage [no/nor]').
 language_iso(115, 'Indo-European', 'Norwegian', 'Norsk', no, nor, nor, 'nor + 2', '', 'macrolanguage, Bokmål is [nb/nob], Nynorsk is [nn/nno]').
@@ -129,10 +129,10 @@ language_iso(118, 'Indo-European', 'Occitan', 'occitan, lenga d\'òc', oc, oci, 
 language_iso(119, 'Algonquian', 'Ojibwe, Ojibwa', 'ᐊᓂᔑᓈᐯᒧᐎᓐ', oj, oji, oji, 'oji + 7', '', macrolanguage).
 language_iso(120, 'Indo-European', 'Old Church Slavonic, Church Slavonic, Old Bulgarian', 'ѩзыкъ словѣньскъ', cu, chu, chu, chu, '', 'ancient, in use by Orthodox Church').
 language_iso(121, 'Afro-Asiatic', 'Oromo', 'Afaan Oromoo', om, orm, orm, 'orm + 4', '', macrolanguage).
-language_iso(122, 'Indo-European', 'Oriya', ଓଡ଼ିଆ, or, ori, ori, ori, '', '').
+language_iso(122, 'Indo-European', 'Oriya', 'ଓଡ଼ିଆ', or, ori, ori, ori, '', '').
 language_iso(123, 'Indo-European', 'Ossetian, Ossetic', 'ирон æвзаг', os, oss, oss, oss, '', '').
 language_iso(124, 'Indo-European', 'Panjabi, Punjabi', 'ਪੰਜਾਬੀ, پنجابی‎', pa, pan, pan, pan, '', '').
-language_iso(125, 'Indo-European', 'Pāli', पाऴि, pi, pli, pli, pli, '', ancient).
+language_iso(125, 'Indo-European', 'Pāli', 'पाऴि', pi, pli, pli, pli, '', ancient).
 language_iso(126, 'Indo-European', 'Persian (Farsi)', 'فارسی', fa, fas, per, 'fas + 2', '', macrolanguage).
 language_iso(127, 'Indo-European', 'Polish', 'język polski, polszczyzna', pl, pol, pol, pol, pols, '').
 language_iso(128, 'Indo-European', 'Pashto, Pushto', 'پښتو', ps, pus, pus, 'pus + 3', '', macrolanguage).
@@ -151,7 +151,7 @@ language_iso(140, 'Creole', 'Sango', 'yângâ tî sängö', sg, sag, sag, sag, '
 language_iso(141, 'Indo-European', 'Serbian', 'српски језик', sr, srp, srp, srp, '', 'The ISO 639-2/T code srp deprecated the ISO 639-2/B code scc').
 language_iso(142, 'Indo-European', 'Scottish Gaelic; Gaelic', 'Gàidhlig', gd, gla, gla, gla, '', '').
 language_iso(143, 'Niger–Congo', 'Shona', chiShona, sn, sna, sna, sna, '', '').
-language_iso(144, 'Indo-European', 'Sinhala, Sinhalese', සිංහල, si, sin, sin, sin, '', '').
+language_iso(144, 'Indo-European', 'Sinhala, Sinhalese', 'සිංහල', si, sin, sin, sin, '', '').
 language_iso(145, 'Indo-European', 'Slovak', 'slovenčina, slovenský jazyk', sk, slk, slo, slk, '', '').
 language_iso(146, 'Indo-European', 'Slovene', 'slovenski jezik, slovenščina', sl, slv, slv, slv, '', '').
 language_iso(147, 'Afro-Asiatic', 'Somali', 'Soomaaliga, af Soomaali', so, som, som, som, '', '').
@@ -162,11 +162,11 @@ language_iso(151, 'Austronesian', 'Sundanese', 'Basa Sunda', su, sun, sun, sun, 
 language_iso(152, 'Niger–Congo', 'Swahili', 'Kiswahili', sw, swa, swa, 'swa + 2', '', macrolanguage).
 language_iso(153, 'Niger–Congo', 'Swati', 'SiSwati', ss, ssw, ssw, ssw, '', '').
 language_iso(154, 'Indo-European', 'Swedish', 'Svenska', sv, swe, swe, swe, '', '').
-language_iso(155, 'Dravidian', 'Tamil', 'தமிழ்', ta, tam, tam, tam, '', '').
-language_iso(156, 'Dravidian', 'Telugu', తెలుగు, te, tel, tel, tel, '', '').
+language_iso(155, 'Dravidian', 'Tamil', 'தமிழ்' ,ta, tam, tam, tam, '', '').
+language_iso(156, 'Dravidian', 'Telugu', 'తెలుగు', te, tel, tel, tel, '', '').
 language_iso(157, 'Indo-European', 'Tajik', 'тоҷикӣ, toğikī, تاجیکی‎', tg, tgk, tgk, tgk, '', '').
-language_iso(158, 'Tai–Kadai', 'Thai', ไทย, th, tha, tha, tha, '', '').
-language_iso(159, 'Afro-Asiatic', 'Tigrinya', ትግርኛ, ti, tir, tir, tir, '', '').
+language_iso(158, 'Tai–Kadai', 'Thai', 'ไทย', th, tha, tha, tha, '', '').
+language_iso(159, 'Afro-Asiatic', 'Tigrinya', 'ትግርኛ', ti, tir, tir, tir, '', '').
 language_iso(160, 'Sino-Tibetan', 'Tibetan Standard, Tibetan, Central', 'བོད་ཡིག', bo, bod, tib, bod, '', '').
 language_iso(161, 'Turkic', 'Turkmen', 'Türkmen, Түркмен', tk, tuk, tuk, tuk, '', '').
 language_iso(162, 'Austronesian', 'Tagalog', 'Wikang Tagalog, ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔', tl, tgl, tgl, tgl, '', 'Note: Filipino (Pilipino) has the code [fil]').
