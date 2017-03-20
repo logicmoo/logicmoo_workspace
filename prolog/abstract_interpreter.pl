@@ -74,6 +74,14 @@ evaluable_goal_hook(member(_, L), _) :-
 evaluable_goal_hook(option(O, L), _) :-
     is_list(L),
     nonvar(O).
+evaluable_goal_hook(nth0(I, L, _), _) :-
+    once(( is_list(L)
+         ; nonvar(I)
+         )).
+evaluable_goal_hook(nth1(I, L, _), _) :-
+    once(( is_list(L)
+         ; nonvar(I)
+         )).
 evaluable_goal_hook(var(V),     _) :- nonvar(V).
 evaluable_goal_hook(nonvar(V),  _) :- nonvar(V).
 evaluable_goal_hook(atomic(A),  _) :- nonvar(A).
