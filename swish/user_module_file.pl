@@ -4,6 +4,7 @@
 % To start as local server:
 % swipl -l user_module_file.pl -l ../../swish/server.pl -g server:server
 
+% :- use_module(library(http/http_log)).
 :- use_module('../../swish/swish').
 :- use_module('../../swish/lib/render').
 :- use_module(library(http/http_dispatch)).
@@ -36,8 +37,8 @@ sandbox:safe_primitive(psyntax:dumploaded).
 sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
 sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 % can not print output as usual, would interfere with http responses:
-% :- open('/Users/mc/git/lps_corner/swish/mylog.txt',write,S), assert(mylogFile(S)).
-% mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
+% :- open('mylog.txt',write,S), assert(mylogFile(S)).
+mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
 % :- asserta((prolog:message(A,B,C) :-  mylog(message-A), fail)).
 
 :- multifile prolog_colour:term_colours/2, prolog_colour:goal_colours/2.
