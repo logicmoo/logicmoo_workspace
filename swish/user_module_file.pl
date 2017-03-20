@@ -9,10 +9,9 @@
 :- use_module('../../swish/lib/render').
 :- use_module(library(http/http_dispatch)).
 
-% :- multifile term_rendering/5.
+% LPS visualizations will appear courtesy of either of two SWISH answer renderers:
 :- use_module(lps_2d_renderer,[]). % need not and can not import the rendering predicate into here
 :- use_module(lps_timeline_renderer,[]).
-
 :- use_rendering(lps_2d). % this will be the preferred... if available for the current visualization
 :- use_rendering(lps_timeline).
 
@@ -34,11 +33,11 @@ sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON)).
 sandbox:safe_primitive(psyntax:dumploaded). 
  
 % For debugging:
-sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
-sandbox:safe_primitive(swish_highlight:show_mirror(_)).
+% sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
+% sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 % can not print output as usual, would interfere with http responses:
 % :- open('mylog.txt',write,S), assert(mylogFile(S)).
-mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
+% mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
 % :- asserta((prolog:message(A,B,C) :-  mylog(message-A), fail)).
 
 :- multifile prolog_colour:term_colours/2, prolog_colour:goal_colours/2.
@@ -88,7 +87,7 @@ serve_lps_resources(Request) :- % http://localhost:3050/lps/foo/Gruntfile.js wor
 		option(path(Info), Request),  
         http_reply_file(lps_resources(Info), [], Request).
 
-% hack SWISH to inject our CSS
+% hack SWISH to inject our CSS and Google Analytics fragment...
 :- use_module('../../swish/lib/page',[swish_resources//0, swish_navbar//1]).
 :- use_module(library(http/html_write)).
 :- use_module(library(http/http_path)).
@@ -108,6 +107,7 @@ swish_page:swish_resources --> !,
 '))
 ), Expanded), swish_page:asserta(Expanded).
 
+% ... and to remove chat notifications widget, and add LPS site link:
 :- expand_term( (
 swish_page:swish_navbar(Options) --> !,
 	swish_resources,
@@ -131,7 +131,6 @@ swish_page:swish_navbar(Options) --> !,
 		       ])
 		 ]))
 ), Expanded), swish_page:asserta(Expanded).
-
 
 
 :- multifile term_expansion/4. % place this at the end so we don't get this file's terms...:
