@@ -84,5 +84,5 @@ bind_interface(Interface, Implementation) :-
     maplist(Interface:abolish, DIL),
     '$import_from_loaded_module'(Implementation, Interface, [imports(DIL)]),
     atom_concat(Interface, '$impl', II),
-    maplist(II:abolish, IIL),
+    forall(member(P, IIL), abolish(II:P)),
     '$import_from_loaded_module'(Implementation, II, [imports(IIL)]).
