@@ -3,7 +3,7 @@
 <div class="nb-cell markdown">
 ---+++ LPS in Prolog
 
-This implementation of LPS is implemented in Prolog, and exploits the SWISH implementation of SWI Prolog. Much of the LPS syntax and some of the other features of LPS are inherited from Prolog.
+This implementation of *LPS* is implemented in Prolog, and exploits the SWISH implementation of SWI Prolog. Much of the LPS syntax and some of the other features of LPS are inherited from Prolog.
 
 Consider the following, more elaborate variant of the light switch example:
 </div>
