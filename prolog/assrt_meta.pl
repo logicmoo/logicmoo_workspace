@@ -33,18 +33,30 @@
 :- use_module(library(assertions_op)).
 :- use_module(library(location_utils)).
 :- use_module(library(implementation_module)).
+:- use_module(library(tabling)).
 
 :- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
 
-assrt_lib:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
-    notrace(am_head_prop_idx(H, M, S, F)).
-assrt_lib:asr_glob(am_asr(M, H, S, F), assrt_meta,
-                   rtcheck_goal(_, [am_asr2(M, H, S, F)]), F).
+:- meta_predicate
+    with_amp(0, +, +).
+
+:- table
+    am_head_prop_idx/5.
+
+with_amp(Goal, OldFlag, NewFlag) :-
+    setup_call_cleanup(set_prolog_flag(assrt_meta_pred, NewFlag),
+                       Goal,
+                       set_prolog_flag(assrt_meta_pred, OldFlag)).
 
 am_head_prop_idx(Head, M, Meta, From) :-
-    var(Meta), !,
     current_prolog_flag(assrt_meta_pred, Flag),
     Flag \= none,
+    copy_term_nat(Head, Term),
+    with_amp(am_head_prop_idx(Flag, Term, M, Meta, From), Flag, none),
+    Head = Term.
+
+am_head_prop_idx(Flag, Head, M, Meta, From) :-
+    var(Meta), !,
     Pred = M:Head,
     ( var(Head)
     ->current_predicate(M:F/A),
@@ -57,14 +69,12 @@ am_head_prop_idx(Head, M, Meta, From) :-
     \+ predicate_property(Pred, nodebug),
     ( Flag = all
     ->
-      \+ ( freeze(Asr, (Asr \= am_asr(_, _, _, _))),
-           asr_head_prop(Asr, CM, Head, check, _, _, _),
+      \+ ( asr_head_prop(Asr, CM, Head, check, _, _, _),
            implementation_module(CM:Head, M),
            asr_glob(Asr, CM, no_meta_modes(_), _)
          )
     ; Flag = specific
-    ->once(( freeze(Asr, (Asr \= am_asr(_, _, _, _))),
-             asr_head_prop(Asr, CM, Head, check, _, _, _),
+    ->once(( asr_head_prop(Asr, CM, Head, check, _, _, _),
              implementation_module(CM:Head, M),
              asr_glob(Asr, CM, meta_modes(_), _)
            ))
@@ -77,7 +87,13 @@ am_head_prop_idx(Head, M, Meta, From) :-
     ; predicate_from(Pred, From)
     ),
     assertion(nonvar(From)).
-am_head_prop_idx(_, _, _, _).
+am_head_prop_idx(_, _, _, _, _).
+
+assrt_lib:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
+    am_head_prop_idx(H, M, S, F).
+assrt_lib:asr_glob(am_asr(M, H, S, F), assrt_meta,
+                   rtcheck_goal(_, [am_asr2(M, H, S, F)]), F) :-
+    am_head_prop_idx(H, M, S, F).
 
 assrt_lib:asr_aprop(am_asr2(M, H, _, From), head,   M:H, From).
 assrt_lib:asr_aprop(am_asr2(_, _, _, From), stat, check, From).

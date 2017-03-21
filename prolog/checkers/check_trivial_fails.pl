@@ -109,14 +109,20 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
     callable(H),
     \+ ignore_predicate(H, M),
     variant_sha1(ai(H, CM), Hash),
-    ( ai_cache_result(Hash, Data) -> true
-    ; once(abstract_interpreter(CM:H, MatchAI, [location(From)], Data)),
+    ( ai_cache_result(Hash, Data)
+    ->true
+    ; ( abstract_interpreter(CM:H, MatchAI, [location(From)], Result)
+      ->Data = true(Result)
+      ; Data = fail
+      ),
       assertz(ai_cache_result(Hash, Data))
     ),
-    Data = data(N, S, fail),
+    Data = fail,
+    N = 0,
+    S = [],
     ( N = 0
     ->Args = trivial_fail(Caller, MGoal)
-    ; Args = failure(Caller, MGoal, S)
+    ; Args = failure(Caller, MGoal, S) % General failure not implemented yet
     ),
     memberchk(Type, [lit, use]),
     update_fact_from(trivial_fail(Args), From).
