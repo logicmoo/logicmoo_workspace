@@ -43,7 +43,7 @@ goto(Person, _) 		terminates 	location(Person, _).
 Notice that in this example, the clauses:
 </div>
 
-<div class="nb-cell program">
+<div class="nb-cell markdown">
 switch(Person, Place) 	initiates light(Place, New)	
 if 		light(Place, Old), opposite(New, Old).
 
@@ -55,7 +55,7 @@ opposite(on, off).
 replace the two clauses in the earlier notebook:
 </div>
 
-<div class="nb-cell program">
+<div class="nb-cell markdown">
 switch initiates 	lightOn 	if lightOff.
 switch initiates 	lightOff 	if lightOn.
 </div>
