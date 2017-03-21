@@ -119,7 +119,7 @@ swish_page:swish_navbar(Options) --> !,
 		 [ div(class('navbar-header'),
 		       [ \collapsed_button,
 			 \swish_logos(Options), 
-			 span('with '), a([href('https://bitbucket.org/lpsmasters/lps_corner'),target('_blank')],'LPS') 
+			 span([style('font-size:20px')],[span([],'with '), a([href('https://bitbucket.org/lpsmasters/lps_corner'),target('_blank'),title('Visit LPS website')],'LPS')]) 
 		       ]),
 		   div([ class([collapse, 'navbar-collapse']),
 			 id(navbar)
