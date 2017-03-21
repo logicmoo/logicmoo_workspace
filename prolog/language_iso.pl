@@ -13,11 +13,11 @@ language_iso(2, 'Afro-Asiatic', 'Afar', 'Afaraf', aa, aar, aar, aar, aars, '').
 language_iso(3, 'Indo-European', 'Afrikaans', 'Afrikaans', af, afr, afr, afr, afrs, '').
 language_iso(4, 'Niger–Congo', 'Akan', 'Akan', ak, aka, aka, 'aka + 2', '', 'macrolanguage, Twi is [tw/twi], Fanti is [fat]').
 language_iso(5, 'Indo-European', 'Albanian', 'gjuha shqipe', sq, sqi, alb, 'sqi + 4', '–', 'macrolanguage, "Albanian Phylozone" in 639-6').
-language_iso(6, 'Afro-Asiatic', 'Amharic', አማርኛ, am, amh, amh, amh, '', '').
-language_iso(7, 'Afro-Asiatic', 'Arabic', العربية, ar, ara, ara, 'ara + 30', '', 'macrolanguage, Standard Arabic is [arb]').
-language_iso(8, 'Indo-European', 'Aragonese', aragonés, an, arg, arg, arg, '', '').
+language_iso(6, 'Afro-Asiatic', 'Amharic', 'አማርኛ', am, amh, amh, amh, '', '').
+language_iso(7, 'Afro-Asiatic', 'Arabic', 'العربية', ar, ara, ara, 'ara + 30', '', 'macrolanguage, Standard Arabic is [arb]').
+language_iso(8, 'Indo-European', 'Aragonese', 'aragonés', an, arg, arg, arg, '', '').
 language_iso(9, 'Indo-European', 'Armenian', 'Հայերեն', hy, hye, arm, hye, '', '').
-language_iso(10, 'Indo-European', 'Assamese', অসমীয়া, as, asm, asm, asm, '', '').
+language_iso(10, 'Indo-European', 'Assamese', 'অসমীয়া', as, asm, asm, asm, '', '').
 language_iso(11, 'Northeast Caucasian', 'Avaric', 'авар мацӀ, магӀарул мацӀ', av, ava, ava, ava, '', '').
 language_iso(12, 'Indo-European', 'Avestan', avesta, ae, ave, ave, ave, '', ancient).
 language_iso(13, 'Aymaran', 'Aymara', 'aymar aru', ay, aym, aym, 'aym + 2', '', macrolanguage).
