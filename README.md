@@ -1,9 +1,7 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the development of LPS engines, examples and related tools.
 
-## Please notice new Syntax at
-
-[this wiki page](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
+## Please notice new Syntax at [this wiki page](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
 
 ## What is LPS? ##
 
@@ -16,7 +14,7 @@ Additional material about the kernel of LPS is available on the [RuleML wiki](ht
 
 The implementation in this repository is an evolved version of the interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda.
 
-Current LPS syntax can be seen at  
+Current LPS syntax can be seen at [this wiki page](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
 
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices.
