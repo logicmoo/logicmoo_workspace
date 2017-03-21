@@ -43,6 +43,11 @@
 :- table
     am_head_prop_idx/5.
 
+meta_has_mode_info(Meta) :-
+    arg(_, Meta, Spec),
+    memberchk(Spec, [+,-]),
+    !.
+
 with_amp(Goal, OldFlag, NewFlag) :-
     setup_call_cleanup(set_prolog_flag(assrt_meta_pred, NewFlag),
                        Goal,
@@ -59,14 +64,19 @@ am_head_prop_idx(Flag, Head, M, Meta, From) :-
     var(Meta), !,
     Pred = M:Head,
     ( var(Head)
-    ->current_predicate(M:F/A),
+    ->module_property(M, class(user)),
+      current_predicate(M:F/A),
       functor(Head, F, A)
     ; functor(Head, F, A),
+      module_property(M, class(user)),
       current_predicate(M:F/A) % Narrow answer set for M
     ),
     \+ predicate_property(Pred, imported_from(_)),
     % if something can not be debugged, can not be rtchecked either:
     \+ predicate_property(Pred, nodebug),
+    '$predicate_property'(meta_predicate(Meta), Pred),
+    % predicate_property(Pred, meta_predicate(Meta)),
+    meta_has_mode_info(Meta),
     ( Flag = all
     ->
       \+ ( asr_head_prop(Asr, CM, Head, check, _, _, _),
@@ -79,8 +89,6 @@ am_head_prop_idx(Flag, Head, M, Meta, From) :-
              asr_glob(Asr, CM, meta_modes(_), _)
            ))
     ),
-    '$predicate_property'(meta_predicate(Meta), Pred),
-    % predicate_property(Pred, meta_predicate(Meta)),
     ( property_from(M:Pred, meta_predicate, From),
       From \= []
     ->true
@@ -98,7 +106,9 @@ assrt_lib:asr_glob(am_asr(M, H, S, F), assrt_meta,
 assrt_lib:asr_aprop(am_asr2(M, H, _, From), head,   M:H, From).
 assrt_lib:asr_aprop(am_asr2(_, _, _, From), stat, check, From).
 assrt_lib:asr_aprop(am_asr2(_, _, _, From), type,  pred, From).
-assrt_lib:asr_aprop(am_asr2(M, H, Meta, From), call,  Prop, From) :-
+assrt_lib:asr_aprop(am_asr2(M, H, Meta, From), Type,  Prop, From) :-
+    (nonvar(Type) -> memberchk(Type, [call, succ]) ; true),
     assrt_lib:current_normalized_assertion(pred Meta, M, _, M:H, _,
-                                           _, _, CaL, _, _, _, _, _),
-    member(Prop-_, CaL).
+                                           _, _, CaL, SuL, _, _, _, _),
+    member(Type-PropL, [call-CaL, succ-SuL]),
+    member(Prop-_, PropL).
