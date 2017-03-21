@@ -31,6 +31,7 @@
 
 :- use_module(library(assrt_lib), []).
 :- use_module(library(interface), []).
+:- use_module(library(context_values)).
 
 % Propagate assertions in an interface to the implementation
 
@@ -38,9 +39,11 @@ assrt_lib:asr_head_prop(in_asr(IM, Head, Asr), IM, Head, Status, Type, Dict, Loc
     head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr).
 
 head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr) :-
+    \+ current_context_value(evaluating, true),
     interface:'$implementation'(IM, Interface),
-    freeze(Asr, Asr \= in_asr(_, _, _)),
-    assrt_lib:asr_head_prop(Asr, Interface, Head, Status, Type, Dict, Loc).
+    with_context_value(assrt_lib:asr_head_prop(Asr, Interface, Head,
+                                               Status, Type, Dict, Loc),
+                       evaluating, true).
 
 assrt_lib:asr_comm(in_asr(IM, Head, Asr), Comm, Loc) :-
     head_prop_asr_intf(Head, IM, _, _, _, _, Asr),

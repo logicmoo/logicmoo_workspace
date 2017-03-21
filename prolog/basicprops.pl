@@ -66,7 +66,7 @@ and as meta predicates, meta_predicate F(0) (assrt_lib.pl)".
 
 global(Goal) :- call(Goal).
 
-:- global global(Goal, Prop) : (callable(Goal), assrt_type(Prop))
+:- global global(Goal, Prop) : (callable(Goal), no_rtcheck, assrt_type(Prop))
 # "Like global/1, but allows to specify the default assertion type".
 
 global(Goal, _) :- call(Goal).
@@ -652,12 +652,12 @@ prolog:called_by(Goal, basicprops, CM, CL) :-
     unfoldable(Goal, M),
     unfold_calls(Goal, CM, unfoldable, CL).
 
-:- global meta_modes(Goal)
+:- global meta_modes(Goal) + no_rtcheck
     # "The modes for ~w are specified in the meta_predicate declaration"-[Goal].
 
 meta_modes(Goal) :- call(Goal).
 
-:- global no_meta_modes(Goal)
+:- global no_meta_modes(Goal) + no_rtcheck
     # "The modes for ~w are not specified in the meta_predicate declaration"-[Goal].
 
 no_meta_modes(Goal) :- call(Goal).
