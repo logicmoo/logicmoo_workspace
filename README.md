@@ -1,8 +1,6 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the development of LPS engines, examples and related tools.
 
-## Please notice new Syntax at [this wiki page](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
-
 ## What is LPS? ##
 
 “Logic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at Imperial College London. 
@@ -21,7 +19,36 @@ All files in this repository are copyright Imperial College London and open sour
 
 Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/), and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto).
 
+## Trying LPS online ##
+At the moment there's one LPS SWISH instance at <http://lpsdemo.interprolog.com>, open to the public for moderate usage. SWISH is a SWI-Prolog web environment, which has been customized for several logic languages, including LPS. 
+
+Start with menu Examples / First Steps with LPS and links therein, as well as "LPS Examples". Refer to the LPS [syntax](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
+
+For regular or intensive usage you should install LPS on your machine, using a number of alternatives:
+
 ## Installing ##
+### LPS on SWISH (web environment) ###
+This is likely the most sensible option for most people.
+#### Local machine ####
+For individual usage the following simplified instructions apply (valid for Windows, Mac and probably Linux too):
+
+* Install the Development version of SWI-Prolog from <http://www.swi-prolog.org/download/devel>; make sure swipl is in your PATH
+* clone <https://bitbucket.org/lpsmasters/lps_corner> (this repository)
+* either clone and build the latest swish from <https://github.com/SWI-Prolog/swish>, or simply download and extract <https://www.dropbox.com/s/fkn5omu302cc25t/swish.zip?dl=0> (based on swish 24217ef) 
+* make sure that you end up with two directories lps_demo (with subdirectories doc,engine,etc.) and swish (with subdirectories client, etc.), side by side in the same directory D
+* open a command shell window
+* cd D/lps_demo/swish
+* swipl -l user_module_file.pl -l ../../swish/server.pl -g server:server
+
+You should get a message such as:
+
+```
+% Started server at http://localhost:3050/
+```
+Open that address with your browser, and you should now have the same functionality as <http://lpsdemo.interprolog.com>
+
+#### Cloud server ####
+Please see separate document for [installing on SWISH server](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/swish/INSTALL.md), e.g. for a Linux server on the cloud. 
 ### Core engine ###
 * Pull or download this whole repository into a new folder "LPS"
 * Install Prolog:
@@ -179,7 +206,7 @@ To install:
 See the robot game at [https://bobthesimplebot.github.io]()
 
 ## How to contribute ##
-* See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/6a587ecd410fd81b8d799554dd86796af9c7e380/RoadMap.md?at=master) 
+* See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/RoadMap.md) 
 * Before you commit any changes to the LPS engine or tools, make sure you execute all tests with 'test_examples'.
 * Please comment your code, and add appropriate copyright/license header
 * To edit this and other future wiki documents: [learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
