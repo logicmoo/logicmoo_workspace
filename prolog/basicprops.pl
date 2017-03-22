@@ -66,7 +66,7 @@ and as meta predicates, meta_predicate F(0) (assrt_lib.pl)".
 
 global(Goal) :- call(Goal).
 
-:- global global(Goal, Prop) : (callable(Goal), no_rtcheck, assrt_type(Prop))
+:- global global(Goal, Prop) : (callable(Goal), assrt_type(Prop)) + no_rtcheck
 # "Like global/1, but allows to specify the default assertion type".
 
 global(Goal, _) :- call(Goal).
