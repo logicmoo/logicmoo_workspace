@@ -85,7 +85,6 @@ terms_share(A, VarsR, B) :-
 slicer_abstraction(Spec, VarsR, Scope, Goal, M, Body,
                    state(_, EvalL, OnErr, CallL, Data, Cont),
                    state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
-    %{ nonvar(Goal), Goal = check_reaktionsenthalpie(_,_) -> gtrace ; true },
     {predicate_property(M:Goal, interpreted)}, !,
     { \+ ground(Spec),
       chain_of_dependencies(Spec, VarsR, Goal, Cont)
