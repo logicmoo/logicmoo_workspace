@@ -1,0 +1,36 @@
+
+maxTime(8).
+
+fluents
+    [_1368-_1370].
+
+actions
+    [die(_1368),live(_1372)].
+
+initial_state([2-3,3-3,4-3]).
+
+reactive_rule([holds(_1368-_1370,_1376),holds(aliveNeighbors(_1368-_1370,_1388),_1376),_1388<2],[happens(die(_1368-_1370),_1784,_1790)]).
+
+reactive_rule([holds(_1368-_1370,_1376),holds(aliveNeighbors(_1368-_1370,_1388),_1376),_1388>3],[happens(die(_1368-_1370),_1776,_1782)]).
+
+reactive_rule([cell(_1368,_1370),holds(aliveNeighbors(_1368-_1370,3),_1388)],[happens(live(_1368-_1370),_1638,_1644)]).
+
+cell(_1368,_1370) :-
+    _1434=[1,2,3,4,5,6,7,8,9,10],
+    member(_1368,_1434),
+    member(_1370,_1434).
+
+adjacent(_1368-_1370,_1376) :-
+    findall(_1380-_1382,(member(_1404,[-1,0,1]),member(_1428,[-1,0,1]),not (_1404=0,_1428=0),_1380 is _1368+_1404,_1382 is _1370+_1428),_1376).
+
+l_int(holds(aliveNeighbors(_1368-_1370,_1376),_1382),[adjacent(_1368-_1370,_1394),holds(countLivingNeighbors(_1394,_1376),_1382)]).
+
+l_int(holds(countLivingNeighbors([],0),_1376),[]).
+
+l_int(holds(countLivingNeighbors([_1368-_1370|_1376],_1382),_1388),[holds(_1368-_1370,_1388),holds(countLivingNeighbors(_1376,_1406),_1388),_1382 is _1406+1]).
+
+l_int(holds(countLivingNeighbors([_1368-_1370|_1376],_1382),_1388),[holds(not _1368-_1370,_1388),holds(countLivingNeighbors(_1376,_1382),_1388)]).
+
+initiated(happens(live(_1368-_1370),_1490,_1496),_1368-_1370,[]).
+
+terminated(happens(die(_1368-_1370),_1490,_1496),_1368-_1370,[]).

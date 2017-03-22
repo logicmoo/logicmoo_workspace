@@ -39,23 +39,6 @@ false
     From1\==From2.
 
 
-d(balance(Person,V), 
-	[from:[X,0], to:[RightX,V], label:(Person:V), type:rectangle,  fontSize:13, fillColor:'#85bb65'/* USD:-)*/ ]
-	) :- 
-    (Person=bob,X=50;Person=fariba,X=200),
-    RightX is X+70.
-    
-d(transfer(From,To,Amount),[type:arrow, label:Amount, from:[FX,20], to:[TX,20]]) :- 
-    (From=bob,FX=120,TX=200 ; From=fariba,FX=200,TX=120).
-
-d(timeless,[ 
-    % a display spec can be a list of properties (for one object) or a list of lists (4 objects here:)
-    [type:star, center:[250,150], points:9, radius1:20, radius2:25, fillColor:yellow, sendToBack],
-    [type:rectangle, fillColor:[0,0.746,1] /*R,G,B*/, from:[0,0], to:[320,200], sendToBack],
-    [type:ellipse, shadowOffset:5, shadowColor:darkGray , point:[50,150], size:[110, 40],fillColor: white],
-    [type:ellipse,  point:[20,130], size:[90, 30],fillColor: white ]
-]).
-
 /** <examples>
 ?- go(Timeline).
 */

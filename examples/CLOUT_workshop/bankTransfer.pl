@@ -1,6 +1,6 @@
 % bankTransfer
 
-maxTime(30).
+maxTime(10).
 actions		transfer(From, To, Amount).
 fluents		balance(Person, Amount).
 
@@ -28,7 +28,7 @@ false	transfer(From, To, Amount), balance(From, Old),  Old < Amount.
 false	transfer(From, To1, Amount1), transfer(From, To2, Amount2),  To1 \=To2.
 false	transfer(From1, To, Amount1), transfer(From2, To, Amount2),  From1 \= From2.
 
-/*
+/* Uncomment this to get an experimental 2d display:
 d(balance(Person,V), 
 	[from:[X,0], to:[RightX,V], label:(Person:V), type:rectangle,  fontSize:13, fillColor:'#85bb65'/* USD:-)*/ ]
 	) :- 

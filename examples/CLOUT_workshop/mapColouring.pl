@@ -38,3 +38,5 @@ false
 */
 
 /** <examples>
+?- go(Timeline).
+*/

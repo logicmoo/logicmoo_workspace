@@ -31,3 +31,7 @@ eliminate terminates water.
 refill initiates water.
 
 false	eliminate, fire, not water.
+
+/** <examples>
+?- go(Timeline).
+*/

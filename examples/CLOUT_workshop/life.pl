@@ -44,7 +44,7 @@ if	not(X-Y) at T, countLivingNeighbors(Cells,N) at T.
 live(X-Y) 	initiates X-Y.	
 die(X-Y) 	terminates X-Y.
 
-/*
+/* Uncomment this to get an experimental 2d display; then you might comment out again the d(live... and d(die... clauses:
 d(X-Y,[center:[XX,YY], radius:5, type:circle, fillColor:green]) :- 
     XX is X*10, YY is Y*10.
 d(live(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:red]) :- 

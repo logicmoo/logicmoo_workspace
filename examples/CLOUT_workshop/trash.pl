@@ -18,5 +18,5 @@ dispose(Object, _Container) terminates 	trash(Object).
 false  dispose(_Object, Container), locked(Container).
 
 /** <examples>
-?- go(Timeline).
+?- godc(Timeline). % experimental LPS executor variant
 */
