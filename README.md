@@ -34,6 +34,7 @@ For individual usage the following simplified instructions apply (valid for Wind
 
 * Install the Development version of SWI-Prolog from <http://www.swi-prolog.org/download/devel>; make sure swipl is in your PATH
 * clone <https://bitbucket.org/lpsmasters/lps_corner> (this repository)
+	* either execute swish/INSTALL.sh or download and expand <https://www.dropbox.com/s/g8f3y1ag8v4afq5/bower_components.zip?dl=0> 
 * either clone and build the latest swish from <https://github.com/SWI-Prolog/swish>, or simply download and extract <https://www.dropbox.com/s/fkn5omu302cc25t/swish.zip?dl=0> (based on swish 24217ef) 
 * make sure that you end up with two directories lps_demo (with subdirectories doc,engine,etc.) and swish (with subdirectories client, etc.), side by side in the same directory D
 * open a command shell window
