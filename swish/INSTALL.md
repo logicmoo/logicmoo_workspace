@@ -65,7 +65,13 @@ git clone https://github.com/SWI-Prolog/swish.git
 cd swish
 git submodule update --init
 bower install
+#as of now, this seems to be missing from the previous step and must be performed too:
+#bower install jquery-ui
 make src
+```
+Ideally minify swish referring to its documentation, or at least comment line swish/web/js/swish.js:47:
+```
+urlArgs: "ts="+new Date().getTime(),	/* prevent caching during development */
 ```
 ## LPS site ##
 ```
