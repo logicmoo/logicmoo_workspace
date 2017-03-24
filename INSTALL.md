@@ -20,7 +20,7 @@ You should get a message such as:
 % Started server at http://localhost:3050/
 ```
 Open that address with your browser, and you should now have the same functionality as <http://lpsdemo.interprolog.com> :
-![Opening LPS on SWISH](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/doc/OpeningSWISH.png)
+![Opening LPS on SWISH](https://bitbucket.org/lpsmasters/lps_corner/src/a2fc6d21ccba40f01117b69b47573ae96baee9f6/doc/OpeningSWISH.png)
 
 ### Cloud server ###
 Please see separate document for [installing on SWISH server](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/swish/INSTALL_server.md), e.g. for a Linux server on the cloud. 
