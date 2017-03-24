@@ -13,8 +13,7 @@ Additional material about the kernel of LPS is available on the [RuleML wiki](ht
 ## Trying LPS online ##
 See and try the language at <http://lpsdemo.interprolog.com>: 
 
-![Opening LPS on SWISH](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/doc/Opening_lpsdemo)
-
+![Opening LPS on SWISH](https://bitbucket.org/repo/z4LaLk/images/1779163991-Opening_lpsdemo.png)
 Start with menu Examples / First Steps with LPS and links therein, as well as "LPS Examples". Refer to the LPS [syntax](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
 
 For regular or intensive usage you can install LPS on your machine, using a number of alternatives:
