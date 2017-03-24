@@ -1,4 +1,4 @@
-# How to install LPS as a SWISH server #
+# How to install LPS as a SWISH cloud server #
 The following applies to Linux Ubuntu, and is a collage of specific instructions for each part for convenience as of March 2017; refer to the original URLs below for more details and updates.
 
 A less Unix-challenged soul (than yours truly) should have no difficulty adapting this into a single Shell script or dockerfile.
