@@ -986,8 +986,8 @@ do_test_suite([F|Files],Options,[F-R|Results]) :-
 	expand_filename(F,Path),
 	file_exists(Path),
 	!,
-	go(Path,Options),
-	( \+ lps_failed_test(_,_) -> R=ok 
+	
+	( (go(Path,Options), \+ lps_failed_test(_,_)) -> R=ok 
 	; 
 	findall(LPSR/Expected,lps_failed_test(LPSR,Expected),Failures), R=failed(Failures) 
 	),
