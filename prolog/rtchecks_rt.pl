@@ -1,7 +1,35 @@
+/*  Part of Tools for SWI-Prolog
+
+    Author:        Edison Mera Menendez
+    E-mail:        efmera@gmail.com
+    WWW:           https://github.com/edisonm/refactor
+    Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+    As a special exception, if you link this library with other files,
+    compiled with a Free Software compiler, to produce an executable, this
+    library does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however
+    invalidate any other reasons why the executable file might be covered by
+    the GNU General Public License.
+*/
+
 :- module(rtchecks_rt,
-          [rtcheck_goal/1,
-           rtcheck_goal/2,
-           rtcheck_goal/4,
+          [rtcheck_goal/2,
+           rtcheck_call/2,
            rtc_call/2,
            '$with_gloc'/2,
            '$with_asr_head'/2,
@@ -125,9 +153,10 @@ checkif_asr_props([], Asr, PType, Part, Check, Call) :-
     send_rtcheck_asr(PType, Asr-PropValues).
 
 :- meta_predicate checkif_asrs_comp(+, 0).
-checkif_asrs_comp([], _, Goal) :- call(Goal).
+checkif_asrs_comp([], _, Goal) :-
+    call(Goal).
 checkif_asrs_comp([Asr-PVL|AsrL], Head, Goal1) :-
-    notrace(checkif_asr_comp(PVL, Asr, Head, Goal1, Goal)),
+    checkif_asr_comp(PVL, Asr, Head, Goal1, Goal),
     checkif_asrs_comp(AsrL, Head, Goal).
 
 valid_command(times(_, _)).
@@ -145,29 +174,28 @@ checkif_asr_comp([], Asr, Head, Goal1, '$with_asr_head'(Goal, Asr-Head)) :-
 comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
     arg(1, Glob, Goal).
 
-
-:- meta_predicate rtcheck_goal(0, +).
-rtcheck_goal(CM:Goal, AsrL) :-
+:- meta_predicate rtcheck_call(0, +).
+rtcheck_call(CM:Goal, AsrL) :-
     implementation_module(CM:Goal, M),
-    rtcheck_goal(Goal, M, CM, AsrL).
+    rtcheck_goal(Goal, CM:Goal, M, CM, AsrL).
 
-rtcheck_goal(Goal, M, CM, AsrL) :-
+rtcheck_goal(Goal, Call, M, CM, AsrL) :-
     checkif_modl(M, CM,
                  check_asrs(step1, AsrL, Goal, G2), G2,
-                 check_asrs(step2, AsrL, Goal, CM:Goal)).
+                 check_asrs(step2, AsrL, Goal, Call)).
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
 ppassertion_type_goal(true( Goal), true,  Goal).
 ppassertion_type_goal(false(Goal), false, Goal).
 
-:- meta_predicate rtcheck_goal(0).
-rtcheck_goal(CM:Goal0) :-
-    notrace(resolve_calln(Goal0, Goal)),
+:- meta_predicate rtcheck_goal(0, 1).
+rtcheck_goal(CM:Goal0, Call) :-
+    resolve_calln(Goal0, Goal),
     ( ppassertion_type_goal(Goal, Type, Pred)
     ->rtc_call(Type, CM:Pred)
-    ; notrace(collect_rtasr(Goal, CM, Pred, M, RAsrL)),
-      rtcheck_goal(Pred, M, CM, RAsrL)
+    ; collect_rtasr(Goal, CM, Pred, M, RAsrL),
+      rtcheck_goal(Pred, call(Call, CM:Pred), M, CM, RAsrL)
     ).
 
 collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
@@ -221,10 +249,10 @@ rtcheck_assr_type(success).
 % ----------------------------------------------------------------------------
 
 check_asrs(Step, AsrL, Head, Goal) :-
-    notrace(check_asrs_pre(Step, AsrL,
-                           AsrGlobL, AsrCompL, AsrSuccL)),
+    check_asrs_pre(Step, AsrL,
+		   AsrGlobL, AsrCompL, AsrSuccL),
     checkif_asrs_comp(AsrGlobL, Head, Goal),
-    notrace(check_asrs_pos(AsrCompL, AsrSuccL)).
+    check_asrs_pos(AsrCompL, AsrSuccL).
 
 check_asrs_pos(AsrCompL, AsrSuccL) :-
     checkif_asrs_props(compat,  AsrCompL),

@@ -1,3 +1,32 @@
+/*  Part of Tools for SWI-Prolog
+
+    Author:        Edison Mera Menendez
+    E-mail:        efmera@gmail.com
+    WWW:           https://github.com/edisonm/refactor
+    Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+    As a special exception, if you link this library with other files,
+    compiled with a Free Software compiler, to produce an executable, this
+    library does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however
+    invalidate any other reasons why the executable file might be covered by
+    the GNU General Public License.
+*/
+
 :- module(rtchecks_tracer, [trace_rtc/1,
                             do_trace_rtc/1]).
 
@@ -6,6 +35,7 @@
 :- use_module(library(apply)).
 :- use_module(library(context_values)).
 :- use_module(system:library(rtchecks_rt)).
+:- use_module(system:library(rtchecks_tracer_rt)).
 :- use_module(library(rtchecks_utils)).
 :- use_module(library(implementation_module)).
 :- use_module(library(intercept)).
@@ -27,18 +57,23 @@ trace_rtc(Goal) :-
 
 do_trace_rtc(Goal) :-
     get_rtcheck_body(Goal, RTChecks),
-    call_inoutex(RTChecks,
-                 setup_trace,
-                 cleanup_trace).
+    call_inoutex(RTChecks, setup_trace, cleanup_trace).
 
 rtcheck_lib(rtchecks_rt).
 rtcheck_lib(nativeprops).
 
-builtin_spec(G, S) :-
-    predicate_property(system:G, meta_predicate(S)),
-    predicate_property(system:G, imported_from(M)),
-    \+ rtcheck_lib(M),
-    once(arg(_, S, 0 )).
+builtin_spec(M, G, S) :-
+    predicate_property(M:G, meta_predicate(S)),
+    once(arg(_, S, 0 )),
+    ( predicate_property(M:G, imported_from(IM))
+    ->( IM = system
+      ->true
+      ; \+ rtcheck_lib(IM),
+	predicate_property(system:G, imported_from(IM))
+      )
+    ; M = system
+    ->true
+    ).
 
 :- meta_predicate get_rtcheck_body(0, -).
 get_rtcheck_body(M:Call, RTChecks) :-
@@ -48,11 +83,11 @@ rtcheck_body(_, G, G) :- var(G), !.
 rtcheck_body(_, M:G, M:R) :- !,
     rtcheck_body(M, G, R).
 rtcheck_body(M, G, R) :-
-    builtin_spec(G, S), !,
+    builtin_spec(M, G, S), !,
     functor(G, F, A),
     functor(R, F, A),
     mapargs(rtcheck_body_meta_arg(M), S, G, R).
-rtcheck_body(M, G, rtcheck_goal(M:G)).
+rtcheck_body(M, G, rtcheck_call(M:G)).
 
 rtcheck_body_meta_arg(M, _, 0, G, R) :- !, rtcheck_body(M, G, R).
 rtcheck_body_meta_arg(_, _, _, R, R).
@@ -70,8 +105,8 @@ setup_trace :-
     trace.
 
 cleanup_trace :-
-    forall(retract(rtc_state(Visible, Leash, Ref)),
-           ontrace:cleanup_trace(state(Visible, Leash, Ref))),
+    retract(rtc_state(Visible, Leash, Ref)),
+    cleanup_trace(state(Visible, Leash, Ref)),
     retractall(rtc_scanned(_)),
     forall(retract(rtc_break(Clause, PC)),
            ignore('$break_at'(Clause, PC, false))).
@@ -129,9 +164,10 @@ pp_assr(false(_), _).
 
 % rtcheck_port(_,_,skip) :- !.
 rtcheck_port(Port, Frame, Action) :-
+    tracing,
     ( current_prolog_flag(gui_tracer, true)
     ->print_message(information,
-                    format("gui_tracer activated, rtchecks tracer will be disabled", [])),
+                    format("gui_tracer activated, rtchecks disabled", [])),
       cleanup_trace,
       visible(+cut_call),
       Action = up
@@ -207,11 +243,13 @@ system:( '$rat_trap'(RTChecks, Goal, Caller, Clause, PC) :-
     send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error)).
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
+%     tracing,
 %     clause_property(Clause, predicate(PI)),
 %     writeln(user_error, prolog:break_hook(Clause:PI, PC, FR, FBR, Expr, _)),
 %     % backtrace(50),
 %     fail.
 prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
+    tracing,
     \+ current_prolog_flag(gui_tracer, true),
     rtc_break(Clause, PC),
     prolog_frame_attribute(FR, context_module, FCM),
