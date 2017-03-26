@@ -28,6 +28,7 @@
 */
 
 :- module(ontrace, [ontrace/3,
+		    cleanup_trace/1,
                     call_inoutex/3]).
 
 :- use_module(library(apply)).

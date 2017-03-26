@@ -1,12 +1,14 @@
 :- module(assrt_meta_ex,
           [amtest/0,
            amtestf/0,
-           metapred/4]).
+           metapred/4,
+	   amtestf2/0]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
 :- use_module(library(nativeprops)).
 :- use_module(library(edinburgh)).
+:- use_module(library(mapargs)).
 :- use_module(library(rtchecks)).
 
 :- meta_predicate metapred(+,-,?,1).
@@ -34,3 +36,9 @@ metapred(Input, Output, IO, Call) :-
     display(Input),
     Output=out(Input),
     IO=(Input-Output).
+
+display1(N, T) :- writeln(N-T).
+
+amtestf2 :-
+    Data = data(a, b, c),
+    mapargs(display1, Data).

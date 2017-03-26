@@ -100,7 +100,7 @@ am_head_prop_idx(_, _, _, _, _).
 assrt_lib:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
     am_head_prop_idx(H, M, S, F).
 assrt_lib:asr_glob(am_asr(M, H, S, F), assrt_meta,
-                   rtcheck_goal(_, [am_asr2(M, H, S, F)]), F) :-
+                   rtcheck_call(_, [am_asr2(M, H, S, F)]), F) :-
     am_head_prop_idx(H, M, S, F).
 
 assrt_lib:asr_aprop(am_asr2(M, H, _, From), head,   M:H, From).
