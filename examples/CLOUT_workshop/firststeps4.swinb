@@ -3,7 +3,7 @@
 <div class="nb-cell markdown">
 ---+++ LPS in Prolog
 
-This implementation of *LPS* is implemented in Prolog, and exploits the SWISH implementation of SWI Prolog. Much of the LPS syntax and some of the other features of LPS are inherited from Prolog.
+This version of *LPS* is implemented in Prolog, and exploits the SWISH implementation of SWI Prolog. Much of the LPS syntax and some of the other features of LPS are inherited from Prolog.
 
 Consider the following, more elaborate variant of the light switch example:
 </div>
@@ -95,22 +95,39 @@ actions switch(_,_, _), goto(_,_).
 initially 	light(livingroom, off), light(kitchen, on), 
 			light(bedroom, on), light(bathroom, on),
 			location(bob, livingroom), location(dad, kitchen).
+<<<<<<< HEAD
 			
 
+=======
+								
+>>>>>>> bc43f7fcc54288055eb34e9b0f934b1b51cf99e5
 opposite(off, on).
 opposite(on, off).
 
 if 		location(bob, Place) at T1, light(Place, off) at T1
 then 	switch(bob, Place, on) from T1 to T2.
+<<<<<<< HEAD
+=======
+
+>>>>>>> bc43f7fcc54288055eb34e9b0f934b1b51cf99e5
 
 if light(Place, on) at T1, location(dad, Place) at T1
 then switch(dad, Place, off) from T1 to T2.
 
 if light(Place, on) at T1, not location(dad, Place) at T1
 then goto(dad, Place) from T2 to T3.
+<<<<<<< HEAD
 
 switch(Person, Place, New) 	initiates light(Place, New).
 switch(Person, Place, New) 	terminates light(Place, Old).
+=======
+
+switch(Person, Place, New) 	initiates light(Place, New).
+% if 		light(Place, Old), opposite(New, Old).
+
+switch(Person, Place, New) 	terminates light(Place, Old).
+% if opposite(New, Old).
+>>>>>>> bc43f7fcc54288055eb34e9b0f934b1b51cf99e5
 
 goto(Person, Place) 	initiates 	location(Person, Place).
 goto(Person, _) 		terminates 	location(Person, _).
