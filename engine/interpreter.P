@@ -213,7 +213,7 @@ u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
 :- op(900,fy,not).
 
 :- use_module(library(lists), [member/2, append/3, select/3, reverse/2]).
-:- use_module(library(prolog_clause)).
+:- use_module(library(prolog_clause),[clause_info/5]).
 :- use_module(library(time)).
 
 append_lists([],[]).
@@ -282,16 +282,16 @@ resolveUntilAction([G1|Gn]) :- !,
 	resolveUntilAction(G1), resolveUntilAction(Gn).
 resolveUntilAction((G1,Gn)) :- !, % this for convenience below
 	resolveUntilAction(G1), resolveUntilAction(Gn).
-% fluents:
 resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
+% fluents:
 resolveUntilAction(G) :- 
 	(G = not(holds(_F,T)) ; G = holds(_F,T)), 
 	nonvar(T), current_time(Now), T>Now, % premature, delay
 	!, 
 	shift(later(G)), resolveUntilAction(G).
 resolveUntilAction(not(holds(F,T))) :- query(not(holds(F,T))).
-% resolveUntilAction(holds(F,T)) :- query(holds(F,T)).... replaced by:
-resolveUntilAction(holds(F,T)) :- findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
+resolveUntilAction(holds(F,T)) :- % spawn a new disjunctive goal for each fluent answer:
+	findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
 	(Answers = [holds(F,T)] -> true ; shift(disjunction(holds(F,T),Answers))).
 resolveUntilAction(holds(F,T)) :- !, var(T), % on failure, delay if that makes sense
 	shift(later(holds(F,T))), resolveUntilAction(holds(F,T)).
@@ -314,7 +314,9 @@ resolveUntilAction(happens(E,T1,T2)) :-
 	current_time(T1), 
 	T2 is T1+1,
 	action_(E), uassertz(happens(E,T1,T2)), 
-	( (d_pre(Conds),holds_all(Conds)) -> uretractall(happens(E,T1,T2)), fail ; true),
+	( (d_pre(Conds),holds_all(Conds)) -> 
+		uretractall(happens(E,T1,T2)), write_verbose([happens(E,T1,T2), ' FORBIDDEN', nl]), fail 
+		; write_verbose([happens(E,T1,T2),'ASSUMED',nl])),
 	(true ; uretractall(happens(E,T1,T2)), fail).
 resolveUntilAction(happens(E,T1,T2)) :- !, 
 	(var(T1),var(T2)), % worth delaying
@@ -344,13 +346,14 @@ dc_resolve_goals(_Unfinished, end):-
 dc_resolve_goals([goal(Discard,G)|Goals],NewGoals) :-
 	write_verbose(['Goal is ',G,'.',nl]),
 	reset(resolveUntilAction(G),Ball,Continuation),
+	(true;write_verbose(['BACKTRACKING into previous goal ',G,nl]),fail),
 	(Continuation==0 -> % resolved G completely:
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
 		dc_resolve_goals_suspended(G,Discard,Goals,Ball,Continuation,NewGoals)
 	).
 dc_resolve_goals([goal(Discard,G)|Goals],[goal(Discard,G)|NewGoals]) :- % do NOT retry the failed goal later...
-	write_verbose(['resolveUntilAction for ',G,' has failed',nl]),
+	write_verbose(['FAILED resolveUntilAction for ',G,' (',Discard,')',nl]),
 	Discard \== non_discardable, % disjunctive alternatives can stay, otherwise we backtrack
 	dc_resolve_goals(Goals,NewGoals).
 	
@@ -824,6 +827,9 @@ write_verbose(What) :-
 
 do_write(_) :- option(silent), !.
 do_write([]) :- !.
+do_write([What|Rest]) :- var(What), !,
+    write(What),
+    do_write(Rest).
 do_write([pprint_goal(What)|Rest]) :- !,
     pprint_goal(What),
     do_write(Rest).
