@@ -374,7 +374,7 @@ term_rendering(lps_visualization(_T,TwoD), _Vars, _Options) -->
 		setTimeout(function(){
 			if (!userEntered) 
 			layer.visible = false;
-		}, 2000);
+		}, 1000);
 		al.activate();
 
 		var userEntered = false;
