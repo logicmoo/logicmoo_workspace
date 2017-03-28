@@ -60,6 +60,3 @@ row(Location1, Location2) terminates loc(farmer, Location1).
 
 false transport(Object1, Location1, Location2), transport(Object2, Location1, Location2) , Object1 \= Object2.
 false row(south, north), row(north, south).
-
-d(loc(Entity,Side),[id(Entity),x:X,y:1,label:Entity]) :- (Side=south,X=1;Side=north,X=3).
-d(true,[x:2,y:0,color:blue,type:rectangle,width:1,height:1,tip:'river']).

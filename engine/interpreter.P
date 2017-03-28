@@ -350,6 +350,7 @@ dc_resolve_goals([goal(Discard,G)|Goals],NewGoals) :-
 	(Continuation==0 -> % resolved G completely:
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
+		% writeln('CONTINUATION:'), write_continuations(Continuation), nl,
 		dc_resolve_goals_suspended(G,Discard,Goals,Ball,Continuation,NewGoals)
 	).
 dc_resolve_goals([goal(Discard,G)|Goals],[goal(Discard,G)|NewGoals]) :- % do NOT retry the failed goal later...
@@ -373,6 +374,10 @@ dc_resolve_goals_suspended(_G,_,Goals,disjunction(SuspendedG,Answers),Continuati
 
 bind_discarders([goal(Discard,_)|Goals],Discard) :- !, bind_discarders(Goals,Discard).
 bind_discarders([],_Discard).
+
+write_continuations(call_continuation(L)) :- write_continuations_(L).
+write_continuations_([]) :- !.
+write_continuations_(['$cont$'(Clause,  PC,   Environment)|Continuations]) :- clause(H,B,Clause), writeln((H:-B)/Environment), write_continuations_(Continuations).
 
 :- endif.
 
