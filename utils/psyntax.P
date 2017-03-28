@@ -573,7 +573,7 @@ syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,null,happens(NL,T1,T2)) :-
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,delimiter-[EC,classify],happens(NL,T1,T2)) :- 
 	nonvar(LT), 
 	% tricky handling to avoid infinite terms in the first branch:
-	( LT = (L from T1_), (var(T1_);number(T1_)); LT = (L to T2); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
+	( LT = (L from T1_), (var(T1_);number(T1_)), T1=T1_; LT = (L to T2); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
 	!,
 	simple_event_colour(L,EC),
 	remember_event_hint(L),
