@@ -280,6 +280,8 @@ lps_welcome_message :-
 resolveUntilAction([]) :- !.
 resolveUntilAction([G1|Gn]) :- !, 
 	resolveUntilAction(G1), resolveUntilAction(Gn).
+resolveUntilAction((G1,Gn)) :- !, % this for convenience below
+	resolveUntilAction(G1), resolveUntilAction(Gn).
 % fluents:
 resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
 resolveUntilAction(G) :- 
@@ -288,39 +290,38 @@ resolveUntilAction(G) :-
 	!, 
 	shift(later(G)), resolveUntilAction(G).
 resolveUntilAction(not(holds(F,T))) :- query(not(holds(F,T))).
-resolveUntilAction(holds(F,T)) :- query(holds(F,T)).
+% resolveUntilAction(holds(F,T)) :- query(holds(F,T)).... replaced by:
+resolveUntilAction(holds(F,T)) :- findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
+	(Answers = [holds(F,T)] -> true ; shift(disjunction(holds(F,T),Answers))).
 resolveUntilAction(holds(F,T)) :- !, var(T), % on failure, delay if that makes sense
 	shift(later(holds(F,T))), resolveUntilAction(holds(F,T)).
 % events/actions:
 resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, 
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
-resolveUntilAction(happens(_E,T1,T2)) :- 
+resolveUntilAction(happens(_E,T1,T2)) :- % outdated
 	current_time(Now),
-	(nonvar(T1),T1<Now ; nonvar(T2),T2<Now+1), % outdated
+	(nonvar(T1),T1<Now ; nonvar(T2),T2<Now+1), 
 	!, fail. 
-resolveUntilAction(happens(E,T1,T2)) :- 
+resolveUntilAction(happens(E,T1,T2)) :- % premature
 	current_time(Now), 
-	(nonvar(T1), T1>Now ; nonvar(T2),T2>Now+1), % premature
+	(nonvar(T1), T1>Now ; nonvar(T2),T2>Now+1), 
 	!,
 	shift(later(happens(E,T1,T2))), 
 	resolveUntilAction(happens(E,T1,T2)). 
-	
 resolveUntilAction(happens(E,T1,T2)) :- happens(E,T1,T2).
-resolveUntilAction(happens(E,T1,T2)) :- !, % let's avoid need for \= tests below
+resolveUntilAction(happens(E,T1,T2)) :- 
 	\+ happens(E,T1,T2), 
 	current_time(T1), 
 	T2 is T1+1,
 	action_(E), uassertz(happens(E,T1,T2)), 
 	( (d_pre(Conds),holds_all(Conds)) -> uretractall(happens(E,T1,T2)), fail ; true),
 	(true ; uretractall(happens(E,T1,T2)), fail).
-/* delaying at his stage is not interesting:
 resolveUntilAction(happens(E,T1,T2)) :- !, 
+	(var(T1),var(T2)), % worth delaying
 	\+ happens(E,T1,T2),
 	action_(E), 
-	(var(T1),var(T2)), % worth delaying
 	shift(later(happens(E,T1,T2))),
-	resolveUntilAction(happens(E,T1,T2)). */
-
+	resolveUntilAction(happens(E,T1,T2)).
 % timeless and time constraints:
 resolveUntilAction(tc(G)) :- ground(G), G.
 resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later(tc(G))), resolveUntilAction(tc(G)).
@@ -328,38 +329,47 @@ resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
 % TODO: deprecate/remove l_timeless ?
 resolveUntilAction(G) :- 
 	findall(G, ( \+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)), Answers), Answers\=[],
-	(Answers = [G] -> true ; shift(timeless_disjunction(G,Answers))).
+	(Answers = [G] -> true ; shift(disjunction(G,Answers))).
 
 
-% dc_resolve_goals(Goals,NewGoals) NewGoals contains goals delayed because of pending actions
+% dc_resolve_goals(Goals,NewGoals) Goals is list of goal(Discard,G) 
+% if Discard==yes, some alternative to G was solved; 
+% if Discard is a variable, G is one of several alternatives; 
+% if Discard==non_discardable, it's a "normal" goal
 % Fails if all Goals can not be solved with admissible actions
 dc_resolve_goals([],[]) :- !.
+dc_resolve_goals([goal(Discard,_G)|Goals],NewGoals) :- Discard == yes, !, dc_resolve_goals(Goals,NewGoals).
 dc_resolve_goals(_Unfinished, end):-
 	steps(N), N < 1, !.
-dc_resolve_goals([goal(G)|Goals],NewGoals) :-
+dc_resolve_goals([goal(Discard,G)|Goals],NewGoals) :-
 	write_verbose(['Goal is ',G,'.',nl]),
 	reset(resolveUntilAction(G),Ball,Continuation),
 	(Continuation==0 -> % resolved G completely:
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
-		dc_resolve_goals_suspended(G,Goals,Ball,Continuation,NewGoals)
+		dc_resolve_goals_suspended(G,Discard,Goals,Ball,Continuation,NewGoals)
 	).
-dc_resolve_goals([goal(G)|Goals],[goal(G)|NewGoals]) :- % retry the failed goal later
+dc_resolve_goals([goal(Discard,G)|Goals],[goal(Discard,G)|NewGoals]) :- % do NOT retry the failed goal later...
 	write_verbose(['resolveUntilAction for ',G,' has failed',nl]),
+	Discard \== non_discardable, % disjunctive alternatives can stay, otherwise we backtrack
 	dc_resolve_goals(Goals,NewGoals).
 	
 % Decide what to do, depending on the cause of suspension: found an action, or failed something that may succeed later
-% dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,+MoreGoals,+Ball,+Continuation,-NewGoals)
-dc_resolve_goals_suspended(_TopG,Goals,later(G),Continuation,NewGoals) :- !,
+% dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,?Discard,+MoreGoals,+Ball,+Continuation,-NewGoals)
+dc_resolve_goals_suspended(_TopG,Discard,Goals,later(G),Continuation,NewGoals) :- !,
 	write_verbose([' Delayed ',G, /* ' while executing ',_TopG,*/ nl]),
 	dc_resolve_goals(Goals,NewGoals_),
 	%NewGoals = [goal(Continuation)|NewGoals_].
-	append(NewGoals_,[goal(Continuation)],NewGoals). % push it to end of queue
-dc_resolve_goals_suspended(_G,Goals,timeless_disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
-	findall(goal(Continuation), member(SuspendedG,Answers), ExtraGoals),
+	append(NewGoals_,[goal(Discard,Continuation)],NewGoals). % push it to end of queue
+dc_resolve_goals_suspended(_G,_,Goals,disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
+	findall(goal(Discard,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
+	bind_discarders(ExtraGoals,Discard),
 	write_verbose([' Spawning disjunctive results because of ',SuspendedG, nl]),
 	append(ExtraGoals,Goals,Goals_),
 	dc_resolve_goals(Goals_,NewGoals).
+
+bind_discarders([goal(Discard,_)|Goals],Discard) :- !, bind_discarders(Goals,Discard).
+bind_discarders([],_Discard).
 
 :- endif.
 
@@ -978,6 +988,8 @@ do_test_suite(Files,Options) :-
 	do_test_suite(Files,Options,Results),
 	nl, write('*** Test suite ended ('), write(Options), writeln('):'),
 	( member(F-R,Results), write(F), write(': '), writeln(R), fail; true),
+	length(Results,N), findall(f,member(_-failed(_),Results),FL), length(FL,NF),
+	(NF==0->write('All '), write(N), writeln(' tests succeeded:-) !') ; write('FAILED '), write(NF/N), writeln(' tests:-(')),
 	writeln('*** End of test suite results').
 
 % do_test_suite(Files,Options,Results)  Results is a list of File - ok/failed
@@ -1044,16 +1056,16 @@ cycle(Ri, Gi) :-
 		' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
 		' Process goal tree at time ',Time, nl,' New: ',NewGi, nl]),
 	append(Gi, NewGi, NGi), % Puts new goals at the end of the queue.
-%	write_verbose([nl,
-%		' Process reactive rules at time ',Time, nl,' New: ',
-%		NRi, nl,
-%		' Current goal tree at time ',Time, nl,' New: ',NGi,
-%		nl]),
+	write_verbose([nl,
+		' Process reactive rules at time ',Time, nl,' New: ',
+		NRi, nl,
+		' Current goal tree at time ',Time, nl,' All: ',NGi,
+		nl]),
 	forall( action_(A), uretractall(tried(_, _, lpsClause(happens(A, _, _), [])))),
 	uretractall(happens(_, _, _)),
 	updateEvents(Time, Next, ExternalObservations),
 	% This resolves goals in the goal state.
-	time_limited(resolve, (option(dc) -> once( dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)), Timeout),
+	time_limited(resolve, (option(dc) -> once(dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)), Timeout),
 	(GoalTree = end -> % this will execute on timeout too
 		do_write([nl,' Exceeded number of steps. ',nl])	
 		;	
@@ -1600,7 +1612,7 @@ dc_process([], Rs, Rs, NG, NG) :- !.
 
 % Antecedent is []. Add Consequent as new goal/tree.
 dc_process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, 
-	dc_process(Rs, AccRi, NRi, [goal(C) | AccG], NGi ).
+	dc_process(Rs, AccRi, NRi, [goal(non_discardable,C) | AccG], NGi ).
 
 % Too late to solve, no longer relevant.
 dc_process([reactive_rule([L |_],_) | Rs], AccRi, NRi, AccG, NGi):-
