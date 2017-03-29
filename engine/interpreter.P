@@ -277,6 +277,7 @@ lps_welcome_message :-
 
 % resolveUntilAction(Goal) TODO: CHANGE NAME!!!!!
 % Execute goal until an action or fluent is found that needs delaying, then calls shift(later(A)), suspending computation
+resolveUntilAction(V) :- var(V), !, throw(lps_var_goal).
 resolveUntilAction([]) :- !.
 resolveUntilAction([G1|Gn]) :- !, 
 	resolveUntilAction(G1), resolveUntilAction(Gn).
@@ -290,14 +291,23 @@ resolveUntilAction(G) :-
 	!, 
 	shift(later(G)), resolveUntilAction(G).
 resolveUntilAction(not(holds(F,T))) :- query(not(holds(F,T))).
+resolveUntilAction(holds(F,T)) :- option(no_parallel), query(holds(F,T)).
 resolveUntilAction(holds(F,T)) :- % spawn a new disjunctive goal for each fluent answer:
+	\+ option(no_parallel),
 	findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
 	(Answers = [holds(F,T)] -> true ; shift(disjunction(holds(F,T),Answers))).
 resolveUntilAction(holds(F,T)) :- !, var(T), % on failure, delay if that makes sense
 	shift(later(holds(F,T))), resolveUntilAction(holds(F,T)).
 % events/actions:
-resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, 
+resolveUntilAction(happens(E,T1,T2)) :- (nonvar(T1)/*heuristic*/ ; option(no_parallel)), macroaction(E), 
+	!,
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
+resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, % general case, spawn disjuntive goals
+	findall(l_events(happens(E,T1,T2),Body),  l_events(happens(E,T1,T2),Body), Alternatives), Alternatives\=[],
+	(Alternatives = [l_events(happens(E,T1,T2),Body)] -> 
+		resolveUntilAction(Body) 
+		; shift(l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives))
+	).
 resolveUntilAction(happens(_E,T1,T2)) :- % outdated
 	current_time(Now),
 	(nonvar(T1),T1<Now ; nonvar(T2),T2<Now+1), 
@@ -329,6 +339,8 @@ resolveUntilAction(tc(G)) :- ground(G), G.
 resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later(tc(G))), resolveUntilAction(tc(G)).
 resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
 % TODO: deprecate/remove l_timeless ?
+resolveUntilAction(G) :- option(no_parallel), !, 
+	(\+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)).
 resolveUntilAction(G) :- 
 	findall(G, ( \+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)), Answers), Answers\=[],
 	(Answers = [G] -> true ; shift(disjunction(G,Answers))).
@@ -368,7 +380,15 @@ dc_resolve_goals_suspended(_TopG,Discard,Goals,later(G),Continuation,NewGoals) :
 dc_resolve_goals_suspended(_G,_,Goals,disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
 	findall(goal(Discard,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
 	bind_discarders(ExtraGoals,Discard),
-	write_verbose([' Spawning disjunctive results because of ',SuspendedG, nl]),
+	length(ExtraGoals,N),
+	write_verbose([' Spawning ',N,' disjunctive goals because of ',SuspendedG, nl]),
+	append(ExtraGoals,Goals,Goals_),
+	dc_resolve_goals(Goals_,NewGoals).
+dc_resolve_goals_suspended(_G,_,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers),Continuation,NewGoals) :-
+	findall(goal(Discard,(Body,Continuation,Discard=yes)), member(l_events(happens(E,T1,T2),Body),Answers), ExtraGoals),
+	bind_discarders(ExtraGoals,Discard),
+	length(ExtraGoals,N),
+	write_verbose([' Spawning ',N,' disjunctive goals because of ',l_events(happens(E,T1,T2),Body), nl]),
 	append(ExtraGoals,Goals,Goals_),
 	dc_resolve_goals(Goals_,NewGoals).
 
@@ -377,7 +397,7 @@ bind_discarders([],_Discard).
 
 write_continuations(call_continuation(L)) :- write_continuations_(L).
 write_continuations_([]) :- !.
-write_continuations_(['$cont$'(Clause,  PC,   Environment)|Continuations]) :- clause(H,B,Clause), writeln((H:-B)/Environment), write_continuations_(Continuations).
+write_continuations_(['$cont$'(Clause,  _PC,   Environment)|Continuations]) :- clause(H,B,Clause), writeln((H:-B)/Environment), write_continuations_(Continuations).
 
 :- endif.
 
@@ -738,7 +758,7 @@ assert_list([]).
 endTime(T) :- maxTime(T), !.
 endTime(20). % default duration of execution
 
-% parse_options(OptionsList)
+% parse_options(OptionsList)  See code and comments below for precise semantics of each option...
 %
 parse_options(Options) :- 
 	uretractall(option(_)),
@@ -768,6 +788,14 @@ parse_options_([dc|Rest]) :- !,
     	-> uassertz(option(dc)) 
     	; 
     	writeln(user_error, 'ERROR in options: delimited continuations are available only for SWI Prolog '),
+    	fail
+    	),
+    parse_options_(Rest).
+parse_options_([no_parallel|Rest]) :- !,
+    (current_prolog_flag(dialect, swi) 
+    	-> uassertz(option(no_parallel)) 
+    	; 
+    	writeln(user_error, 'ERROR in options: no_parallel is a delimited continuations option, available only for SWI Prolog '),
     	fail
     	),
     parse_options_(Rest).

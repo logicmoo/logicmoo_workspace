@@ -1,13 +1,13 @@
 /*
-  LPS test results file generated on 2016-12-15 at 15:30:02
-  on Prolog xsb(3,6,,_h51757) for program file:
+  LPS test results file generated on 2017-3-29 at 11:38:6
+  on Prolog swi(7,5,2,[]) for program file:
   /Users/mc/git/lps_corner/examples/forTesting/backtrackExample2.lpsw
 */
 
-(:- dynamic lps_test_result / 3,lps_test_result_item / 3,lps_test_options / 1).
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_options/1.
 
 % LPS options prior to the test:
-lps_test_options([verbose]).
+lps_test_options([dc]).
 
 % lps_test_result(Stage,Cycle,TestTerm)
 lps_test_result(fluents,0,5).
@@ -19,7 +19,7 @@ lps_test_result(events,3,0).
 lps_test_result(fluents,3,3).
 lps_test_result(events,4,1).
 lps_test_result(fluents,4,4).
-lps_test_result(events,5,0).
+lps_test_result(events,5,1).
 lps_test_result(fluents,5,4).
 lps_test_result(events,6,0).
 lps_test_result(fluents,6,4).
@@ -75,6 +75,7 @@ lps_test_result_item(fluents,4,c(1,1)).
 lps_test_result_item(fluents,4,c(1,2)).
 lps_test_result_item(fluents,4,r(2)).
 lps_test_result_item(fluents,4,d(2,2)).
+lps_test_result_item(events,5,a2(2)).
 lps_test_result_item(fluents,5,c(1,1)).
 lps_test_result_item(fluents,5,c(1,2)).
 lps_test_result_item(fluents,5,r(2)).
