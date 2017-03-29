@@ -275,15 +275,21 @@ lps_welcome_message :-
 
 %% Now for an implementation available only on SWI:
 
-% resolveUntilAction(Goal) TODO: CHANGE NAME!!!!!
-% Execute goal until an action or fluent is found that needs delaying, then calls shift(later(A)), suspending computation
-resolveUntilAction(V) :- var(V), !, throw(lps_var_goal).
+% resolveUntilAction(Goal) 
+% Execute goal until finding a literal that needs delaying or parallel execution, 
+% then calls shift(...), suspending computation; shift's argument conveys the reason for suspending:
+% - a fluent or action was found that needs delaying
+% - a timeless goal, a fluent or action subgoal has more than one solution; by default (e.g. unless option(no_parallel)),
+%   all solutions to these are used in paralell, adding new goals to the "goal tree", that include the full continuation;
+%   see dc_resolve_goals_suspended/6 below; when one of these goals succeeds the others are marked discardable, and thus ignored 
+%
+resolveUntilAction(V) :- var(V), !, throw(lps_var_goal). % a bug somewhere!
 resolveUntilAction([]) :- !.
 resolveUntilAction([G1|Gn]) :- !, 
 	resolveUntilAction(G1), resolveUntilAction(Gn).
-resolveUntilAction((G1,Gn)) :- !, % this for convenience below
+resolveUntilAction((G1,Gn)) :- !, % this for convenience in dc_resolve_goals_suspended
 	resolveUntilAction(G1), resolveUntilAction(Gn).
-resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
+% resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
 % fluents:
 resolveUntilAction(G) :- 
 	(G = not(holds(_F,T)) ; G = holds(_F,T)), 
@@ -299,7 +305,9 @@ resolveUntilAction(holds(F,T)) :- % spawn a new disjunctive goal for each fluent
 resolveUntilAction(holds(F,T)) :- !, var(T), % on failure, delay if that makes sense
 	shift(later(holds(F,T))), resolveUntilAction(holds(F,T)).
 % events/actions:
-resolveUntilAction(happens(E,T1,T2)) :- (nonvar(T1)/*heuristic*/ ; option(no_parallel)), macroaction(E), 
+resolveUntilAction(happens(E,T1,T2)) :- 
+	(nonvar(T1)/*heuristic condition dispensing parallelism*/ ; option(no_parallel)), 
+	macroaction(E), 
 	!,
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body).
 resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, % general case, spawn disjuntive goals
@@ -308,26 +316,26 @@ resolveUntilAction(happens(E,T1,T2)) :- macroaction(E), !, % general case, spawn
 		resolveUntilAction(Body) 
 		; shift(l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives))
 	).
-resolveUntilAction(happens(_E,T1,T2)) :- % outdated
+resolveUntilAction(happens(_E,T1,T2)) :- % outdated action, we fail
 	current_time(Now),
 	(nonvar(T1),T1<Now ; nonvar(T2),T2<Now+1), 
 	!, fail. 
-resolveUntilAction(happens(E,T1,T2)) :- % premature
+resolveUntilAction(happens(E,T1,T2)) :- % premature, we delay
 	current_time(Now), 
 	(nonvar(T1), T1>Now ; nonvar(T2),T2>Now+1), 
 	!,
 	shift(later(happens(E,T1,T2))), 
 	resolveUntilAction(happens(E,T1,T2)). 
 resolveUntilAction(happens(E,T1,T2)) :- happens(E,T1,T2).
-resolveUntilAction(happens(E,T1,T2)) :- 
+resolveUntilAction(happens(E,T1,T2)) :- % select action:
 	\+ happens(E,T1,T2), 
 	current_time(T1), 
 	T2 is T1+1,
 	action_(E), uassertz(happens(E,T1,T2)), 
-	( (d_pre(Conds),holds_all(Conds)) -> 
-		uretractall(happens(E,T1,T2)), write_verbose([happens(E,T1,T2), ' FORBIDDEN', nl]), fail 
-		; write_verbose([happens(E,T1,T2),'ASSUMED',nl])),
-	(true ; uretractall(happens(E,T1,T2)), fail).
+	( (d_pre(Conds),holds_all(Conds)) -> % inadmssible action, undo it:
+		uretractall(happens(E,T1,T2)), fail 
+		; true),
+	(true ; uretractall(happens(E,T1,T2)), fail). % undo on backtracking
 resolveUntilAction(happens(E,T1,T2)) :- !, 
 	(var(T1),var(T2)), % worth delaying
 	\+ happens(E,T1,T2),
@@ -338,7 +346,7 @@ resolveUntilAction(happens(E,T1,T2)) :- !,
 resolveUntilAction(tc(G)) :- ground(G), G.
 resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later(tc(G))), resolveUntilAction(tc(G)).
 resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
-% TODO: deprecate/remove l_timeless ?
+% TODO: should we deprecate/remove l_timeless ?
 resolveUntilAction(G) :- option(no_parallel), !, 
 	(\+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)).
 resolveUntilAction(G) :- 
@@ -346,13 +354,17 @@ resolveUntilAction(G) :-
 	(Answers = [G] -> true ; shift(disjunction(G,Answers))).
 
 
-% dc_resolve_goals(Goals,NewGoals) Goals is list of goal(Discard,G) 
-% if Discard==yes, some alternative to G was solved; 
-% if Discard is a variable, G is one of several alternatives; 
+% dc_resolve_goals(+Goals,-NewGoals) Alternative implementation of resolve_tree, used with option(dc)
+% Based on SWI's delimited continuations (reset/shift, cf. http://www.swi-prolog.org/pldoc/man?section=delcont )
+% Continuations allow us to push down to the engine maintenance of backtracking, which resolve_tree implements explicitly
+% Goals is list of goal(Discard,G):
+% if Discard==yes, some alternative to G was solved, we can ignore G; 
+% if Discard is a variable, G is one of several alternatives still under consideration; 
 % if Discard==non_discardable, it's a "normal" goal
 % Fails if all Goals can not be solved with admissible actions
 dc_resolve_goals([],[]) :- !.
-dc_resolve_goals([goal(Discard,_G)|Goals],NewGoals) :- Discard == yes, !, dc_resolve_goals(Goals,NewGoals).
+dc_resolve_goals([goal(Discard,_G)|Goals],NewGoals) :- Discard == yes, !, % some alternative already succeeded! we can drop this goal
+	dc_resolve_goals(Goals,NewGoals).
 dc_resolve_goals(_Unfinished, end):-
 	steps(N), N < 1, !.
 dc_resolve_goals([goal(Discard,G)|Goals],NewGoals) :-
@@ -362,7 +374,7 @@ dc_resolve_goals([goal(Discard,G)|Goals],NewGoals) :-
 	(Continuation==0 -> % resolved G completely:
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
-		% writeln('CONTINUATION:'), write_continuations(Continuation), nl,
+		% writeln('CONTINUATION:'), write_continuations(Continuation), nl, % uncomment for debugging
 		dc_resolve_goals_suspended(G,Discard,Goals,Ball,Continuation,NewGoals)
 	).
 dc_resolve_goals([goal(Discard,G)|Goals],[goal(Discard,G)|NewGoals]) :- % do NOT retry the failed goal later...
@@ -370,7 +382,7 @@ dc_resolve_goals([goal(Discard,G)|Goals],[goal(Discard,G)|NewGoals]) :- % do NOT
 	Discard \== non_discardable, % disjunctive alternatives can stay, otherwise we backtrack
 	dc_resolve_goals(Goals,NewGoals).
 	
-% Decide what to do, depending on the cause of suspension: found an action, or failed something that may succeed later
+% Decide what to do, depending on the cause of suspension
 % dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,?Discard,+MoreGoals,+Ball,+Continuation,-NewGoals)
 dc_resolve_goals_suspended(_TopG,Discard,Goals,later(G),Continuation,NewGoals) :- !,
 	write_verbose([' Delayed ',G, /* ' while executing ',_TopG,*/ nl]),
@@ -378,6 +390,8 @@ dc_resolve_goals_suspended(_TopG,Discard,Goals,later(G),Continuation,NewGoals) :
 	%NewGoals = [goal(Continuation)|NewGoals_].
 	append(NewGoals_,[goal(Discard,Continuation)],NewGoals). % push it to end of queue
 dc_resolve_goals_suspended(_G,_,Goals,disjunction(SuspendedG,Answers),Continuation,NewGoals) :-
+	% build new goals, including the common Continuation albeit reflecting the different bindings in Answers,
+	% and ending with the setting of the common variable Discard
 	findall(goal(Discard,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
 	bind_discarders(ExtraGoals,Discard),
 	length(ExtraGoals,N),
@@ -385,6 +399,7 @@ dc_resolve_goals_suspended(_G,_,Goals,disjunction(SuspendedG,Answers),Continuati
 	append(ExtraGoals,Goals,Goals_),
 	dc_resolve_goals(Goals_,NewGoals).
 dc_resolve_goals_suspended(_G,_,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers),Continuation,NewGoals) :-
+	% similar to the previous clause, except that in addition to different bindings there are different Body terms to consider:
 	findall(goal(Discard,(Body,Continuation,Discard=yes)), member(l_events(happens(E,T1,T2),Body),Answers), ExtraGoals),
 	bind_discarders(ExtraGoals,Discard),
 	length(ExtraGoals,N),
@@ -397,7 +412,8 @@ bind_discarders([],_Discard).
 
 write_continuations(call_continuation(L)) :- write_continuations_(L).
 write_continuations_([]) :- !.
-write_continuations_(['$cont$'(Clause,  _PC,   Environment)|Continuations]) :- clause(H,B,Clause), writeln((H:-B)/Environment), write_continuations_(Continuations).
+write_continuations_(['$cont$'(Clause,  _PC,   Environment)|Continuations]) :- 
+	clause(H,B,Clause), writeln((H:-B)/Environment), write_continuations_(Continuations).
 
 :- endif.
 
@@ -776,7 +792,7 @@ parse_options(Options) :-
 	parse_options_(Options).
 
 parse_options_([]) :- !.
-parse_options_([timeout(Max)|Rest]) :- !,
+parse_options_([timeout(Max)|Rest]) :- !, 
     (number(Max)->true; writeln(user_error, 'ERROR in options: timeout must be a float (seconds) '), fail),
     uassertz(option(timeout(Max))),
     parse_options_(Rest).
@@ -1045,7 +1061,8 @@ do_test_suite([F|Files],Options,[F-R|Results]) :-
 	do_test_suite(Files,Options,Results).
 do_test_suite([_|Files],Options,Results) :- do_test_suite(Files,Options,Results).
 
-% time_limited(+StepName,+G,?Timeout) Skips G if Timeout is true; timeout will be bound to true if time runs out; will remain unbound otherwise
+% time_limited(+StepName,+G,?Timeout) 
+% Skips G if Timeout is true; timeout will be bound to true if time runs out; will remain unbound otherwise
 time_limited(_Step,_G,Timeout) :- nonvar(Timeout), !.
 time_limited(Step,G,Timeout) :-
 	(option(timeout(MaxTime)) -> true ; MaxTime = 0.5), % by default, half second max in each of the following steps
