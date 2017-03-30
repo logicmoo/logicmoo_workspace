@@ -90,7 +90,15 @@ https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 This is definitely not a serious example either of the Turing test or of a program that conducts a dialogue in English. However, it does show that in LPS the same definitions (in this case the definitions of sentence, noun phrase, etc.) can be used both to recognise complex external events and to generate complex plans of actions. Arguably, no other computer language comes close to realising such possibilities.
 You may think that the robot's reaction to the string of words input by Turing is non-sensical. Think again. But if you are still convinced that the robot's reaction doesn't make any sense, then improve the grammar, for example, by adding an extra condition that every sentence ends with a full stop "." .
     - [Silly dialogue](example/turingTest.pl)
-	
+
+- *Visualization*
+
+LPS on SWISH has an experimental alternative visualization (in addition to the fluent/event timelines you've seen by now): 
+if fluents and/or events for a particular example can be visualized naturally on a 2-dimentional space, then by defining a few
+declarative display rules one can specify a full 2D world animation of the LPS execution.
+The rules map LPS literals into HTML5 Canvas objects, powered by [paperjs](http://paperjs.org) 
+    - [2d world visualisation](example/burning.pl)
+		
 </div>
 
 </div>
