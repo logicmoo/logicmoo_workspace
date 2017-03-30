@@ -69,9 +69,10 @@ Others in paperjs|See <http://paperjs.org/reference/path/>|In general, any prope
 	% convert our model coordinates to screen pixels
 	pixels(X,Y,CX,CY) :- CX is X*20+10, CY is Y*20+10.
 
-Two more notes: 
+Some more notes: 
 
 * all prop lists must become ground after any fluent or event matches them
+* only the first display specification found for a fluent/event is considered
 * if you don't see what you expect displayed, make sure you got no warnings on the SWISH window, and eventually take a look at your browser JavaScript console
 
 # Adding time independent scenery #
@@ -86,4 +87,4 @@ The following defines the (unchanging) background for the banking example:
     	[type:rectangle, from:[0,0], to:[320,200], sendToBack, fillColor:[0,0.746,1]], % R,G,B
     	[type:ellipse, shadowOffset:5, shadowColor:darkGray , point:[50,150], size:[110, 40],fillColor: white],
     	[type:ellipse,  point:[20,130], size:[90, 30],fillColor: white ]
-]). 
+	]). 
