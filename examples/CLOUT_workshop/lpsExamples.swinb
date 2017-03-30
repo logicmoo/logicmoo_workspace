@@ -97,7 +97,7 @@ LPS on SWISH has an experimental alternative visualization (in addition to the f
 if fluents and/or events for a particular example can be visualized naturally on a 2-dimentional space, then by defining a few
 declarative display rules one can specify a full 2D world animation of the LPS execution.
 The rules map LPS literals into HTML5 Canvas objects, powered by [paperjs](http://paperjs.org) 
-    - A [2d world visualisation example](example/burning.pl)
+    - A 2d world visualisation example: [burning.pl](example/burning.pl); another: ["dad switching lights off"](example/badlight.pl).
     - How to [write display specifications](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/swish/2dWord.md?at=master&fileviewer=file-view-default).
 		
 </div>
