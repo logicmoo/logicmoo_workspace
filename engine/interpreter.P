@@ -348,7 +348,7 @@ resolveUntilAction(tc(G)) :- !, \+ ground(G), shift(later(tc(G))), resolveUntilA
 resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
 % TODO: should we deprecate/remove l_timeless ?
 resolveUntilAction(G) :- option(no_parallel), !, 
-	(\+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)).
+	(\+l_timeless(G,_Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)).
 resolveUntilAction(G) :- 
 	findall(G, ( \+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)), Answers), Answers\=[],
 	(Answers = [G] -> true ; shift(disjunction(G,Answers))).
