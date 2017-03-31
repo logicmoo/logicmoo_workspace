@@ -3,7 +3,7 @@
 <div class="nb-cell markdown">
 ---+++ LPS in Prolog
 
-This version of *LPS* is implemented in Prolog, and exploits the SWISH implementation of SWI Prolog. Much of the LPS syntax and some of the other features of LPS are inherited from Prolog.
+This version of *LPS* is implemented in the programming language Prolog, and exploits the SWISH implementation of SWI Prolog. Much of the LPS syntax and some of the other features of LPS are inherited from Prolog.
 
 Consider the following, more elaborate variant of the light switch example:
 </div>
@@ -40,13 +40,13 @@ goto(Person, _) 		terminates 	location(Person, _).
 Notice that in this example, the three clauses:
 
 	switch(Person, Place, New) 	initiates light(Place, New).
-opposite(off, on).
-opposite(on, off).
+	opposite(off, on).
+	opposite(on, off).
 
 replace the two clauses in the earlier notebook:
 
-switch initiates 	lightOn 	if lightOff.
-switch initiates 	lightOff 	if lightOn.
+	switch initiates 	lightOn 	if lightOff.
+	switch initiates 	lightOff 	if lightOn.
 
 The two facts defining the predicate "opposite" are actually written and executed in Prolog. In general, clauses that do not depend upon time in LPS are written in Prolog.
 
@@ -55,9 +55,7 @@ Before running the example, be aware that (as in Prolog) all occurrences of comm
 Notice too that predicate symbols and constants all begin with a lower case letter. Variables begin with an upper case letter or with an underscore "_". Underscore is used to represent a variable whose name doesn't matter (and is
  therefore "anonymous") because it does not occur elsewhere in the same sentence.
  
-Underscore is useful because singleton variables are often a source of error in Prolog. In the program above the singleton variable *Person* in lines 21 and 23 is not erroneous, but is highlighted in bold font, to draw  attention to the possibility of an error. Some Prolog programmers like to indicate the intended meaning of an anonymous variable by combining underscore with a meaningful name, as for example in:
-
-	switch(_Person, Place) terminates light(Place, _Status).
+Underscore is useful because singleton variables are often a source of error in Prolog. In the program above the singleton variable *Person* in lines 21 and 23 is not erroneous, but is highlighted in bold font, to draw  attention to the possibility of an error. 
     
 Now try running the program.
 </div>
@@ -82,7 +80,7 @@ where conditions is a list of conditions, separated by commas. At least one cond
 In this example, we need to add two constraints:
 
 	false goto(Person, Place1), goto(Person, Place2), Place1 \= Place2.
-    	false goto(Person, _Place1), switch(Person, _Place2).
+    	false goto(Person, _), switch(Person, _, _).
 
 Let's also increase the length of time:
 </div>
@@ -130,7 +128,7 @@ go(Timeline).
 
 This is, no doubt, much better. But why does dad keep going back to the bedroom and bathroom, even after he has already swiched off their lights? 
 
-It's because the rules say that for every time T1 the light is on in a room, there must be a future time T2 at which dad goes to the room. If you change maxTime to, say, 30, you will see that eventually dad will have gone to a room for every time the light is on in the room. Then, starting at time 19, dad will settle down to staying in the living room, switching the light off, whenever bob switches the light on. 
+It's because the rules say that for every time T1 that the light is on in a room, there must be a future time T2 at which dad goes to the room. If you change maxTime to, say, 30, you will see that eventually dad will have gone to a room for every time the light is on in the room. Then, starting at time 19, dad will settle down to staying in the living room, switching the light off, whenever bob switches the light on. 
 
 LPS is not clever enough to realise that one action of going to a room is good enough to satisfy the rule for all the consecutive  times the light is on in the room. However, you can add an extra constraint, to prevent dad from going to a room when the light is already off. Try it!
 
