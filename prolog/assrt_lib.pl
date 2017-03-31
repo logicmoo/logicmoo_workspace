@@ -545,6 +545,10 @@ current_normalized_assertion(Assertions is BGl, M, term_position(_, _, _, _, [AP
                              Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
     propdef(BGl, M, PGl, Gl, Gl0),
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, CoPos, RPos).
+current_normalized_assertion(Assertions # Co2, M, term_position(_, _, _, _, [APos, CoPos2]),
+                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
+    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co1, CoPos1, RPos),
+    once(merge_comments(Co1, CoPos1, Co2, CoPos2, Co, CoPos)).
 current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     ( is_global(Assertions, DType, M)
     ->Term =.. [DType, true, Assertions],
@@ -556,6 +560,10 @@ current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su
       (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
       assertion_format(Type, GFormat)
     ).
+
+merge_comments("",  _, C, P, C, P).
+merge_comments(C, P, "",  _, C, P).
+merge_comments(C1, P1, C2, P2, [C1, C2], list_position(_, _, [P1, P2])).
 
 normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     normalize_assertion_body(Body, Format, BPos,
