@@ -66,11 +66,11 @@ prolog_colour:style(time,S) :- prolog_colour:style(event,S).
 prolog_colour:style(lps_delimiter,[bold(true)]) :- mylog(lps_delimiter). */
 
 dump :- psyntax:dumploaded.
-go :- interpreter:lps_welcome_message, writeln('Using rak:'),interpreter:go.
-gov :- interpreter:lps_welcome_message, writeln('Using rak:'),interpreter:go(_,[swish,verbose]).
-go(Timeline) :- visualizer:gojson(_File,[],[],Timeline).
-go(T,Options) :- \+ member(cycle_hook(_,_,_),Options), interpreter:lps_welcome_message, writeln('Using rak:'),visualizer:gojson(_File,Options,[],T).
-godc(T) :- visualizer:gojson(_File,[dc],[],T).
+go :- interpreter:lps_welcome_message, writeln('Using main interpreter:'),interpreter:go.
+gov :- interpreter:lps_welcome_message, writeln('Using main interpreter:'),interpreter:go(_,[swish,verbose]).
+go(Timeline) :- visualizer:gojson(_File,[silent],[],Timeline).
+go(T,Options) :- \+ member(cycle_hook(_,_,_),Options), interpreter:lps_welcome_message, visualizer:gojson(_File,Options,[],T).
+godc(T) :- visualizer:gojson(_File,[dc,silent],[],T).
 godc :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,dc]).
 godcv :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
 	

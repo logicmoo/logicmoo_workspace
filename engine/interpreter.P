@@ -788,7 +788,10 @@ parse_options(Options) :-
 		; true),
 	( (member(meta_actions,Options), member(swish,Options)) ->
 		writeln(user_error, 'ERROR in options: meta_actions not supported on SWISH.'), fail
-		; true),		
+		; true),	
+	( (member(manual,Options), member(make_test,Options), \+ member(swish,Options)) ->
+		writeln(user_error, 'ERROR in options: make_test incompatible with manual option.'), fail
+		; true),				
 	parse_options_(Options).
 
 parse_options_([]) :- !.
@@ -830,9 +833,6 @@ parse_options_([silent|Rest]) :- !,
     uassertz(option(silent)),
     parse_options_(Rest).
 parse_options_([make_test|Rest]) :- !,
-	(member(manual,Rest) ->  
-		writeln(user_error, 'ERROR in options: with make_test you can not use ''manual''.'), fail
-		; true),
 	uassertz(option(make_test)),
 	parse_options_(Rest).
 parse_options_([run_test|Rest]) :- !,
@@ -860,7 +860,13 @@ parse_options_([delta_state(State)|Rest]) :- !,
 % parameter for declaration generation by alternative syntaxes; default (absent) may help LPS program debugging
 % auto_declarations. 'true' will add fluent, event and action declarations guessed from usage; 
 parse_options_([auto_declarations|Rest]) :- !,
-	uretractall(option(auto_declarations)), uassertz(option(auto_declarations)),
+	uassertz(option(auto_declarations)),
+	parse_options_(Rest).
+parse_options_([manual|Rest]) :- !,
+	(observe(_, _) -> 
+		writeln(user_error, 'ERROR in options: with ''manual'', no observations in the program are allowed.'), fail
+		;true),
+	uassertz(option(manual)),
 	parse_options_(Rest).
 parse_options_([O|Rest]) :- 
     write(user_error, 'WARNING: Ignored option '), writeln(user_error,O),
@@ -1087,7 +1093,11 @@ cycle(Ri, Gi) :-
     		HookGoal =.. [Predicate,ExternalObservations],
 		(HookGoal -> true ; writeln('* LPS cycle hook goal failed, terminating.'), fail)
     	; ExternalObservations=[]),
-	(Time = 1 -> updateEvents(0, 1, ExternalObservations)   ; true),
+
+    	(option(manual) ->read_obs(UserObservations) ; UserObservations=[]),
+    	append(UserObservations,ExternalObservations,ExternalObservations_),
+    	
+	(Time = 1 -> updateEvents(0, 1, ExternalObservations_)   ; true),
 	
 	% At this point last cycle events are still available
     	% TODO: ExternalObservations to be injected as new events
@@ -1119,7 +1129,7 @@ cycle(Ri, Gi) :-
 		nl]),
 	forall( action_(A), uretractall(tried(_, _, lpsClause(happens(A, _, _), [])))),
 	uretractall(happens(_, _, _)),
-	updateEvents(Time, Next, ExternalObservations),
+	updateEvents(Time, Next, ExternalObservations_),
 	% This resolves goals in the goal state.
 	time_limited(resolve, (option(dc) -> once(dc_resolve_goals(NGi,GoalTree) ) ; resolve_tree(NGi, [], GoalTree)), Timeout),
 	(GoalTree = end -> % this will execute on timeout too
@@ -1129,6 +1139,15 @@ cycle(Ri, Gi) :-
 		next_time, 
 		cycle(NRi, NextGi)
 	).
+
+% Obtain events (observations) from the user
+read_obs(Obs) :-
+	writeln('What happened? Please type a list of events, ending with .'),
+    	read(Obs),
+    	( \+ is_list(Obs) ->
+        	write(user_error, 'ERROR: Input must be a list of valid events (possibly empty), e.g. [event3].'),nl,
+        	read_obs(Obs)
+    	;true).
 
 % Update any observed events, including events injectd from the outside, e.g. Java API
 updateEvents(Time, Next, ExternalObservations) :-  

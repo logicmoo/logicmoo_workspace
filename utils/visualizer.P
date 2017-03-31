@@ -158,7 +158,7 @@ golpsv(LPSP_file,Options,Results) :-
 
 % for SWISH:
 gojson(JSON) :- gojson(_File,[],[],JSON).
-gojson(File,Options,Results,JSON) :- go(File,[silent,make_test,swish|Options],Results), visual(File,JSON).
+gojson(File,Options,Results,JSON) :- go(File,[make_test,swish|Options],Results), visual(File,JSON).
 
 
 % visual(TestResultsFile,lps_visualization(TimelineJSON,TwoD_JSON))  This MUST be called after go(File,[...make_test,...],...)
