@@ -332,7 +332,7 @@ resolveUntilAction(happens(E,T1,T2)) :- % select action:
 	current_time(T1), 
 	T2 is T1+1,
 	action_(E), uassertz(happens(E,T1,T2)), 
-	( (d_pre(Conds),holds_all(Conds)) -> % inadmssible action, undo it:
+	( (d_pre(Conds),holds_all(Conds)) -> % inadmissible action, undo it:
 		uretractall(happens(E,T1,T2)), fail 
 		; true),
 	(true ; uretractall(happens(E,T1,T2)), fail). % undo on backtracking
