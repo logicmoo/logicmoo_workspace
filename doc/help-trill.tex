@@ -1,17 +1,20 @@
 \documentclass[a4paper,10pt]{scrartcl}
 \RequirePackage[hyperindex]{hyperref}
 \usepackage{amssymb}
-\begin{document}
-\title{\texttt{cplint} on SWISH Manual}
-\maketitle
+\newcommand\cI{{\cal I}}
+\newcommand\cT{{\cal T}}
+\newcommand\cA{{\cal A}}
+\newcommand\cK{{\cal K}}
+\newcommand\cC{{\cal C}}
+\newcommand\cL{{\cal L}}
+\newcommand\fluffy{{\mathit{fluffy}}}
 
-%\section{Table of Contents}
-%
-%\begin{itemize}
-%	\item \hyperref[syn]{Syntax} 
-%	\item Inference \ref{inf}
-%	\item Learning \ref{learning}
-%\end{itemize}
+\newenvironment{example}{}{}
+\newenvironment{definition}{}{}
+
+\begin{document}
+\title{TRILL on SWISH Manual}
+\maketitle
 
 \input{syntax}
 \input{semantics}
@@ -27,7 +30,8 @@ can be used with bash to download the results for a query in CSV.  The call
 below downloads a CSV file for the coin example.
 \begin{verbatim}
 $ bash swish-ask.sh --server=http://trill.lamping.unife.it \
-  examples/trill/peoplePets.pl Prob "prob_instanceOf('natureLover','Kevin',Prob)"
+  examples/trill/peoplePets.pl \
+  Prob "prob_instanceOf('natureLover','Kevin',Prob)"
 \end{verbatim}
 The script can ask queries against Prolog scripts stored in 
 \url{http://trill.lamping.unife.it} by specifying

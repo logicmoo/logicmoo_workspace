@@ -1,19 +1,19 @@
-%\ifnum\pdfoutput>0 % pdflatex compilation
 \documentclass[a4paper,10pt]{scrartcl}
 \usepackage[pdftex]{graphicx}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \RequirePackage[hyperindex]{hyperref}
-%\else % htlatex compilation
-%\documentclass{article}
-%\usepackage{graphicx}
-%\DeclareGraphicsExtensions{.png, .gif, .jpg}
-%\newcommand{\href}[2]{\Link[#1]{}{} #2 \EndLink}
-%\newcommand{\hypertarget}[2]{\Link[]{}{#1} #2 \EndLink}
-%\newcommand{\hyperlink}[2]{\Link[]{#1}{} #2 \EndLink}
-%\newcommand{\url}[1]{\Link[#1]{}{} #1 \EndLink}
-%\fi
 \usepackage{amssymb}
 
+\newcommand\cI{{\cal I}}
+\newcommand\cT{{\cal T}}
+\newcommand\cA{{\cal A}}
+\newcommand\cK{{\cal K}}
+\newcommand\cC{{\cal C}}
+\newcommand\cL{{\cal L}}
+\newcommand\fluffy{{\mathit{fluffy}}}
+
+\newenvironment{example}{}{}
+\newenvironment{definition}{}{}
 
 \begin{document}
 \title{TRILL Manual}
@@ -29,7 +29,7 @@ riccardo.zese@unife.it}
 \section{Introduction}
 
 
-TRILL ("Tableau Reasoner for descrIption Logics in Prolog") implements a tableau algorithm in
+TRILL ("Tableau Reasoner for descrIption Logics in Prolog", \cite{ZesBelRig16-AMAI-IJ,Zese17-SSW-BK}) implements a tableau algorithm in
 Prolog to compute the set of all the explanations of a query. After generating the explanations, 
 TRILL can computes the probability of the query. The management of the tableau rules' non-determinism is delegated to the Prolog language.
 
@@ -37,7 +37,7 @@ TRILL is available in two versions, one for Yap Prolog and one for SWI-Prolog. T
 The Yap version differs principally in the absence of the translation module form OWL/RDF to TRILL syntax.
 
 \section{Installation}
-TRILL is distributed as a \href{http://www.swi-prolog.org/pack/list?p=cplint}{pack} of \href{http://www.swi-prolog.org/}{SWI-Prolog}. To install it, use
+TRILL is distributed as a \href{http://www.swi-prolog.org/pack/list?p=trill}{pack} of \href{http://www.swi-prolog.org/}{SWI-Prolog}. To install it, use
 \begin{verbatim}
 ?- pack_install(trill).
 \end{verbatim}
@@ -68,7 +68,7 @@ The \texttt{pack/trill/doc} folder in SWI-Prolog home contains this manual in la
 
 
 
-\texttt{cplint} follows the Artistic License 2.0 that you can find in \texttt{cplint} root folder. The copyright is by Fabrizio Riguzzi.
+TRILL follows the Artistic License 2.0 that you can find in TRILL root folder. The copyright is by Riccardo Zese.
 \vspace{3mm}
 
 The library \href{http://vangelisv.github.io/thea/}{Thea} at the basis of the translation module is available under the \href{http://www.gnu.org/copyleft/gpl.html}{GNU/GPL license}.

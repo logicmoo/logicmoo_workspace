@@ -25,7 +25,8 @@ as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{
 
 The probability of two individuals to be related by a role can be computed with
 \begin{verbatim}
-prob_property_value(+Prop:atom,+Individual1:atom,+Individual2:atom,-Prob:double)
+prob_property_value(+Prop:atom,+Individual1:atom,
+                    +Individual2:atom,-Prob:double)
 \end{verbatim}
 as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
 \begin{verbatim}
@@ -80,7 +81,8 @@ In the first query the result is \verb|true| because Tom belongs to cat, in the 
 Similarly, to ask whether two individuals are related by a role you have to use the queries
 \begin{verbatim}
 property_value(+Prop:atom,+Individual1:atom,+Individual2:atom)
-property_value(+Prop:atom,+Individual1:atom,+Individual2:atom,-Expl:list)
+property_value(+Prop:atom,+Individual1:atom,
+               +Individual2:atom,-Expl:list)
 \end{verbatim}
 as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
 \begin{verbatim}
@@ -109,7 +111,7 @@ as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{
 ?- unsat(intersectionOf([cat,complementOf(pet)])).
 ?- unsat(intersectionOf([cat,complementOf(pet)]),Expl).
 \end{verbatim}
-In this case, the returned explanation is the same obtained using the \verb|sub_class/3| predicate, i.e., \verb|[subClassOf(cat,pet)]|
+In this case, the returned explanation is the same obtained by querying if cat is subclass of pet with the \verb|sub_class/3| predicate, i.e., \verb|[subClassOf(cat,pet)]|
 
 Finally, you can ask about the inconsistency of the knowledge base with
 \begin{verbatim}

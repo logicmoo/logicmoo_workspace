@@ -4,22 +4,16 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
-  <meta name="author" content="Riccardo Zese riccardo.zese@unife.it" />
-  <title>TRILL Manual</title>
+  <title>TRILL on SWISH Manual</title>
   <style type="text/css">code{white-space: pre;}</style>
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
 </head>
 <body>
 <div id="header">
-<h1 class="title">TRILL Manual</h1>
-<h1 class="subtitle">SWI-Prolog Version</h1>
-<h2 class="author">Riccardo Zese<br />
-riccardo.zese@unife.it</h2>
+<h1 class="title">TRILL on SWISH Manual</h1>
 </div>
 <div id="TOC">
 <ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#installation">Installation</a></li>
 <li><a href="#syn">Syntax</a><ul>
 <li><a href="#trill-syn">TRILL Syntax</a><ul>
 <li><a href="#declarations">Declarations</a></li>
@@ -30,19 +24,16 @@ riccardo.zese@unife.it</h2>
 </ul></li>
 <li><a href="#semantics">Semantics</a></li>
 <li><a href="#inf">Inference</a><ul>
-<li><a href="#files">Files</a></li>
+<li><a href="#queries">Possible Queries</a><ul>
+<li><a href="#probabilistic-queries">Probabilistic Queries</a></li>
+<li><a href="#non-probabilistic-queries">Non Probabilistic Queries</a></li>
 </ul></li>
-<li><a href="#license">License</a></li>
+</ul></li>
+<li><a href="#download-query-results-through-an-api">Download Query Results through an API</a></li>
+<li><a href="#manual-in-pdf">Manual in PDF</a></li>
+<li><a href="#bibliography">Bibliography</a></li>
 </ul>
 </div>
-<h1 id="introduction">Introduction</h1>
-<p>TRILL (“Tableau Reasoner for descrIption Logics in Prolog”, <span class="citation">[<a href="#ref-ZesBelRig16-AMAI-IJ">18</a>,<a href="#ref-Zese17-SSW-BK">19</a>]</span>) implements a tableau algorithm in Prolog to compute the set of all the explanations of a query. After generating the explanations, TRILL can computes the probability of the query. The management of the tableau rules’ non-determinism is delegated to the Prolog language.</p>
-<p>TRILL is available in two versions, one for Yap Prolog and one for SWI-Prolog. They differ slightly in the features offered. The Yap version differs principally in the absence of the translation module form OWL/RDF to TRILL syntax.</p>
-<h1 id="installation">Installation</h1>
-<p>TRILL is distributed as a <a href="http://www.swi-prolog.org/pack/list?p=trill">pack</a> of <a href="http://www.swi-prolog.org/">SWI-Prolog</a>. To install it, use</p>
-<pre><code>?- pack_install(trill).</code></pre>
-<p>Moreover, in order to make sure you have a foreign library that matches your architecture, run</p>
-<pre><code>?- pack_rebuild(trill). </code></pre>
 <h1 id="syn">Syntax</h1>
 <p>Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web <span class="citation">[<a href="#ref-DBLP:conf/dlog/2003handbook">1</a>,<a href="#ref-dlchap">2</a>]</span> and are used for modeling ontologies. They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals of the domain. In this section, we recall the expressive description logic <span class="math inline">\(\mathcal{ALC}\)</span> <span class="citation">[<a href="#ref-DBLP:journals/ai/Schmidt-SchaussS91">15</a>]</span>. We refer to <span class="citation">[<a href="#ref-DBLP:journals/ws/LukasiewiczS08">8</a>]</span> for a detailed description of <span class="math inline">\(\mathcal{SHOIN}(\mathbf{D})\)</span> DL, that is at the basis of OWL DL.</p>
 <p>Let <span class="math inline">\(\mathbf{A}\)</span>, <span class="math inline">\(\mathbf{R}\)</span> and <span class="math inline">\(\mathbf{I}\)</span> be sets of <em>atomic concepts</em>, <em>roles</em> and <em>individuals</em>. A <em>role</em> is an atomic role <span class="math inline">\(R \in \mathbf{R}\)</span>. <em>Concepts</em> are defined by induction as follows. Each <span class="math inline">\(C \in \mathbf{A}\)</span>, <span class="math inline">\(\bot\)</span> and <span class="math inline">\(\top\)</span> are concepts. If <span class="math inline">\(C\)</span>, <span class="math inline">\(C_1\)</span> and <span class="math inline">\(C_2\)</span> are concepts and <span class="math inline">\(R \in \mathbf{R}\)</span>, then <span class="math inline">\((C_1\sqcap C_2)\)</span>, <span class="math inline">\((C_1\sqcup C_2 )\)</span>, <span class="math inline">\(\neg C\)</span>, <span class="math inline">\(\exists R.C\)</span>, and <span class="math inline">\(\forall R.C\)</span> are concepts. Let <span class="math inline">\(C\)</span>, <span class="math inline">\(D\)</span> be concepts, <span class="math inline">\(R \in \mathbf{R}\)</span> and <span class="math inline">\(a, b \in \mathbf{I}\)</span>. An <em>ABox</em> <span class="math inline">\({{\cal A}}\)</span> is a finite set of <em>concept membership axioms</em> <span class="math inline">\(a : C\)</span> and <em>role membership axioms</em> <span class="math inline">\((a, b) : R\)</span>, while a <em>TBox</em> <span class="math inline">\({{\cal T}}\)</span> is a finite set of <em>concept inclusion axioms</em> <span class="math inline">\(C\sqsubseteq D\)</span>. <span class="math inline">\(C \equiv D\)</span> abbreviates <span class="math inline">\(C \sqsubseteq D\)</span> and <span class="math inline">\(D\sqsubseteq  C\)</span>.</p>
@@ -237,7 +228,7 @@ propertyAssertion(hasAnimal,kevin,fluffy)</code></pre>
 <p>There are many <a href="http://www.w3.org/2001/sw/wiki/Category:Editor">editors</a> for developing knowledge bases.</p>
 <h1 id="semantics">Semantics</h1>
 <p>In the field of Probabilistic Logic Programming (PLP for short) many proposals have been presented. An effective and popular approach is the Distribution Semantics <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">12</a>]</span>, which underlies many PLP languages such as PRISM <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">12</a>,<a href="#ref-DBLP:journals/jair/SatoK01">13</a>]</span>, Independent Choice Logic <span class="citation">[<a href="#ref-Poo97-ArtInt-IJ">10</a>]</span>, Logic Programs with Annotated Disjunctions <span class="citation">[<a href="#ref-VenVer04-ICLP04-IC">17</a>]</span> and ProbLog <span class="citation">[<a href="#ref-DBLP:conf/ijcai/RaedtKT07">3</a>]</span>. Along this line, many reserchers proposed to combine probability theory with Description Logics (DLs for short) <span class="citation">[<a href="#ref-DBLP:journals/ws/LukasiewiczS08">8</a>,<a href="#ref-DBLP:conf/rweb/Straccia08">16</a>]</span>. DLs are at the basis of the Web Ontology Language (OWL for short), a family of knowledge representation formalisms used for modeling information of the Semantic Web</p>
-<p>TRILL follows the DISPONTE <span class="citation">[<a href="#ref-RigBelLamZese12-URSW12">11</a>,<a href="#ref-Zese17-SSW-BK">19</a>]</span> semantics to compute the probability of queries. DISPONTE applies the distribution semantics <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">12</a>]</span> of probabilistic logic programming to DLs. A program following this semantics defines a probability distribution over normal logic programs called <em>worlds</em>. Then the distribution is extended to queries and the probability of a query is obtained by marginalizing the joint distribution of the query and the programs.</p>
+<p>TRILL follows the DISPONTE <span class="citation">[<a href="#ref-RigBelLamZese12-URSW12">11</a>,<a href="#ref-Zese17-SSW-BK">18</a>]</span> semantics to compute the probability of queries. DISPONTE applies the distribution semantics <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">12</a>]</span> of probabilistic logic programming to DLs. A program following this semantics defines a probability distribution over normal logic programs called <em>worlds</em>. Then the distribution is extended to queries and the probability of a query is obtained by marginalizing the joint distribution of the query and the programs.</p>
 <p>In DISPONTE, a <em>probabilistic knowledge base</em> <span class="math inline">\({{\cal K}}\)</span> is a set of <em>certain axioms</em> or <em>probabilistic axioms</em> in which each axiom is independent evidence. Certain axioms take the form of regular DL axioms while probabilistic axioms are <span class="math inline">\(p::E\)</span> where <span class="math inline">\(p\)</span> is a real number in <span class="math inline">\([0,1]\)</span> and <span class="math inline">\(E\)</span> is a DL axiom.</p>
 <p>The idea of DISPONTE is to associate independent Boolean random variables to the probabilistic axioms. To obtain a <em>world</em>, we include every formula obtained from a certain axiom. For each probabilistic axiom, we decide whether to include it or not in <span class="math inline">\(w\)</span>. A world therefore is a non probabilistic KB that can be assigned a semantics in the usual way. A query is entailed by a world if it is true in every model of the world.</p>
 <p>The probability <span class="math inline">\(p\)</span> can be interpreted as an <em>epistemic probability</em>, i.e., as the degree of our belief in axiom <span class="math inline">\(E\)</span>. For example, a probabilistic concept membership axiom <span class="math inline">\(
@@ -270,7 +261,7 @@ P(Q) = P(X_1\vee X_2) = P(X_1)+P(X_2)-P(X_1\wedge X_2)
 \)</span></p>
 <h1 id="inf">Inference</h1>
 <p>Traditionally, a reasoning algorithm decides whether an axiom is entailed or not by a KB by refutation: the axiom <span class="math inline">\(E\)</span> is entailed if <span class="math inline">\(\neg E\)</span> has no model in the KB. Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom.</p>
-<p>The problem of finding explanations for a query has been investigated by various authors <span class="citation">[<a href="#ref-extended_tracing">4</a>–<a href="#ref-DBLP:journals/ws/KalyanpurPSH05">7</a>,<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>,<a href="#ref-Zese17-SSW-BK">19</a>]</span>. It was called <em>axiom pinpointing</em> in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>]</span> and considered as a non-standard reasoning service useful for tracing derivations and debugging ontologies. In particular, in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>]</span> the authors define <em>minimal axiom sets</em> (<em>MinAs</em> for short).</p>
+<p>The problem of finding explanations for a query has been investigated by various authors <span class="citation">[<a href="#ref-extended_tracing">4</a>–<a href="#ref-DBLP:journals/ws/KalyanpurPSH05">7</a>,<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>,<a href="#ref-Zese17-SSW-BK">18</a>]</span>. It was called <em>axiom pinpointing</em> in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>]</span> and considered as a non-standard reasoning service useful for tracing derivations and debugging ontologies. In particular, in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>]</span> the authors define <em>minimal axiom sets</em> (<em>MinAs</em> for short).</p>
 <p>Let <span class="math inline">\({{\cal K}}\)</span> be a knowledge base and <span class="math inline">\(Q\)</span> an axiom that follows from it, i.e., <span class="math inline">\({{\cal K}}\models Q\)</span>. We call a set <span class="math inline">\(M\subseteq {{\cal K}}\)</span> a <em>minimal axiom set</em> or <em>MinA</em> for <span class="math inline">\(Q\)</span> in <span class="math inline">\({{\cal K}}\)</span> if <span class="math inline">\(M \models Q\)</span> and it is minimal w.r.t. set inclusion.</p>
 <p>The problem of enumerating all MinAs is called <span style="font-variant: small-caps;">min-a-enum</span>. <span style="font-variant: small-caps;">All-MinAs(<span class="math inline">\(Q,{{\cal K}}\)</span>)</span> is the set of all MinAs for query <span class="math inline">\(Q\)</span> in knowledge base <span class="math inline">\({{\cal K}}\)</span>.</p>
 <p>A <em>tableau</em> is a graph where each node represents an individual <span class="math inline">\(a\)</span> and is labeled with the set of concepts <span class="math inline">\({{\cal L}}(a)\)</span> it belongs to. Each edge <span class="math inline">\(\langle a, b\rangle\)</span> in the graph is labeled with the set of roles to which the couple <span class="math inline">\((a, b)\)</span> belongs. Then, a set of consistency preserving tableau expansion rules are repeatedly applied until a clash (i.e., a contradiction) is detected or a clash-free graph is found to which no more rules are applicable. A clash is for example a couple <span class="math inline">\((C, a)\)</span> where <span class="math inline">\(C\)</span> and <span class="math inline">\(\neg C\)</span> are present in the label of a node, i.e. <span class="math inline">\({C, \neg C} \subseteq {{\cal L}}(a)\)</span>.</p>
@@ -278,24 +269,102 @@ P(Q) = P(X_1\vee X_2) = P(X_1)+P(X_2)-P(X_1\wedge X_2)
 <p><span style="font-variant: small-caps;">min-a-enum</span> is required to answer queries to KBs following the DISPONTE semantics. To compute the probability of a query, the explanations must be made mutually exclusive, so that the probability of each individual explanation is computed and summed with the others. To do that we assign independent Boolean random variables to the axioms contained in the explanations and defining the Disjunctive Normal Form (DNF) Boolean formula <span class="math inline">\(f_K\)</span> which models the set of explanations. Thus <span class="math inline">\(
 f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}\overline{X_{i}}
 \)</span> where <span class="math inline">\(\mathbf{X}=\{X_{i}|(E_i,k)\in\kappa,\kappa\in K\}\)</span> is the set of Boolean random variables. We can now translate <span class="math inline">\(f_K\)</span> to a Binary Decision Diagram (BDD), from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.</p>
-<p>To run a query, you can simply load the Prolog file, for example <a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>, as</p>
-<pre><code>?- [peoplePets].</code></pre>
-<h2 id="files">Files</h2>
-<p>The <code>pack/trill/prolog/examples</code> folder in SWI-Prolog home contains some example programs. The <code>pack/trill/doc</code> folder in SWI-Prolog home contains this manual in latex, html and pdf.</p>
-<h1 id="license">License</h1>
-<p>TRILL follows the Artistic License 2.0 that you can find in TRILL root folder. The copyright is by Riccardo Zese.</p>
-<p>The library <a href="http://vangelisv.github.io/thea/">Thea</a> at the basis of the translation module is available under the <a href="http://www.gnu.org/copyleft/gpl.html">GNU/GPL license</a>.</p>
-<p>The library <a href="http://vlsi.colorado.edu/\string ~fabio/">CUDD</a> for manipulating BDDs has the following license:</p>
-<p>Copyright (c) 1995-2004, Regents of the University of Colorado</p>
-<p>All rights reserved.</p>
-<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+<h2 id="queries">Possible Queries</h2>
+<p>TRILL can compute the probability or find an explanation of the following queries:</p>
 <ul>
-<li><p>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</p></li>
-<li><p>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</p></li>
-<li><p>Neither the name of the University of Colorado nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</p></li>
+<li><p>Concept membership queries.</p></li>
+<li><p>Property assertion queries.</p></li>
+<li><p>Subsumption queries.</p></li>
+<li><p>Unsatifiability of a concept.</p></li>
+<li><p>Inconsistency of the knowledge base.</p></li>
 </ul>
-<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAU-SED<br />
-AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+<p>All the input arguments have to be atoms or ground terms.</p>
+<h3 id="probabilistic-queries">Probabilistic Queries</h3>
+<p>TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.</p>
+<p>The probability of an individual to belong to a concept can be asked using TRILL with the predicate</p>
+<pre><code>prob_instanceOf(+Concept:term,+Individual:atom,-Prob:double)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- prob_instanceOf(cat,&#39;Tom&#39;,Prob).</code></pre>
+<p>The probability of two individuals to be related by a role can be computed with</p>
+<pre><code>prob_property_value(+Prop:atom,+Individual1:atom,
+                    +Individual2:atom,-Prob:double)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;,Prob).</code></pre>
+<p>If you want to know tho probability with which a class is a subclass of another you have to use</p>
+<pre><code>prob_sub_class(+Concept:term,+SupConcept:term,-Prob:double)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- prob_sub_class(cat,pet,Prob).</code></pre>
+<p>The probability of the unsatisfiability of a concept can be asked with the predicate</p>
+<pre><code>prob_unsat(+Concept:term,-Prob:double)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- prob_unsat(intersectionOf([cat,complementOf(pet)]),P).</code></pre>
+<p>This query for example corresponds with a subsumption query, which is represented as the intersection of the subclass and the complement of the superclass.</p>
+<p>Finally, you can ask the probability if the inconsistency of the knowledge base with</p>
+<pre><code>prob_inconsistent_theory(-Prob:double)</code></pre>
+<h3 id="non-probabilistic-queries">Non Probabilistic Queries</h3>
+<p>In TRILL you can also ask whether a query is true or false w.r.t. the knowledge base and in case of a succesful query an explanation can be returned as well. Query predicates in this case differs in the number of arguments, in the second case, when we want also an explanation, an extra argument is added to unify with the list of axioms build to explain the query.</p>
+<p>The query if an individual belongs to a concept can be used the predicates</p>
+<pre><code>instanceOf(+Concept:term,+Individual:atom)
+instanceOf(+Concept:term,+Individual:atom,-Expl:list)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- instanceOf(pet,&#39;Tom&#39;).
+?- instanceOf(pet,&#39;Tom&#39;,Expl).</code></pre>
+<p>In the first query the result is <code>true</code> because Tom belongs to cat, in the second case TRILL returns the explanation</p>
+<pre><code>[classAssertion(cat,&#39;Tom&#39;), subClassOf(cat,pet)]</code></pre>
+<p>Similarly, to ask whether two individuals are related by a role you have to use the queries</p>
+<pre><code>property_value(+Prop:atom,+Individual1:atom,+Individual2:atom)
+property_value(+Prop:atom,+Individual1:atom,
+               +Individual2:atom,-Expl:list)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;).
+?- property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;,Expl).</code></pre>
+<p>If you want to know if a class is a subclass of another you have to use</p>
+<pre><code>sub_class(+Concept:term,+SupConcept:term)
+sub_class(+Concept:term,+SupConcept:term,-Expl:list)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- sub_class(cat,pet).
+?- sub_class(cat,pet,Expl).</code></pre>
+<p>The unsatisfiability of a concept can be asked with the predicate</p>
+<pre><code>unsat(+Concept:term)
+unsat(+Concept:term,-Expl:list)</code></pre>
+<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<pre><code>?- unsat(intersectionOf([cat,complementOf(pet)])).
+?- unsat(intersectionOf([cat,complementOf(pet)]),Expl).</code></pre>
+<p>In this case, the returned explanation is the same obtained by querying if cat is subclass of pet with the <code>sub_class/3</code> predicate, i.e., <code>[subClassOf(cat,pet)]</code></p>
+<p>Finally, you can ask about the inconsistency of the knowledge base with</p>
+<pre><code>inconsistent_theory
+inconsistent_theory(-Expl:list)</code></pre>
+<h1 id="download-query-results-through-an-api">Download Query Results through an API</h1>
+<p>The results of queries can also be downloaded programmatically by directly approaching the Pengine API. Example client code is <a href="https://github.com/friguzzi/trill-on-swish/tree/master/client">available</a>. For example, the <code>swish-ask.sh</code> client can be used with bash to download the results for a query in CSV. The call below downloads a CSV file for the coin example.</p>
+<pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
+  examples/trill/peoplePets.pl \
+  Prob &quot;prob_instanceOf(&#39;natureLover&#39;,&#39;Kevin&#39;,Prob)&quot;</code></pre>
+<p>The script can ask queries against Prolog scripts stored in <a href="http://trill.lamping.unife.it" class="uri">http://trill.lamping.unife.it</a> by specifying the script on the commandline. User defined files stored in TRILL on SWISH (locations of type <a href="http://trill.lamping.unife.it/p/johnEmployee_user.pl" class="uri">http://trill.lamping.unife.it/p/johnEmployee_user.pl</a>) can be directly used, for example:</p>
+<pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
+  johnEmployee_user.pl Expl &quot;instanceOf(person,john,Expl)&quot;</code></pre>
+<p>Example programs can be used by specifying the folder portion of the url of the example, as in the first johnEmployee example above where the url for the program is <a href="http://trill.lamping.unife.it/examples/trill/johnEmployee.pl" class="uri">http://trill.lamping.unife.it/examples/trill/johnEmployee.pl</a>.</p>
+<p>You can also use an url for the program as in</p>
+<pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
+  https://raw.githubusercontent.com/friguzzi/trill-on-swish/\
+  master/examples/trill/peoplePets.pl \
+  Prob &quot;prob_instanceOf(&#39;natureLover&#39;,&#39;Kevin&#39;,Prob)&quot;</code></pre>
+<p>Results can be downloaded in JSON using the option <code>--json-s</code> or <code>--json-html</code>. With the first the output is in a simple string format where Prolog terms are sent using quoted write, the latter serialize responses as HTML strings. E.g.</p>
+<pre><code>$ bash swish-ask.sh --json-s --server=http://trill.lamping.unife.it \
+  johnEmployee_user.pl Expl &quot;instanceOf(person,john,Expl)&quot;</code></pre>
+<p>The JSON format can also be modified. See <a href="http://www.swi-prolog.org/pldoc/doc_for?object=pengines%3Aevent_to_json/4">http://www.swi-prolog.org/pldoc/doc_for?object=pengines%3Aevent_to_json/4</a>.</p>
+<p>Prolog can exploit the Pengine API directly. For example, the above can be called as:</p>
+<pre><code>?- [library(pengines)].
+?- pengine_rpc(&#39;http://trill.lamping.unife.it&#39;,
+     prob_instanceOf(&#39;natureLover&#39;,&#39;Kevin&#39;,Prob),
+     [ src_url(&#39;https://raw.githubusercontent.com/friguzzi/trill-on-swish/\
+  master/examples/trill/peoplePets.pl&#39;),
+     application(swish)
+     ]).
+Prob = 0.51.
+?-</code></pre>
+<h1 id="manual-in-pdf">Manual in PDF</h1>
+<p>A PDF version of the manual is available at <a href="https://github.com/friguzzi/trill-on-swish/blob/master/doc/help-trill.pdf" class="uri">https://github.com/friguzzi/trill-on-swish/blob/master/doc/help-trill.pdf</a>.</p>
+<h1 id="bibliography" class="unnumbered">Bibliography</h1>
 <div id="refs" class="references">
 <div id="ref-DBLP:conf/dlog/2003handbook">
 <p>1. F. Baader, D. Calvanese, D. L. McGuinness, D. Nardi, and P. F. Patel-Schneider (eds.). 2003. <em>The description logic handbook: Theory, implementation, and applications</em>. Cambridge University Press.</p>
@@ -348,11 +417,8 @@ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (
 <div id="ref-VenVer04-ICLP04-IC">
 <p>17. J. Vennekens, S. Verbaeten, and M. Bruynooghe. 2004. Logic programs with annotated disjunctions. <em>ICLP</em>, Springer, 195–209.</p>
 </div>
-<div id="ref-ZesBelRig16-AMAI-IJ">
-<p>18. Riccardo Zese, Elena Bellodi, Fabrizio Riguzzi, Giuseppe Cota, and Evelina Lamma. 2016. Tableau reasoning for description logics and its extension to probabilities. <em>Ann. Math. Artif. Intel.</em>: 1–30. <a href="http://doi.org/10.1007/s10472-016-9529-3" class="uri">http://doi.org/10.1007/s10472-016-9529-3</a></p>
-</div>
 <div id="ref-Zese17-SSW-BK">
-<p>19. Riccardo Zese. 2017. <em>Probabilistic semantic web</em>. IOS Press. <a href="http://doi.org/10.3233/978-1-61499-734-4-i" class="uri">http://doi.org/10.3233/978-1-61499-734-4-i</a></p>
+<p>18. Riccardo Zese. 2017. <em>Probabilistic semantic web</em>. IOS Press. <a href="http://doi.org/10.3233/978-1-61499-734-4-i" class="uri">http://doi.org/10.3233/978-1-61499-734-4-i</a></p>
 </div>
 </div>
 </body>

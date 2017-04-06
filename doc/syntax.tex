@@ -54,7 +54,7 @@ owl_rdf('
 </rdf:RDF>
 ').
 \end{verbatim}
-For a brief introduction on RDF/XML syntax see \href{rdfxml-syn}{\texttt{RDF/XML syntax and tools}} section below.
+For a brief introduction on RDF/XML syntax see \textit{RDF/XML syntax and tools} section below (Sec. \ref{rdfxml-syn}).
 
 Note that each single \verb|owl_rdf/1| must be self contained and well formatted, it must start and end with \verb|rdf:RDF| tag and contain all necessary declarations (namespaces, entities, ...).
 
@@ -166,16 +166,18 @@ equivalentClasses([worker,workingman]).
 
 Annotation assertions can be defined, for example, as
 \begin{verbatim}
-annotationAssertion(foo:myAnnotation,subClassOf(employee,worker),'myValue').
+annotationAssertion(foo:myAnnotation,
+    subClassOf(employee,worker),'myValue').
 \end{verbatim}
 
 
-In particular, an axiom can be annotated with a probability which defines the degree of belief in the truth of the axiom. See \cite{trillquale} for details.
+In particular, an axiom can be annotated with a probability which defines the degree of belief in the truth of the axiom. See Section \ref{semantics} for details.
 
 
 Below, an example of an probabilistic axiom, following the TRILL syntax.
 \begin{verbatim}
-annotationAssertion('disponte:probability',subClassOf(employee,worker),literal('0.6')).
+annotationAssertion('disponte:probability',
+    subClassOf(employee,worker),literal('0.6')).
 \end{verbatim}
 
 \subsubsection{Concepts descriptions}
@@ -210,7 +212,8 @@ oneOf([list,of,classes]).
 \end{verbatim}
 For example, the class \textit{workingman} is the intersection of \textit{worker} with the union of \textit{man} and \textit{woman}. It can be defined as:
 \begin{verbatim}
-equivalentClasses([workingman,intersectionOf([worker,unionOf([man,woman])])]).
+equivalentClasses([workingman,
+    intersectionOf([worker,unionOf([man,woman])])]).
 \end{verbatim}
 
 \subsection{RDF/XML syntax and tools}
@@ -248,7 +251,8 @@ A representations of the three axioms seen above is shown below.
 
 Annotations are assertable using an extension of RDF/XML. For example the annotated axiom below, defined using the TRILL sintax
 \begin{verbatim}
-annotationAssertion('disponte:probability',subClassOf('Cat','Pet'),literal('0.6')).
+annotationAssertion('disponte:probability',
+    subClassOf('Cat','Pet'),literal('0.6')).
 \end{verbatim}
 is modeled using RDF/XML syntax as
 \begin{verbatim}
@@ -256,7 +260,9 @@ is modeled using RDF/XML syntax as
  <rdfs:subClassOf rdf:resource="Pet"/>
 </owl:Class>
 <owl:Axiom>
- <disponte:probability rdf:datatype="&amp;xsd;decimal">0.6</disponte:probability>
+ <disponte:probability rdf:datatype="&amp;xsd;decimal">
+     0.6
+ </disponte:probability>
  <owl:annotatedSource rdf:resource="Cat"/>
  <owl:annotatedTarget rdf:resource="Pet"/>
  <owl:annotatedProperty rdf:resource="&amp;rdfs;subClassOf"/>

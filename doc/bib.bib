@@ -25,7 +25,7 @@ chapter={3},
   author    = {Manfred Schmidt-Schau{\ss} and
                Gert Smolka},
   title     = {Attributive Concept Descriptions with Complements},
-  journal   = {Artificial Intelligence},
+  journal   = {Artif. Intell.},
   volume    = {48},
   number    = {1},
   year      = {1991},
@@ -63,7 +63,7 @@ chapter={3},
   author    = {T. Sato},
   title     = {A Statistical Learning Method for Logic Programs with Distribution
                Semantics},
-  booktitle = {International Conference on Logic Programming},
+  booktitle = {ICLP},
   year      = {1995},
   pages     = {715-729},
  publisher={MIT Press}
@@ -95,7 +95,7 @@ chapter={3},
 @inproceedings{VenVer04-ICLP04-IC,
    author =      {J. Vennekens and S. Verbaeten and M. Bruynooghe},
    title =       {Logic Programs With Annotated Disjunctions},
-  booktitle =  {International Conference on Logic Programming},
+  booktitle =  {ICLP},
    year =        {2004},
    volume={3131},
    pages={195-209},
@@ -106,7 +106,7 @@ chapter={3},
 @inproceedings{DBLP:conf/ijcai/RaedtKT07,
   author = {De Raedt, L. and A. Kimmig and H. Toivonen},
   title = {{ProbLog}: A Probabilistic {P}rolog and Its Application in Link Discovery.},
-  booktitle = {International Joint Conference on Artificial Intelligence},
+  booktitle = {IJCAI},
   year = {2007},
   pages = {2462-2467},
 }
@@ -115,7 +115,7 @@ chapter={3},
   title = {Epistemic and Statistical Probabilistic Ontologies},
   author = {Fabrizio Riguzzi and Evelina Lamma and Elena Bellodi and Riccardo Zese},
   pages = { 3-14},
-  booktitle = { Uncertainty Reasoning for the Semantic Web},
+  booktitle = { URSW},
   series = {CEUR Workshop Proceedings},
   volume = {900},
   year = {2012},
@@ -179,4 +179,56 @@ year={2006},
   volume    = {4825},
   publisher = {Springer},
   series    = {LNCS}
- }
+}
+ 
+@article{ZesBelRig16-AMAI-IJ,
+  author = {Riccardo Zese and
+        Elena Bellodi  and
+        Fabrizio Riguzzi and
+        Giuseppe Cota and
+        Evelina Lamma },
+  title = {Tableau Reasoning for Description Logics and its Extension to Probabilities},
+  journal = {Ann. Math. Artif. Intel.},
+  publisher = {Springer},
+  copyright = {Springer},
+  year = {2016},
+  pages = {1-30},
+  issn-print = {1012-2443},
+  issn-online = {1573-7470},
+  url = {http://dx.doi.org/10.1007/s10472-016-9529-3f},
+  pdf = {http://ds.ing.unife.it/~friguzzi/Papers/ZesBelRig-AMAI16.pdf},
+  doi = {10.1007/s10472-016-9529-3},
+  abstract = {
+The increasing popularity of the Semantic Web drove to a wide-
+spread adoption of Description Logics (DLs) for modeling real world domains.
+To help the diffusion of DLs, a large number of reasoning algorithms have been
+developed. Usually these algorithms are implemented in procedural languages
+such as Java or C++. Most of the reasoners exploit the tableau algorithm
+which features non-determinism, that is not easily handled by those languages.
+Prolog directly manages non-determinism, thus is a good candidate for dealing
+with the tableau's non-deterministic expansion rules.
+We present TRILL, for "Tableau Reasoner for descrIption Logics in pro-
+Log", that implements a tableau algorithm and is able to return explanations
+for queries and their corresponding probability, and TRILLP , for "TRILL
+powered by Pinpointing formulas", which is able to compute a Boolean for-
+mula representing the set of explanations for a query. Reasoning on real world
+domains also requires the capability of managing probabilistic and uncertain
+information. We show how TRILL and TRILLP can be used to compute the
+probability of queries to knowledge bases following DISPONTE semantics.
+Experiments comparing these with other systems show the feasibility of the
+approach.},
+  keywords = { Description Logics, Tableau, Prolog, Semantic Web},
+  scopus = {2-s2.0-84990986085}
+}
+
+@book{Zese17-SSW-BK,
+  author    = {Riccardo Zese},
+  title     = {Probabilistic Semantic Web},
+  series    = {Studies on the Semantic Web},
+  volume    = {28},
+  publisher = {{IOS} Press},
+  year      = {2017},
+  url       = {http://ebooks.iospress.nl/volume/probabilistic-semantic-web-reasoning-and-learning},
+  doi       = {10.3233/978-1-61499-734-4-i},
+  isbn      = {978-1-61499-733-7}
+}
