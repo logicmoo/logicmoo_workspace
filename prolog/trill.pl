@@ -4,8 +4,8 @@ This module performs reasoning over probabilistic description logic knowledge ba
 It reads probabilistic knowledge bases in RDF format or in TRILL format, a functional-like
 sintax, and answers queries by finding the set of explanations or computing the probability.
 
-See <manual_url_pdf_git> or
-<manual_url_html> for
+See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
+http://ds.ing.unife.it/~rzese/software/trill/manual.html for
 details.
 
 @author Riccardo Zese
