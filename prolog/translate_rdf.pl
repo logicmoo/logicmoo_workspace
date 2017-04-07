@@ -3074,7 +3074,7 @@ get_module('user'):- !.
 
 parse_rdf_from_owl_rdf_pred(String):-
   open_chars_stream(String,S),
-  load_owl_from_stream(S)
+  load_owl_from_stream(S).
 
 create_and_assert_axioms(P,Args) :-
   ns4query(NSList),
