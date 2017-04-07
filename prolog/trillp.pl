@@ -1,4 +1,4 @@
-/** <module> trill
+/** <module> trillp
 
 This module performs reasoning over probabilistic description logic knowledge bases.
 It reads probabilistic knowledge bases in RDF format or in TRILL format, a functional-like
@@ -13,7 +13,7 @@ details.
 @copyright Riccardo Zese
 */
 
-:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3,
+:- module(trillp,[sub_class/2, sub_class/3, prob_sub_class/3,
                  instanceOf/2, instanceOf/3, prob_instanceOf/3,
                  property_value/3, property_value/4, prob_property_value/4,
                  unsat/1, unsat/2, prob_unsat/2,
@@ -21,14 +21,11 @@ details.
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1] ).
 
-%:- set_prolog_flag(unknow,fail).
-
-/*:- use_module(library('thea2/owl2_io')).
-:- use_module(library('thea2/owl2_model')).*/
 :- use_module(library(lists)).
 :- use_module(library(ugraphs)).
 :- use_module(library(rbtrees)).
 :- use_module(library(dif)).
+:- use_module(library(clpb)).
 :- use_module(library(pengines)).
 :- use_module(library(sandbox)).
 
@@ -39,13 +36,13 @@ details.
 :- style_check(-discontiguous).
 
 :- multifile
-    owl2_model:axiom/1,
-	  owl2_model:class/1,
-	  owl2_model:annotationProperty/1,
-	  owl2_model:namedIndividual/1,
-	  owl2_model:objectProperty/1,
-	  owl2_model:dataProperty/1,
-	  owl2_model:transitiveProperty/1,
+	owl2_model:axiom/1,
+	owl2_model:class/1,
+	owl2_model:annotationProperty/1,
+	owl2_model:namedIndividual/1,
+	owl2_model:objectProperty/1,
+	owl2_model:dataProperty/1,
+	owl2_model:transitiveProperty/1,
     owl2_model:classAssertion/2,
     owl2_model:propertyAssertion/3,
     owl2_model:subPropertyOf/2,
@@ -73,8 +70,8 @@ details.
 /********************************
   SETTINGS
 *********************************/
-setting_trillp(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
-setting_trillp(nondet_rules,[or_rule,max_rule]).
+setting_trillp(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,exists_rule]).
+setting_trillp(nondet_rules,[or_rule]).
 
 /********************************
   LOAD KNOWLEDGE BASE
@@ -442,7 +439,7 @@ inconsistent_theory:-
  */
 prob_instanceOf(Class,Ind,Prob):-
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
-  	all_instanceOf(ClassEx,IndEx,Exps),
+  	instanceOf(ClassEx,IndEx,Exps),
   	compute_prob(Exps,Prob)
   ;
   	print_message(warning,iri_not_exists),!,false
@@ -456,7 +453,7 @@ prob_instanceOf(Class,Ind,Prob):-
  */
 prob_property_value(Prop, Ind1, Ind2,Prob):-
   ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
-  	all_property_value(PropEx,Ind1Ex,Ind2Ex,Exps),
+  	property_value(PropEx,Ind1Ex,Ind2Ex,Exps),
   	compute_prob(Exps,Prob)
   ;
   	print_message(warning,iri_not_exists),!,false
@@ -471,7 +468,7 @@ prob_property_value(Prop, Ind1, Ind2,Prob):-
  */
 prob_sub_class(Class,SupClass,Prob):-
   ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
-  	all_sub_class(ClassEx,SupClassEx,Exps),
+  	sub_class(ClassEx,SupClassEx,Exps),
   	compute_prob(Exps,Prob)
   ;
   	print_message(warning,iri_not_exists),!,false
@@ -486,7 +483,7 @@ prob_sub_class(Class,SupClass,Prob):-
  */
 prob_unsat(Concept,Prob):-
   ( check_query_args([Concept],[ConceptEx]) *->
-    all_unsat(ConceptEx,Exps),
+    unsat(ConceptEx,Exps),
     compute_prob(Exps,Prob)
   ;
     print_message(warning,iri_not_exists),!,false
@@ -498,30 +495,8 @@ prob_unsat(Concept,Prob):-
  * This predicate returns the probability of the inconsistency of the loaded knowledge base.
  */
 prob_inconsistent_theory(Prob):-
-  all_inconsistent_theory(Exps),
+  inconsistent_theory(Exps),
   compute_prob(Exps,Prob).
-
-/***********
-  Utilities for queries
- ***********/
-
-% to find all axplanations for probabilistic queries
-all_sub_class(Class,SupClass,LE):-
-  all_unsat(intersectionOf([Class,complementOf(SupClass)]),LE).
-
-all_instanceOf(Class,Ind,LE):-
-  findall(Expl,instanceOf(Class,Ind,Expl),LE).
-
-all_property_value(Prop,Ind1,Ind2,LE):-
-  findall(Expl,property_value(Prop,Ind1,Ind2,Expl),LE).
-
-all_unsat(Concept,LE):-
-  findall(Expl,unsat_internal(Concept,Expl),LE).
-
-
-all_inconsistent_theory(LE):-
-  findall(Expl,inconsistent_theory(Expl),LE).
-
 
 
 % expands query arguments using prefixes and checks their existence in the kb
@@ -591,36 +566,21 @@ find_atom_in_axioms(Name,H):-
 find_expls([],_,[]).
 
 % checks if an explanations was already found (instance_of version)
-find_expls([ABox|_T],[C,I],E):-
-  clash(ABox,E0),
-  sort(E0,E),
-  findall(Exp,exp_found([C,I],Exp),Expl),
-   not_already_found(Expl,[C,I],E),
-   assert(exp_found([C,I],E)).
+find_expls([ABox|T],[C,I],E):-
+  clash(ABox,E0),!,
+  find_expls(T,[C,I],E1),
+  or_f(E0,E1,E).
 
 % checks if an explanations was already found (property_value version)
-find_expls([(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
-  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E),ABox),
-  findall(Exp,exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
-  not_already_found(Expl,[PropEx,Ind1Ex,Ind2Ex],E),
-  assert(exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
+find_expls([(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
+  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),!,
+  find_expls(T,[PropEx,Ind1Ex,Ind2Ex],E1),
+  or_f(E0,E1,E).
+  
 
 find_expls([_ABox|T],Query,Expl):-
   \+ length(T,0),
   find_expls(T,Query,Expl).
-
-not_already_found([],_Q,_E):-!.
-
-not_already_found([H|_T],_Q,E):-
-  subset(H,E),!,
-  fail.
-
-not_already_found([H|_T],Q,E):-
-  subset(E,H),!,
-  retract(exp_found(Q,H)).
-
-not_already_found([_H|T],Q,E):-
-  not_already_found(T,Q,E).
 
 /****************************/
 
@@ -639,12 +599,6 @@ findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox):-
   TABLEAU ALGORITHM
 ****************************/
 
-/*
-find_clash((ABox0,Tabs0),Expl2):-
-  apply_rules((ABox0,Tabs0),(ABox,Tabs)),
-  clash((ABox,Tabs),Expl).
-*/
-
 %-------------
 % clash managing
 % previous version, manages only one clash at time
@@ -655,7 +609,7 @@ clash((ABox,_),Expl):-
   %write('clash 1'),nl,
   findClassAssertion(C,Ind,Expl1,ABox),
   findClassAssertion(complementOf(C),Ind,Expl2,ABox),
-  append(Expl1,Expl2,Expl).
+  and_f(Expl1,Expl2,Expl).
 
 clash((ABox,_),Expl):-
   %write('clash 2'),nl,
@@ -666,7 +620,7 @@ clash((ABox,_),Expl):-
   member(X,LD),
   member(Y,LD),
   dif(X,Y),
-  append(Expl1,Expl2,Expl).
+  and_f(Expl1,Expl2,Expl).
 
 clash((ABox,_),Expl):-
   %write('clash 3'),nl,
@@ -674,26 +628,28 @@ clash((ABox,_),Expl):-
   findClassAssertion(complementOf(C),sameIndividual(L2),Expl2,ABox),
   member(X,L1),
   member(X,L2),!,
-  append(Expl1,Expl2,Expl).
+  and_f(Expl1,Expl2,Expl).
 
 clash((ABox,_),Expl):-
   %write('clash 4'),nl,
   findClassAssertion(C,Ind1,Expl1,ABox),
   findClassAssertion(complementOf(C),sameIndividual(L2),Expl2,ABox),
   member(Ind1,L2),
-  append(Expl1,Expl2,Expl).
+  and_f(Expl1,Expl2,Expl).
 
 clash((ABox,_),Expl):-
   %write('clash 5'),nl,
   findClassAssertion(C,sameIndividual(L1),Expl1,ABox),
   findClassAssertion(complementOf(C),Ind2,Expl2,ABox),
   member(Ind2,L1),
-  append(Expl1,Expl2,Expl).
+  and_f(Expl1,Expl2,Expl).
 
 clash((ABox,_),Expl):-
   %write('clash 6'),nl,
-  findClassAssertion("http://www.w3.org/2002/07/owl#Nothing",_Ind,Expl,ABox).
-
+  findall(Expl1,findClassAssertion("http://www.w3.org/2002/07/owl#Nothing",_Ind,Expl1,ABox),Expls),
+  dif(Expls,[]),
+  or_all(Expls,Expl).
+  
 /*
 clash((ABox,Tabs),Expl):-
   %write('clash 7'),nl,
@@ -715,15 +671,23 @@ clash((ABox,Tabs),Expl):-
   make_expl(Ind,S,SN,Expl1,ABox,Expl2),
   flatten(Expl2,Expl3),
   list_to_set(Expl3,Expl).
-
+*/
 
 % --------------
+or_all([],[]).
+
+or_all([H|T],Expl):-
+  or_all(T,Expl1),
+  or_f(H,Expl1,Expl).
+
+/*
 make_expl(_,_,[],Expl1,_,Expl1).
 
 make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
   findPropertyAssertion(S,Ind,H,Expl2,ABox),
   make_expl(Ind,S,T,Expl1,ABox,Expl).
 */
+
 
 % -------------
 % rules application
@@ -759,145 +723,6 @@ apply_nondet_rules([_|T],ABox0,ABox):-
   apply_nondet_rules(T,ABox0,ABox).
 
 
-/*
-apply_all_rules(ABox0,ABox):-
-  apply_nondet_rules([or_rule,max_rule],
-                  ABox0,ABox1),
-  (ABox0=ABox1 *->
-  ABox=ABox1;
-  apply_all_rules(ABox1,ABox)).
-
-apply_det_rules([],ABox,ABox).
-apply_det_rules([H|_],ABox0,ABox):-
-  %C=..[H,ABox,ABox1],
-  once(call(H,ABox0,ABox)).
-apply_det_rules([_|T],ABox0,ABox):-
-  apply_det_rules(T,ABox0,ABox).
-apply_nondet_rules([],ABox0,ABox):-
-  apply_det_rules([o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule],ABox0,ABox).
-apply_nondet_rules([H|_],ABox0,ABox):-
-  %C=..[H,ABox,L],
-  once(call(H,ABox0,L)),
-  member(ABox,L),
-  dif(ABox0,ABox).
-apply_nondet_rules([_|T],ABox0,ABox):-
-  apply_nondet_rules(T,ABox0,ABox).
-*/
-
-/**********************
-   old version for the rules application
-
-apply_rules_0((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules((ABox0,Tabs0),(ABox,Tabs)):-
-  %writel(ABox0),nl,
-  %apply_rules1((ABox0,Tabs0),(ABox,Tabs)).
-  apply_rules1_1((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules1_1((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('o_rule: '),nl,
-  o_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules1_1((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules1((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules1((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('and_rule: '),nl,
-  and_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules1((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules2((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules2((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('exists_rule: '),nl,
-  exists_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules2((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules3((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules3((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('forall_rule: '), nl,
-  forall_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules3((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules3_1((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules3_1((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('forall_plus_rule: '),nl,
-  forall_plus_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules3_1((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules4((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules4((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('min_rule: '),nl,
-  min_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules4((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules5((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules5((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('unfold_rule: '),nl,
-  unfold_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules5((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules6((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules6((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('add_exists_rule: '),nl,
-  add_exists_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
-  %writel(ABox1),nl,
-  %write('apllyied'),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules6((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules7((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules7((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('or_rule: '),nl,
-  or_rule((ABox0,Tabs0),L),!,
-  member((ABox1,Tabs1),L),
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules7((ABox0,Tabs0),(ABox,Tabs)):-
-  apply_rules8((ABox0,Tabs0),(ABox,Tabs)).
-
-apply_rules8((ABox0,Tabs0),(ABox,Tabs)):-
-  %write('max_rule: '),nl,
-  max_rule((ABox0,Tabs0),L),!,
-  member((ABox1,Tabs1),L),
-  %write('apllyied'),nl,
-  %writel(ABox1),nl,
-  apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
-apply_rules8((ABox,Tabs),(ABox,Tabs)).
-
-*/
-
-
 /***********
   rules
 ************/
@@ -911,13 +736,12 @@ apply_rules8((ABox,Tabs),(ABox,Tabs)).
   This rule hasn't a corresponding rule in the tableau
   ========================
 */
-add_exists_rule((ABox,Tabs),([(classAssertion(someValuesFrom(R,C),Ind1),Expl)|ABox],Tabs)):-
-  findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
-  findClassAssertion(C,Ind2,Expl2,ABox),
+add_exists_rule((ABox0,Tabs),(ABox,Tabs)):-
+  findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox0),
+  findClassAssertion(C,Ind2,Expl2,ABox0),
   existsInKB(R,C),
-  append(Expl1,Expl2,ExplT),
-  list_to_set(ExplT,Expl),
-  absent(classAssertion(someValuesFrom(R,C),Ind1),Expl,(ABox,Tabs)).
+  and_f(Expl1,Expl2,Expl),
+  modify_ABox(ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
 
 existsInKB(R,C):-
   get_trill_current_module(Name),
@@ -945,8 +769,8 @@ and_rule((ABox0,Tabs0),(ABox,Tabs0)):-
 scan_and_list([],_Ind,_Expl,ABox,_Tabs,ABox,Mod):-
   dif(Mod,0).
 
-scan_and_list([C|T],Ind,Expl,ABox0, Tabs0,[(classAssertion(C,Ind),Expl)|ABox],_Mod):-
-  absent(classAssertion(C,Ind),Expl,(ABox0,Tabs0)),!,
+scan_and_list([C|T],Ind,Expl,ABox0,Tabs0,[(classAssertion(C,Ind),Expl)|ABox],_Mod):-
+  modify_ABox(ABox0,C,Ind,Expl,ABox),!,
   scan_and_list(T,Ind,Expl,ABox0,Tabs0,ABox,1).
 
 scan_and_list([_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
@@ -972,15 +796,15 @@ ind_intersected_union(Ind,LC,ABox) :-
   findClassAssertion(C,Ind,_,ABox),
   member(C,LC),!.
 %---------------
-scan_or_list([C],1,Ind,Expl,ABox, Tabs, [(classAssertion(C,Ind),Expl)|ABox]):- !,
-  absent(classAssertion(C,Ind),Expl,(ABox,Tabs)).
+scan_or_list([C],1,Ind,Expl,ABox0,_Tabs,ABox):- !,
+  modify_ABox(ABox0,C,Ind,Expl,ABox).
 
-scan_or_list([C|_T],_NClasses,Ind,Expl,ABox, Tabs, [(classAssertion(C,Ind),Expl)|ABox]):-
-  absent(classAssertion(C,Ind),Expl,(ABox,Tabs)).
+scan_or_list([C|_T],_NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
+  modify_ABox(ABox0,C,Ind,Expl,ABox).
 
-scan_or_list([_C|T],NClasses,Ind,Expl,ABox0,Tabs, ABox):-
+scan_or_list([_C|T],NClasses,Ind,Expl,ABox0,Tabs,ABox):-
   NC is NClasses - 1,
-  scan_or_list(T,NC,Ind,Expl,ABox0, Tabs,ABox).
+  scan_or_list(T,NC,Ind,Expl,ABox0,Tabs,ABox).
 /* **************** */
 
 /*
@@ -1007,52 +831,26 @@ connected_individual(R,C,Ind1,ABox):-
   forall_rule
   ===================
 */
-forall_rule((ABox,Tabs),([(classAssertion(C,Ind2),Expl)|ABox],Tabs)):-
-  findClassAssertion(allValuesFrom(R,C),Ind1,Expl1,ABox),
-  \+ indirectly_blocked(Ind1,(ABox,Tabs)),
-  findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox),
-  append(Expl1,Expl2,ExplT),
-  list_to_set(ExplT,Expl),
-  absent(classAssertion(C,Ind2),Expl,(ABox,Tabs)).
+forall_rule((ABox0,Tabs),(ABox,Tabs)):-
+  findClassAssertion(allValuesFrom(R,C),Ind1,Expl1,ABox0),
+  \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
+  findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
+  and_f(Expl1,Expl2,Expl),
+  modify_ABox(ABox0,C,Ind2,Expl,ABox).
 
 /* ************** */
-
-/*
-  forall_plus_rule
-  =================
-*/
-forall_plus_rule((ABox,Tabs),([(classAssertion(allValuesFrom(R,C),Ind2),Expl)| ABox],Tabs)):-
-  findClassAssertion(allValuesFrom(S,C),Ind1,Expl1,ABox),
-  \+ indirectly_blocked(Ind1,(ABox,Tabs)),
-  findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox),
-  find_sub_sup_trans_role(R,S,Ind1,Ind2,Expl3),
-  append(Expl1,Expl2,ExplT),
-  append(ExplT,Expl3,ExplT1),
-  list_to_set(ExplT1,Expl),
-  absent(classAssertion(allValuesFrom(R,C),Ind2),Expl,(ABox,Tabs)).
-
-% --------------
-find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S),transitive(R)]):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S),
-  Name:transitiveProperty(R).
-
-find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S)]):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S),
-  \+ Name:transitiveProperty(R).
-/* ************ */
 
 /*
   unfold_rule
   ===========
 */
 
-unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[Ax|Expl])|ABox],Tabs)):-
+unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind,Expl,ABox0),
   find_sub_sup_class(C,D,Ax),
-  absent(classAssertion(D,Ind),[Ax|Expl],(ABox0,Tabs)),
-  add_nominal(D,Ind,ABox0,ABox).
+  and_f([Ax],Expl,AxL),
+  modify_ABox(ABox0,D,Ind,AxL,ABox1),
+  add_nominal(D,Ind,ABox1,ABox).
 
 /* -- unfold_rule
       takes a class C1 in which Ind belongs, find a not atomic class C
@@ -1063,33 +861,35 @@ unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[Ax|Expl])|ABox],Tabs)):-
       correspond to the ce_rule
    --
 */
-unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[Ax|Expl1])|ABox],Tabs)):-
+unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(C1,C,L),
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(Ind,L,ABox0,Expl1)),
   find_sub_sup_class(C,D,Ax),
-  absent(classAssertion(D,Ind),[Ax|Expl1],(ABox0,Tabs)),
-  add_nominal(D,Ind,ABox0,ABox).
+  and_f([Ax],Expl1,AxL1),
+  modify_ABox(ABox0,D,Ind,AxL1,ABox1),
+  add_nominal(D,Ind,ABox1,ABox).
 
 /* -- unfold_rule
  *    control propertyRange e propertyDomain
  * --
  */
-unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),Expl)|ABox],Tabs)):-
+unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
   find_class_prop_range_domain(Ind,D,Expl,(ABox0,Tabs)),
-  absent(classAssertion(D,Ind),Expl,(ABox0,Tabs)),
-  add_nominal(D,Ind,ABox0,ABox).
+  modify_ABox(ABox0,D,Ind,Expl,ABox1),
+  add_nominal(D,Ind,ABox1,ABox).
 
 /*
  * -- unfold_rule
  *    manage the negation
  * --
  */
-unfold_rule((ABox0,Tabs),([(classAssertion(D,Ind),[complementOf(C)|Expl])|ABox],Tabs)):-
+unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(complementOf(C),Ind,Expl,ABox0),
   find_neg_class(C,D),
-  absent(classAssertion(D,Ind),[complementOf(C)|Expl],(ABox0,Tabs)),
-  add_nominal(D,Ind,ABox0,ABox).
+  and_f([complementOf(C)],Expl,AxL),
+  modify_ABox(ABox0,D,Ind,AxL,ABox1),
+  add_nominal(D,Ind,ABox1,ABox).
 
 % ----------------
 % add_nominal
@@ -1131,6 +931,7 @@ find_neg_class(allValuesFrom(R,C),someValuesFrom(R,NC)):-
 find_neg_class(someValuesFrom(R,C),allValuesFrom(R,NC)):-
   neg_class(C,NC).
 
+/*
 find_neg_class(exactCardinality(N,R,C),unionOf([maxCardinality(NMax,R,C),minCardinality(NMin,R,C)])):-
   NMax is N - 1,
   NMin is N + 1.
@@ -1140,6 +941,7 @@ find_neg_class(minCardinality(N,R,C),maxCardinality(NMax,R,C)):-
 
 find_neg_class(maxCardinality(N,R,C),minCardinality(NMin,R,C)):-
   NMin is N + 1.
+*/
 
 % ---------------
 
@@ -1208,6 +1010,7 @@ find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S).
 
+/*
 %role for concepts exactCardinality
 find_sub_sup_class(exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S)):-
   get_trill_current_module(Name),
@@ -1252,13 +1055,14 @@ find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),subClassOf(C,D)):
 find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S).
+*/
 
 /*******************
  managing the concept (C subclassOf Thing)
  this implementation doesn't work well in a little set of cases
  TO IMPROVE!
- *******************
-
+ *******************/
+/*
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
   get_trill_current_module(Name),
   Name:subClassOf(A,B),
@@ -1347,193 +1151,31 @@ find_all(_,[],_,[]).
 
 find_all(Ind,[H|T],ABox,ExplT):-
   findClassAssertion(H,Ind,Expl1,ABox),
-  find_all(Ind,T,ABox,Expl),
-  append(Expl,Expl1,Expl2),
-  list_to_set(Expl2,ExplT).
+  find_all(Ind,T,ABox,Expl2),
+  and_f(Expl1,Expl2,ExplT).
 
 
 /* ************* */
 
-/*
-  ce_rule
-  =============
-*/
-ce_rule((ABox0,(T,RBN,RBR)),(ABox,(T,RBN,RBR))):-
-  find_not_sub_sup_class(Ax,UnAx),
-  vertices(T,Inds),
-  apply_ce_to(Inds,Ax,UnAx,ABox0,ABox,(T,RBN,RBR),C),
-  C @> 0.
+/***********
+  update abox
+  utility for tableau
+************/
+modify_ABox(ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
+  findClassAssertion(C,Ind,Expl1,ABox0),!,
+  L0 \== Expl1,
+  (Expl1 == [] -> 
+     Expl = L0
+   ;
+     (test(L0,Expl1),or_f(L0,Expl1,Expl))
+  ),
+  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
+  
+  
+modify_ABox(ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
+/* ************* */
 
-% ------------------
-find_not_sub_sup_class(subClassOf(C,D),unionOf(complementOf(C),D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D),
-  \+ atomic(C).
-
-
-find_not_sub_sup_class(equivalentClasses(L),unionOf(L1)):-
-  get_trill_current_module(Name),
-  Name:equivalentClasses(L),
-  member(C,L),
-  \+ atomic(C),
-  copy_neg_c(C,L,L1).
-
-%-------------------------
-copy_neg_c(_,[],[]).
-
-copy_neg_c(C,[C|T],[complementOf(C)|T1]):-
-  !,
-  copy_neg_c(C,T,T1).
-
-copy_neg_c(C,[H|T],[H|T1]):-
-  copy_neg_c(C,T,T1).
-
-%---------------------
-apply_ce_to([],_,_,ABox,ABox,_,0).
-
-apply_ce_to([Ind|T],Ax,UnAx,ABox0,[(classAssertion(UnAx,Ind),[Ax])|ABox],Tabs,C):-
-  \+ indirectly_blocked(Ind,(ABox0,Tabs)),
-  absent(classAssertion(UnAx,Ind),[Ax],(ABox0,Tabs)),!,
-  apply_ce_to(T,Ax,UnAx,ABox0,ABox,Tabs,C0),
-  C is C0 + 1.
-
-apply_ce_to([_Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
-  apply_ce_to(T,Ax,UnAx,ABox0,ABox,Tabs,C).
-
-/* **************** */
-
-/*
-  min_rule
-  =============
-*/
-min_rule((ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
-  findClassAssertion(minCardinality(N,S),Ind1,Expl,ABox),
-  \+ blocked(Ind1,(ABox,Tabs)),
-  s_neighbours(Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
-  length(SS,LSS),
-  LSS @< N,
-  NoI is N-LSS,
-  min_rule_neigh(NoI,S,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
-
-
-min_rule((ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
-  findClassAssertion(minCardinality(N,S,C),Ind1,Expl,ABox),
-  \+ blocked(Ind1,(ABox,Tabs)),
-  s_neighbours(Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
-  length(SS,LSS),
-  LSS @< N,
-  NoI is N-LSS,
-  min_rule_neigh_C(NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
-
-% ----------------------
-min_rule_neigh(0,_,_,_,[],ABox,Tabs,ABox,Tabs).
-
-min_rule_neigh(N,S,Ind1,Expl,[Ind2|NI],ABox,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl)|ABox2],Tabs2):-
-  N > 0,
-  NoI is N-1,
-  new_ind(Ind2),
-  add_edge(S,Ind1,Ind2,Tabs,Tabs1),
-  check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
-  min_rule_neigh(NoI,S,Ind1,Expl,NI,ABox,Tabs1,ABox2,Tabs2).
-
-%----------------------
-min_rule_neigh_C(0,_,_,_,_,[],ABox,Tabs,ABox,Tabs).
-
-min_rule_neigh_C(N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl),
-                                          (classAssertion(C,Ind2),[propertyAssertion(S,Ind1,Ind2)|Expl])|ABox2],Tabs2):-
-  N > 0,
-  NoI is N-1,
-  new_ind(Ind2),
-  add_edge(S,Ind1,Ind2,Tabs,Tabs1),
-  check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
-  min_rule_neigh_C(NoI,S,C,Ind1,Expl,NI,ABox,Tabs1,ABox2,Tabs2).
-
-%---------------------
-safe_s_neigh([],_,_,[]).
-
-safe_s_neigh([H|T],S,Tabs,[H|ST]):-
-  safe(H,S,Tabs),
-  safe_s_neigh(T,S,Tabs,ST).
-/* **************** */
-
-/*
-  max_rule
-  ================
-*/
-max_rule((ABox0,Tabs0),L):-
-  findClassAssertion(maxCardinality(N,S,C),Ind,Expl,ABox0),
-  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
-  s_neighbours(Ind,S,(ABox0,Tabs0),SN),
-  individual_class_C(SN,C,ABox0,SNC),
-  length(SNC,LSS),
-  LSS @> N,
-  findall((ABox1,Tabs1),scan_max_list(S,SNC,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
-  dif(L,[]),
-  !.
-
-max_rule((ABox0,Tabs0),L):-
-  findClassAssertion(maxCardinality(N,S),Ind,Expl,ABox0),
-  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
-  s_neighbours(Ind,S,(ABox0,Tabs0),SN),
-  length(SN,LSS),
-  LSS @> N,
-  findall((ABox1,Tabs1),scan_max_list(S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
-  dif(L,[]),
-  !.
-%---------------------
-
-scan_max_list(S,SN,Ind,Expl,ABox0,Tabs0,ABox,Tabs):-
-  member(YI,SN),
-  member(YJ,SN),
-  check_individuals_not_equal(YI,YJ,ABox0),
-  findPropertyAssertion(S,Ind,YI,ExplYI,ABox0),
-  findPropertyAssertion(S,Ind,YJ,ExplYJ,ABox0),
-  append(ExplYI,ExplYJ,Expl0),
-  append(Expl,Expl0,ExplT),
-  merge_all([(sameIndividual([YI,YJ]),ExplT)],ABox0,Tabs0,ABox,Tabs).
-
-%--------------------
-check_individuals_not_equal(X,Y,ABox):-
-  dif(X,Y),
-  \+ same_ind([X],Y,ABox).
-%--------------------
-individual_class_C([],_,_,[]).
-
-individual_class_C([H|T],C,ABox,[H|T1]):-
-  findClassAssertion(C,H,_,ABox),
-  individual_class_C(T,C,ABox,T1).
-
-individual_class_C([H|T],C,ABox,T1):-
-  \+ findClassAssertion(C,H,_,ABox),
-  individual_class_C(T,C,ABox,T1).
-/* *************** */
-
-/*
- o_rule
- ============
-*/
-
-o_rule((ABox0,Tabs0),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
-  findClassAssertion(oneOf([C]),X,ExplX,ABox0),
-  findClassAssertion(oneOf([D]),Y,ExplY,ABox0),
-  containsCommon(C,D),
-  dif(X,Y),
-  notDifferentIndividuals(X,Y,ABox0),
-  nominal(C,(ABox0,Tabs0)),
-  indAsList(X,LX),
-  indAsList(Y,LY),
-  append(ExplX,ExplY,ExplC),
-  merge(X,Y,(ABox0,Tabs0),(ABox,Tabs)),
-  flatten([LX,LY],LI0),
-  list_to_set(LI0,LI),
-  absent(sameIndividual(LI),ExplC,(ABox0,Tabs0)).
-
-containsCommon(L1,L2):-
-  member(X,L1),
-  member(X,L2),!.
 % -------------------
 
 indAsList(sameIndividual(L),L):-
@@ -1542,117 +1184,7 @@ indAsList(sameIndividual(L),L):-
 indAsList(X,[X]):-
   atomic(X).
 
-% -------------------
-notDifferentIndividuals(X,Y,ABox):-
-  \+ inAssertDifferentIndividuals(X,Y),
-  \+ inABoxDifferentIndividuals(X,Y,ABox).
 
-% --------------
-
-inAssertDifferentIndividuals(differentIndividuals(X),differentIndividuals(Y)):-
-  !,
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
-  member(X0,X),
-  member(X0,LI),
-  member(Y0,Y),
-  member(Y0,LI).
-
-inAssertDifferentIndividuals(X,sameIndividual(Y)):-
-  !,
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
-  member(X,LI),
-  member(Y0,Y),
-  member(Y0,LI).
-
-inAssertDifferentIndividuals(sameIndividual(X),Y):-
-  !,
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
-  member(X0,X),
-  member(X0,LI),
-  member(Y,LI).
-
-inAssertDifferentIndividuals(X,Y):-
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
-  member(X,LI),
-  member(Y,LI).
-
-% ------------------
-
-inABoxDifferentIndividuals(sameIndividual(X),sameIndividual(Y),ABox):-
-  !,
-  find((differentIndividuals(LI),_),ABox),
-  member(X0,X),
-  member(X0,LI),
-  member(Y0,Y),
-  member(Y0,LI).
-
-inABoxDifferentIndividuals(X,sameIndividual(Y),ABox):-
-  !,
-  find((differentIndividuals(LI),_),ABox),
-  member(X,LI),
-  member(Y0,Y),
-  member(Y0,LI).
-
-inABoxDifferentIndividuals(sameIndividual(X),Y,ABox):-
-  !,
-  find((differentIndividuals(LI),_),ABox),
-  member(X0,X),
-  member(X0,LI),
-  member(Y,LI).
-
-inABoxDifferentIndividuals(X,Y,ABox):-
-  find((differentIndividuals(LI),_),ABox),
-  member(X,LI),
-  member(Y,LI).
-
-% --------------------
-
-listIntersection([],_,[]).
-
-listIntersection([HX|TX],LCY,TI):-
-  \+ member(HX,LCY),
-  listIntersection(TX,LCY,TI).
-
-listIntersection([HX|TX],LCY,[HX|TI]):-
-  member(HX,LCY),
-  listIntersection(TX,LCY,TI).
-
-% ---------------
-
-findExplForClassOf(LC,LI,ABox0,Expl):-
-  member(C,LC),
-  member(I,LI),
-  findClassAssertion(C,I,Expl,ABox0).
-%  member((classAssertion(C,I),Expl),ABox0).
-
-/* ************ */
-
-
-/*  absent
-  =========
-*/
-absent(classAssertion(C,Ind),Expl,(ABox,_Tabs)):-
-  \+ absent1(classAssertion(C,Ind),Expl,ABox),!.
-
-absent(sameIndividual(L),Expl,(ABox,_Tabs)):-
-  \+ absent1(sameIndividual(L),Expl,ABox),!.
-
-
-%------------------
-absent1(Ax,Expl,ABox):-
-  find((Ax,Expl0),ABox),
-  subset(Expl0,Expl),!.
-
-absent1(sameIndividual(L),Expl,ABox):-
-  find((sameIndividual(LF),Expl0),ABox),
-  permutation(L,LF),
-  subset(Expl0,Expl),!.
-
-/* **************** */
 
 /*
  * nominal/2, blockable/2, blocked/2, indirectly_blocked/2 and safe/3
@@ -1768,16 +1300,6 @@ writeABox((ABox,_)):-
   ===============
 */
 
-/*build_abox(ABox):-
-  findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),propertyAssertion(Property,Subject, Object),LPA),
-  findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property,Subject,Object),propertyAssertion(SubProperty,Subject,Object)]),subPropertyOf(SubProperty,Property),LSPA),
-  new_abox(ABox0),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox).
-*/
-
 build_abox((ABox,Tabs)):-
   get_trill_current_module(Name),
   findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),Name:classAssertion(Class,Individual),LCA),
@@ -1859,7 +1381,6 @@ create_tabs([(classAssertion(_,I),_Expl)|Tail],(T0,RBN,RBR),(T,RBN,RBR)):-
 /*
   add edge to tableau
 
-  add_edge(Property,Subject,Object,Tab0,Tab)
 */
 
 add_edge(P,S,O,(T0,ItR0,RtI0),(T1,ItR1,RtI1)):-
@@ -2162,18 +1683,6 @@ control(El,ABox):-
 
 /* end of abox a s list */
 
-/* abox as a red-black tree */
-/*new_abox(T):-
-  rb_new(T).
-
-add(A,(Ass,Ex),A1):-
-  rb_insert(A,(Ass,Ex),[],A1).
-
-find((Ass,Ex),A):-
-  rb_lookup((Ass,Ex),_,A).
-*/
-/* end of abox as a rb tree */
-
 /*
   creation of a new individual
 
@@ -2378,107 +1887,121 @@ s_predecessors2([H|T],T1,ABox):-
 
 /* ********** */
 
-/* *************
-   Probability computation
+/**********************
 
-   ************* */
+TRILLP PINPOINTING FORMULA MANAGEMENT
 
-/*
-build_formula([],[],Var,Var).
+***********************/
 
-build_formula([D|TD],TF,VarIn,VarOut):-
-        build_term(D,[],[],VarIn,Var1),!,
-        build_formula(TD,TF,Var1,VarOut).
-
-build_formula([D|TD],[F|TF],VarIn,VarOut):-
-        build_term(D,[],F,VarIn,Var1),
-        build_formula(TD,TF,Var1,VarOut).
-
-build_term([],F,F,Var,Var).
-
-build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
-  (p_x(Ax,_)*->
-    (nth0_eq(0,NVar,VarIn,(Ax,S))*->
-      Var1=VarIn
-    ;
-      append(VarIn,[(Ax,S)],Var1),
-      length(VarIn,NVar)
-    ),
-    build_term(TC,[[NVar,0]|F0],F,Var1,VarOut)
-  ;
-    (p(Ax,_)*->
-      (nth0_eq(0,NVar,VarIn,(Ax,[]))*->
-        Var1=VarIn
-      ;
-        append(VarIn,[(Ax,[])],Var1),
-        length(VarIn,NVar)
-      ),
-      build_term(TC,[[NVar,0]|F0],F,Var1,VarOut)
-    ;
-      build_term(TC,F0,F,VarIn,VarOut)
-    )
-  ).
-
-build_term([Ax|TC],F0,F,VarIn,VarOut):-!,
-  (p(Ax,_)*->
-    (nth0_eq(0,NVar,VarIn,(Ax,[]))*->
-      Var1=VarIn
-    ;
-      append(VarIn,[(Ax,[])],Var1),
-      length(VarIn,NVar)
-    ),
-    build_term(TC,[[NVar,0]|F0],F,Var1,VarOut)
-  ;
-    build_term(TC,F0,F,VarIn,VarOut)
-  ).
-*/
-
-/* nth0_eq(PosIn,PosOut,List,El) takes as input a List,
-an element El and an initial position PosIn and returns in PosOut
-the position in the List that contains an element exactly equal to El
-*/
-
-/*
-nth0_eq(N,N,[H|_T],El):-
-        H==El,!.
-
-nth0_eq(NIn,NOut,[_H|T],El):-
-        N1 is NIn+1,
-        nth0_eq(N1,NOut,T,El).
-
-*/
-/* var2numbers converts a list of couples (Rule,Substitution) into a list
-of triples (N,NumberOfHeadsAtoms,ListOfProbabilities), where N is an integer
-starting from 0 */
-/*
-var2numbers([],_N,[]).
-
-var2numbers([(R,_S)|T],N,[[N,2,[Prob,Prob1,0.3,0.7]]|TNV]):-
-        (p(R,_);p_x(R,_)),
-        compute_prob_ax(R,Prob),!,
-        Prob1 is 1-Prob,
-        N1 is N+1,
-        var2numbers(T,N1,TNV).
+% and between two formulae
+and_f([],[],[]):-!.
+and_f([],F2,F2):-!.
+and_f(F1,[],F1):-!.
+and_f([and(L1)],[and(L2)],[and(L)]):-!,
+  flatten([L1,L2],L0),
+  sort(L0,L).
+and_f([or(L1)],[and(L2)],[and(L)]):-!,
+  flatten([L2,or(L1)],L0),
+  sort(L0,L).
+and_f([and(L1)],[or(L2)],[and(L)]):-!,
+  flatten([L1,or(L2)],L0),
+  sort(L0,L).  
+and_f([or(L1)],[or(L2)],[and(L)]):-!,
+  flatten([or(L1),or(L2)],L0),
+  sort(L0,L).
+and_f([El],[and(L2)],[and(L)]):-!,
+  flatten([El,L2],L0),
+  sort(L0,L).  
+and_f([El],[or(L2)],[and(L)]):-!,
+  flatten([El,or(L2)],L0),
+  sort(L0,L).
+and_f([and(L1)],[El],[and(L)]):-!,
+  flatten([El,L1],L0),
+  sort(L0,L).  
+and_f([or(L1)],[El],[and(L)]):-!,
+  flatten([El,or(L1)],L0),
+  sort(L0,L).  
+and_f([El1],[El2],[and(L)]):-
+  flatten([El1,El2],L0),
+  sort(L0,L).
 
 
-compute_prob_ax(R,Prob):-
-  findall(P, p(R,P),Probs),
-  compute_prob_ax1(Probs,Prob).
+or_f([],[],[]):-!.
+or_f([],F2,F2):-!.
+or_f(F1,[],F1):-!.
+or_f([or(L1)],[or(L2)],[or(L)]):-!,
+  flatten([L1,L2],L0),
+  sort(L0,L).
+or_f([and(L1)],[or(L2)],[or(L)]):-!,
+  flatten([L2,and(L1)],L0),
+  sort(L0,L).
+or_f([or(L1)],[and(L2)],[or(L)]):-!,
+  flatten([L1,and(L2)],L0),
+  sort(L0,L).  
+or_f([and(L1)],[and(L2)],[or(L)]):-!,
+  flatten([and(L1),and(L2)],L0),
+  sort(L0,L).
+or_f([El],[or(L2)],[or(L)]):-!,
+  flatten([El,L2],L0),
+  sort(L0,L).  
+or_f([El],[and(L2)],[or(L)]):-!,
+  flatten([El,and(L2)],L0),
+  sort(L0,L).
+or_f([or(L1)],[El],[or(L)]):-!,
+  flatten([El,L1],L0),
+  sort(L0,L).  
+or_f([and(L1)],[El],[or(L)]):-!,
+  flatten([El,and(L1)],L0),
+  sort(L0,L).  
+or_f([El1],[El2],[or(L)]):-
+  flatten([El1,El2],L0),
+  sort(L0,L).
 
-compute_prob_ax1([Prob],Prob):-!.
-
-compute_prob_ax1([Prob1,Prob2],Prob):-!,
-  Prob is Prob1+Prob2-(Prob1*Prob2).
-
-compute_prob_ax1([Prob1 | T],Prob):-
-  compute_prob_ax1(T,Prob0),
-  Prob is Prob1 + Prob0 - (Prob1*Prob0).
-
-*/
 
 /**********************
 
-TRILL COMPUTEPROB
+TRILLP SAT TEST
+
+***********************/
+
+test(L1,L2):-
+  build_f(L1,L2,F),
+  sat(F).
+
+build_f([L1],[L2],F1*(-F2)):-
+  build_f1(L1,F1,[],Var1),
+  build_f1(L2,F2,Var1,_Var).
+
+build_f1(and(L),F,Var0,Var):-!,
+  build_and(L,F,Var0,Var).
+build_f1(or(L),F,Var0,Var):-!,
+  build_or(L,F,Var0,Var).
+build_f1(H,C,Var0,Var):-
+  give_me_C(H,C,Var0,Var).
+  
+build_and([H|T],F,Var0,Var):-
+  T==[],
+  build_f1(H,F,Var0,Var).
+
+build_and([H|T],F1 * F2,Var0,Var):-
+  build_f1(H,F1,Var0,Var1),
+  build_and(T,F2,Var1,Var).
+  
+build_or([H|T],F,Var0,Var):-
+  T==[],
+  build_f1(H,F,Var0,Var).
+
+build_or([H|T],F1 + F2,Var0,Var):-
+  build_f1(H,F1,Var0,Var1),
+  build_or(T,F2,Var1,Var).
+
+give_me_C(H,D,Var0,Var0):-
+  member(corr(H,D),Var0),!.
+give_me_C(H,C,Var0,[corr(H,C)|Var0]).
+
+/**********************
+
+TRILLP COMPUTEPROB
 
 ***********************/
 
@@ -2601,43 +2124,44 @@ get_trill_current_module('owl2_model'):- !.
 
 :- multifile sandbox:safe_primitive/1.
 
-sandbox:safe_primitive(trill:init_test(_,_)).
-sandbox:safe_primitive(trill:ret_prob(_,_,_)).
-sandbox:safe_primitive(trill:end_test(_)).
-sandbox:safe_primitive(trill:one(_,_)).
-sandbox:safe_primitive(trill:zero(_,_)).
-sandbox:safe_primitive(trill:and(_,_,_,_)).
-sandbox:safe_primitive(trill:or(_,_,_,_)).
-sandbox:safe_primitive(trill:bdd_not(_,_,_)).
-sandbox:safe_primitive(trill:get_var_n(_,_,_,_,_)).
-sandbox:safe_primitive(trill:add_var(_,_,_,_,_)).
-sandbox:safe_primitive(trill:equality(_,_,_,_)).
+sandbox:safe_primitive(trillp:init_test(_,_)).
+sandbox:safe_primitive(trillp:ret_prob(_,_,_)).
+sandbox:safe_primitive(trillp:end_test(_)).
+sandbox:safe_primitive(trillp:one(_,_)).
+sandbox:safe_primitive(trillp:zero(_,_)).
+sandbox:safe_primitive(trillp:and(_,_,_,_)).
+sandbox:safe_primitive(trillp:or(_,_,_,_)).
+sandbox:safe_primitive(trillp:bdd_not(_,_,_)).
+sandbox:safe_primitive(trillp:get_var_n(_,_,_,_,_)).
+sandbox:safe_primitive(trillp:add_var(_,_,_,_,_)).
+sandbox:safe_primitive(trillp:equality(_,_,_,_)).
 
 
-sandbox:safe_primitive(trill:sub_class(_,_)).
-sandbox:safe_primitive(trill:sub_class(_,_,_)).
-sandbox:safe_primitive(trill:prob_sub_class(_,_,_)).
-sandbox:safe_primitive(trill:instanceOf(_,_)).
-sandbox:safe_primitive(trill:instanceOf(_,_,_)).
-sandbox:safe_primitive(trill:prob_instanceOf(_,_,_)).
-sandbox:safe_primitive(trill:property_value(_,_,_)).
-sandbox:safe_primitive(trill:property_value(_,_,_,_)).
-sandbox:safe_primitive(trill:prob_property_value(_,_,_,_)).
-sandbox:safe_primitive(trill:unsat(_)).
-sandbox:safe_primitive(trill:unsat(_,_)).
-sandbox:safe_primitive(trill:prob_unsat(_,_)).
-sandbox:safe_primitive(trill:inconsistent_theory).
-sandbox:safe_primitive(trill:inconsistent_theory(_)).
-sandbox:safe_primitive(trill:prob_inconsistent_theory(_)).
-sandbox:safe_primitive(trill:axiom(_)).
-sandbox:safe_primitive(trill:add_kb_prefix(_,_)).
-sandbox:safe_primitive(trill:add_axiom(_)).
-sandbox:safe_primitive(trill:add_axioms(_)).
-sandbox:safe_primitive(trill:load_kb(_)).
-sandbox:safe_primitive(trill:load_owl_kb(_)).
+sandbox:safe_primitive(trillp:sub_class(_,_)).
+sandbox:safe_primitive(trillp:sub_class(_,_,_)).
+sandbox:safe_primitive(trillp:prob_sub_class(_,_,_)).
+sandbox:safe_primitive(trillp:instanceOf(_,_)).
+sandbox:safe_primitive(trillp:instanceOf(_,_,_)).
+sandbox:safe_primitive(trillp:prob_instanceOf(_,_,_)).
+sandbox:safe_primitive(trillp:property_value(_,_,_)).
+sandbox:safe_primitive(trillp:property_value(_,_,_,_)).
+sandbox:safe_primitive(trillp:prob_property_value(_,_,_,_)).
+sandbox:safe_primitive(trillp:unsat(_)).
+sandbox:safe_primitive(trillp:unsat(_,_)).
+sandbox:safe_primitive(trillp:prob_unsat(_,_)).
+sandbox:safe_primitive(trillp:inconsistent_theory).
+sandbox:safe_primitive(trillp:inconsistent_theory(_)).
+sandbox:safe_primitive(trillp:prob_inconsistent_theory(_)).
+sandbox:safe_primitive(trillp:axiom(_)).
+sandbox:safe_primitive(trillp:add_kb_prefix(_,_)).
+sandbox:safe_primitive(trillp:add_axiom(_)).
+sandbox:safe_primitive(trillp:add_axioms(_)).
+sandbox:safe_primitive(trillp:load_kb(_)).
+sandbox:safe_primitive(trillp:load_owl_kb(_)).
 
 :- use_module(translate_rdf).
 
 :- if(\+pengine_self(_Name)).
 :- trill.
 :- endif.
+
