@@ -36,7 +36,10 @@
     rtcheck_call(0).
 
 rtcheck_call(Call) :-
-    rtcheck_pause(rtcheck_goal(Call, rtcheck_start)).
+    ( tracing
+    ->rtcheck_pause(rtcheck_goal(Call, rtcheck_start))
+    ; call(Call)
+    ).
 
 :- meta_predicate rtcheck_start(0).
 rtcheck_start(Call) :-

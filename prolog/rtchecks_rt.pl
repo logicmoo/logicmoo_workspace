@@ -30,6 +30,7 @@
 :- module(rtchecks_rt,
           [rtcheck_goal/2,
            rtcheck_call/2,
+           start_rtcheck/2,
            rtc_call/2,
            '$with_gloc'/2,
            '$with_asr_head'/2,
@@ -38,6 +39,7 @@
           ]).
 
 :- use_module(library(assertions)).
+:- use_module(library(rtchecks_flags)).
 :- use_module(library(termtyping), []). % assertions about builtins
 :- use_module(library(context_values)).
 :- use_module(library(qualify_meta_goal)).
@@ -98,14 +100,15 @@ checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 
 rtcheck_cond(Cond, Check, PredName) :-
     ( Cond
-    ->send_rtcheck([_/Check-[]], pp_check, PredName, _)
+    ->send_rtcheck([[]/Check-[]], pp_check, PredName, [])
     ; true
     ).
 
-check_asr_props(Asr, Part, Check, Mult, PropValues) :-
+check_asr_props(Asr, Cond, PType, PropValues) :-
     copy_term_nat(Asr, NAsr),
     findall(NAsr-(From/Prop-[]),
-            ( asr_aprop(NAsr, Part, Prop, From),
+            ( type_cond_part_check_mult(Cond, PType, Part, Check, Mult),
+              asr_aprop(NAsr, Part, Prop, From),
               \+ check_prop(Check, Prop),
               (Mult = once -> ! ; true)
             ),
@@ -115,41 +118,49 @@ check_asr_props(Asr, Part, Check, Mult, PropValues) :-
 check_prop(compat,   Prop) :- compat(  Prop).
 check_prop(instance, Prop) :- instance(Prop).
 
-type_part_check_call(compat,    comp, compat,   call).
-type_part_check_call(calls,     call, instance, call).
-type_part_check_call(success,   call, instance, once).
-type_part_check_call(compatpos, comp, compat,   once).
-type_part_check_call(comp,      call, instance, once).
+type_cond_part_check_mult(inco, Cond, Part, Check, Mult) :-
+    type_inco_part_check_mult(Cond, Part, Check, Mult).
+type_cond_part_check_mult(cond, Cond, Part, Check, Mult) :-
+    type_cond_part_check_mult(Cond, Part, Check, Mult).
 
-check_asrs_props(PType, AsrPVL) :-
-    type_part_check_call(PType, Part, Check, Call),
-    maplist(check_asr_props(Part, Check, Call), AsrPVL),
+type_inco_part_check_mult(calls,   call, instance, call).
+type_inco_part_check_mult(calls,   comp, compat,   call).
+type_inco_part_check_mult(success, call, instance, once).
+type_inco_part_check_mult(success, comp, compat,   once).
+type_inco_part_check_mult(comp,    call, instance, once).
+
+type_cond_part_check_mult(success, comp, compat,   call).
+type_cond_part_check_mult(success, succ, instance, call).
+
+check_asrs_props_calls(AsrPVL) :-
+    check_asrs_props_all(calls, AsrPVL).
+
+check_asrs_props_all(PType, AsrPVL) :-
+    check_asrs_props(PType, AsrPVL),
     ( \+ memberchk(_-[], AsrPVL)
     ->maplist(send_rtcheck_asr(PType), AsrPVL)
     ; true
     ).
 
-typeif_part_check_call(compat,  comp, compat,   call).
-typeif_part_check_call(success, succ, instance, call).
+check_asrs_props(PType, AsrPVL) :-
+    maplist(check_asr_props(PType), AsrPVL).
 
 checkif_asrs_props(PType, AsrPVL) :-
-    typeif_part_check_call(PType, Part, Check, Call),
-    maplist(checkif_asr_props(PType, Part, Check, Call), AsrPVL).
+    maplist(checkif_asr_props(PType), AsrPVL).
 
-checkif_asr_props(PType, Part, Check, Call, Asr-CondValues) :-
-    checkif_asr_props(CondValues, Asr, PType, Part, Check, Call).
+checkif_asr_props(PType, Asr-CondValues) :-
+    checkif_asr_props(CondValues, Asr, PType).
 
-check_asr_props(Part, Check, Call, Asr-PropValues) :-
-    check_asr_props(Asr, Part, Check, Call, PropValues).
+check_asr_props(PType, Asr-PropValues) :-
+    check_asr_props(Asr, inco, PType, PropValues).
 
 send_rtcheck_asr(PType, Asr-PropValues) :-
     asr_aprop(Asr, head, _:Pred, ALoc), !,
     send_rtcheck(PropValues, PType, Pred, ALoc).
 
-:- meta_predicate checkif_asr_props(+,+,+,+,+,1).
-checkif_asr_props([_|_], _, _, _, _, _).
-checkif_asr_props([], Asr, PType, Part, Check, Call) :-
-    check_asr_props(Asr, Part, Check, Call, PropValues),
+checkif_asr_props([_|_], _, _).
+checkif_asr_props([], Asr, PType) :-
+    check_asr_props(Asr, cond, PType, PropValues),
     send_rtcheck_asr(PType, Asr-PropValues).
 
 :- meta_predicate checkif_asrs_comp(+, 0).
@@ -194,12 +205,18 @@ rtcheck_goal(CM:Goal0, Call) :-
     resolve_calln(Goal0, Goal),
     ( ppassertion_type_goal(Goal, Type, Pred)
     ->rtc_call(Type, CM:Pred)
-    ; collect_rtasr(Goal, CM, Pred, M, RAsrL),
+    ; implementation_module(CM:Goal, M),
+      collect_rtasr(Goal, CM, Pred, M, RAsrL),
       rtcheck_goal(Pred, call(Call, CM:Pred), M, CM, RAsrL)
     ).
 
+:- meta_predicate start_rtcheck(+, 0).
+start_rtcheck(M:Goal0, CM:WrappedHead) :-
+    resolve_calln(Goal0, Goal),
+    collect_rtasr(Goal, CM, Pred, M, RAsrL),
+    rtcheck_goal(Pred, M:WrappedHead, M, CM, RAsrL).
+
 collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
-    implementation_module(CM:Goal, M),
     qualify_meta_goal(Goal, M, CM, Pred),
     collect_assertions(Pred, M, rtcheck, AsrL),
     maplist(wrap_asr_rtcheck, AsrL, RAsrL).
@@ -209,8 +226,6 @@ wrap_asr_rtcheck(Asr, rtcheck(Asr)).
 % ----------------------------------------------------------------------------
 % assrt_op(Part, Step, Level, Type).
 
-assrt_op(comp, step1, exports, pred).
-assrt_op(comp, step2, inner,   pred).
 assrt_op(call, step1, _,       entry).
 assrt_op(call, step1, exports, calls).
 assrt_op(call, step1, exports, pred).
@@ -249,26 +264,18 @@ rtcheck_assr_type(success).
 % ----------------------------------------------------------------------------
 
 check_asrs(Step, AsrL, Head, Goal) :-
-    check_asrs_pre(Step, AsrL,
-		   AsrGlobL, AsrCompL, AsrSuccL),
+    check_asrs_pre(Step, AsrL, AsrGlobL, AsrSuccL),
     checkif_asrs_comp(AsrGlobL, Head, Goal),
-    check_asrs_pos(AsrCompL, AsrSuccL).
-
-check_asrs_pos(AsrCompL, AsrSuccL) :-
-    checkif_asrs_props(compat,  AsrCompL),
     checkif_asrs_props(success, AsrSuccL).
 
-check_asrs_pre(Step, AsrL, AsrGlobL, AsrCompL, AsrSuccL) :-
+check_asrs_pre(Step, AsrL, AsrGlobL, AsrSuccL) :-
     current_prolog_flag(rtchecks_level, Level),
     prop_rtchecks(AsrL, call, Step, Level, AsrCallL),
-    prop_rtchecks(AsrL, comp, Step, Level, AsrCompL),
-    subtract(AsrCompL, AsrCallL, DAsrCompL),
     prop_rtchecks(AsrL, succ, Step, Level, AsrSuccL),
     subtract(AsrSuccL, AsrCallL, DAsrSuccL),
     prop_rtchecks(AsrL, glob, Step, Level, AsrGlobL),
     subtract(AsrGlobL, AsrCallL, DAsrGlobL),
-    check_asrs_props(calls,   AsrCallL ),
-    check_asrs_props(compat,  DAsrCompL),
+    check_asrs_props_calls(   AsrCallL),
     check_asrs_props(success, DAsrSuccL),
     check_asrs_props(comp,    DAsrGlobL).
 
@@ -278,7 +285,7 @@ prop_rtchecks(AsrL0, Part, Step, Level, AsrPVL) :-
 
 is_prop_rtcheck(Part, Step, Level, Asr) :-
     asr_aprop(Asr, stat, Status, _),
-    asr_aprop(Asr, type,   Type, _),
+    asr_aprop(Asr, type, Type,   _),
     assrt_op(Part, Step, Level, Type),
     is_valid_status_type(Status, Type), !.
 
@@ -365,3 +372,5 @@ collect_assertions(Pred, M, TimeCheck, AsrL) :-
     copy_term_nat(Pred, Head), % copy to avoid duplication of atributes
     findall(Head-Asr, current_assertion(Head, M, TimeCheck, Asr), Pairs),
     maplist(unify_common(Pred), Pairs, AsrL).
+
+sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).

@@ -10,6 +10,7 @@
 :- use_module(library(basicprops)).
 :- use_module(library(nativeprops)).
 :- use_module(library(plprops)).
+:- use_module(library(rtchecks)).
 
 :- pred nullasr/2.
 
@@ -28,6 +29,7 @@ test1 :-
 :- prop animal/1 is type.
 
 animal(A) :- atm(A).
+animal(A) :- int(A).
 
 :- prop family/1 is type.
 
@@ -42,7 +44,10 @@ family(B) :- atm(B).
 :- calls fullasr(A, _) :: str(A).
 :- success fullasr(A, _) : int(A) => nnegint(A).
 
-fullasr(_, _).
+:- rtchecked
+    fullasr/2.
+
+fullasr(X, X).
 
 :- pred p/1 is semidet.
 

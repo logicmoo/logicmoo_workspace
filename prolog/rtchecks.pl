@@ -27,8 +27,104 @@
     the GNU General Public License.
 */
 
-:- module(rtchecks, []).
+:- module(rtchecks,
+          [(rtchecked)/1,
+           
+           op(1150, fx, rtchecked)
+          ]).
 
-:- use_module(library(rtchecks_flags)).
-:- reexport(library(rtchecks_utils)).
-:- reexport(library(rtchecks_rt)).
+:- use_module(system:library(rtchecks_rt)).
+
+rtchecked(PlList) :-
+    throw(error(context_error(nodirective, rtcheck(PlList)), _)).
+
+:- multifile
+    system:term_expansion/2,
+    prolog:rename_predicate/2.
+
+:- dynamic
+    system:term_expansion/2.
+
+wrappers(Var) -->
+    { var(Var),
+      !,
+      instantiation_error(Var)
+    }.
+wrappers((A,B)) -->
+    !,
+    wrappers(A),
+    wrappers(B).
+wrappers(Name//Arity) -->
+    { atom(Name), integer(Arity), Arity >= 0,
+      !,
+      Arity1 is Arity+2
+    },
+    wrappers(Name/Arity1).
+wrappers(Name/Arity) -->
+    { atom(Name), integer(Arity), Arity >= 0,
+      !,
+      functor(Head, Name, Arity),
+      atom_concat(Name, ' rtchecked', WrapName),
+      Head =.. [Name|Args],
+      WrappedHead =.. [WrapName|Args],
+      prolog_load_context(module, Module)
+    },
+    [ '$rtchecked'(Head),
+      (:- module_transparent Name/Arity),
+      (   Head :-
+             start_rtcheck(Module:Head, WrappedHead)
+      )
+    ].
+
+%!  prolog:rename_predicate(:Head0, :Head) is semidet.
+%
+%   Hook into term_expansion for  post   processing  renaming of the
+%   generated predicate.
+
+prolog:rename_predicate(M:Head0, M:Head) :-
+    '$flushed_predicate'(M:'$rtchecked'(_)),
+    call(M:'$rtchecked'(Head0)),
+    !,
+    rename_term(Head0, Head).
+
+rename_term(Compound0, Compound) :-
+    compound(Compound0),
+    !,
+    compound_name_arguments(Compound0, Name, Args),
+    atom_concat(Name, ' rtchecked', WrapName),
+    compound_name_arguments(Compound, WrapName, Args).
+rename_term(Name, WrapName) :-
+    atom_concat(Name, ' rtchecked', WrapName).
+
+
+system:term_expansion((:- rtchecked(Preds)),
+                      [ (:- discontiguous('$rtchecked'/1))
+                      | Clauses
+                      ]) :-
+    phrase(wrappers(Preds), Clauses).
+
+:- multifile
+    sandbox:safe_directive/1,
+    sandbox:safe_primitive/1,
+    sandbox:safe_meta/2.
+
+%!  sandbox:safe_directive(+Directive) is semidet.
+%
+%   Allow rtchecks directives that affect locally defined predicates.
+
+sandbox:safe_directive(Dir) :-
+    ground(Dir),
+    local_rtchecks_dir(Dir).
+
+local_rtchecks_dir(rtchecked(Preds)) :-
+    local_preds(Preds).
+
+local_preds((A,B)) :-
+    !,
+    local_preds(A),
+    local_preds(B).
+
+local_preds(Name/Arity) :-
+    atom(Name), integer(Arity).
+local_preds(Name//Arity) :-
+    atom(Name), integer(Arity).

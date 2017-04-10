@@ -9,7 +9,7 @@
 :- use_module(library(call_in_dir)).
 :- use_module(library(substitute)).
 :- use_module(library(rtchecks_utils)).
-:- use_module(library(rtchecks_tracer)).
+%:- use_module(library(rtchecks_tracer)).
 :- use_module(library(intercept)).
 :- use_module(library(libprops)).
 
@@ -18,6 +18,8 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 :- set_prolog_flag(runtime_checks, yes).
 :- set_prolog_flag(rtchecks_check, yes).
+
+:- ['../examples/rtchecks_example3'].
 
 test(rtc_external) :-
     call_in_module_dir(plunit_rtchecks,
@@ -53,8 +55,6 @@ test(rtcompile) :-
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
-:- ['../examples/rtchecks_example3'].
-
 test(rtexec1) :-
     save_rtchecks(do_trace_rtc(test1)),
     load_rtchecks(E),
@@ -74,5 +74,21 @@ test(rtexec3) :-
                  assrchk(ppt(rtchecks_example3:p/1,
                              clause_pc(_, 3)), error(comp, r, [file(_, _, _, _)/det-[fails]],
                                                      file(_, _, _, _)))]).
+
+% The next  two tests  implements run-time checking  via instrumentation  of the
+% predicate  being run-time  checked.  Apart  of  that, be  careful, since  they
+% contain  several combinations  of assertions,  so don't  modifiy the  run-time
+% checks without being sure that they are Ok
+
+test(rtexec4) :-
+    save_rtchecks(fullasr(3,_B)),
+    load_rtchecks(E),
+    assertion(E=[assrchk(asr,error(success,fullasr(3,3),
+                                   [_/(rtchecks_example3:family(3))-[]], _))]).
+
+test(rtexec5) :-
+    save_rtchecks(fullasr(a,_B)),
+    load_rtchecks(E),
+    assertion(E=[]).
 
 :- end_tests(rtchecks).
