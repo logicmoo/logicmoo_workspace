@@ -22,6 +22,15 @@
     link_foreign_library/2,
     pkg_foreign_config/2.
 
+:- dynamic
+    gen_foreign_library/2,
+    use_foreign_source/2,
+    use_foreign_header/2,
+    include_foreign_dir/2,
+    extra_compiler_opts/2,
+    link_foreign_library/2,
+    pkg_foreign_config/2.
+
 :- meta_predicate current_foreign_prop(2,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?).
 
 command_to_atom(Command, Args, Atom) :-
@@ -803,28 +812,32 @@ declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind) :-
     declare_foreign_head(CHead, M, CM, Comp, Call, Succ, Glob, Bind), !.
 
 declare_foreign_head(Head, M, CM, Comp, Call, Succ, Glob, (CN/_ as _ + _)) :-
-    format('~w(', [CN]),
-    (memberchk(memory_root(_), Glob) -> format('root_t __root, ', []) ; true),
-    ( compound(Head) ->
-      declare_foreign_bind_(1, M, CM, Head, Comp, Call, Succ, Glob)
-    ; true
-    ),
-    format(')', []).
+    phrase(( ( {memberchk(memory_root(_), Glob)}
+             ->['root_t __root']
+             ; []
+             ),
+             ( {compound(Head)}
+             ->declare_foreign_bind_(1, M, CM, Head, Comp, Call, Succ, Glob)
+             ; []
+             )
+           ), ArgL, []),
+    atomic_list_concat(ArgL, ', ', Args),
+    format('~w(~w)', [CN, Args]).
 
-declare_foreign_bind_(N, M, CM, Head, Comp, Call, Succ, Glob) :-
-    arg(N, Head, Arg),
-    ( N \= 1 -> write(', ') ; true ),
+declare_foreign_bind_(N, M, CM, Head, Comp, Call, Succ, Glob) -->
+    {arg(N, Head, Arg)},
     declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg),
-    format(' ~w', [Arg]),
-    N1 is N + 1,
+    {succ(N, N1)},
     !,
     declare_foreign_bind_(N1, M, CM, Head, Comp, Call, Succ, Glob).
-declare_foreign_bind_(_, _, _, _, _, _, _, _).
+declare_foreign_bind_(_, _, _, _, _, _, _, _) --> [].
 
-declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg) :-
-    bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-    ctype_barg_decl(Spec, Mode, Decl, []),
-    format('~s', [Decl]).
+declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg) -->
+    {bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+     ctype_barg_decl(Spec, Mode, Decl, []),
+     format(atom(A), '~s ~w', [Decl, Arg])
+    },
+    [A].
 
 ctype_barg_decl(Spec, Mode) -->
     ctype_arg_decl(Spec, Mode),
