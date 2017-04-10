@@ -9,7 +9,6 @@
 :- use_module(library(nativeprops)).
 :- use_module(library(edinburgh)).
 :- use_module(library(mapargs)).
-:- use_module(library(rtchecks)).
 
 :- meta_predicate metapred(+,-,?,1).
 

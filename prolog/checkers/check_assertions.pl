@@ -34,7 +34,7 @@
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(extra_codewalk)).
-:- use_module(library(rtchecks)).
+:- use_module(library(rtchecks_rt)).
 :- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(implementation_module)).
@@ -245,7 +245,7 @@ wrap_asr_ctcheck(Asr, ctcheck(Asr)).
 :- public ctcheck_goal/1.
 ctcheck_goal(AsrL) :-
     pairs_keys_values(AsrPVL, AsrL, _),
-    rtchecks_rt:check_asrs_props(compat, AsrPVL).
+    rtchecks_rt:check_asrs_props_calls(AsrPVL).
 
 % Trivial abstraction: Check for compatibility issues in properties,
 % compatibility is an abstraction that makes static check decidable.  Here we
