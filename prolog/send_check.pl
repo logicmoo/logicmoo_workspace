@@ -13,7 +13,10 @@ get_comp_rtcheck_info(Goal, Name, From) :-
 
 send_comp_rtcheck(Goal, Prop, Fail) :-
     get_comp_rtcheck_info(Goal, PredName, ALoc),
-    ignore(nb_current('$with_gloc', GLoc)),
+    ( nb_current('$with_gloc', GLoc)
+    ->true
+    ; GLoc = []
+    ),
     send_rtcheck([GLoc/Prop-[Fail]], comp, PredName, ALoc).
 
 send_rtcheck([], _, _, _) :- !.
