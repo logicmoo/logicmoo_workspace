@@ -121,20 +121,14 @@ prolog:message(assrchk(Level, Error)) -->
     assr_error_message(Error).
 
 assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
-    ( {nonvar(ALoc)}
-    ->prolog:message_location(ALoc)
-    ; []
-    ),
+    prolog:message_location(ALoc),
     ['Assertion failure for ~q.'-[Pred], nl],
     ['    In *~w*, unsatisfied properties: '-[Type], nl],
     foldl(prop_values, PropValues).
 
 prop_values(From/Prop-Values) -->
     ['        '],
-    ( {nonvar(From)}
-    ->prolog:message_location(From)
-    ; []
-    ),
+    prolog:message_location(From),
     ['~q'-[Prop]],
     ( {Values = []}
     ->['.']
@@ -152,8 +146,8 @@ prop_values(From/Prop-Values) -->
 
 call_rtc(Goal) :-
         Error = assrchk(_, _),
-        ( current_prolog_flag(rtchecks_abort_on_error, yes) ->
-          intercept(Goal, Error, throw(Error)) % rethrow signal as exception
+        ( current_prolog_flag(rtchecks_abort_on_error, yes)
+	->intercept(Goal, Error, throw(Error)) % rethrow signal as exception
         ; intercept(Goal, Error, (handle_rtcheck(Error), tracertc))
         ).
 
