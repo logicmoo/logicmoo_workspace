@@ -69,7 +69,8 @@ wrappers(Name/Arity) -->
       WrappedHead =.. [WrapName|Args],
       prolog_load_context(module, Module)
     },
-    [ '$rtchecked'(Head),
+    [ :- public '$rtchecked'/1,
+      '$rtchecked'(Head),
       (:- module_transparent Name/Arity),
       (   Head :-
              start_rtcheck(Module:Head, WrappedHead)
@@ -104,9 +105,7 @@ system:term_expansion((:- rtchecked(Preds)),
     phrase(wrappers(Preds), Clauses).
 
 :- multifile
-    sandbox:safe_directive/1,
-    sandbox:safe_primitive/1,
-    sandbox:safe_meta/2.
+    sandbox:safe_directive/1.
 
 %!  sandbox:safe_directive(+Directive) is semidet.
 %
