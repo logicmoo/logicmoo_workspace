@@ -61,5 +61,6 @@ r :-
     display(1).
 
 :- pred qq/0 + not_fails.
+:- pred qq/0 + fails.
 
 qq :- fail.

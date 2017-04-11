@@ -19,8 +19,6 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- set_prolog_flag(runtime_checks, yes).
 :- set_prolog_flag(rtchecks_check, yes).
 
-:- ['../examples/rtchecks_example3'].
-
 test(rtc_external) :-
     call_in_module_dir(plunit_rtchecks,
                        ( ['../examples/rtc_external'],
@@ -55,6 +53,8 @@ test(rtcompile) :-
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
+:- ['../examples/rtchecks_example3'].
+
 test(rtexec1) :-
     save_rtchecks(do_trace_rtc(test1)),
     load_rtchecks(E),
@@ -67,6 +67,7 @@ test(rtexec2) :-
 
 test(rtexec3) :-
     ignore(save_rtchecks(do_trace_rtc(p(_)))),
+    % ignore(save_rtchecks(p(_))),
     load_rtchecks(E),
     assertion(E=[assrchk(ppt(rtchecks_example3:r/0,
                              clause_pc(_, 7)), error(comp, qq, [file(_, _, _, _)/not_fails-[fails]],
@@ -90,5 +91,12 @@ test(rtexec5) :-
     save_rtchecks(fullasr(a,_B)),
     load_rtchecks(E),
     assertion(E=[]).
+
+:- ['../examples/rtpred1'].
+
+test(rtpred1) :-
+    save_rtchecks(p1(1)),
+    load_rtchecks(E),
+    assertion(E=[_]).
 
 :- end_tests(rtchecks).

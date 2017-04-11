@@ -106,11 +106,15 @@ rtcheck_cond(Cond, Check, PredName) :-
 
 check_asr_props(Asr, Cond, PType, PropValues) :-
     copy_term_nat(Asr, NAsr),
-    findall(NAsr-(From/Prop-[]),
-            ( type_cond_part_check_mult(Cond, PType, Part, Check, Mult),
-              asr_aprop(NAsr, Part, Prop, From),
-              \+ check_prop(Check, Prop),
-              (Mult = once -> ! ; true)
+    findall(NAsr-PropValue,
+            ( ( type_cond_part_check_mult(Cond, PType, Part, Check, Mult),
+                asr_aprop(NAsr, Part, Prop, From)
+              *->
+                \+ check_prop(Check, Prop),
+                (Mult = once -> ! ; true),
+                PropValue = (From/Prop-[])
+              ; PropValue = [] % Skip property
+              )
             ),
             AsrPropValues),
     maplist(unify_common(Asr), AsrPropValues, PropValues).
@@ -155,13 +159,18 @@ check_asr_props(PType, Asr-PropValues) :-
     check_asr_props(Asr, inco, PType, PropValues).
 
 send_rtcheck_asr(PType, Asr-PropValues) :-
-    asr_aprop(Asr, head, _:Pred, ALoc), !,
-    send_rtcheck(PropValues, PType, Pred, ALoc).
+    ( PropValues = [[]] % Skip property
+    ->true
+    ; once(asr_aprop(Asr, head, _:Pred, ALoc)),
+      send_rtcheck(PropValues, PType, Pred, ALoc)
+    ).
 
-checkif_asr_props([_|_], _, _).
-checkif_asr_props([], Asr, PType) :-
-    check_asr_props(Asr, cond, PType, PropValues),
-    send_rtcheck_asr(PType, Asr-PropValues).
+checkif_asr_props(CondValues, Asr, PType) :-
+    ( member(CondValues, [[], [[]]])
+    ->check_asr_props(Asr, cond, PType, PropValues),
+      send_rtcheck_asr(PType, Asr-PropValues)
+    ; true
+    ).
 
 :- meta_predicate checkif_asrs_comp(+, 0).
 checkif_asrs_comp([], _, Goal) :-
@@ -173,14 +182,17 @@ checkif_asrs_comp([Asr-PVL|AsrL], Head, Goal1) :-
 valid_command(times(_, _)).
 valid_command(try_sols(_, _)). % Legacy
 
-checkif_asr_comp([_|_], _, _, Goal,  Goal).
-checkif_asr_comp([], Asr, Head, Goal1, '$with_asr_head'(Goal, Asr-Head)) :-
-    copy_term_nat(Asr, NAsr),
-    findall(g(NAsr, M, Glob, Loc),
-            ( asr_aprop(NAsr, glob, M:Glob, Loc),
-              \+ valid_command(Glob)
-            ), GlobL),
-    comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal, Goal1).
+checkif_asr_comp(PropValues, Asr, Head, Goal1, Goal) :-
+    ( member(PropValues, [[], [[]]])
+    ->copy_term_nat(Asr, NAsr),
+      findall(g(NAsr, M, Glob, Loc),
+              ( asr_aprop(NAsr, glob, M:Glob, Loc),
+                \+ valid_command(Glob)
+              ), GlobL),
+      comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, Goal1),
+      Goal = '$with_asr_head'(Goal2, Asr-Head)
+    ; Goal = Goal1
+    ).
 
 comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
     arg(1, Glob, Goal).
