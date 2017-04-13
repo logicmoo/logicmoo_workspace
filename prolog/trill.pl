@@ -449,7 +449,7 @@ prob_instanceOf(Class,Ind,Prob):-
 %  writel(Exps),nl,
   	compute_prob(Exps,Prob)
   ;
-  	P = ["IRIs not existent"],!
+  	Prob = ["IRIs not existent"],!
   ).
 
 /**
@@ -474,7 +474,7 @@ prob_property_value(Prop, Ind1, Ind2,Prob):-
 %  writel(Exps),nl,
   	compute_prob(Exps,Prob)
   ;
-  	P = ["IRIs not existent"],!
+  	Prob = ["IRIs not existent"],!
   ).
 
 /**
@@ -498,7 +498,7 @@ prob_sub_class(Class,SupClass,Prob):-
 %    P = 0).
   	compute_prob(Exps,Prob)
   ;
-  	P = ["IRIs not existent"],!
+  	Prob = ["IRIs not existent"],!
   ).
 
 /**
