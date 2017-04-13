@@ -3031,7 +3031,6 @@ expand_ns4query(URL,_,URL).
 
 :- multifile trill:add_axiom/1.
 trill:add_axiom(Ax):-
-  ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   create_and_assert_axioms(P,Args).
 
