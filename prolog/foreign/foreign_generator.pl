@@ -2,6 +2,7 @@
                               gen_foreign_library/2]).
 
 :- use_module(library(assertions)).
+:- use_module(library(extra_messages)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(call_ref)).
 :- use_module(library(foreign/foreign_props)).
@@ -685,15 +686,12 @@ generate_aux_clauses(dict_rec(_, _, N, Name), _, Key) :- !,
 generate_aux_clauses(_, _, _).
 
 :- multifile
-    prolog:message//1,
-    prolog:message_location//1.
+    prolog:message//1.
 
-prolog:message(ignored_type(Loc, Name, Arg)) -->
-    prolog:message_location(Loc),
+prolog:message(ignored_type(Name, Arg)) -->
     ['~w->~w ignored'-[Name, Arg]].
 
-prolog:message(failed_binding(Loc, TypeComponents)) -->
-    prolog:message_location(Loc),
+prolog:message(failed_binding(TypeComponents)) -->
     ['~w failed'-[TypeComponents]].
 
 :- meta_predicate type_components(+,+,+,3,+).
@@ -714,7 +712,7 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
                match_known_type_(Prop, M, Spec, Arg),
                call(Call, func_rec(N, Term, Name, TPLDL), Spec, Arg)
              ->true
-             ; print_message(warning, ignored_type(Loc, Name, Arg))
+             ; print_message(warning, at_location(Loc, ignored_type(Name, Arg)))
              )
             ),
       call(Call, func_end(TPLDL), Term, Name)
@@ -736,7 +734,7 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
                match_known_type_(Prop, M, Spec, Arg),
                call(Call, dict_rec(M, Term, N, Name), Spec, Arg)
              ->true
-             ; print_message(warning, ignored_type(Loc, Name, Arg))
+             ; print_message(warning, at_location(Loc, ignored_type(Name, Arg)))
              )),
       call(Call, dict_end(M, Tag), Term, Name)
     ; member(Prop, PropL),
@@ -745,10 +743,11 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
     ; PropL = []
     ->true
     ), !.
-type_components_one(M, Name, Call, TPLDL, Loc, TypePropLDict) :-
+type_components_one(M, N, G, TPLDL, Loc, TPLD) :-
     print_message(error,
-                  failed_binding(Loc,
-                                 type_components_one(M, Name, Call, TPLDL, Loc, TypePropLDict))).
+                  at_location(Loc,
+                              failed_binding(type_components_one(M, N, G, TPLDL,
+                                                                 Loc, TPLD)))).
 
 key_value_from_dict(Dict, N, Key, Value) :-
     S = s(0),
