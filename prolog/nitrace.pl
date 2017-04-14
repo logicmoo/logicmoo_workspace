@@ -62,12 +62,11 @@ nitrace_port(Stream, Port, Frame, PC, ParentL, SubLoc, continue) :-
 
 :- multifile
     user:message_property/2,
-    prolog:message_location//1,
     prolog:message//1.
 
 user:message_property(stream(Stream, _), stream(Stream)) :- !.
 user:message_property(stream(_, Loc), prefix(F-A)) :- !,
-    prolog:message_location(Loc, [F0-A], []),
+    '$messages':swi_location(Loc, [F0-A], []),
     atomic_list_concat(['~N', F0, '\t'], F).
 
 prolog:message(frame(Frame, redo(Redo), PC, CS)) --> !,

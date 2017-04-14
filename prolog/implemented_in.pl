@@ -32,16 +32,15 @@
 
 :- use_module(library(lists)).
 :- use_module(library(extra_location)).
+:- use_module(library(extra_messages)).
 :- use_module(library(prolog_codewalk), []). % for message_location//1
 :- use_module(library(normalize_head)).
 :- use_module(library(dynamic_locations)).
 
 :- multifile
-    prolog:message//1,
-    prolog:message_location//1.
+    prolog:message//1.
 
-prolog:message(acheck(implemented_in(From, Args))) -->
-    prolog:message_location(From),
+prolog:message(implemented_in(Args)) -->
     ['Implements ~w'-Args].
 
 implemented_in(MGoal0, From, Args) :-
@@ -86,4 +85,5 @@ implemented_in(MGoal) :-
     ; prepare
     ),
     forall(implemented_in(MGoal, From, Args),
-           print_message(information, acheck(implemented_in(From, Args)))).
+           print_message(information, at_location(From,
+                                                  implemented_in(Args)))).

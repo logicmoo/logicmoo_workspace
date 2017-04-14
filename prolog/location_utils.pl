@@ -44,7 +44,9 @@
 :- use_module(library(compact_goal)).
 
 from_location(From, Location) :-
-    prolog:message_location(From, Location, []), !.
+    '$messages':swi_location(From, Location, []),
+    Location \= [],
+    !.
 from_location(From, From).
 
 in_set(FileL, File) :-

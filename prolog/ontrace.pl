@@ -35,6 +35,7 @@
 :- use_module(library(edinburgh)).
 :- use_module(library(lists)).
 :- use_module(library(option)).
+:- use_module(library(tabling)).
 :- use_module(library(prolog_clause), []).
 :- use_module(library(prolog_codewalk), []).
 :- use_module(library(prolog_source)).
@@ -158,18 +159,10 @@ find_parent_with_pc(Frame, PC, List0, List) :-
 :- multifile
     prolog:message_location//1.
 
-:- dynamic
-    clause_location_cache/3.
-:- volatile
-    clause_location_cache/3.
+:- table
+    clause_pc_location/3.
 
 clause_pc_location(Clause, PC, Loc) :-
-    clause_location_cache(Clause, PC, Loc), !.
-clause_pc_location(Clause, PC, Loc) :-
-    get_clause_pc_location(Clause, PC, Loc),
-    assertz(clause_location_cache(Clause, PC, Loc)).
-
-get_clause_pc_location(Clause, PC, Loc) :-
     ( '$clause_term_position'(Clause, PC, List)
     ->clause_subloc(Clause, List, Loc)
     ; Loc = clause(Clause)
@@ -177,7 +170,7 @@ get_clause_pc_location(Clause, PC, Loc) :-
 
 prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_pc_location(Clause, PC, Loc)},
-    prolog:message_location(Loc).
+    '$messages':swi_location(Loc).
 
 %% clause_subloc(+ClauseRef, +List, -SubLoc) is det.
 %

@@ -39,8 +39,7 @@
 :- use_module(library(location_utils)).
 
 :- multifile
-        prolog:message//1,
-        prolog:message_location//1.
+        prolog:message//1.
 
 current_abstract_domain(product(fail, sideff)).
 
@@ -51,20 +50,16 @@ prolog:message(acheck(abstract_domains)) -->
     ['Check Abstract Domains'].
 prolog:message(acheck(progress(Module))) -->
     ['Scanning ~w'-[Module]].
-prolog:message(acheck(abstract_domain(product(fail, sideff),
-                                      From, Calls, Args))) -->
-    prolog:message_location(From),
+prolog:message(abstract_domain(product(fail, sideff), Calls, Args)) -->
     [' ~w ~w always fails (~w)'-Args],
-    ( {\+ empty(Calls)} ->
-      [nl,'  at '],
+    ( {\+ empty(Calls)}
+    ->[nl,'  at '],
       {current_prolog_flag(verbose,Verbose)},
       call_locations(Calls, Verbose)
-    ;
-      []
+    ; []
     ).
 
-prolog:message(acheck(partial_eval(From, Calls, Args))) -->
-    prolog:message_location(From),
+prolog:message(partial_eval(Calls, Args)) -->
     [' partial evaluation of [~w] throws the exception ~w'-Args, nl],
     {current_prolog_flag(verbose,Verbose)},
     call_locations(Calls, Verbose).
@@ -87,7 +82,7 @@ print_space(verbose) --> [nl].
 
 print_call(silent, PI, _) --> !, ['~w'-PI].
 print_call(_,      PI, From) -->
-    prolog:message_location(From),
+    '$messages':swi_location(From),
     [': ~w'-[PI]].
 
 list_abstract_domains :-
@@ -164,8 +159,10 @@ report_problems(TraceCalls, M, Domain) :-
 
 report_problem(Domain, trace(PI, From, Result)-Calls) :-
     once(problematic_case(Result, Msg)),
-    print_message(warning, acheck(abstract_domain(Domain, From, Calls,
-                                                  [predicate, PI, Msg]))).
+    print_message(warning,
+                  at_location(From,
+                              abstract_domain(Domain, Calls,
+                                              [predicate, PI, Msg]))).
 
 :- meta_predicate abstract_execute_entry(*,*,:,*,*,*,*,*,*).
 
@@ -243,8 +240,8 @@ abstract_execute_goal(Goal, From, Module:_, Domain, Calls, Calls,
     trusted_result(Domain, Goal, Module, Result),
     catch(ignore(partial_evaluate(Goal, Module)), % Only to improve precision
           error(What, _Where),
-          print_message(warning, acheck(partial_eval(From, Calls,
-                                                     [Goal, error(What, _)])))
+          print_message(warning,
+                        at_location(From, partial_eval(Calls, [Goal, error(What, _)])))
          ),
     !.
 abstract_execute_goal(Goal, _From, Module:_, Domain, Calls, Calls,
