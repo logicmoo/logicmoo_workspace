@@ -38,6 +38,9 @@
 :- use_module(library(filtered_backtrace)).
 :- use_module(library(intercept)).
 
+:- multifile
+    prolog:message_location//1.
+
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
@@ -59,7 +62,12 @@ tracertc :-
 :- doc(handle_rtcheck/1, "Predicate that processes a rtcheck exception.").
 
 :- prop location_t/1 + type.
-location_t(Loc) :- clause(prolog:message_location(Loc, _, _), _).
+location_t(Loc) :-
+    ( clause('$messages':swi_location(Term, _, _), _)
+    ; clause(prolog:message_location(Term, _, _), _)
+    ),
+    nonvar(Term),
+    Term = Loc.
 
 :- prop assrchk_error/1 + type #
         "Specifies the format of an assertion check error.".
@@ -113,7 +121,7 @@ prolog:message(acheck(checks, RTChecks)) -->
 
 assr_level_message(asr) --> [].
 assr_level_message(ppt(Caller, Loc)) -->
-    prolog:message_location(Loc),
+    '$messages':swi_location(Loc),
     ['At program point in ~q:'-[Caller], nl].
 
 prolog:message(assrchk(Level, Error)) -->
@@ -121,14 +129,14 @@ prolog:message(assrchk(Level, Error)) -->
     assr_error_message(Error).
 
 assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
-    prolog:message_location(ALoc),
+    '$messages':swi_location(ALoc),
     ['Assertion failure for ~q.'-[Pred], nl],
     ['    In *~w*, unsatisfied properties: '-[Type], nl],
     foldl(prop_values, PropValues).
 
 prop_values(From/Prop-Values) -->
     ['        '],
-    prolog:message_location(From),
+    '$messages':swi_location(From),
     ['~q'-[Prop]],
     ( {Values = []}
     ->['.']
