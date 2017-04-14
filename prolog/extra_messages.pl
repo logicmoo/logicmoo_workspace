@@ -30,10 +30,16 @@
 :- module(extra_messages, []).
 
 :- multifile
-        prolog:message_location//1.
+    user:message_hook/3.
 
-prolog:message_location(file(Path, Line, -1, _CharNo)) --> !,
-        [ '~w:~d: '-[Path, Line] ].
-prolog:message_location(file(Path, Line, LinePos, _CharNo)) -->
-        [ '~w:~d:~d: '-[Path, Line, LinePos] ].
-prolog:message_location([]) --> [].
+:- dynamic
+    user:message_hook/3.
+
+% KLUDGE: We simulate a syntax error to prevent the system write the
+% current source location (because we want to write another location)
+user:message_hook(at_location(_, _), Level, Lines) :-
+    '$messages':print_system_message(error(syntax_error(_), _), Level, Lines).
+
+prolog:message(at_location(From, Message)) -->
+    '$messages':swi_location(From),
+    '$messages':translate_message(Message).
