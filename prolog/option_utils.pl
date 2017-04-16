@@ -33,8 +33,8 @@
                          option_allchk/4,
                          option_fromchk/3,
                          call_2/3,
-                         check_alias/3,
-                         check_dir_file/2,
+			 check_alias/3,
+                         check_dir_file/3,
                          check_pred/2,
                          check_module/2,
                          from_chk/2,
@@ -49,27 +49,76 @@
 select_option_default(Holder-Default, OptionL0, OptionL) :-
     select_option(Holder, OptionL0, OptionL, Default).
 
-check_alias(Type, Alias, File) :-
-    absolute_file_name(Alias, Pattern, [file_type(Type), solutions(all)]),
+:- public check_alias/4. % This should be exported since it may be used
+                         % indirectly in other places
+
+check_alias(Alias, File, OptionL) :-
+    absolute_file_name(Alias, Pattern, [solutions(all)|OptionL]),
     expand_file_name(Pattern, FileL),
     member(File, FileL),
     access_file(File, exist). % exist checked at the end to avoid premature fail
 
-check_dir_file(Dir, File) :-
+check_dir_file(Dir, File, _) :-
     nonvar(Dir),
     nonvar(File), !,
     directory_file_path(Dir, _, File).
-check_dir_file(Dir, File) :-
+check_dir_file(Dir, File, OptionL) :-
     % here, we need all the files, even if the option specifies only loaded
     % files, otherwise included files without clauses will be ignored
-    directory_source_files(Dir, FileL, [recursive(true), if(false)]),
-    member(File, FileL).
+    % directory_source_files(Dir, FileL, [recursive(true), if(false)]),
+    absolute_file_name(Dir, AbsDir, [file_type(directory), access(read)]),
+    directory_files(AbsDir, Files),
+    phrase(src_files(Files, AbsDir, [recursive(true)|OptionL]), SrcFiles),
+    member(File, SrcFiles).
 
-option_files(File, FileGen0-OptionL0, FileGen-OptionL) :-
+% Based on predicate with same name in prolog_source.pl:
+
+src_files([], _, _) -->
+    [].
+src_files([H|T], Dir, Options) -->
+    { file_name_extension(_, Ext, H),
+      ( option(extensions(ExtL), Options)
+      ->memberchk(Ext, ExtL)
+      ;	option(file_type(Type), Options, prolog),
+	user:prolog_file_type(Ext, Type)
+      ->( Type \= prolog
+	->true
+	; \+ user:prolog_file_type(Ext, qlf)
+	)
+      ),
+      directory_file_path(Dir, H, File0),
+      absolute_file_name(File0, File,
+                         [ file_errors(fail)
+                         | Options
+                         ])
+    },
+    !,
+    [File],
+    src_files(T, Dir, Options).
+src_files([H|T], Dir, Options) -->
+    { \+ special(H),
+      option(recursive(true), Options),
+      directory_file_path(Dir, H, SubDir),
+      exists_directory(SubDir),
+      !,
+      catch(directory_files(SubDir, Files), _, fail)
+    },
+    !,
+    src_files(Files, SubDir, Options),
+    src_files(T, Dir, Options).
+src_files([_|T], Dir, Options) -->
+    src_files(T, Dir, Options).
+
+special(.).
+special(..).
+
+option_files(File, FileGen0-OptionL0, FileGen-OptionL1) :-
     foldl(select_option_default,
-                [files(Files)-Files,
-                 file( AFile)-AFile
-                ], OptionL0, OptionL),
+	  [files(Files)-Files,
+	   file( AFile)-AFile,
+	   file_type(Type)-prolog
+	  ], OptionL0, OptionL1),
+    OptionL=[file_type(Type)|OptionL1],
     ( nonvar(Files)
     ->( nonvar(AFile)
       ->flatten([AFile|Files], FileL)
@@ -77,46 +126,57 @@ option_files(File, FileGen0-OptionL0, FileGen-OptionL) :-
         flatten(Files, FileL)
       ),
       FileGen0 = ( member(Alias, FileL),
-                   check_alias(prolog, Alias, File),
+                   check_alias(Alias, File, OptionL),
                    FileGen
                  )
     ; nonvar(AFile)
-    ->FileGen0 = ( check_alias(prolog, AFile, File),
+    ->FileGen0 = ( check_alias(AFile, File, OptionL),
                    FileGen
                  )
     ; AFile = File,
       FileGen0 = FileGen
     ).
 
-option_exclude_files(File, FG-OptionL0, FG-OptionL) :-
+option_exclude_files(File, FG-OptionL0, FG-OptionL1) :-
     foldl(select_option_default,
-                [exclude_files(ExFileL)-[]
-                ], OptionL0, OptionL),
+	  [exclude_files(ExFileL)-[],
+	   file_type(Type)-prolog
+	  ], OptionL0, OptionL1),
+    OptionL=[file_type(Type)|OptionL1],
     ( ExFileL = []
     ->true
     ; freeze(File, \+ ( member(ExAlias, ExFileL),
-                        check_alias(prolog, ExAlias, File)
+                        check_alias(ExAlias, File, OptionL)
                       ))
     ).
 
-option_exclude_fdirs(File, FG-OptionL0, FG-OptionL) :-
+option_exclude_fdirs(File, FG-OptionL0, FG-OptionL1) :-
     foldl(select_option_default,
-                [exclude_dirs(ExDirL)-[]
-                ], OptionL0, OptionL),
+	  [exclude_dirs(ExDirL)-[],
+	   file_type(Type)-directory
+	  ], OptionL0, OptionL1),
+    foldl(select_option_default,
+	  [extensions(E)-E
+	  ], OptionL1, OptionL2),
+    OptionL=[file_type(Type)|OptionL2],
     ( ExDirL = []
     ->true
     ; freeze(File, \+ ( member(ExAlias, ExDirL),
-                        check_alias(directory, ExAlias, ExDir),
-                        check_dir_file(ExDir, File)
+                        check_alias(ExAlias, ExDir, OptionL),
+                        check_dir_file(ExDir, File, OptionL1)
                       ))
     ).
 
-option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
+option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL1) :-
     foldl(select_option_default,
-                [dirs(Dirs)-Dirs,
-                 dir( ADir)-ADir
-                ],
-                OptionL0, OptionL),
+	 [dirs(Dirs)-Dirs,
+	  dir( ADir)-ADir,
+	  file_type(Type)-directory
+	 ], OptionL0, OptionL1),
+    foldl(select_option_default,
+	  [extensions(E)-E
+	  ], OptionL1, OptionL2),
+    OptionL=[file_type(Type)|OptionL2],
     ( nonvar(Dirs)
     ->( nonvar(ADir)
       ->flatten([ADir|Dirs], DirL)
@@ -124,35 +184,44 @@ option_fdirs(File, FileGen0-OptionL0, FileGen-OptionL) :-
         flatten(Dirs, DirL)
       ),
       FileGen0 = ( member(Alias, DirL),
-                   check_alias(directory, Alias, Dir),
-                   check_dir_file(Dir, File),
+                   check_alias(Alias, Dir, OptionL),
+                   check_dir_file(Dir, File, OptionL1),
                    FileGen
                  )
     ; nonvar(ADir)
-    ->FileGen0 = ( check_alias(directory, ADir, Dir),
-                   check_dir_file(Dir, File),
+    ->FileGen0 = ( check_alias(ADir, Dir, OptionL),
+                   check_dir_file(Dir, File, OptionL1),
                    FileGen
                  )
     ; FileGen0 = FileGen
     ).
 
-option_exclude_dirs(Dir, DG-OptionL0, DG-OptionL) :-
+option_exclude_dirs(Dir, DG-OptionL0, DG-OptionL1) :-
     foldl(select_option_default,
-                [exclude_dirs(ExDirL)-[]
-                ], OptionL0, OptionL),
+	 [exclude_dirs(ExDirL)-[],
+	  file_type(Type)-directory
+	 ], OptionL0, OptionL1),
+    foldl(select_option_default,
+	  [extensions(E)-E
+	  ], OptionL1, OptionL2),
+    OptionL=[file_type(Type)|OptionL2],
     ( ExDirL = []
     ->true
     ; freeze(Dir, \+ ( member(ExAlias, ExDirL),
-                       check_alias(directory, ExAlias, Dir)
+                       check_alias(ExAlias, Dir, OptionL)
                      ))
     ).
 
-option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
+option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL1) :-
     foldl(select_option_default,
-                [dirs(Dirs)-Dirs,
-                 dir( ADir)-ADir
-                ],
-                OptionL0, OptionL),
+	  [dirs(Dirs)-Dirs,
+	   dir( ADir)-ADir,
+	   file_type(Type)-directory
+	  ], OptionL0, OptionL1),
+    foldl(select_option_default,
+	  [extensions(E)-E
+	  ], OptionL1, OptionL2),
+    OptionL=[file_type(Type)|OptionL2],
     ( nonvar(Dirs)
     ->( nonvar(ADir)
       ->flatten([ADir|Dirs], DirL)
@@ -160,11 +229,11 @@ option_dirs(Dir, DirGen0-OptionL0, DirGen-OptionL) :-
         flatten(Dirs, DirL)
       ),
       DirGen0 = ( member(Alias, DirL),
-                  check_alias(directory, Alias, Dir),
+                  check_alias(Alias, Dir, OptionL),
                   DirGen
                 )
     ; nonvar(ADir)
-    ->DirGen0 = ( check_alias(directory, ADir, Dir),
+    ->DirGen0 = ( check_alias(ADir, Dir, OptionL),
                   DirGen
                 )
     ; ADir = Dir,
