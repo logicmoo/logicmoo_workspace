@@ -58,7 +58,11 @@ select_option_default(Holder-Default, OptionL0, OptionL) :-
 :- public check_alias/4. % This should be exported since it may be used
                          % indirectly in other places
 
-check_alias(Alias, File, OptionL) :-
+check_alias(Alias, File, OptionL1) :-
+    ( select_option(extensions(EL), OptionL1, OptionL2)
+    ->OptionL = [extensions([''|EL])|OptionL2]
+    ; OptionL = OptionL1
+    ),
     absolute_file_name(Alias, Pattern, [solutions(all)|OptionL]),
     expand_file_name(Pattern, FileL),
     member(File, FileL),
