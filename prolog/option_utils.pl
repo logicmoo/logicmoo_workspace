@@ -37,6 +37,7 @@
                          option_dirchk/3,
                          option_allchk/4,
                          option_fromchk/3,
+                         source_extension/2,
                          call_2/3,
 			 check_alias/3,
                          check_dir_file/3,
@@ -76,6 +77,13 @@ check_dir_file(Dir, File, OptionL) :-
     phrase(src_files(Files, AbsDir, [recursive(true)|OptionL]), SrcFiles),
     member(File, SrcFiles).
 
+source_extension(Type, Ext) :-
+    user:prolog_file_type(Ext, Type),
+    ( Type \= prolog
+    ->true
+    ; \+ user:prolog_file_type(Ext, qlf)
+    ).
+
 % Based on predicate with same name in prolog_source.pl:
 
 src_files([], _, _) -->
@@ -84,12 +92,8 @@ src_files([H|T], Dir, Options) -->
     { file_name_extension(_, Ext, H),
       ( option(extensions(ExtL), Options)
       ->memberchk(Ext, ExtL)
-      ;	option(file_type(Type), Options, prolog),
-	user:prolog_file_type(Ext, Type)
-      ->( Type \= prolog
-	->true
-	; \+ user:prolog_file_type(Ext, qlf)
-	)
+      ; option(file_type(Type), Options, prolog)
+      ->once(source_extension(Type, Ext))
       ),
       directory_file_path(Dir, H, File0),
       absolute_file_name(File0, File,
