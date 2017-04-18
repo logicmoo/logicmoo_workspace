@@ -35,12 +35,12 @@ test(rtc_external) :-
                    assrchk(ppt(_,_),
                            error(success,
                                  functor(0, 0, 0),
-                                 [_/(libprops:atm(0))-[]],
+                                 [_/instance(libprops:atm(0))-[]],
                                  _)),
                    assrchk(ppt(_,_),
                            error(success,
                                  functor(0, 0, 0),
-                                 [_/(rtc_external:atom(0))-[]],
+                                 [_/instance(rtc_external:atom(0))-[]],
                                  _))]).
 
 test(rtcompile) :-
@@ -85,7 +85,7 @@ test(rtexec4) :-
     save_rtchecks(fullasr(3,_B)),
     load_rtchecks(E),
     assertion(E=[assrchk(asr,error(success,fullasr(3,3),
-                                   [_/(rtchecks_example3:family(3))-[]], _))]).
+                                   [_/instance(rtchecks_example3:family(3))-[]], _))]).
 
 test(rtexec5) :-
     save_rtchecks(fullasr(a,_B)),
