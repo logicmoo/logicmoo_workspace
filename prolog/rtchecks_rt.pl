@@ -117,7 +117,8 @@ check_asr_props(Asr, Cond, PType, PropValues) :-
               *->
                 \+ check_prop(Check, Prop),
                 (Mult = once -> ! ; true),
-                PropValue = (From/Prop-[])
+                CheckProp =.. [Check, Prop],
+                PropValue = (From/CheckProp-[])
               ; PropValue = [] % Skip property
               )
             ),
