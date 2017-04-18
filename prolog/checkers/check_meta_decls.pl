@@ -45,9 +45,9 @@
         prolog:message//1.
 
 prolog:message(acheck(meta_decls)) -->
-    ['-----------------------------------',nl,
-     'Missing Meta Predicate Declarations',nl,
-     '-----------------------------------',nl,
+    ['-----------------------------------', nl,
+     'Missing Meta Predicate Declarations', nl,
+     '-----------------------------------', nl,
      'The predicates below require a missing meta_predicate declaration.', nl,
      'They have been automatically inferred. Although is not required, it', nl,
      'is recommended to add them by hand or to fix the predicate in order', nl,
@@ -76,6 +76,7 @@ meta_decls2([H|T]) -->
 :- multifile hide_missing_meta_pred/1.
 
 hide_missing_meta_pred(prolog:generated_predicate/1).
+hide_missing_meta_pred(prolog:rename_predicate/2).
 
 checker:check(meta_decls, Pairs, OptionL0 ) :-
     option_allchk(OptionL0, OptionL1, FileChk),

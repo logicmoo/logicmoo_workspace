@@ -255,7 +255,7 @@ ctcheck_goal(AsrL) :-
 % Trivial abstraction: Check for compatibility issues in properties,
 % compatibility is an abstraction that makes static check decidable.  Here we
 % lose precision but we gain computability of checks at earlier, even
-% compile-time. TBD: Formal demostration. --EMM
+% compile-time. TBD: Formal demonstration. --EMM
 assrt_lib:asr_aprop(ctcheck(Asr), Key, Prop, From) :-
     prop_abstraction(Key, Abst),
     curr_prop_asr(Abst, Prop, From, Asr).
