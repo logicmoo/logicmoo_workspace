@@ -3031,11 +3031,8 @@ expand_ns4query(URL,_,URL).
 
 :- multifile trill:add_axiom/1.
 trill:add_axiom(Ax):-
-  ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
-  expand_all_ns(Args,NSList,ArgsEx),
-  AxEx =.. [P|ArgsEx],
-  test_and_assert(AxEx,'ont').
+  create_and_assert_axioms(P,Args).
 
 :- multifile trill:add_axioms/1.
 trill:add_axioms([]).
@@ -3048,8 +3045,15 @@ trill:add_axioms([H|T]) :-
 trill:remove_axiom(Ax):-
   ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
-  expand_all_ns(Args,NSList,ArgsEx),
-  AxEx =.. [P|ArgsEx],
+  ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
+       ( expand_all_ns(IntArgs,NSList,ArgsExp),
+         AxEx =.. [P,ArgsExp]
+       )
+     ;
+       ( expand_all_ns(Args,NSList,ArgsExp),
+         AxEx =.. [P|ArgsExp]
+       )
+  ),
   retract(owl2_model:AxEx),
   retract(owl2_model:owl(AxEx,'ont')).
 
@@ -3077,7 +3081,7 @@ parse_rdf_from_owl_rdf_pred(String):-
   load_owl_from_stream(S).
 
 create_and_assert_axioms(P,Args) :-
-  ns4query(NSList),
+  ( ns4query(NSList) *-> true; NSList = []),
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
        ( expand_all_ns(IntArgs,NSList,ArgsExp),
          NewTRILLAxiom =.. [P,ArgsExp]

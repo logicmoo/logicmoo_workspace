@@ -692,7 +692,7 @@ clash((ABox,_),Expl):-
 
 clash((ABox,_),Expl):-
   %write('clash 6'),nl,
-  findClassAssertion("http://www.w3.org/2002/07/owl#Nothing",_Ind,Expl,ABox).
+  findClassAssertion('http://www.w3.org/2002/07/owl#Nothing',_Ind,Expl,ABox).
 
 /*
 clash((ABox,Tabs),Expl):-
@@ -1189,9 +1189,8 @@ find_sub_sup_class(C,D,equivalentClasses(L)):-
   dif(C,D).
 
 %concept for concepts allValuesFrom
-find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts allValuesFrom
 find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1199,9 +1198,8 @@ find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts someValuesFrom
-find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts someValuesFrom
 find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1214,9 +1212,8 @@ find_sub_sup_class(exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S
   Name:subPropertyOf(R,S).
 
 %concept for concepts exactCardinality
-find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts exactCardinality
 find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1229,9 +1226,8 @@ find_sub_sup_class(maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts maxCardinality
-find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts maxCardinality
 find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1244,9 +1240,8 @@ find_sub_sup_class(minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts minCardinality
-find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts minCardinality
 find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
