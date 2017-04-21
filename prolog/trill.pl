@@ -1347,6 +1347,49 @@ find_all(Ind,[H|T],ABox,ExplT):-
   list_to_set(Expl2,ExplT).
 
 
+% ------------------------
+%  unfold_rule to unfold roles
+% ------------------------
+% sub properties
+unfold_rule((ABox0,Tabs),([(propertyAssertion(D,Ind1,Ind2),[Ax|Expl])|ABox],Tabs)):-
+  findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
+  find_sub_sup_property(C,D,Ax),
+  absent(propertyAssertion(D,Ind1,Ind2),[Ax|Expl],(ABox0,Tabs)),
+  add_nominal(D,Ind1,ABox0,ABox1),
+  add_nominal(D,Ind2,ABox1,ABox).
+
+%inverseProperties
+unfold_rule((ABox0,Tabs),([(propertyAssertion(D,Ind2,Ind1),[Ax|Expl])|ABox],Tabs)):-
+  findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
+  find_inverse_property(C,D,Ax),
+  absent(propertyAssertion(D,Ind2,Ind1),[Ax|Expl],(ABox0,Tabs)),
+  add_nominal(D,Ind1,ABox0,ABox1),
+  add_nominal(D,Ind2,ABox1,ABox).
+
+%-----------------
+% subPropertyOf
+find_sub_sup_property(C,D,subPropertyOf(C,D)):-
+  get_trill_current_module(Name),
+  Name:subPropertyOf(C,D).
+
+%equivalentProperties
+find_sub_sup_property(C,D,equivalentProperties(L)):-
+  get_trill_current_module(Name),
+  Name:equivalentProperties(L),
+  member(C,L),
+  member(D,L),
+  dif(C,D).
+
+%-----------------
+%inverseProperties
+find_inverse_property(C,D,inverseProperties(C,D)):-
+  get_trill_current_module(Name),
+  Name:inverseProperties(C,D).
+
+find_inverse_property(C,D,inverseProperties(D,C)):-
+  get_trill_current_module(Name),
+  Name:inverseProperties(D,C).
+
 /* ************* */
 
 /*
@@ -1630,6 +1673,9 @@ findExplForClassOf(LC,LI,ABox0,Expl):-
 /*  absent
   =========
 */
+absent(propertyAssertion(P,Ind1,Ind2),Expl,(ABox,_Tabs)):-
+  \+ absent1(propertyAssertion(P,Ind1,Ind2),Expl,ABox),!.
+
 absent(classAssertion(C,Ind),Expl,(ABox,_Tabs)):-
   \+ absent1(classAssertion(C,Ind),Expl,ABox),!.
 
@@ -1777,7 +1823,7 @@ build_abox((ABox,Tabs)):-
   get_trill_current_module(Name),
   findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),Name:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),Name:propertyAssertion(Property,Subject, Object),LPA),
-  findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
+  % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),Name:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
   new_tabs(Tabs0),
