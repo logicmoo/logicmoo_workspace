@@ -9,7 +9,7 @@
 :- use_module(library(call_in_dir)).
 :- use_module(library(substitute)).
 :- use_module(library(rtchecks_utils)).
-%:- use_module(library(rtchecks_tracer)).
+:- use_module(library(rtchecks_tracer)).
 :- use_module(library(intercept)).
 :- use_module(library(libprops)).
 
