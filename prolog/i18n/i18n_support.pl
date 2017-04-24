@@ -372,9 +372,8 @@ current_i18n_record(M, Lang, MsgId, MsgStr) :-
       \+ language(Lang)
     ),
     Lang \= en,
-    current_pot_file(M, PotAlias),
+    current_pot_file(M, PotFile),
     reference(M, Ref),
-    absolute_file_name(PotAlias, PotFile, [file_type(pot)]),
     get_lang_file(PotFile, Lang, PoFile),
     access_file(PoFile, read),
     read_file_to_codes(PoFile, Codes, []),
@@ -409,10 +408,12 @@ get_lang_file(PotFile, Lang, PoFile) :-
 current_pot_file(M, PotFile) :-
     (var(M) -> current_i18n_module(M) ; true),
     ( i18n_resource(M, PotAlias) -> true
-    ; ( i18n_resource_dir(DirAlias) -> true
-      ; DirAlias = '.'
-      ),
-      absolute_file_name(DirAlias, DirName),
-      PotAlias = DirName/M
+    ; ( i18n_resource_dir(DirAlias)
+      ->absolute_file_name(DirAlias, DirName),
+        PotAlias = DirName/M
+      ; module_property(M, file(File)),
+        file_name_extension(PotAlias, _, File)
+      ; PotAlias = '.'/M
+      )
     ),
     absolute_file_name(PotAlias, PotFile, [file_type(pot)]).
