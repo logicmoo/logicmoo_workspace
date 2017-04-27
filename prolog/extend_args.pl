@@ -35,10 +35,14 @@
 :- module(extend_args,
           [extend_args/3]).
 
-extend_args(Goal, _, Goal) :- var(Goal), !, fail.
-extend_args(M:Call, Args, M:Goal) :- !,
-    extend_args(Call, Args, Goal).
-extend_args(Call, Args, Goal) :-
-    Call =.. CArgs,
-    append(CArgs, Args, GArgs),
-    Goal =.. GArgs.
+extend_args(Goal, _, Goal) :-
+    var(Goal), !, fail.
+extend_args(M:Goal0, Extra, M:Goal) :- !,
+    extend_args(Goal0, Extra, Goal).
+extend_args(Atom, Extra, Goal) :-
+    atom(Atom), !,
+    Goal =.. [Atom|Extra].
+extend_args(Goal0, Extra, Goal) :-
+    compound_name_arguments(Goal0, Name, Args0),
+    '$append'(Args0, Extra, Args),
+    compound_name_arguments(Goal, Name, Args).
