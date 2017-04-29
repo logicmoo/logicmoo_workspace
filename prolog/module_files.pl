@@ -1,8 +1,8 @@
-/*  Part of XTools for SWI-Prolog
+/*  Part of Extended Tools for SWI-Prolog
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
-    WWW:           https://github.com/edisonm/refactor, http://www.swi-prolog.org
+    WWW:           https://github.com/edisonm/xtools
     Copyright (C): 2013, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 

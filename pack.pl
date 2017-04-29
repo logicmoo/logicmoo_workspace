@@ -1,6 +1,6 @@
 name(xtools).
 version('0.0.2').
-title('Extended tools for Prolog').
+title('Extended Tools for SWI-Prolog').
 keywords([tools,development]).
 author('Edison Mera Menendez', 'http://www.edisonm.com/').
 packager('Edison Mera Menendez', 'http://www.edisonm.com/').
