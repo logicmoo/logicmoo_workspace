@@ -21,6 +21,7 @@
 :- use_module(library(basicprops)).
 :- use_module(library(termtyping)).
 :- use_module(library(plprops)).
+:- use_module(library(extend_args)).
 
 :- prop foreign/1 + no_rtcheck.
 :- meta_predicate foreign(0).
@@ -124,9 +125,9 @@ dict_kv(Dict, Key-Value) :-
     Type=Dict.Key,
     call(Type, Value).
 
-type_desc(M:Type, Desc) :-
-    extend_term(Type, [_], Call),
-    clause(M:Call, dict_t(_, _, Desc)).
+type_desc(MType, Desc) :-
+    extend_args(MType, [_], MCall),
+    clause(MCall, dict_t(_, _, Desc)).
 
 join_dict_types(Type1, M1, Type2, M2, Tag, Dict) :-
     type_desc(M1:Type1, Desc1),
@@ -138,15 +139,3 @@ join_dict_descs(M1:Desc1, M2:Desc2, Tag, Dict) :-
     dict_mq(Desc2, M2, Tag, Dict2),
     Dict=Dict1.put(Dict2),
     assertion(Dict=Dict2.put(Dict1)).
-
-extend_term(Term, _, Term) :-
-    var(Term), !.
-extend_term(M:Term0, Extra, M:Term) :- !,
-    extend_term(Term0, Extra, Term).
-extend_term(Atom, Extra, Term) :-
-    atom(Atom), !,
-    Term =.. [Atom|Extra].
-extend_term(Term0, Extra, Term) :-
-    compound_name_arguments(Term0, Name, Args0),
-    '$append'(Args0, Extra, Args),
-    compound_name_arguments(Term, Name, Args).

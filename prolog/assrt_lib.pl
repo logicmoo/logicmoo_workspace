@@ -31,10 +31,6 @@
 :- use_module(library(subpos_utils)).
 :- use_module(library(prolog_codewalk), []).
 
-:- expects_dialect(swi).
-
-% :- ml(160).
-
 % Assertion reader for SWI-Prolog
 
 % asr_* declared multifile to allow extensibility. At this point you extend
@@ -479,7 +475,7 @@ current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
 
 % but can be confused with:
 %  :- true prop det(callable)
-%  :- true prop det(A) :: callable(X).
+%  :- true prop det(X) :: callable(X).
 %
 % in any case this is syntax sugar so we can always write the long version of
 % the assertion to avoid ambiguities

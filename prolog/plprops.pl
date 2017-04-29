@@ -1,6 +1,6 @@
 :- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, tlist/2,
                     char/1, keypair/1, keylist/1, arithexpression/1,
-                    dupclauses/1]).
+                    dupclauses/1, database/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
@@ -27,9 +27,8 @@ tlist(E, T) :- call(T, E).
 :- true prop char/1 is type.
 char(A) :- atm(A). % size(A)=1
 
-:- prop det(X) + equiv(not_fails(is_det(X))).
-:- meta_predicate det(0).
-% det(Goal) :- not_fails(is_det(Goal)).
+:- global det(X) + equiv(not_fails(is_det(X))).
+
 det(Goal) :-
         Solved = solved(no),
         ( true
@@ -49,20 +48,16 @@ det(Goal) :-
         ; nb_setarg(1, Solved, yes)
         ).
 
-:- prop semidet(X) + equiv(is_det(X)).
+:- global semidet(X) + equiv(is_det(X)).
 
-:- meta_predicate semidet(0).
 semidet(Goal) :- is_det(Goal).
 
-:- prop nondet/1.
+:- global nondet/1.
 
-:- meta_predicate nondet(0).
 nondet(Goal) :- Goal.
 
-:- prop multi(X) + equiv(not_fails(X)).
+:- global multi(X) + equiv(not_fails(X)).
 
-:- meta_predicate multi(0).
-% multi(Goal) :- not_fails(Goal).
 multi(Goal) :-
         Solved = solved(no),
         ( true
@@ -77,9 +72,12 @@ multi(Goal) :-
         ; nb_setarg(1, Solved, yes)
         ).
 
-:- meta_predicate dupclauses(0).
-:- prop dupclauses/1 is (type, eval)
-    # "States that a predicate have repeated clauses".
+:- global database(X) + no_rtcheck # "A call to ~w will change the prolog database"-[X].
+
+database(Goal) :- call(Goal).
+
+:- global dupclauses/1 + (type, eval, database)
+    # "States that a predicate has repeated clauses".
 dupclauses(M:Goal) :-
     ( functor(Goal, F, A),
       functor(Head1, F, A),
