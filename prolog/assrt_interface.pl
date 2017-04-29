@@ -1,8 +1,8 @@
-/*  Part of Tools for SWI-Prolog
+/*  Part of Assertion Reader for SWI-Prolog
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
-    WWW:           https://github.com/edisonm/refactor, http://www.swi-prolog.org
+    WWW:           https://github.com/edisonm/assertions
     Copyright (C): 2015, Process Design Center, Breda, The Netherlands.
 
     This program is free software; you can redistribute it and/or

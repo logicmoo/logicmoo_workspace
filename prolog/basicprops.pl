@@ -1,9 +1,9 @@
-/*  Part of SWI-Prolog
+/*  Part of Assertion Reader for SWI-Prolog
 
-    Author:        Edison Mera
+    Author:        The Ciao Development Team, port and additions by Edison Mera
     E-mail:        efmera@gmail.com
-    WWW:           http://www.swi-prolog.org
-    Copyright (C): 2013, Process Design Center, Breda, The Netherlands.
+    WWW:           https://github.com/edisonm/assertions
+    Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -27,8 +27,6 @@
     the GNU General Public License.
 */
 
-%% Migrated from Ciao to SWI-Prolog
-
 :- module(basicprops,
           [term/1, int/1, nnegint/1, flt/1, num/1, atm/1, str/1, struct/1,
            gnd/1, gndstr/1, constant/1, inst/2, operator_specifier/1, list/1,
@@ -44,6 +42,7 @@
 
 :- use_module(library(lists)).
 :- use_module(library(assertions)).
+:- license(gplv2).
 
 :- doc(title,"Basic data types and properties").
 
