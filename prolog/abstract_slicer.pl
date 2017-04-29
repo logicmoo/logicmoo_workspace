@@ -1,8 +1,8 @@
-/*  Part of Extended libraries for Prolog
+/*  Part of Extended Libraries for SWI-Prolog
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
-    WWW:           https://github.com/edisonm/refactor, http://www.swi-prolog.org
+    WWW:           https://github.com/edisonm/xlibrary
     Copyright (C): 2015, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 

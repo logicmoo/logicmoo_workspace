@@ -2,7 +2,7 @@
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
-    WWW:           https://github.com/edisonm/refactor, http://www.swi-prolog.org
+    WWW:           https://github.com/edisonm/xlibrary
     Copyright (C): 2016, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 

@@ -1,6 +1,6 @@
 name(xlibrary).
 version('0.0.2').
-title('Extended libraries for Prolog').
+title('Extended Libraries for Prolog').
 keywords([library]).
 author('Edison Mera Menendez', 'http://www.edisonm.com/').
 packager('Edison Mera Menendez', 'http://www.edisonm.com/').
