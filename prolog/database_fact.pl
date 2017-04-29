@@ -43,8 +43,10 @@
            fa_to_head/3
           ]).
 
+:- use_module(library(assrt_lib)).
+:- use_module(library(plprops)).
+:- use_module(library(implementation_module)).
 :- use_module(library(extend_args)).
-:- use_module(library(normalize_pi)).
 :- use_module(library(static_strip_module)).
 
 :- create_prolog_flag(check_database_preds, false, [type(boolean)]).
@@ -60,14 +62,20 @@ prolog:called_by(H, IM, CM, [F]) :-
     nonvar(M).
 
 :- multifile
-    database_var_fact/1,
     database_def_fact/3,
     database_dec_fact/3,
     database_retract_fact/3,
     database_query_fact/3.
 
-database_fact(G) :- database_fact(G, _).
-database_fact(G) :- normalize_pi(G, PI), database_var_fact(PI).
+:- meta_predicate
+    database_fact(0).
+
+database_fact(M:G) :-
+    implementation_module(M:G, IM),
+    database_fact(IM:G, _).
+database_fact(MG) :-
+    prop_asr(head, MG, _, Asr),
+    prop_asr(glob, database(_), _, Asr).
 
 database_mod_fact(M:G, F) :- database_def_fact(    G, M, F).
 database_mod_fact(M:G, F) :- database_dec_fact(    G, M, F).
@@ -124,31 +132,6 @@ database_def_fact(update_fact_from(A, From), from_utils, F) :-
     nonvar(A),
     extend_args(A, [From], H),
     clause_head(H, F).
-
-database_var_fact(check:check_trivial_fail/3).
-database_var_fact(prolog_codewalk:walk_clauses/2).
-database_var_fact(check_abstract_domains:abstract_execute_goal/9).
-database_var_fact(check_non_mutually_exclusive:mutually_exclusive/3).
-database_var_fact(check_non_mutually_exclusive:collect_non_mutually_exclusive/1).
-database_var_fact(check_trivial_fails:check_trivial_fail/3).
-database_var_fact(ifprolog:clause_with_names/3).
-database_var_fact(ifprolog:retract_with_names/2).
-database_var_fact(implemented_in:implemented_in/1).
-database_var_fact(predicate_options:assert_option_clause/2).
-database_var_fact(man_data:fix_source_path/2).
-database_var_fact(pce_prolog_tracer:show_source/2).
-database_var_fact(prolog_codewalk:clause_not_from_development/4).
-database_var_fact(prolog_codewalk:walk_called_by_pred/2).
-database_var_fact(prolog_listing:list_clauserefs/1).
-database_var_fact(prolog_listing:list_clauses/2).
-database_var_fact(prolog_metainference:meta_pred_args_in_clause/3).
-database_var_fact(shlib:abolish_foreign/1).
-database_var_fact(shlib:unload_foreign/1).
-database_var_fact(user:prolog_clause_name/2).
-database_var_fact(user:prolog_list_goal/1).
-database_var_fact(prolog_trace_utils:list_clauses/3).
-database_var_fact(prolog_term_view:print_clause_properties/2).
-database_var_fact(from_utils:update_fact_from/1).
 
 database_retract_fact(retract(A),  system,     F) :- clause_head(A, F).
 database_retract_fact(lretract(A), pce_config, F) :- clause_head(A, F).

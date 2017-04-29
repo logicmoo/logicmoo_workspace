@@ -55,46 +55,33 @@
     hide_wrong_dynamic/2,
     hide_var_dynamic_hook/2.
 
-hide_var_dynamic(Call, M) :-
-    ( Call1 = Call
-    ; Call =.. [F|Args],
-      atom_concat(F1, ' tabled', F),
-      Call1 =.. [F1|Args]
+hide_var_dynamic(Call1, M) :-
+    ( \+ ( current_module(M:'$tabled'/1),
+           M:'$tabled'(Call1)
+         )
+    ->Call = Call1
+    ; Call1 =.. [F1|Args],
+      atom_concat(F, ' tabled', F1),
+      Call =.. [F|Args]
     ),
-    hide_var_dynamic_hook(Call1, M).
+    hide_var_dynamic_hook(Call, M).
 
-hide_var_dynamic_hook(list_strings(_), check).
-hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
-hide_var_dynamic_hook(current_used_use_module(_, _, _, _), check_imports).
-hide_var_dynamic_hook(mutually_exclusive(_, _, _), check_non_mutually_exclusive).
-hide_var_dynamic_hook(cu_caller_hook(_, _, _, _, _, _, _), check_trivial_fails).
-hide_var_dynamic_hook(implemented_in(_, _, _), implemented_in).
-hide_var_dynamic_hook(unfold_goal(_, _), ref_scenarios).
-hide_var_dynamic_hook(match_head_clause(_, _), check_unused).
-hide_var_dynamic_hook(unmarked(_, _, _, _, _), check_unused).
-hide_var_dynamic_hook(duptype_elem(_, _, _, _, _, _), check_dupcode).
-hide_var_dynamic_hook(bind_type_names(_, _, _, _), foreign_generator).
-hide_var_dynamic_hook(bind_tn_clause(_, _, _, _), foreign_generator).
-hide_var_dynamic_hook(call_ref(_, _), foreign_generator).
-hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
-hide_var_dynamic_hook(mark_to_head(_, _), check_unused).
-hide_var_dynamic_hook(current_arc(_, _, _), check_unused).
-hide_var_dynamic_hook(match_clause(_, _, _, _, _), ontrace).
 hide_var_dynamic_hook(type_desc(_, _), foreign_props).
-hide_var_dynamic_hook(prepare_results(_, _, _), checker).
-hide_var_dynamic_hook(current_edge(_, _, _), check_unused).
-hide_var_dynamic_hook(commited_retract(_), commited_retract).
-hide_var_dynamic_hook(tabling(_, _), ntabling).
+hide_var_dynamic_hook(duptype_elem(_, _, _, _, _, _), check_dupcode).
+hide_var_dynamic_hook(bind_tn_clause(_, _, _, _), foreign_generator).
+hide_var_dynamic_hook(unfold_goal(_, _), ref_scenarios).
 hide_var_dynamic_hook(match_head_body(_, _, _, _), abstract_interpreter).
-hide_var_dynamic_hook(is_entry_caller(_), check_unused).
-hide_var_dynamic_hook(caller_ptr(_, _, _), check_unused).
-hide_var_dynamic_hook(match_head_1st_arg(_, _, _), check_text).
-hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
+hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
 hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
-hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), extra_codewalk).
+hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
+hide_var_dynamic_hook(current_used_use_module(_, _, _, _), check_imports).
+hide_var_dynamic_hook(match_head_clause(_, _), check_unused).
 hide_var_dynamic_hook(current_clause_module_body(_, _), extra_codewalk).
-hide_var_dynamic_hook(update_fact_from(_, _), from_utils).
-hide_var_dynamic_hook(dupclauses(_), plprops).
+hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), extra_codewalk).
+hide_var_dynamic_hook(implemented_in(_, _, _), implemented_in).
+hide_var_dynamic_hook(match_clause(_, _, _, _, _), ontrace).
+hide_var_dynamic_hook(abstract_execute_goal(_, _, _, _, _, _, _, _, _), check_abstract_domains).
+hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -217,9 +204,10 @@ prolog:message(acheck(wrong_dynamic)) -->
      'difficult to analyze.', nl, nl].
 
 :- public collect_wrong_dynamic/4.
+:- meta_predicate collect_wrong_dynamic(?,+,0,+).
 collect_wrong_dynamic(M, MGoal, Caller, From) :-
-    record_location_meta(MGoal, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
-                         record_location_wd(Caller)).
+    ignore(record_location_meta(MGoal, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
+                                record_location_wd(Caller))).
 
 record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
     compact_goal(MGoal, Comp),

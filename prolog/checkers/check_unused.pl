@@ -143,18 +143,12 @@ resolve_meta_goal(H, M, G) :-
     ; G = H
     ).
 
-% mark_to_head(clause(CRef), M:H-I) :- !,
-%     nth_clause(M:H, I, CRef).
-% mark_to_head(Ref, Ref).
-
 is_marked(CRef) :-
     copy_term(CRef, Term),
     marked(Term),
     subsumes_term(Term, CRef).
 
 put_mark(CRef) :-
-    % mark_to_head(CRef, Head),
-    % writeln(user_error, put_mark(Head)),
     ( \+ is_marked(CRef)
     ->record_marked(CRef),
       forall(calls_to(CRef, CM, Callee),

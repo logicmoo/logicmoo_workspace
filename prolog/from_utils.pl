@@ -43,7 +43,9 @@
 :- use_module(library(prolog_clause),   []).
 :- use_module(library(prolog_codewalk), []).
 :- use_module(library(extra_messages),  []).
-:- use_module(library(resolve_calln)).
+:- use_module(library(assertions)).
+:- use_module(library(plprops)).
+:- use_module(library(extend_args)).
 
 :- dynamic
     filepos_line_db/5.
@@ -110,16 +112,17 @@ from_to_line(file_term_position(File, TermPos), Line) :-
 from_to_line(file(_, Line, _, _), Line).
 
 :- meta_predicate update_fact_from(1, ?).
+:- pred update_fact_from/2 + database.
 update_fact_from(Fact, From) :-
-    resolve_calln(call(Fact, From0), FactFrom0),
-    forall(( clause(FactFrom0, _, Ref),
-             subsumes_from(From0, From)
+    extend_args(Fact, [From1], FactFrom),
+    forall(( clause(FactFrom, _, Ref),
+             subsumes_from(From1, From)
            ),
            erase(Ref)),
-    ( \+ ( call(FactFrom0 ),
-           subsumes_from(From, From0 )
+    ( \+ ( call(FactFrom),
+           subsumes_from(From, From1)
          )
-    ->From = From0,
-      assertz(FactFrom0)
+    ->From = From1,
+      assertz(FactFrom)
     ; true
     ).
