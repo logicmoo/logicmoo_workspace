@@ -1,4 +1,4 @@
-/*  Part of Tools for SWI-Prolog
+/*  Part of Run-Time Checker for Assertions
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
