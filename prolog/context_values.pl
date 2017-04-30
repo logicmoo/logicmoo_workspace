@@ -32,19 +32,20 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(context_values, [context_name/2,
-                           with_value/3,
-                           with_value/4,
-                           get_context_value/2,
-                           set_context_value/2,
-                           current_context_value/2,
-                           with_context_values/3,
-                           with_context_values/4,
-                           with_context_value/3,
-                           with_context_value/4,
-                           without_context_value/2,
-                           without_context_value/3
-                           ]).
+:- module(context_values,
+          [context_name/2,
+           with_value/3,
+           with_value/4,
+           get_context_value/2,
+           set_context_value/2,
+           current_context_value/2,
+           with_context_values/3,
+           with_context_values/4,
+           with_context_value/3,
+           with_context_value/4,
+           without_context_value/2,
+           without_context_value/3
+          ]).
 
 context_name(M:Name, ContextName) :-
     context_name(M, Name, ContextName).
@@ -105,7 +106,9 @@ without_context_value(Goal, Name, Value) :-
 without_value(Goal, Name, Value) :-
     ( nb_current(Name, Value)
     ->setup_call_cleanup(nb_delete(Name),
-                         (Goal, nb_setval(Name, Value)),
+                         ( Goal,
+                           b_setval(Name, Value)
+                         ),
                          nb_setval(Name, Value))
     ; Goal
     ).
