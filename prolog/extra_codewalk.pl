@@ -51,9 +51,9 @@
     extra_walk_code(:),
     extra_walk_code(:,+,-).
 
-%% extra_walk_module_body(-, +) :-
-extra_walk_module_body(M, OptionL0 ) :-
-    select_option(module(M), OptionL0, OptionL, M),
+%% extra_walk_module_body(-, +) is det.
+extra_walk_module_body(M, OptionL1) :-
+    select_option(module(M), OptionL1, OptionL, M),
     ( nonvar(M)
     ->findall(Ref, current_clause_module_body(M, Ref), RefU),
       sort(RefU, RefL),
