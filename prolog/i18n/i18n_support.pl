@@ -54,6 +54,7 @@
                          '=~~'/2]).
 
 :- use_module(library(lists)).
+:- use_module(library(apply)).
 :- use_module(library(pairs)).
 :- use_module(library(readutil)).
 :- use_module(library(clambda)).
@@ -214,10 +215,10 @@ show_i18n_terms(M:Term) :-
 
 show_i18n_term(M, Op, MsgId, _) :-
     reference(M, Ref),
-    maplist(Op+\S^format(user_error, '~w~s~n', [Op, S]), Ref),
+    maplist([Op]+\S^format(user_error, '~w~s~n', [Op, S]), Ref),
     nl(user_error),
     writeln(user_error, M),
-    maplist(Op+\S^format(user_error, '~w~s~n', [Op, S]), MsgId),
+    maplist([Op]+\S^format(user_error, '~w~s~n', [Op, S]), MsgId),
     nl(user_error).
 
 i18n_entry_expander((~), M, MsgId, MsgStr) :-
