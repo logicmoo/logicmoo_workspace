@@ -37,8 +37,8 @@
           check_results/2, check_results/3, report_list/2, full_report/1,
           simple_report/1, available_checker/1]).
 
+:- use_module(library(atomics_atom)).
 :- use_module(library(thread)).
-:- use_module(library(clambda)).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(infer_meta_if_required)).
 :- use_module(library(location_utils)).
@@ -52,6 +52,18 @@ user:file_search_path(checkers, library(checkers)).
 :- public
     prepare_results/3,
     check/3.
+
+prolog:called_by(Goal, _, M, [M:Macro]) :-
+    functor(Goal, F, A),
+    once(atomics_atom(['__aux_', Name, '/', AN, '_', CF, '+', EN], F)),
+    atom_number(AN, N),
+    atom_number(EN, E),
+    A =:= E + N - 1,
+    length(EL, E),
+    Goal =.. [F|AL],
+    append(EL, TL, AL),
+    C =.. [CF|EL],
+    Macro =.. [Name, C|TL].
 
 /*
 user:prolog_clause_name(Ref, Name) :-
