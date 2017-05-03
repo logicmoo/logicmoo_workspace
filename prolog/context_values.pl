@@ -38,6 +38,7 @@
            with_value/4,
            get_context_value/2,
            set_context_value/2,
+           nb_set_context_value/2,
            current_context_value/2,
            with_context_values/3,
            with_context_values/4,
@@ -62,6 +63,11 @@ get_context_value(Name, Value) :-
 set_context_value(Name, Value) :-
     context_name(Name, ContextName),
     b_setval(ContextName, Value).
+
+:- meta_predicate nb_set_context_value(:, ?).
+nb_set_context_value(Name, Value) :-
+    context_name(Name, ContextName),
+    nb_setval(ContextName, Value).
 
 :- meta_predicate current_context_value(:, ?).
 current_context_value(Name, Value) :-
