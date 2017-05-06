@@ -35,6 +35,7 @@
 :- module(rtchecks_rt,
           [rtcheck_goal/2,
            rtcheck_call/2,
+           check_asrs/4,
            start_rtcheck/2,
            rtc_call/2,
            '$with_gloc'/2,
@@ -189,13 +190,14 @@ valid_command(times(_, _)).
 valid_command(try_sols(_, _)). % Legacy
 
 checkif_asr_comp(PropValues, Asr, Head, Goal1, Goal) :-
-    ( member(PropValues, [[], [[]]])
-    ->copy_term_nat(Asr, NAsr),
+    ( member(PropValues, [[], [[]]]),
+      copy_term_nat(Asr, NAsr),
       findall(g(NAsr, M, Glob, Loc),
               ( asr_aprop(NAsr, glob, M:Glob, Loc),
                 \+ valid_command(Glob)
               ), GlobL),
-      comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, Goal1),
+      GlobL \= []
+    ->comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, Goal1),
       Goal = '$with_asr_head'(Goal2, Asr-Head)
     ; Goal = Goal1
     ).
@@ -209,9 +211,10 @@ rtcheck_call(CM:Goal, AsrL) :-
     rtcheck_goal(Goal, CM:Goal, M, CM, AsrL).
 
 rtcheck_goal(Goal, Call, M, CM, AsrL) :-
+    current_prolog_flag(rtchecks_level, Level),
     checkif_modl(M, CM,
-                 check_asrs(step1, AsrL, Goal, G2), G2,
-                 check_asrs(step2, AsrL, Goal, Call)).
+                 check_asrs(is_prop_rtcheck(step1, Level), AsrL, Goal, G2), G2,
+                 check_asrs(is_prop_rtcheck(step2, Level), AsrL, Goal, Call)).
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
@@ -281,27 +284,28 @@ rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
 rtcheck_assr_type(success).
 % ----------------------------------------------------------------------------
 
-check_asrs(Step, AsrL, Head, Goal) :-
-    check_asrs_pre(Step, AsrL, AsrGlobL, AsrSuccL),
+:- meta_predicate check_asrs(2, +, +, +).
+
+check_asrs(IsPropCheck, AsrL, Head, Goal) :-
+    check_asrs_pre(IsPropCheck, AsrL, AsrGlobL, AsrSuccL),
     checkif_asrs_comp(AsrGlobL, Head, Goal),
     checkif_asrs_props(success, AsrSuccL).
 
-check_asrs_pre(Step, AsrL, AsrGlobL, AsrSuccL) :-
-    current_prolog_flag(rtchecks_level, Level),
-    prop_rtchecks(AsrL, call, Step, Level, AsrCallL),
-    prop_rtchecks(AsrL, succ, Step, Level, AsrSuccL),
+check_asrs_pre(IsPropCheck, AsrL, AsrGlobL, AsrSuccL) :-
+    prop_rtchecks(AsrL, IsPropCheck, call, AsrCallL),
+    prop_rtchecks(AsrL, IsPropCheck, succ, AsrSuccL),
     subtract(AsrSuccL, AsrCallL, DAsrSuccL),
-    prop_rtchecks(AsrL, glob, Step, Level, AsrGlobL),
+    prop_rtchecks(AsrL, IsPropCheck, glob, AsrGlobL),
     subtract(AsrGlobL, AsrCallL, DAsrGlobL),
     check_asrs_props_calls(   AsrCallL),
     check_asrs_props(success, DAsrSuccL),
     check_asrs_props(comp,    DAsrGlobL).
 
-prop_rtchecks(AsrL0, Part, Step, Level, AsrPVL) :-
-    include(is_prop_rtcheck(Part, Step, Level), AsrL0, AsrL),
+prop_rtchecks(AsrL1, IsPropCheck, Part, AsrPVL) :-
+    include(call(IsPropCheck, Part), AsrL1, AsrL),
     pairs_keys_values(AsrPVL, AsrL, _PValuesL).
 
-is_prop_rtcheck(Part, Step, Level, Asr) :-
+is_prop_rtcheck(Step, Level, Part, Asr) :-
     asr_aprop(Asr, stat, Status, _),
     asr_aprop(Asr, type, Type,   _),
     assrt_op(Part, Step, Level, Type),
@@ -340,7 +344,7 @@ do_rtcheck(false, Check) :-
   check      | no_rtcheck || yes       | no
   check      | -          || yes       | yes
   ===========+============++===========+==========
-  Note: Is weird to preserve ciao-compatibility
+  Note: This is weird to preserve ciao-compatibility
 */
 
 valid_ctcheck_assertions(Status, Type) :-
