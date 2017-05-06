@@ -35,8 +35,7 @@
 :- module(extra_codewalk, [extra_walk_code/1,
                            extra_walk_code/3,
                            extra_wcsetup/3,
-                           extra_walk_module_body/2,
-                           resolve_head/3]).
+                           extra_walk_module_body/2]).
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assrt_lib)).
@@ -166,18 +165,6 @@ assertion_goal(body, _, _, Asr, Prop, PM) :-
     ; asr_glob(Asr, PM, Prop, _)
       %% arg(1, Prop, HM:Head), but keep it uninstantiated for optimization
     ).
-
-resolve_head(M:H0, _, H) :- !,
-    resolve_head(H0, M, H).
-resolve_head((A,B), M, H) :- !,
-    ( resolve_head(A, M, H)
-    ; resolve_head(B, M, H)
-    ).
-resolve_head((A;B), M, H) :- !,
-    ( resolve_head(A, M, H)
-    ; resolve_head(B, M, H)
-    ).
-resolve_head(H, M, M:H).
 
 record_issues(CRef) :-
     assertz(issues(CRef)).

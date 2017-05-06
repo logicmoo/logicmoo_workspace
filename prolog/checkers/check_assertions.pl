@@ -38,7 +38,7 @@
 :- use_module(checkers(checker)).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(source_codewalk)).
 :- use_module(library(rtchecks_rt)).
 :- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
@@ -52,6 +52,7 @@
 :- use_module(library(tabling)).
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
+:- use_module(library(option_utils)).
 
 :- dynamic
     violations_db/3.
@@ -59,9 +60,9 @@
 :- multifile
     prolog:message//1.
 
-:- table
-    generate_ctchecks/3,
-    do_check_property_ctcheck/2.
+% :- table
+%     generate_ctchecks/3,
+%     do_check_property_ctcheck/2.
 
 checker:check(assertions, Result, OptionL) :-
     cleanup_db,
@@ -70,12 +71,15 @@ checker:check(assertions, Result, OptionL) :-
 cleanup_db :-
         retractall(violations_db(_, _, _)).
 
-check_assertions(OptionL0, Pairs) :-
-    merge_options(OptionL0,
-                  [on_etrace(collect_violations(M)),
-                   walkextras([declaration]) % TODO: use asrparts([head, body])
+
+check_assertions(OptionL1, Pairs) :-
+    select_option(module(M), OptionL1, OptionL2, M),
+    merge_options(OptionL2,
+                  [module(M),
+                   on_trace(collect_violations(M))
                   ], OptionL),
-    extra_walk_code(OptionL, M, FromChk),
+    source_codewalk(OptionL),
+    option_fromchk(OptionL, _, FromChk),
     findall(error-Issue,
             ( retract(violations_db(CPI, CTChecks, From)),
               from_location(From, Loc),
@@ -92,7 +96,7 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     \+ predicate_property(M:H, imported_from(_)),
     \+ predicate_property(M:H, built_in),
     \+ predicate_property(M:H, foreign),
-    generate_ctchecks(H, M, CTCheck),
+    generate_ctchecks(H, M, [], CTCheck),
     CTCheck \= _:true,
     clause(M:H, _, Clause),
     From = clause(Clause),
@@ -131,6 +135,18 @@ current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     numbervars(Issues, 0, _),
     from_location(PFrom, PLoc),
     from_location(From, Loc).
+
+resolve_head(M:H0, _, H) :- !,
+    resolve_head(H0, M, H).
+resolve_head((A,B), M, H) :- !,
+    ( resolve_head(A, M, H)
+    ; resolve_head(B, M, H)
+    ).
+resolve_head((A;B), M, H) :- !,
+    ( resolve_head(A, M, H)
+    ; resolve_head(B, M, H)
+    ).
+resolve_head(H, M, M:H).
 
 prolog:message(acheck(assertions)) -->
     ['-----------------',nl,
@@ -175,7 +191,7 @@ black_list(M:Call) :- black_list(Call, M).
 
 :- public collect_violations/4.
 
-:- meta_predicate collect_violations(+,+,0,+).
+:- meta_predicate collect_violations(+,0,0,+).
 collect_violations(M, CM:Goal, Caller, From) :-
     \+ black_list(Caller),
     implementation_module(CM:Goal, M),
@@ -190,14 +206,24 @@ check_property_ctcheck(Goal, M, CM, Caller, AssrErrorL) :-
                        % trigger violations
     do_check_property_ctcheck(CTCheck, AssrErrorL).
 
+set_variable_names(Name=Variable) :- ignore(Variable = '$VAR'(Name)).
+
+:- dynamic
+    assrt_error_db/1.
+
 do_check_property_ctcheck(CTCheck, AssrErrorL) :-
     AssrError = assrchk(_, _),
-    S = s([]),
-    intercept(CTCheck, AssrError, % Now execute the checks
-              ( S = s(AssrErrorL1),
-                nb_setarg(1, S, [AssrError|AssrErrorL1])
-              )),
-    S = s(AssrErrorL).
+    retractall(assrt_error_db(_)),
+    intercept(CTCheck, AssrError, record_assrt_error(AssrError)),
+    findall(AssrError, retract(assrt_error_db(AssrError)), AssrErrorL).
+
+record_assrt_error(AssrError) :-
+    ignore(( nb_current('$variable_names', VNL),
+             maplist(set_variable_names, VNL)
+           )),
+    assertz(assrt_error_db(AssrError)),
+    fail.
+record_assrt_error(_).
 
 checker_t(defined).
 checker_t(is_prop).
@@ -220,54 +246,98 @@ check_property(ctcheck, H, M, CM, (M:F/A)-CTChecks) :-
     resolve_calln(M:H, M:G),
     functor(G, F, A).
 
+var_info(A, P) -->
+    ( { var_property(A, fresh(Fresh)) }
+    ->[P=Fresh]
+    ; []
+    ).
+
+rm_var_info(Var) :- del_attr(Var, '$var_info').
+
 %% tabled_generate_ctchecks(+, +, ?, +, -) is det
 %
 tabled_generate_ctchecks(H, M, CM, Caller, Goal) :-
     functor(H, F, A),
     functor(P, F, A),
+    H =.. [F|Args],
+    P =.. [F|PInf],
+    foldl(var_info, Args, PInf, VInf, []),
+    term_variables(H, Vars),
+    maplist(rm_var_info, Vars),
     ( meta_call_goal(H, M, Caller, Meta)
     ->qualify_meta_goal(CM1:P, Meta, G)
     ; G = P
     ),
-    generate_ctchecks(G, M, Goal),
+    generate_ctchecks(G, M, VInf, Goal),
     CM = CM1,
     P = H.
 
-% Generate compile-time checks, currently only compatibility is checked, fails
-% if no ctchecks can be applied to Pred. Note that CM can be a variable, to
-% allow tabling of the result and CM to be instantiated later.
+%% generate_ctchecks(+Goal, +M, +VInf, -CTChecks) is det
 %
-generate_ctchecks(Goal, M, CTChecks) :-
+% Generate compile-time checks, currently only compatibility is checked, fails
+% if no ctchecks can be applied to Pred.
+%
+generate_ctchecks(Goal, M, VInf, CTChecks) :-
+    % writeln(user_error, generate_ctchecks(Goal, M, VInf, CTChecks)),
     collect_assertions(Goal, M, ctcheck, AsrL),
     ( AsrL \= []
-    ->maplist(wrap_asr_ctcheck, AsrL, PAsrL),
-      CTChecks = check_assertions:ctcheck_goal(PAsrL)
+    ->maplist(wrap_asr_ctcheck(VInf), AsrL, PAsrL),
+      CTChecks = check_assertions:ctcheck_goal(PAsrL, Goal)
     ; CTChecks = check_assertions:true
     ).
 
-wrap_asr_ctcheck(Asr, ctcheck(Asr)).
+wrap_asr_ctcheck(VInf, Asr, ctcheck(VInf, Asr)).
 
-:- public ctcheck_goal/1.
-ctcheck_goal(AsrL) :-
-    pairs_keys_values(AsrPVL, AsrL, _),
-    rtchecks_rt:check_asrs_props_calls(AsrPVL).
+:- public ctcheck_goal/2.
+ctcheck_goal(AsrL, Goal) :-
+    % To catch more errors we can use a partial evaluator instead of true:
+    check_asrs(check_assertions:is_prop_ctcheck, AsrL, Goal, true).
+
+assrt_op(call, entry).
+assrt_op(call, calls).
+assrt_op(call, pred).
+assrt_op(call, prop).
+assrt_op(succ, exit).
+assrt_op(succ, success).
+assrt_op(succ, pred).
+assrt_op(succ, prop).
+% assrt_op(glob, comp).
+% assrt_op(glob, pred).
+
+is_prop_ctcheck(Part, Asr) :-
+    asr_aprop(Asr, type, Type, _),
+    assrt_op(Part, Type), !.
 
 % Trivial abstraction: Check for compatibility issues in properties,
 % compatibility is an abstraction that makes static check decidable.  Here we
-% lose precision but we gain computability of checks at earlier, even
-% compile-time. TBD: Formal demonstration. --EMM
-assrt_lib:asr_aprop(ctcheck(Asr), Key, Prop, From) :-
-    prop_abstraction(Key, Abst),
-    curr_prop_asr(Abst, Prop, From, Asr).
+% lose precision but we gain computability of checks at compile-time.
+% TBD: Formal demonstration. --EMM
+assrt_lib:asr_aprop(ctcheck(VInf, Asr), Key, Prop, From) :-
+    asr_aprop_ctcheck(Key, VInf, Asr, Prop, From).
 
-prop_abstraction(head, head).
-prop_abstraction(stat, stat).
-prop_abstraction(type, type).
-prop_abstraction(dict, dict).
-prop_abstraction(comm, comm).
-prop_abstraction(comp, comp).
-prop_abstraction(comp, call).
-prop_abstraction(comp, succ).
+asr_aprop_ctcheck(head, _, A, P, F) :- curr_prop_asr(head, P, F, A).
+asr_aprop_ctcheck(stat, _, A, P, F) :- curr_prop_asr(stat, P, F, A).
+asr_aprop_ctcheck(type, _, A, P, F) :- curr_prop_asr(type, P, F, A).
+asr_aprop_ctcheck(dict, _, A, P, F) :- curr_prop_asr(dict, P, F, A).
+asr_aprop_ctcheck(comm, _, A, P, F) :- curr_prop_asr(comm, P, F, A).
+asr_aprop_ctcheck(comp, _, A, P, F) :- curr_prop_asr(comp, P, F, A).
+asr_aprop_ctcheck(comp, _, A, P, F) :- curr_prop_asr(succ, P, F, A). % TBD: Key = succ
+asr_aprop_ctcheck(Key,  L, Asr, Prop, From) :-
+    asr_aprop_ctcheck_abstraction(Key, L, Asr, Prop, From).
+
+prop_abstraction(call, true).
+% prop_abstraction(succ, false).
+
+asr_aprop_ctcheck_abstraction(Key, L, Asr, Prop, From) :-
+    prop_abstraction(RKey, Fresh),
+    curr_prop_asr(RKey, Prop, From, Asr),
+    term_variables(Prop, Vars),
+    ( member(Var=Fresh, L),
+      member(Arg, Vars),
+      Arg==Var
+    ->Key = RKey
+    ; Key = comp
+    ).
 
 verif_is_property(system, true, 0) :- !. % ignore true (identity)
 verif_is_property(M, F, A) :-

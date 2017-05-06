@@ -54,7 +54,7 @@ test(ctcex) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
     set_prolog_flag(verbose, silent),
     assert(user:error_on_co),
-    with_output_to(string(Result), showcheck(assertions, [module(ctcex), source(true), walkextras([])])),
+    with_output_to(string(Result), showcheck(assertions, [module(ctcex)])),
     comment_data(ctcex, Pattern),
     module_property(ctcex, file(File)),
     directory_file_path(Dir, _, File),
@@ -83,11 +83,25 @@ p1.pl:16:4: In the body of p1:p0/0:
 p1.pl:9:8: Assertion failure for p1(p1:q2).
     In *calls*, unsatisfied properties: 
         p1.pl:9:11: compat(nativeprops:is_pred(p1:q2,0)).
+p1.pl:22:4: In the body of p1:p2/1:
+p1.pl:18:8: Assertion failure for q(A,B,C).
+    In *calls*, unsatisfied properties: 
+        p1.pl:18:11: instance(p1:int(A)).
+p1.pl:19:8: Assertion failure for q(A,B,C).
+    In *calls*, unsatisfied properties: 
+        p1.pl:19:11: instance(p1:atm(A)).
+p1.pl:26:4: In the body of p1:p2/1:
+p1.pl:18:8: Assertion failure for q(X,Y,Z).
+    In *calls*, unsatisfied properties: 
+        p1.pl:18:11: instance(p1:int(X)).
+p1.pl:19:8: Assertion failure for q(X,Y,Z).
+    In *calls*, unsatisfied properties: 
+        p1.pl:19:11: instance(p1:atm(X)).
 */
 test(ctmeta) :-
     set_prolog_flag(verbose, silent),
     assert(user:error_on_co),
-    with_output_to(string(Result), showcheck(assertions, [module(p1), source(true), walkextras([])])),
+    with_output_to(string(Result), showcheck(assertions, [module(p1)])),
     comment_data(p1, Pattern),
     module_property(ctcex, file(File)),
     directory_file_path(Dir, _, File),

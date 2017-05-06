@@ -125,7 +125,6 @@ record_unlinked(H, M, Pos, Id) :-
     ( unlinked_arg(H, M, Pos, Id)
     ->true
     ; count(Id),
-      ( unlinked_arg(H, M, Pos, Id) -> gtrace ; true ),
       assertz(unlinked_arg(H, M, Pos, Id))
     ).
 

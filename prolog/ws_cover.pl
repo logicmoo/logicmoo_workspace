@@ -38,6 +38,7 @@
 :- use_module(library(apply)).
 :- use_module(library(lists)).
 :- use_module(library(http/html_write)).
+:- use_module(library(http/http_dispatch)).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(gcover)).
 :- use_module(library(module_files)).

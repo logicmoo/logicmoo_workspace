@@ -66,18 +66,24 @@ determine_caller((:- Decl), Caller) :- decl_caller(Decl, Caller).
 decl_caller(initialization(_), '<initialization>').
 decl_caller(_,                 '<declaration>').
 
+:- public
+    true_3/3,
+    do_goal_expansion/2,
+    determine_caller/2.
+
 prepare(p(TRef, GRef)) :-
     assertz((system:term_expansion(T, P, T, P) :-
-            determine_caller(T, Caller),
-            set_context_value(caller, Caller)), TRef),
+                 determine_caller(T, Caller),
+                 set_context_value(caller, Caller)), TRef),
     assertz((system:goal_expansion(G, P, _, _) :-
-            once(do_goal_expansion(G, P)), fail), GRef).
+                 once(do_goal_expansion(G, P)), fail), GRef).
 
 cleanup(p(TRef, GRef)) :-
     erase(TRef),
     erase(GRef).
 
 true_3(_, _, _).
+
 /*
 true_3(Goal, Caller, From) :-
     print_message(information,
@@ -94,20 +100,24 @@ do_goal_expansion(Goal, TermPos) :-
     ),
     current_context_value(on_trace, OnTrace),
     current_context_value(caller,   Caller),
-    call(OnTrace, Goal, Caller, From).
+    '$current_source_module'(M),
+    call(OnTrace, M:Goal, Caller, From).
 
 do_source_codewalk(OptionL1) :-
     select_option(on_trace(OnTrace), OptionL1, OptionL2, true_3),
-    option_allchk(M, File, FileMGen-OptionL2, true-OptionL3),
+    select_option(variable_names(VNL), OptionL2, OptionL3, VNL),
+    option_allchk(M, File, FileMGen-OptionL3, true-OptionL4),
+    freeze(VNL, b_setval('$variable_names', VNL)),
     with_context_values(
         setup_call_cleanup(
             ( '$current_source_module'(OldM),
               freeze(M, '$set_source_module'(_, M))
             ),
             forall(( call(FileMGen),
-                     setup_call_cleanup(prolog_open_source(File, In),
-                                        fetch_term(In, OptionL3),
-                                        prolog_close_source(In))
+                     setup_call_cleanup(
+                         prolog_open_source(File, In),
+                         fetch_term(In, [variable_names(VNL)|OptionL4]),
+                         prolog_close_source(In))
                    ),
                    true
                   ),
