@@ -36,10 +36,10 @@
 
 :- meta_predicate on_retry(0, 0).
 
-%% on_retry(:Call, :Retry)
+%!  on_retry(:Call, :Retry)
 %
-% Executes OnRetry if Call is going to be retried. If Call does not have
-% choice-points OnRetry is ignored.
+%   Executes OnRetry if Call is going to be retried. If Call does not have
+%   choice-points OnRetry is ignored.
 
 on_retry(Call, OnRetry) :-
     prolog_current_choice(C1),

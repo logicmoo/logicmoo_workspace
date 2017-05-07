@@ -34,10 +34,10 @@
 
 :- module(atomics_string, [atomics_string/2]).
 
-%% atomics_string(+Atms:list(atomic), -Atm:string) is det.
-%% atomics_string(?Atms:list(string), +Atm:string)
+%!  atomics_string(+Atms:list(atomic), -Atm:string) is det.
+%!  atomics_string(?Atms:list(string), +Atm:string)
 %
-% Like atomics_atom, but with strings.
+%   Like atomics_atom, but with strings.
 
 atomics_string(Atomics, String) :-
     ( var(String)->F=1 ; F=2 ),

@@ -34,14 +34,14 @@
 
 :- module(atomics_atom, [atomics_atom/2]).
 
-%% atomics_atom(+Atms:list(atomic), -Atm:atom) is det.
-%% atomics_atom(?Atms:list(atom), +Atm:atomic)
+%!  atomics_atom(+Atms:list(atomic), -Atm:atom) is det.
+%!  atomics_atom(?Atms:list(atom), +Atm:atomic)
 %
-% Atm is the atom resulting from concatenating all atomics in the list Atms in the
-% order in which they appear. If Atm is an atom at call then Atms can contain
-% free variables, and multiple solutions can be found on backtracking.
+%   Atm is the atom resulting from concatenating all atomics in the list Atms in
+%   the order in which they appear. If Atm is an atom at call then Atms can
+%   contain free variables, and multiple solutions can be found on backtracking.
 %
-% Based on atom_concat/2 of Ciao-Prolog, but without performance issues.
+%   Based on atom_concat/2 of Ciao-Prolog, but without performance issues.
 
 atomics_atom(Atomics, Atom) :-
     ( var(Atom)->F=1 ; F=2 ),

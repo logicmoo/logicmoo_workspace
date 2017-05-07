@@ -35,7 +35,8 @@
 :- module(termdiff, [termdiff/4]).
 
 :- meta_predicate termdiff(+,+,2,-).
-%% termdiff(+Term1, +Term2, :Diff, -List) is det.
+
+%!  termdiff(+Term1, +Term2, :Diff, -List) is det.
 %
 termdiff(Term1, Term2, D, [E|L]) :-
     compound(Term1),

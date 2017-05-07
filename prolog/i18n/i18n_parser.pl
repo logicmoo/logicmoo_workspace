@@ -68,20 +68,18 @@ flag([F|Fs]) -->
         flag(Fs).
 flag([]) --> [].
 
-%% parse_po_entries(+Term,-Codes,?Tail).
-%% parse_po_entries(-Term,+Codes,?Tail).
-
-%% Note that parse_po_entries/3 is reversible, it is used to compile and
-%% to decompile the .po file. Example:
-
-/*
-%% i18n_support:parse_po_entries([i18n_support:i18n("a","b","c"),
-%% i18n_support:i18n("a","b\nc","c")],D,[]), atom_codes(A,D),write(A).
-
-  read_file_to_codes('/usr/share/cups/locale/es/cups_es.po',C,[]),
-  i18n_support:parse_po_entries(Term,C,[]),
-  i18n_support:parse_po_entries(Term,S,[]),format('~s',[S]).
-*/
+%!  parse_po_entries(+Term)// is semidet.
+%!  parse_po_entries(-Term)// is semidet.
+%
+%   Note that parse_po_entries/3 is reversible, it is used to compile and to
+%   decompile the .po file. Example:
+%
+%   i18n_support:parse_po_entries([i18n_support:i18n("a","b","c"),
+%   i18n_support:i18n("a","b\nc","c")],D,[]), atom_codes(A,D),write(A).
+%
+%   read_file_to_codes('/usr/share/cups/locale/es/cups_es.po',C,[]),
+%   i18n_support:parse_po_entries(Term,C,[]),
+%   i18n_support:parse_po_entries(Term,S,[]),format('~s',[S]).
 
 parse_po_entry(entry(TranslatorComments, ExtractedComments,
                      Reference, Flag, MsgId, MsgStr)) -->

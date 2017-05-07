@@ -36,9 +36,8 @@
                            compact_intervals/2,
                            repack_list/2]).
 
-
-%% list_intervals(+list,-list(pairs)) is det.
-%% list_intervals(-list,+list(pairs)) is det.
+%!  list_intervals(+From:list,-Pairs:list(pair)) is det.
+%!  list_intervals(-From:list,+Pairs:list(pair)) is det.
 %
 % :- pred list_intervals(?sorted, ?sorted).
 %

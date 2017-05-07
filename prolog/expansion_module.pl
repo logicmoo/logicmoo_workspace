@@ -34,9 +34,10 @@
 
 :- module(expansion_module, [expansion_module/2]).
 
-%% expansion_module(?, ?)
-% Kludge: using swipl internals. Perhaps is not a good idea --EMM
-% Warning: could report duplicate solutions
+%!  expansion_module(?, ?)
+%
+%   Kludge: using swipl internals. Perhaps is not a good idea --EMM
+%   Warning: could report duplicate solutions
 %
 expansion_module(M, EM) :-
     CM = compound_expand,

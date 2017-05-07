@@ -130,11 +130,10 @@ variable_name('LANG').
 language_t(Lang) :-
     language_iso(_, _, _, _, Lang, _, _, _, _, _).
 
-%% language(+language_t(Lang)) is multi.
+%!  language(+Lang:language_t) is multi.
 %
-% if not defined, assume the system language or English. Although is
-% not recommended, you can use several languages to look for
-% translations.
+%   if not defined, assume the system language or English. Although is not
+%   recommended, you can use several languages to look for translations.
 
 language(Lang) :-
     ( %% Guess the system language using environment variables:
@@ -344,10 +343,10 @@ i18n_to_translate_arg(_, _, _) --> [].
 
 % In prolog, reference would be Module:Pred/Name, Module:(TermScheme), ...
 
-%% resourceterm(+Term) is multi.
+%!  resourceterm(+Term) is multi.
 %
-% Declaration. Tells the system that a string must be considered as a
-% resource string, even if it don't appears in a ~/1 operator.
+%   Declaration. Tells the system that a string must be considered as a resource
+%   string, even if it don't appears in a ~/1 operator.
 
 :- multifile user:prolog_file_type/2.
 :- dynamic   user:prolog_file_type/2.
@@ -366,6 +365,7 @@ i18n_record(M, Lang, MsgId, MsgStr) :-
 
 :- table current_i18n_record/4.
 */
+
 current_i18n_record(M, Lang, MsgId, MsgStr) :-
     ( language(Lang)
     ; dictionary(Lang),
