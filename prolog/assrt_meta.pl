@@ -54,9 +54,10 @@ meta_has_mode_info(Meta) :-
     !.
 
 with_amp(Goal, OldFlag, NewFlag) :-
-    setup_call_cleanup(set_prolog_flag(assrt_meta_pred, NewFlag),
-                       Goal,
-                       set_prolog_flag(assrt_meta_pred, OldFlag)).
+    setup_call_cleanup(
+        set_prolog_flag(assrt_meta_pred, NewFlag),
+        Goal,
+        set_prolog_flag(assrt_meta_pred, OldFlag)).
 
 am_head_prop_idx(Head, M, Meta, From) :-
     current_prolog_flag(assrt_meta_pred, Flag),
