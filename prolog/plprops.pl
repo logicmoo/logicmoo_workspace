@@ -33,19 +33,24 @@
 */
 
 :- module(plprops, [det/1, semidet/1, nondet/1, multi/1, type/1, tlist/2,
-                    char/1, keypair/1, keylist/1, arithexpression/1,
-                    dupclauses/1, database/1]).
+                    char/1, pair/1, keypair/1, keylist/1, arithexpression/1,
+                    dupclauses/1, database/1, any/1, unknown/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(basicprops)).
 :- use_module(library(nativeprops)).
 :- use_module(library(send_check)).
 
+:- reexport(library(basicprops), [list/1, list/2]).
+
 % SWI-Like Properties:
 
 :- true prop type/1.
 :- meta_predicate type(0).
 type(Goal) :- call(Goal).
+
+:- true prop pair/1 + type.
+pair(_-_).
 
 :- true prop keypair/1 + type.
 keypair(_-_).
@@ -60,6 +65,13 @@ tlist(E, T) :- call(T, E).
 
 :- true prop char/1 is type.
 char(A) :- atm(A). % size(A)=1
+
+:- true prop any/1 + type.
+any(_).
+
+:- global unknown/1.
+
+unknown(Goal) :- Goal.
 
 :- global det(X) + equiv(not_fails(is_det(X))).
 
