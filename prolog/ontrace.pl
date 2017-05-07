@@ -70,7 +70,8 @@ call_inout(Goal, OnIn, OnOut) :-
 :- public true_1/1.
 true_1(_).
 
-%% setup_trace(!State, :OnTrace, +OptL) is det.
+%!  setup_trace(!State, :OnTrace, +OptL) is det.
+%
 setup_trace(State, M:OnTrace, OptL) :-
     select_option(goal(ValidGoal), OptL,  OptL1, ontrace:true_1),
     select_option(file(ValidFile), OptL1, OptL2, ontrace:true_1),
@@ -89,7 +90,8 @@ setup_trace(State, M:OnTrace, OptL) :-
     nb_setarg(3, State, Ref),
     trace.
 
-%% cleanup_state(+State) is det.
+%!  cleanup_state(+State) is det.
+%
 cleanup_trace(state(Visible, Leash, Ref)) :-
     nodebug,
     '$visible'(_, Visible),
@@ -177,7 +179,7 @@ prolog:message_location(clause_pc(Clause, PC)) -->
     {clause_pc_location(Clause, PC, Loc)},
     '$messages':swi_location(Loc).
 
-%% clause_subloc(+ClauseRef, +List, -SubLoc) is det.
+%!  clause_subloc(+ClauseRef, +List, -SubLoc) is det.
 %
 clause_subloc(Cl, List, SubLoc) :-
     ( clause_property(Cl, file(File)),

@@ -36,10 +36,10 @@
 
 :- dynamic comment_data/2.
 
-%% process_comment_data(+Comments, +Term) is semidet
+%!  process_comment_data(+Comments, +Term) is semidet
 %
-% This comment_hook hack allow us to write copy-pasteable data as
-% comment, to facilitate output comparisons:
+%   This comment_hook hack allow us to write copy-pasteable data as comment, to
+%   facilitate output comparisons:
 
 process_comment_data(Comments, Term) :-
     Term = (test(_Test) :- _),

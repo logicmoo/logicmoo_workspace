@@ -50,7 +50,7 @@
     extra_walk_code(:),
     extra_walk_code(:,+,-).
 
-%% extra_walk_module_body(-, +) is det.
+%!  extra_walk_module_body(-Module, +Options) is det.
 extra_walk_module_body(M, OptionL1) :-
     select_option(module(M), OptionL1, OptionL, M),
     ( nonvar(M)
@@ -60,11 +60,11 @@ extra_walk_module_body(M, OptionL1) :-
     ; true
     ).
 
-%% extra_walk_code(:) is det.
+%!  extra_walk_code(:Options) is det.
 extra_walk_code(OptionL) :-
     extra_walk_code(OptionL, _, _).
 
-%% extra_walk_code(:, -, -) is det.
+%!  extra_walk_code(:Options, -Module, -FromChk) is det.
 extra_walk_code(CM:OptionL0, M, FromChk) :-
     extra_wcsetup(OptionL0, OptionL1, FromChk),
     foldl(select_option_default,

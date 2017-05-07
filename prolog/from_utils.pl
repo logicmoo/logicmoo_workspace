@@ -53,7 +53,7 @@
 :- volatile
     filepos_line_db/5.
 
-%% from_to_file_line_pos(+, -, -, ?, ?) is semidet.
+%!  from_to_file_line_pos(+, -, -, ?, ?) is semidet.
 %
 from_to_file_line_pos(clause_term_position(ClauseRef, TermPos),
                       File, CLine, TLine, Pos) :-
@@ -75,7 +75,7 @@ file_termpos_line(File, TermPos, Line, Pos) :-
     ; true
     ).
 
-%% filepos_line(+, +, -, -) is det
+%!  filepos_line(+, +, -, -) is det
 %
 filepos_line(File, CharCount, Line, Pos) :-
     time_file(File, Time),      % Prevents usage of old tabled information

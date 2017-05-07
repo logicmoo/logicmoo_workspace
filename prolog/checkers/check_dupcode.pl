@@ -93,10 +93,10 @@ checker:check(dupcode, Result, OptionL0) :-
     option_allchk(OptionL0, OptionL, FileChk),
     check_dupcode(OptionL, FileChk, Result).
 
-%% duptype_elem(+DupType, +Head, +Module, :FileChk, -DupId, -Elem) is multi
+%!  duptype_elem(+DupType, +Head, +Module, :FileChk, -DupId, -Elem) is multi
 %
-% For a given Element of the language, returns a duplication key and an
-% associated value
+%   For a given Element of the language, returns a duplication key and an
+%   associated value
 %
 duptype_elem(name,   H, M, FileChk, F/A, M:F/A) :-
     predicate_property(M:H, file(File)),

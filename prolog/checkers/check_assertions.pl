@@ -254,7 +254,7 @@ var_info(A, P) -->
 
 rm_var_info(Var) :- del_attr(Var, '$var_info').
 
-%% tabled_generate_ctchecks(+, +, ?, +, -) is det
+%!  tabled_generate_ctchecks(+Head, +Module, ?Context, +Caller, -Goal) is det
 %
 tabled_generate_ctchecks(H, M, CM, Caller, Goal) :-
     functor(H, F, A),
@@ -272,10 +272,10 @@ tabled_generate_ctchecks(H, M, CM, Caller, Goal) :-
     CM = CM1,
     P = H.
 
-%% generate_ctchecks(+Goal, +M, +VInf, -CTChecks) is det
+%!  generate_ctchecks(+Goal, +M, +VInf, -CTChecks) is det
 %
-% Generate compile-time checks, currently only compatibility is checked, fails
-% if no ctchecks can be applied to Pred.
+%   Generate compile-time checks, currently only compatibility is checked, fails
+%   if no ctchecks can be applied to Pred.
 %
 generate_ctchecks(Goal, M, VInf, CTChecks) :-
     % writeln(user_error, generate_ctchecks(Goal, M, VInf, CTChecks)),

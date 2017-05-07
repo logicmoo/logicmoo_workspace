@@ -40,17 +40,17 @@
 
 user:file_search_path(domains, library(checkers/domains)).
 
-%% abstract_domain(?Domain).
+%! abstract_domain(?Domain).
 :- multifile abstract_domain:abstract_domain/1.
 
-%% top(+Domain:abstract_domain,-Top).
+%! top(+Domain:abstract_domain,-Top).
 :- multifile abstract_domain:top/2.
 
-%% bot(+Domain:abstract_domain,-Bot).
+%! bot(+Domain:abstract_domain,-Bot).
 :- multifile abstract_domain:bot/2.
 
-%% eval(+Domain:abstract_domain,+Expr,-Value).
+%! eval(+Domain:abstract_domain,+Expr,-Value).
 :- multifile abstract_domain:eval/3.
 
-%% trusted_result(+Domain:abstract_domain,:Goal,+Module,-Result).
+%! trusted_result(+Domain:abstract_domain,:Goal,+Module,-Result).
 :- multifile abstract_domain:trusted_result/4.
