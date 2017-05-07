@@ -67,24 +67,24 @@
    program analyzers of @apl{ciaopp}.  They are used by @apl{ciaopp}
    on output and they can also be used as properties in assertions.").
 
-%%    Note that the implementations provided for the properties are the ones used
-%%    when run-time checks are enabled.  Run-time check for properties
-%%    @var{Prop} must be implemented following certain rules:
-%%    ** Comment: these rules are incomplete! See other documentation
-%%                for properties.
-%%
-%%    @begin{itemize}
-%%    @item For any @var{Goal}, @pred{call(Goal)} must be equivalent to:
-%%
-%%      intercept(Prop(Goal), rtcheck(_, _, _, _, _), true).
-%%
-%%    @item Remove the choicepoints if the goal does not introduce new ones.
-%%
-%%    @item Try to throw the run-time check exception as soon as the
-%%    property being validated has been violated.
-%%
-%%    @item All the checks must be compatible among them.
-%%    @end{itemize}
+%    Note that the implementations provided for the properties are the ones used
+%    when run-time checks are enabled.  Run-time check for properties
+%    @var{Prop} must be implemented following certain rules:
+%    ** Comment: these rules are incomplete! See other documentation
+%                for properties.
+%
+%    @begin{itemize}
+%    @item For any @var{Goal}, @pred{call(Goal)} must be equivalent to:
+%
+%      intercept(Prop(Goal), rtcheck(_, _, _, _, _), true).
+%
+%    @item Remove the choicepoints if the goal does not introduce new ones.
+%
+%    @item Try to throw the run-time check exception as soon as the
+%    property being validated has been violated.
+%
+%    @item All the checks must be compatible among them.
+%    @end{itemize}
 
 
 :- doc(usage, "@tt{:- use_module(library(assertions(nativeprops)))}
@@ -425,17 +425,11 @@ possibly_nondet(Goal) :- call(Goal).
 
 test_type(Goal, _) :- call(Goal).
 
-%% disjoint(X)
-%% # "Calls of the form @var{X} select at most one clause.".
-
 :- global mut_exclusive(X) + rtcheck(unimplemented) #
 "For any call of the form ~w at most one clause succeeds,
 i.e., clauses are pairwise exclusive."-[X].
 
 mut_exclusive(Goal) :- call(Goal).
-
-%% For any call of the form @var{X} at most one
-%% clause succeeds, i.e. clauses are pairwise exclusive.").
 
 :- global not_mut_exclusive(X) + rtcheck(unimplemented)
 # "For some calls of the form ~w more than one clause may succeed,
@@ -460,10 +454,6 @@ size_lb(_, _).
    etc. @cite{caslog,granularity-jsc}."-[X, Y].
 
 size_ub(_, _).
-
-%% upper_size(X,Y)
-%% # "The maximum size of arguments of calls of the form @var{X} are
-%%    given by the expression @var{Y}.".
 
 :- prop size_o(X, Y) + no_rtcheck
 # "The size of argument ~w is in the order of ~w."-[X, Y].
@@ -493,20 +483,12 @@ size_metric(Goal, _, _) :- call(Goal).
 
 steps_lb(Goal, _) :- call(Goal).
 
-%% lower_time(X,Y)
-%% # "The minimum computation time spent by calls of the form @var{X} is
-%%    given by the expression @var{Y}.".
-
 :- global steps_ub(X, Y) + no_rtcheck
 # "The maximum computation time (in
    resolution steps) spent by any call of the form ~w is given by
    the expression ~w @cite{caslog,granularity-jsc}."-[X, Y].
 
 steps_ub(Goal, _) :- call(Goal).
-
-%% upper_time(X,Y)
-%% # "The maximum computation time spent by calls of the form @var{X} is
-%%    given by the expression @var{Y}.".
 
 :- global steps(X, Y) + no_rtcheck
 # "The time (in resolution steps) spent by any
@@ -996,13 +978,6 @@ size(_, _, _).
 # "~w is the size of argument ~w, for any approximation."-[X, Y].
 
 size(_, _).
-
-%% Note: succeeds/1, compat/1 and instance/2 would bind variables, so
-%% they have to be negated in the caller to undo bindings.  They are
-%% defined here but processed in rtchecks_basic
-
-:- doc(bug, "compat/1 and instance/1 are incompatible with attributed
-      variables, due to the usage of the freeze/2 predicate.").
 
 :- global succeeds(Prop) + no_rtcheck # "A call to ~w succeeds."-[Prop].
 succeeds(Prop) :- Prop.

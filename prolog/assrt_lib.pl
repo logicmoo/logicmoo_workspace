@@ -309,7 +309,6 @@ normalize_assertion_body((BO                 #CO), P, PD, DP,   CP,   AP,   GP, 
     normalize_assertion_body(BO, P, PD, DP, CP, AP, GP, ""), !. %00001%N
 normalize_assertion_body((PD                 #CO), p, PD, true, true, true, true, CO) :- !. %00001%N
 normalize_assertion_body((PD                    ), t, PD, true, true, true, true, ""). %00000
-%% ---------------------------------------------------------------------------------------- %% ----
 
 fix_format_global(p, p).
 fix_format_global(d, p).
@@ -346,11 +345,10 @@ assrt_status(trust).
 assrt_status(trace).
 assrt_status(debug).
 
-% ---------------------------------------------------------------------------
-% :- pred default_assrt_status(+assrt_type,-assrt_status)
-% # "Defines the status to be used for a given assertion type, if an
-%    assertion status is not specified explicitly.".
-% ---------------------------------------------------------------------------
+%!  default_assrt_status(+Type:assrt_type,-Status:assrt_status)
+%
+%   Defines the status to be used for a given assertion type, if an
+%   assertion status is not specified explicitly.
 
 default_assrt_status(entry,   true) :- !. % ???
 default_assrt_status(modedef, true) :- !. % ???
@@ -403,22 +401,15 @@ expand_nodirective_error(Clauses) :-
 % To Avoid attempts to execute asertions (must be declarations):
 generate_nodirective_error.
 
-%% ---------------------------------------------------------------------------
-% :- pred assertion_format(AssrtType, Code) :: assrt_type * assrt_format_code
-% # "@var{Code} describes an admissible format in which assertions of
-%    the class @var{AssrtType} can be written.".
-%% ---------------------------------------------------------------------------
+%!  assertion_format(AssrtType:assrt_type, Code:assrt_format_code)
+%
+%   Code describes an admissible format in which assertions of the class
+%   AssrtType can be written.
 
-% Admissible assertion formats:
 assertion_format(pred, X) :- assrt_format_code(X).
 assertion_format(decl, X) :- assrt_format_code(X). % ?
 assertion_format(prop, X) :- assrt_format_code(X).
 assertion_format(test, X) :- assrt_format_code(X). % For unit-test -- EMM
-% Obsolete: delete eventually...
-% assertion_format(type,    t).
-% Not needed any more...
-% assertion_format(type,    g). %% Added for now to put typedef there...
-% assertion_format(compat,  d). %% Not using these as basic any more?!
 assertion_format(calls,   c).
 assertion_format(success, s).
 % Entry for unit-test -- EMM
@@ -431,12 +422,11 @@ assertion_format(comp, g).
 assertion_format(entry, c).
 assertion_format(entry, t).
 
-% Not an assertion any more, but a status instead
-% assertion_format(trust,   X) :- assrt_format_code(X).
 assertion_format(modedef, X) :- assrt_format_code(X).
 
-% :- prop assrt_format_code(X) + regtype
-%    # "@var{X} is a designator for an assertion format.".
+%!  prop assrt_format_code(X) + regtype
+%
+%   X is a designator for an assertion format.
 
 assrt_format_code(p).
 assrt_format_code(d).
@@ -469,16 +459,25 @@ current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
              Body, BPos, Gl0, Gl) :- !,
     propdef(BGl, M, PGl, Gl0, Gl1),
     current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
-%% Next syntax is ambiguous, but shorter:
-%  :- det callable, is equivalent to:
-%  :- true prop callable/1 is det
+/*
+  NOTE: Next syntax is ambiguous, but shorter:
+    ```
+      :- det callable.
+    ```
+  is equivalent to:
+    ```
+      :- true prop callable/1 is det
+    ```
+  
+  but can be confused with:
+  ```
+  :- true prop det(callable)
+  :- true prop det(X) :: callable(X).
+  ```
+  in any case this is syntax sugar so we can always write the long version of
+  the assertion to avoid ambiguities
+*/
 
-% but can be confused with:
-%  :- true prop det(callable)
-%  :- true prop det(X) :: callable(X).
-%
-% in any case this is syntax sugar so we can always write the long version of
-% the assertion to avoid ambiguities
 current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
     is_global(BodyS, M),
     BodyS =.. [F, Head|GArgL],
