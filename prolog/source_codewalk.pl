@@ -104,32 +104,31 @@ do_goal_expansion(Goal, TermPos) :-
     call(OnTrace, M:Goal, Caller, From).
 
 do_source_codewalk(OptionL1) :-
-    select_option(on_trace(OnTrace), OptionL1, OptionL2, true_3),
-    select_option(variable_names(VNL), OptionL2, OptionL3, VNL),
-    option_allchk(M, File, FileMGen-OptionL3, true-OptionL4),
+    foldl(select_option_default,
+          [on_trace(OnTrace)  -true_3,
+           variable_names(VNL)-VNL],
+          OptionL1, OptionL2),
+    option_allchk(M, File, FileMGen-OptionL2, true-OptionL),
     freeze(VNL, b_setval('$variable_names', VNL)),
     with_context_values(
         setup_call_cleanup(
             ( '$current_source_module'(OldM),
               freeze(M, '$set_source_module'(_, M))
             ),
-            forall(( call(FileMGen),
-                     setup_call_cleanup(
-                         prolog_open_source(File, In),
-                         fetch_term(In, [variable_names(VNL)|OptionL4]),
-                         prolog_close_source(In))
-                   ),
-                   true
-                  ),
+            forall(FileMGen,
+                   walk_source(File, [variable_names(VNL)|OptionL])),
             '$set_source_module'(_, OldM)),
         [on_trace],
         [OnTrace]).
 
+walk_source(File, OptionL) :-
+    setup_call_cleanup(
+        prolog_open_source(File, In),
+        fetch_term(In, OptionL),
+        prolog_close_source(In)).
+
 fetch_term(In, OptionL) :-
     repeat,
       prolog_read_source_term(In, Term, _Expanded, OptionL),
-      ( Term == end_of_file
-      ->!,
-        fail
-      ; true
-      ).
+      Term == end_of_file,
+    !.

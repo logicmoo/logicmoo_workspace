@@ -74,4 +74,5 @@ disable :-
 
 prolog:comment_hook(Comments, _TermPos, Term) :-
     enabled,
-    process_comment_data(Comments, Term).
+    process_comment_data(Comments, Term),
+    fail.
