@@ -62,8 +62,20 @@ prolog:called_by(Goal, _, M, [M:Macro]) :-
     length(EL, E),
     Goal =.. [F|AL],
     append(EL, TL, AL),
-    C =.. [CF|EL],
-    Macro =.. [Name, C|TL].
+    trim_args(Name, N, C, CF, EL, [C|TL], TT),
+    Macro =.. [Name|TT].
+
+% This is a kludge to bypass the fact that maplist/N, N>5 does not exist:
+trim_args(maplist, N, C, CF, EL, AL, AT) :-
+    N > 5, !,
+    length(AT, 5),
+    append(AT, AR, AL),
+    length(AR, RN),
+    length(ER, RN),
+    append(ER, EL, CL),
+    C =.. [CF|CL].
+trim_args(_, _, C, CF, EL, AL, AL) :-
+    C =.. [CF|EL].
 
 /*
 user:prolog_clause_name(Ref, Name) :-
