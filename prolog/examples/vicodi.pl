@@ -1,3 +1,6 @@
+:-use_module(library(trill)).
+
+:-trill.
 
 /*
 This knowledge base is an extract of the Vicodi knowledge base that contains information on European history.

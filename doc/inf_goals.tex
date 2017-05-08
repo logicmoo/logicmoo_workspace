@@ -1,0 +1,120 @@
+\subsection{Possible Queries}
+\label{queries}
+
+TRILL can compute the probability or find an explanation of the following queries:
+\begin{itemize}
+  \item Concept membership queries.
+  \item Property assertion queries.
+  \item Subsumption queries.
+  \item Unsatifiability of a concept.
+  \item Inconsistency of the knowledge base.
+\end{itemize}
+All the input arguments have to be atoms or ground terms.
+
+\subsubsection{Probabilistic Queries}
+TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.
+
+The probability of an individual to belong to a concept can be asked using TRILL with the predicate
+\begin{verbatim}
+prob_instanceOf(+Concept:term,+Individual:atom,-Prob:double)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- prob_instanceOf(cat,'Tom',Prob).
+\end{verbatim}
+
+The probability of two individuals to be related by a role can be computed with
+\begin{verbatim}
+prob_property_value(+Prop:atom,+Individual1:atom,
+                    +Individual2:atom,-Prob:double)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- property_value(has_animal,'Kevin','Tom',Prob).
+\end{verbatim}
+
+If you want to know tho probability with which a class is a subclass of another you have to use
+\begin{verbatim}
+prob_sub_class(+Concept:term,+SupConcept:term,-Prob:double)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- prob_sub_class(cat,pet,Prob).
+\end{verbatim}
+
+The probability of the unsatisfiability of a concept can be asked with the predicate
+\begin{verbatim}
+prob_unsat(+Concept:term,-Prob:double)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- prob_unsat(intersectionOf([cat,complementOf(pet)]),P).
+\end{verbatim}
+This query for example corresponds with a subsumption query, which is represented as the intersection of the subclass and the complement of the superclass.
+
+Finally, you can ask the probability if the inconsistency of the knowledge base with
+\begin{verbatim}
+prob_inconsistent_theory(-Prob:double)
+\end{verbatim}
+
+\subsubsection{Non Probabilistic Queries}
+In TRILL you can also ask whether a query is true or false w.r.t. the knowledge base and in case of a succesful query an explanation can be returned as well. 
+Query predicates in this case differs in the number of arguments, in the second case, when we want also an explanation, an extra argument is added to unify with the list of axioms
+build to explain the query.
+
+The query if an individual belongs to a concept can be used the predicates
+\begin{verbatim}
+instanceOf(+Concept:term,+Individual:atom)
+instanceOf(+Concept:term,+Individual:atom,-Expl:list)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- instanceOf(pet,'Tom').
+?- instanceOf(pet,'Tom',Expl).
+\end{verbatim}
+In the first query the result is \verb|true| because Tom belongs to cat, in the second case TRILL returns the explanation 
+\begin{verbatim}
+[classAssertion(cat,'Tom'), subClassOf(cat,pet)]
+\end{verbatim}
+
+
+Similarly, to ask whether two individuals are related by a role you have to use the queries
+\begin{verbatim}
+property_value(+Prop:atom,+Individual1:atom,+Individual2:atom)
+property_value(+Prop:atom,+Individual1:atom,
+               +Individual2:atom,-Expl:list)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- property_value(has_animal,'Kevin','Tom').
+?- property_value(has_animal,'Kevin','Tom',Expl).
+\end{verbatim}
+
+If you want to know if a class is a subclass of another you have to use
+\begin{verbatim}
+sub_class(+Concept:term,+SupConcept:term)
+sub_class(+Concept:term,+SupConcept:term,-Expl:list)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- sub_class(cat,pet).
+?- sub_class(cat,pet,Expl).
+\end{verbatim}
+
+The unsatisfiability of a concept can be asked with the predicate
+\begin{verbatim}
+unsat(+Concept:term)
+unsat(+Concept:term,-Expl:list)
+\end{verbatim}
+as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}})
+\begin{verbatim}
+?- unsat(intersectionOf([cat,complementOf(pet)])).
+?- unsat(intersectionOf([cat,complementOf(pet)]),Expl).
+\end{verbatim}
+In this case, the returned explanation is the same obtained by querying if cat is subclass of pet with the \verb|sub_class/3| predicate, i.e., \verb|[subClassOf(cat,pet)]|
+
+Finally, you can ask about the inconsistency of the knowledge base with
+\begin{verbatim}
+inconsistent_theory
+inconsistent_theory(-Expl:list)
+\end{verbatim}

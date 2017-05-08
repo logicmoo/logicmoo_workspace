@@ -1,0 +1,52 @@
+\section{Inference}
+\label{inf}
+
+Traditionally, a reasoning algorithm decides  whether an axiom is entailed or not by a KB by refutation: the  axiom $E$ is entailed if $\neg E$ has no model
+in the KB.
+Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom.
+
+The problem of finding  explanations for a query
+has been investigated by various authors \cite{DBLP:conf/ijcai/SchlobachC03,DBLP:journals/ws/KalyanpurPSH05,DBLP:conf/semweb/KalyanpurPHS07,Kalyanpurphd,extended_tracing,Zese17-SSW-BK}.
+ It was called  \emph{axiom pinpointing} in 
+\cite{DBLP:conf/ijcai/SchlobachC03}  and considered as a non-standard reasoning service useful for tracing derivations and debugging ontologies. 
+In particular, in \cite{DBLP:conf/ijcai/SchlobachC03} the authors define \emph{minimal axiom sets}  (\emph{MinAs} for short).
+\begin{definition}[MinA]
+ Let $\cK$ be a knowledge base and $Q$ an
+axiom that follows from it, i.e., 
+$\cK \models Q$. We call a set 
+$M\subseteq \cK$ a
+\emph{minimal axiom set} or \emph{MinA} for $Q$ in $\cK$ if 
+$M \models Q$ and it is minimal
+w.r.t. set inclusion.
+\end{definition}  
+\noindent The problem of enumerating all MinAs is called \textsc{min-a-enum}.
+\textsc{All-MinAs($Q,\cK$)} is the set of all MinAs for query $Q$ in knowledge base $\cK$.
+
+A \emph{tableau} is a graph where each node represents an
+individual $a$ and is labeled with the set of concepts $\cL(a)$ it belongs to. Each
+edge $\langle a, b\rangle$ in the graph is labeled with the set of roles to which the couple
+$(a, b)$ belongs. Then, a set of  consistency preserving tableau
+expansion rules are repeatedly applied until a clash (i.e., a contradiction) is detected or a clash-free
+graph is found to which no more rules are applicable. A clash is for example a
+couple $(C, a)$ where $C$ and $\neg C$ are present in the label of a node, i.e. ${C, \neg C} \subseteq \cL(a)$.
+
+Some expansion rules are non-deterministic, i.e., they generate
+a finite set of tableaux. Thus the algorithm keeps a set of tableaux that is
+consistent if there is any tableau in it that is consistent, i.e., that is clash-free.
+Each time a clash is detected in a tableau $G$, the algorithm stops applying rules
+to $G$. Once every tableau in $T$ contains a clash or no more expansion rules
+can be applied to it, the algorithm terminates. If all the tableaux in the final
+set $T$ contain a clash, the algorithm returns unsatisfiable as no model can be
+found. Otherwise, any one clash-free completion graph in $T$ represents a possible
+model for the concept and the algorithm returns satisfiable.
+
+\textsc{min-a-enum} is required to answer queries to KBs following the DISPONTE semantics. To
+compute the probability of a query, the explanations must be made mutually exclusive, so
+that the probability of each individual explanation is computed and summed
+with the others. To do that we assign independent Boolean random variables to the axioms contained in the explanations and defining 
+the Disjunctive Normal Form (DNF) Boolean formula $f_K$ which models the set of explanations. Thus
+$
+f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}\overline{X_{i}}
+$
+where $\mathbf{X}=\{X_{i}|(E_i,k)\in\kappa,\kappa\in K\}$ is the set of Boolean random variables.
+We can now translate $f_K$ to a Binary Decision Diagram (BDD), from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.

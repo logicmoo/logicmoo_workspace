@@ -1,3 +1,17 @@
+/** <module> owl2_model
+
+This module translates OWL/RDF axioms into TRILL format and 
+loads the knowledge base to be queried by TRILL.
+
+The translation form OWL/RDF is based on the Thea OWL library.
+Thea OWL library is available under the GNU/GPL license.
+http://vangelisv.github.io/thea/
+
+@author Riccardo Zese
+@license Artistic License 2.0
+@copyright Riccardo Zese
+*/
+
 :- module(owl2_model, [load_owl/1, load_owl_from_string/1, expand_all_ns/3, is_axiom/1]).
 
 :- use_module(library(lists),[member/2]).
@@ -2803,11 +2817,23 @@ The file owl2_from_rdf.plt has some examples
 */
 :- thread_local ns4query/1.
 
-load_owl(String):-
+/**
+ * load_owl(++FileName:kb_file_name) is det
+ *
+ * The predicate loads the knowledge base contained in the given file. 
+ * The knowledge base must be defined in pure OWL/RDF format.
+ */
+ load_owl(String):-
   retractall(ns4query(_)),
   open(String,read,S),
   load_owl_from_stream(S).
   
+/**
+ * load_owl_from_string(++KB:string) is det
+ *
+ * The predicate loads the knowledge base contained in the given string. 
+ * The knowledge base must be defined in pure OWL/RDF format.
+ */
 load_owl_from_string(String):-
   open_chars_stream(String,S),
   load_owl_from_stream(S).
@@ -2822,6 +2848,8 @@ load_owl_from_stream(S):-
   parse_probabilistic_annotation_assertions.
 
 % Adds a list of kb prefixes into ns4query
+:- multifile trill:add_kb_prefixes/1.
+
 add_kb_prefixes([]).
 add_kb_prefixes([(H=H1)|T]):-
   trill:add_kb_prefix(H,H1),
@@ -2939,6 +2967,12 @@ query_expand(Q):-
   call(NQ).
 */
 
+/**
+ * expand_all_ns(++Args:list,++NSList:list,--ExpandedArgs:list) is det
+ *
+ * The predicate takes as input a list containing srtings and expands these strings
+ * using the list of prefixes. Finally, it returns the list of expanded strings.
+ */
 expand_all_ns([],_,[]).
 
 expand_all_ns([P|T],NSList,[P|NewArgs]):-
@@ -2997,11 +3031,8 @@ expand_ns4query(URL,_,URL).
 
 :- multifile trill:add_axiom/1.
 trill:add_axiom(Ax):-
-  ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
-  expand_all_ns(Args,NSList,ArgsEx),
-  AxEx =.. [P|ArgsEx],
-  test_and_assert(AxEx,'ont').
+  create_and_assert_axioms(P,Args).
 
 :- multifile trill:add_axioms/1.
 trill:add_axioms([]).
@@ -3014,8 +3045,15 @@ trill:add_axioms([H|T]) :-
 trill:remove_axiom(Ax):-
   ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
-  expand_all_ns(Args,NSList,ArgsEx),
-  AxEx =.. [P|ArgsEx],
+  ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
+       ( expand_all_ns(IntArgs,NSList,ArgsExp),
+         AxEx =.. [P,ArgsExp]
+       )
+     ;
+       ( expand_all_ns(Args,NSList,ArgsExp),
+         AxEx =.. [P|ArgsExp]
+       )
+  ),
   retract(owl2_model:AxEx),
   retract(owl2_model:owl(AxEx,'ont')).
 
@@ -3039,17 +3077,11 @@ get_module(M):-
 get_module('user'):- !.
 
 parse_rdf_from_owl_rdf_pred(String):-
-  get_module(M),
   open_chars_stream(String,S),
-  process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
-  close(S),
-  add_kb_prefixes(NSList),
-  rdf_2_owl('ont','ont'),
-  owl_canonical_parse_3(['ont']),
-  parse_probabilistic_annotation_assertions.
+  load_owl_from_stream(S).
 
 create_and_assert_axioms(P,Args) :-
-  ns4query(NSList),
+  ( ns4query(NSList) *-> true; NSList = []),
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
        ( expand_all_ns(IntArgs,NSList,ArgsExp),
          NewTRILLAxiom =.. [P,ArgsExp]
@@ -3061,6 +3093,12 @@ create_and_assert_axioms(P,Args) :-
   ),
   test_and_assert(NewTRILLAxiom,'ont').
 
+/**
+ * is_axiom(?Pred:string) is det
+ *
+ * This predicate unifies Pred with one of the possible type of axioms managed by TRILL and 
+ * by the translation module.
+ */
 is_axiom(Pred) :-
 	member(Pred, [class,datatype,objectProperty,dataProperty,annotationProperty,namedIndividual,subClassOf,equivalentClasses,disjointClasses,disjointUnion,subPropertyOf,equivalentProperties,disjointProperties,
 inverseProperties,propertyDomain,propertyRange,functionalProperty,inverseFunctionalProperty,reflexiveProperty,irreflexiveProperty,symmetricProperty,asymmetricProperty,transitiveProperty,hasKey,

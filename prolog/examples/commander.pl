@@ -1,3 +1,7 @@
+:-use_module(library(trill)).
+
+:-trill.
+
 /** <examples>
 
 ?- instanceOf(commander,john,Expl).

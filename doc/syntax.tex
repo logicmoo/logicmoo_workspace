@@ -1,0 +1,289 @@
+\section{Syntax}
+\label{syn}
+
+Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web \cite{DBLP:conf/dlog/2003handbook,dlchap} and are used for modeling ontologies.
+They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals
+of the domain. In this section, we recall the expressive description logic $\mathcal{ALC}$ \cite{DBLP:journals/ai/Schmidt-SchaussS91}. We refer to 
+\cite{DBLP:journals/ws/LukasiewiczS08} for a detailed description of $\mathcal{SHOIN}(\mathbf{D})$ DL, that is at the basis of OWL DL.
+
+%%ALC
+Let $\mathbf{A}$, $\mathbf{R}$ and $\mathbf{I}$ be sets of \emph{atomic concepts}, \emph{roles} and \emph{individuals}.
+A \emph{role} is an atomic role $R \in \mathbf{R}$. 
+\emph{Concepts} are defined by induction as follows. Each $C \in \mathbf{A}$, $\bot$ and $\top$
+are concepts.
+If $C$, $C_1$ and $C_2$ are concepts and $R \in \mathbf{R}$, then $(C_1\sqcap C_2)$, $(C_1\sqcup C_2 )$, $\neg C$,
+$\exists R.C$, and $\forall R.C$ are concepts. 
+Let $C$, $D$ be concepts,  $R \in \mathbf{R}$ and $a, b \in \mathbf{I}$. 
+An \emph{ABox} $\cA$ is a finite set of \textit{concept membership axioms} $a : C$ and \textit{role membership
+axioms} $(a, b) : R$, while 
+a \emph{TBox} $\cT$ is a finite set of \textit{concept inclusion axioms} $C\sqsubseteq D$. $C \equiv D$ abbreviates $C \sqsubseteq D$ and $D\sqsubseteq  C$.
+
+A \emph{knowledge base} $\cK = (\cT, \cA)$ consists of a TBox $\cT$ and an ABox $\cA$.
+A KB $\cK$ is assigned a semantics in terms of set-theoretic interpretations $\cI = (\Delta^\cI , \cdot^\cI )$, where $\Delta^\cI$ is a non-empty \textit{domain} and $\cdot^\cI$ is the \textit{interpretation function} that assigns  an element in $\Delta ^\cI$ to each $a \in \mathbf{I}$, a subset of $\Delta^\cI$ to each $C \in \mathbf{A}$ and a subset of $\Delta^\cI \times \Delta^\cI$ to each $R \in \mathbf{R}$.
+
+TRILL allows the use of two different syntaxes used together or individually:
+\begin{itemize}
+ \item RDF/XML
+ \item TRILL syntax 
+\end{itemize}
+
+RDF/XML syntax can be used by exploiting the predicate \verb|owl_rdf/1|. For example:
+\begin{verbatim}
+owl_rdf('
+<?xml version="1.0"?>
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+<rdf:RDF xmlns="http://here.the.IRI.of.your.ontology#"
+     xml:base="http://here.the.IRI.of.your.ontology"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://here.the.IRI.of.your.ontology"/>
+
+    <!-- 
+    Axioms
+    -->
+
+</rdf:RDF>
+').
+\end{verbatim}
+For a brief introduction on RDF/XML syntax see \textit{RDF/XML syntax and tools} section below (Sec. \ref{rdfxml-syn}).
+
+Note that each single \verb|owl_rdf/1| must be self contained and well formatted, it must start and end with \verb|rdf:RDF| tag and contain all necessary declarations (namespaces, entities, ...).
+
+
+An example of the combination of both syntaxes is shown the example \href{http://trill.lamping.unife.it/example/trill/johnEmployee.pl}{\texttt{johnEmployee.pl}}. It models that \textit{john} is an \textit{employee} and that employees are \textit{workers}, which are in turn people (modeled by the concept \textit{person}).
+\begin{verbatim}
+owl_rdf('<?xml version="1.0"?>
+<rdf:RDF xmlns="http://example.foo#"
+     xml:base="http://example.foo"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://example.foo"/>
+
+    <!-- Classes -->
+    <owl:Class rdf:about="http://example.foo#worker">
+        <rdfs:subClassOf rdf:resource="http://example.foo#person"/>
+    </owl:Class>
+
+</rdf:RDF>').
+
+subClassOf('employee','worker').
+
+owl_rdf('<?xml version="1.0"?>
+<rdf:RDF xmlns="http://example.foo#"
+     xml:base="http://example.foo"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://example.foo"/>
+    
+    <!-- Individuals -->
+    <owl:NamedIndividual rdf:about="http://example.foo#john">
+        <rdf:type rdf:resource="http://example.foo#employee"/>
+    </owl:NamedIndividual>
+</rdf:RDF>').
+\end{verbatim}
+
+\subsection{TRILL Syntax}
+\label{trill-syn}
+\subsubsection{Declarations}
+
+
+TRILL syntax allows, as in standard OWL, the declaration of classes, properties, etc.
+\begin{verbatim}
+class("classIRI").
+datatype("datatypeIRI").
+objectProperty("objectPropertyIRI").
+dataProperty("dataPropertyIRI").
+annotationProperty("annotationPropertyIRI").
+namedIndividual("individualIRI").
+\end{verbatim}
+However, TRILL properly works also in their absence.
+
+TRILL syntax allows also the declaration of aliases for namespaces by using the \verb|kb_prefix/2| predicate.
+\begin{verbatim}
+kb_prefix("foo","http://example.foo#").
+\end{verbatim}
+After this declaration, the prefix \verb|foo| is available, thus, instead of \verb|http://example.foo#john|, one can write \verb|foo:john|.
+It is possible to define also an empty prefix as
+\begin{verbatim}
+kb_prefix("","http://example.foo#").
+\end{verbatim}
+or as
+\begin{verbatim}
+kb_prefix([],"http://example.foo#").
+\end{verbatim}
+In this way \verb|http://example.foo#john| can be written only as \verb|john|.
+
+\textbf{Note:} Only one prefix per alias is allowed. Aliases defined in OWL/RDF part have the precedence, in case more than one prefix was assigned to the same alias, TRILL keeps only the first assignment.
+
+
+\subsubsection{Axioms}
+
+
+Axioms are modeled using the following predicates
+\begin{verbatim}
+subClassOf("subClass","superClass").
+equivalentClasses([list,of,classes]).
+disjointClasses([list,of,classes]).
+disjointUnion([list,of,classes]).
+
+subPropertyOf("subProperty","superProperty").
+equivalentProperties([list,of,properties]).
+propertyDomain("propertyIRI","domainIRI").
+propertyRange("propertyIRI","rangeIRI").
+transitiveProperty("propertyIRI").
+
+sameIndividual([list,of,individuals]).
+differentIndividuals([list,of,individuals]).
+
+classAssertion("classIRI","individualIRI").
+propertyAssertion("propertyIRI","subjectIRI","objectIRI").
+annotationAssertion("annotationIRI",axiom,literal('value')).
+\end{verbatim}
+For example, for asserting that \textit{employee} is subclass of \textit{worker} one can use
+\begin{verbatim}
+subClassOf(employee,worker).
+\end{verbatim}
+while the assertion \textit{worker} is equal to \textit{workingman} can be defined as
+\begin{verbatim}
+equivalentClasses([worker,workingman]).
+\end{verbatim}
+
+
+Annotation assertions can be defined, for example, as
+\begin{verbatim}
+annotationAssertion(foo:myAnnotation,
+    subClassOf(employee,worker),'myValue').
+\end{verbatim}
+
+
+In particular, an axiom can be annotated with a probability which defines the degree of belief in the truth of the axiom. See Section \ref{semantics} for details.
+
+
+Below, an example of an probabilistic axiom, following the TRILL syntax.
+\begin{verbatim}
+annotationAssertion('disponte:probability',
+    subClassOf(employee,worker),literal('0.6')).
+\end{verbatim}
+
+\subsubsection{Concepts descriptions}
+Complex concepts can be defined using different operators.
+
+Existential and universal quantifiers
+\begin{verbatim}
+someValuesFrom("propertyIRI","classIRI").
+allValuesFrom("propertyIRI","classIRI").
+\end{verbatim}
+Union and intersection of concepts
+\begin{verbatim}
+unionOf([list,of,classes]).
+intersectionOf([list,of,classes]).
+\end{verbatim}
+Cardinality descriptions
+\begin{verbatim}
+exactCardinality(cardinality,"propertyIRI").
+exactCardinality(cardinality,"propertyIRI","classIRI").
+maxCardinality(cardinality,"propertyIRI").
+maxCardinality(cardinality,"propertyIRI","classIRI").
+minCardinality(cardinality,"propertyIRI").
+minCardinality(cardinality,"propertyIRI","classIRI").
+\end{verbatim}
+Complement of a concept
+\begin{verbatim}
+complementOf("classIRI").
+\end{verbatim}
+Nominal concept
+\begin{verbatim}
+oneOf([list,of,classes]).
+\end{verbatim}
+For example, the class \textit{workingman} is the intersection of \textit{worker} with the union of \textit{man} and \textit{woman}. It can be defined as:
+\begin{verbatim}
+equivalentClasses([workingman,
+    intersectionOf([worker,unionOf([man,woman])])]).
+\end{verbatim}
+
+\subsection{RDF/XML syntax and tools}
+\label{rdfxml-syn}
+As said before, TRILL is able to automatically translate RDF/XML knowledge bases when passed as a string using 
+the preticate \verb|owl_rdf/1|.
+
+Consider the following axioms 
+
+\begin{verbatim}
+classAssertion(Cat,fluffy)
+subClassOf(Cat,Pet)
+propertyAssertion(hasAnimal,kevin,fluffy)
+\end{verbatim}
+
+The first axiom states that \textit{fluffy} is a \textit{Cat}. The second states that every \textit{Cat} is also a \textit{Pet}. The third states that the role \textit{hasAnimal} links together \textit{kevin} and \textit{fluffy}.
+
+RDF (Resource Descritpion Framework) is a standard W3C. See the \href{http://www.w3.org/TR/REC-rdf-syntax/}{syntax specification} for more details.
+RDF is a standard XML-based used for representing knowledge by means of triples.
+A representations of the three axioms seen above is shown below.
+\begin{verbatim}
+<owl:NamedIndividual rdf:about="fluffy">
+  <rdf:type rdf:resource="Cat"/>
+</owl:NamedIndividual>
+
+<owl:Class rdf:about="Cat">
+  <rdfs:subClassOf rdf:resource="Pet"/>
+</owl:Class>
+
+<owl:ObjectProperty rdf:about="hasAnimal"/>
+<owl:NamedIndividual rdf:about="kevin">
+ <hasAnimal rdf:resource="fluffy"/>
+</owl:NamedIndividual>
+\end{verbatim}
+
+Annotations are assertable using an extension of RDF/XML. For example the annotated axiom below, defined using the TRILL sintax
+\begin{verbatim}
+annotationAssertion('disponte:probability',
+    subClassOf('Cat','Pet'),literal('0.6')).
+\end{verbatim}
+is modeled using RDF/XML syntax as
+\begin{verbatim}
+<owl:Class rdf:about="Cat">
+ <rdfs:subClassOf rdf:resource="Pet"/>
+</owl:Class>
+<owl:Axiom>
+ <disponte:probability rdf:datatype="&amp;xsd;decimal">
+     0.6
+ </disponte:probability>
+ <owl:annotatedSource rdf:resource="Cat"/>
+ <owl:annotatedTarget rdf:resource="Pet"/>
+ <owl:annotatedProperty rdf:resource="&amp;rdfs;subClassOf"/>
+</owl:Axiom>
+\end{verbatim}
+If you define the annotated axiom in the RDF/XML part, the annotation must be declared in the knowledge base as follow
+\begin{verbatim}
+<!DOCTYPE rdf:RDF [
+ ...
+ <!ENTITY disponte "https://sites.google.com/a/unife.it/ml/disponte#" >
+]>
+
+<rdf:RDF
+ ...
+ xmlns:disponte="https://sites.google.com/a/unife.it/ml/disponte#"
+ ...>
+
+ ...
+ <owl:AnnotationProperty rdf:about="&amp;disponte;probability"/>
+ ...
+</rdf:RDF>
+\end{verbatim}
+
+There are many \href{http://www.w3.org/2001/sw/wiki/Category:Editor}{editors} for developing knowledge bases.

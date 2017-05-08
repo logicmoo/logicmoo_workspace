@@ -1,10 +1,24 @@
+/** <module> trill
+
+This module performs reasoning over probabilistic description logic knowledge bases.
+It reads probabilistic knowledge bases in RDF format or in TRILL format, a functional-like
+sintax, and answers queries by finding the set of explanations or computing the probability.
+
+See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
+http://ds.ing.unife.it/~rzese/software/trill/manual.html for
+details.
+
+@author Riccardo Zese
+@license Artistic License 2.0
+@copyright Riccardo Zese
+*/
 
 :- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3,
                  instanceOf/2, instanceOf/3, prob_instanceOf/3,
                  property_value/3, property_value/4, prob_property_value/4,
                  unsat/1, unsat/2, prob_unsat/2,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
-                 axiom/1, add_kb_prefix/2, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
+                 axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1] ).
 
 %:- set_prolog_flag(unknow,fail).
@@ -59,13 +73,24 @@
 /********************************
   LOAD KNOWLEDGE BASE
 *********************************/
-% consults a pl file and loads the contained axioms
-load_kb(Name):-
-  user:consult(Name).
+/**
+ * load_kb(++FileName:kb_file_name) is det
+ *
+ * The predicate loads the knowledge base contained in the given file. 
+ * The knowledge base must be defined in TRILL format, to use also OWL/RDF format
+ * use the predicate owl_rdf/1.
+ */
+load_kb(FileName):-
+  user:consult(FileName).
 
-% loads a OWL/RDF file
-load_owl_kb(Name):-
-  load_owl(Name).
+/**
+ * load_owl_kb(++FileName:kb_file_name) is det
+ *
+ * The predicate loads the knowledge base contained in the given file. 
+ * The knowledge base must be defined in pure OWL/RDF format.
+ */
+load_owl_kb(FileName):-
+  load_owl(FileName).
 
 /*****************************/
 
@@ -73,12 +98,73 @@ load_owl_kb(Name):-
   UTILITY PREDICATES
 ******************************/
 %defined in translate_rdf
-:- multifile add_kb_prefix/2, add_axiom/1, add_axioms/1,
+:- multifile add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1,
              remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1.
 
-axiom(A):-
+/**
+ * add_kb_prefix(++ShortPref:string,++LongPref:string) is det
+ *
+ * This predicate registers the alias ShortPref for the prefix defined in LongPref.
+ * The empty string '' can be defined as alias.
+ */
+
+/**
+ * add_kb_prefixes(++Prefixes:list) is det
+ *
+ * This predicate registers all the alias prefixes contained in Prefixes.
+ * The input list must contain pairs alias=prefix, i.e., [('foo'='http://example.foo#')].
+ * The empty string '' can be defined as alias.
+ */
+
+/**
+ * add_axiom(++Axiom:axiom) is det
+ *
+ * This predicate adds the given axiom to the knowledge base.
+ * The axiom must be defined following the TRILL syntax.
+ */
+
+/**
+ * add_axioms(++Axioms:list) is det
+ *
+ * This predicate adds the axioms of the list to the knowledge base.
+ * The axioms must be defined following the TRILL syntax.
+ */
+
+/**
+ * remove_kb_prefix(++ShortPref:string,++LongPref:string) is det
+ *
+ * This predicate removes from the registered aliases the one given in input.
+ */
+
+/**
+ * remove_kb_prefix(++Name:string) is det
+ *
+ * This predicate takes as input a string that can be an alias or a prefix and 
+ * removes the pair containing the string from the registered aliases.
+ */
+
+/**
+ * remove_axiom(++Axiom:axiom) is det
+ *
+ * This predicate removes the given axiom from the knowledge base.
+ * The axiom must be defined following the TRILL syntax.
+ */
+
+/**
+ * remove_axioms(++Axioms:list) is det
+ *
+ * This predicate removes the axioms of the list from the knowledge base.
+ * The axioms must be defined following the TRILL syntax.
+ */
+
+/**
+ * axiom(?Axiom:axiom) is det
+ *
+ * This predicate searches in the loaded knowledge base axioms that unify with Axiom.
+ */
+axiom(Axiom):-
   get_trill_current_module(Name),
-  Name:axiom(A).
+  Name:axiom(Axiom).
 
 /*****************************
   MESSAGES
@@ -99,26 +185,20 @@ prolog:message(inconsistent) -->
   Queries
   - with and without explanations -
  ***********/
-sub_class(Class,SupClass,Expl):-
-  ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
-	unsat_internal(intersectionOf([ClassEx,complementOf(SupClassEx)]),Expl)
-    ;
-    	Expl = ["IRIs not existent"],!
-  ).
-  %subClassOf(Class,SupClass).
-
-sub_class(Class,SupClass):-
-  ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
-        unsat_internal(intersectionOf([ClassEx,complementOf(SupClassEx)])),!
-    ;
-        print_message(warning,iri_not_exists),!
-  ).
-
+/**
+ * instanceOf(++Class:concept_description,++Ind:individual_name,-Expl:list)
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition
+ * of a complex concept as a ground term and name or the full URI of an individual and
+ * returns one explanation for the instantiation of the individual to the given class.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if the individual does not belong to the class.
+ */
 instanceOf(Class,Ind,Expl):-
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
 	retractall(exp_found(_,_)),
-	retractall(ind(_)),
-  	assert(ind(1)),
+	retractall(trillan_idx(_)),
+  	assert(trillan_idx(1)),
   	build_abox((ABox,Tabs)),
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
@@ -135,12 +215,19 @@ instanceOf(Class,Ind,Expl):-
     	Expl = ["IRIs not existent"],!
   ).
 
+/**
+ * instanceOf(++Class:concept_description,++Ind:individual_name) is det
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition
+ * of a complex concept as a ground term and name or the full URI of an individual and
+ * returns true if the individual belongs to the class, false otherwise.
+ */
 instanceOf(Class,Ind):-
   (  check_query_args([Class,Ind],[ClassEx,IndEx]) *->
 	(
 	  retractall(exp_found(_,_)),
-	  retractall(ind(_)),
-	  assert(ind(1)),
+	  retractall(trillan_idx(_)),
+	  assert(trillan_idx(1)),
 	  build_abox((ABox,Tabs)),
 	  (  \+ clash((ABox,Tabs),_) *->
 	      (
@@ -157,11 +244,19 @@ instanceOf(Class,Ind):-
         print_message(warning,iri_not_exists),!
   ).
 
+/**
+ * property_value(++Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list)
+ *
+ * This predicate takes as input the name or the full URI of a property and of two individuals
+ * and returns one explanation for the fact Ind1 is related with Ind2 via Prop.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if the two individual are not Prop-related.
+ */
 property_value(Prop, Ind1, Ind2,Expl):-
   ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
 	retractall(exp_found(_,_)),
-	retractall(ind(_)),
-  	assert(ind(1)),
+	retractall(trillan_idx(_)),
+  	assert(trillan_idx(1)),
   	build_abox((ABox,Tabs)),
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
@@ -176,12 +271,18 @@ property_value(Prop, Ind1, Ind2,Expl):-
     	Expl = ["IRIs not existent"],!
   ).
 
+/**
+ * property_value(++Prop:property_name,++Ind1:individual_name,++Ind2:individual_name) is det
+ *
+ * This predicate takes as input the name or the full URI of a property and of two individuals
+ * and returns true if the two individual are Prop-related, false otherwise.
+ */
 property_value(Prop, Ind1, Ind2):-
   (  check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
 	(
 	  retractall(exp_found(_,_)),
-	  retractall(ind(_)),
-	  assert(ind(1)),
+	  retractall(trillan_idx(_)),
+	  assert(trillan_idx(1)),
 	  build_abox((ABox,Tabs)),
 	  (  \+ clash((ABox,Tabs),_) *->
 	      (
@@ -196,7 +297,45 @@ property_value(Prop, Ind1, Ind2):-
         print_message(warning,iri_not_exists),!
   ).
 
+/**
+ * sub_class(++Class:concept_description,++SupClass:concept_description,-Expl:list)
+ *
+ * This predicate takes as input two concepts which can be given by the name or the full URI 
+ * of two a simple concept or the definition of a complex concept as a ground term and returns
+ * one explanation for the subclass relation between Class and SupClass.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if there is not a subclass relation between the two classes.
+ */
+sub_class(Class,SupClass,Expl):-
+  ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
+	unsat_internal(intersectionOf([ClassEx,complementOf(SupClassEx)]),Expl)
+    ;
+    	Expl = ["IRIs not existent"],!
+  ).
+  %subClassOf(Class,SupClass).
 
+/**
+ * sub_class(++Class:concept_description,++SupClass:concept_description) is det
+ *
+ * This predicate takes as input two concepts which can be given by the name or the full URI 
+ * of two a simple concept or the definition of a complex concept as a ground term and returns
+ * true if Class is a subclass of SupClass, and false otherwise.
+ */
+sub_class(Class,SupClass):-
+  ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
+        unsat_internal(intersectionOf([ClassEx,complementOf(SupClassEx)])),!
+    ;
+        print_message(warning,iri_not_exists),!
+  ).
+
+/**
+ * unsat(++Concept:concept_description,-Expl:list)
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition of 
+ * a complex concept as a ground term and returns one explanation for the unsatisfiability of the concept.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if the concept is satisfiable.
+ */
 unsat(Concept,Expl):-
   (check_query_args([Concept],[ConceptEx]) *->
   	unsat_internal(ConceptEx,Expl)
@@ -207,8 +346,8 @@ unsat(Concept,Expl):-
 % ----------- %
 unsat_internal(Concept,Expl):-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(2)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(2)),
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
@@ -223,6 +362,12 @@ unsat_internal(Concept,Expl):-
   ).
 % ----------- %
 
+/**
+ * unsat(++Concept:concept_description) is det
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition of 
+ * a complex concept as a ground term and returns true if the concept is unsatisfiable, false otherwise.
+ */
 unsat(Concept):-
   (check_query_args([Concept],[ConceptEx]) *->
   	unsat_internal(ConceptEx)
@@ -233,8 +378,8 @@ unsat(Concept):-
 % ----------- %
 unsat_internal(Concept):-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(2)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(2)),
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
@@ -248,19 +393,31 @@ unsat_internal(Concept):-
   ).
 % ----------- %
 
+/**
+ * inconsistent_theory(-Expl:list)
+ *
+ * This predicate returns one explanation for the inconsistency of the loaded knowledge base.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if the knowledge base is consistent.
+ */
 inconsistent_theory(Expl):-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(1)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(1)),
   build_abox((ABox,Tabs)),
   findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
   find_expls(L,['inconsistent','kb'],Expl),
   dif(Expl,[]).
 
+/**
+ * inconsistent_theory
+ *
+ * This predicate returns true if the knowledge base is inconsistent, false otherwise.
+ */
 inconsistent_theory:-
   retractall(exp_found(_,_)),
-  retractall(ind(_)),
-  assert(ind(1)),
+  retractall(trillan_idx(_)),
+  assert(trillan_idx(1)),
   build_abox((ABox,Tabs)),
   \+ clash((ABox,Tabs),_),!,
   apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),!,
@@ -269,7 +426,14 @@ inconsistent_theory:-
 inconsistent_theory:-
   print_message(warning,inconsistent).
 
-prob_instanceOf(Class,Ind,P):-
+/**
+ * prob_instanceOf(++Class:concept_description,++Ind:individual_name,--Prob:double) is det
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition
+ * of a complex concept as a ground term and name or the full URI of an individual and
+ * returns the probability of the instantiation of the individual to the given class.
+ */
+prob_instanceOf(Class,Ind,Prob):-
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
   	all_instanceOf(ClassEx,IndEx,Exps),
 %  (Exps \= [] *->
@@ -283,12 +447,18 @@ prob_instanceOf(Class,Ind,P):-
 %  ;
 %    P = 0).
 %  writel(Exps),nl,
-  	compute_prob(Exps,P)
+  	compute_prob(Exps,Prob)
   ;
-  	P = ["IRIs not existent"],!
+  	Prob = ["IRIs not existent"],!
   ).
 
-prob_property_value(Prop, Ind1, Ind2,P):-
+/**
+ * prob_property_value(++Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,--Prob:double) is det
+ *
+ * This predicate takes as input the name or the full URI of a property and of two individuals
+ * and returns the probability of the fact Ind1 is related with Ind2 via Prop.
+ */
+prob_property_value(Prop, Ind1, Ind2,Prob):-
   ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
   	all_property_value(PropEx,Ind1Ex,Ind2Ex,Exps),
 %  (Exps \= [] *->
@@ -302,12 +472,19 @@ prob_property_value(Prop, Ind1, Ind2,P):-
 %  ;
 %    P = 0).
 %  writel(Exps),nl,
-  	compute_prob(Exps,P)
+  	compute_prob(Exps,Prob)
   ;
-  	P = ["IRIs not existent"],!
+  	Prob = ["IRIs not existent"],!
   ).
 
-prob_sub_class(Class,SupClass,P):-
+/**
+ * prob_sub_class(++Class:concept_description,++SupClass:class_name,--Prob:double) is det
+ *
+ * This predicate takes as input two concepts which can be given by the name or the full URI 
+ * of two a simple concept or the definition of a complex concept as a ground term and returns 
+ * the probability of the subclass relation between Class and SupClass.
+ */
+prob_sub_class(Class,SupClass,Prob):-
   ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
   	all_sub_class(ClassEx,SupClassEx,Exps),
 %  (Exps \= [] *->
@@ -319,19 +496,31 @@ prob_sub_class(Class,SupClass,P):-
 %      P = 1)
 %  ;
 %    P = 0).
-  	compute_prob(Exps,P)
+  	compute_prob(Exps,Prob)
   ;
-  	P = ["IRIs not existent"],!
+  	Prob = ["IRIs not existent"],!
   ).
 
-prob_unsat(Concept,P):-
+/**
+ * prob_unsat(++Concept:concept_description,--Prob:double) is det
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition of 
+ * a complex concept as a ground term and returns the probability of the unsatisfiability
+ * of the concept.
+ */
+prob_unsat(Concept,Prob):-
   check_query_args([Concept],[ConceptEx]),
   all_unsat(ConceptEx,Exps),
-  compute_prob(Exps,P).
+  compute_prob(Exps,Prob).
 
-prob_inconsistent_theory(P):-
+/**
+ * prob_inconsistent_theory(--Prob:double) is det
+ *
+ * This predicate returns the probability of the inconsistency of the loaded knowledge base.
+ */
+prob_inconsistent_theory(Prob):-
   all_inconsistent_theory(Exps),
-  compute_prob(Exps,P).
+  compute_prob(Exps,Prob).
 
 /***********
   Utilities for queries
@@ -522,8 +711,13 @@ clash((ABox,_),Expl):-
   member(Ind2,L1),
   append(Expl1,Expl2,Expl).
 
-clash((ABox,Tabs),Expl):-
+clash((ABox,_),Expl):-
   %write('clash 6'),nl,
+  findClassAssertion('http://www.w3.org/2002/07/owl#Nothing',_Ind,Expl,ABox).
+
+/*
+clash((ABox,Tabs),Expl):-
+  %write('clash 7'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
   s_neighbours(Ind,S,(ABox,Tabs),SN),
   individual_class_C(SN,C,ABox,SNC),
@@ -534,7 +728,7 @@ clash((ABox,Tabs),Expl):-
   list_to_set(Expl3,Expl).
 
 clash((ABox,Tabs),Expl):-
-  %write('clash 7'),nl,
+  %write('clash 8'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
   s_neighbours(Ind,S,(ABox,Tabs),SN),
   length(SN,LSS),
@@ -542,6 +736,7 @@ clash((ABox,Tabs),Expl):-
   make_expl(Ind,S,SN,Expl1,ABox,Expl2),
   flatten(Expl2,Expl3),
   list_to_set(Expl3,Expl).
+*/
 
 % --------------
 make_expl(_,_,[],Expl1,_,Expl1).
@@ -1044,9 +1239,8 @@ find_sub_sup_class(C,D,equivalentClasses(L)):-
   dif(C,D).
 
 %concept for concepts allValuesFrom
-find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts allValuesFrom
 find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1054,9 +1248,8 @@ find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts someValuesFrom
-find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts someValuesFrom
 find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1069,9 +1262,8 @@ find_sub_sup_class(exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S
   Name:subPropertyOf(R,S).
 
 %concept for concepts exactCardinality
-find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts exactCardinality
 find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1084,9 +1276,8 @@ find_sub_sup_class(maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts maxCardinality
-find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts maxCardinality
 find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1099,9 +1290,8 @@ find_sub_sup_class(minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts minCardinality
-find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts minCardinality
 find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1778,57 +1968,57 @@ graph_edge(Ind1,Ind2,T0):-
   remove edge from tableau
 */
 
-remove_node_to_tree(P,S,O,RB,RB):-
+remove_node_from_tree(P,S,O,RB,RB):-
   rb_lookup((S,O),V,RB),
   \+ member(P,V).
 
-remove_node_to_tree(P,S,O,RB0,RB1):-
+remove_node_from_tree(P,S,O,RB0,RB1):-
   rb_lookup((S,O),V,RB0),
   member(P,V),
   remove(V,P,V1),
   dif(V1,[]),
   rb_update(RB0,(S,O),V1,RB1).
 
-remove_node_to_tree(P,S,O,RB0,RB1):-
+remove_node_from_tree(P,S,O,RB0,RB1):-
   rb_lookup((S,O),V,RB0),
   member(P,V),
   remove(V,P,V1),
   V1==[],
   rb_delete(RB0,(S,O),RB1).
 
-remove_all_node_to_tree(_P,S,O,RB0,RB1):-
+remove_all_node_from_tree(_P,S,O,RB0,RB1):-
   rb_lookup((S,O),_,RB0),
   rb_delete(RB0,(S,O),RB1).
 
-remove_all_node_to_tree(_P,S,O,RB0,_RB1):-
+remove_all_node_from_tree(_P,S,O,RB0,_RB1):-
   \+ rb_lookup((S,O),_,RB0).
 
-remove_role_to_tree(P,S,O,RB,RB):-
+remove_role_from_tree(P,S,O,RB,RB):-
   rb_lookup(P,V,RB),
   \+ member((S,O),V).
 
-remove_role_to_tree(P,S,O,RB0,RB1):-
+remove_role_from_tree(P,S,O,RB0,RB1):-
   rb_lookup(P,V,RB0),
   member((S,O),V),
   delete(V,(S,O),V1),
   dif(V1,[]),
   rb_update(RB0,P,V1,RB1).
 
-remove_role_to_tree(P,S,O,RB0,RB1):-
+remove_role_from_tree(P,S,O,RB0,RB1):-
   rb_lookup(P,V,RB0),
   member((S,O),V),
   delete(V,(S,O),V1),
   V1==[],
   rb_delete(RB0,P,RB1).
 
-remove_edge_to_table(_P,S,O,T,T):-
+remove_edge_from_table(_P,S,O,T,T):-
   \+ graph_edge(S,O,T).
 
-remove_edge_to_table(_P,S,O,T0,T1):-
+remove_edge_from_table(_P,S,O,T0,T1):-
   graph_edge(S,O,T0),
   del_edges(T0,[S-O],T1).
 
-remove_node_to_table(S,T0,T1):-
+remove_node_from_table(S,T0,T1):-
   del_vertices(T0,[S],T1).
 
 /*
@@ -1884,7 +2074,7 @@ remove_node1(_,[],RBN,RBR,RBN,RBR).
 remove_node1(X,[H|T],RBN0,RBR0,RBN,RBR):-
   rb_lookup((X,H),V,RBN0),
   remove_edges(V,X,H,RBR0,RBR1),
-  remove_all_node_to_tree(_,X,H,RBN0,RBN1),
+  remove_all_node_from_tree(_,X,H,RBN0,RBN1),
   remove_node1(X,T,RBN1,RBR1,RBN,RBR).
 
 remove_node2(_,[],RBN,RBR,RBN,RBR).
@@ -1892,13 +2082,13 @@ remove_node2(_,[],RBN,RBR,RBN,RBR).
 remove_node2(X,[H|T],RBN0,RBR0,RBN,RBR):-
   rb_lookup((H,X),V,RBN0),
   remove_edges(V,H,X,RBR0,RBR1),
-  remove_all_node_to_tree(_,H,X,RBN0,RBN1),
+  remove_all_node_from_tree(_,H,X,RBN0,RBN1),
   remove_node1(X,T,RBN1,RBR1,RBN,RBR).
 
 remove_edges([],_,_,RBR,RBR).
 
 remove_edges([H|T],S,O,RBR0,RBR):-
-  remove_role_to_tree(H,S,O,RBR0,RBR1),
+  remove_role_from_tree(H,S,O,RBR0,RBR1),
   remove_edges(T,S,O,RBR1,RBR).
 
 
@@ -2041,10 +2231,10 @@ find((Ass,Ex),A):-
   creation of a new individual
 
 */
-new_ind(I):-
-  retract(ind(I)),
+new_ind(trillan(I)):-
+  retract(trillan_idx(I)),
   I1 is I+1,
-  assert(ind(I1)).
+  assert(trillan_idx(I1)).
 
 
 
