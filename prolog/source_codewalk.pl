@@ -106,9 +106,10 @@ do_goal_expansion(Goal, TermPos) :-
 do_source_codewalk(OptionL1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)  -true_3,
+           if(Loaded)-true,
            variable_names(VNL)-VNL],
           OptionL1, OptionL2),
-    option_allchk(M, File, FileMGen-OptionL2, true-OptionL),
+    option_allchk(M, File, FileMGen-[if(Loaded)|OptionL2], true-OptionL),
     freeze(VNL, b_setval('$variable_names', VNL)),
     with_context_values(
         setup_call_cleanup(
