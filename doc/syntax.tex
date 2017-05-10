@@ -141,11 +141,13 @@ equivalentClasses([list,of,classes]).
 disjointClasses([list,of,classes]).
 disjointUnion([list,of,classes]).
 
-subPropertyOf("subProperty","superProperty").
-equivalentProperties([list,of,properties]).
+subPropertyOf("subPropertyIRI","superPropertyIRI").
+equivalentProperties([list,of,properties,IRI]).
 propertyDomain("propertyIRI","domainIRI").
 propertyRange("propertyIRI","rangeIRI").
 transitiveProperty("propertyIRI").
+inverseProperties("propertyIRI","inversePropertyIRI").
+symmetricProperty("propertyIRI").
 
 sameIndividual([list,of,individuals]).
 differentIndividuals([list,of,individuals]).

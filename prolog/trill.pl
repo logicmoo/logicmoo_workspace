@@ -21,10 +21,6 @@ details.
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1] ).
 
-%:- set_prolog_flag(unknow,fail).
-
-/*:- use_module(library('thea2/owl2_io')).
-:- use_module(library('thea2/owl2_model')).*/
 :- use_module(library(lists)).
 :- use_module(library(ugraphs)).
 :- use_module(library(rbtrees)).
@@ -40,12 +36,12 @@ details.
 
 :- multifile
     owl2_model:axiom/1,
-	  owl2_model:class/1,
-	  owl2_model:annotationProperty/1,
-	  owl2_model:namedIndividual/1,
-	  owl2_model:objectProperty/1,
-	  owl2_model:dataProperty/1,
-	  owl2_model:transitiveProperty/1,
+    owl2_model:class/1,
+    owl2_model:annotationProperty/1,
+    owl2_model:namedIndividual/1,
+    owl2_model:objectProperty/1,
+    owl2_model:dataProperty/1,
+    owl2_model:transitiveProperty/1,
     owl2_model:classAssertion/2,
     owl2_model:propertyAssertion/3,
     owl2_model:subPropertyOf/2,
@@ -63,7 +59,9 @@ details.
     owl2_model:maxCardinality/2,
     owl2_model:maxCardinality/3,
     owl2_model:minCardinality/2,
-    owl2_model:minCardinality/3.
+    owl2_model:minCardinality/3,
+    owl2_model:inverseProperties/2,
+    owl2_model:symmetricProperty/1.
 
 
 :- thread_local
@@ -715,9 +713,10 @@ clash((ABox,Tabs),Expl):-
   make_expl(Ind,S,SN,Expl1,ABox,Expl2),
   flatten(Expl2,Expl3),
   list_to_set(Expl3,Expl).
-
+*/
 
 % --------------
+/*
 make_expl(_,_,[],Expl1,_,Expl1).
 
 make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
@@ -1252,8 +1251,8 @@ find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S
  managing the concept (C subclassOf Thing)
  this implementation doesn't work well in a little set of cases
  TO IMPROVE!
- *******************
-
+ *******************/
+/*
 find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
   get_trill_current_module(Name),
   Name:subClassOf(A,B),
@@ -1389,6 +1388,11 @@ find_inverse_property(C,D,inverseProperties(C,D)):-
 find_inverse_property(C,D,inverseProperties(D,C)):-
   get_trill_current_module(Name),
   Name:inverseProperties(D,C).
+
+%inverseProperties
+find_inverse_property(C,C,symmetricProperty(C)):-
+  get_trill_current_module(Name),
+  Name:symmetricProperty(C).
 
 /* ************* */
 
@@ -1856,6 +1860,9 @@ add_nominal_list(ABox0,(T,_,_),ABox):-
 %--------------
 
 prepare_nom_list([],[]).
+
+prepare_nom_list([literal(_)|T],T1):-!,
+  prepare_nom_list(T,T1).
 
 prepare_nom_list([H|T],[(nominal(H)),(classAssertion('Thing',H),[])|T1]):-
   prepare_nom_list(T,T1).
@@ -2682,3 +2689,4 @@ sandbox:safe_primitive(trill:load_owl_kb(_)).
 :- if(\+pengine_self(_Name)).
 :- trill.
 :- endif.
+

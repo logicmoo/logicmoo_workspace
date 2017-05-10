@@ -36,13 +36,13 @@ details.
 :- style_check(-discontiguous).
 
 :- multifile
-	owl2_model:axiom/1,
-	owl2_model:class/1,
-	owl2_model:annotationProperty/1,
-	owl2_model:namedIndividual/1,
-	owl2_model:objectProperty/1,
-	owl2_model:dataProperty/1,
-	owl2_model:transitiveProperty/1,
+    owl2_model:axiom/1,
+    owl2_model:class/1,
+    owl2_model:annotationProperty/1,
+    owl2_model:namedIndividual/1,
+    owl2_model:objectProperty/1,
+    owl2_model:dataProperty/1,
+    owl2_model:transitiveProperty/1,
     owl2_model:classAssertion/2,
     owl2_model:propertyAssertion/3,
     owl2_model:subPropertyOf/2,
@@ -60,7 +60,9 @@ details.
     owl2_model:maxCardinality/2,
     owl2_model:maxCardinality/3,
     owl2_model:minCardinality/2,
-    owl2_model:minCardinality/3.
+    owl2_model:minCardinality/3,
+    owl2_model:inverseProperties/2,
+    owl2_model:symmetricProperty/1.
 
 
 :- thread_local
@@ -182,6 +184,12 @@ prolog:message(inconsistent) -->
 
 prolog:message(consistent) -->
   [ 'Consistent ABox' ].
+
+prolog:message(or_in_or) -->
+  [ 'Boolean formula wrongly built: or in or' ].
+
+prolog:message(and_in_and) -->
+  [ 'Boolean formula wrongly built: and in and' ].
 
 /****************************
   QUERY PREDICATES
@@ -688,7 +696,6 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
   make_expl(Ind,S,T,Expl1,ABox,Expl).
 */
 
-
 % -------------
 % rules application
 % -------------
@@ -848,7 +855,7 @@ forall_rule((ABox0,Tabs),(ABox,Tabs)):-
 unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind,Expl,ABox0),
   find_sub_sup_class(C,D,Ax),
-  and_f([Ax],Expl,AxL),
+  and_f(Expl,*([Ax]),AxL),
   modify_ABox(ABox0,D,Ind,AxL,ABox1),
   add_nominal(D,Ind,ABox1,ABox).
 
@@ -866,7 +873,7 @@ unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
   find_not_atomic(C1,C,L),
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(Ind,L,ABox0,Expl1)),
   find_sub_sup_class(C,D,Ax),
-  and_f([Ax],Expl1,AxL1),
+  and_f(Expl1,*([Ax]),AxL1),
   modify_ABox(ABox0,D,Ind,AxL1,ABox1),
   add_nominal(D,Ind,ABox1,ABox).
 
@@ -887,7 +894,7 @@ unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
 unfold_rule((ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(complementOf(C),Ind,Expl,ABox0),
   find_neg_class(C,D),
-  and_f([complementOf(C)],Expl,AxL),
+  and_f(Expl,*([complementOf(C)]),AxL),
   modify_ABox(ABox0,D,Ind,AxL,ABox1),
   add_nominal(D,Ind,ABox1,ABox).
 
@@ -991,9 +998,8 @@ find_sub_sup_class(C,D,equivalentClasses(L)):-
   dif(C,D).
 
 %concept for concepts allValuesFrom
-find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts allValuesFrom
 find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1001,9 +1007,8 @@ find_sub_sup_class(allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts someValuesFrom
-find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts someValuesFrom
 find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1017,9 +1022,8 @@ find_sub_sup_class(exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S
   Name:subPropertyOf(R,S).
 
 %concept for concepts exactCardinality
-find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts exactCardinality
 find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1032,9 +1036,8 @@ find_sub_sup_class(maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts maxCardinality
-find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts maxCardinality
 find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1047,9 +1050,8 @@ find_sub_sup_class(minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S)):-
   Name:subPropertyOf(R,S).
 
 %concept for concepts minCardinality
-find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),subClassOf(C,D)):-
-  get_trill_current_module(Name),
-  Name:subClassOf(C,D).
+find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
+  find_sub_sup_class(C,D,Ax).
 
 %role for concepts minCardinality
 find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -1200,6 +1202,11 @@ find_inverse_property(C,D,inverseProperties(D,C)):-
   get_trill_current_module(Name),
   Name:inverseProperties(D,C).
 
+%inverseProperties
+find_inverse_property(C,C,symmetricProperty(C)):-
+  get_trill_current_module(Name),
+  Name:symmetricProperty(C).
+
 /* ************* */
 
 /***********
@@ -1208,7 +1215,7 @@ find_inverse_property(C,D,inverseProperties(D,C)):-
 ************/
 modify_ABox(ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
-  L0 \== Expl1,gtrace,
+  dif(L0,Expl1),
   (Expl1 == [] -> 
      Expl = L0
    ;
@@ -1221,7 +1228,7 @@ modify_ABox(ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
 modify_ABox(ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
-  L0 \== Expl1,gtrace,
+  dif(L0,Expl1),
   (Expl1 == [] -> 
      Expl = L0
    ;
@@ -1396,6 +1403,9 @@ add_nominal_list(ABox0,(T,_,_),ABox):-
 
 prepare_nom_list([],[]).
 
+prepare_nom_list([literal(_)|T],T1):-!,
+  prepare_nom_list(T,T1).
+
 prepare_nom_list([H|T],[(nominal(H)),(classAssertion('Thing',H),[])|T1]):-
   prepare_nom_list(T,T1).
 %--------------
@@ -1439,6 +1449,7 @@ create_tabs([(classAssertion(_,I),_Expl)|Tail],(T0,RBN,RBR),(T,RBN,RBR)):-
 /*
   add edge to tableau
 
+  add_edge(Property,Subject,Object,Tab0,Tab)
 */
 
 add_edge(P,S,O,(T0,ItR0,RtI0),(T1,ItR1,RtI1)):-
@@ -1958,30 +1969,35 @@ and_f([],F,F):-!.
 
 and_f(F,[],F):-!.
 
+% absorption for subformula (a * (b + (c * d))) * (c * d * e) = a * c * d * e
 and_f(*(A1),*(A2),*(A)):-
   member(+(O1),A1),
   member(*(AO1),O1),
   subset(AO1,A2),!,
   delete(A1,+(O1),A11),
   and_f(*(A11),*(A2),*(A)).
+% (a * (b + c + e)) * (c * d) = a * c * d
 and_f(*(A1),*(A2),*(A)):-
   member(+(O1),A1),
   member(X,O1),
   member(X,A2),!,
   delete(A1,+(O1),A11),
   and_f(*(A11),*(A2),*(A)).
+% absorption for subformula (c * d * e)  (a * (b + (c * d))) = c * d * e * a
 and_f(*(A1),*(A2),*(A)):-
   member(+(O2),A2),
   member(*(AO2),O2),
   subset(AO2,A1),!,
   delete(A2,+(O2),A21),
   and_f(*(A1),*(A21),*(A)).
+% (c * d) * (a * (b + c + e)) = c * d * a
 and_f(*(A1),*(A2),*(A)):-
   member(+(O2),A2),
   member(X,O2),
   member(X,A1),!,
   delete(A2,+(O2),A21),
   and_f(*(A1),*(A21),*(A)).
+% (a * b) * (a * c) = a * b * c
 and_f(*(A1),*(A2),*(A)):-!,
   append(A1,A2,A0),
   sort(A0,A).
@@ -2010,49 +2026,54 @@ or_f([],F,F):-!.
 
 or_f(F,[],F):-!.
 
-or_f(*(A1),*(A2),*(A)):-
-  member(+(O1),A1),
-  member(*(AO1),O1),
+% absorption for subformula (a + (b * (c + d))) + (c + d + e) = a + c + d + e
+or_f(+(A1),+(A2),+(A)):-
+  member(*(O1),A1),
+  member(+(AO1),O1),
   subset(AO1,A2),!,
-  delete(A1,+(O1),A11),
-  or_f(*(A11),*(A2),*(A)).
-or_f(*(A1),*(A2),*(A)):-
-  member(+(O1),A1),
+  delete(A1,*(O1),A11),
+  or_f(+(A11),+(A2),+(A)).
+% (a + (b * c * e)) + (c + d) = a + c + d
+or_f(+(A1),+(A2),+(A)):-
+  member(*(O1),A1),
   member(X,O1),
   member(X,A2),!,
-  delete(A1,+(O1),A11),
-  or_f(*(A11),*(A2),*(A)).
-or_f(*(A1),*(A2),*(A)):-
-  member(+(O2),A2),
-  member(*(AO2),O2),
+  delete(A1,*(O1),A11),
+  or_f(+(A11),+(A2),+(A)).
+% absorption for subformula (c + d + e)  (a + (b * (c + d))) = c + d + e + a
+or_f(+(A1),+(A2),+(A)):-
+  member(*(O2),A2),
+  member(+(AO2),O2),
   subset(AO2,A1),!,
-  delete(A2,+(O2),A21),
-  or_f(*(A1),*(A21),*(A)).
-or_f(*(A1),*(A2),*(A)):-
-  member(+(O2),A2),
+  delete(A2,*(O2),A21),
+  or_f(+(A1),+(A21),+(A)).
+% (c + d) + (a + (b * c * e)) = c + d + a
+or_f(+(A1),+(A2),+(A)):-
+  member(*(O2),A2),
   member(X,O2),
   member(X,A1),!,
-  delete(A2,+(O2),A21),
-  or_f(*(A1),*(A21),*(A)).
-or_f(*(A1),*(A2),*(A)):-!,
+  delete(A2,*(O2),A21),
+  or_f(+(A1),+(A21),+(A)).
+% (a + b) + (a + c) = a + b + c
+or_f(+(A1),+(A2),+(A)):-!,
   append(A1,A2,A0),
   sort(A0,A).
 
-% absorption x * (x + y) = x
+% absorption x + (x * y) = x
 or_f(*(A1),+(O1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
 or_f(*(A1),+(O1),*(A)):-
   append(A1,[+(O1)],A).
 
-% absorption x * (x + y) = x
+% absorption x + (x * y) = x
 or_f(+(O1),*(A1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
 or_f(+(O1),*(A1),*(A)):-
   append([+(O1)],A1,A).
 
-or_f(+(O1),+(O2),*([+(O1),+(O2)])).
+or_f(*(O1),*(O2),+([*(O1),*(O2)])).
 
 
 /**********************
@@ -2064,38 +2085,44 @@ TRILLP SAT TEST
 test(L1,L2):-
   %build_f(L1,L2,F),
   %sat(F).
-  sat((L1*(~(L2)))).
+  create_formula(L1,L2,F),
+  sat(F).
 
-build_f([L1],[L2],(F1*(~(F2)))):-
-  build_f1(L1,F1,[],Var1),
-  build_f1(L2,F2,Var1,_Var).
+create_formula(L1,L2,(F1*(~(F2)))):-
+  variabilize_formula(L1,F1,[],Vars),
+  variabilize_formula(L2,F2,Vars,_).
 
-build_f1(*(L),F,Var0,Var):-!,
-  build_and(L,F,Var0,Var).
-build_f1(+(L),F,Var0,Var):-!,
-  build_or(L,F,Var0,Var).
-build_f1(H,C,Var0,Var):-
-  give_me_C(H,C,Var0,Var).
-  
-build_and([H|T],F,Var0,Var):-
-  T==[],
-  build_f1(H,F,Var0,Var).
+variabilize_formula([],[],V,V).
 
-build_and([H|T],F1 * F2,Var0,Var):-
-  build_f1(H,F1,Var0,Var1),
-  build_and(T,F2,Var1,Var).
-  
-build_or([H|T],F,Var0,Var):-
-  T==[],
-  build_f1(H,F,Var0,Var).
+variabilize_formula(*(L),*(F),V0,V1):-
+  variabilize_formula(L,F,V0,V1).
 
-build_or([H|T],F1 + F2,Var0,Var):-
-  build_f1(H,F1,Var0,Var1),
-  build_or(T,F2,Var1,Var).
+variabilize_formula(+(L),+(F),V0,V1):-
+  variabilize_formula(L,F,V0,V1).
 
-give_me_C(H,D,Var0,Var0):-
-  member(corr(H,D),Var0),!.
-give_me_C(H,C,Var0,[corr(H,C)|Var0]).
+variabilize_formula(~(L),~(F),V0,V1):-
+  variabilize_formula(L,F,V0,V1).
+
+variabilize_formula([H|T],[HV|TV],V0,V1):-
+  not_bool_op(H),
+  member((H-HV),V0),!,
+  variabilize_formula(T,TV,V0,V1).
+
+variabilize_formula([H|T],[HV|TV],V0,V1):-
+  not_bool_op(H),!,
+  variabilize_formula(T,TV,[(H-HV)|V0],V1).
+
+variabilize_formula([H|T],[HV|TV],V0,V2):-
+  variabilize_formula(H,HV,V0,VH),
+  append(VH,V0,V1),
+  variabilize_formula(T,TV,V1,V2).
+
+not_bool_op(H):-
+  \+bool_op(H).
+
+bool_op(+(_)):-!.
+bool_op(*(_)):-!.
+bool_op(~(_)):-!.
 
 /**********************
 
@@ -2124,34 +2151,19 @@ compute_prob(Expl,Prob):-
   end_test(Env), !.
 
 
+build_bdd(Env,*(F),BDD):-
+  bdd_and(Env,F,BDD).
 
-build_bdd(Env,[X],BDD):- 
-  \+ is_and(X), \+ is_or(X),!,
-  bdd_and(Env,[X],BDD).
+build_bdd(Env,+(F),BDD):-
+  bdd_or(Env,F,BDD).
 
-build_bdd(Env,[*(F)],BDDF):-
-  find_or_in_formula(F,Or),
-  build_bdd(Env,[+(Or)],BDDOr),
-  find_and_in_formula(F,And),
-  bdd_and(Env,And,BDDAnd),
-  and(Env,BDDAnd,BDDOr,BDDF),!.
-build_bdd(Env,[*(And)],BDDAnd):- 
-  get_trill_current_module(Name),
-  findall(El,(member(El,And),
-   Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',El,_)), AndNew),
-  ( AndNew = [] -> Expl = [] ; (AndNew = [X] -> Expl = [X]; Expl = [*(AndNew)]) ),
-  bdd_and(Env,And,BDDAnd),!.
-build_bdd(Env,[+(F)],BDOr):-
-  findall( BDDEl, (member(El,F), build_bdd(Env,[El],BDDEl)), BDDList),
-  bdd_or(Env,BDDList,BDOr).
 
-build_bdd(Env,[],BDD):- !,
-  zero(Env,BDD).
+bdd_and(Env,[+(X)],BDDX):-!,
+  bdd_or(Env,X,BDDX).
 
-bdd_or(Env,[BDDX],BDDX):- !.
-bdd_or(Env,[BDDH|BDDT],BDDOr):-
-  bdd_or(Env,BDDT,BDDOrT),
-  or(Env,BDDH,BDDOrT,BDDOr).
+bdd_and(Env,[*(_X)],_BDDX):-
+  write('error: *([*(_)])'),
+  print_message(error,and_in_and),!,false.
 
 bdd_and(Env,[X],BDDX):-
   get_prob_ax(X,AxN,Prob),!,
@@ -2161,6 +2173,15 @@ bdd_and(Env,[X],BDDX):-
 
 bdd_and(Env,[_X],BDDX):- !,
   one(Env,BDDX).
+
+bdd_and(Env,[+(H)|T],BDDAnd):-!,
+  bdd_or(Env,H,BDDH),
+  bdd_and(Env,T,BDDT),
+  and(Env,BDDH,BDDT,BDDAnd).
+
+bdd_and(Env,[*(_H)|_T],BDDX):-
+  write('error: *([*(_)|_])'),
+  print_message(error,and_in_and),!,false.
 
 bdd_and(Env,[H|T],BDDAnd):-
   get_prob_ax(H,AxN,Prob),!,
@@ -2174,6 +2195,45 @@ bdd_and(Env,[_H|T],BDDAnd):- !,
   one(Env,BDDH),
   bdd_and(Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
+
+
+bdd_or(Env,[*(X)],BDDX):-!,
+  bdd_and(Env,X,BDDX).
+
+bdd_or(Env,[+(_X)],BDDX):-
+  write('error: +([+(_)])'),
+  print_message(error,or_in_or),!,false.
+
+bdd_or(Env,[X],BDDX):-
+  get_prob_ax(X,AxN,Prob),!,
+  ProbN is 1-Prob,
+  get_var_n(Env,AxN,[],[Prob,ProbN],VX),
+  equality(Env,VX,0,BDDX),!.
+
+bdd_or(Env,[_X],BDDX):- !,
+  zero(Env,BDDX).
+
+bdd_or(Env,[*(H)|T],BDDAnd):-!,
+  bdd_and(Env,H,BDDH),
+  bdd_or(Env,T,BDDT),
+  or(Env,BDDH,BDDT,BDDAnd).
+
+bdd_or(Env,[+(_H)|_T],BDDX):-
+  write('error: +([+(_)|_])')
+  print_message(error,or_in_or),!,false.
+
+bdd_or(Env,[H|T],BDDAnd):-
+  get_prob_ax(H,AxN,Prob),!,
+  ProbN is 1-Prob,
+  get_var_n(Env,AxN,[],[Prob,ProbN],VH),
+  equality(Env,VH,0,BDDH),
+  bdd_or(Env,T,BDDT),
+  or(Env,BDDH,BDDT,BDDAnd).
+  
+bdd_or(Env,[_H|T],BDDAnd):- !,
+  zero(Env,BDDH),
+  bdd_or(Env,T,BDDT),
+  or(Env,BDDH,BDDT,BDDAnd).
 
 
 
