@@ -33,12 +33,19 @@
 */
 
 :- module(intercept, [intercept/3,
+                      intercept/4,
                       send_signal/1]).
 
-:- meta_predicate intercept(0,+,0).
-intercept(Goal, Signal, Handler) :-
+:- meta_predicate
+       intercept(0,+,0),
+       intercept(0,+,+,0).
+
+intercept(Goal, Signal, Bindings, Handler) :-
     call(Goal),
-    keep_on_frame(Signal-Handler).
+    keep_on_frame(i(Signal, Bindings, Handler)).
+
+intercept(Goal, Signal, Handler) :-
+    intercept(Goal, Signal, [], Handler).
 
 keep_on_frame(_).
 
@@ -61,9 +68,10 @@ find_parent_handler(Frame, Signal, IFrame, Handler, SFrameL) :-
     ->find_parent_handler(Parent, Signal, IFrame, Handler, SFrameL)
     ; prolog_frame_attribute(Frame, goal, Goal),
       ( Goal \= call_handler(_, _)
-      ->( Goal \= intercept(_, Signal, Handler)
+      ->( Goal \= intercept(_, Signal, _, _)
         ->find_parent_handler(Parent, Signal, IFrame, Handler, SFrameL)
-        ; copy_term(Goal, intercept(_, Signal, Handler)),
+        ; Goal = intercept(_, _, Bindings, _),
+          copy_term(Goal, intercept(_, Signal, Bindings, Handler)),
           IFrame = Parent
         )
       ; Goal = call_handler(SkipFrame, _),
