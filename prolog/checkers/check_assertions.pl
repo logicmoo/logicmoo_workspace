@@ -55,14 +55,14 @@
 :- use_module(library(option_utils)).
 
 :- dynamic
-    violations_db/3.
+       violations_db/3.
 
 :- multifile
-    prolog:message//1.
+       prolog:message//1.
 
-% :- table
-%     generate_ctchecks/3,
-%     do_check_property_ctcheck/2.
+:- table
+       generate_ctchecks/4,
+       do_check_property_ctcheck/2.
 
 checker:check(assertions, Result, OptionL) :-
     cleanup_db,
@@ -70,7 +70,6 @@ checker:check(assertions, Result, OptionL) :-
 
 cleanup_db :-
         retractall(violations_db(_, _, _)).
-
 
 check_assertions(OptionL1, Pairs) :-
     select_option(module(M), OptionL1, OptionL2, M),
@@ -131,7 +130,9 @@ current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     ),
     checker_t(Checker),
     implementation_module(N:H, IM),
-    check_property(Checker, H, IM, PM, Issues),
+    term_variables(Head, Vars),
+    '$expand':mark_vars_non_fresh(Vars),
+    check_property(Checker, H, IM, PM, M:Head, Issues),
     numbervars(Issues, 0, _),
     from_location(PFrom, PLoc),
     from_location(From, Loc).
@@ -202,9 +203,13 @@ collect_violations(M, CM:Goal, Caller, From) :-
 
 check_property_ctcheck(Goal, M, CM, Caller, AssrErrorL) :-
     tabled_generate_ctchecks(Goal, M, CM, Caller, CTCheck),
-    CTCheck \= _:true, % Skip lack of assertions or assertions that will not
-                       % trigger violations
-    do_check_property_ctcheck(CTCheck, AssrErrorL).
+    CTCheck \= _:true,
+    % Skip lack of assertions or assertions that will not
+    % trigger violations
+    do_check_property_ctcheck(CTCheck, AssrErrorL),
+    ignore(( nb_current('$variable_names', VNL),
+             maplist(set_variable_names, VNL)
+           )).
 
 set_variable_names(Name=Variable) :- ignore(Variable = '$VAR'(Name)).
 
@@ -213,35 +218,30 @@ set_variable_names(Name=Variable) :- ignore(Variable = '$VAR'(Name)).
 
 do_check_property_ctcheck(CTCheck, AssrErrorL) :-
     AssrError = assrchk(_, _),
-    retractall(assrt_error_db(_)),
-    intercept(CTCheck, AssrError, record_assrt_error(AssrError)),
-    findall(AssrError, retract(assrt_error_db(AssrError)), AssrErrorL).
+    retractall(assrt_error_db(_, _)),
+    intercept(CTCheck, AssrError, CTCheck, assertz(assrt_error_db(CTCheck, AssrError))),
+    findall(CTCheck-AssrError,
+            retract(assrt_error_db(CTCheck, AssrError)), CAssrErrorL),
+    maplist(collect_assr_error(CTCheck), CAssrErrorL, AssrErrorL).
 
-record_assrt_error(AssrError) :-
-    ignore(( nb_current('$variable_names', VNL),
-             maplist(set_variable_names, VNL)
-           )),
-    assertz(assrt_error_db(AssrError)),
-    fail.
-record_assrt_error(_).
+collect_assr_error(CTCheck, CTCheck-AssrError, AssrError).
 
 checker_t(defined).
 checker_t(is_prop).
 checker_t(ctcheck).
 
-check_property(defined, H, M, _, M:F/A) :-
-                                % Also reported by check_undefined, but is here
-                                % to avoid dependency with other analysis.
+check_property(defined, H, M, _, _, M:F/A) :-
+    % Also reported by check_undefined, but is here to avoid dependency with
+    % other analysis.
     functor(H, F, A),
     \+ current_predicate(M:F/A).
-check_property(is_prop, H, M, _, M:F/A) :-
+check_property(is_prop, H, M, _, _, M:F/A) :-
     resolve_calln(M:H, M:G),
     functor(G, F, A),
     \+ verif_is_property(M, F, A).
-check_property(ctcheck, H, M, CM, (M:F/A)-CTChecks) :-
-                                % compile-time checks. Currently only
-                                % compatibility checks.
-    check_property_ctcheck(H, M, CM, true, CTChecks),
+check_property(ctcheck, H, M, CM, Caller, (M:F/A)-CTChecks) :-
+    % compile-time checks. Currently only compatibility checks.
+    check_property_ctcheck(H, M, CM, Caller, CTChecks),
     CTChecks \= [],
     resolve_calln(M:H, M:G),
     functor(G, F, A).
