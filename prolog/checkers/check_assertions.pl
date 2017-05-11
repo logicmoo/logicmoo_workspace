@@ -214,7 +214,7 @@ check_property_ctcheck(Goal, M, CM, Caller, AssrErrorL) :-
 set_variable_names(Name=Variable) :- ignore(Variable = '$VAR'(Name)).
 
 :- dynamic
-    assrt_error_db/1.
+    assrt_error_db/2.
 
 do_check_property_ctcheck(CTCheck, AssrErrorL) :-
     AssrError = assrchk(_, _),
