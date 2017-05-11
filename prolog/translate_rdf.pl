@@ -3111,9 +3111,6 @@ sandbox:safe_primitive(owl2_model:load_owl_from_string(_)).
 sandbox:safe_primitive(owl2_model:expand_all_ns(_,_,_)).
 %sandbox:safe_primitive(owl2_model:query_expand(_)).
 
-user:term_expansion((:- trill),[]):-
-  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#').
-
 user:term_expansion(kb_prefix(A,B),[]):-
   trill:add_kb_prefix(A,B).
 

@@ -1,6 +1,6 @@
 %:-use_module(library(trill)).
 
-%:-trill.
+:-trill.
 
 /*
 Model of metabolic pathways.
