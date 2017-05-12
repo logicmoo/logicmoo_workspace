@@ -51,11 +51,46 @@ Moreover, in order to make sure you have a foreign library that matches your arc
 \input{semantics}
 \input{inference}
 
-
+\subsection{Executing a Query with TRILL}
 To run a query, you can simply load the Prolog file, for example \href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
 \begin{verbatim}
 ?- [peoplePets].
 \end{verbatim}
+\noindent
+The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and TRILL Syntax.
+\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}} is equivalent with the following KB
+\begin{verbatim}
+:- use_module(library(trill)).
+
+:- trill.
+
+:- add_kb_prefix('','http://cohse.semanticweb.org/ontologies/people#').
+
+subClassOf(someValuesFrom('has_animal', 'pet'), 'natureLover').
+subClassOf('cat', 'pet').
+annotationAssertion('disponte:probability', 
+        classAssertion('cat', 'Fluffy'), literal('0.4')).
+annotationAssertion('disponte:probability', 
+        classAssertion('cat', 'Tom'), literal('0.3')).
+annotationAssertion('disponte:probability', 
+        subClassOf('cat', 'pet'), literal('0.6')).
+propertyAssertion('has_animal', 'Kevin', 'Fluffy').
+propertyAssertion('has_animal', 'Kevin', 'Tom').
+classAssertion('cat', 'Fluffy').
+classAssertion('cat', 'Tom').
+\end{verbatim}
+\noindent
+Note that it is necessary to specify which algorithm, TRILL or TRILL$^P$, has to be loaded for performing inference. This is done by using the directive
+\begin{verbatim}
+:- trill.
+\end{verbatim}
+for loading TRILL or 
+\begin{verbatim}
+:- trillp.
+\end{verbatim}
+for TRILL$^P$. The \verb|add_kb_prefix/2| adds the prefix to use to expand the name of the individuals, concepts and roles of the KB.
+
+
 
 
 \subsection{Files}
