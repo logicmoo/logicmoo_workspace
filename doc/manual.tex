@@ -29,12 +29,14 @@ riccardo.zese@unife.it}
 \section{Introduction}
 
 
-TRILL ("Tableau Reasoner for descrIption Logics in Prolog", \cite{ZesBelRig16-AMAI-IJ,Zese17-SSW-BK}) implements a tableau algorithm in
-Prolog to compute the set of all the explanations of a query. After generating the explanations, 
+TRILL (``Tableau Reasoner for descrIption Logics in Prolog'', \cite{ZesBelRig16-AMAI-IJ,Zese17-SSW-BK}) implements a tableau algorithm in
+Prolog to compute the set of all the explanations of a query. 
+TRILL also contains TRILL$^P$ (``TRILL powered by Pinpointing formulas''), which is able to compute a Boolean formula representing the set of explanations for a query.
+After generating the explanations, 
 TRILL can computes the probability of the query. The management of the tableau rules' non-determinism is delegated to the Prolog language.
 
 TRILL is available in two versions, one for Yap Prolog and one for SWI-Prolog. They differ slightly in the features offered.
-The Yap version differs principally in the absence of the translation module form OWL/RDF to TRILL syntax.
+The Yap version differs principally in the absence of the translation module form OWL/RDF to TRILL syntax and in a different management of the explanations in TRILL$^P$.
 
 \section{Installation}
 TRILL is distributed as a \href{http://www.swi-prolog.org/pack/list?p=trill}{pack} of \href{http://www.swi-prolog.org/}{SWI-Prolog}. To install it, use
@@ -50,7 +52,7 @@ Moreover, in order to make sure you have a foreign library that matches your arc
 \input{syntax}
 \input{semantics}
 \input{inference}
-
+\input{inf_goals}
 \subsection{Executing a Query with TRILL}
 To run a query, you can simply load the Prolog file, for example \href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
 \begin{verbatim}
@@ -80,15 +82,6 @@ classAssertion('cat', 'Fluffy').
 classAssertion('cat', 'Tom').
 \end{verbatim}
 \noindent
-Note that it is necessary to specify which algorithm, TRILL or TRILL$^P$, has to be loaded for performing inference. This is done by using the directive
-\begin{verbatim}
-:- trill.
-\end{verbatim}
-for loading TRILL or 
-\begin{verbatim}
-:- trillp.
-\end{verbatim}
-for TRILL$^P$. The \verb|add_kb_prefix/2| adds the prefix to use to expand the name of the individuals, concepts and roles of the KB.
 
 
 

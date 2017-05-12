@@ -288,7 +288,11 @@ f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}
 <li><p>Unsatifiability of a concept.</p></li>
 <li><p>Inconsistency of the knowledge base.</p></li>
 </ul>
-<p>All the input arguments have to be atoms or ground terms.</p>
+<p>All the input arguments have to be atoms or ground terms. Note that it is necessary to specify which algorithm, TRILL or TRILL<span class="math inline">\(^P\)</span>, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive</p>
+<pre><code>:- trill.</code></pre>
+<p>for loading TRILL or</p>
+<pre><code>:- trillp.</code></pre>
+<p>for TRILL<span class="math inline">\(^P\)</span>.</p>
 <h3 id="probabilistic-queries">Probabilistic Queries</h3>
 <p>TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.</p>
 <p>The probability of an individual to belong to a concept can be asked using TRILL with the predicate</p>

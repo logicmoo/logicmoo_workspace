@@ -10,6 +10,15 @@ TRILL can compute the probability or find an explanation of the following querie
   \item Inconsistency of the knowledge base.
 \end{itemize}
 All the input arguments have to be atoms or ground terms.
+Note that it is necessary to specify which algorithm, TRILL or TRILL$^P$, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive
+\begin{verbatim}
+:- trill.
+\end{verbatim}
+for loading TRILL or 
+\begin{verbatim}
+:- trillp.
+\end{verbatim}
+for TRILL$^P$.
 
 \subsubsection{Probabilistic Queries}
 TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.
