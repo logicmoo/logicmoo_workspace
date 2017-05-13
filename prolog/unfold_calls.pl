@@ -82,7 +82,7 @@ unfold_call(Goal0, CM, IsUnfold, NonUnfoldL, Call) :-
         ; \+ Head \= Goal
         ->copy_term(Goal, Head),
           unfold_call(Body, BM, IsUnfold, [M:Head|NonUnfoldL], Call)
-                                % Abstraction to get more info
+          % Abstraction to get more info
         )
       ; predicate_property(CM:Goal, meta_predicate(Spec)),
         ( arg(N, Spec, S),
