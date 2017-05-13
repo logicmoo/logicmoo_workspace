@@ -25,6 +25,7 @@
 :- use_module(library(apply)).
 :- use_module(library(extra_messages), []).
 :- use_module(library(lists)).
+:- use_module(library(list_sequence)).
 :- use_module(library(implementation_module)).
 :- use_module(library(subpos_utils)).
 :- use_module(library(prolog_codewalk), []).
@@ -179,97 +180,98 @@ var_location(Term, Pos, Var, Loc) :-
     ; true
     ).
 
-term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :- valid_cp(CP)),
-               (normalize_assertion_body(Assertion, Format, Pos,
-                                         PD,  DP,  CP,  AP,  GP,  CO,
-                                         PDP, DPP, CPP, APP, GPP, COP) :- valid_cp(CP))) :- !,
-    maplist(var_location(Assertion, Pos),
-            [PD,  DP,  CP,  AP,  GP,  CO],
+term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F) :- valid_cp(C)),
+               (decompose_assertion_body(Body, Format, Pos,
+                                         A,  B,  C,  D,  E,  F,
+                                         PDP, DPP, CPP, APP, GPP, COP) :- valid_cp(C))) :- !,
+    maplist(var_location(Body, Pos),
+            [A,  B,  C,  D,  E,  F],
             [PDP, DPP, CPP, APP, GPP, COP]).
 
-term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO)),
-               (normalize_assertion_body(Assertion, Format, Pos,
-                                         PD,  DP,  CP,  AP,  GP,  CO,
+term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F)),
+               (decompose_assertion_body(Body, Format, Pos,
+                                         A,  B,  C,  D,  E,  F,
                                          PDP, DPP, CPP, APP, GPP, COP))) :-
-    maplist(var_location(Assertion, Pos),
-            [PD,  DP,  CP,  AP,  GP,  CO],
+    maplist(var_location(Body, Pos),
+            [A,  B,  C,  D,  E,  F],
             [PDP, DPP, CPP, APP, GPP, COP]).
-term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :-
-                    normalize_assertion_body(BO, Format, PD, DP, CP, AP, GP, "")),
-               (normalize_assertion_body(Assertion, Format, Pos,
-                                         PD,  DP,  CP,  AP,  GP,  CO,
+term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F) :-
+                    decompose_assertion_body(BO, Format, A, B, C, D, E, "")),
+               (decompose_assertion_body(Body, Format, Pos,
+                                         A,  B,  C,  D,  E,  F,
                                          PDP, DPP, CPP, APP, GPP, COP) :-
-                    normalize_assertion_body(BO, Format, BOP,
-                                             PD,  DP,  CP,  AP,  GP,  "",
+                    decompose_assertion_body(BO, Format, BOP,
+                                             A,  B,  C,  D,  E,  "",
                                              PDP, DPP, CPP, APP, GPP, _))) :-
-    Assertion = BO#CO,
-    maplist(var_location(Assertion, Pos), [BO, CO], [BOP, COP]).
+    Body = BO#F,
+    maplist(var_location(Body, Pos), [BO, F], [BOP, COP]).
 
-% Without Pos information:
-% normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :-
-%     normalize_assertion_body(Assertion, Format, _, PD, DP, CP, AP, GP, CO, _, _, _, _, _, _).
+%!  decompose_assertion_body(+Body, +Format, +Pos, -Head, -Compat, -Call, -Succ, -Glob, Comment,
+%                                                  -HPos, -CmpPos, -CPos, -SPos, -GPos, -ComPos)
+%
+%   Extract the different sections from the Body of an assertion. Note that this
+%   is expanded during compilation to contain extra arguments with the term
+%   locations for each section of the assertion from:
+%
+%   ```
+%     decompose_assertion_body(+Body, +Format, +Pos, -Head, -Compat, -Call, -Succ, -Glob, Comment)
+%   ```
+%
+%   SWI-Extensions with respect to the Ciao Assertion Language:
+%   - Usage of is/2 in addition to +/2.
+%   - Solved ambiguity of :/2 and module qualification (valid_cp/1)
 
-% ---------------------------------------------------------------------------
-% :- pred normalize_assertion_body(B,F,NB)
-%    # "@var{NB} is a normalized assertion body corresponding to the
-%      unnomalized assertion body @var{B}.".
-% ---------------------------------------------------------------------------
-
-% MH: Added new assertions for transition. Marked as %N
-% MH: No comments allowed now in basic assertions (difficult to document).
-% EM: SWI-Like notation, usage of is/2 instead of +/2.
-% EM: valid_cp/1 solves ambiguity of :/2 with module qualification
-% --------------------------- A  B   C     D  E -- FormatId ------------------------------- %ABCDE
-normalize_assertion_body((PD::DP:CP=>AP  + GP#CO), p, PD, DP,   CP,   AP,   GP,   CO). %11111%N
-normalize_assertion_body((PD::DP:CP=>AP is GP#CO), p, PD, DP,   CP,   AP,   GP,   CO). %11111%N
-normalize_assertion_body((PD::DP:CP=>AP  + GP   ), p, PD, DP,   CP,   AP,   GP,   ""). %11110
-normalize_assertion_body((PD::DP:CP=>AP is GP   ), p, PD, DP,   CP,   AP,   GP,   ""). %11110
-normalize_assertion_body((PD::DP:CP=>AP      #CO), p, PD, DP,   CP,   AP,   true, CO). %11101%N%N
-normalize_assertion_body((PD::DP:CP=>AP         ), p, PD, DP,   CP,   AP,   true, ""). %11100
-normalize_assertion_body((PD::DP:CP      + GP#CO), p, PD, DP,   CP,   true, GP,   CO). %11011%N
-normalize_assertion_body((PD::DP:CP     is GP#CO), p, PD, DP,   CP,   true, GP,   CO). %11011%N
-normalize_assertion_body((PD::DP:CP      + GP   ), p, PD, DP,   CP,   true, GP,   ""). %11010
-normalize_assertion_body((PD::DP:CP     is GP   ), p, PD, DP,   CP,   true, GP,   ""). %11010
-normalize_assertion_body((PD::DP:CP          #CO), p, PD, DP,   CP,   true, true, CO). %11001%N
-normalize_assertion_body((PD::DP:CP             ), p, PD, DP,   CP,   true, true, ""). %11000
-normalize_assertion_body((PD::DP   =>AP  + GP#CO), p, PD, DP,   true, AP,   GP,   CO). %10111%N
-normalize_assertion_body((PD::DP   =>AP is GP#CO), p, PD, DP,   true, AP,   GP,   CO). %10111%N
-normalize_assertion_body((PD::DP   =>AP  + GP   ), p, PD, DP,   true, AP,   GP,   ""). %10110
-normalize_assertion_body((PD::DP   =>AP is GP   ), p, PD, DP,   true, AP,   GP,   ""). %10110
-normalize_assertion_body((PD::DP   =>AP      #CO), p, PD, DP,   true, AP,   true, CO). %10101%N
-normalize_assertion_body((PD::DP   =>AP         ), p, PD, DP,   true, AP,   true, ""). %10100
-normalize_assertion_body((PD::DP         + GP#CO), p, PD, DP,   true, true, GP,   CO). %10011%N
-normalize_assertion_body((PD::DP        is GP#CO), p, PD, DP,   true, true, GP,   CO). %10011%N
-normalize_assertion_body((PD::DP         + GP   ), p, PD, DP,   true, true, GP,   ""). %10010
-normalize_assertion_body((PD::DP        is GP   ), p, PD, DP,   true, true, GP,   ""). %10010
-normalize_assertion_body((PD::DP             #CO), d, PD, DP,   true, true, true, CO). %10001%N
-normalize_assertion_body((PD::DP                ), d, PD, DP,   true, true, true, ""). %10000
-normalize_assertion_body((PD    :CP=>AP  + GP#CO), p, PD, true, CP,   AP,   GP,   CO) :- valid_cp(CP). %01111%N
-normalize_assertion_body((PD    :CP=>AP is GP#CO), p, PD, true, CP,   AP,   GP,   CO) :- valid_cp(CP). %01111%N
-normalize_assertion_body((PD    :CP=>AP  + GP   ), p, PD, true, CP,   AP,   GP,   "") :- valid_cp(CP). %01110
-normalize_assertion_body((PD    :CP=>AP is GP   ), p, PD, true, CP,   AP,   GP,   "") :- valid_cp(CP). %01110
-normalize_assertion_body((PD    :CP=>AP      #CO), s, PD, true, CP,   AP,   true, CO) :- valid_cp(CP). %01101%N
-normalize_assertion_body((PD    :CP=>AP         ), s, PD, true, CP,   AP,   true, "") :- valid_cp(CP). %01100
-normalize_assertion_body((PD    :CP      + GP#CO), g, PD, true, CP,   true, GP,   CO) :- valid_cp(CP). %01011%N
-normalize_assertion_body((PD    :CP     is GP#CO), g, PD, true, CP,   true, GP,   CO) :- valid_cp(CP). %01011%N
-normalize_assertion_body((PD    :CP      + GP   ), g, PD, true, CP,   true, GP,   "") :- valid_cp(CP). %01010
-normalize_assertion_body((PD    :CP     is GP   ), g, PD, true, CP,   true, GP,   "") :- valid_cp(CP). %01010
-normalize_assertion_body((PD    :CP          #CO), c, PD, true, CP,   true, true, CO) :- valid_cp(CP). %01001%N
-normalize_assertion_body((PD    :CP             ), c, PD, true, CP,   true, true, "") :- valid_cp(CP). %01000
-normalize_assertion_body((PD       =>AP  + GP#CO), p, PD, true, true, AP,   GP,   CO). %00111%N
-normalize_assertion_body((PD       =>AP is GP#CO), p, PD, true, true, AP,   GP,   CO). %00111%N
-normalize_assertion_body((PD       =>AP  + GP   ), p, PD, true, true, AP,   GP,   ""). %00110
-normalize_assertion_body((PD       =>AP is GP   ), p, PD, true, true, AP,   GP,   ""). %00110
-normalize_assertion_body((PD       =>AP      #CO), s, PD, true, true, AP,   true, CO). %00101%N
-normalize_assertion_body((PD       =>AP         ), s, PD, true, true, AP,   true, ""). %00100
-normalize_assertion_body((PD             + GP#CO), g, PD, true, true, true, GP,   CO). %00011%N
-normalize_assertion_body((PD            is GP#CO), g, PD, true, true, true, GP,   CO). %00011%N
-normalize_assertion_body((PD             + GP   ), g, PD, true, true, true, GP,   ""). %00010
-normalize_assertion_body((PD            is GP   ), g, PD, true, true, true, GP,   ""). %00010
-normalize_assertion_body((BO                 #CO), P, PD, DP,   CP,   AP,   GP,   CO) :-
-    normalize_assertion_body(BO, P, PD, DP, CP, AP, GP, ""). %00001%N
-normalize_assertion_body((PD                 #CO), p, PD, true, true, true, true, CO). %00001%N
-normalize_assertion_body((PD                    ), t, PD, true, true, true, true, ""). %00000
+% ----------------------- A  B C  D    E F-- - -A--B-----C-----D-----E-----F--- %ABCDEF
+decompose_assertion_body((A::B:C=>D  + E#F), p, A, B,    C,    D,    E,    F ). %111111
+decompose_assertion_body((A::B:C=>D is E#F), p, A, B,    C,    D,    E,    F ). %111111
+decompose_assertion_body((A::B:C=>D  + E  ), p, A, B,    C,    D,    E,    ""). %111100
+decompose_assertion_body((A::B:C=>D is E  ), p, A, B,    C,    D,    E,    ""). %111100
+decompose_assertion_body((A::B:C=>D     #F), p, A, B,    C,    D,    true, F ). %111011
+decompose_assertion_body((A::B:C=>D       ), p, A, B,    C,    D,    true, ""). %111000
+decompose_assertion_body((A::B:C     + E#F), p, A, B,    C,    true, E,    F ). %110111
+decompose_assertion_body((A::B:C    is E#F), p, A, B,    C,    true, E,    F ). %110111
+decompose_assertion_body((A::B:C     + E  ), p, A, B,    C,    true, E,    ""). %110100
+decompose_assertion_body((A::B:C    is E  ), p, A, B,    C,    true, E,    ""). %110100
+decompose_assertion_body((A::B:C        #F), p, A, B,    C,    true, true, F ). %110011
+decompose_assertion_body((A::B:C          ), p, A, B,    C,    true, true, ""). %110000
+decompose_assertion_body((A::B  =>D  + E#F), p, A, B,    true, D,    E,    F ). %101111
+decompose_assertion_body((A::B  =>D is E#F), p, A, B,    true, D,    E,    F ). %101111
+decompose_assertion_body((A::B  =>D  + E  ), p, A, B,    true, D,    E,    ""). %101100
+decompose_assertion_body((A::B  =>D is E  ), p, A, B,    true, D,    E,    ""). %101100
+decompose_assertion_body((A::B  =>D     #F), p, A, B,    true, D,    true, F ). %101011
+decompose_assertion_body((A::B  =>D       ), p, A, B,    true, D,    true, ""). %101000
+decompose_assertion_body((A::B       + E#F), p, A, B,    true, true, E,    F ). %100111
+decompose_assertion_body((A::B      is E#F), p, A, B,    true, true, E,    F ). %100111
+decompose_assertion_body((A::B       + E  ), p, A, B,    true, true, E,    ""). %100100
+decompose_assertion_body((A::B      is E  ), p, A, B,    true, true, E,    ""). %100100
+decompose_assertion_body((A::B          #F), d, A, B,    true, true, true, F ). %100011
+decompose_assertion_body((A::B            ), d, A, B,    true, true, true, ""). %100000
+decompose_assertion_body((A   :C=>D  + E#F), p, A, true, C,    D,    E,    F ) :- valid_cp(C). %011111
+decompose_assertion_body((A   :C=>D is E#F), p, A, true, C,    D,    E,    F ) :- valid_cp(C). %011111
+decompose_assertion_body((A   :C=>D  + E  ), p, A, true, C,    D,    E,    "") :- valid_cp(C). %011100
+decompose_assertion_body((A   :C=>D is E  ), p, A, true, C,    D,    E,    "") :- valid_cp(C). %011100
+decompose_assertion_body((A   :C=>D     #F), s, A, true, C,    D,    true, F ) :- valid_cp(C). %011011
+decompose_assertion_body((A   :C=>D       ), s, A, true, C,    D,    true, "") :- valid_cp(C). %011000
+decompose_assertion_body((A   :C     + E#F), g, A, true, C,    true, E,    F ) :- valid_cp(C). %010111
+decompose_assertion_body((A   :C    is E#F), g, A, true, C,    true, E,    F ) :- valid_cp(C). %010111
+decompose_assertion_body((A   :C     + E  ), g, A, true, C,    true, E,    "") :- valid_cp(C). %010100
+decompose_assertion_body((A   :C    is E  ), g, A, true, C,    true, E,    "") :- valid_cp(C). %010100
+decompose_assertion_body((A   :C        #F), c, A, true, C,    true, true, F ) :- valid_cp(C). %010011
+decompose_assertion_body((A   :C          ), c, A, true, C,    true, true, "") :- valid_cp(C). %010000
+decompose_assertion_body((A     =>D  + E#F), p, A, true, true, D,    E,    F ). %001111
+decompose_assertion_body((A     =>D is E#F), p, A, true, true, D,    E,    F ). %001111
+decompose_assertion_body((A     =>D  + E  ), p, A, true, true, D,    E,    ""). %001100
+decompose_assertion_body((A     =>D is E  ), p, A, true, true, D,    E,    ""). %001100
+decompose_assertion_body((A     =>D     #F), s, A, true, true, D,    true, F ). %001011
+decompose_assertion_body((A     =>D       ), s, A, true, true, D,    true, ""). %001000
+decompose_assertion_body((A          + E#F), g, A, true, true, true, E,    F ). %000111
+decompose_assertion_body((A         is E#F), g, A, true, true, true, E,    F ). %000111
+decompose_assertion_body((A          + E  ), g, A, true, true, true, E,    ""). %000100
+decompose_assertion_body((A         is E  ), g, A, true, true, true, E,    ""). %000100
+decompose_assertion_body((BO            #F), P, A, B,    C,    D,    E,    F ) :-
+    decompose_assertion_body(BO, P, A, B, C, D, E, "").                         %000011
+decompose_assertion_body((A             #F), p, A, true, true, true, true, F ). %000011
+decompose_assertion_body((A               ), t, A, true, true, true, true, ""). %000000
 
 fix_format_global(p, p).
 fix_format_global(d, p).
@@ -278,7 +280,7 @@ fix_format_global(g, g).
 fix_format_global(c, g).
 fix_format_global(t, g).
 
-valid_cp(CP) :- \+ invalid_cp(CP).
+valid_cp(C) :- \+ invalid_cp(C).
 
 invalid_cp(_/_).
 
@@ -520,7 +522,7 @@ merge_comments(C, P, "",  _, C, P).
 merge_comments(C1, P1, C2, P2, [C1, C2], list_position(_, _, [P1, P2])).
 
 normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    once(normalize_assertion_body(Body, Format, BPos, Head, BCp, BCa, BSu,
+    once(decompose_assertion_body(Body, Format, BPos, Head, BCp, BCa, BSu,
                                   BGl, Co, HPos, PCp, PCa, PSu, PGl, CoPos)),
     normalize_assertion_head(Head, M, HPos, Pred, Cp0, Ca0, Su0, Gl0, RPos),
     apropdef(Pred, M, BCp, PCp, Cp, Cp0),
@@ -695,30 +697,15 @@ props_args((A, B), M, V, term_position(_, _, _, _, [PA, PB])) --> !,
 props_args((A; B), M, V, Pos) --> !,
     { Pos = term_position(_, _, _, _, [PA, PB]),
       props_args(A, M, V, PA, P1, []),
-      list_conj(P1, C1),
+      list_sequence(P1, C1),
       props_args(B, M, V, PB, P2, []),
-      list_conj(P2, C2)
+      list_sequence(P2, C2)
     },
     [(C1;C2)-Pos].
 props_args(M:A, _, V, term_position(_, _, _, _, [_, PA])) -->
     {atom(M)}, !,
     props_args(A, M, V, PA).
 props_args(A, M, V, Pos) --> call(V, A, M, Pos).
-
-list_conj([],     true).
-list_conj([E|EL], CL) :-
-    list_conj_2(EL, E, CL).
-
-list_conj_2([E|L], E0-_, (E0, S)) :- list_conj_2(L, E, S).
-list_conj_2([], E-_, E).
-
-% conj_list(V) --> {var(V)}, !, [V].
-% conj_list((A, B)) --> !,
-%     conj_list(A),
-%     conj_list(B).
-% conj_list(A) --> [A].
-
-% add_module(M, P, M:P).
 
 prop_arg(V, A, M, Pos) -->
     {add_arg(V, A, P, Pos, PPos)},
@@ -897,10 +884,3 @@ get_sequence_and_inc(S) :-
     retract(sequence(S)),
     succ(S, S2),
     assertz(sequence(S2)).
-
-/*
-:- use_module(library(dialect/ciao), []).
-
-ciao:declaration_hook(Decl, Records) :-
-    assertion_records(Decl, _, Records, _).
-*/
