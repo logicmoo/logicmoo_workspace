@@ -37,7 +37,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(assertions_op)).
 :- use_module(library(location_utils)).
-:- use_module(library(implementation_module)).
+:- use_module(library(globprops)).
 :- use_module(library(tabling)).
 
 :- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
@@ -85,14 +85,12 @@ am_head_prop_idx(Flag, Head, M, Meta, From) :-
     meta_has_mode_info(Meta),
     ( Flag = all
     ->
-      \+ ( asr_head_prop(Asr, CM, Head, check, _, _, _),
-           implementation_module(CM:Head, M),
-           asr_glob(Asr, CM, no_meta_modes(_), _)
+      \+ ( prop_asr(Head, M, check, _, _, _, Asr),
+           prop_asr(glob, no_meta_modes(_), _, Asr)
          )
     ; Flag = specific
-    ->once(( asr_head_prop(Asr, CM, Head, check, _, _, _),
-             implementation_module(CM:Head, M),
-             asr_glob(Asr, CM, meta_modes(_), _)
+    ->once(( prop_asr(Head, M, check, _, _, _, Asr),
+             prop_asr(glob, meta_modes(_), _, Asr)
            ))
     ),
     ( property_from(M:Pred, meta_predicate, From),

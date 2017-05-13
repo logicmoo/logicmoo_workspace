@@ -119,11 +119,8 @@ current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     call(FromChk, From),
     functor(Head, HF,HA),
     PI=M:HF/HA,
-    ( ( asr_comp(Asr, PM, Prop, PFrom)
-      ; asr_call(Asr, PM, Prop, PFrom)
-      ; asr_succ(Asr, PM, Prop, PFrom)
-      ; asr_glob(Asr, PM, Prop, PFrom)
-      ),
+    ( member(Part, [comp, call, succ, glob]),
+      curr_prop_asr(Part, PM:Prop, PFrom, Asr),
       resolve_head(Prop, PM, N:H)
     ),
     checker_t(Checker),

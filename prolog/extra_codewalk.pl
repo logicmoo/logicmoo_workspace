@@ -159,12 +159,9 @@ walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
 
 assertion_goal(head, Head, HM, _, Head, HM).
 assertion_goal(body, _, _, Asr, Prop, PM) :-
-    ( asr_comp(Asr, PM, Prop, _)
-    ; asr_call(Asr, PM, Prop, _)
-    ; asr_succ(Asr, PM, Prop, _)
-    ; asr_glob(Asr, PM, Prop, _)
-      %% arg(1, Prop, HM:Head), but keep it uninstantiated for optimization
-    ).
+    member(Part, [comp, call, succ, glob]),
+    % For glob, actually is arg(1, Prop, HM:Head), but we keep it uninstantiated for optimization
+    curr_prop_asr(Part, PM:Prop, _, Asr).
 
 record_issues(CRef) :-
     assertz(issues(CRef)).
