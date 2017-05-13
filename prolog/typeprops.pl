@@ -32,12 +32,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(typeprops, [list/1, list/2, tlist/2, nlist/2, int/1, nnegint/1, flt/1,
-                      num/1, atm/1, gnd/1, str/1, gndstr/1, constant/1, term/1,
-                      char/1, pair/1, struct/1, sequence/2, character_code/1,
-                      linear/1, sequence_or_list/2, keypair/1, is_pred/2, any/1,
-                      mod_qual/1, mod_qual/2, keylist/1, arithexpression/1,
-                      predname/1, operator_specifier/1]).
+:- module(typeprops, [list/1, list/2, tlist/2, nlist/2, int/1, nnegint/1,
+                      posint/1, flt/1, num/1, atm/1, gnd/1, str/1, gndstr/1,
+                      constant/1, term/1, char/1, pair/1, struct/1, sequence/2,
+                      character_code/1, linear/1, sequence_or_list/2, keypair/1,
+                      is_pred/2, any/1, mod_qual/1, mod_qual/2, keylist/1,
+                      arithexpression/1, predname/1, operator_specifier/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
@@ -54,12 +54,14 @@ int(X) :-
     integer(X).
 int(0).
 int(X) :-
-    natural(N),
+    posint(N),
     give_sign(N, X).
 
-natural(1).
-natural(N) :-
-    natural(N1),
+:- type posint/1.
+
+posint(1).
+posint(N) :-
+    posint(N1),
     succ(N1, N).
 
 give_sign(P, P).
@@ -69,14 +71,14 @@ give_sign(P, N) :- N is -P.
 
 %!  nnegint(X)
 %
-%   The type of non negative integers, i.e., natural numbers plus zero
+%   The type of non negative integers, i.e., natural numbers (including zero)
 
 nnegint(X) :-
     nonvar(X), !,
     integer(X),
     X >= 0.
 nnegint(0).
-nnegint(N) :- natural(N).
+nnegint(N) :- posint(N).
 
 :- type flt/1.
 

@@ -38,23 +38,17 @@
            assrt_type/1,
            assrt_status/1,
            assertion_records/4,
-           assertion_db/13,
-           asr_head_prop/8,
            asr_head_prop/7,
            asr_head/2,
-           asr_glob/4,
            asr_comp/4,
            asr_call/4,
            asr_succ/4,
+           asr_glob/4,
            asr_comm/3,
            curr_prop_asr/4,
            asr_aprop/4,
            prop_asr/4,
-           prop_asr/7,
-           collect_prop/3,
-           normalize_assertion_head/7,
-           qualify_with/3,
-           assrt_lib_tr/4]).
+           prop_asr/7]).
 
 :- use_module(library(assertions_op)).
 :- use_module(library(apply)).
@@ -65,11 +59,13 @@
 :- use_module(library(subpos_utils)).
 :- use_module(library(prolog_codewalk), []).
 
-% Assertion reader for SWI-Prolog
+/** <module> Assertion reader for SWI-Prolog
 
-% asr_* declared multifile to allow extensibility. At this point you extend
-% concrete assertions (not abstractions or fake ones, since they will be
-% collected by the run-time checker, for instance)
+- Notes: 
+  asr_* declared multifile to allow extensibility. At this point you
+  extend concrete assertions (not abstractions or fake ones, since they will be
+  collected by the run-time checker, for instance)
+*/
 
 :- multifile
     asr_head_prop/7,
@@ -95,10 +91,6 @@
 :- discontiguous
     term_expansion/2.
 
-asr_head_prop(Asr, CM, Head, Status, Type, Comm, Dict, Loc) :-
-    asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
-    asr_comm(Asr, Comm, _).
-
 asr_head(Asr, M:Head) :-
     ( nonvar(Asr)
     ->arg(1, Asr, M),
@@ -116,11 +108,14 @@ curr_prop_asr(call, M:P, From, Asr) :- asr_call(Asr, M, P, From).
 curr_prop_asr(succ, M:P, From, Asr) :- asr_succ(Asr, M, P, From).
 curr_prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 
-% Extensible accessor to assertion properties, ideal to have different views of
-% assertions, to extend the assertions or to create ancillary assertions (see
-% module assrt_meta.pl for an example). The first argument is wrapped to
-% facilitate indexing.  Note that it is recommended that multiple clauses of
-% this predicate be mutually exclusive.
+%!  asr_aprop(+Asr, +Key, ?Prop, -From)
+%
+%   Extensible accessor to assertion properties, ideal to have different views
+%   of assertions, to extend the assertions or to create ancillary assertions
+%   (see module assrt_meta.pl for an example). The first argument is wrapped to
+%   facilitate indexing.  Note that it is recommended that multiple clauses of
+%   this predicate be mutually exclusive.
+
 :- multifile asr_aprop/4.
 asr_aprop(rtcheck(Asr), Key, Prop, From) :-
     curr_prop_asr(Key, Prop, From, Asr).
@@ -171,42 +166,10 @@ add_arg(H, G1, G2, Pos,
       G1 =.. [F|L]
     ).
 
-:- meta_predicate collect(?,^,-).
-collect(Tmpl, Goal, List) :-
-    (bagof(Tmpl, Goal, List) *-> true ; List = []).
-
-collect_props(Asr, CM, CompL, CallL, SuccL, GlobL) :-
-    collect_prop(asr_comp(Asr), CM, CompL),
-    collect_prop(asr_call(Asr), CM, CallL),
-    collect_prop(asr_succ(Asr), CM, SuccL),
-    collect_prop(asr_glob(Asr), CM, GlobL).
-
-:- meta_predicate collect_prop(3,+,-).
-collect_prop(GenProp, CM, PropL) :-
-    collect(MProp,
-            (M,Prop,From)^( call(GenProp, M, Prop, From),
-                            ( M \= CM
-                            ->MProp = M:Prop
-                            ; MProp = Prop
-                            )
-                          ), PropL).
-
-assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
-    asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
-    ( asr_comm(Asr, Comm, _)
-    ->true
-    ; Comm = ""
-    ),
-    implementation_module(CM:Head, M),
-    collect_props(Asr, CM, Comp, Call, Succ, Glob).
-
 filepos_line(File, CharPos, Line, LinePos) :-
     setup_call_cleanup('$push_input_context'(filepos),
                        prolog_codewalk:filepos_line(File, CharPos, Line, LinePos),
                        '$pop_input_context').
-
-qualify_with(CM, MProp, M:Prop) :-
-    strip_module(CM:MProp, M, Prop).
 
 var_location(Term, Pos, Var, Loc) :-
     ( var(Var),
@@ -318,16 +281,24 @@ valid_cp(C) :- \+ invalid_cp(C).
 
 invalid_cp(_/_).
 
+%!  assrt_type(Type)
+%
+%  The type of assertion
+
 assrt_type(pred).
 assrt_type(prop).
 assrt_type(decl).
-assrt_type(func).
+% assrt_type(func).
 assrt_type(calls).
 assrt_type(success).
 assrt_type(comp).
 assrt_type(entry).
 assrt_type(exit).
-assrt_type(modedef).
+% assrt_type(modedef).
+
+%!  assrt_status(Status)
+%
+%   The status of an assertion
 
 assrt_status(true).
 assrt_status(false).
@@ -389,6 +360,57 @@ expand_nodirective_error(Clauses) :-
               )
             ),
             ClauseT).
+
+%!  exit(+Status, +AssertionBody)
+%
+%   Assertion type exit, specifies the properties on success, but only for
+%   external calls.
+
+%!  exit(+AssertionBody)
+%
+%   Same as exit/2, but with default status check
+
+%!  entry(+Status, +AssertionBody)
+%
+%   Assertion type entry, specifies the properties at call time, only for
+%   external entry.
+
+%!  entry(+AssertionBody)
+%
+%   Same as entry/2, but with default status check
+
+%!  calls(+AssertionBody)
+%
+%   Assertion type calls, specifies the properties at call time.
+
+%!  calls(+AssertionBody)
+%
+%   Same as calls/2, but with default status check
+
+%!  success(+Status, +AssertionBody)
+%
+%   Assertion type success, specifies the properties on success, but only for
+%   external calls.
+
+%!  success(+AssertionBody)
+%
+%   Same as success/2, but with default status check
+
+%!  prop(+Status, +AssertionBody)
+%
+%   States that the predicate is a property
+
+%!  prop(+AssertionBody)
+%
+%   Same as prop/2, but with default status check
+
+%!  pred(+Status, +AssertionBody)
+%
+%   Union of calls, success and comp assertion types
+
+%!  pred(+AssertionBody)
+%
+%   Same as pred/2, but with default status check
 
 % To Avoid attempts to execute asertions (must be declarations):
 generate_nodirective_error.
@@ -567,11 +589,6 @@ normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, C
     apropdef(Pred, M, BCa, PCa, Ca, Ca0),
     apropdef(Pred, M, BSu, PSu, Su, Su0),
     propdef(BGl, M, PGl, Gl, Gl0).
-
-normalize_assertion_head(Spec, M, Pred, Comp, Call, Succ, Glob) :-
-    normalize_assertion_head(Spec, M, _, Pred, CompP, CallP, SuccP, GlobP, _),
-    maplist(pairs_keys, [CompP, CallP, SuccP, GlobP], [Comp, Call, Succ, Glob]).
-
 
 normalize_assertion_head(Head, M, PPos, Pred, Cp, Ca, Su, Gl, HPos) :-
     nonvar(PPos),
@@ -785,9 +802,6 @@ comps_to_goal2([Check|Checks], Check0, Goal) -->
     call(Goal, Check0),
     comps_to_goal2(Checks, Check, Goal).
 
-assrt_lib_tr((:- Decl), Records, M, Dict) :-
-    assertion_records(M, Dict, Decl, _, Records, _).
-
 assertion_records_helper(Match, a(Match, Record, Pos), Record, Pos).
 
 assertion_records(M, Dict, Decl, PPos, Records, RPos) :-
@@ -908,6 +922,11 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
       )
     ; true
     ).
+
+%!  assertion_records(+Decl, DPos, -Records, RPos) is semidet.
+%
+%   Process a Declaration as an assertion.  This is called in a term_expansion/2
+%   of the assertion module. Fails if Decl is not a valid assertion.
 
 assertion_records(Decl, DPos, Records, RPos) :-
     '$current_source_module'(M),

@@ -52,6 +52,4 @@ term_expansion((:- Decl), DPos, Records, RPos) :-
 
 :- use_module(library(plprops)).
 
-:- deprecated assertion_db/13.
-
 :- type assrt_type/1, assrt_status/1.

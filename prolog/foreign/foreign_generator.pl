@@ -40,6 +40,7 @@
 :- use_module(library(assrt_lib)).
 :- use_module(library(call_ref)).
 :- use_module(library(foreign/foreign_props)).
+:- use_module(library(metaprops)).
 :- use_module(library(apply)).
 :- use_module(library(atomics_atom)).
 :- use_module(library(camel_snake)).
@@ -66,7 +67,7 @@
     link_foreign_library/2,
     pkg_foreign_config/2.
 
-:- meta_predicate current_foreign_prop(2,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?).
+:- meta_predicate current_foreign_prop(1,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?).
 
 command_to_atom(Command, Args, Atom) :-
     process_create(path(Command), Args, [stdout(pipe(Out))]),
@@ -330,7 +331,7 @@ apply_dict_tp(t(Type, PropL, Dict)) :- apply_dict(Type-PropL, Dict).
 
 type_props(M, Type, TypePropLDictL, Pos, Asr) :-
     type_props_(M, Type, TDict, Pos, Asr),
-    collect_prop(asr_comp(Asr), M, TPropL),
+    collect_prop(Asr, M, comp, TPropL),
     ( TPropL \= []
     ->TypePropLDictL = [t(Type, TPropL, TDict)]
     ; bind_type_names(M, Type, TypePropLDictL)
@@ -340,16 +341,14 @@ type_props(M, Type, TypePropLDictL, Pos, Asr) :-
 
 type_props_(CM, Type, Dict, Pos, Asr) :-
     asr_head_prop(Asr, CM, Type, check, prop, Dict, Pos),
-    once(( member(TType, [type(_), regtype(_)]),
-           asr_glob(Asr, _, TType, _)
-         )).
+    once(prop_asr(glob, type(_), _, Asr)).
 
 type_props_nf(Module, Type, TypePropLDictL, Pos, Asr) :-
     type_props(Module, Type, TypePropLDictL, Pos, Asr),
                                 % Don't create getters and unifiers for
                                 % typedefs, they are just casts:
     \+ type_is_tdef(Module, Type, _, _),
-    \+ asr_glob(Asr, _, foreign(_, _), _).
+    \+ prop_asr(glob, foreign(_, _), _, Asr).
 
 define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
     format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',
@@ -918,10 +917,10 @@ cond_qualify_with(CM, MProp, MProp) :-
     ; MProp = M:Prop
     ).
 
-foreign_native(foreign(_),    foreign_props).
-foreign_native(foreign(_, _), foreign_props).
-foreign_native(native(_),     foreign_props).
-foreign_native(native(_, _),  foreign_props).
+foreign_native(foreign(_)).
+foreign_native(foreign(_, _)).
+foreign_native(native(_)).
+foreign_native(native(_, _)).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
                      FuncName, PredName, BindName, Arity) :-
@@ -933,13 +932,40 @@ current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, Dic
     current_foreign_prop(foreign_native_fimport, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
                          DictL, FuncName, PredName, BindName, Arity, Type).
 
+:- meta_predicate collect(?,^,-).
+collect(Tmpl, Goal, List) :-
+    (bagof(Tmpl, Goal, List) *-> true ; List = []).
+
+collect_props(Asr, CM, CompL, CallL, SuccL, GlobL) :-
+    maplist(collect_prop(Asr, CM),
+            [comp, call, succ, glob],
+            [CompL, CallL, SuccL, GlobL]).
+
+collect_prop(Asr, CM, Part, PropL) :-
+    collect(MProp,
+            (M, Prop, From)^( curr_prop_asr(Part, M:Prop, From, Asr),
+                              ( M \= CM
+                              ->MProp = M:Prop
+                              ; MProp = Prop
+                              )
+                            ), PropL).
+
+assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
+    asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
+    ( asr_comm(Asr, Comm, _)
+    ->true
+    ; Comm = ""
+    ),
+    implementation_module(CM:Head, M),
+    collect_props(Asr, CM, Comp, Call, Succ, Glob).
+
 current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
                      DictL, FuncName, PredName, BindName, Arity, KeyProp) :-
     asr_head_prop(Asr, Context, Head, check, Type, _, _),
     memberchk(Type, [pred, prop]),
     implementation_module(Context:Head, Module),
-    once(( call(GenKeyProp, KeyProp, _KI),
-           asr_glob(Asr, _KM, KeyProp, _)
+    once(( call(GenKeyProp, KeyProp),
+           prop_asr(glob, KeyProp, _, Asr)
            % implementation_module(KM:KeyProp+1_extra_argument, KI)
          )),
     findall(Head-[MComp, MCall, MSucc, MGlob, Dict],
@@ -955,8 +981,8 @@ current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL
     maplist(append, PropTL, [CompU, CallU, SuccU, GlobU, DictD]),
     maplist(sort, [CompU, CallU, SuccU, GlobU], [CompL, CallL, SuccL, GlobL]),
     remove_dups(DictD, DictL),
-    ( ( asr_glob(Asr, foreign_props, native(_),    _)
-      ; asr_glob(Asr, foreign_props, native(_, _), _)
+    ( ( prop_asr(glob, native(_),    _, Asr)
+      ; prop_asr(glob, native(_, _), _, Asr)
       )
     -> % Already considered
       \+ ( member(KeyProp2, [foreign(_), foreign(_, _)]),
@@ -983,9 +1009,9 @@ current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL
     ->atom_concat('pl_', FuncName, BindName)
     ).
 
-foreign_native_fimport(M, H) :- foreign_native(M, H).
-foreign_native_fimport(fimport(_),    foreign_props).
-foreign_native_fimport(fimport(_, _), foreign_props).
+foreign_native_fimport(H) :- foreign_native(H).
+foreign_native_fimport(fimport(_)).
+foreign_native_fimport(fimport(_, _)).
 
 read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, CN/A as PN/BN + CheckMode, T) :-
     current_foreign_prop(_Asr, Head, M, CM, Comp, Call, Succ, Glob, Dict, CN, PN, BN, A, T),
