@@ -293,8 +293,6 @@ assrt_type(success).
 assrt_type(comp).
 assrt_type(entry).
 assrt_type(exit).
-assrt_type(test).
-assrt_type(texec).
 assrt_type(modedef).
 
 assrt_status(true).
@@ -369,12 +367,8 @@ generate_nodirective_error.
 assertion_format(pred, X) :- assrt_format_code(X).
 assertion_format(decl, X) :- assrt_format_code(X). % ?
 assertion_format(prop, X) :- assrt_format_code(X).
-assertion_format(test, X) :- assrt_format_code(X). % For unit-test -- EMM
 assertion_format(calls,   c).
 assertion_format(success, s).
-% Entry for unit-test -- EMM
-assertion_format(texec, g).
-assertion_format(texec, c).
 % DTM: New assertion type
 assertion_format(exit, s).
 assertion_format(comp, g).
@@ -717,25 +711,23 @@ comp_to_goal_assrt(Comp, Body0, Body) :-
         Comp  =.. [PropName, _|Args],
         Body0 =.. [PropName, Body|Args].
 
-:- pred comps_to_goal/3 #
-        "This predicate allows to compound a list of global properties in to
-        sucessive meta-calls".
+%!  comps_to_goal(+Check:list)//
+%
+%   This predicate allows to compound a list of global properties in to
+%   sucessive meta-calls.
 
 comps_to_goal(Comp) -->
         comps_to_goal(Comp, comp_to_goal_assrt).
 
-:- pred comps_to_goal/3 # "This predicate allows to compound a list of
-        global properties in to successive meta-calls, but in the
-        third argument you can use your own selector.".
-
-:- test comps_to_goal(Comp, Goal, Pred) :
-        (
-            Comp = [not_fails(p(A)), is_det(p(A)), exception(p(A), exc)],
-            Pred = p(A)
-        ) =>
-        (
-            Goal = not_fails(is_det(exception(p(A),exc)))
-        ).
+%!  comps_to_goal(+Check:list, :Goal)//
+%
+%   This predicate allows to compound a list of global properties in to
+%   successive meta-calls, but in the third argument you can use your own
+%   selector:
+%   ```
+%   ?- comps_to_goal([not_fails(p(A)), is_det(p(A)), exception(p(A), exc)],G,p(A)).
+%   G = not_fails(is_det(exception(p(A),exc)))
+%   ```
 
 :- meta_predicate comps_to_goal(?, 3, ?, ?).
 comps_to_goal([],             _) --> [].

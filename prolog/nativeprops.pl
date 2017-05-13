@@ -214,8 +214,8 @@ occurrs_one(T, Var) :- occurrences_of_var(Var, T, 1).
    @prop{ground/1}, @prop{indep/1} and @prop{indep/2} properties,
    which are easier to read."-[X]).
 
-:- test mshare(L) : (L = [[A], [p(A)]]) + fails.
-:- test mshare(L) : (L = [[_], [p(_)]]) + not_fails.
+% :- test mshare(L) : (L = [[A], [p(A)]]) + fails.
+% :- test mshare(L) : (L = [[_], [p(_)]]) + not_fails.
 
 :- prop mshare(X) + (native(sharing(X)), no_rtcheck)
 # "The sharing pattern is @tt{~w}."-[X].
