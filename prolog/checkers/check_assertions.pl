@@ -51,7 +51,6 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(tabling)).
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
 :- use_module(library(option_utils)).
 
 :- dynamic
@@ -115,7 +114,7 @@ prop_ctcheck(M, FromChk, Trans) :-
            ^group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
-    asr_head_prop(Asr, CM, Head, _, Type, _, From),
+    asr_head_prop(Asr, CM, Head, _, _, _, From),
     implementation_module(CM:Head, M),
     call(FromChk, From),
     functor(Head, HF,HA),

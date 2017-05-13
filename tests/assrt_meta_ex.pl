@@ -5,8 +5,8 @@
 	   amtestf2/0]).
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
-:- use_module(library(nativeprops)).
+:- use_module(library(globprops)).
+:- use_module(library(typeprops)).
 :- use_module(library(edinburgh)).
 :- use_module(library(mapargs)).
 

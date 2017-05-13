@@ -1,13 +1,13 @@
 :- module(ctcex, [a/2, q/0]).
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
-:- use_module(library(nativeprops)).
 :- use_module(library(plprops)).
+
 :- set_prolog_flag(check_assertions, [defined,
                                       is_prop,
                                       ctcheck
                                      ]). % Now tighten the screws
+
 
 :- pred a(int, list) is det.
 

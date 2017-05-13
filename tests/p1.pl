@@ -1,7 +1,7 @@
 :- module(p1, [p0/0, p1/1, p2/1]).
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
+:- use_module(library(typeprops)).
 :- use_module(q1).
 
 :- meta_predicate p1(0).

@@ -52,7 +52,7 @@
 
 deprecated_predicate(MGoal, Comment, DFrom, CFrom) :-
     prop_asr(head, MGoal, DFrom, Asr),
-    prop_asr(glob, basicprops:deprecated(_), _, Asr),
+    prop_asr(glob, globprops:deprecated(_), _, Asr),
     asr_comm(Asr, Comment, CFrom).
 deprecated_predicate(M:Goal, " Use ~q instead."-[Alt], [], []) :-
     implementation_module(M:Goal, IM),
