@@ -65,7 +65,9 @@ do_trace_rtc(Goal) :-
     call_inoutex(RTChecks, setup_trace, cleanup_trace).
 
 rtcheck_lib(rtchecks_rt).
-rtcheck_lib(nativeprops).
+rtcheck_lib(metaprops).
+rtcheck_lib(globprops).
+rtcheck_lib(typeprops).
 
 builtin_spec(M, G, S) :-
     predicate_property(M:G, meta_predicate(S)),
@@ -121,11 +123,13 @@ black_list_caller(M:F/A) :-
     black_list_caller(H, M).
 
 black_list_caller(M, _) :- black_list_module(M).
-black_list_caller(nativeprops, _).
+black_list_caller(globprops, _).
+black_list_caller(typeprops, _).
+black_list_caller(metaprops, _).
 
 black_list_callee(M, _) :- black_list_module(M).
 black_list_callee(system, Call) :- black_list_callee_system(Call).
-black_list_callee(nativeprops, Call) :-
+black_list_callee(metaprops, Call) :-
     \+ memberchk(Call, [check(_), trust(_), true(_), false(_)]).
 
 black_list_callee_system(catch(_, _, _)).
@@ -145,7 +149,6 @@ black_list_module(context_values).
 black_list_module('$expand').
 black_list_module('$messages').
 black_list_module(complete_dict).
-black_list_module(basicprops).
 black_list_module(apply_dict).
 black_list_module(exceptions).
 black_list_module(intercept).
@@ -154,6 +157,8 @@ black_list_module(exceptions_db).
 black_list_module(hiordlib).
 black_list_module(ontrace).
 black_list_module(expansion_module).
+black_list_module(globprops).
+black_list_module(typeprops).
 
 white_list_meta(system, Call) :- \+ functor(Call, call, _).
 

@@ -1,7 +1,7 @@
 :- module(rtchecks_disc, [disc1/1]).
 
 :- use_module(library(assertions)).
-:- use_module(library(nativeprops)).
+:- use_module(library(plprops)).
 
 :- discontiguous disc1/1.
 

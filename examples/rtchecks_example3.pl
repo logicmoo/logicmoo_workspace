@@ -7,8 +7,6 @@
                               p/1]).
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
-:- use_module(library(nativeprops)).
 :- use_module(library(plprops)).
 :- use_module(library(rtchecks)).
 

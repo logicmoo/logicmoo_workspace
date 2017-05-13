@@ -45,15 +45,13 @@
           ]).
 
 :- use_module(library(assertions)).
+:- use_module(library(metaprops)).
 :- use_module(library(rtchecks_flags)).
-:- use_module(library(termtyping), []). % assertions about builtins
 :- use_module(library(context_values)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(implementation_module)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(send_check)).
-:- use_module(library(nativeprops)).
-:- use_module(library(basicprops)).
 
 :- doc(author, "Edison Mera").
 

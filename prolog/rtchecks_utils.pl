@@ -37,7 +37,6 @@
            assrchk_error/1]).
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
 :- use_module(library(plprops)).
 :- use_module(library(prolog_codewalk),  []). % for message_location
 :- use_module(library(filtered_backtrace)).
@@ -50,7 +49,9 @@ filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
 filtered_backtrace:no_backtrace_clause_hook(_, intercept).
-filtered_backtrace:no_backtrace_clause_hook(_, nativeprops).
+filtered_backtrace:no_backtrace_clause_hook(_, globprops).
+filtered_backtrace:no_backtrace_clause_hook(_, typeprops).
+filtered_backtrace:no_backtrace_clause_hook(_, metaprops).
 filtered_backtrace:no_backtrace_clause_hook(_, send_check).
 filtered_backtrace:no_backtrace_clause_hook(_, plprops).
 filtered_backtrace:no_backtrace_clause_hook(_, context_values).
@@ -66,7 +67,7 @@ tracertc :-
 
 :- doc(handle_rtcheck/1, "Predicate that processes a rtcheck exception.").
 
-:- prop location_t/1 + type.
+:- type location_t/1.
 location_t(Loc) :-
     ( clause('$messages':swi_location(Term, _, _), _)
     ; clause(prolog:message_location(Term, _, _), _)
@@ -74,7 +75,7 @@ location_t(Loc) :-
     nonvar(Term),
     Term = Loc.
 
-:- prop assrchk_error/1 + type #
+:- type assrchk_error/1 #
         "Specifies the format of an assertion check error.".
 
 assrchk_error(assrchk(Level, error(Type, _Pred, PropValues, ALoc))) :-
@@ -83,14 +84,14 @@ assrchk_error(assrchk(Level, error(Type, _Pred, PropValues, ALoc))) :-
     keylist(PropValues),
     location_t(ALoc).
 
-:- prop rtcheck_level/1 + type.
+:- type rtcheck_level/1.
 
 rtcheck_level(asr).
 rtcheck_level(ppt(Caller, Loc)) :-
     term(Caller),
     location_t(Loc).
 
-:- prop rtcheck_type/1 + type # "Specifies the type of run-time errors.".
+:- type rtcheck_type/1 # "Specifies the type of run-time errors.".
 
 rtcheck_type(comp).
 rtcheck_type(pp_check).

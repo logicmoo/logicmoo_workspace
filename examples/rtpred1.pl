@@ -2,7 +2,6 @@
 
 :- use_module(library(rtchecks)).
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
 :- use_module(library(plprops)).
 
 :- rtchecked p1/1.

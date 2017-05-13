@@ -38,6 +38,7 @@
            op(1150, fx, rtchecked)
           ]).
 
+:- use_module(library(rtcprops), []).
 :- use_module(system:library(rtchecks_rt)).
 
 rtchecked(PlList) :-
