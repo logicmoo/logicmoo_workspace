@@ -35,8 +35,6 @@
 
 :- check pred is_animal(+Animal) :: animal(Animal) + (not_fails, is_det).
 
-:- test is_animal(An) : (An = dogg) + not_fails.
-
 is_animal(An) :- animal(An).
 
 :- check pred animals(+_) : list(animal).

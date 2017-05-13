@@ -255,12 +255,10 @@ assrt_op(call, step2, inner,   pred).
 assrt_op(succ, step1, _,       exit).
 assrt_op(succ, step1, exports, success).
 assrt_op(succ, step1, exports, pred).
-assrt_op(succ, step2, inner,   test).
 assrt_op(succ, step2, inner,   success).
 assrt_op(succ, step2, inner,   pred).
 assrt_op(glob, step1, exports, comp).
 assrt_op(glob, step1, exports, pred).
-assrt_op(glob, step2, inner,   test).
 assrt_op(glob, step2, inner,   comp).
 assrt_op(glob, step2, inner,   pred).
 
@@ -278,7 +276,6 @@ rtcheck_assr_status(check) :- current_prolog_flag(rtchecks_check, yes).
 rtcheck_assr_type(calls).
 rtcheck_assr_type(pred).
 rtcheck_assr_type(prop).
-rtcheck_assr_type(test) :- current_prolog_flag(rtchecks_test, yes).
 rtcheck_assr_type(comp).
 rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
 rtcheck_assr_type(success).
