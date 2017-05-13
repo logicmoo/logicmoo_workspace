@@ -52,6 +52,7 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(send_check)).
+:- use_module(library(rtcprops)).
 
 :- doc(author, "Edison Mera").
 
@@ -361,27 +362,25 @@ black_list_pred(_=_).
 assertion_is_valid(ctcheck, Status, Type, _) :-
     valid_ctcheck_assertions(Status, Type).
 assertion_is_valid(rtcheck, Status, Type, Asr) :-
-    ( \+ asr_glob(Asr, _, rtcheck(_), _)
+    ( \+ prop_asr(glob, rtcheck(_), _, Asr)
     ->is_valid_status_type(Status, Type),
-      \+ asr_glob(Asr, _, no_rtcheck(_), _)
+      \+ prop_asr(glob, no_rtcheck(_), _, Asr)
     ; true % Force run-time checking
     ).
 
 current_assertion(Pred, M, TimeCheck, Asr) :-
     \+ ( TimeCheck = (rtcheck),
-         asr_head_prop(_, AM, Pred, _, prop, _, _),
-         implementation_module(AM:Pred, M)
+         prop_asr(Pred, M, _, prop, _, _, _)
        ),
-    asr_head_prop(Asr, CM, Pred, Status, Type, _, _),
+    prop_asr(Pred, M, Status, Type, _, _, Asr),
     assertion_is_valid(TimeCheck, Status, Type, Asr),
     ( current_prolog_flag(rtchecks_level, inner)
     ->true
     ; current_prolog_flag(rtchecks_level, exports),
-      predicate_property(CM:Pred, export)
+      predicate_property(M:Pred, export)
     ->true
     ),
-    \+ black_list_pred(Pred),
-    implementation_module(CM:Pred, M).
+    \+ black_list_pred(Pred).
 
 unify_common(Common, Common-Term, Term).
 
