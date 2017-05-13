@@ -116,7 +116,6 @@ prop_ctcheck(M, FromChk, Trans) :-
 
 current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     asr_head_prop(Asr, CM, Head, _, Type, _, From),
-    Type \= (test),
     implementation_module(CM:Head, M),
     call(FromChk, From),
     functor(Head, HF,HA),
