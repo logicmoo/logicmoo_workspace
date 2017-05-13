@@ -130,7 +130,8 @@ variable_name('LANG').
 language_t(Lang) :-
     language_iso(_, _, _, _, Lang, _, _, _, _, _).
 
-%!  language(+Lang:language_t) is multi.
+%!  language(+Lang:language_t) is semidet.
+%!  language(-Lang:language_t) is multi.
 %
 %   if not defined, assume the system language or English. Although is not
 %   recommended, you can use several languages to look for translations.
