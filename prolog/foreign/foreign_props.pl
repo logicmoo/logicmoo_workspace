@@ -35,6 +35,8 @@
 :- module(foreign_props,
           [foreign/1,
            foreign/2,
+           (native)/1,
+           (native)/2,
            fimport/1,
            fimport/2,
            returns/2,
@@ -52,50 +54,57 @@
            join_type_desc/5]).
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
-:- use_module(library(termtyping)).
+:- use_module(library(metaprops)).
 :- use_module(library(plprops)).
 :- use_module(library(extend_args)).
 
-:- prop foreign/1 + no_rtcheck.
-:- meta_predicate foreign(0).
+:- global foreign/1.
 foreign(G) :- call(G).
 
-:- prop foreign/2 + no_rtcheck.
-:- meta_predicate foreign(0,?).
+:- global foreign/2.
 foreign(G, _) :- call(G).
 
-:- prop fimport/1 + no_rtcheck.
+:- global native(_, Name)
+   # "This predicate is implemented in C ~w."-[Name].
+
+native(Goal, _) :- call(Goal).
+
+:- global declaration (native)/1
+   # "This predicate is implemented in C with a pl_ prefix.".
+
+native(X) :- native(X, X).
+
+:- prop fimport/1.
 :- meta_predicate fimport(0).
 fimport(G) :- call(G).
 
-:- prop fimport/2 + no_rtcheck.
+:- prop fimport/2.
 :- meta_predicate fimport(0,?).
 fimport(G, _) :- call(G).
 
-:- prop returns/2 + no_rtcheck.
+:- prop returns/2.
 :- meta_predicate returns(0,?).
 returns(G,_) :- call(G).
 
-:- prop parent/2 + no_rtcheck.
+:- prop parent/2.
 :- meta_predicate parent(0,?).
 parent(G,_) :- call(G).
 
-:- prop returns_state/1 + no_rtcheck.
+:- prop returns_state/1.
 :- meta_predicate returns_state(0).
 returns_state(G) :- call(G).
 
-:- prop memory_root/1 + no_rtcheck.
+:- prop memory_root/1.
 :- meta_predicate memory_root(0).
 memory_root(G) :- call(G).
 
-:- prop float_t/1 + type # "Defines a float".
+:- type float_t/1 # "Defines a float".
 float_t(Num) :- num(Num).
 
-:- prop ptr/1 + type # "Defines a void pointer".
+:- type ptr/1 # "Defines a void pointer".
 ptr(Ptr) :- int(Ptr).
 
-:- prop ptr/2 + type # "Defines a typed pointer. Note that if the value was
+:- type ptr/2 # "Defines a typed pointer. Note that if the value was
     allocated dinamically by foreign_interface, it allows its usage as parent in
     FI_new_child_value/array in the C side to perform semi-automatic memory
     management".
@@ -119,26 +128,26 @@ called_by_dict_t(Desc, CM, L) :-
               add_1st_arg(T, _, P)
             ), L).
 
-:- prop dict_t/2 + type.
+:- type dict_t/2.
 :- meta_predicate dict_t(?, :).
 dict_t(Term, Desc) :-
     dict_t(Term, _, Desc).
 
-:- prop dict_t/3 + type.
+:- type dict_t/3.
 :- meta_predicate dict_t(?, ?, :).
 dict_t(Term, Tag, M:Desc) :-
     dict_mq(Desc, M, Tag, Dict),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict), Pairs).
 
-:- prop dict_join_t/4 + type.
+:- type dict_join_t/4.
 :- meta_predicate dict_join_t(?, ?, 1, 1).
 dict_join_t(Term, Tag, M1:Type1, M2:Type2) :-
     join_dict_types(Type1, M1, Type2, M2, Tag, Dict),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict), Pairs).
 
-:- prop dict_extend_t/4 + type.
+:- type dict_extend_t/4.
 :- meta_predicate dict_extend_t(?, 1, ?, +).
 dict_extend_t(Term, M:Type, Tag, Desc) :-
     join_type_desc(Type, M, Tag, Desc, Dict),

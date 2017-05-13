@@ -920,8 +920,8 @@ cond_qualify_with(CM, MProp, MProp) :-
 
 foreign_native(foreign(_),    foreign_props).
 foreign_native(foreign(_, _), foreign_props).
-foreign_native(native(_),     basicprops).
-foreign_native(native(_, _),  basicprops).
+foreign_native(native(_),     foreign_props).
+foreign_native(native(_, _),  foreign_props).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
                      FuncName, PredName, BindName, Arity) :-
@@ -955,8 +955,8 @@ current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL
     maplist(append, PropTL, [CompU, CallU, SuccU, GlobU, DictD]),
     maplist(sort, [CompU, CallU, SuccU, GlobU], [CompL, CallL, SuccL, GlobL]),
     remove_dups(DictD, DictL),
-    ( ( asr_glob(Asr, basicprops, native(_),    _)
-      ; asr_glob(Asr, basicprops, native(_, _), _)
+    ( ( asr_glob(Asr, foreign_props, native(_),    _)
+      ; asr_glob(Asr, foreign_props, native(_, _), _)
       )
     -> % Already considered
       \+ ( member(KeyProp2, [foreign(_), foreign(_, _)]),
@@ -991,7 +991,7 @@ read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, CN/A as PN/BN + Che
     current_foreign_prop(_Asr, Head, M, CM, Comp, Call, Succ, Glob, Dict, CN, PN, BN, A, T),
     nonvar(CN),
     ( memberchk(type(_), Glob)
-    ->CheckMode=type
+    ->CheckMode=(type)
     ; CheckMode=pred
     ),
     apply_dict(Head, Dict).
@@ -1025,7 +1025,7 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) :-
     Bind = (PI as _/PCN + CheckMode),
     declare_intf_head(PCN, Head),
     format(' {~n', []),
-    ( CheckMode==type      % If is variable then succeed (because is compatible)
+    ( CheckMode==(type) % If is variable then succeed (because is compatible)
     ->forall(arg(_, Head, Arg),
              format('    if(PL_is_variable(~w)) return TRUE;~n', [Arg]))
     ; true

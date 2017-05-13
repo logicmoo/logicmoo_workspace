@@ -50,8 +50,8 @@ term_expansion_decl(Decl, term_position(_, _, _, _, [DPos]), Records, RPos) :-
 term_expansion((:- Decl), DPos, Records, RPos) :-
     term_expansion_decl(Decl, DPos, Records, RPos).
 
-:- use_module(library(basicprops)).
+:- use_module(library(plprops)).
 
 :- deprecated assertion_db/13.
 
-:- regtype assrt_type/1.
+:- type assrt_type/1, assrt_status/1.

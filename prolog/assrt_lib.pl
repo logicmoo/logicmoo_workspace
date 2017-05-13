@@ -1,7 +1,42 @@
+/*  Part of Assertion Reader for SWI-Prolog
+
+    Author:        Edison Mera Menendez
+    E-mail:        efmera@gmail.com
+    WWW:           https://github.com/edisonm/assertions
+    Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in
+       the documentation and/or other materials provided with the
+       distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+
 :- module(assrt_lib,
           [comps_to_goal/3,
            comps_to_goal/4,
            assrt_type/1,
+           assrt_status/1,
            assertion_records/4,
            assertion_db/13,
            asr_head_prop/8,
@@ -206,8 +241,7 @@ term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F) :-
     Body = BO#F,
     maplist(var_location(Body, Pos), [BO, F], [BOP, COP]).
 
-%!  decompose_assertion_body(+Body, +Format, +Pos, -Head, -Compat, -Call, -Succ, -Glob, Comment,
-%                                                  -HPos, -CmpPos, -CPos, -SPos, -GPos, -ComPos)
+%!  decompose_assertion_body(+Body, +Format, +Pos, -Head, -Compat, -Call, -Succ, -Glob, Comment, -HPos, -CmpPos, -CPos, -SPos, -GPos, -ComPos)
 %
 %   Extract the different sections from the Body of an assertion. Note that this
 %   is expanded during compilation to contain extra arguments with the term
@@ -378,7 +412,7 @@ assertion_format(entry, t).
 
 assertion_format(modedef, X) :- assrt_format_code(X).
 
-%!  prop assrt_format_code(X) + regtype
+%!  assrt_format_code(X)
 %
 %   X is a designator for an assertion format.
 
@@ -434,7 +468,7 @@ current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
 */
 
 current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
-    is_global(BodyS, M),
+    is_decl_global(BodyS, M),
     BodyS =.. [F, Head|GArgL],
     nonvar(Head), !,
     PosS = term_position(_, _, FF, FT, [HPos|PArgL]),
@@ -473,14 +507,24 @@ body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :-
     ( Lit=A, LPos=APos
     ; Lit=B, LPos=BPos
     ).
-is_global(Head, M) :-
-    is_global(Head, _, M).
 
-is_global(Head, Type, M) :-
+is_decl_global(Head, M) :-
+    is_decl_global(Head, _, _, M).
+
+is_decl_global(Head, Status, Type, M) :-
     prop_asr(head, M:Head, _, Asr),
-    ( prop_asr(glob, basicprops:global(_, Type), _, Asr)
-    ; Type = (pred),
-      prop_asr(glob, basicprops:global(_), _, Asr)
+    ( ( prop_asr(glob, metaprops:declaration(_, Status), _, Asr)
+      ; Status = true,
+        prop_asr(glob, metaprops:declaration(_), _, Asr)
+      )
+    ->( prop_asr(glob, metaprops:global(_, Type), _, Asr)
+      ; Type = (pred)
+      )
+    ; ( prop_asr(glob, metaprops:global(_, Type), _, Asr)
+      ; Type = (pred),
+        prop_asr(glob, metaprops:global(_), _, Asr)
+      ),
+      Status = true
     ), !.
 
 current_normalized_assertion(Assertions, M, PPos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
@@ -500,8 +544,8 @@ current_normalized_assertion(Assertions # Co2, M, term_position(_, _, _, _, [APo
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co1, CoPos1, RPos),
     once(merge_comments(Co1, CoPos1, Co2, CoPos2, Co, CoPos)).
 current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    ( is_global(Assertions, DType, M)
-    ->Term =.. [DType, true, Assertions],
+    ( is_decl_global(Assertions, DStatus, DType, M)
+    ->Term =.. [DType, DStatus, Assertions],
       current_normalized_assertion(Term, M, term_position(_, _, _, _, [0-0, APos]),
                                    Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos)
     ; normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS),
@@ -610,12 +654,12 @@ modedef(+(A),         M, A, B, Pos, PA, Cp,                       Ca0,          
     (var(A), var(Ca1) -> Ca0 = [(M:nonvar(B))-Pos|Ca1] ; Ca0 = Ca1). % A bit confuse hack, Ca1 come instantiated to optimize the expression
 modedef(-(A),         M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su0,                          Gl,  Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [PA]).
 modedef(?(A),         _, A, _, Pos, PA, Cp0,                      Ca,                Su,                           Gl,  Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(@(A),         _, A, B, Pos, PA, Cp0,                      Ca,                Su, [(nativeprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(@(A),         _, A, B, Pos, PA, Cp0,                      Ca,                Su, [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]).
 % PlDoc (SWI) Modes
 modedef(:(A0 ),       _, A, B, Pos, PA, Cp,                       Ca0,               Su,                           Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(From, To, FFrom, FTo, [PA0 ]),
      % The first part of this check is not redundant if we forgot the meta_predicate declaration
-    (var(A0 ), var(Ca1) -> Ca0 = [(nativeprops:mod_qual(B))-Pos|Ca1], A0 = A ; Ca0 = Ca1, A = nativeprops:mod_qual(B, A0 ), PA = term_position(From, To, FFrom, FTo, [From-From, PA0 ])).
-modedef(is_pred(A,N), _, A, B, Pos, PA, Cp,  [(nativeprops:is_pred(B,N))-Pos|Ca0],   Su,         Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [PA, _]).
+    (var(A0 ), var(Ca1) -> Ca0 = [(typeprops:mod_qual(B))-Pos|Ca1], A0 = A ; Ca0 = Ca1, A = typeprops:mod_qual(B, A0 ), PA = term_position(From, To, FFrom, FTo, [From-From, PA0 ])).
+modedef(is_pred(A,N), _, A, B, Pos, PA, Cp,  [(typeprops:is_pred(B,N))-Pos|Ca0],   Su,         Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [PA, _]).
 modedef('!'(A),       M, A, B, Pos, PA, Cp0, [(M:compound(B))-Pos|Ca],               Su,         Gl,  Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]). % May be modified using setarg/3 or nb_setarg/3 (mutable)
 % Ciao Modes:
 modedef(in(A),        M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca0],                 Su,      Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [PA]).
@@ -623,12 +667,12 @@ modedef(out(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],  [(M:gnd(
 modedef(go(A),        M, A, B, Pos, PA, Cp0,                      Ca,   [(M:gnd(B))-Pos|Su],     Gl,  Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]).
 % Additional Modes (See Coding Guidelines for Prolog, Michael A. Covington, 2009):
 modedef('*'(A),       M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca0],              Su,                            Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [PA]).
-modedef('='(A),       _, A, B, Pos, PA, Cp0,                      Ca,                Su,  [(nativeprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]). % The state of A is preserved
-modedef('/'(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su0, [(nativeprops:nsh(B))-Pos|Gl], Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [PA]). % Like '-' but also A don't share with any other argument
+modedef('='(A),       _, A, B, Pos, PA, Cp0,                      Ca,                Su,  [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]). % The state of A is preserved
+modedef('/'(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su0, [(globprops:nsh(B))-Pos|Gl], Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [PA]). % Like '-' but also A don't share with any other argument
 modedef('>'(A),       _, A, _, term_position(_, _, _, _, [PA]), PA, Cp, Ca,          Su0,        Gl,  Cp, Ca, Su, Gl, Su0, Su). % Like output but A might be nonvar on entry
 
-                                % nfi == not_further_inst
-                                % nsh == not_shared
+% nfi == not_further_inst
+% nsh == not_shared
 
 :- multifile prolog:error_message/3.
 
@@ -822,23 +866,26 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
         member(MGl-GPos, GlL),
         strip_module(MGl, PM, Gl),
         add_arg(_, Gl, Pr, GPos, SubPos)
-      ; once(( member(MGl-_, GlL),
-               strip_module(MGl, PM, declaration),
-               implementation_module(PM:declaration(_), basicprops),
-               functor(Head, Pr, 1)
+      ;
+        once(( member(MGl-GPos, GlL),
+               member(Gl, [declaration, declaration(_)]),
+               strip_module(MGl, PM, Gl),
+               add_arg(_, Gl, Pr, GPos, _),
+               implementation_module(PM:Pr, metaprops),
+               functor(Head, Op, 1)
              )),
-        Clause = (:- '$export_ops'([op(1125, fy, Pr)], PM, File))
+        Clause = (:- '$export_ops'([op(1125, fy, Op)], PM, File))
       ; member(MGl-_, GlL),
-        ( strip_module(MGl, PM, declaration),
-          implementation_module(PM:declaration(_), basicprops)
-        ; strip_module(MGl, PM, global(_)),
-          implementation_module(PM:global(_, _), basicprops)
-        ; strip_module(MGl, PM, global),
-          implementation_module(PM:global(_), basicprops)
-        )
-      ->functor(Head, Pr, N),
+        member(Gl, [declaration,
+                    declaration(_),
+                    global,
+                    global(_)]),
+        strip_module(MGl, PM, Gl),
+        add_arg(_, Gl, Pr, _, _),
+        implementation_module(PM:Pr, metaprops)
+      ->functor(Head, Fn, N),
         ( \+ predicate_property(M:Head, meta_predicate(_)),
-          functor(Meta, Pr, N),
+          functor(Meta, Fn, N),
           Meta =.. [_, 0|ArgL],
           maplist(=(?), ArgL),
           Clause = (:- meta_predicate Meta)
@@ -865,8 +912,8 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
 assertion_records(Decl, DPos, Records, RPos) :-
     '$current_source_module'(M),
     assertion_records(M, Dict, Decl, DPos, Records, RPos),
-    %% Dict Must be assigned after assertion_records/6 to avoid performance
-    %% issues --EMM
+    % Dict Must be assigned after assertion_records/6 to avoid performance
+    % issues --EMM
     b_getval('$variable_names', Dict).
 
 :- dynamic sequence/1.

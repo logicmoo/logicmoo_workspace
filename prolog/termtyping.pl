@@ -27,10 +27,10 @@
     the GNU General Public License.
 */
 
-:- module(termtyping,
-          [type/2, add_1st_arg/3]).
+:- module(termtyping, []).
 
 :- use_module(library(assertions)).
+:- use_module(library(metaprops)).
 :- use_module(library(basicprops)).
 :- license(gplv2).
 
@@ -113,39 +113,5 @@ In SWI-Prolog also to a string or the empty list."-[X].
 :- true comp var(X) : nonvar(X) + eval.
 :- true comp var(X) : nonvar(X) + equiv(fail).
 :- true comp var(X) : var(X) + equiv(true).
-
-:- true prop type(X, Y) + (native)
-# "~w is internally of type ~w (@tt{var}, @tt{attv}, @tt{float},
-      @tt{integer}, @tt{structure}, @tt{atom} or @tt{list})."-[X, Y].
-:- trust comp type/2 + (is_det).
-:- true comp type/2 + (sideff(free), (native)).
-:- true comp type(X, _) : nonvar(X) + eval.
-:- meta_predicate type(?, :).
-
-type(A, T) :-
-    add_1st_arg(T, A, P),
-    call(P).
-
-add_1st_arg(M:T, A, M:P) :- !,
-    add_1st_arg(T, A, P).
-add_1st_arg(T, A, P) :-
-    T =.. [F|Args],
-    P =.. [F, A|Args].
-
-% Help analyzers to identify this call:
-prolog:called_by(type(A, MT), termtyping, CM, [M:P]) :-
-    nonvar(A),
-    nonvar(MT),
-    strip_module(CM:MT, M, T),
-    nonvar(T),
-    add_1st_arg(T, A, P).
-
-:- multifile
-    unfold_calls:unfold_call_hook/4.
-
-unfold_calls:unfold_call_hook(type(A, MT), termtyping, CM, M:P) :-
-    strip_module(CM:MT, M, T),
-    nonvar(T),
-    add_1st_arg(T, A, P).
 
 :- use_module(library(nativeprops)).

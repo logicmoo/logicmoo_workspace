@@ -34,11 +34,10 @@
 
 :- module(libprops, []).
 
-% Properties of library predicates
+/** <module> Properties of library predicates
+*/
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
-:- use_module(library(termtyping), []).
 :- use_module(library(plprops)).
 
 :- pred functor(+, -atm, -nnegint) is det.
@@ -83,3 +82,14 @@
 :- pred maplist(A, list, list, list, list) : callable(call(A, _, _, _, _)).
 
 :- pred memberchk(?, ?list) is semidet.
+
+:- true prop [ground/1,
+              atom/1,
+              atomic/1,
+              float/1,
+              integer/1,
+              nonvar/1,
+              number/1,
+              var/1,
+              member/2,
+              callable/1].

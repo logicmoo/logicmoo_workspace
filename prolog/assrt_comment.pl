@@ -1,9 +1,9 @@
-/*  Part of Extended Tools for SWI-Prolog
+/*  Part of Assertion Reader for SWI-Prolog
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
-    WWW:           https://github.com/edisonm/xtools
-    Copyright (C): 2015, Process Design Center, Breda, The Netherlands.
+    WWW:           https://github.com/edisonm/assertions
+    Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(assertions_op)).
 :- use_module(library(location_utils)).
-:- use_module(system:library(plprops)).
+:- use_module(user:library(plprops)).
 :- use_module(pldoc(doc_modes)).
 
 :- create_prolog_flag(assrt_comment, yes, [type(atom)]).

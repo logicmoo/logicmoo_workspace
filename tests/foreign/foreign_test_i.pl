@@ -4,7 +4,6 @@
                            test_ireverse1/2, test_ireverse2/2]).
 
 :- use_module(library(assertions)).
-:- use_module(library(basicprops)).
 :- use_module(library(plprops)).
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
@@ -24,7 +23,7 @@ this_dir(Dir) :-
     ; true
     ).
 
-:- prop d_t/1 is type.
+:- type d_t/1.
 
 d_t(Dict) :-
     dict_t(Dict,
@@ -38,27 +37,27 @@ d_t(Dict) :-
          fd3(d_t,atm,atm,list(int))+memory_root
         ] is foreign.
 
-:- prop positive_t/1 is type.
+:- type positive_t/1.
 positive_t(N) :- int(N).
 
-:- prop negative_t/1 is (type, foreign(is_negative_t)).
+:- type negative_t/1 is foreign(is_negative_t).
 
-:- prop contain_extern_t/1 is type.
+:- type contain_extern_t/1.
 contain_extern_t(contain_extern(Idx, Value)) :-
     int(Idx),
     positive_t(Value).
 
-:- prop contain_opaque_t/1 is type.
+:- type contain_opaque_t/1.
 contain_opaque_t(contain_opaque(Idx, Value)) :-
     int(Idx),
     negative_t(Value).
 
-:- prop example_t/1 is type.
+:- type example_t/1.
 example_t(example(Name, Value)) :-
     atm(Name),
     num(Value).
 
-:- prop compound_t/1 is type.
+:- type compound_t/1.
 compound_t(compound(Idx, Value, Example, Name, PExample)) :-
     int(Idx),
     ptr(Value, int),
@@ -70,19 +69,19 @@ compound_t(compound(Idx, Value, Example, Name, PExample)) :-
 
 :- pred fco(+contain_opaque_t, -contain_opaque_t) is foreign.
 
-:- prop flag_t/1 is type.
+:- type flag_t/1.
 
 flag_t(Value) :- int(Value).
 
-:- prop field_t/1 is type.
+:- type field_t/1.
 
 field_t(field(A, B, Sum)) :- int(A), int(B), ptr(Sum,flag_t).
 
-:- prop position_t/1 is type.
+:- type position_t/1.
 
 position_t(position(X, Y)) :- int(X), int(Y).
 
-:- prop geometry_t/1 is type.
+:- type geometry_t/1.
 
 geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 
