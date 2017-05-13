@@ -1,7 +1,5 @@
 :- module(assrt_lib,
-          [assertion_read/9,
-           assertion_body/7,
-           comps_to_goal/3,
+          [comps_to_goal/3,
            comps_to_goal/4,
            assrt_type/1,
            assertion_records/4,
@@ -34,7 +32,7 @@
 % Assertion reader for SWI-Prolog
 
 % asr_* declared multifile to allow extensibility. At this point you extend
-% concrete assertions (not abstractions nor fake ones, since they will be
+% concrete assertions (not abstractions or fake ones, since they will be
 % collected by the run-time checker, for instance)
 
 :- multifile
@@ -102,10 +100,6 @@ prop_asr(Key, M:P, From, Asr) :-
     implementation_module(M:P, IM),
     curr_prop_asr(Key, C:P, From, Asr),
     implementation_module(C:P, IM).
-
-% :- volatile
-%     assrt_lib:assertion_head/7,
-%     assrt_lib:doc_db/4.
 
 add_arg(_, G1, G2, _, _) :-
     var(G1),
@@ -178,38 +172,6 @@ filepos_line(File, CharPos, Line, LinePos) :-
 qualify_with(CM, MProp, M:Prop) :-
     strip_module(CM:MProp, M, Prop).
 
-
-set_arg_1(Head, Glob) :- arg(1, Glob, Head).
-
-% For compatibility with Ciao Libraries
-assertion_read(Head, M, Status, Type, Body, Dict, File, Line0, Line1) :-
-    assertion_db(_, Head, M, CM, Status, Type, Comp0, Call0, Succ0, Glob0,
-                 Comm, Dict, Loc),
-    maplist(set_arg_1(Head), Glob0),
-    ( M \= CM
-    ->maplist(maplist(qualify_with(CM)),
-              [Comp0, Call0, Succ0, Glob0],
-              [Comp,  Call,  Succ,  Glob ])
-    ; [Comp0, Call0, Succ0, Glob0] = [Comp, Call, Succ, Glob]
-    ),
-    assertion_body(Head, Comp, Call, Succ, Glob, Comm, Body),
-    ( Loc = file_term_position(File, Pos),
-      nonvar(Pos),
-      arg(1, Pos, From),
-      arg(2, Pos, To),
-      integer(From),
-      integer(To)
-    ->filepos_line(File, From, Line0, _),
-      filepos_line(File, To,   Line1, _)
-    ; Loc = file(File, Line0, _, _)
-    ->Line1 = Line0
-    ; Loc = clause(Ref),
-      clause_property(Ref, file(File)),
-      clause_property(Ref, line_count(Line0 ))
-    ->Line1 = Line0
-    ; true
-    ).
-
 var_location(Term, Pos, Var, Loc) :-
     ( var(Var),
       subterm_location_eq(L, Var, Term)
@@ -217,11 +179,10 @@ var_location(Term, Pos, Var, Loc) :-
     ; true
     ).
 
-term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :- Body),
+term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :- valid_cp(CP)),
                (normalize_assertion_body(Assertion, Format, Pos,
                                          PD,  DP,  CP,  AP,  GP,  CO,
-                                         PDP, DPP, CPP, APP, GPP, COP) :- Body)) :-
-    memberchk(Body, [!, (valid_cp(CP), !)]), !,
+                                         PDP, DPP, CPP, APP, GPP, COP) :- valid_cp(CP))) :- !,
     maplist(var_location(Assertion, Pos),
             [PD,  DP,  CP,  AP,  GP,  CO],
             [PDP, DPP, CPP, APP, GPP, COP]).
@@ -234,13 +195,13 @@ term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, 
             [PD,  DP,  CP,  AP,  GP,  CO],
             [PDP, DPP, CPP, APP, GPP, COP]).
 term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, CO) :-
-                    normalize_assertion_body(BO, Format, PD, DP, CP, AP, GP, ""), !),
+                    normalize_assertion_body(BO, Format, PD, DP, CP, AP, GP, "")),
                (normalize_assertion_body(Assertion, Format, Pos,
                                          PD,  DP,  CP,  AP,  GP,  CO,
                                          PDP, DPP, CPP, APP, GPP, COP) :-
                     normalize_assertion_body(BO, Format, BOP,
                                              PD,  DP,  CP,  AP,  GP,  "",
-                                             PDP, DPP, CPP, APP, GPP, _), !)) :-
+                                             PDP, DPP, CPP, APP, GPP, _))) :-
     Assertion = BO#CO,
     maplist(var_location(Assertion, Pos), [BO, CO], [BOP, COP]).
 
@@ -259,55 +220,55 @@ term_expansion((normalize_assertion_body(Assertion, Format, PD, DP, CP, AP, GP, 
 % EM: SWI-Like notation, usage of is/2 instead of +/2.
 % EM: valid_cp/1 solves ambiguity of :/2 with module qualification
 % --------------------------- A  B   C     D  E -- FormatId ------------------------------- %ABCDE
-normalize_assertion_body((PD::DP:CP=>AP  + GP#CO), p, PD, DP,   CP,   AP,   GP,   CO) :- !. %11111%N
-normalize_assertion_body((PD::DP:CP=>AP is GP#CO), p, PD, DP,   CP,   AP,   GP,   CO) :- !. %11111%N
-normalize_assertion_body((PD::DP:CP=>AP  + GP   ), p, PD, DP,   CP,   AP,   GP,   "") :- !. %11110
-normalize_assertion_body((PD::DP:CP=>AP is GP   ), p, PD, DP,   CP,   AP,   GP,   "") :- !. %11110
-normalize_assertion_body((PD::DP:CP=>AP      #CO), p, PD, DP,   CP,   AP,   true, CO) :- !. %11101%N%N
-normalize_assertion_body((PD::DP:CP=>AP         ), p, PD, DP,   CP,   AP,   true, "") :- !. %11100
-normalize_assertion_body((PD::DP:CP      + GP#CO), p, PD, DP,   CP,   true, GP,   CO) :- !. %11011%N
-normalize_assertion_body((PD::DP:CP     is GP#CO), p, PD, DP,   CP,   true, GP,   CO) :- !. %11011%N
-normalize_assertion_body((PD::DP:CP      + GP   ), p, PD, DP,   CP,   true, GP,   "") :- !. %11010
-normalize_assertion_body((PD::DP:CP     is GP   ), p, PD, DP,   CP,   true, GP,   "") :- !. %11010
-normalize_assertion_body((PD::DP:CP          #CO), p, PD, DP,   CP,   true, true, CO) :- !. %11001%N
-normalize_assertion_body((PD::DP:CP             ), p, PD, DP,   CP,   true, true, "") :- !. %11000
-normalize_assertion_body((PD::DP   =>AP  + GP#CO), p, PD, DP,   true, AP,   GP,   CO) :- !. %10111%N
-normalize_assertion_body((PD::DP   =>AP is GP#CO), p, PD, DP,   true, AP,   GP,   CO) :- !. %10111%N
-normalize_assertion_body((PD::DP   =>AP  + GP   ), p, PD, DP,   true, AP,   GP,   "") :- !. %10110
-normalize_assertion_body((PD::DP   =>AP is GP   ), p, PD, DP,   true, AP,   GP,   "") :- !. %10110
-normalize_assertion_body((PD::DP   =>AP      #CO), p, PD, DP,   true, AP,   true, CO) :- !. %10101%N
-normalize_assertion_body((PD::DP   =>AP         ), p, PD, DP,   true, AP,   true, "") :- !. %10100
-normalize_assertion_body((PD::DP         + GP#CO), p, PD, DP,   true, true, GP,   CO) :- !. %10011%N
-normalize_assertion_body((PD::DP        is GP#CO), p, PD, DP,   true, true, GP,   CO) :- !. %10011%N
-normalize_assertion_body((PD::DP         + GP   ), p, PD, DP,   true, true, GP,   "") :- !. %10010
-normalize_assertion_body((PD::DP        is GP   ), p, PD, DP,   true, true, GP,   "") :- !. %10010
-normalize_assertion_body((PD::DP             #CO), d, PD, DP,   true, true, true, CO) :- !. %10001%N
-normalize_assertion_body((PD::DP                ), d, PD, DP,   true, true, true, "") :- !. %10000
-normalize_assertion_body((PD    :CP=>AP  + GP#CO), p, PD, true, CP,   AP,   GP,   CO) :- valid_cp(CP), !. %01111%N
-normalize_assertion_body((PD    :CP=>AP is GP#CO), p, PD, true, CP,   AP,   GP,   CO) :- valid_cp(CP), !. %01111%N
-normalize_assertion_body((PD    :CP=>AP  + GP   ), p, PD, true, CP,   AP,   GP,   "") :- valid_cp(CP), !. %01110
-normalize_assertion_body((PD    :CP=>AP is GP   ), p, PD, true, CP,   AP,   GP,   "") :- valid_cp(CP), !. %01110
-normalize_assertion_body((PD    :CP=>AP      #CO), s, PD, true, CP,   AP,   true, CO) :- valid_cp(CP), !. %01101%N
-normalize_assertion_body((PD    :CP=>AP         ), s, PD, true, CP,   AP,   true, "") :- valid_cp(CP), !. %01100
-normalize_assertion_body((PD    :CP      + GP#CO), g, PD, true, CP,   true, GP,   CO) :- valid_cp(CP), !. %01011%N
-normalize_assertion_body((PD    :CP     is GP#CO), g, PD, true, CP,   true, GP,   CO) :- valid_cp(CP), !. %01011%N
-normalize_assertion_body((PD    :CP      + GP   ), g, PD, true, CP,   true, GP,   "") :- valid_cp(CP), !. %01010
-normalize_assertion_body((PD    :CP     is GP   ), g, PD, true, CP,   true, GP,   "") :- valid_cp(CP), !. %01010
-normalize_assertion_body((PD    :CP          #CO), c, PD, true, CP,   true, true, CO) :- valid_cp(CP), !. %01001%N
-normalize_assertion_body((PD    :CP             ), c, PD, true, CP,   true, true, "") :- valid_cp(CP), !. %01000
-normalize_assertion_body((PD       =>AP  + GP#CO), p, PD, true, true, AP,   GP,   CO) :- !. %00111%N
-normalize_assertion_body((PD       =>AP is GP#CO), p, PD, true, true, AP,   GP,   CO) :- !. %00111%N
-normalize_assertion_body((PD       =>AP  + GP   ), p, PD, true, true, AP,   GP,   "") :- !. %00110
-normalize_assertion_body((PD       =>AP is GP   ), p, PD, true, true, AP,   GP,   "") :- !. %00110
-normalize_assertion_body((PD       =>AP      #CO), s, PD, true, true, AP,   true, CO) :- !. %00101%N
-normalize_assertion_body((PD       =>AP         ), s, PD, true, true, AP,   true, "") :- !. %00100
-normalize_assertion_body((PD             + GP#CO), g, PD, true, true, true, GP,   CO) :- !. %00011%N
-normalize_assertion_body((PD            is GP#CO), g, PD, true, true, true, GP,   CO) :- !. %00011%N
-normalize_assertion_body((PD             + GP   ), g, PD, true, true, true, GP,   "") :- !. %00010
-normalize_assertion_body((PD            is GP   ), g, PD, true, true, true, GP,   "") :- !. %00010
+normalize_assertion_body((PD::DP:CP=>AP  + GP#CO), p, PD, DP,   CP,   AP,   GP,   CO). %11111%N
+normalize_assertion_body((PD::DP:CP=>AP is GP#CO), p, PD, DP,   CP,   AP,   GP,   CO). %11111%N
+normalize_assertion_body((PD::DP:CP=>AP  + GP   ), p, PD, DP,   CP,   AP,   GP,   ""). %11110
+normalize_assertion_body((PD::DP:CP=>AP is GP   ), p, PD, DP,   CP,   AP,   GP,   ""). %11110
+normalize_assertion_body((PD::DP:CP=>AP      #CO), p, PD, DP,   CP,   AP,   true, CO). %11101%N%N
+normalize_assertion_body((PD::DP:CP=>AP         ), p, PD, DP,   CP,   AP,   true, ""). %11100
+normalize_assertion_body((PD::DP:CP      + GP#CO), p, PD, DP,   CP,   true, GP,   CO). %11011%N
+normalize_assertion_body((PD::DP:CP     is GP#CO), p, PD, DP,   CP,   true, GP,   CO). %11011%N
+normalize_assertion_body((PD::DP:CP      + GP   ), p, PD, DP,   CP,   true, GP,   ""). %11010
+normalize_assertion_body((PD::DP:CP     is GP   ), p, PD, DP,   CP,   true, GP,   ""). %11010
+normalize_assertion_body((PD::DP:CP          #CO), p, PD, DP,   CP,   true, true, CO). %11001%N
+normalize_assertion_body((PD::DP:CP             ), p, PD, DP,   CP,   true, true, ""). %11000
+normalize_assertion_body((PD::DP   =>AP  + GP#CO), p, PD, DP,   true, AP,   GP,   CO). %10111%N
+normalize_assertion_body((PD::DP   =>AP is GP#CO), p, PD, DP,   true, AP,   GP,   CO). %10111%N
+normalize_assertion_body((PD::DP   =>AP  + GP   ), p, PD, DP,   true, AP,   GP,   ""). %10110
+normalize_assertion_body((PD::DP   =>AP is GP   ), p, PD, DP,   true, AP,   GP,   ""). %10110
+normalize_assertion_body((PD::DP   =>AP      #CO), p, PD, DP,   true, AP,   true, CO). %10101%N
+normalize_assertion_body((PD::DP   =>AP         ), p, PD, DP,   true, AP,   true, ""). %10100
+normalize_assertion_body((PD::DP         + GP#CO), p, PD, DP,   true, true, GP,   CO). %10011%N
+normalize_assertion_body((PD::DP        is GP#CO), p, PD, DP,   true, true, GP,   CO). %10011%N
+normalize_assertion_body((PD::DP         + GP   ), p, PD, DP,   true, true, GP,   ""). %10010
+normalize_assertion_body((PD::DP        is GP   ), p, PD, DP,   true, true, GP,   ""). %10010
+normalize_assertion_body((PD::DP             #CO), d, PD, DP,   true, true, true, CO). %10001%N
+normalize_assertion_body((PD::DP                ), d, PD, DP,   true, true, true, ""). %10000
+normalize_assertion_body((PD    :CP=>AP  + GP#CO), p, PD, true, CP,   AP,   GP,   CO) :- valid_cp(CP). %01111%N
+normalize_assertion_body((PD    :CP=>AP is GP#CO), p, PD, true, CP,   AP,   GP,   CO) :- valid_cp(CP). %01111%N
+normalize_assertion_body((PD    :CP=>AP  + GP   ), p, PD, true, CP,   AP,   GP,   "") :- valid_cp(CP). %01110
+normalize_assertion_body((PD    :CP=>AP is GP   ), p, PD, true, CP,   AP,   GP,   "") :- valid_cp(CP). %01110
+normalize_assertion_body((PD    :CP=>AP      #CO), s, PD, true, CP,   AP,   true, CO) :- valid_cp(CP). %01101%N
+normalize_assertion_body((PD    :CP=>AP         ), s, PD, true, CP,   AP,   true, "") :- valid_cp(CP). %01100
+normalize_assertion_body((PD    :CP      + GP#CO), g, PD, true, CP,   true, GP,   CO) :- valid_cp(CP). %01011%N
+normalize_assertion_body((PD    :CP     is GP#CO), g, PD, true, CP,   true, GP,   CO) :- valid_cp(CP). %01011%N
+normalize_assertion_body((PD    :CP      + GP   ), g, PD, true, CP,   true, GP,   "") :- valid_cp(CP). %01010
+normalize_assertion_body((PD    :CP     is GP   ), g, PD, true, CP,   true, GP,   "") :- valid_cp(CP). %01010
+normalize_assertion_body((PD    :CP          #CO), c, PD, true, CP,   true, true, CO) :- valid_cp(CP). %01001%N
+normalize_assertion_body((PD    :CP             ), c, PD, true, CP,   true, true, "") :- valid_cp(CP). %01000
+normalize_assertion_body((PD       =>AP  + GP#CO), p, PD, true, true, AP,   GP,   CO). %00111%N
+normalize_assertion_body((PD       =>AP is GP#CO), p, PD, true, true, AP,   GP,   CO). %00111%N
+normalize_assertion_body((PD       =>AP  + GP   ), p, PD, true, true, AP,   GP,   ""). %00110
+normalize_assertion_body((PD       =>AP is GP   ), p, PD, true, true, AP,   GP,   ""). %00110
+normalize_assertion_body((PD       =>AP      #CO), s, PD, true, true, AP,   true, CO). %00101%N
+normalize_assertion_body((PD       =>AP         ), s, PD, true, true, AP,   true, ""). %00100
+normalize_assertion_body((PD             + GP#CO), g, PD, true, true, true, GP,   CO). %00011%N
+normalize_assertion_body((PD            is GP#CO), g, PD, true, true, true, GP,   CO). %00011%N
+normalize_assertion_body((PD             + GP   ), g, PD, true, true, true, GP,   ""). %00010
+normalize_assertion_body((PD            is GP   ), g, PD, true, true, true, GP,   ""). %00010
 normalize_assertion_body((BO                 #CO), P, PD, DP,   CP,   AP,   GP,   CO) :-
-    normalize_assertion_body(BO, P, PD, DP, CP, AP, GP, ""), !. %00001%N
-normalize_assertion_body((PD                 #CO), p, PD, true, true, true, true, CO) :- !. %00001%N
+    normalize_assertion_body(BO, P, PD, DP, CP, AP, GP, ""). %00001%N
+normalize_assertion_body((PD                 #CO), p, PD, true, true, true, true, CO). %00001%N
 normalize_assertion_body((PD                    ), t, PD, true, true, true, true, ""). %00000
 
 fix_format_global(p, p).
@@ -320,9 +281,6 @@ fix_format_global(t, g).
 valid_cp(CP) :- \+ invalid_cp(CP).
 
 invalid_cp(_/_).
-
-assertion_body( Pred, Comp,Call, Succ,Glob,Comm,
-               (Pred::Comp:Call=>Succ+Glob#Comm)).
 
 assrt_type(pred).
 assrt_type(prop).
@@ -459,6 +417,7 @@ current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
              Body, BPos, Gl0, Gl) :- !,
     propdef(BGl, M, PGl, Gl0, Gl1),
     current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
+
 /*
   NOTE: Next syntax is ambiguous, but shorter:
     ```
@@ -561,9 +520,8 @@ merge_comments(C, P, "",  _, C, P).
 merge_comments(C1, P1, C2, P2, [C1, C2], list_position(_, _, [P1, P2])).
 
 normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    normalize_assertion_body(Body, Format, BPos,
-                             Head, BCp, BCa, BSu, BGl, Co,
-                             HPos, PCp, PCa, PSu, PGl, CoPos),
+    once(normalize_assertion_body(Body, Format, BPos, Head, BCp, BCa, BSu,
+                                  BGl, Co, HPos, PCp, PCa, PSu, PGl, CoPos)),
     normalize_assertion_head(Head, M, HPos, Pred, Cp0, Ca0, Su0, Gl0, RPos),
     apropdef(Pred, M, BCp, PCp, Cp, Cp0),
     apropdef(Pred, M, BCa, PCa, Ca, Ca0),
