@@ -55,38 +55,43 @@
 :- use_module(library(rtcprops)).
 :- use_module(library(clambda)).
 
-:- doc(author, "Edison Mera").
-
-:- doc(module, "This module contains the predicates that are
-        required to implement run-time checks.").
-
-/*
+/** <module> Predicates that are required to implement run-time checks
 
 Algorithm:
+----------
 
 pred :- body.
 
-is transformed in:
+is executed as if where transformed to:
 
-pred :-                        \
-        "check entry...",       \___________ STEP
-        "check exit...",        /            ONE
-        'pred$rtc1'.           /
+* *Step one*
 
-'pred$rtc1' :-                            \
-        "check compat pre..."              \
-        "check calls...",                   \
-        "check success pre",                 \__________ STEP
-        "check comp..."(                     /           TWO
-        'pred$rtc2',                        /
-        "check success pos",               /
-        "check compat pos..."             /
+```
+pred :-
+     "check entry...", 
+     "check exit...",
+     'pred$rtc1'.
+```
+
+* *Step two*
+```
+'pred$rtc1' :-                
+        "check compat pre..." 
+        "check calls...",     
+        "check success pre",  
+        "check comp..."(      
+        'pred$rtc2',          
+        "check success pos",  
+        "check compat pos..." 
 
 'pred$rtc2' :-
         body.
+```
 
-And goals preds are renamed to 'pred$rtc1'.  There are other steps in
-order to simplify the generated code as far as possible.
+However the current implementation is an interpreter, rather than a compiler,
+since SWI-Prolog is fully dynamic and the status of a module could change at
+run-time. A future improvement could be to apply a partial evaluator to the
+interpreter.
 
 */
 

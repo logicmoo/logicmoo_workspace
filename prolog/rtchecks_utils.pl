@@ -45,6 +45,9 @@
 :- multifile
     prolog:message_location//1.
 
+/** <module> Useful predicates to facilitate work with run-time checks.
+*/
+
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
@@ -59,13 +62,6 @@ filtered_backtrace:no_backtrace_clause_hook('$rat_trap'(_, _, _, _, _), _).
 
 tracertc :-
     filtered_backtrace(100).
-
-:- doc(author, "Edison Mera").
-
-:- doc(module, "This module contains some useful predicates to
-        facilitate work with run-time checks.").
-
-:- doc(handle_rtcheck/1, "Predicate that processes a rtcheck exception.").
 
 :- type location_t/1.
 location_t(Loc) :-
@@ -100,7 +96,9 @@ rtcheck_type(compat).
 rtcheck_type(compatpos).
 rtcheck_type(calls).
 
-:- pred handle_rtcheck/1 : assrchk_error.
+%!  handle_rtcheck(RTCheck:assrchk_error) is det.
+%
+%  Predicate that processes a rtcheck exception.
 
 handle_rtcheck(RTCheck) :-
     \+ ( copy_term_nat(RTCheck, Term),
