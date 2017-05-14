@@ -36,14 +36,14 @@
           [rtcheck_goal/2,
            rtcheck_call/2,
            check_asrs/4,
+           current_assertion_rt/3,
            start_rtcheck/2,
            rtc_call/2,
            '$with_gloc'/2,
-           '$with_asr_head'/2,
-           collect_assertions/4,
-           current_assertion/4
+           '$with_asr_head'/2
           ]).
 
+:- use_module(library(apply)).
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
 :- use_module(library(rtchecks_flags)).
@@ -53,10 +53,9 @@
 :- use_module(library(resolve_calln)).
 :- use_module(library(send_check)).
 :- use_module(library(rtcprops)).
+:- use_module(library(clambda)).
 
 :- doc(author, "Edison Mera").
-
-%:- doc(author, "Based on David Trallero's rtchecks package.").
 
 :- doc(module, "This module contains the predicates that are
         required to implement run-time checks.").
@@ -123,7 +122,7 @@ check_asr_props(Asr, Cond, PType, PropValues) :-
               )
             ),
             AsrPropValues),
-    maplist(unify_common(Asr), AsrPropValues, PropValues).
+    maplist([Asr] +\ (Asr-PV)^PV^true, AsrPropValues, PropValues).
 
 check_prop(compat,   Prop) :- compat(  Prop).
 check_prop(instance, Prop) :- instance(Prop).
@@ -238,7 +237,7 @@ start_rtcheck(M:Goal0, CM:WrappedHead) :-
 
 collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
     qualify_meta_goal(Goal, M, CM, Pred),
-    collect_assertions(Pred, M, rtcheck, AsrL),
+    collect_assertions(Pred, M, AsrL),
     maplist(wrap_asr_rtcheck, AsrL, RAsrL).
 
 wrap_asr_rtcheck(Asr, rtcheck(Asr)).
@@ -343,37 +342,19 @@ do_rtcheck(false, Check) :-
   Note: This is weird to preserve ciao-compatibility
 */
 
-valid_ctcheck_assertions(Status, Type) :-
-    ctcheck_assr_status(Status),
-    ctcheck_assr_type(Type).
-
-ctcheck_assr_status(trust).
-ctcheck_assr_status(check).
-
-ctcheck_assr_type(calls).
-ctcheck_assr_type(entry).
-ctcheck_assr_type(pred).
-ctcheck_assr_type(prop).
-ctcheck_assr_type(exit).
-ctcheck_assr_type(success).
-
 black_list_pred(_=_).
 
-assertion_is_valid(ctcheck, Status, Type, _) :-
-    valid_ctcheck_assertions(Status, Type).
-assertion_is_valid(rtcheck, Status, Type, Asr) :-
+assertion_is_valid(Status, Type, Asr) :-
     ( \+ prop_asr(glob, rtcheck(_), _, Asr)
     ->is_valid_status_type(Status, Type),
       \+ prop_asr(glob, no_rtcheck(_), _, Asr)
     ; true % Force run-time checking
     ).
 
-current_assertion(Pred, M, TimeCheck, Asr) :-
-    \+ ( TimeCheck = (rtcheck),
-         prop_asr(Pred, M, _, prop, _, _, _)
-       ),
+current_assertion_rt(Pred, M, Asr) :-
+    \+ prop_asr(Pred, M, _, prop, _, _, _),
     prop_asr(Pred, M, Status, Type, _, _, Asr),
-    assertion_is_valid(TimeCheck, Status, Type, Asr),
+    assertion_is_valid(Status, Type, Asr),
     ( current_prolog_flag(rtchecks_level, inner)
     ->true
     ; current_prolog_flag(rtchecks_level, exports),
@@ -382,11 +363,9 @@ current_assertion(Pred, M, TimeCheck, Asr) :-
     ),
     \+ black_list_pred(Pred).
 
-unify_common(Common, Common-Term, Term).
-
-collect_assertions(Pred, M, TimeCheck, AsrL) :-
+collect_assertions(Pred, M, AsrL) :-
     copy_term_nat(Pred, Head), % copy to avoid duplication of atributes
-    findall(Head-Asr, current_assertion(Head, M, TimeCheck, Asr), Pairs),
-    maplist(unify_common(Pred), Pairs, AsrL).
+    findall(Head-Asr, current_assertion_rt(Head, M, Asr), Pairs),
+    maplist([Pred] +\ (Pred-T)^T^true, Pairs, AsrL).
 
 sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).
