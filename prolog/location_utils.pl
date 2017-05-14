@@ -34,7 +34,7 @@
 
 :- module(location_utils,
         [property_location/3, predicate_location/2, property_from/3,
-         record_location_dynamic/3, predicate_from/2, cleanup_loc_dynamic/4,
+         record_location_dynamic/3, cleanup_loc_dynamic/4,
          from_location/2, in_set/2, in_dir/2, all_call_refs/5,
          record_location_meta/5, record_location/4, record_location_goal/6]).
 
@@ -47,6 +47,7 @@
 :- use_module(library(extra_location)).
 :- use_module(library(static_strip_module)).
 :- use_module(library(compact_goal)).
+:- use_module(library(predicate_from)).
 
 from_location(From, Location) :-
     '$messages':swi_location(From, Location, []),
@@ -119,12 +120,6 @@ predicate_properties(P, List) :-
                                       indexed(_),
                                       line_count(_)])
                 ), List).
-
-:- meta_predicate predicate_from(:,-).
-
-predicate_from(P, file(File, Line, -1, 0)) :-
-        predicate_property(P, file(File)),
-        predicate_property(P, line_count(Line)).
 
 prop_t(use). % In some cases is already tracked by prolog:called_by/4@database_fact
 prop_t(def).

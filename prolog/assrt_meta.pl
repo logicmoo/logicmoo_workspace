@@ -37,6 +37,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(assertions_op)).
 :- use_module(library(location_utils)).
+:- use_module(library(predicate_from)).
 :- use_module(library(globprops)).
 :- use_module(library(tabling)).
 

@@ -42,6 +42,9 @@
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(infer_meta_if_required)).
 :- use_module(library(location_utils)).
+% This provides extra information to prolog_codewalk but will not be required if
+% you use source_codewalk instead:
+:- use_module(library(ai_extra_clauses), []).
 
 user:file_search_path(checkers, library(checkers)).
 

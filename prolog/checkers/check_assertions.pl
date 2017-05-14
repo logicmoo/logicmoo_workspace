@@ -39,7 +39,6 @@
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(source_codewalk)).
-:- use_module(library(rtchecks_rt)).
 :- use_module(library(clambda)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(implementation_module)).
@@ -274,12 +273,32 @@ tabled_generate_ctchecks(H, M, CM, Caller, Goal) :-
 %
 generate_ctchecks(Goal, M, VInf, CTChecks) :-
     % writeln(user_error, generate_ctchecks(Goal, M, VInf, CTChecks)),
-    collect_assertions(Goal, M, ctcheck, AsrL),
+    collect_assertions(Goal, M, AsrL),
     ( AsrL \= []
     ->maplist(wrap_asr_ctcheck(VInf), AsrL, PAsrL),
       CTChecks = check_assertions:ctcheck_goal(PAsrL, Goal)
     ; CTChecks = check_assertions:true
     ).
+
+collect_assertions(Pred, M, AsrL) :-
+    copy_term_nat(Pred, Head),
+    findall(Head-Asr, current_assertion_ct(Head, M, Asr), Pairs),
+    maplist({Pred}/[Pred-T,T]>>true, Pairs, AsrL).
+
+current_assertion_ct(Pred, M, Asr) :-
+    prop_asr(Pred, M, Status, Type, _, _, Asr),
+    ctcheck_assr_status(Status),
+    ctcheck_assr_type(Type).
+
+ctcheck_assr_status(trust).
+ctcheck_assr_status(check).
+
+ctcheck_assr_type(calls).
+ctcheck_assr_type(entry).
+ctcheck_assr_type(pred).
+ctcheck_assr_type(prop).
+ctcheck_assr_type(exit).
+ctcheck_assr_type(success).
 
 wrap_asr_ctcheck(VInf, Asr, ctcheck(VInf, Asr)).
 
