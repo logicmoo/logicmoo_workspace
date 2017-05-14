@@ -32,14 +32,46 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(globprops, [det/1, semidet/1, nondet/1, multi/1, dupclauses/1, iso/1,
-                      (deprecated)/1, num_solutions/2, num_solutions_eq/2,
-                      solutions/2, is_det/1, non_det/1, fails/1, not_fails/1,
-                      unknown/1, equiv/2, have_choicepoints/1, nsh/2, nfi/2,
-                      fi/2, no_choicepoints/1, signal/1, signal/2, signals/2,
-                      throws/2, throw/2, exception/1, exception/2, database/1,
-                      user_output/2, no_exception/1, no_exception/2, eval/1,
-                      no_signal/1, no_signal/2, meta_modes/1, no_meta_modes/1]).
+:- module(globprops,
+          [(deprecated)/1,
+           database/1,
+           det/1,
+           dupclauses/1,
+           equiv/2,
+           eval/1,
+           exception/1,
+           exception/2,
+           fails/1,
+           failure/1,
+           fi/2,
+           have_choicepoints/1,
+           is_det/1,
+           iso/1,
+           meta_modes/1,
+           multi/1,
+           nfi/2,
+           no_choicepoints/1,
+           no_exception/1,
+           no_exception/2,
+           no_meta_modes/1,
+           no_signal/1,
+           no_signal/2,
+           non_det/1,
+           nondet/1,
+           not_fails/1,
+           nsh/2,
+           num_solutions/2,
+           num_solutions_eq/2,
+           semidet/1,
+           signal/1,
+           signal/2,
+           signals/2,
+           solutions/2,
+           throw/2,
+           throws/2,
+           unknown/1,
+           user_output/2
+          ]).
 
 :- use_module(library(assertions)).
 :- use_module(library(intercept)).
@@ -47,33 +79,53 @@
 :- use_module(library(typeprops)).
 :- use_module(library(send_check)).
 
-%    Note that the implementations provided for the properties are the ones used
-%    when run-time checks are enabled.  Run-time check for properties
-%    @var{Prop} must be implemented following certain rules:
+/** <module> Global Properties
+
+    These are the properties that can be placed in the global section of an
+    assertion, or in a program-point assertion
+
+    Note that the implementations provided for the properties are executed when
+    run-time checking is enabled.  Such properties should be implemented
+    following certain rules:
+
+    - For any Goal, call(Goal) must be equivalent to:
+      ```
+      intercept(Prop(Goal), RTCheck, true).
+      ```
+    - Should remove the choicepoints if the goal does not introduce new ones.
+
+    - Should try to throw the run-time check exception as soon as the property
+      being validated has been violated.
+
+    - All the checks must be compatible among them.
+
+    - Should be conmutative.
+
+    - Should be side-effects free
+*/
+
+%!  equiv(:Goal1,:Goal2)
 %
-%    - For any @var{Goal}, @pred{call(Goal)} must be equivalent to:
-%
-%      intercept(Prop(Goal), rtcheck(_, _, _, _, _), true).
-%
-%    - Remove the choicepoints if the goal does not introduce new ones.
-%
-%    - Try to throw the run-time check exception as soon as the property being
-%      validated has been violated.
-%
-%    - All the checks must be compatible among them.
-%
-%    - They are side-effects free
+%   Goal1 is equivalent to Goal2
 
 :- meta_predicate equiv(0, 0).
-:- global equiv(Goal1,Goal2) # "~w is equivalent to ~w."-[Goal1, Goal2].
+:- global equiv/2.
 
 equiv(Goal, _) :- call(Goal).
 
-:- global det(X) + equiv(not_fails(is_det(X))).
+%!  unknown(:Goal)
+%
+%   Does nothing, just provided as a stub for the meta/2 predicate
 
 :- global unknown/1.
 
 unknown(Goal) :- Goal.
+
+%!  det(:Goal)
+%
+%   Goal has exactly one solution
+
+:- global det(X) + equiv(not_fails(is_det(X))).
 
 det(Goal) :-
     Solved = solved(no),
@@ -94,82 +146,102 @@ det(Goal) :-
     ; nb_setarg(1, Solved, yes)
     ).
 
-:- global semidet(X) + equiv(is_det(X)).
+%!  semidet(:Goal)
+%
+%   Goal has zero or one solution
 
-semidet(Goal) :- is_det(Goal).
+:- global semidet/1.
+
+semidet(Goal) :- semidet(Goal, semidet).
+
+%!  nondet(:Goal)
+%
+%   Goal is non-deterministic.
 
 :- global nondet/1.
 
 nondet(Goal) :- Goal.
 
-:- global multi(X) + equiv(not_fails(X)).
+%!  multi(:Goal)
+%
+%   Goal could have multiple solutions.
 
-multi(Goal) :-
-    Solved = solved(no),
-    ( true
-    ; arg(1, Solved, no) ->
-      send_comp_rtcheck(Goal, multi, fails),
-      fail
-    ),
-    prolog_current_choice(C0),
-    test_throw_2(Goal, multi, _, true),
-    prolog_current_choice(C1),
-    ( C0 == C1 -> !
-    ; nb_setarg(1, Solved, yes)
-    ).
+:- global multi/1.
 
-:- global fails(X)
-# "Calls of the form ~w fail."-[X].
+multi(Goal) :- multi(Goal, multi).
 
-fails(Goal) :-
-    Solved = solved(no),
-    test_throw_2(Goal, fails, _, true),
-    ( arg(1, Solved, no)
-    ->send_comp_rtcheck(Goal, fails, not_fails),
-      nb_setarg(1, Solved, yes)
-    ; true
-    ).
-
-:- global not_fails(X)
-# "All the calls of the form ~w do not fail."-[X].
-
-not_fails(Goal) :-
+multi(Goal, Prop) :-
     Solved = solved(no),
     ( true
     ; arg(1, Solved, no)
-    ->send_comp_rtcheck(Goal, not_fails, fails),
+    ->send_comp_rtcheck(Goal, Prop, failure),
       fail
     ),
     prolog_current_choice(C0),
-    test_throw_2(Goal, not_fails, _, true),
+    test_throw_2(Goal, Prop, _, true),
     prolog_current_choice(C1),
     ( C0 == C1
     ->!
     ; nb_setarg(1, Solved, yes)
     ).
 
-:- doc(is_det(X), "All calls of the form ~w are
-   deterministic, i.e., produce at most one solution, or do not
-   terminate.  In other words, if ~w succeeds, it can only
-   succeed once. It can still leave choice points after its execution,
-   but when backtracking into these, it can only fail or go into an
-   infinite loop."-[X, X]).
+%!  not_fails(:Goal)
+%
+%   Goal does not fail
 
-:- global is_det(X)
-# "All calls of the form ~w are deterministic."-[X].
+:- global not_fails(X) + equiv(multi(X)).
 
-is_det(Goal) :-
+not_fails(Goal) :- multi(Goal, not_fails).
+
+%!  failure(:Goal)
+%
+%   Goal always fail
+
+:- global failure/1.
+
+failure(Goal) :- failure(Goal, failure).
+
+%!  fails(:Goal)
+%
+%   Equivalent to failure/1
+
+:- global fails(X) + equiv(failure(X)).
+
+fails(Goal) :- failure(Goal, fails).
+
+failure(Goal, Prop) :-
+    Solved = solved(no),
+    test_throw_2(Goal, Prop, _, true),
+    ( arg(1, Solved, no)
+    ->send_comp_rtcheck(Goal, Prop, not_fails),
+      nb_setarg(1, Solved, yes)
+    ; true
+    ).
+
+
+%!  is_det(:Goal)
+%
+%   Goal is deterministic. Equivalent to semidet.
+
+:- global is_det(X) + equiv(semidet(X)).
+
+is_det(Goal) :- semidet(Goal, is_det).
+
+semidet(Goal, Prop) :-
     Solved = solved(no),
     Goal,
     ( arg(1, Solved, no)
     ->true
-    ; send_comp_rtcheck(Goal, is_det, non_det)
+    ; send_comp_rtcheck(Goal, Prop, non_det)
       % more than one solution!
     ),
     nb_setarg(1, Solved, yes).
 
-:- global non_det(X)
-# "All calls of the form ~w are non-deterministic."-[X].
+%!  non_det(:Goal)
+%
+%   Goal is non-deterministic
+
+:- global non_det/1.
 
 non_det(Goal) :-
     Solved = solved(no),
@@ -190,8 +262,11 @@ non_det(Goal) :-
     ; nb_setarg(1, Solved, yes)
     ).
 
-:- global no_choicepoints(X)
-# "A call to ~w does not create choicepoints."-[X].
+%!  no_choicepoints(:Goal)
+%
+%   Goal does not leave choicepoints on exit
+
+:- global no_choicepoints/1.
 
 no_choicepoints(Goal) :-
     prolog_current_choice(C0),
@@ -201,8 +276,11 @@ no_choicepoints(Goal) :-
     ; send_comp_rtcheck(Goal, no_choicepoints, have_choicepoints)
     ).
 
-:- global have_choicepoints(X)
-# "A call to ~w creates choicepoints."-[X].
+%!  have_choicepoints(:Goal)
+%
+%   Goal leave choicepoints on exit
+
+:- global have_choicepoints/1.
 
 have_choicepoints(Goal) :-
     prolog_current_choice(C0),
@@ -213,8 +291,11 @@ have_choicepoints(Goal) :-
     ; true
     ).
 
-:- global num_solutions_eq(X, N) : callable * int
-# "All the calls of the form ~w have ~w solutions."-[X, N].
+%!  num_solutions_eq(:Goal, Num:int)
+%
+%   Goal have Num solutions
+
+:- global num_solutions_eq/2.
 
 num_solutions_eq(Goal, N) :-
     Sols = solutions(0),
@@ -250,10 +331,11 @@ num_solutions_eq(Goal, N) :-
     ).
 
 :- meta_predicate num_solutions(0, 1).
+%!   num_solutions(:Goal, :Check)
+%
+%    If the number of solutions of Goal is N, call(Check, N) succeeds.
 
-:- global num_solutions(Goal, Check) : callable * callable
-# "For a call to ~w, @pred{~w(X)} succeeds, where @var{X} is
-   the number of solutions."-[Goal, Check].
+:- global num_solutions/2 + meta_modes.
 
 num_solutions(Goal, Check) :-
     Sols = num_solutions(0),
@@ -280,8 +362,11 @@ num_solutions(Goal, Check) :-
     ; nb_setarg(1, Sols, N1)
     ).
 
-:- global solutions(Goal, Sols) : callable * list
-# "~w produces the solutions listed in ~w."-[Goal, Sols].
+%!   solutions(:Goal, +Sols)
+%
+%    Goal produces the solutions listed in Sols
+
+:- global solutions(:, +list).
 
 solutions(Goal, Sols) :-
     Goal = _:Sol,
@@ -319,16 +404,28 @@ solutions(Goal, Sols) :-
       )
     ).
 
-:- global database(X) # "A call to ~w will change the prolog database"-[X].
+%!  database(:Goal)
+%
+%   Goal will change the prolog database.
+
+:- global database/1.
 
 database(Goal) :- call(Goal).
 
-:- global eval(Goal) # "~w is evaluable at compile-time."-[Goal].
+%!  eval(:Goal)
+%
+%   Goal is evaluable at compile-time.
+
+:- global eval/1.
 
 eval(Goal) :- call(Goal).
 
-:- global dupclauses/1 + (eval, database)
-    # "States that a predicate has repeated clauses".
+%!  dupclauses(:Goal)
+%
+%   Goal is a predicate with duplicated clauses.
+
+:- global dupclauses/1 + (eval, database).
+
 dupclauses(M:Goal) :-
     ( functor(Goal, F, A),
       functor(Head1, F, A),
@@ -369,46 +466,71 @@ emit_signal(Choice, E) :-
         retract(signal_db(Choice, _, _)),
         assertz(signal_db(Choice, yes, E)).
 
-:- global signal(Goal)
-# "Calls of the form ~w throw a signal."-[Goal].
+%!  signal(:Goal)
+%
+%   Goal sends a signal
+
+:- global signal/1.
 
 signal(Goal) :- signal(Goal, _).
 
-:- global signal(Goal, E)
-# "A call to ~w sends a signal that unifies with ~w."-[Goal, E].
+%!  signal(:Goal, Signal)
+%
+%   Goal sends a signal that unifies with Signal
 
-signal(Goal, E) :-
+:- global signal/2.
+
+signal(Goal, Signal) :-
         prolog_current_choice(Choice),
-        asserta_signal_check(Choice, Goal, E, yes),
+        asserta_signal_check(Choice, Goal, Signal, yes),
         prolog_current_choice(C0),
-        intercept(Goal, E, (emit_signal(Choice, E), send_signal(E))),
+        intercept(Goal, Signal,
+                  ( emit_signal(Choice, Signal),
+                    send_signal(Signal)
+                  )),
         prolog_current_choice(C1),
-        retract_signal_check(Choice, Goal, E, yes),
+        retract_signal_check(Choice, Goal, Signal, yes),
         (C0 == C1 -> ! ; true).
 
-:- global no_signal(Goal)
-# "Calls of the form ~w do not send any signal."-[Goal].
+%!  no_signal(:Goal)
+%
+%   Goal don't send any signal.
+
+:- global no_signal/1.
 
 no_signal(Goal) :- no_signal(Goal, _).
 
-:- global no_signal(Goal, E)
-# "Calls of the form ~w do not send the signal ~w."-[Goal, E].
+%!  no_signal(:Goal, Signal)
+%
+%   Goal don't send signals that unifies with Signal
 
-no_signal(Goal, E) :-
+:- global no_signal/2.
+
+no_signal(Goal, Signal) :-
         prolog_current_choice(Choice),
-        asserta_signal_check(Choice, Goal, E, no),
+        asserta_signal_check(Choice, Goal, Signal, no),
         prolog_current_choice(C0),
-        intercept(Goal, E, (emit_signal(Choice, E), throw(E))),
+        intercept(Goal, Signal,
+                  ( emit_signal(Choice, Signal),
+                    throw(Signal)
+                  )),
         prolog_current_choice(C1),
-        retract_signal_check(Choice, Goal, E, no),
+        retract_signal_check(Choice, Goal, Signal, no),
         (C0 == C1 -> ! ; true).
 
-:- global exception(Goal)
-# "Calls of the form ~w throw an exception."-[Goal].
+%!  exception(:Goal)
+%
+%   Goal throws an exception.
+
+:- global exception/1.
 
 exception(Goal) :-
         Goal,
         send_comp_rtcheck(Goal, exception, no_exception).
+
+%!  throw(:Goal, Exception)
+%
+%   Goal throws an exception that does not unifies with Exception
 
 :- global throw/2.
 throw(Goal, E) :-
@@ -429,59 +551,92 @@ test_throw_2(Goal, Prop, F, Test) :-
                 throw(F)
             )).
 
-:- global exception(Goal, E) # "Calls of the form ~w throw an
-exception that unifies with ~w."-[Goal, E].
-% exception(Goal, E) :- exception(throw(Goal, E)).
+%!  exception(:Goal, Exception)
+%
+%   Goal throws an exception that unifies with Exception
+
+:- global exception(X, E) + equiv(exception(throw(X, E))).
 
 exception(Goal, E) :-
         test_throw_2(Goal, exception(E), F, F\=E),
         send_comp_rtcheck(Goal, exception(E), no_exception).
 
-:- global no_exception(Goal) #
-        "Calls of the form ~w do not throw any exception."-[Goal].
+%!  no_exception(:Goal)
+%
+%   Goal doesn't throw any exception.
+
+:- global no_exception/1.
 
 no_exception(Goal) :- test_throw_2(Goal, no_exception, _, true).
 
-:- global no_exception(Goal, E) # "Calls of the form ~w do not
-        throw exception ~w."-[Goal, E].
+%!  no_exception(:Goal, Exception)
+%
+%   Goal doesn't throw an exception that unifies with Exception
+
+:- global no_exception/2.
 
 no_exception(Goal, E) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 
-:- global throws(Goal, Es)
-# "Calls of the form ~w can throw only the exceptions that
-   unify with the terms listed in ~w."-[Goal, Es].
+%!  throws(:Goal, Exceptions:List)
+%
+%   Goal can only throw the exceptions that unify with the elements of
+%   Exceptions
+
+:- global throws/2.
 
 throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 
-:- global signals(Goal, Es)
-# "Calls of the form ~w can generate only the signals that
-   unify with the terms listed in ~w."-[Goal, Es].
+%!  signals(:Goal, Signals:List)
+%
+%   Goal can generate only the signals that unify with the elements of
+%   Signals
+%
+%   @tbd proper implementation
+
+:- global signals/2.
 
 signals(Goal, _) :- call(Goal).
 
-:- global meta_modes(Goal)
-    # "The modes for ~w are specified in the meta_predicate declaration"-[Goal].
+%!  meta_modes(:Goal)
+%
+%   The modes for Goal are specified in the meta_predicate declaration.
+
+:- global meta_modes/1.
 
 meta_modes(Goal) :- call(Goal).
 
-:- global no_meta_modes(Goal)
-    # "The modes for ~w are not specified in the meta_predicate declaration"-[Goal].
+%!  no_meta_modes(:Goal)
+%
+%   The modes for ~w are not specified in the meta_predicate declaration.
+
+:- global no_meta_modes/1.
 
 no_meta_modes(Goal) :- call(Goal).
 
-:- global declaration (deprecated)/1
-# "Specifies that the predicate marked with this global property has been
-   deprecated, i.e., its use is not recommended any more since it will be
-   deleted at a future date. Typically this is done because its functionality
-   has been superseded by another predicate.".
+%!  deprecated(:Goal)
+%
+%  Specifies that the predicate marked with this global property has been
+%  deprecated, i.e., its use is not recommended any more since it will be
+%  deleted at a future date. Typically this is done because its functionality
+%  has been superseded by another predicate.
+
+:- global declaration (deprecated)/1.
 
 deprecated(Goal) :- call(Goal).
 
-:- global iso/1 # "Complies with the ISO-Prolog standard.".
+%!  iso(:Goal)
+%
+%  Complies with the ISO-Prolog standard.
+
+:- global iso/1.
 
 iso(Goal) :- call(Goal).
 
-:- global nfi(_,V) # "~w is not further instantiated."-[V].
+%!  nfi(:Goal, Term)
+%
+%   On success of Goal, Term is not further instantiated.
+
+:- global nfi/2.
 
 nfi(Goal, V) :-
     copy_term(V, X),
@@ -491,7 +646,11 @@ nfi(Goal, V) :-
     ; send_comp_rtcheck(Goal, nfi, fi)
     ).
 
-:- global fi(_, V) # "~w is further instantiated."-[V].
+%!  fi(:Goal, Term)
+%
+%   On success of Goal, Term is further instantiated.
+
+:- global fi/2.
 
 fi(Goal, V) :-
     copy_term(V, X),
@@ -500,6 +659,10 @@ fi(Goal, V) :-
     ->send_comp_rtcheck(Goal, fi, nfi)
     ; true
     ).
+
+%!  nsh(:Goal, Term)
+%
+%   On call of Goal, Goal and Term don't share variables
 
 :- global nsh/2.
 nsh(Goal, Arg) :-
@@ -523,8 +686,11 @@ check_nsh(_:Goal, Arg) :-
     ; true
     ).
 
-:- global user_output(Goal, S) #
-        "Calls of the form ~w write ~w to standard output."-[Goal, S].
+%!  user_output(:Goal, +String)
+%
+%   Goal produces String as standard output
+
+:- global user_output/2.
 
 user_output(Goal, S) :-
     setup_call_cleanup(new_memory_file(FileName),
