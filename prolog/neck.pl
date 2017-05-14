@@ -34,6 +34,7 @@
 
 :- module(neck, [neck/0]).
 
+:- use_module(library(lists)).
 :- use_module(library(compound_expand)).
 :- use_module(library(sequence_list)).
 :- use_module(library(list_sequence)).

@@ -1,9 +1,9 @@
-/*  Part of Extended Libraries for SWI-Prolog
+/*  Part of Extended Libraries for Prolog
 
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/xlibrary
-    Copyright (C): 2014, Process Design Center, Breda, The Netherlands.
+    Copyright (C): 2015, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,45 +32,11 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(subpos_utils,
-          [subpos_location/3,
-           subterm_location/3,
-           subterm_location_eq/3
-          ]).
+:- module(predicate_from,
+          [predicate_from/2]).
 
-:- use_module(library(lists)).
+:- meta_predicate predicate_from(:,-).
 
-location_subpos(PPos, N, SPos) :-
-    nonvar(PPos),
-    PPos = parentheses_term_position(_, _, Pos), !,
-    location_subpos(Pos, N, SPos).
-location_subpos(term_position(_, _, _, _, PosL), N, Pos) :-
-    nth1(N, PosL, Pos).
-location_subpos(list_position(From, To, PosL, Tail), N, Pos) :-
-    ( N = 1
-    ->PosL = [Pos|_]
-    ; N = 2
-    ->( PosL = [_]
-      ->Pos = Tail
-      ; PosL = [_|PosL1],
-        Pos = list_position(From, To, PosL1, Tail)
-      )
-    ).
-location_subpos(brace_term_position(_, _, Pos), 1, Pos).
-
-subpos_location([],    Pos,    Pos).
-subpos_location([N|L], SubPos, Pos) :-
-    location_subpos(SubPos, N, Pos0),
-    subpos_location(L, Pos0, Pos).
-
-subterm_location([],    Term, Term).
-subterm_location([N|L], Find, Term) :-
-    compound(Term),
-    arg(N, Term, SubTerm),
-    subterm_location(L, Find, SubTerm).
-
-subterm_location_eq([],    Find, Term) :- Find==Term.
-subterm_location_eq([N|L], Find, Term) :-
-    compound(Term),
-    arg(N, Term, SubTerm),
-    subterm_location_eq(L, Find, SubTerm).
+predicate_from(P, file(File, Line, -1, 0)) :-
+        predicate_property(P, file(File)),
+        predicate_property(P, line_count(Line)).

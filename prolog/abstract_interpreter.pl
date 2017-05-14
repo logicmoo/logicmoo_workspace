@@ -45,7 +45,6 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(resolve_calln)).
-:- use_module(library(extra_location)).
 :- use_module(library(term_size)).
 
 :- meta_predicate
@@ -363,10 +362,6 @@ match_head_body(Goal, M, CMBody, From) :-
 
 :- multifile extra_clauses/4.
 
-extra_clauses(Goal, CM, CM:true, From) :-
-    predicate_property(CM:Goal, dynamic),
-    implementation_module(CM:Goal, M),
-    loc_dynamic(Goal, M, dynamic(def, _, _), From).
 extra_clauses(Goal, CM, I:Goal, _From) :-
     implementation_module(CM:Goal, M),
     functor(Goal, F, A),
