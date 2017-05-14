@@ -32,8 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(globprops, [(global)/1, (global)/2, (declaration)/1, (declaration)/2,
-                      det/1, semidet/1, nondet/1, multi/1, dupclauses/1, iso/1,
+:- module(globprops, [det/1, semidet/1, nondet/1, multi/1, dupclauses/1, iso/1,
                       (deprecated)/1, num_solutions/2, num_solutions_eq/2,
                       solutions/2, is_det/1, non_det/1, fails/1, not_fails/1,
                       unknown/1, equiv/2, have_choicepoints/1, nsh/2, nfi/2,
@@ -45,6 +44,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(intercept)).
 :- use_module(library(metaprops)).
+:- use_module(library(typeprops)).
 :- use_module(library(send_check)).
 
 %    Note that the implementations provided for the properties are the ones used

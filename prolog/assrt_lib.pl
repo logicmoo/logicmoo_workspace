@@ -314,7 +314,6 @@ assrt_status(debug).
 %   assertion status is not specified explicitly.
 
 default_assrt_status(entry,   true) :- !. % ???
-default_assrt_status(modedef, true) :- !. % ???
 default_assrt_status(X,       check) :-
     assrt_type(X),
     !.
@@ -431,8 +430,6 @@ assertion_format(comp, g).
 % These to become obsolete?
 assertion_format(entry, c).
 assertion_format(entry, t).
-
-assertion_format(modedef, X) :- assrt_format_code(X).
 
 %!  assrt_format_code(X)
 %
