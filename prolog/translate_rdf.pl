@@ -2842,7 +2842,7 @@ load_owl_from_stream(S):-
   get_module(M),
   process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
   close(S),
-  add_kb_prefixes(NSList),
+  trill:add_kb_prefixes(NSList),
   rdf_2_owl('ont','ont'),
   owl_canonical_parse_3(['ont']),
   parse_probabilistic_annotation_assertions.
@@ -2854,7 +2854,7 @@ trill:add_kb_prefixes([]).
 
 trill:add_kb_prefixes([(H=H1)|T]):-
   trill:add_kb_prefix(H,H1),
-  add_kb_prefixes(T).
+  trill:add_kb_prefixes(T).
 
 % Adds a prefix into ns4query
 :- multifile trill:add_kb_prefix/2.
