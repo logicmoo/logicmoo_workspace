@@ -1,4 +1,4 @@
-/** trillp predicates
+/* trillp predicates
 
 This module performs reasoning over probabilistic description logic knowledge bases.
 It reads probabilistic knowledge bases in RDF format or in TRILL format, a functional-like

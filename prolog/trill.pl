@@ -2412,9 +2412,9 @@ sandbox:safe_primitive(trill:load_owl_kb(_)).
 
 user:term_expansion((:- trill),[]):-
   trill:add_kb_prefixes([('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]),
-  consult('trill_internal.pl').
+  consult(library(trill_internal)).
 
 user:term_expansion((:- trillp),[]):-
   trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
-  consult('trillp_internal.pl').
+  consult(library(trillp_internal)).
 
