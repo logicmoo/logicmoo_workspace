@@ -10,6 +10,15 @@ TRILL can compute the probability or find an explanation of the following querie
   \item Inconsistency of the knowledge base.
 \end{itemize}
 All the input arguments have to be atoms or ground terms.
+Note that it is necessary to specify which algorithm, TRILL or TRILL$^P$, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive
+\begin{verbatim}
+:- trill.
+\end{verbatim}
+for loading TRILL or 
+\begin{verbatim}
+:- trillp.
+\end{verbatim}
+for TRILL$^P$.
 
 \subsubsection{Probabilistic Queries}
 TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.
@@ -118,3 +127,33 @@ Finally, you can ask about the inconsistency of the knowledge base with
 inconsistent_theory
 inconsistent_theory(-Expl:list)
 \end{verbatim}
+
+\subsection{TRILL Useful Predicates}
+There are other predicates defined in TRILL which helps manage and load the KB.
+\begin{verbatim}
+add_kb_prefix(++ShortPref:string,++LongPref:string)
+add_kb_prefixes(++Prefixes:list)
+\end{verbatim}
+They register the alias for prefixes. The firs registers \verb|ShortPref| for the prefix \verb|LongPref|, while the second register all the alias prefixes contained in Prefixes. The input list must contain pairs alias=prefix, i.e., \verb|[('foo'='http://example.foo#')]|. In both cases, the empty string \verb|''| can be defined as alias. The predicates
+\begin{verbatim}
+remove_kb_prefix(++ShortPref:string,++LongPref:string)
+remove_kb_prefix(++Name:string)
+\end{verbatim}
+remove from the registered aliases the one given in input. In particular, \verb|remove_kb_prefix/1| takes as input a string that can be an alias or a prefix and removes the pair containing the string from the registered aliases.
+
+\begin{verbatim}
+add_axiom(++Axiom:axiom)
+add_axioms(++Axioms:list)
+\end{verbatim}
+These predicates add (all) the given axiom to the knowledge base. While, to remove axioms can be similarly used the predicates
+\begin{verbatim}
+remove_axiom(++Axiom:axiom)
+remove_axioms(++Axioms:list)
+\end{verbatim}
+All the axioms must be defined following the TRILL syntax.
+
+Finally, we can interrogate TRILL to return the loaded axioms with
+\begin{verbatim}
+axiom(?Axiom:axiom)
+\end{verbatim}
+This predicate searches in the loaded knowledge base axioms that unify with Axiom.

@@ -1,4 +1,4 @@
-:-use_module(library(trill)).
+%:-use_module(library(trill)).
 
 :-trill.
 

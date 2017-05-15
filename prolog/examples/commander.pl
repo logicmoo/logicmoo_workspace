@@ -1,4 +1,4 @@
-:-use_module(library(trill)).
+:-use_module('../trill.pl').
 
 :-trill.
 
@@ -11,4 +11,4 @@ subClassOf(allValuesFrom(commands,soldier),commander).
 classAssertion(guard,pete).
 classAssertion(guard,al).
 classAssertion(allValuesFrom(commands,guard),john).
-subClassOf(guard,soldier).
+equivalentClasses([guard,soldier]).

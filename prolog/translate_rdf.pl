@@ -3031,11 +3031,8 @@ expand_ns4query(URL,_,URL).
 
 :- multifile trill:add_axiom/1.
 trill:add_axiom(Ax):-
-  ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
-  expand_all_ns(Args,NSList,ArgsEx),
-  AxEx =.. [P|ArgsEx],
-  test_and_assert(AxEx,'ont').
+  create_and_assert_axioms(P,Args).
 
 :- multifile trill:add_axioms/1.
 trill:add_axioms([]).
@@ -3048,8 +3045,15 @@ trill:add_axioms([H|T]) :-
 trill:remove_axiom(Ax):-
   ( ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
-  expand_all_ns(Args,NSList,ArgsEx),
-  AxEx =.. [P|ArgsEx],
+  ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
+       ( expand_all_ns(IntArgs,NSList,ArgsExp),
+         AxEx =.. [P,ArgsExp]
+       )
+     ;
+       ( expand_all_ns(Args,NSList,ArgsExp),
+         AxEx =.. [P|ArgsExp]
+       )
+  ),
   retract(owl2_model:AxEx),
   retract(owl2_model:owl(AxEx,'ont')).
 
@@ -3074,10 +3078,10 @@ get_module('user'):- !.
 
 parse_rdf_from_owl_rdf_pred(String):-
   open_chars_stream(String,S),
-  load_owl_from_stream(S)
+  load_owl_from_stream(S).
 
 create_and_assert_axioms(P,Args) :-
-  ns4query(NSList),
+  ( ns4query(NSList) *-> true; NSList = []),
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
        ( expand_all_ns(IntArgs,NSList,ArgsExp),
          NewTRILLAxiom =.. [P,ArgsExp]
@@ -3106,9 +3110,6 @@ sandbox:safe_primitive(owl2_model:load_owl(_)).
 sandbox:safe_primitive(owl2_model:load_owl_from_string(_)).
 sandbox:safe_primitive(owl2_model:expand_all_ns(_,_,_)).
 %sandbox:safe_primitive(owl2_model:query_expand(_)).
-
-user:term_expansion((:- trill),[]):-
-  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#').
 
 user:term_expansion(kb_prefix(A,B),[]):-
   trill:add_kb_prefix(A,B).

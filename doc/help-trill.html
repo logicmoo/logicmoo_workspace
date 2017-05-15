@@ -24,10 +24,12 @@
 </ul></li>
 <li><a href="#semantics">Semantics</a></li>
 <li><a href="#inf">Inference</a><ul>
+<li><a href="#computing-queries-probability">Computing Queries Probability</a></li>
 <li><a href="#queries">Possible Queries</a><ul>
 <li><a href="#probabilistic-queries">Probabilistic Queries</a></li>
 <li><a href="#non-probabilistic-queries">Non Probabilistic Queries</a></li>
 </ul></li>
+<li><a href="#trill-useful-predicates">TRILL Useful Predicates</a></li>
 </ul></li>
 <li><a href="#download-query-results-through-an-api">Download Query Results through an API</a></li>
 <li><a href="#manual-in-pdf">Manual in PDF</a></li>
@@ -35,7 +37,7 @@
 </ul>
 </div>
 <h1 id="syn">Syntax</h1>
-<p>Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web <span class="citation">[<a href="#ref-DBLP:conf/dlog/2003handbook">1</a>,<a href="#ref-dlchap">2</a>]</span> and are used for modeling ontologies. They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals of the domain. In this section, we recall the expressive description logic <span class="math inline">\(\mathcal{ALC}\)</span> <span class="citation">[<a href="#ref-DBLP:journals/ai/Schmidt-SchaussS91">15</a>]</span>. We refer to <span class="citation">[<a href="#ref-DBLP:journals/ws/LukasiewiczS08">8</a>]</span> for a detailed description of <span class="math inline">\(\mathcal{SHOIN}(\mathbf{D})\)</span> DL, that is at the basis of OWL DL.</p>
+<p>Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web <span class="citation">[<a href="#ref-DBLP:conf/dlog/2003handbook">3</a>,<a href="#ref-dlchap">4</a>]</span> and are used for modeling ontologies. They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals of the domain. In this section, we recall the expressive description logic <span class="math inline">\(\mathcal{ALC}\)</span> <span class="citation">[<a href="#ref-DBLP:journals/ai/Schmidt-SchaussS91">17</a>]</span>. We refer to <span class="citation">[<a href="#ref-DBLP:journals/ws/LukasiewiczS08">10</a>]</span> for a detailed description of <span class="math inline">\(\mathcal{SHOIN}(\mathbf{D})\)</span> DL, that is at the basis of OWL DL.</p>
 <p>Let <span class="math inline">\(\mathbf{A}\)</span>, <span class="math inline">\(\mathbf{R}\)</span> and <span class="math inline">\(\mathbf{I}\)</span> be sets of <em>atomic concepts</em>, <em>roles</em> and <em>individuals</em>. A <em>role</em> is an atomic role <span class="math inline">\(R \in \mathbf{R}\)</span>. <em>Concepts</em> are defined by induction as follows. Each <span class="math inline">\(C \in \mathbf{A}\)</span>, <span class="math inline">\(\bot\)</span> and <span class="math inline">\(\top\)</span> are concepts. If <span class="math inline">\(C\)</span>, <span class="math inline">\(C_1\)</span> and <span class="math inline">\(C_2\)</span> are concepts and <span class="math inline">\(R \in \mathbf{R}\)</span>, then <span class="math inline">\((C_1\sqcap C_2)\)</span>, <span class="math inline">\((C_1\sqcup C_2 )\)</span>, <span class="math inline">\(\neg C\)</span>, <span class="math inline">\(\exists R.C\)</span>, and <span class="math inline">\(\forall R.C\)</span> are concepts. Let <span class="math inline">\(C\)</span>, <span class="math inline">\(D\)</span> be concepts, <span class="math inline">\(R \in \mathbf{R}\)</span> and <span class="math inline">\(a, b \in \mathbf{I}\)</span>. An <em>ABox</em> <span class="math inline">\({{\cal A}}\)</span> is a finite set of <em>concept membership axioms</em> <span class="math inline">\(a : C\)</span> and <em>role membership axioms</em> <span class="math inline">\((a, b) : R\)</span>, while a <em>TBox</em> <span class="math inline">\({{\cal T}}\)</span> is a finite set of <em>concept inclusion axioms</em> <span class="math inline">\(C\sqsubseteq D\)</span>. <span class="math inline">\(C \equiv D\)</span> abbreviates <span class="math inline">\(C \sqsubseteq D\)</span> and <span class="math inline">\(D\sqsubseteq  C\)</span>.</p>
 <p>A <em>knowledge base</em> <span class="math inline">\({{\cal K}}= ({{\cal T}}, {{\cal A}})\)</span> consists of a TBox <span class="math inline">\({{\cal T}}\)</span> and an ABox <span class="math inline">\({{\cal A}}\)</span>. A KB <span class="math inline">\({{\cal K}}\)</span> is assigned a semantics in terms of set-theoretic interpretations <span class="math inline">\({{\cal I}}= (\Delta^{{\cal I}}, \cdot^{{\cal I}})\)</span>, where <span class="math inline">\(\Delta^{{\cal I}}\)</span> is a non-empty <em>domain</em> and <span class="math inline">\(\cdot^{{\cal I}}\)</span> is the <em>interpretation function</em> that assigns an element in <span class="math inline">\(\Delta ^{{\cal I}}\)</span> to each <span class="math inline">\(a \in \mathbf{I}\)</span>, a subset of <span class="math inline">\(\Delta^{{\cal I}}\)</span> to each <span class="math inline">\(C \in \mathbf{A}\)</span> and a subset of <span class="math inline">\(\Delta^{{\cal I}}\times \Delta^{{\cal I}}\)</span> to each <span class="math inline">\(R \in \mathbf{R}\)</span>.</p>
 <p>TRILL allows the use of two different syntaxes used together or individually:</p>
@@ -130,11 +132,13 @@ equivalentClasses([list,of,classes]).
 disjointClasses([list,of,classes]).
 disjointUnion([list,of,classes]).
 
-subPropertyOf(&quot;subProperty&quot;,&quot;superProperty&quot;).
-equivalentProperties([list,of,properties]).
+subPropertyOf(&quot;subPropertyIRI&quot;,&quot;superPropertyIRI&quot;).
+equivalentProperties([list,of,properties,IRI]).
 propertyDomain(&quot;propertyIRI&quot;,&quot;domainIRI&quot;).
 propertyRange(&quot;propertyIRI&quot;,&quot;rangeIRI&quot;).
 transitiveProperty(&quot;propertyIRI&quot;).
+inverseProperties(&quot;propertyIRI&quot;,&quot;inversePropertyIRI&quot;).
+symmetricProperty(&quot;propertyIRI&quot;).
 
 sameIndividual([list,of,individuals]).
 differentIndividuals([list,of,individuals]).
@@ -227,8 +231,8 @@ propertyAssertion(hasAnimal,kevin,fluffy)</code></pre>
 &lt;/rdf:RDF&gt;</code></pre>
 <p>There are many <a href="http://www.w3.org/2001/sw/wiki/Category:Editor">editors</a> for developing knowledge bases.</p>
 <h1 id="semantics">Semantics</h1>
-<p>In the field of Probabilistic Logic Programming (PLP for short) many proposals have been presented. An effective and popular approach is the Distribution Semantics <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">12</a>]</span>, which underlies many PLP languages such as PRISM <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">12</a>,<a href="#ref-DBLP:journals/jair/SatoK01">13</a>]</span>, Independent Choice Logic <span class="citation">[<a href="#ref-Poo97-ArtInt-IJ">10</a>]</span>, Logic Programs with Annotated Disjunctions <span class="citation">[<a href="#ref-VenVer04-ICLP04-IC">17</a>]</span> and ProbLog <span class="citation">[<a href="#ref-DBLP:conf/ijcai/RaedtKT07">3</a>]</span>. Along this line, many reserchers proposed to combine probability theory with Description Logics (DLs for short) <span class="citation">[<a href="#ref-DBLP:journals/ws/LukasiewiczS08">8</a>,<a href="#ref-DBLP:conf/rweb/Straccia08">16</a>]</span>. DLs are at the basis of the Web Ontology Language (OWL for short), a family of knowledge representation formalisms used for modeling information of the Semantic Web</p>
-<p>TRILL follows the DISPONTE <span class="citation">[<a href="#ref-RigBelLamZese12-URSW12">11</a>,<a href="#ref-Zese17-SSW-BK">18</a>]</span> semantics to compute the probability of queries. DISPONTE applies the distribution semantics <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">12</a>]</span> of probabilistic logic programming to DLs. A program following this semantics defines a probability distribution over normal logic programs called <em>worlds</em>. Then the distribution is extended to queries and the probability of a query is obtained by marginalizing the joint distribution of the query and the programs.</p>
+<p>In the field of Probabilistic Logic Programming (PLP for short) many proposals have been presented. An effective and popular approach is the Distribution Semantics <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">14</a>]</span>, which underlies many PLP languages such as PRISM <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">14</a>,<a href="#ref-DBLP:journals/jair/SatoK01">15</a>]</span>, Independent Choice Logic <span class="citation">[<a href="#ref-Poo97-ArtInt-IJ">12</a>]</span>, Logic Programs with Annotated Disjunctions <span class="citation">[<a href="#ref-VenVer04-ICLP04-IC">19</a>]</span> and ProbLog <span class="citation">[<a href="#ref-DBLP:conf/ijcai/RaedtKT07">5</a>]</span>. Along this line, many reserchers proposed to combine probability theory with Description Logics (DLs for short) <span class="citation">[<a href="#ref-DBLP:journals/ws/LukasiewiczS08">10</a>,<a href="#ref-DBLP:conf/rweb/Straccia08">18</a>]</span>. DLs are at the basis of the Web Ontology Language (OWL for short), a family of knowledge representation formalisms used for modeling information of the Semantic Web</p>
+<p>TRILL follows the DISPONTE <span class="citation">[<a href="#ref-RigBelLamZese12-URSW12">13</a>,<a href="#ref-Zese17-SSW-BK">21</a>]</span> semantics to compute the probability of queries. DISPONTE applies the distribution semantics <span class="citation">[<a href="#ref-DBLP:conf/iclp/Sato95">14</a>]</span> of probabilistic logic programming to DLs. A program following this semantics defines a probability distribution over normal logic programs called <em>worlds</em>. Then the distribution is extended to queries and the probability of a query is obtained by marginalizing the joint distribution of the query and the programs.</p>
 <p>In DISPONTE, a <em>probabilistic knowledge base</em> <span class="math inline">\({{\cal K}}\)</span> is a set of <em>certain axioms</em> or <em>probabilistic axioms</em> in which each axiom is independent evidence. Certain axioms take the form of regular DL axioms while probabilistic axioms are <span class="math inline">\(p::E\)</span> where <span class="math inline">\(p\)</span> is a real number in <span class="math inline">\([0,1]\)</span> and <span class="math inline">\(E\)</span> is a DL axiom.</p>
 <p>The idea of DISPONTE is to associate independent Boolean random variables to the probabilistic axioms. To obtain a <em>world</em>, we include every formula obtained from a certain axiom. For each probabilistic axiom, we decide whether to include it or not in <span class="math inline">\(w\)</span>. A world therefore is a non probabilistic KB that can be assigned a semantics in the usual way. A query is entailed by a world if it is true in every model of the world.</p>
 <p>The probability <span class="math inline">\(p\)</span> can be interpreted as an <em>epistemic probability</em>, i.e., as the degree of our belief in axiom <span class="math inline">\(E\)</span>. For example, a probabilistic concept membership axiom <span class="math inline">\(
@@ -239,7 +243,7 @@ p::C\sqsubseteq D
 <p>Formally, an <em>atomic choice</em> is a couple <span class="math inline">\((E_i,k)\)</span> where <span class="math inline">\(E_i\)</span> is the <span class="math inline">\(i\)</span>th probabilistic axiom and <span class="math inline">\(k\in \{0,1\}\)</span>. <span class="math inline">\(k\)</span> indicates whether <span class="math inline">\(E_i\)</span> is chosen to be included in a world (<span class="math inline">\(k\)</span> = 1) or not (<span class="math inline">\(k\)</span> = 0). A <em>composite choice</em> <span class="math inline">\(\kappa\)</span> is a consistent set of atomic choices, i.e., <span class="math inline">\((E_i,k)\in\kappa, (E_i,m)\in \kappa\)</span> implies <span class="math inline">\(k=m\)</span> (only one decision is taken for each formula). The probability of a composite choice <span class="math inline">\(\kappa\)</span> is <span class="math inline">\(P(\kappa)=\prod_{(E_i,1)\in \kappa}p_i\prod_{(E_i, 0)\in \kappa} (1-p_i)\)</span>, where <span class="math inline">\(p_i\)</span> is the probability associated with axiom <span class="math inline">\(E_i\)</span>. A <em>selection</em> <span class="math inline">\(\sigma\)</span> is a total composite choice, i.e., it contains an atomic choice <span class="math inline">\((E_i,k)\)</span> for every probabilistic axiom of the probabilistic KB. A selection <span class="math inline">\(\sigma\)</span> identifies a theory <span class="math inline">\(w_\sigma\)</span> called a <em>world</em> in this way: <span class="math inline">\(w_\sigma={{\cal C}}\cup\{E_i|(E_i,1)\in \sigma\}\)</span> where <span class="math inline">\({{\cal C}}\)</span> is the set of certain axioms. Let us indicate with <span class="math inline">\(\mathcal{S}_{{\cal K}}\)</span> the set of all selections and with <span class="math inline">\(\mathcal{W}_{{\cal K}}\)</span> the set of all worlds. The probability of a world <span class="math inline">\(w_\sigma\)</span> is <span class="math inline">\(P(w_\sigma)=P(\sigma)=\prod_{(E_i,1)\in \sigma}p_i\prod_{(E_i, 0)\in \sigma} (1-p_i)\)</span>. <span class="math inline">\(P(w_\sigma)\)</span> is a probability distribution over worlds, i.e., <span class="math inline">\(\sum_{w\in \mathcal{W}_{{\cal K}}}P(w)=1\)</span>.</p>
 <p>We can now assign probabilities to queries. Given a world <span class="math inline">\(w\)</span>, the probability of a query <span class="math inline">\(Q\)</span> is defined as <span class="math inline">\(P(Q|w)=1\)</span> if <span class="math inline">\(w\models Q\)</span> and 0 otherwise. The probability of a query can be defined by marginalizing the joint probability of the query and the worlds, i.e. <span class="math inline">\(P(Q)=\sum_{w\in \mathcal{W}_{{\cal K}}}P(Q,w)=\sum_{w\in \mathcal{W}_{{\cal K}}} P(Q|w)p(w)=\sum_{w\in \mathcal{W}_{{\cal K}}: w\models Q}P(w)\)</span>.</p>
 <p>[people+petsxy]</p>
-<p>Consider the following KB, inspired by the <code>people+pets</code> ontology <span class="citation">[<a href="#ref-ISWC03-tut">9</a>]</span>: <span><span class="math inline">\(0.5\ \ ::\ \ \exists hasAnimal.Pet \sqsubseteq NatureLover\ \ \ \ \ 0.6\ \ ::\ \ Cat\sqsubseteq Pet\)</span><br />
+<p>Consider the following KB, inspired by the <code>people+pets</code> ontology <span class="citation">[<a href="#ref-ISWC03-tut">11</a>]</span>: <span><span class="math inline">\(0.5\ \ ::\ \ \exists hasAnimal.Pet \sqsubseteq NatureLover\ \ \ \ \ 0.6\ \ ::\ \ Cat\sqsubseteq Pet\)</span><br />
 <span class="math inline">\((kevin,tom):hasAnimal\ \ \ \ \ (kevin,{{\mathit{fluffy}}}):hasAnimal\ \ \ \ \ tom: Cat\ \ \ \ \ {{\mathit{fluffy}}}: Cat\)</span><br />
 </span> The KB indicates that the individuals that own an animal which is a pet are nature lovers with a 50% probability and that <span class="math inline">\(kevin\)</span> has the animals <span class="math inline">\({{\mathit{fluffy}}}\)</span> and <span class="math inline">\(tom\)</span>. Fluffy and <span class="math inline">\(tom\)</span> are cats and cats are pets with probability 60%. We associate a Boolean variable to each axiom as follow <span class="math inline">\(F_1 = \exists hasAnimal.Pet \sqsubseteq NatureLover\)</span>, <span class="math inline">\(F_2=(kevin,{{\mathit{fluffy}}}):hasAnimal\)</span>, <span class="math inline">\(F_3=(kevin,tom):hasAnimal\)</span>, <span class="math inline">\(F_4={{\mathit{fluffy}}}: Cat\)</span>, <span class="math inline">\(F_5=tom: Cat\)</span> and <span class="math inline">\(F_6= Cat\sqsubseteq Pet\)</span>.</p>
 <p>The KB has four worlds and the query axiom <span class="math inline">\(Q=kevin:NatureLover\)</span> is true in one of them, the one corresponding to the selection <span class="math inline">\(
@@ -260,15 +264,21 @@ P(Q) = P(X_1\vee X_2) = P(X_1)+P(X_2)-P(X_1\wedge X_2)
  = 0.4+0.3-0.4\cdot 0.3=0.58
 \)</span></p>
 <h1 id="inf">Inference</h1>
-<p>Traditionally, a reasoning algorithm decides whether an axiom is entailed or not by a KB by refutation: the axiom <span class="math inline">\(E\)</span> is entailed if <span class="math inline">\(\neg E\)</span> has no model in the KB. Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom.</p>
-<p>The problem of finding explanations for a query has been investigated by various authors <span class="citation">[<a href="#ref-extended_tracing">4</a>–<a href="#ref-DBLP:journals/ws/KalyanpurPSH05">7</a>,<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>,<a href="#ref-Zese17-SSW-BK">18</a>]</span>. It was called <em>axiom pinpointing</em> in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>]</span> and considered as a non-standard reasoning service useful for tracing derivations and debugging ontologies. In particular, in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">14</a>]</span> the authors define <em>minimal axiom sets</em> (<em>MinAs</em> for short).</p>
+<p>Traditionally, a reasoning algorithm decides whether an axiom is entailed or not by a KB by refutation: the axiom <span class="math inline">\(E\)</span> is entailed if <span class="math inline">\(\neg E\)</span> has no model in the KB. Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom, in order to compute the probability of the axiom.</p>
+<h2 id="computing-queries-probability">Computing Queries Probability</h2>
+<p>The problem of finding explanations for a query has been investigated by various authors <span class="citation">[<a href="#ref-extended_tracing">6</a>–<a href="#ref-DBLP:journals/ws/KalyanpurPSH05">9</a>,<a href="#ref-DBLP:conf/ijcai/SchlobachC03">16</a>,<a href="#ref-Zese17-SSW-BK">21</a>]</span>. It was called <em>axiom pinpointing</em> in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">16</a>]</span> and considered as a non-standard reasoning service useful for tracing derivations and debugging ontologies. In particular, in <span class="citation">[<a href="#ref-DBLP:conf/ijcai/SchlobachC03">16</a>]</span> the authors define <em>minimal axiom sets</em> (<em>MinAs</em> for short).</p>
 <p>Let <span class="math inline">\({{\cal K}}\)</span> be a knowledge base and <span class="math inline">\(Q\)</span> an axiom that follows from it, i.e., <span class="math inline">\({{\cal K}}\models Q\)</span>. We call a set <span class="math inline">\(M\subseteq {{\cal K}}\)</span> a <em>minimal axiom set</em> or <em>MinA</em> for <span class="math inline">\(Q\)</span> in <span class="math inline">\({{\cal K}}\)</span> if <span class="math inline">\(M \models Q\)</span> and it is minimal w.r.t. set inclusion.</p>
 <p>The problem of enumerating all MinAs is called <span style="font-variant: small-caps;">min-a-enum</span>. <span style="font-variant: small-caps;">All-MinAs(<span class="math inline">\(Q,{{\cal K}}\)</span>)</span> is the set of all MinAs for query <span class="math inline">\(Q\)</span> in knowledge base <span class="math inline">\({{\cal K}}\)</span>.</p>
 <p>A <em>tableau</em> is a graph where each node represents an individual <span class="math inline">\(a\)</span> and is labeled with the set of concepts <span class="math inline">\({{\cal L}}(a)\)</span> it belongs to. Each edge <span class="math inline">\(\langle a, b\rangle\)</span> in the graph is labeled with the set of roles to which the couple <span class="math inline">\((a, b)\)</span> belongs. Then, a set of consistency preserving tableau expansion rules are repeatedly applied until a clash (i.e., a contradiction) is detected or a clash-free graph is found to which no more rules are applicable. A clash is for example a couple <span class="math inline">\((C, a)\)</span> where <span class="math inline">\(C\)</span> and <span class="math inline">\(\neg C\)</span> are present in the label of a node, i.e. <span class="math inline">\({C, \neg C} \subseteq {{\cal L}}(a)\)</span>.</p>
 <p>Some expansion rules are non-deterministic, i.e., they generate a finite set of tableaux. Thus the algorithm keeps a set of tableaux that is consistent if there is any tableau in it that is consistent, i.e., that is clash-free. Each time a clash is detected in a tableau <span class="math inline">\(G\)</span>, the algorithm stops applying rules to <span class="math inline">\(G\)</span>. Once every tableau in <span class="math inline">\(T\)</span> contains a clash or no more expansion rules can be applied to it, the algorithm terminates. If all the tableaux in the final set <span class="math inline">\(T\)</span> contain a clash, the algorithm returns unsatisfiable as no model can be found. Otherwise, any one clash-free completion graph in <span class="math inline">\(T\)</span> represents a possible model for the concept and the algorithm returns satisfiable.</p>
-<p><span style="font-variant: small-caps;">min-a-enum</span> is required to answer queries to KBs following the DISPONTE semantics. To compute the probability of a query, the explanations must be made mutually exclusive, so that the probability of each individual explanation is computed and summed with the others. To do that we assign independent Boolean random variables to the axioms contained in the explanations and defining the Disjunctive Normal Form (DNF) Boolean formula <span class="math inline">\(f_K\)</span> which models the set of explanations. Thus <span class="math inline">\(
+<p>To compute the probability of a query, the explanations must be made mutually exclusive, so that the probability of each individual explanation is computed and summed with the others. To do that we assign independent Boolean random variables to the axioms contained in the explanations and defining the Disjunctive Normal Form (DNF) Boolean formula <span class="math inline">\(f_K\)</span> which models the set of explanations. Thus <span class="math inline">\(
 f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}\overline{X_{i}}
 \)</span> where <span class="math inline">\(\mathbf{X}=\{X_{i}|(E_i,k)\in\kappa,\kappa\in K\}\)</span> is the set of Boolean random variables. We can now translate <span class="math inline">\(f_K\)</span> to a Binary Decision Diagram (BDD), from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.</p>
+<p>In <span class="citation">[<a href="#ref-DBLP:journals/jar/BaaderP10">1</a>,<a href="#ref-DBLP:journals/logcom/BaaderP10">2</a>]</span> the authors consider the problem of finding a <em>pinpointing formula</em> instead of <span style="font-variant: small-caps;">All-MinAs(<span class="math inline">\(Q,{{\cal K}}\)</span>)</span>. The pinpointing formula is a monotone Boolean formula in which each Boolean variable corresponds to an axiom of the KB. This formula is built using the variables and the conjunction and disjunction connectives. It compactly encodes the set of all MinAs. Let’s assume that each axiom <span class="math inline">\(E\)</span> of a KB <span class="math inline">\({{\cal K}}\)</span> is associated with a propositional variable, indicated with <span class="math inline">\(var(E)\)</span>. The set of all propositional variables is indicated with <span class="math inline">\(var({{\cal K}})\)</span>. A valuation <span class="math inline">\(\nu\)</span> of a monotone Boolean formula is the set of propositional variables that are true. For a valuation <span class="math inline">\(\nu \subseteq var({{\cal K}})\)</span>, let <span class="math inline">\({{\cal K}}_{\nu} := \{t \in {{\cal K}}|var(t)\in\nu\}\)</span>.</p>
+<p>Given a query <span class="math inline">\(Q\)</span> and a KB <span class="math inline">\({{\cal K}}\)</span>, a monotone Boolean formula <span class="math inline">\(\phi\)</span> over <span class="math inline">\(var({{\cal K}})\)</span> is called a <em>pinpointing formula</em> for <span class="math inline">\(Q\)</span> if for every valuation <span class="math inline">\(\nu \subseteq var({{\cal K}})\)</span> it holds that <span class="math inline">\({{\cal K}}_{\nu} \models Q\)</span> iff <span class="math inline">\(\nu\)</span> satisfies <span class="math inline">\(\phi\)</span>.</p>
+<p>In Lemma 2.4 of <span class="citation">[<a href="#ref-DBLP:journals/logcom/BaaderP10">2</a>]</span> the authors proved that the set of all MinAs can be obtained by transforming the pinpointing formula into a Disjunctive Normal Form Boolean formula (DNF) and removing disjuncts implying other disjuncts.</p>
+<p>Irrespective of which representation of the explanations we choose, a DNF or a general pinpointing formula, we can apply knowledge compilation and <em>transform it into a Binary Decision Diagram (BDD)</em>, from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.</p>
+<p>We refer to <span class="citation">[<a href="#ref-ZesBelRig16-AMAI-IJ">20</a>,<a href="#ref-Zese17-SSW-BK">21</a>]</span> for a detailed description of the two methods.</p>
 <h2 id="queries">Possible Queries</h2>
 <p>TRILL can compute the probability or find an explanation of the following queries:</p>
 <ul>
@@ -278,7 +288,11 @@ f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}
 <li><p>Unsatifiability of a concept.</p></li>
 <li><p>Inconsistency of the knowledge base.</p></li>
 </ul>
-<p>All the input arguments have to be atoms or ground terms.</p>
+<p>All the input arguments have to be atoms or ground terms. Note that it is necessary to specify which algorithm, TRILL or TRILL<span class="math inline">\(^P\)</span>, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive</p>
+<pre><code>:- trill.</code></pre>
+<p>for loading TRILL or</p>
+<pre><code>:- trillp.</code></pre>
+<p>for TRILL<span class="math inline">\(^P\)</span>.</p>
 <h3 id="probabilistic-queries">Probabilistic Queries</h3>
 <p>TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.</p>
 <p>The probability of an individual to belong to a concept can be asked using TRILL with the predicate</p>
@@ -334,6 +348,23 @@ unsat(+Concept:term,-Expl:list)</code></pre>
 <p>Finally, you can ask about the inconsistency of the knowledge base with</p>
 <pre><code>inconsistent_theory
 inconsistent_theory(-Expl:list)</code></pre>
+<h2 id="trill-useful-predicates">TRILL Useful Predicates</h2>
+<p>There are other predicates defined in TRILL which helps manage and load the KB.</p>
+<pre><code>add_kb_prefix(++ShortPref:string,++LongPref:string)
+add_kb_prefixes(++Prefixes:list)</code></pre>
+<p>They register the alias for prefixes. The firs registers <code>ShortPref</code> for the prefix <code>LongPref</code>, while the second register all the alias prefixes contained in Prefixes. The input list must contain pairs alias=prefix, i.e., <code>[('foo'='http://example.foo#')]</code>. In both cases, the empty string <code>''</code> can be defined as alias. The predicates</p>
+<pre><code>remove_kb_prefix(++ShortPref:string,++LongPref:string)
+remove_kb_prefix(++Name:string)</code></pre>
+<p>remove from the registered aliases the one given in input. In particular, <code>remove_kb_prefix/1</code> takes as input a string that can be an alias or a prefix and removes the pair containing the string from the registered aliases.</p>
+<pre><code>add_axiom(++Axiom:axiom)
+add_axioms(++Axioms:list)</code></pre>
+<p>These predicates add (all) the given axiom to the knowledge base. While, to remove axioms can be similarly used the predicates</p>
+<pre><code>remove_axiom(++Axiom:axiom)
+remove_axioms(++Axioms:list)</code></pre>
+<p>All the axioms must be defined following the TRILL syntax.</p>
+<p>Finally, we can interrogate TRILL to return the loaded axioms with</p>
+<pre><code>axiom(?Axiom:axiom)</code></pre>
+<p>This predicate searches in the loaded knowledge base axioms that unify with Axiom.</p>
 <h1 id="download-query-results-through-an-api">Download Query Results through an API</h1>
 <p>The results of queries can also be downloaded programmatically by directly approaching the Pengine API. Example client code is <a href="https://github.com/friguzzi/trill-on-swish/tree/master/client">available</a>. For example, the <code>swish-ask.sh</code> client can be used with bash to download the results for a query in CSV. The call below downloads a CSV file for the coin example.</p>
 <pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
@@ -366,59 +397,68 @@ Prob = 0.51.
 <p>A PDF version of the manual is available at <a href="https://github.com/rzese/trill/blob/master/doc/help-trill.pdf" class="uri">https://github.com/rzese/trill/blob/master/doc/help-trill.pdf</a>.</p>
 <h1 id="bibliography" class="unnumbered">Bibliography</h1>
 <div id="refs" class="references">
+<div id="ref-DBLP:journals/jar/BaaderP10">
+<p>1. F. Baader and R. Peñaloza. 2010. Automata-based axiom pinpointing. <em>Journal of Automated Reasoning</em> 45, 2: 91–129.</p>
+</div>
+<div id="ref-DBLP:journals/logcom/BaaderP10">
+<p>2. F. Baader and R. Peñaloza. 2010. Axiom pinpointing in general tableaux. <em>Journal of Logic and Computation</em> 20, 1: 5–34.</p>
+</div>
 <div id="ref-DBLP:conf/dlog/2003handbook">
-<p>1. F. Baader, D. Calvanese, D. L. McGuinness, D. Nardi, and P. F. Patel-Schneider (eds.). 2003. <em>The description logic handbook: Theory, implementation, and applications</em>. Cambridge University Press.</p>
+<p>3. F. Baader, D. Calvanese, D. L. McGuinness, D. Nardi, and P. F. Patel-Schneider (eds.). 2003. <em>The description logic handbook: Theory, implementation, and applications</em>. Cambridge University Press.</p>
 </div>
 <div id="ref-dlchap">
-<p>2. F. Baader, I. Horrocks, and U. Sattler. 2008. Description logics. In <em>Handbook of knowledge representation</em>. Elsevier, 135–179.</p>
+<p>4. F. Baader, I. Horrocks, and U. Sattler. 2008. Description logics. In <em>Handbook of knowledge representation</em>. Elsevier, 135–179.</p>
 </div>
 <div id="ref-DBLP:conf/ijcai/RaedtKT07">
-<p>3. L. De Raedt, A. Kimmig, and H. Toivonen. 2007. ProbLog: A probabilistic Prolog and its application in link discovery. <em>IJCAI</em>, 2462–2467.</p>
+<p>5. L. De Raedt, A. Kimmig, and H. Toivonen. 2007. ProbLog: A probabilistic Prolog and its application in link discovery. <em>IJCAI</em>, 2462–2467.</p>
 </div>
 <div id="ref-extended_tracing">
-<p>4. C. Halaschek-Wiener, A. Kalyanpur, and B. Parsia. 2006. <em>Extending tableau tracing for ABox updates</em>. University of Maryland.</p>
+<p>6. C. Halaschek-Wiener, A. Kalyanpur, and B. Parsia. 2006. <em>Extending tableau tracing for ABox updates</em>. University of Maryland.</p>
 </div>
 <div id="ref-Kalyanpurphd">
-<p>5. A. Kalyanpur. 2006. Debugging and repair of OWL ontologies. </p>
+<p>7. A. Kalyanpur. 2006. Debugging and repair of OWL ontologies. </p>
 </div>
 <div id="ref-DBLP:conf/semweb/KalyanpurPHS07">
-<p>6. A. Kalyanpur, B. Parsia, M. Horridge, and E. Sirin. 2007. Finding all justifications of OWL DL entailments. <em>ISWC</em>, Springer, 267–280.</p>
+<p>8. A. Kalyanpur, B. Parsia, M. Horridge, and E. Sirin. 2007. Finding all justifications of OWL DL entailments. <em>ISWC</em>, Springer, 267–280.</p>
 </div>
 <div id="ref-DBLP:journals/ws/KalyanpurPSH05">
-<p>7. A. Kalyanpur, B. Parsia, E. Sirin, and J. A. Hendler. 2005. Debugging unsatisfiable classes in OWL ontologies. <em>J. Web Sem.</em> 3, 4: 268–293.</p>
+<p>9. A. Kalyanpur, B. Parsia, E. Sirin, and J. A. Hendler. 2005. Debugging unsatisfiable classes in OWL ontologies. <em>J. Web Sem.</em> 3, 4: 268–293.</p>
 </div>
 <div id="ref-DBLP:journals/ws/LukasiewiczS08">
-<p>8. T. Lukasiewicz and U. Straccia. 2008. Managing uncertainty and vagueness in description logics for the semantic web. <em>J. Web Sem.</em> 6, 4: 291–308.</p>
+<p>10. T. Lukasiewicz and U. Straccia. 2008. Managing uncertainty and vagueness in description logics for the semantic web. <em>J. Web Sem.</em> 6, 4: 291–308.</p>
 </div>
 <div id="ref-ISWC03-tut">
-<p>9. F. Patel-Schneider P, I. Horrocks, and S. Bechhofer. 2003. Tutorial on OWL. </p>
+<p>11. F. Patel-Schneider P, I. Horrocks, and S. Bechhofer. 2003. Tutorial on OWL. </p>
 </div>
 <div id="ref-Poo97-ArtInt-IJ">
-<p>10. D. Poole. 1997. The Independent Choice Logic for modelling multiple agents under uncertainty. <em>Artif. Intell.</em> 94, 1-2: 7–56.</p>
+<p>12. D. Poole. 1997. The Independent Choice Logic for modelling multiple agents under uncertainty. <em>Artif. Intell.</em> 94, 1-2: 7–56.</p>
 </div>
 <div id="ref-RigBelLamZese12-URSW12">
-<p>11. Fabrizio Riguzzi, Evelina Lamma, Elena Bellodi, and Riccardo Zese. 2012. Epistemic and statistical probabilistic ontologies. <em>URSW</em>, Sun SITE Central Europe, 3–14.</p>
+<p>13. Fabrizio Riguzzi, Evelina Lamma, Elena Bellodi, and Riccardo Zese. 2012. Epistemic and statistical probabilistic ontologies. <em>URSW</em>, Sun SITE Central Europe, 3–14.</p>
 </div>
 <div id="ref-DBLP:conf/iclp/Sato95">
-<p>12. T. Sato. 1995. A statistical learning method for logic programs with distribution semantics. <em>ICLP</em>, MIT Press, 715–729.</p>
+<p>14. T. Sato. 1995. A statistical learning method for logic programs with distribution semantics. <em>ICLP</em>, MIT Press, 715–729.</p>
 </div>
 <div id="ref-DBLP:journals/jair/SatoK01">
-<p>13. Taisuke Sato and Yoshitaka Kameya. 2001. Parameter learning of logic programs for symbolic-statistical modeling. <em>J. Artif. Intell. Res.</em> 15: 391–454.</p>
+<p>15. Taisuke Sato and Yoshitaka Kameya. 2001. Parameter learning of logic programs for symbolic-statistical modeling. <em>J. Artif. Intell. Res.</em> 15: 391–454.</p>
 </div>
 <div id="ref-DBLP:conf/ijcai/SchlobachC03">
-<p>14. Stefan Schlobach and Ronald Cornet. 2003. Non-standard reasoning services for the debugging of description logic terminologies. <em>IJCAI</em>, Morgan Kaufmann, 355–362.</p>
+<p>16. Stefan Schlobach and Ronald Cornet. 2003. Non-standard reasoning services for the debugging of description logic terminologies. <em>IJCAI</em>, Morgan Kaufmann, 355–362.</p>
 </div>
 <div id="ref-DBLP:journals/ai/Schmidt-SchaussS91">
-<p>15. Manfred Schmidt-Schauß and Gert Smolka. 1991. Attributive concept descriptions with complements. <em>Artif. Intell.</em> 48, 1: 1–26.</p>
+<p>17. Manfred Schmidt-Schauß and Gert Smolka. 1991. Attributive concept descriptions with complements. <em>Artif. Intell.</em> 48, 1: 1–26.</p>
 </div>
 <div id="ref-DBLP:conf/rweb/Straccia08">
-<p>16. Umberto Straccia. 2008. Managing uncertainty and vagueness in description logics, logic programs and description logic programs. <em>International summer school on reasoning web</em>, Springer, 54–103.</p>
+<p>18. Umberto Straccia. 2008. Managing uncertainty and vagueness in description logics, logic programs and description logic programs. <em>International summer school on reasoning web</em>, Springer, 54–103.</p>
 </div>
 <div id="ref-VenVer04-ICLP04-IC">
-<p>17. J. Vennekens, S. Verbaeten, and M. Bruynooghe. 2004. Logic programs with annotated disjunctions. <em>ICLP</em>, Springer, 195–209.</p>
+<p>19. J. Vennekens, S. Verbaeten, and M. Bruynooghe. 2004. Logic programs with annotated disjunctions. <em>ICLP</em>, Springer, 195–209.</p>
+</div>
+<div id="ref-ZesBelRig16-AMAI-IJ">
+<p>20. Riccardo Zese, Elena Bellodi, Fabrizio Riguzzi, Giuseppe Cota, and Evelina Lamma. 2016. Tableau reasoning for description logics and its extension to probabilities. <em>Ann. Math. Artif. Intel.</em>: 1–30. <a href="http://doi.org/10.1007/s10472-016-9529-3" class="uri">http://doi.org/10.1007/s10472-016-9529-3</a></p>
 </div>
 <div id="ref-Zese17-SSW-BK">
-<p>18. Riccardo Zese. 2017. <em>Probabilistic semantic web</em>. IOS Press. <a href="http://doi.org/10.3233/978-1-61499-734-4-i" class="uri">http://doi.org/10.3233/978-1-61499-734-4-i</a></p>
+<p>21. Riccardo Zese. 2017. <em>Probabilistic semantic web</em>. IOS Press. <a href="http://doi.org/10.3233/978-1-61499-734-4-i" class="uri">http://doi.org/10.3233/978-1-61499-734-4-i</a></p>
 </div>
 </div>
 </body>

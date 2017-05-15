@@ -3,8 +3,9 @@
 
 Traditionally, a reasoning algorithm decides  whether an axiom is entailed or not by a KB by refutation: the  axiom $E$ is entailed if $\neg E$ has no model
 in the KB.
-Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom.
+Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom, in order to compute the probability of the axiom.
 
+\subsection{Computing Queries Probability}
 The problem of finding  explanations for a query
 has been investigated by various authors \cite{DBLP:conf/ijcai/SchlobachC03,DBLP:journals/ws/KalyanpurPSH05,DBLP:conf/semweb/KalyanpurPHS07,Kalyanpurphd,extended_tracing,Zese17-SSW-BK}.
  It was called  \emph{axiom pinpointing} in 
@@ -40,8 +41,7 @@ set $T$ contain a clash, the algorithm returns unsatisfiable as no model can be
 found. Otherwise, any one clash-free completion graph in $T$ represents a possible
 model for the concept and the algorithm returns satisfiable.
 
-\textsc{min-a-enum} is required to answer queries to KBs following the DISPONTE semantics. To
-compute the probability of a query, the explanations must be made mutually exclusive, so
+To compute the probability of a query, the explanations must be made mutually exclusive, so
 that the probability of each individual explanation is computed and summed
 with the others. To do that we assign independent Boolean random variables to the axioms contained in the explanations and defining 
 the Disjunctive Normal Form (DNF) Boolean formula $f_K$ which models the set of explanations. Thus
@@ -50,3 +50,22 @@ f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}
 $
 where $\mathbf{X}=\{X_{i}|(E_i,k)\in\kappa,\kappa\in K\}$ is the set of Boolean random variables.
 We can now translate $f_K$ to a Binary Decision Diagram (BDD), from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.
+
+
+In \cite{DBLP:journals/jar/BaaderP10,DBLP:journals/logcom/BaaderP10} the authors consider the problem of finding a \emph{pinpointing formula} instead of 
+ \textsc{All-MinAs($Q,\cK$)}.
+ The pinpointing formula is a monotone Boolean formula in which each Boolean variable corresponds to an axiom of the KB. This formula is built using 
+ the variables and the conjunction and disjunction connectives. It compactly encodes the set of all MinAs.
+ Let's assume that each axiom $E$ of a KB $\cK$ is associated with a propositional variable, indicated with $var(E)$. The set of all propositional variables is indicated with $var(\cK )$.
+ A valuation $\nu$ of a monotone Boolean formula is the set of propositional variables that are true. For a valuation $\nu \subseteq var(\cK)$, let $\cK_{\nu} := \{t \in \cK |var(t)\in\nu\}$.
+ \begin{definition}[Pinpointing formula]
+ Given a query $Q$ and a KB $\cK$, a monotone Boolean formula $\phi$ over $var(\cK)$ is called a \emph{pinpointing formula} for $Q$ if for every valuation $\nu \subseteq var(\cK)$ it holds that $\cK_{\nu} \models Q$ iff
+ $\nu$ satisfies $\phi$.
+  
+ \end{definition}
+ In Lemma 2.4 of \cite{DBLP:journals/logcom/BaaderP10} the authors proved that the set of all MinAs can be obtained by transforming the pinpointing formula into a Disjunctive Normal Form Boolean formula (DNF) and removing disjuncts implying other disjuncts. 
+
+Irrespective of which representation of the explanations we choose, a DNF or a general pinpointing formula, we can apply knowledge compilation and \textit{transform it into a Binary Decision Diagram (BDD)}, 
+ from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.
+ 
+We refer to \cite{Zese17-SSW-BK,ZesBelRig16-AMAI-IJ} for a detailed description of the two methods.
