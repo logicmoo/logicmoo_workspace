@@ -1,6 +1,6 @@
-%:-use_module(library(trill)).
+:-use_module(library(trill)).
 
-%:-trill.
+:-trill.
 
 /*
 Model of risk factor of breast cancer, from

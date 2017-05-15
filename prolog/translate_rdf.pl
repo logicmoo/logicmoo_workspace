@@ -2850,8 +2850,9 @@ load_owl_from_stream(S):-
 % Adds a list of kb prefixes into ns4query
 :- multifile trill:add_kb_prefixes/1.
 
-add_kb_prefixes([]).
-add_kb_prefixes([(H=H1)|T]):-
+trill:add_kb_prefixes([]).
+
+trill:add_kb_prefixes([(H=H1)|T]):-
   trill:add_kb_prefix(H,H1),
   add_kb_prefixes(T).
 
@@ -2871,6 +2872,7 @@ trill:add_kb_prefix(A,B):-
     ;
       true
    ).
+   
 trill:add_kb_prefix(A,B):-
   assert(ns4query([(A=B)])).
 

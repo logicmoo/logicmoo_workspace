@@ -167,7 +167,9 @@ load_owl_kb(FileName):-
  */
 axiom(Axiom):-
   get_trill_current_module(Name),
-  Name:axiom(Axiom).
+  Name:ns4query(NSList),
+  expand_all_ns([Axiom],NSList,[AxiomEx]),
+  Name:axiom(AxiomEx).
 
 /*****************************
   MESSAGES
@@ -1045,11 +1047,11 @@ add_nominal(D,Ind,ABox0,ABox):-
     *->
    (
      ABox1 = [nominal(Ind)|ABox0],
-     (member((classAssertion('Thing',Ind),_E),ABox1)
+     (member((classAssertion('http://www.w3.org/2002/07/owl#Thing',Ind),_E),ABox1)
      ->
      ABox = ABox1
      ;
-     ABox = [(classAssertion('Thing',Ind),[])|ABox1]
+     ABox = [(classAssertion('http://www.w3.org/2002/07/owl#Thing',Ind),[])|ABox1]
      )
    )
     ;
@@ -1144,52 +1146,53 @@ find_sub_sup_class(someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S).
 
+
 /*******************
  managing the concept (C subclassOf Thing)
  this implementation doesn't work well in a little set of cases
  TO IMPROVE!
  *******************/
 /*
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:subClassOf(A,B),
   member(C,[A,B]),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:classAssertion(C,_),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(C,L),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:unionOf(L),
   member(C,L),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(someValuesFrom(_,C),L),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(allValuesFrom(_,C),L),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(minCardinality(_,_,C),L),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(maxCardinality(_,_,C),L),!.
 
-find_sub_sup_class(C,'Thing',subClassOf(C,'Thing')):-
+find_sub_sup_class(C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   get_trill_current_module(Name),
   Name:equivalentClasses(L),
   member(exactCardinality(_,_,C),L),!.
@@ -1622,7 +1625,7 @@ prepare_nom_list([],[]).
 prepare_nom_list([literal(_)|T],T1):-!,
   prepare_nom_list(T,T1).
 
-prepare_nom_list([H|T],[(nominal(H)),(classAssertion('Thing',H),[])|T1]):-
+prepare_nom_list([H|T],[(nominal(H)),(classAssertion('http://www.w3.org/2002/07/owl#Thing',H),[])|T1]):-
   prepare_nom_list(T,T1).
 %--------------
 
@@ -2399,6 +2402,7 @@ sandbox:safe_primitive(trill:inconsistent_theory(_)).
 sandbox:safe_primitive(trill:prob_inconsistent_theory(_)).
 sandbox:safe_primitive(trill:axiom(_)).
 sandbox:safe_primitive(trill:add_kb_prefix(_,_)).
+sandbox:safe_primitive(trill:add_kb_prefixes(_)).
 sandbox:safe_primitive(trill:add_axiom(_)).
 sandbox:safe_primitive(trill:add_axioms(_)).
 sandbox:safe_primitive(trill:load_kb(_)).
@@ -2407,10 +2411,10 @@ sandbox:safe_primitive(trill:load_owl_kb(_)).
 :- use_module(translate_rdf).
 
 user:term_expansion((:- trill),[]):-
-  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#'),
+  trill:add_kb_prefixes([('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]),
   consult('trill_internal.pl').
 
 user:term_expansion((:- trillp),[]):-
-  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#'),
+  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
   consult('trillp_internal.pl').
 

@@ -1,4 +1,4 @@
-:-use_module('../trill.pl').
+:-use_module(library(trill)).
 
 :-trill.
 
