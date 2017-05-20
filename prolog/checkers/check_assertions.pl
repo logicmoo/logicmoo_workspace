@@ -113,8 +113,7 @@ prop_ctcheck(M, FromChk, Trans) :-
            ^group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
-    asr_head_prop(Asr, CM, Head, _, _, _, From),
-    implementation_module(CM:Head, M),
+    prop_asr(head, M:Head, From, Asr),
     call(FromChk, From),
     functor(Head, HF,HA),
     PI=M:HF/HA,
