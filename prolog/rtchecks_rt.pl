@@ -189,16 +189,11 @@ checkif_asrs_comp([Asr-PVL|AsrL], Head, Goal1) :-
     checkif_asr_comp(PVL, Asr, Head, Goal1, Goal),
     checkif_asrs_comp(AsrL, Head, Goal).
 
-valid_command(times(_, _)).
-valid_command(try_sols(_, _)). % Legacy
-
 checkif_asr_comp(PropValues, Asr, Head, Goal1, Goal) :-
     ( member(PropValues, [[], [[]]]),
       copy_term_nat(Asr, NAsr),
       findall(g(NAsr, M, Glob, Loc),
-              ( asr_aprop(NAsr, glob, M:Glob, Loc),
-                \+ valid_command(Glob)
-              ), GlobL),
+              asr_aprop(NAsr, glob, M:Glob, Loc), GlobL),
       GlobL \= []
     ->comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, Goal1),
       Goal = '$with_asr_head'(Goal2, Asr-Head)
@@ -206,10 +201,33 @@ checkif_asr_comp(PropValues, Asr, Head, Goal1, Goal) :-
     ).
 
 comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
-    arg(1, Glob, Goal).
+    functor(Glob, _, N),
+    arg(N, Glob, Goal).
 
-:- meta_predicate rtcheck_call(0, +).
-rtcheck_call(CM:Goal, AsrL) :-
+%!  comps_to_goal(+Check:list, :Goal)//
+%
+%   This predicate allows to compound a list of global properties in to
+%   successive meta-calls, but in the third argument you can use your own
+%   selector:
+%   ```
+%   ?- comps_to_goal([not_fails(p(A)), is_det(p(A)), exception(p(A), exc)],G,p(A)).
+%   G = not_fails(is_det(exception(p(A),exc)))
+%   ```
+
+:- meta_predicate comps_to_goal(?, 3, ?, ?).
+comps_to_goal([],             _) --> [].
+comps_to_goal([Check|Checks], Goal) -->
+    comps_to_goal2(Checks, Check, Goal).
+
+:- meta_predicate comps_to_goal2(?, ?, 3, ?, ?).
+comps_to_goal2([], Check, Goal) -->
+    call(Goal, Check).
+comps_to_goal2([Check|Checks], Check0, Goal) -->
+    call(Goal, Check0),
+    comps_to_goal2(Checks, Check, Goal).
+
+:- meta_predicate rtcheck_call(+, 0).
+rtcheck_call(AsrL, CM:Goal) :-
     implementation_module(CM:Goal, M),
     rtcheck_goal(Goal, CM:Goal, M, CM, AsrL).
 

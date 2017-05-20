@@ -96,18 +96,18 @@ rtc_status(unknown).
 rtc_status(exhaustive).
 rtc_status(impossible).
 
-:- global rtcheck(G, Status) : callable * rtc_status
+:- global rtcheck(Status, G) : rtc_status * callable
     # "The runtime check of ~w have the status ~w."-[G, Status].
 
 :- true comp (rtcheck)/2.
 
-rtcheck(Goal, _) :- call(Goal).
+rtcheck(_, Goal) :- call(Goal).
 
 :- global rtcheck(G) # "Equivalent to rtcheck(~w, complete)."-[G].
 
 :- true comp (rtcheck)/1.
 
-rtcheck(Goal) :- rtcheck(Goal, complete).
+rtcheck(Goal) :- rtcheck(complete, Goal).
 
 :- global no_rtcheck(G)
     # "Declares that the assertion in which this comp property appears must not
@@ -115,4 +115,4 @@ rtcheck(Goal) :- rtcheck(Goal, complete).
 
 :- true comp (no_rtcheck)/1.
 
-no_rtcheck(Goal) :- rtcheck(Goal, impossible).
+no_rtcheck(Goal) :- rtcheck(impossible, Goal).
