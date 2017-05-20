@@ -47,7 +47,5 @@ resolve_calln(Meta, Goal) :-
 resolve_calln(Goal, Goal).
 
 do_resolve_calln(Meta, Meta2) :-
-    functor(Meta, call, A),
-    A >= 2,
     Meta =.. [call, Call|Args],
     extend_args(Call, Args, Meta2).
