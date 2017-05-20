@@ -39,12 +39,6 @@
            assrt_status/1,
            assertion_records/4,
            asr_head_prop/7,
-           asr_head/2,
-           asr_comp/4,
-           asr_call/4,
-           asr_succ/4,
-           asr_glob/4,
-           asr_comm/3,
            curr_prop_asr/4,
            asr_aprop/4,
            prop_asr/4,
@@ -91,12 +85,14 @@
 :- discontiguous
     term_expansion/2.
 
-asr_head(Asr, M:Head) :-
-    ( nonvar(Asr)
-    ->arg(1, Asr, M),
-      arg(2, Asr, Head)
-    ; true
-    ).
+%  These predicates are intended not to be called directly by user-applications:
+
+:- public
+       asr_comm/3,
+       asr_comp/4,
+       asr_call/4,
+       asr_succ/4,
+       asr_glob/4.
 
 curr_prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
 curr_prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).

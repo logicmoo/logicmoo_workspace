@@ -71,12 +71,12 @@ do_ac_head_prop_idx(Head, M, Mode, Det, From) :-
     predicate_from(M:Head, From).
 do_ac_head_prop_idx(_, _, _, _, _).
 
-assrt_lib:asr_head_prop(ac_asr(M, H, Mode, D, F), M, H, check, pred, [], F) :-
-    ac_head_prop_idx(H, M, Mode, D, F).
-assrt_lib:asr_comp(ac_asr(M, H, Mode, D, F), PM, P, F) :- asrc_prop(comp, M, H, Mode, D, F, PM, P).
-assrt_lib:asr_call(ac_asr(M, H, Mode, D, F), PM, P, F) :- asrc_prop(call, M, H, Mode, D, F, PM, P).
-assrt_lib:asr_succ(ac_asr(M, H, Mode, D, F), PM, P, F) :- asrc_prop(succ, M, H, Mode, D, F, PM, P).
-assrt_lib:asr_glob(ac_asr(M, H, Mode, D, F), PM, P, F) :- asrc_prop(glob, M, H, Mode, D, F, PM, P).
+assrt_lib:asr_head_prop(ac_asr(M, H, S, D, F), M, H, check, pred, [], F) :-
+    ac_head_prop_idx(H, M, S, D, F).
+assrt_lib:asr_comp(ac_asr(M, H, S, D, F), PM, P, F) :- asrc_prop(comp, M, H, S, D, F, PM, P).
+assrt_lib:asr_call(ac_asr(M, H, S, D, F), PM, P, F) :- asrc_prop(call, M, H, S, D, F, PM, P).
+assrt_lib:asr_succ(ac_asr(M, H, S, D, F), PM, P, F) :- asrc_prop(succ, M, H, S, D, F, PM, P).
+assrt_lib:asr_glob(ac_asr(M, H, S, D, F), PM, P, F) :- asrc_prop(glob, M, H, S, D, F, PM, P).
 
 asrc_prop(Type, M, H, Mode, D, F, PM, P) :-
     ac_head_prop_idx(H, M, Mode, D, F),

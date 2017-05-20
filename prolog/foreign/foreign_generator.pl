@@ -952,7 +952,7 @@ collect_prop(Asr, CM, Part, PropL) :-
 
 assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
     asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
-    ( asr_comm(Asr, Comm, _)
+    ( curr_prop_asr(comm, Comm, _, Asr)
     ->true
     ; Comm = ""
     ),
@@ -1337,7 +1337,7 @@ type_is_tdef(M, Type, Spec, A) :-
     functor(Type, TName, Arity),
     functor(Head, TName, Arity),
     type_props_(M, Head, _, _, Asr),
-    \+ asr_comp(Asr, _, _, _),
+    \+ curr_prop_asr(comp, _, _, Asr),
     bind_type_names(M, Head, TypeMPropLDictL),
     TypeMPropLDictL = [t(Head, [Prop], _)],
     arg(1, Head, A),
