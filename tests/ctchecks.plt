@@ -41,13 +41,13 @@ ctcex.pl:32: In assertions of [ctcex:b/2]:
     ctcex.pl:32:10: ctcex:is_2/1 is not a property
 ctcex.pl:36: In assertions of [ctcex:b/2]:
     ctcex.pl:36:10: In call to ctcex:is_num/2:
-ctcex.pl:26: Assertion failure for is_num(A,a).
+ctcex.pl:26: Assertion failure for is_num(a,A).
     In *calls*, unsatisfied properties: 
-        ctcex.pl:26:20: compat(ctcex:int(a)).
+        ctcex.pl:26:15: compat(ctcex:int(a)).
     ctcex.pl:36:21: In call to ctcex:is_num/2:
-ctcex.pl:26: Assertion failure for is_num(A,b).
+ctcex.pl:26: Assertion failure for is_num(b,A).
     In *calls*, unsatisfied properties: 
-        ctcex.pl:26:20: compat(ctcex:int(b)).
+        ctcex.pl:26:15: compat(ctcex:int(b)).
 */
 
 test(ctcex) :-
@@ -82,7 +82,7 @@ Warning:
 p1.pl:16:4: In the body of p1:p0/0:
 p1.pl:9:8: Assertion failure for p1(p1:q2).
     In *calls*, unsatisfied properties: 
-        p1.pl:9:11: compat(typeprops:is_pred(p1:q2,0)).
+        p1.pl:9:11: compat(typeprops:is_pred(0,p1:q2)).
 p1.pl:22:4: In the body of p1:p2/1:
 p1.pl:18:8: Assertion failure for q(A,B,C).
     In *calls*, unsatisfied properties: 
