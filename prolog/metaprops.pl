@@ -34,7 +34,7 @@
 
 :- module(metaprops, [(type)/1, (type)/2, (global)/1, (global)/2, compat/1,
                       instance/1, (declaration)/1, (declaration)/2, check/1,
-                      trust/1, true/1, false/1, add_1st_arg/3]).
+                      trust/1, true/1, false/1]).
 
 :- use_module(library(assertions)).
 
@@ -48,10 +48,10 @@ and as meta predicates, meta_predicate F(0) (assrt_lib.pl)".
 
 global(Goal) :- call(Goal).
 
-:- global global(Goal, Prop) : (callable(Goal), assrt_type(Prop))
+:- global global(Prop, Goal) : (assrt_type(Prop), callable(Goal))
 # "Like global/1, but allows to specify the default assertion type".
 
-global(Goal, _) :- call(Goal).
+global(_, Goal) :- call(Goal).
 
 :- true prop (declaration)/1 + (global(prop), declaration)
 # "A property that is a declaration, i.e., an operator is added as op(1125, fx, F). Implies global/1".
@@ -61,39 +61,19 @@ declaration(Goal) :- call(Goal).
 :- true prop declaration(Goal, Status) : (callable(Goal), assrt_status(Status)) + global(prop)
 # "Like declaration/1, but allows to specify the default assertion status".
 
-declaration(Goal, _) :- call(Goal).
+declaration(_, Goal) :- call(Goal).
 
-:- true prop type(X, Y)
-# "~w is internally of type ~w (@tt{var}, @tt{attv}, @tt{float},
-      @tt{integer}, @tt{structure}, @tt{atom} or @tt{list})."-[X, Y].
-:- true comp type(X, _) : nonvar(X) + eval.
-:- meta_predicate type(?, :).
+:- true prop type(T, A)
+# "~w is internally of type ~w, a predicate of arity 1 defined as a type/1."-[A, T].
+:- meta_predicate type(1, ?).
 
-type(A, T) :-
-    add_1st_arg(T, A, P),
-    call(P).
+type(T, A) :- call(T, A).
 
-add_1st_arg(M:T, A, M:P) :- !,
-    add_1st_arg(T, A, P).
-add_1st_arg(T, A, P) :-
-    T =.. [F|Args],
-    P =.. [F, A|Args].
-
-% Help analyzers to identify this call:
-prolog:called_by(type(A, MT), metaprops, CM, [M:P]) :-
-    nonvar(A),
-    nonvar(MT),
-    strip_module(CM:MT, M, T),
-    nonvar(T),
-    add_1st_arg(T, A, P).
 
 :- multifile
     unfold_calls:unfold_call_hook/4.
 
-unfold_calls:unfold_call_hook(type(A, MT), metaprops, CM, M:P) :-
-    strip_module(CM:MT, M, T),
-    nonvar(T),
-    add_1st_arg(T, A, P).
+unfold_calls:unfold_call_hook(type(T, A), metaprops, M, M:call(T, A)).
 
 :- true prop compat(Prop)
 # "Uses ~w as a compatibility property."-[Prop].

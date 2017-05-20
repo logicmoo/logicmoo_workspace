@@ -62,7 +62,7 @@
 foreign(G) :- call(G).
 
 :- global foreign/2.
-foreign(G, _) :- call(G).
+foreign(_, G) :- call(G).
 
 :- global native(_, Name)
    # "This predicate is implemented in C ~w."-[Name].
@@ -74,28 +74,22 @@ native(Goal, _) :- call(Goal).
 
 native(X) :- native(X, X).
 
-:- prop fimport/1.
-:- meta_predicate fimport(0).
+:- global fimport/1.
 fimport(G) :- call(G).
 
-:- prop fimport/2.
-:- meta_predicate fimport(0,?).
-fimport(G, _) :- call(G).
+:- global fimport/2.
+fimport(_, G) :- call(G).
 
-:- prop returns/2.
-:- meta_predicate returns(0,?).
-returns(G,_) :- call(G).
+:- global returns/2.
+returns(_, G) :- call(G).
 
-:- prop parent/2.
-:- meta_predicate parent(0,?).
-parent(G,_) :- call(G).
+:- global parent/2.
+parent(_, G) :- call(G).
 
-:- prop returns_state/1.
-:- meta_predicate returns_state(0).
+:- global returns_state/1.
 returns_state(G) :- call(G).
 
-:- prop memory_root/1.
-:- meta_predicate memory_root(0).
+:- global memory_root/1.
 memory_root(G) :- call(G).
 
 :- type float_t/1 # "Defines a float".
@@ -105,12 +99,13 @@ float_t(Num) :- num(Num).
 ptr(Ptr) :- int(Ptr).
 
 :- type ptr/2 # "Defines a typed pointer. Note that if the value was
-    allocated dinamically by foreign_interface, it allows its usage as parent in
+    allocated dynamically by foreign_interface, it allows its usage as parent in
     FI_new_child_value/array in the C side to perform semi-automatic memory
     management".
 
-:- meta_predicate ptr(?,1).
-ptr(Ptr, Type) :-
+:- meta_predicate ptr(1, ?).
+
+ptr(Type, Ptr) :-
     call(Type, Ptr).
 
 prolog:called_by(dict_t(_, Desc), foreign_props, M, L) :-
@@ -125,7 +120,7 @@ called_by_dict_t(Desc, CM, L) :-
             ( MType=Dict._Key,
               strip_module(CM:MType, M, T),
               nonvar(T),
-              add_1st_arg(T, _, P)
+              extend_args(T, [_], P)
             ), L).
 
 :- type dict_t/2.

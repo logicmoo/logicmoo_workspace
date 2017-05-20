@@ -41,6 +41,7 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
+:- use_module(library(apply)).
 :- use_module(library(static_strip_module)).
 
 %!  int(Int)
@@ -128,7 +129,7 @@ frac(X, Q) :-
 
 atm(T) :- nonvar(T), !, atom(T).
 atm(A) :-
-    list(L, character_code),
+    list(character_code, L),
     atom_codes(A, L).
 
 :- type str/1.
@@ -139,7 +140,7 @@ atm(A) :-
 
 str(T) :- nonvar(T), !, string(T).
 str(S) :-
-    list(L, character_code),
+    list(character_code, L),
     string_codes(S, L).
 
 :- type character_code/1 # "an integer which is a character code.".
@@ -172,12 +173,10 @@ term(_).
 list([]).
 list([_|L]) :- list(L).
 
-:- type list(L,T) # "~w is a list of ~ws."-[L, T].
-:- meta_predicate list(?, 1).
-list([],_).
-list([X|Xs], T) :-
-    type(X, T),
-    list(Xs, T).
+:- type list(T, L) # "~w is a list of ~ws."-[L, T].
+:- meta_predicate list(1, ?).
+
+list(Type, List) :- maplist(Type, List).
 
 :- type pair/1.
 pair(_-_).
@@ -186,21 +185,24 @@ pair(_-_).
 keypair(_-_).
 
 :- type keylist/1.
-keylist(KL) :- list(KL, keypair).
+keylist(KL) :- list(keypair, KL).
 
 :- type tlist/2 # "@var{L} is a list or a value of @var{T}s".
 :- meta_predicate tlist(?, 1).
-tlist(L, T) :- list(L, T).
-tlist(E, T) :- type(E, T).
+tlist(L, T) :- list(T, L).
+tlist(E, T) :- type(T, E).
 
 :- type nlist/2 # "A nested list".
-:- meta_predicate nlist(?, 1).
-nlist([], _).
-nlist([X|Xs], T) :-
-        nlist(X, T),
-        nlist(Xs, T).
-nlist(X, T) :-
-        type(X, T).
+:- meta_predicate nlist(1, ?).
+
+nlist(Type, NList) :- nlist_(NList, Type).
+
+nlist_([], _).
+nlist_([X|Xs], T) :-
+        nlist_(X, T),
+        nlist_(Xs, T).
+nlist_(X, T) :-
+        type(T, X).
 
 :- type char/1.
 char(A) :- atm(A). % size(A)=1
@@ -217,20 +219,22 @@ linear(T) :-
 
 occurrs_one(T, Var) :- occurrences_of_var(Var, T, 1).
 
-:- type sequence(S,T) # "~w is a sequence of ~ws."-[S, T].
+:- type sequence(T, S) # "~w is a sequence of ~ws."-[S, T].
 
-:- meta_predicate sequence(?, :).
+:- meta_predicate sequence(1, ?).
 
-sequence(E, T) :- type(E, T).
-sequence((E, S), T) :-
+sequence(T, S) :- sequence_(T, S).
+
+sequence_(E, T) :- type(E, T).
+sequence_((E, S), T) :-
         type(E, T),
-        sequence(S,T).
+        sequence_(S, T).
 
 :- type sequence_or_list/2.
-:- meta_predicate sequence_or_list(?, 1).
+:- meta_predicate sequence_or_list(1, ?).
 
-sequence_or_list(E, T) :- list(E,T).
-sequence_or_list(E, T) :- sequence(E, T).
+sequence_or_list(T, E) :- list(T, E).
+sequence_or_list(T, E) :- sequence(T, E).
 
 :- type struct/1 # "A compound term".
 
@@ -266,10 +270,10 @@ arithexpression(X) :-
 % and some variables becomes uninstantiated. That is an SWI-Prolog bug but I
 % don't have time to isolate it --EMM
 
-:- true prop is_pred(P, N)
+:- true prop is_pred(N, P)
     # "check that ~w is a defined predicate with ~w extra arguments."-[P, N].
-:- meta_predicate is_pred(:, ?).
-is_pred(Pred, N) :-
+:- meta_predicate is_pred(?, :).
+is_pred(N, Pred) :-
     nnegint(N),
     is_pred_2(Pred, N).
 
@@ -290,11 +294,11 @@ mod_qual(M:V) :-
     current_module(CM).
 
 :- true prop mod_qual/2.
-:- meta_predicate mod_qual(?, :).
-mod_qual(M:V, T) :-
+:- meta_predicate mod_qual(:, ?).
+mod_qual(T, M:V) :-
     static_strip_module(V, M, C, CM),
     current_module(CM),
-    type(C, T).
+    type(T, C).
 
 :- type operator_specifier/1.
 

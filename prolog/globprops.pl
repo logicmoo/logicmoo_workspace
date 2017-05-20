@@ -111,7 +111,7 @@
 :- meta_predicate equiv(0, 0).
 :- global equiv/2.
 
-equiv(Goal, _) :- call(Goal).
+equiv(_, Goal) :- call(Goal).
 
 %!  unknown(:Goal)
 %
@@ -297,7 +297,7 @@ have_choicepoints(Goal) :-
 
 :- global num_solutions_eq/2.
 
-num_solutions_eq(Goal, N) :-
+num_solutions_eq(N, Goal) :-
     Sols = solutions(0),
     ( true
     ; arg(1, Sols, A),
@@ -452,8 +452,8 @@ retract_signal_check(Choice, _, E, _) :-
         asserta(signal_db(Choice, no, E)),
         fail.
 
-signal_prop(yes, E, signal(yes, E), signal(no,  E)).
-signal_prop(no,  E, signal(no,  E), signal(yes, E)).
+signal_prop(yes, E, signal(E, yes), signal(E,  no)).
+signal_prop(no,  E, signal(E,  no), signal(E, yes)).
 
 end_signal_check(Choice, Goal, CheckThrown) :-
         retract(signal_db(Choice, Thrown, E)),
@@ -472,7 +472,7 @@ emit_signal(Choice, E) :-
 
 :- global signal/1.
 
-signal(Goal) :- signal(Goal, _).
+signal(Goal) :- signal(_, Goal).
 
 %!  signal(:Goal, Signal)
 %
@@ -480,7 +480,7 @@ signal(Goal) :- signal(Goal, _).
 
 :- global signal/2.
 
-signal(Goal, Signal) :-
+signal(Signal, Goal) :-
         prolog_current_choice(Choice),
         asserta_signal_check(Choice, Goal, Signal, yes),
         prolog_current_choice(C0),
@@ -498,7 +498,7 @@ signal(Goal, Signal) :-
 
 :- global no_signal/1.
 
-no_signal(Goal) :- no_signal(Goal, _).
+no_signal(Goal) :- no_signal(_, Goal).
 
 %!  no_signal(:Goal, Signal)
 %
@@ -506,7 +506,7 @@ no_signal(Goal) :- no_signal(Goal, _).
 
 :- global no_signal/2.
 
-no_signal(Goal, Signal) :-
+no_signal(Signal, Goal) :-
         prolog_current_choice(Choice),
         asserta_signal_check(Choice, Goal, Signal, no),
         prolog_current_choice(C0),
@@ -528,12 +528,12 @@ exception(Goal) :-
         Goal,
         send_comp_rtcheck(Goal, exception, no_exception).
 
-%!  throw(:Goal, Exception)
+%!  throw(Exception, :Goal)
 %
 %   Goal throws an exception that does not unifies with Exception
 
 :- global throw/2.
-throw(Goal, E) :-
+throw(E, Goal) :-
         test_throw_2(Goal, throw(E), F, F\=E).
 
 :- meta_predicate test_throw_2(0, ?, ?, 0).
@@ -551,13 +551,13 @@ test_throw_2(Goal, Prop, F, Test) :-
                 throw(F)
             )).
 
-%!  exception(:Goal, Exception)
+%!  exception(Exception, :Goal)
 %
 %   Goal throws an exception that unifies with Exception
 
-:- global exception(X, E) + equiv(exception(throw(X, E))).
+:- global exception(E, Goal) + equiv(exception(throw(E, Goal))).
 
-exception(Goal, E) :-
+exception(E, Goal) :-
         test_throw_2(Goal, exception(E), F, F\=E),
         send_comp_rtcheck(Goal, exception(E), no_exception).
 
@@ -569,24 +569,24 @@ exception(Goal, E) :-
 
 no_exception(Goal) :- test_throw_2(Goal, no_exception, _, true).
 
-%!  no_exception(:Goal, Exception)
+%!  no_exception(Exception, :Goal)
 %
 %   Goal doesn't throw an exception that unifies with Exception
 
 :- global no_exception/2.
 
-no_exception(Goal, E) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
+no_exception(E, Goal) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 
-%!  throws(:Goal, Exceptions:List)
+%!  throws(Exceptions:List, :Goal)
 %
 %   Goal can only throw the exceptions that unify with the elements of
 %   Exceptions
 
 :- global throws/2.
 
-throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
+throws(EL, Goal) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 
-%!  signals(:Goal, Signals:List)
+%!  signals(Signals:List, :Goal)
 %
 %   Goal can generate only the signals that unify with the elements of
 %   Signals
@@ -595,7 +595,7 @@ throws(Goal, EL) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
 
 :- global signals/2.
 
-signals(Goal, _) :- call(Goal).
+signals(_, Goal) :- call(Goal).
 
 %!  meta_modes(:Goal)
 %
@@ -632,13 +632,13 @@ deprecated(Goal) :- call(Goal).
 
 iso(Goal) :- call(Goal).
 
-%!  nfi(:Goal, Term)
+%!  nfi(Term, :Goal)
 %
 %   On success of Goal, Term is not further instantiated.
 
 :- global nfi/2.
 
-nfi(Goal, V) :-
+nfi(V, Goal) :-
     copy_term(V, X),
     call(Goal),
     ( subsumes_term(V, X)
@@ -646,13 +646,13 @@ nfi(Goal, V) :-
     ; send_comp_rtcheck(Goal, nfi, fi)
     ).
 
-%!  fi(:Goal, Term)
+%!  fi(Term, :Goal)
 %
 %   On success of Goal, Term is further instantiated.
 
 :- global fi/2.
 
-fi(Goal, V) :-
+fi(V, Goal) :-
     copy_term(V, X),
     call(Goal),
     ( subsumes_term(V, X)
@@ -660,16 +660,16 @@ fi(Goal, V) :-
     ; true
     ).
 
-%!  nsh(:Goal, Term)
+%!  nsh(Term, :Goal)
 %
 %   On call of Goal, Goal and Term don't share variables
 
 :- global nsh/2.
-nsh(Goal, Arg) :-
-    check_nsh(Goal, Arg),
+nsh(Arg, Goal) :-
+    check_nsh(Arg, Goal),
     call(Goal).
 
-check_nsh(_:Goal, Arg) :-
+check_nsh(Arg, _:Goal) :-
     ( term_variables(Arg, Vars),
       Vars \= []
     ->Goal =.. [_|Args],
@@ -686,53 +686,53 @@ check_nsh(_:Goal, Arg) :-
     ; true
     ).
 
-%!  user_output(:Goal, +String)
+%!  user_output(+String, :Goal)
 %
 %   Goal produces String as standard output
 
 :- global user_output/2.
 
-user_output(Goal, S) :-
-    setup_call_cleanup(new_memory_file(FileName),
-                       use_output_mf(Goal, S, FileName),
-                       free_memory_file(FileName)).
+user_output(S, Goal) :-
+    setup_call_cleanup(new_memory_file(File),
+                       use_output_mf(File, S, Goal),
+                       free_memory_file(File)).
 
-use_output_mf(Goal, S, FileName) :-
-    asserta_user_output_check(FileName, Goal, S),
+use_output_mf(File, S, Goal) :-
+    asserta_user_output_check(File, S, Goal),
     prolog_current_choice(C0),
     catch(Goal, E,
-          ( end_output_check(FileName, Goal, S),
+          ( end_output_check(File, S, Goal),
             throw(E)
           )),
     prolog_current_choice(C1),
-    retract_user_output_check(FileName, Goal, S),
+    retract_user_output_check(File, S, Goal),
     ( C0 == C1
     ->!,
-      output_check(FileName, Goal, S)
+      output_check(File, S, Goal)
     ; true
     ).
 
-asserta_user_output_check(FileName, _, _) :-
-    open_memory_file(FileName, write, Stream),
+asserta_user_output_check(File, _, _) :-
+    open_memory_file(File, write, Stream),
     tell(Stream).
-asserta_user_output_check(FileName, Goal, S) :-
+asserta_user_output_check(File, S, Goal) :-
     told,
-    output_check(FileName, Goal, S),
+    output_check(File, S, Goal),
     fail.
 
 retract_user_output_check(_, _, _) :-
     told.
-retract_user_output_check(FileName, _, _) :-
-    open_memory_file(FileName, append, Stream),
+retract_user_output_check(File, _, _) :-
+    open_memory_file(File, append, Stream),
     append(Stream),
     fail.
 
-end_output_check(FileName, Goal, S) :-
+end_output_check(File, S, Goal) :-
     told,
-    output_check(FileName, Goal, S).
+    output_check(File, S, Goal).
 
-output_check(FileName, Goal, S) :-
-    memory_file_to_string(FileName, S1),
+output_check(File, S, Goal) :-
+    memory_file_to_string(File, S1),
     format("~s", [S1]),
     ( S \== S1
     ->send_comp_rtcheck(Goal, user_output(S), user_output(S1))

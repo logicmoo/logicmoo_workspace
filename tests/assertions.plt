@@ -78,11 +78,11 @@ test(assrt_lib_sugar) :-
                   Records, _),
     assertion(Records=[assrt_lib:asr_head_prop(Idx, a, atomic_list_concat(A, B), check, pred, Dict, _),
                        assrt_lib:asr_comm(Idx, "Write live comments here", _),
-                       assrt_lib:asr_comp(Idx, a, list(A, ground), _),
+                       assrt_lib:asr_comp(Idx, a, list(ground, A), _),
                        assrt_lib:asr_comp(Idx, a, atom(B), _),
-                       assrt_lib:asr_call(Idx, a, list(A, atom), _),
+                       assrt_lib:asr_call(Idx, a, list(atom, A), _),
                        assrt_lib:asr_call(Idx, a, term(B), _),
-                       assrt_lib:asr_succ(Idx, a, list(A, atom), _),
+                       assrt_lib:asr_succ(Idx, a, list(atom, A), _),
                        assrt_lib:asr_succ(Idx, a, atom(B), _),
                        assrt_lib:asr_glob(Idx, a, is_det(_), _),
                        assrt_lib:asr_glob(Idx, a, iso(_), _)
@@ -94,7 +94,7 @@ test(assrt_lib_multi) :-
                                 _, Records, _),
     assertion(Records=[assrt_lib:asr_head_prop(Idx1, q, a(_), check, pred, [], _),
                        assrt_lib:asr_glob(Idx1, m, kbrule(_), _),
-                       assrt_lib:asr_glob(Idx1, q, kbmask(_, [(+)]), _),
+                       assrt_lib:asr_glob(Idx1, q, kbmask([(+)], _), _),
                        assrt_lib:asr_head_prop(Idx2, m, b(_, _), check, pred, [], _),
                        assrt_lib:asr_glob(Idx2, m, kbrule(_), _),
                        assrt_lib:asr_glob(Idx2, m, hidden(_), _)
@@ -145,8 +145,8 @@ test(assrt_lib_abridged_notation) :-
                                                            Messages0,
                                                            Messages), check, pred, [], _),
                  assrt_lib:asr_comm(Idx, "c", _),
-                 assrt_lib:asr_comp(Idx, rt, list(Messages0, message_info), _),
-                 assrt_lib:asr_comp(Idx, rt, list(Messages,  message_info), _),
+                 assrt_lib:asr_comp(Idx, rt, list(message_info, Messages0), _),
+                 assrt_lib:asr_comp(Idx, rt, list(message_info, Messages), _),
                  assrt_lib:asr_call(Idx, rt, ctime_t(Time), _),
                  assrt_lib:asr_call(Idx, rt, rtcheck_error(RTCheck), _)]).
 

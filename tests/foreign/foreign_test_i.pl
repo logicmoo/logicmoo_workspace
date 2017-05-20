@@ -60,10 +60,10 @@ example_t(example(Name, Value)) :-
 :- type compound_t/1.
 compound_t(compound(Idx, Value, Example, Name, PExample)) :-
     int(Idx),
-    ptr(Value, int),
+    ptr(int, Value),
     example_t(Example),
-    ptr(Name, atm),
-    ptr(PExample, example_t).
+    ptr(atm, Name),
+    ptr(example_t, PExample).
 
 :- pred fce(+contain_extern_t, -contain_extern_t) is foreign.
 
@@ -75,7 +75,7 @@ flag_t(Value) :- int(Value).
 
 :- type field_t/1.
 
-field_t(field(A, B, Sum)) :- int(A), int(B), ptr(Sum,flag_t).
+field_t(field(A, B, Sum)) :- int(A), int(B), ptr(flag_t, Sum).
 
 :- type position_t/1.
 
