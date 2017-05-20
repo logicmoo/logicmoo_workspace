@@ -35,6 +35,7 @@
 :- module(check_deprecated, []).
 
 :- use_module(checkers(checker)).
+:- use_module(library(globprops)).
 :- use_module(library(check), []).
 :- use_module(library(implementation_module)).
 :- use_module(library(location_utils)).
@@ -52,8 +53,8 @@
 
 deprecated_predicate(MGoal, Comment, DFrom, CFrom) :-
     prop_asr(head, MGoal, DFrom, Asr),
-    prop_asr(glob, globprops:deprecated(_), _, Asr),
-    asr_comm(Asr, Comment, CFrom).
+    prop_asr(glob, deprecated(_), _, Asr),
+    curr_prop_asr(comm, Comment, CFrom, Asr).
 deprecated_predicate(M:Goal, " Use ~q instead."-[Alt], [], []) :-
     implementation_module(M:Goal, IM),
     deprecated_predicate(Goal, IM, Alt).
