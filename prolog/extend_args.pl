@@ -35,14 +35,19 @@
 :- module(extend_args,
           [extend_args/3]).
 
+%!  extend_args(+Goal, +Extra:list, -Goal) is det.
+%!  extend_args(-Goal, ?Extra:list, +Goal)
+
 extend_args(Goal, _, Goal) :-
     var(Goal), !, fail.
 extend_args(M:Goal0, Extra, M:Goal) :- !,
     extend_args(Goal0, Extra, Goal).
-extend_args(Atom, Extra, Goal) :-
-    atom(Atom), !,
-    Goal =.. [Atom|Extra].
 extend_args(Goal0, Extra, Goal) :-
-    compound_name_arguments(Goal0, Name, Args0),
+    nonvar(Goal0), !,
+    Goal0 =.. [Name|Args0],
     '$append'(Args0, Extra, Args),
-    compound_name_arguments(Goal, Name, Args).
+    Goal  =.. [Name|Args].
+extend_args(Goal0, Extra, Goal) :-
+    Goal  =.. [Name|Args],
+    '$append'(Args0, Extra, Args),
+    Goal0 =.. [Name|Args0].
