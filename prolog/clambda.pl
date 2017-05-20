@@ -66,7 +66,7 @@ cgoal_args(+\, [Fr,G1|EL], G, Fr, EL) :- remove_hats(G1, G, EL).
 
 singleton(T, Name=V) :-
     occurrences_of_var(V, T, 1),
-    \+ sub_atom(Name, _, _, _, '_').
+    \+ atom_concat('_', _, Name).
 
 have_name(VarL, _=Value) :-
     member(Var, VarL),
