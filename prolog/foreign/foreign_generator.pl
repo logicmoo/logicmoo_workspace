@@ -341,6 +341,9 @@ type_props(M, Type, TypePropLDictL, Pos, Asr) :-
     ).
 
 type_props_(CM, Type, Dict, Pos, Asr) :-
+    % We use asr_head_prop instead of prop_asr since the auto-generated types
+    % should be only those defined in the current module, but not others that
+    % could be imported in CM --EMM
     asr_head_prop(Asr, CM, Type, check, prop, Dict, Pos),
     once(prop_asr(glob, type(_), _, Asr)).
 
