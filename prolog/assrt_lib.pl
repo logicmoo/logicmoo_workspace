@@ -279,7 +279,7 @@ invalid_cp(_/_).
 
 assrt_type(pred).
 assrt_type(prop).
-assrt_type(decl).
+% assrt_type(decl). % Not used, instead we have declaration
 % assrt_type(func).
 assrt_type(calls).
 assrt_type(success).
@@ -370,7 +370,7 @@ expand_nodirective_error(Clauses) :-
 %
 %   Same as entry/2, but with default status check
 
-%!  calls(+AssertionBody)
+%!  calls(+Status, +AssertionBody)
 %
 %   Assertion type calls, specifies the properties at call time.
 
@@ -386,6 +386,14 @@ expand_nodirective_error(Clauses) :-
 %!  success(+AssertionBody)
 %
 %   Same as success/2, but with default status check
+
+%!  comp(+Status, +AssertionBody)
+%
+%   Assertion type comp, specifies computational or global properties.
+
+%!  comp(+AssertionBody)
+%
+%   Same as comp/2, but with default status check
 
 %!  prop(+Status, +AssertionBody)
 %
