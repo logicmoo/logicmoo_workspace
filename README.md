@@ -25,7 +25,7 @@ Example of use
     $ cd <pack>/sldnfdraw/prolog/examples
     $ swipl
     ?- [member].
-    ?- draw_goal(T).
+    ?- draw_goal("tree.tex").
 
 Usage
 -----
