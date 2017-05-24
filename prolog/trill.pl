@@ -210,7 +210,7 @@ instanceOf(Class,Ind,Expl):-
   	build_abox((ABox,Tabs)),
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
-  	    	add(ABox,(classAssertion(complementOf(ClassEx),IndEx),[]),ABox0),
+  	    	add_q(ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	  	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
   		find_expls(L,[ClassEx,IndEx],Expl),
   		dif(Expl,[])
@@ -238,7 +238,7 @@ instanceOf(Class,Ind):-
 	  build_abox((ABox,Tabs)),
 	  (  \+ clash((ABox,Tabs),_) *->
 	      (
-	        add(ABox,(classAssertion(complementOf(ClassEx),IndEx),[]),ABox0),
+	        add_q(ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	        apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
 	  	clash((ABox1,Tabs1),_),!
 	      )
@@ -357,7 +357,7 @@ unsat_internal(Concept,Expl):-
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
-     	add(ABox,(classAssertion(Concept,trillan(1)),[]),ABox0),
+     	add_q(ABox,classAssertion(Concept,trillan(1)),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
 	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
 	find_expls(L,['unsat',Concept],Expl),
@@ -389,7 +389,7 @@ unsat_internal(Concept):-
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
-     	add(ABox,(classAssertion(Concept,trillan(1)),[]),ABox0),
+     	add_q(ABox,classAssertion(Concept,trillan(1)),ABox0),
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   	apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),!,
   	clash((ABox1,Tabs1),_),!
@@ -971,7 +971,7 @@ forall_plus_rule((ABox0,Tabs),(ABox,Tabs)):-
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
   find_sub_sup_trans_role(R,S,Ind1,Ind2,Expl3),
-  append(Expl1,Expl2,ExplT),
+  and_f(Expl1,Expl2,ExplT),
   and_f(ExplT,Expl3,Expl),
   modify_ABox(ABox0,allValuesFrom(R,C),Ind2,Expl,ABox).
 
@@ -1097,19 +1097,21 @@ neg_list([complementOf(H)|T],[H|T1]):-
 
 % ----------------
 
-find_class_prop_range_domain(Ind,D,[propertyRange(R,D)|ExplPA],(ABox,_Tabs)):-
+find_class_prop_range_domain(Ind,D,Expl,(ABox,_Tabs)):-
   findPropertyAssertion(R,_,IndL,ExplPA,ABox),
   indAsList(IndL,L),
   member(Ind,L),
   get_trill_current_module(Name),
-  Name:propertyRange(R,D).
+  Name:propertyRange(R,D),
+  and_f_ax(propertyRange(R,D),ExplPA,Expl).
 
-find_class_prop_range_domain(Ind,D,[propertyDomain(R,D)|ExplPA],(ABox,_Tabs)):-
+find_class_prop_range_domain(Ind,D,Expl,(ABox,_Tabs)):-
   findPropertyAssertion(R,IndL,_,ExplPA,ABox),
   indAsList(IndL,L),
   member(Ind,L),
   get_trill_current_module(Name),
-  Name:propertyDomain(R,D).
+  Name:propertyDomain(R,D),
+  and_f_ax(propertyDomain(R,D),ExplPA,Expl).
 
 
 %-----------------
@@ -1434,8 +1436,8 @@ scan_max_list(S,SN,Ind,Expl,ABox0,Tabs0,ABox,Tabs):-
   check_individuals_not_equal(YI,YJ,ABox0),
   findPropertyAssertion(S,Ind,YI,ExplYI,ABox0),
   findPropertyAssertion(S,Ind,YJ,ExplYJ,ABox0),
-  append(ExplYI,ExplYJ,Expl0),
-  append(Expl,Expl0,ExplT),
+  and_f(ExplYI,ExplYJ,Expl0),
+  and_f(Expl,Expl0,ExplT),
   merge_all([(sameIndividual([YI,YJ]),ExplT)],ABox0,Tabs0,ABox,Tabs).
 
 %--------------------
@@ -1468,7 +1470,7 @@ o_rule((ABox0,Tabs0),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
   nominal(C,(ABox0,Tabs0)),
   indAsList(X,LX),
   indAsList(Y,LY),
-  append(ExplX,ExplY,ExplC),
+  and_f(ExplX,ExplY,ExplC),
   merge(X,Y,(ABox0,Tabs0),(ABox,Tabs)),
   flatten([LX,LY],LI0),
   list_to_set(LI0,LI),
@@ -1884,21 +1886,21 @@ merge_abox(X,Y,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIn
   flatten([X,Y],L0),
   list_to_set(L0,L),
   member(Ind,L),!,
-  append(Expl0,ExplT,Expl),
+  and_f(Expl0,ExplT,Expl),
   merge_abox(X,Y,Expl0,T,ABox).
 
 merge_abox(X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),[sameIndividual(L)|Expl])|ABox]):-
   flatten([X,Y],L0),
   list_to_set(L0,L),
   member(Ind1,L),!,
-  append(Expl0,ExplT,Expl),
+  and_f(Expl0,ExplT,Expl),
   merge_abox(X,Y,Expl0,T,ABox).
 
 merge_abox(X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),[sameIndividual(L)|Expl])|ABox]):-
   flatten([X,Y],L0),
   list_to_set(L0,L),
   member(Ind2,L),!,
-  append(Expl0,ExplT,Expl),
+  and_f(Expl0,ExplT,Expl),
   merge_abox(X,Y,Expl0,T,ABox).
 
 merge_abox(X,Y,Expl0,[H|T],[H|ABox]):-
@@ -1914,7 +1916,7 @@ merge_all([(sameIndividual(H),Expl)|T],ABox0,Tabs0,ABox,Tabs):-
   merge_all1(H,L,ABox0,Tabs0,ABox1,Tabs1),
   flatten([H,L],L0),
   list_to_set(L0,L1),
-  append(Expl,ExplL,ExplT),
+  and_f(Expl,ExplL,ExplT),
   add(ABox1,(sameIndividual(L1),ExplT),ABox2),
   delete(ABox2,(sameIndividual(L),ExplL),ABox3),
   retract_sameIndividual(L),
@@ -2307,10 +2309,10 @@ compute_prob(Expl,Prob):-
   assert(rule_n(0)),
   get_trill_current_module(Name),
   findall(1,Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
-  init_test(NV,Env),
+  get_bdd_environment(NV,Env),
   build_bdd(Env,Expl,BDD),
   ret_prob(Env,BDD,Prob),
-  end_test(Env), !.
+  clean_environment(Env), !.
 
 get_var_n(Env,R,S,Probs,V):-
   (
@@ -2417,4 +2419,8 @@ user:term_expansion((:- trill),[]):-
 user:term_expansion((:- trillp),[]):-
   trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
   consult(library(trillp_internal)).
+
+user:term_expansion((:- trillpbdd),[]):-
+  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
+  consult(library(trillpbdd_internal)).
 

@@ -26,6 +26,11 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
   Utilities for queries
  ***********/
 
+% adds the query into the ABox
+add_q(ABox,Query,ABox0):-
+  add(ABox,(Query,[]),ABox0).
+
+
 % to find all axplanations for probabilistic queries
 all_sub_class(ClassEx,SupClassEx,Exps):-
   all_unsat(intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
@@ -350,6 +355,12 @@ and_f(Expl1,Expl2,Expl):-
  TRILL Probability Computation
 
 ***********************/
+
+get_bdd_environment(NV,Env):-
+  init_test(NV,Env).
+
+clean_environment(Env):-
+  end_test(Env).
 
 
 build_bdd(Env,[X],BDD):- !,
