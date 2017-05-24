@@ -19,8 +19,17 @@ It can be installed with `pack_install/1`
     $ swipl
     ?- pack_install(sldnfdraw).
 
+Example of use
+---------------
+
+    $ cd <pack>/sldnfdraw/prolog/examples
+    $ swipl
+    ?- [member].
+    ?- draw_goal(T).
+
 Usage
 -----
+
 Prepare an input file that first loads the module `sldnfdraw`
 
     :- use_module(library(sldnfdraw)).
