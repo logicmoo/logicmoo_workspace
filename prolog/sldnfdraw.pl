@@ -1,7 +1,14 @@
-% SLDNF Draw
-% Produces a LaTeX drawing of an SLDNF tree
-% Author: Marco Gavanelli
-% http://www.ing.unife.it/docenti/MarcoGavanelli/sldnfDraw/
+/** <module> sldnfdraw
+
+Produces a LaTeX drawing of an SLDNF tree
+
+http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-informatica/software/sldnf-draw/sldnf-draw
+
+
+@author Marco Gavanelli
+@license Artistic License 2.0
+@copyright Marco Gavanelli
+*/
 
 % Version 1.4
 % Does not crash when printing infinite terms
@@ -40,7 +47,7 @@
 % Fabrizio Riguzzi <fabrizio.riguzzi@unife.it>
 
 :-module(sldnfdraw,
-  [draw_goal/1,draw_goal/3,set_depth/1,animate/1,
+  [draw_goal/1,set_depth/1,animate/1,
   op(900,fy,not)]).
 
 :-use_module(library(apply)).
@@ -87,6 +94,11 @@ sldnf_version(1.6).
 :- dynamic max_resolvent_length/1.
 max_resolvent_length(25).
 
+/**
+ * set_depth(++Depth:int) is det
+ *
+ * Sets the maximum depth of the SLDNF tree
+ */
 set_depth(M:D):-
     retract(M:maxdepth(_)),
     assert(M:maxdepth(D)).
@@ -95,6 +107,12 @@ maxdepth(20). % Default max depth: 20
 
 animations(no).
 
+/**
+ * animate(:Var) is det
+ *
+ * Sets animation on. The argument is unused (it is there to collect the
+ * name of the calling module)
+ */
 animate(M:_):- retract(M:animations(_)), assert(M:animations(yes)).
 
 %begin_binding('{\\tt ').
@@ -126,7 +144,13 @@ draw_goal(M:G,FileName,ListName):-
 	reset_slide(M),
     (draw(M:GSq,File,Length,ListName) ; true),
     close(File).
-
+/**
+ * draw_goal(++File:String) is det
+ * draw_goal(--Tree:String) is det
+ *
+ * Writes the Latex code of the tree to File or
+ * returns it as a string in Tree
+ */
 draw_goal(M:String):-
     var(String),!,
     new_memory_file(Handle),
@@ -810,8 +834,6 @@ get_var_name(X,Name=X):-
    var_property(X, name(Name)).
 
 :- multifile sandbox:safe_primitive/1.
-
-%sandbox:safe_meta(sldnfdraw:draw_goal(_)).
 
 :- multifile sandbox:safe_meta/2.
 

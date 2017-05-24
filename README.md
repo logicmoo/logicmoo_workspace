@@ -107,3 +107,11 @@ texlive-pictures
 Full Manual
 -----------
 http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-informatica/software/sldnf-draw/sldnf-draw
+
+Credits
+-------
+Developed by Marco Gavanelli <marco.gavanelli@unife.it>
+
+Ported to SWI-Prolog by Lorenzo Campioni <lorenzo.campioni@student.unife.it>
+
+Transformed into a module and adapted to SWISH by Fabrizio Riguzzi <fabrizio.riguzzi@unife.it>
