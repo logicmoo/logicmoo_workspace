@@ -145,7 +145,7 @@ draw_goal(M:G,FileName,ListName):-
     (draw(M:GSq,File,Length,ListName) ; true),
     close(File).
 /**
- * draw_goal(++File:String) is det
+ * draw_goal(++File:String) is det.
  * draw_goal(--Tree:String) is det
  *
  * Writes the Latex code of the tree to File or
