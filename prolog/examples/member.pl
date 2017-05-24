@@ -1,4 +1,4 @@
-:- use_module(libray(sldnfdraw)).
+:- use_module(library(sldnfdraw)).
 
 :- if(current_predicate(use_rendering/1)).
 :- use_rendering(sldnf).

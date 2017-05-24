@@ -811,11 +811,11 @@ get_var_name(X,Name=X):-
 
 :- multifile sandbox:safe_primitive/1.
 
-%sandbox:safe_meta(sldnf_draw:draw_goal(_)).
+%sandbox:safe_meta(sldnfdraw:draw_goal(_)).
 
 :- multifile sandbox:safe_meta/2.
 
-sandbox:safe_meta(sldnf_draw:draw_goal(_),[]).
+sandbox:safe_meta(sldnfdraw:draw_goal(_),[]).
 
 user:term_expansion(end_of_file, end_of_file) :-!,
   prolog_load_context(module, M),
