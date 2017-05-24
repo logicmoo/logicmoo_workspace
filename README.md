@@ -23,19 +23,8 @@ Usage
 -----
 Prepare an input file that first loads the module `sldnfdraw`
 
-    :- use_module(sldnfdraw).
+    :- use_module(libray(sldnfdraw)).
 
-If you are using your example in SWISH and want the output to be shown
-in SVG add the following code
-
-    :- if(current_predicate(use_rendering/1)).
-    :- use_rendering(sldnf).
-    :- endif.
-
-and you need to have the following programs on the server
- - LaTeX
- - pdfcrop
- - pdf2svg
 
 Then you need to initialize the library with
 
@@ -64,18 +53,18 @@ member(X,[1,2]), \+ member(X,[1,3]).
 You can now build the SLDNF tree with the predicate `draw_goal/1`.
 If you call it with a variable as in
 ```
-draw_goal(T).
+?- draw_goal(T).
 ```
 it will return in `T` a string with the Latex code for drawing the tree, that you
 can then include in a LaTeX document.
 
 If you call `draw_goal/1` with a string as in
 ```
-draw_goal("tree.tex").
+?- draw_goal("tree.tex").
 ```
 it will write the LaTeX code in file `tree.tex` in the current folder.
 You can then include it in a LaTeX document. The minimal LaTeX file you could use
-is 
+is
 ```
 \documentclass{article}
 \usepackage{epic}
@@ -85,6 +74,27 @@ is
 \end{document}
 ```
 
+If you are using your example in SWISH and want the output to be shown
+in SVG add the following code after laoding the library
+
+    :- if(current_predicate(use_rendering/1)).
+    :- use_rendering(sldnf).
+    :- endif.
+
+and you need to have the following programs on the server
+ - LaTeX
+ - pdfcrop
+ - pdf2svg
+
+In Ubuntu you would need the packages
+```
+texlive
+texlive-extra-utils  
+pdf2svg
+texlive-humanities
+texlive-pictures
+```
+
 Full Manual
-------
+-----------
 http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-informatica/software/sldnf-draw/sldnf-draw
