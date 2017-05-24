@@ -35,7 +35,7 @@ Prepare an input file that first loads the module `sldnfdraw`
     :- use_module(library(sldnfdraw)).
 
 
-Then you need to initialize the library with
+Then initialize the library with
 
     :- sldnf.
 
