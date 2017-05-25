@@ -49,7 +49,7 @@ browse_server(Port) :-
 :- multifile
     provides_method/1,
     fetch_module_files_hook/2,
-    show_source_hook/2.
+    show_source_hook/3.
 
 list_files(Request) :-
     print_message(information, format('Preparing to list files', [])),
@@ -73,9 +73,10 @@ show_source(Request) :-
     once(provides_method(DMethod)),
     http_parameters(Request,
                     [meth(Method, [default(DMethod)]),
+                     module(Module, [default(user)]),
                      file(File, [])
                     ]),
-    show_source_hook(Method, File),
+    show_source_hook(Method, Module, File),
     print_message(information, format('done', [])).
 
 header -->
@@ -83,11 +84,11 @@ header -->
              td(b('File'))])).
 
 html_module_files(Method, Module-Files) -->
-    html(tr([td(Module),td(table([\foldl(html_file(Method), Files)]))])).
+    html(tr([td(Module),td(table([\foldl(html_file(Method, Module), Files)]))])).
 
-html_file(Method, File) -->
-    html(tr([td(\html_link(Method, File))])).
+html_file(Method, Module, File) -->
+    html(tr([td(\html_link(Method, Module, File))])).
 
-html_link(Method, File) -->
-    {http_link_to_id(show_source, [meth=Method, file=File], HREF)},
+html_link(Method, Module, File) -->
+    {http_link_to_id(show_source, [meth=Method, module=Module, file=File], HREF)},
     html(a(href(HREF), File)).

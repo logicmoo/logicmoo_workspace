@@ -36,180 +36,212 @@
 
 :- reexport(library(ws_browser)).
 :- use_module(library(apply)).
-:- use_module(library(lists)).
 :- use_module(library(http/html_write)).
-:- use_module(library(http/http_dispatch)).
-:- use_module(library(group_pairs_or_sort)).
+:- use_module(library(tabling)).
 :- use_module(library(gcover)).
 :- use_module(library(module_files)).
-
-:- http_handler(root(colors_code), colors_code, []). % /module?file=<file>
-
-colors_code(_) :-
-    reply_html_page([title('Colors Code')
-                    ],
-                    [table([border(1)],
-                           [\header,
-                            \enum_colors
-                           ])
-                    ]).
-
-code_webcolor(Color, C) :-
-    format(atom(C), '#~|~`0t~16R~6+', [Color]).
-
-enum_colors -->
-    { findall(Port, port_color(Port, _), PortL),
-      oset_power(PortL, PortLL)
-    },
-    foldl(enum_colors_row(PortL), PortLL).
-
-enum_colors_row(PortL, SubPortL) -->
-    { maplist(enum_colors_cell(SubPortL), PortL, TDL),
-      ports_color(SubPortL, Color),
-      code_webcolor(Color, AC),
-      append(TDL, [td([bgcolor=AC], '')], TD)
-    },
-    html(tr(TD)).
-
-enum_colors_cell(SubPortL, Port, td(T)) :-
-    ( memberchk(Port, SubPortL)
-    ->T='X'
-    ; T='-'
-    ).
-
-header -->
-    {findall(td([bgcolor=AC], b(Text)),
-             ( port_color(Port, Color),
-               code_webcolor(Color, AC),
-               term_to_atom(Port, Text)
-             ), HCols, [td(b(color))])},
-    html(tr(HCols)).
+:- use_module(pldoc(doc_htmlsrc)).
 
 ws_browser:provides_method(gcover).
 
 ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     findall(M-File,
-            ( covered_db(_, _, File, _, _, _),
+            ( covered_db(File, _, _, _, _),
               module_file(M, File)
             ), MFileU),
     sort(MFileU, MFileS),
     group_pairs_by_key(MFileS, ModuleFiles).
 
-port_color(call,         rgb(0xFF,0xFF,0x00)). % yellow
-% port_color(call,        0x000000). % black
-port_color(exception,    rgb(0xFF,0x00,0x00)). % red.
-port_color(exception(_), rgb(0xFF,0x00,0x00)). % red.
-port_color(exit,         rgb(0x00,0xFF,0x00)). % green
-port_color(fail,         rgb(0xFF,0x00,0xFF)). % fuchsia
-port_color(redo(0),      rgb(0x00,0x00,0xFF)) :- !. % blue.
-port_color(redo(_),      rgb(0xFF,0xFF,0xFF)). % ignore, white, but show in hint
-port_color(redo,         rgb(0x00,0x00,0xFF)). % blue.
-port_color(unify,        rgb(0xA9,0xA9,0xA9)). % gray.
+% This is in order of priority
+port_color(exception,    red).
+port_color(exception(_), red).
+port_color(fail,         magenta).
+port_color(redo(0),      blue).
+port_color(redo(X),      white) :- nonvar(X), X \= 0.
+port_color(redo,         blue).
+port_color(exit,         lime).
+port_color(unify,        orange).
+port_color(call,         yellow).
 
-% port_text(call, call).
-% port_text(exception, exception).
-% port_text(exit, exit).
-% port_text(fail, fail).
-% port_text(redo(_), redo).
-% port_text(unify, unify).
+ws_browser:show_source_hook(gcover, Module, File) :-
+    format('Content-type: text/html~n~n', []),
+    source_to_html(File, stream(current_output),
+                   [format_comments(true), skin(color_js(Module, File))]).
 
-add_port_colors(Port, rgb(R0,G0,B0), rgb(R,G,B)) :-
-    port_color(Port, rgb(R1,G1,B1)),
-    R is R0+R1,
-    G is G0+G1,
-    B is B0+B1.
+:- table
+   file_line_end/4.
 
-rgb_color(rgb(R, G, B), Color) :-
-    Color is R * 0x10000 + G * 0x100 + B.
+file_line_end(Module, File, L1, L2) :-
+    catch(open(File, read, In), _, fail),
+    set_stream(In, newline(detect)),
+    call_cleanup(
+        ( read_source_term_at_location(
+              In, _,
+              [ line(L1),
+                module(Module)
+              ]),
+          stream_property(In, position(Pos)),
+          stream_position_data(line_count, Pos, L2)
+        ),
+        close(In)).
 
-ports_color(PortL, Color) :-
-    memberchk(fail, PortL),
-    \+ memberchk(exit, PortL), !,
-    port_color(fail, RGB),
-    rgb_color(RGB, Color).
-ports_color(PortL, Color) :-
-    memberchk(exit, PortL),
-    \+ memberchk(fail, PortL), !,
-    port_color(exit, RGB),
-    rgb_color(RGB, Color).
-ports_color(PortL, Color) :-
-    memberchk(fail, PortL),
-    memberchk(exit, PortL), !,
-    rgb_color(rgb(0xFF,0xA5,0x00), Color).
-ports_color(PortL, Color) :-
-    member(Port, [fail,exit]),
-    memberchk(Port, PortL), !,
-    port_color(Port, RGB),
-    rgb_color(RGB, Color).
-ports_color(PortL, Color) :-
-    foldl(add_port_colors, PortL, rgb(0,0,0), ColorT),
-    length(PortL, N),
-    ( N \= 0
-    ->ColorT=rgb(RT,GT,BT),
-      R is RT//N, G is GT//N, B is BT//N,
-      rgb_color(rgb(R,G,B),Color)
-    ; Color = 0xFFFFFF
-    ).
+property_lines(Module, File) -->
+    { findall(Line-(Port-Tag),
+              ( covered_db(File, L1, Port, Tag, _Count),
+                file_line_end(Module, File, L1, L2),
+                between(L1, L2, Line)
+              ), Pairs),
+      sort(Pairs, Sorted),
+      group_pairs_by_key(Sorted, Grouped)
+    },
+    foldl(property_lines_each, Grouped).
 
-ctx(PortL, Text, HTML) :-
-    sort(PortL, PortS),
-    maplist(term_to_atom, PortS, PortT),
-    ports_color(PortL, Color),
-    code_webcolor(Color, C),
-    format(atom(AC), 'background:~a', [C]),
-    format(atom(PortA), 'ports=~w',[PortT]),
-    HTML=span([style=AC, title=PortA], Text).
+ports_color(Pairs, Color) :-
+    port_color(Port, Color),
+    memberchk(Port-_, Pairs).
 
-context_port(fr-PortTagL, Port0, Port) :-
-    pairs_keys(PortTagL, PortL),
-    append(Port0, PortL, Port).
+property_lines_each(Line-PortTagL) -->
+    { group_pairs_by_key(PortTagL, PortTagG),
+      once(ports_color(PortTagG, Color))
+    },
+    ['  lineColor["', Line, '"]="', Color, '";\n'],
+    ['  tooltText["', Line, '"]="'],
+    foldl(port_tags_text, PortTagG),
+    ['";\n'].
 
-context_port(to-PortTagL, Port0, Port) :-
-    pairs_keys(PortTagL, PortL),
-    subtract(Port0, PortL, Port).
+port_tags_text(Port-TagL) --> [Port, ":", TagL,"\\n"].
 
-gcover_format(Pos-CovL,
-              gf(Pos0, CtxC, Raw0, [HTML|Tail]),
-              gf(Pos,  CtxL, Raw1, Tail)) :-
-    Length is Pos-Pos0,
-    sub_string(Raw0, 0, Length, After, Text),
-    enum_lines(Text, HTML0 ),
-    sub_string(Raw0, _, After,  0,     Raw1),
-    ( CtxC = []
-    ->HTML=span([], HTML0 )
-    ; ctx(CtxC, HTML0, HTML)
-    ),
-    foldl(context_port, CovL, CtxC, CtxL).
+:- public color_js/4.
 
-enum_lines(Text, HTML) :-
-    ( sub_string(Text, Before, L, After, '\n')
-    ->B is Before+L,
-      sub_string(Text, 0, B, _, Line),
-      sub_string(Text, _, After, 0, Text2),
-      HTML=[Line, i([],'')|HTML2],
-      enum_lines(Text2, HTML2)
-    ; HTML=[Text]
-    ).
+color_js(Module, File, header, Out) :-
+    phrase(html([script([type('text/javascript')
+                        ],
+                        ['function updateColorLine(){\n',
+                         '  var lineColor={};\n',
+                         '  var tooltText={};\n',
+                         \property_lines(Module, File),
+                         '  elements=document.getElementsByClassName("line-no");\n',
+                         '  for (var i=0; i < elements.length; i++) {\n',
+                         '    var key=elements[i].innerText.trim();\n',
+                         '    if (typeof lineColor[key] !== \'undefined\') {\n',
+                         '      elements[i].style.backgroundColor=lineColor[key];\n',
+                         '      elements[i].classList.add("tooltip");\n',
+                         '      var toolTipText=document.createElement("span");\n',
+                         '      toolTipText.classList.add("tooltiptext");\n',
+                         '      toolTipText.classList.add("tooltiptext::after");\n',
+                         '      toolTipText.classList.add("tooltip-right");\n',
+                         '      var content= document.createTextNode(tooltText[key]);\n',
+                         '      toolTipText.appendChild(content);\n',
+                         '      elements[i].appendChild(toolTipText);\n',
+                         '    }\n',
+                         '  }\n',
+                         '}\n'
+                        ]),
+                 style([],
+                       [
+"
+span.directive {
+    display: inline;
+}
 
-ws_browser:show_source_hook(gcover, File) :-
-    directory_file_path(_, Name, File),
-    read_file_to_string(File, Raw, []),
-    string_length(Raw, Length),
-    findall(Pos,
-            ( covered_db(Fr, To, File, Port, Tag, _Count),
-              ( Pos=Fr-(fr-(Port-Tag))
-              ; Pos=To-(to-(Port-Tag))
-              )
-            ), CovU),
-    sort(CovU, CovL),
-    group_pairs_or_sort(CovL, CovG0),
-    append(CovG0, [Length-[]], CovG),
-    foldl(gcover_format, CovG, gf(0, [], Raw, Text), gf(Length, [], "", "")),
-    reply_html_page([title(Name),
-                     style('pre.code { counter-reset: listing; }\n\c
-                          .code i:before { counter-increment: listing; content: counter(listing) ". "; color: gray;}\n\c
-                          .code i { float: left; clear: both; min-width: 3.5em; }\n\c
-                          .code:before { counter-increment: listing; content: counter(listing) ". "; color: gray; display: inline-block; min-width: 3.5em; }\n\c
-                          ')
-                    ],
-                    [pre([class="code"], Text)]).
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted #ccc;
+    color: #006080;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    //width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-right {
+  top: -5px;
+  left: 125%;  
+}
+
+.tooltip-right::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #555 transparent transparent;
+}
+
+.tooltip-bottom {
+  top: 135%;
+  left: 50%;  
+  margin-left: -60px;
+}
+
+.tooltip-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent;
+}
+
+.tooltip-top {
+  bottom: 125%;
+  left: 50%;  
+  margin-left: -60px;
+}
+
+.tooltip-top::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip-left {
+  top: -5px;
+  bottom:auto;
+  right: 128%;  
+}
+.tooltip-left::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #555;
+}
+"
+                       ])
+                ]), Tokens),
+    print_html(Out, Tokens).
+color_js(_, _, footer, Out) :-
+    phrase(html(script([type('text/javascript')
+                       ],
+                       ['updateColorLine();'])
+               ), Tokens),
+    print_html(Out, Tokens).

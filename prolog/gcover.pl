@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(gcover, [gcover/2, covered_db/6, reset_cover/0, reset_cover/1]).
+:- module(gcover, [gcover/2, covered_db/5, reset_cover/0, reset_cover/1]).
 
 :- use_module(library(ontrace)).
 
@@ -42,24 +42,47 @@ gcover(Goal, OptL0 ) :-
     select_option(tag(Tag), OptL0, OptL, user),
     ontrace(Goal, gcover_port(Tag), OptL).
 
-:- dynamic covered_db/6.
+:- dynamic covered_db/5.
 
 gcover_port(Tag, Port, _Frame, _PC, _ParentL, Loc, continue) :-
     record_cover(Loc, Port, Tag).
 
-loc_file_range(file_term_position(File, TermPos), File, Fr, To) :-
+filepos_line(File, CharPos, Line) :-
+    setup_call_cleanup(
+        ( catch(open(File, read, In), _, fail),
+          set_stream(In, newline(detect)),
+          open_null_stream(Out)
+        ),
+        ( copy_stream_data(In, Out, CharPos),
+          stream_property(In, position(Pos)),
+          stream_position_data(line_count, Pos, Line)
+          % stream_position_data(line_position, Pos, LinePos)
+        ),
+        ( close(Out),
+          close(In)
+        )).
+
+loc_file_line(file_term_position(File, TermPos), File, Line) :-
     arg(1, TermPos, Fr),
-    arg(2, TermPos, To).
+    filepos_line(File, Fr, Line).
+loc_file_line(clause(Clause), File, Line) :-
+    clause_file_line(Clause, File, Line).
+loc_file_line(clause_pc(Clause, _), File, Line) :-
+    clause_file_line(Clause, File, Line).
+
+clause_file_line(Clause, File, Line) :-
+    clause_property(Clause, file(File)),
+    clause_property(Clause, line_count(Line)).
 
 record_cover(Loc, Port, Tag) :-
-    loc_file_range(Loc, File, Fr, To),
-    ( retract(covered_db(Fr, To, File, Port, Tag, Count1))
+    loc_file_line(Loc, File, Line),
+    ( retract(covered_db(File, Line, Port, Tag, Count1))
     ->succ(Count1, Count)
     ; Count=1
     ),
-    assertz(covered_db(Fr, To, File, Port, Tag, Count)).
+    assertz(covered_db(File, Line, Port, Tag, Count)).
 
 reset_cover :- reset_cover(_).
 
 reset_cover(Tag) :-
-    retractall(covered_db(_, _, Tag, _, _, _)).
+    retractall(covered_db(_, _, _, Tag, _)).
