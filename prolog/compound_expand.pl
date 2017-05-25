@@ -47,7 +47,7 @@
 */
 
 :- use_module(library(expansion_module)).
-:- use_module(library(remove_dups)).
+:- use_module(library(solution_sequences)).
 
 :- multifile
     system:term_expansion/4,
@@ -63,16 +63,17 @@ implemented_pi(M:F/A) :-
 
 collect_expansors(M, ExpansorName, ML) :-
     findall(EM-PI,
-            ( expansion_module(M, EM),
-              ( implemented_pi(EM:ExpansorName/4)
-              ->PI=[ExpansorName/4|PIT],
-                ( implemented_pi(EM:ExpansorName/2)
-                ->PIT = [ExpansorName/2]
-                ; PIT = []
-                )
-              ; PI=[ExpansorName/2]
-              )), MD),
-    remove_dups(MD, ML).
+            distinct(
+                EM-PI,
+                ( expansion_module(M, EM),
+                  ( implemented_pi(EM:ExpansorName/4)
+                  ->PI=[ExpansorName/4|PIT],
+                    ( implemented_pi(EM:ExpansorName/2)
+                    ->PIT = [ExpansorName/2]
+                    ; PIT = []
+                    )
+                  ; PI=[ExpansorName/2]
+                  ))), ML).
 
 :- dynamic
     lock_expansion/1.
