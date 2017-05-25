@@ -36,10 +36,10 @@
 
 :- reexport(library(ws_browser)).
 :- use_module(library(apply)).
-:- use_module(library(http/html_write)).
-:- use_module(library(tabling)).
 :- use_module(library(gcover)).
+:- use_module(library(http/html_write)).
 :- use_module(library(module_files)).
+:- use_module(library(tabling)).
 :- use_module(pldoc(doc_htmlsrc)).
 
 ws_browser:provides_method(gcover).
@@ -56,8 +56,8 @@ ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
 port_color(exception,    red).
 port_color(exception(_), red).
 port_color(fail,         magenta).
-port_color(redo(0),      blue).
-port_color(redo(X),      white) :- nonvar(X), X \= 0.
+port_color(redo(_),      blue).
+% port_color(redo(X),      white) :- nonvar(X), X \= 0.
 port_color(redo,         blue).
 port_color(exit,         lime).
 port_color(unify,        orange).
@@ -66,7 +66,7 @@ port_color(call,         yellow).
 ws_browser:show_source_hook(gcover, Module, File) :-
     format('Content-type: text/html~n~n', []),
     source_to_html(File, stream(current_output),
-                   [format_comments(true), skin(color_js(Module, File))]).
+                   [format_comments(true), skin(coverage_js(Module, File))]).
 
 :- table
    file_line_end/4.
@@ -111,9 +111,9 @@ property_lines_each(Line-PortTagL) -->
 
 port_tags_text(Port-TagL) --> [Port, ":", TagL,"\\n"].
 
-:- public color_js/4.
+:- public coverage_js/4.
 
-color_js(Module, File, header, Out) :-
+coverage_js(Module, File, header, Out) :-
     phrase(html([script([type('text/javascript')
                         ],
                         ['function updateColorLine(){\n',
@@ -155,8 +155,8 @@ span.directive {
     visibility: hidden;
     position: absolute;
     //width: 120px;
-    background-color: #555;
-    color: #fff;
+    background-color: dimgray;
+    color: white;
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;
@@ -239,7 +239,7 @@ span.directive {
                        ])
                 ]), Tokens),
     print_html(Out, Tokens).
-color_js(_, _, footer, Out) :-
+coverage_js(_, _, footer, Out) :-
     phrase(html(script([type('text/javascript')
                        ],
                        ['updateColorLine();'])
