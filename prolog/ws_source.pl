@@ -35,8 +35,9 @@
 :- module(ws_source, []).
 
 :- reexport(library(ws_browser)).
-:- use_module(library(pldoc/doc_htmlsrc)).
+:- use_module(library(http/html_write)).
 :- use_module(library(module_files)).
+:- use_module(pldoc(doc_htmlsrc)).
 
 ws_browser:provides_method(live).
 
@@ -50,4 +51,15 @@ ws_browser:fetch_module_files_hook(live, ModuleFiles) :-
 ws_browser:show_source_hook(live, _Module, File) :-
     format('Content-type: text/html~n~n', []),
     source_to_html(File, stream(current_output),
-                   [format_comments(false)]).
+                   [format_comments(false), skin(adjustments_js)]).
+
+adjustments_js(header, Out) :-
+    phrase(html([style([],
+                       [
+"
+span.directive {
+    display: inline;
+}
+"
+                       ])]), Tokens),
+    print_html(Out, Tokens).
