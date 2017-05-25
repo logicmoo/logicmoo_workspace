@@ -40,9 +40,9 @@ Then initialize the library with
     :- sldnf.
 
 You can now write the program you want to query by including it within
-the directives `:- begin_program.` and `:- end_program.` as in
+the directives `:-begin_program.` and `:-end_program.` as in
 ```
-:- begin_program.
+:-begin_program.
 
 member(X ,[X|_T]).
 member(X ,[_H|T]):-
@@ -51,7 +51,7 @@ member(X ,[_H|T]):-
 :-end_program.
 ```
 You can now write the query by including it within
-the directives `:- begin_query.` and `:- end_query.` as in
+the directives `:-begin_query.` and `:-end_query.` as in
 ```
 :-begin_query.
 
