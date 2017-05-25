@@ -895,7 +895,10 @@ assertion_records(Decl, DPos, Records, RPos) :-
     assertion_records(M, Dict, Decl, DPos, Records, RPos),
     % Dict Must be assigned after assertion_records/6 to avoid performance
     % issues --EMM
-    b_getval('$variable_names', Dict).
+    ( nb_current('$variable_names', Dict)
+    ->true
+    ; Dict = []
+    ).
 
 :- dynamic sequence/1.
 sequence(1).
