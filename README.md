@@ -64,7 +64,7 @@ If you call it with a variable as in
 ```
 ?- draw_goal(T).
 ```
-it will return in `T` a string with the Latex code for drawing the tree, that you
+it will return in `T` a string with the LaTex code for drawing the tree, that you
 can then include in a LaTeX document.
 
 If you call `draw_goal/1` with a string as in
@@ -91,17 +91,17 @@ in SVG add the following code after laoding the library
     :- endif.
 
 and you need to have the following programs on the server
- - LaTeX
- - pdfcrop
- - pdf2svg
+ - LaTeX with packages `epic` and `ecltree`
+ - `pdfcrop` https://www.ctan.org/pkg/pdfcrop?lang=en
+ - `pdf2svg` http://www.cityinthesky.co.uk/opensource/pdf2svg/
 
 In Ubuntu you would need the packages
 ```
 texlive
 texlive-extra-utils  
-pdf2svg
 texlive-humanities
 texlive-pictures
+pdf2svg
 ```
 
 Full Manual
