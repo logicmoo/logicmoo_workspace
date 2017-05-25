@@ -46,7 +46,6 @@
 :- use_module(library(atomics_atom)).
 :- use_module(library(camel_snake)).
 :- use_module(library(key_value)).
-:- use_module(library(remove_dups)).
 :- use_module(library(transpose)).
 :- use_module(library(implementation_module)).
 
@@ -984,9 +983,8 @@ current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL
     maplist(=(Head-_), KPropLL),
     pairs_values(KPropLL, PropLL),
     transpose(PropLL, PropTL),
-    maplist(append, PropTL, [CompU, CallU, SuccU, GlobU, DictD]),
+    maplist(append, PropTL, [CompU, CallU, SuccU, GlobU, DictL]),
     maplist(sort, [CompU, CallU, SuccU, GlobU], [CompL, CallL, SuccL, GlobL]),
-    remove_dups(DictD, DictL),
     ( ( prop_asr(glob, native(_),    _, Asr)
       ; prop_asr(glob, native(_, _), _, Asr)
       )
