@@ -34,17 +34,16 @@
 
 :- module(included_files, [included_files/3]).
 
-:- use_module(library(remove_dups)).
+:- use_module(library(solution_sequences)).
 
-includes([])           --> [].
-includes([File|Files]) -->
-    findall(I, source_file_property(File, includes(I, _))),
-    includes(Files).
+includes(Files) -->
+    findall(I, distinct(I, ( member(File, Files),
+                             source_file_property(File, includes(I, _))
+                           ))).
 
 included_files(Files, List, Tail) :-
     includes(Files, Included, []),
     ( Included = [] -> List = Tail
-    ; remove_dups(Included, Nodups),
-      List = [Nodups|List1],
-      included_files(Nodups, List1, Tail)
+    ; List = [Included|List1],
+      included_files(Included, List1, Tail)
     ).

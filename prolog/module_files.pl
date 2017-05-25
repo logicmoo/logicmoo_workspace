@@ -34,16 +34,14 @@
 
 :- module(module_files, [module_files/2, file_modules/2, module_file/2]).
 
-:- use_module(library(remove_dups)).
+:- use_module(library(solution_sequences)).
 
 % NOTE: Files are not unique, and the first must be the main one
 module_files(M, Files) :-
-    findall(File, module_file(M, File), DFiles),
-    remove_dups(DFiles, Files).
+    findall(File, distinct(File, module_file(M, File)), Files).
 
 file_modules(File, ML) :-
-    findall(M, module_file(M, File), MD),
-    remove_dups(MD, ML).
+    findall(M, distinct(M, module_file(M, File)), ML).
 
 module_file(M, File) :-
     module_property(M, file(File)).
