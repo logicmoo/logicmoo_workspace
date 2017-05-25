@@ -90,7 +90,7 @@ in SVG add the following code after laoding the library
     :- use_rendering(sldnf).
     :- endif.
 
-and you need to have the following programs on the server
+and you need the following programs on the server
  - LaTeX with packages `epic` and `ecltree`
  - `pdfcrop` https://www.ctan.org/pkg/pdfcrop?lang=en
  - `pdf2svg` http://www.cityinthesky.co.uk/opensource/pdf2svg/
