@@ -78,10 +78,12 @@ setup_trace(State, M:OnTrace, OptL) :-
     %% redo port have weird bugs, ignoring it for now:
     select_option(ports(PortList), OptL2, _,
                   [call, exit, fail, unify, exception]),
-    asserta((user:prolog_trace_interception(Port, Frame, PC, Action)
-            :- ignore(trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
-                                 M:ValidFile, Action))),
-            Ref),
+    asserta((user:prolog_trace_interception(Port, Frame, PC, Action) :-
+                 ( trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
+                              M:ValidFile, Action)
+                 ->true
+                 ; Action = continue
+                 )), Ref),
     foldl(port_mask, PortList, 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
@@ -137,7 +139,6 @@ do_trace_port(_, _, _, _, _, _, continue).
 find_parents(Port, Frame, ParentL, RFrame, Cl, Loc) :-
     ( Port = redo(RPC)
     ->ParentL = [],
-      writeln(user_error, prolog_frame_attribute(Frame, clause, Cl)),
       RFrame = Frame,
       prolog_frame_attribute(Frame, clause, Cl),
       '$fetch_vm'(Cl, RPC, PC, _VMI),
