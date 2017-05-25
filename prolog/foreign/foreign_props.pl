@@ -64,13 +64,18 @@ foreign(G) :- call(G).
 :- global foreign/2.
 foreign(_, G) :- call(G).
 
-:- global native(_, Name)
-   # "This predicate is implemented in C ~w."-[Name].
+%!  native(+Name, :Predicate)
+%
+%   Predicate is implemented in C as Name.
 
-native(Goal, _) :- call(Goal).
+:- global (native)/2.
+native(_, G) :- call(G).
 
-:- global declaration (native)/1
-   # "This predicate is implemented in C with a pl_ prefix.".
+%!  native(:Predicate)
+%
+%   Predicate is implemented in C with a pl_ prefix.
+
+:- global declaration (native)/1.
 
 native(X) :- native(X, X).
 
@@ -98,10 +103,13 @@ float_t(Num) :- num(Num).
 :- type ptr/1 # "Defines a void pointer".
 ptr(Ptr) :- int(Ptr).
 
-:- type ptr/2 # "Defines a typed pointer. Note that if the value was
-    allocated dynamically by foreign_interface, it allows its usage as parent in
-    FI_new_child_value/array in the C side to perform semi-automatic memory
-    management".
+%!  ptr(:Type, ?Ptr)
+%
+%   Defines a typed pointer. Note that if the value was allocated dynamically by
+%   foreign_interface, it allows its usage as parent in FI_new_child_value/array
+%   in the C side to perform semi-automatic memory management
+
+:- type ptr/2.
 
 :- meta_predicate ptr(1, ?).
 
