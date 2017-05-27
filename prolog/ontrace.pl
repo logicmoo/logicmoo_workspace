@@ -186,22 +186,25 @@ clause_subloc(Cl, List, SubLoc) :-
     ( clause_property(Cl, file(File)),
       clause_property(Cl, line_count(Line)),
       clause_property(Cl, module(Module))
-    ->( read_term_at_line(File, Line, Module, Term, TermPos)
-      % Usage of term positions has priority
-      ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
-          match_clause(Cl, ClauseL, Module, List2, List),
-          nonvar(ClausePos)
-        ->( foldl(find_subgoal, List2, ClausePos, SubPos), % Expensive
-            nonvar(SubPos)
-          ->true
-          ; SubPos = ClausePos
-          )
-        ; SubPos = TermPos
-        ),
-        SubLoc = file_term_position(File, SubPos)
-      ; SubLoc = file(File, Line, -1, _)
-      )
+    ->file_line_module_subloc(Cl, List, File, Line, Module, SubLoc)
     ; SubLoc = clause(Cl)
+    ).
+
+file_line_module_subloc(Cl, List, File, Line, Module, SubLoc) :-
+    ( read_term_at_line(File, Line, Module, Term, TermPos)
+    % Usage of term positions has priority
+    ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
+        match_clause(Cl, ClauseL, Module, List2, List),
+        nonvar(ClausePos)
+      ->( foldl(find_subgoal, List2, ClausePos, SubPos), % Expensive
+          nonvar(SubPos)
+        ->true
+        ; SubPos = ClausePos
+        )
+      ; SubPos = TermPos
+      ),
+      SubLoc = file_term_position(File, SubPos)
+    ; SubLoc = file(File, Line, -1, _)
     ).
 
 read_term_at_line(File, Line, Module, Clause, TermPos) :-
@@ -224,6 +227,9 @@ read_term_at_line_2(File, Line, Module, Clause, TermPos) :-
 
 list_pos(term_position(_, _, _, _, PosL), PosL).
 list_pos(list_position(_, _, PosL, _), PosL).
+list_pos(parentheses_term_position(_, _, Pos1), Pos) :-
+    nonvar(Pos1),
+    list_pos(Pos1, Pos).
 
 find_subgoal(A, TermPos, Pos) :-
     list_pos(TermPos, PosL),
