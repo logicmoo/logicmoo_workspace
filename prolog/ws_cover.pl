@@ -40,7 +40,7 @@
 :- use_module(library(http/html_write)).
 :- use_module(library(module_files)).
 :- use_module(library(tabling)).
-:- use_module(pldoc(doc_htmlsrc)).
+:- use_module(library(pldoc/doc_htmlsrc)).
 
 ws_browser:provides_method(gcover).
 
@@ -86,28 +86,28 @@ file_line_end(Module, File, L1, L2) :-
         close(In)).
 
 property_lines(Module, File) -->
-    { findall(Line-(Port-Tag),
-              ( covered_db(File, L1, Port, Tag, _Count),
-                file_line_end(Module, File, L1, L2),
-                between(L1, L2, Line)
-              ), Pairs),
+    { findall(Line-(Port-Tag), covered_db(File, Line, Port, Tag, _), Pairs),
       sort(Pairs, Sorted),
       group_pairs_by_key(Sorted, Grouped)
     },
-    foldl(property_lines_each, Grouped).
+    foldl(property_lines_each(Module, File), Grouped).
 
 ports_color(Pairs, Color) :-
     port_color(Port, Color),
     memberchk(Port-_, Pairs).
 
-property_lines_each(Line-PortTagL) -->
+property_lines_each(Module, File, Line-PortTagL) -->
     { group_pairs_by_key(PortTagL, PortTagG),
-      once(ports_color(PortTagG, Color))
+      once(ports_color(PortTagG, Color)),
+      file_line_end(Module, File, Line, LEnd),
+      findall(L, between(Line, LEnd, L), LL)
     },
-    ['  lineColor["', Line, '"]="', Color, '";\n'],
-    ['  tooltText["', Line, '"]="'],
+    foldl(line_color(Color), LL),
+    ['  tT["', Line, '"]="'],
     foldl(port_tags_text, PortTagG),
     ['";\n'].
+
+line_color(Color, Line) --> ['  lC["', Line, '"]="', Color, '";\n'].
 
 port_tags_text(Port-TagL) --> [Port, ":", TagL,"\\n"].
 
@@ -117,22 +117,24 @@ coverage_js(Module, File, header, Out) :-
     phrase(html([script([type('text/javascript')
                         ],
                         ['function updateColorLine(){\n',
-                         '  var lineColor={};\n',
-                         '  var tooltText={};\n',
+                         '  var lC={};\n',
+                         '  var tT={};\n',
                          \property_lines(Module, File),
                          '  elements=document.getElementsByClassName("line-no");\n',
                          '  for (var i=0; i < elements.length; i++) {\n',
                          '    var key=elements[i].innerText.trim();\n',
-                         '    if (typeof lineColor[key] !== \'undefined\') {\n',
-                         '      elements[i].style.backgroundColor=lineColor[key];\n',
+                         '    if (typeof lC[key] !== \'undefined\') {\n',
+                         '      elements[i].style.backgroundColor=lC[key];\n',
+                         '    };\n',
+                         '    if (typeof tT[key] !== \'undefined\') {\n',
                          '      elements[i].classList.add("tooltip");\n',
-                         '      var toolTipText=document.createElement("span");\n',
-                         '      toolTipText.classList.add("tooltiptext");\n',
-                         '      toolTipText.classList.add("tooltiptext::after");\n',
-                         '      toolTipText.classList.add("tooltip-right");\n',
-                         '      var content= document.createTextNode(tooltText[key]);\n',
-                         '      toolTipText.appendChild(content);\n',
-                         '      elements[i].appendChild(toolTipText);\n',
+                         '      var t=document.createElement("span");\n',
+                         '      t.classList.add("tooltiptext");\n',
+                         '      t.classList.add("tooltiptext::after");\n',
+                         '      t.classList.add("tooltip-right");\n',
+                         '      var content=document.createTextNode(tT[key]);\n',
+                         '      t.appendChild(content);\n',
+                         '      elements[i].appendChild(t);\n',
                          '    }\n',
                          '  }\n',
                          '}\n'

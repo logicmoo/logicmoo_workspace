@@ -51,6 +51,8 @@
 :- use_module(library(tabling)).
 :- use_module(library(assertions)).
 :- use_module(library(option_utils)).
+:- use_module(library(rtchecks_rt)).
+:- use_module(library(rtchecks_utils), []).
 
 :- dynamic
        violations_db/3.

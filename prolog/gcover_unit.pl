@@ -32,37 +32,29 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(ws_source, []).
+:- module(gcover_unit,
+          [cov_run_tests/0,
+           cov_run_tests/1
+          ]).
+          
+:- use_module(library(plunit)).
+:- use_module(library(gcover)).
 
-:- reexport(library(ws_browser)).
-:- use_module(library(http/html_write)).
-:- use_module(library(module_files)).
-:- use_module(library(pldoc/doc_htmlsrc)).
+cov_run_tests :-
+    setup_call_cleanup(
+        plunit:setup_trap_assertions(Ref),
+        cover_current_units,
+        plunit:report_and_cleanup(Ref)).
 
-ws_browser:provides_method(live).
+cover_current_units :-
+    working_directory(W,W),
+    forall(plunit:current_test_set(Set),
+           gcover(plunit:run_unit(Set), [tag(Set),
+                                         file(directory_file_path(W,_))])),
+    plunit:check_for_test_errors.
 
-ws_browser:fetch_module_files_hook(live, ModuleFiles) :-
-    findall(M-Files,
-            ( current_module(M),
-              module_files(M, Files)
-            ), ModuleFilesU),
-    sort(ModuleFilesU, ModuleFiles).
-
-ws_browser:show_source_hook(live, _Module, File) :-
-    format('Content-type: text/html~n~n', []),
-    source_to_html(File, stream(current_output),
-                   [format_comments(false), skin(adjustments_js)]).
-
-:- public
-       adjustments_js/2.
-
-adjustments_js(header, Out) :-
-    phrase(html([style([],
-                       [
-"
-span.directive {
-    display: inline;
-}
-"
-                       ])]), Tokens),
-    print_html(Out, Tokens).
+cov_run_tests(Set) :-
+    working_directory(W,W),
+    gcover(run_tests(Set),
+           [tag(Set),
+            file(directory_file_path(W,_))]).

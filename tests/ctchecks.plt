@@ -11,7 +11,8 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- use_module(library(record_locations)).
 :- use_module(library(comment_data)).
 :- use_module(library(call_in_dir)).
-:- use_module(checkers(checker)).
+:- use_module(library(checkers/checker)).
+:- use_module(library(checkers/check_assertions)).
 :- use_module(library(listing), []).
 :- set_setting(listing:tab_distance, 0). % Use only spaces, no tabs
 
