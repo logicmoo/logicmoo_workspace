@@ -39,87 +39,87 @@
 :- use_module(library(gcover)).
 :- use_module(library(http/html_write)).
 :- use_module(library(module_files)).
-:- use_module(library(tabling)).
 :- use_module(library(pldoc/doc_htmlsrc)).
 
 ws_browser:provides_method(gcover).
 
 ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     findall(M-File,
-            ( covered_db(File, _, _, _, _),
+            ( covered_db(File, _, _, _, _, _),
               module_file(M, File)
             ), MFileU),
     sort(MFileU, MFileS),
     group_pairs_by_key(MFileS, ModuleFiles).
 
 % This is in order of priority
+ports_color([(success)-_, failure-_, multi-_], brown).
+ports_color([(success)-_, multi-_],            blue).
+ports_color([(success)-_, failure-_],          orange).
+ports_color([(exit)-_,    fail-_],             yellow).
+ports_color([(exit)-_,    call-_],             lime).
+ports_color([Port-_], Color) :- port_color(Port, Color).
+
 port_color(exception,    red).
 port_color(exception(_), red).
-port_color(fail,         magenta).
-port_color(redo(_),      blue).
-% port_color(redo(X),      white) :- nonvar(X), X \= 0.
-port_color(redo,         blue).
-port_color(exit,         lime).
+port_color(failure,      orangered).
+port_color(success,      greenyellow).
+port_color(multi,        green).
+port_color(fail,         fuchsia).
+port_color(redo,         lightblue).
+port_color(redoi,        cyan).
+port_color(exit,         yellowgreen).
+port_color(call,         greenyellow).
+% Note that exitcl and unify are converted to failure and success:
+port_color(exitcl,       orchid).
 port_color(unify,        orange).
-port_color(call,         yellow).
 
-ws_browser:show_source_hook(gcover, Module, File) :-
+ws_browser:show_source_hook(gcover, File) :-
     format('Content-type: text/html~n~n', []),
     source_to_html(File, stream(current_output),
-                   [format_comments(true), skin(coverage_js(Module, File))]).
+                   [format_comments(true), skin(coverage_js(File))]).
 
-:- table
-   file_line_end/4.
-
-file_line_end(Module, File, L1, L2) :-
-    catch(open(File, read, In), _, fail),
-    set_stream(In, newline(detect)),
-    call_cleanup(
-        ( read_source_term_at_location(
-              In, _,
-              [ line(L1),
-                module(Module)
-              ]),
-          stream_property(In, position(Pos)),
-          stream_position_data(line_count, Pos, L2)
-        ),
-        close(In)).
-
-property_lines(Module, File) -->
-    { findall(Line-(Port-Tag), covered_db(File, Line, Port, Tag, _), Pairs),
+property_lines(File) -->
+    { findall((L1-L2)-(Port-(Tag-Count)),
+              covered_db(File, L1, L2, Port, Tag, Count), Pairs),
       sort(Pairs, Sorted),
       group_pairs_by_key(Sorted, Grouped)
     },
-    foldl(property_lines_each(Module, File), Grouped).
+    foldl(property_lines_each, Grouped).
 
-ports_color(Pairs, Color) :-
-    port_color(Port, Color),
-    memberchk(Port-_, Pairs).
+porttags_color(Pairs, Color) :-
+    ports_color(Ports, Color),
+    subset(Ports, Pairs).
 
-property_lines_each(Module, File, Line-PortTagL) -->
-    { group_pairs_by_key(PortTagL, PortTagG),
-      once(ports_color(PortTagG, Color)),
-      file_line_end(Module, File, Line, LEnd),
-      findall(L, between(Line, LEnd, L), LL)
+property_lines_each((L1-L2)-PortTagCL) -->
+    { group_pairs_by_key(PortTagCL, PortTagCG),
+      once(porttags_color(PortTagCG, Color)),
+      findall(L, between(L1, L2, L), LineL)
     },
-    foldl(line_color(Color), LL),
-    ['  tT["', Line, '"]="'],
-    foldl(port_tags_text, PortTagG),
+    foldl(line_color(Color), LineL),
+    ['  tT["', L1, '"]="'],
+    foldl(port_tags_text, PortTagCG),
     ['";\n'].
 
 line_color(Color, Line) --> ['  lC["', Line, '"]="', Color, '";\n'].
 
-port_tags_text(Port-TagL) --> [Port, ":", TagL,"\\n"].
+port_tags_text(Port-TagCL) -->
+    { group_pairs_by_key(TagCL, TagCG),
+      maplist(tag_count, TagCG, TagC)
+    },
+    [Port, ":", TagC,"\\n"].
 
-:- public coverage_js/4.
+tag_count(Tag-L, Tag:S) :-
+    sum_list(L, S).
 
-coverage_js(Module, File, header, Out) :-
+:- public coverage_js/3.
+
+coverage_js(File, header, Out) :-
     phrase(html([script([type('text/javascript')
                         ],
                         ['function updateColorLine(){\n',
                          '  var lC={};\n',
                          '  var tT={};\n',
-                         \property_lines(Module, File),
+                         \property_lines(File),
                          '  elements=document.getElementsByClassName("line-no");\n',
                          '  for (var i=0; i < elements.length; i++) {\n',
                          '    var key=elements[i].innerText.trim();\n',
@@ -241,7 +241,7 @@ span.directive {
                        ])
                 ]), Tokens),
     print_html(Out, Tokens).
-coverage_js(_, _, footer, Out) :-
+coverage_js(_, footer, Out) :-
     phrase(html(script([type('text/javascript')
                        ],
                        ['updateColorLine();'])

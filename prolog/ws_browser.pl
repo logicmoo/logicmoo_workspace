@@ -49,7 +49,7 @@ browse_server(Port) :-
 :- multifile
     provides_method/1,
     fetch_module_files_hook/2,
-    show_source_hook/3.
+    show_source_hook/2.
 
 list_files(Request) :-
     print_message(information, format('Preparing to list files', [])),
@@ -73,10 +73,9 @@ show_source(Request) :-
     once(provides_method(DMethod)),
     http_parameters(Request,
                     [meth(Method, [default(DMethod)]),
-                     module(Module, [default(user)]),
                      file(File, [])
                     ]),
-    show_source_hook(Method, Module, File),
+    show_source_hook(Method, File),
     print_message(information, format('done', [])).
 
 header -->

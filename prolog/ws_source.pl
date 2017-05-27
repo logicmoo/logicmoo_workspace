@@ -48,7 +48,7 @@ ws_browser:fetch_module_files_hook(live, ModuleFiles) :-
             ), ModuleFilesU),
     sort(ModuleFilesU, ModuleFiles).
 
-ws_browser:show_source_hook(live, _Module, File) :-
+ws_browser:show_source_hook(live, File) :-
     format('Content-type: text/html~n~n', []),
     source_to_html(File, stream(current_output),
                    [format_comments(false), skin(adjustments_js)]).
