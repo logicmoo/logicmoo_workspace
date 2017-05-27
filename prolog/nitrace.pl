@@ -77,6 +77,9 @@ user:message_property(stream(_, Loc), prefix(F-A)) :- !,
 prolog:message(frame(Frame, redo(Redo), PC, CS)) --> !,
     '$messages':translate_message(frame(Frame, redo, PC, CS)),
     [' - redo(~w)'-[Redo]].
+prolog:message(frame(Frame, exitcl, PC, CS)) --> !,
+    '$messages':translate_message(frame(Frame, exit, PC, CS)),
+    [' - clause'].
 prolog:message(frame(Frame, exception(Ex), PC, CS)) --> !,
     '$messages':translate_message(frame(Frame, exception, PC, CS)),
     [nl],
