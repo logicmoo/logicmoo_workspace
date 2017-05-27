@@ -37,3 +37,4 @@
 :- reexport(library(metaprops)).
 :- reexport(library(globprops)).
 :- reexport(library(typeprops)).
+:- use_module(library(libprops)).
