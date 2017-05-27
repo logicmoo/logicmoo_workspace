@@ -33,6 +33,7 @@
 */
 
 :- module(ontrace, [ontrace/3,
+                    clause_pc_location/3,
 		    cleanup_trace/1,
                     call_inoutex/3]).
 
@@ -119,7 +120,19 @@ trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
 do_trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
     prolog_frame_attribute(Frame,  goal, M:H), % M:H to skip local predicates
     \+ \+ call(ValidGoal, M:H),
+    ignore(( Port = (exit),
+             prolog_frame_attribute(Frame, clause, ExCl),
+             % Trace exit at clause level:
+             check_and_call(exitcl, Frame, PC, OnTrace, ValidGoal, ValidFile,
+                            _, [], Frame, ExCl, clause(ExCl))
+           )),
     find_parents(Port, Frame, ParentL, RFrame, Cl, SubLoc),
+    check_and_call(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action,
+                   ParentL, RFrame, Cl, SubLoc), !.
+do_trace_port(_, _, _, _, _, _, continue).
+
+check_and_call(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action,
+               ParentL, RFrame, Cl, SubLoc) :-
     prolog_frame_attribute(RFrame, goal, CM:CH),
     ( ( clause_property(Cl, file(File))
       ; module_property(CM, file(File))
@@ -132,20 +145,10 @@ do_trace_port(Port, Frame, PC, OnTrace, ValidGoal, ValidFile, Action) :-
             prolog_frame_attribute(F, goal, PM:_),
             user_defined_module(PM)
           ),
-    !,
     call(OnTrace, Port, Frame, PC, ParentL, SubLoc, Action).
-do_trace_port(_, _, _, _, _, _, continue).
 
 find_parents(Port, Frame, ParentL, RFrame, Cl, Loc) :-
-    ( Port = redo(RPC)
-    ->ParentL = [],
-      RFrame = Frame,
-      prolog_frame_attribute(Frame, clause, Cl),
-      '$fetch_vm'(Cl, RPC, PC, _VMI),
-      Loc = clause_pc(Cl, PC)
-    ; member(Port, [unify /*, exit*/])
-    % TODO: if exit placed here, then it is marked in the clause, else in the
-    % literal, perhaps would be good to have exit_clause and exit_lit
+    ( member(Port, [unify, redo(_)])
     ->ParentL = [],
       prolog_frame_attribute(Frame, clause, Cl),
       RFrame = Frame,
