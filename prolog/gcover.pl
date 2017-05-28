@@ -134,8 +134,7 @@ port_record_cover(Port, File, Line1, Line2, Tag) :-
 
 incr_record_cover(Port, File, Line1, Line2, Tag) :-
     ( retract(covered_db(File, Line1, Line2, Port, Tag, Count1))
-    ->Count is Count1 + 1
-      %succ(Count1, Count
+    ->succ(Count1, Count)
     ; Count=1
     ),
     assertz(covered_db(File, Line1, Line2, Port, Tag, Count)).
