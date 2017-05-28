@@ -32,7 +32,11 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(gcover, [gcover/2, covered_db/6, reset_cover/0, reset_cover/1]).
+:- module(gcover, [gcover/2,
+                   covered_db/6,
+                   reset_cover/0,
+                   reset_cover/1,
+                   loc_file_line/4]).
 
 :- use_module(library(tabling)).
 :- use_module(library(module_files)).

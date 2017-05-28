@@ -35,6 +35,7 @@
 :- module(ws_cover, []).
 
 :- reexport(library(ws_browser)).
+:- use_module(library(tabling)).
 :- use_module(library(apply)).
 :- use_module(library(gcover)).
 :- use_module(library(http/html_write)).
@@ -51,10 +52,17 @@ ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     sort(MFileU, MFileS),
     group_pairs_by_key(MFileS, ModuleFiles).
 
-% This is in order of priority
-ports_color([(success)-_, failure-_, multi-_], brown).
-ports_color([(success)-_, multi-_],            blue).
+%! ports_color(List:list(pairs), Color:atm)
+%
+%  Convention: the color that affects the clause should be
+%  darker than those that affects only literals.
+%
+%  Keep the order since it is the priority.
+
+ports_color([(success)-_, failure-_, multi-_], lightpink).
+ports_color([(success)-_, multi-_],            yellowgreen).
 ports_color([(success)-_, failure-_],          orange).
+ports_color([uncovered-[clause-_]],            beige).
 ports_color([(exit)-_,    fail-_],             yellow).
 ports_color([(exit)-_,    call-_],             lime).
 ports_color([Port-_], Color) :- port_color(Port, Color).
@@ -67,31 +75,79 @@ port_color(multi,        green).
 port_color(fail,         fuchsia).
 port_color(redo,         lightblue).
 port_color(redoi,        cyan).
-port_color(exit,         yellowgreen).
-port_color(call,         greenyellow).
+port_color(exit,         greenyellow).
+port_color(call,         darkgreen).
 % Note that exitcl and unify are converted to failure and success:
 port_color(exitcl,       orchid).
 port_color(unify,        orange).
+port_color(uncovered,    white).
 
 ws_browser:show_source_hook(gcover, File) :-
     format('Content-type: text/html~n~n', []),
     source_to_html(File, stream(current_output),
                    [format_comments(true), skin(coverage_js(File))]).
 
-property_lines(File) -->
-    { findall((L1-L2)-(Port-(Tag-Count)),
-              covered_db(File, L1, L2, Port, Tag, Count), Pairs),
-      sort(Pairs, Sorted),
-      group_pairs_by_key(Sorted, Grouped)
-    },
-    foldl(property_lines_each, Grouped).
+:- table
+    source_file_line/4.
+
+source_file_line(File, L1, L2, Scope) :-
+    file_clause(File, Ref),
+    source_clause_line(File, Ref, L1, L2, Scope).
+
+source_clause_line(File, Ref, L1, L2, clause) :-
+    clause_property(Ref, line_count(L1)),
+    loc_file_line(clause(Ref), File, L1, L2).
+source_clause_line(File, Ref, L1, L2, literal(TInstr)) :-
+    '$break_pc'(Ref, PC1, _NextPC1),
+    '$fetch_vm'(Ref, PC1, PC, TInstr),
+    \+ skip_instr(TInstr),
+    loc_file_line(clause_pc(Ref, PC), File, L1, L2).
+
+skip_instr(i_cut).
+skip_instr(i_exit).
+
+file_clause(File, Ref) :-
+    current_predicate(M:F/A),
+    functor(H, F, A),
+    \+ predicate_property(M:H, imported_from(_)),
+    \+ predicate_property(M:H, dynamic),
+    nth_clause(M:H, _, Ref),
+    clause_property(Ref, file(File)).
+
+%!  covered(+File, -L1, -L2, -Port, -Tag, -Count)
+%
+%   Get on backtracking coverage information per each line, showing all the Port
+%   that has  been tried  in the  program point  specified by  File, L1  and L2,
+%   including `uncovered` which is used to  detect if such code has been covered
+%   or not, in such  case the Tag can be clause or literal,  depending if is the
+%   clause or  the literal that  has not been  covered. Note that  could happend
+%   that a covered line  does not have an 'uncovered' entry,  for instance if at
+%   some late point the system was unable to get the program point.
+
+covered(File, L1, L2, Port, Tag, Count) :-
+    covered_db(File, L1, L2, Port, Tag, Count).
+covered(File, L1, L2, uncovered, Scope, 0) :-
+    source_file_line(File, L1, L2, Scope).
+
+property_lines(File, List, Tail) :-
+    findall((L1-L2)-(Port-(Tag-Count)),
+            covered(File, L1, L2, Port, Tag, Count),
+            Pairs),
+    sort(Pairs, Sorted),
+    group_pairs_by_key(Sorted, Grouped),
+    foldl(property_lines_each, Grouped, List, Tail).
 
 porttags_color(Pairs, Color) :-
     ports_color(Ports, Color),
     subset(Ports, Pairs).
 
 property_lines_each((L1-L2)-PortTagCL) -->
-    { group_pairs_by_key(PortTagCL, PortTagCG),
+    { group_pairs_by_key(PortTagCL, PortTagCGU),
+      ( subtract(PortTagCGU, [uncovered-_], PortTagCG),
+        PortTagCG \= []
+      ->true
+      ; PortTagCG = PortTagCGU
+      ),
       once(porttags_color(PortTagCG, Color)),
       findall(L, between(L1, L2, L), LineL)
     },
