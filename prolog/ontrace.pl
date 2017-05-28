@@ -199,11 +199,7 @@ file_line_module_subloc(Cl, List, File, Line, Module, SubLoc) :-
     ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
         match_clause(Cl, ClauseL, Module, List2, List),
         nonvar(ClausePos)
-      ->( foldl(find_subgoal, List2, ClausePos, SubPos), % Expensive
-          nonvar(SubPos)
-        ->true
-        ; SubPos = ClausePos
-        )
+      ->foldl(find_subgoal, List2, ClausePos, SubPos) % Expensive
       ; SubPos = TermPos
       ),
       SubLoc = file_term_position(File, SubPos)
@@ -233,12 +229,14 @@ list_pos(list_position(_, _, PosL, _), PosL).
 list_pos(parentheses_term_position(_, _, Pos1), Pos) :-
     nonvar(Pos1),
     list_pos(Pos1, Pos).
+list_pos(F-T, [F-T]).
 
 find_subgoal(A, TermPos, Pos) :-
     list_pos(TermPos, PosL),
     is_list(PosL),
     nth1(A, PosL, Pos),
     nonvar(Pos), !.
+find_subgoal(_, Pos, Pos).
 
 match_clause(Ref, ClauseL, Module, List, Tail) :-
     % format(user_error, '~N~w',[match_clause(Ref, ClauseL, Module, List, Tail)]),
