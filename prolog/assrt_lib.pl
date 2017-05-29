@@ -33,7 +33,8 @@
 */
 
 :- module(assrt_lib,
-          [assrt_type/1,
+          [asr_head/2,
+           assrt_type/1,
            assrt_status/1,
            assertion_records/4,
            asr_head_prop/7,
@@ -92,6 +93,19 @@
        asr_call/4,
        asr_succ/4,
        asr_glob/4.
+
+%!  asr_head(?, ?) is det
+%
+%   Extract the Head for a given assertion identifier.  Note that for convention
+%   the first and second arguments of the Assertion identifier contains the
+%   module and the head respectively.
+
+asr_head(Asr, M:Head) :-
+    ( nonvar(Asr)
+    ->arg(1, Asr, M),
+      arg(2, Asr, Head)
+    ; true
+    ).
 
 curr_prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
 curr_prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
