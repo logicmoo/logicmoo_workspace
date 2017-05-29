@@ -32,10 +32,10 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(ws_cover, []).
+:- module(ws_cover, [cache_file_lines/0]).
 
 :- reexport(library(ws_browser)).
-:- use_module(library(tabling)).
+:- use_module(library(ntabling)).
 :- use_module(library(apply)).
 :- use_module(library(gcover)).
 :- use_module(library(http/html_write)).
@@ -52,6 +52,10 @@ ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     sort(MFileU, MFileS),
     group_pairs_by_key(MFileS, ModuleFiles).
 
+cache_file_lines :-
+    forall(distinct(File, covered_db(File, _, _, _, _, _)),
+           collect_sols(source_file_line(File, _, _, _), _)).
+
 %! ports_color(List:list(pairs), Color:atm)
 %
 %  Convention: the color that affects the clause should be
@@ -62,7 +66,7 @@ ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
 ports_color([(success)-_, failure-_, multi-_], lightpink).
 ports_color([(success)-_, multi-_],            yellowgreen).
 ports_color([(success)-_, failure-_],          orange).
-ports_color([uncovered-[clause-_]],            beige).
+ports_color([uncovered-[clause-_]],            bisque).
 ports_color([(exit)-_,    fail-_],             yellow).
 ports_color([(exit)-_,    call-_],             lime).
 ports_color([Port-_], Color) :- port_color(Port, Color).
@@ -87,8 +91,8 @@ ws_browser:show_source_hook(gcover, File) :-
     source_to_html(File, stream(current_output),
                    [format_comments(true), skin(coverage_js(File))]).
 
-:- table
-    source_file_line/4.
+% :- table
+%     source_file_line/4.
 
 source_file_line(File, L1, L2, Scope) :-
     file_clause(File, Ref),
@@ -116,18 +120,18 @@ file_clause(File, Ref) :-
 
 %!  covered(+File, -L1, -L2, -Port, -Tag, -Count)
 %
-%   Get on backtracking coverage information per each line, showing all the Port
-%   that has  been tried  in the  program point  specified by  File, L1  and L2,
-%   including `uncovered` which is used to  detect if such code has been covered
-%   or not, in such  case the Tag can be clause or literal,  depending if is the
-%   clause or  the literal that  has not been  covered. Note that  could happend
-%   that a covered line  does not have an 'uncovered' entry,  for instance if at
-%   some late point the system was unable to get the program point.
+%   Get on  backtracking coverage information per  each line, and the  Port that
+%   has been tried in the program point  specified by File, L1 and L2, including
+%   `uncovered` which is used to detect if such code has been covered or not, in
+%   such case the  Tag can be clause  or literal, depending if is  the clause or
+%   the  literal that  has not  been  covered. Note  that could  happend that  a
+%   covered line  does not have  an 'uncovered' entry,  for instance if  at some
+%   late point the system was unable to get the program point.
 
 covered(File, L1, L2, Port, Tag, Count) :-
     covered_db(File, L1, L2, Port, Tag, Count).
 covered(File, L1, L2, uncovered, Scope, 0) :-
-    source_file_line(File, L1, L2, Scope).
+    tabled(source_file_line(File, L1, L2, Scope)).
 
 property_lines(File, List, Tail) :-
     findall((L1-L2)-(Port-(Tag-Count)),
