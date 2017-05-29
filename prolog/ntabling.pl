@@ -32,25 +32,41 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(ntabling, [tabling/2, tabling/3, tabling/4]).
+:- module(ntabling, [tabled/1, collect_sols/2]).
 
-% BUG: It performs an eager call of the Goal first.
-:- meta_predicate tabling(0, 0).
-tabling(Elem, Goal) :-
-    \+ Elem,
-    ( Goal,
-      assertz(Elem),
-      fail
-    ; true
+:- dynamic
+       '$tabled'/2.
+
+:- meta_predicate
+       tabled(0),
+       collect_sols(0, -).
+
+tabled(M:Goal) :-
+    collect_sols(M:Goal, TM),
+    TM:Goal.
+
+collect_sols(M:Goal, TM) :-
+    atom_concat(M, '$tabled', TM),
+    variant_hash(M:Goal, Hash),
+    (   '$tabled'(Hash, M:Goal)
+    *-> true
+    ;   functor(Goal, F, A),
+        dynamic(TM:F/A),
+        forall(M:Goal, assertz(TM:Goal)),
+        assertz('$tabled'(Hash, M:Goal))
     ).
 
-:- meta_predicate tabling(0, 0, -).
-tabling(Elem, Goal, List) :-
-    tabling(Elem, Goal, List, []).
+abolish_all_ntables :-
+    abolish_ntable_subgoals(_, _).
 
-:- meta_predicate tabling(0, 0, -, ?).
-tabling(Elem, Goal, List, Tail) :-
-    ( \+ Elem ->
-      findall(Elem, Goal, List, Tail)
-    ; List = Tail
-    ).
+:- meta_predicate
+       abolish_ntable_subgoals(0).
+
+abolish_ntable_subgoals(M:Goal) :-
+    variant_hash(M:Goal, Hash),
+    abolish_ntable_subgoals(Hash, M:Goal).
+
+abolish_ntable_subgoals(Hash, M:Goal) :-
+    forall(retract('$tabled'(Hash, M:Goal)),
+           ( atom_concat(M, '$tabled', TM),
+             retractall(TM:Goal))).
