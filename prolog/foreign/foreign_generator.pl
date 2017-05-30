@@ -35,6 +35,7 @@
 :- module(foreign_generator, [generate_library/4,
                               gen_foreign_library/2]).
 
+:- use_module(library(lists)).
 :- use_module(library(assertions)).
 :- use_module(library(extend_args)).
 :- use_module(library(extra_messages)).
