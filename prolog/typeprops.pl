@@ -173,7 +173,11 @@ term(_).
 list([]).
 list([_|L]) :- list(L).
 
-:- type list(T, L) # "~w is a list of ~ws."-[L, T].
+%!  list(:Type, List:list)
+%
+%    List is a list of Type
+
+:- type list(1, list).
 :- meta_predicate list(1, ?).
 
 list(Type, List) :- maplist(Type, List).
@@ -262,9 +266,12 @@ arithexpression(X) :- number(X), !. % Optimization
 arithexpression(X) :- num(X).
 arithexpression(X) :-
     callable(X),
-    current_arithmetic_function(X),
+    arithmetic_function(X),
     X =.. [_|Args],
     maplist(arithexpression, Args).
+
+arithmetic_function(X) :- current_arithmetic_function(X).
+arithmetic_function(X) :- arithmetic:evaluable(X, _Module).
 
 % BUG: if the trace have all the ports active, we can not use ';'/2 in is_pred/2
 % and some variables becomes uninstantiated. That is an SWI-Prolog bug but I
