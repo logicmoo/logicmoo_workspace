@@ -111,8 +111,8 @@ prop_ctcheck(M, FromChk, Trans) :-
     findall(Pair, current_prop_ctcheck(M, FromChk, Pair), Pairs),
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Groups),
-    maplist(\ (K-L)^(error-(prop(G)-K))
-           ^group_pairs_by_key(L, G), Groups, Trans).
+    maplist([K-L, (error-(prop(G)-K))]
+            >>group_pairs_by_key(L, G), Groups, Trans).
 
 current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     prop_asr(head, M:Head, From, Asr),
