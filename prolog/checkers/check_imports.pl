@@ -43,6 +43,7 @@
 :- use_module(library(extra_location)).
 :- use_module(library(from_utils)).
 :- use_module(library(location_utils)).
+:- use_module(library(module_files)).
 
 :- multifile
     prolog:message//1.
@@ -127,6 +128,18 @@ current_unused_import(M, FromChk, U, Loc, F, A) :-
 
 ignore_import(_, rtchecks_rt).
 ignore_import(M, IM) :- expansion_module(M, IM).
+ignore_import(_, IM) :-
+    '$def_modules'([goal_expansion/4,
+                    goal_expansion/2,
+                    term_expansion/4,
+                    term_expansion/2],
+                   MList),
+    member(M-PIL, MList),
+    member(F/A, PIL),
+    functor(H, F, A),
+    clause(M:H, _, Ref),
+    clause_property(Ref, file(File)),
+    module_file(IM, File).
 
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
