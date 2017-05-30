@@ -94,7 +94,7 @@
        asr_succ/4,
        asr_glob/4.
 
-%!  asr_head(?, ?) is det
+%!  asr_head(?Asr, ?Head) is det
 %
 %   Extract the Head for a given assertion identifier.  Note that for convention
 %   the first and second arguments of the Assertion identifier contains the
@@ -763,15 +763,22 @@ props_args((A, B), M, V, term_position(_, _, _, _, [PA, PB])) --> !,
 props_args((A; B), M, V, Pos) --> !,
     { Pos = term_position(_, _, _, _, [PA, PB]),
       props_args(A, M, V, PA, P1, []),
-      list_sequence(P1, C1),
+      pairs_keys(P1, ML1),
+      maplist(cleanup_mod(M), ML1, L1),
+      list_sequence(L1, C1),
       props_args(B, M, V, PB, P2, []),
-      list_sequence(P2, C2)
+      pairs_keys(P2, ML2),
+      maplist(cleanup_mod(M), ML2, L2),
+      list_sequence(L2, C2)
     },
-    [(C1;C2)-Pos].
+    [(M:(C1;C2))-Pos].
 props_args(M:A, _, V, term_position(_, _, _, _, [_, PA])) -->
     {atom(M)}, !,
     props_args(A, M, V, PA).
 props_args(A, M, V, Pos) --> call(V, A, M, Pos).
+
+cleanup_mod(M, M:C, C) :- !.
+cleanup_mod(_, MC, MC).
 
 prop_arg(V, A, M, Pos) -->
     {add_arg(V, A, P, Pos, PPos)},
