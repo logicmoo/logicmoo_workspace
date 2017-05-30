@@ -32,16 +32,15 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(rtchecks_rt,
-          [rtcheck_goal/2,
-           rtcheck_call/2,
-           check_asrs/4,
-           current_assertion_rt/3,
-           start_rtcheck/2,
-           rtc_call/2,
-           '$with_gloc'/2,
-           '$with_asr_head'/2
-          ]).
+:- module(rtchecks_rt, 
+	  [check_goal/6,
+	   check_call/3,
+           rtcheck_goal/2,
+	   check_asrs/4,
+	   start_rtcheck/2,
+	   rtc_call/2,
+	   '$with_gloc'/2,
+	   '$with_asr_head'/2]).
 
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
@@ -52,8 +51,8 @@
 :- use_module(library(implementation_module)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(send_check)).
-:- use_module(library(rtcprops)).
 :- use_module(library(clambda)).
+:- use_module(library(check_ctrt)).
 
 /** <module> Predicates that are required to implement run-time checks
 
@@ -94,10 +93,6 @@ run-time. A future improvement could be to apply a partial evaluator to the
 interpreter.
 
 */
-
-:- meta_predicate checkif_modl(?, ?, 0, ?, 0).
-checkif_modl(M, M,    _,    _, Goal) :- !, call(Goal).
-checkif_modl(_, _, GMod, Goal, Goal) :- call(GMod).
 
 :- meta_predicate '$with_asr_head'(0, ?).
 '$with_asr_head'(Comp, AsrHead) :-
@@ -226,16 +221,20 @@ comps_to_goal2([Check|Checks], Check0, Goal) -->
     call(Goal, Check0),
     comps_to_goal2(Checks, Check, Goal).
 
-:- meta_predicate rtcheck_call(+, 0).
-rtcheck_call(AsrL, CM:Goal) :-
-    implementation_module(CM:Goal, M),
-    rtcheck_goal(Goal, CM:Goal, M, CM, AsrL).
-
-rtcheck_goal(Goal, Call, M, CM, AsrL) :-
+check_goal(T, Goal, Call, M, CM, AsrL) :-
     current_prolog_flag(rtchecks_level, Level),
     checkif_modl(M, CM,
-                 check_asrs(is_prop_rtcheck(step1, Level), AsrL, Goal, G2), G2,
-                 check_asrs(is_prop_rtcheck(step2, Level), AsrL, Goal, Call)).
+                 check_asrs(is_prop_check(step1, Level, T), AsrL, Goal, G2), G2,
+                 check_asrs(is_prop_check(step2, Level, T), AsrL, Goal, Call)).
+
+:- meta_predicate check_call(+, +, 0).
+check_call(T, AsrL, CM:Goal) :-
+    implementation_module(CM:Goal, M),
+    ctrt_call(T, CM:Goal, Call),
+    check_goal(T, Goal, Call, M, CM, AsrL).
+
+ctrt_call(rt, Call, Call).
+ctrt_call(ct, _, true). % TBD: use a partial evaluator instead of true
 
 ppassertion_type_goal(check(Goal), check, Goal).
 ppassertion_type_goal(trust(Goal), trust, Goal).
@@ -249,57 +248,22 @@ rtcheck_goal(CM:Goal0, Call) :-
     ->rtc_call(Type, CM:Pred)
     ; implementation_module(CM:Goal, M),
       collect_rtasr(Goal, CM, Pred, M, RAsrL),
-      rtcheck_goal(Pred, call(Call, CM:Pred), M, CM, RAsrL)
+      check_goal(rt, Pred, call(Call, CM:Pred), M, CM, RAsrL)
     ).
 
 :- meta_predicate start_rtcheck(+, 0).
 start_rtcheck(M:Goal0, CM:WrappedHead) :-
     resolve_calln(Goal0, Goal),
     collect_rtasr(Goal, CM, Pred, M, RAsrL),
-    rtcheck_goal(Pred, M:WrappedHead, M, CM, RAsrL).
+    check_goal(rt, Pred, M:WrappedHead, M, CM, RAsrL).
 
 collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
     qualify_meta_goal(Goal, M, CM, Pred),
-    collect_assertions(Pred, M, AsrL),
+    collect_assertions(rt, Pred, M, AsrL),
     maplist(wrap_asr_rtcheck, AsrL, RAsrL).
 
 wrap_asr_rtcheck(Asr, rtcheck(Asr)).
 
-% ----------------------------------------------------------------------------
-% assrt_op(Part, Step, Level, Type).
-
-assrt_op(call, step1, _,       entry).
-assrt_op(call, step1, exports, calls).
-assrt_op(call, step1, exports, pred).
-assrt_op(call, step2, inner,   calls).
-assrt_op(call, step2, inner,   pred).
-assrt_op(succ, step1, _,       exit).
-assrt_op(succ, step1, exports, success).
-assrt_op(succ, step1, exports, pred).
-assrt_op(succ, step2, inner,   success).
-assrt_op(succ, step2, inner,   pred).
-assrt_op(glob, step1, exports, comp).
-assrt_op(glob, step1, exports, pred).
-assrt_op(glob, step2, inner,   comp).
-assrt_op(glob, step2, inner,   pred).
-
-is_valid_status_type(true, entry) :- current_prolog_flag(rtchecks_entry, yes).
-is_valid_status_type(Status, Type) :-
-        rtcheck_assr_type(Type),
-        rtcheck_assr_status(Status).
-
-rtcheck_assr_status(true)  :- current_prolog_flag(rtchecks_true,  yes).
-rtcheck_assr_status(trust) :- current_prolog_flag(rtchecks_trust, yes).
-rtcheck_assr_status(debug) :- current_prolog_flag(rtchecks_debug, yes).
-rtcheck_assr_status(trace) :- current_prolog_flag(rtchecks_trace, yes).
-rtcheck_assr_status(check) :- current_prolog_flag(rtchecks_check, yes).
-
-rtcheck_assr_type(calls).
-rtcheck_assr_type(pred).
-rtcheck_assr_type(prop).
-rtcheck_assr_type(comp).
-rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
-rtcheck_assr_type(success).
 % ----------------------------------------------------------------------------
 
 :- meta_predicate check_asrs(2, +, +, +).
@@ -323,12 +287,6 @@ prop_rtchecks(AsrL1, IsPropCheck, Part, AsrPVL) :-
     include(call(IsPropCheck, Part), AsrL1, AsrL),
     pairs_keys_values(AsrPVL, AsrL, _PValuesL).
 
-is_prop_rtcheck(Step, Level, Part, Asr) :-
-    asr_aprop(Asr, stat, Status, _),
-    asr_aprop(Asr, type, Type,   _),
-    assrt_op(Part, Step, Level, Type),
-    is_valid_status_type(Status, Type), !.
-
 :- meta_predicate rtc_call(+, 0).
 
 rtc_call(Type, Check) :-
@@ -349,46 +307,5 @@ do_rtcheck(false, Check) :-
     current_prolog_flag(rtchecks_false, yes),
     rtcheck_cond(Check, Check, false/1),
     fail.
-
-/*
-  Combination of status and rtcheck indicators, to control the compile
-  and run-time checking:
-
-  ===========+============++===========+==========
-  Status     | + Command  || ctchecked | rtchecked
-  ===========+============++===========+==========
-  true/trust | -          || no        | no
-  true/trust | rtcheck    || no        | yes
-  check      | no_rtcheck || yes       | no
-  check      | -          || yes       | yes
-  ===========+============++===========+==========
-  Note: This is weird to preserve ciao-compatibility
-*/
-
-black_list_pred(_=_).
-
-assertion_is_valid(Status, Type, Asr) :-
-    ( \+ prop_asr(glob, rtcheck(_), _, Asr)
-    ->is_valid_status_type(Status, Type),
-      \+ prop_asr(glob, no_rtcheck(_), _, Asr)
-    ; true % Force run-time checking
-    ).
-
-current_assertion_rt(Pred, M, Asr) :-
-    \+ prop_asr(Pred, M, _, prop, _, _, _),
-    prop_asr(Pred, M, Status, Type, _, _, Asr),
-    assertion_is_valid(Status, Type, Asr),
-    ( current_prolog_flag(rtchecks_level, inner)
-    ->true
-    ; current_prolog_flag(rtchecks_level, exports),
-      predicate_property(M:Pred, export)
-    ->true
-    ),
-    \+ black_list_pred(Pred).
-
-collect_assertions(Pred, M, AsrL) :-
-    copy_term_nat(Pred, Head), % copy to avoid duplication of atributes
-    findall(Head-Asr, current_assertion_rt(Head, M, Asr), Pairs),
-    maplist([Pred] +\ (Pred-T)^T^true, Pairs, AsrL).
 
 sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).

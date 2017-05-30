@@ -47,6 +47,7 @@
 :- use_module(library(ontrace)).
 :- use_module(library(static_strip_module)).
 :- use_module(library(resolve_calln)).
+:- use_module(library(check_ctrt)).
 
 :- dynamic
     rtc_scanned/1,
@@ -222,7 +223,7 @@ setup_clause_bpt(Clause, Action) :-
           ),
           \+ black_list_callee(M, Goal),
           once(( rtchecks_tracer:pp_assr(Goal, M)
-               ; current_assertion_rt(Goal, M, _)
+               ; current_assertion(rt, Goal, M, _)
                ; white_list_meta(M, Goal),
                  predicate_property(M:Goal, meta_predicate(S)),
                  once(arg(_, S, 0 ))
