@@ -84,6 +84,12 @@ cleanup(p(TRef, GRef)) :-
 
 true_3(_, _, _).
 
+skip((_,_)).
+skip((_;_)).
+skip((_->_)).
+skip((_*->_)).
+skip(\+(_)).
+
 /*
 true_3(Goal, Caller, From) :-
     print_message(information,
@@ -91,6 +97,8 @@ true_3(Goal, Caller, From) :-
 */
 
 do_goal_expansion(Goal, TermPos) :-
+    \+ skip(Goal),
+    current_context_value(file, File),
     prolog_load_context(source, File),
     ( TermPos \= none
     ->From = file_term_position(File, TermPos)
@@ -119,8 +127,8 @@ do_source_codewalk(OptionL1) :-
             forall(FileMGen,
                    walk_source(File, [variable_names(VNL)|OptionL])),
             '$set_source_module'(_, OldM)),
-        [on_trace],
-        [OnTrace]).
+        [file, on_trace],
+        [File, OnTrace]).
 
 walk_source(File, OptionL) :-
     setup_call_cleanup(
