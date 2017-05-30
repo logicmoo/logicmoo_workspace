@@ -32,7 +32,11 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(ntabling, [tabled/1, collect_sols/2]).
+:- module(ntabling,
+          [tabled/1,
+           collect_sols/2,
+           abolish_all_ntables/0,
+           abolish_ntable_subgoals/1]).
 
 :- dynamic
        '$tabled'/2.
