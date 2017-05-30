@@ -88,7 +88,8 @@ compat(_:H) :-
 compat(Goal) :- \+ \+ Goal.
 
 compatc(H) :-
-    arg(1, H, A),
+    functor(H, _, N),
+    arg(N, H, A),
     var(A), !.
 compatc(var(_)).
 compatc(nonvar(_)).
