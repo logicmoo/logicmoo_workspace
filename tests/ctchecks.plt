@@ -118,6 +118,16 @@ test(ctmeta) :-
     %set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
+:- use_module(p2).
+
+test(samename) :-
+    set_prolog_flag(verbose, silent),
+    assert(user:error_on_co),
+    with_output_to(string(Result), showcheck(assertions, [module(p2)])),
+    set_prolog_flag(verbose, normal),
+    assertion(Result == ""),
+    retractall(user:error_on_co).
+
 replace_noisy_strings(SD) -->
         replace_substrings(SD, ""),
         replace_substrings("ERROR: ", ""),
