@@ -46,6 +46,9 @@ performance.
 :- use_module(library(lists)).
 :- use_module(library(occurs)).
 :- use_module(library(compound_expand)).
+% Next module will require the installation of lambda package, comment it out if
+% you only want compiled lambda expressions:
+:- reexport(library(lambda)).
 
 remove_hats(^(H, G0), G) -->
     [H], !,
