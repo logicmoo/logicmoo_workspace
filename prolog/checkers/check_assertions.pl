@@ -39,7 +39,7 @@
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(source_codewalk)).
-:- use_module(library(clambda)).
+:- use_module(library(yall)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(implementation_module)).
 :- use_module(library(intercept)).
@@ -77,8 +77,8 @@ check_assertions(OptionL1, Pairs) :-
                   [module(M),
                    on_trace(collect_violations(M))
                   ], OptionL),
-    source_codewalk(OptionL),
     option_fromchk(OptionL, _, FromChk),
+    source_codewalk(OptionL),
     findall(error-Issue,
             ( retract(violations_db(CPI, CTChecks, From)),
               from_location(From, Loc),
@@ -187,10 +187,15 @@ black_list(M:Call) :- black_list(Call, M).
 
 :- public collect_violations/4.
 
+%!  collect_violations(+Module, :Goal, +Caller, +From)
+%
+%   Collect the assertion violations of a given Goal. Note that Module refer to
+%   the module of the source code, while Goal could have another context module,
+%   for instance, if module qualification was used in the body of a predicate.
+
 :- meta_predicate collect_violations(+,0,0,+).
 collect_violations(M, CM:Goal, Caller, From) :-
     \+ black_list(Caller),
-    implementation_module(CM:Goal, M),
     check_property_ctcheck(Goal, M, CM, Caller, CTChecks),
     CTChecks \= [],
     normalize_pi(Caller, CPI),
@@ -273,7 +278,6 @@ tabled_generate_ctchecks(H, M, CM, Caller, Goal) :-
 %   if no ctchecks can be applied to Pred.
 %
 generate_ctchecks(Goal, M, VInf, CTChecks) :-
-    % writeln(user_error, generate_ctchecks(Goal, M, VInf, CTChecks)),
     collect_assertions(Goal, M, AsrL),
     ( AsrL \= []
     ->maplist(wrap_asr_ctcheck(VInf), AsrL, PAsrL),
