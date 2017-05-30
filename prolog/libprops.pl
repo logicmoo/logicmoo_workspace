@@ -76,10 +76,10 @@
 :- comp maplist/4 is multi.
 :- comp maplist/5 is multi.
 
-:- pred maplist(A, list)                   : callable(call(A, _)).
-:- pred maplist(A, list, list)             : callable(call(A, _, _)).
-:- pred maplist(A, list, list, list)       : callable(call(A, _, _, _)).
-:- pred maplist(A, list, list, list, list) : callable(call(A, _, _, _, _)).
+:- pred maplist(1, list).
+:- pred maplist(2, list, list).
+:- pred maplist(3, list, list, list).
+:- pred maplist(4, list, list, list, list).
 
 :- pred memberchk(?, ?list) is semidet.
 
