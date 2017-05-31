@@ -47,7 +47,7 @@
 :- use_module(library(ontrace)).
 :- use_module(library(static_strip_module)).
 :- use_module(library(resolve_calln)).
-:- use_module(library(check_ctrt)).
+:- use_module(library(ctrtchecks)).
 
 :- dynamic
     rtc_scanned/1,
