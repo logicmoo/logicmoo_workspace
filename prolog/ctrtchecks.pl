@@ -151,42 +151,44 @@ collect_assertions(T, Pred, M, AsrL) :-
 check_goal(T, Goal, Call, M, CM, AsrL) :-
     current_prolog_flag(rtchecks_level, Level),
     checkif_modl(M, CM,
-                 check_asrs(is_prop_check(step1, Level, T), AsrL, Goal, G2), G2,
-                 check_asrs(is_prop_check(step2, Level, T), AsrL, Goal, Call)).
+                 check_asrs(T, is_prop_check(step1, Level), AsrL, Goal, G2), G2,
+                 check_asrs(T, is_prop_check(step2, Level), AsrL, Goal, Call)).
 
-:- meta_predicate check_asrs(2, +, +, +).
+:- meta_predicate check_asrs(+, 3, +, +, +).
 
-check_asrs(IsPropCheck, AsrL, Head, Goal) :-
-    check_asrs_pre(IsPropCheck, AsrL, AsrGlobL, AsrSuccL),
-    checkif_asrs_comp(AsrGlobL, Head, Goal),
-    checkif_asrs_props(success, AsrSuccL).
+check_asrs(T, IsPropCheck, AsrL, Head, Goal) :-
+    check_asrs_pre(T, IsPropCheck, AsrL, AsrGlobL, AsrSuccL),
+    checkif_asrs_comp(AsrGlobL, T, Head, Goal),
+    checkif_asrs_props(T, success, AsrSuccL).
 
-check_asrs_pre(IsPropCheck, AsrL, AsrGlobL, AsrSuccL) :-
-    prop_rtchecks(AsrL, IsPropCheck, call, AsrCallL),
-    prop_rtchecks(AsrL, IsPropCheck, succ, AsrSuccL),
+check_asrs_pre(T, IsPropCheck, AsrL, AsrGlobL, AsrSuccL) :-
+    prop_rtchecks(T, AsrL, IsPropCheck, call, AsrCallL),
+    prop_rtchecks(T, AsrL, IsPropCheck, succ, AsrSuccL),
     subtract(AsrSuccL, AsrCallL, DAsrSuccL),
-    prop_rtchecks(AsrL, IsPropCheck, glob, AsrGlobL),
+    prop_rtchecks(T, AsrL, IsPropCheck, glob, AsrGlobL),
     subtract(AsrGlobL, AsrCallL, DAsrGlobL),
-    check_asrs_props_calls(   AsrCallL),
-    check_asrs_props(success, DAsrSuccL),
-    check_asrs_props(comp,    DAsrGlobL).
+    check_asrs_props_calls(T, AsrCallL),
+    check_asrs_props(T, success, DAsrSuccL),
+    check_asrs_props(T, comp,    DAsrGlobL).
 
-prop_rtchecks(AsrL1, IsPropCheck, Part, AsrPVL) :-
-    include(call(IsPropCheck, Part), AsrL1, AsrL),
+prop_rtchecks(T, AsrL1, IsPropCheck, Part, AsrPVL) :-
+    include(call(IsPropCheck, T, Part), AsrL1, AsrL),
     pairs_keys_values(AsrPVL, AsrL, _PValuesL).
 
-:- meta_predicate checkif_asrs_comp(+, 0).
-checkif_asrs_comp([], _, Goal) :-
+:- meta_predicate checkif_asrs_comp(+, +, +, 0).
+checkif_asrs_comp([], _, _, Goal) :-
     call(Goal).
-checkif_asrs_comp([Asr-PVL|AsrL], Head, Goal1) :-
-    checkif_asr_comp(PVL, Asr, Head, Goal1, Goal),
-    checkif_asrs_comp(AsrL, Head, Goal).
+checkif_asrs_comp([Asr-PVL|AsrL], T, Head, Goal1) :-
+    checkif_asr_comp(T, PVL, Asr, Head, Goal1, Goal),
+    checkif_asrs_comp(AsrL, T, Head, Goal).
 
-checkif_asr_comp(PropValues, Asr, Head, Goal1, Goal) :-
+checkif_asr_comp(T, PropValues, Asr, Head, Goal1, Goal) :-
     ( member(PropValues, [[], [[]]]),
       copy_term_nat(Asr, NAsr),
       findall(g(NAsr, M, Glob, Loc),
-              asr_aprop(NAsr, glob, M:Glob, Loc), GlobL),
+              ( asr_aprop(NAsr, glob, M:Glob, Loc),
+                valid_prop(T, M:Glob)
+              ), GlobL),
       GlobL \= []
     ->comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, Goal1),
       Goal = '$with_asr_head'(Goal2, Asr-Head)
@@ -228,27 +230,27 @@ check_call(T, AsrL, CM:Goal) :-
 ctrt_call(rt, Call, Call).
 ctrt_call(ct, _, true). % TBD: use a partial evaluator instead of true
 
-check_asrs_props_calls(AsrPVL) :-
-    check_asrs_props_all(calls, AsrPVL).
+check_asrs_props_calls(T, AsrPVL) :-
+    check_asrs_props_all(T, calls, AsrPVL).
 
-check_asrs_props_all(PType, AsrPVL) :-
-    check_asrs_props(PType, AsrPVL),
+check_asrs_props_all(T, PType, AsrPVL) :-
+    check_asrs_props(T, PType, AsrPVL),
     ( \+ memberchk(_-[], AsrPVL)
     ->maplist(send_check_asr(PType), AsrPVL)
     ; true
     ).
 
-check_asrs_props(PType, AsrPVL) :-
-    maplist(check_asr_props(PType), AsrPVL).
+check_asrs_props(T, PType, AsrPVL) :-
+    maplist(check_asr_props(T, PType), AsrPVL).
 
-checkif_asrs_props(PType, AsrPVL) :-
-    maplist(checkif_asr_props(PType), AsrPVL).
+checkif_asrs_props(T, PType, AsrPVL) :-
+    maplist(checkif_asr_props(T, PType), AsrPVL).
 
-checkif_asr_props(PType, Asr-CondValues) :-
-    checkif_asr_props(CondValues, Asr, PType).
+checkif_asr_props(T, PType, Asr-CondValues) :-
+    checkif_asr_props(T, CondValues, Asr, PType).
 
-check_asr_props(PType, Asr-PropValues) :-
-    check_asr_props(Asr, inco, PType, PropValues).
+check_asr_props(T, PType, Asr-PropValues) :-
+    check_asr_props(T, Asr, inco, PType, PropValues).
 
 send_check_asr(PType, Asr-PropValues) :-
     ( PropValues = [[]] % Skip property
@@ -257,19 +259,20 @@ send_check_asr(PType, Asr-PropValues) :-
       send_check(PropValues, PType, Pred, ALoc)
     ).
 
-checkif_asr_props(CondValues, Asr, PType) :-
+checkif_asr_props(T, CondValues, Asr, PType) :-
     ( member(CondValues, [[], [[]]])
-    ->check_asr_props(Asr, cond, PType, PropValues),
+    ->check_asr_props(T, Asr, cond, PType, PropValues),
       send_check_asr(PType, Asr-PropValues)
     ; true
     ).
 
-check_asr_props(Asr, Cond, PType, PropValues) :-
+check_asr_props(T, Asr, Cond, PType, PropValues) :-
     copy_term_nat(Asr, NAsr),
     findall(NAsr-PropValue,
             ( ( type_cond_part_check_mult(Cond, PType, Part, Check, Mult),
                 asr_aprop(NAsr, Part, Prop, From)
               *->
+                valid_prop(T, Prop), % if not valid, ignore property
                 \+ check_prop(Check, Prop),
                 (Mult = once -> ! ; true),
                 CheckProp =.. [Check, Prop],
@@ -282,6 +285,13 @@ check_asr_props(Asr, Cond, PType, PropValues) :-
 
 check_prop(compat,   Prop) :- compat(  Prop).
 check_prop(instance, Prop) :- instance(Prop).
+
+valid_prop(T, Prop) :-
+    \+ (( prop_asr(head, Prop, _, Asr),
+          ( prop_asr(glob, no_acheck(   _), _, Asr)
+          ; prop_asr(glob, no_acheck(T, _), _, Asr)
+          )
+        )).
 
 type_cond_part_check_mult(inco, Cond, Part, Check, Mult) :-
     type_inco_part_check_mult(Cond, Part, Check, Mult).
