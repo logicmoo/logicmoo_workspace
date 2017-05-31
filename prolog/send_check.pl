@@ -33,7 +33,7 @@
 */
 
 :- module(send_check, [get_comp_rtcheck_info/3,
-                       send_rtcheck/4,
+                       send_check/4,
                        send_comp_rtcheck/3]).
 
 :- use_module(library(assrt_lib)).
@@ -51,8 +51,8 @@ send_comp_rtcheck(Goal, Prop, Fail) :-
     ->true
     ; GLoc = []
     ),
-    send_rtcheck([GLoc/Prop-[Fail]], comp, PredName, ALoc).
+    send_check([GLoc/Prop-[Fail]], comp, PredName, ALoc).
 
-send_rtcheck([], _, _, _) :- !.
-send_rtcheck(Props, ErrType, PredName, ALoc) :-
-        send_signal(assrchk(asr, error(ErrType, PredName, Props, ALoc))).
+send_check([], _, _, _) :- !.
+send_check(Props, ErrType, PredName, ALoc) :-
+    send_signal(assrchk(asr, error(ErrType, PredName, Props, ALoc))).
