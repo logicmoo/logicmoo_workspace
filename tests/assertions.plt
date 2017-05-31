@@ -61,10 +61,10 @@ test(assrt_lib_simple) :-
 
 test(assrt_lib_comp) :-
     assrt_lib:assertion_records(
-                  m, [], true comp nfi1(G,V) + (sideff(free), no_rtcheck), _, R, _),
+                  m, [], true comp nfi1(G,V) + (sideff(free), no_acheck), _, R, _),
     assertion(R=[assrt_lib:asr_head_prop(Idx, m, nfi1(G, V), true, comp, [], _),
                  assrt_lib:asr_glob(Idx, m, sideff(_, free), _),
-                 assrt_lib:asr_glob(Idx, m, no_rtcheck(_), _)
+                 assrt_lib:asr_glob(Idx, m, no_acheck(_), _)
                 ]).
 
 % for a complex expression with syntax sugar:
@@ -106,8 +106,8 @@ test(assrt_lib_mode1) :-
                   assrt_lib:asr_call(Idx, u, int(A), _)]).
 
 test(assrt_lib_is_plus) :-
-    As1 = (prop (hidden)/1 : callable  + no_rtcheck # "Specifies a hidden rule."),
-    As2 = (prop (hidden)/1 : callable is no_rtcheck # "Specifies a hidden rule."),
+    As1 = (prop (hidden)/1 : callable  + no_acheck(rt) # "Specifies a hidden rule."),
+    As2 = (prop (hidden)/1 : callable is no_acheck(rt) # "Specifies a hidden rule."),
     assrt_lib:assertion_records(user, [], As1, _, R1, _),
     assrt_lib:assertion_records(user, [], As2, _, R2, _),
     R1 = [_, _, _:asr_call(Idx1, _, _, _)|_],
