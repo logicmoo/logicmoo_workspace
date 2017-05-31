@@ -50,7 +50,7 @@
 :- use_module(library(tabling)).
 :- use_module(library(assertions)).
 :- use_module(library(option_utils)).
-:- use_module(library(check_ctrt)).
+:- use_module(library(ctrtchecks)).
 :- use_module(library(rtchecks_rt)).
 :- use_module(library(rtchecks_utils), []).
 
@@ -280,7 +280,7 @@ generate_ctchecks(Goal, M, VInf, CTChecks) :-
     collect_assertions(ct, Goal, M, AsrL),
     ( AsrL \= []
     ->maplist(wrap_asr_ctcheck(VInf), AsrL, PAsrL),
-      CTChecks = rtchecks_rt:check_call(ct, PAsrL, M:Goal)
+      CTChecks = ctrtchecks:check_call(ct, PAsrL, M:Goal)
     ; CTChecks = check_assertions:true
     ).
 
