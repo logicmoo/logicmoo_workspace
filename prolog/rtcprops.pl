@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(rtcprops, [rtcheck/1, rtcheck/2, no_rtcheck/1, rtc_status/1]).
+:- module(rtcprops, [acheck/1, acheck/2, acheck/3, no_acheck/1, no_acheck/2]).
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
@@ -60,16 +60,13 @@
               returns/2,
               parent/2,
               returns_state/1,
-              memory_root/1,
-              nfi/2,
-              fi/2] + no_rtcheck.
+              memory_root/1] + no_acheck(rt).
 
-:- type rtc_status/1.
+:- type acstatus/1.
 
-%!  rtc_status(Status)
+%!  acstatus(Status)
 %
-%   Status of the runtime-check
-%   implementation for a given property. Valid values are:
+%   Status of the assertion checker for a given property. Valid values are:
 %
 %   - unimplemented: No run-time checker has been implemented for the property.
 %                    Althought it can be implemented further.
@@ -89,30 +86,38 @@
 %
 %
 
-rtc_status(unimplemented).
-rtc_status(incomplete).
-rtc_status(complete).
-rtc_status(unknown).
-rtc_status(exhaustive).
-rtc_status(impossible).
+acstatus(unimplemented).
+acstatus(incomplete).
+acstatus(complete).
+acstatus(unknown).
+acstatus(exhaustive).
+acstatus(impossible).
 
-:- global rtcheck(Status, G) : rtc_status * callable
-    # "The runtime check of ~w have the status ~w."-[G, Status].
+:- type ctrt/1.
 
-:- true comp (rtcheck)/2.
+ctrt(ct).
+ctrt(rt).
 
-rtcheck(_, Goal) :- call(Goal).
+:- global acheck(T, Status, G) : ctrt * acstatus * callable
+    # "The ~w assertion check of ~w has the status ~w."-[T, G, Status].
 
-:- global rtcheck(G) # "Equivalent to rtcheck(~w, complete)."-[G].
+acheck(_, _, Goal) :- call(Goal).
 
-:- true comp (rtcheck)/1.
+:- global acheck(T, G) + equiv(acheck(T, complete, G))
+   # "Equivalent to acheck(~w, complete, ~w)."-[T, G].
 
-rtcheck(Goal) :- rtcheck(complete, Goal).
+acheck(_, Goal) :- call(Goal).
 
-:- global no_rtcheck(G)
+:- global acheck(G) + equiv(acheck(ct, acheck(rt, G))).
+
+acheck(Goal) :- call(Goal).
+
+:- global no_acheck(T, G) + equiv(acheck(T, impossible, G))
     # "Declares that the assertion in which this comp property appears must not
-    be checked at run-time.  Equivalent to rtcheck(~w, impossible)."-[G].
+    be checked at run-time.".
 
-:- true comp (no_rtcheck)/1.
+no_acheck(_, Goal) :- call(Goal).
 
-no_rtcheck(Goal) :- rtcheck(impossible, Goal).
+:- global no_acheck(G) + equiv(noacheck(ct, noacheck(rt, G))).
+
+no_acheck(Goal) :- call(Goal).

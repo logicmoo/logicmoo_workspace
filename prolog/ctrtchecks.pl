@@ -111,8 +111,8 @@ rtcheck_assr_type(success).
   Status     | + Command  || ctchecked | rtchecked
   ===========+============++===========+==========
   true/trust | -          || no        | no
-  true/trust | rtcheck    || no        | yes
-  check      | no_rtcheck || yes       | no
+  true/trust | acheck     || no        | yes
+  check      | no_acheck  || yes       | no
   check      | -          || yes       | yes
   ===========+============++===========+==========
   Note: This is weird to preserve ciao-compatibility
@@ -120,13 +120,14 @@ rtcheck_assr_type(success).
 
 black_list_pred(_=_).
 
-assertion_is_valid(rt, Status, Type, Asr) :-
-    ( \+ prop_asr(glob, rtcheck(_), _, Asr)
+assertion_is_valid(T, Status, Type, Asr) :-
+    ( \+ prop_asr(glob, acheck(_), _, Asr),
+      \+ prop_asr(glob, acheck(T, _), _, Asr)
     ->is_valid_status_type(Status, Type),
-      \+ prop_asr(glob, no_rtcheck(_), _, Asr)
+      \+ prop_asr(glob, no_acheck(_), _, Asr),
+      \+ prop_asr(glob, no_acheck(T, _), _, Asr)
     ; true % Force run-time checking
     ).
-assertion_is_valid(ct, _, _, _).
 
 current_assertion(T, Pred, M, Asr) :-
     \+ ( T = rt,
