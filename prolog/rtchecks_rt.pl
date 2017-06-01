@@ -40,7 +40,6 @@
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
 :- use_module(library(rtchecks_flags)).
-:- use_module(library(context_values)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(implementation_module)).
 :- use_module(library(resolve_calln)).
