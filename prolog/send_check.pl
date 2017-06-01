@@ -41,13 +41,13 @@
 
 get_comp_rtcheck_info(Goal, Name, From) :-
     ( nb_current('$with_asr', Asr)
-    ->asr_aprop(Asr, head, Name, From)
+    ->asr_aprop(Asr, head, _:Name, From)
     ; Name = Goal
     ).
 
 :- meta_predicate send_comp_rtcheck(0, +, +).
 
-send_comp_rtcheck(Goal, Prop, Fail) :-
+send_comp_rtcheck(_:Goal, Prop, Fail) :-
     get_comp_rtcheck_info(Goal, Name, ALoc),
     ( nb_current('$with_loc', GLoc)
     ->true
