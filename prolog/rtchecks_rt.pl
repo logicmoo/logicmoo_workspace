@@ -35,9 +35,7 @@
 :- module(rtchecks_rt, 
 	  [rtcheck_goal/2,
 	   start_rtcheck/2,
-	   rtc_call/2,
-	   '$with_gloc'/2,
-	   '$with_asr_head'/2]).
+	   rtc_call/2]).
 
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
@@ -49,7 +47,10 @@
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
 :- use_module(library(ctrtchecks)).
-:- reexport(library(ctrtchecks), [check_call/3]).
+:- reexport(library(ctrtchecks),
+            ['$with_asr'/2,
+             '$with_loc'/2,
+             check_call/3]).
 
 /** <module> Predicates that are required to implement run-time checks
 
@@ -91,14 +92,6 @@ interpreter.
 
 */
 
-:- meta_predicate '$with_asr_head'(0, ?).
-'$with_asr_head'(Comp, AsrHead) :-
-    with_value(Comp, '$with_asr_head', AsrHead).
-
-:- meta_predicate '$with_gloc'(0, ?).
-'$with_gloc'(Comp, GLoc) :-
-    with_value(Comp, '$with_gloc', GLoc).
-
 check_cond(Cond, Check, PredName) :-
     ( Cond
     ->send_check([[]/Check-[]], pp_check, PredName, [])
@@ -117,14 +110,14 @@ rtcheck_goal(CM:Goal0, Call) :-
     ->rtc_call(Type, CM:Pred)
     ; implementation_module(CM:Goal, M),
       collect_rtasr(Goal, CM, Pred, M, RAsrL),
-      check_goal(rt, Pred, call(Call, CM:Pred), M, CM, RAsrL)
+      check_goal(rt, call(Call, CM:Pred), M, CM, RAsrL)
     ).
 
 :- meta_predicate start_rtcheck(+, 0).
 start_rtcheck(M:Goal0, CM:WrappedHead) :-
     resolve_calln(Goal0, Goal),
-    collect_rtasr(Goal, CM, Pred, M, RAsrL),
-    check_goal(rt, Pred, M:WrappedHead, M, CM, RAsrL).
+    collect_rtasr(Goal, CM, _, M, RAsrL),
+    check_goal(rt, M:WrappedHead, M, CM, RAsrL).
 
 collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
     qualify_meta_goal(Goal, M, CM, Pred),

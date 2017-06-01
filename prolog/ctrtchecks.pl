@@ -33,16 +33,20 @@
 */
 
 :- module(ctrtchecks, 
-	  [check_call/3,
-           check_goal/6,
+	  ['$with_asr'/2,
+           '$with_loc'/2,
+           check_call/3,
+           check_goal/5,
 	   is_prop_check/5,
            collect_assertions/4,
 	   current_assertion/4]).
 
+:- use_module(library(tabling)).
 :- use_module(library(apply)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
+:- use_module(library(context_values)).
 :- use_module(library(rtcprops)).
 :- use_module(library(implementation_module)).
 :- use_module(library(metaprops)).
@@ -148,17 +152,17 @@ collect_assertions(T, Pred, M, AsrL) :-
     findall(Head-Asr, current_assertion(T, Head, M, Asr), Pairs),
     maplist([Pred] +\ (Pred-T)^T^true, Pairs, AsrL).
 
-check_goal(T, Goal, Call, M, CM, AsrL) :-
+check_goal(T, Call, M, CM, AsrL) :-
     current_prolog_flag(rtchecks_level, Level),
     checkif_modl(M, CM,
-                 check_asrs(T, is_prop_check(step1, Level), AsrL, Goal, G2), G2,
-                 check_asrs(T, is_prop_check(step2, Level), AsrL, Goal, Call)).
+                 check_asrs(T, is_prop_check(step1, Level), AsrL, G2), G2,
+                 check_asrs(T, is_prop_check(step2, Level), AsrL, Call)).
 
-:- meta_predicate check_asrs(+, 3, +, +, +).
+:- meta_predicate check_asrs(+, 3, +, +).
 
-check_asrs(T, IsPropCheck, AsrL, Head, Goal) :-
+check_asrs(T, IsPropCheck, AsrL, Goal) :-
     check_asrs_pre(T, IsPropCheck, AsrL, AsrGlobL, AsrSuccL),
-    checkif_asrs_comp(AsrGlobL, T, Head, Goal),
+    checkif_asrs_comp(AsrGlobL, T, Goal),
     checkif_asrs_props(T, success, AsrSuccL).
 
 check_asrs_pre(T, IsPropCheck, AsrL, AsrGlobL, AsrSuccL) :-
@@ -175,29 +179,37 @@ prop_rtchecks(T, AsrL1, IsPropCheck, Part, AsrPVL) :-
     include(call(IsPropCheck, T, Part), AsrL1, AsrL),
     pairs_keys_values(AsrPVL, AsrL, _PValuesL).
 
-:- meta_predicate checkif_asrs_comp(+, +, +, 0).
-checkif_asrs_comp([], _, _, Goal) :-
+:- meta_predicate checkif_asrs_comp(+, +, 0).
+checkif_asrs_comp([], _, Goal) :-
     call(Goal).
-checkif_asrs_comp([Asr-PVL|AsrL], T, Head, Goal1) :-
-    checkif_asr_comp(T, PVL, Asr, Head, Goal1, Goal),
-    checkif_asrs_comp(AsrL, T, Head, Goal).
+checkif_asrs_comp([Asr-PVL|AsrL], T, Goal1) :-
+    checkif_asr_comp(T, PVL, Asr, Goal1, Goal),
+    checkif_asrs_comp(AsrL, T, Goal).
 
-checkif_asr_comp(T, PropValues, Asr, Head, Goal1, Goal) :-
+checkif_asr_comp(T, PropValues, Asr, M:Goal1, Goal) :-
     ( member(PropValues, [[], [[]]]),
       copy_term_nat(Asr, NAsr),
-      findall(g(NAsr, M, Glob, Loc),
-              ( asr_aprop(NAsr, glob, M:Glob, Loc),
-                valid_prop(T, M:Glob)
+      findall(g(NAsr, Glob, Loc),
+              ( asr_aprop(NAsr, glob, Glob, Loc),
+                valid_prop(T, Glob)
               ), GlobL),
       GlobL \= []
-    ->comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, Goal1),
-      Goal = '$with_asr_head'(Goal2, Asr-Head)
-    ; Goal = Goal1
+    ->comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, M:Goal1),
+      Goal = M:'$with_asr'(Goal2, Asr)
+    ; Goal = M:Goal1
     ).
 
-comp_pos_to_goal(Asr, g(Asr, M, Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
+comp_pos_to_goal(Asr, g(Asr, M:Glob, Loc), '$with_loc'(M:Glob, Loc), Goal) :-
     functor(Glob, _, N),
     arg(N, Glob, Goal).
+
+:- meta_predicate '$with_asr'(0, ?).
+'$with_asr'(Comp, Asr) :-
+    with_value(Comp, '$with_asr', Asr).
+
+:- meta_predicate '$with_loc'(0, ?).
+'$with_loc'(Comp, GLoc) :-
+    with_value(Comp, '$with_loc', GLoc).
 
 %!  comps_to_goal(+Check:list, :Goal)//
 %
@@ -225,7 +237,7 @@ comps_to_goal2([Check|Checks], Check0, Goal) -->
 check_call(T, AsrL, CM:Goal) :-
     implementation_module(CM:Goal, M),
     ctrt_call(T, CM:Goal, Call),
-    check_goal(T, Goal, Call, M, CM, AsrL).
+    check_goal(T, Call, M, CM, AsrL).
 
 ctrt_call(rt, Call, Call).
 ctrt_call(ct, _, true). % TBD: use a partial evaluator instead of true
@@ -286,8 +298,15 @@ check_asr_props(T, Asr, Cond, PType, PropValues) :-
 check_prop(compat,   Prop) :- compat(  Prop).
 check_prop(instance, Prop) :- instance(Prop).
 
-valid_prop(T, Prop) :-
-    \+ (( prop_asr(head, Prop, _, Asr),
+valid_prop(T, M:Prop) :-
+    functor(Prop, F, A),
+    tabled_valid_prop(T, M, F, A).
+
+:- table tabled_valid_prop/4.
+
+tabled_valid_prop(T, M, F, A) :-
+    functor(H, F, A),
+    \+ (( prop_asr(head, M:H, _, Asr),
           ( prop_asr(glob, no_acheck(   _), _, Asr)
           ; prop_asr(glob, no_acheck(T, _), _, Asr)
           )
