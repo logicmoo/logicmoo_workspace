@@ -261,7 +261,7 @@ tabled_generate_ctchecks(H, M, Caller, Goal) :-
     H =.. [F|Args],
     P =.. [F|PInf],
     foldl(var_info, Args, PInf, VInf, []),
-    term_variables(H, Vars),
+    term_variables(M:H, Vars),
     maplist(rm_var_info, Vars),
     ( meta_call_goal(H, M, Caller, Meta)
     ->qualify_meta_goal(CM:P, Meta, G)
