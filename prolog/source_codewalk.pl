@@ -36,6 +36,7 @@
           [source_codewalk/1]).
 
 :- use_module(library(prolog_source)).
+:- use_module(library(prolog_xref), []).
 :- use_module(library(context_values)).
 :- use_module(library(option_utils)).
 :- use_module(library(extend_args)).
@@ -68,13 +69,13 @@ decl_caller(_,                 '<declaration>').
 
 :- public
     true_3/3,
+    do_term_expansion/1,
     do_goal_expansion/2,
     determine_caller/2.
 
 prepare(p(TRef, GRef)) :-
     assertz((system:term_expansion(T, P, T, P) :-
-                 determine_caller(T, Caller),
-                 set_context_value(caller, Caller)), TRef),
+                 do_term_expansion(T)), TRef),
     assertz((system:goal_expansion(G, P, _, _) :-
                  once(do_goal_expansion(G, P)), fail), GRef).
 
@@ -96,10 +97,21 @@ true_3(Goal, Caller, From) :-
                   at_location(From, format("~w :- ~w", [Caller, Goal]))).
 */
 
-do_goal_expansion(Goal, TermPos) :-
-    \+ skip(Goal),
+check_conditions(M, File) :-
     current_context_value(file, File),
     prolog_load_context(source, File),
+    '$current_source_module'(M),
+    prolog_xref:current_condition(Cond),
+    call(M:Cond).
+
+do_term_expansion(Term) :-
+    check_conditions(_, _),
+    determine_caller(Term, Caller),
+    set_context_value(caller, Caller).    
+
+do_goal_expansion(Goal, TermPos) :-
+    check_conditions(M, File),
+    \+ skip(Goal),
     ( TermPos \= none
     ->From = file_term_position(File, TermPos)
     ; prolog_load_context(term_position, Pos),
@@ -108,7 +120,6 @@ do_goal_expansion(Goal, TermPos) :-
     ),
     current_context_value(on_trace, OnTrace),
     current_context_value(caller,   Caller),
-    '$current_source_module'(M),
     call(OnTrace, M:Goal, Caller, From).
 
 do_source_codewalk(OptionL1) :-
@@ -139,5 +150,6 @@ walk_source(File, OptionL) :-
 fetch_term(In, OptionL) :-
     repeat,
       prolog_read_source_term(In, Term, _Expanded, OptionL),
+      prolog_xref:update_condition(Term),
       Term == end_of_file,
     !.
