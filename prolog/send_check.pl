@@ -40,18 +40,20 @@
 :- use_module(library(intercept)).
 
 get_comp_rtcheck_info(Goal, Name, From) :-
-    ( nb_current('$with_asr_head', Asr-Name)
-    ->asr_aprop(Asr, head, _:Name, From)
+    ( nb_current('$with_asr', Asr)
+    ->asr_aprop(Asr, head, Name, From)
     ; Name = Goal
     ).
 
+:- meta_predicate send_comp_rtcheck(0, +, +).
+
 send_comp_rtcheck(Goal, Prop, Fail) :-
-    get_comp_rtcheck_info(Goal, PredName, ALoc),
-    ( nb_current('$with_gloc', GLoc)
+    get_comp_rtcheck_info(Goal, Name, ALoc),
+    ( nb_current('$with_loc', GLoc)
     ->true
     ; GLoc = []
     ),
-    send_check([GLoc/Prop-[Fail]], comp, PredName, ALoc).
+    send_check([GLoc/Prop-[Fail]], comp, Name, ALoc).
 
 send_check([], _, _, _) :- !.
 send_check(Props, ErrType, PredName, ALoc) :-
