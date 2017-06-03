@@ -33,44 +33,62 @@
 */
 
 :- module(ntabling,
-          [tabled/1,
-           collect_sols/2,
-           abolish_all_ntables/0,
-           abolish_ntable_subgoals/1]).
+          [ (table)/1,
+            abolish_all_tables/0,
+            abolish_table_subgoals/1,
+            start_tabling/2,
+
+            op(1150, fx, table)]).
+
+:- use_module(library(tabling), []).
+
+/** <module> Naive Tabled execution
+
+This library provides tabled execution, in the same way as library(tabling), but
+is implemented in a naive way, just collecting all the solutions and later on
+asserting them in the prolog database.
+*/
 
 :- dynamic
-       '$tabled'/2.
+       '$table_data'/1,
+       '$table_data'/2.
 
 :- meta_predicate
-       tabled(0),
-       collect_sols(0, -).
+       start_tabling(+, 0),
+       abolish_table_subgoals(:).
 
-tabled(M:Goal) :-
-    collect_sols(M:Goal, TM),
-    TM:Goal.
+table(PIList) :-
+    throw(error(context_error(nodirective, table(PIList)), _)).
 
-collect_sols(M:Goal, TM) :-
-    atom_concat(M, '$tabled', TM),
-    variant_hash(M:Goal, Hash),
-    (   '$tabled'(Hash, M:Goal)
+start_tabling(M:Goal, WrappedHead) :-
+    collect_sols(M:Goal, WrappedHead, Hash),
+    '$table_data'(Hash, Goal).
+
+goal_hash(M:Goal, Hash) :-
+    ( '$expand':is_meta_call(Goal, M, _)
+    ->Meta = M:Goal
+    ; Meta = Goal
+    ),
+    variant_hash(Meta, Hash).
+
+collect_sols(M:Goal, WrappedHead, Hash) :-
+    goal_hash(M:Goal, Hash),
+    (   '$table_data'(Hash)
     *-> true
-    ;   functor(Goal, F, A),
-        dynamic(TM:F/A),
-        forall(M:Goal, assertz(TM:Goal)),
-        assertz('$tabled'(Hash, M:Goal))
+    ;   forall(WrappedHead, assertz('$table_data'(Hash, Goal))),
+        assertz('$table_data'(Hash))
     ).
 
-abolish_all_ntables :-
-    abolish_ntable_subgoals(_, _).
+abolish_all_tables :-
+    abolish_table_hash(_).
 
 :- meta_predicate
        abolish_ntable_subgoals(0).
 
-abolish_ntable_subgoals(M:Goal) :-
-    variant_hash(M:Goal, Hash),
-    abolish_ntable_subgoals(Hash, M:Goal).
+abolish_table_subgoals(M:Goal) :-
+    goal_hash(M:Goal, Hash),
+    abolish_table_hash(Hash).
 
-abolish_ntable_subgoals(Hash, M:Goal) :-
-    forall(retract('$tabled'(Hash, M:Goal)),
-           ( atom_concat(M, '$tabled', TM),
-             retractall(TM:Goal))).
+abolish_table_hash(Hash) :-
+    retractall('$table_data'(Hash)),
+    retractall('$table_data'(Hash, _)).
