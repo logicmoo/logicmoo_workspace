@@ -41,7 +41,7 @@
 :- use_module(library(edinburgh)).
 :- use_module(library(lists)).
 :- use_module(library(option)).
-:- use_module(library(tabling)).
+:- use_module(library(ntabling)).
 :- use_module(library(prolog_clause), []).
 :- use_module(library(prolog_codewalk), []).
 :- use_module(library(prolog_source)).
@@ -196,8 +196,8 @@ clause_subloc(Cl, List, SubLoc) :-
 file_line_module_subloc(Cl, List, File, Line, Module, SubLoc) :-
     ( read_term_at_line(File, Line, Module, Term, TermPos)
     % Usage of term positions has priority
-    ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, ClausePos),
-        match_clause(Cl, ClauseL, Module, List2, List),
+    ->( prolog_clause:ci_expand(Term, ClauseL, Module, TermPos, CPosL),
+        match_clause(Cl, ClauseL, Module, CPosL, ClausePos, List2, List),
         nonvar(ClausePos)
       ->foldl(find_subgoal, List2, ClausePos, SubPos) % Expensive
       ; SubPos = TermPos
@@ -238,16 +238,24 @@ find_subgoal(A, TermPos, Pos) :-
     nonvar(Pos), !.
 find_subgoal(_, Pos, Pos).
 
-match_clause(Ref, ClauseL, Module, List, Tail) :-
+match_clause(Ref, ClauseL, Module, CPosL, CPos, List, Tail) :-
     % format(user_error, '~N~w',[match_clause(Ref, ClauseL, Module, List, Tail)]),
-    ( is_list(ClauseL),
-      clause(Head, Body, Ref),
+    ( is_list(ClauseL)
+    ->clause(Head, Body, Ref),
       nth1(Pos, ClauseL, Clause),
+      ( ( is_list(CPosL),
+          TermPosL = CPosL
+        ; CPosL = list_position(_,_, TermPosL, _),
+          is_list(TermPosL)
+        )
+      ->nth1(Pos, TermPosL, CPos)
+      ),
       % format(user_error, '~N~w',[normalize_cl(Clause, Module, Module, NClause)]),
       normalize_cl(Clause, Module, Module, NClause),
       NClause =@= (Head :- Body)
     ->List = [Pos|Tail]
-    ; List = Tail
+    ; List = Tail,
+      CPos = CPosL
     ).
 
 normalize_cl(M:Clause, _, CM, NClause) :- !,
