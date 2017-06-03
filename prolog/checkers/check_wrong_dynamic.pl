@@ -83,8 +83,8 @@ hide_var_dynamic_hook(match_clause(_, _, _, _, _), ontrace).
 hide_var_dynamic_hook(abstract_execute_goal(_, _, _, _, _, _, _, _, _), check_abstract_domains).
 hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
 hide_var_dynamic_hook(ignore_import(_, _), check_imports).
-hide_var_dynamic_hook(collect_sols(_, _), ntabling).
-hide_var_dynamic_hook(abolish_ntable_subgoals(_, _), ntabling).
+hide_var_dynamic_hook(collect_sols(_, _, _), ntabling).
+hide_var_dynamic_hook(abolish_table_subgoals(_), ntabling).
 
 :- dynamic
     wrong_dynamic_db/4,

@@ -62,7 +62,7 @@ cache_file_lines :-
     length(FileL, N),
     forall(nth1(I, FileL, File),
            ( format(user_error, "Caching ~w of ~w files\r", [I, N]),
-             forall(source_file_line(File, _, _, _), true)
+             ignore(source_file_line(File, _, _, _))
            )),
     nl(user_error).
 

@@ -107,7 +107,7 @@ check_conditions(M, File) :-
 do_term_expansion(Term) :-
     check_conditions(_, _),
     determine_caller(Term, Caller),
-    set_context_value(caller, Caller).    
+    set_context_value(caller, Caller).
 
 do_goal_expansion(Goal, TermPos) :-
     check_conditions(M, File),
