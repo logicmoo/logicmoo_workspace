@@ -44,6 +44,9 @@
 
 ws_browser:provides_method(gcover).
 
+:- table
+       source_file_line/4.
+
 ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     findall(M-File,
             ( covered_db(File, _, _, _, _, _),
@@ -53,8 +56,15 @@ ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
     group_pairs_by_key(MFileS, ModuleFiles).
 
 cache_file_lines :-
-    forall(distinct(File, covered_db(File, _, _, _, _, _)),
-           collect_sols(source_file_line(File, _, _, _), _)).
+    findall(File,
+            distinct(File, covered_db(File, _, _, _, _, _)),
+            FileL),
+    length(FileL, N),
+    forall(nth1(I, FileL, File),
+           ( format(user_error, "Caching ~w of ~w files\r", [I, N]),
+             forall(source_file_line(File, _, _, _), true)
+           )),
+    nl(user_error).
 
 %! ports_color(List:list(pairs), Color:atm)
 %
@@ -66,7 +76,7 @@ cache_file_lines :-
 ports_color([(success)-_, failure-_, multi-_], lightpink).
 ports_color([(success)-_, multi-_],            yellowgreen).
 ports_color([(success)-_, failure-_],          orange).
-ports_color([uncovered-[clause-_]],            bisque).
+ports_color([uncovered-[clause(_)-_]],         bisque).
 ports_color([(exit)-_,    fail-_],             yellow).
 ports_color([(exit)-_,    call-_],             lime).
 ports_color([Port-_], Color) :- port_color(Port, Color).
@@ -91,17 +101,25 @@ ws_browser:show_source_hook(gcover, File) :-
     source_to_html(File, stream(current_output),
                    [format_comments(true), skin(coverage_js(File))]).
 
-% :- table
-%     source_file_line/4.
-
 source_file_line(File, L1, L2, Scope) :-
     file_clause(File, Ref),
     source_clause_line(File, Ref, L1, L2, Scope).
 
-source_clause_line(File, Ref, L1, L2, clause) :-
+clause_id(Ref, File, CI) :-
+    nth_clause(M:H, I, Ref),
+    functor(H, F, A),
+    ( module_file(M, File)
+    ->CI = F/A-I
+    ; CI = M:F/A-I
+    ).
+
+source_clause_line(File, Ref, L1, L2, cl(CI)) :-
+    clause_id(Ref, File, CI),
     clause_property(Ref, line_count(L1)),
-    loc_file_line(clause(Ref), File, L1, L2).
-source_clause_line(File, Ref, L1, L2, literal(TInstr)) :-
+    loc_file_line(clause(Ref), File, L1, L2),
+    assertion(nonvar(L1)),
+    assertion(nonvar(L2)).
+source_clause_line(File, Ref, L1, L2, lt(TInstr)) :-
     '$break_pc'(Ref, PC1, _NextPC1),
     '$fetch_vm'(Ref, PC1, PC, TInstr),
     \+ skip_instr(TInstr),
@@ -131,7 +149,7 @@ file_clause(File, Ref) :-
 covered(File, L1, L2, Port, Tag, Count) :-
     covered_db(File, L1, L2, Port, Tag, Count).
 covered(File, L1, L2, uncovered, Scope, 0) :-
-    tabled(source_file_line(File, L1, L2, Scope)).
+    source_file_line(File, L1, L2, Scope).
 
 property_lines(File, List, Tail) :-
     findall((L1-L2)-(Port-(Tag-Count)),
@@ -187,6 +205,7 @@ coverage_js(File, header, Out) :-
                          '      elements[i].style.backgroundColor=lC[key];\n',
                          '    };\n',
                          '    if (typeof tT[key] !== \'undefined\') {\n',
+                         '      elements[i].style.textDecoration="underline";\n',
                          '      elements[i].classList.add("tooltip");\n',
                          '      var t=document.createElement("span");\n',
                          '      t.classList.add("tooltiptext");\n',
