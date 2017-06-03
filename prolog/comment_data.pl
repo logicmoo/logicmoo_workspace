@@ -34,7 +34,9 @@
 
 :- module(comment_data, [comment_data/2, enable/0, disable/0]).
 
-:- dynamic comment_data/2.
+:- dynamic
+       comment_data/2,
+       enabled/0.
 
 %!  process_comment_data(+Comments, +Term) is semidet
 %
@@ -42,14 +44,13 @@
 %   facilitate output comparisons:
 
 process_comment_data(Comments, Term) :-
+    enabled,
     Term = (test(_Test) :- _),
-    ( member(_-Comment, Comments),
-      get_comment_data(Comment, Name, Out),
-      retractall(comment_data(Name, _)),
-      assertz(comment_data(Name, Out)),
-      fail
-    ; true
-    ).
+    member(_-Comment, Comments),
+    get_comment_data(Comment, Name, Out),
+    retractall(comment_data(Name, _)),
+    assertz(comment_data(Name, Out)),
+    fail.
 
 get_comment_data(Comment, Name, Out) :-
     string_concat("/* $", Out0, Comment),
@@ -60,8 +61,6 @@ get_comment_data(Comment, Name, Out) :-
     sub_string(Out0, OutPos, After, _, Out1),
     string_concat(Out, "*/", Out1).
 
-:- dynamic enabled/0.
-
 enable :-
     retractall(enabled),
     assertz(enabled).
@@ -70,9 +69,8 @@ disable :-
     retractall(enabled).
 
 :- multifile prolog:comment_hook/3.
-% :- dynamic prolog:comment_hook/3.
+:- dynamic prolog:comment_hook/3.
 
-prolog:comment_hook(Comments, _TermPos, Term) :-
-    enabled,
-    process_comment_data(Comments, Term),
-    fail.
+% Should be placed first
+:- asserta((prolog:comment_hook(Comments, _TermPos, Term) :-
+                process_comment_data(Comments, Term))).
