@@ -47,6 +47,7 @@
 :- use_module(library(extend_args)).
 :- use_module(library(apply)).
 :- use_module(library(extra_messages), []).
+:- use_module(library(filepos_line)).
 :- use_module(library(lists)).
 :- use_module(library(list_sequence)).
 :- use_module(library(implementation_module)).
@@ -171,11 +172,6 @@ add_arg(H, G1, G2, Pos,
       PosL = [0-0]
     ),
     extend_args(G1, [H], G2).
-
-filepos_line(File, CharPos, Line, LinePos) :-
-    setup_call_cleanup('$push_input_context'(filepos),
-                       prolog_codewalk:filepos_line(File, CharPos, Line, LinePos),
-                       '$pop_input_context').
 
 var_location(Term, Pos, Var, Loc) :-
     ( var(Var),
@@ -358,10 +354,10 @@ expand_nodirective_error(Clauses) :-
             ( assrt_type(Type),
               normalize_status_and_type_1(Assr, _, Status, Type, _, _),
               functor(Assr, Type, Arity),
-              Body0 = ignore(assrt_lib:nodirective_error_hook(Assr)),
+              Body0 = ignore(nodirective_error_hook(Assr)),
               ( Arity = 1
               ->Body = Body0
-              ; Body = (assrt_lib:assrt_status(Status), Body0 )
+              ; Body = (assrt_status(Status), Body0 )
               )
             ),
             ClauseT).
