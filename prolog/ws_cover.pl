@@ -116,9 +116,7 @@ clause_id(Ref, File, CI) :-
 source_clause_line(File, Ref, L1, L2, cl(CI)) :-
     clause_id(Ref, File, CI),
     clause_property(Ref, line_count(L1)),
-    loc_file_line(clause(Ref), File, L1, L2),
-    assertion(nonvar(L1)),
-    assertion(nonvar(L2)).
+    loc_file_line(clause(Ref), File, L1, L2).
 source_clause_line(File, Ref, L1, L2, lt(TInstr)) :-
     '$break_pc'(Ref, PC1, _NextPC1),
     '$fetch_vm'(Ref, PC1, PC, TInstr),

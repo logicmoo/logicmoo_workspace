@@ -56,24 +56,6 @@ gcover(Goal, OptL1) :-
 gcover_port(Tag, Port, _Frame, _PC, _ParentL, Loc, continue) :-
     record_cover(Loc, Port, Tag).
 
-filepos_line2(File, CharPos1, CharPos2, Line1, Line2) :-
-    setup_call_cleanup(
-        ( catch(open(File, read, In), _, fail),
-          set_stream(In, newline(detect)),
-          open_null_stream(Out)
-        ),
-        ( copy_stream_data(In, Out, CharPos1),
-          stream_property(In, position(Pos1)),
-          stream_position_data(line_count, Pos1, Line1),
-          CharInc is CharPos2 - CharPos1,
-          copy_stream_data(In, Out, CharInc),
-          stream_property(In, position(Pos2)),
-          stream_position_data(line_count, Pos2, Line2)
-        ),
-        ( close(Out),
-          close(In)
-        )).
-
 file_line_end(Module, File, L1, L2) :-
     setup_call_cleanup(
         '$push_input_context'(file_line_end),
@@ -119,7 +101,6 @@ file_termpos_line2(File, TermPos, Line1, Line2) :-
       integer(C2)
     ->filepos_line(File, C1, Line1, _),
       filepos_line(File, C2, Line2, _)
-      % filepos_line2(File, C1, C2, Line1, Line2)
     ; true
     ).
 
