@@ -37,21 +37,14 @@
                        from_to_file_line_pos/5,
                        file_termpos_line/4,
                        update_fact_from/2,
-                       subsumes_from/2,
-                       filepos_line/4]).
+                       subsumes_from/2]).
 
 :- use_module(library(prolog_clause),   []).
-:- use_module(library(prolog_codewalk), []).
 :- use_module(library(extra_messages),  []).
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
 :- use_module(library(extend_args)).
-
-:- dynamic
-    filepos_line_db/5.
-
-:- volatile
-    filepos_line_db/5.
+:- use_module(library(filepos_line)).
 
 %!  from_to_file_line_pos(+Loc, -File, -CLine, ?TLine, ?Pos) is semidet.
 %
@@ -74,21 +67,6 @@ file_termpos_line(File, TermPos, Line, Pos) :-
     ->filepos_line(File, CharCount, Line, Pos)
     ; true
     ).
-
-%!  filepos_line(+File, +CharCount, -Line, -Pos) is det
-%
-filepos_line(File, CharCount, Line, Pos) :-
-    time_file(File, Time),      % Prevents usage of old tabled information
-    ( filepos_line_db(File, CharCount, Line, Pos, Time)
-    ->true
-    ; filepos_line_(File, CharCount, Line, Pos),
-      assertz(filepos_line_db(File, CharCount, Line, Pos, Time))
-    ).
-
-filepos_line_(File, CharCount, Line, Pos) :-
-    setup_call_cleanup('$push_input_context'(file_line),
-                       prolog_codewalk:filepos_line(File, CharCount, Line, Pos),
-                       '$pop_input_context').
 
 subsumes_from(From1, From2) :-
     from_to_file_line_pos(From1, File1, CLine1, TLine1, Pos1),

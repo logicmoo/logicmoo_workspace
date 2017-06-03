@@ -38,9 +38,12 @@
                    reset_cover/1,
                    loc_file_line/4]).
 
-:- use_module(library(tabling)).
+:- use_module(library(filepos_line)).
 :- use_module(library(module_files)).
 :- use_module(library(ontrace)).
+:- use_module(library(ntabling)).
+
+:- table loc_file_line/4.
 
 :- meta_predicate gcover(0,+).
 
@@ -71,10 +74,13 @@ filepos_line2(File, CharPos1, CharPos2, Line1, Line2) :-
           close(In)
         )).
 
-:- table
-   loc_file_line/4.
-
 file_line_end(Module, File, L1, L2) :-
+    setup_call_cleanup(
+        '$push_input_context'(file_line_end),
+        file_line_end_2(Module, File, L1, L2),
+        '$pop_input_context').
+
+file_line_end_2(Module, File, L1, L2) :-
     catch(open(File, read, In), _, fail),
     set_stream(In, newline(detect)),
     call_cleanup(
@@ -88,25 +94,22 @@ file_line_end(Module, File, L1, L2) :-
         ),
         close(In)).
 
-loc_file_line1(clause_term_position(ClauseRef, TermPos), File, L1, L2) :-
+loc_file_line(clause_term_position(ClauseRef, TermPos), File, L1, L2) :-
     clause_property(ClauseRef, file(File)),
     file_termpos_line2(File, TermPos, L1, L2).
-loc_file_line1(clause(ClauseRef), File, L1, L2) :-
+loc_file_line(clause(ClauseRef), File, L1, L2) :-
     clause_property(ClauseRef, file(File)),
     clause_property(ClauseRef, line_count(L1)),
     clause_property(ClauseRef, module(Module)),
     file_line_end(Module, File, L1, L2).
-loc_file_line1(file_term_position(File, TermPos), File, L1, L2) :-
+loc_file_line(file_term_position(File, TermPos), File, L1, L2) :-
     file_termpos_line2(File, TermPos, L1, L2).
-loc_file_line1(file(File, L1, _, _), File, L1, L2) :-
+loc_file_line(file(File, L1, _, _), File, L1, L2) :-
     once(module_file(Module, File)),
     file_line_end(Module, File, L1, L2).
-
 loc_file_line(clause_pc(Clause, PC), File, L1, L2) :-
-    ontrace:clause_pc_location(Clause, PC, Loc),
-    loc_file_line1(Loc, File, L1, L2), !.
-loc_file_line(From, File, L1, L2) :-
-    loc_file_line1(From, File, L1, L2).
+    clause_pc_location(Clause, PC, Loc),
+    loc_file_line(Loc, File, L1, L2).
 
 file_termpos_line2(File, TermPos, Line1, Line2) :-
     ( compound(TermPos),
@@ -114,7 +117,9 @@ file_termpos_line2(File, TermPos, Line1, Line2) :-
       integer(C1),
       arg(2, TermPos, C2),
       integer(C2)
-    ->filepos_line2(File, C1, C2, Line1, Line2)
+    ->filepos_line(File, C1, Line1, _),
+      filepos_line(File, C2, Line2, _)
+      % filepos_line2(File, C1, C2, Line1, Line2)
     ; true
     ).
 

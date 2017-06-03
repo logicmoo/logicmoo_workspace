@@ -35,6 +35,7 @@
 :- module(record_locations, [record_location/0]).
 
 :- use_module(library(apply)).
+:- use_module(library(filepos_line)).
 :- use_module(library(extra_location)).
 :- use_module(library(implementation_module)).
 :- use_module(library(from_utils)).
