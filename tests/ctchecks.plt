@@ -55,7 +55,7 @@ test(ctcex) :-
     %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
     set_prolog_flag(verbose, silent),
     assert(user:error_on_co),
-    with_output_to(string(Result), showcheck(assertions, [module(ctcex)])),
+    notrace(with_output_to(string(Result), showcheck(assertions, [module(ctcex)]))),
     comment_data(ctcex, Pattern),
     module_property(ctcex, file(File)),
     directory_file_path(Dir, _, File),
@@ -68,7 +68,7 @@ test(ctcex) :-
     ),
     assertion(Pattern == AResult),
     set_prolog_flag(verbose, normal),
-    %set_prolog_flag(check_assertions, []).
+    % set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
 :- use_module(p1).
@@ -102,7 +102,7 @@ p1.pl:19:8: Assertion failure for q(X,Y,Z).
 test(ctmeta) :-
     set_prolog_flag(verbose, silent),
     assert(user:error_on_co),
-    with_output_to(string(Result), showcheck(assertions, [module(p1)])),
+    notrace(with_output_to(string(Result), showcheck(assertions, [module(p1)]))),
     comment_data(p1, Pattern),
     module_property(ctcex, file(File)),
     directory_file_path(Dir, _, File),
