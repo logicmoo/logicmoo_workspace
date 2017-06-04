@@ -83,8 +83,7 @@ check_deprecated(OptionL0, Pairs) :-
             ), Pairs).
 
 prolog:message(acheck(deprecated)) -->
-    ['---------------------',nl,
-     'Deprecated Predicates',nl,
+    ['Deprecated Predicates',nl,
      '---------------------',nl,
      'The predicates below are marked as deprecated, so you have to', nl,
      'avoid its usage in new code, and to refactorize old code.', nl, nl].

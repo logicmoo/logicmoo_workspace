@@ -45,8 +45,7 @@
         prolog:message//1.
 
 prolog:message(acheck(meta_decls)) -->
-    ['-----------------------------------', nl,
-     'Missing Meta Predicate Declarations', nl,
+    ['Missing Meta Predicate Declarations', nl,
      '-----------------------------------', nl,
      'The predicates below require a missing meta_predicate declaration.', nl,
      'They have been automatically inferred. Although is not required, it', nl,

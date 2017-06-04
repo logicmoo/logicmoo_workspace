@@ -74,8 +74,7 @@ cleanup_f :-
     retractall(ai_cache_result(_, _)).
 
 prolog:message(acheck(trivial_fails)) -->
-    ['-------------',nl,
-     'Trivial Fails',nl,
+    ['Trivial Fails',nl,
      '-------------',nl,
      'The literals below always fails, due to there are no', nl,
      'matching clauses for such calls, which is reported as', nl,

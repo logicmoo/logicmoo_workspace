@@ -49,8 +49,7 @@
     prolog:message//1.
 
 prolog:message(acheck(imports)) -->
-    ['--------------',nl,
-     'Unused Imports',nl,
+    ['Unused Imports',nl,
      '--------------',nl,
      'The predicates or modules below has been imported, however they', nl,
      'are never used in the importing module, or they do not implement', nl,

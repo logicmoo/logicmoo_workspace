@@ -116,8 +116,7 @@ collect_non_mutually_exclusive(FromChk, H, M, LocPL) :-
     sort(LocPU, LocPL).
 
 prolog:message(acheck(non_mutually_exclusive)) -->
-    ['---------------------------------',nl,
-     'Non Mutually Exclusive Predicates',nl,
+    ['Non Mutually Exclusive Predicates',nl,
      '---------------------------------',nl,
      'The predicates below are marked as mutually_exclusive, but they have', nl,
      'non mutually exclusive clauses. You can resolve the ambiguity unifying', nl,

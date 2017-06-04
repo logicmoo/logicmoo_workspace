@@ -131,8 +131,7 @@ collect_undef(MCall, Caller, From) :-
     update_fact_from(undef(PI, CI), From).
 
 prolog:message(acheck(undefined)) -->
-    ['--------------------',nl,
-     'Undefined Predicates',nl,
+    ['Undefined Predicates',nl,
      '--------------------',nl],
     prolog:message(check(undefined_predicates)).
 prolog:message(acheck(undefined, File-ALPILocCIList)) -->

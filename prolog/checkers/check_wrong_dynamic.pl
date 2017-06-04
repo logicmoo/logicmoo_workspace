@@ -196,10 +196,9 @@ var_as_dynamic(PI-LocCIs) -->
     foldl(show_locci, LocCIs).
 
 prolog:message(acheck(wrong_dynamic)) -->
-    ['--------------------------', nl,
-     'Wrong Dynamic Declarations', nl,
+    ['Wrong Dynamic Declarations', nl,
      '--------------------------', nl,
-     'The predicates below present inconsistencies between its', nl,
+     'The predicates present inconsistencies between its', nl,
      'usage and the dynamic declarations. Could be that they are', nl,
      'being used as dynamic without a proper declaration, being', nl,
      'declared as dynamic but never asserted, retracted, or using', nl,

@@ -71,8 +71,7 @@ check_non_loaded(FileChk, Pairs) :-
             ), Pairs).
 
 prolog:message(acheck(non_loaded)) -->
-    ['----------',nl,
-     'Non Loaded',nl,
+    ['Non Loaded',nl,
      '----------',nl,
      'The following files are not being loaded, which', nl,
      'means you are not analyzing them statically', nl, nl].

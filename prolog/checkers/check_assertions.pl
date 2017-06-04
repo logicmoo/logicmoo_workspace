@@ -144,10 +144,9 @@ resolve_head((A;B), M, H) :- !,
 resolve_head(H, M, M:H).
 
 prolog:message(acheck(assertions)) -->
-    ['-----------------',nl,
-     'Check asssertions',nl,
-     '---------------------',nl,
-     'The predicates below contains assertions that are inconsistent', nl,
+    ['Check asssertions',nl,
+     '-----------------',nl,
+     'The predicates contains assertions that are inconsistent', nl,
      'with the  implementation. The reason is explained there.', nl, nl].
 prolog:message(acheck(assertions, Type-IssueL)) -->
     type_message(Type),

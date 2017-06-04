@@ -250,8 +250,7 @@ add_location(DupType/GKey-DupId/Elem,
     sort(LocDU, LocDL).
 
 prolog:message(acheck(dupcode)) -->
-    ['---------------',nl,
-     'Duplicated Code',nl,
+    ['Duplicated Code',nl,
      '---------------',nl,
      'The elements below would has been implemented in different modules,', nl,
      'but are duplicates.  Would be a symptom of duplicated functionality.', nl,

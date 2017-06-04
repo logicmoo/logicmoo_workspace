@@ -357,10 +357,9 @@ check_pred_file(Ref, FromChk, From) :-
     call(FromChk, From), !.
 
 prolog:message(acheck(unused)) -->
-    ['-----------------',nl,
-     'Unused Predicates',nl,
+    ['Unused Predicates',nl,
      '-----------------',nl,
-     'The predicates below has been implemented, however they are', nl,
+     'The predicates has been implemented, however they are', nl,
      'never referenced in the code nor exported.  Probably are', nl,
      'dead-code, part of an incomplete implementation, or called', nl,
      'indirectly by some meta predicate without or with incorrect', nl,
