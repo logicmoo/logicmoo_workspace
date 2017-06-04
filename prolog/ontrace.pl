@@ -47,7 +47,7 @@
 :- use_module(library(prolog_source)).
 :- use_module(library(clambda)).
 
-:- meta_predicate ontrace(0,6,+).
+:- meta_predicate ontrace(0,6,:).
 
 ontrace(Goal, OnTrace, OptionL) :-
     State=state(_, _, _),       % Allow destructive assignment
@@ -71,9 +71,13 @@ call_inout(Goal, OnIn, OnOut) :-
 :- public true_1/1.
 true_1(_).
 
-%!  setup_trace(!State, :OnTrace, +OptL) is det.
+is_meta(goal).
+is_meta(file).
+
+%!  setup_trace(!State, :OnTrace, :OptL) is det.
 %
-setup_trace(State, M:OnTrace, OptL) :-
+setup_trace(State, M:OnTrace, MOptL) :-
+    meta_options(is_meta, MOptL, OptL),
     select_option(goal(ValidGoal), OptL,  OptL1, ontrace:true_1),
     select_option(file(ValidFile), OptL1, OptL2, ontrace:true_1),
     %% redo port have weird bugs, ignoring it for now:
