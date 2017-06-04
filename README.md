@@ -6,11 +6,29 @@ Extended tools for Prolog
 Usage
 =====
 
-This library contains several development tools, although not all are listed here, the most stable and relevant ones follows:
+This library contains several development tools, although not all are listed
+here, the most stable and relevant ones follows:
+
+Code Coverage
+=============
+
+A code coverage tool that also work at a literal level, and that shows the
+result in a web server. It is easier to use the pltool.sh from plsteroids to see
+a demo:
+
+
+```
+./pltool.sh cover
+```
+
+Will execute the coverage over the unit tests.
 
 Static Analysis
 ===============
-A static analysis tool mostly based on looking the abstract syntax graph for inconsistencies, for example:
+
+A static analysis tool mostly based on looking the abstract syntax graph for
+inconsistencies, for example:
+
 
 ```
  ?- [library(checkers)].
@@ -18,9 +36,12 @@ true.
  ?- checkall([dir('.')]).
 ```
 
-will execute all the checkers to analyze the modules in the directory '.'. Alternatively you can use checkallc instead, which is the concurrent version of the above.
+will execute all the checkers to analyze the modules in the directory
+'.'. Alternatively you can use checkallc instead, which is the concurrent
+version of the above.
 
-If you want to use specific analysis, use the predicate showcheck(Analysis, Options), where Analsyis can be:
+If you want to use specific analysis, use the predicate showcheck(Analysis,
+Options), where Analsyis can be:
 
 
 [//]: # (shell_ini ./pltool.sh checkc)
