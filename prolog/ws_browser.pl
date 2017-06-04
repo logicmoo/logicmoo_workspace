@@ -35,6 +35,7 @@
 :- module(ws_browser, [browse_server/1]).
 
 :- use_module(library(apply)).
+:- use_module(library(transpose)).
 :- use_module(library(http/html_write)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_parameters)).
@@ -48,7 +49,7 @@ browse_server(Port) :-
 
 :- multifile
     provides_method/1,
-    fetch_module_files_hook/2,
+    fetch_files_properties_hook/3,
     show_source_hook/2.
 
 list_files(Request) :-
@@ -57,14 +58,14 @@ list_files(Request) :-
     http_parameters(Request,
                     [ meth(Method, [default(DMethod)])
                     ]),
-    fetch_module_files_hook(Method, ModuleFiles),
+    fetch_files_properties_hook(Method, Descs, FilesProps),
     reply_html_page([% style(Style),
                      title('Browse Code')
                     ],
-                    [h1('Modules'),
+                    [h1('Files'),
                      table([border(1)],
-                           [\header,
-                            \foldl(html_module_files(Method), ModuleFiles)
+                           [\header(Descs),
+                            \foldl(html_module_props(Method), FilesProps)
                            ])
                     ]),
     print_message(information, format('done', [])).
@@ -78,16 +79,22 @@ show_source(Request) :-
     show_source_hook(Method, File),
     print_message(information, format('done', [])).
 
-header -->
-    html(tr([td(b('Module')),
-             td(b('File'))])).
+header(Descs) -->
+    html(tr([td(b('File')),
+             \foldl(desc, Descs)
+            ])).
 
-html_module_files(Method, Module-Files) -->
-    html(tr([td(Module),td(table([\foldl(html_file(Method, Module), Files)]))])).
+desc(Desc) --> html(td(b(Desc))).
 
-html_file(Method, Module, File) -->
-    html(tr([td(\html_link(Method, Module, File))])).
+html_module_props(Method, File-Props) -->
+    {transpose(Props, PropsT)},
+    html(tr([td(\html_file(Method, File)), \foldl(html_prop, PropsT)])).
 
-html_link(Method, Module, File) -->
-    {http_link_to_id(show_source, [meth=Method, module=Module, file=File], HREF)},
+html_prop(PropL) -->
+    html(td(table(\foldl(prop, PropL)))).
+
+prop(Prop) --> html(tr(td(Prop))).
+
+html_file(Method, File) -->
+    {http_link_to_id(show_source, [meth=Method, file=File], HREF)},
     html(a(href(HREF), File)).

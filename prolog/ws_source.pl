@@ -41,12 +41,13 @@
 
 ws_browser:provides_method(live).
 
-ws_browser:fetch_module_files_hook(live, ModuleFiles) :-
-    findall(M-Files,
+ws_browser:fetch_files_properties_hook(live, [module], FileMG) :-
+    findall(File-[M],
             ( current_module(M),
-              module_files(M, Files)
-            ), ModuleFilesU),
-    sort(ModuleFilesU, ModuleFiles).
+              module_file(M, File)
+            ), FileMU),
+    sort(FileMU, FileML),
+    group_pairs_by_key(FileML, FileMG).
 
 ws_browser:show_source_hook(live, File) :-
     format('Content-type: text/html~n~n', []),

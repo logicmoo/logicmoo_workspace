@@ -49,7 +49,10 @@
 
 gcover(Goal, OptL1) :-
     select_option(tag(Tag), OptL1, OptL, user),
-    ontrace(Goal, gcover_port(Tag), OptL).
+    ontrace(Goal, gcover_port(Tag), [goal(not_dynamic)|OptL]).
+
+not_dynamic(Call) :-
+    \+ predicate_property(Call, dynamic).
 
 :- dynamic covered_db/6.
 

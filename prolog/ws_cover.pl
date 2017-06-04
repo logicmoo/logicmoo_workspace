@@ -45,26 +45,50 @@
 ws_browser:provides_method(gcover).
 
 :- table
+       source_file/1,
        source_file_line/4.
 
-ws_browser:fetch_module_files_hook(gcover, ModuleFiles) :-
-    findall(M-File,
-            ( covered_db(File, _, _, _, _, _),
-              module_file(M, File)
-            ), MFileU),
-    sort(MFileU, MFileS),
-    group_pairs_by_key(MFileS, ModuleFiles).
+ws_browser:fetch_files_properties_hook(gcover, [ccov, clss, lcov, lits], FileMG) :-
+    findall(File-[CCov, Clss, LCov, Lits],
+            ( source_file(File),
+              cover_info(File, CCov, Clss, LCov, Lits)
+            ), FileMU),
+    sort(FileMU, FileML),
+    group_pairs_by_key(FileML, FileMG).
+
+source_file(File) :-
+    distinct(File, covered_db(File, _, _, _, _, _)).
 
 cache_file_lines :-
-    findall(File,
-            distinct(File, covered_db(File, _, _, _, _, _)),
-            FileL),
+    findall(File, source_file(File), FileL),
     length(FileL, N),
     forall(nth1(I, FileL, File),
            ( format(user_error, "Caching ~w of ~w files\r", [I, N]),
              ignore(source_file_line(File, _, _, _))
            )),
     nl(user_error).
+
+cover_info(File, CCov, Clss, LCov, Lits) :-
+    CountC = count(0, 0),
+    CountL = count(0, 0),
+    ( source_file_line(File, L1, L2, Scope),
+      ( Scope = cl(_)
+      ->Count = CountC
+      ; Count = CountL
+      ),
+      Count = count(C1, N1),
+      succ(N1, N),
+      nb_setarg(2, Count, N),
+      ( covered_db(File, L1, L2, _, _, _)
+      ->succ(C1, C),
+        nb_setarg(1, Count, C)
+      ; true
+      ),
+      fail
+    ; true
+    ),
+    CountC = count(CCov, Clss),
+    CountL = count(LCov, Lits).
 
 %! ports_color(List:list(pairs), Color:atm)
 %
@@ -76,7 +100,7 @@ cache_file_lines :-
 ports_color([(success)-_, failure-_, multi-_], lightpink).
 ports_color([(success)-_, multi-_],            yellowgreen).
 ports_color([(success)-_, failure-_],          orange).
-ports_color([uncovered-[clause(_)-_]],         bisque).
+ports_color([uncovered-[cl(_)-_]],             bisque).
 ports_color([(exit)-_,    fail-_],             yellow).
 ports_color([(exit)-_,    call-_],             lime).
 ports_color([Port-_], Color) :- port_color(Port, Color).
@@ -124,6 +148,7 @@ source_clause_line(File, Ref, L1, L2, lt(TInstr)) :-
     loc_file_line(clause_pc(Ref, PC), File, L1, L2).
 
 skip_instr(i_cut).
+skip_instr(i_enter).
 skip_instr(i_exit).
 
 file_clause(File, Ref) :-
