@@ -7,4 +7,4 @@ packager('Edison Mera Menendez', 'http://www.edisonm.com/').
 maintainer('Edison Mera Menendez', 'http://www.edisonm.com/').
 home('https://github.com/edisonm/xlibrary').
 download('https://github.com/edisonm/xlibrary.git').
-requires([lambda]).
+requires(lambda).
