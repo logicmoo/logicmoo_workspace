@@ -23,7 +23,7 @@ will execute all the checkers to analyze the modules in the directory '.'. Alter
 If you want to use specific analysis, use the predicate showcheck(Analysis, Options), where Analsyis can be:
 
 
-[comment] # shell_ini ./pltool.sh checkc
+[//]: # (shell_ini ./pltool.sh checkc)
 
 assertions:
 Check asssertions
@@ -119,5 +119,5 @@ declared as dynamic but never asserted, retracted, or using
 a variable argument in a database predicate, making it
 difficult to analyze.
 
-[comment] # shell_end
+[//]: # (shell_end)
 
