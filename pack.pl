@@ -7,4 +7,5 @@ packager('Edison Mera Menendez', 'http://www.edisonm.com/').
 maintainer('Edison Mera Menendez', 'http://www.edisonm.com/').
 home('https://github.com/edisonm/xtools').
 download('https://github.com/edisonm/xtools.git').
-requires([xlibrary,rtchecks]).
+requires(xlibrary).
+requires(rtchecks).
