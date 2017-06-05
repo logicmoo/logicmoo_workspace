@@ -36,6 +36,7 @@
           [source_codewalk/1]).
 
 :- use_module(library(prolog_source)).
+:- use_module(library(prolog_stack)).
 :- use_module(library(prolog_xref), []).
 :- use_module(library(context_values)).
 :- use_module(library(option_utils)).
@@ -46,10 +47,10 @@
 
 is_meta(on_trace).
 
-source_codewalk(MOptionL) :-
-    meta_options(is_meta, MOptionL, OptionL),
+source_codewalk(MOptions) :-
+    meta_options(is_meta, MOptions, Options),
     setup_call_cleanup(prepare(Ref),
-                       do_source_codewalk(OptionL),
+                       do_source_codewalk(Options),
                        cleanup(Ref)).
 
 head_caller(MHead, M:Head) :-
@@ -97,20 +98,17 @@ true_3(Goal, Caller, From) :-
                   at_location(From, format("~w :- ~w", [Caller, Goal]))).
 */
 
-check_conditions(M, File) :-
+check_file(File) :-
     current_context_value(file, File),
-    prolog_load_context(source, File),
-    '$current_source_module'(M),
-    prolog_xref:current_condition(Cond),
-    call(M:Cond).
+    prolog_load_context(source, File).
 
 do_term_expansion(Term) :-
-    check_conditions(_, _),
+    check_file(_),
     determine_caller(Term, Caller),
     set_context_value(caller, Caller).
 
 do_goal_expansion(Goal, TermPos) :-
-    check_conditions(M, File),
+    check_file(File),
     \+ skip(Goal),
     ( TermPos \= none
     ->From = file_term_position(File, TermPos)
@@ -120,15 +118,16 @@ do_goal_expansion(Goal, TermPos) :-
     ),
     current_context_value(on_trace, OnTrace),
     current_context_value(caller,   Caller),
+    '$current_source_module'(M),
     call(OnTrace, M:Goal, Caller, From).
 
-do_source_codewalk(OptionL1) :-
+do_source_codewalk(Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)  -true_3,
            if(Loaded)-true,
            variable_names(VNL)-VNL],
-          OptionL1, OptionL2),
-    option_allchk(M, File, FileMGen-[if(Loaded)|OptionL2], true-OptionL),
+          Options1, Options2),
+    option_allchk(M, File, FileMGen-[if(Loaded)|Options2], true-Options),
     freeze(VNL, b_setval('$variable_names', VNL)),
     with_context_values(
         setup_call_cleanup(
@@ -136,20 +135,41 @@ do_source_codewalk(OptionL1) :-
               freeze(M, '$set_source_module'(_, M))
             ),
             forall(FileMGen,
-                   walk_source(File, [variable_names(VNL)|OptionL])),
+                   walk_source(File, [variable_names(VNL)|Options])),
             '$set_source_module'(_, OldM)),
         [file, on_trace],
         [File, OnTrace]).
 
-walk_source(File, OptionL) :-
+walk_source(File, Options) :-
     setup_call_cleanup(
         prolog_open_source(File, In),
-        fetch_term(In, OptionL),
+        fetch_term(In, Options),
         prolog_close_source(In)).
 
-fetch_term(In, OptionL) :-
+fetch_term(In, Options1) :-
+    foldl(select_option_default,
+          [subterm_positons(TermPos)-TermPos,
+           term_position(Pos)-Pos,
+           syntax_errors(SE)-dec10,
+           process_comment(PC)-false,
+           comments(C)-C
+          ], Options1, Options2),
+    Options = [subterm_positions(TermPos),
+               syntax_errors(SE),
+               term_position(Pos),
+               process_comment(PC),
+               comments(C)
+               |Options2
+              ],
     repeat,
-      prolog_read_source_term(In, Term, _Expanded, OptionL),
+      read_clause(In, Term, Options),
       prolog_xref:update_condition(Term),
+      '$current_source_module'(M),
+      prolog_xref:current_condition(Cond),
+      ( M:Cond
+      ->prolog_source:expand(Term, TermPos, In, Expanded),
+        prolog_source:update_state(Term, Expanded, M)
+      ; true
+      ),
       Term == end_of_file,
     !.
