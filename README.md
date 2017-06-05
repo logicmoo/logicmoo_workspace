@@ -44,7 +44,7 @@ If you want to use specific analysis, use the predicate showcheck(Analysis,
 Options), where Analsyis can be:
 
 
-[//]: # (shell_ini ./pltool.sh checkc)
+[//]: # (prolog_ini checkhelp)
 
 assertions:
 Check asssertions
@@ -140,5 +140,5 @@ declared as dynamic but never asserted, retracted, or using
 a variable argument in a database predicate, making it
 difficult to analyze.
 
-[//]: # (shell_end)
+[//]: # (prolog_end)
 
