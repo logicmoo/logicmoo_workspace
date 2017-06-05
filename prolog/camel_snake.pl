@@ -34,6 +34,8 @@
 
 :- module(camel_snake, [camel_snake/2]).
 
+:- use_module(library(ctypes)).
+
 camel_snake(Camel, Snake) :-
     atom(Camel), !,
     atom_codes(Camel, CamelS),
