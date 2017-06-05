@@ -45,12 +45,12 @@ Options), where Analsyis can be:
 
 
 [//]: # (prolog_ini checkhelp)
-
+[//]: # (Content generated automatically by pltoolmisc.pl)
 assertions:
 Check asssertions
 -----------------
-The predicates contains assertions that are inconsistent
-with the  implementation. The reason is explained there.
+The predicates contain assertions that are inconsistent
+with the implementation.
 
 deprecated:
 Deprecated Predicates
@@ -139,6 +139,7 @@ being used as dynamic without a proper declaration, being
 declared as dynamic but never asserted, retracted, or using
 a variable argument in a database predicate, making it
 difficult to analyze.
+
 
 [//]: # (prolog_end)
 
