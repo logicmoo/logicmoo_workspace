@@ -21,11 +21,10 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- use_module(ctcex).
 
 /* $ctcex$
-Warning: -----------------
 Warning: Check asssertions
-Warning: ---------------------
-Warning: The predicates below contains assertions that are inconsistent
-Warning: with the  implementation. The reason is explained there.
+Warning: -----------------
+Warning: The predicates contain assertions that are inconsistent
+Warning: with the implementation.
 Warning: 
 ctcex.pl:18: In the body of ctcex:q/0:
 ctcex.pl:12: Assertion failure for a(1,b).
@@ -74,11 +73,10 @@ test(ctcex) :-
 :- use_module(p1).
 
 /* $p1$
-Warning: -----------------
 Warning: Check asssertions
-Warning: ---------------------
-Warning: The predicates below contains assertions that are inconsistent
-Warning: with the  implementation. The reason is explained there.
+Warning: -----------------
+Warning: The predicates contain assertions that are inconsistent
+Warning: with the implementation.
 Warning: 
 p1.pl:16:4: In the body of p1:p0/0:
 p1.pl:9:8: Assertion failure for p1(p1:q2).

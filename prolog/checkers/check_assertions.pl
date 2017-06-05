@@ -60,9 +60,9 @@
 :- multifile
        prolog:message//1.
 
-%% :- table
-%%        generate_ctchecks/4,
-%%        do_check_property_ctcheck/2.
+% :- table
+%        generate_ctchecks/4,
+%        do_check_property_ctcheck/2.
 
 checker:check(assertions, Result, OptionL) :-
     cleanup_db,
@@ -146,8 +146,8 @@ resolve_head(H, M, M:H).
 prolog:message(acheck(assertions)) -->
     ['Check asssertions',nl,
      '-----------------',nl,
-     'The predicates contains assertions that are inconsistent', nl,
-     'with the  implementation. The reason is explained there.', nl, nl].
+     'The predicates contain assertions that are inconsistent', nl,
+     'with the implementation.', nl, nl].
 prolog:message(acheck(assertions, Type-IssueL)) -->
     type_message(Type),
     {type_issue_t(Type, IssueT)},
@@ -217,7 +217,8 @@ set_variable_names(Name=Variable) :- ignore(Variable = '$VAR'(Name)).
 do_check_property_ctcheck(CTCheck, AssrErrorL) :-
     AssrError = assrchk(_, _),
     retractall(assrt_error_db(_, _)),
-    intercept(CTCheck, AssrError, CTCheck, assertz(assrt_error_db(CTCheck, AssrError))),
+    intercept(CTCheck, AssrError, CTCheck,
+              assertz(assrt_error_db(CTCheck, AssrError))),
     findall(CTCheck-AssrError,
             retract(assrt_error_db(CTCheck, AssrError)), CAssrErrorL),
     maplist(collect_assr_error(CTCheck), CAssrErrorL, AssrErrorL).
@@ -285,10 +286,13 @@ generate_ctchecks(Goal, M, VInf, CTChecks) :-
 
 wrap_asr_ctcheck(VInf, Asr, ctcheck(VInf, Asr)).
 
-% Trivial abstraction: Check for compatibility issues in properties,
-% compatibility is an abstraction that makes static check decidable.  Here we
-% lose precision but we gain computability of checks at compile-time.
-% TBD: Formal demonstration. --EMM
+%! assrt_lib:asr_aprop(Asr, Section, Property, From)
+%
+%  Assertion abstraction: If we can not determine the mode at compile time, at
+%  least check for compatibility (instead of instantiation).  This abstraction
+%  makes static check decidable, the tradeoff is that we lose precision but we
+%  gain computability of checks at compile-time.
+
 assrt_lib:asr_aprop(ctcheck(VInf, Asr), Key, Prop, From) :-
     asr_aprop_ctcheck(Key, VInf, Asr, Prop, From).
 
