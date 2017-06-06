@@ -70,6 +70,7 @@
 		op(900,xfy,because)
 	  ]).
 :-set_prolog_flag(unknown,warning).
+:- dynamic input_mod/1.
 
 /* INIT ALEPH */
 aleph :-
@@ -181,7 +182,6 @@ user:term_expansion((:- end_in_neg), []) :-
 
 %%%%%%%%
 
-:- dynamic input_mod/1.
 assert_all([],_M,[]).
 
 assert_all([H|T],M,[HRef|TRef]):-
