@@ -1,8 +1,11 @@
 /** <module> trill
 
 This module performs reasoning over probabilistic description logic knowledge bases.
-It reads probabilistic knowledge bases in RDF format or in TRILL format, a functional-like
-sintax, and answers queries by finding the set of explanations or computing the probability.
+It reads probabilistic knowledge bases in RDF format or in Prolog format, a functional-like
+sintax based on definitions of Thea library, and answers queries by finding the set 
+of explanations or computing the probability.
+
+[1] http://vangelisv.github.io/thea/
 
 See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
@@ -212,8 +215,8 @@ instanceOf(Class,Ind,Expl):-
   	    (
   	    	add_q(ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	  	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  		find_expls(L,[ClassEx,IndEx],Expl),
-  		dif(Expl,[])
+  		find_expls(L,[ClassEx,IndEx],Expl1),
+  		check_and_close(Expl1,Expl)
   	    )
   	 ;
   	    print_message(warning,inconsistent),!,false
@@ -267,8 +270,8 @@ property_value(Prop, Ind1, Ind2,Expl):-
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
   	    	findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
-  		find_expls(L,[PropEx,Ind1Ex,Ind2Ex],Expl),
-  		dif(Expl,[])
+  		find_expls(L,[PropEx,Ind1Ex,Ind2Ex],Expl1),
+  		check_and_close(Expl1,Expl)
   	    )
   	 ;
   	    print_message(warning,inconsistent),!,false
@@ -360,8 +363,8 @@ unsat_internal(Concept,Expl):-
      	add_q(ABox,classAssertion(Concept,trillan(1)),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
 	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-	find_expls(L,['unsat',Concept],Expl),
-	dif(Expl,[])
+	find_expls(L,['unsat',Concept],Expl1),
+	check_and_close(Expl1,Expl)
      )
     ;
      print_message(warning,inconsistent),!,false
@@ -412,8 +415,8 @@ inconsistent_theory(Expl):-
   assert(trillan_idx(1)),
   build_abox((ABox,Tabs)),
   findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,['inconsistent','kb'],Expl),
-  dif(Expl,[]).
+  find_expls(L,['inconsistent','kb'],Expl1),
+  check_and_close(Expl1,Expl).
 
 /**
  * inconsistent_theory
@@ -503,6 +506,11 @@ prob_inconsistent_theory(Prob):-
 /***********
   Utilities for queries
  ***********/
+
+% adds the query into the ABox
+add_q(ABox,Query,ABox0):-
+  empty_expl(Expl),
+  add(ABox,(Query,Expl),ABox0).
 
 % expands query arguments using prefixes and checks their existence in the kb
 check_query_args(L,LEx) :-
@@ -970,21 +978,26 @@ forall_plus_rule((ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(allValuesFrom(S,C),Ind1,Expl1,ABox0),
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
-  find_sub_sup_trans_role(R,S,Ind1,Ind2,Expl3),
+  find_sub_sup_trans_role(R,S,Expl3),
   and_f(Expl1,Expl2,ExplT),
   and_f(ExplT,Expl3,Expl),
   modify_ABox(ABox0,allValuesFrom(R,C),Ind2,Expl,ABox).
 
 % --------------
-find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S),transitive(R)]):-
+find_sub_sup_trans_role(R,S,Expl):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S),
-  Name:transitiveProperty(R).
+  Name:transitiveProperty(R),
+  empty_expl(EExpl),
+  and_f_ax(subPropertyOf(R,S),EExpl,Expl0),
+  and_f_ax(transitive(R),Expl0,Expl).
 
-find_sub_sup_trans_role(R,S,_Ind1,_Ind2,[subPropertyOf(R,S)]):-
+find_sub_sup_trans_role(R,S,Expl):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S),
-  \+ Name:transitiveProperty(R).
+  \+ Name:transitiveProperty(R),
+  empty_expl(EExpl),
+  and_f_ax(subPropertyOf(R,S),EExpl,Expl).
 /* ************ */
 
 /*
@@ -2414,13 +2427,19 @@ sandbox:safe_primitive(trill:load_owl_kb(_)).
 
 user:term_expansion((:- trill),[]):-
   trill:add_kb_prefixes([('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]),
+  unload_file(library(trillp_internal)),
+  unload_file(library(tornado_internal)),
   consult(library(trill_internal)).
 
 user:term_expansion((:- trillp),[]):-
   trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
+  unload_file(library(trill_internal)),
+  unload_file(library(tornado_internal)),
   consult(library(trillp_internal)).
 
-user:term_expansion((:- trillpbdd),[]):-
+user:term_expansion((:- tornado),[]):-
   trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
-  consult(library(trillpbdd_internal)).
+  unload_file(library(trill_internal)),
+  unload_file(library(trillp_internal)),
+  consult(library(tornado_internal)).
 

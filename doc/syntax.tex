@@ -24,7 +24,7 @@ A KB $\cK$ is assigned a semantics in terms of set-theoretic interpretations $\c
 TRILL allows the use of two different syntaxes used together or individually:
 \begin{itemize}
  \item RDF/XML
- \item TRILL syntax 
+ \item Prolog syntax 
 \end{itemize}
 
 RDF/XML syntax can be used by exploiting the predicate \verb|owl_rdf/1|. For example:
@@ -97,12 +97,12 @@ owl_rdf('<?xml version="1.0"?>
 </rdf:RDF>').
 \end{verbatim}
 
-\subsection{TRILL Syntax}
+\subsection{Prolog Syntax}
 \label{trill-syn}
 \subsubsection{Declarations}
 
 
-TRILL syntax allows, as in standard OWL, the declaration of classes, properties, etc.
+Prolog syntax allows, as in standard OWL, the declaration of classes, properties, etc.
 \begin{verbatim}
 class("classIRI").
 datatype("datatypeIRI").
@@ -113,7 +113,7 @@ namedIndividual("individualIRI").
 \end{verbatim}
 However, TRILL properly works also in their absence.
 
-TRILL syntax allows also the declaration of aliases for namespaces by using the \verb|kb_prefix/2| predicate.
+Prolog syntax allows also the declaration of aliases for namespaces by using the \verb|kb_prefix/2| predicate.
 \begin{verbatim}
 kb_prefix("foo","http://example.foo#").
 \end{verbatim}
@@ -160,9 +160,10 @@ For example, for asserting that \textit{employee} is subclass of \textit{worker}
 \begin{verbatim}
 subClassOf(employee,worker).
 \end{verbatim}
-while the assertion \textit{worker} is equal to \textit{workingman} can be defined as
+while the assertion \textit{worker} is equal to the intersection of \textit{person} and not \textit{unemployed}
 \begin{verbatim}
-equivalentClasses([worker,workingman]).
+equivalentClasses([worker,
+           intersectionOf([person,complementOf(unemployed)])]).
 \end{verbatim}
 
 
@@ -176,7 +177,7 @@ annotationAssertion(foo:myAnnotation,
 In particular, an axiom can be annotated with a probability which defines the degree of belief in the truth of the axiom. See Section \ref{semantics} for details.
 
 
-Below, an example of an probabilistic axiom, following the TRILL syntax.
+Below, an example of an probabilistic axiom, following the Prolog syntax.
 \begin{verbatim}
 annotationAssertion('disponte:probability',
     subClassOf(employee,worker),literal('0.6')).
@@ -251,7 +252,7 @@ A representations of the three axioms seen above is shown below.
 </owl:NamedIndividual>
 \end{verbatim}
 
-Annotations are assertable using an extension of RDF/XML. For example the annotated axiom below, defined using the TRILL sintax
+Annotations are assertable using an extension of RDF/XML. For example the annotated axiom below, defined using the Prolog sintax
 \begin{verbatim}
 annotationAssertion('disponte:probability',
     subClassOf('Cat','Pet'),literal('0.6')).

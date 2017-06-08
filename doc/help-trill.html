@@ -15,7 +15,7 @@
 <div id="TOC">
 <ul>
 <li><a href="#syn">Syntax</a><ul>
-<li><a href="#trill-syn">TRILL Syntax</a><ul>
+<li><a href="#trill-syn">Prolog Syntax</a><ul>
 <li><a href="#declarations">Declarations</a></li>
 <li><a href="#axioms">Axioms</a></li>
 <li><a href="#concepts-descriptions">Concepts descriptions</a></li>
@@ -43,7 +43,7 @@
 <p>TRILL allows the use of two different syntaxes used together or individually:</p>
 <ul>
 <li><p>RDF/XML</p></li>
-<li><p>TRILL syntax</p></li>
+<li><p>Prolog syntax</p></li>
 </ul>
 <p>RDF/XML syntax can be used by exploiting the predicate <code>owl_rdf/1</code>. For example:</p>
 <pre><code>owl_rdf(&#39;
@@ -107,9 +107,9 @@ owl_rdf(&#39;&lt;?xml version=&quot;1.0&quot;?&gt;
         &lt;rdf:type rdf:resource=&quot;http://example.foo#employee&quot;/&gt;
     &lt;/owl:NamedIndividual&gt;
 &lt;/rdf:RDF&gt;&#39;).</code></pre>
-<h2 id="trill-syn">TRILL Syntax</h2>
+<h2 id="trill-syn">Prolog Syntax</h2>
 <h3 id="declarations">Declarations</h3>
-<p>TRILL syntax allows, as in standard OWL, the declaration of classes, properties, etc.</p>
+<p>Prolog syntax allows, as in standard OWL, the declaration of classes, properties, etc.</p>
 <pre><code>class(&quot;classIRI&quot;).
 datatype(&quot;datatypeIRI&quot;).
 objectProperty(&quot;objectPropertyIRI&quot;).
@@ -117,7 +117,7 @@ dataProperty(&quot;dataPropertyIRI&quot;).
 annotationProperty(&quot;annotationPropertyIRI&quot;).
 namedIndividual(&quot;individualIRI&quot;).</code></pre>
 <p>However, TRILL properly works also in their absence.</p>
-<p>TRILL syntax allows also the declaration of aliases for namespaces by using the <code>kb_prefix/2</code> predicate.</p>
+<p>Prolog syntax allows also the declaration of aliases for namespaces by using the <code>kb_prefix/2</code> predicate.</p>
 <pre><code>kb_prefix(&quot;foo&quot;,&quot;http://example.foo#&quot;).</code></pre>
 <p>After this declaration, the prefix <code>foo</code> is available, thus, instead of <code>http://example.foo#john</code>, one can write <code>foo:john</code>. It is possible to define also an empty prefix as</p>
 <pre><code>kb_prefix(&quot;&quot;,&quot;http://example.foo#&quot;).</code></pre>
@@ -148,13 +148,14 @@ propertyAssertion(&quot;propertyIRI&quot;,&quot;subjectIRI&quot;,&quot;objectIRI
 annotationAssertion(&quot;annotationIRI&quot;,axiom,literal(&#39;value&#39;)).</code></pre>
 <p>For example, for asserting that <em>employee</em> is subclass of <em>worker</em> one can use</p>
 <pre><code>subClassOf(employee,worker).</code></pre>
-<p>while the assertion <em>worker</em> is equal to <em>workingman</em> can be defined as</p>
-<pre><code>equivalentClasses([worker,workingman]).</code></pre>
+<p>while the assertion <em>worker</em> is equal to the intersection of <em>person</em> and not <em>unemployed</em></p>
+<pre><code>equivalentClasses([worker,
+           intersectionOf([person,complementOf(unemployed)])]).</code></pre>
 <p>Annotation assertions can be defined, for example, as</p>
 <pre><code>annotationAssertion(foo:myAnnotation,
     subClassOf(employee,worker),&#39;myValue&#39;).</code></pre>
 <p>In particular, an axiom can be annotated with a probability which defines the degree of belief in the truth of the axiom. See Section [semantics] for details.</p>
-<p>Below, an example of an probabilistic axiom, following the TRILL syntax.</p>
+<p>Below, an example of an probabilistic axiom, following the Prolog syntax.</p>
 <pre><code>annotationAssertion(&#39;disponte:probability&#39;,
     subClassOf(employee,worker),literal(&#39;0.6&#39;)).</code></pre>
 <h3 id="concepts-descriptions">Concepts descriptions</h3>
@@ -199,7 +200,7 @@ propertyAssertion(hasAnimal,kevin,fluffy)</code></pre>
 &lt;owl:NamedIndividual rdf:about=&quot;kevin&quot;&gt;
  &lt;hasAnimal rdf:resource=&quot;fluffy&quot;/&gt;
 &lt;/owl:NamedIndividual&gt;</code></pre>
-<p>Annotations are assertable using an extension of RDF/XML. For example the annotated axiom below, defined using the TRILL sintax</p>
+<p>Annotations are assertable using an extension of RDF/XML. For example the annotated axiom below, defined using the Prolog sintax</p>
 <pre><code>annotationAssertion(&#39;disponte:probability&#39;,
     subClassOf(&#39;Cat&#39;,&#39;Pet&#39;),literal(&#39;0.6&#39;)).</code></pre>
 <p>is modeled using RDF/XML syntax as</p>
@@ -288,11 +289,13 @@ f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}
 <li><p>Unsatifiability of a concept.</p></li>
 <li><p>Inconsistency of the knowledge base.</p></li>
 </ul>
-<p>All the input arguments have to be atoms or ground terms. Note that it is necessary to specify which algorithm, TRILL or TRILL<span class="math inline">\(^P\)</span>, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive</p>
+<p>All the input arguments have to be atoms or ground terms. Note that it is necessary to specify which algorithm, TRILL, TRILL<span class="math inline">\(^P\)</span> or TORNADO, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive</p>
 <pre><code>:- trill.</code></pre>
-<p>for loading TRILL or</p>
+<p>for loading TRILL,</p>
 <pre><code>:- trillp.</code></pre>
-<p>for TRILL<span class="math inline">\(^P\)</span>.</p>
+<p>for TRILL<span class="math inline">\(^P\)</span> or</p>
+<pre><code>:- tornado.</code></pre>
+<p>for TORNADO.</p>
 <h3 id="probabilistic-queries">Probabilistic Queries</h3>
 <p>TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.</p>
 <p>The probability of an individual to belong to a concept can be asked using TRILL with the predicate</p>

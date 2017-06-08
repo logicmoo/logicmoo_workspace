@@ -1,9 +1,11 @@
-
 /* trill predicates
 
 This module performs reasoning over probabilistic description logic knowledge bases.
-It reads probabilistic knowledge bases in RDF format or in TRILL format, a functional-like
-sintax, and answers queries by finding the set of explanations or computing the probability.
+It reads probabilistic knowledge bases in RDF format or in Prolog format, a functional-like
+sintax based on definitions of Thea library, and answers queries by finding the set 
+of explanations or computing the probability.
+
+[1] http://vangelisv.github.io/thea/
 
 See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
@@ -26,11 +28,6 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
   Utilities for queries
  ***********/
 
-% adds the query into the ABox
-add_q(ABox,Query,ABox0):-
-  add(ABox,(Query,[]),ABox0).
-
-
 % to find all axplanations for probabilistic queries
 all_sub_class(ClassEx,SupClassEx,Exps):-
   all_unsat(intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
@@ -49,7 +46,9 @@ all_inconsistent_theory(Exps):-
   findall(Expl,inconsistent_theory(Expl),Exps).
 
 
-
+% checks the explanation
+check_and_close(Expl,Expl):-
+  dif(Expl,[]).
 
 
 % checks if an explanations was already found
@@ -341,6 +340,8 @@ build_abox((ABox,Tabs)):-
 Explanation Management
 
 ***********************/
+
+empty_expl([]).
 
 and_f_ax(Axiom,F0,F):-
   and_f([Axiom],F0,F).
