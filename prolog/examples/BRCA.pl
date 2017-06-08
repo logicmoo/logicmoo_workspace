@@ -1,6 +1,6 @@
 :-use_module(library(trill)).
 
-:-trill.
+:- trill. % or :- trillp. or :- tornado.
 
 /*
 Model of risk factor of breast cancer, from
