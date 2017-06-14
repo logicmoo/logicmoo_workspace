@@ -147,9 +147,10 @@ is_meta(merge).
 %	rocks_put/3  makes  the  operation  _atomic_  and  reduces  disk
 %	accesses.
 %
-%	`Merger` is called as below, where `How`  is one of `partial` or
-%	`full`. If `full`, `MergeValue` is a list of values that need to
-%	be merged, if `partial`, `MergeValue` is a single value.
+%	`Merger` is called as below, where two clauses are required:
+%	one with `How` set to `partial` and one with `How` set to
+%	`full`.  If `full`, `MergeValue` is a list of values that need
+%	to be merged, if `partial`, `MergeValue` is a single value.
 %
 %	    call(:Merger, +How, +Key, +Value0, +MergeValue, -Value)
 %
