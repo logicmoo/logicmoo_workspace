@@ -261,7 +261,7 @@ draw(M:[!|R],F,LongestIn,Depth,[LastCut|OpenCuts],ListName):- !,
     write_indented(M,F,Depth,"\\begin{bundle}{"),
     print_resolvent(M,F,[!|R],ListName),
     writeln(F,"}"),
-	current_slide(Slide),
+	M:current_slide(Slide),
     assert(M:reached(LastCut,Slide)),
     (print_builtin_children(true,M:R,F,Length,Depth1,OpenCuts,ListName);     writeln(F,"\\end{bundle}")),
     fail.
@@ -860,7 +860,9 @@ indexOf([_|Tail], Element, Index):-
 %%%%%
 
 get_var_name(X,Name=X):-
-   var_property(X, name(Name)).
+   var_property(X, name(Name)),!.
+
+get_var_name(X,'_'=X).
 
 :- multifile sandbox:safe_primitive/1.
 
