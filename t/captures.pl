@@ -82,6 +82,12 @@ regex('.*', [], howdy, []).
     Y == "hola",
     X == "hi".
 
+'implicit named captures: three' :-
+    N = _, % avoid singleton warning
+    Pattern = "num: (?<N>\\d+)$",
+    "num: 42" =~ Pattern,
+    N == "42".
+
 'implicit named captures: extra in-scope variables' :-
     X = X,  % an extra, in-scope variable
     Name = _, % avoid singleton warnings

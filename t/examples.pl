@@ -62,3 +62,11 @@ booooot \~ 'bo{2,4}t'.
 % email
 valid_email("michael@ndrix.org").
 valid_email("some-one@googlemail.co.uk").
+
+'works with pattern in variable' :-
+    Pattern = '[a-z]',
+    'a' =~ Pattern.
+
+'works with text in variable' :-
+    Text = a,
+    Text =~ '[a-z]'.
