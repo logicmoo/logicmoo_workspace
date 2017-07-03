@@ -96,6 +96,7 @@ http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-infor
 :- dynamic my_clause/2.
 :- dynamic animations/1.
 
+:- thread_local sldnf_input_mod/1.
 :- dynamic sldnf_input_mod/1.
 
 :-meta_predicate set_depth(:).
