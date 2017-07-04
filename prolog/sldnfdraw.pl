@@ -871,8 +871,9 @@ get_var_name(X,'_'=X).
 
 sandbox:safe_meta(sldnfdraw:draw_goal(_),[]).
 
-user:term_expansion(end_of_file, end_of_file) :-!,
+user:term_expansion(end_of_file, end_of_file) :-
   prolog_load_context(module, M),
+  sldnf_input_mod(M),!,
   retractall(sldnf_input_mod(M)),
   style_check(+singleton).
 
