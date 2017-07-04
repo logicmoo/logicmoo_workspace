@@ -62,6 +62,7 @@
 :-meta_predicate mc_rejection_sample_arg_bar_r(:,:,+,+).
 :-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+).
 :-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+,+).
+:-meta_predicate test_r(:,+,-,-,-).
 
 :- multifile sandbox:safe_primitive/1.
 sandbox:safe_primitive(current_predicate(_)).
@@ -655,6 +656,8 @@ test_r(P,TestFolds,LL,AUCROC,AUCPR):-
   test_prob(P,TestFolds,_NPos,_NNeg,LL,LG),
   compute_areas_diagrams_r(LG,AUCROC,AUCPR).
 
+:- multifile sandbox:safe_primitive/1.
+
 sandbox:safe_primitive(cplint_r:build_xy_list(_,_,_)).
 sandbox:safe_primitive(cplint_r:r_row(_,_,_)).
 sandbox:safe_primitive(cplint_r:get_set_from_xy_list(_,_)).
@@ -662,7 +665,8 @@ sandbox:safe_primitive(cplint_r:histogram_r(_,_)).
 sandbox:safe_primitive(cplint_r:density_r(_)).
 sandbox:safe_primitive(cplint_r:densities_r(_,_)).
 sandbox:safe_primitive(cplint_r:compute_areas_diagrams_r(_,_,_)).
-sandbox:safe_primitive(cplint_r:test_r(_,_,_,_,_)).
+
+:- multifile sandbox:safe_meta/2.
 
 sandbox:safe_meta(cplint_r:prob_bar_r(_),[]).
 sandbox:safe_meta(cplint_r:prob_bar_r(_,_),[]).
@@ -673,4 +677,5 @@ sandbox:safe_meta(cplint_r:mc_sample_arg_first_bar_r(_,_,_),[]).
 sandbox:safe_meta(cplint_r:mc_rejection_sample_arg_bar_r(_,_,_,_),[]).
 sandbox:safe_meta(cplint_r:mc_mh_sample_arg_bar_r(_,_,_,_,_),[]).
 sandbox:safe_meta(cplint_r:mc_mh_sample_arg_bar_r(_,_,_,_,_,_),[]).
+sandbox:safe_meta(cplint_r:test_r(_,_,_,_,_), []).
 
