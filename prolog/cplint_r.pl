@@ -33,7 +33,8 @@
             histogram_r/2,
             density_r/1,
             densities_r/2,
-            compute_areas_diagrams_r/3
+            compute_areas_diagrams_r/3,
+            test_r/5
           ]).
 
 
@@ -45,6 +46,7 @@
 :- use_module(library(pita)).
 :- use_module(library(mcintyre)).
 :- use_module(library(auc)).
+:- use_module(library(slipcover)).
 
 /* Optional module */
 :- use_module(swish(lib/r_swish)).
@@ -74,7 +76,8 @@ check_modules :-
     current_module(lists),
     current_module(pita),
     current_module(mcintyre),
-    current_module(auc).
+    current_module(auc),
+    current_module(slipcover).
 
 check_modules :-
     writeln("ERROR: Library/ies missing"),
@@ -639,6 +642,19 @@ compute_areas_diagrams_r(LG,AUCROC,AUCPR) :-
     geom_compute_areas_diagram(PR0,"PR","Precision","Recall"),
     finalize_r_graph.
 
+/**
+ * test_r(+P:probabilistic_program,+TestFolds:list_of_atoms,-LL:float,-AUCROC:float,-AUCPR:float) is det
+ *
+ * The predicate takes as input in P a probabilistic program,
+ * tests P on the folds indicated in TestFolds and returns the
+ * log likelihood of the test examples in LL, the area under the Receiver
+ * Operating Characteristic curve in AUCROC, the area under the Precision Recall
+ * curve in AUCPR and draws R diagrams of the curves.
+ */
+test_r(P,TestFolds,LL,AUCROC,AUCPR):-
+  test_prob(P,TestFolds,_NPos,_NNeg,LL,LG),
+  compute_areas_diagrams_r(LG,AUCROC,AUCPR).
+
 sandbox:safe_primitive(cplint_r:build_xy_list(_,_,_)).
 sandbox:safe_primitive(cplint_r:r_row(_,_,_)).
 sandbox:safe_primitive(cplint_r:get_set_from_xy_list(_,_)).
@@ -646,6 +662,7 @@ sandbox:safe_primitive(cplint_r:histogram_r(_,_)).
 sandbox:safe_primitive(cplint_r:density_r(_)).
 sandbox:safe_primitive(cplint_r:densities_r(_,_)).
 sandbox:safe_primitive(cplint_r:compute_areas_diagrams_r(_,_,_)).
+sandbox:safe_primitive(cplint_r:test_r(_,_,_,_,_)).
 
 sandbox:safe_meta(cplint_r:prob_bar_r(_),[]).
 sandbox:safe_meta(cplint_r:prob_bar_r(_,_),[]).
