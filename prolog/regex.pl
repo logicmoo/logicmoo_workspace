@@ -32,7 +32,7 @@ Text =~ Pattern :-
     call(Goal).
 
 expand_equalstilde(Text =~ Pattern, Vars, regex(P,Options,Text,Vars)) :-
-    ( Pattern = P/Options ->
+    ( nonvar(Pattern), Pattern = P/Options ->
         true
     ; % no explicit options ->
         P = Pattern,
