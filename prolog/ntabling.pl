@@ -53,6 +53,10 @@ asserting them in the prolog database.
        '$table_data'/1,
        '$table_data'/2.
 
+:- volatile
+       '$table_data'/1,
+       '$table_data'/2.
+
 :- meta_predicate
        start_tabling(+, 0),
        abolish_table_subgoals(:).
