@@ -407,6 +407,8 @@ unused_type(_, 'unreachable' ).
 hide_unused('$exported_op'(_, _, _), _).
 hide_unused('$mode'(_, _), _).
 hide_unused('$tabled'(_), _).
+hide_unused('$table_mode'(_, _, _), _).
+hide_unused('$table_update'(_, _, _, _), _).
 hide_unused('$pldoc'(_, _, _, _), _).
 hide_unused(attr_unify_hook(_, _), predopts_analysis).
 hide_unused(loading(_), shlib).
