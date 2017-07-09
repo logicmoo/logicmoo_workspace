@@ -7,7 +7,7 @@
 (:- dynamic lps_test_result / 3,lps_test_result_item / 3,lps_test_options / 1).
 
 % LPS options prior to the test:
-lps_test_options([]).
+lps_test_options([dc]).
 
 % lps_test_result(Stage,Cycle,TestTerm)
 lps_test_result((fluents),0,1).

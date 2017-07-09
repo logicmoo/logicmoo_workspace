@@ -12,7 +12,7 @@ For individual usage the following simplified instructions apply (valid for Wind
 * make sure that you end up with two directories lps_demo (with subdirectories doc,engine,etc.) and swish (with subdirectories client, etc.), side by side in the same directory D
 * open a command shell window
 * cd D/lps_demo/swish
-* swipl -l user_module_file.pl -l ../../swish/server.pl -g server:server
+* swipl -l user\_module\_file.pl -l ../../swish/server.pl -g server:server
 
 You should get a message such as:
 
