@@ -36,7 +36,6 @@
           [source_codewalk/1]).
 
 :- use_module(library(prolog_source)).
-:- use_module(library(prolog_stack)).
 :- use_module(library(prolog_xref), []).
 :- use_module(library(context_values)).
 :- use_module(library(option_utils)).

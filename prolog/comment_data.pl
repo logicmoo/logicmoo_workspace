@@ -38,6 +38,9 @@
        comment_data/2,
        enabled/0.
 
+:- public
+       process_comment_data/2.
+
 %!  process_comment_data(+Comments, +Term) is semidet
 %
 %   This comment_hook hack allow us to write copy-pasteable data as comment, to
