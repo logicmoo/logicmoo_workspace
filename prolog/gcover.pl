@@ -45,14 +45,18 @@
 
 :- table loc_file_line/4.
 
+:- public not_dynamic/1.
+
+:- meta_predicate not_dynamic(0).
+
+not_dynamic(Call) :-
+    \+ predicate_property(Call, dynamic).
+
 :- meta_predicate gcover(0,+).
 
 gcover(Goal, OptL1) :-
     select_option(tag(Tag), OptL1, OptL, user),
     ontrace(Goal, gcover_port(Tag), [goal(not_dynamic)|OptL]).
-
-not_dynamic(Call) :-
-    \+ predicate_property(Call, dynamic).
 
 :- dynamic covered_db/6.
 
