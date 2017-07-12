@@ -64,7 +64,7 @@ prolog:called_by(Goal, _, M, [M:Macro]) :-
     A =:= E + N - 1,
     length(EL, E),
     Goal =.. [F|AL],
-    append(EL, TL, AL),
+    append(TL, EL, AL),
     trim_args(Name, N, C, CF, EL, [C|TL], TT),
     Macro =.. [Name|TT].
 
