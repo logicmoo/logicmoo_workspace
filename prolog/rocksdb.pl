@@ -94,8 +94,8 @@ See rocks_open/3 for details.
 %	      sequence of bytes in RocksDB.
 %	    - int32
 %	      Maps to a Prolog integer in the range
-%	      -2147483648..2147483647.  Stored as a 4 bytes in native
-%	      byte order.
+%	      -2,147,483,648...2,147,483,647.  Stored as a 4 bytes in
+%	      native byte order.
 %	    - int64
 %	      Maps to a Prolog integer in the range
 %	      -9223372036854775808..9223372036854775807 Stored as a 8
@@ -224,7 +224,7 @@ is_meta(merge).
 
 rocks_property(RocksDB, Property) :-
     var(Property), !,
-    rock_property(P),
+    rocks_property(P),
     rocks_property(RocksDB, P, Value),
     Property =.. [P,Value].
 rocks_property(RocksDB, Property) :-
@@ -233,4 +233,4 @@ rocks_property(RocksDB, Property) :-
 rocks_property(_RocksDB, Property) :-
     type_error(property, Property).
 
-rock_property(estimate_num_keys).
+rocks_property(estimate_num_keys).
