@@ -36,17 +36,10 @@
           [filepos_line/4]).
 
 :- use_module(library(prolog_codewalk), []).
-:- use_module(library(ntabling)).
-
-:- table filepos_line/5.
 
 %!  filepos_line(+File, +CharCount, -Line, -Pos) is det
 %
 filepos_line(File, CharCount, Line, Pos) :-
-    time_file(File, Time),    % Prevents usage of old tabled information
-    filepos_line(File, CharCount, Line, Pos, Time).
-
-filepos_line(File, CharCount, Line, Pos, _) :-
     setup_call_cleanup('$push_input_context'(filepos_line),
                        prolog_codewalk:filepos_line(File, CharCount, Line, Pos),
                        '$pop_input_context').
