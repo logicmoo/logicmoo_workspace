@@ -205,7 +205,7 @@ system:term_expansion(Term, Pos, _, _) :-
     ( rl_tmp(File, Line, _)
     ->true
     ; retractall(rl_tmp(_, _, _)),
-      asserta(rl_tmp(File, Line, 0 )),
+      asserta(rl_tmp(File, Line, 0)),
       record_extra_location(Term, Pos)
     ),
     fail.
@@ -229,6 +229,8 @@ rl_goal_expansion(Goal, Pos) :-
     ->Flag == 1
     ; true
     ),
+    b_getval('$term', Term),
+    memberchk(Term, [(:-_), []]),
     \+ clause(declaration_pos(Goal, _, _, _, _, _, _), _),
     \+ skip_record_decl(Goal),
     assert_position(Goal, Pos, goal),
