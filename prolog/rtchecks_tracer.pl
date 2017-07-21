@@ -121,14 +121,15 @@ cleanup_trace :-
 
 black_list_caller(M:F/A) :-
     functor(H, F, A),
-    black_list_caller(H, M).
+    black_list_caller(M, H).
 
 black_list_caller(M, _) :- black_list_module(M).
-black_list_caller(globprops, _).
-black_list_caller(typeprops, _).
 black_list_caller(metaprops, _).
 
 black_list_callee(M, _) :- black_list_module(M).
+black_list_callee(M, Call) :-
+    predicate_property(M:'$rtchecked'(_), defined),
+    M:'$rtchecked'(Call).
 black_list_callee(system, Call) :- black_list_callee_system(Call).
 black_list_callee(metaprops, Call) :-
     \+ memberchk(Call, [check(_), trust(_), true(_), false(_)]).
@@ -141,21 +142,14 @@ black_list_callee_system(atom(_)).
 
 black_list_module(assrt_lib).
 black_list_module(send_check).
-black_list_module(rtchecks_tr).
+black_list_module(ctrtchecks).
 black_list_module(rtchecks_rt).
 black_list_module(rtchecks_tracer).
 black_list_module(rtchecks_utils).
-black_list_module(rtchecks_basic).
 black_list_module(context_values).
 black_list_module('$expand').
 black_list_module('$messages').
-black_list_module(complete_dict).
-black_list_module(apply_dict).
-black_list_module(exceptions).
 black_list_module(intercept).
-black_list_module(compact_list).
-black_list_module(exceptions_db).
-black_list_module(hiordlib).
 black_list_module(ontrace).
 black_list_module(expansion_module).
 black_list_module(globprops).
