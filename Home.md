@@ -2,6 +2,8 @@
 
 ## We are working out the syntax of LPS [here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax). Come and join in!
 
+## New!! [https://bitbucket.org/lpsmasters/lps_corner/wiki/Smart%20Contract%20Examples](Smart Contracts Examples)
+
 --
 
 Welcome to our wiki! This is the default page we've installed for your convenience. Go ahead and edit it.
