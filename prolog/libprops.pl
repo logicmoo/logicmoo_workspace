@@ -57,9 +57,8 @@
 :- pred atomic_list_concat(+list(constant), +constant).
 :- pred atomic_list_concat(+list(constant), -constant).
 
-:- pred atomic_list_concat(+list(constant), +constant, +constant).
 :- pred atomic_list_concat(+list(constant), +constant, -constant).
-:- pred atomic_list_concat(-list(constant), +constant, +constant).
+:- pred atomic_list_concat(?list(constant), +constant, +constant).
 
 :- pred atom_number(+atm,-num) is semidet.
 :- pred atom_number(?atm,+num) is det.
@@ -71,10 +70,6 @@
 :- pred sub_atom(+atm,?int,?int,?int,?atm).
 
 :- use_module(library(apply)).
-:- comp maplist/2 is multi.
-:- comp maplist/3 is multi.
-:- comp maplist/4 is multi.
-:- comp maplist/5 is multi.
 
 :- pred maplist(1, list).
 :- pred maplist(2, list, list).
