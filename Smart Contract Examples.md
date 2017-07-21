@@ -21,3 +21,6 @@ by [https://www.agrello.org/](Agrello)
 
 
 ## From [Enterprise Smart Contracts](https://azure.microsoft.com/en-in/blog/introducing-enterprise-smart-contracts/) ##
+
+
+## From [Ethereum Contract Security Techniques and Tips](https://github.com/ConsenSys/smart-contract-best-practices#known-attacks) ##
