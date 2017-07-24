@@ -34,8 +34,10 @@
 
 :- module(rtchecks_rt, 
 	  [rtcheck_goal/2,
+           rtcheck_goal/3,
+           rtcheck_goal/4,
 	   start_rtcheck/2,
-	   rtc_call/2]).
+	   rtc_call/3]).
 
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
@@ -106,11 +108,26 @@ ppassertion_type_goal(false(Goal), false, Goal).
 rtcheck_goal(CM:Goal0, Call) :-
     resolve_calln(Goal0, Goal),
     ( ppassertion_type_goal(Goal, Type, Pred)
-    ->rtc_call(Type, CM:Pred)
+    ->rtc_call(Type, call(Call, CM:Pred), CM:Pred)
     ; implementation_module(CM:Goal, M),
       collect_rtasr(Goal, CM, Pred, M, RAsrL),
       check_goal(rt, call(Call, CM:Pred), M, CM, RAsrL)
     ).
+
+:- meta_predicate rtcheck_goal(0, 1, -).
+rtcheck_goal(CM:Goal0, Call, RTCheck) :-
+    resolve_calln(Goal0, Goal),
+    ( ppassertion_type_goal(Goal, Type, Pred)
+    ->RTCheck = rtc_call(Type, call(Call, CM:Pred), CM:Pred)
+    ; implementation_module(CM:Goal, M),
+      collect_rtasr(Goal, CM, Pred, M, RAsrL),
+      RAsrL \= [],
+      RTCheck = rtcheck_goal(call(Call, CM:Pred), M, CM, RAsrL)
+    ).
+
+:- meta_predicate rtcheck_goal(0, +, +, +).
+rtcheck_goal(Goal, M, CM, RAsrL) :-
+    check_goal(rt, Goal, M, CM, RAsrL).
 
 :- meta_predicate start_rtcheck(+, 0).
 start_rtcheck(M:Goal0, CM:WrappedHead) :-
@@ -127,25 +144,25 @@ wrap_asr_rtcheck(Asr, rtcheck(Asr)).
 
 % ----------------------------------------------------------------------------
 
-:- meta_predicate rtc_call(+, 0).
+:- meta_predicate rtc_call(+, 0, ?).
 
-rtc_call(Type, Check) :-
-    ignore(do_rtcheck(Type, Check)).
+rtc_call(Type, Check, Pred) :-
+    ignore(do_rtcheck(Type, Check, Pred)).
 
-rtcheck_ifnot(Check, PredName) :-
-    check_cond(\+ Check, Check, PredName).
+rtcheck_ifnot(Check, Pred, PredName) :-
+    check_cond(\+ Check, Pred, PredName).
 
-do_rtcheck(check, Check) :-
-    rtcheck_ifnot(Check, check/1).
-do_rtcheck(trust, Check) :-
+do_rtcheck(check, Check, Pred) :-
+    rtcheck_ifnot(Check, Pred, check/1).
+do_rtcheck(trust, Check, Pred) :-
     current_prolog_flag(rtchecks_trust, yes),
-    rtcheck_ifnot(Check, trust/1).
-do_rtcheck(true, Check) :-
+    rtcheck_ifnot(Check, Pred, trust/1).
+do_rtcheck(true, Check, Pred) :-
     current_prolog_flag(rtchecks_true, yes),
-    rtcheck_ifnot(Check, true/1).
-do_rtcheck(false, Check) :-
+    rtcheck_ifnot(Check, Pred, true/1).
+do_rtcheck(false, Check, Pred) :-
     current_prolog_flag(rtchecks_false, yes),
-    check_cond(Check, Check, false/1),
+    check_cond(Check, Pred, false/1),
     fail.
 
 sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).

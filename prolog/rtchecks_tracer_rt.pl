@@ -32,21 +32,28 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(rtchecks_tracer_rt, [rtcheck_call/1]).
+:- module(rtchecks_tracer_rt,
+          [rtcheck_start/1,
+           rtcheck_call/1,
+           rtcheck_call/2]).
 
 :- use_module(library(ontrace)).
 :- use_module(library(rtchecks_rt)).
 
 :- meta_predicate
-    rtcheck_call(0).
+       rtcheck_start(0),
+       rtcheck_call(0),
+       rtcheck_call(0, 0).
 
 rtcheck_call(Call) :-
+    rtcheck_call(Call, rtcheck_goal(Call, rtcheck_start)).
+
+rtcheck_call(Call, RTChecks) :-
     ( tracing
-    ->rtcheck_pause(rtcheck_goal(Call, rtcheck_start))
+    ->rtcheck_pause(RTChecks)
     ; call(Call)
     ).
-
-:- meta_predicate rtcheck_start(0).
+    
 rtcheck_start(Call) :-
     call_inoutex(Call, trace, nodebug).
 

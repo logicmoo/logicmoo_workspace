@@ -85,7 +85,7 @@ builtin_spec(M, G, S) :-
 
 :- meta_predicate get_rtcheck_body(0, -).
 get_rtcheck_body(M:Call, RTChecks) :-
-    rtcheck_body(M, Call, RTChecks).
+    rtcheck_body(_, M:Call, RTChecks).
 
 rtcheck_body(_, G, G) :- var(G), !.
 rtcheck_body(_, M:G, M:R) :- !,
@@ -95,7 +95,12 @@ rtcheck_body(M, G, R) :-
     functor(G, F, A),
     functor(R, F, A),
     mapargs(rtcheck_body_meta_arg(M), S, G, R).
-rtcheck_body(M, G, rtcheck_call(M:G)).
+% rtcheck_body(_, G, rtcheck_call(G)). % Fully interpreted
+rtcheck_body(M, G, C) :- % Partially interpreted
+    ( rtcheck_goal(M:G, rtcheck_start, R)
+    ->C = rtcheck_call(G, R)
+    ; C = G
+    ).
 
 rtcheck_body_meta_arg(M, _, 0, G, R) :- !, rtcheck_body(M, G, R).
 rtcheck_body_meta_arg(_, _, _, R, R).
@@ -125,6 +130,7 @@ black_list_caller(M:F/A) :-
 
 black_list_caller(M, _) :- black_list_module(M).
 black_list_caller(metaprops, _).
+black_list_caller(system, call(_)).
 
 black_list_callee(M, _) :- black_list_module(M).
 black_list_callee(M, Call) :-
@@ -141,6 +147,7 @@ black_list_callee_system(callable(_)).
 black_list_callee_system(atom(_)).
 
 black_list_module(assrt_lib).
+black_list_module(assrt_meta).
 black_list_module(send_check).
 black_list_module(ctrtchecks).
 black_list_module(rtchecks_rt).
@@ -149,6 +156,7 @@ black_list_module(rtchecks_utils).
 black_list_module(context_values).
 black_list_module('$expand').
 black_list_module('$messages').
+black_list_module('$bags').
 black_list_module(intercept).
 black_list_module(ontrace).
 black_list_module(expansion_module).
@@ -268,8 +276,10 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
           CurrGoal =@= CM:Goal
         ->Action = continue
         ; get_rtcheck_body(CM:Goal, RTChecks),
-          '$fetch_vm'(Clause, PC, NPC, _VMI),
+          CM:Goal \== RTChecks
+        ->'$fetch_vm'(Clause, PC, NPC, _VMI),
           Action = call('$rat_trap'(RTChecks, CM:Goal, Caller, Clause, NPC))
+        ; Action = continue
         )
       ; Action = continue
       )
