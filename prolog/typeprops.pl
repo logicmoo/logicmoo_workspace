@@ -32,12 +32,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(typeprops, [list/1, list/2, tlist/2, nlist/2, int/1, nnegint/1,
-                      posint/1, flt/1, num/1, atm/1, gnd/1, str/1, gndstr/1,
-                      constant/1, term/1, char/1, pair/1, struct/1, sequence/2,
-                      character_code/1, linear/1, sequence_or_list/2, keypair/1,
-                      is_pred/2, any/1, mod_qual/1, mod_qual/2, keylist/1,
-                      arithexpression/1, predname/1, operator_specifier/1]).
+:- module(typeprops,
+          [list/1, list/2, tlist/2, nlist/2, int/1, nnegint/1, posint/1, flt/1,
+           num/1, atm/1, atmel/1, gnd/1, str/1, gndstr/1, constant/1, struct/1,
+           term/1, char/1, character_code/1, sequence_or_list/2, pair/1, any/1,
+           keypair/1, predname/1, mod_qual/1, linear/1, sequence/2, mod_qual/2,
+           keylist/1, is_pred/2, arithexpression/1, operator_specifier/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
@@ -131,6 +131,15 @@ atm(T) :- nonvar(T), !, atom(T).
 atm(A) :-
     list(character_code, L),
     atom_codes(A, L).
+
+:- type atmel/1.
+
+%!  atmel(A)
+%
+%   An atom or an empty list
+
+atmel([]).
+atmel(A) :- atm(A).
 
 :- type str/1.
 
