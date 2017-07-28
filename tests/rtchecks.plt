@@ -35,7 +35,7 @@ test(rtc_external) :-
                    assrchk(ppt(_,_),
                            error(success,
                                  functor(0, 0, 0),
-                                 [_/instance(libprops:atm(0))-[]],
+                                 [_/instance(libprops:atmel(0))-[]],
                                  _)),
                    assrchk(ppt(_,_),
                            error(success,
