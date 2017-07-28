@@ -40,10 +40,10 @@
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
 
-:- pred functor(+, -atm, -nnegint) is det.
-:- pred functor(-, +atm, +nnegint) is det.
-:- pred functor(+, +atm, ?nnegint) is semidet.
-:- pred functor(+, -atm, +nnegint) is semidet.
+:- pred functor(+, -atmel, -nnegint) is det.
+:- pred functor(-, +atmel, +nnegint) is det.
+:- pred functor(+, +atmel, ?nnegint) is semidet.
+:- pred functor(+, -atmel, +nnegint) is semidet.
 
 :- pred (+arithexpression> +arithexpression) is semidet.
 :- pred (+arithexpression< +arithexpression) is semidet.
@@ -55,9 +55,9 @@
 :- pred ((is)/2) : (num*arithexpression) is semidet.
 
 :- pred atomic_list_concat(+list(constant), +constant).
-:- pred atomic_list_concat(+list(constant), -constant).
+:- pred atomic_list_concat(+list(constant), -atm).
 
-:- pred atomic_list_concat(+list(constant), +constant, -constant).
+:- pred atomic_list_concat(+list(constant), +constant, -atm).
 :- pred atomic_list_concat(?list(constant), +constant, +constant).
 
 :- pred atom_number(+atm,-num) is semidet.
