@@ -56,10 +56,16 @@
 
 prolog:called_by(H, IM, CM, [F]) :-
     current_prolog_flag(check_database_preds, true),
+    \+ is_meta(IM:H),
     database_use_fact(IM:H, F),
     static_strip_module(F, CM, C, M),
     callable(C),
     nonvar(M).
+
+is_meta(G) :-
+    predicate_property(G, meta_predicate(Meta)),
+    arg(_, Meta, S),
+    integer(S).
 
 :- multifile
     database_def_fact/3,
