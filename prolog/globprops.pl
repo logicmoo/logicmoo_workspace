@@ -130,19 +130,19 @@ unknown(Goal) :- Goal.
 det(Goal) :-
     Solved = solved(no),
     ( true
-    ; arg(1, Solved, no) ->
-      send_comp_rtcheck(Goal, det, fails),
+    ; arg(1, Solved, no)
+    ->send_comp_rtcheck(Goal, det, fails),
       fail
     ),
     prolog_current_choice(C0),
     Goal,
     prolog_current_choice(C1),
     ( arg(1, Solved, no)
-    -> true
+    ->true
     ; send_comp_rtcheck(Goal, det, non_det)
-      %% more than one solution!
     ),
-    ( C0 == C1 -> !
+    ( C0 == C1
+    ->!
     ; nb_setarg(1, Solved, yes)
     ).
 
@@ -233,7 +233,6 @@ semidet(Goal, Prop) :-
     ( arg(1, Solved, no)
     ->true
     ; send_comp_rtcheck(Goal, Prop, non_det)
-      % more than one solution!
     ),
     nb_setarg(1, Solved, yes).
 
@@ -272,7 +271,8 @@ no_choicepoints(Goal) :-
     prolog_current_choice(C0),
     Goal,
     prolog_current_choice(C1),
-    ( C1 == C0 -> true
+    ( C1 == C0
+    ->true
     ; send_comp_rtcheck(Goal, no_choicepoints, have_choicepoints)
     ).
 
@@ -301,7 +301,9 @@ num_solutions_eq(N, Goal) :-
     Sols = solutions(0),
     ( true
     ; arg(1, Sols, A),
-      ( (A == done ; A == N)
+      ( ( A == done
+        ; A == N
+        )
       ->fail
       ; send_comp_rtcheck(Goal, num_solutions_eq(N), Sols),
         fail
@@ -313,20 +315,17 @@ num_solutions_eq(N, Goal) :-
     arg(1, Sols, A),
     ( A == done
     ->true
-    ; N1 is A + 1,
+    ; N1 is A+1,
       ( C1 == C0
       ->!,
         ( N1 == N
         ->true
-        ; send_comp_rtcheck(Goal, num_solutions_eq(N),
-                            num_solutions_eq(N1))
+        ; send_comp_rtcheck(Goal, num_solutions_eq(N), num_solutions_eq(N1))
         )
-      ; ( N1 > N
-        ->send_comp_rtcheck(Goal, num_solutions_eq(N),
-                            num_solutions(>(N))),
-          nb_setarg(1, Sols, done)
-        ; nb_setarg(1, Sols, N1)
-        )
+      ; N1 > N
+      ->send_comp_rtcheck(Goal, num_solutions_eq(N), num_solutions(>(N))),
+        nb_setarg(1, Sols, done)
+      ; nb_setarg(1, Sols, N1)
       )
     ).
 
@@ -343,8 +342,7 @@ num_solutions(Goal, Check) :-
     ; arg(1, Sols, N0),
       ( call(Check, N0)
       ->fail
-      ; send_comp_rtcheck(
-            Goal, num_solutions(Check), num_solutions(N0)),
+      ; send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N0)),
         fail
       )
     ),
@@ -352,7 +350,7 @@ num_solutions(Goal, Check) :-
     call(Goal),
     prolog_current_choice(C1),
     arg(1, Sols, N0),
-    N1 is N0 + 1,
+    N1 is N0+1,
     ( C1 == C0
     ->!,
       ( call(Check, N1)
@@ -373,7 +371,10 @@ solutions(Goal, Sols) :-
     Remaining = solutions(Sols),
     ( true
     ; arg(1, Remaining, Sols0),
-      ( (Sols == done ; Sols0 == []) -> fail
+      ( ( Sols == done
+        ; Sols0 == []
+        )
+      ->fail
       ; append(Sols2, Sols0, Sols),
         send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
         fail
@@ -394,13 +395,12 @@ solutions(Goal, Sols) :-
           send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2))
         ; true
         )
-      ; ( Elem \= Sol
-        ->append(Curr, Sols0,   Sols),
-          append(Curr, [Sol|_], Sols2),
-          send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
-          nb_setarg(1, Remaining, done)
-        ; nb_setarg(1, Remaining, Sols1)
-        )
+      ; Elem \= Sol
+      ->append(Curr, Sols0, Sols),
+        append(Curr, [Sol|_], Sols2),
+        send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
+        nb_setarg(1, Remaining, done)
+      ; nb_setarg(1, Remaining, Sols1)
       )
     ).
 
@@ -441,30 +441,28 @@ dupclauses(M:Goal) :-
 
 :- dynamic signal_db/3.
 
-asserta_signal_check(Choice, _, E, _) :-
-        asserta(signal_db(Choice, no, E)).
-asserta_signal_check(Choice, Goal, _, CheckThrown) :-
-        end_signal_check(Choice, Goal, CheckThrown), fail.
+asserta_signal_check(Choice, _, E, _) :- asserta(signal_db(Choice, no, E)).
+ asserta_signal_check(Choice, Goal, _, CheckThrown) :-
+    end_signal_check(Choice, Goal, CheckThrown),
+    fail.
 
-retract_signal_check(Choice, Goal, _, CheckThrown) :-
-        end_signal_check(Choice, Goal, CheckThrown).
-retract_signal_check(Choice, _, E, _) :-
-        asserta(signal_db(Choice, no, E)),
-        fail.
+retract_signal_check(Choice, Goal, _, CheckThrown) :- end_signal_check(Choice, Goal, CheckThrown).
+retract_signal_check(Choice, _, E, _) :- asserta(signal_db(Choice, no, E)), fail.
 
-signal_prop(yes, E, signal(E, yes), signal(E,  no)).
-signal_prop(no,  E, signal(E,  no), signal(E, yes)).
+signal_prop(yes, E, signal(E, yes), signal(E, no)).
+signal_prop(no, E, signal(E, no), signal(E, yes)).
 
 end_signal_check(Choice, Goal, CheckThrown) :-
-        retract(signal_db(Choice, Thrown, E)),
-        signal_prop(CheckThrown, E, EP, EV),
-        ( Thrown = CheckThrown -> true
-        ; send_comp_rtcheck(Goal, EP, EV)
-        ).
+    retract(signal_db(Choice, Thrown, E)),
+    signal_prop(CheckThrown, E, EP, EV),
+    ( Thrown = CheckThrown
+    ->true
+    ; send_comp_rtcheck(Goal, EP, EV)
+    ).
 
 emit_signal(Choice, E) :-
-        retract(signal_db(Choice, _, _)),
-        assertz(signal_db(Choice, yes, E)).
+    retract(signal_db(Choice, _, _)),
+    assertz(signal_db(Choice, yes, E)).
 
 %!  signal(:Goal)
 %
@@ -481,16 +479,19 @@ signal(Goal) :- signal(_, Goal).
 :- global signal/2.
 
 signal(Signal, Goal) :-
-        prolog_current_choice(Choice),
-        asserta_signal_check(Choice, Goal, Signal, yes),
-        prolog_current_choice(C0),
-        intercept(Goal, Signal,
-                  ( emit_signal(Choice, Signal),
-                    send_signal(Signal)
-                  )),
-        prolog_current_choice(C1),
-        retract_signal_check(Choice, Goal, Signal, yes),
-        (C0 == C1 -> ! ; true).
+    prolog_current_choice(Choice),
+    asserta_signal_check(Choice, Goal, Signal, yes),
+    prolog_current_choice(C0),
+    intercept(Goal, Signal,
+              ( emit_signal(Choice, Signal),
+                send_signal(Signal)
+              )),
+    prolog_current_choice(C1),
+    retract_signal_check(Choice, Goal, Signal, yes),
+    ( C0 == C1
+    ->!
+    ; true
+    ).
 
 %!  no_signal(:Goal)
 %
@@ -507,16 +508,19 @@ no_signal(Goal) :- no_signal(_, Goal).
 :- global no_signal/2.
 
 no_signal(Signal, Goal) :-
-        prolog_current_choice(Choice),
-        asserta_signal_check(Choice, Goal, Signal, no),
-        prolog_current_choice(C0),
-        intercept(Goal, Signal,
-                  ( emit_signal(Choice, Signal),
-                    throw(Signal)
-                  )),
-        prolog_current_choice(C1),
-        retract_signal_check(Choice, Goal, Signal, no),
-        (C0 == C1 -> ! ; true).
+    prolog_current_choice(Choice),
+    asserta_signal_check(Choice, Goal, Signal, no),
+    prolog_current_choice(C0),
+    intercept(Goal, Signal,
+              ( emit_signal(Choice, Signal),
+                throw(Signal)
+              )),
+    prolog_current_choice(C1),
+    retract_signal_check(Choice, Goal, Signal, no),
+    ( C0 == C1
+    ->!
+    ; true
+    ).
 
 %!  exception(:Goal)
 %
@@ -524,32 +528,25 @@ no_signal(Signal, Goal) :-
 
 :- global exception/1.
 
-exception(Goal) :-
-        Goal,
-        send_comp_rtcheck(Goal, exception, no_exception).
+exception(Goal) :- Goal, send_comp_rtcheck(Goal, exception, no_exception).
 
 %!  throw(Exception, :Goal)
 %
-%   Goal throws an exception that does not unifies with Exception
+%   Goal throws an exception that unifies with Exception
 
 :- global throw/2.
-throw(E, Goal) :-
-        test_throw_2(Goal, throw(E), F, F\=E).
+throw(E, Goal) :- test_throw_2(Goal, throw(E), F, F \= E).
 
 :- meta_predicate test_throw_2(0, ?, ?, 0).
 test_throw_2(Goal, Prop, F, Test) :-
-        catch(Goal, F,
-            (
-                (
-                    F \= assrchk(_, _),
-                    Test
-                ->
-                    send_comp_rtcheck(Goal, Prop, exception(F))
-                ;
-                    true
-                ),
-                throw(F)
-            )).
+    catch(Goal, F,
+          ( ( F \= assrchk(_, _),
+              Test
+            ->send_comp_rtcheck(Goal, Prop, exception(F))
+            ; true
+            ),
+            throw(F)
+          )).
 
 %!  exception(Exception, :Goal)
 %
@@ -558,8 +555,8 @@ test_throw_2(Goal, Prop, F, Test) :-
 :- global exception(E, Goal) + equiv(exception(throw(E, Goal))).
 
 exception(E, Goal) :-
-        test_throw_2(Goal, exception(E), F, F\=E),
-        send_comp_rtcheck(Goal, exception(E), no_exception).
+    test_throw_2(Goal, exception(E), F, F \= E),
+    send_comp_rtcheck(Goal, exception(E), no_exception).
 
 %!  no_exception(:Goal)
 %
@@ -575,7 +572,7 @@ no_exception(Goal) :- test_throw_2(Goal, no_exception, _, true).
 
 :- global no_exception/2.
 
-no_exception(E, Goal) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
+no_exception(E, Goal) :- test_throw_2(Goal, no_exception(E), F, \+F \= E).
 
 %!  throws(Exceptions:List, :Goal)
 %
@@ -584,7 +581,7 @@ no_exception(E, Goal) :- test_throw_2(Goal, no_exception(E), F, \+ F\=E).
 
 :- global throws/2.
 
-throws(EL, Goal) :- test_throw_2(Goal, throws(EL), F, \+ memberchk(F, EL)).
+throws(EL, Goal) :- test_throw_2(Goal, throws(EL), F, \+memberchk(F, EL)).
 
 %!  signals(Signals:List, :Goal)
 %
@@ -665,16 +662,14 @@ fi(V, Goal) :-
 %   On call of Goal, Goal and Term don't share variables
 
 :- global nsh/2.
-nsh(Arg, Goal) :-
-    check_nsh(Arg, Goal),
-    call(Goal).
+nsh(Arg, Goal) :- check_nsh(Arg, Goal), call(Goal).
 
-check_nsh(Arg, _:Goal) :-
+ check_nsh(Arg, _:Goal) :-
     ( term_variables(Arg, Vars),
       Vars \= []
     ->Goal =.. [_|Args],
       ( select(Arg0, Args, Left),
-        Arg0 == Arg             % TODO: this can be static
+        Arg0 == Arg
       ->term_variables(Left, GVars),
         intersection(Vars, GVars, Shared),
         ( Shared \= []
@@ -715,21 +710,19 @@ use_output_mf(File, S, Goal) :-
 asserta_user_output_check(File, _, _) :-
     open_memory_file(File, write, Stream),
     tell(Stream).
-asserta_user_output_check(File, S, Goal) :-
+ asserta_user_output_check(File, S, Goal) :-
     told,
     output_check(File, S, Goal),
     fail.
 
 retract_user_output_check(_, _, _) :-
     told.
-retract_user_output_check(File, _, _) :-
+ retract_user_output_check(File, _, _) :-
     open_memory_file(File, append, Stream),
     append(Stream),
     fail.
 
-end_output_check(File, S, Goal) :-
-    told,
-    output_check(File, S, Goal).
+end_output_check(File, S, Goal) :- told, output_check(File, S, Goal).
 
 output_check(File, S, Goal) :-
     memory_file_to_string(File, S1),
