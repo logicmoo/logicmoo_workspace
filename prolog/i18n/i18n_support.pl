@@ -141,10 +141,8 @@ language(Lang) :-
       variable_name(AppVariable),
       getenv(AppVariable, X),   % Read from application specific
                                 % language variable
-      atom_codes(X, C),
-      SLang = [_, _],
-      append(SLang, _, C),
-      atom_codes(Lang, SLang)
+      atom_codes(X, [C1, C2|_]),
+      atom_codes(Lang, [C1, C2])
     ->true
     ; Lang = en                 % take English by default
     ).
@@ -390,7 +388,8 @@ valid_entry(Ref, M, Entry) :-
     ).
 
 get_lang_file(PotFile, PoFile) :-
-    language(Lang), Lang \= en,
+    language(Lang),
+    Lang \= en,
     get_lang_file(PotFile, Lang, PoFile).
 
 get_lang_file(PotFile, Lang, PoFile) :-
