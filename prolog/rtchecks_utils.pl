@@ -60,9 +60,6 @@ filtered_backtrace:no_backtrace_clause_hook(_, plprops).
 filtered_backtrace:no_backtrace_clause_hook(_, context_values).
 filtered_backtrace:no_backtrace_clause_hook('$rat_trap'(_, _, _, _, _), _).
 
-tracertc :-
-    filtered_backtrace(100).
-
 :- type location_t/1.
 location_t(Loc) :-
     ( clause('$messages':swi_location(Term, _, _), _)
@@ -160,7 +157,10 @@ call_rtc(Goal) :-
         Error = assrchk(_, _),
         ( current_prolog_flag(rtchecks_abort_on_error, yes)
 	->intercept(Goal, Error, throw(Error)) % rethrow signal as exception
-        ; intercept(Goal, Error, (handle_rtcheck(Error), tracertc))
+        ; intercept(Goal, Error,
+                    notrace(( handle_rtcheck(Error),
+                              filtered_backtrace(100)
+                            )))
         ).
 
 :- dynamic rtcheck_db/1.
