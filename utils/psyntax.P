@@ -529,7 +529,7 @@ syntax2p(Term, _, _Translator, classify,Term).  % pass through for Wei terms or 
 % syntax2p_observations(ObsCommaList,CommaT2,ObsList,ListT2,-ColourSpec) CommaT2 must be unique
 syntax2p_observations(CL,CommaT2,[E],CommonT2,Spec) :- (nonvar(CL)-> \+ functor(CL,',',2) ; true), !, 
 	syntax2p_one_obsservation(CL,CommaT2,E,CommonT2,Spec).
-syntax2p_observations((Ob,CL),CommaT2,[E|L],CommonT2,delimiter-[Spec1,Specs]) :- (nonvar(CL)-> \+ functor(CL,',',2) ; true), !, 
+syntax2p_observations((Ob,CL),CommaT2,[E|L],CommonT2,delimiter-[Spec1,Specs]) :-
 	syntax2p_one_obsservation(Ob,CommaT2,E,CommonT2,Spec1),
 	syntax2p_observations(CL,CommaT2,L,CommonT2,Specs).
 
