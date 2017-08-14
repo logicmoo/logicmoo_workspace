@@ -14,6 +14,7 @@ Pls see instructions from your cloud provider.
 Please refer to [SWI Prolog's site](http://www.swi-prolog.org/build/unix.html)
 
 ```
+cd ~
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install unzip
@@ -54,6 +55,7 @@ sudo make install
 Please refer to the [SWISH README](https://github.com/SWI-Prolog/swish/blob/master/README.md) file.
 
 ```
+cd ~
 sudo apt-get install nodejs
 sudo apt install nodejs-legacy
 sudo apt install npm
@@ -67,6 +69,7 @@ git submodule update --init
 bower install
 #as of now, this seems to be missing from the previous step and must be performed too:
 #bower install jquery-ui
+
 make src
 ```
 Ideally minify swish referring to its documentation, or at least comment line swish/web/js/swish.js:47:
