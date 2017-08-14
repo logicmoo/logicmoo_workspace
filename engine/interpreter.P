@@ -54,7 +54,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- if(current_prolog_flag(dialect, xsb)).
 
 :- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
-:- lps_engine_directory(D), string:concat_atom([D,'../Wei-engine/db.P'],DB), ensure_loaded(DB).
+:- lps_engine_directory(D), string:concat_atom([D,'../engine/db.P'],DB), ensure_loaded(DB).
 
 :- use_module(db,[ d/2,
 	action/1, current_time/1, d_pre/1, event/1,
@@ -179,7 +179,7 @@ u_swiclause(H,B,Ref) :- pengine_self(M), clause(M:H,B,Ref).
 
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
 % Now support for vanilla SWI Prolog
-:- use_module('../Wei-engine/db.P',[d/2,
+:- use_module('../engine/db.P',[d/2,
 	action/1, current_time/1, d_pre/1 ,event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1,

@@ -78,7 +78,7 @@ has_d_clauses :- pengine_self(M), catch(M:clause(d(_,_),_),_,fail), !.
 :- endif.
 % now non-swish SWI...
 :- if((current_prolog_flag(dialect, swi), \+ current_module(swish) )).
-:- use_module('../Wei-engine/db.P',[
+:- use_module('../engine/db.P',[
 	lps_test_result_item/3, action/1, d/2
 	]).
 has_d_clauses :- clause(d(_,_),_), !.
