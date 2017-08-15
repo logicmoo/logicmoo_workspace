@@ -94,7 +94,7 @@ cd ~/lps_corner/swish/web/lps
 # Google Analytics (optional):
 # with sftp, put googleAnalyticsKey file (containing only the key) into lps_corner/swish
 
-# Setup operation as service
+# Setup operation as service (Using upstart)
 sudo apt install upstart
 sudo reboot
 sudo apt-get install upstart-sysv
@@ -108,6 +108,23 @@ sudo start lps
 # sudo restart lps
 ```
 For HTTP (SWI/SWISH) logging: give write permission to www-data in ~/swish 
+
+### Variant for systemd (instead of Upstart) ###
+Replace the final sequence above with the following:
+
+```
+# Setup operation as service (Using systemd, e.g. Ubuntu 17.0)
+cd /lib/systemd/system
+sudo ln -s ~/lps_corner/swish/systemd/lps.service .
+sudo systemctl enable lps.service
+sudo systemctl daemon-reload
+sudo systemctl restart lps.service
+
+# then use
+# sudo systemctl stop lps.service
+# systemctl status lps.service
+
+```
 
 ## Site alarms with Amazon Cloud Watch ##
 At https://console.aws.amazon.com/cloudwatch:

@@ -1,0 +1,24 @@
+# demo - LPS/SWISH demo server
+# adapted from https://github.com/SWI-Prolog/plweb/blob/master/upstart/swi-prolog.conf
+# ... considering https://wiki.ubuntu.com/SystemdForUpstartUsers#Example_Systemd_service , etc.
+# You MUST check and likely edit the WorkingDirectory below.
+
+[Unit]
+Description=LPS experimental website
+Documentation=man:foo(1)
+UMask=022
+Requires=multi-user.target
+
+[Service]
+Type=simple
+Environment=LANG=en_US.utf8
+WorkingDirectory=/home/ubuntu/lps_corner/swish
+ExecStart=/usr/local/bin/swipl user_module_file.pl ../../swish/daemon.pl --no-fork --port=80 --user=www-data --workers=16
+StandardOutput=tty
+StandardError=tty
+Restart=on-failure
+RestartSec=60
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
