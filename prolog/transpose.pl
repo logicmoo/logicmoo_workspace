@@ -32,21 +32,31 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-/* This predicate was copied from library/clp/clpfd.pl, to avoid dependencies
-   from clpfd --EMM */
-
 :- module(transpose, [transpose/2]).
 
 :- use_module(library(apply)).
 
-transpose(Ls, Ts) :-
-        must_be(list(list), Ls),
-        lists_transpose(Ls, Ts).
+%% transpose(+Matrix, ?Transpose)
+%
+%  Transpose a list of lists of the same length.
+%
+%  Its implementation is more general than the one in library/clp/clpfd.pl,
+%  since it allows to work with incomplete double lists, provided that the
+%  transpose have sense. Example:
+%
+%  ==
+%  ?- transpose([[1,2,3,4],[5,6,7,8],[9,10],[11,12],[13]], Ts).
+%  Ts = [[1, 5, 9, 11, 13], [2, 6, 10, 12], [3, 7], [4, 8]].
+%  ==
 
-lists_transpose([], []).
-lists_transpose([L|Ls], Ts) :- foldl(transpose_, L, Ts, [L|Ls], _).
 
-transpose_(_, Fs, Lists0, Lists) :-
-        maplist(list_first_rest, Lists0, Fs, Lists).
+transpose([], L) :-
+    once(maplist(=([]), L)).
+transpose([C|Cs], L) :-
+    deal_column(C, L, R),
+    transpose(Cs, R).
 
-list_first_rest([L|Ls], L, Ls).
+deal_column([], L, L) :-
+    once(maplist(=([]), L)).
+deal_column([E|Es], [[E|R1]|L], [R1|R]) :-
+    deal_column(Es, L, R).
