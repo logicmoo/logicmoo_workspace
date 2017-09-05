@@ -118,6 +118,7 @@ predicate_properties(P, List) :-
                                       imported_from(_),
                                       file(_),
                                       indexed(_),
+                                      last_modified_generation(_),
                                       line_count(_)])
                 ), List).
 
