@@ -32,20 +32,28 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(countsols, [countsols/2]).
+:- module(countsols, [countsols/2,
+                      ini_counter/2,
+                      inc_counter/2]).
 
 :- meta_predicate countsols(?, 0).
 
+ini_counter(N, count(N)).
+
+inc_counter(State, N) :-
+    arg(1, State, N0),
+    succ(N0, N1),
+    nb_setarg(1, State, N1),
+    N1 = N.
+
 countsols(N, Goal) :-
-    State = count(0),
     ( var(N)
     ->Cut = 0
     ; Cut = 1
     ),
+    ini_counter(0, Counter),
     call(Goal),
-    arg(1, State, N0),
-    succ(N0, N),
-    nb_setarg(1, State, N),
+    inc_counter(Counter, N),
     ( Cut = 1
     ->!
     ; true
