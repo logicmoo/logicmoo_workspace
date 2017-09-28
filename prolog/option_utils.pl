@@ -90,11 +90,12 @@ source_extension(Type, Ext) :-
 
 % Based on predicate with same name in prolog_source.pl:
 
-src_files([], _, _) -->
-    [].
-src_files([H|T], Dir, Options) -->
-    { file_name_extension(_, Ext, H),
-      ( option(extensions(ExtL), Options)
+src_files([], _, _) --> [].
+src_files([H|T], Dir, Options1) -->
+    { \+ special(H),
+      file_name_extension(_, Ext, H),
+      select_option(extensions(ExtL), Options1, Options, []),
+      ( ExtL \= []
       ->memberchk(Ext, ExtL)
       ; option(file_type(Type), Options, prolog)
       ->once(source_extension(Type, Ext))
@@ -107,7 +108,7 @@ src_files([H|T], Dir, Options) -->
     },
     !,
     [File],
-    src_files(T, Dir, Options).
+    src_files(T, Dir, Options1).
 src_files([H|T], Dir, Options) -->
     { \+ special(H),
       option(recursive(true), Options),
