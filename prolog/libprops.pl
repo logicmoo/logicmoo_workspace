@@ -63,9 +63,9 @@
 :- pred atom_number(+atm,-num) is semidet.
 :- pred atom_number(?atm,+num) is det.
 
-:- pred atom_codes(+atm, -list) is det.
+:- pred atom_codes(+atomic, -list) is det.
 :- pred atom_codes(-atm, +list) is det.
-:- pred atom_codes(+atm, ?list) is semidet.
+:- pred atom_codes(+atomic, ?list) is semidet.
 
 :- pred sub_atom(+atomic,?int,?int,?int,?atm).
 
