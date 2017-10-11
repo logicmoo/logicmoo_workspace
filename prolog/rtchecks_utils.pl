@@ -117,8 +117,19 @@ prolog:error_message(unintercepted_signal(Signal)) -->
         ; ['unintercepted signal: ~p'-[Signal]]
         ).
 
+% We should use our own apply.pl predicates, so that apply.pl can be
+% run-time checked:
+
+'$foldl'(Goal, List, V0, V) :-
+    '$foldl_'(List, Goal, V0, V).
+
+'$foldl_'([], _, V, V).
+'$foldl_'([H|T], Goal, V0, V) :-
+    call(Goal, H, V0, V1),
+    '$foldl_'(T, Goal, V1, V).
+
 prolog:message(acheck(checks, RTChecks)) -->
-    foldl(prolog:message, RTChecks).
+    '$foldl'(prolog:message, RTChecks).
 
 assr_level_message(asr) --> [].
 assr_level_message(ppt(Caller, Loc)) -->
@@ -127,13 +138,14 @@ assr_level_message(ppt(Caller, Loc)) -->
 
 prolog:message(assrchk(Level, Error)) -->
     assr_level_message(Level),
-    assr_error_message(Error).
+    assr_error_message(Error),
+    !.
 
 assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
     '$messages':swi_location(ALoc),
     ['Assertion failure for ~q.'-[Pred], nl],
     ['    In *~w*, unsatisfied properties: '-[Type], nl],
-    foldl(prop_values, PropValues).
+    '$foldl'(prop_values, PropValues).
 
 prop_values(From/Prop-Values) -->
     ['        '],
