@@ -85,7 +85,24 @@ compat(_:H) :-
     % compatibility check
     compound(H),
     compatc(H), !.
-compat(Goal) :- \+ \+ Goal.
+compat(Goal) :-
+    term_variables(Goal, VS),
+    \+ \+ ( maplist(freeze_cut, VS),
+            Goal
+          ).
+
+freeze_cut(V) :- freeze(V, cut_one_frame).
+
+cut_one_frame :-
+    prolog_current_frame(Frame),
+    prolog_frame_attribute(Frame, parent, FParent),
+    prolog_current_choice(Choice),
+    prolog_choice_attribute(Choice, parent, Parent),
+    prolog_choice_attribute(Parent, frame, CParent),
+    ( FParent=CParent
+    ->prolog_cut_to(Parent)
+    ; true
+    ).
 
 compatc(H) :-
     functor(H, _, N),
@@ -97,19 +114,23 @@ compatc(term(_)).
 compatc(gnd(_)).
 compatc(ground(_)).
 
+freeze_fail(CP, V) :-
+    freeze(V, ( prolog_cut_to(CP),
+                fail
+              )).
+
 :- global instance(Prop)
 # "Uses Prop as an instantiation property. Verifies that execution of
    ~w does not produce bindings for the argument variables."-[Prop].
 
+:- meta_predicate instance(0).
+
 instance(Goal) :-
     term_variables(Goal, VS),
-    Goal,
-    term_variables(Goal, VO),
-    ( VS == VO
-    ->true
-    ; !,
-      fail
-    ).
+    prolog_current_choice(CP),
+    \+ \+ ( maplist(freeze_fail(CP), VS),
+            Goal
+          ).
 
 :- meta_predicate check(0).
 check(_).
