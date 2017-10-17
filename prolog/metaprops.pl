@@ -86,23 +86,17 @@ compat(_:H) :-
     compound(H),
     compatc(H), !.
 compat(Goal) :-
+    copy_term_nat(Goal, Term),
+    \+ \+ do_compat(Term).
+
+do_compat(Goal) :-
     term_variables(Goal, VS),
-    \+ \+ ( maplist(freeze_cut, VS),
-            Goal
-          ).
+    prolog_current_choice(CP),
+    maplist(freeze_cut(CP), VS),
+    Goal.
 
-freeze_cut(V) :- freeze(V, cut_one_frame).
-
-cut_one_frame :-
-    prolog_current_frame(Frame),
-    prolog_frame_attribute(Frame, parent, FParent),
-    prolog_current_choice(Choice),
-    prolog_choice_attribute(Choice, parent, Parent),
-    prolog_choice_attribute(Parent, frame, CParent),
-    ( FParent=CParent
-    ->prolog_cut_to(Parent)
-    ; true
-    ).
+freeze_cut(CP, V) :-
+    freeze(V, catch(prolog_cut_to(CP), _, true)).
 
 compatc(H) :-
     functor(H, _, N),
