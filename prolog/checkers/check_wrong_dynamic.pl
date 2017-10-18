@@ -80,6 +80,7 @@ hide_var_dynamic_hook(current_clause_module_body(_, _), extra_codewalk).
 hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), extra_codewalk).
 hide_var_dynamic_hook(implemented_in(_, _, _), implemented_in).
 hide_var_dynamic_hook(match_clause(_, _, _, _, _, _, _), ontrace).
+hide_var_dynamic_hook(compat_body(_, _), metaprops).
 hide_var_dynamic_hook(abstract_execute_goal(_, _, _, _, _, _, _, _, _), check_abstract_domains).
 hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
 hide_var_dynamic_hook(ignore_import(_, _), check_imports).
