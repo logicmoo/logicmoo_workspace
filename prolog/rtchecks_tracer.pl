@@ -145,6 +145,7 @@ black_list_callee_system(setup_call_cleanup(_, _, _)).
 black_list_callee_system(setup_call_catcher_cleanup(_, _, _, _)).
 black_list_callee_system(callable(_)).
 black_list_callee_system(atom(_)).
+black_list_callee_system('$end_aux'(_, _)).
 
 black_list_module(assrt_lib).
 black_list_module(assrt_meta).
@@ -196,7 +197,6 @@ rtcheck_port_(_, Frame, Action) :-
     ->Action = skip
     ; Action = continue
     ).
-%    writeln(user_error, rtcheck_port_(Action->Goal)).
 
 call_instr(i_usercall0 ).
 call_instr(i_usercalln(_)).
@@ -208,27 +208,34 @@ setup_clause_bpt(Clause, Action) :-
     ( rtc_scanned(Clause)
     ->Action = skip
     ; assertz(rtc_scanned(Clause)),
+      clause_property(Clause, predicate(CPI)),
+      \+ black_list_caller(CPI),
       clause_property(Clause, module(CM)),
       \+ black_list_module(CM),
       '$break_pc'(Clause, PC, _NextPC1),
       '$fetch_vm'(Clause, PC, _NextPC2, TInstr),
-      ( ( call_instr(TInstr)
-        ->nth_clause(M:Goal, _, Clause),
-          \+ prop_asr(Goal, M, _, prop, _, _, _)
+      ( nth_clause(M:Caller, _, Clause),
+        \+ prop_asr(Caller, M, _, prop, _, _, _),
+        ( call_instr(TInstr)
+        ->true
         ; call_instr_param(TInstr, PI),
           ( PI=LM:F/A
           ->functor(Goal, F, A),
-            implementation_module(LM:Goal, M)
+            implementation_module(LM:Goal, IM)
           ; PI=F/A
           ->functor(Goal, F, A),
-            implementation_module(CM:Goal, M)
+            implementation_module(CM:Goal, IM)
           ),
-          \+ black_list_callee(M, Goal),
+          \+ black_list_callee(IM, Goal),
+          ( current_prolog_flag(rtchecks_level, exports)
+          ->M \= IM
+          ; true
+          ),
           once(( rtchecks_tracer:pp_assr(Goal, M)
                ; current_assertion(rt, Goal, M, _)
                ; white_list_meta(M, Goal),
                  predicate_property(M:Goal, meta_predicate(S)),
-                 once(arg(_, S, 0 ))
+                 once(arg(_, S, 0))
                ))
         )
       ->'$break_at'(Clause, PC, true),
@@ -247,13 +254,17 @@ system:( '$rat_trap'(RTChecks, Goal, Caller, Clause, PC) :-
                                    assrchk(asr, Error),
                                    '$rat_trap_handle'(Caller, Clause, PC, Error)))).
 
-:- '$hide'('$rat_trap_handle'/4).
-'$rat_trap_handle'(Caller, Clause, PC, Error) :-
+cleanup_break(Clause, PC) :-
     ( retract(rtc_break(Clause, PC))
     ->ignore('$break_at'(Clause, PC, false))
     ; true
-    ),
+    ).
+
+:- '$hide'('$rat_trap_handle'/4).
+'$rat_trap_handle'(Caller, Clause, PC, Error) :-
+    cleanup_break(Clause, PC),
     send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error)).
+
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
 %     tracing,
@@ -279,9 +290,12 @@ prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
           CM:Goal \== RTChecks
         ->'$fetch_vm'(Clause, PC, NPC, _VMI),
           Action = call('$rat_trap'(RTChecks, CM:Goal, Caller, Clause, NPC))
-        ; Action = continue
+        ; Action = continue,
+          cleanup_break(Clause, PC)
         )
-      ; Action = continue
+      ; Action = continue,
+        cleanup_break(Clause, PC)
       )
-    ; Action = continue
+    ; Action = continue,
+      cleanup_break(Clause, PC)
     ).
