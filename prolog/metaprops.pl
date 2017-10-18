@@ -80,14 +80,48 @@ unfold_calls:unfold_call_hook(type(T, A), metaprops, M, M:call(T, A)).
 
 :- meta_predicate compat(0).
 
-compat(_:H) :-
-    % This first clause allows usage of atom/atomic and other test predicates as
-    % compatibility check
-    compound(H),
-    compatc(H), !.
-compat(Goal) :-
-    copy_term_nat(Goal, Term),
-    \+ \+ do_compat(Term).
+compat(M:Goal) :-
+    copy_term_nat(Goal, Term), % get rid of corroutining while checking compatibility
+    compat(Term, M).
+
+% this small interpreter will reduce the possibility of loops if the goal being
+% checked is not linear, i.e., it contains linked variables:
+compat(Var, _) :- var(Var), !.
+compat(M:Goal, _) :- !,
+    compat(Goal, M).
+compat((A, B), M) :-
+    !,
+    compat(A, M),
+    compat(B, M).
+compat((A; B), M) :-
+    ( compat(A, M)
+    ; compat(B, M)
+    ), !.
+compat((A->B; C), M) :-
+    ( call(M:A)
+    ->compat(B, M)
+    ; compat(C, M)
+    ), !.
+compat((A->B), M) :-
+    !,
+    ( call(M:A)
+    ->compat(B, M)
+    ).
+compat(!, _) :-
+    !,
+    cut_from.
+compat(A, M) :-
+    % This clause allows usage of simple test predicates as compatibility check
+    compound(A),
+    compatc(A, M), !.
+compat(A, M) :-
+    ( is_type(A, M)
+    ->( cut_to(compat_body(A, M))
+      ->true
+      ; \+ \+ do_compat(M:A)
+      )
+    ; call(M:A)
+    ).
 
 do_compat(Goal) :-
     term_variables(Goal, VS),
@@ -95,13 +129,47 @@ do_compat(Goal) :-
     maplist(freeze_cut(CP), VS),
     Goal.
 
+is_type(Head, M) :-
+    prop_asr(Head, M, Stat, prop, _, _, Asr),
+    memberchk(Stat, [check, true]),
+    prop_asr(glob, type(_), _, Asr).
+
+compat_body(A, M) :-
+    catch(clause(M:A, Body, Ref), _, fail),
+    clause_property(Ref, module(CM)),
+    compat(Body, CM).
+
+:- use_module(library(intercept)).
+:- use_module(library(safe_prolog_cut_to)).
+
+cut_to(Goal) :-
+    prolog_current_choice(CP),
+    intercept(Goal, cut_from, catch(safe_prolog_cut_to(CP), _, true)).
+
+cut_from :- send_signal(cut_from).
+
 freeze_cut(CP, V) :-
     freeze(V, catch(prolog_cut_to(CP), _, true)).
 
-compatc(H) :-
+compatc(H, M) :-
     functor(H, _, N),
     arg(N, H, A),
-    var(A), !.
+    ( var(A)
+    ; predicate_property(M:H, meta_predicate(Spec)),
+      arg(N, Spec, Meta),
+      integer(Meta),
+      Meta>=0,
+      A = X:Y,
+      ( ( var(X)
+        ; current_module(X)
+        )
+      ->var(Y)
+      )
+    ),
+    !.
+compatc(H, _) :-
+    compatc(H).
+
 compatc(var(_)).
 compatc(nonvar(_)).
 compatc(term(_)).
