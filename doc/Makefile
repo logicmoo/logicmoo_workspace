@@ -1,4 +1,6 @@
 
+all: manual.pdf manual.html help-trill.pdf help-trill.html
+
 manual.pdf: manual.tex inference.tex syntax.tex semantics.tex inf_goals.tex bib.bib
 	pdflatex manual
 	bibtex manual

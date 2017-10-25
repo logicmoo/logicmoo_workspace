@@ -1,4 +1,4 @@
 name(trill).
-title('A tableau probabilistic reasoner').
-version('3.1.0').
+title('A tableau probabilistic reasoner in three different versions').
+version('4.1.0').
 author('Riccardo Zese', 'zsercr@unife.it').

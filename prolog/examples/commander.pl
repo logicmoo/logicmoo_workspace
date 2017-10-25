@@ -1,6 +1,6 @@
 :-use_module(library(trill)).
 
-:-trill.
+:- trill. % or :- trillp. or :- tornado.
 
 /** <examples>
 
@@ -11,4 +11,4 @@ subClassOf(allValuesFrom(commands,soldier),commander).
 classAssertion(guard,pete).
 classAssertion(guard,al).
 classAssertion(allValuesFrom(commands,guard),john).
-subClassOf(guard,soldier).
+equivalentClasses([guard,soldier]).

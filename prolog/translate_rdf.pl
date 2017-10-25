@@ -2842,7 +2842,7 @@ load_owl_from_stream(S):-
   get_module(M),
   process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
   close(S),
-  add_kb_prefixes(NSList),
+  trill:add_kb_prefixes(NSList),
   rdf_2_owl('ont','ont'),
   owl_canonical_parse_3(['ont']),
   parse_probabilistic_annotation_assertions.
@@ -2850,10 +2850,11 @@ load_owl_from_stream(S):-
 % Adds a list of kb prefixes into ns4query
 :- multifile trill:add_kb_prefixes/1.
 
-add_kb_prefixes([]).
-add_kb_prefixes([(H=H1)|T]):-
+trill:add_kb_prefixes([]).
+
+trill:add_kb_prefixes([(H=H1)|T]):-
   trill:add_kb_prefix(H,H1),
-  add_kb_prefixes(T).
+  trill:add_kb_prefixes(T).
 
 % Adds a prefix into ns4query
 :- multifile trill:add_kb_prefix/2.
@@ -2871,6 +2872,7 @@ trill:add_kb_prefix(A,B):-
     ;
       true
    ).
+   
 trill:add_kb_prefix(A,B):-
   assert(ns4query([(A=B)])).
 
@@ -3110,9 +3112,6 @@ sandbox:safe_primitive(owl2_model:load_owl(_)).
 sandbox:safe_primitive(owl2_model:load_owl_from_string(_)).
 sandbox:safe_primitive(owl2_model:expand_all_ns(_,_,_)).
 %sandbox:safe_primitive(owl2_model:query_expand(_)).
-
-user:term_expansion((:- trill),[]):-
-  trill:add_kb_prefix('disponte','https://sites.google.com/a/unife.it/ml/disponte#').
 
 user:term_expansion(kb_prefix(A,B),[]):-
   trill:add_kb_prefix(A,B).
