@@ -11,6 +11,7 @@
 owl_rdf('<?xml version="1.0"?>
 <rdf:RDF xmlns="http://example.foo#"
      xml:base="http://example.foo"
+     xmlns:johnEmployee="http://example.foo#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
@@ -24,7 +25,7 @@ owl_rdf('<?xml version="1.0"?>
     </owl:Class>
 
 </rdf:RDF>').
-subClassOf('employee','worker').
+subClassOf('johnEmployee:employee','johnEmployee:worker').
 owl_rdf('<?xml version="1.0"?>
 <rdf:RDF xmlns="http://example.foo#"
      xml:base="http://example.foo"

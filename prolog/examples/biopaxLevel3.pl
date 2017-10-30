@@ -31,6 +31,7 @@ owl_rdf('<?xml version="1.0"?>
 
 <rdf:RDF xmlns="http://www.biopax.org/release/biopax-level3.owl#"
      xml:base="http://www.biopax.org/release/biopax-level3.owl"
+     xmlns:biopax="http://www.biopax.org/release/biopax-level3.owl#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:swrl="http://www.w3.org/2003/11/swrl#"
      xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"

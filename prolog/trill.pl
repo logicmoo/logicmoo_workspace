@@ -2377,6 +2377,25 @@ compute_prob_ax1([Prob1 | T],Prob):-
 
 /************************/
 
+set_algorithm(trill):-
+  unload_file(library(trill_internal)),
+  unload_file(library(trillp_internal)),
+  unload_file(library(tornado_internal)),
+  consult(library(trill_internal)).
+
+set_algorithm(trillp):-
+  unload_file(library(trill_internal)),
+  unload_file(library(trillp_internal)),
+  unload_file(library(tornado_internal)),
+  consult(library(trillp_internal)).
+
+set_algorithm(tornado):-
+  unload_file(library(trill_internal)),
+  unload_file(library(trillp_internal)),
+  unload_file(library(tornado_internal)),
+  consult(library(tornado_internal)).
+
+
 /**************/
 /*get_trill_current_module('translate_rdf'):-
   pengine_self(_Name),!.*/

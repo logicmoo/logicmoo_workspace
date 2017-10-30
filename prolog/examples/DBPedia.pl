@@ -57,6 +57,7 @@ owl_rdf('<?xml version="1.0"?>
 
 <rdf:RDF xmlns="http://dbpedia.org/ontology/"
      xml:base="http://dbpedia.org/ontology/"
+     xmlns:dbpedia="http://dbpedia.org/ontology/"
      xmlns:Software="http://dbpedia.org/ontology/Software/"
      xmlns:Astronaut="http://dbpedia.org/ontology/Astronaut/"
      xmlns:SpaceStation="http://dbpedia.org/ontology/SpaceStation/"
