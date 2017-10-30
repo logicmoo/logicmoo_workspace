@@ -133,6 +133,7 @@ modify_ABox(ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ((dif(L0,[]),subset(L0,Expl1)) -> 
      Expl = L0
    ;
+     % L0 is the new explanation, i.e. the \psi and Expl1 is the old label of an essertion
      (test(L0,Expl1),or_f(L0,Expl1,Expl))
   ),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
@@ -549,7 +550,12 @@ remove_duplicates(A,C):-sort(A,C).
 TRILLP SAT TEST
 
 ***********************/
+/**
+L1 is the \psi
+L2 is the old label of the assertion, e.g. lab(n : D) in the unfold rule
+I check if L1*(~L2) is satisfiable with sat/2. If it is satifiable it means that L1 does not model L2, i.e. \psi \not\models L2
 
+*/
 test(L1,L2):-
   %build_f(L1,L2,F),
   %sat(F).
