@@ -12,6 +12,7 @@ test_trill:-
     trill_peoplePets,
     trill_vicodi]).
 
+:- use_module(library(test/trill_test)).
 
 :- begin_tests(trill_brca, []).
 
@@ -62,8 +63,6 @@ test(p_p_r):-
   run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
 
 :- end_tests(trill_vicodi).
-
-:- use_module(library(test/trill_test)).
 
 :- begin_tests(trill_biopax, []).
 

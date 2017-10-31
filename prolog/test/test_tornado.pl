@@ -12,6 +12,7 @@ test_tornado:-
     tornado_peoplePets,
     tornado_vicodi]).
 
+:- use_module(library(test/trill_test)).
 
 :- begin_tests(tornado_brca, []).
 
@@ -54,8 +55,6 @@ test(p_p_r):-
   run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
 
 :- end_tests(tornado_vicodi).
-
-:- use_module(library(test/trill_test)).
 
 :- begin_tests(tornado_biopax, []).
 

@@ -13,6 +13,8 @@ test_trillp:-
     trillp_vicodi]).
 
 
+:- use_module(library(test/trill_test)).
+
 :- begin_tests(trillp_brca, []).
 
 :- ensure_loaded(library('examples/BRCA.pl')).
@@ -65,8 +67,6 @@ test(p_p_r):-
   run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
 
 :- end_tests(trillp_vicodi).
-
-:- use_module(library(test/trill_test)).
 
 :- begin_tests(trillp_biopax, []).
 
