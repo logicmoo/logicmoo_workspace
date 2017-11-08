@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(ctrtchecks, 
+:- module(ctrtchecks,
 	  ['$with_asr'/2,
            '$with_loc'/2,
            check_call/3,
@@ -142,7 +142,7 @@ current_assertion(T, Pred, M, Asr) :-
     ( current_prolog_flag(rtchecks_level, inner)
     ->true
     ; current_prolog_flag(rtchecks_level, exports),
-      predicate_property(M:Pred, export)
+      predicate_property(M:Pred, exported)
     ->true
     ),
     \+ black_list_pred(Pred).
