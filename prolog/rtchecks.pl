@@ -79,7 +79,7 @@ wrappers(Name/Arity) -->
       '$rtchecked'(Head),
       (:- module_transparent Name/Arity),
       (   Head :-
-             start_rtcheck(Module:Head, WrappedHead)
+              start_rtcheck(Module:Head, WrappedHead)
       )
     ].
 
