@@ -52,39 +52,39 @@ check_and_close(Expl,Expl):-
 
 
 % checks if an explanations was already found
-find_expls([],_,[]).
+find_expls(_M,[],_,[]).
 
 % checks if an explanations was already found (instance_of version)
-find_expls([ABox|_T],[C,I],E):-
+find_expls(M,[ABox|_T],[C,I],E):-
   clash(ABox,E0),
   sort(E0,E),
-  findall(Exp,exp_found([C,I],Exp),Expl),
-   not_already_found(Expl,[C,I],E),
-   assert(exp_found([C,I],E)).
+  findall(Exp,M:exp_found([C,I],Exp),Expl),
+   not_already_found(M,Expl,[C,I],E),
+   assert(M:exp_found([C,I],E)).
 
 % checks if an explanations was already found (property_value version)
-find_expls([(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E),ABox),
-  findall(Exp,exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
-  not_already_found(Expl,[PropEx,Ind1Ex,Ind2Ex],E),
-  assert(exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
+  findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
+  not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
+  assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
 
-find_expls([_ABox|T],Query,Expl):-
+find_expls(M,[_ABox|T],Query,Expl):-
   \+ length(T,0),
-  find_expls(T,Query,Expl).
+  find_expls(M,T,Query,Expl).
 
-not_already_found([],_Q,_E):-!.
+not_already_found(_M,[],_Q,_E):-!.
 
-not_already_found([H|_T],_Q,E):-
+not_already_found(_M,[H|_T],_Q,E):-
   subset(H,E),!,
   fail.
 
-not_already_found([H|_T],Q,E):-
+not_already_found(M,[H|_T],Q,E):-
   subset(E,H),!,
-  retract(exp_found(Q,H)).
+  retract(M:exp_found(Q,H)).
 
-not_already_found([_H|T],Q,E):-
-  not_already_found(T,Q,E).
+not_already_found(M,[_H|T],Q,E):-
+  not_already_found(M,T,Q,E).
 
 /****************************/
 

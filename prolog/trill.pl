@@ -37,39 +37,6 @@ details.
 
 :- style_check(-discontiguous).
 
-:- multifile
-    owl2_model:axiom/1,
-    owl2_model:class/1,
-    owl2_model:annotationProperty/1,
-    owl2_model:namedIndividual/1,
-    owl2_model:objectProperty/1,
-    owl2_model:dataProperty/1,
-    owl2_model:transitiveProperty/1,
-    owl2_model:classAssertion/2,
-    owl2_model:propertyAssertion/3,
-    owl2_model:subPropertyOf/2,
-    owl2_model:subClassOf/2,
-    owl2_model:equivalentClasses/1,
-    owl2_model:differentIndividuals/1,
-    owl2_model:sameIndividual/1,
-    owl2_model:intersectionOf/1,
-    owl2_model:unionOf/1,
-    owl2_model:propertyRange/2,
-    owl2_model:propertyDomain/2,
-    owl2_model:annotationAssertion/3,
-    owl2_model:exactCardinality/2,
-    owl2_model:exactCardinality/3,
-    owl2_model:maxCardinality/2,
-    owl2_model:maxCardinality/3,
-    owl2_model:minCardinality/2,
-    owl2_model:minCardinality/3,
-    owl2_model:inverseProperties/2,
-    owl2_model:symmetricProperty/1.
-
-
-:- thread_local
-	ind/1,
-	exp_found/2.
 
 /********************************
   SETTINGS
@@ -103,7 +70,7 @@ load_owl_kb(FileName):-
 /*****************************
   UTILITY PREDICATES
 ******************************/
-%defined in translate_rdf
+%defined in utility_translation
 :- multifile add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1,
              remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1.
 
@@ -168,11 +135,12 @@ load_owl_kb(FileName):-
  *
  * This predicate searches in the loaded knowledge base axioms that unify with Axiom.
  */
-axiom(Axiom):-
+:- multifile axiom/1.
+/*axiom(Axiom):-
   get_trill_current_module(Name),
   Name:ns4query(NSList),
   expand_all_ns([Axiom],NSList,[AxiomEx]),
-  Name:axiom(AxiomEx).
+  Name:axiom(AxiomEx).*/
 
 /*****************************
   MESSAGES
@@ -207,15 +175,16 @@ prolog:message(consistent) -->
  */
 instanceOf(Class,Ind,Expl):-
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
-	retractall(exp_found(_,_)),
-	retractall(trillan_idx(_)),
-  	assert(trillan_idx(1)),
+	utility_translation:get_module(M),
+    retractall(M:exp_found(_,_)),
+	retractall(M:trillan_idx(_)),
+  	assert(M:trillan_idx(1)),
   	build_abox((ABox,Tabs)),
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
   	    	add_q(ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	  	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-  		find_expls(L,[ClassEx,IndEx],Expl1),
+  		find_expls(M,L,[ClassEx,IndEx],Expl1),
   		check_and_close(Expl1,Expl)
   	    )
   	 ;
@@ -235,9 +204,10 @@ instanceOf(Class,Ind,Expl):-
 instanceOf(Class,Ind):-
   (  check_query_args([Class,Ind],[ClassEx,IndEx]) *->
 	(
-	  retractall(exp_found(_,_)),
-	  retractall(trillan_idx(_)),
-	  assert(trillan_idx(1)),
+	  utility_translation:get_module(M),
+      retractall(M:exp_found(_,_)),
+	  retractall(M:trillan_idx(_)),
+	  assert(M:trillan_idx(1)),
 	  build_abox((ABox,Tabs)),
 	  (  \+ clash((ABox,Tabs),_) *->
 	      (
@@ -263,14 +233,15 @@ instanceOf(Class,Ind):-
  */
 property_value(Prop, Ind1, Ind2,Expl):-
   ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
-	retractall(exp_found(_,_)),
-	retractall(trillan_idx(_)),
-  	assert(trillan_idx(1)),
+	utility_translation:get_module(M),
+    retractall(M:exp_found(_,_)),
+	retractall(M:trillan_idx(_)),
+  	assert(M:trillan_idx(1)),
   	build_abox((ABox,Tabs)),
   	(  \+ clash((ABox,Tabs),_) *->
   	    (
   	    	findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
-  		find_expls(L,[PropEx,Ind1Ex,Ind2Ex],Expl1),
+  		find_expls(M,L,[PropEx,Ind1Ex,Ind2Ex],Expl1),
   		check_and_close(Expl1,Expl)
   	    )
   	 ;
@@ -289,9 +260,10 @@ property_value(Prop, Ind1, Ind2,Expl):-
 property_value(Prop, Ind1, Ind2):-
   (  check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
 	(
-	  retractall(exp_found(_,_)),
-	  retractall(trillan_idx(_)),
-	  assert(trillan_idx(1)),
+	  utility_translation:get_module(M),
+      retractall(M:exp_found(_,_)),
+	  retractall(M:trillan_idx(_)),
+	  assert(M:trillan_idx(1)),
 	  build_abox((ABox,Tabs)),
 	  (  \+ clash((ABox,Tabs),_) *->
 	      (
@@ -354,16 +326,17 @@ unsat(Concept,Expl):-
 
 % ----------- %
 unsat_internal(Concept,Expl):-
-  retractall(exp_found(_,_)),
-  retractall(trillan_idx(_)),
-  assert(trillan_idx(2)),
+  utility_translation:get_module(M),
+  retractall(M:exp_found(_,_)),
+  retractall(M:trillan_idx(_)),
+  assert(M:trillan_idx(2)),
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
      	add_q(ABox,classAssertion(Concept,trillan(1)),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
 	findall((ABox1,Tabs1),apply_all_rules((ABox0,Tabs),(ABox1,Tabs1)),L),
-	find_expls(L,['unsat',Concept],Expl1),
+	find_expls(M,L,['unsat',Concept],Expl1),
 	check_and_close(Expl1,Expl)
      )
     ;
@@ -386,9 +359,10 @@ unsat(Concept):-
 
 % ----------- %
 unsat_internal(Concept):-
-  retractall(exp_found(_,_)),
-  retractall(trillan_idx(_)),
-  assert(trillan_idx(2)),
+  utility_translation:get_module(M),
+  retractall(M:exp_found(_,_)),
+  retractall(M:trillan_idx(_)),
+  assert(M:trillan_idx(2)),
   build_abox((ABox,Tabs)),
   ( \+ clash((ABox,Tabs),_) *->
      (
@@ -410,12 +384,13 @@ unsat_internal(Concept):-
  * The predicate fails if the knowledge base is consistent.
  */
 inconsistent_theory(Expl):-
-  retractall(exp_found(_,_)),
-  retractall(trillan_idx(_)),
-  assert(trillan_idx(1)),
+  utility_translation:get_module(M),
+  retractall(M:exp_found(_,_)),
+  retractall(M:trillan_idx(_)),
+  assert(M:trillan_idx(1)),
   build_abox((ABox,Tabs)),
   findall((ABox1,Tabs1),apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),L),
-  find_expls(L,['inconsistent','kb'],Expl1),
+  find_expls(M,L,['inconsistent','kb'],Expl1),
   check_and_close(Expl1,Expl).
 
 /**
@@ -424,9 +399,10 @@ inconsistent_theory(Expl):-
  * This predicate returns true if the knowledge base is inconsistent, false otherwise.
  */
 inconsistent_theory:-
-  retractall(exp_found(_,_)),
-  retractall(trillan_idx(_)),
-  assert(trillan_idx(1)),
+  utility_translation:get_module(M),
+  retractall(M:exp_found(_,_)),
+  retractall(M:trillan_idx(_)),
+  assert(M:trillan_idx(1)),
   build_abox((ABox,Tabs)),
   \+ clash((ABox,Tabs),_),!,
   apply_all_rules((ABox,Tabs),(ABox1,Tabs1)),!,
@@ -516,7 +492,7 @@ add_q(ABox,Query,ABox0):-
 check_query_args(L,LEx) :-
   get_trill_current_module(Name),
   Name:ns4query(NSList),
-  expand_all_ns(L,NSList,LEx), %from translate_rdf module
+  expand_all_ns(L,NSList,LEx), %from utility_translation module
   check_query_args_presence(LEx,Name).
 
 check_query_args_presence([],_).
@@ -535,44 +511,7 @@ check_query_args_presence([H|T],Name) :-
 
 % looks for presence of atoms in kb's axioms
 find_atom_in_axioms(Name,H):-
-  Name:axiom(A),
-  A =.. [_|L],
-  flatten(L,L1),
-  member(H,L1),!.
-
-find_atom_in_axioms(Name,H):-
-  (
-    (
-      ( Name:class(A) ; Name:annotationProperty(A) ; Name:namedIndividual(A) ; Name:objectProperty(A) ;
-        Name:dataProperty(A)
-      ),
-      L=[A]
-    )
-   ;(
-      ( Name:classAssertion(A,B) ; Name:subPropertyOf(A,B) ; Name:subClassOf(A,B) ; Name:propertyRange(A,B) ;
-        Name:propertyDomain(A,B) ; Name:exactCardinality(A,B) ; Name:maxCardinality(A,B) ; Name:minCardinality(A,B)
-      ),
-      L=[A,B]
-    )
-   ;
-    (
-      ( Name:propertyAssertion(A,B,C) ; Name:annotationAssertion(A,B,C) ; Name:exactCardinality(A,B,C) ;
-        Name:maxCardinality(A,B,C) ; Name:minCardinality(A,B,C)
-      ),
-      L=[A,B,C]
-    )
-   ;
-    Name:equivalentClasses(L)
-   ;
-    Name:differentIndividuals(L)
-   ;
-    Name:sameIndividual(L)
-   ;
-    Name:intersectionOf(L)
-   ;
-    Name:unionOf(L)
-  ),
-  flatten(L,L1),
+  Name:kb_atom(L1),
   member(H,L1),!.
 
 /****************************/
@@ -1228,6 +1167,7 @@ find_not_atomic(C,unionOf(L1),L1):-
   member(unionOf(L1),[A,B]),
   member(C,L1).
 
+/*
 find_not_atomic(C,intersectionOf(L),L):-
   get_trill_current_module(Name),
   Name:intersectionOf(L),
@@ -1237,6 +1177,7 @@ find_not_atomic(C,unionOf(L),L):-
   get_trill_current_module(Name),
   Name:unionOf(L),
   member(C,L).
+*/
 
 find_not_atomic(C,intersectionOf(L1),L1):-
   get_trill_current_module(Name),
@@ -2003,9 +1944,10 @@ find((Ass,Ex),A):-
 
 */
 new_ind(trillan(I)):-
-  retract(trillan_idx(I)),
+  utility_translation:get_module(M),
+  retract(M:trillan_idx(I)),
   I1 is I+1,
-  assert(trillan_idx(I1)).
+  assert(M:trillan_idx(I1)).
 
 /*
   same label for two individuals
@@ -2397,11 +2339,13 @@ set_algorithm(tornado):-
 
 
 /**************/
-/*get_trill_current_module('translate_rdf'):-
+/*get_trill_current_module('utility_translation'):-
   pengine_self(_Name),!.*/
 %get_trill_current_module(Name):-
 %  pengine_self(Name),!.
-get_trill_current_module('owl2_model'):- !.
+%get_trill_current_module('utility_translation'):- !.
+get_trill_current_module(M):-
+  utility_translation:get_module(M).
 /**************/
 
 :- multifile sandbox:safe_primitive/1.
@@ -2442,21 +2386,30 @@ sandbox:safe_primitive(trill:add_axioms(_)).
 sandbox:safe_primitive(trill:load_kb(_)).
 sandbox:safe_primitive(trill:load_owl_kb(_)).
 
-:- use_module(translate_rdf).
+:- use_module(library(utility_translation)).
 
 user:term_expansion((:- trill),[]):-
+  utility_translation:get_module(M),
+  utility_translation:set_up(M),
+  M:(dynamic exp_found/2),
   trill:add_kb_prefixes([('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]),
   unload_file(library(trillp_internal)),
   unload_file(library(tornado_internal)),
   consult(library(trill_internal)).
 
 user:term_expansion((:- trillp),[]):-
+  utility_translation:get_module(M),
+  utility_translation:set_up(M),
+  M:(dynamic exp_found/2),
   trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
   unload_file(library(trill_internal)),
   unload_file(library(tornado_internal)),
   consult(library(trillp_internal)).
 
 user:term_expansion((:- tornado),[]):-
+  utility_translation:get_module(M),
+  utility_translation:set_up(M),
+  M:(dynamic exp_found/2),
   trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
   unload_file(library(trill_internal)),
   unload_file(library(trillp_internal)),
