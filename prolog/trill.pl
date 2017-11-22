@@ -24,14 +24,19 @@ details.
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1] ).
 
+:- meta_predicate sub_class(:,+).
+:- meta_predicate prob_sub_class(:,+,-).
+:- meta_predicate instanceOf(:,+,-).
+:- meta_predicate prob_instanceOf(:,+,-).
+
+
+
 :- use_module(library(lists)).
 :- use_module(library(ugraphs)).
 :- use_module(library(rbtrees)).
 :- use_module(library(dif)).
 :- use_module(library(pengines)).
 :- use_module(library(sandbox)).
-
-
 
 :- use_foreign_library(foreign(bddem),install).
 
@@ -173,7 +178,7 @@ prolog:message(consistent) -->
  * The returning explanation is a set of axioms.
  * The predicate fails if the individual does not belong to the class.
  */
-instanceOf(Class,Ind,Expl):-
+instanceOf(M:Class,Ind,Expl):-
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
 	utility_translation:get_module(M),
     retractall(M:exp_found(_,_)),
@@ -418,9 +423,9 @@ inconsistent_theory:-
  * of a complex concept as a ground term and name or the full URI of an individual and
  * returns the probability of the instantiation of the individual to the given class.
  */
-prob_instanceOf(Class,Ind,Prob):-
+prob_instanceOf(M:Class,Ind,Prob):-gtrace,
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
-  	all_instanceOf(ClassEx,IndEx,Exps),
+  	all_instanceOf(M:ClassEx,IndEx,Exps),
   	compute_prob(Exps,Prob)
   ;
   	print_message(warning,iri_not_exists),!,false
@@ -447,7 +452,7 @@ prob_property_value(Prop, Ind1, Ind2,Prob):-
  * of two a simple concept or the definition of a complex concept as a ground term and returns 
  * the probability of the subclass relation between Class and SupClass.
  */
-prob_sub_class(Class,SupClass,Prob):-
+prob_sub_class(M:Class,SupClass,Prob):-gtrace,
   ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
   	all_sub_class(ClassEx,SupClassEx,Exps),
   	compute_prob(Exps,Prob)
@@ -492,21 +497,26 @@ add_q(ABox,Query,ABox0):-
 check_query_args(L,LEx) :-
   get_trill_current_module(Name),
   Name:ns4query(NSList),
-  expand_all_ns(L,NSList,LEx), %from utility_translation module
+  expand_all_ns(L,NSList,false,LEx), %from utility_translation module
   check_query_args_presence(LEx,Name).
 
 check_query_args_presence([],_).
 
 check_query_args_presence([H|T],Name) :-
+  nonvar(H),
   atomic(H),!,
   find_atom_in_axioms(Name,H),%!,
   check_query_args_presence(T,Name).
 
 check_query_args_presence([H|T],Name) :-
+  nonvar(H),
   \+ atomic(H),!,
   H =.. [_|L],
   flatten(L,L1),
   check_query_args_presence(L1,Name),
+  check_query_args_presence(T,Name).
+
+check_query_args_presence([_|T],Name):-
   check_query_args_presence(T,Name).
 
 % looks for presence of atoms in kb's axioms
@@ -2363,6 +2373,7 @@ sandbox:safe_primitive(trill:add_var(_,_,_,_,_)).
 sandbox:safe_primitive(trill:equality(_,_,_,_)).
 
 
+/*
 sandbox:safe_primitive(trill:sub_class(_,_)).
 sandbox:safe_primitive(trill:sub_class(_,_,_)).
 sandbox:safe_primitive(trill:prob_sub_class(_,_,_)).
@@ -2385,6 +2396,32 @@ sandbox:safe_primitive(trill:add_axiom(_)).
 sandbox:safe_primitive(trill:add_axioms(_)).
 sandbox:safe_primitive(trill:load_kb(_)).
 sandbox:safe_primitive(trill:load_owl_kb(_)).
+*/
+
+:- multifile sandbox:safe_meta/2.
+
+sandbox:safe_meta(trill:sub_class(_,_),[]).
+sandbox:safe_meta(trill:sub_class(_,_,_),[]).
+sandbox:safe_meta(trill:prob_sub_class(_,_,_),[]).
+sandbox:safe_meta(trill:instanceOf(_,_),[]).
+sandbox:safe_meta(trill:instanceOf(_,_,_),[]).
+sandbox:safe_meta(trill:prob_instanceOf(_,_,_),[]).
+sandbox:safe_meta(trill:property_value(_,_,_),[]).
+sandbox:safe_meta(trill:property_value(_,_,_,_),[]).
+sandbox:safe_meta(trill:prob_property_value(_,_,_,_),[]).
+sandbox:safe_meta(trill:unsat(_),[]).
+sandbox:safe_meta(trill:unsat(_,_),[]).
+sandbox:safe_meta(trill:prob_unsat(_,_),[]).
+sandbox:safe_meta(trill:inconsistent_theory,[]).
+sandbox:safe_meta(trill:inconsistent_theory(_),[]).
+sandbox:safe_meta(trill:prob_inconsistent_theory(_),[]).
+sandbox:safe_meta(trill:axiom(_),[]).
+sandbox:safe_meta(trill:add_kb_prefix(_,_),[]).
+sandbox:safe_meta(trill:add_kb_prefixes(_),[]).
+sandbox:safe_meta(trill:add_axiom(_),[]).
+sandbox:safe_meta(trill:add_axioms(_),[]).
+sandbox:safe_meta(trill:load_kb(_),[]).
+sandbox:safe_meta(trill:load_owl_kb(_),[]).
 
 :- use_module(library(utility_translation)).
 

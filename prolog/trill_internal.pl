@@ -32,8 +32,8 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
 all_sub_class(ClassEx,SupClassEx,Exps):-
   all_unsat(intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
 
-all_instanceOf(ClassEx,IndEx,Exps):-
-  findall(Expl,instanceOf(ClassEx,IndEx,Expl),Exps).
+all_instanceOf(M:ClassEx,IndEx,Exps):-
+  findall(Expl,instanceOf(M:ClassEx,IndEx,Expl),Exps).
 
 all_property_value(PropEx,Ind1Ex,Ind2Ex,Exps):-
   findall(Expl,property_value(PropEx,Ind1Ex,Ind2Ex,Expl),Exps).

@@ -12,7 +12,7 @@ http://vangelisv.github.io/thea/
 @copyright Riccardo Zese
 */
 
-:- module(utility_translation, [load_owl/1, load_owl_from_string/1, expand_all_ns/3, is_axiom/1]).
+:- module(utility_translation, [load_owl/1, load_owl_from_string/1, expand_all_ns/3, expand_all_ns/4, is_axiom/1]).
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
@@ -144,8 +144,8 @@ valid_axiom(anonymousIndividual(A)) :- subsumed_by([A],[iri]).
 
 %% construct(?IRI)
 % @see axiom/1, annotation/1, ontology/1
-construct(A) :- get_module(M),M:axiom(A).
-construct(A) :- get_module(M),M:annotation(A).
+construct(A) :- trill:axiom(A).
+construct(A) :- annotation(A).
 construct(A) :- get_module(M),M:ontology(A).
 axiom_arguments(construct,[iri]).
 valid_axiom(construct(A)) :- subsumed_by([A],[iri]).
@@ -956,20 +956,20 @@ labelAnnotation_value(X,Val) :-
 % e.g. axiom_directly_about( propertyAssertion(P,X,_), X).
 %
 axiom_directly_about(Ax,About) :-
-        axiom(Ax),
+        trill:axiom(Ax),
         Ax =.. [_,Arg1|_],
         (   is_list(Arg1)
         ->  member(About,Arg1)
         ;   About=Arg1).
 axiom_directly_about(Ax,About) :-
 	Ax=propertyAssertion(_,About,_),
-        axiom(Ax).
+        trill:axiom(Ax).
 axiom_directly_about(Ax,About) :-
 	Ax=annotationAssertion(_,About,_),
-        axiom(Ax).
+        trill:axiom(Ax).
 axiom_directly_about(Ax,About) :-
 	Ax=classAssertion(_,About),
-        axiom(Ax).
+        trill:axiom(Ax).
 
 
 %% axiom_directly_references(?Ax:axiom,?Ref)
@@ -979,7 +979,7 @@ axiom_directly_about(Ax,About) :-
 %  - a named entity
 %  - an expression
 axiom_directly_references(Ax,Ref) :-
-        axiom(Ax),
+        trill:axiom(Ax),
         axiom_or_expression_references(Ax,Ref).
 
 axiom_or_expression_references(X,Ref) :-
@@ -1005,7 +1005,7 @@ axiom_references(Ax,Ref) :-
 axiom_contains_expression(Ax,Ex) :-
         axiom_contains_expression(Ax,Ex,_).
 axiom_contains_expression(Ax,Ex,D) :-
-        axiom(Ax),
+        trill:axiom(Ax),
         expression_has_subexpression(Ax,Ex,[],Chain),
         length(Chain,D).
 
@@ -1111,7 +1111,7 @@ retract_axiom(M,Axiom,Ontology) :-
 
 
 retract_all_axioms(M) :-
-        findall(M:A,M:axiom(A),Axioms),
+        findall(M:A,trill:axiom(A),Axioms),
         maplist(retract,Axioms),
         findall(M:ontologyAxiom(O,A),M:ontologyAxiom(O,A),OAxioms),
         maplist(retract,OAxioms),
@@ -2238,7 +2238,7 @@ owl_parse_axiom(M,equivalentClasses(DL),AnnMode,List) :-
 	valid_axiom_annotation_mode(AnnMode,M,X,'owl:equivalentClass',Y,List),
 	use_owl(M,X,'owl:equivalentClass',Y,equivalentClass(X,Y)),
         % maximally_connected_subgraph_over('owl:equivalentClass',L),
-        maplist(owl_description,[X,Y],DL),
+        maplist(owl_description,M,[X,Y],DL),
         debug(owl_parser_detail,'equivalentClasses Descs: ~w',[DL]).
 
 
@@ -2331,7 +2331,7 @@ owl_parse_axiom(M,equivalentProperties(OPEL),AnnMode,List) :-
 	valid_axiom_annotation_mode(AnnMode,M,X,'owl:equivalentProperty',Y,List),
 	use_owl(M,X,'owl:equivalentProperty',Y,equivProperty(X,Y)),
 	% maximally_connected_subgraph_over('owl:equivalentProperty',L),
-	maplist(owl_property_expression,[X,Y],OPEL).
+	maplist(owl_property_expression,M,[X,Y],OPEL).
 
 
 % TODO. Process the disjointProperties(L) axioms to generate
@@ -2636,7 +2636,7 @@ The file owl2_from_rdf.plt has some examples
  * The predicate loads the knowledge base contained in the given file. 
  * The knowledge base must be defined in pure OWL/RDF format.
  */
- load_owl(String):-
+load_owl(String):-
   get_module(M),
   retractall(M:ns4query(_)),
   open(String,read,S),
@@ -2794,66 +2794,87 @@ query_expand(Q):-
  *
  * The predicate takes as input a list containing strings and expands these strings
  * using the list of prefixes. Finally, it returns the list of expanded strings.
+ * It adds names in Args to the list of known elements.
  */
-expand_all_ns([],_,[]).
+expand_all_ns(Args,NSList,ExpandedArgs):-
+  expand_all_ns(Args,NSList,true,ExpandedArgs).
 
-expand_all_ns([P|T],NSList,[P|NewArgs]):-
-  compound(P),
-  P =.. ['literal' | _],!,
-  expand_all_ns(T,NSList,NewArgs).
+/**
+ * expand_all_ns(++Args:list,++NSList:list,++AddName:boolean,--ExpandedArgs:list) is det
+ *
+ * The predicate takes as input a list containing strings and expands these strings
+ * using the list of prefixes. Finally, it returns the list of expanded strings.
+ * If AddName is set true it adds names in Args in the list of known elements.
+ */
+expand_all_ns([],_,_,[]).
 
-expand_all_ns([P|T],NSList,[NP|NewArgs]):-
+expand_all_ns([literal(LitVal)|T],NSList,AddName,[literal(LitVal)|NewArgs]):- !,
+  expand_all_ns(T,NSList,AddName,NewArgs).
+
+expand_all_ns([P|T],NSList,AddName,[NP|NewArgs]):-
   compound(P),
   P =.. [N, Args],!,
   ( is_list(Args) ->
-      expand_all_ns(Args,NSList,NewPArgs)
+      expand_all_ns(Args,NSList,AddName,NewPArgs)
     ;
-      expand_all_ns([Args],NSList,[NewPArgs])
+      expand_all_ns([Args],NSList,AddName,[NewPArgs])
   ),
   NP =.. [N, NewPArgs],
-  expand_all_ns(T,NSList,NewArgs).
+  expand_all_ns(T,NSList,AddName,NewArgs).
 
-expand_all_ns([P|T],NSList,[NP|NewArgs]):-
+expand_all_ns([P|T],NSList,AddName,[NP|NewArgs]):-
   compound(P),
   P =.. [N | Args],!,
-  expand_all_ns(Args,NSList,NewPArgs),
+  expand_all_ns(Args,NSList,AddName,NewPArgs),
   NP =.. [N| NewPArgs],
-  expand_all_ns(T,NSList,NewArgs).
+  expand_all_ns(T,NSList,AddName,NewArgs).
 
-expand_all_ns([H|T],NSList,[H|NewArgs]):-
+expand_all_ns([H|T],NSList,AddName,[H|NewArgs]):-
   check_query_arg(H),!,
-  expand_all_ns(T,NSList,NewArgs).
+  expand_all_ns(T,NSList,AddName,NewArgs).
 
-expand_all_ns([H|T],NSList,[NewArg|NewArgs]):-
-  expand_ns4query(H,NSList,NewArg),
-  expand_all_ns(T,NSList,NewArgs).
+expand_all_ns([H|T],NSList,AddName,[NewArg|NewArgs]):-
+  expand_ns4query(H,NSList,AddName,NewArg),
+  expand_all_ns(T,NSList,AddName,NewArgs).
 
 check_query_arg(Arg) :-
   atomic(Arg),!,
-  axiom(Ax),
-  Ax =.. [_|L],
-  flatten(L,L1),
-  member(Arg,L1),!,
+  trill:axiom(Ax),
+  in_axiom(Arg,[Ax]),!,
   add_kb_atom(Arg).
 
-expand_ns4query(NS_URL,NSList, Full_URL):- 
+expand_ns4query(NS_URL,NSList,AddName, Full_URL):- 
 	nonvar(NS_URL),
 	NS_URL \= literal(_),
 	uri_split(NS_URL,Short_NS,Term, ':'),
 	member((Short_NS=Long_NS),NSList),
 	concat_atom([Long_NS,Term],Full_URL),!,
-	add_kb_atom(Full_URL).
+	( AddName == true *-> add_kb_atom(Full_URL) ; true).
 
-expand_ns4query(NS_URL,NSList, Full_URL):- 
+expand_ns4query(NS_URL,NSList,AddName, Full_URL):- 
 	nonvar(NS_URL),
 	NS_URL \= literal(_),
 	\+ sub_atom(NS_URL,_,_,_,':'),
 	member(([]=Long_NS),NSList),
 	concat_atom([Long_NS,NS_URL],Full_URL),!,
-	add_kb_atom(Full_URL).
+	( AddName == true *-> add_kb_atom(Full_URL) ; true).
 
-expand_ns4query(URL,_,URL):-
-	add_kb_atom(URL).
+expand_ns4query(URL,_,_,URL):-
+    var(URL),!.
+
+% check whether the given atom is present in an axiom
+in_axiom(Atom,[literal(_)|T]):-!,
+	in_axiom(Atom,T).
+	
+in_axiom(Atom,[Axiom|_]):-
+	compound(Axiom),
+	Axiom=..[_|Args],
+	in_axiom(Atom,Args),!.
+
+in_axiom(Atom,[Atom|_]):- !.
+
+in_axiom(Atom,[_|T]):-
+	in_axiom(Atom,T).
 
 % save atoms in kb for checking existence when querying
 add_atoms_from_axiom([]).
@@ -2913,11 +2934,11 @@ trill:remove_axiom(Ax):-
   ( M:ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
-       ( expand_all_ns(IntArgs,NSList,ArgsExp),
+       ( expand_all_ns(IntArgs,NSList,false,ArgsExp),
          AxEx =.. [P,ArgsExp]
        )
      ;
-       ( expand_all_ns(Args,NSList,ArgsExp),
+       ( expand_all_ns(Args,NSList,false,ArgsExp),
          AxEx =.. [P|ArgsExp]
        )
   ),
@@ -2990,6 +3011,7 @@ set_up(M):-
 sandbox:safe_primitive(utility_translation:load_owl(_)).
 sandbox:safe_primitive(utility_translation:load_owl_from_string(_)).
 sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_)).
+sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_)).
 %sandbox:safe_primitive(utility_translation:query_expand(_)).
 
 user:term_expansion(kb_prefix(A,B),[]):-
