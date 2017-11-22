@@ -45,25 +45,25 @@ prolog:message(and_in_and) -->
  ***********/
 
 % to find all axplanations for probabilistic queries
-all_sub_class(ClassEx,SupClassEx,Exps):-
-  sub_class(ClassEx,SupClassEx,Exps).
+all_sub_class(M:ClassEx,SupClassEx,Exps):-
+  sub_class(M:ClassEx,SupClassEx,Exps).
 
-all_instanceOf(ClassEx,IndEx,Exps):-
-  instanceOf(ClassEx,IndEx,Exps).
+all_instanceOf(M:ClassEx,IndEx,Exps):-
+  instanceOf(M:ClassEx,IndEx,Exps).
 
-all_property_value(PropEx,Ind1Ex,Ind2Ex,Exps):-
-  property_value(PropEx,Ind1Ex,Ind2Ex,Exps).
+all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
+  property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps).
 
-all_unsat(ConceptEx,Exps):-
-  unsat(ConceptEx,Exps).
+all_unsat(M:ConceptEx,Exps):-
+  unsat(M:ConceptEx,Exps).
 
 
-all_inconsistent_theory(Exps):-
-  inconsistent_theory(Exps).
+all_inconsistent_theory(M:Print,Exps):-
+  inconsistent_theory(M:Print,Exps).
 
 
 % checks the explanation
-check_and_close(Expl,Expl):-
+check_and_close(_,Expl,Expl):-
   dif(Expl,[]).
 
 

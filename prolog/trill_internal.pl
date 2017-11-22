@@ -29,25 +29,25 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
  ***********/
 
 % to find all axplanations for probabilistic queries
-all_sub_class(ClassEx,SupClassEx,Exps):-
-  all_unsat(intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
+all_sub_class(M:ClassEx,SupClassEx,Exps):-
+  all_unsat(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
 
 all_instanceOf(M:ClassEx,IndEx,Exps):-
   findall(Expl,instanceOf(M:ClassEx,IndEx,Expl),Exps).
 
-all_property_value(PropEx,Ind1Ex,Ind2Ex,Exps):-
-  findall(Expl,property_value(PropEx,Ind1Ex,Ind2Ex,Expl),Exps).
+all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
+  findall(Expl,property_value(M:PropEx,Ind1Ex,Ind2Ex,Expl),Exps).
 
-all_unsat(ConceptEx,Exps):-
-  findall(Expl,unsat_internal(ConceptEx,Expl),Exps).
+all_unsat(M:ConceptEx,Exps):-
+  findall(Expl,unsat_internal(M:ConceptEx,Expl),Exps).
 
 
-all_inconsistent_theory(Exps):-
-  findall(Expl,inconsistent_theory(Expl),Exps).
+all_inconsistent_theory(M:Print,Exps):-
+  findall(Expl,inconsistent_theory(M:Print,Expl),Exps).
 
 
 % checks the explanation
-check_and_close(Expl,Expl):-
+check_and_close(_,Expl,Expl):-
   dif(Expl,[]).
 
 

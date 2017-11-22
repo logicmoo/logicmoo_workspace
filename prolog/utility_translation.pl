@@ -42,32 +42,34 @@ set_trdf(Setting,Value):-
   AXIOMS
   ****************************************/
 
-%% entity(?IRI)
+%% entity(:IRI)
 % the fundamental building blocks of owl 2 ontologies, and they define the vocabulary (the named terms) of an ontology
 %
 % @see individual/1, property/1, class/1, datatype/1
-entity(A) :- get_module(M),M:individual(A).
-entity(A) :- get_module(M),M:property(A).
-entity(A) :- get_module(M),M:class(A).
-entity(A) :- get_module(M),M:datatype(A).
+:- meta_predicate entity(:).
+
+entity(M:A) :- individual(M:A).
+entity(M:A) :- property(M:A).
+entity(M:A) :- M:class(A).
+entity(M:A) :- M:datatype(A).
 axiom_arguments(entity,[iri]).
 valid_axiom(entity(A)) :- subsumed_by([A],[iri]).
 
-%declarationAxiom(individual(A)) :- individual(A). % TODO - check this
-declarationAxiom(namedIndividual(A)) :- get_module(M),M:namedIndividual(A).
-declarationAxiom(objectProperty(A)) :- get_module(M),M:objectProperty(A).
-declarationAxiom(dataProperty(A)) :- get_module(M),M:dataProperty(A).
-declarationAxiom(annotationProperty(A)) :- get_module(M),M:annotationProperty(A).  % VV added 9/3/2010
-declarationAxiom(class(A)) :- get_module(M),M:class(A).
-declarationAxiom(datatype(A)) :- get_module(M),M:datatype(A).
+% declarationAxiom(M:individual(A)) :- individual(M:A).
+declarationAxiom(M:namedIndividual(A)) :- M:namedIndividual(A).
+declarationAxiom(M:objectProperty(A)) :- M:objectProperty(A).
+declarationAxiom(M:dataProperty(A)) :- M:dataProperty(A).
+declarationAxiom(M:annotationProperty(A)) :- M:annotationProperty(A).
+declarationAxiom(M:class(A)) :- M:class(A).
+declarationAxiom(M:datatype(A)) :- M:datatype(A).
 % TODO: check. here we treat the ontology declaration as an axiom;
 % this liberal definition of axiom allows us to iterate over axiom/1
 % to find every piece of information in the ontology.
-declarationAxiom(ontology(A)) :- get_module(M),M:ontology(A).
+declarationAxiom(M:ontology(A)) :- M:ontology(A).
 
 %% class(?IRI)
 % Classes can be understood as sets of individuals
-:- thread_local(class/1).
+% :- thread_local(class/1).
 
 axiompred(class/1).
 axiom_arguments(class,[iri]).
@@ -75,7 +77,7 @@ valid_axiom(class(A)) :- subsumed_by([A],[iri]).
 
 %% datatype(?IRI)
 % Datatypes are entities that refer to sets of values described by a datatype map
-:- thread_local(datatype/1).
+% :- thread_local(datatype/1).
 
 axiompred(datatype/1).
 axiom_arguments(datatype,[iri]).
@@ -85,15 +87,17 @@ valid_axiom(datatype(A)) :- subsumed_by([A],[iri]).
 % Properties connect individuals with either other individuals or with literals
 %
 % @see dataProperty/1, objectProperty/1, annotationProperty/1
-property(A) :- dataProperty(A).
-property(A) :- objectProperty(A).
-property(A) :- annotationProperty(A).
+:- meta_predicate property(:).
+
+property(M:A) :- M:dataProperty(A).
+property(M:A) :- M:objectProperty(A).
+property(M:A) :- M:annotationProperty(A).
 axiom_arguments(property,[iri]).
 valid_axiom(property(A)) :- subsumed_by([A],[iri]).
 
 %% objectProperty(?IRI)
 % Object properties connect pairs of individuals
-:- thread_local(objectProperty/1).
+%:- thread_local(objectProperty/1).
 
 axiompred(objectProperty/1).
 axiom_arguments(objectProperty,[iri]).
@@ -101,7 +105,7 @@ valid_axiom(objectProperty(A)) :- subsumed_by([A],[iri]).
 
 %% dataProperty(?IRI)
 % Data properties connect individuals with literals. In some knowledge representation systems, functional data properties are called attributes.
-:- thread_local(dataProperty/1).
+%:- thread_local(dataProperty/1).
 
 axiompred(dataProperty/1).
 axiom_arguments(dataProperty,[iri]).
@@ -109,25 +113,25 @@ valid_axiom(dataProperty(A)) :- subsumed_by([A],[iri]).
 
 %% annotationProperty(?IRI)
 % Annotation properties can be used to provide an annotation for an ontology, axiom, or an IRI
-:- thread_local(annotationProperty/1).
+%:- thread_local(annotationProperty/1).
 
 axiompred(annotationProperty/1).
 axiom_arguments(annotationProperty,[iri]).
 valid_axiom(annotationProperty(A)) :- subsumed_by([A],[iri]).
 
 
-%% individual(?IRI)
+%% individual(:IRI)
 % Individuals represent actual objects from the domain being modeled
 % @see anonymousIndividual/1, namedIndividual/1
-individual(A) :- get_module(M),M:anonymousIndividual(A).
-individual(A) :- get_module(M),M:namedIndividual(A).
+individual(M:A) :- M:anonymousIndividual(A).
+individual(M:A) :- M:namedIndividual(A).
 %individual(A) :- nonvar(A),iri(A),\+property(A),\+class(A),\+ontology(A). % TODO: check: make individuals the default
 axiom_arguments(individual,[iri]).
 valid_axiom(individual(A)) :- subsumed_by([A],[iri]).
 
 %% namedIndividual(?IRI)
 % Named individuals are given an explicit name that can be used in any ontology in the import closure to refer to the same individual
-:- thread_local(namedIndividual/1).
+%:- thread_local(namedIndividual/1).
 
 axiompred(namedIndividual/1).
 axiom_arguments(namedIndividual,[iri]).
@@ -136,42 +140,42 @@ valid_axiom(namedIndividual(A)) :- subsumed_by([A],[iri]).
 %% anonymousIndividual(?IRI)
 % Anonymous individuals are local to the ontology they are contained in. Analagous to bnodes
 % @see construct/1
-:- thread_local(anonymousIndividual/1).
+%:- thread_local(anonymousIndividual/1).
 
 axiompred(anonymousIndividual/1).
 axiom_arguments(anonymousIndividual,[iri]).
 valid_axiom(anonymousIndividual(A)) :- subsumed_by([A],[iri]).
 
-%% construct(?IRI)
+%% construct(:IRI)
 % @see axiom/1, annotation/1, ontology/1
-construct(A) :- trill:axiom(A).
-construct(A) :- annotation(A).
-construct(A) :- get_module(M),M:ontology(A).
+construct(M:A) :- trill:axiom(M:A).
+construct(M:A) :- annotation(M:A).
+construct(M:A) :- M:ontology(A).
 axiom_arguments(construct,[iri]).
 valid_axiom(construct(A)) :- subsumed_by([A],[iri]).
 
-%% axiom(?Axiom)
+%% axiom(:Axiom)
 % The main component of an OWL 2 ontology is a set of axioms - statements that say what is true in the domain being modeled.
 % @see classAxiom/1, propertyAxiom/1, fact/1
 :- multifile trill:axiom/1.
 
-trill:axiom(A) :- classAxiom(A).
-trill:axiom(A) :- propertyAxiom(A).
-trill:axiom(hasKey(A,B)) :- get_module(M),M:hasKey(A,B).
-trill:axiom(A) :- fact(A).
-trill:axiom(A) :- declarationAxiom(A).
+trill:axiom(M:A) :- classAxiom(M:A).
+trill:axiom(M:A) :- propertyAxiom(M:A).
+trill:axiom(M:hasKey(A,B)) :- M:hasKey(A,B).
+trill:axiom(M:A) :- fact(M:A).
+trill:axiom(M:A) :- declarationAxiom(M:A).
 %axiom(annotation(A,B,C)) :-
 %	annotation(A,B,C). % CJM-treat annotations as axioms
 axiom_arguments(axiom,[axiom]).
 valid_axiom(axiom(A)) :- subsumed_by([A],[axiom]).
 
-%% classAxiom(?Axiom)
+%% classAxiom(:Axiom)
 % OWL 2 provides axioms that allow relationships to be established between class expressions. This predicate reifies the actual axiom
 % @see equivalentClasses/1, disjointClasses/1, subClassOf/2, disjointUnion/2
-classAxiom(equivalentClasses(A)) :- get_module(M),M:equivalentClasses(A).
-classAxiom(disjointClasses(A)) :- get_module(M),M:disjointClasses(A).
-classAxiom(subClassOf(A, B)) :- get_module(M),M:subClassOf(A, B).
-classAxiom(disjointUnion(A, B)) :- get_module(M),M:disjointUnion(A, B).
+classAxiom(M:equivalentClasses(A)) :- M:equivalentClasses(A).
+classAxiom(M:disjointClasses(A)) :- M:disjointClasses(A).
+classAxiom(M:subClassOf(A, B)) :- M:subClassOf(A, B).
+classAxiom(M:disjointUnion(A, B)) :- M:disjointUnion(A, B).
 axiom_arguments(classAxiom,[axiom]).
 valid_axiom(classAxiom(A)) :- subsumed_by([A],[axiom]).
 
@@ -211,23 +215,23 @@ axiompred(disjointUnion/2).
 axiom_arguments(disjointUnion,[classExpression,set(classExpression)]).
 valid_axiom(disjointUnion(A,B)) :- subsumed_by([A,B],[classExpression,set(classExpression)]).
 
-%% propertyAxiom(?Axiom)
+%% propertyAxiom(:Axiom)
 % OWL 2 provides axioms that can be used to characterize and establish relationships between object property expressions. This predicate reifies the actual axiom
 %
 % @see symmetricProperty/1, inverseFunctionalProperty/1, transitiveProperty/1, asymmetricProperty/1, subPropertyOf/2, functionalProperty/1, irreflexiveProperty/1, disjointProperties/1, propertyDomain/2, reflexiveProperty/1, propertyRange/2, equivalentProperties/1, inverseProperties/2
-propertyAxiom(symmetricProperty(A)) :- get_module(M),M:symmetricProperty(A).
-propertyAxiom(inverseFunctionalProperty(A)) :- get_module(M),M:inverseFunctionalProperty(A).
-propertyAxiom(transitiveProperty(A)) :- get_module(M),M:transitiveProperty(A).
-propertyAxiom(asymmetricProperty(A)) :- get_module(M),M:asymmetricProperty(A).
-propertyAxiom(subPropertyOf(A, B)) :- get_module(M),M:subPropertyOf(A, B).
-propertyAxiom(functionalProperty(A)) :- get_module(M),M:functionalProperty(A).
-propertyAxiom(irreflexiveProperty(A)) :- get_module(M),M:irreflexiveProperty(A).
-propertyAxiom(disjointProperties(A)) :- get_module(M),M:disjointProperties(A).
-propertyAxiom(propertyDomain(A, B)) :- get_module(M),M:propertyDomain(A, B).
-propertyAxiom(reflexiveProperty(A)) :- get_module(M),M:reflexiveProperty(A).
-propertyAxiom(propertyRange(A, B)) :- get_module(M),M:propertyRange(A, B).
-propertyAxiom(equivalentProperties(A)) :- get_module(M),M:equivalentProperties(A).
-propertyAxiom(inverseProperties(A, B)) :- get_module(M),M:inverseProperties(A, B).
+propertyAxiom(M:symmetricProperty(A)) :- M:symmetricProperty(A).
+propertyAxiom(M:inverseFunctionalProperty(A)) :- M:inverseFunctionalProperty(A).
+propertyAxiom(M:transitiveProperty(A)) :- M:transitiveProperty(A).
+propertyAxiom(M:asymmetricProperty(A)) :- M:asymmetricProperty(A).
+propertyAxiom(M:subPropertyOf(A, B)) :- M:subPropertyOf(A, B).
+propertyAxiom(M:functionalProperty(A)) :- M:functionalProperty(A).
+propertyAxiom(M:irreflexiveProperty(A)) :- M:irreflexiveProperty(A).
+propertyAxiom(M:disjointProperties(A)) :- M:disjointProperties(A).
+propertyAxiom(M:propertyDomain(A, B)) :- M:propertyDomain(A, B).
+propertyAxiom(M:reflexiveProperty(A)) :- M:reflexiveProperty(A).
+propertyAxiom(M:propertyRange(A, B)) :- M:propertyRange(A, B).
+propertyAxiom(M:equivalentProperties(A)) :- M:equivalentProperties(A).
+propertyAxiom(M:inverseProperties(A, B)) :- M:inverseProperties(A, B).
 axiom_arguments(propertyAxiom,[axiom]).
 valid_axiom(propertyAxiom(A)) :- subsumed_by([A],[axiom]).
 
@@ -447,16 +451,16 @@ axiom_arguments(hasKey,[classExpression,propertyExpression]).
 valid_axiom(hasKey(CE,PE)) :- subsumed_by([CE,PE],[classExpression,propertyExpression]).
 
 
-%% fact(?Axiom)
+%% fact(:Axiom)
 % OWL 2 supports a rich set of axioms for stating assertions - axioms about individuals that are often also called facts. The fact/1 predicate reifies the fact predicate
 %
 % @see annotationAssertion/3, differentIndividuals/1, negativePropertyAssertion/3, propertyAssertion/3, sameIndividual/1, classAssertion/2
-fact(annotationAssertion(A, B, C)) :- get_module(M),M:annotationAssertion(A, B, C).
-fact(differentIndividuals(A)) :- get_module(M),M:differentIndividuals(A).
-fact(negativePropertyAssertion(A, B, C)) :- get_module(M),M:negativePropertyAssertion(A, B, C).
-fact(propertyAssertion(A, B, C)) :- get_module(M),M:propertyAssertion(A, B, C).
-fact(sameIndividual(A)) :- get_module(M),M:sameIndividual(A).
-fact(classAssertion(A, B)) :- get_module(M),M:classAssertion(A, B).
+fact(M:annotationAssertion(A, B, C)) :- M:annotationAssertion(A, B, C).
+fact(M:differentIndividuals(A)) :- M:differentIndividuals(A).
+fact(M:negativePropertyAssertion(A, B, C)) :- M:negativePropertyAssertion(A, B, C).
+fact(M:propertyAssertion(A, B, C)) :- M:propertyAssertion(A, B, C).
+fact(M:sameIndividual(A)) :- M:sameIndividual(A).
+fact(M:classAssertion(A, B)) :- M:classAssertion(A, B).
 axiom_arguments(fact,[axiom]).
 valid_axiom(fact(A)) :- subsumed_by([A],[axiom]).
 
@@ -537,52 +541,52 @@ valid_axiom(annotationAssertion(A, B, C)) :- subsumed_by([A, B, C],[annotationPr
 annotationSubject(_).
 annotationValue(_).
 
-%% annotation(?IRI,?AnnotationProperty,?AnnotationValue)
+%% annotation(:IRI,?AnnotationProperty,?AnnotationValue)
 %
 % @see annotationAnnotation/3, ontologyAnnotation/3, axiomAnnotation/3
-:- thread_local(annotation/3).
+%:- thread_local(annotation/3).
 
 axiompred(annotation/3).
 
-annotation(annotationAnnotation(A, B, C)) :- annotationAnnotation(A, B, C).
-annotation(axiomAnnotation(A, B, C)) :- axiomAnnotation(A, B, C).
+annotation(M:annotationAnnotation(A, B, C)) :- M:annotationAnnotation(M:A, B, C).
+annotation(M:axiomAnnotation(A, B, C)) :- M:axiomAnnotation(M:A, B, C).
 axiom_arguments(annotation,[iri,annotationProperty,annotationValue]).
 valid_axiom(annotation(A,B,C)) :- subsumed_by([A,B,C],[iri,annotationProperty,annotationValue]).
 
 %% ontologyAnnotation(?Ontology, ?AnnotationProperty, ?AnnotationValue)
-ontologyAnnotation(Ontology,AP,AV) :-
-	get_module(M),M:annotation(Ontology,AP,AV),
+ontologyAnnotation(M:Ontology,AP,AV) :-
+	M:annotation(Ontology,AP,AV),
 	M:ontology(Ontology).
 axiom_arguments(ontologyAnnotation,[ontology, annotationProperty, annotationValue]).
 valid_axiom(ontologyAnnotation(A, B, C)) :- subsumed_by([A, B, C],[ontology, annotationProperty, annotationValue]).
 
 %% axiomAnnotation(?Axiom, ?AnnotationProperty, ?AnnotationValue)
-axiomAnnotation(Axiom,AP,AV) :-
-	get_module(M),M:annotation(Axiom,AP,AV),
+axiomAnnotation(M:Axiom,AP,AV) :-
+	M:annotation(Axiom,AP,AV),
 	M:axiom(Axiom).
 axiom_arguments(axiomAnnotation,[axiom, annotationProperty, annotationValue]).
 valid_axiom(axiomAnnotation(A, B, C)) :- subsumed_by([A, B, C],[axiom, annotationProperty, annotationValue]).
 
 %% annotationAnnotation(?Annotation, ?AnnotationProperty, ?AnnotationValue)
-annotationAnnotation(Annotation,AP,AV) :-
-	get_module(M),M:annotation(Annotation,AP,AV),
+annotationAnnotation(M:Annotation,AP,AV) :-
+	M:annotation(Annotation,AP,AV),
 	M:annotation(Annotation).
 axiom_arguments(annotationAnnotation,[annotation, annotationProperty, annotationValue]).
 valid_axiom(annotationAnnotation(A, B, C)) :- subsumed_by([A, B, C],[annotation, annotationProperty, annotationValue]).
 
 %% ontology(?IRI)
 % An ontology in OWL2 is a collection of OWL Axioms
-:- thread_local(ontology/1).
+%:- thread_local(ontology/1).
 
 axiompred(ontology/1).
 axiom_arguments(ontology,[iri]).
 valid_axiom(ontology(A)) :- subsumed_by([A],[iri]).
 
-%% ontologyDirective(?OntologyIRI,?IRI)
+%% ontologyDirective(:OntologyIRI,?IRI)
 % @see ontologyImport/2, ontologyAxiom/2
-ontologyDirective(A, B) :- get_module(M),M:ontologyImport(A, B).
-ontologyDirective(A, B) :- get_module(M),M:ontologyAxiom(A, B).
-ontologyDirective(A, B) :- get_module(M),M:ontologyVersionInfo(A, B).
+ontologyDirective(M:A, B) :- M:ontologyImport(A, B).
+ontologyDirective(M:A, B) :- M:ontologyAxiom(A, B).
+ontologyDirective(M:A, B) :- M:ontologyVersionInfo(A, B).
 axiom_arguments(ontologyDirective,[ontology, iri]).
 valid_axiom(ontologyDirective(A, B)) :- subsumed_by([A, B],[ontology, iri]).
 
@@ -594,7 +598,7 @@ valid_axiom(ontologyDirective(A, B)) :- subsumed_by([A, B],[ontology, iri]).
 % subClassOf('http://example.org#a', 'http://example.org#b').
 % ontologyAxiom('http://example.org#', subClassOf('http://example.org#a','http://example.org#b')).
 % ==
-:- thread_local(ontologyAxiom/2).
+%:- thread_local(ontologyAxiom/2).
 
 axiompred(ontologyAxiom/2).
 axiom_arguments(ontologyAxiom,[ontology, axiom]).
@@ -602,14 +606,14 @@ valid_axiom(ontologyAxiom(A, B)) :- subsumed_by([A, B],[ontology, axiom]).
 
 %% ontologyImport(?Ontology, ?IRI)
 % True of Ontology imports document IRI
-:- thread_local(ontologyImport/2).
+%:- thread_local(ontologyImport/2).
 
 axiompred(ontologyImport/2).
 axiom_arguments(ontologyImport,[ontology, iri]).
 valid_axiom(ontologyImport(A, B)) :- subsumed_by([A, B],[ontology, iri]).
 
 %% ontologyVersionInfo(?Ontology, ?IRI)
-:- thread_local(ontologyVersionInfo/2).
+%:- thread_local(ontologyVersionInfo/2).
 
 axiompred(ontologyVersionInfo/2).
 axiom_arguments(ontologyVersionInfo,[ontology, iri]).
@@ -2657,7 +2661,7 @@ load_owl_from_stream(S):-
   retractall(M:trdf_setting(_,_)),
   process_rdf(stream(S), assert_list(M), [namespaces(NSList)]),
   close(S),
-  trill:add_kb_prefixes(NSList),
+  trill:add_kb_prefixes(M:NSList),
   rdf_2_owl(M,'ont'),
   owl_canonical_parse_3(M,['ont']),
   parse_probabilistic_annotation_assertions(M).
@@ -2665,20 +2669,19 @@ load_owl_from_stream(S):-
 % Adds a list of kb prefixes into ns4query
 :- multifile trill:add_kb_prefixes/1.
 
-trill:add_kb_prefixes([]).
+trill:add_kb_prefixes(_:[]).
 
-trill:add_kb_prefixes([(H=H1)|T]):-
-  trill:add_kb_prefix(H,H1),
-  trill:add_kb_prefixes(T).
+trill:add_kb_prefixes(M:[(H=H1)|T]):-
+  trill:add_kb_prefix(M:H,H1),
+  trill:add_kb_prefixes(M:T).
 
 % Adds a prefix into ns4query
 :- multifile trill:add_kb_prefix/2.
 
-trill:add_kb_prefix('',B):- !,
-  trill:add_kb_prefix([],B).
+trill:add_kb_prefix(M:'',B):- !,
+  trill:add_kb_prefix(M:[],B).
 
-trill:add_kb_prefix(A,B):-
-  get_module(M),
+trill:add_kb_prefix(M:A,B):-
   M:ns4query(L),!,
   (\+ member((A=_),L) ->
       (retract(M:ns4query(L)),
@@ -2689,14 +2692,12 @@ trill:add_kb_prefix(A,B):-
       true
    ).
    
-trill:add_kb_prefix(A,B):-
-  get_module(M),
+trill:add_kb_prefix(M:A,B):-
   assert(M:ns4query([(A=B)])).
 
 % Removes a prefix from ns4query
 :- multifile trill:remove_kb_prefix/2.
-trill:remove_kb_prefix(A,B):-
-  get_module(M),
+trill:remove_kb_prefix(M:A,B):-
   M:ns4query(L),!,
   (member((A=B),L) ->
       (retract(M:ns4query(L)),
@@ -2708,8 +2709,7 @@ trill:remove_kb_prefix(A,B):-
    ).
 
 :- multifile trill:remove_kb_prefix/1.
-trill:remove_kb_prefix(A):-
-  get_module(M),
+trill:remove_kb_prefix(M:A):-
   M:ns4query(L),!,
   (member((A=B),L) *->
       (retract(M:ns4query(L)),
@@ -2808,8 +2808,16 @@ expand_all_ns(Args,NSList,ExpandedArgs):-
  */
 expand_all_ns([],_,_,[]).
 
-expand_all_ns([literal(LitVal)|T],NSList,AddName,[literal(LitVal)|NewArgs]):- !,
+expand_all_ns([P|T],NSList,AddName,[P|NewArgs]):-
+  nonvar(P),
+  P==literal(_),!,
   expand_all_ns(T,NSList,AddName,NewArgs).
+
+/*
+expand_all_ns([P|T],NSList,AddName,[P|NewArgs]):-
+  var(P),!,
+  expand_all_ns(T,NSList,AddName,NewArgs).
+*/
 
 expand_all_ns([P|T],NSList,AddName,[NP|NewArgs]):-
   compound(P),
@@ -2859,8 +2867,10 @@ expand_ns4query(NS_URL,NSList,AddName, Full_URL):-
 	concat_atom([Long_NS,NS_URL],Full_URL),!,
 	( AddName == true *-> add_kb_atom(Full_URL) ; true).
 
+/*
 expand_ns4query(URL,_,_,URL):-
     var(URL),!.
+*/
 
 % check whether the given atom is present in an axiom
 in_axiom(Atom,[literal(_)|T]):-!,
@@ -2917,20 +2927,19 @@ add_kb_atom(IRI):-
   ).
 
 :- multifile trill:add_axiom/1.
-trill:add_axiom(Ax):-
+trill:add_axiom(M:Ax):-
   Ax =.. [P|Args],
-  create_and_assert_axioms(P,Args).
+  create_and_assert_axioms(M,P,Args).
 
 :- multifile trill:add_axioms/1.
-trill:add_axioms([]).
+trill:add_axioms(_:[]).
 
-trill:add_axioms([H|T]) :-
-  trill:add_axiom(H),
-  trill:add_axioms(T).
+trill:add_axioms(M:[H|T]) :-
+  trill:add_axiom(M:H),
+  trill:add_axioms(M:T).
 
 :- multifile trill:remove_axiom/1.
-trill:remove_axiom(Ax):-
-  get_module(M),
+trill:remove_axiom(M:Ax):-
   ( M:ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
@@ -2943,14 +2952,14 @@ trill:remove_axiom(Ax):-
        )
   ),
   retract_axiom(M,AxEx),
-  retract(M:owl(AxEx,'ont')).
+  retractall(M:owl(AxEx,'ont')),!.
 
 :- multifile trill:remove_axioms/1.
-trill:remove_axioms([]).
+trill:remove_axioms(_:[]):-!.
 
-trill:remove_axioms([H|T]) :-
-  trill:remove_axiom(H),
-  trill:remove_axioms(T).
+trill:remove_axioms(M:[H|T]) :-
+  trill:remove_axiom(M:H),
+  trill:remove_axioms(M:T).
 
 test_and_assert(M,Ax,O):-
   (\+ M:owl(Ax,O) ->
@@ -2970,8 +2979,7 @@ parse_rdf_from_owl_rdf_pred(String):-
   open_chars_stream(String,S),
   load_owl_from_stream(S).
 
-create_and_assert_axioms(P,Args) :-
-  get_module(M),
+create_and_assert_axioms(M,P,Args) :-
   ( M:ns4query(NSList) *-> true; NSList = []),
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
        ( expand_all_ns(IntArgs,NSList,ArgsExp),
@@ -3015,15 +3023,17 @@ sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_)).
 %sandbox:safe_primitive(utility_translation:query_expand(_)).
 
 user:term_expansion(kb_prefix(A,B),[]):-
-  trill:add_kb_prefix(A,B).
+  get_module(M),
+  trill:add_kb_prefix(M:A,B).
 
 user:term_expansion(owl_rdf(String),[]):-
   parse_rdf_from_owl_rdf_pred(String).
   
 user:term_expansion(TRILLAxiom,[]):-
+  get_module(M),
   TRILLAxiom =.. [P|Args],
   is_axiom(P),
-  create_and_assert_axioms(P,Args).
+  create_and_assert_axioms(M,P,Args).
 
 
 

@@ -45,32 +45,32 @@ prolog:message(and_in_and) -->
 :- thread_local keep_env/0.
 
 % to find all axplanations for probabilistic queries
-all_sub_class(ClassEx,SupClassEx,Exps):-
-  assert(keep_env),
-  sub_class(ClassEx,SupClassEx,Exps).
+all_sub_class(M:ClassEx,SupClassEx,Exps):-
+  assert(M:keep_env),
+  sub_class(M:ClassEx,SupClassEx,Exps).
 
-all_instanceOf(ClassEx,IndEx,Exps):-
-  assert(keep_env),
-  instanceOf(ClassEx,IndEx,Exps).
+all_instanceOf(M:ClassEx,IndEx,Exps):-
+  assert(M:keep_env),
+  instanceOf(M:ClassEx,IndEx,Exps).
 
-all_property_value(PropEx,Ind1Ex,Ind2Ex,Exps):-
-  assert(keep_env),
-  property_value(PropEx,Ind1Ex,Ind2Ex,Exps).
+all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
+  assert(M:keep_env),
+  property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps).
 
-all_unsat(ConceptEx,Exps):-
-  assert(keep_env),
-  unsat(ConceptEx,Exps).
+all_unsat(M:ConceptEx,Exps):-
+  assert(M:keep_env),
+  unsat(M:ConceptEx,Exps).
 
-all_inconsistent_theory(Exps):-
-  assert(keep_env),
-  inconsistent_theory(Exps).
+all_inconsistent_theory(M:Print,Exps):-
+  assert(M:keep_env),
+  inconsistent_theory(M:Print,Exps).
 
 
 % checks the explanation
-check_and_close(Expl,Expl):-
-  keep_env,!.
+check_and_close(M,Expl,Expl):-
+  M:keep_env,!.
 
-check_and_close(Expl,dot(Dot)):-
+check_and_close(_,Expl,dot(Dot)):-
   get_bdd_environment(Env),
   create_dot_string(Env,Expl,Dot),
   end_test(Env).
