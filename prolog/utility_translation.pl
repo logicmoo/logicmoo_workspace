@@ -2822,7 +2822,7 @@ expand_all_ns([],_,_,[]).
 
 expand_all_ns([P|T],NSList,AddName,[P|NewArgs]):-
   nonvar(P),
-  P==literal(_),!,
+  P=literal(_),!,
   expand_all_ns(T,NSList,AddName,NewArgs).
 
 /*

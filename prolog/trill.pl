@@ -416,7 +416,7 @@ inconsistent_theory(M:Print,Expl):-
       true
     ;
       ( (Print == true) ->
-          ( print_message(warning,consistent),Expl = [],! )
+          ( print_message(warning,consistent),empty_expl(Expl),! )
         ;
           false
       )
@@ -460,7 +460,7 @@ inconsistent_theory(M:Print):-
 prob_instanceOf(M:Class,Ind,Prob):-gtrace,
   ( check_query_args([Class,Ind],[ClassEx,IndEx]) *->
   	all_instanceOf(M:ClassEx,IndEx,Exps),
-  	compute_prob(Exps,Prob)
+  	compute_prob_and_close(M,Exps,Prob)
   ;
   	print_message(warning,iri_not_exists),!,false
   ).
@@ -474,7 +474,7 @@ prob_instanceOf(M:Class,Ind,Prob):-gtrace,
 prob_property_value(M:Prop, Ind1, Ind2,Prob):-
   ( check_query_args([Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
   	all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps),
-  	compute_prob(Exps,Prob)
+  	compute_prob_and_close(M,Exps,Prob)
   ;
   	print_message(warning,iri_not_exists),!,false
   ).
@@ -489,7 +489,7 @@ prob_property_value(M:Prop, Ind1, Ind2,Prob):-
 prob_sub_class(M:Class,SupClass,Prob):-gtrace,
   ( check_query_args([Class,SupClass],[ClassEx,SupClassEx]) *->
   	all_sub_class(M:ClassEx,SupClassEx,Exps),
-  	compute_prob(Exps,Prob)
+  	compute_prob_and_close(M,Exps,Prob)
   ;
   	print_message(warning,iri_not_exists),!,false
   ).
@@ -504,7 +504,7 @@ prob_sub_class(M:Class,SupClass,Prob):-gtrace,
 prob_unsat(M:Concept,Prob):-
   ( check_query_args([Concept],[ConceptEx]) *->
     all_unsat(M:ConceptEx,Exps),
-    compute_prob(Exps,Prob)
+    compute_prob_and_close(M,Exps,Prob)
   ;
     print_message(warning,iri_not_exists),!,false
   ).
@@ -518,10 +518,10 @@ prob_unsat(M:Concept,Prob):-
  */
 prob_inconsistent_theory(M:Print,Prob):-
   all_inconsistent_theory(M:false,Exps),
-  ( dif(Exps,[]) -> compute_prob(Exps,Prob)
+  ( dif(Exps,[]) -> compute_prob_and_close(M,Exps,Prob)
     ;
       ( (Print == true) ->
-          ( print_message(warning,consistent),Prob=0.0,! )
+          ( print_message(warning,consistent),Prob = 0.0,! )
         ;
           false
       )
@@ -533,7 +533,7 @@ prob_inconsistent_theory(M:Print,Prob):-
 
 % adds the query into the ABox
 add_q(ABox,Query,ABox0):-
-  empty_expl(Expl),
+  initial_expl(Expl),
   add(ABox,(Query,Expl),ABox0).
 
 % expands query arguments using prefixes and checks their existence in the kb
@@ -982,7 +982,7 @@ find_sub_sup_trans_role(R,S,Expl):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S),
   Name:transitiveProperty(R),
-  empty_expl(EExpl),
+  initial_expl(EExpl),
   and_f_ax(subPropertyOf(R,S),EExpl,Expl0),
   and_f_ax(transitive(R),Expl0,Expl).
 
@@ -990,7 +990,7 @@ find_sub_sup_trans_role(R,S,Expl):-
   get_trill_current_module(Name),
   Name:subPropertyOf(R,S),
   \+ Name:transitiveProperty(R),
-  empty_expl(EExpl),
+  initial_expl(EExpl),
   and_f_ax(subPropertyOf(R,S),EExpl,Expl).
 /* ************ */
 
@@ -2472,28 +2472,25 @@ sandbox:safe_meta(trill:load_owl_kb(_),[]).
 
 user:term_expansion((:- trill),[]):-
   utility_translation:get_module(M),
-  utility_translation:set_up(M),
-  M:(dynamic exp_found/2),
-  trill:add_kb_prefixes([('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]),
   unload_file(library(trillp_internal)),
   unload_file(library(tornado_internal)),
-  consult(library(trill_internal)).
+  consult(library(trill_internal)),
+  set_up(M),
+  trill:add_kb_prefixes([('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 user:term_expansion((:- trillp),[]):-
   utility_translation:get_module(M),
-  utility_translation:set_up(M),
-  M:(dynamic exp_found/2),
-  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
   unload_file(library(trill_internal)),
   unload_file(library(tornado_internal)),
-  consult(library(trillp_internal)).
+  consult(library(trillp_internal)),
+  set_up(M),
+  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
 user:term_expansion((:- tornado),[]):-
   utility_translation:get_module(M),
-  utility_translation:set_up(M),
-  M:(dynamic exp_found/2),
-  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']),
   unload_file(library(trill_internal)),
   unload_file(library(trillp_internal)),
-  consult(library(tornado_internal)).
+  consult(library(tornado_internal)),
+  set_up(M),
+  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 

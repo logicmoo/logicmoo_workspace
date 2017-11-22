@@ -23,6 +23,10 @@ details.
 setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]).
 setting_trill(nondet_rules,[or_rule]).
 
+set_up(M):-
+  utility_translation:set_up(M),
+  M:(dynamic exp_found/2, keep_env/0).
+
 /*****************************
   MESSAGES
 ******************************/
@@ -41,8 +45,6 @@ prolog:message(and_in_and) -->
 /***********
   Utilities for queries
  ***********/
-
-:- thread_local keep_env/0.
 
 % to find all axplanations for probabilistic queries
 all_sub_class(M:ClassEx,SupClassEx,Exps):-
@@ -63,8 +65,14 @@ all_unsat(M:ConceptEx,Exps):-
 
 all_inconsistent_theory(M:Print,Exps):-
   assert(M:keep_env),
-  inconsistent_theory(M:Print,Exps).
+  inconsistent_theory(M:Print,Exps),!.
 
+all_inconsistent_theory(_:_,[]).
+
+
+compute_prob_and_close(M,Exps,Prob):-
+  compute_prob(Exps,Prob),
+  retractall(M:keep_env),!.
 
 % checks the explanation
 check_and_close(M,Expl,Expl):-
@@ -184,9 +192,13 @@ Explanation Management
 
 ***********************/
 
-empty_expl(BDD):-
+initial_expl(BDD):-
   get_bdd_environment(Env),
   one(Env,BDD).
+
+empty_expl(BDD):-
+  get_bdd_environment(Env),
+  zero(Env,BDD).
 
 and_f_ax(Axiom,BDD0,BDD):-
   get_bdd_environment(Env),
@@ -228,7 +240,7 @@ test(L1,L2,F):-
 
 /**********************
 
- TRILLP Probability Computation
+ TORNADO Probability Computation
 
 ***********************/
 

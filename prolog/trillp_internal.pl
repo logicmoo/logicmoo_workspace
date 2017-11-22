@@ -25,6 +25,10 @@ details.
 setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]).
 setting_trill(nondet_rules,[or_rule]).
 
+set_up(M):-
+  utility_translation:set_up(M),
+  M:(dynamic exp_found/2).
+
 /*****************************
   MESSAGES
 ******************************/
@@ -59,8 +63,13 @@ all_unsat(M:ConceptEx,Exps):-
 
 
 all_inconsistent_theory(M:Print,Exps):-
-  inconsistent_theory(M:Print,Exps).
+  inconsistent_theory(M:Print,Exps),!.
 
+all_inconsistent_theory(_:_,[]).
+
+
+compute_prob_and_close(M,Exps,Prob):-
+  compute_prob(Exps,Prob).
 
 % checks the explanation
 check_and_close(_,Expl,Expl):-
@@ -177,6 +186,8 @@ build_abox((ABox,Tabs)):-
 Explanation Management
 
 ***********************/
+
+initial_expl([]).
 
 empty_expl([]).
 
