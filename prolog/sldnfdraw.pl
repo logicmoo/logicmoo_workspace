@@ -316,7 +316,7 @@ print_children(M:G,M:R,F,Length,Depth,OpenCuts,ListName):-
 % 3. la clause_is_cut restituisce anche la slide S in cui viene fatto il taglio
 % 4. cambiare la start_pause in una pausa effettuata alla slide S
 % 5. sincronizzare anche le slide seguenti (se necessario)
-    (clause_is_cut(C,SlideCut)	%ATTENZIONE CHE HO TOLTO UNA NEGAZIONE! CONTROLLARE CHE NON CI SIANO DEI BINDING ...
+    (clause_is_cut(M,C,SlideCut)	%ATTENZIONE CHE HO TOLTO UNA NEGAZIONE! CONTROLLARE CHE NON CI SIANO DEI BINDING ...
         ->   write_indented(M,F,Depth,"\\chunk{"),start_pause(M,F,SlideCut), cut_symbol(StringCut), write(F,StringCut),write(F,"}"), end_pause(M,F), fail
 		;    true),
     (check_body_contains_cut(B,OpenCuts,NewCuts,_AddedCut,C)
@@ -366,10 +366,10 @@ check_body_contains_cut(B,OpenCuts,NewCuts,AddedCut,Counter):-
 
 % A clause is not cut if the cut of the current
 % node has not been reached.
-clause_is_not_cut(C):-
-    not(reached(cut(C))).
-clause_is_cut(C,Slide):-
-    reached(cut(C),Slide).
+clause_is_not_cut(M,C):-
+    not(M:reached(cut(C))).
+clause_is_cut(M,C,Slide):-
+    M:reached(cut(C),Slide).
 
 push_cut(L,[cut(C)|L],cut(C),C).
 
@@ -880,7 +880,7 @@ user:term_expansion(end_of_file, end_of_file) :-
 user:term_expansion((:- sldnf), []) :-!,
   prolog_load_context(module, M),
   assert(sldnf_input_mod(M)),
-  M:dynamic((prog_on/0,query_on/0,c/3,query/2)),
+  M:dynamic((prog_on/0,query_on/0,c/3,query/2,reached/1)),
   animations(A),
   assert(M:animations(A)),
   maxdepth(MD),
