@@ -281,7 +281,7 @@ draw(M:[G|R],F,LongestIn,Depth,OpenCuts,ListName):-
     write_indented(M,F,Depth,"\\begin{bundle}{"),
     print_resolvent(M,F,[G|R],ListName),
     writeln(F,"}"),
-    (print_builtin_children(M:G,R,F,Length,Depth1,OpenCuts,ListName);     write_indented(M,F,Depth,"\\end{bundle}")),
+    (print_builtin_children(G,M:R,F,Length,Depth1,OpenCuts,ListName);     write_indented(M,F,Depth,"\\end{bundle}")),
     fail.
 
 % User defined predicate
