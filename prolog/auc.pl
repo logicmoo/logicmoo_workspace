@@ -1,4 +1,4 @@
-/** <module> auc
+/* <module> auc
 
 This module computes the Area Under the Receiving Operating Charactersitics and
 Precision Recall curves using the method of
@@ -16,7 +16,7 @@ Proceedings of the 23rd international conference on Machine learning. ACM, 2006.
 %
 % The predicate takes as input
 %* a list LG of pairs probability-literal in asceding order on probability
-%where the litaral can be an Atom (incading a positive example) or \+ Atom,
+%where the literal can be an Atom (indicating a positive example) or \+ Atom,
 %indicating a negative example while the probability is the probability of
 %Atom of being true
 %
@@ -24,7 +24,7 @@ Proceedings of the 23rd international conference on Machine learning. ACM, 2006.
 %* AUCROC: the size of area under the ROC curve
 %* ROC: the ROC curve as a list of points that are couples of the form x-y
 %* AUCPR: the size of the area under the PR curve
-%* P: the PR curve as a list of points that are couples of the form x-y
+%* PR: the PR curve as a list of points that are couples of the form x-y
 %
 
 
@@ -46,7 +46,7 @@ compute_areas_diagrams(+LG:list,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) i
 
 The predicate takes as input
 * a list LG of pairs probability-literal in asceding order on probability
- where the litaral can be an Atom (incading a positive example) or \+ Atom,
+ where the literal can be an Atom (indicating a positive example) or \+ Atom,
  indicating a negative example while the probability is the probability of
  Atom of being true
 
@@ -64,6 +64,7 @@ See http://cplint.lamping.unife.it/example/exauc.pl for an example
 
 compute_areas_diagrams(LG,AUCROC,ROC,AUCPR,PR):-
   compute_areas(LG,AUCROC,ROC0,AUCPR,PR0),
+  %  write(ROC0),nl,write(PR0),nl,
   ROC = c3{data:_{x:x, rows:[x-'ROC'|ROC0]},
     axis:_{x:_{min:0.0,max:1.0,padding:0.0,
         tick:_{values:[0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]}},
@@ -81,7 +82,7 @@ compute_maxacc(+LG:list,-MaxAcc) is det
 
 The predicate takes as input
 * a list LG of pairs probability-literal in asceding order on probability
- where the litaral can be an Atom (incading a positive example) or \+ Atom,
+ where the literal can be an Atom (indicating a positive example) or \+ Atom,
  indicating a negative example while the probability is the probability of
  Atom of being true
 
@@ -109,7 +110,7 @@ compute_acc_list(+LG:list, +TP:int, +FP:int, +FN:int, +TN:int, +AccList0:list, -
 
 The predicate takes as input
 * LG: a list LG of pairs probability-literal in asceding order on probability
- where the litaral can be an Atom (incading a positive example) or \+ Atom,
+ where the literal can be an Atom (indicating a positive example) or \+ Atom,
  indicating a negative example while the probability is the probability of
  Atom of being true
 * TP: the current number of true positive examples
