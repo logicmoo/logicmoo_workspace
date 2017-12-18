@@ -227,7 +227,8 @@ draw(_M:[],F,Longest,_,_,_):-
 draw(_,F,Longest,Depth,_,_):- Depth=<0, !,
     print_string_spaces(F,Longest,"..."),
     fail.
-draw(M:[not(G)|R],F,LongestIn,Depth,OpenCuts,ListName):-
+draw(M:[H|R],F,LongestIn,Depth,OpenCuts,ListName):-
+    negative(H,G),
     Depth1 is Depth-1,
     write_indented(M,F,Depth,"\\begin{bundle}{"),
     print_resolvent(M,F,[not(G)|R],ListName),
@@ -357,6 +358,10 @@ print_builtin_children(G,M:_,F,Length,Depth,_OpenCuts,_):-
     print_fail(M,F,Depth,Length),
     fail.
 
+
+negative(not(G),G):-!.
+
+negative(\+(G),G).
 %%%%%%%%%%%%%%%% Predicates fot cut handling %%%%%%%%%%%%%%%%%
 
 %check_body_contains_cut(+Body,++OpenCuts,-NewCuts,-AddedCut,++Counter)
@@ -631,7 +636,7 @@ vanilla(M:not(X)) :- !,
 vanilla(_M:X) :-
     built_in(X), call(X).
 vanilla(M:X) :-
-    clausola_list(M:X,Body,_,_),
+    M:c(X,Body,_),
     vanilla(M:Body).
 
 term_length(G,Length):-
@@ -670,7 +675,8 @@ max_subtree_width(M:[A|B],Width):- built_in(A),!,
 max_subtree_width(M:[A|B],Width):-!,
 	term_length_chopped([A|B],W1),
 	findall(W,
-		(	clausola_list(M:A,Body,_,_),
+		(	
+            M:c(A,Body,_),
 			append(Body,B,Resolvent),
 			max_subtree_width(M:Resolvent,W)
 		),
