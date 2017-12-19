@@ -71,7 +71,7 @@ all_inconsistent_theory(_:_,[]).
 
 
 compute_prob_and_close(M,Exps,Prob):-
-  compute_prob(Exps,Prob),
+  compute_prob(M,Exps,Prob),
   retractall(M:keep_env),!.
 
 % checks the explanation
@@ -79,7 +79,7 @@ check_and_close(M,Expl,Expl):-
   M:keep_env,!.
 
 check_and_close(_,Expl,dot(Dot)):-
-  get_bdd_environment(Env),
+  get_bdd_environment(M,Env),
   create_dot_string(Env,Expl,Dot),
   end_test(Env).
 
@@ -87,20 +87,20 @@ check_and_close(_,Expl,dot(Dot)):-
 
 % checks if an explanations was already found
 find_expls(_,[],_,BDD):-
-  get_bdd_environment(Env),
+  get_bdd_environment(M,Env),
   zero(Env,BDD).
 
 % checks if an explanations was already found (instance_of version)
 find_expls(_,[ABox|T],[C,I],E):-
   clash(ABox,E0),!,
   find_expls(_,T,[C,I],E1),
-  or_f(E0,E1,E).
+  or_f(M,E0,E1,E).
 
 % checks if an explanations was already found (property_value version)
 find_expls(_,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),!,
   find_expls(_,T,[PropEx,Ind1Ex,Ind2Ex],E1),
-  or_f(E0,E1,E).
+  or_f(M,E0,E1,E).
   
 
 find_expls(_,[_ABox|T],Query,Expl):-
@@ -123,7 +123,7 @@ or_all([],[]).
 
 or_all([H|T],Expl):-
   or_all(T,Expl1),
-  or_f(H,Expl1,Expl).
+  or_f(M,H,Expl1,Expl).
 
 /* ************* */
 
@@ -164,9 +164,9 @@ build_abox((ABox,Tabs)):-
   assert(rule_n(0)),
   get_trill_current_module(Name),
   findall(1,Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
-  get_bdd_environment(NV,Env),
-  findall((classAssertion(Class,Individual),BDDCA),(Name:classAssertion(Class,Individual),bdd_and(Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
-  findall((propertyAssertion(Property,Subject, Object),BDDPA),(Name:propertyAssertion(Property,Subject, Object),bdd_and(Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
+  get_bdd_environment(M,NV,Env),
+  findall((classAssertion(Class,Individual),BDDCA),(Name:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
+  findall((propertyAssertion(Property,Subject, Object),BDDPA),(Name:propertyAssertion(Property,Subject, Object),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),Name:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
@@ -176,12 +176,12 @@ build_abox((ABox,Tabs)):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),BDDDIA),(Name:differentIndividuals(Ld),bdd_and(Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
+  findall((differentIndividuals(Ld),BDDDIA),(Name:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),BDDSIA),(Name:sameIndividual(L),bdd_and(Env,[sameIndividual(L)],BDDSIA)),LSIA),
+  findall((sameIndividual(L),BDDSIA),(Name:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
   merge_all(LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
   !.
@@ -193,35 +193,35 @@ Explanation Management
 ***********************/
 
 initial_expl(BDD):-
-  get_bdd_environment(Env),
+  get_bdd_environment(M,Env),
   one(Env,BDD).
 
 empty_expl(BDD):-
-  get_bdd_environment(Env),
+  get_bdd_environment(M,Env),
   zero(Env,BDD).
 
-and_f_ax(Axiom,BDD0,BDD):-
-  get_bdd_environment(Env),
-  bdd_and(Env,[Axiom],BDDAxiom),
-  and_f(BDDAxiom,BDD0,BDD).
+and_f_ax(M,Axiom,BDD0,BDD):-
+  get_bdd_environment(M,Env),
+  bdd_and(M,Env,[Axiom],BDDAxiom),
+  and_f(M,BDDAxiom,BDD0,BDD).
 
 % and between two BDDs
-and_f([],BDD,BDD):- !.
+and_f(_,[],BDD,BDD):- !.
 
-and_f(BDD,[],BDD):- !.
+and_f(_,BDD,[],BDD):- !.
 
-and_f(BDD0,BDD1,BDD):-
-  get_bdd_environment(Env),
+and_f(M,BDD0,BDD1,BDD):-
+  get_bdd_environment(M,Env),
   and(Env,BDD0,BDD1,BDD).
 
 
 % or between two formulae
-or_f([],BDD,BDD):- !.
+or_f(_,[],BDD,BDD):- !.
   
-or_f(BDD,[],BDD):- !.
+or_f(_,BDD,[],BDD):- !.
   
-or_f(BDD0,BDD1,BDD):-
-  get_bdd_environment(Env),
+or_f(M,BDD0,BDD1,BDD):-
+  get_bdd_environment(M,Env),
   or(Env,BDD0,BDD1,BDD).
 
 
@@ -234,7 +234,7 @@ TRILLP SAT TEST
 test(L1,L2,F):-
   %build_f(L1,L2,F),
   %sat(F).
-  or_f(L1,L2,F),
+  or_f(M,L1,L2,F),
   dif(L2,F).
 
 
@@ -244,30 +244,30 @@ test(L1,L2,F):-
 
 ***********************/
 
-:- thread_local trillpbdd_environment/1.
+:- thread_local tornado_bdd_environment/1.
 
-get_bdd_environment(_NV,Env):-
-  trillpbdd_environment(Env),!.
+get_bdd_environment(M,_NV,Env):-
+  M:tornado_bdd_environment(Env),!.
 
-get_bdd_environment(NV,Env):-
+get_bdd_environment(M,NV,Env):-
   init_test(NV,Env),
-  assert(trillpbdd_environment(Env)).
+  M:assert(tornado_bdd_environment(Env)).
 
-get_bdd_environment(Env):-
-  trillpbdd_environment(Env),!.
+get_bdd_environment(M,Env):-
+  M:tornado_bdd_environment(Env),!.
 
-clean_environment(Env):-
+clean_environment(M,Env):-
   end_test(Env),
-  retractall(trillpbdd_environment(_)).
+  retractall(M:tornado_bdd_environment(_)).
 
 
-build_bdd(_Env,BDD,BDD).
+build_bdd(_,_Env,BDD,BDD).
 
-bdd_and(Env,[X],BDDX):-
-  get_prob_ax(X,AxN,Prob),!,
+bdd_and(M,Env,[X],BDDX):-
+  get_prob_ax(M,X,AxN,Prob),!,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_and(Env,[_X],BDDX):- !,
+bdd_and(M,Env,[_X],BDDX):- !,
   one(Env,BDDX).

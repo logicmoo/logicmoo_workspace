@@ -69,7 +69,7 @@ all_inconsistent_theory(_:_,[]).
 
 
 compute_prob_and_close(M,Exps,Prob):-
-  compute_prob(Exps,Prob).
+  compute_prob(M,Exps,Prob).
 
 % checks the explanation
 check_and_close(_,Expl,Expl):-
@@ -83,13 +83,13 @@ find_expls(_,[],_,[]).
 find_expls(_,[ABox|T],[C,I],E):-
   clash(ABox,E0),!,
   find_expls(_,T,[C,I],E1),
-  or_f(E0,E1,E).
+  or_f(M,E0,E1,E).
 
 % checks if an explanations was already found (property_value version)
 find_expls(_,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),!,
   find_expls(_,T,[PropEx,Ind1Ex,Ind2Ex],E1),
-  or_f(E0,E1,E).
+  or_f(M,E0,E1,E).
   
 
 find_expls(_,[_ABox|T],Query,Expl):-
@@ -112,7 +112,7 @@ or_all([],[]).
 
 or_all([H|T],Expl):-
   or_all(T,Expl1),
-  or_f(H,Expl1,Expl).
+  or_f(M,H,Expl1,Expl).
 
 /* ************* */
 
@@ -128,7 +128,7 @@ modify_ABox(ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
    ;
      (subset(Expl1,L0) -> fail 
       ;
-        (test(L0,Expl1),or_f(L0,Expl1,Expl))
+        (test(L0,Expl1),or_f(M,L0,Expl1,Expl))
      )
   ),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
@@ -143,7 +143,7 @@ modify_ABox(ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
      Expl = L0
    ;
      % L0 is the new explanation, i.e. the \psi and Expl1 is the old label of an essertion
-     (test(L0,Expl1),or_f(L0,Expl1,Expl))
+     (test(L0,Expl1),or_f(M,L0,Expl1,Expl))
   ),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
   
@@ -191,153 +191,153 @@ initial_expl([]).
 
 empty_expl([]).
 
-and_f_ax(Axiom,F0,F):-
-  and_f(*([Axiom]),F0,F).
+and_f_ax(M,Axiom,F0,F):-
+  and_f(M,*([Axiom]),F0,F).
 
 % and between two formulae
-and_f([],[],[]):-!.
+and_f(_,[],[],[]):-!.
 
-and_f([],F,F):-!.
+and_f(_,[],F,F):-!.
 
-and_f(F,[],F):-!.
+and_f(_,F,[],F):-!.
 
 % absorption for subformula (a * (b + (c * d))) * (c * d * e) = a * c * d * e
-and_f(*(A1),*(A2),*(A)):-
+and_f(M,*(A1),*(A2),*(A)):-
   member(+(O1),A1),
   member(*(AO1),O1),
   subset(AO1,A2),!,
   delete(A1,+(O1),A11),
-  and_f(*(A11),*(A2),*(A)).
+  and_f(M,*(A11),*(A2),*(A)).
 % (a * (b + c + e)) * (c * d) = a * c * d
-and_f(*(A1),*(A2),*(A)):-
+and_f(M,*(A1),*(A2),*(A)):-
   member(+(O1),A1),
   member(X,O1),
   member(X,A2),!,
   delete(A1,+(O1),A11),
-  and_f(*(A11),*(A2),*(A)).
+  and_f(M,*(A11),*(A2),*(A)).
 % absorption for subformula (c * d * e)  (a * (b + (c * d))) = c * d * e * a
-and_f(*(A1),*(A2),*(A)):-
+and_f(M,*(A1),*(A2),*(A)):-
   member(+(O2),A2),
   member(*(AO2),O2),
   subset(AO2,A1),!,
   delete(A2,+(O2),A21),
-  and_f(*(A1),*(A21),*(A)).
+  and_f(M,*(A1),*(A21),*(A)).
 % (c * d) * (a * (b + c + e)) = c * d * a
-and_f(*(A1),*(A2),*(A)):-
+and_f(M,*(A1),*(A2),*(A)):-
   member(+(O2),A2),
   member(X,O2),
   member(X,A1),!,
   delete(A2,+(O2),A21),
-  and_f(*(A1),*(A21),*(A)).
+  and_f(M,*(A1),*(A21),*(A)).
 % (a * b) * (a * c) = a * b * c
-and_f(*(A1),*(A2),*(A)):-!,
+and_f(M,*(A1),*(A2),*(A)):-!,
   append(A1,A2,A0),
   sort(A0,A).
 
 % absorption x * (x + y) = x
-and_f(*(A1),+(O1),*(A1)):-
+and_f(M,*(A1),+(O1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(*(A1),+(O1),*(A)):-
+and_f(M,*(A1),+(O1),*(A)):-
   append(A1,[+(O1)],A).
 
 % absorption x * (x + y) = x
-and_f(+(O1),*(A1),*(A1)):-
+and_f(M,+(O1),*(A1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(+(O1),*(A1),*(A)):-
+and_f(M,+(O1),*(A1),*(A)):-
   append([+(O1)],A1,A).
 
-and_f(+(O1),+(O2),*([+(O1),+(O2)])).
+and_f(M,+(O1),+(O2),*([+(O1),+(O2)])).
 /*
-and_f([],[],[]):-!.
-and_f([],F2,F2):-!.
-and_f(F1,[],F1):-!.
-and_f(*(L1),*(L2),*(L)):-!,
+and_f(M,[],[],[]):-!.
+and_f(M,[],F2,F2):-!.
+and_f(M,F1,[],F1):-!.
+and_f(M,*(L1),*(L2),*(L)):-!,
   flatten([L1,L2],L0),
   remove_duplicates(L0,L).
-and_f(+(L1),*(L2),*(L)):-!,
+and_f(M,+(L1),*(L2),*(L)):-!,
   flatten([L2,+(L1)],L0),
   remove_duplicates(L0,L).
-and_f(*(L1),+(L2),*(L)):-!,
+and_f(M,*(L1),+(L2),*(L)):-!,
   flatten([L1,+(L2)],L0),
   remove_duplicates(L0,L).  
-and_f(+(L1),+(L2),*(L)):-!,
+and_f(M,+(L1),+(L2),*(L)):-!,
   flatten([+(L1),+(L2)],L0),
   remove_duplicates(L0,L).
-and_f([El],[*(L2)],*(L)):-!,gtrace,
+and_f(M,[El],[*(L2)],*(L)):-!,gtrace,
   flatten([El,L2],L0),
   remove_duplicates(L0,L).  
-and_f([El],[+(L2)],*(L)):-!,gtrace,
+and_f(M,[El],[+(L2)],*(L)):-!,gtrace,
   flatten([El,+(L2)],L0),
   remove_duplicates(L0,L).
-and_f([*(L1)],[El],*(L)):-!,gtrace,
+and_f(M,[*(L1)],[El],*(L)):-!,gtrace,
   flatten([El,L1],L0),
   remove_duplicates(L0,L).  
-and_f([+(L1)],[El],*(L)):-!,gtrace,
+and_f(M,[+(L1)],[El],*(L)):-!,gtrace,
   flatten([El,+(L1)],L0),
   remove_duplicates(L0,L).  
-and_f([El1],[El2],*(L)):-gtrace,
+and_f(M,[El1],[El2],*(L)):-gtrace,
   flatten([El1,El2],L0),
   remove_duplicates(L0,L).
 */
 
 /*
 % or between two formulae
-or_f([],[],[]):-!.
+or_f(M,[],[],[]):-!.
 
-or_f([],F,F):-!.
+or_f(M,[],F,F):-!.
 
-or_f(F,[],F):-!.
+or_f(M,F,[],F):-!.
 
 % absorption for subformula (a + (b * (c + d))) + (c + d + e) = a + c + d + e
-or_f(+(A1),+(A2),+(A)):-
+or_f(M,+(A1),+(A2),+(A)):-
   member(*(O1),A1),
   member(+(AO1),O1),
   subset(AO1,A2),!,
   delete(A1,*(O1),A11),
-  or_f(+(A11),+(A2),+(A)).
+  or_f(M,+(A11),+(A2),+(A)).
 % (a + (b * c * e)) + (c + d) = a + c + d
-or_f(+(A1),+(A2),+(A)):-
+or_f(M,+(A1),+(A2),+(A)):-
   member(*(O1),A1),
   member(X,O1),
   member(X,A2),!,
   delete(A1,*(O1),A11),
-  or_f(+(A11),+(A2),+(A)).
+  or_f(M,+(A11),+(A2),+(A)).
 % absorption for subformula (c + d + e)  (a + (b * (c + d))) = c + d + e + a
-or_f(+(A1),+(A2),+(A)):-
+or_f(M,+(A1),+(A2),+(A)):-
   member(*(O2),A2),
   member(+(AO2),O2),
   subset(AO2,A1),!,
   delete(A2,*(O2),A21),
-  or_f(+(A1),+(A21),+(A)).
+  or_f(M,+(A1),+(A21),+(A)).
 % (c + d) + (a + (b * c * e)) = c + d + a
-or_f(+(A1),+(A2),+(A)):-
+or_f(M,+(A1),+(A2),+(A)):-
   member(*(O2),A2),
   member(X,O2),
   member(X,A1),!,
   delete(A2,*(O2),A21),
-  or_f(+(A1),+(A21),+(A)).
+  or_f(M,+(A1),+(A21),+(A)).
 % (a + b) + (a + c) = a + b + c
-or_f(+(A1),+(A2),+(A)):-!,
+or_f(M,+(A1),+(A2),+(A)):-!,
   append(A1,A2,A0),
   sort(A0,A).
 
 % absorption x + (x * y) = x
-or_f(*(A1),+(O1),*(A1)):-
+or_f(M,*(A1),+(O1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-or_f(*(A1),+(O1),*(A)):-
+or_f(M,*(A1),+(O1),*(A)):-
   append(A1,[+(O1)],A).
 
 % absorption x + (x * y) = x
-or_f(+(O1),*(A1),*(A1)):-
+or_f(M,+(O1),*(A1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-or_f(+(O1),*(A1),*(A)):-
+or_f(M,+(O1),*(A1),*(A)):-
   append([+(O1)],A1,A).
 
-or_f(*(O1),*(O2),+([*(O1),*(O2)])).
+or_f(M,*(O1),*(O2),+([*(O1),*(O2)])).
 */
 
 /*
@@ -449,14 +449,14 @@ formule_decomp([El1],[El2],[El1],[El2],[],[El1],[El2]):- !.
  
 %computes a compact formula strarting from 2 formulae 
 /*
-or_f([],[],[]):-!.
+or_f(M,[],[],[]):-!.
 
-or_f([],F,F):-!.
+or_f(M,[],F,F):-!.
 
-or_f(F,[],F):-!.
+or_f(M,F,[],F):-!.
 */
 
-or_f(F1,F2,F):-
+or_f(M,F1,F2,F):-
   or_f_int([F1],[F2],[F]).
 
 or_f_int([*(FC1)],[FC2],OrF):- !,
@@ -561,7 +561,7 @@ remove_duplicates(A,C):-sort(A,C).
 TRILLP SAT TEST
 
 ***********************/
-/**
+/*
 L1 is the \psi
 L2 is the old label of the assertion, e.g. lab(n : D) in the unfold rule
 I check if L1*(~L2) is satisfiable with sat/2. If it is satifiable it means that L1 does not model L2, i.e. \psi \not\models L2
@@ -617,94 +617,94 @@ bool_op(~(_)):-!.
 
 ***********************/
 
-get_bdd_environment(NV,Env):-
+get_bdd_environment(M,NV,Env):-
   init_test(NV,Env).
 
-clean_environment(Env):-
+clean_environment(M,Env):-
   end_test(Env).
 
 
-build_bdd(Env,*(F),BDD):-
-  bdd_and(Env,F,BDD).
+build_bdd(M,Env,*(F),BDD):-
+  bdd_and(M,Env,F,BDD).
 
-build_bdd(Env,+(F),BDD):-
-  bdd_or(Env,F,BDD).
+build_bdd(M,Env,+(F),BDD):-
+  bdd_or(M,Env,F,BDD).
 
 
-bdd_and(Env,[+(X)],BDDX):-!,
-  bdd_or(Env,X,BDDX).
+bdd_and(M,Env,[+(X)],BDDX):-!,
+  bdd_or(M,Env,X,BDDX).
 
-bdd_and(_Env,[*(_X)],_BDDX):-
+bdd_and(_,_Env,[*(_X)],_BDDX):-
   write('error: *([*(_)])'),
   print_message(error,and_in_and),!,false.
 
-bdd_and(Env,[X],BDDX):-
-  get_prob_ax(X,AxN,Prob),!,
+bdd_and(M,Env,[X],BDDX):-
+  get_prob_ax(M,X,AxN,Prob),!,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_and(Env,[_X],BDDX):- !,
+bdd_and(M,Env,[_X],BDDX):- !,
   one(Env,BDDX).
 
-bdd_and(Env,[+(H)|T],BDDAnd):-!,
-  bdd_or(Env,H,BDDH),
-  bdd_and(Env,T,BDDT),
+bdd_and(M,Env,[+(H)|T],BDDAnd):-!,
+  bdd_or(M,Env,H,BDDH),
+  bdd_and(M,Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
 
-bdd_and(_Env,[*(_H)|_T],_BDDX):-
+bdd_and(_,_Env,[*(_H)|_T],_BDDX):-
   write('error: *([*(_)|_])'),
   print_message(error,and_in_and),!,false.
 
-bdd_and(Env,[H|T],BDDAnd):-
-  get_prob_ax(H,AxN,Prob),!,
+bdd_and(M,Env,[H|T],BDDAnd):-
+  get_prob_ax(M,H,AxN,Prob),!,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VH),
   equality(Env,VH,0,BDDH),
-  bdd_and(Env,T,BDDT),
+  bdd_and(M,Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
   
-bdd_and(Env,[_H|T],BDDAnd):- !,
+bdd_and(M,Env,[_H|T],BDDAnd):- !,
   one(Env,BDDH),
-  bdd_and(Env,T,BDDT),
+  bdd_and(M,Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
 
 
-bdd_or(Env,[*(X)],BDDX):-!,
-  bdd_and(Env,X,BDDX).
+bdd_or(M,Env,[*(X)],BDDX):-!,
+  bdd_and(M,Env,X,BDDX).
 
-bdd_or(_Env,[+(_X)],_BDDX):-
+bdd_or(_,_Env,[+(_X)],_BDDX):-
   write('error: +([+(_)])'),
   print_message(error,or_in_or),!,false.
 
-bdd_or(Env,[X],BDDX):-
-  get_prob_ax(X,AxN,Prob),!,
+bdd_or(M,Env,[X],BDDX):-
+  get_prob_ax(M,X,AxN,Prob),!,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_or(Env,[_X],BDDX):- !,
+bdd_or(M,Env,[_X],BDDX):- !,
   zero(Env,BDDX).
 
-bdd_or(Env,[*(H)|T],BDDAnd):-!,
-  bdd_and(Env,H,BDDH),
-  bdd_or(Env,T,BDDT),
+bdd_or(M,Env,[*(H)|T],BDDAnd):-!,
+  bdd_and(M,Env,H,BDDH),
+  bdd_or(M,Env,T,BDDT),
   or(Env,BDDH,BDDT,BDDAnd).
 
-bdd_or(_Env,[+(_H)|_T],_BDDX):-
+bdd_or(_,_Env,[+(_H)|_T],_BDDX):-
   write('error: +([+(_)|_])'),
   print_message(error,or_in_or),!,false.
 
-bdd_or(Env,[H|T],BDDAnd):-
-  get_prob_ax(H,AxN,Prob),!,
+bdd_or(M,Env,[H|T],BDDAnd):-
+  get_prob_ax(M,H,AxN,Prob),!,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VH),
   equality(Env,VH,0,BDDH),
-  bdd_or(Env,T,BDDT),
+  bdd_or(M,Env,T,BDDT),
   or(Env,BDDH,BDDT,BDDAnd).
   
-bdd_or(Env,[_H|T],BDDAnd):- !,
+bdd_or(M,Env,[_H|T],BDDAnd):- !,
   zero(Env,BDDH),
-  bdd_or(Env,T,BDDT),
+  bdd_or(M,Env,T,BDDT),
   or(Env,BDDH,BDDT,BDDAnd).
 

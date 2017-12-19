@@ -50,7 +50,7 @@ all_inconsistent_theory(M:Print,Exps):-
 
 
 compute_prob_and_close(M,Exps,Prob):-
-  compute_prob(Exps,Prob).
+  compute_prob(M,Exps,Prob).
 
 % checks the explanation
 check_and_close(_,Expl,Expl):-
@@ -130,46 +130,40 @@ find_neg_class(maxCardinality(N,R,C),minCardinality(NMin,R,C)):-
 :- multifile find_sub_sup_class/3.
 
 %role for concepts exactCardinality
-find_sub_sup_class(exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S)):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S).
+find_sub_sup_class(M,exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S)):-
+  M:subPropertyOf(R,S).
 
 %concept for concepts exactCardinality
-find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
-  find_sub_sup_class(C,D,Ax).
+find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts exactCardinality
-find_sub_sup_class(exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S).
+find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
+  M:subPropertyOf(R,S).
 
 %role for concepts maxCardinality
-find_sub_sup_class(maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S)):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S).
+find_sub_sup_class(M,maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S)):-
+  M:subPropertyOf(R,S).
 
 %concept for concepts maxCardinality
-find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
-  find_sub_sup_class(C,D,Ax).
+find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts maxCardinality
-find_sub_sup_class(maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S).
+find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
+  M:subPropertyOf(R,S).
 
 %role for concepts minCardinality
-find_sub_sup_class(minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S)):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S).
+find_sub_sup_class(M,minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S)):-
+  M:subPropertyOf(R,S).
 
 %concept for concepts minCardinality
-find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
-  find_sub_sup_class(C,D,Ax).
+find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts minCardinality
-find_sub_sup_class(minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
-  get_trill_current_module(Name),
-  Name:subPropertyOf(R,S).
+find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
+  M:subPropertyOf(R,S).
 
 /* ************* */
 
@@ -351,10 +345,10 @@ initial_expl([]).
 
 empty_expl([]).
 
-and_f_ax(Axiom,F0,F):-
-  and_f([Axiom],F0,F).
+and_f_ax(M,Axiom,F0,F):-
+  and_f(M,[Axiom],F0,F).
 
-and_f(Expl1,Expl2,Expl):-
+and_f(M,Expl1,Expl2,Expl):-
   append(Expl1,Expl2,ExplT),
   list_to_set(ExplT,Expl).
 
@@ -365,44 +359,44 @@ and_f(Expl1,Expl2,Expl):-
 
 ***********************/
 
-get_bdd_environment(NV,Env):-
+get_bdd_environment(M,NV,Env):-
   init_test(NV,Env).
 
-clean_environment(Env):-
+clean_environment(M,Env):-
   end_test(Env).
 
 
-build_bdd(Env,[X],BDD):- !,
-  bdd_and(Env,X,BDD).
+build_bdd(M,Env,[X],BDD):- !,
+  bdd_and(M,Env,X,BDD).
 
-build_bdd(Env, [H|T],BDD):-
-  build_bdd(Env,T,BDDT),
-  bdd_and(Env,H,BDDH),
+build_bdd(M,Env, [H|T],BDD):-
+  build_bdd(M,Env,T,BDDT),
+  bdd_and(M,Env,H,BDDH),
   or(Env,BDDH,BDDT,BDD).
 
-build_bdd(Env,[],BDD):- !,
+build_bdd(M,Env,[],BDD):- !,
   zero(Env,BDD).
 
 
-bdd_and(Env,[X],BDDX):-
-  get_prob_ax(X,AxN,Prob),!,
+bdd_and(M,Env,[X],BDDX):-
+  get_prob_ax(M,X,AxN,Prob),!,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_and(Env,[_X],BDDX):- !,
+bdd_and(M,Env,[_X],BDDX):- !,
   one(Env,BDDX).
 
-bdd_and(Env,[H|T],BDDAnd):-
-  get_prob_ax(H,AxN,Prob),!,
+bdd_and(M,Env,[H|T],BDDAnd):-
+  get_prob_ax(M,H,AxN,Prob),!,
   ProbN is 1-Prob,
   get_var_n(Env,AxN,[],[Prob,ProbN],VH),
   equality(Env,VH,0,BDDH),
-  bdd_and(Env,T,BDDT),
+  bdd_and(M,Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
   
-bdd_and(Env,[_H|T],BDDAnd):- !,
+bdd_and(M,Env,[_H|T],BDDAnd):- !,
   one(Env,BDDH),
-  bdd_and(Env,T,BDDT),
+  bdd_and(M,Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
 
