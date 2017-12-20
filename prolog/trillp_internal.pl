@@ -161,7 +161,7 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 build_abox(M,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),M:propertyAssertion(Property,Subject, Object),LPA),
-  % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
+  % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
   new_tabs(Tabs0),

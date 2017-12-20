@@ -161,11 +161,10 @@ load_owl_kb(FileName):-
  * This predicate searches in the loaded knowledge base axioms that unify with Axiom.
  */
 :- multifile axiom/1.
-/*axiom(Axiom):-
-  get_trill_current_module(Name),
-  Name:ns4query(NSList),
+/*axiom(M:Axiom):-
+  M:ns4query(NSList),
   expand_all_ns([Axiom],NSList,[AxiomEx]),
-  Name:axiom(AxiomEx).*/
+  M:axiom(AxiomEx).*/
 
 /*****************************
   MESSAGES
@@ -559,8 +558,8 @@ check_query_args_presence(M,[H|T]) :-
   check_query_args_presence(M,T).
 
 /*
-check_query_args_presence([_|T],Name):-
-  check_query_args_presence(T,Name).
+check_query_args_presence(M,[_|T]):-
+  check_query_args_presence(M,T).
 */
 
 % looks for presence of atoms in kb's axioms
@@ -983,7 +982,6 @@ find_sub_sup_trans_role(M,R,S,Expl):-
   and_f_ax(M,transitive(R),Expl0,Expl).
 
 find_sub_sup_trans_role(M,R,S,Expl):-
-  get_trill_current_module(Name),
   M:subPropertyOf(R,S),
   \+ M:transitiveProperty(R),
   initial_expl(EExpl),
@@ -1443,7 +1441,7 @@ o_rule(M,(ABox0,Tabs0),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
   findClassAssertion(oneOf([D]),Y,ExplY,ABox0),
   containsCommon(C,D),
   dif(X,Y),
-  notDifferentIndividuals(X,Y,ABox0),
+  notDifferentIndividuals(M,X,Y,ABox0),
   nominal(C,(ABox0,Tabs0)),
   indAsList(X,LX),
   indAsList(Y,LY),

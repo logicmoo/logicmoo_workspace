@@ -180,40 +180,36 @@ modify_ABox(_,ABox,P,Ind1,Ind2,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]
 /* ************* */
 
 % -------------------
-notDifferentIndividuals(X,Y,ABox):-
-  \+ inAssertDifferentIndividuals(X,Y),
+notDifferentIndividuals(M,X,Y,ABox):-
+  \+ inAssertDifferentIndividuals(M,X,Y),
   \+ inABoxDifferentIndividuals(X,Y,ABox).
 
 % --------------
 
-inAssertDifferentIndividuals(differentIndividuals(X),differentIndividuals(Y)):-
+inAssertDifferentIndividuals(M,differentIndividuals(X),differentIndividuals(Y)):-
   !,
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
+  M:differentIndividuals(LI),
   member(X0,X),
   member(X0,LI),
   member(Y0,Y),
   member(Y0,LI).
 
-inAssertDifferentIndividuals(X,sameIndividual(Y)):-
+inAssertDifferentIndividuals(M,X,sameIndividual(Y)):-
   !,
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
+  M:differentIndividuals(LI),
   member(X,LI),
   member(Y0,Y),
   member(Y0,LI).
 
-inAssertDifferentIndividuals(sameIndividual(X),Y):-
+inAssertDifferentIndividuals(M,sameIndividual(X),Y):-
   !,
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
+  M:differentIndividuals(LI),
   member(X0,X),
   member(X0,LI),
   member(Y,LI).
 
-inAssertDifferentIndividuals(X,Y):-
-  get_trill_current_module(Name),
-  Name:differentIndividuals(LI),
+inAssertDifferentIndividuals(M,X,Y):-
+  M:differentIndividuals(LI),
   member(X,LI),
   member(Y,LI).
 
@@ -312,7 +308,7 @@ absent1(sameIndividual(L),Expl,ABox):-
 build_abox(M,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),M:propertyAssertion(Property,Subject, Object),LPA),
-  % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
+  % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
   new_tabs(Tabs0),
