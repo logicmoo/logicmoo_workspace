@@ -2438,7 +2438,7 @@ user:term_expansion((:- trill),[]):-
   unload_file(library(tornado_internal)),
   consult(library(trill_internal)),
   set_up(M),
-  trill:add_kb_prefixes([('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
+  trill:add_kb_prefixes(M:[('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 user:term_expansion((:- trillp),[]):-
   utility_translation:get_module(M),
@@ -2446,7 +2446,7 @@ user:term_expansion((:- trillp),[]):-
   unload_file(library(tornado_internal)),
   consult(library(trillp_internal)),
   set_up(M),
-  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
+  trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
 user:term_expansion((:- tornado),[]):-
   utility_translation:get_module(M),
@@ -2454,5 +2454,5 @@ user:term_expansion((:- tornado),[]):-
   unload_file(library(trillp_internal)),
   consult(library(tornado_internal)),
   set_up(M),
-  trill:add_kb_prefixes(['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
+  trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
