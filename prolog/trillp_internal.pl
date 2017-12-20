@@ -77,7 +77,7 @@ check_and_close(_,Expl,Expl):-
 
 
 % checks if an explanations was already found
-find_expls(_M,[],_,[]).
+find_expls(_M,[],_,[]):-!.
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|T],[C,I],E):-
@@ -186,9 +186,9 @@ Explanation Management
 
 ***********************/
 
-initial_expl([]).
+initial_expl(_M,[]):-!.
 
-empty_expl([]).
+empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
   and_f(M,*([Axiom]),F0,F).
@@ -229,25 +229,25 @@ and_f(M,*(A1),*(A2),*(A)):-
   delete(A2,+(O2),A21),
   and_f(M,*(A1),*(A21),*(A)).
 % (a * b) * (a * c) = a * b * c
-and_f(M,*(A1),*(A2),*(A)):-!,
+and_f(_M,*(A1),*(A2),*(A)):-!,
   append(A1,A2,A0),
   sort(A0,A).
 
 % absorption x * (x + y) = x
-and_f(M,*(A1),+(O1),*(A1)):-
+and_f(_M,*(A1),+(O1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(M,*(A1),+(O1),*(A)):-
+and_f(_M,*(A1),+(O1),*(A)):-
   append(A1,[+(O1)],A).
 
 % absorption x * (x + y) = x
-and_f(M,+(O1),*(A1),*(A1)):-
+and_f(_M,+(O1),*(A1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(M,+(O1),*(A1),*(A)):-
+and_f(_M,+(O1),*(A1),*(A)):-
   append([+(O1)],A1,A).
 
-and_f(M,+(O1),+(O2),*([+(O1),+(O2)])).
+and_f(_M,+(O1),+(O2),*([+(O1),+(O2)])).
 /*
 and_f(M,[],[],[]):-!.
 and_f(M,[],F2,F2):-!.
@@ -455,7 +455,7 @@ or_f(M,[],F,F):-!.
 or_f(M,F,[],F):-!.
 */
 
-or_f(M,F1,F2,F):-
+or_f(_M,F1,F2,F):-
   or_f_int([F1],[F2],[F]).
 
 or_f_int([*(FC1)],[FC2],OrF):- !,
@@ -566,7 +566,7 @@ L2 is the old label of the assertion, e.g. lab(n : D) in the unfold rule
 I check if L1*(~L2) is satisfiable with sat/2. If it is satifiable it means that L1 does not model L2, i.e. \psi \not\models L2
 
 */
-test(M,L1,L2):-
+test(_M,L1,L2):-
   %build_f(L1,L2,F),
   %sat(F).
   create_formula(L1,L2,F),
@@ -616,10 +616,10 @@ bool_op(~(_)):-!.
 
 ***********************/
 
-get_bdd_environment(M,NV,Env):-
+get_bdd_environment(_M,NV,Env):-
   init_test(NV,Env).
 
-clean_environment(M,Env):-
+clean_environment(_M,Env):-
   end_test(Env).
 
 
@@ -643,7 +643,7 @@ bdd_and(M,Env,[X],BDDX):-
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_and(M,Env,[_X],BDDX):- !,
+bdd_and(_M,Env,[_X],BDDX):- !,
   one(Env,BDDX).
 
 bdd_and(M,Env,[+(H)|T],BDDAnd):-!,
@@ -682,7 +682,7 @@ bdd_or(M,Env,[X],BDDX):-
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_or(M,Env,[_X],BDDX):- !,
+bdd_or(_M,Env,[_X],BDDX):- !,
   zero(Env,BDDX).
 
 bdd_or(M,Env,[*(H)|T],BDDAnd):-!,

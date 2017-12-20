@@ -205,7 +205,7 @@ instanceOf(M:Class,Ind,Expl):-
   	build_abox(M,(ABox,Tabs)),
   	(  \+ clash(M,(ABox,Tabs),_) *->
   	    (
-  	    	add_q(ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
+  	    	add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	  	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
   		find_expls(M,L,[ClassEx,IndEx],Expl1),
   		check_and_close(M,Expl1,Expl)
@@ -233,7 +233,7 @@ instanceOf(M:Class,Ind):-
 	  build_abox(M,(ABox,Tabs)),
 	  (  \+ clash(M,(ABox,Tabs),_) *->
 	      (
-	        add_q(ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
+	        add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	        apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
 	  	clash(M,(ABox1,Tabs1),_),!
 	      )
@@ -352,7 +352,7 @@ unsat_internal(M:Concept,Expl):-
   build_abox(M,(ABox,Tabs)),
   ( \+ clash(M,(ABox,Tabs),_) *->
      (
-     	add_q(ABox,classAssertion(Concept,trillan(1)),ABox0),
+     	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
 	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
 	find_expls(M,L,['unsat',Concept],Expl1),
@@ -384,7 +384,7 @@ unsat_internal(M:Concept):-
   build_abox(M,(ABox,Tabs)),
   ( \+ clash(M,(ABox,Tabs),_) *->
      (
-     	add_q(ABox,classAssertion(Concept,trillan(1)),ABox0),
+     	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   	apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
   	clash(M,(ABox1,Tabs1),_),!
@@ -415,7 +415,7 @@ inconsistent_theory(M:Print,Expl):-
       true
     ;
       ( (Print == true) ->
-          ( print_message(warning,consistent),empty_expl(Expl),! )
+          ( print_message(warning,consistent),empty_expl(M,Expl),! )
         ;
           false
       )
@@ -456,7 +456,7 @@ inconsistent_theory(M:Print):-
  * of a complex concept as a ground term and name or the full URI of an individual and
  * returns the probability of the instantiation of the individual to the given class.
  */
-prob_instanceOf(M:Class,Ind,Prob):-gtrace,
+prob_instanceOf(M:Class,Ind,Prob):-
   ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) *->
   	all_instanceOf(M:ClassEx,IndEx,Exps),
   	compute_prob_and_close(M,Exps,Prob)
@@ -485,7 +485,7 @@ prob_property_value(M:Prop, Ind1, Ind2,Prob):-
  * of two a simple concept or the definition of a complex concept as a ground term and returns 
  * the probability of the subclass relation between Class and SupClass.
  */
-prob_sub_class(M:Class,SupClass,Prob):-gtrace,
+prob_sub_class(M:Class,SupClass,Prob):-
   ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) *->
   	all_sub_class(M:ClassEx,SupClassEx,Exps),
   	compute_prob_and_close(M,Exps,Prob)
@@ -531,8 +531,8 @@ prob_inconsistent_theory(M:Print,Prob):-
  ***********/
 
 % adds the query into the ABox
-add_q(ABox,Query,ABox0):-
-  initial_expl(Expl),
+add_q(M,ABox,Query,ABox0):-
+  initial_expl(M,Expl),
   add(ABox,(Query,Expl),ABox0).
 
 % expands query arguments using prefixes and checks their existence in the kb
@@ -541,7 +541,7 @@ check_query_args(M,L,LEx) :-
   expand_all_ns(L,NSList,false,LEx), %from utility_translation module
   check_query_args_presence(M,LEx).
 
-check_query_args_presence(_,[]).
+check_query_args_presence(_M,[]):-!.
 
 check_query_args_presence(M,[H|T]) :-
   nonvar(H),
@@ -977,14 +977,14 @@ forall_plus_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
 find_sub_sup_trans_role(M,R,S,Expl):-
   M:subPropertyOf(R,S),
   M:transitiveProperty(R),
-  initial_expl(EExpl),
+  initial_expl(M,EExpl),
   and_f_ax(M,subPropertyOf(R,S),EExpl,Expl0),
   and_f_ax(M,transitive(R),Expl0,Expl).
 
 find_sub_sup_trans_role(M,R,S,Expl):-
   M:subPropertyOf(R,S),
   \+ M:transitiveProperty(R),
-  initial_expl(EExpl),
+  initial_expl(M,EExpl),
   and_f_ax(M,subPropertyOf(R,S),EExpl,Expl).
 /* ************ */
 
@@ -2134,12 +2134,12 @@ same_ind(_,SN,H,ABox):-
  find all S-predecessor of Ind
 */
 
-s_predecessors(Ind1,S,(ABox,(_,_,RBR)),SN):-
+s_predecessors(M,Ind1,S,(ABox,(_,_,RBR)),SN):-
   rb_lookup(S,VN,RBR),
   s_predecessors1(Ind1,VN,SN1),
-  s_predecessors2(SN1,SN,ABox).
+  s_predecessors2(M,SN1,SN,ABox).
 
-s_predecessors(_Ind1,S,(_ABox,(_,_,RBR)),[]):-
+s_predecessors(_M,_Ind1,S,(_ABox,(_,_,RBR)),[]):-
   \+ rb_lookup(S,_VN,RBR).
 
 s_predecessors1(_,[],[]).
@@ -2151,14 +2151,14 @@ s_predecessors1(Ind1,[(_X,Y)|T],T1):-
   dif(Y,Ind1),
   s_predecessors1(Ind1,T,T1).
 
-s_predecessors2([],[],_).
+s_predecessors2(_M,[],[],_).
 
-s_predecessors2([H|T],[H|T1],ABox):-
-  s_predecessors2(T,T1,ABox),
+s_predecessors2(M,[H|T],[H|T1],ABox):-
+  s_predecessors2(M,T,T1,ABox),
   \+ same_ind(M,T1,H,ABox).
 
-s_predecessors2([H|T],T1,ABox):-
-  s_predecessors2(T,T1,ABox),
+s_predecessors2(M,[H|T],T1,ABox):-
+  s_predecessors2(M,T,T1,ABox),
   same_ind(M,T1,H,ABox).
 
 /* ********** */

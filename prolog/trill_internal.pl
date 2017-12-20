@@ -336,14 +336,14 @@ Explanation Management
 
 ***********************/
 
-initial_expl([]).
+initial_expl(_M,[]):-!.
 
-empty_expl([]).
+empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
   and_f(M,[Axiom],F0,F).
 
-and_f(M,Expl1,Expl2,Expl):-
+and_f(_M,Expl1,Expl2,Expl):-
   append(Expl1,Expl2,ExplT),
   list_to_set(ExplT,Expl).
 
@@ -354,10 +354,10 @@ and_f(M,Expl1,Expl2,Expl):-
 
 ***********************/
 
-get_bdd_environment(M,NV,Env):-
+get_bdd_environment(_M,NV,Env):-
   init_test(NV,Env).
 
-clean_environment(M,Env):-
+clean_environment(_M,Env):-
   end_test(Env).
 
 
@@ -369,7 +369,7 @@ build_bdd(M,Env, [H|T],BDD):-
   bdd_and(M,Env,H,BDDH),
   or(Env,BDDH,BDDT,BDD).
 
-build_bdd(M,Env,[],BDD):- !,
+build_bdd(_M,Env,[],BDD):- !,
   zero(Env,BDD).
 
 
@@ -379,7 +379,7 @@ bdd_and(M,Env,[X],BDDX):-
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_and(M,Env,[_X],BDDX):- !,
+bdd_and(_M,Env,[_X],BDDX):- !,
   one(Env,BDDX).
 
 bdd_and(M,Env,[H|T],BDDAnd):-

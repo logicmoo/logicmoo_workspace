@@ -25,7 +25,7 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, keep_env/0).
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1).
 
 /*****************************
   MESSAGES
@@ -78,7 +78,7 @@ compute_prob_and_close(M,Exps,Prob):-
 check_and_close(M,Expl,Expl):-
   M:keep_env,!.
 
-check_and_close(_,Expl,dot(Dot)):-
+check_and_close(M,Expl,dot(Dot)):-
   get_bdd_environment(M,Env),
   create_dot_string(Env,Expl,Dot),
   end_test(Env).
@@ -86,9 +86,9 @@ check_and_close(_,Expl,dot(Dot)):-
 
 
 % checks if an explanations was already found
-find_expls(_M,[],_,BDD):-
+find_expls(M,[],_,BDD):-
   get_bdd_environment(M,Env),
-  zero(Env,BDD).
+  zero(Env,BDD),!.
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|T],[C,I],E):-
@@ -191,11 +191,11 @@ Explanation Management
 
 ***********************/
 
-initial_expl(BDD):-
+initial_expl(M,BDD):-
   get_bdd_environment(M,Env),
   one(Env,BDD).
 
-empty_expl(BDD):-
+empty_expl(M,BDD):-
   get_bdd_environment(M,Env),
   zero(Env,BDD).
 
@@ -243,8 +243,6 @@ test(M,L1,L2,F):-
 
 ***********************/
 
-:- thread_local tornado_bdd_environment/1.
-
 get_bdd_environment(M,_NV,Env):-
   M:tornado_bdd_environment(Env),!.
 
@@ -268,5 +266,5 @@ bdd_and(M,Env,[X],BDDX):-
   get_var_n(Env,AxN,[],[Prob,ProbN],VX),
   equality(Env,VX,0,BDDX),!.
 
-bdd_and(M,Env,[_X],BDDX):- !,
+bdd_and(_M,Env,[_X],BDDX):- !,
   one(Env,BDDX).
