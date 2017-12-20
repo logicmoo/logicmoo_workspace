@@ -86,26 +86,26 @@ check_and_close(_,Expl,dot(Dot)):-
 
 
 % checks if an explanations was already found
-find_expls(_,[],_,BDD):-
+find_expls(_M,[],_,BDD):-
   get_bdd_environment(M,Env),
   zero(Env,BDD).
 
 % checks if an explanations was already found (instance_of version)
-find_expls(_,[ABox|T],[C,I],E):-
-  clash(ABox,E0),!,
-  find_expls(_,T,[C,I],E1),
+find_expls(M,[ABox|T],[C,I],E):-
+  clash(M,ABox,E0),!,
+  find_expls(M,T,[C,I],E1),
   or_f(M,E0,E1,E).
 
 % checks if an explanations was already found (property_value version)
-find_expls(_,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls(M,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),!,
-  find_expls(_,T,[PropEx,Ind1Ex,Ind2Ex],E1),
+  find_expls(M,T,[PropEx,Ind1Ex,Ind2Ex],E1),
   or_f(M,E0,E1,E).
   
 
-find_expls(_,[_ABox|T],Query,Expl):-
+find_expls(M,[_ABox|T],Query,Expl):-
   \+ length(T,0),
-  find_expls(_,T,Query,Expl).
+  find_expls(M,T,Query,Expl).
 
 /****************************/
 
@@ -114,15 +114,15 @@ find_expls(_,[_ABox|T],Query,Expl):-
 ****************************/
 
 % --------------
-findClassAssertion4OWLNothing(ABox,Expl):-
+findClassAssertion4OWLNothing(M,ABox,Expl):-
   findall(Expl1,findClassAssertion('http://www.w3.org/2002/07/owl#Nothing',_Ind,Expl1,ABox),Expls),
   dif(Expls,[]),
-  or_all(Expls,Expl).
+  or_all(M,Expls,Expl).
 
-or_all([],[]).
+or_all(_M,[],[]).
 
-or_all([H|T],Expl):-
-  or_all(T,Expl1),
+or_all(M,[H|T],Expl):-
+  or_all(M,T,Expl1),
   or_f(M,H,Expl1,Expl).
 
 /* ************* */
@@ -131,23 +131,23 @@ or_all([H|T],Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
-  test(L0,Expl1,Expl),
+  test(M,L0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
   
   
-modify_ABox(ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
-modify_ABox(ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
-  test(L0,Expl1,Expl),
+  test(M,L0,Expl1,Expl),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
   
   
-modify_ABox(ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
+modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* ************* */
 
@@ -157,18 +157,17 @@ modify_ABox(ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
   ===============
 */
 
-build_abox((ABox,Tabs)):-
+build_abox(M,(ABox,Tabs)):-
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
-  get_trill_current_module(Name),
-  findall(1,Name:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
+  findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
   get_bdd_environment(M,NV,Env),
-  findall((classAssertion(Class,Individual),BDDCA),(Name:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
-  findall((propertyAssertion(Property,Subject, Object),BDDPA),(Name:propertyAssertion(Property,Subject, Object),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
+  findall((classAssertion(Class,Individual),BDDCA),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
+  findall((propertyAssertion(Property,Subject, Object),BDDPA),(M:propertyAssertion(Property,Subject, Object),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
-  findall(nominal(NominalIndividual),Name:classAssertion(oneOf(_),NominalIndividual),LNA),
+  findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
@@ -176,13 +175,13 @@ build_abox((ABox,Tabs)):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),BDDDIA),(Name:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
+  findall((differentIndividuals(Ld),BDDDIA),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),BDDSIA),(Name:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
-  merge_all(LSIA,ABox5,Tabs4,ABox6,Tabs),
+  findall((sameIndividual(L),BDDSIA),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
+  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
   !.
 
@@ -231,7 +230,7 @@ TRILLP SAT TEST
 
 ***********************/
 
-test(L1,L2,F):-
+test(M,L1,L2,F):-
   %build_f(L1,L2,F),
   %sat(F).
   or_f(M,L1,L2,F),

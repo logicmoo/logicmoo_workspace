@@ -62,7 +62,7 @@ find_expls(_M,[],_,[]).
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|_T],[C,I],E):-
-  clash(ABox,E0),
+  clash(M,ABox,E0),
   sort(E0,E),
   findall(Exp,M:exp_found([C,I],Exp),Expl),
    not_already_found(M,Expl,[C,I],E),
@@ -99,7 +99,7 @@ not_already_found(M,[_H|T],Q,E):-
 ****************************/
 
 % --------------
-findClassAssertion4OWLNothing(ABox,Expl):-
+findClassAssertion4OWLNothing(_M,ABox,Expl):-
   findClassAssertion('http://www.w3.org/2002/07/owl#Nothing',_Ind,Expl,ABox).
 
 
@@ -171,10 +171,10 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(ABox,C,Ind,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(_,ABox,C,Ind,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
   absent(classAssertion(C,Ind),Expl,ABox).
 
-modify_ABox(ABox,P,Ind1,Ind2,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(_,ABox,P,Ind1,Ind2,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   absent(propertyAssertion(P,Ind1,Ind2),Expl,ABox).
 
 /* ************* */
@@ -299,7 +299,7 @@ absent1(sameIndividual(L),Expl,ABox):-
   ===============
 */
 
-/*build_abox(ABox):-
+/*build_abox(M,ABox):-
   findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),propertyAssertion(Property,Subject, Object),LPA),
   findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property,Subject,Object),propertyAssertion(SubProperty,Subject,Object)]),subPropertyOf(SubProperty,Property),LSPA),
@@ -309,12 +309,11 @@ absent1(sameIndividual(L),Expl,ABox):-
   add_all(LSPA,ABox2,ABox).
 */
 
-build_abox((ABox,Tabs)):-
-  get_trill_current_module(Name),
-  findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),Name:classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),Name:propertyAssertion(Property,Subject, Object),LPA),
+build_abox(M,(ABox,Tabs)):-
+  findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),M:classAssertion(Class,Individual),LCA),
+  findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(Name,SubProperty,Property,Subject,Object),LSPA),
-  findall(nominal(NominalIndividual),Name:classAssertion(oneOf(_),NominalIndividual),LNA),
+  findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
@@ -322,13 +321,13 @@ build_abox((ABox,Tabs)):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[differentIndividuals(Ld)]),Name:differentIndividuals(Ld),LDIA),
+  findall((differentIndividuals(Ld),[differentIndividuals(Ld)]),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),[sameIndividual(L)]),Name:sameIndividual(L),LSIA),
-  merge_all(LSIA,ABox5,Tabs4,ABox6,Tabs),
+  findall((sameIndividual(L),[sameIndividual(L)]),M:sameIndividual(L),LSIA),
+  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
   !.
 
