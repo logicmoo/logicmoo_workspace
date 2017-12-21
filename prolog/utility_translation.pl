@@ -12,7 +12,7 @@ http://vangelisv.github.io/thea/
 @copyright Riccardo Zese
 */
 
-:- module(utility_translation, [load_owl/1, load_owl_from_string/1, expand_all_ns/3, expand_all_ns/4, is_axiom/1]).
+:- module(utility_translation, [load_owl/1, load_owl_from_string/1, expand_all_ns/4, expand_all_ns/5, is_axiom/1]).
 
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
@@ -1127,7 +1127,7 @@ retract_axiom(M,Axiom,Ontology) :-
 
 
 retract_all_axioms(M) :-
-        findall(M:A,trill:axiom(A),Axioms),
+        findall(M:A,trill:axiom(M:A),Axioms),
         maplist(retract,Axioms),
         findall(M:ontologyAxiom(O,A),M:ontologyAxiom(O,A),OAxioms),
         maplist(retract,OAxioms),
@@ -2785,7 +2785,7 @@ query_expand(CQ):-
   get_module(M),
   M:ns4query(NSList),!,
   %retract(M:ns4query(NSList)),
-  expand_all_ns(Args,NSList,NewArgs),!,
+  expand_all_ns(M,Args,NSList,NewArgs),!,
   NQ =.. [P|NewArgs],
   set_new_query(CQArgs,PosQ,NQ,CQNewArgs),
   NCQ =.. [CQP|CQNewArgs],
@@ -2796,70 +2796,70 @@ query_expand(Q):-
   get_module(M),
   M:ns4query(NSList),!,
   %retract(M:ns4query(NSList)),
-  expand_all_ns(Args,NSList,NewArgs),!,
+  expand_all_ns(M,Args,NSList,NewArgs),!,
   NQ =.. [P|NewArgs],
   call(NQ).
 */
 
 /**
- * expand_all_ns(++Args:list,++NSList:list,--ExpandedArgs:list) is det
+ * expand_all_ns(++Module:string,++Args:list,++NSList:list,--ExpandedArgs:list) is det
  *
  * The predicate takes as input a list containing strings and expands these strings
  * using the list of prefixes. Finally, it returns the list of expanded strings.
  * It adds names in Args to the list of known elements.
  */
-expand_all_ns(Args,NSList,ExpandedArgs):-
-  expand_all_ns(Args,NSList,true,ExpandedArgs).
+expand_all_ns(M,Args,NSList,ExpandedArgs):-
+  expand_all_ns(M,Args,NSList,true,ExpandedArgs).
 
 /**
- * expand_all_ns(++Args:list,++NSList:list,++AddName:boolean,--ExpandedArgs:list) is det
+ * expand_all_ns(++Module:string,++Args:list,++NSList:list,++AddName:boolean,--ExpandedArgs:list) is det
  *
  * The predicate takes as input a list containing strings and expands these strings
  * using the list of prefixes. Finally, it returns the list of expanded strings.
  * If AddName is set true it adds names in Args in the list of known elements.
  */
-expand_all_ns([],_,_,[]).
+expand_all_ns(_M,[],_,_,[]).
 
-expand_all_ns([P|T],NSList,AddName,[P|NewArgs]):-
+expand_all_ns(M,[P|T],NSList,AddName,[P|NewArgs]):-
   nonvar(P),
   P=literal(_),!,
-  expand_all_ns(T,NSList,AddName,NewArgs).
+  expand_all_ns(M,T,NSList,AddName,NewArgs).
 
 /*
-expand_all_ns([P|T],NSList,AddName,[P|NewArgs]):-
+expand_all_ns(M,[P|T],NSList,AddName,[P|NewArgs]):-
   var(P),!,
-  expand_all_ns(T,NSList,AddName,NewArgs).
+  expand_all_ns(M,T,NSList,AddName,NewArgs).
 */
 
-expand_all_ns([P|T],NSList,AddName,[NP|NewArgs]):-
+expand_all_ns(M,[P|T],NSList,AddName,[NP|NewArgs]):-
   compound(P),
   P =.. [N, Args],!,
   ( is_list(Args) ->
-      expand_all_ns(Args,NSList,AddName,NewPArgs)
+      expand_all_ns(M,Args,NSList,AddName,NewPArgs)
     ;
-      expand_all_ns([Args],NSList,AddName,[NewPArgs])
+      expand_all_ns(M,[Args],NSList,AddName,[NewPArgs])
   ),
   NP =.. [N, NewPArgs],
-  expand_all_ns(T,NSList,AddName,NewArgs).
+  expand_all_ns(M,T,NSList,AddName,NewArgs).
 
-expand_all_ns([P|T],NSList,AddName,[NP|NewArgs]):-
+expand_all_ns(M,[P|T],NSList,AddName,[NP|NewArgs]):-
   compound(P),
   P =.. [N | Args],!,
-  expand_all_ns(Args,NSList,AddName,NewPArgs),
+  expand_all_ns(M,Args,NSList,AddName,NewPArgs),
   NP =.. [N| NewPArgs],
-  expand_all_ns(T,NSList,AddName,NewArgs).
+  expand_all_ns(M,T,NSList,AddName,NewArgs).
 
-expand_all_ns([H|T],NSList,AddName,[H|NewArgs]):-
-  check_query_arg(H),!,
-  expand_all_ns(T,NSList,AddName,NewArgs).
+expand_all_ns(M,[H|T],NSList,AddName,[H|NewArgs]):-
+  check_query_arg(M,H),!,
+  expand_all_ns(M,T,NSList,AddName,NewArgs).
 
-expand_all_ns([H|T],NSList,AddName,[NewArg|NewArgs]):-
+expand_all_ns(M,[H|T],NSList,AddName,[NewArg|NewArgs]):-
   expand_ns4query(H,NSList,AddName,NewArg),
-  expand_all_ns(T,NSList,AddName,NewArgs).
+  expand_all_ns(M,T,NSList,AddName,NewArgs).
 
-check_query_arg(Arg) :-
+check_query_arg(M,Arg) :-
   atomic(Arg),!,
-  trill:axiom(Ax),
+  trill:axiom(M:Ax),
   in_axiom(Arg,[Ax]),!,
   add_kb_atom(Arg).
 
@@ -2955,11 +2955,11 @@ trill:remove_axiom(M:Ax):-
   ( M:ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
-       ( expand_all_ns(IntArgs,NSList,false,ArgsExp),
+       ( expand_all_ns(M,IntArgs,NSList,false,ArgsExp),
          AxEx =.. [P,ArgsExp]
        )
      ;
-       ( expand_all_ns(Args,NSList,false,ArgsExp),
+       ( expand_all_ns(M,Args,NSList,false,ArgsExp),
          AxEx =.. [P|ArgsExp]
        )
   ),
@@ -2994,11 +2994,11 @@ parse_rdf_from_owl_rdf_pred(String):-
 create_and_assert_axioms(M,P,Args) :-
   ( M:ns4query(NSList) *-> true; NSList = []),
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
-       ( expand_all_ns(IntArgs,NSList,ArgsExp),
+       ( expand_all_ns(M,IntArgs,NSList,ArgsExp),
          NewTRILLAxiom =.. [P,ArgsExp]
        )
      ;
-       ( expand_all_ns(Args,NSList,ArgsExp),
+       ( expand_all_ns(M,Args,NSList,ArgsExp),
          NewTRILLAxiom =.. [P|ArgsExp]
        )
   ),
@@ -3030,8 +3030,8 @@ set_up(M):-
 
 sandbox:safe_primitive(utility_translation:load_owl(_)).
 sandbox:safe_primitive(utility_translation:load_owl_from_string(_)).
-sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_)).
 sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_)).
+sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_,_)).
 %sandbox:safe_primitive(utility_translation:query_expand(_)).
 
 user:term_expansion(kb_prefix(A,B),[]):-
@@ -3044,7 +3044,7 @@ user:term_expansion(owl_rdf(String),[]):-
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
   TRILLAxiom =.. [P|Args],
-  is_axiom(P),
+  is_axiom(P),%gtrace,
   create_and_assert_axioms(M,P,Args).
 
 

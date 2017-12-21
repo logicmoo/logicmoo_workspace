@@ -163,7 +163,7 @@ load_owl_kb(FileName):-
 :- multifile axiom/1.
 /*axiom(M:Axiom):-
   M:ns4query(NSList),
-  expand_all_ns([Axiom],NSList,[AxiomEx]),
+  expand_all_ns(M,[Axiom],NSList,[AxiomEx]),
   M:axiom(AxiomEx).*/
 
 /*****************************
@@ -538,7 +538,7 @@ add_q(M,ABox,Query,ABox0):-
 % expands query arguments using prefixes and checks their existence in the kb
 check_query_args(M,L,LEx) :-
   M:ns4query(NSList),
-  expand_all_ns(L,NSList,false,LEx), %from utility_translation module
+  expand_all_ns(M,L,NSList,false,LEx), %from utility_translation module
   check_query_args_presence(M,LEx).
 
 check_query_args_presence(_M,[]):-!.
