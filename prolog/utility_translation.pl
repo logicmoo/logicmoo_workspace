@@ -3004,15 +3004,14 @@ create_and_assert_axioms(M,P,Args) :-
   test_and_assert(M,NewTRILLAxiom,'ont').
 
 /**
- * is_axiom(?Pred:string) is det
+ * is_axiom(?Axiom:string) is det
  *
  * This predicate unifies Pred with one of the possible type of axioms managed by TRILL and 
  * by the translation module.
  */
-is_axiom(Pred) :-
-	member(Pred, [class,datatype,objectProperty,dataProperty,annotationProperty,namedIndividual,subClassOf,equivalentClasses,disjointClasses,disjointUnion,subPropertyOf,equivalentProperties,disjointProperties,
-inverseProperties,propertyDomain,propertyRange,functionalProperty,inverseFunctionalProperty,reflexiveProperty,irreflexiveProperty,symmetricProperty,asymmetricProperty,transitiveProperty,hasKey,
-sameIndividual,differentIndividuals,classAssertion,propertyAssertion,negativePropertyAssertion,annotationAssertion]).
+is_axiom(Axiom) :-
+	functor(Axiom,Pred,Arity)
+	axiompred(Pred/Arity),!.
 
 set_up(M):-
   M:(dynamic class/1, datatype/1, objectProperty/1, dataProperty/1, annotationProperty/1),
@@ -3042,8 +3041,7 @@ user:term_expansion(owl_rdf(String),[]):-
   
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
-  TRILLAxiom =.. [P|Args],
-  is_axiom(P),%gtrace,
+  is_axiom(TRILLAxiom),%gtrace,
   create_and_assert_axioms(M,P,Args).
 
 
