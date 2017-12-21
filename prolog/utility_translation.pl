@@ -1790,7 +1790,7 @@ triple_replace([owl(X,'rdf:type','rdfs:Class')],[owl(X,'rdf:type','owl:Class')])
 % See table 7.
 % http://www.w3.org/TR/2008/WD-owl2-mapping-to-rdf-20081202/
 
-%% owl_parse_axiom(+AxiomSpec,+AnnMode:boolean,?AnnList:list) is det
+%% owl_parse_axiom(+Module,+AxiomSpec,+AnnMode:boolean,?AnnList:list) is det
 %
 % None
 %
@@ -2377,7 +2377,7 @@ owl_parse_axiom(M,propertyDomain(PX,CX),AnnMode,List) :-
 	test_use_owl(M,P,'rdfs:domain',C),
 	valid_axiom_annotation_mode(AnnMode,M,P,'rdfs:domain',C,List),
         use_owl(M,P,'rdfs:domain',C,domain(P,C)),
-	(   annotationProperty(P),CX = C ;
+	(   M:annotationProperty(P),CX = C ;
 	    owl_property_expression(M,P,PX),
 	    owl_description(M,C,CX)
 	).
@@ -2391,7 +2391,7 @@ owl_parse_axiom(M,propertyRange(PX,CX),AnnMode,List) :-
 	test_use_owl(M,P,'rdfs:range',C),
 	valid_axiom_annotation_mode(AnnMode,M,P,'rdfs:range',C,List),
         use_owl(M,P,'rdfs:range',C,range(P,C)),
-	(   annotationProperty(P) -> PX = P, CX = C ;
+	(   M:annotationProperty(P) -> PX = P, CX = C ;
 	    owl_property_expression(M,P,PX),
             (   owl_description(M,C,CX) -> true ; owl_datarange(M,C,CX))
 	).
@@ -2745,7 +2745,7 @@ assert_list(M,[H|T], Source) :-
     H=..[_|Args],
     H1=..[myrdf|Args],
 	assert(M:H1),
-	add_atoms_from_axiom(Args),
+	add_atoms_from_axiom(M,Args),
         assert_list(M,T, Source).
 
 find_all_probabilistic_annotations(M,Ax,PV):-
@@ -2854,33 +2854,33 @@ expand_all_ns(M,[H|T],NSList,AddName,[H|NewArgs]):-
   expand_all_ns(M,T,NSList,AddName,NewArgs).
 
 expand_all_ns(M,[H|T],NSList,AddName,[NewArg|NewArgs]):-
-  expand_ns4query(H,NSList,AddName,NewArg),
+  expand_ns4query(M,H,NSList,AddName,NewArg),
   expand_all_ns(M,T,NSList,AddName,NewArgs).
 
 check_query_arg(M,Arg) :-
   atomic(Arg),!,
   trill:axiom(M:Ax),
   in_axiom(Arg,[Ax]),!,
-  add_kb_atom(Arg).
+  add_kb_atom(M,Arg).
 
-expand_ns4query(NS_URL,NSList,AddName, Full_URL):- 
+expand_ns4query(M,NS_URL,NSList,AddName, Full_URL):- 
 	nonvar(NS_URL),
 	NS_URL \= literal(_),
 	uri_split(NS_URL,Short_NS,Term, ':'),
 	member((Short_NS=Long_NS),NSList),
 	concat_atom([Long_NS,Term],Full_URL),!,
-	( AddName == true *-> add_kb_atom(Full_URL) ; true).
+	( AddName == true *-> add_kb_atom(M,Full_URL) ; true).
 
-expand_ns4query(NS_URL,NSList,AddName, Full_URL):- 
+expand_ns4query(M,NS_URL,NSList,AddName, Full_URL):- 
 	nonvar(NS_URL),
 	NS_URL \= literal(_),
 	\+ sub_atom(NS_URL,_,_,_,':'),
 	member(([]=Long_NS),NSList),
 	concat_atom([Long_NS,NS_URL],Full_URL),!,
-	( AddName == true *-> add_kb_atom(Full_URL) ; true).
+	( AddName == true *-> add_kb_atom(M,Full_URL) ; true).
 
 /*
-expand_ns4query(URL,_,_,URL):-
+expand_ns4query(_M,URL,_,_,URL):-
     var(URL),!.
 */
 
@@ -2899,36 +2899,35 @@ in_axiom(Atom,[_|T]):-
 	in_axiom(Atom,T).
 
 % save atoms in kb for checking existence when querying
-add_atoms_from_axiom([]).
+add_atoms_from_axiom(_M,[]):-!.
 
-add_atoms_from_axiom([H|T]):-
+add_atoms_from_axiom(M,[H|T]):-
   compound(H),
   H =.. ['literal' | _],!,
-  add_atoms_from_axiom(T).
+  add_atoms_from_axiom(M,T).
 
-add_atoms_from_axiom([H|T]):-
+add_atoms_from_axiom(M,[H|T]):-
   compound(H),
   H =.. [_N, Args],!,
   ( is_list(Args) ->
-      add_atoms_from_axiom(Args)
+      add_atoms_from_axiom(M,Args)
     ;
-      add_atoms_from_axiom([Args])
+      add_atoms_from_axiom(M,[Args])
   ),
-  add_atoms_from_axiom(T).
+  add_atoms_from_axiom(M,T).
 
-add_atoms_from_axiom([H|T]):-
+add_atoms_from_axiom(M,[H|T]):-
   compound(H),
   H =.. [_N | Args],!,
-  add_atoms_from_axiom(Args),
-  add_atoms_from_axiom(T).
+  add_atoms_from_axiom(M,Args),
+  add_atoms_from_axiom(M,T).
 
-add_atoms_from_axiom([H|T]):-
-  add_kb_atom(H),!,
-  add_atoms_from_axiom(T).
+add_atoms_from_axiom(M,[H|T]):-
+  add_kb_atom(M,H),!,
+  add_atoms_from_axiom(M,T).
 
 
-add_kb_atom(IRI):-
-  get_module(M),
+add_kb_atom(M,IRI):-
   M:kb_atom(L),
   ( (member(IRI,L),!) *->
       true

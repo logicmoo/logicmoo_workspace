@@ -14,6 +14,18 @@ test_trill:-
 
 :- use_module(library(test/trill_test)).
 
+:- begin_tests(trill_vicodi, []).
+
+:-ensure_loaded(library(examples/vicodi)).
+
+test(p_r_avdpf):-
+  run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
+test(p_p_r):-
+  run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
+
+:- end_tests(trill_vicodi).
+
+
 :- begin_tests(trill_brca, []).
 
 :- ensure_loaded(library('examples/BRCA.pl')).
@@ -53,16 +65,7 @@ test(ne_nl_k):-
 
 :- end_tests(trill_peoplePets).
 
-:- begin_tests(trill_vicodi, []).
 
-:-ensure_loaded(library(examples/vicodi)).
-
-test(p_r_avdpf):-
-  run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
-test(p_p_r):-
-  run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
-
-:- end_tests(trill_vicodi).
 
 :- begin_tests(trill_biopax, []).
 
