@@ -1171,7 +1171,7 @@ axiom_type(A,T) :- functor(A,T,_).
 
 % we make this discontiguous so that the code can follow the structure of the document as much as possible
 
-:- discontiguous owl_parse_axiom/3.
+:- discontiguous owl_parse_axiom/4.
 :- discontiguous dothislater/1.
 
 % hookable
@@ -1578,6 +1578,7 @@ owl_canonical_parse_3(M,[IRI|Rest]) :-
                owl_parse_nonannotated_axioms(M,PredSpec)),
         forall((axiompred(PredSpec),dothislater(PredSpec),\+omitthis(PredSpec)),
                owl_parse_nonannotated_axioms(M,PredSpec)),!,
+    %gtrace,
 	% annotation Assertion
 	parse_annotation_assertions(M),
 	forall(owl_parse_compatibility_DL(M,Axiom),assert_axiom(M,Axiom)),
@@ -2254,7 +2255,7 @@ owl_parse_axiom(M,equivalentClasses(DL),AnnMode,List) :-
 	valid_axiom_annotation_mode(AnnMode,M,X,'owl:equivalentClass',Y,List),
 	use_owl(M,X,'owl:equivalentClass',Y,equivalentClass(X,Y)),
         % maximally_connected_subgraph_over('owl:equivalentClass',L),
-        maplist(owl_description,M,[X,Y],DL),
+        maplist(owl_description(M),[X,Y],DL),
         debug(owl_parser_detail,'equivalentClasses Descs: ~w',[DL]).
 
 
@@ -2347,7 +2348,7 @@ owl_parse_axiom(M,equivalentProperties(OPEL),AnnMode,List) :-
 	valid_axiom_annotation_mode(AnnMode,M,X,'owl:equivalentProperty',Y,List),
 	use_owl(M,X,'owl:equivalentProperty',Y,equivProperty(X,Y)),
 	% maximally_connected_subgraph_over('owl:equivalentProperty',L),
-	maplist(owl_property_expression,M,[X,Y],OPEL).
+	maplist(owl_property_expression(M),[X,Y],OPEL).
 
 
 % TODO. Process the disjointProperties(L) axioms to generate
@@ -2540,10 +2541,10 @@ owl_parse_axiom(M,negativePropertyAssertion(PX,A,B),_,X) :-
 % Parsing annotationAssertions
 %
 
-parse_annotation_assertions(M) :-
+parse_annotation_assertions(M) :- gtrace,
 	( M:trdf_setting(rind,RIND) -> true ; RIND = []),!,
 	forall((M:aNN(X,AP,AV),findall( aNN(annotation(X,AP,AV),AP1,AV1),
-				      M:aNN(annotation(X,AP,AV),AP1,AV1),ANN), \+member(X,RIND), \+name(X,[95, 95, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_])),
+				      M:aNN(annotation(X,AP,AV),AP1,AV1),ANN), \+member(X,RIND), \+name(X,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_])),
 	       (   assert_axiom(M,annotationAssertion(AP,X,AV)),
 		  %  VV 10/3/2010 keep annotation/3
 		  % retract(annotation(X,AP,AV)),
@@ -2879,6 +2880,7 @@ expand_ns4query(M,NS_URL,NSList,AddName, Full_URL):-
 	concat_atom([Long_NS,NS_URL],Full_URL),!,
 	( AddName == true *-> add_kb_atom(M,Full_URL) ; true).
 
+expand_ns4query(_M,URL,_,_,URL).
 /*
 expand_ns4query(_M,URL,_,_,URL):-
     var(URL),!.
@@ -2939,8 +2941,7 @@ add_kb_atom(M,IRI):-
 
 :- multifile trill:add_axiom/1.
 trill:add_axiom(M:Ax):-
-  Ax =.. [P|Args],
-  create_and_assert_axioms(M,P,Args).
+  create_and_assert_axioms(M,Ax).
 
 :- multifile trill:add_axioms/1.
 trill:add_axioms(_:[]).
@@ -2990,7 +2991,8 @@ parse_rdf_from_owl_rdf_pred(String):-
   open_chars_stream(String,S),
   load_owl_from_stream(S).
 
-create_and_assert_axioms(M,P,Args) :-
+create_and_assert_axioms(M,Axiom) :-
+  Axiom=..[P|Args],
   ( M:ns4query(NSList) *-> true; NSList = []),
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
        ( expand_all_ns(M,IntArgs,NSList,ArgsExp),
@@ -3010,7 +3012,7 @@ create_and_assert_axioms(M,P,Args) :-
  * by the translation module.
  */
 is_axiom(Axiom) :-
-	functor(Axiom,Pred,Arity)
+	functor(Axiom,Pred,Arity),
 	axiompred(Pred/Arity),!.
 
 set_up(M):-
@@ -3042,7 +3044,7 @@ user:term_expansion(owl_rdf(String),[]):-
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
   is_axiom(TRILLAxiom),%gtrace,
-  create_and_assert_axioms(M,P,Args).
+  create_and_assert_axioms(M,TRILLAxiom).
 
 
 
