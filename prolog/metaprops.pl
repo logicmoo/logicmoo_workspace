@@ -86,7 +86,8 @@ compat(M:Goal) :-
 
 compat(M:Goal, VarL) :-
     copy_term_nat(Goal-VarL, Term-VarTL), % get rid of corroutining while checking compatibility
-    compat(Term, VarTL, M).
+    sort(VarTL, VS),
+    compat(Term, VS, M).
 
 % this small interpreter will reduce the possibility of loops if the goal being
 % checked is not linear, i.e., it contains linked variables:
@@ -197,6 +198,8 @@ freeze_fail(CP, V) :-
 instance(Goal) :-
     term_variables(Goal, VS),
     instance(Goal, VS).
+
+:- meta_predicate instance(0, +).
 
 instance(Goal, VS) :-
     prolog_current_choice(CP),
