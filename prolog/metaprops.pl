@@ -33,8 +33,8 @@
 */
 
 :- module(metaprops, [(type)/1, (type)/2, (global)/1, (global)/2, compat/1,
-                      instance/1, (declaration)/1, (declaration)/2, check/1,
-                      trust/1, true/1, false/1]).
+                      compat/2, instance/1, instance/2, (declaration)/1,
+                      (declaration)/2, check/1, trust/1, true/1, false/1]).
 
 :- use_module(library(assertions)).
 
@@ -81,50 +81,54 @@ unfold_calls:unfold_call_hook(type(T, A), metaprops, M, M:call(T, A)).
 :- meta_predicate compat(0).
 
 compat(M:Goal) :-
-    copy_term_nat(Goal, Term), % get rid of corroutining while checking compatibility
-    compat(Term, M).
+    term_variables(Goal, VS),
+    compat(Goal, VS, M).
+
+compat(M:Goal, VarL) :-
+    copy_term_nat(Goal-VarL, Term-VarTL), % get rid of corroutining while checking compatibility
+    compat(Term, VarTL, M).
 
 % this small interpreter will reduce the possibility of loops if the goal being
 % checked is not linear, i.e., it contains linked variables:
-compat(Var, _) :- var(Var), !.
-compat(M:Goal, _) :- !,
-    compat(Goal, M).
-compat((A, B), M) :-
+compat(Var, _, _) :- var(Var), !.
+compat(M:Goal, VarL, _) :- !,
+    compat(Goal, VarL, M).
+compat((A, B), VarL, M) :-
     !,
-    compat(A, M),
-    compat(B, M).
-compat((A; B), M) :-
-    ( compat(A, M)
-    ; compat(B, M)
+    compat(A, VarL, M),
+    compat(B, VarL, M).
+compat((A; B), VarL, M) :-
+    ( compat(A, VarL, M)
+    ; compat(B, VarL, M)
     ), !.
-compat((A->B; C), M) :-
+compat((A->B; C), VarL, M) :-
     ( call(M:A)
-    ->compat(B, M)
-    ; compat(C, M)
+    ->compat(B, VarL, M)
+    ; compat(C, VarL, M)
     ), !.
-compat((A->B), M) :-
+compat((A->B), VarL, M) :-
     !,
     ( call(M:A)
-    ->compat(B, M)
+    ->compat(B, VarL, M)
     ).
-compat(!, _) :-
+compat(!, _, _) :-
     !,
     cut_from.
-compat(A, M) :-
+compat(A, VarL, M) :-
     % This clause allows usage of simple test predicates as compatibility check
     compound(A),
-    compatc(A, M), !.
-compat(A, M) :-
+    compatc(A, VarL, M), !.
+compat(A, VarL, M) :-
     ( is_type(A, M)
-    ->( cut_to(compat_body(A, M))
+    ->( cut_to(compat_body(A, VarL, M))
       ->true
-      ; \+ \+ do_compat(M:A)
+      ; \+ \+ do_compat(M:A, VarL)
       )
     ; call(M:A)
     ).
 
-do_compat(Goal) :-
-    term_variables(Goal, VS),
+do_compat(Goal, VarL) :-
+    term_variables(VarL, VS),
     prolog_current_choice(CP),
     maplist(freeze_cut(CP), VS),
     Goal.
@@ -134,10 +138,10 @@ is_type(Head, M) :-
     memberchk(Stat, [check, true]),
     prop_asr(glob, type(_), _, Asr).
 
-compat_body(A, M) :-
+compat_body(A, VarL, M) :-
     catch(clause(M:A, Body, Ref), _, fail),
     clause_property(Ref, module(CM)),
-    compat(Body, CM).
+    compat(Body, VarL, CM).
 
 :- use_module(library(intercept)).
 :- use_module(library(safe_prolog_cut_to)).
@@ -151,10 +155,11 @@ cut_from :- send_signal(cut_from).
 freeze_cut(CP, V) :-
     freeze(V, catch(prolog_cut_to(CP), _, true)).
 
-compatc(H, M) :-
+compatc(H, VarL, M) :-
     functor(H, _, N),
     arg(N, H, A),
-    ( var(A)
+    ( var(A),
+      ord_intersect(VarL, [A], [A])
     ; predicate_property(M:H, meta_predicate(Spec)),
       arg(N, Spec, Meta),
       integer(Meta),
@@ -163,18 +168,20 @@ compatc(H, M) :-
       ( ( var(X)
         ; current_module(X)
         )
-      ->var(Y)
+      ->var(Y),
+        ord_intersect(VarL, [Y], [Y])
       )
     ),
     !.
-compatc(H, _) :-
-    compatc(H).
+compatc(H, VarL, _) :-
+    compatc_arg(H, A),
+    (var(A)->ord_intersect(VarL, [A], [A]) ; true).
 
-compatc(var(_)).
-compatc(nonvar(_)).
-compatc(term(_)).
-compatc(gnd(_)).
-compatc(ground(_)).
+compatc_arg(var(   A), A).
+compatc_arg(nonvar(A), A).
+compatc_arg(term(  A), A).
+compatc_arg(gnd(   A), A).
+compatc_arg(ground(A), A).
 
 freeze_fail(CP, V) :-
     freeze(V, ( prolog_cut_to(CP),
@@ -189,6 +196,9 @@ freeze_fail(CP, V) :-
 
 instance(Goal) :-
     term_variables(Goal, VS),
+    instance(Goal, VS).
+
+instance(Goal, VS) :-
     prolog_current_choice(CP),
     \+ \+ ( maplist(freeze_fail(CP), VS),
             Goal
