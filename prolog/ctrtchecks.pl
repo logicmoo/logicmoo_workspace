@@ -280,12 +280,15 @@ checkif_asr_props(T, CondValues, Asr, PType) :-
 
 check_asr_props(T, Asr, Cond, PType, PropValues) :-
     copy_term_nat(Asr, NAsr),
+    once(asr_aprop(NAsr, head, _:Pred, _)),
+    term_variables(Pred, VU),
+    sort(VU, VS),
     findall(NAsr-PropValue,
             ( ( type_cond_part_check_mult(Cond, PType, Part, Check, Mult),
                 asr_aprop(NAsr, Part, Prop, From)
               *->
                 valid_prop(T, Prop), % if not valid, ignore property
-                \+ check_prop(Check, Prop),
+                \+ check_prop(Check, VS, Prop),
                 (Mult = once -> ! ; true),
                 CheckProp =.. [Check, Prop],
                 PropValue = (From/CheckProp-[])
@@ -295,8 +298,8 @@ check_asr_props(T, Asr, Cond, PType, PropValues) :-
             AsrPropValues),
     maplist([Asr] +\ (Asr-PV)^PV^true, AsrPropValues, PropValues).
 
-check_prop(compat,   Prop) :- compat(  Prop).
-check_prop(instance, Prop) :- instance(Prop).
+check_prop(compat,   VS, Prop) :- compat(  Prop, VS).
+check_prop(instance, VS, Prop) :- instance(Prop, VS).
 
 valid_prop(T, M:Prop) :-
     functor(Prop, F, A),
