@@ -73,7 +73,7 @@ test(p_twbr_e):-
 :-ensure_loaded(library('examples/DBPedia.pl')).
 
 test(p_p_pp):-
-  run((prob_sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Prob),close_to(Prob,0.8567540128))).
+  run((prob_sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Prob),close_to(Prob,0.8273765902816))).
 
 :- end_tests(tornado_dbpedia).
 
