@@ -406,7 +406,7 @@ unsat_internal(M:Concept):-
  * This predicate returns one explanation for the inconsistency of the loaded knowledge base.
  * The returning explanation is a set of axioms.
  * If the knowledge base is consistent, if Print is true the predicate prints a message and succeeds 
- * returning an empty list, if Print is false it fails.
+ * returning an empty explanation, if Print is false it fails.
  */
 inconsistent_theory(M:Print,Expl):-
   set_up(M),
@@ -2431,6 +2431,8 @@ sandbox:safe_meta(trill:prob_inconsistent_theory(_),[]).
 sandbox:safe_meta(trill:axiom(_),[]).
 sandbox:safe_meta(trill:add_kb_prefix(_,_),[]).
 sandbox:safe_meta(trill:add_kb_prefixes(_),[]).
+sandbox:safe_meta(trill:remove_kb_prefix(_,_),[]).
+sandbox:safe_meta(trill:remove_kb_prefix(_),[]).
 sandbox:safe_meta(trill:add_axiom(_),[]).
 sandbox:safe_meta(trill:add_axioms(_),[]).
 sandbox:safe_meta(trill:load_kb(_),[]).

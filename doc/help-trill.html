@@ -317,6 +317,9 @@ f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}
 <pre><code>?- prob_unsat(intersectionOf([cat,complementOf(pet)]),P).</code></pre>
 <p>This query for example corresponds with a subsumption query, which is represented as the intersection of the subclass and the complement of the superclass.</p>
 <p>Finally, you can ask the probability if the inconsistency of the knowledge base with</p>
+<pre><code>prob_inconsistent_theory(+Print:boolean,-Prob:double)</code></pre>
+<p>The first argument takes values <code>true</code> or <code>false</code>. This will affect the behavior of the predicate when the KB is <em>consistent</em>. In this case, if <code>Print</code> is true the predicate prints a message and succeeds returning 0.0 as probability, if <code>Print</code> is false it fails.</p>
+<p><strong>NOTE:</strong> For versions below 5.0.0 this predicates does not work. You have to use predicate</p>
 <pre><code>prob_inconsistent_theory(-Prob:double)</code></pre>
 <h3 id="non-probabilistic-queries">Non Probabilistic Queries</h3>
 <p>In TRILL you can also ask whether a query is true or false w.r.t. the knowledge base and in case of a succesful query an explanation can be returned as well. Query predicates in this case differs in the number of arguments, in the second case, when we want also an explanation, an extra argument is added to unify with the list of axioms build to explain the query.</p>
@@ -349,6 +352,10 @@ unsat(+Concept:term,-Expl:list)</code></pre>
 ?- unsat(intersectionOf([cat,complementOf(pet)]),Expl).</code></pre>
 <p>In this case, the returned explanation is the same obtained by querying if cat is subclass of pet with the <code>sub_class/3</code> predicate, i.e., <code>[subClassOf(cat,pet)]</code></p>
 <p>Finally, you can ask about the inconsistency of the knowledge base with</p>
+<pre><code>inconsistent_theory(+Print:boolean)
+inconsistent_theory(+Print:boolean,-Expl:list)</code></pre>
+<p>The argument <code>Print</code> takes values <code>true</code> or <code>false</code>. This will affect the behavior of the predicate when the KB is <em>consistent</em>. In this case, if <code>Print</code> is true the predicate prints a message and succeeds (returning an empty explanation in the second case), if <code>Print</code> is false it fails.</p>
+<p><strong>NOTE:</strong> For versions below 5.0.0 this predicates does not work. You have to use predicate</p>
 <pre><code>inconsistent_theory
 inconsistent_theory(-Expl:list)</code></pre>
 <h2 id="trill-useful-predicates">TRILL Useful Predicates</h2>

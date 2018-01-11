@@ -67,6 +67,13 @@ This query for example corresponds with a subsumption query, which is represente
 
 Finally, you can ask the probability if the inconsistency of the knowledge base with
 \begin{verbatim}
+prob_inconsistent_theory(+Print:boolean,-Prob:double)
+\end{verbatim}
+The first argument takes values \verb|true| or \verb|false|. This will affect the behavior of the predicate when the KB is \emph{consistent}. In this case, if \verb|Print| is true the predicate prints a message and succeeds returning 0.0 as probability, if \verb|Print| is false it fails.
+
+\noindent
+\textbf{NOTE:} For versions below 5.0.0 this predicates does not work. You have to use predicate 
+\begin{verbatim}
 prob_inconsistent_theory(-Prob:double)
 \end{verbatim}
 
@@ -127,6 +134,14 @@ as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{
 In this case, the returned explanation is the same obtained by querying if cat is subclass of pet with the \verb|sub_class/3| predicate, i.e., \verb|[subClassOf(cat,pet)]|
 
 Finally, you can ask about the inconsistency of the knowledge base with
+\begin{verbatim}
+inconsistent_theory(+Print:boolean)
+inconsistent_theory(+Print:boolean,-Expl:list)
+\end{verbatim}
+The argument \verb|Print| takes values \verb|true| or \verb|false|. This will affect the behavior of the predicate when the KB is \emph{consistent}. In this case, if \verb|Print| is true the predicate prints a message and succeeds (returning an empty explanation in the second case), if \verb|Print| is false it fails.
+
+\noindent
+\textbf{NOTE:} For versions below 5.0.0 this predicates does not work. You have to use predicate 
 \begin{verbatim}
 inconsistent_theory
 inconsistent_theory(-Expl:list)
