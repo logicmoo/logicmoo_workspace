@@ -313,7 +313,7 @@ classAssertion('WomanTakingEstrogen','Helen').
 classAssertion('PostmenopausalWoman','Helen').
 classAssertion('WomanAged3040','Helen').
 
- 
+/* 
  % Declarations -optional-
 objectProperty('hasAge').
 objectProperty('hasGender').

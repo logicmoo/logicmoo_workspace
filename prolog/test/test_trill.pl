@@ -42,8 +42,6 @@ test(p_p_r):-
 :- end_tests(trill_vicodi).
 
 
-
-
 :- begin_tests(trill_commander, []).
 
 :-ensure_loaded(library(examples/commander)).
@@ -56,7 +54,6 @@ test(e_c_j):-
 :- end_tests(trill_commander).
 
 
-
 :- begin_tests(trill_peoplePets, []).
 
 :-ensure_loaded(library(examples/peoplePets)).
@@ -67,7 +64,6 @@ test(ne_nl_k):-
   run((aggregate_all(count, (instanceOf('natureLover','Kevin',_ListExpl)), Count),Count = 2)).
 
 :- end_tests(trill_peoplePets).
-
 
 
 :- begin_tests(trill_biopax, []).
@@ -97,6 +93,7 @@ test(ae_twbr_e):-
 
 :- end_tests(trill_biopax).
 
+
 :- begin_tests(trill_dbpedia, []).
 
 :-ensure_loaded(library('examples/DBPedia.pl')).
@@ -109,6 +106,7 @@ test(ae_p_pp):-
   )).
 
 :- end_tests(trill_dbpedia).
+
 
 :- begin_tests(trill_johnEmployee, []).
 

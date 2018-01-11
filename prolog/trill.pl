@@ -198,12 +198,13 @@ prolog:message(consistent) -->
  * The predicate fails if the individual does not belong to the class.
  */
 instanceOf(M:Class,Ind,Expl):-
-  ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) *->
+  ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
+  	set_up(M),
 	retractall(M:exp_found(_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
   	build_abox(M,(ABox,Tabs)),
-  	(  \+ clash(M,(ABox,Tabs),_) *->
+  	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
   	    	add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	  	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
@@ -225,13 +226,14 @@ instanceOf(M:Class,Ind,Expl):-
  * returns true if the individual belongs to the class, false otherwise.
  */
 instanceOf(M:Class,Ind):-
-  (  check_query_args(M,[Class,Ind],[ClassEx,IndEx]) *->
+  (  check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
 	(
+	  set_up(M),
 	  retractall(M:exp_found(_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
 	  build_abox(M,(ABox,Tabs)),
-	  (  \+ clash(M,(ABox,Tabs),_) *->
+	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
 	        add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
 	        apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
@@ -254,12 +256,13 @@ instanceOf(M:Class,Ind):-
  * The predicate fails if the two individual are not Prop-related.
  */
 property_value(M:Prop, Ind1, Ind2,Expl):-
-  ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
+  ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
+	set_up(M),
 	retractall(M:exp_found(_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
   	build_abox(M,(ABox,Tabs)),
-  	(  \+ clash(M,(ABox,Tabs),_) *->
+  	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
   	    	findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
   		find_expls(M,L,[PropEx,Ind1Ex,Ind2Ex],Expl1),
@@ -279,13 +282,14 @@ property_value(M:Prop, Ind1, Ind2,Expl):-
  * and returns true if the two individual are Prop-related, false otherwise.
  */
 property_value(M:Prop, Ind1, Ind2):-
-  (  check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
+  (  check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
 	(
+	  set_up(M),
 	  retractall(M:exp_found(_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
 	  build_abox(M,(ABox,Tabs)),
-	  (  \+ clash(M,(ABox,Tabs),_) *->
+	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
 	        apply_all_rules(M,(ABox,Tabs),(ABox1,_Tabs1)),!,
 	  	find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),_),ABox1),!
@@ -308,7 +312,7 @@ property_value(M:Prop, Ind1, Ind2):-
  * The predicate fails if there is not a subclass relation between the two classes.
  */
 sub_class(M:Class,SupClass,Expl):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) *->
+  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
 	unsat_internal(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Expl)
     ;
     	print_message(warning,iri_not_exists),!,false
@@ -323,7 +327,7 @@ sub_class(M:Class,SupClass,Expl):-
  * true if Class is a subclass of SupClass, and false otherwise.
  */
 sub_class(M:Class,SupClass):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) *->
+  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
         unsat_internal(M:intersectionOf([ClassEx,complementOf(SupClassEx)])),!
     ;
         print_message(warning,iri_not_exists),!,false
@@ -338,7 +342,7 @@ sub_class(M:Class,SupClass):-
  * The predicate fails if the concept is satisfiable.
  */
 unsat(M:Concept,Expl):-
-  (check_query_args(M,[Concept],[ConceptEx]) *->
+  (check_query_args(M,[Concept],[ConceptEx]) ->
   	unsat_internal(M:ConceptEx,Expl)
     ;
     	print_message(warning,iri_not_exists),!,false
@@ -346,11 +350,12 @@ unsat(M:Concept,Expl):-
 
 % ----------- %
 unsat_internal(M:Concept,Expl):-
+  set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
   build_abox(M,(ABox,Tabs)),
-  ( \+ clash(M,(ABox,Tabs),_) *->
+  ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
@@ -370,7 +375,7 @@ unsat_internal(M:Concept,Expl):-
  * a complex concept as a ground term and returns true if the concept is unsatisfiable, false otherwise.
  */
 unsat(M:Concept):-
-  (check_query_args(M,[Concept],[ConceptEx]) *->
+  (check_query_args(M,[Concept],[ConceptEx]) ->
   	unsat_internal(M:ConceptEx)
     ;
     	print_message(warning,iri_not_exists),!,false
@@ -378,11 +383,12 @@ unsat(M:Concept):-
 
 % ----------- %
 unsat_internal(M:Concept):-
+  set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
   build_abox(M,(ABox,Tabs)),
-  ( \+ clash(M,(ABox,Tabs),_) *->
+  ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
@@ -403,6 +409,7 @@ unsat_internal(M:Concept):-
  * returning an empty list, if Print is false it fails.
  */
 inconsistent_theory(M:Print,Expl):-
+  set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
@@ -430,7 +437,7 @@ inconsistent_theory(M:Print,Expl):-
  * if Print is false it fails.
  */
 inconsistent_theory(M:Print):-
-  utility_translation:get_module(M),
+  set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
@@ -457,7 +464,7 @@ inconsistent_theory(M:Print):-
  * returns the probability of the instantiation of the individual to the given class.
  */
 prob_instanceOf(M:Class,Ind,Prob):-
-  ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) *->
+  ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
   	all_instanceOf(M:ClassEx,IndEx,Exps),
   	compute_prob_and_close(M,Exps,Prob)
   ;
@@ -471,7 +478,7 @@ prob_instanceOf(M:Class,Ind,Prob):-
  * and returns the probability of the fact Ind1 is related with Ind2 via Prop.
  */
 prob_property_value(M:Prop, Ind1, Ind2,Prob):-
-  ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) *->
+  ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
   	all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps),
   	compute_prob_and_close(M,Exps,Prob)
   ;
@@ -486,7 +493,7 @@ prob_property_value(M:Prop, Ind1, Ind2,Prob):-
  * the probability of the subclass relation between Class and SupClass.
  */
 prob_sub_class(M:Class,SupClass,Prob):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) *->
+  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
   	all_sub_class(M:ClassEx,SupClassEx,Exps),
   	compute_prob_and_close(M,Exps,Prob)
   ;
@@ -501,7 +508,7 @@ prob_sub_class(M:Class,SupClass,Prob):-
  * of the concept.
  */
 prob_unsat(M:Concept,Prob):-
-  ( check_query_args(M,[Concept],[ConceptEx]) *->
+  ( check_query_args(M,[Concept],[ConceptEx]) ->
     all_unsat(M:ConceptEx,Exps),
     compute_prob_and_close(M,Exps,Prob)
   ;
@@ -677,7 +684,7 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 apply_all_rules(M,ABox0,ABox):-
   setting_trill(det_rules,Rules),
   apply_det_rules(M,Rules,ABox0,ABox1),
-  (ABox0=ABox1 *->
+  (ABox0=ABox1 ->
   ABox=ABox1;
   apply_all_rules(M,ABox1,ABox)).
 
@@ -709,7 +716,7 @@ apply_nondet_rules(M,[_|T],ABox0,ABox):-
 apply_all_rules(M,ABox0,ABox):-
   apply_nondet_rules([or_rule,max_rule],
                   ABox0,ABox1),
-  (ABox0=ABox1 *->
+  (ABox0=ABox1 ->
   ABox=ABox1;
   apply_all_rules(M,ABox1,ABox)).
 
@@ -1045,7 +1052,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
 add_nominal(D,Ind,ABox0,ABox):-
   ((D = oneOf(_),
     \+ member(nominal(Ind),ABox0))
-    *->
+    ->
    (
      ABox1 = [nominal(Ind)|ABox0],
      (member((classAssertion('http://www.w3.org/2002/07/owl#Thing',Ind),_E),ABox1)
@@ -1483,7 +1490,7 @@ nominal(Inds,(ABox,_)):-
 
 blockable(Ind,(ABox,_)):-
   ( find((nominal(Ind)),ABox)
-    *->
+    ->
     false
     ;
     true ).
@@ -2029,7 +2036,7 @@ min_length([H|T],MP):-
   min_length(T,P),
   length(H,N),
   length(P,NP),
-  (N<NP *->
+  (N<NP ->
      MP= H
    ;
      MP= P).
@@ -2183,8 +2190,8 @@ build_formula([D|TD],[F|TF],VarIn,VarOut):-
 build_term([],F,F,Var,Var).
 
 build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
-  (p_x(Ax,_)*->
-    (nth0_eq(0,NVar,VarIn,(Ax,S))*->
+  (p_x(Ax,_)->
+    (nth0_eq(0,NVar,VarIn,(Ax,S))->
       Var1=VarIn
     ;
       append(VarIn,[(Ax,S)],Var1),
@@ -2192,8 +2199,8 @@ build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
     ),
     build_term(TC,[[NVar,0]|F0],F,Var1,VarOut)
   ;
-    (p(Ax,_)*->
-      (nth0_eq(0,NVar,VarIn,(Ax,[]))*->
+    (p(Ax,_)->
+      (nth0_eq(0,NVar,VarIn,(Ax,[]))->
         Var1=VarIn
       ;
         append(VarIn,[(Ax,[])],Var1),
@@ -2206,8 +2213,8 @@ build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
   ).
 
 build_term([Ax|TC],F0,F,VarIn,VarOut):-!,
-  (p(Ax,_)*->
-    (nth0_eq(0,NVar,VarIn,(Ax,[]))*->
+  (p(Ax,_)->
+    (nth0_eq(0,NVar,VarIn,(Ax,[]))->
       Var1=VarIn
     ;
       append(VarIn,[(Ax,[])],Var1),
@@ -2336,22 +2343,21 @@ compute_prob_ax1([Prob1 | T],Prob):-
 
 /************************/
 
-set_algorithm(trill):-
+unload_all_algorithms :-
   unload_file(library(trill_internal)),
   unload_file(library(trillp_internal)),
-  unload_file(library(tornado_internal)),
+  unload_file(library(tornado_internal)).
+
+set_algorithm(trill):-
+  unload_all_algorithms,
   consult(library(trill_internal)).
 
 set_algorithm(trillp):-
-  unload_file(library(trill_internal)),
-  unload_file(library(trillp_internal)),
-  unload_file(library(tornado_internal)),
+  unload_all_algorithms,
   consult(library(trillp_internal)).
 
 set_algorithm(tornado):-
-  unload_file(library(trill_internal)),
-  unload_file(library(trillp_internal)),
-  unload_file(library(tornado_internal)),
+  unload_all_algorithms,
   consult(library(tornado_internal)).
 
 
@@ -2434,25 +2440,19 @@ sandbox:safe_meta(trill:load_owl_kb(_),[]).
 
 user:term_expansion((:- trill),[]):-
   utility_translation:get_module(M),
-  unload_file(library(trillp_internal)),
-  unload_file(library(tornado_internal)),
-  consult(library(trill_internal)),
+  set_algorithm(trill),
   set_up(M),
   trill:add_kb_prefixes(M:[('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 user:term_expansion((:- trillp),[]):-
   utility_translation:get_module(M),
-  unload_file(library(trill_internal)),
-  unload_file(library(tornado_internal)),
-  consult(library(trillp_internal)),
+  set_algorithm(trillp),
   set_up(M),
   trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
 user:term_expansion((:- tornado),[]):-
   utility_translation:get_module(M),
-  unload_file(library(trill_internal)),
-  unload_file(library(trillp_internal)),
-  consult(library(tornado_internal)),
+  set_algorithm(tornado),
   set_up(M),
   trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 

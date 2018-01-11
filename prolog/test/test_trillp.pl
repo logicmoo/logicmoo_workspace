@@ -32,17 +32,29 @@ test(ne_wa_wulbrcr):-
 
 :- end_tests(trillp_brca).
 
+
+:- begin_tests(trillp_vicodi, []).
+
+:-ensure_loaded(library(examples/vicodi)).
+
+test(p_r_avdpf):-
+  run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
+test(p_p_r):-
+  run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
+
+:- end_tests(trillp_vicodi).
+
+
 :- begin_tests(trillp_commander, []).
 
 :-ensure_loaded(library(examples/commander)).
 
 test(e_c_j):-
   run((instanceOf(commander,john,Expl),
-       Expl = +[*([equivalentClasses([guard,soldier]),+[*([classAssertion(allValuesFrom(commands,guard),john),subClassOf(allValuesFrom(commands,soldier),commander)]),*([classAssertion(allValuesFrom('http://cohse.semanticweb.org/ontologies/people#commands',guard),john),subClassOf(allValuesFrom('http://cohse.semanticweb.org/ontologies/people#commands',soldier),commander)])]])]
+       Expl = +[*([equivalentClasses([guard, soldier]), classAssertion(allValuesFrom(commands, guard), john), subClassOf(allValuesFrom(commands, soldier), commander)])]
   )).
 
 :- end_tests(trillp_commander).
-
 
 
 :- begin_tests(trillp_peoplePets, []).
@@ -57,16 +69,6 @@ test(ne_nl_k):-
 
 :- end_tests(trillp_peoplePets).
 
-:- begin_tests(trillp_vicodi, []).
-
-:-ensure_loaded(library(examples/vicodi)).
-
-test(p_r_avdpf):-
-  run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
-test(p_p_r):-
-  run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
-
-:- end_tests(trillp_vicodi).
 
 :- begin_tests(trillp_biopax, []).
 
@@ -76,6 +78,7 @@ test(p_twbr_e):-
   run((prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
 
 :- end_tests(trillp_biopax).
+
 
 :- begin_tests(trillp_dbpedia, []).
 
@@ -89,6 +92,7 @@ test(ae_p_pp):-
   )).
 
 :- end_tests(trillp_dbpedia).
+
 
 :- begin_tests(trillp_johnEmployee, []).
 

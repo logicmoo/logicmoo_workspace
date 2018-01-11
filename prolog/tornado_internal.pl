@@ -243,7 +243,7 @@ test(M,L1,L2,F):-
 
 ***********************/
 
-get_bdd_environment(M,_NV,Env):-
+get_bdd_environment(M,_NV,Env):- 
   M:tornado_bdd_environment(Env),!.
 
 get_bdd_environment(M,NV,Env):-

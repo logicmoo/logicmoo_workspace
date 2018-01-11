@@ -1506,7 +1506,6 @@ owl_canonical_parse_3(M,[IRI|Rest]) :-
 
         debug(owl_parser,'Anon individuals in reification [see table 8]',[]),
 
-
 	collect_r_nodes(M),
 
 	% First parse the Ontology axiom
@@ -1573,12 +1572,17 @@ owl_canonical_parse_3(M,[IRI|Rest]) :-
         forall((axiompred(PredSpec),dothislater(PredSpec),\+omitthis(PredSpec)),
                owl_parse_annotated_axioms(M,PredSpec)),
 
+	% annotated complex axioms, s.a., equivalentClasses([a,intersectionOf(..)]) that are
+	% seen in axiom_r_node as axiom_r_node(a,intersectionOf,_:DescriptionX,_:DescriptionY)
+	
+	
+
         debug(owl_parser_detail,'Commencing parse of unannotated axioms',[]),
         forall((axiompred(PredSpec),\+dothislater(PredSpec),\+omitthis(PredSpec)),
                owl_parse_nonannotated_axioms(M,PredSpec)),
         forall((axiompred(PredSpec),dothislater(PredSpec),\+omitthis(PredSpec)),
                owl_parse_nonannotated_axioms(M,PredSpec)),!,
-    %gtrace,
+    
 	% annotation Assertion
 	parse_annotation_assertions(M),
 	forall(owl_parse_compatibility_DL(M,Axiom),assert_axiom(M,Axiom)),
@@ -2208,6 +2212,7 @@ collect_r_nodes(M) :-
 		 test_use_owl(M,Node,'owl:annotatedProperty',P),
 		 test_use_owl(M,Node,'owl:annotatedTarget',O)),
 	       (assert(M:axiom_r_node(S,P,O,Node)),
+	        assert(M:owl(S,P,O,not_used)),
                 debug(owl_parser_detail,'~w',[axiom_r_node(S,P,O,Node)]),
 		use_owl(M,[owl(Node,'rdf:type','owl:Axiom'),
 			 owl(Node,'owl:annotatedSource',S),
@@ -2541,7 +2546,7 @@ owl_parse_axiom(M,negativePropertyAssertion(PX,A,B),_,X) :-
 % Parsing annotationAssertions
 %
 
-parse_annotation_assertions(M) :- gtrace,
+parse_annotation_assertions(M) :- 
 	( M:trdf_setting(rind,RIND) -> true ; RIND = []),!,
 	forall((M:aNN(X,AP,AV),findall( aNN(annotation(X,AP,AV),AP1,AV1),
 				      M:aNN(annotation(X,AP,AV),AP1,AV1),ANN), \+member(X,RIND), \+name(X,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_])),
@@ -2819,7 +2824,7 @@ expand_all_ns(M,Args,NSList,ExpandedArgs):-
  * using the list of prefixes. Finally, it returns the list of expanded strings.
  * If AddName is set true it adds names in Args in the list of known elements.
  */
-expand_all_ns(_M,[],_,_,[]).
+expand_all_ns(_M,[],_,_,[]):- !.
 
 expand_all_ns(M,[P|T],NSList,AddName,[P|NewArgs]):-
   nonvar(P),
@@ -2887,15 +2892,21 @@ expand_ns4query(_M,URL,_,_,URL):-
 */
 
 % check whether the given atom is present in an axiom
+in_axiom(Atom,[Atom|_]):- !.
+
 in_axiom(Atom,[literal(_)|T]):-!,
 	in_axiom(Atom,T).
+
+in_axiom(Atom,[Axiom|_]):-
+	is_list(Axiom),
+	in_axiom(Atom,Axiom),!.
+
 	
 in_axiom(Atom,[Axiom|_]):-
+	\+ is_list(Axiom),
 	compound(Axiom),
 	Axiom=..[_|Args],
 	in_axiom(Atom,Args),!.
-
-in_axiom(Atom,[Atom|_]):- !.
 
 in_axiom(Atom,[_|T]):-
 	in_axiom(Atom,T).
@@ -2987,7 +2998,6 @@ get_module(M):- !,
   prolog_load_context(module,M).
 
 parse_rdf_from_owl_rdf_pred(String):-
-  %gtrace,
   open_chars_stream(String,S),
   load_owl_from_stream(S).
 
@@ -3024,6 +3034,7 @@ set_up(M):-
   M:(dynamic annotationAssertion/3, annotation/3, ontology/1, ontologyAxiom/2, ontologyImport/2, ontologyVersionInfo/2),
   M:(dynamic owl/4, owl/3, owl/2, blanknode/3, outstream/1, aNN/3, annotation_r_node/4, axiom_r_node/4, owl_repository/2, trdf_setting/2),
   M:(dynamic ns4query/1),
+  retractall(M:kb_atom([])),
   assert(M:kb_atom([])).
 
 :- multifile sandbox:safe_primitive/1.
@@ -3043,7 +3054,7 @@ user:term_expansion(owl_rdf(String),[]):-
   
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
-  is_axiom(TRILLAxiom),%gtrace,
+  is_axiom(TRILLAxiom),
   create_and_assert_axioms(M,TRILLAxiom).
 
 

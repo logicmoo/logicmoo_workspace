@@ -25,25 +25,6 @@ test(p_wa_wulbrcr):-
 
 :- end_tests(tornado_brca).
 
-:- begin_tests(tornado_commander, []).
-
-:-ensure_loaded(library(examples/commander)).
-
-test(e_c_j):-
-  run((prob_instanceOf(commander,john,Prob),close_to(Prob,1))).
-
-:- end_tests(tornado_commander).
-
-
-
-:- begin_tests(tornado_peoplePets, []).
-
-:-ensure_loaded(library(examples/peoplePets)).
-
-test(p_nl_k):-
-  run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.348))).
-
-:- end_tests(tornado_peoplePets).
 
 :- begin_tests(tornado_vicodi, []).
 
@@ -56,6 +37,27 @@ test(p_p_r):-
 
 :- end_tests(tornado_vicodi).
 
+
+:- begin_tests(tornado_commander, []).
+
+:-ensure_loaded(library(examples/commander)).
+
+test(e_c_j):-
+  run((prob_instanceOf(commander,john,Prob),close_to(Prob,1))).
+
+:- end_tests(tornado_commander).
+
+
+:- begin_tests(tornado_peoplePets, []).
+
+:-ensure_loaded(library(examples/peoplePets)).
+
+test(p_nl_k):-
+  run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.348))).
+
+:- end_tests(tornado_peoplePets).
+
+
 :- begin_tests(tornado_biopax, []).
 
 :-ensure_loaded(library(examples/biopaxLevel3)).
@@ -65,6 +67,7 @@ test(p_twbr_e):-
 
 :- end_tests(tornado_biopax).
 
+
 :- begin_tests(tornado_dbpedia, []).
 
 :-ensure_loaded(library('examples/DBPedia.pl')).
@@ -73,6 +76,7 @@ test(p_p_pp):-
   run((prob_sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Prob),close_to(Prob,0.8567540128))).
 
 :- end_tests(tornado_dbpedia).
+
 
 :- begin_tests(tornado_johnEmployee, []).
 
