@@ -1507,6 +1507,8 @@ owl_canonical_parse_3(M,[IRI|Rest]) :-
         debug(owl_parser,'Anon individuals in reification [see table 8]',[]),
 
 	collect_r_nodes(M),
+	
+	forall(M:axiom_r_node(S,P,O,_Node),assert(M:owl(S,P,O,not_used))),
 
 	% First parse the Ontology axiom
         owl_parse_annotated_axioms(M,ontology/1),
@@ -2212,12 +2214,11 @@ collect_r_nodes(M) :-
 		 test_use_owl(M,Node,'owl:annotatedProperty',P),
 		 test_use_owl(M,Node,'owl:annotatedTarget',O)),
 	       (assert(M:axiom_r_node(S,P,O,Node)),
-	        assert(M:owl(S,P,O,not_used)),
-                debug(owl_parser_detail,'~w',[axiom_r_node(S,P,O,Node)]),
-		use_owl(M,[owl(Node,'rdf:type','owl:Axiom'),
-			 owl(Node,'owl:annotatedSource',S),
-			 owl(Node,'owl:annotatedProperty',P),
-			 owl(Node,'owl:annotatedTarget',O)]))),
+            debug(owl_parser_detail,'~w',[axiom_r_node(S,P,O,Node)]),
+		    use_owl(M,[owl(Node,'rdf:type','owl:Axiom'),
+			         owl(Node,'owl:annotatedSource',S),
+			         owl(Node,'owl:annotatedProperty',P),
+			         owl(Node,'owl:annotatedTarget',O)]))),
 
 	retractall(M:annotation_r_node(_,_,_,_)),
 	forall(( test_use_owl(M,W,'rdf:type','owl:Annotation'),
