@@ -103,8 +103,17 @@ available_checker(Checker) :-
     clause(check(Checker, _, _), _).
 
 showcheck(Checker, OptionL) :-
-    check_results(Checker, Results, OptionL),
+    with_prolog_flag(
+        verbose, silent,
+        check_results(Checker, Results, OptionL)),
     full_report(Checker-Results).
+
+with_prolog_flag(Flag, Value, Goal) :-
+    current_prolog_flag(Flag, Old),
+    setup_call_cleanup(
+        set_prolog_flag(Flag, Value),
+        Goal,
+        set_prolog_flag(Flag, Old)).
 
 full_report(Checker-Pairs) :-
     ( Pairs == []
@@ -155,9 +164,12 @@ checkallc(OptionL) :- checkall(concurrent_maplist, OptionL).
 :- meta_predicate checkall(2, +).
 checkall(Mapper, OptionL) :-
     findall(C, available_checker(C), CL),
-    setup_call_cleanup(infer_meta_if_required,
-                       call(Mapper, checkeach(OptionL), CL),
-                       cleanup_db).
+    setup_call_cleanup(
+        with_prolog_flag(
+            verbose, silent,
+            infer_meta_if_required),
+        call(Mapper, checkeach(OptionL), CL),
+        cleanup_db).
 
 :- public checkeach/2.
 checkeach(OptionL, Checker) :-
@@ -166,8 +178,6 @@ checkeach(OptionL, Checker) :-
      donecheck(Checker, T).
 
 check_results(Checker, Results, OptionL) :-
-    current_prolog_flag(check_database_preds, F),
-    setup_call_cleanup(
-        set_prolog_flag(check_database_preds, true),
-        check(Checker, Results, OptionL),
-        set_prolog_flag(check_database_preds, F)).
+    with_prolog_flag(
+        check_database_preds, true,
+        check(Checker, Results, OptionL)).

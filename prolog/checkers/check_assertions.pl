@@ -34,8 +34,8 @@
 
 :- module(check_assertions, []).
 
+:- use_module(library(checkers/checker)).
 :- use_module(library(assrt_lib)).
-:- use_module(checkers(checker)).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(source_codewalk)).

@@ -34,7 +34,7 @@
 
 :- module(check_non_loaded, []).
 
-:- use_module(checkers(checker)).
+:- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
 :- use_module(library(option_utils)).
 
