@@ -51,5 +51,3 @@ term_expansion((:- Decl), DPos, Records, RPos) :-
     term_expansion_decl(Decl, DPos, Records, RPos).
 
 :- use_module(library(plprops)).
-
-:- type assrt_type/1, assrt_status/1.
