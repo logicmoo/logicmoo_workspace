@@ -36,6 +36,7 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
+:- use_module(library(globprops)).
 :- use_module(library(foreign/foreign_props)).
 
 :- true comp [(global)/1,
