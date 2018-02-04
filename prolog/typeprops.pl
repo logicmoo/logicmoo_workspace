@@ -154,7 +154,13 @@ str(S) :-
 
 :- type character_code/1 # "an integer which is a character code.".
 
-character_code(I) :- between(0, 255, I).
+:- dynamic
+       character_code/1.
+
+:- retractall(character_code(_)),
+   forall(between(0, 255, I),
+          assertz(character_code(I))),
+   compile_predicates([character_code/1]).
 
 :- type constant/1 # "An atomic term (an atom, string or a number).".
 
