@@ -56,6 +56,9 @@ user:file_search_path(checkers, library(checkers)).
     prepare_results/3,
     check/3.
 
+:- meta_predicate
+    with_prolog_flag(+, +, 0).
+
 prolog:called_by(Goal, _, M, [M:Macro]) :-
     functor(Goal, F, A),
     once(atomics_atom(['__aux_', Name, '/', AN, '_', CF, '+', EN], F)),
