@@ -102,6 +102,6 @@ r(a).
 7 ?- r(a).
 ERROR: /home/edison/apps/plsteroids/pp.pl:8: Assertion failure for r(a).
 ERROR:     In *calls*, unsatisfied properties: 
-ERROR:         /home/edison/apps/plsteroids/pp.pl:8: instance(pp:var(a)).
+ERROR:         /home/edison/apps/plsteroids/pp.pl:8: instan(pp:var(a)).
 
 */

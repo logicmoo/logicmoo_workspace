@@ -33,7 +33,7 @@
 */
 
 :- module(metaprops, [(type)/1, (type)/2, (global)/1, (global)/2, compat/1,
-                      compat/2, instance/1, instance/2, (declaration)/1,
+                      compat/2, instan/1, instan/2, (declaration)/1,
                       (declaration)/2, check/1, trust/1, true/1, false/1]).
 
 :- use_module(library(assertions)).
@@ -191,19 +191,19 @@ freeze_fail(CP, V) :-
                 fail
               )).
 
-:- global instance(Prop)
+:- global instan(Prop)
 # "Uses Prop as an instantiation property. Verifies that execution of
    ~w does not produce bindings for the argument variables."-[Prop].
 
-:- meta_predicate instance(0).
+:- meta_predicate instan(0).
 
-instance(Goal) :-
+instan(Goal) :-
     term_variables(Goal, VS),
-    instance(Goal, VS).
+    instan(Goal, VS).
 
-:- meta_predicate instance(0, +).
+:- meta_predicate instan(0, +).
 
-instance(Goal, VS) :-
+instan(Goal, VS) :-
     prolog_current_choice(CP),
     \+ \+ ( maplist(freeze_fail(CP), VS),
             Goal
