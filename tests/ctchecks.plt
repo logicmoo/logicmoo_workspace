@@ -85,17 +85,17 @@ p1.pl:9:8: Assertion failure for p1(p1:q2).
 p1.pl:22:4: In the body of p1:p2/1:
 p1.pl:18:8: Assertion failure for q(A,B,C).
     In *calls*, unsatisfied properties: 
-        p1.pl:18:11: instance(p1:int(A)).
+        p1.pl:18:11: instan(p1:int(A)).
 p1.pl:19:8: Assertion failure for q(A,B,C).
     In *calls*, unsatisfied properties: 
-        p1.pl:19:11: instance(p1:atm(A)).
+        p1.pl:19:11: instan(p1:atm(A)).
 p1.pl:26:4: In the body of p1:p2/1:
 p1.pl:18:8: Assertion failure for q(X,Y,Z).
     In *calls*, unsatisfied properties: 
-        p1.pl:18:11: instance(p1:int(X)).
+        p1.pl:18:11: instan(p1:int(X)).
 p1.pl:19:8: Assertion failure for q(X,Y,Z).
     In *calls*, unsatisfied properties: 
-        p1.pl:19:11: instance(p1:atm(X)).
+        p1.pl:19:11: instan(p1:atm(X)).
 */
 test(ctmeta) :-
     set_prolog_flag(verbose, silent),
