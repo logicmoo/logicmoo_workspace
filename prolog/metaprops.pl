@@ -60,7 +60,7 @@ global(_, Goal) :- call(Goal).
 
 declaration(Goal) :- call(Goal).
 
-:- true prop declaration(Goal, Status) : (callable(Goal), assrt_status(Status)) + global(prop)
+:- true prop declaration(Status, Goal) : (assrt_status(Status), callable(Goal)) + global(prop)
 # "Like declaration/1, but allows to specify the default assertion status".
 
 declaration(_, Goal) :- call(Goal).
