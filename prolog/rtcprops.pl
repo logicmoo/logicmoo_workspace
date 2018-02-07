@@ -47,7 +47,7 @@
               (declaration)/1,
               (declaration)/2,
               compat/1,
-              instance/1,
+              instan/1,
               (native)/1,
               (native)/2,
               foreign/1,

@@ -298,8 +298,8 @@ check_asr_props(T, Asr, Cond, PType, PropValues) :-
             AsrPropValues),
     maplist([Asr] +\ (Asr-PV)^PV^true, AsrPropValues, PropValues).
 
-check_prop(compat,   VS, Prop) :- compat(  Prop, VS).
-check_prop(instance, VS, Prop) :- instance(Prop, VS).
+check_prop(compat, VS, Prop) :- compat(Prop, VS).
+check_prop(instan, VS, Prop) :- instan(Prop, VS).
 
 valid_prop(T, M:Prop) :-
     functor(Prop, F, A),
@@ -320,11 +320,11 @@ type_cond_part_check_mult(inco, Cond, Part, Check, Mult) :-
 type_cond_part_check_mult(cond, Cond, Part, Check, Mult) :-
     type_cond_part_check_mult(Cond, Part, Check, Mult).
 
-type_inco_part_check_mult(calls,   call, instance, call).
-type_inco_part_check_mult(calls,   comp, compat,   call).
-type_inco_part_check_mult(success, call, instance, once).
-type_inco_part_check_mult(success, comp, compat,   once).
-type_inco_part_check_mult(comp,    call, instance, once).
+type_inco_part_check_mult(calls,   call, instan, call).
+type_inco_part_check_mult(calls,   comp, compat, call).
+type_inco_part_check_mult(success, call, instan, once).
+type_inco_part_check_mult(success, comp, compat, once).
+type_inco_part_check_mult(comp,    call, instan, once).
 
-type_cond_part_check_mult(success, comp, compat,   call).
-type_cond_part_check_mult(success, succ, instance, call).
+type_cond_part_check_mult(success, comp, compat, call).
+type_cond_part_check_mult(success, succ, instan, call).
