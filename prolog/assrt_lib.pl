@@ -40,6 +40,7 @@
            asr_head_prop/7,
            curr_prop_asr/4,
            asr_aprop/4,
+           aprop_asr/4,
            prop_asr/4,
            prop_asr/7]).
 
@@ -127,19 +128,24 @@ curr_prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 %   this predicate be mutually exclusive.
 
 :- multifile asr_aprop/4.
-asr_aprop(rtcheck(Asr), Key, Prop, From) :-
-    curr_prop_asr(Key, Prop, From, Asr).
 
 prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
     implementation_module(M:H, IM),
     asr_head_prop(Asr, C, H, Stat, Type, Dict, From),
     implementation_module(C:H, IM).
 
-:- meta_predicate prop_asr(?, 0, +, +).
+:- meta_predicate
+       prop_asr(?, 0, +, +),
+       aprop_asr(?, 0, +, +).
 
 prop_asr(Key, M:P, From, Asr) :-
     implementation_module(M:P, IM),
     curr_prop_asr(Key, C:P, From, Asr),
+    implementation_module(C:P, IM).
+
+aprop_asr(Key, M:P, From, Asr) :-
+    implementation_module(M:P, IM),
+    asr_aprop(Asr, Key, C:P, From),
     implementation_module(C:P, IM).
 
 add_arg(_, G1, G2, _, _) :-
@@ -581,7 +587,11 @@ current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su
       current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
       normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, CoPos, RPos),
       (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
-      assertion_format(Type, GFormat)
+      ( assertion_format(Type, GFormat)
+      ->true
+      ; print_message(warning, format("Invalid type '~w' for assertion format '~w'", [Type, GFormat])),
+        fail
+      )
     ).
 
 merge_comments("",  _, C, P, C, P).
