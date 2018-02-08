@@ -33,13 +33,16 @@
 */
 
 :- module(ctrtchecks,
-	  ['$with_asr'/2,
+          ['$with_asr'/2,
            '$with_loc'/2,
+           assrt_op/4,
            check_call/3,
            check_goal/5,
-	   is_prop_check/5,
+           check_asrs_pre/5,
            collect_assertions/4,
-	   current_assertion/4]).
+           current_assertion/4,
+           is_prop_check/5,
+           part_time/2]).
 
 :- use_module(library(tabling)).
 :- use_module(library(apply)).
@@ -158,7 +161,9 @@ check_goal(T, Call, M, CM, AsrL) :-
                  check_asrs(T, is_prop_check(step1, Level), AsrL, G2), G2,
                  check_asrs(T, is_prop_check(step2, Level), AsrL, Call)).
 
-:- meta_predicate check_asrs(+, 3, +, +).
+:- meta_predicate
+       check_asrs(+, 3, +, +),
+       check_asrs_pre(+, 3, +, -, -).
 
 check_asrs(T, IsPropCheck, AsrL, Goal) :-
     check_asrs_pre(T, IsPropCheck, AsrL, AsrGlobL, AsrSuccL),
