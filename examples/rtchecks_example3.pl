@@ -39,7 +39,7 @@ family(B) :- atm(B).
 :- pred fullasr(A, B) :: atm(A) : (animal(A), atm(A)) => family(B) + not_fails.
 :- pred fullasr(A, B) :: atm(A) : animal(A) => family(B) + is_det.
 :- pred fullasr(A, B) :: (num(A), int(A)) : animal(A) => family(B) + is_det.
-:- calls fullasr(A, _) :: str(A).
+:- calls fullasr(A, _) : str(A).
 :- success fullasr(A, _) : int(A) => nnegint(A).
 
 :- rtchecked
