@@ -33,11 +33,12 @@
 */
 
 :- module(typeprops,
-          [list/1, list/2, tlist/2, nlist/2, int/1, nnegint/1, posint/1, flt/1,
-           num/1, atm/1, atmel/1, gnd/1, str/1, gndstr/1, constant/1, struct/1,
-           term/1, char/1, character_code/1, sequence_or_list/2, pair/1, any/1,
-           keypair/1, predname/1, mod_qual/1, linear/1, sequence/2, mod_qual/2,
-           keylist/1, is_pred/2, arithexpression/1, operator_specifier/1]).
+          [list/1, list/2, tlist/2, nlist/2, int/1, nnegint/1, posint/1, pair/1,
+           flt/1, nnegflt/1, posflt/1, num/1, nnegnum/1, posnum/1, atm/1, gnd/1,
+           any/1, gndstr/1, str/1, struct/1, term/1, char/1, atmel/1, keypair/1,
+           sequence_or_list/2, operator_specifier/1, character_code/1, linear/1,
+           is_pred/2, keylist/1, predname/1, mod_qual/1, sequence/2, constant/1,
+           mod_qual/2, arithexpression/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
@@ -65,6 +66,7 @@ posint(N) :-
     posint(N1),
     succ(N1, N).
 
+give_sign(0, 0) :- !.
 give_sign(P, P).
 give_sign(P, N) :- N is -P.
 
@@ -91,11 +93,36 @@ flt(X) :-
     nonvar(X), !,
     float(X).
 flt(F) :-
+    nnegfltgen(Q),
+    give_sign(Q, F).
+
+:- type nnegflt/1.
+
+nnegflt(X) :-
+    nonvar(X), !,
+    float(X),
+    X >= 0.
+nnegflt(Q) :-
+    nnegfltgen(Q).
+
+nnegfltgen(Q) :-
     nnegint(X),
+    intfrac1(X, Q).
+
+intfrac1(X, Q) :-
     ( Q is 1.0*X
     ; frac(X, Q)
-    ),
-    give_sign(Q, F).
+    ).
+
+:- type posflt/1.
+
+posflt(X) :-
+    nonvar(X), !,
+    float(X),
+    X > 0.
+posflt(Q) :-
+    posint(X),
+    intfrac1(X, Q).
 
 :- type num/1.
 
@@ -107,12 +134,37 @@ num(X) :-
     nonvar(X), !,
     number(X).
 num(F) :-
+    nnegnumgen(Q),
+    give_sign(Q, F).
+
+:- type nnegnum/1.
+
+nnegnum(X) :-
+    nonvar(X), !,
+    number(X),
+    X >= 0.
+nnegnum(Q) :-
+    nnegnumgen(Q).
+
+nnegnumgen(Q) :-
     nnegint(X),
+    intfrac2(X, Q).
+
+:- type posnum/1.
+
+posnum(X) :-
+    nonvar(X), !,
+    number(X),
+    X > 0.
+posnum(Q) :-
+    posint(X),
+    intfrac2(X, Q).
+
+intfrac2(X, Q) :-
     ( Q is X
     ; Q is 1.0*X
     ; frac(X, Q)
-    ),
-    give_sign(Q, F).
+    ).
 
 frac(X, Q) :-
     between(2, X, Y),
