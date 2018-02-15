@@ -49,25 +49,38 @@ prolog:message(and_in_and) -->
 % to find all axplanations for probabilistic queries
 all_sub_class(M:ClassEx,SupClassEx,Exps):-
   assert(M:keep_env),
-  sub_class(M:ClassEx,SupClassEx,Exps).
+  sub_class(M:ClassEx,SupClassEx,Exps),!.
+
+all_sub_class(M:_,_,Exps):-
+  empty_expl(M,Exps).
 
 all_instanceOf(M:ClassEx,IndEx,Exps):-
   assert(M:keep_env),
-  instanceOf(M:ClassEx,IndEx,Exps).
+  instanceOf(M:ClassEx,IndEx,Exps),!.
+  
+all_instanceOf(M:_,_,Exps):-
+  empty_expl(M,Exps).
 
 all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
   assert(M:keep_env),
-  property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps).
+  property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps),!.
+  
+all_property_value(M:_,_,_,Exps):-
+  empty_expl(M,Exps).
 
 all_unsat(M:ConceptEx,Exps):-
   assert(M:keep_env),
-  unsat(M:ConceptEx,Exps).
+  unsat(M:ConceptEx,Exps),!.
+
+all_unsat(M:_,Exps):-
+  empty_expl(M,Exps).
 
 all_inconsistent_theory(M:Print,Exps):-
   assert(M:keep_env),
   inconsistent_theory(M:Print,Exps),!.
 
-all_inconsistent_theory(_:_,[]).
+all_inconsistent_theory(M:_,Exps):-
+  empty_expl(M,Exps).
 
 
 compute_prob_and_close(M,Exps,Prob):-
@@ -257,6 +270,8 @@ clean_environment(M,Env):-
   end_test(Env),
   retractall(M:tornado_bdd_environment(_)).
 
+build_bdd(_,Env,[],BDD):- !,
+  zero(Env,BDD).
 
 build_bdd(_,_Env,BDD,BDD).
 
