@@ -62,15 +62,17 @@ find_expls(_M,[],_,[]).
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|_T],[C,I],E):-
-  clash(M,ABox,E0),
+  clash(M,ABox,EL0),
+  member(E0,EL0),
   sort(E0,E),
   findall(Exp,M:exp_found([C,I],Exp),Expl),
-   not_already_found(M,Expl,[C,I],E),
-   assert(M:exp_found([C,I],E)).
+  not_already_found(M,Expl,[C,I],E),
+  assert(M:exp_found([C,I],E)).
 
 % checks if an explanations was already found (property_value version)
 find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
-  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E),ABox),
+  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
+  member(E,Es),
   findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
   not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
@@ -171,11 +173,35 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(_,ABox,C,Ind,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
-  absent(classAssertion(C,Ind),Expl,ABox).
+modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
+  ( find((sameIndividual(L),Expl0),ABox) ->
+  	( sort(L,LS),
+  	  sort(LF,LFS),
+  	  LS = LFS,!,
+  	  absent(Expl0,Expl1,Expl),
+  	  delete(ABox0,[(sameIndividual(L),Expl0)],ABox)
+  	)
+  ;
+  	(ABox = ABox0,Expl = Expl1)
+  ).
 
-modify_ABox(_,ABox,P,Ind1,Ind2,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
-  absent(propertyAssertion(P,Ind1,Ind2),Expl,ABox).
+modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
+  ( find((classAssertion(C,Ind),Expl0),ABox0) ->
+    ( absent(Expl0,Expl1,Expl),
+      delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
+    )
+  ;
+    (ABox = ABox0,Expl = Expl1)
+  ).
+
+modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+  ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
+    ( absent(Expl0,Expl1,Expl),
+      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+    )
+  ;
+    (ABox = ABox0,Expl = Expl1)
+  ).
 
 /* ************* */
 
@@ -268,25 +294,33 @@ findExplForClassOf(LC,LI,ABox0,Expl):-
 /*  absent
   =========
 */
-absent(propertyAssertion(P,Ind1,Ind2),Expl,ABox):-
-  \+ absent1(propertyAssertion(P,Ind1,Ind2),Expl,ABox),!.
-
-absent(classAssertion(C,Ind),Expl,ABox):-
-  \+ absent1(classAssertion(C,Ind),Expl,ABox),!.
-
-absent(sameIndividual(L),Expl,ABox):-
-  \+ absent1(sameIndividual(L),Expl,ABox),!.
-
+absent(Expl0,Expl1,Expl):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
+  absent0(Expl0,Expl1,Expl),!.
 
 %------------------
-absent1(Ax,Expl,ABox):-
-  find((Ax,Expl0),ABox),
-  subset(Expl0,Expl),!.
+absent0(Expl0,Expl1,Expl):-
+  absent1(Expl0,Expl1,Expl,Added),
+  dif(Added,0).
 
-absent1(sameIndividual(L),Expl,ABox):-
-  find((sameIndividual(LF),Expl0),ABox),
-  permutation(L,LF),
-  subset(Expl0,Expl),!.
+absent1(Expl,[],Expl,0).
+
+absent1(Expl0,[H|T],[H|Expl],1):-
+  absent2(Expl0,H),!,
+  absent1(Expl0,T,Expl,_).
+
+absent1(Expl0,[_|T],Expl,Added):-
+  absent1(Expl0,T,Expl,Added).
+  
+absent2([H],Expl):-
+  length([H],1),
+  subset(H,Expl) -> fail ; true.
+
+absent2([H|_T],Expl):-
+  subset(H,Expl),!,
+  fail.
+
+absent2([_|T],Expl):-
+  absent2(T,Expl).
 
 /* **************** */
 
@@ -306,8 +340,8 @@ absent1(sameIndividual(L),Expl,ABox):-
 */
 
 build_abox(M,(ABox,Tabs)):-
-  findall((classAssertion(Class,Individual),[classAssertion(Class,Individual)]),M:classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),M:propertyAssertion(Property,Subject, Object),LPA),
+  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
+  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
@@ -317,12 +351,12 @@ build_abox(M,(ABox,Tabs)):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[differentIndividuals(Ld)]),M:differentIndividuals(Ld),LDIA),
+  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]]),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),[sameIndividual(L)]),M:sameIndividual(L),LSIA),
+  findall((sameIndividual(L),[[sameIndividual(L)]]),M:sameIndividual(L),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
   !.
@@ -341,11 +375,29 @@ initial_expl(_M,[]):-!.
 empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
-  and_f(M,[Axiom],F0,F).
+  and_f(M,[[Axiom]],F0,F).
 
-and_f(_M,Expl1,Expl2,Expl):-
-  append(Expl1,Expl2,ExplT),
-  list_to_set(ExplT,Expl).
+and_f(_M,[],[],[]):- !.
+
+and_f(_M,[],L,L):- !.
+
+and_f(_M,L,[],L):- !.
+
+and_f(_M,L1,L2,F):-
+  and_f1(L1,L2,[],F).
+
+and_f1([],_,L,L).
+
+and_f1([H1|T1],L2,L3,L):-
+  and_f2(H1,L2,L12),
+  append(L3,L12,L4),
+  and_f1(T1,L2,L4,L).
+
+and_f2(_,[],[]):- !.
+
+and_f2(L1,[H2|T2],[H|T]):-
+  append(L1,H2,H),
+  and_f2(L1,T2,T).
 
 
 /**********************
