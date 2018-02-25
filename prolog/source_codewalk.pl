@@ -56,13 +56,13 @@ head_caller(MHead, M:Head) :-
     '$current_source_module'(CM),
     strip_module(CM:MHead, M, Head).
 
-determine_caller((Head   :-  _), Caller) :- !, head_caller(Head, Caller).
-determine_caller((DHead --> _), Caller) :-
+determine_caller((Head :-  _), Caller) :- !, head_caller(Head, Caller).
+determine_caller((Head --> _), Caller) :-
     !,
-    extend_args(DHead, [_, _], Head),
-    head_caller(Head, Caller).
+    extend_args(Head, [_, _], EHead),
+    head_caller(EHead, Caller).
+determine_caller((:- Decl), Caller) :- !, decl_caller(Decl, Caller).
 determine_caller(Head, Caller) :- head_caller(Head, Caller).
-determine_caller((:- Decl), Caller) :- decl_caller(Decl, Caller).
 
 decl_caller(initialization(_), '<initialization>').
 decl_caller(_,                 '<declaration>').
