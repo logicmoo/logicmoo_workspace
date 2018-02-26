@@ -79,7 +79,7 @@ bind_name(Name=_, Name).
 
 check_singletons(Goal, Term) :-
     term_variables(Term, VarL),
-    ( b_getval('$variable_names', Bindings)
+    ( nb_current('$variable_names', Bindings)
     ->true
     ; Bindings = []
     ),
