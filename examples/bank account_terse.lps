@@ -15,7 +15,7 @@ transfer(From,To,Amount) initiates balance(From,New) if
 transfer(From,To,Amount) terminates balance(To,Old).
 transfer(From,To,Amount) terminates balance(From,Old).
 
-observe([transfer(fariba,bob,10)],1).
+observe([transfer(fariba,bob,10)],2).
 
 if transfer(fariba,bob,_X)
 then 

@@ -1,0 +1,39 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Fintech examples
+
+This notebook gives an overview of finantial technology related logical contracts.
+
+- *Banking* In this toy example, fariba and bob alternate transfering money to one another, until fariba runs out of money.
+  Most of the code is in the causal laws, which update bank balances and prevent concurrent transfers that would complicate the computation of updated bank balances. In conventional database programming languages the code for transfering money incorporates implementation details that are catered for in LPS by its general-purpose engine. 
+	- [Bank transfers](example/bankTransfer.pl)
+
+- *Ethereum blockchain* How to manage a game of "Rock, Paper, Scissors" for real (**well, Rostnet testnet**) blockchain coins? 
+The first example simulates a game so we fully understand it, by seeing its logic over time in a fluents/events timeline, 
+and understanding why contract decisions are made (try the second example query to see a preliminary explanation/auditing for a payment). 
+
+The second changes a couple of lines to consider real blockchain events and actions. 
+It is a fully working Ethereum agent, whose real transactions can be observed on https://ropsten.etherscan.io . Notice how the timestamped logic of LPS
+dispenses with complex concurrent programming.
+	 - [Rock, Paper, Scissors](example/RockPaperScissorsBase.pl)
+	 	- [Same, in Formal English](example/RockPaperScissorsBaseEN.pl). Preliminary demonstration of executable formal English.
+	 - [Rock, Paper, Scissors "gambling" on Ethereum](example/RockPaperScissorsEthereum.pl) testnet. Read the comments (%) to understand the differences.
+	 	- [Same, in Formal English](example/RockPaperScissorsEthereumFEn.pl). 
+
+- *Simplified Loan Agreement* This example is based on the loan agreement in Flood and Goodenough, March 2017, [Contract as automaton: the computational representation of financial agreements](https://pdfs.semanticscholar.org/b7ad/4e46b58094de72d9e82510ba38cb7e0521e4.pdf). 
+ 
+The representation is similar in spirit to the Flood_Goodenough formalisation as a
+collection of transitions of the form current-state -> event -> new-state. Here they are
+represented in the form: event initiates new-fluent if current-conditions.
+
+The representation simulates real calendar time using cycle time in LPS. Here one day equals four cycles. 
+It also includes a preliminary application of metalogic to disentangle the meaning of representations, warrants and covenants.
+
+	- [Two-payment loan contract](example/loanAgreementPostConditionsRT.pl)
+	- [Variant with cycle time only](example/loanAgreementPostConditions.pl). Useful to see timelines, still unavailable for simulated calendar time.
+
+ 
+</div>
+
+</div>

@@ -18,11 +18,11 @@ terminated( happens(event2, T1, _T2),
 d_pre([ happens(action, T1, _T2), holds(not(condition), T1) ]).
 
 initial_state([]).
-observe([event1], 1).  
-observe([ ], 2).  
+observe([event1], 2).  
 observe([ ], 3).  
 observe([ ], 4).  
-observe([event2], 5).  
+observe([ ], 5).  
+observe([event2], 6).  
 
 fluent(condition).
 event(event1).

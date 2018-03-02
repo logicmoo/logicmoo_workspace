@@ -1,4 +1,5 @@
 % Example submitted by Fariba, showing backtracking
+% Deprecated, depends on reactive rules with priority
 
 event(start_game(_)).
 action(moveperson(_,_,_)).
@@ -44,7 +45,7 @@ l_events( happens(newbelief, T1, T2), [
 	happens(genbelief(X,Y1),T1,T2)
 	]).
 
-observe([start_game(unit1)], 1).
-observe([], 2).
+observe([start_game(unit1)], 2).
 observe([], 3).
 observe([], 4).
+observe([], 5).

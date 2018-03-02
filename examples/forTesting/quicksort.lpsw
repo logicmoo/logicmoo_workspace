@@ -1,8 +1,8 @@
 
-maxTime(2).
+maxTime(3).
 
 reactive_rule([happens(sort(X), T1, T2)], [quicksort(X, Y), happens(sorted(Y),T2, T3)]).
-observe([sort([2,1,4,3])], 1).
+observe([sort([2,1,4,3])], 2).
 
 
 quicksort([X|Xs],Ys) :-

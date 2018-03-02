@@ -1,0 +1,31 @@
+/*
+  LPS test results file generated on 2017-12-12 at 19:34:23
+  on Prolog swi(7,5,8,[]) for program file:
+  /Users/mc/git/logicalcontracts/examples/forTesting/terminator.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,0).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,0).
+lps_test_result(events,2,0).
+lps_test_result(fluents,2,0).
+lps_test_result(events,3,0).
+lps_test_result(fluents,3,0).
+lps_test_result(events,4,0).
+lps_test_result(fluents,4,0).
+lps_test_result(events,5,0).
+lps_test_result(fluents,5,0).
+lps_test_result(events,6,1).
+lps_test_result(fluents,6,0).
+lps_test_result(events,7,1).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(events,6,writeln('Goodbye!'(6))).
+lps_test_result_item(events,7,lps_terminate(leaving)).
+% lps_test_action_ancestor(Call,T1,T2)
+lps_test_action_ancestor(exit,6,7).

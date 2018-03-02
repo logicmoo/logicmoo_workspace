@@ -13,7 +13,7 @@ the XSB version depends on http://interprolog.com/interprolog-studio , the SWI o
 
 %%% XSB specific section:
 :- if(current_prolog_flag(dialect, xsb)).
-:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3]). % assumed preloaded
+:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1]). % assumed preloaded
 :- use_module(db,[
 	lps_test_result_item/3, action/1, d/2
 	]).
@@ -72,7 +72,6 @@ displayTimeline(File,JSON) :-
 :- if((current_prolog_flag(dialect, swi), current_module(swish))).
 :- use_module(library(pengines),[pengine_self/1]).
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
-action(X) :- pengine_self(M), catch(M:action(X),_,fail).
 d(X,P) :- pengine_self(M), catch(M:d(X,P),_,fail).
 has_d_clauses :- pengine_self(M), catch(M:clause(d(_,_),_),_,fail), !.
 :- endif.
@@ -90,7 +89,7 @@ has_d_clauses :- clause(d(_,_),_), !.
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3
+	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1
 	]).
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
@@ -158,7 +157,9 @@ golpsv(LPSP_file,Options,Results) :-
 
 % for SWISH:
 gojson(JSON) :- gojson(_File,[],[],JSON).
-gojson(File,Options,Results,JSON) :- go(File,[make_test,swish|Options],Results), visual(File,JSON).
+gojson(File,Options,Results,JSON) :- 
+	( go(File,[make_test,swish|Options],Results) -> true ; writeln('PROGRAM FAILED')), 
+	visual(File,JSON).
 
 
 % visual(TestResultsFile,lps_visualization(TimelineJSON,TwoD_JSON))  This MUST be called after go(File,[...make_test,...],...)
@@ -175,43 +176,51 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	% For events and actions times T1 and T2 are the usual; for fluents, they are time of initiation and termination
 	% OFF BY ONE BUG HERE???
 	findall(t(X,T1-T2,G), (
-		lps_test_result_item('Observations:',T2,X), T1 is T2-1, G=observation
-		;
-		(lps_test_result_item('Selected actions:',TT2,happens(XX,TT1,TT2)) ; lps_test_result_item(events,TT2,XX), T1 is TT2-1), 
-		(action(XX)->G=action;G=event),
-		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X, TT1=T1, TT2=T2)
-		;
 		(lps_test_result_item('Database state:',T1,X) ; lps_test_result_item(fluents,T1,X)), 
-		% T1 \== 0, % hack to discard irrelevant state information
+		T1 \== 0, % hack to discard irrelevant state information
 		T2 is T1+1, functor(X,F,N), G=F/N % fluent
-	), Tuples),
-	% Find groups
-	(setof(G, T^X^member(t(X,T,G),Tuples), GroupIds)->true;GroupIds=[]), % allow for empty timelines
-	findall(FluentGroup,(
-		make_json_object([id:Gatom,content:Gsignature],FluentGroup),
-		member(F/N,GroupIds), 
-		my_term_to_atom(F/N,Gatom), functor(GG,F,N), nicer_vars(GG), my_term_to_atom(GG,Gsignature)
-	), FluentGroups),
-	make_json_object([id:observation,content:'Observations'],ObsGroup), % TODO: get rid of empty Observations 
-	( member(t(_,_,event),Tuples) -> 
-		make_json_object([id:event,content:'Events'],EventsGroup),
-		G1 = [ObsGroup,EventsGroup|FluentGroups]
-		; 
-		G1 = [ObsGroup|FluentGroups]),
-	make_json_object([id:action,content:'Actions'],ActionsGroup),
-	append(G1, [ActionsGroup], Groups ),
+	), FluentTuples),
+	sort(FluentTuples,Sorted),
+	join_fluent_ranges(Sorted,RangedFluents),
 	
+	findall(t(X,T1-T2,G), (
+		lps_test_result_item(events,TT2,XX), T1 is TT2-1, 
+		T1 \== 0, % hack to discard irrelevant initial "transition"
+		(action_(XX)->G=action;G=event),
+		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X,  TT2=T2)
+	), OtherTuples),
+	append(RangedFluents,OtherTuples,Ranged),
+
+	% Find groups
+	(setof(G, T^X^member(t(X,T,G),Ranged), GroupIds)->true;GroupIds=[]), % allow for empty timelines
+	findall(FluentGroup,(
+		make_json_object([id:Gatom,content:Gsignature,order:2],FluentGroup),
+		member(F/N,GroupIds), 
+		my_term_to_atom(F/N,Gatom), functor(GG,F,N), numbervars(GG), my_term_to_atom(GG,Gsignature)
+	), FluentGroups),
+	%make_json_object([id:observation,content:'Observations'],ObsGroup),  
+	( member(t(_,_,event),Ranged) -> 
+		make_json_object([id:event,order:1,content:'Events'],EventsGroup),
+		G1 = [EventsGroup|FluentGroups]
+		; 
+		G1 = FluentGroups),
+	( member(t(_,_,action),Ranged) -> 
+		make_json_object([id:action,content:'Actions',order:3],ActionsGroup),
+		append(G1,[ActionsGroup],Groups)
+		;
+		Groups=G1), 
 	% term2json(Groups,GroupsJSON),
-	% Aggregate fluent ranges
-	sort(Tuples,Sorted),
-	join_fluent_ranges(Sorted,Ranged),
 	(has_d_clauses -> % Is there a 2D display specification?
 		collect_display_specs(Ranged,DS), % (member(XX,DS), writeln(XX), fail;true),
 		prepare_display_sequence(DS,DSarray) % , (member(XX,DSarray), writeq(XX), nl, fail;true)
 		; DSarray=[] ),
 	create_counter(IDs),
 	% Render fluents
-	endTime(End), LastRelevantTime is End+1,
+	% Let's find the end of time; since real time was introduced, we can't rely on endTime(_),
+	% so we need to find the last time os all events and fluents
+	findall(T2,member(t(_,_-T2,_),Ranged),Times),
+	sort(Times,SortedTimes),
+	( append(_,[LastTime],SortedTimes) -> LastRelevantTime is LastTime+1 ; LastRelevantTime = 1),
 	findall(Fluent,(
 		make_json_object([id:ID,content:AtomAbridged,start:T1,end:T2,group:Gatom,title:Tip],Fluent),
 		member(t(X,T1-T2,F/N),Ranged),  
@@ -223,7 +232,7 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	), Fluents),
 	%... and the rest:
 	findall(Item,(
-		member(t(X,T1-T2,G),Sorted),  
+		member(t(X,T1-T2,G),Ranged),  
 		\+ functor(G,/,2), % not a fluent
 		my_term_to_atom(G,Gatom), my_term_to_atom(X,Atom),
 		(G==observation -> S='color:Peru'; G==action -> S='color:green' ; S='color:#E19735'),
@@ -233,8 +242,11 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 		get_increment_counter(IDs,ID)
 	), Others),
 	append(Fluents,Others,Items),
+	(beginningOfSimulatedRealTime(RTB) -> 
+		simulatedRealTimePerCycle(RTC), make_json_object([begin:RTB,cycle:RTC],BC), SRT = [simulatedRealTime:BC] 
+		; SRT=[]),
 	% render to JSON:
-	make_json_object([groups:Groups,items:Items],All), term2json(All,Timeline),
+	make_json_object([groups:Groups,items:Items|SRT],All), term2json(All,Timeline),
 	displayTimeline(File,Timeline), 
 	( DSarray == [] -> Cycles=[] ; make_json_object([cycles:DSarray],Cycles)), 
 	term2json(Cycles,Sequence).
@@ -328,7 +340,7 @@ op_for_one_enter(ID,T,X,Mode,Props,Op) :-
 	ensure_all_colons(Props_,Props),
 	assert(id_props_cache(ID,T,Props)),
 	( Mode = update(OldProps) -> 
-		Op = ({update:ID, oldProps:OldProps, newProps:Props})
+		Op = ({(update):ID, oldProps:OldProps, newProps:Props})
 		; 
 		Mode=create, 
 		(d_event(X) -> enforce_property(Props,event:true,TheProps_); TheProps_=Props),
@@ -371,7 +383,7 @@ prepare_one_display_spec({create:Props},T,OpJSON) :- !,
 	resolve_id_props(Props,T,NewProps), 
 	make_json_list(NewProps,NewPropsJSON),
 	make_json_object([create:NewPropsJSON],OpJSON). % list to {...}
-prepare_one_display_spec({update:ID, oldProps:_OldProps, newProps:NewProps},T,OpsJSON) :- !,
+prepare_one_display_spec({(update):ID, oldProps:_OldProps, newProps:NewProps},T,OpsJSON) :- !,
 	resolve_id_props(NewProps,T,NewProps_),
 	% Unfortunately PaperJS does not ease minimal updating wrt props used at creation time; considering 
 	% this AND the convenience to represent composite object as mere arrays of props objects, commenting this for now:
@@ -383,7 +395,7 @@ prepare_one_display_spec({update:ID, oldProps:_OldProps, newProps:NewProps},T,Op
 	% make_json_object(TheOldProps,OldJSON), make_json_object(TheNewProps,NewJSON),
 	make_json_list(NewProps_,NewJSON),
 	flatten_prop(id:ID,id:NewID),
-	make_json_object([update:NewID, oldProps:[], newProps:NewJSON ],OpsJSON).
+	make_json_object([(update):NewID, oldProps:[], newProps:NewJSON ],OpsJSON).
 
 % Makes an array if some element is a list, otherwise makes an object
 make_json_list(Props,JSON) :- member([_|_],Props), !, make_json_list2(Props,JSON).

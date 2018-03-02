@@ -20,6 +20,7 @@ term_rendering(lps_visualization(T,_TwoD), _Vars, _Options) -->
 		% And now our script:
 		\js_script({|javascript(T)||
 var lpsTimelineCSSloaded; // global scope
+
 (function() {
 	if (!( $.ajaxScript )) 
 	return;
@@ -38,6 +39,12 @@ var lpsTimelineCSSloaded; // global scope
 	var json_payload = T ;
 	var items = json_payload['items'];
 	var groups =  json_payload['groups'];
+	var simulatedRealTime = json_payload['simulatedRealTime']; // in seconds
+	
+	function displayedToLPStime(TT){
+		if (!simulatedRealTime) return TT;
+		return Math.round((TT-simulatedRealTime.begin*1000)/(simulatedRealTime.cycle*1000));
+	}
 
 	var minTime = Number.MAX_VALUE;
 	var maxTime = Number.MIN_VALUE;
@@ -47,20 +54,49 @@ var lpsTimelineCSSloaded; // global scope
 			minTime = items[i].start;
 		if(items[i].start>maxTime)
 			maxTime = items[i].start;
-		if(items[i].end>maxTime)
+		if(items[i].end && items[i].end>maxTime)
 			maxTime = items[i].end;
 	}
-	// console.log("minTime:"+minTime+", maxTime:"+maxTime);
 	// Configuration for the Timeline
-	var options = {
-		//autoResize : true,     seems to cause loop
-		//width: Math.max(0.85*div.parents("div.answer").innerWidth(),100),   useless?
-		min:minTime, max:maxTime+1,
-		showMajorLabels : false
-		,orientation : {axis:'both'} // 'top' looks fine too
-		,timeAxis : {scale:'millisecond',step:1}
-		,format : {minorLabels:{millisecond:'x'}}
-	};
+	var options;
+		
+	if (simulatedRealTime){
+		// we need to change all items times to simulated times
+		// note that visjs requires ms, not seconds!
+		var SRTB = simulatedRealTime.begin*1000;
+		var SRTC = simulatedRealTime.cycle*1000;
+		maxTime = SRTB + maxTime*SRTC;
+		minTime = SRTB;
+		var duration = maxTime-minTime;
+		options = {
+			//autoResize : true,     seems to cause loop
+			//width: Math.max(0.85*div.parents("div.answer").innerWidth(),100),   useless?
+			min:minTime, max: minTime+Math.round(duration*1.15),
+			showMajorLabels : false
+			,orientation : {axis:'both'} // 'top' looks fine too
+			//,timeAxis : {scale:'millisecond',step:1}
+			//,format : {minorLabels:{millisecond:'x'}}
+		};
+		for(i=0; i<items.length; i++){
+			items[i].start = SRTB + SRTC*items[i].start;
+			var dateTip = "<br/>"+new Date(items[i].start).toISOString();
+			if (items[i].end){
+				items[i].end = SRTB + SRTC*items[i].end;
+				dateTip += " to " + new Date(items[i].end).toISOString();
+			}
+			items[i].title += dateTip;
+		}
+	} else 
+		options = {
+			//autoResize : true,     seems to cause loop
+			//width: Math.max(0.85*div.parents("div.answer").innerWidth(),100),   useless?
+			min:minTime, max:maxTime+1,
+			showMajorLabels : false
+			,orientation : {axis:'both'} // 'top' looks fine too
+			,timeAxis : {scale:'millisecond',step:1}
+			,format : {minorLabels:{millisecond:'x'}}
+		};
+	
 
 	var timeline;
 	
@@ -81,6 +117,7 @@ var lpsTimelineCSSloaded; // global scope
     document.getElementsByTagName("head")[0].appendChild(link);
   }
   require(["/lps/bower_components/vis/dist/vis.min.js"], function(vis) {
+
       // ... updateSize();
 	  // Create a Timeline
 	  timeline = new vis.Timeline(DOMcontainer, items, groups, options);
@@ -94,6 +131,29 @@ var lpsTimelineCSSloaded; // global scope
 			}
 			// document.getElementById('log').innerHTML=""+id+" "+items[id].content+" "+items[id].p;
 		});
+		timeline.on('contextmenu', function (properties) {
+			// show internal syntax for the clicked item:
+			if (!properties.what || properties.what!=="item")
+				return;
+			id = properties['item'];
+			var item = null;
+			for(i=0; i<items.length; i++){
+				if (items[i].id==id){
+					item = items[i];
+				}
+			}
+			if (!item) return;
+			var F = item.group.indexOf("/");
+			var literal;
+			if (F!==-1){ // fluent
+				literal = "holds("+item.group.substr(0,F)+"("+item.content+"),"+ displayedToLPStime(new Date(properties.time).getTime())+")";
+			} else { // event or action
+				var T2 = displayedToLPStime(item.start);
+				literal = "happens("+item.content+","+(T2-1)+","+ T2 +")";
+			}
+			$(".prolog-query").queryEditor("setQuery","why("+literal+").");
+			properties.event.preventDefault();
+	  	});
 	  });
 	  setTimeout(function(){
 	  		$(".vis-minor",DOMcontainer).css('text-align', 'center'); // hack axis labels to be centered; working on visjs 4.17.0

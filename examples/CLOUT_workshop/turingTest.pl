@@ -8,10 +8,10 @@ actions 	say(_,_).
 
 initially	said(turing, []), said(robot, []).
 
-observe		say(turing, what)	from 0 to 1.
-observe		say(turing, is)		from 1 to 2.
-observe		say(turing, your)	from 2 to 3.
-observe		say(turing, name)	from 3 to 4.
+observe		say(turing, what)	from 1 to 2.
+observe		say(turing, is)		from 2 to 3.
+observe		say(turing, your)	from 3 to 4.
+observe		say(turing, name)	from 4 to 5.
 
 if		saying(turing, sentence)  	from T1 to T2  
 then 	saying(robot, sentence) 	from T3 to T4.

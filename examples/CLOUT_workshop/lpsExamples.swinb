@@ -16,7 +16,7 @@ This notebook gives an overview of some LPS example programs.
 
 	- [Simple fire](example/fireSimple.pl)
 	
-	- [Recurrent fire](example/fire_recurrent.pl)
+	- [Recurrent fire](example/fireRecurrent.pl)
 	
 - *Trash* 
 
@@ -76,7 +76,7 @@ This is a variant of the famous Blocks World planning problem in AI, investigate
 https://en.wikipedia.org/wiki/Blocks_world
 In this variant, two towers have to be constructed, and they are constructed concurrently.
 The LPS program is not a planner, but a plan executor. The plan for building a tower involves subplans for making a block on top of a place and for making a place clear. In both cases, the simplest case is when the goal is already true without the need to perform any actions. For simplicity, the floor is assumed to be always clear, so there is always space to put a block on it.
-    - [Make tower](example/concurrent_towers.pl)
+    - [Make tower](example/concurrentTowers.pl)
  
 - *Game of Life*
 

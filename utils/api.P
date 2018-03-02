@@ -8,6 +8,7 @@
 
 % Utility predicates required by external LPS APIs
 % This version depends on http://interprolog.com/java-bridge/ , an open source Java/XSB interface
+% SWI Prolog NOT YET incorporated
 
 :- import ipPrologEngine/1, java/3 from interprolog.
 :- import current_time/1, option/1 from usermod. % current LPS cycle

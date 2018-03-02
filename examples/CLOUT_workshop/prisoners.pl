@@ -3,8 +3,8 @@ fluents		total_years_in_jail(_,_).
 actions		refuses(_), bears_witness(_), gets(_,_).
 
 initially	total_years_in_jail(me,0),  total_years_in_jail(you,0).
-observe		refuses(you) from 0 to 1.
-observe	    bears_witness(me) from 0 to 1.
+observe		refuses(you) from 1 to 2.
+observe	    bears_witness(me) from 1 to 2.
 
 other(me,you).
 other(you,me).

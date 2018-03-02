@@ -1,7 +1,7 @@
 % prisoners-dilemma. Dec 6, 2016
 
 
-maxTime(5).
+maxTime(6).
 
 %  if prisoner P bears witness at time T and prisoner Q refuses at time T
 % then P gets 0 years in jail at time T+1 and Q gets 3 years in jail at time T+1.
@@ -47,7 +47,7 @@ initial_state([
 	total_years_in_jail(you, 0)
 ]).
 
-observe([refuses(you),bears_witness(me)], 1).
+observe([refuses(you),bears_witness(me)], 2).
 other(me, you).
 other(you, me).
 

@@ -8,11 +8,11 @@ terminated(happens(dispose(L1,L2),_T1,_T2),trash_at(L1),[]).
 
 d_pre([happens(dispose(L1,L2),T1,T2),holds(locked(L2),T1)]).
 
-observe([],1).
 observe([],2).
-observe([unlock(location2)],3).
-observe([],4).
+observe([],3).
+observe([unlock(location2)],4).
 observe([],5).
+observe([],6).
 
 fluent(locked(_)).
 fluent(bin_at(_)).

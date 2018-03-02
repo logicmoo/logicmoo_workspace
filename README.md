@@ -1,5 +1,17 @@
 # Logic Production Systems (LPS)#
-Welcome to "LPS Corner", a repository to support the open source development of LPS engines, examples and related tools.
+Welcome to "LPS Corner", a repository to support the open source development of LPS engines, examples and related tools. Most of the current version is contributed by LogicalContracts from the open source component of its [Logical Contracts Server](http://logicalcontracts.com/server/) product.
+
+## Major release, March 2, 2018 ##
+This is the first update since Summer 2017, and incorporates most improvements developed by LogicalContracts:
+
+* LPS background servers
+* LPS program hibernation / restore
+* External (Prolog) fluents and events
+* Simplified "fluent editing" actions
+* Simulated real (calendar) time
+* Bug fixes
+
+.. and more, please see preliminary documentation at the [LogicalContracts site](http://logicalcontracts.com/server/).
 
 ## What is LPS? ##
 
@@ -12,7 +24,7 @@ See the [Rule-ML 2017 Tutorial](https://bitbucket.org/lpsmasters/lps_corner/src/
 Additional material about the kernel of LPS is available on the [RuleML wiki](http://wiki.ruleml.org/index.php/KELPS). See also the slide presentation at [1st CLOUT workshop 2017](https://bitbucket.org/lpsmasters/lps_corner/raw/930d3e0b15e8477ff941ddc0ca7843083fba207e/doc/CLOUT_workshop_21Jan2017.pptx). Other technical papers and bibliographic references can be found on Bob Kowalski's home page at <https://www.doc.ic.ac.uk/~rak/>, which also includes a copy of his 2011 book, which presents some of the philosophy underlying LPS.
 
 ## Trying LPS online ##
-See and try the language at <http://lpsdemo.interprolog.com>: 
+See and try the language at <http://demo.logicalcontracts.com>: 
 
 ![Opening LPS on SWISH](https://bitbucket.org/repo/z4LaLk/images/1779163991-Opening_lpsdemo.png)
 Start with menu Examples / First Steps with LPS and links therein, as well as "LPS Examples". Refer to the LPS [syntax](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax).
@@ -21,21 +33,23 @@ For regular or intensive usage you can install LPS on your machine, using a numb
 
 ## Installing your own ##
 
-Besides trying it rightway on your browser at <http://lpsdemo.interprolog.com>, you can install LPS:
+Besides trying it rightway on your browser at <http://demo.logicalcontracts.com>, you can install LPS:
 
 * as your own local instance of the lpsdemo web application, on Windows, Mac, Linux
 * as a server in your own private or university cloud
-* as a SWI or XSB Prolog program
+* as a SWI Prolog program
 
 Please refer to the [INSTALL](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/INSTALL.md) instructions.
+
+XSB Prolog support is deprecated, but still available in the [Aug 15, 2017 version](https://bitbucket.org/lpsmasters/lps_corner/commits/be54e22ffd3fdb5fc80e57dd3c4fe4f3672e415a)
 
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices, all being some sort of open source. 
 
-Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/), and also contributions by [Miguel Calejo](http://calejo.com) and [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto). The engine implementation in this repository is an evolved version of the core interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda. 
+Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/), [Miguel Calejo](http://calejo.com) and also contributions by [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto). The engine implementation in this repository is an evolved version of the core interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda. 
 
 
-### Core Engine + Prolog Studio ###
+### Core Engine + Prolog Studio (deprecated) ###
 InterProlog Consulting's Prolog Studio adds somes facilities for LPS running over XSB Prolog: a semantic highlighting editor and a timeline visualizer. 
 To install:
 

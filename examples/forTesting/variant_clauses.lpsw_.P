@@ -1,0 +1,22 @@
+
+initial_state([f(1,2)]).
+
+observe([start],2).
+observe([],_9918) :-
+    _9918>2,
+    _9918<6.
+
+reactive_rule([happens(start,_9918,_9920)],[happens(composite,_9920,_9934)]).
+
+l_events(happens(composite,_9918,_9920),[holds(f(_9924,_9926),_9918),different(_9924,1),happens(a(_9924),_9918,_9920)]).
+l_events(happens(composite,_9918,_9920),[holds(f(_9924,_9926),_9918),happens(a(_9926),_9918,_9920)]).
+
+fluent(f(_9916,_9918)).
+
+action(a(_9916)).
+
+event(start).
+
+l_timeless(different(_9916,_9918),[_9916\==_9918]).
+
+maxTime(5).

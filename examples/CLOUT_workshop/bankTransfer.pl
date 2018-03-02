@@ -3,7 +3,7 @@ actions		transfer(From, To, Amount).
 fluents		balance(Person, Amount).
 
 initially	balance(bob, 0), balance(fariba, 100).
-observe		transfer(fariba, bob, 10) 	from 0 to 1.
+observe		transfer(fariba, bob, 10) 	from 1 to 2.
 
 if		transfer(fariba, bob, X) 	from  T1 to T2,  
 		balance(bob, A) at T2, A >= 10
@@ -13,14 +13,8 @@ if		transfer(bob, fariba, X) 	from  T1 to T2,
 		balance(fariba, A) at T2, A >= 20
 then  	transfer(fariba, bob, 20) 	from  T2 to T3.
 
-transfer(From, To, Amount) 	initiates 	balance(To, New) 
-if    	balance(To, Old),  New is Old + Amount.
-
-transfer(From, To, Amount) 	initiates 	balance(From, New) 
-if    	balance(From, Old),  New is Old - Amount.
-
-transfer(From, To, Amount) 	terminates	balance(To, Old).
-transfer(From, To, Amount) 	terminates	balance(From, Old).
+transfer(F,T,A) updates Old to New in balance(T, Old) if New is Old + A.
+transfer(F,T,A) updates Old to New in balance(F, Old) if New is Old - A.
 
 false	transfer(From, To, Amount), balance(From, Old),  Old < Amount.
 false	transfer(From, To1, Amount1), transfer(From, To2, Amount2),  To1 \=To2.

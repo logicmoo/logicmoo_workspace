@@ -1,0 +1,9 @@
+
+maxRealTime(60).
+
+minCycleTime(1).
+
+events
+    [rain(_766),lps_terminate].
+
+reactive_rule([happens(rain(_766),_864,_870)],[happens(writeln('IT RAINED!'),_778,_780)]).

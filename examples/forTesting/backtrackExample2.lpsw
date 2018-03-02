@@ -7,25 +7,24 @@ reactive_rule( [ happens(e1, _T1, T2), holds(p(X), T2)],
 
 l_events( happens(m(X), T1, T2), [holds(c(X,Y), T1), happens(a1(Y), T1, T2)]).
 
-l_events( happens(m(X), T1, T2), [holds(d(X,Y), T1), happens(a2(Y), T1, T2)]).
+l_events( happens(m(X), T1, T2), [holds(d_(X,Y), T1), happens(a2(Y), T1, T2)]).
 
 
 
 terminated( happens(a1(_X), T1, _T2), p(Y), [holds(p(Y), T1)] ).
 terminated( happens(a2(_X), T1, _T2), p(Y), [holds(p(Y), T1)] ).
 
-initiated( happens(e2, _T1, _T2), d(2,2), []).
+initiated( happens(e2, _T1, _T2), d_(2,2), []).
 
 
 d_pre([happens(a1(X), T1, _T2), holds(not(r(X)), T1)]).
 
-observe([e1], 1).
-observe([], 2).
+observe([e1], 2).
 observe([], 3).
-observe([e2], 4).
-observe([], 5).
+observe([], 4).
+observe([e2], 5).
 observe([], 6).
-% observe([], 7).
+observe([], 7).
 % observe([], 8).
 % observe([], 9).
 % observe([], 10).
@@ -33,7 +32,7 @@ observe([], 6).
 fluent( p(_) ).
 fluent( c(_,_) ).
 fluent( r(_) ).
-fluent( d(_,_) ) .
+fluent( d_(_,_) ) .
 
 action( a1(_) ).
 action( a2(_) ).

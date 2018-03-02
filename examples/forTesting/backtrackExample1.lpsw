@@ -15,19 +15,19 @@ initiated( happens(e2, _T1, _T2), c(2,2), []).
 
 d_pre([ happens(a1(X),T1,_T2), holds(not(r(X)),T1) ]).
 
-observe([e1], 1).
-observe([], 2).
+observe([e1], 2).
 observe([], 3).
-observe([e2], 4).
-observe([], 5).
+observe([], 4).
+observe([e2], 5).
 observe([], 6).
+observe([], 7).
 
 maxTime(10).
 
 fluent( p(_) ).
 fluent( c(_,_) ).
 fluent( r(_) ).
-fluent( d(_,_) ) .
+fluent( d_(_,_) ) .
 
 action( a1(_) ).
 action( a2(_) ).

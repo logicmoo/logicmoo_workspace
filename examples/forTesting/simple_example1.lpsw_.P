@@ -1,0 +1,25 @@
+
+reactive_rule([happens(event1,_9474,_9476),lps_inc(_9476,_9488),holds(condition,_9488)],[happens(action,_9512,_9514),tc(_9488<_9514)]).
+
+l_timeless(lps_inc(_9472,_9474),[_9474 is _9472+1]).
+
+initiated(happens(event1,_9474,_9476),condition,[holds(not condition,_9474)]).
+
+terminated(happens(event2,_9474,_9476),condition,[holds(condition,_9474)]).
+
+d_pre([happens(action,_9474,_9476),holds(not condition,_9474)]).
+
+initial_state([]).
+
+observe([event1],2).
+observe([],3).
+observe([],4).
+observe([],5).
+observe([event2],6).
+
+fluent(condition).
+
+event(event1).
+event(event2).
+
+action(action).

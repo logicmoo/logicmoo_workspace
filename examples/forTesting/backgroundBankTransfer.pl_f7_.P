@@ -1,0 +1,27 @@
+
+maxRealTime(60).
+
+minCycleTime(1).
+
+actions
+    [transfer(_4384,_4386,_4388)].
+
+fluents
+    [balance(_4384,_4386)].
+
+initial_state([balance(bob,0),balance(fariba,100)]).
+
+observe([transfer(fariba,bob,10)],1).
+
+reactive_rule([happens(transfer(fariba,bob,_4388),_4392,_4394),holds(balance(bob,_4406),_4394),_4406>=10],[happens(transfer(bob,fariba,10),_4394,_4448)]).
+reactive_rule([happens(transfer(bob,fariba,_4388),_4392,_4394),holds(balance(fariba,_4406),_4394),_4406>=20],[happens(transfer(fariba,bob,20),_4394,_4448)]).
+
+initiated(happens(transfer(_4384,_4386,_4388),_4638,_4644),balance(_4386,_4394),[holds(balance(_4386,_4406),_4638),_4394 is _4406+_4388]).
+initiated(happens(transfer(_4384,_4386,_4388),_4638,_4644),balance(_4384,_4394),[holds(balance(_4384,_4406),_4638),_4394 is _4406-_4388]).
+
+terminated(happens(transfer(_4384,_4386,_4388),_4534,_4540),balance(_4386,_4394),[]).
+terminated(happens(transfer(_4384,_4386,_4388),_4534,_4540),balance(_4384,_4394),[]).
+
+d_pre([happens(transfer(_4384,_4386,_4388),_4498,_4504),holds(balance(_4384,_4394),_4498),_4394<_4388]).
+d_pre([happens(transfer(_4384,_4386,_4388),_4512,_4518),happens(transfer(_4384,_4394,_4396),_4512,_4518),_4386\=_4394]).
+d_pre([happens(transfer(_4384,_4386,_4388),_4512,_4518),happens(transfer(_4392,_4386,_4396),_4512,_4518),_4384\=_4392]).

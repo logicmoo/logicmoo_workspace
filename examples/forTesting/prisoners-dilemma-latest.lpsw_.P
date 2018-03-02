@@ -1,0 +1,25 @@
+
+maxTime(6).
+
+reactive_rule([happens(bears_witness(_6132),_6138,_6140),happens(refuses(_6150),_6138,_6140)],[happens(gets(_6132,0),_6140,_6178),happens(gets(_6150,3),_6140,_6178)]).
+reactive_rule([happens(bears_witness(_6132),_6138,_6140),happens(bears_witness(_6150),_6138,_6140),other(_6132,_6150)],[happens(gets(_6132,2),_6140,_6190)]).
+reactive_rule([happens(refuses(_6132),_6138,_6140),happens(refuses(_6150),_6138,_6140),other(_6132,_6150)],[happens(gets(_6132,1),_6140,_6190)]).
+reactive_rule([happens(refuses(_6132),_6138,_6140),other(_6150,_6132)],[happens(refuses(_6150),_6140,_6170)]).
+reactive_rule([happens(bears_witness(_6132),_6138,_6140),other(_6150,_6132)],[happens(bears_witness(_6150),_6140,_6170)]).
+
+initial_state([total_years_in_jail(me,0),total_years_in_jail(you,0)]).
+
+observe([refuses(you),bears_witness(me)],2).
+
+other(me,you).
+other(you,me).
+
+initiated(happens(gets(_6132,_6134),_6140,_6142),total_years_in_jail(_6132,_6148),[holds(total_years_in_jail(_6132,_6154),_6140),_6148 is _6154+_6134]).
+
+terminated(happens(gets(_6132,_6134),_6140,_6142),total_years_in_jail(_6132,_6148),[]).
+
+action(refuses(_6132)).
+action(bears_witness(_6132)).
+action(gets(_6132,_6134)).
+
+fluent(total_years_in_jail(_6132,_6134)).

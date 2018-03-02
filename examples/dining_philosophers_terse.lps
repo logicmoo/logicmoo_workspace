@@ -2,7 +2,7 @@
 initial_state([available(fork(0)),available(fork(1)),available(fork(2)),available(fork(3)),available(fork(4))]).
 
 % a little hack assuming adjacent/3 enumerates our philosophers
-observe(Desires,1) :- findall(time_to_eat(Phi),adjacent(_,Phi,_),Desires).
+observe(Desires,2) :- findall(time_to_eat(Phi),adjacent(_,Phi,_),Desires).
 
 maxTime(10).
 

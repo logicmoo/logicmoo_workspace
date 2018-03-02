@@ -21,17 +21,15 @@ l_events( happens(m2, T1, _T3), [ happens(a3, T1, _T2)]).
 
 d_pre([happens(a1, T1, T2), happens(b1, T1, T2)]).
 
-observe([e1, e2], 1).
-observe([], 2).
+observe([e1, e2], 2).
 observe([], 3).
 observe([], 4).
 observe([], 5).
 observe([], 6).
-% observe([], 7).
+observe([], 7).
 % observe([], 8).
 % observe([], 9).
 % observe([], 10).
-
 
 
 action( a1 ).

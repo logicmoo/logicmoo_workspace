@@ -37,6 +37,8 @@ sudo apt-get install \
         texlive-fonts-extra-doc \
         texlive-fonts-recommended \
         texlive-fonts-recommended-doc
+# Optional, to avoid some error messages later:
+apt-get install libpcre3-dev
 git clone https://github.com/SWI-Prolog/swipl-devel.git
 cd swipl-devel
 ./prepare
@@ -56,6 +58,7 @@ Please refer to the [SWISH README](https://github.com/SWI-Prolog/swish/blob/mast
 
 ```
 cd ~
+sudo apt-get install graphviz
 sudo apt-get install nodejs
 sudo apt install nodejs-legacy
 sudo apt install npm
@@ -80,7 +83,11 @@ urlArgs: "ts="+new Date().getTime(),	/* prevent caching during development */
 ```
 cd ~
 git clone https://bitbucket.org/lpsmasters/lps_corner.git
-cd lps_corner/swish
+# In what follows replace lps_corner by the name of your own directory if necessary:
+cd lps_corner/engine
+mkdir logs
+chmod a+w logs  # ...or something finer
+cd ~/lps_corner/swish
 mkdir data
 chmod a+w data    # ...or something finer
 
@@ -107,7 +114,7 @@ sudo start lps
 # sudo stop lps
 # sudo restart lps
 ```
-For HTTP (SWI/SWISH) logging: give write permission to www-data in ~/swish 
+For HTTP (SWI/SWISH) logging: give write permission to www-data in ~/swish. It may also be necessary to review permissions of lps_corner/swish/postmortems.
 
 ### Variant for systemd (instead of Upstart) ###
 Replace the final sequence above with the following:
@@ -125,6 +132,8 @@ sudo systemctl restart lps.service
 # systemctl status lps.service
 
 ```
+
+For both Upstart and systemd, revise the environment variable ```HOSTING``` set in the configuration scripts, which may restrict LPS system capabilities. Also check that the working directory set for the service exists in your system.
 
 ## Site alarms with Amazon Cloud Watch ##
 At https://console.aws.amazon.com/cloudwatch:
@@ -145,4 +154,12 @@ crontab -e
 */5 * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-util --disk-space-util --disk-path=/ --from-cron
 ```
 Then define alarms and email notifications at the Cloud Watch console.
+
+## Authenticated users ##
+By configuring SWISH authentication, the predicate ```lps_user(-User)``` returns a unique user reference as given by the authentication service, such as Google (the only tested so far). Unauthenticated users are mapped into the single user account ```unknown_user``.
+
+To configure authentication, follow the instructions at swish/config-available/README.md (namely copying config-available/auth_google.pl to directory config-enabled/ ) and (specially) at the top of swish/config-available/auth_google.pl, editing that file as indicated plus:
+
+* Edit the last fact to ```oauth2:server_attribute(google, scope,email).```
+* Around line 96, in the oauth2:login clause, replace ```name(UserInfo.name)``` by ``name(UserInfo.email)```
 

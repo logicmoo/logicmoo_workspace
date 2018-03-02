@@ -13,7 +13,7 @@ terminated( happens(transfer(From, To, Amount), T1, T2), balance(To, Old), []).
 terminated( happens(transfer(From, To, Amount), T1, T2), balance(From, Old), []).
 
 
-observe([ transfer(fariba, bob, 10)],1).
+observe([ transfer(fariba, bob, 10)],2).
 %observe([ ],2).
 %observe([ transfer(fariba, bob, 20)],3).
 %observe([], Cycle) :- Cycle>4, Cycle<11.		% Prolog code here.

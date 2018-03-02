@@ -1,10 +1,10 @@
 % Prolog programs can be called from LPS.
 
-maxTime(2).
+maxTime(3).
 events	request(_).
 actions	announce(_).
 
-observe  request(sort([2,1,4,3])) from 0 to 1.
+observe  request(sort([2,1,4,3])) from 1 to 2.
 
 
 if	request(sort(X)) from T1 to T2 
