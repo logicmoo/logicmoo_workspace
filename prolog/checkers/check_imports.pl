@@ -84,7 +84,7 @@ check_imports(OptionL, Pairs) :-
 exwalkc_imports(M, FromChk, OptionL) :-
     extra_walk_code([source(false),
                      walkextras([declaration, asrparts([body, head])]),
-                     on_etrace(collect_imports_wc)|OptionL], M, FromChk).
+                     on_trace(collect_imports_wc)|OptionL], M, FromChk).
 
 :- public collect_imports_wc/3.
 collect_imports_wc(M:Goal, Caller, From) :-

@@ -70,7 +70,7 @@ extra_walk_code(CM:OptionL0, M, FromChk) :-
     foldl(select_option_default,
           [source(S)-false,
            walkextras(Extras)-[declaration, asrparts([body])],
-           on_etrace(ETracer)-ETracer
+           on_trace(ETracer)-ETracer
           ], OptionL1, OptionL2),
     OptionL = [on_trace(extra_codewalk:pcw_trace(1, CM:ETracer, FromChk))|OptionL2],
     extra_walk_module_body(M, OptionL),

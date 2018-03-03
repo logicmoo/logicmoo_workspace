@@ -107,7 +107,7 @@ check_wrong_dynamic(OptionL0, Pairs) :-
                    autoload(false),
                    evaluate(false),
                    trace_reference(_),
-                   on_etrace(collect_wrong_dynamic(M))],
+                   on_trace(collect_wrong_dynamic(M))],
                   OptionL),
     extra_walk_code(OptionL, M, FromChk),
     collect_result(M, FromChk, Pairs),

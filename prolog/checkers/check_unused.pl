@@ -83,7 +83,7 @@ checker:check(unused, Result, OptionL) :-
 check_unused(OptionL, Pairs) :-
     infer_meta_if_required,
     extra_walk_code([source(false), % False, otherwise this will not work
-                     on_etrace(collect_unused(M))|OptionL], M, FromChk),
+                     on_trace(collect_unused(M))|OptionL], M, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.

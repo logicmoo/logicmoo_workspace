@@ -62,7 +62,7 @@ check_trivial_fails(OptionL1, Pairs) :-
                    module_class([user, system, library])
                   ], OptionL),
     dynamic_locations(OptionL),
-    extra_walk_code([on_etrace(collect_trivial_fails(MatchAI))|OptionL]),
+    extra_walk_code([on_trace(collect_trivial_fails(MatchAI))|OptionL]),
     findall(warning-(Loc-Args),
             ( retract(trivial_fail(Args, From)),
               from_location(From, Loc)

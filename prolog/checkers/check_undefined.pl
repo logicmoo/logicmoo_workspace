@@ -61,7 +61,7 @@ check_undefined(OptionL, Results) :-
     extra_walk_code([source(true),
                      trace_reference(-),
                      undefined(trace),
-                     on_etrace(collect_undef)|OptionL]),
+                     on_trace(collect_undef)|OptionL]),
     findall(File-(AL-(PI-(Loc/['~w'-[CI]]))),
             ( retract(undef(PI, CI, From)),
               find_alternatives(PI, AL),

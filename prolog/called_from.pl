@@ -94,7 +94,7 @@ collect_called_from(Ref, M, CM, Caller, OptionL0) :-
                    evaluate(false),
                    trace_reference(_:Ref),
                    module_class([user, system, library]),
-                   on_etrace(collect_call_point(M, CM, Caller))],
+                   on_trace(collect_call_point(M, CM, Caller))],
                   OptionL0, OptionL),
     extra_walk_code(OptionL, M, _).
 

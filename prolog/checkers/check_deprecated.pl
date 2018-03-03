@@ -69,7 +69,7 @@ check_deprecated(OptionL0, Pairs) :-
                    autoload(false),
                    evaluate(false),
                    trace_reference(_),
-                   on_etrace(collect_deprecated)],
+                   on_trace(collect_deprecated)],
                   OptionL),
     extra_walk_code(OptionL),
     findall(information-((DLoc/(IM:F/A))-((CLoc/Comment)-(Loc/CI))),
