@@ -41,11 +41,11 @@
 :- multifile
     prolog:message//1.
 
-checker:check(non_loaded, Results, OptionL1) :-
-    option_allchk(OptionL1, OptionL, FileChk1),
+checker:check(non_loaded, Results, Options1) :-
+    option_allchk(Options1, Options, FileChk1),
     ( FileChk1 = option_utils:call_2(true, _)
     ->FileChk = option_utils:call_2(( working_directory(Dir, Dir),
-                                      check_dir_file(Dir, File, OptionL)), File)
+                                      check_dir_file(Dir, File, Options)), File)
     ; FileChk  = FileChk1
     ),
     check_non_loaded(FileChk, Results).

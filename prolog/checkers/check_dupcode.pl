@@ -90,9 +90,9 @@ ignore_dupcode(_,                               prolog, declaration(_)).
 ignore_dupcode(_,                               user,   declaration(use_module)).
 ignore_dupcode(_,                               _,      declaration(dynamic(_,_,_))).
 
-checker:check(dupcode, Result, OptionL0) :-
-    option_allchk(OptionL0, OptionL, FileChk),
-    check_dupcode(OptionL, FileChk, Result).
+checker:check(dupcode, Result, Options0) :-
+    option_allchk(Options0, Options, FileChk),
+    check_dupcode(Options, FileChk, Result).
 
 %!  duptype_elem(+DupType, +Head, +Module, :FileChk, -DupId, -Elem) is multi
 %
@@ -208,8 +208,8 @@ curr_duptype_elem(M, FileChk, DupType, DupId, Elem) :-
 curr_duptype_elem(M, FileChk, declaration, DupId, Elem) :-
     duptype_elem_declaration(_, M, FileChk, DupId, Elem).
 
-check_dupcode(OptionL, FileChk, Result) :-
-    select_option(module(M), OptionL, _, M),
+check_dupcode(Options, FileChk, Result) :-
+    select_option(module(M), Options, _, M),
     findall((DupType-DupId)-Elem,
             curr_duptype_elem(M, FileChk, DupType, DupId, Elem), PU),
     sort(PU, PL),

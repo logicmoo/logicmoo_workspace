@@ -50,12 +50,12 @@
 
 :- dynamic mutually_exclusive_db/1.
 
-option_allmchk(OptionL0, OptionL, option_utils:call_2(FileGen, File)) :-
-    option_allchk(_M, File, FileGen-OptionL0, true-OptionL).
+option_allmchk(Options0, Options, option_utils:call_2(FileGen, File)) :-
+    option_allchk(_M, File, FileGen-Options0, true-Options).
 
-checker:check(non_mutually_exclusive, Result, OptionL0 ) :-
-    option_allmchk(OptionL0, OptionL1, FileChk),
-    select_option(predicate(Ref), OptionL1, _, Ref),
+checker:check(non_mutually_exclusive, Result, Options0 ) :-
+    option_allmchk(Options0, Options1, FileChk),
+    select_option(predicate(Ref), Options1, _, Ref),
     findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
 
 check_non_mutually_exclusive(FromChk, Ref, warning-(Ref-LocIdx)) :-

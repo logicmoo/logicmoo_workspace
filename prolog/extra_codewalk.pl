@@ -106,31 +106,31 @@ current_clause_module_body(CM, Ref) :-
       strip_module(HM:Body, CM, _)
     ).
 
-optimized_walk_code(false, 1, Tracer, OptionL) :-
-    prolog_walk_code([source(false), on_trace(Tracer)|OptionL]).
-optimized_walk_code(true, Stage, Tracer, OptionL) :-
-    optimized_walk_code_true(Stage, Tracer, OptionL).
+optimized_walk_code(false, 1, Tracer, Options) :-
+    prolog_walk_code([source(false), on_trace(Tracer)|Options]).
+optimized_walk_code(true, Stage, Tracer, Options) :-
+    optimized_walk_code_true(Stage, Tracer, Options).
 
-optimized_walk_code_true(1, Tracer, OptionL) :-
-    prolog_walk_code([source(false), on_trace(Tracer)|OptionL]),
+optimized_walk_code_true(1, Tracer, Options) :-
+    prolog_walk_code([source(false), on_trace(Tracer)|Options]),
     fail.
-optimized_walk_code_true(2, Tracer, OptionL) :-
+optimized_walk_code_true(2, Tracer, Options) :-
     findall(CRef, retract(issues(CRef)), ClausesU),
     sort(ClausesU, Clauses),
     ( Clauses==[]
     ->true
-    ; prolog_walk_code([clauses(Clauses), on_trace(Tracer)|OptionL])
+    ; prolog_walk_code([clauses(Clauses), on_trace(Tracer)|Options])
     ).
 
-extra_wcsetup(OptionL0, OptionL, FromChk) :-
-    option_fromchk(OptionL0, OptionL1, FromChk),
-    merge_options(OptionL1,
+extra_wcsetup(Options0, Options, FromChk) :-
+    option_fromchk(Options0, Options1, FromChk),
+    merge_options(Options1,
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
                    trace_reference(_),
                    module_class([user, system, library])
-                  ], OptionL).
+                  ], Options).
 
 walk_from_loc_declaration(OTerm, M, FromChk) :-
     forall(( prolog_codewalk:walk_option_caller(OTerm, '<declaration>'),

@@ -49,20 +49,20 @@
     trivial_fail/2,
     ai_cache_result/2.
 
-checker:check(trivial_fails, Result, OptionL) :-
-    check_trivial_fails(OptionL, Result).
+checker:check(trivial_fails, Result, Options) :-
+    check_trivial_fails(Options, Result).
 
-check_trivial_fails(OptionL1, Pairs) :-
-    select_option(match_ai(MatchAI), OptionL1, OptionL2, match_head),
-    merge_options(OptionL2,
+check_trivial_fails(Options1, Pairs) :-
+    select_option(match_ai(MatchAI), Options1, Options2, match_head),
+    merge_options(Options2,
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
                    trace_reference(_),
                    module_class([user, system, library])
-                  ], OptionL),
-    dynamic_locations(OptionL),
-    walk_code([on_trace(collect_trivial_fails(MatchAI))|OptionL]),
+                  ], Options),
+    dynamic_locations(Options),
+    walk_code([on_trace(collect_trivial_fails(MatchAI))|Options]),
     findall(warning-(Loc-Args),
             ( retract(trivial_fail(Args, From)),
               from_location(From, Loc)

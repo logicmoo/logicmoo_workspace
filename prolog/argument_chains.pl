@@ -57,21 +57,21 @@ count(Curr) :-
     succ(Curr, Next),
     assertz(counter(Next)).
 
-gen_argument_chains(AIL, OptionL0 ) :-
+gen_argument_chains(AIL, Options0 ) :-
     retractall(clause_db(_)),
     retractall(arg_id(_, _, _, _, _, _)),
     retractall(linked_arg(_, _)),
     retractall(unlinked_arg(_, _, _, _)),
     forall(member(AI, AIL),
            record_linked(AI, 0 )),
-    merge_options(OptionL0, [source(false)], OptionL),
-    check_argument_fixpoint(0, OptionL).
+    merge_options(Options0, [source(false)], Options),
+    check_argument_fixpoint(0, Options).
 
 record_linked(IM:F/A-Pos, Stage) :-
     functor(H, F, A),
     record_linked(H, IM, _, Pos, Stage, 0).
 
-check_argument_fixpoint(Stage, OptionL) :-
+check_argument_fixpoint(Stage, Options) :-
     succ(Stage, NStage),
     findall(P, ( arg_id(H, M, Idx, Pos, Stage, _),
                  functor(H, F, A),
@@ -82,16 +82,16 @@ check_argument_fixpoint(Stage, OptionL) :-
                ), L),
     length(L, N),
     print_message(information, format("Stage ~w: Checking ~w argument positions", [NStage, N])),
-    walk_code([source(false), on_trace(propagate_argument_1(Stage, NStage))|OptionL]),
+    walk_code([source(false), on_trace(propagate_argument_1(Stage, NStage))|Options]),
     print_message(information, format("Stage ~w: Collecting unlinked arguments", [NStage])),
     findall(Clause, retract(clause_db(Clause)), ClauseU),
     sort(ClauseU, ClauseL),
     walk_code([source(false),
                clauses(ClauseL),
-               on_trace(propagate_argument_2(Stage, NStage))|OptionL]),
+               on_trace(propagate_argument_2(Stage, NStage))|Options]),
     ( \+ arg_id(_, _, _, _, NStage, _)
     ->true
-    ; check_argument_fixpoint(NStage, OptionL)
+    ; check_argument_fixpoint(NStage, Options)
     ).
 
 :- public propagate_argument_1/5.

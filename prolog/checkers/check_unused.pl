@@ -79,8 +79,8 @@ collect_unused(MGoal, Caller, From) :-
     '$current_source_module'(M),
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
-checker:check(unused, Result, OptionL) :-
-    check_unused(OptionL, Result).
+checker:check(unused, Result, Options) :-
+    check_unused(Options, Result).
 
 check_unused(Options, Pairs) :-
     infer_meta_if_required,

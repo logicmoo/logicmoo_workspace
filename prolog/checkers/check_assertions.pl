@@ -64,21 +64,21 @@
 %        generate_ctchecks/4,
 %        do_check_property_ctcheck/2.
 
-checker:check(assertions, Result, OptionL) :-
+checker:check(assertions, Result, Options) :-
     cleanup_db,
-    check_assertions(OptionL, Result).
+    check_assertions(Options, Result).
 
 cleanup_db :-
     retractall(violations_db(_, _, _)).
 
-check_assertions(OptionL1, Pairs) :-
-    select_option(module(M), OptionL1, OptionL2, M),
-    merge_options(OptionL2,
+check_assertions(Options1, Pairs) :-
+    select_option(module(M), Options1, Options2, M),
+    merge_options(Options2,
                   [module(M),
                    on_trace(collect_violations)
-                  ], OptionL),
-    option_fromchk(OptionL, _, FromChk),
-    walk_code(OptionL),
+                  ], Options),
+    option_fromchk(Options, _, FromChk),
+    walk_code(Options),
     findall(error-Issue,
             ( retract(violations_db(CPI, CTChecks, From)),
               from_location(From, Loc),

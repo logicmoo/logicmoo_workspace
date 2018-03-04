@@ -59,19 +59,19 @@ deprecated_predicate(M:Goal, " Use ~q instead."-[Alt], [], []) :-
     implementation_module(M:Goal, IM),
     deprecated_predicate(Goal, IM, Alt).
 
-checker:check(deprecated, Result, OptionL) :-
-    check_deprecated(OptionL, Result).
+checker:check(deprecated, Result, Options) :-
+    check_deprecated(Options, Result).
 
-check_deprecated(OptionL0, Pairs) :-
-    merge_options(OptionL0,
+check_deprecated(Options0, Pairs) :-
+    merge_options(Options0,
                   [source(true),
                    infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
                    trace_reference(_),
                    on_trace(collect_deprecated)],
-                  OptionL),
-    walk_code(OptionL),
+                  Options),
+    walk_code(Options),
     findall(information-((DLoc/(IM:F/A))-((CLoc/Comment)-(Loc/CI))),
             ( retract(deprecated_db(Call, M, Comment, DFrom, CFrom, From)),
               implementation_module(M:Call, IM),

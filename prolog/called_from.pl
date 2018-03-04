@@ -72,12 +72,12 @@ called_from(Ref, Caller) :-
       retractall(called_from_db(_, _, _, _, _))
     ).
 
-called_from(Ref, CM, Caller, OptionL, Pairs) :-
+called_from(Ref, CM, Caller, Options, Pairs) :-
     normalize_head(Ref, M:H),
-    collect_called_from(H, M, CM, Caller, OptionL, Pairs).
+    collect_called_from(H, M, CM, Caller, Options, Pairs).
 
-collect_called_from(H, M, CM, Caller, OptionL, Sorted) :-
-    collect_called_from(H, M, CM, Caller, OptionL),
+collect_called_from(H, M, CM, Caller, Options, Sorted) :-
+    collect_called_from(H, M, CM, Caller, Options),
     findall(Loc-[M:F/A, CPI], ( current_called_from(H, M, CM, From, C),
                                 functor(H, F, A),
                                 normalize_pi(C, CPI),
@@ -85,7 +85,7 @@ collect_called_from(H, M, CM, Caller, OptionL, Sorted) :-
                               ), Pairs),
     keysort(Pairs, Sorted).
 
-collect_called_from(Ref, M, CM, Caller, OptionL0) :-
+collect_called_from(Ref, M, CM, Caller, Options0) :-
     cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
     retractall(called_from_db(_, _, _, _, _)),
     merge_options([source(true),
@@ -95,8 +95,8 @@ collect_called_from(Ref, M, CM, Caller, OptionL0) :-
                    trace_reference(_:Ref),
                    module_class([user, system, library]),
                    on_trace(collect_call_point(M, CM, Caller))],
-                  OptionL0, OptionL),
-    walk_code(OptionL).
+                  Options0, Options),
+    walk_code(Options).
 
 current_called_from(H, M, CM, From, Caller) :-
     current_used_from([retract, query], H, M, CM, From, Caller).

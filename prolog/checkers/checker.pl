@@ -105,10 +105,10 @@ showcheck(Checker) :-
 available_checker(Checker) :-
     clause(check(Checker, _, _), _).
 
-showcheck(Checker, OptionL) :-
+showcheck(Checker, Options) :-
     with_prolog_flag(
         verbose, silent,
-        check_results(Checker, Results, OptionL)),
+        check_results(Checker, Results, Options)),
     full_report(Checker-Results).
 
 with_prolog_flag(Flag, Value, Goal) :-
@@ -169,27 +169,27 @@ donecheck(Checker, T) :-
     DT is T2-T,
     print_message(information, format('Done ~w (~3f s)', [Checker, DT])).
 
-checkall(OptionL) :- checkall(maplist, OptionL).
+checkall(Options) :- checkall(maplist, Options).
 
-checkallc(OptionL) :- checkall(concurrent_maplist, OptionL).
+checkallc(Options) :- checkall(concurrent_maplist, Options).
 
 :- meta_predicate checkall(2, +).
-checkall(Mapper, OptionL) :-
+checkall(Mapper, Options) :-
     findall(C, available_checker(C), CL),
     setup_call_cleanup(
         with_prolog_flag(
             verbose, silent,
             infer_meta_if_required),
-        call(Mapper, checkeach(OptionL), CL),
+        call(Mapper, checkeach(Options), CL),
         cleanup_db).
 
 :- public checkeach/2.
-checkeach(OptionL, Checker) :-
+checkeach(Options, Checker) :-
      infocheck(Checker, T),
-     showcheck(Checker, OptionL),
+     showcheck(Checker, Options),
      donecheck(Checker, T).
 
-check_results(Checker, Results, OptionL) :-
+check_results(Checker, Results, Options) :-
     with_prolog_flag(
         check_database_preds, true,
-        check(Checker, Results, OptionL)).
+        check(Checker, Results, Options)).

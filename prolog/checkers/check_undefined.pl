@@ -53,15 +53,15 @@
 :- dynamic
     undef/3.
 
-checker:check(undefined, Results, OptionL) :-
-    check_undefined(OptionL, Results).
+checker:check(undefined, Results, Options) :-
+    check_undefined(Options, Results).
 
-check_undefined(OptionL, Results) :-
+check_undefined(Options, Results) :-
     infer_meta_if_required,
     walk_code([source(true),
                trace_reference(-),
                undefined(trace),
-               on_trace(collect_undef)|OptionL]),
+               on_trace(collect_undef)|Options]),
     findall(File-(AL-(PI-(Loc/['~w'-[CI]]))),
             ( retract(undef(PI, CI, From)),
               find_alternatives(PI, AL),
