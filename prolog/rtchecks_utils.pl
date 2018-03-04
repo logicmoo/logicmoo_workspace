@@ -99,7 +99,9 @@ rtcheck_type(calls).
 
 handle_rtcheck(RTCheck) :-
     \+ ( copy_term_nat(RTCheck, Term),
-         numbervars(Term, 0, _),
+         numbervars(Term, 0, _,
+                    [ singletons(true)
+                    ]),
          print_message(error, Term),
          fail
        ).
