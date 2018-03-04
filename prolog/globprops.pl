@@ -442,15 +442,15 @@ dupclauses(M:Goal) :-
 :- dynamic signal_db/3.
 
 asserta_signal_check(Choice, _, E, _) :- asserta(signal_db(Choice, no, E)).
- asserta_signal_check(Choice, Goal, _, CheckThrown) :-
-    end_signal_check(Choice, Goal, CheckThrown),
+asserta_signal_check(Choice, G, _, Thrown) :-
+    end_signal_check(Choice, G, Thrown),
     fail.
 
-retract_signal_check(Choice, Goal, _, CheckThrown) :- end_signal_check(Choice, Goal, CheckThrown).
+retract_signal_check(Choice, G, _, Thrown) :- end_signal_check(Choice, G, Thrown).
 retract_signal_check(Choice, _, E, _) :- asserta(signal_db(Choice, no, E)), fail.
 
-signal_prop(yes, E, signal(E, yes), signal(E, no)).
-signal_prop(no, E, signal(E, no), signal(E, yes)).
+signal_prop(yes, E, signal(E, yes), signal(E, no )).
+signal_prop(no,  E, signal(E, no ), signal(E, yes)).
 
 end_signal_check(Choice, Goal, CheckThrown) :-
     retract(signal_db(Choice, Thrown, E)),

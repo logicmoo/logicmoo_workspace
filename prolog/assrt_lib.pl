@@ -832,7 +832,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ),
     current_normalized_assertion(Assertions, CM, APos, M:Head, Status,
                                  Type, CpL, CaL, SuL, GlL, Co, CoPos, HPos),
-    get_sequence_and_inc(Count),
+    with_mutex('get_sequence_and_inc/1', get_sequence_and_inc(Count)),
     term_variables(t(Co, CpL, CaL, SuL, GlL), ShareL),
     atom_number(AIdx, Count),
     Asr =.. [AIdx, M, Head|ShareL], % Asr also contains variable bindings. By
