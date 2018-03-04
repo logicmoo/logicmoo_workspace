@@ -49,10 +49,10 @@
 
 :- meta_predicate ontrace(0,6,:).
 
-ontrace(Goal, OnTrace, OptionL) :-
+ontrace(Goal, OnTrace, Options) :-
     State=state(_, _, _),       % Allow destructive assignment
     call_inoutex(Goal,
-        setup_trace(State, OnTrace, OptionL),
+        setup_trace(State, OnTrace, Options),
         cleanup_trace(State)).
 
 :- meta_predicate call_inoutex(0,0,0).

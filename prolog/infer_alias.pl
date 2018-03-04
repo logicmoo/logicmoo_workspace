@@ -43,8 +43,8 @@
 
 :- use_module(library(term_size)).
 
-infer_alias(File, CAlias, OptionL) :-
-    select_option(sort(SortL), OptionL, _, []),
+infer_alias(File, CAlias, Options) :-
+    select_option(sort(SortL), Options, _, []),
     findall(SortTerm-Alias,
             ( current_alias(File, Alias),
               Alias =.. [AName, _],

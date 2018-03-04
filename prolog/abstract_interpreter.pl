@@ -118,17 +118,17 @@ mod_qual(M, G, I:F/A) :-
     functor(H, F, A),
     implementation_module(N:H, I).
 
-abstract_interpreter(M:Goal, Abstraction, OptionL, Result) :-
-    option(location(Loc),   OptionL, context(toplevel, Goal)),
-    option(evaluable(Eval), OptionL, []),
-    option(on_error(OnErr), OptionL, print_message(error)),
+abstract_interpreter(M:Goal, Abstraction, Options, Result) :-
+    option(location(Loc),   Options, context(toplevel, Goal)),
+    option(evaluable(Eval), Options, []),
+    option(on_error(OnErr), Options, print_message(error)),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
     maplist(mod_qual(M), EvalL, MEvalL),
     abstract_interpreter(M:Goal, Abstraction,
                          state(Loc, MEvalL, M:OnErr, [], [], []), [], Result).
 
-abstract_interpreter(MGoal, Abstraction, OptionL) :-
-    abstract_interpreter(MGoal, Abstraction, OptionL, _).
+abstract_interpreter(MGoal, Abstraction, Options) :-
+    abstract_interpreter(MGoal, Abstraction, Options, _).
 
 :- meta_predicate catch(2, ?, ?, ?, ?).
 catch(DCG, Ex, H, S0, S) :-
