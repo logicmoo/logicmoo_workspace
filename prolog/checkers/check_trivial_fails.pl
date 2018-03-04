@@ -39,7 +39,7 @@
 :- use_module(library(abstract_interpreter)).
 :- use_module(library(from_utils)).
 :- use_module(library(location_utils)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(dynamic_locations)).
 
 :- multifile
@@ -62,7 +62,7 @@ check_trivial_fails(OptionL1, Pairs) :-
                    module_class([user, system, library])
                   ], OptionL),
     dynamic_locations(OptionL),
-    extra_walk_code([on_trace(collect_trivial_fails(MatchAI))|OptionL]),
+    walk_code([on_trace(collect_trivial_fails(MatchAI))|OptionL]),
     findall(warning-(Loc-Args),
             ( retract(trivial_fail(Args, From)),
               from_location(From, Loc)
@@ -112,10 +112,11 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
     MGoal = M:H,
     callable(H),
     \+ ignore_predicate(H, M),
-    variant_sha1(ai(H, CM), Hash),
+    copy_term_nat(CM:H, Term),
+    variant_sha1(Term, Hash),
     ( ai_cache_result(Hash, Data)
     ->true
-    ; ( abstract_interpreter(CM:H, MatchAI, [location(From)], Result)
+    ; ( abstract_interpreter(Term, MatchAI, [location(From)], Result)
       ->Data = true(Result)
       ; Data = fail
       ),

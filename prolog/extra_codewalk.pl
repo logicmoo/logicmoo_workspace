@@ -32,64 +32,63 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(extra_codewalk, [extra_walk_code/1,
-                           extra_walk_code/3,
-                           extra_wcsetup/3,
-                           extra_walk_module_body/2]).
+:- module(extra_codewalk, []).
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(extra_location)).
+:- use_module(library(from_utils)).
 :- use_module(library(implementation_module)).
 :- use_module(library(option_utils)).
 
 :- thread_local
     issues/1.
 
-:- meta_predicate
-    extra_walk_code(:),
-    extra_walk_code(:,+,-).
-
 %!  extra_walk_module_body(-Module, +Options) is det.
-extra_walk_module_body(M, OptionL1) :-
-    select_option(module(M), OptionL1, OptionL, M),
+
+extra_walk_module_body(M, Options) :-
     ( nonvar(M)
     ->findall(Ref, current_clause_module_body(M, Ref), RefU),
       sort(RefU, RefL),
-      prolog_walk_code([source(false), clauses(RefL)|OptionL])
+      prolog_walk_code([source(false), clauses(RefL)|Options])
     ; true
     ).
 
-%!  extra_walk_code(:Options) is det.
-extra_walk_code(OptionL) :-
-    extra_walk_code(OptionL, _, _).
-
-%!  extra_walk_code(:Options, -Module, -FromChk) is det.
-extra_walk_code(CM:OptionL0, M, FromChk) :-
-    extra_wcsetup(OptionL0, OptionL1, FromChk),
+codewalk:walk_code(prolog, Options1) :-
+    extra_wcsetup(Options1, Options2, FromChk),
     foldl(select_option_default,
           [source(S)-false,
+           module(M)-M,
            walkextras(Extras)-[declaration, asrparts([body])],
            on_trace(ETracer)-ETracer
-          ], OptionL1, OptionL2),
-    OptionL = [on_trace(extra_codewalk:pcw_trace(1, CM:ETracer, FromChk))|OptionL2],
-    extra_walk_module_body(M, OptionL),
-    optimized_walk_code(S, Stage, extra_codewalk:pcw_trace(Stage, CM:ETracer, FromChk), OptionL2),
-    prolog_codewalk:meta_options(is_meta, CM:OptionL, QOptions),
-    prolog_codewalk:make_walk_option(QOptions, OTerm),
+          ],
+          Options2, Options3),
+    ( nonvar(M)
+    ->Options4 = [module(M)|Options3]
+    ; Options4 = Options3
+    ),
+    Options = [on_trace(extra_codewalk:pcw_trace(1, M, ETracer, FromChk))|Options4],
+    extra_walk_module_body(M, Options),
+    optimized_walk_code(S, Stage, extra_codewalk:pcw_trace(Stage, M, ETracer, FromChk), Options4),
+    prolog_codewalk:make_walk_option(Options, OTerm),
     maplist(walk_extras(OTerm, M, FromChk), Extras).
 
-:- public pcw_trace/6.
+from_to_module(From, M) :-
+    from_to_file(From, File),
+    module_file(M, File).
 
-:- meta_predicate pcw_trace(+,3,1,+,+,+).
-pcw_trace(1, ETracer, FromChk, Goal, Caller, From) :-
+:- public pcw_trace/7.
+:- meta_predicate pcw_trace(+,+,3,1,+,+,+).
+pcw_trace(1, M, ETracer, FromChk, Goal, Caller, From) :-
     call(FromChk, From),
+    from_to_module(From, M),
+    '$set_source_module'(M),
     call(ETracer, Goal, Caller, From),
     ( From = clause(CRef)
     ->record_issues(CRef)
     ; true
     ).
-pcw_trace(2, ETracer, _, Goal, Caller, From) :-
+pcw_trace(2, _, ETracer, _, Goal, Caller, From) :-
     call(ETracer, Goal, Caller, From).
 
 walk_extras(OTerm, M, FromChk, Extra) :- walk_extras_(Extra, OTerm, M, FromChk).
@@ -148,10 +147,10 @@ walk_from_goal(Head, M, Ref, OTerm) :-
 
 walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
     forall(( AHead = assrt_lib:asr_head_prop(Asr, HM, Head, _, _, _, From),
+             clause(AHead, _, Ref),
              call(FromChk, From),
              implementation_module(HM:Head, M),
              prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
-             clause(AHead, _, Ref),
              member(AsrPart, AsrPartL),
              assertion_goal(AsrPart, Head, HM, Asr, Goal, CM)
            ),

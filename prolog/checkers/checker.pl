@@ -137,7 +137,16 @@ report_analysis_results(Checker, Type-ResultL) :-
     maplist(report_record_message(Checker, Type), ResultL).
 
 report_record_message(Checker, Type, Result) :-
-    print_message(Type, acheck(Checker, Result)).
+    print_check_message(Type, acheck(Checker, Result)).
+
+print_check_message(Type, Message) :-
+    \+ ( copy_term_nat(Message, Term),
+         numbervars(Term, 0, _,
+                    [ singletons(true)
+                    ]),
+         print_message(Type, Term),
+         fail
+       ).
 
 :- meta_predicate report_list(?,1).
 report_list(Pairs, PrintMethod) :-

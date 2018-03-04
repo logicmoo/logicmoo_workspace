@@ -113,7 +113,8 @@ duptype_elem(clause, H, M, FileChk, hash(DupId), M:F/A-Idx) :-
     call(FileChk, File),
     functor(H, F, A),
     strip_module(MBody, _C, Body),
-    variant_sha1((H :- Body), DupId).
+    copy_term_nat((H :- Body), Term),
+    variant_sha1(Term, DupId).
 duptype_elem(predicate, H, M, FileChk, hash(DupId), M:F/A) :-
     predicate_property(M:H, file(File)),
     call(FileChk, File),
@@ -121,7 +122,8 @@ duptype_elem(predicate, H, M, FileChk, hash(DupId), M:F/A) :-
             ( clause(M:H, MB),
               strip_module(MB, _, B)
             ), ClauseL),
-    variant_sha1(ClauseL, DupId),
+    copy_term_nat(ClauseL, Term),
+    variant_sha1(Term, DupId),
     functor(H, F, A).
 
 duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-

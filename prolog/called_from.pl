@@ -47,7 +47,7 @@
 :- use_module(library(assrt_lib)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
@@ -96,7 +96,7 @@ collect_called_from(Ref, M, CM, Caller, OptionL0) :-
                    module_class([user, system, library]),
                    on_trace(collect_call_point(M, CM, Caller))],
                   OptionL0, OptionL),
-    extra_walk_code(OptionL, M, _).
+    walk_code(OptionL).
 
 current_called_from(H, M, CM, From, Caller) :-
     current_used_from([retract, query], H, M, CM, From, Caller).

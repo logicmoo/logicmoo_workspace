@@ -38,7 +38,7 @@
 :- use_module(library(assrt_lib)).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
-:- use_module(library(source_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(yall)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(intercept)).
@@ -69,7 +69,7 @@ checker:check(assertions, Result, OptionL) :-
     check_assertions(OptionL, Result).
 
 cleanup_db :-
-        retractall(violations_db(_, _, _)).
+    retractall(violations_db(_, _, _)).
 
 check_assertions(OptionL1, Pairs) :-
     select_option(module(M), OptionL1, OptionL2, M),
@@ -78,14 +78,13 @@ check_assertions(OptionL1, Pairs) :-
                    on_trace(collect_violations)
                   ], OptionL),
     option_fromchk(OptionL, _, FromChk),
-    source_codewalk(OptionL),
+    walk_code(OptionL),
     findall(error-Issue,
             ( retract(violations_db(CPI, CTChecks, From)),
               from_location(From, Loc),
               Issue = body(Loc-CPI)-CTChecks
             ; current_head_ctcheck(M, FromChk, Issue)
-            ),
-            Pairs, Props),
+            ), Pairs, Props),
     prop_ctcheck(M, FromChk, Props).
 
 current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
@@ -179,8 +178,7 @@ type_message_prop(Loc-PIL) -->
     Loc, ['In assertions of ~q:'-[PIC], nl].
 
 black_list(assertion_head(_, _, _, _, _, _, _), assrt_lib).
-                                % Issues in the assertion body will be reported
-                                % when checking properties.
+% Issues in the assertion body will be reported when checking properties.
 black_list(M:Call) :- black_list(Call, M).
 
 :- public collect_violations/3.

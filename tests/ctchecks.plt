@@ -26,7 +26,7 @@ Warning: -----------------
 Warning: The predicates contain assertions that are inconsistent
 Warning: with the implementation.
 Warning: 
-ctcex.pl:18: In the body of ctcex:q/0:
+ctcex.pl:xx: In the body of ctcex:q/0:
 ctcex.pl:12: Assertion failure for a(1,b).
     In *calls*, unsatisfied properties: 
         ctcex.pl:12:15: compat(ctcex:list(b)).
@@ -51,28 +51,11 @@ ctcex.pl:26: Assertion failure for is_num(b,A).
 */
 
 test(ctcex) :-
-    %set_prolog_flag(check_assertions, [defined, is_prop, ctcheck]),
-    set_prolog_flag(verbose, silent),
-    assert(user:error_on_co),
-    notrace(with_output_to(string(Result), showcheck(assertions, [module(ctcex)]))),
-    comment_data(ctcex, Pattern),
-    module_property(ctcex, file(File)),
-    directory_file_path(Dir, _, File),
-    directory_file_path(Dir, '', AD),
-    atom_string(AD, SD),
-    replace_noisy_strings(SD, Result, AResult),
-    ( Pattern \== AResult
-    ->format("~s", [AResult])
-    ; true
-    ),
-    assertion(Pattern == AResult),
-    set_prolog_flag(verbose, normal),
-    % set_prolog_flag(check_assertions, []).
-    retractall(user:error_on_co).
+    test_ct(ctcex, [module(ctcex)]).
 
 :- use_module(p1).
 
-/* $p1$
+/* $p11$
 Warning: Check asssertions
 Warning: -----------------
 Warning: The predicates contain assertions that are inconsistent
@@ -97,24 +80,48 @@ p1.pl:19:8: Assertion failure for q(X,Y,Z).
     In *calls*, unsatisfied properties: 
         p1.pl:19:11: instan(p1:atm(X)).
 */
-test(ctmeta) :-
+test(ctmeta1) :-
+    test_ct(p11, [module(p1), method(source)]).
+
+/* $p12$
+Warning: Check asssertions
+Warning: -----------------
+Warning: The predicates contain assertions that are inconsistent
+Warning: with the implementation.
+Warning: 
+p1.pl:14: In the body of p1:p0/0:
+p1.pl:9:8: Assertion failure for p1(p1:q2).
+    In *calls*, unsatisfied properties: 
+        p1.pl:9:11: compat(typeprops:is_pred(0,p1:q2)).
+p1.pl:21: In the body of p1:p2/1:
+p1.pl:18:8: Assertion failure for q(A,B,C).
+    In *calls*, unsatisfied properties: 
+        p1.pl:18:11: instan(p1:int(A)).
+p1.pl:19:8: Assertion failure for q(A,B,C).
+    In *calls*, unsatisfied properties: 
+        p1.pl:19:11: instan(p1:atm(A)).
+*/
+
+test(ctmeta2) :-
+    test_ct(p12, [module(p1), method(clause)]).
+
+test_ct(CommentName, Options) :-
     set_prolog_flag(verbose, silent),
     assert(user:error_on_co),
-    %notrace
-    (with_output_to(string(Result), showcheck(assertions, [module(p1)]))),
-    comment_data(p1, Pattern),
+    notrace(with_output_to(string(Result), showcheck(assertions, Options))),
+    comment_data(CommentName, Pattern),
     module_property(ctcex, file(File)),
     directory_file_path(Dir, _, File),
     directory_file_path(Dir, '', AD),
     atom_string(AD, SD),
     replace_noisy_strings(SD, Result, AResult),
     ( Pattern \== AResult
-    ->format("~s", [AResult])
+    ->format("~n~s", [AResult])
     ; true
     ),
     assertion(Pattern == AResult),
     set_prolog_flag(verbose, normal),
-    %set_prolog_flag(check_assertions, []).
+    % set_prolog_flag(check_assertions, []).
     retractall(user:error_on_co).
 
 :- use_module(p2).
@@ -128,14 +135,15 @@ test(samename) :-
     retractall(user:error_on_co).
 
 replace_noisy_strings(SD) -->
-        replace_substrings(SD, ""),
-        replace_substrings("ERROR: ", ""),
-        replace_substrings("ctcex.pl:12:8:", "ctcex.pl:12:"),
-        replace_substrings("ctcex.pl:18:4:", "ctcex.pl:18:"),
-        replace_substrings("ctcex.pl:26:8:", "ctcex.pl:26:"),
-        replace_substrings("ctcex.pl:30:8:", "ctcex.pl:30:"),
-        replace_substrings("ctcex.pl:36:8:", "ctcex.pl:36:"),
-        replace_substrings("ctcex.pl:32:8:", "ctcex.pl:32:").
+    replace_substrings(SD, ""),
+    replace_substrings("ERROR: ", ""),
+    replace_substrings("ctcex.pl:12:8:", "ctcex.pl:12:"),
+    replace_substrings("ctcex.pl:18:4:", "ctcex.pl:xx:"),
+    replace_substrings("ctcex.pl:17:",   "ctcex.pl:xx:"),
+    replace_substrings("ctcex.pl:26:8:", "ctcex.pl:26:"),
+    replace_substrings("ctcex.pl:30:8:", "ctcex.pl:30:"),
+    replace_substrings("ctcex.pl:36:8:", "ctcex.pl:36:"),
+    replace_substrings("ctcex.pl:32:8:", "ctcex.pl:32:").
 
 replace_substrings(SubS, Repl, String, Result) :-
     ( sub_string(String, Before, _, After, SubS)

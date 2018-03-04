@@ -36,10 +36,13 @@
           [dynamic_locations/1]).
 
 :- use_module(library(location_utils)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 
 dynamic_locations(OptionL) :-
-    extra_walk_code([source(false), on_trace(collect_dynamic_locations(M))|OptionL], M, _).
+    option(module(M), OptionL, M), % Be careful, this is required to let M be
+                                   % unified with the current module, specially
+                                   % if method is prolog.
+    walk_code([source(false), on_trace(collect_dynamic_locations(M))|OptionL]).
 
 :- public collect_dynamic_locations/4.
 collect_dynamic_locations(M, MGoal, _, From) :-

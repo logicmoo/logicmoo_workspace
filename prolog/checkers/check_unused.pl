@@ -50,10 +50,11 @@
 :- use_module(library(checkable_predicate)).
 :- use_module(library(implementation_module)).
 :- use_module(library(current_defined_predicate)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(extra_location)).
 :- use_module(library(is_entry_point)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(ungroup_keys_values)).
 :- use_module(library(compact_goal)).
 
@@ -73,17 +74,19 @@
     marked_declaration/0,
     edge/5.
 
-:- public collect_unused/4.
-collect_unused(M, MGoal, Caller, From) :-
+:- public collect_unused/3.
+collect_unused(MGoal, Caller, From) :-
+    '$current_source_module'(M),
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
 checker:check(unused, Result, OptionL) :-
     check_unused(OptionL, Result).
 
-check_unused(OptionL, Pairs) :-
+check_unused(Options, Pairs) :-
     infer_meta_if_required,
-    extra_walk_code([source(false), % False, otherwise this will not work
-                     on_trace(collect_unused(M))|OptionL], M, FromChk),
+    walk_code([source(false), % False, otherwise this will not work
+               on_trace(collect_unused)|Options]),
+    option_fromchk(M, _, Options, _, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.

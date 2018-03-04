@@ -32,8 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(source_codewalk,
-          [source_codewalk/1]).
+:- module(source_codewalk, []).
 
 :- use_module(library(prolog_source)).
 :- use_module(library(prolog_xref), []).
@@ -41,15 +40,9 @@
 :- use_module(library(option_utils)).
 :- use_module(library(extend_args)).
 
-:- meta_predicate
-    source_codewalk(:).
-
-is_meta(on_trace).
-
-source_codewalk(MOptions) :-
-    meta_options(is_meta, MOptions, Options),
+codewalk:walk_code(source, Options) :-
     setup_call_cleanup(prepare(Ref),
-                       do_source_codewalk(Options),
+                       do_source_walk_code(Options),
                        cleanup(Ref)).
 
 head_caller(MHead, M:Head) :-
@@ -68,7 +61,6 @@ decl_caller(initialization(_), '<initialization>').
 decl_caller(_,                 '<declaration>').
 
 :- public
-    true_3/3,
     do_term_expansion/1,
     do_goal_expansion/2,
     determine_caller/2.
@@ -83,19 +75,11 @@ cleanup(p(TRef, GRef)) :-
     erase(TRef),
     erase(GRef).
 
-true_3(_, _, _).
-
 skip((_,_)).
 skip((_;_)).
 skip((_->_)).
 skip((_*->_)).
 skip(\+(_)).
-
-/*
-true_3(Goal, Caller, From) :-
-    print_message(information,
-                  at_location(From, format("~w :- ~w", [Caller, Goal]))).
-*/
 
 check_file(File) :-
     current_context_value(file, File),
@@ -109,6 +93,14 @@ do_term_expansion(Term) :-
 do_goal_expansion(Goal, TermPos) :-
     check_file(File),
     \+ skip(Goal),
+    '$current_source_module'(M),
+    current_context_value(trace_reference, To),
+    To \== (-),
+    (   subsumes_term(To, M:Goal)
+    ->  M2 = M
+    ;   predicate_property(M:Goal, imported_from(M2)),
+        subsumes_term(To, M2:Goal)
+    ),
     ( TermPos \= none
     ->From = file_term_position(File, TermPos)
     ; prolog_load_context(term_position, Pos),
@@ -117,12 +109,12 @@ do_goal_expansion(Goal, TermPos) :-
     ),
     current_context_value(on_trace, OnTrace),
     current_context_value(caller,   Caller),
-    '$current_source_module'(M),
-    call(OnTrace, M:Goal, Caller, From).
+    call(OnTrace, M2:Goal, Caller, From).
 
-do_source_codewalk(Options1) :-
+do_source_walk_code(Options1) :-
     foldl(select_option_default,
-          [on_trace(OnTrace)  -true_3,
+          [on_trace(OnTrace)-true_3,
+           trace_reference(To)-To,
            if(Loaded)-true,
            variable_names(VNL)-VNL],
           Options1, Options2),
@@ -133,17 +125,17 @@ do_source_codewalk(Options1) :-
             ( '$current_source_module'(OldM),
               freeze(M, '$set_source_module'(_, M))
             ),
-            forall(FileMGen,
-                   walk_source(File, [variable_names(VNL)|Options])),
+            walk_source(FileMGen, File, [variable_names(VNL)|Options]),
             '$set_source_module'(_, OldM)),
-        [file, on_trace],
-        [File, OnTrace]).
+        [file, on_trace, trace_reference],
+        [File, OnTrace,  To]).
 
-walk_source(File, Options) :-
-    setup_call_cleanup(
-        prolog_open_source(File, In),
-        fetch_term(In, Options),
-        prolog_close_source(In)).
+walk_source(FileMGen, File, Options) :-
+    forall(FileMGen,
+           setup_call_cleanup(
+               prolog_open_source(File, In),
+               fetch_term(In, Options),
+               prolog_close_source(In))).
 
 fetch_term(In, Options1) :-
     foldl(select_option_default,

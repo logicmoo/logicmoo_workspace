@@ -3,7 +3,7 @@
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/xtools
-    Copyright (C): 2015, Process Design Center, Breda, The Netherlands.
+    Copyright (C): 2018, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,15 +32,40 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(infer_meta_if_required, [infer_meta_if_required/0]).
+:- module(codewalk, [walk_code/1]).
 
-:- use_module(library(prolog_codewalk)).
+:- use_module(library(option_utils)).
 
-infer_meta_if_required :-
-    ( predicate_property(prolog_metainference:inferred_meta_pred(_, _, _),
-                         number_of_clauses(0 ))
-    ->prolog_walk_code([autoload(false),
-                        source(false),
-                        infer_meta_predicates(true)])
-    ; true
-    ).
+:- multifile
+    walk_code/2.
+
+:- public
+    true_3/3.
+
+:- use_module(library(extra_codewalk)).
+:- use_module(library(source_codewalk)).
+:- use_module(library(clause_codewalk)).
+
+true_3(_, _, _).
+
+/*
+true_3(Goal, Caller, From) :-
+    print_message(information,
+                  at_location(From, format("~w :- ~w", [Caller, Goal]))).
+*/
+
+is_meta(on_trace).
+
+:- meta_predicate
+    walk_code(:).
+
+%!  walk_code(:Options) is det.
+
+walk_code(MOptions) :-
+    meta_options(is_meta, MOptions, Options1),
+    foldl(select_option_default,
+          [method(Method)-clause],
+          % FIXME: method prolog doesn't work with assertions,
+          % FIXME: method source doesn't work with undefined
+          Options1, Options),
+    walk_code(Method, Options).

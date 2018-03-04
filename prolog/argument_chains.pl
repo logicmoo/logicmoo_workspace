@@ -40,7 +40,7 @@
            lead_to_root/1,
            linked_arg/2]).
 
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(implementation_module)).
 
 :- dynamic
@@ -82,13 +82,13 @@ check_argument_fixpoint(Stage, OptionL) :-
                ), L),
     length(L, N),
     print_message(information, format("Stage ~w: Checking ~w argument positions", [NStage, N])),
-    extra_walk_code([source(false), on_trace(propagate_argument_1(Stage, NStage))|OptionL]),
+    walk_code([source(false), on_trace(propagate_argument_1(Stage, NStage))|OptionL]),
     print_message(information, format("Stage ~w: Collecting unlinked arguments", [NStage])),
     findall(Clause, retract(clause_db(Clause)), ClauseU),
     sort(ClauseU, ClauseL),
-    extra_walk_code([source(false),
-                     clauses(ClauseL),
-                     on_trace(propagate_argument_2(Stage, NStage))|OptionL]),
+    walk_code([source(false),
+               clauses(ClauseL),
+               on_trace(propagate_argument_2(Stage, NStage))|OptionL]),
     ( \+ arg_id(_, _, _, _, NStage, _)
     ->true
     ; check_argument_fixpoint(NStage, OptionL)

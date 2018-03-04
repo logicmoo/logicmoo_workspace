@@ -40,7 +40,7 @@
 :- use_module(library(clambda)).
 :- use_module(library(infer_alias)).
 :- use_module(library(normalize_pi)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(referenced_by)).
@@ -58,10 +58,10 @@ checker:check(undefined, Results, OptionL) :-
 
 check_undefined(OptionL, Results) :-
     infer_meta_if_required,
-    extra_walk_code([source(true),
-                     trace_reference(-),
-                     undefined(trace),
-                     on_trace(collect_undef)|OptionL]),
+    walk_code([source(true),
+               trace_reference(-),
+               undefined(trace),
+               on_trace(collect_undef)|OptionL]),
     findall(File-(AL-(PI-(Loc/['~w'-[CI]]))),
             ( retract(undef(PI, CI, From)),
               find_alternatives(PI, AL),

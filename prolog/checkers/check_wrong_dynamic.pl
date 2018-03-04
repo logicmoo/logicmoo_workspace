@@ -45,8 +45,9 @@
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(infer_meta_if_required)).
 :- use_module(library(database_fact)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(location_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(compact_goal)).
 :- use_module(library(from_utils)).
 
@@ -86,6 +87,7 @@ hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutu
 hide_var_dynamic_hook(ignore_import(_, _), check_imports).
 hide_var_dynamic_hook(collect_sols(_, _, _), ntabling).
 hide_var_dynamic_hook(abolish_table_subgoals(_), ntabling).
+hide_var_dynamic_hook(walk_clause(_, _), clause_codewalk).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -97,19 +99,20 @@ cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _, _)),
     retractall(var_dynamic_db(_, _)).
 
-checker:check(wrong_dynamic, Result, OptionL) :-
-    check_wrong_dynamic(OptionL, Result).
+checker:check(wrong_dynamic, Result, Options) :-
+    check_wrong_dynamic(Options, Result).
 
-check_wrong_dynamic(OptionL0, Pairs) :-
+check_wrong_dynamic(Options0, Pairs) :-
     infer_meta_if_required,
-    merge_options(OptionL0,
+    merge_options(Options0,
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
                    trace_reference(_),
-                   on_trace(collect_wrong_dynamic(M))],
-                  OptionL),
-    extra_walk_code(OptionL, M, FromChk),
+                   on_trace(collect_wrong_dynamic)],
+                  Options),
+    walk_code(Options),
+    option_fromchk(M, _, Options, _, FromChk),
     collect_result(M, FromChk, Pairs),
     cleanup_dynamic_db.
 
@@ -206,9 +209,10 @@ prolog:message(acheck(wrong_dynamic)) -->
      'a variable argument in a database predicate, making it', nl,
      'difficult to analyze.', nl, nl].
 
-:- public collect_wrong_dynamic/4.
-:- meta_predicate collect_wrong_dynamic(?,+,0,+).
-collect_wrong_dynamic(M, MGoal, Caller, From) :-
+:- public collect_wrong_dynamic/3.
+:- meta_predicate collect_wrong_dynamic(+,0,+).
+collect_wrong_dynamic(MGoal, Caller, From) :-
+    '$current_source_module'(M),
     ignore(record_location_meta(MGoal, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
                                 record_location_wd(Caller))).
 

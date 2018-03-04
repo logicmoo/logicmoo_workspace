@@ -41,7 +41,7 @@
 :- use_module(library(location_utils)).
 :- use_module(library(referenced_by)).
 :- use_module(library(assrt_lib)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(from_utils)).
 
 :- dynamic
@@ -71,7 +71,7 @@ check_deprecated(OptionL0, Pairs) :-
                    trace_reference(_),
                    on_trace(collect_deprecated)],
                   OptionL),
-    extra_walk_code(OptionL),
+    walk_code(OptionL),
     findall(information-((DLoc/(IM:F/A))-((CLoc/Comment)-(Loc/CI))),
             ( retract(deprecated_db(Call, M, Comment, DFrom, CFrom, From)),
               implementation_module(M:Call, IM),

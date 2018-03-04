@@ -37,6 +37,7 @@
                          option_dirchk/3,
                          option_allchk/4,
                          option_fromchk/3,
+                         option_fromchk/5,
                          source_extension/2,
                          call_2/3,
 			 check_alias/3,
@@ -357,6 +358,9 @@ option_allchk(OptionL0, OptionL, option_utils:call_2(FileGen, File)) :-
 
 option_fromchk(OptionL0, OptionL, option_utils:from_chk(FileGen, File)) :-
     option_filechk(File, FileGen-OptionL0, true-OptionL).
+
+option_fromchk(M, File, OptionL0, OptionL, option_utils:from_chk(FileMGen, File)) :-
+    option_allchk(M, File, FileMGen-OptionL0, true-OptionL).
 
 option_dirchk(OptionL0, OptionL, option_utils:call_2(DirGen, Dir)) :-
     option_dirchk_(Dir, DirGen-OptionL0, true-OptionL).

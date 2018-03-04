@@ -39,9 +39,10 @@
 :- use_module(library(clambda)).
 :- use_module(library(expansion_module)).
 :- use_module(library(implementation_module)).
-:- use_module(library(extra_codewalk)).
+:- use_module(library(codewalk)).
 :- use_module(library(extra_location)).
 :- use_module(library(from_utils)).
+:- use_module(library(option_utils)).
 :- use_module(library(location_utils)).
 :- use_module(library(module_files)).
 
@@ -72,19 +73,16 @@ unused_import(Type, Loc/Elem) -->
     used_import/1,
     used_usemod/2.
 
-checker:check(imports, Result, OptionL) :-
-    check_imports(OptionL, Result).
+checker:check(imports, Result, Options) :-
+    check_imports(Options, Result).
 
-check_imports(OptionL, Pairs) :-
-    exwalkc_imports(M, FromChk, OptionL),
+check_imports(Options, Pairs) :-
+    walk_code([source(false),
+               on_trace(collect_imports_wc)|Options]),
+    option_fromchk(M, _, Options, _, FromChk),
     collect_imports(M, FromChk, Pairs, Tail),
     collect_usemods(M, FromChk, Tail, []),
     cleanup_imports.
-
-exwalkc_imports(M, FromChk, OptionL) :-
-    extra_walk_code([source(false),
-                     walkextras([declaration, asrparts([body, head])]),
-                     on_trace(collect_imports_wc)|OptionL], M, FromChk).
 
 :- public collect_imports_wc/3.
 collect_imports_wc(M:Goal, Caller, From) :-
