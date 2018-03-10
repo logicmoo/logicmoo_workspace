@@ -63,8 +63,14 @@ duptype(name).
 
 % Use the same group key to allow filtering of redundant messages.
 %
-element_group(declaration,    T-M:H, T-M:G) :-
-    (T = (meta_predicate) -> functor(H, F, A), G=F/A ; G = H).
+element_group(declaration, T-_:M:H, M:G) :-
+    ( T = (meta_predicate)
+    ->functor(H, F, A),
+      G=meta_predicate(F/A)
+    ; atomic(T)
+    ->G =.. [T, H]
+    ; G = T-H
+    ).
 element_group(predicate,      _:F/A,   F/A).
 element_group(clause,         _:F/A-_, F/A).
 element_group(name,           _:F/A,   F/A).
@@ -126,20 +132,20 @@ duptype_elem(predicate, H, M, FileChk, hash(DupId), M:F/A) :-
     variant_sha1(Term, DupId),
     functor(H, F, A).
 
-duptype_elem_declaration(H, M, FileChk, DupId, Elem) :-
+duptype_elem_declaration(H, M, FileChk, DupId, T-From:M:Elem) :-
     loc_declaration(H, M, T, From),
     \+ ignore_dupcode(H, M, declaration(T)),
     from_chk(FileChk, From),
     \+ memberchk(T, [goal, assertion(_,_)]),
     once(dtype_dupid_elem(T, T, From, H, M, DupId, Elem)).
 
-dtype_dupid_elem(meta_predicate, T, _, H, M, T-M:F/A, T-M:H) :- functor(H, F, A).
-dtype_dupid_elem(use_module,     T, F, H, M, T-File:M:H, T-File:M:H) :-
+dtype_dupid_elem(meta_predicate, T, _, H, M, T-M:F/A, H) :- functor(H, F, A).
+dtype_dupid_elem(use_module,     T, F, H, M, T-File:M:H, H) :-
     from_to_file(F, File). % Ignore duplicated use_module's from different files
-dtype_dupid_elem(consult,        T, F, H, M, T-File:M:H, T-File:M:H) :-
+dtype_dupid_elem(consult,        T, F, H, M, T-File:M:H, H) :-
     from_to_file(F, File). % Ignore duplicated consult's    from different files
 % dtype_dupid_elem(use_module_2,   T, H, M, T-M:H,  T-M:H).
-dtype_dupid_elem(T,              T, _, H, M, T-M:PI,     T-M:G) :-
+dtype_dupid_elem(T,              T, _, H, M, T-M:PI, G) :-
     ( H =.. [_|Vars1],
       term_variables(H, Vars2),
       Vars1==Vars2
@@ -240,9 +246,9 @@ clean_redundant_group(GKey-Group, (DupType/GKey)-List) :-
 elem_property(name,           PI,        PI,        T, T).
 elem_property(clause,         M:F/A-Idx, (M:H)/Idx, T, T) :- functor(H, F, A).
 elem_property(predicate,      M:F/A,     M:H,       T, T) :- functor(H, F, A).
-elem_property(declaration,    T-M:PI,    (M:H)/0,   T, declaration) :-
-    (PI = F/A->functor(H, F, A) ; PI = H).
 
+elem_location(declaration, _-From:_:_, declaration, Loc) :- !,
+    from_location(From, Loc).
 elem_location(DupType, Elem, D, Loc) :-
     elem_property(DupType, Elem, Prop, T, D),
     property_location(Prop, T, Loc).
@@ -278,5 +284,5 @@ message_duplicated(Pre, Elem, Loc/D) -->
     message_elem(D, Elem),
     [nl].
 
-message_elem(declaration, T-M:PI) --> !, [':- ~w ~w.'-[T, M:PI]].
+message_elem(declaration, T-_:M:H) --> !, [':- ~w(~w).'-[M:T, H]].
 message_elem(Type, Elem) --> ['~w ~w'-[Type, Elem]].
