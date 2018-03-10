@@ -65,7 +65,5 @@ walk_code(MOptions) :-
     meta_options(is_meta, MOptions, Options1),
     foldl(select_option_default,
           [method(Method)-clause],
-          % FIXME: method prolog doesn't work with assertions,
-          % FIXME: method source doesn't work with undefined
           Options1, Options),
     walk_code(Method, Options).

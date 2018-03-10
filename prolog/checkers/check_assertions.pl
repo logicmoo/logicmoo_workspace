@@ -72,9 +72,21 @@ cleanup_db :-
     retractall(violations_db(_, _, _)).
 
 check_assertions(Options1, Pairs) :-
-    select_option(module(M), Options1, Options2, M),
+    foldl(select_option_default,
+          [module(M)-M,
+           method(Method1)-clause],
+          Options1, Options2),
+    ( \+ memberchk(Method1, [source, clause]) % only these methods are supported
+    ->Method = clause,
+      print_message(
+          warning,
+          format("Method `~w' not supported, using `~w' instead",
+                 [Method1, Method]))
+    ; Method = Method1
+    ),
     merge_options(Options2,
                   [module(M),
+                   method(Method),
                    on_trace(collect_violations)
                   ], Options),
     option_fromchk(Options, _, FromChk),

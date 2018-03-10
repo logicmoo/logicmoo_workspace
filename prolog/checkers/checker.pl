@@ -176,18 +176,21 @@ checkallc(Options) :- checkall(concurrent_maplist, Options).
 :- meta_predicate checkall(2, +).
 checkall(Mapper, Options) :-
     findall(C, available_checker(C), CL),
-    setup_call_cleanup(
+    with_prolog_flag(
+        check_database_preds, true,
         with_prolog_flag(
             verbose, silent,
-            infer_meta_if_required),
-        call(Mapper, checkeach(Options), CL),
-        cleanup_db).
+            setup_call_cleanup(
+                infer_meta_if_required,
+                call(Mapper, checkeach(Options), CL),
+                cleanup_db))).
 
 :- public checkeach/2.
 checkeach(Options, Checker) :-
-     infocheck(Checker, T),
-     showcheck(Checker, Options),
-     donecheck(Checker, T).
+    infocheck(Checker, T),
+    check(Checker, Results, Options),
+    full_report(Checker-Results),
+    donecheck(Checker, T).
 
 check_results(Checker, Results, Options) :-
     with_prolog_flag(

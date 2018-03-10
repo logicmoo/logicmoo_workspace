@@ -51,7 +51,7 @@ ctcex.pl:26: Assertion failure for is_num(b,A).
 */
 
 test(ctcex) :-
-    test_ct(ctcex, [module(ctcex)]).
+    test_ct(ctcex, [module(ctcex), method(source)]).
 
 :- use_module(p1).
 

@@ -82,10 +82,25 @@ collect_unused(MGoal, Caller, From) :-
 checker:check(unused, Result, Options) :-
     check_unused(Options, Result).
 
-check_unused(Options, Pairs) :-
+check_unused(Options1, Pairs) :-
     infer_meta_if_required,
-    walk_code([source(false), % False, otherwise this will not work
-               on_trace(collect_unused)|Options]),
+    foldl(select_option_default,
+          [method(Method1)-clause],
+          Options1, Options2),
+    ( \+ memberchk(Method1, [prolog, clause]) % only these methods are supported
+    ->Method = clause,
+      print_message(
+          warning,
+          format("Method `~w' not supported yet, using `~w' instead",
+                 [Method1, Method]))
+    ; Method = Method1
+    ),
+    merge_options(Options2,
+                  [source(false), % False, otherwise this will not work
+                   method(Method),
+                   on_trace(collect_unused)
+                  ], Options),
+    walk_code(Options),
     option_fromchk(M, _, Options, _, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),

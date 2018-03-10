@@ -41,9 +41,7 @@
 :- use_module(library(extend_args)).
 
 codewalk:walk_code(source, Options) :-
-    setup_call_cleanup(prepare(Ref),
-                       do_source_walk_code(Options),
-                       cleanup(Ref)).
+    do_source_walk_code(Options).
 
 head_caller(MHead, M:Head) :-
     '$current_source_module'(CM),
@@ -61,25 +59,63 @@ decl_caller(initialization(_), '<initialization>').
 decl_caller(_,                 '<declaration>').
 
 :- public
+    check_trace_reference/3,
     do_term_expansion/1,
-    do_goal_expansion/2,
+    do_goal_expansion/3,
     determine_caller/2.
 
-prepare(p(TRef, GRef)) :-
-    assertz((system:term_expansion(T, P, T, P) :-
-                 do_term_expansion(T)), TRef),
-    assertz((system:goal_expansion(G, P, _, _) :-
-                 once(do_goal_expansion(G, P)), fail), GRef).
+prepare(To, Undefined, p(TRef, GRef)) :-
+    ( To \== (-)
+    ->( var(To)
+      ->assertz((system:goal_expansion(G, P, _, _) :-
+                       '$current_source_module'(M),
+                       once(do_goal_expansion(M, G, P)),
+                       fail), GRef)
+      ; To = _:H
+      ->functor(H, F, A),
+        functor(G, F, A), % speed up goal expansion
+        assertz((system:goal_expansion(G, P, _, _) :-
+                     '$current_source_module'(M),
+                     check_trace_reference(To, M, G),
+                     once(do_goal_expansion(M, G, P)),
+                     fail), GRef)
+      ; true
+      )
+    ; Undefined = ignore
+    ->true
+    ; Undefined = trace
+    ->assertz((system:goal_expansion(G, P, _, _) :-
+                   '$current_source_module'(M),
+                   \+ '$get_predicate_attribute'(M:G, defined, 1),
+                   \+ predicate_property(M:G, autoload(_)),
+                   once(do_goal_expansion(M, G, P)),
+                   fail), GRef)
+    ; true
+    ),
+    ( nonvar(GRef)
+    ->assertz((system:term_expansion(T, P, T, P) :-
+               do_term_expansion(T)), TRef)
+    ; true
+    ).
 
 cleanup(p(TRef, GRef)) :-
-    erase(TRef),
-    erase(GRef).
+    ( nonvar(TRef)
+    ->erase(TRef)
+    ; true
+    ),
+    ( nonvar(GRef)
+    ->erase(GRef)
+    ; true
+    ).
 
 skip((_,_)).
 skip((_;_)).
 skip((_->_)).
 skip((_*->_)).
 skip(\+(_)).
+skip(module(_, _)).
+skip(module(_, _, _)).
+skip(_:_).
 
 check_file(File) :-
     current_context_value(file, File),
@@ -90,17 +126,16 @@ do_term_expansion(Term) :-
     determine_caller(Term, Caller),
     set_context_value(caller, Caller).
 
-do_goal_expansion(Goal, TermPos) :-
-    check_file(File),
-    \+ skip(Goal),
-    '$current_source_module'(M),
-    current_context_value(trace_reference, To),
-    To \== (-),
+check_trace_reference(To, M, Goal) :-
     (   subsumes_term(To, M:Goal)
-    ->  M2 = M
+    ->  true
     ;   predicate_property(M:Goal, imported_from(M2)),
         subsumes_term(To, M2:Goal)
-    ),
+    ).
+
+do_goal_expansion(M, Goal, TermPos) :-
+    check_file(File),
+    \+ skip(Goal),
     ( TermPos \= none
     ->From = file_term_position(File, TermPos)
     ; prolog_load_context(term_position, Pos),
@@ -109,12 +144,13 @@ do_goal_expansion(Goal, TermPos) :-
     ),
     current_context_value(on_trace, OnTrace),
     current_context_value(caller,   Caller),
-    call(OnTrace, M2:Goal, Caller, From).
+    call(OnTrace, M:Goal, Caller, From).
 
 do_source_walk_code(Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)-true_3,
            trace_reference(To)-To,
+           undefined(Undefined)-ignore,
            if(Loaded)-true,
            variable_names(VNL)-VNL],
           Options1, Options2),
@@ -123,12 +159,15 @@ do_source_walk_code(Options1) :-
     with_context_values(
         setup_call_cleanup(
             ( '$current_source_module'(OldM),
-              freeze(M, '$set_source_module'(_, M))
+              freeze(M, '$set_source_module'(_, M)),
+              prepare(To, Undefined, Ref)
             ),
             walk_source(FileMGen, File, [variable_names(VNL)|Options]),
-            '$set_source_module'(_, OldM)),
-        [file, on_trace, trace_reference],
-        [File, OnTrace,  To]).
+            ( '$set_source_module'(_, OldM),
+              cleanup(Ref)
+            )),
+        [file, on_trace],
+        [File, OnTrace]).
 
 walk_source(FileMGen, File, Options) :-
     forall(FileMGen,
