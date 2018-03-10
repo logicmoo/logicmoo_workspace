@@ -35,12 +35,20 @@
 :- module(clause_codewalk, []).
 
 :- use_module(library(prolog_xref), []).
-:- use_module(library(context_values)).
-:- use_module(library(option_utils)).
-:- use_module(library(extend_args)).
 :- use_module(library(assrt_lib)).
+:- use_module(library(context_values)).
+:- use_module(library(extend_args)).
 :- use_module(library(extra_location)).
+:- use_module(library(from_utils)).
 :- use_module(library(implementation_module)).
+:- use_module(library(option_utils)).
+
+:- thread_local
+    '$file_module_db'/2.
+
+mf_from_chk(M, File, From) :-
+    from_to_file(From, File),
+    '$file_module_db'(File, M).
 
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
@@ -53,18 +61,20 @@ codewalk:walk_code(clause, Options1) :-
                                asrparts([body])],
            variable_names(VNL)-VNL],
           Options1, Options2),
-    option_fromchk(M, _, [if(Loaded)|Options2], _, FromChk),
+    option_allchk(M, File, FileMGen-[if(Loaded)|Options2], true-_),
+    forall(FileMGen, assertz('$file_module_db'(File, M))),
     with_context_values(
         setup_call_cleanup(
             ( '$current_source_module'(OldM),
               freeze(M, '$set_source_module'(_, M))
             ),
-            ( walk_clause(FromChk, From),
-              maplist(walk_extras(FromChk, From), Extras)
+            ( walk_clause(mf_from_chk(M, File), From),
+              maplist(walk_extras(mf_from_chk(M, File), From), Extras)
             ),
             '$set_source_module'(_, OldM)),
         [from, on_trace, trace_reference, undefined],
-        [From, OnTrace,  To,              Undefined]).
+        [From, OnTrace,  To,              Undefined]),
+    retractall('$file_module_db'(_, _)).
 
 walk_extras(FromChk, From, Extra) :-
     walk_extras_(Extra, FromChk, From).
