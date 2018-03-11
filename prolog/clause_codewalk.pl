@@ -52,7 +52,7 @@ mf_from_chk(M, File, From) :-
 
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
-          [on_trace(OnTrace)-true_3,
+          [on_trace(OnTrace)-(codewalk:true_3),
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
            if(Loaded)-true,
@@ -117,14 +117,17 @@ assertion_goal(AsrPart, Asr, Prop, PM, From) :-
     curr_prop_asr(Part, PM:Prop, From, Asr).
 
 walk_clause(FromChk, From) :-
-    forall(( current_predicate(_, M:Head),
-             \+ predicate_property(M:Head, imported_from(_)),
-             catch(clause(M:Head, Body, Ref), _, fail),
-             From = clause(Ref),
-             call(FromChk, From),
-             clause_property(Ref, module(CM))
-           ),
-           walk_head_body(M:Head, CM:Body)).
+    forall(current_head_body(FromChk, Head, Body, From),
+           walk_head_body(Head, Body)).
+
+current_head_body(FromChk, Head, CM:Body, From) :-
+    From = clause(Ref),
+    Head = _:_,
+    current_predicate(_, Head),
+    \+ predicate_property(Head, imported_from(_)),
+    catch(clause(Head, Body, Ref), _, fail),
+    call(FromChk, From),
+    clause_property(Ref, module(CM)).
 
 walk_head_body(Head, CM:Body) :-
     term_variables(Head, Vars),

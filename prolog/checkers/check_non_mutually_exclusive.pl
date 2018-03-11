@@ -48,8 +48,6 @@
     mutually_exclusive_predicate/2,
     mutually_exclusive_predicate_key/3.
 
-:- dynamic mutually_exclusive_db/1.
-
 option_allmchk(Options0, Options, option_utils:call_2(FileGen, File)) :-
     option_allchk(_M, File, FileGen-Options0, true-Options).
 

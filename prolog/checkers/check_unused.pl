@@ -339,7 +339,7 @@ semantic_head(H, M, -1, assertion(S, T), '<assertion>'(M:H), From) :-
 unmarked(M, FromChk, Node, D, From) :-
     Ref = M:H,
     MPI = M:F/A,
-    ( current_defined_predicate(MPI),
+    ( current_defined_predicate(Ref),
       functor(H, F, A),
       checkable_predicate(Ref),
       \+ entry_caller(M, H),
@@ -364,7 +364,7 @@ unmarked(M, FromChk, Node, D, From) :-
       not_marked(Mark),
       functor(H, F, A),
       check_pred_file(Ref, FromChk, From),
-      \+ current_defined_predicate(MPI),
+      \+ current_predicate(_, Ref),
       checkable_predicate(Ref),
       \+ entry_caller(M, H),
       Node = MPI/I

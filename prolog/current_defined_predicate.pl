@@ -34,11 +34,13 @@
 
 :- module(current_defined_predicate, [current_defined_predicate/1]).
 
-current_defined_predicate(MPI) :-
-    MPI = M:F/A,
+:- meta_predicate
+    current_defined_predicate(?).
+
+current_defined_predicate(Ref) :-
+    Ref = M:_,
     current_module(M),
     M \= user,
     module_property(M, class(user)),
-    current_predicate(MPI),
-    functor(H, F, A),
-    \+ predicate_property(M:H, imported_from(_)).
+    current_predicate(_, Ref),
+    \+ predicate_property(Ref, imported_from(_)).

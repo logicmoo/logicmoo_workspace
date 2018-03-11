@@ -148,7 +148,7 @@ do_goal_expansion(M, Goal, TermPos) :-
 
 do_source_walk_code(Options1) :-
     foldl(select_option_default,
-          [on_trace(OnTrace)-true_3,
+          [on_trace(OnTrace)-(codewalk:true_3),
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
            if(Loaded)-true,

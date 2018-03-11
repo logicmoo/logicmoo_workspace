@@ -50,8 +50,6 @@
     prolog:message//1,
     ignore_dupcode/3.
 
-:- dynamic duptype/1.
-
 % Note: the order of clauses is important, to allow remove redundant information,
 % that is, 'predicate' implies 'clause' implies 'name' duplication.
 %

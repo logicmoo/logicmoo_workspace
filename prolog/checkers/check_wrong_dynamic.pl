@@ -88,6 +88,7 @@ hide_var_dynamic_hook(ignore_import(_, _), check_imports).
 hide_var_dynamic_hook(collect_sols(_, _, _), ntabling).
 hide_var_dynamic_hook(abolish_table_subgoals(_), ntabling).
 hide_var_dynamic_hook(walk_clause(_, _), clause_codewalk).
+hide_var_dynamic_hook(current_head_body(_, _, _, _), clause_codewalk).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -146,19 +147,15 @@ current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
       once(property_location(PI, _, Loc))
     ).
 
-:- meta_predicate current_dynamic_as_static(?, 1, -, ?).
+:- meta_predicate current_dynamic_as_static(?, 1, -, -).
 current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
     Ref = M:H,
     PI = M:F/A,
-    ( var(H) ->
-      current_defined_predicate(PI),
-      functor(H, F, A)
-    ; functor(H, F, A),
-      current_defined_predicate(PI)
-    ),
+    current_defined_predicate(Ref),
     \+ hide_wrong_dynamic(H, M),
     checkable_predicate(Ref),
     predicate_property(Ref, dynamic),
+    functor(H, F, A),
     property_from(PI, dynamic, From),
     call(FromChk, From),
     %% ignore predicates with the following properties:
