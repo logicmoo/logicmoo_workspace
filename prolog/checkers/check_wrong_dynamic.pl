@@ -209,8 +209,7 @@ prolog:message(acheck(wrong_dynamic)) -->
 :- public collect_wrong_dynamic/3.
 :- meta_predicate collect_wrong_dynamic(+,0,+).
 collect_wrong_dynamic(MGoal, Caller, From) :-
-    '$current_source_module'(M),
-    ignore(record_location_meta(MGoal, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
+    ignore(record_location_meta(MGoal, _, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
                                 record_location_wd(Caller))).
 
 record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
