@@ -192,7 +192,7 @@ checkif_asrs_comp([Asr-PVL|AsrL], T, Goal1) :-
     checkif_asrs_comp(AsrL, T, Goal).
 
 checkif_asr_comp(T, PropValues, Asr, M:Goal1, Goal) :-
-    ( member(PropValues, [[], [[]]]),
+    ( memberchk(PropValues, [[], [[]]]),
       copy_term_nat(Asr, NAsr),
       findall(g(NAsr, Glob, Loc),
               ( asr_aprop(NAsr, glob, Glob, Loc),
@@ -277,7 +277,7 @@ send_check_asr(PType, Asr-PropValues) :-
     ).
 
 checkif_asr_props(T, CondValues, Asr, PType) :-
-    ( member(CondValues, [[], [[]]])
+    ( memberchk(CondValues, [[], [[]]])
     ->check_asr_props(T, Asr, cond, PType, PropValues),
       send_check_asr(PType, Asr-PropValues)
     ; true
