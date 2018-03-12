@@ -149,7 +149,10 @@ walk_called_2(G, _) :-
 walk_called_2(true, _) :- !.
 walk_called_2(M:G, _) :-
     !,
-    walk_called(G, M).
+    ( nonvar(M)
+    ->walk_called(G, M)
+    ; true
+    ).
 walk_called_2((A,B), M) :-
     !,
     walk_called(A, M),
