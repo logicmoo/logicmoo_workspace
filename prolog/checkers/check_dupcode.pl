@@ -137,11 +137,15 @@ duptype_elem_declaration(H, M, FileChk, DupId, From-MTE) :-
     once(dtype_dupid_elem(T, T, From, H, M, DupId, Elem)),
     extend_args(M:T, [Elem], MTE).
 
+dup_if_same_file(use_module).
+dup_if_same_file(consult).
+dup_if_same_file(multifile).
+dup_if_same_file(discontiguous).
+
 dtype_dupid_elem(meta_predicate, T, _, H, M, T-M:F/A, H) :- functor(H, F, A).
-dtype_dupid_elem(use_module,     T, F, H, M, T-File:M:H, H) :-
-    from_to_file(F, File). % Ignore duplicated use_module's from different files
-dtype_dupid_elem(consult,        T, F, H, M, T-File:M:H, H) :-
-    from_to_file(F, File). % Ignore duplicated consult's    from different files
+dtype_dupid_elem(T, T, F, H, M, T-File:M:H, H) :-
+    dup_if_same_file(T),  % Ignore duplicates from different files
+    from_to_file(F, File).
 % dtype_dupid_elem(use_module_2,   T, H, M, T-M:H,  T-M:H).
 dtype_dupid_elem(T,              T, _, H, M, T-M:PI, G) :-
     ( H =.. [_|Vars1],
