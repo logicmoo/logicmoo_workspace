@@ -103,14 +103,15 @@ cleanup_dynamic_db :-
 checker:check(wrong_dynamic, Result, Options) :-
     check_wrong_dynamic(Options, Result).
 
-check_wrong_dynamic(Options0, Pairs) :-
+check_wrong_dynamic(Options1, Pairs) :-
     infer_meta_if_required,
-    merge_options(Options0,
+    option(module(M), Options1, M),
+    merge_options(Options1,
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
                    trace_reference(_),
-                   on_trace(collect_wrong_dynamic)],
+                   on_trace(collect_wrong_dynamic(M))],
                   Options),
     walk_code(Options),
     option_fromchk(M, _, Options, _, FromChk),
@@ -206,10 +207,10 @@ prolog:message(acheck(wrong_dynamic)) -->
      'a variable argument in a database predicate, making it', nl,
      'difficult to analyze.', nl, nl].
 
-:- public collect_wrong_dynamic/3.
-:- meta_predicate collect_wrong_dynamic(+,0,+).
-collect_wrong_dynamic(MGoal, Caller, From) :-
-    ignore(record_location_meta(MGoal, _, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
+:- public collect_wrong_dynamic/4.
+:- meta_predicate collect_wrong_dynamic(?,+,0,+).
+collect_wrong_dynamic(M, MGoal, Caller, From) :-
+    ignore(record_location_meta(MGoal, M, From, \T^G^MG^_^F^database_fact_ort(T,G,MG,F),
                                 record_location_wd(Caller))).
 
 record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-

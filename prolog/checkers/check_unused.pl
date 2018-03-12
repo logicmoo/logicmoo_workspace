@@ -74,9 +74,8 @@
     marked_declaration/0,
     edge/5.
 
-:- public collect_unused/3.
-collect_unused(MGoal, Caller, From) :-
-    '$current_source_module'(M),
+:- public collect_unused/4.
+collect_unused(M, MGoal, Caller, From) :-
     record_location_meta(MGoal, M, From, all_call_refs, cu_caller_hook(Caller)).
 
 checker:check(unused, Result, Options) :-
@@ -95,10 +94,11 @@ check_unused(Options1, Pairs) :-
                  [Method1, Method]))
     ; Method = Method1
     ),
+    option(module(M), Options1, M),
     merge_options(Options2,
                   [source(false), % False, otherwise this will not work
                    method(Method),
-                   on_trace(collect_unused)
+                   on_trace(collect_unused(M))
                   ], Options),
     walk_code(Options),
     option_fromchk(M, _, Options, _, FromChk),
