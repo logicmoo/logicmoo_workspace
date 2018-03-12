@@ -164,7 +164,7 @@ record_location_meta(MCall, M, From, FactBuilder, Recorder) :-
        ).
 
 record_location_dynamic(MCall, M, From) :-
-    record_location_meta(MCall, M, From, \T^G^M^_^F^database_fact_ort(T,G,M,F),
+    record_location_meta(MCall, M, From, \T^G^MG^_^F^database_fact_ort(T,G,MG,F),
                          record_location_callable).
 
 cleanup_loc_dynamic(Head, M, Type, From) :-
