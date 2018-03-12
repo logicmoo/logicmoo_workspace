@@ -37,7 +37,6 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(extra_location)).
-:- use_module(library(from_utils)).
 :- use_module(library(implementation_module)).
 :- use_module(library(option_utils)).
 
@@ -67,28 +66,23 @@ codewalk:walk_code(prolog, Options1) :-
     ->Options4 = [module(M)|Options3]
     ; Options4 = Options3
     ),
-    Options = [on_trace(extra_codewalk:pcw_trace(1, M, ETracer, FromChk))|Options4],
+    Options = [on_trace(extra_codewalk:pcw_trace(1, ETracer, FromChk))|Options4],
     extra_walk_module_body(M, Options),
-    optimized_walk_code(S, Stage, extra_codewalk:pcw_trace(Stage, M, ETracer, FromChk), Options4),
+    optimized_walk_code(S, Stage, extra_codewalk:pcw_trace(Stage, ETracer, FromChk), Options4),
     prolog_codewalk:make_walk_option(Options, OTerm),
     maplist(walk_extras(OTerm, M, FromChk), Extras).
 
-from_to_module(From, M) :-
-    from_to_file(From, File),
-    module_file(M, File).
-
-:- public pcw_trace/7.
-:- meta_predicate pcw_trace(+,+,3,1,+,+,+).
-pcw_trace(1, M, ETracer, FromChk, Goal, Caller, From) :-
+:- public pcw_trace/6.
+:- meta_predicate pcw_trace(+,3,1,+,+,+).
+pcw_trace(1, ETracer, FromChk, M:Goal, Caller, From) :-
     call(FromChk, From),
-    from_to_module(From, M),
     '$set_source_module'(M),
-    call(ETracer, Goal, Caller, From),
+    call(ETracer, M:Goal, Caller, From),
     ( From = clause(CRef)
     ->record_issues(CRef)
     ; true
     ).
-pcw_trace(2, _, ETracer, _, Goal, Caller, From) :-
+pcw_trace(2, ETracer, _, Goal, Caller, From) :-
     call(ETracer, Goal, Caller, From).
 
 walk_extras(OTerm, M, FromChk, Extra) :- walk_extras_(Extra, OTerm, M, FromChk).
