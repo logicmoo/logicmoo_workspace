@@ -53,13 +53,16 @@
 :- use_module(library(from_utils)).
 :- use_module(library(implemented_in)).
 
+% TBD: This module requires optimization
+
 select_option_default(Holder-Default, Options0, Options) :-
     select_option(Holder, Options0, Options, Default).
 
-:- public check_alias/4. % This should be exported since it may be used
+:- public check_alias/3. % This should be exported since it may be used
                          % indirectly in other places
 
 check_alias(Alias, File, Options1) :-
+    option(if(Loaded), Options1, false),
     ( select_option(extensions(EL), Options1, Options2)
     ->Options = [extensions([''|EL])|Options2]
     ; Options = Options1
@@ -67,7 +70,10 @@ check_alias(Alias, File, Options1) :-
     absolute_file_name(Alias, Pattern, [solutions(all)|Options]),
     expand_file_name(Pattern, FileL),
     member(File, FileL),
-    access_file(File, exist). % exist checked at the end to avoid premature fail
+    ( Loaded = false
+    ->access_file(File, exist) % exist checked at the end to avoid premature fail
+    ; true
+    ).
 
 check_dir_file(Dir, File, _) :-
     nonvar(Dir),
@@ -77,10 +83,16 @@ check_dir_file(Dir, File, Options) :-
     % here, we need all the files, even if the option specifies only loaded
     % files, otherwise included files without clauses will be ignored
     % directory_source_files(Dir, FileL, [recursive(true), if(false)]),
-    absolute_file_name(Dir, AbsDir, [file_type(directory), access(read)]),
-    directory_files(AbsDir, Files),
-    phrase(src_files(Files, AbsDir, [recursive(true)|Options]), SrcFiles),
-    member(File, SrcFiles).
+    option(if(Loaded), Options, false),
+    ( Loaded = false
+    ->absolute_file_name(Dir, AbsDir, [file_type(directory), access(read)]),
+      directory_files(AbsDir, Files),
+      phrase(src_files(Files, AbsDir, [recursive(true)|Options]), SrcFiles),
+      member(File, SrcFiles)
+    ; absolute_file_name(Dir, AbsDir, [file_type(directory), solutions(all)]),
+      distinct(File, module_file(_, File)),
+      directory_file_path(AbsDir, _, File)
+    ).
 
 source_extension(Type, Ext) :-
     user:prolog_file_type(Ext, Type),
@@ -274,12 +286,11 @@ option_preds(File, FileGen0-Options0, FileGen-Options) :-
     ).
 
 check_module(M, File) :-
-    module_files(M, FileL),
-    member(File, FileL).
+    distinct(File, module_file(M, File)).
 
 option_module(M, File, FileGen0-Options0, FileGen-Options) :-
-    select_option(module(M), Options0, Options1, M),
-    select_option(if(Loaded), Options1, Options, false),
+    select_option(module(M), Options0, Options, M),
+    option(if(Loaded), Options, false),
     ( nonvar(M)
     ->FileGen0 = ( module_file(M, File),
                    FileGen
