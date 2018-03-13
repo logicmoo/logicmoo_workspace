@@ -44,15 +44,16 @@
 :- use_module(library(option_utils)).
 
 :- thread_local
-    '$file_module_db'/2.
+    '$file_db'/1.
 
-mf_from_chk(M, File, From) :-
+f_from_chk(From) :-
     from_to_file(From, File),
-    '$file_module_db'(File, M).
+    '$file_db'(File).
 
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)-(codewalk:true_3),
+           module(M)-M,
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
            if(Loaded)-true,
@@ -62,19 +63,14 @@ codewalk:walk_code(clause, Options1) :-
            variable_names(VNL)-VNL],
           Options1, Options2),
     option_allchk(M, File, FileMGen-[if(Loaded)|Options2], true-_),
-    forall(FileMGen, assertz('$file_module_db'(File, M))),
+    forall(distinct(File, FileMGen), assertz('$file_db'(File))),
     with_context_values(
-        setup_call_cleanup(
-            ( '$current_source_module'(OldM),
-              freeze(M, '$set_source_module'(_, M))
-            ),
-            ( walk_clause(mf_from_chk(M, File), From),
-              maplist(walk_extras(mf_from_chk(M, File), From), Extras)
-            ),
-            '$set_source_module'(_, OldM)),
+        ( walk_clause(f_from_chk, From),
+          maplist(walk_extras(f_from_chk, From), Extras)
+        ),
         [from, on_trace, trace_reference, undefined],
         [From, OnTrace,  To,              Undefined]),
-    retractall('$file_module_db'(_, _)).
+    retractall('$file_db'(_)).
 
 walk_extras(FromChk, From, Extra) :-
     walk_extras_(Extra, FromChk, From).
@@ -129,11 +125,11 @@ current_head_body(FromChk, Head, CM:Body, From) :-
     call(FromChk, From),
     clause_property(Ref, module(CM)).
 
-walk_head_body(Head, CM:Body) :-
+walk_head_body(Head, Body) :-
     term_variables(Head, Vars),
     '$expand':mark_vars_non_fresh(Vars),
     with_context_values(
-        walk_called(Body, CM),
+        walk_called(Body, user),
         [caller], [Head]), !.
 walk_head_body(Head, Body) :-
     writeln(user_error, (Head :- Body)), fail.
@@ -150,7 +146,11 @@ walk_called_2(true, _) :- !.
 walk_called_2(M:G, _) :-
     !,
     ( nonvar(M)
-    ->walk_called(G, M)
+    ->setup_call_cleanup(( '$current_source_module'(OldM),
+                           '$set_source_module'(_, M)
+                         ),
+                         walk_called(G, M),
+                         '$set_source_module'(_, OldM))
     ; true
     ).
 walk_called_2((A,B), M) :-
