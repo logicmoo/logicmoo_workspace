@@ -132,7 +132,7 @@ walk_head_body(Head, Body) :-
         walk_called(Body, user),
         [caller], [Head]), !.
 walk_head_body(Head, Body) :-
-    writeln(user_error, (Head :- Body)), fail.
+    writeln(user_error, walk_head_body(Head, Body)), fail.
 
 walk_called(Goal, M) :-
     walk_called_2(Goal, M),
@@ -172,6 +172,9 @@ walk_called_2((A;B), M) :-
     \+ \+ walk_called(A, M),
     \+ \+ walk_called(B, M).
 walk_called_2(Goal, M) :-
+    walk_called_3(Goal, M),
+    fail.
+walk_called_2(Goal, M) :-
     current_context_value(trace_reference, To),
     To \== (-),
     (   subsumes_term(To, M:Goal)
@@ -183,8 +186,10 @@ walk_called_2(Goal, M) :-
     current_context_value(caller,   Caller),
     current_source_location(From),
     call(OnTrace, M2:Goal, Caller, From),
-    fail.
-walk_called_2(Goal, M) :-
+    !.
+walk_called_2(_, _).
+
+walk_called_3(Goal, M) :-
     (   (   predicate_property(M:Goal, imported_from(IM))
         ->  true
         ;   IM = M
@@ -195,22 +200,22 @@ walk_called_2(Goal, M) :-
     Called \== [],
     !,
     walk_called_by(Called, M).
-walk_called_2(Meta, M) :-
+walk_called_3(Meta, M) :-
     (   predicate_property(M:Meta, meta_predicate(Head))
     ;   inferred_meta_predicate(M:Meta, Head)
     ),
     !,
     walk_meta_call(1, Head, Meta, M).
-walk_called_2(Goal, Module) :-
+walk_called_3(Goal, Module) :-
     nonvar(Module),
     '$get_predicate_attribute'(Module:Goal, defined, 1),
     !.
-walk_called_2(Goal, Module) :-
+walk_called_3(Goal, Module) :-
     callable(Goal),
     nonvar(Module),
     !,
     undefined(Module:Goal).
-walk_called_2(_, _).
+walk_called_3(_, _).
 
 undefined(_) :-
     current_context_value(undefined, ignore),
