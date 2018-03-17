@@ -60,7 +60,7 @@ applicable_status(check).
 %
 %   For a given Call, AsrGlobL gives the applicable assertions with global
 %   properties and AsrSuccL gives the applicable assertions with success
-%   properties.
+%   properties. This predicate is intended to be used at run-time.
 
 applicable_assertions(Head, AsrGlobL, AsrSuccL) :-
     findall(spec(Asr), prop_asr(head, Head, _, Asr), AsrL),
