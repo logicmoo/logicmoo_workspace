@@ -760,7 +760,7 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
       ; select(dict_join_t(Term, Tag, Type1, Type2), PropL, PropL1),
         join_dict_types(Type1, M, Type2, M, Tag, Desc)
       ; select(dict_extend_t(Term, Type, Tag, Desc2), PropL, PropL1),
-        join_type_desc(Type, M, Tag, Desc2, Desc)
+        join_type_desc(M:Type, Tag, Desc2, Desc)
       )
     ->( is_dict(Desc, Tag)
       ->Dict=Desc

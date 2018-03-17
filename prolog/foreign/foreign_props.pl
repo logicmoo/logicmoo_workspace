@@ -51,7 +51,7 @@
            dict_join_t/4,
            dict_extend_t/4,
            join_dict_types/6,
-           join_type_desc/5]).
+           join_type_desc/4]).
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
@@ -152,12 +152,13 @@ dict_join_t(Term, Tag, M1:Type1, M2:Type2) :-
 
 :- type dict_extend_t/4.
 :- meta_predicate dict_extend_t(?, 1, ?, +).
-dict_extend_t(Term, M:Type, Tag, Desc) :-
-    join_type_desc(Type, M, Tag, Desc, Dict),
+dict_extend_t(Term, Type, Tag, Desc) :-
+    join_type_desc(Type, Tag, Desc, Dict),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict), Pairs).
 
-join_type_desc(Type, M, Tag, Desc2, Dict) :-
+:- meta_predicate join_type_desc(1, ?, +, -).
+join_type_desc(M:Type, Tag, Desc2, Dict) :-
     type_desc(M:Type, Desc1),
     join_dict_descs(M:Desc1, M:Desc2, Tag, Dict).
 
