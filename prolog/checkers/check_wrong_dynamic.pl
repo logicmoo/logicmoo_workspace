@@ -67,28 +67,20 @@ hide_var_dynamic(Call1, M) :-
     ),
     hide_var_dynamic_hook(Call, M).
 
-hide_var_dynamic_hook(type_desc(_, _), foreign_props).
-hide_var_dynamic_hook(duptype_elem(_, _, _, _, _, _), check_dupcode).
-hide_var_dynamic_hook(bind_tn_clause(_, _, _, _), foreign_generator).
-hide_var_dynamic_hook(unfold_goal(_, _), ref_scenarios).
-hide_var_dynamic_hook(match_head_body(_, _, _, _), abstract_interpreter).
-hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
-hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
-hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
-hide_var_dynamic_hook(current_used_use_module(_, _, _, _), check_imports).
 hide_var_dynamic_hook(match_head_clause(_, _), check_unused).
 hide_var_dynamic_hook(current_clause_module_body(_, _), codewalk_prolog).
-hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), codewalk_prolog).
 hide_var_dynamic_hook(implemented_in(_, _, _), implemented_in).
 hide_var_dynamic_hook(match_clause(_, _, _, _, _, _, _), ontrace).
 hide_var_dynamic_hook(compat_body(_, _, _), metaprops).
 hide_var_dynamic_hook(abstract_execute_goal(_, _, _, _, _, _, _, _, _), check_abstract_domains).
 hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
 hide_var_dynamic_hook(ignore_import(_, _), check_imports).
-hide_var_dynamic_hook(collect_sols(_, _, _), ntabling).
-hide_var_dynamic_hook(abolish_table_subgoals(_), ntabling).
-hide_var_dynamic_hook(walk_clause(_, _), codewalk_clause).
 hide_var_dynamic_hook(current_head_body(_, _, _, _), codewalk_clause).
+hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), codewalk_prolog).
+hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
+hide_var_dynamic_hook(current_used_use_module(_, _, _, _), check_imports).
+hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
+hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -224,11 +216,8 @@ record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
     ; \+ database_fact(Caller)
     ->normalize_head(Caller, CM:HC),
       \+ hide_var_dynamic(HC, CM),
-      \+ ( predicate_property(CM:HC, meta_predicate(Meta)),
-           arg(Pos, Meta, Spec),
-           '$expand':meta_arg(Spec),
-           arg(Pos, HC, Arg),
-           Arg == Fact
+      \+ ( get_attr(Fact, meta_args, Spec),
+           '$expand':meta_arg(Spec)
          ),
       update_fact_from(var_dynamic_db(MPI), From)
     ; true

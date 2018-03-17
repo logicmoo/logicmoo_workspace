@@ -40,7 +40,8 @@
     walk_code/2.
 
 :- public
-    true_3/3.
+    true_3/3,
+    true_2/2.
 
 :- use_module(library(codewalk_prolog)).
 :- use_module(library(codewalk_source)).
@@ -48,6 +49,7 @@
 % :- use_module(library(codewalk_hybrid)).
 
 true_3(_, _, _).
+true_2(_, _).
 
 /*
 true_3(Goal, Caller, From) :-
@@ -56,6 +58,7 @@ true_3(Goal, Caller, From) :-
 */
 
 is_meta(on_trace).
+is_meta(on_head).
 
 :- meta_predicate
     walk_code(:).

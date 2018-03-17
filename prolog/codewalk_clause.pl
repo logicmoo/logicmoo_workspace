@@ -41,6 +41,7 @@
 :- use_module(library(extra_location)).
 :- use_module(library(from_utils)).
 :- use_module(library(implementation_module)).
+:- use_module(library(meta_args)).
 :- use_module(library(option_utils)).
 
 :- thread_local
@@ -53,10 +54,12 @@ f_from_chk(From) :-
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)-(codewalk:true_3),
+           on_head(OnHead)-(codewalk:true_2),
            module(M)-M,
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
            if(Loaded)-true,
+           trace_variables(TraceVars)-[],
            walkextras(Extras)-[initialization,
                                declaration,
                                asrparts([body])],
@@ -68,8 +71,8 @@ codewalk:walk_code(clause, Options1) :-
         ( walk_clause(f_from_chk, From),
           maplist(walk_extras(f_from_chk, From), Extras)
         ),
-        [from, on_trace, trace_reference, undefined],
-        [From, OnTrace,  To,              Undefined]),
+        [from, on_trace, on_head, trace_vars, trace_reference, undefined],
+        [From, OnTrace,  OnHead,  TraceVars,  To,              Undefined]),
     retractall('$file_db'(_)).
 
 walk_extras(FromChk, From, Extra) :-
@@ -100,7 +103,9 @@ walk_from_assertion(FromChk, From, AsrPartL) :-
              call(FromChk, AFrom),
              implementation_module(HM:Head, M),
              member(AsrPart, AsrPartL),
-             assertion_goal(AsrPart, Asr, Goal, CM, From)
+             assertion_goal(AsrPart, Asr, Goal, CM, From),
+             current_context_value(trace_vars, TraceVars),
+             maplist(trace_var(M:Head), TraceVars)
            ),
            walk_head_body('<assertion>'(M:Head), CM:Goal)).
 
@@ -123,21 +128,30 @@ current_head_body(FromChk, Head, CM:Body, From) :-
     \+ predicate_property(Head, imported_from(_)),
     catch(clause(Head, Body, Ref), _, fail),
     call(FromChk, From),
-    clause_property(Ref, module(CM)).
+    clause_property(Ref, module(CM)),
+    current_context_value(trace_vars, TraceVars),
+    maplist(trace_var(Head), TraceVars).
+
+trace_var(Head, non_fresh) :-
+    term_variables(Head, Vars),
+    '$expand':mark_vars_non_fresh(Vars).
+trace_var(Head, meta_arg) :-
+    mark_meta_arguments(Head).
 
 walk_head_body(Head, Body) :-
-    term_variables(Head, Vars),
-    '$expand':mark_vars_non_fresh(Vars),
+    current_context_value(on_head, OnHead),
+    current_source_location(From),
+    ignore(call(OnHead, Head, From)),
     with_context_values(
         walk_called(Body, user),
         [caller], [Head]), !.
 walk_head_body(Head, Body) :-
-    writeln(user_error, walk_head_body(Head, Body)), fail.
+    walk_head_body(Head, Body),
+    writeln(user_error, walk_head_body(Head, Body)),
+    fail.
 
 walk_called(Goal, M) :-
-    walk_called_2(Goal, M),
-    term_variables(Goal, Vars),
-    '$expand':mark_vars_non_fresh(Vars).
+    walk_called_2(Goal, M).
 
 walk_called_2(G, _) :-
     var(G),
@@ -175,6 +189,11 @@ walk_called_2(Goal, M) :-
     walk_called_3(Goal, M),
     fail.
 walk_called_2(Goal, M) :-
+    ignore(walk_called_ontrace(Goal, M)),
+    current_context_value(trace_vars, TraceVars),
+    maplist(trace_var(M:Goal), TraceVars).
+
+walk_called_ontrace(Goal, M) :-
     current_context_value(trace_reference, To),
     To \== (-),
     (   subsumes_term(To, M:Goal)
@@ -185,9 +204,7 @@ walk_called_2(Goal, M) :-
     current_context_value(on_trace, OnTrace),
     current_context_value(caller,   Caller),
     current_source_location(From),
-    call(OnTrace, M2:Goal, Caller, From),
-    !.
-walk_called_2(_, _).
+    call(OnTrace, M2:Goal, Caller, From).
 
 walk_called_3(Goal, M) :-
     (   (   predicate_property(M:Goal, imported_from(IM))
