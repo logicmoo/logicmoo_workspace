@@ -42,9 +42,10 @@
 :- public
     true_3/3.
 
-:- use_module(library(extra_codewalk)).
-:- use_module(library(source_codewalk)).
-:- use_module(library(clause_codewalk)).
+:- use_module(library(codewalk_prolog)).
+:- use_module(library(codewalk_source)).
+:- use_module(library(codewalk_clause)).
+% :- use_module(library(codewalk_hybrid)).
 
 true_3(_, _, _).
 

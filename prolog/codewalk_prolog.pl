@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(extra_codewalk, []).
+:- module(codewalk_prolog, []).
 
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assrt_lib)).
@@ -66,9 +66,9 @@ codewalk:walk_code(prolog, Options1) :-
     ->Options4 = [module(M)|Options3]
     ; Options4 = Options3
     ),
-    Options = [on_trace(extra_codewalk:pcw_trace(1, ETracer, FromChk))|Options4],
+    Options = [on_trace(codewalk_prolog:pcw_trace(1, ETracer, FromChk))|Options4],
     extra_walk_module_body(M, Options),
-    optimized_walk_code(S, Stage, extra_codewalk:pcw_trace(Stage, ETracer, FromChk), Options4),
+    optimized_walk_code(S, Stage, codewalk_prolog:pcw_trace(Stage, ETracer, FromChk), Options4),
     prolog_codewalk:make_walk_option(Options, OTerm),
     maplist(walk_extras(OTerm, M, FromChk), Extras).
 

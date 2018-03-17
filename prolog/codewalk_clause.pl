@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(clause_codewalk, []).
+:- module(codewalk_clause, []).
 
 :- use_module(library(prolog_xref), []).
 :- use_module(library(assrt_lib)).
