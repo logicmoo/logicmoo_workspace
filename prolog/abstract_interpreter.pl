@@ -35,11 +35,11 @@
 :- module(abstract_interpreter, [abstract_interpreter/3,
                                  abstract_interpreter/4,
                                  abstract_interpreter/5,
-                                 match_head/7,
-                                 match_head_body/4,
+                                 match_head/6,
+                                 match_head_body/3,
                                  bottom/2,
-                                 match_ai/8,
-                                 match_noloops/7,
+                                 match_ai/7,
+                                 match_noloops/6,
                                  terms_share/2]).
 
 :- use_module(library(implementation_module)).
@@ -48,10 +48,10 @@
 :- use_module(library(term_size)).
 
 :- meta_predicate
-    match_head(*,*,*,*,*, *,*),
-    match_head_body(*,*,*,*),
-    match_ai(*,*,*,*,*,*,*,*),
-    match_noloops(*,*,*,*,*,*,*),
+    match_head(0,*,*,*,*, *),
+    match_head_body(0,*,*),
+    match_ai(*,0,*,*,*, *,*),
+    match_noloops(0,*,*,*,*, *),
     abstract_interpreter(0,7,?),
     abstract_interpreter(0,7,+,-),
     abstract_interpreter(0,7,+,+,-).
@@ -322,7 +322,7 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
                                 % TBD: information to error
           fail
         }
-      ; call(Abs, Goal, M, CM:Body, State1, State),
+      ; call(Abs, M:Goal, CM:Body, State1, State),
         cut_to(abstract_interpreter_body(Body, CM, Abs, State))
       )
     ).
@@ -333,14 +333,15 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
 
 bottom(_, bottom).
 
-:- multifile match_ai/8.
+:- multifile match_ai/7.
 
-match_ai(head,    G, M, Body, S0, S) --> match_head(   G, M, Body, S0, S).
-match_ai(noloops, G, M, Body, S0, S) --> match_noloops(G, M, Body, S0, S).
+match_ai(head,    MG, Body, S0, S) --> match_head(   MG, Body, S0, S).
+match_ai(noloops, MG, Body, S0, S) --> match_noloops(MG, Body, S0, S).
 
-match_head(Goal, M, M:true, state(_, EvalL, OnErr, CallL, D, Cont), S) -->
-    {predicate_property(M:Goal, interpreted)}, !,
-    { match_head_body(Goal, M, Body, Loc)
+match_head(MGoal, M:true, state(_, EvalL, OnErr, CallL, D, Cont), S) -->
+    {predicate_property(MGoal, interpreted)}, !,
+    {strip_module(MGoal, M, _)},
+    { match_head_body(MGoal, Body, Loc)
     *->S = state(Loc, EvalL, OnErr, CallL, D, Cont)
     ; fail
     },
@@ -348,12 +349,15 @@ match_head(Goal, M, M:true, state(_, EvalL, OnErr, CallL, D, Cont), S) -->
     ->[]
     ; bottom %% loose of precision
     ).
-match_head(_,    M, M:true, S, S) --> bottom.
+match_head(MGoal, M:true, S, S) -->
+    {strip_module(MGoal, M, _)},
+    bottom.
 
-match_head_body(Goal, M, CMBody, From) :-
+match_head_body(MGoal, CMBody, From) :-
+    strip_module(MGoal, M, Goal),
     ( extra_clauses(Goal, M, CMBody, From)
     ; From = clause(Ref),
-      clause(M:Goal, Body, Ref),
+      clause(MGoal, Body, Ref),
       clause_property(Ref, module(CM)),
       CMBody = CM:Body
     ).
@@ -372,18 +376,21 @@ extra_clauses(Goal, CM, I:Goal, _From) :-
     ->interface:'$implementation'(I, M)
     ).
 
-match_noloops(Goal, M, Body, state(Loc0, EvalL, OnErr, CallL, S, Cont),
+match_noloops(MGoal, Body, state(Loc0, EvalL, OnErr, CallL, S, Cont),
               state(Loc, EvalL, OnErr, CallL, [M:F/A-Size|S], Cont)) -->
-    {predicate_property(M:Goal, interpreted)}, !,
+    {predicate_property(MGoal, interpreted)}, !,
+    {strip_module(MGoal, M, Goal)},
     ( { functor(Goal, F, A),
         term_size(Goal, Size),
         \+ ( memberchk(M:F/A-Size1, S),
              Size1=<Size
            )
       }
-    ->{ match_head_body(Goal, M, Body, Loc) },
+    ->{ match_head_body(MGoal, Body, Loc) },
       []
     ; { Loc = Loc0 },
       bottom %% loose of precision
     ).
-match_noloops(_,    M, M:true, S, S) --> bottom.
+match_noloops(MGoal, M:true, S, S) -->
+    {strip_module(MGoal, M, _)},
+    bottom.

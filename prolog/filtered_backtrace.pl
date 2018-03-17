@@ -35,6 +35,7 @@
 :- module(filtered_backtrace,
           [filtered_backtrace/1]).
 
+:- use_module(library(assertions)).
 :- use_module(library(prolog_stack)).
 
 filtered_backtrace(Max) :-
@@ -48,5 +49,5 @@ no_backtrace_clause_hook(_, filtered_backtrace).
 no_backtrace_clause_hook(_, prolog_stack).
 
 no_backtrace_entry(frame(_, clause(Clause, _), _)) :-
-    clause(M:Head, _Body, Clause),
+    clause(M:Head, _, Clause),
     \+ no_backtrace_clause_hook(Head, M).

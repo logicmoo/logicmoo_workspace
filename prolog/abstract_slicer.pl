@@ -93,7 +93,7 @@ slicer_abstraction(Spec, VarsR, Scope, Goal, M, Body,
     {predicate_property(M:Goal, interpreted)}, !,
     { \+ ground(Spec),
       chain_of_dependencies(Spec, VarsR, Goal, Cont)
-    ->match_head_body(Goal, M, Body1, Loc),
+    ->match_head_body(M:Goal, Body1, Loc),
       ( Scope = body
       ->Body = Body1
       ; terms_share(Spec, VarsR, Goal)
@@ -102,7 +102,7 @@ slicer_abstraction(Spec, VarsR, Scope, Goal, M, Body,
       )
     ; % check if the body trivially fails:
       ( Scope = body
-      ->once(match_head_body(Goal, M, _Body, Loc))
+      ->once(match_head_body(M:Goal, _Body, Loc))
       ; true
       ),
       Body = M:true

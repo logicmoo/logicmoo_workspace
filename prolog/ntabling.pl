@@ -89,8 +89,8 @@ abolish_all_tables :-
 :- meta_predicate
        abolish_ntable_subgoals(0).
 
-abolish_table_subgoals(M:Goal) :-
-    goal_hash(M:Goal, Hash),
+abolish_table_subgoals(Goal) :-
+    goal_hash(Goal, Hash),
     abolish_table_hash(Hash).
 
 abolish_table_hash(Hash) :-
