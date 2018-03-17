@@ -678,7 +678,12 @@ do_modedef(A0, M, A1, A, APos, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr)
     modedef(A2, M, A1, A, Pos, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr), !.
 do_modedef(A0, M, A1, A, From-To, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
     integer(A0),
-    modedef(is_pred(A0, A), M, A1, A, term_position(From, To, From, From, [From-From, From-To]), PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
+    ( A0 >= 0
+    ->A2 = goal_in(A0, A)
+    ; A3 is -A0,
+      A2 = goal_go(A3, A)
+    ),
+    modedef(A2, M, A1, A, term_position(From, To, From, From, [From-From, From-To]), PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
     !.
 do_modedef(A0, _, A0, _, PA0, PA0, Cp0, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp0, Cp).
 
@@ -693,7 +698,8 @@ modedef(@(A),         _, A, B, Pos, PA, Cp0,                      Ca,           
 modedef(:(A0),        _, A, B, Pos, PA, Cp,                       Ca0,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(From, To, FFrom, FTo, [PA0]),
      % The first part of this check is not redundant if we forgot the meta_predicate declaration
     (var(A0 ), var(Ca1) -> Ca0 = [(typeprops:mod_qual(B))-Pos|Ca1], A0 = A ; Ca0 = Ca1, A = typeprops:mod_qual(A0, B), PA = term_position(From, To, FFrom, FTo, [PA0, From-From])).
-modedef(is_pred(N,A), _, A, B, Pos, PA, Cp,  [(typeprops:is_pred(N,B))-Pos|Ca0],     Su,                          Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [_,PA]).
+modedef(goal_in(N,A), _, A, B, Pos, PA, Cp,  [(typeprops:goal(N,B))-Pos|Ca0],     Su,                          Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [_,PA]).
+modedef(goal_go(N,A), _, A, B, Pos, PA, Cp,        Ca, [(typeprops:goal(N,B))-Pos|Su0],                        Gl,  Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [_,PA]).
 modedef('!'(A),       M, A, B, Pos, PA, Cp0, [(M:compound(B))-Pos|Ca],               Su,                          Gl,  Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]). % May be modified using setarg/3 or nb_setarg/3 (mutable)
 % Ciao Modes:
 modedef(in(A),        M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca0],                 Su,                       Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [PA]).
