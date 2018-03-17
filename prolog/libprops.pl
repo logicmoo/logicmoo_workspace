@@ -44,6 +44,8 @@
 :- pred functor(-, +atmel, +nnegint) is det.
 :- pred functor(+, +atmel, ?nnegint) is semidet.
 :- pred functor(+, -atmel, +nnegint) is semidet.
+:- pred predicate_property(callable, ?).
+:- pred current_predicate(atm, callable).
 
 :- pred (+arithexpression> +arithexpression) is semidet.
 :- pred (+arithexpression< +arithexpression) is semidet.

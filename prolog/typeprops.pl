@@ -353,6 +353,7 @@ is_pred(N, Pred) :-
 
 is_pred_2(M:Pred, N) :-
     var(Pred), !,
+    current_module(M),
     current_predicate(M:F/A),
     A >= N,
     A1 is A - N,
@@ -360,6 +361,7 @@ is_pred_2(M:Pred, N) :-
 is_pred_2(M:Pred, N) :-
     functor(Pred, F, A1),
     A is A1 + N,
+    current_module(M),
     current_predicate(M:F/A).
 
 :- true prop mod_qual/1.

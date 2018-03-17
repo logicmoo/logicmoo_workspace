@@ -172,8 +172,12 @@ dict_kv(Dict, Key-Value) :-
     Type=Dict.Key,
     call(Type, Value).
 
+:- pred extend_one_arg(1, -callable) is det.
+
+extend_one_arg(Call1, Call) :- extend_args(Call1, [_], Call).
+
 type_desc(MType, Desc) :-
-    extend_args(MType, [_], MCall),
+    extend_one_arg(MType, MCall),
     clause(MCall, dict_t(_, _, Desc)).
 
 join_dict_types(Type1, M1, Type2, M2, Tag, Dict) :-

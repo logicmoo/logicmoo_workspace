@@ -123,7 +123,7 @@ compat(A, VarL, M) :-
     compatc(A, VarL, M), !.
 compat(A, VarL, M) :-
     ( is_type(A, M)
-    ->( cut_to(compat_body(A, VarL, M))
+    ->( cut_to(compat_body(M:A, VarL))
       ->true
       ; \+ \+ do_compat(M:A, VarL)
       )
@@ -141,8 +141,10 @@ is_type(Head, M) :-
     memberchk(Stat, [check, true]),
     prop_asr(glob, type(_), _, Asr).
 
-compat_body(A, VarL, M) :-
-    catch(clause(M:A, Body, Ref), _, fail),
+:- meta_predicate compat_body(0, +).
+
+compat_body(MA, VarL) :-
+    catch(clause(MA, Body, Ref), _, fail),
     clause_property(Ref, module(CM)),
     compat(Body, VarL, CM).
 

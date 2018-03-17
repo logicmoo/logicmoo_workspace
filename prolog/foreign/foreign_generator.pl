@@ -335,7 +335,7 @@ type_props(M, Type, TypePropLDictL, Pos, Asr) :-
     collect_prop(Asr, M, comp, TPropL),
     ( TPropL \= []
     ->TypePropLDictL = [t(Type, TPropL, TDict)]
-    ; bind_type_names(M, Type, TypePropLDictL)
+    ; bind_type_names(M:Type, TypePropLDictL)
     ->true
     ; TypePropLDictL = [t(Type, [], TDict)]
     ).
@@ -611,14 +611,19 @@ fg_numbervars([V|Vs], N, Dict) :-
       fg_numbervars(Vs, N1, Dict)
     ).
 
-bind_type_names(M, Type, TypeMPropLDictL) :-
-    predicate_property(M:Type, interpreted),
+bind_type_names(MType, TypeMPropLDictL) :-
+    predicate_property(MType, interpreted),
+    strip_module(MType, _, Type),
     findall(t(Type, MPropL, Dict),
-            bind_tn_clause(M, Type, MPropL, Dict),
+            bind_tn_clause(MType, MPropL, Dict),
             TypeMPropLDictL).
 
-bind_tn_clause(M, Type, MPropL, Dict) :-
-    catch(clause(M:Type, Body, Ref), _, fail),
+:- meta_predicate
+    bind_tn_clause(0, -, -).
+
+bind_tn_clause(MType, MPropL, Dict) :-
+    strip_module(MType, M, Type),
+    catch(clause(MType, Body, Ref), _, fail),
     ( clause_property(Ref, file(File)),
       clause_property(Ref, line_count(Line)),
       get_dictionary(Type :- Body, File, Line, M, Dict)
@@ -1342,7 +1347,7 @@ type_is_tdef(M, Type, Spec, A) :-
     functor(Head, TName, Arity),
     type_props_(M, Head, _, _, Asr),
     \+ curr_prop_asr(comp, _, _, Asr),
-    bind_type_names(M, Head, TypeMPropLDictL),
+    bind_type_names(M:Head, TypeMPropLDictL),
     TypeMPropLDictL = [t(Head, [Prop], _)],
     arg(Arity, Head, A),
     arg(Arity, Prop, B),

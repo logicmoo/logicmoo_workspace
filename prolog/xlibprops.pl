@@ -3,7 +3,7 @@
     Author:        Edison Mera Menendez
     E-mail:        efmera@gmail.com
     WWW:           https://github.com/edisonm/assertions
-    Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
+    Copyright (C): 2018, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,10 +32,9 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(plprops, []).
+:- module(xlibprops, []).
 
-:- reexport(library(metaprops)).
-:- reexport(library(globprops)).
-:- reexport(library(typeprops)).
-:- use_module(library(libprops)).
-:- use_module(library(xlibprops)).
+:- use_module(library(assertions)).
+:- use_module(library(normalize_head)).
+
+:- pred normalize_head(+, -goal).
