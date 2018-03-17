@@ -119,17 +119,17 @@ check_wrong_dynamic(Options1, Pairs) :-
     cleanup_dynamic_db.
 
 collect_result(M, FromChk, Pairs) :-
-    findall(Type-(as_dynamic(DType)-((Loc/PI)-(MLoc/MPI))),
-            ( current_static_as_dynamic(Type, DType, Loc, PI, From, MPI),
+    findall(Type-(modified_nondynamic(DType)-((Loc/PI)-(MLoc/MPI))),
+            ( current_modified_nondynamic(Type, DType, Loc, PI, From, MPI),
               from_location(From, MLoc)), Pairs, Pairs1),
-    findall(warning-(dynamic_as_static-(Loc-PI)),
-            current_dynamic_as_static(M:_, FromChk, Loc, PI), Pairs1, Pairs2),
+    findall(warning-(unmodified_dynamic-(Loc-PI)),
+            current_unmodified_dynamic(M:_, FromChk, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
             ( retract(var_dynamic_db(PI, From)),
               check:predicate_indicator(From, CI, []),
               from_location(From, Loc)), Pairs2, []).
 
-current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
+current_modified_nondynamic(Type, DType, Loc, PI, MFrom, MPI) :-
     wrong_dynamic_db(TypeDB, PI, MPI, MFrom),
     memberchk(TypeDB, [def, dec, retract]),
     PI = M:F/A,
@@ -148,8 +148,8 @@ current_static_as_dynamic(Type, DType, Loc, PI, MFrom, MPI) :-
       once(property_location(PI, _, Loc))
     ).
 
-:- meta_predicate current_dynamic_as_static(?, 1, -, -).
-current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
+:- meta_predicate current_unmodified_dynamic(?, 1, -, -).
+current_unmodified_dynamic(Ref, FromChk, Loc, PI) :-
     Ref = M:H,
     PI = M:F/A,
     current_defined_predicate(Ref),
@@ -171,7 +171,7 @@ current_dynamic_as_static(Ref, FromChk, Loc, PI) :-
 prolog:message(acheck(wrong_dynamic, Type-List)) -->
     wrong_dynamic_message(Type, List).
 
-as_dynamic(DType, Loc/PI-MLocPIs) -->
+modified_nondynamic(DType, Loc/PI-MLocPIs) -->
     ['\t'|Loc], ['~w ~q modified by'-[DType, PI], nl],
     foldl(show_locpi, MLocPIs).
 
@@ -179,16 +179,16 @@ show_locpi(Loc/PI) --> ['\t\t'|Loc], check:predicate(PI), [nl].
 
 show_locci(Loc/CI) --> ['\t\t'|Loc], CI, [nl].
 
-dynamic_as_static(Loc-PIs) -->
+unmodified_dynamic(Loc-PIs) -->
     {compact_pi_list(PIs, CPIs)},
     ['\t'|Loc], ['predicates ~w'-[CPIs], nl].
 
-wrong_dynamic_message(as_dynamic(DType), LocPIs) -->
+wrong_dynamic_message(modified_nondynamic(DType), LocPIs) -->
     ['Predicates are ~w, but never declared dynamic and modified:'-DType, nl],
-    foldl(as_dynamic(DType), LocPIs).
-wrong_dynamic_message(dynamic_as_static, LocPIs) -->
+    foldl(modified_nondynamic(DType), LocPIs).
+wrong_dynamic_message(unmodified_dynamic, LocPIs) -->
     ['Predicates declared dynamic, but never modified:', nl],
-    foldl(dynamic_as_static, LocPIs).
+    foldl(unmodified_dynamic, LocPIs).
 wrong_dynamic_message(var_as_dynamic, PILocCIs) -->
     ['Predicates called with a variable in a module-sensitive argument:', nl],
     foldl(var_as_dynamic, PILocCIs).
