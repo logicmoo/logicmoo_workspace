@@ -180,7 +180,7 @@ walk_called_2((A*->B), M) :-
     walk_called(A, M),
     walk_called(B, M).
 walk_called_2(\+(A), M) :-
-    walk_called(A, M).
+    \+ \+ walk_called(A, M).
 walk_called_2((A;B), M) :-
     !,
     \+ \+ walk_called(A, M),

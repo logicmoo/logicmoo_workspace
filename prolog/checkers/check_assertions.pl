@@ -87,6 +87,7 @@ check_assertions(Options1, Pairs) :-
     merge_options(Options2,
                   [module(M),
                    method(Method),
+                   trace_variables([non_fresh]),
                    on_trace(collect_violations)
                   ], Options),
     option_fromchk(Options, _, FromChk),
@@ -103,12 +104,13 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     PI=M:F/A,
     current_predicate(M:F/A),
     functor(H, F, A),
-    \+ predicate_property(M:H, imported_from(_)),
-    \+ predicate_property(M:H, built_in),
-    \+ predicate_property(M:H, foreign),
+    MH = M:H,
+    \+ predicate_property(MH, imported_from(_)),
+    \+ predicate_property(MH, built_in),
+    \+ predicate_property(MH, foreign),
     generate_ctchecks(H, M, [], CTCheck),
     CTCheck \= _:true,
-    clause(M:H, _, Clause),
+    clause(MH, _, Clause),
     From = clause(Clause),
     call(FromChk, From),
     do_check_property_ctcheck(CTCheck, AssrErrorL),
@@ -203,11 +205,13 @@ black_list(M:Call) :- black_list(Call, M).
 
 :- meta_predicate collect_violations(0,0,+).
 collect_violations(M:Goal, Caller, From) :-
-    \+ black_list(Caller),
-    check_property_ctcheck(Goal, M, Caller, CTChecks),
-    CTChecks \= [],
-    normalize_pi(Caller, CPI),
-    update_fact_from(violations_db(CPI, CTChecks), From).
+    ( \+ black_list(Caller),
+      check_property_ctcheck(Goal, M, Caller, CTChecks),
+      CTChecks \= []
+    ->normalize_pi(Caller, CPI),
+      update_fact_from(violations_db(CPI, CTChecks), From)
+    ; true
+    ).
 
 check_property_ctcheck(Goal, M, Caller, AssrErrorL) :-
     tabled_generate_ctchecks(Goal, M, Caller, CTCheck),
@@ -284,7 +288,8 @@ tabled_generate_ctchecks(H, M, Caller, Goal) :-
 %!  generate_ctchecks(+Goal, +Context, +VInf, -CTChecks) is det
 %
 %   Generate compile-time checks, currently only compatibility is checked, fails
-%   if no ctchecks can be applied to Pred.
+%   if no ctchecks can be applied to Pred. VInf contains information about fresh
+%   variables.
 %
 generate_ctchecks(Goal, M, VInf, CTChecks) :-
     collect_assertions(ct, Goal, M, AsrL),

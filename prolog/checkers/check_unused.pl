@@ -176,9 +176,11 @@ put_mark(CRef) :-
 
 mark_rec(H, M) :-
     resolve_meta_goal(H, M, G),
-    forall(gen_lit_marks(G, M, CRef), % Widening
+    forall(gen_lit_marks(M:G, CRef), % Widening
            put_mark(CRef)).
 
+%% gen_lit_marks(:Goal, Ref)
+%
 % Generalization step, we lose precision but avoid loops --EMM
 %
 % The order of this clauses matters, because we record as marked from the most
@@ -190,13 +192,13 @@ mark_rec(H, M) :-
 % (2) the clauses that match, and
 % (3) the dynamic calls that match
 %
-gen_lit_marks(G, M, '<assertion>'(M:P)) :-
+gen_lit_marks(M:G, '<assertion>'(M:P)) :-
     functor(G, F, A),
     functor(P, F, A).          % Build a fresh head without undesirable bindings
-gen_lit_marks(G, M, clause(Clause)) :-
-    match_head_clause(M:G, Clause),
+gen_lit_marks(MG, clause(Clause)) :-
+    match_head_clause(MG, Clause),
     clause_property(Clause, file(_)).    % Static clauses only
-gen_lit_marks(G, M, M:P) :- copy_term(G, P). % copy term to avoid undesirable bindings
+gen_lit_marks(G, P) :- copy_term(G, P). % copy term to avoid undesirable bindings
 
 gen_marks(Ref, Ref).
 gen_marks('<assertion>'(M:H), clause(Clause)) :-
@@ -209,10 +211,11 @@ not_marked(Ref) :-
        ).
 
 not_marked(H, M) :-
-    \+ ( gen_lit_marks(H, M, Mark),
+    \+ ( gen_lit_marks(M:H, Mark),
          marked(Mark)
        ).
 
+:- meta_predicate match_head_clause(0, -).
 match_head_clause(MH, Clause) :-
     catch(clause(MH, _, Clause), _, fail).
 

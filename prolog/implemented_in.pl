@@ -66,8 +66,8 @@ implemented_in(MGoal0, From, Args) :-
       ),
       Args = [M:F/A-Declaration]
     ; From = clause(ClauseRef),
-      catch(( clause(M:Goal, _, ClauseRef),
-              nth_clause(M:Goal, N, ClauseRef)
+      catch(( clause(MGoal, _, ClauseRef),
+              nth_clause(MGoal, N, ClauseRef)
             ), _, fail),
       Args = [M:F/A-N]
     ).

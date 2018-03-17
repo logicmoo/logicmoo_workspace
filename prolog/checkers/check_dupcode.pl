@@ -97,32 +97,37 @@ checker:check(dupcode, Result, Options0) :-
     option_allchk(Options0, Options, FileChk),
     check_dupcode(Options, FileChk, Result).
 
-%!  duptype_elem(+DupType, +Head, +Module, :FileChk, -DupId, -Elem) is multi
+:- meta_predicate
+    duptype_elem(+, 0, :, -, -).
+
+%!  duptype_elem(+DupType, :Head, :FileChk, -DupId, -Elem) is multi
 %
 %   For a given Element of the language, returns a duplication key and an
 %   associated value
 %
-duptype_elem(name,   H, M, FileChk, F/A, M:F/A) :-
+duptype_elem(name, M:H, FileChk, F/A, M:F/A) :-
     predicate_property(M:H, file(File)),
     call(FileChk, File),
     functor(H, F, A).
 % Note: we wrap the DupId with hash/1 to allow easy identification in saved
 % analysis outputs:
-duptype_elem(clause, H, M, FileChk, hash(DupId), M:F/A-Idx) :-
+duptype_elem(clause, MH, FileChk, hash(DupId), M:F/A-Idx) :-
+    strip_module(MH, M, H),
     \+ has_dupclauses(H, M),
-    nth_clause(M:H, Idx, Ref),
-    clause(M:H, MBody, Ref),
+    nth_clause(MH, Idx, Ref),
+    clause(MH, MBody, Ref),
     clause_property(Ref, file(File)),
     call(FileChk, File),
     functor(H, F, A),
     strip_module(MBody, _C, Body),
     copy_term_nat((H :- Body), Term),
     variant_sha1(Term, DupId).
-duptype_elem(predicate, H, M, FileChk, hash(DupId), M:F/A) :-
-    predicate_property(M:H, file(File)),
+duptype_elem(predicate, MH, FileChk, hash(DupId), M:F/A) :-
+    predicate_property(MH, file(File)),
+    strip_module(MH, M, H),
     call(FileChk, File),
     findall((H :- B),
-            ( clause(M:H, MB),
+            ( clause(MH, MB),
               strip_module(MB, _, B)
             ), ClauseL),
     copy_term_nat(ClauseL, Term),
@@ -212,7 +217,7 @@ curr_duptype_elem(M, FileChk, DupType, DupId, Elem) :-
     \+ predicate_property(M:H, imported_from(_)),
     duptype(DupType),
     \+ ignore_dupcode(H, M, DupType),
-    duptype_elem(DupType, H, M, FileChk, DupId, Elem).
+    duptype_elem(DupType, M:H, FileChk, DupId, Elem).
 curr_duptype_elem(M, FileChk, declaration, DupId, Elem) :-
     duptype_elem_declaration(_, M, FileChk, DupId, Elem).
 

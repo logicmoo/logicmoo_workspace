@@ -91,11 +91,11 @@ walk_extras_(declaration, OTerm, M, FromChk) :- walk_from_loc_declaration(OTerm,
 walk_extras_(asrparts(L), OTerm, M, FromChk) :- walk_from_assertion(OTerm, M, FromChk, L).
 
 current_clause_module_body(CM, Ref) :-
-    current_predicate(M:F/A),
+    MH = M:_,
+    current_predicate(_, MH),
     M \= CM,
-    functor(H, F, A),
-    \+ predicate_property(M:H, imported_from(_)),
-    ( catch(clause(M:H, Body, Ref), _, fail),
+    \+ predicate_property(MH, imported_from(_)),
+    ( catch(clause(MH, Body, Ref), _, fail),
       clause_property(Ref, module(HM)),
       strip_module(HM:Body, CM, _)
     ).

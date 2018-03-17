@@ -35,9 +35,12 @@
 :- module(meta_args,
           [mark_meta_arguments/1]).
 
+:- use_module(library(intercept)).
 :- use_module(library(assrt_lib)).
-:- use_module(library(applicable_assertions)).
 :- use_module(library(mapargs)).
+:- use_module(library(ctrtchecks)).
+:- use_module(library(rtchecks_rt)).
+:- use_module(library(rtchecks_utils), []).
 
 :- meta_predicate
         mark_meta_arguments(0).
@@ -63,9 +66,26 @@ narrow_meta_spec(N, _, N) :- integer(N).
 narrow_meta_spec(_, N, N) :- integer(N).
 narrow_meta_spec(_, _, ?).
 
-mark_meta_arg(_, Arg, Spec) :-
+mark_meta_arg(_, Arg, Spec) :- mark_meta_arg(Arg, Spec).
+
+mark_meta_arg(Arg, Spec) :-
     put_attr(Var, meta_args, Spec),
     Arg = Var.
+
+assrt_lib:asr_aprop(ctspec(Asr), CKey, Prop, From) :-
+    ckey_akey(CKey, AKey),
+    curr_prop_asr(AKey, Prop, From, Asr).
+
+ckey_akey(head, head).
+ckey_akey(stat, stat).
+ckey_akey(type, type).
+ckey_akey(dict, dict).
+ckey_akey(comm, comm).
+ckey_akey(comp, AKey) :- cc(AKey).
+ckey_akey(succ, succ).
+
+cc(call).
+cc(comp).
 
 mark_meta_arguments(Head) :-
     ( ( predicate_property(Head, meta_predicate(Meta))
@@ -75,22 +95,20 @@ mark_meta_arguments(Head) :-
       mapargs(mark_meta_arg, H, Meta)
     ; true
     ),
-    ( applicable_assertions(Head, _, AsrSuccL),
-      AsrSuccL \= []
-    ->findall(Head-Spec-Arg,
-              ( member(AsrSucc, AsrSuccL),
-                asr_aprop(AsrSucc, head, Head, _),
-                meta_prop(Succ, Spec, Arg),
-                asr_aprop(AsrSucc, succ, Succ, _)
-              ), HeadSpecArgL),
-      maplist(mark_head_spec(Head), HeadSpecArgL)
-    ; true
-    ).
+    findall(ctspec(Asr), prop_asr(head, Head, _, Asr), AsrL),
+    intercept(check_asrs_pre(ct, applicable_assertions:applicable_prop_check,
+                             AsrL, _, AsrSuccPVL), assrchk(_, _), true),
+    findall(Head-Spec-Arg,
+            ( member(Asr-PVL, AsrSuccPVL),
+              memberchk(PVL, [[], [[]]]),
+              aprop_asr(head, Head, _, Asr),
+              meta_prop(Succ, Spec, Arg),
+              aprop_asr(succ, Succ, _, Asr)
+            ), HeadSpecArgL),
+    maplist(mark_head_spec(Head), HeadSpecArgL).
 
 meta_prop(typeprops:is_pred(N, Var), N,   Var).
 meta_prop(typeprops:mod_qual(  Var), (:), Var).
 
-mark_head_spec(Head1, Head-Spec-Arg) :-
-    put_attr(Arg, meta_args, Spec),
-    Head1 = Head.
-
+mark_head_spec(Head, Head-Spec-Arg) :-
+    mark_meta_arg(Arg, Spec).

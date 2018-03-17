@@ -67,20 +67,15 @@ hide_var_dynamic(Call1, M) :-
     ),
     hide_var_dynamic_hook(Call, M).
 
-hide_var_dynamic_hook(match_head_clause(_, _), check_unused).
-hide_var_dynamic_hook(current_clause_module_body(_, _), codewalk_prolog).
-hide_var_dynamic_hook(implemented_in(_, _, _), implemented_in).
 hide_var_dynamic_hook(match_clause(_, _, _, _, _, _, _), ontrace).
-hide_var_dynamic_hook(compat_body(_, _, _), metaprops).
 hide_var_dynamic_hook(abstract_execute_goal(_, _, _, _, _, _, _, _, _), check_abstract_domains).
 hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
 hide_var_dynamic_hook(ignore_import(_, _), check_imports).
 hide_var_dynamic_hook(current_head_body(_, _, _, _), codewalk_clause).
 hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), codewalk_prolog).
 hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
-hide_var_dynamic_hook(current_used_use_module(_, _, _, _), check_imports).
-hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
 hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
+hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
 
 :- dynamic
     wrong_dynamic_db/4,
@@ -102,7 +97,8 @@ check_wrong_dynamic(Options1, Pairs) :-
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
-                   trace_reference(_),
+                   trace_variables([meta_arg,
+                                    non_fresh]),
                    on_trace(collect_wrong_dynamic(M))],
                   Options),
     walk_code(Options),

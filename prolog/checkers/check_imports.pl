@@ -168,10 +168,11 @@ current_used_use_module(M, FromChk, U, From) :-
        ),
     \+ ( member(F/A, PIL),
          functor(Head, F, A),
-         implementation_module(UM:Head, IM),
+         MHead = UM:Head,
+         implementation_module(MHead, IM),
          ( used_usemod(M, IM)                        % is used
-         ; predicate_property(UM:Head, multifile),   % is extended
-           clause(UM:Head, _, Ref),
+         ; predicate_property(MHead, multifile),   % is extended
+           clause(MHead, _, Ref),
            clause_property(Ref, file(File))
          )
        ).
