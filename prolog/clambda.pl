@@ -50,17 +50,17 @@ performance.
 % you only want compiled lambda expressions:
 :- reexport(library(lambda)).
 
-remove_hats(^(H, G0), G) -->
+remove_hats(^(H, G1), G) -->
     [H], !,
-    remove_hats(G0, G).
+    remove_hats(G1, G).
 remove_hats(G, G) --> [].
 
-remove_hats(G0, G, EL) :-
-    remove_hats(G0, G1, EL, T),
-    '$expand':extend_arg_pos(G1, _, T, G, _).
+remove_hats(G1, G, EL) :-
+    remove_hats(G1, G2, EL, T),
+    '$expand':extend_arg_pos(G2, _, T, G, _).
 
-cgoal_args(G0, G, AL, EL) :-
-    G0 =.. [F|Args],
+cgoal_args(G1, G, AL, EL) :-
+    G1 =.. [F|Args],
     cgoal_args(F, Args, G, Fr, EL),
     term_variables(Fr, AL).
 
@@ -95,24 +95,24 @@ prolog:message(local_variables_outside(Names, Goal, Bindings)) -->
     [ 'Local variables ~w should not occurs outside lambda expression: ~W'
     -[Names, Goal, [variable_names(Bindings)]] ].
 
-lambdaize_args(G, A0, M, VL, Ex, A) :-
-    check_singletons(G, h(VL, Ex, A0 )),
+lambdaize_args(G, A1, M, VL, Ex, A) :-
+    check_singletons(G, h(VL, Ex, A1 )),
     ( ( Ex==[]
       ; '$member'(E1, Ex),
         '$member'(E2, VL),
         E1==E2
       )
-    ->'$expand':wrap_meta_arguments(A0, M, VL, Ex, A)
-    ; '$expand':remove_arg_pos(A0, _, M, VL, Ex, A, _)
+    ->'$expand':wrap_meta_arguments(A1, M, VL, Ex, A)
+    ; '$expand':remove_arg_pos(A1, _, M, VL, Ex, A, _)
     ).
 
-goal_expansion(G0, G) :-
-    callable(G0),
-    cgoal_args(G0, G1, AL, EL),
+goal_expansion(G1, G) :-
+    callable(G1),
+    cgoal_args(G1, G2, AL, EL),
     '$current_source_module'(M),
-    expand_goal(G1, G2),
-    lambdaize_args(G0, G2, M, AL, EL, G3),
+    expand_goal(G2, G3),
+    lambdaize_args(G1, G3, M, AL, EL, G4),
     % '$expand':wrap_meta_arguments(G2, M, AL, EL, G3), % Use this to debug
-    G3 =.. [AuxName|VL],
+    G4 =.. [AuxName|VL],
     append(VL, EL, AV),
     G =.. [AuxName|AV].

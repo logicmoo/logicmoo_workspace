@@ -156,8 +156,8 @@ language(Lang) :-
 (Engl ~= M:Dict) :-
     i18n_process_term(\ X^D^E^i18n_entry(dictionary, X, E, D), M, Dict, Engl).
 
-(Term =~~ M:Term0) :-
-    i18n_process_term(i18n_entry_dl, M, Term0, Term).
+(Term =~~ M:Term1) :-
+    i18n_process_term(i18n_entry_dl, M, Term1, Term).
 
 i18n_entry_dl(M, Dict, Lang) :-
     ( Dict = [S|_], nonvar(S) ->
@@ -199,8 +199,8 @@ i18n_entry_partial(GLang, M, MsgId, MsgStr) :- % 3. partial translation
     maplist(i18n_record_3(M, GLang), MsgId, MsgStr).
 
 i18n_record_2(M, Lang, MsgId, MsgStr) :-
-    (M0 = M ; true),            % Be flexible, module is not strict
-    i18n_record(M0, Lang, MsgId, MsgStr).
+    (M1 = M ; true),            % Be flexible, module is not strict
+    i18n_record(M1, Lang, MsgId, MsgStr).
 
 i18n_record_3(M, GLang, MsgId, MsgStr) :-
     ( call(GLang, Lang),
@@ -224,30 +224,30 @@ i18n_entry_expander((~), M, MsgId, MsgStr) :-
 i18n_entry_expander((~~), M, MsgId, MsgStr) :-
     i18n_entry_dl(M, MsgId, MsgStr).
 
-expand_i18n_term_trans(_, _, Var0, ~Var1) :-
-    var(Var0),
+expand_i18n_term_trans(_, _, Var1, ~Var2) :-
     var(Var1),
-    Var0 = Var1,
+    var(Var2),
+    Var1 = Var2,
     !.
 expand_i18n_term_trans(Proc, _, M:Term, Translation) :- !,
     expand_i18n_term_trans(Proc, M, Term, Translation).
 expand_i18n_term_trans(Proc, M, Term, Translation) :-
     i18n_process_term(call(Proc, (~)), M, Term, Translation).
 
-expand_i18n_term_rtrans(_, _, Var0, ~~Var1) :-
-    var(Var0),
+expand_i18n_term_rtrans(_, _, Var1, ~~Var2) :-
     var(Var1),
-    Var0 = Var1,
+    var(Var2),
+    Var1 = Var2,
     !.
 expand_i18n_term_rtrans(Proc, _, M:Term, Translation) :- !,
     expand_i18n_term_rtrans(Proc, M, Term, Translation).
 expand_i18n_term_rtrans(Proc, M, Term, Translation) :-
     i18n_process_term(call(Proc, (~~)), M, Term, Translation).
 
-expand_i18n_term(_, _, Var0, Var1) :-
-    var(Var0),
+expand_i18n_term(_, _, Var1, Var2) :-
     var(Var1),
-    Var0=Var1,
+    var(Var2),
+    Var1=Var2,
     !.
 expand_i18n_term(Proc, _, M:~Term, Translation) :- !,
     expand_i18n_term(Proc, M, ~Term, Translation).
@@ -257,19 +257,19 @@ expand_i18n_term(Proc, M, ~(Term), Translation) :- !,
     expand_i18n_term_trans(Proc, M, Term, Translation).
 expand_i18n_term(Proc, M, ~~(Term), Translation) :- !,
     expand_i18n_term_rtrans(Proc, M, Term, Translation).
-expand_i18n_term(Proc, M, Term0, Term) :-
-    compound(Term0),
-    functor(Term0, F, A),
+expand_i18n_term(Proc, M, Term1, Term) :-
+    compound(Term1),
+    functor(Term1, F, A),
     functor(Term, F, A), !,
-    expand_i18n_term_arg(1, Proc, M, Term0, Term).
+    expand_i18n_term_arg(1, Proc, M, Term1, Term).
 expand_i18n_term(_, _, Term, Term).
 
-expand_i18n_term_arg(N0, Proc, M, Term0, Term) :-
-    arg(N0, Term0, Arg0 ), !,
-    arg(N0, Term,  Arg),
-    expand_i18n_term(Proc, M, Arg0, Arg),
-    succ(N0, N),
-    expand_i18n_term_arg(N, Proc, M, Term0, Term).
+expand_i18n_term_arg(N1, Proc, M, Term1, Term) :-
+    arg(N1, Term1, Arg1 ), !,
+    arg(N1, Term,  Arg),
+    expand_i18n_term(Proc, M, Arg1, Arg),
+    succ(N1, N),
+    expand_i18n_term_arg(N, Proc, M, Term1, Term).
 expand_i18n_term_arg(_, _, _, _, _).
 
 code(Code) :-
@@ -299,45 +299,45 @@ i18n_to_translate(Var, Var) -->
     {var(Var)},
     !.
 i18n_to_translate([],   [])   --> !, [].
-i18n_to_translate([C|String0], String) -->
-    {maplist(code, [C|String0])},
-    [[C|String0]-String],
+i18n_to_translate([C|String1], String) -->
+    {maplist(code, [C|String1])},
+    [[C|String1]-String],
     !.
-i18n_to_translate(Term0, Term) -->
-    { compound(Term0),
-      functor(Term0, F, A),
+i18n_to_translate(Term1, Term) -->
+    { compound(Term1),
+      functor(Term1, F, A),
       functor(Term, F, A)
     },
     !,
-    i18n_to_translate_arg(1, Term0, Term).
-i18n_to_translate(String0, String) -->
-    { string(String0),
-      string_codes(String0, Codes0),
+    i18n_to_translate_arg(1, Term1, Term).
+i18n_to_translate(String1, String) -->
+    { string(String1),
+      string_codes(String1, Codes1),
       ( string(String) -> string_codes(String, Codes)
       ; freeze(Codes, string_codes(String, Codes))
       )
     },
-    [Codes0-Codes],
+    [Codes1-Codes],
     !.
-i18n_to_translate(Atom0, Atom) -->
-    { atom(Atom0),
-      atom_codes(Atom0, Codes0),
+i18n_to_translate(Atom1, Atom) -->
+    { atom(Atom1),
+      atom_codes(Atom1, Codes1),
       ( atom(Atom) -> atom_codes(Atom, Codes)
       ; freeze(Codes, atom_codes(Atom, Codes))
       )
     },
-    [Codes0-Codes],
+    [Codes1-Codes],
     !.
 i18n_to_translate(Term, Term) --> [].
 
-i18n_to_translate_arg(N0, Term0, Term) -->
-    { arg(N0, Term0, Arg0),
+i18n_to_translate_arg(N1, Term1, Term) -->
+    { arg(N1, Term1, Arg1),
       !,
-      arg(N0, Term, Arg)
+      arg(N1, Term, Arg)
     },
-    i18n_to_translate(Arg0, Arg),
-    {N is N0 + 1},
-    i18n_to_translate_arg(N, Term0, Term).
+    i18n_to_translate(Arg1, Arg),
+    {N is N1 + 1},
+    i18n_to_translate_arg(N, Term1, Term).
 i18n_to_translate_arg(_, _, _) --> [].
 
 % In prolog, reference would be Module:Pred/Name, Module:(TermScheme), ...
@@ -359,8 +359,8 @@ user:prolog_file_type(pot, pot).
 :- table i18n_record/4.         % Speed up, decrease complexity
 i18n_record(M, Lang, MsgId, MsgStr) :-
     ( current_module(M) *->true ; true ),
-    current_i18n_record(M, Lang0, MsgId0, MsgStr0 ),
-    Lang = Lang0, MsgId = MsgId0, MsgStr = MsgStr0.
+    current_i18n_record(M, Lang1, MsgId1, MsgStr1),
+    Lang = Lang1, MsgId = MsgId1, MsgStr = MsgStr1.
 
 :- table current_i18n_record/4.
 */

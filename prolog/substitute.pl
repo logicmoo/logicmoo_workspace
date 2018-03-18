@@ -39,39 +39,39 @@
            is_subterm/2]).
 
 :- meta_predicate substitute(2, ?, ?).
-substitute(Comp, Term0, Term) :-
-    ( call(Comp, Term0, Subs)
+substitute(Comp, Term1, Term) :-
+    ( call(Comp, Term1, Subs)
     ->Term = Subs
-    ; compound(Term0),
-      functor(Term0, F, A),
+    ; compound(Term1),
+      functor(Term1, F, A),
       functor(Term,  F, A),
-      substitute(1, Comp, Term0, Term),
+      substitute(1, Comp, Term1, Term),
       %% required to avoid construction of equivalent terms:
-      Term0 \== Term
+      Term1 \== Term
     ->true
-    ; Term = Term0
+    ; Term = Term1
     ).
 
-substitute(N, Comp, Term0, Term) :-
-    arg(N, Term0, Arg0),
+substitute(N, Comp, Term1, Term) :-
+    arg(N, Term1, Arg1),
     !,
-    substitute(Comp, Arg0, Arg),
+    substitute(Comp, Arg1, Arg),
     arg(N, Term, Arg),
     succ(N, N1),
-    substitute(N1, Comp, Term0, Term).
+    substitute(N1, Comp, Term1, Term).
 substitute(_, _, _, _).
 
 substitute_one(Value, Var, Term, Var) :-
     Value==Term.
 
-substitute_value(Value, Subs, Term0, Term) :-
-    substitute(substitute_one(Value, Subs), Term0, Term).
+substitute_value(Value, Subs, Term1, Term) :-
+    substitute(substitute_one(Value, Subs), Term1, Term).
 
 unpair_eq(V=S, V, S).
 
-substitute_values(Pairs, Term0, Term) :-
+substitute_values(Pairs, Term1, Term) :-
     maplist(unpair_eq, Pairs, Values, Subss),
-    foldl(substitute_value, Values, Subss, Term0, Term).
+    foldl(substitute_value, Values, Subss, Term1, Term).
 
 is_subterm(SubTerm, Term) :-
     substitute_value(SubTerm, Var, Term, Term1),

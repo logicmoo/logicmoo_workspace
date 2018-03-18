@@ -38,18 +38,18 @@
 :- use_module(library(clambda)).
 
 :- meta_predicate change_alias(2,+,-).
-change_alias(Changer, Alias0, Alias) :-
-    compound(Alias0), !,
-    functor(Alias0, F, A),
+change_alias(Changer, Alias1, Alias) :-
+    compound(Alias1), !,
+    functor(Alias1, F, A),
     functor(Alias, F, A),
     succ(N, A),
     foreach(between(1, N, I),
-            [I, Alias0, Alias] +\
-            ( arg(I, Alias0, ArgI),
+            [I, Alias1, Alias] +\
+            ( arg(I, Alias1, ArgI),
               arg(I, Alias,  ArgI)
             )),
-    arg(A, Alias0, Arg0),
+    arg(A, Alias1, Arg1),
     arg(A, Alias, Arg),
-    change_alias(Changer, Arg0, Arg).
-change_alias(Changer, Alias0, Alias) :-
-    call(Changer, Alias0, Alias).
+    change_alias(Changer, Arg1, Arg).
+change_alias(Changer, Alias1, Alias) :-
+    call(Changer, Alias1, Alias).

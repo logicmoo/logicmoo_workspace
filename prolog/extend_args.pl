@@ -40,14 +40,14 @@
 
 extend_args(Goal, _, Goal) :-
     var(Goal), !, fail.
-extend_args(M:Goal0, Extra, M:Goal) :- !,
-    extend_args(Goal0, Extra, Goal).
-extend_args(Goal0, Extra, Goal) :-
-    nonvar(Goal0), !,
-    Goal0 =.. [Name|Args0],
-    '$append'(Args0, Extra, Args),
+extend_args(M:Goal1, Extra, M:Goal) :- !,
+    extend_args(Goal1, Extra, Goal).
+extend_args(Goal1, Extra, Goal) :-
+    nonvar(Goal1), !,
+    Goal1 =.. [Name|Args1],
+    '$append'(Args1, Extra, Args),
     Goal  =.. [Name|Args].
-extend_args(Goal0, Extra, Goal) :-
+extend_args(Goal1, Extra, Goal) :-
     Goal  =.. [Name|Args],
-    '$append'(Args0, Extra, Args),
-    Goal0 =.. [Name|Args0].
+    '$append'(Args1, Extra, Args),
+    Goal1 =.. [Name|Args1].

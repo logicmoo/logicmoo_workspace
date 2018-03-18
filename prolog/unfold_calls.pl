@@ -57,10 +57,10 @@ unfold_call(\+ Goal, CM, IsUnfold, NonUnfoldL, Call) :- !,
 unfold_call(CM:Goal, _, IsUnfold, NonUnfoldL, Call) :-
     nonvar(Goal), !,
     unfold_call(Goal, CM, IsUnfold, NonUnfoldL, Call).
-unfold_call(Goal0, CM, IsUnfold, NonUnfoldL, Call) :-
-    CMGoal0 = CM:Goal0,
-    implementation_module(CMGoal0, M),
-    qualify_meta_goal(CMGoal0, Goal),
+unfold_call(Goal1, CM, IsUnfold, NonUnfoldL, Call) :-
+    CMGoal1 = CM:Goal1,
+    implementation_module(CMGoal1, M),
+    qualify_meta_goal(CMGoal1, Goal),
     ( unfold_call_hook(Goal, M, CM, Goal2)
     *->
       unfold_call(Goal2, CM, IsUnfold, NonUnfoldL, Call)

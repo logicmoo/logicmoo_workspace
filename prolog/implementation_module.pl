@@ -42,7 +42,7 @@
 implementation_module(M:Goal, IM) :-
     ( atom(M),
       callable(Goal),
-      predicate_property(M:Goal, imported_from(IM0))
-    ->IM = IM0 %% Allow usage as test
+      predicate_property(M:Goal, imported_from(IM1))
+    ->IM = IM1 %% Allow usage as test
     ; IM = M   %% Asume that if not imported, it is defined here
     ).

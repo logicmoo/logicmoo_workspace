@@ -41,15 +41,15 @@ compact_list_n(L, N, R) :-
         append(L1, R1, L),
         compact_list_n_(L, L1, R1, N, R).
 
-compact_list_n_(L, L1, R1, N, R) :-
-        length(L2, N),
-        append(L2, R2, R1),
+compact_list_n_(L, L2, R2, N, R) :-
+        length(L3, N),
+        append(L3, R3, R2),
         (
-            L1 == L2 ->
-            (compact_list_n_(R1, L2, R2, N, R) -> true ; R1 = R)
+            L2 == L3 ->
+            (compact_list_n_(R2, L3, R3, N, R) -> true ; R2 = R)
         ;
-            L = [E|L0],
-            (compact_list_n(L0, N, R0) -> R = [E|R0] ; R = L)
+            L = [E|L1],
+            (compact_list_n(L1, N, R1) -> R = [E|R1] ; R = L)
         ).
 
 % :- test compact_list(A, B) :
@@ -63,8 +63,8 @@ compact_list(L, R) :-
         compact_list_(L, 1, R).
 
 compact_list_(L, N, R) :-
-        compact_list_n(L, N, R0) ->
+        compact_list_n(L, N, R1) ->
         N1 is N + 1,
-        compact_list_(R0, N1, R)
+        compact_list_(R1, N1, R)
     ;
         L = R.

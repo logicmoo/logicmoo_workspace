@@ -89,9 +89,9 @@ with_context_value(Goal, Name, OldValue, NewValue) :-
     with_value(Goal, ContextName, OldValue, NewValue).
 
 :- meta_predicate with_value(0, +, ?, +).
-with_value(Goal, Name, OldValue0, NewValue) :-
+with_value(Goal, Name, OldValue1, NewValue) :-
     ( nb_current(Name, OldValue)
-    ->OldValue0 = OldValue,
+    ->OldValue1 = OldValue,
       b_setval(Name, NewValue),
       Goal,
       b_setval(Name, OldValue)

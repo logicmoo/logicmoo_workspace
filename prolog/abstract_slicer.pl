@@ -51,18 +51,18 @@ apply_mode(Call, Mode, Spec, RevS) :-
     functor(RevS, F, A),
     apply_mode_arg(1, Call, Mode, Spec, RevS).
 
-apply_mode_arg(N0, Call, Mode, Spec, RevS) :-
-    arg(N0, Call, Arg), !,
-    arg(N0, Mode, MSp),
-    arg(N0, Spec, ASp),
-    arg(N0, RevS, ARs),
+apply_mode_arg(N1, Call, Mode, Spec, RevS) :-
+    arg(N1, Call, Arg), !,
+    arg(N1, Mode, MSp),
+    arg(N1, Spec, ASp),
+    arg(N1, RevS, ARs),
     ( MSp = -
     ->ASp = Arg,
       ARs = -
     ; ASp = +,
       ARs = Arg
     ),
-    succ(N0, N),
+    succ(N1, N),
     apply_mode_arg(N, Call, Mode, Spec, RevS).
 apply_mode_arg(_, _, _, _, _).
 

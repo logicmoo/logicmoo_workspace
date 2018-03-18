@@ -58,9 +58,9 @@ compact_intervals(L, R) :-
 compact_interval(To-To,  To) :- To \= _-_, !.
 compact_interval(FromTo, FromTo).
 
-repack_list(List0, List) :-
-    compact_intervals(List1, List0),
-    list_intervals(List2, List1),
-    sort(List2, List3),
-    list_intervals(List3, List4),
-    compact_intervals(List4, List).
+repack_list(List1, List) :-
+    compact_intervals(List2, List1),
+    list_intervals(List3, List2),
+    sort(List3, List4),
+    list_intervals(List4, List5),
+    compact_intervals(List5, List).

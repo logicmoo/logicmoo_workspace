@@ -37,5 +37,5 @@
 list_sequence([], true).
 list_sequence([E|L], S) :- list_sequence_2(L, E, S).
 
-list_sequence_2([E|L], E0, (E0, S)) :- list_sequence_2(L, E, S).
+list_sequence_2([E|L], E1, (E1, S)) :- list_sequence_2(L, E, S).
 list_sequence_2([], E, E).

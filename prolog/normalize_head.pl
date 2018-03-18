@@ -38,12 +38,12 @@
 
 current_predicate_ext(M:F/A) :-
     ( nonvar(M) ->
-      findall(M:F/A, current_predicate(M:F/A), PIL0)
+      findall(M:F/A, current_predicate(M:F/A), PIL1)
     ; findall(M:F/A, (current_predicate(CM:F/A),
                       functor(H, F, A),
-                      implementation_module(CM:H, M)), PIL0)
+                      implementation_module(CM:H, M)), PIL1)
     ),
-    sort(PIL0, PIL),
+    sort(PIL1, PIL),
     member(M:F/A, PIL),
     current_predicate(M:F/A).
 

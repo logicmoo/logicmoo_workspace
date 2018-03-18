@@ -38,12 +38,12 @@
 remove_dups(L, U) :-
     remove_dups(L, [], U, []).
 
-remove_dups([E|L], H0, R0, T) :-
-    ( \+ memberchk(E, H0) ->
-      R0 = [E|R],
-      H = [E|H0 ]
-    ; R = R0,
-      H = H0
+remove_dups([E|L], H1, R1, T) :-
+    ( \+ memberchk(E, H1) ->
+      R1 = [E|R],
+      H = [E|H1 ]
+    ; R = R1,
+      H = H1
     ),
     remove_dups(L, H, R, T).
 remove_dups([], _, T, T).

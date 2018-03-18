@@ -131,8 +131,8 @@ abstract_interpreter(MGoal, Abstraction, Options) :-
     abstract_interpreter(MGoal, Abstraction, Options, _).
 
 :- meta_predicate catch(2, ?, ?, ?, ?).
-catch(DCG, Ex, H, S0, S) :-
-    catch(call(DCG, S0, S), Ex, H).
+catch(DCG, Ex, H, S1, S) :-
+    catch(call(DCG, S1, S), Ex, H).
 
 cut_to(Goal) --> catch(Goal, cut_from, true).
 
@@ -148,8 +148,8 @@ cut_from :- throw(cut_from).
 :- use_module(library(safe_prolog_cut_to)).
 
 :- meta_predicate intercept(2, ?, ?, ?, ?).
-intercept(DCG, Ex, H, S0, S) :-
-    intercept(call(DCG, S0, S), Ex, H).
+intercept(DCG, Ex, H, S1, S) :-
+    intercept(call(DCG, S1, S), Ex, H).
 
 cut_to(Goal) -->
     {prolog_current_choice(CP)},
@@ -182,21 +182,21 @@ add_cont(Cont,
          state(Loc, EvalL, OnErr, CallL, Data, ContL),
          state(Loc, EvalL, OnErr, CallL, Data, [Cont|ContL])).
 
-abstract_interpreter_body(once(Goal), M, Abs, State, S0, S) :- !,
-    once(abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
-abstract_interpreter_body(distinct(Goal), M, Abs, State, S0, S) :-
+abstract_interpreter_body(once(Goal), M, Abs, State, S1, S) :- !,
+    once(abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
+abstract_interpreter_body(distinct(Goal), M, Abs, State, S1, S) :-
     implementation_module(M:distinct(_), solution_sequences), !,
-    distinct(Goal, abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
-abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S0, S) :-
+    distinct(Goal, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
+abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S1, S) :-
     implementation_module(M:distinct(_, _), solution_sequences), !,
-    distinct(Witness, abstract_interpreter_body(Goal, M, Abs, State, S0, S)).
-abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S0, S) :- !,
-    setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S0, S1),
-                       abstract_interpreter_body(C, M, Abs, State, S1, S2),
-                       abstract_interpreter_body(E, M, Abs, State, S2, S)).
-abstract_interpreter_body(call_cleanup(C, E), M, Abs, State, S0, S) :- !,
-    call_cleanup(abstract_interpreter_body(C, M, Abs, State, S0, S1),
-                 abstract_interpreter_body(E, M, Abs, State, S1, S)).
+    distinct(Witness, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
+abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S1, S) :- !,
+    setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S1, S2),
+                       abstract_interpreter_body(C, M, Abs, State, S2, S3),
+                       abstract_interpreter_body(E, M, Abs, State, S3, S)).
+abstract_interpreter_body(call_cleanup(C, E), M, Abs, State, S1, S) :- !,
+    call_cleanup(abstract_interpreter_body(C, M, Abs, State, S1, S2),
+                 abstract_interpreter_body(E, M, Abs, State, S2, S)).
 abstract_interpreter_body((A, B), M, Abs, State) --> !,
     { \+ terms_share(A, B)
     ->CutOnFail = true
@@ -286,12 +286,12 @@ abstract_interpreter(MH, Abs, State) -->
     {strip_module(MH, M, H)},
     abstract_interpreter_lit(H, M, Abs, State).
 
-abstract_interpreter_lit(H, M, Abs, State0 ) -->
+abstract_interpreter_lit(H, M, Abs, State1 ) -->
     { predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H
     },
-    { State0 = state(Loc, EvalL, OnError, CallL, Data, Cont),
+    { State1 = state(Loc, EvalL, OnError, CallL, Data, Cont),
       implementation_module(M:Goal, IM)
     },
     ( {member(MCall, CallL),
@@ -299,7 +299,7 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
       }
     ->bottom
     ; { copy_term(IM:Goal, MCall),
-        State1 = state(Loc, EvalL, OnError, [MCall|CallL], Data, Cont)
+        State2 = state(Loc, EvalL, OnError, [MCall|CallL], Data, Cont)
       },
       ( { ( evaluable_goal_hook(Goal, IM)
           ; functor(Goal, F, A),
@@ -316,13 +316,13 @@ abstract_interpreter_lit(H, M, Abs, State0 ) -->
         ; copy_term(EvalL, EvalC), % avoid undesirable unifications
           memberchk((IM:Goal :- Body), EvalC)
         }
-      ->cut_to(abstract_interpreter_body(Body, M, Abs, State1))
+      ->cut_to(abstract_interpreter_body(Body, M, Abs, State2))
       ; { \+ predicate_property(M:Goal, defined) }
       ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
                                 % TBD: information to error
           fail
         }
-      ; call(Abs, M:Goal, CM:Body, State1, State),
+      ; call(Abs, M:Goal, CM:Body, State2, State),
         cut_to(abstract_interpreter_body(Body, CM, Abs, State))
       )
     ).
@@ -335,8 +335,8 @@ bottom(_, bottom).
 
 :- multifile match_ai/7.
 
-match_ai(head,    MG, Body, S0, S) --> match_head(   MG, Body, S0, S).
-match_ai(noloops, MG, Body, S0, S) --> match_noloops(MG, Body, S0, S).
+match_ai(head,    MG, Body, S1, S) --> match_head(   MG, Body, S1, S).
+match_ai(noloops, MG, Body, S1, S) --> match_noloops(MG, Body, S1, S).
 
 match_head(MGoal, M:true, state(_, EvalL, OnErr, CallL, D, Cont), S) -->
     {predicate_property(MGoal, interpreted)}, !,
@@ -376,7 +376,7 @@ extra_clauses(Goal, CM, I:Goal, _From) :-
     ->interface:'$implementation'(I, M)
     ).
 
-match_noloops(MGoal, Body, state(Loc0, EvalL, OnErr, CallL, S, Cont),
+match_noloops(MGoal, Body, state(Loc1, EvalL, OnErr, CallL, S, Cont),
               state(Loc, EvalL, OnErr, CallL, [M:F/A-Size|S], Cont)) -->
     {predicate_property(MGoal, interpreted)}, !,
     {strip_module(MGoal, M, Goal)},
@@ -388,7 +388,7 @@ match_noloops(MGoal, Body, state(Loc0, EvalL, OnErr, CallL, S, Cont),
       }
     ->{ match_head_body(MGoal, Body, Loc) },
       []
-    ; { Loc = Loc0 },
+    ; { Loc = Loc1 },
       bottom %% loose of precision
     ).
 match_noloops(MGoal, M:true, S, S) -->

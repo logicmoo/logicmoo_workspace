@@ -41,10 +41,10 @@
 ini_counter(N, count(N)).
 
 inc_counter(State, N) :-
-    arg(1, State, N0),
-    succ(N0, N1),
-    nb_setarg(1, State, N1),
-    N1 = N.
+    arg(1, State, N1),
+    succ(N1, N2),
+    nb_setarg(1, State, N2),
+    N2 = N.
 
 countsols(N, Goal) :-
     ( var(N)

@@ -60,8 +60,8 @@ location_subpos(brace_term_position(_, _, Pos), 1, Pos).
 
 subpos_location([],    Pos,    Pos).
 subpos_location([N|L], SubPos, Pos) :-
-    location_subpos(SubPos, N, Pos0),
-    subpos_location(L, Pos0, Pos).
+    location_subpos(SubPos, N, Pos1),
+    subpos_location(L, Pos1, Pos).
 
 subterm_location([],    Term, Term).
 subterm_location([N|L], Find, Term) :-

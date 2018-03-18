@@ -76,16 +76,16 @@ smallest_alias(File, Alias) :-
     infer_alias(File, Alias, [sort([length, size, sols])]).
 
 current_alias(File, Alias) :-
-    user:file_search_path(A0, ADir),
-    A0 \= autoload,
+    user:file_search_path(A1, ADir),
+    A1 \= autoload,
     absolute_file_name(ADir, Dir, [file_type(directory), solutions(all)]),
     directory_file_path(Dir, Base, File),
     file_name_extension(Name, _Ext, Base),
     pretty_path(Name, Path),
-    Alias =.. [A0, Path].
+    Alias =.. [A1, Path].
 
-pretty_path(Name0, Path/F) :-
-    directory_file_path(Dir, F, Name0),
+pretty_path(Name1, Path/F) :-
+    directory_file_path(Dir, F, Name1),
     Dir \= '.',
     !,
     pretty_path(Dir, Path).

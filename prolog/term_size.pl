@@ -47,11 +47,11 @@ term_size(Term) -->
     inc(N),
     term_size_arg(1, Term).
 
-inc(N, S0, S) :- S is S0 + N.
+inc(N, S1, S) :- S is S1 + N.
 
-term_size_arg(N0, Term) -->
-    {arg(N0, Term, Arg)}, !,
+term_size_arg(N1, Term) -->
+    {arg(N1, Term, Arg)}, !,
     term_size(Arg),
-    {succ(N0, N)},
+    {succ(N1, N)},
     term_size_arg(N, Term).
 term_size_arg(_, _) --> [].

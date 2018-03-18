@@ -62,11 +62,11 @@ call_inoutex(Goal, OnIn, OnOut) :-
 
 call_inout(Goal, OnIn, OnOut) :-
     (OnIn;OnOut,fail),
-    prolog_current_choice(C0),
-    Goal,
     prolog_current_choice(C1),
+    Goal,
+    prolog_current_choice(C2),
     (OnOut;OnIn,fail),
-    (C0==C1 -> ! ;true).
+    (C1==C2 -> ! ;true).
 
 :- public true_1/1.
 true_1(_).
@@ -109,8 +109,8 @@ cleanup_trace(State) :-
     print_message(error, format('Failed when saving tracer data', [State])),
     fail.
 
-port_mask(Port, Mask0, Mask) :- '$syspreds':port_name(Port, Bit),
-    Mask is Mask0\/Bit.
+port_mask(Port, Mask1, Mask) :- '$syspreds':port_name(Port, Bit),
+    Mask is Mask1\/Bit.
 
 user_defined_module(M) :-
     M \= ontrace,
@@ -164,11 +164,11 @@ find_parents(Port, Frame, ParentL, RFrame, Cl, Loc) :-
       Loc = clause_pc(Cl, PC)
     ).
 
-find_parent_with_pc(Frame, PC, List0, List) :-
+find_parent_with_pc(Frame, PC, List1, List) :-
     prolog_frame_attribute(Frame, parent, Parent),
     ( prolog_frame_attribute(Frame, pc, PC)
-    ->List = [Parent|List0 ]
-    ; find_parent_with_pc(Parent, PC, [Parent|List0 ], List)
+    ->List = [Parent|List1 ]
+    ; find_parent_with_pc(Parent, PC, [Parent|List1 ], List)
     ).
 
 :- multifile

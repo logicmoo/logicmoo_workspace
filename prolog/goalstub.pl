@@ -71,37 +71,37 @@ stub_term_expansion(end_of_file, P, _, CL, P) :- !,
               findall(S, requires_stub(F, A, M, S), StubL),
               concat_stubs(StubL, H, G, HS)
             ), CL, [end_of_file]).
-stub_term_expansion(Term0, P, _, Term, P) :-
+stub_term_expansion(Term1, P, _, Term, P) :-
     '$current_source_module'(M),
-    requires_stub_rename_head(Term0, Term, M).
+    requires_stub_rename_head(Term1, Term, M).
 
 concat_stubs([],    _, G,  G).
-concat_stubs([S|L], H, G0, G) :-
-    G0 =.. [S, H, G1],
-    concat_stubs(L, H, G1, G).
+concat_stubs([S|L], H, G1, G) :-
+    G1 =.. [S, H, G2],
+    concat_stubs(L, H, G2, G).
 
-stub_head(Head0, Head) :-
-    Head0 =.. [F0|Args],
-    atom_concat(F0, '$stub', F),
+stub_head(Head1, Head) :-
+    Head1 =.. [F1|Args],
+    atom_concat(F1, '$stub', F),
     Head  =.. [F |Args].
 
-requires_stub_rename_head(M:Term0, Term, _) :- !,
-    requires_stub_rename_head(Term0, Term, M).
-requires_stub_rename_head((Head0 :- Body),
+requires_stub_rename_head(M:Term1, Term, _) :- !,
+    requires_stub_rename_head(Term1, Term, M).
+requires_stub_rename_head((Head1 :- Body),
                           (Head  :- Body),
                           M) :- !,
-    requires_stub_rename_head_(Head0, Head, 0, M).
-requires_stub_rename_head((Head0 --> Body),
+    requires_stub_rename_head_(Head1, Head, 0, M).
+requires_stub_rename_head((Head1 --> Body),
                           (Head  --> Body),
                           M) :- !,
-    requires_stub_rename_head_(Head0, Head, 2, M).
+    requires_stub_rename_head_(Head1, Head, 2, M).
 
 
-requires_stub_rename_head_(M:Head0, Head, N, _) :- !,
-    requires_stub_rename_head_(Head0, Head, N, M).
+requires_stub_rename_head_(M:Head1, Head, N, _) :- !,
+    requires_stub_rename_head_(Head1, Head, N, M).
 
-requires_stub_rename_head_(Head0, Head, N, M) :-
-    functor(Head0, F, A0 ),
-    A is A0 + N,
+requires_stub_rename_head_(Head1, Head, N, M) :-
+    functor(Head1, F, A1 ),
+    A is A1 + N,
     requires_stub(F, A, M, _), !,
-    stub_head(Head0, Head).
+    stub_head(Head1, Head).

@@ -87,21 +87,21 @@ call_lock(Goal, ID) :-
 type_expansors(term, term_expansion, call_term_expansion).
 type_expansors(goal, goal_expansion, call_goal_expansion).
 
-do_compound_expansion(M, Type, Term0, Pos0, Term, Pos) :-
+do_compound_expansion(M, Type, Term1, Pos1, Term, Pos) :-
     type_expansors(Type, Expansor, Closure),
     collect_expansors(M, Expansor, ML),
-    call('$expand':Closure, ML, Term0, Pos0, Term, Pos), !.
+    call('$expand':Closure, ML, Term1, Pos1, Term, Pos), !.
 
-do_compound_expansion(Type, Term0, Pos0, Term, Pos) :-
+do_compound_expansion(Type, Term1, Pos1, Term, Pos) :-
     '$current_source_module'(M),
     M \= user, % Compound expansions not supported in user module
-    do_compound_expansion(M, Type, Term0, Pos0, Term, Pos).
+    do_compound_expansion(M, Type, Term1, Pos1, Term, Pos).
 
-compound_expansion(Type, Term0, Pos0, Term, Pos) :-
-    call_lock(do_compound_expansion(Type, Term0, Pos0, Term, Pos), Type).
+compound_expansion(Type, Term1, Pos1, Term, Pos) :-
+    call_lock(do_compound_expansion(Type, Term1, Pos1, Term, Pos), Type).
 
-system:goal_expansion(Goal0, Pos0, Goal, Pos) :-
-    do_compound_expansion(goal, Goal0, Pos0, Goal, Pos).
+system:goal_expansion(Goal1, Pos1, Goal, Pos) :-
+    do_compound_expansion(goal, Goal1, Pos1, Goal, Pos).
 
 :- dynamic compounding/0.
 :- volatile compounding/0.

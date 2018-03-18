@@ -77,21 +77,21 @@ qualify_meta_call(Goal1, M, CM, Caller, Goal) :-
 qualify_meta_call(Goal, _, _, _, Goal).
 
 :- meta_predicate qualify_meta_goal(0, -).
-qualify_meta_goal(Goal0, Goal) :-
-    predicate_property(Goal0, meta_predicate(Meta)), !,
-    qualify_meta_goal(Goal0, Meta, Goal).
+qualify_meta_goal(Goal1, Goal) :-
+    predicate_property(Goal1, meta_predicate(Meta)), !,
+    qualify_meta_goal(Goal1, Meta, Goal).
 qualify_meta_goal(_:Goal, Goal).
 
-qualify_meta_goal(M:Goal0, Meta, Goal) :-
-    functor(Goal0, F, N),
+qualify_meta_goal(M:Goal1, Meta, Goal) :-
+    functor(Goal1, F, N),
     functor(Goal, F, N),
-    mapargs(meta_goal(M), Meta, Goal0, Goal).
+    mapargs(meta_goal(M), Meta, Goal1, Goal).
 
 module_qualified(:) :- !.
 module_qualified(N) :- integer(N), N >= 0.
 
-meta_goal(M, _, ArgM, Arg0, Arg) :-
+meta_goal(M, _, ArgM, Arg1, Arg) :-
     ( module_qualified(ArgM)
-    ->check:add_module(Arg0, M, Arg)
-    ; Arg = Arg0
+    ->check:add_module(Arg1, M, Arg)
+    ; Arg = Arg1
     ).
