@@ -144,8 +144,8 @@ current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     from_location(PFrom, PLoc),
     from_location(From, Loc).
 
-resolve_head(M:H0, _, H) :- !,
-    resolve_head(H0, M, H).
+resolve_head(M:H1, _, H) :- !,
+    resolve_head(H1, M, H).
 resolve_head((A,B), M, H) :- !,
     ( resolve_head(A, M, H)
     ; resolve_head(B, M, H)

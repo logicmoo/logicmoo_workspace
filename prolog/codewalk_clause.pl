@@ -349,10 +349,10 @@ current_source_location(From) :-
 remove_quantifier(Goal, Goal, M, M) :-
     var(Goal),
     !.
-remove_quantifier(_^Goal0, Goal, M0, M) :-
+remove_quantifier(_^Goal1, Goal, M1, M) :-
     !,
-    remove_quantifier(Goal0, Goal, M0, M).
-remove_quantifier(M1:Goal0, Goal, _, M) :-
+    remove_quantifier(Goal1, Goal, M1, M).
+remove_quantifier(M1:Goal1, Goal, _, M) :-
     !,
-    remove_quantifier(Goal0, Goal, M1, M).
+    remove_quantifier(Goal1, Goal, M1, M).
 remove_quantifier(Goal, Goal, M, M).

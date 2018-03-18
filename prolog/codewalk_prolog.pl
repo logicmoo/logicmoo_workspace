@@ -116,9 +116,9 @@ optimized_walk_code_true(2, Tracer, Options) :-
     ; prolog_walk_code([clauses(Clauses), on_trace(Tracer)|Options])
     ).
 
-extra_wcsetup(Options0, Options, FromChk) :-
-    option_fromchk(Options0, Options1, FromChk),
-    merge_options(Options1,
+extra_wcsetup(Options1, Options, FromChk) :-
+    option_fromchk(Options1, Options2, FromChk),
+    merge_options(Options2,
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),

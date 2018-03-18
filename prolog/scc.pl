@@ -37,10 +37,10 @@ nodes_arcs_sccs(Ns, As, Ss) :-
                list_to_assoc(Ps, Assoc),
                maplist(attach_arc(Assoc), As),
                scc(Vs, successors),
-               maplist(v_with_lowlink, Vs, Ls0),
-               keysort(Ls0, Ls1),
-               group_pairs_by_key(Ls1, Ss0),
-               pairs_values(Ss0, Ss),
+               maplist(v_with_lowlink, Vs, Ls1),
+               keysort(Ls1, Ls2),
+               group_pairs_by_key(Ls2, Ss1),
+               pairs_values(Ss1, Ss),
                % reset all attributes
                throw(scc(Ss))),
               scc(Ss),
@@ -147,4 +147,4 @@ v_in_stack(V) --> { get_attr(V, in_stack, true) }.
 
 state(S), [S] --> [S].
 
-state(S0, S), [S] --> [S0].
+state(S1, S), [S] --> [S1].

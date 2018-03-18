@@ -85,7 +85,7 @@ collect_called_from(H, M, CM, Caller, Options, Sorted) :-
                               ), Pairs),
     keysort(Pairs, Sorted).
 
-collect_called_from(Ref, M, CM, Caller, Options0) :-
+collect_called_from(Ref, M, CM, Caller, Options1) :-
     cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
     retractall(called_from_db(_, _, _, _, _)),
     merge_options([source(true),
@@ -95,7 +95,7 @@ collect_called_from(Ref, M, CM, Caller, Options0) :-
                    trace_reference(_:Ref),
                    module_class([user, system, library]),
                    on_trace(collect_call_point(M, CM, Caller))],
-                  Options0, Options),
+                  Options1, Options),
     walk_code(Options).
 
 current_called_from(H, M, CM, From, Caller) :-

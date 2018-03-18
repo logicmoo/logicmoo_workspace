@@ -34,64 +34,64 @@
 
 :- module(tabulator, [tabulate/3, align/4]).
 
-tabulate(FillChar, Table0, Table) :-
-    maplist(tabulate_row(Lists), Table0, Table),
+tabulate(FillChar, Table1, Table) :-
+    maplist(tabulate_row(Lists), Table1, Table),
     maplist(close_list(FillChar), Lists).
 
 close_list(FillChar, List) :-
     maplist('='(FillChar), List),
     !.
 
-tabulate_row(Lengths, Row0, Row) :-
-    maplist(tabulate_element, Lengths, Row0, Row).
+tabulate_row(Lengths, Row1, Row) :-
+    maplist(tabulate_element, Lengths, Row1, Row).
 
-tabulate_element(List, Column0, Column) :-
-    length(Column0, Length0),
-    length(List0,   Length0),
-    append(Column0, Tail0, Column),
-    append(List0,   Tail0, List).
+tabulate_element(List, Column1, Column) :-
+    length(Column1, Length1),
+    length(List1,   Length1),
+    append(Column1, Tail1, Column),
+    append(List1,   Tail1, List).
 
-align(FillChar, Scheme, Table0, Table) :-
-    maplist(align_row(FillChar, Scheme), Table0, Table).
+align(FillChar, Scheme, Table1, Table) :-
+    maplist(align_row(FillChar, Scheme), Table1, Table).
 
-align_row(FillChar, Scheme, Row0, Row) :-
-    maplist(align_cell_(FillChar), Scheme, Row0, Row).
+align_row(FillChar, Scheme, Row1, Row) :-
+    maplist(align_cell_(FillChar), Scheme, Row1, Row).
 
-align_cell_(FillChar, Align, Cell0, Cell) :-
-    align_cell(Align, FillChar, Cell0, Cell).
+align_cell_(FillChar, Align, Cell1, Cell) :-
+    align_cell(Align, FillChar, Cell1, Cell).
 
-align_cell(left, FillChar, Cell0, Cell) :-
-    align_cell_left(Cell0, FillChar, Cell).
-align_cell(right, FillChar, Cell0, Cell) :-
-    align_cell_right(Cell0, FillChar, Cell).
-align_cell(center, FillChar, Cell0, Cell) :-
-    align_cell_center(Cell0, FillChar, Cell).
+align_cell(left, FillChar, Cell1, Cell) :-
+    align_cell_left(Cell1, FillChar, Cell).
+align_cell(right, FillChar, Cell1, Cell) :-
+    align_cell_right(Cell1, FillChar, Cell).
+align_cell(center, FillChar, Cell1, Cell) :-
+    align_cell_center(Cell1, FillChar, Cell).
 align_cell(none, _, Cell, Cell).
 
-align_cell_left(Cell0, FillChar, Cell) :-
-    discompose_cell(Cell0, FillChar, [], FillStr, Cell1),
-    append(Cell1, FillStr, Cell).
+align_cell_left(Cell1, FillChar, Cell) :-
+    discompose_cell(Cell1, FillChar, [], FillStr, Cell2),
+    append(Cell2, FillStr, Cell).
 
 discompose_cell([],           _,    FillStr,  FillStr, []).
-discompose_cell([Char|Cell0], Char, FillStr0, FillStr, Cell) :- !,
-    discompose_cell(Cell0, Char, [Char|FillStr0], FillStr, Cell).
+discompose_cell([Char|Cell1], Char, FillStr1, FillStr, Cell) :- !,
+    discompose_cell(Cell1, Char, [Char|FillStr1], FillStr, Cell).
 discompose_cell(Cell, _, FillStr, FillStr, Cell).
 
-align_cell_right(Cell0, FillChar, Cell) :-
-    reverse(Cell0, Cell1),
-    discompose_cell(Cell1, FillChar, [], FillStr, Cell2),
-    reverse(Cell2, Cell3),
-    append(FillStr, Cell3, Cell).
-
-align_cell_center(Cell0, FillChar, Cell) :-
-    discompose_cell(Cell0, FillChar, [], Fill1, Cell1),
+align_cell_right(Cell1, FillChar, Cell) :-
     reverse(Cell1, Cell2),
-    discompose_cell(Cell2, FillChar, [], Fill2, Cell3),
+    discompose_cell(Cell2, FillChar, [], FillStr, Cell3),
     reverse(Cell3, Cell4),
+    append(FillStr, Cell4, Cell).
+
+align_cell_center(Cell1, FillChar, Cell) :-
+    discompose_cell(Cell1, FillChar, [], Fill1, Cell2),
+    reverse(Cell2, Cell3),
+    discompose_cell(Cell3, FillChar, [], Fill2, Cell4),
+    reverse(Cell4, Cell5),
     length(Fill1, N1),
     length(Fill2, N2),
     NL is (N1 + N2) // 2,
     length(FillL, NL),
     append(Fill1, Fill2, Fill),
     append(FillL, FillR, Fill),
-    append([FillL, Cell4, FillR], Cell).
+    append([FillL, Cell5, FillR], Cell).

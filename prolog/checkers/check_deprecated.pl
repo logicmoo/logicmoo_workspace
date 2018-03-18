@@ -62,8 +62,8 @@ deprecated_predicate(M:Goal, " Use ~q instead."-[Alt], [], []) :-
 checker:check(deprecated, Result, Options) :-
     check_deprecated(Options, Result).
 
-check_deprecated(Options0, Pairs) :-
-    merge_options(Options0,
+check_deprecated(Options1, Pairs) :-
+    merge_options(Options1,
                   [source(true),
                    infer_meta_predicates(false),
                    autoload(false),

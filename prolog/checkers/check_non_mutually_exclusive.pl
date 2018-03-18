@@ -48,12 +48,12 @@
     mutually_exclusive_predicate/2,
     mutually_exclusive_predicate_key/3.
 
-option_allmchk(Options0, Options, option_utils:call_2(FileGen, File)) :-
-    option_allchk(_M, File, FileGen-Options0, true-Options).
+option_allmchk(Options1, Options, option_utils:call_2(FileGen, File)) :-
+    option_allchk(_M, File, FileGen-Options1, true-Options).
 
-checker:check(non_mutually_exclusive, Result, Options0 ) :-
-    option_allmchk(Options0, Options1, FileChk),
-    select_option(predicate(Ref), Options1, _, Ref),
+checker:check(non_mutually_exclusive, Result, Options1 ) :-
+    option_allmchk(Options1, Options2, FileChk),
+    select_option(predicate(Ref), Options2, _, Ref),
     findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
 
 check_non_mutually_exclusive(FromChk, Ref, warning-(Ref-LocIdx)) :-

@@ -171,43 +171,43 @@ report_problem(Domain, trace(PI, From, Result)-Calls) :-
 
 :- meta_predicate abstract_execute_entry(*,*,:,*,*,*,*,*,*).
 
-abstract_execute_entry(true, From, PI, Domain, Calls0, Calls,
-                       Trace0, Trace, Result) :- !,
-    abstract_execute_goal(true, From, PI, Domain, Calls0, Calls,
-                          Trace0, Trace, Result).
-abstract_execute_entry(fail, From, PI, Domain, Calls0, Calls,
-                       Trace0, Trace, Result) :- !,
-    abstract_execute_goal(fail, From, PI, Domain, Calls0, Calls,
-                          Trace0, Trace, Result).
-abstract_execute_entry(Goal, From, PI, Domain, Calls0, Calls,
-                       Trace0, [trace(PI, From, Result)-Calls|Trace], Result) :-
-    abstract_execute_goal(Goal, From, PI, Domain, Calls0, Calls,
-                          Trace0, Trace, Result).
+abstract_execute_entry(true, From, PI, Domain, Calls1, Calls,
+                       Trace1, Trace, Result) :- !,
+    abstract_execute_goal(true, From, PI, Domain, Calls1, Calls,
+                          Trace1, Trace, Result).
+abstract_execute_entry(fail, From, PI, Domain, Calls1, Calls,
+                       Trace1, Trace, Result) :- !,
+    abstract_execute_goal(fail, From, PI, Domain, Calls1, Calls,
+                          Trace1, Trace, Result).
+abstract_execute_entry(Goal, From, PI, Domain, Calls1, Calls,
+                       Trace1, [trace(PI, From, Result)-Calls|Trace], Result) :-
+    abstract_execute_goal(Goal, From, PI, Domain, Calls1, Calls,
+                          Trace1, Trace, Result).
 
 problematic_case(product(fail, free), 'without doing anything').
 problematic_case(product(fail, soft), 'only doing soft things').
 
 select_problematic_cases([], _, []) :- !.
-select_problematic_cases(GTraceCalls0, M, ATraceCalls) :-
-    ( select(trace(PI, _, _)-_, GTraceCalls0, GTraceCalls1),
+select_problematic_cases(GTraceCalls1, M, ATraceCalls) :-
+    ( select(trace(PI, _, _)-_, GTraceCalls1, GTraceCalls2),
       PI \= M:_ ->
-      remove_all(trace(PI), GTraceCalls1, GTraceCalls2),
-      select_problematic_cases(GTraceCalls2, M, ATraceCalls)
-    ; select(trace(PI, _, Result)-_, GTraceCalls0, GTraceCalls1),
+      remove_all(trace(PI), GTraceCalls2, GTraceCalls3),
+      select_problematic_cases(GTraceCalls3, M, ATraceCalls)
+    ; select(trace(PI, _, Result)-_, GTraceCalls1, GTraceCalls2),
       \+ problematic_case(Result, _) ->
-      remove_all(trace(PI, _), GTraceCalls1, GTraceCalls2),
-      select_problematic_cases(GTraceCalls2, M, ATraceCalls)
-    ; GTraceCalls0 = ATraceCalls
+      remove_all(trace(PI, _), GTraceCalls2, GTraceCalls3),
+      select_problematic_cases(GTraceCalls3, M, ATraceCalls)
+    ; GTraceCalls1 = ATraceCalls
     ).
 
-remove_all(trace(PI), TraceCalls0, TraceCalls) :-
-    select(trace(PI, _, _)-_, TraceCalls0, TraceCalls1),
+remove_all(trace(PI), TraceCalls1, TraceCalls) :-
+    select(trace(PI, _, _)-_, TraceCalls1, TraceCalls2),
     !,
-    remove_all(trace(PI), TraceCalls1, TraceCalls).
-remove_all(trace(PI, From), TraceCalls0, TraceCalls) :-
-    select(trace(PI, From, _)-_, TraceCalls0, TraceCalls1),
+    remove_all(trace(PI), TraceCalls2, TraceCalls).
+remove_all(trace(PI, From), TraceCalls1, TraceCalls) :-
+    select(trace(PI, From, _)-_, TraceCalls1, TraceCalls2),
     !,
-    remove_all(trace(PI, From), TraceCalls1, TraceCalls).
+    remove_all(trace(PI, From), TraceCalls2, TraceCalls).
 remove_all(_, TraceCalls, TraceCalls).
 
 % Abstract interpretation of the program in a given domain:
@@ -264,28 +264,28 @@ abstract_execute_goal(_Goal, _From, PI, Domain, Calls, Calls,
     % format(user_error, 'WARNING: Lost of precision because loop ~w~n',
     %        [Module:Head]),
     !.
-abstract_execute_goal(Goal, From, M0:F/A, Domain, Calls0, Calls, Trace0, Trace,
+abstract_execute_goal(Goal, From, M1:F/A, Domain, Calls1, Calls, Trace1, Trace,
                       Result) :-
-    ( predicate_property(M0:Goal, imported_from(MI)) ->
+    ( predicate_property(M1:Goal, imported_from(MI)) ->
       M = MI
-    ; M = M0
+    ; M = M1
     ),
     PI = M:F/A,
-    Calls1 = [stack(PI, From)|Calls0],
+    Calls2 = [stack(PI, From)|Calls1],
     ( clause(M:Goal, Body, ClauseRef) *->
       ignore(clause_info(ClauseRef, _File, TermPos, _NameOffset)),
       ( Body = true ->
-        abstract_execute_goal(true, TermPos, PI, Domain, Calls1, Calls,
-                              Trace0, Trace, Result)
+        abstract_execute_goal(true, TermPos, PI, Domain, Calls2, Calls,
+                              Trace1, Trace, Result)
       ;
         ( TermPos = term_position(_, _, _, _, [_, BodyPos]) -> true
         ; TermPos = BodyPos
         ),
         abstract_execute_body(Body, ClauseRef, BodyPos, M, Domain,
-                              Calls1, Calls, Trace0, Trace, Result)
+                              Calls2, Calls, Trace1, Trace, Result)
       )
-    ; abstract_execute_goal(fail, From, PI, Domain, Calls1, Calls,
-                            Trace0, Trace, Result)
+    ; abstract_execute_goal(fail, From, PI, Domain, Calls2, Calls,
+                            Trace1, Trace, Result)
     ).
 
 % TODO: Handle findall/3 and other meta predicates in a more general way -- EMM
@@ -312,64 +312,64 @@ abstract_execute_body(Var, _, _, _, Domain, Calls, Calls, Trace, Trace, Result) 
     !,
     bot(Domain, Result).
 abstract_execute_body(M:Goal, ClauseRef, term_position(_, _, _, _, [_, Pos]),
-                      _M0, Domain, Calls0, Calls, Trace0, Trace, Result) :- !,
-    abstract_execute_body(Goal, ClauseRef, Pos, M, Domain, Calls0, Calls,
-                          Trace0, Trace, Result).
+                      _M1, Domain, Calls1, Calls, Trace1, Trace, Result) :- !,
+    abstract_execute_body(Goal, ClauseRef, Pos, M, Domain, Calls1, Calls,
+                          Trace1, Trace, Result).
 abstract_execute_body((A->B), ClauseRef, term_position(_, _, _, _, [PA, PB]),
-                      M, Domain, Calls0, Calls, Trace0, Trace, Result) :- !,
-    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls0, CallsA,
-                          Trace0, Trace1, ResultA), % Cut here ???
+                      M, Domain, Calls1, Calls, Trace1, Trace, Result) :- !,
+    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls1, CallsA,
+                          Trace1, Trace2, ResultA), % Cut here ???
     ( bot(Domain, Bot),
       eval(Domain, (ResultA->Bot), ResultA) ->
-      Calls = CallsA, Result = ResultA, Trace = Trace1
-    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls0, Calls,
-                            Trace1, Trace, ResultB),
+      Calls = CallsA, Result = ResultA, Trace = Trace2
+    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls1, Calls,
+                            Trace2, Trace, ResultB),
       eval(Domain, (ResultA->ResultB), Result)
     ).
 abstract_execute_body(findall(_, A, _), ClauseRef, term_position(_, _, _, _, [_, PA, _]),
-                      M, Domain, Calls, Calls, Trace0, Trace, Result) :- !,
-    findall(ResultA-Trace1, abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls, _,
-                                                  [], Trace1, ResultA), ResultsTraces),
+                      M, Domain, Calls, Calls, Trace1, Trace, Result) :- !,
+    findall(ResultA-Trace2, abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls, _,
+                                                  [], Trace2, ResultA), ResultsTraces),
     pairs_keys_values(ResultsTraces, Results, Traces),
-    append(Traces, Trace1),
-    append(Trace1, Trace0, Trace),
+    append(Traces, Trace2),
+    append(Trace2, Trace1, Trace),
     collapse_results_findall(Domain, Results, Result).
 abstract_execute_body((A*->B), ClauseRef, term_position(_, _, _, _, [PA, PB]),
-                      M, Domain, Calls0, Calls, Trace0, Trace, Result) :- !,
-    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls0, CallsA,
-                          Trace0, Trace1, ResultA), % Soft cut here ???
+                      M, Domain, Calls1, Calls, Trace1, Trace, Result) :- !,
+    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls1, CallsA,
+                          Trace1, Trace2, ResultA), % Soft cut here ???
     ( bot(Domain, Bot),
       eval(Domain, (ResultA*->Bot), ResultA) ->
-      Calls = CallsA, Result = ResultA, Trace = Trace1
-    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls0, Calls,
-                            Trace1, Trace, ResultB),
+      Calls = CallsA, Result = ResultA, Trace = Trace2
+    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls1, Calls,
+                            Trace2, Trace, ResultB),
       eval(Domain, (ResultA->ResultB), Result)
     ).
 abstract_execute_body((\+ A), ClauseRef, term_position(_, _, _, _, [PA]),
-                      M, Domain, Calls0, Calls, Trace0, Trace, Result) :- !,
-    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls0, Calls,
-                          Trace0, Trace, ResultA),
+                      M, Domain, Calls1, Calls, Trace1, Trace, Result) :- !,
+    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls1, Calls,
+                          Trace1, Trace, ResultA),
     eval(Domain, (\+ ResultA), Result).
 abstract_execute_body((A, B), ClauseRef, term_position(_, _, _, _, [PA, PB]),
-                      M, Domain, Calls0, Calls, Trace0, Trace, Result) :- !,
-    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls0, CallsA,
-                          Trace0, Trace1, ResultA),
+                      M, Domain, Calls1, Calls, Trace1, Trace, Result) :- !,
+    abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls1, CallsA,
+                          Trace1, Trace2, ResultA),
     ( bot(Domain, Bot),
       eval(Domain, (ResultA, Bot), ResultA) ->
-      Calls = CallsA, Result = ResultA, Trace = Trace1
-    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls0, Calls,
-                            Trace1, Trace, ResultB),
+      Calls = CallsA, Result = ResultA, Trace = Trace2
+    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls1, Calls,
+                            Trace2, Trace, ResultB),
       eval(Domain, (ResultA, ResultB), Result)
     ).
 abstract_execute_body((A;B), ClauseRef, term_position(_, _, _, _, [PA, PB]),
-                      M, Domain, Calls0, Calls, Trace0, Trace, Result) :- !,
-    ( abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls0, Calls,
-                            Trace0, Trace, Result)
-    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls0, Calls,
-                            Trace0, Trace, Result)
+                      M, Domain, Calls1, Calls, Trace1, Trace, Result) :- !,
+    ( abstract_execute_body(A, ClauseRef, PA, M, Domain, Calls1, Calls,
+                            Trace1, Trace, Result)
+    ; abstract_execute_body(B, ClauseRef, PB, M, Domain, Calls1, Calls,
+                            Trace1, Trace, Result)
     ).
-abstract_execute_body(Goal, ClauseRef, TermPos, M, Domain, Calls0, Calls,
-                      Trace0, Trace, Result) :-
+abstract_execute_body(Goal, ClauseRef, TermPos, M, Domain, Calls1, Calls,
+                      Trace1, Trace, Result) :-
     functor(Goal, F, A),
     PI = M:F/A,
     ( nonvar(TermPos) ->
@@ -378,5 +378,5 @@ abstract_execute_body(Goal, ClauseRef, TermPos, M, Domain, Calls0, Calls,
     ;
       From = clause(ClauseRef)
     ),
-    abstract_execute_entry(Goal, From, PI, Domain, Calls0, Calls,
-                           Trace0, Trace, Result).
+    abstract_execute_entry(Goal, From, PI, Domain, Calls1, Calls,
+                           Trace1, Trace, Result).

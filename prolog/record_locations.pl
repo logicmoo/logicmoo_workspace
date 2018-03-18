@@ -151,8 +151,8 @@ assert_declaration_one(Declaration, _, M:PI,
 assert_declaration_one(Declaration, M, F/A, Pos) :- !,
     functor(H, F, A),
     assert_position(H, M, Declaration, Pos).
-assert_declaration_one(Declaration, M, F//A0, Pos) :- !,
-    A is A0+2,
+assert_declaration_one(Declaration, M, F//A1, Pos) :- !,
+    A is A1+2,
     functor(H, F, A),
     assert_position(H, M, Declaration, Pos).
 assert_declaration_one(Declaration, M, H, Pos) :-
@@ -168,13 +168,13 @@ assert_reexport_declaration_2(op(_, _, _), _, _, _).
 assert_reexport_declaration_2(except(_),   _, _, _).
 
 assert_position(H, M, Type, TermPos) :-
-    source_location(File, Line0 ),
+    source_location(File, Line1 ),
     ( nonvar(TermPos)
     ->arg(1, TermPos, Chars),
       filepos_line(File, Chars, Line, LinePos)
       % Meld TermPos because later the source code will not be available and
       % therefore we will not be able to get LinePos
-    ; Line = Line0,
+    ; Line = Line1,
       LinePos = -1
     ),
     assert_location(H, M, Type, File, Line, file(File, Line, LinePos, Chars)).
@@ -194,9 +194,9 @@ have_extra_location(From, H, M, Type) :-
     extra_location(H, M, Type, From).
 */
 
-have_extra_location(From0, H, M, Type) :-
+have_extra_location(From1, H, M, Type) :-
     extra_location(H, M, Type, From),
-    subsumes_from(From0, From).
+    subsumes_from(From1, From).
 
 system:term_expansion(Term, Pos, _, _) :-
     record_location,

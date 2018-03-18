@@ -118,16 +118,16 @@ trusted_result_fail((A is B),                    _, Result) :-
         ).
 trusted_result_fail(functor(T, F, A),            _, Result) :-
         ( atom(F), integer(A), A >= 0 ->
-          functor(T0, F, A),
-          ( T0 \= T ->
+          functor(T1, F, A),
+          ( T1 \= T ->
             Result = fail
           ; ground(T) ->
             Result = true
           ; Result = top
           )
         ; nonvar(T) ->
-          functor(T, F0, A0),
-          ( \+ (F0 = F, A0 = A) ->
+          functor(T, F1, A1),
+          ( \+ (F1 = F, A1 = A) ->
             Result = fail
           ; ground(F/A) ->
             Result = true

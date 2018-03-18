@@ -56,13 +56,13 @@ process_comment_data(Comments, Term) :-
     fail.
 
 get_comment_data(Comment, Name, Out) :-
-    string_concat("/* $", Out0, Comment),
-    sub_string(Out0, Before, Length, After, "$\n"),
-    sub_string(Out0, 0, Before, _, SName),
+    string_concat("/* $", Out1, Comment),
+    sub_string(Out1, Before, Length, After, "$\n"),
+    sub_string(Out1, 0, Before, _, SName),
     atom_string(Name, SName),
     OutPos is Before + Length,
-    sub_string(Out0, OutPos, After, _, Out1),
-    string_concat(Out, "*/", Out1).
+    sub_string(Out1, OutPos, After, _, Out2),
+    string_concat(Out, "*/", Out2).
 
 enable :-
     retractall(enabled),

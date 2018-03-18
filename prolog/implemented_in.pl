@@ -48,8 +48,8 @@
 prolog:message(implemented_in(Args)) -->
     ['Implements ~w'-Args].
 
-implemented_in(MGoal0, From, Args) :-
-    normalize_head(MGoal0, MGoal),
+implemented_in(MGoal1, From, Args) :-
+    normalize_head(MGoal1, MGoal),
     M:Goal = MGoal,
     functor(Goal, F, A),
     findall(MI, ( current_module(M),

@@ -57,14 +57,14 @@ count(Curr) :-
     succ(Curr, Next),
     assertz(counter(Next)).
 
-gen_argument_chains(AIL, Options0 ) :-
+gen_argument_chains(AIL, Options1 ) :-
     retractall(clause_db(_)),
     retractall(arg_id(_, _, _, _, _, _)),
     retractall(linked_arg(_, _)),
     retractall(unlinked_arg(_, _, _, _)),
     forall(member(AI, AIL),
            record_linked(AI, 0 )),
-    merge_options(Options0, [source(false)], Options),
+    merge_options(Options1, [source(false)], Options),
     check_argument_fixpoint(0, Options).
 
 record_linked(IM:F/A-Pos, Stage) :-
@@ -188,12 +188,12 @@ argument_chain_rec(_, []).
 lead_to_root(Chain) :-
     lead_to_root([], Chain).
 
-lead_to_root(Chain0, Chain) :-
+lead_to_root(Chain1, Chain) :-
     linked_arg(0, Id),
-    lead_to_root(Id, Chain0, Chain).
+    lead_to_root(Id, Chain1, Chain).
 
 lead_to_root(Id, Chain, [Id|Chain]).
-lead_to_root(Id, Chain0, Chain) :-
+lead_to_root(Id, Chain1, Chain) :-
     linked_arg(Id, Id2),
-    \+ memberchk(Id2, [Id|Chain0 ]),
-    lead_to_root(Id2, [Id|Chain0 ], Chain).
+    \+ memberchk(Id2, [Id|Chain1 ]),
+    lead_to_root(Id2, [Id|Chain1 ], Chain).

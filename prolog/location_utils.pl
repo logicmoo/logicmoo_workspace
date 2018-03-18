@@ -76,11 +76,11 @@ property_from(Head, Declaration, From) :-
     ; From = []
     ).
 
-dec_location(Head0/0, Declaration, From) :-
-    normalize_head(Head0, M:Head),
+dec_location(Head1/0, Declaration, From) :-
+    normalize_head(Head1, M:Head),
     extra_location(Head, M, Declaration, From).
-dec_location(M:Head0, Declaration, From) :-
-    normalize_head(M:Head0, M:Head),
+dec_location(M:Head1, Declaration, From) :-
+    normalize_head(M:Head1, M:Head),
     extra_location(Head, M, Declaration, From).
 
 clause_from(Ref, clause(Ref)).
