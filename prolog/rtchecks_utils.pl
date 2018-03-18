@@ -122,13 +122,13 @@ prolog:error_message(unintercepted_signal(Signal)) -->
 % We should use our own apply.pl predicates, so that apply.pl can be
 % run-time checked:
 
-'$foldl'(Goal, List, V0, V) :-
-    '$foldl_'(List, Goal, V0, V).
+'$foldl'(Goal, List, V1, V) :-
+    '$foldl_'(List, Goal, V1, V).
 
 '$foldl_'([], _, V, V).
-'$foldl_'([H|T], Goal, V0, V) :-
-    call(Goal, H, V0, V1),
-    '$foldl_'(T, Goal, V1, V).
+'$foldl_'([H|T], Goal, V1, V) :-
+    call(Goal, H, V1, V2),
+    '$foldl_'(T, Goal, V2, V).
 
 prolog:message(acheck(checks, RTChecks)) -->
     '$foldl'(prolog:message, RTChecks).

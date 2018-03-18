@@ -85,21 +85,21 @@ wrappers(Name/Arity) -->
       )
     ].
 
-%!  prolog:rename_predicate(:Head0, :Head) is semidet.
+%!  prolog:rename_predicate(:Head1, :Head) is semidet.
 %
 %   Hook into term_expansion for  post   processing  renaming of the
 %   generated predicate.
 
-prolog:rename_predicate(M:Head0, M:Head) :-
+prolog:rename_predicate(M:Head1, M:Head) :-
     '$flushed_predicate'(M:'$rtchecked'(_)),
-    call(M:'$rtchecked'(Head0)),
+    call(M:'$rtchecked'(Head1)),
     !,
-    rename_term(Head0, Head).
+    rename_term(Head1, Head).
 
-rename_term(Compound0, Compound) :-
-    compound(Compound0),
+rename_term(Compound1, Compound) :-
+    compound(Compound1),
     !,
-    compound_name_arguments(Compound0, Name, Args),
+    compound_name_arguments(Compound1, Name, Args),
     atom_concat(Name, ' rtchecked', WrapName),
     compound_name_arguments(Compound, WrapName, Args).
 rename_term(Name, WrapName) :-

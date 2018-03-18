@@ -105,8 +105,8 @@ ppassertion_type_goal(true( Goal), true,  Goal).
 ppassertion_type_goal(false(Goal), false, Goal).
 
 :- meta_predicate rtcheck_goal(0, 1).
-rtcheck_goal(CM:Goal0, Call) :-
-    resolve_calln(Goal0, Goal),
+rtcheck_goal(CM:Goal1, Call) :-
+    resolve_calln(Goal1, Goal),
     ( ppassertion_type_goal(Goal, Type, Pred)
     ->rtc_call(Type, call(Call, CM:Pred), CM:Pred)
     ; implementation_module(CM:Goal, M),
@@ -115,8 +115,8 @@ rtcheck_goal(CM:Goal0, Call) :-
     ).
 
 :- meta_predicate rtcheck_goal(0, 1, -).
-rtcheck_goal(CM:Goal0, Call, RTCheck) :-
-    resolve_calln(Goal0, Goal),
+rtcheck_goal(CM:Goal1, Call, RTCheck) :-
+    resolve_calln(Goal1, Goal),
     ( ppassertion_type_goal(Goal, Type, Pred)
     ->RTCheck = rtc_call(Type, call(Call, CM:Pred), CM:Pred)
     ; implementation_module(CM:Goal, M),
@@ -140,8 +140,8 @@ determine_context_module(Goal, WM, CM) :-
     ).
 
 :- meta_predicate start_rtcheck(+, 0).
-start_rtcheck(M:Goal0, WM:WrappedHead) :-
-    resolve_calln(Goal0, Goal),
+start_rtcheck(M:Goal1, WM:WrappedHead) :-
+    resolve_calln(Goal1, Goal),
     determine_context_module(Goal, WM, CM),
     collect_rtasr(Goal, CM, _, M, RAsrL),
     check_goal(rt, M:WrappedHead, M, CM, RAsrL).

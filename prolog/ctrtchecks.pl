@@ -234,8 +234,8 @@ comps_to_goal([Check|Checks], Goal) -->
 :- meta_predicate comps_to_goal2(?, ?, 3, ?, ?).
 comps_to_goal2([], Check, Goal) -->
     call(Goal, Check).
-comps_to_goal2([Check|Checks], Check0, Goal) -->
-    call(Goal, Check0),
+comps_to_goal2([Check|Checks], Check1, Goal) -->
+    call(Goal, Check1),
     comps_to_goal2(Checks, Check, Goal).
 
 :- meta_predicate check_call(+, +, 0).

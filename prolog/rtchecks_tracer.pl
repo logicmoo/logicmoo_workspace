@@ -272,15 +272,15 @@ cleanup_break(Clause, PC) :-
 %     writeln(user_error, prolog:break_hook(Clause:PI, PC, FR, FBR, Expr, _)),
 %     % backtrace(50),
 %     fail.
-prolog:break_hook(Clause, PC, FR, _, call(Goal0), Action) :-
+prolog:break_hook(Clause, PC, FR, _, call(Goal1), Action) :-
     tracing,
     \+ current_prolog_flag(gui_tracer, true),
     rtc_break(Clause, PC),
     prolog_frame_attribute(FR, context_module, FCM),
     clause_property(Clause, predicate(Caller)),
     ( \+ black_list_caller(Caller)
-    ->resolve_calln(Goal0, Goal1),
-      static_strip_module(Goal1, FCM, Goal, CM),
+    ->resolve_calln(Goal1, Goal2),
+      static_strip_module(Goal2, FCM, Goal, CM),
       implementation_module(CM:Goal, IM),
       ( \+ black_list_callee(IM, Goal)
       ->( nb_current('$current_goal', CurrGoal),
