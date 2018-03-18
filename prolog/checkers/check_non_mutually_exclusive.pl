@@ -48,10 +48,13 @@
     mutually_exclusive_predicate/2,
     mutually_exclusive_predicate_key/3.
 
+mutually_exclusive_predicate(check(_, _, _), checker).
+mutually_exclusive_predicate_key(check(K, _, _), checker, K).
+
 option_allmchk(Options1, Options, option_utils:call_2(FileGen, File)) :-
     option_allchk(_M, File, FileGen-Options1, true-Options).
 
-checker:check(non_mutually_exclusive, Result, Options1 ) :-
+checker:check(non_mutually_exclusive, Result, Options1) :-
     option_allmchk(Options1, Options2, FileChk),
     select_option(predicate(Ref), Options2, _, Ref),
     findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
@@ -59,34 +62,37 @@ checker:check(non_mutually_exclusive, Result, Options1 ) :-
 check_non_mutually_exclusive(FromChk, Ref, warning-(Ref-LocIdx)) :-
     normalize_head(Ref, M:H),
     mutually_exclusive_predicate(H, M),
-    collect_non_mutually_exclusive(FromChk, H, M, LocIdxL),
+    collect_non_mutually_exclusive(FromChk, M:H, LocIdxL),
     member(LocIdx, LocIdxL).
 
 cleanup_redundant_groups([], _, []).
 cleanup_redundant_groups([Key-Clause-ClauseNME|ClauseKeyU], ClauseKeyI, ClauseKeyR) :-
-       ( \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyU),
-              subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2]),
-              \+subset([Key2-Clause2|ClauseNME2], [Key-Clause|ClauseNME])
-            ),
-         \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyI),
-              subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2])
-            )
-       ->ClauseKeyR=[Key-Clause-ClauseNME|ClauseKeyR2],
-         ClauseKeyI2=[Key-Clause-ClauseNME|ClauseKeyI]
-       ; ClauseKeyR=ClauseKeyR2,
-         ClauseKeyI2=ClauseKeyI
-       ),
-       cleanup_redundant_groups(ClauseKeyU, ClauseKeyI2, ClauseKeyR2).
+    ( \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyU),
+           subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2]),
+           \+subset([Key2-Clause2|ClauseNME2], [Key-Clause|ClauseNME])
+         ),
+      \+ ( member(Key2-Clause2-ClauseNME2, ClauseKeyI),
+           subset([Key-Clause|ClauseNME], [Key2-Clause2|ClauseNME2])
+         )
+    ->ClauseKeyR=[Key-Clause-ClauseNME|ClauseKeyR2],
+      ClauseKeyI2=[Key-Clause-ClauseNME|ClauseKeyI]
+    ; ClauseKeyR=ClauseKeyR2,
+      ClauseKeyI2=ClauseKeyI
+    ),
+    cleanup_redundant_groups(ClauseKeyU, ClauseKeyI2, ClauseKeyR2).
 
-collect_non_mutually_exclusive(FromChk, H, M, LocPL) :-
+:- meta_predicate collect_non_mutually_exclusive(1, 0, -).
+
+collect_non_mutually_exclusive(FromChk, MH, LocPL) :-
+    strip_module(MH, M, H),
     findall(I-(Key-Clause),
-            ( nth_clause(M:H, I, Clause),
+            ( clause(MH, _, Clause),
+              nth_clause(MH, I, Clause),
               From = clause(Clause),
               call(FromChk, From),
-              clause(M:P, _, Clause),
-              ( mutually_exclusive_predicate_key(P, M, Key)
+              ( mutually_exclusive_predicate_key(H, M, Key)
               ->true
-              ; Key = M:P
+              ; Key = MH
               )
             ),
             ClauseKeyU),

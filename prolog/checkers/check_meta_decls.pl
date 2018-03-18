@@ -77,7 +77,7 @@ meta_decls2([H|T]) -->
 hide_missing_meta_pred(prolog:generated_predicate/1).
 hide_missing_meta_pred(prolog:rename_predicate/2).
 
-checker:check(meta_decls, Pairs, Options1 ) :-
+checker:check(meta_decls, Pairs, Options1) :-
     option_allchk(Options1, Options2, FileChk),
     select_option(module(M), Options2, _, M),
     infer_meta_if_required,

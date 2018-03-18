@@ -57,7 +57,7 @@ count(Curr) :-
     succ(Curr, Next),
     assertz(counter(Next)).
 
-gen_argument_chains(AIL, Options1 ) :-
+gen_argument_chains(AIL, Options1) :-
     retractall(clause_db(_)),
     retractall(arg_id(_, _, _, _, _, _)),
     retractall(linked_arg(_, _)),

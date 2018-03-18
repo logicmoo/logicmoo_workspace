@@ -168,7 +168,7 @@ assert_reexport_declaration_2(op(_, _, _), _, _, _).
 assert_reexport_declaration_2(except(_),   _, _, _).
 
 assert_position(H, M, Type, TermPos) :-
-    source_location(File, Line1 ),
+    source_location(File, Line1),
     ( nonvar(TermPos)
     ->arg(1, TermPos, Chars),
       filepos_line(File, Chars, Line, LinePos)
