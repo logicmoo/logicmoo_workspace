@@ -172,7 +172,7 @@ dict_kv(Dict, Key-Value) :-
     Type=Dict.Key,
     call(Type, Value).
 
-:- pred extend_one_arg(1, -callable) is det.
+:- pred extend_one_arg(1, -goal) is det.
 
 extend_one_arg(Call1, Call) :- extend_args(Call1, [_], Call).
 

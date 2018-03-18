@@ -37,8 +37,9 @@
            flt/1, nnegflt/1, posflt/1, num/1, nnegnum/1, posnum/1, atm/1, gnd/1,
            any/1, gndstr/1, str/1, struct/1, term/1, char/1, atmel/1, keypair/1,
            sequence_or_list/2, operator_specifier/1, character_code/1, linear/1,
-           is_pred/2, keylist/1, predname/1, mod_qual/1, sequence/2, constant/1,
-           mod_qual/2, arithexpression/1]).
+           mod_qual/1, mod_qual/2, goal/1, goal/2, arithexpression/1, keylist/1,
+           sequence/2, predname/1, constant/1
+          ]).
 
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
@@ -340,25 +341,30 @@ arithexpression(X) :-
 arithmetic_function(X) :- current_arithmetic_function(X).
 arithmetic_function(X) :- arithmetic:evaluable(X, _Module).
 
-% BUG: if the trace have all the ports active, we can not use ';'/2 in is_pred/2
+% BUG: if the trace have all the ports active, we can not use ';'/2 in goal/2
 % and some variables becomes uninstantiated. That is an SWI-Prolog bug but I
 % don't have time to isolate it --EMM
 
-:- true prop is_pred(N, P)
-    # "check that ~w is a defined predicate with ~w extra arguments."-[P, N].
-:- meta_predicate is_pred(?, :).
-is_pred(N, Pred) :-
-    nnegint(N),
-    is_pred_2(Pred, N).
+:- true prop goal(P) # "check that ~w is a defined predicate."-[P].
+:- meta_predicate goal(:).
+goal(Pred) :- goal(0, Pred).
+    % current_predicate(_, M:G).
 
-is_pred_2(M:Pred, N) :-
+:- true prop goal(N, P)
+    # "check that ~w is a defined predicate with ~w extra arguments."-[P, N].
+:- meta_predicate goal(?, :).
+goal(N, Pred) :-
+    nnegint(N),
+    goal_2(Pred, N).
+
+goal_2(M:Pred, N) :-
     var(Pred), !,
     current_module(M),
     current_predicate(M:F/A),
     A >= N,
     A1 is A - N,
     functor(Pred, F, A1).
-is_pred_2(M:Pred, N) :-
+goal_2(M:Pred, N) :-
     functor(Pred, F, A1),
     A is A1 + N,
     current_module(M),
