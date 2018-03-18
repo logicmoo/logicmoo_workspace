@@ -107,8 +107,9 @@ mark_meta_arguments(Head) :-
             ), HeadSpecArgL),
     maplist(mark_head_spec(Head), HeadSpecArgL).
 
-meta_prop(typeprops:is_pred(N, Var), N,   Var).
-meta_prop(typeprops:mod_qual(  Var), (:), Var).
+meta_prop(typeprops:goal(Var),     0, Var).
+meta_prop(typeprops:goal(N, Var),  N, Var).
+meta_prop(typeprops:mod_qual(Var), :, Var).
 
 mark_head_spec(Head, Head-Spec-Arg) :-
     mark_meta_arg(Arg, Spec).

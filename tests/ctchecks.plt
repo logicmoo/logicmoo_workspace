@@ -64,7 +64,7 @@ Warning:
 p1.pl:16:4: In the body of p1:p0/0:
 p1.pl:9:8: Assertion failure for p1(p1:q2).
     In *calls*, unsatisfied properties: 
-        p1.pl:9:11: compat(typeprops:is_pred(0,p1:q2)).
+        p1.pl:9:11: compat(typeprops:goal(0,p1:q2)).
 p1.pl:22:4: In the body of p1:p2/1:
 p1.pl:18:8: Assertion failure for q(A,B,C).
     In *calls*, unsatisfied properties: 
@@ -92,7 +92,7 @@ Warning:
 p1.pl:14: In the body of p1:p0/0:
 p1.pl:9:8: Assertion failure for p1(p1:q2).
     In *calls*, unsatisfied properties: 
-        p1.pl:9:11: compat(typeprops:is_pred(0,p1:q2)).
+        p1.pl:9:11: compat(typeprops:goal(0,p1:q2)).
 p1.pl:21: In the body of p1:p2/1:
 p1.pl:18:8: Assertion failure for q(A,B,C).
     In *calls*, unsatisfied properties: 
