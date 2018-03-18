@@ -363,7 +363,7 @@ expand_nodirective_error(Clauses) :-
               Body1 = ignore(nodirective_error_hook(Assr)),
               ( Arity = 1
               ->Body = Body1
-              ; Body = (assrt_status(Status), Body1 )
+              ; Body = (assrt_status(Status), Body1)
               )
             ),
             ClauseT).
@@ -697,7 +697,7 @@ modedef(@(A),         _, A, B, Pos, PA, Cp1,                      Ca,           
 % PlDoc (SWI) Modes
 modedef(:(A1),        _, A, B, Pos, PA, Cp,                       Ca1,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca2, Ca) :- Pos = term_position(From, To, FFrom, FTo, [PA1]),
      % The first part of this check is not redundant if we forgot the meta_predicate declaration
-    (var(A1 ), var(Ca2) -> Ca1 = [(typeprops:mod_qual(B))-Pos|Ca2], A1 = A ; Ca1 = Ca2, A = typeprops:mod_qual(A1, B), PA = term_position(From, To, FFrom, FTo, [PA1, From-From])).
+    (var(A1), var(Ca2) -> Ca1 = [(typeprops:mod_qual(B))-Pos|Ca2], A1 = A ; Ca1 = Ca2, A = typeprops:mod_qual(A1, B), PA = term_position(From, To, FFrom, FTo, [PA1, From-From])).
 modedef(goal_in(N,A), _, A, B, Pos, PA, Cp,  [(typeprops:goal(N,B))-Pos|Ca1],     Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [_,PA]).
 modedef(goal_go(N,A), _, A, B, Pos, PA, Cp,        Ca, [(typeprops:goal(N,B))-Pos|Su1],                        Gl,  Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [_,PA]).
 modedef('!'(A),       M, A, B, Pos, PA, Cp1, [(M:compound(B))-Pos|Ca],               Su,                          Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]). % May be modified using setarg/3 or nb_setarg/3 (mutable)
