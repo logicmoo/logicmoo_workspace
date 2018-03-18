@@ -70,6 +70,6 @@ term_expansion(end_of_file, Decl) :-
     generate_library(M, AliasSO, AliasSOPl, File),
     Decl = [(:- [AliasSOPl]), end_of_file].
 
-add_suffix(Suffix, Name0, Name) :-
-    file_name_extension(Name1, _, Name0),
-    atom_concat(Name1, Suffix, Name).
+add_suffix(Suffix, Name1, Name) :-
+    file_name_extension(Name2, _, Name1),
+    atom_concat(Name2, Suffix, Name).

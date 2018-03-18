@@ -181,8 +181,8 @@ do_generate_library(M, FileSO, File, FSourceL) :-
     findall(CLib, ( link_foreign_library(M, Lib),
                     atom_concat('-l', Lib, CLib)
                   ; pkg_foreign_config(M, Package),
-                    command_to_atom('pkg-config', ['--libs', Package], CLib0),
-                    atom_concat(CLibs, '\n', CLib0),
+                    command_to_atom('pkg-config', ['--libs', Package], CLib1),
+                    atom_concat(CLibs, '\n', CLib1),
                     atomic_args(CLibs, CLibL1),
                     member(CLib, CLibL1)
                   ), CLibL, ['-o', FileSO]),
@@ -1151,8 +1151,8 @@ bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) :-
                bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
                memberchk(Mode, [in, inout])
              ),
-             ( c_var_name(Arg, CArg0),
-               atom_concat('&', CArg0, CArg),
+             ( c_var_name(Arg, CArg1),
+               atom_concat('&', CArg1, CArg),
                write('    '),
                c_get_argument(Spec, Mode, CArg, Arg),
                write(';\n')
@@ -1288,10 +1288,10 @@ generate_foreign_call_(_, _, _, _, _, _, _, _).
 :- use_module(library(prolog_clause), []).
 
 get_dictionary(Term, File, Line, M, Dict) :-
-    ( prolog_clause:read_term_at_line(File, Line, M, RawTerm0, _TermPos, Dict),
-      ( RawTerm0 \= (_ :- _)
-      ->RawTerm = (RawTerm0 :- true)
-      ; RawTerm0 = RawTerm
+    ( prolog_clause:read_term_at_line(File, Line, M, RawTerm1, _TermPos, Dict),
+      ( RawTerm1 \= (_ :- _)
+      ->RawTerm = (RawTerm1 :- true)
+      ; RawTerm1 = RawTerm
       ),
       subsumes(RawTerm, Term) -> true
     ; Dict = []
@@ -1357,26 +1357,26 @@ type_is_tdef(M, Type, Spec, A) :-
 
 bind_argument(Head, M, CM, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
     ( member(Comp, CompL),
-      match_known_type(Comp, CM, Spec, Arg0),
-      Arg0 == Arg
+      match_known_type(Comp, CM, Spec, Arg1),
+      Arg1 == Arg
     ->true
     ; true
     ),
     ( member(Call, CallL),
-      match_known_type(Call, CM, Spec, Arg0),
-      Arg0 == Arg
+      match_known_type(Call, CM, Spec, Arg1),
+      Arg1 == Arg
     ->Mode = in
     ; true
     ),
     ( member(Succ, SuccL),
-      match_known_type(Succ, CM, Spec, Arg0),
-      Arg0 == Arg
+      match_known_type(Succ, CM, Spec, Arg1),
+      Arg1 == Arg
     ->Mode = out
     ; true
     ),
     ( memberchk(type(_), GlobL),
-      match_known_type(Head, M, Spec, Arg0),
-      Arg0 == Arg
+      match_known_type(Head, M, Spec, Arg1),
+      Arg1 == Arg
     ->Mode = in
     ; true
     ),

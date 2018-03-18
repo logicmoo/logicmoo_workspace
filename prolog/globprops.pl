@@ -134,14 +134,14 @@ det(Goal) :-
     ->send_comp_rtcheck(Goal, det, fails),
       fail
     ),
-    prolog_current_choice(C0),
-    Goal,
     prolog_current_choice(C1),
+    Goal,
+    prolog_current_choice(C2),
     ( arg(1, Solved, no)
     ->true
     ; send_comp_rtcheck(Goal, det, non_det)
     ),
-    ( C0 == C1
+    ( C1 == C2
     ->!
     ; nb_setarg(1, Solved, yes)
     ).
@@ -177,10 +177,10 @@ multi(Goal, Prop) :-
     ->send_comp_rtcheck(Goal, Prop, failure),
       fail
     ),
-    prolog_current_choice(C0),
-    test_throw_2(Goal, Prop, _, true),
     prolog_current_choice(C1),
-    ( C0 == C1
+    test_throw_2(Goal, Prop, _, true),
+    prolog_current_choice(C2),
+    ( C1 == C2
     ->!
     ; nb_setarg(1, Solved, yes)
     ).
@@ -249,11 +249,11 @@ non_det(Goal) :-
     ->send_comp_rtcheck(Goal, non_det, is_det),
       fail
     ),
-    prolog_current_choice(C0),
-    Goal,
     prolog_current_choice(C1),
+    Goal,
+    prolog_current_choice(C2),
     ( arg(1, Solved, no)
-    ->( C1 == C0
+    ->( C2 == C1
       ->!,
         send_comp_rtcheck(Goal, non_det, no_choicepoints)
       ; nb_setarg(1, Solved, one)
@@ -268,10 +268,10 @@ non_det(Goal) :-
 :- global no_choicepoints/1.
 
 no_choicepoints(Goal) :-
-    prolog_current_choice(C0),
-    Goal,
     prolog_current_choice(C1),
-    ( C1 == C0
+    Goal,
+    prolog_current_choice(C2),
+    ( C2 == C1
     ->true
     ; send_comp_rtcheck(Goal, no_choicepoints, have_choicepoints)
     ).
@@ -283,10 +283,10 @@ no_choicepoints(Goal) :-
 :- global have_choicepoints/1.
 
 have_choicepoints(Goal) :-
-    prolog_current_choice(C0),
-    Goal,
     prolog_current_choice(C1),
-    ( C1 == C0
+    Goal,
+    prolog_current_choice(C2),
+    ( C2 == C1
     ->send_comp_rtcheck(Goal, have_choicepoints, no_choicepoints)
     ; true
     ).
@@ -309,14 +309,14 @@ num_solutions_eq(N, Goal) :-
         fail
       )
     ),
-    prolog_current_choice(C0),
-    call(Goal),
     prolog_current_choice(C1),
+    call(Goal),
+    prolog_current_choice(C2),
     arg(1, Sols, A),
     ( A == done
     ->true
     ; N1 is A+1,
-      ( C1 == C0
+      ( C2 == C1
       ->!,
         ( N1 == N
         ->true
@@ -339,25 +339,25 @@ num_solutions_eq(N, Goal) :-
 num_solutions(Goal, Check) :-
     Sols = num_solutions(0),
     ( true
-    ; arg(1, Sols, N0),
-      ( call(Check, N0)
+    ; arg(1, Sols, N1),
+      ( call(Check, N1)
       ->fail
-      ; send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N0)),
+      ; send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N1)),
         fail
       )
     ),
-    prolog_current_choice(C0),
-    call(Goal),
     prolog_current_choice(C1),
-    arg(1, Sols, N0),
-    N1 is N0+1,
-    ( C1 == C0
+    call(Goal),
+    prolog_current_choice(C2),
+    arg(1, Sols, N1),
+    N2 is N1+1,
+    ( C2 == C1
     ->!,
-      ( call(Check, N1)
+      ( call(Check, N2)
       ->true
-      ; send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N0))
+      ; send_comp_rtcheck(Goal, num_solutions(Check), num_solutions(N1))
       )
-    ; nb_setarg(1, Sols, N1)
+    ; nb_setarg(1, Sols, N2)
     ).
 
 %!   solutions(:Goal, +Sols)
@@ -370,37 +370,37 @@ solutions(Goal, Sols) :-
     Goal = _:Sol,
     Remaining = solutions(Sols),
     ( true
-    ; arg(1, Remaining, Sols0),
+    ; arg(1, Remaining, Sols1),
       ( ( Sols == done
-        ; Sols0 == []
+        ; Sols1 == []
         )
       ->fail
-      ; append(Sols2, Sols0, Sols),
-        send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
+      ; append(Sols3, Sols1, Sols),
+        send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols3)),
         fail
       )
     ),
-    prolog_current_choice(C0),
-    call(Goal),
     prolog_current_choice(C1),
-    arg(1, Remaining, Sols0),
-    ( Sols0 == done
+    call(Goal),
+    prolog_current_choice(C2),
+    arg(1, Remaining, Sols1),
+    ( Sols1 == done
     ->true
-    ; [Elem|Sols1] = Sols0,
-      ( C1 == C0
+    ; [Elem|Sols2] = Sols1,
+      ( C2 == C1
       ->!,
         ( Elem \= Sol
-        ->append(Curr, Sols0, Sols),
-          append(Curr, [Sol], Sols2),
-          send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2))
+        ->append(Curr, Sols1, Sols),
+          append(Curr, [Sol], Sols3),
+          send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols3))
         ; true
         )
       ; Elem \= Sol
-      ->append(Curr, Sols0, Sols),
-        append(Curr, [Sol|_], Sols2),
-        send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols2)),
+      ->append(Curr, Sols1, Sols),
+        append(Curr, [Sol|_], Sols3),
+        send_comp_rtcheck(Goal, solutions(Sols), solutions(Sols3)),
         nb_setarg(1, Remaining, done)
-      ; nb_setarg(1, Remaining, Sols1)
+      ; nb_setarg(1, Remaining, Sols2)
       )
     ).
 
@@ -481,14 +481,14 @@ signal(Goal) :- signal(_, Goal).
 signal(Signal, Goal) :-
     prolog_current_choice(Choice),
     asserta_signal_check(Choice, Goal, Signal, yes),
-    prolog_current_choice(C0),
+    prolog_current_choice(C1),
     intercept(Goal, Signal,
               ( emit_signal(Choice, Signal),
                 send_signal(Signal)
               )),
-    prolog_current_choice(C1),
+    prolog_current_choice(C2),
     retract_signal_check(Choice, Goal, Signal, yes),
-    ( C0 == C1
+    ( C1 == C2
     ->!
     ; true
     ).
@@ -510,14 +510,14 @@ no_signal(Goal) :- no_signal(_, Goal).
 no_signal(Signal, Goal) :-
     prolog_current_choice(Choice),
     asserta_signal_check(Choice, Goal, Signal, no),
-    prolog_current_choice(C0),
+    prolog_current_choice(C1),
     intercept(Goal, Signal,
               ( emit_signal(Choice, Signal),
                 throw(Signal)
               )),
-    prolog_current_choice(C1),
+    prolog_current_choice(C2),
     retract_signal_check(Choice, Goal, Signal, no),
-    ( C0 == C1
+    ( C1 == C2
     ->!
     ; true
     ).
@@ -668,8 +668,8 @@ nsh(Arg, Goal) :- check_nsh(Arg, Goal), call(Goal).
     ( term_variables(Arg, Vars),
       Vars \= []
     ->Goal =.. [_|Args],
-      ( select(Arg0, Args, Left),
-        Arg0 == Arg
+      ( select(Arg1, Args, Left),
+        Arg1 == Arg
       ->term_variables(Left, GVars),
         intersection(Vars, GVars, Shared),
         ( Shared \= []
@@ -694,14 +694,14 @@ user_output(S, Goal) :-
 
 use_output_mf(File, S, Goal) :-
     asserta_user_output_check(File, S, Goal),
-    prolog_current_choice(C0),
+    prolog_current_choice(C1),
     catch(Goal, E,
           ( end_output_check(File, S, Goal),
             throw(E)
           )),
-    prolog_current_choice(C1),
+    prolog_current_choice(C2),
     retract_user_output_check(File, S, Goal),
-    ( C0 == C1
+    ( C1 == C2
     ->!,
       output_check(File, S, Goal)
     ; true

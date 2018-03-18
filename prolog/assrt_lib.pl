@@ -360,10 +360,10 @@ expand_nodirective_error(Clauses) :-
             ( assrt_type(Type),
               normalize_status_and_type_1(Assr, _, Status, Type, _, _),
               functor(Assr, Type, Arity),
-              Body0 = ignore(nodirective_error_hook(Assr)),
+              Body1 = ignore(nodirective_error_hook(Assr)),
               ( Arity = 1
-              ->Body = Body0
-              ; Body = (assrt_status(Status), Body0 )
+              ->Body = Body1
+              ; Body = (assrt_status(Status), Body1 )
               )
             ),
             ClauseT).
@@ -468,20 +468,20 @@ current_body(M:BodyS, _, term_position(_, _, _, _, [_, PosS]), Body, BPos, Gl1, 
     atom(M), !,
     current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
 current_body(BodyS + BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BPos, Gl0, Gl) :- !,
-    propdef(BGl, M, PGl, Gl0, Gl1),
-    current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
+             Body, BPos, Gl1, Gl) :- !,
+    propdef(BGl, M, PGl, Gl1, Gl2),
+    current_body(BodyS, M, PosS, Body, BPos, Gl2, Gl).
 current_body(BodyS is BGl#Co, M,
              term_position(From, To, _, _, [PosS, A2TermPos]),
-             Body, BPos, Gl0, Gl) :- !,
+             Body, BPos, Gl1, Gl) :- !,
     f2_pos(A2TermPos, FFrom, FTo, PGl, PosCo),
-    propdef(BGl, M, PGl, Gl0, Gl1),
+    propdef(BGl, M, PGl, Gl1, Gl2),
     current_body(BodyS#Co, M, term_position(From, To, FFrom, FTo, [PosS, PosCo]),
-                 Body, BPos, Gl1, Gl).
+                 Body, BPos, Gl2, Gl).
 current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BPos, Gl0, Gl) :- !,
-    propdef(BGl, M, PGl, Gl0, Gl1),
-    current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
+             Body, BPos, Gl1, Gl) :- !,
+    propdef(BGl, M, PGl, Gl1, Gl2),
+    current_body(BodyS, M, PosS, Body, BPos, Gl2, Gl).
 
 /*
   NOTE: Next syntax is ambiguous, but shorter:
@@ -502,7 +502,7 @@ current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
   the assertion to avoid ambiguities
 */
 
-current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
+current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl) :-
     is_decl_global(BodyS, M),
     BodyS =.. [F, Head|GArgL],
     nonvar(Head), !,
@@ -511,13 +511,13 @@ current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
     current_body(Head + BGl, M,
                  term_position(_, _, _, _,
                                [HPos, term_position(_, _, FF, FT, [PArgL])]),
-                 Body, BPos, Gl0, Gl).
-current_body(BodyS, M, PosS, Body, BPos, Gl0, Gl) :-
+                 Body, BPos, Gl1, Gl).
+current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl) :-
     ( body_member(BodyS, PosS, Lit, LPos)
     *->
-      current_body(Lit, M, LPos, Body, BPos, Gl0, Gl)
+      current_body(Lit, M, LPos, Body, BPos, Gl1, Gl)
     ; Body = M:BodyS,
-      Gl = Gl0,
+      Gl = Gl1,
       BPos = PosS
     ).
 
@@ -568,12 +568,12 @@ current_normalized_assertion(Assertions, M, PPos, Pred, Status, Type, Cp, Ca, Su
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos).
 current_normalized_assertion(Assertions  + BGl, M, term_position(_, _, _, _, [APos, PGl]),
                              Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
-    propdef(BGl, M, PGl, Gl, Gl0),
-    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, CoPos, RPos).
+    propdef(BGl, M, PGl, Gl, Gl1),
+    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl1, Co, CoPos, RPos).
 current_normalized_assertion(Assertions is BGl, M, term_position(_, _, _, _, [APos, PGl]),
                              Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
-    propdef(BGl, M, PGl, Gl, Gl0),
-    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl0, Co, CoPos, RPos).
+    propdef(BGl, M, PGl, Gl, Gl1),
+    current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl1, Co, CoPos, RPos).
 current_normalized_assertion(Assertions # Co2, M, term_position(_, _, _, _, [APos, CoPos2]),
                              Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co1, CoPos1, RPos),
@@ -584,8 +584,8 @@ current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su
       current_normalized_assertion(Term, M, term_position(_, _, _, _, [0-0, APos]),
                                    Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos)
     ; normalize_status_and_type(Assertions, APos, Status, Type, BodyS, PosS),
-      current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl0),
-      normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl0, Co, CoPos, RPos),
+      current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl1),
+      normalize_assertion_head_body(Body, BM, BPos, Pred, Format, Cp, Ca, Su, Gl1, Co, CoPos, RPos),
       (Gl \= [] -> fix_format_global(Format, GFormat) ; GFormat = Format),
       ( assertion_format(Type, GFormat)
       ->true
@@ -601,11 +601,11 @@ merge_comments(C1, P1, C2, P2, [C1, C2], list_position(_, _, [P1, P2])).
 normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     once(decompose_assertion_body(Body, Format, BPos, Head, BCp, BCa, BSu,
                                   BGl, Co, HPos, PCp, PCa, PSu, PGl, CoPos)),
-    normalize_assertion_head(Head, M, HPos, Pred, Cp0, Ca0, Su0, Gl0, RPos),
-    apropdef(Pred, M, BCp, PCp, Cp, Cp0),
-    apropdef(Pred, M, BCa, PCa, Ca, Ca0),
-    apropdef(Pred, M, BSu, PSu, Su, Su0),
-    propdef(BGl, M, PGl, Gl, Gl0).
+    normalize_assertion_head(Head, M, HPos, Pred, Cp1, Ca1, Su1, Gl1, RPos),
+    apropdef(Pred, M, BCp, PCp, Cp, Cp1),
+    apropdef(Pred, M, BCa, PCa, Ca, Ca1),
+    apropdef(Pred, M, BSu, PSu, Su, Su1),
+    propdef(BGl, M, PGl, Gl, Gl1).
 
 normalize_assertion_head(Head, M, PPos, Pred, Cp, Ca, Su, Gl, HPos) :-
     nonvar(PPos),
@@ -638,12 +638,12 @@ normalize_assertion_head(Head, M, Pos, M:Pred, Cp, Ca, Su, Gl, Pos) :-
 normalize_assertion_head(Head, M, Pos, M:Head, [], [], [], [], Pos) :-
     atom(Head).
 
-normalize_args([Pos|PosL], N0, Head, M, Pred, Cp0, Ca0, Su0, Gl0) :-
-    arg(N0, Head, HArg), !,
-    resolve_types_modes(HArg, M, PArg, Pos, Cp0, Ca0, Su0, Gl0, Cp1, Ca1, Su1, Gl1),
-    arg(N0, Pred, PArg),
-    succ(N0, N),
-    normalize_args(PosL, N, Head, M, Pred, Cp1, Ca1, Su1, Gl1).
+normalize_args([Pos|PosL], N1, Head, M, Pred, Cp1, Ca1, Su1, Gl1) :-
+    arg(N1, Head, HArg), !,
+    resolve_types_modes(HArg, M, PArg, Pos, Cp1, Ca1, Su1, Gl1, Cp2, Ca2, Su2, Gl2),
+    arg(N1, Pred, PArg),
+    succ(N1, N),
+    normalize_args(PosL, N, Head, M, Pred, Cp2, Ca2, Su2, Gl2).
 normalize_args([], _, _, _, _, [], [], [], []).
 
 resolve_types_modes(A,    _, A, _, Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
@@ -651,65 +651,65 @@ resolve_types_modes(A1, M, A, PPos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
     nonvar(PPos),
     PPos = parentheses_term_position(_, _, Pos), !,
     resolve_types_modes(A1, M, A, Pos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl).
-resolve_types_modes(A0:T, M, A, term_position(_, _, _, _, [PA0, PT]), Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl) :-
-    do_propdef(T, M, A, PT, Pr0, Pr1),
-    do_modedef(A0, M, A1, A, PA0, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
+resolve_types_modes(A1:T, M, A, term_position(_, _, _, _, [PA1, PT]), Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
+    do_propdef(T, M, A, PT, Pr1, Pr2),
+    do_modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !,
-    do_propdef(A1, M, A, PA1, Pr1, Pr).
-resolve_types_modes(A0, M, A, PA0, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl) :-
-    do_modedef(A0, M, A1, A, PA0, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
-    do_propdef(A1, M, A, PA1, Pr0, Pr).
+    do_propdef(A2, M, A, PA2, Pr2, Pr).
+resolve_types_modes(A1, M, A, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
+    do_modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    do_propdef(A2, M, A, PA2, Pr1, Pr).
 
 do_propdef(A,  _, A, _,   Cp,  Cp) :- var(A), !.
 do_propdef(A1, M, A, PA1, Cp1, Cp) :-
     hpropdef(A1, M, A, PA1, Cp1, Cp).
 
-do_modedef(A0, M, A1, A, PA0, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
-    nonvar(A0),
-    modedef(A0, M, A1, A, PA0, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr), !.
-do_modedef(A0, M, A1, A, PPA0, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
-    nonvar(PPA0),
-    PPA0 = parentheses_term_position(_, _, PA0), !,
-    modedef(A0, M, A1, A, PA0, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr).
-do_modedef(A0, M, A1, A, APos, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
-    atom(A0),
-    A2 =.. [A0, A],
+do_modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+    nonvar(A1),
+    modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr), !.
+do_modedef(A1, M, A2, A, PPA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+    nonvar(PPA1),
+    PPA1 = parentheses_term_position(_, _, PA1), !,
+    modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr).
+do_modedef(A1, M, A2, A, APos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+    atom(A1),
+    A3 =.. [A1, A],
     ( var(APos) -> true ; APos = From-To, Pos = term_position(From, To, From, To, [To-To]) ),
-    modedef(A2, M, A1, A, Pos, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr), !.
-do_modedef(A0, M, A1, A, From-To, PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr) :-
-    integer(A0),
-    ( A0 >= 0
-    ->A2 = goal_in(A0, A)
-    ; A3 is -A0,
-      A2 = goal_go(A3, A)
+    modedef(A3, M, A2, A, Pos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr), !.
+do_modedef(A1, M, A2, A, From-To, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+    integer(A1),
+    ( A1 >= 0
+    ->A3 = goal_in(A1, A)
+    ; A4 is -A1,
+      A3 = goal_go(A4, A)
     ),
-    modedef(A2, M, A1, A, term_position(From, To, From, From, [From-From, From-To]), PA1, Cp0, Ca0, Su0, Gl0, Cp, Ca, Su, Gl, Pr0, Pr),
+    modedef(A3, M, A2, A, term_position(From, To, From, From, [From-From, From-To]), PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
-do_modedef(A0, _, A0, _, PA0, PA0, Cp0, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp0, Cp).
+do_modedef(A1, _, A1, _, PA1, PA1, Cp1, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp1, Cp).
 
 % Support for modes are hard-wired here:
 % ISO Modes
-modedef(+(A),         M, A, B, Pos, PA, Cp,                       Ca0,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [PA]),
-    (var(A), var(Ca1) -> Ca0 = [(M:nonvar(B))-Pos|Ca1] ; Ca0 = Ca1). % A bit confuse hack, Ca1 come instantiated to optimize the expression
-modedef(-(A),         M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su0,                         Gl,  Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(?(A),         _, A, _, Pos, PA, Cp0,                      Ca,                Su,                          Gl,  Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(@(A),         _, A, B, Pos, PA, Cp0,                      Ca,                Su,  [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(+(A),         M, A, B, Pos, PA, Cp,                       Ca1,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca2, Ca) :- Pos = term_position(_, _, _, _, [PA]),
+    (var(A), var(Ca2) -> Ca1 = [(M:nonvar(B))-Pos|Ca2] ; Ca1 = Ca2). % A bit confuse hack, Ca1 come instantiated to optimize the expression
+modedef(-(A),         M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su1,                         Gl,  Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(?(A),         _, A, _, Pos, PA, Cp1,                      Ca,                Su,                          Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(@(A),         _, A, B, Pos, PA, Cp1,                      Ca,                Su,  [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]).
 % PlDoc (SWI) Modes
-modedef(:(A0),        _, A, B, Pos, PA, Cp,                       Ca0,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(From, To, FFrom, FTo, [PA0]),
+modedef(:(A1),        _, A, B, Pos, PA, Cp,                       Ca1,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca2, Ca) :- Pos = term_position(From, To, FFrom, FTo, [PA1]),
      % The first part of this check is not redundant if we forgot the meta_predicate declaration
-    (var(A0 ), var(Ca1) -> Ca0 = [(typeprops:mod_qual(B))-Pos|Ca1], A0 = A ; Ca0 = Ca1, A = typeprops:mod_qual(A0, B), PA = term_position(From, To, FFrom, FTo, [PA0, From-From])).
-modedef(goal_in(N,A), _, A, B, Pos, PA, Cp,  [(typeprops:goal(N,B))-Pos|Ca0],     Su,                          Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [_,PA]).
-modedef(goal_go(N,A), _, A, B, Pos, PA, Cp,        Ca, [(typeprops:goal(N,B))-Pos|Su0],                        Gl,  Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [_,PA]).
-modedef('!'(A),       M, A, B, Pos, PA, Cp0, [(M:compound(B))-Pos|Ca],               Su,                          Gl,  Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]). % May be modified using setarg/3 or nb_setarg/3 (mutable)
+    (var(A1 ), var(Ca2) -> Ca1 = [(typeprops:mod_qual(B))-Pos|Ca2], A1 = A ; Ca1 = Ca2, A = typeprops:mod_qual(A1, B), PA = term_position(From, To, FFrom, FTo, [PA1, From-From])).
+modedef(goal_in(N,A), _, A, B, Pos, PA, Cp,  [(typeprops:goal(N,B))-Pos|Ca1],     Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [_,PA]).
+modedef(goal_go(N,A), _, A, B, Pos, PA, Cp,        Ca, [(typeprops:goal(N,B))-Pos|Su1],                        Gl,  Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [_,PA]).
+modedef('!'(A),       M, A, B, Pos, PA, Cp1, [(M:compound(B))-Pos|Ca],               Su,                          Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]). % May be modified using setarg/3 or nb_setarg/3 (mutable)
 % Ciao Modes:
-modedef(in(A),        M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca0],                 Su,                       Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(out(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],  [(M:gnd(B))-Pos|Su0],                     Gl,  Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(go(A),        M, A, B, Pos, PA, Cp0,                      Ca,   [(M:gnd(B))-Pos|Su],                      Gl,  Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(in(A),        M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca1],                 Su,                       Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(out(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],  [(M:gnd(B))-Pos|Su1],                     Gl,  Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(go(A),        M, A, B, Pos, PA, Cp1,                      Ca,   [(M:gnd(B))-Pos|Su],                      Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]).
 % Additional Modes (See Coding Guidelines for Prolog, Michael A. Covington, 2009):
-modedef('*'(A),       M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca0],              Su,                          Gl,  Cp, Ca, Su, Gl, Ca0, Ca) :- Pos = term_position(_, _, _, _, [PA]).
-modedef('='(A),       _, A, B, Pos, PA, Cp0,                      Ca,                Su,  [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp0, Cp) :- Pos = term_position(_, _, _, _, [PA]). % The state of A is preserved
-modedef('/'(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su0, [(globprops:nsh(B))-Pos|Gl], Cp, Ca, Su, Gl, Su0, Su) :- Pos = term_position(_, _, _, _, [PA]). % Like '-' but also A don't share with any other argument
-modedef('>'(A),       _, A, _, term_position(_, _, _, _, [PA]), PA, Cp, Ca,          Su0,                         Gl,  Cp, Ca, Su, Gl, Su0, Su). % Like output but A might be nonvar on entry
+modedef('*'(A),       M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca1],              Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [PA]).
+modedef('='(A),       _, A, B, Pos, PA, Cp1,                      Ca,                Su,  [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]). % The state of A is preserved
+modedef('/'(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su1, [(globprops:nsh(B))-Pos|Gl], Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [PA]). % Like '-' but also A don't share with any other argument
+modedef('>'(A),       _, A, _, term_position(_, _, _, _, [PA]), PA, Cp, Ca,          Su1,                         Gl,  Cp, Ca, Su, Gl, Su1, Su). % Like output but A might be nonvar on entry
 
 % nfi == not_further_inst
 % nsh == not_shared
@@ -719,11 +719,11 @@ modedef('>'(A),       _, A, _, term_position(_, _, _, _, [PA]), PA, Cp, Ca,     
 prolog:error_message(assertion(il_formed_assertion, Term)) -->
     [ 'Il formed assertion, check term ~w'-[Term]].
 
-hpropdef(A0, M, A, PA0, Cp0, Cp) :-
-    term_variables(A0, V),
+hpropdef(A1, M, A, PA1, Cp1, Cp) :-
+    term_variables(A1, V),
     ( member(X, V), X==A ->
-      Cp0 = [(M:A0)-PA0|Cp]
-    ; aprops_arg(A0, M, A, PA0, Cp0, Cp)
+      Cp1 = [(M:A1)-PA1|Cp]
+    ; aprops_arg(A1, M, A, PA1, Cp1, Cp)
     ).
 
 apropdef_2(0, _, _, _, _) --> !, {fail}.
@@ -735,9 +735,9 @@ apropdef_2(N, Head, M, A, PPos) -->
 apropdef_2(1, Head, M, A, APos) -->
     {arg(1, Head, V)}, !,
     hpropdef(A, M, V, APos).
-apropdef_2(N0, Head, M, (P * A), term_position(_, _, _, _, [PPos, APos])) -->
-    {arg(N0, Head, V)}, !,
-    {N is N0 - 1},
+apropdef_2(N1, Head, M, (P * A), term_position(_, _, _, _, [PPos, APos])) -->
+    {arg(N1, Head, V)}, !,
+    {N is N1 - 1},
     apropdef_2(N, Head, M, P, PPos),
     hpropdef(A, M, V, APos).
 
@@ -826,11 +826,11 @@ assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
     maplist(assertion_records_helper(Match), ARecords, Records, RPos).
 
 assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
-    ignore(source_location(File, Line0)),
+    ignore(source_location(File, Line1)),
     ( nonvar(File)
     ->Loc = file(File, Line, Pos, _),
       ( var(APos)
-      ->Line = Line0,
+      ->Line = Line1,
         Pos = -1
       ; true
       )
@@ -912,7 +912,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ->( nonvar(SubPos),
         integer(From)
       ->filepos_line(File, From, Line, Pos)
-      ; Line = Line0,
+      ; Line = Line1,
         Pos = -1
       )
     ; true
