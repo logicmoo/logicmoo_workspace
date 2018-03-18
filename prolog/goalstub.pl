@@ -101,7 +101,7 @@ requires_stub_rename_head_(M:Head1, Head, N, _) :- !,
     requires_stub_rename_head_(Head1, Head, N, M).
 
 requires_stub_rename_head_(Head1, Head, N, M) :-
-    functor(Head1, F, A1 ),
+    functor(Head1, F, A1),
     A is A1 + N,
     requires_stub(F, A, M, _), !,
     stub_head(Head1, Head).

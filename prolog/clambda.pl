@@ -96,7 +96,7 @@ prolog:message(local_variables_outside(Names, Goal, Bindings)) -->
     -[Names, Goal, [variable_names(Bindings)]] ].
 
 lambdaize_args(G, A1, M, VL, Ex, A) :-
-    check_singletons(G, h(VL, Ex, A1 )),
+    check_singletons(G, h(VL, Ex, A1)),
     ( ( Ex==[]
       ; '$member'(E1, Ex),
         '$member'(E2, VL),

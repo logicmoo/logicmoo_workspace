@@ -286,7 +286,7 @@ abstract_interpreter(MH, Abs, State) -->
     {strip_module(MH, M, H)},
     abstract_interpreter_lit(H, M, Abs, State).
 
-abstract_interpreter_lit(H, M, Abs, State1 ) -->
+abstract_interpreter_lit(H, M, Abs, State1) -->
     { predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(M:H, Meta, Goal)
     ; Goal = H

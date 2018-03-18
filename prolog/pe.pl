@@ -52,8 +52,8 @@ pe_arithmetic(A, C) :-
     C =.. [F|CL].
 pe_arithmetic(A, A).
 
-goal_expansion((X is A1 ), (X is A)) :-
+goal_expansion((X is A1), (X is A)) :-
     pe_arithmetic(A1, A).
-goal_expansion((A1 =:= B1 ), (A =:= B)) :-
+goal_expansion((A1 =:= B1), (A =:= B)) :-
     pe_arithmetic(A1, A),
     pe_arithmetic(B1, B).

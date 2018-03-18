@@ -265,7 +265,7 @@ expand_i18n_term(Proc, M, Term1, Term) :-
 expand_i18n_term(_, _, Term, Term).
 
 expand_i18n_term_arg(N1, Proc, M, Term1, Term) :-
-    arg(N1, Term1, Arg1 ), !,
+    arg(N1, Term1, Arg1), !,
     arg(N1, Term,  Arg),
     expand_i18n_term(Proc, M, Arg1, Arg),
     succ(N1, N),
