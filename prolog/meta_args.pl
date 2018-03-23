@@ -36,6 +36,7 @@
           [mark_meta_arguments/1]).
 
 :- use_module(library(intercept)).
+:- use_module(library(applicable_assertions)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(mapargs)).
 :- use_module(library(ctrtchecks)).
@@ -45,7 +46,7 @@
 :- meta_predicate
         mark_meta_arguments(0).
 
-meta_args:attr_unify_hook(AttValue1, VarValue2) :-
+attr_unify_hook(AttValue1, VarValue2) :-
     ( var(VarValue2)
     ->( get_attr(VarValue2, meta_args, AttValue2)
       ->once(narrow_meta_spec(AttValue1, AttValue2, AttValue))
@@ -96,7 +97,7 @@ mark_meta_arguments(Head) :-
     ; true
     ),
     findall(ctspec(Asr), prop_asr(head, Head, _, Asr), AsrL),
-    intercept(check_asrs_pre(ct, applicable_assertions:applicable_prop_check,
+    intercept(check_asrs_pre(ct, applicable_prop_check,
                              AsrL, _, AsrSuccPVL), assrchk(_, _), true),
     findall(Head-Spec-Arg,
             ( member(Asr-PVL, AsrSuccPVL),
