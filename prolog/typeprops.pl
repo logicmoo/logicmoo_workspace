@@ -396,16 +396,3 @@ operator_specifier(xfy).
 operator_specifier(xfx).
 operator_specifier(yf).
 operator_specifier(xf).
-
-:- use_module(library(implementation_module)).
-:- use_module(library(unfold_calls)).
-
-unfoldable(list(_, _),     typeprops).
-unfoldable(nlist(_, _),    typeprops).
-unfoldable(sequence(_, _), typeprops).
-
-prolog:called_by(Goal, typeprops, CM, CL) :-
-    nonvar(Goal),
-    implementation_module(CM:Goal, M),
-    unfoldable(Goal, M),
-    unfold_calls(Goal, CM, unfoldable, CL).
