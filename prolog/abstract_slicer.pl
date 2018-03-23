@@ -33,12 +33,14 @@
 */
 
 :- module(abstract_slicer, [abstract_slice/3,
-                            slicer_abstraction/10]).
+                            slicer_abstraction/9]).
 
 :- use_module(library(abstract_interpreter)).
 
-:- meta_predicate abstract_slice(0, +, ?).
-
+:- meta_predicate
+    abstract_slice(0,+,?),
+    slicer_abstraction(+,+,+,0,?, ?,?,?,?).
+    
 abstract_slice(M:Call, Mode, OptL) :-
     apply_mode(Call, Mode, Spec, RevS),
     term_variables(RevS, VarsR),
@@ -87,10 +89,12 @@ terms_share(A, VarsR, B) :-
          )
     ), !.
 
-slicer_abstraction(Spec, VarsR, Scope, Goal, M, Body,
+slicer_abstraction(Spec, VarsR, Scope, MGoal, Body,
                    state(_, EvalL, OnErr, CallL, Data, Cont),
                    state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
-    {predicate_property(M:Goal, interpreted)}, !,
+    {predicate_property(MGoal, interpreted)},
+    !,
+    {strip_module(MGoal, M, Goal)},
     { \+ ground(Spec),
       chain_of_dependencies(Spec, VarsR, Goal, Cont)
     ->match_head_body(M:Goal, Body1, Loc),
@@ -111,8 +115,9 @@ slicer_abstraction(Spec, VarsR, Scope, Goal, M, Body,
     ->bottom                    % Kludge to avoid cut remove solutions
     ; []
     ).
-slicer_abstraction(_, _, _, Goal, M, M:true, S, S) -->
+slicer_abstraction(_, _, _, MGoal, M:true, S, S) -->
     { S = state(Loc, _, OnError, _, _, _),
-      call(OnError, error(existence_error(evaluation_rule, M:Goal), Loc))
+      call(OnError, error(existence_error(evaluation_rule, MGoal), Loc)),
+      strip_module(MGoal, M, _)
     },
     bottom.

@@ -52,9 +52,9 @@
     match_head_body(0,*,*),
     match_ai(*,0,*,*,*, *,*),
     match_noloops(0,*,*,*,*, *),
-    abstract_interpreter(0,7,?),
-    abstract_interpreter(0,7,+,-),
-    abstract_interpreter(0,7,+,+,-).
+    abstract_interpreter(0,6,?),
+    abstract_interpreter(0,6,+,-),
+    abstract_interpreter(0,6,+,+,-).
 
 :- multifile
     replace_goal_hook/3,
