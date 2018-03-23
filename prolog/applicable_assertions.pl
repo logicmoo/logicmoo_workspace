@@ -33,7 +33,8 @@
 */
 
 :- module(applicable_assertions,
-          [applicable_assertions/3]).
+          [applicable_prop_check/3,
+           applicable_assertions/3]).
 
 :- use_module(library(assrt_lib)).
 :- use_module(library(ctrtchecks)).
