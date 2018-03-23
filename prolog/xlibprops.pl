@@ -36,5 +36,8 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(normalize_head)).
+:- use_module(library(qualify_meta_goal)).
 
 :- pred normalize_head(+, -goal).
+
+:- pred qualify_meta_goal(0, -goal).

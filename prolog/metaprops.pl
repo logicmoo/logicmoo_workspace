@@ -37,6 +37,7 @@
                       (declaration)/2, check/1, trust/1, true/1, false/1]).
 
 :- use_module(library(assertions)).
+:- use_module(library(qualify_meta_goal)).
 
 :- true prop (type)/1 + (declaration(check), global(prop)) # "Defines a type.".
 
@@ -123,11 +124,10 @@ compat(A, VarL, M) :-
     compatc(A, VarL, M), !.
 compat(A, VarL, M) :-
     ( is_type(A, M)
-    ->( cut_to(compat_body(M:A, VarL))
-      ->true
-      ; \+ \+ do_compat(M:A, VarL)
-      )
-    ; call(M:A)
+    ->catch(cut_to(compat_body(M:A, VarL)),
+            _,
+            \+ \+ do_compat(M:A, VarL))
+    ; \+ \+ do_compat(M:A, VarL)
     ).
 
 do_compat(Goal, VarL) :-
@@ -143,8 +143,9 @@ is_type(Head, M) :-
 
 :- meta_predicate compat_body(0, +).
 
-compat_body(MA, VarL) :-
-    catch(clause(MA, Body, Ref), _, fail),
+compat_body(M:G1, VarL) :-
+    qualify_meta_goal(M:G1, G),
+    clause(M:G, Body, Ref),
     clause_property(Ref, module(CM)),
     compat(Body, VarL, CM).
 
