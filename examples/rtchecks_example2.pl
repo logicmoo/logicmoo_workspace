@@ -71,7 +71,7 @@ pred4(X, Y) :-
 
 pred5(a, b).
 
-:- check success concat(A, B, X) : (A = [1, 2], B = [3]) => (X == [1, 2, 4]).
+:- check success aconcat(A, B, X) : (A = [1, 2], B = [3]) => (X == [1, 2, 4]).
 
 :- check exit aconcat/3 : (list * list * var) => (list * list * list).
 
