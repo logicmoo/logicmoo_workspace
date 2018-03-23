@@ -130,23 +130,23 @@ curr_prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 :- multifile asr_aprop/4.
 
 prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
-    implementation_module(M:H, IM),
     asr_head_prop(Asr, C, H, Stat, Type, Dict, From),
-    implementation_module(C:H, IM).
+    implementation_module(C:H, IM),
+    implementation_module(M:H, IM).
 
 :- meta_predicate
        prop_asr(?, 0, +, +),
        aprop_asr(?, 0, +, +).
 
 prop_asr(Key, M:P, From, Asr) :-
-    implementation_module(M:P, IM),
     curr_prop_asr(Key, C:P, From, Asr),
-    implementation_module(C:P, IM).
+    implementation_module(C:P, IM),
+    implementation_module(M:P, IM).
 
 aprop_asr(Key, M:P, From, Asr) :-
-    implementation_module(M:P, IM),
     asr_aprop(Asr, Key, C:P, From),
-    implementation_module(C:P, IM).
+    implementation_module(C:P, IM),
+    implementation_module(M:P, IM).
 
 add_arg(_, G1, G2, _, _) :-
     var(G1),
