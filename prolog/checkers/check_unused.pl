@@ -45,7 +45,6 @@
 :- use_module(library(apply)).
 :- use_module(library(clambda)).
 :- use_module(library(commited_retract)).
-:- use_module(library(infer_meta_if_required)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(checkable_predicate)).
 :- use_module(library(implementation_module)).
@@ -82,7 +81,6 @@ checker:check(unused, Result, Options) :-
     check_unused(Options, Result).
 
 check_unused(Options1, Pairs) :-
-    infer_meta_if_required,
     foldl(select_option_default,
           [method(Method1)-clause],
           Options1, Options2),

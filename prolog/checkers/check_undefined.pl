@@ -45,7 +45,6 @@
 :- use_module(library(from_utils)).
 :- use_module(library(referenced_by)).
 :- use_module(library(group_pairs_or_sort)).
-:- use_module(library(infer_meta_if_required)).
 
 :- multifile
     prolog:message//1.
@@ -57,7 +56,6 @@ checker:check(undefined, Results, Options) :-
     check_undefined(Options, Results).
 
 check_undefined(Options, Results) :-
-    infer_meta_if_required,
     walk_code([source(true),
                trace_reference(-),
                undefined(trace),

@@ -43,7 +43,6 @@
 :- use_module(library(normalize_pi)).
 :- use_module(library(checkable_predicate)).
 :- use_module(library(current_defined_predicate)).
-:- use_module(library(infer_meta_if_required)).
 :- use_module(library(database_fact)).
 :- use_module(library(codewalk)).
 :- use_module(library(location_utils)).
@@ -91,7 +90,6 @@ checker:check(wrong_dynamic, Result, Options) :-
     check_wrong_dynamic(Options, Result).
 
 check_wrong_dynamic(Options1, Pairs) :-
-    infer_meta_if_required,
     option(module(M), Options1, M),
     merge_options(Options1,
                   [infer_meta_predicates(false),
