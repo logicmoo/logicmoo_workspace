@@ -35,6 +35,7 @@
 :- module(codewalk_clause, []).
 
 :- use_module(library(prolog_xref), []).
+:- use_module(library(apply)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(context_values)).
 :- use_module(library(extend_args)).
@@ -121,16 +122,20 @@ walk_clause(FromChk, From) :-
     forall(current_head_body(FromChk, Head, Body, From),
            walk_head_body(Head, Body)).
 
+tv_beforecl(meta_arg).
+
 current_head_body(FromChk, Head, CM:Body, From) :-
     From = clause(Ref),
     Head = _:_,
     current_predicate(_, Head),
     \+ predicate_property(Head, imported_from(_)),
+    current_context_value(trace_vars, TraceVars),
+    partition(tv_beforecl, TraceVars, BC, AC),
+    maplist(trace_var(Head), BC),
     catch(clause(Head, Body, Ref), _, fail),
     call(FromChk, From),
     clause_property(Ref, module(CM)),
-    current_context_value(trace_vars, TraceVars),
-    maplist(trace_var(Head), TraceVars).
+    maplist(trace_var(Head), AC).
 
 trace_var(Head, non_fresh) :-
     term_variables(Head, Vars),
