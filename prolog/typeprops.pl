@@ -248,7 +248,12 @@ list([_|L]) :- list(L).
 :- type list(1, list).
 :- meta_predicate list(1, ?).
 
-list(Type, List) :- maplist(Type, List).
+list(Type, List) :- list_(List, Type).
+
+list_([], _).
+list_([E|L], T) :-
+    type(T, E),
+    list_(L, T).
 
 :- type pair/1.
 pair(_-_).
@@ -260,9 +265,9 @@ keypair(_-_).
 keylist(KL) :- list(keypair, KL).
 
 :- type tlist/2 # "@var{L} is a list or a value of @var{T}s".
-:- meta_predicate tlist(?, 1).
-tlist(L, T) :- list(T, L).
-tlist(E, T) :- type(T, E).
+:- meta_predicate tlist(1, ?).
+tlist(T, L) :- list(T, L).
+tlist(T, E) :- type(T, E).
 
 :- type nlist/2 # "A nested list".
 :- meta_predicate nlist(1, ?).
@@ -346,7 +351,7 @@ arithmetic_function(X) :- arithmetic:evaluable(X, _Module).
 % don't have time to isolate it --EMM
 
 :- true prop goal(P) # "check that ~w is a defined predicate."-[P].
-:- meta_predicate goal(:).
+:- meta_predicate goal(0).
 goal(Pred) :- goal(0, Pred).
     % current_predicate(_, M:G).
 
