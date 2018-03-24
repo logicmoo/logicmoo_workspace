@@ -210,8 +210,8 @@ record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
     ; \+ database_fact(Caller)
     ->normalize_head(Caller, CM:HC),
       \+ hide_var_dynamic(HC, CM),
-      \+ ( get_attr(Fact, meta_args, Spec),
-           '$expand':meta_arg(Spec)
+      \+ ( get_attr(Fact, prolog_metainference, Spec),
+           prolog_metainference:is_meta(Spec)
          ),
       update_fact_from(var_dynamic_db(MPI), From)
     ; true

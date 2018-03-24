@@ -223,8 +223,8 @@ walk_called_3(Goal, M) :-
     !,
     walk_called_by(Called, M).
 walk_called_3(Meta, M) :-
-    (   predicate_property(M:Meta, meta_predicate(Head))
-    ;   inferred_meta_predicate(M:Meta, Head)
+    (   inferred_meta_predicate(M:Meta, Head)
+    ;   predicate_property(M:Meta, meta_predicate(Head))
     ),
     !,
     walk_meta_call(1, Head, Meta, M).
