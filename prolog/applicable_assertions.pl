@@ -48,9 +48,9 @@ assrt_lib:asr_aprop(spec(Asr), Key, Prop, From) :-
 
 applicable_prop_check(T, Part, Asr) :-
     part_time(Part, T),
-    asr_aprop(Asr, type, Type,   _),
-    asr_aprop(Asr, stat, Status, _),
+    asr_aprop(Asr, type, Type, _),
     assrt_op(Part, step2, inner, Type),
+    asr_aprop(Asr, stat, Status, _),
     applicable_status(Status).
 
 applicable_status(true).
