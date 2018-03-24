@@ -194,7 +194,7 @@ prolog:message(acheck(wrong_dynamic)) -->
      'difficult to analyze.', nl, nl].
 
 :- public collect_wrong_dynamic/4.
-:- meta_predicate collect_wrong_dynamic(?,+,0,+).
+:- meta_predicate collect_wrong_dynamic(?,0,+,+).
 collect_wrong_dynamic(M, MGoal, Caller, From) :-
     ignore(record_location_meta(MGoal, M, From, \T^G^MG^_^F^database_fact_ort(T,G,MG,F),
                                 record_location_wd(Caller))).
