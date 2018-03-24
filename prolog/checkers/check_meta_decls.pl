@@ -81,10 +81,12 @@ checker:check(meta_decls, Pairs, Options1) :-
     select_option(module(M), Options2, _, M),
     findall(information-((Loc/M)-Spec),
             ( prolog_metainference:inferred_meta_pred(_, M, Spec),
+              functor(Spec, F, A),
+              functor(Head, F, A),
+              \+ predicate_property(M:Head, meta_predicate(_)),
               %% Only exported predicates would require qualification
               %% of meta-arguments -- EMM after JW talk
               is_entry_point(Spec, M),
-              functor(Spec, F, A),
               PI = M:F/A,
               \+ hide_missing_meta_pred(PI),
               once(property_from(PI, _, From)), % once: only first occurrence
