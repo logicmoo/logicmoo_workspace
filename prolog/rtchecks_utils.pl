@@ -122,6 +122,8 @@ prolog:error_message(unintercepted_signal(Signal)) -->
 % We should use our own apply.pl predicates, so that apply.pl can be
 % run-time checked:
 
+:- meta_predicate '$foldl'(3,+,?,?).
+
 '$foldl'(Goal, List, V1, V) :-
     '$foldl_'(List, Goal, V1, V).
 
