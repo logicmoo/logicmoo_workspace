@@ -45,12 +45,10 @@ rtchecked(PlList) :-
     throw(error(context_error(nodirective, rtcheck(PlList)), _)).
 
 :- multifile
-    '$rtchecked'/1, % kludge to avoid static analysis messages
     system:term_expansion/2,
     prolog:rename_predicate/2.
 
 :- dynamic
-    '$rtchecked'/1,
     system:term_expansion/2.
 
 wrappers(Var) -->
