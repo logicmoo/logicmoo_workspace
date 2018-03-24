@@ -99,16 +99,13 @@ cleanup_db :-
     cleanup_loc_dynamic(_, _, dynamic(_, _, _), _).
 
 showcheck(Checker) :-
-    showcheck(Checker, []),
-    cleanup_db.
+    showcheck(Checker, []).
 
 available_checker(Checker) :-
     clause(check(Checker, _, _), _).
 
 showcheck(Checker, Options) :-
-    with_prolog_flag(
-        verbose, silent,
-        check_results(Checker, Results, Options)),
+    check_wrapper(check(Checker, Results, Options)),
     full_report(Checker-Results).
 
 with_prolog_flag(Flag, Value, Goal) :-
@@ -176,13 +173,16 @@ checkallc(Options) :- checkall(concurrent_maplist, Options).
 :- meta_predicate checkall(2, +).
 checkall(Mapper, Options) :-
     findall(C, available_checker(C), CL),
+    check_wrapper(call(Mapper, checkeach(Options), CL)).
+
+check_wrapper(Goal) :-
     with_prolog_flag(
         check_database_preds, true,
         with_prolog_flag(
             verbose, silent,
             setup_call_cleanup(
                 infer_meta_if_required,
-                call(Mapper, checkeach(Options), CL),
+                Goal,
                 cleanup_db))).
 
 :- public checkeach/2.
