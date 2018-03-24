@@ -188,26 +188,26 @@ var_location(Term, Pos, Var, Loc) :-
 
 term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F) :- valid_cp(C)),
                (decompose_assertion_body(Body, Format, Pos,
-                                         A,  B,  C,  D,  E,  F,
+                                         A,   B,   C,   D,   E,   F,
                                          PDP, DPP, CPP, APP, GPP, COP) :- valid_cp(C))) :- !,
     maplist(var_location(Body, Pos),
-            [A,  B,  C,  D,  E,  F],
+            [A,   B,   C,   D,   E,   F],
             [PDP, DPP, CPP, APP, GPP, COP]).
 
 term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F)),
                (decompose_assertion_body(Body, Format, Pos,
-                                         A,  B,  C,  D,  E,  F,
+                                         A,   B,   C,   D,   E,   F,
                                          PDP, DPP, CPP, APP, GPP, COP))) :-
     maplist(var_location(Body, Pos),
-            [A,  B,  C,  D,  E,  F],
+            [A,   B,   C,   D,   E,   F],
             [PDP, DPP, CPP, APP, GPP, COP]).
 term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F) :-
                     decompose_assertion_body(BO, Format, A, B, C, D, E, "")),
                (decompose_assertion_body(Body, Format, Pos,
-                                         A,  B,  C,  D,  E,  F,
+                                         A,   B,   C,   D,   E,   F,
                                          PDP, DPP, CPP, APP, GPP, COP) :-
                     decompose_assertion_body(BO, Format, BOP,
-                                             A,  B,  C,  D,  E,  "",
+                                             A,   B,   C,   D,   E,   "",
                                              PDP, DPP, CPP, APP, GPP, _))) :-
     Body = BO#F,
     maplist(var_location(Body, Pos), [BO, F], [BOP, COP]).
