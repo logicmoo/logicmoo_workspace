@@ -52,6 +52,9 @@ f_from_chk(From) :-
     from_to_file(From, File),
     '$file_db'(File).
 
+:- meta_predicate
+    walk_clause(1, +).
+
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)-(codewalk:true_3),
