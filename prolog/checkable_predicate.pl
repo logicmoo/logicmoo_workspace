@@ -63,5 +63,9 @@ checkable_predicate(P) :-
     \+ predicate_property(P, dynamic),
     !.
 checkable_predicate(P) :-
+    predicate_property(P, dynamic),
+    \+ predicate_property(P, exported),
+    !.
+checkable_predicate(P) :-
     \+ not_checkable_predicate(P).
     
