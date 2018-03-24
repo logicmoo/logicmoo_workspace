@@ -329,14 +329,14 @@ num_solutions_eq(N, Goal) :-
       )
     ).
 
-:- meta_predicate num_solutions(0, 1).
 %!   num_solutions(:Goal, :Check)
 %
 %    If the number of solutions of Goal is N, call(Check, N) succeeds.
 
+:- meta_predicate num_solutions(1, 0).
 :- global num_solutions/2 + meta_modes.
 
-num_solutions(Goal, Check) :-
+num_solutions(Check, Goal) :-
     Sols = num_solutions(0),
     ( true
     ; arg(1, Sols, N1),
