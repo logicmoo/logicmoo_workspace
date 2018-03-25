@@ -51,6 +51,9 @@ not_checkable_predicate(P) :-
     predicate_property(P, dynamic),
     \+ application_predicate(P).
 not_checkable_predicate(P) :-
+    predicate_property(P, multifile),
+    \+ application_predicate(P).
+not_checkable_predicate(P) :-
     predicate_property(P, imported_from(_)).
 not_checkable_predicate(P) :-
     predicate_property(P, foreign).
@@ -59,17 +62,8 @@ not_checkable_predicate(P) :-
 
 :- meta_predicate checkable_predicate(?).
 checkable_predicate(P) :-
-    predicate_property(P, exported),
-    \+ predicate_property(P, dynamic),
-    !.
-checkable_predicate(P) :-
     predicate_property(P, dynamic),
     \+ predicate_property(P, exported),
-    !.
-checkable_predicate(P) :-
-    predicate_property(P, dynamic),
-    predicate_property(P, exported),
-    application_predicate(P),
     !.
 checkable_predicate(P) :-
     \+ not_checkable_predicate(P).
