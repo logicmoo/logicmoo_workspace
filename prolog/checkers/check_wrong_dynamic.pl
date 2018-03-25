@@ -46,6 +46,7 @@
 :- use_module(library(database_fact)).
 :- use_module(library(codewalk)).
 :- use_module(library(location_utils)).
+:- use_module(library(predicate_from)).
 :- use_module(library(option_utils)).
 :- use_module(library(compact_goal)).
 :- use_module(library(from_utils)).
@@ -143,7 +144,9 @@ current_unmodified_dynamic(Ref, FromChk, Loc, PI) :-
     checkable_predicate(Ref),
     predicate_property(Ref, dynamic),
     functor(H, F, A),
-    property_from(PI, dynamic, From),
+    once(( property_from(PI, dynamic, From)
+         ; predicate_from(Ref, From)
+         )),
     call(FromChk, From),
     %% ignore predicates with the following properties:
     \+ predicate_property(Ref, multifile),

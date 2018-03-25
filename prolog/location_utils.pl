@@ -33,10 +33,10 @@
 */
 
 :- module(location_utils,
-        [property_location/3, predicate_location/2, property_from/3,
-         record_location_dynamic/3, cleanup_loc_dynamic/4,
-         from_location/2, in_set/2, in_dir/2, all_call_refs/5,
-         record_location_meta/5, record_location/4, record_location_goal/6]).
+          [property_location/3, predicate_location/2, record_location_dynamic/3,
+           in_dir/2, all_call_refs/5, record_location_meta/5, record_location/4,
+           in_set/2, from_location/2, property_from/3, record_location_goal/6,
+           cleanup_loc_dynamic/4]).
 
 :- use_module(library(lists)).
 :- use_module(library(prolog_codewalk), []).
@@ -70,10 +70,8 @@ property_location(Prop, Declaration, Location) :-
 
 % non det
 property_from(Head, Declaration, From) :-
-    ( ( dec_location(Head, Declaration, From)
-      ; def_location(Head, Declaration, From)
-      ) *-> true
-    ; From = []
+    ( dec_location(Head, Declaration, From)
+    ; def_location(Head, Declaration, From)
     ).
 
 dec_location(Head1/0, Declaration, From) :-
@@ -106,21 +104,21 @@ predicate_location(P, Loc) :-
 
 :- meta_predicate predicate_properties(:,-).
 predicate_properties(P, List) :-
-        findall(Prop,
-                ( predicate_property(P, Prop),
-                  \+ memberchk(Prop, [interpreted,
-                                      visible,
-                                      built_in,
-                                      defined,
-                                      nodebug,
-                                      number_of_rules(_),
-                                      number_of_clauses(_),
-                                      imported_from(_),
-                                      file(_),
-                                      indexed(_),
-                                      last_modified_generation(_),
-                                      line_count(_)])
-                ), List).
+    findall(Prop,
+            ( predicate_property(P, Prop),
+              \+ memberchk(Prop, [interpreted,
+                                  visible,
+                                  built_in,
+                                  defined,
+                                  nodebug,
+                                  number_of_rules(_),
+                                  number_of_clauses(_),
+                                  imported_from(_),
+                                  file(_),
+                                  indexed(_),
+                                  last_modified_generation(_),
+                                  line_count(_)])
+            ), List).
 
 prop_t(use). % In some cases is already tracked by prolog:called_by/4@database_fact
 prop_t(def).

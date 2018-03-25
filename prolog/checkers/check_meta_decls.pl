@@ -89,6 +89,7 @@ checker:check(meta_decls, Pairs, Options1) :-
               is_entry_point(Spec, M),
               PI = M:F/A,
               \+ hide_missing_meta_pred(PI),
-              once(property_from(PI, _, From)), % once: only first occurrence
-              from_chk(FileChk, From),
+              once(( property_from(PI, _, From),
+                     from_chk(FileChk, From)
+                   )), % once: only first occurrence
               from_location(From, Loc)), Pairs).

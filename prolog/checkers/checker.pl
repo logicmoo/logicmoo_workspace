@@ -105,7 +105,7 @@ available_checker(Checker) :-
     clause(check(Checker, _, _), _).
 
 showcheck(Checker, Options) :-
-    check_wrapper(check(Checker, Results, Options)),
+    check_results(Checker, Results, Options),
     full_report(Checker-Results).
 
 with_prolog_flag(Flag, Value, Goal) :-
@@ -193,6 +193,4 @@ checkeach(Options, Checker) :-
     donecheck(Checker, T).
 
 check_results(Checker, Results, Options) :-
-    with_prolog_flag(
-        check_database_preds, true,
-        check(Checker, Results, Options)).
+    check_wrapper(check(Checker, Results, Options)).

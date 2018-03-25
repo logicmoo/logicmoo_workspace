@@ -94,12 +94,9 @@ am_head_prop_idx(Flag, Head, M, Meta, From) :-
              prop_asr(glob, meta_modes(_), _, Asr)
            ))
     ),
-    ( property_from(M:Pred, meta_predicate, From),
-      From \= []
-    ->true
-    ; predicate_from(Pred, From)
-    ),
-    assertion(nonvar(From)).
+    once(( property_from(M:Pred, meta_predicate, From)
+         ; predicate_from(Pred, From)
+         )).
 am_head_prop_idx(_, _, _, _, _).
 
 assrt_lib:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
