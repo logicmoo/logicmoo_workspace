@@ -38,5 +38,10 @@
 :- meta_predicate predicate_from(:,-).
 
 predicate_from(P, file(File, Line, -1, 0)) :-
-        predicate_property(P, file(File)),
-        predicate_property(P, line_count(Line)).
+        ( predicate_property(P, file(File)),
+          predicate_property(P, line_count(Line))
+        ->true
+        ; strip_module(P, M, _),
+          module_property(M, file(File)),
+          Line = 1
+        ).
