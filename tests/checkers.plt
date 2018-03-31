@@ -12,6 +12,7 @@ application_module(cwdb).
 :- use_module(cwda).
 :- use_module(cwdb).
 :- use_module(cwdc).
+:- use_module(cwde).
 
 test(cwd_1) :-
     check_results(wrong_dynamic, Results, [files([xtools/tests/cwdb])]),
@@ -32,5 +33,9 @@ test(cwd_4) :- % There is an issue that does not refers to module cwda
 test(cwd_5) :-
     check_results(wrong_dynamic, Results, [files([xtools/tests/cwdc])]),
     assertion(Results = []).
+
+test(cwd_6) :-
+    check_results(wrong_dynamic, Results, [module(cwde)]),
+    assertion(Results = [_]).
 
 :- end_tests(checkers).

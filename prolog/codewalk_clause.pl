@@ -187,8 +187,18 @@ walk_called_2(\+(A), M) :-
     \+ \+ walk_called(A, M).
 walk_called_2((A;B), M) :-
     !,
-    \+ \+ walk_called(A, M),
-    \+ \+ walk_called(B, M).
+    term_variables(A, VA),
+    term_variables(B, VB),
+    sort(VA, SA),
+    sort(VB, SB),
+    ord_intersection(SA, SB, L),
+    findall(L-V-Att,
+            ( member(C, [A, B]),
+              walk_called(C, M),
+              term_attvars(L, V),
+              maplist(get_attrs, V, Att)
+            ), LVA),
+    maplist(put_attrs_(L), LVA).
 walk_called_2(Goal, M) :-
     walk_called_3(Goal, M),
     fail.
@@ -196,6 +206,8 @@ walk_called_2(Goal, M) :-
     ignore(walk_called_ontrace(Goal, M)),
     current_context_value(trace_vars, TraceVars),
     maplist(trace_var(M:Goal), TraceVars).
+
+put_attrs_(L, L-V-A) :- maplist(put_attrs, V, A).
 
 walk_called_ontrace(Goal, M) :-
     current_context_value(trace_reference, To),
