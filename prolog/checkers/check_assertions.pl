@@ -265,8 +265,6 @@ var_info(A, P) -->
     ; []
     ).
 
-rm_var_info(Var) :- del_attr(Var, '$var_info').
-
 %!  tabled_generate_ctchecks(+Head, ?Context, +Caller, -Goal) is det
 %
 tabled_generate_ctchecks(H, M, Caller, Goal) :-
@@ -275,8 +273,8 @@ tabled_generate_ctchecks(H, M, Caller, Goal) :-
     H =.. [F|Args],
     P =.. [F|PInf],
     foldl(var_info, Args, PInf, VInf, []),
-    term_variables(M:H, Vars),
-    maplist(rm_var_info, Vars),
+    term_attvars(M:H, Vars),
+    maplist(del_attrs, Vars),
     ( meta_call_goal(H, M, Caller, Meta)
     ->qualify_meta_goal(CM:P, Meta, G)
     ; G = P

@@ -40,8 +40,24 @@
 
 :- meta_predicate mark_meta_arguments(0 ).
 
+annotate(Var, Annotation) :-
+    get_attr(Var, meta_args, Annot0),
+    !,
+    prolog_metainference:join_annotation(Annot0, Annotation, Joined),
+    put_attr(Var, meta_args, Joined).
+annotate(Var, Annotation) :-
+    put_attr(Var, meta_args, Annotation).
+
+attr_unify_hook(A1, Other) :-
+    ( get_attr(Other, meta_args, A2)
+    ->prolog_metainference:join_annotation(A1, A2, A),
+      put_attr(Other, meta_args, A)
+    ; var(Other)
+    ->put_attr(Other, meta_args, A1)
+    ; true
+    ).
+
 mark_meta_arg(_, Arg, Spec) :-
-    prolog_metainference:
     ( var(Arg)
     ->annotate(Arg, Spec)
     ; Arg = M:A

@@ -98,6 +98,7 @@ check_wrong_dynamic(Options1, Pairs) :-
                    evaluate(false),
                    trace_variables([meta_arg,
                                     non_fresh]),
+                   module_class([user, system, library]),
                    on_trace(collect_wrong_dynamic(M))],
                   Options),
     walk_code(Options),
@@ -213,7 +214,7 @@ record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
     ; \+ database_fact(Caller)
     ->normalize_head(Caller, CM:HC),
       \+ hide_var_dynamic(HC, CM),
-      \+ ( get_attr(Fact, prolog_metainference, Spec),
+      \+ ( get_attr(Fact, meta_args, Spec),
            prolog_metainference:is_meta(Spec)
          ),
       update_fact_from(var_dynamic_db(MPI), From)
