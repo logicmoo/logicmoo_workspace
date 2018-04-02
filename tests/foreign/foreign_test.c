@@ -89,18 +89,23 @@ void c_get_arrays(root_t __root, int const size, double ****A, int ***B, int **C
 
 void show_arrays(double *** const A, int ** const B, int * const C) {
     int index1, index2, index3;
+    printf("\n");
     for (index1 = 0; index1 < FI_array_length(A); index1 ++) {
-	for (index2 = 0; index2 < FI_array_length(A[index1]); index2++)
+	for (index2 = 0; index2 < FI_array_length(A[index1]); index2++) {
 	    for (index3 = 0; index3 < FI_array_length(A[index1][index2]); index3++)
-		printf("A[%d,%d,%d]=%lf\n",index1,index2,index3,A[index1][index2][index3]);
+		printf("A[%d,%d,%d]=%lf ",index1,index2,index3,A[index1][index2][index3]);
+            printf("\n");
+        }
     }
     for (index1 = 0; index1 < FI_array_length(B); index1 ++) {
 	for (index2 = 0; index2 < FI_array_length(B[index1]); index2++)
-	    printf("B[%d,%d]=%d\n",index1,index2,B[index1][index2]);
+	    printf("B[%d,%d]=%d ",index1,index2,B[index1][index2]);
+        printf("\n");
     }
     for (index1 = 0; index1 < FI_array_length(C); index1 ++) {
-	printf("C[%d]=%d\n",index1,C[index1]);
+	printf("C[%d]=%d ",index1,C[index1]);
     }
+    printf("\n");
 }
 
 void c_io(int ** I) {

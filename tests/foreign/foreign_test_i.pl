@@ -7,7 +7,8 @@
 :- use_module(library(plprops)).
 :- use_module(library(foreign/foreign_interface)).
 :- use_module(library(foreign/foreign_props)).
-:- extra_compiler_opts('-O2 -gdwarf-2 -g3 -D__DEBUG_MALLOC__').
+% :- extra_compiler_opts('-O2 -gdwarf-2 -g3 -D__DEBUG_MALLOC__').
+:- extra_compiler_opts('-O2 -gdwarf-2 -g3').
 :- use_foreign_header(foreign_test).
 :- use_foreign_source(foreign_test).
 :- gen_foreign_library(.(foreign_test_i)).
