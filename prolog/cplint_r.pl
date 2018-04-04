@@ -125,7 +125,7 @@ r_row(X,Y,r(X,Y)).
  */
 get_set_from_xy_list(L,R) :-
     maplist(key,L,X),
-    maplist(y,L,Y),
+    maplist(value,L,Y),
     maplist(r_row,X,Y,R).
 
 
