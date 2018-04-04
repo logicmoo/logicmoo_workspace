@@ -21,15 +21,9 @@
           [ build_xy_list/3,
             r_row/3,
             get_set_from_xy_list/2,
-            prob_bar_r/1,
-            prob_bar_r/2,
-            mc_prob_bar_r/1,
-            mc_sample_bar_r/2,
-            mc_sample_arg_bar_r/3,
-            mc_sample_arg_first_bar_r/3,
-            mc_rejection_sample_arg_bar_r/4,
-            mc_mh_sample_arg_bar_r/5,
-            mc_mh_sample_arg_bar_r/6,
+            bar_r/1,
+            bar_r/2,
+            argbar_r/1,
             histogram_r/2,
             density_r/1,
             densities_r/2,
@@ -47,21 +41,12 @@
 :- use_module(library(mcintyre)).
 :- use_module(library(auc)).
 :- use_module(library(slipcover)).
-
+:- use_module(library(cplint_util)).
 /* Optional module */
 :- use_module(swish(lib/r_swish)).
 
 /* Meta predicate definitions. */
 
-:-meta_predicate prob_bar_r(:).
-:-meta_predicate prob_bar_r(:,:).
-:-meta_predicate mc_prob_bar_r(:).
-:-meta_predicate mc_sample_bar_r(:,+).
-:-meta_predicate mc_sample_arg_bar_r(:,+,+).
-:-meta_predicate mc_sample_arg_first_bar_r(:,+,+).
-:-meta_predicate mc_rejection_sample_arg_bar_r(:,:,+,+).
-:-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+).
-:-meta_predicate mc_mh_sample_arg_bar_r(:,:,+,+,+,+).
 :-meta_predicate test_r(:,+,-,-,-).
 
 :- multifile sandbox:safe_primitive/1.
@@ -190,57 +175,29 @@ geom_prob_bar(PTrue,PFalse) :-
     ).
 
 /**
- * prob_bar_r(:Query:atom) is nondet
+ * bar_r(+Probability:float) is nondet
  *
- * The predicate computes and plots the probability of Query
- * as a bar chart with a bar for the probability of Query true and
- * a bar for the probability of Query false.
- * If Query is not ground, it returns in backtracking all ground
- * instantiations of Query together with their probabilities
+ * The predicate plots the probability 
+ * as a bar chart with a bar for Probability and
+ * a bar for 1-Probability.
  */
-prob_bar_r(M:Goal) :-
+bar_r(PT) :-
     load_r_libraries,
-    s(M:Goal,PT),
-    PF is 1.0-PT,
-    geom_prob_bar(PT,PF),
-    finalize_r_graph.
-/*
- * PF is 1.0-PT i.e:
- * Probability False = 1 - Probability True. 
- */
-
-
-/**
- * prob_bar_r(:Query:atom,:Evidence:atom) is nondet
- *
- * The predicate computes the probability of the Query given Evidence
- * as a bar chart with
- * a bar for the probability of Query true and a bar for the probability of
- * Query false given Evidence.
- * If Query /Evidence are not ground, it returns in backtracking all
- * ground instantiations of
- * Query/Evidence together with their probabilities
- */
-prob_bar_r(M:Goal,M:Evidence):-
-    load_r_libraries,
-    prob(M:Goal,M:Evidence,PT),
     PF is 1.0-PT,
     geom_prob_bar(PT,PF),
     finalize_r_graph.
 
-/* mcintyre */
-
 
 /**
- * mc_prob_bar_r(:Query:atom) is det
+ * bar_r(+Successes:int,+Failures:int) is nondet
  *
- * See prob_bar.
+ * The predicate plots a  chart with a bar for the number
+ * of Successes and
+ * a bar for the number of Failures.
  */
-mc_prob_bar_r(M:Goal):-
+bar_r(S,F) :-
     load_r_libraries,
-    mc_prob(M:Goal,PT),
-    PF is 1.0-PT,
-    geom_prob_bar(PT,PF),
+    geom_mc_sample_bar(S,F),
     finalize_r_graph.
 
 
@@ -268,20 +225,6 @@ geom_mc_sample_bar(PTrue,PFalse) :-
     )
     + coord_flip()
     + theme(aspect.ratio=1/2).
-
-/**
- * mc_sample_bar_r(:Query:atom,+Samples:int) is det
- *
- * The predicate samples Query a number of Samples times and
- * plots a bar chart with a bar for the number of successes and a bar for the 
- * number of failures.
- * If Query is not ground, it considers it as an existential query.
- */
-mc_sample_bar_r(M:Goal,S):-
-    load_r_libraries,
-    mc_sample(M:Goal,S,T,F,_P),
-    geom_mc_sample_bar(T,F),
-    finalize_r_graph.
 
 
 /* Differences from the previous predicates:
@@ -323,133 +266,20 @@ geom_mc_sample_arg_bar(L) :-
     ).
 
 /**
- * mc_sample_arg_bar_r(:Query:atom,+Samples:int,?Arg:var) is det
+ * argbar_r(+Values:list) is det
  *
- * The predicate samples Query Samples times. Arg should be a variable
- * in Query.
+ * Values is a list of couples V-N where
+ * V is the value and N is the number of samples
+ * returning that value.
  * The predicate plots a bar chart
- * with a bar for each possible value of L,
- * the list of values of Arg for which Query succeeds in
- * a world sampled at random.
- * The size of the bar is the number of samples
- * returning that list of values.
+ * with a bar for each possible value V.
+ * The size of the bar is given by N.
  */
-mc_sample_arg_bar_r(M:Goal,S,Arg):-
+argbar_r(ValList0):-
     load_r_libraries,
-    mc_sample_arg(M:Goal,S,Arg,ValList0),
     maplist(to_atom,ValList0,ValList),
     geom_mc_sample_arg_bar(ValList),
     finalize_r_graph.
-
-
-geom_mc_sample_arg_first_bar(L) :-
-    get_set_from_xy_list(L,R),
-    r_data_frame_from_rows(df1, R),
-    colnames(df1) <- c("names", "prob"),
-    df <- data.frame(
-        ids=as.character(df1$names),
-        probabilities=c(df1$prob)
-    ),
-    <- ggplot(
-        data=df,
-        aes(
-            x=reorder(
-                ids,
-                probabilities
-            ),
-            y=probabilities
-        )
-    ) + geom_bar(
-        stat="identity",
-        width=0.5
-    )
-    + coord_flip() + theme(
-        axis.title.y=element_blank()
-    ).
-
-/**
- * mc_sample_arg_first_bar_r(:Query:atom,+Samples:int,?Arg:var) is det
- *
- * The predicate samples Query Samples times. Arg should be a variable
- * in Query.
- * The predicate plots a bar chart
- * with a bar for each value of Arg returned as a first answer by Query in
- * a world sampled at random.
- * The size of the bar is the number of samples that returned that value.
- * The value is failure if the query fails.
- */
-mc_sample_arg_first_bar_r(M:Goal,S,Arg):-
-    load_r_libraries,
-    mc_sample_arg_first(M:Goal,S,Arg,ValList0),
-    maplist(to_atom,ValList0,ValList),
-    geom_mc_sample_arg_first_bar(ValList),
-    finalize_r_graph.
-  
-
-geom_mc_rejection_sample_arg_bar(L) :-
-    geom_mc_sample_arg_first_bar(L).
-
-/**
- * mc_rejection_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,?Arg:var) is det
- *
- * The predicate calls mc_rejection_sample_arg/5 and builds an R graph
- * of the results.
- * It plots a bar chart with a bar for each possible value of L,
- * the list of values of Arg for which Query succeeds
- * given that Evidence is true
- * The size of the bar is the number of samples
- * returning that list of values.
- */
-mc_rejection_sample_arg_bar_r(M:Goal,M:Ev,S,Arg):-
-    load_r_libraries,
-    mc_rejection_sample_arg(M:Goal,M:Ev,S,Arg,ValList0),
-    maplist(to_atom,ValList0,ValList),
-    geom_mc_rejection_sample_arg_bar(ValList),
-    finalize_r_graph.
-
-
-geom_mc_mh_sample_arg_bar(L) :-
-    geom_mc_sample_arg_first_bar(L).
-
-/**
- * mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Mix:int,+Lag:int,?Arg:var) is det
- *
- * The predicate calls mc_mh_sample_arg/7 and builds an R graph
- * of the results.
- * The predicate plots a bar chart
- * with a bar for each possible value of L,
- * the list of values of Arg for which Query succeeds in
- * a world sampled at random.
- * The size of the bar is the number of samples
- * returning that list of values.
- */
-mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,Mix,L,Arg):-
-    load_r_libraries,
-    mc_mh_sample_arg(M:Goal,M:Ev,S,Mix,L,Arg,ValList0),
-    maplist(to_atom,ValList0,ValList),
-    geom_mc_mh_sample_arg_bar(ValList),
-    finalize_r_graph.
-
-
-/**
- * mc_mh_sample_arg_bar_r(:Query:atom,:Evidence:atom,+Samples:int,+Lag:int,?Arg:var) is det
- *
- * The predicate call mc_mh_sample_arg/6 and builds a R graph
- * of the results.
- * The predicate plots a bar chart
- * with a bar for each possible value of L,
- * the list of values of Arg for which Query succeeds in
- * a world sampled at random.
- * The size of the bar is the number of samples
- * returning that list of values.
- */
-mc_mh_sample_arg_bar_r(M:Goal,M:Ev,S,L,Arg):-
-    load_r_libraries,
-    mc_mh_sample_arg(M:Goal,M:Ev,S,L,Arg,ValList0),
-    maplist(to_atom,ValList0,ValList),
-    geom_mc_mh_sample_arg_bar(ValList),
-    finalize_r_graph.
-
 
 geom_histogram(L,Min,Max,BinWidth) :-
     binwidtH <- BinWidth,
@@ -665,17 +495,10 @@ sandbox:safe_primitive(cplint_r:histogram_r(_,_)).
 sandbox:safe_primitive(cplint_r:density_r(_)).
 sandbox:safe_primitive(cplint_r:densities_r(_,_)).
 sandbox:safe_primitive(cplint_r:compute_areas_diagrams_r(_,_,_)).
+sandbox:safe_primitive(cplint_r:bar_r(_),[]).
+sandbox:safe_primitive(cplint_r:argbar_r(_),[]).
 
 :- multifile sandbox:safe_meta/2.
 
-sandbox:safe_meta(cplint_r:prob_bar_r(_),[]).
-sandbox:safe_meta(cplint_r:prob_bar_r(_,_),[]).
-sandbox:safe_meta(cplint_r:mc_prob_bar_r(_),[]).
-sandbox:safe_meta(cplint_r:mc_sample_bar_r(_,_),[]).
-sandbox:safe_meta(cplint_r:mc_sample_arg_bar_r(_,_,_),[]).
-sandbox:safe_meta(cplint_r:mc_sample_arg_first_bar_r(_,_,_),[]).
-sandbox:safe_meta(cplint_r:mc_rejection_sample_arg_bar_r(_,_,_,_),[]).
-sandbox:safe_meta(cplint_r:mc_mh_sample_arg_bar_r(_,_,_,_,_),[]).
-sandbox:safe_meta(cplint_r:mc_mh_sample_arg_bar_r(_,_,_,_,_,_),[]).
 sandbox:safe_meta(cplint_r:test_r(_,_,_,_,_), []).
 
