@@ -295,18 +295,28 @@ geom_histogram(L,Min,Max,BinWidth) :-
     ).
 
 /**
- * histogram_r(+List:list,+NBins:int) is det
+ * histogram_r(+List:list,+Options:list) is det
  *
- * Draws a histogram of the samples in List dividing the domain in
- * NBins bins. List must be a list of couples of the form [V]-W or V-W
+ * Draws a histogram of the samples in List.
+ * List must be a list of couples of the form [V]-W or V-W
  * where V is a sampled value and W is its weight.
- */
-histogram_r(L0,NBins) :-
+ * Options is a list of options, the following are recognised by histogram/3:
+ * * min(+Min:float)
+ *   the minimum value of domain, default value the minimum in List
+ * * max(+Max:float)
+ *   the maximum value of domain, default value the maximum in List
+ * * nbins(+NBins:int)
+ *   the number of bins for dividing the domain, default value 40
+*/
+histogram_r(L0,Options):-
     load_r_libraries,
     maplist(to_pair,L0,L1),
     maplist(key,L1,L2),
-    max_list(L2,Max),
-    min_list(L2,Min),
+    max_list(L2,DMax),
+    min_list(L2,DMin),
+    option(max(Max),Options,DMax),
+    option(min(Min),Options,DMin),
+    option(nbins(NBins),Options,40),
     histogram_r(L0,NBins,Min,Max),
     finalize_r_graph.
 
