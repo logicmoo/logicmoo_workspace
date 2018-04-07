@@ -41,6 +41,7 @@
 :- use_module(library(location_utils)).
 :- use_module(library(codewalk)).
 :- use_module(library(dynamic_locations)).
+:- use_module(library(checkable_predicate)).
 
 :- multifile
     prolog:message//1.
@@ -91,11 +92,7 @@ show_trivial_fail(failure(Caller, MGoal, S)) -->
     ['In ~q, failure for ~q, biggest failure chain was ~q'-[Caller, MGoal, S], nl].
 
 :- multifile ignore_predicate/2.
-ignore_predicate(_=_, _) :- !, fail.
 ignore_predicate(H, M) :- \+ predicate_property(M:H, defined), !.
-ignore_predicate(H, M) :-
-    predicate_property(M:H, built_in),
-    \+ predicate_property(M:H, dynamic), !.
 ignore_predicate(H, M) :- predicate_property(M:H, multifile), !.
 ignore_predicate(pce_class(_, _, template, _, _, _), pce_expansion).
 ignore_predicate(property(system_source_prefix(_)), pce_host).
@@ -111,6 +108,7 @@ cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
     atom(CM),
     MGoal = M:H,
     callable(H),
+    checkable_predicate(MGoal),
     \+ ignore_predicate(H, M),
     copy_term_nat(CM:H, Term),
     variant_sha1(Term, Hash),

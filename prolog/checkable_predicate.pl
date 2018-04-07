@@ -59,11 +59,14 @@ not_checkable_predicate(P) :-
     predicate_property(P, foreign).
 not_checkable_predicate(P) :-
     predicate_property(P, volatile).
+not_checkable_predicate(P) :-
+    predicate_property(P, public).
 
 :- meta_predicate checkable_predicate(?).
 checkable_predicate(P) :-
     predicate_property(P, dynamic),
     \+ predicate_property(P, exported),
+    \+ predicate_property(P, public),
     !.
 checkable_predicate(P) :-
     \+ not_checkable_predicate(P).
