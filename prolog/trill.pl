@@ -627,9 +627,12 @@ clash(M,(ABox,_),Expl):-
   %write('clash 3'),nl,
   findClassAssertion(C,sameIndividual(L1),Expl1,ABox),
   findClassAssertion(complementOf(C),sameIndividual(L2),Expl2,ABox),
-  member(X,L1),
-  member(X,L2),!,
+  samemember(L1,L2),
   and_f(M,Expl1,Expl2,Expl).
+
+samemember(L1,L2):-
+  member(X,L1),
+  member(X,L2),!.
 
 clash(M,(ABox,_),Expl):-
   %write('clash 4'),nl,
@@ -648,6 +651,15 @@ clash(M,(ABox,_),Expl):-
 clash(M,(ABox,_),Expl):-
   %write('clash 6'),nl,
   findClassAssertion4OWLNothing(M,ABox,Expl).
+
+clash(M,(ABox,_),Expl):-
+  M:disjointUnion(_,L),
+  member(C1,L),
+  member(C2,L),
+  dif(C1,C2),
+  findClassAssertion(C1,Ind,Expl1,ABox),
+  findClassAssertion(C2,Ind,Expl2,ABox),
+  and_f(M,Expl1,Expl2,Expl).
 
 /*
 clash(M,(ABox,Tabs),Expl):-
