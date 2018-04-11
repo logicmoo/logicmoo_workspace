@@ -46,10 +46,10 @@ add_disjoint_link(TreeH-NC-TreeD0-Classes,C,C1,TreeH-NC-TreeD1-Classes):-
   ( dif(PC,PC1) -> % check consistenza kb
      add_vertices(TreeD0,[PC-[PC1],PC1-[PC]],TreeD1)
     ;
-     fail.
+     fail
   ).
 
-add_hierarchy_link(TreeH0-NC-TreeD-Classes,C,C1,TreeH-NC-TreeD-Classes):- % già in equivalentClasses
+add_hierarchy_link(TreeH-NC-TreeD-Classes,C,C1,TreeH-NC-TreeD-Classes):- % già in equivalentClasses
   PC=Classes.find(C),
   PC=Classes.find(C1),!.
 
@@ -59,11 +59,11 @@ add_hierarchy_link(TreeH0-NC-TreeD-Classes0,C,C1,TreeH-NC-TreeD-Classes):- % lin
   are_subClasses_int(TreeH0-NC-TreeD-Classes0,PC,PC1), % controlla non siano già linkati
   merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes). % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
 
-are_subClasses_int(TreeH-NC-TreeD-Classes,C,C1):-
+are_subClasses_int(TreeH-_NC-_TreeD-_Classes,C,C1):-
   neighbours(TreeH,C1,L),
   memberchk(C,L),!.
 
-are_subClasses_int(TreeH-NC-TreeD-Classes,C,C1):-
+are_subClasses_int(TreeH-_NC-_TreeD-_Classes,C,C1):-
   neighbours(TreeH,C1,L),
   member(EquivalentClasses,L),
   memberchk(C,EquivalentClasses),!.
@@ -129,7 +129,7 @@ add_class(H0,[_|T],H):-
   add_classes(H0,T,H).
 
 % aggiunge un insieme di classi equivalenti, se c'è già un set contenente classi equivalenti li unisce, altrimenti aggiunge. Fallisce se ha giù il nodo con tutte le classi
-add_equivalentClasses(TreeH0-NC0-TreeD-Classes0,ClassList0,TreeH-NC-TreeD-Classes):-
+add_equivalentClasses(TreeH-NC-TreeD-Classes0,ClassList0,TreeH-NC-TreeD-Classes):-
   sort(ClassList0,ClassList),
   Node=Classes0.findOne(ClassList),!,
   EqClasses=Classes0.get(Node),
@@ -159,7 +159,7 @@ add_single_disjointClass(H0,[C|T],ClassList,H):-
   add_single_disjointClass(H1,T,ClassList,H).
 
 
-add_single_disjointClass_int(H,C,[],H):- !.
+add_single_disjointClass_int(H,_C,[],H):- !.
 
 add_single_disjointClass_int(H0,C,[C|T],H):- !,
   add_single_disjointClass_int(H0,C,T,H).
@@ -168,12 +168,12 @@ add_single_disjointClass_int(H0,C,[C1|T],H):-
   ( add_disjoint_link(H0,C,C1,H1) ->
      add_single_disjointClass_int(H1,C,[C1|T],H)
     ;
-     fail.
+     fail
   ).
 
 %% add_disjointUnion(classExpression,set(classExpression)) da controllare cosa fa e aggiungere classi. Gestire bene l'assioma.
 add_disjointUnion(H0,Class,DisjointUnion,H):-
-  add_equivalentClasses(H0,[C,unionOf(DisjointUnion)],H1),
+  add_equivalentClasses(H0,[Class,unionOf(DisjointUnion)],H1),
   add_disjointClasses(H1,DisjointUnion,H).
 
 
