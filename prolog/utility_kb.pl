@@ -12,22 +12,28 @@ This module models and manages the hierarchy of the KB's concepts.
 
 :- module(utility_kb, []).
 
+:- use_module(classes).
 :- use_module(library(ugraphs)).
 
 :- multifile trill:hierarchy/1.
 trill:hierarchy(M:H):-
+  utility_kb:hierarchy_int(M:H).
+
+hierarchy_int(M:H):-
   init_hierarchy(H0),
   findall(C,M:class(C),L1),
   findall(Class,M:classAssertion(Class,_Individual),L2),
   append(L1,L2,L3),
   sort(L3,L4),
   add_classes(H0,L4,H1),
+  retractall(M:kb_hierarchy(_)),
   assert(M:kb_hierarchy(H1)),
-  forall(M:equivalentClasses(CL),(M:kb_hierarchy(H0),add_equivalentClasses(H0,CL,H),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H)))),
-  forall(M:disjointClasses(CL),(M:kb_hierarchy(H0),add_disjointClasses(H0,CL,H),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H)))),
-  forall(M:disjointUnion(C,D),(M:kb_hierarchy(H0),add_disjointUnion(H0,C,D,H),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H)))),
-  forall(M:subClassOf(C,D),(M:kb_hierarchy(H0),add_subClassOf(H0,C,D,H),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H)))),
-  M:kb_hierarchy(TreeH-NC-TreeD-Classes),
+  forall(M:equivalentClasses(CL),(M:kb_hierarchy(H2),add_equivalentClasses(H2,CL,H3),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H3)))),
+  forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
+  forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
+  forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
+  M:kb_hierarchy(H),
+  H=TreeH-NC-TreeD-Classes,
   writeln(TreeH),
   writeln(NC),
   writeln(TreeD),
@@ -38,13 +44,19 @@ trill:hierarchy(M:H):-
 init_hierarchy(TreeH-1-TreeD-Classes):-
   vertices_edges_to_ugraph([0,'n'],[],TreeH),
   Classes=classes{'n':'http://www.w3.org/2002/07/owl#Nothing',0:'http://www.w3.org/2002/07/owl#Thing'},
-  vertices_edges_to_ugraph([],['n'-[0],0-['n']],TreeD).
+  vertices_edges_to_ugraph([],['n'-0,0-'n'],TreeD).
+
+check_disjoint(_TreeH-_NC-TreeD-Classes,C,C1):-
+  PC=Classes.find(C),
+  PC1=Classes.find(C1),
+  edges(TreeD,E),
+  \+ memberchk(PC-PC1,E).
 
 add_disjoint_link(TreeH-NC-TreeD0-Classes,C,C1,TreeH-NC-TreeD1-Classes):-
   PC=Classes.find(C),
   PC1=Classes.find(C1),
   ( dif(PC,PC1) -> % check consistenza kb
-     add_vertices(TreeD0,[PC-[PC1],PC1-[PC]],TreeD1)
+     add_edges(TreeD0,[PC-PC1,PC1-PC],TreeD1)
     ;
      fail
   ).
@@ -57,16 +69,17 @@ add_hierarchy_link(TreeH0-NC-TreeD-Classes0,C,C1,TreeH-NC-TreeD-Classes):- % lin
   PC=Classes0.find(C),
   PC1=Classes0.find(C1),
   are_subClasses_int(TreeH0-NC-TreeD-Classes0,PC,PC1), % controlla non siano già linkati
-  merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes). % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
+  merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes),!. % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
+
+add_hierarchy_link(TreeH0-NC-TreeD-Classes,C,C1,TreeH-NC-TreeD-Classes):- % non linkati
+  PC=Classes.find(C),
+  PC1=Classes.find(C1),
+  del_edges(TreeH0,[0-PC],TreeH1),
+  add_edges(TreeH1,[PC1-PC],TreeH).
 
 are_subClasses_int(TreeH-_NC-_TreeD-_Classes,C,C1):-
-  neighbours(TreeH,C1,L),
-  memberchk(C,L),!.
-
-are_subClasses_int(TreeH-_NC-_TreeD-_Classes,C,C1):-
-  neighbours(TreeH,C1,L),
-  member(EquivalentClasses,L),
-  memberchk(C,EquivalentClasses),!.
+  neighbours(C1,TreeH,L),
+  ( (memberchk(C,L),!) ; (member(EquivalentClasses,L),memberchk(C,EquivalentClasses),!)).
 
 merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes):- % uno collegato all'altro direttamente
   edges(TreeH0,E),
@@ -113,19 +126,19 @@ merge_dict_value(C,C1,[C,C1]):- !.
   
 % aggiunge una classe, se la classe già esiste fallisce
 add_class(TreeH0-NC0-TreeD-Classes0,Class,TreeH-NC-TreeD-Classes):-
-  \+ Classes0.find(Class),
+  \+ _=Classes0.find(Class),
   NC is NC0 + 1,
   Classes=Classes0.put(NC0,Class),
-  add_edges(TreeH0,[0-[NC0]],TreeH). %% classe sotto owl:Thing
+  add_edges(TreeH0,[0-NC0],TreeH). %% classe sotto owl:Thing
 
 % aggiunge una lista di classi
 add_classes(H,[],H):- !.
 
-add_class(H0,[Class|T],H):-
+add_classes(H0,[Class|T],H):-
   add_class(H0,Class,H1),!,
   add_classes(H1,T,H).
 
-add_class(H0,[_|T],H):-
+add_classes(H0,[_|T],H):-
   add_classes(H0,T,H).
 
 % aggiunge un insieme di classi equivalenti, se c'è già un set contenente classi equivalenti li unisce, altrimenti aggiunge. Fallisce se ha giù il nodo con tutte le classi
@@ -145,7 +158,7 @@ add_equivalentClasses(TreeH-NC-TreeD-Classes0,ClassList0,TreeH-NC-TreeD-Classes)
 add_equivalentClasses(TreeH0-NC0-TreeD-Classes0,ClassList,TreeH-NC-TreeD-Classes):-  %% se non c'è nodo lo aggiungo. NOTA: aggiunta di classi deve essere fatta PRIMA della gestione degli assiomi di sottoclasse
   NC is NC0 + 1,
   Classes=Classes0.put(NC0,ClassList),
-  add_edges(TreeH0,[0-[NC0]],TreeH).
+  add_edges(TreeH0,[0-NC0],TreeH).
 
 %% add_disjountClasses(...) aggiunge classi e verifica non ci sia contraddizione. Fallisce se c'è inconsistenza
 add_disjointClasses(H0,ClassList,H):-
@@ -184,36 +197,6 @@ add_subClassOf(H0,SubClass,SupClass,H):-
   add_hierarchy_link(H1,SubClass,SupClass,H).
   
 
-
-
-
-%% utility
-M.find(C) := Pos :-
-  Pos=M.findClass(C),
-  !.
-
-M.find(C) := Pos :-
-  Pos=M.findEqClass(C),
-  !.
-
-%M.find(C) := fail,!.
-
-M.findClass(C) := Pos :-
-  C=M.Pos,!.
-
-M.findClass(C) := Pos :-
-  C=M.Pos,!.
-
-
-M.findEqClasses(C) := Pos :-
-  CL=M.Pos,
-  memberchk(C,CL),!.
-
-M.findOne(LC) := Pos :-
-  member(C,LC),
-  Pos=M.find(C),!.
-
-%M.findOne(_) := fail,!.
 
 
 
