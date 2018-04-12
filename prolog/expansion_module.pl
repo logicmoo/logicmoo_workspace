@@ -61,7 +61,7 @@ expansion_module(M, EM, L, EF1, EF) :-
       expansion_module(EM1, EM, [M|L], EF2, EF)
     ).
 
-%!  expansion_module(+Module, ?ExpansionModule)
+%!  expansion_module(+Module, ExpansionModule)
 %
 %   Kludge: using swipl internals. Perhaps is not a good idea --EMM
 %   Warning: could report duplicate solutions
