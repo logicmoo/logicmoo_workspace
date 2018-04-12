@@ -124,7 +124,7 @@ current_unused_import(M, FromChk, U, Loc, F, A) :-
 :- multifile ignore_import/2.
 
 ignore_import(_, rtchecks_rt).
-ignore_import(M, IM) :- expansion_module(M, IM).
+ignore_import(_, IM) :- is_expansion_module(IM).
 ignore_import(_, IM) :-
     '$def_modules'([goal_expansion/4,
                     goal_expansion/2,
