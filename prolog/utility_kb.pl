@@ -46,11 +46,16 @@ init_hierarchy(TreeH-1-TreeD-Classes):-
   Classes=classes{'n':'http://www.w3.org/2002/07/owl#Nothing',0:'http://www.w3.org/2002/07/owl#Thing'},
   vertices_edges_to_ugraph([],['n'-0,0-'n'],TreeD).
 
-check_disjoint(_TreeH-_NC-TreeD-Classes,C,C1):-
-  PC=Classes.find(C),
-  PC1=Classes.find(C1),
-  edges(TreeD,E),
-  \+ memberchk(PC-PC1,E).
+check_disjoint(H):-
+  \+ check_disjoint_int(H),!.
+
+check_disjoint_int(TreeH-_NC-TreeD-_Classes):-
+  edges(TreeD,E),  
+  member(DC1-DC2,E),
+  reachable(DC1,TreeH,DCL1),
+  reachable(DC2,TreeH,DCL2),
+  member(SameNode,[DC1|DCL1]),
+  memberchk(SameNode,[DC2|DCL2]),!.
 
 add_disjoint_link(TreeH-NC-TreeD0-Classes,C,C1,TreeH-NC-TreeD1-Classes):-
   PC=Classes.find(C),
@@ -78,8 +83,8 @@ add_hierarchy_link(TreeH0-NC-TreeD-Classes,C,C1,TreeH-NC-TreeD-Classes):- % non 
   add_edges(TreeH1,[PC1-PC],TreeH).
 
 are_subClasses_int(TreeH-_NC-_TreeD-_Classes,C,C1):-
-  neighbours(C1,TreeH,L),
-  ( (memberchk(C,L),!) ; (member(EquivalentClasses,L),memberchk(C,EquivalentClasses),!)).
+  reachable(C1,TreeH,L),
+  ( (memberchk(C,L),!) ; (member(EquivalentClasses,L),is_list(EquivalentClasses),memberchk(C,EquivalentClasses),!)).
 
 merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes):- % uno collegato all'altro direttamente
   edges(TreeH0,E),
@@ -91,6 +96,8 @@ merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes):- % un
   del_dict(PC,Classes0,C,Classes1),
   merge_dict_value(C,C1,CM),
   Classes=Classes1.put(PC1,CM).
+
+% merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes):- % non collegati all'altro direttamente
 
 % sostituisce gli archi del vecchio nodo con nuovi archi
 update_edges([],_,_,[]):-!.
@@ -163,13 +170,13 @@ add_equivalentClasses(TreeH0-NC0-TreeD-Classes0,ClassList,TreeH-NC-TreeD-Classes
 %% add_disjountClasses(...) aggiunge classi e verifica non ci sia contraddizione. Fallisce se c'è inconsistenza
 add_disjointClasses(H0,ClassList,H):-
   add_classes(H0,ClassList,H1),
-  add_single_disjointClass(H1,ClassList,ClassList,H).
+  add_single_disjointClass(H1,ClassList,H).
 
-add_single_disjointClass(H,[],_,H):- !.
+add_single_disjointClass(H,[],H):- !.
 
-add_single_disjointClass(H0,[C|T],ClassList,H):-
-  add_single_disjointClass_int(H0,C,ClassList,H1),
-  add_single_disjointClass(H1,T,ClassList,H).
+add_single_disjointClass(H0,[C|T],H):-
+  add_single_disjointClass_int(H0,C,T,H1),
+  add_single_disjointClass(H1,T,H).
 
 
 add_single_disjointClass_int(H,_C,[],H):- !.
@@ -179,7 +186,7 @@ add_single_disjointClass_int(H0,C,[C|T],H):- !,
 
 add_single_disjointClass_int(H0,C,[C1|T],H):-
   ( add_disjoint_link(H0,C,C1,H1) ->
-     add_single_disjointClass_int(H1,C,[C1|T],H)
+     add_single_disjointClass_int(H1,C,T,H)
     ;
      fail
   ).
@@ -193,8 +200,8 @@ add_disjointUnion(H0,Class,DisjointUnion,H):-
 %% add_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
 add_subClassOf(H0,SubClass,SupClass,H):-
   add_classes(H0,[SubClass,SupClass],H1),
-  check_disjoint(H1,SubClass,SupClass),!, % si può proseguire
-  add_hierarchy_link(H1,SubClass,SupClass,H).
+  add_hierarchy_link(H1,SubClass,SupClass,H),
+  check_disjoint(H),!. % si può proseguire
   
 
 

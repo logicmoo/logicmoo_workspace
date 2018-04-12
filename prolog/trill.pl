@@ -653,13 +653,14 @@ clash(M,(ABox,_),Expl):-
   findClassAssertion4OWLNothing(M,ABox,Expl).
 
 clash(M,(ABox,_),Expl):-
-  M:disjointUnion(_,L),
+  M:disjointUnion(Class,L),
   member(C1,L),
   member(C2,L),
   dif(C1,C2),
   findClassAssertion(C1,Ind,Expl1,ABox),
   findClassAssertion(C2,Ind,Expl2,ABox),
-  and_f(M,Expl1,Expl2,Expl).
+  and_f(M,Expl1,Expl2,ExplT),
+  and_f_ax(M,disjointUnion(Class,L),ExplT,Expl).
 
 /*
 clash(M,(ABox,Tabs),Expl):-
