@@ -32,21 +32,44 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(expansion_module, [expansion_module/2]).
+:- module(expansion_module,
+          [expansion_module/2,
+           is_expansion_module/1]).
 
-%!  expansion_module(Module, ExpansionModule)
+reexported_module(EM1, EF) :-
+    '$load_context_module'(EF, EM1, Opts),
+    option(reexport(true), Opts).
+
+expansion_module_(M, EM, EF) :-
+    CM = compound_expand,
+    module_property(CM, file(CF)),
+    ( nonvar(EF)
+    ->module_property(EM, file(EF)),
+      '$load_context_module'(CF, EM, _),
+      '$load_context_module'(EF, M, _)
+    ; '$load_context_module'(EF, M, _),
+      module_property(EM, file(EF)),
+      '$load_context_module'(CF, EM, _)
+    ).
+
+expansion_module(M, EM, L, EF1, EF) :-
+    expansion_module_(M, EM1, EF1),
+    \+ memberchk(EM1, L),
+    ( EM = EM1,
+      EF = EF1
+    ; reexported_module(EM1, EF2),
+      expansion_module(EM1, EM, [M|L], EF2, EF)
+    ).
+
+%!  expansion_module(+Module, ?ExpansionModule)
 %
 %   Kludge: using swipl internals. Perhaps is not a good idea --EMM
 %   Warning: could report duplicate solutions
 %
 expansion_module(M, EM) :-
+    expansion_module(M, EM, [], _, _).
+
+is_expansion_module(EM) :-
     CM = compound_expand,
     module_property(CM, file(CF)),
-    ( nonvar(M)
-    ->'$load_context_module'(EF, M, _),
-      module_property(EM, file(EF)),
-      '$load_context_module'(CF, EM, _)
-    ; '$load_context_module'(CF, EM, _),
-      module_property(EM, file(EF)),
-      '$load_context_module'(EF, M, _)
-    ).
+    '$load_context_module'(CF, EM, _).
