@@ -2837,6 +2837,11 @@ expand_all_ns(M,[P|T],NSList,AddName,[P|NewArgs]):-
   expand_all_ns(M,T,NSList,AddName,NewArgs).
 */
 
+expand_all_ns(M,[P|T],NSList,AddName,[PNewArgs|NewArgs]):-
+  is_list(P),!,
+  expand_all_ns(M,P,NSList,AddName,PNewArgs),
+  expand_all_ns(M,T,NSList,AddName,NewArgs).
+
 expand_all_ns(M,[P|T],NSList,AddName,[NP|NewArgs]):-
   compound(P),
   P =.. [N, Args],!,
