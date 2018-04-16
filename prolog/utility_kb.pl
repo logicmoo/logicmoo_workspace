@@ -15,6 +15,9 @@ This module models and manages the hierarchy of the KB's concepts.
 :- use_module(classes).
 :- use_module(library(ugraphs)).
 
+:- use_module(library(tabling)).
+:- table expl_combination/4.
+
 :- multifile trill:hierarchy/1.
 trill:hierarchy(M:H):-
   utility_kb:hierarchy_int(M:H).
@@ -67,61 +70,6 @@ add_disjoint_link(TreeH-NC-TreeD0-Classes-Expls,C,C1,TreeH-NC-TreeD1-Classes-Exp
      fail
   ).
 
-add_subClass_expl(Expls0,C,C1,[ex(C,C1)-[subClassOf(C,C1)|Ex]|Expls]):-
-  member(ex(C,C1)-Ex,Expls0),!,
-  delete(Expls0,ex(C,C1)-Ex,Expls).
-
-add_subClass_expl(Expls,C,C1,[ex(C,C1)-[subClassOf(C,C1)]|Expls]).
-
-add_eqClass_expl(TreeH-NC-TreeD-Classes-Expls0,equivalentClasses(ClassList),TreeH-NC-TreeD-Classes-Expls):-
-  add_eqClass_expl(Expls0,ClassList,equivalentClasses(ClassList),Expls).
-
-add_eqClass_expl(TreeH-NC-TreeD-Classes-Expls0,disjointUnion(Class,DisjList),TreeH-NC-TreeD-Classes-Expls):-
-  add_eqClass_expl(Expls0,[Class,DisjList],disjointUnion(Class,DisjList),Expls).
-
-add_eqClass_expl(Expls,[],_,Expls):- !.
-
-add_eqClass_expl(Expls0,[C|T],L,Expls):-
-  add_eqClass_expl(Expls0,C,T,L,Expls1),
-  add_eqClass_expl(Expls1,T,L,Expls).
-
-add_eqClass_expl(E,_C,[],_L,E):- !.
-
-add_eqClass_expl(E0,C,[C|T],L,E):- !,
-  add_eqClass_expl(E0,C,T,L,E).
-
-add_eqClass_expl(E0,C,[C1|T],L,E):-
-  ( member(ex(C,C1)-Ex,E0) ->
-     ( delete(E0,ex(C,C1)-Ex,E1),
-       add_eqClass_expl([ex(C,C1)-[equivalentClasses(L)|Ex]|E1],C,T,L,E)
-     )
-    ;
-     add_eqClass_expl([ex(C,C1)-[equivalentClasses(L)]|E0],C,T,L,E)
-  ).
-
-add_disjClass_expl(TreeH-NC-TreeD-Classes-Expls0,Ax,TreeH-NC-TreeD-Classes-Expls):-
-  Ax=..[_|Arg],
-  add_disjClass_expl(Expls0,Arg,Ax,Expls).
-
-add_disjClass_expl(Expls,[],Expls):- !.
-
-add_disjClass_expl(Expls0,[C|T],Ax,Expls):-
-  add_disjClass_expl(Expls0,C,T,Ax,Expls1),
-  add_disjClass_expl(Expls1,T,Ax,Expls).
-
-add_disjClass_expl(E,_C,[],_Ax,E):- !.
-
-add_disjClass_expl(E0,C,[C|T],Ax,E):- !,
-  add_disjClass_expl(E0,C,T,Ax,E).
-
-add_disjClass_expl(E0,C,[C1|T],Ax,E):-
-  ( member(dis(C,C1)-Ex,E0) ->
-      ( delete(E0,dis(C,C1)-Ex,E1),
-        add_disjClass_expl([dis(C,C1)-[Ax|Ex]|E1],C,T,Ax,E)
-      )
-    ;
-      add_disjClass_expl([dis(C,C1)-[Ax]|E0],C,T,Ax,E)
-  ).
 
 add_hierarchy_link(TreeH-NC-TreeD-Classes-Expls0,C,C1,TreeH-NC-TreeD-Classes-Expls):- % già in equivalentClasses
   PC=Classes.find(C),
@@ -231,31 +179,116 @@ add_classes(H0,[_|T],H):-
   add_classes(H0,T,H).
 
 % aggiunge un insieme di classi equivalenti, se c'è già un set contenente classi equivalenti li unisce, altrimenti aggiunge. Fallisce se ha giù il nodo con tutte le classi
-add_equivalentClasses(TreeH-NC-TreeD-Classes0-Expls0,ClassList0,TreeH-NC-TreeD-Classes-Expls):-
+add_equivalentClasses(H0,ClassList,H):-
+  add_eqClass_hier(H0,ClassList,H1),
+  add_eqClass_expl(H1,equivalentClasses(ClassList),H).
+
+add_eqClass_hier(TreeH-NC-TreeD-Classes0-Expls,ClassList0,TreeH-NC-TreeD-Classes-Expls):-
   sort(ClassList0,ClassList),
   Node=Classes0.findOne(ClassList),!,
   EqClasses=Classes0.get(Node),
   ( dif(EqClasses,ClassList) ->
     ( append(EqClasses,ClassList,UnsortedClassList),
       sort(UnsortedClassList,ClassSet),
-      Classes=Classes0.put(Node,ClassSet),
-      add_eqClass_expl(Expls0,ClassList0,ClassList0,Expls) %% se già c'è nodo non modifico gerarchia ma solo nodo in dict
+      Classes=Classes0.put(Node,ClassSet) %% se già c'è nodo non modifico gerarchia ma solo nodo in dict
     )
    ;
     fail
   ).
 
-add_equivalentClasses(TreeH0-NC0-TreeD-Classes0-Expls0,ClassList,TreeH-NC-TreeD-Classes-Expls):-  %% se non c'è nodo lo aggiungo. NOTA: aggiunta di classi deve essere fatta PRIMA della gestione degli assiomi di sottoclasse
+add_eqClass_hier(TreeH0-NC0-TreeD-Classes0-Expls,ClassList,TreeH-NC-TreeD-Classes-Expls):-  %% se non c'è nodo lo aggiungo. NOTA: aggiunta di classi deve essere fatta PRIMA della gestione degli assiomi di sottoclasse
   NC is NC0 + 1,
   Classes=Classes0.put(NC0,ClassList),
-  add_edges(TreeH0,[0-NC0],TreeH),
-  add_eqClass_expl(Expls0,ClassList,ClassList,Expls).
+  add_edges(TreeH0,[0-NC0],TreeH).
+
+add_eqClass_expl(H0,Ax,H):-
+  add_eqClass_simple_expl(H0,Ax,H1),
+  add_eqClass_complex_expl(H1,Ax,H).
+  
+add_eqClass_expl(H0,ClassList,ClassList,H):-
+  add_eqClass_simple_expl(H0,ClassList,ClassList,equivalentClasses(ClassList),H1),
+  add_eqClass_complex_expl(H1,equivalentClasses(ClassList),H).
+
+% aggiunge spiegazioni fra i componenti del singolo assioma
+add_eqClass_simple_expl(TreeH-NC-TreeD-Classes-Expls0,equivalentClasses(ClassList),TreeH-NC-TreeD-Classes-Expls):-
+  add_eqClass_simple_expl(Expls0,ClassList,ClassList,equivalentClasses(ClassList),Expls).
+
+add_eqClass_simple_expl(TreeH-NC-TreeD-Classes-Expls0,disjointUnion(Class,DisjList),TreeH-NC-TreeD-Classes-Expls):-
+  add_eqClass_simple_expl(Expls0,[Class,unionOf(DisjList)],[Class,unionOf(DisjList)],disjointUnion(Class,DisjList),Expls).
+
+add_eqClass_simple_expl(Expls,[],_L,_Ax,Expls):- !.
+
+add_eqClass_simple_expl(Expls0,[C|T],L,Ax,Expls):-
+  add_eqClass_simple_expl(Expls0,C,T,L,Ax,Expls1),
+  add_eqClass_simple_expl(Expls1,T,L,Ax,Expls).
+
+add_eqClass_simple_expl(E,_C,[],_L,_Ax,E):- !.
+
+add_eqClass_simple_expl(E0,C,[C|T],L,Ax,E):- !,
+  add_eqClass_simple_expl(E0,C,T,L,Ax,E).
+
+add_eqClass_simple_expl(E0,C,[C1|T],L,Ax,E):-
+  ( member(ex(C,C1)-Ex,E0) ->
+     ( delete(E0,ex(C,C1)-Ex,E1),
+       add_eqClass_simple_expl([ex(C,C1)-[[Ax]|Ex]|E1],C,T,L,Ax,E)
+     )
+    ;
+     add_eqClass_simple_expl([ex(C,C1)-[[Ax]]|E0],C,T,L,Ax,E)
+  ).
+
+% combina le spiegazioni per tutti i membri dell'equivalent axiom
+add_eqClass_complex_expl(TreeH-NC-TreeD-Classes-Expls0,equivalentClasses(ClassList),TreeH-NC-TreeD-Classes-Expls):-
+  member(C,ClassList),!, % prendo una classe a caso
+  PC=Classes.find(C),
+  combine_eqClass_expl(Expls0,Classes.PC,Expls).
+
+add_eqClass_complex_expl(TreeH-NC-TreeD-Classes-Expls0,disjointUnion(Class,_ClassList),TreeH-NC-TreeD-Classes-Expls):-
+  PC=Classes.find(Class),
+  combine_eqClass_expl(Expls0,Classes.PC,Expls).
+
+combine_eqClass_expl(E,[],E):- !.
+
+combine_eqClass_expl(Expls0,[C|T],Expls):-
+  combine_eqClass_expl(Expls0,C,T,Expls1),
+  combine_eqClass_expl(Expls1,T,Expls).
+
+combine_eqClass_expl(Expls0,_C,[],Expls):- !,
+  sort(Expls0,Expls).
+
+combine_eqClass_expl(Expls0,C,[C1|T],Expls):-
+  abolish_all_tables,
+  findall(Ex,expl_combination(Expls0,C,C1,[],Ex),Exs),
+  ( member(ex(C,C1)-Exs0,Expls0) ->
+     ( delete(Expls0,ex(C,C1)-Exs0,Expls1),
+       combine_eqClass_expl([ex(C,C1)-Exs|Expls1],C,T,Expls)
+     )
+    ;
+     combine_eqClass_expl([ex(C,C1)-Exs|Expls0],C,T,Expls)
+  ).
+
+expl_combination(Expls,C,C1,Used,Ex):-
+  (member(ex(C,C1)-Ex0,Expls) ; member(ex(C1,C)-Ex0,Expls)),
+  \+ (memberchk(C,Used), memberchk(C1,Used)),
+  member(Ex,Ex0).
+
+expl_combination(Expls,C,C1,Used,Ex):-
+  (member(ex(C,C0)-Ex0,Expls) ; member(ex(C0,C)-Ex0,Expls)),
+  dif(C0,C1),
+  \+ (memberchk(C,Used), memberchk(C0,Used)),
+  member(Ex01,Ex0),
+  expl_combination(Expls,C0,C1,[C,C0|Used],Ex1),
+  append(Ex01,Ex1,ExT),
+  sort(ExT,Ex).
+
 
 %% add_disjountClasses(...) aggiunge classi e verifica non ci sia contraddizione. Fallisce se c'è inconsistenza
 add_disjointClasses(H0,ClassList,H):-
+  add_disjClass_hier(H0,ClassList,H1),
+  add_disjClass_expl(H1,disjointClasses(ClassList),H).
+  
+add_disjClass_hier(H0,ClassList,H):-
   add_classes(H0,ClassList,H1),
-  add_single_disjointClass(H1,ClassList,H2),
-  add_disjClass_expl(H2,disjointClasses(ClassList),H).
+  add_single_disjointClass(H1,ClassList,H).
 
 add_single_disjointClass(H,[],H):- !.
 
@@ -276,12 +309,36 @@ add_single_disjointClass_int(H0,C,[C1|T],H):-
      fail
   ).
 
+add_disjClass_expl(TreeH-NC-TreeD-Classes-Expls0,Ax,TreeH-NC-TreeD-Classes-Expls):-
+  (Ax=..[disjointClasses,Arg] ; Ax=..[disjointUnion,_,Arg]),
+  add_disjClass_expl(Expls0,Arg,Ax,Expls).
+
+add_disjClass_expl(Expls,[],_Ax,Expls):- !.
+
+add_disjClass_expl(Expls0,[C|T],Ax,Expls):-
+  add_disjClass_expl(Expls0,C,T,Ax,Expls1),
+  add_disjClass_expl(Expls1,T,Ax,Expls).
+
+add_disjClass_expl(E,_C,[],_Ax,E):- !.
+
+add_disjClass_expl(E0,C,[C|T],Ax,E):- !,
+  add_disjClass_expl(E0,C,T,Ax,E).
+
+add_disjClass_expl(E0,C,[C1|T],Ax,E):-
+  ( member(dis(C,C1)-Ex,E0) ->
+      ( delete(E0,dis(C,C1)-Ex,E1),
+        add_disjClass_expl([dis(C,C1)-[[Ax]|Ex]|E1],C,T,Ax,E)
+      )
+    ;
+      add_disjClass_expl([dis(C,C1)-[[Ax]]|E0],C,T,Ax,E)
+  ).
+
 %% add_disjointUnion(classExpression,set(classExpression)) da controllare cosa fa e aggiungere classi. Gestire bene l'assioma.
 add_disjointUnion(H0,Class,DisjointUnion,H):-
-  add_equivalentClasses(H0,[Class,unionOf(DisjointUnion)],H1),
-  add_disjointClasses(H1,DisjointUnion,H2),
-  add_eqClass_expl(H2,disjointClasses(Class,[DisjointUnion]),H3),
-  add_disjClass_expl(H3,disjointClasses(Class,[DisjointUnion]),H).
+  add_eqClass_hier(H0,[Class,unionOf(DisjointUnion)],H1),
+  add_disjClass_hier(H1,DisjointUnion,H2),
+  add_eqClass_expl(H2,disjointUnion(Class,DisjointUnion),H3),
+  add_disjClass_expl(H3,disjointUnion(Class,DisjointUnion),H).
 
 
 %% add_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
@@ -290,6 +347,12 @@ add_subClassOf(H0,SubClass,SupClass,H):-
   add_hierarchy_link(H1,SubClass,SupClass,H),
   check_disjoint(H),!. % si può proseguire
   
+add_subClass_expl(Expls0,C,C1,[ex(C,C1)-[[subClassOf(C,C1)]|Ex]|Expls]):-
+  member(ex(C,C1)-Ex,Expls0),!,
+  delete(Expls0,ex(C,C1)-Ex,Expls).
+
+add_subClass_expl(Expls,C,C1,[ex(C,C1)-[[subClassOf(C,C1)]]|Expls]).
+
 
 
 
