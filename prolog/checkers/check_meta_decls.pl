@@ -71,25 +71,25 @@ meta_decls2([H|T]) -->
 %     retractall(prolog_metainference:inferred_meta_pred(_, _, _)).
 
 % Hook to hide messages:
-:- multifile hide_missing_meta_pred/1.
+:- multifile
+    hide_missing_meta_pred/2.
 
-hide_missing_meta_pred(prolog:generated_predicate/1).
-hide_missing_meta_pred(prolog:rename_predicate/2).
+hide_missing_meta_pred(generated_predicate(_), prolog).
+hide_missing_meta_pred(rename_predicate(_, _), prolog).
+hide_missing_meta_pred(prolog_exception_hook(_, _, _, _), user).
 
 checker:check(meta_decls, Pairs, Options1) :-
     option_allchk(Options1, Options2, FileChk),
     select_option(module(M), Options2, _, M),
     findall(information-((Loc/M)-Spec),
-            ( prolog_metainference:inferred_meta_pred(_, M, Spec),
-              functor(Spec, F, A),
-              functor(Head, F, A),
+            ( prolog_metainference:inferred_meta_pred(Head, M, Spec),
               \+ predicate_property(M:Head, meta_predicate(_)),
               %% Only exported predicates would require qualification
               %% of meta-arguments -- EMM after JW talk
               is_entry_point(Spec, M),
-              PI = M:F/A,
-              \+ hide_missing_meta_pred(PI),
-              once(( property_from(PI, _, From),
+              \+ hide_missing_meta_pred(Head, M),
+              once(( property_from(M:Head, _, From),
                      from_chk(FileChk, From)
                    )), % once: only first occurrence
-              from_location(From, Loc)), Pairs).
+              from_location(From, Loc)
+            ), Pairs).
