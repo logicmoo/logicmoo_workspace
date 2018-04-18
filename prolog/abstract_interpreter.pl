@@ -39,6 +39,7 @@
                                  match_head_body/3,
                                  bottom/2,
                                  match_ai/7,
+                                 ignore_ai/1,
                                  match_noloops/6,
                                  terms_share/2]).
 
@@ -54,7 +55,8 @@
     match_noloops(0,*,*,*,*, *),
     abstract_interpreter(0,6,?),
     abstract_interpreter(0,6,+,-),
-    abstract_interpreter(0,6,+,+,-).
+    abstract_interpreter(0,6,+,+,-),
+    ignore_ai(0).
 
 :- multifile
     replace_goal_hook/3,
@@ -107,6 +109,9 @@ replace_goal_hook(retract(_),    _, true).
 replace_goal_hook(assertz(_),    _, true).
 replace_goal_hook(asserta(_),    _, true).
 replace_goal_hook(assert( _),    _, true).
+replace_goal_hook(ignore_ai(_), abstract_interpreter, true).
+
+ignore_ai(Goal) :- call(Goal).
 
 mod_qual(M, G as R, I:H as B:C) :- !,
     strip_module(M:G, N, H),
@@ -210,7 +215,22 @@ abstract_interpreter_body((A, B), M, Abs, State) --> !,
       ->!, fail                 % The whole body will fail
       }
     ).
-
+abstract_interpreter_body((A*->B;C), M, Abs, State) --> !,
+    { \+ terms_share(A, B)
+    ->CutOnFail = true
+    ; CutOnFail = fail
+    },
+    {add_cont(B, State, State2)},
+    ( abstract_interpreter_body(A, M, Abs, State2)
+    *->
+      ( abstract_interpreter_body(B, M, Abs, State)
+      *->[]
+      ; { CutOnFail = true
+        ->!, fail                 % The whole body will fail
+        }
+      )
+    ; abstract_interpreter_body(C, M, Abs, State)
+    ).
 abstract_interpreter_body((A->B;C), M, Abs, State) --> !,
     {SCE = s(no)},
     ( interpret_local_cut(A, B, M, Abs, State, CutElse),
