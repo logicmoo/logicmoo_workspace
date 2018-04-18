@@ -10,13 +10,18 @@ This module models and manages the hierarchy of the KB's concepts.
 
 %% astrazione della gerarchia
 
-:- module(utility_kb, []).
+:- module(utility_kb, [get_hierarchy/3]).
+
+:- meta_predicate get_hierarchy(:,+,-).
 
 :- use_module(classes).
 :- use_module(library(ugraphs)).
 
 :- use_module(library(tabling)).
 :- table expl_combination/4.
+
+:- table get_combined_expls(_,_,_,_,_,lattice(append_expl/3)). %get_hierarchy_ric/6,
+%:- table get_single_expls/7. %(_,_,_,_,_,lattice(append_expl)).
 
 :- multifile trill:hierarchy/1.
 trill:hierarchy(M:H):-
@@ -181,16 +186,35 @@ add_classes(H0,[_|T],H):-
 % aggiunge un insieme di classi equivalenti, se c'è già un set contenente classi equivalenti li unisce, altrimenti aggiunge. Fallisce se ha giù il nodo con tutte le classi
 add_equivalentClasses(H0,ClassList,H):-
   add_eqClass_hier(H0,ClassList,H1),
-  add_eqClass_expl(H1,equivalentClasses(ClassList),H).
+  add_subClasses_expl(H1,ClassList,H2),
+  add_eqClass_expl(H2,equivalentClasses(ClassList),H).
 
-add_eqClass_hier(TreeH-NC-TreeD-Classes0-Expls,ClassList0,TreeH-NC-TreeD-Classes-Expls):-
+add_eqClass_hier(TreeH0-NC-TreeD-Classes0-Expls,ClassList0,TreeH-NC-TreeD-Classes-Expls):-
   sort(ClassList0,ClassList),
-  Node=Classes0.findOne(ClassList),!,
+  findall(NodeC,(member(OneOfClassList,ClassList),NodeC=Classes0.find(OneOfClassList)),Nodes),
+  (length(Nodes,1) -> %% se già c'è un nodo non modifico gerarchia ma solo nodo in dict
+    (Nodes=[Node],
+     update_eqNode(TreeH0-NC-TreeD-Classes0-Expls,Node,ClassList,TreeH-NC-TreeD-Classes-Expls)
+    )
+   ;
+    (Nodes=[PC1|PCL],!, %% se ci sono più nodi faccio merge
+     edges(TreeH0,E),
+     del_vertices(TreeH0,PCL,TreeH1),
+     update_edges(E,PCL,PC1,EU),
+     add_edges(TreeH1,EU,TreeH),
+     C1=Classes0.PC1,
+     del_classes_from_dict(PCL,Classes0,CL,Classes1),
+     merge_dict_value(CL,C1,CM),
+     Classes=Classes1.put(PC1,CM)
+    )
+  ).
+
+update_eqNode(TreeH-NC-TreeD-Classes0-Expls,Node,ClassList,TreeH-NC-TreeD-Classes-Expls):-
   EqClasses=Classes0.get(Node),
   ( dif(EqClasses,ClassList) ->
     ( append(EqClasses,ClassList,UnsortedClassList),
       sort(UnsortedClassList,ClassSet),
-      Classes=Classes0.put(Node,ClassSet) %% se già c'è nodo non modifico gerarchia ma solo nodo in dict
+      Classes=Classes0.put(Node,ClassSet) 
     )
    ;
     fail
@@ -200,6 +224,13 @@ add_eqClass_hier(TreeH0-NC0-TreeD-Classes0-Expls,ClassList,TreeH-NC-TreeD-Classe
   NC is NC0 + 1,
   Classes=Classes0.put(NC0,ClassList),
   add_edges(TreeH0,[0-NC0],TreeH).
+
+add_subClasses_expl(Expls,[],Expls):-!.
+
+add_subClasses_expl(TreeH-NC-TreeD-Classes-Expls0,[Class|List],TreeH-NC-TreeD-Classes-Expls):-
+  add_subClass_expl(Expls0,Class,'http://www.w3.org/2002/07/owl#Thing',Expls1),
+  add_subClasses_expl(TreeH-NC-TreeD-Classes-Expls1,List,TreeH-NC-TreeD-Classes-Expls).
+
 
 add_eqClass_expl(H0,Ax,H):-
   add_eqClass_simple_expl(H0,Ax,H1),
@@ -256,7 +287,7 @@ combine_eqClass_expl(Expls0,_C,[],Expls):- !,
   sort(Expls0,Expls).
 
 combine_eqClass_expl(Expls0,C,[C1|T],Expls):-
-  abolish_all_tables,
+  %abolish_table_subgoals(expl_combination(_,_,_,_,_)),
   findall(Ex,expl_combination(Expls0,C,C1,[],Ex),Exs),
   ( member(ex(C,C1)-Exs0,Expls0) ->
      ( delete(Expls0,ex(C,C1)-Exs0,Expls1),
@@ -273,7 +304,7 @@ expl_combination(Expls,C,C1,Used,Ex):-
 
 expl_combination(Expls,C,C1,Used,Ex):-
   (member(ex(C,C0)-Ex0,Expls) ; member(ex(C0,C)-Ex0,Expls)),
-  dif(C0,C1),
+  dif(C0,C1),dif(C0,'http://www.w3.org/2002/07/owl#Thing'),
   \+ (memberchk(C,Used), memberchk(C0,Used)),
   member(Ex01,Ex0),
   expl_combination(Expls,C0,C1,[C,C0|Used],Ex1),
@@ -346,22 +377,120 @@ add_subClassOf(H0,SubClass,SupClass,H):-
   add_classes(H0,[SubClass,SupClass],H1),
   add_hierarchy_link(H1,SubClass,SupClass,H),
   check_disjoint(H),!. % si può proseguire
-  
-add_subClass_expl(Expls0,C,C1,[ex(C,C1)-[[subClassOf(C,C1)]|Ex]|Expls]):-
+
+add_subClass_expl(Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
   member(ex(C,C1)-Ex,Expls0),!,
-  delete(Expls0,ex(C,C1)-Ex,Expls).
+  delete(Expls0,ex(C,C1)-Ex,Expls),
+  sort([[subClassOf(C,C1)]|Ex],ExF).
 
 add_subClass_expl(Expls,C,C1,[ex(C,C1)-[[subClassOf(C,C1)]]|Expls]).
 
 
+% TODO aggiungere eventuali altri sottoclasse (someValuesFrom(R,C)->somevaluesFrom(R,D) con subClassOf(C,D))
+
+
+get_hierarchy(M:Class,_Expl4Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
+  M:kb_hierarchy(TreeH-_NC-_TreeD-Classes-Expls),
+  Pos=Classes.find(Class),
+  edges(TreeH,E),
+  get_combined_expls(Class,Pos,E,Classes,Expls,H4C).
+
+
+
+get_combined_expls(Class,Pos,E,Classes,Expls,H4C):-
+  get_single_expls(Class,Pos,E,Classes,Expls,Class,H4C).
+
+append_expl(AllExpl,[EndClass-NewExpl],NewAllExpl):-
+  \+ memberchk(EndClass-_,AllExpl),!,
+  append(AllExpl,[EndClass-NewExpl],NewAllExpl).
+
+append_expl(AllExpl,[EndClass-NewExpl],NewAllExpl):-
+  member(EndClass-OldExpl,AllExpl),
+  delete(AllExpl,EndClass-OldExpl,AllExpl0),
+  append(OldExpl,NewExpl,NewExplT),
+  append(AllExpl0,[EndClass-NewExplT],NewAllExpl).
+
+
+get_next(P,_E,Classes,P,NextClass):-
+  EqClasses=Classes.P,
+  is_list(EqClasses),
+  member(NextClass,EqClasses).
+
+get_next(P,E,Classes,NextP,NextClass):-
+  member(NextP-P,E),
+  \+ owl_f(NextP),
+  NextClass=Classes.NextP,
+  \+ is_list(NextClass).
+
+get_next(P,E,Classes,NextP,NextClass):-
+  member(NextP-P,E),
+  \+ owl_f(NextP),
+  EqClasses=Classes.NextP,
+  is_list(EqClasses),
+  member(NextClass,EqClasses).
+
+get_single_expls(Class,P,E,Classes,Expls,_Start,[NextClass-[Expls4Class]]):-
+  get_next(P,E,Classes,_NextP,NextClass),
+  member(ex(Class,NextClass)-Exs,Expls),
+  member(Expls4Class,Exs).
+
+get_single_expls(Class,P,E,Classes,Expls,Start,[EndClass-[TotExpl]]):-
+  get_next(P,E,Classes,NextP,NextClass),
+  dif(NextClass,Start),
+  member(ex(Class,NextClass)-Exs,Expls),
+  member(Expl4Class,Exs),
+  get_single_expls(NextClass,NextP,E,Classes,Expls,Start,[EndClass-[Expl4EndClass]]),
+  append(Expl4Class,Expl4EndClass,TotExpl).
+
+
+get_single_expls(Class,P,E,Classes,Expls,_Start,[NextClass-[[equivalentClasses(ListExpls4Class)]]]):-
+  get_next(P,E,Classes,P,NextClass),
+  member(ex(NextClass,Class)-Exs,Expls),
+  member([equivalentClasses(ListExpls4Class)],Exs).
+
+get_single_expls(Class,P,E,Classes,Expls,Start,[EndClass-[TotExpl]]):-
+  get_next(P,E,Classes,P,NextClass),
+  member(ex(NextClass,Class)-Exs,Expls),
+  member([equivalentClasses(ListExpls4Class)],Exs),
+  get_single_expls(P,NextClass,E,Classes,Expls,Start,[EndClass-[Expl4EndClass]]),
+  append([equivalentClasses(ListExpls4Class)],Expl4EndClass,TotExpl).
+
+
+get_one_expl(Pos,Class,E,Classes,Expls,Expl4Class,EndClass-H4C):-
+  get_hierarchy_ric(Pos,Class,E,Classes,Expls,EndClass-[Expl]),
+  append(Expl4Class,Expl,H4C).
+
+get_hierarchy_ric(0,_C,_E,_Classes,_Expls,0-[]). % arrivato a owl:Thing
+
+get_hierarchy_ric(n,_C,_E,_Classes,_Expls,n-[]). % arrivato a owl:Nothing
+
+get_hierarchy_ric(P,Class,E,Classes,Expls,EndClass-[Ex0|Ex1]):-
+  EqClasses=Classes.P,
+  is_list(EqClasses),
+  member(NextClass,EqClasses),
+  member(ex(Class,NextClass)-Exs,Expls),
+  member(Ex0,Exs),
+  get_hierarchy_ric(P,NextClass,E,Classes,Expls,EndClass-Ex1).
+
+get_hierarchy_ric(P,Class,E,Classes,Expls,EndClass-Expl):-
+  member(NextP-P,E),
+  (owl_f(NextP) -> 
+    ( Expl = [], EndClass = Class)
+   ;
+    ( NextClass=Classes.NextP,
+      member(ex(Class,NextClass)-Exs,Expls),
+      member(Ex0,Exs),
+      get_hierarchy_ric(NextP,NextClass,E,Classes,Expls,EndClass-Ex1),
+      Expl=[Ex0|Ex1]
+    )
+  ).
 
 
 
 
-
-
-
-
+% owl fixed classes (owl:Thing e owl:Nothing)
+owl_f(0).
+owl_f(n).
 
 
 
