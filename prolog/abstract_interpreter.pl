@@ -39,6 +39,7 @@
                                  match_head_body/3,
                                  bottom/2,
                                  match_ai/7,
+                                 call_ai/1,
                                  ignore_ai/1,
                                  match_noloops/6,
                                  terms_share/2]).
@@ -56,6 +57,7 @@
     abstract_interpreter(0,6,?),
     abstract_interpreter(0,6,+,-),
     abstract_interpreter(0,6,+,+,-),
+    call_ai(0),
     ignore_ai(0).
 
 :- multifile
@@ -109,8 +111,10 @@ replace_goal_hook(retract(_),    _, true).
 replace_goal_hook(assertz(_),    _, true).
 replace_goal_hook(asserta(_),    _, true).
 replace_goal_hook(assert( _),    _, true).
+replace_goal_hook(call_ai(G),    _, G).
 replace_goal_hook(ignore_ai(_), abstract_interpreter, true).
 
+call_ai(Goal) :- call(Goal).
 ignore_ai(Goal) :- call(Goal).
 
 mod_qual(M, G as R, I:H as B:C) :- !,
