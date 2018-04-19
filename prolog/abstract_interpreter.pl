@@ -63,7 +63,8 @@
 :- multifile
     replace_goal_hook/3,
     replace_body_hook/3,
-    evaluable_goal_hook/2.
+    evaluable_goal_hook/2,
+    evaluable_body_hook/3.
 
 :- dynamic
     evaluable_goal_hook/2.
@@ -71,40 +72,33 @@
 :- discontiguous
     abstract_interpreter_body/6.
 
-evaluable_goal_hook(absolute_file_name(A, _, O), _) :-
-    ground(A),
-    ground(O).
-evaluable_goal_hook(memberchk(E, L), _) :-
-    is_list(L),
-    nonvar(E).
-evaluable_goal_hook(member(_, L), _) :-
-    is_list(L).
-evaluable_goal_hook(option(O, L), _) :-
-    is_list(L),
-    nonvar(O).
-evaluable_goal_hook(nth0(I, L, _), _) :-
-    once(( is_list(L)
-         ; nonvar(I)
-         )).
-evaluable_goal_hook(nth1(I, L, _), _) :-
-    once(( is_list(L)
-         ; nonvar(I)
-         )).
-evaluable_goal_hook(var(V),     _) :- nonvar(V).
-evaluable_goal_hook(nonvar(V),  _) :- nonvar(V).
-evaluable_goal_hook(atomic(A),  _) :- nonvar(A).
-evaluable_goal_hook(atom(A),    _) :- nonvar(A).
-evaluable_goal_hook(number(A),  _) :- nonvar(A).
-evaluable_goal_hook(float(A),   _) :- nonvar(A).
-evaluable_goal_hook(integer(A), _) :- nonvar(A).
-evaluable_goal_hook(format(Out, Format, Args), _) :-
-    nonvar(Out), nonvar(Format), ground(Args).
-evaluable_goal_hook(_ is B, _) :- ground(B).
-evaluable_goal_hook(atom_concat(A, B, C), _) :-
-    once(( nonvar(A), nonvar(B)
-         ; nonvar(A), nonvar(C)
-         ; nonvar(B), nonvar(C)
-         )).
+evaluable_body_hook(absolute_file_name(A, _, O), _, (ground(A), ground(O))).
+evaluable_body_hook(atom_concat(A, B, C), _,
+                    ( nonvar(A), nonvar(B)
+                    ; nonvar(A), nonvar(C)
+                    ; nonvar(B), nonvar(C)
+                    )).
+evaluable_body_hook(_ is A, _, ground(A)).
+evaluable_body_hook(A > B, _, (ground(A),ground(B))).
+evaluable_body_hook(A >= B, _, (ground(A),ground(B))).
+evaluable_body_hook(A < B, _, (ground(A),ground(B))).
+evaluable_body_hook(A =< B, _, (ground(A),ground(B))).
+evaluable_body_hook(A =:= B, _, (ground(A),ground(B))).
+evaluable_body_hook(atom_codes(A, B), _, (nonvar(A);nonvar(B))).
+evaluable_body_hook(memberchk(E, L), _, (is_list(L), nonvar(E))).
+evaluable_body_hook(member(_, L), _, is_list(L)).
+evaluable_body_hook(option(O, L), _, (is_list(L), nonvar(O))).
+evaluable_body_hook(nth0(I, L, _), _, (is_list(L);nonvar(I))).
+evaluable_body_hook(nth1(I, L, _), _, (is_list(L);nonvar(I))).
+evaluable_body_hook(var(V),     _, nonvar(V)).
+evaluable_body_hook(nonvar(V),  _, nonvar(V)).
+evaluable_body_hook(atomic(A),  _, nonvar(A)).
+evaluable_body_hook(atom(A),    _, nonvar(A)).
+evaluable_body_hook(number(A),  _, nonvar(A)).
+evaluable_body_hook(float(A),   _, nonvar(A)).
+evaluable_body_hook(integer(A), _, nonvar(A)).
+evaluable_body_hook(format(Out, Format, Args), _,
+                    (nonvar(Out), nonvar(Format), ground(Args))).
 
 replace_goal_hook(retractall(_), _, true).
 replace_goal_hook(retract(_),    _, true).
@@ -113,6 +107,7 @@ replace_goal_hook(asserta(_),    _, true).
 replace_goal_hook(assert( _),    _, true).
 replace_goal_hook(call_ai(G),    _, G).
 replace_goal_hook(ignore_ai(_), abstract_interpreter, true).
+replace_goal_hook(V is A, _, (ground(A)->V is A; var(V))).
 
 call_ai(Goal) :- call(Goal).
 ignore_ai(Goal) :- call(Goal).
@@ -286,6 +281,13 @@ abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
 abstract_interpreter_body(A\=B, _, _, _) --> !, ( \+ is_bottom -> {A\=B} ; {A\==B} ).
 abstract_interpreter_body(true, _, _, _) --> !.
 abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
+abstract_interpreter_body(A, M, _, _) -->
+    {evaluable_body_hook(A, M, Condition)},
+    !,
+    ( {call(Condition)}
+    ->{call(M:A)}
+    ; bottom
+    ).
 abstract_interpreter_body(H, M, Abs, State) -->
     cut_to(abstract_interpreter_lit(H, M, Abs, State)).
 
