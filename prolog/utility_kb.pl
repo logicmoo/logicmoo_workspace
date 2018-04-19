@@ -233,8 +233,8 @@ add_subClasses_expl(TreeH-NC-TreeD-Classes-Expls0,[Class|List],TreeH-NC-TreeD-Cl
 
 
 add_eqClass_expl(H0,Ax,H):-
-  add_eqClass_simple_expl(H0,Ax,H1),
-  add_eqClass_complex_expl(H1,Ax,H).
+  add_eqClass_simple_expl(H0,Ax,H).%1),
+%  add_eqClass_complex_expl(H1,Ax,H).
   
 add_eqClass_expl(H0,ClassList,ClassList,H):-
   add_eqClass_simple_expl(H0,ClassList,ClassList,equivalentClasses(ClassList),H1),
@@ -260,11 +260,13 @@ add_eqClass_simple_expl(E0,C,[C|T],L,Ax,E):- !,
 
 add_eqClass_simple_expl(E0,C,[C1|T],L,Ax,E):-
   ( member(ex(C,C1)-Ex,E0) ->
-     ( delete(E0,ex(C,C1)-Ex,E1),
-       add_eqClass_simple_expl([ex(C,C1)-[[Ax]|Ex]|E1],C,T,L,Ax,E)
+     ( member(ex(C1,C)-ExC,E0),
+       delete(E0,ex(C,C1)-Ex,E1),
+       delete(E1,ex(C1,C)-ExC,E2),
+       add_eqClass_simple_expl([ex(C,C1)-[[Ax]|Ex],ex(C1,C)-[[Ax]|ExC]|E2],C,T,L,Ax,E)
      )
     ;
-     add_eqClass_simple_expl([ex(C,C1)-[[Ax]]|E0],C,T,L,Ax,E)
+     add_eqClass_simple_expl([ex(C,C1)-[[Ax]],ex(C1,C)-[[Ax]]|E0],C,T,L,Ax,E)
   ).
 
 % combina le spiegazioni per tutti i membri dell'equivalent axiom
@@ -290,20 +292,22 @@ combine_eqClass_expl(Expls0,C,[C1|T],Expls):-
   %abolish_table_subgoals(expl_combination(_,_,_,_,_)),
   findall(Ex,expl_combination(Expls0,C,C1,[],Ex),Exs),
   ( member(ex(C,C1)-Exs0,Expls0) ->
-     ( delete(Expls0,ex(C,C1)-Exs0,Expls1),
-       combine_eqClass_expl([ex(C,C1)-Exs|Expls1],C,T,Expls)
+     ( member(ex(C1,C)-Exs0C,Expls0),
+       delete(Expls0,ex(C,C1)-Exs0,Expls1),
+       delete(Expls1,ex(C1,C)-Exs0C,Expls2),
+       combine_eqClass_expl([ex(C,C1)-Exs,ex(C1,C)-Exs|Expls2],C,T,Expls)
      )
     ;
-     combine_eqClass_expl([ex(C,C1)-Exs|Expls0],C,T,Expls)
+     combine_eqClass_expl([ex(C,C1)-Exs,ex(C1,C)-Exs|Expls0],C,T,Expls)
   ).
 
 expl_combination(Expls,C,C1,Used,Ex):-
-  (member(ex(C,C1)-Ex0,Expls) ; member(ex(C1,C)-Ex0,Expls)),
+  member(ex(C,C1)-Ex0,Expls),
   \+ (memberchk(C,Used), memberchk(C1,Used)),
   member(Ex,Ex0).
 
 expl_combination(Expls,C,C1,Used,Ex):-
-  (member(ex(C,C0)-Ex0,Expls) ; member(ex(C0,C)-Ex0,Expls)),
+  member(ex(C,C0)-Ex0,Expls),
   dif(C0,C1),dif(C0,'http://www.w3.org/2002/07/owl#Thing'),
   \+ (memberchk(C,Used), memberchk(C0,Used)),
   member(Ex01,Ex0),
@@ -398,7 +402,7 @@ get_hierarchy(M:Class,_Expl4Class,H4C):- %prende la gerarchia (KB) una classe e 
 
 
 get_combined_expls(Class,Pos,E,Classes,Expls,H4C):-
-  get_single_expls(Class,Pos,E,Classes,Expls,Class,H4C).
+  get_single_expls(Class,Pos,E,Classes,Expls,[Class],H4C).
 
 append_expl(AllExpl,[EndClass-NewExpl],NewAllExpl):-
   \+ memberchk(EndClass-_,AllExpl),!,
@@ -429,32 +433,39 @@ get_next(P,E,Classes,NextP,NextClass):-
   is_list(EqClasses),
   member(NextClass,EqClasses).
 
-get_single_expls(Class,P,E,Classes,Expls,_Start,[NextClass-[Expls4Class]]):-
+get_single_expls(Class,P,E,Classes,Expls,Used,[NextClass-[Expls4Class]]):-
   get_next(P,E,Classes,_NextP,NextClass),
+  \+ member(NextClass,Used),
   member(ex(Class,NextClass)-Exs,Expls),
   member(Expls4Class,Exs).
 
-get_single_expls(Class,P,E,Classes,Expls,Start,[EndClass-[TotExpl]]):-
+get_single_expls(Class,P,E,Classes,Expls,Used,[EndClass-[TotExpl]]):-
   get_next(P,E,Classes,NextP,NextClass),
-  dif(NextClass,Start),
+  \+ member(NextClass,Used),
   member(ex(Class,NextClass)-Exs,Expls),
   member(Expl4Class,Exs),
-  get_single_expls(NextClass,NextP,E,Classes,Expls,Start,[EndClass-[Expl4EndClass]]),
-  append(Expl4Class,Expl4EndClass,TotExpl).
+  get_single_expls(NextClass,NextP,E,Classes,Expls,[NextClass|Used],[EndClass-[Expl4EndClass]]),
+  append(Expl4Class,Expl4EndClass,TotExpl).%,
+%  sort(TotExpl0,TotExpl),
+%  length(TotExpl0,LTE),
+%  length(TotExpl,LTE).
 
 
-get_single_expls(Class,P,E,Classes,Expls,_Start,[NextClass-[[equivalentClasses(ListExpls4Class)]]]):-
+/*
+get_single_expls(Class,P,E,Classes,Expls,Start,[NextClass-[[equivalentClasses(ListExpls4Class)]]]):-
   get_next(P,E,Classes,P,NextClass),
+  dif(NextClass,Start),
   member(ex(NextClass,Class)-Exs,Expls),
   member([equivalentClasses(ListExpls4Class)],Exs).
 
 get_single_expls(Class,P,E,Classes,Expls,Start,[EndClass-[TotExpl]]):-
   get_next(P,E,Classes,P,NextClass),
+  dif(NextClass,Start),
   member(ex(NextClass,Class)-Exs,Expls),
   member([equivalentClasses(ListExpls4Class)],Exs),
-  get_single_expls(P,NextClass,E,Classes,Expls,Start,[EndClass-[Expl4EndClass]]),
+  get_single_expls(NextClass,P,E,Classes,Expls,Start,[EndClass-[Expl4EndClass]]),
   append([equivalentClasses(ListExpls4Class)],Expl4EndClass,TotExpl).
-
+*/
 
 get_one_expl(Pos,Class,E,Classes,Expls,Expl4Class,EndClass-H4C):-
   get_hierarchy_ric(Pos,Class,E,Classes,Expls,EndClass-[Expl]),
