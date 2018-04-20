@@ -886,7 +886,8 @@ add_exists_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind2,Expl2,ABox0),
   existsInKB(M,R,C),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
+  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox1),
+  expand_from_ind_class(someValuesFrom(R,C),Ind1,Expl,M,ABox1,ABox).
 
 existsInKB(M,R,C):-
   M:subClassOf(A,B),
@@ -914,7 +915,8 @@ scan_and_list(_M,[],_Ind,_Expl,ABox,_Tabs,ABox,Mod):-
 
 scan_and_list(M,[C|T],Ind,Expl,ABox0,Tabs0,ABox,_Mod):-
   modify_ABox(M,ABox0,C,Ind,Expl,ABox1),!,
-  scan_and_list(M,T,Ind,Expl,ABox1,Tabs0,ABox,1).
+  expand_from_ind_class(C,Ind,Expl,M,ABox1,ABox2),
+  scan_and_list(M,T,Ind,Expl,ABox2,Tabs0,ABox,1).
 
 scan_and_list(M,[_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
   scan_and_list(M,T,Ind,Expl,ABox0,Tabs0,ABox,Mod).
@@ -940,10 +942,12 @@ ind_intersected_union(Ind,LC,ABox) :-
   member(C,LC),!.
 %---------------
 scan_or_list(M,[C],1,Ind,Expl,ABox0,_Tabs,ABox):- !,
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox).
+  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),
+  expand_from_ind_class(C,Ind,Expl,M,ABox1,ABox).
 
 scan_or_list(M,[C|_T],_NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox).
+  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),
+  expand_from_ind_class(C,Ind,Expl,M,ABox1,ABox).
 
 scan_or_list(M,[_C|T],NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
   NC is NClasses - 1,
@@ -955,12 +959,13 @@ scan_or_list(M,[_C|T],NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
   ==================
 */
 exists_rule(M,(ABox0,Tabs0),([(propertyAssertion(R,Ind1,Ind2),Expl),
-    (classAssertion(C,Ind2),Expl)|ABox0],Tabs)):-
+    (classAssertion(C,Ind2),Expl)|ABox],Tabs)):-
   findClassAssertion(someValuesFrom(R,C),Ind1,Expl,ABox0),
   \+ blocked(Ind1,(ABox0,Tabs0)),
   \+ connected_individual(R,C,Ind1,ABox0),
   new_ind(M,Ind2),
-  add_edge(R,Ind1,Ind2,Tabs0,Tabs).
+  add_edge(R,Ind1,Ind2,Tabs0,Tabs),
+  expand_from_ind_class(C,Ind2,Expl,M,ABox0,ABox).
 
 
 %---------------
@@ -979,7 +984,8 @@ forall_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,C,Ind2,Expl,ABox).
+  modify_ABox(M,ABox0,C,Ind2,Expl,ABox1),
+  expand_from_ind_class(C,Ind2,Expl,M,ABox1,ABox).
 
 /* ************** */
 
@@ -994,7 +1000,8 @@ forall_plus_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_sub_sup_trans_role(M,R,S,Expl3),
   and_f(M,Expl1,Expl2,ExplT),
   and_f(M,ExplT,Expl3,Expl),
-  modify_ABox(M,ABox0,allValuesFrom(R,C),Ind2,Expl,ABox).
+  modify_ABox(M,ABox0,allValuesFrom(R,C),Ind2,Expl,ABox1),
+  expand_from_ind_class(allValuesFrom(R,C),Ind2,Expl,M,ABox1,ABox).
 
 % --------------
 find_sub_sup_trans_role(M,R,S,Expl):-
@@ -1021,7 +1028,9 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(D,Ind,ABox1,ABox2),
+  expand_from_ind_class(D,Ind,AxL,M,ABox2,ABox).
+
 
 /* -- unfold_rule
       takes a class C1 in which Ind belongs, find a not atomic class C
@@ -1039,7 +1048,8 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl1,AxL1),
   modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(D,Ind,ABox1,ABox2),
+  expand_from_ind_class(D,Ind,AxL1,M,ABox2,ABox).
 
 /* -- unfold_rule
  *    control propertyRange e propertyDomain
@@ -1048,7 +1058,8 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_class_prop_range_domain(M,Ind,D,Expl,(ABox0,Tabs)),
   modify_ABox(M,ABox0,D,Ind,Expl,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(D,Ind,ABox1,ABox2),
+  expand_from_ind_class(D,Ind,Expl,M,ABox2,ABox).
 
 /*
  * -- unfold_rule
@@ -1060,7 +1071,8 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_neg_class(C,D),
   and_f_ax(M,complementOf(C),Expl,AxL),
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(D,Ind,ABox1,ABox2),
+  expand_from_ind_class(D,Ind,AxL,M,ABox2,ABox).
 
 % ----------------
 % add_nominal
@@ -1139,6 +1151,7 @@ find_class_prop_range_domain(M,Ind,D,Expl,(ABox,_Tabs)):-
 %-----------------
 :- multifile find_sub_sup_class/4.
 
+/*
 % subClassOf
 find_sub_sup_class(M,C,D,subClassOf(C,D)):-
   M:subClassOf(C,D).
@@ -1149,6 +1162,7 @@ find_sub_sup_class(M,C,D,equivalentClasses(L)):-
   member(C,L),
   member(D,L),
   dif(C,D).
+*/
 
 %concept for concepts allValuesFrom
 find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(R,D),Ax):-
@@ -1338,7 +1352,8 @@ apply_ce_to(_M,[],_,_,ABox,ABox,_,0).
 apply_ce_to(M,[Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
   \+ indirectly_blocked(Ind,(ABox0,Tabs)),
   modify_ABox(M,ABox0,UnAx,Ind,[Ax],ABox1),!,
-  apply_ce_to(M,T,Ax,UnAx,ABox1,ABox,Tabs,C0),
+  expand_from_ind_class(UnAx,Ind,[Ax],M,ABox1,ABox2),
+  apply_ce_to(M,T,Ax,UnAx,ABox2,ABox,Tabs,C0),
   C is C0 + 1.
 
 apply_ce_to(M,[_Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
@@ -1436,7 +1451,7 @@ scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0,ABox,Tabs):-
   findPropertyAssertion(S,Ind,YJ,ExplYJ,ABox0),
   and_f(M,ExplYI,ExplYJ,Expl0),
   and_f(M,Expl,Expl0,ExplT),
-  merge_all(M,[(sameIndividual([YI,YJ]),ExplT)],ABox0,Tabs0,ABox,Tabs).
+  merge_all(M,[(sameIndividual([YI,YJ]),ExplT)],ABox0,Tabs0,ABox,Tabs). % TODO to check!
 
 %--------------------
 check_individuals_not_equal(M,X,Y,ABox):-
@@ -1469,7 +1484,7 @@ o_rule(M,(ABox0,Tabs0),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
   indAsList(X,LX),
   indAsList(Y,LY),
   and_f(M,ExplX,ExplY,ExplC),
-  merge(M,X,Y,(ABox0,Tabs0),(ABox,Tabs)),
+  merge(M,X,Y,(ABox0,Tabs0),(ABox,Tabs)), % TODO to check!
   flatten([LX,LY],LI0),
   list_to_set(LI0,LI),
   absent(sameIndividual(LI),ExplC,ABox0).
@@ -1605,6 +1620,54 @@ writeABox((ABox,_)):-
 /*
   build_abox
   ===============
+*/
+
+build_abox(M,(ABox,Tabs)):-
+  hierarchy(M:H),
+  build_abox_int(M,(ABox0,Tabs0)),
+  expand_individuals_from_hierarchy(H.individuals,H,M,(ABox0,Tabs0),(ABox,Tabs)).
+  
+expand_individuals_from_hierarchy([],_H,_M,(ABox,Tabs),(ABox,Tabs)):-!.
+
+expand_individuals_from_hierarchy([Ind|T],H,M,(ABox0,Tabs),(ABox,Tabs)):-
+  findall(C,findClassAssertion(C,Ind,_Expl,ABox0),Classes4Ind),
+  expand_from_ind_classes(Classes4Ind,Ind,M,ABox0,ABox1),
+  expand_individuals_from_hierarchy(T,H,M,(ABox1,Tabs),(ABox,Tabs)).
+
+expand_from_ind_classes([],_Ind,_M,ABox,ABox).
+
+expand_from_ind_classes([Class|T],Ind,M,ABox0,ABox):-
+  expand_from_ind_class(Class,Ind,[[classAssertion(Class,Ind)]],M,ABox0,ABox1),
+  expand_from_ind_classes(T,Ind,M,ABox1,ABox).
+
+% data una classe un individuo e la spiegazione, cerca la gerarchia e espande il tableau di consegnuenza
+expand_from_ind_class(Class,Ind,Expl4ClassInd,M,ABox0,ABox):-
+  M:kb_hierarchy(H),
+  get_hierarchy(H,Class,H4C),!, % esiste una gerarchia dalla classe Class
+  expand_from_hier_ind_class(H4C,M,Ind,Expl4ClassInd,ABox0,ABox).
+
+expand_from_ind_class(_Class,_Ind,_Expl4ClassInd,_M,ABox,ABox):- !.% non esiste una gerarchia dalla classe Class
+
+expand_from_hier_ind_class([],_M,_Ind,_Expl4ClassInd,ABox,ABox).
+
+expand_from_hier_ind_class([H-Ex|T],M,Ind,Expl4ClassInd,ABox0,ABox):-
+  and_f(M,Ex,Expl4ClassInd,Expl),
+  modify_ABox(M,ABox0,H,Ind,Expl,ABox1),!,
+  add_nominal(H,Ind,ABox1,ABox2),
+  expand_from_hier_ind_class(T,M,Ind,Expl4ClassInd,ABox2,ABox).
+
+expand_from_hier_ind_class([_H-_Ex|T],M,Ind,Expl4ClassInd,ABox0,ABox):-
+  expand_from_hier_ind_class(T,M,Ind,Expl4ClassInd,ABox0,ABox).
+
+
+
+/*
+unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
+  findClassAssertion(C,Ind,Expl,ABox0),
+  find_sub_sup_class(M,C,D,Ax),
+  and_f_ax(M,Ax,Expl,AxL),
+  modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
+  add_nominal(D,Ind,ABox1,ABox).
 */
 
 %---------------
@@ -2452,8 +2515,8 @@ sandbox:safe_meta(trill:add_axioms(_),[]).
 sandbox:safe_meta(trill:load_kb(_),[]).
 sandbox:safe_meta(trill:load_owl_kb(_),[]).
 
-:- use_module(utility_kb).
-:- use_module(utility_translation).
+:- use_module(library(utility_kb)).
+:- use_module(library(utility_translation)).
 
 user:term_expansion((:- trill),[]):-
   utility_translation:get_module(M),

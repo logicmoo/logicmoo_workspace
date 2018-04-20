@@ -170,7 +170,7 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
   ===============
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox_int(M,(ABox,Tabs)):-
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
