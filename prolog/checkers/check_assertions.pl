@@ -299,15 +299,15 @@ generate_ctchecks(Goal, M, VInf, CTChecks) :-
 
 wrap_asr_ctcheck(VInf, Asr, ctcheck(VInf, Asr)).
 
-%! assrt_lib:asr_aprop(Asr, Section, Property, From)
-%
-%  Assertion abstraction: If we can not determine the mode at compile time, at
-%  least check for compatibility (instead of instantiation).  This abstraction
-%  makes static check decidable, the tradeoff is that we lose precision but we
-%  gain computability of checks at compile-time.
-
 assrt_lib:asr_aprop(ctcheck(VInf, Asr), Key, Prop, From) :-
     asr_aprop_ctcheck(Key, VInf, Asr, Prop, From).
+
+%!  asr_aprop_ctcheck(Asr, Section, Property, From)
+%
+%   Assertion abstraction: If we can not determine the mode at compile time, at
+%   least check for compatibility (instead of instantiation).  This abstraction
+%   makes static check decidable, the tradeoff is that we lose precision but we
+%   gain computability of checks at compile-time.
 
 asr_aprop_ctcheck(head, _, A, P, F) :- curr_prop_asr(head, P, F, A).
 asr_aprop_ctcheck(stat, _, A, P, F) :- curr_prop_asr(stat, P, F, A).
