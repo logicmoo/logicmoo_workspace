@@ -36,6 +36,8 @@
           [expansion_module/2,
            is_expansion_module/1]).
 
+:- use_module(library(option)).
+
 reexported_module(EM1, EF) :-
     '$load_context_module'(EF, EM1, Opts),
     option(reexport(true), Opts).
