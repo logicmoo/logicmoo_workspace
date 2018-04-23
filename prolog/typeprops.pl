@@ -41,6 +41,7 @@
            sequence/2, predname/1, constant/1
           ]).
 
+:- use_module(library(neck)).
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
 :- use_module(library(apply)).
@@ -207,13 +208,9 @@ str(S) :-
 
 :- type character_code/1 # "an integer which is a character code.".
 
-:- dynamic
-       character_code/1.
-
-:- retractall(character_code(_)),
-   forall(between(0, 255, I),
-          assertz(character_code(I))),
-   compile_predicates([character_code/1]).
+character_code(I) :-
+    between(0, 255, I),
+    neck.
 
 :- type constant/1 # "An atomic term (an atom, string or a number).".
 
