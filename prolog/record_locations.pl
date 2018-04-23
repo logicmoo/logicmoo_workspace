@@ -182,6 +182,7 @@ assert_position(H, M, Type, TermPos) :-
 assert_location(H, M, Type, File, Line, From) :-
     ( \+ have_extra_location(From, H, M, Type)
     ->compile_aux_clauses('$source_location'(File, Line):extra_location:loc_declaration(H, M, Type, From))
+      % assertz(extra_location:loc_declaration(H, M, Type, From))
     ; true
     ).
 
