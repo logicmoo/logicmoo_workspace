@@ -86,9 +86,6 @@ collect_sols(M:Goal, WrappedHead, Hash) :-
 abolish_all_tables :-
     abolish_table_hash(_).
 
-:- meta_predicate
-       abolish_ntable_subgoals(0).
-
 abolish_table_subgoals(Goal) :-
     goal_hash(Goal, Hash),
     abolish_table_hash(Hash).
