@@ -33,11 +33,12 @@ hierarchy_int(M:H):-
   findall(C,M:class(C),L1),
   findall(Class,M:classAssertion(Class,_Individual),L2),
   findall(I,M:namedIndividual(I),LI1),
+  findall(Individual,M:classAssertion(_Class,Individual),LI6),
   findall(LIS,M:sameIndividual(LIS),LI2),
   findall(LID,M:differentIndividuals(LID),LI3),
   append(LI2,LI4),
   append(LI3,LI5),
-  append([LI1,LI4,LI5],LIndNS),
+  append([LI1,LI4,LI5,LI6],LIndNS),
   sort(LIndNS,LInd),
   append(L1,L2,L3),
   sort(L3,L4),
@@ -49,12 +50,12 @@ hierarchy_int(M:H):-
   forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
   forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
   forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
-  M:kb_hierarchy(H),
-  writeln(H.hierarchy),
-  writeln(H.nClasses),
-  writeln(H.disjointClasses),
-  writeln(H.classes),
-  writeln(H.explanations).
+  M:kb_hierarchy(H).
+  %writeln(H.hierarchy),
+  %writeln(H.nClasses),
+  %writeln(H.disjointClasses),
+  %writeln(H.classes),
+  %writeln(H.explanations).
 
 % inizializza la gerarchia albero con thing + numero classi + albero disjoint + dizionario fra nodi e classi
 % init_hierarchy(kb{hierarchy:TreeH,nClasses:1,disjointClasses:TreeD,node2classes:Classes})
@@ -256,8 +257,9 @@ add_eqClass_hier(KB0,ClassList0,KB):-
 update_eqNode(KB0,Node,ClassList,KB):-
   Classes0=KB0.classes,
   EqClasses=Classes0.get(Node),
-  ( dif(EqClasses,ClassList) ->
-    ( append(EqClasses,ClassList,UnsortedClassList),
+  ( is_list(EqClasses) -> EqClassesList = EqClasses ; EqClassesList = [EqClasses]),
+  ( dif(EqClassesList,ClassList) ->
+    ( append(EqClassesList,ClassList,UnsortedClassList),
       sort(UnsortedClassList,ClassSet),
       Classes=Classes0.put(Node,ClassSet),
       KB=KB0.put(classes,Classes)
