@@ -1045,7 +1045,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(M,Ind,L,ABox0,Expl1)),
-  find_sub_sup_class(M,C,D,Ax),
+  find_sub_sup_class_tot(M,C,D,Ax),
   and_f_ax(M,Ax,Expl1,AxL1),
   modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
   add_nominal(D,Ind,ABox1,ABox2),
@@ -1149,6 +1149,12 @@ find_class_prop_range_domain(M,Ind,D,Expl,(ABox,_Tabs)):-
 
 
 %-----------------
+find_sub_sup_class_tot(M,C,D,Ax):-
+  find_sub_sup_class(M,C,D,Ax).
+
+find_sub_sup_class_tot(M,C,D,Ax):-
+  find_sub_sup_class_dir(M,C,D,Ax).
+
 :- multifile find_sub_sup_class/4.
 
 % subClassOf
