@@ -1023,6 +1023,7 @@ find_sub_sup_trans_role(M,R,S,Expl):-
   ===========
 */
 
+/*
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind,Expl,ABox0),
   find_sub_sup_class(M,C,D,Ax),
@@ -1030,7 +1031,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
   add_nominal(D,Ind,ABox1,ABox2),
   expand_from_ind_class(D,Ind,AxL,M,ABox2,ABox).
-
+*/
 
 /* -- unfold_rule
       takes a class C1 in which Ind belongs, find a not atomic class C
@@ -1041,6 +1042,8 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
       correspond to the ce_rule
    --
 */
+/*
+
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
@@ -1050,6 +1053,14 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
   add_nominal(D,Ind,ABox1,ABox2),
   expand_from_ind_class(D,Ind,AxL1,M,ABox2,ABox).
+*/
+unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
+  findClassAssertion(C1,Ind,Expl,ABox0),
+  find_not_atomic(M,C1,C,L),
+  ( C = unionOf(_) -> Expl1 = Expl ; find_all(M,Ind,L,ABox0,Expl1)),
+  modify_ABox(M,ABox0,C,Ind,Expl1,ABox1),
+  add_nominal(C,Ind,ABox1,ABox2),
+  expand_from_ind_class(C,Ind,Expl1,M,ABox2,ABox).
 
 /* -- unfold_rule
  *    control propertyRange e propertyDomain
@@ -1066,6 +1077,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
  *    manage the negation
  * --
  */
+/*
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(complementOf(C),Ind,Expl,ABox0),
   find_neg_class(C,D),
@@ -1073,7 +1085,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
   add_nominal(D,Ind,ABox1,ABox2),
   expand_from_ind_class(D,Ind,AxL,M,ABox2,ABox).
-
+*/
 % ----------------
 % add_nominal
 

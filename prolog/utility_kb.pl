@@ -50,12 +50,27 @@ hierarchy_int(M:H):-
   forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
   forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
   forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
+  search_and_add_complex_subClassOf(M),
   M:kb_hierarchy(H).
   %writeln(H.hierarchy),
   %writeln(H.nClasses),
   %writeln(H.disjointClasses),
   %writeln(H.classes),
   %writeln(H.explanations).
+
+
+search_and_add_complex_subClassOf(M):-
+  M:kb_hierarchy(H10),
+  collect_all_classes(H10.classes, Classes),
+  findall(_,process_classes_for_complex_subClassOf(M,Classes),_).
+
+process_classes_for_complex_subClassOf(M,Classes):-
+  complex_subClassOf(Classes,M,C,D,Ex),
+  M:kb_hierarchy(H10),
+  add_complex_subClassOf(H10,C,D,Ex,H11),
+  retractall(M:kb_hierarchy(_)),
+  assert(M:kb_hierarchy(H11)),
+  fail.
 
 % inizializza la gerarchia albero con thing + numero classi + albero disjoint + dizionario fra nodi e classi
 % init_hierarchy(kb{hierarchy:TreeH,nClasses:1,disjointClasses:TreeD,node2classes:Classes})
@@ -112,6 +127,33 @@ add_hierarchy_link(KB0,C,C1,KB):- % non linkati
   add_edges(TreeH1,[PC1-PC],TreeH),
   add_subClass_expl(KB0.explanations,C,C1,Expls),
   KB=KB0.put([hierarchy=TreeH,explanations=Expls]).
+
+
+add_hierarchy_link(KB0,C,C1,Expl,KB):- % già in equivalentClasses
+  Classes0=KB0.classes,
+  PC=Classes0.find(C),
+  PC=Classes0.find(C1),!,
+  add_subClass_expl(KB0.explanations,C,C1,Expl,Expls),
+  KB=KB0.put(explanations,Expls).
+
+add_hierarchy_link(KB0,C,C1,Expl,KB):- % linkati al contrario C sub D, D sub C -> trasformo in equivalent
+  Classes0=KB0.classes,
+  PC=Classes0.find(C),
+  PC1=Classes0.find(C1),
+  are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
+  merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
+  add_subClass_expl(KB1.explanations,C,C1,Expl,Expls),
+  KB=KB1.put(explanations,Expls).
+
+add_hierarchy_link(KB0,C,C1,Expl,KB):- % non linkati
+  Classes0=KB0.classes,
+  PC=Classes0.find(C),
+  PC1=Classes0.find(C1),
+  del_edges(KB0.hierarchy,[0-PC],TreeH1),
+  add_edges(TreeH1,[PC1-PC],TreeH),
+  add_subClass_expl(KB0.explanations,C,C1,Expl,Expls),
+  KB=KB0.put([hierarchy=TreeH,explanations=Expls]).
+
 
 are_subClasses_int(KB,C,C1):-
   reachable(C,KB.hierarchy,L),
@@ -448,6 +490,13 @@ add_subClass_expl(Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
 
 add_subClass_expl(Expls,C,C1,[ex(C,C1)-[[subClassOf(C,C1)]]|Expls]).
 
+add_subClass_expl(Expls0,C,C1,Expl,[ex(C,C1)-ExF|Expls]):-
+  member(ex(C,C1)-Ex,Expls0),!,
+  delete(Expls0,ex(C,C1)-Ex,Expls),
+  sort([Expl|Ex],ExF).
+
+add_subClass_expl(Expls,C,C1,Expl,[ex(C,C1)-[Expl]|Expls]).
+
 
 % TODO aggiungere eventuali altri sottoclasse (someValuesFrom(R,C)->somevaluesFrom(R,D) con subClassOf(C,D))
 
@@ -561,7 +610,26 @@ get_hierarchy_ric(P,Class,E,Classes,Expls,EndClass-Expl):-
   ).
 
 
+%% add_complex_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
+add_complex_subClassOf(KB0,SubClass,SupClass,Expl,KB):-
+  add_classes(KB0,[SubClass,SupClass],KB1),
+  add_hierarchy_link(KB1,SubClass,SupClass,Expl,KB),
+  check_disjoint(KB),!. % si può proseguire
 
+
+collect_all_classes(DictClasses,Classes):-
+  findall(C,get_dict(_,DictClasses,C),CL0),
+  flatten(CL0,CL1),
+  sort(CL1,Classes).
+
+
+complex_subClassOf(Classes,M,C,D,[Ax]):-
+  member(C,Classes),
+  trill:find_sub_sup_class(M,C,D,Ax).
+
+complex_subClassOf(Classes,_M,complementOf(C),D,[equivalentClasses([complementOf(C),D])]):-
+  member(complementOf(C),Classes),
+  trill:find_neg_class(C,D).
 
 % owl fixed classes (owl:Thing e owl:Nothing)
 owl_f(0).
