@@ -34,8 +34,8 @@
 
 :- module(checker,
           [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
-          check_results/2, check_results/3, report_list/2, full_report/1,
-          simple_report/1, available_checker/1]).
+           checkeach/2, check_results/2, check_results/3, report_list/2,
+           full_report/1, simple_report/1, available_checker/1]).
 
 :- use_module(library(atomics_atom)).
 :- use_module(library(thread)).
@@ -185,7 +185,6 @@ check_wrapper(Goal) :-
                 Goal,
                 cleanup_db))).
 
-:- public checkeach/2.
 checkeach(Options, Checker) :-
     infocheck(Checker, T),
     check(Checker, Results, Options),
