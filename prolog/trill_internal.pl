@@ -339,6 +339,8 @@ absent2([_|T],Expl):-
   add_all(LSPA,ABox2,ABox).
 */
 
+clear_trill_db(_):- !.
+
 build_abox_int(M,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),M:propertyAssertion(Property,Subject, Object),LPA),
@@ -399,6 +401,13 @@ and_f2(L1,[H2|T2],[H|T]):-
   append(L1,H2,H),
   and_f2(L1,T2,T).
 
+or_f(_M,Or1,Or2,Or):-
+  append(Or1,Or2,Or0),
+  sort(Or0,Or).
+
+% init an explanation with one axiom
+ax2ex(_M,Ax,[[Ax]]):- !.
+  
 
 /**********************
 

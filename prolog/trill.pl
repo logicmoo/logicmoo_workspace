@@ -1654,7 +1654,8 @@ expand_individuals_from_hierarchy([Ind|T],H,M,(ABox0,Tabs),(ABox,Tabs)):-
 expand_from_ind_classes([],_Ind,_M,ABox,ABox).
 
 expand_from_ind_classes([Class|T],Ind,M,ABox0,ABox):-
-  expand_from_ind_class(Class,Ind,[[classAssertion(Class,Ind)]],M,ABox0,ABox1),
+  ax2ex(M,classAssertion(Class,Ind),ExAx),
+  expand_from_ind_class(Class,Ind,ExAx,M,ABox0,ABox1),
   expand_from_ind_classes(T,Ind,M,ABox1,ABox).
 
 % data una classe un individuo e la spiegazione, cerca la gerarchia e espande il tableau di consegnuenza

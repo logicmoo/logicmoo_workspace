@@ -170,13 +170,16 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
   ===============
 */
 
-build_abox_int(M,(ABox,Tabs)):-
+clear_trill_db(M):-
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
   findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
-  get_bdd_environment(M,NV,Env),
+  get_bdd_environment(M,NV,_Env).
+
+build_abox_int(M,(ABox,Tabs)):-
+  get_bdd_environment(M,_NV,Env),
   findall((classAssertion(Class,Individual),BDDCA),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
   findall((propertyAssertion(Property,Subject, Object),BDDPA),(M:propertyAssertion(Property,Subject, Object),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -236,6 +239,12 @@ or_f(M,BDD0,BDD1,BDD):-
   get_bdd_environment(M,Env),
   or(Env,BDD0,BDD1,BDD).
 
+
+
+% init an explanation with one axiom
+ax2ex(M,Ax,BDDAxiom):-
+  get_bdd_environment(M,Env),
+  bdd_and(M,Env,[Ax],BDDAxiom).
 
 /**********************
 

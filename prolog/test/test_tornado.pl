@@ -1,16 +1,17 @@
 :- module(test_tornado,
   [test_tornado/0]).
 :- use_module(library(plunit)).
+:- use_module(library(tabling)).
 
 test_tornado:-
     trill:set_algorithm(tornado),
     run_tests([tornado_biopax,
     tornado_dbpedia,
+    tornado_vicodi,
     tornado_brca,
     tornado_commander,
     tornado_johnEmployee,
-    tornado_peoplePets,
-    tornado_vicodi]).
+    tornado_peoplePets]).
 
 :- use_module(library(test/trill_test)).
 
@@ -30,9 +31,9 @@ test(p_wa_wulbrcr):-
 
 :-ensure_loaded(library(examples/vicodi)).
 
-test(p_r_avdpf):-
+test(p_r_avdpf):-abolish_all_tables,
   run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
-test(p_p_r):-
+test(p_p_r):-abolish_all_tables,
   run((prob_sub_class('vicodi:Painter','vicodi:Role',Prob),close_to(Prob,0.30600000000000005))).
 
 :- end_tests(tornado_vicodi).

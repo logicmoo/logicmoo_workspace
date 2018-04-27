@@ -170,6 +170,8 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
   ===============
 */
 
+clear_trill_db(_):- !.
+
 build_abox_int(M,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),M:propertyAssertion(Property,Subject, Object),LPA),
@@ -566,6 +568,9 @@ find_compatible_or(F1,OrF2,OrF2C,OrF2NC):-
   differenceFML(OrF2,OrF2C,OrF2NC).
   
 remove_duplicates(A,C):-sort(A,C).
+
+% init an explanation with one axiom
+ax2ex(_M,Ax,*([Ax])):- !.
 
 /**********************
 

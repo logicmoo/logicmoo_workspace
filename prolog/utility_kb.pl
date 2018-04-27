@@ -10,8 +10,9 @@ This module models and manages the hierarchy of the KB's concepts.
 
 %% astrazione della gerarchia
 
-:- module(utility_kb, [get_hierarchy/3,get_hierarchy/2]).
+:- module(utility_kb, [init_hierarchy/1,get_hierarchy/3,get_hierarchy/2]).
 
+:- meta_predicate init_hierarchy(:).
 :- meta_predicate get_hierarchy(:,-).
 :- meta_predicate get_hierarchy(+,+,-).
 
@@ -21,15 +22,16 @@ This module models and manages the hierarchy of the KB's concepts.
 :- use_module(library(tabling)).
 :- table expl_combination/4.
 
-:- table get_combined_expls(_,_,_,_,_,lattice(append_expl/3)). %get_hierarchy_ric/6,
+:- table get_combined_expls(_,_,_,_,_,_,lattice(append_expl/3)). %get_hierarchy_ric/6,
 %:- table get_single_expls/7. %(_,_,_,_,_,lattice(append_expl)).
 
 :- multifile trill:hierarchy/1.
 trill:hierarchy(M:H):-
+  trill:clear_trill_db(M),
   utility_kb:hierarchy_int(M:H).
 
 hierarchy_int(M:H):-
-  init_hierarchy(H0),
+  init_hierarchy(M:H0),
   findall(C,M:class(C),L1),
   findall(Class,M:classAssertion(Class,_Individual),L2),
   findall(I,M:namedIndividual(I),LI1),
@@ -65,7 +67,7 @@ search_and_add_complex_subClassOf(M):-
   findall(_,process_classes_for_complex_subClassOf(M,Classes),_).
 
 process_classes_for_complex_subClassOf(M,Classes):-
-  complex_subClassOf(Classes,M,C,D,Ex),
+  complex_subClassOf(M,Classes,C,D,Ex),
   M:kb_hierarchy(H10),
   add_complex_subClassOf(H10,C,D,Ex,H11),
   retractall(M:kb_hierarchy(_)),
@@ -74,7 +76,7 @@ process_classes_for_complex_subClassOf(M,Classes):-
 
 % inizializza la gerarchia albero con thing + numero classi + albero disjoint + dizionario fra nodi e classi
 % init_hierarchy(kb{hierarchy:TreeH,nClasses:1,disjointClasses:TreeD,node2classes:Classes})
-init_hierarchy(kb{hierarchy:TreeH,nClasses:1,nIndividuals:0,disjointClasses:TreeD,classes:Classes,explanations:[],individuals:[]}):-
+init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjointClasses:TreeD,classes:Classes,explanations:[],individuals:[]}):-
   vertices_edges_to_ugraph([0,'n'],[],TreeH),
   Classes=classes{'n':'http://www.w3.org/2002/07/owl#Nothing',0:'http://www.w3.org/2002/07/owl#Thing'},
   vertices_edges_to_ugraph([],['n'-0,0-'n'],TreeD).
@@ -107,7 +109,7 @@ add_hierarchy_link(KB0,C,C1,KB):- % già in equivalentClasses
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC=Classes0.find(C1),!,
-  add_subClass_expl(KB0.explanations,C,C1,Expls),
+  add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expls),
   KB=KB0.put(explanations,Expls).
 
 add_hierarchy_link(KB0,C,C1,KB):- % linkati al contrario C sub D, D sub C -> trasformo in equivalent
@@ -116,7 +118,7 @@ add_hierarchy_link(KB0,C,C1,KB):- % linkati al contrario C sub D, D sub C -> tra
   PC1=Classes0.find(C1),
   are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
   merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
-  add_subClass_expl(KB1.explanations,C,C1,Expls),
+  add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expls),
   KB=KB1.put(explanations,Expls).
 
 add_hierarchy_link(KB0,C,C1,KB):- % non linkati
@@ -125,7 +127,7 @@ add_hierarchy_link(KB0,C,C1,KB):- % non linkati
   PC1=Classes0.find(C1),
   del_edges(KB0.hierarchy,[0-PC],TreeH1),
   add_edges(TreeH1,[PC1-PC],TreeH),
-  add_subClass_expl(KB0.explanations,C,C1,Expls),
+  add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expls),
   KB=KB0.put([hierarchy=TreeH,explanations=Expls]).
 
 
@@ -133,7 +135,7 @@ add_hierarchy_link(KB0,C,C1,Expl,KB):- % già in equivalentClasses
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC=Classes0.find(C1),!,
-  add_subClass_expl(KB0.explanations,C,C1,Expl,Expls),
+  add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expl,Expls),
   KB=KB0.put(explanations,Expls).
 
 add_hierarchy_link(KB0,C,C1,Expl,KB):- % linkati al contrario C sub D, D sub C -> trasformo in equivalent
@@ -142,7 +144,7 @@ add_hierarchy_link(KB0,C,C1,Expl,KB):- % linkati al contrario C sub D, D sub C -
   PC1=Classes0.find(C1),
   are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
   merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
-  add_subClass_expl(KB1.explanations,C,C1,Expl,Expls),
+  add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expl,Expls),
   KB=KB1.put(explanations,Expls).
 
 add_hierarchy_link(KB0,C,C1,Expl,KB):- % non linkati
@@ -151,7 +153,7 @@ add_hierarchy_link(KB0,C,C1,Expl,KB):- % non linkati
   PC1=Classes0.find(C1),
   del_edges(KB0.hierarchy,[0-PC],TreeH1),
   add_edges(TreeH1,[PC1-PC],TreeH),
-  add_subClass_expl(KB0.explanations,C,C1,Expl,Expls),
+  add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expl,Expls),
   KB=KB0.put([hierarchy=TreeH,explanations=Expls]).
 
 
@@ -235,7 +237,7 @@ add_class(KB0,Class,KB):-
   NC is NC0 + 1,
   Classes=Classes0.put(NC0,Class),
   add_edges(KB0.hierarchy,[0-NC0],TreeH), %% classe sotto owl:Thing
-  add_subClass_expl(KB0.explanations,Class,'http://www.w3.org/2002/07/owl#Thing',Expls),
+  add_subClass_expl(KB0.usermod,KB0.explanations,Class,'http://www.w3.org/2002/07/owl#Thing',Expls),
   KB=KB0.put([hierarchy=TreeH,nClasses=NC,classes=Classes,explanations=Expls]).
 
 % aggiunge una lista di classi
@@ -321,7 +323,7 @@ add_eqClass_hier(KB0,ClassList,KB):-  %% se non c'è nodo lo aggiungo. NOTA: agg
 add_subClasses_expl(KB,[],KB):-!.
 
 add_subClasses_expl(KB0,[Class|List],KB):-
-  add_subClass_expl(KB0.explanations,Class,'http://www.w3.org/2002/07/owl#Thing',Expls1),
+  add_subClass_expl(KB0.usermod,KB0.explanations,Class,'http://www.w3.org/2002/07/owl#Thing',Expls1),
   KB1=KB0.put(explanations,Expls1),
   add_subClasses_expl(KB1,List,KB).
 
@@ -330,39 +332,44 @@ add_eqClass_expl(KB0,Ax,KB):-
   add_eqClass_simple_expl(KB0,Ax,KB).%1),
 %  add_eqClass_complex_expl(H1,Ax,H).
   
+/*
 add_eqClass_expl(KB0,ClassList,ClassList,KB):-
   add_eqClass_simple_expl(KB0,ClassList,ClassList,equivalentClasses(ClassList),KB1),
   add_eqClass_complex_expl(KB1,equivalentClasses(ClassList),KB).
+*/
 
 % aggiunge spiegazioni fra i componenti del singolo assioma
 add_eqClass_simple_expl(KB0,equivalentClasses(ClassList),KB):-
-  add_eqClass_simple_expl(KB0.explanations,ClassList,ClassList,equivalentClasses(ClassList),Expls),
+  add_eqClass_simple_expl(KB0.usermod,KB0.explanations,ClassList,ClassList,equivalentClasses(ClassList),Expls),
   KB=KB0.put(explanations,Expls).
 
 add_eqClass_simple_expl(KB0,disjointUnion(Class,DisjList),KB):-
-  add_eqClass_simple_expl(KB0.explanations,[Class,unionOf(DisjList)],[Class,unionOf(DisjList)],disjointUnion(Class,DisjList),Expls),
+  add_eqClass_simple_expl(KB0.usermod,KB0.explanations,[Class,unionOf(DisjList)],[Class,unionOf(DisjList)],disjointUnion(Class,DisjList),Expls),
   KB=KB0.put(explanations,Expls).
 
-add_eqClass_simple_expl(Expls,[],_L,_Ax,Expls):- !.
+add_eqClass_simple_expl(_M,Expls,[],_L,_Ax,Expls):- !.
 
-add_eqClass_simple_expl(Expls0,[C|T],L,Ax,Expls):-
-  add_eqClass_simple_expl(Expls0,C,T,L,Ax,Expls1),
-  add_eqClass_simple_expl(Expls1,T,L,Ax,Expls).
+add_eqClass_simple_expl(M,Expls0,[C|T],L,Ax,Expls):-
+  add_eqClass_simple_expl(M,Expls0,C,T,L,Ax,Expls1),
+  add_eqClass_simple_expl(M,Expls1,T,L,Ax,Expls).
 
-add_eqClass_simple_expl(E,_C,[],_L,_Ax,E):- !.
+add_eqClass_simple_expl(_M,E,_C,[],_L,_Ax,E):- !.
 
-add_eqClass_simple_expl(E0,C,[C|T],L,Ax,E):- !,
-  add_eqClass_simple_expl(E0,C,T,L,Ax,E).
+add_eqClass_simple_expl(M,E0,C,[C|T],L,Ax,E):- !,
+  add_eqClass_simple_expl(M,E0,C,T,L,Ax,E).
 
-add_eqClass_simple_expl(E0,C,[C1|T],L,Ax,E):-
+add_eqClass_simple_expl(M,E0,C,[C1|T],L,Ax,E):-
+  trill:ax2ex(M,Ax,ExAx),
   ( member(ex(C,C1)-Ex,E0) ->
      ( member(ex(C1,C)-ExC,E0),
        delete(E0,ex(C,C1)-Ex,E1),
        delete(E1,ex(C1,C)-ExC,E2),
-       add_eqClass_simple_expl([ex(C,C1)-[[Ax]|Ex],ex(C1,C)-[[Ax]|ExC]|E2],C,T,L,Ax,E)
+       trill:or_f(M,ExAx,Ex,ExOr),
+       trill:or_f(M,ExAx,ExC,ExCOr),
+       add_eqClass_simple_expl(M,[ex(C,C1)-ExOr,ex(C1,C)-ExCOr|E2],C,T,L,Ax,E)
      )
     ;
-     add_eqClass_simple_expl([ex(C,C1)-[[Ax]],ex(C1,C)-[[Ax]]|E0],C,T,L,Ax,E)
+     add_eqClass_simple_expl(M,[ex(C,C1)-ExAx,ex(C1,C)-ExAx|E0],C,T,L,Ax,E)
   ).
 
 % combina le spiegazioni per tutti i membri dell'equivalent axiom
@@ -370,51 +377,57 @@ add_eqClass_complex_expl(KB0,equivalentClasses(ClassList),KB):-
   member(C,ClassList),!, % prendo una classe a caso
   Classes0=KB0.classes,
   PC=Classes0.find(C),
-  combine_eqClass_expl(KB0.explanations,Classes0.PC,Expls),
+  combine_eqClass_expl(KB0.usermod,KB0.explanations,Classes0.PC,Expls),
   KB=KB0.put(explanations.Expls).
 
 add_eqClass_complex_expl(KB0,disjointUnion(Class,_ClassList),KB):-
   Classes0=KB0.classes,
   PC=Classes0.find(Class),
-  combine_eqClass_expl(KB0.explanations,Classes0.PC,Expls),
+  combine_eqClass_expl(KB0.usermod,KB0.explanations,Classes0.PC,Expls),
   KB=KB0.put(explanations.Expls).
 
-combine_eqClass_expl(E,[],E):- !.
+combine_eqClass_expl(_M,E,[],E):- !.
 
-combine_eqClass_expl(Expls0,[C|T],Expls):-
-  combine_eqClass_expl(Expls0,C,T,Expls1),
-  combine_eqClass_expl(Expls1,T,Expls).
+combine_eqClass_expl(M,Expls0,[C|T],Expls):-
+  combine_eqClass_expl(M,Expls0,C,T,Expls1),
+  combine_eqClass_expl(M,Expls1,T,Expls).
 
-combine_eqClass_expl(Expls0,_C,[],Expls):- !,
+combine_eqClass_expl(_M,Expls0,_C,[],Expls):- !,
   sort(Expls0,Expls).
 
-combine_eqClass_expl(Expls0,C,[C1|T],Expls):-
-  %abolish_table_subgoals(expl_combination(_,_,_,_,_)),
-  findall(Ex,expl_combination(Expls0,C,C1,[],Ex),Exs),
+combine_eqClass_expl(M,Expls0,C,[C1|T],Expls):-
+  %abolish_table_subgoals(expl_combination(_,_,_,_,_,_)),
+  findall(Ex,expl_combination(M,Expls0,C,C1,[],Ex),Exs0),
+  combine_all(M,Exs0,Exs),
   ( member(ex(C,C1)-Exs0,Expls0) ->
      ( member(ex(C1,C)-Exs0C,Expls0),
        delete(Expls0,ex(C,C1)-Exs0,Expls1),
        delete(Expls1,ex(C1,C)-Exs0C,Expls2),
-       combine_eqClass_expl([ex(C,C1)-Exs,ex(C1,C)-Exs|Expls2],C,T,Expls)
+       combine_eqClass_expl(M,[ex(C,C1)-Exs,ex(C1,C)-Exs|Expls2],C,T,Expls)
      )
     ;
-     combine_eqClass_expl([ex(C,C1)-Exs,ex(C1,C)-Exs|Expls0],C,T,Expls)
+     combine_eqClass_expl(M,[ex(C,C1)-Exs,ex(C1,C)-Exs|Expls0],C,T,Expls)
   ).
 
-expl_combination(Expls,C,C1,Used,Ex):-
+expl_combination(_M,Expls,C,C1,Used,Ex):-
   member(ex(C,C1)-Ex0,Expls),
   \+ (memberchk(C,Used), memberchk(C1,Used)),
   member(Ex,Ex0).
 
-expl_combination(Expls,C,C1,Used,Ex):-
+expl_combination(M,Expls,C,C1,Used,Ex):-
   member(ex(C,C0)-Ex0,Expls),
   dif(C0,C1),dif(C0,'http://www.w3.org/2002/07/owl#Thing'),
   \+ (memberchk(C,Used), memberchk(C0,Used)),
   member(Ex01,Ex0),
-  expl_combination(Expls,C0,C1,[C,C0|Used],Ex1),
-  append(Ex01,Ex1,ExT),
-  sort(ExT,Ex).
+  expl_combination(M,Expls,C0,C1,[C,C0|Used],Ex1),
+  trill:and_f(M,Ex01,Ex1,Ex).
 
+combine_all(M,[],Ex):-
+  trill:empty_expl(M,Ex).
+
+combine_all(M,[H|T],Ex):-
+  combine_all(M,T,Ex0),
+  trill:or_f(M,Ex0,H,Ex).
 
 %% add_disjountClasses(...) aggiunge classi e verifica non ci sia contraddizione. Fallisce se c'è inconsistenza
 add_disjointClasses(KB0,ClassList,KB):-
@@ -446,27 +459,29 @@ add_single_disjointClass_int(KB0,C,[C1|T],KB):-
 
 add_disjClass_expl(KB0,Ax,KB):-
   (Ax=..[disjointClasses,Arg] ; Ax=..[disjointUnion,_,Arg]),
-  add_disjClass_expl(KB0.explanations,Arg,Ax,Expls),
+  add_disjClass_expl(KB0.usermod,KB0.explanations,Arg,Ax,Expls),
   KB=KB0.put(explanations,Expls).
 
-add_disjClass_expl(Expls,[],_Ax,Expls):- !.
+add_disjClass_expl(_M,Expls,[],_Ax,Expls):- !.
 
-add_disjClass_expl(Expls0,[C|T],Ax,Expls):-
-  add_disjClass_expl(Expls0,C,T,Ax,Expls1),
-  add_disjClass_expl(Expls1,T,Ax,Expls).
+add_disjClass_expl(M,Expls0,[C|T],Ax,Expls):-
+  add_disjClass_expl(M,Expls0,C,T,Ax,Expls1),
+  add_disjClass_expl(M,Expls1,T,Ax,Expls).
 
-add_disjClass_expl(E,_C,[],_Ax,E):- !.
+add_disjClass_expl(_M,E,_C,[],_Ax,E):- !.
 
-add_disjClass_expl(E0,C,[C|T],Ax,E):- !,
-  add_disjClass_expl(E0,C,T,Ax,E).
+add_disjClass_expl(M,E0,C,[C|T],Ax,E):- !,
+  add_disjClass_expl(M,E0,C,T,Ax,E).
 
-add_disjClass_expl(E0,C,[C1|T],Ax,E):-
+add_disjClass_expl(M,E0,C,[C1|T],Ax,E):-
+  trill:ax2ex(M,Ax,ExAx),
   ( member(dis(C,C1)-Ex,E0) ->
       ( delete(E0,dis(C,C1)-Ex,E1),
-        add_disjClass_expl([dis(C,C1)-[[Ax]|Ex]|E1],C,T,Ax,E)
+        trill:or_f(M,ExAx,Ex,ExOr),
+        add_disjClass_expl(M,[dis(C,C1)-ExOr|E1],C,T,Ax,E)
       )
     ;
-      add_disjClass_expl([dis(C,C1)-[[Ax]]|E0],C,T,Ax,E)
+      add_disjClass_expl(M,[dis(C,C1)-ExAx|E0],C,T,Ax,E)
   ).
 
 %% add_disjointUnion(classExpression,set(classExpression)) da controllare cosa fa e aggiungere classi. Gestire bene l'assioma.
@@ -483,19 +498,21 @@ add_subClassOf(KB0,SubClass,SupClass,KB):-
   add_hierarchy_link(KB1,SubClass,SupClass,KB),
   check_disjoint(KB),!. % si può proseguire
 
-add_subClass_expl(Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
+add_subClass_expl(M,Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
   member(ex(C,C1)-Ex,Expls0),!,
   delete(Expls0,ex(C,C1)-Ex,Expls),
-  sort([[subClassOf(C,C1)]|Ex],ExF).
+  trill:ax2ex(M,subClassOf(C,C1),ExAx),
+  trill:or_f(M,ExAx,Ex,ExF).
 
-add_subClass_expl(Expls,C,C1,[ex(C,C1)-[[subClassOf(C,C1)]]|Expls]).
+add_subClass_expl(M,Expls,C,C1,[ex(C,C1)-ExAx|Expls]):-
+  trill:ax2ex(M,subClassOf(C,C1),ExAx).
 
-add_subClass_expl(Expls0,C,C1,Expl,[ex(C,C1)-ExF|Expls]):-
+add_subClass_expl(M,Expls0,C,C1,Expl,[ex(C,C1)-ExF|Expls]):-
   member(ex(C,C1)-Ex,Expls0),!,
   delete(Expls0,ex(C,C1)-Ex,Expls),
-  sort([Expl|Ex],ExF).
+  trill:or_f(M,Expl,Ex,ExF).
 
-add_subClass_expl(Expls,C,C1,Expl,[ex(C,C1)-[Expl]|Expls]).
+add_subClass_expl(_M,Expls,C,C1,Expl,[ex(C,C1)-Expl|Expls]).
 
 
 % TODO aggiungere eventuali altri sottoclasse (someValuesFrom(R,C)->somevaluesFrom(R,D) con subClassOf(C,D))
@@ -506,25 +523,25 @@ get_hierarchy(M:Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazio
   Classes=KB.classes,
   Pos=Classes.find(Class),
   edges(KB.hierarchy,E),
-  get_combined_expls(Class,Pos,E,Classes,KB.explanations,H4C).
+  get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,(_,H4C)).
 
 get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
   Classes=KB.classes,
   Pos=Classes.find(Class),
   edges(KB.hierarchy,E),
-  get_combined_expls(Class,Pos,E,Classes,KB.explanations,H4C).
+  get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,(_,H4C)).
 
-get_combined_expls(Class,Pos,E,Classes,Expls,H4C):-
-  get_single_expls(Class,Pos,E,Classes,Expls,[Class],H4C).
+get_combined_expls(M,Class,Pos,E,Classes,Expls,(M,H4C)):-
+  get_single_expls(M,Class,Pos,E,Classes,Expls,[Class],H4C).
 
-append_expl(AllExpl,[EndClass-NewExpl],NewAllExpl):-
+append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
   \+ memberchk(EndClass-_,AllExpl),!,
   append(AllExpl,[EndClass-NewExpl],NewAllExpl).
 
-append_expl(AllExpl,[EndClass-NewExpl],NewAllExpl):-
+append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
   member(EndClass-OldExpl,AllExpl),
   delete(AllExpl,EndClass-OldExpl,AllExpl0),
-  append(OldExpl,NewExpl,NewExplT),
+  trill:or_f(M,OldExpl,NewExpl,NewExplT),
   append(AllExpl0,[EndClass-NewExplT],NewAllExpl).
 
 
@@ -546,19 +563,17 @@ get_next(P,E,Classes,NextP,NextClass):-
   is_list(EqClasses),
   member(NextClass,EqClasses).
 
-get_single_expls(Class,P,E,Classes,Expls,Used,[NextClass-[Expls4Class]]):-
+get_single_expls(_M,Class,P,E,Classes,Expls,Used,[NextClass-Expls4Class]):-
   get_next(P,E,Classes,_NextP,NextClass),
   \+ member(NextClass,Used),
-  member(ex(Class,NextClass)-Exs,Expls),
-  member(Expls4Class,Exs).
+  member(ex(Class,NextClass)-Expls4Class,Expls).
 
-get_single_expls(Class,P,E,Classes,Expls,Used,[EndClass-[TotExpl]]):-
+get_single_expls(M,Class,P,E,Classes,Expls,Used,[EndClass-TotExpl]):-
   get_next(P,E,Classes,NextP,NextClass),
   \+ member(NextClass,Used),
-  member(ex(Class,NextClass)-Exs,Expls),
-  member(Expl4Class,Exs),
-  get_single_expls(NextClass,NextP,E,Classes,Expls,[NextClass|Used],[EndClass-[Expl4EndClass]]),
-  append(Expl4Class,Expl4EndClass,TotExpl).%,
+  member(ex(Class,NextClass)-Expls4Class,Expls),
+  get_single_expls(M,NextClass,NextP,E,Classes,Expls,[NextClass|Used],[EndClass-Expls4EndClass]),
+  trill:and_f(M,Expls4Class,Expls4EndClass,TotExpl).%,
 %  sort(TotExpl0,TotExpl),
 %  length(TotExpl0,LTE),
 %  length(TotExpl,LTE).
@@ -580,23 +595,27 @@ get_single_expls(Class,P,E,Classes,Expls,Start,[EndClass-[TotExpl]]):-
   append([equivalentClasses(ListExpls4Class)],Expl4EndClass,TotExpl).
 */
 
-get_one_expl(Pos,Class,E,Classes,Expls,Expl4Class,EndClass-H4C):-
-  get_hierarchy_ric(Pos,Class,E,Classes,Expls,EndClass-[Expl]),
-  append(Expl4Class,Expl,H4C).
+/*
+get_one_expl(M,Pos,Class,E,Classes,Expls,Expl4Class,EndClass-H4C):-
+  get_hierarchy_ric(M,Pos,Class,E,Classes,Expls,EndClass-Expl),
+  trill:and_f(M,Expl4Class,Expl,H4C).
 
-get_hierarchy_ric(0,_C,_E,_Classes,_Expls,0-[]). % arrivato a owl:Thing
+get_hierarchy_ric(M,0,_C,_E,_Classes,_Expls,0-Expl):- % arrivato a owl:Thing
+  trill:empty_expl(M,Expl).
 
-get_hierarchy_ric(n,_C,_E,_Classes,_Expls,n-[]). % arrivato a owl:Nothing
+get_hierarchy_ric(M,n,_C,_E,_Classes,_Expls,n-Expl):- % arrivato a owl:Nothing
+  trill:empty_expl(M,Expl).
 
-get_hierarchy_ric(P,Class,E,Classes,Expls,EndClass-[Ex0|Ex1]):-
+get_hierarchy_ric(M,P,Class,E,Classes,Expls,EndClass-Expl):-
   EqClasses=Classes.P,
   is_list(EqClasses),
   member(NextClass,EqClasses),
   member(ex(Class,NextClass)-Exs,Expls),
   member(Ex0,Exs),
-  get_hierarchy_ric(P,NextClass,E,Classes,Expls,EndClass-Ex1).
+  get_hierarchy_ric(M,P,NextClass,E,Classes,Expls,EndClass-Ex1),
+  trill:and_f(M,Ex0,Ex1,Expl).
 
-get_hierarchy_ric(P,Class,E,Classes,Expls,EndClass-Expl):-
+get_hierarchy_ric(M,P,Class,E,Classes,Expls,EndClass-Expl):-
   member(NextP-P,E),
   (owl_f(NextP) -> 
     ( Expl = [], EndClass = Class)
@@ -604,11 +623,11 @@ get_hierarchy_ric(P,Class,E,Classes,Expls,EndClass-Expl):-
     ( NextClass=Classes.NextP,
       member(ex(Class,NextClass)-Exs,Expls),
       member(Ex0,Exs),
-      get_hierarchy_ric(NextP,NextClass,E,Classes,Expls,EndClass-Ex1),
-      Expl=[Ex0|Ex1]
+      get_hierarchy_ric(M,NextP,NextClass,E,Classes,Expls,EndClass-Ex1),
+      trill:and_f(M,Ex0,Ex1,Expl)
     )
   ).
-
+*/
 
 %% add_complex_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
 add_complex_subClassOf(KB0,SubClass,SupClass,Expl,KB):-
@@ -623,13 +642,15 @@ collect_all_classes(DictClasses,Classes):-
   sort(CL1,Classes).
 
 
-complex_subClassOf(Classes,M,C,D,[Ax]):-
+complex_subClassOf(M,Classes,C,D,Expl):-
   member(C,Classes),
-  trill:find_sub_sup_class(M,C,D,Ax).
+  trill:find_sub_sup_class(M,C,D,Ax),
+  trill:ax2ex(M,Ax,Expl).
 
-complex_subClassOf(Classes,_M,complementOf(C),D,[equivalentClasses([complementOf(C),D])]):-
+complex_subClassOf(M,Classes,complementOf(C),D,Expl):-
   member(complementOf(C),Classes),
-  trill:find_neg_class(C,D).
+  trill:find_neg_class(C,D),
+  trill:ax2ex(M,equivalentClasses([complementOf(C),D]),Expl).
 
 % owl fixed classes (owl:Thing e owl:Nothing)
 owl_f(0).
