@@ -1,5 +1,6 @@
 :- begin_tests(checkers).
 
+:- use_module(library(infer_meta)).
 :- use_module(library(checkers/checker)).
 :- use_module(library(checkers/check_wrong_dynamic)).
 
@@ -30,7 +31,7 @@ test(cwd_4) :- % There is an issue that does not refers to module cwda
     check_results(wrong_dynamic, Results, [module(cwda), files([xtools/tests/cwdb])]),
     assertion(Results = []).
 
-test(cwd_5) :-
+test(cwd_5, [setup(cleanup_inferred_meta)]) :-
     check_results(wrong_dynamic, Results, [files([xtools/tests/cwdc])]),
     assertion(Results = []).
 

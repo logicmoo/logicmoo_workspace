@@ -40,7 +40,7 @@
 :- use_module(library(atomics_atom)).
 :- use_module(library(thread)).
 :- use_module(library(group_pairs_or_sort)).
-:- use_module(library(infer_meta_if_required)).
+:- use_module(library(infer_meta)).
 :- use_module(library(location_utils)).
 % This provides extra information to prolog_codewalk but will not be required if
 % you use source_codewalk instead:
