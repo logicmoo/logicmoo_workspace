@@ -40,10 +40,10 @@
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
 
-:- pred functor(+, -atmel, -nnegint) is det.
-:- pred functor(-, +atmel, +nnegint) is det.
-:- pred functor(+, +atmel, ?nnegint) is semidet.
-:- pred functor(+, -atmel, +nnegint) is semidet.
+:- pred functor(+, -constant, -nnegint) is det.
+:- pred functor(-, +constant, +nnegint) is det.
+:- pred functor(+, +constant, ?nnegint) is semidet.
+:- pred functor(+, -constant, +nnegint) is semidet.
 :- pred predicate_property(callable, ?).
 :- pred current_predicate(atm, callable).
 

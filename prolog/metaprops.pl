@@ -183,11 +183,12 @@ compatc(H, VarL, _) :-
     compatc_arg(H, A),
     (var(A)->ord_intersect(VarL, [A], [A]) ; true).
 
-compatc_arg(var(   A), A).
-compatc_arg(nonvar(A), A).
-compatc_arg(term(  A), A).
-compatc_arg(gnd(   A), A).
-compatc_arg(ground(A), A).
+compatc_arg(var(      A), A).
+compatc_arg(nonvar(   A), A).
+compatc_arg(term(     A), A).
+compatc_arg(gnd(      A), A).
+compatc_arg(ground(   A), A).
+compatc_arg(nonground(A), A).
 
 freeze_fail(CP, V) :-
     freeze(V, ( prolog_cut_to(CP),
