@@ -163,6 +163,7 @@ black_list_module(ontrace).
 black_list_module(expansion_module).
 black_list_module(globprops).
 black_list_module(typeprops).
+black_list_module(plunit).
 
 white_list_meta(system, Call) :- \+ functor(Call, call, _).
 
@@ -265,6 +266,17 @@ cleanup_break(Clause, PC) :-
     cleanup_break(Clause, PC),
     send_signal(assrchk(ppt(Caller, clause_pc(Clause, PC)), Error)).
 
+% To simply call notrace/1 is not enough: suppose the break_hook has already
+% been installed
+
+:- meta_predicate notrace_rtc(0).
+
+notrace_rtc(Goal) :-
+    notrace(notrace_rtc_2(Goal)).
+
+notrace_rtc_2(Goal) :-
+    \+ nb_current('$block_trace', true),
+    with_value(Goal, '$block_trace', true).
 
 % prolog:break_hook(Clause, PC, FR, FBR, Expr, _) :-
 %     tracing,
@@ -272,8 +284,11 @@ cleanup_break(Clause, PC) :-
 %     writeln(user_error, prolog:break_hook(Clause:PI, PC, FR, FBR, Expr, _)),
 %     % backtrace(50),
 %     fail.
-prolog:break_hook(Clause, PC, FR, _, call(Goal1), Action) :-
+prolog:break_hook(Clause, PC, FR, _, call(Goal), Action) :-
     tracing,
+    notrace_rtc(do_break_hook(Clause, PC, FR, Goal, Action)).
+
+do_break_hook(Clause, PC, FR, Goal1, Action) :-
     \+ current_prolog_flag(gui_tracer, true),
     rtc_break(Clause, PC),
     prolog_frame_attribute(FR, context_module, FCM),

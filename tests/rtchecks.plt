@@ -21,7 +21,7 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 
 test(rtc_external) :-
     call_in_module_dir(plunit_rtchecks,
-                       ( ['../examples/rtc_external'],
+                       ( notrace(['../examples/rtc_external']),
                          save_rtchecks(do_trace_rtc(test_ex)),
                          load_rtchecks(E),
                          % Unload it to avoid further problems with format/3:
@@ -31,11 +31,6 @@ test(rtc_external) :-
                            error(comp,
                                  functor(0, 0, 0),
                                  [_/fails-[not_fails]],
-                                 _)),
-                   assrchk(ppt(_,_),
-                           error(success,
-                                 functor(0, 0, 0),
-                                 [_/instan(libprops:atmel(0))-[]],
                                  _)),
                    assrchk(ppt(_,_),
                            error(success,
