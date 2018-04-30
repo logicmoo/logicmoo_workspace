@@ -34,7 +34,7 @@
 
 :- module(static_strip_module, [static_strip_module/4]).
 
-%!  static_strip_module(+Call, +ContextModule, -Head, -Module) is det.
+%!  static_strip_module(Call, ContextModule, Head, Module) is det.
 %
 %   Like strip_module/4, but assume as Module the ContextModule if Call is
 %   uninstantiated
