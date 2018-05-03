@@ -40,8 +40,6 @@
 
             op(1150, fx, table)]).
 
-:- use_module(library(tabling), []).
-
 /** <module> Naive Tabled execution
 
 This library provides tabled execution, in the same way as library(tabling), but
