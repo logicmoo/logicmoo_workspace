@@ -47,7 +47,6 @@
 :- use_module(library(location_utils)).
 :- use_module(library(from_utils)).
 :- use_module(library(qualify_meta_goal)).
-:- use_module(library(tabling)).
 :- use_module(library(assertions)).
 :- use_module(library(option_utils)).
 :- use_module(library(ctrtchecks)).

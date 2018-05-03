@@ -39,7 +39,6 @@
 :- use_module(library(location_utils)).
 :- use_module(library(predicate_from)).
 :- use_module(library(globprops)).
-:- use_module(library(tabling)).
 
 :- create_prolog_flag(assrt_meta_pred, none, [type(atom)]).
 
