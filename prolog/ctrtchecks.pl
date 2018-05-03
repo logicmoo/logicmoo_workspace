@@ -44,7 +44,6 @@
            is_prop_check/5,
            part_time/2]).
 
-:- use_module(library(tabling)).
 :- use_module(library(apply)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(send_check)).
