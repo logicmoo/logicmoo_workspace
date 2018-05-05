@@ -34,9 +34,9 @@
 
 :- module(record_locations, [record_location/0]).
 
+:- use_module(library(extra_location)). % shold be the first
 :- use_module(library(apply)).
 :- use_module(library(filepos_line)).
-:- use_module(library(extra_location)).
 :- use_module(library(implementation_module)).
 :- use_module(library(from_utils)).
 
@@ -66,25 +66,27 @@ skip_record_decl(Decl) :-
     memberchk(Arity, [1, 2]),
     assrt_lib:assrt_type(Type), !.
 
-:- public record_extra_location/2.
+:- public record_extra_location/4.
 
 record_extra_location((:- Decl),
-                      term_position(_, _, _, _, [DPos])) :-
-    ( \+ skip_record_decl(Decl)
+                      term_position(_, _, _, _, [DPos])) -->
+    ( {\+ skip_record_decl(Decl)}
     ->record_extra_decl(Decl, DPos)
-    ; true
+    ; []
     ).
 
-record_extra_decl(Decl, DPos) :-
-    '$set_source_module'(SM, SM),
-    declaration_pos(Decl, DPos, SM, M, IdL, ArgL, PosL),
-    maplist(assert_declaration(M), IdL, ArgL, PosL),
+record_extra_decl(Decl, DPos) -->
+    { '$current_source_module'(SM),
+      declaration_pos(Decl, DPos, SM, M, IdL, ArgL, PosL)
+    },
+    foldl(assert_declaration(M), IdL, ArgL, PosL),
     !.
-record_extra_decl(G, _) :-
-    nonvar(G),
-    source_location(File, Line),
-    retractall(rl_tmp(File, Line, _)),
-    asserta(rl_tmp(File, Line, 1)).
+record_extra_decl(G, _) -->
+    { nonvar(G),
+      source_location(File, Line),
+      retractall(rl_tmp(File, Line, _)),
+      asserta(rl_tmp(File, Line, 1))
+    }.
 
 declaration_pos(DM:Decl, term_position(_, _, _, _, [_, DPos]), _, M, ID, U, Pos) :-
     declaration_pos(Decl, DPos, DM, M, ID, U, Pos).
@@ -126,64 +128,77 @@ declaration_pos(use_module(U, L), DPos, M, M,
                 [use_module_2, import(U)], [use_module(U, L), L], [DPos, Pos]) :-
     DPos = term_position(_, _, _, _, [_, Pos]).
 
-:- meta_predicate mapsequence(2,?,?).
-mapsequence(_, A, _) :-
-    var(A),
+:- meta_predicate foldsequence(4,?,?,?,?).
+
+foldsequence(G, A, B) --> foldsequence_(A, G, B).
+
+foldsequence_(A, _, _) -->
+    {var(A)},
     !.
     % call(G, A).
-mapsequence(_, [], _) :- !.
-mapsequence(G, [E|L], list_position(_, _, PosL, _)) :- !,
-    maplist(mapsequence(G), [E|L], PosL).
-mapsequence(G, (A, B), term_position(_, _, _, _, [PA, PB])) :- !,
-    mapsequence(G, A, PA),
-    mapsequence(G, B, PB).
-mapsequence(G, A, PA) :-
-    call(G, A, PA).
+foldsequence_([], _, _) --> !.
+foldsequence_([E|L], G, list_position(_, _, PosL, _)) -->
+    !,
+    foldl(foldsequence(G), [E|L], PosL).
+foldsequence_((A, B), G, term_position(_, _, _, _, [PA, PB])) -->
+    !,
+    foldsequence_(A, G, PA),
+    foldsequence_(B, G, PB).
+foldsequence_(A, G, PA) --> call(G, A, PA).
 
-assert_declaration(M, Declaration, Sequence, Pos) :-
-    mapsequence(assert_declaration_one(Declaration, M), Sequence, Pos).
+assert_declaration(M, Declaration, Sequence, Pos) -->
+    foldsequence(assert_declaration_one(Declaration, M), Sequence, Pos).
 
-assert_declaration_one(reexport(U), M, PI, Pos) :- !,
+assert_declaration_one(reexport(U), M, PI, Pos) -->
+    !,
     assert_reexport_declaration_2(PI, U, Pos, M).
 assert_declaration_one(Declaration, _, M:PI,
-                       term_position(_, _, _, _, [_, Pos])) :- !,
+                       term_position(_, _, _, _, [_, Pos])) -->
+    !,
     assert_declaration_one(Declaration, M, PI, Pos).
-assert_declaration_one(Declaration, M, F/A, Pos) :- !,
-    functor(H, F, A),
+assert_declaration_one(Declaration, M, F/A, Pos) -->
+    !,
+    {functor(H, F, A)},
     assert_position(H, M, Declaration, Pos).
-assert_declaration_one(Declaration, M, F//A1, Pos) :- !,
-    A is A1+2,
-    functor(H, F, A),
+assert_declaration_one(Declaration, M, F//A1, Pos) -->
+    !,
+    { A is A1+2,
+      functor(H, F, A)
+    },
     assert_position(H, M, Declaration, Pos).
-assert_declaration_one(Declaration, M, H, Pos) :-
+assert_declaration_one(Declaration, M, H, Pos) -->
     assert_position(H, M, Declaration, Pos).
 
-assert_reexport_declaration_2((F/A as G), U, Pos, M) :-
-    functor(H, G, A),
+assert_reexport_declaration_2((F/A as G), U, Pos, M) -->
+    {functor(H, G, A)},
     assert_position(H, M, reexport(U, [F/A as G]), Pos).
-assert_reexport_declaration_2(F/A, U, Pos, M) :-
-    functor(H, F, A),
+assert_reexport_declaration_2(F/A, U, Pos, M) -->
+    {functor(H, F, A)},
     assert_position(H, M, reexport(U, [F/A]), Pos).
-assert_reexport_declaration_2(op(_, _, _), _, _, _).
-assert_reexport_declaration_2(except(_),   _, _, _).
+assert_reexport_declaration_2(op(_, _, _), _, _, _) --> [].
+assert_reexport_declaration_2(except(_),   _, _, _) --> [].
 
 assert_position(H, M, Type, TermPos) :-
-    source_location(File, Line1),
-    ( nonvar(TermPos)
-    ->arg(1, TermPos, Chars),
-      filepos_line(File, Chars, Line, LinePos)
-      % Meld TermPos because later the source code will not be available and
-      % therefore we will not be able to get LinePos
-    ; Line = Line1,
-      LinePos = -1
-    ),
+    assert_position(H, M, Type, TermPos, Clauses, []),
+    compile_aux_clauses(Clauses).
+
+assert_position(H, M, Type, TermPos) -->
+    { source_location(File, Line1),
+      ( nonvar(TermPos)
+      ->arg(1, TermPos, Chars),
+        filepos_line(File, Chars, Line, LinePos)
+        % Meld TermPos because later the source code will not be available and
+        % therefore we will not be able to get LinePos
+      ; Line = Line1,
+        LinePos = -1
+      )
+    },
     assert_location(H, M, Type, File, Line, file(File, Line, LinePos, Chars)).
 
-assert_location(H, M, Type, File, Line, From) :-
-    ( \+ have_extra_location(From, H, M, Type)
-    ->compile_aux_clauses('$source_location'(File, Line):extra_location:loc_declaration(H, M, Type, From))
-      % assertz(extra_location:loc_declaration(H, M, Type, From))
-    ; true
+assert_location(H, M, Type, File, Line, From) -->
+    ( {\+ have_extra_location(From, H, M, Type)}
+    ->['$source_location'(File, Line):extra_location:loc_declaration(H, M, Type, From)]
+    ; []
     ).
 
 /*
@@ -199,17 +214,16 @@ have_extra_location(From1, H, M, Type) :-
     extra_location(H, M, Type, From),
     subsumes_from(From1, From).
 
-system:term_expansion(Term, Pos, _, _) :-
+system:term_expansion(Term, Pos, [Term|Clauses], Pos) :-
     record_location,
-    % format(user_error, '~q~n',[Term]),
     source_location(File, Line),
     ( rl_tmp(File, Line, _)
-    ->true
+    ->fail
     ; retractall(rl_tmp(_, _, _)),
-      asserta(rl_tmp(File, Line, 0)),
-      record_extra_location(Term, Pos)
-    ),
-    fail.
+      asserta(rl_tmp(File, Line, 0 )),
+      record_extra_location(Term, Pos, Clauses, []),
+      Clauses \= []
+    ).
 
 redundant((_,_)).
 redundant((_;_)).
