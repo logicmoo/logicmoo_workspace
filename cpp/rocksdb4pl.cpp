@@ -882,6 +882,7 @@ PREDICATE_NONDET(rocks_enum, 3)
       free(state);
       return TRUE;
   }
+  PL_fail;
 }
 
 static PlAtom ATOM_delete("delete");
