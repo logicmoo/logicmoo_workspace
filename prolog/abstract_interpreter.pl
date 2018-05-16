@@ -40,7 +40,8 @@
                                  bottom/2,
                                  match_ai/7,
                                  call_ai/1,
-                                 ignore_ai/1,
+                                 eval_ai/1,
+                                 skip_ai/1,
                                  match_noloops/6,
                                  terms_share/2]).
 
@@ -58,7 +59,8 @@
     abstract_interpreter(0,6,+,-),
     abstract_interpreter(0,6,+,+,-),
     call_ai(0),
-    ignore_ai(0).
+    eval_ai(0),
+    skip_ai(0).
 
 :- multifile
     replace_goal_hook/3,
@@ -105,13 +107,15 @@ replace_goal_hook(retract(_),    _, true).
 replace_goal_hook(assertz(_),    _, true).
 replace_goal_hook(asserta(_),    _, true).
 replace_goal_hook(assert( _),    _, true).
-replace_goal_hook(call_ai(G),    _, G).
-replace_goal_hook(ignore_ai(_), abstract_interpreter, true).
+replace_goal_hook(call_ai(G), abstract_interpreter, G).
+replace_goal_hook(eval_ai(G), abstract_interpreter, G).
+replace_goal_hook(skip_ai(_), abstract_interpreter, true).
 replace_goal_hook(V is A, _, (ground(A)->V is A; var(V))).
 
-call_ai(Goal) :- call(Goal).
-ignore_ai(Goal) :- call(Goal).
-
+call_ai(G) :- call(G).
+eval_ai(_).
+skip_ai(G) :- call(G).
+    
 mod_qual(M, G as R, I:H as B:C) :- !,
     strip_module(M:G, N, H),
     implementation_module(N:H, I),
@@ -194,6 +198,9 @@ abstract_interpreter_body(distinct(Goal), M, Abs, State, S1, S) :-
 abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S1, S) :-
     implementation_module(M:distinct(_, _), solution_sequences), !,
     distinct(Witness, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
+abstract_interpreter_body(order_by(Spec, Goal), M, Abs, State, S1, S) :-
+    implementation_module(M:order_by(_, _), solution_sequences), !,
+    order_by(Spec, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
 abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S1, S) :- !,
     setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S1, S2),
                        abstract_interpreter_body(C, M, Abs, State, S2, S3),
