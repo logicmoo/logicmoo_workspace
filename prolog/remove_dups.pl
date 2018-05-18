@@ -33,10 +33,16 @@
 */
 
 :- module(remove_dups, [remove_dups/2,
+                        remove_dups_reversed/2,
                         remove_dups/4]).
 
 remove_dups(L, U) :-
     remove_dups(L, [], U, []).
+
+remove_dups_reversed(A, D) :-
+    reverse(A, B),
+    remove_dups(B, C),
+    reverse(C, D).
 
 remove_dups([E|L], H1, R1, T) :-
     ( \+ memberchk(E, H1) ->
