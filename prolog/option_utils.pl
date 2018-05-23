@@ -53,6 +53,9 @@
 :- use_module(library(from_utils)).
 :- use_module(library(implemented_in)).
 
+:- multifile user:prolog_file_type/2.
+:- dynamic   user:prolog_file_type/2.
+
 % TBD: This module requires optimization
 
 select_option_default(Holder-Default, Options1, Options) :-

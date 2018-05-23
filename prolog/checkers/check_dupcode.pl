@@ -91,7 +91,8 @@ ignore_dupcode('$included'(_, _, _, _),         system, _).
 ignore_dupcode('$load_context_module'(_, _, _), system, _).
 ignore_dupcode(_,                               prolog, declaration(_)).
 ignore_dupcode(_,                               user,   declaration(use_module)).
-ignore_dupcode(_,                               _,      declaration(dynamic(_,_,_))).
+ignore_dupcode(_,                               user,   declaration(dynamic)).
+ignore_dupcode(_,                               _,      declaration(dynamic(_, _, _))).
 
 checker:check(dupcode, Result, Options1) :-
     option_allchk(Options1, Options, FileChk),
