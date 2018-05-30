@@ -51,9 +51,9 @@
 neck.
 
 term_expansion((Head :- Body1), ClauseL) :-
+    '$current_source_module'(M),
     sequence_list(Body1, List, []),
     append(Left, [neck|Right], List),
-    '$current_source_module'(M),
     list_sequence(Left, Static),
     once(( append(LRight, RRight, Right),
            \+ ( sub_term(Lit, RRight),
@@ -61,8 +61,9 @@ term_expansion((Head :- Body1), ClauseL) :-
                 Lit == !
               ) % We can not move the part above a cut to a separate clause
          )),
+    expand_goal(M:Static, Expanded),
     ( RRight = [_, _|_]
-    ->term_variables(t(Head, Static, LRight), VarHU),
+    ->term_variables(t(Head, Expanded, LRight), VarHU),
       sort(VarHU, VarHL),
       term_variables(RRight, VarBU),
       sort(VarBU, VarBL),
@@ -72,9 +73,10 @@ term_expansion((Head :- Body1), ClauseL) :-
       format(atom(FNB), '__aux_neck_~w/~d_~w', [F, A, Hash]),
       SepHead =.. [FNB|ArgNB],
       list_sequence(RRight, SepBody),
-      '$expand':compile_auxiliary_clause(M, (SepHead :- SepBody)),
+      expand_goal(M:SepBody, MSepBody),
+      '$expand':compile_aux_clauses([SepHead :- MSepBody]),
       append(LRight, [SepHead], NeckL),
       list_sequence(NeckL, NeckBody)
     ; list_sequence(Right, NeckBody)
     ),
-    findall((Head :- NeckBody), M:Static, ClauseL).
+    findall((Head :- NeckBody), Expanded, ClauseL).
