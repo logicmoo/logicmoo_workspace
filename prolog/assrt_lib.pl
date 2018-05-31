@@ -547,6 +547,7 @@ is_decl_global(Head, M) :-
     is_decl_global(Head, _, _, M).
 
 is_decl_global(Head, Status, Type, M) :-
+    forall(Head = HM:_, (var(HM);atom(HM))),
     prop_asr(head, M:Head, _, Asr),
     ( ( prop_asr(glob, metaprops:declaration(Status, _), _, Asr)
       ; Status = true,
