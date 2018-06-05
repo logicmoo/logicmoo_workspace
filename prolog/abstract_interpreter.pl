@@ -80,6 +80,13 @@ evaluable_body_hook(atom_concat(A, B, C), _,
                     ; nonvar(A), nonvar(C)
                     ; nonvar(B), nonvar(C)
                     )).
+evaluable_body_hook(atomic_list_concat(A, B), _, (ground(A);ground(B))).
+evaluable_body_hook(atomic_list_concat(A, B, C), _,
+                    ( ground(A), ground(B)
+                    ; ground(B), ground(C)
+                    )).
+evaluable_body_hook(nb_current(A, _), _, ground(A)).
+evaluable_body_hook(nb_getval(A, _), _, ground(A)).
 evaluable_body_hook(_ is A, _, ground(A)).
 evaluable_body_hook(A > B, _, (ground(A),ground(B))).
 evaluable_body_hook(A >= B, _, (ground(A),ground(B))).
