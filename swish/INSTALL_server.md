@@ -38,7 +38,7 @@ sudo apt-get install \
         texlive-fonts-recommended \
         texlive-fonts-recommended-doc
 # Optional, to avoid some error messages later:
-apt-get install libpcre3-dev
+sudo apt-get install libpcre3-dev
 git clone https://github.com/SWI-Prolog/swipl-devel.git
 cd swipl-devel
 ./prepare
@@ -156,10 +156,11 @@ crontab -e
 Then define alarms and email notifications at the Cloud Watch console.
 
 ## Authenticated users ##
-By configuring SWISH authentication, the predicate ```lps_user(-User)``` returns a unique user reference as given by the authentication service, such as Google (the only tested so far). Unauthenticated users are mapped into the single user account ```unknown_user``.
+By configuring SWISH authentication, the predicate ```lps_user(-User)``` returns a unique user reference as given by the authentication service, such as Google or SWISH's own auth_http (the only ones tested so far). Unauthenticated users are mapped into the single user account ```unknown_user``.
 
-To configure authentication, follow the instructions at swish/config-available/README.md (namely copying config-available/auth_google.pl to directory config-enabled/ ) and (specially) at the top of swish/config-available/auth_google.pl, editing that file as indicated plus:
+To configure authentication for **Google** accounts, follow the instructions at swish/config-available/README.md (namely copying ```swish/config-available/auth_google.pl```  to directory ```swish/config-enabled/``` ) and (specially) at the top of swish/config-available/auth_google.pl, editing that file as indicated plus:
 
 * Edit the last fact to ```oauth2:server_attribute(google, scope,email).```
 * Around line 96, in the oauth2:login clause, replace ```name(UserInfo.name)``` by ``name(UserInfo.email)```
 
+For **HTTP** authentication, copy/link ```config-available/auth_http.pl``` to ```config-enabled/```. You also need to create a passwd file in ```lps_corner/swish```, following the SWISH [instructions](https://github.com/SWI-Prolog/swish/blob/master/lib/plugin/http_authenticate.pl#L82). 

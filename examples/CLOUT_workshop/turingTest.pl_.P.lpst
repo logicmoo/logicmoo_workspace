@@ -1,5 +1,5 @@
 /*
-  LPS test results file generated on 2018-2-28 at 16:49:2
+  LPS test results file generated on 2018-6-5 at 17:3:30
   on Prolog swi(7,7,2,[]) for program file:
   /Users/mc/git/logicalcontracts/examples/CLOUT_workshop/turingTest.pl_.P
 */
@@ -56,39 +56,36 @@ lps_test_result_item(fluents,6,said(robot,[my,bob,is])).
 lps_test_result_item(events,7,say(robot,bob)).
 lps_test_result_item(fluents,7,said(turing,[what,is,your,name])).
 lps_test_result_item(fluents,7,said(robot,[my,bob,is,bob])).
-lps_test_result_item(events,8,say(robot,your)).
+lps_test_result_item(events,8,say(robot,my)).
 lps_test_result_item(fluents,8,said(turing,[what,is,your,name])).
-lps_test_result_item(fluents,8,said(robot,[my,bob,is,bob,your])).
+lps_test_result_item(fluents,8,said(robot,[my,bob,is,bob,my])).
 lps_test_result_item(events,9,say(robot,what)).
 lps_test_result_item(fluents,9,said(turing,[what,is,your,name])).
-lps_test_result_item(fluents,9,said(robot,[my,bob,is,bob,your,what])).
+lps_test_result_item(fluents,9,said(robot,[my,bob,is,bob,my,what])).
 lps_test_result_item(events,10,say(robot,is)).
 lps_test_result_item(fluents,10,said(turing,[what,is,your,name])).
-lps_test_result_item(fluents,10,said(robot,[my,bob,is,bob,your,what,is])).
+lps_test_result_item(fluents,10,said(robot,[my,bob,is,bob,my,what,is])).
 % lps_test_action_ancestor(Call,T1,T2)
-lps_test_action_ancestor(saying(robot,sentence),10,_3724).
-lps_test_action_ancestor(saying(robot,nounphrase),10,11).
-lps_test_action_ancestor(saying(robot,noun),10,11).
 lps_test_action_ancestor(saying(robot,sentence),7,10).
 lps_test_action_ancestor(saying(robot,nounphrase),7,9).
 lps_test_action_ancestor(saying(robot,verbphrase),9,10).
 lps_test_action_ancestor(saying(robot,verb),9,10).
-lps_test_action_ancestor(saying(robot,sentence),8,_3724).
+lps_test_action_ancestor(saying(robot,sentence),8,_6178).
 lps_test_action_ancestor(saying(robot,nounphrase),8,9).
 lps_test_action_ancestor(saying(robot,noun),8,9).
-lps_test_action_ancestor(saying(robot,sentence),7,_3724).
-lps_test_action_ancestor(saying(robot,nounphrase),7,_3724).
+lps_test_action_ancestor(saying(robot,sentence),7,_6178).
+lps_test_action_ancestor(saying(robot,nounphrase),7,_6178).
 lps_test_action_ancestor(saying(robot,adjective),7,8).
-lps_test_action_ancestor(saying(robot,sentence),6,_3724).
+lps_test_action_ancestor(saying(robot,sentence),6,_6178).
 lps_test_action_ancestor(saying(robot,nounphrase),6,7).
 lps_test_action_ancestor(saying(robot,noun),6,7).
 lps_test_action_ancestor(saying(robot,sentence),3,6).
 lps_test_action_ancestor(saying(robot,nounphrase),3,5).
 lps_test_action_ancestor(saying(robot,verbphrase),5,6).
 lps_test_action_ancestor(saying(robot,verb),5,6).
-lps_test_action_ancestor(saying(robot,sentence),4,_3724).
+lps_test_action_ancestor(saying(robot,sentence),4,_6178).
 lps_test_action_ancestor(saying(robot,nounphrase),4,5).
 lps_test_action_ancestor(saying(robot,noun),4,5).
-lps_test_action_ancestor(saying(robot,sentence),3,_3724).
-lps_test_action_ancestor(saying(robot,nounphrase),3,_3724).
+lps_test_action_ancestor(saying(robot,sentence),3,_6178).
+lps_test_action_ancestor(saying(robot,nounphrase),3,_6178).
 lps_test_action_ancestor(saying(robot,adjective),3,4).

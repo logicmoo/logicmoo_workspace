@@ -1,6 +1,6 @@
 /* Adapted by RAK from the simplified loan agreement in Flood and Goodenough, March 2017.
 Contract as automaton: the computational representation of financial agreements.
-https://pdfs.semanticscholar.org/b7ad/4e46b58094de72d9e82510ba38cb7e0521e4.pdf
+https://www.financialresearch.gov/working-papers/files/OFRwp-2015-04_Contract-as-Automaton-The-Computational-Representation-of-Financial-Agreements.pdf
 
 This representation is similar in spirit to the Flood_Goodenough formalisation as a
 collection of transitions of the form current-state -> event -> new-state, 

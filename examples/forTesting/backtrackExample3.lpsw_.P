@@ -1,15 +1,15 @@
 
 initial_state([]).
 
-reactive_rule([happens(e1,_6282,_6284)],[happens(m1,_6296,_6298),happens(m2,_6310,_6312),tc(_6284=<_6296),tc(_6284=<_6310)]).
-reactive_rule([happens(e2,_6282,_6284)],[happens(n1,_6296,_6298),tc(_6284=<_6296)]).
+reactive_rule([happens(e1,_126,_128)],[happens(m1,_140,_142),happens(m2,_154,_156),tc(_128=<_140),tc(_128=<_154)]).
+reactive_rule([happens(e2,_126,_128)],[happens(n1,_140,_142),tc(_128=<_140)]).
 
-l_events(happens(m1,_6282,_6284),[happens(a1,_6282,_6292),happens(a2,_6292,_6284)]).
-l_events(happens(n1,_6282,_6284),[happens(b1,_6282,_6284)]).
-l_events(happens(n1,_6282,_6284),[happens(a1,_6282,_6292),happens(a3,_6292,_6284)]).
-l_events(happens(m2,_6282,_6284),[happens(a3,_6282,_6292)]).
+l_events(happens(m1,_126,_128),[happens(a1,_126,_136),happens(a2,_136,_128)]).
+l_events(happens(n1,_126,_128),[happens(b1,_126,_128)]).
+l_events(happens(n1,_126,_128),[happens(a1,_126,_136),happens(a3,_136,_128)]).
+l_events(happens(m2,_126,_128),[happens(a3,_126,_136)]).
 
-d_pre([happens(a1,_6282,_6284),happens(b1,_6282,_6284)]).
+d_pre([happens(a1,_126,_128),happens(b1,_126,_128)]).
 
 observe([e1,e2],2).
 observe([],3).

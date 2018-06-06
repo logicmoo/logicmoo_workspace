@@ -89,7 +89,7 @@ has_d_clauses :- clause(d(_,_),_), !.
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1
+	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1
 	]).
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
@@ -186,7 +186,11 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	findall(t(X,T1-T2,G), (
 		lps_test_result_item(events,TT2,XX), T1 is TT2-1, 
 		T1 \== 0, % hack to discard irrelevant initial "transition"
-		(action_(XX)->G=action;G=event),
+		((action_(XX), \+ (observe(Obs,TT2), member(XX,Obs)))->
+			% XX can be both event and action; consider observe(...) as evidence that XX is an event
+			% notice that external (Prolog) events and web events (thar are also declared as action) are still visualised as actions
+			G=action
+			;G=event),
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X,  TT2=T2)
 	), OtherTuples),
 	append(RangedFluents,OtherTuples,Ranged),

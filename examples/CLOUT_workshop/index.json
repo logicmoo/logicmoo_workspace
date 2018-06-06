@@ -1,3 +1,1 @@
-// list of examples, represented as a JSON list
-
 [ "--",{ "file":"First_Steps_with_LPS.swinb", "title":"First Steps with LPS" },{ "file":"lpsExamples.swinb", "title":"LPS examples" },{ "file":"fintechExamples.swinb", "title":"Fintech examples" }]

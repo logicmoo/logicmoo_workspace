@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	go/0, go/1, go/2, go/3,
 	test_examples/0, test_examples_dc/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1, check_load_postmortem/0,
 	load_check_syntax/2, print_error/3, print_error/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
-	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,
+	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,(observe)/2,
 	lps_engine_directory/1, uassert/1, uretractall/1, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1,
 	check_lps_program_swish_module/0, get_lps_program_hash/1, server_log_filename/2, lps_program_clause_file/3, callprolog/1, replace_term/4,
 	bindAllVars/1, lps_welcome_message/0, endTime/1, simulatedRealTimeBeginning/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1,
@@ -349,10 +349,11 @@ get_version(0.5).
 % - a timeless goal, a fluent or action subgoal has more than one solution; by default (e.g. unless option(no_parallel)),
 %   all solutions to these are used in paralell, adding new goals to the "goal tree", that include the full continuation;
 %   see dc_resolve_goals_suspended/6 below; when one of these goals succeeds the others are marked discardable, and thus ignored 
-% ActionAncestors is a list of the current ancestors (happens(CompositEvent,T1,T2)) - for actions or composite events, otherwise it's []
-%  it also included in Balls
+% ActionAncestors is a list of the current ancestors (happens(CompositEvent,T1,T2)), plus a last Discarder (initially var) element
+%   - for actions or composite events, otherwise it's [Discarder]. The Discarder var will be bound when the goal succeeds
+%  it is also included in Balls
 %
-% resolveUntilAction(V,A,_,_) :- writeln(rua-V), fail. % for debugging
+% resolveUntilAction(V,A,_,_) :- writeln(rua-V/A), fail. % for debugging
 resolveUntilAction(V,_,_,_) :- var(V), !, throw(lps_var_goal). % a bug somewhere!
 resolveUntilAction(true,_,_,true) :- !.
 resolveUntilAction([],_,_,true) :- !.
@@ -374,19 +375,19 @@ resolveUntilAction((G1,Gn),A,B,C) :- !,
 % resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
 % fluents:
 resolveUntilAction(G,Ancestors,Ball,Cont) :- 
-	(G = not(holds(_F,T)) ; G = holds(_F,T)), 
+	G = holds(_F,T), 
 	nonvar(T), current_time(Now), T>Now, % premature, delay
 	!, Ball=later(G,Ancestors), Cont=G.
-resolveUntilAction(not(holds(F,T)),_A,_,true) :- query(not(holds(F,T))). % has only one solution
+% fluent negation handled in query/1
 resolveUntilAction(holds(F,T),_A,_,true) :- option(no_parallel), query(holds(F,T)).
 resolveUntilAction(holds(F,T),Ancestors,B,C) :- % spawn a new disjunctive goal for each fluent answer:
 	\+ option(no_parallel),
 	findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
-	% Follows the only SHIFT whose backtracking alternative (the next clause) was missed, turnaround hack follows:
-	(Answers = [holds(F,T)] -> C=true ; 
+	((nonvar(T),Answers = [holds(F,T)]) -> C=true ; 
+	% eternally changing fluents... handled in dc_resolve_goals_suspended below:
 		(B=disjunction(holds(F,T),Answers,Ancestors), C=true; 
-			% turnaround to SWI shift bug (or Miguel's misunderstanding?, cf. Sep 15, 2017 email):
-			var(T), !, C = holds(F,T), B=later(C) 
+			% do we need this? won't there be an extra goal...?
+			var(T), !, C = holds(F,T), B=later(C,Ancestors) 
 		)
 	).
 resolveUntilAction(holds(F,T),Ancestors,Ball,Cont) :- !, % on failure, delay if that makes sense
@@ -444,7 +445,7 @@ resolveUntilAction(happens(E,T1,T2),A,Ball,Cont) :- !,
 	action_(E). 
 % timeless and time constraints:
 resolveUntilAction(tc(G),_A,_,Cont) :- ground(G), !, G, Cont=true.
-resolveUntilAction(tc(G), _A, Ball, Cont) :- !, Ball = later(tc(G)), Cont = tc(G).
+resolveUntilAction(tc(G), A, Ball, Cont) :- !, Ball = later(tc(G),A), Cont = tc(G).
 % not anymore: resolveUntilAction(call_continuation(G)) :- !, call_continuation(G).
 % TODO: should we deprecate/remove l_timeless ?
 resolveUntilAction(G,_A,_,true) :- option(no_parallel), !,
@@ -455,24 +456,26 @@ resolveUntilAction(G,Ancestors,B,true) :-
 
 
 % dc_resolve_goals(+Goals,-NewGoals) Alternative implementation of resolve_tree, used with option(dc)
-% Fails if all Goals can not be solved with admissible actions (e.g. at least one fails)
+% Fails if some goal fails; 
 % Goals is a list of goal(Discard,MyFailure,AllFailures,EventAncestors,G):
-% if Discard==non_discardable, it's a "normal" goal, which must succeed
-% if Discard is a variable, G is one of several alternatives still under consideration; 
+% if Discard==non_discardable, it's a "normal" goal, which must succeed; 
+% 	it may "succeed" by vanishing into its (typically disjunctive) continuations, that become new goals in this list
+% if Discard is a variable, G is one of several alternatives (continuations for some vanished goal) still under consideration; 
 % if Discard==yes, some alternative to G was solved, we can ignore G; 
 % MyFailure is a variable to be used as a mark for failure of G; AllFailures is a list of all such variables for a disjunction
 % MySuccess is a variable to mark success for this branch of a parallel conjunction
-% AllSuccesses is a list of such variables, onr for each branch of a parallel conjunction
 % In summary: 
 %  - when an alternative in a disjunction succeeds, all others are discarded
-%  - when an alternative in a disjunction fails, discard it if there is still a non-failed alternative
+%  - when an alternative in a disjunction fails, discard it (without failing the whole thing) if there is still a non-failed alternative
+% EventAncestor has a special last element: a discarder variable for the goal (typically a rule consequent), 
+%   to allow discarding irrelevant fluent alternatives
 % Evolved from a version based SWI's delimited continuations (reset/shift, cf. http://www.swi-prolog.org/pldoc/man?section=delcont )
 % Adopted an explicit implementation since SWI continuations can not be saved/restored, 
 % as they contain session dependent memory references.
-%dc_resolve_goals(_Goals,_) :- % for debugging
-%	findall(Action, happens(Action, _, _), Actions), do_write([nl, 'CURRENT Events and actions are ',Actions,nl]),
-%	writeln('GOALS:'),member(G,_Goals), writeln(G),
-%	fail.
+/* dc_resolve_goals(Goals,_) :- % for debugging
+	findall(Action, happens(Action, _, _), Actions), do_write([nl, 'CURRENT Events and actions are ',Actions,nl]),
+	writeln('GOALS:'),member(G,Goals), writeln(G),
+	fail.*/
 dc_resolve_goals([],[]) :- !.
 dc_resolve_goals([goal(Discard,_,_,_,_G)|Goals],NewGoals) :- Discard == yes, !, % some alternative already succeeded! we can drop this goal
 	dc_resolve_goals(Goals,NewGoals).
@@ -482,20 +485,22 @@ dc_resolve_goals([goal(Discard,_,Failures,A,G)|Goals],NewGoals) :-
 	( (var(Ball), Continuation\==true) -> throw(inconsistent_lps_ball3(G,Ball));true),
 	(true;write_verbose(['BACKTRACKING into previous goal ',G,nl]),fail),
 	( (var(Ball);Ball==conjunction_prunning) -> 
-		% resolved G completely, or G is a completed parallel conjunction branch whose continuation can be discarded
+		% resolved G completely, or G is a completed parallel conjunction branch whose continuation can be discarded 
+		% (because some other pending branch will have it)
 		% writeln('SOLVED:'), writeln(G),
 		dc_resolve_goals(Goals,NewGoals) 
 	; % we suspended the execution:
 		% writeln('CONTINUATION:'), writeln(Continuation), nl, % uncomment for debugging
 		dc_resolve_goals_suspended(G,Discard,Failures,Goals,Ball,Continuation,NewGoals)
 	).
-dc_resolve_goals([goal(Discard,failed/*unify this:-)*/,OurFailures,_A,G)|Goals],NewGoals) :- % do NOT retry the failed goal later...
-	write_verbose(['FAILED resolveUntilAction for ',G,' (',Discard,')',nl]),
+dc_resolve_goals([goal(Discard,failed/*unify this:-)*/,OurFailures,A,G)|Goals],NewGoals) :- 
+	% does NOT retry the failed goal later... by being consumed here
+	write_verbose(['FAILED resolveUntilAction for ',G,' (discarder:',Discard,')',' failures:', OurFailures, ' ancestors:', A, nl]),
 	Discard \== non_discardable, % disjunctive alternatives may or not stay, otherwise we backtrack for sure
 	% we don't mind about a failed goal if it belongs to a disjunctive bunch with at least one branch left to execute
 	is_list(OurFailures),
 	once(( member(Failed,OurFailures), var(Failed))), % there is still an alternative
-	% writeln('TOLERATING FAILURE of '-G), writeln(because-_GG),
+	% writeln('TOLERATING FAILURE of '-G), writeln(because-OurFailures),
 	dc_resolve_goals(Goals,NewGoals).
 	
 % Decide what to do, depending on the cause of suspension
@@ -503,7 +508,7 @@ dc_resolve_goals([goal(Discard,failed/*unify this:-)*/,OurFailures,_A,G)|Goals],
 dc_resolve_goals_suspended(_TopG,Discard,Failures,Goals,later(G,Ancestors),Continuation,NewGoals) :- !,
 	write_verbose([' Delayed ',G, /* ' while executing ',_TopG,*/ nl]),
 	dc_resolve_goals(Goals,NewGoals_),
-	% Inherit goal altrenative failure marks:
+	% Inherit goal alternative failure marks:
 	append(NewGoals_,[goal(Discard,_,Failures,Ancestors,Continuation)],NewGoals). % push it to end of queue
 
 dc_resolve_goals_suspended(_G,_Discard,_Failures,Goals,conjunction(Branches,Gn,Ancestors),Continuation,NewGoals) :- !,
@@ -516,20 +521,41 @@ dc_resolve_goals_suspended(_G,_Discard,_Failures,Goals,conjunction(Branches,Gn,A
 dc_resolve_goals_suspended(_G,_,_Failures,Goals,disjunction(SuspendedG,Answers,Ancestors),Continuation,NewGoals) :- !,
 	% build new goals, including the common Continuation albeit reflecting the different bindings in Answers,
 	% and ending with the setting of the common variable Discard
-	findall(goal(Discard,_Failed,_OurFailures,Ancestors,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
-	bind_discarders(ExtraGoals,Discard),
+	% I think the following was WRONG, as it did assume answer bindings to be equally useful for the continuation:
+	% findall(goal(Discard,_Failed,_OurFailures,Ancestors,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
+	% ...instead, only the "top" goal (rule consequent) success guarantees an alternative to be irrelevant:
+	 ((SuspendedG = holds(F,T),var(T), \+ ground(F) )-> copy_term(SuspendedG+Ancestors+Continuation,BindingsForFuture) ; true),
+	findall(goal(_Discard,_Failed,_OurFailures,Ancestors,Continuation), member(SuspendedG,Answers), ExtraGoals),
+
+	(ExtraGoals=[goal(_,_,_,Ancestors,Continuation)]->true;true), % why is this needed?
+		% ...this mimicks what used to be done in resolveUntilAction and fixes the problem with paralellConjunctions.pl, but...
+	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	bind_discarders(ExtraGoals,RootAncestorDiscard),
 	length(ExtraGoals,N), length(OurFailures,N), 
 	% append(Failures,OurFailures,AllFailures),
 	% bind_failure_variables(ExtraGoals,OurFailures,AllFailures),
 	% The above two lines somehow make goat.lps execute badly
-	bind_failure_variables(ExtraGoals,OurFailures),
+	bind_failure_variables(ExtraGoals,OurFailures), % links Failed to OurFailures in all created goals
 	write_verbose([' Spawning ',N,' disjunctive goals because of ',SuspendedG, nl]),
 	append(ExtraGoals,Goals,Goals_),
-	dc_resolve_goals(Goals_,NewGoals).
+	dc_resolve_goals(Goals_,NewGoals_),
+	% Now check if we need to add a "disjunctive alternative for the unknown future of state", e.g. in future cycles:
+	( nonvar(BindingsForFuture) -> 
+		% We really never know when a fluent answer set is "final"... later actions may affect it, so...:
+		BindingsForFuture = SuspendedG_+Ancestors_+Continuation_,
+		append(NewGoals_,[goal(RootAncestorDiscard,Failed,[Failed|OurFailures],Ancestors_,(SuspendedG_,Continuation_))],NewGoals),
+		last(Ancestors_,RootAncestorDiscard),
+		write_verbose([' Spawned one extra disjunctive goal for the future because of ',SuspendedG, nl])
+		; NewGoals=NewGoals_).
+		
 dc_resolve_goals_suspended(_G,_,_Failures,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers,Ancestors),Continuation,NewGoals) :-
 	% similar to the previous clause, except that in addition to different bindings there are different Body terms to consider:
-	findall(goal(Discard,_Failed,_OurFailures,[happens(E,T1,T2)|Ancestors],(Body,Continuation,Discard=yes)), member(l_events(happens(E,T1,T2),Body),Answers), ExtraGoals),
-	bind_discarders(ExtraGoals,Discard),
+	% I think the following was WRONG, as it did assume answer bindings to be equally useful for the continuation:
+	% findall(goal(Discard,_Failed,_OurFailures,[happens(E,T1,T2)|Ancestors],(Body,Continuation,Discard=yes)), member(l_events(happens(E,T1,T2),Body),Answers), ExtraGoals),
+	% ...instead, only the "top" goal (rule consequent) success guarantees an alternative to be irrelevant:
+	findall(goal(_Discard,_Failed,_OurFailures,[happens(E,T1,T2)|Ancestors],(Body,Continuation)), member(l_events(happens(E,T1,T2),Body),Answers), ExtraGoals),
+	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	bind_discarders(ExtraGoals,RootAncestorDiscard),
 	length(ExtraGoals,N), length(OurFailures,N),
 	% append(Failures,OurFailures,AllFailures),
 	% bind_failure_variables(ExtraGoals,OurFailures,AllFailures),
@@ -540,7 +566,8 @@ dc_resolve_goals_suspended(_G,_,_Failures,Goals,l_events_disjunction(l_events(ha
 	dc_resolve_goals(Goals_,NewGoals).
 
 % make_branch_goals(+Branches,+Ancestors,+Continuation,AllSuccesses,-SuccessVars,-Goals) for parallelized conjunctions
-make_branch_goals([B|Bn],A,Cont,AllS,[S|Sn],[goal(non_discardable,_,_,A,( B,S=yes,lps_conjunction_control(AllS),Cont) )|Goals]) :- !,
+make_branch_goals([B|Bn],A,Cont,AllS,[S|Sn],[goal(RootAncestorDiscard,_,_,A,( B,S=yes,lps_conjunction_control(AllS),Cont) )|Goals]) :- !,
+	last(A,RootAncestorDiscard), % get the variable marking success of the top goal
 	make_branch_goals(Bn,A,Cont,AllS,Sn,Goals).
 make_branch_goals([],_,_,_AllS,[],[]).
 	
@@ -552,7 +579,7 @@ bind_failure_variables([goal(_,Failed,AllFailures,_,_)|Goals],[Failed|Failures],
 	bind_failure_variables(Goals,Failures,AllFailures).
 bind_failure_variables([],[],_).
 	
-bind_discarders([goal(Discard,_,_,_,_)|Goals],Discard) :- !, bind_discarders(Goals,Discard).
+bind_discarders([goal(Discard,_,_,Ancestors,_)|Goals],Discard) :- !, last(Ancestors,Discard), bind_discarders(Goals,Discard).
 bind_discarders([],_Discard).
 
 /* 
@@ -594,7 +621,11 @@ user:file_search_path(system, SD) :-
 	lps_engine_directory(D), 
 	concat_atom([D,'/'],DD), % hack, don't know where to fetch OS-dependent separator
 	relative_file_name(SD,DD,'system').
-	
+
+% flag reset at each interpreter cycle
+clean_state_flag('$_state'(false)).
+state_is_clean('$_state'(false)).
+state_changed(S) :- nb_setarg(1,S,true).
 :- endif.
 
 %%% end of SWI and Prolog engine-specific code
@@ -902,7 +933,8 @@ go_(File,OptionsList,ResultFluents) :-
 		(system_fluent(SF,SFG), SFG, uassert(state(SF)), fail ; true) % initial state of all system fluents
 
 	),
-	(cycle(Ri, Gi) -> go_finish(File,ResultFluents,T0,Old,T1,success) 
+	clean_state_flag(StateFlag),
+	(cycle(Ri, Gi,StateFlag) -> go_finish(File,ResultFluents,T0,Old,T1,success) 
 		; go_finish(File,ResultFluents,T0,Old,T1,failure), option(run_test)).
 
 go_finish(File,ResultFluents,T0,Old,T1,Outcome) :-
@@ -1597,10 +1629,12 @@ assert_lps_test_result_item(Stage,Cycle,Item) :-
 % Notice that nonvar(T1) always, but T2 may be var; could improve performance with variant_sha1(+Term, -SHA1)
 % backtrackable, as these facts are interesting only for committed actions
 % On retrieving, latest calls will be returned first
+% HACK ALERT: the last of the "calls" is not a call... but athe discarder variable for the top goal! See resolveUntilAction comments
 
 check_lps_test_action_ancestors(A) :- option(make_test), !, check_lps_test_action_ancestors_(A).
 check_lps_test_action_ancestors(_).
 
+check_lps_test_action_ancestors_([_]) :- !. % last element is NOT an event, it's a hacky marker
 check_lps_test_action_ancestors_([happens(E,T1,T2)|Ancestors]) :- !,
 	check_lps_test_action_ancestor(E,T1,T2), check_lps_test_action_ancestors_(Ancestors).
 check_lps_test_action_ancestors_([]).
@@ -1689,18 +1723,18 @@ minCycleTime_(MCT) :- (minCycleTime(MCT); defaultMinCycleTime(MCT)), !.
 minCycleTime_(0.001) :- option(backgroun(_)), !.
 minCycleTime_(0).
 
-%  cycle(PartialReactiveRules,GoalState,PendingResponses)
+%  cycle(PartialReactiveRules,GoalState,PendingResponses,StateFlag)
 %  GoalState is a list (conjunction) of goal(Id,Failure,DisjunctionFailures,EventAncestors,Tree)
 %  Tree is a list representing the current branch of the tree.
 %  PendingResponses is a goal to execute as soon as the state is "stable", to report answers back to waiting clients
-cycle(Ri, Gi) :- cycle(Ri, Gi, true).
+cycle(Ri, Gi, StateFlag) :- cycle(Ri, Gi, true, StateFlag).
 
-cycle(_Ri, Gi, PendingResponses) :-
+cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 	current_time(Time), endTime(M), M < Time,
 	!,
     	answer_thread_queries, PendingResponses,
 	do_write([nl, ' Simulation time is up. Unsolved goals: ',nl,pprint_goal(Gi)]).
-cycle(_Ri, Gi, PendingResponses) :-
+cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 	current_prolog_flag(dialect, swi),
 	maxRealTime(MaxRT),
 	get_time(Now), real_time_beginning(Begin), Duration is Now - Begin,
@@ -1708,7 +1742,7 @@ cycle(_Ri, Gi, PendingResponses) :-
 	!,
     	answer_thread_queries, PendingResponses,
 	do_write([nl, ' Real time is up. Unsolved goals: ',nl, pprint_goal(Gi)]).
-cycle(_Ri, Gi, PendingResponses) :-
+cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 	current_time(Time),  
 	% to avoid persisting in the saved state:
 	(uretract(happens(lps_terminate,T1,T2)), Cause=unknown ; uretract(happens(lps_terminate(Cause),T1,T2))),
@@ -1717,7 +1751,7 @@ cycle(_Ri, Gi, PendingResponses) :-
 	(Time \== T2 -> do_write([nl,'*** Weird timing:', happens(lps_terminate,T1,T2), ' at ',Time]) ; true),
 	test(events,Time,[lps_terminate(Cause)]),
 	do_write([nl, 'Terminated due to ', lps_terminate(Cause), '. Unsolved goals: ',nl, pprint_goal(Gi)]).
-cycle(Ri, Gi, PendingResponses) :-
+cycle(Ri, Gi, PendingResponses, _StateFlag) :-
 	% special case to allow save and suspend by program internal action; can't simply reuse lps_terminate,
 	% as the saved program would resume with... immediate lps_terminate.
 	retract(save_finish_execution(File)), 
@@ -1725,7 +1759,7 @@ cycle(Ri, Gi, PendingResponses) :-
     	answer_thread_queries, PendingResponses,
 	save_execution(File,Ri,Gi,_),
 	do_write([nl, 'Terminated due to lps_save_finish_execution. Saved to file ',File]).
-cycle(Ri, Gi, PendingResponses) :-
+cycle(Ri, Gi, PendingResponses, StateFlag) :-
 	% (writeln('STATE:'), state(XX), writeln(XX), fail ; true),
 	(simulatedRealTimePerCycle(_) -> true ;
 		minCycleTime_(MCT),
@@ -1793,7 +1827,7 @@ cycle(Ri, Gi, PendingResponses) :-
 		test(composites,Time,CompositeEvents),
 		enter_step_0,
 		%time_limited(updateComposites,updateNextStateFluents(Previous),Timeout), 
-		updateNextStateFluents(Previous,false), 
+		updateNextStateFluents(Previous,false,StateFlag), 
 		leave_step_0,
 		copyNextState,
 		(option(log_composites) -> do_write([nl, ' Composite Events to ', Time,' are ',CompositeEvents,nl]) ; true)
@@ -1802,9 +1836,11 @@ cycle(Ri, Gi, PendingResponses) :-
 	% only now do we have the full state:
 	findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents), 
 	test(fluents,Time,Fluents),
-	((Actions \= [] ; Time<3 ; CompositeEvents \= [], option(log_composites)) ->
+	% ((Actions \= [] ; Time<3 ; CompositeEvents \= [], option(log_composites)) ->
+	((\+ state_is_clean(StateFlag)) ->
 		do_write([nl,' State at time ',Time,' is ',Fluents, nl]);
-		true), 	
+		true),
+	clean_state_flag(NewStateFlag),
 	% This resolves goals in the goal state.
 	% next_state(_) is now empty
 	( 
@@ -1819,14 +1855,14 @@ cycle(Ri, Gi, PendingResponses) :-
 				% the following d_pre check is done for all, and not just for 'both' preconditions... to support one more check, after 
 				% the accumulated changes over the microstates in serializable actions, see updateNextStateFluents
 				( option(non_prospective) -> true ; 
-					updateNextStateFluents(Time,true), 
+					updateNextStateFluents(Time,true,NewStateFlag), 
 					\+ (d_pre(_,Conds), holds_all(Conds,Time,Next), write_verbose(['Violated precondition:',Conds])) ) 
 				), Timeout)
 			; 
 			% DEPRECATED:
 			updateEvents(Time, Next, NRi, NextGi, ExternalObservations_, ToReturn),
 			time_limited(resolve, resolve_tree(NGi, [], GoalTree), Timeout),
-			( option(non_prospective) -> time_limited(updateNextStateFluents2,updateNextStateFluents(Time,true), Timeout) ; true)
+			( option(non_prospective) -> time_limited(updateNextStateFluents2,updateNextStateFluents(Time,true,NewStateFlag), Timeout) ; true)
 		) 
 	; 
 		current_time(Time), % avoid cascading the following message to past cycles
@@ -1840,7 +1876,7 @@ cycle(Ri, Gi, PendingResponses) :-
 		(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
 		next_time, 
 		!, % recover stack space...
-		cycle(NRi, NextGi, ToReturn)
+		cycle(NRi, NextGi, ToReturn, NewStateFlag)
 	).
 
 	
@@ -2096,12 +2132,13 @@ updateFluents(Time) :-
     	forall(((member(Fl, Inits);member(_-Fl,Updates)), \+ state(Fl)), uassertz(state(Fl))).
 
 % support "prospective" constraint checking, by keeping both current and next state momentarily
-updateNextStateFluents(Previous,ExecSystemFluents) :-
+updateNextStateFluents(Previous,ExecSystemFluents,StateFlag) :-
 	Time is Previous+1,
 	% copy current state into next state:
 	uretractall(next_state(_)), 
 	( state(X), uassert(next_state(X)), fail ; true),
     	( current_prolog_flag(dialect, swi) ->
+    		% We keep system fluent changes out of StateFlag
     		(ExecSystemFluents==true, system_fluent(SF,SFG), uretractall(next_state(SF)), SFG, uassertz(next_state(SF)), fail ; true)
     		; true),
 
@@ -2121,8 +2158,8 @@ updateNextStateFluents(Previous,ExecSystemFluents) :-
 		replace_term(TFl,Old,New,IFl), next_state(TFl), holds_all(Cond)
 		), Updates),
 	% Actually change the state:
-	forall(((member(Fl, Terms);member(Fl-_,Updates))), uretractall(next_state(Fl))),
-    	forall(((member(Fl, Inits);member(_-Fl,Updates)), \+ next_state(Fl)), uassertz(next_state(Fl))),
+	forall(((member(Fl, Terms);member(Fl-_,Updates))), (uretractall(next_state(Fl)), state_changed(StateFlag)) ),
+    	forall(((member(Fl, Inits);member(_-Fl,Updates)), \+ next_state(Fl)), (uassertz(next_state(Fl)), state_changed(StateFlag)) ),
 
     	% Now the serializable actions (engine default), whose impact should be independent of any particular sequencing
     	% Furthermore, preconditions should not be violated over the intermediate micro states, nor at the end...
@@ -2131,21 +2168,21 @@ updateNextStateFluents(Previous,ExecSystemFluents) :-
     		% fully apply one action at a time, so fluents may accumulate/aggregate... although this
     		% will only happen for UPDATED - terminated/initiated effects do NOT accumulate;
     		% implementation is too tricky and theory... may be even worse;-)
-    		(A=happens(terminate(Fl),_,_) -> true ; terminated(A, Fl, Cond), holds_all(Cond)), uretractall(next_state(Fl)), fail ;
-    		(A=happens(initiate(Fl),_,_) -> true ; initiated(A, Fl, Cond), holds_all(Cond)), \+ next_state(Fl), uassertz(next_state(Fl)), fail ;
+    		(A=happens(terminate(Fl),_,_) -> true ; terminated(A, Fl, Cond), holds_all(Cond)), uretractall(next_state(Fl)), state_changed(StateFlag), fail ;
+    		(A=happens(initiate(Fl),_,_) -> true ; initiated(A, Fl, Cond), holds_all(Cond)), \+ next_state(Fl), uassertz(next_state(Fl)), state_changed(StateFlag), fail ;
     		% ...again, only updates get accumulated effects:
     		(
     			(A=happens(update(Old-New,TFl),_,_) -> 
     				replace_term(TFl,Old,New,IFl), next_state(TFl) ;
     				updated(A,TFl,Old-New,Cond), replace_term(TFl,Old,New,IFl), next_state(TFl), holds_all(Cond) ), 
-    			uretractall(next_state(TFl)), uassertz(next_state(IFl)), fail)
+    			uretractall(next_state(TFl)), uassertz(next_state(IFl)), state_changed(StateFlag), fail)
     		) 
     	; true) /*, for debugging:
     	(write_verbose('ACTIONS'), happens(EE,TT1,TT2), write_verbose(happens(EE,TT1,TT2)), fail; 
     	write_verbose('CURRENT'), state(XX), write_verbose(XX), fail ; 
     	write_verbose('NEXT'), next_state(XX), write_verbose(XX), fail ; 
     	true) */.    	
-updateNextStateFluents(_Previous,_) :- uretractall(next_state(_)), fail.
+updateNextStateFluents(_Previous,_,_) :- uretractall(next_state(_)), fail.
 	
 copyNextState :-
 	uretractall(state(_)), 
@@ -2745,7 +2782,7 @@ dc_process([], Rs, Rs, NG, NG) :- !.
 
 % Antecedent is []. Add Consequent as new goal/tree.
 dc_process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, 
-	dc_process(Rs, AccRi, NRi, [goal(non_discardable,_,[],[],C) | AccG], NGi ).
+	dc_process(Rs, AccRi, NRi, [goal(non_discardable,_,[],[DiscardChildren], (C,DiscardChildren=yes)) | AccG], NGi ).
 
 dc_process([composite_event([], happens(CE,Start,End)) | Rs], AccRi, NRi, AccG, NGi):- !, 
 	current_time(T),

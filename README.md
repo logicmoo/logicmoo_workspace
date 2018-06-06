@@ -1,7 +1,11 @@
 # Logic Production Systems (LPS)#
 Welcome to "LPS Corner", a repository to support the open source development of LPS engines, examples and related tools. Most of the current version is contributed by LogicalContracts from the open source component of its [Logical Contracts Server](http://logicalcontracts.com/server/) product.
 
-## Major release, March 2, 2018 ##
+## Latest version: D-Day, 2018 ##
+* Bug fixes
+* Legal contract examples
+
+### Previous versions: March 2, 2018 ###
 This is the first update since Summer 2017, and incorporates most improvements developed by LogicalContracts:
 
 * LPS background servers

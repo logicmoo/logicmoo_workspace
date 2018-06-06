@@ -4,6 +4,19 @@
 % To start as local server:
 % swipl -l user_module_file.pl -l ../../swish/server.pl -g server:server
 
+:- multifile sandbox:safe_primitive/1.
+ 
+% For debugging:
+% sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
+% sandbox:safe_primitive(swish_highlight:show_mirror(_)).
+% can not print output as usual, would interfere with http responses; uncomment the following for a log:
+/*
+:- open('mylog.txt',write,S), assert(mylogFile(S)).
+mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
+% :- asserta((prolog:message(A,B,C) :-  mylog(message-A), fail)).
+sandbox:safe_primitive(user:mylog(_M)). 
+*/
+
 :- use_module(library(http/http_log)). % uncomment to produce httpd.log
 :- use_module(library(settings)).
 :- set_setting_default(http:logfile, 'data/httpd.log'). % swish's writable sub directory
@@ -13,6 +26,7 @@
 :- use_module(library(http/http_dispatch)).
 :- use_module(swish(lib/plugin/login)).
 :- use_module(swish(lib/authenticate)).
+:- use_module(library(settings)).
 
 % LPS visualizations will appear courtesy of either of two SWISH answer renderers:
 :- use_module(lps_2d_renderer,[]). % need not and can not import the rendering predicate into here
@@ -40,23 +54,17 @@ pengines:prepare_module(_Module, swish, _Options) :-
 :- use_rendering(c3). % some charts for blockchain accounts
 :- endif.
 
-:- multifile sandbox:safe_primitive/1.
 sandbox:safe_primitive(interpreter:go(_File,Options)) :- \+ member(cycle_hook(_,_,_),Options).
 sandbox:safe_primitive(interpreter:go). 
 sandbox:safe_primitive(interpreter:lps_welcome_message). 
 sandbox:safe_primitive(visualizer:gojson(_JSON)). 
 sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON)). 
 sandbox:safe_primitive(psyntax:dumploaded(_)). 
- 
-% For debugging:
-% sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
-% sandbox:safe_primitive(swish_highlight:show_mirror(_)).
-% can not print output as usual, would interfere with http responses; uncomment the following for a log:
+
 /*
-:- open('mylog.txt',write,S), assert(mylogFile(S)).
-mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
-:- asserta((prolog:message(A,B,C) :-  mylog(message-A), fail)).
-sandbox:safe_primitive(user:mylog(_M)). 
+The following could be used to prevent pengines (remote goal) access... but bear in mind that swish (user) browsers communicate directly
+to the server, so their IPs would have to be allowed. I guess full authentication is needed to prevent remote pengines usage.
+:- initialization(( gethostname(H), tcp_host_to_address(H,ip(A,B,C,D)), format(atom(IP),'~w.~w.~w.~w',[A,B,C,D]), set_setting(pengines:allow_from, ['127.0.0.1',IP]))) .
 */
 
 % We'll fill this information at the beginning of each web request; can't use a thread_local fact because 
@@ -69,17 +77,28 @@ lps_user(User) :- lps_user(User,_).
 lps_user(User,Email) :- transaction_lps_user(User,Email), !.
 lps_user(unknown_user,unknown_email).
 
-% hack SWISH's http authentication hook to maintain the above:
+% hack SWISH's http authentication hook in lib/authenticate.pl to maintain the above:
 :- multifile pengines:authentication_hook/3.
 :- asserta((pengines:authentication_hook(Request, _Application, User) :- !,
-    authenticate(Request, User), update_user(Request))).
+    authenticate(Request, User), update_user(Request,User))).
 %TODO: try instead http_current_request(Request) !
 
-update_user(Request) :- 
-	retractall(transaction_lps_user(_,_)), 
-	catch( (current_user_info(Request, Info), assert(transaction_lps_user(Info.sub,Info.email))), _Ex, fail), !.
-update_user(_Request) :- 
+update_user(Request,_User) :- 
+	retractall(transaction_lps_user(_,_)), % hacky retract, good for all clauses...
+	catch( (current_user_info(Request, Info), assert(transaction_lps_user(Info.sub,Info.email))), _Ex, fail), 
+	!.
+% the above clause may be dumb (or not...) because perhaps the following suffices... TODO: clean up this.
+update_user(_Request,User) :- 
+		catch(user_property(User,email(Email)),_,fail),
+		!,
+		assert(transaction_lps_user(User.identity,Email)).   % local (e.g. HTTP-authenticated) account
+update_user(_Request,_User) :- 
 	assert(transaction_lps_user(unknown_user,unknown_email)).
+
+% patch SWISH so that "local" (HTTP authenticated users) are kept sandboxed:
+:- asserta((
+	swish_pep:approve(run(any, _), Auth) :- user_property(Auth, login(local)), !, fail
+	)).
 
 
 :- multifile prolog_colour:term_colours/2, prolog_colour:goal_colours/2.
@@ -173,14 +192,41 @@ swish_examples:example_files(AllExamples) :-
 	append(JSON, AllExamples),
 	!
 )).
+
+% Patch config/2
+% seems irrelevant: :- multifile swish_config:config/2.
+
+:- if((current_prolog_flag(version_data, swi(H,M,L,_)) , H>=7,M>=7,L>=11)).
+% This had to be copied from swish.pl... otherwise the term_expansion/2 rule in there
+% would ignore these declarations... but only for the latest SWI (or Linux...?)
+swish_config:config(show_beware,        true).
+swish_config:config(tabled_results,     false).
+swish_config:config(application,        swish).
+swish_config:config(csv_formats,        [prolog]).
+swish_config:config(community_examples, false).
+swish_config:config(public_access,      true). % HACK here
+swish_config:config(include_alias,	example).
+swish_config:config(ping,		10).
+swish_config:config(notebook,		_{eval_script: true,
+					  fullscreen: false
+					 }).
+swish_config:config(chat,		true).
+:- endif.
+
 :- asserta((
-swish_config:config(profiles, Profiles) :-
+swish_config:config(What, Profiles) :-
+	What==profiles, !,  % hack to allow swish_config_dict/2 to... not lose config items;-)
 	findall(Profile, swish_profiles:swish_profile(Profile), Profiles0_),
 	list_without_duplicates(Profiles0_,Profiles0), % patch..
 	sort(value, =<, Profiles0, Profiles1),
-	swish_profiles:join_profiles(Profiles1, Profiles),
-	!
+	swish_profiles:join_profiles(Profiles1, Profiles)
 )).
+:- asserta((
+swish_config:config(What, A) :- 
+	What==include_alias, !, % hack to allow swish_config_dict/2 to... not lose config items;-)
+	once((A=example;A=system))
+)).
+
 
 % This is actually NOT being used by Swish (yet?)
 :- multifile swish_config:main_title/1.
