@@ -94,7 +94,7 @@ check_and_close(M,Expl,Expl):-
 check_and_close(M,Expl,dot(Dot)):-
   get_bdd_environment(M,Env),
   create_dot_string(Env,Expl,Dot),
-  end_test(Env).
+  clean_environment(M,Env).
 
 
 
