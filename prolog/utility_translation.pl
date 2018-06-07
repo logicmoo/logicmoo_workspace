@@ -76,7 +76,7 @@ declarationAxiom(M:ontology(A)) :- M:ontology(A).
 axiompred(class/1).
 axiom_arguments(class,[iri]).
 valid_axiom(class(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,class(A),NSList,AddName,class(A_full_URL)) :- 
+expand_axiom(M,class(A),NSList,class(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,class,[A_full_URL]) ; true).
 
@@ -87,7 +87,7 @@ expand_axiom(M,class(A),NSList,AddName,class(A_full_URL)) :-
 axiompred(datatype/1).
 axiom_arguments(datatype,[iri]).
 valid_axiom(datatype(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,datatype(A),NSList,AddName,datatype(A_full_URL)) :- 
+expand_axiom(M,datatype(A),NSList,datatype(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,datatype,[A_full_URL]) ; true).
 
@@ -114,7 +114,7 @@ expand_objectProperty(M,P,NSList,ExpP) :-
   expand_iri(M,P,NSList,ExpP).
 
 valid_axiom(objectProperty(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,objectProperty(A),NSList,AddName,objectProperty(A_full_URL)) :- 
+expand_axiom(M,objectProperty(A),NSList,objectProperty(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,objectProperty,[A_full_URL]) ; true).
 
@@ -130,7 +130,7 @@ expand_dataProperty(M,P,NSList,ExpP) :-
 
 
 valid_axiom(dataProperty(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,dataProperty(A),NSList,AddName,dataProperty(A_full_URL)) :- 
+expand_axiom(M,dataProperty(A),NSList,dataProperty(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,dataProperty,[A_full_URL]) ; true).
 
@@ -159,7 +159,7 @@ expand_annotationValue(M,P,NSList,ExpP) :-
 
 
 valid_axiom(annotationProperty(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,annotationProperty(A),NSList,AddName,annotationProperty(A_full_URL)) :- 
+expand_axiom(M,annotationProperty(A),NSList,annotationProperty(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,annotationProperty,[A_full_URL]) ; true).
 
@@ -175,7 +175,7 @@ individual(M:A) :- M:namedIndividual(A).
 axiom_arguments(individual,[iri]).
 valid_axiom(individual(A)) :- subsumed_by([A],[iri]).
 
-expand_individuals(M,[],_NSList,[]) :- !.
+expand_individuals(_M,[],_NSList,[]) :- !.
 expand_individuals(M,[H|T],NSList,[ExpH|ExpT]) :-
   expand_individual(M,H,NSList,ExpH),
   expand_individuals(M,T,NSList,ExpT).
@@ -190,7 +190,7 @@ expand_individual(M,I,NSList,ExpI) :-
 axiompred(namedIndividual/1).
 axiom_arguments(namedIndividual,[iri]).
 valid_axiom(namedIndividual(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,namedIndividual(A),NSList,AddName,namedIndividual(A_full_URL)) :- 
+expand_axiom(M,namedIndividual(A),NSList,namedIndividual(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,individual,[A_full_URL]) ; true).
 
@@ -202,7 +202,7 @@ expand_axiom(M,namedIndividual(A),NSList,AddName,namedIndividual(A_full_URL)) :-
 axiompred(anonymousIndividual/1).
 axiom_arguments(anonymousIndividual,[iri]).
 valid_axiom(anonymousIndividual(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,anonymousIndividual(A),NSList,AddName,anonymousIndividual(A_full_URL)) :- 
+expand_axiom(M,anonymousIndividual(A),NSList,anonymousIndividual(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,individual,[A_full_URL]) ; true).
 
@@ -253,7 +253,7 @@ valid_axiom(classAxiom(A)) :- subsumed_by([A],[axiom]).
 axiompred(subClassOf/2).
 axiom_arguments(subClassOf,[classExpression, classExpression]).
 valid_axiom(subClassOf(A, B)) :- subsumed_by([A, B],[classExpression, classExpression]).
-expand_axiom(M,subClassOf(A,B),NSList,AddName,subClassOf(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,subClassOf(A,B),NSList,subClassOf(A_full_URL,B_full_URL)) :- 
   expand_classExpression(M,A,NSList,A_full_URL),
   expand_classExpression(M,B,NSList,B_full_URL),
   ( M:addKBName -> add_kb_atoms(M,class,[A_full_URL,B_full_URL]) ; true ).
@@ -266,7 +266,7 @@ expand_axiom(M,subClassOf(A,B),NSList,AddName,subClassOf(A_full_URL,B_full_URL))
 axiompred(equivalentClasses/1).
 axiom_arguments(equivalentClasses,[set(classExpression)]).
 valid_axiom(equivalentClasses(A)) :- subsumed_by([A],[set(classExpression)]).
-expand_axiom(M,equivalentClasses(A),NSList,AddName,equivalentClasses(A_full_URL)) :- 
+expand_axiom(M,equivalentClasses(A),NSList,equivalentClasses(A_full_URL)) :- 
   expand_classExpressions(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,class,A_full_URL) ; true ).
 
@@ -277,7 +277,7 @@ expand_axiom(M,equivalentClasses(A),NSList,AddName,equivalentClasses(A_full_URL)
 axiompred(disjointClasses/1).
 axiom_arguments(disjointClasses,[set(classExpression)]).
 valid_axiom(disjointClasses(A)) :- subsumed_by([A],[set(classExpression)]).
-expand_axiom(M,disjointClasses(A),NSList,AddName,disjointClasses(A_full_URL)) :- 
+expand_axiom(M,disjointClasses(A),NSList,disjointClasses(A_full_URL)) :- 
   expand_classExpressions(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,class,A_full_URL) ; true ).
 
@@ -288,7 +288,7 @@ expand_axiom(M,disjointClasses(A),NSList,AddName,disjointClasses(A_full_URL)) :-
 axiompred(disjointUnion/2).
 axiom_arguments(disjointUnion,[classExpression,set(classExpression)]).
 valid_axiom(disjointUnion(A,B)) :- subsumed_by([A,B],[classExpression,set(classExpression)]).
-expand_axiom(M,disjointUnion(A,B),NSList,AddName,disjointUnion(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,disjointUnion(A,B),NSList,disjointUnion(A_full_URL,B_full_URL)) :- 
   expand_classExpression(M,A,NSList,A_full_URL),
   expand_classExpressions(M,B,NSList,B_full_URL),
   ( M:addKBName -> add_kb_atoms(M,class,[A_full_URL|B_full_URL]) ; true ).
@@ -324,7 +324,7 @@ valid_axiom(propertyAxiom(A)) :- subsumed_by([A],[axiom]).
 axiompred(subPropertyOf/2).
 axiom_arguments(subPropertyOf,[propertyExpression, objectPropertyExpression]).
 valid_axiom(subPropertyOf(A, B)) :- subsumed_by([A, B],[propertyExpression, objectPropertyExpression]).
-expand_axiom(M,subPropertyOf(A,B),NSList,AddName,subPropertyOf(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,subPropertyOf(A,B),NSList,subPropertyOf(A_full_URL,B_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_objectPropertyExpression(M,B,NSList,B_full_URL),
   ( M:addKBName -> add_kb_atoms(M,property,[A_full_URL,B_full_URL]) ; true ).
@@ -355,7 +355,7 @@ valid_axiom(subAnnotationPropertyOf(A, B)) :- subsumed_by([A, B],[annotationProp
 axiompred(equivalentProperties/1).
 axiom_arguments(equivalentProperties,[set(propertyExpression)]).
 valid_axiom(equivalentProperties(A)) :- subsumed_by([A],[set(propertyExpression)]).
-expand_axiom(M,equivalentProperties(A),NSList,AddName,equivalentProperties(A_full_URL)) :- 
+expand_axiom(M,equivalentProperties(A),NSList,equivalentProperties(A_full_URL)) :- 
   expand_propertyExpressions(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,property,A_full_URL) ; true ).
 
@@ -379,7 +379,7 @@ valid_axiom(equivalentDataProperties(A)) :- subsumed_by([A],[set(dataPropertyExp
 axiompred(disjointProperties/1).
 axiom_arguments(disjointProperties,[set(propertyExpression)]).
 valid_axiom(disjointProperties(A)) :- subsumed_by([A],[set(propertyExpression)]).
-expand_axiom(M,disjointProperties(A),NSList,AddName,disjointProperties(A_full_URL)) :- 
+expand_axiom(M,disjointProperties(A),NSList,disjointProperties(A_full_URL)) :- 
   expand_propertyExpressions(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,property,A_full_URL) ; true ).
 
@@ -406,7 +406,7 @@ valid_axiom(disjointDataProperties(A)) :- subsumed_by([A],[set(dataPropertyExpre
 axiompred(inverseProperties/2).
 axiom_arguments(inverseProperties,[objectPropertyExpression, objectPropertyExpression]).
 valid_axiom(inverseProperties(A, B)) :- subsumed_by([A, B],[objectPropertyExpression, objectPropertyExpression]).
-expand_axiom(M,inverseProperties(A,B),NSList,AddName,inverseProperties(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,inverseProperties(A,B),NSList,inverseProperties(A_full_URL,B_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   expand_objectPropertyExpression(M,B,NSList,B_full_URL),
   ( M:addKBName -> add_kb_atoms(M,property,[A_full_URL,B_full_URL]) ; true ).
@@ -421,7 +421,7 @@ expand_axiom(M,inverseProperties(A,B),NSList,AddName,inverseProperties(A_full_UR
 axiompred(propertyDomain/2).
 axiom_arguments(propertyDomain,[propertyExpression, classExpression]).
 valid_axiom(propertyDomain(A, B)) :- subsumed_by([A, B],[propertyExpression, classExpression]).
-expand_axiom(M,propertyDomain(A,B),NSList,AddName,propertyDomain(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,propertyDomain(A,B),NSList,propertyDomain(A_full_URL,B_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_classExpression(M,B,NSList,B_full_URL),
   ( M:addKBName -> 
@@ -458,7 +458,7 @@ valid_axiom(annotationPropertyDomain(A, B)) :- subsumed_by([A, B],[annotationPro
 axiompred(propertyRange/2).
 axiom_arguments(propertyRange,[propertyExpression, classExpression]).
 valid_axiom(propertyRange(A, B)) :- subsumed_by([A, B],[propertyExpression, classExpression]).
-expand_axiom(M,propertyRange(A,B),NSList,AddName,propertyRange(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,propertyRange(A,B),NSList,propertyRange(A_full_URL,B_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_classExpression(M,B,NSList,B_full_URL),
   ( M:addKBName -> 
@@ -495,7 +495,7 @@ valid_axiom(annotationPropertyRange(A, B)) :- subsumed_by([A, B],[annotationProp
 axiompred(functionalProperty/1).
 axiom_arguments(functionalProperty,[propertyExpression]).
 valid_axiom(functionalProperty(A)) :- subsumed_by([A],[propertyExpression]).
-expand_axiom(M,functionalProperty(A),NSList,AddName,functionalProperty(A_full_URL)) :- 
+expand_axiom(M,functionalProperty(A),NSList,functionalProperty(A_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,property,[A_full_URL]) ; true).
 
@@ -518,7 +518,7 @@ valid_axiom(functionalDataProperty(A)) :- subsumed_by([A],[dataPropertyExpressio
 axiompred(inverseFunctionalProperty/1).
 axiom_arguments(inverseFunctionalProperty,[objectPropertyExpression]).
 valid_axiom(inverseFunctionalProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
-expand_axiom(M,inverseFunctionalProperty(A),NSList,AddName,inverseFunctionalProperty(A_full_URL)) :- 
+expand_axiom(M,inverseFunctionalProperty(A),NSList,inverseFunctionalProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,objectProperty,[A_full_URL]) ; true).
 
@@ -529,7 +529,7 @@ expand_axiom(M,inverseFunctionalProperty(A),NSList,AddName,inverseFunctionalProp
 axiompred(reflexiveProperty/1).
 axiom_arguments(reflexiveProperty,[objectPropertyExpression]).
 valid_axiom(reflexiveProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
-expand_axiom(M,reflexiveProperty(A),NSList,AddName,reflexiveProperty(A_full_URL)) :- 
+expand_axiom(M,reflexiveProperty(A),NSList,reflexiveProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,objectProperty,[A_full_URL]) ; true).
 
@@ -540,7 +540,7 @@ expand_axiom(M,reflexiveProperty(A),NSList,AddName,reflexiveProperty(A_full_URL)
 axiompred(irreflexiveProperty/1).
 axiom_arguments(irreflexiveProperty,[objectPropertyExpression]).
 valid_axiom(irreflexiveProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
-expand_axiom(M,irreflexiveProperty(A),NSList,AddName,irreflexiveProperty(A_full_URL)) :- 
+expand_axiom(M,irreflexiveProperty(A),NSList,irreflexiveProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,objectProperty,[A_full_URL]) ; true).
 
@@ -551,7 +551,7 @@ expand_axiom(M,irreflexiveProperty(A),NSList,AddName,irreflexiveProperty(A_full_
 axiompred(symmetricProperty/1).
 axiom_arguments(symmetricProperty,[objectPropertyExpression]).
 valid_axiom(symmetricProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
-expand_axiom(M,symmetricProperty(A),NSList,AddName,symmetricProperty(A_full_URL)) :- 
+expand_axiom(M,symmetricProperty(A),NSList,symmetricProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,objectProperty,[A_full_URL]) ; true).
 
@@ -562,7 +562,7 @@ expand_axiom(M,symmetricProperty(A),NSList,AddName,symmetricProperty(A_full_URL)
 axiompred(asymmetricProperty/1).
 axiom_arguments(asymmetricProperty,[objectPropertyExpression]).
 valid_axiom(asymmetricProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
-expand_axiom(M,asymmetricProperty(A),NSList,AddName,asymmetricProperty(A_full_URL)) :- 
+expand_axiom(M,asymmetricProperty(A),NSList,asymmetricProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,objectProperty,[A_full_URL]) ; true).
 
@@ -573,7 +573,7 @@ expand_axiom(M,asymmetricProperty(A),NSList,AddName,asymmetricProperty(A_full_UR
 axiompred(transitiveProperty/1).
 axiom_arguments(transitiveProperty,[objectPropertyExpression]).
 valid_axiom(transitiveProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
-expand_axiom(M,transitiveProperty(A),NSList,AddName,transitiveProperty(A_full_URL)) :- 
+expand_axiom(M,transitiveProperty(A),NSList,transitiveProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,objectProperty,[A_full_URL]) ; true).
 
@@ -584,7 +584,7 @@ expand_axiom(M,transitiveProperty(A),NSList,AddName,transitiveProperty(A_full_UR
 axiompred(hasKey/2).
 axiom_arguments(hasKey,[classExpression,propertyExpression]).
 valid_axiom(hasKey(CE,PE)) :- subsumed_by([CE,PE],[classExpression,propertyExpression]).
-expand_axiom(M,hasKey(A,B),NSList,AddName,hasKey(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,hasKey(A,B),NSList,hasKey(A_full_URL,B_full_URL)) :- 
   expand_classExpression(M,A,NSList,A_full_URL),
   expand_propertyExpression(M,B,NSList,B_full_URL),
   ( M:addKBName -> 
@@ -619,7 +619,7 @@ valid_axiom(fact(A)) :- subsumed_by([A],[axiom]).
 axiompred(sameIndividual/1).
 axiom_arguments(sameIndividual,[set(individual)]).
 valid_axiom(sameIndividual(A)) :- subsumed_by([A],[set(individual)]).
-expand_axiom(M,sameIndividual(A),NSList,AddName,sameIndividual(A_full_URL)) :- 
+expand_axiom(M,sameIndividual(A),NSList,sameIndividual(A_full_URL)) :- 
   expand_individuals(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,individual,A_full_URL) ; true ).
 
@@ -630,7 +630,7 @@ expand_axiom(M,sameIndividual(A),NSList,AddName,sameIndividual(A_full_URL)) :-
 axiompred(differentIndividuals/1).
 axiom_arguments(differentIndividuals,[set(individual)]).
 valid_axiom(differentIndividuals(A)) :- subsumed_by([A],[set(individual)]).
-expand_axiom(M,differentIndividuals(A),NSList,AddName,differentIndividuals(A_full_URL)) :- 
+expand_axiom(M,differentIndividuals(A),NSList,differentIndividuals(A_full_URL)) :- 
   expand_individuals(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,individual,A_full_URL) ; true ).
 
@@ -641,7 +641,7 @@ expand_axiom(M,differentIndividuals(A),NSList,AddName,differentIndividuals(A_ful
 axiompred(classAssertion/2).
 axiom_arguments(classAssertion,[classExpression, individual]).
 valid_axiom(classAssertion(A, B)) :- subsumed_by([A, B],[classExpression, individual]).
-expand_axiom(M,classAssertion(A,B),NSList,AddName,classAssertion(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,classAssertion(A,B),NSList,classAssertion(A_full_URL,B_full_URL)) :- 
   expand_classExpression(M,A,NSList,A_full_URL),
   expand_individual(M,B,NSList,B_full_URL),
   ( M:addKBName -> 
@@ -660,7 +660,7 @@ expand_axiom(M,classAssertion(A,B),NSList,AddName,classAssertion(A_full_URL,B_fu
 axiompred(propertyAssertion/3).
 axiom_arguments(propertyAssertion,[propertyExpression, individual, individual]).
 valid_axiom(propertyAssertion(A, B, C)) :- subsumed_by([A, B, C],[propertyExpression, individual, individual]).
-expand_axiom(M,propertyAssertion(A,B,C),NSList,AddName,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
+expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]),
   ( M:addKBName -> 
@@ -691,7 +691,7 @@ valid_axiom(dataPropertyAssertion(A, B, C)) :- subsumed_by([A, B, C],[dataProper
 axiompred(negativePropertyAssertion/3).
 axiom_arguments(negativePropertyAssertion,[propertyExpression, individual, individual]).
 valid_axiom(negativePropertyAssertion(A, B, C)) :- subsumed_by([A, B, C],[propertyExpression, individual, individual]).
-expand_axiom(M,negativePropertyAssertion(A,B,C),NSList,AddName,negativePropertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
+expand_axiom(M,negativePropertyAssertion(A,B,C),NSList,negativePropertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]),
   ( M:addKBName -> 
@@ -723,7 +723,7 @@ axiom_arguments(annotationAssertion,[annotationProperty, annotationSubject, anno
 valid_axiom(annotationAssertion(A, B, C)) :- subsumed_by([A, B, C],[annotationProperty, annotationSubject, annotationValue]).
 annotationSubject(_).
 annotationValue(_).
-expand_axiom(M,annotationAssertion(A,B,C),NSList,AddName,annotationAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
+expand_axiom(M,annotationAssertion(A,B,C),NSList,annotationAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
   expand_annotationProperty(M,A,NSList,A_full_URL),
   expand_annotationSubject(M,B,NSList,B_full_URL),
   expand_annotationValue(M,C,NSList,C_full_URL),
@@ -740,7 +740,7 @@ annotation(M:annotationAnnotation(A, B, C)) :- M:annotationAnnotation(M:A, B, C)
 annotation(M:axiomAnnotation(A, B, C)) :- M:axiomAnnotation(M:A, B, C).
 axiom_arguments(annotation,[iri,annotationProperty,annotationValue]).
 valid_axiom(annotation(A,B,C)) :- subsumed_by([A,B,C],[iri,annotationProperty,annotationValue]).
-expand_axiom(M,annotationAnnotation(A,B,C),NSList,AddName,annotationAnnotation(A_full_URL,B_full_URL,C_full_URL)) :- 
+expand_axiom(M,annotationAnnotation(A,B,C),NSList,annotationAnnotation(A_full_URL,B_full_URL,C_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   expand_annotationProperty(M,B,NSList,B_full_URL),
   expand_annotationValue(M,C,NSList,C_full_URL),
@@ -774,7 +774,7 @@ valid_axiom(annotationAnnotation(A, B, C)) :- subsumed_by([A, B, C],[annotation,
 axiompred(ontology/1).
 axiom_arguments(ontology,[iri]).
 valid_axiom(ontology(A)) :- subsumed_by([A],[iri]).
-expand_axiom(M,ontology(A),NSList,_AddName,ontology(A_full_URL)) :- 
+expand_axiom(M,ontology(A),NSList,ontology(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL).
 
 %% ontologyDirective(:OntologyIRI,?IRI)
@@ -800,9 +800,9 @@ valid_axiom(ontologyDirective(A, B)) :- subsumed_by([A, B],[ontology, iri]).
 axiompred(ontologyAxiom/2).
 axiom_arguments(ontologyAxiom,[ontology, axiom]).
 valid_axiom(ontologyAxiom(A, B)) :- subsumed_by([A, B],[ontology, axiom]).
-expand_axiom(M,ontologyAxiom(A,B),NSList,AddName,ontology(A_full_URL,B_full_URL)) :- 
+expand_axiom(M,ontologyAxiom(A,B),NSList,ontology(A_full_URL,B_full_URL)) :- 
   expand_ontology(M,A,NSList,A_full_URL),
-  expand_axiom(M,B,NSList,AddName,B_full_URL).
+  expand_axiom(M,B,NSList,B_full_URL).
 
 %% ontologyImport(?Ontology, ?IRI)
 % True of Ontology imports document IRI
@@ -811,7 +811,7 @@ expand_axiom(M,ontologyAxiom(A,B),NSList,AddName,ontology(A_full_URL,B_full_URL)
 axiompred(ontologyImport/2).
 axiom_arguments(ontologyImport,[ontology, iri]).
 valid_axiom(ontologyImport(A, B)) :- subsumed_by([A, B],[ontology, iri]).
-expand_axiom(M,ontologyImport(A,B),NSList,_AddName,ontology(A_full_URL,B)) :- 
+expand_axiom(M,ontologyImport(A,B),NSList,ontology(A_full_URL,B)) :- 
   expand_iri(M,A,NSList,A_full_URL),
   M:consult(B).
 
@@ -857,21 +857,21 @@ subsumed_by(I,T):-
 %% iri(?IRI)
 % true if IRI is an IRI. TODO: currently underconstrained, any atomic term can be an IRI
 iri(IRI) :- atomic(IRI).	%
-expand_iri(M,NS_URL,NSList,Full_URL):-
-  nonvar(NS_URL),
+expand_iri(_M,NS_URL,NSList,Full_URL):-
+  atomic(NS_URL),
   NS_URL \= literal(_),
   uri_split(NS_URL,Short_NS,Term, ':'),
   member((Short_NS=Long_NS),NSList),
   concat_atom([Long_NS,Term],Full_URL),!.
 
-expand_iri(M,NS_URL,NSList,Full_URL):- 
-  nonvar(NS_URL),
+expand_iri(_M,NS_URL,NSList,Full_URL):- 
+  atomic(NS_URL),
   NS_URL \= literal(_),
   \+ sub_atom(NS_URL,_,_,_,':'),
   member(([]=Long_NS),NSList),
   concat_atom([Long_NS,NS_URL],Full_URL),!.
 
-expand_iri(_M,IRI,_NSList,IRI).
+expand_iri(_M,IRI,_NSList,IRI):- atomic(IRI).
   
 
 %% literal(?Lit)
@@ -929,7 +929,7 @@ expand_dataPropertyExpression(M,E,NSList,ExpE) :- expand_iri(M,E,NSList,ExpE).
 expand_datatype(M,DT,NSList,ExpDT) :- 
   expand_iri(M,DT,NSList,ExpDT).
 
-expand_dataRanges(M,[],_NSList,[]) :- !.
+expand_dataRanges(_M,[],_NSList,[]) :- !.
 expand_dataRanges(M,[H|T],NSList,[ExpH|ExpT]) :-
   expand_dataRange(M,H,NSList,ExpH),
   expand_dataRanges(M,T,NSList,ExpT).
@@ -979,13 +979,12 @@ classExpression(CE):-
     dataSomeValuesFrom(CE) ; dataAllValuesFrom(CE) ; dataHasValue(CE) ;
     dataMinCardinality(CE) ; dataMaxCardinality(CE) ; dataExactCardinality(CE).
 expand_classExpression(M,CE,NSList,ExpCE):-
-    expand_iri(CE) ;               % NOTE: added to allow cases where class is not imported
-    expand_class(CE) ;
-    expand_objectIntersectionOf(CE) ; expand_objectUnionOf(CE) ; expand_objectComplementOf(CE) ; expand_objectOneOf(CE) ;
-    expand_objectSomeValuesFrom(CE) ; expand_objectAllValuesFrom(CE) ; expand_objectHasValue(CE) ; expand_objectHasSelf(CE) ;
-    expand_objectMinCardinality(CE) ; expand_objectMaxCardinality(CE) ; expand_objectExactCardinality(CE) ;
-    expand_dataSomeValuesFrom(CE) ; expand_dataAllValuesFrom(CE) ; expand_dataHasValue(CE) ;
-    expand_dataMinCardinality(CE) ; expand_dataMaxCardinality(CE) ; expand_dataExactCardinality(CE).
+    expand_iri(M,CE,NSList,ExpCE) ;               % NOTE: added to allow cases where class is not imported
+    expand_objectIntersectionOf(M,CE,NSList,ExpCE) ; expand_objectUnionOf(M,CE,NSList,ExpCE) ; expand_objectComplementOf(M,CE,NSList,ExpCE) ; expand_objectOneOf(M,CE,NSList,ExpCE) ;
+    expand_objectSomeValuesFrom(M,CE,NSList,ExpCE) ; expand_objectAllValuesFrom(M,CE,NSList,ExpCE) ; expand_objectHasValue(M,CE,NSList,ExpCE) ; expand_objectHasSelf(M,CE,NSList,ExpCE) ;
+    expand_objectMinCardinality(M,CE,NSList,ExpCE) ; expand_objectMaxCardinality(M,CE,NSList,ExpCE) ; expand_objectExactCardinality(M,CE,NSList,ExpCE) ;
+    expand_dataSomeValuesFrom(M,CE,NSList,ExpCE) ; expand_dataAllValuesFrom(M,CE,NSList,ExpCE) ; expand_dataHasValue(M,CE,NSList,ExpCE) ;
+    expand_dataMinCardinality(M,CE,NSList,ExpCE) ; expand_dataMaxCardinality(M,CE,NSList,ExpCE) ; expand_dataExactCardinality(M,CE,NSList,ExpCE).
 
 
 %% objectIntersectionOf(+CE) is semidet
@@ -1020,7 +1019,7 @@ objectOneOf(oneOf(Is)) :-
 %objectOneOf(oneOf(Is)) :-
 %	forall(member(I,Is),
 %	       individual(I)).
-expand_objectOneOf(M,oneOf(Is),NSList,oneOf(ExpIs) :-
+expand_objectOneOf(M,oneOf(Is),NSList,oneOf(ExpIs)) :-
   expand_individuals(M,Is,NSList,ExpIs).
 
 %% objectSomeValuesFrom(+R) is semidet
@@ -3203,7 +3202,7 @@ expand_all_ns(M,[H|T],NSList,AddName,[H|NewArgs]):-
   expand_all_ns(M,T,NSList,AddName,NewArgs).
 
 expand_all_ns(M,[H|T],NSList,AddName,[ExpH|NewArgs]):-
-  expand_axiom(M,H,NSList,AddName,ExpH),
+  expand_axiom(M,H,NSList,ExpH),
   expand_all_ns(M,T,NSList,AddName,NewArgs).
 
 check_query_arg(M,Arg) :-
@@ -3391,10 +3390,10 @@ create_and_assert_axioms(M,Axiom) :-
   ( M:ns4query(NSList) -> true; NSList = []),
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
        ( expand_all_ns(M,IntArgs,NSList,ArgsExp),
-         NewTRILLAxiom =.. [P,ArgsExp]
+         ExpAxiom =.. [P,ArgsExp]
        )
      ;
-       ( expand_axiom(M,Axiom,NSList,true,ExpAxiom)
+       ( expand_axiom(M,Axiom,NSList,ExpAxiom)
          %NewTRILLAxiom =.. [P|ArgsExp]
        )
   ),
@@ -3418,7 +3417,7 @@ set_up(M):-
   M:(dynamic sameIndividual/1, differentIndividuals/1, classAssertion/2, propertyAssertion/3, negativePropertyAssertion/3),
   M:(dynamic annotationAssertion/3, annotation/3, ontology/1, ontologyAxiom/2, ontologyImport/2, ontologyVersionInfo/2),
   M:(dynamic owl/4, owl/3, owl/2, blanknode/3, outstream/1, aNN/3, annotation_r_node/4, axiom_r_node/4, owl_repository/2, trdf_setting/2),
-  M:(dynamic ns4query/1),
+  M:(dynamic ns4query/1, addKBName/0),
   retractall(M:kb_atom([])),
   assert(M:kb_atom([])).
 
@@ -3439,7 +3438,7 @@ user:term_expansion(owl_rdf(String),[]):-
   
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
-  is_axiom(TRILLAxiom),gtrace,
+  is_axiom(TRILLAxiom),
   create_and_assert_axioms(M,TRILLAxiom).
 
 

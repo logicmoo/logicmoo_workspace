@@ -523,13 +523,13 @@ get_hierarchy(M:Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazio
   Classes=KB.classes,
   Pos=Classes.find(Class),
   edges(KB.hierarchy,E),
-  get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,(_,H4C)).
+  get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
 get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
   Classes=KB.classes,
   Pos=Classes.find(Class),
   edges(KB.hierarchy,E),
-  get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,(_,H4C)).
+  get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
 get_combined_expls(M,Class,Pos,E,Classes,Expls,(M,H4C)):-
   get_single_expls(M,Class,Pos,E,Classes,Expls,[Class],H4C).
