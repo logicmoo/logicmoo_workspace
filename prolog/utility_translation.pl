@@ -23,10 +23,43 @@ http://vangelisv.github.io/thea/
 :- discontiguous(valid_axiom/1).
 :- discontiguous(axiompred/1).
 :- discontiguous(axiom_arguments/2).
-:- discontiguous(expand_axiom/2).
+:- discontiguous(expand_axiom/4).
 
 builtin_class('http://www.w3.org/2002/07/owl#Thing').
 builtin_class('http://www.w3.org/2002/07/owl#Nothing').
+builtin_datatype('http://www.w3.org/2002/07/owl#real').
+builtin_datatype('http://www.w3.org/2002/07/owl#rational').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#decimal').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#integer').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#nonNegativeInteger').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#nonPositiveInteger').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#positiveInteger').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#negativeInteger').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#long').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#int').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#short').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#byte').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#unsignedLong').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#unsignedInt').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#unsignedShort').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#unsignedByte').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#double').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#float').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#string').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#normalizedString').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#token').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#language').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#Name').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#NCName').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#NMTOKEN').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#boolean').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#hexBinary').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#base64Binary').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#minLength').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#maxLength').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#length').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#dateTime').
+builtin_datatype('http://www.w3.org/2001/XMLSchema#dateTimeStamp').
 is_class(C) :- get_module(M),M:class(C).
 is_class(C) :- builtin_class(C).
 
@@ -89,6 +122,7 @@ axiom_arguments(datatype,[iri]).
 valid_axiom(datatype(A)) :- subsumed_by([A],[iri]).
 expand_axiom(M,datatype(A),NSList,datatype(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
+  \+ name(A_full_URL,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_]),gtrace,
   ( M:addKBName -> add_kb_atoms(M,datatype,[A_full_URL]) ; true).
 
 %% property(?IRI)
@@ -145,7 +179,7 @@ axiom_arguments(annotationProperty,[iri]).
 
 expand_annotationProperty(M,P,NSList,ExpP) :- 
   expand_iri(M,P,NSList,ExpP),
-  ( M:addKBName -> add_kb_atoms(M,annotatioProperty,[ExpP]) ; true ).
+  ( M:addKBName -> add_kb_atoms(M,annotationProperty,[ExpP]) ; true ).
 
 expand_annotationSubject(M,P,NSList,ExpP) :- 
   (expand_classExpression(M,P,NSList,ExpP),!) ;
@@ -448,6 +482,11 @@ axiompred(propertyRange/2).
 axiom_arguments(propertyRange,[propertyExpression, classExpression]).
 valid_axiom(propertyRange(A, B)) :- subsumed_by([A, B],[propertyExpression, classExpression]).
 expand_axiom(M,propertyRange(A,B),NSList,propertyRange(A_full_URL,B_full_URL)) :- 
+  expand_iri(M,B,NSList,Datatype),
+  builtin_datatype(Datatype),!,
+  expand_dataPropertyExpression(M,A,NSList,A_full_URL),
+  expand_dataRange(M,B,NSList,B_full_URL).
+expand_axiom(M,propertyRange(A,B),NSList,propertyRange(A_full_URL,B_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_classExpression(M,B,NSList,B_full_URL).
 
@@ -607,6 +646,9 @@ expand_axiom(M,differentIndividuals(A),NSList,differentIndividuals(A_full_URL)) 
 axiompred(classAssertion/2).
 axiom_arguments(classAssertion,[classExpression, individual]).
 valid_axiom(classAssertion(A, B)) :- subsumed_by([A, B],[classExpression, individual]).
+expand_axiom(M,classAssertion(A,B),NSList,B_full_URL) :- 
+  expand_iri(M,A,NSList,'http://www.w3.org/2000/01/rdf-schema#Datatype'),!,
+  ( expand_axiom(M,datatype(B),NSList,B_full_URL) -> true ; B_full_URL='none' ).
 expand_axiom(M,classAssertion(A,B),NSList,classAssertion(A_full_URL,B_full_URL)) :- 
   expand_classExpression(M,A,NSList,A_full_URL),
   expand_individual(M,B,NSList,B_full_URL).
@@ -619,9 +661,18 @@ expand_axiom(M,classAssertion(A,B),NSList,classAssertion(A_full_URL,B_full_URL))
 axiompred(propertyAssertion/3).
 axiom_arguments(propertyAssertion,[propertyExpression, individual, individual]).
 valid_axiom(propertyAssertion(A, B, C)) :- subsumed_by([A, B, C],[propertyExpression, individual, individual]).
+expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion('http://www.w3.org/2000/01/rdf-schema#label',B_full_URL,C_full_URL)) :- 
+  expand_iri(M,A,NSList,'http://www.w3.org/2000/01/rdf-schema#label'),!,
+  expand_iri(M,B,NSList,B_full_URL),
+  ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ).
+expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion('http://www.w3.org/2000/01/rdf-schema#comment',B_full_URL,C_full_URL)) :- 
+  expand_iri(M,A,NSList,'http://www.w3.org/2000/01/rdf-schema#comment'),!,gtrace,
+  expand_iri(M,B,NSList,B_full_URL),
+  ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ).
 expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]).
+
 
 %% objectPropertyAssertion(?ObjectPropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)
 % A positive object property assertion PropertyAssertion( OPE a1 a2 ) states that the individual a1 is connected by the object property expression OPE to the individual a2
@@ -837,7 +888,7 @@ expand_propertyExpression(M,E,NSList,ExpE):- expand_objectPropertyExpression(M,E
 % true if OPE is an ObjectPropertyExpression
 % ObjectPropertyExpression := ObjectProperty | InverseObjectProperty
 objectPropertyExpression(E) :- objectProperty(E) ; inverseObjectProperty(E).
-expand_objectPropertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE) ; expand_inverseObjectProperty(M,E,NSList,ExpE) ; .
+expand_objectPropertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE) ; expand_inverseObjectProperty(M,E,NSList,ExpE).
 
 % give benefit of doubt; e.g. rdfs:label
 % in the OWL2 spec we have DataProperty := IRI
@@ -893,12 +944,14 @@ dataRange(DR) :-
     dataOneOf(DR) ;
     datatypeRestriction(DR).
 expand_dataRange(M,DR,NSList,ExpDR) :-
-    expand_datatype(M,DR,NSList,ExpDR) ;
+  ( expand_iri(M,DR,NSList,ExpDR) ;
     expand_dataIntersectionOf(M,DR,NSList,ExpDR);
     expand_dataUnionOf(M,DR,NSList,ExpDR) ;
     expand_dataComplementOf(M,DR,NSList,ExpDR) ;
     expand_dataOneOf(M,DR,NSList,ExpDR) ;
-    expand_datatypeRestriction(M,DR,NSList,ExpDR).
+    expand_datatypeRestriction(M,DR,NSList,ExpDR)
+  ),gtrace,
+  ( M:addKBName -> add_kb_atoms(M,datatype,[ExpDR]) ; true ).
 
 %% classExpression(+CE) is semidet
 %
@@ -921,7 +974,7 @@ expand_classExpressions(M,[CE|T],NSList,[ExpCE|ExpT]) :-
   expand_classExpressions(M,T,NSList,ExpT).
 
 classExpression(CE):-
-    (iri(CE) ;               % NOTE: added to allow cases where class is not imported
+    iri(CE) ;               % NOTE: added to allow cases where class is not imported
     class(CE) ;
     objectIntersectionOf(CE) ; objectUnionOf(CE) ; objectComplementOf(CE) ; objectOneOf(CE) ;
     objectSomeValuesFrom(CE) ; objectAllValuesFrom(CE) ; objectHasValue(CE) ; objectHasSelf(CE) ;
@@ -929,7 +982,7 @@ classExpression(CE):-
     dataSomeValuesFrom(CE) ; dataAllValuesFrom(CE) ; dataHasValue(CE) ;
     dataMinCardinality(CE) ; dataMaxCardinality(CE) ; dataExactCardinality(CE).
 expand_classExpression(M,CE,NSList,ExpCE):-
-    expand_iri(M,CE,NSList,ExpCE) ;               % NOTE: added to allow cases where class is not imported
+    (expand_iri(M,CE,NSList,ExpCE) ;               % NOTE: added to allow cases where class is not imported
     expand_objectIntersectionOf(M,CE,NSList,ExpCE) ; expand_objectUnionOf(M,CE,NSList,ExpCE) ; expand_objectComplementOf(M,CE,NSList,ExpCE) ; expand_objectOneOf(M,CE,NSList,ExpCE) ;
     expand_objectSomeValuesFrom(M,CE,NSList,ExpCE) ; expand_objectAllValuesFrom(M,CE,NSList,ExpCE) ; expand_objectHasValue(M,CE,NSList,ExpCE) ; expand_objectHasSelf(M,CE,NSList,ExpCE) ;
     expand_objectMinCardinality(M,CE,NSList,ExpCE) ; expand_objectMaxCardinality(M,CE,NSList,ExpCE) ; expand_objectExactCardinality(M,CE,NSList,ExpCE) ;
@@ -1371,14 +1424,19 @@ referenced_description(unionOf(L),Y) :- member(X,L),referenced_description(X,Y).
 assert_axiom(M,Axiom) :-
 		( M:ns4query(NSList) -> true; NSList = []),
   		expand_axiom(M,Axiom,NSList,ExpAxiom),
+  		dif(ExpAxiom,'none'),
         M:ExpAxiom,
         !.
-assert_axiom(M,Axiom) :- % expansion not done here because it is already done by failed call of assert_axiom/2
-        assert(M:Axiom),
+assert_axiom(M,Axiom) :-
+        ( M:ns4query(NSList) -> true; NSList = []),
+  		expand_axiom(M,Axiom,NSList,ExpAxiom),
+  		dif(ExpAxiom,'none'),
+        assert(M:ExpAxiom),
 	(   M:trdf_setting(current_ontology,O)
-        ->  assert(M:ontologyAxiom(O,Axiom))
+        ->  assert(M:ontologyAxiom(O,ExpAxiom))
         ;   true),
         !.
+assert_axiom(_M,_Axiom).
   
 %% assert_axiom(+Module,+Axiom:axiom,+Ontology:ontology) is det
 %
@@ -3041,7 +3099,7 @@ assert_list(M,[H|T], Source) :-
     H=..[_|Args],
     H1=..[myrdf|Args],
 	assert(M:H1),
-	add_atoms_from_axiom(M,Args),
+	%add_atoms_from_axiom(M,Args),
     assert_list(M,T, Source).
 
 find_all_probabilistic_annotations(M,Ax,PV):-
@@ -3246,45 +3304,52 @@ add_kb_atom(M,IRI):-
   ).
 
 
-add_kb_atoms(M,property,[URL]):- !,
-  is_known_property(M,URL),!.
+add_kb_atoms(_M,_Type,[]).
 
-add_kb_atoms(M,property,[URL|T]):-
-  is_known_property(M,URL),!,
-  add_kb_atoms(M,property,T).
+add_kb_atoms(M,Type,[H|T]):-
+  M:kb_atom(KBA),
+  L=KBA.Type,
+  memberchk(H,L),!,
+  add_kb_atoms(M,Type,T).
 
-add_kb_atoms(M,property,[URL]):- !,
-  M:objectProperty(L0),
-  retractall(M:objectProperty(_)),
-  append([URL],L0,L),
-  M:assert(objectProperty(L)).
+add_kb_atoms(M,Type,[H|T]):-
+  M:kb_atom(KBA0),
+  L=KBA0.Type,
+  ( memberchk(H,L) -> 
+      true
+    ;
+      ( retractall(M:kb_atom(_)),
+        KBA=KBA0.put(Type,[H|L]),
+        assert(M:kb_atom(KBA))
+      )
+  ),
+  add_kb_atoms(M,Type,T).
 
-add_kb_atoms(M,property,[URL|T]):- !,
-  M:objectProperty(L0),
-  retractall(M:objectProperty(_)),
-  append([URL],L0,L),
-  M:assert(objectProperty(L)),
-  add_kb_atoms(M,property,T).
+fix_wrongly_classified_atoms(M):-
+  M:kb_atom(KBA0),
+  findall(OP,M:objectProperty(OP),ObjPs),
+  findall(DP,M:dataProperty(DP),DataPs),
+  fix_wrongly_classified_properties(ObjPs,objectProperty,KBA0,KBA1),
+  fix_wrongly_classified_properties(DataPs,dataProperty,KBA1,KBA2),
+  findall(DT,M:datatype(DT),DataTs),
+  fix_wrongly_classified_datatype(DataTs,DataPs,ObjPs,KBA2,KBA),
+  retractall(M:kb_atom(_)),
+  assert(M:kb_atom(KBA)).
 
-add_kb_atoms(M,Type,LURL):- !,
-  P =.. [Type,L0],
-  M:P,
-  retractall(P),
-  append(LURL,L0,L),
-  P0 =.. [Type,L],
-  M:assert(P0).
+fix_wrongly_classified_properties([],_Type,KBA,KBA).
 
-is_known_property(M,URL):-
-  M:objectProperty(L),
-  memberchk(URL,L),!.
+fix_wrongly_classified_properties([H|T],Type,KBA0,KBA):-
+  RP=KBA0.Type,
+  ( Type=objectProperty -> OtherType=dataProperty ; OtherType=objectProperty ),
+  WP=KBA0.OtherType,
+  ( memberchk(H,RP) -> NRP=RP ; NRP=[H|RP] ),
+  ( memberchk(H,WP) -> delete(WP,H,NWP) ; NWP=WP ),
+  KBA1=KBA0.put(Type,NRP),
+  KBA2=KBA1.put(OtherType,NWP),
+  fix_wrongly_classified_properties(T,Type,KBA2,KBA).
 
-is_known_property(M,URL):-
-  M:dataProperty(L),
-  memberchk(URL,L),!.
-
-is_known_property(M,URL):-
-  M:annotationProperty(L),
-  memberchk(URL,L),!.
+fix_wrongly_classified_datatype(DataTs,DataPs,ObjPs,KBA2,KBA):-
+  
 
 
 :- multifile trill:add_axiom/1.
@@ -3321,7 +3386,7 @@ trill:remove_axioms(M:[H|T]) :-
   trill:remove_axiom(M:H),
   trill:remove_axioms(M:T).
 
-test_and_assert(M,Ax,O):-gtrace,
+test_and_assert(M,Ax,O):-
   (\+ M:owl(Ax,O) ->
     (assert_axiom(M,Ax,O), assert(M:owl(Ax,O)))
    ;
@@ -3338,6 +3403,7 @@ parse_rdf_from_owl_rdf_pred(String):-
   open_chars_stream(String,S),
   load_owl_from_stream(S).
 
+/*
 create_and_assert_axioms(M,Axiom) :-
   Axiom=..[P|Args],
   ( M:ns4query(NSList) -> true; NSList = []),
@@ -3350,6 +3416,12 @@ create_and_assert_axioms(M,Axiom) :-
          %NewTRILLAxiom =.. [P|ArgsExp]
        )
   ),
+  test_and_assert(M,ExpAxiom,'ont').
+*/
+
+create_and_assert_axioms(M,Axiom) :-
+  ( M:ns4query(NSList) -> true; NSList = []),
+  expand_axiom(M,Axiom,NSList,ExpAxiom),
   test_and_assert(M,ExpAxiom,'ont').
 
 /**
@@ -3371,8 +3443,11 @@ set_up(M):-
   M:(dynamic annotationAssertion/3, annotation/3, ontology/1, ontologyAxiom/2, ontologyImport/2, ontologyVersionInfo/2),
   M:(dynamic owl/4, owl/3, owl/2, blanknode/3, outstream/1, aNN/3, annotation_r_node/4, axiom_r_node/4, owl_repository/2, trdf_setting/2),
   M:(dynamic ns4query/1, addKBName/0),
-  retractall(M:kb_atom([])),
-  assert(M:kb_atom([])).
+  retractall(M:kb_atom(_)),
+  assert(M:kb_atom(kbatoms{annotationProperty:[],class:[],dataProperty:[],datatype:[],individual:[],objectProperty:[]})),
+  retractall(M:addKBName),
+  assert(M:addKBName),
+  assert(trill_input_mode(M)).
 
 :- multifile sandbox:safe_primitive/1.
 
@@ -3384,16 +3459,23 @@ sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_,_)).
 
 user:term_expansion(kb_prefix(A,B),[]):-
   get_module(M),
+  assert(M:addKBName),
   trill:add_kb_prefix(M:A,B).
 
 user:term_expansion(owl_rdf(String),[]):-
   parse_rdf_from_owl_rdf_pred(String).
   
+user:term_expansion(end_of_file, end_of_file) :-
+  get_module(M),
+  dif(M,trill),
+  dif(M,utility_translation),%gtrace,
+  fix_wrongly_classified_atoms(M),
+  retractall(M:addKBName). %hierarchy
+
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
   is_axiom(TRILLAxiom),
   create_and_assert_axioms(M,TRILLAxiom).
-
 
 
 /*
