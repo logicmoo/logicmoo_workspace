@@ -108,6 +108,11 @@ declarationAxiom(M:ontology(A)) :- M:ontology(A).
 
 axiompred(class/1).
 axiom_arguments(class,[iri]).
+
+expand_class(M,C,NSList,ExpC) :- 
+  expand_iri(M,C,NSList,ExpC),
+  \+ builtin_datatype(ExpC).
+
 valid_axiom(class(A)) :- subsumed_by([A],[iri]).
 expand_axiom(M,class(A),NSList,class(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
@@ -122,7 +127,7 @@ axiom_arguments(datatype,[iri]).
 valid_axiom(datatype(A)) :- subsumed_by([A],[iri]).
 expand_axiom(M,datatype(A),NSList,datatype(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
-  \+ name(A_full_URL,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_]),gtrace,
+  \+ name(A_full_URL,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_]),%gtrace,
   ( M:addKBName -> add_kb_atoms(M,datatype,[A_full_URL]) ; true).
 
 %% property(?IRI)
@@ -666,7 +671,7 @@ expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion('http://www.w3.
   expand_iri(M,B,NSList,B_full_URL),
   ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ).
 expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion('http://www.w3.org/2000/01/rdf-schema#comment',B_full_URL,C_full_URL)) :- 
-  expand_iri(M,A,NSList,'http://www.w3.org/2000/01/rdf-schema#comment'),!,gtrace,
+  expand_iri(M,A,NSList,'http://www.w3.org/2000/01/rdf-schema#comment'),!,%gtrace,
   expand_iri(M,B,NSList,B_full_URL),
   ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ).
 expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
@@ -928,7 +933,8 @@ dataPropertyExpression(E) :- nonvar(E),iri(E).
 %already declared as entity
 %datatype(IRI) :- iri(IRI).
 expand_datatype(M,DT,NSList,ExpDT) :- 
-  expand_iri(M,DT,NSList,ExpDT).
+  expand_iri(M,DT,NSList,ExpDT),
+  builtin_datatype(ExpDT).
 
 expand_dataRanges(_M,[],_NSList,[]) :- !.
 expand_dataRanges(M,[H|T],NSList,[ExpH|ExpT]) :-
@@ -944,13 +950,13 @@ dataRange(DR) :-
     dataOneOf(DR) ;
     datatypeRestriction(DR).
 expand_dataRange(M,DR,NSList,ExpDR) :-
-  ( expand_iri(M,DR,NSList,ExpDR) ;
+  ( expand_datatype(M,DR,NSList,ExpDR) ;
     expand_dataIntersectionOf(M,DR,NSList,ExpDR);
     expand_dataUnionOf(M,DR,NSList,ExpDR) ;
     expand_dataComplementOf(M,DR,NSList,ExpDR) ;
     expand_dataOneOf(M,DR,NSList,ExpDR) ;
     expand_datatypeRestriction(M,DR,NSList,ExpDR)
-  ),gtrace,
+  ),%gtrace,
   ( M:addKBName -> add_kb_atoms(M,datatype,[ExpDR]) ; true ).
 
 %% classExpression(+CE) is semidet
@@ -982,7 +988,7 @@ classExpression(CE):-
     dataSomeValuesFrom(CE) ; dataAllValuesFrom(CE) ; dataHasValue(CE) ;
     dataMinCardinality(CE) ; dataMaxCardinality(CE) ; dataExactCardinality(CE).
 expand_classExpression(M,CE,NSList,ExpCE):-
-    (expand_iri(M,CE,NSList,ExpCE) ;               % NOTE: added to allow cases where class is not imported
+    (expand_class(M,CE,NSList,ExpCE) ;               % NOTE: added to allow cases where class is not imported
     expand_objectIntersectionOf(M,CE,NSList,ExpCE) ; expand_objectUnionOf(M,CE,NSList,ExpCE) ; expand_objectComplementOf(M,CE,NSList,ExpCE) ; expand_objectOneOf(M,CE,NSList,ExpCE) ;
     expand_objectSomeValuesFrom(M,CE,NSList,ExpCE) ; expand_objectAllValuesFrom(M,CE,NSList,ExpCE) ; expand_objectHasValue(M,CE,NSList,ExpCE) ; expand_objectHasSelf(M,CE,NSList,ExpCE) ;
     expand_objectMinCardinality(M,CE,NSList,ExpCE) ; expand_objectMaxCardinality(M,CE,NSList,ExpCE) ; expand_objectExactCardinality(M,CE,NSList,ExpCE) ;
@@ -3330,9 +3336,7 @@ fix_wrongly_classified_atoms(M):-
   findall(OP,M:objectProperty(OP),ObjPs),
   findall(DP,M:dataProperty(DP),DataPs),
   fix_wrongly_classified_properties(ObjPs,objectProperty,KBA0,KBA1),
-  fix_wrongly_classified_properties(DataPs,dataProperty,KBA1,KBA2),
-  findall(DT,M:datatype(DT),DataTs),
-  fix_wrongly_classified_datatype(DataTs,DataPs,ObjPs,KBA2,KBA),
+  fix_wrongly_classified_properties(DataPs,dataProperty,KBA1,KBA),
   retractall(M:kb_atom(_)),
   assert(M:kb_atom(KBA)).
 
@@ -3348,8 +3352,6 @@ fix_wrongly_classified_properties([H|T],Type,KBA0,KBA):-
   KBA2=KBA1.put(OtherType,NWP),
   fix_wrongly_classified_properties(T,Type,KBA2,KBA).
 
-fix_wrongly_classified_datatype(DataTs,DataPs,ObjPs,KBA2,KBA):-
-  
 
 
 :- multifile trill:add_axiom/1.
