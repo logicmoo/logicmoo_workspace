@@ -23,7 +23,7 @@ details.
                  inconsistent_theory/1, inconsistent_theory/2, prob_inconsistent_theory/2,
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1,
-                 hierarchy/1] ).
+                 hierarchy/1, reload_kb/1] ).
 
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
@@ -52,6 +52,7 @@ details.
 :- meta_predicate load_kb(:).
 :- meta_predicate load_owl_kb(:).
 :- meta_predicate hierarchy(:).
+:- meta_predicate reload_kb(:).
 
 :- use_module(library(lists)).
 :- use_module(library(ugraphs)).
@@ -575,7 +576,8 @@ check_query_args_presence(M,[_|T]):-
 % looks for presence of atoms in kb's axioms
 find_atom_in_axioms(M,H):-
   M:kb_atom(L1),
-  member(H,L1),!.
+  ( member(H,L1.class) ; member(H,L1.objectProperty) ; member(H,L1.individual) ; member(H,L1.dataProperty) ; member(H,L1.annotationProperty) ; member(H,L1.datatype) ),!.
+  
 
 /****************************/
 
@@ -2457,6 +2459,14 @@ set_algorithm(tornado):-
   unload_all_algorithms,
   consult(library(tornado_internal)).
 
+reload_kb(M:true):-
+  set_up(M),
+  time(utility_kb:create_hierarchy(M)).
+
+reload_kb(M:false):-
+  set_up(M),
+  utility_kb:create_hierarchy(M).
+  
 
 /**************/
 /*get_trill_current_module('utility_translation'):-
@@ -2540,17 +2550,20 @@ user:term_expansion((:- trill),[]):-
   utility_translation:get_module(M),
   set_algorithm(trill),
   set_up(M),
+  utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:[('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 user:term_expansion((:- trillp),[]):-
   utility_translation:get_module(M),
   set_algorithm(trillp),
   set_up(M),
+  utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
 user:term_expansion((:- tornado),[]):-
   utility_translation:get_module(M),
   set_algorithm(tornado),
   set_up(M),
+  utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 

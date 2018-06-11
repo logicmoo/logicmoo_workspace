@@ -10,9 +10,10 @@ This module models and manages the hierarchy of the KB's concepts.
 
 %% astrazione della gerarchia
 
-:- module(utility_kb, [init_hierarchy/1,get_hierarchy/3,get_hierarchy/2]).
+:- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,get_hierarchy/3,get_hierarchy/2]).
 
 :- meta_predicate init_hierarchy(:).
+:- meta_predicate create_hierarchy(+).
 :- meta_predicate get_hierarchy(:,-).
 :- meta_predicate get_hierarchy(+,+,-).
 
@@ -27,33 +28,37 @@ This module models and manages the hierarchy of the KB's concepts.
 
 :- multifile trill:hierarchy/1.
 trill:hierarchy(M:H):-
-  trill:clear_trill_db(M),
-  utility_kb:hierarchy_int(M:H).
+  ( M:delay_hier(true) -> create_hierarchy(M) ; true ),
+  M:kb_hierarchy(H).
 
-hierarchy_int(M:H):-
+create_hierarchy(M):-
+  trill:clear_trill_db(M),
+  utility_kb:hierarchy_int(M).
+
+hierarchy_int(M):-
   init_hierarchy(M:H0),
-  findall(C,M:class(C),L1),
-  findall(Class,M:classAssertion(Class,_Individual),L2),
-  findall(I,M:namedIndividual(I),LI1),
-  findall(Individual,M:classAssertion(_Class,Individual),LI6),
-  findall(LIS,M:sameIndividual(LIS),LI2),
-  findall(LID,M:differentIndividuals(LID),LI3),
-  append(LI2,LI4),
-  append(LI3,LI5),
-  append([LI1,LI4,LI5,LI6],LIndNS),
-  sort(LIndNS,LInd),
-  append(L1,L2,L3),
-  sort(L3,L4),
-  add_classes(H0,L4,H01),
-  add_individuals(H01,LInd,H1),
+  %findall(C,M:class(C),L1),
+  %findall(Class,M:classAssertion(Class,_Individual),L2),
+  %findall(I,M:namedIndividual(I),LI1),
+  %findall(Individual,M:classAssertion(_Class,Individual),LI6),
+  %findall(LIS,M:sameIndividual(LIS),LI2),
+  %findall(LID,M:differentIndividuals(LID),LI3),
+  %append(LI2,LI4),
+  %append(LI3,LI5),
+  %append([LI1,LI4,LI5,LI6],LIndNS),
+  %sort(LIndNS,LInd),
+  %append(L1,L2,L3),
+  %sort(L3,L4),
+  M:kb_atom(KB),
+  add_classes(H0,KB.class,H01),
+  add_individuals(H01,KB.individual,H1),
   retractall(M:kb_hierarchy(_)),
   assert(M:kb_hierarchy(H1)),
   forall(M:equivalentClasses(CL),(M:kb_hierarchy(H2),add_equivalentClasses(H2,CL,H3),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H3)))),
   forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
   forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
   forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
-  search_and_add_complex_subClassOf(M),
-  M:kb_hierarchy(H).
+  search_and_add_complex_subClassOf(M).
   %writeln(H.hierarchy),
   %writeln(H.nClasses),
   %writeln(H.disjointClasses),
@@ -62,9 +67,10 @@ hierarchy_int(M:H):-
 
 
 search_and_add_complex_subClassOf(M):-
-  M:kb_hierarchy(H10),
-  collect_all_classes(H10.classes, Classes),
-  findall(_,process_classes_for_complex_subClassOf(M,Classes),_).
+  %M:kb_hierarchy(H10),
+  M:kb_atom(KBA),
+  %collect_all_classes(H10.classes, Classes),
+  findall(_,process_classes_for_complex_subClassOf(M,KBA.class),_).
 
 process_classes_for_complex_subClassOf(M,Classes):-
   complex_subClassOf(M,Classes,C,D,Ex),
@@ -491,7 +497,6 @@ add_disjointUnion(KB0,Class,DisjointUnion,KB):-
   add_eqClass_expl(KB2,disjointUnion(Class,DisjointUnion),KB3),
   add_disjClass_expl(KB3,disjointUnion(Class,DisjointUnion),KB).
 
-
 %% add_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
 add_subClassOf(KB0,SubClass,SupClass,KB):-
   add_classes(KB0,[SubClass,SupClass],KB1),
@@ -651,6 +656,11 @@ complex_subClassOf(M,Classes,complementOf(C),D,Expl):-
   member(complementOf(C),Classes),
   trill:find_neg_class(C,D),
   trill:ax2ex(M,equivalentClasses([complementOf(C),D]),Expl).
+
+%complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
+%  member(intersectionOf(Cs),Classes),
+%  member(D,Cs),
+%  trill:initial_expl(M,Expl).
 
 % owl fixed classes (owl:Thing e owl:Nothing)
 owl_f(0).

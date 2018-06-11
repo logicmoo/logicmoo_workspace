@@ -19,6 +19,8 @@ test_trillp:-
 
 :- ensure_loaded(library('examples/BRCA.pl')).
 
+test(rkb_brca):-
+  run((reload_kb(false),true)).
 test(p_wlbrcr_h):-
   run((prob_instanceOf('WomanUnderLifetimeBRCRisk','Helen',Prob),close_to(Prob,0.123))).
 test(ne_wlbrcr_h):-
@@ -37,6 +39,8 @@ test(ne_wa_wulbrcr):-
 
 :-ensure_loaded(library(examples/vicodi)).
 
+test(rkb_v):-
+  run((reload_kb(false),true)).
 test(p_r_avdpf):-
   run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
 test(p_p_r):-
@@ -49,6 +53,8 @@ test(p_p_r):-
 
 :-ensure_loaded(library(examples/commander)).
 
+test(rkb_c):-
+  run((reload_kb(false),true)).
 test(e_c_j):-
   run((instanceOf(commander,john,Expl),
        Expl = +[*([equivalentClasses([guard, soldier]), classAssertion(allValuesFrom(commands, guard), john), subClassOf(allValuesFrom(commands, soldier), commander)])]
@@ -61,6 +67,8 @@ test(e_c_j):-
 
 :-ensure_loaded(library(examples/peoplePets)).
 
+test(rkb_pp):-
+  run((reload_kb(false),true)).
 test(p_nl_k):-
   run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.348))).
 test(ne_nl_k):-
@@ -74,6 +82,8 @@ test(ne_nl_k):-
 
 :-ensure_loaded(library(examples/biopaxLevel3)).
 
+test(rkb_bp):-
+  run((reload_kb(false),true)).
 test(p_twbr_e):-
   run((prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
 
@@ -84,6 +94,8 @@ test(p_twbr_e):-
 
 :-ensure_loaded(library('examples/DBPedia.pl')).
 
+test(rkb_dbp):-
+  run((reload_kb(false),true)).
 test(p_p_pp):-
   run((prob_sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Prob),close_to(Prob,0.8273765902816))).
 test(ae_p_pp):-
@@ -98,6 +110,8 @@ test(ae_p_pp):-
 
 :-ensure_loaded(library(examples/johnEmployee)).
 
+test(rkb_je):-
+  run((reload_kb(false),true)).
 test(e_p_j):-
   run((instanceOf('johnEmployee:person','johnEmployee:john',Expl),
        Expl = +[*([classAssertion('http://example.foo#employee', 'http://example.foo#john'), subClassOf('http://example.foo#employee', 'http://example.foo#worker'), subClassOf('http://example.foo#worker', 'http://example.foo#person')])]

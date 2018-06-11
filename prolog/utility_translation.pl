@@ -14,6 +14,8 @@ http://vangelisv.github.io/thea/
 
 :- module(utility_translation, [load_owl/1, load_owl_from_string/1, expand_all_ns/4, expand_all_ns/5, is_axiom/1]).
 
+:- dynamic trill_input_mode/1.
+
 :- use_module(library(lists),[member/2]).
 :- use_module(library(pengines)).
 :- use_module(library(gui_tracer)).
@@ -60,6 +62,7 @@ builtin_datatype('http://www.w3.org/2001/XMLSchema#maxLength').
 builtin_datatype('http://www.w3.org/2001/XMLSchema#length').
 builtin_datatype('http://www.w3.org/2001/XMLSchema#dateTime').
 builtin_datatype('http://www.w3.org/2001/XMLSchema#dateTimeStamp').
+builtin_datatype('http://www.w3.org/2000/01/rdf-schema#Literal').
 is_class(C) :- get_module(M),M:class(C).
 is_class(C) :- builtin_class(C).
 
@@ -205,6 +208,13 @@ expand_axiom(M,annotationProperty(A),NSList,annotationProperty(A_full_URL)) :-
   expand_iri(M,A,NSList,A_full_URL),
   ( M:addKBName -> add_kb_atoms(M,annotationProperty,[A_full_URL]) ; true).
 
+expand_axiom(M,annotation(A,B,C),NSList,annotation(A_full_URL,B_full_URL,C_full_URL)) :-
+  ( M:addKBName -> (retractall(M:addKBName), Add=true) ; Add=false ),
+  expand_argument(M,A,NSList,A_full_URL),
+  expand_argument(M,B,NSList,B_full_URL),
+  expand_argument(M,C,NSList,C_full_URL),
+  ( Add=true -> assert(M:addKBName) ; true ).
+
 
 %% individual(:IRI)
 % Individuals represent actual objects from the domain being modeled
@@ -224,6 +234,7 @@ expand_individuals(M,[H|T],NSList,[ExpH|ExpT]) :-
 
 expand_individual(M,I,NSList,ExpI) :- 
   expand_iri(M,I,NSList,ExpI),
+  \+ builtin_datatype(ExpI),
   ( M:addKBName -> add_kb_atoms(M,individual,[ExpI]) ; true ).
 
 %% namedIndividual(?IRI)
@@ -372,6 +383,9 @@ expand_axiom(M,subPropertyOf(A,B),NSList,subPropertyOf(A_full_URL,B_full_URL)) :
 subObjectPropertyOf(A, B) :- get_module(M),M:subPropertyOf(A, B),subsumed_by([A, B],[objectPropertyExpressionOrChain, objectPropertyExpression]).
 axiom_arguments(subObjectPropertyOf,[objectPropertyExpressionOrChain, objectPropertyExpression]).
 valid_axiom(subObjectPropertyOf(A, B)) :- subsumed_by([A, B],[objectPropertyExpressionOrChain, objectPropertyExpression]).
+expand_axiom(M,subPropertyOf(A,B),NSList,subPropertyOf(A_full_URL,B_full_URL)) :- 
+  expand_objectPropertyExpressionOrChain(M,A,NSList,A_full_URL),
+  expand_objectPropertyExpression(M,B,NSList,B_full_URL).
 
 %% subDataPropertyOf(?Sub:DataPropertyExpression, ?Super:DataPropertyExpression)
 % A data subproperty axiom SubPropertyOf( DPE1 DPE2 ) states that the data property expression DPE1 is a subproperty of the data property expression DPE2 - that is, if an individual x is connected by OPE1 to a literal y, then x is connected by OPE2 to y as well.
@@ -489,8 +503,8 @@ valid_axiom(propertyRange(A, B)) :- subsumed_by([A, B],[propertyExpression, clas
 expand_axiom(M,propertyRange(A,B),NSList,propertyRange(A_full_URL,B_full_URL)) :- 
   expand_iri(M,B,NSList,Datatype),
   builtin_datatype(Datatype),!,
-  expand_dataPropertyExpression(M,A,NSList,A_full_URL),
-  expand_dataRange(M,B,NSList,B_full_URL).
+  expand_dataRange(M,B,NSList,B_full_URL),
+  expand_dataPropertyExpression(M,A,NSList,A_full_URL).
 expand_axiom(M,propertyRange(A,B),NSList,propertyRange(A_full_URL,B_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL),
   expand_classExpression(M,B,NSList,B_full_URL).
@@ -675,8 +689,12 @@ expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion('http://www.w3.
   expand_iri(M,B,NSList,B_full_URL),
   ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ).
 expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
-  expand_propertyExpression(M,A,NSList,A_full_URL),
-  expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]).
+  expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]),
+  expand_objectPropertyExpression(M,A,NSList,A_full_URL).
+expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
+  expand_literal(M,C,NSList,C_full_URL),
+  expand_individual(M,B,NSList,B_full_URL),
+  expand_dataPropertyExpression(M,A,NSList,A_full_URL).
 
 
 %% objectPropertyAssertion(?ObjectPropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)
@@ -700,8 +718,12 @@ axiompred(negativePropertyAssertion/3).
 axiom_arguments(negativePropertyAssertion,[propertyExpression, individual, individual]).
 valid_axiom(negativePropertyAssertion(A, B, C)) :- subsumed_by([A, B, C],[propertyExpression, individual, individual]).
 expand_axiom(M,negativePropertyAssertion(A,B,C),NSList,negativePropertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
-  expand_propertyExpression(M,A,NSList,A_full_URL),
-  expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]).
+  expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]),
+  expand_objectPropertyExpression(M,A,NSList,A_full_URL).
+expand_axiom(M,negativePropertyAssertion(A,B,C),NSList,negativePropertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
+  expand_literal(M,C,NSList,C_full_URL),
+  expand_individuals(M,B,NSList,B_full_URL),
+  expand_datatPropertyExpression(M,A,NSList,A_full_URL).
 
 %% negativeObjectPropertyAssertion(?ObjectPropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)
 % A negative object property assertion NegativePropertyAssertion( OPE a1 a2 ) states that the individual a1 is not connected by the object property expression OPE to the individual a2
@@ -724,7 +746,7 @@ axiom_arguments(annotationAssertion,[annotationProperty, annotationSubject, anno
 valid_axiom(annotationAssertion(A, B, C)) :- subsumed_by([A, B, C],[annotationProperty, annotationSubject, annotationValue]).
 annotationSubject(_).
 annotationValue(_).
-expand_axiom(M,annotationAssertion(A,B,C),NSList,annotationAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
+expand_axiom(M,annotationAssertion(A,B,C),NSList,annotationAssertion(A_full_URL,B_full_URL,C_full_URL)) :-
   expand_annotationProperty(M,A,NSList,A_full_URL),
   expand_annotationSubject(M,B,NSList,B_full_URL),
   expand_annotationValue(M,C,NSList,C_full_URL).
@@ -770,6 +792,9 @@ valid_axiom(annotationAnnotation(A, B, C)) :- subsumed_by([A, B, C],[annotation,
 %% ontology(?IRI)
 % An ontology in OWL2 is a collection of OWL Axioms
 %:- thread_local(ontology/1).
+
+expand_ontology(M,A,NSList,A_full_URL) :-
+  expand_iri(M,A,NSList,A_full_URL).
 
 axiompred(ontology/1).
 axiom_arguments(ontology,[iri]).
@@ -878,7 +903,7 @@ expand_iri(_M,IRI,_NSList,IRI):- atomic(IRI).
 % true if Lit is an rdf literal
 %literal(_).			% TODO
 literal(literal(_)).			% TODO
-expand_literal(_M,Literal,_NSList,Literal).
+expand_literal(_M,literal(Literal),_NSList,literal(Literal)).
 
 propertyExpression(E) :- objectPropertyExpression(E) ; dataPropertyExpression(E).
 
@@ -902,8 +927,11 @@ objectPropertyExpression(E) :- nonvar(E),iri(E).
 
 objectPropertyExpressionOrChain(propertyChain(PL)) :- forall(member(P,PL),objectPropertyExpression(P)).
 objectPropertyExpressionOrChain(PE) :- objectPropertyExpression(PE).
-expand_objectPropertyExpressionOrChain(M,propertyChain(PL),NSList,propertyChain(ExpPL)):-
+expand_objectPropertyExpressionOrChain(M,propertyChain(PL),NSList,propertyChain(ExpPL)):- !,
   expand_propertyExpressions(M,PL,NSList,ExpPL).
+expand_objectPropertyExpressionOrChain(M,P,NSList,ExpP):-
+  expand_objectPropertyExpression(M,P,NSList,ExpP).
+
 
 
 inverseObjectProperty(inverseOf(OP)) :- objectProperty(OP).
@@ -958,6 +986,9 @@ expand_dataRange(M,DR,NSList,ExpDR) :-
     expand_datatypeRestriction(M,DR,NSList,ExpDR)
   ),%gtrace,
   ( M:addKBName -> add_kb_atoms(M,datatype,[ExpDR]) ; true ).
+
+expand_dataRange(M,DR,NSList,ExpDR):-
+  expand_literal(M,DR,NSList,ExpDR).
 
 %% classExpression(+CE) is semidet
 %
@@ -1180,16 +1211,16 @@ dataSomeValuesFrom(someValuesFrom(DPE,DR)):-
 	dataPropertyExpression(DPE),
 	dataRange(DR).
 expand_dataSomeValuesFrom(M,someValuesFrom(DPE,DR),NSList,someValuesFrom(ExpDPE,ExpDR)):-
-	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE),
-	expand_dataRange(M,DR,NSList,ExpDR).
+	expand_dataRange(M,DR,NSList,ExpDR),
+	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE).
 
 %% dataAllValuesFrom(+DR) is semidet
 dataAllValuesFrom(allValuesFrom(DPE,DR)):-
 	dataPropertyExpression(DPE),
 	dataRange(DR).
 expand_dataAllValuesFrom(M,allValuesFrom(DPE,DR),NSList,allValuesFrom(ExpDPE,ExpDR)):-
-	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE),
-	expand_dataRange(M,DR,NSList,ExpDR).
+	expand_dataRange(M,DR,NSList,ExpDR),
+	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE).
 
 %% dataHasValue(+DR) is semidet
 % A has-value class expression HasValue( DPE lt ) consists of a data property expression DPE and a literal lt, and it contains all those individuals that are connected by DPE to lt. Each such class expression can be seen as a syntactic shortcut for the class expression SomeValuesFrom( DPE OneOf( lt ) )
@@ -1197,8 +1228,8 @@ dataHasValue(hasValue(DPE,L)):-
 	dataPropertyExpression(DPE),
 	literal(L).
 expand_dataHasValue(M,hasValue(DPE,L),NSList,hasValue(ExpDPE,ExpL)):-
-	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE),
-	expand_literal(M,L,NSList,ExpL).
+	expand_literal(M,L,NSList,ExpL),
+	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE).
 
 %% dataMinCardinality(+DR) is semidet
 % A minimum cardinality expression MinCardinality( n DPE DR ) consists of a nonnegative integer n, a data property expression DPE, and a unary data range DR, and it contains all those individuals that are connected by DPE to at least n different literals in DR. If DR is not present, it is taken to be rdfs:Literal
@@ -1214,8 +1245,8 @@ dataMinCardinality(minCardinality(C,DPE)):-
 expand_dataMinCardinality(M,minCardinality(C,DPE,DR),NSList,minCardinality(C,ExpDPE,ExpDR)):-
 	number(C),
 	C>=0,
-	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE),
-	expand_dataRange(M,DR,NSList,ExpDR).
+	expand_dataRange(M,DR,NSList,ExpDR),
+	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE).
 expand_dataMinCardinality(M,minCardinality(C,DPE),NSList,minCardinality(C,ExpDPE)):-
 	number(C),
 	C>=0,
@@ -1236,8 +1267,8 @@ dataMaxCardinality(maxCardinality(C,DPE)):-
 expand_dataMaxCardinality(M,maxCardinality(C,DPE,DR),NSList,maxCardinality(C,ExpDPE,ExpDR)):-
 	number(C),
 	C>=0,
-	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE),
-	expand_dataRange(M,DR,NSList,ExpDR).
+	expand_dataRange(M,DR,NSList,ExpDR),
+	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE).
 expand_dataMaxCardinality(M,maxCardinality(C,DPE),NSList,maxCardinality(C,ExpDPE)):-
 	number(C),
 	C>=0,
@@ -1263,8 +1294,8 @@ dataExactCardinality(cardinality(C,OPE)):-
 expand_dataExactCardinality(M,exactCardinality(C,DPE,DR),NSList,exactCardinality(C,ExpDPE,ExpDR)):-
 	number(C),
 	C>=0,
-	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE),
-	expand_dataRange(M,DR,NSList,ExpDR).
+	expand_dataRange(M,DR,NSList,ExpDR),
+	expand_dataPropertyExpression(M,DPE,NSList,ExpDPE).
 expand_dataExactCardinality(M,exactCardinality(C,DPE),NSList,exactCardinality(C,ExpDPE)):-
 	number(C),
 	C>=0,
@@ -1431,17 +1462,14 @@ assert_axiom(M,Axiom) :-
 		( M:ns4query(NSList) -> true; NSList = []),
   		expand_axiom(M,Axiom,NSList,ExpAxiom),
   		dif(ExpAxiom,'none'),
-        M:ExpAxiom,
-        !.
-assert_axiom(M,Axiom) :-
-        ( M:ns4query(NSList) -> true; NSList = []),
-  		expand_axiom(M,Axiom,NSList,ExpAxiom),
-  		dif(ExpAxiom,'none'),
-        assert(M:ExpAxiom),
-	(   M:trdf_setting(current_ontology,O)
-        ->  assert(M:ontologyAxiom(O,ExpAxiom))
-        ;   true),
-        !.
+        ( M:ExpAxiom -> true
+          ;
+          ( assert(M:ExpAxiom),
+			(   M:trdf_setting(current_ontology,O)
+        		->  assert(M:ontologyAxiom(O,ExpAxiom))
+        		;   true)
+       	  )
+       	), !.
 assert_axiom(_M,_Axiom).
   
 %% assert_axiom(+Module,+Axiom:axiom,+Ontology:ontology) is det
@@ -3117,7 +3145,7 @@ find_all_probabilistic_annotations(M,Ax,PV):-
 	atomic(PV).
   
 
-parse_probabilistic_annotation_assertions(M) :-
+parse_probabilistic_annotation_assertions(M) :- 
   forall(find_all_probabilistic_annotations(M,Ax,PV),
        (assert_axiom(M,annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(PV))))
   ),
@@ -3161,6 +3189,19 @@ query_expand(Q):-
   call(NQ).
 */
 
+
+
+expand_argument(M,P,NSList,ExpP) :- 
+  (expand_literal(M,P,NSList,ExpP) ;
+   expand_classExpression(M,P,NSList,ExpP) ;
+   expand_individual(M,P,NSList,ExpP) ;
+   expand_propertyExpression(M,P,NSList,ExpP) ;
+   expand_axiom(M,P,NSList,ExpP) ; 
+   expand_annotationProperty(M,P,NSList,ExpP) ;
+   expand_dataRange(M,P,NSList,ExpP) ; 
+   expand_ontology(M,P,NSList,ExpP) ), !.
+
+
 /**
  * expand_all_ns(++Module:string,++Args:list,++NSList:list,--ExpandedArgs:list) is det
  *
@@ -3180,75 +3221,14 @@ expand_all_ns(M,Args,NSList,ExpandedArgs):-
  */
 expand_all_ns(_M,[],_,_,[]):- !.
 
-expand_all_ns(M,[P|T],NSList,AddName,[P|NewArgs]):-
-  nonvar(P),
-  P=literal(_),!,
-  expand_all_ns(M,T,NSList,AddName,NewArgs).
-
-/*
-expand_all_ns(M,[P|T],NSList,AddName,[P|NewArgs]):-
-  var(P),!,
-  expand_all_ns(M,T,NSList,AddName,NewArgs).
-*/
-
 expand_all_ns(M,[P|T],NSList,AddName,[PNewArgs|NewArgs]):-
   is_list(P),!,
   expand_all_ns(M,P,NSList,AddName,PNewArgs),
   expand_all_ns(M,T,NSList,AddName,NewArgs).
 
 expand_all_ns(M,[P|T],NSList,AddName,[NP|NewArgs]):-
-  compound(P),
-  P =.. [N, Args],!,
-  ( is_list(Args) ->
-      expand_all_ns(M,Args,NSList,AddName,NewPArgs)
-    ;
-      expand_all_ns(M,[Args],NSList,AddName,[NewPArgs])
-  ),
-  NP =.. [N, NewPArgs],
+  expand_argument(M,P,NSList,NP),
   expand_all_ns(M,T,NSList,AddName,NewArgs).
-
-expand_all_ns(M,[P|T],NSList,AddName,[NP|NewArgs]):-
-  compound(P),
-  P =.. [N | Args],!,
-  expand_all_ns(M,Args,NSList,AddName,NewPArgs),
-  NP =.. [N| NewPArgs],
-  expand_all_ns(M,T,NSList,AddName,NewArgs).
-
-expand_all_ns(M,[H|T],NSList,AddName,[H|NewArgs]):-
-  check_query_arg(M,H),!,
-  expand_all_ns(M,T,NSList,AddName,NewArgs).
-
-expand_all_ns(M,[H|T],NSList,AddName,[ExpH|NewArgs]):-
-  expand_axiom(M,H,NSList,ExpH),
-  expand_all_ns(M,T,NSList,AddName,NewArgs).
-
-check_query_arg(M,Arg) :-
-  atomic(Arg),!,
-  trill:axiom(M:Ax),
-  in_axiom(Arg,[Ax]),!,
-  add_kb_atom(M,Arg).
-
-expand_ns4query(M,NS_URL,NSList,AddName, Full_URL):- 
-	nonvar(NS_URL),
-	NS_URL \= literal(_),
-	uri_split(NS_URL,Short_NS,Term, ':'),
-	member((Short_NS=Long_NS),NSList),
-	concat_atom([Long_NS,Term],Full_URL),!,
-	( AddName == true -> add_kb_atom(M,Full_URL) ; true).
-
-expand_ns4query(M,NS_URL,NSList,AddName, Full_URL):- 
-	nonvar(NS_URL),
-	NS_URL \= literal(_),
-	\+ sub_atom(NS_URL,_,_,_,':'),
-	member(([]=Long_NS),NSList),
-	concat_atom([Long_NS,NS_URL],Full_URL),!,
-	( AddName == true -> add_kb_atom(M,Full_URL) ; true).
-
-expand_ns4query(_M,URL,_,_,URL).
-/*
-expand_ns4query(_M,URL,_,_,URL):-
-    var(URL),!.
-*/
 
 % check whether the given atom is present in an axiom
 in_axiom(Atom,[Atom|_]):- !.
@@ -3313,12 +3293,6 @@ add_kb_atom(M,IRI):-
 add_kb_atoms(_M,_Type,[]).
 
 add_kb_atoms(M,Type,[H|T]):-
-  M:kb_atom(KBA),
-  L=KBA.Type,
-  memberchk(H,L),!,
-  add_kb_atoms(M,Type,T).
-
-add_kb_atoms(M,Type,[H|T]):-
   M:kb_atom(KBA0),
   L=KBA0.Type,
   ( memberchk(H,L) -> 
@@ -3336,7 +3310,8 @@ fix_wrongly_classified_atoms(M):-
   findall(OP,M:objectProperty(OP),ObjPs),
   findall(DP,M:dataProperty(DP),DataPs),
   fix_wrongly_classified_properties(ObjPs,objectProperty,KBA0,KBA1),
-  fix_wrongly_classified_properties(DataPs,dataProperty,KBA1,KBA),
+  fix_wrongly_classified_properties(DataPs,dataProperty,KBA1,KBA2),
+  fix_duplicated_wrongly_classified_properties(KBA2.objectProperty,KBA2.dataProperty,KBA2,KBA),
   retractall(M:kb_atom(_)),
   assert(M:kb_atom(KBA)).
 
@@ -3352,18 +3327,31 @@ fix_wrongly_classified_properties([H|T],Type,KBA0,KBA):-
   KBA2=KBA1.put(OtherType,NWP),
   fix_wrongly_classified_properties(T,Type,KBA2,KBA).
 
+fix_duplicated_wrongly_classified_properties([],_DP,KBA,KBA).
+
+fix_duplicated_wrongly_classified_properties([H|T],DP,KBA0,KBA):-
+  memberchk(H,DP),!,
+  delete(DP,H,NDP),
+  KBA1=KBA0.put(dataProperty,NDP),
+  fix_duplicated_wrongly_classified_properties(T,DP,KBA1,KBA).
+
+fix_duplicated_wrongly_classified_properties([_H|T],DP,KBA0,KBA):-
+  fix_duplicated_wrongly_classified_properties(T,DP,KBA0,KBA).
 
 
 :- multifile trill:add_axiom/1.
 trill:add_axiom(M:Ax):-
-  create_and_assert_axioms(M,Ax).
+  assert(M:addKBName),
+  create_and_assert_axioms(M,Ax),
+  retractall(M:addKBName),
+  reload_kb(M:false).
 
 :- multifile trill:add_axioms/1.
 trill:add_axioms(_:[]).
 
 trill:add_axioms(M:[H|T]) :-
   trill:add_axiom(M:H),
-  trill:add_axioms(M:T).
+  trill:add_axioms(M:T). % TODO
 
 :- multifile trill:remove_axiom/1.
 trill:remove_axiom(M:Ax):-
@@ -3445,8 +3433,12 @@ set_up(M):-
   M:(dynamic annotationAssertion/3, annotation/3, ontology/1, ontologyAxiom/2, ontologyImport/2, ontologyVersionInfo/2),
   M:(dynamic owl/4, owl/3, owl/2, blanknode/3, outstream/1, aNN/3, annotation_r_node/4, axiom_r_node/4, owl_repository/2, trdf_setting/2),
   M:(dynamic ns4query/1, addKBName/0),
+  retractall(M:addKBName).
+
+set_up_kb_loading(M):-
   retractall(M:kb_atom(_)),
   assert(M:kb_atom(kbatoms{annotationProperty:[],class:[],dataProperty:[],datatype:[],individual:[],objectProperty:[]})),
+  retractall(M:kb_hierarchy(_)),
   retractall(M:addKBName),
   assert(M:addKBName),
   assert(trill_input_mode(M)).
@@ -3468,11 +3460,13 @@ user:term_expansion(owl_rdf(String),[]):-
   parse_rdf_from_owl_rdf_pred(String).
   
 user:term_expansion(end_of_file, end_of_file) :-
-  get_module(M),
+  get_module(M),trill_input_mode(M),
   dif(M,trill),
   dif(M,utility_translation),%gtrace,
   fix_wrongly_classified_atoms(M),
-  retractall(M:addKBName). %hierarchy
+  retractall(M:addKBName),
+  retractall(trill_input_mode(_)),
+  ( M:delay_hier(true) -> true ; utility_kb:create_hierarchy(M) ). %hierarchy
 
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),

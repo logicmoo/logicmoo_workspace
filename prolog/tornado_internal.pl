@@ -20,12 +20,13 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]).
+setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
 setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1).
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
+  assert(M:delay_hier(true)).
 
 /*****************************
   MESSAGES
