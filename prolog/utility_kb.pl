@@ -50,15 +50,15 @@ hierarchy_int(M):-
   %append(L1,L2,L3),
   %sort(L3,L4),
   M:kb_atom(KB),
-  add_classes(H0,KB.class,H01),
-  add_individuals(H01,KB.individual,H1),
+  time(add_classes(H0,KB.class,H01)),
+  time(add_individuals(H01,KB.individual,H1)),
   retractall(M:kb_hierarchy(_)),
   assert(M:kb_hierarchy(H1)),
-  forall(M:equivalentClasses(CL),(M:kb_hierarchy(H2),add_equivalentClasses(H2,CL,H3),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H3)))),
-  forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
-  forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
-  forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
-  search_and_add_complex_subClassOf(M).
+  time(forall(M:equivalentClasses(CL),(M:kb_hierarchy(H2),add_equivalentClasses(H2,CL,H3),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H3))))),
+  time(forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5))))),
+  time(forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7))))),
+  time(forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9))))),
+  time(search_and_add_complex_subClassOf(M)).
   %writeln(H.hierarchy),
   %writeln(H.nClasses),
   %writeln(H.disjointClasses),
@@ -122,15 +122,15 @@ add_hierarchy_link(KB0,C,C1,KB):- % linkati al contrario C sub D, D sub C -> tra
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC1=Classes0.find(C1),
-  are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
-  merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
-  add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expls),
+  add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB).
+
+add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):-
+  time(are_subClasses_int(KB0,PC,PC1)),!, % controlla non siano già linkati
+  time(merge_classes_int(KB0,PC,PC1,KB1)), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
+  time(add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expls)),
   KB=KB1.put(explanations,Expls).
 
-add_hierarchy_link(KB0,C,C1,KB):- % non linkati
-  Classes0=KB0.classes,
-  PC=Classes0.find(C),
-  PC1=Classes0.find(C1),
+add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):- % non linkati
   del_edges(KB0.hierarchy,[0-PC],TreeH1),
   add_edges(TreeH1,[PC1-PC],TreeH),
   add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expls),
@@ -148,15 +148,15 @@ add_hierarchy_link(KB0,C,C1,Expl,KB):- % linkati al contrario C sub D, D sub C -
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC1=Classes0.find(C1),
+  add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB).
+
+add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB):-
   are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
   merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
   add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expl,Expls),
   KB=KB1.put(explanations,Expls).
 
-add_hierarchy_link(KB0,C,C1,Expl,KB):- % non linkati
-  Classes0=KB0.classes,
-  PC=Classes0.find(C),
-  PC1=Classes0.find(C1),
+add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB):-
   del_edges(KB0.hierarchy,[0-PC],TreeH1),
   add_edges(TreeH1,[PC1-PC],TreeH),
   add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expl,Expls),
@@ -165,7 +165,8 @@ add_hierarchy_link(KB0,C,C1,Expl,KB):- % non linkati
 
 are_subClasses_int(KB,C,C1):-
   reachable(C,KB.hierarchy,L),
-  ( (memberchk(C1,L),!) ; (member(EquivalentClasses,L),is_list(EquivalentClasses),memberchk(C1,EquivalentClasses),!)).
+  %flatten(L0,L),
+  memberchk(C1,L),!.
 
 /*
 merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes):- % uno collegato all'altro direttamente
@@ -441,8 +442,8 @@ add_disjointClasses(KB0,ClassList,KB):-
   add_disjClass_expl(KB1,disjointClasses(ClassList),KB).
   
 add_disjClass_hier(KB0,ClassList,KB):-
-  add_classes(KB0,ClassList,KB1),
-  add_single_disjointClass(KB1,ClassList,KB).
+  %add_classes(KB0,ClassList,KB1),
+  add_single_disjointClass(KB0,ClassList,KB).
 
 add_single_disjointClass(KB,[],KB):- !.
 
@@ -499,8 +500,8 @@ add_disjointUnion(KB0,Class,DisjointUnion,KB):-
 
 %% add_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
 add_subClassOf(KB0,SubClass,SupClass,KB):-
-  add_classes(KB0,[SubClass,SupClass],KB1),
-  add_hierarchy_link(KB1,SubClass,SupClass,KB),
+  %add_classes(KB0,[SubClass,SupClass],KB1),
+  time(add_hierarchy_link(KB0,SubClass,SupClass,KB)),
   check_disjoint(KB),!. % si può proseguire
 
 add_subClass_expl(M,Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
@@ -657,10 +658,10 @@ complex_subClassOf(M,Classes,complementOf(C),D,Expl):-
   trill:find_neg_class(C,D),
   trill:ax2ex(M,equivalentClasses([complementOf(C),D]),Expl).
 
-%complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
-%  member(intersectionOf(Cs),Classes),
-%  member(D,Cs),
-%  trill:initial_expl(M,Expl).
+complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
+  member(intersectionOf(Cs),Classes),
+  member(D,Cs),
+  trill:initial_expl(M,Expl).
 
 % owl fixed classes (owl:Thing e owl:Nothing)
 owl_f(0).

@@ -680,16 +680,14 @@ expand_axiom(M,classAssertion(A,B),NSList,classAssertion(A_full_URL,B_full_URL))
 axiompred(propertyAssertion/3).
 axiom_arguments(propertyAssertion,[propertyExpression, individual, individual]).
 valid_axiom(propertyAssertion(A, B, C)) :- subsumed_by([A, B, C],[propertyExpression, individual, individual]).
-expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion('http://www.w3.org/2000/01/rdf-schema#label',B_full_URL,C_full_URL)) :- 
-  expand_iri(M,A,NSList,'http://www.w3.org/2000/01/rdf-schema#label'),!,
+expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(IRI,B_full_URL,C_full_URL)) :- 
+  expand_iri(M,A,NSList,IRI),
+  ( IRI='http://www.w3.org/2000/01/rdf-schema#label' ; IRI='http://www.w3.org/2000/01/rdf-schema#comment' ),!,
   expand_iri(M,B,NSList,B_full_URL),
-  ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ).
-expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion('http://www.w3.org/2000/01/rdf-schema#comment',B_full_URL,C_full_URL)) :- 
-  expand_iri(M,A,NSList,'http://www.w3.org/2000/01/rdf-schema#comment'),!,%gtrace,
-  expand_iri(M,B,NSList,B_full_URL),
-  ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ).
+  ( expand_iri(M,C,NSList,C_full_URL) ; expand_literal(M,C,NSList,C_full_URL) ), !.
 expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
-  expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]),
+  expand_individual(M,C,NSList,C_full_URL),!,
+  expand_individual(M,B,NSList,B_full_URL),
   expand_objectPropertyExpression(M,A,NSList,A_full_URL).
 expand_axiom(M,propertyAssertion(A,B,C),NSList,propertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
   expand_literal(M,C,NSList,C_full_URL),
@@ -718,12 +716,13 @@ axiompred(negativePropertyAssertion/3).
 axiom_arguments(negativePropertyAssertion,[propertyExpression, individual, individual]).
 valid_axiom(negativePropertyAssertion(A, B, C)) :- subsumed_by([A, B, C],[propertyExpression, individual, individual]).
 expand_axiom(M,negativePropertyAssertion(A,B,C),NSList,negativePropertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
-  expand_individuals(M,[B,C],NSList,[B_full_URL,C_full_URL]),
+  expand_individual(M,C,NSList,C_full_URL),!,
+  expand_individual(M,B,NSList,B_full_URL),
   expand_objectPropertyExpression(M,A,NSList,A_full_URL).
 expand_axiom(M,negativePropertyAssertion(A,B,C),NSList,negativePropertyAssertion(A_full_URL,B_full_URL,C_full_URL)) :- 
   expand_literal(M,C,NSList,C_full_URL),
-  expand_individuals(M,B,NSList,B_full_URL),
-  expand_datatPropertyExpression(M,A,NSList,A_full_URL).
+  expand_individual(M,B,NSList,B_full_URL),
+  expand_dataPropertyExpression(M,A,NSList,A_full_URL).
 
 %% negativeObjectPropertyAssertion(?ObjectPropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)
 % A negative object property assertion NegativePropertyAssertion( OPE a1 a2 ) states that the individual a1 is not connected by the object property expression OPE to the individual a2
@@ -903,6 +902,8 @@ expand_iri(_M,IRI,_NSList,IRI):- atomic(IRI).
 % true if Lit is an rdf literal
 %literal(_).			% TODO
 literal(literal(_)).			% TODO
+expand_literal(M,literal(type(Type,Val)),NSList,literal(type(ExpType,Val))) :-
+  expand_datatype(M,Type,NSList,ExpType),!.
 expand_literal(_M,literal(Literal),_NSList,literal(Literal)).
 
 propertyExpression(E) :- objectPropertyExpression(E) ; dataPropertyExpression(E).
@@ -912,13 +913,17 @@ expand_propertyExpressions(M,[CE|T],NSList,[ExpCE|ExpT]) :-
   expand_propertyExpression(M,CE,NSList,ExpCE),
   expand_propertyExpressions(M,T,NSList,ExpT).
   
-expand_propertyExpression(M,E,NSList,ExpE):- expand_objectPropertyExpression(M,E,NSList,ExpE) ; expand_dataPropertyExpression(M,E,NSList,ExpE).
+% expand_propertyExpression(M,E,NSList,ExpE):- expand_objectPropertyExpression(M,E,NSList,ExpE) ; expand_dataPropertyExpression(M,E,NSList,ExpE). % TODO: support for datatype to implement
+expand_propertyExpression(M,inverseOf(OP),NSList,inverseOf(ExpOP)) :- !,expand_objectProperty(M,OP,NSList,ExpOP).
+expand_propertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE).
 
 %% objectPropertyExpression(?OPE)
 % true if OPE is an ObjectPropertyExpression
 % ObjectPropertyExpression := ObjectProperty | InverseObjectProperty
 objectPropertyExpression(E) :- objectProperty(E) ; inverseObjectProperty(E).
-expand_objectPropertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE) ; expand_inverseObjectProperty(M,E,NSList,ExpE).
+% expand_objectPropertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE) ; expand_inverseObjectProperty(M,E,NSList,ExpE).
+expand_objectPropertyExpression(M,inverseOf(OP),NSList,inverseOf(ExpOP)) :- !,expand_objectProperty(M,OP,NSList,ExpOP).
+expand_objectPropertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE).
 
 % give benefit of doubt; e.g. rdfs:label
 % in the OWL2 spec we have DataProperty := IRI
@@ -977,18 +982,23 @@ dataRange(DR) :-
     dataComplementOf(DR) ;
     dataOneOf(DR) ;
     datatypeRestriction(DR).
+expand_dataRange(M,intersectionOf(DRs),NSList,intersectionOf(ExpDRs)) :- !,
+  expand_dataRanges(M,DRs,NSList,ExpDRs).
+expand_dataRange(M,unionOf(DRs),NSList,unionOf(ExpDRs)) :- !,
+	expand_dataRanges(M,DRs,NSList,ExpDRs).
+expand_dataRange(M,complementOf(DR),NSList,complementOf(ExpDR)) :- !,
+	expand_dataRange(M,DR,NSList,ExpDR).
+expand_dataRange(M,oneOf(DRs),NSList,oneOf(ExpDRs)) :- !,
+	expand_dataRanges(M,DRs,NSList,ExpDRs).
+expand_dataRange(M,datatypeRestriction(DR,FacetValues),NSList,datatypeRestriction(DRs,FacetValues)):- !,
+	expand_datatype(M,DR,NSList,DRs),
+	FacetValues=[_|_].
+expand_dataRange(M,literal(DR),NSList,ExpDR):- !,
+  expand_literal(M,literal(DR),NSList,ExpDR).
 expand_dataRange(M,DR,NSList,ExpDR) :-
-  ( expand_datatype(M,DR,NSList,ExpDR) ;
-    expand_dataIntersectionOf(M,DR,NSList,ExpDR);
-    expand_dataUnionOf(M,DR,NSList,ExpDR) ;
-    expand_dataComplementOf(M,DR,NSList,ExpDR) ;
-    expand_dataOneOf(M,DR,NSList,ExpDR) ;
-    expand_datatypeRestriction(M,DR,NSList,ExpDR)
-  ),%gtrace,
+  expand_datatype(M,DR,NSList,ExpDR),%gtrace,
   ( M:addKBName -> add_kb_atoms(M,datatype,[ExpDR]) ; true ).
 
-expand_dataRange(M,DR,NSList,ExpDR):-
-  expand_literal(M,DR,NSList,ExpDR).
 
 %% classExpression(+CE) is semidet
 %
@@ -1018,7 +1028,8 @@ classExpression(CE):-
     objectMinCardinality(CE) ; objectMaxCardinality(CE) ; objectExactCardinality(CE) ;
     dataSomeValuesFrom(CE) ; dataAllValuesFrom(CE) ; dataHasValue(CE) ;
     dataMinCardinality(CE) ; dataMaxCardinality(CE) ; dataExactCardinality(CE).
-expand_classExpression(M,CE,NSList,ExpCE):-
+/*
+expand_classExpression(M,CE,NSList,ExpCE):-			 % TODO: add management datatype
     (expand_class(M,CE,NSList,ExpCE) ;               % NOTE: added to allow cases where class is not imported
     expand_objectIntersectionOf(M,CE,NSList,ExpCE) ; expand_objectUnionOf(M,CE,NSList,ExpCE) ; expand_objectComplementOf(M,CE,NSList,ExpCE) ; expand_objectOneOf(M,CE,NSList,ExpCE) ;
     expand_objectSomeValuesFrom(M,CE,NSList,ExpCE) ; expand_objectAllValuesFrom(M,CE,NSList,ExpCE) ; expand_objectHasValue(M,CE,NSList,ExpCE) ; expand_objectHasSelf(M,CE,NSList,ExpCE) ;
@@ -1026,7 +1037,70 @@ expand_classExpression(M,CE,NSList,ExpCE):-
     expand_dataSomeValuesFrom(M,CE,NSList,ExpCE) ; expand_dataAllValuesFrom(M,CE,NSList,ExpCE) ; expand_dataHasValue(M,CE,NSList,ExpCE) ;
     expand_dataMinCardinality(M,CE,NSList,ExpCE) ; expand_dataMaxCardinality(M,CE,NSList,ExpCE) ; expand_dataExactCardinality(M,CE,NSList,ExpCE)),
     ( M:addKBName -> add_kb_atoms(M,class,[ExpCE]) ; true ).
-
+*/
+expand_classExpression(M,intersectionOf(CEs),NSList,intersectionOf(ExpCEs)):- !,
+  expand_classExpressions(M,CEs,NSList,ExpCEs),
+  ( M:addKBName -> add_kb_atoms(M,class,[intersectionOf(ExpCEs)]) ; true ).
+expand_classExpression(M,unionOf(CEs),NSList,unionOf(ExpCEs)) :- !,
+  expand_classExpressions(M,CEs,NSList,ExpCEs),
+  ( M:addKBName -> add_kb_atoms(M,class,[unionOf(ExpCEs)]) ; true ).
+expand_classExpression(M,complementOf(CE),NSList,complementOf(ExpCE)) :- !,
+  expand_classExpression(M,CE,NSList,ExpCE),
+  ( M:addKBName -> add_kb_atoms(M,class,[complementOf(ExpCE)]) ; true ).
+expand_classExpression(M,oneOf(Is),NSList,oneOf(ExpIs)) :- !,  % TODO check in trill
+  expand_individuals(M,Is,NSList,ExpIs),
+  ( M:addKBName -> add_kb_atoms(M,class,[oneOf(ExpIs)]) ; true ).
+expand_classExpression(M,someValuesFrom(OPE,CE),NSList,someValuesFrom(ExpOPE,ExpCE)) :- !,
+  expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+  expand_classExpression(M,CE,NSList,ExpCE),
+  ( M:addKBName -> add_kb_atoms(M,class,[someValuesFrom(ExpOPE,ExpCE)]) ; true ).
+expand_classExpression(M,allValuesFrom(OPE,CE),NSList,allValuesFrom(ExpOPE,ExpCE)) :- !,
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+	expand_classExpression(M,CE,NSList,ExpCE),
+    ( M:addKBName -> add_kb_atoms(M,class,[allValuesFrom(ExpOPE,ExpCE)]) ; true ).
+expand_classExpression(M,hasValue(OPE,I),NSList,hasValue(ExpOPE,ExpI)) :- !,  % TODO: add in trill
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+	expand_individual(M,I,NSList,ExpI),
+    ( M:addKBName -> add_kb_atoms(M,class,[hasValue(ExpOPE,ExpI)]) ; true ).
+expand_classExpression(M,hasSelf(OPE),NSList,hasSelf(ExpOPE)) :- !,  % TODO: add in trill
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+    ( M:addKBName -> add_kb_atoms(M,class,[hasSelf(ExpOPE)]) ; true ).
+expand_classExpression(M,minCardinality(C,OPE,CE),NSList,minCardinality(C,ExpOPE,ExpCE)):- !,
+	number(C),
+	C>=0,
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+	expand_classExpression(M,CE,NSList,ExpCE),
+    ( M:addKBName -> add_kb_atoms(M,class,[minCardinality(C,ExpOPE,ExpCE)]) ; true ).
+expand_classExpression(M,minCardinality(C,OPE),NSList,minCardinality(C,ExpOPE)):- !,
+	number(C),
+	C>=0,
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+    ( M:addKBName -> add_kb_atoms(M,class,[minCardinality(C,ExpOPE)]) ; true ).
+expand_classExpression(M,maxCardinality(C,OPE,CE),NSList,maxCardinality(C,ExpOPE,ExpCE)):- !,
+	number(C),
+	C>=0,
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+	expand_classExpression(M,CE,NSList,ExpCE),
+    ( M:addKBName -> add_kb_atoms(M,class,[maxCardinality(C,ExpOPE,ExpCE)]) ; true ).
+expand_classExpression(M,maxCardinality(C,OPE),NSList,maxCardinality(C,ExpOPE)):- !,
+	number(C),
+	C>=0,
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+    ( M:addKBName -> add_kb_atoms(M,class,[maxCardinality(C,ExpOPE)]) ; true ).
+expand_classExpression(M,exactCardinality(C,OPE,CE),NSList,exactCardinality(C,ExpOPE,ExpCE)):- !,
+	number(C),
+	C>=0,
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+	expand_classExpression(M,CE,NSList,ExpCE),
+    ( M:addKBName -> add_kb_atoms(M,class,[exactCardinality(C,ExpOPE,ExpCE)]) ; true ).
+expand_classExpression(M,exactCardinality(C,OPE),NSList,exactCardinality(C,ExpOPE)):- !,
+	number(C),
+	C>=0,
+	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
+    ( M:addKBName -> add_kb_atoms(M,class,[exactCardinality(C,ExpOPE)]) ; true ).
+expand_classExpression(M,CE,NSList,ExpCE):-
+    expand_class(M,CE,NSList,ExpCE),
+    ( M:addKBName -> add_kb_atoms(M,class,[ExpCE]) ; true ).
 
 %% objectIntersectionOf(+CE) is semidet
 % true if CE is a term intersectionOf(ClassExpression:list)
@@ -3191,15 +3265,17 @@ query_expand(Q):-
 
 
 
+expand_argument(M,literal(P),NSList,ExpP) :- !,
+  expand_literal(M,literal(P),NSList,ExpP).
 expand_argument(M,P,NSList,ExpP) :- 
-  (expand_literal(M,P,NSList,ExpP) ;
-   expand_classExpression(M,P,NSList,ExpP) ;
+  (expand_classExpression(M,P,NSList,ExpP) ;
    expand_individual(M,P,NSList,ExpP) ;
    expand_propertyExpression(M,P,NSList,ExpP) ;
    expand_axiom(M,P,NSList,ExpP) ; 
    expand_annotationProperty(M,P,NSList,ExpP) ;
    expand_dataRange(M,P,NSList,ExpP) ; 
    expand_ontology(M,P,NSList,ExpP) ), !.
+
 
 
 /**

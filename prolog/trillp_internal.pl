@@ -22,7 +22,7 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
+setting_trill(det_rules,[unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
 setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
