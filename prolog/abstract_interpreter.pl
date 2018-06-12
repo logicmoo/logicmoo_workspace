@@ -99,6 +99,7 @@ evaluable_body_hook(member(_, L), _, is_list(L)).
 evaluable_body_hook(option(O, L), _, (is_list(L), nonvar(O))).
 evaluable_body_hook(nth0(I, L, _), _, (is_list(L);nonvar(I))).
 evaluable_body_hook(nth1(I, L, _), _, (is_list(L);nonvar(I))).
+evaluable_body_hook(arg(_, C, _), _, nonvar(C)).
 evaluable_body_hook(var(V),     _, nonvar(V)).
 evaluable_body_hook(nonvar(V),  _, nonvar(V)).
 evaluable_body_hook(atomic(A),  _, nonvar(A)).
@@ -106,6 +107,8 @@ evaluable_body_hook(atom(A),    _, nonvar(A)).
 evaluable_body_hook(number(A),  _, nonvar(A)).
 evaluable_body_hook(float(A),   _, nonvar(A)).
 evaluable_body_hook(integer(A), _, nonvar(A)).
+evaluable_body_hook(clause(A, _), _, nonvar(A)).
+evaluable_body_hook(clause(A, _, _), _, nonvar(A)).
 evaluable_body_hook(format(Out, Format, Args), _,
                     (nonvar(Out), nonvar(Format), ground(Args))).
 
