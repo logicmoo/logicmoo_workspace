@@ -575,8 +575,8 @@ check_query_args_presence(M,[_|T]):-
 
 % looks for presence of atoms in kb's axioms
 find_atom_in_axioms(M,H):-
-  M:kb_atom(L1),
-  ( member(H,L1.class) ; member(H,L1.objectProperty) ; member(H,L1.individual) ; member(H,L1.dataProperty) ; member(H,L1.annotationProperty) ; member(H,L1.datatype) ),!.
+  M:hierarchy(L1),
+  ( member(H,L1.classesName) ; member(H,L1.objectProperties) ; member(H,L1.individuals) ; member(H,L1.dataProperties) ; member(H,L1.annotationProperties) ; member(H,L1.datatypes) ),!.
   
 
 /****************************/
@@ -2461,10 +2461,14 @@ set_algorithm(tornado):-
 
 reload_kb(M:true):-
   set_up(M),
+  M:hierarchy(H),
+  utility_translation:init_kb_atom(M,H.annotationProperties,H.classesName,H.dataProperties,H.datatypes,H.individuals,H.objectProperties),
   time(utility_kb:create_hierarchy(M)).
 
 reload_kb(M:false):-
   set_up(M),
+  M:hierarchy(H),
+  utility_translation:init_kb_atom(M,H.annotationProperties,H.classesName,H.dataProperties,H.datatypes,H.individuals,H.objectProperties),
   utility_kb:create_hierarchy(M).
   
 

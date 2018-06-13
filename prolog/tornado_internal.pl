@@ -20,7 +20,7 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
+setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
 setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
@@ -249,6 +249,44 @@ ax2ex(M,Ax,BDDAxiom):-
 
 /**********************
 
+Hierarchy Explanation Management
+
+***********************/
+
+hier_initial_expl(_M,[]):-!.
+
+hier_empty_expl(_M,[]):-!.
+
+hier_and_f(_M,[],[],[]):- !.
+
+hier_and_f(_M,[],L,L):- !.
+
+hier_and_f(_M,L,[],L):- !.
+
+hier_and_f(_M,L1,L2,F):-
+  hier_and_f1(L1,L2,[],F).
+
+hier_and_f1([],_,L,L).
+
+hier_and_f1([H1|T1],L2,L3,L):-
+  hier_and_f2(H1,L2,L12),
+  append(L3,L12,L4),
+  hier_and_f1(T1,L2,L4,L).
+
+hier_and_f2(_,[],[]):- !.
+
+hier_and_f2(L1,[H2|T2],[H|T]):-
+  append(L1,H2,H),
+  hier_and_f2(L1,T2,T).
+
+hier_or_f(_M,Or1,Or2,Or):-
+  append(Or1,Or2,Or0),
+  sort(Or0,Or).
+
+hier_ax2ex(_M,Ax,[[Ax]]):- !.
+
+/**********************
+
 TRILLP SAT TEST
 
 ***********************/
@@ -293,3 +331,52 @@ bdd_and(M,Env,[X],BDDX):-
 
 bdd_and(_M,Env,[_X],BDDX):- !,
   one(Env,BDDX).
+
+
+/**********************
+
+ TORNADO Probability Computation
+
+***********************/
+hier_build_bdd(_M,_Env,[],[]):- !.
+
+hier_build_bdd(M,Env, [C-H|T],[C-BDDH|BDDT]):-
+  hier_build_bdd_int(M,Env,H,BDDH),
+  hier_build_bdd(M,Env,T,BDDT).
+
+hier_build_bdd_int(_M,Env,[],BDD):- !,
+  zero(Env,BDD).
+
+hier_build_bdd_int(M,Env,[X],BDD):- !,
+  hier_bdd_and(M,Env,X,BDD).
+
+hier_build_bdd_int(M,Env, [H|T],BDD):-
+  hier_build_bdd_int(M,Env,T,BDDT),
+  hier_bdd_and(M,Env,H,BDDH),
+  or(Env,BDDH,BDDT,BDD).
+
+hier_build_bdd_int(_M,Env,[],BDD):- !,
+  zero(Env,BDD).
+
+
+hier_bdd_and(M,Env,[X],BDDX):-
+  get_prob_ax(M,X,AxN,Prob),!,
+  ProbN is 1-Prob,
+  get_var_n(Env,AxN,[],[Prob,ProbN],VX),
+  equality(Env,VX,0,BDDX),!.
+
+hier_bdd_and(_M,Env,[_X],BDDX):- !,
+  one(Env,BDDX).
+
+hier_bdd_and(M,Env,[H|T],BDDAnd):-
+  get_prob_ax(M,H,AxN,Prob),!,
+  ProbN is 1-Prob,
+  get_var_n(Env,AxN,[],[Prob,ProbN],VH),
+  equality(Env,VH,0,BDDH),
+  hier_bdd_and(M,Env,T,BDDT),
+  and(Env,BDDH,BDDT,BDDAnd).
+  
+hier_bdd_and(M,Env,[_H|T],BDDAnd):- !,
+  one(Env,BDDH),
+  hier_bdd_and(M,Env,T,BDDT),
+  and(Env,BDDH,BDDT,BDDAnd).

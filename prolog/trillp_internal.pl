@@ -22,7 +22,7 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
+setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
 setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
@@ -572,6 +572,22 @@ remove_duplicates(A,C):-sort(A,C).
 
 % init an explanation with one axiom
 ax2ex(_M,Ax,*([Ax])):- !.
+
+/**********************
+
+Hierarchy Explanation Management
+
+***********************/
+
+hier_initial_expl(_M,[]):-!.
+
+hier_empty_expl(_M,[]):-!.
+
+hier_and_f(M,A,B,C):- and_f(M,A,B,C).
+
+hier_or_f(M,Or1,Or2,Or):- or_f(M,Or1,Or2,Or).
+
+hier_ax2ex(_M,Ax,*([Ax])):- !.
 
 /**********************
 

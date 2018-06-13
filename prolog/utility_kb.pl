@@ -10,12 +10,14 @@ This module models and manages the hierarchy of the KB's concepts.
 
 %% astrazione della gerarchia
 
-:- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,get_hierarchy/3,get_hierarchy/2]).
+:- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,get_hierarchy/3,get_hierarchy/2,update_hierarchy/1,update_hierarchy/2]).
 
 :- meta_predicate init_hierarchy(:).
 :- meta_predicate create_hierarchy(+).
 :- meta_predicate get_hierarchy(:,-).
 :- meta_predicate get_hierarchy(+,+,-).
+:- meta_predicate update_hierarchy(:).
+:- meta_predicate update_hierarchy(+,+).
 
 :- use_module(library(classes)).
 :- use_module(library(ugraphs)).
@@ -28,7 +30,6 @@ This module models and manages the hierarchy of the KB's concepts.
 
 :- multifile trill:hierarchy/1.
 trill:hierarchy(M:H):-
-  ( M:delay_hier(true) -> create_hierarchy(M) ; true ),
   M:kb_hierarchy(H).
 
 create_hierarchy(M):-
@@ -50,27 +51,31 @@ hierarchy_int(M):-
   %append(L1,L2,L3),
   %sort(L3,L4),
   M:kb_atom(KB),
-  time(add_classes(H0,KB.class,H01)),
-  time(add_individuals(H01,KB.individual,H1)),
+  add_classes(H0,KB.class,H01),
+  add_individuals(H01,KB.individual,H02),
+  add_annotationProperties(H02,KB.annotationProperty,H03),
+  add_dataProperties(H03,KB.dataProperty,H04),
+  add_datatypes(H04,KB.datatype,H05),
+  add_objectProperties(H05,KB.objectProperty,H1),
+  retractall(M:kb_atom(_)),
   retractall(M:kb_hierarchy(_)),
   assert(M:kb_hierarchy(H1)),
-  time(forall(M:equivalentClasses(CL),(M:kb_hierarchy(H2),add_equivalentClasses(H2,CL,H3),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H3))))),
-  time(forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5))))),
-  time(forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7))))),
-  time(forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9))))),
-  time(search_and_add_complex_subClassOf(M)).
+  forall(M:equivalentClasses(CL),(M:kb_hierarchy(H2),add_equivalentClasses(H2,CL,H3),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H3)))),
+  forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
+  forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
+  forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
+  search_and_add_complex_subClassOf(M).
   %writeln(H.hierarchy),
   %writeln(H.nClasses),
   %writeln(H.disjointClasses),
   %writeln(H.classes),
   %writeln(H.explanations).
 
-
 search_and_add_complex_subClassOf(M):-
   %M:kb_hierarchy(H10),
-  M:kb_atom(KBA),
+  M:hierarchy(KBA),
   %collect_all_classes(H10.classes, Classes),
-  findall(_,process_classes_for_complex_subClassOf(M,KBA.class),_).
+  findall(_,process_classes_for_complex_subClassOf(M,KBA.classesName),_).
 
 process_classes_for_complex_subClassOf(M,Classes):-
   complex_subClassOf(M,Classes,C,D,Ex),
@@ -82,9 +87,10 @@ process_classes_for_complex_subClassOf(M,Classes):-
 
 % inizializza la gerarchia albero con thing + numero classi + albero disjoint + dizionario fra nodi e classi
 % init_hierarchy(kb{hierarchy:TreeH,nClasses:1,disjointClasses:TreeD,node2classes:Classes})
-init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjointClasses:TreeD,classes:Classes,explanations:[],individuals:[]}):-
+init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjointClasses:TreeD,classes:Classes,classesName:ClassesName,explanations:[],individuals:[],annotationProperties:[],dataProperties:[],datatypes:[],objectProperties:[]}):-
   vertices_edges_to_ugraph([0,'n'],[],TreeH),
   Classes=classes{'n':'http://www.w3.org/2002/07/owl#Nothing',0:'http://www.w3.org/2002/07/owl#Thing'},
+  ClassesName=['http://www.w3.org/2002/07/owl#Nothing','http://www.w3.org/2002/07/owl#Thing'],
   vertices_edges_to_ugraph([],['n'-0,0-'n'],TreeD).
 
 check_disjoint(KB):-
@@ -125,9 +131,9 @@ add_hierarchy_link(KB0,C,C1,KB):- % linkati al contrario C sub D, D sub C -> tra
   add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB).
 
 add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):-
-  time(are_subClasses_int(KB0,PC,PC1)),!, % controlla non siano già linkati
-  time(merge_classes_int(KB0,PC,PC1,KB1)), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
-  time(add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expls)),
+  are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
+  merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
+  add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expls),
   KB=KB1.put(explanations,Expls).
 
 add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):- % non linkati
@@ -239,13 +245,14 @@ merge_dict_value(C,C1,CM):-
 % aggiunge una classe, se la classe già esiste fallisce
 add_class(KB0,Class,KB):-
   Classes0=KB0.classes,
+  ClassesN=KB0.classesName,
   \+ _=Classes0.find(Class),
   NC0=KB0.nClasses,
   NC is NC0 + 1,
   Classes=Classes0.put(NC0,Class),
   add_edges(KB0.hierarchy,[0-NC0],TreeH), %% classe sotto owl:Thing
   add_subClass_expl(KB0.usermod,KB0.explanations,Class,'http://www.w3.org/2002/07/owl#Thing',Expls),
-  KB=KB0.put([hierarchy=TreeH,nClasses=NC,classes=Classes,explanations=Expls]).
+  KB=KB0.put([hierarchy=TreeH,nClasses=NC,classes=Classes,explanations=Expls,classesName=[Class|ClassesN]]).
 
 % aggiunge una lista di classi
 add_classes(H,[],H):- !.
@@ -275,6 +282,66 @@ add_individuals(H0,[Class|T],H):-
 
 add_individuals(H0,[_|T],H):-
   add_individuals(H0,T,H).
+
+add_annotationProperty(KB0,Ind,KB):-
+  Inds0=KB0.annotationProperties,
+  \+ member(Ind,Inds0),
+  KB=KB0.put(annotationProperties,[Ind|Inds0]).
+
+% aggiunge una lista di annotationProperties
+add_annotationProperties(H,[],H):- !.
+
+add_annotationProperties(H0,[Class|T],H):-
+  add_annotationProperty(H0,Class,H1),!,
+  add_annotationProperties(H1,T,H).
+
+add_annotationProperties(H0,[_|T],H):-
+  add_annotationProperties(H0,T,H).
+
+add_dataProperty(KB0,Ind,KB):-
+  Inds0=KB0.dataProperties,
+  \+ member(Ind,Inds0),
+  KB=KB0.put(dataProperties,[Ind|Inds0]).
+
+% aggiunge una lista di dataProperties
+add_dataProperties(H,[],H):- !.
+
+add_dataProperties(H0,[Class|T],H):-
+  add_dataProperty(H0,Class,H1),!,
+  add_dataProperties(H1,T,H).
+
+add_dataProperties(H0,[_|T],H):-
+  add_dataProperties(H0,T,H).
+
+add_datatype(KB0,Ind,KB):-
+  Inds0=KB0.datatypes,
+  \+ member(Ind,Inds0),
+  KB=KB0.put(datatypes,[Ind|Inds0]).
+
+% aggiunge una lista di datatypes
+add_datatypes(H,[],H):- !.
+
+add_datatypes(H0,[Class|T],H):-
+  add_datatype(H0,Class,H1),!,
+  add_datatypes(H1,T,H).
+
+add_datatypes(H0,[_|T],H):-
+  add_datatypes(H0,T,H).
+
+add_objectProperty(KB0,Ind,KB):-
+  Inds0=KB0.objectProperties,
+  \+ member(Ind,Inds0),
+  KB=KB0.put(objectProperties,[Ind|Inds0]).
+
+% aggiunge una lista di objectProperties
+add_objectProperties(H,[],H):- !.
+
+add_objectProperties(H0,[Class|T],H):-
+  add_objectProperty(H0,Class,H1),!,
+  add_objectProperties(H1,T,H).
+
+add_objectProperties(H0,[_|T],H):-
+  add_objectProperties(H0,T,H).
 
 % aggiunge un insieme di classi equivalenti, se c'è già un set contenente classi equivalenti li unisce, altrimenti aggiunge. Fallisce se ha giù il nodo con tutte le classi
 add_equivalentClasses(H0,ClassList,H):-
@@ -366,13 +433,13 @@ add_eqClass_simple_expl(M,E0,C,[C|T],L,Ax,E):- !,
   add_eqClass_simple_expl(M,E0,C,T,L,Ax,E).
 
 add_eqClass_simple_expl(M,E0,C,[C1|T],L,Ax,E):-
-  trill:ax2ex(M,Ax,ExAx),
+  trill:hier_ax2ex(M,Ax,ExAx),
   ( member(ex(C,C1)-Ex,E0) ->
      ( member(ex(C1,C)-ExC,E0),
        delete(E0,ex(C,C1)-Ex,E1),
        delete(E1,ex(C1,C)-ExC,E2),
-       trill:or_f(M,ExAx,Ex,ExOr),
-       trill:or_f(M,ExAx,ExC,ExCOr),
+       trill:hier_or_f(M,ExAx,Ex,ExOr),
+       trill:hier_or_f(M,ExAx,ExC,ExCOr),
        add_eqClass_simple_expl(M,[ex(C,C1)-ExOr,ex(C1,C)-ExCOr|E2],C,T,L,Ax,E)
      )
     ;
@@ -427,14 +494,14 @@ expl_combination(M,Expls,C,C1,Used,Ex):-
   \+ (memberchk(C,Used), memberchk(C0,Used)),
   member(Ex01,Ex0),
   expl_combination(M,Expls,C0,C1,[C,C0|Used],Ex1),
-  trill:and_f(M,Ex01,Ex1,Ex).
+  trill:hier_and_f(M,Ex01,Ex1,Ex).
 
 combine_all(M,[],Ex):-
-  trill:empty_expl(M,Ex).
+  trill:hier_empty_expl(M,Ex).
 
 combine_all(M,[H|T],Ex):-
   combine_all(M,T,Ex0),
-  trill:or_f(M,Ex0,H,Ex).
+  trill:hier_or_f(M,Ex0,H,Ex).
 
 %% add_disjountClasses(...) aggiunge classi e verifica non ci sia contraddizione. Fallisce se c'è inconsistenza
 add_disjointClasses(KB0,ClassList,KB):-
@@ -481,10 +548,10 @@ add_disjClass_expl(M,E0,C,[C|T],Ax,E):- !,
   add_disjClass_expl(M,E0,C,T,Ax,E).
 
 add_disjClass_expl(M,E0,C,[C1|T],Ax,E):-
-  trill:ax2ex(M,Ax,ExAx),
+  trill:hier_ax2ex(M,Ax,ExAx),
   ( member(dis(C,C1)-Ex,E0) ->
       ( delete(E0,dis(C,C1)-Ex,E1),
-        trill:or_f(M,ExAx,Ex,ExOr),
+        trill:hier_or_f(M,ExAx,Ex,ExOr),
         add_disjClass_expl(M,[dis(C,C1)-ExOr|E1],C,T,Ax,E)
       )
     ;
@@ -501,22 +568,22 @@ add_disjointUnion(KB0,Class,DisjointUnion,KB):-
 %% add_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
 add_subClassOf(KB0,SubClass,SupClass,KB):-
   %add_classes(KB0,[SubClass,SupClass],KB1),
-  time(add_hierarchy_link(KB0,SubClass,SupClass,KB)),
+  add_hierarchy_link(KB0,SubClass,SupClass,KB),
   check_disjoint(KB),!. % si può proseguire
 
 add_subClass_expl(M,Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
   member(ex(C,C1)-Ex,Expls0),!,
   delete(Expls0,ex(C,C1)-Ex,Expls),
-  trill:ax2ex(M,subClassOf(C,C1),ExAx),
-  trill:or_f(M,ExAx,Ex,ExF).
+  trill:hier_ax2ex(M,subClassOf(C,C1),ExAx),
+  trill:hier_or_f(M,ExAx,Ex,ExF).
 
 add_subClass_expl(M,Expls,C,C1,[ex(C,C1)-ExAx|Expls]):-
-  trill:ax2ex(M,subClassOf(C,C1),ExAx).
+  trill:hier_ax2ex(M,subClassOf(C,C1),ExAx).
 
 add_subClass_expl(M,Expls0,C,C1,Expl,[ex(C,C1)-ExF|Expls]):-
   member(ex(C,C1)-Ex,Expls0),!,
   delete(Expls0,ex(C,C1)-Ex,Expls),
-  trill:or_f(M,Expl,Ex,ExF).
+  trill:hier_or_f(M,Expl,Ex,ExF).
 
 add_subClass_expl(_M,Expls,C,C1,Expl,[ex(C,C1)-Expl|Expls]).
 
@@ -537,8 +604,9 @@ get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazi
   edges(KB.hierarchy,E),
   get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
-get_combined_expls(M,Class,Pos,E,Classes,Expls,(M,H4C)):-
-  get_single_expls(M,Class,Pos,E,Classes,Expls,[Class],H4C).
+get_combined_expls(M,Class,Pos,E,Classes,Expls,(M,H4C)):-%gtrace,
+  get_single_expls(M,Class,Pos,E,Classes,Expls,[Class],H4CE),
+  ( M:delay_hier(true) -> trill:get_bdd_environment(M,Env),trill:hier_build_bdd(M,Env,H4CE,H4C) ; H4C=H4CE ).
 
 append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
   \+ memberchk(EndClass-_,AllExpl),!,
@@ -547,7 +615,7 @@ append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
 append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
   member(EndClass-OldExpl,AllExpl),
   delete(AllExpl,EndClass-OldExpl,AllExpl0),
-  trill:or_f(M,OldExpl,NewExpl,NewExplT),
+  trill:hier_or_f(M,OldExpl,NewExpl,NewExplT),
   append(AllExpl0,[EndClass-NewExplT],NewAllExpl).
 
 
@@ -579,7 +647,7 @@ get_single_expls(M,Class,P,E,Classes,Expls,Used,[EndClass-TotExpl]):-
   \+ member(NextClass,Used),
   member(ex(Class,NextClass)-Expls4Class,Expls),
   get_single_expls(M,NextClass,NextP,E,Classes,Expls,[NextClass|Used],[EndClass-Expls4EndClass]),
-  trill:and_f(M,Expls4Class,Expls4EndClass,TotExpl).%,
+  trill:hier_and_f(M,Expls4Class,Expls4EndClass,TotExpl).%,
 %  sort(TotExpl0,TotExpl),
 %  length(TotExpl0,LTE),
 %  length(TotExpl,LTE).
@@ -604,13 +672,13 @@ get_single_expls(Class,P,E,Classes,Expls,Start,[EndClass-[TotExpl]]):-
 /*
 get_one_expl(M,Pos,Class,E,Classes,Expls,Expl4Class,EndClass-H4C):-
   get_hierarchy_ric(M,Pos,Class,E,Classes,Expls,EndClass-Expl),
-  trill:and_f(M,Expl4Class,Expl,H4C).
+  trill:hier_and_f(M,Expl4Class,Expl,H4C).
 
 get_hierarchy_ric(M,0,_C,_E,_Classes,_Expls,0-Expl):- % arrivato a owl:Thing
-  trill:empty_expl(M,Expl).
+  trill:hier_empty_expl(M,Expl).
 
 get_hierarchy_ric(M,n,_C,_E,_Classes,_Expls,n-Expl):- % arrivato a owl:Nothing
-  trill:empty_expl(M,Expl).
+  trill:hier_empty_expl(M,Expl).
 
 get_hierarchy_ric(M,P,Class,E,Classes,Expls,EndClass-Expl):-
   EqClasses=Classes.P,
@@ -619,7 +687,7 @@ get_hierarchy_ric(M,P,Class,E,Classes,Expls,EndClass-Expl):-
   member(ex(Class,NextClass)-Exs,Expls),
   member(Ex0,Exs),
   get_hierarchy_ric(M,P,NextClass,E,Classes,Expls,EndClass-Ex1),
-  trill:and_f(M,Ex0,Ex1,Expl).
+  trill:hier_and_f(M,Ex0,Ex1,Expl).
 
 get_hierarchy_ric(M,P,Class,E,Classes,Expls,EndClass-Expl):-
   member(NextP-P,E),
@@ -630,7 +698,7 @@ get_hierarchy_ric(M,P,Class,E,Classes,Expls,EndClass-Expl):-
       member(ex(Class,NextClass)-Exs,Expls),
       member(Ex0,Exs),
       get_hierarchy_ric(M,NextP,NextClass,E,Classes,Expls,EndClass-Ex1),
-      trill:and_f(M,Ex0,Ex1,Expl)
+      trill:hier_and_f(M,Ex0,Ex1,Expl)
     )
   ).
 */
@@ -651,25 +719,38 @@ collect_all_classes(DictClasses,Classes):-
 complex_subClassOf(M,Classes,C,D,Expl):-
   member(C,Classes),
   trill:find_sub_sup_class(M,C,D,Ax),
-  trill:ax2ex(M,Ax,Expl).
+  trill:hier_ax2ex(M,Ax,Expl).
 
 complex_subClassOf(M,Classes,complementOf(C),D,Expl):-
   member(complementOf(C),Classes),
   trill:find_neg_class(C,D),
-  trill:ax2ex(M,equivalentClasses([complementOf(C),D]),Expl).
+  trill:hier_ax2ex(M,equivalentClasses([complementOf(C),D]),Expl).
 
-complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
-  member(intersectionOf(Cs),Classes),
-  member(D,Cs),
-  trill:initial_expl(M,Expl).
+%complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
+%  member(intersectionOf(Cs),Classes),
+%  member(D,Cs),
+%  trill:hier_initial_expl(M,Expl).
 
 % owl fixed classes (owl:Thing e owl:Nothing)
 owl_f(0).
 owl_f(n).
 
 
+update_hierarchy(M:Axiom) :-
+  update_hierarchy(M,Axiom).
 
+update_hierarchy(_M,_Axiom).
+/*
+update_hierarchy(M,equivalentClasses(L)):-
 
+update_hierarchy(M,disjointClasses(L)):-
+
+update_hierarchy(M,disjointUnion(C,L)):-
+
+update_hierarchy(M,subClassOf(C,D)):-
+
+update_hierarchy(M,classAssertion(L)):-
+*/
 
 
 

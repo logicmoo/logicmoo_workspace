@@ -3513,11 +3513,17 @@ set_up(M):-
 
 set_up_kb_loading(M):-
   retractall(M:kb_atom(_)),
-  assert(M:kb_atom(kbatoms{annotationProperty:[],class:[],dataProperty:[],datatype:[],individual:[],objectProperty:[]})),
+  init_kb_atom(M),
   retractall(M:kb_hierarchy(_)),
   retractall(M:addKBName),
   assert(M:addKBName),
   assert(trill_input_mode(M)).
+
+init_kb_atom(M):-
+  assert(M:kb_atom(kbatoms{annotationProperty:[],class:[],dataProperty:[],datatype:[],individual:[],objectProperty:[]})).
+
+init_kb_atom(M,AnnProps,Classes,DataProps,Datatypes,Inds,ObjectProps):-
+  assert(M:kb_atom(kbatoms{annotationProperty:AnnProps,class:Classes,dataProperty:DataProps,datatype:Datatypes,individual:Inds,objectProperty:ObjectProps})).
 
 :- multifile sandbox:safe_primitive/1.
 
@@ -3542,7 +3548,7 @@ user:term_expansion(end_of_file, end_of_file) :-
   fix_wrongly_classified_atoms(M),
   retractall(M:addKBName),
   retractall(trill_input_mode(_)),
-  ( M:delay_hier(true) -> true ; utility_kb:create_hierarchy(M) ). %hierarchy
+  utility_kb:create_hierarchy(M). %hierarchy
 
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
