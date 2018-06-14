@@ -303,8 +303,13 @@ option_module(M, File, FileGen1-Options1, FileGen-Options) :-
                    ignore(module_file(M, File))
                  )
     ; FileGen1 = ( FileGen,
-                   once(module_file(M, File))
-                 )
+                   MFG
+                 ),
+      freeze(FileGen,
+             ( FileGen = true
+             ->MFG = module_file(M, File)
+             ; MFG = once(module_file(M, File))
+             ))
     ).
 
 option_modules(M, File, FileGen1-Options1, FileGen-Options) :-
