@@ -1,6 +1,6 @@
 :-use_module(library(trill)).
 
-:- tornado. % or :- trillp. or :- tornado.
+:- trill. % or :- trillp. or :- tornado.
 
 /** <examples>
 

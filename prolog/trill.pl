@@ -1662,8 +1662,7 @@ expand_from_ind_classes([Class|T],Ind,M,ABox0,ABox):-
 
 % data una classe un individuo e la spiegazione, cerca la gerarchia e espande il tableau di consegnuenza
 expand_from_ind_class(Class,Ind,Expl4ClassInd,M,ABox0,ABox):-
-  M:kb_hierarchy(H),
-  get_hierarchy(H,Class,H4C),!, % esiste una gerarchia dalla classe Class
+  get_hierarchy_from_class(M,Class,H4C),!, % esiste una gerarchia dalla classe Class
   expand_from_hier_ind_class(H4C,M,Ind,Expl4ClassInd,ABox0,ABox).
 
 expand_from_ind_class(_Class,_Ind,_Expl4ClassInd,_M,ABox,ABox):- !.% non esiste una gerarchia dalla classe Class

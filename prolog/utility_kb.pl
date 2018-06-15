@@ -33,10 +33,9 @@ trill:hierarchy(M:H):-
   M:kb_hierarchy(H).
 
 create_hierarchy(M):-
-  trill:clear_trill_db(M),
-  utility_kb:hierarchy_int(M).
-
-hierarchy_int(M):-
+%  utility_kb:hierarchy_int(M).
+%
+%hierarchy_int(M):-
   init_hierarchy(M:H0),
   %findall(C,M:class(C),L1),
   %findall(Class,M:classAssertion(Class,_Individual),L2),
@@ -601,12 +600,11 @@ get_hierarchy(M:Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazio
 get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
   Classes=KB.classes,
   Pos=Classes.find(Class),
-  edges(KB.hierarchy,E),
+  edges(KB.hierarchy,E),%gtrace,
   get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
 get_combined_expls(M,Class,Pos,E,Classes,Expls,(M,H4C)):-%gtrace,
-  get_single_expls(M,Class,Pos,E,Classes,Expls,[Class],H4CE),
-  ( M:delay_hier(true) -> trill:get_bdd_environment(M,Env),trill:hier_build_bdd(M,Env,H4CE,H4C) ; H4C=H4CE ).
+  get_single_expls(M,Class,Pos,E,Classes,Expls,[Class],H4C).
 
 append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
   \+ memberchk(EndClass-_,AllExpl),!,

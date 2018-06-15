@@ -25,8 +25,7 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
-  assert(M:delay_hier(true)).
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1).
 
 /*****************************
   MESSAGES
@@ -165,22 +164,34 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* ************* */
 
+/***********
+  update abox
+  utility for tableau
+************/
+
+get_hierarchy_from_class(M,Class,H4C):-
+  M:kb_hierarchy(H),
+  get_hierarchy(H,Class,H4CE),!,
+  get_bdd_environment(M,Env),
+  hier_build_bdd(M,Env,H4CE,H4C).
+
+/* ************* */
 
 /*
   build_abox
   ===============
 */
 
-clear_trill_db(M):-
+start_bdd(M,Env):-
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
   findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
-  get_bdd_environment(M,NV,_Env).
+  get_bdd_environment(M,NV,Env).
 
 build_abox_int(M,(ABox,Tabs)):-
-  get_bdd_environment(M,_NV,Env),
+  start_bdd(M,Env),
   findall((classAssertion(Class,Individual),BDDCA),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
   findall((propertyAssertion(Property,Subject, Object),BDDPA),(M:propertyAssertion(Property,Subject, Object),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),

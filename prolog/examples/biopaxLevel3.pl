@@ -1,6 +1,6 @@
 :-use_module(library(trill)).
 
-:- trillp. % or :- trillp. or :- tornado.
+:- trill. % or :- trillp. or :- tornado.
 
 /*
 Model of metabolic pathways.

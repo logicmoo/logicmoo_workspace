@@ -25,8 +25,7 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2),
-  assert(M:delay_hier(false)).
+  M:(dynamic exp_found/2).
 
 /***********
   Utilities for queries
@@ -324,6 +323,17 @@ absent2([_|T],Expl):-
   absent2(T,Expl).
 
 /* **************** */
+
+/***********
+  update abox
+  utility for tableau
+************/
+
+get_hierarchy_from_class(M,Class,H4C):-
+  M:kb_hierarchy(H),
+  get_hierarchy(H,Class,H4C),!.
+
+/* ************* */
 
 /*
   build_abox
