@@ -724,10 +724,10 @@ complex_subClassOf(M,Classes,complementOf(C),D,Expl):-
   trill:find_neg_class(C,D),
   trill:hier_ax2ex(M,equivalentClasses([complementOf(C),D]),Expl).
 
-%complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
-%  member(intersectionOf(Cs),Classes),
-%  member(D,Cs),
-%  trill:hier_initial_expl(M,Expl).
+complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
+  member(intersectionOf(Cs),Classes),
+  member(D,Cs),
+  trill:hier_initial_expl(M,Expl).
 
 % owl fixed classes (owl:Thing e owl:Nothing)
 owl_f(0).

@@ -210,7 +210,7 @@ instanceOf(M:Class,Ind,Expl):-
   	build_abox(M,(ABox,Tabs)),
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
-  	    	add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
+  	    	add_q(M,ABox,complementOf(ClassEx),IndEx,ABox0),
 	  	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
   		find_expls(M,L,[ClassEx,IndEx],Expl1),
   		check_and_close(M,Expl1,Expl)
@@ -239,7 +239,7 @@ instanceOf(M:Class,Ind):-
 	  build_abox(M,(ABox,Tabs)),
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
-	        add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
+	        add_q(M,ABox,complementOf(ClassEx),IndEx,ABox0),
 	        apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
 	  	clash(M,(ABox1,Tabs1),_),!
 	      )
@@ -361,7 +361,7 @@ unsat_internal(M:Concept,Expl):-
   build_abox(M,(ABox,Tabs)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
-     	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
+     	add_q(M,ABox,Concept,trillan(1),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
 	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
 	find_expls(M,L,['unsat',Concept],Expl1),
@@ -394,7 +394,7 @@ unsat_internal(M:Concept):-
   build_abox(M,(ABox,Tabs)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
-     	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
+     	add_q(M,ABox,Concept,trillan(1),ABox0),
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
   	apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
   	clash(M,(ABox1,Tabs1),_),!
@@ -542,9 +542,18 @@ prob_inconsistent_theory(M:Print,Prob):-
  ***********/
 
 % adds the query into the ABox
-add_q(M,ABox,Query,ABox0):-
+add_q(M,ABox0,intersectionOf([Class1,Class2]),Ind,ABox):- !,
   initial_expl(M,Expl),
-  add(ABox,(Query,Expl),ABox0).
+  add(ABox0,(classAssertion(Class1,Ind),Expl),ABox1),
+  expand_from_ind_class(Class1,Ind,Expl,M,ABox1,ABox2),
+  add(ABox2,(classAssertion(Class2,Ind),Expl),ABox3),
+  expand_from_ind_class(Class2,Ind,Expl,M,ABox3,ABox).
+
+% adds the query into the ABox
+add_q(M,ABox0,complementOf(Class),Ind,ABox):- !,
+  initial_expl(M,Expl),
+  add(ABox0,(classAssertion(complementOf(Class),Ind),Expl),ABox1),
+  expand_from_ind_class(Class,Ind,Expl,M,ABox1,ABox).
 
 % expands query arguments using prefixes and checks their existence in the kb
 check_query_args(M,L,LEx) :-
