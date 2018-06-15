@@ -36,6 +36,8 @@ create_hierarchy(M):-
 %  utility_kb:hierarchy_int(M).
 %
 %hierarchy_int(M):-
+  format("Loading the knowledge base...~n",[]),
+  statistics(walltime,[_,_]),
   init_hierarchy(M:H0),
   %findall(C,M:class(C),L1),
   %findall(Class,M:classAssertion(Class,_Individual),L2),
@@ -63,12 +65,30 @@ create_hierarchy(M):-
   forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
   forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
   forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
-  search_and_add_complex_subClassOf(M).
+  search_and_add_complex_subClassOf(M),
+  statistics(walltime,[_,KBAM]),
+  KBAS is KBAM / 1000,
+  format("Analysis completed in ~f seconds.~n~n~n",[KBAS]).
   %writeln(H.hierarchy),
   %writeln(H.nClasses),
   %writeln(H.disjointClasses),
   %writeln(H.classes),
   %writeln(H.explanations).
+
+update_kb(M,Axiom):-
+  M:kb_atom(KB),
+  M:kb_hierarchy(H0),
+  add_classes(H0,KB.class,H01),
+  add_individuals(H01,KB.individual,H02),
+  add_annotationProperties(H02,KB.annotationProperty,H03),
+  add_dataProperties(H03,KB.dataProperty,H04),
+  add_datatypes(H04,KB.datatype,H05),
+  add_objectProperties(H05,KB.objectProperty,H1),
+  retractall(M:kb_atom(_)),
+  retractall(M:kb_hierarchy(_)),
+  assert(M:kb_hierarchy(H1)),
+  update_hierarchy_with_axiom(M,Axiom),
+  search_and_add_complex_subClassOf(M).  
 
 search_and_add_complex_subClassOf(M):-
   %M:kb_hierarchy(H10),
@@ -83,6 +103,33 @@ process_classes_for_complex_subClassOf(M,Classes):-
   retractall(M:kb_hierarchy(_)),
   assert(M:kb_hierarchy(H11)),
   fail.
+
+
+update_hierarchy_with_axiom(M,equivalentClasses(CL)):- !,
+  M:kb_hierarchy(H0),
+  add_equivalentClasses(H0,CL,H),
+  retractall(M:kb_hierarchy(_)),
+  assert(M:kb_hierarchy(H)).
+
+update_hierarchy_with_axiom(M,disjointClasses(CL)):- !,
+  M:kb_hierarchy(H0),
+  add_disjointClasses(H0,CL,H),
+  retractall(M:kb_hierarchy(_)),
+  assert(M:kb_hierarchy(H)).
+  
+update_hierarchy_with_axiom(M,disjointUnion(C,D)):- !,
+  M:kb_hierarchy(H0),
+  add_disjointUnion(H0,C,D,H),
+  retractall(M:kb_hierarchy(_)),
+  assert(M:kb_hierarchy(H)).
+
+update_hierarchy_with_axiom(M,subClassOf(C,D)):- !,
+  M:kb_hierarchy(H0),
+  add_subClassOf(H0,C,D,H),
+  retractall(M:kb_hierarchy(_)),
+  assert(M:kb_hierarchy(H)).
+
+update_hierarchy_with_axiom(_M,_Axiom):- !.
 
 % inizializza la gerarchia albero con thing + numero classi + albero disjoint + dizionario fra nodi e classi
 % init_hierarchy(kb{hierarchy:TreeH,nClasses:1,disjointClasses:TreeD,node2classes:Classes})

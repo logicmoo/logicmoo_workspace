@@ -374,9 +374,9 @@ valid_axiom(propertyAxiom(A)) :- subsumed_by([A],[axiom]).
 axiompred(subPropertyOf/2).
 axiom_arguments(subPropertyOf,[propertyExpression, objectPropertyExpression]).
 valid_axiom(subPropertyOf(A, B)) :- subsumed_by([A, B],[propertyExpression, objectPropertyExpression]).
-expand_axiom(M,subPropertyOf(A,B),NSList,subPropertyOf(A_full_URL,B_full_URL)) :- 
-  expand_propertyExpression(M,A,NSList,A_full_URL),
-  expand_objectPropertyExpression(M,B,NSList,B_full_URL).
+%expand_axiom(M,subPropertyOf(A,B),NSList,subPropertyOf(A_full_URL,B_full_URL)) :- %TODO: fix for data properties
+%  expand_propertyExpression(M,A,NSList,A_full_URL),
+%  expand_objectPropertyExpression(M,B,NSList,B_full_URL).
 
 %% subObjectPropertyOf(?Sub:ObjectPropertyExpressionOrChain, ?Super:ObjectPropertyExpression)
 % The basic form is SubPropertyOf( OPE1 OPE2 ). This axiom states that the object property expression OPE1 is a subproperty of the object property expression OPE2 - that is, if an individual x is connected by OPE1 to an individual y, then x is also connected by OPE2 to y. The more complex form is SubPropertyOf( PropertyChain( OPE1 ... OPEn ) OPE ). This axiom states that, if an individual x is connected by a sequence of object property expressions OPE1, ..., OPEn with an individual y, then x is also connected with y by the object property expression OPE
@@ -3366,7 +3366,7 @@ add_kb_atom(M,IRI):-
   ).
 
 
-add_kb_atoms(_M,_Type,[]).
+add_kb_atoms(_M,_Type,[]):-!.
 
 add_kb_atoms(M,Type,[H|T]):-
   M:kb_atom(KBA0),
@@ -3418,9 +3418,10 @@ fix_duplicated_wrongly_classified_properties([_H|T],DP,KBA0,KBA):-
 :- multifile trill:add_axiom/1.
 trill:add_axiom(M:Ax):-
   assert(M:addKBName),
+  init_kb_atom(M),
   create_and_assert_axioms(M,Ax),
   retractall(M:addKBName),
-  reload_kb(M:false).
+  utility_kb:update_kb(M,Ax).
 
 :- multifile trill:add_axioms/1.
 trill:add_axioms(_:[]).
@@ -3517,7 +3518,9 @@ set_up_kb_loading(M):-
   retractall(M:kb_hierarchy(_)),
   retractall(M:addKBName),
   assert(M:addKBName),
-  assert(trill_input_mode(M)).
+  assert(trill_input_mode(M)),
+  format("Loading knowledge base...~n",[]),
+  statistics(walltime,[_,_]).
 
 init_kb_atom(M):-
   assert(M:kb_atom(kbatoms{annotationProperty:[],class:[],dataProperty:[],datatype:[],individual:[],objectProperty:[]})).
@@ -3548,6 +3551,9 @@ user:term_expansion(end_of_file, end_of_file) :-
   fix_wrongly_classified_atoms(M),
   retractall(M:addKBName),
   retractall(trill_input_mode(_)),
+  statistics(walltime,[_,KBLM]),
+  KBLS is KBLM / 1000,
+  format("Knowledge base loaded in ~f seconds.~n",[KBLS]),
   utility_kb:create_hierarchy(M). %hierarchy
 
 user:term_expansion(TRILLAxiom,[]):-
