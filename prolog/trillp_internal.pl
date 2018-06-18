@@ -170,7 +170,7 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 ************/
 
 get_hierarchy_from_class(M,Class,H4C):-
-  M:kb_hierarchy(H),
+  hierarchy(M:H),
   get_hierarchy(H,Class,H4C),!.
 
 /* ************* */

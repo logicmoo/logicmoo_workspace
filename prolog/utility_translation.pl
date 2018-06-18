@@ -3421,17 +3421,26 @@ trill:add_axiom(M:Ax):-
   init_kb_atom(M),
   create_and_assert_axioms(M,Ax),
   retractall(M:addKBName),
-  utility_kb:update_kb(M,Ax).
+  utility_kb:update_kb(M,add,Ax).
 
 :- multifile trill:add_axioms/1.
 trill:add_axioms(_:[]).
 
 trill:add_axioms(M:[H|T]) :-
   trill:add_axiom(M:H),
-  trill:add_axioms(M:T). % TODO
+  trill:add_axioms(M:T).
+
+/*****************************
+  MESSAGES
+******************************/
+:- multifile prolog:message/1.
+
+prolog:message(under_development) -->
+  [ 'NOTE: This function is under development. It may not work properly or may not work at all.' ].
 
 :- multifile trill:remove_axiom/1.
 trill:remove_axiom(M:Ax):-
+  print_message(warning,under_development),
   ( M:ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
@@ -3515,7 +3524,7 @@ set_up(M):-
 set_up_kb_loading(M):-
   retractall(M:kb_atom(_)),
   init_kb_atom(M),
-  retractall(M:kb_hierarchy(_)),
+  utility_kb:clean_hierarchy(M),
   retractall(M:addKBName),
   assert(M:addKBName),
   assert(trill_input_mode(M)),

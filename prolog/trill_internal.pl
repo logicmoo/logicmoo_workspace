@@ -330,7 +330,7 @@ absent2([_|T],Expl):-
 ************/
 
 get_hierarchy_from_class(M,Class,H4C):-
-  M:kb_hierarchy(H),
+  hierarchy(M:H),
   get_hierarchy(H,Class,H4C),!.
 
 /* ************* */

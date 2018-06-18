@@ -32,6 +32,9 @@ This module models and manages the hierarchy of the KB's concepts.
 trill:hierarchy(M:H):-
   M:kb_hierarchy(H).
 
+clean_hierarchy(M):-
+  retractall(M:kb_hierarchy(_)).
+
 create_hierarchy(M):-
 %  utility_kb:hierarchy_int(M).
 %
@@ -60,22 +63,22 @@ create_hierarchy(M):-
   add_objectProperties(H05,KB.objectProperty,H1),
   retractall(M:kb_atom(_)),
   retractall(M:kb_hierarchy(_)),
-  assert(M:kb_hierarchy(H1)),
-  forall(M:equivalentClasses(CL),(M:kb_hierarchy(H2),add_equivalentClasses(H2,CL,H3),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H3)))),
-  forall(M:disjointClasses(CL),(M:kb_hierarchy(H4),add_disjointClasses(H4,CL,H5),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H5)))),
-  forall(M:disjointUnion(C,D),(M:kb_hierarchy(H6),add_disjointUnion(H6,C,D,H7),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H7)))),
-  forall(M:subClassOf(C,D),(M:kb_hierarchy(H8),add_subClassOf(H8,C,D,H9),retractall(M:kb_hierarchy(_)),assert(M:kb_hierarchy(H9)))),
-  search_and_add_complex_subClassOf(M),
+  add_all_equivalentClasses(H1,M,H2),
+  add_all_disjointClasses(H2,M,H3),
+  add_all_disjointUnion(H3,M,H4),
+  add_all_subClassOf(H4,M,H5),
+  search_and_add_complex_subClassOf(H5,M,H),
   statistics(walltime,[_,KBAM]),
   KBAS is KBAM / 1000,
-  format("Analysis completed in ~f seconds.~n~n~n",[KBAS]).
+  format("Analysis completed in ~f seconds.~n~n~n",[KBAS]),
+  assert(M:kb_hierarchy(H)).
   %writeln(H.hierarchy),
   %writeln(H.nClasses),
   %writeln(H.disjointClasses),
   %writeln(H.classes),
   %writeln(H.explanations).
 
-update_kb(M,Axiom):-
+update_kb(M,add,Axiom):-
   M:kb_atom(KB),
   M:kb_hierarchy(H0),
   add_classes(H0,KB.class,H01),
@@ -86,23 +89,29 @@ update_kb(M,Axiom):-
   add_objectProperties(H05,KB.objectProperty,H1),
   retractall(M:kb_atom(_)),
   retractall(M:kb_hierarchy(_)),
-  assert(M:kb_hierarchy(H1)),
-  update_hierarchy_with_axiom(M,Axiom),
-  search_and_add_complex_subClassOf(M).  
+  update_hierarchy_with_axiom(H1,M,Axiom,H2),
+  search_and_add_complex_subClassOf(H2,M,H),
+  assert(M:kb_hierarchy(H)).
 
-search_and_add_complex_subClassOf(M):-
-  %M:kb_hierarchy(H10),
-  M:hierarchy(KBA),
-  %collect_all_classes(H10.classes, Classes),
-  findall(_,process_classes_for_complex_subClassOf(M,KBA.classesName),_).
-
-process_classes_for_complex_subClassOf(M,Classes):-
-  complex_subClassOf(M,Classes,C,D,Ex),
-  M:kb_hierarchy(H10),
-  add_complex_subClassOf(H10,C,D,Ex,H11),
+update_kb(M,remove,Axiom):-
+  M:kb_atom(KB),
+  M:kb_hierarchy(H0),
+  add_classes(H0,KB.class,H01),
+  add_individuals(H01,KB.individual,H02),
+  add_annotationProperties(H02,KB.annotationProperty,H03),
+  add_dataProperties(H03,KB.dataProperty,H04),
+  add_datatypes(H04,KB.datatype,H05),
+  add_objectProperties(H05,KB.objectProperty,H1),
+  retractall(M:kb_atom(_)),
   retractall(M:kb_hierarchy(_)),
-  assert(M:kb_hierarchy(H11)),
-  fail.
+  update_hierarchy_with_axiom(H1,M,Axiom,H2),
+  search_and_add_complex_subClassOf(H2,M,H),
+  assert(M:kb_hierarchy(H)).  
+
+search_and_add_complex_subClassOf(H0,M,H):-
+  Classes=H0.classesName,
+  findall(C-D-Ex,complex_subClassOf(M,Classes,C,D,Ex),L),
+  add_all_complex_subClassOf(H0,L,H).
 
 
 update_hierarchy_with_axiom(M,equivalentClasses(CL)):- !,
@@ -311,7 +320,37 @@ add_classes(H0,[_|T],H):-
   add_classes(H0,T,H).
 
 
-% aggiunge un individuo, se già esiste fallisce
+% rimuove una classe, se la classe già esiste fallisce
+/*  % TODO: if Class is in a list of equivalent classes, the class should be removed in the list (maybe also modifying the axiom), if the list becomes has a single class after removal -> modify node, if Class in not in a list modify the hierarcy by removing the links. Use explanations axiom to remove axioms from the KB.
+remove_class(KB0,Class,KB):-
+  Classes0=KB0.classes,
+  ClassesN0=KB0.classesName,
+  PC=Classes0.find(Class),
+  NC0=KB0.nClasses,
+  NC is NC0 - 1,
+  Cs=Classes0.PC,
+  (is_list(Cs) ->
+    (
+      delete(Cs,
+  del_dict(PC,Classes0,_,Classes),
+  delete(ClassesN0,Class,ClassesN),
+  add_edges(KB0.hierarchy,[0-NC0],TreeH), %% classe sotto owl:Thing
+  add_subClass_expl(KB0.usermod,KB0.explanations,Class,'http://www.w3.org/2002/07/owl#Thing',Expls),
+  KB=KB0.put([hierarchy=TreeH,nClasses=NC,classes=Classes,explanations=Expls,classesName=[Class|ClassesN]]).
+*/
+
+% Removes a list of classes
+remove_classes(H,[],H):- !.
+
+remove_classes(H0,[Ind|T],H):-
+  remove_class(H0,Ind,H1),!,
+  remove_classes(H1,T,H).
+
+remove_classes(H0,[_|T],H):-
+  remove_classes(H0,T,H).
+
+
+% Adds an individual, if already exists fails
 add_individual(KB0,Ind,KB):-
   Inds0=KB0.individuals,
   \+ member(Ind,Inds0),
@@ -319,7 +358,7 @@ add_individual(KB0,Ind,KB):-
   NI is NI0 + 1,
   KB=KB0.put([nIndividuals=NI,individuals=[Ind|Inds0]]).
 
-% aggiunge una lista di individui
+% Adds a list of individuals
 add_individuals(H,[],H):- !.
 
 add_individuals(H0,[Class|T],H):-
@@ -334,7 +373,7 @@ add_annotationProperty(KB0,Ind,KB):-
   \+ member(Ind,Inds0),
   KB=KB0.put(annotationProperties,[Ind|Inds0]).
 
-% aggiunge una lista di annotationProperties
+% Adds a lis of annotationProperties
 add_annotationProperties(H,[],H):- !.
 
 add_annotationProperties(H0,[Class|T],H):-
@@ -349,7 +388,7 @@ add_dataProperty(KB0,Ind,KB):-
   \+ member(Ind,Inds0),
   KB=KB0.put(dataProperties,[Ind|Inds0]).
 
-% aggiunge una lista di dataProperties
+% Adds a lis of dataProperties
 add_dataProperties(H,[],H):- !.
 
 add_dataProperties(H0,[Class|T],H):-
@@ -364,7 +403,7 @@ add_datatype(KB0,Ind,KB):-
   \+ member(Ind,Inds0),
   KB=KB0.put(datatypes,[Ind|Inds0]).
 
-% aggiunge una lista di datatypes
+% Adds a lis of datatypes
 add_datatypes(H,[],H):- !.
 
 add_datatypes(H0,[Class|T],H):-
@@ -379,7 +418,7 @@ add_objectProperty(KB0,Ind,KB):-
   \+ member(Ind,Inds0),
   KB=KB0.put(objectProperties,[Ind|Inds0]).
 
-% aggiunge una lista di objectProperties
+% Adds a lis of objectProperties
 add_objectProperties(H,[],H):- !.
 
 add_objectProperties(H0,[Class|T],H):-
@@ -389,7 +428,18 @@ add_objectProperties(H0,[Class|T],H):-
 add_objectProperties(H0,[_|T],H):-
   add_objectProperties(H0,T,H).
 
-% aggiunge un insieme di classi equivalenti, se c'è già un set contenente classi equivalenti li unisce, altrimenti aggiunge. Fallisce se ha giù il nodo con tutte le classi
+% Adds all equivalentClasses axioms
+add_all_equivalentClasses(H0,M,H):-
+  findall(CL,M:equivalentClasses(CL),L),
+  add_all_equivalentClasses_1(H0,L,H).
+
+add_all_equivalentClasses_1(H,[],H).
+
+add_all_equivalentClasses_1(H0,[ClassList|T],H):-
+  add_equivalentClasses(H0,ClassList,H1),
+  add_all_equivalentClasses_1(H1,T,H).
+
+% Adds a set of equivalent classes, if there exists a set containing some of the classes the two set are merged, otherwise the new set is added. Fails whether there exists a node with all the classes contained in the new set
 add_equivalentClasses(H0,ClassList,H):-
   add_eqClass_hier(H0,ClassList,H1),
   add_subClasses_expl(H1,ClassList,H2),
@@ -399,12 +449,12 @@ add_eqClass_hier(KB0,ClassList0,KB):-
   sort(ClassList0,ClassList),
   Classes0=KB0.classes,
   findall(NodeC,(member(OneOfClassList,ClassList),NodeC=Classes0.find(OneOfClassList)),Nodes),
-  (length(Nodes,1) -> %% se già c'è un nodo non modifico gerarchia ma solo nodo in dict
+  (length(Nodes,1) -> %% if there is already a node, modify only the node in dict
     (Nodes=[Node],
      update_eqNode(KB0,Node,ClassList,KB)
     )
    ;
-    (Nodes=[PC1|PCL],!, %% se ci sono più nodi faccio merge
+    (Nodes=[PC1|PCL],!, %% there are more nodes -> merge
      edges(KB0.hierarchy,E),
      del_vertices(KB0.hierarchy,PCL,TreeH1),
      update_edges(E,PCL,PC1,EU),
@@ -432,7 +482,7 @@ update_eqNode(KB0,Node,ClassList,KB):-
     fail
   ).
 
-add_eqClass_hier(KB0,ClassList,KB):-  %% se non c'è nodo lo aggiungo. NOTA: aggiunta di classi deve essere fatta PRIMA della gestione degli assiomi di sottoclasse
+add_eqClass_hier(KB0,ClassList,KB):-  %% if there is not a node it is added. NOTE: adding classes must be done BEFORE managing subclass axioms
   NC0=KB0.nClasses,
   NC is NC0 + 1,
   Classes0=KB0.classes,
@@ -458,7 +508,7 @@ add_eqClass_expl(KB0,ClassList,ClassList,KB):-
   add_eqClass_complex_expl(KB1,equivalentClasses(ClassList),KB).
 */
 
-% aggiunge spiegazioni fra i componenti del singolo assioma
+% Adds explanations for every class in the set of equivalent classes
 add_eqClass_simple_expl(KB0,equivalentClasses(ClassList),KB):-
   add_eqClass_simple_expl(KB0.usermod,KB0.explanations,ClassList,ClassList,equivalentClasses(ClassList),Expls),
   KB=KB0.put(explanations,Expls).
@@ -492,7 +542,7 @@ add_eqClass_simple_expl(M,E0,C,[C1|T],L,Ax,E):-
      add_eqClass_simple_expl(M,[ex(C,C1)-ExAx,ex(C1,C)-ExAx|E0],C,T,L,Ax,E)
   ).
 
-% combina le spiegazioni per tutti i membri dell'equivalent axiom
+% Combines explanations for all members of the equivalent axiom
 add_eqClass_complex_expl(KB0,equivalentClasses(ClassList),KB):-
   member(C,ClassList),!, % prendo una classe a caso
   Classes0=KB0.classes,
@@ -549,7 +599,20 @@ combine_all(M,[H|T],Ex):-
   combine_all(M,T,Ex0),
   trill:hier_or_f(M,Ex0,H,Ex).
 
-%% add_disjountClasses(...) aggiunge classi e verifica non ci sia contraddizione. Fallisce se c'è inconsistenza
+
+% Adds all disjointClasses axioms
+add_all_disjointClasses(H0,M,H):-
+  findall(CL,M:disjointClasses(CL),L),
+  add_all_disjointClasses_1(H0,L,H).
+
+add_all_disjointClasses_1(H,[],H).
+
+add_all_disjointClasses_1(H0,[ClassList|T],H):-
+  add_disjointClasses(H0,ClassList,H1),
+  add_all_disjointClasses_1(H1,T,H).
+
+
+%% add_disjountClasses(...) adds classes and verifies whether there is not a contraddiction. Fails in case of contradiction
 add_disjointClasses(KB0,ClassList,KB):-
   add_disjClass_hier(KB0,ClassList,KB1),
   add_disjClass_expl(KB1,disjointClasses(ClassList),KB).
@@ -604,14 +667,38 @@ add_disjClass_expl(M,E0,C,[C1|T],Ax,E):-
       add_disjClass_expl(M,[dis(C,C1)-ExAx|E0],C,T,Ax,E)
   ).
 
-%% add_disjointUnion(classExpression,set(classExpression)) da controllare cosa fa e aggiungere classi. Gestire bene l'assioma.
+
+% Adds all disjointUnion axioms
+add_all_disjointUnion(H0,M,H):-
+  findall(C-D,M:disjointUnion(C,D),L),
+  add_all_disjointUnion_1(H0,L,H).
+
+add_all_disjointUnion_1(H,[],H).
+
+add_all_disjointUnion_1(H0,[C-D|T],H):-
+  add_disjointUnion(H0,C,D,H1),
+  add_all_disjointUnion_1(H1,T,H).
+
+%% add_disjointUnion(classExpression,set(classExpression)) TODO: check it works properly and add classes from axiom. TRILL must handle these axioms.
 add_disjointUnion(KB0,Class,DisjointUnion,KB):-
   add_eqClass_hier(KB0,[Class,unionOf(DisjointUnion)],KB1),
   add_disjClass_hier(KB1,DisjointUnion,KB2),
   add_eqClass_expl(KB2,disjointUnion(Class,DisjointUnion),KB3),
   add_disjClass_expl(KB3,disjointUnion(Class,DisjointUnion),KB).
 
-%% add_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
+
+% Adds all subClassOf axioms
+add_all_subClassOf(H0,M,H):-
+  findall(C-D,M:subClassOf(C,D),L),
+  add_all_subClassOf_1(H0,L,H).
+
+add_all_subClassOf_1(H,[],H).
+
+add_all_subClassOf_1(H0,[C-D|T],H):-
+  add_subClassOf(H0,C,D,H1),
+  add_all_subClassOf_1(H1,T,H).
+
+%% add_subClassOf(...)  adds/modifies the edge, checking first that the two classes are not equivalent. One or both classes may be not present
 add_subClassOf(KB0,SubClass,SupClass,KB):-
   %add_classes(KB0,[SubClass,SupClass],KB1),
   add_hierarchy_link(KB0,SubClass,SupClass,KB),
@@ -634,16 +721,19 @@ add_subClass_expl(M,Expls0,C,C1,Expl,[ex(C,C1)-ExF|Expls]):-
 add_subClass_expl(_M,Expls,C,C1,Expl,[ex(C,C1)-Expl|Expls]).
 
 
-% TODO aggiungere eventuali altri sottoclasse (someValuesFrom(R,C)->somevaluesFrom(R,D) con subClassOf(C,D))
-
-
-get_hierarchy(M:Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
+/*
+ Takes a class in Class and returns the set of classes with explanations that are connected with CLass in the hierarchy
+*/
+get_hierarchy(M:Class,H4C):-
   M:kb_hierarchy(KB),
   Classes=KB.classes,
   Pos=Classes.find(Class),
   edges(KB.hierarchy,E),
   get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
+/*
+ Takes the KB descriptor and a class in Class, and returns the set of classes with explanations that are connected with CLass in the hierarchy
+*/
 get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
   Classes=KB.classes,
   Pos=Classes.find(Class),
@@ -748,11 +838,19 @@ get_hierarchy_ric(M,P,Class,E,Classes,Expls,EndClass-Expl):-
   ).
 */
 
-%% add_complex_subClassOf(...)  deve aggiungere/modificare il ramo, controllando prima che le due classi non siano in un nodo di equivalence. Uno o entrambe le classi possono non essere presenti
+
+% Adds all complex subClassOf relations
+add_all_complex_subClassOf(H,[],H).
+
+add_all_complex_subClassOf(H0,[C-D-Ex|T],H):-
+  add_complex_subClassOf(H0,C,D,Ex,H1),
+  add_all_complex_subClassOf(H1,T,H).
+
+%% add_complex_subClassOf(...)  adds/modifies the edge, checking first that the two classes are not equivalent. One or both classes may be not present
 add_complex_subClassOf(KB0,SubClass,SupClass,Expl,KB):-
   add_classes(KB0,[SubClass,SupClass],KB1),
   add_hierarchy_link(KB1,SubClass,SupClass,Expl,KB),
-  check_disjoint(KB),!. % si può proseguire
+  check_disjoint(KB),!.
 
 
 collect_all_classes(DictClasses,Classes):-
@@ -785,154 +883,4 @@ update_hierarchy(M:Axiom) :-
   update_hierarchy(M,Axiom).
 
 update_hierarchy(_M,_Axiom).
-/*
-update_hierarchy(M,equivalentClasses(L)):-
 
-update_hierarchy(M,disjointClasses(L)):-
-
-update_hierarchy(M,disjointUnion(C,L)):-
-
-update_hierarchy(M,subClassOf(C,D)):-
-
-update_hierarchy(M,classAssertion(L)):-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-
-init_hierarchy(M,H,Cors,Expls):-
-  %trovo tutte le classi
-  findall(C,M:class(C),L1),
-  findall(Class,M:classAssertion(Class,_Individual),L2),
-  findall([C1,C2],M:subClassOf(C1,C2),L3),
-  findall(CL,M:equivalentClasses(CL),L4),
-  findall(CL,M:disjointClasses(CL),L5),
-  findall([C1,C2],M:disjointUnion(C1,C2),L5),
-  append([L1,L2],L6),
-  append(L3,L7),
-  append(L5,L8),
-  append([L6,L7,L8],L9),
-  merge_concept_lists(L9,L4,L10,Cors,LeqMD),
-  vertices_edges_to_ugraph(L10,[],H0),
-  expand_hierarchy(H0,Cors,L3,Expls0,H),
-  append(Expls0,LeqMD,Expls).
-
-expand_hierarchy(H0,Cors,L3,Expls,H):-
-  vertices(H0,Vs),
-  expand_hierarchy_int(H0,Cors,L3,Vs,Expls,H).
-
-expand_hierarchy_int(H,_,[],_,[],H):- !.
-
-expand_hierarchy_int(H0,Cors,[[C,D]|T],Vs,Expls,H):-
-  member(C,Vs),!,
-  add_edges(H0,[C-D],H1),
-  expand_hierarchy_int(H1,Cors,T,Vs,Expls,H).
-  
-expand_hierarchy_int(H0,Cors,[[C,D]|T],Vs,[(N-D,C,D)|Expls],H):-
-  member(N-Eq,Cors),
-  memberchk(C,Eq),!,
-  add_edges(H0,[N-D],H1),
-  expand_hierarchy_int(H1,Cors,T,Vs,Expls,H).
-
-expand_hierarchy_int(H0,Cors,[[C,D]|T],Vs,[(C-N,C,D)|Expls],H):-
-  member(N-Eq,Cors),
-  memberchk(D,Eq),!,
-  add_edges(H0,[C-N],H1),
-  expand_hierarchy_int(H1,Cors,T,Vs,Expls,H).
-
-
-merge_concept_lists(LC,LEq,L,Cors,LeqMD):-
-  merge_eq(LEq,LEqM,LeqMD),
-  append(LEqM,CU0),
-  sort(CU0,CU),
-  subtract(LC,CU,LCC),
-  name_eq_nodes(LEqM,1,Names,Cors),
-  append(LCC,Names,L).
-
-double_leq([],[]):-!.
-
-double_leq([H|T],[(H-[H])|T0]):-
-  double_leq(T,T0).
-
-divide_leq([],[],[]):-!.
-
-divide_leq([H-E|T],[H|TH],[E|TE]):-
-  divide_leq(T,TE,TH).
-
-merge_eq(LEq0,LEqM,LEqM0):-
-  double_leq(LEq0,LEq),
-  merge_eq(LEq,LEqM0),
-  divide_leq(LEqM0,LEqM,_LEqMD).
-
-merge_eq(LEq,LEqM):-
-  merge_eq_int(LEq,LEqM0),
-  ( LEq = LEqM0 ->
-      LEqM=LEqM0
-    ;
-      merge_eq(LEqM0,LEqM)
-  ).
-
-merge_eq_int([],[]):- !.
-
-merge_eq_int([H-EH|T],[HF-EF|LEqM0]):-
-  member(X-EX,T),
-  match(H,X),!,
-  append(H,X,H0),
-  sort(H0,HF),
-  append(EH,EX,EF),
-  delete(T,X-EX,T0),
-  merge_eq_int(T0,LEqM0).
-
-merge_eq_int([H|T],[H|LEqM0]):-
-  merge_eq_int(T,LEqM0).
-
-name_eq_nodes([],_,[],[]):-!.
-
-name_eq_nodes([H|T],N,[N|TN],[N-H|TC]):-
-  N1 is N + 1,
-  name_eq_nodes(T,N1,TN,TC).
-
-%%%%%% UTILITY %%%%%%
-match(L1,L2) :- member(E,L1),memberchk(E,L2),!.
-
-*/
