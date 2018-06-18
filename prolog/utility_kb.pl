@@ -8,8 +8,6 @@ This module models and manages the hierarchy of the KB's concepts.
 */
 
 
-%% astrazione della gerarchia
-
 :- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,get_hierarchy/3,get_hierarchy/2,update_hierarchy/1,update_hierarchy/2]).
 
 :- meta_predicate init_hierarchy(:).
@@ -140,7 +138,22 @@ update_hierarchy_with_axiom(M,subClassOf(C,D)):- !,
 
 update_hierarchy_with_axiom(_M,_Axiom):- !.
 
-% inizializza la gerarchia albero con thing + numero classi + albero disjoint + dizionario fra nodi e classi
+/*
+ Initializes the hierarchy:
+ - usermod: module for explanation generation 
+ - hierarchy: tree with owl:Thing-
+ - nClasses: number of classes
+ - nIndividuals: number of individuals
+ - disjointClasses: tree for disjoint classes
+ - classes: dictionaty for nodes and classes
+ - classesName: set of classes of the KB
+ - explanations: explanations for hierarchy links
+ - individuals: set of individuals of the KB
+ - annotationProperties: set of annotation properties of the KB
+ - dataProperties: set of data properties of the KB
+ - datatypes: set of datatypes used in the KB
+ - objectProperties: set of object properties of the KB
+*/
 % init_hierarchy(kb{hierarchy:TreeH,nClasses:1,disjointClasses:TreeD,node2classes:Classes})
 init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjointClasses:TreeD,classes:Classes,classesName:ClassesName,explanations:[],individuals:[],annotationProperties:[],dataProperties:[],datatypes:[],objectProperties:[]}):-
   vertices_edges_to_ugraph([0,'n'],[],TreeH),
@@ -852,11 +865,6 @@ add_complex_subClassOf(KB0,SubClass,SupClass,Expl,KB):-
   add_hierarchy_link(KB1,SubClass,SupClass,Expl,KB),
   check_disjoint(KB),!.
 
-
-collect_all_classes(DictClasses,Classes):-
-  findall(C,get_dict(_,DictClasses,C),CL0),
-  flatten(CL0,CL1),
-  sort(CL1,Classes).
 
 
 complex_subClassOf(M,Classes,C,D,Expl):-
