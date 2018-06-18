@@ -294,7 +294,7 @@ walk_meta_call(I, Head, Meta, Caller, M) :-
     ),
     succ(I, I2),
     walk_meta_call(I2, Head, Meta, Caller, M).
-walk_meta_call(_, _, _, _).
+walk_meta_call(_, _, _, _, _).
 
 walk_dcg_body(Var, _, _) :-
     var(Var),
