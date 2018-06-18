@@ -93,7 +93,7 @@ evaluable_body_hook(A >= B, _, (ground(A),ground(B))).
 evaluable_body_hook(A < B, _, (ground(A),ground(B))).
 evaluable_body_hook(A =< B, _, (ground(A),ground(B))).
 evaluable_body_hook(A =:= B, _, (ground(A),ground(B))).
-evaluable_body_hook(atom_codes(A, B), _, (nonvar(A);nonvar(B))).
+evaluable_body_hook(atom_codes(A, B), _, (ground(A);ground(B))).
 evaluable_body_hook(memberchk(E, L), _, (is_list(L), nonvar(E))).
 evaluable_body_hook(member(_, L), _, is_list(L)).
 evaluable_body_hook(option(O, L), _, (is_list(L), nonvar(O))).
@@ -200,6 +200,12 @@ add_cont(Cont,
          state(Loc, EvalL, OnErr, CallL, Data, ContL),
          state(Loc, EvalL, OnErr, CallL, Data, [Cont|ContL])).
 
+abstract_interpreter_body(catch(Goal, Ex, Handler), M, Abs, State, S1, S) :-
+    !,
+    catch(abstract_interpreter_body(Goal, M, Abs, State, S1, S), Ex,
+          ( Handler,
+            S = S1
+          )).
 abstract_interpreter_body(once(Goal), M, Abs, State, S1, S) :- !,
     once(abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
 abstract_interpreter_body(distinct(Goal), M, Abs, State, S1, S) :-
@@ -208,9 +214,18 @@ abstract_interpreter_body(distinct(Goal), M, Abs, State, S1, S) :-
 abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S1, S) :-
     implementation_module(M:distinct(_, _), solution_sequences), !,
     distinct(Witness, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
+
+ord_spec(asc(_)).
+ord_spec(desc(_)).
+
 abstract_interpreter_body(order_by(Spec, Goal), M, Abs, State, S1, S) :-
-    implementation_module(M:order_by(_, _), solution_sequences), !,
-    order_by(Spec, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
+    ( is_list(Spec),
+      Spec \= [],
+      maplist(nonvar, Spec),
+      maplist(ord_spec, Spec)
+    ->order_by(Spec, abstract_interpreter_body(Goal, M, Abs, State, S1, S))
+    ; abstract_interpreter_body(Goal, M, Abs, State, S1, S)
+    ).
 abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S1, S) :- !,
     setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S1, S2),
                        abstract_interpreter_body(C, M, Abs, State, S2, S3),
@@ -305,6 +320,20 @@ abstract_interpreter_body(A, M, _, _) -->
     ->{call(M:A)}
     ; bottom
     ).
+
+abstract_interpreter_body(G, M, _, state(_, EvalL, _, _, _, _)) -->
+    { implementation_module(M:G, IM),
+      ( ( evaluable_goal_hook(G, IM)
+        ; functor(G, F, A),
+          memberchk(IM:F/A, EvalL)
+        ),
+        R = G
+      ; replace_goal_hook(G, IM, R)
+      ; memberchk((IM:G as R), EvalL)
+      )
+    },
+    !,
+    {call(M:R)}.
 abstract_interpreter_body(H, M, Abs, State) -->
     cut_to(abstract_interpreter_lit(H, M, Abs, State)).
 
@@ -344,25 +373,14 @@ abstract_interpreter_lit(H, M, Abs, State1) -->
     ; { copy_term(IM:Goal, MCall),
         State2 = state(Loc, EvalL, OnError, [MCall|CallL], Data, Cont)
       },
-      ( { ( evaluable_goal_hook(Goal, IM)
-          ; functor(Goal, F, A),
-            memberchk(IM:F/A, EvalL)
-          ),
-          MRepl = M:Goal
-        ; ( replace_goal_hook(Goal, IM, Repl)
-          ; memberchk((IM:Goal as Repl), EvalL)
-          ),
-          MRepl = M:Repl
-        }
-      ->{call(MRepl)}
-      ; { replace_body_hook(Goal, IM, Body)
+      ( { replace_body_hook(Goal, IM, Body)
         ; copy_term(EvalL, EvalC), % avoid undesirable unifications
           memberchk((IM:Goal :- Body), EvalC)
         }
       ->cut_to(abstract_interpreter_body(Body, M, Abs, State2))
       ; { \+ predicate_property(M:Goal, defined) }
       ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
-                                % TBD: information to error
+          % TBD: information to error
           fail
         }
       ; call(Abs, M:Goal, CM:Body, State2, State),
