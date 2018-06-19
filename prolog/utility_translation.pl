@@ -130,7 +130,7 @@ axiom_arguments(datatype,[iri]).
 valid_axiom(datatype(A)) :- subsumed_by([A],[iri]).
 expand_axiom(M,datatype(A),NSList,datatype(A_full_URL)) :- 
   expand_iri(M,A,NSList,A_full_URL),
-  \+ name(A_full_URL,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_]),%gtrace,
+  \+ name(A_full_URL,[95, 58, 68, 101, 115, 99, 114, 105, 112, 116, 105, 111, 110|_]),
   ( M:addKBName -> add_kb_atoms(M,datatype,[A_full_URL]) ; true).
 
 %% property(?IRI)
@@ -996,7 +996,7 @@ expand_dataRange(M,datatypeRestriction(DR,FacetValues),NSList,datatypeRestrictio
 expand_dataRange(M,literal(DR),NSList,ExpDR):- !,
   expand_literal(M,literal(DR),NSList,ExpDR).
 expand_dataRange(M,DR,NSList,ExpDR) :-
-  expand_datatype(M,DR,NSList,ExpDR),%gtrace,
+  expand_datatype(M,DR,NSList,ExpDR),
   ( M:addKBName -> add_kb_atoms(M,datatype,[ExpDR]) ; true ).
 
 
@@ -3556,7 +3556,7 @@ user:term_expansion(owl_rdf(String),[]):-
 user:term_expansion(end_of_file, end_of_file) :-
   get_module(M),trill_input_mode(M),
   dif(M,trill),
-  dif(M,utility_translation),%gtrace,
+  dif(M,utility_translation),
   fix_wrongly_classified_atoms(M),
   retractall(M:addKBName),
   retractall(trill_input_mode(_)),

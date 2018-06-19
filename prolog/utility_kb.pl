@@ -176,7 +176,7 @@ add_disjoint_link(KB0,C,C1,KB):-
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC1=Classes0.find(C1),
-  ( dif(PC,PC1) -> % check consistenza kb
+  ( dif(PC,PC1) -> % check KB consistency
      ( add_edges(KB0.disjointClasses,[PC-PC1,PC1-PC],TreeD),
        KB=KB0.put(disjointClasses,TreeD)
      )
@@ -185,22 +185,22 @@ add_disjoint_link(KB0,C,C1,KB):-
   ).
 
 
-add_hierarchy_link(KB0,C,C1,KB):- % già in equivalentClasses
+add_hierarchy_link(KB0,C,C1,KB):-
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC=Classes0.find(C1),!,
   add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expls),
   KB=KB0.put(explanations,Expls).
 
-add_hierarchy_link(KB0,C,C1,KB):- % linkati al contrario C sub D, D sub C -> trasformo in equivalent
+add_hierarchy_link(KB0,C,C1,KB):- % linked both C sub D, D sub C -> trasform into equivalent
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC1=Classes0.find(C1),
   add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB).
 
 add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):-
-  are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
-  merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
+  are_subClasses_int(KB0,PC,PC1),!, % check they are not linked yet
+  merge_classes_int(KB0,PC,PC1,KB1), % merge_classes has to take into account loops between more classes: C sub D sub E, E sub C
   add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expls),
   KB=KB1.put(explanations,Expls).
 
@@ -211,22 +211,22 @@ add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):- % non linkati
   KB=KB0.put([hierarchy=TreeH,explanations=Expls]).
 
 
-add_hierarchy_link(KB0,C,C1,Expl,KB):- % già in equivalentClasses
+add_hierarchy_link(KB0,C,C1,Expl,KB):-
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC=Classes0.find(C1),!,
   add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expl,Expls),
   KB=KB0.put(explanations,Expls).
 
-add_hierarchy_link(KB0,C,C1,Expl,KB):- % linkati al contrario C sub D, D sub C -> trasformo in equivalent
+add_hierarchy_link(KB0,C,C1,Expl,KB):- % linked both C sub D, D sub C -> trasform into equivalent
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC1=Classes0.find(C1),
   add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB).
 
 add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB):-
-  are_subClasses_int(KB0,PC,PC1),!, % controlla non siano già linkati
-  merge_classes_int(KB0,PC,PC1,KB1), % merge_classes deve tenere conto di loop con più classi: C sub D sub E, E sub C
+  are_subClasses_int(KB0,PC,PC1),!, % check they are not linked yet
+  merge_classes_int(KB0,PC,PC1,KB1), % merge_classes has to take into account loops between more classes: C sub D sub E, E sub C
   add_subClass_expl(KB1.usermod,KB1.explanations,C,C1,Expl,Expls),
   KB=KB1.put(explanations,Expls).
 
@@ -255,9 +255,9 @@ merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes):- % un
   Classes=Classes1.put(PC1,CM).
 */
 
-merge_classes_int(KB0,PC,PC1,KB):- % non collegati all'altro direttamente
+merge_classes_int(KB0,PC,PC1,KB):- % not directly linked
   edges(KB0.hierarchy,E),
-  collect_classes_2_merge(E,PC,PC1,PCL), %contiene tutta la catena da PC a PC1 escluso
+  collect_classes_2_merge(E,PC,PC1,PCL), % contains all the path from PC to PC1 (PC1 not included in the path)
   del_vertices(KB0.hierarchy,PCL,TreeH1),
   update_edges(E,PCL,PC1,EU),
   add_edges(TreeH1,EU,TreeH),
@@ -268,7 +268,7 @@ merge_classes_int(KB0,PC,PC1,KB):- % non collegati all'altro direttamente
   Classes=Classes1.put(PC1,CM),
   KB=KB0.put([hierarchy=TreeH,classes=Classes]).
 
-%contiene tutta la catena da PC a PC1 escluso
+% contains all the path from PC to PC1 (PC1 not included in the path)
 collect_classes_2_merge(E,PC,PC1,[PC]):-
   memberchk(PC-PC1,E),!.
 
@@ -276,7 +276,7 @@ collect_classes_2_merge(E,PC,PC1,[PC|PCT]):-
   member(PC-PCInt,E),
   collect_classes_2_merge(E,PCInt,PC1,PCT).
 
-% sostituisce gli archi del vecchio nodo con nuovi archi
+% change edges of odl node with new ones
 update_edges([],_,_,[]):-!.
 
 update_edges([PC-N|T],PCL,PC1,[PC1-N|TU]):-
@@ -292,14 +292,14 @@ update_edges([N-PC|T],PCL,PC1,[N-PC1|TU]):-
 update_edges([_N0-_N1|T],PCL,PC1,TU):-
   update_edges(T,PCL,PC1,TU).
 
-%cancella le classi dal dict creando lista di classi da inserire nel nodo di merge
+% deletes classes from dict creating a set of classes to be insertes in the merge node
 del_classes_from_dict([],Classes,[],Classes):- !.
 
 del_classes_from_dict([PC|TPC],Classes0,[C|TCL],Classes):-
   del_dict(PC,Classes0,C,Classes1),
   del_classes_from_dict(TPC,Classes1,TCL,Classes).
 
-% unisce due nodi del dict
+% joins two node in the dict
 merge_dict_value(C,C1,CM):-
   is_list(C1),!,
   append(C,C1,CM0),
@@ -310,7 +310,7 @@ merge_dict_value(C,C1,CM):-
   flatten(CM0,CM).
 
   
-% aggiunge una classe, se la classe già esiste fallisce
+% adds one class, if Class already exists fails
 add_class(KB0,Class,KB):-
   Classes0=KB0.classes,
   ClassesN=KB0.classesName,
@@ -322,7 +322,7 @@ add_class(KB0,Class,KB):-
   add_subClass_expl(KB0.usermod,KB0.explanations,Class,'http://www.w3.org/2002/07/owl#Thing',Expls),
   KB=KB0.put([hierarchy=TreeH,nClasses=NC,classes=Classes,explanations=Expls,classesName=[Class|ClassesN]]).
 
-% aggiunge una lista di classi
+% adds a list of classes
 add_classes(H,[],H):- !.
 
 add_classes(H0,[Ind|T],H):-
@@ -333,7 +333,7 @@ add_classes(H0,[_|T],H):-
   add_classes(H0,T,H).
 
 
-% rimuove una classe, se la classe già esiste fallisce
+% removes one class
 /*  % TODO: if Class is in a list of equivalent classes, the class should be removed in the list (maybe also modifying the axiom), if the list becomes has a single class after removal -> modify node, if Class in not in a list modify the hierarcy by removing the links. Use explanations axiom to remove axioms from the KB.
 remove_class(KB0,Class,KB):-
   Classes0=KB0.classes,
@@ -750,10 +750,10 @@ get_hierarchy(M:Class,H4C):-
 get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
   Classes=KB.classes,
   Pos=Classes.find(Class),
-  edges(KB.hierarchy,E),%gtrace,
+  edges(KB.hierarchy,E),
   get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
-get_combined_expls(M,Class,Pos,E,Classes,Expls,(M,H4C)):-%gtrace,
+get_combined_expls(M,Class,Pos,E,Classes,Expls,(M,H4C)):-
   get_single_expls(M,Class,Pos,E,Classes,Expls,[Class],H4C).
 
 append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
