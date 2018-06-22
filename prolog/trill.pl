@@ -2467,17 +2467,11 @@ set_algorithm(tornado):-
   unload_all_algorithms,
   consult(library(tornado_internal)).
 
-reload_kb(M:true):-
+reload_kb(M:Stats):-
   set_up(M),
   M:hierarchy(H),
-  utility_translation:init_kb_atom(M,H.annotationProperties,H.classesName,H.dataProperties,H.datatypes,H.individuals,H.objectProperties),
-  time(utility_kb:create_hierarchy(M)).
-
-reload_kb(M:false):-
-  set_up(M),
-  M:hierarchy(H),
-  utility_translation:init_kb_atom(M,H.annotationProperties,H.classesName,H.dataProperties,H.datatypes,H.individuals,H.objectProperties),
-  utility_kb:create_hierarchy(M).
+  utility_translation:init_kb_atom(M,H),
+  utility_kb:create_hierarchy(M,Stats).
   
 
 /**************/

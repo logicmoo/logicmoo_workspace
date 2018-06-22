@@ -8,10 +8,11 @@ This module models and manages the hierarchy of the KB's concepts.
 */
 
 
-:- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,get_hierarchy/3,get_hierarchy/2,update_hierarchy/1,update_hierarchy/2]).
+:- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,create_hierarchy/2,get_hierarchy/3,get_hierarchy/2,update_hierarchy/1,update_hierarchy/2]).
 
 :- meta_predicate init_hierarchy(:).
 :- meta_predicate create_hierarchy(+).
+:- meta_predicate create_hierarchy(+,+).
 :- meta_predicate get_hierarchy(:,-).
 :- meta_predicate get_hierarchy(+,+,-).
 :- meta_predicate update_hierarchy(:).
@@ -34,11 +35,16 @@ clean_hierarchy(M):-
   retractall(M:kb_hierarchy(_)).
 
 create_hierarchy(M):-
+  create_hierarchy(M,true).
 %  utility_kb:hierarchy_int(M).
 %
 %hierarchy_int(M):-
-  format("Loading the knowledge base...~n",[]),
-  statistics(walltime,[_,_]),
+create_hierarchy(M,Stats):-
+  (Stats=false -> true ;
+     ( format("Loading the knowledge base...~n",[]),
+       statistics(walltime,[_,_])
+     )
+  ),
   init_hierarchy(M:H0),
   %findall(C,M:class(C),L1),
   %findall(Class,M:classAssertion(Class,_Individual),L2),
@@ -66,9 +72,12 @@ create_hierarchy(M):-
   add_all_disjointUnion(H3,M,H4),
   add_all_subClassOf(H4,M,H5),
   search_and_add_complex_subClassOf(H5,M,H),
-  statistics(walltime,[_,KBAM]),
-  KBAS is KBAM / 1000,
-  format("Analysis completed in ~f seconds.~n~n~n",[KBAS]),
+  (Stats=false -> true ;
+     ( statistics(walltime,[_,KBAM]),
+       KBAS is KBAM / 1000,
+       format("Analysis completed in ~f seconds.~n~n~n",[KBAS])
+     )
+  ),
   assert(M:kb_hierarchy(H)).
   %writeln(H.hierarchy),
   %writeln(H.nClasses),
@@ -188,15 +197,14 @@ add_disjoint_link(KB0,C,C1,KB):-
 add_hierarchy_link(KB0,C,C1,KB):-
   Classes0=KB0.classes,
   PC=Classes0.find(C),
-  PC=Classes0.find(C1),!,
-  add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expls),
-  KB=KB0.put(explanations,Expls).
-
-add_hierarchy_link(KB0,C,C1,KB):- % linked both C sub D, D sub C -> trasform into equivalent
-  Classes0=KB0.classes,
-  PC=Classes0.find(C),
-  PC1=Classes0.find(C1),
-  add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB).
+  PC1=Classes0.find(C1),!,
+  (dif(PC,PC1) ->
+     ( add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB) )
+    ;
+     ( add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expls),
+       KB=KB0.put(explanations,Expls)
+     )
+  ).
 
 add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):-
   are_subClasses_int(KB0,PC,PC1),!, % check they are not linked yet
@@ -214,15 +222,14 @@ add_hierarchy_link_int(KB0,PC,PC1,C,C1,KB):- % non linkati
 add_hierarchy_link(KB0,C,C1,Expl,KB):-
   Classes0=KB0.classes,
   PC=Classes0.find(C),
-  PC=Classes0.find(C1),!,
-  add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expl,Expls),
-  KB=KB0.put(explanations,Expls).
-
-add_hierarchy_link(KB0,C,C1,Expl,KB):- % linked both C sub D, D sub C -> trasform into equivalent
-  Classes0=KB0.classes,
-  PC=Classes0.find(C),
-  PC1=Classes0.find(C1),
-  add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB).
+  PC1=Classes0.find(C1),!,
+  (dif(PC,PC1) ->
+     ( add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB) )
+    ;
+     ( add_subClass_expl(KB0.usermod,KB0.explanations,C,C1,Expl,Expls),
+       KB=KB0.put(explanations,Expls)
+     )
+  ).
 
 add_hierarchy_link_int(KB0,PC,PC1,C,C1,Expl,KB):-
   are_subClasses_int(KB0,PC,PC1),!, % check they are not linked yet
@@ -715,7 +722,7 @@ add_all_subClassOf_1(H0,[C-D|T],H):-
 add_subClassOf(KB0,SubClass,SupClass,KB):-
   %add_classes(KB0,[SubClass,SupClass],KB1),
   add_hierarchy_link(KB0,SubClass,SupClass,KB),
-  check_disjoint(KB),!. % si può proseguire
+  check_disjoint(KB),!.
 
 add_subClass_expl(M,Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
   member(ex(C,C1)-Ex,Expls0),!,
@@ -892,3 +899,62 @@ update_hierarchy(M:Axiom) :-
 
 update_hierarchy(_M,_Axiom).
 
+
+
+remove_subClassOf(M,C,D):-
+  M:kb_hierarchy(KB0),
+  remove_subClassOf(KB0,C,D,KB),
+  retractall(M:kb_hierarchy(_)),
+  assert(M:kb_hierarchy(KB)).
+
+/*
+%% remove_subClassOf(...)  deletes/modifies the edge, checking first that the two classes are not equivalent. One or both classes may be not present
+remove_subClassOf(KB0,C,D,KB):-
+  Classes0=KB0.classes,
+  PC=Classes0.find(C),
+  PD=Classes0.find(D),!,
+  (dif(PC,PD) ->
+     ( remove_hierarchy_link_int1(KB0,PC,PD,C,D,KB) )
+    ;
+     ( % remove_hierarchy_link_int2(KB0,PC,C,D,KB) % TODO: modify ex(C,D) with sub(C,D) and eq(C,D). 
+       true
+     )
+  ),!.
+
+
+remove_hierarchy_link_int1(KB0,PC,PD,C,D,KB):- % different nodes
+ Expls0=KB0.explanations,
+ member(ex(C,D)-Ex0,Expls0),
+ delete(Expls0,ex(C,D)-Ex0,Expls1),
+ ( trill:is_or_f(Ex0) -> 
+     ( trill:hier_ax2ex(M,subClassOf(C,D),ExAx),
+       trill:remove_or(Ex0,ExAx,Ex),
+       append([ex(C,D)-Ex],Expls1,Expls),
+       KB=KB0.put([explanations=Expls,hierarchy=TreeH])
+     )
+    ;
+     ( del_edges(KB0.hierarchy,[PD-PC],TreeH1),
+       add_edges(TreeH1,[0-PC],TreeH),
+       KB=KB0.put([explanations=Expls1,hierarchy=TreeH])
+     )
+  ).
+  
+remove_hierarchy_link_int2(KB0,PC,C,D,KB):- % same node
+ Expls0=KB0.explanations,
+ member(ex(C,D)-Ex0,Expls0),
+ delete(Expls0,ex(C,D)-Ex0,Expls1),
+ ( trill:is_or_f(Ex0) -> 
+     ( trill:hier_ax2ex(M,subClassOf(C,D),ExAx),  % equivalentClasses axioms link C and D, only the explanation subClassOf(C,D) must be removed
+       trill:remove_or(Ex0,ExAx,Ex),
+       append([ex(C,D)-Ex],Expls1,Expls),
+       KB=KB0.put([explanations=Expls,hierarchy=TreeH])
+     )
+    ;
+     ( del_edges(KB0.hierarchy,[PD-PC],TreeH1),  % a cycle of subClassOf axioms creates a nod of equivalent classes, open the cycle.
+       add_edges(TreeH1,[0-PC],TreeH),
+       KB=KB0.put([explanations=Expls1,hierarchy=TreeH])
+     )
+  ).
+ */
+ 
+ 

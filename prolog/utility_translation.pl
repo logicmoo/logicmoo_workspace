@@ -3441,6 +3441,24 @@ prolog:message(under_development) -->
 :- multifile trill:remove_axiom/1.
 trill:remove_axiom(M:Ax):-
   print_message(warning,under_development),
+  ( M:ns4query(NSList) -> true; NSList = []),
+  expand_axiom(M,Ax,NSList,ExpAx),
+  retract_axiom(M,ExpAx),
+  retractall(M:owl(ExpAx,'ont')),!,
+  trill:reload_kb(M:false).
+
+
+/*
+trill:remove_axiom(M:subClassOf(C,D)):-
+  print_message(warning,under_development),
+  ( M:ns4query(NSList) -> true; NSList = []),
+  expand_axiom(M,subClassOf(C,D),NSList,subClassOf(ExpC,ExpD)),
+  remove_subClassOf(M,ExpC,ExpD),
+  retract_axiom(M,subClassOf(ExpC,ExpD)),
+  retractall(M:owl(subClassOf(ExpC,ExpD),'ont')),!.
+
+trill:remove_axiom(M:Ax):-
+  print_message(warning,under_development),
   ( M:ns4query(NSList) *-> true; NSList = []),
   Ax =.. [P|Args],
   ( (length(Args,1), Args = [IntArgs], is_list(IntArgs)) -> 
@@ -3454,6 +3472,7 @@ trill:remove_axiom(M:Ax):-
   ),
   retract_axiom(M,AxEx),
   retractall(M:owl(AxEx,'ont')),!.
+*/
 
 :- multifile trill:remove_axioms/1.
 trill:remove_axioms(_:[]):-!.
@@ -3536,6 +3555,9 @@ init_kb_atom(M):-
 
 init_kb_atom(M,AnnProps,Classes,DataProps,Datatypes,Inds,ObjectProps):-
   assert(M:kb_atom(kbatoms{annotationProperty:AnnProps,class:Classes,dataProperty:DataProps,datatype:Datatypes,individual:Inds,objectProperty:ObjectProps})).
+
+init_kb_atom(M,KB):-
+  assert(M:kb_atom(kbatoms{annotationProperty:KB.annotationProperties,class:KB.classesName,dataProperty:KB.dataProperties,datatype:KB.datatypes,individual:KB.individuals,objectProperty:KB.objectProperties})).
 
 :- multifile sandbox:safe_primitive/1.
 
