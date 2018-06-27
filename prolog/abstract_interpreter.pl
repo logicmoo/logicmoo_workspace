@@ -85,6 +85,8 @@ evaluable_body_hook(atomic_list_concat(A, B, C), _,
                     ( ground(A), ground(B)
                     ; ground(B), ground(C)
                     )).
+evaluable_body_hook(upcase_atom(A, _), _, ground(A)).
+evaluable_body_hook(downcase_atom(A, _), _, ground(A)).
 evaluable_body_hook(nb_current(A, _), _, ground(A)).
 evaluable_body_hook(nb_getval(A, _), _, ground(A)).
 evaluable_body_hook(_ is A, _, ground(A)).
@@ -125,7 +127,7 @@ replace_goal_hook(V is A, _, (ground(A)->V is A; var(V))).
 call_ai(G) :- call(G).
 eval_ai(_).
 skip_ai(G) :- call(G).
-    
+
 mod_qual(M, G as R, I:H as B:C) :- !,
     strip_module(M:G, N, H),
     implementation_module(N:H, I),
@@ -136,10 +138,17 @@ mod_qual(M, G, I:F/A) :-
     functor(H, F, A),
     implementation_module(N:H, I).
 
+:- public
+    default_on_error/1.
+
+default_on_error(Error) :-
+    print_message(error, Error),
+    backtrace(40 ).
+
 abstract_interpreter(M:Goal, Abstraction, Options, Result) :-
     option(location(Loc),   Options, context(toplevel, Goal)),
     option(evaluable(Eval), Options, []),
-    option(on_error(OnErr), Options, print_message(error)),
+    option(on_error(OnErr), Options, abstract_interpreter:default_on_error),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
     maplist(mod_qual(M), EvalL, MEvalL),
     abstract_interpreter(M:Goal, Abstraction,
@@ -218,7 +227,7 @@ abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S1, S) :-
 ord_spec(asc(_)).
 ord_spec(desc(_)).
 
-abstract_interpreter_body(order_by(Spec, Goal), M, Abs, State, S1, S) :-
+abstract_interpreter_body(order_by(Spec, Goal), M, Abs, State, S1, S) :- !,
     ( is_list(Spec),
       Spec \= [],
       maplist(nonvar, Spec),
