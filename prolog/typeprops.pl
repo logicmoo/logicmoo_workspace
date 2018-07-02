@@ -361,16 +361,26 @@ goal(N, Pred) :-
 
 goal_2(M:Pred, N) :-
     var(Pred), !,
-    current_module(M),
-    current_predicate(M:F/A),
+    ( var(M)
+    ->current_module(CM),
+      current_predicate(CM:F/A),
+      M=CM
+    ; current_module(M),
+      current_predicate(M:F/A)
+    ),
     A >= N,
     A1 is A - N,
     functor(Pred, F, A1).
 goal_2(M:Pred, N) :-
     functor(Pred, F, A1),
     A is A1 + N,
-    current_module(M),
-    current_predicate(M:F/A).
+    ( var(M)
+    ->current_module(CM),
+      current_predicate(CM:F/A),
+      M=CM
+    ; current_module(M),
+      current_predicate(M:F/A)
+    ).
 
 :- true prop mod_qual/1.
 mod_qual(M:V) :-
