@@ -191,7 +191,7 @@ walk_called((A;B), C, M) :-
     term_variables(B, VB),
     sort(VA, SA),
     sort(VB, SB),
-    ord_intersection(SA, SB, L),
+    ord_union(SA, SB, L),
     findall(L-V-Att,
             ( member(E, [A, B]),
               walk_called(E, C, M),
@@ -237,6 +237,7 @@ walk_called_3(Meta, Caller, M) :-
     ;   predicate_property(M:Meta, meta_predicate(Head))
     ),
     !,
+    mark_args_non_fresh(1, Head, Meta),
     walk_meta_call(1, Head, Meta, Caller, M).
 walk_called_3(Goal, _, Module) :-
     nonvar(Module),
@@ -296,6 +297,22 @@ walk_meta_call(I, Head, Meta, Caller, M) :-
     walk_meta_call(I2, Head, Meta, Caller, M).
 walk_meta_call(_, _, _, _, _).
 
+mark_args_non_fresh(I, Head, Meta) :-
+    arg(I, Head, AS),
+    !,
+    ( ( integer(AS)
+      ; AS == (^)
+      ; AS == (//)
+      )
+    ->true
+    ; arg(I, Meta, MA),
+      term_variables(MA, Vars),
+      '$expand':mark_vars_non_fresh(Vars)
+    ),
+    succ(I, I2),
+    mark_args_non_fresh(I2, Head, Meta).
+mark_args_non_fresh(_, _, _).
+    
 walk_dcg_body(Var, _, _) :-
     var(Var),
     !.
