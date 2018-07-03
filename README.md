@@ -93,6 +93,8 @@ If the graph is too condensed, you can change the spacing with
 \setlength{\EdgeLabelSep}{15pt}
 \setlength{\GapWidth}{30pt}
 ```
+inserted befeore `\begin{document}`.
+
 If you are using your example in SWISH and want the output to be shown
 in SVG add the following code after laoding the library
 
