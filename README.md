@@ -87,7 +87,12 @@ and you should compile it with
 latex file.tex
 dvipdf file.dvi
 ```
-
+If the graph is too condensed, you can change the spacing with
+```
+\setlength{\GapDepth}{30pt}
+\setlength{\EdgeLabelSep}{15pt}
+\setlength{\GapWidth}{30pt}
+```
 If you are using your example in SWISH and want the output to be shown
 in SVG add the following code after laoding the library
 
