@@ -39,6 +39,7 @@
           ]).
 
 :- use_module(library(rtcprops), []).
+:- use_module(library(implementation_module)).
 :- use_module(system:library(rtchecks_rt)).
 
 rtchecked(PlList) :-
@@ -73,13 +74,21 @@ wrappers(Name/Arity) -->
       atom_concat(Name, ' rtchecked', WrapName),
       Head =.. [Name|Args],
       WrappedHead =.. [WrapName|Args],
-      prolog_load_context(module, Module)
+      prolog_load_context(module, Module),
+      ( implementation_module(Module:Head, Module)
+      ->Head2 = Head,
+        Goal2 = WrappedHead,
+        Name2 = Name
+      ; Head2 = WrappedHead,
+        Goal2 = Head,
+        Name2 = WrapName
+      )
     },
     [ :- public '$rtchecked'/1,
       '$rtchecked'(Head),
-      (:- module_transparent Name/Arity),
-      (   Head :-
-              start_rtcheck(Module:Head, WrappedHead)
+      (:- module_transparent Name2/Arity),
+      (   Head2 :-
+              start_rtcheck(Module:Head, Goal2)
       )
     ].
 
@@ -109,6 +118,13 @@ system:term_expansion((:- rtchecked(Preds)),
                       | Clauses
                       ]) :-
     phrase(wrappers(Preds), Clauses).
+
+system:goal_expansion(Goal1, Goal) :-
+    prolog_load_context(module, M),
+    '$flushed_predicate'(M:'$rtchecked'(_)),
+    call(M:'$rtchecked'(Goal1)),
+    \+ implementation_module(M:Goal1, M),
+    rename_term(Goal1, Goal).
 
 :- multifile
     sandbox:safe_directive/1.
