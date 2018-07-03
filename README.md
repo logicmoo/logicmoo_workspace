@@ -76,11 +76,16 @@ You can then include it in a LaTeX document. The minimal LaTeX file you could us
 is
 ```
 \documentclass{article}
-\usepackage{epic}
+\usepackage{epic,eepic}
 \usepackage{ecltree}
 \begin{document}
 \input{tree}
 \end{document}
+```
+and you should compile it with
+```
+latex file.tex
+dvipdf file.dvi
 ```
 
 If you are using your example in SWISH and want the output to be shown
