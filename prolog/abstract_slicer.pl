@@ -42,31 +42,37 @@
     slicer_abstraction(+,+,+,0,?, ?,?,?,?).
     
 abstract_slice(M:Call, Mode, OptL) :-
-    apply_mode(Call, Mode, Spec, RevS),
+    apply_mode(Call, Mask, Mode, Spec, RevS),
     term_variables(RevS, VarsR),
     option(eval_scope(Scope), OptL, body),
-    abstract_interpreter(M:Call, slicer_abstraction(Spec, VarsR, Scope), OptL).
+    abstract_interpreter(M:Mask, slicer_abstraction(Spec, VarsR, Scope), OptL),
+    % In Mask the output arguments are variable, so the binding is performed
+    % after the abstract interpretation. This is a bit inefficient, but correct:
+    Call = Mask.
 
-apply_mode(Call, Mode, Spec, RevS) :-
+apply_mode(Call, Mask, Mode, Spec, RevS) :-
     functor(Call, F, A),
+    functor(Mask, F, A),
     functor(Spec, F, A),
     functor(RevS, F, A),
-    apply_mode_arg(1, Call, Mode, Spec, RevS).
+    apply_mode_arg(1, Call, Mask, Mode, Spec, RevS).
 
-apply_mode_arg(N1, Call, Mode, Spec, RevS) :-
+apply_mode_arg(N1, Call, Mask, Mode, Spec, RevS) :-
     arg(N1, Call, Arg), !,
+    arg(N1, Mask, Var),
     arg(N1, Mode, MSp),
     arg(N1, Spec, ASp),
     arg(N1, RevS, ARs),
     ( MSp = -
-    ->ASp = Arg,
+    ->ASp = Var,
       ARs = -
     ; ASp = +,
-      ARs = Arg
+      ARs = Arg,
+      Arg = Var
     ),
     succ(N1, N),
-    apply_mode_arg(N, Call, Mode, Spec, RevS).
-apply_mode_arg(_, _, _, _, _).
+    apply_mode_arg(N, Call, Mask, Mode, Spec, RevS).
+apply_mode_arg(_, _, _, _, _, _).
 
 chain_of_dependencies(Spec, VarsR, Goal, ContL) :-
     \+ ground(Goal),
