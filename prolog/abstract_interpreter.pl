@@ -113,6 +113,8 @@ evaluable_body_hook(clause(A, _), _, nonvar(A)).
 evaluable_body_hook(clause(A, _, _), _, nonvar(A)).
 evaluable_body_hook(format(Out, Format, Args), _,
                     (nonvar(Out), nonvar(Format), ground(Args))).
+evaluable_body_hook(sort(A, _), _, (is_list(A), maplist(nonvar, A))).
+evaluable_body_hook(A==B, _, (A==B;A\=B)).
 
 replace_goal_hook(retractall(_), _, true).
 replace_goal_hook(retract(_),    _, true).
@@ -319,7 +321,14 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
     ).
 abstract_interpreter_body(!,    _, _, _) --> !, cut_if_no_bottom.
 abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
-abstract_interpreter_body(A\=B, _, _, _) --> !, ( \+ is_bottom -> {A\=B} ; {A\==B} ).
+abstract_interpreter_body(A\=B, _, _, _) -->
+    !,
+    ( {A\=B}
+    ->[]
+    ; {A==B}
+    ->{fail}
+    ; bottom
+    ).
 abstract_interpreter_body(true, _, _, _) --> !.
 abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
 abstract_interpreter_body(A, M, _, _) -->
