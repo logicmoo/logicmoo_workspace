@@ -96,7 +96,6 @@ evaluable_body_hook(A < B, _, (ground(A),ground(B))).
 evaluable_body_hook(A =< B, _, (ground(A),ground(B))).
 evaluable_body_hook(A =:= B, _, (ground(A),ground(B))).
 evaluable_body_hook(atom_codes(A, B), _, (ground(A);ground(B))).
-evaluable_body_hook(memberchk(E, L), _, (is_list(L), nonvar(E))).
 evaluable_body_hook(member(_, L), _, is_list(L)).
 evaluable_body_hook(option(O, L), _, (is_list(L), nonvar(O))).
 evaluable_body_hook(nth0(I, L, _), _, (is_list(L);nonvar(I))).
@@ -328,6 +327,22 @@ abstract_interpreter_body(A\=B, _, _, _) -->
     ; {A==B}
     ->{fail}
     ; bottom
+    ).
+abstract_interpreter_body(memberchk(A, B), _, _, _) -->
+    !,
+    ( {is_list(B)}
+    ->( {nonvar(A)}
+      ->{memberchk(A, B)}
+      ; {member(A, B)},
+        bottom
+      )
+    ; { append(_, [A|T], B),
+        ( var(T)
+        ->!
+        ; true
+        )
+      },
+      bottom
     ).
 abstract_interpreter_body(true, _, _, _) --> !.
 abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
