@@ -40,7 +40,7 @@
 :- meta_predicate
     abstract_slice(0,+,?),
     slicer_abstraction(+,+,+,0,?, ?,?,?,?).
-    
+
 abstract_slice(M:Call, Mode, OptL) :-
     apply_mode(Call, Mask, Mode, Spec, RevS),
     term_variables(RevS, VarsR),
@@ -112,7 +112,7 @@ slicer_abstraction(Spec, VarsR, Scope, MGoal, Body,
       )
     ; % check if the body trivially fails:
       ( Scope = body
-      ->once(match_head_body(M:Goal, _Body, Loc))
+      -> \+ \+ match_head_body(M:Goal, _Body, Loc)
       ; true
       ),
       Body = M:true
