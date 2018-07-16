@@ -49,6 +49,7 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(term_size)).
+:- use_module(library(neck)).
 
 :- meta_predicate
     match_head(0,*,*,*,*, *),
@@ -97,6 +98,7 @@ evaluable_body_hook(A =< B, _, (ground(A),ground(B))).
 evaluable_body_hook(A =:= B, _, (ground(A),ground(B))).
 evaluable_body_hook(atom_codes(A, B), _, (ground(A);ground(B))).
 evaluable_body_hook(member(_, L), _, is_list(L)).
+evaluable_body_hook(select(_, L, _), _, is_list(L)).
 evaluable_body_hook(option(O, L), _, (is_list(L), nonvar(O))).
 evaluable_body_hook(nth0(I, L, _), _, (is_list(L);nonvar(I))).
 evaluable_body_hook(nth1(I, L, _), _, (is_list(L);nonvar(I))).
@@ -327,6 +329,21 @@ abstract_interpreter_body(A\=B, _, _, _) -->
     ; {A==B}
     ->{fail}
     ; bottom
+    ).
+abstract_interpreter_body(BinExpr, _, _, _, S0, S) :-
+    member(BinExpr, [A=\=B,
+                     A=:=B,
+                     A>B,
+                     A<B,
+                     A>=B,
+                     A=<B]),
+    neck,
+    !,
+    ( ground(A),
+      ground(B)
+    ->BinExpr,
+      S0 = S
+    ; bottom(S0, S)
     ).
 abstract_interpreter_body(memberchk(A, B), _, _, _) -->
     !,
