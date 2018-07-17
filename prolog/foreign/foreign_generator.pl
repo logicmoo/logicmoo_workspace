@@ -55,6 +55,7 @@
     use_foreign_source/2,
     use_foreign_header/2,
     include_foreign_dir/2,
+    library_foreign_dir/2,
     extra_compiler_opts/2,
     link_foreign_library/2,
     pkg_foreign_config/2.
@@ -202,7 +203,13 @@ do_generate_library(M, FileSO, File, FSourceL) :-
                     ),
                     atom_concat('-I', Dir, IDir)
                   ),
-            IDirL, FArgsT),
+            IDirL, LDirL),
+    findall(LDir, ( library_foreign_dir(M, DAlias),
+                    absolute_file_name(DAlias, Dir, [file_type(directory),
+                                                     relative_to(File)]),
+                    atom_concat('-L', Dir, LDir)
+                  ),
+            LDirL, FArgsT),
     CommandsT = [path('swipl-ld')-['-shared'|COptL]],
     forall(member(Command-ArgL, Commands),
            compile_1(Command, ArgL)).
@@ -349,10 +356,11 @@ type_props_(CM, Type, Dict, Pos, Asr) :-
 
 type_props_nf(Module, Type, TypePropLDictL, Pos, Asr) :-
     type_props(Module, Type, TypePropLDictL, Pos, Asr),
-                                % Don't create getters and unifiers for
-                                % typedefs, they are just casts:
+    % Don't create getters and unifiers for
+    % typedefs, they are just casts:
     \+ type_is_tdef(Module, Type, _, _),
-    \+ prop_asr(glob, foreign(_, _), _, Asr).
+    \+ prop_asr(glob, foreign(_, _), _, Asr),
+    \+ prop_asr(glob, native(_, _), _, Asr).
 
 define_aux_variables(dict_ini(Name, M, _), _, _) :- !,
     format('    __rtcwarn((__~w_aux_keyid_index_~w=PL_pred(PL_new_functor(PL_new_atom("__aux_keyid_index_~w"), 2), __~w_impl))!=NULL);~n',

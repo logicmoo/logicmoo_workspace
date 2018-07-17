@@ -54,6 +54,9 @@ term_expansion((:- use_foreign_header(FAlias)),
 term_expansion((:- include_foreign_dir(DAlias)),
                foreign_generator:include_foreign_dir(M, DAlias)) :-
     '$current_source_module'(M).
+term_expansion((:- library_foreign_dir(DAlias)),
+               foreign_generator:library_foreign_dir(M, DAlias)) :-
+    '$current_source_module'(M).
 term_expansion((:- extra_compiler_opts(COpt)),
                foreign_generator:extra_compiler_opts(M, COpt)) :-
     '$current_source_module'(M).
