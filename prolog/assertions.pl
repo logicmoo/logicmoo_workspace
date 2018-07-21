@@ -36,7 +36,7 @@
 
 % Do not change the order of the next sentences unless you are sure:
 
-:- use_module(library(compound_expand)).
+:- reexport(library(compound_expand)).
 :- reexport(library(assertions_op)).
 :- reexport(library(assrt_lib)).
 

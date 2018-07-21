@@ -1,6 +1,6 @@
 :- module(andorra, []).
 
-:- use_module(library(compound_expand)).
+:- reexport(library(compound_expand)).
 :- reexport(library(andorra/andorra_op)).
 :- reexport(library(andorra/andorra_rt)).
 :- reexport(library(andorra/andorra_builtins)).
