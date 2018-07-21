@@ -34,23 +34,20 @@
 
 :- module(rtchecks,
           [(rtchecked)/1,
-           
+
            op(1150, fx, rtchecked)
           ]).
 
 :- use_module(library(rtcprops), []).
 :- use_module(library(implementation_module)).
+:- use_module(library(compound_expand)).
 :- use_module(system:library(rtchecks_rt)).
 
 rtchecked(PlList) :-
     throw(error(context_error(nodirective, rtcheck(PlList)), _)).
 
 :- multifile
-    system:term_expansion/2,
     prolog:rename_predicate/2.
-
-:- dynamic
-    system:term_expansion/2.
 
 wrappers(Var) -->
     { var(Var),
@@ -75,20 +72,29 @@ wrappers(Name/Arity) -->
       Head =.. [Name|Args],
       WrappedHead =.. [WrapName|Args],
       prolog_load_context(module, Module),
-      ( implementation_module(Module:Head, Module)
+      ( implementation_module(Module:Head, Module),
+        \+ predicate_property(Module:Head, multifile),
+        \+ predicate_property(Module:Head, dynamic)
       ->Head2 = Head,
         Goal2 = WrappedHead,
-        Name2 = Name
+        Name2 = Name,
+        Level = head
       ; Head2 = WrappedHead,
         Goal2 = Head,
-        Name2 = WrapName
+        Name2 = WrapName,
+        Level = body
       )
     },
-    [ :- public '$rtchecked'/1,
-      '$rtchecked'(Head),
+    ( { predicate_property(Module:Head, exported),
+        Level = body
+      }
+    ->[(:- export(Name2/Arity))]
+    ; []
+    ),
+    [ '$rtchecked'(Head, Level),
       (:- module_transparent Name2/Arity),
-      (   Head2 :-
-              start_rtcheck(Module:Head, Goal2)
+      (Head2 :-
+           start_rtcheck(Module:Head, Goal2)
       )
     ].
 
@@ -98,8 +104,8 @@ wrappers(Name/Arity) -->
 %   generated predicate.
 
 prolog:rename_predicate(M:Head1, M:Head) :-
-    '$flushed_predicate'(M:'$rtchecked'(_)),
-    call(M:'$rtchecked'(Head1)),
+    '$defined_predicate'(M:'$rtchecked'(_, _)),
+    call(M:'$rtchecked'(Head1, head)),
     !,
     rename_term(Head1, Head).
 
@@ -112,18 +118,18 @@ rename_term(Compound1, Compound) :-
 rename_term(Name, WrapName) :-
     atom_concat(Name, ' rtchecked', WrapName).
 
-
-system:term_expansion((:- rtchecked(Preds)),
-                      [ (:- discontiguous('$rtchecked'/1))
-                      | Clauses
-                      ]) :-
+term_expansion((:- rtchecked(Preds)),
+               [ (:- discontiguous('$rtchecked'/2)),
+                 (:- public '$rtchecked'/2)
+                 | Clauses
+               ]) :-
     phrase(wrappers(Preds), Clauses).
 
-system:goal_expansion(Goal1, Goal) :-
+goal_expansion(Goal1, Goal) :-
     prolog_load_context(module, M),
-    '$flushed_predicate'(M:'$rtchecked'(_)),
-    call(M:'$rtchecked'(Goal1)),
-    \+ implementation_module(M:Goal1, M),
+    implementation_module(M:Goal1, IM),
+    '$defined_predicate'(IM:'$rtchecked'(_, _)),
+    call(IM:'$rtchecked'(Goal1, body)),
     rename_term(Goal1, Goal).
 
 :- multifile
