@@ -32,7 +32,9 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(compound_expand, []).
+:- module(compound_expand,
+          [op(1, fx, '$compound_expand') % Used to detect expansion modules
+          ]).
 
 /* This module allows to define compositional term and goal expansions,
    using this module in a module that already defines the predicates

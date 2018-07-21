@@ -42,10 +42,10 @@ performance.
 
 */
 
+:- reexport(library(compound_expand)).
 :- use_module(library(apply)).
 :- use_module(library(lists)).
 :- use_module(library(occurs)).
-:- use_module(library(compound_expand)).
 % Next module will require the installation of lambda package, comment it out if
 % you only want compiled lambda expressions:
 :- reexport(library(lambda)).
