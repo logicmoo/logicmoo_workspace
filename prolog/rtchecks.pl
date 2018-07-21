@@ -38,9 +38,9 @@
            op(1150, fx, rtchecked)
           ]).
 
+:- reexport(library(compound_expand)).
 :- use_module(library(rtcprops), []).
 :- use_module(library(implementation_module)).
-:- use_module(library(compound_expand)).
 :- use_module(system:library(rtchecks_rt)).
 
 rtchecked(PlList) :-
