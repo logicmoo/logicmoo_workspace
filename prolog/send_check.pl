@@ -32,16 +32,15 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(send_check, [get_comp_rtcheck_info/3,
-                       send_check/4,
+:- module(send_check, [send_check/4,
                        send_comp_rtcheck/3]).
 
 :- use_module(library(assrt_lib)).
 :- use_module(library(intercept)).
 
-get_comp_rtcheck_info(Goal, Name, From) :-
+get_comp_rtcheck_info(Goal, Name, ALoc) :-
     ( nb_current('$with_asr', Asr)
-    ->asr_aprop(Asr, head, _:Name, From)
+    ->asr_aprop(Asr, head, _:Name, ALoc)
     ; Name = Goal
     ).
 
@@ -49,12 +48,16 @@ get_comp_rtcheck_info(Goal, Name, From) :-
 
 send_comp_rtcheck(_:Goal, Prop, Fail) :-
     get_comp_rtcheck_info(Goal, Name, ALoc),
-    ( nb_current('$with_loc', GLoc)
+    ( nb_current('$with_gloc', GLoc)
     ->true
     ; GLoc = []
     ),
     send_check([GLoc/Prop-[Fail]], comp, Name, ALoc).
 
 send_check([], _, _, _) :- !.
-send_check(Props, ErrType, PredName, ALoc) :-
-    send_signal(assrchk(asr, error(ErrType, PredName, Props, ALoc))).
+send_check(Props, ErrType, Name, ALoc) :-
+    ( nb_current('$with_ploc', PLoc)
+    ->true
+    ; PLoc = []
+    ),
+    send_signal(assrchk(asr, error(ErrType, Name, Props, PLoc, ALoc))).
