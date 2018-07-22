@@ -50,7 +50,8 @@
 :- use_module(library(ctrtchecks)).
 :- reexport(library(ctrtchecks),
             ['$with_asr'/2,
-             '$with_loc'/2,
+             '$with_gloc'/2,
+             '$with_ploc'/2,
              check_call/3]).
 
 /** <module> Predicates that are required to implement run-time checks

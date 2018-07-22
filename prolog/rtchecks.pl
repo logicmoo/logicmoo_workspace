@@ -125,12 +125,18 @@ term_expansion((:- rtchecked(Preds)),
                ]) :-
     phrase(wrappers(Preds), Clauses).
 
-goal_expansion(Goal1, Goal) :-
+goal_expansion(Goal1, Pos, '$with_ploc'(Goal, From),
+               term_position(0, 0, 0, 0, [Pos, _])) :-
     prolog_load_context(module, M),
     implementation_module(M:Goal1, IM),
     '$defined_predicate'(IM:'$rtchecked'(_, _)),
     call(IM:'$rtchecked'(Goal1, body)),
-    rename_term(Goal1, Goal).
+    rename_term(Goal1, Goal),
+    source_location(File, Line),
+    ( nonvar(Pos)
+    ->From = file_term_position(File, Pos)
+    ; From = file(File, Line, -1, _)
+    ).
 
 :- multifile
     sandbox:safe_directive/1.

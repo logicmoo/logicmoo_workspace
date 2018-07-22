@@ -29,13 +29,15 @@ test(rtc_external) :-
                        )),
     assertion(E = [assrchk(ppt(_,_),
                            error(comp,
-                                 functor(0, 0, 0),
+                                 functor(0, 0, 0 ),
                                  [_/fails-[not_fails]],
+                                 _,
                                  _)),
                    assrchk(ppt(_,_),
                            error(success,
-                                 functor(0, 0, 0),
+                                 functor(0, 0, 0 ),
                                  [_/instan(rtc_external:atom(0))-[]],
+                                  _,
                                  _))]).
 
 test(rtcompile) :-
@@ -55,7 +57,7 @@ test(rtexec1) :-
     load_rtchecks(E),
     assertion(E=[assrchk(ppt(_,_),
                          error(pp_check, check/1,
-                               [_/(rtchecks_example3: (0>0 ))-[]], _))]).
+                               [_/(rtchecks_example3: (0>0 ))-[]], _, _))]).
 
 test(rtexec2) :-
     intercept(do_trace_rtc(test1), Error, print_message(information, Error)).
@@ -66,10 +68,10 @@ test(rtexec3) :-
     load_rtchecks(E),
     assertion(E=[assrchk(ppt(rtchecks_example3:r/0,
                              clause_pc(_, 7)), error(comp, qq, [file(_, _, _, _)/not_fails-[failure]],
-                                                     file(_, _, _, _))),
+                                                     _, file(_, _, _, _))),
                  assrchk(ppt(rtchecks_example3:p/1,
                              clause_pc(_, 3)), error(comp, r, [file(_, _, _, _)/det-[fails]],
-                                                     file(_, _, _, _)))]).
+                                                     _, file(_, _, _, _)))]).
 
 % The next  two tests  implements run-time checking  via instrumentation  of the
 % predicate  being run-time  checked.  Apart  of  that, be  careful, since  they
@@ -80,7 +82,7 @@ test(rtexec4) :-
     save_rtchecks(fullasr(3,_B)),
     load_rtchecks(E),
     assertion(E=[assrchk(asr,error(success,fullasr(3,3),
-                                   [_/instan(rtchecks_example3:family(3))-[]], _))]).
+                                   [_/instan(rtchecks_example3:family(3))-[]], _, _))]).
 
 test(rtexec5) :-
     save_rtchecks(fullasr(a,_B)),

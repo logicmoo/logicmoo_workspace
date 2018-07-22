@@ -72,10 +72,11 @@ location_t(Loc) :-
 :- type assrchk_error/1 #
         "Specifies the format of an assertion check error.".
 
-assrchk_error(assrchk(Level, error(Type, _Pred, PropValues, ALoc))) :-
+assrchk_error(assrchk(Level, error(Type, _Pred, PropValues, PLoc, ALoc))) :-
     rtcheck_level(Level),
     rtcheck_type(Type),
     keylist(PropValues),
+    location_t(PLoc),
     location_t(ALoc).
 
 :- type rtcheck_level/1.
@@ -146,9 +147,10 @@ prolog:message(assrchk(Level, Error)) -->
     assr_error_message(Error),
     !.
 
-assr_error_message(error(Type, Pred, PropValues, ALoc)) -->
-    '$messages':swi_location(ALoc),
+assr_error_message(error(Type, Pred, PropValues, PLoc, ALoc)) -->
+    '$messages':swi_location(PLoc),
     ['Assertion failure for ~q.'-[Pred], nl],
+    '$messages':swi_location(ALoc),
     ['    In *~w*, unsatisfied properties: '-[Type], nl],
     '$foldl'(prop_values, PropValues).
 

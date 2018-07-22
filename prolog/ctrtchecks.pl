@@ -34,7 +34,8 @@
 
 :- module(ctrtchecks,
           ['$with_asr'/2,
-           '$with_loc'/2,
+           '$with_gloc'/2,
+           '$with_ploc'/2,
            assrt_op/4,
            check_call/3,
            check_goal/5,
@@ -203,7 +204,7 @@ checkif_asr_comp(T, PropValues, Asr, M:Goal1, Goal) :-
     ; Goal = M:Goal1
     ).
 
-comp_pos_to_goal(Asr, g(Asr, M:Glob, Loc), '$with_loc'(M:Glob, Loc), Goal) :-
+comp_pos_to_goal(Asr, g(Asr, M:Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
     functor(Glob, _, N),
     arg(N, Glob, Goal).
 
@@ -211,9 +212,13 @@ comp_pos_to_goal(Asr, g(Asr, M:Glob, Loc), '$with_loc'(M:Glob, Loc), Goal) :-
 '$with_asr'(Comp, Asr) :-
     with_value(Comp, '$with_asr', Asr).
 
-:- meta_predicate '$with_loc'(0, ?).
-'$with_loc'(Comp, GLoc) :-
-    with_value(Comp, '$with_loc', GLoc).
+:- meta_predicate '$with_gloc'(0, ?).
+'$with_gloc'(Comp, GLoc) :-
+    with_value(Comp, '$with_gloc', GLoc).
+
+:- meta_predicate '$with_ploc'(0, ?).
+'$with_ploc'(Comp, GLoc) :-
+    with_value(Comp, '$with_ploc', GLoc).
 
 %!  comps_to_goal(+Check:list, :Goal)//
 %
