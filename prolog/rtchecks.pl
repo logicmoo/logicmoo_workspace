@@ -39,9 +39,11 @@
           ]).
 
 :- reexport(library(compound_expand)).
-:- use_module(library(rtcprops), []).
 :- use_module(library(implementation_module)).
+:- use_module(library(rtcprops), []).
+:- use_module(library(ctrtchecks)).
 :- use_module(system:library(rtchecks_rt)).
+:- use_module(library(assrt_lib)).
 
 rtchecked(PlList) :-
     throw(error(context_error(nodirective, rtchecked(PlList)), _)).
@@ -112,7 +114,7 @@ rename_term(Compound1, Compound) :-
 rename_term(Name, WrapName) :-
     atom_concat(Name, ' rtchecked', WrapName).
 
-term_expansion((:- rtchecked(Preds)), []) :-
+generate_rtchecks(Preds) :-
     phrase(( ( { '$current_source_module'(CM),
                  '$defined_predicate'(CM:'$rtchecked'(_, _))
                }
@@ -125,19 +127,42 @@ term_expansion((:- rtchecked(Preds)), []) :-
     % We use compile_aux_clauses to make Clauses immediately available:
     compile_aux_clauses(Clauses).
 
+term_expansion((:- rtchecked(Preds)), []) :-
+    generate_rtchecks(Preds).
+
+term_expansion(assrt_lib:asr_head_prop(_, M, Pred, Status, Type, _, _), _) :-
+    \+ memberchk(Status, [check, debug]),
+    Type \= (prop),
+    \+ prop_asr(Pred, M, _, (prop), _, _, _),
+    is_valid_status_type(Status, Type),
+    \+ ( '$current_source_module'(CM),
+         '$defined_predicate'(CM:'$rtchecked'(_, _)),
+         CM:'$rtchecked'(Pred, _)
+       ),
+    functor(Pred, F, A),
+    generate_rtchecks(F/A),
+    fail.
+
 rtcheck_lit_pos(P, term_position(F,T,F,T,[_,P,_])) :-
     nonvar(P),
     arg(1, P, F),
     arg(2, P, T).
 
-goal_expansion(Goal, Pos1, rtcheck_lit(Level, Goal, From), Pos) :-
+:- dynamic expanding/0.
+:- volatile expanding/0.
+
+goal_expansion(Goal1, Pos1, rtcheck_lit(Level, Goal, From), Pos) :-
+    \+ expanding,
     % prolog_load_context(module, M),
     '$current_source_module'(M),
-    implementation_module(M:Goal, IM),
+    implementation_module(M:Goal1, IM),
     '$defined_predicate'(IM:'$rtchecked'(_, _)),
-    call(IM:'$rtchecked'(Goal, Level)),
+    call(IM:'$rtchecked'(Goal1, Level)),
     source_location(File, Line),
-    ( rtcheck_lit_pos(Pos1, Pos)
+    setup_call_cleanup(assertz(expanding),
+                       expand_goal(Goal1, Pos1, Goal, Pos2),
+                       retractall(expanding)),
+    ( rtcheck_lit_pos(Pos2, Pos)
     ->From = file_term_position(File, Pos1)
     ; From = file(File, Line, -1, _)
     ).
