@@ -47,6 +47,7 @@
            part_time/2]).
 
 :- use_module(library(apply)).
+:- use_module(library(terms_share)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
@@ -290,20 +291,8 @@ checkif_asr_props(T, CondValues, Asr, PType) :-
 :- use_module(library(substitute)).
 :- use_module(library(gcb)).
 
-eq(A, B, A=B).
-
 generalize_term(STerm, Term, _) :-
     \+ terms_share(STerm, Term).
-
-terms_share(A, B) :-
-    term_variables(A, VarsA),
-    VarsA \= [], % Optimization
-    term_variables(B, VarsB),
-    ( member(VA, VarsA),
-      member(VB, VarsB),
-      VA==VB
-    ),
-    !.
 
 check_asr_props(T, Asr, Cond, PType, PropValues) :-
     copy_term_nat(Asr, NAsr),
@@ -322,7 +311,7 @@ check_asr_props(T, Asr, Cond, PType, PropValues) :-
                           substitute(generalize_term(SSub), ST, SG),
                           term_variables(SSub, VL),
                           copy_term((_:SG)-VL, Prop-RL),
-                          maplist(eq, VL, RL, VNL),
+                          maplist(\ A^B^(A=B)^true, VL, RL, VNL),
                           list_sequence(VNL, Body)
                         ), L),
                 retractall(metaprops:'$last_compat_failure'(_, _)),
