@@ -42,13 +42,13 @@
                                  call_ai/1,
                                  eval_ai/1,
                                  skip_ai/1,
-                                 match_noloops/6,
-                                 terms_share/2]).
+                                 match_noloops/6]).
 
 :- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(term_size)).
+:- use_module(library(terms_share)).
 :- use_module(library(neck)).
 
 :- meta_predicate
@@ -386,15 +386,6 @@ abstract_interpreter_body(G, M, _, state(_, EvalL, _, _, _, _)) -->
     {call(M:R)}.
 abstract_interpreter_body(H, M, Abs, State) -->
     cut_to(abstract_interpreter_lit(H, M, Abs, State)).
-
-terms_share(A, B) :-
-    term_variables(A, VarsA),
-    VarsA \= [], % Optimization
-    term_variables(B, VarsB),
-    ( member(VA, VarsA),
-      member(VB, VarsB),
-      VA==VB
-    ), !.
 
 is_bottom(bottom, bottom).
 

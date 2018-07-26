@@ -36,6 +36,7 @@
                             slicer_abstraction/9]).
 
 :- use_module(library(abstract_interpreter)).
+:- use_module(library(terms_share)).
 
 :- meta_predicate
     abstract_slice(0,+,?),
@@ -81,18 +82,6 @@ chain_of_dependencies(Spec, VarsR, Goal, ContL) :-
     ; select(Cont, ContL, ContL2),
       terms_share(Cont, VarsR, Goal),
       chain_of_dependencies(Spec, VarsR, Cont, ContL2)
-    ), !.
-
-terms_share(A, VarsR, B) :-
-    term_variables(A, VarsA),
-    VarsA \= [], % Optimization
-    term_variables(B, VarsB),
-    ( member(VA, VarsA),
-      member(VB, VarsB),
-      VA==VB,
-      \+ ( member(VR, VarsR),
-           VA == VR
-         )
     ), !.
 
 slicer_abstraction(Spec, VarsR, Scope, MGoal, Body,
