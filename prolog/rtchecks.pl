@@ -44,7 +44,7 @@
 :- use_module(system:library(rtchecks_rt)).
 
 rtchecked(PlList) :-
-    throw(error(context_error(nodirective, rtcheck(PlList)), _)).
+    throw(error(context_error(nodirective, rtchecked(PlList)), _)).
 
 :- multifile
     prolog:rename_predicate/2.
@@ -71,32 +71,26 @@ wrappers(Name/Arity) -->
       atom_concat(Name, ' rtchecked', WrapName),
       Head =.. [Name|Args],
       WrappedHead =.. [WrapName|Args],
-      prolog_load_context(module, Module),
-      ( implementation_module(Module:Head, Module),
-        \+ predicate_property(Module:Head, multifile),
-        \+ predicate_property(Module:Head, dynamic)
-      ->Head2 = Head,
-        Goal2 = WrappedHead,
-        Name2 = Name,
-        Level = head
-      ; Head2 = WrappedHead,
-        Goal2 = Head,
-        Name2 = WrapName,
-        Level = body
-      )
+      prolog_load_context(module, Module)
     },
-    ( { predicate_property(Module:Head, exported),
-        Level = body
+    ['$rtchecked'(Head, Level)],
+    ( { implementation_module(Module:Head, Module),
+        \+ predicate_property(Module:Head, multifile),
+        \+ '$get_predicate_attribute'(Module:Head, (discontiguous), 1),
+        \+ predicate_property(Module:Head, dynamic)
       }
-    ->[(:- export(Name2/Arity))]
-    ; []
-    ),
-    [ '$rtchecked'(Head, Level),
-      (:- module_transparent Name2/Arity),
-      (Head2 :-
-           start_rtcheck(Module:Head, Goal2)
+    ->{Level = head},
+      % module_transparent is required to be able to execute WrapperHead in the
+      % context where Head was called from, otherwise the runtime-checks will be
+      % incorrectly skipped for imported predicates if rtchecks_level is exports
+      [(:- module_transparent Name/Arity),
+       (Head :- start_rtcheck(Module:Head, WrappedHead))],
+      ( {'$get_predicate_attribute'(Module:Head, (transparent), 1)}
+      ->[(:- module_transparent WrapName/Arity)]
+      ; []
       )
-    ].
+    ; {Level = body}
+    ).
 
 %!  prolog:rename_predicate(:Head1, :Head) is semidet.
 %
@@ -118,25 +112,40 @@ rename_term(Compound1, Compound) :-
 rename_term(Name, WrapName) :-
     atom_concat(Name, ' rtchecked', WrapName).
 
-term_expansion((:- rtchecked(Preds)),
-               [ (:- discontiguous('$rtchecked'/2)),
-                 (:- public '$rtchecked'/2)
-                 | Clauses
-               ]) :-
-    phrase(wrappers(Preds), Clauses).
+term_expansion((:- rtchecked(Preds)), []) :-
+    phrase(( ( { '$current_source_module'(CM),
+                 '$defined_predicate'(CM:'$rtchecked'(_, _))
+               }
+             ->[]
+             ; [(:- discontiguous('$rtchecked'/2)),
+                (:- public '$rtchecked'/2)]
+             ),
+             wrappers(Preds)
+           ), Clauses),
+    % We use compile_aux_clauses to make Clauses immediately available:
+    compile_aux_clauses(Clauses).
 
-goal_expansion(Goal1, Pos, '$with_ploc'(Goal, From),
-               term_position(0, 0, 0, 0, [Pos, _])) :-
-    prolog_load_context(module, M),
-    implementation_module(M:Goal1, IM),
+rtcheck_lit_pos(P, term_position(F,T,F,T,[_,P,_])) :-
+    nonvar(P),
+    arg(1, P, F),
+    arg(2, P, T).
+
+goal_expansion(Goal, Pos1, rtcheck_lit(Level, Goal, From), Pos) :-
+    % prolog_load_context(module, M),
+    '$current_source_module'(M),
+    implementation_module(M:Goal, IM),
     '$defined_predicate'(IM:'$rtchecked'(_, _)),
-    call(IM:'$rtchecked'(Goal1, body)),
-    rename_term(Goal1, Goal),
+    call(IM:'$rtchecked'(Goal, Level)),
     source_location(File, Line),
-    ( nonvar(Pos)
-    ->From = file_term_position(File, Pos)
+    ( rtcheck_lit_pos(Pos1, Pos)
+    ->From = file_term_position(File, Pos1)
     ; From = file(File, Line, -1, _)
     ).
+
+:- multifile
+    prolog_clause:unify_goal/5.
+
+prolog_clause:unify_goal(G, rtcheck_lit(_, G, _), _, P1, P) :- rtcheck_lit_pos(P1, P).
 
 :- multifile
     sandbox:safe_directive/1.

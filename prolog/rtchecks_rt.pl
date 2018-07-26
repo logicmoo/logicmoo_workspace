@@ -32,11 +32,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(rtchecks_rt, 
+:- module(rtchecks_rt,
 	  [rtcheck_goal/2,
            rtcheck_goal/3,
            rtcheck_goal/4,
 	   start_rtcheck/2,
+           rtcheck_lit/3,
 	   rtc_call/3]).
 
 :- use_module(library(apply)).
@@ -67,21 +68,21 @@ is executed as if where transformed to:
 
 ```
 pred :-
-     "check entry...", 
+     "check entry...",
      "check exit...",
      'pred$rtc1'.
 ```
 
 * *Step two*
 ```
-'pred$rtc1' :-                
-        "check compat pre..." 
-        "check calls...",     
-        "check success pre",  
-        "check comp..."(      
-        'pred$rtc2',          
-        "check success pos",  
-        "check compat pos..." 
+'pred$rtc1' :-
+        "check compat pre..."
+        "check calls...",
+        "check success pre",
+        "check comp..."(
+        'pred$rtc2',
+        "check success pos",
+        "check compat pos..."
 
 'pred$rtc2' :-
         body.
@@ -140,12 +141,21 @@ determine_context_module(Goal, WM, CM) :-
     ; CM = WM
     ).
 
-:- meta_predicate start_rtcheck(+, 0).
-start_rtcheck(M:Goal1, WM:WrappedHead) :-
+:- meta_predicate start_rtcheck(+, 0 ).
+start_rtcheck(M:Goal1, CM:WrappedHead) :-
     resolve_calln(Goal1, Goal),
-    determine_context_module(Goal, WM, CM),
+    % determine_context_module(Goal, WM, CM),
     collect_rtasr(Goal, CM, _, M, RAsrL),
-    check_goal(rt, M:WrappedHead, M, CM, RAsrL).
+    check_goal(rt, @(M:WrappedHead, CM), M, CM, RAsrL).
+
+prolog:called_by(rtcheck_lit(_, C, _), rtchecks_rt, M, [M:C]) :- nonvar(C).
+
+% Note: it should be 0, but we use : to avoid loop in goal_expansion
+:- meta_predicate rtcheck_lit(+, :, +).
+rtcheck_lit(body, Goal, From) :-
+    '$with_ploc'(start_rtcheck(Goal, Goal), From).
+rtcheck_lit(head, Goal, From) :-
+    '$with_ploc'(Goal, From).
 
 collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
     qualify_meta_goal(Goal, M, CM, Pred),
@@ -162,22 +172,18 @@ assrt_lib:asr_aprop(rtcheck(Asr), Key, Prop, From) :-
 :- meta_predicate rtc_call(+, 0, ?).
 
 rtc_call(Type, Check, Pred) :-
-    ignore(do_rtcheck(Type, Check, Pred)).
+    \+ do_rtcheck(Type, Check, Pred).
 
-rtcheck_ifnot(Check, Pred, PredName) :-
-    check_cond(\+ Check, Pred, PredName).
-
-do_rtcheck(check, Check, Pred) :-
-    rtcheck_ifnot(Check, Pred, check/1).
-do_rtcheck(trust, Check, Pred) :-
-    current_prolog_flag(rtchecks_trust, yes),
-    rtcheck_ifnot(Check, Pred, trust/1).
-do_rtcheck(true, Check, Pred) :-
-    current_prolog_flag(rtchecks_true, yes),
-    rtcheck_ifnot(Check, Pred, true/1).
-do_rtcheck(false, Check, Pred) :-
-    current_prolog_flag(rtchecks_false, yes),
-    check_cond(Check, Pred, false/1),
+do_rtcheck(Status, Check, Pred) :-
+    memberchk(Status, [check, true, debug, static]),
+    current_prolog_flag(rtchecks_status, StatusL),
+    memberchk(Status, StatusL),
+    ( Status = false
+    ->Call = Check
+    ; Call = (\+ Check)
+    ),
+    check_cond(Call, Pred, Status/1),
     fail.
 
 sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).
+sandbox:safe_meta_predicate(rtchecks_rt:rtcheck_lit/3).

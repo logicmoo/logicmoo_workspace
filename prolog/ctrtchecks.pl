@@ -43,6 +43,7 @@
            collect_assertions/4,
            current_assertion/4,
            is_prop_check/5,
+           is_valid_status_type/2,
            part_time/2]).
 
 :- use_module(library(apply)).
@@ -97,11 +98,9 @@ is_valid_status_type(Status, Type) :-
         rtcheck_assr_type(Type),
         rtcheck_assr_status(Status).
 
-rtcheck_assr_status(true)  :- current_prolog_flag(rtchecks_true,  yes).
-rtcheck_assr_status(trust) :- current_prolog_flag(rtchecks_trust, yes).
-rtcheck_assr_status(debug) :- current_prolog_flag(rtchecks_debug, yes).
-rtcheck_assr_status(trace) :- current_prolog_flag(rtchecks_trace, yes).
-rtcheck_assr_status(check) :- current_prolog_flag(rtchecks_check, yes).
+rtcheck_assr_status(Status) :-
+            current_prolog_flag(rtchecks_status, StatusL),
+            member(Status, StatusL).
 
 rtcheck_assr_type(calls).
 rtcheck_assr_type(pred).
@@ -191,7 +190,7 @@ checkif_asrs_comp([Asr-PVL|AsrL], T, Goal1) :-
     checkif_asr_comp(T, PVL, Asr, Goal1, Goal),
     checkif_asrs_comp(AsrL, T, Goal).
 
-checkif_asr_comp(T, PropValues, Asr, M:Goal1, Goal) :-
+checkif_asr_comp(T, PropValues, Asr, M:Goal1, M:Goal) :-
     ( memberchk(PropValues, [[], [[]]]),
       copy_term_nat(Asr, NAsr),
       findall(g(NAsr, Glob, Loc),
@@ -200,8 +199,8 @@ checkif_asr_comp(T, PropValues, Asr, M:Goal1, Goal) :-
               ), GlobL),
       GlobL \= []
     ->comps_to_goal(GlobL, comp_pos_to_goal(Asr), Goal2, M:Goal1),
-      Goal = M:'$with_asr'(Goal2, Asr)
-    ; Goal = M:Goal1
+      Goal = '$with_asr'(Goal2, Asr)
+    ; Goal = Goal1
     ).
 
 comp_pos_to_goal(Asr, g(Asr, M:Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
@@ -216,7 +215,7 @@ comp_pos_to_goal(Asr, g(Asr, M:Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
 '$with_gloc'(Comp, GLoc) :-
     with_value(Comp, '$with_gloc', GLoc).
 
-:- meta_predicate '$with_ploc'(0, ?).
+:- meta_predicate '$with_ploc'(:, ?).
 '$with_ploc'(Comp, GLoc) :-
     with_value(Comp, '$with_ploc', GLoc).
 
@@ -287,6 +286,25 @@ checkif_asr_props(T, CondValues, Asr, PType) :-
     ; true
     ).
 
+:- use_module(library(list_sequence)).
+:- use_module(library(substitute)).
+:- use_module(library(gcb)).
+
+eq(A, B, A=B).
+
+generalize_term(STerm, Term, _) :-
+    \+ terms_share(STerm, Term).
+
+terms_share(A, B) :-
+    term_variables(A, VarsA),
+    VarsA \= [], % Optimization
+    term_variables(B, VarsB),
+    ( member(VA, VarsA),
+      member(VB, VarsB),
+      VA==VB
+    ),
+    !.
+
 check_asr_props(T, Asr, Cond, PType, PropValues) :-
     copy_term_nat(Asr, NAsr),
     once(asr_aprop(NAsr, head, _:Pred, _)),
@@ -298,9 +316,19 @@ check_asr_props(T, Asr, Cond, PType, PropValues) :-
               *->
                 valid_prop(T, Prop), % if not valid, ignore property
                 \+ check_prop(Check, VS, Prop),
+                findall(fails((SG :- Body, SSub)),
+                        ( once(metaprops:'$last_compat_failure'(_, Term-Sub)),
+                          greatest_common_binding(Term, Sub, ST, SSub, [], _, []),
+                          substitute(generalize_term(SSub), ST, SG),
+                          term_variables(SSub, VL),
+                          copy_term((_:SG)-VL, Prop-RL),
+                          maplist(eq, VL, RL, VNL),
+                          list_sequence(VNL, Body)
+                        ), L),
+                retractall(metaprops:'$last_compat_failure'(_, _)),
                 (Mult = once -> ! ; true),
                 CheckProp =.. [Check, Prop],
-                PropValue = (From/CheckProp-[])
+                PropValue = (From/CheckProp-L)
               ; PropValue = [] % Skip property
               )
             ),
