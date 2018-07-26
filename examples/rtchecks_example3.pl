@@ -42,9 +42,6 @@ family(B) :- atm(B).
 :- calls fullasr(A, _) : str(A).
 :- success fullasr(A, _) : int(A) => nnegint(A).
 
-:- rtchecked
-    fullasr/2.
-
 fullasr(X, X).
 
 :- pred p/1 is semidet.
