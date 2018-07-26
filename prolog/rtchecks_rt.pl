@@ -131,20 +131,9 @@ rtcheck_goal(CM:Goal1, Call, RTCheck) :-
 rtcheck_goal(Goal, M, CM, RAsrL) :-
     check_goal(rt, Goal, M, CM, RAsrL).
 
-% Kludge to fix transparent+meta_predicate:
-determine_context_module(Goal, WM, CM) :-
-    ( predicate_property(WM:Goal, meta_predicate(Spec)),
-      arg(N, Spec, Meta),
-      '$expand':meta_arg(Meta),
-      arg(N, Goal, CM:_)
-    ->true
-    ; CM = WM
-    ).
-
 :- meta_predicate start_rtcheck(+, 0 ).
 start_rtcheck(M:Goal1, CM:WrappedHead) :-
     resolve_calln(Goal1, Goal),
-    % determine_context_module(Goal, WM, CM),
     collect_rtasr(Goal, CM, _, M, RAsrL),
     check_goal(rt, @(M:WrappedHead, CM), M, CM, RAsrL).
 
