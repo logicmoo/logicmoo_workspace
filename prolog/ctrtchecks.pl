@@ -44,7 +44,8 @@
            current_assertion/4,
            is_prop_check/5,
            is_valid_status_type/2,
-           part_time/2]).
+           part_time/2,
+           rtcheck_assr_status/1]).
 
 :- use_module(library(apply)).
 :- use_module(library(terms_share)).

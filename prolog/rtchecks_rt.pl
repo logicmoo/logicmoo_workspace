@@ -164,9 +164,7 @@ rtc_call(Type, Check, Pred) :-
     \+ do_rtcheck(Type, Check, Pred).
 
 do_rtcheck(Status, Check, Pred) :-
-    memberchk(Status, [check, true, debug, static]),
-    current_prolog_flag(rtchecks_status, StatusL),
-    memberchk(Status, StatusL),
+    rtcheck_assr_status(Status),
     ( Status = false
     ->Call = Check
     ; Call = (\+ Check)

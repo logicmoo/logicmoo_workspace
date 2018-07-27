@@ -37,6 +37,7 @@
 define_flag(runtime_checks,          [yes, no],        atom, no).
 define_flag(rtchecks_level,          [inner, exports], atom, inner).
 define_flag(rtchecks_status,         listof([true, false, check, debug, static]), term, [check, static]).
+define_flag(rtchecks_static,         listof([true, false, check, debug, static]), term, [static]).
 define_flag(rtchecks_entry,          [yes, no],        atom, yes).
 define_flag(rtchecks_exit,           [yes, no],        atom, yes).
 define_flag(rtchecks_abort_on_error, [yes, no],        atom, no).

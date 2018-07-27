@@ -33,6 +33,8 @@ animal(A) :- int(A).
 
 family(B) :- atm(B).
 
+:- rtchecked fullasr/2.
+
 :- entry fullasr(A, B) : (animal(A), var(B)).
 
 :- pred fullasr(A, _) :: atm(A) : atm(A) => atm(A).

@@ -45,13 +45,15 @@ valid prolog flags with its values and a brief explanation of the meaning:
                          exported predicates.
   * __inner__  : Use also rtchecks for internal calls. Default.
 
-* __rtchecks_check__
-  * __no__     : Disable rtchecks for check assertions.
-  * __yes__    : Enable  rtchecks for check assertions. Default.
+* __rtchecks_status__
 
-* __rtchecks_trust__
-  * __no__     : Disable rtchecks for trust assertions.
-  * __yes__    : Enable  rtchecks for trust assertions. Default.
+  Contains a list of the assertion statuses to be checked, could be a list of
+  [true, false, check, debug, static]. Default value is [check, static].
+
+* __rtchecks_static__
+
+  Contains a list of the assertion statuses to be instrumented statically, could
+  be a list of [true, false, check, debug, static]. Default value is [static].
 
 * __rtchecks_entry__
   * __no__     : Disable rtchecks for entry assertions.
@@ -60,11 +62,6 @@ valid prolog flags with its values and a brief explanation of the meaning:
 * __rtchecks_exit__
   * __no__     : Disable rtchecks for exit assertions.
   * __yes__    : Enable  rtchecks for exit assertions. Default.
-
-* __rtchecks_test__
-  * __no__     : Disable rtchecks for test assertions. Default.
-  * __yes__    : Enable  rtchecks for test assertions. Used for
-                 debugging purposes, but is better to use the unittest library.
 
 * __rtchecks_abort_on_error__
 

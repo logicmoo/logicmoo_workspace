@@ -73,7 +73,8 @@ wrappers(Name/Arity) -->
       atom_concat(Name, ' rtchecked', WrapName),
       Head =.. [Name|Args],
       WrappedHead =.. [WrapName|Args],
-      prolog_load_context(module, Module)
+      prolog_load_context(module, Module),
+      check_unexpanded_usage(Name, Arity, Module)
     },
     ['$rtchecked'(Head, Level)],
     ( { implementation_module(Module:Head, Module),
@@ -127,11 +128,40 @@ generate_rtchecks(Preds) :-
     % We use compile_aux_clauses to make Clauses immediately available:
     compile_aux_clauses(Clauses).
 
+/* Use the next code to detect incorrect expansion of run-time checks */
+
+:- dynamic
+    check_unexpanded_usage/0.
+:- public
+    check_unexpanded_usage/0.
+% check_unexpanded_usage.
+
+:- if(check_unexpanded_usage).
+:- use_module(library(from_utils)).
+
+:- dynamic  rt_unexpanded/4.
+:- volatile rt_unexpanded/4.
+
+check_unexpanded_usage(F, A, M) :-
+    forall(( rt_unexpanded(F, A, CM, From),
+             from_to_file_line_pos(From, File, _, Line, Pos)
+           ),
+           format(user_error, "% ~w ~w instrumented but not goal expanded~n",
+                  [File:Line:Pos, @(M:F/A, CM)])).
+
+add_unexpanded_usage(G, M, From) :-
+    functor(G, F, A),
+    assertz(rt_unexpanded(F, A, M, From)).
+:- else.
+check_unexpanded_usage(_, _, _).
+:- endif.
+
 term_expansion((:- rtchecked(Preds)), []) :-
     generate_rtchecks(Preds).
 
 term_expansion(assrt_lib:asr_head_prop(_, M, Pred, Status, Type, _, _), _) :-
-    \+ memberchk(Status, [check, debug]),
+    current_prolog_flag(rtchecks_static, StaticL),
+    memberchk(Status, StaticL),
     Type \= (prop),
     \+ prop_asr(Pred, M, _, (prop), _, _, _),
     is_valid_status_type(Status, Type),
@@ -148,24 +178,38 @@ rtcheck_lit_pos(P, term_position(F,T,F,T,[_,P,_])) :-
     arg(1, P, F),
     arg(2, P, T).
 
-:- dynamic expanding/0.
+:- dynamic  expanding/0.
 :- volatile expanding/0.
 
-goal_expansion(Goal1, Pos1, rtcheck_lit(Level, Goal, From), Pos) :-
-    \+ expanding,
-    % prolog_load_context(module, M),
-    '$current_source_module'(M),
-    implementation_module(M:Goal1, IM),
-    '$defined_predicate'(IM:'$rtchecked'(_, _)),
-    call(IM:'$rtchecked'(Goal1, Level)),
+source_from(Pos, From) :-
     source_location(File, Line),
-    setup_call_cleanup(assertz(expanding),
-                       expand_goal(Goal1, Pos1, Goal, Pos2),
-                       retractall(expanding)),
-    ( rtcheck_lit_pos(Pos2, Pos)
-    ->From = file_term_position(File, Pos1)
+    ( nonvar(Pos)
+    ->From = file_term_position(File, Pos)
     ; From = file(File, Line, -1, _)
     ).
+
+goal_expansion(IM, Goal1, Pos1, Goal, Pos) :-
+    '$defined_predicate'(IM:'$rtchecked'(_, _)),
+    call(IM:'$rtchecked'(Goal1, Level)),
+    !,
+    setup_call_cleanup(assertz(expanding),
+                       expand_goal(Goal1, Pos1, Goal2, Pos2),
+                       retractall(expanding)),
+    ignore(rtcheck_lit_pos(Pos2, Pos)),
+    source_from(Pos2, From),
+    Goal = rtcheck_lit(Level, Goal2, From).
+:- if(check_unexpanded_usage).
+goal_expansion(IM, Goal1, Pos1, _, _) :-
+    source_from(Pos1, From),
+    add_unexpanded_usage(Goal1, IM, From),
+    fail.
+:- endif.
+
+goal_expansion(Goal1, Pos1, Goal, Pos) :-
+    \+ expanding,
+    '$current_source_module'(M),
+    implementation_module(M:Goal1, IM),
+    goal_expansion(IM, Goal1, Pos1, Goal, Pos).
 
 :- multifile
     prolog_clause:unify_goal/5.
