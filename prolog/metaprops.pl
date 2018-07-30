@@ -34,7 +34,8 @@
 
 :- module(metaprops, [(type)/1, (type)/2, (global)/1, (global)/2, compat/1,
                       compat/2, instan/1, instan/2, (declaration)/1,
-                      (declaration)/2, check/1, trust/1, true/1, false/1]).
+                      (declaration)/2, check/1, trust/1, true/1, false/1,
+                      last_prop_failure/1]).
 
 :- use_module(library(assertions)).
 :- use_module(library(qualify_meta_goal)).
@@ -87,76 +88,110 @@ compat(M:Goal) :-
     term_variables(Goal, VS),
     compat(M:Goal, VS).
 
+:- use_module(library(gcb)).
+:- use_module(library(list_sequence)).
+:- use_module(library(substitute)).
+:- use_module(library(terms_share)).
+
 :- dynamic
-        '$last_compat_failure'/2.
+        '$last_prop_failure'/2.
+
+generalize_term(STerm, Term, _) :-
+    \+ terms_share(STerm, Term).
+
+current_prop_failure((SG :- Body)) :-
+    '$last_prop_failure'(Term, SubU),
+    sort(SubU, Sub),
+    greatest_common_binding(Term, Sub, ST, SSub, [[]], Unifier, []),
+    substitute(generalize_term(SSub), ST, SG),
+    maplist(\ A^(\+A)^true, SSub, NSub),
+    foldl(simplify_unifier(SG-SSub), Unifier, LitL, NSub),
+    LitL \= [],
+    list_sequence(LitL, Body).
+
+simplify_unifier(Term, A=B) -->
+    ( {occurrences_of_var(A, Term, 0 )}
+    ->{A=B}
+    ; [A=B]
+    ).
+
+last_prop_failure(L) :-
+    findall(E, once(current_prop_failure(E)), L),
+    retractall('$last_prop_failure'(_, _)).
+
+asserta_prop_failure(T, S) :-
+    once(retract('$last_prop_failure'(T, L))),
+    asserta('$last_prop_failure'(T, [S|L])).
+
+cleanup_prop_failure(T, S) :-
+    retractall('$last_prop_failure'(_, _)),
+    asserta('$last_prop_failure'(T, S)).
+
 
 compat(M:Goal, VarL) :-
     copy_term_nat(Goal-VarL, Term-VarTL), % get rid of corroutining while checking compatibility
     sort(VarTL, VS),
-    retractall('$last_compat_failure'(_, _)),
-    compat(Term, VS, M, Term).
+    cleanup_prop_failure(Term, []),
+    prolog_current_choice(CP),
+    compat(Term, data(VS, Term, CP), M).
 
 % this small interpreter will reduce the possibility of loops if the goal being
-% checked is not linear, i.e., it contains linked variables:
-compat(Var, _, _, _) :- var(Var), !.
-compat(M:Goal, VarL, _, T) :- !,
-    compat(Goal, VarL, M, T).
-compat((A, B), VarL, M, T) :-
+% checked is not linear, i.e., if it contains linked variables:
+compat(Var, _, _) :- var(Var), !.
+compat(M:Goal, D, _) :- !,
+    compat(Goal, D, M).
+compat((A, B), D, M) :-
     !,
-    compat(A, VarL, M, T),
-    compat(B, VarL, M, T).
-compat(compat(A), VarL, M, T) :-
+    compat(A, D, M),
+    compat(B, D, M).
+compat(compat(A), D, M) :-
     !,
-    compat(A, VarL, M, T).
-compat((A->B; C), VarL, M, T) :-
+    compat(A, D, M).
+compat((A->B; C), D, M) :-
+    !,
     ( call(M:A)
-    ->compat(B, VarL, M, T)
-    ; compat(C, VarL, M, T)
+    ->compat(B, D, M)
+    ; compat(C, D, M)
     ), !.
-compat((A->B), VarL, M, T) :-
+compat((A->B), D, M) :-
     !,
     ( call(M:A)
-    ->compat(B, VarL, M, T)
+    ->compat(B, D, M)
     ).
-compat(!, _, _, _) :-
+compat(!, data(_, _, CP), _) :-
     !,
-    cut_from.
-compat(A, VarL, M, _) :-
+    cut_from(CP).
+compat(A, data(VarL, _, _), M) :-
     % This clause allows usage of simple test predicates as compatibility check
     compound(A),
     A \= (_;_),
-    compatc(A, VarL, M), !.
-compat(Term, VS, M, T) :-
-    ( '$last_compat_failure'(N1, _)
-    ->succ(N1, N)
-    ; N = 1
-    ),
-    asserta('$last_compat_failure'(N, T-Term)),
-    compat_1(Term, VS, M, T),
-    forall(( '$last_compat_failure'(I, _),
-             I >= N
-           ),
-           retract('$last_compat_failure'(I, _))).
+    compatc(A, VarL, M),
+    !.
+compat(Term, D, M) :-
+    D = data(_, T, _),
+    asserta_prop_failure(T, Term),
+    compat_1(Term, D, M),
+    cleanup_prop_failure(T, []).
 
 % NOTE: The cut in compat_1 assume that is safe to do it.  That happens when the
 % arguments of the Goal do not share with other parts of the check that could
 % eventually lead the execution to a failure and backtrack.
 
-compat_1((A; B), VarL, M, T) :-
-    ( compat(A, VarL, M, T)
-    ; compat(B, VarL, M, T)
+compat_1((A; B), D, M) :-
+    ( compat(A, D, M)
+    ; compat(B, D, M)
     ),
     !.
-compat_1(A, VarL, M, T) :-
+compat_1(A, D, M) :-
     ( is_type(A, M)
-    ->catch(cut_to(compat_body(M:A, VarL, T)),
+    ->catch(compat_body(M:A, D),
             _,
-            \+ \+ do_compat(M:A, VarL))
-    ; \+ \+ do_compat(M:A, VarL)
+            \+ \+ do_compat(M:A, D))
+    ; \+ \+ do_compat(M:A, D)
     ),
     !.
 
-do_compat(Goal, VarL) :-
+do_compat(Goal, data(VarL, _, _)) :-
     term_variables(VarL, VS),
     prolog_current_choice(CP),
     maplist(freeze_cut(CP), VS),
@@ -167,22 +202,18 @@ is_type(Head, M) :-
     memberchk(Stat, [check, true]),
     prop_asr(glob, type(_), _, Asr).
 
-:- meta_predicate compat_body(0, +, +).
+:- meta_predicate compat_body(0, +).
 
-compat_body(M:G1, VarL, T) :-
+compat_body(M:G1, data(V, T, _)) :-
     qualify_meta_goal(M:G1, G),
+    prolog_current_choice(CP),
     clause(M:G, Body, Ref),
     clause_property(Ref, module(CM)),
-    compat(Body, VarL, CM, T).
+    compat(Body, data(V, T, CP), CM).
 
-:- use_module(library(intercept)).
 :- use_module(library(safe_prolog_cut_to)).
 
-cut_to(Goal) :-
-    prolog_current_choice(CP),
-    intercept(Goal, cut_from, catch(safe_prolog_cut_to(CP), _, true)).
-
-cut_from :- send_signal(cut_from).
+cut_from(CP) :- catch(safe_prolog_cut_to(CP), _, true).
 
 freeze_cut(CP, V) :-
     freeze(V, catch(prolog_cut_to(CP), _, true)).
@@ -216,8 +247,9 @@ compatc_arg(gnd(      A), A).
 compatc_arg(ground(   A), A).
 compatc_arg(nonground(A), A).
 
-freeze_fail(CP, V) :-
+freeze_fail(CP, Term, V) :-
     freeze(V, ( prolog_cut_to(CP),
+                cleanup_prop_failure(Term, [V]),
                 fail
               )).
 
@@ -235,7 +267,7 @@ instan(Goal) :-
 
 instan(Goal, VS) :-
     prolog_current_choice(CP),
-    \+ \+ ( maplist(freeze_fail(CP), VS),
+    \+ \+ ( maplist(freeze_fail(CP, Goal), VS),
             Goal
           ).
 
