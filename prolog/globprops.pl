@@ -640,7 +640,7 @@ nfi(V, Goal) :-
     call(Goal),
     ( subsumes_term(V, X)
     ->true
-    ; send_comp_rtcheck(Goal, nfi, fi)
+    ; send_comp_rtcheck(Goal, nfi(V), fi(X))
     ).
 
 %!  fi(Term, :Goal)
@@ -653,7 +653,7 @@ fi(V, Goal) :-
     copy_term(V, X),
     call(Goal),
     ( subsumes_term(V, X)
-    ->send_comp_rtcheck(Goal, fi, nfi)
+    ->send_comp_rtcheck(Goal, fi(V), nfi(X))
     ; true
     ).
 
