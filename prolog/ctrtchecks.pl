@@ -48,7 +48,6 @@
            rtcheck_assr_status/1]).
 
 :- use_module(library(apply)).
-:- use_module(library(terms_share)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
@@ -288,13 +287,6 @@ checkif_asr_props(T, CondValues, Asr, PType) :-
     ; true
     ).
 
-:- use_module(library(list_sequence)).
-:- use_module(library(substitute)).
-:- use_module(library(gcb)).
-
-generalize_term(STerm, Term, _) :-
-    \+ terms_share(STerm, Term).
-
 check_asr_props(T, Asr, Cond, PType, PropValues) :-
     copy_term_nat(Asr, NAsr),
     once(asr_aprop(NAsr, head, _:Pred, _)),
@@ -306,16 +298,7 @@ check_asr_props(T, Asr, Cond, PType, PropValues) :-
               *->
                 valid_prop(T, Prop), % if not valid, ignore property
                 \+ check_prop(Check, VS, Prop),
-                findall(fails((SG :- Body, SSub)),
-                        ( once(metaprops:'$last_compat_failure'(_, Term-Sub)),
-                          greatest_common_binding(Term, Sub, ST, SSub, [], _, []),
-                          substitute(generalize_term(SSub), ST, SG),
-                          term_variables(SSub, VL),
-                          copy_term((_:SG)-VL, Prop-RL),
-                          maplist(\ A^B^(A=B)^true, VL, RL, VNL),
-                          list_sequence(VNL, Body)
-                        ), L),
-                retractall(metaprops:'$last_compat_failure'(_, _)),
+                last_prop_failure(L),
                 (Mult = once -> ! ; true),
                 CheckProp =.. [Check, Prop],
                 PropValue = (From/CheckProp-L)

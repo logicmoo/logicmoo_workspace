@@ -42,6 +42,7 @@
 
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
+:- use_module(library(metaprops)).
 :- use_module(library(rtchecks_flags)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(implementation_module)).
@@ -97,7 +98,8 @@ interpreter.
 
 check_cond(Cond, Check, PredName) :-
     ( Cond
-    ->send_check([[]/Check-[]], pp_check, PredName, [])
+    ->last_prop_failure(L),
+      send_check([[]/Check-L], pp_check, PredName, [])
     ; true
     ).
 
