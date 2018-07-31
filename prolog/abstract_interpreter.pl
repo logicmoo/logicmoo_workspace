@@ -127,6 +127,14 @@ replace_goal_hook(eval_ai(G), abstract_interpreter, G).
 replace_goal_hook(skip_ai(_), abstract_interpreter, true).
 replace_goal_hook(V is A, _, (ground(A)->V is A; var(V))).
 
+replace_body_hook(with_value(G, _, _), context_values, G).
+replace_body_hook(with_value(G, _, _, _), context_values, G).
+replace_body_hook(rtcheck_lit(_, G, _), _, G).
+replace_body_hook(start_rtcheck(_, G), rtchecks_rt, G).
+replace_body_hook('$with_asr'( G, _), ctrtchecks, G).
+replace_body_hook('$with_gloc'(G, _), ctrtchecks, G).
+replace_body_hook('$with_ploc'(G, _), ctrtchecks, G).
+
 call_ai(G) :- call(G).
 eval_ai(_).
 skip_ai(G) :- call(G).
@@ -190,8 +198,13 @@ cut_from :- send_signal(cut_from).
 
 abstract_interpreter_body(Goal, M, _, _) -->
     {var(Goal) ; var(M)}, bottom, !.
-abstract_interpreter_body(M:Goal, _, Abs, State) --> !,
+abstract_interpreter_body(M:Goal, _, Abs, State) -->
+    !,
     abstract_interpreter_body(Goal, M, Abs, State).
+abstract_interpreter_body(@(M:Goal, CM), _, Abs, State) -->
+    !,
+    cut_to(abstract_interpreter_lit(Goal, M, CM, Abs, State)).
+
 abstract_interpreter_body(call(Goal), M, Abs, State) --> !,
     cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
 abstract_interpreter_body(\+ A, M, Abs, State) --> !,
@@ -385,7 +398,7 @@ abstract_interpreter_body(G, M, _, state(_, EvalL, _, _, _, _)) -->
     !,
     {call(M:R)}.
 abstract_interpreter_body(H, M, Abs, State) -->
-    cut_to(abstract_interpreter_lit(H, M, Abs, State)).
+    cut_to(abstract_interpreter_lit(H, M, M, Abs, State)).
 
 is_bottom(bottom, bottom).
 
@@ -397,11 +410,11 @@ cut_if_no_bottom -->
 
 abstract_interpreter(MH, Abs, State) -->
     {strip_module(MH, M, H)},
-    abstract_interpreter_lit(H, M, Abs, State).
+    abstract_interpreter_lit(H, M, M, Abs, State).
 
-abstract_interpreter_lit(H, M, Abs, State1) -->
+abstract_interpreter_lit(H, M, CM, Abs, State1) -->
     { predicate_property(M:H, meta_predicate(Meta))
-    ->qualify_meta_goal(M:H, Meta, Goal)
+    ->qualify_meta_goal(CM:H, Meta, Goal)
     ; Goal = H
     },
     { State1 = state(Loc, EvalL, OnError, CallL, Data, Cont),
@@ -424,8 +437,8 @@ abstract_interpreter_lit(H, M, Abs, State1) -->
           % TBD: information to error
           fail
         }
-      ; call(Abs, M:Goal, CM:Body, State2, State),
-        cut_to(abstract_interpreter_body(Body, CM, Abs, State))
+      ; call(Abs, M:Goal, BM:Body, State2, State),
+        cut_to(abstract_interpreter_body(Body, BM, Abs, State))
       )
     ).
 
