@@ -56,18 +56,29 @@ fix_choice(CPC, CP, CPF) :-
     prolog_choice_attribute(CPC, parent, CPP),
     fix_choice(CPP, CP, CPF).
 
+:- dynamic
+    decreasing_cp_db/2.
+        
+:- volatile
+    decreasing_cp_db/2.
+
 call_decreasing_cp(Call, Arg) :-
+    variant_sha1(Arg, H1),
     prolog_current_choice(CP1),
-    copy_term(Arg, PArg),
-    S = s([CP1-PArg]),
-    call(Call),
-    prolog_current_choice(CP2),
-    S = s(SolL1),
-    ( select(CP-Sol, SolL1, SolL),
-      Sol =@= Arg,
-      CP2 > CP
-    ->safe_prolog_cut_to(CP2, CP, CPN)
-    ; SolL = SolL1,
-      CPN = CP2
-    ),
-    nb_setarg(1, S, [CPN-Arg|SolL]).
+    setup_call_cleanup(
+        assertz(decreasing_cp_db(H1, CP1)),
+        do_call_decreasing_cp(Call, Arg),
+        retractall(decreasing_cp_db(_, _))).
+
+do_call_decreasing_cp(Call, Arg) :-
+    ( call(Call),
+      prolog_current_choice(CP2),
+      variant_sha1(Arg, H2),
+      ( clause(decreasing_cp_db(H2, CP), _, Ref),
+        CP2 > CP
+      ->erase(Ref),
+        safe_prolog_cut_to(CP2, CP, CPN)
+      ; CPN = CP2
+      ),
+      assertz(decreasing_cp_db(H2, CPN))
+    ).
