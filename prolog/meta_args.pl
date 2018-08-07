@@ -57,7 +57,7 @@ attr_unify_hook(A1, Other) :-
     ; true
     ).
 
-mark_meta_arg(_, Arg, Spec) :-
+mark_meta_arg(Arg, Spec) :-
     ( var(Arg)
     ->annotate(Arg, Spec)
     ; Arg = M:A

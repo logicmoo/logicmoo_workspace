@@ -8,7 +8,7 @@
 :- use_module(library(globprops)).
 :- use_module(library(typeprops)).
 :- use_module(library(edinburgh)).
-:- use_module(library(mapargs)).
+:- use_module(library(mapnargs)).
 
 :- meta_predicate metapred(+,-,?,1).
 
@@ -40,4 +40,4 @@ display1(N, T) :- writeln(N-T).
 
 amtestf2 :-
     Data = data(a, b, c),
-    mapargs(display1, Data).
+    mapnargs(display1, Data).
