@@ -102,8 +102,8 @@ rtcheck_body(M, G, C) :- % Partially interpreted
     ; C = G
     ).
 
-rtcheck_body_meta_arg(M, _, 0, G, R) :- !, rtcheck_body(M, G, R).
-rtcheck_body_meta_arg(_, _, _, R, R).
+rtcheck_body_meta_arg(M, 0, G, R) :- !, rtcheck_body(M, G, R).
+rtcheck_body_meta_arg(_, _, R, R).
 
 :- multifile user:prolog_trace_interception/4.
 
