@@ -38,7 +38,7 @@
            any/1, gndstr/1, str/1, struct/1, term/1, char/1, atmel/1, keypair/1,
            sequence_or_list/2, operator_specifier/1, character_code/1, linear/1,
            mod_qual/1, mod_qual/2, goal/1, goal/2, arithexpression/1, keylist/1,
-           sequence/2, predname/1, constant/1
+           sequence/2, predname/1, constant/1, rat/1
           ]).
 
 :- use_module(library(neck)).
@@ -126,6 +126,12 @@ posflt(Q) :-
     posint(X),
     intfrac1(X, Q).
 
+:- type rat/1.
+
+rat(A rdiv B) :-
+    int(A),
+    int(B).
+
 :- type num/1.
 
 %!  num(X)
@@ -138,6 +144,8 @@ num(X) :-
 num(F) :-
     nnegnumgen(Q),
     give_sign(Q, F).
+num(Q) :-
+    rat(Q).
 
 :- type nnegnum/1.
 
