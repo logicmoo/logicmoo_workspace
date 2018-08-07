@@ -56,7 +56,7 @@ meta_call_goal(Goal, M, MCaller, Meta) :-
     strip_module(MCaller, _, Caller),
     mapargs(meta_call_goal_arg(Caller, CMeta), Goal, GMeta, Meta).
 
-meta_call_goal_arg(Caller, CMeta, _, Arg, Spec1, Spec) :-
+meta_call_goal_arg(Caller, CMeta, Arg, Spec1, Spec) :-
     ( module_qualified(Spec1),
       ( nonvar(Arg),
         Arg = _:_
@@ -90,7 +90,7 @@ qualify_meta_goal(M:Goal1, Meta, Goal) :-
 module_qualified(:) :- !.
 module_qualified(N) :- integer(N), N >= 0.
 
-meta_goal(M, _, ArgM, Arg1, Arg) :-
+meta_goal(M, ArgM, Arg1, Arg) :-
     ( module_qualified(ArgM)
     ->check:add_module(Arg1, M, Arg)
     ; Arg = Arg1
