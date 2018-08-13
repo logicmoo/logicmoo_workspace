@@ -122,7 +122,7 @@ mapnargs(Goal, T1, T2) :-
     functor(T1, N, A),
     functor(T2, N, A),
     mapnargs_(1, Goal, T1, T2).
-mapnargs(_, _, _).
+mapnargs(_, T, T).
 
 mapnargs(Goal, T1, T2, T3) :-
     compound(T1),
@@ -131,7 +131,7 @@ mapnargs(Goal, T1, T2, T3) :-
     functor(T2, N, A),
     functor(T3, N, A),
     mapnargs_(1, Goal, T1, T2, T3).
-mapnargs(_, _, _, _).
+mapnargs(_, T, T, T).
 
 mapnargs(Goal, T1, T2, T3, T4) :-
     compound(T1),
@@ -141,6 +141,7 @@ mapnargs(Goal, T1, T2, T3, T4) :-
     functor(T3, N, A),
     functor(T4, N, A),
     mapnargs_(1, Goal, T1, T2, T3, T4).
+mapnargs(_, T, T, T, T).
 
 mapnargs(Goal, T1, T2, T3, T4, T5) :-
     compound(T1),
@@ -151,7 +152,7 @@ mapnargs(Goal, T1, T2, T3, T4, T5) :-
     functor(T4, N, A),
     functor(T5, N, A),
     mapnargs_(1, Goal, T1, T2, T3, T4, T5).
-mapnargs(_, _, _, _, _, _).
+mapnargs(_, T, T, T, T, T).
 
 mapnargs(Goal, T1, T2, T3, T4, T5, T6) :-
     compound(T1),
@@ -163,4 +164,4 @@ mapnargs(Goal, T1, T2, T3, T4, T5, T6) :-
     functor(T5, N, A),
     functor(T6, N, A),
     mapnargs_(1, Goal, T1, T2, T3, T4, T5, T6).
-mapnargs(_, _, _, _, _, _, _).
+mapnargs(_, T, T, T, T, T, T).
