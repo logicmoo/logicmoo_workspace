@@ -41,6 +41,15 @@ d_t(Dict) :-
 :- type positive_t/1.
 positive_t(N) :- int(N).
 
+:- type union_t/1.
+union_t(u(First, Second)) :-
+    int(First),
+    int(Second).
+union_t(num(Number)) :-
+    num(Number).
+union_t(positive(T)) :-
+    positive_t(T).
+
 :- type negative_t/1 is foreign(is_negative_t).
 
 :- type contain_extern_t/1.
