@@ -80,6 +80,7 @@
 #endif
 
 #define FI_get_integer(_, t, i) PL_get_integer(t, i)
+#define FI_get_long(_, t, l) PL_get_long(t, l)
 #define FI_get_float(_, t, f)   PL_get_float(t, f)
 #define FI_get_float_t(_, t, f) ({			\
 	    double d;					\
@@ -105,6 +106,7 @@
 	})
 
 #define FI_unify_integer(t, p)   PL_unify_integer(t, p)
+#define FI_unify_long(t, p)      PL_unify_integer(t, p) /* there is no PL_unify_long */
 #define FI_unify_float(t, p)     PL_unify_float(t, p)
 #define FI_unify_float_t(t, p)   PL_unify_float(t, (double)(p))
 #define FI_unify_pointer(t, p) ({			\

@@ -1367,6 +1367,7 @@ match_known_type_(ptr(Type, A), M, ptr(Spec), A) :-
     match_known_type_(Prop, M, Spec, E).
 % match_known_type_(string(A),        _, string_chars-'char*', A).
 match_known_type_(ptr(A),            _, pointer-'void*', A).
+match_known_type_(long(A),           _, long-long,       A).
 match_known_type_(int(A),            _, integer-int,     A).
 match_known_type_(nnegint(A),        _, integer-'unsigned int', A).
 match_known_type_(integer(A),        _, integer-int,     A).

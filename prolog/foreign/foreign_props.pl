@@ -39,6 +39,7 @@
            (native)/2,
            fimport/1,
            fimport/2,
+           long/1,
            returns/2,
            parent/2,
            returns_state/1,
@@ -102,6 +103,9 @@ float_t(Num) :- num(Num).
 
 :- type ptr/1 # "Defines a void pointer".
 ptr(Ptr) :- int(Ptr).
+
+:- type long/1 # "Defines a long integer".
+long(Long) :- int(Long).
 
 %!  ptr(:Type, ?Ptr)
 %
