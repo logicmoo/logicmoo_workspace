@@ -97,6 +97,7 @@ evaluable_body_hook(A < B, _, (ground(A),ground(B))).
 evaluable_body_hook(A =< B, _, (ground(A),ground(B))).
 evaluable_body_hook(A =:= B, _, (ground(A),ground(B))).
 evaluable_body_hook(atom_codes(A, B), _, (ground(A);ground(B))).
+evaluable_body_hook(atom_chars(A, B), _, (ground(A);ground(B))).
 evaluable_body_hook(member(_, L), _, is_list(L)).
 evaluable_body_hook(select(_, L, _), _, is_list(L)).
 evaluable_body_hook(option(O, L), _, (is_list(L), nonvar(O))).
@@ -107,6 +108,7 @@ evaluable_body_hook(var(V),     _, nonvar(V)).
 evaluable_body_hook(nonvar(V),  _, nonvar(V)).
 evaluable_body_hook(atomic(A),  _, nonvar(A)).
 evaluable_body_hook(atom(A),    _, nonvar(A)).
+evaluable_body_hook(is_list(A), _, is_list(A)).
 evaluable_body_hook(number(A),  _, nonvar(A)).
 evaluable_body_hook(float(A),   _, nonvar(A)).
 evaluable_body_hook(integer(A), _, nonvar(A)).
