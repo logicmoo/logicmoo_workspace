@@ -173,7 +173,10 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,ABox1):-
+  modify_ABox(M,ABox0,C,Ind,L0,true,ABox1).
+
+modify_ABox(_,ABox0,sameIndividual(LF),Expl1,true,[(sameIndividual(L),Expl)|ABox]):-
   ( find((sameIndividual(L),Expl0),ABox) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
@@ -185,7 +188,19 @@ modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
   	(ABox = ABox0,Expl = Expl1)
   ).
 
-modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(_,ABox0,sameIndividual(LF),Expl1,false,[(sameIndividual(L),Expl)|ABox]):-
+  ( find((sameIndividual(L),Expl0),ABox) ->
+  	( sort(L,LS),
+  	  sort(LF,LFS),
+  	  LS = LFS,!,
+  	  append(Expl0,Expl1,Expl),
+      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+  	)
+  ;
+  	(ABox = ABox0,Expl = Expl1)
+  ).
+
+modify_ABox(_,ABox0,C,Ind,Expl1,true,[(classAssertion(C,Ind),Expl)|ABox]):-
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
@@ -194,9 +209,27 @@ modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
     (ABox = ABox0,Expl = Expl1)
   ).
 
-modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(_,ABox0,C,Ind,Expl1,false,[(classAssertion(C,Ind),Expl)|ABox]):-
+  ( find((classAssertion(C,Ind),Expl0),ABox0) ->
+    ( append(Expl0,Expl1,Expl),
+      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+    )
+  ;
+    (ABox = ABox0,Expl = Expl1)
+  ).
+
+modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,true,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
+      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+    )
+  ;
+    (ABox = ABox0,Expl = Expl1)
+  ).
+
+modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,false,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+  ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
+    ( append(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
     )
   ;

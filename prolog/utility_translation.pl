@@ -27,6 +27,16 @@ http://vangelisv.github.io/thea/
 :- discontiguous(axiom_arguments/2).
 :- discontiguous(expand_axiom/4).
 
+/*****************************
+  MESSAGES
+******************************/
+:- multifile prolog:message/1.
+
+prolog:message(under_development) -->
+  [ 'NOTE: This function is under development. It may not work properly or may not work at all.' ].
+
+
+
 builtin_class('http://www.w3.org/2002/07/owl#Thing').
 builtin_class('http://www.w3.org/2002/07/owl#Nothing').
 builtin_datatype('http://www.w3.org/2002/07/owl#real').
@@ -386,6 +396,7 @@ valid_axiom(subObjectPropertyOf(A, B)) :- subsumed_by([A, B],[objectPropertyExpr
 expand_axiom(M,subPropertyOf(A,B),NSList,subPropertyOf(A_full_URL,B_full_URL)) :- 
   expand_objectPropertyExpressionOrChain(M,A,NSList,A_full_URL),
   expand_objectPropertyExpression(M,B,NSList,B_full_URL).
+  %add_expressivity(M,h).
 
 %% subDataPropertyOf(?Sub:DataPropertyExpression, ?Super:DataPropertyExpression)
 % A data subproperty axiom SubPropertyOf( DPE1 DPE2 ) states that the data property expression DPE1 is a subproperty of the data property expression DPE2 - that is, if an individual x is connected by OPE1 to a literal y, then x is connected by OPE2 to y as well.
@@ -459,6 +470,7 @@ valid_axiom(inverseProperties(A, B)) :- subsumed_by([A, B],[objectPropertyExpres
 expand_axiom(M,inverseProperties(A,B),NSList,inverseProperties(A_full_URL,B_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL),
   expand_objectPropertyExpression(M,B,NSList,B_full_URL).
+  %add_expressivity(M,i).
 
 %% propertyDomain(?PropertyExpression, ?CE)
 %  A property domain axiom PropertyDomain( PE CE ) states that the
@@ -537,6 +549,7 @@ axiom_arguments(functionalProperty,[propertyExpression]).
 valid_axiom(functionalProperty(A)) :- subsumed_by([A],[propertyExpression]).
 expand_axiom(M,functionalProperty(A),NSList,functionalProperty(A_full_URL)) :- 
   expand_propertyExpression(M,A,NSList,A_full_URL).
+  %add_expressivity(M,f).
 
 %% functionalObjectProperty(?ObjectPropertyExpression)
 % An object property functionality axiom FunctionalProperty( OPE ) states that the object property expression OPE is functional - that is, for each individual x, there can be at most one distinct individual y such that x is connected by OPE to y
@@ -559,6 +572,8 @@ axiom_arguments(inverseFunctionalProperty,[objectPropertyExpression]).
 valid_axiom(inverseFunctionalProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
 expand_axiom(M,inverseFunctionalProperty(A),NSList,inverseFunctionalProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL).
+  %add_expressivity(M,i),
+  %add_expressivity(M,f).
 
 %% reflexiveProperty(?ObjectPropertyExpression)
 % An object property reflexivity axiom ReflexiveProperty( OPE ) states that the object property expression OPE is reflexive - that is, each individual is connected by OPE to itself
@@ -609,6 +624,8 @@ axiom_arguments(transitiveProperty,[objectPropertyExpression]).
 valid_axiom(transitiveProperty(A)) :- subsumed_by([A],[objectPropertyExpression]).
 expand_axiom(M,transitiveProperty(A),NSList,transitiveProperty(A_full_URL)) :- 
   expand_objectPropertyExpression(M,A,NSList,A_full_URL).
+  %add_rule(M,forall_plus_rule),
+  %add_expressivity(M,s).
 
 %% hasKey(?ClassExpression,?PropertyExpression)
 % A key axiom HasKey( CE PE1 ... PEn ) states that each (named) instance of the class expression CE is uniquely identified by the (data or object) property expressions PEi - that is, no two distinct (named) instances of CE can coincide on the values of all property expressions PEi
@@ -914,7 +931,9 @@ expand_propertyExpressions(M,[CE|T],NSList,[ExpCE|ExpT]) :-
   expand_propertyExpressions(M,T,NSList,ExpT).
   
 % expand_propertyExpression(M,E,NSList,ExpE):- expand_objectPropertyExpression(M,E,NSList,ExpE) ; expand_dataPropertyExpression(M,E,NSList,ExpE). % TODO: support for datatype to implement
-expand_propertyExpression(M,inverseOf(OP),NSList,inverseOf(ExpOP)) :- !,expand_objectProperty(M,OP,NSList,ExpOP).
+expand_propertyExpression(M,inverseOf(OP),NSList,inverseOf(ExpOP)) :- !,
+  expand_objectProperty(M,OP,NSList,ExpOP).
+  %add_expressivity(M,i).
 expand_propertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE).
 
 %% objectPropertyExpression(?OPE)
@@ -923,6 +942,7 @@ expand_propertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,E
 objectPropertyExpression(E) :- objectProperty(E) ; inverseObjectProperty(E).
 % expand_objectPropertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE) ; expand_inverseObjectProperty(M,E,NSList,ExpE).
 expand_objectPropertyExpression(M,inverseOf(OP),NSList,inverseOf(ExpOP)) :- !,expand_objectProperty(M,OP,NSList,ExpOP).
+  %add_expressivity(M,i).
 expand_objectPropertyExpression(M,E,NSList,ExpE) :- expand_objectProperty(M,E,NSList,ExpE).
 
 % give benefit of doubt; e.g. rdfs:label
@@ -934,6 +954,7 @@ objectPropertyExpressionOrChain(propertyChain(PL)) :- forall(member(P,PL),object
 objectPropertyExpressionOrChain(PE) :- objectPropertyExpression(PE).
 expand_objectPropertyExpressionOrChain(M,propertyChain(PL),NSList,propertyChain(ExpPL)):- !,
   expand_propertyExpressions(M,PL,NSList,ExpPL).
+  %add_expressivity(M,r).
 expand_objectPropertyExpressionOrChain(M,P,NSList,ExpP):-
   expand_objectPropertyExpression(M,P,NSList,ExpP).
 
@@ -941,6 +962,7 @@ expand_objectPropertyExpressionOrChain(M,P,NSList,ExpP):-
 
 inverseObjectProperty(inverseOf(OP)) :- objectProperty(OP).
 expand_inverseObjectProperty(M,inverseOf(OP),NSList,inverseOf(ExpOP)) :- expand_objectProperty(M,OP,NSList,ExpOP).
+  %add_expressivity(M,i).
 
 expand_dataPropertyExpressions(M,DPEs,NSList,ExpDPEs) :- expand_dataPropertyExpression(M,DPEs,NSList,ExpDPEs).
 
@@ -1044,20 +1066,28 @@ expand_classExpression(M,intersectionOf(CEs),NSList,intersectionOf(ExpCEs)):- !,
 expand_classExpression(M,unionOf(CEs),NSList,unionOf(ExpCEs)) :- !,
   expand_classExpressions(M,CEs,NSList,ExpCEs),
   ( M:addKBName -> add_kb_atoms(M,class,[unionOf(ExpCEs)]) ; true ).
+  %add_rule(M,or_rule),
+  %add_expressivity(M,a).
 expand_classExpression(M,complementOf(CE),NSList,complementOf(ExpCE)) :- !,
   expand_classExpression(M,CE,NSList,ExpCE),
   ( M:addKBName -> add_kb_atoms(M,class,[complementOf(ExpCE)]) ; true ).
+  %add_expressivity(M,a).
 expand_classExpression(M,oneOf(Is),NSList,oneOf(ExpIs)) :- !,  % TODO check in trill
   expand_individuals(M,Is,NSList,ExpIs),
   ( M:addKBName -> add_kb_atoms(M,class,[oneOf(ExpIs)]) ; true ).
+  %add_rule(M,o_rule),
+  %add_expressivity(M,o).
 expand_classExpression(M,someValuesFrom(OPE,CE),NSList,someValuesFrom(ExpOPE,ExpCE)) :- !,
   expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
   expand_classExpression(M,CE,NSList,ExpCE),
   ( M:addKBName -> add_kb_atoms(M,class,[someValuesFrom(ExpOPE,ExpCE)]) ; true ).
+  %add_rule(M,exists_rule).
 expand_classExpression(M,allValuesFrom(OPE,CE),NSList,allValuesFrom(ExpOPE,ExpCE)) :- !,
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
 	expand_classExpression(M,CE,NSList,ExpCE),
     ( M:addKBName -> add_kb_atoms(M,class,[allValuesFrom(ExpOPE,ExpCE)]) ; true ).
+  %add_rule(M,forall_rule),
+  %add_expressivity(M,a).
 expand_classExpression(M,hasValue(OPE,I),NSList,hasValue(ExpOPE,ExpI)) :- !,  % TODO: add in trill
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
 	expand_individual(M,I,NSList,ExpI),
@@ -1071,33 +1101,45 @@ expand_classExpression(M,minCardinality(C,OPE,CE),NSList,minCardinality(C,ExpOPE
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
 	expand_classExpression(M,CE,NSList,ExpCE),
     ( M:addKBName -> add_kb_atoms(M,class,[minCardinality(C,ExpOPE,ExpCE)]) ; true ).
+  %add_rule(M,min_rule),
+  %add_expressivity(M,q).
 expand_classExpression(M,minCardinality(C,OPE),NSList,minCardinality(C,ExpOPE)):- !,
 	number(C),
 	C>=0,
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
     ( M:addKBName -> add_kb_atoms(M,class,[minCardinality(C,ExpOPE)]) ; true ).
+  %add_rule(M,min_rule),
+  %add_expressivity(M,n).
 expand_classExpression(M,maxCardinality(C,OPE,CE),NSList,maxCardinality(C,ExpOPE,ExpCE)):- !,
 	number(C),
 	C>=0,
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
 	expand_classExpression(M,CE,NSList,ExpCE),
     ( M:addKBName -> add_kb_atoms(M,class,[maxCardinality(C,ExpOPE,ExpCE)]) ; true ).
+  %add_rule(M,max_rule),
+  %add_expressivity(M,q).
 expand_classExpression(M,maxCardinality(C,OPE),NSList,maxCardinality(C,ExpOPE)):- !,
 	number(C),
 	C>=0,
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
     ( M:addKBName -> add_kb_atoms(M,class,[maxCardinality(C,ExpOPE)]) ; true ).
+  %add_rule(M,max_rule),
+  %add_expressivity(M,n).
 expand_classExpression(M,exactCardinality(C,OPE,CE),NSList,exactCardinality(C,ExpOPE,ExpCE)):- !,
 	number(C),
 	C>=0,
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
 	expand_classExpression(M,CE,NSList,ExpCE),
     ( M:addKBName -> add_kb_atoms(M,class,[exactCardinality(C,ExpOPE,ExpCE)]) ; true ).
+  %add_rule(M,min_rule),add_rule(M,max_rule),
+  %add_expressivity(M,q).
 expand_classExpression(M,exactCardinality(C,OPE),NSList,exactCardinality(C,ExpOPE)):- !,
 	number(C),
 	C>=0,
 	expand_objectPropertyExpression(M,OPE,NSList,ExpOPE),
     ( M:addKBName -> add_kb_atoms(M,class,[exactCardinality(C,ExpOPE)]) ; true ).
+  %add_rule(M,min_rule),add_rule(M,max_rule),
+  %add_expressivity(M,n).
 expand_classExpression(M,CE,NSList,ExpCE):-
     expand_class(M,CE,NSList,ExpCE),
     ( M:addKBName -> add_kb_atoms(M,class,[ExpCE]) ; true ).
@@ -3430,17 +3472,9 @@ trill:add_axioms(M:[H|T]) :-
   trill:add_axiom(M:H),
   trill:add_axioms(M:T).
 
-/*****************************
-  MESSAGES
-******************************/
-:- multifile prolog:message/1.
-
-prolog:message(under_development) -->
-  [ 'NOTE: This function is under development. It may not work properly or may not work at all.' ].
-
 :- multifile trill:remove_axiom/1.
 trill:remove_axiom(M:Ax):-
-  print_message(warning,under_development),
+  %print_message(warning,under_development),
   ( M:ns4query(NSList) -> true; NSList = []),
   expand_axiom(M,Ax,NSList,ExpAx),
   retract_axiom(M,ExpAx),
@@ -3519,6 +3553,79 @@ create_and_assert_axioms(M,Axiom) :-
   expand_axiom(M,Axiom,NSList,ExpAxiom),
   test_and_assert(M,ExpAxiom,'ont').
 
+
+/**
+ * add_rule(+Module:string, +Rule:string) is det
+ *
+ * This predicate adds to the rules list the rule in Rule
+ */
+add_rule(M,max_rule):- !,
+  M:rules(D,ND),
+  ( memberchk(max_rule,ND) -> true ;
+    ( retractall(M:rules(_,_)),
+      assert(M:rules(D,[max_rule|ND]))
+    )
+  ), !.
+  
+add_rule(M,or_rule):- !,
+  M:rules(D,ND),
+  ( memberchk(or_rule,ND) -> true ;
+    ( retractall(M:rules(_,_)),
+      assert(M:rules(D,[or_rule|ND]))
+    )
+  ), !.
+  
+add_rule(M,Rule):-
+  M:rules(D,ND),
+  ( memberchk(Rule,D) -> true ;
+    ( retractall(M:rules(_,_)),
+      assert(M:rules([Rule|D],ND))
+    )
+  ), !.
+
+/**
+ * add_expressivity(+Module:string, +L:string) is det
+ *
+ * This predicate collects expressivity info
+ * expressivity(I,R) -> I=1|2|3 (EL|ALC|S)
+ *						R=[0|1,0|1,0|1,0|1,0|1|2,0|1] ([H,R,O,I,N|Q,F])
+ */
+add_expressivity(M,a):-
+  M:expressivity(I,R),
+  ( I > 1 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(2,R)))), !.
+
+add_expressivity(M,s):-
+  M:expressivity(I,R),
+  ( I > 2 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(3,R)))), !.
+
+add_expressivity(M,h):-
+  M:expressivity(I,[H,R,O,I,Res,F]),
+  ( H=1 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(I,[1,R,O,I,Res,F])))), !.
+
+add_expressivity(M,r):-
+  M:expressivity(I,[H,R,O,I,Res,F]),
+  ( R=1 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(I,[H,1,O,I,Res,F])))), !.
+
+add_expressivity(M,o):-
+  M:expressivity(I,[H,R,O,I,Res,F]),
+  ( O=1 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(I,[H,R,1,I,Res,F])))), !.
+
+add_expressivity(M,i):-
+  M:expressivity(I,[H,R,O,I,Res,F]),
+  ( I=1 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(I,[H,R,O,1,Res,F])))), !.
+
+add_expressivity(M,n):-
+  M:expressivity(I,[H,R,O,I,Res,F]),
+  ( Res>0 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(I,[H,R,O,I,1,F])))), !.
+
+add_expressivity(M,q):-
+  M:expressivity(I,[H,R,O,I,Res,F]),
+  ( Res>1 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(I,[H,R,O,I,2,F])))), !.
+
+add_expressivity(M,f):-
+  M:expressivity(I,[H,R,O,I,Res,F]),
+  ( F=1 ; ( retractall(M:expressivity(_,_)),assert(M:expressivity(I,[H,R,O,I,Res,1])))), !.
+
 /**
  * is_axiom(?Axiom:string) is det
  *
@@ -3539,6 +3646,10 @@ set_up(M):-
   M:(dynamic owl/4, owl/3, owl/2, blanknode/3, outstream/1, aNN/3, annotation_r_node/4, axiom_r_node/4, owl_repository/2, trdf_setting/2),
   M:(dynamic ns4query/1, addKBName/0),
   retractall(M:addKBName).
+  %retractall(M:rules(_,_)),
+  %assert(M:rules([],[])),
+  %retractall(M:expressivity(_,_)),
+  %assert(M:expressivity(1,[0,0,0,0,0,0])).
 
 set_up_kb_loading(M):-
   retractall(M:kb_atom(_)),
@@ -3586,6 +3697,7 @@ user:term_expansion(end_of_file, end_of_file) :-
   KBLS is KBLM / 1000,
   format("Knowledge base loaded in ~f seconds.~n",[KBLS]),
   utility_kb:create_hierarchy(M). %hierarchy
+  %trill:set_rules(M). 
 
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),

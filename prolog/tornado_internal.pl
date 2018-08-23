@@ -144,6 +144,9 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
+modify_ABox(M,ABox0,C,Ind,L0,false,ABox1):-
+  modify_ABox(M,ABox0,C,Ind,L0,ABox1).
+
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
