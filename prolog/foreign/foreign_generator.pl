@@ -324,7 +324,7 @@ declare_intf_fimp_head(BindName, "predicate_t "+BindName+"").
 
 generate_foreign_impl_h(Module) -->
     add_autogen_note(Module),
-    ['#ifndef __~w_IMPL_H~n#define __~w_IMPL_H'-[Module, Module],
+    ["#ifndef __"+Module+"_IMPL_H~n#define __"+Module+"_IMPL_H",
      '',
      '#include <foreign_interface.h>'],
     findall_tp(Module, type_props, declare_struct),
@@ -359,8 +359,8 @@ generate_foreign_register(Module, Base) -->
      '    __system_get_dict           =PL_predicate("get_dict",    3, "system");',
      '    __system_put_dict           =PL_predicate("put_dict",    4, "system");',
      '    __foreign_generator_call_idx=PL_predicate("call_idx",    2, "foreign_generator");',
-     '    __~w     =PL_new_module(PL_new_atom("~w"));'-[Module, Module],
-     '    __~w_impl=PL_new_module(PL_new_atom("~w$impl"));'-[Module, Module]],
+     "    __"+Module+"     =PL_new_module(PL_new_atom(\""+Module+"\"));",
+     "    __"+Module+"_impl=PL_new_module(PL_new_atom(\""+Module+"$impl\"));"],
     findall_tp(Module, type_props_nf, define_aux_variables),
     findall(Line,
             ( current_foreign_prop(_, _, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
@@ -512,7 +512,7 @@ implement_type_getter(dict_ini(Name, M, _, L), Spec, Term) -->
     ->{functor(Term, TName, _)},
       ['    case ~s_~s:'-[Name, TName],
        '    {']
-    ; ['predicate_t __~w_aux_keyid_index_~w;'-[M, Name]],
+    ; ["predicate_t __"+M+"_aux_keyid_index_"+Name+";"],
       {term_pcname(Term, Name, PName, CName)},
       %% TBD: This will fail for structures with dict_t
       implement_type_getter_dict_ini(M, PName, CName, Spec, Name)
@@ -553,8 +553,8 @@ implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) -->
      'get_pair_~w(root_t __root, term_t __keyid, term_t ~w, ~s *~w) {'
      -[Name, PName, Decl, CName],
      '    int __index;',
-     '    FI_get_keyid_index(__~w_aux_keyid_index_~w, __keyid, __index);'
-     -[Module, Name],
+     "    FI_get_keyid_index(__"+Module+"_aux_keyid_index_"+Name
+     +", __keyid, __index);",
      '    switch (__index) {'].
 
 implement_type_end -->
@@ -698,7 +698,7 @@ implement_type_unifier(dict_rec(_, Term, _N, Name, L), Spec, Arg) -->
 implement_type_unifier(dict_end(_, Tag, L), Term, _) -->
     {func_pcname(Term, PName, _)},
     ['    __rtcheck(PL_unify_nil(__tail));',
-     '    FI_dict_create(~w, "~w", __desc);'-[PName, Tag]],
+     "    FI_dict_create("+PName+", \""+Tag+"\", __desc);"],
     ( {L = [_, _|_]}
     ->['        break;',
        '    }']
@@ -834,7 +834,7 @@ declare_type_getter_unifier(func_ini(Spec, L), _, Name) -->
 declare_type_getter_unifier(func_end(_), _, _) --> [].
 declare_type_getter_unifier(func_rec(_, _, _, _), _, _) --> [].
 declare_type_getter_unifier(dict_ini(Name, M, _, _), _, _) -->
-    ['predicate_t __~w_aux_keyid_index_~w;'-[M, Name]].
+    ["predicate_t __"+M+"_aux_keyid_index_"+Name+";"].
 declare_type_getter_unifier(dict_end(_, _, _), _, _) --> [].
 declare_type_getter_unifier(dict_rec(_, _, _, _, _), _, _) --> [].
 
@@ -868,7 +868,7 @@ generate_aux_clauses(_, _, _) --> [].
     prolog:message//1.
 
 prolog:message(ignored_type(Name, Arg)) -->
-    ['~w->~w ignored'-[Name, Arg]].
+    [""+Name+"->"+Arg+" ignored"].
 
 prolog:message(failed_binding(TypeComponents)) -->
     ['~w failed'-[TypeComponents]].
@@ -1193,7 +1193,7 @@ declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
     [BNHead+'=NULL;'],
     {declare_impl_head(Head, M, Module, Comp, Call, Succ, Glob, Bind, ImplHead)},
     [ImplHead+' {',
-     '    term_t ~w_args = PL_new_term_refs(~w);'-[BN, A]],
+     "    term_t "+BN+"_args = PL_new_term_refs("+A+");"],
     ( {memberchk(parent(Var, _), Glob)}
     ->["    __leaf_t *__root = LF_ROOT(LF_PTR(FI_array_ptr("+Var+")));"]
     ; []
@@ -1226,7 +1226,7 @@ c_set_argument(cdef(T),    M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(T-_,        M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(chrs(_),    M, C, A, L) :- c_set_argument_chrs(M, C, A, L).
 c_set_argument(tdef(_, S), M, C, A, L) :- c_set_argument(S, M, C, A, L).
-c_set_argument(term,       _, C, A, '__rtcheck(PL_unify(~w, ~w))'-[A, C]).
+c_set_argument(term,       _, C, A, "__rtcheck(PL_unify("+A+", "+C+"))").
 
 c_set_argument_one(out,   Type, CArg, Arg, '__rtc_FI_unify(~w, ~w, ~w)'-[Type, Arg, CArg]).
 c_set_argument_one(inout, Type, CArg, Arg, 'FI_unify_inout(~w, ~w, ~w)'-[Type, Arg, CArg]).
@@ -1234,10 +1234,10 @@ c_set_argument_one(inout, Type, CArg, Arg, 'FI_unify_inout(~w, ~w, ~w)'-[Type, A
 c_set_argument_type(out,   Type, CArg, Arg, '__rtc_FI_unify(~w, ~w, &~w)'-[Type, Arg, CArg]).
 c_set_argument_type(inout, Type, CArg, Arg, 'FI_unify_inout_type(~w, ~w, ~w)'-[Type, Arg, CArg]).
 
-c_set_argument_chrs(out,   CArg, Arg, '__rtc_FI_unify(chrs, ~w, ~w)'-[Arg, CArg]).
-c_set_argument_chrs(inout, CArg, Arg, 'FI_unify_inout_chrs(~w, ~w)'-[Arg, CArg]).
+c_set_argument_chrs(out,   CArg, Arg, "__rtc_FI_unify(chrs, "+Arg+", "+CArg+")").
+c_set_argument_chrs(inout, CArg, Arg, "FI_unify_inout_chrs("+Arg+", "+CArg+")").
 
-c_set_argument_rec(Type, Spec, CArg, Arg, ("FI_unify_"+Type+"(")+L+(', ~w, ~w)'-[Arg, CArg])) :-
+c_set_argument_rec(Type, Spec, CArg, Arg, ("FI_unify_"+Type+"(")+L+(", "+Arg+", "+CArg+")")) :-
     format(atom(Arg_), '~w_', [Arg]),
     c_var_name(Arg_, CArg_),
     c_set_argument(Spec, out, CArg_, Arg_, L).
@@ -1249,7 +1249,7 @@ c_get_argument(cdef(T),    M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(T-_,        M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(chrs(_),    M, C, A, L) :- c_get_argument_chrs(M, C, A, L).
 c_get_argument(tdef(_, S), M, C, A, L) :- c_get_argument(S, M, C, A, L).
-c_get_argument(term, _, C, A, '*~w=PL_copy_term_ref(~w)'-[C, A]).
+c_get_argument(term, _, C, A, "*"+C+"=PL_copy_term_ref("+A+")").
 
 c_get_argument_one(in, Type, CArg, Arg, '__rtc_FI_get(~w, ~w, ~w)'-[Type, Arg, CArg]).
 c_get_argument_one(inout, Type, CArg, Arg, 'FI_get_inout(~w, ~w, ~w)'-[Type, Arg, CArg]).
@@ -1258,10 +1258,10 @@ c_get_argument_type(in, Type, CArg, Arg, '__rtc_FI_get(~w, ~w, ~w)'-[Type, Arg, 
 c_get_argument_type(inout, Type, CArg, Arg, 'FI_get_inout(~w, ~w, ~w)'-[Type, Arg, CArg]).
 
 c_get_argument_chrs(in, CArg, Arg, '__rtc_FI_get(~w, ~w, ~w)'-[chrs, Arg, CArg]).
-c_get_argument_chrs(inout, CArg, Arg, 'FI_get_inout_chrs(~w, ~w)'-[Arg, CArg]).
+c_get_argument_chrs(inout, CArg, Arg, "FI_get_inout_chrs("+Arg+", "+CArg+")").
 
 c_get_argument_rec(Mode, Type, Spec, CArg, Arg,
-                   ('FI_get_~w_~w('-[Mode, Type])+L+(', ~w, ~w)'-[Arg, CArg])) :-
+                   ("FI_get_"+Mode+"_"+Type+"(")+L+(", "+Arg+", "+CArg+")")) :-
     format(atom(Arg_), '~w_',   [Arg]),
     c_var_name(Arg_, CArg_),
     c_get_argument(Spec, in, CArg_, Arg_, L).
