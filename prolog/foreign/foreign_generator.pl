@@ -809,10 +809,11 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
     ->call(Call, func_ini(type(Name), TPLDL), Term, Name),
       forall(arg(N, Term, Arg),
              ( member(Prop, PropL),
-               match_known_type_(Prop, M, Spec, Arg),
+               match_known_type_(Prop, M, Name, Spec, Arg),
                call(Call, func_rec(N, Term, Name, TPLDL), Spec, Arg)
              ->true
-             ; print_message(warning, at_location(Loc, ignored_type(Name, Arg)))
+             ; %gtrace,
+               print_message(warning, at_location(Loc, ignored_type(Name, Arg)))
              )),
       call(Call, func_end(TPLDL), Term, Name)
     ; ( select(dict_t(Desc, Term), PropL, PropL1)
@@ -830,14 +831,14 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
       call(Call, dict_ini(Name, M, Dict, TPLDL), type(Name), Term),
       forall(call(Call, dict_key_value(Dict, Desc, N, Name), Arg, Value),
              ( fetch_kv_prop_arg(Arg,  M, Value, PropL1, Prop),
-               match_known_type_(Prop, M, Spec, Arg),
+               match_known_type_(Prop, M, Name, Spec, Arg),
                call(Call, dict_rec(M, Term, N, Name, TPLDL), Spec, Arg)
              ->true
              ; print_message(warning, at_location(Loc, ignored_type(Name, Arg)))
              )),
       call(Call, dict_end(M, Tag, TPLDL), Term, Name)
     ; member(Prop, PropL),
-      match_known_type_(Prop, M, Spec, Term)
+      match_known_type_(Prop, M, Name, Spec, Term)
     ->call(Call, atom(Name, TPLDL), Spec, Term)
     ; PropL = []
     ->true
@@ -1352,39 +1353,43 @@ get_dictionary(Term, File, Line, M, Dict) :-
     ; Dict = []
     ).
 
-match_known_type(Prop, M, Spec, Arg) :-
-    match_known_type_(Prop, M, Spec, Arg), !.
+match_known_type(Prop, M, Name, Spec, Arg) :-
+    match_known_type_(Prop, M, Name, Spec, Arg), !.
 
-match_known_type_(M:Prop,       _, Spec, Arg) :-
-    match_known_type(Prop, M, Spec, Arg).
-match_known_type_(atm(A),       _, chrs('char*'), A).
-match_known_type_(atom(A),      _, chrs('char*'), A).
-match_known_type_(ptr(Type, A), M, ptr(Spec), A) :-
+match_known_type_(M:Prop,       _, Name, Spec, Arg) :-
+    match_known_type(Prop, M, Name, Spec, Arg).
+match_known_type_(atm(A),       _, _, chrs('char*'), A).
+match_known_type_(atom(A),      _, _, chrs('char*'), A).
+match_known_type_(ptr(Type, A), M, N, ptr(Spec), A) :-
     nonvar(Type),
     Type =.. [F|Args],
     Prop =.. [F, E|Args],
-    match_known_type_(Prop, M, Spec, E).
-% match_known_type_(string(A),        _, string_chars-'char*', A).
-match_known_type_(ptr(A),            _, pointer-'void*', A).
-match_known_type_(long(A),           _, long-long,       A).
-match_known_type_(int(A),            _, integer-int,     A).
-match_known_type_(nnegint(A),        _, integer-'unsigned int', A).
-match_known_type_(integer(A),        _, integer-int,     A).
-match_known_type_(character_code(A), _, char_code-char,  A).
-match_known_type_(char(A),           _, char-char,       A).
-match_known_type_(num(A),            _, float-double,    A).
-match_known_type_(float_t(A),        _, float_t-float,   A).
-match_known_type_(number(A),         _, float-double,    A).
-match_known_type_(term(A),           _, term,            A).
-match_known_type_(list(Type, A),     M, list(Spec),      A) :-
+    match_known_type_(Prop, M, N, Spec, E).
+% match_known_type_(string(A),        _, _, string_chars-'char*', A).
+match_known_type_(ptr(A),            _, _, pointer-'void*', A).
+match_known_type_(long(A),           _, _, long-long,       A).
+match_known_type_(int(A),            _, _, integer-int,     A).
+match_known_type_(nnegint(A),        _, _, integer-'unsigned int', A).
+match_known_type_(integer(A),        _, _, integer-int,     A).
+match_known_type_(character_code(A), _, _, char_code-char,  A).
+match_known_type_(char(A),           _, _, char-char,       A).
+match_known_type_(num(A),            _, _, float-double,    A).
+match_known_type_(float_t(A),        _, _, float_t-float,   A).
+match_known_type_(number(A),         _, _, float-double,    A).
+match_known_type_(term(A),           _, _, term,            A).
+match_known_type_(list(Type, A),     M, N, list(Spec),      A) :-
     nonvar(Type),
     extend_args(Type, [E], Prop),
-    match_known_type_(Prop, M, Spec, E).
-match_known_type_(Type, M, tdef(Name, Spec), A) :-
+    match_known_type_(Prop, M, N, Spec, E).
+match_known_type_(dict_t(Desc, A), _, Name, type(Type), A) :-
+    is_dict(Desc, Tag),
+    !,
+    atomic_list_concat([Name, '_', Tag], Type).
+match_known_type_(Type, M, _, tdef(Name, Spec), A) :-
     type_is_tdef(M, Type, Spec, A),
     functor(Type, Name, _),
     !.
-match_known_type_(Type, M, Spec, A) :-
+match_known_type_(Type, M, _, Spec, A) :-
     compound(Type),
     functor(Type, Name, Arity),
     arg(Arity, Type, A),
@@ -1408,30 +1413,31 @@ type_is_tdef(M, Type, Spec, A) :-
     arg(Arity, Head, A),
     arg(Arity, Prop, B),
     A==B,
-    match_known_type_(Prop, M, Spec, A),
+    match_known_type_(Prop, M, TName, Spec, A),
     !.
 
 bind_argument(Head, M, CM, CompL, CallL, SuccL, GlobL, Arg, Spec, Mode) :-
+    functor(Head, Name, _),
     ( member(Comp, CompL),
-      match_known_type(Comp, CM, Spec, Arg1),
+      match_known_type(Comp, CM, Name, Spec, Arg1),
       Arg1 == Arg
     ->true
     ; true
     ),
     ( member(Call, CallL),
-      match_known_type(Call, CM, Spec, Arg1),
+      match_known_type(Call, CM, Name, Spec, Arg1),
       Arg1 == Arg
     ->Mode = in
     ; true
     ),
     ( member(Succ, SuccL),
-      match_known_type(Succ, CM, Spec, Arg1),
+      match_known_type(Succ, CM, Name, Spec, Arg1),
       Arg1 == Arg
     ->Mode = out
     ; true
     ),
     ( memberchk(type(_), GlobL),
-      match_known_type(Head, M, Spec, Arg1),
+      match_known_type(Head, M, Name, Spec, Arg1),
       Arg1 == Arg
     ->Mode = in
     ; true

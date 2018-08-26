@@ -42,13 +42,37 @@ d_t(Dict) :-
 positive_t(N) :- int(N).
 
 :- type union_t/1.
-union_t(u(First, Second)) :-
+union_t(U) :- union_s(U).
+
+:- type union_s/1.
+union_s(u(First, Second)) :-
     int(First),
     int(Second).
-union_t(num(Number)) :-
+union_s(num(Number)) :-
     num(Number).
-union_t(positive(T)) :-
+union_s(positive(T)) :-
     positive_t(T).
+
+/* TBD: Make this works:
+
+:- type uniond_t/1.
+uniond_t(U) :- uniond_s(U).
+
+:- type uniond_s/1.
+uniond_s(u(Dict2, Num)) :-
+    d_t(Dict2),
+    num(Num).
+uniond_s(d(Dict)) :-
+    dict_t(d{value1:atm,
+             value2:list(atm)
+            },
+           Dict).
+uniond_s(pair(X, Y)) :-
+    num(X),
+    num(Y).
+uniond_s(positive(T)) :-
+    positive_t(T).
+*/
 
 :- type negative_t/1 is foreign(is_negative_t).
 
