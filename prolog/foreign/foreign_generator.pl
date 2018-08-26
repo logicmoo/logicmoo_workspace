@@ -457,7 +457,7 @@ implement_type_getter(union_end(L), _, _) -->
 implement_type_getter(func_ini(Spec, L), Term, Name) -->
     ( {L = [_, _|_]}
     ->{functor(Term, TName, _)},
-      ['    case ~s_~s:'-[Name, TName],
+      ["    case "+Name+"_"+TName+":",
        '    {']
     ; {func_pcname(Name, PName, CName)},
       implement_type_getter_ini(PName, CName, Spec, Name)
@@ -494,7 +494,7 @@ implement_type_getter(atom(Name, L), Spec, Term) -->
         format(atom(CName), '~w->~w', [CName1, TName]),
         Indent = '        '
       },
-      ['    case ~s_~s:'-[Name, TName]]
+      ["    case "+Name+"_"+TName+":"]
     ; { func_pcname(Name, PName, CName),
         Indent = '    '
       },
@@ -511,7 +511,7 @@ implement_type_getter(atom(Name, L), Spec, Term) -->
 implement_type_getter(dict_ini(Name, M, _, L), Spec, Term) -->
     ( {L = [_, _|_]}
     ->{functor(Term, TName, _)},
-      ['    case ~s_~s:'-[Name, TName],
+      ["    case "+Name+"_"+TName+":",
        '    {']
     ; ["predicate_t __"+M+"_aux_keyid_index_"+Name+";"],
       {term_pcname(Term, Name, PName, CName)},
@@ -543,10 +543,10 @@ implement_type_getter(dict_end(_, _, L), _, _) -->
 
 implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) -->
     {ctype_decl(Spec, Decl)},
-    ['static int get_pair_~w(root_t, term_t, term_t, ~s *);'-[Name, Decl],
+    ["static int get_pair_"+Name+"(root_t, term_t, term_t, "+Decl+" *);",
      ''],
     implement_type_getter_ini(PName, CName, Spec, Name),
-    ['    memset(~w, 0, sizeof(~s));'-[CName, Decl],
+    ["    memset("+CName+", 0, sizeof("+Decl+"));",
      '    FI_get_dict_t(~w, ~w, ~w);'-[Name, PName, CName]
     ],
     implement_type_end,
@@ -595,7 +595,7 @@ implement_type_unifier(atom(Name, _), Spec, Term) -->
         format(atom(CName), '~w->~w', [CName1, TName]),
         Indent = '        '
       },
-      ['    case ~s_~s:'-[Name, TName]]
+      ["    case "+Name+"_"+TName+":"]
     ; { func_pcname(Name, PName, CName),
         Indent = '    '
       },
@@ -628,7 +628,7 @@ implement_type_unifier(func_ini(Spec, L), Term, Name) -->
     {func_pcname(Name, PName, CName)},
     ( {L = [_, _|_]}
     ->{functor(Term, TName, _)},
-      ['    case ~s_~s:'-[Name, TName],
+      ["    case "+Name+"_"+TName+":",
        '    {']
     ; implement_type_unifier_ini(PName, CName, Name, Spec)
     ),
@@ -663,7 +663,7 @@ implement_type_unifier(func_end(L), _, _) -->
 implement_type_unifier(dict_ini(Name, _, _, L), Spec, Term) -->
     ( {L = [_, _|_]}
     ->{functor(Term, TName, _)},
-      ['    case ~s_~s:'-[Name, TName],
+      ["    case "+Name+"_"+TName+":",
        '    {']
     ; {func_pcname(Term, PName, CName)},
       implement_type_unifier_ini(PName, CName, Name, Spec)
@@ -789,8 +789,8 @@ declare_struct(atom(Name, L), Spec, Term) -->
     {ctype_decl(Spec, Decl)},
     ( {L = [_, _|_]}
     ->{functor(Term, TName, _)},
-      ['    ~s ~w;'-[Decl, TName]]
-    ; ['typedef ~s ~w;'-[Decl, Name]]
+      ["    "+Decl+" "+TName+";"]
+    ; ["typedef "+Decl+" "+Name+";"]
     ).
 declare_struct(func_ini(Spec, L), _, _) -->
     ( {L = [_, _|_]}
@@ -806,7 +806,7 @@ declare_struct(func_end(L), Term, _) -->
     ).
 declare_struct(func_rec(_, _, _, _), Spec, Name) -->
     {ctype_decl(Spec, Decl)},
-    ['    ~s ~w;'-[Decl, Name]].
+    ["    "+Decl+" "+Name+";"].
 %%
 declare_struct(dict_ini(_, _, _, _), Spec, _) -->
     {ctype_decl(Spec, Decl)},
@@ -816,7 +816,7 @@ declare_struct(dict_key_value(Dict, Desc, N, _), Key, Value) -->
     {key_value_from_desc(Dict, Desc, N, Key, Value)}.
 declare_struct(dict_rec(_, _, _, _, _), Spec, Name) -->
     {ctype_decl(Spec, Decl)},
-    ['    ~s ~w;'-[Decl, Name]].
+    ["    "+Decl+" "+Name+";"].
 declare_struct(dict_end(_, _, _), _, _) --> ['};'].
 
 declare_type_getter_unifier(atom(_, _), _, _) --> [].
@@ -841,8 +841,8 @@ declare_type_getter_unifier(dict_rec(_, _, _, _, _), _, _) --> [].
 
 declare_type_getter_unifier(Name, Spec) -->
     {ctype_decl(Spec, Decl)},
-    ['int FI_get_~w(root_t __root, term_t, ~s*);'-[Name, Decl],
-     'int FI_unify_~w(term_t, ~s* const);'-[Name, Decl],
+    ["int FI_get_"+Name+"(root_t __root, term_t, "+Decl+"*);",
+     "int FI_unify_"+Name+"(term_t, "+Decl+"* const);",
      ''].
 
 generate_aux_clauses(Module) -->
