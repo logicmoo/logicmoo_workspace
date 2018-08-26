@@ -813,12 +813,11 @@ type_components_one(M, Name, Call, TPLDL, Loc, t(Type, PropL, _)) :-
                call(Call, func_rec(N, Term, Name, TPLDL), Spec, Arg)
              ->true
              ; print_message(warning, at_location(Loc, ignored_type(Name, Arg)))
-             )
-            ),
+             )),
       call(Call, func_end(TPLDL), Term, Name)
-    ; ( select(dict_t(Term, Desc), PropL, PropL1)
-      ; select(dict_t(Term, Tag, Desc), PropL, PropL1)
-      ; select(dict_join_t(Term, Tag, Type1, Type2), PropL, PropL1),
+    ; ( select(dict_t(Desc, Term), PropL, PropL1)
+      ; select(dict_t(Tag, Desc, Term), PropL, PropL1)
+      ; select(dict_join_t(Tag, Type1, Type2, Term), PropL, PropL1),
         join_dict_types(Type1, M, Type2, M, Tag, Desc)
       ; select(dict_extend_t(Term, Type, Tag, Desc2), PropL, PropL1),
         join_type_desc(M:Type, Tag, Desc2, Desc)

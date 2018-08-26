@@ -120,9 +120,9 @@ long(Long) :- int(Long).
 ptr(Type, Ptr) :-
     call(Type, Ptr).
 
-prolog:called_by(dict_t(_, Desc), foreign_props, M, L) :-
+prolog:called_by(dict_t(Desc, _), foreign_props, M, L) :-
     called_by_dict_t(Desc, M, L).
-prolog:called_by(dict_t(_, _, Desc), foreign_props, M, L) :-
+prolog:called_by(dict_t(_, Desc, _), foreign_props, M, L) :-
     called_by_dict_t(Desc, M, L).
 
 called_by_dict_t(Desc, CM, L) :-
@@ -136,13 +136,13 @@ called_by_dict_t(Desc, CM, L) :-
             ), L).
 
 :- type dict_t/2.
-:- meta_predicate dict_t(?, :).
-dict_t(Term, Desc) :-
-    dict_t(Term, _, Desc).
+:- meta_predicate dict_t(:, ?).
+dict_t(Desc, Term) :-
+    dict_t(_, Desc, Term).
 
 :- type dict_t/3.
-:- meta_predicate dict_t(?, ?, :).
-dict_t(Term, Tag, M:Desc) :-
+:- meta_predicate dict_t(?, :, ?).
+dict_t(Tag, M:Desc, Term) :-
     dict_mq(Desc, M, Tag, Dict),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict), Pairs).
@@ -155,8 +155,8 @@ dict_join_t(Term, Tag, M1:Type1, M2:Type2) :-
     maplist(dict_kv(Dict), Pairs).
 
 :- type dict_extend_t/4.
-:- meta_predicate dict_extend_t(?, 1, ?, +).
-dict_extend_t(Term, Type, Tag, Desc) :-
+:- meta_predicate dict_extend_t(1, ?, +, ?).
+dict_extend_t(Type, Tag, Desc, Term) :-
     join_type_desc(Type, Tag, Desc, Dict),
     dict_pairs(Term, Tag, Pairs),
     maplist(dict_kv(Dict), Pairs).
@@ -182,7 +182,7 @@ extend_one_arg(Call1, Call) :- extend_args(Call1, [_], Call).
 
 type_desc(MType, Desc) :-
     extend_one_arg(MType, MCall),
-    clause(MCall, dict_t(_, _, Desc)).
+    clause(MCall, dict_t(_, Desc, _)).
 
 join_dict_types(Type1, M1, Type2, M2, Tag, Dict) :-
     type_desc(M1:Type1, Desc1),

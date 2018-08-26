@@ -27,11 +27,11 @@ this_dir(Dir) :-
 :- type d_t/1.
 
 d_t(Dict) :-
-    dict_t(Dict,
-           d{value1:atm,
+    dict_t(d{value1:atm,
              value2:atm,
              listv:list(int)
-            }).
+            },
+          Dict).
 
 :- pred [fd1(+d_t,atm,atm,int),
          fd2(-d_t,+atm,+atm,+int)+memory_root,
