@@ -324,7 +324,8 @@ declare_intf_fimp_head(BindName, "predicate_t "+BindName+"").
 
 generate_foreign_impl_h(Module) -->
     add_autogen_note(Module),
-    ["#ifndef __"+Module+"_IMPL_H~n#define __"+Module+"_IMPL_H",
+    ["#ifndef __"+Module+"_IMPL_H",
+     "#define __"+Module+"_IMPL_H",
      '',
      '#include <foreign_interface.h>'],
     findall_tp(Module, type_props, declare_struct),
@@ -422,7 +423,7 @@ define_aux_variables(dict_key_value(_, _, _, _), _, _) --> !, {fail}.
 define_aux_variables(_, _, _) --> [].
 
 implement_type_getter_ini(PName, CName, Spec, Name) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ['int FI_get_~w(root_t __root, term_t ~w, ~s *~w) {'-[Name, PName, Decl, CName]].
 
 c_get_argument_getter(Spec, CNameArg, PNameArg, GetArg) :-
@@ -541,7 +542,7 @@ implement_type_getter(dict_end(_, _, L), _, _) -->
     ).
 
 implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ['static int get_pair_~w(root_t, term_t, term_t, ~s *);'-[Name, Decl],
      ''],
     implement_type_getter_ini(PName, CName, Spec, Name),
@@ -713,7 +714,7 @@ spec_pointer(tdef(_, Spec)) :- spec_pointer(Spec).
 % spec_pointer(type(_)).
 
 implement_type_unifier_ini(PName, CName, Term, Spec) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ['int FI_unify_~w(term_t ~w, ~s* const ~w) {'
      -[Term, PName, Decl, CName]].
 
@@ -785,7 +786,7 @@ declare_struct(union_end(TPDL), _, _) -->
     ; []
     ).
 declare_struct(atom(Name, L), Spec, Term) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ( {L = [_, _|_]}
     ->{functor(Term, TName, _)},
       ['    ~s ~w;'-[Decl, TName]]
@@ -794,7 +795,7 @@ declare_struct(atom(Name, L), Spec, Term) -->
 declare_struct(func_ini(Spec, L), _, _) -->
     ( {L = [_, _|_]}
     ->{Decl = "  struct"}
-    ; {ctype_decl(Spec, Decl, [])}
+    ; {ctype_decl(Spec, Decl)}
     ),
     ['~s {'-[Decl]].
 declare_struct(func_end(L), Term, _) -->
@@ -804,17 +805,17 @@ declare_struct(func_end(L), Term, _) -->
     ; ['};']
     ).
 declare_struct(func_rec(_, _, _, _), Spec, Name) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ['    ~s ~w;'-[Decl, Name]].
 %%
 declare_struct(dict_ini(_, _, _, _), Spec, _) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ['',
      '~s {'-[Decl]].
 declare_struct(dict_key_value(Dict, Desc, N, _), Key, Value) -->
     {key_value_from_desc(Dict, Desc, N, Key, Value)}.
 declare_struct(dict_rec(_, _, _, _, _), Spec, Name) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ['    ~s ~w;'-[Decl, Name]].
 declare_struct(dict_end(_, _, _), _, _) --> ['};'].
 
@@ -839,7 +840,7 @@ declare_type_getter_unifier(dict_end(_, _, _), _, _) --> [].
 declare_type_getter_unifier(dict_rec(_, _, _, _, _), _, _) --> [].
 
 declare_type_getter_unifier(Name, Spec) -->
-    {ctype_decl(Spec, Decl, [])},
+    {ctype_decl(Spec, Decl)},
     ['int FI_get_~w(root_t __root, term_t, ~s*);'-[Name, Decl],
      'int FI_unify_~w(term_t, ~s* const);'-[Name, Decl],
      ''].
