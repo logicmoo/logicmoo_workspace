@@ -294,14 +294,14 @@ c_var_name(Arg, CArg) :-
 
 generate_foreign_intf_h(Module, FileImpl_h) -->
     add_autogen_note(Module),
-    ['#ifndef __~w_INTF_H'-[Module],
-     '#define __~w_INTF_H'-[Module],
+    ["#ifndef __"+Module+"_INTF_H",
+     "#define __"+Module+"_INTF_H",
      '',
      '',
      '#include <foreign_swipl.h>',
-     '#include "~w"'-[FileImpl_h],
+     "#include \""+FileImpl_h+"\"",
      '',
-     'extern module_t __~w_impl;'-[Module]],
+     "extern module_t __"+Module+"_impl;"],
     findall_tp(Module, type_props_nf, declare_type_getter_unifier),
     findall('extern '+Decl+';',
             ( current_foreign_prop(_, Head, _, Module, _, _, _, _, Dict, _, _, BindName, _, Type),
@@ -309,7 +309,7 @@ generate_foreign_intf_h(Module, FileImpl_h) -->
               declare_intf_head(Type, BindName, Head, Decl)
             )),
     ['',
-     '#endif /* __~w_INTF_H */'-[Module]].
+     "#endif /* __"+Module+"_INTF_H */"].
 
 declare_intf_head(fimport(_), BindName, _, Decl) :-
     !,
@@ -320,7 +320,7 @@ declare_intf_head(fimport(_, _), BindName, _, Decl) :-
 declare_intf_head(_, BindName, Head, Decl) :-
     declare_intf_head(BindName, Head, Decl).
 
-declare_intf_fimp_head(BindName, "predicate_t ~w"-[BindName]).
+declare_intf_fimp_head(BindName, "predicate_t "+BindName+"").
 
 generate_foreign_impl_h(Module) -->
     add_autogen_note(Module),
@@ -329,24 +329,24 @@ generate_foreign_impl_h(Module) -->
      '#include <foreign_interface.h>'],
     findall_tp(Module, type_props, declare_struct),
     declare_foreign_bind(Module),
-    ['#endif /* __~w_IMPL_H */'-[Module]].
+    ["#endif /* __"+Module+"_IMPL_H */"].
 
 add_autogen_note(Module) -->
-    ['/* NOTE: File generated automatically from ~w */'-[Module],
+    ["/* NOTE: File generated automatically from "+Module+" */",
      ''].
 
 generate_foreign_c(Module, Base, FilePl, FileIntf_h) -->
     add_autogen_note(Module),
-    findall('#include "~w"'-[File_h],
+    findall("#include \""+File_h+"\"",
             ( use_foreign_header(Module, HAlias),
               absolute_file_name(HAlias, File_h, [extensions(['.h', '']),
                                                   access(read),
                                                   relative_to(FilePl)])
             )),
-    ['#include "~w"'-[FileIntf_h],
+    ["#include \""+FileIntf_h+"\"",
      '',
-     'module_t __~w;'-[Module],
-     'module_t __~w_impl;'-[Module]
+     "module_t __"+Module+";",
+     "module_t __"+Module+"_impl;"
     ],
     findall_tp(Module, type_props_nf, implement_type_getter),
     findall_tp(Module, type_props_nf, implement_type_unifier),
@@ -354,7 +354,7 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) -->
     generate_foreign_intf(Module).
 
 generate_foreign_register(Module, Base) -->
-    ['install_t install_~w() {'-[Base],
+    ["install_t install_"+Base+"() {",
      '    __system_dict_create        =PL_predicate("dict_create", 3, "system");',
      '    __system_get_dict           =PL_predicate("get_dict",    3, "system");',
      '    __system_put_dict           =PL_predicate("put_dict",    4, "system");',
@@ -365,7 +365,7 @@ generate_foreign_register(Module, Base) -->
     findall(Line,
             ( current_foreign_prop(_, _, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
               write_register_sentence(Type, M, PredName, Arity, BindName, Line))),
-    ['} /* install_~w */'-[Base],
+    ["} /* install_"+Base+" */",
     ''].
 
 write_register_sentence(fimport(_),    M, PredName, Arity, BindName, Line) :- !,
@@ -434,13 +434,13 @@ implement_type_getter(union_ini(Spec, L), Term, Name) -->
       implement_type_getter_ini(PName, CName, Spec, Name),
       ['    term_t __args = PL_new_term_refs(2);',
        '    int __utype;',
-       '    PL_put_term(__args, ~w);'-[PName],
+       "    PL_put_term(__args, "+PName+");",
        '    __rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL,',
        '                                          __foreign_generator_call_idx, __args),',
-       '                        __args, "Not a valid ~w"));'-[Name],
+       "                        __args, \"Not a valid "+Name+"\"));",
        '    __rtcheck(PL_get_integer(__args + 1, &__utype));',
-       '    ~w->utype=__utype;'-[CName],
-       '    switch (~w->utype) {'-[CName]]
+       "    "+CName+"->utype=__utype;",
+       "    switch ("+CName+"->utype) {"]
     ; []
     ).
 implement_type_getter(union_end(L), _, _) -->
@@ -610,7 +610,7 @@ implement_type_unifier(union_ini(Spec, TPDL), Term, Name) -->
     {term_pcname(Term, Name, PName, CName)},
     ( {TPDL = [_, _|_]}
     ->implement_type_unifier_ini(PName, CName, Name, Spec),
-      ['    switch (~w->utype) {'-[CName]]
+      ["    switch ("+CName+"->utype) {"]
     ; []
     ).
 implement_type_unifier(union_end(TPDL), _, _) -->
@@ -800,7 +800,7 @@ declare_struct(func_ini(Spec, L), _, _) -->
 declare_struct(func_end(L), Term, _) -->
     ( {L = [_, _|_]}
     ->{functor(Term, TName, _)},
-      ['    } ~w;'-[TName]]
+      ["    } "+TName+";"]
     ; ['};']
     ).
 declare_struct(func_rec(_, _, _, _), Spec, Name) -->
@@ -964,7 +964,7 @@ fetch_kv_prop_arg(Key, CM, Value, PropL, M:Prop) :-
       M=CM
     ).
 
-declare_intf_head(PCN, Head, ('foreign_t ~w('-[PCN])+ArgS+')') :-
+declare_intf_head(PCN, Head, ("foreign_t "+PCN+"(")+ArgS+')') :-
     ( compound(Head)
     ->findall(Txt, ( arg(_, Head, Arg),
                      format(atom(Txt), 'term_t ~w', [Arg])
@@ -1195,11 +1195,11 @@ declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
     [ImplHead+' {',
      '    term_t ~w_args = PL_new_term_refs(~w);'-[BN, A]],
     ( {memberchk(parent(Var, _), Glob)}
-    ->['    __leaf_t *__root = LF_ROOT(LF_PTR(FI_array_ptr(~w)));'-[Var]]
+    ->["    __leaf_t *__root = LF_ROOT(LF_PTR(FI_array_ptr("+Var+")));"]
     ; []
     ),
     bind_outs_arguments(Head, M, Module, Comp, Call, Succ, Glob, Bind),
-    ['} /* ~w */'-[PN/A],
+    ["} /* "+PN/A+" */",
      ''].
 
 declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
@@ -1208,15 +1208,15 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
     },
     [PCNH+' {'],
     % If is variable then succeed (because is compatible)
-    findall('    if(PL_is_variable(~w)) return TRUE;'-[Arg],
+    findall("    if(PL_is_variable("+Arg+")) return TRUE;",
             ( CheckMode==(type),
               arg(_, Head, Arg)
             )),
     ['    __mkroot(__root);'],
     bind_arguments(Head, M, Module, Comp, Call, Succ, Glob, Bind, Return),
     ['    __delroot(__root);',
-     '    return ~w;'-[Return],
-     '} /* ~w */'-[PI],
+     "    return "+Return+";",
+     "} /* "+PI+" */",
      ''].
 
 c_set_argument(list(S),    _, C, A, L) :- c_set_argument_rec(list, S, C, A, L).
@@ -1237,7 +1237,7 @@ c_set_argument_type(inout, Type, CArg, Arg, 'FI_unify_inout_type(~w, ~w, ~w)'-[T
 c_set_argument_chrs(out,   CArg, Arg, '__rtc_FI_unify(chrs, ~w, ~w)'-[Arg, CArg]).
 c_set_argument_chrs(inout, CArg, Arg, 'FI_unify_inout_chrs(~w, ~w)'-[Arg, CArg]).
 
-c_set_argument_rec(Type, Spec, CArg, Arg, ('FI_unify_~w('-[Type])+L+(', ~w, ~w)'-[Arg, CArg])) :-
+c_set_argument_rec(Type, Spec, CArg, Arg, ("FI_unify_"+Type+"(")+L+(', ~w, ~w)'-[Arg, CArg])) :-
     format(atom(Arg_), '~w_', [Arg]),
     c_var_name(Arg_, CArg_),
     c_set_argument(Spec, out, CArg_, Arg_, L).
@@ -1274,8 +1274,8 @@ bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) -->
                 ctype_arg_decl(Spec, Mode, Decl, []),
                 c_var_name(Arg, CArg),
                 ( Spec = term
-                ->DN=' ~w=PL_new_term_ref();'-[CArg]
-                ; DN=' ~w;'-[CArg]
+                ->DN=" "+CArg+"=PL_new_term_ref();"
+                ; DN=" "+CArg+";"
                 )
              )),
       findall('    '+GetArg+';',
@@ -1312,8 +1312,8 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
               memberchk(Mode, [out, inout]),
               ctype_arg_decl(Spec, Mode, Decl, []),
               ( Spec = term
-              ->Line=' ~w=PL_new_term_ref();'-[Arg]
-              ; Line=' ~w;'-[Arg]
+              ->Line=" "+Arg+"=PL_new_term_ref();"
+              ; Line=" "+Arg+";"
               )
             )),
     ( {compound(Head)}
@@ -1355,7 +1355,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
         ; memberchk(returns_state(_), Glob),
           Arg = '__result'
         }
-      ->['    return ~w;'-[Arg]]
+      ->["    return "+Arg+";"]
       ; []
       )
     ; []
