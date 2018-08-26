@@ -983,16 +983,16 @@ declare_foreign_bind(CM) -->
 declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind, Type+FHD) :-
     ( member(RS, [returns_state(_), type(_)]),
       memberchk(RS, Glob)
-    ->Type = 'int ',       % int to avoid SWI-Prolog.h dependency at this level
+    ->Type = "int ",       % int to avoid SWI-Prolog.h dependency at this level
       CHead = Head
     ; member(returns(Var, _), Glob)
     ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Var, Spec, Mode),
-      ctype_arg_decl(Spec, Mode, Decl, []),
-      Type = '~s '-[Decl],
+      ctype_arg_decl(Spec, Mode, Decl),
+      Type = Decl+" ",
       Head =.. Args,
       once(select(Var, Args, CArgs)),
       CHead =.. CArgs
-    ; Type = 'void ',
+    ; Type = "void ",
       CHead = Head
     ),
     declare_foreign_head(CHead, M, CM, Comp, Call, Succ, Glob, Bind, FHD),
@@ -1020,11 +1020,14 @@ declare_foreign_bind_(N, M, CM, Head, Comp, Call, Succ, Glob) -->
 declare_foreign_bind_(_, _, _, _, _, _, _, _) --> [].
 
 declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg) -->
-    {bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-     ctype_barg_decl(Spec, Mode, Decl, []),
-     format(atom(A), '~s ~w', [Decl, Arg])
+    { bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+      ctype_barg_decl(Spec, Mode, Decl)
     },
-    [A].
+    [Decl+' '+Arg].
+
+ctype_barg_decl(Spec, Mode, Decl) :-
+    ctype_barg_decl(Spec, Mode, Codes, []),
+    atom_codes(Decl, Codes).
 
 ctype_barg_decl(Spec, Mode) -->
     ctype_arg_decl(Spec, Mode),
@@ -1034,6 +1037,10 @@ ctype_barg_decl(Spec, Mode) -->
 ctype_arg_decl(Spec, Mode) -->
     ctype_decl(Spec),
     ({is_ref(Spec, Mode)} -> [] ; "*").
+
+ctype_arg_decl(Spec, Mode, Decl) :-
+    ctype_arg_decl(Spec, Mode, Codes, []),
+    atom_codes(Decl, Codes).
 
 is_ref(term,    _) :- !.
 is_ref(list(_), _) :- !.        % Always ref
@@ -1056,6 +1063,10 @@ ctype_decl(term)          --> "term_t".
 ctype_decl(tdef(Name, _)) --> acodes(Name).
 ctype_decl(cdef(Name))    --> acodes(Name).
 ctype_decl(_-CType)       --> acodes(CType).
+
+ctype_decl(Spec, Decl) :-
+    ctype_decl(Spec, Codes, []),
+    atom_codes(Decl, Codes).
 
 acodes(Atom, List, Tail) :-
     atom_codes(Atom, Codes),
@@ -1272,7 +1283,7 @@ bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) -->
     ->findall('    '+("~s"-[Decl])+DN,
               ( arg(_, Head, Arg),
                 bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-                ctype_arg_decl(Spec, Mode, Decl, []),
+                ctype_arg_decl(Spec, Mode, Decl),
                 c_var_name(Arg, CArg),
                 ( Spec = term
                 ->DN=" "+CArg+"=PL_new_term_ref();"
@@ -1307,11 +1318,11 @@ invert_mode(out, in).
 invert_mode(inout, inout).
 
 bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
-    findall('    '+("~s"-Decl)+Line,
+    findall('    '+Decl+Line,
             ( memberchk(returns(Arg, _), Glob)
             ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
               memberchk(Mode, [out, inout]),
-              ctype_arg_decl(Spec, Mode, Decl, []),
+              ctype_arg_decl(Spec, Mode, Decl),
               ( Spec = term
               ->Line=" "+Arg+"=PL_new_term_ref();"
               ; Line=" "+Arg+";"
