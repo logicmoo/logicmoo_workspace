@@ -13,6 +13,24 @@
 :- use_foreign_source(foreign_test).
 :- gen_foreign_library(.(foreign_test_i)).
 
+:- type temperature_t/1.
+temperature_t(T) :- num(T).
+
+:- type nw_stream_t/1.
+nw_stream_t(S) :- nw_stream_s(S).
+
+:- type nw_stream_s/1.
+nw_stream_s(NwStream) :-
+    dict_t(nw_stream,
+           [p:atm,
+            e:list(atm),
+            t:temperature_t,
+            d:num,
+            h:char,
+            i:int
+           ],
+          NwStream).
+
 this_dir(Dir) :-
     context_module(M),
     current_module(M, Path),

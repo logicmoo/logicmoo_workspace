@@ -61,6 +61,9 @@
     link_foreign_library/2,
     pkg_foreign_config/2.
 
+:- discontiguous
+    implement_type_unifier//3.
+
 :- dynamic
     gen_foreign_library/2,
     use_foreign_source/2,
@@ -567,7 +570,7 @@ implement_type_end -->
      '}',
      ''].
 
-term_pcname(Term, NameL, PName, CName) :-
+term_pcname(Term, NameL, Name) :-
     ( compound(Term)
     ->functor(Term, Func, _)
     ; Func = Term
@@ -575,7 +578,10 @@ term_pcname(Term, NameL, PName, CName) :-
     ( valid_csym(Func)
     ->Name = Func
     ; Name = NameL
-    ),
+    ).
+
+term_pcname(Term, NameL, PName, CName) :-
+    term_pcname(Term, NameL, Name),
     func_pcname(Name, PName, CName).
 
 func_pcname(NameL, PName, CName) :-
@@ -640,24 +646,30 @@ implement_type_unifier(func_ini(Spec, L), Term, Name) -->
     ["    __rtcheck(PL_unify_functor("+PName
      +", PL_new_functor(PL_new_atom(\""+Func+"\"), "+Arity+")));"].
 implement_type_unifier(func_rec(N, Term, Name, L), Spec, Arg) -->
-    { func_pcname(Name, PName, CName),
-      ( L = [_, _|_]
-      ->functor(Term, TName, _),
-        format(atom(CRecordName), '~w.~w', [TName, Arg]),
-        format(atom(TNameArg), '~w_~w', [TName, Arg]),
-        camel_snake(PRecordName, TNameArg),
-        Indent = '        '
-      ; CRecordName = Arg,
-        camel_snake(PRecordName, Arg),
-        Indent = '    '
-      ),
-      CNameArg = CName+"->"+CRecordName,
-      PNameArg = PName+"_"+PRecordName
-    },
-    [Indent+'term_t '+PNameArg+'=PL_new_term_ref();',
-     Indent+'__rtcheck(PL_get_arg('+N+','+PName+','+PNameArg+'));'],
+    {type_unifiers_elem_names(Term, Name, L, Arg, Indent, PName, CNameArg, PNameArg)},
+    type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg),
+    [Indent+'__rtcheck(PL_unify_arg('+N+','+PName+','+PNameArg+'));'].
+
+type_unifiers_elem_names(Term, Name, L, Arg, Indent, PName, CNameArg, PNameArg) :-
+    func_pcname(Name, PName, CName),
+    ( L = [_, _|_]
+    ->functor(Term, TName, _),
+      format(atom(CRecordName), '~w.~w', [TName, Arg]),
+      format(atom(TNameArg), '~w_~w', [TName, Arg]),
+      camel_snake(PRecordName, TNameArg),
+      Indent = '        '
+    ; CRecordName = Arg,
+      camel_snake(PRecordName, Arg),
+      Indent = '    '
+    ),
+    CNameArg = CName+"->"+CRecordName,
+    PNameArg = PName+"_"+PRecordName.
+
+type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg) -->
+    [Indent+'term_t '+PNameArg+'=PL_new_term_ref();'],
     {c_set_argument(Spec, out, CNameArg, PNameArg, SetArg)},
     [Indent+SetArg+';'].
+
 implement_type_unifier(func_end(L), _, _) -->
     ( {L = [_, _|_]}
     ->['        break;',
@@ -676,30 +688,26 @@ implement_type_unifier(dict_ini(Name, _, _, L), Spec, Term) -->
      '    term_t __tail=PL_copy_term_ref(__desc);'].
 implement_type_unifier(dict_key_value(Dict, _, N, _), Key, Value) -->
     {key_value_from_dict(Dict, N, Key, Value)}. % Placed in 'dict' order
-implement_type_unifier(dict_rec(_, Term, _N, Name, L), Spec, Arg) -->
-    { term_pcname(Term, Name, PName, CName),
-      ( L = [_, _|_]
-      ->functor(Term, TName, _),
-        format(atom(CRecordName), '~w.~w', [TName, Arg]),
-        format(atom(TNameArg), '~w_~w', [TName, Arg]),
-        camel_snake(PRecordName, TNameArg),
-        Indent = '        '
-      ; CRecordName = Arg,
-        camel_snake(PRecordName, Arg),
-        Indent = '    '
-      ),
-      CNameArg = CName+"->"+CRecordName,
-      PNameArg = PName+"_"+PRecordName
-    },
+implement_type_unifier(dict_rec(_, Term, _N, NameL, L), Spec, Arg) -->
+    {term_pcname(Term, NameL, Name)},
+    {type_unifiers_elem_names(Term, Name, L, Arg, Indent, _, CNameArg, PNameArg)},
     ( {spec_pointer(Spec)}
-    ->[Indent+'if('+CNameArg+') {']
-    ; [Indent+'{']
-    ),
-    [Indent+'    term_t '+PNameArg+'=PL_new_term_ref();'],
-    {c_set_argument(Spec, out, CNameArg, PNameArg, SetArg)},
-    [Indent+'    '+SetArg+';',
-     Indent+'    FI_put_desc(__tail, "'+Arg+'", '+PNameArg+');',
-     '    }'].
+    ->with_wrapper(
+          Indent+'if('+CNameArg+') {',
+          type_unifiers_elem_dict_settle(Spec, Arg, Indent+'    ', CNameArg, PNameArg),
+          Indent+'}')
+    ; type_unifiers_elem_dict_settle(Spec, Arg, Indent, CNameArg, PNameArg)
+    ).
+
+type_unifiers_elem_dict_settle(Spec, Arg, Indent, CNameArg, PNameArg) -->
+    type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg),
+    [Indent+'FI_put_desc(__tail, "'+Arg+'", '+PNameArg+');'].
+
+with_wrapper(Ini, Goal, End) -->
+    [Ini],
+    call(Goal),
+    [End].
+
 implement_type_unifier(dict_end(_, Tag, L), Term, _) -->
     {func_pcname(Term, PName, _)},
     ['    __rtcheck(PL_unify_nil(__tail));',
