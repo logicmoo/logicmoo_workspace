@@ -71,16 +71,21 @@ union_s(num(Number)) :-
 union_s(positive(T)) :-
     positive_t(T).
 
-/* TBD: Make this works:
-
 :- type uniond_t/1.
 uniond_t(U) :- uniond_s(U).
+
+% :- type uniond_s_d/1.
+% uniond_s_d(Dict) :- 
+%     dict_t(d{value1:atm,
+%              value2:list(atm)},
+%            Dict).
 
 :- type uniond_s/1.
 uniond_s(u(Dict2, Num)) :-
     d_t(Dict2),
     num(Num).
 uniond_s(d(Dict)) :-
+    % uniond_s_d(Dict).
     dict_t(d{value1:atm,
              value2:list(atm)
             },
@@ -90,7 +95,6 @@ uniond_s(pair(X, Y)) :-
     num(Y).
 uniond_s(positive(T)) :-
     positive_t(T).
-*/
 
 :- type negative_t/1 is foreign(is_negative_t).
 
