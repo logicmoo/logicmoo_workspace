@@ -58,14 +58,20 @@ int(X) :-
     integer(X).
 int(0).
 int(X) :-
-    posint(N),
+    curr_posint(N),
     give_sign(N, X).
 
 :- type posint/1.
 
-posint(1).
-posint(N) :-
-    posint(N1),
+posint(X) :-
+    nonvar(X), !,
+    integer(X),
+    X > 0.
+posint(X) :- curr_posint(X).
+
+curr_posint(1).
+curr_posint(N) :-
+    curr_posint(N1),
     succ(N1, N).
 
 give_sign(0, 0) :- !.
@@ -83,7 +89,7 @@ nnegint(X) :-
     integer(X),
     X >= 0.
 nnegint(0).
-nnegint(N) :- posint(N).
+nnegint(N) :- curr_posint(N).
 
 :- type flt/1.
 
@@ -123,7 +129,7 @@ posflt(X) :-
     float(X),
     X > 0.
 posflt(Q) :-
-    posint(X),
+    curr_posint(X),
     intfrac1(X, Q).
 
 :- type rat/1.
@@ -167,7 +173,7 @@ posnum(X) :-
     number(X),
     X > 0.
 posnum(Q) :-
-    posint(X),
+    curr_posint(X),
     intfrac2(X, Q).
 
 intfrac2(X, Q) :-
