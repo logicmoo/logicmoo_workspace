@@ -35,6 +35,7 @@
 :- module(foreign_props,
           [foreign/1,
            foreign/2,
+           namespec/1,
            (native)/1,
            (native)/2,
            fimport/1,
@@ -65,11 +66,17 @@ foreign(G) :- call(G).
 :- global foreign/2.
 foreign(_, G) :- call(G).
 
-%!  native(+Name, :Predicate)
-%
-%   Predicate is implemented in C as Name.
+:- type namespec/1.
 
-:- global (native)/2.
+namespec(name(  Name  )) :- atm(Name).
+namespec(prefix(Prefix)) :- atm(Prefix).
+namespec(suffix(Suffix)) :- atm(Suffix).
+
+%!  native(+NameSpec, :Predicate)
+%
+%   Predicate is implemented in C as specified by NameSpec.
+
+:- global native/2 :: namespec * callable.
 native(_, G) :- call(G).
 
 %!  native(:Predicate)
@@ -78,7 +85,7 @@ native(_, G) :- call(G).
 
 :- global declaration (native)/1.
 
-native(X) :- native(X, X).
+native(X) :- native(prefix(pl_), X).
 
 :- global fimport/1.
 fimport(G) :- call(G).

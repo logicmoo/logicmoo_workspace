@@ -1203,23 +1203,33 @@ current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL
     ; true
     ),
     functor(Head, PredName, Arity),
-    ( memberchk(foreign(_), GlobL)
-    ->FuncName = PredName
-    ; memberchk(foreign(FuncName, _), GlobL)
-    ->true
-    ; memberchk(fimport(_), GlobL)
-    ->FuncName = PredName
-    ; memberchk(fimport(FuncName, _), GlobL)
-    ->true
+    ( ( memberchk(foreign(_), GlobL)
+      ->FuncSpec = name(PredName)
+      ; memberchk(foreign(FuncSpec, _), GlobL)
+      ->true
+      ; memberchk(fimport(_), GlobL)
+      ->FuncSpec = name(PredName)
+      ; memberchk(fimport(FuncSpec, _), GlobL)
+      )
+    ->resolve_name(FuncSpec, PredName, FuncName)
     ; true
     ),
-    ( memberchk(native(_), GlobL)
-    ->BindName = PredName
-    ; memberchk(native(BindName, _), GlobL)
-    ->true
+    ( ( memberchk(native(_), GlobL)
+      ->BindSpec=name(PredName)
+      ; memberchk(native(BindSpec, _), GlobL)
+      ->true
+      )
+    ->Name = PredName
     ; nonvar(FuncName)
-    ->atom_concat('pl_', FuncName, BindName)
-    ).
+    ->BindSpec=prefix(pl_),
+      Name = FuncName
+    ),
+    resolve_name(BindSpec, Name, BindName).
+
+resolve_name(BindName, _, BindName) :- atom(BindName), !.
+resolve_name(name(BindName), _, BindName).
+resolve_name(prefix(Prefix), PredName, BindName) :- atom_concat(Prefix, PredName, BindName).
+resolve_name(suffix(Suffix), PredName, BindName) :- atom_concat(PredName, Suffix, BindName).
 
 foreign_native_fimport(H) :- foreign_native(H).
 foreign_native_fimport(fimport(_)).
