@@ -44,10 +44,29 @@
    foldargs(6, +, +, +, +, -),
    foldargs(7, +, +, +, +, +, -).
 
-foldargs(Goal, Term)                   --> foldargs_(1, Goal, Term).
-foldargs(Goal, T1, T2)                 --> foldargs_(1, Goal, T1, T2).
-foldargs(Goal, T1, T2, T3)             --> foldargs_(1, Goal, T1, T2, T3).
-foldargs(Goal, T1, T2, T3, T4)         --> foldargs_(1, Goal, T1, T2, T3, T4).
+foldargs(Goal, Term) -->
+    {compound(Term)},
+    !,
+    foldargs_(1, Goal, Term).
+foldargs(_, _) --> [].
+
+foldargs(Goal, T1, T2) -->
+    {compound(T1)},
+    !,
+    foldargs_(1, Goal, T1, T2).
+foldargs(_, _, _) --> [].
+
+foldargs(Goal, T1, T2, T3) -->
+    {compound(T1)},
+    !,
+    foldargs_(1, Goal, T1, T2, T3).
+foldargs(_, _, _, _) --> [].
+
+foldargs(Goal, T1, T2, T3, T4) -->
+    {compound(T1)},
+    !,
+    foldargs_(1, Goal, T1, T2, T3, T4).
+foldargs(_, _, _, _, _) --> [].
 
 foldargs_(N, Goal, T1) -->
     {arg(N, T1, A1)},
