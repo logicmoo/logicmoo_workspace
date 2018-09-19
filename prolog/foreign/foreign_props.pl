@@ -76,7 +76,7 @@ namespec(suffix(Suffix)) :- atm(Suffix).
 %
 %   Predicate is implemented in C as specified by NameSpec.
 
-:- global native/2 :: namespec * callable.
+:- global native(namespec, callable).
 native(_, G) :- call(G).
 
 %!  native(:Predicate)

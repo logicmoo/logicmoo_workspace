@@ -33,6 +33,7 @@
 */
 
 :- module(foreign_generator, [generate_library/4,
+                              collect_prop/4,
                               gen_foreign_library/2]).
 
 :- use_module(library(lists)).

@@ -150,7 +150,8 @@ aprop_asr(Key, M:P, From, Asr) :-
 
 add_arg(_, G1, G2, _, _) :-
     var(G1),
-    var(G2), !,
+    var(G2),
+    !,
     assertion(fail),
     fail.
 add_arg(H, G1, G2, PPos1, PPos2) :-
@@ -163,7 +164,8 @@ add_arg(H, G1, G2, PPos1, PPos2) :-
     add_arg(H, G1, G2, Pos1, Pos2).
 add_arg(H, M:G1, M:G2,
         term_position(From, To, FFrom, FTo, [MPos, Pos1]),
-        term_position(From, To, FFrom, FTo, [MPos, Pos2])) :- !,
+        term_position(From, To, FFrom, FTo, [MPos, Pos2])) :-
+    !,
     add_arg(H, G1, G2, Pos1, Pos2).
 add_arg(H, G1, G2, Pos,
         term_position(From, To, FFrom, FTo, PosL)) :-
@@ -189,7 +191,8 @@ var_location(Term, Pos, Var, Loc) :-
 term_expansion((decompose_assertion_body(Body, Format, A, B, C, D, E, F) :- valid_cp(C)),
                (decompose_assertion_body(Body, Format, Pos,
                                          A,   B,   C,   D,   E,   F,
-                                         PDP, DPP, CPP, APP, GPP, COP) :- valid_cp(C))) :- !,
+                                         PDP, DPP, CPP, APP, GPP, COP) :- valid_cp(C))) :-
+    !,
     maplist(var_location(Body, Pos),
             [A,   B,   C,   D,   E,   F],
             [PDP, DPP, CPP, APP, GPP, COP]).
@@ -342,7 +345,8 @@ normalize_status_and_type(Assertions, APos, AssrtStatus, AssrtType, UBody, BPos)
 
 normalize_status_and_type_1(Assertions, PPos, AssrtStatus, AssrtType, UBody, BPos) :-
     nonvar(PPos),
-    PPos = parentheses_term_position(_, _, Pos), !,
+    PPos = parentheses_term_position(_, _, Pos),
+    !,
     normalize_status_and_type_1(Assertions, Pos, AssrtStatus, AssrtType, UBody, BPos).
 normalize_status_and_type_1(Assertions, term_position(_, _, _, _, [BPos]),
                           _, AssrtType, UBody, BPos) :-
@@ -472,24 +476,29 @@ assrt_format_code(t).
 
 current_body(MBodyS, M, PPos, Body, BPos, Gl1, Gl) :-
     nonvar(PPos),
-    PPos = parentheses_term_position(_, _, Pos), !,
+    PPos = parentheses_term_position(_, _, Pos),
+    !,
     current_body(MBodyS, M, Pos, Body, BPos, Gl1, Gl).
 current_body(M:BodyS, _, term_position(_, _, _, _, [_, PosS]), Body, BPos, Gl1, Gl) :-
-    atom(M), !,
+    atom(M),
+    !,
     current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
 current_body(BodyS + BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BPos, Gl1, Gl) :- !,
+             Body, BPos, Gl1, Gl) :-
+    !,
     propdef(BGl, M, PGl, Gl1, Gl2),
     current_body(BodyS, M, PosS, Body, BPos, Gl2, Gl).
 current_body(BodyS is BGl#Co, M,
              term_position(From, To, _, _, [PosS, A2TermPos]),
-             Body, BPos, Gl1, Gl) :- !,
+             Body, BPos, Gl1, Gl) :-
+    !,
     f2_pos(A2TermPos, FFrom, FTo, PGl, PosCo),
     propdef(BGl, M, PGl, Gl1, Gl2),
     current_body(BodyS#Co, M, term_position(From, To, FFrom, FTo, [PosS, PosCo]),
                  Body, BPos, Gl2, Gl).
 current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BPos, Gl1, Gl) :- !,
+             Body, BPos, Gl1, Gl) :-
+    !,
     propdef(BGl, M, PGl, Gl1, Gl2),
     current_body(BodyS, M, PosS, Body, BPos, Gl2, Gl).
 
@@ -515,7 +524,8 @@ current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
 current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl) :-
     is_decl_global(BodyS, M),
     BodyS =.. [F, Head|GArgL],
-    nonvar(Head), !,
+    nonvar(Head),
+    !,
     PosS = term_position(_, _, FF, FT, [HPos|PArgL]),
     BGl =.. [F|GArgL],
     current_body(Head + BGl, M,
@@ -533,18 +543,23 @@ current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl) :-
 
 f2_pos(PPos, FFrom, FTo, PGl, PosCo) :-
     nonvar(PPos),
-    PPos = parentheses_term_position(_, _, Pos), !,
+    PPos = parentheses_term_position(_, _, Pos),
+    !,
     f2_pos(Pos, FFrom, FTo, PGl, PosCo).
 f2_pos(term_position(_, _, FFrom, FTo, [PGl, PosCo]), FFrom, FTo, PGl, PosCo).
 
 body_member(Body, _, _, _) :-
-    var(Body), !, fail.
+    var(Body),
+    !,
+    fail.
 body_member([], _, _, _) :- !, fail.
 body_member(Body, PPos, Lit, Pos) :-
     nonvar(PPos),
-    PPos = parentheses_term_position(_, _, BPos), !,
+    PPos = parentheses_term_position(_, _, BPos),
+    !,
     body_member(Body, BPos, Lit, Pos).
-body_member([A|B], list_position(From, To, [APos|EPos], TPos), Lit, LPos) :- !,
+body_member([A|B], list_position(From, To, [APos|EPos], TPos), Lit, LPos) :-
+    !,
     ( Lit=A, LPos=APos
     ; Lit=B, LPos=list_position(From, To, EPos, TPos)
     ).
@@ -571,22 +586,27 @@ is_decl_global(Head, Status, Type, M) :-
         prop_asr(glob, metaprops:global(_), _, Asr)
       ),
       Status = true
-    ), !.
+    ),
+    !.
 
 current_normalized_assertion(Assertions, M, PPos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     nonvar(PPos),
-    PPos = parentheses_term_position(_, _, APos), !,
+    PPos = parentheses_term_position(_, _, APos),
+    !,
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos).
 current_normalized_assertion(Assertions  + BGl, M, term_position(_, _, _, _, [APos, PGl]),
-                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
+                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    !,
     propdef(BGl, M, PGl, Gl, Gl1),
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl1, Co, CoPos, RPos).
 current_normalized_assertion(Assertions is BGl, M, term_position(_, _, _, _, [APos, PGl]),
-                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
+                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    !,
     propdef(BGl, M, PGl, Gl, Gl1),
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl1, Co, CoPos, RPos).
 current_normalized_assertion(Assertions # Co2, M, term_position(_, _, _, _, [APos, CoPos2]),
-                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :- !,
+                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    !,
     current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co1, CoPos1, RPos),
     once(merge_comments(Co1, CoPos1, Co2, CoPos2, Co, CoPos)).
 current_normalized_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
@@ -609,58 +629,101 @@ merge_comments("",  _, C, P, C, P).
 merge_comments(C, P, "",  _, C, P).
 merge_comments(C1, P1, C2, P2, [C1, C2], list_position(_, _, [P1, P2])).
 
+combine_pi_comp(N, Head, PosL1, PosL, BCp, PCp) :-
+    nonvar(PCp),
+    PCp = parentheses_term_position(_, _, Pos),
+    !,
+    combine_pi_comp(N, Head, PosL1, PosL, BCp, Pos).
+combine_pi_comp(N1, Head, PosL1, PosL, (H * P), term_position(_, _, _, _, [TPos, Pos])) :-
+    arg(N1, Head, P),
+    !,
+    succ(N, N1),
+    combine_pi_comp(N, Head, [Pos|PosL1], PosL, H, TPos).
+combine_pi_comp(N, Head, PosL, [Pos|PosL], P, Pos) :-
+    arg(N, Head, P).
+
 normalize_assertion_head_body(Body, M, BPos, Pred, Format, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    once(decompose_assertion_body(Body, Format, BPos, Head, BCp, BCa, BSu,
-                                  BGl, Co, HPos, PCp, PCa, PSu, PGl, CoPos)),
-    normalize_assertion_head(Head, M, HPos, Pred, Cp1, Ca1, Su1, Gl1, RPos),
+    once(decompose_assertion_body(Body, Format, BPos, Head, BCp1, BCa, BSu,
+                                  BGl, Co, HPos, PCp1, PCa, PSu, PGl, CoPos)),
+    normalize_assertion_head(Head, M, HPos, Pred, BCp1, PCp1, BCp, PCp, Cp1, Ca1, Su1, Gl1, RPos),
     apropdef(Pred, M, BCp, PCp, Cp, Cp1),
     apropdef(Pred, M, BCa, PCa, Ca, Ca1),
     apropdef(Pred, M, BSu, PSu, Su, Su1),
     propdef(BGl, M, PGl, Gl, Gl1).
 
-normalize_assertion_head(Head, M, PPos, Pred, Cp, Ca, Su, Gl, HPos) :-
+normalize_assertion_head(Head, M, PPos, Pred, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, HPos) :-
     nonvar(PPos),
-    PPos = parentheses_term_position(_, _, Pos), !,
-    normalize_assertion_head(Head, M, Pos, Pred, Cp, Ca, Su, Gl, HPos).
+    PPos = parentheses_term_position(_, _, Pos),
+    !,
+    normalize_assertion_head(Head, M, Pos, Pred, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, HPos).
 normalize_assertion_head((H1,H2), M, term_position(_, _, _, _, [P1, P2]),
-                         P, Cp, Ca, Su, Gl, RP) :- !,
-    ( normalize_assertion_head(H1, M, P1, P, Cp, Ca, Su, Gl, RP)
-    ; normalize_assertion_head(H2, M, P2, P, Cp, Ca, Su, Gl, RP)
+                         P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP) :-
+    !,
+    ( normalize_assertion_head(H1, M, P1, P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
+    ; normalize_assertion_head(H2, M, P2, P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
     ).
 normalize_assertion_head([H1|H2], M, list_position(From, To, [P1|E], TP),
-                         P, Cp, Ca, Su, Gl, RP) :- !,
-    ( normalize_assertion_head(H1, M, P1, P, Cp, Ca, Su, Gl, RP)
+                         P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP) :-
+    !,
+    ( normalize_assertion_head(H1, M, P1, P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
     ; normalize_assertion_head(H2, M, list_position(From, To, E, TP),
-                               P, Cp, Ca, Su, Gl, RP)
+                               P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
     ).
 normalize_assertion_head(M:H, _, term_position(_, _, _, _, [_, HP]),
-                         P, Cp, Ca, Su, Gl, RP) :-
-    atom(M), !,
-    normalize_assertion_head(H, M, HP, P, Cp, Ca, Su, Gl, RP).
-normalize_assertion_head(F/A, M, Pos, M:Pred, [], [], [], [], Pos) :- !,
-    functor(Pred, F, A).
-normalize_assertion_head(Head, M, Pos, M:Pred, Cp, Ca, Su, Gl, Pos) :-
+                         P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP) :-
+    atom(M),
+    !,
+    normalize_assertion_head(H, M, HP, P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP).
+normalize_assertion_head(F/A, M, HPos, M:Pred, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, Pos) :-
+    !,
+    functor(Head, F, A),
+    ( BCp1 \= true,
+      %(A=3->gtrace;true),
+      combine_pi_comp(A, Head, [], PosL, BCp1, PCp1)
+    ->( nonvar(HPos)
+      ->HPos = term_position(From, To, _, _, [FPos, APos]),
+        ( nonvar(FPos)
+        ->arg(1, FPos, FFrom),
+          arg(2, FPos, FTo)
+        ; true
+        )
+      ; true
+      ),
+      normalize_assertion_head(Head, M, term_position(From, To, FFrom, FTo, PosL),
+                               M:Pred, true, APos, BCp, PCp, Cp, Ca, Su, Gl, Pos)
+    ; Pred = Head,
+      Cp = [],
+      Ca = [],
+      Su = [],
+      Gl = [],
+      HPos = Pos,
+      BCp = BCp1,
+      PCp = PCp1
+    ).
+normalize_assertion_head(Head, M, Pos, M:Pred, BCp, PCp, BCp, PCp, Cp, Ca, Su, Gl, Pos) :-
     compound(Head),
     !,
     functor(Head, F, A),
     functor(Pred, F, A),
     Pos = term_position(_, _, _, _, PosL),
     normalize_args(PosL, 1, Head, M, Pred, Cp, Ca, Su, Gl).
-normalize_assertion_head(Head, M, Pos, M:Head, [], [], [], [], Pos) :-
+normalize_assertion_head(Head, M, Pos, M:Head, BCp, PCp, BCp, PCp, [], [], [], [], Pos) :-
     atom(Head).
 
 normalize_args([Pos|PosL], N1, Head, M, Pred, Cp1, Ca1, Su1, Gl1) :-
-    arg(N1, Head, HArg), !,
+    arg(N1, Head, HArg),
+    !,
     resolve_types_modes(HArg, M, PArg, Pos, Cp1, Ca1, Su1, Gl1, Cp2, Ca2, Su2, Gl2),
     arg(N1, Pred, PArg),
     succ(N1, N),
     normalize_args(PosL, N, Head, M, Pred, Cp2, Ca2, Su2, Gl2).
 normalize_args([], _, _, _, _, [], [], [], []).
 
-resolve_types_modes(A,    _, A, _, Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
+resolve_types_modes(A,  _, A, _,    Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
 resolve_types_modes(A1, M, A, PPos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
     nonvar(PPos),
-    PPos = parentheses_term_position(_, _, Pos), !,
+    PPos = parentheses_term_position(_, _, Pos),
+    !,
     resolve_types_modes(A1, M, A, Pos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl).
 resolve_types_modes(A1:T, M, A, term_position(_, _, _, _, [PA1, PT]), Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
     do_propdef(T, M, A, PT, Pr1, Pr2),
@@ -677,16 +740,19 @@ do_propdef(A1, M, A, PA1, Cp1, Cp) :-
 
 do_modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     nonvar(A1),
-    modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr), !.
+    modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    !.
 do_modedef(A1, M, A2, A, PPA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     nonvar(PPA1),
-    PPA1 = parentheses_term_position(_, _, PA1), !,
+    PPA1 = parentheses_term_position(_, _, PA1),
+    !,
     modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr).
 do_modedef(A1, M, A2, A, APos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     atom(A1),
     A3 =.. [A1, A],
     ( var(APos) -> true ; APos = From-To, Pos = term_position(From, To, From, To, [To-To]) ),
-    modedef(A3, M, A2, A, Pos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr), !.
+    modedef(A3, M, A2, A, Pos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    !.
 do_modedef(A1, M, A2, A, From-To, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     integer(A1),
     ( A1 >= 0
@@ -743,21 +809,25 @@ apropdef_2(0, _, _, _, _) --> !, {fail}.
 apropdef_2(N, Head, M, A, PPos) -->
     { nonvar(PPos),
       PPos = parentheses_term_position(_, _, Pos)
-    }, !,
+    },
+    !,
     apropdef_2(N, Head, M, A, Pos).
 apropdef_2(1, Head, M, A, APos) -->
-    {arg(1, Head, V)}, !,
+    {arg(1, Head, V)},
+    !,
     hpropdef(A, M, V, APos).
 apropdef_2(N1, Head, M, (P * A), term_position(_, _, _, _, [PPos, APos])) -->
-    {arg(N1, Head, V)}, !,
-    {N is N1 - 1},
+    {arg(N1, Head, V)},
+    !,
+    {succ(N, N1)},
     apropdef_2(N, Head, M, P, PPos),
     hpropdef(A, M, V, APos).
 
 apropdef(Var, _, _, _) --> {var(Var), !, fail}.
 apropdef(_:Head, M, A, APos) -->
     {functor(Head, _, N)},
-    apropdef_2(N, Head, M, A, APos), !.
+    apropdef_2(N, Head, M, A, APos),
+    !.
 apropdef(_, M, A, APos) --> propdef(A, M, APos).
 
 propdef(A, M, APos) --> props_args(A, M, push, APos).
@@ -767,7 +837,8 @@ push(A, M, Pos) --> [(M:A)-Pos].
 aprops_arg(A, M, V, PPos) -->
     { nonvar(PPos),
       PPos = parentheses_term_position(_, _, Pos)
-    }, !,
+    },
+    !,
     aprops_arg(A, M, V, Pos).
 aprops_arg({A}, M, V, brace_term_position(_, _, Pos)) --> !, aprops_args(A, M, V, Pos).
 aprops_arg(A,   M, V, Pos) --> aprops_args(A, M, V, Pos).
@@ -780,12 +851,15 @@ props_args(true,   _, _, _) --> !, [].
 props_args(A, M, V, PPos) -->
     { nonvar(PPos),
       PPos = parentheses_term_position(_, _, Pos)
-    }, !,
+    },
+    !,
     props_args(A, M, V, Pos).
-props_args((A, B), M, V, term_position(_, _, _, _, [PA, PB])) --> !,
+props_args((A, B), M, V, term_position(_, _, _, _, [PA, PB])) -->
+    !,
     props_args(A, M, V, PA),
     props_args(B, M, V, PB).
-props_args((A; B), M, V, Pos) --> !,
+props_args((A; B), M, V, Pos) -->
+    !,
     { Pos = term_position(_, _, _, _, [PA, PB]),
       props_args(A, M, V, PA, P1, []),
       pairs_keys(P1, ML1),
@@ -798,7 +872,8 @@ props_args((A; B), M, V, Pos) --> !,
     },
     [(M:(C1;C2))-Pos].
 props_args(M:A, _, V, term_position(_, _, _, _, [_, PA])) -->
-    {atom(M)}, !,
+    {atom(M)},
+    !,
     props_args(A, M, V, PA).
 props_args(A, M, V, Pos) --> call(V, A, M, Pos).
 
@@ -818,7 +893,8 @@ assertion_records(M, Dict, Decl, PPos, Records, RPos) :-
     assertion_records(M, Dict, Decl, Pos, Records, RPos).
 assertion_records(_, Dict, M:Decl, term_position(_, _, _, _, [_, DPos]),
                   Records, RPos) :-
-    atom(M), !,
+    atom(M),
+    !,
     assertion_records(M, Dict, Decl, DPos, Records, RPos).
 assertion_records(M, Dict, doc(Key, Doc),
                   term_position(From, To, FFrom, FTo, [KPos, DPos]),
