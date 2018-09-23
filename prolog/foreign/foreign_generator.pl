@@ -154,10 +154,10 @@ generate_library(M, AliasSO, AliasSOPl, File) :-
     ->print_message(informational,
                     format('Skipping build of ~w: is up to date', [FileSO]))
     ; do_generate_library(M, FileSO, File, FSourceL),
-      do_generate_wrapper(M, AliasSO, AliasSOPl, File)
+      do_generate_wrapper(M, FileSO, AliasSO, AliasSOPl, File)
     ).
 
-do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
+do_generate_wrapper(M, FileSO, AliasSO, AliasSOPl, File) :-
     findall(F/A, ( current_foreign_prop(_, Head, M, _, _, _, _, _, _, _, _, _, _),
                    \+ ( predicate_property(M:Head, number_of_clauses(X)),
                         X>0
@@ -168,13 +168,17 @@ do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
     atom_concat(M, '$impl', IModule),
     absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
                                              relative_to(File)]),
-    % assertion(file_name_extension(_, pl, FileSOPl)),
+    directory_file_path(_, BaseSO, FileSO),
+    file_name_extension(Base, _, BaseSO),
     save_to_file(FileSOPl,
                  phrase(( add_autogen_note(M),
                           [(:- module(IModule, IntfPIL))],
                           generate_aux_clauses(M),
                           ['',
-                           (:- use_foreign_library(AliasSO))]
+                           (:- use_foreign_library(AliasSO)),
+                           % make these symbols public:
+                           (:- shlib:current_library(Base, _, F1, IModule, _),
+                               open_shared_object(F1, _Handle, [global]))]
                         ))).
 
 atomic_args(String, ArgL) :-
@@ -215,8 +219,7 @@ do_generate_library(M, FileSO, File, FSourceL) :-
                                                        relative_to(File)])
                     ),
                     atom_concat('-I', Dir, IDir)
-                  ),
-            IDirL, LDirL),
+                  ), IDirL, LDirL),
     findall(LDir, ( library_foreign_dir(M, DAlias),
                     absolute_file_name(DAlias, Dir, [file_type(directory),
                                                      relative_to(File)]),
