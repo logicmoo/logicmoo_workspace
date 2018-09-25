@@ -415,6 +415,9 @@ apply_dict_tp_2(t(Type, PropL, Dict)) :- apply_dict(Type-PropL, Dict).
 
 type_props(M, Type, TypePropLDictL, Pos, Asr) :-
     type_props_(M, Type, TDict, Pos, Asr),
+    type_props2(M, Type, TDict, TypePropLDictL, Asr).
+
+type_props2(M, Type, TDict, TypePropLDictL, Asr) :-
     collect_prop(Asr, M, comp, TPropL),
     ( TPropL \= []
     ->TypePropLDictL1 = [t(Type, TPropL, TDict)]
@@ -453,6 +456,7 @@ type_props_(CM, Type, Dict, Pos, Asr) :-
     % We use asr_head_prop instead of prop_asr since the auto-generated types
     % should be only those defined in the current module, but not others that
     % could be imported in CM --EMM
+    % prop_asr(Type, CM, check, prop, Dict, Pos, Asr),
     asr_head_prop(Asr, CM, Type, check, prop, Dict, Pos),
     once(prop_asr(glob, type(_), _, Asr)).
 
@@ -1556,7 +1560,8 @@ match_known_type(Type, M, _, Spec, A) -->
       functor(Head, Name, Arity),
       % Note: type_props will call match_unknown_type internally,
       % that is why this clause is only valid for match_known_type
-      type_props(M, _Head, TypePropLDictL, _, _),
+      type_props_(M, TH, TDict, _, Asr),
+      type_props2(M, TH, TDict, TypePropLDictL, Asr),
       ( TypePropLDictL = [Head-[t(_, [], _)]]
       ->Spec=cdef(Name)
       ; member(_-HeadPropLDictL, TypePropLDictL),
