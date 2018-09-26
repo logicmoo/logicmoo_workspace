@@ -77,10 +77,11 @@ qualify_meta_call(Goal1, M, CM, Caller, Goal) :-
 qualify_meta_call(Goal, _, _, _, Goal).
 
 :- meta_predicate qualify_meta_goal(0, -).
-qualify_meta_goal(Goal1, Goal) :-
-    predicate_property(Goal1, meta_predicate(Meta)), !,
-    qualify_meta_goal(Goal1, Meta, Goal).
-qualify_meta_goal(_:Goal, Goal).
+qualify_meta_goal(M:Goal1, M:Goal) :-
+    predicate_property(M:Goal1, meta_predicate(Meta)),
+    !,
+    qualify_meta_goal(M:Goal1, Meta, Goal).
+qualify_meta_goal(MGoal, MGoal).
 
 qualify_meta_goal(M:Goal1, Meta, Goal) :-
     functor(Goal1, F, N),
