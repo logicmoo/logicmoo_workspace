@@ -138,6 +138,14 @@ rat(A rdiv B) :-
     int(A),
     int(B).
 
+real(X) :-
+    ( number(X)
+    ->true
+    ; X = N rdiv B,
+      integer(N),
+      integer(B)
+    ).
+
 :- type num/1.
 
 %!  num(X)
@@ -145,19 +153,19 @@ rat(A rdiv B) :-
 %   Numbers
 
 num(X) :-
-    nonvar(X), !,
-    number(X).
+    nonvar(X),
+    !,
+    real(X).
 num(F) :-
     nnegnumgen(Q),
     give_sign(Q, F).
-num(Q) :-
-    rat(Q).
 
 :- type nnegnum/1.
 
 nnegnum(X) :-
-    nonvar(X), !,
-    number(X),
+    nonvar(X),
+    !,
+    real(X),
     X >= 0.
 nnegnum(Q) :-
     nnegnumgen(Q).
@@ -179,14 +187,17 @@ posnum(Q) :-
 intfrac2(X, Q) :-
     ( Q is X
     ; Q is 1.0*X
-    ; frac(X, Q)
+    ; frac(X, R),
+      ( Q is R
+      ; Q is 1.0*R
+      )
     ).
 
 frac(X, Q) :-
     between(2, X, Y),
     1 =:= gcd(X, Y),
-    ( Q is X/Y
-    ; Q is Y/X
+    ( Q is X rdiv Y
+    ; Q is Y rdiv X
     ).
 
 :- type atm/1.
