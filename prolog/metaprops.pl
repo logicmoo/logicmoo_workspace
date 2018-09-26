@@ -204,10 +204,10 @@ is_type(Head, M) :-
 
 :- meta_predicate compat_body(0, +).
 
-compat_body(M:G1, data(V, T, _)) :-
-    qualify_meta_goal(M:G1, G),
+compat_body(MG1, data(V, T, _)) :-
+    qualify_meta_goal(MG1, MG),
     prolog_current_choice(CP),
-    clause(M:G, Body, Ref),
+    clause(MG, Body, Ref),
     clause_property(Ref, module(CM)),
     compat(Body, data(V, T, CP), CM).
 
