@@ -67,7 +67,7 @@ check_undefined(Options, Results) :-
               from_to_file(From, File)
             ), Pairs),
     group_pairs_or_sort(Pairs, Grouped),
-    findall(warning-(File-(Decl-(PI-LocCI))),
+    findall(error-(File-(Decl-(PI-LocCI))),
             ( member(File-ALPILocCIList, Grouped),
               member(AL-PILocCIList, ALPILocCIList),
               maplist(\ ((_:F/A)-_)^(F/A)^true, PILocCIList, PIL),
