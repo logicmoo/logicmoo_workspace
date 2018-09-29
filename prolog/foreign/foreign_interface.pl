@@ -40,7 +40,14 @@
 :- reexport(library(compound_expand)).
 
 term_expansion((:- gen_foreign_library(AliasSO)),
-               foreign_generator:gen_foreign_library(M, AliasSO)) :-
+               foreign_generator:gen_foreign_library(M, AliasSO, [])) :-
+    '$current_source_module'(M).
+term_expansion((:- gen_foreign_library(AliasSO, Init)),
+               foreign_generator:gen_foreign_library(M, AliasSO, InitL)) :-
+    ( is_list(Init)
+    ->InitL = Init
+    ; InitL = [Init]
+    ),
     '$current_source_module'(M).
 term_expansion((:- pkg_foreign_config(Package)),
                foreign_generator:pkg_foreign_config(M, Package)) :-
@@ -68,9 +75,9 @@ term_expansion(end_of_file, Decl) :-
     '$current_source_module'(M),
     module_property(M, file(File)),
     prolog_load_context(file, File), !,
-    gen_foreign_library(M, AliasSO),
+    gen_foreign_library(M, AliasSO, InitL),
     change_alias(add_suffix('_so'), AliasSO, AliasSOPl),
-    generate_library(M, AliasSO, AliasSOPl, File),
+    generate_library(M, AliasSO, AliasSOPl, InitL, File),
     Decl = [(:- [AliasSOPl]), end_of_file].
 
 add_suffix(Suffix, Name1, Name) :-

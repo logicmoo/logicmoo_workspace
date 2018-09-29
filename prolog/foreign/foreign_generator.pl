@@ -32,9 +32,9 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(foreign_generator, [generate_library/4,
+:- module(foreign_generator, [generate_library/5,
                               collect_prop/4,
-                              gen_foreign_library/2]).
+                              gen_foreign_library/3]).
 
 :- use_module(library(lists)).
 :- use_module(library(foldnl)).
@@ -54,7 +54,7 @@
 :- use_module(library(implementation_module)).
 
 :- multifile
-    gen_foreign_library/2,
+    gen_foreign_library/3,
     use_foreign_source/2,
     use_foreign_header/2,
     include_foreign_dir/2,
@@ -68,7 +68,7 @@
     implement_type_unifier//3.
 
 :- dynamic
-    gen_foreign_library/2,
+    gen_foreign_library/3,
     use_foreign_source/2,
     use_foreign_header/2,
     include_foreign_dir/2,
@@ -121,7 +121,7 @@ is_newer(File1, File2) :-
     time_file(File2, Time2),
     Time1 > Time2.
 
-generate_library(M, AliasSO, AliasSOPl, File) :-
+generate_library(M, AliasSO, AliasSOPl, InitL, File) :-
     absolute_file_name(AliasSO, FileSO, [file_type(executable),
                                          relative_to(File)]),
     findall(FSource, ( ( use_foreign_source(M, FAlias)
@@ -153,11 +153,11 @@ generate_library(M, AliasSO, AliasSOPl, File) :-
              is_newer(FileSO, Dep))
     ->print_message(informational,
                     format('Skipping build of ~w: is up to date', [FileSO]))
-    ; do_generate_library(M, FileSO, File, FSourceL),
-      do_generate_wrapper(M, FileSO, AliasSO, AliasSOPl, File)
+    ; do_generate_library(M, FileSO, File, InitL, FSourceL),
+      do_generate_wrapper(M, AliasSO, AliasSOPl, File)
     ).
 
-do_generate_wrapper(M, FileSO, AliasSO, AliasSOPl, File) :-
+do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
     findall(F/A, ( current_foreign_prop(_, Head, M, _, _, _, _, _, _, _, _, _, _),
                    \+ ( predicate_property(M:Head, number_of_clauses(X)),
                         X>0
@@ -168,8 +168,6 @@ do_generate_wrapper(M, FileSO, AliasSO, AliasSOPl, File) :-
     atom_concat(M, '$impl', IModule),
     absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
                                              relative_to(File)]),
-    directory_file_path(_, BaseSO, FileSO),
-    file_name_extension(Base, _, BaseSO),
     save_to_file(FileSOPl,
                  phrase(( add_autogen_note(M),
                           [(:- module(IModule, IntfPIL))],
@@ -177,7 +175,7 @@ do_generate_wrapper(M, FileSO, AliasSO, AliasSOPl, File) :-
                           ['',
                            (:- use_foreign_library(AliasSO)),
                            % make these symbols public:
-                           (:- shlib:current_library(Base, _, F1, IModule, _),
+                           (:- shlib:current_library(AliasSO, _, F1, IModule, _),
                                open_shared_object(F1, _Handle, [global]))]
                         ))).
 
@@ -185,9 +183,9 @@ atomic_args(String, ArgL) :-
     atomic_list_concat(ArgL1, ' ', String),
     subtract(ArgL1, [''], ArgL).
 
-do_generate_library(M, FileSO, File, FSourceL) :-
+do_generate_library(M, FileSO, File, InitL, FSourceL) :-
     file_name_extension(BaseFile, _, FileSO),
-    generate_foreign_interface(M, File, BaseFile),
+    generate_foreign_interface(M, File, InitL, BaseFile),
     absolute_file_name(library(foreign/foreign_interface),
                        IntfPl,
                        [file_type(prolog), access(read), relative_to(File)]),
@@ -300,7 +298,7 @@ save_to_file(File, Goal) :-
     call(Goal, Lines, []),
     with_output_to_file(File, write_lines(Lines)).
 
-generate_foreign_interface(Module, FilePl, BaseFile) :-
+generate_foreign_interface(Module, FilePl, IntL, BaseFile) :-
     atom_concat(BaseFile, '_impl', BaseFileImpl),
     file_name_extension(BaseFileImpl, h, FileImpl_h),
     atom_concat(BaseFile, '_intf', BaseFileIntf),
@@ -309,7 +307,7 @@ generate_foreign_interface(Module, FilePl, BaseFile) :-
     directory_file_path(_, Base, BaseFile),
     save_to_file(FileImpl_h, generate_foreign_impl_h(Module)),
     save_to_file(FileIntf_h, generate_foreign_intf_h(Module, FileImpl_h)),
-    save_to_file(FileIntf_c, generate_foreign_c(Module, Base, FilePl, FileIntf_h)).
+    save_to_file(FileIntf_c, generate_foreign_c(Module, Base, IntL, FilePl, FileIntf_h)).
 
 c_var_name(Arg, "_c_"+Arg).
 
@@ -357,7 +355,7 @@ add_autogen_note(Module) -->
     ["/* NOTE: File generated automatically from "+Module+" */",
      ''].
 
-generate_foreign_c(Module, Base, FilePl, FileIntf_h) -->
+generate_foreign_c(Module, Base, InitL, FilePl, FileIntf_h) -->
     add_autogen_note(Module),
     findall("#include \""+File_h+"\"",
             ( use_foreign_header(Module, HAlias),
@@ -372,10 +370,10 @@ generate_foreign_c(Module, Base, FilePl, FileIntf_h) -->
     ],
     findall_tp(Module, type_props_nf, implement_type_getter),
     findall_tp(Module, type_props_nf, implement_type_unifier),
-    generate_foreign_register(Module, Base),
+    generate_foreign_register(Module, Base, InitL),
     generate_foreign_intf(Module).
 
-generate_foreign_register(Module, Base) -->
+generate_foreign_register(Module, Base, InitL) -->
     ["install_t install_"+Base+"() {",
      '    __system_dict_create        =PL_predicate("dict_create", 3, "system");',
      '    __system_get_dict           =PL_predicate("get_dict",    3, "system");',
@@ -387,8 +385,11 @@ generate_foreign_register(Module, Base) -->
     findall(Line,
             ( current_foreign_prop(_, _, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
               write_register_sentence(Type, M, PredName, Arity, BindName, Line))),
+    foldl(generate_init, InitL),
     ["} /* install_"+Base+" */",
     ''].
+
+generate_init(Init) --> ["    "+Init+";"].
 
 write_register_sentence(fimport(_),    M, PredName, Arity, BindName, Line) :- !,
     write_init_fimport_binding(M, PredName, Arity, BindName, Line).
