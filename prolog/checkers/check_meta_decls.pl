@@ -81,7 +81,7 @@ hide_missing_meta_pred(prolog_exception_hook(_, _, _, _), user).
 checker:check(meta_decls, Pairs, Options1) :-
     option_allchk(Options1, Options2, FileChk),
     select_option(module(M), Options2, _, M),
-    findall(information-((Loc/M)-Spec),
+    findall(warning-((Loc/M)-Spec),
             ( prolog_metainference:inferred_meta_pred(Head, M, Spec),
               \+ predicate_property(M:Head, meta_predicate(_)),
               %% Only exported predicates would require qualification
