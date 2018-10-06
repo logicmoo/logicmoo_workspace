@@ -91,6 +91,7 @@ compat(M:Goal) :-
 :- use_module(library(gcb)).
 :- use_module(library(list_sequence)).
 :- use_module(library(substitute)).
+:- use_module(library(clambda)).
 :- use_module(library(terms_share)).
 
 :- dynamic
