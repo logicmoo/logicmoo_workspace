@@ -657,18 +657,6 @@ double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],
 // ++++++++++++++++++++++++ Expectation Maximization functions  ++++++++++++++++++++++++++
 
 
-void openFilesEM (char * datasetName, FILE**probsFile, FILE** expectationsFile, FILE**countsFile ,FILE** lls);
-void closeFilesEM (FILE**probsFile, FILE** expectationsFile, FILE**countsFile,FILE** lls);
-void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR);
-void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR);
-void  printHyperparamsEM(double EA,double ER, int MaxIteration,int lenNodes,char*datasetName,char*save);
-void backwardEM(double expectations[], int Count[],int NR, node*root);
-double expectation(node**Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR);
-void maximization(double Probabilities [],double expectations[],int Count [],int NR);
-double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR, int MaxIteration,double EA, double ER,char* datasetName, char* save);
-foreign_t pl_phil(term_t Nodes,term_t StopCond,term_t Adam, term_t Stra_Name, term_t LL, term_t RulesProbabilitiesGD, term_t LLem,term_t RulesProbabilitiesEM);
-
-
 
  // Create if it does not exist the directory for the dataset and also create the necessary files 
 void openFilesEM (char * datasetName, FILE**probsFile, FILE** expectationsFile, FILE**countsFile ,FILE** lls)
