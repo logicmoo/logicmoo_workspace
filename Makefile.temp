@@ -1,0 +1,63 @@
+SHELL := /bin/bash
+#LIBDIR=lib/$(SWIARCH)/
+LIBDIR=lib/$(SWIARCH)/  # es. 'x64-win64'
+#
+#
+CC=gcc
+#INC1=cudd-3.0.0/cudd
+CURRDIR=$(shell pwd)
+#INC2=$(shell while read one two three; \
+#do TEMP=$two; \
+#done <<< `whereis swipl`; \
+#readlink -f $TEMP; \
+)/include #da completare
+
+INC2=${SWIHOME}/include
+#INC2=`echo /usr/lib/swi*`/include/
+#INCDIRS= -I$(INC1)
+CFLAGSPHIL= $(CFLAGS) -fPIC -DBP_FREE -O3 -fomit-frame-pointer -Wall -g -O2 
+
+#
+#
+# You shouldn't need to change what follows.
+#
+#LDFLAGS= $(LDSOFLAGS) -shared -Lcudd-3.0.0/cudd/.libs/ -lcudd
+#cudd-3.0.0/cudd/.libs/libcudd-3.0.0.so.0.0.0
+
+#
+
+
+all:  phil.$(SOEXT)
+
+phil.$(SOEXT): phil.o
+	
+	if test $(SWIARCH) == x64-win64 -o $(SWIARCH) == i386-win32 ; then \
+  $(CC) phil.o -static-libgcc -static-libstdc++  -lswipl -o phil.$(SOEXT) ;\
+   else  \
+     if [[ $(SWIARCH) ==  *darwin* ]] ;  then \
+  $(CC) phil.o  -lswipl -o phil.$(SOEXT) ;\
+  else  \
+  $(CC) -export-dynamic phil.o  -o phil.$(SOEXT) ;\
+  fi \
+  fi
+#-Wl,-R,$(YAPLIBDIR) -Wl,-R,$(LIBDIR)
+
+phil.o : phil.c
+	$(CC) -c $(CFLAGSPHIL) phil.c -o phil.o
+
+
+distclean: clean
+	rm Makefile
+
+clean:
+	rm -f *.o phil.$(SOEXT)
+
+check:
+	@echo "no check"
+
+install: all
+	mkdir -p $(LIBDIR)
+	cp phil.$(SOEXT) $(LIBDIR)
+
+installcheck:
+	swipl -g test -t halt prolog/phil_test/uwcselearndeep.pl
