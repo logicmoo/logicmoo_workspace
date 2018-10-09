@@ -15,16 +15,9 @@ CURRDIR=$(shell pwd)
 INC2=${SWIHOME}/include
 #INC2=`echo /usr/lib/swi*`/include/
 #INCDIRS= -I$(INC1)
-CFLAGSPHIL= $(CFLAGS) -fPIC -DBP_FREE -O3 -fomit-frame-pointer -Wall -g -O2 
+CFLAGSPHIL= $(CFLAGS) 
 
-#
-#
-# You shouldn't need to change what follows.
-#
-#LDFLAGS= $(LDSOFLAGS) -shared -Lcudd-3.0.0/cudd/.libs/ -lcudd
-#cudd-3.0.0/cudd/.libs/libcudd-3.0.0.so.0.0.0
 
-#
 
 
 all:  phil.$(SOEXT)
