@@ -40,8 +40,8 @@ void construct_leaves_node(node **leaves_node,int lenRules);
 void printAC(node* root,char*Choice);
 double randInRange(double min, double max);
 node *convertACToTree(term_t AC,node **leaves_node,int lenRules);
-double product_sum(node*nod,double Probabilities[],int NR);
-double product(node*nod,double Probabilities[],int NR);
+double product_sum(node*nod,double Probabilities[]);
+double product(node*nod,double Probabilities[]);
 void forward(double Probabilities[], int NR, node*root);
 int getType(char *algorithm);
 
@@ -177,10 +177,10 @@ void print_Vector(double Vector[],int NR,char*VectorType){
 
 // Convert an arithmetic circuit (a term prolog) into n-aries tree in C
 node *convertACToTree(term_t AC,node **leaves_node,int lenRules){
-  int i,j,ret,arity,ind;
+  int i,j,ret,arity,ind,lenNodes1;
   size_t lenNodes;
   atom_t name;
-  char *type,*s;
+  char *type;
   term_t current_term,current_List_term, temp_term;
   node *root,**nodes_ex;
 
@@ -201,6 +201,7 @@ node *convertACToTree(term_t AC,node **leaves_node,int lenRules){
        if (PL_is_list(current_List_term))
        {
        ret=PL_skip_list(current_List_term,0,&lenNodes);
+       lenNodes1=(int)lenNodes;
        if(lenNodes==1){ // The list has a single term. Example [2]
           ret=PL_get_list(current_List_term,current_term,current_List_term);
           root->child=convertACToTree(current_term,leaves_node,lenRules);
@@ -209,7 +210,7 @@ node *convertACToTree(term_t AC,node **leaves_node,int lenRules){
             ret=PL_get_list(current_List_term,current_term,current_List_term);
             nodes_ex[0]=convertACToTree(current_term,leaves_node,lenRules);
             root->child=nodes_ex[0];
-            for(j=1;j<lenNodes;j++){
+            for(j=1;j<lenNodes1;j++){
                 ret=PL_get_list(current_List_term,current_term,current_List_term);
                 nodes_ex[j]=convertACToTree(current_term,leaves_node,lenRules);
                 nodes_ex[j-1]->next=nodes_ex[j];
@@ -228,11 +229,12 @@ node *convertACToTree(term_t AC,node **leaves_node,int lenRules){
      root->index=-1;
     } 
   }// end arity!=0
+  ret=ret*2;
   return root; 
 }
 
 // computes the oplus of sibling values: oplus activation function
-double product_sum(node*nod,double Probabilities[],int NR){
+double product_sum(node*nod,double Probabilities[]){
    double prod_s=1;
    int index;
    node * n=nod;
@@ -250,7 +252,7 @@ double product_sum(node*nod,double Probabilities[],int NR){
 }
 
 // Compute the product of sibling values: X activation function
-double product(node*nod,double Probabilities[],int NR){
+double product(node*nod,double Probabilities[]){
    double prod=1;
    int index;
    node * n=nod;
@@ -283,7 +285,7 @@ void forward(double Probabilities[], int NR, node*root){
            forward(Probabilities,NR,n);
            n = n->next;
          }
-         root->value=product_sum(root->child,Probabilities,NR);
+         root->value=product_sum(root->child,Probabilities);
        }else{
           if(strcmp(root->type,"and")==0){
          // iterate on sibling
@@ -292,7 +294,7 @@ void forward(double Probabilities[], int NR, node*root){
            forward(Probabilities,NR,n);
            n = n->next;
         }
-        root->value=product(root->child,Probabilities,NR);
+        root->value=product(root->child,Probabilities);
        }else{ // leaf node;
            if(strcmp(root->type,"leaf")==0){
             index=root->index;
@@ -733,7 +735,7 @@ void  printHyperparamsEM(double EA,double ER, int MaxIteration,int lenNodes,char
 // Performs the backward step in the message passing
 void backwardEM(double expectations[], int Count[],int NR, node*root){
  node * n;
- double tn,tn1,tp,tp1,temp,denominator;
+ double tn,tp,temp,denominator;
  if(root!=NULL){
   tp=root->tp;
   if(strcmp(root->type,"not")==0){
@@ -888,7 +890,7 @@ double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectatio
 
 // Learns the parameters of HPLP using Gradient Descent or Expectation Maximization
 foreign_t pl_phil(term_t Nodes,term_t StopCond,term_t Adam, term_t Stra_Name, term_t LL, term_t RulesProbabilitiesGD, term_t LLem,term_t RulesProbabilitiesEM){ // 
-  int ret,i,valid,count, type=0; // type=0 (only emphil is computed), type=1 (only dphil is computed) type=2(both emphil and dphil are computed)
+  int ret,i, type=0, lenNodes1; // type=0 (only emphil is computed), type=1 (only dphil is computed) type=2(both emphil and dphil are computed)
   term_t nodesTerm,nodesTerm1,nodesTerm2,nodesTerm3,out1,out2,out3,out4,head,pterm;
   size_t lenNodes;
   int NR,MaxIter,BatchSize;
@@ -962,13 +964,14 @@ foreign_t pl_phil(term_t Nodes,term_t StopCond,term_t Adam, term_t Stra_Name, te
   
     // Allocate space to store nodes, weights and probabilities or expectations
   ret=PL_skip_list(Nodes,0,&lenNodes);
+  lenNodes1=(int)lenNodes;
   nodes_ex=(node **)malloc(lenNodes*sizeof(node*));
   leaves_node=(node **)malloc(NR*sizeof(node*));
 
   // Construct the leave nodes
   construct_leaves_node(leaves_node,NR);
   // construct the ACs: convert all the Acs into n-ary tress
-  for(i=0;i<lenNodes;i++){
+  for(i=0;i<lenNodes1;i++){
      ret=PL_get_list(nodesTerm3,head,nodesTerm3);
      root=convertACToTree(head,leaves_node,NR);
      nodes_ex[i]=root;     
@@ -989,22 +992,22 @@ foreign_t pl_phil(term_t Nodes,term_t StopCond,term_t Adam, term_t Stra_Name, te
   if(type==0){
       Counts=(int*)malloc(NR*sizeof(int));
       expectations=(double*)malloc(NR*sizeof(double));
-      printHyperparamsEM(EA,ER,MaxIter,lenNodes,datasetName,save);
-      CLLem=emphil(nodes_ex,lenNodes,ProbabilitiesEM,expectations,Counts,NR,MaxIter,EA,ER,datasetName,save);
+      printHyperparamsEM(EA,ER,MaxIter,lenNodes1,datasetName,save);
+      CLLem=emphil(nodes_ex,lenNodes1,ProbabilitiesEM,expectations,Counts,NR,MaxIter,EA,ER,datasetName,save);
 
   }else{
      printHyperparams(EA,ER,MaxIter,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,lenNodes,strategy,datasetName,save);
      if (type==1){
         Weights=(double*)malloc(NR*sizeof(double));
-        CLL=dphil(nodes_ex,lenNodes,MaxIter,Probabilities,Weights,NR,EA,ER,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy,datasetName,save); 
+        CLL=dphil(nodes_ex,lenNodes1,MaxIter,Probabilities,Weights,NR,EA,ER,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy,datasetName,save); 
 
      }else{
        if(type==2){
           Weights=(double*)malloc(NR*sizeof(double));
           Counts=(int*)malloc(NR*sizeof(int));
           expectations=(double*)malloc(NR*sizeof(double));
-          CLLem=emphil(nodes_ex,lenNodes,ProbabilitiesEM,expectations,Counts,NR,MaxIter,EA,ER,datasetName,save);
-          CLL=dphil(nodes_ex,lenNodes,MaxIter,Probabilities,Weights,NR,EA,ER,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy,datasetName2,save); 
+          CLLem=emphil(nodes_ex,lenNodes1,ProbabilitiesEM,expectations,Counts,NR,MaxIter,EA,ER,datasetName,save);
+          CLL=dphil(nodes_ex,lenNodes1,MaxIter,Probabilities,Weights,NR,EA,ER,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy,datasetName2,save); 
          }else{
             perror("Wrong algorithm type");
             return ret;
