@@ -53,7 +53,7 @@ using gradient descent and Backpropagation
 :-set_prolog_flag(unknown,warning).
 
 
-:-load_foreign_library(phil).
+:-use_foreign_library(foreign(phil),install).
 
 
 :- dynamic getIndex/2.
