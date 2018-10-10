@@ -153,7 +153,8 @@ compat((A->B; C), D, M) :-
     ( call(M:A)
     ->compat(B, D, M)
     ; compat(C, D, M)
-    ), !.
+    ),
+    !.
 compat((A->B), D, M) :-
     !,
     ( call(M:A)
@@ -187,8 +188,8 @@ compat_1(A, D, M) :-
     ( is_type(A, M)
     ->catch(compat_body(M:A, D),
             _,
-            \+ \+ do_compat(M:A, D))
-    ; \+ \+ do_compat(M:A, D)
+            do_compat(M:A, D))
+    ; do_compat(M:A, D)
     ),
     !.
 
