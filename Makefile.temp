@@ -6,19 +6,8 @@ LIBDIR=lib/$(SWIARCH)/  # es. 'x64-win64'
 CC=gcc
 #INC1=cudd-3.0.0/cudd
 CURRDIR=$(shell pwd)
-#INC2=$(shell while read one two three; \
-#do TEMP=$two; \
-#done <<< `whereis swipl`; \
-#readlink -f $TEMP; \
-)/include #da completare
 
-INC2=${SWIHOME}/include
-#INC2=`echo /usr/lib/swi*`/include/
-#INCDIRS= -I$(INC1)
-CFLAGSPHIL= $(CFLAGS) 
-
-
-
+CFLAGSPHIL= $(CFLAGS) -Wall -Wextra -g -O3 -fPIC
 
 all:  phil.$(SOEXT)
 
