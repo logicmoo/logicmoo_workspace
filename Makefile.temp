@@ -7,19 +7,19 @@ CC=gcc
 #INC1=cudd-3.0.0/cudd
 CURRDIR=$(shell pwd)
 
-CFLAGSPHIL= $(CFLAGS) -Wall -Wextra -g -O3 -fPIC
+CFLAGSPHIL= -Wall -Wextra -g -O3 $(CFLAGS)  
 
 all:  phil.$(SOEXT)
 
 phil.$(SOEXT): phil.o
 	
 	if test $(SWIARCH) == x64-win64 -o $(SWIARCH) == i386-win32 ; then \
-  $(CC) phil.o -static-libgcc -static-libstdc++  -lswipl -o phil.$(SOEXT) ;\
+  $(CC) phil.o -static-libgcc -static-libstdc++  $(LDSOFLAGS) -lswipl -o phil.$(SOEXT) ;\
    else  \
      if [[ $(SWIARCH) ==  *darwin* ]] ;  then \
-  $(CC) phil.o  -lswipl -o phil.$(SOEXT) ;\
+  $(CC) phil.o  $(LDSOFLAGS) -lswipl -o phil.$(SOEXT) ;\
   else  \
-  $(CC) -export-dynamic phil.o  -o phil.$(SOEXT) ;\
+  $(CC) -export-dynamic phil.o $(LDSOFLAGS) -o phil.$(SOEXT) ;\
   fi \
   fi
 #-Wl,-R,$(YAPLIBDIR) -Wl,-R,$(LIBDIR)
