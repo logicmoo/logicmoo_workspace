@@ -36,6 +36,7 @@
 	  [rtcheck_goal/2,
            rtcheck_goal/3,
            rtcheck_goal/4,
+           start_rtcheck/1,
 	   start_rtcheck/2,
            rtcheck_lit/3,
 	   rtc_call/3]).
@@ -133,8 +134,19 @@ rtcheck_goal(CM:Goal1, Call, RTCheck) :-
 rtcheck_goal(Goal, M, CM, RAsrL) :-
     check_goal(rt, Goal, M, CM, RAsrL).
 
+:- meta_predicate start_rtcheck(0 ).
+start_rtcheck(Goal) :-
+    do_start_rtcheck(Goal, Goal).
+
 :- meta_predicate start_rtcheck(+, 0 ).
-start_rtcheck(M:Goal1, CM:WrappedHead) :-
+start_rtcheck(M:_, CM:WrappedHead) :-
+    tracing,
+    !,
+    @(M:WrappedHead, CM).
+start_rtcheck(Goal, WrappedHead) :-
+    do_start_rtcheck(Goal, WrappedHead).
+
+do_start_rtcheck(M:Goal1, CM:WrappedHead) :-
     resolve_calln(Goal1, Goal),
     collect_rtasr(Goal, CM, _, M, RAsrL),
     check_goal(rt, @(M:WrappedHead, CM), M, CM, RAsrL).
@@ -144,7 +156,7 @@ prolog:called_by(rtcheck_lit(_, C, _), rtchecks_rt, M, [M:C]) :- nonvar(C).
 % Note: it should be 0, but we use : to avoid loop in goal_expansion
 :- meta_predicate rtcheck_lit(+, :, +).
 rtcheck_lit(body, Goal, From) :-
-    '$with_ploc'(start_rtcheck(Goal, Goal), From).
+    '$with_ploc'(start_rtcheck(Goal), From).
 rtcheck_lit(head, Goal, From) :-
     '$with_ploc'(Goal, From).
 

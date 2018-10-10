@@ -129,41 +129,46 @@ black_list_caller(M:F/A) :-
     black_list_caller(M, H).
 
 black_list_caller(M, _) :- black_list_module(M).
-black_list_caller(metaprops, _).
-black_list_caller(system, call(_)).
+black_list_caller(M, C) :- black_list_parent(M, C).
+
+black_list_parent(M:Goal) :- black_list_parent(M, Goal).
+
+black_list_parent(metaprops, _).
+black_list_parent(system, call(_)).
 
 black_list_callee(M, _) :- black_list_module(M).
-black_list_callee(M, Call) :-
-    predicate_property(M:'$rtchecked'(_), defined),
-    M:'$rtchecked'(Call).
 black_list_callee(system, Call) :- black_list_callee_system(Call).
 black_list_callee(metaprops, Call) :-
     \+ memberchk(Call, [check(_), trust(_), true(_), false(_)]).
 
-black_list_callee_system(catch(_, _, _)).
-black_list_callee_system(setup_call_cleanup(_, _, _)).
-black_list_callee_system(setup_call_catcher_cleanup(_, _, _, _)).
-black_list_callee_system(callable(_)).
-black_list_callee_system(atom(_)).
 black_list_callee_system('$end_aux'(_, _)).
+black_list_callee_system(atom(_)).
+black_list_callee_system(callable(_)).
+black_list_callee_system(catch(_, _, _)).
+black_list_callee_system(setup_call_catcher_cleanup(_, _, _, _)).
+black_list_callee_system(setup_call_cleanup(_, _, _)).
 
-black_list_module(assrt_lib).
-black_list_module(assrt_meta).
-black_list_module(send_check).
-black_list_module(ctrtchecks).
-black_list_module(rtchecks_rt).
-black_list_module(rtchecks_tracer).
-black_list_module(rtchecks_utils).
-black_list_module(context_values).
+black_list_module('$bags').
 black_list_module('$expand').
 black_list_module('$messages').
-black_list_module('$bags').
-black_list_module(intercept).
-black_list_module(ontrace).
+black_list_module(abstract_interpreter).
+black_list_module(assrt_lib).
+black_list_module(assrt_meta).
+black_list_module(context_values).
+black_list_module(ctrtchecks).
 black_list_module(expansion_module).
 black_list_module(globprops).
-black_list_module(typeprops).
+black_list_module(implementation_module).
+black_list_module(intercept).
+black_list_module(ontrace).
 black_list_module(plunit).
+black_list_module(qualify_meta_goal).
+black_list_module(rtchecks_rt).
+black_list_module(rtchecks_tracer).
+black_list_module(rtchecks_tracer_rt).
+black_list_module(rtchecks_utils).
+black_list_module(send_check).
+black_list_module(typeprops).
 
 white_list_meta(system, Call) :- \+ functor(Call, call, _).
 
@@ -191,7 +196,7 @@ rtcheck_port(Port, Frame, Action) :-
 
 rtcheck_port_(unify, Frame, Action) :-
     prolog_frame_attribute(Frame, clause, Clause),
-    setup_clause_bpt(Clause, Action), !.
+    setup_clause_bpt(Clause, Frame, Action), !.
 rtcheck_port_(_, Frame, Action) :-
     prolog_frame_attribute(Frame, goal, Goal),
     ( skip_predicate(Goal)
@@ -205,12 +210,17 @@ call_instr(i_usercalln(_)).
 call_instr_param(i_call(  PI), PI).
 call_instr_param(i_depart(PI), PI).
 
-setup_clause_bpt(Clause, Action) :-
+setup_clause_bpt(Clause, Frame, Action) :-
     ( rtc_scanned(Clause)
     ->Action = skip
     ; assertz(rtc_scanned(Clause)),
-      clause_property(Clause, predicate(CPI)),
-      \+ black_list_caller(CPI),
+      \+ ( clause_property(Clause, predicate(TPI)),
+           black_list_caller(TPI)
+         ),
+      \+ ( prolog_frame_attribute(Frame, parent, Parent),
+           prolog_frame_attribute(Parent, goal, PG),
+           black_list_parent(PG)
+         ),
       clause_property(Clause, module(CM)),
       \+ black_list_module(CM),
       '$break_pc'(Clause, PC, _NextPC1),
@@ -236,7 +246,7 @@ setup_clause_bpt(Clause, Action) :-
                ; current_assertion(rt, Goal, M, _)
                ; white_list_meta(M, Goal),
                  predicate_property(M:Goal, meta_predicate(S)),
-                 once(arg(_, S, 0))
+                 once(arg(_, S, 0 ))
                ))
         )
       ->'$break_at'(Clause, PC, true),
