@@ -210,6 +210,17 @@ call_instr(i_usercalln(_)).
 call_instr_param(i_call(  PI), PI).
 call_instr_param(i_depart(PI), PI).
 
+:- table inspect_target/3.
+
+inspect_target(F, A, M) :-
+    functor(Goal, F, A),
+    once(( rtchecks_tracer:pp_assr(Goal, M)
+         ; current_assertion(rt, Goal, M, _)
+         ; white_list_meta(M, Goal),
+           predicate_property(M:Goal, meta_predicate(S)),
+           once(arg(_, S, 0 ))
+         )).
+
 setup_clause_bpt(Clause, Frame, Action) :-
     ( rtc_scanned(Clause)
     ->Action = skip
@@ -242,12 +253,7 @@ setup_clause_bpt(Clause, Frame, Action) :-
           ->M \= IM
           ; true
           ),
-          once(( rtchecks_tracer:pp_assr(Goal, M)
-               ; current_assertion(rt, Goal, M, _)
-               ; white_list_meta(M, Goal),
-                 predicate_property(M:Goal, meta_predicate(S)),
-                 once(arg(_, S, 0 ))
-               ))
+          inspect_target(F, A, M)
         )
       ->'$break_at'(Clause, PC, true),
         assertz(rtc_break(Clause, PC)),
