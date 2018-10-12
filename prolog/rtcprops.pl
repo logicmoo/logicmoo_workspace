@@ -39,25 +39,26 @@
 :- use_module(library(globprops)).
 :- use_module(library(foreign/foreign_props)).
 
-:- true comp [(global)/1,
-              (global)/2,
-              database/1,
-              meta_modes/1,
-              no_meta_modes/1,
-              (declaration)/1,
-              (declaration)/2,
-              compat/1,
-              instan/1,
-              (native)/1,
-              (native)/2,
-              foreign/1,
-              foreign/2,
-              fimport/1,
-              fimport/2,
-              returns/2,
-              parent/2,
-              returns_state/1,
-              memory_root/1] + no_acheck(rt).
+:- true comp [functor/3,
+              predicate_property/2,
+              current_predicate/2,
+              (>)/2,
+              (<)/2,
+              (>=)/2,
+              (=<)/2,
+              (=\=)/2,
+              (=:=)/2,
+              (is)/2,
+              atomic_list_concat/2,
+              atomic_list_concat/3,
+              atom_number/2,
+              atom_codes/2,
+              sub_atom/5,
+              maplist/2,
+              maplist/3,
+              maplist/4,
+              maplist/5,
+              memberchk/2] + no_acheck(rt).
 
 :- type acstatus/1.
 

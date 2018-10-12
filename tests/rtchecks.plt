@@ -19,7 +19,7 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- set_prolog_flag(runtime_checks, yes).
 :- set_prolog_flag(rtchecks_check, yes).
 
-test(rtc_external) :-
+test(rtc_external, [blocked('rtchecks for functor/3 is now disabled')]) :-
     call_in_module_dir(plunit_rtchecks,
                        ( notrace(['../examples/rtc_external']),
                          save_rtchecks(do_trace_rtc(test_ex)),
