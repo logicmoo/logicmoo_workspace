@@ -38,7 +38,7 @@
            any/1, gndstr/1, str/1, struct/1, term/1, char/1, atmel/1, keypair/1,
            sequence_or_list/2, operator_specifier/1, character_code/1, linear/1,
            mod_qual/1, mod_qual/2, goal/1, goal/2, arithexpression/1, keylist/1,
-           sequence/2, predname/1, constant/1, rat/1
+           sequence/2, predname/1, constant/1, rat/1, negint/1
           ]).
 
 :- use_module(library(neck)).
@@ -73,6 +73,18 @@ curr_posint(1).
 curr_posint(N) :-
     curr_posint(N1),
     succ(N1, N).
+
+:- type negint/1.
+
+negint(X) :-
+    nonvar(X),
+    !,
+    integer(X),
+    X < 0.
+negint(0).
+negint(X) :-
+    curr_posint(N),
+    X is -N.
 
 give_sign(0, 0) :- !.
 give_sign(P, P).
