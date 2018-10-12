@@ -48,8 +48,10 @@
 /** <module> Useful predicates to facilitate work with run-time checks.
 */
 
+filtered_backtrace:no_backtrace_clause_hook(_, ontrace).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer).
+filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer_rt).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
 filtered_backtrace:no_backtrace_clause_hook(_, ctrtchecks).
 filtered_backtrace:no_backtrace_clause_hook(_, intercept).
