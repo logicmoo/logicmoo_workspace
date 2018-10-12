@@ -136,10 +136,18 @@ assertion_is_valid(T, Status, Type, Asr) :-
     ; true % Force run-time checking
     ).
 
+no_acheck_predicate(T, Pred, M) :-
+    prop_asr(Pred, M, true, comp, _, _, Asr),
+    \+ prop_asr(call, _, _, Asr),
+    ( prop_asr(glob, no_acheck(_), _, Asr)
+    ; prop_asr(glob, no_acheck(T, _), _, Asr)
+    ).
+
 current_assertion(T, Pred, M, Asr) :-
     \+ ( T = rt,
          prop_asr(Pred, M, _, prop, _, _, _)
        ),
+    \+ no_acheck_predicate(T, Pred, M),
     prop_asr(Pred, M, Status, Type, _, _, Asr),
     assertion_is_valid(T, Status, Type, Asr),
     ( current_prolog_flag(rtchecks_level, inner)
