@@ -1,10 +1,8 @@
 SHELL := /bin/bash
-#LIBDIR=lib/$(SWIARCH)/
-LIBDIR=lib/$(SWIARCH)/  # es. 'x64-win64'
+LIBDIR=lib/$(SWIARCH)/  
 #
 #
 CC=gcc
-#INC1=cudd-3.0.0/cudd
 CURRDIR=$(shell pwd)
 
 CFLAGSPHIL= -Wall -Wextra -g -O3 $(CFLAGS)  
@@ -22,7 +20,7 @@ phil.$(SOEXT): phil.o
   $(CC) -export-dynamic phil.o $(LDSOFLAGS) -o phil.$(SOEXT) ;\
   fi \
   fi
-#-Wl,-R,$(YAPLIBDIR) -Wl,-R,$(LIBDIR)
+
 
 phil.o : phil.c
 	$(CC) -c $(CFLAGSPHIL) phil.c -o phil.o
@@ -42,4 +40,4 @@ install: all
 	cp phil.$(SOEXT) $(LIBDIR)
 
 installcheck:
-	swipl -g test -t halt prolog/phil_test/uwcselearndeep.pl
+	swipl -g test -t halt prolog/phil test/test.pl

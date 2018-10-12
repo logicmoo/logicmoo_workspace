@@ -18,12 +18,13 @@ using gradient descent (dphil) or Expectation Maximization (emphil).
 #include <unistd.h>
 #include <sys/stat.h>
 //#include <sys/types.h>
-#define MaxName 10
+#define MaxType 10
+#define MaxName 50
 #define RETURN_IF_FAIL if (ret!=TRUE) return ret;
 
-double ZERO= 0.0000001;
+double ZERO= 0.0;
 typedef struct node_1 {
-    char type[MaxName ]; // Type of node: can be and,or,not,leaf                         
+    char type[MaxType]; // Type of node: can be and,or,not,leaf                         
     double value; // node value.
     int index; // number of the rule for leaf node
     double tp; // the message to propagate to the children in the backward step of EM
@@ -43,40 +44,44 @@ node *convertACToTree(term_t AC,node **leaves_node,int lenRules);
 double product_sum(node*nod,double Probabilities[]);
 double product(node*nod,double Probabilities[]);
 void forward(double Probabilities[], int NR, node*root);
-int getType(char *algorithm);
+void commonParamameters(double EA,double ER, int MaxIteration,int lenNodes,char*statisticsFolder,char*save,char*seeded,int seed);
+int getNodes_Parameters (term_t Nodes,term_t Params,term_t StopCond,term_t Folder,node ***leaves_node,node***nodes_ex,int* lenNodes, int *MaxIter,double* EA,double*  ER,int *NR, double*ZERO,char**statisticsFolder, char**save,char** seeded, int* seed);
+int setResults(double CLL, double Probabilities[],int NR,term_t *CLLFinal, term_t *ProbFinal);
 
 // ++++++++++++++++++++++++ Gradient descent declaration functions  ++++++++++++++++++++++++++
 
-void openFilesGD (char * datasetName, FILE**probsFile, FILE** weightsFile,FILE** Moments0File,FILE** Moments1File,FILE** lls);
+void openFilesGD (char * statisticsFolder, FILE**probsFile, FILE** weightsFile,FILE** Moments0File,FILE** Moments1File,FILE** lls);
 void closeFilesGD (FILE**probsFile, FILE** weightsFile,FILE** Moments0File,FILE** Moments1File,FILE** lls);
-void saveValuesGD(double Probabilities[],double Weights [],double Moments0 [],double Moments1 [],int NR, FILE*probsFile, FILE* weightsFile,FILE* Moments0File,FILE* Moments1File,FILE* lls, double CLL);
+void saveStatisticsGD(double Probabilities[],double Weights [],double Moments0 [],double Moments1 [],int NR, FILE*probsFile, FILE* weightsFile,FILE* Moments0File,FILE* Moments1File,FILE* lls, double CLL);
 void sigma_vec(double Weights[],double Probabilities[],int NR);
-void initialize_weights_moments(double weights[],double Gradient[],double moments0[],double moments1[],int NR,double Max_W);
-void  printHyperparams(double EA,double ER, int MaxIteration, double Eta,double Beta1,double Beta2, long double Adam_hat,double Max_W,int BatchSize,int lenNodes,char* strategy,char*datasetName,char*save);
+void initialize_weights_moments(double weights[],double Gradient[],double moments0[],double moments1[],int NR,double Max_W,char* seeded, int seed);
+void  printHyperparamsGD(double Eta,double Beta1,double Beta2, long double Adam_hat,double Max_W,int BatchSize,char* strategy);
 void backwardGD(double Probabilities[], double Gradient[],int NR, node*root);
 void update_weights_Adam(double Weights[], double Gradients[], int NR, double Moment_0[],double Moment_1[],int Iter,double Eta,double Beta1,double Beta2,long double Epsilon_adam_hat);
 void nextBatch(int*from,int*to,int lenNodes,int BatchSize,char*strategy);
 void normalize_grad(double Gradients[],int NR,int Num_nodes);
-double forward_backwardGD(node**Nodes,int lenNodes,int from,int to,double Weights[],double Gradients[],int NR,char *strategy);
-double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],double Weights[],int NR,double EA,double ER,double Eta,double Beta1,double Beta2,long double Epsilon_adam_hat,double Max_W,int BatchSize,char*strategy,char* datasetName, char* save);
+double forward_backwardGD(node**Nodes,int lenNodes,int from,int to,double Weights[],double Gradients[],int NR,char *strategy,char* seeded, int seed);
+double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],double Weights[],int NR,double EA,double ER,double Eta,double Beta1,double Beta2,long double Epsilon_adam_hat,double Max_W,int BatchSize,char*strategy,char* statisticsFolder, char* save,char* seeded, int seed);
 
 
 // ++++++++++++++++++++++++ Expectation Maximization declaration functions  ++++++++++++++++++++++++++
 
-void openFilesEM (char * datasetName, FILE**probsFile, FILE** expectationsFile, FILE**countsFile ,FILE** lls);
+void openFilesEM (char * statisticsFolder, FILE**probsFile, FILE** expectationsFile, FILE**countsFile ,FILE** lls);
 void closeFilesEM (FILE**probsFile, FILE** expectationsFile, FILE**countsFile,FILE** lls);
-void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR);
-void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR);
-void  printHyperparamsEM(double EA,double ER, int MaxIteration,int lenNodes,char*datasetName,char*save);
+void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR,char* seeded, int seed);
 void backwardEM(double expectations[], int Count[],int NR, node*root);
 double expectation(node**Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR);
 void maximization(double Probabilities [],double expectations[],int Count [],int NR);
-double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR, int MaxIteration,double EA, double ER,char* datasetName, char* save);
+double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR, int MaxIteration,double EA, double ER,char* statisticsFolder, char* save,char* seeded, int seed);
 
-// ++++++++++++++++++++++++ Parameter learning declaration function  ++++++++++++++++++++++++++
+// ++++++++++++++++++++++++ Parameter learning declaration functions  ++++++++++++++++++++++++++
+static foreign_t pl_dphil(term_t Nodes,term_t Params,term_t StopCond, term_t Folder, term_t Adam, term_t Params2, term_t CLLFinal, term_t ProbFinal);
+static foreign_t pl_emphil(term_t Nodes,term_t Params,term_t StopCond,term_t Folder, term_t CLLFinal, term_t ProbFinal);
 
-foreign_t pl_phil(term_t Nodes,term_t StopCond,term_t Adam, term_t Stra_Name, term_t LL, term_t RulesProbabilitiesGD, term_t LLem,term_t RulesProbabilitiesEM);
+// ++++++++++++++++++++++++ Forward step use in phil.pl  ++++++++++++++++++++++++++
 
+
+static foreign_t pl_forward(term_t Circuit,term_t Parameters,term_t NR1,term_t Output);
 
 
 
@@ -142,7 +147,12 @@ void printAC(node* root,char*Choice){
      perror("Null AC");
   }  
 }
-
+void setSeed(char* seeded, int seed){
+  if(strcmp(seeded,"yes")==0 || strcmp(seeded,"Yes")==0 || strcmp(seeded,"YES")==0)
+    srand((unsigned)seed);
+  else
+      srand(time(NULL));
+}
 double randInRange(double min, double max)
 {
   return min + (double)rand() / (RAND_MAX / (max - min));
@@ -175,9 +185,9 @@ void print_Vector(double Vector[],int NR,char*VectorType){
   printf("]\n");
 }
 
-// Convert an arithmetic circuit (a term prolog) into n-aries tree in C
+// Converts an arithmetic circuit (a term prolog) into n-aries tree in C
 node *convertACToTree(term_t AC,node **leaves_node,int lenRules){
-  int i,j,ret,arity,ind,lenNodes1;
+  int ret,ind,arity,i,j,lenNodes1;
   size_t lenNodes;
   atom_t name;
   char *type;
@@ -201,7 +211,7 @@ node *convertACToTree(term_t AC,node **leaves_node,int lenRules){
        if (PL_is_list(current_List_term))
        {
        ret=PL_skip_list(current_List_term,0,&lenNodes);
-       lenNodes1=(int)lenNodes;
+       lenNodes1= (int)lenNodes;
        if(lenNodes==1){ // The list has a single term. Example [2]
           ret=PL_get_list(current_List_term,current_term,current_List_term);
           root->child=convertACToTree(current_term,leaves_node,lenRules);
@@ -229,7 +239,7 @@ node *convertACToTree(term_t AC,node **leaves_node,int lenRules){
      root->index=-1;
     } 
   }// end arity!=0
-  ret=ret*2;
+  ret=ret*2; // to avoid warning message
   return root; 
 }
 
@@ -268,7 +278,24 @@ double product(node*nod,double Probabilities[]){
   }
   return prod;
 }
-
+// Prints common hyperparameters 
+void  commonParamameters(double EA,double ER, int MaxIteration,int lenNodes,char*statisticsFolder,char*save,char*seeded,int seed){
+  printf("\n Hyperparameters of %s:\n\n", statisticsFolder);
+  printf("Save the statistics? %s\n",save);
+  printf("Number of arithmetic circuits: %d \n",lenNodes);
+  printf("Max Iteration= %d \n",MaxIteration);
+  printf("Epsilon= %lf \n",EA);
+  printf("Delta= %lf \n",ER);
+  printf("Value used as zero= %.9lf\n",ZERO);
+  if(strcmp(seeded,"yes")==0 || strcmp(seeded,"Yes")==0 || strcmp(seeded,"YES")==0)
+  {
+    printf("Seed =%d \n",seed);
+  }  
+   else
+  {
+    printf("Seed = Time clock \n");
+  } 
+}
 // The forward pass evaluates the tree
 void forward(double Probabilities[], int NR, node*root){
   node * n;
@@ -308,89 +335,110 @@ void forward(double Probabilities[], int NR, node*root){
  }  
 }
 
+int getNodes_Parameters (term_t Nodes,term_t Params,term_t StopCond,term_t Folder,node ***leaves_node,node***nodes_ex,int* lenNodes, int *MaxIter,double* EA,double*  ER,int *NR, double*ZERO,char**statisticsFolder, char**save,char**seeded, int*seed){
+  int ret,i; // type=0 (only emphil is computed), type=1 (only dphil is computed) type=2(both emphil and dphil are computed)
+  term_t nodesTerm1,nodesTerm2,nodesTerm3,nodesTerm4,head;
+  size_t lenNodes1;
+  node * root;
+  head=PL_new_term_ref();
+  //get the arguments
 
-/*
-foreign_t pl_forward(term_t Circuit,term_t Parameters,term_t NR1,term_t Output){
-  node * root, **leaves_node;
-  char *name1;
-  atom_t name;
-  int NR,i,ret,arity;
-  double *Probabilities;
-  term_t ParamatersTerm, head,out, argument,temp_term;
-  argument=PL_new_term_ref();
-  temp_term=PL_new_term_ref();
-  ret=PL_get_arg(1,Circuit, argument);
-  ret=PL_get_compound_name_arity(argument,&name,&arity);
-  ret=PL_put_atom(temp_term,name);
-  ret=PL_get_atom_chars(temp_term,&name1);
-  printf("Name=%s ",name1);
-  if (strcmp(name1,"zero")==0){
-      printf("Name=%s ",name1);
-  }
- else {
-    head=PL_new_term_ref();
-    out=PL_new_term_ref();
-    ret=PL_get_integer(NR1,&NR);
-    leaves_node=(node **)malloc(NR*sizeof(node*));
-    Probabilities=(double*)malloc(NR*sizeof(double));
-    ParamatersTerm=PL_copy_term_ref(Parameters); 
-    for(i=0;i<NR;i++){
-      ret=PL_get_list(ParamatersTerm,head,ParamatersTerm);
-      ret=PL_get_float(head,&(Probabilities[i]));
-      printf("%lf ",Probabilities[i]);
-    }
-    root=convertACToTree(Circuit,leaves_node,NR);
-    forward(Probabilities,NR,root);
+  nodesTerm1=PL_copy_term_ref(Params); // Contains the Stop criterion and
+  nodesTerm2=PL_copy_term_ref(StopCond); // Contains the Stop criterion and 
+  nodesTerm3=PL_copy_term_ref(Folder);  // Contains the name of the folder and the save flag (yes or no)
+  nodesTerm4=PL_copy_term_ref(Nodes); // Contains the Arithmetic Circuits
+  
+  // Get the number of rule and the Zero setting
+   ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_integer(head,NR);
+  // Get the zero value
+  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_float(head,ZERO);
+   // Get the zero value
+  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_chars(head, seeded,CVT_STRING);
+   // Get the zero value
+  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_integer(head,seed);
 
-    // return the computed value
-    ret=PL_put_float(out,root->value);
-    ret=PL_unify(Output,out);
+  // Get the stop conditions
+  ret=PL_get_list(nodesTerm2,head,nodesTerm2);
+  ret=PL_get_integer(head,MaxIter);
+  ret=PL_get_list(nodesTerm2,head,nodesTerm2);
+  ret=PL_get_float(head,EA);
+  ret=PL_get_list(nodesTerm2,head,nodesTerm2);
+  ret=PL_get_float(head,ER);
+ 
+  // Get the statistic folder and a flag for saving statistics
+  ret=PL_get_list(nodesTerm3,head,nodesTerm3);
+  ret=PL_get_chars(head, save,CVT_STRING);
+  ret=PL_get_list(nodesTerm3,head,nodesTerm3);
+  ret=PL_get_chars(head, statisticsFolder,CVT_STRING);
+  
+
+  ret=PL_skip_list(Nodes,0,&lenNodes1);
+  *lenNodes=(int)lenNodes1;
+  *nodes_ex=(node **)malloc((*lenNodes)*sizeof(node*));
+  *leaves_node=(node **)malloc((*NR)*sizeof(node*));
+  // Construct the leave nodes
+  construct_leaves_node(*leaves_node,*NR);
+  // construct the ACs: convert all the Acs into n-ary tress
+  for(i=0;i<*lenNodes;i++){
+     ret=PL_get_list(nodesTerm4,head,nodesTerm4);
+     root=convertACToTree(head,*leaves_node,*NR);
+     (*nodes_ex)[i]=root;     
   }
+ return ret;
+}
+
+int setResults(double CLL, double Probabilities[],int NR,term_t *CLLFinal, term_t *ProbFinal){
+  term_t out1,out2,pterm;
+  int i,ret;
+  pterm=PL_new_term_ref();
+  out1=PL_new_term_ref();
+  out2=PL_new_term_ref();
+  ret=PL_put_float(out1,CLL);
+  ret=PL_unify(*CLLFinal,out1);
+
+  ret=PL_put_nil(out2);
+  for(i=NR-1;i>=0;i--){
+     ret=PL_put_float(pterm,Probabilities[i]);
+     ret=PL_cons_list(out2,pterm,out2);
+  }
+  ret=PL_unify(out2,*ProbFinal);
   return ret;
 }
-*/
-// return 0 for emphil, 1 for dphil, 2 for both and -1 otherwise
-int getType(char *algorithm ){
-  int type=-1;
-  if(strcmp(algorithm, "dphil")==0) { 
-        type=1;
-  }else{
-      if(strcmp(algorithm, "emphil")==0){
-          type=0;
-       }else{
-         if(strcmp(algorithm, "dphil_emphil")==0){
-             type=2;
-          }
-       }
-    }
-    return type;
-}
-
 
 // ++++++++++++++++++++++++ Gradient descent functions  ++++++++++++++++++++++++++
 
-
-
-
-
- // Create if it does not exist the directory for the dataset and also create the necessary files 
-void openFilesGD (char * datasetName, FILE**probsFile, FILE** weightsFile,FILE** Moments0File,FILE** Moments1File,FILE** lls){
+ // Creates if it does not exist the directory for the dataset and also create the necessary files 
+void openFilesGD (char * statisticsFolder, FILE**probsFile, FILE** weightsFile,FILE** Moments0File,FILE** Moments1File,FILE** lls){
   struct stat st = {0};
+  char statisticsFolder2 [MaxName];
   char nameFileProbs [40]="./";
   char nameFileWeights [40]="./";
   char nameFileClls [40]="./";
   char nameFileMoments0 [40]="./";
   char nameFileMoments1 [40]="./";
-  strcat(datasetName, "_Values");
+  strcpy(statisticsFolder2, statisticsFolder);
+  strcat(statisticsFolder, "_Statistics/GD");
    // create the directory to save information
-  if (stat(datasetName, &st) == -1) {
-     mkdir(datasetName, 0700);
+  if (stat(statisticsFolder, &st) == -1) {
+    strcat(statisticsFolder2, "_Statistics");
+     if (stat(statisticsFolder2, &st) == -1) {
+       mkdir(statisticsFolder2, 0700);
+       strcat(statisticsFolder2, "/GD");
+       mkdir(statisticsFolder2, 0700);
+     }else{
+         mkdir(statisticsFolder, 0700);
+     }  
   }
-  strcat(nameFileProbs,datasetName); strcat(nameFileProbs,"/probabilities.txt");
-  strcat(nameFileWeights,datasetName); strcat(nameFileWeights,"/weights.txt");
-  strcat(nameFileClls,datasetName); strcat(nameFileClls,"/clls.txt");
-  strcat(nameFileMoments0,datasetName); strcat(nameFileMoments0,"/moments0.txt");
-  strcat(nameFileMoments1,datasetName); strcat(nameFileMoments1,"/moments1.txt");
+
+  strcat(nameFileProbs,statisticsFolder); strcat(nameFileProbs,"/Probabilities.txt");
+  strcat(nameFileWeights,statisticsFolder); strcat(nameFileWeights,"/Weights.txt");
+  strcat(nameFileClls,statisticsFolder); strcat(nameFileClls,"/clls.txt");
+  strcat(nameFileMoments0,statisticsFolder); strcat(nameFileMoments0,"/Moments0.txt");
+  strcat(nameFileMoments1,statisticsFolder); strcat(nameFileMoments1,"/Moments1.txt");
 
   *probsFile = fopen(nameFileProbs,"w");
   *weightsFile= fopen(nameFileWeights,"w");
@@ -403,7 +451,7 @@ void openFilesGD (char * datasetName, FILE**probsFile, FILE** weightsFile,FILE**
     exit(1);
   }
 }
-// Close all the opened files
+// Closes all the opened files
 void closeFilesGD (FILE**probsFile, FILE** weightsFile,FILE** Moments0File,FILE** Moments1File,FILE** lls){
   fclose(*probsFile);
   fclose(*weightsFile);
@@ -412,8 +460,8 @@ void closeFilesGD (FILE**probsFile, FILE** weightsFile,FILE** Moments0File,FILE*
   fclose(*lls);
 }
 
-//Save the log-likelihood (CLL), the moments and the learned weights/parameters
-void saveValuesGD(double Probabilities[],double Weights [],double Moments0 [],double Moments1 [],int NR, FILE*probsFile, FILE* weightsFile,FILE* Moments0File,FILE* Moments1File,FILE* lls, double CLL){
+//Saves the log-likelihood (CLL), the moments and the learned weights/parameters
+void saveStatisticsGD(double Probabilities[],double Weights [],double Moments0 [],double Moments1 [],int NR, FILE*probsFile, FILE* weightsFile,FILE* Moments0File,FILE* Moments1File,FILE* lls, double CLL){
   int i;
   for(i=0; i<NR; i++){
      fprintf(probsFile,"%f ",Probabilities[i]);
@@ -428,7 +476,7 @@ void saveValuesGD(double Probabilities[],double Weights [],double Moments0 [],do
   fprintf(Moments1File,"\n \n");
 }
 
-// Apply the sigmoid function to the weights.
+// Applies the sigmoid function to the weights.
 void sigma_vec(double Weights[],double Probabilities[],int NR){
   int i;
   for(i=0;i<NR;i++){
@@ -436,10 +484,10 @@ void sigma_vec(double Weights[],double Probabilities[],int NR){
   }
 }
 
-// Initialize the weights the moments and the gradients
-void initialize_weights_moments(double weights[],double Gradient[],double moments0[],double moments1[],int NR,double Max_W){
+// Initializes the weights the moments and the gradients
+void initialize_weights_moments(double weights[],double Gradient[],double moments0[],double moments1[],int NR,double Max_W,char*seeded,int seed){
   int i;
-  srand(time(NULL));
+  setSeed(seeded,seed);
     for(i=0;i<NR;i++){
         weights[i]=randInRange(-Max_W,Max_W);
         //weights[i]=0.5;
@@ -450,20 +498,14 @@ void initialize_weights_moments(double weights[],double Gradient[],double moment
 }
 
 // Print the hyperparameters for gradient descent
-void  printHyperparams(double EA,double ER, int MaxIteration, double Eta,double Beta1,double Beta2, long double Adam_hat,double Max_W,int BatchSize,int lenNodes,char* strategy,char*datasetName,char*save){
-  printf("\nHyperparameters of the dataset %s: %d Arithmetic Circuits\n\n", datasetName,lenNodes);
-  printf("Weights are initialized in the range [%.3lf %.3lf]\n",-Max_W,Max_W);
-  printf("Max Iteration= %d \n",MaxIteration);
-  printf("Epsilon= %lf \n",EA);
-  printf("Delta= %lf \n",ER);
+void  printHyperparamsGD(double Eta,double Beta1,double Beta2, long double Adam_hat,double Max_W,int BatchSize,char* strategy){
+  printf("Initialize weights in the range [%.2lf %.2lf]\n",-Max_W,Max_W);
   printf("Eta= %lf \n",Eta);
   printf("Beta1= %lf \n",Beta1);
   printf("Beta2= %lf \n",Beta2);
   printf("Adam_hat= %.10Lf  \n",Adam_hat);
   printf("BatchSize= %d \n",BatchSize);
   printf("Strategy= %s \n",strategy);
-  printf("DatasetName= %s \n",datasetName);
-  printf("Save= %s \n\n",save);
 }
 
 // Performs the backwardGD pass to compute the gradient.
@@ -525,7 +567,7 @@ void backwardGD(double Probabilities[], double Gradient[],int NR, node*root){
   }
 }
 
-// Update weights with Adam techniques
+// Updates weights with Adam techniques
 void update_weights_Adam(double Weights[], double Gradients[], int NR, double Moment_0[],double Moment_1[],int Iter,double Eta,double Beta1,double Beta2,long double Epsilon_adam_hat){
   int Iter_new,i;
   double Result1,Result2,Eta_new;
@@ -569,9 +611,8 @@ void nextBatch(int*from,int*to,int lenNodes,int BatchSize,char*strategy){
     }
   }
 *from=from1; *to=to1;
-//return ;
 }
-// Normalize the gradient
+// Normalizes the gradient
 void normalize_grad(double Gradients[],int NR,int Num_nodes){
   int i;
   for(i=0;i<NR;i++){
@@ -579,13 +620,12 @@ void normalize_grad(double Gradients[],int NR,int Num_nodes){
   }
 }
 // Performs the forward and the backwardGD steps
-double forward_backwardGD(node**Nodes,int lenNodes,int from,int to,double Weights[],double Gradients[],int NR,char *strategy){
+double forward_backwardGD(node**Nodes,int lenNodes,int from,int to,double Weights[],double Gradients[],int NR,char *strategy,char* seeded, int seed){
   double Root_Value;
   double Probabilities[NR],CLL=0;
   int i,index;
-  srand(time(NULL)); // for the stochastic strategy
+  setSeed(seeded,seed);
   sigma_vec(Weights,Probabilities,NR);
-  //printf("from %d to %d",from,to);
   for(i=from;i<to;i++){
      if(strcmp(strategy,"stochastic")==0){
         index=rand()%lenNodes; // generate a number between 0 and lenNodes-1
@@ -608,7 +648,7 @@ double forward_backwardGD(node**Nodes,int lenNodes,int from,int to,double Weight
   return CLL;
 }
 //Performs gradient descent 
-double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],double Weights[],int NR,double EA,double ER,double Eta,double Beta1,double Beta2,long double Epsilon_adam_hat,double Max_W,int BatchSize,char*strategy,char* datasetName, char* save){
+double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],double Weights[],int NR,double EA,double ER,double Eta,double Beta1,double Beta2,long double Epsilon_adam_hat,double Max_W,int BatchSize,char*strategy,char* statisticsFolder, char* save,char* seeded, int seed){
   double Gradients[NR],Moments0[NR],Moments1[NR];
   int from,to,Iter,saved=0;
   double CLL0= -2.2*pow(10,10); //-inf
@@ -627,23 +667,23 @@ double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],
   Iter=0;
   if(strcmp(save,"Yes")==0 || strcmp(save,"yes")==0 || strcmp(save,"YES")==0 || strcmp(save,"YeS")==0)
      saved=1;
-  initialize_weights_moments(Weights,Gradients,Moments0,Moments1,NR,Max_W);
+  initialize_weights_moments(Weights,Gradients,Moments0,Moments1,NR,Max_W,seeded,seed);
   sigma_vec(Weights,Probabilities,NR);
   if(saved==1){
-      openFilesGD (datasetName,&probsFile, &weightsFile,&Moments0File,&Moments1File,&lls); 
-      saveValuesGD(Probabilities,Weights,Moments0,Moments1,NR,probsFile,weightsFile,Moments0File,Moments1File,lls,CLL1);
+      openFilesGD (statisticsFolder,&probsFile, &weightsFile,&Moments0File,&Moments1File,&lls); 
+      saveStatisticsGD(Probabilities,Weights,Moments0,Moments1,NR,probsFile,weightsFile,Moments0File,Moments1File,lls,CLL1);
   }
   from=0; to=BatchSize;
   while(Iter<MaxIteration1 && diff>EA && ratio>ER){ //   && diff>EA && ratio>ER
       CLL0 = CLL1;
-      CLL1=forward_backwardGD(Nodes,lenNodes,from,to,Weights,Gradients,NR,strategy);
+      CLL1=forward_backwardGD(Nodes,lenNodes,from,to,Weights,Gradients,NR,strategy,seeded,seed);
       normalize_grad(Gradients,NR,to-from+1);
       diff=fabs(CLL1-CLL0);
       ratio=diff/fabs(CLL0);
       update_weights_Adam(Weights,Gradients,NR,Moments0,Moments1,Iter,Eta,Beta1,Beta2,Epsilon_adam_hat);
       sigma_vec(Weights,Probabilities,NR);
       if(saved==1)
-        saveValuesGD(Probabilities,Weights,Moments0,Moments1,NR,probsFile,weightsFile,Moments0File,Moments1File,lls,CLL1);
+        saveStatisticsGD(Probabilities,Weights,Moments0,Moments1,NR,probsFile,weightsFile,Moments0File,Moments1File,lls,CLL1);
       Iter++;
       nextBatch(&from,&to,lenNodes,BatchSize,strategy);
   }//end while
@@ -653,30 +693,36 @@ double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],
 }
 
 
-
-
-
 // ++++++++++++++++++++++++ Expectation Maximization functions  ++++++++++++++++++++++++++
 
 
-
- // Create if it does not exist the directory for the dataset and also create the necessary files 
-void openFilesEM (char * datasetName, FILE**probsFile, FILE** expectationsFile, FILE**countsFile ,FILE** lls)
+ // Creates if it does not exist the directory for the dataset and also create the necessary files 
+void openFilesEM (char * statisticsFolder, FILE**probsFile, FILE** expectationsFile, FILE**countsFile ,FILE** lls)
 {
   struct stat st = {0};
+  char statisticsFolder2 [MaxName];
   char nameFileProbs [40]="./";
   char nameFileExpects [40]="./";
   char nameFileCount [40]="./";
   char nameFileClls [40]="./";
-  strcat(datasetName, "_Values");
+ strcpy(statisticsFolder2, statisticsFolder);
+
+  strcat(statisticsFolder, "_Statistics/EM");
    // create the directory to save information
-  if (stat(datasetName, &st) == -1) {
-     mkdir(datasetName, 0700);
+  if (stat(statisticsFolder, &st) == -1) {
+    strcat(statisticsFolder2, "_Statistics");
+     if (stat(statisticsFolder2, &st) == -1) {
+       mkdir(statisticsFolder2, 0700);
+       strcat(statisticsFolder2, "/EM");
+       mkdir(statisticsFolder2, 0700);
+     }else{
+         mkdir(statisticsFolder, 0700);
+     }  
   }
- strcat(nameFileProbs,datasetName); strcat(nameFileProbs,"/probabilitiesEM.txt");
-  strcat(nameFileExpects,datasetName); strcat(nameFileExpects,"/expectationsEM.txt");
-  strcat(nameFileCount,datasetName); strcat(nameFileCount,"/countsEM.txt");
-  strcat(nameFileClls,datasetName); strcat(nameFileClls,"/cllsEM.txt");
+ strcat(nameFileProbs,statisticsFolder); strcat(nameFileProbs,"/probabilitiesEM.txt");
+  strcat(nameFileExpects,statisticsFolder); strcat(nameFileExpects,"/expectationsEM.txt");
+  strcat(nameFileCount,statisticsFolder); strcat(nameFileCount,"/countsEM.txt");
+  strcat(nameFileClls,statisticsFolder); strcat(nameFileClls,"/cllsEM.txt");
   *probsFile = fopen(nameFileProbs,"w");
   *expectationsFile= fopen(nameFileExpects,"w");
   *countsFile=fopen(nameFileCount,"w"); 
@@ -695,8 +741,8 @@ void closeFilesEM (FILE**probsFile, FILE** expectationsFile, FILE**countsFile,FI
   fclose(*lls);
 }
 
-//Save the log-likelihood (CLL), The expectations and the count.
-void saveValuesEM(double Probabilities[],double expectations [], int Counts [],int NR, FILE*probsFile, FILE*expectationsFile, FILE *countsFile, FILE* lls, double CLL){
+//Saves the log-likelihood (CLL), The expectations and the count.
+void saveStatisticsEM(double Probabilities[],double expectations [], int Counts [],int NR, FILE*probsFile, FILE*expectationsFile, FILE *countsFile, FILE* lls, double CLL){
   int i;
   for(i=0; i<NR; i++){
      fprintf(probsFile,"%f ",Probabilities[i]);
@@ -712,24 +758,14 @@ void saveValuesEM(double Probabilities[],double expectations [], int Counts [],i
 }
 
 // initialize the probabilities the expectations and the counters 
-void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR){
-    srand(time(NULL));
+void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR,char *seeded,int seed){
+    setSeed(seeded,seed);
     for(int i=0;i<NR;i++){
         Probabilities[i]=randInRange(0,1);
         //Probabilities[i]=0.5;
         expectations[i]=0.0; 
         Count[i]=0;
     }
-}
-
-// Print hyperparameters for Expectation Maximization
-void  printHyperparamsEM(double EA,double ER, int MaxIteration,int lenNodes,char*datasetName,char*save){
-  printf("\n Hyperparameters of the dataset of the dataset %s: %d Arithmetic Circuits\n\n", datasetName,lenNodes);
-  printf("Max Iteration= %d \n",MaxIteration);
-  printf("Epsilon= %lf \n",EA);
-  printf("Delta= %lf \n",ER);
-  printf("DatasetName= %s \n",datasetName);
-  printf("Save= %s \n\n",save);
 }
 
 // Performs the backward step in the message passing
@@ -836,9 +872,8 @@ void maximization(double Probabilities [],double expectations[],int Count [],int
     }
 }
 
-
 // Performs Expectation Maximization
-double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR, int MaxIteration,double EA, double ER,char* datasetName, char* save)
+double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR, int MaxIteration,double EA, double ER,char* statisticsFolder, char* save,char* seeded, int seed)
 {
   int Iter, saved=0;
   double CLL0= -2.2*pow(10,10); //-inf
@@ -859,10 +894,10 @@ double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectatio
   if(strcmp(save,"Yes")==0 || strcmp(save,"yes")==0 || strcmp(save,"YES")==0 || strcmp(save,"YeS")==0)
      saved=1;
 
-  initialize_expectations_Counters(Probabilities,expectations,Counts,NR);
+  initialize_expectations_Counters(Probabilities,expectations,Counts,NR,seeded,seed);
   if(saved==1){ 
-    openFilesEM (datasetName,&probsFile,&expectationsFile,&countsFile,&lls);
-    saveValuesEM(Probabilities,expectations,Counts,NR,probsFile,expectationsFile,countsFile,lls,CLL1);
+    openFilesEM (statisticsFolder,&probsFile,&expectationsFile,&countsFile,&lls);
+    saveStatisticsEM(Probabilities,expectations,Counts,NR,probsFile,expectationsFile,countsFile,lls,CLL1);
   }
    Iter=0;
   while(Iter<MaxIteration1 && diff>EA && ratio>ER){ // MaxIteration1  && diff>EA && ratio>ER
@@ -873,7 +908,7 @@ double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectatio
       maximization(Probabilities,expectations,Counts,NR);
       // save the values of probabilities
       if(saved==1)
-        saveValuesEM(Probabilities,expectations,Counts,NR,probsFile,expectationsFile,countsFile,lls,CLL1);
+        saveStatisticsEM(Probabilities,expectations,Counts,NR,probsFile,expectationsFile,countsFile,lls,CLL1);
       diff=fabs(CLL1-CLL0);
       ratio=diff/fabs(CLL0);
       Iter++;
@@ -888,153 +923,104 @@ double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectatio
 // ++++++++++++++++++++++++ Parameter learning function  ++++++++++++++++++++++++++
 
 
-// Learns the parameters of HPLP using Gradient Descent or Expectation Maximization
-foreign_t pl_phil(term_t Nodes,term_t StopCond,term_t Adam, term_t Stra_Name, term_t LL, term_t RulesProbabilitiesGD, term_t LLem,term_t RulesProbabilitiesEM){ // 
-  int ret,i, type=0, lenNodes1; // type=0 (only emphil is computed), type=1 (only dphil is computed) type=2(both emphil and dphil are computed)
-  term_t nodesTerm,nodesTerm1,nodesTerm2,nodesTerm3,out1,out2,out3,out4,head,pterm;
-  size_t lenNodes;
-  int NR,MaxIter,BatchSize;
-  char *strategy, *datasetName, *save, *algorithm;
-  char datasetName2 [50];
-  node * root,**leaves_node,**nodes_ex;
-  double EA,ER,Eta,Beta1,Beta2,CLL,CLLem,Adam_hat,Max_W;
-  double *Weights,*Probabilities, *ProbabilitiesEM, *expectations;
-  int *Counts;
+// Learns the parameters of HPLP using Gradient Descent
+static foreign_t pl_dphil(term_t Nodes,term_t Params,term_t StopCond, term_t Folder, term_t Adam, term_t Params2, term_t CLLFinal, term_t ProbFinal){ // 
+  int ret,NR,MaxIter,lenNodes,BatchSize,seed; 
+  char *statisticsFolder, *save,*strategy, *seeded;
+  node **leaves_node=NULL,**nodes_ex=NULL;
+  double *Probabilities,  *Weights;
+  double EA,ER,CLL,Max_W,Eta,Beta1,Beta2,Adam_hat;
+  term_t nodesTerm1,nodesTerm2,head;
   head=PL_new_term_ref();
-  pterm=PL_new_term_ref();
-  out1=PL_new_term_ref();
-  out2=PL_new_term_ref();
-  out3=PL_new_term_ref();
-  out4=PL_new_term_ref();
-  //get the arguments
-
-  nodesTerm=PL_copy_term_ref(StopCond); // Contains the Stop criterion and 
-  nodesTerm1=PL_copy_term_ref(Stra_Name); // Contains the Arithmetic Circuits
-  nodesTerm2=PL_copy_term_ref(Adam); // Contains the list of Adam arguments
-  nodesTerm3=PL_copy_term_ref(Nodes); // Contains the strategy and the name of the dataset
-
-  // Get the maximun iteration, the learning strategy and the batch size
-  ret=PL_get_list(nodesTerm,head,nodesTerm);
-  ret=PL_get_integer(head,&MaxIter);
-  // Get the thresholds
-  ret=PL_get_list(nodesTerm,head,nodesTerm);
-  ret=PL_get_float(head,&EA);
-  ret=PL_get_list(nodesTerm,head,nodesTerm);
-  ret=PL_get_float(head,&ER);
-  // Get the number of rule
-  ret=PL_get_list(nodesTerm,head,nodesTerm);
-  ret=PL_get_integer(head,&NR);
-  // Get the zero value
-  ret=PL_get_list(nodesTerm,head,nodesTerm);
-  ret=PL_get_float(head,&ZERO);
-  
-  // Get others parameters
+  // get the nodes and the parameters
+  ret=getNodes_Parameters(Nodes,Params,StopCond,Folder,&leaves_node,&nodes_ex,&lenNodes,&MaxIter,&EA,&ER,&NR, &ZERO,&statisticsFolder,&save,&seeded, &seed);
+  // get other parameters
+  nodesTerm1=PL_copy_term_ref(Adam); // Contains the list of Adam arguments
+  nodesTerm2=PL_copy_term_ref(Params2); // 
+  //Get the adam parameters
   ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_float(head,&Eta);
+  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_float(head,&Beta1);
+  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_float(head,&Beta2);
+  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_float(head,&Adam_hat);
+ 
+  // Get the strategy (minibatch, stochastic, batch)
+  ret=PL_get_list(nodesTerm2,head,nodesTerm2);
   ret=PL_get_chars(head, &strategy,CVT_STRING);
+  // Get the BatchSize
+  ret=PL_get_list(nodesTerm2,head,nodesTerm2);
+  ret=PL_get_integer(head,&BatchSize);
+  // Get the maximun initial weights
+  ret=PL_get_list(nodesTerm2,head,nodesTerm2);
+  ret=PL_get_float(head,&Max_W);
 
-  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
-  ret=PL_get_chars(head, &datasetName,CVT_STRING);
-
-  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
-  ret=PL_get_chars(head, &save,CVT_STRING);
-
-  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
-  ret=PL_get_chars(head, &algorithm,CVT_STRING);
-
-  
-  if(strcmp(algorithm, "dphil")==0 || strcmp(algorithm, "dphil_emphil")==0){ // Se GD is attivated
-       // Get the batch size
-      ret=PL_get_list(nodesTerm2,head,nodesTerm2);
-      ret=PL_get_integer(head,&BatchSize);
-
-      // Get the maximun initial weights
-      ret=PL_get_list(nodesTerm2,head,nodesTerm2);
-      ret=PL_get_float(head,&Max_W);
-
-      //Get the adam parameters
-      ret=PL_get_list(nodesTerm2,head,nodesTerm2);
-      ret=PL_get_float(head,&Eta);
-      ret=PL_get_list(nodesTerm2,head,nodesTerm2);
-      ret=PL_get_float(head,&Beta1);
-      ret=PL_get_list(nodesTerm2,head,nodesTerm2);
-      ret=PL_get_float(head,&Beta2);
-      ret=PL_get_list(nodesTerm2,head,nodesTerm2);
-      ret=PL_get_float(head,&Adam_hat);
-  }
-  
-    // Allocate space to store nodes, weights and probabilities or expectations
-  ret=PL_skip_list(Nodes,0,&lenNodes);
-  lenNodes1=(int)lenNodes;
-  nodes_ex=(node **)malloc(lenNodes*sizeof(node*));
-  leaves_node=(node **)malloc(NR*sizeof(node*));
-
-  // Construct the leave nodes
-  construct_leaves_node(leaves_node,NR);
-  // construct the ACs: convert all the Acs into n-ary tress
-  for(i=0;i<lenNodes1;i++){
-     ret=PL_get_list(nodesTerm3,head,nodesTerm3);
-     root=convertACToTree(head,leaves_node,NR);
-     nodes_ex[i]=root;     
-  }
-
+  // Print Hyperparameters
+  commonParamameters(EA,ER,MaxIter,lenNodes,statisticsFolder,save,seeded,seed);
+  printHyperparamsGD(Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy);
   Probabilities=(double*)malloc(NR*sizeof(double));
-  ProbabilitiesEM=(double*)malloc(NR*sizeof(double));
-  // Get the algorithm to perform
-  type=getType(algorithm);
-  if (type==-1){
-     perror("Wrong algorithm type");
-     return ret;
-  }
-
-    // Learning the parameters.
-  CLL=-2.2*pow(10,10);CLLem=-2.2*pow(10,10);
-  strcpy(datasetName2,datasetName);
-  if(type==0){
-      Counts=(int*)malloc(NR*sizeof(int));
-      expectations=(double*)malloc(NR*sizeof(double));
-      printHyperparamsEM(EA,ER,MaxIter,lenNodes1,datasetName,save);
-      CLLem=emphil(nodes_ex,lenNodes1,ProbabilitiesEM,expectations,Counts,NR,MaxIter,EA,ER,datasetName,save);
-
-  }else{
-     printHyperparams(EA,ER,MaxIter,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,lenNodes,strategy,datasetName,save);
-     if (type==1){
-        Weights=(double*)malloc(NR*sizeof(double));
-        CLL=dphil(nodes_ex,lenNodes1,MaxIter,Probabilities,Weights,NR,EA,ER,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy,datasetName,save); 
-
-     }else{
-       if(type==2){
-          Weights=(double*)malloc(NR*sizeof(double));
-          Counts=(int*)malloc(NR*sizeof(int));
-          expectations=(double*)malloc(NR*sizeof(double));
-          CLLem=emphil(nodes_ex,lenNodes1,ProbabilitiesEM,expectations,Counts,NR,MaxIter,EA,ER,datasetName,save);
-          CLL=dphil(nodes_ex,lenNodes1,MaxIter,Probabilities,Weights,NR,EA,ER,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy,datasetName2,save); 
-         }else{
-            perror("Wrong algorithm type");
-            return ret;
-         }
-      }
-  }
-  // Return the last CLL and the learned probabilities. 
-  ret=PL_put_float(out1,CLL);
-  ret=PL_unify(LL,out1);
-  ret=PL_put_float(out3,CLLem);
-  ret=PL_unify(LLem,out3);
-
-  ret=PL_put_nil(out2);
-  for(i=NR-1;i>=0;i--){
-     ret=PL_put_float(pterm,Probabilities[i]);
-     ret=PL_cons_list(out2,pterm,out2);
-     ret=PL_put_float(pterm,ProbabilitiesEM[i]);
-     ret=PL_cons_list(out4,pterm,out4);
-  }
-  ret=PL_unify(out2,RulesProbabilitiesGD);
-  ret=PL_unify(out4,RulesProbabilitiesEM);
-  return ret;
+  Weights=(double*)malloc(NR*sizeof(double));
+  // Performs paramter learning with gradient descent descent
+ CLL=dphil(nodes_ex,lenNodes,MaxIter,Probabilities,Weights,NR,EA,ER,Eta,Beta1,Beta2,Adam_hat,Max_W,BatchSize,strategy,statisticsFolder,save,seeded, seed);  // return the CLL and the learned probabilities
+ ret=setResults(CLL,Probabilities,NR,&CLLFinal, &ProbFinal);
+ return ret;
 }
 
+// Learns the parameters of HPLP using  Expectation Maximization
+static foreign_t pl_emphil(term_t Nodes,term_t Params,term_t StopCond,term_t Folder, term_t CLLFinal, term_t ProbFinal){ // 
+  int ret,NR,MaxIter,lenNodes,seed; // type=0 (only emphil is computed), type=1 (only dphil is computed) type=2(both emphil and dphil are computed)
+  char *statisticsFolder, *save,*seeded;
+  node **leaves_node=NULL,**nodes_ex=NULL;
+  double *Probabilities,  *Expectations;
+  double EA,ER,CLL;
+  int *Counts;
+
+  // get the nodes and the parameters
+  ret=getNodes_Parameters (Nodes,Params,StopCond,Folder,&leaves_node,&nodes_ex,&lenNodes,&MaxIter,&EA,&ER,&NR, &ZERO,&statisticsFolder,&save,&seeded, &seed);
+  commonParamameters(EA,ER,MaxIter,lenNodes,statisticsFolder,save,seeded,seed);
+  Counts=(int*)malloc(NR*sizeof(int));
+  Expectations=(double*)malloc(NR*sizeof(double));
+  Probabilities=(double*)malloc(NR*sizeof(double));
+  // Performs paramter learning with EM
+  CLL=emphil(nodes_ex,lenNodes,Probabilities,Expectations,Counts,NR,MaxIter,EA,ER,statisticsFolder,save,seeded,seed);
+  // return the CLL and the learned probabilities
+  ret=setResults(CLL,Probabilities,NR,&CLLFinal, &ProbFinal);
+  return ret;
+}
+// Evaluates the AC in phil.pl at test time 
+static foreign_t pl_forward(term_t Circuit,term_t Parameters,term_t NR1,term_t Output){
+  node * root, **leaves_node;
+  int NR,i,ret;
+  double *Probabilities;
+  term_t ParamatersTerm, head,out;
+  head=PL_new_term_ref();
+  out=PL_new_term_ref();
+  ret=PL_get_integer(NR1,&NR);
+  leaves_node=(node **)malloc(NR*sizeof(node*));
+  Probabilities=(double*)malloc(NR*sizeof(double));
+  leaves_node=(node **)malloc(NR*sizeof(node*));
+  ParamatersTerm=PL_copy_term_ref(Parameters); 
+  for(i=0;i<NR;i++){
+    ret=PL_get_list(ParamatersTerm,head,ParamatersTerm);
+    ret=PL_get_float(head,&(Probabilities[i]));
+  }
+  construct_leaves_node(leaves_node,NR);
+  root=convertACToTree(Circuit,leaves_node,NR);
+  forward(Probabilities,NR,root);
+
+  // return the computed value
+  ret=PL_put_float(out,root->value);
+  ret=PL_unify(Output,out);
+
+  return ret;
+}
 
 install_t
 install()
 { 
-  PL_register_foreign("phil",8, pl_phil, 0);
+  PL_register_foreign("dphil",8, pl_dphil, 0);
+  PL_register_foreign("emphil",6, pl_emphil, 0);
+  PL_register_foreign("forward",4, pl_forward, 0);
 }

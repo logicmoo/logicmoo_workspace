@@ -53,7 +53,8 @@ using gradient descent and Backpropagation
 :-set_prolog_flag(unknown,warning).
 
 
-:-use_foreign_library(foreign(phil),install).
+:-load_foreign_library(phil).
+
 
 
 :- dynamic getIndex/2.
@@ -110,8 +111,7 @@ default_setting_sc(seed,seed(3032)).
 default_setting_sc(verbosity,1).
 
 
-%              Phil  default settings
-
+%     Phil  default settings
 default_setting_sc(maxIter_phil,1000).
 default_setting_sc(epsilon_deep,0.0001).
 default_setting_sc(epsilon_deep_fraction,0.00001).
@@ -120,13 +120,63 @@ default_setting_sc(adam_params,[0.001,0.9,0.999,1e-8]).
 default_setting_sc(batch_strategy,stoch_minibatch(100)).
 % allowed values: batch, minibatch(size), stoch_minibatch(size)
 default_setting_sc(algorithmType,"dphil").
-% allowed values: dphil, dphil and dphil_emphil
-default_setting_sc(datasetName,"DEFAULT").
-default_setting_sc(saveValues,"no").
+% allowed values: dphil, emphil
+default_setting_sc(statistics_folder,"Statisitics").
+default_setting_sc(saveStatistics,"no").
 default_setting_sc(zero,0.000001).
+default_setting_sc(setSeed,"no").
+default_setting_sc(c_seed,3032).
 
 
+/*
+  dphil/8, emphil/6, forward/4
+*/
 
+/**
+ * dphil(++ListOfACs:list,++Params1:list,++StopCondition:list,++Folder:list,++AdamParams:list,++Params2:list,-CLL:float,-Probabilities:list) is det
+ *
+ * Performs gradient descent learning on HPLP.
+ * Takes as input  a list of ACs each representing one example,
+ * Params is a list whose elements are [NR,ZERO,Seeded,Seed] where NR is the number of rule, ZERO is the value to use if the 
+ * denominator of a particular fraction is zero, Seeded (yes to set a Seed or no otherwise).
+ * StopCond is a list whose elements are[MaxIter,EA,ER] where MaxIter is the maximum number of iterations
+ * EA and ER are the minimum absolute difference  and relative between the
+ * log likelihood of examples in two different iterations 
+ * Folder is a list whose elements are [Saved,StatisticsFolder] where if Saved is yes, the statistics are
+ * saved in StatisticsFolder and no otherwise
+ * AdamParams is a list whose elements are [Eta,Beta1,Beta2,Epsilon_adam_hat] containing the Adam parameters
+ * Params2 is a list whose elements are [Strategy,BatchSize,MAX_W] where Strategy is the  strategy used in
+ * gradient descent (batch, minibatch or stochastic minibatch) and BatchSize the corresponding batch.
+ * weights are initialized in the range [-MAX_W,+MAX_W]
+ *
+ * It returns the final log likelihood of examples CLL and the list of learned Parameters probabilities
+ */
+
+
+/**
+ * emphil(++ListOfACs:list,++Params1:list,++StopCondition:list,++Folder:list,-CLL:float,-Probabilities:list) is det
+ *
+ * Performs EM learning on HPLP.
+ * Takes as input  a list of ACs each representing one example,
+ * Params is a list whose elements are [NR,ZERO,Seeded,Seed] where NR is the number of rule, ZERO is the value to use if the 
+ * denominator of a particular fraction is zero, Seeded (yes to set a Seed or no otherwise).
+ * StopCond is a list whose elements are[MaxIter,EA,ER] where MaxIter is the maximum number of iterations
+ * EA and ER are the minimum absolute difference  and relative between the
+ * log likelihood of examples in two different iterations 
+ * Folder is a list whose elements are [Saved,StatisticsFolder] where if Saved is yes, the statistics are
+ * saved in StatisticsFolder and no otherwise
+ *
+ * It returns the final log likelihood of examples CLL and the list of learned Parameters probabilities
+ */
+
+/**
+ * forward(AC:+term,++Pobabilities:list,+:integer-Probability:+double) is det
+ *
+ * Evaluate the arrithmetic circuit AC.
+ * Takes as input the list of learned probabilities and the number of rule NR,
+ *
+ * Returns in Probability the ecaluated output of the AC
+ */
 
 
 orc(or(A),or(B),or(C)):-
@@ -321,40 +371,6 @@ induce_parameters(M:Folds,DB,R):-
  * the data is stored.
  */
 
-learn_params(DB,M,R0,R):-  %Parameter Learning
-
-  generate_clauses(R0,M,R1,0,[],Th0),
-  assert_all(Th0,M,Th0Ref),
-  assert_all(R1,M,R1Ref),!,
-  length(R0,NR),
-  retractall(M:v(_,_,_)),
-  length(DB,NEx),
-  length(DB,NEx),
-  abolish_all_tables,
-  M:local_setting(group,G),
-  derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
-  maplist(remove_p,Nodes0,Nodes),
-  learning_algorithm(NR,M,Nodes,CLL,ProbFinalGD,CLLem,ProbFinalEM),
-  format3(M,' Initial CLL on PHIL ~f */~n',[CLL0]),
-  format3(M,' Final CLL on DPHIL ~f */~n',[CLL]),
-  format3(M,' Final CLL on EMPHIL ~f */~n',[CLLem]),
-  retract_all(Th0Ref),
-  retract_all(R1Ref),
-  M:local_setting(algorithmType,Algorithm),
-  ( Algorithm = "emphil" ->
-     update_theory_par(R1,ProbFinalEM,R)
-    ;
-     ( Algorithm = "dphil" ->
-        update_theory_par(R1,ProbFinalGD,R)
-        ;
-        ( Algorithm = "dphil_emphil" ->
-          update_theory_par(R1,ProbFinalGD,R)
-          ;
-          format("Algorithm ~w  does not exist",[Algorithm])
-        )
-     )
-  ).
-
 
 remove_p([N,_],N).
 
@@ -385,87 +401,74 @@ delete_AC(ACs, [Head|Tail], [Head|Result]):-
 
 writefile(_Stream,[]):-!.
 writefile(Stream,[Head|Tail]):-
-   /*(Head\==not(and([zero])) ->
-      true
-    ,
-     writeln(Stream,Head)
-   ),*/
    writeln(Stream,Head),
    writefile(Stream,Tail).
   
-     
 
-learning_algorithm(NR,M,Nodes,CLL,ProbFinalGD,CLLem,ProbFinalEM):-
- 
+
+learn_params(DB,M,R0,R):-  %Parameter Learning
+  generate_clauses(R0,M,R1,0,[],Th0),
+  assert_all(Th0,M,Th0Ref),
+  assert_all(R1,M,R1Ref),!,
+  length(R0,NR),
+  retractall(M:v(_,_,_)),
+  length(DB,NEx),
+  length(DB,NEx),
+  abolish_all_tables,
+  M:local_setting(group,G),
+  derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
+  maplist(remove_p,Nodes0,Nodes),
+  ACs=[not(and([zero])),and([zero]),one|[]],
+  delete_AC(ACs,Nodes,NodesNew),
+  M:local_setting(algorithmType,Algorithm),
   M:local_setting(maxIter_phil,MaxIter),
   M:local_setting(epsilon_deep,EA),
   M:local_setting(epsilon_deep_fraction,ER),
-  M:local_setting(adam_params,Adam),
-  M:local_setting(saveValues,Save),
-  M:local_setting(datasetName,DatasetName),
-  M:local_setting(max_initial_weight,MAX_W),
+  StopCond=[MaxIter,EA,ER],
+  
+  M:local_setting(statistics_folder,Statistics_folder),
+  M:local_setting(saveStatistics,Save),
+  Folder=[Save,Statistics_folder],
+
   M:local_setting(zero,ZERO),
-  M:local_setting(algorithmType,Algorithm),
+  M:local_setting(setSeed,Seeded),
+  M:local_setting(c_seed,Seed),
+  Params=[NR,ZERO,Seeded,Seed],
 
-  StopCond=[MaxIter,EA,ER,NR,ZERO],
-  AdamParams1=[MAX_W|Adam],
-  ParamsSave=[DatasetName,Save,Algorithm],
-  M:local_setting(adam_params,Adam),
-  ACs=[not(and([zero])),and([zero]),one|[]],
-  delete_AC(ACs,Nodes,NodesNew),
-  phil_C(M,NodesNew,StopCond,AdamParams1,ParamsSave,CLL,ProbFinalGD,CLLem,ProbFinalEM). 
+  format3(M,'Initial CLL on PHIL ~f */~n',[CLL0]),
+  retract_all(Th0Ref),
+  retract_all(R1Ref),
+  %M:local_setting(algorithmType,Algorithm),
+  ( Algorithm = "emphil" ->
+     emphil(NodesNew,Params,StopCond,Folder,CLL,ProbFinal)
+    ;
+     ( Algorithm = "dphil" ->
+        M:local_setting(adam_params,Adam),
+        M:local_setting(max_initial_weight,MAX_W),
+        dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal)
+        ;
+        format("The algorithm ~w does not exist. Do you mean dphil or emphil? ~n",[Algorithm]),
+        halt
+     )
+  ),
+  format3(M,'~nFinal CLL ~f */~n',[CLL]),
+  update_theory_par(R1,ProbFinal,R).
 
-phil_C(M,Nodes,StopCond,AdamParams1,ParamsSave,CLL,ProbFinalGD,CLLem,ProbFinalEM):-
-     M:local_setting(batch_strategy,minibatch(BatchSize)),!,
-     Stra_Name=["minibatch"|ParamsSave],
-     AdamParams=[BatchSize|AdamParams1],
-     phil(Nodes,StopCond,AdamParams,Stra_Name,CLL,ProbFinalGD,CLLem,ProbFinalEM).
+dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
+   M:local_setting(batch_strategy,minibatch(BatchSize)),!,
+   Params2=["minibatch",BatchSize,MAX_W],
+   dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
 
-phil_C(M,Nodes,StopCond,AdamParams1,ParamsSave,CLL,ProbFinalGD,CLLem,ProbFinalEM):-
-     M:local_setting(batch_strategy,stoch_minibatch(BatchSize)),!,
-     Stra_Name=["stochastic"|ParamsSave],
-     AdamParams=[BatchSize|AdamParams1],
-     phil(Nodes,StopCond,AdamParams,Stra_Name,CLL,ProbFinalGD,CLLem,ProbFinalEM).
+dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
+   M:local_setting(batch_strategy,stoch_minibatch(BatchSize)),!,
+   Params2=["stochastic",BatchSize,MAX_W],
+   dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
 
-phil_C(M,Nodes,StopCond,AdamParams1,ParamsSave,CLL,ProbFinalGD,CLLem,ProbFinalEM):-
-     M:local_setting(batch_strategy,batch),!,
-     BatchSize is 0,
-     Stra_Name=["batch"|ParamsSave],
-     AdamParams=[BatchSize|AdamParams1],
-     phil(Nodes,StopCond,AdamParams,Stra_Name,CLL,ProbFinalGD,CLLem,ProbFinalEM).
-     
-
-% Forward pass
-forward(_W,one,n(one,1)):-!.
-
-forward(_W,and([zero]),n(zero,0)):-!.
-
-forward(_W,zero,n(zero,0)):-!.
-
-forward(W,not(L),n(not(n(PL,P0)),P)):-!,
-  forward(W,L,n(PL,P0)),
-  P is 1-P0.
-
-forward(W,or(L),n(or(PL),P)):-!,
-  maplist(forward(W),L,PL),
-  foldl(prob_sum,PL,0,P).
-
-forward(W,and([N|L]),n(and([n(N,Pr)|PL]),P)):-!,
-  N1 is N+1,
-  arg(N1,W,Pr),
-  maplist(forward(W),L,PL),
-  foldl(prod,PL,1,P).
-
-%forward(W,N,n(N,P)):-!,
-  % ogni volta che prendo un W nel vettore dei pesi lo converto in sigma(W) prima di usarlo nellinferenza cosi evito di creare un vettore di p(sigma(W0),sigma(W1)...) 
-prod(n(_,A),B,C):-
-  C is A*B.
-
-prob_sum(n(and([n(_,P)|_]),A),B,C):-
-  C is 1-(1-A*P)*(1-B).
-
-
-
+dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
+   M:local_setting(batch_strategy,batch),!,
+   BatchSize is 0,
+   Params2=["batch",BatchSize,MAX_W],
+   dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
 
 
 update_theory_par([],[],[]).
@@ -2940,12 +2943,21 @@ compute_CLL_atoms([],_M,_N,CLL,CLL,[]):-!.
 
 compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
-  Par=..[w|LR],
+  %Par=..[w|LR],
   abolish_all_tables,
   get_node(H,M,Circuit),!,
   %trace,
-  %forward_C(Circuit,LR,NR,PG),
-  forward(Par,Circuit,n(_,PG)),
+  length(LR,NR),
+  (Circuit ="one" ->
+     PG is 1.0
+    ;
+    ( Circuit ="zero" ->
+       PG is 0.0
+      ;
+      forward(Circuit,LR,NR,PG)
+    )
+  ),
+  %forward(Par,Circuit,n(_,PG)),
   PG1 is 1-PG,
   (PG1=:=0.0->
     setting_sc(logzero,LZ),
@@ -2958,10 +2970,21 @@ compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
 
 compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1]):-
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
-  Par=..[w|LR],
+  %Par=..[w|LR],
   abolish_all_tables,
   get_node(H,M,Circuit),!,
-  forward(Par,Circuit,n(_,PG)),
+  length(LR,NR),
+  (Circuit ="one" ->
+     PG is 1.0
+    ;
+    ( Circuit ="zero" ->
+       PG is 0.0
+      ;
+      forward(Circuit,LR,NR,PG)
+    )
+  ),
+
+  %forward(Par,Circuit,n(_,PG)),
   (PG=:=0.0->
     setting_sc(logzero,LZ),
     CLL2 is CLL0+LZ
