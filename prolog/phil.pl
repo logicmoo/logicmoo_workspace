@@ -470,6 +470,39 @@ dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
    dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
 
 
+
+
+ %Forward pass
+forward(_W,one,n(one,1)):-!.
+
+forward(_W,and([zero]),n(zero,0)):-!.
+
+forward(_W,zero,n(zero,0)):-!.
+
+forward(W,not(L),n(not(n(PL,P0)),P)):-!,
+  forward(W,L,n(PL,P0)),
+  P is 1-P0.
+
+forward(W,or(L),n(or(PL),P)):-!,
+  maplist(forward(W),L,PL),
+  foldl(prob_sum,PL,0,P).
+
+forward(W,and([N|L]),n(and([n(N,Pr)|PL]),P)):-!,
+  N1 is N+1,
+  arg(N1,W,Pr),
+  maplist(forward(W),L,PL),
+  foldl(prod,PL,1,P).
+
+%forward(W,N,n(N,P)):-!,
+  % ogni volta che prendo un W nel vettore dei pesi lo converto in sigma(W) prima di usarlo nellinferenza cosi evito di creare un vettore di p(sigma(W0),sigma(W1)...) 
+prod(n(_,A),B,C):-
+  C is A*B.
+
+prob_sum(n(and([n(_,P)|_]),A),B,C):-
+  C is 1-(1-A*P)*(1-B).
+
+
+
 update_theory_par([],[],[]).
 
 update_theory_par([rule(N,[H:_,'':_],B,L)|T0],[Par|ParT],
@@ -2942,11 +2975,10 @@ compute_CLL_atoms([],_M,_N,CLL,CLL,[]):-!.
 
 compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
-  %Par=..[w|LR],
+  Par=..[w|LR],
   abolish_all_tables,
   get_node(H,M,Circuit),!,
-  %trace,
-  length(LR,NR),
+  /*length(LR,NR),
   (Circuit ="one" ->
      PG is 1.0
     ;
@@ -2955,8 +2987,8 @@ compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
       ;
       forward(Circuit,LR,NR,PG)
     )
-  ),
-  %forward(Par,Circuit,n(_,PG)),
+  ),*/
+  forward(Par,Circuit,n(_,PG)),
   PG1 is 1-PG,
   (PG1=:=0.0->
     setting_sc(logzero,LZ),
@@ -2969,10 +3001,10 @@ compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
 
 compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1]):-
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
-  %Par=..[w|LR],
+  Par=..[w|LR],
   abolish_all_tables,
   get_node(H,M,Circuit),!,
-  length(LR,NR),
+  /*length(LR,NR),
   (Circuit ="one" ->
      PG is 1.0
     ;
@@ -2981,9 +3013,9 @@ compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1]):-
       ;
       forward(Circuit,LR,NR,PG)
     )
-  ),
+  ),*/
 
-  %forward(Par,Circuit,n(_,PG)),
+  forward(Par,Circuit,n(_,PG)),
   (PG=:=0.0->
     setting_sc(logzero,LZ),
     CLL2 is CLL0+LZ
