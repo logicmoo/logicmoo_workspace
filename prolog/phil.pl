@@ -49,7 +49,6 @@ using gradient descent and Backpropagation
 :-use_module(library(terms)).
 :-use_module(library(rbtrees)).
 :-use_module(library(apply)).
-:-use_module(library(lbfgs)).
 :-set_prolog_flag(unknown,warning).
 
 

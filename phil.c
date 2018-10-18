@@ -759,8 +759,9 @@ void saveStatisticsEM(double Probabilities[],double expectations [], int Counts 
 
 // initialize the probabilities the expectations and the counters 
 void initialize_expectations_Counters(double Probabilities[],double expectations[],int Count [],int NR,char *seeded,int seed){
+    int i;
     setSeed(seeded,seed);
-    for(int i=0;i<NR;i++){
+    for(i=0;i<NR;i++){
         Probabilities[i]=randInRange(0,1);
         //Probabilities[i]=0.5;
         expectations[i]=0.0; 
@@ -846,7 +847,8 @@ void backwardEM(double expectations[], int Count[],int NR, node*root){
 // Computes the expectations of each parameters and the CLL.
 double expectation(node**Nodes,int lenNodes,double Probabilities[],double expectations[],int Counts [],int NR){
   double Root_Value,CLL=0;
-  for(int i=0;i<lenNodes;i++){
+  int i;
+  for(i=0;i<lenNodes;i++){
     // forward pass
     forward(Probabilities,NR,Nodes[i]);
     Root_Value=Nodes[i]->value;
@@ -865,7 +867,8 @@ double expectation(node**Nodes,int lenNodes,double Probabilities[],double expect
 
 // Maximization step: computes new values the probabilities 
 void maximization(double Probabilities [],double expectations[],int Count [],int NR){
-    for(int i=0;i<NR;i++){
+   int i;
+   for(i=0;i<NR;i++){
       if(Count[i]!=0){
         Probabilities[i]=expectations[i]/Count[i];
       } 
