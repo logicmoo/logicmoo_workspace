@@ -87,7 +87,7 @@ static foreign_t pl_forward(term_t Circuit,term_t Parameters,term_t NR1,term_t O
 
 
 // ++++++++++ Common util functions for Gradient descent and EM +++++++++++++++
-node * new_node(double val,char type[]){
+node * new_node(double val,char type[MaxType]){
     node *new_node = malloc(sizeof(node));
 
     if ( new_node ){
