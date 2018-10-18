@@ -43,7 +43,7 @@ double randInRange(double min, double max);
 node *convertACToTree(term_t AC,node **leaves_node,int lenRules);
 double product_sum(node*nod,double Probabilities[]);
 double product(node*nod,double Probabilities[]);
-void forward(double Probabilities[], int NR, node*root);
+void forward_C(double Probabilities[], int NR, node*root);
 void commonParamameters(double EA,double ER, int MaxIteration,int lenNodes,char*statisticsFolder,char*save,char*seeded,int seed);
 int getNodes_Parameters (term_t Nodes,term_t Params,term_t StopCond,term_t Folder,node ***leaves_node,node***nodes_ex,int* lenNodes, int *MaxIter,double* EA,double*  ER,int *NR, double*ZERO,char**statisticsFolder, char**save,char** seeded, int* seed);
 int setResults(double CLL, double Probabilities[],int NR,term_t *CLLFinal, term_t *ProbFinal);
@@ -297,19 +297,19 @@ void  commonParamameters(double EA,double ER, int MaxIteration,int lenNodes,char
   } 
 }
 // The forward pass evaluates the tree
-void forward(double Probabilities[], int NR, node*root){
+void forward_C(double Probabilities[], int NR, node*root){
   node * n;
   int index;
  if(root!=NULL){
     if(strcmp(root->type,"not")==0){
-      forward(Probabilities,NR,root->child);
+      forward_C(Probabilities,NR,root->child);
       root->value=1-(root->child)->value;
     }else{
         if(strcmp(root->type,"or")==0){
          // iterate on sibling
          n=root->child;
          while (n!=NULL){
-           forward(Probabilities,NR,n);
+           forward_C(Probabilities,NR,n);
            n = n->next;
          }
          root->value=product_sum(root->child,Probabilities);
@@ -318,7 +318,7 @@ void forward(double Probabilities[], int NR, node*root){
          // iterate on sibling
          n=root->child;
          while (n!=NULL){
-           forward(Probabilities,NR,n);
+           forward_C(Probabilities,NR,n);
            n = n->next;
         }
         root->value=product(root->child,Probabilities);
@@ -633,7 +633,7 @@ double forward_backwardGD(node**Nodes,int lenNodes,int from,int to,double Weight
        index=i;
      }
      //printf("\nIndex= %d",index);
-    forward(Probabilities,NR,Nodes[index]);
+    forward_C(Probabilities,NR,Nodes[index]);
     Root_Value=Nodes[index]->value;
     if(Root_Value!=0){
       CLL=CLL+log(Root_Value);
@@ -850,7 +850,7 @@ double expectation(node**Nodes,int lenNodes,double Probabilities[],double expect
   int i;
   for(i=0;i<lenNodes;i++){
     // forward pass
-    forward(Probabilities,NR,Nodes[i]);
+    forward_C(Probabilities,NR,Nodes[i]);
     Root_Value=Nodes[i]->value;
     if(Root_Value!=0){
       CLL=CLL+log(Root_Value);
@@ -1011,7 +1011,7 @@ static foreign_t pl_forward(term_t Circuit,term_t Parameters,term_t NR1,term_t O
   }
   construct_leaves_node(leaves_node,NR);
   root=convertACToTree(Circuit,leaves_node,NR);
-  forward(Probabilities,NR,root);
+  forward_C(Probabilities,NR,root);
 
   // return the computed value
   ret=PL_put_float(out,root->value);
