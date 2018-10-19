@@ -1584,7 +1584,7 @@ owl_canonical_parse_3(M,[IRI|Rest]) :-
                owl_parse_nonannotated_axioms(M,PredSpec)),
         forall((axiompred(PredSpec),dothislater(PredSpec),\+omitthis(PredSpec)),
                owl_parse_nonannotated_axioms(M,PredSpec)),!,
-    
+   
 	% annotation Assertion
 	parse_annotation_assertions(M),
 	forall(owl_parse_compatibility_DL(M,Axiom),assert_axiom(M,Axiom)),
@@ -2770,7 +2770,8 @@ parse_probabilistic_annotation_assertions(M) :-
   ),
   % forall(aNN(X,Y,Z),assert(annotation(X,Y,Z))), VV remove 25/1/11
   % annotation/3 axioms created already during owl_parse_annotated_axioms/1
-  retractall(M:annotation(_,'https://sites.google.com/a/unife.it/ml/disponte#probability',_)).
+  %retractall(M:annotation(_,'https://sites.google.com/a/unife.it/ml/disponte#probability',_)).
+  retractall(M:annotation(_,_,_)).
 
 /*
 query_is([Q|_],0,Q):-!.
@@ -3026,6 +3027,29 @@ is_axiom(Axiom) :-
 	functor(Axiom,Pred,Arity),
 	axiompred(Pred/Arity),!.
 
+clean_up(M):-
+  M:(dynamic class/1, datatype/1, objectProperty/1, dataProperty/1, annotationProperty/1),
+  M:(dynamic namedIndividual/1, anonymousIndividual/1, subClassOf/2, equivalentClasses/1, disjointClasses/1, disjointUnion/2),
+  M:(dynamic subPropertyOf/2, equivalentProperties/1, disjointProperties/1, inverseProperties/2, propertyDomain/2, propertyRange/2),
+  M:(dynamic functionalProperty/1, inverseFunctionalProperty/1, reflexiveProperty/1, irreflexiveProperty/1, symmetricProperty/1, asymmetricProperty/1, transitiveProperty/1, hasKey/2),
+  M:(dynamic sameIndividual/1, differentIndividuals/1, classAssertion/2, propertyAssertion/3, negativePropertyAssertion/3),
+  M:(dynamic annotationAssertion/3, annotation/3, ontology/1, ontologyAxiom/2, ontologyImport/2, ontologyVersionInfo/2),
+  M:(dynamic owl/4, owl/3, owl/2, blanknode/3, outstream/1, aNN/3, annotation_r_node/4, axiom_r_node/4, owl_repository/2, trdf_setting/2),
+  M:(dynamic ns4query/1),
+  retractall(M:kb_atom([])),
+  forall(trill:axiom(M:A),retractall(M:A)),
+  retractall(M:blanknode(_,_,_)),
+  retractall(M:aNN(_,_,_)),
+  retractall(M:annotation_r_node(_,_,_)),
+  retractall(M:axiom_r_node(_,_,_)),
+  retractall(M:annotation(_,_,_)),
+  retractall(M:owl(_,_,_)),
+  retractall(M:owl(_,_,_,_)),
+  retractall(M:owl(_,_)),
+  retractall(M:ontologyAxiom(_,_)),
+  retractall(M:ontologyImport(_,_)),
+  retractall(M:ontologyVersionInfo(_,_)).
+
 set_up(M):-
   M:(dynamic class/1, datatype/1, objectProperty/1, dataProperty/1, annotationProperty/1),
   M:(dynamic namedIndividual/1, anonymousIndividual/1, subClassOf/2, equivalentClasses/1, disjointClasses/1, disjointUnion/2),
@@ -3045,6 +3069,7 @@ sandbox:safe_primitive(utility_translation:load_owl_from_string(_)).
 sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_)).
 sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_,_)).
 %sandbox:safe_primitive(utility_translation:query_expand(_)).
+
 
 user:term_expansion(kb_prefix(A,B),[]):-
   get_module(M),
