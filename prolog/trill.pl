@@ -897,8 +897,8 @@ add_exists_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind2,Expl2,ABox0),
   existsInKB(M,R,C),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox1),
-  expand_from_ind_class(someValuesFrom(R,C),Ind1,Expl,M,ABox1,ABox).
+  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,Added,ABox1),
+  expand_from_ind_class(someValuesFrom(R,C),Ind1,Added,M,ABox1,ABox).
 
 existsInKB(M,R,C):-
   hierarchy(M:H),
@@ -922,8 +922,8 @@ scan_and_list(_M,[],_Ind,_Expl,ABox,_Tabs,ABox,Mod):-
   dif(Mod,0).
 
 scan_and_list(M,[C|T],Ind,Expl,ABox0,Tabs0,ABox,_Mod):-
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),!,
-  expand_from_ind_class(C,Ind,Expl,M,ABox1,ABox2),
+  modify_ABox(M,ABox0,C,Ind,Expl,Added,ABox1),!,
+  expand_from_ind_class(C,Ind,Added,M,ABox1,ABox2),
   scan_and_list(M,T,Ind,Expl,ABox2,Tabs0,ABox,1).
 
 scan_and_list(M,[_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
@@ -950,12 +950,12 @@ ind_intersected_union(Ind,LC,ABox) :-
   member(C,LC),!.
 %---------------
 scan_or_list(M,[C],1,Ind,Expl,ABox0,_Tabs,ABox):- !,
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),
-  expand_from_ind_class(C,Ind,Expl,M,ABox1,ABox).
+  modify_ABox(M,ABox0,C,Ind,Expl,Added,ABox1),
+  expand_from_ind_class(C,Ind,Added,M,ABox1,ABox).
 
 scan_or_list(M,[C|_T],_NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),
-  expand_from_ind_class(C,Ind,Expl,M,ABox1,ABox).
+  modify_ABox(M,ABox0,C,Ind,Expl,Added,ABox1),
+  expand_from_ind_class(C,Ind,Added,M,ABox1,ABox).
 
 scan_or_list(M,[_C|T],NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
   NC is NClasses - 1,
@@ -992,8 +992,8 @@ forall_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,C,Ind2,Expl,ABox1),
-  expand_from_ind_class(C,Ind2,Expl,M,ABox1,ABox).
+  modify_ABox(M,ABox0,C,Ind2,Expl,Added,ABox1),
+  expand_from_ind_class(C,Ind2,Added,M,ABox1,ABox).
 
 /* ************** */
 
@@ -1008,8 +1008,8 @@ forall_plus_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
   and_f(M,Expl1,Expl2,ExplT),
   and_f(M,ExplT,Expl3,Expl),
-  modify_ABox(M,ABox0,allValuesFrom(R,C),Ind2,Expl,ABox1),
-  expand_from_ind_class(allValuesFrom(R,C),Ind2,Expl,M,ABox1,ABox).
+  modify_ABox(M,ABox0,allValuesFrom(R,C),Ind2,Expl,Added,ABox1),
+  expand_from_ind_class(allValuesFrom(R,C),Ind2,Added,M,ABox1,ABox).
 
 % --------------
 find_sub_sup_trans_role(M,R,S,Expl):-
@@ -1068,9 +1068,9 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(M,Ind,L,ABox0,Expl1)),
-  modify_ABox(M,ABox0,C,Ind,Expl1,ABox1),
+  modify_ABox(M,ABox0,C,Ind,Expl1,Added,ABox1),
   add_nominal(C,Ind,ABox1,ABox2),
-  expand_from_ind_class(C,Ind,Expl1,M,ABox2,ABox).
+  expand_from_ind_class(C,Ind,Added,M,ABox2,ABox).
 
 /* -- unfold_rule
  *    control propertyRange e propertyDomain
@@ -1078,9 +1078,9 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
  */
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_class_prop_range_domain(M,Ind,D,Expl,(ABox0,Tabs)),
-  modify_ABox(M,ABox0,D,Ind,Expl,ABox1),
+  modify_ABox(M,ABox0,D,Ind,Expl,Added,ABox1),
   add_nominal(D,Ind,ABox1,ABox2),
-  expand_from_ind_class(D,Ind,Expl,M,ABox2,ABox).
+  expand_from_ind_class(D,Ind,Added,M,ABox2,ABox).
 
 /*
  * -- unfold_rule
@@ -1303,7 +1303,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
   find_sub_sup_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind1,Ind2,AxL,ABox1),
+  modify_ABox(M,ABox0,D,Ind1,Ind2,AxL,_Added,ABox1),
   add_nominal(D,Ind1,ABox1,ABox2),
   add_nominal(D,Ind2,ABox2,ABox).
 
@@ -1312,7 +1312,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
   find_inverse_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind2,Ind1,AxL,ABox1),
+  modify_ABox(M,ABox0,D,Ind2,Ind1,AxL,_Added,ABox1),
   add_nominal(D,Ind1,ABox1,ABox2),
   add_nominal(D,Ind2,ABox2,ABox).
 
@@ -1380,8 +1380,8 @@ apply_ce_to(_M,[],_,_,ABox,ABox,_,0).
 
 apply_ce_to(M,[Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
   \+ indirectly_blocked(Ind,(ABox0,Tabs)),
-  modify_ABox(M,ABox0,UnAx,Ind,[Ax],ABox1),!,
-  expand_from_ind_class(UnAx,Ind,[Ax],M,ABox1,ABox2),
+  modify_ABox(M,ABox0,UnAx,Ind,[Ax],Added,ABox1),!,
+  expand_from_ind_class(UnAx,Ind,Added,M,ABox1,ABox2),
   apply_ce_to(M,T,Ax,UnAx,ABox2,ABox,Tabs,C0),
   C is C0 + 1.
 
@@ -1559,7 +1559,7 @@ o_rule(M,(ABox0,Tabs0),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
   merge(M,X,Y,(ABox0,Tabs0),(ABox,Tabs)), % TODO to check!
   flatten([LX,LY],LI0),
   list_to_set(LI0,LI),
-  absent(sameIndividual(LI),ExplC,ABox0).
+  absent(sameIndividual(LI),ExplC,ABox0,_).
 
 containsCommon(L1,L2):-
   member(X,L1),
@@ -1723,8 +1723,10 @@ expand_from_ind_class(_Class,_Ind,_Expl4ClassInd,_M,ABox,ABox):- !.% Does not ex
 expand_from_hier_ind_class([],_M,_Ind,_Expl4ClassInd,ABox,ABox).
 
 expand_from_hier_ind_class([H-Ex|T],M,Ind,Expl4ClassInd,ABox0,ABox):-
+  empty_expl(M,EEx),
+  dif(Ex,EEx),
   and_f(M,Ex,Expl4ClassInd,Expl),
-  modify_ABox(M,ABox0,H,Ind,Expl,false,ABox1),!,
+  modify_ABox(M,ABox0,H,Ind,Expl,false,_Added,ABox1),!,
   add_nominal(H,Ind,ABox1,ABox2),
   expand_from_hier_ind_class(T,M,Ind,Expl4ClassInd,ABox2,ABox).
 

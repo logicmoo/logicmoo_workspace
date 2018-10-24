@@ -144,26 +144,27 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(M,ABox0,C,Ind,L0,false,ABox1):-
-  modify_ABox(M,ABox0,C,Ind,L0,ABox1).
 
-modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
   
-  
-modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+modify_ABox(_,ABox0,C,Ind,L0,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,false,Added,ABox1):-
+  modify_ABox(M,ABox0,C,Ind,L0,Added,ABox1).
+
+
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
   
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
+modify_ABox(_,ABox0,P,Ind1,Ind2,L0,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* ************* */
 
@@ -293,11 +294,44 @@ hier_and_f2(L1,[H2|T2],[H|T]):-
   append(L1,H2,H),
   hier_and_f2(L1,T2,T).
 
+hier_or_f_check(_M,Or1,Or2,Or):-absent(Or1,Or2,Or,_).
+
 hier_or_f(_M,Or1,Or2,Or):-
   append(Or1,Or2,Or0),
   sort(Or0,Or).
 
 hier_ax2ex(_M,Ax,[[Ax]]):- !.
+
+/*  absent
+  =========
+*/
+absent(Expl0,Expl1,Expl,Added):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
+  absent0(Expl0,Expl1,Expl,Added),!.
+
+%------------------
+absent0(Expl0,Expl1,Expl,Added):-
+  absent1(Expl0,Expl1,Expl,Added),
+  dif(Added,[]).
+
+absent1(Expl,[],Expl,[]).
+
+absent1(Expl0,[H|T],[H|Expl],[H|Added]):-
+  absent2(Expl0,H),!,
+  absent1(Expl0,T,Expl,Added).
+
+absent1(Expl0,[_|T],Expl,Added):-
+  absent1(Expl0,T,Expl,Added).
+  
+absent2([H],Expl):-
+  length([H],1),
+  subset(H,Expl) -> fail ; true.
+
+absent2([H|_T],Expl):-
+  subset(H,Expl),!,
+  fail.
+
+absent2([_|T],Expl):-
+  absent2(T,Expl).
 
 /**********************
 

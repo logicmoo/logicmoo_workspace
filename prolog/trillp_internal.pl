@@ -132,10 +132,10 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(M,ABox0,C,Ind,L0,ABox1):-
-  modify_ABox(M,ABox0,C,Ind,L0,true,ABox1).
+modify_ABox(M,ABox0,C,Ind,L0,Added,ABox1):-
+  modify_ABox(M,ABox0,C,Ind,L0,true,Added,ABox1).
 
-modify_ABox(M,ABox0,C,Ind,L0,true,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,true,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -148,15 +148,15 @@ modify_ABox(M,ABox0,C,Ind,L0,true,[(classAssertion(C,Ind),Expl)|ABox]):-
   ),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
 
-modify_ABox(M,ABox0,C,Ind,L0,false,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,false,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   or_f(M,L0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).  
 
-modify_ABox(_,ABox0,C,Ind,L0,_,[(classAssertion(C,Ind),L0)|ABox0]):-!.
+modify_ABox(_,ABox0,C,Ind,L0,_,L0,[(classAssertion(C,Ind),L0)|ABox0]):-!.
 
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,true,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,true,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -167,13 +167,13 @@ modify_ABox(M,ABox0,P,Ind1,Ind2,L0,true,[(propertyAssertion(P,Ind1,Ind2),Expl)|A
   ),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
 
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,false,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,false,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   or_f(M,L0,Expl1,Expl),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,_,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-!.
+modify_ABox(_,ABox0,P,Ind1,Ind2,L0,_,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-!.
 
 /* **************** */
 
@@ -609,6 +609,8 @@ hier_empty_expl(_M,[]):-!.
 hier_and_f(M,A,B,C):- and_f(M,A,B,C).
 
 hier_or_f(M,Or1,Or2,Or):- or_f(M,Or1,Or2,Or).
+
+hier_or_f_check(M,Or1,Or2,Or):- or_f(M,Or1,Or2,Or).
 
 hier_ax2ex(_M,Ax,*([Ax])):- !.
 

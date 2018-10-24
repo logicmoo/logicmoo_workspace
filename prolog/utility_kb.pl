@@ -752,7 +752,7 @@ get_hierarchy(M:Class,H4C):-
   get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
 /*
- Takes the KB descriptor and a class in Class, and returns the set of classes with explanations that are connected with CLass in the hierarchy
+ Takes the KB descriptor and a class in Class, and returns the set of classes with explanations that are connected with Class in the hierarchy
 */
 get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
   Classes=KB.classes,
@@ -768,9 +768,9 @@ append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
   append(AllExpl,[EndClass-NewExpl],NewAllExpl).
 
 append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
-  member(EndClass-OldExpl,AllExpl),
+  member(EndClass-OldExpl,AllExpl),%gtrace,
   delete(AllExpl,EndClass-OldExpl,AllExpl0),
-  trill:hier_or_f(M,OldExpl,NewExpl,NewExplT),
+  trill:hier_or_f_check(M,OldExpl,NewExpl,NewExplT),%gtrace,
   append(AllExpl0,[EndClass-NewExplT],NewAllExpl).
 
 
