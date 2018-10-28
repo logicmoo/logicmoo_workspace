@@ -131,7 +131,7 @@ collect_undef(MCall, Caller, From) :-
 prolog:message(acheck(undefined)) -->
     ['Undefined Predicates',nl,
      '--------------------',nl],
-    prolog:message(check(undefined_predicates)).
+    prolog:message(check(undefined_procedures, [])).
 prolog:message(acheck(undefined, File-ALPILocCIList)) -->
     [ 'Undefined predicates in ~w:'-[File], nl],
     foldl(show_alternatives, ALPILocCIList),

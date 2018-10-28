@@ -44,6 +44,7 @@ is_entry_property(imported_from(_)).
 :- multifile
     is_entry_point_hook/2.
 
+is_entry_point_hook(attribute_goals(_, _, _), _).
 is_entry_point_hook(term_expansion(_, _), _).
 is_entry_point_hook(goal_expansion(_, _), _).
 is_entry_point_hook(term_expansion(_, _, _, _), _).
@@ -57,6 +58,7 @@ is_entry_point_hook(prolog_trace_interception(_, _, _, _), user).
 is_entry_point_hook(_, prolog).
 is_entry_point_hook(doc_db(_, _, _, _), assrt_lib).
 is_entry_point_hook(H, sandbox) :- predicate_property(sandbox:H, multifile).
+is_entry_point_hook(goal_colours(_, _, _), prolog_colour).
 
 is_entry_point(H, M) :- is_entry_point_hook(H, M), !.
 is_entry_point(H, M) :-

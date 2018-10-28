@@ -127,6 +127,7 @@ database_dec_fact(M:H, F) :- database_dec_fact(H, M, F).
 database_dec_fact(abolish(F, A),             system,     H) :- fa_to_head(F, A, H).
 database_dec_fact(abolish(PI),               system,     H) :- pi_to_head(PI, H).
 database_dec_fact(retractall(F),             system,     F).
+database_dec_fact(retractall_near(F),        near_utils, F).
 database_dec_fact(forall(A, B),              system,     F) :-
     subsumes_term(forall(retract(F), true), forall(A, B)),
     A=retract(F).
@@ -142,9 +143,10 @@ database_def_fact(update_fact_from(A, From), from_utils, F) :-
 database_retract_fact(retract(A),  system,     F) :- clause_head(A, F).
 database_retract_fact(lretract(A), pce_config, F) :- clause_head(A, F).
 
-database_query_fact(clause(A, _),       system,   F) :- clause_head(A, F).
-database_query_fact(clause(A, _, _),    system,   F) :- clause_head(A, F).
-database_query_fact(unfold_goal(_,A,_), refactor, F) :- clause_head(A, F).
+database_query_fact(clause(A, _),       system,     F) :- clause_head(A, F).
+database_query_fact(clause(A, _, _),    system,     F) :- clause_head(A, F).
+database_query_fact(unfold_goal(_,A,_), refactor,   F) :- clause_head(A, F).
+database_query_fact(fact_near(A, _),    near_utils, F) :- clause_head(A, F).
 
 pi_to_head(PI, H) :- nonvar(PI) -> PI=F/A, fa_to_head(F, A, H) ; true.
 
