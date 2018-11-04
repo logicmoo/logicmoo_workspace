@@ -2,6 +2,9 @@
   init/1,init_bdd/2,init_test/1,end/1,end_bdd/1,end_test/1,
   one/2,zero/2,and/4,or/4,bdd_not/3,
   ret_prob/3,equality/4,add_var/4,
+  add_abd_var/4,ret_abd_prob/4,
+  add_query_var/4,ret_map_prob/4,ret_vit_prob/4,
+  make_query_var/3,create_dot_string/3,
   em/9,rand_seed/1
     ]).
 /** <module> bddem
