@@ -1,45 +1,18 @@
 :- module(test_bddem,
-  [test/0]).
+  [test_bddem/0]).
 :- use_module(library(plunit)).
+:- ensure_loaded(library(bddem)).
 
-test:-
-    run_tests([coin,
-    coinmsw,
-    dice,
-    epidemic,
-    earthquake,
-    sneezing,
-    trigger,
-    light,
-    threesideddice,
-    bloodtype,
-    mendel,
-    coin2,
-    simpson,
-    viral,
-    uwcse,
-    path,
-    pathdb,
-    multiple_paths_simple,
-    multiple_paths,
-    abd1,
-    abd2,
-    abd3,
-    map1,
-    map_es3,
-    map_es21,
-    map_es2,
-    map_es2map,
-    map_es2map1,
-    pitavit_win,
-    pitavit_hmm,
-    pitavit_coin,
-    pitavit_mendel,
-    meta,
-    pcfg,
-    var_objdb,
-    card
+:- rand_seed(100).
+
+test_bddem:-
+    run_tests([
+    prob,em
     ]).
+
+
+v1_0(Env,R,BDD):-
+  add_var(Env,[0.4,0.6],R,V),equality(Env,V,0,BDD).
 
 
 :- begin_tests(prob, []).
@@ -47,7 +20,75 @@ test:-
 :-ensure_loaded(library(bddem)).
 
 test(one):-
-  init_test(Env),add_var(Env,[0.4,0.6],0,V),equality(Env,V,0,BDD),
-  ret_prob(Env,BDD,P),P=:=0.4.
+  init_test(Env),
+  v1_0(Env,0,BDD),
+  ret_prob(Env,BDD,P),
+  end_test(Env),
+  P=:=0.4.
 
-:- end_tests(coin).
+test(and):-
+  init_test(Env),
+  v1_0(Env,0,BDD1),
+  v1_0(Env,0,BDD2),
+  and(Env,BDD1,BDD2,BDD),
+  ret_prob(Env,BDD,P),
+  end_test(Env),
+  P=:=0.4*0.4.
+
+test(or):-
+  init_test(Env),
+  v1_0(Env,0,BDD1),
+  v1_0(Env,0,BDD2),
+  or(Env,BDD1,BDD2,BDD),
+  ret_prob(Env,BDD,P),
+  end_test(Env),
+  P=:=0.4+0.4-0.4*0.4.
+
+test(nor):-
+  init_test(Env),
+  v1_0(Env,0,BDD1),
+  v1_0(Env,0,BDD2),
+  or(Env,BDD1,BDD2,BDDN),
+  bdd_not(Env,BDDN,BDD),
+  ret_prob(Env,BDD,P),
+  end_test(Env),
+  P=:=1-(0.4+0.4-0.4*0.4).
+
+
+
+:- end_tests(prob).
+
+:- begin_tests(em, []).
+
+:-ensure_loaded(library(bddem)).
+
+test(one):-
+  init(Cont),
+  ex1(Cont,BDD1),
+  ex1(Cont,BDD2),
+  ex2(Cont,BDD3),
+  em(Cont,[2,2],[[BDD1,1.0],[BDD2,1.0],[BDD3,1.0]],0.0001,0.001,100,LL,Par,ExP),
+  writeln(LL),
+  writeln(Par),
+  writeln(ExP),
+  end(Cont),
+  LL=:=  -8.182497543790239e-5.
+
+ex1(Cont,BDD):-
+  init_bdd(Cont,Env),
+  v1_0(Env,0,B0),
+  v1_0(Env,1,B1),
+  or(Env,B0,B1,BDD),
+  end_bdd(Cont).
+
+ex2(Cont,BDD):-
+  init_bdd(Cont,Env),
+  v1_0(Env,0,B00),
+  v1_0(Env,1,B1),
+  bdd_not(Env,B00,B0),
+  or(Env,B0,B1,BDD),
+  end_bdd(Cont).
+
+
+
+:- end_tests(em).
