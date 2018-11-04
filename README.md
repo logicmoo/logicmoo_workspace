@@ -12,7 +12,7 @@ It is used by various SWI-Prolog packs:
 
 Installation
 ------------
-This is a SWI-Prolog (http://www.swi-prolog.org/) pack.
+This is an SWI-Prolog pack.
 
 It can be installed with `pack_install/1`
 
@@ -21,14 +21,14 @@ It can be installed with `pack_install/1`
 
 The pack uses a foreign library and contains the library binaries for 32 and 64 bits Linux and 64 bits Windows. If you want to recompile the foreign library you can use
 
-    ?- pack_rebuild(cplint).
+    ?- pack_rebuild(bddem).
 
 On 32 and 64 bits Linux this should work out of the box. On 64 bits Windows the library must be rebuilt by hand.
 The procedure for building it using MSYS2 can be found at the bottom of this document.
 
 
 Testing the installation
------------------------
+------------------------
 
     $ swipl
     ?- use_module(library(bddem_test)).
