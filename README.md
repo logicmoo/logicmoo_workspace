@@ -112,3 +112,8 @@ Compile with
     $ ./configure
     $ make
     $ make install
+
+Support
+-------
+
+Use the Google group https://groups.google.com/forum/#!forum/cplint
