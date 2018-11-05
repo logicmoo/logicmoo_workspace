@@ -2289,8 +2289,8 @@ compute_prob(M,Expl,Prob):-
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
-  findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
-  get_bdd_environment(M,NV,Env),
+  %findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
+  get_bdd_environment(M,Env),
   build_bdd(M,Env,Expl,BDD),
   ret_prob(Env,BDD,Prob),
   clean_environment(M,Env), !.
@@ -2377,17 +2377,7 @@ get_trill_current_module(M):-
 
 :- multifile sandbox:safe_primitive/1.
 
-sandbox:safe_primitive(trill:init_test(_,_)).
-sandbox:safe_primitive(trill:ret_prob(_,_,_)).
-sandbox:safe_primitive(trill:end_test(_)).
-sandbox:safe_primitive(trill:one(_,_)).
-sandbox:safe_primitive(trill:zero(_,_)).
-sandbox:safe_primitive(trill:and(_,_,_,_)).
-sandbox:safe_primitive(trill:or(_,_,_,_)).
-sandbox:safe_primitive(trill:bdd_not(_,_,_)).
 sandbox:safe_primitive(trill:get_var_n(_,_,_,_,_)).
-sandbox:safe_primitive(trill:add_var(_,_,_,_,_)).
-sandbox:safe_primitive(trill:equality(_,_,_,_)).
 
 
 /*

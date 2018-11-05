@@ -12,7 +12,7 @@ test_trill:-
     trill_peoplePets,
     trill_vicodi]).
 
-:- use_module(library(test/trill_test)).
+:- use_module(library(trill_test/trill_test)).
 
 :- begin_tests(trill_brca, []).
 

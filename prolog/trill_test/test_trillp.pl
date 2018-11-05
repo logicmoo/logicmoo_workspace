@@ -13,7 +13,7 @@ test_trillp:-
     trillp_vicodi]).
 
 
-:- use_module(library(test/trill_test)).
+:- use_module(library(trill_test/trill_test)).
 
 :- begin_tests(trillp_brca, []).
 

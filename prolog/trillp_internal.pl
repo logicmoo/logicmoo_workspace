@@ -633,8 +633,8 @@ bool_op(~(_)):-!.
 
 ***********************/
 
-get_bdd_environment(_M,NV,Env):-
-  init_test(NV,Env).
+get_bdd_environment(_M,Env):-
+  init_test(Env).
 
 clean_environment(_M,Env):-
   end_test(Env).
