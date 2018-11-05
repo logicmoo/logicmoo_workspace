@@ -70,7 +70,7 @@ It contains programs for building BDDs, for computing probabilities and for perf
  *
  * Terminates the environment data structure for storing a single BDD.
  * Environment is a pointer to a data structure returned by a call
- * to init_test/2.
+ * to init_test/1.
  */
 
 /**
