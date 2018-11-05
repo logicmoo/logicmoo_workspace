@@ -20,38 +20,38 @@ v1_0(Env,R,BDD):-
 :-ensure_loaded(library(bddem)).
 
 test(one):-
-  init_test(Env),
+  init(Env),
   v1_0(Env,0,BDD),
   ret_prob(Env,BDD,P),
-  end_test(Env),
+  end(Env),
   P=:=0.4.
 
 test(and):-
-  init_test(Env),
+  init(Env),
   v1_0(Env,0,BDD1),
   v1_0(Env,0,BDD2),
   and(Env,BDD1,BDD2,BDD),
   ret_prob(Env,BDD,P),
-  end_test(Env),
+  end(Env),
   P=:=0.4*0.4.
 
 test(or):-
-  init_test(Env),
+  init(Env),
   v1_0(Env,0,BDD1),
   v1_0(Env,0,BDD2),
   or(Env,BDD1,BDD2,BDD),
   ret_prob(Env,BDD,P),
-  end_test(Env),
+  end(Env),
   P=:=0.4+0.4-0.4*0.4.
 
 test(nor):-
-  init_test(Env),
+  init(Env),
   v1_0(Env,0,BDD1),
   v1_0(Env,0,BDD2),
   or(Env,BDD1,BDD2,BDDN),
   bdd_not(Env,BDDN,BDD),
   ret_prob(Env,BDD,P),
-  end_test(Env),
+  end(Env),
   P=:=1-(0.4+0.4-0.4*0.4).
 
 
@@ -63,7 +63,7 @@ test(nor):-
 :-ensure_loaded(library(bddem)).
 
 test(one):-
-  init(Cont),
+  init_em(Cont),
   ex1(Cont,BDD1),
   ex1(Cont,BDD2),
   ex2(Cont,BDD3),
@@ -71,23 +71,23 @@ test(one):-
   writeln(LL),
   writeln(Par),
   writeln(ExP),
-  end(Cont),
-  LL=:=  -8.182497543790239e-5.
+  end_em(Cont),
+  abs(LL)<  1e-4.
 
 ex1(Cont,BDD):-
-  init_bdd(Cont,Env),
+  init_ex(Cont,Env),
   v1_0(Env,0,B0),
   v1_0(Env,1,B1),
   or(Env,B0,B1,BDD),
-  end_bdd(Cont).
+  end_ex(Cont).
 
 ex2(Cont,BDD):-
-  init_bdd(Cont,Env),
+  init_ex(Cont,Env),
   v1_0(Env,0,B00),
   v1_0(Env,1,B1),
   bdd_not(Env,B00,B0),
   or(Env,B0,B1,BDD),
-  end_bdd(Cont).
+  end_ex(Cont).
 
 
 

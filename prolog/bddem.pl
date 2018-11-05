@@ -1,5 +1,5 @@
 :- module(bddem,[
-  init/1,init_bdd/2,init_test/1,end/1,end_bdd/1,end_test/1,
+  init_em/1,init_ex/2,init/1,end_em/1,end_ex/1,end/1,
   one/2,zero/2,and/4,or/4,bdd_not/3,
   ret_prob/3,equality/4,add_var/4,
   add_abd_var/4,ret_abd_prob/4,
@@ -21,7 +21,7 @@ It contains programs for building BDDs, for computing probabilities and for perf
 :-use_foreign_library(foreign(bddem),install).
 
 /**
- * init(--Context:int) is det
+ * init_em(--Context:int) is det
  *
  * Initializes a data structure for performing parameter learning.
  * It returns an integer in Context that is a pointer to a
@@ -29,17 +29,17 @@ It contains programs for building BDDs, for computing probabilities and for perf
  */
 
 /**
- * end(++Context:int) is det
+ * end_em(++Context:int) is det
  *
  * Terminates the context data structure for performing parameter learning.
  * Context is a pointer to a context data structure for performing
  * the EM algorithm
- * Context must have been returned by a call to init/1.
+ * Context must have been returned by a call to init_em/1.
  * It frees the memory occupied by Context.
  */
 
 /**
- * init_bdd(++Context:int,--Environment:int) is det
+ * init_ex(++Context:int,--Environment:int) is det
  *
  * Initializes an enviroment data structure for storing a BDD.
  * Context is an integer that is a pointer to a context data structure
@@ -49,16 +49,16 @@ It contains programs for building BDDs, for computing probabilities and for perf
  */
 
 /**
- * end_bdd(++Environment:int) is det
+ * end_ex(++Environment:int) is det
  *
  * Terminates the evnironment data structure for storing a BDD.
- * Environment is a pointer to a data structure returned by init_bdd/2.
+ * Environment is a pointer to a data structure returned by init_ex/2.
  * It frees the memory occupied by the BDD.
  */
 
 
 /**
- * init_test(--Environment:int) is det
+ * init(--Environment:int) is det
  *
  * Initializes a data structure for storing a single BDD.
  * Returns an integer Environment that is a pointer to a data structure for
@@ -66,11 +66,11 @@ It contains programs for building BDDs, for computing probabilities and for perf
  */
 
 /**
- * end_test(++Environment:int) is det
+ * end(++Environment:int) is det
  *
  * Terminates the environment data structure for storing a single BDD.
  * Environment is a pointer to a data structure returned by a call
- * to init_test/1.
+ * to init/1.
  */
 
 /**

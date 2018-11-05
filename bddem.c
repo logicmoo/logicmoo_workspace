@@ -135,13 +135,14 @@ prob_abd_expl map_Prob(DdNode *node, environment * env,
 prob_abd_expl vit_Prob(DdNode *node, environment * env,
   expltablerow * expltable, tablerow * table,
   int comp_par);
-static foreign_t end_bdd(term_t);
-static foreign_t init_test(term_t);
+static foreign_t end_ex(term_t);
+static foreign_t init(term_t);
+static foreign_t init_ex(term_t arg1, term_t arg2);
 static foreign_t add_var(term_t,term_t,term_t,term_t);
 static foreign_t add_query_var(term_t,term_t,term_t,term_t);
 static foreign_t add_abd_var(term_t,term_t,term_t,term_t);
-static foreign_t init(term_t);
-static foreign_t end(term_t);
+static foreign_t init_em(term_t);
+static foreign_t end_em(term_t);
 static foreign_t EM(term_t,term_t,term_t,term_t,
   term_t,term_t,term_t,term_t,term_t);
 static foreign_t reorder(term_t arg1);
@@ -183,7 +184,7 @@ term_t abd_clist_to_pllist(explan_t *mpa);
 term_t vit_clist_to_pllist(explan_t *mpa, environment * env);
 
 
-static foreign_t init(term_t arg1)
+static foreign_t init_em(term_t arg1)
 {
   int ret;
   example_data * ex_d;
@@ -207,7 +208,7 @@ static foreign_t init(term_t arg1)
 
 }
 
-static foreign_t init_bdd(term_t arg1, term_t arg2)
+static foreign_t init_ex(term_t arg1, term_t arg2)
 {
   example_data * ex_d;
   DdManager * mgr;
@@ -246,7 +247,7 @@ static foreign_t init_bdd(term_t arg1, term_t arg2)
 
 }
 
-static foreign_t end_bdd(term_t arg1)
+static foreign_t end_ex(term_t arg1)
 {
   int ret;
   example_data *ex_d;
@@ -257,7 +258,7 @@ static foreign_t end_bdd(term_t arg1)
   PL_succeed;
 }
 
-static foreign_t init_test(term_t arg1)
+static foreign_t init(term_t arg1)
 {
   term_t env_t;
   environment * env;
@@ -287,7 +288,7 @@ static foreign_t init_test(term_t arg1)
   return(PL_unify(env_t,arg1));
 }
 
-static foreign_t end_test(term_t arg1)
+static foreign_t end(term_t arg1)
 {
   int ret;
   environment *env;
@@ -344,7 +345,7 @@ static double Expectation(example_data * ex_d,DdNode **nodes_ex,int lenNodes)
   return CLL;
 }
 
-static foreign_t end(term_t arg1)
+static foreign_t end_em(term_t arg1)
 {
   int r,i,ret;
   example_data * ex_d;
@@ -2321,10 +2322,10 @@ install_t install()
 {
   srand(10);
 
-  PL_register_foreign("init",1,init,0);
-  PL_register_foreign("init_bdd",2,init_bdd,0);
-  PL_register_foreign("end",1,end,0);
-  PL_register_foreign("end_bdd",1,end_bdd,0);
+  PL_register_foreign("init_em",1,init_em,0);
+  PL_register_foreign("init_ex",2,init_ex,0);
+  PL_register_foreign("end_em",1,end_em,0);
+  PL_register_foreign("end_ex",1,end_ex,0);
   PL_register_foreign("add_var",4,add_var,0);
   PL_register_foreign("add_query_var",4,add_query_var,0);
   PL_register_foreign("add_abd_var",4,add_abd_var,0);
@@ -2336,8 +2337,8 @@ install_t install()
   PL_register_foreign("bdd_not",3,bdd_not,0);
   PL_register_foreign("create_dot",3,create_dot,0);
   PL_register_foreign("create_dot_string",3,create_dot_string,0);
-  PL_register_foreign("init_test",1,init_test,0);
-  PL_register_foreign("end_test",1,end_test,0);
+  PL_register_foreign("init",1,init,0);
+  PL_register_foreign("end",1,end,0);
   PL_register_foreign("ret_prob",3,ret_prob,0);
   PL_register_foreign("ret_abd_prob",4,ret_abd_prob,0);
   PL_register_foreign("ret_map_prob",4,ret_map_prob,0);
