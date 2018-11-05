@@ -2300,8 +2300,8 @@ get_var_n(Env,R,S,Probs,V):-
     v(R,S,V) ->
       true
     ;
-      length(Probs,L),
-      add_var(Env,L,Probs,R,V),
+      %length(Probs,L),
+      add_var(Env,Probs,R,V),
       assert(v(R,S,V))
   ).
 
