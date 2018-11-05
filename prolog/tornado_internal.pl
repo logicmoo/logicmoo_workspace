@@ -267,11 +267,11 @@ get_bdd_environment(M,Env):-
   M:tornado_bdd_environment(Env),!.
 
 get_bdd_environment(M,Env):-
-  init_test(Env),
+  init(Env),
   M:assert(tornado_bdd_environment(Env)).
 
 clean_environment(M,Env):-
-  end_test(Env),
+  end(Env),
   retractall(M:tornado_bdd_environment(_)).
 
 build_bdd(_,Env,[],BDD):- !,

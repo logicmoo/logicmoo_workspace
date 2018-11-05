@@ -634,10 +634,10 @@ bool_op(~(_)):-!.
 ***********************/
 
 get_bdd_environment(_M,Env):-
-  init_test(Env).
+  init(Env).
 
 clean_environment(_M,Env):-
-  end_test(Env).
+  end(Env).
 
 build_bdd(_M,Env,[],BDD):-
   zero(Env,BDD).
