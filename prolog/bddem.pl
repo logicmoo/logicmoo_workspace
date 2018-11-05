@@ -4,7 +4,7 @@
   ret_prob/3,equality/4,add_var/4,
   add_abd_var/4,ret_abd_prob/4,
   add_query_var/4,ret_map_prob/4,ret_vit_prob/4,
-  make_query_var/3,create_dot_string/3,
+  make_query_var/3,create_dot/3,create_dot_string/3,
   em/9,rand_seed/1
     ]).
 /** <module> bddem
@@ -33,7 +33,7 @@ It contains programs for building BDDs, for computing probabilities and for perf
  *
  * Terminates the context data structure for performing parameter learning.
  * Context is a pointer to a context data structure for performing
- * the EM algorithm
+ * the EM algorithm.
  * Context must have been returned by a call to init_em/1.
  * It frees the memory occupied by Context.
  */
@@ -43,7 +43,7 @@ It contains programs for building BDDs, for computing probabilities and for perf
  *
  * Initializes an enviroment data structure for storing a BDD.
  * Context is an integer that is a pointer to a context data structure
- * created using init/3.
+ * created using init_em/1.
  * Returns an integer Environment that is a pointer to a data structure for
  * storing a single BDD to be used for the EM algorithm.
  */
@@ -77,41 +77,62 @@ It contains programs for building BDDs, for computing probabilities and for perf
  * one(++Environment:int,--One:int) is det
  *
  * Returns in One a pointer to a BDD belonging to environment Environment
- * representing the one Boolean function
+ * representing the one Boolean function.
  */
 
 /**
  * zero(++Environment:int,--Zero:int) is det
  *
  * Returns in Zero a pointer to a BDD belonging to environment Environment
- * representing the zero Boolean function
+ * representing the zero Boolean function.
  */
 
 /**
  * and(++Environment:int,++A:int,++B:int,--AandB:int) is det
  *
  * Returns in AandB a pointer to a BDD belonging to environment Environment
- * representing the conjunction of BDDs A and B
+ * representing the conjunction of BDDs A and B.
  */
 
 /**
  * or(++Environment:int,++A:int,++B:int,--AorB:int) is det
  *
  * Returns in AorB a pointer to a BDD belonging to environment Environment
- * representing the disjunction of BDDs A and B
+ * representing the disjunction of BDDs A and B.
  */
 
 /**
  * ret_prob(++Environment:int,++BDD:int,-Probability:float) is det
  *
- * Returns the Probability of BDD belonging to environment Environment
+ * Returns the Probability of BDD belonging to environment Environment.
+ */
+
+/**
+ * ret_map_prob(++Environment:int,++BDD:int,-Probability:float,-MAPState:list) is det
+ *
+ * Returns the MAP state MPAState of BDD and its Probability.
+ * BDD belongs to environment Environment.
+ */
+
+/**
+ * ret_abd_prob(++Environment:int,++BDD:int,-Probability:float,-Explanation:list) is det
+ *
+ * Returns the abductive Explanation of BDD and its Probability.
+ * BDD belongs to environment Environment.
+ */
+
+/**
+ * ret_vit_prob(++Environment:int,++BDD:int,-Probability:float,-MPEState:list) is det
+ *
+ * Returns the MPE (Viterbi) state MPEState of BDD and its Probability.
+ * BDD belongs to environment Environment.
  */
 
 /**
  * bdd_not(++Environment:int,++A:int,--NotA:int) is det
  *
  * Returns in NotA a pointer to a BDD belonging to environment Environment
- * representing the negation of BDD A
+ * representing the negation of BDD A.
  */
 
 /**
@@ -157,7 +178,30 @@ It contains programs for building BDDs, for computing probabilities and for perf
  * add_var(++Environment:int,++ProbabilityDistribution:list, ++Rule:int,-Variable:int) is det.
  *
  * Returns in Variable the index of a new random variable in Environment with
- * NumberOHeads values and probability distribution ProbabilityDistribution
+ * NumberOHeads values and probability distribution ProbabilityDistribution.
+ */
+
+/**
+ * add_abd_var(++Environment:int,++ProbabilityDistribution:list, ++Rule:int,-Variable:int) is det.
+ *
+ * Returns in Variable the index of a new abducible random variable in Environment with
+ * NumberOHeads values and probability distribution ProbabilityDistribution.
+ */
+
+/**
+ * add_query_var(++Environment:int,++ProbabilityDistribution:list, ++Rule:int,-Variable:int) is det.
+ *
+ * Returns in Variable the index of a new random variable to be queried in MAP inference with
+ * NumberOHeads values and probability distribution ProbabilityDistribution.
+ * The variable belongs to Environment. 
+ */
+
+/**
+ * make_query_var(++Environment:int,+Variable:int,--BDD:int) is det.
+ *
+ * Makes Variable belonging to Environment a query random variable for MAP inference.
+ * Returns in BDD the diagram of the formula encoding the required constraints among the
+ * Boolean random variable that represent Variable. 
  */
 
 /**
@@ -170,12 +214,12 @@ It contains programs for building BDDs, for computing probabilities and for perf
  * create_dot(++Env:int,++BDD:int,++File:string) is det
  *
  * The predicate writes the BDD in dot format to
- * to file FileName
+ * to file FileName.
  */
 
 /**
  * rand_seed(+Seed:int) is det
  *
  * The pseudo-random number generator is initialized using the argument passed as Seed.
- * It calls the C function srand
+ * It calls the C function srand.
  */
