@@ -4875,7 +4875,7 @@ copy_theory_eval_inner((H:-B),Program):-
     numbervars((Head:-Body),0,_),
 	add_lit_to_program(Body,Program).
 copy_theory_eval_inner((Lit),Program):- 
-	$trace,
+	trace,
 	!,
 	copy_term(Lit,Lit1),
     numbervars(Lit1,0,_),
