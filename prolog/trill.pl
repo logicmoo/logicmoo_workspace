@@ -61,6 +61,8 @@ details.
 :- use_module(library(pengines)).
 :- use_module(library(sandbox)).
 
+:- reexport(library(bddem)).
+
 :- style_check(-discontiguous).
 
 
