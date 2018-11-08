@@ -59,7 +59,7 @@ details.
 :- use_module(library(pengines)).
 :- use_module(library(sandbox)).
 
-:- use_foreign_library(foreign(bddem),install).
+:- reexport(library(bddem)).
 
 :- style_check(-discontiguous).
 
