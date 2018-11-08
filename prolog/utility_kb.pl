@@ -39,7 +39,7 @@ create_hierarchy(M):-
 %  utility_kb:hierarchy_int(M).
 %
 %hierarchy_int(M):-
-create_hierarchy(M,Stats):-gtrace,
+create_hierarchy(M,Stats):-
   (Stats=false -> true ;
      ( format("Loading the knowledge base...~n",[]),
        statistics(walltime,[_,_])
