@@ -191,8 +191,8 @@ start_bdd(M,Env):-
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
-  findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
-  get_bdd_environment(M,NV,Env).
+  %findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
+  get_bdd_environment(M,Env).
 
 build_abox_int(M,(ABox,Tabs)):-
   start_bdd(M,Env),
@@ -352,18 +352,18 @@ test(M,L1,L2,F):-
 
 ***********************/
 
-get_bdd_environment(M,_NV,Env):- 
+get_bdd_environment(M,Env):- 
   M:tornado_bdd_environment(Env),!.
 
-get_bdd_environment(M,NV,Env):-
-  init_test(NV,Env),
+get_bdd_environment(M,Env):-
+  init(Env),
   M:assert(tornado_bdd_environment(Env)).
 
 get_bdd_environment(M,Env):-
   M:tornado_bdd_environment(Env),!.
 
 clean_environment(M,Env):-
-  end_test(Env),
+  end(Env),
   retractall(M:tornado_bdd_environment(_)).
 
 build_bdd(_,Env,[],BDD):- !,

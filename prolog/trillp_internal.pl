@@ -675,11 +675,11 @@ bool_op(~(_)):-!.
 
 ***********************/
 
-get_bdd_environment(_M,NV,Env):-
-  init_test(NV,Env).
+get_bdd_environment(_M,Env):-
+  init(Env).
 
 clean_environment(_M,Env):-
-  end_test(Env).
+  end(Env).
 
 build_bdd(_M,Env,[],BDD):-
   zero(Env,BDD).

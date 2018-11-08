@@ -495,11 +495,11 @@ hier_ax2ex(_M,Ax,[[Ax]]):- !.
 
 ***********************/
 
-get_bdd_environment(_M,NV,Env):-
-  init_test(NV,Env).
+get_bdd_environment(_M,Env):-
+  init(Env).
 
 clean_environment(_M,Env):-
-  end_test(Env).
+  end(Env).
 
 
 build_bdd(M,Env,[X],BDD):- !,
