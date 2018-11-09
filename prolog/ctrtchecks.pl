@@ -301,20 +301,22 @@ check_asr_props(T, Asr, Cond, PType, PropValues) :-
     term_variables(Pred, VU),
     sort(VU, VS),
     findall(NAsr-PropValue,
-            ( ( type_cond_part_check_mult(Cond, PType, Part, Check, Mult),
-                asr_aprop(NAsr, Part, Prop, From)
-              *->
-                valid_prop(T, Prop), % if not valid, ignore property
-                \+ check_prop(Check, VS, Prop),
-                last_prop_failure(L),
-                (Mult = once -> ! ; true),
-                CheckProp =.. [Check, Prop],
-                PropValue = (From/CheckProp-L)
-              ; PropValue = [] % Skip property
-              )
-            ),
+            current_asr_prop_value(VS, T, Cond, PType, NAsr, PropValue),
             AsrPropValues),
     maplist([Asr] +\ (Asr-PV)^PV^true, AsrPropValues, PropValues).
+
+current_asr_prop_value(VS, T, Cond, PType, NAsr, PropValue) :-
+    ( type_cond_part_check_mult(Cond, PType, Part, Check, Mult),
+      asr_aprop(NAsr, Part, Prop, From)
+    *->
+      valid_prop(T, Prop), % if not valid, ignore property
+      \+ check_prop(Check, VS, Prop),
+      last_prop_failure(L),
+      (Mult = once -> ! ; true),
+      CheckProp =.. [Check, Prop],
+      PropValue = (From/CheckProp-L)
+    ; PropValue = [] % Skip property
+    ).
 
 check_prop(compat, VS, Prop) :- compat(Prop, VS).
 check_prop(instan, VS, Prop) :- instan(Prop, VS).
