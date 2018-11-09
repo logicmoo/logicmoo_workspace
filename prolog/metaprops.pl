@@ -38,6 +38,7 @@
                       last_prop_failure/1]).
 
 :- use_module(library(assertions)).
+:- use_module(library(resolve_calln)).
 :- use_module(library(qualify_meta_goal)).
 
 :- true prop (type)/1 + (declaration(check), global(prop)) # "Defines a type.".
@@ -139,8 +140,13 @@ compat(M:Goal, VarL) :-
 % this small interpreter will reduce the possibility of loops if the goal being
 % checked is not linear, i.e., if it contains linked variables:
 compat(Var, _, _) :- var(Var), !.
-compat(M:Goal, D, _) :- !,
+compat(M:Goal, D, _) :-
+    !,
     compat(Goal, D, M).
+compat(A, D, M) :-
+    do_resolve_calln(A, B),
+    !,
+    compat(B, D, M).
 compat((A, B), D, M) :-
     !,
     compat(A, D, M),
@@ -185,7 +191,7 @@ compat_1((A; B), D, M) :-
     ),
     !.
 compat_1(A, D, M) :-
-    ( is_type(A, M)
+    ( is_prop(A, M)
     ->catch(compat_body(M:A, D),
             _,
             do_compat(M:A, D))
@@ -197,12 +203,18 @@ do_compat(Goal, data(VarL, _, _)) :-
     term_variables(VarL, VS),
     prolog_current_choice(CP),
     maplist(freeze_cut(CP), VS),
-    Goal.
+    Goal,
+    maplist(del_freeze, VS).
 
-is_type(Head, M) :-
-    prop_asr(Head, M, Stat, prop, _, _, Asr),
-    memberchk(Stat, [check, true]),
-    prop_asr(glob, type(_), _, Asr).
+del_freeze(Var) :-
+    ( attvar(Var)
+    ->del_attr(Var, freeze)
+    ; true
+    ).
+
+is_prop(Head, M) :-
+    prop_asr(Head, M, Stat, prop, _, _, _),
+    memberchk(Stat, [check, true]).
 
 :- meta_predicate compat_body(0, +).
 
