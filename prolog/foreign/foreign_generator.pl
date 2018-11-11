@@ -92,27 +92,31 @@ command_to_atom(Command, Args, Atom) :-
 fortran_command(M, path(gfortran), ValueL, ValueT) :-
     command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
     atomic_list_concat(AtomL, ';\n', Atom),
-    findall(Value, ( ( member(NameValue, AtomL),
-                       member(NameEq, ['PLCFLAGS="', 'PLLDFLAGS="']),
-                       atomics_atom([NameEq, Values, '"'], NameValue)
-                     ; extra_compiler_opts(M, Values)
-                     ),
-                     atomic_args(Values, ValueL1),
-                     member(Value, ValueL1)
-                   ),
+    findall(Value,
+            ( ( member(NameValue, AtomL),
+                member(NameEq, ['PLCFLAGS="', 'PLLDFLAGS="']),
+                atomics_atom([NameEq, Values, '"'], NameValue)
+              ; extra_compiler_opts(M, Values)
+              ),
+              atomic_args(Values, ValueL1),
+              member(Value, ValueL1)
+            ),
             ValueL, ValueT).
 
-intermediate_obj(M, DirSO, Source, Object) -->
-    {intermediate_obj(M, DirSO, Source, Object, Command)}, !,
+intermediate_obj(M, DirSO, LibL, Source, Object) -->
+    { intermediate_obj_fortran(M, DirSO, Source, Object, Command),
+      memberchk(gfortran, LibL)
+    },
+    !,
     [Command].
-intermediate_obj(_, _, Source, Source) --> [].
+intermediate_obj(_, _, _, Source, Source) --> [].
 
-intermediate_obj(M, DirSO, Source, Object, Fortran-Args) :-
+intermediate_obj_fortran(M, DirSO, Source, Object, Fortran-Args) :-
     file_name_extension(Base, for, Source),
     file_base_name(Base, Name),
     file_name_extension(Name, o, NameO),
     directory_file_path(DirSO, NameO, Object),
-    fortran_command(M, Fortran, Args, ['-c', Source, '-o', Object]).
+    fortran_command(M, Fortran, Args, ['-fPIC', '-c', Source, '-o', Object]).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -192,9 +196,12 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
     atom_concat(BaseFile, '_intf.c', IntfFile),
-    foldl(intermediate_obj(M, DirSO), FSourceL, FTargetL, Commands, CommandsT),
+    foldl(intermediate_obj(M, DirSO, LibL), FSourceL, FTargetL, Commands, CommandsT),
+    once(append(LibL, [], _)),
     append(FTargetL, [IntfFile|CLibL], FArgsT),
-    findall(CLib, ( link_foreign_library(M, Lib),
+    findall(CLib, ( ( link_foreign_library(M, Lib)
+                    ; member(Lib, LibL)
+                    ),
                     atom_concat('-l', Lib, CLib)
                   ; pkg_foreign_config(M, Package),
                     command_to_atom('pkg-config', ['--libs', Package], CLib1),
@@ -224,7 +231,7 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
                     atom_concat('-L', Dir, LDir)
                   ),
             LDirL, FArgsT),
-    CommandsT = [path('swipl-ld')-['-shared'|COptL]],
+    CommandsT = [path('swipl-ld')-['-shared', '-fPIC'|COptL]],
     forall(member(Command-ArgL, Commands),
            compile_1(Command, ArgL)).
 
