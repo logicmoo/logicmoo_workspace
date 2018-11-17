@@ -157,10 +157,16 @@ assert_declaration_one(Declaration, _, M:PI,
     !,
     assert_declaration_one(Declaration, M, PI, Pos).
 assert_declaration_one(Declaration, M, F/A, Pos) -->
+    { atom(F),
+      integer(A)
+    },
     !,
     {functor(H, F, A)},
     assert_position(H, M, Declaration, Pos).
 assert_declaration_one(Declaration, M, F//A1, Pos) -->
+    { atom(F),
+      integer(A1)
+    },
     !,
     { A is A1+2,
       functor(H, F, A)
