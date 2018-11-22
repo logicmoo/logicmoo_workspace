@@ -15,6 +15,8 @@ test_bddem:-
 v1_0(Env,R,BDD):-
   add_var(Env,[0.4,0.6],R,V),equality(Env,V,0,BDD).
 
+v2_0(Env,R,Val,BDD):-
+  add_var(Env,[0.4,0.3,0.3],R,V),equality(Env,V,Val,BDD).
 
 :- begin_tests(prob, []).
 
@@ -103,6 +105,35 @@ test(one_dir):-
   end_em(Cont),
   abs(LL)<  1e-3.
 
+test(one_dir1):-
+  init_em(Cont),
+  ex1(Cont,BDD1),
+  ex1(Cont,BDD2),
+  ex2(Cont,BDD3),
+  ex3(Cont,BDD4),
+  ex4(Cont,BDD5),
+  initial_values(Cont,1.0),
+  em(Cont,[2,2,3],[[BDD1,1.0],[BDD2,1.0],[BDD3,1.0],[BDD4,1.0],[BDD5,1.0]],0.0001,0.001,100,LL,Par,ExP),
+  writeln(LL),
+  writeln(Par),
+  writeln(ExP),
+  end_em(Cont),
+  abs(LL)<  1e-3.
+
+ex3(Cont,BDD):-
+  init_ex(Cont,Env),
+  v2_0(Env,2,1,B00),
+  v2_0(Env,2,2,B1),
+  bdd_not(Env,B00,B0),
+  or(Env,B0,B1,BDD),
+  end_ex(Cont).
+
+ex4(Cont,BDD):-
+  init_ex(Cont,Env),
+  v2_0(Env,2,0,B0),
+  v2_0(Env,2,2,B1),
+  or(Env,B0,B1,BDD),
+  end_ex(Cont).
 :- end_tests(em).
 
 :- begin_tests(sampling, []).
