@@ -184,6 +184,204 @@ term_t abd_clist_to_pllist(explan_t *mpa);
 term_t vit_clist_to_pllist(explan_t *mpa, environment * env);
 
 
+double uniform_sample();
+double gauss_sample(double mean,double var);
+double gamma_sample(double shape, double scale);
+double gamma_sample_gt1(double shape);
+void dirichlet_sample(double * alpha,int K, double * theta);
+
+static foreign_t gamma_sample_pl(term_t arg1,term_t arg2,term_t arg3);
+static foreign_t gauss_sample_pl(term_t arg1,term_t arg2,term_t arg3);
+static foreign_t uniform_sample_pl(term_t arg1);
+static foreign_t dirichlet_sample_pl(term_t arg1,term_t arg2);
+static foreign_t discrete_sample_pl(term_t arg1,term_t arg2);
+
+static foreign_t uniform_sample_pl(term_t arg1)
+{
+  double sample;
+  int ret;
+  term_t out;
+
+  sample=uniform_sample();
+  out=PL_new_term_ref();
+  ret=PL_put_float(out,sample);
+  RETURN_IF_FAIL
+  return PL_unify(out,arg1);
+}
+double uniform_sample()
+{
+  return ((double)rand())/RAND_MAX;
+}
+
+static foreign_t gauss_sample_pl(term_t arg1,term_t arg2,term_t arg3)
+{
+  double mean, var, sample;
+  int ret;
+  term_t out;
+
+  ret=PL_get_float(arg1,&mean);
+  RETURN_IF_FAIL
+  ret=PL_get_float(arg2,&var);
+  RETURN_IF_FAIL
+  sample=gauss_sample(mean,var);
+  out=PL_new_term_ref();
+  ret=PL_put_float(out,sample);
+  RETURN_IF_FAIL
+  return PL_unify(out,arg3);
+}
+
+double gauss_sample(double mean,double var)
+{
+  double u1,u2,r,theta,s; 
+
+  u1= uniform_sample();
+  u2= uniform_sample();
+  r= sqrt(-2*log(u1));
+  theta=2*M_PI*u2;
+  s=r*cos(theta);
+  return sqrt(var)*s+mean;
+}
+static foreign_t gamma_sample_pl(term_t arg1,term_t arg2,term_t arg3)
+{
+  double shape, scale, sample;
+  int ret;
+  term_t out;
+
+  ret=PL_get_float(arg1,&shape);
+  RETURN_IF_FAIL
+  ret=PL_get_float(arg2,&scale);
+  RETURN_IF_FAIL
+  sample=gamma_sample(shape,scale);
+  out=PL_new_term_ref();
+  ret=PL_put_float(out,sample);
+  RETURN_IF_FAIL
+  return PL_unify(out,arg3);
+}
+double gamma_sample(double shape, double scale)
+{
+  double u,s;
+  if (shape>=1)
+    return gamma_sample_gt1(shape)*scale;
+  else
+  {
+    u=uniform_sample();
+    s=gamma_sample_gt1(shape+1);
+    return pow(s*u,1/shape)*scale;
+  }
+}
+double gamma_sample_gt1(double shape)
+{
+  double c,d,x,v,u;
+
+  d=shape-1.0/3.0;
+  c =1.0/sqrt(9.0*d);
+
+  do
+  {
+    do
+    {
+      x=gauss_sample(0.0,1.0);
+      v=pow(1+c*x,3);
+    } while (v<=0);
+    u=uniform_sample();
+  } while (u>=1-0.0331*pow(x,4) && log(u)>=0.5*pow(x,2)+d*(1-v+log(v)));
+  return d*v;
+}
+
+static foreign_t dirichlet_sample_pl(term_t arg1,term_t arg2)
+{
+  double * alpha, * sample;
+
+  int ret, i;
+  size_t K;
+  term_t out,alphaterm, head;
+
+
+  head=PL_new_term_ref();
+  out=PL_new_term_ref();
+  alphaterm=PL_copy_term_ref(arg1);
+  ret=PL_skip_list(alphaterm,0,&K);
+  if (ret!=PL_LIST) return FALSE;
+  alpha=malloc(sizeof(double)*K);
+  sample=malloc(sizeof(double)*K);
+
+  for (i=0;i<K;i++)
+  {
+    ret=PL_get_list(alphaterm,head,alphaterm);
+    RETURN_IF_FAIL
+    ret=PL_get_float(head,&alpha[i]);
+    RETURN_IF_FAIL
+  }
+  dirichlet_sample(alpha,K,sample);
+  ret=PL_put_nil(out);
+  RETURN_IF_FAIL
+  for (i=0;i<K;i++)
+  {
+    ret=PL_put_float(head,sample[i]);
+    RETURN_IF_FAIL
+    ret=PL_cons_list(out,head,out);
+    RETURN_IF_FAIL
+  }
+  return PL_unify(out,arg2);
+
+}
+static foreign_t discrete_sample_pl(term_t arg1,term_t arg2)
+{
+  double * theta;
+  double u, p;
+
+  int ret, i;
+  size_t K;
+  term_t out,thetaterm, head;
+
+
+  head=PL_new_term_ref();
+  out=PL_new_term_ref();
+  thetaterm=PL_copy_term_ref(arg1);
+  ret=PL_skip_list(thetaterm,0,&K);
+  if (ret!=PL_LIST) return FALSE;
+  theta=malloc(sizeof(double)*K);
+
+  for (i=0;i<K;i++)
+  {
+    ret=PL_get_list(thetaterm,head,thetaterm);
+    RETURN_IF_FAIL
+    ret=PL_get_float(head,&theta[i]);    
+    RETURN_IF_FAIL
+  }
+  u=uniform_sample();
+  i=0;
+  p=theta[0];
+  while (u>p && i<K)
+  {
+    i++;
+    p=p+theta[i];
+  }
+  ret=PL_put_integer(out,i);
+  RETURN_IF_FAIL
+  free(theta);
+  return PL_unify(out,arg2);
+}
+
+void dirichlet_sample(double * alpha,int K, double * theta)
+{
+  int i;
+  double sum;
+  double * gamma;
+
+  gamma=malloc(sizeof(double)*K);
+
+  sum=0.0;
+  for (i=0;i<K;i++)
+  {
+    gamma[i]=gamma_sample(alpha[i],1.0);
+    sum=sum+gamma[i];
+  }
+  for (i=0;i<K;i++)
+    theta[i]=gamma[i]/sum;
+  free(gamma);
+}
+
 static foreign_t init_em(term_t arg1)
 {
   int ret;
@@ -2084,7 +2282,7 @@ static foreign_t init_par(example_data * ex_d, term_t ruleHeadsArg)
       {
         eta[j][i]=(double *) malloc(2*sizeof(double));
         eta_temp[j][i]=(double *) malloc(2*sizeof(double));
-        par=((double)rand())/RAND_MAX*(1-pmass);
+        par=uniform_sample()*(1-pmass);
         pmass=pmass+par;
         theta[i]=par;
         ex_d->arrayprob[j][i]=par;
@@ -2347,6 +2545,11 @@ install_t install()
   PL_register_foreign("make_query_var",3,make_query_var,0);
   PL_register_foreign("em",9,EM,0);
   PL_register_foreign("rand_seed",1,rand_seed,0);
+  PL_register_foreign("gamma_sample",3,gamma_sample_pl,0);
+  PL_register_foreign("gauss_sample",3,gauss_sample_pl,0);
+  PL_register_foreign("uniform_sample",1,uniform_sample_pl,0);
+  PL_register_foreign("dirichlet_sample",2,dirichlet_sample_pl,0);
+  PL_register_foreign("discrete_sample",2,discrete_sample_pl,0);
 //  PL_register_foreign("deref",1,rec_deref,0);
 //  PL_register_foreign("garbage_collect",2,garbage_collect,0);
 //  PL_register_foreign("bdd_to_add",2,bdd_to_add,0);

@@ -10,7 +10,12 @@
   or_list/3,
   or_listc/3,
   make_query_var/3,create_dot/3,create_dot_string/3,
-  em/9,rand_seed/1
+  em/9,rand_seed/1,
+  gamma_sample/3,
+  gauss_sample/3,
+  uniform_sample/1,
+  dirichlet_sample/2,
+  discrete_sample/2
     ]).
 /** <module> bddem
 
@@ -342,3 +347,36 @@ or_listc1([],_Env,B,B).
 or_listc1([H|T],Env,B0,B1):-
   orc(B0,H,B2),
   or_listc1(T,Env,B2,B1).
+
+/**
+ * gamma_sample(++Shape:float,++Scale:float,--Value:float) is det
+ *
+ * Returns a Value sampled from a gamma distribution with parameters Shape and Scale
+ */
+
+/**
+ * gauss_sample(++Mean:float,++Variance:float,--Value:float) is det
+ *
+ * Returns a Value sampled from a Gaussian distribution with parameters Mean and Variance
+ */
+
+/**
+ * uniform_sample(--Value:float) is det
+ *
+ * Returns a Value sampled from a uniform distribution in [0,1]
+ */
+
+/**
+ * dirichlet_sample(++Alpha:list,--Value:list) is det
+ *
+ * Returns a Value sampled from a Dirichlet distribution with parameters Alpha.
+ * Alpha and Value are lists of floating point numbers of the same length.
+ */
+
+/**
+ * discrete_sample(++Theta:list,--Value:int) is det
+ *
+ * Returns a Value sampled from a discrete distribution with parameters Theta.
+ * Theta is a list of floating point numbers in [0,1] that sum to 1.
+ * Value is in 0..(length(Theta)-1)
+ */

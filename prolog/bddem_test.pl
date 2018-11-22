@@ -7,7 +7,8 @@
 
 test_bddem:-
     run_tests([
-    prob,em
+    prob,em,
+    sampling
     ]).
 
 
@@ -91,4 +92,109 @@ ex2(Cont,BDD):-
 
 
 
-:- end_tests(em).
+
+
+:- begin_tests(sampling, []).
+
+:-ensure_loaded(library(bddem)).
+:- use_module(library(apply)).
+relatively_close_to(V,T,E):-
+	TLow is T*(1-E),
+	THigh is T*(1+E),
+	TLow=<V,
+	V=<THigh.
+
+close_to(V,T):-
+	epsilon(E),
+	TLow is T-E,
+	THigh is T+E,
+	TLow=<V,
+	V=<THigh.
+
+
+average([H|T],Av):-
+  sum_list([H|T],Sum),
+  length([H|T],N),
+  Av is Sum/N.
+
+variance(L,Av,Var):-
+  average(L,Av),
+  maplist(sq_diff(Av),L,LS), 
+  average(LS,Var).
+
+std_dev(L,Av,Dev):-
+  variance(L,Av,Var),
+  root(Var,Dev).
+
+root(Var,Dev):-
+  Dev is sqrt(Var).
+
+sq_diff(Av,A,S):-
+  S is (A-Av)^2.
+
+is0(0).
+
+is1(1).
+
+is2(2).
+
+is3(3).
+
+test(gamma):-
+  findall(S,(between(1,10000,_),gamma_sample(1,2,S)),V),
+  variance(V,M,Var),
+  writeln(mean(M)),
+  writeln(var(Var)),
+  relatively_close_to(M,1*2,0.2),
+  relatively_close_to(Var,1*2*2,0.2).
+
+test(gauss):-
+  findall(S,(between(1,10000,_),gauss_sample(1,2,S)),V),
+  variance(V,M,Var),
+  writeln(mean(M)),
+  writeln(var(Var)),
+  relatively_close_to(M,1,0.1),
+  relatively_close_to(Var,2,0.1).
+
+
+test(uniform):-
+  findall(S,(between(1,10000,_),uniform_sample(S)),V),
+  variance(V,M,Var),
+  writeln(mean(M)),
+  writeln(var(Var)),
+  relatively_close_to(M,0.5,0.1),
+  relatively_close_to(Var,1/12,0.1).
+
+test(dirichlet):-
+  findall(S,(between(1,10000,_),dirichlet_sample([1,1,1],S)),_V).
+
+test(dirichlet1):-
+  findall(S,(between(1,10000,_),dirichlet_sample([1,1,1,1],D),discrete_sample(D,S)),V),
+  check_sample(V).
+
+test(dirichlet2):-
+  findall(S,(between(1,10000,_),dirichlet_sample([2,2,2,2],D),discrete_sample(D,S)),V),
+  check_sample(V).
+
+test(discrete):-
+  findall(S,(between(1,10000,_),discrete_sample([0.25,0.25,0.25,0.25],S)),V),
+  check_sample(V).
+
+check_sample(V):-
+  partition(is0,V,L0,_),
+  partition(is1,V,L1,_),
+  partition(is2,V,L2,_),
+  partition(is3,V,L3,_),
+  length(L0,N0),
+  length(L1,N1),
+  length(L2,N2),
+  length(L3,N3),
+  writeln(N0),
+  writeln(N1),
+  writeln(N2),
+  writeln(N3),
+  relatively_close_to(N0,2500,0.1),
+  relatively_close_to(N1,2500,0.1),
+  relatively_close_to(N2,2500,0.1),
+  relatively_close_to(N3,2500,0.1).
+:- end_tests(sampling).
