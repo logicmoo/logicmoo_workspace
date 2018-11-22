@@ -15,7 +15,9 @@
   gauss_sample/3,
   uniform_sample/1,
   dirichlet_sample/2,
-  discrete_sample/2
+  symmetric_dirichlet_sample/3,
+  discrete_sample/2,
+  initial_values/2
     ]).
 /** <module> bddem
 
@@ -309,6 +311,14 @@ equalityc(Env,V,N,(Env,B)):-
 ret_probc(Env,(_,BDD),P):-
   ret_prob(Env,BDD,P).
 
+/**
+ * initial_values(++Environment:int,++Alpha:float) is det
+ *
+ * Sets the type of parameter initialization for EM on Environment:
+ * if Alpha is 0.0, it uses a truncated Dirichlet process
+ * if Alpha is a float > 0.0, it uses a symmetric Dirichlet distribution
+ * with that value as parameter
+ */
 
 /**
  * or_list(++ListOfBDDs:list,++Environment,--BDD:int) is det
@@ -374,9 +384,16 @@ or_listc1([H|T],Env,B0,B1):-
  */
 
 /**
+ * symmetric_dirichlet_sample(++Alpha:float,++K:int,--Value:list) is det
+ *
+ * Returns a Value sampled from a symmetric Dirichlet distribution with parameter Alpha.
+ * K is the number of dimensions of the result.
+ */
+/**
  * discrete_sample(++Theta:list,--Value:int) is det
  *
  * Returns a Value sampled from a discrete distribution with parameters Theta.
  * Theta is a list of floating point numbers in [0,1] that sum to 1.
  * Value is in 0..(length(Theta)-1)
  */
+

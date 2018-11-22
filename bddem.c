@@ -80,6 +80,9 @@ typedef struct
   tablerow * nodesFE; // tables of probabilities for nodes in Forward step
   tablerow * nodesFO; // tables of probabilities for nodes in Forward step
   double * example_prob; // probability (frequency) of examples in the data
+  double alpha; // type of parameter initialization in EM: 
+                // 0 for truncated Dirichlet process
+                // >0 for symmetric Dirichlet distribution with values alpha
 } example_data;
 
 typedef struct
@@ -189,12 +192,15 @@ double gauss_sample(double mean,double var);
 double gamma_sample(double shape, double scale);
 double gamma_sample_gt1(double shape);
 void dirichlet_sample(double * alpha,int K, double * theta);
+void symmetric_dirichlet_sample(double alpha,int K, double * theta);
 
 static foreign_t gamma_sample_pl(term_t arg1,term_t arg2,term_t arg3);
 static foreign_t gauss_sample_pl(term_t arg1,term_t arg2,term_t arg3);
 static foreign_t uniform_sample_pl(term_t arg1);
 static foreign_t dirichlet_sample_pl(term_t arg1,term_t arg2);
+static foreign_t symmetric_dirichlet_sample_pl(term_t arg1,term_t arg2, term_t arg3);
 static foreign_t discrete_sample_pl(term_t arg1,term_t arg2);
+static foreign_t initial_values_pl(term_t arg1, term_t arg2);
 
 static foreign_t uniform_sample_pl(term_t arg1)
 {
@@ -287,7 +293,36 @@ double gamma_sample_gt1(double shape)
   } while (u>=1-0.0331*pow(x,4) && log(u)>=0.5*pow(x,2)+d*(1-v+log(v)));
   return d*v;
 }
+static foreign_t symmetric_dirichlet_sample_pl(term_t arg1,term_t arg2, term_t arg3)
+{
+  double  alpha, * sample;
 
+  int ret, i, K;
+  term_t out, head;
+
+  head=PL_new_term_ref();
+  out=PL_new_term_ref();
+
+  ret=PL_get_integer(arg2,&K);
+  RETURN_IF_FAIL
+  sample=malloc(sizeof(double)*K);
+
+  ret=PL_get_float(arg1,&alpha);
+  RETURN_IF_FAIL
+  symmetric_dirichlet_sample(alpha,K,sample);
+
+  ret=PL_put_nil(out);
+  RETURN_IF_FAIL
+  for (i=0;i<K;i++)
+  {
+    ret=PL_put_float(head,sample[i]);
+    RETURN_IF_FAIL
+    ret=PL_cons_list(out,head,out);
+    RETURN_IF_FAIL
+  }
+  return PL_unify(out,arg3);
+
+}
 static foreign_t dirichlet_sample_pl(term_t arg1,term_t arg2)
 {
   double * alpha, * sample;
@@ -362,6 +397,18 @@ static foreign_t discrete_sample_pl(term_t arg1,term_t arg2)
   free(theta);
   return PL_unify(out,arg2);
 }
+void symmetric_dirichlet_sample(double alpha,int K, double * theta)
+{
+  int i;
+  double * alphas;
+
+  alphas=malloc(sizeof(double)*K);
+
+  for (i=0;i<K;i++)
+    alphas[i]=alpha;
+  dirichlet_sample(alphas,K,theta);
+  free(alphas);
+}
 
 void dirichlet_sample(double * alpha,int K, double * theta)
 {
@@ -399,6 +446,7 @@ static foreign_t init_em(term_t arg1)
   ex_d->nodes_probs=NULL;
   ex_d->tunable_rules=NULL;
   ex_d->arrayprob=NULL;
+  ex_d->alpha=0.0;
 
   ret=PL_put_pointer(ex_d_t,(void *)ex_d);
   RETURN_IF_FAIL
@@ -406,6 +454,18 @@ static foreign_t init_em(term_t arg1)
 
 }
 
+static foreign_t initial_values_pl(term_t arg1, term_t arg2)
+{
+  example_data * ex_d;
+
+  int ret;
+
+  ret=PL_get_pointer(arg1,(void **)&ex_d);
+  RETURN_IF_FAIL
+  ret=PL_get_float(arg1,&(ex_d->alpha));
+  RETURN_IF_FAIL
+  PL_succeed;
+}
 static foreign_t init_ex(term_t arg1, term_t arg2)
 {
   example_data * ex_d;
@@ -2278,17 +2338,29 @@ static foreign_t init_par(example_data * ex_d, term_t ruleHeadsArg)
       
       eta[j]= (double **) malloc((nHeads-1)*sizeof(double *));
       eta_temp[j]= (double **) malloc((nHeads-1)*sizeof(double *));
+      tun_rules[j]=1;
       for (i=0;i<rules[j]-1;i++)
       {
         eta[j][i]=(double *) malloc(2*sizeof(double));
         eta_temp[j][i]=(double *) malloc(2*sizeof(double));
-        par=uniform_sample()*(1-pmass);
-        pmass=pmass+par;
-        theta[i]=par;
-        ex_d->arrayprob[j][i]=par;
       }
-      tun_rules[j]=1;
-      theta[nHeads-1]=1-pmass;
+      if (ex_d->alpha==0.0)
+      {
+        for (i=0;i<rules[j]-1;i++)
+        {
+          par=uniform_sample()*(1-pmass);
+          pmass=pmass+par;
+          theta[i]=par;
+          ex_d->arrayprob[j][i]=par;
+        }
+        theta[nHeads-1]=1-pmass;
+      }
+      else
+      {
+        symmetric_dirichlet_sample(ex_d->alpha,rules[j],theta);
+        for (i=0;i<rules[j]-1;i++)
+          ex_d->arrayprob[j][i]=theta[i];
+      }
     }
   }
 
@@ -2515,48 +2587,7 @@ static int dag_size(void)
   return(YAP_Unify(out,arg2));
 }
 */
-install_t install()
-/* function required by YAP for intitializing the predicates defined by a C function*/
-{
-  srand(10);
 
-  PL_register_foreign("init_em",1,init_em,0);
-  PL_register_foreign("init_ex",2,init_ex,0);
-  PL_register_foreign("end_em",1,end_em,0);
-  PL_register_foreign("end_ex",1,end_ex,0);
-  PL_register_foreign("add_var",4,add_var,0);
-  PL_register_foreign("add_query_var",4,add_query_var,0);
-  PL_register_foreign("add_abd_var",4,add_abd_var,0);
-  PL_register_foreign("equality",4,equality,0);
-  PL_register_foreign("and",4,and,0);
-  PL_register_foreign("one",2,one,0);
-  PL_register_foreign("zero",2,zero,0);
-  PL_register_foreign("or",4,or,0);
-  PL_register_foreign("bdd_not",3,bdd_not,0);
-  PL_register_foreign("create_dot",3,create_dot,0);
-  PL_register_foreign("create_dot_string",3,create_dot_string,0);
-  PL_register_foreign("init",1,init,0);
-  PL_register_foreign("end",1,end,0);
-  PL_register_foreign("ret_prob",3,ret_prob,0);
-  PL_register_foreign("ret_abd_prob",4,ret_abd_prob,0);
-  PL_register_foreign("ret_map_prob",4,ret_map_prob,0);
-  PL_register_foreign("ret_vit_prob",4,ret_vit_prob,0);
-  PL_register_foreign("reorder",1,reorder,0);
-  PL_register_foreign("make_query_var",3,make_query_var,0);
-  PL_register_foreign("em",9,EM,0);
-  PL_register_foreign("rand_seed",1,rand_seed,0);
-  PL_register_foreign("gamma_sample",3,gamma_sample_pl,0);
-  PL_register_foreign("gauss_sample",3,gauss_sample_pl,0);
-  PL_register_foreign("uniform_sample",1,uniform_sample_pl,0);
-  PL_register_foreign("dirichlet_sample",2,dirichlet_sample_pl,0);
-  PL_register_foreign("discrete_sample",2,discrete_sample_pl,0);
-//  PL_register_foreign("deref",1,rec_deref,0);
-//  PL_register_foreign("garbage_collect",2,garbage_collect,0);
-//  PL_register_foreign("bdd_to_add",2,bdd_to_add,0);
-//  PL_register_foreign("paths_to_non_zero",2,paths_to_non_zero,0);
-//  PL_register_foreign("paths",2,paths,0);
-//  PL_register_foreign("dag_size",2,dag_size,0);
-}
 FILE * open_file(char *filename, const char *mode)
 /* opens a file */
 {
@@ -2692,4 +2723,51 @@ void expl_destroy_table(expltablerow *tab,int varcnt)
     free(tab[i].row);
   }
   free(tab);
+}
+
+
+install_t install()
+/* function required by YAP for intitializing the predicates defined by a C function*/
+{
+  srand(10);
+
+  PL_register_foreign("init_em",1,init_em,0);
+  PL_register_foreign("init_ex",2,init_ex,0);
+  PL_register_foreign("end_em",1,end_em,0);
+  PL_register_foreign("end_ex",1,end_ex,0);
+  PL_register_foreign("add_var",4,add_var,0);
+  PL_register_foreign("add_query_var",4,add_query_var,0);
+  PL_register_foreign("add_abd_var",4,add_abd_var,0);
+  PL_register_foreign("equality",4,equality,0);
+  PL_register_foreign("and",4,and,0);
+  PL_register_foreign("one",2,one,0);
+  PL_register_foreign("zero",2,zero,0);
+  PL_register_foreign("or",4,or,0);
+  PL_register_foreign("bdd_not",3,bdd_not,0);
+  PL_register_foreign("create_dot",3,create_dot,0);
+  PL_register_foreign("create_dot_string",3,create_dot_string,0);
+  PL_register_foreign("init",1,init,0);
+  PL_register_foreign("end",1,end,0);
+  PL_register_foreign("ret_prob",3,ret_prob,0);
+  PL_register_foreign("ret_abd_prob",4,ret_abd_prob,0);
+  PL_register_foreign("ret_map_prob",4,ret_map_prob,0);
+  PL_register_foreign("ret_vit_prob",4,ret_vit_prob,0);
+  PL_register_foreign("reorder",1,reorder,0);
+  PL_register_foreign("make_query_var",3,make_query_var,0);
+  PL_register_foreign("em",9,EM,0);
+  PL_register_foreign("rand_seed",1,rand_seed,0);
+  PL_register_foreign("gamma_sample",3,gamma_sample_pl,0);
+  PL_register_foreign("gauss_sample",3,gauss_sample_pl,0);
+  PL_register_foreign("uniform_sample",1,uniform_sample_pl,0);
+  PL_register_foreign("dirichlet_sample",2,dirichlet_sample_pl,0);
+  PL_register_foreign("symmetric_dirichlet_sample",3,symmetric_dirichlet_sample_pl,0);
+  PL_register_foreign("discrete_sample",2,discrete_sample_pl,0);
+  PL_register_foreign("initial_values",2,initial_values_pl,0);
+
+//  PL_register_foreign("deref",1,rec_deref,0);
+//  PL_register_foreign("garbage_collect",2,garbage_collect,0);
+//  PL_register_foreign("bdd_to_add",2,bdd_to_add,0);
+//  PL_register_foreign("paths_to_non_zero",2,paths_to_non_zero,0);
+//  PL_register_foreign("paths",2,paths,0);
+//  PL_register_foreign("dag_size",2,dag_size,0);
 }

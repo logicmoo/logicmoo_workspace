@@ -90,9 +90,20 @@ ex2(Cont,BDD):-
   or(Env,B0,B1,BDD),
   end_ex(Cont).
 
+test(one_dir):-
+  init_em(Cont),
+  ex1(Cont,BDD1),
+  ex1(Cont,BDD2),
+  ex2(Cont,BDD3),
+  initial_values(Cont,1.0),
+  em(Cont,[2,2],[[BDD1,1.0],[BDD2,1.0],[BDD3,1.0]],0.0001,0.001,100,LL,Par,ExP),
+  writeln(LL),
+  writeln(Par),
+  writeln(ExP),
+  end_em(Cont),
+  abs(LL)<  1e-3.
 
-
-
+:- end_tests(em).
 
 :- begin_tests(sampling, []).
 
@@ -174,6 +185,14 @@ test(dirichlet1):-
 
 test(dirichlet2):-
   findall(S,(between(1,10000,_),dirichlet_sample([2,2,2,2],D),discrete_sample(D,S)),V),
+  check_sample(V).
+
+test(sdirichlet1):-
+  findall(S,(between(1,10000,_),symmetric_dirichlet_sample(1,4,D),discrete_sample(D,S)),V),
+  check_sample(V).
+
+test(sdirichlet2):-
+  findall(S,(between(1,10000,_),symmetric_dirichlet_sample(2,4,D),discrete_sample(D,S)),V),
   check_sample(V).
 
 test(discrete):-
