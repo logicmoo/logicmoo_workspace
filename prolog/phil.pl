@@ -36,6 +36,7 @@ using gradient descent and Backpropagation
   retract_all/1,assert_all/3,
   write2/2,write3/2,format2/3,format3/3,
   write_rules2/3,write_rules3/3,
+  %writefile/2,
   nl2/1,nl3/1,
  % forward/3,backward/4,write_net/3,write_eval_net/3,update_weights/3,update_weights_Adam/6,
   onec/1,zeroc/1,andc/3,ac_notc/2,
@@ -49,11 +50,12 @@ using gradient descent and Backpropagation
 :-use_module(library(terms)).
 :-use_module(library(rbtrees)).
 :-use_module(library(apply)).
+%:-use_module(library(lbfgs)).
 :-set_prolog_flag(unknown,warning).
 
 
-:-use_foreign_library(foreign(phil),install).
-
+%:-load_foreign_library(foreign(phil)).
+:-load_foreign_library(phil).
 
 
 :- dynamic getIndex/2.
@@ -100,7 +102,7 @@ default_setting_sc(tabling, off).
 /* on, off */
 default_setting_sc(bagof,false).
 /* values: false, intermediate, all, extra */
-default_setting_sc(depth_bound,true).  %if true, it limits the derivation of the example to the value of 'depth'
+default_setting_sc(depth_bound,false).  %if true, it limits the derivation of the example to the value of 'depth'
 default_setting_sc(depth,2).
 default_setting_sc(single_var,false). %false:1 variable for every grounding of a rule; true: 1 variable for rule (even if a rule has more groundings),simpler.
 default_setting_sc(prob_approx,false). %if true, it limits the number of different solutions found when computing the probability
@@ -118,13 +120,14 @@ default_setting_sc(max_initial_weight,0.0).
 default_setting_sc(adam_params,[0.001,0.9,0.999,1e-8]).
 default_setting_sc(batch_strategy,stoch_minibatch(100)).
 % allowed values: batch, minibatch(size), stoch_minibatch(size)
-default_setting_sc(algorithmType,"dphil").
+default_setting_sc(algorithmType,dphil).
 % allowed values: dphil, emphil
-default_setting_sc(statistics_folder,"Statisitics").
-default_setting_sc(saveStatistics,"no").
+default_setting_sc(statistics_folder,statisitics).
+default_setting_sc(saveStatistics,no).
 default_setting_sc(zero,0.000001).
-default_setting_sc(setSeed,"no").
-default_setting_sc(c_seed,3032).
+default_setting_sc(setSeed,no).
+default_setting_sc(useInitParams,no). % Default value=no
+default_setting_sc(c_seed,c_seed).
 
 
 /*
@@ -206,7 +209,7 @@ onec(and([one])).
 
 zeroc(and([zero])).
 
-andc(and(A),and(B),and(C)):-
+andc(and(A),and(B),and(C)):-!,
   ((A=[zero];B=[zero])->
     %C=and(A,B)
     fail
@@ -218,6 +221,22 @@ andc(and(A),and(B),and(C)):-
         C=A
       ;
         append(A,B,C)
+      )
+    )
+  ).
+
+andc(and(A),or(B),and(C)):-
+  ((A=[zero];B=[and([zero])])->
+    %C=and(A,B)
+    fail
+  ;
+    (A=[one]->
+      C=or(B)
+    ;
+      (B=[one]->
+        C=A
+      ;
+        append(A,[or(B)],C)
       )
     )
   ).
@@ -266,6 +285,7 @@ or_list1([H|T],B0,B1):-
 
 
 
+
 /**
  * test(:P:probabilistic_program,+TestFolds:list_of_atoms,-LL:float,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
  *
@@ -279,6 +299,8 @@ or_list1([H|T],B0,B1):-
 test(P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
   test_prob(P,TestFolds,_NPos,_NNeg,LL,LG),
   compute_areas_diagrams(LG,AUCROC,ROC,AUCPR,PR).
+
+
 
 /**
  * test_prob(:P:probabilistic_program,+TestFolds:list_of_atoms,-NPos:int,-NNeg:int,-LL:float,-Results:list) is det
@@ -350,7 +372,7 @@ induce_parameters(M:Folds,DB,R):-
   learn_params(DB,M,R0,R),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
-  format2(M,' DPHIL Wall time ~f */~n',[CTS]),
+  format2(M,' PHIL Wall time ~f */~n',[CTS]),
   nl,
   write_rules2(M,R,user_output),
   (M:bg(RBG0)->
@@ -389,62 +411,70 @@ take(0, _, []) :- !.
   N2 is N - 1,
   take(N2, TA, TB).
 
-delete_AC(_, [], []).
+
+writefile(List,FileName):-
+ open(FileName,write, Stream),
+ writefile1(Stream,List),
+ close(Stream).
+
+writefile1(_Stream,[]):-!.
+writefile1(Stream,[Head|Tail]):-
+   writeln(Stream,Head),
+   writefile1(Stream,Tail).
+  
+delete_AC(_, [], []):-!.
 delete_AC(ACs, [Term|Tail],Result):-
     member(Term,ACs),!,
+    writeln(Term),
     delete_AC(ACs, Tail, Result).
 
 delete_AC(ACs, [Head|Tail], [Head|Result]):-
     delete_AC(ACs, Tail, Result).
 
+getInitialParameters([],[]):-!.
+getInitialParameters([rule(_Number,[_Head:Param,'':_],_Body,_)|Rest],[Param|RestParams]):-
+   getInitialParameters(Rest,RestParams).
 
-writefile(_Stream,[]):-!.
-writefile(Stream,[Head|Tail]):-
-   writeln(Stream,Head),
-   writefile(Stream,Tail).
-  
-
-
-learn_params(DB,M,R0,R):-  %Parameter Learning
+learn_params(DB,M,R0,R):- 
   generate_clauses(R0,M,R1,0,[],Th0),
   assert_all(Th0,M,Th0Ref),
   assert_all(R1,M,R1Ref),!,
   length(R0,NR),
   retractall(M:v(_,_,_)),
   length(DB,NEx),
-  length(DB,NEx),
   abolish_all_tables,
   M:local_setting(group,G),
   derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
   maplist(remove_p,Nodes0,Nodes),
-  ACs=[not(and([zero])),and([zero]),one|[]],
-  delete_AC(ACs,Nodes,NodesNew),
+  writefile(Nodes,"ACs"),
   M:local_setting(algorithmType,Algorithm),
   M:local_setting(maxIter_phil,MaxIter),
   M:local_setting(epsilon_deep,EA),
   M:local_setting(epsilon_deep_fraction,ER),
   StopCond=[MaxIter,EA,ER],
-  
   M:local_setting(statistics_folder,Statistics_folder),
   M:local_setting(saveStatistics,Save),
   Folder=[Save,Statistics_folder],
-
   M:local_setting(zero,ZERO),
   M:local_setting(setSeed,Seeded),
   M:local_setting(c_seed,Seed),
-  Params=[NR,ZERO,Seeded,Seed],
-
+  M:local_setting(useInitParams,Init),
+  (Init=yes ->
+    getInitialParameters(R0,InitParameters),
+    Params=[NR,ZERO,Seeded,Seed,Init,InitParameters]
+    ;
+    Params=[NR,ZERO,Seeded,Seed,Init]
+  ),
   format3(M,'Initial CLL on PHIL ~f */~n',[CLL0]),
   retract_all(Th0Ref),
   retract_all(R1Ref),
-  %M:local_setting(algorithmType,Algorithm),
-  ( Algorithm = "emphil" ->
-     emphil(NodesNew,Params,StopCond,Folder,CLL,ProbFinal)
+  ( Algorithm = emphil ->
+     emphil(Nodes,Params,StopCond,Folder,CLL,ProbFinal)
     ;
-     ( Algorithm = "dphil" ->
+     ( Algorithm = dphil ->
         M:local_setting(adam_params,Adam),
         M:local_setting(max_initial_weight,MAX_W),
-        dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal)
+        dphil_C(M,Nodes,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal)
         ;
         format("The algorithm ~w does not exist. Do you mean dphil or emphil? ~n",[Algorithm]),
         halt
@@ -455,52 +485,19 @@ learn_params(DB,M,R0,R):-  %Parameter Learning
 
 dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
    M:local_setting(batch_strategy,minibatch(BatchSize)),!,
-   Params2=["minibatch",BatchSize,MAX_W],
+   Params2=[minibatch,BatchSize,MAX_W],
    dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
 
 dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
    M:local_setting(batch_strategy,stoch_minibatch(BatchSize)),!,
-   Params2=["stochastic",BatchSize,MAX_W],
+   Params2=[stochastic,BatchSize,MAX_W],
    dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
 
 dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
    M:local_setting(batch_strategy,batch),!,
    BatchSize is 0,
-   Params2=["batch",BatchSize,MAX_W],
+   Params2=[batch,BatchSize,MAX_W],
    dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
-
-
-
-
- %Forward pass
-forward(_W,one,n(one,1)):-!.
-
-forward(_W,and([zero]),n(zero,0)):-!.
-
-forward(_W,zero,n(zero,0)):-!.
-
-forward(W,not(L),n(not(n(PL,P0)),P)):-!,
-  forward(W,L,n(PL,P0)),
-  P is 1-P0.
-
-forward(W,or(L),n(or(PL),P)):-!,
-  maplist(forward(W),L,PL),
-  foldl(prob_sum,PL,0,P).
-
-forward(W,and([N|L]),n(and([n(N,Pr)|PL]),P)):-!,
-  N1 is N+1,
-  arg(N1,W,Pr),
-  maplist(forward(W),L,PL),
-  foldl(prod,PL,1,P).
-
-%forward(W,N,n(N,P)):-!,
-  % ogni volta che prendo un W nel vettore dei pesi lo converto in sigma(W) prima di usarlo nellinferenza cosi evito di creare un vettore di p(sigma(W0),sigma(W1)...) 
-prod(n(_,A),B,C):-
-  C is A*B.
-
-prob_sum(n(and([n(_,P)|_]),A),B,C):-
-  C is 1-(1-A*P)*(1-B).
-
 
 
 update_theory_par([],[],[]).
@@ -538,12 +535,10 @@ derive_circuit_groupatoms_output_atoms([],_M,_O,_E,_G,Nodes,Nodes,CLL,CLL,LE,LE)
 
 derive_circuit_groupatoms_output_atoms([H|T],M,O,E,G,Nodes0,Nodes,CLL0,CLL,LE0,LE):-
   generate_goal(O,M,H,[],GL),
-  length(GL,NA),
-  (M:prob(H,P)->
-    CardEx is P*E/NA
-  ;
+
+
     CardEx is 1.0
-  ),
+  ,
   get_node_list_groupatoms(GL,M,ACs,CardEx,G,CLL0,CLL1,LE0,LE1),
   append(Nodes0,ACs,Nodes1),
   derive_circuit_groupatoms_output_atoms(T,M,O,E,G,Nodes1,Nodes,CLL1,CLL,LE1,LE).
@@ -554,12 +549,7 @@ derive_circuit_groupatoms([],_M,_E,_G,Nodes,Nodes,CLL,CLL,LE,LE).
 derive_circuit_groupatoms([H|T],M,E,G,Nodes0,Nodes,CLL0,CLL,LE0,LE):-
   get_output_atoms(O,M),
   generate_goal(O,M,H,[],GL),
-  length(GL,NA),
-  (M:prob(H,P)->
-    CardEx is P*E/NA
-  ;
-    CardEx is 1.0
-  ),
+  CardEx is 1.0,
   get_node_list_groupatoms(GL,M,ACs,CardEx,G,CLL0,CLL1,LE0,LE1),
   append(Nodes0,ACs,Nodes1),
   derive_circuit_groupatoms(T,M,E,G,Nodes1,Nodes,CLL1,CLL,LE1,LE).
@@ -702,10 +692,6 @@ update_head([],[],_N,[]):-!.
 update_head([H:_P|T],[PU|TP],N,[H:P|T1]):-
   P is PU/N,
   update_head(T,TP,N,T1).
-
-
-/* EM end */
-
 
 /* utilities */
 /**
@@ -1651,12 +1637,15 @@ make_dynamic(M):-
   maplist(to_dyn(M),L).
 
 to_dyn(M,P/A):-
+  atomic_concat(P, ' tabled',PT),
   A1 is A+1,
   M:(dynamic P/A1),
-  A2 is A1+2,
+  A2 is A1+1,
   M:(dynamic P/A2),
+  M:(dynamic PT/A2),
   A3 is A2+1,
-  M:(dynamic P/A3).
+  M:(dynamic P/A3),
+  M:(dynamic PT/A3).
 
 
 %Computation of the depth of the variables in the clause head/body
@@ -1880,9 +1869,10 @@ get_node(\+ Goal,M,AC):-
   M:local_setting(depth_bound,true),!,
   M:local_setting(depth,DB),
   retractall(M:v(_,_,_)),
-  add_ac_arg_db(Goal,AC,DB,Goal1),
-  (bagof(AC,M:Goal1,L)->
-    or_list(L,B)
+  abolish_all_tables,
+  add_ac_arg_db(Goal,C,DB,Goal1),
+  (M:Goal1->
+    B=C
   ;
     zeroc(B)
   ),
@@ -1890,9 +1880,10 @@ get_node(\+ Goal,M,AC):-
 
 get_node(\+ Goal,M,AC):-!,
   retractall(M:v(_,_,_)),
-  add_ac_arg(Goal,AC,Goal1),
-  (bagof(AC,M:Goal1,L)->
-    or_list(L,B)
+  abolish_all_tables,
+  add_ac_arg(Goal,C,Goal1),
+  (M:Goal1->
+    B=C
   ;
     zeroc(B)
   ),
@@ -1902,9 +1893,10 @@ get_node(Goal,M,B):-
   M:local_setting(depth_bound,true),!,
   M:local_setting(depth,DB),
   retractall(M:v(_,_,_)),
+  abolish_all_tables,
   add_ac_arg_db(Goal,AC,DB,Goal1),%DB=depth bound
-  (bagof(AC,M:Goal1,L)->
-    or_list(L,B)
+  (M:Goal1->
+    B=AC
   ;
     zeroc(B)
   ).
@@ -1912,8 +1904,9 @@ get_node(Goal,M,B):-
 get_node(Goal,M,B):- %with DB=false
   retractall(M:v(_,_,_)),
   add_ac_arg(Goal,AC,Goal1),
-  (bagof(AC,M:Goal1,L)->
-    or_list(L,B)
+  abolish_all_tables,
+  (M:Goal1->
+    B=AC
   ;
     zeroc(B)
   ).
@@ -1974,8 +1967,8 @@ generate_rules_fact_db([Head:_P|T],VC,R,Probs,N,[Clause|Clauses],Module,M):-
 
 
 generate_clause(Head,Body,_VC,_R,_Probs,ACAnd,_N,Clause,Module,_M):-
-  add_ac_arg(Head,AC,Module,Head1),
-  Clause=(Head1:-Body,AC=or([ACAnd])).
+  add_ac_arg(Head,or([ACAnd]),Module,Head1),
+  Clause=(Head1:-Body).
 
 
 generate_clause_db(Head,Body,_VC,_R,_Probs,DB,ACAnd,_N,Clause,Module,_M):-
@@ -2024,35 +2017,22 @@ process_body_bg([H|T],[H1|Rest],Module):-!,
 
 
 
-process_body([],AC,AC,Vars,Vars,[],_Module,_M).
+
+process_body([],AC,AC,Vars,Vars,[],_Module,_M):-!.
 
 process_body([\+ H|T],AC,AC1,Vars,Vars1,[\+ H|Rest],Module,M):-
   builtin(H),!,
   process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
 
-process_body([\+ H|T],AC,AC1,Vars,Vars1,[\+ H|Rest],Module,M):-
-  db(H),!,
-  process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
-
 process_body([\+ H|T],AC,AC1,Vars,Vars1,[
-(((neg(H1);\+ H1),onec(ACN));
-  (H2,ac_notc(ACH,ACN))),
-  andc(AC,ACN,AC2)
-  |Rest],Module,M):-
-  given(M,H),!,
-  add_mod_arg(H,Module,H1),
-  add_ac_arg(H,ACH,Module,H2),
-  process_body(T,AC2,AC1,Vars,Vars1,Rest,Module,M).
-
-process_body([\+ H|T],AC,AC1,Vars,Vars1,[
-  \+(H1)|Rest],Module,M):-
+  neg(H1)|Rest],Module,M):-
   given_cw(M,H),!,
   add_mod_arg(H,Module,H1),
   process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
 
 process_body([\+ H|T],AC,AC1,Vars,[ACH,ACN,AC2|Vars1],
-[H1,ac_notc(ACH,ACN),
-  andc(AC,ACN,AC2)|Rest],Module,M):-!,
+[H1,phil:ac_notc(ACH,ACN),
+  phil:andc(AC,ACN,AC2)|Rest],Module,M):-!,
   add_ac_arg(H,ACH,Module,H1),
   process_body(T,AC2,AC1,Vars,Vars1,Rest,Module,M).
 
@@ -2060,30 +2040,14 @@ process_body([H|T],AC,AC1,Vars,Vars1,[H|Rest],Module,M):-
   builtin(H),!,
   process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
 
-process_body([H|T],AC,AC1,Vars,Vars1,[H|Rest],Module,M):-
-  db(H),!,
-  process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
-
-/*process_body([H|T],AC,AC1,Vars,Vars1,
-[((H1,onec(ACH));H2),andc(AC,ACH,AC2)|Rest],Module,M):-
-  given(M,H),!,
-  add_mod_arg(H,Module,H1),
-  add_ac_arg(H,ACH,Module,H2),
-  process_body(T,AC2,AC1,Vars,Vars1,Rest,Module,M).
-*/
 process_body([H|T],AC,AC1,Vars,Vars1,
 [H1|Rest],Module,M):-
-  given(M,H),!,
+  given_cw(M,H),!,
   add_mod_arg(H,Module,H1),
-  process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
-
-process_body([H|T],AC,AC1,Vars,Vars1,[H1|Rest],Module,M):-
-  add_mod_arg(H,Module,H1),
-  db(H1),!,
   process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
 
 process_body([H|T],AC,AC1,Vars,[ACH,AC2|Vars1],
-[bagof(ACH,H1,L),or_list(L,ACL),andc(AC,and([ACL]),AC2)|Rest],Module,M):-
+[H1,andc(AC,ACH,AC2)|Rest],Module,M):-!, %agg. cut
   add_ac_arg(H,ACH,Module,H1),
   process_body(T,AC2,AC1,Vars,Vars1,Rest,Module,M).
 
@@ -2093,52 +2057,6 @@ process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[\+ H|Rest],Module,M):-
   builtin(H),!,
   process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
 
-process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[\+ H|Rest],Module,M):-
-  db(H),!,
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[
-  (((neg(H1);\+ H1),phil:onec(ACN));
-    (H2,phil:ac_notc(ACH,ACN))),
-  phil:andc(AC,ACN,AC2)
-  |Rest],Module,M):-
-  given(M,H),!,
-  add_mod_arg(H,Module,H1),
-  add_ac_arg_db(H,ACH,DB,Module,H2),
-  process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[
-  neg(H1)|Rest],Module,M):-
-  given_cw(M,H),!,
-  add_mod_arg(H,Module,H1),
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([\+ H|T],AC,AC1,DB,Vars,[ACH,ACN,AC2|Vars1],
-[H1,phil:ac_notc(ACH,ACN),
-  phil:andc(AC,ACN,AC2)|Rest],Module,M):-!,
-  add_ac_arg_db(H,ACH,DB,Module,H1),
-  process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([],AC,AC,_DB,Vars,Vars,[],_Module,_M):-!.
-
-process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[\+ H|Rest],Module,M):-
-  builtin(H),!,
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[\+ H|Rest],Module,M):-
-  db(H),!,
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[
-(((neg(H1);\+ H1),phil:onec(ACN));
-  (H2,phil:ac_notc(ACH,ACN))),
-  phil:andc(AC,ACN,AC2)
-  |Rest],Module,M):-
-  given(M,H),!,
-  add_mod_arg(H,Module,H1),
-  add_ac_arg_db(H,ACH,DB,Module,H2),
-  process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
-
 process_body_db([\+ H|T],AC,AC1,DB,Vars,Vars1,[
   neg(H1)|Rest],Module,M):-
   given_cw(M,H),!,
@@ -2155,17 +2073,6 @@ process_body_db([H|T],AC,AC1,DB,Vars,Vars1,[H|Rest],Module,M):-
   builtin(H),!,
   process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
 
-process_body_db([H|T],AC,AC1,DB,Vars,Vars1,[H|Rest],Module,M):-
-  db(H),!,
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([H|T],AC,AC1,DB,Vars,Vars1,
-[((H1,phil:onec(ACH));H2),phil:andc(AC,ACH,AC2)|Rest],Module,M):-
-  given(M,H),!,
-  add_mod_arg(H,Module,H1),
-  add_ac_arg_db(H,ACH,DB,Module,H2),
-  process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
-
 process_body_db([H|T],AC,AC1,DB,Vars,Vars1,
 [H1|Rest],Module,M):-
   given_cw(M,H),!,
@@ -2173,33 +2080,7 @@ process_body_db([H|T],AC,AC1,DB,Vars,Vars1,
   process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
 
 process_body_db([H|T],AC,AC1,DB,Vars,[ACH,AC2|Vars1],
-[bagof(ACH,H1,L),or_list(L,ACL),andc(AC,and([ACL]),AC2)|Rest],Module,M):-!, %agg. cut
-  add_ac_arg_db(H,ACH,DB,Module,H1),
-  process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([H|T],AC,AC1,DB,Vars,Vars1,[H|Rest],Module,M):-
-  builtin(H),!,
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([H|T],AC,AC1,DB,Vars,Vars1,[H|Rest],Module,M):-
-  db(H),!,
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([H|T],AC,AC1,DB,Vars,Vars1,
-[((H1,phil:onec(ACH));H2),phil:andc(AC,ACH,AC2)|Rest],Module,M):-
-  given(M,H),!,
-  add_mod_arg(H,Module,H1),
-  add_ac_arg_db(H,ACH,DB,Module,H2),
-  process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([H|T],AC,AC1,DB,Vars,Vars1,
-[H1|Rest],Module,M):-
-  given_cw(M,H),!,
-  add_mod_arg(H,Module,H1),
-  process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
-
-process_body_db([H|T],AC,AC1,DB,Vars,[ACH,AC2|Vars1],
-[H1,phil:andc(AC,ACH,AC2)|Rest],Module,M):-!, %agg. cut
+[H1,andc(AC,ACH,AC2)|Rest],Module,M):-!, %agg. cut
   add_ac_arg_db(H,ACH,DB,Module,H1),
   process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
 
@@ -2369,8 +2250,7 @@ generate_clauses_cw([H|T],M,[H1|T1],N,C0,C):-
   append(C0,CL,C1),
   generate_clauses_cw(T,M,T1,N1,C1,C).
 
-to_tabled(H0,H):-
-  input_mod(M),
+to_tabled(M,H0,H):-
   (M:tabled(H0)->
     H0=..[P|Args],
     atomic_concat(P, ' tabled',PT),
@@ -2379,8 +2259,8 @@ to_tabled(H0,H):-
     H=H0
   ).
 
-to_tabled_head_list(A0:P,A:P):-
-  to_tabled(A0,A).
+to_tabled_head_list(M,A0:P,A:P):-
+  to_tabled(M,A0,A).
 
 gen_clause_cw((H :- Body),_M,N,N,(H :- Body),[(H1 :- Body)]):-
   !,
@@ -2425,17 +2305,17 @@ gen_clause((H :- Body),_M,N,N,(H :- Body),[(H1 :- Body)]):-
   !,
   to_tabled(H,H1).
 
+
 gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   rule(N,HeadList,BodyList,Lit),Clauses):-
   M:local_setting(depth_bound,true),!,
 % disjunctive clause with more than one head atom e depth_bound
   process_body_db(BodyList,and([N]),ACAnd, DB,[],_Vars,BodyList1,Module,M),
-  %append([phil:andc((N),AC)],BodyList1,BodyList2),
   list2and(BodyList1,Body1),
   append(HeadList,BodyList,List),
   extract_vars_list(List,[],VC),
   get_probs(HeadList,Probs),
-  maplist(to_tabled_head_list,HeadList,HeadList1),
+  maplist(to_tabled_head_list(M),HeadList,HeadList1),
   (M:local_setting(single_var,true)->
     generate_rules_db(HeadList1,Body1,[],N,Probs,DB,ACAnd,0,Clauses,Module,M)
   ;
@@ -2447,16 +2327,15 @@ gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   rule(N,HeadList,BodyList,Lit),Clauses):-!,
 % disjunctive clause with more than one head atom senza depth_bound
   process_body(BodyList,and([N]),ACAnd,[],_Vars,BodyList1,Module,M),
-%  writeln(BodyList1),
-%  append([phil:andc((N),AC)],BodyList1,BodyList2),
   list2and(BodyList1,Body1),
   append(HeadList,BodyList,List),
   extract_vars_list(List,[],VC),
   get_probs(HeadList,Probs),
+  maplist(to_tabled_head_list(M),HeadList,HeadList1),
   (M:local_setting(single_var,true)->
-    generate_rules(HeadList,Body1,[],N,Probs,ACAnd,0,Clauses,Module,M)
+    generate_rules(HeadList1,Body1,[],N,Probs,ACAnd,0,Clauses,Module,M)
   ;
-    generate_rules(HeadList,Body1,VC,N,Probs,ACAnd,0,Clauses,Module,M)
+    generate_rules(HeadList1,Body1,VC,N,Probs,ACAnd,0,Clauses,Module,M)
   ),
   N1 is N+1.
 
@@ -2522,80 +2401,6 @@ average(L,Av):-
         length(L,N),
         Av is Sum/N.
 
-term_expansion_int((Head :- Body),_M, ((H :- Body),[])):-
-  Head=db(H),!.
-
-term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)])):-
-  M:local_setting(depth_bound,true),
-% disjunctive clause with more than one head atom e depth_bound
-  Head = (_;_), !,
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  list2and(BodyList, Body),
-  process_body_db(BodyList,AC,ACAnd, DB,[],_Vars,BodyList1,Module,M),
-  append([phil:onec(AC)],BodyList1,BodyList2),
-  list2and(BodyList2,Body1),
-  append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
-  get_next_rule_number(M,R),
-  get_probs(HeadList,Probs),
-  (M:local_setting(single_var,true)->
-    generate_rules_db(HeadList,Body1,[],R,Probs,DB,ACAnd,0,Clauses,Module,M)
-  ;
-    generate_rules_db(HeadList,Body1,VC,R,Probs,DB,ACAnd,0,Clauses,Module,M)
-   ).
-
-term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)])):-
-% disjunctive clause with more than one head atom senza depth_bound
-  Head = (_;_), !,
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  list2and(BodyList, Body),
-  process_body(BodyList,AC,ACAnd,[],_Vars,BodyList1,Module,M),
-  append([phil:onec(AC)],BodyList1,BodyList2),
-  list2and(BodyList2,Body1),
-  append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
-  get_next_rule_number(M,R),
-  get_probs(HeadList,Probs),
-  (M:local_setting(single_var,true)->
-    generate_rules(HeadList,Body1,[],R,Probs,ACAnd,0,Clauses,Module,M)
-  ;
-    generate_rules(HeadList,Body1,VC,R,Probs,ACAnd,0,Clauses,Module,M)
-  ).
-
-term_expansion_int((Head :- Body),_M, ([],[])) :-
-% disjunctive clause with a single head atom con prob. 0 senza depth_bound --> la regola non è caricata nella teoria e non è conteggiata in NR
-  ((Head:-Body) \= ((user:term_expansion(_,_) ):- _ )),
-  Head = (_H:P),P=:=0.0, !.
-
-term_expansion_int((Head :- Body),M, (Clauses,[def_rule(H,BodyList,true)])) :-
-% disjunctive clause with a single head atom e depth_bound
-  M:local_setting(depth_bound,true),
-  ((Head:-Body) \= ((user:term_expansion(_,_) ):- _ )),
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  HeadList=[H:_],!,
-  list2and(BodyList, Body),
-  process_body_db(BodyList,AC,ACAnd,DB,[],_Vars,BodyList2,Module,M),
-  append([phil:onec(AC)],BodyList2,BodyList3),
-  list2and(BodyList3,Body1),
-  add_ac_arg_db(H,ACAnd,DBH,Module,Head1),
-  Clauses=(Head1 :- (DBH>=1,DB is DBH-1,Body1)).
-
-term_expansion_int((Head :- Body), M,(Clauses,[def_rule(H,BodyList,true)])) :-
-% disjunctive clause with a single head atom senza depth_bound con prob =1
-   ((Head:-Body) \= ((user:term_expansion(_,_) ):- _ )),
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  HeadList=[H:_],!,
-  list2and(BodyList, Body),
-  process_body(BodyList,AC,ACAnd,[],_Vars,BodyList2,Module,M),
-  append([phil:onec(AC)],BodyList2,BodyList3),
-  list2and(BodyList3,Body1),
-  add_ac_arg(H,ACAnd,Module,Head1),
-  Clauses=(Head1 :- Body1).
-
 term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)])) :-
 % disjunctive clause with a single head atom e DB, con prob. diversa da 1
   M:local_setting(depth_bound,true),
@@ -2618,7 +2423,8 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
   ).
 
 term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)])) :-
-% disjunctive clause with a single head atom senza DB, con prob. diversa da 1
+% disjunctive clause with a single head atom e DB, con prob. diversa da 1
+  M:local_setting(depth_bound,false),
   ((Head:-Body) \= ((user:term_expansion(_,_) ):- _ )),
   Head = (H:_), !,
   list2or(HeadListOr, Head),
@@ -2630,137 +2436,12 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
   append(HeadList,BodyList,List),
   extract_vars_list(List,[],VC),
   get_next_rule_number(M,R),
-  get_probs(HeadList,Probs),%***test single_vars
+  get_probs(HeadList,Probs),%***test single_var
   (M:local_setting(single_var,true)->
     generate_clause(H,Body2,[],R,Probs,ACAnd,0,Clauses,Module,M)
   ;
     generate_clause(H,Body2,VC,R,Probs,ACAnd,0,Clauses,Module,M)
   ).
-
-term_expansion_int((Head :- Body),_M,(Clauses,[])) :-
-% definite clause for db facts
-  ((Head:-Body) \= ((user:term_expansion(_,_)) :- _ )),
-  Head=db(Head1),!,
-  Clauses=(Head1 :- Body).
-
-term_expansion_int((Head :- Body),M,(Clauses,[def_rule(Head,BodyList,true)])) :-
-% definite clause with depth_bound
-  M:local_setting(depth_bound,true),
-   ((Head:-Body) \= ((user:term_expansion(_,_)) :- _ )),!,
-  list2and(BodyList, Body),
-  process_body_db(BodyList,AC,ACAnd,DB,[],_Vars,BodyList2,Module,M),
-  append([phil:onec(AC)],BodyList2,BodyList3),
-  list2and(BodyList3,Body1),
-  add_ac_arg_db(Head,ACAnd,DBH,Module,Head1),
-  Clauses=(Head1 :- (DBH>=1,DB is DBH-1,Body1)).
-
-term_expansion_int((Head :- Body),M,(Clauses,[def_rule(Head,BodyList,true)])) :-
-% definite clause senza DB
-  ((Head:-Body) \= ((user:term_expansion(_,_)) :- _ )),!,
-  list2and(BodyList, Body),
-  process_body(BodyList,AC,ACAnd,[],_Vars,BodyList2,Module,M),
-  append([phil:onec(AC)],BodyList2,BodyList3),
-  list2and(BodyList3,Body2),
-  add_ac_arg(Head,ACAnd,Module,Head1),
-  Clauses=(Head1 :- Body2).
-
-term_expansion_int(Head,M,(Clauses,[rule(R,HeadList,[],true)])) :-
-  M:local_setting(depth_bound,true),
-% disjunctive FACT with more than one head atom e db
-  Head=(_;_), !,
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  extract_vars_list(HeadList,[],VC),
-  get_next_rule_number(M,R),
-  get_probs(HeadList,Probs),
-  (M:local_setting(single_var,true)->
-    generate_rules_fact_db(HeadList,[],R,Probs,0,Clauses,_Module,M)
-  ;
-    generate_rules_fact_db(HeadList,VC,R,Probs,0,Clauses,_Module,M)
-  ).
-
-term_expansion_int(Head,M,(Clauses,[rule(R,HeadList,[],true)])) :-
-% disjunctive fact with more than one head atom senza db
-  Head=(_;_), !,
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  extract_vars_list(HeadList,[],VC),
-  get_next_rule_number(M,R),
-  get_probs(HeadList,Probs), %**** test single_var
-  (M:local_setting(single_var,true)->
-    generate_rules_fact(HeadList,[],R,Probs,0,Clauses,_Module,M)
-  ;
-    generate_rules_fact(HeadList,VC,R,Probs,0,Clauses,_Module,M)
-  ).
-
-term_expansion_int(Head,_M,([],[])) :-
-% disjunctive fact with a single head atom con prob. 0
-  (Head \= ((user:term_expansion(_,_)) :- _ )),
-  Head = (_H:P),P=:=0.0, !.
-
-term_expansion_int(Head,M,(Clause,[def_rule(H,[],true)])) :-
-  M:local_setting(depth_bound,true),
-% disjunctive fact with a single head atom con prob.1 e db
-  (Head \= ((user:term_expansion(_,_)) :- _ )),
-  Head = (H:P),P=:=1.0, !,
-  list2and([phil:onec(AC)],Body1),
-  add_ac_arg_db(H,AC,_DB,_Module,Head1),
-  Clause=(Head1 :- Body1).
-
-term_expansion_int(Head,_M,(Clause,[def_rule(H,[],true)])) :-
-% disjunctive fact with a single head atom con prob. 1, senza db
-  (Head \= ((user:term_expansion(_,_)) :- _ )),
-  Head = (H:P),P=:=1.0, !,
-  list2and([phil:onec(AC)],Body1),
-  add_ac_arg(H,AC,_Module,Head1),
-  Clause=(Head1 :- Body1).
-
-term_expansion_int(Head,M,(Clause,[rule(R,HeadList,[],true)])) :-
-  M:local_setting(depth_bound,true),
-% disjunctive fact with a single head atom e prob. generiche, con db
-  (Head \= ((user:term_expansion(_,_)) :- _ )),
-  Head=(H:_), !,
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  extract_vars_list(HeadList,[],VC),
-  get_next_rule_number(M,R),
-  get_probs(HeadList,Probs),
-  add_ac_arg_db(H,AC,_DB,_Module,Head1),
-  (M:local_setting(single_var,true)->
-    Clause=(Head1:-(phil:get_var_n(M,R,[],Probs,V),phil:equalityc(V,0,AC)))
-  ;
-    Clause=(Head1:-(phil:get_var_n(M,R,VC,Probs,V),phil:equalityc(V,0,AC)))
-  ).
-
-term_expansion_int(Head,M,(Clause,[rule(R,HeadList,[],true)])) :-
-% disjunctive fact with a single head atom e prob. generiche, senza db
-  (Head \= ((user:term_expansion(_,_)) :- _ )),
-  Head=(H:_), !,
-  list2or(HeadListOr, Head),
-  process_head(HeadListOr,M,HeadList),
-  extract_vars_list(HeadList,[],VC),
-  get_next_rule_number(M,R),
-  get_probs(HeadList,Probs),
-  add_ac_arg(H,AC,_Module,Head1),%***test single_var
-  (M:local_setting(single_var,true)->
-    Clause=(Head1:-(phil:get_var_n(M,R,[],Probs,V),phil:equalityc(V,0,AC)))
-  ;
-    Clause=(Head1:-(phil:get_var_n(M,R,VC,Probs,V),phil:equalityc(V,0,AC)))
-  ).
-
-term_expansion_int(Head,M, ((Head1:-phil:onec(One)),[def_rule(Head,[],true)])) :-
-  M:local_setting(depth_bound,true),
-% definite fact with db
-  (Head \= ((user:term_expansion(_,_) ):- _ )),
-  (Head\= end_of_file),!,
-  add_ac_arg_db(Head,One,_DB,_Module,Head1).
-
-term_expansion_int(Head,_M, ((Head1:-phil:onec(One)),[def_rule(Head,[],true)])) :-
-% definite fact without db
-  (Head \= ((user:term_expansion(_,_) ):- _ )),
-  (Head\= end_of_file),!,
-  add_ac_arg(Head,One,_Module,Head1).
-
 /*-----------*/
 
 
@@ -2975,20 +2656,10 @@ compute_CLL_atoms([],_M,_N,CLL,CLL,[]):-!.
 
 compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
-  Par=..[w|LR],
   abolish_all_tables,
   get_node(H,M,Circuit),!,
-  /*length(LR,NR),
-  (Circuit ="one" ->
-     PG is 1.0
-    ;
-    ( Circuit ="zero" ->
-       PG is 0.0
-      ;
-      forward(Circuit,LR,NR,PG)
-    )
-  ),*/
-  forward(Par,Circuit,n(_,PG)),
+  length(LR,NR),
+  forward(Circuit,LR,NR,PG),
   PG1 is 1-PG,
   (PG1=:=0.0->
     setting_sc(logzero,LZ),
@@ -3001,21 +2672,10 @@ compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
 
 compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1]):-
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
-  Par=..[w|LR],
   abolish_all_tables,
   get_node(H,M,Circuit),!,
-  /*length(LR,NR),
-  (Circuit ="one" ->
-     PG is 1.0
-    ;
-    ( Circuit ="zero" ->
-       PG is 0.0
-      ;
-      forward(Circuit,LR,NR,PG)
-    )
-  ),*/
-
-  forward(Par,Circuit,n(_,PG)),
+  length(LR,NR),
+  forward(Circuit,LR,NR,PG),
   (PG=:=0.0->
     setting_sc(logzero,LZ),
     CLL2 is CLL0+LZ
@@ -3128,18 +2788,32 @@ write_body3(M,A,B):-
 tab(M,A/B,P):-
   length(Args0,B),
   (M:local_setting(depth_bound,true)->
-    append(Args0,[_,_,-,lattice(phil:orc/3)],Args)
+    append(Args0,[_,_,lattice(phil:orc/3)],Args)
   ;
-    append(Args0,[_,-,lattice(phil:orc/3)],Args)
+    append(Args0,[_,lattice(phil:orc/3)],Args)
   ),
   P=..[A|Args],
   PT=..[A|Args0],
   assert(M:tabled(PT)).
 
-zero_clause(A/B,(H:-phil:zeroc(AC))):-
-  length(Args0,B),
-  append(Args0,[_,AC],Args),
+/**
+ * zero_clause(+Module:atom,+PredSpec:pred_spec,-ZeroClause:term) is det
+ *
+ * Generates the zero clause for predicate PredSpec. 
+ * Module is the module of the input file.
+ */
+zero_clause(M,A/B,(H:-maplist(nonvar,Args0),phil:zeroc(AC))):-
+  B1 is B+1,
+  length(Args0,B1),
+  (M:local_setting(depth_bound,true)->
+    ExtraArgs=[_,or([AC])]
+  ;
+    ExtraArgs=[or([AC])]
+  ),
+  append(Args0,ExtraArgs,Args),
   H=..[A|Args].
+
+
 
 user:term_expansion((:- sc), []) :-!,
   prolog_load_context(module, M),
@@ -3149,28 +2823,25 @@ user:term_expansion((:- sc), []) :-!,
   assert(input_mod(M)),
   retractall(M:rule_sc_n(_)),
   assert(M:rule_sc_n(0)),
-  M:dynamic((modeh/2,p/2,
-    modeh/4,fixed_rule/3,banned/2,lookahead/2,
-    lookahead_cons/2,lookahead_cons_var/2,prob/2,output/1,input/1,input_cw/1,
-    ref_clause/1,ref/1,model/1,neg/1,rule/4,determination/2,
+  M:dynamic((modeh/2,modeh/4,fixed_rule/3,banned/2,lookahead/2,
+    lookahead_cons/2,lookahead_cons_var/2,'$prob'/2,output/1,input/1,input_cw/1,
+    ref_clause/1,ref/1,model/1,neg/1,rule/5,determination/2,
     bg_on/0,bg/1,bgc/1,in_on/0,in/1,inc/1,int/1,v/3,
+    query_rule/4,database/1,
     zero_clauses/1,tabled/1)),
+  retractall(M:tabled(_)),
   style_check(-discontiguous).
-
-user:term_expansion((:- table(Conj)), [:- table(Conj1)]) :-!,
-  prolog_load_context(module, M),
-  input_mod(M),!,
-  list2and(L,Conj),
-  maplist(tab(M),L,L1),
-  maplist(zero_clause,L,LZ),
-  assert(M:zero_clauses(LZ)),
-  list2and(L1,Conj1).
 
 user:term_expansion(end_of_file, C) :-
   prolog_load_context(module, M),
   input_mod(M),!,
   make_dynamic(M),
-  append([],[(:- style_check(+discontiguous)),end_of_file],C).
+  findall(LZ,M:zero_clauses(LZ),L0),
+  append(L0,L),
+  retractall(M:zero_clauses(_)),
+%  retractall(M:tabled(_)),
+  %retractall(input_mod(M)),
+  append(L,[(:- style_check(+discontiguous)),end_of_file],C).
 
 user:term_expansion((:- begin_bg), []) :-
   prolog_load_context(module, M),
@@ -3221,6 +2892,20 @@ user:term_expansion((:- end_in), []) :-
   ;
     assert(M:in(L))
   ).
+
+user:term_expansion(output(P/A), [(:- table P1),output(P/A)]) :-
+  prolog_load_context(module, M),
+  input_mod(M),!,
+  tab(M,P/A,P1),
+  zero_clause(M,P/A,Z),
+  assert(M:zero_clauses([Z])).
+
+user:term_expansion(input(P/A), [(:- table P1),input(P/A)]) :-
+  prolog_load_context(module, M),
+  input_mod(M),!,
+  tab(M,P/A,P1),
+  zero_clause(M,P/A,Z),
+  assert(M:zero_clauses([Z])).
 
 user:term_expansion(begin(model(I)), []) :-
   prolog_load_context(module, M),
