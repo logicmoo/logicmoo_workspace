@@ -54,8 +54,8 @@ using gradient descent and Backpropagation
 :-set_prolog_flag(unknown,warning).
 
 
-%:-load_foreign_library(foreign(phil)).
-:-load_foreign_library(phil).
+:-load_foreign_library(foreign(phil)).
+
 
 
 :- dynamic getIndex/2.
