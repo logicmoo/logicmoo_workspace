@@ -54,8 +54,8 @@ using gradient descent and Backpropagation
 :-set_prolog_flag(unknown,warning).
 
 
-:-load_foreign_library(foreign(phil)).
-
+%:-load_foreign_library(foreign(phil)).
+:-load_foreign_library(phil).
 
 
 :- dynamic getIndex/2.
@@ -284,8 +284,6 @@ or_list1([H|T],B0,B1):-
   or_list1(T,B2,B1).
 
 
-
-
 /**
  * test(:P:probabilistic_program,+TestFolds:list_of_atoms,-LL:float,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
  *
@@ -311,6 +309,7 @@ test(P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
  * in NNeg, the log likelihood in LL
  * and in Results a list containing the probabilistic result for each query contained in TestFolds.
  */
+
 test_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
   write2(M,'Testing\n'),
   findall(Exs,(member(F,TestFolds),M:fold(F,Exs)),L),
@@ -338,7 +337,6 @@ test_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
   retract_all(ThRef),
   retract_all(RFRef).
 
-
 /**
  * induce_par(:TrainFolds:list_of_atoms,-P:probabilistic_program) is det
  *
@@ -348,7 +346,13 @@ test_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
  */
 induce_par(Folds,ROut):-
   induce_parameters(Folds,_DB,R),
-  rules2terms(R,ROut).
+  rules2termHPLPs(R,ROut).
+
+rules2termHPLPs(R,T):-
+  maplist(rules2termHPLP,R,T).
+
+rules2termHPLP(rule(_N,[H:Par|_],BL,_Lit),(H:Par:-B)):-
+list2and(BL,B).
 
 induce_parameters(M:Folds,DB,R):-
   M:local_setting(seed,Seed),
@@ -446,7 +450,7 @@ learn_params(DB,M,R0,R):-
   M:local_setting(group,G),
   derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
   maplist(remove_p,Nodes0,Nodes),
-  writefile(Nodes,"ACs"),
+  %writefile(Nodes,"ACs"),
   M:local_setting(algorithmType,Algorithm),
   M:local_setting(maxIter_phil,MaxIter),
   M:local_setting(epsilon_deep,EA),
@@ -499,6 +503,13 @@ dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
    Params2=[batch,BatchSize,MAX_W],
    dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
 
+
+
+/*update_theory_par([],[],[]).
+
+update_theory_par([(Head:_:-Body)|T0],[Par|ParT],[(Head:Par:-Body)|T]):-
+  update_theory_par(T0,ParT,T).
+*/
 
 update_theory_par([],[],[]).
 
@@ -2658,6 +2669,7 @@ compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
   abolish_all_tables,
   get_node(H,M,Circuit),!,
+  %writeln(Circuit),
   length(LR,NR),
   forward(Circuit,LR,NR,PG),
   PG1 is 1-PG,
@@ -2676,6 +2688,8 @@ compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1]):-
   get_node(H,M,Circuit),!,
   length(LR,NR),
   forward(Circuit,LR,NR,PG),
+  %trace
+  %writeln(Circuit),
   (PG=:=0.0->
     setting_sc(logzero,LZ),
     CLL2 is CLL0+LZ
@@ -2938,3 +2952,4 @@ user:term_expansion(At, A) :-
       A=Atom1
     )
   ).
+

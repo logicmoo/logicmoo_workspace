@@ -1116,3 +1116,4 @@ install()
   PL_register_foreign("emphil",6, pl_emphil, 0);
   PL_register_foreign("forward",4, pl_forward, 0);
 }
+
