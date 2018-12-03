@@ -361,6 +361,7 @@ induce_parameters(M:Folds,DB,R):-
   append(L,DB),
   assert(M:database(DB)),
   statistics(walltime,[_,_]),
+  %trace,
   (M:bg(RBG0)->
     process_clauses(RBG0,M,[],_,[],RBG),
     generate_clauses(RBG,M,_RBG1,0,[],ThBG),
@@ -376,7 +377,7 @@ induce_parameters(M:Folds,DB,R):-
   learn_params(DB,M,R0,R),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
-  format2(M,' PHIL Wall time ~f */~n',[CTS]),
+  format(M,' PHIL Wall time ~f */~n',[CTS]),
   nl,
   write_rules2(M,R,user_output),
   (M:bg(RBG0)->
@@ -2952,4 +2953,3 @@ user:term_expansion(At, A) :-
       A=Atom1
     )
   ).
-
