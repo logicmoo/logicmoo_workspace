@@ -39,9 +39,9 @@ create_hierarchy(M):-
 %  utility_kb:hierarchy_int(M).
 %
 %hierarchy_int(M):-
-create_hierarchy(M,Stats):-
+create_hierarchy(M,Stats):-%gtrace,
   (Stats=false -> true ;
-     ( format("Loading the knowledge base...~n",[]),
+     ( format("Analyzing the knowledge base...~n",[]),
        statistics(walltime,[_,_])
      )
   ),
@@ -72,6 +72,7 @@ create_hierarchy(M,Stats):-
   add_all_disjointUnion(H3,M,H4),
   add_all_subClassOf(H4,M,H5),
   search_and_add_complex_subClassOf(H5,M,H),
+  check_disjoint(H),
   (Stats=false -> true ;
      ( statistics(walltime,[_,KBAM]),
        KBAS is KBAM / 1000,
@@ -721,8 +722,7 @@ add_all_subClassOf_1(H0,[C-D|T],H):-
 %% add_subClassOf(...)  adds/modifies the edge, checking first that the two classes are not equivalent. One or both classes may be not present
 add_subClassOf(KB0,SubClass,SupClass,KB):-
   %add_classes(KB0,[SubClass,SupClass],KB1),
-  add_hierarchy_link(KB0,SubClass,SupClass,KB),
-  check_disjoint(KB),!.
+  add_hierarchy_link(KB0,SubClass,SupClass,KB),!.
 
 add_subClass_expl(M,Expls0,C,C1,[ex(C,C1)-ExF|Expls]):-
   member(ex(C,C1)-Ex,Expls0),!,
@@ -756,7 +756,7 @@ get_hierarchy(M:Class,H4C):-
 */
 get_hierarchy(KB,Class,H4C):- %prende la gerarchia (KB) una classe e la spiegazione per arrivare a quella classe e resituisce l'insieme di tutte le classi con spiegazioni da quella in su
   Classes=KB.classes,
-  Pos=Classes.find(Class),
+  Pos=Classes.find(Class),%gtrace,
   edges(KB.hierarchy,E),
   get_combined_expls(KB.usermod,Class,Pos,E,Classes,KB.explanations,MH4C), MH4C = (_M,H4C).
 
@@ -869,8 +869,7 @@ add_all_complex_subClassOf(H0,[C-D-Ex|T],H):-
 %% add_complex_subClassOf(...)  adds/modifies the edge, checking first that the two classes are not equivalent. One or both classes may be not present
 add_complex_subClassOf(KB0,SubClass,SupClass,Expl,KB):-
   add_classes(KB0,[SubClass,SupClass],KB1),
-  add_hierarchy_link(KB1,SubClass,SupClass,Expl,KB),
-  check_disjoint(KB),!.
+  add_hierarchy_link(KB1,SubClass,SupClass,Expl,KB),!.
 
 
 
@@ -884,10 +883,10 @@ complex_subClassOf(M,Classes,complementOf(C),D,Expl):-
   trill:find_neg_class(C,D),
   trill:hier_ax2ex(M,equivalentClasses([complementOf(C),D]),Expl).
 
-complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
-  member(intersectionOf(Cs),Classes),
-  member(D,Cs),
-  trill:hier_initial_expl(M,Expl).
+%complex_subClassOf(M,Classes,intersectionOf(Cs),D,Expl):-
+%  member(intersectionOf(Cs),Classes),
+%  member(D,Cs),
+%  trill:hier_initial_expl(M,Expl).
 
 % owl fixed classes (owl:Thing e owl:Nothing)
 owl_f(0).

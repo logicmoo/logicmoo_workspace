@@ -467,7 +467,7 @@ inconsistent_theory(M:Print):-
  * of a complex concept as a ground term and name or the full URI of an individual and
  * returns the probability of the instantiation of the individual to the given class.
  */
-prob_instanceOf(M:Class,Ind,Prob):-
+prob_instanceOf(M:Class,Ind,Prob):-%gtrace,
   ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
   	all_instanceOf(M:ClassEx,IndEx,Exps),
   	compute_prob_and_close(M,Exps,Prob)
@@ -542,17 +542,19 @@ prob_inconsistent_theory(M:Print,Prob):-
  ***********/
 
 % adds the query into the ABox
+/*
 add_q(M,ABox0,intersectionOf([Class1,Class2]),Ind,ABox):- !,
   initial_expl(M,Expl),
   add(ABox0,(classAssertion(Class1,Ind),Expl),ABox1),
   expand_from_ind_class(Class1,Ind,Expl,M,ABox1,ABox2),
   add(ABox2,(classAssertion(Class2,Ind),Expl),ABox3),
   expand_from_ind_class(Class2,Ind,Expl,M,ABox3,ABox).
+*/
 
 % adds the query into the ABox
-add_q(M,ABox0,complementOf(Class),Ind,ABox):- !,
+add_q(M,ABox0,Class,Ind,ABox):- !,
   initial_expl(M,Expl),
-  add(ABox0,(classAssertion(complementOf(Class),Ind),Expl),ABox1),
+  add(ABox0,(classAssertion(Class,Ind),Expl),ABox1),
   expand_from_ind_class(Class,Ind,Expl,M,ABox1,ABox).
 
 % expands query arguments using prefixes and checks their existence in the kb
@@ -709,7 +711,7 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 % rules application
 % -------------
 apply_all_rules(M,ABox0,ABox):-
-  setting_trill(det_rules,Rules),
+  setting_trill(det_rules,Rules),%gtrace,
   apply_det_rules(M,Rules,ABox0,ABox1),
   (ABox0=ABox1 ->
   ABox=ABox1;
@@ -1052,18 +1054,19 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
       correspond to the ce_rule
    --
 */
-/*
 
+/*
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(M,Ind,L,ABox0,Expl1)),
   find_sub_sup_class_tot(M,C,D,Ax),
   and_f_ax(M,Ax,Expl1,AxL1),
-  modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
+  modify_ABox(M,ABox0,D,Ind,AxL1,Added,ABox1),
   add_nominal(D,Ind,ABox1,ABox2),
-  expand_from_ind_class(D,Ind,AxL1,M,ABox2,ABox).
+  expand_from_ind_class(D,Ind,Added,M,ABox2,ABox).
 */
+
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
@@ -1726,7 +1729,7 @@ expand_from_hier_ind_class([H-Ex|T],M,Ind,Expl4ClassInd,ABox0,ABox):-
   empty_expl(M,EEx),
   dif(Ex,EEx),
   and_f(M,Ex,Expl4ClassInd,Expl),
-  modify_ABox(M,ABox0,H,Ind,Expl,false,_Added,ABox1),!,
+  modify_ABox(M,ABox0,H,Ind,Expl,true,_Added,ABox1),!,
   add_nominal(H,Ind,ABox1,ABox2),
   expand_from_hier_ind_class(T,M,Ind,Expl4ClassInd,ABox2,ABox).
 
