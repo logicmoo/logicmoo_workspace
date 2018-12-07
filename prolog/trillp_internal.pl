@@ -22,12 +22,17 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
+setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]).
 setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
   M:(dynamic exp_found/2).
+
+clean_up(M):-
+  utility_translation:clean_up(M),
+  M:(dynamic exp_found/2),
+  retractall(M:exp_found(_,_)).
 
 /*****************************
   MESSAGES
@@ -132,10 +137,7 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(M,ABox0,C,Ind,L0,Added,ABox1):-
-  modify_ABox(M,ABox0,C,Ind,L0,true,Added,ABox1).
-
-modify_ABox(M,ABox0,C,Ind,L0,true,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -147,16 +149,11 @@ modify_ABox(M,ABox0,C,Ind,L0,true,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
      )
   ),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
+  
+  
+modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
-modify_ABox(M,ABox0,C,Ind,L0,false,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
-  findClassAssertion(C,Ind,Expl1,ABox0),!,
-  dif(L0,Expl1),
-  or_f(M,L0,Expl1,Expl),
-  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).  
-
-modify_ABox(_,ABox0,C,Ind,L0,_,L0,[(classAssertion(C,Ind),L0)|ABox0]):-!.
-
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,true,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -166,37 +163,19 @@ modify_ABox(M,ABox0,P,Ind1,Ind2,L0,true,Expl,[(propertyAssertion(P,Ind1,Ind2),Ex
      (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
   ),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
-
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,false,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
-  findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
-  dif(L0,Expl1),
-  or_f(M,L0,Expl1,Expl),
-  delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,_,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-!.
+  
+modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* **************** */
 
-/***********
-  update abox
-  utility for tableau
-************/
-
-get_hierarchy_from_class(M,Class,H4C):-
-  hierarchy(M:H),
-  get_hierarchy(H,Class,H4C),!.
-
-/* ************* */
 
 /*
-
   build_abox
   ===============
 */
 
-clear_trill_db(_):- !.
-
-build_abox_int(M,(ABox,Tabs)):-
+build_abox(M,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -592,9 +571,6 @@ find_compatible_or(F1,OrF2,OrF2C,OrF2NC):-
   differenceFML(OrF2,OrF2C,OrF2NC).
   
 remove_duplicates(A,C):-sort(A,C).
-
-% init an explanation with one axiom
-ax2ex(_M,Ax,*([Ax])):- !.
 
 /**********************
 

@@ -20,12 +20,17 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]). %o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule
+setting_trill(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
 setting_trill(nondet_rules,[or_rule,max_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
   M:(dynamic exp_found/2).
+
+clean_up(M):-
+  utility_translation:clean_up(M),
+  M:(dynamic exp_found/2),
+  retractall(M:exp_found(_,_)).
 
 /***********
   Utilities for queries
@@ -173,63 +178,30 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(M,ABox0,C,Ind,L0,Added,ABox1):-
-  modify_ABox(M,ABox0,C,Ind,L0,true,Added,ABox1).
-
-modify_ABox(_,ABox0,sameIndividual(LF),Expl1,true,Added,[(sameIndividual(L),Expl)|ABox]):-
+modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
   ( find((sameIndividual(L),Expl0),ABox) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
   	  LS = LFS,!,
-  	  absent(Expl0,Expl1,Expl,Added),
+  	  absent(Expl0,Expl1,Expl),
   	  delete(ABox0,[(sameIndividual(L),Expl0)],ABox)
-  	)
-  ;
-  	(ABox = ABox0,Expl = Expl1,Added=Expl)
-  ).
-
-modify_ABox(_,ABox0,sameIndividual(LF),Expl1,false,_Added,[(sameIndividual(L),Expl)|ABox]):-
-  ( find((sameIndividual(L),Expl0),ABox) ->
-  	( sort(L,LS),
-  	  sort(LF,LFS),
-  	  LS = LFS,!,
-  	  append(Expl0,Expl1,Expl),
-      delete(ABox0,[(sameIndividual(L),Expl0)],ABox)
   	)
   ;
   	(ABox = ABox0,Expl = Expl1)
   ).
 
-modify_ABox(_,ABox0,C,Ind,Expl1,true,Added,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
-    ( absent(Expl0,Expl1,Expl,Added),
-      delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
-    )
-  ;
-    (ABox = ABox0,Expl = Expl1,Added=Expl)
-  ).
-
-modify_ABox(_,ABox0,C,Ind,Expl1,false,_Added,[(classAssertion(C,Ind),Expl)|ABox]):-
-  ( find((classAssertion(C,Ind),Expl0),ABox0) ->
-    ( append(Expl0,Expl1,Expl),
+    ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
     )
   ;
     (ABox = ABox0,Expl = Expl1)
   ).
 
-modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,true,Added,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
-    ( absent(Expl0,Expl1,Expl,Added),
-      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
-    )
-  ;
-    (ABox = ABox0,Expl = Expl1,Added=Expl)
-  ).
-
-modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,false,_Added,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
-  ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
-    ( append(Expl0,Expl1,Expl),
+    ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
     )
   ;
@@ -327,19 +299,19 @@ findExplForClassOf(LC,LI,ABox0,Expl):-
 /*  absent
   =========
 */
-absent(Expl0,Expl1,Expl,Added):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
-  absent0(Expl0,Expl1,Expl,Added),!.
+absent(Expl0,Expl1,Expl):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
+  absent0(Expl0,Expl1,Expl),!.
 
 %------------------
-absent0(Expl0,Expl1,Expl,Added):-
+absent0(Expl0,Expl1,Expl):-
   absent1(Expl0,Expl1,Expl,Added),
-  dif(Added,[]).
+  dif(Added,0).
 
-absent1(Expl,[],Expl,[]).
+absent1(Expl,[],Expl,0).
 
-absent1(Expl0,[H|T],[H|Expl],[H|Added]):-
+absent1(Expl0,[H|T],[H|Expl],1):-
   absent2(Expl0,H),!,
-  absent1(Expl0,T,Expl,Added).
+  absent1(Expl0,T,Expl,_).
 
 absent1(Expl0,[_|T],Expl,Added):-
   absent1(Expl0,T,Expl,Added).
@@ -357,17 +329,6 @@ absent2([_|T],Expl):-
 
 /* **************** */
 
-/***********
-  update abox
-  utility for tableau
-************/
-
-get_hierarchy_from_class(M,Class,H4C):-
-  hierarchy(M:H),
-  get_hierarchy(H,Class,H4C),!.
-
-/* ************* */
-
 /*
   build_abox
   ===============
@@ -383,9 +344,7 @@ get_hierarchy_from_class(M,Class,H4C):-
   add_all(LSPA,ABox2,ABox).
 */
 
-clear_trill_db(_):- !.
-
-build_abox_int(M,(ABox,Tabs)):-
+build_abox(M,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -421,8 +380,7 @@ initial_expl(_M,[]):-!.
 empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
-  and_f(M,[[Axiom]],F0,F1),
-  minimize_f(F1,F1,F).
+  and_f(M,[[Axiom]],F0,F).
 
 and_f(_M,[],[],[]):- !.
 
@@ -431,8 +389,7 @@ and_f(_M,[],L,L):- !.
 and_f(_M,L,[],L):- !.
 
 and_f(_M,L1,L2,F):-
-  and_f1(L1,L2,[],F0),
-  minimize_f(F0,F0,F).
+  and_f1(L1,L2,[],F).
 
 and_f1([],_,L,L).
 
@@ -444,32 +401,13 @@ and_f1([H1|T1],L2,L3,L):-
 and_f2(_,[],[]):- !.
 
 and_f2(L1,[H2|T2],[H|T]):-
-  append(L1,H2,H0),
-  sort(H0,H),
+  append(L1,H2,H),
   and_f2(L1,T2,T).
 
 or_f(_M,Or1,Or2,Or):-
   append(Or1,Or2,Or0),
   sort(Or0,Or).
 
-% init an explanation with one axiom
-ax2ex(_M,Ax,[[Ax]]):- !.
-
-
-% removes duplicated and non-minimal expls
-minimize_f([],_,[]).
-
-minimize_f([H|T],F0,[H|T1]):-
-  delete(F0,H,FD),
-  \+ is_there_subset(H,FD),!,
-  minimize_f(T,F0,T1).
-
-minimize_f([_H|T],F0,T1):-
-  minimize_f(T,F0,T1).
-
-is_there_subset(H,FD):-
-  member(X,FD),
-  subset(X,H),!.
 /**********************
 
 Hierarchy Explanation Management

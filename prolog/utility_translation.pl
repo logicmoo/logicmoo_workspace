@@ -1709,7 +1709,7 @@ rdf_2_owl(M,Ont) :-
 	debug(owl_parser, 'Removing existing owl triples',[]),
 %	retractall(owl(_,_,_,Ont)),
 	debug(owl_parser,'Copying RDF triples to OWL triples for Ontology ~w',[Ont]),
-	M:myrdf(X,Y,Z),
+	M:rdf(X,Y,Z),
 	assert(M:owl(X,Y,Z,Ont)), fail.
 
 rdf_2_owl(M,Ont) :-
@@ -3246,10 +3246,10 @@ trill:remove_kb_prefix(M:A):-
 
 assert_list(_M,[], _):-!.
 assert_list(M,[H|T], Source) :-
-    H=..[_|Args],
-    H1=..[myrdf|Args],
-	assert(M:H1),
-	%add_atoms_from_axiom(M,Args),
+    %H=..[_|Args],
+    %H1=..[rdf|Args],
+    assert(M:H),
+    %add_atoms_from_axiom(M,Args),
     assert_list(M,T, Source).
 
 find_all_probabilistic_annotations(M,Ax,PV):-
@@ -3635,6 +3635,31 @@ add_expressivity(M,f):-
 is_axiom(Axiom) :-
 	functor(Axiom,Pred,Arity),
 	axiompred(Pred/Arity),!.
+
+clean_up(M):-
+  rdf_reset_db,
+  M:(dynamic class/1, datatype/1, objectProperty/1, dataProperty/1, annotationProperty/1),
+  M:(dynamic namedIndividual/1, anonymousIndividual/1, subClassOf/2, equivalentClasses/1, disjointClasses/1, disjointUnion/2),
+  M:(dynamic subPropertyOf/2, equivalentProperties/1, disjointProperties/1, inverseProperties/2, propertyDomain/2, propertyRange/2),
+  M:(dynamic functionalProperty/1, inverseFunctionalProperty/1, reflexiveProperty/1, irreflexiveProperty/1, symmetricProperty/1, asymmetricProperty/1, transitiveProperty/1, hasKey/2),
+  M:(dynamic sameIndividual/1, differentIndividuals/1, classAssertion/2, propertyAssertion/3, negativePropertyAssertion/3),
+  M:(dynamic annotationAssertion/3, annotation/3, ontology/1, ontologyAxiom/2, ontologyImport/2, ontologyVersionInfo/2),
+  M:(dynamic owl/4, owl/3, owl/2, blanknode/3, outstream/1, aNN/3, annotation_r_node/4, axiom_r_node/4, owl_repository/2, trdf_setting/2),
+  M:(dynamic ns4query/1),
+  retractall(M:kb_atom([])),
+  forall(trill:axiom(M:A),retractall(M:A)),
+  retractall(M:blanknode(_,_,_)),
+  retractall(M:aNN(_,_,_)),
+  retractall(M:annotation_r_node(_,_,_)),
+  retractall(M:axiom_r_node(_,_,_)),
+  retractall(M:annotation(_,_,_)),
+  retractall(M:owl(_,_,_)),
+  retractall(M:owl(_,_,_,_)),
+  retractall(M:owl(_,_)),
+  retractall(M:ontologyAxiom(_,_)),
+  retractall(M:ontologyImport(_,_)),
+  retractall(M:ontologyVersionInfo(_,_)),
+  retractall(M:rdf(_,_,_)).
 
 set_up(M):-
   M:(dynamic class/1, datatype/1, objectProperty/1, dataProperty/1, annotationProperty/1),

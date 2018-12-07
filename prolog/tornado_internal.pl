@@ -20,12 +20,19 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]). %and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule
+setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]).
 setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
   M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1).
+
+clean_up(M):-
+  utility_translation:clean_up(M),
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
+  retractall(M:exp_found(_,_)),
+  retractall(M:keep_env),
+  retractall(M:tornado_bdd_environment(_)).
 
 /*****************************
   MESSAGES
@@ -144,58 +151,39 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
-
-modify_ABox(M,ABox0,C,Ind,L0,Expl,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
   
-modify_ABox(_,ABox0,C,Ind,L0,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+  
+modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
-modify_ABox(M,ABox0,C,Ind,L0,false,Added,ABox1):-
-  modify_ABox(M,ABox0,C,Ind,L0,Added,ABox1).
-
-
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,Expl,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
   
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
+modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* ************* */
 
-/***********
-  update abox
-  utility for tableau
-************/
-
-get_hierarchy_from_class(M,Class,H4C):-
-  hierarchy(M:H),
-  get_hierarchy(H,Class,H4CE),!,
-  get_bdd_environment(M,Env),
-  hier_build_bdd(M,Env,H4CE,H4C).
-
-/* ************* */
 
 /*
   build_abox
   ===============
 */
 
-start_bdd(M,Env):-
+build_abox(M,(ABox,Tabs)):-
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
   %findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
-  get_bdd_environment(M,Env).
-
-build_abox_int(M,(ABox,Tabs)):-
-  start_bdd(M,Env),
+  get_bdd_environment(M,Env),
   findall((classAssertion(Class,Individual),BDDCA),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
   findall((propertyAssertion(Property,Subject, Object),BDDPA),(M:propertyAssertion(Property,Subject, Object),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -255,13 +243,6 @@ or_f(M,BDD0,BDD1,BDD):-
   get_bdd_environment(M,Env),
   or(Env,BDD0,BDD1,BDD).
 
-
-
-% init an explanation with one axiom
-ax2ex(M,Ax,BDDAxiom):-
-  get_bdd_environment(M,Env),
-  bdd_and(M,Env,[Ax],BDDAxiom).
-
 /**********************
 
 Hierarchy Explanation Management
@@ -302,37 +283,6 @@ hier_or_f(_M,Or1,Or2,Or):-
 
 hier_ax2ex(_M,Ax,[[Ax]]):- !.
 
-/*  absent
-  =========
-*/
-absent(Expl0,Expl1,Expl,Added):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
-  absent0(Expl0,Expl1,Expl,Added),!.
-
-%------------------
-absent0(Expl0,Expl1,Expl,Added):-
-  absent1(Expl0,Expl1,Expl,Added),
-  dif(Added,[]).
-
-absent1(Expl,[],Expl,[]).
-
-absent1(Expl0,[H|T],[H|Expl],[H|Added]):-
-  absent2(Expl0,H),!,
-  absent1(Expl0,T,Expl,Added).
-
-absent1(Expl0,[_|T],Expl,Added):-
-  absent1(Expl0,T,Expl,Added).
-  
-absent2([H],Expl):-
-  length([H],1),
-  subset(H,Expl) -> fail ; true.
-
-absent2([H|_T],Expl):-
-  subset(H,Expl),!,
-  fail.
-
-absent2([_|T],Expl):-
-  absent2(T,Expl).
-
 /**********************
 
 TRILLP SAT TEST
@@ -359,9 +309,6 @@ get_bdd_environment(M,Env):-
   init(Env),
   M:assert(tornado_bdd_environment(Env)).
 
-get_bdd_environment(M,Env):-
-  M:tornado_bdd_environment(Env),!.
-
 clean_environment(M,Env):-
   end(Env),
   retractall(M:tornado_bdd_environment(_)).
@@ -379,52 +326,3 @@ bdd_and(M,Env,[X],BDDX):-
 
 bdd_and(_M,Env,[_X],BDDX):- !,
   one(Env,BDDX).
-
-
-/**********************
-
- TORNADO Probability Computation
-
-***********************/
-hier_build_bdd(_M,_Env,[],[]):- !.
-
-hier_build_bdd(M,Env, [C-H|T],[C-BDDH|BDDT]):-
-  hier_build_bdd_int(M,Env,H,BDDH),
-  hier_build_bdd(M,Env,T,BDDT).
-
-hier_build_bdd_int(_M,Env,[],BDD):- !,
-  zero(Env,BDD).
-
-hier_build_bdd_int(M,Env,[X],BDD):- !,
-  hier_bdd_and(M,Env,X,BDD).
-
-hier_build_bdd_int(M,Env, [H|T],BDD):-
-  hier_build_bdd_int(M,Env,T,BDDT),
-  hier_bdd_and(M,Env,H,BDDH),
-  or(Env,BDDH,BDDT,BDD).
-
-hier_build_bdd_int(_M,Env,[],BDD):- !,
-  zero(Env,BDD).
-
-
-hier_bdd_and(M,Env,[X],BDDX):-
-  get_prob_ax(M,X,AxN,Prob),!,
-  ProbN is 1-Prob,
-  get_var_n(Env,AxN,[],[Prob,ProbN],VX),
-  equality(Env,VX,0,BDDX),!.
-
-hier_bdd_and(_M,Env,[_X],BDDX):- !,
-  one(Env,BDDX).
-
-hier_bdd_and(M,Env,[H|T],BDDAnd):-
-  get_prob_ax(M,H,AxN,Prob),!,
-  ProbN is 1-Prob,
-  get_var_n(Env,AxN,[],[Prob,ProbN],VH),
-  equality(Env,VH,0,BDDH),
-  hier_bdd_and(M,Env,T,BDDT),
-  and(Env,BDDH,BDDT,BDDAnd).
-  
-hier_bdd_and(M,Env,[_H|T],BDDAnd):- !,
-  one(Env,BDDH),
-  hier_bdd_and(M,Env,T,BDDT),
-  and(Env,BDDH,BDDT,BDDAnd).
