@@ -1,6 +1,6 @@
 phil
 ======
-phil is a parameter learning algorithm that learns the parameters of Hierarchical Probabilistic Logic Programs (HPLP) applying gradient descent or Expectation Maximization.
+phil is a parameter learning algorithm that learns the parameters of Hierarchical Probabilistic Logic Programs (HPLP) applying gradient descent (dphil) or Expectation Maximization (emphil).
 
 Installation
 ------------
