@@ -713,7 +713,7 @@ apply_det_rules(M,[],ABox0,ABox):-
 
 apply_det_rules(M,[H|_],ABox0,ABox):-
   %C=..[H,ABox,ABox1],
-  call(H,M,ABox0,ABox),!.
+  call(H,M,ABox0,ABox),!,writeln(H).
 
 apply_det_rules(M,[_|T],ABox0,ABox):-
   apply_det_rules(M,T,ABox0,ABox).
@@ -892,9 +892,12 @@ add_exists_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
 
 existsInKB(M,R,C):-
-  hierarchy(M:H),
-  Classes=H.classesName,
-  member(someValuesFrom(R,C),Classes).
+  M:subClassOf(A,B),
+  member(someValuesFrom(R,C),[A,B]).
+
+existsInKB(M,R,C):-
+  M:equivalentClasses(L),
+  member(someValuesFrom(R,C),L).
 
 /* *************** */ 
 
@@ -990,8 +993,8 @@ forall_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
 forall_plus_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(allValuesFrom(S,C),Ind1,Expl1,ABox0),
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
-  find_sub_sup_trans_role(M,R,S,Expl3),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
+  find_sub_sup_trans_role(M,R,S,Expl3),
   and_f(M,Expl1,Expl2,ExplT),
   and_f(M,ExplT,Expl3,Expl),
   modify_ABox(M,ABox0,allValuesFrom(R,C),Ind2,Expl,ABox).
@@ -1004,13 +1007,11 @@ find_sub_sup_trans_role(M,R,S,Expl):-
   and_f_ax(M,subPropertyOf(R,S),EExpl,Expl0),
   and_f_ax(M,transitive(R),Expl0,Expl).
 
-/*
 find_sub_sup_trans_role(M,R,S,Expl):-
   M:subPropertyOf(R,S),
   \+ M:transitiveProperty(R),
   initial_expl(M,EExpl),
   and_f_ax(M,subPropertyOf(R,S),EExpl,Expl).
-*/
 /* ************ */
 
 /*
@@ -1020,7 +1021,7 @@ find_sub_sup_trans_role(M,R,S,Expl):-
 
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind,Expl,ABox0),
-  find_sub_sup_class_tot(M,C,D,Ax),
+  find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
   add_nominal(D,Ind,ABox1,ABox).
@@ -1038,7 +1039,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(M,Ind,L,ABox0,Expl1)),
-  find_sub_sup_class_tot(M,C,D,Ax),
+  find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl1,AxL1),
   modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
   add_nominal(D,Ind,ABox1,ABox).
@@ -1125,34 +1126,28 @@ neg_list([complementOf(H)|T],[H|T1]):-
 
 find_class_prop_range_domain(M,Ind,D,Expl,(ABox,_Tabs)):-
   findPropertyAssertion(R,_,IndL,ExplPA,ABox),
-  M:propertyRange(R,D),
   indAsList(IndL,L),
   member(Ind,L),
+  M:propertyRange(R,D),
   and_f_ax(M,propertyRange(R,D),ExplPA,Expl).
 
 find_class_prop_range_domain(M,Ind,D,Expl,(ABox,_Tabs)):-
   findPropertyAssertion(R,IndL,_,ExplPA,ABox),
-  M:propertyDomain(R,D),
   indAsList(IndL,L),
   member(Ind,L),
+  M:propertyDomain(R,D),
   and_f_ax(M,propertyDomain(R,D),ExplPA,Expl).
 
 
 %-----------------
-find_sub_sup_class_tot(M,C,D,Ax):-
-  find_sub_sup_class(M,C,D,Ax).
-
-find_sub_sup_class_tot(M,C,D,Ax):-
-  find_sub_sup_class_dir(M,C,D,Ax).
-
 :- multifile find_sub_sup_class/4.
 
 % subClassOf
-find_sub_sup_class_dir(M,C,D,subClassOf(C,D)):-
+find_sub_sup_class(M,C,D,subClassOf(C,D)):-
   M:subClassOf(C,D).
 
 %equivalentClasses
-find_sub_sup_class_dir(M,C,D,equivalentClasses(L)):-
+find_sub_sup_class(M,C,D,equivalentClasses(L)):-
   M:equivalentClasses(L),
   member(C,L),
   member(D,L),
@@ -1160,7 +1155,7 @@ find_sub_sup_class_dir(M,C,D,equivalentClasses(L)):-
 
 %concept for concepts allValuesFrom
 find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(R,D),Ax):-
-  find_sub_sup_class_dir(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts allValuesFrom
 find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1168,7 +1163,7 @@ find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
 
 %concept for concepts someValuesFrom
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
-  find_sub_sup_class_dir(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts someValuesFrom
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1221,15 +1216,13 @@ find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http:
 %--------------------
 % looks for not atomic concepts descriptions containing class C
 find_not_atomic(M,C,intersectionOf(L1),L1):-
-  hierarchy(M:H),
-  Classes=H.classesName,
-  member(intersectionOf(L1),Classes),
+  M:subClassOf(A,B),
+  member(intersectionOf(L1),[A,B]),
   member(C,L1).
 
 find_not_atomic(M,C,unionOf(L1),L1):-
-  hierarchy(M:H),
-  Classes=H.classesName,
-  member(unionOf(L1),Classes),
+  M:subClassOf(A,B),
+  member(unionOf(L1),[A,B]),
   member(C,L1).
 
 /*
@@ -1240,6 +1233,7 @@ find_not_atomic(M,C,intersectionOf(L),L):-
 find_not_atomic(M,C,unionOf(L),L):-
   M:unionOf(L),
   member(C,L).
+*/
 
 find_not_atomic(M,C,intersectionOf(L1),L1):-
   M:equivalentClasses(L),
@@ -1250,7 +1244,6 @@ find_not_atomic(M,C,unionOf(L1),L1):-
   M:equivalentClasses(L),
   member(unionOf(L1),L),
   member(C,L1).
-*/
 
 % -----------------------
 % puts together the explanations of all the concepts found by find_not_atomic/3
@@ -1381,27 +1374,6 @@ min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
   NoI is N-LSS,
   min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
 
-min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
-  findClassAssertion(exactCardinality(N,S),Ind1,Expl,ABox),
-  \+ blocked(Ind1,(ABox,Tabs)),
-  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
-  length(SS,LSS),
-  LSS @< N,
-  NoI is N-LSS,
-  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
-
-
-min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
-  findClassAssertion(exactCardinality(N,S,C),Ind1,Expl,ABox),
-  \+ blocked(Ind1,(ABox,Tabs)),
-  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
-  length(SS,LSS),
-  LSS @< N,
-  NoI is N-LSS,
-  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
-
 % ----------------------
 min_rule_neigh(_,0,_,_,_,[],ABox,Tabs,ABox,Tabs).
 
@@ -1457,28 +1429,6 @@ max_rule(M,(ABox0,Tabs0),L):-
   findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
   dif(L,[]),
   !.
-
-max_rule(M,(ABox0,Tabs0),L):-
-  findClassAssertion(exactCardinality(N,S,C),Ind,Expl,ABox0),
-  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
-  s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
-  individual_class_C(SN,C,ABox0,SNC),
-  length(SNC,LSS),
-  LSS @> N,
-  findall((ABox1,Tabs1),scan_max_list(M,S,SNC,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
-  dif(L,[]),
-  !.
-
-max_rule(M,(ABox0,Tabs0),L):-
-  findClassAssertion(exactCardinality(N,S),Ind,Expl,ABox0),
-  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
-  s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
-  length(SN,LSS),
-  LSS @> N,
-  findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
-  dif(L,[]),
-  !.
-
 %---------------------
 
 scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0,ABox,Tabs):-
