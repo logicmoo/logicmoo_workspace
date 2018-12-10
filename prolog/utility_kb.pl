@@ -45,7 +45,7 @@ create_hierarchy(M,Stats):-%gtrace,
        statistics(walltime,[_,_])
      )
   ),
-  init_hierarchy(M:H0),
+  init_hierarchy(M:H0),%gtrace,
   %findall(C,M:class(C),L1),
   %findall(Class,M:classAssertion(Class,_Individual),L2),
   %findall(I,M:namedIndividual(I),LI1),
@@ -71,8 +71,8 @@ create_hierarchy(M,Stats):-%gtrace,
   add_all_disjointClasses(H2,M,H3),
   add_all_disjointUnion(H3,M,H4),
   add_all_subClassOf(H4,M,H5),
-  search_and_add_complex_subClassOf(H5,M,H),
-  check_disjoint(H),
+  search_and_add_complex_subClassOf(H5,M,H6),
+  check_disjoint(H6,H),
   (Stats=false -> true ;
      ( statistics(walltime,[_,KBAM]),
        KBAS is KBAM / 1000,
@@ -165,35 +165,55 @@ update_hierarchy_with_axiom(_M,_Axiom):- !.
  - objectProperties: set of object properties of the KB
 */
 % init_hierarchy(kb{hierarchy:TreeH,nClasses:1,disjointClasses:TreeD,node2classes:Classes})
-init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjointClasses:TreeD,classes:Classes,classesName:ClassesName,explanations:[],individuals:[],annotationProperties:[],dataProperties:[],datatypes:[],objectProperties:[]}):-
+init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjointClasses:[0-'n'],classes:Classes,classesName:ClassesName,explanations:[],individuals:[],annotationProperties:[],dataProperties:[],datatypes:[],objectProperties:[]}):-
   vertices_edges_to_ugraph([0,'n'],[],TreeH),
   Classes=classes{'n':'http://www.w3.org/2002/07/owl#Nothing',0:'http://www.w3.org/2002/07/owl#Thing'},
-  ClassesName=['http://www.w3.org/2002/07/owl#Nothing','http://www.w3.org/2002/07/owl#Thing'],
-  vertices_edges_to_ugraph([],['n'-0,0-'n'],TreeD).
+  ClassesName=['http://www.w3.org/2002/07/owl#Nothing','http://www.w3.org/2002/07/owl#Thing'].
+  %vertices_edges_to_ugraph([],[0-'n'],TreeD).
 
-check_disjoint(KB):-
-  \+ check_disjoint_int(KB),!.
+check_disjoint(KB0,KB):-
+  KBH=KB0.hierarchy,
+  edges(KBH,H),
+  check_disjoint_int(KB0.disjointClasses,H,NewEdges),
+  collect_nodes_to_remove(NewEdges,H,[],Edges),
+  del_edges(KBH,Edges,TreeH0),
+  add_edges(TreeH0,NewEdges,TreeH),
+  KB=KB0.put(hierarchy,TreeH),!.
 
-check_disjoint_int(KB):-
-  edges(KB.disjointClasses,E),  
-  member(DC1-DC2,E),
-  reachable(DC1,KB.hierarchy,DCL1),
-  reachable(DC2,KB.hierarchy,DCL2),
+check_disjoint_int([],_,[]).
+
+check_disjoint_int([DC1-DC2|TDisj],KBH,['n'-SameNode|NEdges0]):-
+  ordered_sons(DC1,KBH,DCL1),
+  ordered_sons(DC2,KBH,DCL2),
   member(SameNode,[DC1|DCL1]),
-  memberchk(SameNode,[DC2|DCL2]),!.
+  memberchk(SameNode,[DC2|DCL2]),!,
+  check_disjoint_int(TDisj,KBH,NEdges0).
+
+check_disjoint_int([_DC1-_DC2|TDisj],KBH,NEdges):-
+  check_disjoint_int(TDisj,KBH,NEdges).
+
+ordered_sons(C,KBH,Nodes):-
+  findall(X,member(C-X,KBH),Nodes0),
+  findall(Y,(member(S,Nodes0),ordered_sons(S,KBH,Y)),Nodes1),
+  append([Nodes0|Nodes1],Nodes).
+
+collect_nodes_to_remove([],_H,N,N).
+
+collect_nodes_to_remove(['n'-C|TD],H,TN0,TN):-
+  findall(X-C,member(X-C,H),CN),
+  append(CN,TN0,TN1),
+  collect_nodes_to_remove(TD,H,TN1,TN).
 
 add_disjoint_link(KB0,C,C1,KB):-
   Classes0=KB0.classes,
   PC=Classes0.find(C),
   PC1=Classes0.find(C1),
   ( dif(PC,PC1) -> % check KB consistency
-     ( add_edges(KB0.disjointClasses,[PC-PC1,PC1-PC],TreeD),
-       KB=KB0.put(disjointClasses,TreeD)
+     ( KB=KB0.put(disjointClasses,[PC-PC1|KB0.disjointClasses])
      )
     ;
      fail
   ).
-
 
 add_hierarchy_link(KB0,C,C1,KB):-
   Classes0=KB0.classes,
@@ -635,8 +655,8 @@ add_all_disjointClasses_1(H0,[ClassList|T],H):-
 
 %% add_disjountClasses(...) adds classes and verifies whether there is not a contraddiction. Fails in case of contradiction
 add_disjointClasses(KB0,ClassList,KB):-
-  add_disjClass_hier(KB0,ClassList,KB1),
-  add_disjClass_expl(KB1,disjointClasses(ClassList),KB).
+  add_disjClass_hier(KB0,ClassList,KB).
+  %add_disjClass_expl(KB1,disjointClasses(ClassList),KB).
   
 add_disjClass_hier(KB0,ClassList,KB):-
   %add_classes(KB0,ClassList,KB1),
@@ -704,8 +724,8 @@ add_all_disjointUnion_1(H0,[C-D|T],H):-
 add_disjointUnion(KB0,Class,DisjointUnion,KB):-
   add_eqClass_hier(KB0,[Class,unionOf(DisjointUnion)],KB1),
   add_disjClass_hier(KB1,DisjointUnion,KB2),
-  add_eqClass_expl(KB2,disjointUnion(Class,DisjointUnion),KB3),
-  add_disjClass_expl(KB3,disjointUnion(Class,DisjointUnion),KB).
+  add_eqClass_expl(KB2,disjointUnion(Class,DisjointUnion),KB).
+  %add_disjClass_expl(KB3,disjointUnion(Class,DisjointUnion),KB).
 
 
 % Adds all subClassOf axioms
