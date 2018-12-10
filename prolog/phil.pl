@@ -57,7 +57,6 @@ using gradient descent and Backpropagation
 :-load_foreign_library(foreign(phil)).
 
 
-
 :- dynamic getIndex/2.
 
 :- dynamic db/1.
@@ -377,7 +376,7 @@ induce_parameters(M:Folds,DB,R):-
   learn_params(DB,M,R0,R),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
-  format(M,' PHIL Wall time ~f */~n',[CTS]),
+  format2(M,' PHIL Wall time ~f */~n',[CTS]),
   nl,
   write_rules2(M,R,user_output),
   (M:bg(RBG0)->
@@ -462,7 +461,11 @@ learn_params(DB,M,R0,R):-
   Folder=[Save,Statistics_folder],
   M:local_setting(zero,ZERO),
   M:local_setting(setSeed,Seeded),
-  M:local_setting(c_seed,Seed),
+  (Seeded=yes ->
+    M:local_setting(c_seed,Seed)
+  ;
+   Seed is 0
+  ),
   M:local_setting(useInitParams,Init),
   (Init=yes ->
     getInitialParameters(R0,InitParameters),
@@ -1278,14 +1281,6 @@ remove_duplicates([H|T],L0,L):-
 remove_duplicates([H|T],L0,L):-
   remove_duplicates(T,[H|L0],L).
 
-
-/*
-
-EMBLEM and SLIPCASE
-
-Copyright (c) 2011, Fabrizio Riguzzi, Nicola di Mauro and Elena Bellodi
-
-*/
 
 
 specialize_rule(Rule,M,_SpecRule,_Lit):-

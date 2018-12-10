@@ -314,7 +314,7 @@ double product(node*nod,double Probabilities[]){
 // Prints common hyperparameters 
 void  printCommonParamameters(double EA,double ER, int MaxIteration,int lenNodes,char*statisticsFolder,char*save,char*seeded,int seed){
   printf("\n Hyperparameters of %s:\n\n", statisticsFolder);
-  printf("Save the statistics? %s\n",save);
+  printf("Save statistics? %s\n",save);
   printf("Number of arithmetic circuits: %d \n",lenNodes);
   printf("Max Iteration= %d \n",MaxIteration);
   printf("Epsilon= %lf \n",EA);
@@ -409,7 +409,7 @@ int getParameters( term_t Parameters, double Probabilities[],int NR){
   return ret;
 }
 // Get the hyperparameters for learning
-int getHyperParameters (term_t Params,term_t StopCond,term_t Folder, int *MaxIter,double* EA,double*  ER,int *NR, double*ZERO,char**statisticsFolder, char**save,char**seeded, int*seed){
+int getHyperParameters(term_t Params,term_t StopCond,term_t Folder, int *MaxIter,double* EA,double*  ER,int *NR, double*ZERO,char**statisticsFolder, char**save,char**seeded, int*seed){
   int ret; 
   term_t nodesTerm1,nodesTerm2,nodesTerm3,head;
   char  *initialized;
@@ -421,14 +421,14 @@ int getHyperParameters (term_t Params,term_t StopCond,term_t Folder, int *MaxIte
   nodesTerm3=PL_copy_term_ref(Folder);  // Contains the name of the folder and the save flag (yes or no)
   
   // Get the number of rule and the Zero setting
-   ret=PL_get_list(nodesTerm1,head,nodesTerm1);
+  ret=PL_get_list(nodesTerm1,head,nodesTerm1);
   ret=PL_get_integer(head,NR);
   // Get the zero value
   ret=PL_get_list(nodesTerm1,head,nodesTerm1);
   ret=PL_get_float(head,ZERO);
    // Get the zero value
   ret=PL_get_list(nodesTerm1,head,nodesTerm1);
-  ret=PL_get_chars(head, seeded,CVT_STRING);
+  ret=PL_get_atom_chars(head, seeded);
    // Get the zero value
   ret=PL_get_list(nodesTerm1,head,nodesTerm1);
   ret=PL_get_integer(head,seed);
@@ -558,13 +558,27 @@ void sigma_vec(double Weights[],double Probabilities[],int NR){
   }
 }
 
+// Applies the inverse of  sigmoid function to a single probability.
+double sigma_vec_inv(double Probability){
+  double temp;
+   if(Probability==0)
+      temp=1/ZERO;
+   else
+      temp=(1-Probability)/Probability;
+    if(temp==1)
+       temp=0.9999999999;
+    if (temp <=0)
+        temp=ZERO;
+   return -log(temp);
+}
+
 // Initializes the weights the moments and the gradients
 void initialize_weights_moments(double weights[],double Gradient[],double moments0[],double moments1[],int NR,double Max_W,char*seeded,int seed){
   int i;
   setSeed(seeded,seed);
     for(i=0;i<NR;i++){
         if(Init==1){
-            weights[i]=InitParameters[i];
+            weights[i]=sigma_vec_inv(InitParameters[i]);
         }else{
             weights[i]=randInRange(-Max_W,Max_W);
         }
@@ -576,7 +590,11 @@ void initialize_weights_moments(double weights[],double Gradient[],double moment
 
 // Print the hyperparameters for gradient descent
 void  printHyperparamsGD(double Eta,double Beta1,double Beta2, long double Adam_hat,double Max_W,int BatchSize,char* strategy){
-  printf("Initialize weights in the range [%.2lf %.2lf]\n",-Max_W,Max_W);
+  if(Init==1){
+     printf("Parameters are initialized with the initial program parameters\n");
+  }else{
+      printf("Parameters are initialized with sigma of weights in the range [%.2lf %.2lf]\n",-Max_W,Max_W);
+  }
   printf("Eta= %lf \n",Eta);
   printf("Beta1= %lf \n",Beta1);
   printf("Beta2= %lf \n",Beta2);
@@ -745,10 +763,11 @@ double dphil(node **Nodes,int lenNodes,int MaxIteration,double Probabilities [],
   if(strcmp(save,"Yes")==0 || strcmp(save,"yes")==0 || strcmp(save,"YES")==0 || strcmp(save,"YeS")==0)
      saved=1;
   initialize_weights_moments(Weights,Gradients,Moments0,Moments1,NR,Max_W,seeded,seed);
-  sigma_vec(Weights,Probabilities,NR);
   if(saved==1){
-      openFilesGD (statisticsFolder,&probsFile, &weightsFile,&Moments0File,&Moments1File,&lls); 
-      saveStatisticsGD(Probabilities,Weights,Moments0,Moments1,NR,probsFile,weightsFile,Moments0File,Moments1File,lls,CLL1);
+      openFilesGD (statisticsFolder,&probsFile, &weightsFile,&Moments0File,&Moments1File,&lls);
+        sigma_vec(Weights,Probabilities,NR);
+        saveStatisticsGD(Probabilities,Weights,Moments0,Moments1,NR,probsFile,weightsFile,Moments0File,Moments1File,lls,CLL1);
+            
   }
   from=0; to=BatchSize;
   while(Iter<MaxIteration1 && diff>EA && ratio>ER){
