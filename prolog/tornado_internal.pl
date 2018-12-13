@@ -151,6 +151,17 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
+modify_ABox(M,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox]):-
+  find((sameIndividual(L),Expl0),ABox),!,
+  sort(L,LS),
+  sort(LF,LFS),
+  LS = LFS,!,
+  dif(L0,Expl0),
+  test(M,L0,Expl1,Expl),
+  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
+  
+modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),L0)|ABox0]).
+
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
@@ -158,7 +169,7 @@ modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
   
   
-modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+modify_ABox(_M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
@@ -171,6 +182,18 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* ************* */
 
+/***********
+  update abox
+  utility for tableau
+************/
+
+get_hierarchy_from_class(M,Class,H4C):-
+  hierarchy(M:H),
+  get_hierarchy(H,Class,H4CE),!,
+  get_bdd_environment(M,Env),
+  hier_build_bdd(M,Env,H4CE,H4C).
+
+/* ************* */
 
 /*
   build_abox

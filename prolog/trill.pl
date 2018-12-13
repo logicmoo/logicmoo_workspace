@@ -209,10 +209,12 @@ instanceOf(M:Class,Ind,Expl):-
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
   	build_abox(M,(ABox,Tabs)),
-  	(  \+ clash(M,(ABox,Tabs),_) ->
+  	init_expand_abox_wt_hierarchy(M,(ABox,Tabs),(ABox0,Tabs)),
+  	(  \+ clash(M,(ABox0,Tabs),_) ->
   	    (
-  	    	add_q(M,ABox,complementOf(ClassEx),IndEx,ABox0),
-	  	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
+  	    	add_q(M,ABox0,complementOf(ClassEx),IndEx,ABox1),
+  	    	
+	  	findall((ABox2,Tabs2),apply_all_rules(M,(ABox1,Tabs),(ABox2,Tabs2)),L),
   		find_expls(M,L,[ClassEx,IndEx],Expl1),
   		check_and_close(M,Expl1,Expl)
   	    )
@@ -611,8 +613,8 @@ find_clash(M,(ABox0,Tabs0),Expl2):-
 %------------
 clash(M,(ABox,_),Expl):-
   %write('clash 1'),nl,
-  findClassAssertion(C,Ind,Expl1,ABox),
   findClassAssertion(complementOf(C),Ind,Expl2,ABox),
+  findClassAssertion(C,Ind,Expl1,ABox),
   and_f(M,Expl1,Expl2,Expl).
 
 clash(M,(ABox,_),Expl):-
@@ -628,8 +630,8 @@ clash(M,(ABox,_),Expl):-
 
 clash(M,(ABox,_),Expl):-
   %write('clash 3'),nl,
-  findClassAssertion(C,sameIndividual(L1),Expl1,ABox),
   findClassAssertion(complementOf(C),sameIndividual(L2),Expl2,ABox),
+  findClassAssertion(C,sameIndividual(L1),Expl1,ABox),
   samemember(L1,L2),
   and_f(M,Expl1,Expl2,Expl).
 
@@ -639,8 +641,8 @@ samemember(L1,L2):-
 
 clash(M,(ABox,_),Expl):-
   %write('clash 4'),nl,
-  findClassAssertion(C,Ind1,Expl1,ABox),
   findClassAssertion(complementOf(C),sameIndividual(L2),Expl2,ABox),
+  findClassAssertion(C,Ind1,Expl1,ABox),
   member(Ind1,L2),
   and_f(M,Expl1,Expl2,Expl).
 
@@ -657,7 +659,7 @@ clash(M,(ABox,_),Expl):-
 
 clash(M,(ABox,_),Expl):-
   %write('clash 7'),nl,
-  M:disjointClasses(L),
+  M:disjointClasses(L), % TODO use hierarchy
   member(C1,L),
   member(C2,L),
   dif(C1,C2),
@@ -668,7 +670,7 @@ clash(M,(ABox,_),Expl):-
 
 clash(M,(ABox,_),Expl):-
   %write('clash 8'),nl,
-  M:disjointUnion(Class,L),
+  M:disjointUnion(Class,L), % TODO use hierarchy
   member(C1,L),
   member(C2,L),
   dif(C1,C2),
@@ -679,7 +681,7 @@ clash(M,(ABox,_),Expl):-
 
 /*
 clash(M,(ABox,Tabs),Expl):-
-  %write('clash 7'),nl,
+  %write('clash 9'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
   s_neighbours(M,Ind,S,(ABox,Tabs),SN),
   individual_class_C(SN,C,ABox,SNC),
@@ -690,7 +692,7 @@ clash(M,(ABox,Tabs),Expl):-
   list_to_set(Expl3,Expl).
 
 clash(M,(ABox,Tabs),Expl):-
-  %write('clash 8'),nl,
+  %write('clash 10'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
   s_neighbours(M,Ind,S,(ABox,Tabs),SN),
   length(SN,LSS),
@@ -725,7 +727,7 @@ apply_det_rules(M,[],ABox0,ABox):-
 
 apply_det_rules(M,[H|_],ABox0,ABox):-
   %C=..[H,ABox,ABox1],
-  call(H,M,ABox0,ABox),!,writeln(H).
+  call(H,M,ABox0,ABox),!.
 
 apply_det_rules(M,[_|T],ABox0,ABox):-
   apply_det_rules(M,T,ABox0,ABox).
@@ -741,6 +743,13 @@ apply_nondet_rules(M,[H|_],ABox0,ABox):-
 
 apply_nondet_rules(M,[_|T],ABox0,ABox):-
   apply_nondet_rules(M,T,ABox0,ABox).
+
+
+expand_close_abox(M,(ABox0,Tabs),(ABox,Tabs)):-%gtrace,
+  findall((C,Ind,Expl),M:new_added(C,Ind,Expl),ClAss),
+  dif(ClAss,[]),
+  retractall(M:new_added(_,_,_)),
+  expand_abox_wt_hierarchy(M,ClAss,ABox0,ABox).
 
 
 /*
@@ -903,6 +912,13 @@ add_exists_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   and_f(M,Expl1,Expl2,Expl),
   modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
 
+/*
+existsInKB(M,R,C):-
+  hierarchy(M:H),
+  Classes=H.classesName,
+  member(someValuesFrom(R,C),Classes).
+*/
+
 existsInKB(M,R,C):-
   M:subClassOf(A,B),
   member(someValuesFrom(R,C),[A,B]).
@@ -910,6 +926,7 @@ existsInKB(M,R,C):-
 existsInKB(M,R,C):-
   M:equivalentClasses(L),
   member(someValuesFrom(R,C),L).
+
 
 /* *************** */ 
 
@@ -1033,10 +1050,11 @@ find_sub_sup_trans_role(M,R,S,Expl):-
 
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind,Expl,ABox0),
-  find_sub_sup_class(M,C,D,Ax),
-  and_f_ax(M,Ax,Expl,AxL),
+  find_sub_sup_class_u(M,C,D,Ax),
+  and_f(M,Ax,Expl,AxL),
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
   add_nominal(D,Ind,ABox1,ABox).
+
 
 /* -- unfold_rule
       takes a class C1 in which Ind belongs, find a not atomic class C
@@ -1051,10 +1069,11 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(M,Ind,L,ABox0,Expl1)),
-  find_sub_sup_class(M,C,D,Ax),
-  and_f_ax(M,Ax,Expl1,AxL1),
+  find_sub_sup_class_u(M,C,D,Ax),
+  and_f(M,Ax,Expl1,AxL1),
   modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
   add_nominal(D,Ind,ABox1,ABox).
+
 
 /* -- unfold_rule
  *    control propertyRange e propertyDomain
@@ -1152,6 +1171,16 @@ find_class_prop_range_domain(M,Ind,D,Expl,(ABox,_Tabs)):-
 
 
 %-----------------
+find_sub_sup_class_u(M,C,D,Expl):-
+  M:hierarchy(H),
+  Classes=H.classes,
+  Expls=H.explanations,
+  PC=Classes.find(C),
+  edges(H.hierarchy,E),
+  utility_kb:get_next(PC,E,Classes,_PD,D),
+  member(ex(C,D)-Expl,Expls).
+
+
 :- multifile find_sub_sup_class/4.
 
 % subClassOf
@@ -1228,6 +1257,19 @@ find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http:
 %--------------------
 % looks for not atomic concepts descriptions containing class C
 find_not_atomic(M,C,intersectionOf(L1),L1):-
+  M:hierarchy(H),
+  Classes=H.classesName,
+  member(intersectionOf(L1),Classes),
+  member(C,L1).
+
+find_not_atomic(M,C,unionOf(L1),L1):-
+  M:hierarchy(H),
+  Classes=H.classesName,
+  member(unionOf(L1),Classes),
+  member(C,L1).
+
+/*
+find_not_atomic(M,C,intersectionOf(L1),L1):-
   M:subClassOf(A,B),
   member(intersectionOf(L1),[A,B]),
   member(C,L1).
@@ -1236,7 +1278,7 @@ find_not_atomic(M,C,unionOf(L1),L1):-
   M:subClassOf(A,B),
   member(unionOf(L1),[A,B]),
   member(C,L1).
-
+*/
 /*
 find_not_atomic(M,C,intersectionOf(L),L):-
   M:intersectionOf(L),
@@ -1246,7 +1288,7 @@ find_not_atomic(M,C,unionOf(L),L):-
   M:unionOf(L),
   member(C,L).
 */
-
+/*
 find_not_atomic(M,C,intersectionOf(L1),L1):-
   M:equivalentClasses(L),
   member(intersectionOf(L1),L),
@@ -1256,6 +1298,7 @@ find_not_atomic(M,C,unionOf(L1),L1):-
   M:equivalentClasses(L),
   member(unionOf(L1),L),
   member(C,L1).
+*/
 
 % -----------------------
 % puts together the explanations of all the concepts found by find_not_atomic/3
@@ -1533,7 +1576,7 @@ blocked(Ind,(ABox,T)):-
 
 /*
 
-  control for block an individual
+  control for blocking an individual
 
 */
 
@@ -1621,6 +1664,50 @@ writeABox((ABox,_)):-
   build_abox
   ===============
 */
+
+init_expand_abox_wt_hierarchy(M,(ABox0,Tabs),(ABox,Tabs)):-
+  findall((C,Ind,Expl),findClassAssertion(C,Ind,Expl,ABox0),ClAss),
+  expand_abox_wt_hierarchy(M,ClAss,ABox0,ABox).
+
+/***********
+  update abox
+  utility for tableau
+************/
+
+expand_abox_wt_hierarchy(M,ClAss,ABox0,ABox):-
+  expand_abox_wt_hierarchy_int(ClAss,M,[],NewClAss),
+  add_to_abox(NewClAss,M,ABox0,ABox).
+
+expand_abox_wt_hierarchy_int([],_M,NewClAss,NewClAss).
+
+expand_abox_wt_hierarchy_int([(C,Ind,Expl)|ClAss],M,NewClAss0,NewClAss):-
+  get_hierarchy_from_class(M,C,H4C),!,
+  append_in_all(H4C,M,Ind,Expl,NewExpls),
+  append(NewClAss0,NewExpls,NewClAss1),
+  expand_abox_wt_hierarchy_int(ClAss,M,NewClAss1,NewClAss).
+
+expand_abox_wt_hierarchy_int([_|ClAss],M,NewClAss0,NewClAss):-
+  expand_abox_wt_hierarchy_int(ClAss,M,NewClAss0,NewClAss).
+
+append_in_all([],_M,_Ind,_Expl,[]).
+
+append_in_all([H-Expl0|T0],M,Ind,Expl,[(classAssertion(H,Ind),NewExpl)|T]):-
+  and_f(M,Expl0,Expl,NewExpl),
+  append_in_all(T0,M,Ind,Expl,T).
+
+add_to_abox([],_M,ABox,ABox).
+
+add_to_abox([(classAssertion(C,Ind),Expl0)|ClAss],M,ABox0,ABox):-
+  find((classAssertion(C,Ind),Expl1),ABox0),!,
+  or_f(M,Expl0,Expl1,Expl),
+  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox1),
+  assert(M:new_added(C,Ind,Expl0)),
+  add_to_abox(ClAss,M,[(classAssertion(C,Ind),Expl)|ABox1],ABox).
+
+add_to_abox([(classAssertion(C,Ind),Expl0)|ClAss],M,ABox0,ABox):-
+  add_nominal(C,Ind,ABox0,ABox1),
+  assert(M:new_added(C,Ind,Expl0)),
+  add_to_abox(ClAss,M,[(classAssertion(C,Ind),Expl0)|ABox1],ABox).
 
 %---------------
 subProp(M,SubProperty,Property,Subject,Object):-

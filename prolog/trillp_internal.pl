@@ -137,6 +137,24 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
+modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox]):-
+  find((sameIndividual(L),Expl0),ABox),!,
+  sort(L,LS),
+  sort(LF,LFS),
+  LS = LFS,!,
+  dif(L0,Expl0),
+  ((dif(L0,[]),subset(L0,Expl0)) -> 
+     Expl = L0
+   ;
+     (subset(Expl0,L0) -> fail 
+      ;
+        (test(M,L0,Expl0),or_f(M,L0,Expl0,Expl))
+     )
+  ),
+  delete(ABox0,[(sameIndividual(L),Expl0)],ABox).
+
+modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),L0)|ABox0]).
+
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
@@ -169,6 +187,16 @@ modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* **************** */
 
+/***********
+  update abox
+  utility for tableau
+************/
+
+get_hierarchy_from_class(M,Class,H4C):-
+  hierarchy(M:H),
+  get_hierarchy(H,Class,H4C),!.
+
+/* ************* */
 
 /*
   build_abox
