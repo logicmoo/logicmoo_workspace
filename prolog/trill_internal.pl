@@ -20,12 +20,13 @@ details.
   SETTINGS
 *********************************/
 :- multifile setting_trill/2.
-setting_trill(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).%,unfold_rule1
+setting_trill(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
 setting_trill(nondet_rules,[or_rule,max_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
   M:(dynamic exp_found/2),
+  M:(dynamic new_added/2),
   M:(dynamic new_added/3).
 
 clean_up(M):-
@@ -195,19 +196,20 @@ modify_ABox(M,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-%gtrace,
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox),
-      assert(M:new_added(C,Ind,Expl1))
+      assert(M:new_added(C,Ind))
     )
   ;
-    (ABox = ABox0,Expl = Expl1,assert(M:new_added(C,Ind,Expl1)))
+    (ABox = ABox0,Expl = Expl1,assert(M:new_added(C,Ind)))
   ).
 
-modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox),
+      assert(M:new_added(P,Ind1,Ind2))
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
+    (ABox = ABox0,Expl = Expl1,assert(M:new_added(P,Ind1,Ind2)))
   ).
 
 /* ************* */
@@ -357,7 +359,7 @@ get_hierarchy_from_class(M,Class,H4C):-
   add_all(LSPA,ABox2,ABox).
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox(M,ExpansionQueue,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -366,14 +368,15 @@ build_abox(M,(ABox,Tabs)):-
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
   add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox3),
+  add_all(LPA,ABox1,ABox3),
+  %add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
   findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]]),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs3),
-  create_tabs(LSPA,Tabs3,Tabs4),
+  create_tabs(LPA,Tabs2,Tabs4),
+  %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),[[sameIndividual(L)]]),M:sameIndividual(L),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),

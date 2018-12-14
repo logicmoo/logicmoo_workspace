@@ -54,7 +54,7 @@ test(rkb_c):-
   run((reload_kb(false),true)).
 test(e_c_j):-
   run((instanceOf(commander,john,Expl),
-       Expl = [equivalentClasses([guard, soldier]), classAssertion(allValuesFrom(commands, guard), john), subClassOf(allValuesFrom(commands, soldier), commander)]
+       one_of(Expl,[[equivalentClasses([guard, soldier]), classAssertion(allValuesFrom(commands, guard), john), subClassOf(allValuesFrom(commands, soldier), commander)]])
   )).
 
 :- end_tests(trill_commander).

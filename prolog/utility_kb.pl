@@ -787,7 +787,7 @@ append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
   \+ memberchk(EndClass-_,AllExpl),!,
   append(AllExpl,[EndClass-NewExpl],NewAllExpl).
 
-append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-
+append_expl((M,AllExpl),(M,[EndClass-NewExpl]),(M,NewAllExpl)):-gtrace,
   member(EndClass-OldExpl,AllExpl),%gtrace,
   delete(AllExpl,EndClass-OldExpl,AllExpl0),
   trill:hier_or_f_check(M,OldExpl,NewExpl,NewExplT),%gtrace,
