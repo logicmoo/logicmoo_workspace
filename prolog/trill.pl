@@ -1203,11 +1203,11 @@ find_sub_sup_class_u(M,C,D,Expl):-
 :- multifile find_sub_sup_class/4.
 
 % subClassOf
-find_sub_sup_class(M,C,D,subClassOf(C,D)):-
+find_sub_sup_class_dir(M,C,D,subClassOf(C,D)):-
   M:subClassOf(C,D).
 
 %equivalentClasses
-find_sub_sup_class(M,C,D,equivalentClasses(L)):-
+find_sub_sup_class_dir(M,C,D,equivalentClasses(L)):-
   M:equivalentClasses(L),
   member(C,L),
   member(D,L),
@@ -1215,7 +1215,7 @@ find_sub_sup_class(M,C,D,equivalentClasses(L)):-
 
 %concept for concepts allValuesFrom
 find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class_dir(M,C,D,Ax).
 
 %role for concepts allValuesFrom
 find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
@@ -1223,7 +1223,7 @@ find_sub_sup_class(M,allValuesFrom(R,C),allValuesFrom(S,C),subPropertyOf(R,S)):-
 
 %concept for concepts someValuesFrom
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class_dir(M,C,D,Ax).
 
 %role for concepts someValuesFrom
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
