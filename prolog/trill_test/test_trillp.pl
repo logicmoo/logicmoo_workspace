@@ -25,12 +25,12 @@ test(p_wlbrcr_h):-
   run((prob_instanceOf('WomanUnderLifetimeBRCRisk','Helen',Prob),close_to(Prob,0.123))).
 test(ne_wlbrcr_h):-
   run((instanceOf('WomanUnderLifetimeBRCRisk','Helen',Expl),
-       Expl = +[*([subClassOf('Woman', 'WomanUnderLifetimeBRCRisk'), +[*([classAssertion('WomanAged3040', 'Helen'), +[*([equivalentClasses(['WomanUnderShortTermBRCRisk', intersectionOf(['Woman', someValuesFrom(hasRisk, 'ShortTermBRCRisk')])]), subClassOf('WomanAged3040', 'WomanUnderShortTermBRCRisk')]), subClassOf('WomanAged3040', 'Woman')]]), classAssertion('Woman', 'Helen'), *([classAssertion('PostmenopausalWoman', 'Helen'), subClassOf('PostmenopausalWoman', 'Woman')]), *([classAssertion('WomanTakingEstrogen', 'Helen'), subClassOf('WomanTakingEstrogen', 'Woman')])]])])).
+       test_formula(Expl,+[*([subClassOf('Woman', 'WomanUnderLifetimeBRCRisk'), +[*([classAssertion('WomanAged3040', 'Helen'), +[*([equivalentClasses(['WomanUnderShortTermBRCRisk', intersectionOf(['Woman', someValuesFrom(hasRisk, 'ShortTermBRCRisk')])]), subClassOf('WomanAged3040', 'WomanUnderShortTermBRCRisk')]), subClassOf('WomanAged3040', 'Woman')]]), classAssertion('Woman', 'Helen'), *([classAssertion('PostmenopausalWoman', 'Helen'), subClassOf('PostmenopausalWoman', 'Woman')]), *([classAssertion('WomanTakingEstrogen', 'Helen'), subClassOf('WomanTakingEstrogen', 'Woman')])]])]))).
 test(p_wa_wulbrcr):-
   run((prob_sub_class('WomanAged3040','WomanUnderLifetimeBRCRisk',Prob),close_to(Prob,0.123))).
 test(ne_wa_wulbrcr):-
   run((sub_class('WomanAged3040','WomanUnderLifetimeBRCRisk',Expl),
-       Expl =  +[*([subClassOf('Woman', 'WomanUnderLifetimeBRCRisk'), +[*([equivalentClasses(['WomanUnderShortTermBRCRisk', intersectionOf(['Woman', someValuesFrom(hasRisk, 'ShortTermBRCRisk')])]), subClassOf('WomanAged3040', 'WomanUnderShortTermBRCRisk')]), subClassOf('WomanAged3040', 'Woman')]])])).
+       test_formula(Expl,+[*([subClassOf('Woman', 'WomanUnderLifetimeBRCRisk'), +[*([equivalentClasses(['WomanUnderShortTermBRCRisk', intersectionOf(['Woman', someValuesFrom(hasRisk, 'ShortTermBRCRisk')])]), subClassOf('WomanAged3040', 'WomanUnderShortTermBRCRisk')]), subClassOf('WomanAged3040', 'Woman')]])]))).
 
 :- end_tests(trillp_brca).
 
@@ -57,7 +57,7 @@ test(rkb_c):-
   run((reload_kb(false),true)).
 test(e_c_j):-
   run((instanceOf(commander,john,Expl),
-       Expl = +[*([equivalentClasses([guard, soldier]), classAssertion(allValuesFrom(commands, guard), john), subClassOf(allValuesFrom(commands, soldier), commander)])]
+       test_formula(Expl,+[*([equivalentClasses([guard, soldier]), classAssertion(allValuesFrom(commands, guard), john), subClassOf(allValuesFrom(commands, soldier), commander)])])
   )).
 
 :- end_tests(trillp_commander).
@@ -73,7 +73,7 @@ test(p_nl_k):-
   run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.348))).
 test(ne_nl_k):-
   run((instanceOf('natureLover','Kevin',Expl),
-       Expl =  +[*([subClassOf('http://cohse.semanticweb.org/ontologies/people#cat', 'http://cohse.semanticweb.org/ontologies/people#pet'), subClassOf(someValuesFrom('http://cohse.semanticweb.org/ontologies/people#has_animal', 'http://cohse.semanticweb.org/ontologies/people#pet'), 'http://cohse.semanticweb.org/ontologies/people#natureLover'), +[*([classAssertion('http://cohse.semanticweb.org/ontologies/people#cat', 'http://cohse.semanticweb.org/ontologies/people#Fluffy'), propertyAssertion('http://cohse.semanticweb.org/ontologies/people#has_animal', 'http://cohse.semanticweb.org/ontologies/people#Kevin', 'http://cohse.semanticweb.org/ontologies/people#Fluffy')]), *([classAssertion('http://cohse.semanticweb.org/ontologies/people#cat', 'http://cohse.semanticweb.org/ontologies/people#Tom'), propertyAssertion('http://cohse.semanticweb.org/ontologies/people#has_animal', 'http://cohse.semanticweb.org/ontologies/people#Kevin', 'http://cohse.semanticweb.org/ontologies/people#Tom')])]])])).
+       test_formula(Expl,+[*([subClassOf('http://cohse.semanticweb.org/ontologies/people#cat', 'http://cohse.semanticweb.org/ontologies/people#pet'), subClassOf(someValuesFrom('http://cohse.semanticweb.org/ontologies/people#has_animal', 'http://cohse.semanticweb.org/ontologies/people#pet'), 'http://cohse.semanticweb.org/ontologies/people#natureLover'), +[*([classAssertion('http://cohse.semanticweb.org/ontologies/people#cat', 'http://cohse.semanticweb.org/ontologies/people#Fluffy'), propertyAssertion('http://cohse.semanticweb.org/ontologies/people#has_animal', 'http://cohse.semanticweb.org/ontologies/people#Kevin', 'http://cohse.semanticweb.org/ontologies/people#Fluffy')]), *([classAssertion('http://cohse.semanticweb.org/ontologies/people#cat', 'http://cohse.semanticweb.org/ontologies/people#Tom'), propertyAssertion('http://cohse.semanticweb.org/ontologies/people#has_animal', 'http://cohse.semanticweb.org/ontologies/people#Kevin', 'http://cohse.semanticweb.org/ontologies/people#Tom')])]])]))).
 
 :- end_tests(trillp_peoplePets).
 
@@ -100,7 +100,7 @@ test(p_p_pp):-
   run((prob_sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Prob),close_to(Prob,0.8273765902816))).
 test(ae_p_pp):-
   run((sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Expl),
-       Expl =  +[*([subClassOf('http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/Settlement'), +[*([equivalentClasses(['http://dbpedia.org/ontology/A0_144_', intersectionOf(['http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/PopulatedPlace'])]), subClassOf('http://dbpedia.org/ontology/Settlement', 'http://dbpedia.org/ontology/A0_144_')]), subClassOf('http://dbpedia.org/ontology/Settlement', 'http://dbpedia.org/ontology/PopulatedPlace')]]), subClassOf('http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/PopulatedPlace'), *([equivalentClasses(['http://dbpedia.org/ontology/A73_A0_', intersectionOf(['http://dbpedia.org/ontology/PopulatedPlace', 'http://dbpedia.org/ontology/Settlement'])]), subClassOf('http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/A73_A0_')])]
+       test_formula(Expl,+[*([subClassOf('http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/Settlement'), +[*([equivalentClasses(['http://dbpedia.org/ontology/A0_144_', intersectionOf(['http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/PopulatedPlace'])]), subClassOf('http://dbpedia.org/ontology/Settlement', 'http://dbpedia.org/ontology/A0_144_')]), subClassOf('http://dbpedia.org/ontology/Settlement', 'http://dbpedia.org/ontology/PopulatedPlace')]]), subClassOf('http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/PopulatedPlace'), *([equivalentClasses(['http://dbpedia.org/ontology/A73_A0_', intersectionOf(['http://dbpedia.org/ontology/PopulatedPlace', 'http://dbpedia.org/ontology/Settlement'])]), subClassOf('http://dbpedia.org/ontology/Place', 'http://dbpedia.org/ontology/A73_A0_')])])
   )).
 
 :- end_tests(trillp_dbpedia).
@@ -114,7 +114,7 @@ test(rkb_je):-
   run((reload_kb(false),true)).
 test(e_p_j):-
   run((instanceOf('johnEmployee:person','johnEmployee:john',Expl),
-       Expl = +[*([classAssertion('http://example.foo#employee', 'http://example.foo#john'), subClassOf('http://example.foo#employee', 'http://example.foo#worker'), subClassOf('http://example.foo#worker', 'http://example.foo#person')])]
+       test_formula(Expl,+[*([classAssertion('http://example.foo#employee', 'http://example.foo#john'), subClassOf('http://example.foo#employee', 'http://example.foo#worker'), subClassOf('http://example.foo#worker', 'http://example.foo#person')])])
   )).
   
 :- end_tests(trillp_johnEmployee).

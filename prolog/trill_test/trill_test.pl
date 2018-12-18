@@ -43,3 +43,7 @@ one_of(Expl,CorrExpls):-
   member(X,CorrExpls),
   sort(X,ExplSort),!.
 
+test_formula(F1,F2):-
+  \+ trill:test(_,F1,F2),
+  \+ trill:test(_,F2,F1).
+
