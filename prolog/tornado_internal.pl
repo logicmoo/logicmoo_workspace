@@ -158,10 +158,10 @@ modify_ABox(M,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox]):-
   sort(LF,LFS),
   LS = LFS,!,
   dif(L0,Expl0),
-  test(M,L0,Expl1,Expl),
-  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
+  test(M,L0,Expl0,Expl),
+  delete(ABox0,(sameIndividual(L),Expl0),ABox).
   
-modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),L0)|ABox0]).
+modify_ABox(_,ABox0,sameIndividual(L),L0,[(sameIndividual(L),L0)|ABox0]).
 
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
@@ -311,10 +311,16 @@ hier_or_f(_M,Or1,Or2,Or):-
   sort(Or0,Or).
 
 hier_ax2ex(_M,Ax,[[Ax]]):- !.
+  
+get_subclass_explanation(M,C,D,BDD,Expls):-
+  member(ex(C,D)-Expl,Expls),
+  get_bdd_environment(M,Env),
+  build_expl_bdd(M,Env,Expl,BDD).
 
 /*  absent
   =========
 */
+
 absent(Expl0,Expl1,Expl):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
   absent0(Expl0,Expl1,Expl),!.
 
@@ -342,6 +348,8 @@ absent2([H|_T],Expl):-
 
 absent2([_|T],Expl):-
   absent2(T,Expl).
+
+
 
 /**********************
 
@@ -377,6 +385,17 @@ build_bdd(_,Env,[],BDD):- !,
   zero(Env,BDD).
 
 build_bdd(_,_Env,BDD,BDD).
+
+build_expl_bdd(M,Env,[X],BDD):- !,
+  bdd_and(M,Env,X,BDD).
+
+build_expl_bdd(M,Env, [H|T],BDD):-
+  build_expl_bdd(M,Env,T,BDDT),
+  bdd_and(M,Env,H,BDDH),
+  or(Env,BDDH,BDDT,BDD).
+
+build_expl_bdd(_M,Env,[],BDD):- !,
+  zero(Env,BDD).
 
 bdd_and(M,Env,[X],BDDX):-
   get_prob_ax(M,X,AxN,Prob),!,

@@ -1,6 +1,6 @@
 :-use_module(library(trill)).
 
-:- trillp. % or :- trillp. or :- tornado.
+:- trill. % or :- trillp. or :- tornado.
 
 /*
 An extract of the DBPedia ontology, it contains structured information from Wikipedia.

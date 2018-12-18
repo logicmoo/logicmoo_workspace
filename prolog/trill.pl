@@ -1203,7 +1203,7 @@ find_sub_sup_class_u(M,C,D,Expl):-
   PC=Classes.find(C),
   edges(H.hierarchy,E),
   utility_kb:get_next(PC,E,Classes,_PD,D),
-  member(ex(C,D)-Expl,Expls).
+  get_subclass_explanation(M,C,D,Expl,Expls).
 
 
 :- multifile find_sub_sup_class/4.

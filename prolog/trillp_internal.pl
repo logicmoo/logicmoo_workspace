@@ -623,6 +623,9 @@ hier_or_f(M,Or1,Or2,Or):- or_f(M,Or1,Or2,Or).
 hier_or_f_check(M,Or1,Or2,Or):- or_f(M,Or1,Or2,Or).
 
 hier_ax2ex(_M,Ax,*([Ax])):- !.
+  
+get_subclass_explanation(_M,C,D,Expl,Expls):-
+  member(ex(C,D)-Expl,Expls).
 
 /**********************
 
