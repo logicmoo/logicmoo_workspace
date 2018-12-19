@@ -1502,6 +1502,27 @@ min_rule(M,(ABox,Tabs),(minCardinality(N,S,C),Ind1),([(differentIndividuals(NI),
   NoI is N-LSS,
   min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
 
+min_rule(M,(ABox,Tabs),(exactCardinality(N,S),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+  findClassAssertion(exactCardinality(N,S),Ind1,Expl,ABox),
+  \+ blocked(Ind1,(ABox,Tabs)),
+  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
+  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  length(SS,LSS),
+  LSS @< N,
+  NoI is N-LSS,
+  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+
+
+min_rule(M,(ABox,Tabs),(exactCardinality(N,S,C),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+  findClassAssertion(exactCardinality(N,S,C),Ind1,Expl,ABox),
+  \+ blocked(Ind1,(ABox,Tabs)),
+  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
+  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  length(SS,LSS),
+  LSS @< N,
+  NoI is N-LSS,
+  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+
 % ----------------------
 min_rule_neigh(_,0,_,_,_,[],ABox,Tabs,ABox,Tabs).
 
@@ -1557,6 +1578,28 @@ max_rule(M,(ABox0,Tabs0),(maxCardinality(N,S),Ind),L):-
   findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
   dif(L,[]),
   !.
+
+max_rule(M,(ABox0,Tabs0),(exactCardinality(N,S,C),Ind),L):-
+  findClassAssertion(exactCardinality(N,S,C),Ind,Expl,ABox0),
+  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
+  s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
+  individual_class_C(SN,C,ABox0,SNC),
+  length(SNC,LSS),
+  LSS @> N,
+  findall((ABox1,Tabs1),scan_max_list(M,S,SNC,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
+  dif(L,[]),
+  !.
+
+max_rule(M,(ABox0,Tabs0),(exactCardinality(N,S),Ind),L):-
+  findClassAssertion(exactCardinality(N,S),Ind,Expl,ABox0),
+  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
+  s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
+  length(SN,LSS),
+  LSS @> N,
+  findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
+  dif(L,[]),
+  !.
+
 %---------------------
 
 scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0,ABox,Tabs):-
