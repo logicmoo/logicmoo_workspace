@@ -726,12 +726,14 @@ expand_queue(M,ABox0,[EA|T],ABox):-
 %expand_queue(M,ABox0,[_EA|T],ABox):-
 %  expand_queue(M,ABox0,T,ABox).
   
-update_queue(M,T,NewExpQueue):-
+update_queue(M,T0,NewExpQueue):-
   findall((C,Ind),M:new_added(C,Ind),ClAss),
   retractall(M:new_added(_,_)),
   findall((R,S,O),M:new_added(R,S,O),PrAss),
   retractall(M:new_added(_,_,_)),
-  append([T,ClAss,PrAss],NewExpQueue).
+  subtract(T0,ClAss,T1),
+  subtract(T1,PrAss,T2),
+  append([T2,ClAss,PrAss],NewExpQueue).
 
 apply_all_rules(M,ABox0,EA,ABox):-
   setting_trill(det_rules,Rules),
