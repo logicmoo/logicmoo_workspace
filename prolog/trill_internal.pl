@@ -26,8 +26,8 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
 set_up(M):-
   utility_translation:set_up(M),
   M:(dynamic exp_found/2),
-  M:(dynamic new_added/2),
-  M:(dynamic new_added/3).
+  M:(dynamic new_added_det/2, new_added_det/3),
+  M:(dynamic new_added_nondet/2, new_added_nondet/3).
 
 clean_up(M):-
   utility_translation:clean_up(M),
@@ -196,20 +196,20 @@ modify_ABox(M,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-%gtrace,
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox),
-      assert(M:new_added(C,Ind))
+      assert_new_added(M,C,Ind)
     )
   ;
-    (ABox = ABox0,Expl = Expl1,assert(M:new_added(C,Ind)))
+    (ABox = ABox0,Expl = Expl1,assert_new_added(M,C,Ind))
   ).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox),
-      assert(M:new_added(P,Ind1,Ind2))
+      assert_new_added(M,P,Ind1,Ind2)
     )
   ;
-    (ABox = ABox0,Expl = Expl1,assert(M:new_added(P,Ind1,Ind2)))
+    (ABox = ABox0,Expl = Expl1,assert_new_added(M,P,Ind1,Ind2))
   ).
 
 /* ************* */

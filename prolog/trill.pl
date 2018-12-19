@@ -716,35 +716,57 @@ make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
 % -------------
 % rules application
 % -------------
-expand_queue(_M,ABox,[],ABox).
+expand_queue(M,ABox0,EAs,ABox):-
+  expand_queue_det(M,ABox0,EAs,ABox1),
+  update_queue_det(M,[],EAN),
+  (dif(EAN,[]) ->
+     expand_queue(M,ABox1,EAN,ABox)
+    ;
+     ABox=ABox1
+  ).
 
-expand_queue(M,ABox0,[EA|T],ABox):-
-  apply_all_rules(M,ABox0,EA,ABox1),
-  update_queue(M,T,NewExpQueue),
-  expand_queue(M,ABox1,NewExpQueue,ABox).
+expand_queue_det(M,ABox0,[],ABox):-
+  update_queue_nondet(M,[],EAN),
+  expand_queue_nondet(M,ABox0,EAN,ABox).
+
+expand_queue_det(M,ABox0,[EA|T],ABox):-
+  apply_all_det_rules(M,ABox0,EA,ABox1),
+  update_queue_det(M,T,NewExpQueue),
+  expand_queue_det(M,ABox1,NewExpQueue,ABox).
+
+expand_queue_nondet(_M,ABox,[],ABox).
+
+expand_queue_nondet(M,ABox0,[EA|T],ABox):-
+  apply_all_nondet_rules(M,ABox0,EA,ABox1),
+  update_queue_nondet(M,T,NewExpQueue),
+  expand_queue_nondet(M,ABox1,NewExpQueue,ABox).
 
 %expand_queue(M,ABox0,[_EA|T],ABox):-
 %  expand_queue(M,ABox0,T,ABox).
   
-update_queue(M,T0,NewExpQueue):-
-  findall((C,Ind),M:new_added(C,Ind),ClAss),
-  retractall(M:new_added(_,_)),
-  findall((R,S,O),M:new_added(R,S,O),PrAss),
-  retractall(M:new_added(_,_,_)),
-  subtract(T0,ClAss,T1),
+update_queue_det(M,T0,NewExpQueue):-
+  findall((C,Ind),M:new_added_det(C,Ind),ClAss),
+  retractall(M:new_added_det(_,_)),
+  findall((R,S,O),M:new_added_det(R,S,O),PrAss),
+  retractall(M:new_added_det(_,_,_)),
+  subtract(T0,ClAss,T1), %TODO test this!
   subtract(T1,PrAss,T2),
   append([T2,ClAss,PrAss],NewExpQueue).
 
-apply_all_rules(M,ABox0,EA,ABox):-
+update_queue_nondet(M,T0,NewExpQueue):-
+  findall((C,Ind),M:new_added_nondet(C,Ind),ClAss),
+  retractall(M:new_added_nondet(_,_)),
+  subtract(T0,ClAss,T1), %TODO test this!
+  append(T1,ClAss,NewExpQueue).
+
+apply_all_det_rules(M,ABox0,EA,ABox):-
   setting_trill(det_rules,Rules),
   apply_det_rules(M,Rules,ABox0,EA,ABox1),
   (ABox0=ABox1 ->
   ABox=ABox1;
-  apply_all_rules(M,ABox1,EA,ABox)).
+  apply_all_det_rules(M,ABox1,EA,ABox)).
 
-apply_det_rules(M,[],ABox0,EA,ABox):-
-  setting_trill(nondet_rules,Rules),
-  apply_nondet_rules(M,Rules,ABox0,EA,ABox).
+apply_det_rules(_M,[],ABox,_EA,ABox).
 
 apply_det_rules(M,[H|_],ABox0,EA,ABox):-
   %C=..[H,ABox,ABox1],
@@ -753,6 +775,12 @@ apply_det_rules(M,[H|_],ABox0,EA,ABox):-
 apply_det_rules(M,[_|T],ABox0,EA,ABox):-
   apply_det_rules(M,T,ABox0,EA,ABox).
 
+apply_all_nondet_rules(M,ABox0,EA,ABox):- %:-
+  setting_trill(nondet_rules,Rules),
+  apply_nondet_rules(M,Rules,ABox0,EA,ABox1),
+  (ABox0=ABox1 ->
+  ABox=ABox1;
+  apply_all_nondet_rules(M,ABox1,EA,ABox)).
 
 apply_nondet_rules(_,[],ABox,_EA,ABox).
 
@@ -767,11 +795,29 @@ apply_nondet_rules(M,[_|T],ABox0,EA,ABox):-
 
 
 expand_close_abox(M,(ABox0,Tabs),(ABox,Tabs)):-%gtrace,
-  findall((C,Ind,Expl),M:new_added(C,Ind,Expl),ClAss),
+  findall((C,Ind,Expl),M:new_added_det(C,Ind,Expl),ClAss),
   dif(ClAss,[]),
-  retractall(M:new_added(_,_,_)),
+  retractall(M:new_added_det(_,_,_)),
   expand_abox_wt_hierarchy(M,ClAss,ABox0,ABox).
 
+
+% ------------
+% Utility for rule application
+% ------------
+assert_new_added(M,unionOf(L),Ind):-!,
+  M:assert(new_added_nondet(unionOf(L),Ind)).
+
+assert_new_added(M,maxCardinality(N,S,C),Ind):-!,
+  M:assert(new_added_nondet(maxCardinality(N,S,C),Ind)).
+
+assert_new_added(M,maxCardinality(N,S),Ind):-!,
+  M:assert(new_added_nondet(maxCardinality(N,S),Ind)).
+
+assert_new_added(M,C,Ind):-!,
+  M:assert(new_added_det(C,Ind)).
+
+assert_new_added(M,P,Ind1,Ind2):-!,
+  M:assert(new_added_det(P,Ind1,Ind2)).
 
 /*
 apply_all_rules(M,ABox0,ABox):-
@@ -1744,12 +1790,12 @@ add_to_abox([(classAssertion(C,Ind),Expl0)|ClAss],M,ABox0,ABox):-
   find((classAssertion(C,Ind),Expl1),ABox0),!,
   or_f(M,Expl0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox1),
-  assert(M:new_added(C,Ind,Expl0)),
+  assert(M:new_added_det(C,Ind,Expl0)),
   add_to_abox(ClAss,M,[(classAssertion(C,Ind),Expl)|ABox1],ABox).
 
 add_to_abox([(classAssertion(C,Ind),Expl0)|ClAss],M,ABox0,ABox):-
   add_nominal(C,Ind,ABox0,ABox1),
-  assert(M:new_added(C,Ind,Expl0)),
+  assert(M:new_added_det(C,Ind,Expl0)),
   add_to_abox(ClAss,M,[(classAssertion(C,Ind),Expl0)|ABox1],ABox).
 
 %---------------

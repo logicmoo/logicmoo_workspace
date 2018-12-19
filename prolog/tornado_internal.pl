@@ -26,7 +26,8 @@ setting_trill(nondet_rules,[or_rule]).
 set_up(M):-
   utility_translation:set_up(M),
   M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
-  M:(dynamic new_added/2, new_added/3).
+  M:(dynamic new_added_det/2, new_added_det/3),
+  M:(dynamic new_added_nondet/2, new_added_nondet/3).
 
 clean_up(M):-
   utility_translation:clean_up(M),
@@ -168,22 +169,22 @@ modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox),
-  assert(M:new_added(C,Ind)).
+  assert_new_added(M,C,Ind).
   
   
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]):-
-  assert(M:new_added(C,Ind)).
+  assert_new_added(M,C,Ind).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
-  assert(M:new_added(P,Ind1,Ind2)).
+  assert_new_added(M,P,Ind1,Ind2).
   
   
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-
-  assert(M:new_added(P,Ind1,Ind2)).
+  assert_new_added(M,P,Ind1,Ind2).
 
 /* ************* */
 
