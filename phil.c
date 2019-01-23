@@ -842,6 +842,7 @@ void saveCountsEM(FILE *countsFile,int NR){
   }
 }
 //Saves the log-likelihood (CLL), The expectations and the count.
+
 void saveStatisticsEM(double Probabilities[],double expectations [],int NR, FILE*probsFile, FILE*expectationsFile, FILE* lls, double CLL){
   int i;
   for(i=0; i<NR; i++){
@@ -860,7 +861,12 @@ void initialize_Counts(int NR){
         Counts[i]=0; 
     }
 }
-
+void initExpectations (double expectations [],int NR){
+  int i;
+  for(i=0; i<NR; i++){
+     expectations[i]=0; // reinitialized the expectations
+  }
+}
 // initialize the probabilities the expectations and the counters 
 void initialize_expectations_Probabilities(double Probabilities[],double expectations[],int NR,char *seeded,int seed){
     int i;
@@ -868,6 +874,7 @@ void initialize_expectations_Probabilities(double Probabilities[],double expecta
     for(i=0;i<NR;i++){
         if(Init==1){
             Probabilities[i]=InitParameters[i];
+            //Probabilities[i]=0.0;
         }else{
             Probabilities[i]=randInRange(0,1);
         }
@@ -959,11 +966,14 @@ double expectation(node**Nodes,int lenNodes,double Probabilities[],double expect
     // forward pass
     forward(Probabilities,NR,Nodes[i]);
     Root_Value=Nodes[i]->value;
+
     if(Root_Value!=0){
       CLL=CLL+log(Root_Value);
     }
     else 
        CLL=CLL+ log(ZERO);
+   //printf("Expectation Iteration %d Root_Value=%lf CLL=%lf\n",i,Root_Value, CLL);
+
     Nodes[i]->tp=1.0; // the initial message from the root must be 1 (see the paper emphil)
     backwardEM(expectations,NR,Nodes[i]);
   }
@@ -1009,7 +1019,8 @@ double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectatio
     saveStatisticsEM(Probabilities,expectations,NR,probsFile,expectationsFile,lls,CLL1);
   }
    Iter=0;
-  while(Iter<MaxIteration1 && diff>EA && ratio>ER){
+  while(Iter<MaxIteration1 && diff>EA && ratio>ER){ //
+     //printf("Iteration %d diff=%lf ratio=%lf  CLL1=%lf CLL0=%lf \n",Iter,diff, ratio,CLL1,CLL0);
       CLL0 = CLL1;
       //Expectation step
       CLL1=expectation(Nodes,lenNodes,Probabilities,expectations,NR);
@@ -1018,9 +1029,15 @@ double emphil(node **Nodes,int lenNodes,double Probabilities[],double expectatio
       // save the current statistics
       if(saved==1)
         saveStatisticsEM(Probabilities,expectations,NR,probsFile,expectationsFile,lls,CLL1);
+      else
+         initExpectations(expectations,NR);
       diff=fabs(CLL1-CLL0);
-      ratio=diff/fabs(CLL0);
+      if(CLL0!=0)
+         ratio=diff/fabs(CLL0);
+      else
+         ratio=0;
       Iter++;
+       //printf("\n\n");
   }
   // close the different files
   if(saved==1)
