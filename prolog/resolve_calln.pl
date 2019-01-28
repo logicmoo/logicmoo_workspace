@@ -39,8 +39,10 @@
 :- use_module(library(extend_args)).
 
 % May be this is slow, but it works:
-resolve_calln(M:CallN, M:Goal) :- !,
-    resolve_calln(CallN, Goal).
+resolve_calln(M:CallN, A:B) :-
+    !,
+    resolve_calln(CallN, Goal),
+    strip_module(M:Goal, A, B).
 resolve_calln(Meta, Goal) :-
     do_resolve_calln(Meta, Meta2), !,
     resolve_calln(Meta2, Goal).
