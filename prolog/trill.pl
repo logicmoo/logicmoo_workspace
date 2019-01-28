@@ -393,13 +393,13 @@ unsat_internal(M:Concept):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs)),
+  build_abox(M,ExpansionQueue,(ABox,Tabs)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
-     	add_q(M,ABox,Concept,trillan(1),ABox0),
-  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
-  	clash(M,(ABox1,Tabs1),_),!
+     	add_q(M,ABox,ExpansionQueue,Concept,trillan(1),ExpansionQueueQ,ABox0),
+  		expand_queue(M,(ABox0,Tabs),ExpansionQueueQ,(ABox1,Tabs1)),!,
+  		%apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
+  		clash(M,(ABox1,Tabs1),_),!
      )
     ;
      print_message(warning,inconsistent),!,false
@@ -419,9 +419,9 @@ inconsistent_theory(M:Print,Expl):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
-  build_abox(M,(ABox,Tabs)),
+  build_abox(M,ExpansionQueue,(ABox,Tabs)),
   % Without prior search of clashes in order to find all the possible clashes after expansion
-  findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
+  findall((ABox1,Tabs1),expand_queue(M,(ABox,Tabs),ExpansionQueue,(ABox1,Tabs1)),L),
   ( (find_expls(M,L,['inconsistent','kb'],Expl1),
      check_and_close(M,Expl1,Expl)
     ) *->
@@ -447,10 +447,10 @@ inconsistent_theory(M:Print):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
-  build_abox(M,(ABox,Tabs)),
+  build_abox(M,ExpansionQueue,(ABox,Tabs)),
   ( (clash(M,(ABox,Tabs),_),!) -> true
     ;
-      (apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),!,
+      (expand_queue(M,(ABox,Tabs),ExpansionQueue,(ABox1,Tabs1)),!,
        ( (clash(M,(ABox1,Tabs1),_),!) -> true
          ;
            ( (Print == true) ->
