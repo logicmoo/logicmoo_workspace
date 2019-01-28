@@ -107,13 +107,17 @@ rtcheck_body_meta_arg(_, _, R, R).
 
 :- multifile user:prolog_trace_interception/4.
 
+:- dynamic trace_rtchecks.
+
+user:prolog_trace_interception(Port, Frame, _, Action) :-
+    trace_rtchecks,
+    rtcheck_port(Port, Frame, Action).
+
 setup_trace :-
     foldl(ontrace:port_mask, [unify], 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
-    asserta((user:prolog_trace_interception(Port, Frame, _, Action) :-
-            rtcheck_port(Port, Frame, Action)),
-            Ref),
+    asserta(trace_rtchecks, Ref),
     asserta(rtc_state(Visible, Leash, Ref)),
     trace.
 
