@@ -42,6 +42,7 @@
                                  call_ai/1,
                                  eval_ai/1,
                                  skip_ai/1,
+                                 intr_ai/1,
                                  match_noloops/6]).
 
 :- use_module(library(implementation_module)).
@@ -136,10 +137,16 @@ replace_body_hook(start_rtcheck(_, G), rtchecks_rt, G).
 replace_body_hook('$with_asr'( G, _), ctrtchecks, G).
 replace_body_hook('$with_gloc'(G, _), ctrtchecks, G).
 replace_body_hook('$with_ploc'(G, _), ctrtchecks, G).
+replace_body_hook(intr_ai(G), _, G).
 
+% abstract interpret and execute
 call_ai(G) :- call(G).
+% only abstract interpret but ignore execution
 eval_ai(_).
+% ignore abstract interpretation but execute
 skip_ai(G) :- call(G).
+% abstract interpret but ignore execution
+intr_ai(_).
 
 mod_qual(M, G as R, I:H as B:C) :- !,
     strip_module(M:G, N, H),
