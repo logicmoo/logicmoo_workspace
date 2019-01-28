@@ -74,6 +74,19 @@ true_1(_).
 is_meta(goal).
 is_meta(file).
 
+:- multifile
+    user:prolog_trace_interception/4.
+
+:- dynamic
+    ontrace_enabled/4.
+
+user:prolog_trace_interception(Port, Frame, PC, Action) :-
+    ontrace_enabled(M, OnTrace, ValidGoal, ValidFile),
+    ( trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal, M:ValidFile, Action)
+    ->true
+    ; Action = continue
+    ).
+
 %!  setup_trace(!State, :OnTrace, :OptL) is det.
 %
 setup_trace(State, M:OnTrace, MOptL) :-
@@ -83,12 +96,7 @@ setup_trace(State, M:OnTrace, MOptL) :-
     %% redo port have weird bugs, ignoring it for now:
     select_option(ports(PortList), OptL2, _,
                   [call, exit, fail, unify, exception]),
-    asserta((user:prolog_trace_interception(Port, Frame, PC, Action) :-
-                 ( trace_port(Port, Frame, PC, M:OnTrace, M:ValidGoal,
-                              M:ValidFile, Action)
-                 ->true
-                 ; Action = continue
-                 )), Ref),
+    asserta(ontrace_enabled(M, OnTrace, ValidGoal, ValidFile), Ref),
     foldl(port_mask, PortList, 0, Mask),
     '$visible'(Visible, Mask),
     '$leash'(Leash, Mask),
