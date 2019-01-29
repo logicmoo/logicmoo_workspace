@@ -139,13 +139,13 @@ replace_body_hook('$with_gloc'(G, _), ctrtchecks, G).
 replace_body_hook('$with_ploc'(G, _), ctrtchecks, G).
 replace_body_hook(intr_ai(G), _, G).
 
-% abstract interpret and execute
+% call during abstract interpretation and execution
 call_ai(G) :- call(G).
-% only abstract interpret but ignore execution
+% call during abstract interpretation but ignore during execution
 eval_ai(_).
-% ignore abstract interpretation but execute
+% ignore during abstract interpretation but call during execution
 skip_ai(G) :- call(G).
-% abstract interpret but ignore execution
+% abstract interpret but ignore during execution
 intr_ai(_).
 
 mod_qual(M, G as R, I:H as B:C) :- !,
