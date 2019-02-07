@@ -51,6 +51,12 @@ implements(Implementation:Alias) :-
     module_property(Interface, file(File)),
     module_property(Interface, exports(PIL)),
     compile_aux_clauses(interface:'$implementation'(Implementation, Interface)),
+    findall((:- meta_predicate Implementation:Spec),
+            ( member(F/A, PIL),
+              functor(Pred, F, A),
+              predicate_property(Interface:Pred, meta_predicate(Spec))
+            ), MetaPredicates),
+    compile_aux_clauses(MetaPredicates),
     maplist(Implementation:export, PIL).
 
 direct_interface(M, F/A) :-
