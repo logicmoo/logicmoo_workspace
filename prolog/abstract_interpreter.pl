@@ -385,11 +385,16 @@ abstract_interpreter_body(memberchk(A, B), _, _, _) -->
     ).
 abstract_interpreter_body(true, _, _, _) --> !.
 abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
-abstract_interpreter_body(A, M, _, _) -->
+abstract_interpreter_body(A, M, _, state(Loc, _, OnError, _, _, _)) -->
     {evaluable_body_hook(A, M, Condition)},
     !,
     ( {call(Condition)}
-    ->{call(M:A)}
+    ->{catch(M:A,
+             Error,
+             ( call(OnError, at_location(Loc, Error)),
+               fail
+             ))
+      }
     ; bottom
     ).
 
