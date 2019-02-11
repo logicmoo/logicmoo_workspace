@@ -51,7 +51,7 @@ d_t(Dict) :-
             },
           Dict).
 
-:- pred [fd1(+d_t,atm,atm,int),
+:- pred [fd1(+d_t,atm,str,int),
          fd2(-d_t,+atm,+atm,+int)+memory_root,
          fd3(d_t,atm,atm,list(int))+memory_root
         ] is foreign.

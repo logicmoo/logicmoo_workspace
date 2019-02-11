@@ -90,6 +90,7 @@
 	})
 #define FI_get_pointer(_, t, p) PL_get_pointer(t, p)
 #define FI_get_chrs(_, t, v)    PL_get_atom_chars(t, v)
+#define FI_get_string(_, t, v)  PL_get_string_chars(t, v, NULL)
 #define FI_get_char_code(_, t, c) ({			\
 	    int i;					\
 	    int __result = PL_get_integer(t, &i);	\
@@ -121,6 +122,12 @@
 		__result = PL_unify_atom_chars(t, v);	\
 	    __result;					\
 	})
+#define FI_unify_string(t, v) ({                        \
+            if (v!=NULL)                                \
+                PL_unify_string_chars(t, v);            \
+            TRUE;                                       \
+        })
+
 #define FI_unify_char_code(t, c) PL_unify_integer(t, c)
 #define FI_unify_char(t, c) ({		\
 	    char s[2];			\
@@ -247,9 +254,24 @@
 	}						\
     }
 
+#define FI_get_inout_string(__term, __value) {		\
+	if(PL_is_variable(__term)) {			\
+	    *__value = NULL;				\
+	}						\
+	else {						\
+	    __rtc_FI_get(string, __term, __value);	\
+	}						\
+    }
+
 #define FI_unify_inout_chrs(__term, __value) {		\
 	if (__value!=NULL) {				\
 	    __rtc_FI_unify(chrs, __term, __value);	\
+	}						\
+    }
+
+#define FI_unify_inout_string(__term, __value) {        \
+	if (__value!=NULL) {				\
+	    __rtc_FI_unify(string, __term, __value);	\
 	}						\
     }
 

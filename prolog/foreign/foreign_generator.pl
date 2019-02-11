@@ -46,7 +46,6 @@
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(metaprops)).
 :- use_module(library(apply)).
-:- use_module(library(atomics_atom)).
 :- use_module(library(camel_snake)).
 :- use_module(library(key_value)).
 :- use_module(library(substitute)).
@@ -88,35 +87,6 @@ command_to_atom(Command, Args, Atom) :-
     process_create(path(Command), Args, [stdout(pipe(Out))]),
     read_stream_to_codes(Out, String),
     string_to_atom(String, Atom).
-
-fortran_command(M, path(gfortran), ValueL, ValueT) :-
-    command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
-    atomic_list_concat(AtomL, ';\n', Atom),
-    findall(Value,
-            ( ( member(NameValue, AtomL),
-                member(NameEq, ['PLCFLAGS="', 'PLLDFLAGS="']),
-                atomics_atom([NameEq, Values, '"'], NameValue)
-              ; extra_compiler_opts(M, Values)
-              ),
-              atomic_args(Values, ValueL1),
-              member(Value, ValueL1)
-            ),
-            ValueL, ValueT).
-
-intermediate_obj(M, DirSO, LibL, Source, Object) -->
-    { intermediate_obj_fortran(M, DirSO, Source, Object, Command),
-      memberchk(gfortran, LibL)
-    },
-    !,
-    [Command].
-intermediate_obj(_, _, _, Source, Source) --> [].
-
-intermediate_obj_fortran(M, DirSO, Source, Object, Fortran-Args) :-
-    file_name_extension(Base, for, Source),
-    file_base_name(Base, Name),
-    file_name_extension(Name, o, NameO),
-    directory_file_path(DirSO, NameO, Object),
-    fortran_command(M, Fortran, Args, ['-fPIC', '-c', Source, '-o', Object]).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -196,9 +166,8 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
     atom_concat(BaseFile, '_intf.c', IntfFile),
-    foldl(intermediate_obj(M, DirSO, LibL), FSourceL, FTargetL, Commands, CommandsT),
     once(append(LibL, [], _)),
-    append(FTargetL, [IntfFile|CLibL], FArgsT),
+    append(FSourceL, [IntfFile|CLibL], FArgsT),
     findall(CLib, ( ( link_foreign_library(M, Lib)
                     ; member(Lib, LibL)
                     ),
@@ -231,7 +200,7 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
                     atom_concat('-L', Dir, LDir)
                   ),
             LDirL, FArgsT),
-    CommandsT = [path('swipl-ld')-['-shared', '-fPIC'|COptL]],
+    Commands = [path('swipl-ld')-['-shared', '-fPIC'|COptL]],
     forall(member(Command-ArgL, Commands),
            compile_1(Command, ArgL)).
 
@@ -772,6 +741,7 @@ implement_type_unifier(dict_end(_, Tag, L), Term, _) -->
     ).
 
 spec_pointer(chrs(_)).
+spec_pointer(string(_)).
 spec_pointer(ptr(_)).
 spec_pointer(pointer-_).
 spec_pointer(list(_)).
@@ -1109,10 +1079,11 @@ ctype_arg_decl(Spec, Mode, Decl) :-
     ctype_arg_decl(Spec, Mode, Codes, []),
     atom_codes(Decl, Codes).
 
-is_ref(term,    _) :- !.
-is_ref(list(_), _) :- !.        % Always ref
-is_ref(ptr(_),  _) :- !.        % Always ref
-is_ref(chrs(_), _) :- !.
+is_ref(term,      _) :- !.
+is_ref(list(_),   _) :- !.        % Always ref
+is_ref(ptr(_),    _) :- !.        % Always ref
+is_ref(chrs(_),   _) :- !.
+is_ref(string(_), _) :- !.
 is_ref(_, in).
 is_ref(_, out).
 % is_ref(inout, _) :- fail.
@@ -1125,6 +1096,7 @@ is_type(tdef(_, Spec)) :- is_type(Spec).
 ctype_decl(list(Spec))    --> ctype_decl(Spec), "*".
 ctype_decl(ptr(Spec))     --> ctype_decl(Spec), "*".
 ctype_decl(chrs(Name))    --> acodes(Name).
+ctype_decl(string(Name))  --> acodes(Name).
 ctype_decl(type(Name))    --> "struct ", acodes(Name).
 ctype_decl(term)          --> "term_t".
 ctype_decl(tdef(Name, _)) --> acodes(Name).
@@ -1314,6 +1286,7 @@ c_set_argument(type(T),    M, C, A, L) :- c_set_argument_type(M, T, C, A, L).
 c_set_argument(cdef(T),    M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(T-_,        M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(chrs(_),    M, C, A, L) :- c_set_argument_chrs(M, C, A, L).
+c_set_argument(string(_),  M, C, A, L) :- c_set_argument_string(M, C, A, L).
 c_set_argument(tdef(_, S), M, C, A, L) :- c_set_argument(S, M, C, A, L).
 c_set_argument(term,       _, C, A, "__rtcheck(PL_unify("+A+", "+C+"))").
 
@@ -1326,6 +1299,9 @@ c_set_argument_type(inout, Type, CArg, Arg, "FI_unify_inout_type("+Type+", "+Arg
 c_set_argument_chrs(out,   CArg, Arg, "__rtc_FI_unify(chrs, "+Arg+", "+CArg+")").
 c_set_argument_chrs(inout, CArg, Arg, "FI_unify_inout_chrs("+Arg+", "+CArg+")").
 
+c_set_argument_string(out,   CArg, Arg, "__rtc_FI_unify(string, "+Arg+", "+CArg+")").
+c_set_argument_string(inout, CArg, Arg, "FI_unify_inout_string("+Arg+", "+CArg+")").
+
 c_set_argument_rec(Type, Spec, CArg, Arg, "FI_unify_"+Type+"("+L+", "+Arg+", "+CArg+")") :-
     Arg_ = Arg+"_",
     c_var_name(Arg_, CArg_),
@@ -1337,6 +1313,7 @@ c_get_argument(type(T),    M, C, A, L) :- c_get_argument_type(M, T, C, A, L).
 c_get_argument(cdef(T),    M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(T-_,        M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(chrs(_),    M, C, A, L) :- c_get_argument_chrs(M, C, A, L).
+c_get_argument(string(_),  M, C, A, L) :- c_get_argument_string(M, C, A, L).
 c_get_argument(tdef(_, S), M, C, A, L) :- c_get_argument(S, M, C, A, L).
 c_get_argument(term, _, C, A, "*"+C+"=PL_copy_term_ref("+A+")").
 
@@ -1348,6 +1325,9 @@ c_get_argument_type(inout, Type, CArg, Arg, "FI_get_inout("+Type+", "+Arg+", "+C
 
 c_get_argument_chrs(in, CArg, Arg, "__rtc_FI_get(chrs, "+Arg+", "+CArg+")").
 c_get_argument_chrs(inout, CArg, Arg, "FI_get_inout_chrs("+Arg+", "+CArg+")").
+
+c_get_argument_string(in, CArg, Arg, "__rtc_FI_get(string, "+Arg+", "+CArg+")").
+c_get_argument_string(inout, CArg, Arg, "FI_get_inout_string("+Arg+", "+CArg+")").
 
 c_get_argument_rec(Mode, Type, Spec, CArg, Arg,
                    "FI_get_"+Mode+"_"+Type+"("+L+", "+Arg+", "+CArg+")") :-
@@ -1530,16 +1510,17 @@ match_type(Prop, M, K, N, Spec, A) -->
 
 match_type_k(known, Prop, M, N, Spec, A) --> match_known_type(Prop, M, N, Spec, A).
 match_type_k(unknown, _, _, _, _, _) --> [].
-    
-match_known_type(atm(A),       _, _, chrs('char*'), A) --> [].
-match_known_type(atom(A),      _, _, chrs('char*'), A) --> [].
+
+match_known_type(atm(A),       _, _, chrs('char*'),   A) --> [].
+match_known_type(atom(A),      _, _, chrs('char*'),   A) --> [].
+match_known_type(str(A),       _, _, string('char*'), A) --> [].
+match_known_type(string(A),    _, _, string('char*'), A) --> [].
 match_known_type(ptr(Type, A), M, N, ptr(Spec), A) -->
     { nonvar(Type),
       Type =.. [F|Args],
       Prop =.. [F, E|Args]
     },
     match_type(Prop, M, known, N, Spec, E).
-% match_known_type(string(A),        _, _, string_chars-'char*', A).
 match_known_type(ptr(A),            _, _, pointer-'void*', A) --> [].
 match_known_type(long(A),           _, _, long-long,       A) --> [].
 match_known_type(int(A),            _, _, integer-int,     A) --> [].
