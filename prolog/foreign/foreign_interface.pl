@@ -58,6 +58,9 @@ term_expansion((:- use_foreign_source(FAlias)),
 term_expansion((:- use_foreign_header(FAlias)),
                foreign_generator:use_foreign_header(M, FAlias)) :-
     '$current_source_module'(M).
+term_expansion((:- foreign_dependency(FAlias)),
+               foreign_generator:foreign_dependency(M, FAlias)) :-
+    '$current_source_module'(M).
 term_expansion((:- include_foreign_dir(DAlias)),
                foreign_generator:include_foreign_dir(M, DAlias)) :-
     '$current_source_module'(M).

@@ -4,6 +4,10 @@
 
 :- begin_tests(foreign).
 
+test(fortran1) :-
+    fortran1(1.5, X),
+    assertion(X =:= 2.25).
+
 test(foreign_eq) :-
     eq(2, B),
     assertion(B=:=2).

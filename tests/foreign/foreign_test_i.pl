@@ -1,7 +1,7 @@
 :- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
                            get_arrays/4, show_arrays/3, sio/1, negative_t/1,
-                           positive_t/1, fd1/4, fd2/4, fd3/4, extend/2,
-                           test_ireverse1/2, test_ireverse2/2]).
+                           fortran1/2, positive_t/1, fd1/4, fd2/4, fd3/4,
+                           extend/2, test_ireverse1/2, test_ireverse2/2]).
 
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
@@ -9,8 +9,11 @@
 :- use_module(library(foreign/foreign_props)).
 % :- extra_compiler_opts('-O2 -gdwarf-2 -g3 -D__DEBUG_MALLOC__').
 :- extra_compiler_opts('-O2 -gdwarf-2 -g3').
-:- use_foreign_header(foreign_test).
+:- use_foreign_header(include/foreign_test).
 :- use_foreign_source(foreign_test).
+:- include_foreign_dir(include).
+:- foreign_dependency(include/'constants.for').
+:- use_foreign_source('foreign_test.for').
 :- gen_foreign_library(.(foreign_test_i)).
 
 :- type temperature_t/1.
@@ -51,7 +54,8 @@ d_t(Dict) :-
             },
           Dict).
 
-:- pred [fd1(+d_t,atm,str,int),
+:- pred [fortran1(+num,-num),
+         fd1(+d_t,atm,str,int),
          fd2(-d_t,+atm,+atm,+int)+memory_root,
          fd3(d_t,atm,atm,list(int))+memory_root
         ] is foreign.

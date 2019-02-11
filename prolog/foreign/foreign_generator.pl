@@ -114,7 +114,9 @@ intermediate_obj(_, _, _, Source, Source) --> [].
 intermediate_obj_fortran(M, DirSO, Source, Object, Fortran-Args) :-
     file_name_extension(Base, for, Source),
     file_base_name(Base, Name),
-    file_name_extension(Name, o, NameO),
+    % Add a preffix to avoid problems with other files with the same base
+    atom_concat(Name, '_for', NameFor),
+    file_name_extension(NameFor, o, NameO),
     directory_file_path(DirSO, NameO, Object),
     fortran_command(M, Fortran, Args, ['-fPIC', '-c', Source, '-o', Object]).
 

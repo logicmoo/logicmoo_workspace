@@ -12,6 +12,13 @@ void  extend(int* const in, int** out) {
 	(*out)[n+i] = in[i] * 2;
     }
 }
+
+extern void fortran1_(const double *x, double *result);
+
+void fortran1(double const x, double *result) {
+    fortran1_(&x, result);
+}
+
 void fd1(struct d_t* const A, char **B, char **C, int **D) {
     *B=A->value1;
     *C=A->value2;
