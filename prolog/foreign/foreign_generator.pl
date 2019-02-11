@@ -54,6 +54,7 @@
 :- use_module(library(implementation_module)).
 
 :- multifile
+    foreign_dependency/2,
     gen_foreign_library/3,
     use_foreign_source/2,
     use_foreign_header/2,
@@ -68,6 +69,7 @@
     implement_type_unifier//3.
 
 :- dynamic
+    foreign_dependency/2,
     gen_foreign_library/3,
     use_foreign_source/2,
     use_foreign_header/2,
@@ -83,7 +85,14 @@
 
 % user:prolog_exception_hook(ExceptionIn, ExceptionOut, Frame, CatcherFrame) :-
 %     backtrace(40).
-    
+
+
+% Predefined foreign dependencies:
+
+foreign_dependency(M, HAlias) :- use_foreign_header(M, HAlias).
+foreign_dependency(_, library('foreign/foreign_interface.h')).
+foreign_dependency(_, library('foreign/foreign_swipl.h')).
+
 command_to_atom(Command, Args, Atom) :-
     process_create(path(Command), Args, [stdout(pipe(Out))]),
     read_stream_to_codes(Out, String),
@@ -103,22 +112,23 @@ fortran_command(M, path(gfortran), ValueL, ValueT) :-
             ),
             ValueL, ValueT).
 
-intermediate_obj(M, DirSO, LibL, Source, Object) -->
-    { intermediate_obj_fortran(M, DirSO, Source, Object, Command),
+intermediate_obj(M, DirSO, OptL, LibL, Source, Object) -->
+    { intermediate_obj_fortran(M, DirSO, OptL, Source, Object, Command),
       memberchk(gfortran, LibL)
     },
     !,
     [Command].
-intermediate_obj(_, _, _, Source, Source) --> [].
+intermediate_obj(_, _, _, _, Source, Source) --> [].
 
-intermediate_obj_fortran(M, DirSO, Source, Object, Fortran-Args) :-
+intermediate_obj_fortran(M, DirSO, OptL, Source, Object, Fortran-Args) :-
     file_name_extension(Base, for, Source),
     file_base_name(Base, Name),
     % Add a preffix to avoid problems with other files with the same base
     atom_concat(Name, '_for', NameFor),
     file_name_extension(NameFor, o, NameO),
     directory_file_path(DirSO, NameO, Object),
-    fortran_command(M, Fortran, Args, ['-fPIC', '-c', Source, '-o', Object]).
+    append([['-fPIC'|OptL], ['-c', Source, '-o', Object]], FOptL),
+    fortran_command(M, Fortran, Args, FOptL).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -140,10 +150,7 @@ generate_library(M, AliasSO, AliasSOPl, InitL, File) :-
                                            relative_to(File)])
                      ), FSourceL),
     ( forall(( member(Dep, [File|FSourceL])
-             ; ( use_foreign_header(M, HAlias)
-               ; HAlias = library('foreign/foreign_interface.h')
-               ; HAlias = library('foreign/foreign_swipl.h')
-               ),
+             ; foreign_dependency(M, HAlias),
                absolute_file_name(HAlias, Dep,
                                   [extensions(['.h','']),
                                    access(read),
@@ -198,9 +205,26 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
     atom_concat(BaseFile, '_intf.c', IntfFile),
-    foldl(intermediate_obj(M, DirSO, LibL), FSourceL, FTargetL, Commands, CommandsT),
+    findall(IDir, ( ( Dir = DirSO
+                    ; Dir = DirIntf
+                    ; include_foreign_dir(M, DAlias),
+                      absolute_file_name(DAlias, Dir, [file_type(directory),
+                                                       relative_to(File)])
+                    ),
+                    atom_concat('-I', Dir, IDir)
+                  ), IDirL),
+    CommonOptL = ['-fPIC'|IDirL],
+    foldl(intermediate_obj(M, DirSO, CommonOptL, LibL), FSourceL, FTargetL, Commands, CommandsT),
     once(append(LibL, [], _)),
-    append(FTargetL, [IntfFile|CLibL], FArgsT),
+    findall(COpt, ( COpt = '-shared'
+                  ; ( extra_compiler_opts(M, COpts)
+                    ; pkg_foreign_config(M, Package),
+                      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
+                      atom_concat(COpts, '\n', COpt1)
+                    ),
+                    atomic_args(COpts, COptL1),
+                    member(COpt, COptL1)
+                  ), COptL),
     findall(CLib, ( ( link_foreign_library(M, Lib)
                     ; member(Lib, LibL)
                     ),
@@ -211,29 +235,14 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
                     atomic_args(CLibs, CLibL1),
                     member(CLib, CLibL1)
                   ), CLibL, ['-o', FileSO]),
-    findall(COpt, ( ( extra_compiler_opts(M, COpts)
-                    ; pkg_foreign_config(M, Package),
-                      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
-                      atom_concat(COpts, '\n', COpt1)
-                    ),
-                    atomic_args(COpts, COptL1),
-                    member(COpt, COptL1)
-                  ), COptL, IDirL),
-    findall(IDir, ( ( Dir = DirSO
-                    ; Dir = DirIntf
-                    ; include_foreign_dir(M, DAlias),
-                      absolute_file_name(DAlias, Dir, [file_type(directory),
-                                                       relative_to(File)])
-                    ),
-                    atom_concat('-I', Dir, IDir)
-                  ), IDirL, LDirL),
     findall(LDir, ( library_foreign_dir(M, DAlias),
                     absolute_file_name(DAlias, Dir, [file_type(directory),
                                                      relative_to(File)]),
                     atom_concat('-L', Dir, LDir)
                   ),
-            LDirL, FArgsT),
-    CommandsT = [path('swipl-ld')-['-shared', '-fPIC'|COptL]],
+            LDirL),
+    append([COptL, CommonOptL, LDirL, FTargetL, [IntfFile|CLibL]], FArgsL),
+    CommandsT = [path('swipl-ld')-FArgsL],
     forall(member(Command-ArgL, Commands),
            compile_1(Command, ArgL)).
 
@@ -1200,7 +1209,6 @@ current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL
     implementation_module(Context:Head, Module),
     once(( call(GenKeyProp, KeyProp),
            prop_asr(glob, KeyProp, _, Asr)
-           % implementation_module(KM:KeyProp+1_extra_argument, KI)
          )),
     findall(Head-[MComp, MCall, MSucc, MGlob, Dict],
             ( assertion_db(_, Head, Module, CM, check, Type, Comp, Call, Succ,
