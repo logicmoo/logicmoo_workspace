@@ -123,9 +123,10 @@
 	    __result;					\
 	})
 #define FI_unify_string(t, v) ({                        \
+	    int __result = TRUE;			\
             if (v!=NULL)                                \
-                PL_unify_string_chars(t, v);            \
-            TRUE;                                       \
+                __result = PL_unify_string_chars(t, v); \
+            __result;                                   \
         })
 
 #define FI_unify_char_code(t, c) PL_unify_integer(t, c)
