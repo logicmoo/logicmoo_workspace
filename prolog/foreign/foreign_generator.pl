@@ -46,6 +46,7 @@
 :- use_module(library(foreign/foreign_props)).
 :- use_module(library(metaprops)).
 :- use_module(library(apply)).
+:- use_module(library(atomics_atom)).
 :- use_module(library(camel_snake)).
 :- use_module(library(key_value)).
 :- use_module(library(substitute)).
@@ -87,6 +88,35 @@ command_to_atom(Command, Args, Atom) :-
     process_create(path(Command), Args, [stdout(pipe(Out))]),
     read_stream_to_codes(Out, String),
     string_to_atom(String, Atom).
+
+fortran_command(M, path(gfortran), ValueL, ValueT) :-
+    command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
+    atomic_list_concat(AtomL, ';\n', Atom),
+    findall(Value,
+            ( ( member(NameValue, AtomL),
+                member(NameEq, ['PLCFLAGS="', 'PLLDFLAGS="']),
+                atomics_atom([NameEq, Values, '"'], NameValue)
+              ; extra_compiler_opts(M, Values)
+              ),
+              atomic_args(Values, ValueL1),
+              member(Value, ValueL1)
+            ),
+            ValueL, ValueT).
+
+intermediate_obj(M, DirSO, LibL, Source, Object) -->
+    { intermediate_obj_fortran(M, DirSO, Source, Object, Command),
+      memberchk(gfortran, LibL)
+    },
+    !,
+    [Command].
+intermediate_obj(_, _, _, Source, Source) --> [].
+
+intermediate_obj_fortran(M, DirSO, Source, Object, Fortran-Args) :-
+    file_name_extension(Base, for, Source),
+    file_base_name(Base, Name),
+    file_name_extension(Name, o, NameO),
+    directory_file_path(DirSO, NameO, Object),
+    fortran_command(M, Fortran, Args, ['-fPIC', '-c', Source, '-o', Object]).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -166,8 +196,9 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
     directory_file_path(DirIntf, _, IntfPl),
     directory_file_path(DirSO,   _, FileSO),
     atom_concat(BaseFile, '_intf.c', IntfFile),
+    foldl(intermediate_obj(M, DirSO, LibL), FSourceL, FTargetL, Commands, CommandsT),
     once(append(LibL, [], _)),
-    append(FSourceL, [IntfFile|CLibL], FArgsT),
+    append(FTargetL, [IntfFile|CLibL], FArgsT),
     findall(CLib, ( ( link_foreign_library(M, Lib)
                     ; member(Lib, LibL)
                     ),
@@ -200,7 +231,7 @@ do_generate_library(M, FileSO, File, InitL, FSourceL) :-
                     atom_concat('-L', Dir, LDir)
                   ),
             LDirL, FArgsT),
-    Commands = [path('swipl-ld')-['-shared', '-fPIC'|COptL]],
+    CommandsT = [path('swipl-ld')-['-shared', '-fPIC'|COptL]],
     forall(member(Command-ArgL, Commands),
            compile_1(Command, ArgL)).
 
