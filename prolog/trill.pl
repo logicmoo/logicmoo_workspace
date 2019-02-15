@@ -50,7 +50,7 @@ details.
 :- meta_predicate remove_axioms(:).
 :- meta_predicate load_kb(:).
 :- meta_predicate load_owl_kb(:).
-:- meta_predicate load_owl_kb(:).
+:- meta_predicate load_owl_kb_from_string(:).
 :- meta_predicate set_algorithm(:).
 
 :- use_module(library(lists)).
