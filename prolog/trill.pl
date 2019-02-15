@@ -98,7 +98,7 @@ load_owl_kb(FileName):-
  * The predicate loads the knowledge base contained in the given string. 
  * The knowledge base must be defined in pure OWL/RDF format.
  */
-load_owl_kb_from_string(String):-
+load_owl_kb_from_string(_:String):-
   load_owl_from_string(String).
 
 /*****************************/
