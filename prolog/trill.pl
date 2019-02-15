@@ -22,7 +22,7 @@ details.
                  unsat/1, unsat/2, prob_unsat/2,
                  inconsistent_theory/1, inconsistent_theory/2, prob_inconsistent_theory/2,
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
-                 load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, set_algorithm/1] ).
+                 load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
 
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
@@ -52,6 +52,7 @@ details.
 :- meta_predicate load_owl_kb(:).
 :- meta_predicate load_owl_kb_from_string(:).
 :- meta_predicate set_algorithm(:).
+:- meta_predicate init_trill(+).
 
 :- use_module(library(lists)).
 :- use_module(library(ugraphs)).
@@ -2374,6 +2375,11 @@ set_algorithm(M:tornado):-
   consult(library(tornado_internal)),
   clean_up(M),!.
 
+init_trill(Alg):-
+  utility_translation:get_module(M),
+  set_algorithm(M:Alg),
+  set_up(M),
+  trill:add_kb_prefixes(M:[('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 /**************/
 /*get_trill_current_module('utility_translation'):-
