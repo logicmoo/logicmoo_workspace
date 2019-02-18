@@ -178,23 +178,23 @@ swish_help:help_files(AllExamples) :-
 	append(JSON, AllExamples),
 	!
 )).
-:- dynamic(swish_examples:example_files/1). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
+:- dynamic(swish_examples:swish_examples_no_cache/1). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
 :- asserta((
-swish_examples:example_files(AllExamples) :-
-	http_absolute_location(swish(example), HREF, []),
-	findall(Index,
-		absolute_file_name(example(.), Index,
-				   [ access(read),
-				     file_type(directory),
-				     file_errors(fail),
-				     solutions(all)
-				   ]),
-		ExDirs_), 
-	list_without_duplicates(ExDirs_,ExDirs), % patch..
-	maplist(swish_examples:index_json(HREF), ExDirs, JSON),
-	append(JSON, AllExamples),
-	!
+	swish_examples:swish_examples_no_cache(SWISHExamples) :-
+		http_absolute_location(swish(example), HREF, []),
+		findall(Index,
+			absolute_file_name(example(.), Index,
+					   [ access(read),
+						 file_type(directory),
+						 file_errors(fail),
+						 solutions(all)
+					   ]),
+			ExDirs_),
+		list_without_duplicates(ExDirs_,ExDirs), % patch..
+		maplist(swish_examples:index_json(HREF), ExDirs, SWISHExamples)
 )).
+	
+/* Somehow this is NOT working:
 :- dynamic(swish_config:config/2). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
 :- asserta((
 swish_config:config(What, Profiles) :-
@@ -209,6 +209,7 @@ swish_config:config(What, A) :-
 	What==include_alias, !, % hack to allow swish_config_dict/2 to... not lose config items;-)
 	once((A=example;A=system))
 )).
+*/
 
 
 :- http_handler('/lps', serve_lps_resources, [prefix]). 
