@@ -1,7 +1,7 @@
 { "comment": "Examples specific to LPS",
 "menu":[ {"group":"lps","rank":30000} ],
 "files":[
-	{ "file":"First_Steps_with_LPS.swinb",
+	{ "file":"FirstStepswithLPS.swinb",
       "title":"First Steps with LPS",
       "group":"lps"
     },

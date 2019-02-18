@@ -156,6 +156,60 @@ gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[s
 user:file_search_path(profile, '../swish/profiles').
 user:file_search_path(lps_resources, '../swish/web').
 
+% PATCH to swish to avoid duplicate example and help menu and profile entries on Linux
+% list_without_duplicates(+L,-NL) 
+% Remove duplicates from list L, but keeping first occurrences in their original order
+list_without_duplicates([X|L],[X|NL]) :- select(X,L,LL), !, list_without_duplicates(LL,NL).
+list_without_duplicates([X|L],[X|NL]) :- !, list_without_duplicates(L,NL).
+list_without_duplicates([],[]).
+:- dynamic(swish_help:help_files/1). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
+:- asserta((
+swish_help:help_files(AllExamples) :-
+	findall(Index,
+		absolute_file_name(swish_help(.), Index,
+				   [ access(read),
+				     file_type(directory),
+				     file_errors(fail),
+				     solutions(all)
+				   ]),
+		ExDirs_), 
+	list_without_duplicates(ExDirs_,ExDirs), % patch
+	maplist(swish_help:index_json, ExDirs, JSON),
+	append(JSON, AllExamples),
+	!
+)).
+:- dynamic(swish_examples:example_files/1). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
+:- asserta((
+swish_examples:example_files(AllExamples) :-
+	http_absolute_location(swish(example), HREF, []),
+	findall(Index,
+		absolute_file_name(example(.), Index,
+				   [ access(read),
+				     file_type(directory),
+				     file_errors(fail),
+				     solutions(all)
+				   ]),
+		ExDirs_), 
+	list_without_duplicates(ExDirs_,ExDirs), % patch..
+	maplist(swish_examples:index_json(HREF), ExDirs, JSON),
+	append(JSON, AllExamples),
+	!
+)).
+:- dynamic(swish_config:config/2). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
+:- asserta((
+swish_config:config(What, Profiles) :-
+	What==profiles, !,  % hack to allow swish_config_dict/2 to... not lose config items;-)
+	findall(Profile, swish_profiles:swish_profile(Profile), Profiles0_),
+	list_without_duplicates(Profiles0_,Profiles0), % patch..
+	sort(value, =<, Profiles0, Profiles1),
+	swish_profiles:join_profiles(Profiles1, Profiles)
+)).
+:- asserta((
+swish_config:config(What, A) :- 
+	What==include_alias, !, % hack to allow swish_config_dict/2 to... not lose config items;-)
+	once((A=example;A=system))
+)).
+
 
 :- http_handler('/lps', serve_lps_resources, [prefix]). 
 serve_lps_resources(Request) :- % http://localhost:3050/lps/foo/Gruntfile.js working :-)
