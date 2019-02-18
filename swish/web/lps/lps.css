@@ -6,12 +6,6 @@
 /*.cm-s-prolog span.cm-event	       {border: 1px solid #FDA428;}*/
 .cm-s-prolog span.cm-time	       {color: #FDA428; }
 .cm-s-prolog span.cm-head	       {font-weight: normal;} /* keep LPS constructs bolder...*/
-a.logicalcontracts-logo {
-  position:absolute;
-  top:4px;left:4px;
-  /*width: 84px; height: 42px;
-  background-size: 100%;*/
-}
 div.prolog-runners {
   width: 100%; height: 100%;
   background-image: url("");

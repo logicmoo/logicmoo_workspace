@@ -1,1 +1,17 @@
-[ "--",{ "file":"First_Steps_with_LPS.swinb", "title":"First Steps with LPS" },{ "file":"lpsExamples.swinb", "title":"LPS examples" },{ "file":"fintechExamples.swinb", "title":"Fintech examples" }]
+{ "comment": "Examples specific to LPS",
+"menu":[ {"group":"lps","rank":30000} ],
+"files":[
+	{ "file":"First_Steps_with_LPS.swinb",
+      "title":"First Steps with LPS",
+      "group":"lps"
+    },
+	{ "file":"lpsExamples.swinb",
+      "title":"LPS examples",
+      "group":"lps"
+    },
+	{ "file":"fintechExamples.swinb",
+      "title":"Fintech examples",
+      "group":"lps"
+    }
+	]
+}

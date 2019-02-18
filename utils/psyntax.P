@@ -133,7 +133,7 @@ may_add_timeless_ref(G) :-
 set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; functor(T,F,N)), assert(current_top_term(F/N)).
 
 
-:- use_module('../engine/interpreter.P',[go/3, print_error/2, 
+:- use_module('../engine/interpreter.P',[go/3, print_error/2, is_some_time/1,
 	uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,
 	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1]).
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
@@ -144,6 +144,11 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(1200,xfx,user:(then)).
 :- op(1185,fx,user:(if)).
 :- op(1200,xfx,user:(if)).
+% the following is for "conditional expressions", (if C then T else E)
+% this maybe slightly confusing versus (if Antecedent then Consequent) rules, 
+% and other choices would be possible, e.g. Python's or C et.al... but this still feels
+% easier on newcomers, hoping that context (and the obligation to use parenthesis) helps:
+:- op(1100,xfy,user:else). 
 :- op(1050,xfx,user:(terminates)).
 :- op(1050,xfx,user:(initiates)).
 :- op(1050,xfx,user:(updates)).
@@ -310,7 +315,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	nonvar(IStr), nonvar(OStr),
 	repeat,
 	catch(my_file_read(IStr,Term_,Vars_),Ex,writeln(ex-Ex)), 
-	term_includer(Term_,Vars_,Term,Vars), % inject terms from included files
+	term_includer(Term_,Vars_,[],Term,Vars), % inject terms from included files
 	closetail(Vars),
 	( Term==end_of_file -> true
 	;  
@@ -337,19 +342,23 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	close(OStr),close(IStr),
 	(nonvar(Old)->set_xsb_flag(write_depth,Old);true).
 
-term_includer((:- include(F)), _, Term,Vars) :- !, absolute_file_name(F,File), 
-	term_in_file(File, Term, Vars).
-term_includer(T,V,T,V).
+% term_includer(+TermRead,+VarsRead,+FilesIncludedSoFar,-Term,-Vars)
+term_includer((:- include(F)), _, Included, Term,Vars) :- !, absolute_file_name(F,File), 
+	length(Included,N), 
+	(N>5 -> throw(too_many_file_inclusions(N,File)) ; true),
+	term_in_file(File, [File|Included], Term, Vars).
+term_includer(T,V,_Included,T,V).
 
 % Inspired from http://www.swi-prolog.org/pldoc/man?predicate=setup_call_cleanup/3:
-term_in_file(File,Term,Vars) :-
-	setup_call_cleanup( open(File, read, In), term_in_stream(In, Term, Vars), close(In) ).
+term_in_file(File,Included,Term,Vars) :-
+	setup_call_cleanup( open(File, read, In), term_in_stream(In, Included, Term, Vars), close(In) ).
 
-term_in_stream(In, Term, Vars) :-
-        repeat, my_file_read(In,T,Vars), 
-        (   T == end_of_file
+term_in_stream(In, Included, Term, Vars) :-
+        repeat, my_file_read(In,T,Vars_), 
+        term_includer(T,Vars_,Included,Term,Vars), 
+        (   Term == end_of_file
         ->  !, fail
-        ;   T = Term
+        ;   true
         ).
         
 % head_hint(HeadTemplate,Sort,Declared) Sort maybe l_timeless,event,fluent
@@ -410,7 +419,7 @@ syntax2p(NicerSyntaxTerm,Vars,Translator,Pterm) :-
 
 % syntax2p(?NicerSyntaxTerm,+Vars,+Translator,NiceColouring,?Pterm) 
 % Vars is a (closed tail) list of some_functor(Name,Variable)
-% Translator: lpsp2p ("papers syntax") or lps2p ("new syntax"); 
+% Translator: lpsp2p ("papers syntax", no longer supported!) or lps2p ("new syntax"); 
 % Either NicerSyntaxTerm or Pterm must be bound; the other should be unbound
 % NiceColouring is a colouring specificatin term as per SWI's prolog_colouring.pl, for the NicerSyntaxTerm
 %   null if undefined colouring, e.g. for timeless/Prolog literals (they'll be coloured elsewhere in SWI)
@@ -443,7 +452,7 @@ syntax2p((observe E from T1 to T2),_Vars,lps2p, lps_delimiter - [SpecHead], obse
 	syntax2p_literal((E from T1 to T2),[],lps2p,_,_,SpecHead,_).
 syntax2p((observe E to T2),_Vars,lps2p, lps_delimiter - [SpecHead],observe([E],T2)) :- !,
 	syntax2p_literal((E to T2),[],lps2p,_,_,SpecHead,_).
-syntax2p((observe E at T2),_Vars,lps2p, lps_delimiter - [SpecHead],observe([E],T2)) :- atom(T2), !,
+syntax2p((observe E at T2),_Vars,lps2p, lps_delimiter - [SpecHead],observe([E],T2)) :- is_some_time(T2), !,
 	syntax2p_literal((E to T2),[],lps2p,_,_,SpecHead,_).
 syntax2p((observe E from T1),_Vars,lps2p, lps_delimiter - [SpecHead],observe([E],T2)) :- number(T1), !, T2 is T1+1,
 	syntax2p_literal((E to T2),[],lps2p,_,_,SpecHead,_).
@@ -461,24 +470,12 @@ syntax2p((fluents A),_Vars,lps2p,lps_delimiter - [Specs],fluents(L)) :- !, comma
 % reactive rules:
 syntax2p((if A then C priority P), Vars,TT, null,reactive_rule(NA,NC,P)) :- TT=lps2p, !, % TODO: should add T3>=T1?? interpreter enforced?
 	syntax2p_sequence(A,Vars,TT,[_T1,_T2],_,NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],_,NC).
-syntax2p((A--->C priority P), Vars,TT, null,reactive_rule(NA,NC,P)) :- TT=lpsp2p, !, 
-	syntax2p_sequence(A,Vars,TT,[_T1,_T2],_,NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],_,NC).
 syntax2p((if A then C), Vars,TT, lps_delimiter-[lps_delimiter-SpecA,SpecC],reactive_rule(NA,NC)) :- TT=lps2p, !, 
 	syntax2p_sequence(A,Vars,TT,[_T1,_T2],SpecA,NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],SpecC,NC).
-syntax2p((A--->C),Vars,TT,null,reactive_rule(NA,NC)) :- TT=lpsp2p, !, 
-	syntax2p_sequence(A,Vars,TT,[_T1,_T2],_,NA), syntax2p_sequence(C,Vars,TT,[_T3,_T4],_,NC).
 % pre-conditions:
 syntax2p((false B),Vars,lps2p,lps_delimiter-[SpecB],d_pre(IC)) :- !, 
 	syntax2p_sequence(B,Vars,lps2p,[_T1,_T2],single,_ET,SpecB,IC).
-syntax2p(((false):-B),Vars,lpsp2p,null,d_pre(IC)) :- !, 
-	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,_ET,_,IC).
 % now post-conditions:	
-syntax2p((IT:-B),Vars,lpsp2p,null,PT) :- % LPSP -> Wei term
-	var(PT),
-	IT=..[F,H], ((F==terminated) ; (F==initiated)), 
-	!,
-	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,_ET,_,[NB1|NBn]), % should be strictier wrt NB1 ?
-	PT=..[F,NB1,H,NBn].
 syntax2p((H if B),Vars,lps2p,Spec,PT) :- % 
 	var(PT),( 
 		H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn), Spec=lps_delimiter-[lps_delimiter-[EC,FC],SpecB] ; 
@@ -488,9 +485,11 @@ syntax2p((H if B),Vars,lps2p,Spec,PT) :- %
 		),
 	!,
 	remember_fluent_hint(Fluent), remember_event_hint(Event),
-	simple_event_colour(Event,EC), simple_fluent_colour(Fluent,FC),
-	syntax2p_literal(Event,Vars,lps2p,[T1,T2], _ETL, _Spec1, NB1),
-	syntax2p_sequence(B,Vars,lps2p,[T1,T2],single,_ET,SpecB,NBn). 
+	% simple_event_colour(Event,EC), 
+	simple_fluent_colour(Fluent,FC),
+	syntax2p_literal(Event,Vars,lps2p,[T1,T2], _ETL, EC, NB1),
+	syntax2p_sequence(B,Vars,lps2p,[T1,T3],single,_ET,SpecB,NBn),
+	(T3\==T1 -> T2=T3;true). % beware of collapsing the event time interval...
 syntax2p(H,Vars,lps2p,Spec,PT) :- % 
 	var(PT),( 
 		H= (Event initiates Fluent), PT=initiated(NB1,Fluent,NBn), Spec=lps_delimiter-[SpecE,FC] ; 
@@ -502,12 +501,6 @@ syntax2p(H,Vars,lps2p,Spec,PT) :- %
 	remember_fluent_hint(Fluent),
 	simple_fluent_colour(Fluent,FC),
 	syntax2p_sequence(Event,Vars,lps2p,[_T1,_T2],single,_ET,SpecE,[NB1|NBn]).
-syntax2p(L,Vars,lpsp2p,null,PT) :- % LPSP <- Wei term
-	var(L), PT=..[F,NB1,H,NBn], 
-	((F==terminated) ; (F==initiated)), 
-	!,
-	LH=..[F,H], L = (LH:-B),
-	syntax2p_sequence(B,Vars,lpsp2p,[_T1,_T2],single,_ET,_,[NB1|NBn]). % should be strictier wrt NB1 ?
 syntax2p(L,Vars,lps2p,null,PT) :-
 	var(L), PT=..[F,NB1,Fluent,NBn], 
 	((F==terminated), L_ = (Event terminates Fluent) ; (F==initiated), L_ = (Event initiates Fluent)), 
@@ -523,7 +516,7 @@ syntax2p(L,Vars,lps2p,null,updated(NB1,Fluent,Old-New,NBn)) :-
 % intentional fluents and composite events, and more
 syntax2p((Head if Body),Vars,lps2p,lps_delimiter-[SpecHead,SpecBody],PT) :-
 	(var(PT) -> ToWei=true; ToWei=false),
-	(ToWei==true -> syntax2p_literal(Head,Vars,lps2p,[T1,T2],_,SpecHead,NH); true),
+	(ToWei==true -> syntax2p_literal(Head,Vars,lps2p,[T1,T2],ETH,SpecHead,NH); true),
 	( 
 		PT = l_events(NH,NB), NH=happens(_,_,_);
 		PT = l_int(NH,NB), NH = holds(_,_)
@@ -531,7 +524,11 @@ syntax2p((Head if Body),Vars,lps2p,lps_delimiter-[SpecHead,SpecBody],PT) :-
 	!,
 	(PT=l_int(_,_) -> IntervalType=single ; IntervalType = _),
 	((ToWei==false) -> syntax2p_literal(Head,Vars,lps2p,[T1,T2],_,_,NH) ; true),
-	syntax2p_sequence(Body,Vars,lps2p,[T1,T2],IntervalType,_ET,SpecBody,NB).
+	syntax2p_sequence(Body,Vars,lps2p,[T1body,T2body],IntervalType,_ETbody,SpecBody,NB),
+	% we only bind head and body intervals fully if no explicit time is mentioned in head
+	% First the case for fluents, which must bind:
+	(NH = holds(_,_) -> T2body=T2, T1body=T1 ; true), 
+	((ETH== (false) ) -> T2body=T2, T1body=T1 ; true).
 syntax2p((H:-B),_,_TT,null,PT) :- var(PT), (var(H);var(B)), !, fail.
 % time-dependent facts:
 syntax2p(Head,Vars,lps2p,Spec,l_int(WHead,[])) :-
@@ -540,19 +537,6 @@ syntax2p(Head,Vars,lps2p,Spec,l_int(WHead,[])) :-
 syntax2p(Head,Vars,lps2p,Spec,l_events(WHead,[])) :-
 	syntax2p_literal(Head,Vars,lps2p,[_T1,_T2],_,Spec,WHead), WHead = happens(_,_,_),
 	!.
-syntax2p(L,Vars,lpsp2p,null,PT) :- 
-	(var(PT) -> ToWei=true; ToWei=false),
-	(L = (LH:-LB)->true;LH=L,LB=true), 
-	(ToWei==true -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_,_,NH); true),
-	( 
-		PT = l_events(NH,NB), NH=happens(_,_,_) ;
-		PT = l_int(NH,NB), NH = holds(_,_) ;
-		% if a timeless head, remember that to override "time looks" in body if need be:
-		PT = l_timeless(NH,NB), \+ (nonvar(NH), (NH = holds(_,_);NH = happens(_,_,_)) ), remember_timeless_hint(NH)
-	),
-	!,
-	((ToWei==false) -> syntax2p_literal(LH,Vars,Translator,[T1,T2],_,_,NH) ; true),
-	syntax2p_sequence(LB,Vars,Translator,[T1,T2],_,NB).
 syntax2p(Term, _, _Translator, classify,Term).  % pass through for Wei terms or other Prolog facts
 
 % syntax2p_observations(ObsCommaList,CommaT2,ObsList,ListT2,-ColourSpec) CommaT2 must be unique
@@ -582,26 +566,37 @@ syntax2p_sequence((L1,L2),Vars,Translator,[T1,T6],IT, ET, delimiter-[Spec1,Spec2
 	% if no explicit time arguments, the literals are assumed in timely sequence with neighbors
 	 % 'single' too strict, should probably reflect into a tc(...) ???
 	( (ETL == (false), ETS == (false)) -> ET= (false) ; ET = true),
+
 	(IT==single -> 
-		((PT1=happens(_,_,_),ETL==true) -> T3=T6 ; T1=T4,T3=T6)
-		; ( (ETL == (false), ETS == (false)) -> T4=T3 ; true)
-		),
-	T1=T2, T6=T5.
-syntax2p_sequence(true,_,_TT,[_T1,_T2],_,false,classify,[]) :- !.
+		(
+			% we need to be careful inadvertently binding event end times with fluents bound to a previous time 
+			((T2==T3,ETL==false) /* fluent or timeless */ -> T2=T1 ; PT1=happens(_,_,_) -> T1=T2,T6=T3 ; true /* fluent with explicit time */),
+			((T4==T5,ETL==false) -> T4=T1, (T2==T3 -> T5=T6; true) ; memberchk(happens(_,_,_),PT2) -> T1=T4,T6=T5 ; true)
+			% (PT1=happens(_,_,_),ETL==true) -> T3=T6 ; T1=T4,T3=T6
+		)
+		; 
+		( (ETL == (false), ETS == (false)) -> T4=T3 ; true),
+		T1=T2, T6=T5
+	).
+	
+syntax2p_sequence(true,_,_TT,[T,T],_,false,classify,[]) :- !.
 syntax2p_sequence(L,Vars,Translator,Interval,_,ET,Spec,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,ET,Spec,PT).
 
 % syntax2p_literal(NicerLiteral,+Vars,+Translator,[T1,T2],-ExplicitTime,-NiceColouring,WeiLiteral)
 %  for events, [T1,T2] is their interval; for fluents, T1 is the time
 % ExplicitTime == true if the given literal has explicit time arguments, false otherwise
-syntax2p_literal(tc(TC),_Vars,lpsp2p,[_T1,_T2],true,null,tc(TC)) :- !. % no tc(_) allowed in new syntax... lpsp2p TODO: check Vars for (some) Ts
+syntax2p_literal((if Cond then Then else Else),Vars,Translator,[T1,T2],ET,lps_delimiter-[lps_delimiter-[NiceC],lps_delimiter-[NiceT,NiceE]],(CondW->ThenW;ElseW)) :- !,
+	syntax2p_sequence(Cond,Vars,Translator,[T1,TC],_,ETC,NiceC, CondW),
+	syntax2p_sequence(Then,Vars,Translator,[TT,T2],_,ETT,NiceT, ThenW),
+	syntax2p_sequence(Else,Vars,Translator,[_TE,T2],_,ETE,NiceE, ElseW),
+	( (ETC== (false),ETT== (false),ETE== (false)) -> ET=(false); ET=true),
+	% force or not adjacent time intervals, depending on whether the user wrote explicit time
+	( (ETC== (false),ETT== (false)) -> TC=TT; true).
+	% ( (ETC== (false),ETE== (false)) -> TC=TE; true). Can not bind this time, different branch...
+% alternative syntax for conditional (even though only the above will be used for translation from internal form):
+syntax2p_literal((Cond -> Then ; Else),Vars,Translator,Interval,ET,Spec,(CondW->ThenW;ElseW)) :- !,
+	syntax2p_literal((if Cond then Then else Else),Vars,Translator,Interval,ET,Spec,(CondW->ThenW;ElseW)).
 % event cases first...
-syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
-	nonvar(L),
-	L=..LL, append(Tless,[T1,T2],LL),  Tless=[_|_], % last 2 args of term 
-	is_time_var(Vars,T1), is_time_var(Vars,T2),	
-	\+ head_hint(L,l_timeless),
-	!,
-	NL=..Tless.
 syntax2p_literal(NT,_Vars,lps2p,[T1,T2],ET,event-NC,happens(NEA,T1,T2)) :- 
 	(nonvar(NT) -> ToInternal=true, NT=..[EA,LT] ; ToInternal=(false), NEA=..[EA,NL]),
 	(EA=initiate ; EA = terminate),
@@ -633,7 +628,7 @@ syntax2p_literal(update(in(to(Old,New),LT)),_Vars,lps2p,[T1,T2],ET,event-[delimi
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,delimiter-[EC,classify],happens(NL,T1,T2)) :- 
 	nonvar(LT), 
 	% tricky handling to avoid infinite terms in the first branch:
-	( LT = (L from T1_), (var(T1_);number(T1_)), T1=T1_; LT = (L to T2); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
+	( LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_; LT = (L to T2), (var(T2);is_some_time(T2)); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
 	!,
 	simple_event_colour(L,EC),
 	remember_event_hint(L),
@@ -643,13 +638,6 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :-
 	!,
 	simple_event_colour(LT,EC),
 	NL=LT.
-syntax2p_literal(L,Vars,lpsp2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
-	var(L),
-	!,
-	NL=..NLL, append(NLL,[T1,T2],Tplus),  
-	!,
-	check_time_var(T1,Vars), check_time_var(T2,Vars),
-	L=..Tplus.
 syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
 	var(L),
 	!,
@@ -657,23 +645,17 @@ syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,null,happens(NL,T1,T2)) :-
 	L = (NL from T1 to T2). % ...thus ommitting "..during..." in events is not fully supported when reversing the transform
 
 % ... now on to fluents...
-syntax2p_literal(not(L),Vars,lpsp2p,[T1,T2],ET,null,holds(not(NL),T)) :- 
-	% Wei syntax seems to preclude 'not' elsewhere!
-	!,
-	syntax2p_literal(L,Vars,lpsp2p,[T1,T2],ET,_,holds(NL,T)),
-	check_time_var(T,Vars).
-	% Should probably ...? \+ head_hint(L,l_timeless),
-syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],ET,Spec,holds(not(NL),T)) :- % not(fluent) at T is the preferred form, but 2 others available
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],ET,Spec,holds(not(NL),T)) :- % not(fluent) at T is the preferred form, but 2 others available
 	( 
-		LT= (not(F) at T), Spec = delimiter - [delimiter-[EF],classify], ET=true ; 
-		LT= not(F at T), Spec = delimiter - [delimiter - [EF,classify]], ET=true ; 
+		LT= (not(F) at T), (var(T);is_some_time(T)), Spec = delimiter - [delimiter-[EF],classify], ET=true ; 
+		LT= not(F at T), (var(T);is_some_time(T)), Spec = delimiter - [delimiter - [EF,classify]], ET=true ; 
 		LT= not(F), head_hint(F,fluent), Spec = delimiter - [EF], ET=false
 		),
 	!,
 	simple_fluent_colour(F,EF),
 	NL=F,
 	remember_fluent_hint(F),
-	T1=T.	
+	T1=T, T2=T.	
 syntax2p_literal(not(FS),Vars,lps2p,[T1,T2],ET,Spec,holds(not(NL),T)) :- 
 	syntax2p_sequence(FS,Vars,lps2p,[T1,T2],single,ET,NiceColouring,NL),
 	member(holds(_,_),NL), 
@@ -686,58 +668,24 @@ syntax2p_literal(LT,Vars,lps2p,[T1,T2],ET,Spec,holds(findall(X,WFS,L),T)) :-
 	syntax2p_sequence(FS,Vars,lps2p,[T1,T2],single,_ET,NiceColouring,WFS),
 	member(holds(_,_),WFS),
 	!,
-	T1=T.	
-syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],true,null,holds(NL,T)) :- 
-	nonvar(L),
-	L=..LL, LL=[_,_|_], append(Tless,[T],LL), 
-	is_time_var(Vars,T),
-	\+ head_hint(L,l_timeless),
+	T1=T,T2=T.	
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,delimiter-[FC,classify],holds(NL,T)) :- 
+	nonvar(LT), LT = (F at T), (var(T);is_some_time(T)),
 	!,
-	NL=..Tless, T=T1.
-syntax2p_literal(LT,_Vars,lps2p,[T1,_T2],true,delimiter-[FC,classify],holds(NL,T)) :- 
-	nonvar(LT), LT = (F at T),
-	!,
-	NL=F, T=T1,
+	NL=F, T=T1,T=T2,
 	simple_fluent_colour(F,FC),
 	remember_fluent_hint(F).
-syntax2p_literal(F,_Vars,lps2p,[T1,_T2],false,EF,holds(NL,T)) :- 
+syntax2p_literal(F,_Vars,lps2p,[T1,T2],false,EF,holds(NL,T)) :- 
 	nonvar(F), ( head_hint(F,fluent) ; system_fluent(F)),
 	!,
 	simple_fluent_colour(F,EF),
-	NL=F, T=T1.
-syntax2p_literal(L,Vars,lpsp2p,[T1,_T2],true,null,holds(NL,T)) :- 
+	NL=F, T=T1, T=T2.
+syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,null,holds(NL,T)) :- 
 	var(L),
 	!,
-	is_time_var(Vars,T), T=T1,
-	NL=..NLL, append(NLL,[T],Tplus),
-	L=..Tplus.
-syntax2p_literal(L,_Vars,lps2p,[T1,_T2],true,null,holds(NL,T)) :- 
-	var(L),
-	!,
-	L = (NL at T), T1=T. % ...thus ommitting "..at..." in fluents is not fully supported when reversing the transform
-syntax2p_literal(L,_,_Translator,[_T1,_T2],false,body(L),L) :- may_add_timeless_ref(L). % some timeless literal
+	L = (NL at T), T1=T, T2=T. % ...thus ommitting "..at..." in fluents is not fully supported when reversing the transform
+syntax2p_literal(L,_,_Translator,[T,T],false,body(L),L) :- may_add_timeless_ref(L). % some timeless literal
 
-check_time_var(V,Vars) :- is_time_var(Vars,V), !.
-check_time_var(V,Vars) :-
-	writeln('*** Warning: time variable in a time predicate should start with T:'), 
-	\+ \+ (bindAllVars(Vars), writeln(V)).
-	
-% is_time_var(AllVars,Var)
-% Accepting any Txxx variable as time variable
-is_time_var([],_T) :-!, fail.
-is_time_var([VV|_Vars], T) :- arg(2,VV,V), V==T, !,
-	is_time_var(VV).
-is_time_var([_VV|Vars], T) :- is_time_var(Vars, T).
-
-is_time_var(VV) :- 
-	arg(1,VV,Name), atom_codes(Name,Codes), 
-	(append("T",Rest,Codes);append("_T",Rest,Codes)),
-	!,
-	(Rest=[] -> true ; 
-		Rest=[C|_], 
-		% T_... or T0/9...
-		(C==95->true;C>=48,C=<57)
-	).
 	
 
 % Declare here predicates you wish to keep unchanged accross the transform

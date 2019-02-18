@@ -81,7 +81,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	lps_test_action_ancestor/3, 
 	lps_test_result/3,
 	lps_failed_test/2,
-	lps_saved_state/6,
+	lps_saved_state/8,
 	my_load_dyn/2,
 	% The following hosted here for psyntax:
 	'_currenty__defining'/1,
@@ -135,7 +135,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- dynamic lps_test_result/3.
 :- dynamic lps_failed_test/2.
 :- dynamic lps_test_options/1.
-:- dynamic lps_saved_state/6.
+:- dynamic lps_saved_state/8.
 :- dynamic '_currenty__defining'/1.
 :- dynamic head_hint/3.
 
@@ -195,7 +195,7 @@ my_load_dyn(F,_) :- load_dyn(F).
 :- thread_local lps_test_result/3.
 :- thread_local lps_failed_test/2.
 :- thread_local lps_test_options/1.
-:- thread_local lps_saved_state/6.
+:- thread_local lps_saved_state/8.
 :- thread_local '_currenty__defining'/1.
 :- thread_local head_hint/3.
 

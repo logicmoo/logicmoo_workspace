@@ -4,16 +4,16 @@ maxRealTime(180).
 minCycleTime(0.01).
 
 fluents
-    [available(_7878)].
+    [available(_154)].
 
 events
-    [pickup(_7878,_7880),putdown(_7884,_7886)].
+    [pickup(_154,_156),putdown(_160,_162)].
 
 initial_state([available(fork1),available(fork2),available(fork3),available(fork4),available(fork5)]).
 
-terminated(happens(pickup(_7878,_7880),_7992,_7998),available(_7880),[]).
+terminated(happens(pickup(_154,_156),_268,_274),available(_156),[]).
 
-initiated(happens(putdown(_7878,_7880),_7992,_7998),available(_7880),[]).
+initiated(happens(putdown(_154,_156),_268,_274),available(_156),[]).
 
-d_pre([happens(pickup(_7878,_7880),_7956,_7962),holds(not available(_7880),_7956)]).
-d_pre([happens(pickup(_7878,_7880),_7978,_7984),happens(pickup(_7884,_7880),_7978,_7984),_7878\=_7884]).
+d_pre([happens(pickup(_154,_156),_232,_238),holds(not available(_156),_232)]).
+d_pre([happens(pickup(_154,_156),_254,_260),happens(pickup(_160,_156),_254,_260),_154\=_160]).

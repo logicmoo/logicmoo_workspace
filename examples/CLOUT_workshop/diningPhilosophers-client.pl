@@ -1,4 +1,6 @@
-% see diningPhilosphers-table.pl
+% Dining philosophers, detaching the dining table and cutlery from the guests and their seating arrangements 
+% First start the program in diningPhilosphers-table.pl; then execute this program with the engine command below
+% You may have to edit the other program's thread ID, lps1, check the output when starting the table
 maxTime(10).
 
 fluents table_(_). % inject fluent with golps(...,[...,delta_state([ + table(ThreadId) ]),...])
@@ -20,5 +22,5 @@ dine(P,Table) from T1 to T3	if
 	lps_ask(Table,[putdown(P, F1), putdown(P, F2)]) from T2 to T3.
 
 /** <examples>
-?- go(_,[dc,delta_state([ + table_(lps1) ])]).
+?- go(T,[dc,delta_state([ + table_(lps1) ])]).
 */

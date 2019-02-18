@@ -173,7 +173,7 @@ This part of the loan agreement is sufficient to deal with the ideal case in whi
 We will use the same simulated real time for other examples later. For this purpose, we create a global program for the real time simulation and a local program for separate cases.
 </div>
 
-<div class="nb-cell program" name="p16">
+<div class="nb-cell program" data-background="true" name="p16">
 simulatedRealTimeBeginning('2014-05-31'). % The date of the initial state at cycle 1.
 simulatedRealTimePerCycle(21600). % Each cycle = 21600 seconds = 1/4th of a day.
 maxTime(3200). % 3200 cycles = 800 days.

@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2019-1-18 at 11:40:52
+  LPS test results file generated on 2019-1-18 at 11:44:3
   on Prolog swi(7,7,19,[]) for program file:
-  /Users/mc/git/logicalcontracts/examples/forTesting/RockPaperScissors-3players.pl_.P
+  /Users/mc/git/logicalcontracts/examples/forTesting/RockPaperScissors-3players-badFluent.pl_.P
 */
 
 :-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
@@ -23,7 +23,7 @@ lps_test_result(events,5,0).
 lps_test_result(fluents,5,3).
 lps_test_result(events,6,1).
 lps_test_result(fluents,6,4).
-lps_test_result(events,7,0).
+lps_test_result(events,7,2).
 lps_test_result(fluents,7,4).
 lps_test_result(events,8,0).
 lps_test_result(fluents,8,4).
@@ -50,18 +50,22 @@ lps_test_result_item(fluents,6,played(miguel,rock)).
 lps_test_result_item(fluents,6,played(fariba,rock)).
 lps_test_result_item(fluents,6,played(bob,rock)).
 lps_test_result_item(fluents,6,reward(1000)).
+lps_test_result_item(events,7,send(fariba,500)).
+lps_test_result_item(events,7,send(miguel,500)).
 lps_test_result_item(fluents,7,played(miguel,rock)).
 lps_test_result_item(fluents,7,played(fariba,rock)).
 lps_test_result_item(fluents,7,played(bob,rock)).
-lps_test_result_item(fluents,7,reward(1000)).
+lps_test_result_item(fluents,7,reward(0)).
 lps_test_result_item(fluents,8,played(miguel,rock)).
 lps_test_result_item(fluents,8,played(fariba,rock)).
 lps_test_result_item(fluents,8,played(bob,rock)).
-lps_test_result_item(fluents,8,reward(1000)).
+lps_test_result_item(fluents,8,reward(0)).
 lps_test_result_item(fluents,9,played(miguel,rock)).
 lps_test_result_item(fluents,9,played(fariba,rock)).
 lps_test_result_item(fluents,9,played(bob,rock)).
-lps_test_result_item(fluents,9,reward(1000)).
+lps_test_result_item(fluents,9,reward(0)).
 % lps_test_action_ancestor(Call,T1,T2)
+lps_test_action_ancestor(finalize,6,7).
+lps_test_action_ancestor(send_rewards(draw,fariba,miguel),6,7).
 lps_test_action_ancestor(finalize,3,4).
 lps_test_action_ancestor(send_rewards(draw,fariba,miguel),3,4).

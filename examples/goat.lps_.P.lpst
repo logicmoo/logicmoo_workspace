@@ -1,10 +1,10 @@
 /*
-  LPS test results file generated on 2017-2-5 at 12:58:35
-  on Prolog swi(7,3,33,[]) for program file:
-  /Users/mc/git/lps_corner/examples/goat.lps_.P
+  LPS test results file generated on 2019-1-28 at 9:46:23
+  on Prolog swi(7,7,19,[]) for program file:
+  /Users/mc/git/logicalcontracts/examples/goat.lps_.P
 */
 
-:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_options/1.
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
 
 % LPS options prior to the test:
 lps_test_options([dc]).
@@ -48,31 +48,49 @@ lps_test_result_item(fluents,3,loc(cabbage,south)).
 lps_test_result_item(fluents,3,loc(goat,north)).
 lps_test_result_item(fluents,3,loc(farmer,south)).
 lps_test_result_item(events,4,row(south,north)).
-lps_test_result_item(events,4,transport(wolf,south,north)).
-lps_test_result_item(fluents,4,loc(cabbage,south)).
+lps_test_result_item(events,4,transport(cabbage,south,north)).
+lps_test_result_item(fluents,4,loc(wolf,south)).
 lps_test_result_item(fluents,4,loc(goat,north)).
 lps_test_result_item(fluents,4,loc(farmer,north)).
-lps_test_result_item(fluents,4,loc(wolf,north)).
+lps_test_result_item(fluents,4,loc(cabbage,north)).
 lps_test_result_item(events,5,row(north,south)).
 lps_test_result_item(events,5,transport(goat,north,south)).
-lps_test_result_item(fluents,5,loc(cabbage,south)).
-lps_test_result_item(fluents,5,loc(wolf,north)).
+lps_test_result_item(fluents,5,loc(wolf,south)).
+lps_test_result_item(fluents,5,loc(cabbage,north)).
 lps_test_result_item(fluents,5,loc(farmer,south)).
 lps_test_result_item(fluents,5,loc(goat,south)).
 lps_test_result_item(events,6,row(south,north)).
-lps_test_result_item(events,6,transport(cabbage,south,north)).
-lps_test_result_item(fluents,6,loc(wolf,north)).
+lps_test_result_item(events,6,transport(wolf,south,north)).
+lps_test_result_item(fluents,6,loc(cabbage,north)).
 lps_test_result_item(fluents,6,loc(goat,south)).
 lps_test_result_item(fluents,6,loc(farmer,north)).
-lps_test_result_item(fluents,6,loc(cabbage,north)).
+lps_test_result_item(fluents,6,loc(wolf,north)).
 lps_test_result_item(events,7,row(north,south)).
-lps_test_result_item(fluents,7,loc(wolf,north)).
-lps_test_result_item(fluents,7,loc(goat,south)).
 lps_test_result_item(fluents,7,loc(cabbage,north)).
+lps_test_result_item(fluents,7,loc(goat,south)).
+lps_test_result_item(fluents,7,loc(wolf,north)).
 lps_test_result_item(fluents,7,loc(farmer,south)).
 lps_test_result_item(events,8,row(south,north)).
 lps_test_result_item(events,8,transport(goat,south,north)).
-lps_test_result_item(fluents,8,loc(wolf,north)).
 lps_test_result_item(fluents,8,loc(cabbage,north)).
+lps_test_result_item(fluents,8,loc(wolf,north)).
 lps_test_result_item(fluents,8,loc(farmer,north)).
 lps_test_result_item(fluents,8,loc(goat,north)).
+% lps_test_action_ancestor(Call,T1,T2)
+lps_test_action_ancestor(makeLoc(goat,north),6,8).
+lps_test_action_ancestor(makeLoc(farmer,south),6,7).
+lps_test_action_ancestor(dealWithGoat(north,south),6,7).
+lps_test_action_ancestor(makeLoc(goat,north),6,_2020).
+lps_test_action_ancestor(makeLoc(farmer,south),6,_2020).
+lps_test_action_ancestor(makeLoc(wolf,north),4,6).
+lps_test_action_ancestor(makeLoc(farmer,south),4,5).
+lps_test_action_ancestor(dealWithGoat(north,south),4,5).
+lps_test_action_ancestor(makeLoc(wolf,north),4,_2020).
+lps_test_action_ancestor(makeLoc(farmer,south),4,_2020).
+lps_test_action_ancestor(makeLoc(cabbage,north),2,4).
+lps_test_action_ancestor(makeLoc(farmer,south),2,3).
+lps_test_action_ancestor(dealWithGoat(north,south),2,3).
+lps_test_action_ancestor(makeLoc(wolf,north),2,_2020).
+lps_test_action_ancestor(makeLoc(farmer,south),2,_2020).
+lps_test_action_ancestor(makeLoc(goat,north),1,2).
+lps_test_action_ancestor(makeLoc(farmer,south),1,1).

@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	go/0, go/1, go/2, go/3,
 	test_examples/0, test_examples_dc/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1, check_load_postmortem/0,
 	load_check_syntax/2, print_error/3, print_error/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
-	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,(observe)/2,
+	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,(observe)/2, misc_to_realtime/2, is_some_time/1,
 	lps_engine_directory/1, uassert/1, uretractall/1, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1,
 	check_lps_program_swish_module/0, get_lps_program_hash/1, server_log_filename/2, lps_program_clause_file/3, callprolog/1, replace_term/4,
 	bindAllVars/1, lps_welcome_message/0, endTime/1, simulatedRealTimeBeginning/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1,
@@ -177,7 +177,7 @@ lps_test_result_item(X,Y,Z) :- lps_program_module(M), catch(M:lps_test_result_it
 lps_test_action_ancestor(X,Y,Z) :- lps_program_module(M), catch(M:lps_test_action_ancestor(X,Y,Z),_,fail).
 lps_test_result(X,Y,Z) :- lps_program_module(M), catch(M:lps_test_result(X,Y,Z),_,fail).
 lps_failed_test(X,Y) :- lps_program_module(M), catch(M:lps_failed_test(X,Y),_,fail).
-lps_saved_state(A,B,C,D,E,F) :- lps_program_module(M), catch(M:lps_saved_state(A,B,C,D,E,F),_,fail).
+lps_saved_state(A,B,C,D,E,F,G,H) :- lps_program_module(M), catch(M:lps_saved_state(A,B,C,D,E,F,G,H),_,fail).
 events(X) :- lps_program_module(M), catch(M:events(X),_,fail).
 prolog_events(X) :- lps_program_module(M), catch(M:prolog_events(X),_,fail).
 fluents(X) :- lps_program_module(M), catch(M:fluents(X),_,fail).
@@ -216,7 +216,7 @@ u_swiclause(H,B,Ref) :- lps_program_module(M), clause(M:H,B,Ref).
 	current_goal/1, depth/1, tried/3, option/1, lps_updating_current_state/0,
 	initial_state/1,
 	lps_test_result_item/3, lps_test_action_ancestor/3, lps_test_result/3, lps_test_options/1, 
-	lps_failed_test/2, lps_saved_state/6,
+	lps_failed_test/2, lps_saved_state/8,
 	(events)/1, (prolog_events)/1, (fluents)/1, (actions)/1, (unserializable)/1,
 	my_load_dyn/2,
 	head_hint/3]).
@@ -239,6 +239,7 @@ u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
 
 :- if(current_prolog_flag(dialect, swi)).
 % ...and finally the generic SWI support
+
 
 :- thread_local(lps_program_module/1). 
 
@@ -275,11 +276,13 @@ list_directory(D,F) :- directory_files(D,Files), member(F,Files).
 is_directory(D) :- exists_directory(D).
 expand_filename(F,Path) :- expand_file_name(F,[Path]).
 
-:- use_module(library(filesex),[relative_file_name/3]).
 lps_examples_directory(ED) :- 
-	lps_engine_directory(D), 
-	concat_atom([D,'/'],DD), % hack, don't know where to fetch OS-dependent separator
-	relative_file_name(ED,DD,'../examples').
+	lps_engine_directory(D), file_directory_name(D,LPShome), 
+	concat_atom([LPShome,'/examples'],ED).
+
+:- multifile user:file_search_path/2.
+user:file_search_path(system, S) :- lps_engine_directory(D), atomic_list_concat([D,'/system'],S). % Apparently needed on SWI-Prolog 7.7.19 and later
+user:file_search_path(example, S) :- lps_examples_directory(ED), atomic_list_concat([ED,'/CLOUT_workshop'],S).
 
 cputime(T) :- T is cputime.
 
@@ -301,10 +304,10 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 :- multifile prolog:message//1.
 prolog:message(lps_error(accepting_declared_observations_even_with_preconditions_referring_next_state(E,C),_)) --> 
 	['Accepting ~w even though some conditions refer the next state, e.g. ~w'-[E,C]].
-prolog:message(lps_error(rejected_observations1(Events),_)) --> 
-	['Rejected observations ~w attempting to satisfy preconditions'-[Events]].
+prolog:message(lps_error(rejected_observations1(Events,Conditions),_)) --> 
+	['Rejected observations ~w attempting to satisfy false preconditions ~w'-[Events,Conditions]].
 prolog:message(lps_error(rejected_observations2(Events),_)) --> 
-	['Rejected observations ~w attempting to satisfy prospective preconditions'-[Events]].
+	['Rejected observations ~w attempting to satisfy prospective false preconditions'-[Events]].
 prolog:message(lps_error(rejected_observations_0,_)) --> 
 	['Rejected all observations from 0 to 1 because there are prospective preconditions'].
 	
@@ -340,7 +343,7 @@ get_version(0.5).
 
 %% Now for an implementation available only on SWI:
 
-% resolveUntilAction(+Goal,+ActionAncestors,-Ball,-Continuation)  
+% resolveUntilAction(+Goal,+ActionAncestors,-Ball,-Continuation)  Misleading name: also stops when finding alternatives!
 % vaguely equivalent to reset(Goal,Ball,Continuation); rather than calling shift(Ball), Ball and Continuation
 % are explicit bound by the code below. Continuation == true means no "shift" (suspension) occurred, Goal has completed
 % Execute goal until finding a literal that needs delaying or parallel execution, 
@@ -348,7 +351,7 @@ get_version(0.5).
 % - a fluent or action was found that needs delaying
 % - a timeless goal, a fluent or action subgoal has more than one solution; by default (e.g. unless option(no_parallel)),
 %   all solutions to these are used in paralell, adding new goals to the "goal tree", that include the full continuation;
-%   see dc_resolve_goals_suspended/6 below; when one of these goals succeeds the others are marked discardable, and thus ignored 
+%   see dc_resolve_goals_suspended/8 below; when one of these goals succeeds the others are marked discardable, and thus ignored 
 % ActionAncestors is a list of the current ancestors (happens(CompositEvent,T1,T2)), plus a last Discarder (initially var) element
 %   - for actions or composite events, otherwise it's [Discarder]. The Discarder var will be bound when the goal succeeds
 %  it is also included in Balls
@@ -363,56 +366,97 @@ resolveUntilAction(lps_conjunction_control(OurSuccesses),_Ancestors,_Ball,C) :- 
 % there's at least one conjunction branch to complete:
 resolveUntilAction(lps_conjunction_control(_OurSuccesses),_Ancestors,Ball,Cont) :- !,
 	Ball=conjunction_prunning, 
-	Cont=throw(inconsistent_conjunction_prunning). % this should never get called
+	Cont=throw(inconsistent_conjunction_prunning). % this continuation must never get called
 resolveUntilAction([G1|Gn],A,B,C) :- !, 
 	resolveUntilAction(G1,A,B,C1), 
 	((var(B), C1\==true) -> throw(inconsistent_lps_ball1(G1,C1));true),
-	(var(B) -> resolveUntilAction(Gn,A,B,C) ; C = (C1,Gn)).
+	(var(B) -> resolveUntilAction(Gn,A,B,C) ; simplify_conjunction(C1,Gn,C)).
 resolveUntilAction((G1,Gn),A,B,C) :- !, 
 	resolveUntilAction(G1,A,B,C1), 
 	((var(B), C1\==true) -> throw(inconsistent_lps_ball2(G1,C1));true),
-	(var(B) -> resolveUntilAction(Gn,A,B,C) ; C = (C1,Gn)).
-% resolveUntilAction(Goal) :- write_verbose(['  ',Goal,nl]), fail.  % uncomment for debugging
+	(var(B) -> resolveUntilAction(Gn,A,B,C) ; simplify_conjunction(C1,Gn,C)).
+% conditional expressions, e.g. "if-then-else"; 
+resolveUntilAction((Cond->Then;Else),Ancestors,Ball,Continuation) :- !, 
+	Ball=ite(Ancestors,Cond,Then,Else),Continuation=true.
+resolveUntilAction('$_wait'(Guard),A,Ball,Continuation) :- !, % delay a goal until Guard is true
+	(Guard -> Continuation=true ; Ball=later('$_wait'(Guard),A), Continuation='$_wait'(Guard)).
 % fluents:
+resolveUntilAction(G,Ancestors,Ball,Cont) :- 
+	premature_real_time_fluent(G),  % premature fluent, delay
+	!, Ball=later(G,Ancestors), Cont=G.
+resolveUntilAction(G,Ancestors,Ball,Cont) :- G = holds(_F,_T), real_time_literal(G,Goals), 
+	!, % extensional fluents with real times, in need of a quick rewrite
+	resolveUntilAction(Goals,Ancestors,Ball,Cont).
 resolveUntilAction(G,Ancestors,Ball,Cont) :- 
 	G = holds(_F,T), 
 	nonvar(T), current_time(Now), T>Now, % premature, delay
 	!, Ball=later(G,Ancestors), Cont=G.
 % fluent negation handled in query/1
 resolveUntilAction(holds(F,T),_A,_,true) :- option(no_parallel), query(holds(F,T)).
-resolveUntilAction(holds(F,T),Ancestors,B,C) :- % spawn a new disjunctive goal for each fluent answer:
+resolveUntilAction(Fluent,Ancestors,B,C) :- 
+	\+ option(no_parallel), Fluent=holds(Pred,T), intensional(Pred), 
+	% treat this as a "first class" extensional system fluent instead; elsewhere we'll peek into its argument for future killing:
+	Pred \= real_date(_), 
+	!,
+	% spawn disjuntive goals; we'll dispense with delaying of intensional fluents by requiring
+	% that the head time argument is a free variable, and not occurring in the head;
+	% users should constrain time in bodies
+	findall(l_int(Fluent,Body), (
+		l_int(Fluent,Body_),
+		% hack to make sure timeless bodies get a chance to delay, via the extra 'true' "fluent":
+		(a_literal(Body_,holds(_,_)) -> Body=Body_ ; Body=(holds(true,T),Body_))
+		), Alternatives), 
+	Alternatives\=[],
+	(Alternatives = [l_int(Fluent,Body)] -> resolveUntilAction(Body,Ancestors,B,C) 
+		; B = l_ints_disjunction(l_int(Fluent,Body),Alternatives,Ancestors), C=true
+	).
+resolveUntilAction(holds(F,T),Ancestors,B,C) :- % spawn a new disjunctive goal for each extensional fluent answer:
 	\+ option(no_parallel),
 	findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
+	% !,
 	((nonvar(T),Answers = [holds(F,T)]) -> C=true ; 
 	% eternally changing fluents... handled in dc_resolve_goals_suspended below:
-		(B=disjunction(holds(F,T),Answers,Ancestors), C=true; 
-			% do we need this? won't there be an extra goal...?
-			var(T), !, C = holds(F,T), B=later(C,Ancestors) 
+		(B=disjunction(holds(F,T),Answers,Ancestors), C=true /*; 
+			% do we need this? there is an extra goal added in dc_resolve_goals_suspended...
+			var(T), !, C = holds(F,T), B=later(C,Ancestors) */
 		)
 	).
 resolveUntilAction(holds(F,T),Ancestors,Ball,Cont) :- !, % on failure, delay if that makes sense
-	var(T), Ball=later(holds(F,T),Ancestors), Cont=holds(F,T).
+	var(T), Ball=later(holds(F,T),Ancestors), Cont=holds(F,T). 
 % events/actions:
 resolveUntilAction(happens(E,T1,T2),A,B,C) :- 
 	option(no_parallel), % nonvar(T1) was erroneously being used as heuristic condition to dispense parallelism
 	macroaction(E), 
 	!,
 	l_events(happens(E,T1,T2),Body), resolveUntilAction(Body,[happens(E,T1,T2)|A],B,C).
-resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case, spawn disjuntive goals
-	findall(l_events(happens(E,T1,T2),Body),  l_events(happens(E,T1,T2),Body), Alternatives), Alternatives\=[],
-	(Alternatives = [l_events(happens(E,T1,T2),Body)] -> 
-		resolveUntilAction(Body,[happens(E,T1,T2)|A],B,C) 
-		; B = l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives,A), C=true
-	).
-resolveUntilAction(happens(_E,T1,T2),_A,_,_) :- % outdated action, we fail
+% no need to delay events with real times, the auxiliary fluents will delay
+resolveUntilAction(G,_Ancestors,_Ball,_Cont) :- 
+	outdated_real_time_event(G),
+	!, fail.
+resolveUntilAction(G,Ancestors,Ball,Cont) :- G = happens(_,_,_), real_time_literal(G,Goals), 
+	!, % events with real times, in need of a quick rewrite:
+	resolveUntilAction(Goals,Ancestors,Ball,Cont).
+resolveUntilAction(happens(_E,T1,T2),_A,_,_) :- % outdated action (as per LPS cycle time), we fail
 	current_time(Now),
 	(nonvar(T1),T1<Now ; nonvar(T2),T2<Now+1), 
 	!, fail. 
 resolveUntilAction(happens(E,T1,T2),A,Ball,Cont) :- % premature, we delay
 	current_time(Now), 
-	(nonvar(T1), T1>Now ; nonvar(T2),T2>Now+1; premature_system_action(E)), 
+	(nonvar(T1), T1>Now ; nonvar(T2),T2>Now+1, \+ macroaction(E); premature_system_action(E)), 
+	% \+ a_real_time_event(E),
 	!,
 	Ball=later(happens(E,T1,T2),A),Cont=happens(E,T1,T2). 
+resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case, spawn disjuntive goals
+	findall(l_events(happens(E,T1,T2),Body), (
+		l_events(happens(E,T1,T2),Body_),
+		% hack to make sure the event complies to its finish limit
+		((T1\==T2,nonvar(T2)) -> Body = (Body_, holds(true,T), T=<T2-1) ; Body=Body_)
+		), Alternatives), 
+	Alternatives\=[],
+	(Alternatives = [l_events(happens(E,T1,T2),Body)] -> 
+		resolveUntilAction(Body,[happens(E,T1,T2)|A],B,C) 
+		; B = l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives,A), C=true
+	).
 resolveUntilAction(happens(E,T1,T2),_A,_,true) :- happens(E,T1,T2).
 resolveUntilAction(happens(E,T1,T2),A,_,Cont) :- 
 	% select and execute system action; 
@@ -441,8 +485,7 @@ resolveUntilAction(happens(E,T1,T2),A,_,true) :- % select action:
 resolveUntilAction(happens(E,T1,T2),A,Ball,Cont) :- !, 
 	Ball=later(happens(E,T1,T2),A), Cont = happens(E,T1,T2), 
 	(var(T1),var(T2)), % worth delaying
-	\+ happens(E,T1,T2),
-	action_(E). 
+	\+ happens(E,T1,T2) /*, action_(E)*/. 
 % timeless and time constraints:
 resolveUntilAction(tc(G),_A,_,Cont) :- ground(G), !, G, Cont=true.
 resolveUntilAction(tc(G), A, Ball, Cont) :- !, Ball = later(tc(G),A), Cont = tc(G).
@@ -454,140 +497,345 @@ resolveUntilAction(G,Ancestors,B,true) :-
 	findall(G, ( \+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)), Answers), Answers\=[],
 	(Answers = [G] -> true ; B=disjunction(G,Answers,Ancestors)).
 
+% simplify_conjunction(+Goal1,+Goal2,-Goal)
+simplify_conjunction(G1,G2,_) :- (var(G1);var(G2)), throw(bad_simplify_conjunction(G1,G2)).
+simplify_conjunction(true,G,G) :- !.
+simplify_conjunction(G,true,G).
+simplify_conjunction(A,B,(A,B)).
 
-% dc_resolve_goals(+Goals,-NewGoals) Alternative implementation of resolve_tree, used with option(dc)
+% a_literal(+Sequence,Literal)  Visit all literals in a program clause, left to right. Negated fluents inclusive.
+a_literal(V,_) :- var(V), !, fail.
+a_literal((G1,G2),H) :- !, (a_literal(G1,H);a_literal(G2,H)).
+a_literal([G1|Gn],H) :- !, (a_literal(G1,H);a_literal(Gn,H)).
+a_literal((C->T;E),H) :- !, (a_literal(C,H);a_literal(T,H);a_literal(E,H)).
+a_literal(holds(F,T),holds(F,T)) :- !.
+a_literal(happens(E,T1,T2),happens(E,T1,T2)) :- !.
+a_literal(G,G) :- G \== [].
+
+% time_variables(+Goal,-Vars)  returns free time variables
+time_variables(G,UniqueVars) :- 
+	findall(T-G, (
+		a_literal(G,L), (L=holds(_,T);L=happens(_,T,_);L=happens(_,_,T);L=happens(E,_,_),a_real_time_event(E,T)), var(T) 
+		), Pairs), 
+	bind_and_extract(Pairs,G,Vars),  
+	sort(Vars,UniqueVars).
+bind_and_extract([T-G|Pairs],G,[T|Vars]) :- !, bind_and_extract(Pairs,G,Vars).
+bind_and_extract([],_,[]).
+
+% has_no_future(+Goal,+EventAncestors,-CounterExample)
+has_no_future(G,Ancestors,FK) :- 
+	future_killer(G,Ancestors,FK,T,K),
+	nonvar(K), ( misc_to_realtime(K,_) -> get_the_real_date(T) ; current_time(T)),
+	ground(FK), \+ FK. 
+has_no_future(G,_Ancestors,Lit) :- 
+	get_the_real_date(Today),
+	% find a structured time constant with no future
+	a_literal(G,Lit), 
+	(Lit=holds(real_date(RT),_) ; Lit=happens(E,_,_), a_real_time_event(E,RT)),
+	nonvar(RT), RT= _Year/_Month/_Second,
+	Today@>RT.
+
+
+get_the_real_date(Today) :- query( holds(real_date(Today),_) ).
+
+% future_killer(+Goal,+EventAncestors,-FutureKillerSubgoal,-TimeVar,-TimeValue) is nondet
+% Returns subgoals that may have no future because time only moves forward...
+% One could also consider comparison expressions in general (timeless), but we're not supporting dumb programs ;-)
+% Considers only simple expressions with a single mention of time
+future_killer(G,Ancestors,FK,T,K) :- 
+	time_variables(G,Gvars), time_variables(Ancestors,Avars), append(Avars,Gvars,Vars),
+	a_literal(G,FK), limited_future_expression(FK,Vars,T,K).
+
+% limited_future_expression(+ComparisonExpression,+TimeVars,-TimeVar,-FutureConstant)
+limited_future_expression(T<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T@<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T@=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K@>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K@>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+
+member_equivalent_chk(X,[Y|_]) :- X==Y, !.
+member_equivalent_chk(X,[_|L]) :- member_equivalent_chk(X,L).
+
+% dc_resolve_goals(+GoalsAndBinders,-NewGoals) Alternative implementation of resolve_tree, used with option(dc)
 % Fails if some goal fails; 
-% Goals is a list of goal(Discard,MyFailure,AllFailures,EventAncestors,G):
+% Goals is a list of goal(ID,Discard,MyFailure,AllFailures,SharedVars,EventAncestors,G):
+% ID is an integer unique for this computation (different runs originating identic ID sequence)
 % if Discard==non_discardable, it's a "normal" goal, which must succeed; 
 % 	it may "succeed" by vanishing into its (typically disjunctive) continuations, that become new goals in this list
 % if Discard is a variable, G is one of several alternatives (continuations for some vanished goal) still under consideration; 
 % if Discard==yes, some alternative to G was solved, we can ignore G; 
 % MyFailure is a variable to be used as a mark for failure of G; AllFailures is a list of all such variables for a disjunction
-% MySuccess is a variable to mark success for this branch of a parallel conjunction
+% SharedVars is a term used to link to similar terms in other goals (namely for parallel conjuntions)
 % In summary: 
 %  - when an alternative in a disjunction succeeds, all others are discarded
 %  - when an alternative in a disjunction fails, discard it (without failing the whole thing) if there is still a non-failed alternative
-% EventAncestor has a special last element: a discarder variable for the goal (typically a rule consequent), 
+% EventAncestors has a special last element: a discarder variable for the goal (typically a rule consequent), 
 %   to allow discarding irrelevant fluent alternatives
 % Evolved from a version based SWI's delimited continuations (reset/shift, cf. http://www.swi-prolog.org/pldoc/man?section=delcont )
 % Adopted an explicit implementation since SWI continuations can not be saved/restored, 
 % as they contain session dependent memory references.
-/* dc_resolve_goals(Goals,_) :- % for debugging
+% a Binder is a binder(LambdaAllGoals,ConditionToEvaluate,Variable), and will cause the condition to be evaluated in every cycle; 
+% the Condition should also set the Variable, e.g. with 'yes', 
+
+dc_resolve_goals(Goals,NewGoals) :- 
+	simplify_goal_variants(Goals,Goals_),
+	dc_resolve_goals(Goals_,Goals_,NewGoals1),
+	check_binders(NewGoals1,NewGoals2), % check for failures, to bind if-then-else waiters
+	% if it made a difference, repeat once... but waiters first, as they may well discard subsequent goals
+	(NewGoals1\=NewGoals2 -> 
+		collect_waiters(NewGoals2,Waiters,Others), 
+		% format("~n waiters: ~w ~n",[Waiters]),
+		% seems a deadlock "opportunity"...this ordering may be worth looking into:
+		append(Waiters,Others,NewGoals2_), 
+		dc_resolve_goals(NewGoals2_,NewGoals2,NewGoals3) 
+		; NewGoals2=NewGoals3),
+	dc_resolve_goals_handle_failed(NewGoals3,NewGoals). 
+
+dc_resolve_goals_handle_failed(Goals,NewGoals) :- 
+	select(goal(ID,Discard,MyFailure,_OurFailures,_SharedVars,EventAncestors,G),Goals,PrunedGoals),
+	MyFailure==failed, 
+	!,
+	( (
+		Discard == non_discardable
+		;
+		last(EventAncestors,A), 
+		\+ (member(goal(_,_,_,_,_,Ancestors,_),PrunedGoals), last(Ancestors,Same), Same==A)
+		) ->
+		write_verbose(['DETECTED failed goal with NO alternatives ',ID, ' ', G,', backtracking',nl]),
+		fail
+		;
+		write_verbose(['DETECTED failed goal with alternatives ',ID, ' ', G,', ignoring it',nl]),
+		dc_resolve_goals_handle_failed(PrunedGoals,NewGoals)
+	).
+dc_resolve_goals_handle_failed(Goals,Goals).
+
+% collect_waiters(+Goals,Waiters,-OtherGoals)
+collect_waiters([goal(ID,Discard,MyFailure,OurFailures,Shared,Ancestors,G)|Goals],[goal(ID,Discard,MyFailure,OurFailures,Shared,Ancestors,G)|Waiters],Others) :- 
+	once(a_literal(G,W)), W='$_wait'(_), % check the leftmost; we could of course mark goal(...) with yet another argument...
+	!,
+	collect_waiters(Goals,Waiters,Others).
+collect_waiters([G|Goals],Waiters,[G|Others]) :- collect_waiters(Goals,Waiters,Others).
+collect_waiters([],[],[]).
+
+% discard similar goals, abstracting from ancestor minutiae but not from their free variables
+% simplify_goal_variants(Goals,Goals) :- !. % for debugging
+simplify_goal_variants([goal(ID,Discard,MyFailure,OurFailures,Shared,EventAncestors,G)|Goals],NewGoals) :- 
+	term_variables(EventAncestors,AncestorVars),
+	select(goal(ID2,Discard2,MyFailure2,OurFailures2,Shared2,EventAncestors2,G2),Goals,Pruned),
+	term_variables(EventAncestors2,AncestorVars2),
+	(Shared2==Shared;ground(Shared2)),
+	variant(Discard+MyFailure+OurFailures+AncestorVars+G, Discard2+MyFailure2+OurFailures2+AncestorVars2+G2),
+	!, 
+	write_verbose(['SIMPLIFIED ' ,ID2, ' because of ',ID, nl]),
+	simplify_goal_variants([goal(ID,Discard,MyFailure,OurFailures,[],EventAncestors,G)|Pruned],NewGoals). 
+simplify_goal_variants([G|Goals],[G|NewGoals]) :- !, simplify_goal_variants(Goals,NewGoals).
+simplify_goal_variants(Goals,Goals).	
+	
+check_binders(Goals,NewGoals) :- member(G,Goals), G\= binder(_Lambda,_Condition,_Var,_Why), !,
+	check_binders(Goals,Goals,NewGoals).
+check_binders(_Goals,[]). % no real goals left
+	
+check_binders([binder(Lambda,Condition,Var,Why)|Goals],All,NewGoals) :- !, % format("Evaluating ~w~n",[binder(All,Condition,Var,Why)]),
+	((var(Var),Lambda=All,Condition) -> 
+		NewGoals_=NewGoals
+		; [binder(Lambda,Condition,Var,Why)|NewGoals_]=NewGoals), 
+	check_binders(Goals,All,NewGoals_). 
+check_binders([X|Goals],All,[X|NewGoals]) :- !, check_binders(Goals,All,NewGoals).
+check_binders([],_,[]).
+
+% dc_resolve_goals(Goals,AllInitialGoals,NewGoals)
+/* dc_resolve_goals(Goals,_,_) :- % for debugging
 	findall(Action, happens(Action, _, _), Actions), do_write([nl, 'CURRENT Events and actions are ',Actions,nl]),
-	writeln('GOALS:'),member(G,Goals), writeln(G),
-	fail.*/
-dc_resolve_goals([],[]) :- !.
-dc_resolve_goals([goal(Discard,_,_,_,_G)|Goals],NewGoals) :- Discard == yes, !, % some alternative already succeeded! we can drop this goal
-	dc_resolve_goals(Goals,NewGoals).
-dc_resolve_goals([goal(Discard,_,Failures,A,G)|Goals],NewGoals) :-
-	write_verbose(['Goal is ',G,'.',nl]),
+	writeln('GOALS:'),member(G,Goals), writeln(G), 
+	fail. */
+/* dc_resolve_goals([goal(ID,Discard,MyFailure,_OurFailures,_SharedVars,_Ancestors,G)|_Goals],_All,_NewGoals) :-
+	format("dc_resolve_goals for ~w (discard==~w, failure==~w): ~w~n",[ID,Discard,MyFailure,G]), fail.*/
+% a few sanity checks first, while in debug mode:
+dc_resolve_goals([goal(ID,_Discard,MyFailure,OurFailures,_SharedVars,_EventAncestors,G)|_Goals],_All,_NewGoals) :-
+	option(debug),
+	must_be(list,OurFailures),
+	var(MyFailure), OurFailures=[_|_],
+	((member(V,OurFailures), V==MyFailure) -> true ; throw(bad_failures(ID,OurFailures,G))),
+	fail.
+dc_resolve_goals([goal(ID,_Discard,_MyFailure,_OurFailures,_SharedVars,EventAncestors,G)|Goals],_All,_NewGoals) :-
+	option(debug),
+	(member(goal(ID,_,_,_,_,_,_),Goals) -> throw(repeated_goal(ID,EventAncestors,G))).
+dc_resolve_goals([],_,[]) :- !.
+% these will be evaluated later:
+dc_resolve_goals([binder(Lambda,Condition,Var,Why)|Goals],All,[binder(Lambda,Condition,Var,Why)|NewGoals]) :- !, 
+	dc_resolve_goals(Goals,All,NewGoals).
+dc_resolve_goals([goal(_ID,Discard,_Failed,_,_,_,_G)|Goals],All,NewGoals) :- Discard == yes, % even if failed! var(Failed), 
+	!, % some alternative already succeeded! we can drop this goal
+	dc_resolve_goals(Goals,All,NewGoals).
+dc_resolve_goals([goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestors,G)|Goals],All,NewGoals_) :- 
+	var(MyFailure), has_no_future(G,EventAncestors,Killer), 
+	!,
+	MyFailure=failed,
+	write_verbose(['FUTURELESS ',ID, ' ', G,' because of ',Killer, 'OurFailures:', OurFailures, nl]),
+	NewGoals_ = [goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestors,G)|NewGoals],
+	%\+ ground(OurFailures),
+	%NewGoals_=NewGoals, write_verbose([' neglecting futureless failure ']),
+	dc_resolve_goals(Goals,All,NewGoals).
+dc_resolve_goals([goal(ID,Discard,Failure,Failures,SharedVars,A,G)|Goals],All,NewGoals) :- var(Failure),
+	write_verbose(['Goal ',ID,' is ',G,'.',nl]),
+	% (ID==23 -> trace; true),
 	resolveUntilAction(G,A,Ball,Continuation),
 	( (var(Ball), Continuation\==true) -> throw(inconsistent_lps_ball3(G,Ball));true),
-	(true;write_verbose(['BACKTRACKING into previous goal ',G,nl]),fail),
+	(true;write_verbose(['BACKTRACKING into previous goal ',ID, ' ', G,nl]),fail),
 	( (var(Ball);Ball==conjunction_prunning) -> 
 		% resolved G completely, or G is a completed parallel conjunction branch whose continuation can be discarded 
 		% (because some other pending branch will have it)
-		% writeln('SOLVED:'), writeln(G),
-		dc_resolve_goals(Goals,NewGoals) 
+		%writeln('SOLVED:'), writeln(G),
+		dc_resolve_goals(Goals,All,NewGoals) 
 	; % we suspended the execution:
-		% writeln('CONTINUATION:'), writeln(Continuation), nl, % uncomment for debugging
-		dc_resolve_goals_suspended(G,Discard,Failures,Goals,Ball,Continuation,NewGoals)
+		%writeln('CONTINUATION:'), writeln(Continuation), nl, % uncomment for debugging
+		dc_resolve_goals_suspended(G,ID,Discard,Failure,Failures,SharedVars,Goals,Ball,Continuation,All,NewGoals)
 	).
-dc_resolve_goals([goal(Discard,failed/*unify this:-)*/,OurFailures,A,G)|Goals],NewGoals) :- 
+dc_resolve_goals([goal(ID,Discard,failed/*unify this:-)*/,OurFailures,_SharedVars,Ancestors,G)|Goals],All,NewGoals) :- 
 	% does NOT retry the failed goal later... by being consumed here
-	write_verbose(['FAILED resolveUntilAction for ',G,' (discarder:',Discard,')',' failures:', OurFailures, ' ancestors:', A, nl]),
+	write_verbose([
+		'FAILED resolveUntilAction for ',ID,' ', G,' (discarder:',Discard,')',' failures:', 
+		OurFailures, ' ancestors:', Ancestors, nl]),
 	Discard \== non_discardable, % disjunctive alternatives may or not stay, otherwise we backtrack for sure
 	% we don't mind about a failed goal if it belongs to a disjunctive bunch with at least one branch left to execute
 	is_list(OurFailures),
-	once(( member(Failed,OurFailures), var(Failed))), % there is still an alternative
-	% writeln('TOLERATING FAILURE of '-G), writeln(because-OurFailures),
-	dc_resolve_goals(Goals,NewGoals).
-	
-% Decide what to do, depending on the cause of suspension
-% dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,?Discard,+MoreGoals,+Ball,+Continuation,-NewGoals)
-dc_resolve_goals_suspended(_TopG,Discard,Failures,Goals,later(G,Ancestors),Continuation,NewGoals) :- !,
-	write_verbose([' Delayed ',G, /* ' while executing ',_TopG,*/ nl]),
-	dc_resolve_goals(Goals,NewGoals_),
-	% Inherit goal alternative failure marks:
-	append(NewGoals_,[goal(Discard,_,Failures,Ancestors,Continuation)],NewGoals). % push it to end of queue
+	% is there still an alternative goal which is active?
+	\+ ground(OurFailures), 			
+	write_verbose([' tolerating failure',nl]),
+	dc_resolve_goals(Goals,All,NewGoals).
 
-dc_resolve_goals_suspended(_G,_Discard,_Failures,Goals,conjunction(Branches,Gn,Ancestors),Continuation,NewGoals) :- !,
-	length(Branches,N), 
-	make_branch_goals(Branches,Ancestors,(Gn,Continuation),AllS,AllS,ExtraGoals),
+% Decide what to do, depending on the cause of suspension
+% dc_resolve_goals_suspended(+GoalWithSuspendedSubgoal,+ID,?Discard,Failure,Failures,+MoreGoals,+Ball,+Continuation,+AllGoals,-NewGoals)
+dc_resolve_goals_suspended(_TopG,ID,Discard,Failure,Failures,SharedVars,Goals,later(G,Ancestors),Continuation,AllGoals,NewGoals) :- !,
+	write_verbose([' Delayed ',G, ' while executing ',ID, nl]),
+	dc_resolve_goals(Goals,AllGoals,NewGoals_),
+	% Inherit goal alternative failure mark, push goal to end of queue:
+	goal_ID_inc(ChildID), add_goal_child(ID,ChildID),
+	append(NewGoals_,[goal(ID,Discard,Failure,Failures,SharedVars,Ancestors,Continuation)],NewGoals).
+
+dc_resolve_goals_suspended(_TopG,ID,_,Failure,_Failures,SharedVars,Goals,ite(Ancestors,Cond,Then,Else),Continuation,AllGoals,NewGoals) :- !,
+	% writeln(continuation-Continuation),
+	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	goal_ID_inc(ID1), goal_ID_inc(ID2), add_goal_child(ID,ID1), add_goal_child(ID,ID2),
+	simplify_conjunction(Else,Continuation,ElseContinuation),
+	write_verbose([' Spawning 2 goals in parallel ',[ID1,ID2],' because of ',ite(Ancestors,Cond,Then,Else), nl]),
+	append(Goals,[
+		% discard the Else branch if condition succeeds:
+		goal(ID1,RootAncestorDiscard,Cfailed,[Cfailed,Efailed],DiscardE+SharedVars,Ancestors,(Cond,DiscardE=yes,Then, Continuation)), 
+		% Cfailed is not entirely set by descendents...hence the use of the goal_child relation:
+		binder(Lambda, (no_active_descendents(ID1,Lambda),C_has_failed=yes, discard_all_descendents(ID1,Lambda)), C_has_failed,ite), 
+		% wait until (the whole goal resolvent containing the ...) condition fails before trying Else:
+		goal(ID2,DiscardE,Efailed,[Cfailed,Efailed],DiscardE+SharedVars,Ancestors,('$_wait'(nonvar(C_has_failed)),/*RootAncestorDiscard=DiscardE,*/ElseContinuation)),
+		binder(_,( Cfailed==failed,Efailed==failed ; Cfailed==failed,nonvar(DiscardE)), Failure, ite_fail) % propagate failure info
+		], Goals_),
+	%dc_resolve_goals(Goals_,[Condition /* to avoid a premature spurious failure detection */|AllGoals],NewGoals).	
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).	
+	
+dc_resolve_goals_suspended(_G,ID,_Discard,_Failure,_Failures,SharedVars,Goals,conjunction(Branches,Gn,Ancestors),Continuation,AllGoals,NewGoals) :- !,
+	length(Branches,N), % TODO: propagate failure? when all branches have failed ?? what about shared vars???
+	make_branch_goals(Branches,ID,Ancestors,(Gn,Continuation),AllS,AllS,SharedVars,ExtraGoals),
 	write_verbose([' Spawning ',N,' conjunctive goals in parallel because of ',Branches, nl]),
 	append(ExtraGoals,Goals,Goals_),
-	dc_resolve_goals(Goals_,NewGoals).	
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).	
 	
-dc_resolve_goals_suspended(_G,_,_Failures,Goals,disjunction(SuspendedG,Answers,Ancestors),Continuation,NewGoals) :- !,
+dc_resolve_goals_suspended(_G,ID,_,_OriginalFailed,_Failures,SharedVars,Goals,disjunction(SuspendedG,Answers,Ancestors),Continuation,AllGoals,NewGoals) :- !,
 	% build new goals, including the common Continuation albeit reflecting the different bindings in Answers,
 	% and ending with the setting of the common variable Discard
 	% I think the following was WRONG, as it did assume answer bindings to be equally useful for the continuation:
-	% findall(goal(Discard,_Failed,_OurFailures,Ancestors,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
+	% findall(goal(ID,Discard,_Failed,_OurFailures,Ancestors,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
 	% ...instead, only the "top" goal (rule consequent) success guarantees an alternative to be irrelevant:
-	 ((SuspendedG = holds(F,T),var(T), \+ ground(F) )-> copy_term(SuspendedG+Ancestors+Continuation,BindingsForFuture) ; true),
-	findall(goal(_Discard,_Failed,_OurFailures,Ancestors,Continuation), member(SuspendedG,Answers), ExtraGoals),
-
-	(ExtraGoals=[goal(_,_,_,Ancestors,Continuation)]->true;true), % why is this needed?
-		% ...this mimicks what used to be done in resolveUntilAction and fixes the problem with paralellConjunctions.pl, but...
-	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
-	bind_discarders(ExtraGoals,RootAncestorDiscard),
+	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	((SuspendedG = holds(_F,T),var(T) /*, \+ ground(F)*/ )-> copy_term(SuspendedG+SharedVars+Ancestors+Continuation,BindingsForFuture) ; true),
+	simplify_conjunction(SuspendedG=Answer,Continuation,SuspCont),
+	findall(
+		goal(ChildID,_IgetBoundBelow,__Failed,_OurFailures,SharedVars,Ancestors,SuspCont), 
+		(member(Answer,Answers),goal_ID_inc(ChildID),add_goal_child(ID,ChildID)), 
+		ExtraGoals),
+	
+	bind_discarders_and_shared(ExtraGoals,SharedVars,RootAncestorDiscard),
 	length(ExtraGoals,N), length(OurFailures,N), 
 	% append(Failures,OurFailures,AllFailures),
 	% bind_failure_variables(ExtraGoals,OurFailures,AllFailures),
 	% The above two lines somehow make goat.lps execute badly
-	bind_failure_variables(ExtraGoals,OurFailures), % links Failed to OurFailures in all created goals
-	write_verbose([' Spawning ',N,' disjunctive goals because of ',SuspendedG, nl]),
+	
+	% links Failed to OurFailures in all created goals:
+	( nonvar(BindingsForFuture) -> bind_failure_variables([_FutureGoalBelow|ExtraGoals],[Failed|OurFailures]) 
+		; bind_failure_variables(ExtraGoals,OurFailures)), 
+	% bind_failure_variables(ExtraGoals,OurFailures),
+	findall(ID_,member(goal(ID_,_,_,_,_,_,_),ExtraGoals),NewIDs),
+	write_verbose([' Spawning ',N,' disjunctive goals ',NewIDs,' for ',ID,' because of ',SuspendedG, nl]),
+	% execute the first answer first...then proceed with other goals, for some "fairness"
+	%ExtraGoals = [First|ExtraGoals_],
 	append(ExtraGoals,Goals,Goals_),
-	dc_resolve_goals(Goals_,NewGoals_),
+	%append([First|Goals],ExtraGoals_,Goals_),
+	dc_resolve_goals(Goals_,AllGoals,NewGoals_),
+
+	% we'll get here if ExtraGoals have all succeeced, delayed....or failed but we have the following future:
 	% Now check if we need to add a "disjunctive alternative for the unknown future of state", e.g. in future cycles:
 	( nonvar(BindingsForFuture) -> 
 		% We really never know when a fluent answer set is "final"... later actions may affect it, so...:
-		BindingsForFuture = SuspendedG_+Ancestors_+Continuation_,
-		append(NewGoals_,[goal(RootAncestorDiscard,Failed,[Failed|OurFailures],Ancestors_,(SuspendedG_,Continuation_))],NewGoals),
-		last(Ancestors_,RootAncestorDiscard),
-		write_verbose([' Spawned one extra disjunctive goal for the future because of ',SuspendedG, nl])
+		BindingsForFuture = SuspendedG_+SharedVars+Ancestors_+Continuation_,
+		goal_ID_inc(AnotherID), add_goal_child(ID,AnotherID),
+		simplify_conjunction(SuspendedG_,Continuation_,SuspCont_),
+		append(NewGoals_,[goal(AnotherID,RootAncestorDiscard_,Failed,[Failed|OurFailures],SharedVars,Ancestors_,SuspCont_)],NewGoals),
+		last(Ancestors_,RootAncestorDiscard_), RootAncestorDiscard_=RootAncestorDiscard,
+		write_verbose([' Spawned one extra disjunctive goal ',AnotherID,' for the future because of ',ID,' ',SuspendedG, nl])
 		; NewGoals=NewGoals_).
-		
-dc_resolve_goals_suspended(_G,_,_Failures,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers,Ancestors),Continuation,NewGoals) :-
+
+dc_resolve_goals_suspended(_G,ID,_,_Failure,_Failures,SharedVars,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
 	% similar to the previous clause, except that in addition to different bindings there are different Body terms to consider:
-	% I think the following was WRONG, as it did assume answer bindings to be equally useful for the continuation:
-	% findall(goal(Discard,_Failed,_OurFailures,[happens(E,T1,T2)|Ancestors],(Body,Continuation,Discard=yes)), member(l_events(happens(E,T1,T2),Body),Answers), ExtraGoals),
-	% ...instead, only the "top" goal (rule consequent) success guarantees an alternative to be irrelevant:
-	findall(goal(_Discard,_Failed,_OurFailures,[happens(E,T1,T2)|Ancestors],(Body,Continuation)), member(l_events(happens(E,T1,T2),Body),Answers), ExtraGoals),
 	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
-	bind_discarders(ExtraGoals,RootAncestorDiscard),
+	findall(
+		%goal(_ID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, [happens(E,T1,T2)|Ancestors], (l_events(happens(E,T1,T2),Body)=Answer,Body,Continuation) ), 
+		goal(ChildID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, [happens(E,T1,T2)|Ancestors], BodyContinuation ), 
+		( member(l_events(happens(E,T1,T2),Body),Answers), simplify_conjunction(Body,Continuation,BodyContinuation), goal_ID_inc(ChildID), add_goal_child(ID,ChildID)),
+		%member(Answer,Answers), 
+		ExtraGoals),
+	bind_discarders_and_shared(ExtraGoals,SharedVars,RootAncestorDiscard),
 	length(ExtraGoals,N), length(OurFailures,N),
 	% append(Failures,OurFailures,AllFailures),
-	% bind_failure_variables(ExtraGoals,OurFailures,AllFailures),
 	%   see related comment in the above clause
 	bind_failure_variables(ExtraGoals,OurFailures),
-	write_verbose([' Spawning ',N,' disjunctive goals because of ',l_events(happens(E,T1,T2),Body), nl]),
+	write_verbose([' Spawning ',N,' disjunctive goals for ',ID,' because of ',l_events(happens(E,T1,T2),Body), nl]),
 	append(ExtraGoals,Goals,Goals_),
-	dc_resolve_goals(Goals_,NewGoals).
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).
 
-% make_branch_goals(+Branches,+Ancestors,+Continuation,AllSuccesses,-SuccessVars,-Goals) for parallelized conjunctions
-make_branch_goals([B|Bn],A,Cont,AllS,[S|Sn],[goal(RootAncestorDiscard,_,_,A,( B,S=yes,lps_conjunction_control(AllS),Cont) )|Goals]) :- !,
+dc_resolve_goals_suspended(_G,ID,_,_Failure,_Failures,SharedVars,Goals,l_ints_disjunction(l_int(Fluent,Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
+	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	findall(
+		goal(ChildID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, Ancestors, BodyContinuation ), 
+		( member(l_int(Fluent,Body),Answers), simplify_conjunction(Body,Continuation,BodyContinuation), goal_ID_inc(ChildID), add_goal_child(ID,ChildID)),
+		ExtraGoals),
+	bind_discarders_and_shared(ExtraGoals,SharedVars,RootAncestorDiscard),
+	length(ExtraGoals,N), length(OurFailures,N),
+	bind_failure_variables(ExtraGoals,OurFailures),
+	write_verbose([' Spawning ',N,' disjunctive goals for ',ID,' because of ',l_int(Fluent,Body), nl]),
+	append(ExtraGoals,Goals,Goals_),
+	dc_resolve_goals(Goals_,AllGoals,NewGoals).
+
+	
+% make_branch_goals(+Branches,+ID,+Ancestors,+Continuation,AllSuccesses,-SuccessVars,+SharedVars,-Goals) for parallelized conjunctions
+make_branch_goals([B|Bn],ID,A,Cont,AllS,[S|Sn],SharedVars,[goal(ChildID,RootAncestorDiscard,_,[],AllS+SharedVars,A,( B,S=yes,ControlCont) )|Goals]) :- !,
 	last(A,RootAncestorDiscard), % get the variable marking success of the top goal
-	make_branch_goals(Bn,A,Cont,AllS,Sn,Goals).
-make_branch_goals([],_,_,_AllS,[],[]).
+	simplify_conjunction(lps_conjunction_control(AllS),Cont,ControlCont),
+	goal_ID_inc(ChildID), add_goal_child(ID,ChildID),
+	make_branch_goals(Bn,ID,A,Cont,AllS,Sn,SharedVars,Goals).
+make_branch_goals([],_,_,_,_AllS,[],_,[]).
 	
 % some more unification magic: wire the failure mark variables together
 % bind_failure_variables(ExtraGoals,OurFailures)
 bind_failure_variables(ExtraGoals,OurFailures) :- bind_failure_variables(ExtraGoals,OurFailures,OurFailures).
 
-bind_failure_variables([goal(_,Failed,AllFailures,_,_)|Goals],[Failed|Failures], AllFailures) :- !,
+bind_failure_variables([goal(_ID,_,Failed,AllFailures,_,_,_)|Goals],[Failed|Failures], AllFailures) :- !,
 	bind_failure_variables(Goals,Failures,AllFailures).
 bind_failure_variables([],[],_).
 	
-bind_discarders([goal(Discard,_,_,Ancestors,_)|Goals],Discard) :- !, last(Ancestors,Discard), bind_discarders(Goals,Discard).
-bind_discarders([],_Discard).
+bind_discarders_and_shared([goal(_ID,Discard,_,_,SharedVars,Ancestors,_)|Goals],SharedVars,Discard) :- !, last(Ancestors,Discard), bind_discarders_and_shared(Goals,SharedVars,Discard).
+bind_discarders_and_shared([],_SharedVars,_Discard).
 
-/* 
-write_continuations(call_continuation(L)) :- write_continuations_(L).
-write_continuations_([]) :- !.
-write_continuations_(['$cont$'(Clause,  _PC,   Environment)|Continuations]) :- 
-	clause(H,B,Clause), writeln((H:-B)/Environment), write_continuations_(Continuations).
-*/
 
 % parallelizable_conjunction(+Glist,-Branches,-Continuation)  
 % Glist starts with a sequence of 2+ parallelizable branches (macro actions that start at the same time), and the remaining goals are Continuation
@@ -600,13 +848,42 @@ parallelizable_conjunction(G,_,[],G).
 
 lps_conjunction_control(_OurSuccesses) :- throw(bad_usage_of_lps_conjunction_control).
 
-% extract_bind_success_variables(ExtraGoals_,ExtraGoals,OurSuccesses) prepare control vars for parallel conjunction
-extract_bind_success_variables(ExtraGoals_,ExtraGoals,OurSuccesses) :-
-	extract_bind_success_variables(ExtraGoals_,ExtraGoals,OurSuccesses,OurSuccesses).
+% Goal IDs used to build trees of goals, in order to detect their failure
+:- thread_local(next_goal_id/1).
+set_goal_id(N) :- retractall(next_goal_id(_)), assert(next_goal_id(N)).
+goal_ID_inc(N) :- retract(next_goal_id(N)), !, New is N+1, assert(next_goal_id(New)).
+
+:- thread_local(goal_child/2). % ParentID, ChildID  A goal is a child of another if it replaces it in the goal list
+set_goal_children(Tuples) :- 
+	retractall(goal_child(_,_)), 
+	forall(member(T,Tuples), (assertion((T=goal_child(_,_),ground(T))), assert(T))).
+get_goal_children(Tuples) :- findall(goal_child(P,C),goal_child(P,C),Tuples).
+
+add_goal_child(ParentID,ChildID) :- 
+	must_be(integer,ParentID), must_be(integer,ChildID), 
+	assert(goal_child(ParentID,ChildID)).
+
+% goal_descendent(+ID,-DescendentID)    
+% Obtain all descendents
+goal_descendent(ID,Descendent) :- 
+	goal_child(ID,Child), (Descendent=Child ; goal_descendent(Child,Descendent)).
 	
-extract_bind_success_variables([MySuccess-goal(D,MF,Failures,Ancestors,G)|EG_],[goal(D,MF,Failures,Ancestors,G)|ExtraGoals],[MySuccess|OurSuccesses],All) :- !,
-	extract_bind_success_variables(EG_,ExtraGoals,OurSuccesses,All).
-extract_bind_success_variables([],[],[],_).
+no_active_descendents(ID,AllGoals) :- member(goal(ID,_,Failed,_,_,_,_),AllGoals), Failed\==failed, 
+	!, fail.
+no_active_descendents(ID,AllGoals) :- member(goal(Descendent,_,Failed,_,_,_,_),AllGoals), Failed\==failed, goal_descendent(ID,Descendent), 
+	!, fail.
+no_active_descendents(_,_).
+
+% discard_all_descendents(ID,Goals) Mark all descendents of ID in Goals as discardable
+discard_all_descendents(ID,[goal(_,Discard,_, _, _, _, _ )|Goals]) :- nonvar(Discard), !,
+	discard_all_descendents(ID,Goals).
+discard_all_descendents(ID,[goal(ID2,yes,_, _, _, _, _ )|Goals]) :- (ID=ID2 ; goal_descendent(ID,ID2) ), !,
+	discard_all_descendents(ID,Goals).
+discard_all_descendents(ID,[_|Goals]) :- discard_all_descendents(ID,Goals).
+discard_all_descendents(_,[]).
+
+%TODO: add garbage collection at each cycle: remove obsolete children, namely to avoid bloating saved states (non trivial...)
+%TODO: (alternative) add option(no_if_then_else), which disables assertions of children and throws an exception if if-then-else is used
 
 % A cached representation of d_pre indicating its dependence on states ('current' only, or 'both' current and next ('both' also encompasses next-only))
 :- thread_local(d_pre/2).
@@ -706,7 +983,7 @@ temporary_predicate(lps_test_result(_,_,_),uretractall).
 temporary_predicate(lps_test_result_item(_,_,_),uretractall).
 temporary_predicate(lps_test_action_ancestor(_,_,_),uretractall).
 temporary_predicate(lps_test_options(_),uretractall).
-temporary_predicate(lps_saved_state(_,_,_,_,_,_),uretractall).
+temporary_predicate(lps_saved_state(_,_,_,_,_,_,_,_),uretractall).
 
 
 % Clear an LPS program to run another LPS program.
@@ -821,7 +1098,7 @@ go(File, OptionsList, ResultFluents) :-
 		lps_user(User,Email), % this is NOT available in the new thread, so we get it now
 		thread_create((
 			assert(background_execution(User,ID,0,0,0,0,[])),
-			set_server_log(ID,User,Email),
+			catch(set_server_log(ID,User,Email),Ex,print_message(warning,"Could not prepare LPS log"-Ex)), 
 			% May copy SWISH's dynamic user module into our thread's db module:
 			(nonvar(Self) -> % under SWISH
 				asserta((lps_program_module(db) :- !)), db:copy_from_module(Self)
@@ -847,6 +1124,7 @@ next_thread_alias(NID) :- gensym(lps,NID).
 :- dynamic background_execution/7. 
 
 % server_log_filename(+ThreadID,-FilePath) 
+% TODO: probably should move this out to a more mutable place, e.g. /usr/log/
 server_log_filename(ID,FP) :- 
 	(atom(ID)->true;throw(bad_server_ID(ID))), 
 	lps_engine_directory(ED), concat_atom([ED,'/logs/'],LD),
@@ -912,7 +1190,11 @@ go_(File,OptionsList,ResultFluents) :-
 	append(R0,Interesting_CEs,R0_),
 	findall(S,(state(S), \+ system_fluent(S)),IS_),
 	test(fluents,0,IS_),
-	(current_prolog_flag(dialect, swi) -> get_time(RT), uassertz(real_time_beginning(RT)); true),
+	(simulatedRealTimeBeginning(SB)-> 
+		parse_time(SB, SBNow), assert(beginningOfSimulatedRealTime(SBNow)), uassertz(real_time_beginning(SBNow)),
+		RT=SBNow
+		;
+		get_time(RT), uassertz(real_time_beginning(RT))),
 	( option(background(TID)) -> 
 		(endTime(ET) -> true ; ET = 0),
 		(maxRealTime(MaxRT) -> true ; MaxRT = 0),
@@ -924,12 +1206,12 @@ go_(File,OptionsList,ResultFluents) :-
 		assert(background_execution(User,TID,RT,MaxRT,ET,MCT,[]))
 	; true),
 	( 
-		( option(restore(ExecutionFile)) ; lps_saved_state(_,_,_,_,_,_) /* intermediate state part of the program */ ) -> 
+		( option(restore(ExecutionFile)) ; lps_saved_state(_,_,_,_,_,_,_,_) /* intermediate state part of the program */ ) -> 
 		restore_execution(ExecutionFile,Ri,Gi)
 		; 
 		uassertz(current_time(0)), 
 		next_time, Ri=R0_, Gi=[],
-		(simulatedRealTimeBeginning(SB)-> parse_time(SB, SBNow), assert(beginningOfSimulatedRealTime(SBNow));true),
+		set_goal_id(1), set_goal_children([]),
 		(system_fluent(SF,SFG), SFG, uassert(state(SF)), fail ; true) % initial state of all system fluents
 
 	),
@@ -1398,6 +1680,9 @@ parse_options_([silent|Rest]) :- !,
 parse_options_([log_composites|Rest]) :- !,
     uassertz(option(log_composites)),
     parse_options_(Rest).
+parse_options_([debug|Rest]) :- !,
+    uassertz(option(debug)),
+    parse_options_(Rest).
 parse_options_([make_test|Rest]) :- !,
 	uassertz(option(make_test)),
 	parse_options_(Rest).
@@ -1491,7 +1776,7 @@ pprint_goal([goal(_, _, [H|_])|Rest]) :- throw(deprecated_at_pprint_goal),
     write(H),nl,
     pprint_goal(Rest).
 
-pprint_goal([goal(_, _, _, _, [H|_])|Rest]) :- !,
+pprint_goal([goal(_, _, _, _, _, _, [H|_])|Rest]) :- !,
     (server_log_stream(S)->writeln(S,H);writeln(H)),
     pprint_goal(Rest).
 
@@ -1524,16 +1809,19 @@ load_test_file_for(F) :-
 		; true).
 
 % close_test_file(ProgramFile,Outcome) Outcome is success/failure
-close_test_file(F,_Outcome) :- var(F), option(make_test),option(swish), \+ option(background(_)), lps_postmortem_filename(TF), !,
+%  a filed program will get a lps_test_result_item(end,-1,failure) fact, successful programs don't
+close_test_file(F,Outcome) :- var(F), option(make_test),option(swish), \+ option(background(_)), lps_postmortem_filename(TF), !,
+	(Outcome==failure -> uassert(lps_test_result_item(end,-1,failure)); true),
 	write_test_file_(F,TF).
 close_test_file(F,_) :- var(F), !.
-close_test_file(F,_) :- option(make_test), \+ option(swish),  !,
+close_test_file(F,Outcome) :- option(make_test), \+ option(swish),  !,
+	(Outcome==failure -> uassert(lps_test_result_item(end,-1,failure)); true),
 	test_filename(F,TF),
 	write_test_file_(F,TF).
-close_test_file(F,Outcome) :- option(run_test), !,  
+close_test_file(F,_Outcome) :- option(run_test), !,  
 	test_filename(F,TF),
 	nl,
-	(Outcome == failure -> uassert(lps_failed_test(end,program_failure)) ; true),
+	% (Outcome == failure -> uassert(lps_failed_test(end,program_failure)) ; true),
 	( \+ lps_failed_test(_,_) -> Result=' (ok)'; Result=' (FAILED)'),
 	write('*** Tests ended with '), write(TF), write(Result), writeln(' ****').
 close_test_file(_F,_).
@@ -1647,7 +1935,7 @@ check_lps_test_action_ancestor(Call,T1,T2) :- uretract(lps_test_action_ancestor(
 % NOTICE that .lps files are transformed into .P files, so these are used for testing!!
 test_examples :- test_examples([]).
 
-test_examples_dc :- test_examples([dc]).
+test_examples_dc :- test_examples([dc]). % consider using the slower test_examples([dc,debug])
 
 test_examples(Options) :- 
 	lps_examples_directory(ED),
@@ -1710,8 +1998,9 @@ surface_syntax_extension(Codes) :- append(_,[46, 108, 112, 115],Codes). % .lps
 % time_limited(+StepName,+G,?Timeout) 
 % Skips G if Timeout is true; timeout will be bound to true if time runs out; will remain unbound otherwise
 time_limited(_Step,_G,Timeout) :- nonvar(Timeout), !.
+time_limited(_,G,_) :- option(debug), !, G. % so stack traces are more useful
 time_limited(Step,G,Timeout) :-
-	(option(timeout(MaxTime)) -> true ; MaxTime = 0.5), % by default, half second max in each of the following steps
+	(option(timeout(MaxTime)) -> true ; MaxTime = 0.75), % by default, less than a second max in each of the following steps
 	catch(call_with_time_limit(MaxTime,G),Ex,(Ex=time_limit_exceeded->Timeout=true;throw(Ex))),
 	(Timeout==true -> 
 		print_error(error,'execution timeout'(Step),null),
@@ -1724,7 +2013,7 @@ minCycleTime_(0.001) :- option(backgroun(_)), !.
 minCycleTime_(0).
 
 %  cycle(PartialReactiveRules,GoalState,PendingResponses,StateFlag)
-%  GoalState is a list (conjunction) of goal(Id,Failure,DisjunctionFailures,EventAncestors,Tree)
+%  GoalState is a list (conjunction) of goal(Id,Discard,Failure,DisjunctionFailures,SharedVars,EventAncestors,Tree)
 %  Tree is a list representing the current branch of the tree.
 %  PendingResponses is a goal to execute as soon as the state is "stable", to report answers back to waiting clients
 cycle(Ri, Gi, StateFlag) :- cycle(Ri, Gi, true, StateFlag).
@@ -1737,7 +2026,7 @@ cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 	current_prolog_flag(dialect, swi),
 	maxRealTime(MaxRT),
-	get_time(Now), real_time_beginning(Begin), Duration is Now - Begin,
+	get_real_time(Now), real_time_beginning(Begin), Duration is Now - Begin,
 	Duration > MaxRT,
 	!,
     	answer_thread_queries, PendingResponses,
@@ -1786,7 +2075,7 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 %	write_verbose([nl, ' Events and actions from ', Previous, ' to
 %	', Time,' are ',Actions,nl]),
 
-	( (Actions \= [] ; Time<3) ->
+	( (Actions \= [] ; Time<3  ; option(debug) ) ->
 		(simulatedRealTimeBeginning(_) -> 
 			once(state(real_time(RT))), format_time(atom(RTA),"%FT%H:%M:%S",RT), % format compatible with parse_time 
 			do_write([nl, '----- time is now ',Time,' (',RTA,') -----',nl])
@@ -1866,7 +2155,11 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 		) 
 	; 
 		current_time(Time), % avoid cascading the following message to past cycles
-		do_write([nl, ' Program has FAILED. Unsolved goals: ',nl,pprint_goal(Gi)]), fail
+		length(Gi,Ngoals),
+		do_write([nl, ' Program has FAILED. ',Ngoals,' unsolved goals: ',nl,pprint_goal(Gi)]), 
+		%sort(Gi,Sorted), 
+		%once((member(Oldest,Sorted), Oldest = goal(_,_,_,_,_,_,_))), pprint_goal([nl, ' Oldest goal:',nl,Oldest,nl]),		
+		fail
 	),
 	(option(non_prospective) -> true ; copyNextState),
 	
@@ -1875,30 +2168,34 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 		;	
 		(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
 		next_time, 
-		!, % recover stack space...
+		!, % recover stack space... and no backtracking from cycle to cycle (search is carried on breath first in the goals list)
 		cycle(NRi, NextGi, ToReturn, NewStateFlag)
 	).
 
-	
+get_real_time(RT) :- system_fluent(real_time(RT),G), G, !.
+
+
 :- thread_local(save_finish_execution/1).
 lps_save_finish_execution(File) :- assert(save_finish_execution(File)).
 
 % restore LPS execution state from file or fact pertaining to the user program
 restore_execution(ExecutionFile,Ri,Gi) :-
 	(nonvar(ExecutionFile) -> 
-		see(ExecutionFile), read(lps_saved_state(Requirements,Timing,Ri,Gi,Fluents,Events)), seen
-		; lps_saved_state(Requirements,Timing,Ri,Gi,Fluents,Events)
+		see(ExecutionFile), read(lps_saved_state(Requirements,Timing,NextGoalID,Children,Ri,Gi,Fluents,Events)), seen
+		; lps_saved_state(Requirements,Timing,NextGoalID,Children,Ri,Gi,Fluents,Events)
 	),
 	Timing = t(Beginning,NextCycle,_SavedAt),
 	Requirements = r(EngineVersion,Hash),
-	get_lps_program_hash(OurHash), 
+	% get_lps_program_hash(OurHash,Codes), string_codes(HashString,Codes), mylog(ours-HashString),
+	get_lps_program_hash(OurHash),
 	(Hash==OurHash -> true ; throw(bad_hash_in_restored_file(ExecutionFile-Hash/OurHash))),
 	(compatible_engine(EngineVersion) -> true ;  throw(incompatible_engine_in_restored_file(ExecutionFile))),
 	uretractall(real_time_beginning(_)), uassert(real_time_beginning(Beginning)),
 	uretractall(state(_)), uretractall(happens(_,_,_)),
 	(member(Fluent,Fluents), uassertz(state(Fluent)), fail ; true),
 	(member(Event,Events), uassertz(Event), fail ; true),
-	uassertz(current_time(NextCycle)).
+	uassertz(current_time(NextCycle)),
+	set_goal_id(NextGoalID), set_goal_children(Children).
 
 % TODO: this should include the underlying Prolog engine.
 compatible_engine(RequiredVersion) :-  get_version(OurEngine), OurEngine >= RequiredVersion.
@@ -1906,13 +2203,15 @@ compatible_engine(RequiredVersion) :-  get_version(OurEngine), OurEngine >= Requ
 % save_execution(+File,+WorkingReactiveRules,+Goals,-ExecutionState) if File is nonvar, dump ExecutionState into it
 save_execution(File,Ri,Gi,ExecutionState) :- 
 	( option(no_parallel) -> throw(no_parallel_incompatible_with_saving) ; true),
-	current_time(NextCycle),
+	current_time(NextCycle), next_goal_id(NextGoalID), get_goal_children(Children),
 	findall(Fluent,state(Fluent),Fluents), findall(happens(E,T1,T2),happens(E,T1,T2),Events),
-	get_lps_program_hash(Hash), get_version(EngineVersion),
+	% get_lps_program_hash(Hash,Codes), string_codes(HashString,Codes), mylog(saved-HashString),
+	get_lps_program_hash(Hash), 
+	get_version(EngineVersion),
 	real_time_beginning(Beginning), get_time(Now), stamp_date_time(Now, SavedAt, 'UTC'),
 	% the following term may be split, BUT not the Gi - goals have relevant shared variables, controlling disjuntive branches success/failure
 	% FUTURE NOTE:if splitting is necessary, make sure to uniquely name vars before writing, so bindings can be reconstructed after reading chunks
-	ExecutionState = lps_saved_state(r(EngineVersion,Hash),t(Beginning,NextCycle,SavedAt),Ri,Gi,Fluents,Events),
+	ExecutionState = lps_saved_state(r(EngineVersion,Hash),t(Beginning,NextCycle,SavedAt),NextGoalID,Children,Ri,Gi,Fluents,Events),
 	(nonvar(File) -> tell(File), write_canonical(ExecutionState), writeln('.'), told ; true).
 
 % Obtain events (observations) from the user
@@ -1926,16 +2225,18 @@ read_obs(Obs) :-
 
 :- thread_local(observed_at/2). % to avoid repeating real time observations with low granularity
 
-% Update any observed events, including events injectd from the outside, e.g. Java API
+% Update any observed events, including events injected from the outside, e.g. Java API
 % May also return fluent state for those event messages requesting it
 % Ri and Gi are the NEXT cycle's rules and goals, necessary for the save state operation
 updateEvents(Time, Next, Ri, Gi, ExternalObservations, ToReturn) :-
 	findall(E,(observe(Evs, Next),member(E, Evs) ; member(E,ExternalObservations)),Observations),
 	state(real_time(Now)),
-	findall(E,(
-		catch(observe(Evs, RT),_,fail), atom(RT), \+ (observed_at(RT,T), T\=Time), 
-		parse_time(RT,_,RTseconds), RTseconds =< Now, 
-		assert(observed_at(RT,Time)), 
+	findall(E,( 
+		catch(observe(Evs, RT),_,fail), 
+		misc_to_realtime(RT,RTseconds), RTseconds =< Now, 
+		% make sure real time moments do not repeat in different cycles:
+		\+ (observed_at(RTseconds,T), T\=Time), 
+		assert(observed_at(RTseconds,Time)), 
 		member(E, Evs)
 		),RTObservations),
 	append(Observations,RTObservations,AllObservations),
@@ -1977,6 +2278,74 @@ updateEvents(Time, Next, Ri, Gi, ExternalObservations, ToReturn) :-
      % No external events are accepted in the first cycle (for not particular reason other than to simplify the logic above...)
      ( (option(background(_)), Time>0) -> receive_external_events(Time, Next, Ri, Gi, ToReturn); ToReturn=true).
 
+% misc_to_realtime(+ExternalForm,-RealTimeSeconds)
+% fails for LPS (cycle) time
+misc_to_realtime(A,RT) :- atom(A), !, atom_string(A,S), misc_to_realtime(S,RT).
+misc_to_realtime(S,RT) :- string(S), parse_time(S,_,RT).
+misc_to_realtime(Y/M/D/H/Min/S,RT) :- !, date_time_stamp(date(Y,M,D,H,Min,S,0,-,-),RT).
+misc_to_realtime(Y/M/D/H/Min,RT) :- !, date_time_stamp(date(Y,M,D,H,Min,0,0,-,-),RT).
+misc_to_realtime(Y/M/D/H,RT) :- !, date_time_stamp(date(Y,M,D,H,0,0,0,-,-),RT).
+misc_to_realtime(Y/M/D,RT) :- !, date_time_stamp(date(Y,M,D),RT).
+misc_to_realtime(Y/M,RT) :- misc_to_realtime(Y/M/1,RT).
+
+% is_cycle_time(+T)
+is_cycle_time(T) :- must_be(nonvar,T), integer(T).
+
+is_some_time(T) :- (integer(T) ; misc_to_realtime(T,_)), !.
+	
+% real_time_literal(+Literal,-GoalList) Rewrites a literal with real times into a sequence using only cycle times
+% Fails if no real time literal is present
+% Introduces some "time slack" via holds(true,..), so that the body isn't firmly glued to the precise boundaries of a day...
+real_time_literal(holds(_F,T),_) :- (var(T) ; is_cycle_time(T)), !, fail.
+real_time_literal(holds(F,Y/M/D), [holds(real_date(Y/M/D),T), holds(F,T)] ) :- !.
+real_time_literal(happens(_E,T1,T2),_) :- (var(T1) ; is_cycle_time(T1)), (var(T2) ; is_cycle_time(T2)), !, fail.
+real_time_literal(happens(E,RT1,T2),[
+	happens(real_date_begin(RT1),_,_T1), holds(true,T1), happens(E,T1,T2)
+	]) :- nonvar(RT1), RT1=_Y/_M/_D, (var(T2) ; is_cycle_time(T2)), !.
+real_time_literal(happens(E,T1,RT2),[
+	happens(E,T1,_T2), /*holds(true,T2),*/ happens(real_date_end(RT2_),_,_), RT2_ @=< RT2
+	]) :- nonvar(RT2), RT2=_Y/_M/_D, (var(T1) ; is_cycle_time(T1)), !.
+real_time_literal(happens(E,RT1,RT2),[
+	happens(real_date_begin(RT1),_,_T1), holds(true,T1), happens(E,T1,_T2), /*holds(true,T2),*/ happens(real_date_end(RT2_),_,_), RT2_ @=< RT2
+	]) :- nonvar(RT1), nonvar(RT2), RT1=_/_/_, RT2=_/_/_.
+
+a_real_time_event(real_date_begin(RT),RT).
+a_real_time_event(real_date_end(RT),RT).
+a_real_time_event(end_of_day(RT),RT).
+
+premature_real_time_fluent(holds(_,T)) :- nonvar(T), T = _Y/_M/_D, get_the_real_date(Today), T@>Today.
+
+premature_real_time_event(happens(_,T1,_T2)) :- 
+	get_the_real_date(Now),
+	nonvar(T1), T1=_/_/_, T1@>Now.
+	
+outdated_real_time_event(happens(_,T1,T2)) :- 
+	get_the_real_date(Now),
+	( nonvar(T2), T2=_/_/_, Now@>T2 ; nonvar(T1), T1=_/_/_, /* ?real_date_add(T1,1,T1_),*/ T1=T1_, Now@>T1_).
+	
+
+
+/* Probably useless:
+real_time_to_interval(RT,Duration) :- stamp_date_time(RT,DT,local), dt_to_duration(DT,Duration).
+% Assume the interval duration to be the magnitude of the lowest significant quantity in the date structure? BAD IDEA!
+% Tricky because of leap years and different month durations...
+% See http://www.swi-prolog.org/pldoc/man?section=dattimedata
+% dt_to_duration(date(Y,M,D,H,Mn,S,_Off,_TZ,_DST),Duration)
+dt_to_duration(date(Y,0,0,0,0,0.0,_,_,_),Duration) :- !, 
+	date_time_stamp(date(Y,0,0,0,0,0.0,_,_,_),T1), NextY is Y+1, 
+	date_time_stamp(date(NextY,0,0,0,0,0.0,_,_,_),T2), Duration is T2-T1.
+dt_to_duration(date(Y,M,0,0,0,0.0,_,_,_),Duration) :- !, 
+	date_time_stamp(date(Y,M,0,0,0,0.0,_,_,_),T1), 
+	(M==12 -> NextY is Y+1, NextM=1 ; NextY=Y,NextM is M+1),
+	date_time_stamp(date(NextY,NextM,0,0,0,0.0,_,_,_),T2), Duration is T2-T1.
+dt_to_duration(date(_Y,_M,_D,0,0,0.0,_,_,_),86400.0) :- !.
+dt_to_duration(date(_Y,_M,_D,_H,0,0.0,_,_,_),3600.0) :- !.
+dt_to_duration(date(_Y,_M,_D,_H,_S,0.0,_,_,_),60.0) :- !.
+dt_to_duration(date(_Y,_M,_D,_H,_Mn,_S,_,_,_),1.0). 
+...so I ended up sticking with Y/M/D
+*/
+
+
 % receive_external_events(+Time,+Next,+Rules,+Goals,-ToReturn)  
 % ToReturn is a goal with message responses to clients, to be evaluated only at the end of the current cycle
 % (because it depends on fluent state, which at this precise moment is unreadable; also because events may rejected later)
@@ -2017,7 +2386,7 @@ receive_external_events([messageFrom(ClientID,MessageID,Events,After,Fluents)|Me
 	      	DoSample = findall(F, (
 	     			member(F,Fluents), 
 	     			% Special case, lps_saved_state:
-	     			(F=lps_saved_state(_,_,_,_,_,_) -> save_execution(_File,Ri,Gi,F); query(holds(F,_)))
+	     			(F=lps_saved_state(_,_,_,_,_,_,_,_) -> save_execution(_File,Ri,Gi,F); query(holds(F,_)))
 	     			), Values), 
 	     		
 	     	% sample later... or right now:
@@ -2224,6 +2593,7 @@ system_fluent(lps_user(UserID,Email),lps_user(UserID,Email)).
 
 lps_user(User) :- lps_user(User,_Email).
 
+% Currently this is valid for SWISH only
 lps_user(User,Email) :- catch(user:lps_user(User,Email),_,fail), !.
 lps_user(unknown_user,unknown_email).
 
@@ -2247,11 +2617,12 @@ system_action(lps_send_email(_To,_Subject,_Body)).
 :- multifile premature_system_action/1. % so other modules may define non blocking action predicates
 premature_system_action(lps_outcome(MessageID,_)) :- \+ outcome_available(MessageID), !. % so we do not block the LPS interpreter
 
+% deprecated:
 removeSolvedGoals([], NextGi, NextGi).
-removeSolvedGoals([goal(GId, _, _, _, Branch) | GoalTree], AccGi, FinalGi):-
+removeSolvedGoals([goal(GId, _, _, _, _, Branch) | GoalTree], AccGi, FinalGi):-
      (Branch = [[] | _] ->
         uretractall(tried(GId, _, _)), removeSolvedGoals(GoalTree, AccGi, FinalGi)
-      ; removeSolvedGoals(GoalTree, [goal(GId, _, _, _, Branch) | AccGi], FinalGi)).
+      ; removeSolvedGoals(GoalTree, [goal(GId, _, _, _, _, Branch) | AccGi], FinalGi)).
 
 % process(RulesToProcess, RulesProcessed, FinalRules, GoalsSoFar, FinalGoals).
 %	
@@ -2259,7 +2630,7 @@ process([], Rs, Rs, NG, NG) :- !.
 
 % Antecedent is []. Add Consequent as new goal/tree.
 process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, generate_id(GId),
-	process(Rs, AccRi, NRi, [goal(GId, _, _, _, [C]) | AccG], NGi ).
+	process(Rs, AccRi, NRi, [goal(GId, _, _, _, _, [C]) | AccG], NGi ).
 
 % Cannot be resolved now. Leave for later.
 process([reactive_rule([L | Ls], C) | Rs], AccRi, NRi, AccG, NGi):-
@@ -2359,23 +2730,23 @@ resolve_tree(Unfinished, AccG, NextGoals):-
 
 % An alternative to asserting and retracting depth is simply to compute
 % depth when necessary, or pass as a parameter of resolve.
-resolve_tree([goal(GoalId, _, _, _, [ [L|Ls] | Bs]) | Gs], AccG, FinalG) :-
+resolve_tree([goal(GoalId, _, _, _, _, [ [L|Ls] | Bs]) | Gs], AccG, FinalG) :-
     steps(N), N > 1,
 	uretractall(current_goal(_)), uassertz(current_goal(GoalId)),
 	uretractall(depth(_)),length([ [L|Ls] | Bs], Depth),
 	uassertz(depth(Depth)),
      resolve([L|Ls], Result),
 	write_verbose([' Goal is ',L, nl,'. Result/resolvent is ',Result,nl]),
-	(Result = fail -> (backtrack([goal(GoalId,_,_,_,[[L|Ls]|Bs])|Gs], NextTree, AccG, NewAccG)
+	(Result = fail -> (backtrack([goal(GoalId,_,_,_,_,[[L|Ls]|Bs])|Gs], NextTree, AccG, NewAccG)
 %	 nl, write(L), write(' fails. Backtracking: next tree '),
 %	 write(NextTree) nl, write('new accumulated tree '),
 %	 write(NewAccG), nl
 	 )
-	; (Result = later -> (continue([goal(GoalId,_,_,_,[[L|Ls]|Bs])|Gs], NextTree, AccG, NewAccG)
+	; (Result = later -> (continue([goal(GoalId,_,_,_,_,[[L|Ls]|Bs])|Gs], NextTree, AccG, NewAccG)
 %	nl, write('continue next tree '), write(NextTree),
 %	nl, write(' new accumulated tree '), write(NewAccG), nl
 	 )
-	; (advance(Result, [goal(GoalId, _,_, _,[ [L|Ls] | Bs]) | Gs], NextTree, AccG, NewAccG)
+	; (advance(Result, [goal(GoalId, _,_, _,_,[ [L|Ls] | Bs]) | Gs], NextTree, AccG, NewAccG)
 %	nl, write('advance next tree '), write(NextTree),
 %	nl, write(' new accumulated tree '), write(NewAccG), nl
 	  ))
@@ -2509,8 +2880,8 @@ mustBeProcessedNow(holds(_, T)) :-
 	ground(T), current_time(Now),  T =< Now, !.
 mustBeProcessedNow(happens(_, _, T)) :-
 	ground(T), current_time(Now),  T =< Now, !.
-mustBeProcessedNow(holds(P, _)) :-
-	intensional(P), \+ fluent_(P),!.
+%mustBeProcessedNow(holds(P, _)) :-
+%	intensional(P), \+ fluent_(P),!.
 	% Not necessary if extensional and intentional predicates are disjoint.
 mustBeProcessedNow(happens(A,_,_)) :-
 	macroaction(A), \+ action_(A),  !.
@@ -2519,9 +2890,9 @@ mustBeProcessedNow(P) :- prolog(P).
 
 prolog(P) :- \+ P = happens(_,_,_), \+ P = holds(_,_).
 
-intensional(P) :-  P =.. [Pred | Args], length(Args, L),
-	length(Args2, L), Q =.. [Pred |Args2],
-	 l_int(holds(Q, _), _).
+% intensional(Predicate) Predicate without time
+intensional(P) :- functor(P,F,N), functor(Q,F,N), l_int(holds(Q, _), _), !.
+
 % TODO: this should use compound_name_arity(X,F,N) to deal with e.g. newbelief(), or with (slower) A=..L, ...
 macroaction(A):- functor(A,F,N), functor(Q,F,N), l_events(happens(Q, _,_), _), !.
 
@@ -2543,51 +2914,51 @@ mustBeResolvedNow(P) :- mustBeProcessedNow(P),
 
 % Top-level goal lpsClause B1 failed. Backtrack to LastB. Save B1 to retry later.
 %
-backtrack([goal(GoalId, _,_, _,[ B1]) | Gs], [NextBranch, goal(GoalId, _,_,_, [B1]) | Gs],
+backtrack([goal(GoalId, _,_, _,_,[ B1]) | Gs], [NextBranch, goal(GoalId, _,_,_, _, [B1]) | Gs],
 	  [LastBranch | PreviousBs], PreviousBs):-
-	LastBranch = goal(GId, _,_, _,[LastLeaf | LastBs] ),
+	LastBranch = goal(GId, _,_, _,_,[LastLeaf | LastBs] ),
 	length(LastBs, Depth),
 	uretract(current_goal(_)), uassertz(current_goal(GId)),
 	uretract(depth(_)),
 	uretractall(tried(GoalId, _, _)),
 	(LastLeaf = []
-	->  (NextBranch = goal(GId, _,_,_,LastBs), uassertz(depth(Depth) ))
+	->  (NextBranch = goal(GId, _,_,_,_,LastBs), uassertz(depth(Depth) ))
 	; (NextBranch = LastBranch, D is Depth+1, uassertz(depth(D)))).
 
 % Pop up one level.
 %
-backtrack([goal(GoalId,_,_,_,[_B1|Bs])|Gs], NextTree, AccG, NewAccG):-
+backtrack([goal(GoalId,_,_,_,_,[_B1|Bs])|Gs], NextTree, AccG, NewAccG):-
 	Bs \= [],
 	depth(Depth), NewDepth is Depth - 1,
 	uretractall(depth(_)), uassertz(depth(NewDepth)),
 	uretractall(tried(GoalId, Depth, _)),
-	NextTree = [goal(GoalId,_,_,_, Bs)|Gs],
+	NextTree = [goal(GoalId,_,_,_, _,Bs)|Gs],
 	NewAccG = AccG.
 
 
-advance([], [goal(GoalId,_,_,_, [B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
+advance([], [goal(GoalId,_,_,_,_, [B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
 	!, NextTree = Gs,
 %	nl,write(' Next tree is  '), write(NextTree),nl,
-	NewAccG = [goal(GoalId,_,_,_,[[], B1 | Bs])| AccG],
-	(Gs = [] -> true ;(Gs =	[goal(GId,_, _,_,NextBranch) | _] ,
+	NewAccG = [goal(GoalId,_,_,_,_,[[], B1 | Bs])| AccG],
+	(Gs = [] -> true ;(Gs =	[goal(GId,_, _,_,_,NextBranch) | _] ,
 	uretract(depth(_)), length(NextBranch,D), uassertz(depth(D)),
 	uretract(current_goal(_)), uassertz(current_goal(GId)))).
 
-advance(Resolvent, [goal(GoalId, _,_,_,[B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
+advance(Resolvent, [goal(GoalId, _,_,_,_,[B1|Bs]) | Gs] , NextTree, AccG, NewAccG):-
 	\+ Resolvent = [],
-	NextTree = [goal(GoalId, _,_,_,[Resolvent, B1 | Bs]) | Gs], NewAccG = AccG,
+	NextTree = [goal(GoalId, _,_,_,_,[Resolvent, B1 | Bs]) | Gs], NewAccG = AccG,
 	depth(Depth), NewDepth is Depth +1, uretract(depth(Depth)),
 	uassertz(depth(NewDepth)).
 
 % Similar to advance with [].
-continue([goal(GoalId, _,_,_,[B1|Bs]) | Gs], NextTree,  AccG, NewAccG):-
+continue([goal(GoalId, _,_,_,_,[B1|Bs]) | Gs], NextTree,  AccG, NewAccG):-
 	NextTree = Gs,
 	uretractall(current_goal(_)), depth(Depth),
 	uretractall(depth(_)),
 	uretractall(tried(GoalId, Depth, _)),
 %	nl,write(' Next tree is  '), write(NextTree),nl,
-	NewAccG = [goal(GoalId, _,_,_,[B1 | Bs] ) | AccG],
-	(Gs = [] -> true ;(Gs =	[goal(GId, _,_,_,NextBranch) | _] ,
+	NewAccG = [goal(GoalId, _,_,_,_,[B1 | Bs] ) | AccG],
+	(Gs = [] -> true ;(Gs =	[goal(GId, _,_,_,_,NextBranch) | _] ,
 	length(NextBranch,D), uassertz(depth(D)),
 	uassertz(current_goal(GId)))).
 
@@ -2664,7 +3035,8 @@ query(P) :-
 
 %evaluate(X) :- write_verbose(evaluate(X)), fail. % for debugging
 evaluate([]).
-evaluate([P|Rest]) :-query(P), evaluate(Rest).
+evaluate([P|Rest]) :- !, query(P), evaluate(Rest).
+evaluate((P,Rest)) :- query(P), evaluate(Rest).
 
 
 % fluent_pred(+Fl)
@@ -2776,13 +3148,14 @@ d_body(B) :- u_user_predicate(B).
 % In addition to reactive_rule(Antecedent,Consequent) terms, the rules lists may contain 
 % composite_event(CE_goal,happens(CE,Start,End)), to constantly compute some "interesting" composite events;
 % for these the goals lists will contain event(happens(CE,Start,End)) terms
-% dc_process(A,B,C,D,E) :- writeln(dc_process(A,B,C,D,E)), fail.
+% dc_process(A,B,C,D,E) :- writeln(dc_process(A,B,C,D,E)), fail. % for debugging
 
 dc_process([], Rs, Rs, NG, NG) :- !.
 
 % Antecedent is []. Add Consequent as new goal/tree.
 dc_process([reactive_rule([], C) | Rs], AccRi, NRi, AccG, NGi):- !, 
-	dc_process(Rs, AccRi, NRi, [goal(non_discardable,_,[],[DiscardChildren], (C,DiscardChildren=yes)) | AccG], NGi ).
+	goal_ID_inc(ID),
+	dc_process(Rs, AccRi, NRi, [goal(ID,non_discardable,_,[],[],[DiscardChildren], (C,DiscardChildren=yes)) | AccG], NGi ).
 
 dc_process([composite_event([], happens(CE,Start,End)) | Rs], AccRi, NRi, AccG, NGi):- !, 
 	current_time(T),
@@ -2814,7 +3187,13 @@ dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
 	dc_process(Rs, [Rule |AccRi], NRi, AccG, NGi).
 
 dc_process([R|Rs],AccRi, NRi, AccG, NGi) :- member_chk_variant(R,AccRi), !, dc_process(Rs,AccRi, NRi, AccG, NGi).
-
+dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):- 
+	Rule=..[F,[E | Ls], C],
+	real_time_literal(E,TransformedE),
+	!,
+	append(TransformedE,Ls,Antecedent),
+	NewRule=..[F,Antecedent,C],
+	dc_process([NewRule | Rs], AccRi, NRi, AccG, NGi).
 dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):- 
 	Rule=..[F,[E | Ls], C],
 	( mustBeProcessedNow(E) -> ItMust=true; ItMust=false),
@@ -2841,7 +3220,7 @@ lpsClause(happens(X, Y, Z), Body) :- !, happens(X, Y, Z), Body=[].
 lpsClause(holds(not(X),T),Body) :- !, current_time(T), (is_list(X) -> Xs=X ; Xs=[holds(X,T)]), \+ evaluate(Xs), Body=[].
 lpsClause(holds(findall(X,G,L),T),Body) :- !, current_time(T), findall(X,evaluate(G),L), Body=[].
 lpsClause(holds(P,T),[]) :- external_predicate_for_lps(P), !, current_time(T), callprolog(P).
-lpsClause(holds(X, Y), Body) :-  l_int(holds(X, Y), Body).
+lpsClause(holds(X, T), Body) :-  l_int(holds(X, T), Body), may_bind_time(T,Body) .
 lpsClause(holds(X, Y), Body) :- !, current_time(Y), state(X), Body=[].
 lpsClause(tc(P), []) :- !, callprolog(P).
 lpsClause(P, []) :- \+l_timeless(P,_), !, callprolog(P).
@@ -2858,11 +3237,21 @@ dc_query(holds(_P, T)) :-
 dc_query(holds(P,T)) :- P\= findall(_,_,_), external_predicate_for_lps(P), !, (var(T)->get_real_now(T);true), callprolog(P).
 dc_query(holds(P, T)) :- 
 	\+ l_int(holds(P, _), _),
-	get_real_now(RealNow),
-	Next is RealNow+1,
+	get_real_now(RealNow), Next is RealNow+1,
 	% ( nonvar(T), T\== RealNow, throw(bad_dc_query(holds(P, T),Now,RealNow)) ; true),
 	dc_query_evaluate(P,T,RealNow,Next).
-dc_query(holds(P, Now)) :- !, l_int(holds(P, Now), B), holds_all(B).
+dc_query(holds(P, T)) :- !, 
+	l_int(holds(P, T), B), 
+	/*
+	(a_literal(B,holds(_,_)) -> true ; % otherwise we need to bind time:
+		get_real_now(RealNow), Next is RealNow+1,
+		( option(non_prospective) -> T=RealNow ;
+			% let no choicepoints behind if we can:
+			( T==RealNow -> true  ; (T=RealNow ; T=Next) )
+		)
+	),
+	Doing it instead in resolveUntilAction */
+	holds_all(B).
 % can't do, would require keeping past events and fluent states: dc_query(happens(P, X, Y)) :- l_events(happens(P, X, Y),B), holds_all(B).
 dc_query(happens(P, X, Y)) :- !, happens(P, X, Y).
 dc_query(P) :-
@@ -2879,5 +3268,10 @@ dc_query_evaluate(P,T,RealNow,Next) :-
 		( T==RealNow -> state(P)  ; (T=RealNow, state(P) ; T=Next, next_state(P)) )
 	).
 
+% Used to bind time on matching intensional fluent clauses in antecedents
+may_bind_time(_Time,Body) :- a_literal(Body,holds(_,_)), !.
+may_bind_time(T,_) :- current_time(T).
+
+	
 member_chk_variant(X,[XX|_]) :- variant(X,XX), !.
 member_chk_variant(X,[_|L]) :- member_chk_variant(X,L).

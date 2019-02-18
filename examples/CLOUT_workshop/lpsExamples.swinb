@@ -99,7 +99,21 @@ declarative display rules one can specify a full 2D world animation of the LPS e
 The rules map LPS literals into HTML5 Canvas objects, powered by [paperjs](http://paperjs.org) 
     - A 2d world visualisation example: [burning.pl](example/burning.pl); another: ["dad switching lights off"](example/badlight.pl).
     - How to [write display specifications](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/swish/2dWord.md?at=master&fileviewer=file-view-default).
-		
+
+- *Ballot*
+
+LPS version of an Ethereum Solidity example.
+	- [Ballot](example/ballot.pl).	
+
+- *Insulin*
+
+This example illustrates a simple alternative to the value-based argumentation proposed in Bench-Capon, 
+Persuasion in practical argument using value-based argumentation
+frameworks [Journal of Logic and Computation, 13(3):429–448, 2003](https://academic.oup.com/logcom/article-pdf/13/3/429/4241286/130429.pdf). In this representation, different values are represented by different or additional goals and constraints.
+All goals and constraints must be satisfied, without argument.
+	- [Needs insulin](example/use_insulin.pl)
+
+	
 </div>
 
 </div>
