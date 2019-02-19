@@ -1,7 +1,6 @@
-# If you can't find a SWISH release later then the one below,
-# Build one with https://github.com/SWI-Prolog/docker-swish , 
-# using the SWISH_SHA1 below
-#	docker build -t swish-valentine2019 .
+# Build a SWISH image, using the SWISH_SHA1 below. This is a simple variation of
+# https://github.com/SWI-Prolog/docker-swish
+#	docker build -t swish-valentine2019 -f Dockerfile-SWISH-valentine2019 .
 ################
 # If the version below is unavailable, probably use 'latest':
 FROM swipl:8.1.1 as base

@@ -1,6 +1,9 @@
 # Build a LPS server image based on the latest SWISH/SWI-Prolog with
 # 	docker build -t lps.swi .
-# Inspired by https://hub.docker.com/r/dimitriirtimid/lps-swish/dockerfile
+# Grabed some recipes from https://hub.docker.com/r/dimitriirtimid/lps-swish/dockerfile
+# Execute with
+#	docker run -p 3051:3050 -v /Users/mc/git/logicalcontracts/swish/docker/tempData:/data lps.swi
+#
 FROM swish-valentine2019
 LABEL maintainer = "mc@logicalcontracts.com"
 
