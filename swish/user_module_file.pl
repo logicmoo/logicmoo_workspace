@@ -10,15 +10,16 @@
 % sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
 % sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 % can not print output as usual, would interfere with http responses; uncomment the following for a log:
+
 /*
 :- open('mylog.txt',write,S), assert(mylogFile(S)).
 mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
 % :- asserta((prolog:message(A,B,C) :-  mylog(message-A), fail)).
 sandbox:safe_primitive(user:mylog(_M)). 
 */
-% :- use_module(library(http/http_log)). % uncomment to produce httpd.log
 :- use_module(library(settings)).
-% :- set_setting_default(http:logfile, 'data/httpd.log'). % swish's writable sub directory
+%:- use_module(library(http/http_log)). % uncomment to produce httpd.log
+%:- set_setting_default(http:logfile, 'data/httpd.log'). % swish's writable sub directory
 
 :- multifile swish_config:config/2.
 swish_config:config(show_beware,true).
@@ -79,14 +80,9 @@ to the server, so their IPs would have to be allowed. I guess full authenticatio
 :- initialization(( gethostname(H), tcp_host_to_address(H,ip(A,B,C,D)), format(atom(IP),'~w.~w.~w.~w',[A,B,C,D]), set_setting(pengines:allow_from, ['127.0.0.1',IP]))) .
 */
 
-% Obtain the current user behind the HTTP request 
-:- use_module(library(http/http_wrapper)).
-transaction_lps_user(User,Email) :- 
-	http_current_request(Request), authenticate(Request,Identity),
-	(user_property(Identity,identity(User))->true;User=unknown_user), 
-	(user_property(Identity,email(Email))->true;Email=unknown_email).
-
-sandbox:safe_primitive(user:transaction_lps_user(_,_)). 
+% We'll fill this information at the beginning of each web request; can't use a thread_local fact because 
+% SWISH uses more than one thread handling the HTTP request; so we just store it in user, the SWISH transient module
+:- dynamic transaction_lps_user/2. % User unique id, e.g. Google's sub; and email
 
 % Access the user authenticated in the current web request
 lps_user(User) :- lps_user(User,_).
@@ -94,13 +90,30 @@ lps_user(User) :- lps_user(User,_).
 lps_user(User,Email) :- transaction_lps_user(User,Email), !.
 lps_user(unknown_user,unknown_email).
 
-/* No longer active, as this kind of asserts is forbidden in SWI Prolog 8.x. 
-So BEWARE that local accounts have super powers! Meaning, those authenticated via ***auth_http***
+% hack SWISH's http authentication hook in lib/authenticate.pl to maintain the above:
+:- dynamic(pengines:authentication_hook/3). % Needed for SWI Prolog 8.x
+:- asserta((pengines:authentication_hook(Request, _Application, User) :- !,
+    authenticate(Request, User), update_user(Request,User))).
+%TODO: try instead http_current_request(Request) ??
+
+update_user(Request,_User) :- 
+	retractall(transaction_lps_user(_,_)), % hacky retract, good for all clauses...
+	catch( (current_user_info(Request, Info), assert(transaction_lps_user(Info.sub,Info.email))), _Ex, fail), 
+	!.
+% the above clause may be dumb (or not...) because perhaps the following suffices... TODO: clean up this.
+update_user(_Request,User) :- 
+		catch(user_property(User,email(Email)),_,fail),
+		!,
+		assert(transaction_lps_user(User.identity,Email)).   % local (e.g. HTTP-authenticated) account
+update_user(_Request,_User) :- 
+	assert(transaction_lps_user(unknown_user,unknown_email)).
+
 % patch SWISH so that "local" (HTTP authenticated users) are kept sandboxed:
+:- dynamic(swish_pep:approve/2). % Needed for SWI Prolog 8.x. 
 :- asserta((
 	swish_pep:approve(run(any, _), Auth) :- user_property(Auth, login(local)), !, fail
 	)).
-*/
+
 
 :- multifile prolog_colour:term_colours/2, prolog_colour:goal_colours/2.
 % Wire our colouring logic into SWI's:

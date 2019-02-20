@@ -1,6 +1,6 @@
 # Build a SWISH image, using the SWISH_SHA1 below. This is a simple variation of
 # https://github.com/SWI-Prolog/docker-swish
-#	docker build -t swish-valentine2019 -f Dockerfile-SWISH-valentine2019 .
+#	docker build -t logicalcontracts/swish-valentine2019 -f Dockerfile-SWISH-valentine2019 .
 ################
 # If the version below is unavailable, probably use 'latest':
 FROM swipl:8.1.1 as base
@@ -22,6 +22,7 @@ ENV SWISH_HOME /home/swish
 ENV SWISH_SHA1 e3551c7f5bc6e0619ab16307e7c9bc06e2cc43e8
 
 RUN echo "At version ${SWISH_SHA1}"
+# Using a unique SWISH_SHA1 is also good to deal with Docker caching
 RUN (cd /home && git clone https://github.com/SWI-Prolog/swish.git) && \
     (cd ${SWISH_HOME} && git checkout -q ${SWISH_SHA1})
 RUN make -C ${SWISH_HOME} RJS="nodejs /usr/lib/nodejs/requirejs/r.js" \
