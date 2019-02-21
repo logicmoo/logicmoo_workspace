@@ -55,7 +55,9 @@ pengines:prepare_module(_Module, swish, _Options) :-
 :- use_module('../utils/psyntax.P',[
 	syntax2p/4,dumploaded/1,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
 	]).
-
+% This will be useful below, as file searching handling of relative paths differs from what's used
+% by use_module and friends.
+user:file_search_path(lps_engine_dir,D) :- interpreter:lps_engine_directory(D).
 
 sandbox:safe_primitive(interpreter:go(_File,Options)) :- \+ member(cycle_hook(_,_,_),Options).
 sandbox:safe_primitive(interpreter:go). 
@@ -156,8 +158,8 @@ go :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[sw
 gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
 	
 :- multifile user:file_search_path/2.
-user:file_search_path(profile, '../swish/profiles').
-user:file_search_path(lps_resources, '../swish/web').
+user:file_search_path(profile, lps_engine_dir('../swish/profiles')).
+user:file_search_path(lps_resources, lps_engine_dir('../swish/web')).
 
 % PATCH to swish to avoid duplicate example and help menu and profile entries on Linux
 % list_without_duplicates(+L,-NL) 
