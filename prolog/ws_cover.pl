@@ -45,7 +45,7 @@
 ws_browser:provides_method(gcover).
 
 :- table
-       source_file/1,
+       cov_source_file/1,
        source_file_line/4.
 
 ws_browser:fetch_files_properties_hook(gcover, [ccov, clss, lcov, lits], FileMG) :-
@@ -56,11 +56,11 @@ ws_browser:fetch_files_properties_hook(gcover, [ccov, clss, lcov, lits], FileMG)
     sort(FileMU, FileML),
     group_pairs_by_key(FileML, FileMG).
 
-source_file(File) :-
+cov_source_file(File) :-
     distinct(File, covered_db(File, _, _, _, _, _)).
 
 cache_file_lines :-
-    findall(File, source_file(File), FileL),
+    findall(File, cov_source_file(File), FileL),
     length(FileL, N),
     forall(nth1(I, FileL, File),
            ( format(user_error, "Caching ~w of ~w files\r", [I, N]),

@@ -78,8 +78,9 @@ dec_location(Head1/0, Declaration, From) :-
     normalize_head(Head1, M:Head),
     extra_location(Head, M, Declaration, From).
 dec_location(M:Head1, Declaration, From) :-
-    normalize_head(M:Head1, M:Head),
-    extra_location(Head, M, Declaration, From).
+    normalize_head(M:Head1, MHead),
+    strip_module(MHead, N, Head),
+    extra_location(Head, N, Declaration, From).
 
 clause_from(Ref, clause(Ref)).
 
@@ -130,7 +131,8 @@ all_call_refs(Prop, Goal, IM, CM, CM:Fact) :-
     database_fact(Prop, IM:Goal, Fact).
 
 record_location_callable(MGoal, CM, Type, Call, _, From) :-
-    normalize_head(MGoal, M:Head),
+    normalize_head(MGoal, MHead),
+    strip_module(MHead, M, Head),
     ground(M),
     callable(Head),
     compact_goal(Call, Comp),

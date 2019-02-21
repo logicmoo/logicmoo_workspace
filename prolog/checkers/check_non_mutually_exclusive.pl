@@ -48,6 +48,10 @@
     mutually_exclusive_predicate/2,
     mutually_exclusive_predicate_key/3.
 
+mutually_exclusive_predicate(MH) :-
+    strip_module(MH, M, H),
+    mutually_exclusive_predicate(H, M).
+
 mutually_exclusive_predicate(check(_, _, _), checker).
 mutually_exclusive_predicate_key(check(K, _, _), checker, K).
 
@@ -60,9 +64,9 @@ checker:check(non_mutually_exclusive, Result, Options1) :-
     findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
 
 check_non_mutually_exclusive(FromChk, Ref, warning-(Ref-LocIdx)) :-
-    normalize_head(Ref, M:H),
-    mutually_exclusive_predicate(H, M),
-    collect_non_mutually_exclusive(FromChk, M:H, LocIdxL),
+    normalize_head(Ref, MH),
+    mutually_exclusive_predicate(MH),
+    collect_non_mutually_exclusive(FromChk, MH, LocIdxL),
     member(LocIdx, LocIdxL).
 
 cleanup_redundant_groups([], _, []).
