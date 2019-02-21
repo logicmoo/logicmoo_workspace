@@ -49,7 +49,8 @@ swish_config:config(include_alias,	system).
 :- multifile pengines:prepare_module/3.
 pengines:prepare_module(_Module, swish, _Options) :- 
 	style_check(-discontiguous), style_check(-singleton).
-	
+
+% If you consider refactoring this out to somewhere else: somehow these must be after use_module('../../swish/swish'):
 :- use_module('../utils/visualizer.P'). % this loads LPS
 :- use_module('../utils/psyntax.P',[
 	syntax2p/4,dumploaded/1,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
