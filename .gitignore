@@ -4,9 +4,9 @@
 *.lps_.P
 swish/resources/lps/bower_components
 swish/web/lps/bower_components
-swish/data/storage
 googleAnalyticsKey
 *.pl_.P
 swish/docker/tempData
 swish/data
 passwd
+engine/logs
