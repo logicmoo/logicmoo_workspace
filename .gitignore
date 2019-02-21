@@ -8,3 +8,5 @@ swish/data/storage
 googleAnalyticsKey
 *.pl_.P
 swish/docker/tempData
+swish/data
+passwd
