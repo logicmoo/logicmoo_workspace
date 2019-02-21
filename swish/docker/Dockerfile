@@ -14,11 +14,12 @@ ENV SHELL /bin/bash
 ENV LPS_DIR /home/lps_corner
 ARG LPS_SHA1
 ENV MY_USER lpspersona
+ENV SWISH_DATA /data
 
 # Create user
 RUN useradd -m -s /bin/bash $MY_USER
 
-WORKDIR /home
+# WORKDIR /home
 RUN git clone https://bitbucket.org/lpsmasters/lps_corner $LPS_DIR && \
 	cd ${LPS_DIR} && git checkout -q ${LPS_SHA1} && chown -R $MY_USER $LPS_DIR
 #RUN chown -R $MY_USER $LPS_DIR
@@ -31,5 +32,6 @@ WORKDIR $LPS_DIR/swish/web/lps
 RUN bower install vis paper
 
 # Configure container startup
-WORKDIR $LPS_DIR/swish
-ENTRYPOINT /usr/bin/swipl user_module_file.pl ../../swish/daemon.pl --no-fork --port=3050 --user=$MY_USER --workers=16
+WORKDIR ${SWISH_DATA}
+# WORKDIR $LPS_DIR/swish
+ENTRYPOINT /usr/bin/swipl $LPS_DIR/swish/user_module_file.pl ../../swish/daemon.pl --no-fork --port=3050 --user=$MY_USER --workers=16
