@@ -334,7 +334,7 @@ lps_welcome_message :-
 
 % Git log hash "version"
 get_git_version(V) :- git_version_cache(V) , !.
-get_git_version(V) :- lps_engine_directory(D), git_describe(V,[directory(D)]), !, assert(git_version_cache(V)).
+get_git_version(V) :- lps_engine_directory(D), git_hash(V,[]), !, assert(git_version_cache(V)).
 get_git_version(V) :- V='???', assert(git_version_cache(V)).
 
 % Higher level engine version
