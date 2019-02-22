@@ -82,11 +82,11 @@ all_unsat(M:ConceptEx,Exps):-
 all_unsat(M:_,Exps):-
   empty_expl(M,Exps).
 
-all_inconsistent_theory(M:Print,Exps):-
+all_inconsistent_theory(M:Exps):-
   assert(M:keep_env),
-  inconsistent_theory(M:Print,Exps),!.
+  inconsistent_theory(M:Exps),!.
 
-all_inconsistent_theory(M:_,Exps):-
+all_inconsistent_theory(M:Exps):-
   empty_expl(M,Exps).
 
 

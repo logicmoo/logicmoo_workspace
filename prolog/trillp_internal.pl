@@ -78,10 +78,10 @@ all_unsat(M:ConceptEx,Exps):-
 all_unsat(_:_,Exps):-
   empty_expl(_,Exps).
 
-all_inconsistent_theory(M:Print,Exps):-
-  inconsistent_theory(M:Print,Exps),!.
+all_inconsistent_theory(M:Exps):-
+  inconsistent_theory(M:Exps),!.
 
-all_inconsistent_theory(_:_,Exps):-
+all_inconsistent_theory(_:Exps):-
   empty_expl(_,Exps).
 
 

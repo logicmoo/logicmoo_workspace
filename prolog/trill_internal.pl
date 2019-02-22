@@ -50,8 +50,8 @@ all_unsat(M:ConceptEx,Exps):-
   findall(Expl,unsat_internal(M:ConceptEx,Expl),Exps).
 
 
-all_inconsistent_theory(M:Print,Exps):-
-  findall(Expl,inconsistent_theory(M:Print,Expl),Exps).
+all_inconsistent_theory(M:Exps):-
+  findall(Expl,inconsistent_theory(M:Expl),Exps).
 
 
 compute_prob_and_close(M,Exps,Prob):-

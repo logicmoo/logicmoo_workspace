@@ -20,7 +20,7 @@ details.
                  instanceOf/2, instanceOf/3, prob_instanceOf/3,
                  property_value/3, property_value/4, prob_property_value/4,
                  unsat/1, unsat/2, prob_unsat/2,
-                 inconsistent_theory/1, inconsistent_theory/2, prob_inconsistent_theory/2,
+                 inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
 
@@ -37,8 +37,7 @@ details.
 :- meta_predicate unsat(:,-).
 :- meta_predicate prob_unsat(:,-).
 :- meta_predicate inconsistent_theory(:).
-:- meta_predicate inconsistent_theory(:,-).
-:- meta_predicate prob_inconsistent_theory(:,-).
+:- meta_predicate prob_inconsistent_theory(:).
 :- meta_predicate axiom(:).
 :- meta_predicate add_kb_prefix(:,+).
 :- meta_predicate add_kb_prefixes(:).
@@ -413,14 +412,11 @@ unsat_internal(M:Concept):-
 % ----------- %
 
 /**
- * inconsistent_theory(:Print:boolean,-Expl:list)
+ * inconsistent_theory(:Expl:list)
  *
  * This predicate returns one explanation for the inconsistency of the loaded knowledge base.
- * The returning explanation is a set of axioms.
- * If the knowledge base is consistent, if Print is true the predicate prints a message and succeeds 
- * returning an empty explanation, if Print is false it fails.
  */
-inconsistent_theory(M:Print,Expl):-
+inconsistent_theory(M:Expl):-
   set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
@@ -428,27 +424,17 @@ inconsistent_theory(M:Print,Expl):-
   build_abox(M,(ABox,Tabs)),
   % Without prior search of clashes in order to find all the possible clashes after expansion
   findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
-  ( (find_expls(M,L,['inconsistent','kb'],Expl1),
-     check_and_close(M,Expl1,Expl)
-    ) *->
-      true
-    ;
-      ( (Print == true) ->
-          ( print_message(warning,consistent),empty_expl(M,Expl),! )
-        ;
-          false
-      )
-  ).
+  find_expls(M,L,['inconsistent','kb'],Expl1),
+  check_and_close(M,Expl1,Expl).
 
 
 /**
- * inconsistent_theory(:Print:boolean)
+ * inconsistent_theory
  *
- * This predicate returns true if the loaded knowledge base is inconsistent, otherwise
- * when the knowledge base is consistent, if Print is true the predicate prints a message and succeeds,
- * if Print is false it fails.
+ * This predicate returns true if the loaded knowledge base is inconsistent, otherwise it fails.
  */
-inconsistent_theory(M:Print):-
+inconsistent_theory:-
+  get_trill_current_module(M),
   set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
@@ -457,15 +443,7 @@ inconsistent_theory(M:Print):-
   ( (clash(M,(ABox,Tabs),_),!) -> true
     ;
       (apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),!,
-       ( (clash(M,(ABox1,Tabs1),_),!) -> true
-         ;
-           ( (Print == true) ->
-               ( print_message(warning,consistent),! )
-             ;
-               false
-           )
-       )
-      )
+       clash(M,(ABox1,Tabs1),_),!)
   ).
 
 /**
@@ -528,22 +506,13 @@ prob_unsat(M:Concept,Prob):-
   ).
 
 /**
- * prob_inconsistent_theory(:Print:boolean,--Prob:double) is det
+ * prob_inconsistent_theory(:Prob:double) is det
  *
- * If the knowledge base is inconsistent, this predicate returns the probability of the inconsistency,
- * otherwise, if print is true the predicate prints a message and succeeds returning 0.0 as probability,
- * if print is false it fails.
+ * If the knowledge base is inconsistent, this predicate returns the probability of the inconsistency.
  */
-prob_inconsistent_theory(M:Print,Prob):-
-  all_inconsistent_theory(M:false,Exps),
-  ( dif(Exps,[]) -> compute_prob_and_close(M,Exps,Prob)
-    ;
-      ( (Print == true) ->
-          ( print_message(warning,consistent),Prob = 0.0,! )
-        ;
-          false
-      )
-  ).
+prob_inconsistent_theory(M:Prob):-
+  all_inconsistent_theory(M:Exps),
+  compute_prob_and_close(M,Exps,Prob).
 
 /***********
   Utilities for queries
@@ -658,9 +627,31 @@ clash(M,(ABox,_),Expl):-
   %write('clash 6'),nl,
   findClassAssertion4OWLNothing(M,ABox,Expl).
 
+clash(M,(ABox,_),Expl):-
+  %write('clash 7'),nl,
+  M:disjointClasses(L), % TODO use hierarchy
+  member(C1,L),
+  member(C2,L),
+  dif(C1,C2),
+  findClassAssertion(C1,Ind,Expl1,ABox),
+  findClassAssertion(C2,Ind,Expl2,ABox),
+  and_f(M,Expl1,Expl2,ExplT),
+  and_f_ax(M,disjointClasses(L),ExplT,Expl).
+
+clash(M,(ABox,_),Expl):-
+  %write('clash 8'),nl,
+  M:disjointUnion(Class,L), % TODO use hierarchy
+  member(C1,L),
+  member(C2,L),
+  dif(C1,C2),
+  findClassAssertion(C1,Ind,Expl1,ABox),
+  findClassAssertion(C2,Ind,Expl2,ABox),
+  and_f(M,Expl1,Expl2,ExplT),
+  and_f_ax(M,disjointUnion(Class,L),ExplT,Expl).
+
 /*
 clash(M,(ABox,Tabs),Expl):-
-  %write('clash 7'),nl,
+  %write('clash 9'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
   s_neighbours(M,Ind,S,(ABox,Tabs),SN),
   individual_class_C(SN,C,ABox,SNC),
@@ -669,9 +660,8 @@ clash(M,(ABox,Tabs),Expl):-
   make_expl(Ind,S,SNC,Expl1,ABox,Expl2),
   flatten(Expl2,Expl3),
   list_to_set(Expl3,Expl).
-
 clash(M,(ABox,Tabs),Expl):-
-  %write('clash 8'),nl,
+  %write('clash 10'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
   s_neighbours(M,Ind,S,(ABox,Tabs),SN),
   length(SN,LSS),
