@@ -2,14 +2,14 @@
 The following applies to Linux Ubuntu, and is a collage of specific instructions for each part for convenience as of March 2017; refer to the original URLs below for more details and updates.
 
 ## Quicker path, with Docker ##
-The simplest way to install LPS on SWISH as a Docker container. Make sure you have [Docker](https://docs.docker.com/install/) installed in your system, create two empty directories and then simply (for Mac and Linux):
+The simplest way to install LPS on SWISH is using a Docker container. Make sure you have [Docker](https://docs.docker.com/install/) installed in your system, create two empty writeable directories, MyData and MyLogs, and then simply (for Mac and Linux):
 
     docker run -p 3051:3050 \
     -v /MyData:/data \
     -v /MyLogs:/home/lps/engine/logs \
     logicalcontracts/lps.swi
     
-The above starts up a SWISH server with LPS at port 3051 on your system; to use just take your browser to ```http://localhost:3051```. MyData and MyLogs are the paths for some two writable directories.
+The above starts up a SWISH server with LPS at port 3051 on your system; to use it just take your browser to ```http://localhost:3051```. 
 
 For more details please see the [dockerfile](https://bitbucket.org/lpsmasters/lps_corner/src/master/swish/docker/Dockerfile).
 

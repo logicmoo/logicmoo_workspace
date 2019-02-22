@@ -1,7 +1,34 @@
 # Logic Production Systems (LPS)#
-Welcome to "LPS Corner", a repository to support the open source development of LPS engines, examples and related tools. Most of the current version is contributed by LogicalContracts from the open source component of its [Logical Contracts Server](http://logicalcontracts.com/server/) product.
+Welcome to "LPS Corner", a public repository for open source development of LPS engines, examples and related tools. In additional to several experimental engines at [Imperial College](http://lps.doc.ic.ac.uk), there are currently two maintained implementations:
 
-## Latest version: D-Day, 2018 ##
+* **lps.swi**, based on SWI-Prolog+[SWISH](https://swish.swi-prolog.org), running on Linux containers, maintained in this repository
+* **lps.js**, based on JavaScript, running on browsers or Node.js, at [lps.js.org](https://lps.js.org)
+
+The two engines execute slightly different LPS language versions; thanks to an ongoing academic project, over Spring 2019 lps.swi is expected to "cross-compile" LPS for lps.js.
+
+[Logical Contracts Server](http://logicalcontracts.com/server/), maintained elsewhere, is a proprietary extension to lps.swi.
+
+## Quick Start##
+The simplest way to try LPS is to use a public engine instance rightaway:
+
+[http://demo.logicalcontracts.com](http://demo.logicalcontracts.com)
+
+Use the last items of its Examples menu, e.g. [First Steps with LPS](http://demo.logicalcontracts.com/example/FirstStepswithLPS.swinb). 
+
+The second easiest way is to use Docker::
+
+    docker run -p 3051:3050 \
+    -v /MyData:/data \
+    -v /MyLogs:/home/lps/engine/logs \
+    logicalcontracts/lps.swi
+    
+The above starts up a SWISH server with LPS at port 3051 on your system; to use it just take your browser to ```http://localhost:3051```. Make sure you have [Docker](https://docs.docker.com/install/) installed in your system. MyData and MyLogs should be two empty writeable directories. 
+For more details please see [INSTALL_server](https://bitbucket.org/lpsmasters/lps_corner/src/master/swish/INSTALL_server.md).
+
+
+## Latest version ##
+
+## Previous version: D-Day, 2018 ##
 * Bug fixes
 * Legal contract examples
 
