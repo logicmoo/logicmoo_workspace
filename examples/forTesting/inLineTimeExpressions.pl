@@ -1,4 +1,4 @@
-maxTime(5).
+maxTime(8).
 actions a(_).
 
 fluents f1, f2.
