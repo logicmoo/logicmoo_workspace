@@ -1,4 +1,4 @@
-maxTime(8).
+maxTime(10).
 actions row(_,_), transport(_,_,__).
 fluents loc(_, _).
 
@@ -12,7 +12,7 @@ loc(farmer, south).
 % locations are north and south margins
 
 % all things on the south margin, except the farmer, must move to the north margin
-if   loc(Object, south) at 1,	Object \= farmer
+if   loc(Object, south),	Object \= farmer
 then   makeLoc(Object, north) from T2 to T3.
 
 % to move an object to a location, except for the farmer, first move the farmer to the other location, then ...
