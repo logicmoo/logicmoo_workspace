@@ -1818,10 +1818,13 @@ close_test_file(F,Outcome) :- option(make_test), \+ option(swish),  !,
 	(Outcome==failure -> uassert(lps_test_result_item(end,-1,failure)); true),
 	test_filename(F,TF),
 	write_test_file_(F,TF).
-close_test_file(F,_Outcome) :- option(run_test), !,  
+close_test_file(F,Outcome) :- option(run_test), !,  
 	test_filename(F,TF),
 	nl,
-	% (Outcome == failure -> uassert(lps_failed_test(end,program_failure)) ; true),
+	% has the program erroneously failed or succeeded?
+	((Outcome == failure, \+ lps_test_result_item(end,-1,failure) ; Outcome == success, lps_test_result_item(end,-1,failure) ) -> 
+		uassert(lps_failed_test(end,program_failure)) 
+		; true),
 	( \+ lps_failed_test(_,_) -> Result=' (ok)'; Result=' (FAILED)'),
 	write('*** Tests ended with '), write(TF), write(Result), writeln(' ****').
 close_test_file(_F,_).

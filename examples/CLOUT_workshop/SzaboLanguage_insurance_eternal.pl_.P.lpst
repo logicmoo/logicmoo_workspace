@@ -1,7 +1,7 @@
 /*
-  LPS test results file generated on 2019-1-28 at 20:39:54
-  on Prolog swi(7,7,19,[]) for program file:
-  /Users/mc/git/logicalcontracts/examples/CLOUT_workshop/SzaboLanguage_insurance_eternal.pl_.P
+  LPS test results file generated on 2019-2-25 at 12:22:7
+  on Prolog swi(8,1,1,[]) for program file:
+  /Users/mc/git/lps_corner/examples/CLOUT_workshop/SzaboLanguage_insurance_eternal.pl_.P
 */
 
 :-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
@@ -421,78 +421,9 @@ lps_test_result(events,204,0).
 lps_test_result(fluents,204,0).
 lps_test_result(events,205,0).
 lps_test_result(fluents,205,0).
-lps_test_result(events,206,0).
-lps_test_result(fluents,206,0).
-lps_test_result(events,207,0).
-lps_test_result(fluents,207,0).
-lps_test_result(events,208,0).
-lps_test_result(fluents,208,0).
-lps_test_result(events,209,0).
-lps_test_result(fluents,209,0).
-lps_test_result(events,210,0).
-lps_test_result(fluents,210,0).
-lps_test_result(events,211,0).
-lps_test_result(fluents,211,0).
-lps_test_result(events,212,0).
-lps_test_result(fluents,212,0).
-lps_test_result(events,213,0).
-lps_test_result(fluents,213,0).
-lps_test_result(events,214,0).
-lps_test_result(fluents,214,0).
-lps_test_result(events,215,0).
-lps_test_result(fluents,215,0).
-lps_test_result(events,216,0).
-lps_test_result(fluents,216,0).
-lps_test_result(events,217,0).
-lps_test_result(fluents,217,0).
-lps_test_result(events,218,0).
-lps_test_result(fluents,218,0).
-lps_test_result(events,219,0).
-lps_test_result(fluents,219,0).
-lps_test_result(events,220,0).
-lps_test_result(fluents,220,0).
-lps_test_result(events,221,0).
-lps_test_result(fluents,221,0).
-lps_test_result(events,222,0).
-lps_test_result(fluents,222,0).
-lps_test_result(events,223,0).
-lps_test_result(fluents,223,0).
-lps_test_result(events,224,0).
-lps_test_result(fluents,224,0).
-lps_test_result(events,225,0).
-lps_test_result(fluents,225,0).
-lps_test_result(events,226,0).
-lps_test_result(fluents,226,0).
-lps_test_result(events,227,0).
-lps_test_result(fluents,227,0).
-lps_test_result(events,228,0).
-lps_test_result(fluents,228,0).
-lps_test_result(events,229,0).
-lps_test_result(fluents,229,0).
-lps_test_result(events,230,0).
-lps_test_result(fluents,230,0).
-lps_test_result(events,231,0).
-lps_test_result(fluents,231,0).
-lps_test_result(events,232,0).
-lps_test_result(fluents,232,0).
-lps_test_result(events,233,0).
-lps_test_result(fluents,233,0).
-lps_test_result(events,234,0).
-lps_test_result(fluents,234,0).
-lps_test_result(events,235,0).
-lps_test_result(fluents,235,0).
-lps_test_result(events,236,0).
-lps_test_result(fluents,236,0).
-lps_test_result(events,237,0).
-lps_test_result(fluents,237,0).
-lps_test_result(events,238,0).
-lps_test_result(fluents,238,0).
-lps_test_result(events,239,0).
-lps_test_result(fluents,239,0).
-lps_test_result(events,240,0).
-lps_test_result(fluents,240,0).
 % lps_test_result_item(Stage,Cycle,TestTerm)
 lps_test_result_item(events,40,pledge(allGoods(counterparty),"Some key to all Counterparty goods")).
 lps_test_result_item(events,40,counterParty to getTitle(usd(600))).
 lps_test_result_item(events,112,choiceOf("TractoR'Us")).
+lps_test_result_item(end,-1,failure).
 % lps_test_action_ancestor(Call,T1,T2)
