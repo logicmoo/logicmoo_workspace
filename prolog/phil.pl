@@ -37,6 +37,8 @@ using gradient descent and Backpropagation
   write2/2,write3/2,format2/3,format3/3,
   write_rules2/3,write_rules3/3,
   %writefile/2,
+  writeClauseOutput/1,
+  writeClause/2,
   nl2/1,nl3/1,
  % forward/3,backward/4,write_net/3,write_eval_net/3,update_weights/3,update_weights_Adam/6,
   onec/1,zeroc/1,andc/3,ac_notc/2,
@@ -82,7 +84,7 @@ using gradient descent and Backpropagation
 
 
 
-    % Default setting for generating the AC circuits and the predicate test(..)
+   % Default setting for generating the AC circuits and the predicate test(..)
 default_setting_sc(group,1). % use in the predicate derive_circuit_groupatoms (..)
 default_setting_sc(megaex_bottom,1).  % Necessary for the predicate test(..)
 default_setting_sc(initial_clauses_per_megaex,1).
@@ -384,6 +386,29 @@ induce_parameters(M:Folds,DB,R):-
     true
   ).
 
+
+%!	writeClause
+% Write the list List (of terms) in the file FileName
+%
+
+writeClause(List,FileName):-
+  open(FileName,write, Stream),
+  copy_term(List,ListCopy),
+  numbervars((ListCopy,_ListVar),0,_V), 
+  writeClause1(Stream,ListCopy),
+  close(Stream).
+
+
+writeClauseOutput(List):-
+  copy_term(List,ListCopy),
+  numbervars((ListCopy,_ListVar),0,_V), 
+  writeClause1(user_output,ListCopy).
+
+writeClause1(_,[]).
+writeClause1(Stream,[HeadList|RestList]):-
+  write(Stream,HeadList),
+  writeln(Stream,"."),
+  writeClause1(Stream,RestList).
 
  
 /**
