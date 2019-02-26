@@ -34,8 +34,8 @@
 
 :- module(checker,
           [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
-           checkeach/2, check_results/2, check_results/3, report_list/2,
-           full_report/1, simple_report/1, available_checker/1]).
+           checkeach/2, check_results/2, check_results/3, available_checker/1,
+           head_report/1, body_report/1, body_report/2, full_report/1]).
 
 :- use_module(library(atomics_atom)).
 :- use_module(library(thread)).
@@ -115,41 +115,40 @@ with_prolog_flag(Flag, Value, Goal) :-
         Goal,
         set_prolog_flag(Flag, Old)).
 
-full_report(Checker-Pairs) :-
-    ( Pairs == []
-    ->true
-    ; print_message(warning, acheck(Checker)),
-      simple_report(Checker-Pairs)
+head_report(Checker-Pairs) :-
+    ( Pairs \= []
+    ->print_message(warning, acheck(Checker))
+    ; true
     ).
 
-simple_report(Checker-Pairs) :-
+full_report(CheckerPairs) :-
+    head_report(CheckerPairs),
+    body_report(CheckerPairs).
+
+body_report(CheckerPairs) :-
+    body_report(CheckerPairs, report_record_message).
+
+:- meta_predicate body_report(+, 3).
+
+body_report(Checker-Pairs, Printer) :-
     ( prepare_results(Checker, Pairs, Prepared)
     ->true
     ; Prepared = Pairs
     ),
     group_pairs_or_sort(Prepared, Results),
-    maplist(report_analysis_results(Checker), Results).
-
-report_analysis_results(Checker, Type-ResultL) :-
-    maplist(report_record_message(Checker, Type), ResultL).
+    maplist(report_analysis_results(Checker, Printer), Results).
+    
+report_analysis_results(Checker, Printer, Type-ResultL) :-
+    maplist(call(Printer, Checker, Type), ResultL).
 
 report_record_message(Checker, Type, Result) :-
-    print_check_message(Type, acheck(Checker, Result)).
-
-print_check_message(Type, Message) :-
-    \+ ( copy_term_nat(Message, Term),
+    \+ ( copy_term_nat(acheck(Checker, Result), Term),
          numbervars(Term, 0, _,
                     [ singletons(true)
                     ]),
          print_message(Type, Term),
          fail
        ).
-
-:- meta_predicate report_list(?,1).
-report_list(Pairs, PrintMethod) :-
-    keysort(Pairs, Sorted),
-    group_pairs_by_key(Sorted, Results),
-    maplist(PrintMethod, Results).
 
 check_results(Checker, Result) :-
     check_results(Checker, Result, []).

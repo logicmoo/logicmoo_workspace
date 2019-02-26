@@ -63,11 +63,11 @@ prolog:message(acheck(imports)) -->
      'such side effects are not required anymore.', nl, nl].
 prolog:message(acheck(imports, c(Class, Type, Name)-LocElemL)) -->
     ['~w ~w have unused ~w:'-[Class, Name, Type], nl],
-    foldl(unused_import(Type), LocElemL).
+    foldl(unused_import, LocElemL).
 
-unused_import(Type, Loc/Elem) -->
+unused_import(Loc/Elem) -->
     Loc,
-    ['unused ~w ~w'-[Type, Elem], nl].
+    ['unused ~w'-[Elem], nl].
 
 :- dynamic
     used_import/1,
@@ -144,10 +144,12 @@ collect_usemods(M, FromChk, Pairs, Tail) :-
               from_location(From, Loc)
             ), Pairs, Tail).
 
-current_used_use_module(M, FromChk, U, From) :-
-    ( loc_declaration(U, M, use_module, From),
+current_used_use_module(M, FromChk, UE, From) :-
+    ( UE = use_module(U),
+      loc_declaration(U, M, use_module, From),
       ExL = []
-    ; loc_declaration(use_module(U, except(ExL)), M, use_module_2, From)
+    ; UE = use_module(U, except(ExL)),
+      loc_declaration(UE, M, use_module_2, From)
     ),
     call(FromChk, From),
     M \= user,
