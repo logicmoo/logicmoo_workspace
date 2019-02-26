@@ -369,6 +369,23 @@ double product(node *nod, double Probabilities[])
   }
   return prod;
 }
+
+double getNodeValue(node n, double Probabilities[],int NR){
+   int index;
+   if (strcmp(n.type, "leaf") == 0)
+    {
+      index = n.index;
+      if(index >= 0 && index <NR)
+         return Probabilities[index];
+      else
+         return 0.0;
+    }
+    else
+    {
+     return n.value ;
+    }
+}
+
 // Prints common hyperparameters
 void printCommonParamameters(double EA, double ER, int MaxIteration, int lenNodes, char *statisticsFolder, char *save, char *seeded, int seed)
 {
@@ -389,11 +406,13 @@ void printCommonParamameters(double EA, double ER, int MaxIteration, int lenNode
   }
 }
 
+
 // The forward pass evaluates the tree
 void forward(double Probabilities[], int NR, node *root)
 {
   node *n;
-  int index;
+  int index,trovato=0;
+  double Prod=1.0;
   if (root != NULL)
   {
     if (strcmp(root->type, "not") == 0)
@@ -408,14 +427,28 @@ void forward(double Probabilities[], int NR, node *root)
     {
       if (strcmp(root->type, "or") == 0)
       {
+        
         // iterate on sibling
         n = root->child;
-        while (n != NULL)
+        while (n != NULL && trovato==0)
         {
           forward(Probabilities, NR, n);
+            if(n->value==1.0){
+              trovato=1;
+            }else
+            {
+              Prod*=(1-n->value);
+            }
           n = n->next;
         }
-        root->value = product_sum(root->child, Probabilities);
+        if(trovato==1){
+          // If at least one child value is 1 then the whole product is 0
+          root->value=1.0;
+        }else{
+            // Otherwise 
+            //root->value = product_sum(root->child, Probabilities);
+            root->value =1-Prod;
+        }
       }
       else
       {
@@ -423,12 +456,25 @@ void forward(double Probabilities[], int NR, node *root)
         {
           // iterate on sibling
           n = root->child;
-          while (n != NULL)
+          while (n != NULL && trovato==0)
           {
             forward(Probabilities, NR, n);
+            if(n->value==0.0){
+              trovato=1;
+            }else
+            {
+              Prod*=n->value;
+            }
             n = n->next;
           }
-          root->value = product(root->child, Probabilities);
+          if(trovato==1){
+            // If at least one child value is 0 then the whole product is 0
+            root->value=0.0;
+          }else{
+              // Otherwise 
+              //root->value = product(root->child, Probabilities);
+              root->value =Prod;
+          }
         }
         else
         { // leaf node;
@@ -955,7 +1001,7 @@ double update_weights_Adam(double Weights[],double Probabilities[], double Gradi
     }
     // reinitialize the gradient after updating
     Gradients[i] = 0.0;
-    // update the probabilies
+    // probability update
     Probabilities[i] = sigma(Weights[i]);
   }
 
@@ -1494,9 +1540,13 @@ double maximizationReg1(double Probabilities[], double expectations[], double ex
   //printf("Maximization: regularization L1 gamma=%f\n",gamma);
   for (i = 0; i < NR; i++)
   {
+    if (Counts[i] != 0)
+    {
     secondGrad(gamma, -expectations0[i] - expectations[i] - gamma, expectations[i], &Probabilities[i]);
     //Probabilities[i] = x2;
     CLLReg+=Probabilities[i];
+    }else
+      Probabilities[i] = 0.0;
   }
   return gamma*CLLReg;
 }
@@ -1534,9 +1584,14 @@ double maximizationReg2(double Probabilities[], double expectations[], double ex
   //printf("Maximization: regularization L2 gamma=%f\n",gamma);
   for (i = 0; i < NR; i++)
   {
+    if (Counts[i] != 0)
+    {
     thirdGrad(expectations0[i], expectations[i], gamma,&Probabilities[i]);
     CLLReg+=Probabilities[i]*Probabilities[i];
     //Probabilities[i] = x3;
+    }else
+      Probabilities[i] = 0.0;
+    //printf("Prob[%d]=%lf \n",i,Probabilities[i]);
   }
   return (gamma/2)*CLLReg;
 }

@@ -130,7 +130,12 @@ default_setting_sc(setSeed,no).
 default_setting_sc(useInitParams,no). % Default value=no
 default_setting_sc(c_seed,c_seed).
 
-
+% EM regularization parameters
+default_setting_sc(regularized,yes). % yes for activating the regularization and no otherwise
+default_setting_sc(typeRegularization,2). % set the type of regularizaion
+default_setting_sc(gamma,100). % set the value of gamma according to the type
+default_setting_sc(gammaCount,10). % set the value of gamma according to the type
+default_setting_sc(min_probability,1e-5).
 /*
   dphil/8, emphil/6, forward/4
 */
@@ -394,14 +399,18 @@ induce_parameters(M:Folds,DB,R):-
 writeClause(List,FileName):-
   open(FileName,write, Stream),
   copy_term(List,ListCopy),
-  numbervars((ListCopy,_ListVar),0,_V), 
+  numbervars((ListCopy,_ListVar),0,_V),
+  nl(Stream),
+  writeln(Stream,"Learned Program"),
   writeClause1(Stream,ListCopy),
   close(Stream).
 
 
 writeClauseOutput(List):-
   copy_term(List,ListCopy),
-  numbervars((ListCopy,_ListVar),0,_V), 
+  numbervars((ListCopy,_ListVar),0,_V),
+  nl(user_output),
+  writeln(user_output,"Learned Program"),
   writeClause1(user_output,ListCopy).
 
 writeClause1(_,[]).
@@ -562,6 +571,70 @@ dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
    BatchSize is 0,
    Params2=[batch,BatchSize,MAX_W],
    dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
+
+
+
+
+  remove_clauses(Rules,Prob,RulesOut,Num):-
+    remove_clauses_loop(Rules,Prob,0,Num,[],RulesOut).
+  
+  remove_clauses_loop([],_,Num,Num,Rules,Rules):-!.
+  remove_clauses_loop([Rule|Rest],Prob,NumCur,Num,RulesCur,RulesOut):-
+    Rule=rule(_N,[_Head:Par|_],_,_),
+    (Par < Prob ->
+      NumCur1 is NumCur+1,
+      remove_clauses_loop(Rest, Prob, NumCur1,Num,RulesCur, RulesOut)
+      ;
+      append(RulesCur,[Rule],RulesCurNew),
+      remove_clauses_loop(Rest, Prob, NumCur,Num,RulesCurNew, RulesOut)
+    ).
+
+  getHead((rule(_,[Head:_,_],_,_),_),HeadName):-
+    functor(Head,HeadName,_).
+
+
+  removeHidden([],[],Hidden,Hidden):-!.
+removeHidden([Rule|Rest],HPLPOut,HiddenCur,HiddenR):-
+ Rule=rule(N,Head,[Pred,Hidden],True),
+ (exist1(Hidden,Rest) ->
+  append(HiddenCur,[Hidden],HiddenCurNew),
+  removeHidden(Rest,HPLPOutLoop,HiddenCurNew,HiddenR),
+  HPLPOut=[Rule|HPLPOutLoop]
+  ;
+   removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR),
+   HPLPOut=[rule(N,Head,[Pred],True)|HPLPOutLoop]
+).
+
+removeHidden([Rule|Rest],HPLPOut,HiddenCur,HiddenR):-
+Rule=rule(_,Head,[Pred],_),
+Head=[Hidden:_,_],
+(memberVar(Hidden,HiddenCur) ->
+    HPLPOut=[Rule|HPLPOutLoop]
+  ;
+    %trace,
+    (isHiddenPredicate(Pred) ->
+        HPLPOut=[Rule|HPLPOutLoop]
+      ;
+        HPLPOut=HPLPOutLoop
+    )
+  ),
+removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR).
+
+exist1(_,[]):-fail,!.
+exist1(Hidden,[rule(_,Head,_,_)|_Rest]):-
+Head=[Hidden:_,_],!.
+
+exist1(Hidden,[_|Rest]):-
+exist1(Hidden,Rest).
+
+isHiddenPredicate(Hidden):-
+  functor(Hidden,Name,_),
+  atom_concat(hidden,_,Name).
+
+memberVar(X, [Y|T]) :-
+  (   X==Y
+  ;   memberVar(X, T)
+  ).
 
 
 
