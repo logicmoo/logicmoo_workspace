@@ -360,7 +360,6 @@ induce_parameters(M:Folds,DB,R):-
   append(L,DB),
   assert(M:database(DB)),
   statistics(walltime,[_,_]),
-  %trace,
   (M:bg(RBG0)->
     process_clauses(RBG0,M,[],_,[],RBG),
     generate_clauses(RBG,M,_RBG1,0,[],ThBG),
@@ -373,11 +372,10 @@ induce_parameters(M:Folds,DB,R):-
   M:in(R00),
   process_clauses(R00,M,[],_,[],R0),
   statistics(walltime,[_,_]),
-  learn_params(DB,M,R0,R),
+  learn_params(DB,M,R0,R,Score2),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
-  format2(M,' PHIL Wall time ~f */~n',[CTS]),
-  nl,
+  format('Wall time=~f  CLL=~f ~n',[CTS,Score2]),
   write_rules2(M,R,user_output),
   (M:bg(RBG0)->
     retract_all(ThBGRef),
@@ -385,6 +383,7 @@ induce_parameters(M:Folds,DB,R):-
   ;
     true
   ).
+
 
  
 /**
@@ -439,7 +438,11 @@ getInitialParameters([],[]):-!.
 getInitialParameters([rule(_Number,[_Head:Param,'':_],_Body,_)|Rest],[Param|RestParams]):-
    getInitialParameters(Rest,RestParams).
 
-learn_params(DB,M,R0,R):- 
+
+%!	learn_params
+% learn the parameters of a HPLP
+%
+learn_params(DB,M,R0,R,CLL):- 
   generate_clauses(R0,M,R1,0,[],Th0),
   assert_all(Th0,M,Th0Ref),
   assert_all(R1,M,R1Ref),!,
@@ -476,36 +479,64 @@ learn_params(DB,M,R0,R):-
   format3(M,'Initial CLL on PHIL ~f */~n',[CLL0]),
   retract_all(Th0Ref),
   retract_all(R1Ref),
-  ( Algorithm = emphil ->
-     emphil(Nodes,Params,StopCond,Folder,CLL,ProbFinal)
+  % Regularization parameters
+  M:local_setting(regularized,Regularized),
+  M:local_setting(typeRegularization,TypeReg),
+  M:local_setting(gamma,Gamma),
+  M:local_setting(gammaCount,GammaCount),
+  (Regularized=yes ->
+    RegParams=[Regularized,TypeReg,Gamma,GammaCount]
+  ;
+    RegParams=[Regularized]
+  ),
+  (Algorithm = emphil ->
+     emphil(Nodes,Params,RegParams,StopCond,Folder,CLL,ProbFinal)
     ;
-     ( Algorithm = dphil ->
+     (Algorithm = dphil ->
         M:local_setting(adam_params,Adam),
         M:local_setting(max_initial_weight,MAX_W),
-        dphil_C(M,Nodes,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal)
+        AdamReg=[Adam,RegParams],
+        dphil_C(M,Nodes,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal)
         ;
         format("The algorithm ~w does not exist. Do you mean dphil or emphil? ~n",[Algorithm]),
         halt
      )
   ),
-  format3(M,'~nFinal CLL ~f */~n',[CLL]),
-  update_theory_par(R1,ProbFinal,R).
+  format3(M,'~nFinal CLL ~f ~n',[CLL]),
+  (Regularized=yes ->
+    update_theory_par(R1,ProbFinal,R2),
+    M:local_setting(min_probability,Min_prob),
+    remove_clauses(R2,Min_prob,R21,Num),
+    %format("~d clauses removed",[Num]),
+    (Num=:=0 ->    
+      R=R21
+      ;
+      R1=[Rule|_],
+      Rule1=(Rule,_),
+      getHead(Rule1,HeadFunctor),
+      removeHidden(R21,R,[HeadFunctor],_)
+    )
+  ;
+   update_theory_par(R1,ProbFinal,R)
+  ).
 
-dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
+
+
+dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
    M:local_setting(batch_strategy,minibatch(BatchSize)),!,
    Params2=[minibatch,BatchSize,MAX_W],
-   dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
+   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
 
-dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
+dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
    M:local_setting(batch_strategy,stoch_minibatch(BatchSize)),!,
    Params2=[stochastic,BatchSize,MAX_W],
-   dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
+   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
 
-dphil_C(M,NodesNew,Params,StopCond,Folder,Adam,MAX_W,CLL,ProbFinal):-
+dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
    M:local_setting(batch_strategy,batch),!,
    BatchSize is 0,
    Params2=[batch,BatchSize,MAX_W],
-   dphil(NodesNew,Params,StopCond,Folder,Adam,Params2,CLL,ProbFinal).
+   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
 
 
 
