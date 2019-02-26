@@ -556,9 +556,15 @@ future_killer(G,Ancestors,FK,T,K) :-
 	a_literal(G,FK_), limited_future_expression(FK_,FK,Vars,T,K).
 
 % limited_future_expression(+Subgoal,-ComparisonExpression,+TimeVars,-TimeVar,-FutureConstant) NOTE: looking into all fluents and events seems TOO EXPENSIVE!!!
-limited_future_expression(holds(_,FT),T=<K,_Vars,T,K) :- ground(FT), K is FT, !. % fluents from the past are doomed to fail
-limited_future_expression(happens(_,ET1,_ET2),T=<K,_Vars,T,K) :- ground(ET1), K is ET1, !. % events from the past are doomed to fail
-limited_future_expression(happens(_,_ET1,ET2),T=<K,_Vars,T,K) :- ground(ET2), K is ET2, !. % ibidem; not T+1, because composite events may take zero time
+limited_future_expression(holds(_,FT),T@=<K,_Vars,T,K) :-  % fluents from the past are doomed to fail
+	ground(FT), is_structured_time(FT), !.
+limited_future_expression(holds(_,FT),T=<K,_Vars,T,K) :-  
+	ground(FT), !, expression_to_time(FT,K).
+limited_future_expression(happens(_,ET1,_ET2),Expr,_Vars,T,K) :- ground(ET1), 
+	( is_structured_time(ET1)-> Expr = (T@=<ET1) ; expression_to_time(ET1,K), Expr=(T=<K)). % events from the past are doomed to fail
+limited_future_expression(happens(_,_ET1,ET2),Expr,_Vars,T,K) :- ground(ET2), 
+	%  not T+1, because composite events may take zero time
+	( is_structured_time(ET2)-> Expr = (T@=<ET2) ; expression_to_time(ET2,K), Expr=(T=<K)), !. 
 limited_future_expression(T<K,T<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
 limited_future_expression(T=<K,T=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
 limited_future_expression(T@<K,T@<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
@@ -567,6 +573,7 @@ limited_future_expression(K>T,K>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
 limited_future_expression(K>=T,K>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
 limited_future_expression(K@>T,K@>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
 limited_future_expression(K@>=T,K@>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+
 
 member_equivalent_chk(X,[Y|_]) :- X==Y, !.
 member_equivalent_chk(X,[_|L]) :- member_equivalent_chk(X,L).
@@ -686,7 +693,7 @@ dc_resolve_goals([goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestor
 	var(MyFailure), has_no_future(G,EventAncestors,Killer), 
 	!,
 	MyFailure=failed,
-	write_verbose(['FUTURELESS ',ID, ' ', G,' because of ',Killer, 'OurFailures:', OurFailures, nl]),
+	write_verbose(['FUTURELESS ',ID, ' ', G,' because of ',Killer, ' OurFailures:', OurFailures, nl]),
 	NewGoals_ = [goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestors,G)|NewGoals],
 	%\+ ground(OurFailures),
 	%NewGoals_=NewGoals, write_verbose([' neglecting futureless failure ']),
@@ -2313,9 +2320,11 @@ is_time_expression_(_+_).
 is_time_expression_(_-_).
 is_time_expression_(_*_).
 
-expression_to_time(E,T) :- (ground(E)->T is E;T=E).
+expression_to_time(E,T) :- ((ground(E),is_time_expression(E))->T is E;T=E).
 
 is_some_time(T) :- (integer(T); is_time_expression(T) ; misc_to_realtime(T,_)), !.
+
+is_structured_time(T) :- nonvar(T), T= _ / _.
 	
 % real_time_literal(+Literal,-GoalList) Rewrites a literal with real times into a sequence using only cycle times
 % Fails if no real time literal is present
