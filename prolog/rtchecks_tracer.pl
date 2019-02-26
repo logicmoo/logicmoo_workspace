@@ -174,7 +174,7 @@ black_list_module(rtchecks_utils).
 black_list_module(send_check).
 black_list_module(typeprops).
 
-white_list_meta(system, Call) :- \+ functor(Call, call, _).
+black_list_meta(system, Call) :- functor(Call, call, _).
 
 skip_predicate(rtchecks_utils:handle_rtcheck(_)).
 skip_predicate(rtchecks_rt:_).
@@ -220,7 +220,7 @@ inspect_target(F, A, M) :-
     functor(Goal, F, A),
     once(( rtchecks_tracer:pp_assr(Goal, M)
          ; current_assertion(rt, Goal, M, _)
-         ; white_list_meta(M, Goal),
+         ; \+ black_list_meta(M, Goal),
            predicate_property(M:Goal, meta_predicate(S)),
            once(arg(_, S, 0 ))
          )).
