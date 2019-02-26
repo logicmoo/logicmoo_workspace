@@ -389,7 +389,7 @@ resolveUntilAction(G,Ancestors,Ball,Cont) :- G = holds(_F,_T), real_time_literal
 	resolveUntilAction(Goals,Ancestors,Ball,Cont).
 resolveUntilAction(G,Ancestors,Ball,Cont) :- 
 	G = holds(_F,T), 
-	nonvar(T), current_time(Now), T>Now, % premature, delay
+	ground(T), current_time(Now), T>Now, % premature, delay
 	!, Ball=later(G,Ancestors), Cont=G.
 % fluent negation handled in query/1
 resolveUntilAction(holds(F,T),_A,_,true) :- option(no_parallel), query(holds(F,T)).
@@ -410,19 +410,23 @@ resolveUntilAction(Fluent,Ancestors,B,C) :-
 	(Alternatives = [l_int(Fluent,Body)] -> resolveUntilAction(Body,Ancestors,B,C) 
 		; B = l_ints_disjunction(l_int(Fluent,Body),Alternatives,Ancestors), C=true
 	).
+resolveUntilAction(Fl,Ancestors,B,C) :- % special fluent
+	Fl=holds(real_date(_),T),
+	\+ option(no_parallel), 
+	findall(Fl, query(Fl), Answers), Answers\=[], 
+	C=true,
+	((ground(T), Answers = [Fl]) -> true ; B=disjunction(Fl,Answers,Ancestors)).
 resolveUntilAction(holds(F,T),Ancestors,B,C) :- % spawn a new disjunctive goal for each extensional fluent answer:
 	\+ option(no_parallel),
 	findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
 	% !,
-	((nonvar(T),Answers = [holds(F,T)]) -> C=true ; 
+	((ground(T),Answers = [holds(F,T)]) -> C=true ; 
 	% eternally changing fluents... handled in dc_resolve_goals_suspended below:
-		(B=disjunction(holds(F,T),Answers,Ancestors), C=true /*; 
-			% do we need this? there is an extra goal added in dc_resolve_goals_suspended...
-			var(T), !, C = holds(F,T), B=later(C,Ancestors) */
+		(B=disjunction(holds(F,T),Answers,Ancestors), C=true 
 		)
 	).
 resolveUntilAction(holds(F,T),Ancestors,Ball,Cont) :- !, % on failure, delay if that makes sense
-	var(T), Ball=later(holds(F,T),Ancestors), Cont=holds(F,T). 
+	\+ ground(T), Ball=later(holds(F,T),Ancestors), Cont=holds(F,T). 
 % events/actions:
 resolveUntilAction(happens(E,T1,T2),A,B,C) :- 
 	option(no_parallel), % nonvar(T1) was erroneously being used as heuristic condition to dispense parallelism
@@ -438,11 +442,11 @@ resolveUntilAction(G,Ancestors,Ball,Cont) :- G = happens(_,_,_), real_time_liter
 	resolveUntilAction(Goals,Ancestors,Ball,Cont).
 resolveUntilAction(happens(_E,T1,T2),_A,_,_) :- % outdated action (as per LPS cycle time), we fail
 	current_time(Now),
-	(nonvar(T1),T1<Now ; nonvar(T2),T2<Now+1), 
+	(ground(T1),T1<Now ; ground(T2),T2<Now+1), 
 	!, fail. 
 resolveUntilAction(happens(E,T1,T2),A,Ball,Cont) :- % premature, we delay
 	current_time(Now), 
-	(nonvar(T1), T1>Now ; nonvar(T2),T2>Now+1, \+ macroaction(E); premature_system_action(E)), 
+	(ground(T1), T1>Now ; ground(T2),T2>Now+1, \+ macroaction(E); premature_system_action(E)),
 	% \+ a_real_time_event(E),
 	!,
 	Ball=later(happens(E,T1,T2),A),Cont=happens(E,T1,T2). 
@@ -457,9 +461,11 @@ resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case,
 		resolveUntilAction(Body,[happens(E,T1,T2)|A],B,C) 
 		; B = l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives,A), C=true
 	).
-resolveUntilAction(happens(E,T1,T2),_A,_,true) :- happens(E,T1,T2).
-resolveUntilAction(happens(E,T1,T2),A,_,Cont) :- 
+resolveUntilAction(happens(E,T1_,T2_),_A,_,true) :- 
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), happens(E,T1,T2).
+resolveUntilAction(happens(E,T1_,T2_),A,_,Cont) :- 
 	% select and execute system action; 
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
 	\+ happens(E,T1,T2), system_action(E), 
 	\+ functor(E,lps_terminate,_), % this will be handled in next clause: selection and "execution" elsewhere, at the beginning of the next cycle
 	!, % system actions can not be delayed below...
@@ -471,7 +477,8 @@ resolveUntilAction(happens(E,T1,T2),A,_,Cont) :-
 	% as external side-effects will NOT be undone; although no preconditions can mention these actions,
 	% backtracking into here can still occur due to other actions violating preconditions:
 	( callprolog(E), uassertz(happens(E,T1,T2)), fail ; happens(E,T1,T2) ; uretractall(happens(E,T1,T2)), fail).
-resolveUntilAction(happens(E,T1,T2),A,_,true) :- % select action:
+resolveUntilAction(happens(E,T1_,T2_),A,_,true) :- % select action:
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
 	\+ happens(E,T1,T2), 
 	current_time(T1), 
 	T2 is T1+1,
@@ -482,9 +489,11 @@ resolveUntilAction(happens(E,T1,T2),A,_,true) :- % select action:
 		uretractall(happens(E,T1,T2)), fail 
 		; true),
 	(true ; \+ system_action(E), uretractall(happens(E,T1,T2)), fail). % undo on backtracking, except system_actions
-resolveUntilAction(happens(E,T1,T2),A,Ball,Cont) :- !, 
+resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- !, 
 	Ball=later(happens(E,T1,T2),A), Cont = happens(E,T1,T2), 
-	(var(T1),var(T2)), % worth delaying
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
+	(\+ ground(T1), \+ ground(T2)), % worth delaying; 
+	% Possible TODO: are the free variables... time variables...? complicated to find out; the LPS developer should worry about this
 	\+ happens(E,T1,T2) /*, action_(E)*/. 
 % timeless and time constraints:
 resolveUntilAction(tc(G),_A,_,Cont) :- ground(G), !, G, Cont=true.
@@ -514,8 +523,8 @@ a_literal(G,G) :- G \== [].
 
 % time_variables(+Goal,-Vars)  returns free time variables
 time_variables(G,UniqueVars) :- 
-	findall(T-G, (
-		a_literal(G,L), (L=holds(_,T);L=happens(_,T,_);L=happens(_,_,T);L=happens(E,_,_),a_real_time_event(E,T)), var(T) 
+	findall(T-G, ( 
+		a_literal(G,L), (L=holds(_,T);L=happens(_,T,_);L=happens(_,_,T);L=happens(E,_,_),a_real_time_event(E,T)), \+ ground(T) 
 		), Pairs), 
 	bind_and_extract(Pairs,G,Vars),  
 	sort(Vars,UniqueVars).
@@ -526,7 +535,7 @@ bind_and_extract([],_,[]).
 has_no_future(G,Ancestors,FK) :- 
 	future_killer(G,Ancestors,FK,T,K),
 	nonvar(K), ( misc_to_realtime(K,_) -> get_the_real_date(T) ; current_time(T)),
-	ground(FK), \+ FK. 
+	ground(FK), \+ FK. % If FK contains a time expression, it will be evaluated with the inequalities... for those that do arith eval
 has_no_future(G,_Ancestors,Lit) :- 
 	get_the_real_date(Today),
 	% find a structured time constant with no future
@@ -544,17 +553,20 @@ get_the_real_date(Today) :- query( holds(real_date(Today),_) ).
 % Considers only simple expressions with a single mention of time
 future_killer(G,Ancestors,FK,T,K) :- 
 	time_variables(G,Gvars), time_variables(Ancestors,Avars), append(Avars,Gvars,Vars),
-	a_literal(G,FK), limited_future_expression(FK,Vars,T,K).
+	a_literal(G,FK_), limited_future_expression(FK_,FK,Vars,T,K).
 
-% limited_future_expression(+ComparisonExpression,+TimeVars,-TimeVar,-FutureConstant)
-limited_future_expression(T<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
-limited_future_expression(T=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
-limited_future_expression(T@<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
-limited_future_expression(T@=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
-limited_future_expression(K>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
-limited_future_expression(K>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
-limited_future_expression(K@>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
-limited_future_expression(K@>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+% limited_future_expression(+Subgoal,-ComparisonExpression,+TimeVars,-TimeVar,-FutureConstant) NOTE: looking into all fluents and events seems TOO EXPENSIVE!!!
+limited_future_expression(holds(_,FT),T=<K,_Vars,T,K) :- ground(FT), K is FT, !. % fluents from the past are doomed to fail
+limited_future_expression(happens(_,ET1,_ET2),T=<K,_Vars,T,K) :- ground(ET1), K is ET1, !. % events from the past are doomed to fail
+limited_future_expression(happens(_,_ET1,ET2),T=<K,_Vars,T,K) :- ground(ET2), K is ET2, !. % ibidem; not T+1, because composite events may take zero time
+limited_future_expression(T<K,T<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T=<K,T=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T@<K,T@<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(T@=<K,T@=<K,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K>T,K>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K>=T,K>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K@>T,K@>T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
+limited_future_expression(K@>=T,K@>=T,Vars,T,K) :- member_equivalent_chk(T,Vars), !.
 
 member_equivalent_chk(X,[Y|_]) :- X==Y, !.
 member_equivalent_chk(X,[_|L]) :- member_equivalent_chk(X,L).
@@ -748,7 +760,7 @@ dc_resolve_goals_suspended(_G,ID,_,_OriginalFailed,_Failures,SharedVars,Goals,di
 	% findall(goal(ID,Discard,_Failed,_OurFailures,Ancestors,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
 	% ...instead, only the "top" goal (rule consequent) success guarantees an alternative to be irrelevant:
 	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
-	((SuspendedG = holds(_F,T),var(T) /*, \+ ground(F)*/ )-> copy_term(SuspendedG+SharedVars+Ancestors+Continuation,BindingsForFuture) ; true),
+	((SuspendedG = holds(_F,T), \+ ground(T) /*, \+ ground(F)*/ )-> copy_term(SuspendedG+SharedVars+Ancestors+Continuation,BindingsForFuture) ; true),
 	simplify_conjunction(SuspendedG=Answer,Continuation,SuspCont),
 	findall(
 		goal(ChildID,_IgetBoundBelow,__Failed,_OurFailures,SharedVars,Ancestors,SuspCont), 
@@ -2294,12 +2306,21 @@ misc_to_realtime(Y/M,RT) :- misc_to_realtime(Y/M/1,RT).
 % is_cycle_time(+T)
 is_cycle_time(T) :- must_be(nonvar,T), integer(T).
 
-is_some_time(T) :- (integer(T) ; misc_to_realtime(T,_)), !.
+% is_time_expression(+TimeExpression)  No real division, because it is used to represent structured datetime.
+is_time_expression(T) :- nonvar(T), is_time_expression_(T), !.
+
+is_time_expression_(_+_).
+is_time_expression_(_-_).
+is_time_expression_(_*_).
+
+expression_to_time(E,T) :- (ground(E)->T is E;T=E).
+
+is_some_time(T) :- (integer(T); is_time_expression(T) ; misc_to_realtime(T,_)), !.
 	
 % real_time_literal(+Literal,-GoalList) Rewrites a literal with real times into a sequence using only cycle times
 % Fails if no real time literal is present
 % Introduces some "time slack" via holds(true,..), so that the body isn't firmly glued to the precise boundaries of a day...
-real_time_literal(holds(_F,T),_) :- (var(T) ; is_cycle_time(T)), !, fail.
+real_time_literal(holds(_F,T),_) :- (var(T) ; is_cycle_time(T) ; is_time_expression(T)), !, fail.
 real_time_literal(holds(F,Y/M/D), [holds(real_date(Y/M/D),T), holds(F,T)] ) :- !.
 real_time_literal(happens(_E,T1,T2),_) :- (var(T1) ; is_cycle_time(T1)), (var(T2) ; is_cycle_time(T2)), !, fail.
 real_time_literal(happens(E,RT1,T2),[
@@ -2316,7 +2337,7 @@ a_real_time_event(real_date_begin(RT),RT).
 a_real_time_event(real_date_end(RT),RT).
 a_real_time_event(end_of_day(RT),RT).
 
-premature_real_time_fluent(holds(_,T)) :- nonvar(T), T = _Y/_M/_D, get_the_real_date(Today), T@>Today.
+premature_real_time_fluent(holds(_,T)) :- ground(T), T = _Y/_M/_D, get_the_real_date(Today), T@>Today.
 
 premature_real_time_event(happens(_,T1,_T2)) :- 
 	get_the_real_date(Now),
@@ -2873,10 +2894,11 @@ candidateAction([L| Ls], Result) :-
 			                     Result = fail; Result = later )	) )
 	;  Result = CLs ).
 
-
+% must be called after structured date processing!
 mustBeDelayed(holds(_,T)) :- ground(T), current_time(Now),  T>Now, !.
 mustBeDelayed(happens(_,T1,T2)) :- current_time(Now),  (ground(T1),T1>Now;ground(T2),T2>Now+1), !.
 
+% must be called after structured date processing!
 % mustBeProcessedNow(L) is used when unfolding atoms in antecedents of rules.
 % true if L is extensional fluent or basic event with known time, intensional fluent/composite event or timeless/Prolog
 mustBeProcessedNow(holds(_, T)) :-
@@ -2899,6 +2921,7 @@ intensional(P) :- functor(P,F,N), functor(Q,F,N), l_int(holds(Q, _), _), !.
 % TODO: this should use compound_name_arity(X,F,N) to deal with e.g. newbelief(), or with (slower) A=..L, ...
 macroaction(A):- functor(A,F,N), functor(Q,F,N), l_events(happens(Q, _,_), _), !.
 
+% deprecated:
 %mustBeResolvedNow is used when unfolding atoms in goal clauses.
 %
 mustBeResolvedNow(happens(_, T, _)) :- ground(T), current_time(Now), T =< Now, !.
@@ -3003,6 +3026,7 @@ holds_all(PL,Current,Next) :-
 
 query(L) :- option(dc), !, dc_query(L).
 
+% deprecated:
 query(holds(not(P), Now)) :-
 %    current_time(Now),  % Needs looking at more closely.
     \+ l_int(holds(P, Now), _),
@@ -3165,7 +3189,7 @@ dc_process([composite_event([], happens(CE,Start,End)) | Rs], AccRi, NRi, AccG, 
 	(T=End->
 		dc_process(Rs, AccRi, NRi, [event(happens(CE,Start,End)) | AccG], NGi )
 		;
-		(nonvar(End),End<T) -> % too late to solve, no longer relevant
+		(ground(End),End<T) -> % too late to solve, no longer relevant
 			dc_process(Rs, AccRi, NRi, AccG, NGi)
 		; throw(inconsistent_ce_time-happens(CE,Start,End)/T)).
 
@@ -3176,20 +3200,13 @@ dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
 	current_time(Now), Next is Now+1,
 	member(L,A),
 	(
-		L = holds(_, T), nonvar(T), T<Now
+		L = holds(_, T), ground(T), T<Now
 		; 
-		L = happens(_,T1, T2), (nonvar(T1),T1<Now-1;nonvar(T2),T2<Next-1)
+		L = happens(_,T1, T2), (ground(T1),T1<Now-1;ground(T2),T2<Next-1)
 	),
 	!,
 	dc_process(Rs, AccRi, NRi, AccG, NGi).
 
-dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
-	Rule=..[_,[L|_],_],
-	mustBeDelayed(L),
-	!,
-	dc_process(Rs, [Rule |AccRi], NRi, AccG, NGi).
-
-dc_process([R|Rs],AccRi, NRi, AccG, NGi) :- member_chk_variant(R,AccRi), !, dc_process(Rs,AccRi, NRi, AccG, NGi).
 dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):- 
 	Rule=..[F,[E | Ls], C],
 	real_time_literal(E,TransformedE),
@@ -3197,6 +3214,12 @@ dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
 	append(TransformedE,Ls,Antecedent),
 	NewRule=..[F,Antecedent,C],
 	dc_process([NewRule | Rs], AccRi, NRi, AccG, NGi).
+dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
+	Rule=..[_,[L|_],_],
+	mustBeDelayed(L),
+	!,
+	dc_process(Rs, [Rule |AccRi], NRi, AccG, NGi).
+dc_process([R|Rs],AccRi, NRi, AccG, NGi) :- member_chk_variant(R,AccRi), !, dc_process(Rs,AccRi, NRi, AccG, NGi).
 dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):- 
 	Rule=..[F,[E | Ls], C],
 	( mustBeProcessedNow(E) -> ItMust=true; ItMust=false),
@@ -3220,24 +3243,28 @@ split_goals_and_events([],[],[]).
 % lpsClause(+Head, Body) This has some overlap with query/1... TODO: this should be refactored
 lpsClause(happens(X, Y, Z), Body) :-  l_events(happens(X, Y, Z), Body).
 lpsClause(happens(X, Y, Z), Body) :- !, happens(X, Y, Z), Body=[].
-lpsClause(holds(not(X),T),Body) :- !, current_time(T), (is_list(X) -> Xs=X ; Xs=[holds(X,T)]), \+ evaluate(Xs), Body=[].
-lpsClause(holds(findall(X,G,L),T),Body) :- !, current_time(T), findall(X,evaluate(G),L), Body=[].
-lpsClause(holds(P,T),[]) :- external_predicate_for_lps(P), !, current_time(T), callprolog(P).
+lpsClause(holds(not(X),T),Body) :- !, check_time_expression(T), (is_list(X) -> Xs=X ; Xs=[holds(X,T)]), \+ evaluate(Xs), Body=[].
+lpsClause(holds(findall(X,G,L),T),Body) :- !, check_time_expression(T), findall(X,evaluate(G),L), Body=[].
+lpsClause(holds(P,T),[]) :- external_predicate_for_lps(P), !, check_time_expression(T), callprolog(P).
 lpsClause(holds(X, T), Body) :-  l_int(holds(X, T), Body), may_bind_time(T,Body) .
-lpsClause(holds(X, Y), Body) :- !, current_time(Y), state(X), Body=[].
+lpsClause(holds(X, T), Body) :- !, check_time_expression(T), state(X), Body=[].
 lpsClause(tc(P), []) :- !, callprolog(P).
 lpsClause(P, []) :- \+l_timeless(P,_), !, callprolog(P).
 lpsClause(Head, Body) :-  l_timeless(Head, Body).
 
 % Slightly different version of query for 'dc' option, separated to make sure it doesn't break the other variant of the interpreter
 % HACK ALERT: there's a messy overlap between current and next state in updateNextStateFluents, and get_real_now below
+% To be called after structured datetimes (../../..) have been handled
 % dc_query(X) :- write_verbose(dc_query(X)), fail. % for debugging
-dc_query(holds(not(Ps), Now)) :- is_list(Ps), !, \+  holds_all(Ps), (var(Now)->get_real_now(Now);true).
-dc_query(holds(not(P), Now)) :- !, \+ dc_query(holds(P,Now)), (var(Now)->get_real_now(Now);true).
-dc_query(holds(_P, T)) :- 
+dc_query(holds(not(Ps), Now)) :- is_list(Ps), !, 
+	check_time_expression(Now), \+  holds_all(Ps).
+dc_query(holds(not(P), Now)) :- !, check_time_expression(Now), \+ dc_query(holds(P,Now)).
+dc_query(holds(P, T)) :- 
 	get_real_now(RealNow),
-	nonvar(T), T<RealNow, !, fail.
-dc_query(holds(P,T)) :- P\= findall(_,_,_), external_predicate_for_lps(P), !, (var(T)->get_real_now(T);true), callprolog(P).
+	ground(T), T<RealNow, !, throw(fluent_out_of_temporal_order(RealNow,holds(P, T))). % fail. 
+dc_query(holds(P,T)) :- P\= findall(_,_,_), external_predicate_for_lps(P), !, 
+	check_time_expression(T), 
+	callprolog(P).
 dc_query(holds(P, T)) :- 
 	\+ l_int(holds(P, _), _),
 	get_real_now(RealNow), Next is RealNow+1,
@@ -3264,8 +3291,16 @@ get_real_now(RealNow) :-
 	current_time(Now),
 	( lps_updating_current_state -> RealNow is Now-1 ; RealNow=Now).
 
-dc_query_evaluate(findall(X,G,L),_T,_RealNow,_Next) :- !, findall(X,evaluate(G),L).
-dc_query_evaluate(P,T,RealNow,Next) :-
+% dc_query_evaluate(+Literal,?T,+RealNow,+Next)
+dc_query_evaluate(P,T_,RealNow,Next) :-
+	(ground(T_)->T is T_; is_time_expression(T) -> throw(unbound_time_expression(holds(P,T_))) ; T=T_),
+	dc_query_evaluate_(P,T,RealNow,Next).
+
+% Time expressions already evaluated:
+dc_query_evaluate_(findall(X,G,L),_T,_RealNow,_Next) :- !, 
+	% Well formed programs (such as generated by psyntax) have _T bound to all fluents in G, so it will be checked later
+	findall(X,evaluate(G),L).
+dc_query_evaluate_(P,T,RealNow,Next) :-
 	( option(non_prospective) -> T=RealNow, state(P) ;
 		% let no choicepoints behind if we can:
 		( T==RealNow -> state(P)  ; (T=RealNow, state(P) ; T=Next, next_state(P)) )
@@ -3273,8 +3308,10 @@ dc_query_evaluate(P,T,RealNow,Next) :-
 
 % Used to bind time on matching intensional fluent clauses in antecedents
 may_bind_time(_Time,Body) :- a_literal(Body,holds(_,_)), !.
-may_bind_time(T,_) :- current_time(T).
+may_bind_time(T_,_) :- current_time(T), (ground(T_)-> T_ =:= T ; T=T_).
 
-	
+check_time_expression(T) :- 
+	get_real_now(Now), (ground(T)-> T=:=Now ; T=Now).
+		
 member_chk_variant(X,[XX|_]) :- variant(X,XX), !.
 member_chk_variant(X,[_|L]) :- member_chk_variant(X,L).
