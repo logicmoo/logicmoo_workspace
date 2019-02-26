@@ -198,7 +198,8 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	% Find groups
 	(setof(G, T^X^member(t(X,T,G),Ranged), GroupIds)->true;GroupIds=[]), % allow for empty timelines
 	findall(FluentGroup,(
-		make_json_object([id:Gatom,content:Gsignature,order:2],FluentGroup),
+		 % remove subgroupStack:.. to have fluent tuples scattered vertically:
+		make_json_object([id:Gatom,content:Gsignature,order:2,subgroupStack:false],FluentGroup),
 		member(F/N,GroupIds), 
 		my_term_to_atom(F/N,Gatom), functor(GG,F,N), numbervars(GG), my_term_to_atom(GG,Gsignature)
 	), FluentGroups),
@@ -226,12 +227,13 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	sort(Times,SortedTimes),
 	( append(_,[LastTime],SortedTimes) -> LastRelevantTime is LastTime+1 ; LastRelevantTime = 1),
 	findall(Fluent,(
-		make_json_object([id:ID,content:AtomAbridged,start:T1,end:T2,group:Gatom,title:Tip],Fluent),
+		make_json_object([id:ID,content:AtomAbridged,start:T1,end:T2,group:Gatom,title:Tip|Subgroup],Fluent),
 		member(t(X,T1-T2,F/N),Ranged),  
 		abridge_fluent(X,AtomAbridged),
 		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom), 
 		(T2==LastRelevantTime -> FluentSuffix = [' (end of time)'] ; FluentSuffix = []),
 		concat_atom(['Fluent ',Atom,' initiated at ',T1,'<br/>and terminated at transition to ',T2|FluentSuffix],Tip),
+		(atomic(X)-> Subgroup=[]; arg(1,X,SS),Subgroup=[subgroup:SS]),
 		get_increment_counter(IDs,ID)
 	), Fluents),
 	%... and the rest:

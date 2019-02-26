@@ -59,6 +59,12 @@ var lpsTimelineCSSloaded; // global scope
 	}
 	// Configuration for the Timeline
 	var options;
+	
+	
+	/* fluents groups are their predicate names, and subgroups are the first argument values (see visual/2 in visualizer.P)
+	Subgroups are currently not stacked, appearing on the same vertical level, but I was unable to order them:
+	somehow subgroupOrderer didn't make an effect
+	Ordering items per se, eg. http://visjs.org/examples/timeline/items/itemOrdering.html, was not useful */
 		
 	if (simulatedRealTime){
 		// we need to change all items times to simulated times
