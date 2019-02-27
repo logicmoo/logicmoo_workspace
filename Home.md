@@ -4,7 +4,7 @@
 
 ## Preliminary reference documentation for lps.swi ##
 
-[](lps.swi%20Reference)
+[Here](lps.swi%20Reference)
 
 ## New!! [Smart Contracts Examples](https://bitbucket.org/lpsmasters/lps_corner/wiki/Smart%20Contract%20Examples)
 
