@@ -1,6 +1,7 @@
 # Syntax of LPS
 
 [TOC]
+
 The current syntax of LPS uses a flexible mixture of explicit and implicit time. However, most of the top-level of an LPS “program” does not depend upon time and has the following,  mostly optional components.
 
 ### Comments						
