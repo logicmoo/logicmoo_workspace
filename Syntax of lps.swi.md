@@ -2,7 +2,9 @@
 
 [TOC]
 
-The current syntax of LPS uses a flexible mixture of explicit and implicit time. However, most of the top-level of an LPS “program” does not depend upon time and has the following,  mostly optional components.
+lps.swi is the LPS implementation based on SWI-Prolog. The syntax used in lps.js is slightly different.
+
+The current syntax of LPS is essentially a superset of @SWI-Prolog](http://www.swi-prolog.org), adding a flexible mixture of explicit and implicit time and some additional rules and declarations. 
 
 ### Comments						
 
