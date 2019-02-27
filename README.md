@@ -25,6 +25,10 @@ The second easiest way is to use Docker::
 The above starts up a SWISH server with LPS at port 3051 on your system; to use it just take your browser to ```http://localhost:3051```. Make sure you have [Docker](https://docs.docker.com/install/) installed in your system. MyData and MyLogs should be two empty writeable directories. 
 For more details please see [INSTALL_server](https://bitbucket.org/lpsmasters/lps_corner/src/master/swish/INSTALL_server.md).
 
+If you'd rather install a local non-web system, see [INSTALL.md](https://bitbucket.org/lpsmasters/lps_corner/src/master/INSTALL.md).
+
+Preliminary documentation at the [wiki](https://bitbucket.org/lpsmasters/lps_corner/wiki/lps.swi%20Reference). The LPs syntax is decribed [here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax%20of%20lps.swi).
+
 
 ## Latest version: Feb 27, 2019 ##
 * Experimental if-then-else
@@ -98,8 +102,7 @@ To install:
 See the robot game at [https://bobthesimplebot.github.io]()
 
 ## How to contribute ##
-* See [lps_corner/RoadMap.md](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/RoadMap.md) 
-* Before you commit any changes to the LPS engine or tools, make sure you execute all tests with 'interpreter:test_examples'.
+* Before you submit your pull request with any changes to the LPS engine or tools, make sure you execute all tests with 'interpreter:test_examples_dc'.
 * Please comment your code, and add appropriate copyright/license header
 * To edit this and other future wiki documents: [learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
