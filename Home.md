@@ -2,6 +2,10 @@
 
 ## We are working out the syntax of LPS [here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax). Come and join in!
 
+## Preliminary reference documentation for lps.swi ##
+
+[](lps.swi%20Reference)
+
 ## New!! [Smart Contracts Examples](https://bitbucket.org/lpsmasters/lps_corner/wiki/Smart%20Contract%20Examples)
 
 --
