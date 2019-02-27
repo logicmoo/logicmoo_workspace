@@ -88,67 +88,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	head_hint/3
 ]).
 
-:- if(current_prolog_flag(dialect, xsb)).
 
-:- dynamic lps_goal_id_counter/1.
-:- dynamic d/2.
-:- dynamic action/1.
-:- dynamic current_goal/1.
-:- dynamic current_time/1.
-:- dynamic real_time_beginning/1.
-:- dynamic lps_updating_current_state/0.
-% convenience to encode a bunch of declarations in Wei or other syntaxes:
-:- dynamic (events)/1, (prolog_events)/1, (fluents)/1, (actions)/1, (unserializable)/1.
-:- dynamic d_pre/1.
-:- dynamic depth/1.
-:- dynamic event/1.
-:- dynamic expanded_consequent/2.
-:- dynamic failed/3.
-:- dynamic fluent/1.
-:- dynamic happens/3.
-:- dynamic initial_state/1.
-:- dynamic (initiated)/3.
-:- dynamic l_events/2. 
-:- dynamic l_int/2.
-:- dynamic l_timeless/2.
-:- dynamic (observe)/2.
-:- dynamic option/1.
-:- dynamic reactive_rule/2.
-:- dynamic expanded_reactive_rule/2.
-:- dynamic reactive_rule/3. % adds priority
-:- dynamic expanded_reactive_rule/3.
-:- dynamic state/1.
-:- dynamic next_state/1.
-:- dynamic steps/1.
-:- dynamic succ_t/2.
-:- dynamic (terminated)/3.
-:- dynamic tried/3.
-:- dynamic updated/4.
-:- dynamic used/1.
-:- dynamic maxTime/1.
-:- dynamic maxRealTime/1.
-:- dynamic minCycleTime/1.
-:- dynamic simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1.
-:- dynamic defaultMinCycleTime/1.
-:- dynamic lps_test_result_item/3.
-:- dynamic lps_test_action_ancestor/3.
-:- dynamic lps_test_result/3.
-:- dynamic lps_failed_test/2.
-:- dynamic lps_test_options/1.
-:- dynamic lps_saved_state/8.
-:- dynamic '_currenty__defining'/1.
-:- dynamic head_hint/3.
-
-my_load_dyn(F,_) :- load_dyn(F).
-
-% convenient for user programs
-:- use_module(basics, [append/3,member/2]).
-
-:- op(1150,fx,thread_local). % dummy syntax for the following SWI declarations
-
+:- if(\+ current_prolog_flag(dialect, swi)).
+:- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
-
-:- if(current_prolog_flag(dialect, swi)).
 
 :- thread_local lps_goal_id_counter/1.
 :- thread_local d/2.
@@ -214,9 +157,8 @@ my_load_dyn(F,WithWarnings) :-
 	M:load_files([F],[]),
 	(Old==true -> style_check('+'(singleton)) ; style_check('-'(singleton))).
 	
-:- endif.
 
-% Generic Prolog code
+% Generic Prolog code (used to run on other Prologs too)
 
 % Stubs for system actions
 lps_ask(A,B,C) :- interpreter:lps_ask(A,B,C).

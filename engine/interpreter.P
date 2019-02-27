@@ -54,82 +54,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 % This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
 
-%%% XSB specific section:
-:- if(current_prolog_flag(dialect, xsb)).
-
-:- consult:current_loaded_file(F), parse_filename(F,D,_,_), retractall(lps_engine_directory(_)), assert(lps_engine_directory(D)).
-:- lps_engine_directory(D), string:concat_atom([D,'../engine/db.P'],DB), ensure_loaded(DB).
-
-:- use_module(db,[ d/2,
-	action/1, current_time/1, real_time_beginning/1, d_pre/1, event/1,
-	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
-	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1, next_state/1,
-	steps/1, (terminated)/3, used/1, maxTime/1, maxRealTime/1, minCycleTime/1, defaultMinCycleTime/1, simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1,
-	current_goal/1, depth/1, tried/3, option/1, initial_state/1, lps_updating_current_state/0,
-	lps_test_result_item/3, lps_test_action_ancestor/3,  lps_test_result/3, lps_test_options/1, 
-	lps_failed_test/2,
-	(events)/1, (prolog_events)/1, (fluents)/1, (actions)/1, (unserializable)/1,
-	my_load_dyn/2, head_hint/3]).
-
-:- use_module(usermod,[lps_source_position/4]). % support Prolog Studio error reporting
-
-% assert in usermod, if X imported from there... see SWI comment below
-uassert(X) :- assert(X). 
-uasserta(X) :- asserta(X). 
-uassertz(X) :- assertz(X).
-uretract(X) :- retract(X).
-uretractall(X) :- retractall(X).
-u_user_predicate(X) :- functor(X,F,N), current_predicate(F/N).
-% callprolog(G) :- catch(G,E,(print_error(callprolog,E),fail)).
-callprolog(G) :- call(G).
-
-:- use_module(basics, [length/2, member/2, append/3, select/3, reverse/2]).
-:- use_module(lists, [append_lists/2]).
-:- use_module(subsumes,[variant/2]).
-:- use_module(num_vars,[numbervars/1]).
-:- use_module(string,[concat_atom/2, term_to_codes/2]).
-:- use_module(format,[format/2]).
-:- use_module(standard,[datime/1]).
-date_stamp(D) :- datime(Date), fmt_write_string(D,"%d-%02d-%02d at %02d:%02d:%02d",Date).
-
-:- use_module(shell,[list_directory/2, is_directory/1]).
-
-lps_examples_directory(ED) :- 
-	lps_engine_directory(D), 
-	concat_atom([D,'/../examples'], E), expand_filename(E,ED).
-
-my_term_to_codes(T,C) :- atomize_zero_functors(T,NT), term_to_codes(NT,C).
-
-% atomize_zero_functors(+Term,-NewTerm) replaces subterms foo() by 'foo'
-% turnaround to bug reported by Miguel to XSB folks on May 24, 2016
-atomize_zero_functors(T,NT) :- var(T), !, NT=T.
-atomize_zero_functors(T,NT) :- functor(T,F,0), atom(F), !, NT=F.
-atomize_zero_functors(T,NT) :- atomic(T), !, NT=T.
-atomize_zero_functors([T1|Tn],[NT1|NTn]) :- !, atomize_zero_functors(T1,NT1), atomize_zero_functors(Tn,NTn).
-atomize_zero_functors(T,NT) :- T=..[F|Args], atomize_zero_functors(Args,NewArgs), NT=..[F|NewArgs].
-
-my_term_to_atom(T,A) :- my_term_to_codes(T,C), atom_codes(A,C).
-
-print_error(Type,Message,_Position) :- write('OTHER '), write(Type), write(': '), writeln(Message).
-print_syntax_error(Type,Message,_Position) :- write('SYNTAX '), write(Type), write(': '), writeln(Message).
-
-
-lps_welcome_message.
-
-% No time limit on XSB; may be however implementable with timed_call and friends;
-% should throw 'time_limit_exceeded' 
-% http://www.swi-prolog.org/pldoc/doc_for?object=call_with_time_limit/2 
-call_with_time_limit(_Time, Goal) :- Goal.
-
-contains_var(_X,_Fl) :- throw(please_implement_contains_var_in_xsb).
-
-:- dynamic d_pre/2.
-
+:- if(\+ current_prolog_flag(dialect, swi)).
+:- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
 
-%%% end of XSB specific section; now for SWI:
-
-:- if((current_prolog_flag(dialect, swi), current_module(swish))).
+:- if(current_module(swish)).
 
 % First a SWISH specificity - rather than use the db module, will use pengine's dynamic module (or a copy of it made into db, see background option)
 
@@ -201,11 +130,9 @@ callprolog(G) :- lps_program_module(M), call(M:G).
 u_swiclause(H,B,Ref) :- lps_program_module(M), clause(M:H,B,Ref).
 
 
-
 :- endif.
 
-
-:- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
+:- if(\+ current_module(swish)).
 % Now support for vanilla SWI Prolog
 :- use_module('../engine/db.P',[d/2,
 	action/1, current_time/1, real_time_beginning/1, d_pre/1 ,event/1,
@@ -237,7 +164,6 @@ u_swiclause(H,B,Ref) :- clause(db:H,B,Ref).
 
 :- endif.
 
-:- if(current_prolog_flag(dialect, swi)).
 % ...and finally the generic SWI support
 
 
@@ -922,9 +848,6 @@ user:file_search_path(system, SD) :-
 clean_state_flag('$_state'(false)).
 state_is_clean('$_state'(false)).
 state_changed(S) :- nb_setarg(1,S,true).
-:- endif.
-
-%%% end of SWI and Prolog engine-specific code
 
 %%% From here on, generic Prolog code
 
@@ -933,7 +856,6 @@ print_error(Type,Message) :- print_error(Type,Message,null).
 my_load_dyn(F) :- my_load_dyn(F,false).
 
 % my_term_size(Item,Size)  
-% could use XSB's native term_size, but I was having troublbuildEe aligning it with the following for SWI, so...
 my_term_size(T,1) :- var(T), !.
 my_term_size([T|TT],N) :- !, my_term_size(T,N1), my_term_size(TT,N2), N is N1+N2.
 my_term_size([],1) :- !.
@@ -1198,11 +1120,7 @@ go_(File,OptionsList,ResultFluents) :-
     	uassertz(current_goal(0)),
     	uassertz(depth(0)),
 	uassertz(used(0)),
-    	(option(ultra_verbose)->
-    		current_prolog_flag(write_depth,Old), 
-    		set_xsb_flag(write_depth,10000) % ultra_verbose only remembered for xsb
-   	;true),
-    	cputime(T1),
+	cputime(T1),
 	findall(reactive_rule(A, C), (reactive_rule(A, C);reactive_rule(A,C,_P)), R0), % drop priorities, if any
 	
 	interesting_composites(Interesting_CEs),
@@ -1235,15 +1153,13 @@ go_(File,OptionsList,ResultFluents) :-
 
 	),
 	clean_state_flag(StateFlag),
-	(cycle(Ri, Gi,StateFlag) -> go_finish(File,ResultFluents,T0,Old,T1,success) 
-		; go_finish(File,ResultFluents,T0,Old,T1,failure), option(run_test)).
+	(cycle(Ri, Gi,StateFlag) -> go_finish(File,ResultFluents,T0,T1,success) 
+		; go_finish(File,ResultFluents,T0,T1,failure), option(run_test)).
 
-go_finish(File,ResultFluents,T0,Old,T1,Outcome) :-
+go_finish(File,ResultFluents,T0,T1,Outcome) :-
 	cputime(T2),
 	print_statistics(T0,T1,T2),
 	close_test_file(File,Outcome),
-	(option(ultra_verbose)->set_xsb_flag(write_depth,Old);true),
-		% ultra_verbose only remembered for xsb
 	( option(background(TID)) -> % final state saved for debugging
 		findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents),
 		once(retract(background_execution(User,TID,RT,MaxRT,ET,MCT,_))),
@@ -1632,8 +1548,8 @@ parse_options(Options) :-
 	uretractall(option(_)),
 	% when running a test the options will be imposed by the test file:
 	% (member(run_test,Options) -> Options=[_]; true),  commenting this out to allow 'dc' option to be added
-	( (member(silent,Options), (member(verbose,Options);member(ultra_verbose,Options))) ->
-		print_error(error,'silent option incompatible with verbose and ultra_verbose'), fail
+	( (member(silent,Options), (member(verbose,Options))) ->
+		print_error(error,'silent option incompatible with verbose'), fail
 		; true),
 	( (member(cycle_hook(_),Options), (member(make_test,Options) ; member(manual,Options))) ->
 		print_error(error, 'cycle_hook option incompatible with make_test and with manual'), fail
@@ -1686,13 +1602,6 @@ parse_options_([verbose|Rest]) :- !,
     uassertz(option(verbose)),
     parse_options_(Rest).
 % Increase the default maximum written term depth, to avoid '...' output
-parse_options_([ultra_verbose|Rest]) :- !,
-    uassertz(option(verbose)),
-    (current_prolog_flag(dialect, xsb) 
-    	-> uassertz(option(ultra_verbose)) 
-    	; print_error(warning, 'ultra_verbose option considered only for XSB Prolog ')
-    	),
-    parse_options_(Rest).
 parse_options_([silent|Rest]) :- !,
     uassertz(option(silent)),
     parse_options_(Rest).

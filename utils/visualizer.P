@@ -6,77 +6,25 @@
 ** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-/* Utilities for visualizing LPS executions; 
-the XSB version depends on http://interprolog.com/interprolog-studio , the SWI one on SWISH */
+/* Utilities for visualizing LPS executions on SWISH */
 
 :- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1]).
 
-%%% XSB specific section:
-:- if(current_prolog_flag(dialect, xsb)).
-:- use_module(interpreter,[go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1]). % assumed preloaded
-:- use_module(db,[
-	lps_test_result_item/3, action/1, d/2
-	]).
-:- use_module(psyntax,[syntax2p_file/4]).
-
-:- use_module(subsumes,[variant/2]).
-:- use_module(basics, [member/2, append/3, length/2]).
-:- use_module(string,[concat_atom/2]).
-% namely for use with Prolog Studio:
-:- use_module(interprolog,[java/3, term2json/2, create_counter/1, get_increment_counter/2]).
-:- use_module(usermod,[xjShowURL/1]).
-:- use_module(lists,[intersect/3, list_difference_eq/3]).
-
-has_d_clauses :- clause(d(_,_),_), !.
-intersection(A,B,Common) :- intersect(A,B,Common).
-subtract(A,ToDelete,Result) :- list_difference_eq(A,ToDelete,Result).
-	
-www_open_url(URL) :- xjShowURL(URL). % xj2.P
-
-% make_json_object(PairsList,Object) Generate a JSON object in Prolog syntax from a list of Attribute:JSONValue 
-% Shame on me for the following, but I had enough of syntax idiosyncrasies...:
-make_json_object([A],{A}) :- !.
-make_json_object([A,B],{A,B}) :- !.
-make_json_object([A,B,C],{A,B,C}) :- !.
-make_json_object([A,B,C,D],{A,B,C,D}) :- !.
-make_json_object([A,B,C,D,E],{A,B,C,D,E}) :- !.
-make_json_object([A,B,C,D,E,F],{A,B,C,D,E,F}) :- !.
-make_json_object([A,B,C,D,E,F,G],{A,B,C,D,E,F,G}) :- !.
-make_json_object([A,B,C,D,E,F,G,H],{A,B,C,D,E,F,G,H}) :- !.
-make_json_object([A,B,C,D,E,F,G,H,I],{A,B,C,D,E,F,G,H,I}) :- !.
-make_json_object([A,B,C,D,E,F,G,H,I,J],{A,B,C,D,E,F,G,H,I,J}) :- !.
-make_json_object(L,_) :- length(L,N), N>10, !, writeln('*** JSON object with too many attributes in visualizer.P'), fail.
-
-
-displayTimeline(File,JSON) :-
-	concat_atom([File,'-timeline.json'],JSONfile),
-	tell(JSONfile),
-	forall(member(Char,JSON),put(Char)),
-	told,
-	concat_atom(['Fluent and event timeline for LPS program ',File],Subtitle),
-	concat_atom([File,'-timeline.html'],HTMLfile),
-	java( 'com.declarativa.fiji.reporting.VisjsUtils',
-		string(F),
-		generateTimeline(string('LPS program timeline'),string(Subtitle),string(JSONfile),string(HTMLfile))
-		),
-	replace_backslashes(F,FF), str_replace(FF, ' ', '%20', FFF),
-	concat_atom(['file:///',FFF],FFFF),
-	www_open_url(FFFF).
-	
+:- if(\+ current_prolog_flag(dialect, swi)).
+:- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
 
-%%% end of XSB specific section; now for SWI:
 
 
 % SWISH special case
-:- if((current_prolog_flag(dialect, swi), current_module(swish))).
+:- if(current_module(swish)).
 :- use_module(library(pengines),[pengine_self/1]).
 lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
 d(X,P) :- pengine_self(M), catch(M:d(X,P),_,fail).
 has_d_clauses :- pengine_self(M), catch(M:clause(d(_,_),_),_,fail), !.
 :- endif.
 % now non-swish SWI...
-:- if((current_prolog_flag(dialect, swi), \+ current_module(swish) )).
+:- if(\+ current_module(swish)).
 :- use_module('../engine/db.P',[
 	lps_test_result_item/3, action/1, d/2
 	]).
@@ -84,7 +32,6 @@ has_d_clauses :- clause(d(_,_),_), !.
 :- endif.
 
 % ... and generic SWI:
-:- if(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
@@ -120,10 +67,6 @@ get_increment_counter(Dict,CurrentValue) :-
 
 displayTimeline(_File,_JSON). 
 
-
-:- endif.
-
-%%% end of SWI and Prolog engine-specific code
 
 %%% From here on, generic Prolog code
 

@@ -16,69 +16,11 @@
 	file_generator_name/2,
 	may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/1]).
 
-%%% XSB specific section:
-:- if(current_prolog_flag(dialect, xsb)).
-
-:- use_module(interpreter,[go/3,uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,macroaction/1,system_fluent/1,system_action/1]). % assumed preloaded
-:- use_module(db,[head_hint/3, '_currenty__defining'/1]).
-:- use_module(basics, [member/2, append/3]).
-:- use_module(string,[concat_atom/2]).
-:- consult:add_this_lib_dir. % is this needed??
-:- use_module(xsb_read,[ file_read/3]).
-:- use_module(subsumes,[variant/2]).
-
-my_file_read(Stream,Term,Vars) :- file_read(Stream,Term,Vars).
-
-% New syntax .lps
-:- op(1200,xfx,then).
-:- op(1185,fx,if).
-:- op(1200,xfx,if).
-:- op(1050,xfx,(terminates)).
-:- op(1050,xfx,(initiates)).
-:- op(1050,xfx,(updates)).
-% Rejected:-( :- op(1050,fx,impossible). 
-:- op(1050,fx,observe).
-:- op(1050,fx,false).
-:- op(1050,fx,initially).
-:- op(1050,fx,fluents).
-:- op(1050,fx,events).
-:- op(1050,fx,actions).
-:- op(1050,fx,unserializable).
-% notice ',' has priority 1000
-:- op(999,fx,update).
-:- op(999,fx,initiate).
-:- op(999,fx,terminate).
-:- op(997,xfx,in).
-:- op(995,xfx,at).
-:- op(995,xfx,during).
-:- op(995,xfx,from). % Already defined in XSB with higher priority... so parenthesis needed e.g. (event 1 from 1 to 2), event 2 to 3
-:- op(994,xfx,to). % from's priority higher
-:- op(1050,xfy,::).
-% older syntax lpsp2p:
-:- op(1200,xfx,--->). % for reactive rules
-:- op(1190,xfx,priority). %... with priority
-:- op(900,fy,terminated).
-:- op(900,fy,initiated).
-
-may_clear_hints :- throw(only_for_swi).
-
-% hook into test suite runner:
-:- multifile interpreter:regenerate_file/1.
-% regenerate_file(F) F is an existing Wei syntax file that needs to be regenerated...if a source file for it can be found
-regenerate_file(F) :- generate_file(F), !.
-
-% SWI only:
-dumploaded(_).
-clear_timeless_refs. 
-may_add_timeless_ref(_).
-set_top_term(_).
-:- dynamic timeless_ref/1, current_top_term/1. % dummy declaration to please XSB's compiler
-
+:- if(\+ current_prolog_flag(dialect, swi)).
+:- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
 
-%%% end of XSB specific section; now for SWI:
-
-:- if((current_prolog_flag(dialect, swi), current_module(swish))). 
+:- if(current_module(swish)). 
 % first, SWISH specific; see comments in interpreter.P
 
 :- use_module(library(pengines),[pengine_self/1]).
@@ -114,12 +56,11 @@ lps_swish_clause(H,Body,Vars) :-
 	
 :- endif.
 
-:- if((current_prolog_flag(dialect, swi), \+ current_module(swish))).
+:- if( \+ current_module(swish)).
 % Now support for vanilla/barebones SWI Prolog:
 dumploaded(_).
 :- endif.
 
-:- if(current_prolog_flag(dialect, swi)).
 % ...and finally the generic SWI support:
 
 :- use_module('../engine/db.P',[head_hint/3, '_currenty__defining'/1]).
@@ -168,7 +109,7 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(997,xfx,user:in).
 :- op(995,xfx,user:at).
 :- op(995,xfx,user:during).
-:- op(995,xfx,user:from). % Already defined in XSB with higher priority... so parenthesis needed e.g. (event 1 from 1 to 2), event 2 to 3
+:- op(995,xfx,user:from). 
 :- op(994,xfx,user:to). % from's priority higher
 :- op(1050,xfy,::).
 % older syntax lpsp2p:
@@ -199,8 +140,6 @@ may_clear_hints :- thread_self(T), get_time(Now), assert(expanding_in_thread(T,N
 :- multifile interpreter:regenerate_file/1.
 % regenerate_file(F) F is an existing Wei syntax file that needs to be regenerated...if a source file for it can be found
 interpreter:regenerate_file(F) :- generate_file(F), !.
-
-:- endif.
 
 %%% From here on, generic Prolog code
 
@@ -301,7 +240,6 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		; throw('Bad syntax translator:'(Translator))),
 	init_definition_newliner,
 	clear_hints, clear_timeless_refs,
-	( current_prolog_flag(write_depth,Old) -> set_xsb_flag(write_depth,10000) ; true), % XSB specific, ignore otherwise
 	(ToWei==true -> 
 		(file_exists(Lfile)->true;throw(non_existing_file(Lfile))), 
 		open(Lfile,read,IStr), open(Pfile,write,OStr), 
@@ -339,8 +277,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 			(may_write_newline(Fact,OStr), pretty_write(Fact,OStr), writeln(OStr,'.'))
 			)
 	; true),
-	close(OStr),close(IStr),
-	(nonvar(Old)->set_xsb_flag(write_depth,Old);true).
+	close(OStr),close(IStr).
 
 % term_includer(+TermRead,+VarsRead,+FilesIncludedSoFar,-Term,-Vars)
 term_includer((:- include(F)), _, Included, Term,Vars) :- !, absolute_file_name(F,File), 
