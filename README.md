@@ -28,8 +28,7 @@ For more details please see [INSTALL_server](https://bitbucket.org/lpsmasters/lp
 If you'd rather install a local non-web system, see [INSTALL.md](https://bitbucket.org/lpsmasters/lps_corner/src/master/INSTALL.md).
 
 Preliminary documentation at the [wiki](https://bitbucket.org/lpsmasters/lps_corner/wiki/lps.swi%20Reference). The LPs syntax is decribed [here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax%20of%20lps.swi).
-
-
+2D visualisation predicates described [here](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/swish/2dWord.md?at=master&fileviewer=file-view-default)
 ## Latest version: Feb 27, 2019 ##
 * Experimental if-then-else
 * Improve program termination by detecting "future killers", conditions doomed to fail because of time
@@ -53,7 +52,7 @@ This is the first update since Summer 2017, and incorporates most improvements d
 
 ## What is LPS? ##
 
-â€œLogic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at [Imperial College London](http://lps.doc.ic.ac.uk). 
+“Logic-based Production System" is a new computer language that combines the characteristics of an imperative programming language with those of a declarative database and knowledge representation language. It is the result of over a decade of research led by [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/) and [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/) at [Imperial College London](http://lps.doc.ic.ac.uk). 
 
 The kernel of LPS consists of a database, together with reactive rules of the form ***if*** *antecedent* ***then*** *consequent*. The database changes destructively in response to actions and external events, according to a domain-specific causal theory. Computation consists in making the reactive rules true, by performing actions to make the *consequent* true whenever the *antecedent* becomes true. In addition, LPS includes Prolog-like logic programs both to recognise when *antecedents* become true and to generate plans of actions that make *consequents* true.
 
@@ -84,7 +83,7 @@ XSB Prolog support is deprecated, but still available in the [Aug 15, 2017 versi
 ### License and Copyright ###
 All files in this repository are copyright Imperial College London and open source licensed with 3-clause BSD, except for files with other specific copyright and licensing notices, all being some sort of open source. 
 
-Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/), [Miguel Calejo](http://calejo.com) and also contributions by [Jacinto DÃ¡vila](http://webdelprofesor.ula.ve/ingenieria/jacinto). The engine implementation in this repository is an evolved version of the core interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda. 
+Main authors include [Bob Kowalski](https://www.doc.ic.ac.uk/~rak/), [Fariba Sadri](https://www.doc.ic.ac.uk/~fs/), [Miguel Calejo](http://calejo.com) and also contributions by [Jacinto Dávila](http://webdelprofesor.ula.ve/ingenieria/jacinto). The engine implementation in this repository is an evolved version of the core interpreter developed during David Wei's Master Thesis project at Imperial College, London, supervised by Fariba Sadri and Krysia Broda. 
 
 
 ### Core Engine + Prolog Studio (deprecated) ###
