@@ -1622,6 +1622,7 @@ parse_options_([meta_actions|Rest]) :- !,
 	parse_options_(Rest).
 parse_options_([cycle_hook(Predicate,Fluents,Actions)|Rest]) :- !,
 	% Fluents and (basic) Actions are lists of templates; the cycle hook predicate should collect all matching tuples
+	% see examples/external_interfaces/
 	((atom(Predicate),is_list(Fluents),is_list(Actions))->true
 	; print_error(error, 'cycle_hook option first argument must be an atom, a predicate name; then fluent and action lists.'), fail),
 	uassertz(option(cycle_hook(Predicate,Fluents,Actions))),

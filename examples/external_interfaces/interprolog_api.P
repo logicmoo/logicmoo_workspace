@@ -6,9 +6,10 @@
 ** Apache 2.0 License, readable in http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-% Utility predicates required by external LPS APIs
-% This version depends on http://interprolog.com/java-bridge/ , an open source Java/XSB interface
-% SWI Prolog NOT YET incorporated
+% DEPRECATED, not working currently; TODO: adapt LPSEngine in interprolog for SWISubprocessEngine
+% SEE myJavaHook.pl instead
+%
+% Utility predicates required by old external LPS APIs
 
 :- import ipPrologEngine/1, java/3 from interprolog.
 :- import current_time/1, option/1 from usermod. % current LPS cycle
@@ -33,7 +34,6 @@ lps_java_hook(Obs) :-
 	java(E, R, cycleHook(int(T),terms(F),terms(A)) ),
 	( R==null -> fail ; 
 	R = string(ObsStr), (ObsStr='[]'->Obs=[] /* XSB bug...*/;read_atom_to_term(ObsStr,Obs))).
-
 
 
 

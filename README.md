@@ -26,7 +26,10 @@ The above starts up a SWISH server with LPS at port 3051 on your system; to use 
 For more details please see [INSTALL_server](https://bitbucket.org/lpsmasters/lps_corner/src/master/swish/INSTALL_server.md).
 
 
-## Latest version ##
+## Latest version: Feb 27, 2019 ##
+* Experimental if-then-else
+* Improve program termination by detecting "future killers", conditions doomed to fail because of time
+* Support SWI-Prolog 8.1.1 and latest SWISH
 
 ## Previous version: D-Day, 2018 ##
 * Bug fixes
