@@ -101,12 +101,18 @@ compat(M:Goal) :-
 generalize_term(STerm, Term, _) :-
     \+ terms_share(STerm, Term).
 
+neg(nonvar(A), var(A)).
+neg(A==B,  A \== B).
+neg(A =B,  A  \= B).
+neg(A=:=B, A =\= B).
+neg(A,     \+A).
+
 current_prop_failure((SG :- Body)) :-
     '$last_prop_failure'(Term, SubU),
     sort(SubU, Sub),
     greatest_common_binding(Term, Sub, ST, SSub, [[]], Unifier, []),
     substitute(generalize_term(SSub), ST, SG),
-    maplist(\ A^(\+A)^true, SSub, NSub),
+    maplist(\ A^NA^once(neg(A, NA)), SSub, NSub),
     foldl(simplify_unifier(SG-SSub), Unifier, LitL, NSub),
     LitL \= [],
     list_sequence(LitL, Body).
@@ -261,9 +267,9 @@ compatc_arg(gnd(      A), A).
 compatc_arg(ground(   A), A).
 compatc_arg(nonground(A), A).
 
-freeze_fail(CP, Term, V) :-
+freeze_fail(CP, Term, V, N) :-
     freeze(V, ( prolog_cut_to(CP),
-                cleanup_prop_failure(Term, [V]),
+                cleanup_prop_failure(Term, [nonvar(N), N==V]),
                 fail
               )).
 
@@ -281,7 +287,8 @@ instan(Goal) :-
 
 instan(Goal, VS) :-
     prolog_current_choice(CP),
-    \+ \+ ( maplist(freeze_fail(CP, Goal), VS),
+    \+ \+ ( copy_term_nat(Goal-VS, Term-VN),
+            maplist(freeze_fail(CP, Term), VS, VN),
             Goal
           ).
 
