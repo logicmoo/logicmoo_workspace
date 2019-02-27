@@ -39,7 +39,8 @@
 :- use_module(library(normalize_head)).
 :- use_module(library(qualify_meta_goal)).
 
-:- pred normalize_head(+, -goal).
+:- pred normalize_head(:, -goal).
+:- pred normalize_head(+, -).
 :- pred normalize_head(-, -).
 
 :- pred qualify_meta_goal(0, -goal).
