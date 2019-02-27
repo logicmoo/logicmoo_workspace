@@ -214,15 +214,22 @@ call_instr(i_usercalln(_)).
 call_instr_param(i_call(  PI), PI).
 call_instr_param(i_depart(PI), PI).
 
-:- table inspect_target/3.
+% :- table inspect_target/3.
+% Note: We don't use table/1 since sometimes we get this error:
+% ERROR: shift/1: reset/3 `call_info(rtchecks_tracer:inspect_target(x,2,m),...)' does not exist
+
+:- dynamic inspect_target_db/3.
 
 inspect_target(F, A, M) :-
-    functor(Goal, F, A),
-    once(( rtchecks_tracer:pp_assr(Goal, M)
-         ; current_assertion(rt, Goal, M, _)
-         ; \+ black_list_meta(M, Goal),
-           predicate_property(M:Goal, meta_predicate(S)),
-           once(arg(_, S, 0 ))
+    once(( inspect_target_db(F, A, M)
+         ; functor(Goal, F, A),
+           ( pp_assr(Goal, M)
+           ; current_assertion(rt, Goal, M, _)
+           ; \+ black_list_meta(M, Goal),
+             predicate_property(M:Goal, meta_predicate(S)),
+             once(arg(_, S, 0 ))
+           ),
+           assertz(inspect_target_db(F, A, M))
          )).
 
 setup_clause_bpt(Clause, Frame, Action) :-
