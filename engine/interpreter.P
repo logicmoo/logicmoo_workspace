@@ -264,10 +264,8 @@ get_git_version(V) :- lps_engine_directory(D), git_hash(V,[directory(D)]), !, as
 get_git_version(V) :- V='???', assert(git_version_cache(V)).
 
 % Higher level engine version
-get_version(0.5).
+get_version(0.6).
 
-
-%% Now for an implementation available only on SWI:
 
 % resolveUntilAction(+Goal,+ActionAncestors,-Ball,-Continuation)  Misleading name: also stops when finding alternatives!
 % vaguely equivalent to reset(Goal,Ball,Continuation); rather than calling shift(Ball), Ball and Continuation
