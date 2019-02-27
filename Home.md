@@ -8,7 +8,9 @@
 
 [Here](lps.swi%20Reference)
 
-## [Some Smart Contracts Examples](https://bitbucket.org/lpsmasters/lps_corner/wiki/Smart%20Contract%20Examples)
+## Some Smart Contracts Examples ##
+
+[Here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Smart%20Contract%20Examples)
 
 --
 
