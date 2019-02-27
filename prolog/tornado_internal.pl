@@ -25,7 +25,16 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1).
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
+  M:(dynamic new_added_det/2, new_added_det/3),
+  M:(dynamic new_added_nondet/2, new_added_nondet/3).
+
+clean_up(M):-
+  utility_translation:clean_up(M),
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
+  retractall(M:exp_found(_,_)),
+  retractall(M:keep_env),
+  retractall(M:tornado_bdd_environment(_)).
 
 clean_up(M):-
   utility_translation:clean_up(M),
@@ -151,33 +160,60 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
+modify_ABox(M,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox]):-
+  find((sameIndividual(L),Expl0),ABox),!,
+  sort(L,LS),
+  sort(LF,LFS),
+  LS = LFS,!,
+  dif(L0,Expl0),
+  test(M,L0,Expl0,Expl),
+  delete(ABox0,(sameIndividual(L),Expl0),ABox).
+  
+modify_ABox(_,ABox0,sameIndividual(L),L0,[(sameIndividual(L),L0)|ABox0]).
+
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
-  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
+  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox),
+  assert_new_added(M,C,Ind).
   
   
-modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]):-
+  assert_new_added(M,C,Ind).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
-  delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
+  delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
+  assert_new_added(M,P,Ind1,Ind2).
   
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-
+  assert_new_added(M,P,Ind1,Ind2).
 
 /* ************* */
 
+/***********
+  update abox
+  utility for tableau
+************/
+
+get_hierarchy_from_class(M,Class,H4C):-
+  hierarchy(M:H),
+  get_hierarchy(H,Class,H4CE),!,
+  get_bdd_environment(M,Env),
+  hier_build_bdd(M,Env,H4CE,H4C).
+
+/* ************* */
 
 /*
   build_abox
   ===============
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox(M,ExpansionQueue,(ABox,Tabs)):-
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
@@ -192,14 +228,15 @@ build_abox(M,(ABox,Tabs)):-
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
   add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox3),
+  add_all(LPA,ABox1,ABox3),
+  %add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
   findall((differentIndividuals(Ld),BDDDIA),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs3),
-  create_tabs(LSPA,Tabs3,Tabs4),
+  create_tabs(LPA,Tabs2,Tabs4),
+  %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),BDDSIA),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
@@ -243,10 +280,88 @@ or_f(M,BDD0,BDD1,BDD):-
   get_bdd_environment(M,Env),
   or(Env,BDD0,BDD1,BDD).
 
+/**********************
+
+Hierarchy Explanation Management
+
+***********************/
+
+hier_initial_expl(_M,[]):-!.
+
+hier_empty_expl(_M,[]):-!.
+
+hier_and_f(_M,[],[],[]):- !.
+
+hier_and_f(_M,[],L,L):- !.
+
+hier_and_f(_M,L,[],L):- !.
+
+hier_and_f(_M,L1,L2,F):-
+  hier_and_f1(L1,L2,[],F).
+
+hier_and_f1([],_,L,L).
+
+hier_and_f1([H1|T1],L2,L3,L):-
+  hier_and_f2(H1,L2,L12),
+  append(L3,L12,L4),
+  hier_and_f1(T1,L2,L4,L).
+
+hier_and_f2(_,[],[]):- !.
+
+hier_and_f2(L1,[H2|T2],[H|T]):-
+  append(L1,H2,H),
+  hier_and_f2(L1,T2,T).
+
+hier_or_f_check(_M,Or1,Or2,Or):-absent(Or1,Or2,Or).
+
+hier_or_f(_M,Or1,Or2,Or):-
+  append(Or1,Or2,Or0),
+  sort(Or0,Or).
+
+hier_ax2ex(_M,Ax,[[Ax]]):- !.
+  
+get_subclass_explanation(M,C,D,BDD,Expls):-
+  member(ex(C,D)-Expl,Expls),
+  get_bdd_environment(M,Env),
+  build_expl_bdd(M,Env,Expl,BDD).
+
+/*  absent
+  =========
+*/
+
+absent(Expl0,Expl1,Expl):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
+  absent0(Expl0,Expl1,Expl),!.
+
+%------------------
+absent0(Expl0,Expl1,Expl):-
+  absent1(Expl0,Expl1,Expl,Added),
+  dif(Added,0).
+
+absent1(Expl,[],Expl,0).
+
+absent1(Expl0,[H|T],[H|Expl],1):-
+  absent2(Expl0,H),!,
+  absent1(Expl0,T,Expl,_).
+
+absent1(Expl0,[_|T],Expl,Added):-
+  absent1(Expl0,T,Expl,Added).
+  
+absent2([H],Expl):-
+  length([H],1),!,
+  subset(H,Expl) -> !,fail ; !,true.
+
+absent2([H|_T],Expl):-
+  subset(H,Expl),!,
+  fail.
+
+absent2([_|T],Expl):-
+  absent2(T,Expl).
+
+
 
 /**********************
 
-TRILLP SAT TEST
+TORNADO TEST
 
 ***********************/
 
@@ -278,6 +393,17 @@ build_bdd(_,Env,[],BDD):- !,
   zero(Env,BDD).
 
 build_bdd(_,_Env,BDD,BDD).
+
+build_expl_bdd(M,Env,[X],BDD):- !,
+  bdd_and(M,Env,X,BDD).
+
+build_expl_bdd(M,Env, [H|T],BDD):-
+  build_expl_bdd(M,Env,T,BDDT),
+  bdd_and(M,Env,H,BDDH),
+  or(Env,BDDH,BDDT,BDD).
+
+build_expl_bdd(_M,Env,[],BDD):- !,
+  zero(Env,BDD).
 
 bdd_and(M,Env,[X],BDDX):-
   get_prob_ax(M,X,AxN,Prob),!,

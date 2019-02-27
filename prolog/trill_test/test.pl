@@ -1,7 +1,7 @@
 
 
 :- format(user_error,
-	  'trill test suite.  To run all tests run ?- test.~n~n', []).
+	  'TRILL test suite.  To run all tests run ?- test.~n~n', []).
 test:-
   use_module(library(trill_test/test_trill)),
   test_trill,

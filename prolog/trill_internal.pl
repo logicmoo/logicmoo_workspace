@@ -25,7 +25,14 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2).
+  M:(dynamic exp_found/2),
+  M:(dynamic new_added_det/2, new_added_det/3),
+  M:(dynamic new_added_nondet/2, new_added_nondet/3).
+
+clean_up(M):-
+  utility_translation:clean_up(M),
+  M:(dynamic exp_found/2),
+  retractall(M:exp_found(_,_)).
 
 clean_up(M):-
   utility_translation:clean_up(M),
@@ -134,7 +141,7 @@ find_neg_class(maxCardinality(N,R,C),minCardinality(NMin,R,C)):-
   NMin is N + 1.
 
 %-----------------
-:- multifile find_sub_sup_class/3.
+:- multifile find_sub_sup_class/4.
 
 %role for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S)):-
@@ -142,7 +149,7 @@ find_sub_sup_class(M,exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R
 
 %concept for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class_dir(M,C,D,Ax).
 
 %role for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -154,7 +161,7 @@ find_sub_sup_class(M,maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S))
 
 %concept for concepts maxCardinality
 find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class_dir(M,C,D,Ax).
 
 %role for concepts maxCardinality
 find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -166,7 +173,7 @@ find_sub_sup_class(M,minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S))
 
 %concept for concepts minCardinality
 find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
-  find_sub_sup_class(M,C,D,Ax).
+  find_sub_sup_class_dir(M,C,D,Ax).
 
 %role for concepts minCardinality
 find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -190,22 +197,24 @@ modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
   	(ABox = ABox0,Expl = Expl1)
   ).
 
-modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-%gtrace,
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
+      delete(ABox0,(classAssertion(C,Ind),Expl0),ABox),
+      assert_new_added(M,C,Ind)
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
+    (ABox = ABox0,Expl = Expl1,assert_new_added(M,C,Ind))
   ).
 
-modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox),
+      assert_new_added(M,P,Ind1,Ind2)
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
+    (ABox = ABox0,Expl = Expl1,assert_new_added(M,P,Ind1,Ind2))
   ).
 
 /* ************* */
@@ -317,8 +326,8 @@ absent1(Expl0,[_|T],Expl,Added):-
   absent1(Expl0,T,Expl,Added).
   
 absent2([H],Expl):-
-  length([H],1),
-  subset(H,Expl) -> fail ; true.
+  length([H],1),!,
+  subset(H,Expl) -> !,fail ; !,true.
 
 absent2([H|_T],Expl):-
   subset(H,Expl),!,
@@ -328,6 +337,17 @@ absent2([_|T],Expl):-
   absent2(T,Expl).
 
 /* **************** */
+
+/***********
+  update abox
+  utility for tableau
+************/
+
+get_hierarchy_from_class(M,Class,H4C):-
+  hierarchy(M:H),
+  get_hierarchy(H,Class,H4C),!.
+
+/* ************* */
 
 /*
   build_abox
@@ -344,7 +364,7 @@ absent2([_|T],Expl):-
   add_all(LSPA,ABox2,ABox).
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox(M,ExpansionQueue,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -353,14 +373,15 @@ build_abox(M,(ABox,Tabs)):-
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
   add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox3),
+  add_all(LPA,ABox1,ABox3),
+  %add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
   findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]]),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs3),
-  create_tabs(LSPA,Tabs3,Tabs4),
+  create_tabs(LPA,Tabs2,Tabs4),
+  %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),[[sameIndividual(L)]]),M:sameIndividual(L),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
@@ -404,6 +425,30 @@ and_f2(L1,[H2|T2],[H|T]):-
   append(L1,H2,H),
   and_f2(L1,T2,T).
 
+or_f(_M,Or1,Or2,Or):-
+  append(Or1,Or2,Or0),
+  sort(Or0,Or).
+
+/**********************
+
+Hierarchy Explanation Management
+
+***********************/
+
+hier_initial_expl(_M,[]):-!.
+
+hier_empty_expl(_M,[]):-!.
+
+hier_and_f(M,A,B,C):- and_f(M,A,B,C).
+
+hier_or_f_check(_M,Or1,Or2,Or):-absent(Or1,Or2,Or).
+
+hier_or_f(M,Or1,Or2,Or):-or_f(M,Or1,Or2,Or).
+
+hier_ax2ex(_M,Ax,[[Ax]]):- !.
+  
+get_subclass_explanation(_M,C,D,Expl,Expls):-
+  member(ex(C,D)-Expl,Expls).
 
 /**********************
 

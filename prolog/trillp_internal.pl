@@ -27,7 +27,14 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2).
+  M:(dynamic exp_found/2),
+  M:(dynamic new_added_det/2, new_added_det/3),
+  M:(dynamic new_added_nondet/2, new_added_nondet/3).
+
+clean_up(M):-
+  utility_translation:clean_up(M),
+  M:(dynamic exp_found/2),
+  retractall(M:exp_found(_,_)).
 
 clean_up(M):-
   utility_translation:clean_up(M),
@@ -137,6 +144,24 @@ or_all(M,[H|T],Expl):-
   update abox
   utility for tableau
 ************/
+modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox]):-
+  find((sameIndividual(L),Expl0),ABox),!,
+  sort(L,LS),
+  sort(LF,LFS),
+  LS = LFS,!,
+  dif(L0,Expl0),
+  ((dif(L0,[]),subset(L0,Expl0)) -> 
+     Expl = L0
+   ;
+     (subset(Expl0,L0) -> fail 
+      ;
+        (test(M,L0,Expl0),or_f(M,L0,Expl0,Expl))
+     )
+  ),
+  delete(ABox0,[(sameIndividual(L),Expl0)],ABox).
+
+modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(LF),L0)|ABox0]).
+
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
@@ -148,10 +173,12 @@ modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
         (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
      )
   ),
-  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
+  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox),
+  assert_new_added(M,C,Ind).
   
   
-modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]):-
+  assert_new_added(M,C,Ind).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
@@ -162,20 +189,32 @@ modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox])
      % L0 is the new explanation, i.e. the \psi and Expl1 is the old label of an essertion
      (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
   ),
-  delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
+  delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
+  assert_new_added(M,P,Ind1,Ind2).
   
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
+modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-
+  assert_new_added(M,P,Ind1,Ind2).
+
+/* **************** */
+
+/***********
+  update abox
+  utility for tableau
+************/
+
+get_hierarchy_from_class(M,Class,H4C):-
+  hierarchy(M:H),
+  get_hierarchy(H,Class,H4C),!.
 
 /* ************* */
-
 
 /*
   build_abox
   ===============
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox(M,ExpansionQueue,(ABox,Tabs)):-
   findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -184,14 +223,15 @@ build_abox(M,(ABox,Tabs)):-
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
   add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox3),
+  add_all(LPA,ABox1,ABox3),
+  %add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
   findall((differentIndividuals(Ld),*([differentIndividuals(Ld)])),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs3),
-  create_tabs(LSPA,Tabs3,Tabs4),
+  create_tabs(LPA,Tabs2,Tabs4),
+  %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),*([sameIndividual(L)])),M:sameIndividual(L),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
@@ -208,7 +248,7 @@ initial_expl(_M,[]):-!.
 empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
-  and_f(M,*([Axiom]),F0,F).
+  and_f(M,*([Axiom]),F0,F),!.
 
 % and between two formulae
 and_f(_,[],[],[]):-!.
@@ -254,14 +294,14 @@ and_f(_M,*(A1),*(A2),*(A)):-!,
 and_f(_M,*(A1),+(O1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(_M,*(A1),+(O1),*(A)):-
+and_f(_M,*(A1),+(O1),*(A)):-!,
   append(A1,[+(O1)],A).
 
 % absorption x * (x + y) = x
 and_f(_M,+(O1),*(A1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(_M,+(O1),*(A1),*(A)):-
+and_f(_M,+(O1),*(A1),*(A)):-!,
   append([+(O1)],A1,A).
 
 and_f(_M,+(O1),+(O2),*([+(O1),+(O2)])).
@@ -571,6 +611,27 @@ find_compatible_or(F1,OrF2,OrF2C,OrF2NC):-
   differenceFML(OrF2,OrF2C,OrF2NC).
   
 remove_duplicates(A,C):-sort(A,C).
+
+/**********************
+
+Hierarchy Explanation Management
+
+***********************/
+
+hier_initial_expl(_M,[]):-!.
+
+hier_empty_expl(_M,[]):-!.
+
+hier_and_f(M,A,B,C):- and_f(M,A,B,C).
+
+hier_or_f(M,Or1,Or2,Or):- or_f(M,Or1,Or2,Or).
+
+hier_or_f_check(M,Or1,Or2,Or):- or_f(M,Or1,Or2,Or).
+
+hier_ax2ex(_M,Ax,*([Ax])):- !.
+  
+get_subclass_explanation(_M,C,D,Expl,Expls):-
+  member(ex(C,D)-Expl,Expls).
 
 /**********************
 
