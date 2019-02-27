@@ -2,7 +2,7 @@
 
 ## LPS syntax ##
 
-[Here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax)
+[Here](Syntax%20of%20lps.swi)
 
 ## Preliminary reference documentation for lps.swi ##
 
