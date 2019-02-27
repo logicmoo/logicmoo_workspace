@@ -4,6 +4,8 @@
 
 *This document summarizes the open source extensions to the language described in <http://lps.doc.ic.ac.uk>. The system can be tried online at <http://demo.logicalcontracts.com> - start by its Examples menu.*
 
+[TOC]
+
 # About Time #
 
 LPS predicates may be timestamped with "LPS time" or "cycle time", in holds(Fluent,Time) and happens(Event,FromTime,ToTime) literals in the internal syntax representation; external syntax sometimes leaves time implicit. The next sections describe how this abstract, computable "internal timeline" maps to real worl timelines.
