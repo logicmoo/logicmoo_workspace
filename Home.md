@@ -1,16 +1,17 @@
 # Welcome
 
-## We are working out the syntax of LPS [here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax). Come and join in!
+## LPS syntax ##
+
+[Here](https://bitbucket.org/lpsmasters/lps_corner/wiki/Syntax)
 
 ## Preliminary reference documentation for lps.swi ##
 
 [Here](lps.swi%20Reference)
 
-## New!! [Smart Contracts Examples](https://bitbucket.org/lpsmasters/lps_corner/wiki/Smart%20Contract%20Examples)
+## [Some Smart Contracts Examples](https://bitbucket.org/lpsmasters/lps_corner/wiki/Smart%20Contract%20Examples)
 
 --
 
-Welcome to our wiki! This is the default page we've installed for your convenience. Go ahead and edit it.
 
 ## Wiki features
 
