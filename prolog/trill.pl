@@ -11,7 +11,7 @@ See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
 details.
 
-@version 5.2.1-beta
+@version 5.3.0-beta
 @author Riccardo Zese
 @license Artistic License 2.0
 @copyright Riccardo Zese
