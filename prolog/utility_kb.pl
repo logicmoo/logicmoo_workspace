@@ -180,7 +180,7 @@ check_disjoint(KB0,KB):- %trace
   add_edges(TreeH0,NewEdges,TreeH1),
   /*
     MATTIA
-    inserire qua la chiamata al predicato 1
+    inserire qua la chiamata al predicato 1 prova
     
     applichi su TreeH il predicato e sostituisce TreeH1 con la nuova lista TreeH
     
