@@ -15,7 +15,7 @@ using gradient descent and Backpropagation
 :-module(phil,[set_sc/2,setting_sc/2,
   induce_par/2,test/7,
   list2or/2,list2and/2,
-  sample/4,learn_params/4,
+  sample/4,learn_params/5,
   op(500,fx,#),op(500,fx,'-#'),
   test_prob/6,rules2terms/2,
   process_clauses/6,
