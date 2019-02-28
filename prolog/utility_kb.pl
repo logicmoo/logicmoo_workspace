@@ -72,7 +72,7 @@ create_hierarchy(M,Stats):-%gtrace,
   add_all_disjointUnion(H3,M,H4),
   add_all_subClassOf(H4,M,H5),
   search_and_add_complex_subClassOf(H5,M,H6),
-  check_disjoint(H6,H),
+  check_disjoint(H6,H),    
   (Stats=false -> true ;
      ( statistics(walltime,[_,KBAM]),
        KBAS is KBAM / 1000,
@@ -171,13 +171,23 @@ init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjoint
   ClassesName=['http://www.w3.org/2002/07/owl#Nothing','http://www.w3.org/2002/07/owl#Thing'].
   %vertices_edges_to_ugraph([],[0-'n'],TreeD).
 
-check_disjoint(KB0,KB):-
+check_disjoint(KB0,KB):- %trace
   KBH=KB0.hierarchy,
   edges(KBH,H),
   check_disjoint_int(KB0.disjointClasses,H,NewEdges),
   collect_nodes_to_remove(NewEdges,H,[],Edges),
   del_edges(KBH,Edges,TreeH0),
-  add_edges(TreeH0,NewEdges,TreeH),
+  add_edges(TreeH0,NewEdges,TreeH1),
+  /*
+    MATTIA
+    inserire qua la chiamata al predicato 1
+    
+    applichi su TreeH il predicato e sostituisce TreeH1 con la nuova lista TreeH
+    
+    come test carichi il file test_hierarchy.pl e lanchi il comando hierarchy(H),write(H.hierarchy).
+    
+    Per fare questo devi guardarti i dict in SWI-Prolog (http://www.swi-prolog.org/pldoc/man?section=bidicts)
+  */
   KB=KB0.put(hierarchy,TreeH),!.
 
 check_disjoint_int([],_,[]).
