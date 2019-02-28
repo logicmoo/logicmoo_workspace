@@ -126,7 +126,7 @@ cleanup_trace :-
     cleanup_trace(state(Visible, Leash, Ref)),
     retractall(rtc_scanned(_)),
     forall(retract(rtc_break(Clause, PC)),
-           ignore('$break_at'(Clause, PC, false))).
+           ignore(catch('$break_at'(Clause, PC, false), _, true))).
 
 black_list_caller(M:F/A) :-
     functor(H, F, A),
