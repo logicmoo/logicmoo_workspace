@@ -34,11 +34,6 @@ clean_up(M):-
   M:(dynamic exp_found/2),
   retractall(M:exp_found(_,_)).
 
-clean_up(M):-
-  utility_translation:clean_up(M),
-  M:(dynamic exp_found/2),
-  retractall(M:exp_found(_,_)).
-
 /***********
   Utilities for queries
  ***********/

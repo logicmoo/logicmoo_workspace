@@ -36,13 +36,6 @@ clean_up(M):-
   retractall(M:keep_env),
   retractall(M:tornado_bdd_environment(_)).
 
-clean_up(M):-
-  utility_translation:clean_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
-  retractall(M:exp_found(_,_)),
-  retractall(M:keep_env),
-  retractall(M:tornado_bdd_environment(_)).
-
 /*****************************
   MESSAGES
 ******************************/

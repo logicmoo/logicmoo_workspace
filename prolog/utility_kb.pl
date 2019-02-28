@@ -21,7 +21,7 @@ This module models and manages the hierarchy of the KB's concepts.
 :- use_module(library(classes)).
 :- use_module(library(ugraphs)).
 
-:- use_module(library(tabling)).
+%:- use_module(library(tabling)).
 :- table expl_combination/4.
 
 :- table get_combined_expls(_,_,_,_,_,_,lattice(append_expl/3)). %get_hierarchy_ric/6,
