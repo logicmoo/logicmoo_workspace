@@ -143,13 +143,21 @@ current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     from_location(PFrom, PLoc),
     from_location(From, Loc).
 
+resolve_head(V, M, M:V) :-
+    var(V),
+    % Note: this should not happen
+    !,
+    fail.
 resolve_head(M:H1, _, H) :- !,
     resolve_head(H1, M, H).
 resolve_head((A,B), M, H) :- !,
     ( resolve_head(A, M, H)
     ; resolve_head(B, M, H)
     ).
-resolve_head((A;B), M, H) :- !,
+resolve_head((A;B), M, H) :-
+    !,
+    %% ERROR: When Checker=ctcheck, we are reporting an issue even if one of the
+    %% next two branches does not have any:
     ( resolve_head(A, M, H)
     ; resolve_head(B, M, H)
     ).
