@@ -211,7 +211,8 @@ record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
       record_location_goal(Fact, M, Type, CM, Comp, From),
       update_fact_from(wrong_dynamic_db(Type, M:F/A, MPI), From)
     ; \+ database_fact(Caller)
-    ->normalize_head(Caller, CM:HC),
+    ->normalize_head(Caller, CMHC),
+      strip_module(CMHC, CM, HC),
       \+ hide_var_dynamic(HC, CM),
       \+ ( get_attr(Fact, meta_args, Spec),
            prolog_metainference:is_meta(Spec)
