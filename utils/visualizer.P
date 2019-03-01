@@ -216,7 +216,7 @@ prepare_display_sequence([c(NextT,Op)|Cycles],T,CS,[CS|Sequence]) :- NextT is T+
 prepare_display_sequence([],_,CS,[CS]).
 	
 % collect_display_specs(+Items,-OpItems) 
-% Each item is a t(X,T1-T2,Literal). Each OpItem is a c(Cycle,Op); 
+% Each item is a t(Literal,T1-T2,Group). Each OpItem is a c(Cycle,Op); 
 %  sorted by ID, start cycle; end cycle irrelevant because there are no sobrepositions)
 %  This is roughly O(N*N), can be speeded up if necessary by using a dictionary of ID -> Ops
 collect_display_specs(Items,TheOpItems_) :- 

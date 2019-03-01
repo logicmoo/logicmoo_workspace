@@ -1115,8 +1115,8 @@ go_(File,OptionsList,ResultFluents) :-
 	),
 	((observe(_, 1)) -> throw(no_events_admissible_in_cycle_zero); true),
 	cputime(T0),
-    	uassertz(current_goal(0)),
-    	uassertz(depth(0)),
+    uassertz(current_goal(0)),
+    uassertz(depth(0)),
 	uassertz(used(0)),
 	cputime(T1),
 	findall(reactive_rule(A, C), (reactive_rule(A, C);reactive_rule(A,C,_P)), R0), % drop priorities, if any
@@ -1134,7 +1134,7 @@ go_(File,OptionsList,ResultFluents) :-
 		(endTime(ET) -> true ; ET = 0),
 		(maxRealTime(MaxRT) -> true ; MaxRT = 0),
 		minCycleTime_(MCT),
-		(MCT < 0.0001 -> throw(must_increase_minCycleTime) ; true),
+		(MCT < 0.0001 -> throw(must_increase_minCycleTime(MCT)) ; true),
 		((MaxRT =< 0, ET =<0) -> throw(must_bound_maxRealTime_or_maxRealTime) ; true),
 		% Either MaxRT or ET is guaranteed to be not zero
 		once(retract(background_execution(User,TID,_,_,_,_,_))),
@@ -1954,7 +1954,7 @@ time_limited(Step,G,Timeout) :-
 
 % seconds to sleep at the beginning of each cycle
 minCycleTime_(MCT) :- (minCycleTime(MCT); defaultMinCycleTime(MCT)), !.
-minCycleTime_(0.001) :- option(backgroun(_)), !.
+minCycleTime_(0.001) :- option(background(_)), !.
 minCycleTime_(0).
 
 %  cycle(PartialReactiveRules,GoalState,PendingResponses,StateFlag)
@@ -1969,7 +1969,6 @@ cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
     	answer_thread_queries, PendingResponses,
 	do_write([nl, ' Simulation time is up. Unsolved goals: ',nl,pprint_goal(Gi)]).
 cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
-	current_prolog_flag(dialect, swi),
 	maxRealTime(MaxRT),
 	get_real_time(Now), real_time_beginning(Begin), Duration is Now - Begin,
 	Duration > MaxRT,
@@ -2411,13 +2410,13 @@ lps_outcome(MessageID,Result) :-
 % Each query is a goal whose last argument is the result to be returned to the client
 answer_thread_queries :- 
 	thread_peek_message(thread_query(ClientID,ThreadQuery)), 
-     thread_get_message(thread_query(ClientID,ThreadQuery)),
-     !,
-     current_time(Cycle),
-     once(ThreadQuery), functor(ThreadQuery,_,Arity), arg(Arity,ThreadQuery,Result),
-     thread_self(ID),
-     thread_send_message(ClientID,thread_result(ID,Cycle,Result)),
-     answer_thread_queries.
+	thread_get_message(thread_query(ClientID,ThreadQuery)),
+	!,
+	current_time(Cycle),
+	once(ThreadQuery), functor(ThreadQuery,_,Arity), arg(Arity,ThreadQuery,Result),
+	thread_self(ID),
+	thread_send_message(ClientID,thread_result(ID,Cycle,Result)),
+	answer_thread_queries.
 answer_thread_queries.
 
 % Evaluate goal Q in LPS thread ID at Cycle; Result will be bound to the last argument of Q
@@ -2444,7 +2443,7 @@ get_rtb_fluent_event_templates_([Beginning,Fluents,Events]) :-
 enter_step_0 :- uassert(lps_updating_current_state).
 leave_step_0 :- uretractall(lps_updating_current_state).
 
-%   Destructively update the state. USed by the non_prospective option:
+%   Destructively update the state. Used by the non_prospective option:
 updateFluents(Time) :-
     	( current_prolog_flag(dialect, swi) ->
     		(system_fluent(SF,SFG), uretractall(state(SF)), SFG,  uassertz(state(SF)), fail ; true)

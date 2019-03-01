@@ -38,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- use_module(library(http/html_write)).
 :- use_module(library(http/term_html)).
 :- use_module(library(http/js_write)).
+:- use_module(library(http/http_json)).
 :- use_module('../../swish/lib/render').
 
 :- multifile sandbox:safe_primitive/1.
@@ -130,8 +131,14 @@ term_rendering(lpsServers(IDs), _Vars, _Options) -->
 
 serverLinks([]) --> [].
 serverLinks([ID|IDs]) -->
-	{format(atom(URL),"/lps_server/manager/~w",[ID]), format(atom(Label),"Manage ~w",[ID])},
-	html(p(a([href=URL],Label))), serverLinks(IDs).
+	{format(atom(MURL),"/lps_server/manager/~w",[ID]), format(atom(MLabel),"Manage ~w",[ID])},
+	{(
+		background_execution(ID,_,_,_,_,_FinalState,running) -> 
+			format(atom(DURL),"/lps_server/d_sample/~w",[ID]), DLabel="Display", Displayer=span([" | ",a([href=DURL],DLabel)])
+			; Displayer=[]
+	)},
+	html(p([span(a([href=MURL],MLabel))|Displayer])), 
+	serverLinks(IDs).
 
 background_execution(TID,RT,MaxRT,ET,MinCT,FS,Status) :- lps_user(User),
 	background_execution(User,TID,RT,MaxRT,ET,MinCT,FS,Status).
@@ -332,4 +339,35 @@ prepare_events(Query,ServerUser,Events) :-
 	( (member(lps_terminate,Events), ServerUser\=User) %should possibly return Status=403:
 		-> throw('LPS servers can be killed only by their creator user')
 		; true).
+
+% respond to a request for a sample of the current fluents and events covered by d/2 (2d display) declarations
+:- http_handler('/lps_server/d_sample/', lps_server_UI:display_sample, [prefix]).  % .../lps_server/d_sample/lps1
+display_sample(Request) :- 
+	member(path_info(LPS_ID),Request),
+	background_execution(LPS_ID,_,_,_,_,_FinalState,Status), % user is checked here
+	( Status==running ->
+		% Obtain list of t(Literal,T1-T2,Group) and use collect_display_specs to build a single cycle
+		% fake cycle transitions, likely keeping a last_cycle_sample
+		% likely in visualization.P
+		% use variant of inject_events_fetch_fluents with access to d/2 etc., using query_thread:-)
+		% no point using cycle_hook, different thread anyway
+		Events=[], Fluents = [balance(_,_)],
+		interpreter:inject_events_fetch_fluents(LPS_ID,Events,false/*sample before applying events*/,Fluents,Result),
+		term_string(Result,ResultS),
+		Sample = _{cycle:13, ops:[],test:ResultS},
+		reply_json_dict(Sample)
+		; reply_json_dict(_{error:"Not running"})).
+/*
+predsort(variant_compare,List,Sorted)
+variant_compare(O,A,B):- variant(A,B)->O=(=);compare(O,A,B).
+ord_subtract(LastSample,Current,Delta),...
+% this actually can get more verbose then simply dumping the relevant fluents...
+% ultimately a more incremental structure could be used, e.g. a state trie, plus diffs encoded as paths
+% see also ipcompareTerms in interprolog.P for a simple approach
+%	state_diff(Diffs), format("State DIFF: ~w~n",[Diffs]),
+state_diff(Diffs) :-
+	findall(- D,(state(D), \+ next_state(D)), Deleted),
+	findall(+ I,(next_state(I), \+ state(I)), Inserted),
+	append(Deleted,Inserted,Diffs).
+*/
 

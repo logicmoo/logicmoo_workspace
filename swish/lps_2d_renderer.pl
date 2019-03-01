@@ -133,7 +133,7 @@ term_rendering(lps_visualization(_T,TwoD), _Vars, _Options) -->
 				}
 			} else if (props=op.update){  // never happens for events
 				// As we can't easily update incrementally props as specified on the logic side, we need to 
-				// "brute force": update = kill + creation ; otherwise we'd need to ket the logic programmer 
+				// "brute force": update = kill + creation ; otherwise we'd need to let the logic programmer 
 				// know too much about scaling, translation etc.
 				var ID = props;
 				// console.log("Updating "+ID);
@@ -562,7 +562,7 @@ term_rendering(lps_visualization(_T,TwoD), _Vars, _Options) -->
 	if (cycles.length < 15) framesPerCycle = 60;
 	else if (cycles.length <50) framesPerCycle = 30;
 	else framesPerCycle = 15;
-	framesPerCycle = 60;
+	framesPerCycle = 60; // ???
 	console.log("framesPerCycle:"+framesPerCycle);
 	var animationHalfSlice = Math.floor(ANIMATION_HALF_SLICE*framesPerCycle); // frames before and after a cycle transition
 		
