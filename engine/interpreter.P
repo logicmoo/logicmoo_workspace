@@ -1204,14 +1204,29 @@ collect_guessed_declarations(L) :-
 collect_results([]) :- !.
 collect_results([F-R|FR]) :- (setof(F,T^query(holds(F,T)),R)->true;R=[]), collect_results(FR).
 
-% collect_fluents(Fluents,Instances)
+% collect_fluents(+Fluents,-Instances)
 collect_current_fluents([F|Fluents],Instances) :- !,
 	(setof(F,query(holds(F,_)),R)->true;R=[]),
 	collect_current_fluents(Fluents,Instances1),
 	append(R,Instances1,Instances).
 collect_current_fluents([],[]).
 
-% collect_actions(Actions,Instances)  actions or events
+/*
+predsort(variant_compare,List,Sorted)
+variant_compare(O,A,B):- variant(A,B)->O=(=);compare(O,A,B).
+ord_subtract(LastSample,Current,Delta),...
+% this actually can get more verbose then simply dumping the relevant fluents...
+% ultimately a more incremental structure could be used, e.g. a state trie, plus diffs encoded as paths
+% see also ipcompareTerms in interprolog.P for a simple approach
+%	state_diff(Diffs), format("State DIFF: ~w~n",[Diffs]),
+state_diff(Diffs) :-
+	findall(- D,(state(D), \+ next_state(D)), Deleted),
+	findall(+ I,(next_state(I), \+ state(I)), Inserted),
+	append(Deleted,Inserted,Diffs).
+*/
+
+
+% collect_current_actions(Actions,Instances)  actions or events
 collect_current_actions([A|Actions],Instances) :- !,
 	(setof(A, happens(A,_,_) , R)->true;R=[]),
 	collect_current_actions(Actions,Instances1),
@@ -1989,14 +2004,15 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 			repeat, answer_thread_queries, sleep(1), get_time(Later), Later>=Until
 		)
 	),
-	current_time(Time),  Previous is Time - 1 ,Next is Time +1,
-    	( option(cycle_hook(Predicate,_,_)) -> 
-    		HookGoal =.. [Predicate,ExternalObservations],
-		(HookGoal -> true ; do_write([nl,'* LPS cycle hook goal failed, terminating.']), fail)
-    	; ExternalObservations=[]),
+	( option(cycle_hook(Predicate,_,_)) -> 
+		HookGoal =.. [Predicate,ExternalObservations],
+	(HookGoal -> true ; do_write([nl,'* LPS cycle hook goal failed, terminating.']), fail)
+	; ExternalObservations=[]),
 
-    	(option(manual) ->read_obs(UserObservations) ; UserObservations=[]),
-    	append(UserObservations,ExternalObservations,ExternalObservations_),
+	current_time(Time),  Previous is Time - 1 ,Next is Time +1,
+
+	(option(manual) ->read_obs(UserObservations) ; UserObservations=[]),
+	append(UserObservations,ExternalObservations,ExternalObservations_),
 
 	% At this point last cycle events are still available
     	% TODO: ExternalObservations to be injected as new events
@@ -2091,6 +2107,7 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 		%once((member(Oldest,Sorted), Oldest = goal(_,_,_,_,_,_,_))), pprint_goal([nl, ' Oldest goal:',nl,Oldest,nl]),		
 		fail
 	),
+	% At this point we have both state and next_state available
 	(option(non_prospective) -> true ; copyNextState),
 	
 	(GoalTree = end -> % this will execute on timeout too
@@ -2205,7 +2222,7 @@ updateEvents(Time, Next, Ri, Gi, ExternalObservations, ToReturn) :-
 		)
 	;true),
      % Try to add external events only after the internally declared observations were added
-     % No external events are accepted in the first cycle (for not particular reason other than to simplify the logic above...)
+     % No external events are accepted in the first cycle (for no particular reason other than to simplify the logic above...)
      ( (option(background(_)), Time>0) -> receive_external_events(Time, Next, Ri, Gi, ToReturn); ToReturn=true).
 
 % misc_to_realtime(+ExternalForm,-RealTimeSeconds)
@@ -2447,17 +2464,16 @@ updateNextStateFluents(Previous,ExecSystemFluents,StateFlag) :-
 	% copy current state into next state:
 	uretractall(next_state(_)), 
 	( state(X), uassert(next_state(X)), fail ; true),
-    	( current_prolog_flag(dialect, swi) ->
-    		% We keep system fluent changes out of StateFlag
-    		(ExecSystemFluents==true, system_fluent(SF,SFG), uretractall(next_state(SF)), SFG, uassertz(next_state(SF)), fail ; true)
-    		; true),
+	% We keep system fluent changes out of StateFlag
+	(ExecSystemFluents==true, system_fluent(SF,SFG), uretractall(next_state(SF)), SFG, uassertz(next_state(SF)), fail ; true),
 
-    	% Editing actions (initiate/update/terminate) will be executed as serialized actions
-    	
-    	% Compute state changes, depending on whether actions can or not be serialized over "micro-cycles":
-    	(unserializable(UActions)->true;UActions=[]),
-    	findall( happens(Ev, Start, Time), (happens(Ev, Start, Time), \+ editing_action(Ev), \+ \+ member(Ev,UActions)), UAs),
-    	findall( happens(Ev, Start, Time), (happens(Ev, Start, Time), \+ member(Ev,UActions)), SAs),
+
+	% Editing actions (initiate/update/terminate) will be executed as serialized actions
+	
+	% Compute state changes, depending on whether actions can or not be serialized over "micro-cycles":
+	(unserializable(UActions)->true;UActions=[]),
+	findall( happens(Ev, Start, Time), (happens(Ev, Start, Time), \+ editing_action(Ev), \+ \+ member(Ev,UActions)), UAs),
+	findall( happens(Ev, Start, Time), (happens(Ev, Start, Time), \+ member(Ev,UActions)), SAs),
 	%writeln(Previous/Time),
 	%(writeln('HAPPENS:'), happens(EE,TT1,TT2), writeln(happens(EE,TT1,TT2)), fail; true),
     	% We start by the unserializable actions:
@@ -2469,31 +2485,32 @@ updateNextStateFluents(Previous,ExecSystemFluents,StateFlag) :-
 		), Updates),
 	% Actually change the state:
 	forall(((member(Fl, Terms);member(Fl-_,Updates))), (uretractall(next_state(Fl)), state_changed(StateFlag)) ),
-    	forall(((member(Fl, Inits);member(_-Fl,Updates)), \+ next_state(Fl)), (uassertz(next_state(Fl)), state_changed(StateFlag)) ),
+	forall(((member(Fl, Inits);member(_-Fl,Updates)), \+ next_state(Fl)), (uassertz(next_state(Fl)), state_changed(StateFlag)) ),
 
-    	% Now the serializable actions (engine default), whose impact should be independent of any particular sequencing
-    	% Furthermore, preconditions should not be violated over the intermediate micro states, nor at the end...
-    	% Presently we only check it again at the end (see above)
-    	( member(A,SAs), (
-    		% fully apply one action at a time, so fluents may accumulate/aggregate... although this
-    		% will only happen for UPDATED - terminated/initiated effects do NOT accumulate;
-    		% implementation is too tricky and theory... may be even worse;-)
-    		(A=happens(terminate(Fl),_,_) -> true ; terminated(A, Fl, Cond), holds_all(Cond)), uretractall(next_state(Fl)), state_changed(StateFlag), fail ;
-    		(A=happens(initiate(Fl),_,_) -> true ; initiated(A, Fl, Cond), holds_all(Cond)), \+ next_state(Fl), uassertz(next_state(Fl)), state_changed(StateFlag), fail ;
-    		% ...again, only updates get accumulated effects:
-    		(
-    			(A=happens(update(Old-New,TFl),_,_) -> 
-    				replace_term(TFl,Old,New,IFl), next_state(TFl) ;
-    				updated(A,TFl,Old-New,Cond), replace_term(TFl,Old,New,IFl), next_state(TFl), holds_all(Cond) ), 
-    			uretractall(next_state(TFl)), uassertz(next_state(IFl)), state_changed(StateFlag), fail)
-    		) 
-    	; true) /*, for debugging:
-    	(write_verbose('ACTIONS'), happens(EE,TT1,TT2), write_verbose(happens(EE,TT1,TT2)), fail; 
-    	write_verbose('CURRENT'), state(XX), write_verbose(XX), fail ; 
-    	write_verbose('NEXT'), next_state(XX), write_verbose(XX), fail ; 
-    	true) */.    	
+	% Now the serializable actions (engine default), whose impact should be independent of any particular sequencing
+	% Furthermore, preconditions should not be violated over the intermediate micro states, nor at the end...
+	% Presently we only check it again at the end (see above)
+	( member(A,SAs), (
+		% fully apply one action at a time, so fluents may accumulate/aggregate... although this
+		% will only happen for UPDATED - terminated/initiated effects do NOT accumulate;
+		% implementation is too tricky and theory... may be even worse;-)
+		(A=happens(terminate(Fl),_,_) -> true ; terminated(A, Fl, Cond), holds_all(Cond)), uretractall(next_state(Fl)), state_changed(StateFlag), fail ;
+		(A=happens(initiate(Fl),_,_) -> true ; initiated(A, Fl, Cond), holds_all(Cond)), \+ next_state(Fl), uassertz(next_state(Fl)), state_changed(StateFlag), fail ;
+		% ...again, only updates get accumulated effects:
+		(
+			(A=happens(update(Old-New,TFl),_,_) -> 
+				replace_term(TFl,Old,New,IFl), next_state(TFl) ;
+				updated(A,TFl,Old-New,Cond), replace_term(TFl,Old,New,IFl), next_state(TFl), holds_all(Cond) ), 
+			uretractall(next_state(TFl)), uassertz(next_state(IFl)), state_changed(StateFlag), fail)
+		) 
+	; true) /*, for debugging:
+	(write_verbose('ACTIONS'), happens(EE,TT1,TT2), write_verbose(happens(EE,TT1,TT2)), fail; 
+	write_verbose('CURRENT'), state(XX), write_verbose(XX), fail ; 
+	write_verbose('NEXT'), next_state(XX), write_verbose(XX), fail ; 
+	true) */.    	
 updateNextStateFluents(_Previous,_,_) :- uretractall(next_state(_)), fail.
-	
+
+% copies next_state into state
 copyNextState :-
 	uretractall(state(_)), 
 	( uretract(next_state(X)), uassert(state(X)), fail ; true).

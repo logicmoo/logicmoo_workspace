@@ -165,7 +165,7 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	create_counter(IDs),
 	% Render fluents
 	% Let's find the end of time; since real time was introduced, we can't rely on endTime(_),
-	% so we need to find the last time os all events and fluents
+	% so we need to find the last time of all events and fluents
 	findall(T2,member(t(_,_-T2,_),Ranged),Times),
 	sort(Times,SortedTimes),
 	( append(_,[LastTime],SortedTimes) -> LastRelevantTime is LastTime+1 ; LastRelevantTime = 1),
@@ -200,7 +200,8 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	( DSarray == [] -> Cycles=[] ; make_json_object([cycles:DSarray],Cycles)), 
 	term2json(Cycles,Sequence).
 
-% prepare_display_sequence(+DS,-Sequence)  Returns a list of lists, one for cycle 0,... until the last; all cycles have lists
+% prepare_display_sequence(+DS,-Sequence)  
+% Returns a list of lists, one for cycle 0,... until the last; all cycles have lists, added (empty) if needed
 prepare_display_sequence([c(First,Op)|Cycles],Sequence) :- prepare_display_sequence([c(First,Op)|Cycles],First,[],Sequence).
 
 % prepare_display_sequence(+CycleOps,+CurrentCycle,+CurrentCycleSequence,-Sequence)  CycleOps already ordered by cycle
@@ -214,7 +215,8 @@ prepare_display_sequence([c(NextT,Op)|Cycles],T,CS,[CS|Sequence]) :- NextT is T+
 	prepare_display_sequence([c(NextT,Op)|Cycles],NextT,[],Sequence).
 prepare_display_sequence([],_,CS,[CS]).
 	
-% collect_display_specs(+Items,-OpItems) Each OpItem is c(Cycle,Op); 
+% collect_display_specs(+Items,-OpItems) 
+% Each item is a t(X,T1-T2,Literal). Each OpItem is a c(Cycle,Op); 
 %  sorted by ID, start cycle; end cycle irrelevant because there are no sobrepositions)
 %  This is roughly O(N*N), can be speeded up if necessary by using a dictionary of ID -> Ops
 collect_display_specs(Items,TheOpItems_) :- 
@@ -243,11 +245,7 @@ find_max_time([t(_,_-T2,_)|Items],Max,MaxTime) :- !,
 find_max_time([],Max,Max).
 
 % temporary cache to support dereferencing ids
-:- if(current_prolog_flag(dialect, swi)).
-	:- thread_local(id_props_cache/3). % ID, Cycle, Props list
-:- else.
-	:- dynamic id_props_cache/3.
-:- endif.
+:- thread_local(id_props_cache/3). % ID, Cycle, Props list
 
 % collect_display_specs2(+Items,-NewItems)  
 % DB is a list of prop:[Min,Max], e.g. [x:[10,200],y:[+99999,-99999]]  99999 meaning "infinity" or "unknown"
@@ -305,7 +303,7 @@ enforce_property(Props,P,NewProps) :- \+ member([_|_],Props), !, % simple object
 enforce_property([Props1|Props],P,[NewProp1|NewProps]) :- 
 	is_list(Props1), enforce_property(Props1,P,NewProp1), enforce_property(Props,P,NewProps).
 	
-% allow boolean properties to be abbreviated, e.g. 'sendToBack'
+% allow boolean properties to be abbreviated, e.g. 'sendToBack', by completing them
 ensure_all_colons([P|Props],[P|NewProps]) :- (var(P);P=(_:_)), !, ensure_all_colons(Props,NewProps).
 ensure_all_colons([P|Props],[NewP|NewProps]) :- is_list(P), !, ensure_all_colons(P,NewP), ensure_all_colons(Props,NewProps).
 ensure_all_colons([P|Props],[P:true|NewProps]) :- ensure_all_colons(Props,NewProps).
@@ -405,7 +403,7 @@ str_replace1(Ac, Xc, Yc, [B|C]) :-
      ;  Ac = [A|Acs], B = A, str_replace1(Acs, Xc, Yc, C)
     ).
     
-% join_fluent_ranges(Sorted,Ranged)
+% join_fluent_ranges(Sorted,Ranged) merges contiguous fluent states
 join_fluent_ranges([t(X,T,G)|S],[t(X,T,G)|R]) :- \+ functor(G,/,2), !, % not a fluent
 	join_fluent_ranges(S,R).
 join_fluent_ranges([t(X,T1-T2,G),t(XX,T2-T3,G)|S],R) :- variant(X,XX), !, 	
