@@ -1,7 +1,6 @@
 :- module(test_tornado,
   [test_tornado/0]).
 :- use_module(library(plunit)).
-:- use_module(library(tabling)).
 
 test_tornado:-
     trill:set_algorithm(tornado),
@@ -11,7 +10,8 @@ test_tornado:-
     tornado_brca,
     tornado_commander,
     tornado_johnEmployee,
-    tornado_peoplePets]).
+    tornado_peoplePets,
+    tornado_pizza]).
 
 :- use_module(library(trill_test/trill_test)).
 
@@ -101,3 +101,16 @@ test(e_p_j):-
   run((prob_instanceOf('johnEmployee:person','johnEmployee:john',Prob),close_to(Prob,1))).
   
 :- end_tests(tornado_johnEmployee).
+
+:- begin_tests(tornado_pizza, []).
+
+:- ensure_loaded(library(examples/pizza)).
+
+test(rkb_pizza):-
+  run((reload_kb(false),true)).
+test(p_inc_kb):-
+  run((prob_inconsistent_theory(Prob),close_to(Prob,0.0))).
+test(p_uns_tof):-
+  run((prob_unsat('tofu',Prob),close_to(Prob,1.0))).
+
+:- end_tests(tornado_pizza).

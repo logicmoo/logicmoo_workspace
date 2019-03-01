@@ -10,7 +10,8 @@ test_trill:-
     trill_commander,
     trill_johnEmployee,
     trill_peoplePets,
-    trill_vicodi]).
+    trill_vicodi,
+    trill_pizza]).
 
 :- use_module(library(trill_test/trill_test)).
 
@@ -126,8 +127,26 @@ test(rkb_je):-
   run((reload_kb(false),true)).
 test(e_p_j):-
   run((instanceOf('johnEmployee:person','johnEmployee:john',Expl),
-       Expl = [classAssertion('http://example.foo#employee', 'http://example.foo#john'), subClassOf('http://example.foo#employee', 'http://example.foo#worker'), subClassOf('http://example.foo#worker', 'http://example.foo#person')]
+       same_expl([Expl],[[classAssertion('http://example.foo#employee', 'http://example.foo#john'), subClassOf('http://example.foo#employee', 'http://example.foo#worker'), subClassOf('http://example.foo#worker', 'http://example.foo#person')]])
   )).
   
 :- end_tests(trill_johnEmployee).
+
+
+:- begin_tests(trill_pizza, []).
+
+:- ensure_loaded(library(examples/pizza)).
+
+test(rkb_pizza):-
+  run((reload_kb(false),true)).
+test(p_inc_kb):-
+  run((prob_inconsistent_theory(Prob),close_to(Prob,0.0))).
+test(p_uns_tof):-
+  run((prob_unsat('tofu',Prob),close_to(Prob,1.0))).
+test(e_uns_tof):-
+  run((unsat('tofu',Expl),
+       same_expl([Expl],[[disjointClasses([cheeseTopping, vegetableTopping]), subClassOf(soyCheeseTopping, cheeseTopping), subClassOf(soyCheeseTopping, vegetableTopping), subClassOf(tofu, soyCheeseTopping)]])
+  )).
+
+:- end_tests(trill_pizza).
 
