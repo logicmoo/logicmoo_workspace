@@ -8,7 +8,7 @@ This module models and manages the hierarchy of the KB's concepts.
 */
 
 
-:- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,create_hierarchy/2,get_hierarchy/3,get_hierarchy/2,update_hierarchy/1,update_hierarchy/2]).
+:- module(utility_kb, [init_hierarchy/1,create_hierarchy/1,create_hierarchy/2,get_hierarchy/3,get_hierarchy/2,update_hierarchy/1,update_hierarchy/2,print_hierarchy/0]).
 
 :- meta_predicate init_hierarchy(:).
 :- meta_predicate create_hierarchy(+).
@@ -178,36 +178,79 @@ check_disjoint(KB0,KB):-
   %collect_nodes_to_remove(NewEdges,H,[],Edges),
   %del_edges(KBH,Edges,TreeH0),
   add_edges(KBH,NewEdges,TreeH),
-  /*
-    MATTIA
-    inserire qua la chiamata al predicato 1 prova
-    
-    applichi su TreeH il predicato e sostituisce TreeH1 con la nuova lista TreeH
-    
-    come test carichi il file test_hierarchy.pl e lanchi il comando hierarchy(H),write(H.hierarchy).
-    
-    Per fare questo devi guardarti i dict in SWI-Prolog (http://www.swi-prolog.org/pldoc/man?section=bidicts)
-	/
-trovaN(TreeH1,TreeH) :-
-                           member(n-L,TreeH1),
-                           cercaInL(L,[],Out,TreeH1),
-                           delete(TreeH1,n-L,LHelp),
-                           cancella(Out,LHelp,ListaIntermedia),
-                           append(ListaIntermedia,[n-Out],TreeH).
-
-cancella([],Canc,Canc).
-cancella([TestaOut|CodaOut],LHelp,ListaIntermedia):- delete(LHelp,TestaOut-_,Canc),
-    												 cancella(CodaOut,Canc,ListaIntermedia).
-
-cercaInL([],Acc,Acc,_).
-cercaInL([TestaL|CodaL],Acc,ListaOutput,TreeH1):- 
-    							member(TestaL-L2,TreeH1),!,
-                                cercaInL(L2,Acc,ListaHelp,TreeH1),
-                                cercaInL(CodaL,[TestaL|ListaHelp],ListaOutput,TreeH1).
-cercaInL([TestaL|CodaL],Acc,ListaOutput,TreeH1):- cercaInL(CodaL,[TestaL|Acc],ListaOutput,TreeH1).
-  
   KB=KB0.put(hierarchy,TreeH),!.
 
+%=========================================================================================================
+print_hierarchy :-
+  utility_translation:get_module(M),
+  M:hierarchy(H),
+  stampa(H.hierarchy,H.classes).
+  
+  
+%==========================================================================================================
+%Predicato 1  
+trovaN(Lista,StampaLista) :-
+                           member(n-L,Lista),
+                           cercaInL(L,[],Out,Lista),
+                           delete(Lista,n-L,LHelp),
+                           cancella(Out,LHelp,ListaIntermedia),
+                           append(ListaIntermedia,[n-Out],StampaLista).
+
+cancella([],Canc,Canc).
+
+cancella([TestaOut|CodaOut],LHelp,ListaIntermedia):- 
+														delete(LHelp,TestaOut-_,Canc),
+														cancella(CodaOut,Canc,ListaIntermedia).
+
+cercaInL([],Acc,Acc,_).
+
+cercaInL([TestaL|CodaL],Acc,ListaOutput,Lista):- 
+													member(TestaL-L2,Lista),!,
+													cercaInL(L2,Acc,ListaHelp,Lista),
+													cercaInL(CodaL,[TestaL|ListaHelp],ListaOutput,Lista).
+								
+cercaInL([TestaL|CodaL],Acc,ListaOutput,Lista):- 
+													cercaInL(CodaL,[TestaL|Acc],ListaOutput,Lista).
+%===========================================================================================================
+%predicato 2
+stampa(Lista,D):-
+					trovaN(Lista,StampaLista),
+					stampa(StampaLista,0,D),
+					stampa(StampaLista,n,D).
+
+writeMia(X):- 
+				is_list(X),!,
+				stampaUguale(X).
+writeMia(X):- 
+				write(X).
+					
+stampaUguale([]).
+stampaUguale([Testa]):- write(Testa).					
+stampaUguale([Testa|Coda]):-
+								write(Testa),write('='),
+								stampaUguale(Coda).
+						
+stampa(Lista,Val,D):- 
+    					member(Val-L,Lista),!,
+						%chiamo la mia write per vedere se Val è lista o meno
+    					writeMia(D.get(Val)),nl,
+    					stampaDentro(L,1,Lista,D).
+						
+
+stampaDentro([],_,_,_).
+
+stampaDentro([TestaL|CodaL],Cont,Lista,D):-	
+												tab(Cont),
+												%cotrollo che TestaL sia una lista con la mia write
+												writeMia(D.get(TestaL)),nl,
+												member(TestaL-L2,Lista),!,
+												NewCont is Cont+1,
+												stampaDentro(L2,NewCont,Lista,D),
+												stampaDentro(CodaL,Cont,Lista,D).
+												
+stampaDentro([_|CodaL],Cont,Lista,D):-
+												stampaDentro(CodaL,Cont,Lista,D).
+%===========================================================================================================
 check_disjoint_int([],_,[]).
 
 check_disjoint_int([DC1-DC2|TDisj],KBH,['n'-SameNode|NEdges0]):-
@@ -1003,5 +1046,4 @@ remove_hierarchy_link_int2(KB0,PC,C,D,KB):- % same node
      )
   ).
  */
- 
  

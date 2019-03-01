@@ -20,6 +20,7 @@ subClassOf(soyCheeseTopping,cheeseTopping).
 subClassOf(soyCheeseTopping,vegetableTopping).
 subClassOf(tofu,soyCheeseTopping).
 disjointClasses([cheeseTopping,vegetableTopping]).
+equivalentClasses([pizza1,pizza2]). %pizza1 = pizza2
 
 % classAssertion(tofu,'tofu-1').
 
