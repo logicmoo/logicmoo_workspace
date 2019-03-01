@@ -175,9 +175,9 @@ check_disjoint(KB0,KB):- %trace
   KBH=KB0.hierarchy,
   edges(KBH,H),
   check_disjoint_int(KB0.disjointClasses,H,NewEdges),
-  collect_nodes_to_remove(NewEdges,H,[],Edges),
-  del_edges(KBH,Edges,TreeH0),
-  add_edges(TreeH0,NewEdges,TreeH1),
+  %collect_nodes_to_remove(NewEdges,H,[],Edges),
+  %del_edges(KBH,Edges,TreeH0),
+  add_edges(KBH,NewEdges,TreeH),
   /*
     MATTIA
     inserire qua la chiamata al predicato 1

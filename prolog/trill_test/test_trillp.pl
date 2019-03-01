@@ -10,7 +10,8 @@ test_trillp:-
     trillp_commander,
     trillp_johnEmployee,
     trillp_peoplePets,
-    trillp_vicodi]).
+    trillp_vicodi,
+    trillp_pizza]).
 
 
 :- use_module(library(trill_test/trill_test)).
@@ -118,3 +119,20 @@ test(e_p_j):-
   )).
   
 :- end_tests(trillp_johnEmployee).
+
+:- begin_tests(trillp_pizza, []).
+
+:- ensure_loaded(library(examples/pizza)).
+
+test(rkb_pizza):-
+  run((reload_kb(false),true)).
+test(p_inc_kb):-
+  run((prob_inconsistent_theory(Prob),close_to(Prob,0.0))).
+test(p_uns_tof):-
+  run((prob_unsat('tofu',Prob),close_to(Prob,1.0))).
+test(e_uns_tof):-
+  run((unsat('tofu',Expl),
+       test_formula(Expl,+[*([disjointClasses([cheeseTopping, vegetableTopping]), subClassOf(soyCheeseTopping, cheeseTopping), subClassOf(soyCheeseTopping, vegetableTopping), subClassOf(tofu, soyCheeseTopping)])])
+  )).
+
+:- end_tests(trillp_pizza).
