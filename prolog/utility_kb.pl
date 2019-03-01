@@ -171,7 +171,7 @@ init_hierarchy(M:kb{usermod:M,hierarchy:TreeH,nClasses:1,nIndividuals:0,disjoint
   ClassesName=['http://www.w3.org/2002/07/owl#Nothing','http://www.w3.org/2002/07/owl#Thing'].
   %vertices_edges_to_ugraph([],[0-'n'],TreeD).
 
-check_disjoint(KB0,KB):- %trace
+check_disjoint(KB0,KB):-
   KBH=KB0.hierarchy,
   edges(KBH,H),
   check_disjoint_int(KB0.disjointClasses,H,NewEdges),
@@ -187,7 +187,25 @@ check_disjoint(KB0,KB):- %trace
     come test carichi il file test_hierarchy.pl e lanchi il comando hierarchy(H),write(H.hierarchy).
     
     Per fare questo devi guardarti i dict in SWI-Prolog (http://www.swi-prolog.org/pldoc/man?section=bidicts)
-  */
+	/
+trovaN(TreeH1,TreeH) :-
+                           member(n-L,TreeH1),
+                           cercaInL(L,[],Out,TreeH1),
+                           delete(TreeH1,n-L,LHelp),
+                           cancella(Out,LHelp,ListaIntermedia),
+                           append(ListaIntermedia,[n-Out],TreeH).
+
+cancella([],Canc,Canc).
+cancella([TestaOut|CodaOut],LHelp,ListaIntermedia):- delete(LHelp,TestaOut-_,Canc),
+    												 cancella(CodaOut,Canc,ListaIntermedia).
+
+cercaInL([],Acc,Acc,_).
+cercaInL([TestaL|CodaL],Acc,ListaOutput,TreeH1):- 
+    							member(TestaL-L2,TreeH1),!,
+                                cercaInL(L2,Acc,ListaHelp,TreeH1),
+                                cercaInL(CodaL,[TestaL|ListaHelp],ListaOutput,TreeH1).
+cercaInL([TestaL|CodaL],Acc,ListaOutput,TreeH1):- cercaInL(CodaL,[TestaL|Acc],ListaOutput,TreeH1).
+  
   KB=KB0.put(hierarchy,TreeH),!.
 
 check_disjoint_int([],_,[]).
