@@ -1211,20 +1211,6 @@ collect_current_fluents([F|Fluents],Instances) :- !,
 	append(R,Instances1,Instances).
 collect_current_fluents([],[]).
 
-/*
-predsort(variant_compare,List,Sorted)
-variant_compare(O,A,B):- variant(A,B)->O=(=);compare(O,A,B).
-ord_subtract(LastSample,Current,Delta),...
-% this actually can get more verbose then simply dumping the relevant fluents...
-% ultimately a more incremental structure could be used, e.g. a state trie, plus diffs encoded as paths
-% see also ipcompareTerms in interprolog.P for a simple approach
-%	state_diff(Diffs), format("State DIFF: ~w~n",[Diffs]),
-state_diff(Diffs) :-
-	findall(- D,(state(D), \+ next_state(D)), Deleted),
-	findall(+ I,(next_state(I), \+ state(I)), Inserted),
-	append(Deleted,Inserted,Diffs).
-*/
-
 
 % collect_current_actions(Actions,Instances)  actions or events
 collect_current_actions([A|Actions],Instances) :- !,
@@ -2413,7 +2399,9 @@ answer_thread_queries :-
 	thread_get_message(thread_query(ClientID,ThreadQuery)),
 	!,
 	current_time(Cycle),
-	once(ThreadQuery), functor(ThreadQuery,_,Arity), arg(Arity,ThreadQuery,Result),
+	once(ThreadQuery), 
+	(ThreadQuery=_:ThreadQuery_->true;ThreadQuery=ThreadQuery_),
+	functor(ThreadQuery_,_,Arity), arg(Arity,ThreadQuery_,Result),
 	thread_self(ID),
 	thread_send_message(ClientID,thread_result(ID,Cycle,Result)),
 	answer_thread_queries.
@@ -2439,7 +2427,7 @@ get_rtb_fluent_event_templates_([Beginning,Fluents,Events]) :-
 	findall(F,user_fluent(F),Fluents),
 	findall(E,event_(E),Events).
 
-	
+		
 enter_step_0 :- uassert(lps_updating_current_state).
 leave_step_0 :- uretractall(lps_updating_current_state).
 

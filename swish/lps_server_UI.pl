@@ -351,12 +351,28 @@ display_sample(Request) :-
 		% likely in visualization.P
 		% use variant of inject_events_fetch_fluents with access to d/2 etc., using query_thread:-)
 		% no point using cycle_hook, different thread anyway
-		Events=[], Fluents = [balance(_,_)],
-		interpreter:inject_events_fetch_fluents(LPS_ID,Events,false/*sample before applying events*/,Fluents,Result),
+		
+		%Events=[], Fluents = [balance(_,_)],
+		%interpreter:inject_events_fetch_fluents(LPS_ID,Events,false/*sample before applying events*/,Fluents,Result),
+		interpreter:query_thread(LPS_ID, lps_server_UI:get_fluents_events_actions(X,interpreter:d(X,_),_Terms), Cycle, Result),
 		term_string(Result,ResultS),
-		Sample = _{cycle:13, ops:[],test:ResultS},
+		Sample = _{cycle:Cycle, ops:[],test:ResultS},
 		reply_json_dict(Sample)
 		; reply_json_dict(_{error:"Not running"})).
+
+% get_fluents_events_actions(+Template,+Condition,-Terms) 
+% Each term will be t(Literal,Type), where Type is action or event or Functor/Arity (of fluent)
+% E.g. call with get_fluents_events_actions(lps13,X,interpreter:d(X,_),Cycle,Terms)
+% TODO: 'timeless' missing!!! and fetch properties, we need those fetched in the user prograns's thread!
+get_fluents_events_actions(X,Cond,Terms) :-
+	findall(t(X,fluent),(
+		interpreter:user_fluent(X), Cond, interpreter:query(holds(X,_)) 
+		), Fluents),
+	findall(t(X,Type),( 
+		interpreter:happens(X,T1,T2), T2=:=T1+1, Cond, (interpreter:action_(X)->Type=action;Type=event)
+		), EventsActions),
+	append(Fluents,EventsActions,Terms).
+
 /*
 predsort(variant_compare,List,Sorted)
 variant_compare(O,A,B):- variant(A,B)->O=(=);compare(O,A,B).
