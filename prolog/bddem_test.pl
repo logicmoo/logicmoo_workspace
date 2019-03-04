@@ -8,7 +8,8 @@
 test_bddem:-
     run_tests([
     prob,em,
-    sampling
+    sampling,
+    probabilitdd
     ]).
 
 
@@ -23,17 +24,24 @@ prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat):-
   add_var(Env,[0.5,0.5],1,VWindy),
   add_decision_var(Env,VUmbrella),
   add_decision_var(Env,VRaincoat),
-  equality(VRainy,0,Rainy),
-  equality(VWindy,0,Windy),
-  equality(VUmbrella,0,Umbrella),
-  equality(VRaincoat,Raincoat).
+  equality(Env,VRainy,0,Rainy),
+  equality(Env,VWindy,0,Windy),
+  equality(Env,VUmbrella,0,Umbrella),
+  equality(Env,VRaincoat,0,Raincoat).
 
 dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat):-
-  and(Env,Rainy,Umbrella,RU),
-  bdd_not(Env,Umbrella,NU),
-  and(Env,RU,NU),
+  bdd_not(Env,Rainy,BDDNR),
+  and(Env,Rainy,Raincoat,BDDRR),
+  and(Env,Rainy,Umbrella,BDDRU),
+  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
+  bdd_not(Env,BDDBU,BDDNBU),
+  and(Env,BDDRU,BDDNBU,BDDRUNBU),
+  or(Env,BDDNR,BDDRR,BDDOR),
+  or(Env,BDDOR,BDDRUNBU,BDDD).
 
-  broken_umbralla(Env,BDDBU),
+broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella):-
+  and(Env,Rainy,Umbrella,RU),
+  and(Env,Ru,Windy,BDDBU).
 
 :- begin_tests(prob, []).
 
@@ -275,15 +283,14 @@ test(probabilitdd):-
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
   dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
-  broken_umbralla(Env,BDDBU,Rainy,Windy,Umbrella,Raincoat),
-  probability_dd(Env,BDDD,ADDD),
+  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella,Raincoat),
+  probability_dd(Env,BDDD,ADDD), % <- TODO, restituisce un ADD da un BDD
   probability_dd(Env,BDDBU,ADDBU),
-  add_prod(Env,ADDD,60,ADDDU),
+  add_prod(Env,ADDD,60,ADDDU), % <- TODO, prodotto utility*ADD
   add_prod(Env,ADDBU,-40,ADDDUU),
-  add_sum(Env,ADDDU,ADDDUU,ADDS),
+  add_sum(Env,ADDDU,ADDDUU,ADDS), % TODO, somma due ADD
   strategy(Env,ADDS,S,C),
   end(Env),
   test(S,C).
-
 
 :- end_tests(dtprob).
