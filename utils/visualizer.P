@@ -47,12 +47,15 @@ has_d_clauses :- clause(d(_,_),_), !.
   
 make_json_object(L,json(NL)) :- json_colons_to_equals(L,NL).
 
-json_colons_to_equals(V,NV) :- var(V), !, NV=V.
-json_colons_to_equals([],[]) :- !.
-json_colons_to_equals([A:V|L],[A=NV|NL]) :- !, json_colons_to_equals(V,NV), json_colons_to_equals(L,NL).
-json_colons_to_equals([X|L],[NX|NL]) :- !, json_colons_to_equals(X,NX), json_colons_to_equals(L,NL).
-json_colons_to_equals(json(L),json(NL)) :- json_colons_to_equals(L,NL), !.
-json_colons_to_equals(X,X).
+json_colons_to_equals(LC,LE) :- json_colons_to(LC,=,LE).
+
+% json_colons_to(+ListsWithColons,+Functor,-ListsWithFunctor)
+json_colons_to(V,_,NV) :- var(V), !, NV=V.
+json_colons_to([],_,[]) :- !.
+json_colons_to([A:V|L],F,[NX|NL]) :- NX=..[F,A,NV], !, json_colons_to(V,F,NV), json_colons_to(L,F,NL).
+json_colons_to([X|L],F,[NX|NL]) :- !, json_colons_to(X,F,NX), json_colons_to(L,F,NL).
+json_colons_to(json(L),F,json(NL)) :- json_colons_to(L,F,NL), !.
+json_colons_to(X,_,X).
 
 % converts one of our terms to a JSON dictionary 
 term2json(Term,JSONDict) :- 
@@ -218,15 +221,44 @@ op_for_one_lazy(t(X,Type), _{create:TheProps}) :-
 	once(interpreter:d(X,Props_)),
 	ensure_all_colons(Props_,Props__),
 	(member(id:ID,Props__)->true;(member(PP,Props__), member(id:ID,PP))->true;ID=X),
-	% SHOULD WE allow composites with non list elements in props???
+	% TODO: move these checks to the syntax checking, before program loading:
+	% Allow only one level of composition:
+	((member(PP,Props__), is_list(PP), member(P,PP), is_list(P)) ->
+		print_message(error,composites_can_have_one_level_only(PP)), fail
+		; true),
+	% Forbid composites with non list elements in the top props:
+	(member([_|_],Props__) -> (
+		 (member(P,Props__), \+ is_list(P)) ->  
+		 	print_message(error,composite_objects_cannot_have_top_props(Props__)) 
+		 	; true
+		) ; true),
 	enforce_property(Props__,id:ID,Props___), 
 	% id is beeing repeated in composite object parts...but not a problem, 
 	% composite objects will be associated to a single id (the first one found)
 	((Type==event;Type==action) -> enforce_property(Props___,event:true,TheProps_); TheProps_=Props___),
-	enforce_property(TheProps_,id:ID,TheProps).
+	atomize_values(TheProps_,TheProps__),
+	lists_to_dicts(TheProps__,TheProps).
 
+lists_to_dicts(Props,TheProps) :-
+	json_colons_to(Props,-,Props1),
+	pairs_to_dicts(Props1,TheProps).
 
-%%% Eager access to displayable data (all cycles at the end); also, commoin utility predicates
+% Assumes well formed props, cf. checks in op_for_one_lazy/2
+pairs_to_dicts([SubProps|Props],[SubDict|Dicts]) :- is_list(SubProps), !,
+	dict_pairs(SubDict,_,SubProps), pairs_to_dicts(Props,Dicts).
+pairs_to_dicts([],[]) :- !.
+pairs_to_dicts(Props,Dict) :- dict_pairs(Dict,_,Props).
+
+% atomize_values(Props,NewProps) replace any remaining terms by their string representation
+atomize_values([P:L|Props],[P:NL|NewProps]) :- is_list(L), !, atomize_values(L,NL), atomize_values(Props,NewProps).
+atomize_values([L|Props],[NL|NewProps]) :- is_list(L), !, atomize_values(L,NL), atomize_values(Props,NewProps).
+atomize_values([P:V|Props],[P:V|NewProps]) :- atomic(V), !, atomize_values(Props,NewProps).
+atomize_values([P:X|Props],[P:NX|NewProps]) :- !, term_string(X,NX), atomize_values(Props,NewProps).
+atomize_values([X|Props],[X|NewProps]) :- atomic(X), !, atomize_values(Props,NewProps).
+atomize_values([X|Props],[NX|NewProps]) :- !, term_string(X,NX), atomize_values(Props,NewProps).
+atomize_values([],[]).
+
+%%% Eager access to displayable data (all cycles at the end); also, common utility predicates
 
 % prepare_display_sequence(+DS,-Sequence)  
 % Returns a list of lists, one for cycle 0,... until the last; all cycles have lists, added (empty) if needed

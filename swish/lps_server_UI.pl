@@ -359,9 +359,7 @@ display_sample(Request) :-
 		%Events=[], Fluents = [balance(_,_)],
 		%interpreter:inject_events_fetch_fluents(LPS_ID,Events,false/*sample before applying events*/,Fluents,Result),
 		interpreter:query_thread(LPS_ID, lps_server_UI:get_fluents_events_actions(_Result), Cycle, Result),
-		term_string(Result,ResultS),
-		% TODO: term2json(Result,ResultJ), ?? use proper dicts instead of lists of P:V
-		Sample = _{cycle:Cycle, ops:ResultS},
+		Sample = _{cycle:Cycle, ops:Result},
 		reply_json_dict(Sample)
 		; reply_json_dict(_{error:"Not running"})).
 
@@ -387,7 +385,7 @@ get_fluents_events_actions(Ops) :-
 	% Each term will be a t(Literal,Type), where Type is action or event or fluent
 	visualizer:collect_display_specs_lazy(Terms,Ops).
 
-/*
+/* Ideas for compacting communication, using deltas:
 ord_subtract(LastSample,Current,Delta),...
 % this actually can get more verbose then simply dumping the relevant fluents...
 % ultimately a more incremental structure could be used, e.g. a state trie, plus diffs encoded as paths
