@@ -1532,6 +1532,54 @@ static foreign_t add_query_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
   return(PL_unify(out,arg4));
 }
 
+static foreign_t add_decision_var(term_t arg1,term_t arg2,term_t arg3)
+{
+  term_t out,head,probTerm;
+  variable * v;
+  int i,ret,nRules;
+  size_t lenProbs;
+  double p;
+  environment * env;
+
+  head=PL_new_term_ref();
+  out=PL_new_term_ref();
+  ret=PL_get_pointer(arg1,(void **)&env);
+  RETURN_IF_FAIL
+  env->nVars=env->nVars+1;
+  env->n_abd++;
+  env->vars=(variable *) realloc(env->vars,env->nVars * sizeof(variable));
+
+  v=&env->vars[env->nVars-1];
+  v->query=1;
+  v->abducible=0;
+
+  v->nVal=2;
+
+  v->nRule=-1;
+
+  env->n_abd_boolVars=env->n_abd_boolVars+v->nVal;
+  v->firstBoolVar=env->boolVars;
+  env->probs=(double *) realloc(env->probs,(((env->boolVars+v->nVal)* sizeof(double))));
+  env->bVar2mVar=(int *) realloc(env->bVar2mVar,((env->boolVars+v->nVal)* sizeof(int)));
+
+  env->bVar2mVar[env->boolVars]=env->nVars-1;
+  env->probs[env->boolVars+i]=0.5;
+  for (i=0;i<v->nVal;i++)
+  {
+    ret=PL_get_list(probTerm,head,probTerm);
+    RETURN_IF_FAIL
+    ret=PL_get_float(head,&p);
+    RETURN_IF_FAIL
+  }
+  env->boolVars=env->boolVars+v->nVal;
+  env->rules[v->nRule]= v->nVal;
+
+  ret=PL_put_integer(out,env->nVars-1);
+  RETURN_IF_FAIL
+
+  return(PL_unify(out,arg4));
+}
+
 static foreign_t add_abd_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
 {
   term_t out,head,probTerm;

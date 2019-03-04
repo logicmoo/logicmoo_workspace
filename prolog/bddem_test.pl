@@ -18,6 +18,23 @@ v1_0(Env,R,BDD):-
 v2_0(Env,R,Val,BDD):-
   add_var(Env,[0.4,0.3,0.3],R,V),equality(Env,V,Val,BDD).
 
+prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat):-
+  add_var(Env,[0.3,0.7],0,VRainy),
+  add_var(Env,[0.5,0.5],1,VWindy),
+  add_decision_var(Env,VUmbrella),
+  add_decision_var(Env,VRaincoat),
+  equality(VRainy,0,Rainy),
+  equality(VWindy,0,Windy),
+  equality(VUmbrella,0,Umbrella),
+  equality(VRaincoat,Raincoat).
+
+dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat):-
+  and(Env,Rainy,Umbrella,RU),
+  bdd_not(Env,Umbrella,NU),
+  and(Env,RU,NU),
+
+  broken_umbralla(Env,BDDBU),
+
 :- begin_tests(prob, []).
 
 :-ensure_loaded(library(bddem)).
@@ -248,3 +265,25 @@ check_sample(V):-
   relatively_close_to(N2,2500,0.1),
   relatively_close_to(N3,2500,0.1).
 :- end_tests(sampling).
+
+
+:- begin_tests(dtprob, []).
+
+:-ensure_loaded(library(bddem)).
+
+test(probabilitdd):-
+  init(Env),
+  prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
+  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
+  broken_umbralla(Env,BDDBU,Rainy,Windy,Umbrella,Raincoat),
+  probability_dd(Env,BDDD,ADDD),
+  probability_dd(Env,BDDBU,ADDBU),
+  add_prod(Env,ADDD,60,ADDDU),
+  add_prod(Env,ADDBU,-40,ADDDUU),
+  add_sum(Env,ADDDU,ADDDUU,ADDS),
+  strategy(Env,ADDS,S,C),
+  end(Env),
+  test(S,C).
+
+
+:- end_tests(dtprob).
