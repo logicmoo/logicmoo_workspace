@@ -8,7 +8,8 @@
 
 /* Utilities for visualizing LPS executions on SWISH */
 
-:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1]).
+:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1, 
+	collect_display_specs_lazy/2]).
 
 :- if(\+ current_prolog_flag(dialect, swi)).
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
@@ -57,8 +58,8 @@ json_colons_to_equals(X,X).
 term2json(Term,JSONDict) :- 
 	json_colons_to_equals(Term,SWIterm), 
 	% TODO: one step too many! merge into json_colons_to_equals
-	atom_json_term(JSONAtom,SWIterm,[as(atom)]),
-	atom_json_dict(JSONAtom, JSONDict, []).
+	atom_json_term(JSONs,SWIterm,[as(string)]),
+	atom_json_dict(JSONs, JSONDict, []).
 
 create_counter(Dict) :- dict_create(Dict,'$_visualizer_counter',[value=0]).
 
@@ -200,6 +201,33 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 	( DSarray == [] -> Cycles=[] ; make_json_object([cycles:DSarray],Cycles)), 
 	term2json(Cycles,Sequence).
 
+
+%%% Lazy access to displayable data at each cycle
+
+% collect_display_specs_lazy(+Terms,Ops) For each term t(Literal,Type), where Type is fluent | event | action, 
+% return one dict with a create operation. Actions/events are assumed atomic and happening 'to' the current cycle
+% Unlike in the eager version, the Javascript side will find differencesvs the previous cycle it knows about, and
+% should generate kill (and possibly update) operations
+
+collect_display_specs_lazy([T|Terms],[Op|Ops]) :- !, op_for_one_lazy(T,Op), collect_display_specs_lazy(Terms,Ops).
+collect_display_specs_lazy([],[]).
+
+% op_for_one_lazy(+Term,-Operation)
+op_for_one_lazy(t(X,Type), _{create:TheProps}) :-
+	% This is accessing d/2 via the interpreter... should be the same as done by the eager version. TODO: cleanup
+	once(interpreter:d(X,Props_)),
+	ensure_all_colons(Props_,Props__),
+	(member(id:ID,Props__)->true;(member(PP,Props__), member(id:ID,PP))->true;ID=X),
+	% SHOULD WE allow composites with non list elements in props???
+	enforce_property(Props__,id:ID,Props___), 
+	% id is beeing repeated in composite object parts...but not a problem, 
+	% composite objects will be associated to a single id (the first one found)
+	((Type==event;Type==action) -> enforce_property(Props___,event:true,TheProps_); TheProps_=Props___),
+	enforce_property(TheProps_,id:ID,TheProps).
+
+
+%%% Eager access to displayable data (all cycles at the end); also, commoin utility predicates
+
 % prepare_display_sequence(+DS,-Sequence)  
 % Returns a list of lists, one for cycle 0,... until the last; all cycles have lists, added (empty) if needed
 prepare_display_sequence([c(First,Op)|Cycles],Sequence) :- prepare_display_sequence([c(First,Op)|Cycles],First,[],Sequence).
@@ -257,7 +285,7 @@ collect_display_specs2([ID-DI|Items],OpItems) :- collect_display_specs_for([ID-D
 % all objects must have these:
 mandatory_prop_name(type).
 
-% collect_display_specs_for(+Items,ID, +Mode(create/update(LastProps)), -ItemsLeft, -OpItemsForId)
+% collect_display_specs_for(+Items,+ID, +Mode(create/update(LastProps)), -ItemsLeft, -OpItemsForId)
 % Collect display specs for an ID
 % Each OpItem is c(Cycle,Op), where Op is {kill:ID} or {create:Props} or {update:ID, oldProps:OldProps, newProps:Props}
 collect_display_specs_for([ID-di(T1-T2,X,_G)|Items],ID, Mode, Items, [c(T1,Op), c(T2,{kill:ID})]) :- 
@@ -290,7 +318,7 @@ op_for_one_enter(ID,T,X,Mode,Props,Op) :-
 		Op = ({(update):ID, oldProps:OldProps, newProps:Props})
 		; 
 		Mode=create, 
-		(d_event(X) -> enforce_property(Props,event:true,TheProps_); TheProps_=Props),
+		(d_event(X) /* event or action */ -> enforce_property(Props,event:true,TheProps_); TheProps_=Props),
 		enforce_property(TheProps_,id:ID,TheProps),
 		Op= {create:TheProps}
 	).
@@ -309,7 +337,7 @@ ensure_all_colons([P|Props],[NewP|NewProps]) :- is_list(P), !, ensure_all_colons
 ensure_all_colons([P|Props],[P:true|NewProps]) :- ensure_all_colons(Props,NewProps).
 ensure_all_colons([],[]).
 	
-% prepare_item_ids(+Tuples,-Items) Each Item is ID-di(T1-T2,FluentOrEvent,Group); 
+% prepare_item_ids(+Tuples,-Items) Each Item is ID-di(T1-T2,FluentOrEvent,Group), easy to order by id and time range; 
 % ID is extracted from props, or generated - right now it's the whole term, 
 % for more compactness it could be an int key into a term dictionary instead
 prepare_item_ids([t(X,T1-T2,G)|Items], [ID-di(T1-T2,X,G)|WithIds]) :- d(X,Props), !, % displayable item 
@@ -351,7 +379,9 @@ make_json_list(Props,JSON) :- make_json_object(Props,JSON).
 make_json_list2([P|Props],[J|JSON]) :- !, make_json_object(P,J), make_json_list2(Props,JSON).
 make_json_list2([],[]).
 
-	
+% resolve_id_props(+Props,+Time,-ResolvedProps)  replaces "referential" properties, that lookup their value in other object
+%	This is actually not very useful in its current form, because values tend to be compound, e.g. rectangles;
+%	Perhaps a path based notation might be more useful, e.g. from:[FromPerson.from[0],20] ...???
 resolve_id_props([P:id(ID)|Props],T,[P:Value|NewProps]) :- !,
 	( (get_id_props(ID,T,IDProps), member(P:Value,IDProps), Value \= id(_)) -> true
 		; writeln(T/P:id(ID)), print_error(error,'Could not find display property value for'(T/P:id(ID)),null), fail),

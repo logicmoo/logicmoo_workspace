@@ -28,7 +28,12 @@ You can see this at work by trying [banking example](http://lpsdemo.interprolog.
 
 Use the video controls to pause or step through the animation. Clicking the top left corner of the animation lets you see the timeline as usual; LPS timelines and 2d worlds are implemented as SWISH Prolog answer [renderers](http://lpsdemo.interprolog.com/example/rendering.swinb).
 
-In order to see your LPS program running in 2D, you need to write a few clauses for the d/2 predicate, specifying "display properties" for each fluent and/or event you wish to see. Next we look at what "props" (for short) are available.
+In order to see your LPS program running in 2D, you need to write a few clauses for the d/2 predicate, specifying "display properties" for each fluent and/or event you wish to see. 
+
+**NOTE: d/2 clauses must NOT use Prolog cuts nor if-then-elses, nor unbound arithmetic instructions - clauses should be calleable with all unbound head variables. Furthermore, d/2 must be deterministic when called with the first argument bound.**
+
+Next we look at what "props" (for short) are available.
+
 
 # About d/2 props #
 

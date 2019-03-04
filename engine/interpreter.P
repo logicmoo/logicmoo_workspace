@@ -1194,6 +1194,14 @@ user_fluent(F) :-
 		), L), 
 	member(Functor/Arity,L), functor(F,Functor,Arity).
 
+
+% findall removing duplicates, by considering term variants to be "equal"
+findall_variants(T,G,Templates) :- 
+	findall(T,G,Solutions), predsort(variant_compare,Solutions,Templates).
+
+variant_compare(O,A,B):- variant(A,B)->O=(=);compare(O,A,B).
+
+
 % collect_guessed_declarations(-List). 
 %  This was originally in psyntax; it may be called more than once, but only the first run actually does anything
 collect_guessed_declarations(L) :-

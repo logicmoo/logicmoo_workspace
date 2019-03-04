@@ -41,6 +41,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- use_module(library(http/http_json)).
 :- use_module('../../swish/lib/render').
 
+% explicit imports below, commenting this to avoid "weak imports" warnings 
+% :- use_module('../engine/interpreter.P').
+:- use_module('../utils/visualizer.P').
+
 :- multifile sandbox:safe_primitive/1.
 
 :- register_renderer(lps_server_UI, "Access to a LPS server execution").
@@ -354,28 +358,36 @@ display_sample(Request) :-
 		
 		%Events=[], Fluents = [balance(_,_)],
 		%interpreter:inject_events_fetch_fluents(LPS_ID,Events,false/*sample before applying events*/,Fluents,Result),
-		interpreter:query_thread(LPS_ID, lps_server_UI:get_fluents_events_actions(X,interpreter:d(X,_),_Terms), Cycle, Result),
+		interpreter:query_thread(LPS_ID, lps_server_UI:get_fluents_events_actions(_Result), Cycle, Result),
 		term_string(Result,ResultS),
-		Sample = _{cycle:Cycle, ops:[],test:ResultS},
+		% TODO: term2json(Result,ResultJ), ?? use proper dicts instead of lists of P:V
+		Sample = _{cycle:Cycle, ops:ResultS},
 		reply_json_dict(Sample)
 		; reply_json_dict(_{error:"Not running"})).
 
-% get_fluents_events_actions(+Template,+Condition,-Terms) 
-% Each term will be t(Literal,Type), where Type is action or event or Functor/Arity (of fluent)
-% E.g. call with get_fluents_events_actions(lps13,X,interpreter:d(X,_),Cycle,Terms)
-% TODO: 'timeless' missing!!! and fetch properties, we need those fetched in the user prograns's thread!
-get_fluents_events_actions(X,Cond,Terms) :-
-	findall(t(X,fluent),(
-		interpreter:user_fluent(X), Cond, interpreter:query(holds(X,_)) 
-		), Fluents),
-	findall(t(X,Type),( 
-		interpreter:happens(X,T1,T2), T2=:=T1+1, Cond, (interpreter:action_(X)->Type=action;Type=event)
-		), EventsActions),
-	append(Fluents,EventsActions,Terms).
+% get_fluents_events_actions(-Ops) returns a list of dicts
+get_fluents_events_actions(Ops) :-
+	Cond = interpreter:d(X,_),
+	MaxTime = 0.01, % seconds
+	catch( call_with_time_limit(MaxTime,(
+		interpreter:findall_variants(X,Cond,Templates),
+		findall(t(X,fluent),(
+			member(X,Templates), interpreter:user_fluent(X), interpreter:query(holds(X,_)), Cond 
+			), Fluents),
+		findall(t(X,Type),( 
+			member(X,Templates), interpreter:happens(X,T1,T2), T2=:=T1+1, Cond, (interpreter:action_(X)->Type=action;Type=event)
+			), EventsActions)
+		)), 
+		Ex, 
+		(Ex==time_limit_exceeded-> print_message(error,over_complicated_display_specification), Templates=[]; throw(Ex))
+	),
+	% TODO: only the first time! compare cycles maybe?
+	(member(timeless,Templates) -> append([t(timeless,fluent)|Fluents],EventsActions,Terms)
+		; append(Fluents,EventsActions,Terms)),
+	% Each term will be a t(Literal,Type), where Type is action or event or fluent
+	visualizer:collect_display_specs_lazy(Terms,Ops).
 
 /*
-predsort(variant_compare,List,Sorted)
-variant_compare(O,A,B):- variant(A,B)->O=(=);compare(O,A,B).
 ord_subtract(LastSample,Current,Delta),...
 % this actually can get more verbose then simply dumping the relevant fluents...
 % ultimately a more incremental structure could be used, e.g. a state trie, plus diffs encoded as paths
