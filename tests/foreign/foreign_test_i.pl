@@ -12,7 +12,7 @@
 :- use_foreign_header(include/foreign_test).
 :- use_foreign_source(foreign_test).
 :- include_foreign_dir(include).
-:- foreign_dependency(include/'constants.for').
+:- foreign_dependency(include/'includedf.for').
 :- use_foreign_source('foreign_test.for').
 :- gen_foreign_library(.(foreign_test_i)).
 
