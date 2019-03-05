@@ -10,7 +10,7 @@ then
 	NX is X+DX, NY is Y+DY,
 	ignite(NX,NY).
 false ignite(X,Y), burning(X,Y).
-observe ignite(5,5) from 0 to 1.
+observe ignite(5,5) from 1 to 2. % events are not admissible earlier
 
 /* When a LPS program defines the d/2 ("display") predicate, a 2D world animation is show
 d(T,Props) specifies the appearance of fluent or event T; Props is a list of 

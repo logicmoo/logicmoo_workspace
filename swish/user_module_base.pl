@@ -258,7 +258,10 @@ my_swish_resources -->
 	% swish_page:swish_css, swish_page:swish_js, 
 	% {http_absolute_location(lps_resources('lps.css'),LPScss,[])},
 	html_post(head, link([ type('text/css'),rel('stylesheet'),href('/lps/lps.css') ])),
-	html_post(head, script(JS)).
+	html_post(head, script(JS)),
+	html_post(head, script([src('/lps/timeline.js')],[])),
+	html_post(head, script([src('/lps/2dWorld.js')],[])).
+
 	
 sandbox:safe_primitive(interpreter:lps_ask(_A,_B,_C)). 
 sandbox:safe_primitive(interpreter:lps_ask(_A,_B)). 
