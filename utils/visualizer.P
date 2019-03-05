@@ -208,15 +208,15 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 %%% Lazy access to displayable data at each cycle
 
 % collect_display_specs_lazy(+Terms,Ops) For each term t(Literal,Type), where Type is fluent | event | action, 
-% return one dict with a create operation. Actions/events are assumed atomic and happening 'to' the current cycle
-% Unlike in the eager version, the Javascript side will find differencesvs the previous cycle it knows about, and
-% should generate kill (and possibly update) operations
+% return one dict with an object specification (or a list thereof, for composityes). Actions/events are assumed atomic and happening 'to' the current cycle
+% Unlike in the eager version, the Javascript side will find differences vs the previous cycle it knows about, and
+% should generate kill (and possibly update) operations locally in the client
 
 collect_display_specs_lazy([T|Terms],[Op|Ops]) :- !, op_for_one_lazy(T,Op), collect_display_specs_lazy(Terms,Ops).
 collect_display_specs_lazy([],[]).
 
 % op_for_one_lazy(+Term,-Operation)
-op_for_one_lazy(t(X,Type), _{create:TheProps}) :-
+op_for_one_lazy(t(X,Type), TheProps) :-
 	% This is accessing d/2 via the interpreter... should be the same as done by the eager version. TODO: cleanup
 	once(interpreter:d(X,Props_)),
 	ensure_all_colons(Props_,Props__),

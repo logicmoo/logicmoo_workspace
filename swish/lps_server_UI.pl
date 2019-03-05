@@ -139,7 +139,7 @@ serverLinks([ID|IDs]) -->
 	{format(atom(MURL),"/lps_server/manager/~w",[ID]), format(atom(MLabel),"Manage ~w",[ID])},
 	{(
 		background_execution(ID,_,_,_,_,_FinalState,running) -> 
-			format(atom(DURL),"/lps_server/d_sample/~w",[ID]), DLabel="Display", Displayer=span([" | ",a([href=DURL],DLabel)])
+			format(atom(DURL),"/lps_server/twoD/~w",[ID]), DLabel="Display", Displayer=span([" | ",a([href=DURL],DLabel)])
 			; Displayer=[]
 	)},
 	html(p([span(a([href=MURL],MLabel))|Displayer])), 
@@ -396,4 +396,43 @@ state_diff(Diffs) :-
 	findall(+ I,(next_state(I), \+ state(I)), Inserted),
 	append(Deleted,Inserted,Diffs).
 */
+
+:- http_handler('/lps_server/twoD/', twoD, [prefix]). % .../lps_server/twoD/lps1
+twoD(Request) :-
+	member(path_info(LPS_ID),Request),
+	background_execution(LPS_ID,_,_,_,_,_FinalState,Status), % user is checked here
+	header_style(Style),
+	(Status==running ->
+		reply_html_page([
+			title([LPS_ID,' 2d display']),
+			% Include 2d and other stuff... see my_swish_resources?
+			script(src("/bower_components/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
+			\js_script({|javascript(LPS_ID)||
+				var sampler = (function(){
+					var SAMPLE_URL = '/lps_server/d_sample/'+LPS_ID
+					var self = {
+						last: "",
+						load: function(withTimeless){
+							var url = (withTimeless?SAMPLE_URL+"?timeless=true":SAMPLE_URL);
+							jQuery.ajax(url,{}).done(
+								function(data){
+									//console.log("data:"+JSON.stringify(data));
+									jQuery(output).text(JSON.stringify(data));
+									self.last = data;
+									console.log("cycle:"+self.last.cycle);
+								}
+							);
+						}
+					}
+					return self;
+				})();
+			|})
+			], [
+			h2([Style],['2d display for ',LPS_ID,':']), div([id(my_canvas)],[])
+			, div(button(onclick("sampler.load(true);"),"Load All!")), div(button(onclick("sampler.load(false);"),"Load!"))
+			, div(span(id(output),[]))
+			] )
+		;
+		reply_html_page([title([LPS_ID,' 2d display'])],[h2([Style],['2d display for ',LPS_ID,' unavailable, program not running.'])])
+	).
 
