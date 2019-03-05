@@ -1532,6 +1532,7 @@ static foreign_t add_query_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
   return(PL_unify(out,arg4));
 }
 
+// TO DO 
 static foreign_t add_decision_var(term_t arg1,term_t arg2,term_t arg3)
 {
   term_t out,head,probTerm;
@@ -1578,6 +1579,53 @@ static foreign_t add_decision_var(term_t arg1,term_t arg2,term_t arg3)
   RETURN_IF_FAIL
 
   return(PL_unify(out,arg4));
+}
+
+// guardare double Prob(DdNode *node, environment * env, tablerow * table)
+// double ProbPath(example_data * ex_d,DdNode *node, int nex)
+static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) {
+  // TODO  
+}
+
+static foreign_t add_prod(term_t env_ref, term_t add_in, term_t cost, term_t add_out) {
+  int ret;
+  DdNode *add_cost;
+  environment *env;
+
+  ret = PL_get_pointer(env_ref,(void **)&env);
+  RETURN_IF_FAIL
+
+  ret = PL_get_integer(cost,&current_cost);
+  RETURN_IF_FAIL
+
+  add_cost = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) current_cost);
+  if(add_cost == NULL)
+    return add_cost;
+
+  // devo moltiplicare ogni nodo dell'add per il add_cost
+
+
+  // return(PL_unify(node,add_out));
+}
+
+// procedura che moltiplica i nodi (o solo quelli terminali) dell'add per il valore passato
+void MultiplyAddConst(DdManager *mgr, DdNode *current_node, const DdNode *add_cost) {
+  DdNode *T, *E;
+  if(Cudd_IsConstant(current_node) != 1) {
+    current_node = Cudd_addTimes(mgr,current_node,add_cost);
+    T = Cudd_T(current_node);
+    F = Cudd_E(current_node);
+    MultiplyAddConst(mgr,T,add_cost);
+    MultiplyAddConst(mgr,F,add_cost);
+  }
+}
+
+static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_out) {
+  // TODO  
+}
+
+static foreign_t strategy(term_t env_ref, term_t add_A, term_t strategy_list, term_t cost) {
+  // TODO  
 }
 
 static foreign_t add_abd_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)

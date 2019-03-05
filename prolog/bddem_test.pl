@@ -288,9 +288,12 @@ test(probabilitdd):-
   probability_dd(Env,BDDBU,ADDBU),
   add_prod(Env,ADDD,60,ADDDU), % <- TODO, prodotto utility*ADD
   add_prod(Env,ADDBU,-40,ADDDUU),
-  add_sum(Env,ADDDU,ADDDUU,ADDS), % TODO, somma due ADD
+  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- TODO, somma due ADD
   strategy(Env,ADDS,S,C),
-  end(Env),
-  test(S,C).
+  S = umbrella,
+  C =:= 473,
+  % S = [inserire lista]
+  % C =:= costo
+  end(Env).
 
 :- end_tests(dtprob).
