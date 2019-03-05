@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- use_module(library(http/term_html)).
 :- use_module(library(http/js_write)).
 :- use_module(library(http/http_json)).
+:- use_module(library(http/http_parameters)).
 :- use_module('../../swish/lib/render').
 
 % explicit imports below, commenting this to avoid "weak imports" warnings 
@@ -345,26 +346,26 @@ prepare_events(Query,ServerUser,Events) :-
 		; true).
 
 % respond to a request for a sample of the current fluents and events covered by d/2 (2d display) declarations
-:- http_handler('/lps_server/d_sample/', lps_server_UI:display_sample, [prefix]).  % .../lps_server/d_sample/lps1
+:- http_handler('/lps_server/d_sample/', lps_server_UI:display_sample, [prefix]).  % .../lps_server/d_sample/lps1?timeless=true (timeless is optional)
 display_sample(Request) :- 
 	member(path_info(LPS_ID),Request),
+	http_parameters(Request,[timeless(Timeless,[optional(true)])]),
+	(var(Timeless)->Timeless=false;true),
 	background_execution(LPS_ID,_,_,_,_,_FinalState,Status), % user is checked here
 	( Status==running ->
-		% Obtain list of t(Literal,T1-T2,Group) and use collect_display_specs to build a single cycle
-		% fake cycle transitions, likely keeping a last_cycle_sample
-		% likely in visualization.P
-		% use variant of inject_events_fetch_fluents with access to d/2 etc., using query_thread:-)
 		% no point using cycle_hook, different thread anyway
 		
 		%Events=[], Fluents = [balance(_,_)],
 		%interpreter:inject_events_fetch_fluents(LPS_ID,Events,false/*sample before applying events*/,Fluents,Result),
-		interpreter:query_thread(LPS_ID, lps_server_UI:get_fluents_events_actions(_Result), Cycle, Result),
+		interpreter:query_thread(LPS_ID, lps_server_UI:get_fluents_events_actions(Timeless,_Result), Cycle, Result),
 		Sample = _{cycle:Cycle, ops:Result},
 		reply_json_dict(Sample)
-		; reply_json_dict(_{error:"Not running"})).
+		; 
+		reply_json_dict(_{error:"Not running"})
+	).
 
 % get_fluents_events_actions(-Ops) returns a list of dicts
-get_fluents_events_actions(Ops) :-
+get_fluents_events_actions(Timeless,Ops) :-
 	Cond = interpreter:d(X,_),
 	MaxTime = 0.01, % seconds
 	catch( call_with_time_limit(MaxTime,(
@@ -379,8 +380,7 @@ get_fluents_events_actions(Ops) :-
 		Ex, 
 		(Ex==time_limit_exceeded-> print_message(error,over_complicated_display_specification), Templates=[]; throw(Ex))
 	),
-	% TODO: only the first time! compare cycles maybe?
-	(member(timeless,Templates) -> append([t(timeless,fluent)|Fluents],EventsActions,Terms)
+	((Timeless==true,member(timeless,Templates)) -> append([t(timeless,fluent)|Fluents],EventsActions,Terms)
 		; append(Fluents,EventsActions,Terms)),
 	% Each term will be a t(Literal,Type), where Type is action or event or fluent
 	visualizer:collect_display_specs_lazy(Terms,Ops).
