@@ -4,9 +4,13 @@ function sampler_for2d(ID,myWorld){
 	var self = {
 		
 		lastCycle: -1,
+		isFirst: function(){
+			return (self.lastCycle == -1);
+		},
 		load: function(){
+			var isFirst = self.isFirst();
 			// get timeless specifications only for the first time:
-			var url = (self.lastCycle==-1?SAMPLE_URL+"?timeless=true":SAMPLE_URL);
+			var url = (isFirst?SAMPLE_URL+"?timeless=true":SAMPLE_URL);
 			jQuery.ajax(url,{}).done(
 				function(data){
 					//console.log("data:"+JSON.stringify(data));
@@ -16,6 +20,8 @@ function sampler_for2d(ID,myWorld){
 					console.log(JSON.stringify(ops));
 					console.log("cycle:"+self.lastCycle);
 					myWorld.displayFluentsForOne(ops);
+					if (isFirst)
+						myWorld.resizeWorld();
 					myWorld.updatePaper();
 				}
 			).fail(
@@ -25,6 +31,7 @@ function sampler_for2d(ID,myWorld){
 				}
 			);
 		},
+		
 		// returns newProps with props wrapped in {Op:Props}, where Op is create/update/kill, depending
 		// on whether the objects already exist in our 2d world
 		assignOps: function(ops){
@@ -32,7 +39,6 @@ function sampler_for2d(ID,myWorld){
 				return [];
 			var paperFluents = myWorld.getPaperFluents();
 			var paperEvents =  myWorld.getPaperEvents();
-			console.log("paperFluents:"+JSON.stringify(paperFluents));
 			var myIDs = {};
 			for (var i=0; i<ops.length; i++){
 				var op = ops[i];

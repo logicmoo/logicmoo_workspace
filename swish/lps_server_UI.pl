@@ -404,20 +404,23 @@ twoD(Request) :-
 	header_style(Style),
 	(Status==running ->
 		format(string(MANAGER_URL),"/lps_server/manager/~w",[LPS_ID]),
-		MY_CANVAS = my_canvas,
+		MY_CANVAS = my_canvas, 
+		atom_concat('#',MY_CANVAS,MY_SELECTOR),
 		reply_html_page([
 			title([LPS_ID,' 2d display']),
 			script(src("/bower_components/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
 			script(src("/lps/2dWorld.js"),[]), 
 			script(src("/lps/2dWorld_lazy.js"),[]), 
-			\js_script({|javascript(LPS_ID,MY_CANVAS)||
+			\js_script({|javascript(LPS_ID,MY_SELECTOR)||
 				var myWorld = twoDworld();
-				var container = jQuery(MY_CANVAS);
-				myWorld.initPaper(container,false); // should we check for loading to be finished...??
 				var sampler = sampler_for2d(LPS_ID,myWorld);
+				window.onload = function(){
+					var JQcanvas = jQuery(MY_SELECTOR);
+					myWorld.initPaper(JQcanvas.get(0),false); // this loads PaperJS
+				}
 			|})
 			], [ 
-			h2([Style],['2d display for ',a([href(MANAGER_URL),target('_blank')],LPS_ID),':']), div([style("min-width:300px;min-height:200px;resize:both;"),resize,id(MY_CANVAS)],[])
+			h2([Style],['2d display for ',a([href(MANAGER_URL),target('_blank')],LPS_ID),':']), canvas([resize,id(MY_CANVAS)],[])
 			, div(button(onclick("sampler.load();"),"Load!"))
 			, div(span(id(debug_output),[]))
 			] )

@@ -461,35 +461,7 @@ function twoDworld() {
 		}
 		
 		if (!didResize) {
-			// will resize our canvas after the first cycle with all objects displayed
-			if (rastersToLoad>0) return;
-			var bounds = new paper.Rectangle(0,0,0,0);
-			$.each(paperFluents,function(id,po){
-				if (Array.isArray(po)){
-					$.each(po,function(i,o){
-						bounds = bounds.unite(o.bounds);
-					});
-				}
-				else bounds = bounds.unite(po.bounds);
-			});
-			$.each(paperEvents,function(id,po){
-				if (Array.isArray(po)){
-					$.each(po,function(i,o){
-						bounds = bounds.unite(o.bounds);
-					});
-				}
-				else bounds = bounds.unite(po.bounds);
-			});
-			//console.log("BOUNDS "+JSON.stringify(bounds));
-			if (bounds.width === 0)
-				return; // no displayed objects yet
-			if (bounds.width<200)
-				bounds.width = 200; // Minimum space for the video controls
-			console.log("Found LPS 2d world bounds "+JSON.stringify(bounds));
-			paper.view.viewSize.width = bounds.width+10;
-			paper.view.viewSize.height = bounds.height+10;
-			// make y ordinates grow from the bottom:
-			paper.view.matrix.d = -1; paper.view.matrix.ty=bounds.height+10;
+			resizeWorld();
 			didResize = true;
 			controlPanel= buildControlPanel();
 		}
@@ -501,6 +473,38 @@ function twoDworld() {
 		// The time passed in seconds since the last frame event:
 		// console.log(event.delta);
 	
+	}
+	
+	function resizeWorld(){
+		// will resize our canvas after the first cycle with all objects displayed
+		if (rastersToLoad>0) return;
+		var bounds = new paper.Rectangle(0,0,0,0);
+		$.each(paperFluents,function(id,po){
+			if (Array.isArray(po)){
+				$.each(po,function(i,o){
+					bounds = bounds.unite(o.bounds);
+				});
+			}
+			else bounds = bounds.unite(po.bounds);
+		});
+		$.each(paperEvents,function(id,po){
+			if (Array.isArray(po)){
+				$.each(po,function(i,o){
+					bounds = bounds.unite(o.bounds);
+				});
+			}
+			else bounds = bounds.unite(po.bounds);
+		});
+		//console.log("BOUNDS "+JSON.stringify(bounds));
+		if (bounds.width === 0)
+			return; // no displayed objects yet
+		if (bounds.width<200)
+			bounds.width = 200; // Minimum space for the video controls
+		console.log("Found LPS 2d world bounds "+JSON.stringify(bounds));
+		paper.view.viewSize.width = bounds.width+10;
+		paper.view.viewSize.height = bounds.height+10;
+		// make y ordinates grow from the bottom:
+		paper.view.matrix.d = -1; paper.view.matrix.ty=bounds.height+10;
 	}
 	
 	var startOfMyLog = Date.now();
@@ -519,20 +523,11 @@ function twoDworld() {
 		$.ajax({url:"/lps/bower_components/paper/dist/paper-core.js", dataType:"script", cache: true, success:function() {  
 			//mylog("Loaded paperjs");
 			WHITE_COLOR = new paper.Color(255,255,255);
-			var canvas = DOMcontainer;
+			var canvas = DOMcontainer; // must be a DOM object, not a jQuery object...
 			// Create an empty project and a view for the canvas:
 			paper.setup(canvas);
 			if (animate)
 				paper.view.onFrame = onFrame;
-			else // EXPERIMENTAL HACK 
-				{
-					paper.view.matrix.d = -1; paper.view.matrix.ty = 200;
-					paper.view.viewSize.width = 200;
-					paper.view.viewSize.height = 200;
-
-				}
-			console.log(JSON.stringify(paper.view.viewSize));
-
 		} });
     }
 
@@ -588,9 +583,9 @@ function twoDworld() {
 			return paperEvents;
 		},
 		updatePaper: function(){
-			console.log("update:"+paper.view.update());
-			paper.view.draw(); // ??
-		}
+			//console.log("update:"+paper.view.update());
+		},
+		resizeWorld: resizeWorld
 	}
 	return self;
     
