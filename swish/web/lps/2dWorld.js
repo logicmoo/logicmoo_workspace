@@ -1,5 +1,5 @@
 // Used by lps_2d_renderer.pl
-function twoDworld(TwoD) {
+function twoDworld() {
 	
 	// IE oblige... cf. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 	if (typeof Object.assign != 'function') {
@@ -90,7 +90,11 @@ function twoDworld(TwoD) {
 		//console.log("-- displayFluents for cycle "+cycle);
 		if (cycle>=cycles.length)
 			console.log("ERROR: displayFluents for cycle "+cycle+ "...??");
-		var cycleOps = cycles[cycle];
+		displayFluentsForOne(cycles[cycle]);
+	}
+	
+	// Handle one cycle, given as array of operations
+	function displayFluentsForOne(cycleOps){
 		for (var c=0; c<cycleOps.length; c++){
 			var op = cycleOps[c];
 			var props = op.create;
@@ -282,6 +286,7 @@ function twoDworld(TwoD) {
 
 	/** Create an arrow, with mandatory props from/to; other specific props:
 		headLength, headAngle, biDirectional; strokeColor assumed black by default
+		TODO: use a Symbol instead?
 	@param {Object} props for a simple object
 	@param {String} id passed because it is not in props now
 	*/
@@ -412,7 +417,11 @@ function twoDworld(TwoD) {
 		return self;
 	}
 	
-
+	 // frames before and after a cycle transition
+	function animationHalfSlice(){
+		return Math.floor(ANIMATION_HALF_SLICE*framesPerCycle);
+	}
+	
 	function onFrame(event) {
 		if (zeroCount===null) {
 			zeroCount = event.count;
@@ -434,8 +443,8 @@ function twoDworld(TwoD) {
 		}
 		
 		var cycleStart = zeroCount + cycle * framesPerCycle;
-		var lastAnimationEnd = cycleStart + animationHalfSlice;
-		var nextAnimationStart = cycleStart + framesPerCycle - animationHalfSlice;
+		var lastAnimationEnd = cycleStart + animationHalfSlice();
+		var nextAnimationStart = cycleStart + framesPerCycle - animationHalfSlice();
 		
 		if (controlPanel) 
 			controlPanel.refresh(cycle, (event.count-zeroCount)/(endOfTime-zeroCount));
@@ -500,6 +509,53 @@ function twoDworld(TwoD) {
     	console.log(prefix+m);
 	}
 	
+	/** Load and init PaperJS in the given canvas;
+	@param {Object} DOMcontainer
+	@param {String} animate whether onFrame animation should start
+	*/
+    function initPaper(DOMcontainer,animate){
+		// TODO? preprocess properties: replace Point, Size; scale view, with zoom or scale; possibly at cycle 0
+		// This should probably be included differently...
+		$.ajax({url:"/lps/bower_components/paper/dist/paper-core.js", dataType:"script", cache: true, success:function() {  
+			//mylog("Loaded paperjs");
+			WHITE_COLOR = new paper.Color(255,255,255);
+			var canvas = DOMcontainer;
+			// Create an empty project and a view for the canvas:
+			paper.setup(canvas);
+			if (animate)
+				paper.view.onFrame = onFrame;
+			else // EXPERIMENTAL HACK 
+				{
+					paper.view.matrix.d = -1; paper.view.matrix.ty = 200;
+					paper.view.viewSize.width = 200;
+					paper.view.viewSize.height = 200;
+
+				}
+			console.log(JSON.stringify(paper.view.viewSize));
+
+		} });
+    }
+
+	function initCycle(TwoD){
+		cycles_ = TwoD.cycles; 
+		if (!cycles_ || cycles_.length==0){
+			console.log("No LPS cycles to display!");
+			return false;
+		}
+		if (cycles_.length<2){
+			console.log("Weird LPS cycles, less than 2!");
+			return false;
+		}
+		cycles=cycles_;
+		//console.log(JSON.stringify(cycles));
+		for(var i=0;i<cycles.length;i++) console.log(JSON.stringify(cycles[i]));
+		// Adjust animation frames per cycle:
+		if (cycles.length < 15) framesPerCycle = 60;
+		else if (cycles.length <50) framesPerCycle = 30;
+		console.log("framesPerCycle:"+framesPerCycle);
+		return true;
+	}
+	
 	var zeroCount = null; // as obtained from event.count
 	var didResize = false;
 	var endOfTime; // ibidem
@@ -514,47 +570,28 @@ function twoDworld(TwoD) {
 	var paused = false;
 	var nextStop = null; // in frame (event) counts
 	var cycle = 0; // current cycle, as determined by onFrame
-	
-	if (!( $.ajaxScript )) 
-	return;
-	mylog("Starting Javascript");
-	var div  = $.ajaxScript.parent();
-	var container = div.find('#lps_2dworld');
-	if (!container) alert('Could not find 2d world HTML element!');
-	var DOMcontainer = container.get(0);
-
+	var framesPerCycle = 15; // (LPS cycles)
 	// array of arrays, one for each cycle; each cycle array has an operation object
 	// The object properties may be a Javascript object (for a simple display object)
 	// or an array of display object props, for composite objects
-	var cycles = TwoD.cycles; 
-	if (!cycles || cycles.length==0){
-		console.log("No LPS cycles to display!");
-		return;
+	var cycles = []; 
+	
+	// available entry points to functions
+	var self = {
+		initCycle: initCycle,
+		initPaper: initPaper,
+		displayFluentsForOne: displayFluentsForOne,
+		getPaperFluents: function(){
+			return paperFluents;
+		},
+		getPaperEvents: function(){
+			return paperEvents;
+		},
+		updatePaper: function(){
+			console.log("update:"+paper.view.update());
+			paper.view.draw(); // ??
+		}
 	}
-	if (cycles.length<2){
-		console.log("Weird LPS cycles, less than 2!");
-		return;
-	}
-	//console.log(JSON.stringify(cycles));
-	for(var i=0;i<cycles.length;i++) console.log(JSON.stringify(cycles[i]));
-
-	var framesPerCycle; // (LPS cycles)
-	if (cycles.length < 15) framesPerCycle = 60;
-	else if (cycles.length <50) framesPerCycle = 30;
-	else framesPerCycle = 15;
-	framesPerCycle = 60; // ???
-	console.log("framesPerCycle:"+framesPerCycle);
-	var animationHalfSlice = Math.floor(ANIMATION_HALF_SLICE*framesPerCycle); // frames before and after a cycle transition
-		
-	// TODO? preprocess properties: replace Point, Size; scale view, with zoom or scale; possibly at cycle 0
-	// This should probably be included differently...
-    $.ajax({url:"/lps/bower_components/paper/dist/paper-core.js", dataType:"script", cache: true, success:function() {  
-		mylog("Loaded paperjs");
-    	WHITE_COLOR = new paper.Color(255,255,255);
-		var canvas = DOMcontainer;
-		// Create an empty project and a view for the canvas:
-		paper.setup(canvas);
-    	paper.view.onFrame = onFrame;
-    } });
+	return self;
     
   }

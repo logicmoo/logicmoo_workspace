@@ -17,7 +17,18 @@ term_rendering(lps_visualization(_T,TwoD), _Vars, _Options) -->
 		canvas([id(lps_2dworld)], []),
 		% Depends on /lps/2dWorld.js
 		\js_script({|javascript(TwoD)||
-			twoDworld(TwoD);
+
+			if (!( $.ajaxScript )) 
+				throw("Somehow missing SWISH script property");
+			var div  = $.ajaxScript.parent();
+			var container = div.find('#lps_2dworld');
+			if (!container) 
+				alert('Could not find 2d world HTML element!');
+			var DOMcontainer = container.get(0);
+
+			var myWorld = twoDworld();
+			myWorld.initCycle(TwoD);
+			myWorld.initPaper(DOMcontainer,true);
 		|})
 	])).
 

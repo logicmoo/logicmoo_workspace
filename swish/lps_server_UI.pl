@@ -403,34 +403,23 @@ twoD(Request) :-
 	background_execution(LPS_ID,_,_,_,_,_FinalState,Status), % user is checked here
 	header_style(Style),
 	(Status==running ->
+		format(string(MANAGER_URL),"/lps_server/manager/~w",[LPS_ID]),
+		MY_CANVAS = my_canvas,
 		reply_html_page([
 			title([LPS_ID,' 2d display']),
-			% Include 2d and other stuff... see my_swish_resources?
 			script(src("/bower_components/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
-			\js_script({|javascript(LPS_ID)||
-				var sampler = (function(){
-					var SAMPLE_URL = '/lps_server/d_sample/'+LPS_ID
-					var self = {
-						last: "",
-						load: function(withTimeless){
-							var url = (withTimeless?SAMPLE_URL+"?timeless=true":SAMPLE_URL);
-							jQuery.ajax(url,{}).done(
-								function(data){
-									//console.log("data:"+JSON.stringify(data));
-									jQuery(output).text(JSON.stringify(data));
-									self.last = data;
-									console.log("cycle:"+self.last.cycle);
-								}
-							);
-						}
-					}
-					return self;
-				})();
+			script(src("/lps/2dWorld.js"),[]), 
+			script(src("/lps/2dWorld_lazy.js"),[]), 
+			\js_script({|javascript(LPS_ID,MY_CANVAS)||
+				var myWorld = twoDworld();
+				var container = jQuery(MY_CANVAS);
+				myWorld.initPaper(container,false); // should we check for loading to be finished...??
+				var sampler = sampler_for2d(LPS_ID,myWorld);
 			|})
-			], [
-			h2([Style],['2d display for ',LPS_ID,':']), div([id(my_canvas)],[])
-			, div(button(onclick("sampler.load(true);"),"Load All!")), div(button(onclick("sampler.load(false);"),"Load!"))
-			, div(span(id(output),[]))
+			], [ 
+			h2([Style],['2d display for ',a([href(MANAGER_URL),target('_blank')],LPS_ID),':']), div([style("min-width:300px;min-height:200px;resize:both;"),resize,id(MY_CANVAS)],[])
+			, div(button(onclick("sampler.load();"),"Load!"))
+			, div(span(id(debug_output),[]))
 			] )
 		;
 		reply_html_page([title([LPS_ID,' 2d display'])],[h2([Style],['2d display for ',LPS_ID,' unavailable, program not running.'])])
