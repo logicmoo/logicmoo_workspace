@@ -43,7 +43,7 @@ bddem.$(SOEXT): bddem.o
 #-Wl,-R,$(YAPLIBDIR) -Wl,-R,$(LIBDIR)
 
 bddem.o : bddem.c
-	cd cudd-3.0.0 &&  $(MAKE) -j8 && cd ..
+	cd cudd-3.0.0 &&  $(MAKE) && cd ..
 	$(CC) -c $(CFLAGSBDDEM) bddem.c -o bddem.o
 
 
