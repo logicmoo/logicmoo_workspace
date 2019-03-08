@@ -206,10 +206,9 @@ static foreign_t initial_values_pl(term_t arg1, term_t arg2);
 DdNode* Probability_dd(environment *env, DdNode *current_node);
 void traverse_tree(DdNode *node, DdNode *bestNode, int *index, double *value);
 int find_path(DdNode *node, double value, int **array, int *len);
-void ScaleAddConst(DdManager *mgr, DdNode **current_node, DdNode **add_cost);
 static foreign_t add_decision_var(term_t env_ref, term_t rule,term_t var_out);
 static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out);
-static foreign_t add_prod(term_t env_ref, term_t add_in, term_t cost, term_t add_out);
+static foreign_t add_prod(term_t env_ref, term_t add_in, term_t value, term_t add_out);
 static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_out);
 static foreign_t ret_strategy(term_t env_ref, term_t add_A, term_t strategy_list, term_t cost);
 
@@ -1543,8 +1542,7 @@ static foreign_t add_query_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
   return(PL_unify(out,arg4));
 }
 
-static foreign_t add_decision_var(term_t arg1,term_t arg2,term_t arg3)
-{
+static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vout) {
   term_t out,head,probTerm;
   variable * v;
   int i,ret,nRules;
@@ -1552,47 +1550,46 @@ static foreign_t add_decision_var(term_t arg1,term_t arg2,term_t arg3)
   double p;
   environment * env;
 
-  head=PL_new_term_ref();
-  out=PL_new_term_ref();
-  ret=PL_get_pointer(arg1,(void **)&env);
+  head = PL_new_term_ref();
+  out = PL_new_term_ref();
+  ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
-  env->nVars=env->nVars+1;
-  env->vars=(variable *) realloc(env->vars,env->nVars * sizeof(variable));
+  env->nVars = env->nVars+1;
+  env->vars = (variable *) realloc(env->vars,env->nVars * sizeof(variable));
 
-  v=&env->vars[env->nVars-1];
-  v->query=0;
-  v->abducible=0;
-  v->decision=1;
+  v = &env->vars[env->nVars-1];
+  v->query = 0;
+  v->abducible = 0;
+  v->decision = 1;
 
-  v->nVal=2;
+  v->nVal = 2;
 
-  ret=PL_get_integer(arg2,&v->nRule);
+  ret = PL_get_integer(current_n_rule,&v->nRule);
   RETURN_IF_FAIL
+  
   nRules=env->nRules;
-  if (v->nRule>=nRules)
-  {
-    env->rules=(int *)  realloc(env->rules,((v->nRule+1)* sizeof(int)));
+  if (v->nRule>=nRules) {
+    env->rules = (int *)  realloc(env->rules,((v->nRule+1)* sizeof(int)));
     for (i=nRules;i<v->nRule;i++)
-      env->rules[i]=0;
-    env->rules[v->nRule]=2;
-    env->nRules=v->nRule+1;
+      env->rules[i] = 0;
+    env->rules[v->nRule] = 2;
+    env->nRules = v->nRule+1;
   }
 
-  v->firstBoolVar=env->boolVars;
-  env->probs=(double *) realloc(env->probs,(((env->boolVars+v->nVal-1)* sizeof(double))));
-  env->bVar2mVar=(int *) realloc(env->bVar2mVar,((env->boolVars+v->nVal-1)* sizeof(int)));
+  v->firstBoolVar = env->boolVars;
+  env->probs = (double *) realloc(env->probs,(((env->boolVars+v->nVal-1)* sizeof(double))));
+  env->bVar2mVar = (int *) realloc(env->bVar2mVar,((env->boolVars+v->nVal-1)* sizeof(int)));
 
-  env->bVar2mVar[env->boolVars]=env->nVars-1;
-  env->probs[env->boolVars]=0.5;
-  env->boolVars=env->boolVars+v->nVal-1;
-  env->rules[v->nRule]= v->nVal;
+  env->bVar2mVar[env->boolVars] = env->nVars-1;
+  env->probs[env->boolVars] = 0.5; // non necessaria
+  env->boolVars = env->boolVars+v->nVal-1;
+  env->rules[v->nRule] = v->nVal;
 
   ret=PL_put_integer(out,env->nVars-1);
   RETURN_IF_FAIL
 
-  return(PL_unify(out,arg3));
+  return(PL_unify(out,vout));
 }
-
 
 
 // guardare double Prob(DdNode *node, environment * env, tablerow * table)
@@ -1609,9 +1606,9 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   ret = PL_get_pointer(bdd_ref,(void **)&bdd);
   RETURN_IF_FAIL
  
-  node = Probability_dd(env,bdd);
+  // node = Probability_dd(env,bdd);
   // TEST moltiplicazione
-  // node = Cudd_BddToAdd(env->mgr,bdd);
+  node = Cudd_BddToAdd(env->mgr,bdd);
 
   out = PL_new_term_ref();
   ret = PL_put_pointer(out,(void *)node);
@@ -1628,96 +1625,98 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
   DdNode *addh,*addl;
   DdNode *nodep;
   DdNode *nodep1;
-  DdNode *nodepa, *nodepb;
-printf("%x \n",current_node);
+  DdNode *nodepa, *nodepb, *tmpNode, *tmpNode2, *nodeone, *nodeminusone;
+  printf("Init\n");
   if(Cudd_IsConstant(current_node)) {
-    if(Cudd_V(current_node) == 0) {
+    if(Cudd_IsComplement(current_node) == 1) {
+      printf("Value 0\n");
       return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0); 
     }
     else {
+      printf("Value 1\n");
       return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
     }
   }
   
   addh = Probability_dd(env,Cudd_T(current_node));
   addl = Probability_dd(env,Cudd_E(current_node));
+  printf("addh: %d\naddl: %d\n",addh,addl);
 
   index = Cudd_NodeReadIndex(current_node);
-
+  printf("Index: %d \n",index);
   // if decision var
+
   if(env->vars[index].decision == 1) {
-    out = Cudd_addIte(env->mgr,current_node,addh,addl);  
+    printf("Decision\n");
+    if(Cudd_IsComplement(current_node) == 1) {
+      out = Cudd_addIte(env->mgr,current_node,addl,addh);        
+    }
+    else {
+      out = Cudd_addIte(env->mgr,current_node,addh,addl);        
+    }
   }
   else {
     p = env->probs[index];
+    printf("Not decision, P = %lf\n",p);
     nodep = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) p);
     nodep1 = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) (1-p));
-    if(nodep == NULL || nodep1 == NULL) {
-      return NULL;
-    }
     nodepa = Cudd_addTimes(env->mgr,&nodep,&addh);
     nodepb = Cudd_addTimes(env->mgr,&nodep1,&addl);
-    if(nodepa == NULL || nodepb == NULL) {
-      return NULL;
+    printf("nodep: %d\nnodep1: %d\n",nodep,nodep1);
+    if(Cudd_IsComplement(current_node) == 1) {
+      printf("is complement\n");
+      printf("nodep: %d\nnodep1: %d\nnodepa: %d\nnodepb: %d\n",nodep,nodep1,nodepa,nodepb);
+      tmpNode = Cudd_addXor(env->mgr,&nodepa,&nodepb);
+      nodeminusone = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE)-1);
+      tmpNode2 = Cudd_addTimes(env->mgr,&tmpNode,&nodeminusone);
+      nodeone = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE)1);
+      out = Cudd_addPlus(env->mgr,&tmpNode2,&nodeone);
+      printf("end is complement\n");
     }
-    out = Cudd_addXor(env->mgr,&nodepa,&nodepb);
-    if(out == NULL) {
-      return NULL;
+    else {
+      printf("is regular\n");
+      printf("nodepa: %d\nnodepb: %d\n",nodepa,nodepb);
+      out = Cudd_addXor(env->mgr,&nodepa,&nodepb); // o Cudd_addPlus
+      printf("out: %d\n",out);
+      printf("end is regular\n");
     }
   }
-  
-  return out;
+  return out;  
 }
 
-static foreign_t add_prod(term_t env_ref, term_t add_in, term_t cost, term_t add_out) {
-  int ret, current_cost;
-  DdNode *add_cost, *current_add;//, *add_ret;
+static foreign_t add_prod(term_t env_ref, term_t add_in, term_t value, term_t add_out) {
+  int ret, current_value;
+  DdNode *add_const, *current_add, *add_ret;
   environment *env;
   term_t out;
 
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
 
-  ret = PL_get_integer(cost,&current_cost);
+  ret = PL_get_integer(value,&current_value);
   RETURN_IF_FAIL
 
   ret = PL_get_pointer(add_in,(void **)&current_add);
   RETURN_IF_FAIL
 
-  add_cost = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) current_cost);
-  // non sono sicuro che la moltiplicazione si faccia così
-  // add_ret = Cudd_addTimes(env->mgr,&current_add,&add_cost);
-  // RETURN_IF_FAIL
-
-  ScaleAddConst(env->mgr,&current_add,&add_cost);
+  add_const = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) current_value);
+  RETURN_IF_FAIL
+  
+  add_ret = Cudd_addApply(env->mgr,Cudd_addTimes,add_const,current_add);
+  RETURN_IF_FAIL
 
   out = PL_new_term_ref();
-  ret = PL_put_pointer(out,(void *)current_add);
-  // ret = PL_put_pointer(out,(void *)add_ret);
+  ret = PL_put_pointer(out,(void *)add_ret);
   RETURN_IF_FAIL
-  return(PL_unify(out,add_out)); 
-}
 
-void ScaleAddConst(DdManager *mgr, DdNode **current_node, DdNode **add_cost) {
-  if(Cudd_IsConstant(*current_node) != 1) {
-    DdNode *T, *E;
-    T = Cudd_T(*current_node);
-    E = Cudd_E(*current_node);
-    ScaleAddConst(mgr,&T,add_cost);
-    ScaleAddConst(mgr,&E,add_cost);
-  }
-  else { // terminal
-    DdNode *res;
-    res = Cudd_addTimes(mgr,current_node,add_cost);
-    *current_node = res;
-  }
+  return(PL_unify(out,add_out)); 
 }
 
 static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_out) {
   int ret;
   term_t out;
   environment *env;
-  DdNode **addA, **addB, *node;
+  DdNode *addA, *addB, *add_ret;
 
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
@@ -1726,9 +1725,14 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
   ret = PL_get_pointer(add_B,(void *)&addB);
   RETURN_IF_FAIL
   
-  node = Cudd_addXor(env->mgr,addA,addB);
+  add_ret = Cudd_addApply(env->mgr,Cudd_addPlus,addA,addB);
+  printf("ret: %d\n",add_ret);
+  RETURN_IF_FAIL
+
   out = PL_new_term_ref();
-  ret = PL_put_pointer(out,(void *)node);
+  ret = PL_put_pointer(out,(void *)add_ret);
+  printf("ret: %d\n",add_out);
+
   RETURN_IF_FAIL
   return(PL_unify(out,add_out));  
 }
