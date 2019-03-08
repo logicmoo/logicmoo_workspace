@@ -17,7 +17,12 @@
   dirichlet_sample/2,
   symmetric_dirichlet_sample/3,
   discrete_sample/2,
-  initial_values/2
+  initial_values/2,
+  add_decision_var/2,
+  probability_dd/3,
+  add_prod/4,
+  add_sum/4,
+  ret_strategy/4 
     ]).
 /** <module> bddem
 
@@ -397,3 +402,32 @@ or_listc1([H|T],Env,B0,B1):-
  * Value is in 0..(length(Theta)-1)
  */
 
+/*
+ * probability_dd(++Environment:int,++BDD:int,--ADD:int) is det
+ * 
+ * Converts the BDD passed as argument into an ADD.
+*/
+
+/*
+  * add_prod(++Environment:int,++ADDIn:int,++Utility:int,--ADDOut:int) is det
+  *
+  * Multiply the ADD passed as argument with the Utility.
+*/
+
+/* 
+ * add_sum(++Environment:int,++ADD1:int,++ADD2:int,--ADDOut:int) is det
+ * 
+ * Computes the sum ADD1+ADD2. Stores the result in ADDOut.
+*/
+
+/*
+ * ret_strategy(++Environment:int,++ADD:int,--Decision:list,--Cost:int) is det
+ *
+ * Computes the optimal strategy.
+*/
+
+/**
+ * add_decision_var(++Environment:int,-Variable:int) is det.
+ *
+ * Returns in Variable the index of a new decision variable in Environment
+ */

@@ -9,7 +9,7 @@ test_bddem:-
     run_tests([
     prob,em,
     sampling,
-    probabilitdd
+    dtprob
     ]).
 
 
@@ -22,7 +22,7 @@ v2_0(Env,R,Val,BDD):-
 prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat):-
   add_var(Env,[0.3,0.7],0,VRainy),
   add_var(Env,[0.5,0.5],1,VWindy),
-  add_decision_var(Env,VUmbrella),
+  add_decision_var(Env,VUmbrella), % <- TODO
   add_decision_var(Env,VRaincoat),
   equality(Env,VRainy,0,Rainy),
   equality(Env,VWindy,0,Windy),
@@ -41,7 +41,7 @@ dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat):-
 
 broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella):-
   and(Env,Rainy,Umbrella,RU),
-  and(Env,Ru,Windy,BDDBU).
+  and(Env,RU,Windy,BDDBU).
 
 :- begin_tests(prob, []).
 
@@ -282,18 +282,27 @@ check_sample(V):-
 test(probabilitdd):-
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
-  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
-  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella,Raincoat),
-  probability_dd(Env,BDDD,ADDD), % <- TODO, restituisce un ADD da un BDD
-  probability_dd(Env,BDDBU,ADDBU),
-  add_prod(Env,ADDD,60,ADDDU), % <- TODO, prodotto utility*ADD
+  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat), % <- OK
+  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella), % <- OK
+  probability_dd(Env,BDDD,ADDD), % <- restituisce un ADD da un BDD
+  probability_dd(Env,BDDBU,ADDBU), 
+  add_prod(Env,ADDD,60,ADDDU), % <- prodotto utility*ADD
   add_prod(Env,ADDBU,-40,ADDDUU),
-  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- TODO, somma due ADD
-  strategy(Env,ADDS,S,C),
-  S = umbrella,
-  C =:= 473,
-  % S = [inserire lista]
-  % C =:= costo
+  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- somma due ADD
+  % strategy(Env,ADDS,S,C),
+  ret_strategy(Env,ADDS,S,C),
+  % S = umbrella,
+  % C =:= 473,
+  nl,
+  write('BDDBU: '),writeln(BDDBU),
+  write('BDDD: '),writeln(BDDD),
+  write('ADDD: '),writeln(ADDD),
+  write('ADDBU: '),writeln(ADDBU),
+  write('ADDDU: '),writeln(ADDDU),
+  write('ADDDUU: '),writeln(ADDDUU),
+  write('ADDS: '),writeln(ADDS),
+  write('S: '),writeln(S),
+  write('C: '),writeln(C),
   end(Env).
 
 :- end_tests(dtprob).
