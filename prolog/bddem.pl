@@ -18,7 +18,7 @@
   symmetric_dirichlet_sample/3,
   discrete_sample/2,
   initial_values/2,
-  add_decision_var/2,
+  add_decision_var/3,
   probability_dd/3,
   add_prod/4,
   add_sum/4,

@@ -207,7 +207,7 @@ DdNode* Probability_dd(environment *env, DdNode *current_node);
 void traverse_tree(DdNode *node, DdNode *bestNode, int *index, double *value);
 int find_path(DdNode *node, double value, int **array, int *len);
 void ScaleAddConst(DdManager *mgr, DdNode **current_node, DdNode **add_cost);
-static foreign_t add_decision_var(term_t env_ref, term_t var_out);
+static foreign_t add_decision_var(term_t env_ref, term_t rule,term_t var_out);
 static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out);
 static foreign_t add_prod(term_t env_ref, term_t add_in, term_t cost, term_t add_out);
 static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_out);
@@ -1543,47 +1543,57 @@ static foreign_t add_query_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
   return(PL_unify(out,arg4));
 }
 
-static foreign_t add_decision_var(term_t env_ref, term_t var_out) {
-  int i,ret;
-  term_t out;
+static foreign_t add_decision_var(term_t arg1,term_t arg2,term_t arg3)
+{
+  term_t out,head,probTerm;
   variable * v;
+  int i,ret,nRules;
+  size_t lenProbs;
+  double p;
   environment * env;
 
-  out = PL_new_term_ref();
-
-  ret = PL_get_pointer(env_ref,(void **)&env);
+  head=PL_new_term_ref();
+  out=PL_new_term_ref();
+  ret=PL_get_pointer(arg1,(void **)&env);
   RETURN_IF_FAIL
-  
-  env->nVars = env->nVars+1;
-  env->n_abd++;
-  env->vars = (variable *) realloc(env->vars, env->nVars * sizeof(variable));
+  env->nVars=env->nVars+1;
+  env->vars=(variable *) realloc(env->vars,env->nVars * sizeof(variable));
 
-  v = &env->vars[env->nVars-1];
-  v->decision = 1;
-  v->abducible = 0;
+  v=&env->vars[env->nVars-1];
+  v->query=0;
+  v->abducible=0;
+  v->decision=1;
 
-  // only 2: yes or no
-  v->nVal = 2;
+  v->nVal=2;
 
-  v->nRule = 0;
-
-  env->n_abd_boolVars = env->n_abd_boolVars + v->nVal;
-  v->firstBoolVar = env->boolVars;
-  // env->probs = (double *) realloc(env->probs,(((env->boolVars+v->nVal)* sizeof(double))));
-  env->bVar2mVar = (int *) realloc(env->bVar2mVar,((env->boolVars+v->nVal)* sizeof(int)));
-
-  for (i=0;i<v->nVal;i++) {
-    env->bVar2mVar[env->boolVars+i] = env->nVars-1;
-    // env->probs[env->boolVars+i]=p;
+  ret=PL_get_integer(arg2,&v->nRule);
+  RETURN_IF_FAIL
+  nRules=env->nRules;
+  if (v->nRule>=nRules)
+  {
+    env->rules=(int *)  realloc(env->rules,((v->nRule+1)* sizeof(int)));
+    for (i=nRules;i<v->nRule;i++)
+      env->rules[i]=0;
+    env->rules[v->nRule]=2;
+    env->nRules=v->nRule+1;
   }
-  env->boolVars = env->boolVars + v->nVal;
-  env->rules[v->nRule] = v->nVal;
 
-  ret = PL_put_integer(out, env->nVars-1);
+  v->firstBoolVar=env->boolVars;
+  env->probs=(double *) realloc(env->probs,(((env->boolVars+v->nVal-1)* sizeof(double))));
+  env->bVar2mVar=(int *) realloc(env->bVar2mVar,((env->boolVars+v->nVal-1)* sizeof(int)));
+
+  env->bVar2mVar[env->boolVars]=env->nVars-1;
+  env->probs[env->boolVars]=0.5;
+  env->boolVars=env->boolVars+v->nVal-1;
+  env->rules[v->nRule]= v->nVal;
+
+  ret=PL_put_integer(out,env->nVars-1);
   RETURN_IF_FAIL
 
-  return(PL_unify(out,var_out));
+  return(PL_unify(out,arg3));
 }
+
+
 
 // guardare double Prob(DdNode *node, environment * env, tablerow * table)
 // double ProbPath(example_data * ex_d,DdNode *node, int nex)
@@ -1619,7 +1629,7 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
   DdNode *nodep;
   DdNode *nodep1;
   DdNode *nodepa, *nodepb;
-
+printf("%x \n",current_node);
   if(Cudd_IsConstant(current_node)) {
     if(Cudd_V(current_node) == 0) {
       return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0); 
@@ -3066,7 +3076,7 @@ install_t install()
   PL_register_foreign("symmetric_dirichlet_sample",3,symmetric_dirichlet_sample_pl,0);
   PL_register_foreign("discrete_sample",2,discrete_sample_pl,0);
   PL_register_foreign("initial_values",2,initial_values_pl,0);
-  PL_register_foreign("add_decision_var",2,add_decision_var,0);
+  PL_register_foreign("add_decision_var",3,add_decision_var,0);
   PL_register_foreign("probability_dd",3,probability_dd,0);
   PL_register_foreign("add_prod",4,add_prod,0);
   PL_register_foreign("add_sum",4,add_sum,0);
