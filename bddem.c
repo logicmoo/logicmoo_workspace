@@ -204,7 +204,7 @@ static foreign_t discrete_sample_pl(term_t arg1,term_t arg2);
 static foreign_t initial_values_pl(term_t arg1, term_t arg2);
 
 DdNode* Probability_dd(environment *env, DdNode *current_node);
-void traverse_tree(DdNode *node, DdNode *bestNode, int *index, double *value);
+void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value);
 int find_path(DdNode *node, double value, int **array, int *len);
 static foreign_t add_decision_var(term_t env_ref, term_t rule,term_t var_out);
 static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out);
@@ -1573,7 +1573,7 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
     for (i=nRules;i<v->nRule;i++)
       env->rules[i] = 0;
     env->rules[v->nRule] = 2;
-    env->nRules = v->nRule+1;
+    env->nRules = v->nRule + 1;
   }
 
   v->firstBoolVar = env->boolVars;
@@ -1597,7 +1597,7 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
 static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) {
   int ret;
   term_t out;
-  DdNode *bdd, *node;
+  DdNode *bdd, *node, *node1;
   environment *env;
 
   ret = PL_get_pointer(env_ref,(void **)&env);
@@ -1606,9 +1606,9 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   ret = PL_get_pointer(bdd_ref,(void **)&bdd);
   RETURN_IF_FAIL
  
-  // node = Probability_dd(env,bdd);
+  node1 = Cudd_BddToAdd(env->mgr,bdd);
+  node = Probability_dd(env,node1);
   // TEST moltiplicazione
-  node = Cudd_BddToAdd(env->mgr,bdd);
 
   out = PL_new_term_ref();
   ret = PL_put_pointer(out,(void *)node);
@@ -1622,25 +1622,35 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
   int index;
   double p;
   DdNode *out;
-  DdNode *addh,*addl;
+  DdNode *addh, *addl;
   DdNode *nodep;
-  DdNode *nodep1;
+  DdNode *nodep1, *outp, *outd;
   DdNode *nodepa, *nodepb, *tmpNode, *tmpNode2, *nodeone, *nodeminusone;
-  printf("Init\n");
+
   if(Cudd_IsConstant(current_node)) {
-    if(Cudd_IsComplement(current_node) == 1) {
-      printf("Value 0\n");
-      return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0); 
+    if(Cudd_V(current_node) == 1) {
+      printf("cudd value 1\n");
+      // out = Cudd_addNewVar(env->mgr);
+      // Cudd_Ref(out);
+      out = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
+      return out; 
     }
     else {
-      printf("Value 1\n");
-      return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
+      printf("cudd value 0\n");
+      // out = Cudd_addNewVar(env->mgr);
+      // Cudd_Ref(out);
+      out = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0);
+      return out;
     }
   }
   
+  // addh = Cudd_addNewVar(env->mgr);
+  // Cudd_Ref(addh);
   addh = Probability_dd(env,Cudd_T(current_node));
+
+  // addl = Cudd_addNewVar(env->mgr);
+  // Cudd_Ref(addl);
   addl = Probability_dd(env,Cudd_E(current_node));
-  printf("addh: %d\naddl: %d\n",addh,addl);
 
   index = Cudd_NodeReadIndex(current_node);
   printf("Index: %d \n",index);
@@ -1648,40 +1658,41 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
 
   if(env->vars[index].decision == 1) {
     printf("Decision\n");
-    if(Cudd_IsComplement(current_node) == 1) {
-      out = Cudd_addIte(env->mgr,current_node,addl,addh);        
-    }
-    else {
-      out = Cudd_addIte(env->mgr,current_node,addh,addl);        
-    }
+    // outd = Cudd_addNewVar(env->mgr);
+    // Cudd_Ref(outd);
+    outd = Cudd_addIte(env->mgr,current_node,addh,addl);
+    return outd;
   }
   else {
     p = env->probs[index];
-    printf("Not decision, P = %lf\n",p);
+    printf("Prob, P = %lf\n",p);
+    // nodep = Cudd_addNewVar(env->mgr);
+    // Cudd_Ref(nodep);
     nodep = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) p);
+    
+    // nodep1 = Cudd_addNewVar(env->mgr);
+    // Cudd_Ref(nodep1);
     nodep1 = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) (1-p));
-    nodepa = Cudd_addTimes(env->mgr,&nodep,&addh);
-    nodepb = Cudd_addTimes(env->mgr,&nodep1,&addl);
-    printf("nodep: %d\nnodep1: %d\n",nodep,nodep1);
-    if(Cudd_IsComplement(current_node) == 1) {
-      printf("is complement\n");
-      printf("nodep: %d\nnodep1: %d\nnodepa: %d\nnodepb: %d\n",nodep,nodep1,nodepa,nodepb);
-      tmpNode = Cudd_addXor(env->mgr,&nodepa,&nodepb);
-      nodeminusone = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE)-1);
-      tmpNode2 = Cudd_addTimes(env->mgr,&tmpNode,&nodeminusone);
-      nodeone = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE)1);
-      out = Cudd_addPlus(env->mgr,&tmpNode2,&nodeone);
-      printf("end is complement\n");
-    }
-    else {
-      printf("is regular\n");
-      printf("nodepa: %d\nnodepb: %d\n",nodepa,nodepb);
-      out = Cudd_addXor(env->mgr,&nodepa,&nodepb); // o Cudd_addPlus
-      printf("out: %d\n",out);
-      printf("end is regular\n");
-    }
+    
+    // nodepa = Cudd_addNewVar(env->mgr);
+    // Cudd_Ref(nodepa);
+    nodepa = Cudd_addApply(env->mgr,Cudd_addTimes,nodep,addh);
+    
+    // nodepb = Cudd_addNewVar(env->mgr);
+    // Cudd_Ref(nodepb);
+    nodepb = Cudd_addApply(env->mgr,Cudd_addTimes,nodep1,addl);
+    
+    // outp = Cudd_addNewVar(env->mgr);
+    // Cudd_Ref(outp);
+    outp = Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
+
+    // Cudd_RecursiveDeref(env->mgr,nodep);
+    // Cudd_RecursiveDeref(env->mgr,nodep1);
+    // Cudd_RecursiveDeref(env->mgr,nodepa);
+    // Cudd_RecursiveDeref(env->mgr,nodepb);
+
+    return outp;
   }
-  return out;  
 }
 
 static foreign_t add_prod(term_t env_ref, term_t add_in, term_t value, term_t add_out) {
@@ -1744,13 +1755,13 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
   int len_array_of_parents = 0;
   double value = -1;
   double opt_cost;
-  term_t list, head;
-  DdNode *node, *bestNode = NULL;
+  term_t list, head, nil;
+  DdNode *root, *bestNode = NULL;
   environment *env;
 
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
-  ret = PL_get_pointer(add,(void **)&node);
+  ret = PL_get_pointer(add,(void **)&root);
   RETURN_IF_FAIL
 
   list = PL_new_term_ref();
@@ -1759,8 +1770,12 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
 
   array_of_parents = malloc(sizeof(int));
 
-  // traverse tree to find terminal nodes
-  traverse_tree(node,bestNode,&index,&value);
+  // bestNode = Cudd_addFindMax(env->mgr,node);
+  // index = Cudd_NodeReadIndex(bestNode);
+  // // traverse tree to find terminal nodes
+  traverse_tree(root,&bestNode,&index,&value);
+  printf("Index: %d\nValue: %lf\n",index,value);
+  
   // check if found
   if(index == -1) {
     // no solution found -> return empty list and -1 as cost
@@ -1773,13 +1788,15 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
   } 
   else {
     // find path: root -> terminal
-    ret = find_path(node,value,&array_of_parents,&len_array_of_parents);
+    ret = find_path(root,value,&array_of_parents,&len_array_of_parents);
     if(ret != 1) {
       return ret;
     }
+    printf("len parents: %d\n",len_array_of_parents);
 
     for (i = 0; i < len_array_of_parents; i++) {
-      ret = PL_put_float(head,array_of_parents[i]);
+      printf("parents: %d\n",array_of_parents[i]); 
+      ret = PL_put_integer(head,array_of_parents[i]);
       RETURN_IF_FAIL
       ret = PL_cons_list(list,head,list);
       RETURN_IF_FAIL
@@ -1792,9 +1809,12 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
     free(array_of_parents);
   }
 
+  printf("env nvars: %d\n",env->nVars);
+
   return(PL_unify(list,strategy_list) && (PL_unify(opt_cost,cost)));
 }
 
+// pare andare
 int find_path(DdNode *node, double value, int **array, int *len) {
   if(node == NULL) {
     return 0;
@@ -1803,28 +1823,37 @@ int find_path(DdNode *node, double value, int **array, int *len) {
     if(Cudd_V(node) == value) {
       return 1;
     }
+    else {
+      return 0;
+    }
   }
-  if(find_path(Cudd_T(node),value, array, len) || find_path(Cudd_E(node),value, array, len)) {
-    *array = realloc(*array, ((*len)+1)*sizeof(int));
-    (*array)[*len] = Cudd_NodeReadIndex(node);
-    *len = (*len) + 1;
+  // se trovata nel ramo then (1) allora vuol dire che l'ho scelta
+  // quindi aggiungo un elemento
+  if(find_path(Cudd_T(node),value, array, len)) {
+      *array = realloc(*array, ((*len)+1)*sizeof(int));
+      (*array)[*len] = Cudd_NodeReadIndex(node);
+      *len = (*len) + 1;
+    return 1;
+  }
+  else if(find_path(Cudd_E(node),value, array, len)) {
     return 1;
   }
   return 0;
 }
 
 // traverse tree to find terminal node with highest utility
-void traverse_tree(DdNode *node, DdNode *bestNode, int *index, double *value) {
+void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value) {
   if(Cudd_IsConstant(node) != 1) {
     // non terminal node
     traverse_tree(Cudd_T(node),bestNode,index,value);
     traverse_tree(Cudd_E(node),bestNode,index,value);
   }
   else { // terminal node
+    printf("%lf\n",Cudd_V(node));
     if(Cudd_V(node) > *value) {
       *value = Cudd_V(node);
       *index = Cudd_NodeReadIndex(node);
-      bestNode = node;
+      *bestNode = node;
     }
   }
 }

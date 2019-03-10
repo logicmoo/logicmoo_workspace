@@ -22,7 +22,7 @@ v2_0(Env,R,Val,BDD):-
 prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat):-
   add_var(Env,[0.3,0.7],0,VRainy),
   add_var(Env,[0.5,0.5],1,VWindy),
-  add_decision_var(Env,2,VUmbrella), % <- TODO
+  add_decision_var(Env,2,VUmbrella),
   add_decision_var(Env,3,VRaincoat),
   equality(Env,VRainy,0,Rainy),
   equality(Env,VWindy,0,Windy),
@@ -286,27 +286,30 @@ test(probabilitdd):-
   broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella), % <- OK
   probability_dd(Env,BDDD,ADDD), % <- restituisce un ADD da un BDD
   probability_dd(Env,BDDBU,ADDBU), 
-%  add_prod(Env,ADDD,60,ADDDU), % <- prodotto utility*ADD
-%  add_prod(Env,ADDBU,-40,ADDDUU),
-%  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- somma due ADD
-  % strategy(Env,ADDS,S,C),
- % ret_strategy(Env,ADDS,S,C),
+  add_prod(Env,ADDD,60,ADDDU), % <- prodotto utility*ADD
+  add_prod(Env,ADDBU,-40,ADDDUU),
+  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- somma due ADD
+  ret_strategy(Env,ADDS,S,C),
   % S = umbrella,
   % C =:= 473,
+  % strategy(Env,ADDS,S,C),
   nl,
-%  write('BDDBU: '),writeln(BDDBU),
-  write('BDDD: '),writeln(BDDD),
-  write('ADDD: '),writeln(ADDD),
-  create_dot(Env,BDDBU,"broken.dot"),
-  create_dot(Env,ADDBU,"broken_add.dot"),
-  create_dot(Env,BDDD,"dry.dot"),
-  create_dot(Env,ADDD,"dry_add.dot"),
-   write('ADDBU: '),writeln(ADDBU),
-   write('ADDDU: '),writeln(ADDDU),
-  % write('ADDDUU: '),writeln(ADDDUU),
+  % write('BDDBU: '),writeln(BDDBU),
+  % write('BDDD: '),writeln(BDDD),
+  % write('ADDD: '),writeln(ADDD),
+  % create_dot(Env,BDDBU,"broken.dot"),
+  % create_dot(Env,ADDBU,"broken_add.dot"),
+  % create_dot(Env,BDDD,"dry.dot"),
+  % create_dot(Env,ADDD,"dry_add_test.dot"),
+  % create_dot(Env,ADDDU,"dry_add_scaled.dot"),
+  % create_dot(Env,ADDDUU,"umbrella_add_scaled.dot"),
+  % create_dot(Env,ADDS,"sumtree.dot"),
+  %  write('ADDBU: '),writeln(ADDBU),
+  % write('ADDDU: '),writeln(ADDDU),
+  % % write('ADDDUU: '),writeln(ADDDUU),
   % write('ADDS: '),writeln(ADDS),
-  % write('S: '),writeln(S),
- % write('C: '),writeln(C),
+  write('S: '),writeln(S),
+  write('C: '),writeln(C),
   end(Env).
 
 :- end_tests(dtprob).

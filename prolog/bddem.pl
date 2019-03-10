@@ -427,7 +427,7 @@ or_listc1([H|T],Env,B0,B1):-
 */
 
 /**
- * add_decision_var(++Environment:int,-Variable:int) is det.
+ * add_decision_var(++Environment:int,++Rule:int,-Variable:int) is det.
  *
  * Returns in Variable the index of a new decision variable in Environment
  */
