@@ -283,13 +283,24 @@ test(probabilitdd):-
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
   dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat), % <- OK
+  
   broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella), % <- OK
   probability_dd(Env,BDDD,ADDD), % <- restituisce un ADD da un BDD
-  probability_dd(Env,BDDBU,ADDBU), 
   add_prod(Env,ADDD,60,ADDDU), % <- prodotto utility*ADD
+  
+  probability_dd(Env,BDDBU,ADDBU), 
   add_prod(Env,ADDBU,-40,ADDDUU),
   add_sum(Env,ADDDU,ADDDUU,ADDS), % <- somma due ADD
-  ret_strategy(Env,ADDS,S,C),
+    
+  probability_dd(Env,Umbrella,ADDUMB),
+  add_prod(Env,ADDUMB,-2,ADDUMBOUT),
+  add_sum(Env,ADDS,ADDUMBOUT,ADDUMBOUTOUT),
+
+  probability_dd(Env,Raincoat,ADDRAIN),
+  add_prod(Env,ADDRAIN,-20,ADDRAINOUT),
+  add_sum(Env,ADDUMBOUTOUT,ADDRAINOUT,ADDRAINOUTOUT),
+  
+  ret_strategy(Env,ADDRAINOUTOUT,S,C),
   % S = umbrella,
   % C =:= 473,
   % strategy(Env,ADDS,S,C),
@@ -304,7 +315,9 @@ test(probabilitdd):-
   % create_dot(Env,ADDDU,"dry_add_scaled.dot"),
   % create_dot(Env,ADDDUU,"umbrella_add_scaled.dot"),
   % create_dot(Env,ADDS,"sumtree.dot"),
-  %  write('ADDBU: '),writeln(ADDBU),
+  % create_dot(Env,ADDRAINOUTOUT,"test_1.dot"),
+  
+  % write('ADDBU: '),writeln(ADDBU),
   % write('ADDDU: '),writeln(ADDDU),
   % % write('ADDDUU: '),writeln(ADDDUU),
   % write('ADDS: '),writeln(ADDS),
@@ -316,6 +329,11 @@ test(probabilitdd):-
   
   write('S: '),writeln(S),
   write('C: '),writeln(C),
+
+  % expected result
+  % S = [2|_] % <- FIX
+  % C = 43
+
   end(Env).
 
 :- end_tests(dtprob).

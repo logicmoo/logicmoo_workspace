@@ -1767,7 +1767,7 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
   // index = Cudd_NodeReadIndex(bestNode);
   // // traverse tree to find terminal nodes
   traverse_tree(root,&bestNode,&index,&value);
-  printf("Index: %d\nValue: %lf\n",index,value);
+  // printf("Index: %d\nValue: %lf\n",index,value);
   
   // check if found
   if(index == -1) {
@@ -1785,10 +1785,10 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
     if(ret != 1) {
       return ret;
     }
-    printf("len parents: %d\n",len_array_of_parents);
+    // printf("len parents: %d\n",len_array_of_parents);
 
     for (i = 0; i < len_array_of_parents; i++) {
-      printf("parents: %d\n",array_of_parents[i]); 
+      // printf("parents: %d\n",array_of_parents[i]); 
       ret = PL_put_integer(head,array_of_parents[i]);
       RETURN_IF_FAIL
       ret = PL_cons_list(list,head,list);
@@ -1802,7 +1802,7 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
     free(array_of_parents);
   }
 
-  printf("env nvars: %d\n",env->nVars);
+  // printf("env nvars: %d\n",env->nVars);
 
   return(PL_unify(list,strategy_list) && (PL_unify(opt_cost,cost)));
 }
@@ -1842,7 +1842,7 @@ void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value) {
     traverse_tree(Cudd_E(node),bestNode,index,value);
   }
   else { // terminal node
-    printf("%lf\n",Cudd_V(node));
+    // printf("%lf\n",Cudd_V(node));
     if(Cudd_V(node) > *value) {
       *value = Cudd_V(node);
       *index = Cudd_NodeReadIndex(node);
