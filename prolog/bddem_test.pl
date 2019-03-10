@@ -308,6 +308,12 @@ test(probabilitdd):-
   % write('ADDDU: '),writeln(ADDDU),
   % % write('ADDDUU: '),writeln(ADDDUU),
   % write('ADDS: '),writeln(ADDS),
+  
+  % expected result:
+  % raincoat:       0
+  % umbrella:       1
+  % SCORE: 43.0
+  
   write('S: '),writeln(S),
   write('C: '),writeln(C),
   end(Env).

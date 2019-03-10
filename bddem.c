@@ -1543,14 +1543,13 @@ static foreign_t add_query_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
 }
 
 static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vout) {
-  term_t out,head,probTerm;
+  term_t out;
   variable * v;
   int i,ret,nRules;
-  size_t lenProbs;
-  double p;
+  // size_t lenProbs;
+  // double p;
   environment * env;
 
-  head = PL_new_term_ref();
   out = PL_new_term_ref();
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
@@ -1621,26 +1620,23 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
 DdNode* Probability_dd(environment *env, DdNode *current_node) {
   int index;
   double p;
-  DdNode *out;
   DdNode *addh, *addl;
   DdNode *nodep;
-  DdNode *nodep1, *outp, *outd;
-  DdNode *nodepa, *nodepb, *tmpNode, *tmpNode2, *nodeone, *nodeminusone;
+  DdNode *nodep1;
+  DdNode *nodepa, *nodepb;
 
   if(Cudd_IsConstant(current_node)) {
     if(Cudd_V(current_node) == 1) {
-      printf("cudd value 1\n");
+      // printf("cudd value 1\n");
       // out = Cudd_addNewVar(env->mgr);
       // Cudd_Ref(out);
-      out = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
-      return out; 
+      return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
     }
     else {
-      printf("cudd value 0\n");
+      // printf("cudd value 0\n");
       // out = Cudd_addNewVar(env->mgr);
       // Cudd_Ref(out);
-      out = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0);
-      return out;
+      return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0);
     }
   }
   
@@ -1653,19 +1649,18 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
   addl = Probability_dd(env,Cudd_E(current_node));
 
   index = Cudd_NodeReadIndex(current_node);
-  printf("Index: %d \n",index);
+  // printf("Index: %d \n",index);
   // if decision var
 
   if(env->vars[index].decision == 1) {
-    printf("Decision\n");
+    // printf("Decision\n");
     // outd = Cudd_addNewVar(env->mgr);
     // Cudd_Ref(outd);
-    outd = Cudd_addIte(env->mgr,current_node,addh,addl);
-    return outd;
+    return Cudd_addIte(env->mgr,current_node,addh,addl);
   }
   else {
     p = env->probs[index];
-    printf("Prob, P = %lf\n",p);
+    // printf("Prob, P = %lf\n",p);
     // nodep = Cudd_addNewVar(env->mgr);
     // Cudd_Ref(nodep);
     nodep = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) p);
@@ -1684,14 +1679,12 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
     
     // outp = Cudd_addNewVar(env->mgr);
     // Cudd_Ref(outp);
-    outp = Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
+    return Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
 
     // Cudd_RecursiveDeref(env->mgr,nodep);
     // Cudd_RecursiveDeref(env->mgr,nodep1);
     // Cudd_RecursiveDeref(env->mgr,nodepa);
     // Cudd_RecursiveDeref(env->mgr,nodepb);
-
-    return outp;
   }
 }
 
@@ -1737,12 +1730,12 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
   RETURN_IF_FAIL
   
   add_ret = Cudd_addApply(env->mgr,Cudd_addPlus,addA,addB);
-  printf("ret: %d\n",add_ret);
+  // printf("ret: %d\n",add_ret);
   RETURN_IF_FAIL
 
   out = PL_new_term_ref();
   ret = PL_put_pointer(out,(void *)add_ret);
-  printf("ret: %d\n",add_out);
+  // printf("ret: %d\n",add_out);
 
   RETURN_IF_FAIL
   return(PL_unify(out,add_out));  
@@ -1755,7 +1748,7 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
   int len_array_of_parents = 0;
   double value = -1;
   double opt_cost;
-  term_t list, head, nil;
+  term_t list, head;
   DdNode *root, *bestNode = NULL;
   environment *env;
 
