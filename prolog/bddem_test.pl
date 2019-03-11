@@ -282,15 +282,15 @@ check_sample(V):-
 test(probabilitdd):-
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
-  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat), % <- OK
+  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
   
-  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella), % <- OK
-  probability_dd(Env,BDDD,ADDD), % <- restituisce un ADD da un BDD
-  add_prod(Env,ADDD,60,ADDDU), % <- prodotto utility*ADD
+  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
+  probability_dd(Env,BDDD,ADDD), % <- returns ADD from BDD
+  add_prod(Env,ADDD,60,ADDDU), % <- computes the value utility*ADD
   
   probability_dd(Env,BDDBU,ADDBU), 
   add_prod(Env,ADDBU,-40,ADDDUU),
-  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- somma due ADD
+  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- sums two ADD
     
   probability_dd(Env,Umbrella,ADDUMB),
   add_prod(Env,ADDUMB,-2,ADDUMBOUT),
@@ -300,11 +300,11 @@ test(probabilitdd):-
   add_prod(Env,ADDRAIN,-20,ADDRAINOUT),
   add_sum(Env,ADDUMBOUTOUT,ADDRAINOUT,ADDRAINOUTOUT),
   
-  ret_strategy(Env,ADDRAINOUTOUT,S,C),
-  % S = umbrella,
-  % C =:= 473,
+  ret_strategy(Env,ADDRAINOUTOUT,S,C), % <- computes the best strategy
+  S =:= [2],
+  C =:= 43.0,
   % strategy(Env,ADDS,S,C),
-  nl,
+  % nl,
   % write('BDDBU: '),writeln(BDDBU),
   % write('BDDD: '),writeln(BDDD),
   % write('ADDD: '),writeln(ADDD),
@@ -315,7 +315,7 @@ test(probabilitdd):-
   % create_dot(Env,ADDDU,"dry_add_scaled.dot"),
   % create_dot(Env,ADDDUU,"umbrella_add_scaled.dot"),
   % create_dot(Env,ADDS,"sumtree.dot"),
-  % create_dot(Env,ADDRAINOUTOUT,"test_1.dot"),
+  % create_dot(Env,ADDRAINOUTOUT,"test_1.dot"), % <- DUMP THE FINAL ADD
   
   % write('ADDBU: '),writeln(ADDBU),
   % write('ADDDU: '),writeln(ADDDU),
@@ -326,14 +326,12 @@ test(probabilitdd):-
   % raincoat:       0
   % umbrella:       1
   % SCORE: 43.0
-  
-  write('S: '),writeln(S),
-  write('C: '),writeln(C),
 
+  % write('S: '),writeln(S),
+  % write('C: '),writeln(C),
   % expected result
   % S = [2|_] % <- FIX
   % C = 43
-
   end(Env).
 
 :- end_tests(dtprob).

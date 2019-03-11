@@ -1546,8 +1546,6 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
   term_t out;
   variable * v;
   int i,ret,nRules;
-  // size_t lenProbs;
-  // double p;
   environment * env;
 
   out = PL_new_term_ref();
@@ -1576,11 +1574,11 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
   }
 
   v->firstBoolVar = env->boolVars;
-  env->probs = (double *) realloc(env->probs,(((env->boolVars+v->nVal-1)* sizeof(double))));
+  // env->probs = (double *) realloc(env->probs,(((env->boolVars+v->nVal-1)* sizeof(double))));
   env->bVar2mVar = (int *) realloc(env->bVar2mVar,((env->boolVars+v->nVal-1)* sizeof(int)));
 
   env->bVar2mVar[env->boolVars] = env->nVars-1;
-  env->probs[env->boolVars] = 0.5; // non necessaria
+  //env->probs[env->boolVars] = 0.5;
   env->boolVars = env->boolVars+v->nVal-1;
   env->rules[v->nRule] = v->nVal;
 
@@ -1590,9 +1588,6 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
   return(PL_unify(out,vout));
 }
 
-
-// guardare double Prob(DdNode *node, environment * env, tablerow * table)
-// double ProbPath(example_data * ex_d,DdNode *node, int nex)
 static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) {
   int ret;
   term_t out;
@@ -1607,7 +1602,6 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
  
   node1 = Cudd_BddToAdd(env->mgr,bdd);
   node = Probability_dd(env,node1);
-  // TEST moltiplicazione
 
   out = PL_new_term_ref();
   ret = PL_put_pointer(out,(void *)node);
@@ -1616,7 +1610,6 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   return(PL_unify(out,add_out));
 }
 
-// NON FUNZIONA
 DdNode* Probability_dd(environment *env, DdNode *current_node) {
   int index;
   double p;
@@ -1625,66 +1618,30 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
   DdNode *nodep1;
   DdNode *nodepa, *nodepb;
 
-  if(Cudd_IsConstant(current_node)) {
+  if(Cudd_IsConstant(current_node)) { // if is terminal node
     if(Cudd_V(current_node) == 1) {
-      // printf("cudd value 1\n");
-      // out = Cudd_addNewVar(env->mgr);
-      // Cudd_Ref(out);
       return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
     }
     else {
-      // printf("cudd value 0\n");
-      // out = Cudd_addNewVar(env->mgr);
-      // Cudd_Ref(out);
       return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0);
     }
   }
   
-  // addh = Cudd_addNewVar(env->mgr);
-  // Cudd_Ref(addh);
   addh = Probability_dd(env,Cudd_T(current_node));
-
-  // addl = Cudd_addNewVar(env->mgr);
-  // Cudd_Ref(addl);
   addl = Probability_dd(env,Cudd_E(current_node));
-
   index = Cudd_NodeReadIndex(current_node);
-  // printf("Index: %d \n",index);
-  // if decision var
 
-  if(env->vars[index].decision == 1) {
-    // printf("Decision\n");
-    // outd = Cudd_addNewVar(env->mgr);
-    // Cudd_Ref(outd);
+  if(env->vars[index].decision == 1) { // if decision var
     return Cudd_addIte(env->mgr,current_node,addh,addl);
   }
-  else {
+  else { // probability var
     p = env->probs[index];
-    // printf("Prob, P = %lf\n",p);
-    // nodep = Cudd_addNewVar(env->mgr);
-    // Cudd_Ref(nodep);
     nodep = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) p);
-    
-    // nodep1 = Cudd_addNewVar(env->mgr);
-    // Cudd_Ref(nodep1);
     nodep1 = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) (1-p));
-    
-    // nodepa = Cudd_addNewVar(env->mgr);
-    // Cudd_Ref(nodepa);
     nodepa = Cudd_addApply(env->mgr,Cudd_addTimes,nodep,addh);
-    
-    // nodepb = Cudd_addNewVar(env->mgr);
-    // Cudd_Ref(nodepb);
     nodepb = Cudd_addApply(env->mgr,Cudd_addTimes,nodep1,addl);
     
-    // outp = Cudd_addNewVar(env->mgr);
-    // Cudd_Ref(outp);
     return Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
-
-    // Cudd_RecursiveDeref(env->mgr,nodep);
-    // Cudd_RecursiveDeref(env->mgr,nodep1);
-    // Cudd_RecursiveDeref(env->mgr,nodepa);
-    // Cudd_RecursiveDeref(env->mgr,nodepb);
   }
 }
 
@@ -1730,12 +1687,10 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
   RETURN_IF_FAIL
   
   add_ret = Cudd_addApply(env->mgr,Cudd_addPlus,addA,addB);
-  // printf("ret: %d\n",add_ret);
   RETURN_IF_FAIL
 
   out = PL_new_term_ref();
   ret = PL_put_pointer(out,(void *)add_ret);
-  // printf("ret: %d\n",add_out);
 
   RETURN_IF_FAIL
   return(PL_unify(out,add_out));  
@@ -1744,7 +1699,7 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
 static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, term_t cost) {
   int ret, i;
   int index = -1;
-  int *array_of_parents; // array contenente l'indice dei parent incontrati
+  int *array_of_parents; // array containing the indexes of the parents encountered 
   int len_array_of_parents = 0;
   double value = -1;
   double opt_cost;
@@ -1758,26 +1713,24 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
   RETURN_IF_FAIL
 
   list = PL_new_term_ref();
+  ret = PL_put_nil(list);
+  RETURN_IF_FAIL
+
   opt_cost = PL_new_term_ref();
   head = PL_new_term_ref();
 
   array_of_parents = malloc(sizeof(int));
 
-  // bestNode = Cudd_addFindMax(env->mgr,node);
-  // index = Cudd_NodeReadIndex(bestNode);
-  // // traverse tree to find terminal nodes
+  // traverse tree to find terminal nodes
   traverse_tree(root,&bestNode,&index,&value);
-  // printf("Index: %d\nValue: %lf\n",index,value);
   
   // check if found
   if(index == -1) {
     // no solution found -> return empty list and -1 as cost
-    ret = PL_put_nil(list);
-    RETURN_IF_FAIL
     ret = PL_put_integer(opt_cost,(long)-1);
     RETURN_IF_FAIL
     
-    return(PL_unify(list,strategy_list) && (PL_unify(opt_cost,cost)));
+    return PL_unify(opt_cost,cost);
   } 
   else {
     // find path: root -> terminal
@@ -1785,16 +1738,14 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
     if(ret != 1) {
       return ret;
     }
-    // printf("len parents: %d\n",len_array_of_parents);
 
     for (i = 0; i < len_array_of_parents; i++) {
-      // printf("parents: %d\n",array_of_parents[i]); 
       ret = PL_put_integer(head,array_of_parents[i]);
       RETURN_IF_FAIL
       ret = PL_cons_list(list,head,list);
       RETURN_IF_FAIL
     }
-    ret = PL_put_integer(opt_cost,value);
+    ret = PL_put_float(opt_cost,value);
     RETURN_IF_FAIL
   }
 
@@ -1802,12 +1753,9 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
     free(array_of_parents);
   }
 
-  // printf("env nvars: %d\n",env->nVars);
-
   return(PL_unify(list,strategy_list) && (PL_unify(opt_cost,cost)));
 }
 
-// pare andare
 int find_path(DdNode *node, double value, int **array, int *len) {
   if(node == NULL) {
     return 0;
@@ -1820,8 +1768,7 @@ int find_path(DdNode *node, double value, int **array, int *len) {
       return 0;
     }
   }
-  // se trovata nel ramo then (1) allora vuol dire che l'ho scelta
-  // quindi aggiungo un elemento
+  // if found int the branch then (1) -> chosen, add one element
   if(find_path(Cudd_T(node),value, array, len)) {
       *array = realloc(*array, ((*len)+1)*sizeof(int));
       (*array)[*len] = Cudd_NodeReadIndex(node);
@@ -1842,7 +1789,6 @@ void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value) {
     traverse_tree(Cudd_E(node),bestNode,index,value);
   }
   else { // terminal node
-    // printf("%lf\n",Cudd_V(node));
     if(Cudd_V(node) > *value) {
       *value = Cudd_V(node);
       *index = Cudd_NodeReadIndex(node);
@@ -1851,24 +1797,6 @@ void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value) {
   }
 }
 
-
-// definire come funzione non esportata, vedi ret_vit_prob che chiama vit_prob
-// static foreign_t strategy(term_t env_ref, term_t add, term_t strategy_list, term_t cost) {
-//   int ret;
-//   DdNode *node;
-//   environment *env;
-
-//   ret=PL_get_pointer(env_ref, (void **)&env);
-//   RETURN_IF_FAIL
-//   ret=PL_get_pointer(add, (void **)&node);
-//   RETURN_IF_FAIL
-//   /*
-//   Devo cercare il nodo N terminale con la massima utilità
-//   Poi calcolo il path a ritroso da N fino alla root 
-//   Restituisco le decisioni 
-//   */
-
-// }
 
 static foreign_t add_abd_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
 {
