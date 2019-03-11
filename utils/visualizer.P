@@ -218,26 +218,27 @@ collect_display_specs_lazy([],[]).
 % op_for_one_lazy(+Term,-Operation)
 op_for_one_lazy(t(X,Type), TheProps) :-
 	% This is accessing d/2 via the interpreter... should be the same as done by the eager version. TODO: cleanup
-	once(interpreter:d(X,Props_)),
-	ensure_all_colons(Props_,Props__),
-	(member(id:ID,Props__)->true;(member(PP,Props__), member(id:ID,PP))->true;ID=X),
+	once(interpreter:d(X,Props1)),
+	ensure_all_colons(Props1,Props2),
+	(X==timeless -> enforce_property(Props2,timeless:true,Props3) ; Props2=Props3),
+	(member(id:ID,Props3)->true;(member(PP,Props3), member(id:ID,PP))->true;ID=X),
 	% TODO: move these checks to the syntax checking, before program loading:
 	% Allow only one level of composition:
-	((member(PP,Props__), is_list(PP), member(P,PP), is_list(P)) ->
+	((member(PP,Props3), is_list(PP), member(P,PP), is_list(P)) ->
 		print_message(error,composites_can_have_one_level_only(PP)), fail
 		; true),
 	% Forbid composites with non list elements in the top props:
-	(member([_|_],Props__) -> (
-		 (member(P,Props__), \+ is_list(P)) ->  
-		 	print_message(error,composite_objects_cannot_have_top_props(Props__)) 
+	(member([_|_],Props3) -> (
+		 (member(P,Props3), \+ is_list(P)) ->  
+		 	print_message(error,composite_objects_cannot_have_top_props(Props3)) 
 		 	; true
 		) ; true),
-	enforce_property(Props__,id:ID,Props___), 
-	% id is beeing repeated in composite object parts...but not a problem, 
+	enforce_property(Props3,id:ID,Props4), 
+	% id may be repeated in composite object parts...but not a problem, 
 	% composite objects will be associated to a single id (the first one found)
-	((Type==event;Type==action) -> enforce_property(Props___,event:true,TheProps_); TheProps_=Props___),
-	atomize_values(TheProps_,TheProps__),
-	lists_to_dicts(TheProps__,TheProps).
+	((Type==event;Type==action) -> enforce_property(Props4,event:true,Props5); Props4=Props5),
+	atomize_values(Props5,Props6),
+	lists_to_dicts(Props6,TheProps).
 
 lists_to_dicts(Props,TheProps) :-
 	json_colons_to(Props,-,Props1),
@@ -356,10 +357,11 @@ op_for_one_enter(ID,T,X,Mode,Props,Op) :-
 	).
 
 % Considers composite objects, in which case P must be present in ALL object parts
-% enforce_property(+Props,+P,-NewProps).
+% Notice that property values may be different
+% enforce_property(+Props,+P:Value,-NewProps).
 enforce_property([],_P,[]) :- !.
-enforce_property(Props,P,NewProps) :- \+ member([_|_],Props), !, % simple object
-	(member(P,Props) -> Props=NewProps ; NewProps=[P|Props]).
+enforce_property(Props,P:Value,NewProps) :- \+ member([_|_],Props), !, % simple object
+	(member(P:_,Props) -> Props=NewProps ; NewProps=[P:Value|Props]).
 enforce_property([Props1|Props],P,[NewProp1|NewProps]) :- 
 	is_list(Props1), enforce_property(Props1,P,NewProp1), enforce_property(Props,P,NewProps).
 	

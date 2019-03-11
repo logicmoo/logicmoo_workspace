@@ -1,28 +1,26 @@
 // used by the display page in lps_server_UI.pl; depends on 2dWorld.js
+// TODO: the bulk of this file may want to miggrate to 2dWorld.js
 function sampler_for2d(ID,myWorld){
 	var SAMPLE_URL = '/lps_server/d_sample/'+ID
 	var self = {
 		
 		lastCycle: -1,
-		isFirst: function(){
-			return (self.lastCycle == -1);
-		},
-		load: function(){
-			var isFirst = self.isFirst();
+		isFirst: true,
+		load: function(events_for_lps){
 			// get timeless specifications only for the first time:
-			var url = (isFirst?SAMPLE_URL+"?timeless=true":SAMPLE_URL);
+			var url = (self.isFirst?SAMPLE_URL+"?timeless=true":SAMPLE_URL);
+			console.log("sampling "+url);
+			console.log("should POST "+JSON.stringify(events_for_lps));
+			self.isFirst=false;
 			jQuery.ajax(url,{}).done(
 				function(data){
 					//console.log("data:"+JSON.stringify(data));
 					jQuery(debug_output).text(JSON.stringify(data));
 					self.lastCycle = data.cycle;
 					var ops = self.assignOps(data.ops);
-					console.log(JSON.stringify(ops));
-					console.log("cycle:"+self.lastCycle);
-					myWorld.displayFluentsForOne(ops);
-					if (isFirst)
-						myWorld.resizeWorld();
-					myWorld.updatePaper();
+					//console.log(JSON.stringify(ops));
+					//console.log("cycle:"+self.lastCycle);
+					myWorld.displayFluentsForOne_lazy(ops,self.lastCycle);
 				}
 			).fail(
 				function(data){
@@ -37,8 +35,9 @@ function sampler_for2d(ID,myWorld){
 		assignOps: function(ops){
 			if (!ops) 
 				return [];
-			var paperFluents = myWorld.getPaperFluents();
-			var paperEvents =  myWorld.getPaperEvents();
+			var paperFluents = myWorld.getPaperFluents;
+			var paperEvents =  myWorld.getPaperEvents;
+			var isTimeless = myWorld.isTimeless;
 			var myIDs = {};
 			for (var i=0; i<ops.length; i++){
 				var op = ops[i];
@@ -55,11 +54,14 @@ function sampler_for2d(ID,myWorld){
 			}
 			// now kill old fluents absent from the new sample:
 			for (ID in paperFluents){
-				if (ID!=="timeless" && !myIDs[ID]) // timeless objects never die
+				if (isTimeless(ID))
+					continue;
+				if (!myIDs[ID]) // timeless objects never die
 					ops.push({kill:ID});
 			}
 			return ops;
 		}
 	}
+	myWorld.setSampler(self);
 	return self;
 }

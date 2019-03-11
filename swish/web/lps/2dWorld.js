@@ -162,7 +162,7 @@ function twoDworld() {
 		var type = props.type.toLowerCase();
 		var id = props.id;
 		var label = props.label;
-		console.log("creating "+type+" from "+JSON.stringify(props));
+		// console.log("creating "+type+" from "+JSON.stringify(props));
 		var postConfig = prepareProps(props);
 		//console.log("hacked:"+JSON.stringify(props));
 		if (type==="rectangle"){
@@ -234,6 +234,7 @@ function twoDworld() {
 	// (and restore hacked properties)
 	function prepareProps(props){
 		var id = props.id;
+		props.lps_id = id; // our id, for event handling
 		var type = props.type;
 		delete props.id; // Hacky steps! Avoid conflict with paperjs
 		delete props.type; 
@@ -316,7 +317,7 @@ function twoDworld() {
 		if (props.biDirectional)
 			parts.push(new paper.Path([startPoint.add(tailLine.rotate(headAngle)), startPoint, startPoint.add(tailLine.rotate(-headAngle))]));
 
-		var groupProps = {children:parts};
+		var groupProps = {children:parts,lps_id:props.lps_id};
 		Object.assign(groupProps,props);
 		if (!groupProps.strokeColor)
 			groupProps.strokeColor = 'black';
@@ -462,7 +463,6 @@ function twoDworld() {
 		
 		if (!didResize) {
 			resizeWorld();
-			didResize = true;
 			controlPanel= buildControlPanel();
 		}
 		// the number of times the frame event was fired:
@@ -475,9 +475,24 @@ function twoDworld() {
 	
 	}
 	
+	// used for lazy operation only:
+	var sampling=false;
+	var sampler = null;
+	function onFrame_lazy(event){
+		if(sampling) return; // waiting for a new sample
+		// This trivial policy is probably too impatient; we could get minCycleTime and estimate
+		// when is it worthwhile to sample the lps.swi server again:
+		sampling=true;
+		var toSend = lps_events.slice(); // clone...is this really necessary??
+		lps_events = [];
+		sampler.load(toSend); // fetches current LPS state and calls displayFluentsForOne_lazy below
+	}
+	
+	// This may need to be called several times, if rasters are loading
 	function resizeWorld(){
-		// will resize our canvas after the first cycle with all objects displayed
+		// will resize our canvas after the first cycle (or first sample, for lazy display) with all objects displayed
 		if (rastersToLoad>0) return;
+		didResize = true;
 		var bounds = new paper.Rectangle(0,0,0,0);
 		$.each(paperFluents,function(id,po){
 			if (Array.isArray(po)){
@@ -495,7 +510,7 @@ function twoDworld() {
 			}
 			else bounds = bounds.unite(po.bounds);
 		});
-		//console.log("BOUNDS "+JSON.stringify(bounds));
+		// console.log("BOUNDS "+JSON.stringify(bounds));
 		if (bounds.width === 0)
 			return; // no displayed objects yet
 		if (bounds.width<200)
@@ -515,9 +530,9 @@ function twoDworld() {
 	
 	/** Load and init PaperJS in the given canvas;
 	@param {Object} DOMcontainer
-	@param {String} animate whether onFrame animation should start
+	@param {String} eager whether onFrame animation will feed eagerly from a cycles array, or lazily a cycle at a time
 	*/
-    function initPaper(DOMcontainer,animate){
+    function initPaper(DOMcontainer,eager){
 		// TODO? preprocess properties: replace Point, Size; scale view, with zoom or scale; possibly at cycle 0
 		// This should probably be included differently...
 		$.ajax({url:"/lps/bower_components/paper/dist/paper-core.js", dataType:"script", cache: true, success:function() {  
@@ -526,8 +541,16 @@ function twoDworld() {
 			var canvas = DOMcontainer; // must be a DOM object, not a jQuery object...
 			// Create an empty project and a view for the canvas:
 			paper.setup(canvas);
-			if (animate)
+			if (eager)
 				paper.view.onFrame = onFrame;
+			else {
+				paper.view.onFrame = onFrame_lazy;
+				myEventsTool = new paper.Tool();
+				myEventsTool.onMouseDown = self.eventHandler;
+				myEventsTool.onMouseDrag = self.eventHandler;
+				//myEventsTool.onMouseMove = self.eventHandler;
+				myEventsTool.onMouseUp = self.eventHandler;
+			}
 		} });
     }
 
@@ -571,22 +594,52 @@ function twoDworld() {
 	// or an array of display object props, for composite objects
 	var cycles = []; 
 	
+	var myEventsTool = null;
+	var lps_events = []; // queue
+	
 	// available entry points to functions
 	var self = {
 		initCycle: initCycle,
 		initPaper: initPaper,
-		displayFluentsForOne: displayFluentsForOne,
+		// This is called back by sampler.load():
+		displayFluentsForOne_lazy: function(ops,new_cycle){
+			if (new_cycle==undefined){
+				paper.view.onFrame = null; // stops the animation
+			} else {
+				displayFluentsForOne(ops);
+				cycle=new_cycle;
+				if (!didResize){ 
+					resizeWorld();
+					// update?
+				}
+				sampling=false;
+			}
+		},
 		getPaperFluents: function(){
 			return paperFluents;
 		},
 		getPaperEvents: function(){
 			return paperEvents;
 		},
-		updatePaper: function(){
-			//console.log("update:"+paper.view.update());
+		isTimeless: function(ID){
+			var props = fluentProps[ID];
+			return Array.isArray(props) && props[0].timeless;
 		},
-		resizeWorld: resizeWorld
+		setSampler: function(sampler_){
+			sampler=sampler_;
+		},
+		eventHandler: function(event){
+  			//console.log("event timestamp:"+event.timestamp);
+  			//console.log("event type:"+event.type+", point:"+event.point);
+  			// could also use project's hitTest(point[, options])
+  			if (event.item){
+  				//console.log("event item id:"+event.item.id);
+  				// console.log("event item lps_id:"+event.item.lps_id);
+  				lps_events.push({lps_id:event.item.lps_id,x:event.point.x,y:event.point.y,type:event.type});
+  			}
+		}
 	}
 	return self;
     
   }
+    

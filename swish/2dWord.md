@@ -44,6 +44,7 @@ It can be a list of lists (each list defining one graphic object), or a simple l
 Property  | Possible values | Comment / Example
 ------------- | -------------| ----
 type | rectangle circle line ellipse arc raster regularPolygon star path pointtext text arrow| Mandatory. All provided by PaperJS directly, except arrow
+id | Prolog term | optional unique identifier of the (displayed) term; the whole term will be taken as id by default
 label  | Prolog term | the label is rendered in an arbitrary position; for precise positioning use a pointText/text object instead
 sendToBack | none| forces the object to be behind others
 bringToFront | none | draws the object in front
@@ -93,3 +94,5 @@ The following defines the (unchanging) background for the banking example:
     	[type:ellipse, shadowOffset:5, shadowColor:darkGray , point:[50,150], size:[110, 40],fillColor: white],
     	[type:ellipse,  point:[20,130], size:[90, 30],fillColor: white ]
 	]). 
+
+Timeless component objects can have different ids, to allow for GUI event detection.
