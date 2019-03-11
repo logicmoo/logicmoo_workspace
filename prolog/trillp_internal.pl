@@ -702,7 +702,7 @@ bdd_or(M,Env,[X],BDDX):-
   equality(Env,VX,0,BDDX),!.
 
 bdd_or(_M,Env,[_X],BDDX):- !,
-  zero(Env,BDDX).
+  one(Env,BDDX).
 
 bdd_or(M,Env,[*(H)|T],BDDAnd):-!,
   bdd_and(M,Env,H,BDDH),
