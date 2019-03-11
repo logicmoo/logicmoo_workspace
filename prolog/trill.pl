@@ -2652,7 +2652,7 @@ sandbox:safe_meta(trill:add_axioms(_),[]).
 sandbox:safe_meta(trill:load_kb(_),[]).
 sandbox:safe_meta(trill:load_owl_kb(_),[]).
 
-:- use_module(utility_kb).
+:- use_module(library(utility_kb)).
 :- use_module(library(utility_translation)).
 
 user:term_expansion((:- trill),[]):-
