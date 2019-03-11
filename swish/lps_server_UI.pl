@@ -351,6 +351,9 @@ display_sample(Request) :-
 	member(path_info(LPS_ID),Request),
 	http_parameters(Request,[timeless(Timeless,[optional(true)])]),
 	(var(Timeless)->Timeless=false;true),
+	http_read_json_dict(Request, Posted, [value_string_as(atom)]),
+	mylog(cycleAndEvents-Posted),
+	% e.g. _9258{cycle:12,events:[_9152{lps_id:kitchen,type:mousedown,x:223,y:78.8125},_9226{lps_id:kitchen,type:mouseup,x:223,y:78.8125}]}
 	background_execution(LPS_ID,_,_,_,_,_FinalState,Status), % user is checked here
 	( Status==running ->
 		% no point using cycle_hook, different thread anyway

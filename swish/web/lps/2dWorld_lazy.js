@@ -9,10 +9,12 @@ function sampler_for2d(ID,myWorld){
 		load: function(events_for_lps){
 			// get timeless specifications only for the first time:
 			var url = (self.isFirst?SAMPLE_URL+"?timeless=true":SAMPLE_URL);
-			console.log("sampling "+url);
-			console.log("should POST "+JSON.stringify(events_for_lps));
+			//console.log("sampling "+url);
+			//console.log("should POST "+JSON.stringify(events_for_lps));
 			self.isFirst=false;
-			jQuery.ajax(url,{}).done(
+			jQuery.ajax(url,{
+				method:"POST", contentType:"application/json", data: JSON.stringify({events:events_for_lps,cycle:self.lastCycle} )
+				}).done(
 				function(data){
 					//console.log("data:"+JSON.stringify(data));
 					jQuery(debug_output).text(JSON.stringify(data));
