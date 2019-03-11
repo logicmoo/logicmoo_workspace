@@ -2302,6 +2302,10 @@ dt_to_duration(date(_Y,_M,_D,_H,_Mn,_S,_,_,_),1.0).
 % (because it depends on fluent state, which at this precise moment is unreadable; also because events may rejected later)
 
 receive_external_events(Time, Next, Ri, Gi, ToReturn) :-
+	% Special way to inject GUI input events, which are NOT checked against preconditions:
+	findall(IE,retract(lps_GUI_event(IE)),InputEvents), 
+	assert_events(InputEvents,Time,Next),
+	% Now for other events:
 	collect_external_messages(Messages),
 	% the above split from the following as we'll backtrack over the event sequence
 	receive_external_events(Messages, Time, Next, Ri, Gi, ToReturn).
@@ -2414,6 +2418,10 @@ answer_thread_queries :-
 	thread_send_message(ClientID,thread_result(ID,Cycle,Result)),
 	answer_thread_queries.
 answer_thread_queries.
+
+:- thread_local(lps_GUI_event/1).
+% postUIevent(+IE) somehow hacky means to inject GUI events
+postUIevent(IE) :- assertz(lps_GUI_event(IE)).
 
 % Evaluate goal Q in LPS thread ID at Cycle; Result will be bound to the last argument of Q
 % query_thread(+ID,+Q,-Cycle,-Result) 

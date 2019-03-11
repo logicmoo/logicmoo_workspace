@@ -346,13 +346,14 @@ prepare_events(Query,ServerUser,Events) :-
 		; true).
 
 % respond to a request for a sample of the current fluents and events covered by d/2 (2d display) declarations
+% also accepts a posted list of events (e.g. originated in the GUI based on a sample at some cycle S) to insert into the interpreter ASAP
 :- http_handler('/lps_server/d_sample/', lps_server_UI:display_sample, [prefix]).  % .../lps_server/d_sample/lps1?timeless=true (timeless is optional)
 display_sample(Request) :- 
 	member(path_info(LPS_ID),Request),
 	http_parameters(Request,[timeless(Timeless,[optional(true)])]),
 	(var(Timeless)->Timeless=false;true),
 	http_read_json_dict(Request, Posted, [value_string_as(atom)]),
-	mylog(cycleAndEvents-Posted),
+	% mylog(cycleAndEvents-Posted),
 	% e.g. _9258{cycle:12,events:[_9152{lps_id:kitchen,type:mousedown,x:223,y:78.8125},_9226{lps_id:kitchen,type:mouseup,x:223,y:78.8125}]}
 	background_execution(LPS_ID,_,_,_,_,_FinalState,Status), % user is checked here
 	( Status==running ->
@@ -360,15 +361,24 @@ display_sample(Request) :-
 		
 		%Events=[], Fluents = [balance(_,_)],
 		%interpreter:inject_events_fetch_fluents(LPS_ID,Events,false/*sample before applying events*/,Fluents,Result),
-		interpreter:query_thread(LPS_ID, lps_server_UI:get_fluents_events_actions(Timeless,_Result), Cycle, Result),
+		prepare_events_for_lps(Posted.events,InputEvents),
+		interpreter:query_thread(LPS_ID, lps_server_UI:provide_events_get_fluents_events_actions(InputEvents,Timeless,_Result), Cycle, Result),
 		Sample = _{cycle:Cycle, ops:Result},
 		reply_json_dict(Sample)
 		; 
 		reply_json_dict(_{error:"Not running"})
 	).
 
-% get_fluents_events_actions(-Ops) returns a list of dicts
-get_fluents_events_actions(Timeless,Ops) :-
+% TODO: normalize names with lps.js
+prepare_events_for_lps([D|Dicts],[E|Events]) :- !,
+	atomic_list_concat([lps_,D.type],EF),
+	E=..[EF,D.lps_id,D.x,D.y], prepare_events_for_lps(Dicts,Events).
+prepare_events_for_lps([],[]).
+
+% provide_events_get_fluents_events_actions(+InputEvents,+Timeless,-Ops) returns a list of dicts
+% This will execute in the thread of the LPS program in background, thus accessing its predicate database
+% (GUI) Events injected here will be "posted" via asserted facts. TODO: unify event handling...
+provide_events_get_fluents_events_actions(InputEvents,Timeless,Ops) :-
 	Cond = interpreter:d(X,_),
 	MaxTime = 0.01, % seconds
 	catch( call_with_time_limit(MaxTime,(
@@ -386,7 +396,8 @@ get_fluents_events_actions(Timeless,Ops) :-
 	((Timeless==true,member(timeless,Templates)) -> append([t(timeless,fluent)|Fluents],EventsActions,Terms)
 		; append(Fluents,EventsActions,Terms)),
 	% Each term will be a t(Literal,Type), where Type is action or event or fluent
-	visualizer:collect_display_specs_lazy(Terms,Ops).
+	visualizer:collect_display_specs_lazy(Terms,Ops),
+	forall(member(IE,InputEvents),interpreter:postUIevent(IE)).
 
 /* Ideas for compacting communication, using deltas:
 ord_subtract(LastSample,Current,Delta),...

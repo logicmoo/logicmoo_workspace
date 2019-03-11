@@ -1,7 +1,8 @@
-maxRealTime(20).
+maxRealTime(30).
 minCycleTime(1).
 fluents light(_,_), location(_,_).
 actions switch(_,_, _), goto(_,_).
+events lps_mousedown(_ID,_X,_Y).
 
 initially 	light(livingroom, off), light(kitchen, on), 
 			light(bedroom, on), light(bathroom, on),
@@ -27,6 +28,8 @@ switch(Person, Place, New) 	terminates light(Place, Old).
 goto(Person, Place) 	initiates 	location(Person, Place).
 goto(Person, _) 		terminates 	location(Person, _).
 
+% A click in a room switches its light on. Rooms have atom names
+lps_mousedown(Where,_X,_Y) updates Old to 'on' in light(Where,Old) if atomic(Where).
 
 false goto(dad, Place1), goto(dad, Place2), Place1 \= Place2.
 false goto(Person,_), switch(Person, _, _).
@@ -47,7 +50,7 @@ locationXY(bedroom,150,150).
 locationXY(bathroom,0,150).
 
 d(timeless,Divisions) :- findall(
-   	[type:rectangle, label:D, from:[X,Y], to:[TX,TY], strokeColor:black ],
+   	[type:rectangle, label:D, id:D, from:[X,Y], to:[TX,TY], strokeColor:black ],
   	( locationXY(D,X,Y), TX is X+150, TY is Y+150), 
    	Divisions).
 /** <examples>

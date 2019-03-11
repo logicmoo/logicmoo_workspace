@@ -20,7 +20,6 @@ function sampler_for2d(ID,myWorld){
 					jQuery(debug_output).text(JSON.stringify(data));
 					self.lastCycle = data.cycle;
 					var ops = self.assignOps(data.ops);
-					//console.log(JSON.stringify(ops));
 					//console.log("cycle:"+self.lastCycle);
 					myWorld.displayFluentsForOne_lazy(ops,self.lastCycle);
 				}
@@ -37,8 +36,8 @@ function sampler_for2d(ID,myWorld){
 		assignOps: function(ops){
 			if (!ops) 
 				return [];
-			var paperFluents = myWorld.getPaperFluents;
-			var paperEvents =  myWorld.getPaperEvents;
+			var paperFluents = myWorld.getPaperFluents();
+			var paperEvents =  myWorld.getPaperEvents();
 			var isTimeless = myWorld.isTimeless;
 			var myIDs = {};
 			for (var i=0; i<ops.length; i++){
@@ -56,9 +55,9 @@ function sampler_for2d(ID,myWorld){
 			}
 			// now kill old fluents absent from the new sample:
 			for (ID in paperFluents){
-				if (isTimeless(ID))
+				if (isTimeless(ID)) // timeless objects never die
 					continue;
-				if (!myIDs[ID]) // timeless objects never die
+				if (!myIDs[ID]) 
 					ops.push({kill:ID});
 			}
 			return ops;
