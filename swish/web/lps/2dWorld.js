@@ -610,7 +610,6 @@ function twoDworld() {
 				cycle=new_cycle;
 				if (!didResize){ 
 					resizeWorld();
-					// update?
 				}
 				sampling=false;
 			}
@@ -632,11 +631,10 @@ function twoDworld() {
   			//console.log("event timestamp:"+event.timestamp);
   			//console.log("event type:"+event.type+", point:"+event.point);
   			// could also use project's hitTest(point[, options])
-  			if (event.item){
-  				//console.log("event item id:"+event.item.id);
-  				// console.log("event item lps_id:"+event.item.lps_id);
-  				lps_events.push({lps_id:event.item.lps_id,x:event.point.x,y:event.point.y,type:event.type});
-  			}
+  			//console.log("event item id:"+event.item.id);
+  			// console.log("event item lps_id:"+event.item.lps_id);
+  			lps_events.push({lps_id:(event.item?event.item.lps_id:null),x:event.point.x,y:event.point.y,type:event.type});
+  			
 		}
 	}
 	return self;

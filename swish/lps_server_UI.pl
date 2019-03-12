@@ -377,14 +377,16 @@ display_sample(Request) :-
 % TODO: normalize names with lps.js
 prepare_events_for_lps([D|Dicts],[E|Events]) :- !,
 	atomic_list_concat([lps_,D.type],EF),
-	E=..[EF,D.lps_id,D.x,D.y], prepare_events_for_lps(Dicts,Events).
+	catch(term_string(Term,D.lps_id),_,Term=D.lps_id),
+	Term=..LL, mylog(ll-LL),
+	E=..[EF,Term,D.x,D.y], prepare_events_for_lps(Dicts,Events).
 prepare_events_for_lps([],[]).
 
 % provide_events_get_fluents_events_actions(+InputEvents,+Timeless,-Ops) returns a list of dicts
 % This will execute in the thread of the LPS program in background, thus accessing its predicate database
 % (GUI) Events injected here will be "posted" via asserted facts. TODO: unify event handling...
 provide_events_get_fluents_events_actions(InputEvents,Timeless,Ops) :-
-	Cond = interpreter:d(X,_),
+	Cond = (interpreter:lps_program_module(M), M:clause(d(X,_),_)), % Peek into d/2 clause heads, without depending on body arithmetic
 	MaxTime = 0.01, % seconds
 	catch( call_with_time_limit(MaxTime,(
 		interpreter:findall_variants(X,Cond,Templates),
