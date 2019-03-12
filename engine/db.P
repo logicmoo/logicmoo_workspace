@@ -74,7 +74,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	maxTime/1,
 	maxRealTime/1,
 	minCycleTime/1,
-	defaultMinCycleTime/1,
 	simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1,
 	lps_test_options/1,
 	lps_test_result_item/3,
@@ -132,7 +131,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- thread_local maxRealTime/1. % seconds
 :- thread_local minCycleTime/1. % seconds
 :- thread_local simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1.
-:- thread_local defaultMinCycleTime/1.
 :- thread_local lps_test_result_item/3.
 :- thread_local lps_test_action_ancestor/3.
 :- thread_local lps_test_result/3.

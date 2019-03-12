@@ -88,7 +88,6 @@ maxRealTime(X) :- lps_program_module(M), catch(M:maxRealTime(X),_,fail). % real 
 minCycleTime(X) :- lps_program_module(M), catch(M:minCycleTime(X),_,fail). % real time (seconds, float); AVOID in non-background SWISH!
 simulatedRealTimePerCycle(X) :- lps_program_module(M), catch(M:simulatedRealTimePerCycle(X),_,fail). % (seconds)
 simulatedRealTimeBeginning(X) :- lps_program_module(M), catch(M:simulatedRealTimeBeginning(X),_,fail). % date expression atom, cf. http://www.swi-prolog.org/pldoc/man?predicate=parse_time/3
-defaultMinCycleTime(X) :- lps_program_module(M), catch(M:defaultMinCycleTime(X),_,fail). 
 observe(X,Y) :- lps_program_module(M), catch(M:observe(X,Y),_,fail).
 % TODO: interference with SWI ???
 option(X) :- lps_program_module(M), catch(M:option(X),_,fail).
@@ -138,7 +137,7 @@ u_swiclause(H,B,Ref) :- lps_program_module(M), clause(M:H,B,Ref).
 	action/1, current_time/1, real_time_beginning/1, d_pre/1 ,event/1,
 	fluent/1, happens/3, (initiated)/3, l_events/2, l_int/2,
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, state/1, next_state/1,
-	steps/1, (terminated)/3, updated/4, used/1, maxTime/1, maxRealTime/1, minCycleTime/1, defaultMinCycleTime/1, 
+	steps/1, (terminated)/3, updated/4, used/1, maxTime/1, maxRealTime/1, minCycleTime/1, 
 	simulatedRealTimePerCycle/1, simulatedRealTimeBeginning/1,
 	current_goal/1, depth/1, tried/3, option/1, lps_updating_current_state/0,
 	initial_state/1,
@@ -1147,7 +1146,8 @@ go_(File,OptionsList,ResultFluents) :-
 		get_time(RT), uassertz(real_time_beginning(RT))),
 	( option(background(TID)) -> 
 		(endTime(ET) -> true ; ET = 0),
-		(maxRealTime(MaxRT) -> true ; MaxRT = 0),
+		% background programs get 20 seconds by default:
+		(maxRealTime(MaxRT) -> true ; MaxRT = 20.0, uassert((maxRealTime(MaxRT)))), 
 		minCycleTime_(MCT),
 		(MCT < 0.0001 -> throw(must_increase_minCycleTime(MCT)) ; true),
 		((MaxRT =< 0, ET =<0) -> throw(must_bound_maxRealTime_or_maxRealTime) ; true),
@@ -1979,8 +1979,9 @@ time_limited(Step,G,Timeout) :-
 		fail
 		; true).
 
-% seconds to sleep at the beginning of each cycle
-minCycleTime_(MCT) :- (minCycleTime(MCT); defaultMinCycleTime(MCT)), !.
+% seconds to sleep at the beginning of each cycle; assumes some defaults 
+minCycleTime_(MCT) :- minCycleTime(MCT), !.
+minCycleTime_(0.25) :- option(swish), option(background(_)), !.
 minCycleTime_(0.001) :- option(background(_)), !.
 minCycleTime_(0).
 
