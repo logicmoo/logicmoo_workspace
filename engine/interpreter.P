@@ -256,7 +256,7 @@ print_error(Type,Message,Position) :-
 lps_welcome_message :-
 	get_git_version(V),
 	concat_atom(['LPS version ',V],M), 
-	(server_log_stream(S)->writeln(S,M);writeln(M)).
+	my_writeln(M).
 
 % Git log hash "version"
 get_git_version(V) :- git_version_cache(V) , !.
@@ -1071,17 +1071,31 @@ server_log_filename(ID,FP) :-
 	concat_atom([LD,ID,'.log'],FP).
 
 :- thread_local(server_log_stream/1).
+:- thread_local(server_log_lines/1). % counter, to control approximate size; 
 
 set_server_log(ID,User,Email) :- 
 	server_log_filename(ID,FP), 
 	open(FP, write, S, [buffer(line)]),
-	format(S,"~w\t~w~nStarting log for program ~w~n~n",[User,Email,ID]),
+	assert(server_log_stream(S)),
+	assert(server_log_lines(0)),
+	my_format("~w\t~w~nStarting log for program ~w~n~n",[User,Email,ID]).
 	% To get all emails...: head -1 -q logicalcontracts/engine/logs/* | grep "@" | cut -f2 |sort -u
-	assert(server_log_stream(S)) /*, set_prolog_IO(user_input,S,S)*/.
+	 /*, set_prolog_IO(user_input,S,S)*/
 
 close_server_log :- option(background(_)), retract(server_log_stream(S)), close(S), fail.
+close_server_log :- option(background(_)), retract(server_log_lines(_)), fail.
 close_server_log.
 
+% based on number of lines
+% simply use Linux's ulimit, or reimplement these mechanics down to the char if you must:
+check_log_size :- server_log_lines(N), !, 
+	NewN is N+1, 
+	MAXLINES=20000,
+	NewN =< MAXLINES, 
+	retractall(server_log_lines(_)),
+	asserta(server_log_lines(NewN)),
+	( NewN =:= MAXLINES-1 -> my_format("*** TRUNCATED LOG, after ~w lines ***~n",[MAXLINES]); true).
+check_log_size :- throw(failed_server_log_lines).
 	
 go_(File,OptionsList,ResultFluents) :-
 	forall(member(RF,ResultFluents), (nonvar(RF), RF=_-_)),
@@ -1232,8 +1246,8 @@ print_statistics(T0,_T1,T2) :-
 	TotalT is T2-T0,
 	current_time(Next), Cycles is Next-1,
 	(option(background(_)) -> thread_self(ID) ; ID=''),
-	(server_log_stream(S)->nl(S);nl), 
-	(server_log_stream(S)->format(S,"**~s ~d cycles took ~f seconds **\n",[ID, Cycles,TotalT]);format("**~s ~d cycles took ~f seconds **\n",[ID, Cycles,TotalT])).
+	my_nl,
+	my_format("**~s ~d cycles took ~f seconds **\n",[ID, Cycles,TotalT]).
 
 % check_syntax(+File,-Notices) Returns a list of notice(Type,Message,Position)
 %  Type is 'error' or 'warning', Position is some term denoting a source file location
@@ -1690,16 +1704,16 @@ do_write(L) :- \+ \+ (numbervars(L),do_write_(L)).
 do_write_(_) :- option(silent), !.
 do_write_([]) :- !.
 do_write_([What|Rest]) :- var(What), !,
-    (server_log_stream(S)->write(S,What);write(What)),
+	my_write(What),
     do_write_(Rest).
 do_write_([pprint_goal(What)|Rest]) :- !,
     pprint_goal(What),
     do_write_(Rest).
 do_write_([nl|Rest]) :- !,
-    (server_log_stream(S)->nl(S);nl),
+	my_nl,
     do_write_(Rest).
 do_write_([What|Rest]) :- !,
-    (server_log_stream(S)->write(S,What);write(What)),
+	my_write(What),
     do_write_(Rest).
 
 pprint_goal([]).
@@ -1713,13 +1727,18 @@ pprint_goal([goal(_, _, [H|_])|Rest]) :- throw(deprecated_at_pprint_goal),
     pprint_goal(Rest).
 
 pprint_goal([goal(_, _, _, _, _, _, [H|_])|Rest]) :- !,
-    (server_log_stream(S)->writeln(S,H);writeln(H)),
+	my_writeln(H),
     pprint_goal(Rest).
 
 pprint_goal([G|Rest]) :-
-    (server_log_stream(S)->writeln(S,G);writeln(G)),
+	my_writeln(G),
     pprint_goal(Rest).
-    
+
+my_format(Format,Args) :- server_log_stream(S) -> (check_log_size -> format(S,Format,Args); true) ; format(Format,Args).
+my_write(X) :- server_log_stream(S)->(check_log_size->write(S,X);true);write(X).
+my_nl :- server_log_stream(S)->(check_log_size->nl(S);true);nl.
+my_writeln(X) :- my_write(X), my_nl.
+
 % init_test_file(+Filename,+Options)
 % Load test file for this program file  
 % if not running tests does nothing
