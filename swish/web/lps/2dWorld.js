@@ -566,7 +566,7 @@ function twoDworld() {
 		}
 		cycles=cycles_;
 		//console.log(JSON.stringify(cycles));
-		for(var i=0;i<cycles.length;i++) console.log(JSON.stringify(cycles[i]));
+		//for(var i=0;i<cycles.length;i++) console.log(JSON.stringify(cycles[i]));
 		// Adjust animation frames per cycle:
 		if (cycles.length < 15) framesPerCycle = 60;
 		else if (cycles.length <50) framesPerCycle = 30;

@@ -52,10 +52,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 :- discontiguous(lps_server_UI:term_rendering/5).
 
-term_rendering(lpsServer(LPS_ID), _Vars, _Options) -->
+term_rendering(lpsServer(LPS_ID,Has2d), _Vars, _Options) -->
+	{Has2d==true-> twoDviewElements(LPS_ID,false,_,Script,Canvas), Displayer=[Canvas,Script] ; Displayer=[]},
 	html(div(['data-render'('As LPS Server')],[
 		p('See this LPS server\'s status, state and inject events from:'),
-		\serverLinks([LPS_ID])
+		\serverLinks([LPS_ID-Has2d])|Displayer
 		])).
 
 /* Failed hack:
@@ -104,10 +105,12 @@ user:lps_postmortem_filename(FilePath) :-
 	interpreter:get_lps_program_hash(Hash),
 	concat_atom([UD,Hash,'.lpst'],FilePath).
 
-% Launch the current window's progrwhynam in background; BEWARE, this requires upcoming authentication, cycles budget, etc.!!!!
-user:serve(lpsServer(ThreadID)) :-
+% Launch the current window's program in background; BEWARE, this requires upcoming authentication, cycles budget, etc.!!!!
+user:serve(lpsServer(ThreadID,Has2d)) :-
 	check_user_server_usage,
-	interpreter:go(_, [background(ThreadID),/*silent,*/swish,dc]). % current logging is unbound, uncomment this in production
+	Preamble = (visualizer:has_d_clauses -> Has2d=true; Has2d=false),
+	% current logging is bound in check_log_size, but you may want to use 'silent' in production:
+	interpreter:go(_, [background(ThreadID),/*silent,*/swish,dc,preamble_goal(Preamble,Has2d)]). 
 
 check_user_server_usage :-
 	lps_user(User),
@@ -134,12 +137,14 @@ term_rendering(lpsServers(IDs), _Vars, _Options) -->
 		\serverLinks(IDs)
 		])).
 
+% serverLinks(+ListOfPairs,...) Eacha pair is either LPS_ID-Has2Dboolean, or just a LPS_ID (background thread ID)
 serverLinks([]) --> [].
-serverLinks([ID|IDs]) -->
+serverLinks([IDpair|IDs]) -->
+	{IDpair=ID-Has2D -> true ; ID=IDpair, Has2D=false},
 	{format(atom(MURL),"/lps_server/manager/~w",[ID]), format(atom(MLabel),"Manage ~w",[ID])},
 	{(
-		background_execution(ID,_,_,_,_,_FinalState,running) -> 
-			format(atom(DURL),"/lps_server/twoD/~w",[ID]), DLabel="Display", Displayer=span([" | ",a([href=DURL],DLabel)])
+		(background_execution(ID,_,_,_,_,_FinalState,running), Has2D==true) -> 
+			format(atom(DURL),"/lps_server/twoD/~w",[ID]), DLabel="Display", Displayer=span([" | ",a([title="In a separate window",href=DURL],DLabel)])
 			; Displayer=[]
 	)},
 	html(p([span(a([href=MURL],MLabel))|Displayer])), 
@@ -418,27 +423,28 @@ twoD(Request) :-
 	header_style(Style),
 	(Status==running ->
 		format(string(MANAGER_URL),"/lps_server/manager/~w",[LPS_ID]),
-		MY_CANVAS = my_canvas, 
-		atom_concat('#',MY_CANVAS,MY_SELECTOR),
-		reply_html_page([
-			title([LPS_ID,' 2d display']),
-			script(src("/bower_components/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
-			script(src("/lps/2dWorld.js"),[]), 
-			script(src("/lps/2dWorld_lazy.js"),[]), 
-			\js_script({|javascript(LPS_ID,MY_SELECTOR)||
-				var myWorld = twoDworld();
-				var sampler = sampler_for2d(LPS_ID,myWorld);
-				window.onload = function(){
-					var JQcanvas = jQuery(MY_SELECTOR);
-					myWorld.initPaper(JQcanvas.get(0),false); // this loads PaperJS
-				}
-			|})
-			], [ 
-			h2([Style],['2d display for ',a([href(MANAGER_URL),target('_blank')],LPS_ID),':']), canvas([resize,id(MY_CANVAS)],[])
-			, div(button(onclick("sampler.load();"),"Load!"))
-			, div(span(id(debug_output),[]))
+		twoDviewElements(LPS_ID,true,Resources,Script,Canvas),
+		append(Resources,[Script],JS),
+		reply_html_page([ title([LPS_ID,' 2d display'])|JS], [ 
+			h2([Style],['2d display for ',a([href(MANAGER_URL),target('_blank')],LPS_ID),':']), Canvas,
+			div(button(onclick("sampler.load();"),"Load!")), div(span(id(debug_output),[]))
 			] )
 		;
 		reply_html_page([title([LPS_ID,' 2d display'])],[h2([Style],['2d display for ',LPS_ID,' unavailable, program not running.'])])
 	).
 
+% twoDviewElements(+LPS_ID,+WaitForWindowLoading,-CommonResources,-Script,-Canvas)
+twoDviewElements(LPS_ID, WaitForWindow, [
+	script(src("/bower_components/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
+	script(src("/lps/2dWorld.js"),[]), 
+	script(src("/lps/2dWorld_lazy.js"),[]) ], 
+	\js_script({|javascript(LPS_ID,MY_SELECTOR,WaitForWindow)||
+		var myWorld = twoDworld();
+		var sampler = sampler_for2d(LPS_ID,myWorld);
+		var startMyPaperJS = function(){
+			var JQcanvas = jQuery(MY_SELECTOR);
+			myWorld.initPaper(JQcanvas.get(0),false); // this loads PaperJS
+		};
+		if (WaitForWindow=="true") window.onload = startMyPaperJS;
+		else startMyPaperJS();
+	|}), canvas([resize,id(MY_CANVAS)],[])) :- gensym(my_canvas,MY_CANVAS), atom_concat('#',MY_CANVAS,MY_SELECTOR).

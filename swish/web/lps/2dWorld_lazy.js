@@ -17,7 +17,9 @@ function sampler_for2d(ID,myWorld){
 				}).done(
 				function(data){
 					//console.log("data:"+JSON.stringify(data));
-					jQuery(debug_output).text(JSON.stringify(data));
+					var out = jQuery("#debug_output");
+					if (out) 
+						out.text(JSON.stringify(data));
 					self.lastCycle = data.cycle;
 					var ops = self.assignOps(data.ops);
 					//console.log("cycle:"+self.lastCycle);

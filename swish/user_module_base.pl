@@ -260,7 +260,8 @@ my_swish_resources -->
 	html_post(head, link([ type('text/css'),rel('stylesheet'),href('/lps/lps.css') ])),
 	html_post(head, script(JS)),
 	html_post(head, script([src('/lps/timeline.js')],[])),
-	html_post(head, script([src('/lps/2dWorld.js')],[])).
+	html_post(head, script([src('/lps/2dWorld.js')],[])),
+	html_post(head, script([src('/lps/2dWorld_lazy.js')],[])).
 
 	
 sandbox:safe_primitive(interpreter:lps_ask(_A,_B,_C)). 

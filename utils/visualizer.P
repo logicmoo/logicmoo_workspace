@@ -9,27 +9,10 @@
 /* Utilities for visualizing LPS executions on SWISH */
 
 :- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1, 
-	collect_display_specs_lazy/2]).
+	collect_display_specs_lazy/2, has_d_clauses/0]).
 
 :- if(\+ current_prolog_flag(dialect, swi)).
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
-:- endif.
-
-
-
-% SWISH special case
-:- if(current_module(swish)).
-:- use_module(library(pengines),[pengine_self/1]).
-lps_test_result_item(X,Y,Z) :- pengine_self(M), catch(M:lps_test_result_item(X,Y,Z),_,fail).
-d(X,P) :- pengine_self(M), catch(M:d(X,P),_,fail).
-has_d_clauses :- pengine_self(M), catch(M:clause(d(_,_),_),_,fail), !.
-:- endif.
-% now non-swish SWI...
-:- if(\+ current_module(swish)).
-:- use_module('../engine/db.P',[
-	lps_test_result_item/3, action/1, d/2
-	]).
-has_d_clauses :- clause(d(_,_),_), !.
 :- endif.
 
 % ... and generic SWI:
@@ -37,8 +20,12 @@ has_d_clauses :- clause(d(_,_),_), !.
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1
+	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, 
+	beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1, lps_program_module/1, d/2
 	]).
+
+% Notice that this is only valid in the LPS program thread:
+has_d_clauses :- lps_program_module(M), M:clause(d(_,_),_), !.
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
 :- use_module(lpsUtils('psyntax.P'),[
