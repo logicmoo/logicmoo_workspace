@@ -54,8 +54,8 @@
 	    if (!__result) {						\
 		fprintf(stderr, "ERROR: %s:%d: (%s) run-time check failure: " # __call "\n", \
 			__FILE__, __LINE__, __FUNCTION__);		\
-		return __result;					\
 	    }								\
+            __result;                                                   \
 	})
 
 # define __rtcvoid(__call) ({						\

@@ -253,13 +253,15 @@ compile_1(Command, ArgL) :-
     read_string(Out, _, SOut),
     close(Err),
     command_to_string(Command, ArgL, CommandS),
-    catch(( close(Out),
-            print_message(informational, format('~s', [CommandS]))
-          ),
+    catch(call_cleanup(
+              close(Out),
+              ( SOut = "",
+                SErr = ""
+              ->print_message(informational, format('~s', [CommandS]))
+              ; print_message(warning, format("~s~s~nCommand: ~s", [SOut, SErr, CommandS]))
+              )),
           Error,
-          ( print_message(error, Error),
-            print_message(error, format("~s~s~nCommand: ~s", [SOut, SErr, CommandS]))
-          )).
+          print_message(error, Error)).
 
 command_to_string(Command, ArgL, CommandS) :-
     ( Command = path(RCommand)

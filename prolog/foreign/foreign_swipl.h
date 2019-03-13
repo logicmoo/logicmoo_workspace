@@ -137,13 +137,13 @@
 	    PL_unify_atom_chars(t, s);	\
 	})
 
-#define __rtc_FI_unify(__type, __term, __value)	({			\
-      __rtcpass(__rtctype(FI_unify_##__type(__term, __value), __term, __type)); \
-    })
+#define __rtc_FI_unify(__type, __term, __value)	({                      \
+            __rtctype(FI_unify_##__type(__term, __value), __term, __type); \
+        })
 
 #define __rtc_FI_get(__type, __term, __value) ({			\
-      __rtcpass(__rtctype(FI_get_##__type(__root, __term, __value), __term, __type)); \
-    })
+            __rtctype(FI_get_##__type(__root, __term, __value), __term, __type); \
+        })
 
 #define FI_get_list(__FI_get_elem, __term, __value) ({	\
       term_t __term##_ = PL_new_term_ref();			\
@@ -171,9 +171,9 @@
     })
 
 #define FI_get_in_list(__FI_get_elem, __term, __value) ({		\
-      __rtcpass(__rtctype(!PL_is_variable(__term), __term, list));	\
-      FI_get_list(__FI_get_elem, __term, __value);			\
-    })
+            __rtctype(!PL_is_variable(__term), __term, list);           \
+            FI_get_list(__FI_get_elem, __term, __value);                \
+        })
 
 #define FI_get_ptr(__FI_get_elem, __term, __value) ({	\
       term_t __term##_ = __term;			\
