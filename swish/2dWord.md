@@ -14,7 +14,7 @@ The examples above can be tried and seen on 2D at <http://lpsdemo.interprolog.co
 
 # Principles for 2d world visualization #
 
-After LPS execution finishes, fluent states in each cycle and simple events in cycle transitions are collected. All these terms are then matched to the d/2 predicate, to obtain their "display properties", a declarative representation which the Javascript side later renders  on the the screen, cycle after cycle, by using another [Javascript framework](http://paperjs.org) for vector oriented graphics.
+After LPS execution finishes, fluent states in each cycle and simple events in cycle transitions are collected, "postmortem". All these terms are then matched to the d/2 predicate, to obtain their "display properties", a declarative representation which the Javascript side later renders  on the the screen, cycle after cycle, by using another [Javascript framework](http://paperjs.org) for vector oriented graphics.
 
 Consider the fluent `balance(Person,Amount)`. The following d/2 clause makes a fluent value appear as a green rectangle, with position depending on the person and height equal to the value:
 
@@ -96,3 +96,19 @@ The following defines the (unchanging) background for the banking example:
 	]). 
 
 Timeless component objects can have different ids, to allow for GUI event detection.
+
+# Realtime display and input events #
+
+Alternatively, the LPS program can be executed in background with the ```server(S)``` predicate. If the program contains d/2 clauses, a 2d view will appear in the query answers panel, displaying fluents and events incrementally (*or "lazily" as referred in the source code*) and in real time. Add a ```maxRealTime(Seconds)``` if you want to specify the time the program has to run (20 seconds being the default).
+
+User clicks onto fluents and other objects (identified by their 'id' property - the whole object term by default) originate events:
+
+```
+lps_mouseup(ID,X,Y)
+lps_mousedown(ID,X,Y)
+lps_mousedrag(ID,X,Y)
+```
+
+You need to declare these as ```events``` as usual. See examples ```life\_lazyGUI.pl``` and ```badlight\_user.pl```. X and Y are pixel coordinates in the whole scene. 
+
+
