@@ -23,7 +23,7 @@ function sampler_for2d(ID,myWorld){
 					self.lastCycle = data.cycle;
 					var ops = self.assignOps(data.ops);
 					//console.log("cycle:"+self.lastCycle);
-					myWorld.displayFluentsForOne_lazy(ops,self.lastCycle);
+					myWorld.displayForOneCycle_lazy(ops,self.lastCycle);
 				}
 			).fail(
 				function(data){
@@ -55,7 +55,7 @@ function sampler_for2d(ID,myWorld){
 						ops[i] = {create:op}; // new fluent
 				}
 			}
-			// now kill old fluents absent from the new sample:
+			// now kill old fluents absent from the new sample; events are assumed atomic and thus killing by themselves a bit later
 			for (ID in paperFluents){
 				if (isTimeless(ID)) // timeless objects never die
 					continue;

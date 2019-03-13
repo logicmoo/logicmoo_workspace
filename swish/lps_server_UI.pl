@@ -52,8 +52,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 :- discontiguous(lps_server_UI:term_rendering/5).
 
-term_rendering(lpsServer(LPS_ID,Has2d), _Vars, _Options) -->
-	{Has2d==true-> twoDviewElements(LPS_ID,false,_,Script,Canvas), Displayer=[Canvas,Script] ; Displayer=[]},
+term_rendering(lpsServer(LPS_ID,Has2d,MinCT), _Vars, _Options) -->
+	{Has2d==true-> twoDviewElements(LPS_ID,MinCT,false,_,Script,Canvas), Displayer=[Canvas,Script] ; Displayer=[]},
 	html(div(['data-render'('As LPS Server')],[
 		p('See this LPS server\'s status, state and inject events from:'),
 		\serverLinks([LPS_ID-Has2d])|Displayer
@@ -106,11 +106,11 @@ user:lps_postmortem_filename(FilePath) :-
 	concat_atom([UD,Hash,'.lpst'],FilePath).
 
 % Launch the current window's program in background; BEWARE, this requires upcoming authentication, cycles budget, etc.!!!!
-user:serve(lpsServer(ThreadID,Has2d)) :-
+user:serve(lpsServer(ThreadID,Has2d,MinCT)) :-
 	check_user_server_usage,
-	Preamble = (visualizer:has_d_clauses -> Has2d=true; Has2d=false),
+	Preamble = ((visualizer:has_d_clauses -> Has2d=true; Has2d=false), interpreter:minCycleTime_(MinCT)),
 	% current logging is bound in check_log_size, but you may want to use 'silent' in production:
-	interpreter:go(_, [background(ThreadID),/*silent,*/swish,dc,preamble_goal(Preamble,Has2d)]). 
+	interpreter:go(_, [background(ThreadID),/*silent,*/swish,dc,preamble_goal(Preamble,Has2d+MinCT)]). 
 
 check_user_server_usage :-
 	lps_user(User),
@@ -425,7 +425,7 @@ twoD(Request) :-
 	header_style(Style),
 	(Status==running ->
 		format(string(MANAGER_URL),"/lps_server/manager/~w",[LPS_ID]),
-		twoDviewElements(LPS_ID,true,Resources,Script,Canvas),
+		twoDviewElements(LPS_ID,0,true,Resources,Script,Canvas),
 		append(Resources,[Script],JS),
 		reply_html_page([ title([LPS_ID,' 2d display'])|JS], [ 
 			h2([Style],['2d display for ',a([href(MANAGER_URL),target('_blank')],LPS_ID),':']), Canvas,
@@ -436,16 +436,16 @@ twoD(Request) :-
 	).
 
 % twoDviewElements(+LPS_ID,+WaitForWindowLoading,-CommonResources,-Script,-Canvas)
-twoDviewElements(LPS_ID, WaitForWindow, [
+twoDviewElements(LPS_ID, MinCT, WaitForWindow, [
 	script(src("/bower_components/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
 	script(src("/lps/2dWorld.js"),[]), 
 	script(src("/lps/2dWorld_lazy.js"),[]) ], 
-	\js_script({|javascript(LPS_ID,MY_SELECTOR,WaitForWindow)||
+	\js_script({|javascript(LPS_ID,MY_SELECTOR,MinCT,WaitForWindow)||
 		var myWorld = twoDworld();
 		var sampler = sampler_for2d(LPS_ID,myWorld);
 		var startMyPaperJS = function(){
 			var JQcanvas = jQuery(MY_SELECTOR);
-			myWorld.initPaper(JQcanvas.get(0),false); // this loads PaperJS
+			myWorld.initPaper(JQcanvas.get(0),false,MinCT); // this loads PaperJS
 		};
 		if (WaitForWindow=="true") window.onload = startMyPaperJS;
 		else startMyPaperJS();

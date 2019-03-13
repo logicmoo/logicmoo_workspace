@@ -1,4 +1,5 @@
 // Used by lps_2d_renderer.pl
+// Supports both "eager" (postmortem, all states and events available) and "lazy" (one cycle sampled at a time from the running program) displays
 function twoDworld() {
 	
 	// IE oblige... cf. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -29,11 +30,7 @@ function twoDworld() {
 	
 	function killAllObjects(){
 		console.log("killAllObjects");
-		$.each(paperEvents,function(id,po){
-			console.log("removing event "+id);
-			removePaperObject(po);
-			delete paperEvents[id];
-		});
+		killAllEvents();
 		$.each(paperFluents,function(id,po){
 			console.log("removing fluent "+id);
 			removePaperObject(po);
@@ -54,6 +51,14 @@ function twoDworld() {
 				delete paperEvents[id];
 			}
 		}
+	}
+	
+	function killAllEvents(){
+		$.each(paperEvents,function(id,po){
+			// console.log("removing event "+id);
+			removePaperObject(po);
+			delete paperEvents[id];
+		});
 	}
 
 	function createEvents(cycle){
@@ -90,18 +95,24 @@ function twoDworld() {
 		//console.log("-- displayFluents for cycle "+cycle);
 		if (cycle>=cycles.length)
 			console.log("ERROR: displayFluents for cycle "+cycle+ "...??");
-		displayFluentsForOne(cycles[cycle]);
+		displayObjectsForOne(cycles[cycle],false);
 	}
 	
 	// Handle one cycle, given as array of operations
-	function displayFluentsForOne(cycleOps){
+	function displayObjectsForOne(cycleOps,displayEvents){
 		for (var c=0; c<cycleOps.length; c++){
 			var op = cycleOps[c];
 			var props = op.create;
 			//console.log("--- op "+c+": "+JSON.stringify(op));
 			if (props){
-				if (getProp(props,'event')) 
+				if (getProp(props,'event')) {
+					if (displayEvents) {
+						var eid = getProp(props,'id');
+						// console.log("creating EVENT "+eid);
+						paperEvents[eid] = newPaperObject(props);
+					}
 					continue;
+				}
 				// fluent creation:
 				var id = getProp(props,'id');
 				// console.log("creating FLUENT "+id);
@@ -124,6 +135,7 @@ function twoDworld() {
 				/* For now we're not updating incrementally, commenting this out:
 				var allProps = fluentProps[ID];
 				Object.assign(allProps,op.newProps);*/
+				// TODO: consider using Item.tween
 				var allProps = op.newProps;
 				removeFluent(ID);
 				paperFluents[ID] = newPaperObject(allProps);
@@ -475,17 +487,19 @@ function twoDworld() {
 	
 	}
 	
-	// used for lazy operation only:
-	var sampling=false;
-	var sampler = null;
 	function onFrame_lazy(event){
-		if(sampling) return; // waiting for a new sample
-		// This trivial policy is probably too impatient; we could get minCycleTime and estimate
+		// Is it time to kill events created from the last sample?
+		// console.log("event.count:"+event.count);
+		if (Date.now()-lastSampledTime >= animationHalfSlice()/60*1000) {
+			killAllEvents();
+		}
+		if (sampling) return; // waiting for a new sample
+		// This trivial policy is probably too impatient; we could perhaps use minCycleTime and estimate
 		// when is it worthwhile to sample the lps.swi server again:
 		sampling=true;
 		var toSend = lps_events.slice(); // clone...is this really necessary??
 		lps_events = [];
-		sampler.load(toSend); // fetches current LPS state and calls displayFluentsForOne_lazy below
+		sampler.load(toSend); // fetches current LPS state and calls displayForOneCycle_lazy below
 	}
 	
 	// This may need to be called several times, if rasters are loading
@@ -531,19 +545,25 @@ function twoDworld() {
 	/** Load and init PaperJS in the given canvas;
 	@param {Object} DOMcontainer
 	@param {String} eager whether onFrame animation will feed eagerly from a cycles array, or lazily a cycle at a time
+	@param {Integer} minimum cycle time (seconds) specified in the LPS program; 0 if unknown
 	*/
-    function initPaper(DOMcontainer,eager){
+    function initPaper(DOMcontainer,eager,MinCT){
 		// TODO? preprocess properties: replace Point, Size; scale view, with zoom or scale; possibly at cycle 0
 		// This should probably be included differently...
 		$.ajax({url:"/lps/bower_components/paper/dist/paper-core.js", dataType:"script", cache: true, success:function() {  
 			//mylog("Loaded paperjs");
 			WHITE_COLOR = new paper.Color(255,255,255);
+			minimumCycleTime = MinCT;
 			var canvas = DOMcontainer; // must be a DOM object, not a jQuery object...
 			// Create an empty project and a view for the canvas:
 			paper.setup(canvas);
 			if (eager)
 				paper.view.onFrame = onFrame;
 			else {
+				if (MinCT==0) {
+					framesPerCycle = 1;
+					console.log("WEIRD minCycleTime");
+				} else framesPerCycle = Math.round(60*MinCT);
 				paper.view.onFrame = onFrame_lazy;
 				myEventsTool = new paper.Tool();
 				myEventsTool.onMouseDown = self.eventHandler;
@@ -553,7 +573,7 @@ function twoDworld() {
 			}
 		} });
     }
-
+	// used only for "eager" displaying, called by lps_2d_renderer.pl:
 	function initCycle(TwoD){
 		cycles_ = TwoD.cycles; 
 		if (!cycles_ || cycles_.length==0){
@@ -574,7 +594,9 @@ function twoDworld() {
 		return true;
 	}
 	
-	var zeroCount = null; // as obtained from event.count
+	var minimumCycleTime = 0; // as declared in the LPS program
+	var eventsLifetime = 0; // number of frames event objects are displayed
+	var zeroCount = null; // as obtained from event.count; moment of last (eager) animation start/resume
 	var didResize = false;
 	var endOfTime; // ibidem
 	var rastersToLoad = 0; // Raster objects not yet initialized/loaded
@@ -592,8 +614,13 @@ function twoDworld() {
 	// array of arrays, one for each cycle; each cycle array has an operation object
 	// The object properties may be a Javascript object (for a simple display object)
 	// or an array of display object props, for composite objects
+	// used only in "eager" animations
 	var cycles = []; 
 	
+	// used for lazy operation only:
+	var sampling=false;
+	var sampler = null;
+	var lastSampledTime = 0; // when did we receive the last sample (mS)
 	var myEventsTool = null;
 	var lps_events = []; // queue
 	
@@ -602,11 +629,12 @@ function twoDworld() {
 		initCycle: initCycle,
 		initPaper: initPaper,
 		// This is called back by sampler.load():
-		displayFluentsForOne_lazy: function(ops,new_cycle){
+		displayForOneCycle_lazy: function(ops,new_cycle){
 			if (new_cycle==undefined){
 				paper.view.onFrame = null; // stops the animation
 			} else {
-				displayFluentsForOne(ops);
+				lastSampledTime = Date.now();
+				displayObjectsForOne(ops,true);
 				cycle=new_cycle;
 				if (!didResize){ 
 					resizeWorld();
