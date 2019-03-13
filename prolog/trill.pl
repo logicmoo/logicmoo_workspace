@@ -24,7 +24,7 @@ details.
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1,
-                 hierarchy/1, reload_kb/1] ).
+                 hierarchy/1, reload_kb/1, kb_info/0] ).
 
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
@@ -113,7 +113,7 @@ load_owl_kb_from_string(_:String):-
 %defined in utility_translation
 :- multifile add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1,
              remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
-             hierarchy/1.
+             hierarchy/1, kb_info/0.
 
 /**
  * add_kb_prefix(:ShortPref:string,++LongPref:string) is det
@@ -176,6 +176,19 @@ load_owl_kb_from_string(_:String):-
  *
  * This predicate searches in the loaded knowledge base axioms that unify with Axiom.
  */
+ 
+ /**
+ * hierarchy(:Hier:hierarchy) is det
+ *
+ * This predicate returns the hierarchy built during the initialization.
+ */
+ 
+ /**
+ * kb_info is det
+ *
+ * This predicate prints information about the KB.
+ */
+ 
 :- multifile axiom/1.
 /*axiom(M:Axiom):-
   M:ns4query(NSList),

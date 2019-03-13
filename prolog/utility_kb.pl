@@ -181,75 +181,88 @@ check_disjoint(KB0,KB):-
   KB=KB0.put(hierarchy,TreeH),!.
 
 %=========================================================================================================
+
+:- multifile trill:kb_info/0.
+trill:kb_info:-
+  utility_translation:get_module(M),
+  M:hierarchy(H),
+  print_hierarchy(H.hierarchy,H.classes),
+  length(H.individuals,NI),
+  format("~n~n=* General Info *=~n~n",[]),
+  format("Classes:     ~d~n",[H.nClasses]),
+  format("Individuals: ~d~n",[NI]),
+  format("~n==================~n",[H.nClasses,NI]).
+
+
 print_hierarchy :-
   utility_translation:get_module(M),
   M:hierarchy(H),
-  stampa(H.hierarchy,H.classes).
+  print_hierarchy(H.hierarchy,H.classes).
   
   
 %==========================================================================================================
-%Predicato 1  
-trovaN(Lista,StampaLista) :-
-                           member(n-L,Lista),
-                           cercaInL(L,[],Out,Lista),
-                           delete(Lista,n-L,LHelp),
-                           cancella(Out,LHelp,ListaIntermedia),
-                           append(ListaIntermedia,[n-Out],StampaLista).
+% Collecting unsat classes and cleaning hier
+find_n(Hier0,Hier) :-
+  member(n-L,Hier0),
+  find_subclass_of_n(L,[],Out,Hier0),
+  delete(Hier0,n-L,Hier1),
+  remove_from_hier(Out,Hier1,Hier2),
+  append(Hier2,[n-Out],Hier).
 
-cancella([],Canc,Canc).
+remove_from_hier([],Hier,Hier).
 
-cancella([TestaOut|CodaOut],LHelp,ListaIntermedia):- 
-														delete(LHelp,TestaOut-_,Canc),
-														cancella(CodaOut,Canc,ListaIntermedia).
+remove_from_hier([H|T],Hier0,Hier):- 
+  delete(Hier0,H-_,Hier1),
+  remove_from_hier(T,Hier1,Hier).
 
-cercaInL([],Acc,Acc,_).
+find_subclass_of_n([],Acc,Acc,_).
 
-cercaInL([TestaL|CodaL],Acc,ListaOutput,Lista):- 
-													member(TestaL-L2,Lista),!,
-													cercaInL(L2,Acc,ListaHelp,Lista),
-													cercaInL(CodaL,[TestaL|ListaHelp],ListaOutput,Lista).
+find_subclass_of_n([H|T],Acc,ListOutput,Hier):- 
+  member(H-L2,Hier),!,
+  find_subclass_of_n(L2,Acc,ListaHelp,Hier),
+  find_subclass_of_n(T,[H|ListaHelp],ListOutput,Hier).
 								
-cercaInL([TestaL|CodaL],Acc,ListaOutput,Lista):- 
-													cercaInL(CodaL,[TestaL|Acc],ListaOutput,Lista).
+find_subclass_of_n([H|T],Acc,ListOutput,Hier):- 
+  find_subclass_of_n(T,[H|Acc],ListOutput,Hier).
 %===========================================================================================================
-%predicato 2
-stampa(Lista,D):-
-					trovaN(Lista,StampaLista),
-					stampa(StampaLista,0,D),
-					stampa(StampaLista,n,D).
+% Print the hierarchy
+print_hierarchy(Hier0,Classes):-
+					find_n(Hier0,Hier),
+					print_hierarchy(Hier,0,Classes),
+					print_hierarchy(Hier,n,Classes).
 
-writeMia(X):- 
+print_hier_class(X):- 
 				is_list(X),!,
-				stampaUguale(X).
-writeMia(X):- 
+				print_equiv_classes(X).
+print_hier_class(X):- 
 				write(X).
 					
-stampaUguale([]).
-stampaUguale([Testa]):- write(Testa).					
-stampaUguale([Testa|Coda]):-
-								write(Testa),write('='),
-								stampaUguale(Coda).
+print_equiv_classes([]).
+print_equiv_classes([H]):- write(H).					
+print_equiv_classes([H|T]):-
+								write(H),write(' = '),
+								print_equiv_classes(T).
 						
-stampa(Lista,Val,D):- 
-    					member(Val-L,Lista),!,
+print_hierarchy(Hier,Class,Classes):- 
+    					member(Class-L,Hier),!,
 						%chiamo la mia write per vedere se Val è lista o meno
-    					writeMia(D.get(Val)),nl,
-    					stampaDentro(L,1,Lista,D).
+    					print_hier_class(Classes.get(Class)),nl,
+    					print_hierarchy_int(L,1,Hier,Classes).
 						
 
-stampaDentro([],_,_,_).
+print_hierarchy_int([],_,_,_).
 
-stampaDentro([TestaL|CodaL],Cont,Lista,D):-	
+print_hierarchy_int([TestaL|CodaL],Cont,Lista,D):-	
 												tab(Cont),
 												%cotrollo che TestaL sia una lista con la mia write
-												writeMia(D.get(TestaL)),nl,
+												print_hier_class(D.get(TestaL)),nl,
 												member(TestaL-L2,Lista),!,
 												NewCont is Cont+1,
-												stampaDentro(L2,NewCont,Lista,D),
-												stampaDentro(CodaL,Cont,Lista,D).
+												print_hierarchy_int(L2,NewCont,Lista,D),
+												print_hierarchy_int(CodaL,Cont,Lista,D).
 												
-stampaDentro([_|CodaL],Cont,Lista,D):-
-												stampaDentro(CodaL,Cont,Lista,D).
+print_hierarchy_int([_|CodaL],Cont,Lista,D):-
+												print_hierarchy_int(CodaL,Cont,Lista,D).
 %===========================================================================================================
 check_disjoint_int([],_,[]).
 
