@@ -533,6 +533,9 @@ syntax2p_literal((if Cond then Then else Else),Vars,Translator,[T1,T2],ET,lps_de
 % alternative syntax for conditional (even though only the above will be used for translation from internal form):
 syntax2p_literal((Cond -> Then ; Else),Vars,Translator,Interval,ET,Spec,(CondW->ThenW;ElseW)) :- !,
 	syntax2p_literal((if Cond then Then else Else),Vars,Translator,Interval,ET,Spec,(CondW->ThenW;ElseW)).
+% if-then form, useful for "nested implications":
+syntax2p_literal((if Cond then Then),Vars,Translator,Interval,ET,lps_delimiter-[lps_delimiter-NiceC,NiceT],(CondW->ThenW;[true])) :- !,
+	syntax2p_literal((if Cond then Then else true),Vars,Translator,Interval,ET,lps_delimiter-[lps_delimiter-[NiceC],lps_delimiter-[NiceT,_NiceE]],(CondW->ThenW;[true])).
 % event cases first...
 syntax2p_literal(NT,_Vars,lps2p,[T1,T2],ET,event-NC,happens(NEA,T1,T2)) :- 
 	(nonvar(NT) -> ToInternal=true, NT=..[EA,LT] ; ToInternal=(false), NEA=..[EA,NL]),
