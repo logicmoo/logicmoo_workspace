@@ -375,10 +375,11 @@ display_sample(Request) :-
 	).
 
 % TODO: normalize names with lps.js
-prepare_events_for_lps([D|Dicts],[E|Events]) :- !,
+prepare_events_for_lps([D|Dicts],[D|Events]) :- atomic(D), !,
+	prepare_events_for_lps(Dicts,Events).
+prepare_events_for_lps([D|Dicts],[E|Events]) :- is_dict(D), !,
 	atomic_list_concat([lps_,D.type],EF),
 	catch(term_string(Term,D.lps_id),_,Term=D.lps_id),
-	Term=..LL, 
 	E=..[EF,Term,D.x,D.y], prepare_events_for_lps(Dicts,Events).
 prepare_events_for_lps([],[]).
 
@@ -386,6 +387,7 @@ prepare_events_for_lps([],[]).
 % This will execute in the thread of the LPS program in background, thus accessing its predicate database
 % (GUI) Events injected here will be "posted" via asserted facts. TODO: unify event handling...
 provide_events_get_fluents_events_actions(InputEvents,Timeless,Ops) :-
+	% mylog(inputEvents-InputEvents),
 	Cond = (interpreter:lps_program_module(M), M:clause(d(X,_),_)), % Peek into d/2 clause heads, without depending on body arithmetic
 	MaxTime = 0.01, % seconds
 	catch( call_with_time_limit(MaxTime,(
@@ -404,7 +406,10 @@ provide_events_get_fluents_events_actions(InputEvents,Timeless,Ops) :-
 		; append(Fluents,EventsActions,Terms)),
 	% Each term will be a t(Literal,Type), where Type is action or event or fluent
 	visualizer:collect_display_specs_lazy(Terms,Ops),
-	forall(member(IE,InputEvents),interpreter:postUIevent(IE)).
+	% Special handling of pause/resume events:
+	( select(lps_pause,InputEvents,InputEvents_) -> interpreter:set_paused(true); InputEvents=InputEvents_),
+	( select(lps_resume,InputEvents_,InputEvents__) -> interpreter:set_paused(false); InputEvents_=InputEvents__),
+	forall(member(IE,InputEvents__),interpreter:postUIevent(IE)).
 
 /* Ideas for compacting communication, using deltas:
 ord_subtract(LastSample,Current,Delta),...
@@ -449,4 +454,4 @@ twoDviewElements(LPS_ID, MinCT, WaitForWindow, [
 		};
 		if (WaitForWindow=="true") window.onload = startMyPaperJS;
 		else startMyPaperJS();
-	|}), canvas([resize,id(MY_CANVAS)],[])) :- gensym(my_canvas,MY_CANVAS), atom_concat('#',MY_CANVAS,MY_SELECTOR).
+	|}), canvas([title="Alt-click to Pause/Resume",resize,id(MY_CANVAS)],[])) :- gensym(my_canvas,MY_CANVAS), atom_concat('#',MY_CANVAS,MY_SELECTOR).

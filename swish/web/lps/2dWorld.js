@@ -629,6 +629,7 @@ function twoDworld() {
 	var lastSampledTime = 0; // when did we receive the last sample (mS)
 	var myEventsTool = null;
 	var lps_events = []; // queue
+	var running = true; // toggle flag for pause/resume
 	
 	// available entry points to functions
 	var self = {
@@ -640,7 +641,8 @@ function twoDworld() {
 				paper.view.onFrame = null; // stops the animation
 			} else {
 				lastSampledTime = Date.now();
-				displayObjectsForOne(ops,true);
+				if (running) // avoid events to reappear on a paused computation
+					displayObjectsForOne(ops,true);
 				cycle=new_cycle;
 				if (!didResize){ 
 					resizeWorld();
@@ -667,7 +669,11 @@ function twoDworld() {
   			// could also use project's hitTest(point[, options])
   			//console.log("event item id:"+event.item.id);
   			// console.log("event item lps_id:"+event.item.lps_id);
-  			lps_events.push({lps_id:(event.item?event.item.lps_id:null),x:event.point.x,y:event.point.y,type:event.type});
+  			if (event.modifiers.alt && event.type=="mousedown") {
+  				running = !running;
+  				console.log("Alt-click detected, new running=="+running);
+  				lps_events.push((running?"lps_resume":"lps_pause"));
+  			} else lps_events.push({lps_id:(event.item?event.item.lps_id:null),x:event.point.x,y:event.point.y,type:event.type});
   			
 		}
 	}

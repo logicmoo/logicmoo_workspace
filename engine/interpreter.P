@@ -49,7 +49,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	bindAllVars/1, lps_welcome_message/0, endTime/1, simulatedRealTimeBeginning/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1,
 	background_execution/7, inject_events_fetch_fluents/5, inject_events/3, get_fluents/4, get_rtb_fluent_event_templates/5,
 	premature_system_action/1,
-	lps_ask/2, lps_ask/3, lps_outcome/2, lps_save_finish_execution/1]).
+	lps_ask/2, lps_ask/3, lps_outcome/2, lps_save_finish_execution/1, set_paused/1]).
 
 % This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
@@ -1985,6 +1985,12 @@ minCycleTime_(0.25) :- option(swish), option(background(_)), !.
 minCycleTime_(0.001) :- option(background(_)), !.
 minCycleTime_(0).
 
+:- thread_local engine_paused/0. % true if the engine is supposed to answer_thread_queries and nothing more
+
+set_paused(true) :- assert(engine_paused).
+set_paused(false) :- retractall(engine_paused).
+
+
 %  cycle(PartialReactiveRules,GoalState,PendingResponses,StateFlag)
 %  GoalState is a list (conjunction) of goal(Id,Discard,Failure,DisjunctionFailures,SharedVars,EventAncestors,Tree)
 %  Tree is a list representing the current branch of the tree.
@@ -1994,21 +2000,21 @@ cycle(Ri, Gi, StateFlag) :- cycle(Ri, Gi, true, StateFlag).
 cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 	current_time(Time), endTime(M), M < Time,
 	!,
-    	answer_thread_queries, PendingResponses,
+    answer_thread_queries, PendingResponses,
 	do_write([nl, ' Simulation time is up. Unsolved goals: ',nl,pprint_goal(Gi)]).
 cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 	maxRealTime(MaxRT),
 	get_real_time(Now), real_time_beginning(Begin), Duration is Now - Begin,
 	Duration > MaxRT,
 	!,
-    	answer_thread_queries, PendingResponses,
+    answer_thread_queries, PendingResponses,
 	do_write([nl, ' Real time is up. Unsolved goals: ',nl, pprint_goal(Gi)]).
 cycle(_Ri, Gi, PendingResponses, _StateFlag) :-
 	current_time(Time),  
 	% to avoid persisting in the saved state:
 	(uretract(happens(lps_terminate,T1,T2)), Cause=unknown ; uretract(happens(lps_terminate(Cause),T1,T2))),
 	!,
-    	answer_thread_queries, PendingResponses,
+    answer_thread_queries, PendingResponses,
 	(Time \== T2 -> do_write([nl,'*** Weird timing:', happens(lps_terminate,T1,T2), ' at ',Time]) ; true),
 	test(events,Time,[lps_terminate(Cause)]),
 	do_write([nl, 'Terminated due to ', lps_terminate(Cause), '. Unsolved goals: ',nl, pprint_goal(Gi)]).
@@ -2017,7 +2023,7 @@ cycle(Ri, Gi, PendingResponses, _StateFlag) :-
 	% as the saved program would resume with... immediate lps_terminate.
 	retract(save_finish_execution(File)), 
 	!, 
-    	answer_thread_queries, PendingResponses,
+    answer_thread_queries, PendingResponses,
 	save_execution(File,Ri,Gi,_),
 	do_write([nl, 'Terminated due to lps_save_finish_execution. Saved to file ',File]).
 cycle(Ri, Gi, PendingResponses, StateFlag) :-
@@ -2031,119 +2037,120 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 			repeat, answer_thread_queries, sleep(1), get_time(Later), Later>=Until
 		)
 	),
-	( option(cycle_hook(Predicate,_,_)) -> 
-		HookGoal =.. [Predicate,ExternalObservations],
-	(HookGoal -> true ; do_write([nl,'* LPS cycle hook goal failed, terminating.']), fail)
-	; ExternalObservations=[]),
+	(engine_paused -> cycle(Ri, Gi, PendingResponses, StateFlag) 
+		; 
+		( option(cycle_hook(Predicate,_,_)) -> 
+			HookGoal =.. [Predicate,ExternalObservations],
+		(HookGoal -> true ; do_write([nl,'* LPS cycle hook goal failed, terminating.']), fail)
+		; ExternalObservations=[]),
 
-	current_time(Time),  Previous is Time - 1 ,Next is Time +1,
+		current_time(Time),  Previous is Time - 1 ,Next is Time +1,
 
-	(option(manual) ->read_obs(UserObservations) ; UserObservations=[]),
-	append(UserObservations,ExternalObservations,ExternalObservations_),
+		(option(manual) ->read_obs(UserObservations) ; UserObservations=[]),
+		append(UserObservations,ExternalObservations,ExternalObservations_),
 
-	% At this point last cycle events are still available
-    	% TODO: ExternalObservations to be injected as new events
-	findall(Action, happens(Action, Previous, Time), Actions),
-%	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
-%	write_verbose([nl, ' Events and actions from ', Previous, ' to
-%	', Time,' are ',Actions,nl]),
+		% At this point last cycle events are still available
+			% TODO: ExternalObservations to be injected as new events
+		findall(Action, happens(Action, Previous, Time), Actions),
+		%	write_verbose([nl, '----- time is now ',Time,' -----',nl]),
+		%	write_verbose([nl, ' Events and actions from ', Previous, ' to
+		%	', Time,' are ',Actions,nl]),
 
-	( (Actions \= [] ; Time<3  ; option(debug) ) ->
-		(simulatedRealTimeBeginning(_) -> 
-			once(state(real_time(RT))), format_time(atom(RTA),"%FT%H:%M:%S",RT), % format compatible with parse_time 
-			do_write([nl, '----- time is now ',Time,' (',RTA,') -----',nl])
-			; do_write([nl, '----- time is now ',Time,' -----',nl])
-			),
+		( (Actions \= [] ; Time<3  ; option(debug) ) ->
+			(simulatedRealTimeBeginning(_) -> 
+				once(state(real_time(RT))), format_time(atom(RTA),"%FT%H:%M:%S",RT), % format compatible with parse_time 
+				do_write([nl, '----- time is now ',Time,' (',RTA,') -----',nl])
+				; do_write([nl, '----- time is now ',Time,' -----',nl])
+				),
 		
-		do_write([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl])
-		;
-		(0 is Time mod 10 -> 
-			do_write([Time,'...']),
-			(0 is Time mod 200 -> do_write([nl]); true)
-			; true)
-	),
+			do_write([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl])
+			;
+			(0 is Time mod 10 -> 
+				do_write([Time,'...']),
+				(0 is Time mod 200 -> do_write([nl]); true)
+				; true)
+		),
 	
-	test(events,Time,Actions),
-	enter_step_0, % during updateFluents we need a hack to query the previous state, e.g. to locally change "current time"
-	(option(non_prospective) -> time_limited(updateFluents,updateFluents(Time),Timeout) 
-	; true),
-
-	PendingResponses,
-
-	leave_step_0,
-	% This processes antecedents of rules:
-	time_limited(process, (option(dc) -> dc_process(Ri, [], NRi, [], NewGi_) ; process(Ri, [], NRi, [], NewGi_)), Timeout),
-	split_goals_and_events(NewGi_,NewGi,CompositeEvents),
-	(nonvar(Timeout) -> NRi=Ri, NewGi=[] ; true),
-	write_verbose([nl,
-		' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
-		' New goals at time ',Time, nl,NewGi, nl]),
-	append(Gi, NewGi, NGi), % Puts new goals at the end of the queue.
-	write_verbose([nl,' Current goal tree at time ',Time, nl,' All: ',NGi,nl]),
-	forall( action_(A), uretractall(tried(_, _, lpsClause(happens(A, _, _), [])))),
-	uretractall(happens(_, _, _)),
-
-	% these events are imposed, as they stem from previous actions; no point in checking preconditions here:
-	(member(Event,CompositeEvents), uassert(Event), fail; true), 
-	(CompositeEvents=[_|_] -> 
-		test(composites,Time,CompositeEvents),
-		enter_step_0,
-		%time_limited(updateComposites,updateNextStateFluents(Previous),Timeout), 
-		updateNextStateFluents(Previous,false,StateFlag), 
-		leave_step_0,
-		copyNextState,
-		(option(log_composites) -> do_write([nl, ' Composite Events to ', Time,' are ',CompositeEvents,nl]) ; true)
+		test(events,Time,Actions),
+		enter_step_0, % during updateFluents we need a hack to query the previous state, e.g. to locally change "current time"
+		(option(non_prospective) -> time_limited(updateFluents,updateFluents(Time),Timeout) 
 		; true),
+
+		PendingResponses,
+
+		leave_step_0,
+		% This processes antecedents of rules:
+		time_limited(process, (option(dc) -> dc_process(Ri, [], NRi, [], NewGi_) ; process(Ri, [], NRi, [], NewGi_)), Timeout),
+		split_goals_and_events(NewGi_,NewGi,CompositeEvents),
+		(nonvar(Timeout) -> NRi=Ri, NewGi=[] ; true),
+		write_verbose([nl,
+			' Process reactive rules at time ',Time, nl,'Old:  ',Ri, nl, ' New:  ', NRi,  nl,
+			' New goals at time ',Time, nl,NewGi, nl]),
+		append(Gi, NewGi, NGi), % Puts new goals at the end of the queue.
+		write_verbose([nl,' Current goal tree at time ',Time, nl,' All: ',NGi,nl]),
+		forall( action_(A), uretractall(tried(_, _, lpsClause(happens(A, _, _), [])))),
+		uretractall(happens(_, _, _)),
+
+		% these events are imposed, as they stem from previous actions; no point in checking preconditions here:
+		(member(Event,CompositeEvents), uassert(Event), fail; true), 
+		(CompositeEvents=[_|_] -> 
+			test(composites,Time,CompositeEvents),
+			enter_step_0,
+			updateNextStateFluents(Previous,false,StateFlag), 
+			leave_step_0,
+			copyNextState,
+			(option(log_composites) -> do_write([nl, ' Composite Events to ', Time,' are ',CompositeEvents,nl]) ; true)
+			; true),
 	
-	% only now do we have the full state:
-	findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents), 
-	test(fluents,Time,Fluents),
-	% ((Actions \= [] ; Time<3 ; CompositeEvents \= [], option(log_composites)) ->
-	((\+ state_is_clean(StateFlag)) ->
-		do_write([nl,' State at time ',Time,' is ',Fluents, nl]);
-		true),
-	clean_state_flag(NewStateFlag),
-	% This resolves goals in the goal state.
-	% next_state(_) is now empty
-	( 
-		(option(dc) -> 
-			time_limited(resolveAndUpdate, (
-				% external events may be rejected, introducing Prolog choicepoints in updateEvents, that may be backtacked to
-				% all the way from a violated precondition below; notice this is NOT the case for (program declared) observations:
-				% these may be rejected or not but only immediately, and do not introduce choicepoints
+		% only now do we have the full state:
+		findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents), 
+		test(fluents,Time,Fluents),
+		((\+ state_is_clean(StateFlag)) ->
+			do_write([nl,' State at time ',Time,' is ',Fluents, nl]);
+			true),
+		clean_state_flag(NewStateFlag),
+		% This resolves goals in the goal state.
+		% next_state(_) is now empty
+		( 
+			(option(dc) -> 
+				time_limited(resolveAndUpdate, (
+					% external events may be rejected, introducing Prolog choicepoints in updateEvents, that may be backtacked to
+					% all the way from a violated precondition below; notice this is NOT the case for (program declared) observations:
+					% these may be rejected or not but only immediately, and do not introduce choicepoints
+					updateEvents(Time, Next, NRi, NextGi, ExternalObservations_, ToReturn),
+					dc_resolve_goals(NGi,GoalTree), 
+					% if "prospecting", check all preconditions again, with the next state available:
+					% the following d_pre check is done for all, and not just for 'both' preconditions... to support one more check, after 
+					% the accumulated changes over the microstates in serializable actions, see updateNextStateFluents
+					( option(non_prospective) -> true ; 
+						updateNextStateFluents(Time,true,NewStateFlag), 
+						\+ (d_pre(_,Conds), holds_all(Conds,Time,Next), write_verbose(['Violated precondition:',Conds])) ) 
+					), Timeout)
+				; 
+				% DEPRECATED:
 				updateEvents(Time, Next, NRi, NextGi, ExternalObservations_, ToReturn),
-				dc_resolve_goals(NGi,GoalTree), 
-				% if "prospecting", check all preconditions again, with the next state available:
-				% the following d_pre check is done for all, and not just for 'both' preconditions... to support one more check, after 
-				% the accumulated changes over the microstates in serializable actions, see updateNextStateFluents
-				( option(non_prospective) -> true ; 
-					updateNextStateFluents(Time,true,NewStateFlag), 
-					\+ (d_pre(_,Conds), holds_all(Conds,Time,Next), write_verbose(['Violated precondition:',Conds])) ) 
-				), Timeout)
-			; 
-			% DEPRECATED:
-			updateEvents(Time, Next, NRi, NextGi, ExternalObservations_, ToReturn),
-			time_limited(resolve, resolve_tree(NGi, [], GoalTree), Timeout),
-			( option(non_prospective) -> time_limited(updateNextStateFluents2,updateNextStateFluents(Time,true,NewStateFlag), Timeout) ; true)
-		) 
-	; 
-		current_time(Time), % avoid cascading the following message to past cycles
-		length(Gi,Ngoals),
-		do_write([nl, ' Program has FAILED. ',Ngoals,' unsolved goals: ',nl,pprint_goal(Gi)]), 
-		%sort(Gi,Sorted), 
-		%once((member(Oldest,Sorted), Oldest = goal(_,_,_,_,_,_,_))), pprint_goal([nl, ' Oldest goal:',nl,Oldest,nl]),		
-		fail
-	),
-	% At this point we have both state and next_state available
-	(option(non_prospective) -> true ; copyNextState),
+				time_limited(resolve, resolve_tree(NGi, [], GoalTree), Timeout),
+				( option(non_prospective) -> time_limited(updateNextStateFluents2,updateNextStateFluents(Time,true,NewStateFlag), Timeout) ; true)
+			) 
+		; 
+			current_time(Time), % avoid cascading the following message to past cycles
+			length(Gi,Ngoals),
+			do_write([nl, ' Program has FAILED. ',Ngoals,' unsolved goals: ',nl,pprint_goal(Gi)]), 
+			%sort(Gi,Sorted), 
+			%once((member(Oldest,Sorted), Oldest = goal(_,_,_,_,_,_,_))), pprint_goal([nl, ' Oldest goal:',nl,Oldest,nl]),		
+			fail
+		),
+		% At this point we have both state and next_state available
+		(option(non_prospective) -> true ; copyNextState),
 	
-	(GoalTree = end -> % this will execute on timeout too
-		do_write([nl,' Exceeded number of steps. ',nl])	
-		;	
-		(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
-		next_time, 
-		!, % recover stack space... and no backtracking from cycle to cycle (search is carried on breath first in the goals list)
-		cycle(NRi, NextGi, ToReturn, NewStateFlag)
+		(GoalTree = end -> % this will execute on timeout too
+			do_write([nl,' Exceeded number of steps. ',nl])	
+			;	
+			(option(dc) -> NextGi=GoalTree ; removeSolvedGoals(GoalTree, [], NextGi)),
+			next_time, 
+			!, % recover stack space... and no backtracking from cycle to cycle (search is carried on breath first in the goals list)
+			cycle(NRi, NextGi, ToReturn, NewStateFlag)
+		)
 	).
 
 get_real_time(RT) :- system_fluent(real_time(RT),G), G, !.
