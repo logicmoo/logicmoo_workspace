@@ -122,8 +122,6 @@ typedef struct
 } expltablerow;
 
 
-
-
 static foreign_t ret_prob(term_t,term_t,term_t);
 static foreign_t ret_abd_prob(term_t,term_t,term_t,term_t);
 static foreign_t ret_map_prob(term_t,term_t,term_t,term_t);
@@ -174,7 +172,7 @@ expltablerow* expl_init_table(int varcnt);
 prob_abd_expl * expl_get_value(expltablerow *tab,  DdNode *node, int comp);
 void expl_add_node(expltablerow *tab, DdNode *node, int comp, prob_abd_expl value);
 void expl_destroy_table(expltablerow *tab,int varcnt);
-
+DdNode* get_node(DdNode *node,tablerow *tab);
 
 install_t install(void);
 void write_dot(environment * env, DdNode * bdd, FILE * file);
@@ -203,7 +201,7 @@ static foreign_t symmetric_dirichlet_sample_pl(term_t arg1,term_t arg2, term_t a
 static foreign_t discrete_sample_pl(term_t arg1,term_t arg2);
 static foreign_t initial_values_pl(term_t arg1, term_t arg2);
 
-DdNode* Probability_dd(environment *env, DdNode *current_node);
+DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table);
 void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value);
 int find_path(DdNode *node, double value, int **array, int *len);
 static foreign_t add_decision_var(term_t env_ref, term_t rule,term_t var_out);
@@ -1593,6 +1591,7 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   term_t out;
   DdNode *bdd, *node, *node1;
   environment *env;
+  tablerow *table;
 
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
@@ -1601,7 +1600,8 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   RETURN_IF_FAIL
  
   node1 = Cudd_BddToAdd(env->mgr,bdd);
-  node = Probability_dd(env,node1);
+  table=init_table(env->boolVars);
+  node = Probability_dd(env,node1,table);
 
   out = PL_new_term_ref();
   ret = PL_put_pointer(out,(void *)node);
@@ -1610,13 +1610,13 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   return(PL_unify(out,add_out));
 }
 
-DdNode* Probability_dd(environment *env, DdNode *current_node) {
+DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) {
   int index;
   double p;
   DdNode *addh, *addl;
-  DdNode *nodep;
-  DdNode *nodep1;
+  DdNode *nodep, *nodep1;
   DdNode *nodepa, *nodepb;
+  DdNode *nodekey, *result;
 
   if(Cudd_IsConstant(current_node)) { // if is terminal node
     if(Cudd_V(current_node) == 1) {
@@ -1626,13 +1626,23 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
       return Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 0);
     }
   }
+
+  // nodekey = Cudd_Regular(node);
+  // nodekey = get_node(current_node,table); 
   
-  addh = Probability_dd(env,Cudd_T(current_node));
-  addl = Probability_dd(env,Cudd_E(current_node));
+  // bypass per ora
+  // if(nodekey != NULL) {
+  //   return nodekey;
+  // }
+  
+  addh = Probability_dd(env,Cudd_T(current_node),table);
+  addl = Probability_dd(env,Cudd_E(current_node),table);
   index = Cudd_NodeReadIndex(current_node);
 
   if(env->vars[index].decision == 1) { // if decision var
-    return Cudd_addIte(env->mgr,current_node,addh,addl);
+    result = Cudd_addIte(env->mgr,current_node,addh,addl);
+    // add_node(table,result,-1);
+    return result;
   }
   else { // probability var
     p = env->probs[index];
@@ -1640,7 +1650,8 @@ DdNode* Probability_dd(environment *env, DdNode *current_node) {
     nodep1 = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) (1-p));
     nodepa = Cudd_addApply(env->mgr,Cudd_addTimes,nodep,addh);
     nodepb = Cudd_addApply(env->mgr,Cudd_addTimes,nodep1,addl);
-    
+    result = Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
+    // add_node(table,result,-1);
     return Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
   }
 }
@@ -1685,7 +1696,7 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
   RETURN_IF_FAIL
   ret = PL_get_pointer(add_B,(void *)&addB);
   RETURN_IF_FAIL
-  
+
   add_ret = Cudd_addApply(env->mgr,Cudd_addPlus,addA,addB);
   RETURN_IF_FAIL
 
@@ -2960,6 +2971,19 @@ void expl_add_node(expltablerow *tab, DdNode *node, int comp, prob_abd_expl valu
   tab[index].row[tab[index].cnt].key.comp = comp;
   tab[index].row[tab[index].cnt].value = value;
   tab[index].cnt += 1;
+}
+
+// try to reuse
+DdNode* get_node(DdNode *node, tablerow *tab) {
+  int index = Cudd_NodeReadIndex(node);
+  int i;
+
+  for(i = 0; i < tab[index].cnt; i++) {
+    if(tab[index].row[i].key == node) {
+      return tab[index].row[i].key;
+    }
+  }
+  return NULL;
 }
 
 prob_abd_expl * expl_get_value(expltablerow *tab,  DdNode *node, int comp) {
