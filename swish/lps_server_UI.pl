@@ -378,7 +378,7 @@ display_sample(Request) :-
 prepare_events_for_lps([D|Dicts],[E|Events]) :- !,
 	atomic_list_concat([lps_,D.type],EF),
 	catch(term_string(Term,D.lps_id),_,Term=D.lps_id),
-	Term=..LL, mylog(ll-LL),
+	Term=..LL, 
 	E=..[EF,Term,D.x,D.y], prepare_events_for_lps(Dicts,Events).
 prepare_events_for_lps([],[]).
 

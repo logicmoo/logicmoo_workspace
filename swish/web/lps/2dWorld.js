@@ -135,10 +135,12 @@ function twoDworld() {
 				/* For now we're not updating incrementally, commenting this out:
 				var allProps = fluentProps[ID];
 				Object.assign(allProps,op.newProps);*/
-				// TODO: consider using Item.tween
 				var allProps = op.newProps;
 				removeFluent(ID);
 				paperFluents[ID] = newPaperObject(allProps);
+				// considered using Item.tween, but got "paperFluents[ID].tween is not a function"
+				// tweening seems not to work with groups
+				// paperFluents[ID].tweenTo(allProps,animationHalfSliceMs());
 				
 			} else console.log("Unexpected op:"+JSON.stringify(props));
 		}
@@ -435,6 +437,10 @@ function twoDworld() {
 		return Math.floor(ANIMATION_HALF_SLICE*framesPerCycle);
 	}
 	
+	function animationHalfSliceMs(){
+		return animationHalfSlice()/60*1000;
+	}
+	
 	function onFrame(event) {
 		if (zeroCount===null) {
 			zeroCount = event.count;
@@ -490,7 +496,7 @@ function twoDworld() {
 	function onFrame_lazy(event){
 		// Is it time to kill events created from the last sample?
 		// console.log("event.count:"+event.count);
-		if (Date.now()-lastSampledTime >= animationHalfSlice()/60*1000) {
+		if (Date.now()-lastSampledTime >= animationHalfSliceMs()) {
 			killAllEvents();
 		}
 		if (sampling) return; // waiting for a new sample
