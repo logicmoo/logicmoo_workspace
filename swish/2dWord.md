@@ -111,4 +111,5 @@ lps_mousedrag(ID,X,Y)
 
 You need to declare these as ```events``` as usual. See examples ```life\_lazyGUI.pl``` and ```badlight\_user.pl```. X and Y are pixel coordinates in the whole scene. 
 
+Alt-clicking the scene pauses/resumes the LPS program execution, allowing the user (for example) to perform other clicks to appear as events in the next cycle. Notice that LPS cycle time is suspended, but not real time.
 
