@@ -319,8 +319,10 @@ Rule reactive bodies (consequents), as well as composite events / macro actions 
 
 The construct is roughly equivalent to
 
+```
 if_then_else(Condition,Then,Else) if Condition,Then.
 if_then_else(Condition,Then,Else) if not Condition, Else.
+```
 
 Condition is evaluated using negation as (finite) failure, so typically any fluents in Condition should have bound time.
 
