@@ -497,6 +497,7 @@ syntax2p_sequence(NS,Vars,Translator,Interval,NC,W) :-
 	syntax2p_sequence(NS,Vars,Translator,Interval,_IT,_ET,NC,W).
 
 % syntax2p_sequence(NS,Vars,Translator,[T1,T6],+IntervalType,ExplicitTime,NiceColouring,W)  if  IntervalType==single, T6 must be T1+1
+syntax2p_sequence(NS,_,_,_,_,_,_,W) :- var(NS), var(W), !, fail.
 syntax2p_sequence((L1,L2),Vars,Translator,[T1,T6],IT, ET, delimiter-[Spec1,Spec2],[PT1|PT2]) :- PT2 \== [], !,
 	syntax2p_literal(L1,Vars,Translator,[T2,T3], ETL, Spec1, PT1), 
 	syntax2p_sequence(L2,Vars,Translator,[T4,T5],IT,ETS,Spec2, PT2),
@@ -515,7 +516,6 @@ syntax2p_sequence((L1,L2),Vars,Translator,[T1,T6],IT, ET, delimiter-[Spec1,Spec2
 		( (ETL == (false), ETS == (false)) -> T4=T3 ; true),
 		T1=T2, T6=T5
 	).
-	
 syntax2p_sequence(true,_,_TT,[T,T],_,false,classify,[]) :- !.
 syntax2p_sequence(L,Vars,Translator,Interval,_,ET,Spec,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,ET,Spec,PT).
 
