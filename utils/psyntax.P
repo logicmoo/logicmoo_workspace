@@ -578,6 +578,10 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :-
 	!,
 	simple_event_colour(LT,EC),
 	NL=LT.
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- % to allow "meta eventing"
+	nonvar(LT), LT=happens(NL,T1,T2), 
+	!,
+	simple_event_colour(LT,EC).
 syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
 	var(L),
 	!,
@@ -620,6 +624,11 @@ syntax2p_literal(F,_Vars,lps2p,[T1,T2],false,EF,holds(NL,T)) :-
 	!,
 	simple_fluent_colour(F,EF),
 	NL=F, T=T1, T=T2.
+syntax2p_literal(F,_Vars,lps2p,[T1,T2],false,EF,holds(NL,T)) :- % to allow meta "fluenting"
+	nonvar(F), F=holds(NL,T),
+	!,
+	simple_fluent_colour(F,EF),
+	T=T1, T=T2.
 syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,null,holds(NL,T)) :- 
 	var(L),
 	!,

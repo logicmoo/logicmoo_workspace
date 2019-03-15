@@ -267,8 +267,15 @@ my_swish_resources -->
 sandbox:safe_primitive(interpreter:lps_ask(_A,_B,_C)). 
 sandbox:safe_primitive(interpreter:lps_ask(_A,_B)). 
 sandbox:safe_primitive(interpreter:lps_outcome(_A,_B)). 
-
+sandbox:safe_primitive(interpreter:system_fluent(_)). 
 
 lps_ask(A,B,C) :- interpreter:lps_ask(A,B,C).
 lps_ask(A,B) :- interpreter:lps_ask(A,B).
 lps_outcome(A,B) :- interpreter:lps_outcome(A,B).
+/** 
+	system_fluent(Fluent) is det 
+
+	system_fluent(+Fluent)
+	Tests whether a given fluent is defined by the system (not declared by the user).
+*/
+system_fluent(Fl) :- interpreter:system_fluent(Fl).
