@@ -1438,6 +1438,7 @@ static foreign_t add_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
   v=&env->vars[env->nVars-1];
   v->abducible=0;
   v->query=0;
+  v->decision=0;
 
   ret=PL_get_integer(arg3,&v->nRule);
   RETURN_IF_FAIL
@@ -1498,6 +1499,7 @@ static foreign_t add_query_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
   v=&env->vars[env->nVars-1];
   v->query=1;
   v->abducible=0;
+  v->decision=0;
 
   probTerm=PL_copy_term_ref(arg2);
 
@@ -1640,19 +1642,21 @@ DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) 
   index = Cudd_NodeReadIndex(current_node);
 
   if(env->vars[index].decision == 1) { // if decision var
+  printf("qui %d\n",index);
     result = Cudd_addIte(env->mgr,current_node,addh,addl);
     // add_node(table,result,-1);
     return result;
   }
   else { // probability var
     p = env->probs[index];
+    printf("%f %d\n",p,index);
     nodep = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) p);
     nodep1 = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) (1-p));
     nodepa = Cudd_addApply(env->mgr,Cudd_addTimes,nodep,addh);
     nodepb = Cudd_addApply(env->mgr,Cudd_addTimes,nodep1,addl);
     result = Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
     // add_node(table,result,-1);
-    return Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
+    return result;
   }
 }
 
@@ -1692,9 +1696,9 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
 
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
-  ret = PL_get_pointer(add_A,(void *)&addA);
+  ret = PL_get_pointer(add_A,(void **)&addA);
   RETURN_IF_FAIL
-  ret = PL_get_pointer(add_B,(void *)&addB);
+  ret = PL_get_pointer(add_B,(void **)&addB);
   RETURN_IF_FAIL
 
   add_ret = Cudd_addApply(env->mgr,Cudd_addPlus,addA,addB);

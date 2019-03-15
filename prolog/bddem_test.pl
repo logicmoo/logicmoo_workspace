@@ -40,8 +40,8 @@ dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat):-
   or(Env,BDDOR,BDDRUNBU,BDDD).
 
 broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella):-
-  and(Env,Rainy,Umbrella,RU),
-  and(Env,RU,Windy,BDDBU).
+  and(Env,Rainy,Windy,RU),
+  and(Env,RU,Umbrella,BDDBU).
 
 :- begin_tests(prob, []).
 
@@ -282,13 +282,13 @@ check_sample(V):-
 test(probabilitdd):-
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
-  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
   
   broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
+  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
+  probability_dd(Env,BDDBU,ADDBU), 
   probability_dd(Env,BDDD,ADDD), % <- returns ADD from BDD
   add_prod(Env,ADDD,60,ADDDU), % <- computes the value utility*ADD
   
-  probability_dd(Env,BDDBU,ADDBU), 
   add_prod(Env,ADDBU,-40,ADDDUU),
   add_sum(Env,ADDDU,ADDDUU,ADDS), % <- sums two ADD
     
@@ -309,7 +309,7 @@ test(probabilitdd):-
   % write('BDDD: '),writeln(BDDD),
   % write('ADDD: '),writeln(ADDD),
   % create_dot(Env,BDDBU,"broken.dot"),
-  % create_dot(Env,ADDBU,"broken_add.dot"),
+   create_dot(Env,ADDBU,"broken_add.dot"),
   % create_dot(Env,BDDD,"dry.dot"),
   % create_dot(Env,ADDD,"dry_add_test.dot"),
   % create_dot(Env,ADDDU,"dry_add_scaled.dot"),
