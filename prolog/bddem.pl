@@ -1,7 +1,7 @@
 :- module(bddem,[
   init_em/1,init_ex/2,init/1,end_em/1,end_ex/1,end/1,
   one/2,zero/2,and/4,or/4,bdd_not/3,
-  ret_prob/3,equality/4,add_var/4,
+  ret_prob/3,equality/4,add_var/4, % <------- esportare anche equality?
   add_abd_var/4,ret_abd_prob/4,
   add_query_var/4,ret_map_prob/4,ret_vit_prob/4,
   onec/2,zeroc/2,andc/4,andcnf/4,bdd_notc/3,

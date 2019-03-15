@@ -22,8 +22,8 @@ v2_0(Env,R,Val,BDD):-
 prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat):-
   add_var(Env,[0.3,0.7],0,VRainy),
   add_var(Env,[0.5,0.5],1,VWindy),
-  add_decision_var(Env,2,VUmbrella),
   add_decision_var(Env,3,VRaincoat),
+  add_decision_var(Env,2,VUmbrella), % <- attenzione restituisce l'index del nodo, non il numero della var. salvare la corrispondenza
   equality(Env,VRainy,0,Rainy),
   equality(Env,VWindy,0,Windy),
   equality(Env,VUmbrella,0,Umbrella),
@@ -283,35 +283,51 @@ test(probabilitdd):-
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
   dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
-  
   broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
-  probability_dd(Env,BDDD,ADDD), % <- returns ADD from BDD
-  add_prod(Env,ADDD,60,ADDDU), % <- computes the value utility*ADD
   
   probability_dd(Env,BDDBU,ADDBU), 
   add_prod(Env,ADDBU,-40,ADDDUU),
-  add_sum(Env,ADDDU,ADDDUU,ADDS), % <- sums two ADD
-    
-  probability_dd(Env,Umbrella,ADDUMB),
-  add_prod(Env,ADDUMB,-2,ADDUMBOUT),
-  add_sum(Env,ADDS,ADDUMBOUT,ADDUMBOUTOUT),
 
   probability_dd(Env,Raincoat,ADDRAIN),
   add_prod(Env,ADDRAIN,-20,ADDRAINOUT),
-  add_sum(Env,ADDUMBOUTOUT,ADDRAINOUT,ADDRAINOUTOUT),
   
-  ret_strategy(Env,ADDRAINOUTOUT,S,C), % <- computes the best strategy
-  S =:= [2],
-  C =:= 43.0,
+  probability_dd(Env,Umbrella,ADDUMB),
+  add_prod(Env,ADDUMB,-2,ADDUMBOUT),
+
+  probability_dd(Env,BDDD,ADDD), % <- returns ADD from BDD
+  add_prod(Env,ADDD,60,ADDDU), % <- computes the value utility*ADD
+  
+  add_sum(Env,ADDDUU,ADDRAINOUT,AO1),
+  create_dot(Env,AO1,"bu_r.dot"),
+
+  add_sum(Env,AO1,ADDUMBOUT,AO2),
+  create_dot(Env,AO2,"bu_r_u.dot"),
+
+  add_sum(Env,AO2,ADDDU,AO),
+  create_dot(Env,AO,"bu_r_u_d.dot"),
+
+  % add_sum(Env,ADDDU,ADDDUU,ADDS), % <- sums two ADD
+    
+  % add_sum(Env,ADDS,ADDUMBOUT,ADDUMBOUTOUT),
+
+  % add_sum(Env,ADDUMBOUTOUT,ADDRAINOUT,ADDRAINOUTOUT),
+  
+  ret_strategy(Env,AO,S,C), % <- computes the best strategy
+  writeln(S),
+  writeln(C),
+  % S =:= [2],
+  % C =:= 43.0,
   % strategy(Env,ADDS,S,C),
   % nl,
   % write('BDDBU: '),writeln(BDDBU),
   % write('BDDD: '),writeln(BDDD),
   % write('ADDD: '),writeln(ADDD),
-  % create_dot(Env,BDDBU,"broken.dot"),
+  % create_dot(Env,BDDBU,"broken_bdd.dot"),
   % create_dot(Env,ADDBU,"broken_add.dot"),
   % create_dot(Env,BDDD,"dry.dot"),
-  % create_dot(Env,ADDD,"dry_add_test.dot"),
+  % create_dot(Env,ADDD,"dry_add.dot"),
+  % create_dot(Env,ADDUMB,"umbrella_add.dot"),
+  % create_dot(Env,ADDRAIN,"raincoat_add.dot"),
   % create_dot(Env,ADDDU,"dry_add_scaled.dot"),
   % create_dot(Env,ADDDUU,"umbrella_add_scaled.dot"),
   % create_dot(Env,ADDS,"sumtree.dot"),

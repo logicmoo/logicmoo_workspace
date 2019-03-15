@@ -201,7 +201,7 @@ static foreign_t symmetric_dirichlet_sample_pl(term_t arg1,term_t arg2, term_t a
 static foreign_t discrete_sample_pl(term_t arg1,term_t arg2);
 static foreign_t initial_values_pl(term_t arg1, term_t arg2);
 
-DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table);
+DdNode* Probability_dd(environment *env, DdNode *current_node, DdNode *init_node, tablerow *table);
 void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value);
 int find_path(DdNode *node, double value, int **array, int *len);
 static foreign_t add_decision_var(term_t env_ref, term_t rule,term_t var_out);
@@ -1601,7 +1601,7 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
  
   node1 = Cudd_BddToAdd(env->mgr,bdd);
   table=init_table(env->boolVars);
-  node = Probability_dd(env,node1,table);
+  node = Probability_dd(env,node1,bdd,table);
 
   out = PL_new_term_ref();
   ret = PL_put_pointer(out,(void *)node);
@@ -1610,7 +1610,7 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   return(PL_unify(out,add_out));
 }
 
-DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) {
+DdNode* Probability_dd(environment *env, DdNode *current_node, DdNode *init_node, tablerow *table) {
   int index;
   double p;
   DdNode *addh, *addl;
@@ -1635,12 +1635,12 @@ DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) 
   //   return nodekey;
   // }
   
-  addh = Probability_dd(env,Cudd_T(current_node),table);
-  addl = Probability_dd(env,Cudd_E(current_node),table);
+  addh = Probability_dd(env,Cudd_T(current_node),init_node,table);
+  addl = Probability_dd(env,Cudd_E(current_node),init_node,table);
   index = Cudd_NodeReadIndex(current_node);
 
   if(env->vars[index].decision == 1) { // if decision var
-    result = Cudd_addIte(env->mgr,current_node,addh,addl);
+    result = Cudd_addIte(env->mgr,Cudd_addIthVar(env->mgr,index),addh,addl);
     // add_node(table,result,-1);
     return result;
   }
