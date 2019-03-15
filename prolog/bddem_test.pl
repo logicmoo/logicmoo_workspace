@@ -40,8 +40,8 @@ dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat):-
   or(Env,BDDOR,BDDRUNBU,BDDD).
 
 broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella):-
-  and(Env,Rainy,Umbrella,RU),
-  and(Env,RU,Windy,BDDBU).
+  and(Env,Rainy,Windy,RU),
+  and(Env,RU,Umbrella,BDDBU).
 
 :- begin_tests(prob, []).
 
@@ -285,7 +285,6 @@ test(probabilitdd):-
   dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
   broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
   
-  probability_dd(Env,BDDBU,ADDBU), 
   add_prod(Env,ADDBU,-40,ADDDUU),
 
   probability_dd(Env,Raincoat,ADDRAIN),
@@ -322,8 +321,13 @@ test(probabilitdd):-
   % write('BDDBU: '),writeln(BDDBU),
   % write('BDDD: '),writeln(BDDD),
   % write('ADDD: '),writeln(ADDD),
+<<<<<<< HEAD
   % create_dot(Env,BDDBU,"broken_bdd.dot"),
   % create_dot(Env,ADDBU,"broken_add.dot"),
+=======
+  % create_dot(Env,BDDBU,"broken.dot"),
+   create_dot(Env,ADDBU,"broken_add.dot"),
+>>>>>>> aaa1dbbf8bc2f0f00b8c3f170d933645fe2c35f4
   % create_dot(Env,BDDD,"dry.dot"),
   % create_dot(Env,ADDD,"dry_add.dot"),
   % create_dot(Env,ADDUMB,"umbrella_add.dot"),
