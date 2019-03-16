@@ -324,7 +324,7 @@ if_then_else(Condition,Then,Else) if Condition,Then.
 if_then_else(Condition,Then,Else) if not Condition, Else.
 ```
 
-Condition is evaluated using negation as (finite) failure, so typically any fluents in Condition should have bound time.
+Condition is evaluated using negation as (finite) failure.
 
 TBD: further documentation
 
