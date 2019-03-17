@@ -442,7 +442,7 @@ a_literal([G1|Gn],H) :- !, (a_literal(G1,H);a_literal(Gn,H)).
 a_literal((C->T;E),H) :- !, (a_literal(C,H);a_literal(T,H);a_literal(E,H)).
 a_literal(holds(F,T),holds(F,T)) :- !.
 a_literal(happens(E,T1,T2),happens(E,T1,T2)) :- !.
-a_literal(G,G) :- G \== [].
+a_literal(G,G) :- G \== [], G \== true.
 
 % time_variables(+Goal,-Vars)  returns free time variables
 time_variables(G,UniqueVars) :- 
@@ -1026,8 +1026,24 @@ go :- go(_,[swish]). % makes sense only on swish
 
 go(File, OptionsList) :- go(File, OptionsList,[]).
 
-% ResultFluents is a list of Fluent-Instances, obtained at the end of execution in the final state
-%  Instances is a list (ordered by setof)
+/** 
+	go(+File, ?OptionsList, ?ResultFluents)  is det 
+
+	go(+File, ?OptionsList, ?ResultFluents)
+	Execute a LPS program until it fails or time runs out. 
+	
+	ResultsFluent is a list of FluentTemplate-FinalValues, which will return the values of the given fluents in the final state.
+	
+Some of the options available:
+	initialize_only
+	background(-ThreadID)
+	delta_state(+Deltas)  where Deltas is a list of +/- fluent tuple
+	restore(SavedState)   This has currently an intermittent bug
+	preamble_goal(Goal,Result) To fetch info after loading the LPs program and prior to the first cycle
+	timeout(Seconds)  maximum time allowed in the potentially infinite parts of the execution cycle
+	cycle_hook(Predicate,Fluents,Actions)  Allow an external Prolog predicate at each cycle to peek at some fluents and atomic events
+	observations(Obs)  Inject an initial set of observations
+*/
 go(File, OptionsList, ResultFluents) :-
 	retractall(lps_program_module(_)),
 	( member(swish,OptionsList) -> check_lps_program_swish_module(Self) ; assert(lps_program_module(db))),
@@ -1171,8 +1187,10 @@ go_(File,OptionsList,ResultFluents) :-
 		% if we're a server, hack a message into our own queue to be fetched by go above:
 		(option(background(TID)) -> thread_send_message(TID,preamble_result(Result)) ; true /* Result already bound */)
 		; true),
-	(cycle(Ri, Gi,StateFlag) -> go_finish(File,ResultFluents,T0,T1,success) 
-		; go_finish(File,ResultFluents,T0,T1,failure), option(run_test)).
+	(option(initialize_only) -> true ;
+		(cycle(Ri, Gi,StateFlag) -> go_finish(File,ResultFluents,T0,T1,success) 
+			; go_finish(File,ResultFluents,T0,T1,failure), option(run_test))
+	).
 
 go_finish(File,ResultFluents,T0,T1,Outcome) :-
 	cputime(T2),
@@ -1575,6 +1593,9 @@ parse_options(Options) :-
 	uretractall(option(_)),
 	% when running a test the options will be imposed by the test file:
 	% (member(run_test,Options) -> Options=[_]; true),  commenting this out to allow 'dc' option to be added
+	( (member(initialize_only,Options), (member(background(_),Options))) ->
+		print_error(error,'initialize_only option incompatible with background'), fail
+		; true),
 	( (member(silent,Options), (member(verbose,Options))) ->
 		print_error(error,'silent option incompatible with verbose'), fail
 		; true),
@@ -1601,6 +1622,9 @@ parse_options(Options) :-
 
 
 parse_options_([]) :- !.
+parse_options_([initialize_only|Rest]) :- !,
+    uassertz(option(initialize_only)),
+    parse_options_(Rest).	
 parse_options_([preamble_goal(Preamble,Result)|Rest]) :- !, 
 	% a goal executed once after the LPS program has loaded, just prior to the first cycle
 	% it must not fail
