@@ -1,5 +1,5 @@
 /*
-  LPS test results file generated on 2019-3-19 at 9:50:15
+  LPS test results file generated on 2019-3-19 at 12:32:19
   on Prolog swi(8,1,1,[]) for program file:
   /Users/mc/git/lps_corner/examples/CLOUT_workshop/sortWithTime.pl_.P
 */
@@ -56,25 +56,25 @@ lps_test_result_item(events,2,writeln(1)).
 lps_test_result_item(events,3,writeln(2)).
 lps_test_result_item(events,4,writeln(3)).
 lps_test_result_item(events,5,writeln(4)).
-lps_test_result_item(events,7,writeln('Marseille')).
-lps_test_result_item(events,7,writeln('Chelsea')).
-lps_test_result_item(events,7,writeln('Aston Villa')).
-lps_test_result_item(events,7,writeln('Celtic')).
-lps_test_result_item(events,7,writeln('Hamburg')).
-lps_test_result_item(events,7,writeln('Steaua Bucuresti')).
-lps_test_result_item(events,7,writeln('Borussia Dortmund')).
-lps_test_result_item(events,7,writeln('Feyenoord')).
-lps_test_result_item(events,7,writeln('PSV Eindhoven')).
-lps_test_result_item(events,7,writeln('Red Star Belgrade')).
-lps_test_result_item(events,8,writeln('Juventus')).
-lps_test_result_item(events,8,writeln('Nottingham Forest')).
-lps_test_result_item(events,8,writeln('Porto')).
-lps_test_result_item(events,8,writeln('Benfica')).
-lps_test_result_item(events,9,writeln('Manchester United')).
-lps_test_result_item(events,9,writeln('Inter Milan')).
-lps_test_result_item(events,10,writeln('Ajax')).
-lps_test_result_item(events,11,writeln('Barcelona')).
-lps_test_result_item(events,11,writeln('Bayern Munich')).
-lps_test_result_item(events,13,writeln('AC Milan')).
-lps_test_result_item(events,19,writeln('Real Madrid')).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Marseille',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Chelsea',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Aston Villa',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Celtic',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Hamburg',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Steaua Bucuresti',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Borussia Dortmund',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Feyenoord',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['PSV Eindhoven',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Red Star Belgrade',1])).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Juventus',2])).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Nottingham Forest',2])).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Porto',2])).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Benfica',2])).
+lps_test_result_item(events,9,format("~w won ~w times~n",['Manchester United',3])).
+lps_test_result_item(events,9,format("~w won ~w times~n",['Inter Milan',3])).
+lps_test_result_item(events,10,format("~w won ~w times~n",['Ajax',4])).
+lps_test_result_item(events,11,format("~w won ~w times~n",['Barcelona',5])).
+lps_test_result_item(events,11,format("~w won ~w times~n",['Bayern Munich',5])).
+lps_test_result_item(events,13,format("~w won ~w times~n",['AC Milan',7])).
+lps_test_result_item(events,19,format("~w won ~w times~n",['Real Madrid',13])).
 % lps_test_action_ancestor(Call,T1,T2)
