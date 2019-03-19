@@ -28,7 +28,7 @@ won('PSV Eindhoven',1).
 won('Red Star Belgrade',1).
 
 /* Print these 5 times later, after the first example's output: */
-if won(Team,Wins) then writeln(Team) from Wins+5.
+if won(Team,Wins) then format("~w won ~w times~n",[Team,Wins]) from Wins+5.
 
 /** <examples> 
 ?- go(Timeline).
