@@ -30,6 +30,11 @@ won('Red Star Belgrade',1).
 /* Print these 5 times later, after the first example's output: */
 if won(Team,Wins) then format("~w won ~w times~n",[Team,Wins]) from Wins+5.
 
+/* Yet another variant, building a nunch of sorted fluent tuples: */
+fluents sorted(_Team,_NumberOfWins).
+
+if won(Team,Wins) then initiate sorted(Team,Wins) from Wins.
+
 /** <examples> 
 ?- go(Timeline).
 */
