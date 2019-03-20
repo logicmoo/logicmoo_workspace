@@ -2,7 +2,7 @@
 % when the LPS program is equivalent to a deterministic finite automata
 % Assumptions: no time constants, finite states
 % TODO: abort if term depth bigger than 2?? More???
-:- module(states_explorer,[load_program/1]).
+:- module(states_explorer,[load_program/1,phb/0,print_phb/0,print_transitions/0]).
 
 :- ensure_loaded('psyntax.P').
 
@@ -20,15 +20,34 @@ current_state(State) :-
 
 % find possible "relevant" transitions from the current state
 transition(Event,- Fl) :- 
-	interpreter:state(Fl), interpreter:terminated(Event,Fl,Cond), interpreter:holds_all(Cond). 
+	E=happens(Event,_,_),
+	phb_tuple(holds(Fl,_)), interpreter:terminated(E,Fl,Cond), phb_tuple(E), 
+	interpreter:flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
+	bind_with_phb(Pos). 
 	% we need to deal with free vars, and have "incoming" events present (extended state...?)
 transition(Event, + Fl) :- 
-	interpreter:initiated(Event,Fl,Cond), holds_all(Cond). % Cond needs "hypothetical" state, holds_all
-% ... updated(NB1,Fluent,Old-New,NBn)
+	E=happens(Event,_,_),
+	phb_tuple(holds(Fl,_)), interpreter:initiated(E,Fl,Cond), phb_tuple(E), 
+	interpreter:flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
+	bind_with_phb(Pos). 
+transition(Event, Delta) :- 
+	E=happens(Event,_,_),
+	phb_tuple(E), interpreter:updated(E,Fl,Old-New,Cond), 
+	(NewFl=Fl, Delta = - Fl; interpreter:replace_term(Fl,Old,New,NewFl), Delta = + NewFl),
+	phb_tuple(holds(NewFl,_)),
+	interpreter:flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
+	bind_with_phb(Pos). 
 
 % after all transitions from a State are collected, filter those violating pre conditions
 
 % TODO: transitions with multiple events
+
+print_transitions :-
+	setof((Ev->Fl),states_explorer:transition(Ev,Fl),Trans), !, 
+	nl, writeln("State transitions:\n----"),
+	forall(member(T,Trans), writeln(T)).
+print_transitions :- 
+	writeln("No transitions.").
 
 % lps_literals(-Goal) a "clause"-like metapredicate to enumerate all head/body combinations
 lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:terminated(E,Fl,Cond).
@@ -84,14 +103,13 @@ bind_with_phb([_|S]) :- bind_with_phb(S). % we also abduce events/actions
 bind_with_phb([]).
 
 % TODO: deal properly with non user predicates!!!: 
-system_literal(_==_).
-system_literal(_\==_).
+system_literal(G) :- predicate_property(G,built_in).
 
 thread_local phb_tuple/1. % preliminary Herbrand base
 
 phb :- retractall(phb_tuple(_)), fail.
 phb :- current_state(State), member(S,State), assert(phb_tuple(holds(S,'$_LPS_TIME'))), fail.
-phb :- lps_fact(F), ground(F), \+ phb_tuple(F), assert(phb_tuple(F)), fail. % WHAT ABOUT non ground facts??
+phb :- lps_fact(F), ground(F), \+ phb_tuple(F), assert(phb_tuple(F)), fail. % WHAT ABOUT non ground facts? should we care?
 phb :- phb2.
 
 phb2 :- 
@@ -111,6 +129,16 @@ phb2 :-
 	).
 phb2 :- writeln("Finished preliminary HB").
 
+print_phb :- 
+	nl, writeln("Preliminary Herbrand Base:\n----"), setof(T,phb_tuple(T),Tuples), forall(member(T,Tuples),writeln(T)).
+
+%! my_ite(:If,:Then,:Else)  an if-then-else with universal quantifier on the condition
+my_ite(If,Then,_Else) :- 
+	Flag=foo(_), 
+	(If, nb_setarg(1,Flag,made_it), Then ; arg(1,Flag,Arg), nonvar(Arg), !, fail).
+my_ite(_If,_Then,Else) :- Else.
+
 % NEXT? 
 % bind but evaluate negation and system predicates? delay system and negated literals and just run? negated if-then-else conditions?
+% do not abstract time...?
 
