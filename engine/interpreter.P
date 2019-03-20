@@ -279,7 +279,7 @@ get_version(0.6).
 %   - for actions or composite events, otherwise it's [Discarder]. The Discarder var will be bound when the goal succeeds
 %  it is also included in Balls
 %
-% resolveUntilAction(V,A,_,_) :- writeln(rua-V/A), fail. % for debugging
+resolveUntilAction(V,A,_,_) :- option(debug), writeln(rua-V/A), fail. % for debugging
 resolveUntilAction(V,_,_,_) :- var(V), !, throw(lps_var_goal). % a bug somewhere!
 resolveUntilAction(true,_,_,true) :- !.
 resolveUntilAction([],_,_,true) :- !.
@@ -377,7 +377,7 @@ resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case,
 	findall(l_events(happens(E,T1,T2),Body), (
 		l_events(happens(E,T1,T2),Body_),
 		% hack to make sure the event complies to its finish limit
-		((T1\==T2,nonvar(T2)) -> Body = (Body_, holds(true,T), T=<T2-1) ; Body=Body_)
+		((T1\==T2,nonvar(T2)) -> Body = (Body_, holds(true,T), T=<T2-1) ; contains_var(T2,Body_) -> Body=Body_ ; Body = (Body_, holds(true,T2)))
 		), Alternatives), 
 	Alternatives\=[],
 	(Alternatives = [l_events(happens(E,T1,T2),Body)] -> 
@@ -418,6 +418,9 @@ resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- !,
 	(\+ ground(T1), \+ ground(T2)), % worth delaying; 
 	% Possible TODO: are the free variables... time variables...? complicated to find out; the LPS developer should worry about this
 	\+ happens(E,T1,T2) /*, action_(E)*/. 
+%deal with mixed time comparisons, involving both structured time and cycle time
+resolveUntilAction(G,A,Ball,Cont) :- mixed_time_comparison(G,NewG), !, 
+	resolveUntilAction(NewG,A,Ball,Cont).
 % timeless and time constraints:
 resolveUntilAction(tc(G),_A,_,Cont) :- ground(G), !, G, Cont=true.
 resolveUntilAction(tc(G), A, Ball, Cont) :- !, Ball = later(tc(G),A), Cont = tc(G).
@@ -435,7 +438,10 @@ simplify_conjunction(true,G,G) :- !.
 simplify_conjunction(G,true,G).
 simplify_conjunction(A,B,(A,B)).
 
-% a_literal(+Sequence,Literal)  Visit all literals in a program clause, left to right. Negated fluents inclusive.
+% The following predicates overlap significantly with resolveUntilAction, and might be refactorable with it:
+
+% a_literal(+Sequence,Literal)  
+% Generate all literals in a program clause, left to right. Negated fluents inclusive.
 a_literal(V,_) :- var(V), !, fail.
 a_literal((G1,G2),H) :- !, (a_literal(G1,H);a_literal(G2,H)).
 a_literal([G1|Gn],H) :- !, (a_literal(G1,H);a_literal(Gn,H)).
@@ -572,7 +578,7 @@ simplify_goal_variants([goal(ID,Discard,MyFailure,OurFailures,Shared,EventAncest
 	variant(Discard+MyFailure+OurFailures+AncestorVars+G, Discard2+MyFailure2+OurFailures2+AncestorVars2+G2),
 	!, 
 	write_verbose(['SIMPLIFIED ' ,ID2, ' because of ',ID, nl]),
-	simplify_goal_variants([goal(ID,Discard,MyFailure,OurFailures,[],EventAncestors,G)|Pruned],NewGoals). 
+	simplify_goal_variants([goal(ID,Discard,MyFailure,OurFailures,Shared,EventAncestors,G)|Pruned],NewGoals). 
 simplify_goal_variants([G|Goals],[G|NewGoals]) :- !, simplify_goal_variants(Goals,NewGoals).
 simplify_goal_variants(Goals,Goals).	
 	
@@ -580,21 +586,22 @@ check_binders(Goals,NewGoals) :- member(G,Goals), G\= binder(_Lambda,_Condition,
 	check_binders(Goals,Goals,NewGoals).
 check_binders(_Goals,[]). % no real goals left
 	
-check_binders([binder(Lambda,Condition,Var,Why)|Goals],All,NewGoals) :- !, % format("Evaluating ~w~n",[binder(All,Condition,Var,Why)]),
+check_binders([binder(Lambda,Condition,Var,Why)|Goals],All,NewGoals) :- !, 
+	(option(debug)->format("Evaluating ~w~n",[binder(All,Condition,Var,Why)]);true),
 	((var(Var),Lambda=All,Condition) -> 
-		NewGoals_=NewGoals
+		NewGoals_=NewGoals %, format("...bound for ~w~n",[Why])
 		; [binder(Lambda,Condition,Var,Why)|NewGoals_]=NewGoals), 
 	check_binders(Goals,All,NewGoals_). 
 check_binders([X|Goals],All,[X|NewGoals]) :- !, check_binders(Goals,All,NewGoals).
 check_binders([],_,[]).
 
 % dc_resolve_goals(Goals,AllInitialGoals,NewGoals)
-/* dc_resolve_goals(Goals,_,_) :- % for debugging
-	findall(Action, happens(Action, _, _), Actions), do_write([nl, 'CURRENT Events and actions are ',Actions,nl]),
+dc_resolve_goals(Goals,_,_) :- % for debugging
+	option(debug), findall(Action, happens(Action, _, _), Actions), do_write([nl, 'CURRENT Events and actions are ',Actions,nl]),
 	writeln('GOALS:'),member(G,Goals), writeln(G), 
-	fail. */
-/* dc_resolve_goals([goal(ID,Discard,MyFailure,_OurFailures,_SharedVars,_Ancestors,G)|_Goals],_All,_NewGoals) :-
-	format("dc_resolve_goals for ~w (discard==~w, failure==~w): ~w~n",[ID,Discard,MyFailure,G]), fail.*/
+	fail. 
+dc_resolve_goals([goal(ID,Discard,MyFailure,_OurFailures,_SharedVars,_Ancestors,G)|_Goals],_All,_NewGoals) :-
+	option(debug), format("dc_resolve_goals for ~w (discard==~w, failure==~w): ~w~n",[ID,Discard,MyFailure,G]), fail.
 % a few sanity checks first, while in debug mode:
 dc_resolve_goals([goal(ID,_Discard,MyFailure,OurFailures,_SharedVars,_EventAncestors,G)|_Goals],_All,_NewGoals) :-
 	option(debug),
@@ -609,8 +616,9 @@ dc_resolve_goals([],_,[]) :- !.
 % these will be evaluated later:
 dc_resolve_goals([binder(Lambda,Condition,Var,Why)|Goals],All,[binder(Lambda,Condition,Var,Why)|NewGoals]) :- !, 
 	dc_resolve_goals(Goals,All,NewGoals).
-dc_resolve_goals([goal(_ID,Discard,_Failed,_,_,_,_G)|Goals],All,NewGoals) :- Discard == yes, % even if failed! var(Failed), 
+dc_resolve_goals([goal(ID,Discard,_Failed,_,_,_,G)|Goals],All,NewGoals) :- Discard == yes, % even if failed! var(Failed), 
 	!, % some alternative already succeeded! we can drop this goal
+	write_verbose(['DISCARDED ',ID,' ',G]),
 	dc_resolve_goals(Goals,All,NewGoals).
 dc_resolve_goals([goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestors,G)|Goals],All,NewGoals_) :- 
 	var(MyFailure), has_no_future(G,EventAncestors,Killer), 
@@ -623,7 +631,7 @@ dc_resolve_goals([goal(ID,Discard,MyFailure,OurFailures,SharedVars,EventAncestor
 	dc_resolve_goals(Goals,All,NewGoals).
 dc_resolve_goals([goal(ID,Discard,Failure,Failures,SharedVars,A,G)|Goals],All,NewGoals) :- var(Failure),
 	write_verbose(['Goal ',ID,' is ',G,'.',nl]),
-	% (ID==23 -> trace; true),
+	% (ID==188 -> trace; true),
 	resolveUntilAction(G,A,Ball,Continuation),
 	( (var(Ball), Continuation\==true) -> throw(inconsistent_lps_ball3(G,Ball));true),
 	(true;write_verbose(['BACKTRACKING into previous goal ',ID, ' ', G,nl]),fail),
@@ -658,15 +666,17 @@ dc_resolve_goals_suspended(_TopG,ID,Discard,Failure,Failures,SharedVars,Goals,la
 	goal_ID_inc(ChildID), add_goal_child(ID,ChildID),
 	append(NewGoals_,[goal(ID,Discard,Failure,Failures,SharedVars,Ancestors,Continuation)],NewGoals).
 
-dc_resolve_goals_suspended(_TopG,ID,_,Failure,_Failures,SharedVars,Goals,ite(Ancestors,Cond,Then,Else),Continuation,AllGoals,NewGoals) :- !,
+dc_resolve_goals_suspended(_TopG,ID,Discard,Failure,_Failures,SharedVars,Goals,ite(Ancestors,Cond,Then,Else),Continuation,AllGoals,NewGoals) :- !,
 	% writeln(continuation-Continuation),
-	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
 	goal_ID_inc(ID1), goal_ID_inc(ID2), add_goal_child(ID,ID1), add_goal_child(ID,ID2),
 	simplify_conjunction(Else,Continuation,ElseContinuation),
+	simplify_conjunction(Then,Continuation,ThenContinuation),
 	write_verbose([' Spawning 2 goals in parallel ',[ID1,ID2],' because of ',ite(Ancestors,Cond,Then,Else), nl]),
 	append(Goals,[
 		% discard the Else branch if condition succeeds:
-		goal(ID1,RootAncestorDiscard,Cfailed,[Cfailed,Efailed],DiscardE+SharedVars,Ancestors,(Cond,DiscardE=yes,Then, Continuation)), 
+		goal(ID1,RootAncestorDiscard,Cfailed,[Cfailed,Efailed],DiscardE+SharedVars,Ancestors,(Cond,DiscardE=yes,ThenContinuation)), 
 		% Cfailed is not entirely set by descendents...hence the use of the goal_child relation:
 		binder(Lambda, (no_active_descendents(ID1,Lambda),C_has_failed=yes, discard_all_descendents(ID1,Lambda)), C_has_failed,ite), 
 		% wait until (the whole goal resolvent containing the ...) condition fails before trying Else:
@@ -676,20 +686,18 @@ dc_resolve_goals_suspended(_TopG,ID,_,Failure,_Failures,SharedVars,Goals,ite(Anc
 	%dc_resolve_goals(Goals_,[Condition /* to avoid a premature spurious failure detection */|AllGoals],NewGoals).	
 	dc_resolve_goals(Goals_,AllGoals,NewGoals).	
 	
-dc_resolve_goals_suspended(_G,ID,_Discard,_Failure,_Failures,SharedVars,Goals,conjunction(Branches,Gn,Ancestors),Continuation,AllGoals,NewGoals) :- !,
+dc_resolve_goals_suspended(_G,ID,Discard,_Failure,_Failures,SharedVars,Goals,conjunction(Branches,Gn,Ancestors),Continuation,AllGoals,NewGoals) :- !,
 	length(Branches,N), % TODO: propagate failure? when all branches have failed ?? what about shared vars???
-	make_branch_goals(Branches,ID,Ancestors,(Gn,Continuation),AllS,AllS,SharedVars,ExtraGoals),
+	make_branch_goals(Branches,ID,Discard,Ancestors,(Gn,Continuation),AllS,AllS,SharedVars,ExtraGoals),
 	write_verbose([' Spawning ',N,' conjunctive goals in parallel because of ',Branches, nl]),
 	append(ExtraGoals,Goals,Goals_),
 	dc_resolve_goals(Goals_,AllGoals,NewGoals).	
 	
-dc_resolve_goals_suspended(_G,ID,_,_OriginalFailed,_Failures,SharedVars,Goals,disjunction(SuspendedG,Answers,Ancestors),Continuation,AllGoals,NewGoals) :- !,
+dc_resolve_goals_suspended(_G,ID,Discard,_OriginalFailed,_Failures,SharedVars,Goals,disjunction(SuspendedG,Answers,Ancestors),Continuation,AllGoals,NewGoals) :- !,
 	% build new goals, including the common Continuation albeit reflecting the different bindings in Answers,
 	% and ending with the setting of the common variable Discard
-	% I think the following was WRONG, as it did assume answer bindings to be equally useful for the continuation:
-	% findall(goal(ID,Discard,_Failed,_OurFailures,Ancestors,(Continuation,Discard=yes)), member(SuspendedG,Answers), ExtraGoals),
-	% ...instead, only the "top" goal (rule consequent) success guarantees an alternative to be irrelevant:
-	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal 
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
 	((SuspendedG = holds(_F,T), \+ ground(T) /*, \+ ground(F)*/ )-> copy_term(SuspendedG+SharedVars+Ancestors+Continuation,BindingsForFuture) ; true),
 	simplify_conjunction(SuspendedG=Answer,Continuation,SuspCont),
 	findall(
@@ -727,9 +735,10 @@ dc_resolve_goals_suspended(_G,ID,_,_OriginalFailed,_Failures,SharedVars,Goals,di
 		write_verbose([' Spawned one extra disjunctive goal ',AnotherID,' for the future because of ',ID,' ',SuspendedG, nl])
 		; NewGoals=NewGoals_).
 
-dc_resolve_goals_suspended(_G,ID,_,_Failure,_Failures,SharedVars,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
+dc_resolve_goals_suspended(_G,ID,Discard,_Failure,_Failures,SharedVars,Goals,l_events_disjunction(l_events(happens(E,T1,T2),Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
 	% similar to the previous clause, except that in addition to different bindings there are different Body terms to consider:
-	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
 	findall(
 		%goal(_ID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, [happens(E,T1,T2)|Ancestors], (l_events(happens(E,T1,T2),Body)=Answer,Body,Continuation) ), 
 		goal(ChildID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, [happens(E,T1,T2)|Ancestors], BodyContinuation ), 
@@ -745,8 +754,9 @@ dc_resolve_goals_suspended(_G,ID,_,_Failure,_Failures,SharedVars,Goals,l_events_
 	append(ExtraGoals,Goals,Goals_),
 	dc_resolve_goals(Goals_,AllGoals,NewGoals).
 
-dc_resolve_goals_suspended(_G,ID,_,_Failure,_Failures,SharedVars,Goals,l_ints_disjunction(l_int(Fluent,Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
-	last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+dc_resolve_goals_suspended(_G,ID,Discard,_Failure,_Failures,SharedVars,Goals,l_ints_disjunction(l_int(Fluent,Body),Answers,Ancestors),Continuation,AllGoals,NewGoals) :-
+	% last(Ancestors,RootAncestorDiscard), % get the variable marking success of the top goal
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(Ancestors,RootAncestorDiscard)),
 	findall(
 		goal(ChildID,_IgetBoundBelow, _Failed, _OurFailures, SharedVars, Ancestors, BodyContinuation ), 
 		( member(l_int(Fluent,Body),Answers), simplify_conjunction(Body,Continuation,BodyContinuation), goal_ID_inc(ChildID), add_goal_child(ID,ChildID)),
@@ -759,13 +769,14 @@ dc_resolve_goals_suspended(_G,ID,_,_Failure,_Failures,SharedVars,Goals,l_ints_di
 	dc_resolve_goals(Goals_,AllGoals,NewGoals).
 
 	
-% make_branch_goals(+Branches,+ID,+Ancestors,+Continuation,AllSuccesses,-SuccessVars,+SharedVars,-Goals) for parallelized conjunctions
-make_branch_goals([B|Bn],ID,A,Cont,AllS,[S|Sn],SharedVars,[goal(ChildID,RootAncestorDiscard,_,[],AllS+SharedVars,A,( B,S=yes,ControlCont) )|Goals]) :- !,
-	last(A,RootAncestorDiscard), % get the variable marking success of the top goal
+% make_branch_goals(+Branches,+ID,+DiscardVar,+Continuation,AllSuccesses,-SuccessVars,+SharedVars,-Goals) for parallelized conjunctions
+make_branch_goals([B|Bn],ID,Discard,A,Cont,AllS,[S|Sn],SharedVars,[goal(ChildID,RootAncestorDiscard,_,[],AllS+SharedVars,A,( B,S=yes,ControlCont) )|Goals]) :- !,
+	% last(A,RootAncestorDiscard), % get the variable marking success of the top goal
+	(var(Discard) -> RootAncestorDiscard=Discard ; last(A,RootAncestorDiscard)),
 	simplify_conjunction(lps_conjunction_control(AllS),Cont,ControlCont),
 	goal_ID_inc(ChildID), add_goal_child(ID,ChildID),
-	make_branch_goals(Bn,ID,A,Cont,AllS,Sn,SharedVars,Goals).
-make_branch_goals([],_,_,_,_AllS,[],_,[]).
+	make_branch_goals(Bn,ID,Discard,A,Cont,AllS,Sn,SharedVars,Goals).
+make_branch_goals([],_,_,_,_,_AllS,[],_,[]).
 	
 % some more unification magic: wire the failure mark variables together
 % bind_failure_variables(ExtraGoals,OurFailures)
@@ -775,7 +786,10 @@ bind_failure_variables([goal(_ID,_,Failed,AllFailures,_,_,_)|Goals],[Failed|Fail
 	bind_failure_variables(Goals,Failures,AllFailures).
 bind_failure_variables([],[],_).
 	
-bind_discarders_and_shared([goal(_ID,Discard,_,_,SharedVars,Ancestors,_)|Goals],SharedVars,Discard) :- !, last(Ancestors,Discard), bind_discarders_and_shared(Goals,SharedVars,Discard).
+bind_discarders_and_shared([goal(_ID,Discard,_,_,SharedVars,Ancestors,_)|Goals],SharedVars,Discard) :- !, 
+	last(Ancestors,RootDiscard), 
+	(var(RootDiscard)->RootDiscard=Discard;true), % this certainly feels like a HACK;-)
+	bind_discarders_and_shared(Goals,SharedVars,Discard).
 bind_discarders_and_shared([],_SharedVars,_Discard).
 
 
@@ -2339,7 +2353,21 @@ outdated_real_time_event(happens(_,T1,T2)) :-
 	get_the_real_date(Now),
 	( nonvar(T2), T2=_/_/_, Now@>T2 ; nonvar(T1), T1=_/_/_, /* ?real_date_add(T1,1,T1_),*/ T1=T1_, Now@>T1_).
 	
+% mixed_time_comparison(+G,-NewG) 
+% used to rewrite time comparisons, so that (vaguer) structured time is used
+mixed_time_comparison(G,(holds(real_date(RT),T), NewComp)) :- 
+	ground(G), G=..[Op,A1,A2], supported_time_comparison(Op),
+	(is_structured_time(A1), integer(A2), T=A2, NewComp=..[Op,A1,RT] ; is_structured_time(A2), integer(A1), T=A1, NewComp=..[Op,RT,A2]),
+	!.
 
+supported_time_comparison(<).
+supported_time_comparison(=<).
+supported_time_comparison(@<).
+supported_time_comparison(@=<).
+supported_time_comparison(>).
+supported_time_comparison(>=).
+supported_time_comparison(@>).
+supported_time_comparison(@>=).
 
 /* Probably useless:
 real_time_to_interval(RT,Duration) :- stamp_date_time(RT,DT,local), dt_to_duration(DT,Duration).
@@ -3252,6 +3280,7 @@ lpsClause(holds(P,T),[]) :- nonvar(P), external_predicate_for_lps(P), !, check_t
 lpsClause(holds(X, T), Body) :-  nonvar(X), l_int(holds(X, T), Body), may_bind_time(T,Body) .
 lpsClause(holds(X, T), Body) :- !, check_time_expression(T), state(X), Body=[].
 lpsClause(tc(P), []) :- !, callprolog(P).
+lpsClause(G,Body) :- mixed_time_comparison(G,NewG), !, lpsClause(NewG,Body).
 lpsClause(P, []) :- \+l_timeless(P,_), !, callprolog(P).
 lpsClause(Head, Body) :-  l_timeless(Head, Body).
 
