@@ -22,7 +22,8 @@
   probability_dd/3,
   add_prod/4,
   add_sum/4,
-  ret_strategy/4 
+  ret_strategy/4,
+  debug_cudd_var/2 
     ]).
 /** <module> bddem
 
@@ -431,3 +432,11 @@ or_listc1([H|T],Env,B0,B1):-
  *
  * Returns in Variable the index of a new decision variable in Environment
  */
+
+/**
+ * debug_cudd_var(++Environment:int, -Variable:out) is det.
+ * Prints the debug information which is the result of the call
+ * of Cudd_ReadDead, Cudd_CheckZeroRef, Cudd_CheckKeys and 
+ * Cudd_DebugCheck(env->mgr));  
+ */
+ 
