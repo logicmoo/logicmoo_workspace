@@ -450,6 +450,26 @@ a_literal(holds(F,T),holds(F,T)) :- !.
 a_literal(happens(E,T1,T2),happens(E,T1,T2)) :- !.
 a_literal(G,G) :- G \== [], G \== true.
 
+% flat_sequence(+Sequence,-FlatSequence)  
+% Returns a list of literals, including negated ones. May return more than one because of if-then-elses
+% Visit all literals in a program clause, left to right. Negated fluents inclusive.
+% Var literals unacceptable, will cause failure
+
+flat_sequence(S,FS) :- flat_sequence(S,FS,[]).
+
+% flat_sequence(S,Head,Tail) same, returning difference list
+flat_sequence(V,_,_) :- var(V), !, fail.
+flat_sequence((G1,G2),F1,Fn) :- !, flat_sequence(G1,F1,F2), flat_sequence(G2,F2,Fn).
+flat_sequence([G1|Gn],F1,Fn) :- !, flat_sequence(G1,F1,F2), flat_sequence(Gn,F2,Fn).
+flat_sequence((C->T;_E),F1,Fn) :- flat_sequence(C,F1,F2),flat_sequence(T,F2,Fn).
+flat_sequence((C->_T;E),F1,Fn) :- !, flat_sequence((not C),F1,F2),flat_sequence(E,F2,Fn).
+flat_sequence(holds(F,T),[holds(F,T)|Tail],Tail) :- !.
+flat_sequence(happens(E,T1,T2),[happens(E,T1,T2)|Tail],Tail) :- !.
+flat_sequence(true,Tail,Tail) :- !.
+flat_sequence([],Tail,Tail) :- !.
+flat_sequence(G,[G|Tail],Tail).
+
+
 % time_variables(+Goal,-Vars)  returns free time variables
 time_variables(G,UniqueVars) :- 
 	findall(T-G, ( 

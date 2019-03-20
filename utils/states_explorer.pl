@@ -1,0 +1,116 @@
+% Experiments finding states and event transitions by simulation (or abstract interpretation wrt time...?),
+% when the LPS program is equivalent to a deterministic finite automata
+% Assumptions: no time constants, finite states
+% TODO: abort if term depth bigger than 2?? More???
+:- module(states_explorer,[load_program/1]).
+
+:- ensure_loaded('psyntax.P').
+
+% Backtrackable assert/retract of state
+assert_fluent(X) :- interpreter:uassert(state(X)).
+assert_fluent(X) :- interpreter:uretractall(state(X)), fail.
+retract_fluent(X) :- 
+	\+ \+ interpreter:state(X) -> (interpreter:uretractall(X); interpreter:uassert(X), fail) ; true.
+
+
+load_program(F) :- golps(F,[dc,initialize_only]).
+
+current_state(State) :- 
+	interpreter:setof(S,(state(S), \+ system_fluent(S)),State).
+
+% find possible "relevant" transitions from the current state
+transition(Event,- Fl) :- 
+	interpreter:state(Fl), interpreter:terminated(Event,Fl,Cond), interpreter:holds_all(Cond). 
+	% we need to deal with free vars, and have "incoming" events present (extended state...?)
+transition(Event, + Fl) :- 
+	interpreter:initiated(Event,Fl,Cond), holds_all(Cond). % Cond needs "hypothetical" state, holds_all
+% ... updated(NB1,Fluent,Old-New,NBn)
+
+% after all transitions from a State are collected, filter those violating pre conditions
+
+% TODO: transitions with multiple events
+
+% lps_literals(-Goal) a "clause"-like metapredicate to enumerate all head/body combinations
+lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:terminated(E,Fl,Cond).
+lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:initiated(E,Fl,Cond).
+lps_literals([E,holds(NewFl,_)|Cond]) :- interpreter:updated(E,Fl,Old-New,Cond), (NewFl=Fl ; interpreter:replace_term(Fl,Old,New,NewFl)).
+lps_literals(L) :- interpreter:d_pre(L).
+lps_literals(L) :- interpreter:reactive_rule(H,B), append(H,B,L).
+lps_literals([H|Body]) :- interpreter:l_int(H,Body); interpreter:l_events(H,Body); interpreter:l_timeless(H,Body).
+lps_literals([Pred,Body]) :- user_prolog_clause(Pred,Body). 
+
+user_prolog_clause(Pred,Body) :- 
+	interpreter:lps_program_clause_file(Pred,Body,File), File\=asserted, 
+	\+ sub_string(File,_,_,_,'/lps_corner/engine/'), 
+	\+ sub_string(File,_,_,_,'/lps_corner/utils/'), 
+	\+ interpreter:program_predicate(Pred).
+
+lps_fact(H) :- 
+	interpreter:l_int(H,[]); interpreter:l_events(H,[]); interpreter:l_timeless(H,[]); user_prolog_clause(H,true).
+
+lps_literal(Literals,Lit) :- 
+	interpreter:a_literal(Literals,L), nonvar(L), 
+	% We're collecting constants/bindings, skip through negation
+	((L = not(L_); L = holds(not(Fl),T), L_=holds(Fl,T)) -> lps_literal([L_],Lit) ; L=Lit).
+
+% neg_free(Literal,JuicyLiteral) Strip negation of simple literals only
+neg_free(G,_) :- var(G), !, throw(weird_var_goal).
+neg_free(holds(not Fl,T),holds(Fl,T)) :- !.
+neg_free(not(G),NF) :- !, neg_free(G,NF).
+neg_free(G,G).
+
+
+% abstract_literal: ground/replace time by $_LPS_TIME
+abstract_literal(V,_) :- var(V), !, throw(weird_var_literal).
+abstract_literal(holds(Fl,T),holds(Fl,'$_LPS_TIME')) :- !, (T='$_LPS_TIME'->true;true).
+abstract_literal(happens(E,T1,T2),happens(E,'$_LPS_TIME','$_LPS_TIME')) :- !,
+	(T1='$_LPS_TIME'->true;true), (T2='$_LPS_TIME'->true;true).
+abstract_literal(L,L).
+
+% positive_sequence(Sequence,PositivesOnly)  Skips and ignores negated subgoals
+positive_abstract_sequence([not(_)|S],P) :- !, positive_abstract_sequence(S,P).
+positive_abstract_sequence([holds(not(_),_)|S],P) :- !, positive_abstract_sequence(S,P).
+positive_abstract_sequence([L|S],[AL|P]) :- !, abstract_literal(L,AL), positive_abstract_sequence(S,P).
+positive_abstract_sequence([],[]).
+
+% bind_with_phb(+Sequence)  Assumes no var subgoals
+% binds literals in sequence using current tuples in phb
+% considers all literals abducible
+bind_with_phb([G|S]) :- ground(G), !, bind_with_phb(S).
+bind_with_phb([X=X|S]) :- !, bind_with_phb(S).
+% bind_with_phb([G|S]) :- system_literal(G), !, bind_with_phb(S).
+bind_with_phb([G|S]) :- phb_tuple(G), bind_with_phb(S).
+bind_with_phb([_|S]) :- bind_with_phb(S). % we also abduce events/actions
+bind_with_phb([]).
+
+% TODO: deal properly with non user predicates!!!: 
+system_literal(_==_).
+system_literal(_\==_).
+
+thread_local phb_tuple/1. % preliminary Herbrand base
+
+phb :- retractall(phb_tuple(_)), fail.
+phb :- current_state(State), member(S,State), assert(phb_tuple(holds(S,'$_LPS_TIME'))), fail.
+phb :- lps_fact(F), ground(F), \+ phb_tuple(F), assert(phb_tuple(F)), fail. % WHAT ABOUT non ground facts??
+phb :- phb2.
+
+phb2 :- 
+	writeln("Starting a new pass..."),
+	Flag=foo(_), 
+	(
+		% For each clause, considered with its positive literals only...
+		lps_literals(L), interpreter:flat_sequence(L,Flat), positive_abstract_sequence(Flat,Pos), 
+		% .. try to bind those literals with the preliminary HB found so far...
+		bind_with_phb(Pos), member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
+		% we found a new one, remember it and continue:
+		assert(phb_tuple(Lit)), 
+		format("Remembering ~w~n",[Lit]),
+		nb_setarg(1,Flag,added_at_least_one), fail
+	; 
+		arg(1,Flag,Arg), Arg==added_at_least_one, !, phb2 % try again with the extra tuples
+	).
+phb2 :- writeln("Finished preliminary HB").
+
+% NEXT? 
+% bind but evaluate negation and system predicates? delay system and negated literals and just run? negated if-then-else conditions?
+
