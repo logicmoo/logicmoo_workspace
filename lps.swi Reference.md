@@ -98,10 +98,12 @@ Based on the above, these syntactic forms are supported by the engine:
 
 For convenience, cycle and structured times can be mixed together in binary *comparisons*, for example:
 
-   someEvent to Finish, Finish @=< 2018/6/6
+```someEvent to Finish, Finish @=< 2018/6/6```
+
 ...is equivalent to:
 
-   someEvent to Finish, real_date(RT) at Finish, RT @=< 2018/6/6
+```someEvent to Finish, real_date(RT) at Finish, RT @=< 2018/6/6```
+
 
 # Background execution #
 
