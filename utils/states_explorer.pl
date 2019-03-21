@@ -5,6 +5,7 @@
 :- module(states_explorer,[load_program/1,phb/0,print_phb/0,print_transitions/0]).
 
 :- ensure_loaded('psyntax.P').
+:- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1]).
 
 % Backtrackable assert/retract of state
 assert_fluent(X) :- interpreter:uassert(state(X)).
@@ -22,28 +23,29 @@ current_state(State) :-
 transition(Event,- Fl) :- 
 	E=happens(Event,_,_),
 	phb_tuple(holds(Fl,_)), interpreter:terminated(E,Fl,Cond), phb_tuple(E), 
-	interpreter:flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
-	bind_with_phb(Pos). 
+	check_condition(Cond). 
 	% we need to deal with free vars, and have "incoming" events present (extended state...?)
 transition(Event, + Fl) :- 
 	E=happens(Event,_,_),
 	phb_tuple(holds(Fl,_)), interpreter:initiated(E,Fl,Cond), phb_tuple(E), 
-	interpreter:flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
-	bind_with_phb(Pos). 
-transition(Event, Delta) :- 
-	E=happens(Event,_,_),
-	phb_tuple(E), interpreter:updated(E,Fl,Old-New,Cond), 
-	(NewFl=Fl, Delta = - Fl; interpreter:replace_term(Fl,Old,New,NewFl), Delta = + NewFl),
-	phb_tuple(holds(NewFl,_)),
-	interpreter:flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
-	bind_with_phb(Pos). 
+	check_condition(Cond). 
+transition(Event, [-Fl, + NewFl]) :- 
+	E=happens(Event,_,_), phb_tuple(E), 
+	interpreter:updated(E,Fl,Old-New,Cond), 
+	phb_tuple(holds(Fl,_)), 
+	interpreter:replace_term(Fl,Old,New,NewFl), phb_tuple(holds(NewFl,_)),
+	check_condition(Cond). 
 
-% after all transitions from a State are collected, filter those violating pre conditions
+% TODO: transitions with multiple events; filter with preconditions!!
 
-% TODO: transitions with multiple events
+check_condition(Cond) :-
+	flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
+	bind_with_phb(Pos).
 
 print_transitions :-
 	setof((Ev->Fl),states_explorer:transition(Ev,Fl),Trans), !, 
+	nl, writeln("Initial fluents state:\n----"),
+	current_state(State), forall(member(F,State),writeln(F)),
 	nl, writeln("State transitions:\n----"),
 	forall(member(T,Trans), writeln(T)).
 print_transitions :- 
@@ -92,15 +94,22 @@ positive_abstract_sequence([holds(not(_),_)|S],P) :- !, positive_abstract_sequen
 positive_abstract_sequence([L|S],[AL|P]) :- !, abstract_literal(L,AL), positive_abstract_sequence(S,P).
 positive_abstract_sequence([],[]).
 
-% bind_with_phb(+Sequence)  Assumes no var subgoals
+% bind_with_phb(+Sequence,+AbduceAll)  AbduceAll is true/false: whether ALL goals are abducible (even non actions)
+% Assumes no var subgoals
 % binds literals in sequence using current tuples in phb
 % considers all literals abducible
-bind_with_phb([G|S]) :- ground(G), !, bind_with_phb(S).
-bind_with_phb([X=X|S]) :- !, bind_with_phb(S).
-% bind_with_phb([G|S]) :- system_literal(G), !, bind_with_phb(S).
-bind_with_phb([G|S]) :- phb_tuple(G), bind_with_phb(S).
-bind_with_phb([_|S]) :- bind_with_phb(S). % we also abduce events/actions
-bind_with_phb([]).
+bind_with_phb([G|S],Ab) :- ground(G), !, 
+	(system_literal(G) -> once(G) ; once(phb_tuple(G))),
+	bind_with_phb(S,Ab).
+bind_with_phb([X=X|S],Ab) :- !, bind_with_phb(S,Ab).
+% Somehow uncommenting this leads to no transitions being found...:
+% bind_with_phb([G|S],Ab) :- action_(G), !, bind_with_phb(S,Ab). % abduce actions
+bind_with_phb([G|S],Ab) :- phb_tuple(G), bind_with_phb(S,Ab).
+bind_with_phb([_|S],true) :- bind_with_phb(S,true). % we also abduce events etc
+bind_with_phb([],_).
+
+bind_with_phb(S) :- bind_with_phb(S,false).
+
 
 % TODO: deal properly with non user predicates!!!: 
 system_literal(G) :- predicate_property(G,built_in).
@@ -117,9 +126,9 @@ phb2 :-
 	Flag=foo(_), 
 	(
 		% For each clause, considered with its positive literals only...
-		lps_literals(L), interpreter:flat_sequence(L,Flat), positive_abstract_sequence(Flat,Pos), 
+		lps_literals(L), flat_sequence(L,Flat), positive_abstract_sequence(Flat,Pos), 
 		% .. try to bind those literals with the preliminary HB found so far...
-		bind_with_phb(Pos), member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
+		bind_with_phb(Pos,true), member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
 		% we found a new one, remember it and continue:
 		assert(phb_tuple(Lit)), 
 		format("Remembering ~w~n",[Lit]),
