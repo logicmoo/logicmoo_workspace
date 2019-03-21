@@ -32,7 +32,7 @@ insureGoods(GoodsPremium, Principal, Penalty, T1-T2, GoodsInsured) from _ to _ i
 insurancePayment(GoodsInsured, _Principal) from _ to _ if
     safeArrival(GoodsInsured). 
 insurancePayment(_GoodsInsured, Principal) from _ to _ if
-    choiceOf(Holder) from T, to(Holder,Principal) from T.
+    choiceOf(holder) from T, to(holder,Principal) from T.
 
 false safeArrival(_), choiceOf(_). % can't have both at the same time
 
