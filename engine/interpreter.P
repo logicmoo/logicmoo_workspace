@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	go/0, go/1, go/2, go/3,
 	test_examples/0, test_examples_dc/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1, check_load_postmortem/0, lps_test_result_item/3,
 	load_check_syntax/2, print_error/3, print_error/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
-	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,(observe)/2, lps_program_module/1, d/2, misc_to_realtime/2, is_some_time/1,
+	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,event_/1,event_pred/1,(observe)/2, lps_program_module/1, d/2, misc_to_realtime/2, is_some_time/1,
 	lps_engine_directory/1, uassert/1, uretractall/1, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1, flat_sequence/2,
 	check_lps_program_swish_module/0, get_lps_program_hash/1, server_log_filename/2, lps_program_clause_file/3, callprolog/1, replace_term/4,
 	bindAllVars/1, lps_welcome_message/0, endTime/1, simulatedRealTimeBeginning/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1,

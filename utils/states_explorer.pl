@@ -5,7 +5,7 @@
 :- module(states_explorer,[load_program/1,phb/0,print_phb/0,print_transitions/0]).
 
 :- ensure_loaded('psyntax.P').
-:- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1]).
+:- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1, event_pred/1]).
 
 % Backtrackable assert/retract of state
 assert_fluent(X) :- interpreter:uassert(state(X)).
@@ -100,6 +100,10 @@ positive_abstract_sequence([],[]).
 % considers all literals abducible
 bind_with_phb([G|S],Ab) :- ground(G), !, 
 	(system_literal(G) -> once(G) ; once(phb_tuple(G))),
+% Replacing the above by the following commented lines causes too many transitions for goto_with_ifthenelse,
+%	(system_literal(G) -> once(G) 
+%		; \+ event_pred(G) -> once(phb_tuple(G)) 
+%		; true), % abduce events
 	bind_with_phb(S,Ab).
 bind_with_phb([X=X|S],Ab) :- !, bind_with_phb(S,Ab).
 % Somehow uncommenting this leads to no transitions being found...:
@@ -126,9 +130,13 @@ phb2 :-
 	Flag=foo(_), 
 	(
 		% For each clause, considered with its positive literals only...
-		lps_literals(L), flat_sequence(L,Flat), positive_abstract_sequence(Flat,Pos), 
+		lps_literals(L), % (L=[holds(loc(_11528,south),_)|_] -> trace ; true),
+		flat_sequence(L,Flat), positive_abstract_sequence(Flat,Pos), 
 		% .. try to bind those literals with the preliminary HB found so far...
-		bind_with_phb(Pos,true), member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
+		% writeln(binding-Pos),
+		bind_with_phb(Pos,true), 
+		% writeln(bound-Pos),
+		member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
 		% we found a new one, remember it and continue:
 		assert(phb_tuple(Lit)), 
 		format("Remembering ~w~n",[Lit]),
