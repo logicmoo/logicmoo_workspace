@@ -1,7 +1,7 @@
 % SLDNF Draw
 % Produces a LaTeX drawing of an SLDNF tree
 % Author: Marco Gavanelli
-% http://www.ing.unife.it/docenti/MarcoGavanelli/sldnfDraw/
+% http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-informatica/software/sldnf-draw/sldnf-draw
 
 % Version 1.4
 % Does not crash when printing infinite terms
@@ -13,10 +13,10 @@
 % Version 1.6
 % Animations
 
+% Version 1.61
+% Bug fixes, predicate names can now contain underscores
 
 % TODO:
-% stop when 1st solution found
-% stop negation when 1st solution found
 % CLP? Minimize?
 
 
@@ -227,7 +227,7 @@ draw(M:[G|R],F,LongestIn,Depth,OpenCuts,ListName):-
     write_indented(M,F,Depth,"\\begin{bundle}{"),
     print_resolvent(M,F,[G|R],ListName),
     writeln(F,"}"),
-    (print_builtin_children(M:G,R,F,Length,Depth1,OpenCuts,ListName);     write_indented(M,F,Depth,"\\end{bundle}")),
+    (print_builtin_children(M:G,M:R,F,Length,Depth1,OpenCuts,ListName);     write_indented(M,F,Depth,"\\end{bundle}")),
     fail.
 
 % User defined predicate
@@ -286,7 +286,7 @@ print_children(M:G,_,F,Length,Depth,_,ListName):-
     print_fail(M,F,Depth,Length),
     fail.
 
-print_builtin_children(G,M:R,F,Length,Depth,OpenCuts,ListName):-
+print_builtin_children(M:G,M:R,F,Length,Depth,OpenCuts,ListName):-
 %    Depth1 is Depth-1,
     term_variables(G,Vars),
     vars_names(Vars,VarNames,ListName),
@@ -448,7 +448,7 @@ write_term_no_sqbrack(F,[H|T],N,ListName):- !,
     write(F,"\\rbrack ").
 write_term_no_sqbrack(F,T,_,_):-
     T =.. [Fun], !,
-    write(F,Fun).
+    write_functor(F,Fun).
 % infixed operators
 write_term_no_sqbrack(F,T,N,ListName):-
     T =.. [Fun,ArgX,ArgY],
@@ -461,10 +461,24 @@ write_term_no_sqbrack(F,T,N,ListName):-
 write_term_no_sqbrack(F,T,N,ListName):- !,
     N1 is N-1,
     T =.. [Fun|Arg],
-    write(F,Fun),
+    write_functor(F,Fun),
     write(F,"("),
     print_list_no_sqbrack(F,Arg,N1,ListName),
     write(F,")").
+
+% used only to print correctly functor names containing underscores
+% (the underscore in LaTeX has a meaning ...)
+write_functor(File,Functor):-
+    atom_chars(Functor,CharList),
+    convert_underscores(CharList,NewCharList),
+    atom_chars(NewFunctor,NewCharList),
+    write(File,NewFunctor).
+
+convert_underscores([],[]).
+convert_underscores(['_'|T],['\\','_'|T1]):- !,
+    convert_underscores(T,T1).
+convert_underscores([H|T],[H|T1]):-
+    convert_underscores(T,T1).
 
 % If the list is a difference list, we also have the
 % case in which the rest is a variable.
