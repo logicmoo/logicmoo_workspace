@@ -35,14 +35,14 @@ Prepare an input file that first loads the module `sldnfdraw`
     :- use_module(library(sldnfdraw)).
 
 
-Then you need to initialize the library with
+Then initialize the library with
 
     :- sldnf.
 
 You can now write the program you want to query by including it within
-the directives `:- begin_program.` and `:- end_program.` as in
+the directives `:-begin_program.` and `:-end_program.` as in
 ```
-:- begin_program.
+:-begin_program.
 
 member(X ,[X|_T]).
 member(X ,[_H|T]):-
@@ -51,7 +51,7 @@ member(X ,[_H|T]):-
 :-end_program.
 ```
 You can now write the query by including it within
-the directives `:- begin_query.` and `:- end_query.` as in
+the directives `:-begin_query.` and `:-end_query.` as in
 ```
 :-begin_query.
 
@@ -64,7 +64,7 @@ If you call it with a variable as in
 ```
 ?- draw_goal(T).
 ```
-it will return in `T` a string with the Latex code for drawing the tree, that you
+it will return in `T` a string with the LaTex code for drawing the tree, that you
 can then include in a LaTeX document.
 
 If you call `draw_goal/1` with a string as in
@@ -76,12 +76,24 @@ You can then include it in a LaTeX document. The minimal LaTeX file you could us
 is
 ```
 \documentclass{article}
-\usepackage{epic}
+\usepackage{epic,eepic}
 \usepackage{ecltree}
 \begin{document}
 \input{tree}
 \end{document}
 ```
+and you should compile it with
+```
+latex file.tex
+dvipdf file.dvi
+```
+If the graph is too condensed, you can change the spacing with
+```
+\setlength{\GapDepth}{30pt}
+\setlength{\EdgeLabelSep}{15pt}
+\setlength{\GapWidth}{30pt}
+```
+inserted befeore `\begin{document}`.
 
 If you are using your example in SWISH and want the output to be shown
 in SVG add the following code after laoding the library
@@ -90,20 +102,28 @@ in SVG add the following code after laoding the library
     :- use_rendering(sldnf).
     :- endif.
 
-and you need to have the following programs on the server
- - LaTeX
- - pdfcrop
- - pdf2svg
+and you need the following programs on the server
+ - LaTeX with packages `epic` and `ecltree`
+ - `pdfcrop` https://www.ctan.org/pkg/pdfcrop?lang=en
+ - `pdf2svg` http://www.cityinthesky.co.uk/opensource/pdf2svg/
 
 In Ubuntu you would need the packages
 ```
 texlive
 texlive-extra-utils  
-pdf2svg
 texlive-humanities
 texlive-pictures
+pdf2svg
 ```
 
 Full Manual
 -----------
 http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-informatica/software/sldnf-draw/sldnf-draw
+
+Credits
+-------
+Developed by Marco Gavanelli <marco.gavanelli@unife.it>
+
+Ported to SWI-Prolog by Lorenzo Campioni <lorenzo.campioni@student.unife.it>
+
+Transformed into a module and adapted to SWISH by Fabrizio Riguzzi <fabrizio.riguzzi@unife.it>

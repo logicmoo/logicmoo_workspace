@@ -1,7 +1,44 @@
-% SLDNF Draw
-% Produces a LaTeX drawing of an SLDNF tree
-% Author: Marco Gavanelli
-% http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-informatica/software/sldnf-draw/sldnf-draw
+/*
+SLDNF Draw is covered by the Simplified BSD license:
+Copyright (c) 2017, Marco Gavanelli
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those
+of the authors and should not be interpreted as representing official policies,
+either expressed or implied, of the FreeBSD Project.
+*/
+/** <module> sldnfdraw
+
+Produces a LaTeX drawing of an SLDNF tree
+
+http://endif.unife.it/it/ricerca-1/aree-di-ricerca/informazione/ingegneria-informatica/software/sldnf-draw/sldnf-draw
+
+
+@author Marco Gavanelli, Lorenzo Campioni, Fabrizio Riguzzi
+@license Simplified BSD license
+@copyright Marco Gavanelli
+*/
+
 
 % Version 1.4
 % Does not crash when printing infinite terms
@@ -40,7 +77,7 @@
 % Fabrizio Riguzzi <fabrizio.riguzzi@unife.it>
 
 :-module(sldnfdraw,
-  [draw_goal/1,draw_goal/3,set_depth/1,animate/1,
+  [draw_goal/1,set_depth/1,animate/1,
   op(900,fy,not)]).
 
 :-use_module(library(apply)).
@@ -60,6 +97,7 @@
 :- dynamic my_clause/2.
 :- dynamic animations/1.
 
+:- thread_local sldnf_input_mod/1.
 :- dynamic sldnf_input_mod/1.
 
 :-meta_predicate set_depth(:).
@@ -87,6 +125,11 @@ sldnf_version(1.6).
 :- dynamic max_resolvent_length/1.
 max_resolvent_length(25).
 
+/**
+ * set_depth(++Depth:int) is det
+ *
+ * Sets the maximum depth of the SLDNF tree
+ */
 set_depth(M:D):-
     retract(M:maxdepth(_)),
     assert(M:maxdepth(D)).
@@ -95,6 +138,12 @@ maxdepth(20). % Default max depth: 20
 
 animations(no).
 
+/**
+ * animate(:Var) is det
+ *
+ * Sets animation on. The argument is unused (it is there to collect the
+ * name of the calling module)
+ */
 animate(M:_):- retract(M:animations(_)), assert(M:animations(yes)).
 
 %begin_binding('{\\tt ').
@@ -126,7 +175,13 @@ draw_goal(M:G,FileName,ListName):-
 	reset_slide(M),
     (draw(M:GSq,File,Length,ListName) ; true),
     close(File).
-
+/**
+ * draw_goal(++File:string) is det.
+ * draw_goal(--Tree:string) is det
+ *
+ * Writes the Latex code of the tree to File or
+ * returns it as a string in Tree
+ */
 draw_goal(M:String):-
     var(String),!,
     new_memory_file(Handle),
@@ -173,7 +228,8 @@ draw(_M:[],F,Longest,_,_,_):-
 draw(_,F,Longest,Depth,_,_):- Depth=<0, !,
     print_string_spaces(F,Longest,"..."),
     fail.
-draw(M:[not(G)|R],F,LongestIn,Depth,OpenCuts,ListName):-
+draw(M:[H|R],F,LongestIn,Depth,OpenCuts,ListName):-
+    negative(H,G),
     Depth1 is Depth-1,
     write_indented(M,F,Depth,"\\begin{bundle}{"),
     print_resolvent(M,F,[not(G)|R],ListName),
@@ -208,7 +264,7 @@ draw(M:[!|R],F,LongestIn,Depth,[LastCut|OpenCuts],ListName):- !,
     write_indented(M,F,Depth,"\\begin{bundle}{"),
     print_resolvent(M,F,[!|R],ListName),
     writeln(F,"}"),
-	current_slide(Slide),
+	M:current_slide(Slide),
     assert(M:reached(LastCut,Slide)),
     (print_builtin_children(true,M:R,F,Length,Depth1,OpenCuts,ListName);     writeln(F,"\\end{bundle}")),
     fail.
@@ -262,7 +318,7 @@ print_children(M:G,M:R,F,Length,Depth,OpenCuts,ListName):-
 % 3. la clause_is_cut restituisce anche la slide S in cui viene fatto il taglio
 % 4. cambiare la start_pause in una pausa effettuata alla slide S
 % 5. sincronizzare anche le slide seguenti (se necessario)
-    (clause_is_cut(C,SlideCut)	%ATTENZIONE CHE HO TOLTO UNA NEGAZIONE! CONTROLLARE CHE NON CI SIANO DEI BINDING ...
+    (clause_is_cut(M,C,SlideCut)	%ATTENZIONE CHE HO TOLTO UNA NEGAZIONE! CONTROLLARE CHE NON CI SIANO DEI BINDING ...
         ->   write_indented(M,F,Depth,"\\chunk{"),start_pause(M,F,SlideCut), cut_symbol(StringCut), write(F,StringCut),write(F,"}"), end_pause(M,F), fail
 		;    true),
     (check_body_contains_cut(B,OpenCuts,NewCuts,_AddedCut,C)
@@ -303,6 +359,10 @@ print_builtin_children(G,M:_,F,Length,Depth,_OpenCuts,_):-
     print_fail(M,F,Depth,Length),
     fail.
 
+
+negative(not(G),G):-!.
+
+negative(\+(G),G).
 %%%%%%%%%%%%%%%% Predicates fot cut handling %%%%%%%%%%%%%%%%%
 
 %check_body_contains_cut(+Body,++OpenCuts,-NewCuts,-AddedCut,++Counter)
@@ -312,10 +372,10 @@ check_body_contains_cut(B,OpenCuts,NewCuts,AddedCut,Counter):-
 
 % A clause is not cut if the cut of the current
 % node has not been reached.
-clause_is_not_cut(C):-
-    not(reached(cut(C))).
-clause_is_cut(C,Slide):-
-    reached(cut(C),Slide).
+clause_is_not_cut(M,C):-
+    not(M:reached(cut(C))).
+clause_is_cut(M,C,Slide):-
+    M:reached(cut(C),Slide).
 
 push_cut(L,[cut(C)|L],cut(C),C).
 
@@ -591,7 +651,7 @@ vanilla(M:not(X)) :- !,
 vanilla(_M:X) :-
     built_in(X), call(X).
 vanilla(M:X) :-
-    clausola_list(M:X,Body,_,_),
+    M:c(X,Body,_),
     vanilla(M:Body).
 
 term_length(G,Length):-
@@ -630,7 +690,8 @@ max_subtree_width(M:[A|B],Width):- built_in(A),!,
 max_subtree_width(M:[A|B],Width):-!,
 	term_length_chopped([A|B],W1),
 	findall(W,
-		(	clausola_list(M:A,Body,_,_),
+		(	
+            M:c(A,Body,_),
 			append(Body,B,Resolvent),
 			max_subtree_width(M:Resolvent,W)
 		),
@@ -821,25 +882,26 @@ indexOf([_|Tail], Element, Index):-
 %%%%%
 
 get_var_name(X,Name=X):-
-   var_property(X, name(Name)).
+   var_property(X, name(Name)),!.
+
+get_var_name(X,'_'=X).
 
 :- multifile sandbox:safe_primitive/1.
-
-%sandbox:safe_meta(sldnfdraw:draw_goal(_)).
 
 :- multifile sandbox:safe_meta/2.
 
 sandbox:safe_meta(sldnfdraw:draw_goal(_),[]).
 
-user:term_expansion(end_of_file, end_of_file) :-!,
+user:term_expansion(end_of_file, end_of_file) :-
   prolog_load_context(module, M),
+  sldnf_input_mod(M),!,
   retractall(sldnf_input_mod(M)),
   style_check(+singleton).
 
 user:term_expansion((:- sldnf), []) :-!,
   prolog_load_context(module, M),
   assert(sldnf_input_mod(M)),
-  M:dynamic((prog_on/0,query_on/0,c/3,query/2)),
+  M:dynamic((prog_on/0,query_on/0,c/3,query/2,reached/1)),
   animations(A),
   assert(M:animations(A)),
   maxdepth(MD),
