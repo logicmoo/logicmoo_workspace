@@ -1433,11 +1433,11 @@ check_individuals_not_equal(M,X,Y,ABox):-
 individual_class_C([],_,_,[]).
 
 individual_class_C([H|T],C,ABox,[H|T1]):-
-  findClassAssertion(C,H,_,ABox),
+  findClassAssertion(C,H,_,ABox),!,
   individual_class_C(T,C,ABox,T1).
 
-individual_class_C([H|T],C,ABox,T1):-
-  \+ findClassAssertion(C,H,_,ABox),
+individual_class_C([_H|T],C,ABox,T1):-
+  %\+ findClassAssertion(C,H,_,ABox),
   individual_class_C(T,C,ABox,T1).
 /* *************** */
 
