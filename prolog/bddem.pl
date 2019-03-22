@@ -22,7 +22,8 @@
   probability_dd/3,
   add_prod/4,
   add_sum/4,
-  ret_strategy/4,
+  % ret_strategy/4,
+  ret_strategy/6,
   debug_cudd_var/2 
     ]).
 /** <module> bddem
@@ -425,6 +426,14 @@ or_listc1([H|T],Env,B0,B1):-
  * ret_strategy(++Environment:int,++ADD:int,--Decision:list,--Cost:int) is det
  *
  * Computes the optimal strategy.
+*/
+
+/*
+ * ret_strategy(++Environment:int,++ADD:int,--Decision:list,--Cost:int, ++MaxNumberOfChoices:int, ++Precise:int) is det
+ *
+ * Computes the optimal strategy with number of choices = MaxNumberOfChoices
+ * if precise = 1. If precise = 0 then number of choices =< MaxNumberOfChoices
+ * 
 */
 
 /**
