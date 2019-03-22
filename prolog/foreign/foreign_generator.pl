@@ -149,25 +149,35 @@ generate_library(M, AliasSO, AliasSOPl, InitL, File) :-
                                            access(read),
                                            relative_to(File)])
                      ), FSourceL),
-    ( forall(( member(Dep, [File|FSourceL])
-             ; foreign_dependency(M, HAlias),
-               absolute_file_name(HAlias, Dep,
-                                  [extensions(['.h','']),
-                                   access(read),
-                                   relative_to(File)])
+    ( forall(( Dep = File
              ; member(Alias, [library(foreign/foreign_generator),
                               library(foreign/foreign_props),
                               library(foreign/foreign_interface)
                              ]),
                absolute_file_name(Alias, Dep, [file_type(prolog),
                                                access(read),
-                                               relative_to(File)])
+                                               relative_to(File)])),
+             is_newer(FileSO, Dep))
+    ->print_message(informational,
+                    format('Skipping generation of ~w interface: is up to date', [File])),
+      compile_library(M, FileSO, File, FSourceL)
+    ; do_generate_library(M, FileSO, File, InitL),
+      do_generate_wrapper(M, AliasSO, AliasSOPl, File),
+      do_compile_library(M, FileSO, File, FSourceL)
+    ).
+
+compile_library(M, FileSO, File, FSourceL) :-
+    ( forall(( member(Dep, FSourceL)
+             ; foreign_dependency(M, HAlias),
+               absolute_file_name(HAlias, Dep,
+                                  [extensions(['.h','']),
+                                   access(read),
+                                   relative_to(File)])
              ),
              is_newer(FileSO, Dep))
     ->print_message(informational,
-                    format('Skipping build of ~w: is up to date', [FileSO]))
-    ; do_generate_library(M, FileSO, File, InitL, FSourceL),
-      do_generate_wrapper(M, AliasSO, AliasSOPl, File)
+                    format('Skipping compilation of ~w: is up to date', [FileSO]))
+    ; do_compile_library(M, FileSO, File, FSourceL)
     ).
 
 do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
@@ -196,9 +206,13 @@ atomic_args(String, ArgL) :-
     atomic_list_concat(ArgL1, ' ', String),
     subtract(ArgL1, [''], ArgL).
 
-do_generate_library(M, FileSO, File, InitL, FSourceL) :-
+do_generate_library(M, FileSO, File, InitL) :-
     file_name_extension(BaseFile, _, FileSO),
-    generate_foreign_interface(M, File, InitL, BaseFile),
+    generate_foreign_interface(M, File, InitL, BaseFile).
+
+
+do_compile_library(M, FileSO, File, FSourceL) :-
+    file_name_extension(BaseFile, _, FileSO),
     absolute_file_name(library(foreign/foreign_interface),
                        IntfPl,
                        [file_type(prolog), access(read), relative_to(File)]),
