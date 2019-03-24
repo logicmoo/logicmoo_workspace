@@ -573,15 +573,15 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,delimiter-[EC,classify],happens(NL,
 	simple_event_colour(L,EC),
 	remember_event_hint(L),
 	NL=L.
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- % to allow "meta eventing"
+	nonvar(LT), LT=happens(NL,T1,T2), 
+	!,
+	simple_event_colour(LT,EC).
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- 
 	nonvar(LT), ( head_hint(LT,event) /* too strong, due to external_predicate_for_lps/1:  system_action(LT)*/ ),
 	!,
 	simple_event_colour(LT,EC),
 	NL=LT.
-syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- % to allow "meta eventing"
-	nonvar(LT), LT=happens(NL,T1,T2), 
-	!,
-	simple_event_colour(LT,EC).
 syntax2p_literal(L,_Vars,lps2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
 	var(L),
 	!,

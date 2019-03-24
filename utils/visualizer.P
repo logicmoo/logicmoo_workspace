@@ -167,7 +167,7 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 		my_term_to_atom(F/N,Gatom), my_term_to_atom(X,Atom), 
 		(T2==LastRelevantTime -> FluentSuffix = [' (end of time)'] ; FluentSuffix = []),
 		concat_atom(['Fluent ',Atom,' initiated at ',T1,'<br/>and terminated at transition to ',T2|FluentSuffix],Tip),
-		(atomic(X)-> Subgroup=[]; arg(1,X,SS),Subgroup=[subgroup:SS]),
+		(atomic(X)-> Subgroup=[]; arg(1,X,SS),my_term_to_atom(SS,SS_),Subgroup=[subgroup:SS_]),
 		get_increment_counter(IDs,ID)
 	), Fluents),
 	%... and the rest:
@@ -186,7 +186,7 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 		simulatedRealTimePerCycle(RTC), make_json_object([begin:RTB,cycle:RTC],BC), SRT = [simulatedRealTime:BC] 
 		; SRT=[]),
 	% render to JSON:
-	make_json_object([groups:Groups,items:Items|SRT],All), term2json(All,Timeline),
+	make_json_object([groups:Groups,items:Items|SRT],All),term2json(All,Timeline),
 	displayTimeline(File,Timeline), 
 	( DSarray == [] -> Cycles=[] ; make_json_object([cycles:DSarray],Cycles)), 
 	term2json(Cycles,Sequence).

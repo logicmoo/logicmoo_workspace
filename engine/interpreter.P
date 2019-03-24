@@ -1242,7 +1242,7 @@ go_finish(File,ResultFluents,T0,T1,Outcome) :-
 interesting_composites(Interesting_CEs) :-
 	setof(composite_event([happens(CE_template,Start,End)],happens(CE_template,Start,End)), CE^Fl^Cond^Change^TT1^TT2^CE_^EF^EN^(
 		(terminated(CE, Fl, Cond);initiated(CE,Fl, Cond); updated(CE,Change,Fl, Cond)), 
-		CE=happens(CE_,TT1,TT2), functor(CE_,EF,EN), functor(CE_template,EF,EN),
+		CE=happens(CE_,TT1,TT2), nonvar(CE_), functor(CE_,EF,EN), functor(CE_template,EF,EN),
 		macroaction(CE_template)
 		), Interesting_CEs
 	) -> true ; Interesting_CEs=[].
@@ -1403,7 +1403,7 @@ check_syntax(F,Notices) :-
 		source_position(initiated(Ev, Fl, Cond),F,Pos,Vars),
 		(
 			((nonvar(Ev), Ev = happens(Ev2, TT1, _)) -> 
-				( (d_event(Ev2), \+ editing_action(Ev2)) -> fail 
+				( (d_event(Ev2), \+ editing_action(Ev2) ; nonvar(Ev2), Ev2=happens(Meta,_,_)) -> fail 
 				; 
 				(\+ l_events(Ev,_)->
 				buildError(Ev2,Vars,' in initiated post-condition must be an (event/action) predicate',ET), 
@@ -1435,7 +1435,7 @@ check_syntax(F,Notices) :-
 		source_position(terminated(Ev, Fl, Cond),F,Pos,Vars),
 		(
 			((nonvar(Ev), Ev = happens(Ev2, TT1, _)) -> 
-				( (d_event(Ev2), \+ editing_action(Ev2)) -> fail 
+				( (d_event(Ev2), \+ editing_action(Ev2) ; nonvar(Ev2), Ev2=happens(Meta,_,_)) -> fail 
 				; 
 				(\+ l_events(Ev,_) ->
 				buildError(Ev2,Vars,' in terminated post-condition must be an (event/action) predicate',ET), 
@@ -1459,7 +1459,7 @@ check_syntax(F,Notices) :-
 		source_position(updated(Ev, Fl, Change, Cond),F,Pos,Vars),
 		(
 			((nonvar(Ev), Ev = happens(Ev2, TT1, _)) -> 
-				( (d_event(Ev2), \+ editing_action(Ev2)) -> fail 
+				( (d_event(Ev2), \+ editing_action(Ev2); nonvar(Ev2), Ev2=happens(Meta,_,_)) -> fail 
 				; 
 				(\+ l_events(Ev,_)->
 				buildError(Ev2,Vars,' in updated post-condition must be an (event/action) predicate',ET), 
