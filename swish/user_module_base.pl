@@ -45,6 +45,7 @@ swish_config:config(include_alias,	system).
 :- multifile 'swish renderer'/2. % to avoid SWISH warnings in other files
 :- use_rendering(lps_2d). % this will be the preferred... if available for the current visualization
 :- use_rendering(lps_timeline).
+:- use_rendering(graphviz). % for state/transition diagrams
 
 :- multifile pengines:prepare_module/3.
 pengines:prepare_module(_Module, swish, _Options) :- 
@@ -63,7 +64,7 @@ sandbox:safe_primitive(interpreter:go(_File,Options)) :- \+ member(cycle_hook(_,
 sandbox:safe_primitive(interpreter:go). 
 sandbox:safe_primitive(interpreter:lps_welcome_message). 
 sandbox:safe_primitive(visualizer:gojson(_JSON)). 
-sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON)). 
+sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON,_DFAgraph)). 
 sandbox:safe_primitive(psyntax:dumploaded(_)). 
 
 /*
@@ -145,17 +146,16 @@ prolog_colour:style(lps_delimiter,[bold(true)]) :- mylog(lps_delimiter). */
 
 dump :- psyntax:dumploaded(false).
 dumplps :- psyntax:dumploaded(true).
-goclassic :- interpreter:lps_welcome_message, writeln('Using main interpreter:'),interpreter:go.
-goclassicv :- interpreter:lps_welcome_message, writeln('Using main interpreter:'),interpreter:go(_,[swish,verbose]).
-goclassic(Timeline) :- visualizer:gojson(_File,[silent],[],Timeline).
 go(T,Options) :- \+ member(cycle_hook(_,_,_),Options), \+ member(background(_),Options), 
 	(catch(lps_server_UI:lps_user_is_super,_,fail) -> true ; \+ member(timeout(_),Options)), 
 		% TODO: refactor lps_user_is_super into this file?
-	interpreter:lps_welcome_message, visualizer:gojson(_File,[dc,silent|Options],[],T).
-godc(T) :- visualizer:gojson(_File,[dc,silent],[],T).
+	interpreter:lps_welcome_message, visualizer:gojson(_File,[dc,silent|Options],[],T,_DFAgraph).
+godc(T) :- visualizer:gojson(_File,[dc,silent],[],T,_DFAgraph).
 go(T) :- godc(T).
 go :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,dc]).
 gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
+
+godfa(DFAgraph) :- visualizer:gojson(_File,[dc,silent],[],_T,DFAgraph).
 	
 :- multifile user:file_search_path/2.
 user:file_search_path(profile, lps_engine_dir('../swish/profiles')).
