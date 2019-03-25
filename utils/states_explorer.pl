@@ -114,13 +114,27 @@ bind_with_phb([],_).
 
 bind_with_phb(S) :- bind_with_phb(S,false).
 
+% bind_with_time(+Literal,+Time)
+bind_with_time(V,_T) :- var(V), !, throw(weird_var_literal).
+bind_with_time(holds(Fl,T),T) :- !. % TODO: deal with time expressions
+bind_with_time(holds(_,_),_) :- !.
+bind_with_time(happens(_,T1,T2),_T) :- ground(T1-T2), !.
+bind_with_time(happens(_,T1,T2),T) :- ground(T1), !, T2=T.
+bind_with_time(happens(_,T1,T2),T) :- ground(T2), !, T1=T.
+bind_with_time(happens(E,T1,T2),_) :- throw(weird_happenning(happens(E,T1,T2))).
+bind_with_time(holds(not Fl,T),Time) :- !, bind_with_time(holds(Fl,T),Time) .
+bind_with_time(not G,T) :- !, bind_with_time(G,T).
+bind_with_time(_,_).
 
 % TODO: deal properly with non user predicates!!!: 
 system_literal(G) :- predicate_property(G,built_in).
 
 thread_local phb_tuple/1. % preliminary Herbrand base
 
+% time(T) :- between(0,10,T). % time window
+
 phb :- retractall(phb_tuple(_)), fail.
+% phb :- current_state(State), member(S,State), assert(phb_tuple(holds(S,0))), fail.
 phb :- current_state(State), member(S,State), assert(phb_tuple(holds(S,'$_LPS_TIME'))), fail.
 phb :- lps_fact(F), ground(F), \+ phb_tuple(F), assert(phb_tuple(F)), fail. % WHAT ABOUT non ground facts? should we care?
 phb :- phb2.
