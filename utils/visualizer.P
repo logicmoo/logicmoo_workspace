@@ -482,9 +482,7 @@ dfa_graph(L,dot(digraph(Statements))) :-
 		once(( member(State1-Times1, AbstractStates), member(T1,Times1) )),
 		once(( member(State2-Times2, AbstractStates), member(T2,Times2) )) 
 		),Edges),
-	append(Nodes,Edges,Statements),
-	mylog(nodes-Nodes),
-	mylog(edges-Edges).
+	append(Nodes,Edges,Statements).
 	
 
 
