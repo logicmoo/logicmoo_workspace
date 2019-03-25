@@ -469,20 +469,21 @@ join_fluent_ranges([],[]).
 % dfa_graph(FluentsEtAl)  list of t(X,T1-T2,G) , G=action or event for events
 
 dfa_graph(L,dot(digraph(Statements))) :- 
-	setof(T1-State, setof(Fl,T2^G^(member(t(Fl,T1-T2,G),L), G\==event, G\==action),State), History),
-	History=[First-_|_],
-	setof(State-Times, setof(T,member(T-State,History),Times), AbstractStates), % our nodes
+	setof(T1-State, setof(Fl,T2^G^(member(t(Fl,T1-T2,G),L), G\==event, G\==action),State), StateHistory),
+	StateHistory=[First-_|_],
+	(setof(State-Times, setof(T,member(T-State,StateHistory),Times), AbstractStates) -> true ; AbstractStates=[]), % our nodes
 	findall(node(Times,[label=State_,fillcolor='#D7DCF5',style=filled,color=Line]), (
 		member(State-Times,AbstractStates),
 		findall(Fl_,(member(Fl,State),term_string(Fl,Fl_)),Tuples), atomic_list_concat(Tuples,"\n",State_), % format(string(State__),"<span>~s</span>",[State_]),
 		(member(First,Times)->Line=black;Line='#D7DCF5') % indicate the initial state
 		), Nodes),
-	setof(edge((Times1->Times2),[label=Ev,color='#E19735']), G^T1^T2^State1^State2^(
+	( setof(edge((Times1->Times2),[label=Ev,color='#E19735']), G^T1^T2^State1^State2^(
 		member(t(Ev,T1-T2,G),L), (G==event; G==action), 
 		once(( member(State1-Times1, AbstractStates), member(T1,Times1) )),
 		once(( member(State2-Times2, AbstractStates), member(T2,Times2) )) 
-		),Edges),
+		),Edges) -> true ; Edges=[]),
+	!,
 	append(Nodes,Edges,Statements).
-	
+dfa_graph(_L,dot(digraph([node(root,[color=red,label='A DFA graph needs fluent states and events!'])]))). % missing either nodes or edges, no graph to show
 
 
