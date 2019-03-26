@@ -129,7 +129,7 @@ visual(File,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	), OtherTuples),
 	append(RangedFluents,OtherTuples,Ranged),
 	
-	append(FluentTuples,OtherTuples,FluentsEtAl), dfa_graph(FluentsEtAl,DFAgraph),
+	append(FluentTuples,OtherTuples,FluentsEtAl), dfa_graph(FluentsEtAl,false,DFAgraph),
 	
 
 	% Find groups
@@ -466,10 +466,16 @@ join_fluent_ranges([T|S],[T|R]) :- !, join_fluent_ranges(S,R).
 join_fluent_ranges([],[]).
 
 
-% dfa_graph(FluentsEtAl)  list of t(X,T1-T2,G) , G=action or event for events
+% dfa_graph(+FluentsEtAl,+AbstractNumbers,GraphVizGraph)  list of t(X,T1-T2,G) , G=action or event for events
+% AbstractNumbers==true abstracts numbers into 'n', leading to smaller diagrams
 
-dfa_graph(L,dot(digraph(Statements))) :- 
-	setof(T1-State, setof(Fl,T2^G^(member(t(Fl,T1-T2,G),L), G\==event, G\==action),State), StateHistory),
+dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :- 
+	must_be(boolean,AbstractNumbers),
+	setof(T1-State, 
+		setof(Fl_,T2^G^Fl^(
+			member(t(Fl,T1-T2,G),L), G\==event, G\==action, (AbstractNumbers==true->abstract_numbers(Fl,Fl_);Fl=Fl_)
+			),State)
+		, StateHistory),
 	StateHistory=[First-_|_],
 	(setof(State-Times, setof(T,member(T-State,StateHistory),Times), AbstractStates) -> true ; AbstractStates=[]), % our nodes
 	findall(node(Times,[label=State_,fillcolor='#D7DCF5',style=filled,color=Line]), (
@@ -477,13 +483,20 @@ dfa_graph(L,dot(digraph(Statements))) :-
 		findall(Fl_,(member(Fl,State),term_string(Fl,Fl_)),Tuples), atomic_list_concat(Tuples,"\n",State_), % format(string(State__),"<span>~s</span>",[State_]),
 		(member(First,Times)->Line=black;Line='#D7DCF5') % indicate the initial state
 		), Nodes),
-	( setof(edge((Times1->Times2),[label=Ev,color='#E19735']), G^T1^T2^State1^State2^(
-		member(t(Ev,T1-T2,G),L), (G==event; G==action), 
+	( setof(edge((Times1->Times2),[label=Ev_,color='#E19735']), G^T1^T2^State1^State2^Ev^(
+		member(t(Ev,T1-T2,G),L), (G==event; G==action),
 		once(( member(State1-Times1, AbstractStates), member(T1,Times1) )),
-		once(( member(State2-Times2, AbstractStates), member(T2,Times2) )) 
+		once(( member(State2-Times2, AbstractStates), member(T2,Times2) )),
+		(AbstractNumbers==true->abstract_numbers(Ev,Ev_);Ev=Ev_)
 		),Edges) -> true ; Edges=[]),
 	!,
 	append(Nodes,Edges,Statements).
 dfa_graph(_L,dot(digraph([node(root,[color=red,label='A DFA graph needs fluent states and events!'])]))). % missing either nodes or edges, no graph to show
 
+% abstract_numbers(+Term,-AbstractTerm)
+abstract_numbers(V,V) :- var(V), !.
+abstract_numbers(X,n) :- number(X), !.
+abstract_numbers(X,X) :- atomic(X), !.
+abstract_numbers([X|L],[AX|AL]) :- !, abstract_numbers(X,AX), abstract_numbers(L,AL).
+abstract_numbers(X,AX) :- X=..[F|Args], abstract_numbers(Args,AArgs), AX=..[F|AArgs].
 
