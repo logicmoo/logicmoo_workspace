@@ -8,7 +8,7 @@
 
 /* Utilities for visualizing LPS executions on SWISH */
 
-:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/4, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1, 
+:- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/5, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1, 
 	collect_display_specs_lazy/2, has_d_clauses/0]).
 
 :- if(\+ current_prolog_flag(dialect, swi)).
@@ -67,7 +67,7 @@ gov(File) :- gov(File,[]).
 % gov(ProgramFile,Options)
 gov(File,Options) :- gov(File,Options,[]).
 
-gov(File,Options,Results) :- go(File,[make_test|Options],Results), visual(File,_JSON).
+gov(File,Options,Results) :- go(File,[make_test|Options],Results), visual(File,_JSON,_DFAgraph).
 
 % Top level predicates to visualize timelines of a psyntax file
 golv(LPSP_file) :- golv(LPSP_file,[]).
@@ -90,10 +90,10 @@ golpsv(LPSP_file,Options,Results) :-
 	gov(Pfile,Options,Results).
 
 % for SWISH:
-gojson(JSON) :- gojson(_File,[],[],JSON).
-gojson(File,Options,Results,JSON) :- 
+gojson(JSON) :- gojson(_File,[],[],JSON,_DFAgraph).
+gojson(File,Options,Results,JSON,DFAgraph) :- 
 	( go(File,[make_test,swish|Options],Results) -> true ; writeln('PROGRAM FAILED')), 
-	visual(File,JSON).
+	visual(File,JSON,DFAgraph).
 
 
 % visual(TestResultsFile,lps_visualization(TimelineJSON,TwoD_JSON))  This MUST be called after go(File,[...make_test,...],...)
@@ -101,7 +101,7 @@ gojson(File,Options,Results,JSON) :-
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
 % works on facts asserted by either Wei (Stage = 'Observations', ...) or rak interpreter (Stage = fluent,event)
-visual(File,lps_visualization(Timeline,Sequence)) :- 
+visual(File,lps_visualization(Timeline,Sequence),DFAgraph) :- 
 	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
 	% my_load_dyn(File), % we need the meta info about events
 	% load_test_file_for(File),
@@ -128,6 +128,9 @@ visual(File,lps_visualization(Timeline,Sequence)) :-
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X,  TT2=T2)
 	), OtherTuples),
 	append(RangedFluents,OtherTuples,Ranged),
+	
+	append(FluentTuples,OtherTuples,FluentsEtAl), dfa_graph(FluentsEtAl,DFAgraph),
+	
 
 	% Find groups
 	(setof(G, T^X^member(t(X,T,G),Ranged), GroupIds)->true;GroupIds=[]), % allow for empty timelines
@@ -461,3 +464,26 @@ join_fluent_ranges([t(X,T1-T2,G),t(XX,T2-T3,G)|S],R) :- variant(X,XX), !,
 	join_fluent_ranges([t(X,T1-T3,G)|S],R).
 join_fluent_ranges([T|S],[T|R]) :- !, join_fluent_ranges(S,R).
 join_fluent_ranges([],[]).
+
+
+% dfa_graph(FluentsEtAl)  list of t(X,T1-T2,G) , G=action or event for events
+
+dfa_graph(L,dot(digraph(Statements))) :- 
+	setof(T1-State, setof(Fl,T2^G^(member(t(Fl,T1-T2,G),L), G\==event, G\==action),State), StateHistory),
+	StateHistory=[First-_|_],
+	(setof(State-Times, setof(T,member(T-State,StateHistory),Times), AbstractStates) -> true ; AbstractStates=[]), % our nodes
+	findall(node(Times,[label=State_,fillcolor='#D7DCF5',style=filled,color=Line]), (
+		member(State-Times,AbstractStates),
+		findall(Fl_,(member(Fl,State),term_string(Fl,Fl_)),Tuples), atomic_list_concat(Tuples,"\n",State_), % format(string(State__),"<span>~s</span>",[State_]),
+		(member(First,Times)->Line=black;Line='#D7DCF5') % indicate the initial state
+		), Nodes),
+	( setof(edge((Times1->Times2),[label=Ev,color='#E19735']), G^T1^T2^State1^State2^(
+		member(t(Ev,T1-T2,G),L), (G==event; G==action), 
+		once(( member(State1-Times1, AbstractStates), member(T1,Times1) )),
+		once(( member(State2-Times2, AbstractStates), member(T2,Times2) )) 
+		),Edges) -> true ; Edges=[]),
+	!,
+	append(Nodes,Edges,Statements).
+dfa_graph(_L,dot(digraph([node(root,[color=red,label='A DFA graph needs fluent states and events!'])]))). % missing either nodes or edges, no graph to show
+
+
