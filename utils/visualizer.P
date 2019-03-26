@@ -487,7 +487,7 @@ dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :-
 		member(t(Ev,T1-T2,G),L), (G==event; G==action),
 		once(( member(State1-Times1, AbstractStates), member(T1,Times1) )),
 		once(( member(State2-Times2, AbstractStates), member(T2,Times2) )),
-		(AbstractNumbers==true->mylog(abstract_numbers(Ev,Ev_)),abstract_numbers(Ev,Ev_),mylog(abstracted-Ev_);Ev=Ev_)
+		(AbstractNumbers==true->abstract_numbers(Ev,Ev_);Ev=Ev_)
 		),Edges) -> true ; Edges=[]),
 	!,
 	append(Nodes,Edges,Statements).
