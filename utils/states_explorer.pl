@@ -1,7 +1,14 @@
-% Experiments finding states and event transitions by simulation (or abstract interpretation wrt time...?),
-% when the LPS program is equivalent to a deterministic finite automata
-% Assumptions: no time constants, finite states
+% WARNING: preliminary incomplete experiment, do not use this! Except perhaps to half guess domains for fluents and events.
+% Find potential states and event transitions by simulation abstracting  time
+% LPS program being assumed equivalent to a deterministic finite automata
+% Assumptions: no time constants in heads, finite states
 % TODO: abort if term depth bigger than 2?? More???
+% Example usage:
+% /Applications/SWI-Prolog8.1.1.app/Contents/MacOS/swipl -l /Users/mc/git/lps_corner/utils/states_explorer.pl
+% and then:
+% load_program("/Users/mc/git/lps_corner/examples/CLOUT_workshop/loanAgreementPostConditions.pl"), phb, print_phb, print_transitions.
+% load_program("/Users/mc/git/lps_corner/examples/CLOUT_workshop/goto_with_ifthenelse.pl"), phb, print_phb, print_transitions.
+
 :- module(states_explorer,[load_program/1,phb/0,print_phb/0,print_transitions/0]).
 
 :- ensure_loaded('psyntax.P').
@@ -55,7 +62,7 @@ print_transitions :-
 lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:terminated(E,Fl,Cond).
 lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:initiated(E,Fl,Cond).
 lps_literals([E,holds(NewFl,_)|Cond]) :- interpreter:updated(E,Fl,Old-New,Cond), (NewFl=Fl ; interpreter:replace_term(Fl,Old,New,NewFl)).
-lps_literals(L) :- interpreter:d_pre(L).
+lps_literals(L) :- interpreter:d_pre(L). % Arguably correct, given that pre conditions filter rather than generate, but we're looking for all constants...
 lps_literals(L) :- interpreter:reactive_rule(H,B), append(H,B,L).
 lps_literals([H|Body]) :- interpreter:l_int(H,Body); interpreter:l_events(H,Body); interpreter:l_timeless(H,Body).
 lps_literals([Pred,Body]) :- user_prolog_clause(Pred,Body). 
@@ -98,7 +105,7 @@ positive_abstract_sequence([],[]).
 % Assumes no var subgoals
 % binds literals in sequence using current tuples in phb
 % considers all literals abducible
-bind_with_phb([G|S],Ab) :- ground(G), !, 
+bind_with_phb([G|S],Ab) :- ground(G),
 	(system_literal(G) -> once(G) ; once(phb_tuple(G))),
 % Replacing the above by the following commented lines causes too many transitions for goto_with_ifthenelse,
 %	(system_literal(G) -> once(G) 
@@ -116,7 +123,7 @@ bind_with_phb(S) :- bind_with_phb(S,false).
 
 % bind_with_time(+Literal,+Time)
 bind_with_time(V,_T) :- var(V), !, throw(weird_var_literal).
-bind_with_time(holds(Fl,T),T) :- !. % TODO: deal with time expressions
+bind_with_time(holds(_Fl,T),T) :- !. % TODO: deal with time expressions
 bind_with_time(holds(_,_),_) :- !.
 bind_with_time(happens(_,T1,T2),_T) :- ground(T1-T2), !.
 bind_with_time(happens(_,T1,T2),T) :- ground(T1), !, T2=T.
@@ -147,9 +154,7 @@ phb2 :-
 		lps_literals(L), % (L=[holds(loc(_11528,south),_)|_] -> trace ; true),
 		flat_sequence(L,Flat), positive_abstract_sequence(Flat,Pos), 
 		% .. try to bind those literals with the preliminary HB found so far...
-		% writeln(binding-Pos),
 		bind_with_phb(Pos,true), 
-		% writeln(bound-Pos),
 		member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
 		% we found a new one, remember it and continue:
 		assert(phb_tuple(Lit)), 
