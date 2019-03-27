@@ -90,6 +90,7 @@ user_prolog_clause(Pred,Body) :-
 	\+ sub_string(File,_,_,_,'/lps_corner/engine/'), 
 	\+ sub_string(File,_,_,_,'/lps_corner/utils/'), 
 	\+ sub_string(File,_,_,_,'/lps_corner/swish/'), 
+	\+ sub_string(File,_,_,_,'/lc/'), % proprietary LogicalContracts code   TODO: refactor this out of here
 	\+ sub_string(File,_,_,_,'swish/lib/'), 
 	\+ interpreter:program_predicate(Pred).
 
