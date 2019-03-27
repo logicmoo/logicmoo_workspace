@@ -20,7 +20,7 @@
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, 
+	go/3, my_term_to_atom/2, abstract_numbers/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, 
 	beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1, lps_program_module/1, d/2
 	]).
 
@@ -493,10 +493,4 @@ dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :-
 	append(Nodes,Edges,Statements).
 dfa_graph(_L,dot(digraph([node(root,[color=red,label='A DFA graph needs fluent states and events!'])]))). % missing either nodes or edges, no graph to show
 
-% abstract_numbers(+Term,-AbstractTerm)
-abstract_numbers(V,V) :- var(V), !.
-abstract_numbers(X,n) :- number(X), !.
-abstract_numbers(X,X) :- atomic(X), !.
-abstract_numbers([X|L],[AX|AL]) :- !, abstract_numbers(X,AX), abstract_numbers(L,AL).
-abstract_numbers(X,AX) :- X=..[F|Args], abstract_numbers(Args,AArgs), AX=..[F|AArgs].
 

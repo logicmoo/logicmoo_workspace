@@ -8,11 +8,12 @@
 % and then:
 % load_program("/Users/mc/git/lps_corner/examples/CLOUT_workshop/loanAgreementPostConditions.pl"), phb, print_phb, print_transitions.
 % load_program("/Users/mc/git/lps_corner/examples/CLOUT_workshop/goto_with_ifthenelse.pl"), phb, print_phb, print_transitions.
+% Alternatively use print_transitions(false) to present transitions without abstract numbers
 
-:- module(states_explorer,[load_program/1,phb/0,print_phb/0,print_transitions/0]).
+:- module(states_explorer,[load_program/1,phb/0,print_phb/0,print_transitions/0,print_phb/1,print_transitions/1]).
 
 :- ensure_loaded('psyntax.P').
-:- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1, event_pred/1]).
+:- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1, event_pred/1, abstract_numbers/2]).
 
 % Backtrackable assert/retract of state
 assert_fluent(X) :- interpreter:uassert(state(X)).
@@ -49,13 +50,19 @@ check_condition(Cond) :-
 	flat_sequence(Cond,Flat), positive_abstract_sequence(Flat,Pos),
 	bind_with_phb(Pos).
 
-print_transitions :-
-	setof((Ev->Fl),states_explorer:transition(Ev,Fl),Trans), !, 
+print_transitions :- print_transitions(true).
+
+print_transitions(AbstractNumbers) :-
+	must_be(boolean,AbstractNumbers),
+	setof((Ev_->Fl_),Ev^Fl^(
+		states_explorer:transition(Ev,Fl),
+		(AbstractNumbers==true -> abstract_numbers(Ev->Fl,Ev_->Fl_); Ev=Ev_, Fl=Fl_)
+		),Trans), !, 
 	nl, writeln("Initial fluents state:\n----"),
 	current_state(State), forall(member(F,State),writeln(F)),
 	nl, writeln("State transitions:\n----"),
 	forall(member(T,Trans), writeln(T)).
-print_transitions :- 
+print_transitions(_) :- 
 	writeln("No transitions.").
 
 % lps_literals(-Goal) a "clause"-like metapredicate to enumerate all head/body combinations
@@ -116,7 +123,7 @@ bind_with_phb([X=X|S],Ab) :- !, bind_with_phb(S,Ab).
 % Somehow uncommenting this leads to no transitions being found...:
 % bind_with_phb([G|S],Ab) :- action_(G), !, bind_with_phb(S,Ab). % abduce actions
 bind_with_phb([G|S],Ab) :- phb_tuple(G), bind_with_phb(S,Ab).
-bind_with_phb([_|S],true) :- bind_with_phb(S,true). % we also abduce events etc
+bind_with_phb([_|S],true) :- bind_with_phb(S,true). % abduce 
 bind_with_phb([],_).
 
 bind_with_phb(S) :- bind_with_phb(S,false).
@@ -147,7 +154,7 @@ phb :- lps_fact(F), ground(F), \+ phb_tuple(F), assert(phb_tuple(F)), fail. % WH
 phb :- phb2.
 
 phb2 :- 
-	writeln("Starting a new pass..."),
+	writeln("\nStarting a new pass..."),
 	Flag=foo(_), 
 	(
 		% For each clause, considered with its positive literals only...
@@ -158,15 +165,26 @@ phb2 :-
 		member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
 		% we found a new one, remember it and continue:
 		assert(phb_tuple(Lit)), 
-		format("Remembering ~w~n",[Lit]),
+		format("~w.. ",[Lit]),
 		nb_setarg(1,Flag,added_at_least_one), fail
 	; 
 		arg(1,Flag,Arg), Arg==added_at_least_one, !, phb2 % try again with the extra tuples
 	).
-phb2 :- writeln("Finished preliminary HB").
+phb2 :- nl, writeln("Finished preliminary HB").
 
-print_phb :- 
-	nl, writeln("Preliminary Herbrand Base:\n----"), setof(T,phb_tuple(T),Tuples), forall(member(T,Tuples),writeln(T)).
+print_phb :- print_phb(true).
+
+print_phb(AbstractNumbers) :- 
+	must_be(boolean,AbstractNumbers),
+	nl, writeln("Preliminary Herbrand Base:\n----"), 
+	setof(T_, T^(phb_tuple(T), (AbstractNumbers==true->abstract_numbers(T,T_);T=T_) ),Tuples), 
+	writeln("--Fluents:"),
+	forall(member(holds(X,_),Tuples),writeln(X)),
+	writeln("--Events and actions:"),
+	forall(member(happens(X,_,_),Tuples),writeln(X)),
+	writeln("--Timeless:"),
+	forall((member(happens(X,_,_),Tuples), X\=holds(_,_), X\=happens(_,_,_)),writeln(X)),
+	writeln("----").
 
 %! my_ite(:If,:Then,:Else)  an if-then-else with universal quantifier on the condition
 my_ite(If,Then,_Else) :- 
