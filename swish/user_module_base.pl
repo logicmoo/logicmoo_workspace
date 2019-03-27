@@ -56,6 +56,8 @@ pengines:prepare_module(_Module, swish, _Options) :-
 :- use_module('../utils/psyntax.P',[
 	syntax2p/4,dumploaded/1,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
 	]).
+:- use_module('../utils/states_explorer.pl',[explore/2]).
+
 % This will be useful below, as file searching handling of relative paths differs from what's used
 % by use_module and friends.
 user:file_search_path(lps_engine_dir,D) :- interpreter:lps_engine_directory(D).
@@ -66,6 +68,7 @@ sandbox:safe_primitive(interpreter:lps_welcome_message).
 sandbox:safe_primitive(visualizer:gojson(_JSON)). 
 sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON,_DFAgraph)). 
 sandbox:safe_primitive(psyntax:dumploaded(_)). 
+sandbox:safe_primitive(states_explorer:explore(_,Options)) :- \+ member(cycle_hook(_,_,_),Options).
 
 /*
 The following could be used to prevent pengines (remote goal) access... but bear in mind that swish (user) browsers communicate directly
@@ -156,6 +159,9 @@ go :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[sw
 gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
 
 godfa(DFAgraph) :- visualizer:gojson(_File,[dc,silent],[],_T,DFAgraph).
+
+explore :- explore(_,[abstract_numbers,swish,dc,phb_limit(0.05)]).
+explore_numbers :- explore(_,[swish,dc,phb_limit(0.05)]).
 	
 :- multifile user:file_search_path/2.
 user:file_search_path(profile, lps_engine_dir('../swish/profiles')).

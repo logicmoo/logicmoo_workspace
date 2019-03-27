@@ -1,16 +1,18 @@
-% WARNING: preliminary incomplete experiment, do not use this! Except perhaps to half guess domains for fluents and events.
-% Find potential states and event transitions by simulation abstracting  time
-% LPS program being assumed equivalent to a deterministic finite automata
-% Assumptions: no time constants in heads, finite states
-% TODO: abort if term depth bigger than 2?? More???
+% WARNING: preliminary incomplete experiment, use with care! 
+% Finds "potential Herbrand Base", an Herbrand Base for LPS relaxing time overall and ignoring the filtering effect of negations and preconditions
+% Finds potential states and event transitions by abstracting time, and optionally numbers
+% Further assumptions: no time constants in heads, finite states
+% TODO: abstract recursive structures, e.g. lists; right now... timeout is our kludge, resulting in an incomplete base.
 % Example usage:
 % /Applications/SWI-Prolog8.1.1.app/Contents/MacOS/swipl -l /Users/mc/git/lps_corner/utils/states_explorer.pl
 % and then:
 % load_program("/Users/mc/git/lps_corner/examples/CLOUT_workshop/loanAgreementPostConditions.pl"), phb, print_phb, print_transitions.
 % load_program("/Users/mc/git/lps_corner/examples/CLOUT_workshop/goto_with_ifthenelse.pl"), phb, print_phb, print_transitions.
-% Alternatively use print_transitions(false) to present transitions without abstract numbers
+% Alternatively use print_transitions(false) to present transitions without abstracting numbers (e.g. showing concrete numbers)
+%
+% on SWISH, simply use explore (abstracts numbers) and explore_numbers (keeps numbers in the base)
 
-:- module(states_explorer,[load_program/1,phb/0,print_phb/0,print_transitions/0,print_phb/1,print_transitions/1]).
+:- module(states_explorer,[load_program/1,explore/2,phb/0,print_phb/0,print_transitions/0,print_phb/1,print_transitions/1]).
 
 :- ensure_loaded('psyntax.P').
 :- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1, event_pred/1, abstract_numbers/2]).
@@ -21,11 +23,17 @@ assert_fluent(X) :- interpreter:uretractall(state(X)), fail.
 retract_fluent(X) :- 
 	\+ \+ interpreter:state(X) -> (interpreter:uretractall(X); interpreter:uassert(X), fail) ; true.
 
+explore(F,Options) :- 
+	(select(abstract_numbers,Options,Options_) -> AN=true; Options=Options_, AN=false),
+	(select(phb_limit(TimeLimit),Options_,Options__) -> true; Options__=Options_, TimeLimit=0.5),
+	interpreter:go(F,[initialize_only|Options__]),
+	phb(TimeLimit), print_phb(AN), print_transitions(AN).
 
 load_program(F) :- golps(F,[dc,initialize_only]).
 
 current_state(State) :- 
-	interpreter:setof(S,(state(S), \+ system_fluent(S)),State).
+	interpreter:setof(S,(state(S), \+ system_fluent(S)),State), !.
+current_state([]).
 
 % find possible "relevant" transitions from the current state
 transition(Event,- Fl) :- 
@@ -60,15 +68,18 @@ print_transitions(AbstractNumbers) :-
 		),Trans), !, 
 	nl, writeln("Initial fluents state:\n----"),
 	current_state(State), forall(member(F,State),writeln(F)),
-	nl, writeln("State transitions:\n----"),
+	nl, writeln("Potential state transitions:\n----"),
 	forall(member(T,Trans), writeln(T)).
 print_transitions(_) :- 
 	writeln("No transitions.").
 
 % lps_literals(-Goal) a "clause"-like metapredicate to enumerate all head/body combinations
+lps_literals(Events) :- interpreter:observe(Obs, Next), Previous is Next-1, findall(happens(Ev,Previous,Next),member(Ev,Obs),Events).
 lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:terminated(E,Fl,Cond).
 lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:initiated(E,Fl,Cond).
-lps_literals([E,holds(NewFl,_)|Cond]) :- interpreter:updated(E,Fl,Old-New,Cond), (NewFl=Fl ; interpreter:replace_term(Fl,Old,New,NewFl)).
+lps_literals([E,holds(Fl,_)|Cond_]) :- 
+	interpreter:updated(E,Fl,Old-New,Cond), % this boils down to two rules in fact:
+	(Cond_=Cond ; interpreter:replace_term(Fl,Old,New,NewFl), Cond_=[holds(NewFl,_)|Cond]).
 lps_literals(L) :- interpreter:d_pre(L). % Arguably correct, given that pre conditions filter rather than generate, but we're looking for all constants...
 lps_literals(L) :- interpreter:reactive_rule(H,B), append(H,B,L).
 lps_literals([H|Body]) :- interpreter:l_int(H,Body); interpreter:l_events(H,Body); interpreter:l_timeless(H,Body).
@@ -78,6 +89,8 @@ user_prolog_clause(Pred,Body) :-
 	interpreter:lps_program_clause_file(Pred,Body,File), File\=asserted, 
 	\+ sub_string(File,_,_,_,'/lps_corner/engine/'), 
 	\+ sub_string(File,_,_,_,'/lps_corner/utils/'), 
+	\+ sub_string(File,_,_,_,'/lps_corner/swish/'), 
+	\+ sub_string(File,_,_,_,'swish/lib/'), 
 	\+ interpreter:program_predicate(Pred).
 
 lps_fact(H) :- 
@@ -112,12 +125,16 @@ positive_abstract_sequence([],[]).
 % Assumes no var subgoals
 % binds literals in sequence using current tuples in phb
 % considers all literals abducible
+bind_with_phb([Y is E|S],Ab) :- ground(E), !, % TODO: other system predicates with limited domains need to be handled too
+	Y is E, bind_with_phb(S,Ab). 
 bind_with_phb([G|S],Ab) :- ground(G),
-	(system_literal(G) -> once(G) ; once(phb_tuple(G))),
+	(system_literal(G) -> catch(once(G),_,true) % assume exceptions to be caused by time or number abstraction
+		; once(phb_tuple(G))),
 % Replacing the above by the following commented lines causes too many transitions for goto_with_ifthenelse,
 %	(system_literal(G) -> once(G) 
 %		; \+ event_pred(G) -> once(phb_tuple(G)) 
 %		; true), % abduce events
+	!,
 	bind_with_phb(S,Ab).
 bind_with_phb([X=X|S],Ab) :- !, bind_with_phb(S,Ab).
 % Somehow uncommenting this leads to no transitions being found...:
@@ -147,46 +164,60 @@ thread_local phb_tuple/1. % preliminary Herbrand base
 
 % time(T) :- between(0,10,T). % time window
 
-phb :- retractall(phb_tuple(_)), fail.
-% phb :- current_state(State), member(S,State), assert(phb_tuple(holds(S,0))), fail.
-phb :- current_state(State), member(S,State), assert(phb_tuple(holds(S,'$_LPS_TIME'))), fail.
-phb :- lps_fact(F), ground(F), \+ phb_tuple(F), assert(phb_tuple(F)), fail. % WHAT ABOUT non ground facts? should we care?
-phb :- phb2.
+phb :- phb(0.05). % default time limit
 
-phb2 :- 
-	writeln("\nStarting a new pass..."),
+phb(_) :- retractall(phb_tuple(_)), fail.
+% phb :- current_state(State), member(S,State), assert(phb_tuple(holds(S,0))), fail.
+phb(_) :- writeln("Remembering facts and initial state..."), current_state(State), member(S,State), assert(phb_tuple(holds(S,'$_LPS_TIME'))), fail.
+phb(_) :- lps_fact(F), ground(F), \+ phb_tuple(F), assert(phb_tuple(F)), fail. % WHAT ABOUT non ground facts? should we care?
+phb(TimeLimit) :- writeln("Starting bottom-up steps..."), phb2(TimeLimit), !.
+phb(_).
+
+phb2(TimeLimit) :- % seconds
+	findall(t,phb_tuple(_),Tuples), length(Tuples,N),
+	format("~w tuples~n",[N]),
 	Flag=foo(_), 
 	(
 		% For each clause, considered with its positive literals only...
 		lps_literals(L), % (L=[holds(loc(_11528,south),_)|_] -> trace ; true),
+		% writeln(lps_literals(L)),
 		flat_sequence(L,Flat), positive_abstract_sequence(Flat,Pos), 
 		% .. try to bind those literals with the preliminary HB found so far...
-		bind_with_phb(Pos,true), 
-		member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
-		% we found a new one, remember it and continue:
-		assert(phb_tuple(Lit)), 
-		format("~w.. ",[Lit]),
-		nb_setarg(1,Flag,added_at_least_one), fail
+		% writeln(Pos),
+		G = (
+				bind_with_phb(Pos,true), 
+				%writeln(bound-Pos),
+				member(Lit,Pos), ground(Lit), \+ system_literal(Lit), \+ phb_tuple(Lit),
+				% we found a new one, remember it and continue:
+				assert(phb_tuple(Lit)),
+				nb_setarg(1,Flag,added_at_least_one), fail
+			),
+		%(L=[happens(transfer(_11924,_11926,_11928),_11918,_11920),holds(balance(_11926,_11910),_11906),_11912 is _11910+_11928] -> trace; true),
+		% G, % useful for debugging
+		catch(call_with_time_limit(TimeLimit,G),Ex, (Ex=time_limit_exceeded->Timeout=true;throw(Ex))),
+		% If we succeeded, better be a timeout:
+		(Timeout == true -> writeln("Timeout, incomplete base!"), !, fail ; throw(weird_condition))
+		
 	; 
-		arg(1,Flag,Arg), Arg==added_at_least_one, !, phb2 % try again with the extra tuples
+		arg(1,Flag,Arg), Arg==added_at_least_one, !, phb2(TimeLimit) % try again with the extra tuples
 	).
-phb2 :- nl, writeln("Finished preliminary HB").
+phb2(_) :- writeln("\nFixpoint reached.").
 
 print_phb :- print_phb(true).
 
 print_phb(AbstractNumbers) :- 
 	must_be(boolean,AbstractNumbers),
-	nl, writeln("Preliminary Herbrand Base:\n----"), 
+	nl, writeln("----\nPotential Herbrand Base:\n"), 
 	setof(T_, T^(phb_tuple(T), (AbstractNumbers==true->abstract_numbers(T,T_);T=T_) ),Tuples), 
 	writeln("--Fluents:"),
 	forall(member(holds(X,_),Tuples),writeln(X)),
 	writeln("--Events and actions:"),
 	forall(member(happens(X,_,_),Tuples),writeln(X)),
 	writeln("--Timeless:"),
-	forall((member(happens(X,_,_),Tuples), X\=holds(_,_), X\=happens(_,_,_)),writeln(X)),
+	forall((member(X,Tuples), X\=holds(_,_), X\=happens(_,_,_)),writeln(X)),
 	writeln("----").
 
-%! my_ite(:If,:Then,:Else)  an if-then-else with universal quantifier on the condition
+% my_ite(:If,:Then,:Else)  an if-then-else with universal quantifier on the condition
 my_ite(If,Then,_Else) :- 
 	Flag=foo(_), 
 	(If, nb_setarg(1,Flag,made_it), Then ; arg(1,Flag,Arg), nonvar(Arg), !, fail).

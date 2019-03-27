@@ -75,7 +75,7 @@ tt:- threadutil:threads. % ...BUT STILL No permission to call sandboxed threadut
 
 
 % call this before every potentially dangerous operation:
-check_powerful_user(serve_ethereum) :- (allow_anonymous_powerful_ops -> true ; lps_user(User), User\=unknown_user ), !.
+check_powerful_user(serve_ethereum) :- (allow_anonymous_powerful_ops -> true ; lps_user(User), User\=unknown_user ), !. %TODO: move out of open source
 check_powerful_user(_Op) :- (allow_anonymous_powerful_ops -> true ; lps_user_is_super), !.
 check_powerful_user(Op) :- throw(unsufficient_lps_user_privilege_for(Op)).
 
