@@ -44,7 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	test_examples/0, test_examples_dc/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1, check_load_postmortem/0, lps_test_result_item/3,
 	load_check_syntax/2, print_error/3, print_error/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
 	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,event_/1,event_pred/1,(observe)/2, lps_program_module/1, d/2, misc_to_realtime/2, is_some_time/1,
-	lps_engine_directory/1, uassert/1, uretractall/1, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1, flat_sequence/2,
+	lps_engine_directory/1, uassert/1, uretractall/1, cleanup_program/0, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1, flat_sequence/2,
 	check_lps_program_swish_module/0, get_lps_program_hash/1, server_log_filename/2, lps_program_clause_file/3, callprolog/1, replace_term/4, abstract_numbers/2,
 	bindAllVars/1, lps_welcome_message/0, endTime/1, simulatedRealTimeBeginning/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1,
 	background_execution/7, inject_events_fetch_fluents/5, inject_events/3, get_fluents/4, get_rtb_fluent_event_templates/5,
@@ -931,6 +931,7 @@ cleanup_engine :- % should be refactored with exclude_from_user_program below...
 cleanup_engine.
 
 % temporary_predicate(TemporaryEnginePredicateTemplate,FunctorForCleanupGoal)
+% TODO: check whether retractall is adequate in background programs, because of thread_local
 temporary_predicate(observed_at(_,_),retractall).
 temporary_predicate(expanded_reactive_rule(_,_),uretractall).
 temporary_predicate(expanded_reactive_rule(_,_,_),uretractall).
@@ -2182,7 +2183,9 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 					% the accumulated changes over the microstates in serializable actions, see updateNextStateFluents
 					( option(non_prospective) -> true ; 
 						updateNextStateFluents(Time,true,NewStateFlag), 
-						\+ (d_pre(_,Conds), holds_all(Conds,Time,Next), write_verbose(['Violated precondition:',Conds])) ) 
+						\+ (d_pre(_,Conds), 
+						% writeln(holds_all(Conds,Time,Next)), (Conds=[holds(current_state(_4636),_4632)|_]->trace;true), 
+						holds_all(Conds,Time,Next), write_verbose(['Violated precondition:',Conds])) ) 
 					), Timeout)
 				; 
 				% DEPRECATED:
@@ -2319,6 +2322,7 @@ updateEvents(Time, Next, Ri, Gi, ExternalObservations, ToReturn) :-
 
 % misc_to_realtime(+ExternalForm,-RealTimeSeconds)
 % fails for LPS (cycle) time
+misc_to_realtime(V,_) :- var(V), !, fail.
 misc_to_realtime(A,RT) :- atom(A), !, atom_string(A,S), misc_to_realtime(S,RT).
 misc_to_realtime(S,RT) :- string(S), parse_time(S,_,RT).
 misc_to_realtime(Y/M/D/H/Min/S,RT) :- !, date_time_stamp(date(Y,M,D,H,Min,S,0,-,-),RT).
@@ -3310,8 +3314,9 @@ lpsClause(Head, Body) :-  l_timeless(Head, Body).
 % dc_query(X) :- write_verbose(dc_query(X)), fail. % for debugging
 dc_query(holds(Fl, Now)) :- nonvar(Fl), Fl=not(Ps), is_list(Ps), !, 
 	% we want to allow var fluents, for meta hacking
-	check_time_expression(Now), \+  holds_all(Ps).
-dc_query(holds(Fl, Now)) :- nonvar(Fl), Fl=not(P), !, check_time_expression(Now), \+ dc_query(holds(P,Now)).
+	check_time_expression(Now), % this seems too strict for accessing the next_state during d_pre checks...
+	\+  holds_all(Ps).
+dc_query(holds(Fl, Now)) :- nonvar(Fl), Fl=not(P), !, \+ dc_query(holds(P,Now)).
 dc_query(holds(P, T)) :- 
 	get_real_now(RealNow),
 	ground(T), T<RealNow, !, throw(fluent_out_of_temporal_order(RealNow,holds(P, T))). % fail. 

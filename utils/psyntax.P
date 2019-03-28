@@ -76,7 +76,7 @@ set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; fun
 
 :- use_module('../engine/interpreter.P',[go/3, print_error/2, is_some_time/1,
 	uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,
-	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1]).
+	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1, cleanup_program/0]).
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
@@ -184,6 +184,7 @@ golps(LPSP_file,Options,Results) :-
 	(member(background(_),Options) -> % use unique file names to avoid clashs with other threads
 		gensym('_f',ID), concat_atom([LPSP_file,ID, '_.P'],Pfile)
 	; concat_atom([LPSP_file,'_.P'],Pfile)),
+	cleanup_program, %  head_hints depend on l_events etc declarations, so we need to clear any previous program
 	syntax2p_file(LPSP_file,Pfile,lps2p,true),
 	go(Pfile,Options,Results).
 
@@ -569,6 +570,7 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],true,delimiter-[EC,classify],happens(NL,
 	nonvar(LT), 
 	% tricky handling to avoid infinite terms in the first branch:
 	( LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_; LT = (L to T2), (var(T2);is_some_time(T2)); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
+	nonvar(L),
 	!,
 	simple_event_colour(L,EC),
 	remember_event_hint(L),

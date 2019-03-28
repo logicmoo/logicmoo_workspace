@@ -44,6 +44,6 @@ row(Location1, Location2) updates Location1 to Location2 in loc(farmer, Location
 false transport(Object1, Location1, Location2), transport(Object2, Location1, Location2) , Object1 \= Object2.
 false row(south, north), row(north, south).
 
-false loc(goat,L), loc(wolf,L), not loc(farmer,L).  
-false loc(goat,L), loc(cabbage,L), not loc(farmer,L).
+false loc(goat,L) at T, loc(wolf,L) at T, not loc(farmer,L) at T, row(_,_) to T.  
+false loc(goat,L) at T, loc(cabbage,L) at T, not loc(farmer,L) at T, row(_,_) to T.
 
