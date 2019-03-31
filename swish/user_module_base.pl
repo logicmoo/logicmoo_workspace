@@ -159,6 +159,8 @@ go :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[sw
 gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
 
 godfa(DFAgraph) :- visualizer:gojson(_File,[dc,silent],[],_T,DFAgraph).
+state_diagram(DFAgraph) :- godfa(DFAgraph).
+sd(G) :- state_diagram(G).
 
 explore :- explore(_,[abstract_numbers,swish,dc,phb_limit(0.05)]).
 explore_numbers :- explore(_,[swish,dc,phb_limit(0.05)]).
