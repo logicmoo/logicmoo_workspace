@@ -38,7 +38,7 @@ typedef struct node_1
   struct node_1 *next;  // point to next node at same level
 } node;
 // global variables
-double ZERO = 0.00001;
+double ZERO = 0.0;
 int em = 0;             // contains 1 if the algorithm is emphil and 0 otherwise. usefull during the construction of an AC
 int *Counts;            // vector of count when performing emphil
 int Init = 0;           // if 1 InitParameters contains the initial parameters
@@ -69,11 +69,11 @@ void printTrees2(node **nodes_ex, int init, int max, char *FileName);
 
 // ++++++++++++++++++++++++ Gradient descent declaration functions  ++++++++++++++++++++++++++
 
-void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls,FILE **gradient);
-void closeFilesGD(FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls,FILE **gradient);
-void saveStatisticsGD(double Probabilities[], double Weights[], double Gradient[],double Moments0[], double Moments1[], int NR, FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls,FILE *GradientFile, double CLL);
+void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls);
+void closeFilesGD(FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls);
+void saveStatisticsGD(double Probabilities[], double Weights[], double Moments0[], double Moments1[], int NR, FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls, double CLL);
 void sigma_vec(double Weights[], double Probabilities[], int NR);
-double update_weights_Adam(double Weights[],double Probabilities[], double Gradients[], double GradientsCopy[], int NR, double Moment_0[], double Moment_1[], int Iter, double Eta, double Beta1, double Beta2, long double Epsilon_adam_hat, int TypeReg, double Gamma);
+double update_weights_Adam(double Weights[], double Probabilities[],double Gradients[], int NR, double Moment_0[], double Moment_1[], int Iter, double Eta, double Beta1, double Beta2, long double Epsilon_adam_hat, int TypeReg, double Gamma);
 void printHyperparamsGD(double Eta, double Beta1, double Beta2, long double Adam_hat, double Max_W, int BatchSize, char *strategy);
 void backwardGD(double Probabilities[], double Gradient[], int NR, node *root);
 void nextBatch(int *from, int *to, int lenNodes, int BatchSize, char *strategy);
@@ -88,12 +88,12 @@ void closeFilesEM(FILE **probsFile, FILE **expectationsFile, FILE **expectations
 void initialize_expectations_Probabilities(double Probabilities[], double expectations[], double expectations0[], int NR, char *seeded, int seed);
 void saveCountsEM(FILE *countsFile, int NR);
 void saveStatisticsEM(double Probabilities[], double expectations[], double expectations0[], int NR, FILE *probsFile, FILE *expectationsFile, FILE *expectationsFile0, FILE *lls, double CLL);
-void printRegularizedParameters(int TypeReg, double Gamma, int GammaCount);
-int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, int *GammaCount);
+void printRegularizedParameters(int TypeReg, double Gamma, double GammaCount);
+int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, double *GammaCount);
 void backwardEM(double expectations[], double expectations0[], int NR, node *root);
 double expectation(node **Nodes, int lenNodes, double Probabilities[], double expectations[], double expectations0[], int NR);
 void maximization(double Probabilities[], double expectations[], int NR);
-double emphil(node **Nodes, int lenNodes, double Probabilities[], double expectations[], double expectations0[], int NR, int MaxIteration, double EA, double ER, char *statisticsFolder, char *save, char *seeded, int seed, int TypeReg, double Gamma, int GammaCount);
+double emphil(node **Nodes, int lenNodes, double Probabilities[], double expectations[], double expectations0[], int NR, int MaxIteration, double EA, double ER, char *statisticsFolder, char *save, char *seeded, int seed, int TypeReg, double Gamma, double GammaCount);
 // ++++++++++++++++++++++++ Parameter learning declaration functions  ++++++++++++++++++++++++++
 static foreign_t pl_dphil(term_t Nodes, term_t Params, term_t StopCond, term_t Folder, term_t Adam, term_t Params2, term_t CLLFinal, term_t ProbFinal);
 static foreign_t pl_emphil(term_t Nodes, term_t Params, term_t RegParams, term_t StopCond, term_t Folder, term_t CLLFinal, term_t ProbFinal);
@@ -657,7 +657,7 @@ int getTrees(term_t Nodes, node ***nodes_ex, int *lenNodes)
 // ++++++++++++++++++++++++ Gradient descent functions  ++++++++++++++++++++++++++
 
 // Creates if it does not exist the directory for the dataset and also create the necessary files
-void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls,FILE **GradientsFile)
+void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls)
 {
   struct stat st = {0};
   char statisticsFolder2[MaxName];
@@ -666,8 +666,6 @@ void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, F
   char nameFileClls[MaxName] = "./";
   char nameFileMoments0[MaxName] = "./";
   char nameFileMoments1[MaxName] = "./";
-  char nameFileGradient[MaxName] = "./";
-  
   strcpy(statisticsFolder2, statisticsFolder);
   strcat(statisticsFolder, "_Statistics/GD");
   // create the directory to save information
@@ -696,17 +694,14 @@ void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, F
   strcat(nameFileMoments0, "/Moments0.txt");
   strcat(nameFileMoments1, statisticsFolder);
   strcat(nameFileMoments1, "/Moments1.txt");
-  strcat(nameFileGradient, statisticsFolder);
-  strcat(nameFileGradient, "/Gradients.txt");
 
   *probsFile = fopen(nameFileProbs, "w");
   *weightsFile = fopen(nameFileWeights, "w");
   *lls = fopen(nameFileClls, "w");
   *Moments0File = fopen(nameFileMoments0, "w");
   *Moments1File = fopen(nameFileMoments1, "w");
-  *GradientsFile=fopen(nameFileGradient, "w");
 
-  if (*probsFile == NULL || *weightsFile == NULL || *lls == NULL || *Moments0File == NULL || *Moments1File == NULL ||*GradientsFile==NULL)
+  if (*probsFile == NULL || *weightsFile == NULL || *lls == NULL || *Moments0File == NULL || *Moments1File == NULL)
   {
     perror("Problem in opening a file");
     printf("StatFolder= %s\n",statisticsFolder);
@@ -714,18 +709,17 @@ void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, F
   }
 }
 // Closes all the opened files
-void closeFilesGD(FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls,FILE **GradientsFile)
+void closeFilesGD(FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls)
 {
   fclose(*probsFile);
   fclose(*weightsFile);
   fclose(*Moments0File);
   fclose(*Moments1File);
   fclose(*lls);
-  fclose(*GradientsFile);
 }
 
 //Saves the log-likelihood (CLL), the moments and the learned weights/parameters
-void saveStatisticsGD(double Probabilities[], double Weights[], double Gradient[],double Moments0[], double Moments1[], int NR, FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls,FILE *GradientFile, double CLL)
+void saveStatisticsGD(double Probabilities[], double Weights[], double Moments0[], double Moments1[], int NR, FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls, double CLL)
 {
   int i;
   for (i = 0; i < NR; i++)
@@ -734,14 +728,12 @@ void saveStatisticsGD(double Probabilities[], double Weights[], double Gradient[
     fprintf(weightsFile, "%f ", Weights[i]);
     fprintf(Moments0File, "%f ", Moments0[i]);
     fprintf(Moments1File, "%f ", Moments1[i]);
-    fprintf(GradientFile, "%f ", Gradient[i]);
   }
   fprintf(lls, "%f \n", CLL);
   fprintf(probsFile, "\n \n");
   fprintf(weightsFile, "\n \n");
   fprintf(Moments0File, "\n \n");
   fprintf(Moments1File, "\n \n");
-  fprintf(GradientFile, "\n \n");
 }
 
 double sigma(double Weight)
@@ -814,25 +806,6 @@ void printHyperparamsGD(double Eta, double Beta1, double Beta2, long double Adam
   printf("Strategy= %s \n", strategy);
 }
 
-int verified (double Value, char NameValue[],char NameFunction[]){
-  if(isinf(Value)){
-    printf("Warmings: A %s value in the function %s is infinite\n", NameValue,NameFunction);
-    fflush(stdout);
-    fflush(stderr);
-    return 0;
-  }
-
-  if(isnan(Value)){
-    printf("Warmings: A %s value in the function %s is not a number \n", NameValue,NameFunction);
-    fflush(stdout);
-    fflush(stderr);
-    return 0;
-  }
-  return 1;
-}
-
-
-
 // Performs the backwardGD pass to compute the gradient.
 void backwardGD(double Probabilities[], double Gradient[], int NR, node *root)
 {
@@ -862,12 +835,8 @@ void backwardGD(double Probabilities[], double Gradient[], int NR, node *root)
         {
           if (n->value != 0)
             Child_Gradient = Root_Gradient * (root->value / n->value);
-          else{
-            //printf("OR node: denominatore del figlio nullo: valore di ZERO=%lf\n",ZERO);
-             //Child_Gradient = Root_Gradient * (root->value / ZERO);
-             Child_Gradient=0.0;
-            }
-            
+          else
+            Child_Gradient = Root_Gradient * (root->value / ZERO);
           n->gradient = Child_Gradient;
           backwardGD(Probabilities, Gradient, NR, n);
           n = n->next;
@@ -889,14 +858,10 @@ void backwardGD(double Probabilities[], double Gradient[], int NR, node *root)
             }
             else
             {
-              if ((1 - (n->value)) != 0)
+              if (1 - (n->value) != 0)
                 Child_Gradient = Root_Gradient * ((1 - (root->value)) / 1 - (n->value));
-              else{
-                   //Child_Gradient = Root_Gradient * ((1 - (root->value)) / ZERO);
-                   Child_Gradient=0.0;
-                   //printf("And node: denominatore del figlio nullo: valore di ZERO=%lf\n",ZERO);
-                }
-                
+              else
+                Child_Gradient = Root_Gradient * ((1 - (root->value)) / ZERO);
               n->gradient = Child_Gradient;
               backwardGD(Probabilities, Gradient, NR, n);
             }
@@ -908,15 +873,7 @@ void backwardGD(double Probabilities[], double Gradient[], int NR, node *root)
           if (strcmp(root->type, "leaf") == 0)
           {
             int index = root->index;
-            /*if(index==0){
-              if(root->value==0){
-                perror()
-              }
-              //printf("Gradient[%d]=%lf\n",index,Gradient[index]);
-            }*/
-               
             Gradient[index] = Gradient[index] + root->gradient;
-            //verif=verified (Gradient[index], "gradient","backwardGD");
           }
         }
       }
@@ -1000,7 +957,7 @@ void backwardGD(double Probabilities[], double Gradient[], int NR, node *root)
 
 
 // Updates weights with Adam techniques
-double update_weights_Adam(double Weights[],double Probabilities[], double Gradients[], double GradientsCopy[], int NR, double Moment_0[], double Moment_1[], int Iter, double Eta, double Beta1, double Beta2, long double Epsilon_adam_hat, int TypeReg, double Gamma)
+double update_weights_Adam(double Weights[],double Probabilities[], double Gradients[], int NR, double Moment_0[], double Moment_1[], int Iter, double Eta, double Beta1, double Beta2, long double Epsilon_adam_hat, int TypeReg, double Gamma)
 {
   int Iter_new, i;
   double Result1, Result2, Eta_new, Temp,RegCLL=0.0;
@@ -1017,10 +974,8 @@ double update_weights_Adam(double Weights[],double Probabilities[], double Gradi
     Moment_1[i] = Beta2 * Moment_1[i] + (1 - Beta2) * Gradients[i] * Gradients[i];
     Result2 = sqrt(Moment_1[i]);
     Weights[i] = Weights[i] - Eta_new * Moment_0[i] / (Result2 + Epsilon_adam_hat);
-    //verified (Weights[i], "weight","update_weights_Adam");
+    
     //Weights[i]= Weights[i]-Eta*Gradients[i];
-    //if(verif==1)
-     // exit(-1);
 
     if (Regularized)
     {
@@ -1044,8 +999,7 @@ double update_weights_Adam(double Weights[],double Probabilities[], double Gradi
         break;
       }
     }
-    // Save and reinitialize the gradient after updating
-    GradientsCopy[i]=Gradients[i];
+    // reinitialize the gradient after updating
     Gradients[i] = 0.0;
     // probability update
     Probabilities[i] = sigma(Weights[i]);
@@ -1118,13 +1072,7 @@ void normalize_grad(double Gradients[], int NR, int Num_nodes)
   int i;
   for (i = 0; i < NR; i++)
   {
-    //verif=verified (Gradients[i], "gradient","normalize_grad");
-    //if(verif==1)
-     // exit(-1);
-     if(isinf(Gradients[i]) || isnan(Gradients[i])){
-         Gradients[i]=0.0;
-     }else
-        Gradients[i] = Gradients[i] / Num_nodes;
+    Gradients[i] = Gradients[i] / Num_nodes;
   }
 }
 // Performs the forward and the backwardGD steps
@@ -1148,7 +1096,6 @@ double forward_backwardGD(node **Nodes, int lenNodes, int from, int to, double W
     //printf("\nIndex= %d",index);
     forward(Probabilities, NR, Nodes[index]);
     Root_Value = Nodes[index]->value;
-    //verified (Root_Value, "outputForward","forward_backwardGD");
     if (Root_Value != 0)
     {
       CLL = CLL + log(Root_Value);
@@ -1167,12 +1114,12 @@ double forward_backwardGD(node **Nodes, int lenNodes, int from, int to, double W
 //Performs gradient descent
 double dphil(node **Nodes, int lenNodes, int MaxIteration, double Probabilities[], double Weights[], int NR, double EA, double ER, double Eta, double Beta1, double Beta2, long double Epsilon_adam_hat, double Max_W, int BatchSize, char *strategy, char *statisticsFolder, char *save, char *seeded, int seed, int TypeReg, double Gamma)
 {
-  double Gradients[NR], Moments0[NR], Moments1[NR],GradientsCopy[NR];
+  double Gradients[NR], Moments0[NR], Moments1[NR];
   int from, to, Iter, saved = 0;
   double CLL0 = -2.2 * pow(10, 10); //-inf
   double CLL1 = -1.7 * pow(10, 8);  //+inf
   double ratio, diff,CLLReg, MaxIteration1 = MaxIteration;
-  FILE *probsFile, *weightsFile, *lls, *Moments0File, *Moments1File,*GradientFile;
+  FILE *probsFile, *weightsFile, *lls, *Moments0File, *Moments1File;
 
   if (BatchSize > lenNodes)
   { // if the batch size is greater than the training set, consider the cardinality of the training set
@@ -1189,9 +1136,9 @@ double dphil(node **Nodes, int lenNodes, int MaxIteration, double Probabilities[
   initialize_weights_moments(Weights, Gradients, Moments0, Moments1, NR, Max_W, seeded, seed);
   if (saved == 1)
   {
-    openFilesGD(statisticsFolder, &probsFile, &weightsFile, &Moments0File, &Moments1File, &lls,&GradientFile);
+    openFilesGD(statisticsFolder, &probsFile, &weightsFile, &Moments0File, &Moments1File, &lls);
     sigma_vec(Weights, Probabilities, NR);
-    saveStatisticsGD(Probabilities, Weights,Gradients,Moments0, Moments1, NR, probsFile, weightsFile, Moments0File, Moments1File, lls,GradientFile, CLL1);
+    saveStatisticsGD(Probabilities, Weights, Moments0, Moments1, NR, probsFile, weightsFile, Moments0File, Moments1File, lls, CLL1);
   }
   from = 0;
   to = BatchSize;
@@ -1201,20 +1148,19 @@ double dphil(node **Nodes, int lenNodes, int MaxIteration, double Probabilities[
     CLL1 = forward_backwardGD(Nodes, lenNodes, from, to, Weights, Gradients, NR, strategy, seeded, seed);
     normalize_grad(Gradients, NR, to - from + 1);
     diff = fabs(CLL1 - CLL0);
-    if(CLL0 !=0)
-       ratio = diff / fabs(CLL0);
-    CLLReg=update_weights_Adam(Weights,Probabilities, Gradients,GradientsCopy, NR, Moments0, Moments1, Iter, Eta, Beta1, Beta2, Epsilon_adam_hat, TypeReg, Gamma);
+    ratio = diff / fabs(CLL0);
+    CLLReg=update_weights_Adam(Weights,Probabilities, Gradients, NR, Moments0, Moments1, Iter, Eta, Beta1, Beta2, Epsilon_adam_hat, TypeReg, Gamma);
     //printf("CLLReg=%f\n",CLLReg);
     CLL1=CLL1+CLLReg;
     //printf("CLL1=%f\n",CLL1);
     //sigma_vec(Weights, Probabilities, NR);
     if (saved == 1)
-        saveStatisticsGD(Probabilities, Weights,GradientsCopy,Moments0, Moments1, NR, probsFile, weightsFile, Moments0File, Moments1File, lls,GradientFile, CLL1);
+      saveStatisticsGD(Probabilities, Weights, Moments0, Moments1, NR, probsFile, weightsFile, Moments0File, Moments1File, lls, CLL1);
     Iter++;
     nextBatch(&from, &to, lenNodes, BatchSize, strategy);
   } //end while
   if (saved == 1)
-    closeFilesGD(&probsFile, &weightsFile, &Moments0File, &Moments1File, &lls,&GradientFile);
+    closeFilesGD(&probsFile, &weightsFile, &Moments0File, &Moments1File, &lls);
   return CLL1;
 }
 
@@ -1310,7 +1256,7 @@ void saveStatisticsEM(double Probabilities[], double expectations[], double expe
     fprintf(expectationsFile0, "\n \n");
 }
 
-int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, int *GammaCount)
+int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, double *GammaCount)
 {
   int ret;
   term_t nodesTerm, head;
@@ -1328,7 +1274,7 @@ int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, i
     ret = PL_get_list(nodesTerm, head, nodesTerm);
     ret = PL_get_float(head, Gamma);
     ret = PL_get_list(nodesTerm, head, nodesTerm);
-    ret = PL_get_integer(head, GammaCount);
+    ret = PL_get_float(head, GammaCount);
   }
   else
   {
@@ -1337,7 +1283,7 @@ int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, i
   return ret;
 }
 
-void printRegularizedParameters(int TypeReg, double Gamma, int GammaCount)
+void printRegularizedParameters(int TypeReg, double Gamma, double GammaCount)
 {
   if (Regularized == 1)
   {
@@ -1360,9 +1306,11 @@ void printRegularizedParameters(int TypeReg, double Gamma, int GammaCount)
     break;
     case 3:
     {
-      printf("Regularization type: Multiply each parameter by gamma at each iteration\n");
-      printf("Gamma: %lf\n", Gamma);
-      printf("Gamma Count: %d\n", GammaCount);
+      //printf("Regularization type: Multiply each parameter by gamma at each iteration\n");
+      printf("Regularization type L3:\n");
+
+      printf("a: %lf\n", Gamma);
+      printf("fraction of examples b=: %lf\n", GammaCount);
     }
     break;
     default:
@@ -1651,7 +1599,7 @@ double maximizationReg2(double Probabilities[], double expectations[], double ex
 }
 
 // Maximization step: computes new values the probabilities
-double maximizationReg3(double Probabilities[], double expectations[], int NR, double gamma)
+/*double maximizationReg3(double Probabilities[], double expectations[], int NR, double gamma)
 {
   int i;
   //printf("Maximization:  regularization L3 gamma=%f\n",gamma);
@@ -1666,8 +1614,27 @@ double maximizationReg3(double Probabilities[], double expectations[], int NR, d
   }
   return 0.0;
 }
+*/
 
-void enableregularization(int *enableReg, int TypeReg,double Gamma,double* GammaStep,int GammaCount){
+// Maximization step: computes new values the probabilities
+double maximizationReg3(double Probabilities[], double expectations[], int NR, double a, double b)
+{
+  int i;
+  //printf("Maximization:  regularization L3 a=%d b=%d \n",a,b);
+  for (i = 0; i < NR; i++)
+  {
+    if (Counts[i] != 0)
+    {
+      Probabilities[i] = (expectations[i] +a) / (Counts[i]+a+b);
+    }
+    else
+      Probabilities[i] = 0.0;
+  }
+  return 0.0;
+}
+
+
+void enableregularization(int *enableReg, int TypeReg,double Gamma,double* GammaStep,double GammaCount){
   if (Regularized == 0)
   {
     *enableReg = 0;
@@ -1699,12 +1666,15 @@ void enableregularization(int *enableReg, int TypeReg,double Gamma,double* Gamma
     break;
     case 3:
     {
-      if (GammaCount != 0){
+      /*if (GammaCount != 0){
           *GammaStep = (1.0-Gamma) / (double)GammaCount;
           //printf("GammaStep=%f\n",GammaStep);
         }
       else
-        *GammaStep = 0;
+        *GammaStep = 0; */
+
+      *GammaStep=GammaCount;
+
     }
     break;
     default:
@@ -1714,7 +1684,7 @@ void enableregularization(int *enableReg, int TypeReg,double Gamma,double* Gamma
   }
 }
 
-double maxStep(double Probabilities[], double expectations[], double expectations0[], int NR,int Iter, int *enableReg, int TypeReg,double Gamma,double GammaStep){
+double maxStep(double Probabilities[], double expectations[], double expectations0[], int NR,int Iter, int *enableReg, int TypeReg,double Gamma,double GammaStep, int lenNodes){
   double GammaTemp,CLLReg=0.0;
   if (*enableReg == 0)
     {
@@ -1749,13 +1719,18 @@ double maxStep(double Probabilities[], double expectations[], double expectation
       break;
       case 3:
       {
-        GammaTemp = Gamma + Iter * GammaStep;
+        /*GammaTemp = Gamma + Iter * GammaStep;
         if (GammaTemp == 1)
         {
           *enableReg = 0;   // To continue with the standard EM
           Regularized = 0; // Avoid computing and saving expectations0 when regularization is finished
         }else
-          CLLReg=maximizationReg3(Probabilities, expectations, NR,GammaTemp);
+          CLLReg=maximizationReg3(Probabilities, expectations, NR,GammaTemp);*/
+          //printf("Current values of gamma= %lf and gammaCount=%lf \n",Gamma,GammaStep*lenNodes);
+          //double a=Gamma, b=GammaStep*lenNodes;  
+          CLLReg=maximizationReg3(Probabilities, expectations, NR,Gamma,GammaStep*lenNodes);
+
+
       }
       break;
       default:
@@ -1768,7 +1743,7 @@ double maxStep(double Probabilities[], double expectations[], double expectation
 
 
 // Performs Expectation Maximization
-double emphil(node **Nodes, int lenNodes, double Probabilities[], double expectations[], double expectations0[], int NR, int MaxIteration, double EA, double ER, char *statisticsFolder, char *save, char *seeded, int seed, int TypeReg, double Gamma, int GammaCount)
+double emphil(node **Nodes, int lenNodes, double Probabilities[], double expectations[], double expectations0[], int NR, int MaxIteration, double EA, double ER, char *statisticsFolder, char *save, char *seeded, int seed, int TypeReg, double Gamma, double GammaCount)
 {
   int Iter, saved = 0;
   double CLL0 = -2.2 * pow(10, 10); //-inf
@@ -1811,7 +1786,7 @@ double emphil(node **Nodes, int lenNodes, double Probabilities[], double expecta
     //Maximization step
     //maximization(Probabilities,expectations,NR);
     
-    CLLReg=maxStep(Probabilities,expectations,expectations0,NR,Iter,&enableReg,TypeReg,Gamma,GammaStep);
+    CLLReg=maxStep(Probabilities,expectations,expectations0,NR,Iter,&enableReg,TypeReg,Gamma,GammaStep,lenNodes);
     CLL1=CLL1-CLLReg;
     // save the current statistics
     if (saved == 1)
@@ -1837,11 +1812,11 @@ double emphil(node **Nodes, int lenNodes, double Probabilities[], double expecta
 // Learns the parameters of HPLP using Gradient Descent
 static foreign_t pl_dphil(term_t Nodes, term_t Params, term_t StopCond, term_t Folder, term_t AdamReg, term_t Params2, term_t CLLFinal, term_t ProbFinal)
 { //
-  int ret, NR, MaxIter, lenNodes, BatchSize, seed, TypeReg, GammaCount;
+  int ret, NR, MaxIter, lenNodes, BatchSize, seed, TypeReg;
   char *statisticsFolder, *save, *strategy, *seeded;
   node **nodes_ex = NULL;
   double *Probabilities, *Weights;
-  double EA, ER, CLL, Max_W, Eta, Beta1, Beta2, Adam_hat, Gamma;
+  double EA, ER, CLL, Max_W, Eta, Beta1, Beta2, Adam_hat, Gamma,GammaCount;
   term_t nodesTerm, Adam, RegParams;
   // get common hyperparameters between dphil emphil
   Adam = PL_new_term_ref();
@@ -1879,8 +1854,8 @@ static foreign_t pl_emphil(term_t Nodes, term_t Params, term_t RegParams, term_t
   int ret, NR, MaxIter, lenNodes, seed;
   char *statisticsFolder, *save, *seeded;
   double *Probabilities, *Expectations, *Expectations0;
-  double EA, ER, CLL, Gamma;
-  int TypeReg, GammaCount;
+  double EA, ER, CLL, Gamma,GammaCount;
+  int TypeReg;
   node **nodes_ex = NULL;
   em = 1; // activate the emphil algorithm em is a global variable
   ret = getHyperParameters(Params, StopCond, Folder, &MaxIter, &EA, &ER, &NR, &ZERO, &statisticsFolder, &save, &seeded, &seed);
