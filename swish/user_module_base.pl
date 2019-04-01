@@ -158,9 +158,18 @@ go(T) :- godc(T).
 go :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,dc]).
 gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
 
-godfa(DFAgraph) :- visualizer:gojson(_File,[dc,silent],[],_T,DFAgraph).
-state_diagram(DFAgraph) :- godfa(DFAgraph).
-sd(G) :- state_diagram(G).
+godfa(DFAgraph,AbstractNumbers) :- 
+	must_be(boolean,AbstractNumbers),
+	(AbstractNumbers==true->VOptions=[abstract_numbers];VOptions=[]),
+	visualizer:gojson(_File,[dc,silent|VOptions],[],_T,DFAgraph).
+
+godfa(G) :- godfa(G,false).
+
+state_diagram(DFAgraph,AN) :- godfa(DFAgraph,AN).
+state_diagram(DFAgraph) :- state_diagram(DFAgraph,false).
+
+sd(G,AN) :- state_diagram(G,AN).
+sd(G) :- sd(G,false).
 
 explore :- explore(_,[abstract_numbers,swish,dc,phb_limit(0.05)]).
 explore_numbers :- explore(_,[swish,dc,phb_limit(0.05)]).

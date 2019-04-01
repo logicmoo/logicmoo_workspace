@@ -92,16 +92,20 @@ golpsv(LPSP_file,Options,Results) :-
 % for SWISH:
 gojson(JSON) :- gojson(_File,[],[],JSON,_DFAgraph).
 gojson(File,Options,Results,JSON,DFAgraph) :- 
-	( go(File,[make_test,swish|Options],Results) -> true ; writeln('PROGRAM FAILED')), 
-	visual(File,JSON,DFAgraph).
+	( select(abstract_numbers,Options,Options_)->Voptions=[abstract_numbers];Voptions=[],Options=Options_ ),
+	( go(File,[make_test,swish|Options_],Results) -> true ; writeln('PROGRAM FAILED')), 
+	visual(File,Voptions,JSON,DFAgraph).
+
+visual(File,lps_visualization(Timeline,Sequence),DFAgraph) :- 
+	visual(File,[],lps_visualization(Timeline,Sequence),DFAgraph).
 
 
-% visual(TestResultsFile,lps_visualization(TimelineJSON,TwoD_JSON))  This MUST be called after go(File,[...make_test,...],...)
+% visual(+TestResultsFile,+Options,lps_visualization(TimelineJSON,TwoD_JSON))  This MUST be called after go(File,[...make_test,...],...)
 % Uses test facts still in memory
 % This needs to be in sync with test/3 calls in interpreter.P
 % Omits lps_gigantic(...) terms (which by the way usually popup in other Stages, e.g. goals)
 % works on facts asserted by either Wei (Stage = 'Observations', ...) or rak interpreter (Stage = fluent,event)
-visual(File,lps_visualization(Timeline,Sequence),DFAgraph) :- 
+visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :- 
 	% The following two loads can be skipped IF we execute IMMEDIATELY after go(...)
 	% my_load_dyn(File), % we need the meta info about events
 	% load_test_file_for(File),
@@ -129,7 +133,9 @@ visual(File,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	), OtherTuples),
 	append(RangedFluents,OtherTuples,Ranged),
 	
-	append(FluentTuples,OtherTuples,FluentsEtAl), dfa_graph(FluentsEtAl,false,DFAgraph),
+	append(FluentTuples,OtherTuples,FluentsEtAl), 
+	(member(abstract_numbers,Options)->AN=true; Options=[]->AN=false; throw(bad_visualisation_option(Options))),
+	dfa_graph(FluentsEtAl,AN,DFAgraph),
 	
 
 	% Find groups
@@ -468,6 +474,7 @@ join_fluent_ranges([],[]).
 
 % dfa_graph(+FluentsEtAl,+AbstractNumbers,GraphVizGraph)  list of t(X,T1-T2,G) , G=action or event for events
 % AbstractNumbers==true abstracts numbers into 'n', leading to smaller diagrams
+% Generates a GraphViz specification for a state transitions diagram
 
 dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :- 
 	must_be(boolean,AbstractNumbers),
@@ -476,8 +483,10 @@ dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :-
 			member(t(Fl,T1-T2,G),L), G\==event, G\==action, (AbstractNumbers==true->abstract_numbers(Fl,Fl_);Fl=Fl_)
 			),State)
 		, StateHistory),
-	StateHistory=[First-_|_],
-	(setof(State-Times, setof(T,member(T-State,StateHistory),Times), AbstractStates) -> true ; AbstractStates=[]), % our nodes
+	StateHistory=[First-_|_], append(_,[Last-_],StateHistory),
+	findall(T-[],(between(First,Last,T),\+ member(T-_,StateHistory)),EmptyStates),
+	append(StateHistory,EmptyStates,StateHistory_),
+	(setof(State-Times, setof(T,member(T-State,StateHistory_),Times), AbstractStates) -> true ; AbstractStates=[]), % our nodes
 	findall(node(Times,[label=State_,fillcolor='#D7DCF5',style=filled,color=Line]), (
 		member(State-Times,AbstractStates),
 		findall(Fl_,(member(Fl,State),term_string(Fl,Fl_)),Tuples), atomic_list_concat(Tuples,"\n",State_), % format(string(State__),"<span>~s</span>",[State_]),
@@ -485,8 +494,8 @@ dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :-
 		), Nodes),
 	( setof(edge((Times1->Times2),[label=Ev_,color='#E19735']), G^T1^T2^State1^State2^Ev^(
 		member(t(Ev,T1-T2,G),L), (G==event; G==action),
-		once(( member(State1-Times1, AbstractStates), member(T1,Times1) )),
-		once(( member(State2-Times2, AbstractStates), member(T2,Times2) )),
+		member(State1-Times1, AbstractStates), once(member(T1,Times1)),
+		member(State2-Times2, AbstractStates), once(member(T2,Times2)),
 		(AbstractNumbers==true->abstract_numbers(Ev,Ev_);Ev=Ev_)
 		),Edges) -> true ; Edges=[]),
 	!,
