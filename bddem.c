@@ -65,36 +65,6 @@ typedef struct
   int n_abd_boolVars;
 } environment;
 
-void dump_var(variable *var) {
-  printf("\t\tnVal: %d\n", var->nVal);
-  printf("\t\tnRule: %d\n", var->nRule);
-  printf("\t\tfirstBoolVar: %d\n", var->firstBoolVar);
-  printf("\t\tabducible: %d\n", var->abducible);
-  printf("\t\tquery: %d\n", var->query);
-  printf("\t\tdecision: %d\n", var->decision);
-}
-
-void dump_env(environment *env) {
-  int i;
-  printf("nVars: %d\n",env->nVars);
-  for(i = 0; i < env->nVars; i++) {
-    printf("\tvars[%d]: \n",i);
-    dump_var(&env->vars[i]);
-  }
-
-  printf("boolVars: %d\n",env->boolVars);
-  for(i = 0; i < env->boolVars; i++) {
-    printf("\tbVar2mVar[%d] = %d\n",i,env->bVar2mVar[i]);
-    printf("\tprobs[%d] = %lf\n",i,env->probs[i]);
-  }
-
-  printf("nRules: %d\n",env->nRules);
-  for(i = 0; i < env->nRules; i++) {
-    printf("\trules[%d] = %d\n",i,env->bVar2mVar[i]);
-  }
-}
-
-
 typedef struct
 {
   environment * env; // one environment for each example
@@ -232,10 +202,13 @@ static foreign_t discrete_sample_pl(term_t arg1,term_t arg2);
 static foreign_t initial_values_pl(term_t arg1, term_t arg2);
 
 DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table);
+DdNode* Probability_dd_bdd(environment *env, DdNode *current_node, tablerow *table);
 void traverse_tree(DdNode *node, DdNode **bestNode, int *index, double *value);
 void traverse_tree_depth_bound(DdNode *node, DdNode **bestNode, int *index, double *value, int current_lv, int max_lv, int precise);
 int find_path(DdNode *node, double value, int **array, int *len);
-void debug_env(environment *env, int i);
+void debug_cudd_env(environment *env, int i);
+void dump_var(variable *var);
+void dump_env(environment *env);
 static foreign_t add_decision_var(term_t env_ref, term_t rule,term_t var_out);
 static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out);
 static foreign_t add_prod(term_t env_ref, term_t add_in, term_t value, term_t add_out);
@@ -1585,13 +1558,13 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
 
-  env->nVars = env->nVars+1;
+  env->nVars = env->nVars+1; // increase the counter of multival var
   env->vars = (variable *) realloc(env->vars,env->nVars * sizeof(variable));
 
   v = &env->vars[env->nVars-1];
   v->query = 0;
   v->abducible = 0;
-  v->decision = 1;
+  v->decision = 1; // set decision var
 
   v->nVal = 2; // yes or no
 
@@ -1613,8 +1586,9 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
 
   env->bVar2mVar[env->boolVars] = env->nVars-1;
   env->probs[env->boolVars] = -1.0; // set the prob of decision var to -1
-  env->boolVars = env->boolVars+v->nVal-1;
-  env->rules[v->nRule] = v->nVal;
+  
+  env->boolVars = env->boolVars+v->nVal-1; // increases the number of bool vars
+  env->rules[v->nRule] = v->nVal; // set the number of heads
 
   ret=PL_put_integer(out,env->nVars-1);
   RETURN_IF_FAIL
@@ -1625,9 +1599,9 @@ static foreign_t add_decision_var(term_t env_ref,term_t current_n_rule,term_t vo
 static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) {
   int ret;
   term_t out;
-  DdNode *bdd, *node, *node1, *init_node;
+  DdNode *bdd, *root, *add_conversion, *add_one, *root1;
   environment *env;
-  tablerow *table;
+  tablerow *table = NULL;
 
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
@@ -1637,38 +1611,216 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
 
   // convert the BDD to ADD to get rid of the 
   // complemented arcs
-  node1 = Cudd_BddToAdd(env->mgr,bdd);
+  
+  // add_conversion = Cudd_BddToAdd(env->mgr,bdd);
+  // Cudd_Ref(add_conversion);
+  // Cudd_RecursiveDeref(env->mgr,bdd); 
 
-  // dump_env(env);
+  // FILE *fp,*fp1;
+  // fp = fopen("bdd.dot","w");
+  // fp1 = fopen("add.dot","w");
+  // write_dot(env,bdd,fp);
+  // write_dot(env,add_conversion,fp1);
+  // fclose(fp);
+  // fclose(fp1);
+  // scanf("%s",NULL);
 
-  Cudd_Ref(node1);
-  Cudd_RecursiveDeref(env->mgr,bdd); 
 
-  // table = init_table(env->boolVars);
-  node = Probability_dd(env,node1,table);
-  if(node == NULL) {
+  table = init_table(env->boolVars);
+  // root = Probability_dd(env,add_conversion,table);
+  root = Probability_dd_bdd(env,bdd,table);
+  if(root == NULL) {
     return -1;
   }
-  // Cudd_Ref(node); // già referenziato prima della return
   
-  Cudd_RecursiveDeref(env->mgr,node1);
+  if(Cudd_IsComplement(bdd)) {
+    add_one = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
+    Cudd_Ref(add_one);
+    root1 = Cudd_addApply(env->mgr,Cudd_addMinus,add_one,root);
+    Cudd_Ref(root1);
+  }
+  else {
+    root1 = root;
+    Cudd_Ref(root1);
+  }
+
+  // count the number of terminal nodes with the following line:
+  // printf("Path: %ld\n",(long)Cudd_CountPath(root));
+  // printf("HERE\n");
+  // Cudd_RecursiveDeref(env->mgr,add_conversion);
 
   out = PL_new_term_ref();
-  ret = PL_put_pointer(out,(void *)node);
+  ret = PL_put_pointer(out,(void *)root1);
   RETURN_IF_FAIL
 
   // Cudd_RecursiveDeref(env->mgr,node);
   return(PL_unify(out,add_out));
 }
 
-DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) {
+DdNode* Probability_dd_bdd(environment *env, DdNode *current_node, tablerow *table) {
   int index;
-  int indexMultivar; // index associated with the bool var
+  int indexMultival;
   double p;
   DdNode *addh, *addl;
   DdNode *nodep, *nodep1;
   DdNode *nodepa, *nodepb;
-  DdNode *nodekey, *result, *tmp, *t1;
+  DdNode *result, *tmp;
+  DdNode *add_one, *addl_new, *add_new;
+  DdNode *E,*T;
+
+  if(current_node == NULL) {
+    printf("NODE NULL\n"); 
+    return NULL;
+  }
+
+  // if is terminal node
+  // all terminal nodes of a BDD are 1 nodes
+  if(Cudd_IsConstant(current_node)) { 
+    result = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
+    Cudd_Ref(result);
+    return result;
+  }
+
+  // TODO: save nodes in a table
+  // nodekey = Cudd_Regular(node);
+  // nodekey = get_node(nodekey,table); 
+  
+  // if(nodekey != NULL) {
+  //   return nodekey;
+  // }
+  
+  E = Cudd_E(current_node);
+  T = Cudd_T(current_node);
+  
+  addh = Probability_dd_bdd(env,T,table);
+  if(addh == NULL) {
+    printf("ADDH ERROR\n"); 
+    return NULL;
+  }
+  Cudd_Ref(addh);
+  
+  addl = Probability_dd_bdd(env,E,table);  
+  if(addl == NULL) {
+    printf("ADDL ERROR\n"); 
+    return NULL;
+  }
+  Cudd_Ref(addl);
+
+  if(Cudd_IsComplement(E)) {
+    add_one = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
+    Cudd_Ref(add_one);
+    addl_new = Cudd_addApply(env->mgr,Cudd_addMinus,add_one,addl);
+    Cudd_Ref(addl_new);
+  }
+  else {
+    addl_new = addl;
+    Cudd_Ref(addl_new);
+  }
+  
+  // get the index of the node = index of bool var
+  index = Cudd_NodeReadIndex(current_node);
+  if(index >= env->boolVars) {
+    printf("INDEX BOOL ERROR\n"); 
+    return NULL;
+  }
+  
+  // get the index of the multival var
+  indexMultival = env->bVar2mVar[index];
+  if(indexMultival >= env->nVars) {
+    printf("INDEX MULTIVAR ERROR\n"); 
+    return NULL;
+  }
+
+  // check if the multival var is decision or prob
+  if(env->vars[indexMultival].decision == 1) { // if decision var
+    // find the current var by getting its rule number
+    tmp = Cudd_addIthVar(env->mgr,env->vars[indexMultival].nRule);
+    if(tmp == NULL) {
+      printf("ERROR ADDITHVAR\n");
+    }
+    Cudd_Ref(tmp);
+    
+    // compute the ite on the decision var
+    result = Cudd_addIte(env->mgr,tmp,addh,addl_new);
+    if(result == NULL) {
+      printf("ERROR ADDITE 1-P\n");
+      return NULL;
+    }
+    Cudd_Ref(result);
+
+    Cudd_RecursiveDeref(env->mgr,tmp);
+    Cudd_RecursiveDeref(env->mgr,addh);
+    Cudd_RecursiveDeref(env->mgr,addl_new);
+    // add_node(table,result,-1);
+    return result;
+  }
+  else { // probability var
+    // find the probability of the var using as index the
+    // index of the current node in the ADD
+
+    p = env->probs[index];
+
+    if(p < 0 || p > 1) {
+      // p = -1 means decision var. -1 is set in add_decision_var
+      printf("ERROR IN PROBABILITY\n");
+      return NULL;
+    }
+    // p = env->probs[env->vars[index].nRule];
+
+    // printf("Prob var with P = %f at index %d\n",p,index);
+    nodep = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) p);
+    if(nodep == NULL) {
+      printf("ERROR ADDCONST P\n");
+      return NULL;
+    }
+    Cudd_Ref(nodep);
+
+    nodep1 = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) (1-p));
+    if(nodep1 == NULL) {
+      printf("ERROR ADDCONST 1-P\n");
+      return NULL;
+    }
+    Cudd_Ref(nodep1);
+    
+    nodepa = Cudd_addApply(env->mgr,Cudd_addTimes,nodep,addh);
+    if(nodepa == NULL) {
+      printf("ERROR ADDTIMES HIGH\n");
+      return NULL;
+    }
+    Cudd_Ref(nodepa);
+    Cudd_RecursiveDeref(env->mgr,nodep);
+    Cudd_RecursiveDeref(env->mgr,addh);
+    
+    nodepb = Cudd_addApply(env->mgr,Cudd_addTimes,nodep1,addl_new);
+    if(nodepb == NULL) {
+      printf("ERROR ADDTIMES LOW\n");
+      return NULL;
+    }
+    Cudd_Ref(nodepb);
+    Cudd_RecursiveDeref(env->mgr,nodep1);
+    Cudd_RecursiveDeref(env->mgr,addl_new);
+
+    result = Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
+    // add_node(table,result,-1);
+    if(result == NULL) {
+      printf("ERROR ADDAPPLY PLUS\n");
+      return NULL;
+    }
+    Cudd_Ref(result);
+    Cudd_RecursiveDeref(env->mgr,nodepa);
+    Cudd_RecursiveDeref(env->mgr,nodepb);
+    return result;
+  }
+}
+
+DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) {
+  int index;
+  int indexMultival;
+  double p;
+  DdNode *addh, *addl;
+  DdNode *nodep, *nodep1;
+  DdNode *nodepa, *nodepb;
+  DdNode *result, *tmp;
 
   if(current_node == NULL) {
     printf("NODE NULL\n"); 
@@ -1690,8 +1842,9 @@ DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) 
     }
   }
 
+  // TODO: save nodes in a table
   // nodekey = Cudd_Regular(node);
-  // nodekey = get_node(current_node,table); 
+  // nodekey = get_node(nodekey,table); 
   
   // if(nodekey != NULL) {
   //   return nodekey;
@@ -1711,52 +1864,24 @@ DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) 
   }
   Cudd_Ref(addl);
   
+  // get the index of the node = index of bool var
   index = Cudd_NodeReadIndex(current_node);
-
-  // printf("Index: %d\n",index);
-  // printf("env->vars[index].nRule: %d\n",env->vars[index].nRule);
-  // // printf("Cudd_IsConstant(current_node): %d\n",Cudd_IsConstant(current_node));
-  // printf("Env->nVars = %d\n",env->nVars);
-  // printf("Env->nRules = %d\n",env->nRules);
-  // printf("Env->boolVars = %d\n",env->boolVars);
-  
-  // L'ERRORE è IN INDEX NODE
-  // l'indice del nodo deve essere minore del numeri regole
-  // perché poi provo ad accedere alla regola dell'indice
-  // del nodo corrente
   if(index >= env->boolVars) {
     printf("INDEX BOOL ERROR\n"); 
     return NULL;
   }
   
-  // printf("Index: %d\n",index);
-  // for(i = 0; i < env->nVars; i++) {
-  //   printf("Env->vars[%d].decision = %d\n",i,env->vars[i].decision);
-  //   printf("Env->vars[%d].query = %d\n",i,env->vars[i].query);
-  //   printf("Env->vars[%d].nRule = %d\n\n",i,env->vars[i].nRule);
-  // }
- 
-  // printf("Index pre: %d\n",index);
-  // printf("Boolvars: %d\n",env->boolVars);
-  // printf("nrules: %d\n",env->nRules);
-
-  // for(i = 0; i < env->nRules; i++) {
-  //   printf("\trules[%d] = %d\n",i,env->rules[i]); // ok
-  // }
-
-  // <-----
-  indexMultivar = env->bVar2mVar[index];
-  // <----
-  // printf("\nIndex post: %d\n",indexMultivar);
-  if(indexMultivar >= env->nVars) {
-    printf("INDEX NULTIVAR ERROR\n"); 
+  // get the index of the multival var
+  indexMultival = env->bVar2mVar[index];
+  if(indexMultival >= env->nVars) {
+    printf("INDEX MULTIVAR ERROR\n"); 
     return NULL;
   }
 
-  // check if the var is decision or prob
-  if(env->vars[indexMultivar].decision == 1) { // if decision var
-    // find the current var
-    tmp = Cudd_addIthVar(env->mgr,env->vars[indexMultivar].nRule);
+  // check if the multival var is decision or prob
+  if(env->vars[indexMultival].decision == 1) { // if decision var
+    // find the current var by getting its rule number
+    tmp = Cudd_addIthVar(env->mgr,env->vars[indexMultival].nRule);
     if(tmp == NULL) {
       printf("ERROR ADDITHVAR\n");
     }
@@ -1774,11 +1899,14 @@ DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) 
     Cudd_RecursiveDeref(env->mgr,addh);
     Cudd_RecursiveDeref(env->mgr,addl);
     // add_node(table,result,-1);
-    // Cudd_Deref(result);
     return result;
   }
   else { // probability var
-    // find the probability of the var 
+    // find the probability of the var using as index the
+    // index of the current node in the ADD
+    // double p1 = env->probs[indexMultival];
+    // int a = env->vars[indexMultival].firstBoolVar;
+
     p = env->probs[index];
     if(p < 0) {
       // p = -1 means decision var. -1 is set in add_decision_var
@@ -1804,7 +1932,7 @@ DdNode* Probability_dd(environment *env, DdNode *current_node, tablerow *table) 
     
     nodepa = Cudd_addApply(env->mgr,Cudd_addTimes,nodep,addh);
     if(nodepa == NULL) {
-      printf("ERROR ADDTIMES LOW\n");
+      printf("ERROR ADDTIMES HIGH\n");
       return NULL;
     }
     Cudd_Ref(nodepa);
@@ -2042,36 +2170,6 @@ void traverse_tree_depth_bound(DdNode *node, DdNode **bestNode, int *index, doub
     }  
   }
 }
-
-void debug_env(environment *env, int i) {
-  printf("----- %d -----\n",i);
-  printf("Dead nodes (Cudd_ReadDead): %d\n",Cudd_ReadDead(env->mgr));
-  printf("Cudd check zero ref (node with non 0 ref, Cudd_CheckZeroRef): %d\n",Cudd_CheckZeroRef(env->mgr));
-  printf("Cudd check keys (Cudd_CheckKeys): %d\n",Cudd_CheckKeys(env->mgr));
-  printf("Cudd debug check (Cudd_DebugCheck): %d\n",Cudd_DebugCheck(env->mgr));
-  printf("-------------\n");
-}
-
-// out_null is empty, here just in case it's needed
-static foreign_t debug_cudd_var(term_t env_ref, term_t out_null) {
-  int ret;
-  term_t out;
-  environment *env;
-
-  ret = PL_get_pointer(env_ref,(void **)&env);
-  RETURN_IF_FAIL
-  printf("----- DEBUG CUDD -----\n");
-  printf("Dead nodes (Cudd_ReadDead): %d\n",Cudd_ReadDead(env->mgr));
-  printf("Cudd check zero ref (node with non 0 ref, Cudd_CheckZeroRef): %d\n",Cudd_CheckZeroRef(env->mgr));
-  printf("Cudd check keys (Cudd_CheckKeys): %d\n",Cudd_CheckKeys(env->mgr));
-  printf("Cudd debug check (Cudd_DebugCheck): %d\n",Cudd_DebugCheck(env->mgr));
-  printf("----- END DEBUG CUDD -----\n");
-  out = PL_new_term_ref();
-  ret = PL_put_nil(out);
-  RETURN_IF_FAIL
-  return(PL_unify(out,out_null));
-}
-
 
 static foreign_t add_abd_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
 {
@@ -3280,6 +3378,69 @@ void expl_destroy_table(expltablerow *tab,int varcnt)
   free(tab);
 }
 
+// debugging functions
+
+// prints all the fields of a variable data structure
+void dump_var(variable *var) {
+  printf("\t\tnVal: %d\n", var->nVal);
+  printf("\t\tnRule: %d\n", var->nRule);
+  printf("\t\tfirstBoolVar: %d\n", var->firstBoolVar);
+  printf("\t\tabducible: %d\n", var->abducible);
+  printf("\t\tquery: %d\n", var->query);
+  printf("\t\tdecision: %d\n", var->decision);
+}
+
+// prints all the variables of the environment
+void dump_env(environment *env) {
+  int i;
+  printf("nVars: %d\n",env->nVars);
+  for(i = 0; i < env->nVars; i++) {
+    printf("\tvars[%d]: \n",i);
+    dump_var(&env->vars[i]);
+  }
+
+  printf("boolVars: %d\n",env->boolVars);
+  for(i = 0; i < env->boolVars; i++) {
+    printf("\tbVar2mVar[%d] = %d\n",i,env->bVar2mVar[i]);
+    printf("\tprobs[%d] = %lf\n",i,env->probs[i]);
+  }
+
+  printf("nRules: %d\n",env->nRules);
+  for(i = 0; i < env->nRules; i++) {
+    printf("\trules[%d] = %d\n",i,env->bVar2mVar[i]);
+  }
+}
+
+// prints CUDD venv variables
+void debug_cudd_env(environment *env, int i) {
+  printf("----- %d -----\n",i);
+  printf("Dead nodes (Cudd_ReadDead): %d\n",Cudd_ReadDead(env->mgr));
+  printf("Cudd check zero ref (node with non 0 ref, Cudd_CheckZeroRef): %d\n",Cudd_CheckZeroRef(env->mgr));
+  printf("Cudd check keys (Cudd_CheckKeys): %d\n",Cudd_CheckKeys(env->mgr));
+  printf("Cudd debug check (Cudd_DebugCheck): %d\n",Cudd_DebugCheck(env->mgr));
+  printf("-------------\n");
+}
+
+// predicate equivalent to debug_cudd_env
+// out_null is empty, here just in case it's needed
+static foreign_t debug_cudd_var(term_t env_ref, term_t out_null) {
+  int ret;
+  term_t out;
+  environment *env;
+
+  ret = PL_get_pointer(env_ref,(void **)&env);
+  RETURN_IF_FAIL
+  printf("----- DEBUG CUDD -----\n");
+  printf("Dead nodes (Cudd_ReadDead): %d\n",Cudd_ReadDead(env->mgr));
+  printf("Cudd check zero ref (node with non 0 ref, Cudd_CheckZeroRef): %d\n",Cudd_CheckZeroRef(env->mgr));
+  printf("Cudd check keys (Cudd_CheckKeys): %d\n",Cudd_CheckKeys(env->mgr));
+  printf("Cudd debug check (Cudd_DebugCheck): %d\n",Cudd_DebugCheck(env->mgr));
+  printf("----- END DEBUG CUDD -----\n");
+  out = PL_new_term_ref();
+  ret = PL_put_nil(out);
+  RETURN_IF_FAIL
+  return(PL_unify(out,out_null));
+}
 
 install_t install()
 /* function required by YAP for intitializing the predicates defined by a C function*/
