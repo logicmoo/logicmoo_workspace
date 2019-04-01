@@ -500,6 +500,7 @@ dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :-
 		),Edges) -> true ; Edges=[]),
 	!,
 	append(Nodes,Edges,Statements).
-dfa_graph(_L,dot(digraph([node(root,[color=red,label='A DFA graph needs fluent states and events!'])]))). % missing either nodes or edges, no graph to show
+ % missing either nodes or edges, no graph to show:
+dfa_graph(_L,_,dot(digraph([node(root,[color=red,label='A state transitions graph needs fluent states and events!'])]))).
 
 
