@@ -25,12 +25,12 @@ insureGoods(GoodsPremium, Principal, Penalty, T1-T2, GoodsInsured) from Contract
 	pledge(allGoods(counterparty),CounterpartySecurity) from ContractSigned, 
 	to(counterParty,getTitle(GoodsPremium)) from ContractSigned,
 	T1 @> ContractSigned,
-	( if insurancePayment(GoodsInsured,Principal) from T1 to T2 then true
+	( if insurancePayment(GoodsInsured,Principal) from T, T@>=T1, T@<T2 then true
 		else to(holder,foreclose(CounterpartySecurity, Penalty)) ). 
 
-insurancePayment(GoodsInsured, _Principal) from _ to _ if
-    safeArrival(GoodsInsured) to T. 
-insurancePayment(_GoodsInsured, Principal) from _ to _ if
+insurancePayment(GoodsInsured, _Principal) from T if
+    safeArrival(GoodsInsured) from T. 
+insurancePayment(_GoodsInsured, Principal) from T if
     choiceOf(holder) from T, to(holder,Principal) from T.
 
 false safeArrival(_), choiceOf(_). % can't have both at the same time
