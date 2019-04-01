@@ -280,11 +280,13 @@ check_sample(V):-
 :-ensure_loaded(library(bddem)).
 
 test(probabilitdd):-
+  %% TODO:
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
   dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
   broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
   
+probability_dd(Env,BDDBU,ADDBU),
   add_prod(Env,ADDBU,-40,ADDDUU),
 
   probability_dd(Env,Raincoat,ADDRAIN),
@@ -297,61 +299,15 @@ test(probabilitdd):-
   add_prod(Env,ADDD,60,ADDDU), % <- computes the value utility*ADD
   
   add_sum(Env,ADDDUU,ADDRAINOUT,AO1),
-  create_dot(Env,AO1,"bu_r.dot"),
 
   add_sum(Env,AO1,ADDUMBOUT,AO2),
-  create_dot(Env,AO2,"bu_r_u.dot"),
 
   add_sum(Env,AO2,ADDDU,AO),
-  create_dot(Env,AO,"bu_r_u_d.dot"),
 
-  % add_sum(Env,ADDDU,ADDDUU,ADDS), % <- sums two ADD
-    
-  % add_sum(Env,ADDS,ADDUMBOUT,ADDUMBOUTOUT),
-
-  % add_sum(Env,ADDUMBOUTOUT,ADDRAINOUT,ADDRAINOUTOUT),
-  
-  ret_strategy(Env,AO,S,C), % <- computes the best strategy
+  ret_strategy(Env,AO,S,C,-1,-1), % <- computes the best strategy
   writeln(S),
   writeln(C),
-  % S =:= [2],
-  % C =:= 43.0,
-  % strategy(Env,ADDS,S,C),
-  % nl,
-  % write('BDDBU: '),writeln(BDDBU),
-  % write('BDDD: '),writeln(BDDD),
-  % write('ADDD: '),writeln(ADDD),
-<<<<<<< HEAD
-  % create_dot(Env,BDDBU,"broken_bdd.dot"),
-  % create_dot(Env,ADDBU,"broken_add.dot"),
-=======
-  % create_dot(Env,BDDBU,"broken.dot"),
-   create_dot(Env,ADDBU,"broken_add.dot"),
->>>>>>> aaa1dbbf8bc2f0f00b8c3f170d933645fe2c35f4
-  % create_dot(Env,BDDD,"dry.dot"),
-  % create_dot(Env,ADDD,"dry_add.dot"),
-  % create_dot(Env,ADDUMB,"umbrella_add.dot"),
-  % create_dot(Env,ADDRAIN,"raincoat_add.dot"),
-  % create_dot(Env,ADDDU,"dry_add_scaled.dot"),
-  % create_dot(Env,ADDDUU,"umbrella_add_scaled.dot"),
-  % create_dot(Env,ADDS,"sumtree.dot"),
-  % create_dot(Env,ADDRAINOUTOUT,"test_1.dot"), % <- DUMP THE FINAL ADD
-  
-  % write('ADDBU: '),writeln(ADDBU),
-  % write('ADDDU: '),writeln(ADDDU),
-  % % write('ADDDUU: '),writeln(ADDDUU),
-  % write('ADDS: '),writeln(ADDS),
-  
-  % expected result:
-  % raincoat:       0
-  % umbrella:       1
-  % SCORE: 43.0
 
-  % write('S: '),writeln(S),
-  % write('C: '),writeln(C),
-  % expected result
-  % S = [2|_] % <- FIX
-  % C = 43
   end(Env).
 
 :- end_tests(dtprob).
