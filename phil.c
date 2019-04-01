@@ -1309,8 +1309,8 @@ void printRegularizedParameters(int TypeReg, double Gamma, double GammaCount)
       //printf("Regularization type: Multiply each parameter by gamma at each iteration\n");
       printf("Regularization type L3:\n");
 
-      printf("a: %lf\n", Gamma);
-      printf("fraction of examples b=: %lf\n", GammaCount);
+      printf("a:%lf\n", Gamma);
+      printf("fraction of examples b:%lf\n", GammaCount);
     }
     break;
     default:
@@ -1617,7 +1617,7 @@ double maximizationReg2(double Probabilities[], double expectations[], double ex
 */
 
 // Maximization step: computes new values the probabilities
-double maximizationReg3(double Probabilities[], double expectations[], int NR, double a, double b)
+double maximizationReg3(double Probabilities[], double expectations[], double expectations0[],int NR, double a, double b)
 {
   int i;
   //printf("Maximization:  regularization L3 a=%d b=%d \n",a,b);
@@ -1625,7 +1625,7 @@ double maximizationReg3(double Probabilities[], double expectations[], int NR, d
   {
     if (Counts[i] != 0)
     {
-      Probabilities[i] = (expectations[i] +a) / (Counts[i]+a+b);
+      Probabilities[i] = (expectations[i] +a) / (expectations[i]+expectations0[i]+a+b);
     }
     else
       Probabilities[i] = 0.0;
@@ -1728,7 +1728,7 @@ double maxStep(double Probabilities[], double expectations[], double expectation
           CLLReg=maximizationReg3(Probabilities, expectations, NR,GammaTemp);*/
           //printf("Current values of gamma= %lf and gammaCount=%lf \n",Gamma,GammaStep*lenNodes);
           //double a=Gamma, b=GammaStep*lenNodes;  
-          CLLReg=maximizationReg3(Probabilities, expectations, NR,Gamma,GammaStep*lenNodes);
+          CLLReg=maximizationReg3(Probabilities, expectations,expectations0,NR,Gamma,GammaStep*lenNodes);
 
 
       }
