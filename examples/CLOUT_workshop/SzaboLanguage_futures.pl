@@ -21,6 +21,7 @@ events to(_Agent,_Right).
 
 future(RightA,RightB) from _Begin to _End if
 	to(holder,RightA) from T,  to(counterParty,RightB) from T.
+% Note that the time interval of a composite event head implicitly includes all times in its body
 
 % The contract must be enforced:
 if true then 
