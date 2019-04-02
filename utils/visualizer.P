@@ -9,7 +9,7 @@
 /* Utilities for visualizing LPS executions on SWISH */
 
 :- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/5, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1, 
-	collect_display_specs_lazy/2, has_d_clauses/0]).
+	collect_display_specs_lazy/2, has_d_clauses/0, state_diagram_options/1]).
 
 :- if(\+ current_prolog_flag(dialect, swi)).
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
@@ -92,9 +92,10 @@ golpsv(LPSP_file,Options,Results) :-
 % for SWISH:
 gojson(JSON) :- gojson(_File,[],[],JSON,_DFAgraph).
 gojson(File,Options,Results,JSON,DFAgraph) :- 
-	( select(abstract_numbers,Options,Options_)->Voptions=[abstract_numbers];Voptions=[],Options=Options_ ),
+	state_diagram_options(SD),
+	subtract(Options,SD,Options_),
 	( go(File,[make_test,swish|Options_],Results) -> true ; writeln('PROGRAM FAILED')), 
-	visual(File,Voptions,JSON,DFAgraph).
+	visual(File,Options,JSON,DFAgraph).
 
 visual(File,lps_visualization(Timeline,Sequence),DFAgraph) :- 
 	visual(File,[],lps_visualization(Timeline,Sequence),DFAgraph).
@@ -134,10 +135,10 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	append(RangedFluents,OtherTuples,Ranged),
 	
 	append(FluentTuples,OtherTuples,FluentsEtAl), 
-	(member(abstract_numbers,Options)->AN=true; Options=[]->AN=false; throw(bad_visualisation_option(Options))),
-	dfa_graph(FluentsEtAl,AN,DFAgraph),
+	(member(abstract_numbers,Options)->AN=true; AN=false),
+	(member(non_reflexive,Options)->NR=true; NR=false),
+	dfa_graph(FluentsEtAl,AN,NR,DFAgraph),
 	
-
 	% Find groups
 	(setof(G, T^X^member(t(X,T,G),Ranged), GroupIds)->true;GroupIds=[]), % allow for empty timelines
 	findall(FluentGroup,(
@@ -472,12 +473,14 @@ join_fluent_ranges([T|S],[T|R]) :- !, join_fluent_ranges(S,R).
 join_fluent_ranges([],[]).
 
 
-% dfa_graph(+FluentsEtAl,+AbstractNumbers,GraphVizGraph)  list of t(X,T1-T2,G) , G=action or event for events
+% dfa_graph(+FluentsEtAl,+AbstractNumbers,+NonReflexive,GraphVizGraph)  list of t(X,T1-T2,G) , G=action or event for events
 % AbstractNumbers==true abstracts numbers into 'n', leading to smaller diagrams
+% NonReflexive==true removes reflexive edges (event/actions which do not change state)
 % Generates a GraphViz specification for a state transitions diagram
 
-dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :- 
+dfa_graph(L,AbstractNumbers,NonReflexive,dot(digraph(Statements))) :- 
 	must_be(boolean,AbstractNumbers),
+	must_be(boolean,NonReflexive),
 	setof(T1-State, 
 		setof(Fl_,T2^G^Fl^(
 			member(t(Fl,T1-T2,G),L), G\==event, G\==action, (AbstractNumbers==true->abstract_numbers(Fl,Fl_);Fl=Fl_)
@@ -496,11 +499,13 @@ dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :-
 		member(t(Ev,T1-T2,G),L), (G==event, Color='#E19735'; G==action, Color=forestgreen),
 		member(State1-Times1, AbstractStates), once(member(T1,Times1)),
 		member(State2-Times2, AbstractStates), once(member(T2,Times2)),
+		(NonReflexive==true->Times1\=Times2;true),
 		(AbstractNumbers==true->abstract_numbers(Ev,Ev_);Ev=Ev_)
 		),Edges) -> true ; Edges=[]),
 	!,
 	append(Nodes,Edges,Statements).
  % missing either nodes or edges, no graph to show:
-dfa_graph(_L,_,dot(digraph([node(root,[color=red,label='A state transitions graph needs fluent states and events!'])]))).
+dfa_graph(_L,_,_,dot(digraph([node(root,[color=red,label='A state transitions graph needs fluent states and events!'])]))).
 
+state_diagram_options([abstract_numbers,non_reflexive]).
 

@@ -158,18 +158,21 @@ go(T) :- godc(T).
 go :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,dc]).
 gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
 
-godfa(DFAgraph,AbstractNumbers) :- 
-	must_be(boolean,AbstractNumbers),
-	(AbstractNumbers==true->VOptions=[abstract_numbers];VOptions=[]),
-	visualizer:gojson(_File,[dc,silent|VOptions],[],_T,DFAgraph).
+godfa(DFAgraph,Options_) :- 
+	(is_list(Options_)->Options=Options_;Options_==true->Options=[abstract_numbers]; Options=[]),
+	% check:
+	state_diagram_options(SD),
+	( forall(member(O,Options),member(O,SD)) -> true
+		; throw(bad_state_diagram_options(Options))),
+	visualizer:gojson(_File,[dc,silent|Options],[],_T,DFAgraph).
 
-godfa(G) :- godfa(G,false).
+godfa(G) :- godfa(G,[]).
 
 state_diagram(DFAgraph,AN) :- godfa(DFAgraph,AN).
-state_diagram(DFAgraph) :- state_diagram(DFAgraph,false).
+state_diagram(DFAgraph) :- state_diagram(DFAgraph,[]).
 
 sd(G,AN) :- state_diagram(G,AN).
-sd(G) :- sd(G,false).
+sd(G) :- sd(G,[]).
 
 explore :- explore(_,[abstract_numbers,swish,dc,phb_limit(0.05)]).
 explore_numbers :- explore(_,[swish,dc,phb_limit(0.05)]).
