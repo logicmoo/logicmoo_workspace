@@ -492,8 +492,8 @@ dfa_graph(L,AbstractNumbers,dot(digraph(Statements))) :-
 		findall(Fl_,(member(Fl,State),term_string(Fl,Fl_)),Tuples), atomic_list_concat(Tuples,"\n",State_), % format(string(State__),"<span>~s</span>",[State_]),
 		(member(First,Times)->Line=black;Line='#D7DCF5') % indicate the initial state
 		), Nodes),
-	( setof(edge((Times1->Times2),[label=Ev_,color='#E19735']), G^T1^T2^State1^State2^Ev^(
-		member(t(Ev,T1-T2,G),L), (G==event; G==action),
+	( setof(edge((Times1->Times2),[label=Ev_,color=Color]), G^T1^T2^State1^State2^Ev^(
+		member(t(Ev,T1-T2,G),L), (G==event, Color='#E19735'; G==action, Color=forestgreen),
 		member(State1-Times1, AbstractStates), once(member(T1,Times1)),
 		member(State2-Times2, AbstractStates), once(member(T2,Times2)),
 		(AbstractNumbers==true->abstract_numbers(Ev,Ev_);Ev=Ev_)
