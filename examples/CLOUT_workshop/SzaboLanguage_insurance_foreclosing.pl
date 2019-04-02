@@ -5,3 +5,7 @@
 observe choiceOf("TractoR'Us") at 2018/6/25.
 % observe to("TractoR'Us",usd(120000)) at 2018/6/25.
 observe to(holder,foreclose("Some key to all Counterparty goods", usd(5000))) at 2018/8/2.
+
+/** <examples>
+?- go(Timeline).
+*/

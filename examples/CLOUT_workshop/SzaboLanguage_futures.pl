@@ -33,3 +33,7 @@ observe to(counterParty,usd(1500)) at '2002-07-02T11:00'.
 
 % alternate form, denoting the first instant of the following moments:
 % observe to(counterParty,usd(1500)) at 2002/7/2/11.
+
+/** <examples>
+?- go(Timeline).
+*/

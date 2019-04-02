@@ -38,6 +38,15 @@ In case of delayed delivery, the Seller shall pay to the Buyer, for every durati
 
 	- [Delayed delivery](example/deliveryDelay.pl)
 
+- *Generic contract representation* In [A Formal Language for Analyzing Contracts](https://nakamotoinstitute.org/contract-language/) Nick Szabo designed a language to represent legal contracts, illustrated with some examples. That language can be mapped directly to a subset of LPS, with contracts represented as composite events, and non compliance as (negation as) failure.
+
+	- [Insurance](example/SzaboLanguage_insurance_base.pl) A simple shipping insurance contract. To run it, use the following links, that inject world events into the contract for specific scenarios:
+		- [Insurance](example/SzaboLanguage_insurance_normal_claim.pl) All parties behaving normally
+		- [Foreclosing](example/SzaboLanguage_insurance_foreclosing.pl) The insurer failed to honor the claim, so the holder uses his power to foreclose the insurer's goods.
+		- [Non compliant](example/SzaboLanguage_insurance_noncompliant.pl) The insurer failed to honor the claim, but somehow the holder did not foreclose. Contract is non compliant (it fails).
+		- Try different scenarios by pasting observations into the [base contract](example/SzaboLanguage_insurance_base.pl).
+		
+	- [Futures](example/SzaboLanguage_futures.pl) A minimal futures contract.
 </div>
 
 </div>
