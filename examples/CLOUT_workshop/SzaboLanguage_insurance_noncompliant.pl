@@ -1,6 +1,6 @@
 :- include(example('SzaboLanguage_insurance_base.pl')).
 
-% succeeds correctly, claim being paid
+% fails, claim not paid
 % observe safeArrival("10 John D. tractors") at "2018-06-21T15:00".
 observe choiceOf("TractoR'Us") at 2018/6/25.
 % observe to("TractoR'Us",usd(120000)) at 2018/6/25.
