@@ -337,6 +337,33 @@ Condition is evaluated using negation as (finite) failure.
 
 TBD: further documentation
 
+## Meta variables ##
+
+Generic events can be used via the happens(Event,T1,T2) predicate. The following will keep an history of all last occurences of past events:
+
+```
+fluents happened/2.
+happens(E,_,To) initiates happened(E,To) if not happened(E,_).
+```
+This will omit composite events though, for the sake of engine efficiency - as in general there will be many more composite than atomic events. To remember composite events handle them explicitly, e.g.:
+
+```
+end_of_day(Date) initiates happened(Date,Cycle) if true at Cycle.
+```
+NOTE: Postconditions are defined only for simple events, e.g. over a single cycle transition - even if they are defined by intensional ("composite") rules.
+
+The following will forbid all except the two action templates shown:
+
+```
+false happens(E,_,_), not member(E,[ myAction1(_), myAction2(foo) ]).
+```
+
+Fluents can also be generalised via meta variables, wrapped in the holds(Fluent,T) predicate. The following super fluent will include all user fluent tuples:
+
+```
+superFluent(F) at T if holds(F,T), not system_fluent(F).
+```
+
 # Editing Actions #
 
 For convenience the following action verbs are available, to directly "edit" the designated fluents without the need to resort to an additional action definition:
