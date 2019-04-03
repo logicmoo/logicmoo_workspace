@@ -422,6 +422,7 @@ syntax2p((H if B),Vars,lps2p,Spec,PT) :- %
 			Spec=lps_delimiter-[lps_delimiter-[EC,lps_delimiter-[lps_delimiter-[classify,classify],FC]],SpecB]
 		),
 	!,
+	(var(Event)->Event=happens(_,_,_);true),
 	remember_fluent_hint(Fluent), remember_event_hint(Event),
 	% simple_event_colour(Event,EC), 
 	simple_fluent_colour(Fluent,FC),
@@ -436,7 +437,8 @@ syntax2p(H,Vars,lps2p,Spec,PT) :- %
 			Spec = lps_delimiter-[SpecE,lps_delimiter-[lps_delimiter-[classify,classify],FC]]
 		),
 	!,
-	remember_fluent_hint(Fluent),
+	(var(Event)->Event=happens(_,_,_);true),
+	remember_fluent_hint(Fluent), remember_event_hint(Event),
 	simple_fluent_colour(Fluent,FC),
 	syntax2p_sequence(Event,Vars,lps2p,[_T1,_T2],single,_ET,SpecE,[NB1|NBn]).
 syntax2p(L,Vars,lps2p,null,PT) :-
