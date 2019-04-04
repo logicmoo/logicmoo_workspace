@@ -1948,7 +1948,7 @@ assert_lps_test_result_item(Stage,Cycle,Item) :-
 % Notice that nonvar(T1) always, but T2 may be var; could improve performance with variant_sha1(+Term, -SHA1)
 % backtrackable, as these facts are interesting only for committed actions
 % On retrieving, latest calls will be returned first
-% HACK ALERT: the last of the "calls" is not a call... but athe discarder variable for the top goal! See resolveUntilAction comments
+% HACK ALERT: the last of the "calls" is not a call... but the discarder variable for the top goal! See resolveUntilAction comments
 
 check_lps_test_action_ancestors(A) :- option(make_test), !, check_lps_test_action_ancestors_(A).
 check_lps_test_action_ancestors(_).
