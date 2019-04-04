@@ -9,7 +9,7 @@
 /* Utilities for visualizing LPS executions on SWISH */
 
 :- module(visualizer,[ gov/1, gov/2, gov/3, gojson/1, gojson/5, golv/3, golv/2, golv/1, golpsv/3, golpsv/2, golpsv/1, 
-	collect_display_specs_lazy/2, has_d_clauses/0, state_diagram_options/1]).
+	collect_display_specs_lazy/2, has_d_clauses/0, visualization_options/1]).
 
 :- if(\+ current_prolog_flag(dialect, swi)).
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
@@ -92,7 +92,7 @@ golpsv(LPSP_file,Options,Results) :-
 % for SWISH:
 gojson(JSON) :- gojson(_File,[],[],JSON,_DFAgraph).
 gojson(File,Options,Results,JSON,DFAgraph) :- 
-	state_diagram_options(SD),
+	visualization_options(SD),
 	subtract(Options,SD,Options_),
 	( go(File,[make_test,swish|Options_],Results) -> true ; writeln('PROGRAM FAILED')), 
 	visual(File,Options,JSON,DFAgraph).
@@ -141,9 +141,10 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	
 	% Find groups
 	(setof(G, T^X^member(t(X,T,G),Ranged), GroupIds)->true;GroupIds=[]), % allow for empty timelines
+	(member(stacked_fluents,Options)->Stacked=[];Stacked=[subgroupStack:false]),
 	findall(FluentGroup,(
 		 % remove subgroupStack:.. to have fluent tuples scattered vertically:
-		make_json_object([id:Gatom,content:Gsignature,order:2,subgroupStack:false],FluentGroup),
+		make_json_object([id:Gatom,content:Gsignature,order:2|Stacked],FluentGroup),
 		member(F/N,GroupIds), 
 		my_term_to_atom(F/N,Gatom), functor(GG,F,N), numbervars(GG), my_term_to_atom(GG,Gsignature)
 	), FluentGroups),
@@ -507,5 +508,5 @@ dfa_graph(L,AbstractNumbers,NonReflexive,dot(digraph(Statements))) :-
  % missing either nodes or edges, no graph to show:
 dfa_graph(_L,_,_,dot(digraph([node(root,[color=red,label='A state transitions graph needs fluent states and events!'])]))).
 
-state_diagram_options([abstract_numbers,non_reflexive]).
+visualization_options([abstract_numbers,composites,non_reflexive,stacked_fluents]).
 

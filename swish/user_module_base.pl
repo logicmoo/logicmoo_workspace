@@ -152,8 +152,8 @@ dumplps :- psyntax:dumploaded(true).
 go(T,Options) :- \+ member(cycle_hook(_,_,_),Options), \+ member(background(_),Options), 
 	(catch(lps_server_UI:lps_user_is_super,_,fail) -> true ; \+ member(timeout(_),Options)), 
 		% TODO: refactor lps_user_is_super into this file?
-	interpreter:lps_welcome_message, visualizer:gojson(_File,[dc,silent|Options],[],T,_DFAgraph).
-godc(T) :- visualizer:gojson(_File,[dc,silent],[],T,_DFAgraph).
+	visualizer:gojson(_File,[dc,silent|Options],[],T,_DFAgraph).
+godc(T) :- go(T,[]).
 go(T) :- godc(T).
 go :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,dc]).
 gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[swish,verbose,dc]).
@@ -161,9 +161,9 @@ gov :- interpreter:lps_welcome_message, writeln('Using dc:'),interpreter:go(_,[s
 godfa(DFAgraph,Options_) :- 
 	(is_list(Options_)->Options=Options_;Options_==true->Options=[abstract_numbers]; Options=[]),
 	% check:
-	state_diagram_options(SD),
+	visualization_options(SD),
 	( forall(member(O,Options),member(O,SD)) -> true
-		; throw(bad_state_diagram_options(Options))),
+		; throw(bad_visualization_options(Options))),
 	visualizer:gojson(_File,[dc,silent|Options],[],_T,DFAgraph).
 
 godfa(G) :- godfa(G,[]).
