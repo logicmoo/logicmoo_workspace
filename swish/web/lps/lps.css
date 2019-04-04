@@ -13,3 +13,10 @@ div.prolog-runners {
   overflow: auto;
   padding: 0px 5px 0px;
 }
+.vis-item.compositeEvent {
+	background-color: transparent;
+	border-color: #E19735;
+	color: #E19735;
+	border-style: dashed;
+	z-index: 0;
+}

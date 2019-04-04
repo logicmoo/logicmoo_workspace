@@ -20,7 +20,7 @@
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, abstract_numbers/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, 
+	go/3, my_term_to_atom/2, abstract_numbers/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, lps_test_action_ancestor/3,
 	beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1, lps_program_module/1, d/2
 	]).
 
@@ -131,10 +131,21 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 			G=action
 			;G=event),
 		(XX=lps_meta(happens(X,T1,T2)) -> true ; XX=X,  TT2=T2)
-	), OtherTuples),
-	append(RangedFluents,OtherTuples,Ranged),
+	), SimpleEvents),
 	
-	append(FluentTuples,OtherTuples,FluentsEtAl), 
+	findall(t(X,T1-T2,composite), (
+		member(composites,Options),
+		(lps_test_result_item(composites,T2,happens(X,T1,T2)); lps_test_action_ancestor(X,T1,T2)),
+		nonvar(T2), % discard unfinished events
+		T2>T1+1 % "simple composites" are reported as events; also, discard trivial action ancestors
+		% T1 \== 0, % hack to discard irrelevant initial "transition"
+	), Composites),
+	
+	append([RangedFluents,SimpleEvents,Composites],Ranged),
+	
+	% all we care for state diagrams; longer composite may trigger postconditions...
+	% but we will not show them, as it would be eird to relate an older than the previous state:
+	append(FluentTuples,SimpleEvents,FluentsEtAl), 
 	(member(abstract_numbers,Options)->AN=true; AN=false),
 	(member(non_reflexive,Options)->NR=true; NR=false),
 	dfa_graph(FluentsEtAl,AN,NR,DFAgraph),
@@ -144,7 +155,7 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 	(member(stacked_fluents,Options)->Stacked=[];Stacked=[subgroupStack:false]),
 	findall(FluentGroup,(
 		 % remove subgroupStack:.. to have fluent tuples scattered vertically:
-		make_json_object([id:Gatom,content:Gsignature,order:2|Stacked],FluentGroup),
+		make_json_object([id:Gatom,content:Gsignature,order:3|Stacked],FluentGroup),
 		member(F/N,GroupIds), 
 		my_term_to_atom(F/N,Gatom), functor(GG,F,N), numbervars(GG), my_term_to_atom(GG,Gsignature)
 	), FluentGroups),
@@ -155,10 +166,15 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		; 
 		G1 = FluentGroups),
 	( member(t(_,_,action),Ranged) -> 
-		make_json_object([id:action,content:'Actions',order:3],ActionsGroup),
-		append(G1,[ActionsGroup],Groups)
+		make_json_object([id:action,content:'Actions',order:4],ActionsGroup),
+		append(G1,[ActionsGroup],Groups_)
 		;
-		Groups=G1), 
+		Groups_=G1), 
+	( member(composite,GroupIds) -> 
+		make_json_object([id:composite,content:'Composites',order:2],CompositesGroup), 
+		Groups=[CompositesGroup|Groups_]
+		; Groups=Groups_),
+	
 	% term2json(Groups,GroupsJSON),
 	(has_d_clauses -> % Is there a 2D display specification?
 		collect_display_specs(Ranged,DS), % (member(XX,DS), writeln(XX), fail;true),
@@ -186,9 +202,12 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		member(t(X,T1-T2,G),Ranged),  
 		\+ functor(G,/,2), % not a fluent
 		my_term_to_atom(G,Gatom), my_term_to_atom(X,Atom),
-		(G==observation -> S='color:Peru'; G==action -> S='color:green' ; S='color:#E19735'),
-		(T2 is T1+1 -> make_json_object([id:ID,content:Atom,start:T2,group:Gatom,type:point,style:S,title:Tip],Item);
-			make_json_object([id:ID,content:Atom,start:T1,end:T2,group:Gatom,type:range,style:'background-color: lightGray; color:orange',title:Tip],Item)),
+		T2_ is T2+1,
+		(G==observation -> S='color:Peru', More=[type:point,start:T2]
+			; G==action -> S='color:green', More=[type:point,start:T2] 
+			; G==composite -> S='', More=[className:compositeEvent,start:T1,end:T2_] 
+			; S='color:#E19735', More=[type:point,start:T2]),
+		make_json_object([id:ID,content:Atom,group:Gatom,style:S,title:Tip|More],Item),
 		my_term_to_atom(happens(X,T1,T2),Tip),
 		get_increment_counter(IDs,ID)
 	), Others),
