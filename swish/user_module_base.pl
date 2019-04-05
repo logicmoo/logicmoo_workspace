@@ -180,6 +180,7 @@ explore_numbers :- explore(_,[swish,dc,phb_limit(0.05)]).
 :- multifile user:file_search_path/2.
 user:file_search_path(profile, lps_engine_dir('../swish/profiles')).
 user:file_search_path(lps_resources, lps_engine_dir('../swish/web')).
+user:file_search_path(swish_help, '../swish/web/help').
 
 % PATCH to swish to avoid duplicate example and help menu and profile entries on Linux
 % list_without_duplicates(+L,-NL) 
