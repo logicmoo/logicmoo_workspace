@@ -1,5 +1,5 @@
 #lps.swi Server#
-*By <http://logicalcontracts.com>, February 27, 2019*
+*By <http://logicalcontracts.com>, April 5, 2019*
 
 
 *This document summarizes the open source extensions to the language described in <http://lps.doc.ic.ac.uk>. The system can be tried online at <http://demo.logicalcontracts.com> - start by its Examples menu.*
