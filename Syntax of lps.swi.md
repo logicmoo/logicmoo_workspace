@@ -2,7 +2,7 @@
 
 [TOC]
 
-lps.swi is the LPS implementation based on SWI-Prolog. The syntax used in lps.js is slightly different.
+lps.swi is the LPS implementation based on SWI-Prolog. The surface syntax used in lps.js is slightly different.
 
 The current syntax of LPS is essentially a superset of @SWI-Prolog](http://www.swi-prolog.org), adding a flexible mixture of explicit and implicit time and some additional rules and declarations. 
 
@@ -445,7 +445,9 @@ Files have the .lps extension and (more or less) the following structure. Please
 
 * * *
 
-## Wei's syntax (Deprecated) ##
+## Internal syntax ##
+
+NOTE: to see your program in this syntax, use ```dump.```in the SWISH query panel.
   
 Files have the .lpsw extension and (more or less) the following structure: 
 
