@@ -14,6 +14,7 @@ ENV SHELL /bin/bash
 ENV LPS_DIR /home/lps_corner
 ARG LPS_SHA1
 ENV MY_USER lpspersona
+ENV SWISH_DIR /home/swish
 ENV SWISH_DATA /data
 
 # Create user
@@ -32,6 +33,5 @@ WORKDIR $LPS_DIR/swish/web/lps
 RUN bower install vis paper
 
 # Configure container startup
-WORKDIR ${SWISH_DATA}
-# WORKDIR $LPS_DIR/swish
-ENTRYPOINT /usr/bin/swipl $LPS_DIR/swish/user_module_file.pl ../../swish/daemon.pl --no-fork --port=3050 --user=$MY_USER --workers=16
+WORKDIR /
+ENTRYPOINT /usr/bin/swipl $LPS_DIR/swish/user_module_file.pl ${SWISH_DIR}/daemon.pl --no-fork --port=3050 --user=$MY_USER --workers=16
