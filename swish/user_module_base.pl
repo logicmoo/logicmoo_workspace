@@ -188,22 +188,7 @@ user:file_search_path(swish_help, '../swish/web/help').
 list_without_duplicates([X|L],[X|NL]) :- select(X,L,LL), !, list_without_duplicates(LL,NL).
 list_without_duplicates([X|L],[X|NL]) :- !, list_without_duplicates(L,NL).
 list_without_duplicates([],[]).
-:- dynamic(swish_help:help_files/1). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
-:- asserta((
-swish_help:help_files(AllExamples) :-
-	findall(Index,
-		absolute_file_name(swish_help(.), Index,
-				   [ access(read),
-				     file_type(directory),
-				     file_errors(fail),
-				     solutions(all)
-				   ]),
-		ExDirs_), 
-	list_without_duplicates(ExDirs_,ExDirs), % patch
-	maplist(swish_help:index_json, ExDirs, JSON),
-	append(JSON, AllExamples),
-	!
-)).
+
 :- dynamic(swish_examples:swish_examples_no_cache/1). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
 :- asserta((
 	swish_examples:swish_examples_no_cache(SWISHExamples) :-
@@ -219,7 +204,7 @@ swish_help:help_files(AllExamples) :-
 		list_without_duplicates(ExDirs_,ExDirs), % patch..
 		maplist(swish_examples:index_json(HREF), ExDirs, SWISHExamples)
 )).
-	
+
 /* Somehow this is NOT working:
 :- dynamic(swish_config:config/2). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
 :- asserta((
