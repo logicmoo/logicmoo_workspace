@@ -354,6 +354,52 @@ are_subClasses_int(KB,C,C1):-
   %flatten(L0,L),
   memberchk(C1,L),!.
 
+
+% =================================================
+check_for_concepts_to_merge(Concept,Hier,ConceptsToMerge):-	% Given a concept C, takes one subConcept Di at a time and checks whether C is reachable from Di. If it is so, collects all the nodes in the cycle between C to C
+  neighbours(Concept,Hier,SubClasses),
+  check_and_collect_concepts(Concept,Hier,SubClasses,[],ConceptsToMerge).
+
+check_and_collect_concepts(_Concept,_Hier,[],ListOfConcepts,ListOfConcepts):- !.
+
+check_and_collect_concepts(Concept,Hier,[SubClass|OtherSubClasses],ConceptsToMerge0,ConceptsToMerge):-
+  are_subClasses_int2(Concept,Hier,SubClass,ReachableFromSubClass),!,
+  find_cycle_in_hier(Concept,Hier,ReachableFromSubClass,ConceptsToMerge1),
+  append(ConceptsToMerge0,ConceptsToMerge1,ConceptsToMerge2),
+  check_and_collect_concepts(Concept,Hier,OtherSubClasses,ConceptsToMerge2,ConceptsToMerge).
+
+check_and_collect_concepts(Concept,Hier,[_SubClass|OtherSubClasses],ConceptsToMerge0,ConceptsToMerge):-
+  % No cycle found for SubClass, continue with the search
+  check_and_collect_concepts(Concept,Hier,OtherSubClasses,ConceptsToMerge0,ConceptsToMerge).
+
+
+check_for_concepts_to_merge_test(Concept,Hier,ConceptsToMerge):- % Optimization in check_for_concepts_to_merge(Concept,Hier,ConceptsToMerge), work on first level of subclass from Concept. If from a direct subclass C is not reachable all the sons must not be checked. 
+  reachable(Concept,Hier,ReachableFromSubClass),
+  find_cycle_in_hier(Concept,Hier,ReachableFromSubClass,ConceptsToMerge).
+
+find_cycle_in_hier(_Concept,_Hier,[],[]):- !.
+
+find_cycle_in_hier(Concept,Hier,[ReachableFromSubClass|OtherReachable],[ReachableFromSubClass|ConceptsInCycle]):-
+  are_subClasses_int2(Concept,Hier,ReachableFromSubClass),!,
+  find_cycle_in_hier(Concept,Hier,OtherReachable,ConceptsInCycle).
+
+find_cycle_in_hier(Concept,Hier,[_ReachableFromSubClass|OtherReachable],ConceptsInCycle):-
+  % No cycle found for ReachableFromSubClass, continue with the search
+  find_cycle_in_hier(Concept,Hier,OtherReachable,ConceptsInCycle).
+
+are_subClasses_int2(C,Hier,C1,L):-  % similar to are_subClasses_int(KB,C,C1) -- To rename or unify with are_subClasses_int/3
+  reachable(C1,Hier,L),
+  %flatten(L0,L),
+  memberchk(C,L),!.
+
+are_subClasses_int2(C,_Hier,C):- !.
+
+are_subClasses_int2(C,Hier,C1):-  % similar to are_subClasses_int(KB,C,C1) -- To rename or unify with are_subClasses_int/3
+  reachable(C1,Hier,L),
+  %flatten(L0,L),
+  memberchk(C,L),!.
+  
+
 /*
 merge_classes_int(TreeH0-NC-TreeD-Classes0,PC,PC1,TreeH-NC-TreeD-Classes):- % uno collegato all'altro direttamente
   edges(TreeH0,E),
