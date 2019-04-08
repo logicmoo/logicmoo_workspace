@@ -390,3 +390,38 @@ fluents gameOn.
 % in some reactive rule:
 ....,terminate gameOn from _ to _,...
 ```
+
+# Summary of program launching commands #
+
+Documentation for command line usage is TBD. The folowing are commands to be used on SWISH's query pane. 
+
+##Execute a LPS program in simulated time##
+
+These commands execute a LPS program and wait for its end (when failure or timeout happens), and only then show its full state evolution and event trace:
+
+	go(Timeline).
+
+Timeline is rendered graphicall, showing fluent states as blue ranges and atomic events as orange or green dots. 
+
+	go(Timeline,[composite]).
+
+Same, but also includes some composite events in the timeline: those that span more than 2 states, and are either completed macro actions that include atomic actions, or composite events that trigger post conditions; other composites are not shown.
+
+	state_diagram(Graph).
+
+Shows the same information as a timeline, but instead as a state transitions diagram, made of common fluent states (nodes) and event/times between them (edges), abstracting from time.
+
+	state_diagram(Graph,[abstract_numbers, non_reflexive]).
+
+Same, but further abstracting numbers into a single constant 'n', and ommitting reflexive edges, e.g. events ans actions which do not change state.
+
+##Execute a LPS program in real time##
+These commands start the program and immediately report its progress in real time.
+
+	go
+
+Prints actions and events, as well as fluent states, on SWISH's output panel.
+
+	serve(TwoDscene)
+
+This is the same command already referred above, for background execution. But **if** there are ```d(Thing,DisplayProperties)`` clauses in the program, a [2D scene representation](://bitbucket.org/lpsmasters/lps_corner/src/cefe68210aff7b3c9ac40ee097753443d09b0410/swish/2dWord.md?at=master&fileviewer=file-view-default) is rendered in real time, on SWISH's output panel. 
