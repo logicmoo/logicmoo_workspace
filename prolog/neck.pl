@@ -36,6 +36,7 @@
 
 :- use_module(library(lists)).
 :- use_module(library(occurs)).
+:- use_module(library(ordsets)).
 :- use_module(library(sequence_list)).
 :- use_module(library(list_sequence)).
 :- reexport(library(compound_expand)).
