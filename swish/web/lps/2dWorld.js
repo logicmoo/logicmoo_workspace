@@ -556,6 +556,7 @@ function twoDworld() {
     function initPaper(DOMcontainer,eager,MinCT){
 		// TODO? preprocess properties: replace Point, Size; scale view, with zoom or scale; possibly at cycle 0
 		// This should probably be included differently...
+		// TODO: jQuery caching is apparently NOT working here; avoiding it may however get us into trouble wrt multiple paper instances (??)
 		$.ajax({url:"/lps/bower_components/paper/dist/paper-core.js", dataType:"script", cache: true, success:function() {  
 			//mylog("Loaded paperjs");
 			WHITE_COLOR = new paper.Color(255,255,255);
