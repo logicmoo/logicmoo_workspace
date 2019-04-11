@@ -407,6 +407,10 @@ Timeline is rendered graphicall, showing fluent states as blue ranges and atomic
 
 Same, but also includes some composite events in the timeline: those that span more than 2 states, and are either completed macro actions that include atomic actions, or composite events that trigger post conditions; other composites are not shown.
 
+	go(Timeline,[stacked_fluents]).
+
+Displays fluent states stacked, vertically, rather than aligned.
+
 	state_diagram(Graph).
 
 Shows the same information as a timeline, but instead as a state transitions diagram, made of common fluent states (nodes) and event/times between them (edges), abstracting from time.
@@ -424,4 +428,4 @@ Prints actions and events, as well as fluent states, on SWISH's output panel.
 
 	serve(TwoDscene)
 
-This is the same command already referred above, for background execution. But **if** there are ```d(Thing,DisplayProperties)`` clauses in the program, a [2D scene representation](://bitbucket.org/lpsmasters/lps_corner/src/cefe68210aff7b3c9ac40ee097753443d09b0410/swish/2dWord.md?at=master&fileviewer=file-view-default) is rendered in real time, on SWISH's output panel. 
+This is the same command already referred above, for background execution. But **if** there are ```d(Thing,DisplayProperties)`` clauses in the program, a [2D scene representation](://bitbucket.org/lpsmasters/lps_corner/src/cefe68210aff7b3c9ac40ee097753443d09b0410/swish/2dWord.md?at=master&fileviewer=file-view-default) is rendered in real time, on SWISH's output panel.
