@@ -38,3 +38,4 @@ predicate_t __system_dict_create;
 predicate_t __system_get_dict;
 predicate_t __system_put_dict;
 predicate_t __foreign_generator_call_idx;
+predicate_t __foreign_generator_idx_call;

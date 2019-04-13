@@ -1,7 +1,8 @@
-:- module(foreign_test_i, [fce/2, fco/2, aa/2, eq/2, idx/3, numl/2, io/1, f/1,
-                           get_arrays/4, show_arrays/3, sio/1, negative_t/1,
-                           fortran1/2, positive_t/1, fd1/4, fd2/4, fd3/4,
-                           extend/2, test_ireverse1/2, test_ireverse2/2]).
+:- module(foreign_test_i,
+          [f_enum_example/4, f_union_example/4, fce/2, fco/2, aa/2, eq/2, idx/3,
+           numl/2, io/1, f/1, get_arrays/4, show_arrays/3, sio/1, negative_t/1,
+           fortran1/2, positive_t/1, fd1/4, fd2/4, fd3/4, extend/2,
+           test_ireverse1/2, test_ireverse2/2]).
 
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
@@ -15,6 +16,19 @@
 :- foreign_dependency(include/'includedf.for').
 :- use_foreign_source('foreign_test.for').
 :- gen_foreign_library(.(foreign_test_i)).
+
+:- type enum_example_t/1.
+enum_example_t(S) :- enum_example_s(S).
+
+:- type enum_example_s/1.
+enum_example_s(element(1)).
+enum_example_s(element(a)).
+enum_example_s(element_3).
+enum_example_s(element(f(g(h)))).
+
+:- pred f_enum_example(+enum_example_s, enum_example_s, -enum_example_s, -int) is foreign(c_enum_example).
+
+:- type negative_t/1 is foreign(is_negative_t).
 
 :- type temperature_t/1.
 temperature_t(T) :- num(T).
@@ -100,7 +114,7 @@ uniond_s(pair(X, Y)) :-
 uniond_s(positive(T)) :-
     positive_t(T).
 
-:- type negative_t/1 is foreign(is_negative_t).
+:- pred f_union_example(+ptr(uniond_s), uniond_s, -uniond_s, -int) is foreign(c_union_example).
 
 :- type contain_extern_t/1.
 contain_extern_t(contain_extern(Idx, Value)) :-

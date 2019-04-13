@@ -4,6 +4,17 @@
 
 :- begin_tests(foreign).
 
+test(enum_example) :-
+    f_enum_example(element(a), X, Y, I),
+    assertion(I==1),
+    assertion(X==Y),
+    assertion(X==element(f(g(h)))).
+test(union_example) :-
+    f_union_example(pair(2,3), X, Y, I),
+    assertion(I==2),
+    assertion(X==Y),
+    assertion(X==d(d{value1:a,value2:[b,c,d]})).
+
 test(fortran1) :-
     fortran1(1.5, X),
     assertion(X =:= 2.25).

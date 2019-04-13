@@ -47,6 +47,7 @@
            memory_root/1,
            ptr/1,
            ptr/2,
+           set/2,
            float_t/1,
            dict_t/2,
            dict_t/3,
@@ -113,6 +114,18 @@ ptr(Ptr) :- int(Ptr).
 
 :- type long/1 # "Defines a long integer".
 long(Long) :- int(Long).
+
+%!  set(:Type, ?Set)
+%
+%   Set is a set of Type.  The actual implementation would be a bit tricky,
+%   but for now we simple use list/2.
+
+:- type set/2 # "Defines a set of elements".
+
+:- meta_predicate set(1, ?).
+
+set(Type, List) :-
+    list(Type, List).
 
 %!  ptr(:Type, ?Ptr)
 %

@@ -4,6 +4,25 @@
 #include "foreign_test.h"
 #include "foreign_test_i_impl.h"
 
+void c_enum_example(enum enum_example_s const in, enum enum_example_s** io,
+                    enum enum_example_s* ou, int *ix) {
+    *ou = enum_example_s_element_f_g_h;
+    *io = ou;
+    *ix = in;
+};
+
+void c_union_example(struct uniond_s* const in, struct uniond_s** io,
+                     struct uniond_s* ou, int* ix) {
+    FI_new_child_array(in, 3, ou->d.dict.value2);
+    ou->utype = uniond_s_d;
+    ou->d.dict.value1 = "a";
+    ou->d.dict.value2[0] = "b";
+    ou->d.dict.value2[1] = "c";
+    ou->d.dict.value2[2] = "d";
+    *io = ou;
+    *ix = in->utype;
+}
+
 void  extend(int* const in, int** out) {
     int i, n = FI_array_length(in);
     *out = in;
