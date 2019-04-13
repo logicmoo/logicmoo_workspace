@@ -36,6 +36,7 @@
 
 sequence_list(V) --> {var(V)}, !, [V].
 sequence_list([]) --> !, [].
+sequence_list(true) --> !, [].
 sequence_list([A|B]) --> !,
     sequence_list(A),
     sequence_list(B).
