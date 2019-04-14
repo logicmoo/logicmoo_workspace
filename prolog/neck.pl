@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(neck, [neck/0]).
+:- module(neck, [neck/0, neck/2]).
 
 :- use_module(library(lists)).
 :- use_module(library(occurs)).
@@ -42,6 +42,7 @@
 :- reexport(library(compound_expand)).
 
 %!  neck is det
+%!  neck/2 is det
 %
 %   Stablish that everything above it should be evaluated at compile time, be
 %   careful since such part should contain only predicates already defined.  In
@@ -51,10 +52,14 @@
 
 neck.
 
-term_expansion((Head :- Body1), ClauseL) :-
+neck --> [].
+
+term_expansion_hb(Head, Body1, ClauseL) :-
     '$current_source_module'(M),
     sequence_list(Body1, List, []),
-    append(Left, [neck|Right], List),
+    once(( member(Neck, [neck, neck(X, X)]),
+           append(Left, [Neck|Right], List)
+         )),
     list_sequence(Left, Static),
     once(( append(LRight, RRight, Right),
            \+ ( sub_term(Lit, RRight),
@@ -93,3 +98,10 @@ term_expansion((Head :- Body1), ClauseL) :-
     ; list_sequence(Right, NeckBody),
       findall((Head :- NeckBody), Expanded, ClauseL)
     ).
+
+term_expansion((Head :-  Body), ClauseL) :- term_expansion_hb(Head, Body, ClauseL).
+term_expansion((Head --> Body), ClauseL) :-
+    sequence_list(Body, List, []),
+    append(_, [neck|_], List),
+    dcg_translate_rule((Head --> Body), _, (H :- B), _),
+    term_expansion_hb(H, B, ClauseL).
