@@ -429,3 +429,17 @@ Prints actions and events, as well as fluent states, on SWISH's output panel.
 	serve(TwoDscene)
 
 This is the same command already referred above, for background execution. But **if** there are ```d(Thing,DisplayProperties)`` clauses in the program, a [2D scene representation](://bitbucket.org/lpsmasters/lps_corner/src/cefe68210aff7b3c9ac40ee097753443d09b0410/swish/2dWord.md?at=master&fileviewer=file-view-default) is rendered in real time, on SWISH's output panel.
+
+# File extension conventions #
+
+LPS program filenames typically use the following extensions:
+
+Syntax  | File extension
+------------- | -------------
+Surface, as supported by lps.swi | ```.pl```
+Surface, as supported by lps.js | ```.lps```
+Internal  | ```.lpsw```, ```.pl_P```
+
+On lps.swi running over swish only ```.pl``` is used.
+
+In addition to the above extensions, ```.lpst``` denotes the test results of a program: for a program in foo.pl, the file foo.pl_P.lpst will contain its expected behavior - state transitions, actions etc.
