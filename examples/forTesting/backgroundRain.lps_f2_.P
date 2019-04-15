@@ -1,9 +1,0 @@
-
-maxRealTime(60).
-
-minCycleTime(1).
-
-events
-    [rain(_1476)].
-
-reactive_rule([happens(rain(_1476),_1574,_1580)],[happens(writeln('IT RAINED!'),_1488,_1490)]).

@@ -5,7 +5,7 @@ actions transfer(From, To, Amount).
 fluents balance(Person, Amount).
 
 initially balance(bob, 0), balance(fariba, 100).
-observe transfer(fariba, bob, 10) from 0 to 1.
+observe transfer(fariba, bob, 10) from 1 to 2.
 
 if transfer(fariba, bob, X) from  T1 to T2  
 then transfer(bob, fariba, 10) from T2 to T3.
@@ -31,7 +31,3 @@ transfer(From, To2, Amount2),  To1 \=To2.
 
 false transfer(From1, To, Amount1), 
 transfer(From2, To, Amount2),  From1 \= From2.
-
-/** <examples>
-?- go(Timeline).
-*/
