@@ -1,8 +1,8 @@
 :- module(foreign_test_i,
-          [f_enum_example/4, f_union_example/4, fce/2, fco/2, aa/2, eq/2, idx/3,
-           numl/2, io/1, f/1, get_arrays/4, show_arrays/3, sio/1, negative_t/1,
-           fortran1/2, positive_t/1, fd1/4, fd2/4, fd3/4, extend/2,
-           test_ireverse1/2, test_ireverse2/2]).
+          [f_enum_example/4, f_union_example/4, f_setof_enum/4, fce/2, fco/2,
+           aa/2, eq/2, idx/3, numl/2, io/1, f/1, get_arrays/4, show_arrays/3,
+           sio/1, negative_t/1, fortran1/2, positive_t/1, fd1/4, fd2/4, fd3/4,
+           extend/2, test_ireverse1/2, test_ireverse2/2]).
 
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
@@ -27,6 +27,12 @@ enum_example_s(element_3).
 enum_example_s(element(f(g(h)))).
 
 :- pred f_enum_example(+enum_example_s, enum_example_s, -enum_example_s, -int) is foreign(c_enum_example).
+
+:- type setof_enum_s/1.
+
+setof_enum_s(S) :- setof(enum_example_s, S).
+
+:- pred f_setof_enum(+setof_enum_s, setof_enum_s, -setof_enum_s, -long) is foreign(c_setof_enum).
 
 :- type negative_t/1 is foreign(is_negative_t).
 
@@ -71,7 +77,8 @@ d_t(Dict) :-
 :- pred [fortran1(+num,-num),
          fd1(+d_t,atm,str,int),
          fd2(-d_t,+atm,+atm,+int)+memory_root,
-         fd3(d_t,atm,atm,list(int))+memory_root
+         fd3(d_t,atm,atm,list(int))+memory_root,
+         fd4(list(atm))+memory_root
         ] is foreign.
 
 :- type positive_t/1.

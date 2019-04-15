@@ -15,6 +15,12 @@ test(union_example) :-
     assertion(X==Y),
     assertion(X==d(d{value1:a,value2:[b,c,d]})).
 
+test(setof_enum) :-
+    f_setof_enum([element(1), element_3], X, Y, I),
+    assertion(I==5),
+    assertion(X==Y),
+    assertion(X=[element(a), element(f(g(h)))]).
+
 test(fortran1) :-
     fortran1(1.5, X),
     assertion(X =:= 2.25).

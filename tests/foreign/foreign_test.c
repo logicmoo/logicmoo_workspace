@@ -23,6 +23,12 @@ void c_union_example(struct uniond_s* const in, struct uniond_s** io,
     *ix = in->utype;
 }
 
+void c_setof_enum(setof_enum_s const in, setof_enum_s **io, setof_enum_s *ou, long *ix) {
+    *ou = 1<<enum_example_s_element_a | 1<<enum_example_s_element_f_g_h;
+    *io = ou;
+    *ix = in;
+}
+
 void  extend(int* const in, int** out) {
     int i, n = FI_array_length(in);
     *out = in;

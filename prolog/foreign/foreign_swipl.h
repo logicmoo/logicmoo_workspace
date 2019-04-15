@@ -145,7 +145,7 @@
             __rtctype(FI_get_##__type(__root, __term, __value), __term, __type); \
         })
 
-#define FI_get_list(__FI_get_elem, __term, __value) ({	\
+#define FI_get_list(__FI_get_elem, __term, __value) ({          \
       term_t __term##_ = PL_new_term_ref();			\
       term_t __tail = PL_copy_term_ref(__term);			\
       size_t __length = 0;					\
@@ -162,34 +162,63 @@
     })
 
 #define FI_get_inout_list(__FI_get_elem, __term, __value) ({	\
-      if(PL_is_variable(__term)) {				\
-	*__value = NULL;					\
-      }								\
-      else {							\
-	FI_get_list(__FI_get_elem, __term, __value);		\
-      }								\
-    })
-
-#define FI_get_in_list(__FI_get_elem, __term, __value) ({		\
-            __rtctype(!PL_is_variable(__term), __term, list);           \
-            FI_get_list(__FI_get_elem, __term, __value);                \
+            if(PL_is_variable(__term)) {                        \
+                *__value = NULL;                                \
+            }                                                   \
+            else {                                              \
+                FI_get_list(__FI_get_elem, __term, __value);    \
+            }                                                   \
         })
 
-#define FI_get_ptr(__FI_get_elem, __term, __value) ({	\
-      term_t __term##_ = __term;			\
-      FI_new_value(*__value);				\
-      typeof (*__value) _c_##__term##_ = *__value;	\
-      __FI_get_elem;					\
+#define FI_get_in_list(__FI_get_elem, __term, __value) ({	\
+            __rtctype(!PL_is_variable(__term), __term, list);   \
+            FI_get_list(__FI_get_elem, __term, __value);        \
+        })
+
+#define FI_get_setof(__FI_get_elem, __type, __term, __value) ({ \
+      term_t __term##_ = PL_new_term_ref();			\
+      term_t __tail = PL_copy_term_ref(__term);			\
+      __tail = PL_copy_term_ref(__term);			\
+      __type __holder;                                          \
+      __type *_c_##__term##_ = &__holder;                       \
+      *__value = 0;                                             \
+      while(PL_get_list(__tail, __term##_, __tail)) {           \
+          __FI_get_elem;					\
+          *__value |= 1<<(*_c_##__term##_);                     \
+      };                                                        \
+      __rtcheck(PL_get_nil(__tail));				\
     })
 
+#define FI_get_inout_setof(__FI_get_elem, __type, __term, __value) ({	\
+            if(PL_is_variable(__term)) {                                \
+                *__value = NULL;                                        \
+            }                                                           \
+            else {                                                      \
+                FI_new_value(*__value);                                 \
+                FI_get_setof(__FI_get_elem, __type, __term, *__value);  \
+            }                                                           \
+        })
+
+#define FI_get_in_setof(__FI_get_elem, __type, __term, __value) ({      \
+            __rtctype(!PL_is_variable(__term), __term, __value);        \
+            FI_get_setof(__FI_get_elem, __type, __term, __value);       \
+        })
+
+#define FI_get_ptr(__FI_get_elem, __term, __value) ({	        \
+            term_t __term##_ = __term;                          \
+            FI_new_value(*__value);				\
+            typeof (*__value) _c_##__term##_ = *__value;	\
+            __FI_get_elem;					\
+        })
+
 #define FI_get_inout_ptr(__FI_get_elem, __term, __value) ({	\
-      if(PL_is_variable(__term)) {				\
-	*__value = NULL;					\
-      }								\
-      else {							\
-	FI_get_ptr(__FI_get_elem, __term, __value);		\
-      }								\
-    })
+            if(PL_is_variable(__term)) {                        \
+                *__value = NULL;                                \
+            }                                                   \
+            else {                                              \
+                FI_get_ptr(__FI_get_elem, __term, __value);     \
+            }                                                   \
+        })
 
 #define FI_get_in_ptr(__FI_get_elem, __term, __value) \
     FI_get_inout_ptr(__FI_get_elem, __term, __value)
@@ -215,6 +244,30 @@
 	__rtcheck(PL_unify_nil(l));				\
       }								\
     })
+
+#define FI_unify_setof(__FI_unify_elem, __type, __term, __value) ({     \
+            term_t l = PL_copy_term_ref(__term);			\
+            term_t __term##_ = PL_new_term_ref();			\
+            long __elem = __value;                                      \
+            __type _c_##__term##_;                                      \
+            for(_c_##__term##_ = 0; __elem != 0; _c_##__term##_++) {    \
+                if (((1l<<_c_##__term##_) & __elem)!=0) {               \
+                    __rtcheck(PL_unify_list(l, __term##_, l));          \
+                    __FI_unify_elem;                                    \
+                    __elem ^= (1l<<_c_##__term##_);                     \
+                }                                                       \
+            }                                                           \
+            __rtcheck(PL_unify_nil(l));                                 \
+        })
+
+#define FI_unify_out_setof(__FI_unify_elem, __type, __term, __value) \
+    FI_unify_setof(__FI_unify_elem, __type, __term, __value)
+
+#define FI_unify_inout_setof(__FI_unify_elem, __type, __term, __value) ({ \
+            if (__value!=NULL) {                                        \
+                __rtctype(FI_unify_setof(__FI_unify_elem, __type, __term, *__value), __term, __type); \
+            }                                                           \
+        })
 
 #define FI_unify_ptr(__FI_unify_elem, __term, __value) ({	\
       if(__value!=NULL) {					\

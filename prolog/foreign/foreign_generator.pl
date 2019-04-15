@@ -608,11 +608,9 @@ implement_type_getter(atomic(SubType, Name), Spec, Term) -->
     ; { func_pcname(Name, PName, CName),
         Indent = '    '
       },
-      implement_type_getter_ini(PName, CName, Spec, TName)
+      implement_type_getter_ini(PName, CName, Spec, Name)
     ),
-    { (\+ref_type(Spec)->atom_concat('&', CName, CArg);CArg=CName),
-      c_get_argument_getter(Spec, CArg, PName, GetArg)
-    },
+    {c_get_argument_getter(Spec, CName, PName, GetArg)},
     [Indent+GetArg+';'],
     ( {SubType = union}
     ->[Indent+'break;']
@@ -714,7 +712,12 @@ implement_type_unifier(atomic(SubType, Name), Spec, Term) -->
       },
       implement_type_unifier_ini(PName, CName, Name, Spec)
     ),
-    {c_set_argument(Spec, inout, CName, PName, SetArg)},
+    { ( SubType = union
+      ->Mode = inout
+      ; Mode = out
+      ),
+      c_set_argument(Spec, Mode, CName, PName, SetArg)
+    },
     [Indent+SetArg+';'],
     ( {SubType = union}
     ->[Indent+'break;']
@@ -853,14 +856,14 @@ spec_pointer(list(_)).
 spec_pointer(tdef(_, Spec)) :- spec_pointer(Spec).
 % spec_pointer(type(_)).
 
-implement_type_unifier_ini(PName, CName, Term, Spec) -->
+implement_type_unifier_ini(PName, CName, Name, Spec) -->
     { ctype_decl(Spec, Decl),
       ( \+ref_type(Spec)
       ->DRef = ""
       ; DRef = "*"
       )
     },
-    ["int FI_unify_"+Term+"(term_t "+PName+", "+Decl+DRef+" const "+CName+") {"].
+    ["int FI_unify_"+Name+"(term_t "+PName+", "+Decl+DRef+" const "+CName+") {"].
 
 apply_name(Name=Value) :-
     camel_snake(Name, Arg),
@@ -959,6 +962,8 @@ declare_struct(atomic(SubType, Name), Spec, Term) -->
     ( {SubType = union}
     ->{functor(Term, TName, _)},
       ["    "+Decl+" "+TName+";"]
+    ; {Spec = setof(_, _)}
+    ->["typedef long "+Name+";"]
     ; ["typedef "+Decl+" "+Name+";"]
     ).
 declare_struct(func_ini(SubType, Spec), _, _) -->
@@ -1249,16 +1254,17 @@ is_ref(_, out).
 ref_type(type(_)).
 ref_type(tdef(_, Spec)) :- ref_type(Spec).
 
-ctype_decl(list(Spec))    --> ctype_decl(Spec), "*".
-ctype_decl(ptr(Spec))     --> ctype_decl(Spec), "*".
-ctype_decl(chrs(Name))    --> acodes(Name).
-ctype_decl(string(Name))  --> acodes(Name).
-ctype_decl(type(Name))    --> "struct ", acodes(Name).
-ctype_decl(enum(Name))    --> "enum ", acodes(Name).
-ctype_decl(term)          --> "term_t".
-ctype_decl(tdef(Name, _)) --> acodes(Name).
-ctype_decl(cdef(Name))    --> acodes(Name).
-ctype_decl(_-CType)       --> acodes(CType).
+ctype_decl(list(Spec))     --> ctype_decl(Spec), "*".
+ctype_decl(ptr(Spec))      --> ctype_decl(Spec), "*".
+ctype_decl(chrs(Name))     --> acodes(Name).
+ctype_decl(string(Name))   --> acodes(Name).
+ctype_decl(type(Name))     --> "struct ", acodes(Name).
+ctype_decl(enum(Name))     --> "enum ", acodes(Name).
+ctype_decl(term)           --> "term_t".
+ctype_decl(tdef(Name, _))  --> acodes(Name).
+ctype_decl(setof(Name, _)) --> acodes(Name).
+ctype_decl(cdef(Name))     --> acodes(Name).
+ctype_decl(_-CType)        --> acodes(CType).
 
 ctype_decl(Spec, Decl) :-
     ctype_decl(Spec, Codes, []),
@@ -1436,16 +1442,17 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
      "} /* "+PI+" */",
      ''].
 
-c_set_argument(list(S),    _, C, A, L) :- c_set_argument_rec(list, S, C, A, L).
-c_set_argument(ptr( S),    _, C, A, L) :- c_set_argument_rec(ptr,  S, C, A, L).
-c_set_argument(type(T),    M, C, A, L) :- c_set_argument_type(M, T, C, A, L).
-c_set_argument(enum(T),    M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
-c_set_argument(cdef(T),    M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
-c_set_argument(T-_,        M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
-c_set_argument(chrs(_),    M, C, A, L) :- c_set_argument_chrs(M, C, A, L).
-c_set_argument(string(_),  M, C, A, L) :- c_set_argument_string(M, C, A, L).
-c_set_argument(tdef(_, S), M, C, A, L) :- c_set_argument(S, M, C, A, L).
-c_set_argument(term,       _, C, A, "__rtcheck(PL_unify("+A+", "+C+"))").
+c_set_argument(list(S),     _, C, A, L) :- c_set_argument_rec(list, S, C, A, L).
+c_set_argument(ptr( S),     _, C, A, L) :- c_set_argument_rec(ptr,  S, C, A, L).
+c_set_argument(type(T),     M, C, A, L) :- c_set_argument_type(M, T, C, A, L).
+c_set_argument(enum(T),     M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
+c_set_argument(cdef(T),     M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
+c_set_argument(T-_,         M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
+c_set_argument(chrs(_),     M, C, A, L) :- c_set_argument_chrs(M, C, A, L).
+c_set_argument(string(_),   M, C, A, L) :- c_set_argument_string(M, C, A, L).
+c_set_argument(tdef(_, S),  M, C, A, L) :- c_set_argument(S, M, C, A, L).
+c_set_argument(setof(_, S), M, C, A, L) :- c_set_argument_setof(M, S, C, A, L).
+c_set_argument(term,        _, C, A, "__rtcheck(PL_unify("+A+", "+C+"))").
 
 c_set_argument_one(out,   Type, CArg, Arg, "__rtc_FI_unify("+Type+", "+Arg+", "+CArg+")").
 c_set_argument_one(inout, Type, CArg, Arg, "FI_unify_inout("+Type+", "+Arg+", "+CArg+")").
@@ -1464,16 +1471,23 @@ c_set_argument_rec(Type, Spec, CArg, Arg, "FI_unify_"+Type+"("+L+", "+Arg+", "+C
     c_var_name(Arg_, CArg_),
     c_set_argument(Spec, out, CArg_, Arg_, L).
 
-c_get_argument(list(S),    M, C, A, L) :- c_get_argument_rec(M, list, S, C, A, L).
-c_get_argument(ptr(S),     M, C, A, L) :- c_get_argument_rec(M, ptr,  S, C, A, L).
-c_get_argument(type(T),    M, C, A, L) :- c_get_argument_type(M, T, C, A, L).
-c_get_argument(enum(T),    M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
-c_get_argument(cdef(T),    M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
-c_get_argument(T-_,        M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
-c_get_argument(chrs(_),    M, C, A, L) :- c_get_argument_chrs(M, C, A, L).
-c_get_argument(string(_),  M, C, A, L) :- c_get_argument_string(M, C, A, L).
-c_get_argument(tdef(_, S), M, C, A, L) :- c_get_argument(S, M, C, A, L).
-c_get_argument(term, _, C, A, "*"+C+"=PL_copy_term_ref("+A+")").
+c_set_argument_setof(Mode, Spec, CArg, Arg, "FI_unify_"+Mode+"_setof("+L+", "+Type+", "+Arg+", "+CArg+")") :-
+    Arg_ = Arg+"_",
+    c_var_name(Arg_, CArg_),
+    ctype_decl(Spec, Type),
+    c_set_argument(Spec, out, CArg_, Arg_, L).
+
+c_get_argument(list(S),     M, C, A, L) :- c_get_argument_rec(M, list, S, C, A, L).
+c_get_argument(ptr(S),      M, C, A, L) :- c_get_argument_rec(M, ptr,  S, C, A, L).
+c_get_argument(type(T),     M, C, A, L) :- c_get_argument_type(M, T, C, A, L).
+c_get_argument(enum(T),     M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
+c_get_argument(cdef(T),     M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
+c_get_argument(T-_,         M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
+c_get_argument(chrs(_),     M, C, A, L) :- c_get_argument_chrs(M, C, A, L).
+c_get_argument(string(_),   M, C, A, L) :- c_get_argument_string(M, C, A, L).
+c_get_argument(tdef(_, S),  M, C, A, L) :- c_get_argument(S, M, C, A, L).
+c_get_argument(setof(_, S), M, C, A, L) :- c_get_argument_setof(M, S, C, A, L).
+c_get_argument(term,        _, C, A, "*"+C+"=PL_copy_term_ref("+A+")").
 
 c_get_argument_one(in, Type, CArg, Arg, "__rtc_FI_get("+Type+", "+Arg+", "+CArg+")").
 c_get_argument_one(inout, Type, CArg, Arg, "FI_get_inout("+Type+", "+Arg+", "+CArg+")").
@@ -1491,6 +1505,13 @@ c_get_argument_rec(Mode, Type, Spec, CArg, Arg,
                    "FI_get_"+Mode+"_"+Type+"("+L+", "+Arg+", "+CArg+")") :-
     Arg_ = Arg+"_",
     c_var_name(Arg_, CArg_),
+    c_get_argument(Spec, in, CArg_, Arg_, L).
+
+c_get_argument_setof(Mode, Spec, CArg, Arg,
+                     "FI_get_"+Mode+"_setof("+L+", "+Type+", "+Arg+", "+CArg+")") :-
+    Arg_ = Arg+"_",
+    c_var_name(Arg_, CArg_),
+    ctype_decl(Spec, Type),
     c_get_argument(Spec, in, CArg_, Arg_, L).
 
 bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) -->
@@ -1552,7 +1573,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
                 memberchk(Mode, [in, inout]),
                 invert_mode(Mode, InvM),
                 ( Mode = inout
-                ->atom_concat('*', Arg, CArg)
+                ->CArg = '*'+Arg
                 ; CArg = Arg
                 ),
                 PArg = "_p_"+Arg,
@@ -1697,6 +1718,11 @@ match_known_type(Type, M, _, tdef(Name, Spec), A) -->
       functor(Type, Name, _)
     },
     !.
+match_known_type(setof(Type, A), M, N, setof(N, Spec), A) -->
+    { nonvar(Type),
+      extend_args(Type, [E], Prop)
+    },
+    match_type(Prop, M, known, N, Spec, E).
 match_known_type(Type, M, _, Spec, A) -->
     { compound(Type),
       functor(Type, Name, Arity),
@@ -1705,19 +1731,30 @@ match_known_type(Type, M, _, Spec, A) -->
       % Note: type_props will call match_unknown_type internally,
       % that is why this clause is only valid for match_known_type
       type_props_(M, TH, TDict, _, Asr),
-      type_props2(M, TH, TDict, TypePropLDictL, Asr),
-      ( TypePropLDictL = [Head-[t(Head2, [], _)]],
+      type_props2(M, TH, TDict, TypePropLDictL, Asr)
+    },
+    ( { TypePropLDictL = [Head-[t(Head2, [], _)]],
         Head == Head2
-      ->Spec=cdef(Name)
-      ; TypePropLDictL = [Head-L],
+      }
+    ->{Spec=cdef(Name)}
+    ; { TypePropLDictL = [Head-L],
         forall(member(t(Head, PropL, _), L), PropL = [])
-      ->Spec=enum(Name)
-      ; member(_-HeadPropLDictL, TypePropLDictL),
+      }
+    ->{Spec=enum(Name)}
+    ; { member(_-HeadPropLDictL, TypePropLDictL),
         member(t(Head, PropL, _), HeadPropLDictL),
         PropL \= []
-      ->Spec=type(Name)
+      }
+    ->( { PropL = [setof(EType, A)],
+          nonvar(EType)
+        }
+      ->{ Spec=setof(Name, ESpec),
+          extend_args(EType, [E], EProp)
+        },
+        match_type(EProp, M, known, Name, ESpec, E)
+      ; {Spec=type(Name)}
       )
-    },
+    ),
     !.
 
 match_known_type_dict(Prop, Tag, A, Name, type(TypeName)) -->
