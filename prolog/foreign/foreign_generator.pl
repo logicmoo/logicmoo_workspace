@@ -1718,7 +1718,7 @@ match_known_type(Type, M, _, tdef(Name, Spec), A) -->
       functor(Type, Name, _)
     },
     !.
-match_known_type(setof(Type, A), M, N, setof(N, Spec), A) -->
+match_known_type(setof(Type, A), M, N, setof(long, Spec), A) -->
     { nonvar(Type),
       extend_args(Type, [E], Prop)
     },
