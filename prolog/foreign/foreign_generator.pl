@@ -962,8 +962,6 @@ declare_struct(atomic(SubType, Name), Spec, Term) -->
     ( {SubType = union}
     ->{functor(Term, TName, _)},
       ["    "+Decl+" "+TName+";"]
-    ; {Spec = setof(_, _)}
-    ->["typedef long "+Name+";"]
     ; ["typedef "+Decl+" "+Name+";"]
     ).
 declare_struct(func_ini(SubType, Spec), _, _) -->
@@ -1069,7 +1067,8 @@ type_components_1(M, Call, Loc, Type-TypePropLDictL) -->
         Spec = cdef(Name)
       ; forall(member(t(Type, PropL, _), TypePropLDictL), PropL = [])
       ->SubType = enum,
-        Spec = enum(Name)
+        length(TypePropLDictL, N),
+        Spec = enum(Name, N)
       ; Spec = type(Name),
         ( TypePropLDictL = [_, _|_]
         ->SubType = union
@@ -1259,7 +1258,7 @@ ctype_decl(ptr(Spec))      --> ctype_decl(Spec), "*".
 ctype_decl(chrs(Name))     --> acodes(Name).
 ctype_decl(string(Name))   --> acodes(Name).
 ctype_decl(type(Name))     --> "struct ", acodes(Name).
-ctype_decl(enum(Name))     --> "enum ", acodes(Name).
+ctype_decl(enum(Name, _))  --> "enum ", acodes(Name).
 ctype_decl(term)           --> "term_t".
 ctype_decl(tdef(Name, _))  --> acodes(Name).
 ctype_decl(setof(Name, _)) --> acodes(Name).
@@ -1445,7 +1444,7 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
 c_set_argument(list(S),     _, C, A, L) :- c_set_argument_rec(list, S, C, A, L).
 c_set_argument(ptr( S),     _, C, A, L) :- c_set_argument_rec(ptr,  S, C, A, L).
 c_set_argument(type(T),     M, C, A, L) :- c_set_argument_type(M, T, C, A, L).
-c_set_argument(enum(T),     M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
+c_set_argument(enum(T, _),  M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(cdef(T),     M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(T-_,         M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(chrs(_),     M, C, A, L) :- c_set_argument_chrs(M, C, A, L).
@@ -1480,7 +1479,7 @@ c_set_argument_setof(Mode, Spec, CArg, Arg, "FI_unify_"+Mode+"_setof("+L+", "+Ty
 c_get_argument(list(S),     M, C, A, L) :- c_get_argument_rec(M, list, S, C, A, L).
 c_get_argument(ptr(S),      M, C, A, L) :- c_get_argument_rec(M, ptr,  S, C, A, L).
 c_get_argument(type(T),     M, C, A, L) :- c_get_argument_type(M, T, C, A, L).
-c_get_argument(enum(T),     M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
+c_get_argument(enum(T, _),  M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(cdef(T),     M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(T-_,         M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(chrs(_),     M, C, A, L) :- c_get_argument_chrs(M, C, A, L).
@@ -1718,11 +1717,32 @@ match_known_type(Type, M, _, tdef(Name, Spec), A) -->
       functor(Type, Name, _)
     },
     !.
-match_known_type(setof(Type, A), M, N, setof(long, Spec), A) -->
+match_known_type(setof(Type, A), M, N, Spec, A) -->
     { nonvar(Type),
       extend_args(Type, [E], Prop)
     },
-    match_type(Prop, M, known, N, Spec, E).
+    match_type(Prop, M, known, N, PSpec, E),
+    { ( PSpec = tdef(Name, ESpec)
+      ->true
+      ; ESpec = PSpec,
+        Name = TName
+      ),
+      ( ESpec = enum(_, C),
+        ( C =< 16
+        ->TName = short
+        ; C =< 32
+        ->TName = int
+        ; C =< 64
+        ->TName = long
+        ; C =< 128,
+          current_prolog_flag(address_bits, AB),
+          AB >= 64
+        ->TName = '__int128'
+        )
+      ->Spec = setof(Name, ESpec)
+      ; Spec = list(PSpec)
+      )
+    }.
 match_known_type(Type, M, _, Spec, A) -->
     { compound(Type),
       functor(Type, Name, Arity),
@@ -1740,7 +1760,9 @@ match_known_type(Type, M, _, Spec, A) -->
     ; { TypePropLDictL = [Head-L],
         forall(member(t(Head, PropL, _), L), PropL = [])
       }
-    ->{Spec=enum(Name)}
+    ->{ length(L, N),
+        Spec=enum(Name, N)
+      }
     ; { member(_-HeadPropLDictL, TypePropLDictL),
         member(t(Head, PropL, _), HeadPropLDictL),
         PropL \= []

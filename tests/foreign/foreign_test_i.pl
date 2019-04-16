@@ -4,6 +4,7 @@
            sio/1, negative_t/1, fortran1/2, positive_t/1, fd1/4, fd2/4, fd3/4,
            extend/2, test_ireverse1/2, test_ireverse2/2]).
 
+:- use_module(library(neck)).
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
 :- use_module(library(foreign/foreign_interface)).
@@ -33,6 +34,44 @@ enum_example_s(element(f(g(h)))).
 setof_enum_s(S) :- setof(enum_example_s, S).
 
 :- pred f_setof_enum(+setof_enum_s, setof_enum_s, -setof_enum_s, -long) is foreign(c_setof_enum).
+
+:- type setof_body_s/1.
+setof_body_s(setof_body(Label, Set)) :-
+    atm(Label),
+    setof(enum_example_t, Set).
+
+:- type enum32_s/1.
+enum32_s(X) :-
+    between(1, 32, X),
+    neck.
+
+:- type setof_enum32_s/1.
+setof_enum32_s(S) :- setof(enum32_s, S).
+
+:- type enum64_s/1.
+enum64_s(X) :-
+    between(1, 64, X),
+    neck.
+
+:- type setof_enum64_s/1.
+setof_enum64_s(S) :- setof(enum64_s, S).
+
+:- type enum128_s/1.
+enum128_s(X) :-
+    between(1, 128, X),
+    neck.
+
+:- type setof_enum128_s/1.
+setof_enum128_s(S) :- setof(enum128_s, S).
+
+:- type enum256_s/1.
+enum256_s(X) :-
+    between(1, 256, X),
+    neck.
+
+:- type setof_enum256_s/1.
+setof_enum256_s(S) :- setof(enum256_s, S).
+
 
 :- type negative_t/1 is foreign(is_negative_t).
 

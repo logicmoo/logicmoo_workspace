@@ -175,6 +175,11 @@
             FI_get_list(__FI_get_elem, __term, __value);        \
         })
 
+#define FI_is_element( __elem, __set) ((((typeof (__set))1)<<__elem & __set)!= 0)
+#define FI_add_element(__set, __elem) (__set |=  (((typeof (__set))1)<<__elem))
+#define FI_del_element(__set, __elem) (__set &= !(((typeof (__set))1)<<__elem))
+#define FI_xor_element(__set, __elem) (__set ^=  (((typeof (__set))1)<<__elem))
+
 #define FI_get_setof(__FI_get_elem, __type, __term, __value) ({ \
       term_t __term##_ = PL_new_term_ref();			\
       term_t __tail = PL_copy_term_ref(__term);			\
@@ -184,7 +189,7 @@
       *__value = 0;                                             \
       while(PL_get_list(__tail, __term##_, __tail)) {           \
           __FI_get_elem;					\
-          *__value |= 1<<(*_c_##__term##_);                     \
+          FI_add_element(*__value, (*_c_##__term##_));          \
       };                                                        \
       __rtcheck(PL_get_nil(__tail));				\
     })
@@ -248,13 +253,13 @@
 #define FI_unify_setof(__FI_unify_elem, __type, __term, __value) ({     \
             term_t l = PL_copy_term_ref(__term);			\
             term_t __term##_ = PL_new_term_ref();			\
-            long __elem = __value;                                      \
+            typeof (__value + 0) __set = __value;                       \
             __type _c_##__term##_;                                      \
-            for(_c_##__term##_ = 0; __elem != 0; _c_##__term##_++) {    \
-                if (((1l<<_c_##__term##_) & __elem)!=0) {               \
+            for(_c_##__term##_ = 0; __set != 0; _c_##__term##_++) {     \
+                if (FI_is_element(_c_##__term##_, __set)) {             \
                     __rtcheck(PL_unify_list(l, __term##_, l));          \
                     __FI_unify_elem;                                    \
-                    __elem ^= (1l<<_c_##__term##_);                     \
+                    FI_xor_element(__set, _c_##__term##_);              \
                 }                                                       \
             }                                                           \
             __rtcheck(PL_unify_nil(l));                                 \
