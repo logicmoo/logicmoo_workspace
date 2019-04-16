@@ -175,11 +175,6 @@
             FI_get_list(__FI_get_elem, __term, __value);        \
         })
 
-#define FI_is_element( __elem, __set) ((((typeof (__set))1)<<__elem & __set)!= 0)
-#define FI_add_element(__set, __elem) (__set |=  (((typeof (__set))1)<<__elem))
-#define FI_del_element(__set, __elem) (__set &= !(((typeof (__set))1)<<__elem))
-#define FI_xor_element(__set, __elem) (__set ^=  (((typeof (__set))1)<<__elem))
-
 #define FI_get_setof(__FI_get_elem, __type, __term, __value) ({ \
       term_t __term##_ = PL_new_term_ref();			\
       term_t __tail = PL_copy_term_ref(__term);			\

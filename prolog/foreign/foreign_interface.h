@@ -345,4 +345,9 @@ typedef void * root_t;
 #define FI_array_length_ptr(__value)     FI_array_ptr(__value)
 #define FI_array_length(__value)         (*FI_array_length_ptr(__value))
 
+#define FI_is_element( __elem, __set) ((((typeof (__set))1)<<__elem & __set)!= 0)
+#define FI_add_element(__set, __elem) (__set |=  (((typeof (__set))1)<<__elem))
+#define FI_del_element(__set, __elem) (__set &= !(((typeof (__set))1)<<__elem))
+#define FI_xor_element(__set, __elem) (__set ^=  (((typeof (__set))1)<<__elem))
+
 #endif // __FOREIGN_INTERFACE_H__
