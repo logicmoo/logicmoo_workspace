@@ -41,12 +41,13 @@
 
 % Useful for SWISH
 % dumploaded(ShowExternalSyntax) if == true dumps surface syntax, otherwise internal (Wei) syntax
-dumploaded(External) :- 
+dumploaded(External,Translator) :- 
+	check_translator(Translator),
 	% TODO: warn about generated clauses (e.g. from English) than will not appear here
 	lps_swish_clause(H,Body,Vars),
 	(External -> 
 		(Body==true -> InternalTerm=H ; InternalTerm=(H:-Body)),
-		syntax2p(Clause,Vars,lps2p,_,InternalTerm) 
+		syntax2p(Clause,Vars,Translator,_,InternalTerm) 
 		; 
 		Clause = (H:-Body)),
 	% bindAllVars(Vars),
@@ -57,7 +58,10 @@ dumploaded(External) :-
 	%write('  '), writeln(File), % e.g. pengine://fa945952-355c-47a3-bb48-bdf8dfdb4229/src
 	%write('  '), writeln(TermPos/Vars), % e.g. term_position(384,446,416,420,[term_position(.... ])/[N=_1022]
 	fail.
-dumploaded(_).
+dumploaded(_,_).
+
+dumploaded(External) :- dumploaded(External,lps2p).
+
 
 lps_swish_clause(H,Body,Vars) :-
 	interpreter:check_lps_program_swish_module,
@@ -174,7 +178,7 @@ spec_for_one(_/_,SC,delimiter-[SC,classify]) :- !.
 spec_for_one(One,SC,SC) :- atom(One), !.
 spec_for_one(_One,SC,SC-classify).
 
-% functor_arityze(TemplatesOrFA,TemplatesList) replaces term functor/arities by their templates; 
+% functor_arityze(+TemplatesOrFA,-TemplatesList) replaces term functor/arities by their templates; 
 % bidirectional (albeit losing information of course)
 functor_arityze([F/A|TOFAL],[G|FAL]) :- functor(G,F,A), !, functor_arityze(TOFAL,FAL).
 functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
@@ -225,13 +229,15 @@ lps2p_file(LPSfile,LPSWfile) :-
 	(atom(LPSfile)->true;concat_atom([LPSWfile,'_.lps'],LPSfile)),
 	syntax2p_file(LPSfile,LPSWfile,lps2p,false).
 
+check_translator(Translator) :-
+	( member(Translator,[/* no longer:lpsp2p,*/lps2p,js2p]) -> true 
+		; throw('Bad syntax translator:'(Translator))).
 
 % Main file to file syntax converter
 % syntax2p_file(+OtherSyntaxFile,+P_Wei_file,+Translator,+ToWei) Translator is a functor for a predicate Translate(Term,Vars,NewTerm)
 % If ToWei==true it generates a .P (internal syntax) file from the first file, else vice-versa
 syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
-	( member(Translator,[/* no longer:lpsp2p,*/lps2p,js2p]) -> true 
-		; throw('Bad syntax translator:'(Translator))),
+	check_translator(Translator),
 	init_definition_newliner,
 	clear_hints, clear_timeless_refs,
 	(ToWei==true -> 
@@ -348,27 +354,28 @@ js2p(LPSPterm,Vars,Pterm) :- syntax2p(LPSPterm,Vars,js2p,Pterm).
 syntax2p(NicerSyntaxTerm,Vars,Translator,Pterm) :- 
 	syntax2p(NicerSyntaxTerm,Vars,Translator,_NiceColouring,Pterm).
 
-% syntax2p(?NicerSyntaxTerm,+Vars,+Translator,NiceColouring,?Pterm) 
+% syntax2p(?NicerSyntaxTerm,+Vars,+Translator,NiceColouring,?InternalTerm) 
 % Vars is a (closed tail) list of some_functor(Name,Variable)
-% Translator: lpsp2p ("papers syntax", no longer supported!) or lps2p ("new syntax"); 
-% Either NicerSyntaxTerm or Pterm must be bound; the other should be unbound
+% Translator: lps2p (lps.swi surface syntax) or js2p (lps.js syntax)
+% Either NicerSyntaxTerm or InternalTerm must be bound; the other should be unbound
 % NiceColouring is a colouring specificatin term as per SWI's prolog_colouring.pl, for the NicerSyntaxTerm
 %   null if undefined colouring, e.g. for timeless/Prolog literals (they'll be coloured elsewhere in SWI)
 %   needs to be defined only for nonvar(NicerSyntaxTerm)
 % Probably needs to evolve to return error messages
 syntax2p(L,_,_TT,_,PT) :- var(L), var(PT), !, fail.
+% clauses and facts that are not transformed, just propagated:
 syntax2p(NT,_,TT,Spec,(H:-B)) :- 
 	(nonvar(NT)->ToWei=true;ToWei=false),
 	NT = (H:-B),
 	do_not_transform_may_hint(H,TT,ToWei,B,Spec), !.
 syntax2p(NT,_,TT,Spec,Fact) :- 
 	(nonvar(NT)->ToWei=true;ToWei=false),
-	NT=Fact,
+	NT=Fact, Fact \= (_:-_),
 	do_not_transform_may_hint(NT,TT,ToWei,true,Spec), !.
 % convenience notation for declarations:
 syntax2p((initially States),_Vars,lps2p, lps_delimiter - [Specs] , initial_state(StatesList)) :- !, 
-% syntax2p((initially States),_Vars,lps2p, null , initial_state(StatesList)) :- !, 
 	comma_to_list(States,fluent,Specs,StatesList).
+syntax2p(initially(States),_Vars,js2p, null , initial_state(States)) :- !.
 % observe o1, o2, o3 from ... to ...:
 syntax2p((observe Obs),_Vars,lps2p,lps_delimiter - [Specs],observe([O1,O2|On],T2)) :- (nonvar(Obs)-> functor(Obs,',',2) ; true), !,
 	((syntax2p_observations(Obs,CT2,[O1,O2|On],T2,Specs), T2=CT2, nonvar(T2)) -> true
@@ -377,7 +384,6 @@ syntax2p((observe Obs),_Vars,lps2p,lps_delimiter - [Specs],observe([O1,O2|On],T2
 		format(atom(M),"Bad observations: ~w",[(observe Obs)/observe([O1,O2|On],T2)]),
 		print_error(error,M),
 		fail). 
-	
 % single observations, declared as fact declarations; observations list case handled further below
 syntax2p((observe E from T1 to T2),_Vars,lps2p, lps_delimiter - [SpecHead], observe([E],T2)) :- !, 
 	syntax2p_literal((E from T1 to T2),[],lps2p,_,_,SpecHead,_).
@@ -387,11 +393,19 @@ syntax2p((observe E at T2),_Vars,lps2p, lps_delimiter - [SpecHead],observe([E],T
 	syntax2p_literal((E to T2),[],lps2p,_,_,SpecHead,_).
 syntax2p((observe E from T1),_Vars,lps2p, lps_delimiter - [SpecHead],observe([E],T2)) :- number(T1), !, T2 is T1+1,
 	syntax2p_literal((E to T2),[],lps2p,_,_,SpecHead,_).
+% observe (Ev,Time) and observe(Ev,Time1,Time2)
+syntax2p(observe(E,T2),_Vars,js2p, null, observe([E],T2)) :- !.
+syntax2p(observe(E,_T1,T2),_Vars,js2p, null, observe([E],T2)) :- !.
+
 syntax2p((unserializable A),Vars,lps2p,Spec,unserializable(NL)) :- !, syntax2p((actions A),Vars,lps2p,Spec,actions(NL)).
-syntax2p((actions A),_Vars,lps2p,lps_delimiter - [Specs],actions(NL)) :- nonvar(A), !, comma_to_list(A,event,Specs,L), functor_arityze(L,NL), remember_declarations(event,NL).
-syntax2p((actions A),_Vars,lps2p,lps_delimiter - [Specs],actions(L)) :- !, comma_to_list(A,event,Specs,L).
+syntax2p((actions A),_Vars,lps2p,lps_delimiter - [Specs],actions(NL)) :- nonvar(A), !, comma_to_list(A,action,Specs,L), functor_arityze(L,NL), remember_declarations(event,NL).
+syntax2p((actions A),_Vars,lps2p,lps_delimiter - [Specs],actions(L)) :- !, comma_to_list(A,action,Specs,L).
+syntax2p(actions(A),_Vars,js2p,null,actions(L)) :- nonvar(L), !, L=A. % other conversion direction handled by do_not_transform_may_hint(..)
+
 syntax2p((events A),_Vars,lps2p,lps_delimiter - [Specs],events(NL)) :- nonvar(A), !, comma_to_list(A,event,Specs,L), functor_arityze(L,NL), remember_declarations(event,NL).
 syntax2p((events A),_Vars,lps2p,lps_delimiter - [Specs],events(L)) :- !, comma_to_list(A,event,Specs,L).
+syntax2p(events(A),_Vars,js2p,null,events(L)) :- nonvar(L), !, L=A. % other conversion direction handled by do_not_transform_may_hint(..)
+
 syntax2p((prolog_events A),_Vars,lps2p,lps_delimiter - [Specs],prolog_events(NL)) :- nonvar(A), !, 
 	comma_to_list(A,event,Specs,L), functor_arityze(L,NL), remember_declarations(event,NL).
 syntax2p((prolog_events A),_Vars,lps2p,lps_delimiter - [Specs],prolog_events(L)) :- !, comma_to_list(A,event,Specs,L).
@@ -573,7 +587,7 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- % to allo
 	!,
 	simple_event_colour(LT,EC).
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- 
-	nonvar(LT), ( head_hint(LT,event) /* too strong, due to external_predicate_for_lps/1:  system_action(LT)*/ ),
+	nonvar(LT), ( head_hint(LT,event) ; head_hint(LT,action) /* too strong, due to external_predicate_for_lps/1:  system_action(LT)*/ ),
 	!,
 	simple_event_colour(LT,EC),
 	NL=LT.
@@ -637,7 +651,7 @@ syntax2p_literal(L,_,_Translator,[T,T],false,body(L),L) :- may_add_timeless_ref(
 % Most bodies left var, as we may want to use Prolog there, for some kind of "meta-level"
 % Finally, we leave Wei syntax terms untouched when translating TO that syntax, so we can mixing them in
 % do_not_transform_may_hint(Head,SyntaxName,ToWei,Body,-ColourSpec)
-do_not_transform_may_hint(observe(Events,_),_,_,_,lps_delimiter-classify) :-!, remember_hints(event,Events). 
+do_not_transform_may_hint(observe(Events,_),lps2p,_,_,lps_delimiter-classify) :-!, remember_hints(event,Events). 
 do_not_transform_may_hint(fluent(F),_,_,_,lps_delimiter-[fluent-classify]) :- !, remember_declarations(fluent,F).
 do_not_transform_may_hint(fluents(Fls),_,true,_,lps_delimiter-[(fluents/* huh?? weird but probably irrelevant*/)-classify]) :- is_list(Fls), !, 
 	remember_declarations(fluent,Fls).
@@ -646,7 +660,7 @@ do_not_transform_may_hint(events(Evs),_,true,_,lps_delimiter-[(events)-classify]
 	remember_declarations(event,Evs).
 do_not_transform_may_hint(prolog_events(Evs),_,true,_,lps_delimiter-[(events)-classify]) :- is_list(Evs), !, 
 	remember_declarations(event,Evs).
-do_not_transform_may_hint(action(A),_,_,_,lps_delimiter-[event-classify]) :- !, remember_declarations(event,A).
+do_not_transform_may_hint(action(A),_,_,_,lps_delimiter-[action-classify]) :- !, remember_declarations(action,A).
 do_not_transform_may_hint(actions(As),_,true,_,lps_delimiter-[(actions)-classify]) :- is_list(As), !, 
 	remember_declarations(action,As).
 do_not_transform_may_hint(unserializable(As),_,true,_,null) :- is_list(As), !.
