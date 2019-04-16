@@ -164,32 +164,8 @@ dtype_dupid_elem(T,              T, _, H, M, T-M:PI, G) :-
       G =H
     ).
 
-ignore_dupgroup((DupType-_)-ElemL, GL) :-
-    ignore_dupgroup(DupType, ElemL, GL),
+ignore_dupgroup((DupType-_)-ElemL) :-
     \+ consider_dupgroup(DupType, ElemL).
-
-ignore_dupgroup(name, _, _).
-ignore_dupgroup(predicate, _, _).
-ignore_dupgroup(clause, CIL, GL) :-
-    ignore_dupgroup_clause(CIL, GL).
-
-ignore_dupgroup_clause(CIL, GL) :-
-    CIL = [CI|_],
-    element_group(clause, CI, GKey),
-    maplist(\ (M:_/_-_)^M^true, CIL, MU),
-    sort(MU, ML),
-    element_group(clause, CI, GKey),
-    partition([GKey, ML] +\ ((clause-_)-CIL1)
-             ^ ( CIL1 = [CI1|_],
-                 element_group(clause, CI1, GKey),
-                 maplist(\ (M:_/_-_)^M^true, CIL1, MU1),
-                 sort(MU1, ML)
-               ),
-              GL, [_], _).
-    % GI, GE).
-    % length(GI,NI),
-    % length(GE,NE),
-    % writeln(user_error, GKey:NI-NE).
 
 consider_dupgroup(DupType, CIL) :-
     append(_, [CI|PIL2], CIL),
@@ -230,7 +206,7 @@ check_dupcode(Options, FileChk, Result) :-
     group_pairs_by_key(PL, GL),
     partition(\ (_-[_])^true, GL, _, GD), % Consider duplicates
     findall(G, ( member(G, GD),
-                 \+ ignore_dupgroup(G, GD)
+                 \+ ignore_dupgroup(G)
                ), Groups),
     ungroup_keys_values(Groups, Pairs),
     clean_redundants(Pairs, CPairs),
