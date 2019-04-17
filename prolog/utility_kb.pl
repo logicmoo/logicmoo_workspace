@@ -221,48 +221,48 @@ find_subclass_of_n([H|T],Acc,ListOutput,Hier):-
   member(H-L2,Hier),!,
   find_subclass_of_n(L2,Acc,ListaHelp,Hier),
   find_subclass_of_n(T,[H|ListaHelp],ListOutput,Hier).
-								
+			
 find_subclass_of_n([H|T],Acc,ListOutput,Hier):- 
   find_subclass_of_n(T,[H|Acc],ListOutput,Hier).
 %===========================================================================================================
 % Print the hierarchy
 print_hierarchy(Hier0,Classes):-
-					find_n(Hier0,Hier),
-					print_hierarchy(Hier,0,Classes),
-					print_hierarchy(Hier,n,Classes).
+  find_n(Hier0,Hier),
+  print_hierarchy(Hier,0,Classes),
+  print_hierarchy(Hier,n,Classes).
 
 print_hier_class(X):- 
-				is_list(X),!,
-				print_equiv_classes(X).
+  is_list(X),!,
+  print_equiv_classes(X).
 print_hier_class(X):- 
-				write(X).
-					
+  write(X).
+
 print_equiv_classes([]).
-print_equiv_classes([H]):- write(H).					
+print_equiv_classes([H]):- write(H).
 print_equiv_classes([H|T]):-
-								write(H),write(' = '),
-								print_equiv_classes(T).
-						
+  write(H),write(' = '),
+  print_equiv_classes(T).
+  	
 print_hierarchy(Hier,Class,Classes):- 
-    					member(Class-L,Hier),!,
-						%chiamo la mia write per vedere se Val è lista o meno
-    					print_hier_class(Classes.get(Class)),nl,
-    					print_hierarchy_int(L,1,Hier,Classes).
-						
+  member(Class-L,Hier),!,
+  % print the class or the list of equivalent classes
+  print_hier_class(Classes.get(Class)),nl,
+  print_hierarchy_int(L,1,Hier,Classes).
+	
 
 print_hierarchy_int([],_,_,_).
 
-print_hierarchy_int([TestaL|CodaL],Cont,Lista,D):-	
-												tab(Cont),
-												%cotrollo che TestaL sia una lista con la mia write
-												print_hier_class(D.get(TestaL)),nl,
-												member(TestaL-L2,Lista),!,
-												NewCont is Cont+1,
-												print_hierarchy_int(L2,NewCont,Lista,D),
-												print_hierarchy_int(CodaL,Cont,Lista,D).
-												
-print_hierarchy_int([_|CodaL],Cont,Lista,D):-
-												print_hierarchy_int(CodaL,Cont,Lista,D).
+print_hierarchy_int([HeadL|TailL],Cont,List,D):-	
+  tab(Cont),
+  % check whether the head is a list with print_hier_class and print it
+  print_hier_class(D.get(HeadL)),nl,
+  member(HeadL-L2,List),!,
+  NewCont is Cont+1,
+  print_hierarchy_int(L2,NewCont,List,D),
+  print_hierarchy_int(TailL,Cont,List,D).
+
+print_hierarchy_int([_|TailL],Cont,List,D):-
+  print_hierarchy_int(TailL,Cont,List,D).
 %===========================================================================================================
 check_disjoint_int([],_,[]).
 
