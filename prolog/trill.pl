@@ -1032,13 +1032,14 @@ scan_or_list(M,[_C|T],NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
   exists_rule
   ==================
 */
-exists_rule(M,(ABox0,Tabs0),(someValuesFrom(R,C),Ind1),([(propertyAssertion(R,Ind1,Ind2),Expl),
-    (classAssertion(C,Ind2),Expl)|ABox0],Tabs)):-
+exists_rule(M,(ABox0,Tabs0),(someValuesFrom(R,C),Ind1),(ABox,Tabs)):-
   findClassAssertion(someValuesFrom(R,C),Ind1,Expl,ABox0),
   \+ blocked(Ind1,(ABox0,Tabs0)),
   \+ connected_individual(R,C,Ind1,ABox0),
   new_ind(M,Ind2),
-  add_edge(R,Ind1,Ind2,Tabs0,Tabs).
+  add_edge(R,Ind1,Ind2,Tabs0,Tabs),
+  modify_ABox(M,ABox0,C,Ind2,Expl,ABox1),
+  modify_ABox(M,ABox1,R,Ind1,Ind2,Expl,ABox).
 
 
 %---------------
@@ -1201,17 +1202,13 @@ neg_list([complementOf(H)|T],[H|T1]):-
 
 % ----------------
 
-find_class_prop_range_domain(M,P,S,_O,Ind,D,Expl,(ABox,_Tabs)):-
-  findPropertyAssertion(P,S,IndL,ExplPA,ABox),
-  indAsList(IndL,L),
-  member(Ind,L),
+find_class_prop_range_domain(M,P,S,O,O,D,Expl,(ABox,_Tabs)):-
+  findPropertyAssertion(P,S,O,ExplPA,ABox),
   M:propertyRange(R,D),
   and_f_ax(M,propertyRange(R,D),ExplPA,Expl).
 
-find_class_prop_range_domain(M,P,_S,O,Ind,_,D,Expl,(ABox,_Tabs)):-
-  findPropertyAssertion(P,IndL,O,ExplPA,ABox),
-  indAsList(IndL,L),
-  member(Ind,L),
+find_class_prop_range_domain(M,P,S,O,S,D,Expl,(ABox,_Tabs)):-
+  findPropertyAssertion(P,S,O,ExplPA,ABox),
   M:propertyDomain(R,D),
   and_f_ax(M,propertyDomain(R,D),ExplPA,Expl).
 
@@ -1256,6 +1253,11 @@ find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
   M:subPropertyOf(R,S).
 
+%role domain for concepts someValuesFrom
+%find_sub_sup_class(M,C,D,subPropertyOf(R,S)):-
+%  M:propertyDomain(R,D),
+%  find_sub_sup_class_dir(C,someValuesFrom(R,_C0),Ax),
+  
 
 /*******************
  managing the concept (C subclassOf Thing)
@@ -1499,25 +1501,28 @@ min_rule(M,(ABox,Tabs),(exactCardinality(N,S,C),Ind1),([(differentIndividuals(NI
 % ----------------------
 min_rule_neigh(_,0,_,_,_,[],ABox,Tabs,ABox,Tabs).
 
-min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl)|ABox2],Tabs2):-
+min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox,Tabs,ABox2,Tabs2):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
   check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
-  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs1,ABox2,Tabs2).
+  modify_ABox(M,ABox,S,Ind1,Ind2,Expl,ABox1),
+  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox1,Tabs1,ABox2,Tabs2).
 
 %----------------------
 min_rule_neigh_C(_,0,_,_,_,_,[],ABox,Tabs,ABox,Tabs).
 
-min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl),
-                                          (classAssertion(C,Ind2),[propertyAssertion(S,Ind1,Ind2)|Expl])|ABox2],Tabs2):-
+min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,ABox3,Tabs2):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
   check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
-  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs1,ABox2,Tabs2).
+  modify_ABox(M,ABox,S,Ind1,Ind2,Expl,ABox1),
+  and_f_ax(M,propertyAssertion(S,Ind1,Ind2),Expl,ExplC),
+  modify_ABox(M,ABox1,C,Ind2,ExplC,ABox2),
+  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox2,Tabs1,ABox3,Tabs2).
 
 %---------------------
 safe_s_neigh([],_,_,[]).
