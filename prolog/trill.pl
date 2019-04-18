@@ -1253,11 +1253,6 @@ find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(R,D),Ax):-
 find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S)):-
   M:subPropertyOf(R,S).
 
-%role domain for concepts someValuesFrom
-%find_sub_sup_class(M,C,D,subPropertyOf(R,S)):-
-%  M:propertyDomain(R,D),
-%  find_sub_sup_class_dir(C,someValuesFrom(R,_C0),Ax),
-  
 
 /*******************
  managing the concept (C subclassOf Thing)

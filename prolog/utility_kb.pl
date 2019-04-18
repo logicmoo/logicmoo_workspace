@@ -247,7 +247,7 @@ print_hierarchy(Hier,Class,Classes):-
   member(Class-L,Hier),!,
   % print the class or the list of equivalent classes
   print_hier_class(Classes.get(Class)),nl,
-  print_hierarchy_int(L,1,Hier,Classes).
+  print_hierarchy_int(L,3,Hier,Classes).
 	
 
 print_hierarchy_int([],_,_,_).
@@ -257,7 +257,7 @@ print_hierarchy_int([HeadL|TailL],Cont,List,D):-
   % check whether the head is a list with print_hier_class and print it
   print_hier_class(D.get(HeadL)),nl,
   member(HeadL-L2,List),!,
-  NewCont is Cont+1,
+  NewCont is Cont+3,
   print_hierarchy_int(L2,NewCont,List,D),
   print_hierarchy_int(TailL,Cont,List,D).
 
