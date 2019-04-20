@@ -24,7 +24,7 @@
 
 :- module(psyntax,[ 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, syntax2p_literal/7, golps/2, golps/1,
-	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/1
+	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/2
 	]).
 
 :- if(\+ current_prolog_flag(dialect, swi)).
@@ -47,20 +47,20 @@ dumploaded(External,Translator) :-
 	lps_swish_clause(H,Body,Vars),
 	(External -> 
 		(Body==true -> InternalTerm=H ; InternalTerm=(H:-Body)),
-		syntax2p(Clause,Vars,Translator,_,InternalTerm) 
+		catch( syntax2p(Clause,Vars,Translator,_,InternalTerm), Ex, (print_message(error,Ex),fail))
 		; 
 		Clause = (H:-Body)),
 	% bindAllVars(Vars),
 	% term_variables((H:-Body),VarValues),    _Vars: [Name1=VarValue1,...]
 	%_TermPos = term_position(Char,CharEnd,_,_,_),
 	%print_message(error,error(syntax_error(whatever),file(File,LineNumber,_one,_Char))),
-	pretty_write_withvars(Clause,Vars), writeln('.'),
+	pretty_write_withvars(Clause,Translator,Vars), writeln('.'),
 	%write('  '), writeln(File), % e.g. pengine://fa945952-355c-47a3-bb48-bdf8dfdb4229/src
 	%write('  '), writeln(TermPos/Vars), % e.g. term_position(384,446,416,420,[term_position(.... ])/[N=_1022]
 	fail.
 dumploaded(_,_).
 
-dumploaded(External) :- dumploaded(External,lps2p).
+% dumploaded(External) :- dumploaded(External,lps2p).
 
 
 lps_swish_clause(H,Body,Vars) :-
@@ -73,7 +73,7 @@ lps_swish_clause(H,Body,Vars) :-
 
 :- if( \+ current_module(swish)).
 % Now support for vanilla/barebones SWI Prolog:
-dumploaded(_).
+dumploaded(_,_).
 :- endif.
 
 % ...and finally the generic SWI support:
@@ -265,7 +265,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		%	; 
 		% This combined with writeq.... can't do: bindAllVars(Vars), 
 		may_write_newline(NewTerm,OStr),
-		pretty_write(NewTerm,OStr), writeln(OStr,'.'), 
+		pretty_write(NewTerm,Translator,OStr), writeln(OStr,'.'), 
 		fail
 	),
 	!,
@@ -274,7 +274,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 		collect_guessed_declarations(Facts),
 		forall( 
 			member(Fact,Facts), 
-			(may_write_newline(Fact,OStr), pretty_write(Fact,OStr), writeln(OStr,'.'))
+			(may_write_newline(Fact,OStr), pretty_write(Fact,Translator,OStr), writeln(OStr,'.'))
 			)
 	; true),
 	close(OStr),close(IStr).
@@ -462,20 +462,22 @@ syntax2p(H,Vars,Tran,Spec,PT) :- %
 	syntax2p_sequence(Event,Vars,Tran,[_T1,_T2],single,_ET,SpecE,[NB1|NBn]).
 syntax2p(L,Vars,Tran,null,PT) :-
 	var(L), PT=..[F,NB1,Fluent,NBn], 
-	((F==terminated), L_ = (Event terminates Fluent) ; (F==initiated), L_ = (Event initiates Fluent)), 
+	((F==terminated), L_ = (Event_ terminates Fluent) ; (F==initiated), L_ = (Event_ initiates Fluent)), 
 	!,
 	syntax2p_sequence(Conditions,Vars,Tran,[_T1,_T2],single,_ET,_,[NB1|NBn]),
 	(Conditions = (Event,Body) -> 
 		(Tran=lps2p->L = (L_ if Body);Tran=js2p, L = (L_ <- Body))
 		; L = L_, Conditions=Event
-		).
+		),
+	may_remove_lps_time(Event,Tran,Event_).
 syntax2p(L,Vars,Tran,null,updated(NB1,Fluent,Old-New,NBn)) :-
 	var(L),
 	!,
 	syntax2p_sequence(Conditions,Vars,Tran,[_T1,_T2],single,_ET,_,[NB1|NBn]),
-	(Tran=lps2p -> L_ = (Event updates Old to New in Fluent) 
-	; Tran=js2p, L_ = updates(Event,Fluent,New), (Old==Fluent -> true ; throw(over_detailed(updated(NB1,Fluent,Old-New,NBn))))), % lps.swi syntax is more general
-	(Conditions = (Event,Body) -> (Tran=lps2p -> L = (L_ if Body) ; Tran=js2p, L = (L_ <- Body)) ; L = L_, Conditions=Event).
+	(Tran=lps2p -> L_ = (Event_ updates Old to New in Fluent) 
+	; Tran=js2p, L_ = updates(Event_,Fluent,New), (Old==Fluent -> true ; throw(over_detailed(updated(NB1,Fluent,Old-New,NBn))))), % lps.swi syntax is more general
+	(Conditions = (Event,Body) -> (Tran=lps2p -> L = (L_ if Body) ; Tran=js2p, L = (L_ <- Body)) ; L = L_, Conditions=Event),
+	may_remove_lps_time(Event,Tran,Event_).
 % intentional fluents and composite events, and more
 syntax2p(Surface,Vars,Tran,lps_delimiter-[SpecHead,SpecBody],PT) :-
 	(Tran=lps2p->Surface=(Head if Body); Tran=js2p, Surface=(Head<-Body)),
@@ -515,6 +517,13 @@ syntax2p_one_obsservation((E to CT2),T2,E,LT2,delimiter-[EC,classify]) :- !, T2=
 syntax2p_one_obsservation((E at CT2),T2,E,LT2,delimiter-[EC,classify]) :- atom(CT2), !, T2=CT2,CT2=LT2, simple_event_colour(E,EC). % for real times/dates
 syntax2p_one_obsservation(E,T2,E,T2,EC) :- simple_event_colour(E,EC). 
 	% assume T2 defined by another observation
+
+% Useful for js2p
+may_remove_lps_time((E from _ to _),js2p, E) :- !.
+may_remove_lps_time((E from _), js2p, E) :- !.
+may_remove_lps_time((E to _), js2p, E) :- !.
+may_remove_lps_time(E,_Tran,E).
+
 
 simple_event_colour(E,EC) :- atom(E) -> EC = event ; EC = event-classify.
 simple_fluent_colour(E,EC) :- atom(E) -> EC = fluent ; EC = fluent-classify.
@@ -719,41 +728,97 @@ do_not_transform_may_hint(simulatedRealTimePerCycle(_),lps2p,_,_,lps_delimiter-c
 do_not_transform_may_hint(simulatedRealTimeBeginning(_),lps2p,_,_,lps_delimiter-classify).
 
 
-% pretty printing for all syntaxes; although not doing anything specific to the new (lps2p translator) syntax
-% pretty_write_withvars(Clause,VarsList)
-pretty_write_withvars(Term,Vars) :- pretty_write(Term,0,Vars,user_output).
+% pretty printing for all syntaxes 
+% NOTE: this might be better rewritten using a separate module for the lps.js compatible printing, to ignore some lps.swi operators
+% pretty_write_withvars(Clause,Translator,VarsList)
+pretty_write_withvars(Term,Tran,Vars) :- pretty_write(Term,Tran,0,Vars,user_output).
 
-pretty_write(Term,Stream) :- pretty_write(Term,0,[],Stream).
+pretty_write(Term,Translator,Stream) :- pretty_write(Term,Translator,0,[],Stream).
 
-% my_write(Stream,Term,Vars) like writeq but printing nice variable names
-my_write(S,T,Vars) :- write_term(S,T,[quoted(true),variable_names(Vars)]).
+my_write(S,T,Vars) :- my_write(S,T,Vars,lps2p).
+
+% my_write(Stream,Term,Vars,Translator) like writeq but printing nice variable names
+my_write(S,T,Vars,_) :- var(T), !, write_term(S,T,[quoted(true),variable_names(Vars)]).
+my_write(S,T,Vars,lps2p) :- !, write_term(S,T,[quoted(true),variable_names(Vars)]).
+%my_write(S,(X is E ),Vars,js2p) :- !, format(S,"is(~W,~W)",[ X,[quoted(true),variable_names(Vars)], E,[quoted(true),ignore_ops(true),variable_names(Vars)] ]).
+my_write(S,(X from T1 to T2),Vars,js2p) :- !, 
+	my_write_js_literal(S,X,Vars), 
+	format(S," from ~W to ~W",[ T1,[quoted(true),variable_names(Vars)], T2,[quoted(true),variable_names(Vars)] ]).
+my_write(S,(X from T1),Vars,js2p) :- !, 
+	my_write_js_literal(S,X,Vars), 
+	format(S," from ~W",[ T1,[quoted(true),variable_names(Vars)] ]).
+my_write(S,(X to T2),Vars,js2p) :- !, 
+	my_write_js_literal(S,X,Vars), 
+	format(S," from ~W",[ T2,[quoted(true),variable_names(Vars)] ]).
+my_write(S,(X at T),Vars,js2p) :- !, 
+	my_write_js_literal(S,X,Vars), 
+	format(S," from ~W",[ T,[quoted(true),variable_names(Vars)] ]).
+my_write(S,X,Vars,js2p) :- my_write_js_literal(S,X,Vars).
+
+my_write_js_literal(S,X,Vars) :- var(X), !, write_term(S,X,[variable_names(Vars)]).
+my_write_js_literal(S,X,_Vars) :- atomic(X), !, write_term(S,X,[]).
+my_write_js_literal(S,X,Vars) :- is_list(X), !, write_term(S,X,[quoted(true),variable_names(Vars)]). % can only happen in direction lps -> .P
+my_write_js_literal(S,X,Vars) :- 
+	X=..[F|Args], 
+	atom_codes(F,[C1|_]),
+	(between(97,122,C1) -> % lower case start
+		my_write_js_literal_args(Args,Vars,Args_), 
+		atomics_to_string(Args_,",",ArgsString), format(S,"~w(~w)",[F,ArgsString])
+		; write_term(S,X,[quoted(true),variable_names(Vars)]) % just print normally with operators; e.g. X \== Y etc
+	).
+
+% my_write_js_literal_args(Args,VarNames,ArgsAsStrings) 
+%	necessary to use operators only inside literal arguments, e.g. my_write(...,X is 2+2,...) will print "is(X,2+2)"
+my_write_js_literal_args([A1|An],Vars,[S1|Sn]) :- !,
+	format(string(S1),"~W",[A1,[quoted(true),variable_names(Vars)]]), my_write_js_literal_args(An,Vars,Sn).
+my_write_js_literal_args([],_,[]).
 
 % pretty_write(Term,Indent,Vars,Stream)
-pretty_write((if A then C),I,Vars,S) :- !, 
+pretty_write((if A then C),Translator,I,Vars,S) :- !, 
 	my_tab(S,I), write(S,'if '), my_write(S,A,Vars), nl(S),
 	my_tab(S,I), write(S,'then '), writeln(S,''), 
-	NI is I+4, pretty_write(C,NI,Vars,S).
-pretty_write((H if B),I,Vars,S) :- !, 
+	NI is I+4, pretty_write(C,Translator,NI,Vars,S).
+pretty_write(( A->C),js2p,I,Vars,S) :- !, 
+	my_tab(S,I),  my_write(S,A,Vars), write(S,' ->'), nl(S),
+	my_tab(S,I), writeln(S,''), 
+	NI is I+4, pretty_write(C,js2p,NI,Vars,S).
+pretty_write((H if B),Translator,I,Vars,S) :- !, 
 	my_tab(S,I), my_write(S,H,Vars), writeln(S,' if'), 
-	my_tab(S,I), NI is I+4, pretty_write(B,NI,Vars,S).
-pretty_write(Declaration,I,Vars,S) :- Declaration=..[Op,C], member(Op,[false,initially,fluents,events,prolog_events,actions]), !,
-	my_tab(S,I), write(S,Op), writeln(S,''), NI is I+4,
-	pretty_write(C,NI,Vars,S).
-pretty_write(PostCondition,I,Vars,S) :- 
+	my_tab(S,I), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
+pretty_write((H <- B),Translator,I,Vars,S) :- !, 
+	my_tab(S,I), my_write(S,H,Vars), writeln(S,' <-'), 
+	my_tab(S,I), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
+pretty_write((<- B),Translator,I,Vars,S) :- !, 
+	my_tab(S,I), writeln(S,'<- '), 
+	my_tab(S,I), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
+pretty_write(Declaration,Translator,I,Vars,S) :- Declaration=..[Op,C], member(Op,[false,initially,fluents,events,prolog_events,actions]), !,
+	my_tab(S,I), write(S,Op), 
+	(Translator\==js2p -> writeln(S,''), NI is I+4 ; NI=I),
+	(Translator==js2p -> write(S,'(' ); true),
+	pretty_write(C,Translator,NI,Vars,S),
+	(Translator==js2p -> write(S,')' ); true).
+pretty_write(PostCondition,Translator,I,Vars,S) :- 
 	(
 		PostCondition = (E terminates F :- C), Op=(terminates) ; 
 		PostCondition = (E initiates F :- C), Op=(initiates) ;
 		PostCondition = (E terminates F), C=true, Op=(terminates) ;
 		PostCondition = (E initiates F), C=true, Op=(initiates)
 	), !,
-	my_tab(S,I), my_write(S,E,Vars), write(S,' '), 
-	write(S,Op), write(S,' '), pretty_write((F:-C),I,Vars,S).
-pretty_write((H:-true),I,Vars,S) :- !, pretty_write(H,I,Vars,S).
-pretty_write((H:-B),I,Vars,S) :- !, 
-	my_tab(S,I), my_write(S,H,Vars), writeln(S,' :-'), NI is I+4, pretty_write(B,NI,Vars,S).
-pretty_write((G1,G2),I,Vars,S) :- !, 
-	my_tab(S,I), my_write(S,G1,Vars), writeln(S,','), pretty_write(G2,I,Vars,S).
-pretty_write(G,I,Vars,S) :- my_tab(S,I), my_write(S,G,Vars).
+	(Translator==lps2p ->
+		my_tab(S,I), my_write(S,E,Vars,Translator), write(S,' '), 
+		write(S,Op), write(S,' '), pretty_write((F:-C),Translator,I,Vars,S)
+	; Translator==js2p ->
+		my_tab(S,I), format(S,"~w(",Op),  my_write(S,E,Vars,Translator), write(S,","), my_write(S,F,Vars,Translator),
+		(C\==true -> write(S,","), my_write(S,C,Vars,Translator); true),
+		write(S,")")
+	; throw(unknown_syntax(Translator))
+	).
+pretty_write((H:-true),Translator,I,Vars,S) :- !, pretty_write(H,Translator,I,Vars,S).
+pretty_write((H:-B),Translator,I,Vars,S) :- !, 
+	my_tab(S,I), my_write(S,H,Vars), writeln(S,' :-'), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
+pretty_write((G1,G2),Translator,I,Vars,S) :- !, 
+	my_tab(S,I), my_write(S,G1,Vars,Translator), writeln(S,','), pretty_write(G2,Translator,I,Vars,S).
+pretty_write(G,Translator,I,Vars,S) :- my_tab(S,I), my_write(S,G,Vars,Translator).
 
 my_tab(_S,0) :- !.
 my_tab(S,I) :- I>0, write(S,' '), NI is I-1, my_tab(S,NI).

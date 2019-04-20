@@ -54,7 +54,7 @@ pengines:prepare_module(_Module, swish, _Options) :-
 % If you consider refactoring this out to somewhere else: somehow these must be after use_module('../../swish/swish'):
 :- use_module('../utils/visualizer.P'). % this loads LPS
 :- use_module('../utils/psyntax.P',[
-	syntax2p/4,dumploaded/1,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
+	syntax2p/4,dumploaded/2,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
 	]).
 :- use_module('../utils/states_explorer.pl',[explore/2]).
 
@@ -67,7 +67,7 @@ sandbox:safe_primitive(interpreter:go).
 sandbox:safe_primitive(interpreter:lps_welcome_message). 
 sandbox:safe_primitive(visualizer:gojson(_JSON)). 
 sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON,_DFAgraph)). 
-sandbox:safe_primitive(psyntax:dumploaded(_)). 
+sandbox:safe_primitive(psyntax:dumploaded(_,_)). 
 sandbox:safe_primitive(states_explorer:explore(_,Options)) :- \+ member(cycle_hook(_,_,_),Options).
 
 /*
@@ -147,8 +147,10 @@ prolog_colour:style(event,[colour('#FDA428'), background('#FFFFFF')]).
 prolog_colour:style(time,S) :- prolog_colour:style(event,S).
 prolog_colour:style(lps_delimiter,[bold(true)]) :- mylog(lps_delimiter). */
 
-dump :- psyntax:dumploaded(false).
-dumplps :- psyntax:dumploaded(true).
+dump :- psyntax:dumploaded(false,lps2p).
+dumplps :- psyntax:dumploaded(true,lps2p).
+dumpjs :- psyntax:dumploaded(true,js2p).
+
 go(T,Options) :- \+ member(cycle_hook(_,_,_),Options), \+ member(background(_),Options), 
 	(catch(lps_server_UI:lps_user_is_super,_,fail) -> true ; \+ member(timeout(_),Options)), 
 		% TODO: refactor lps_user_is_super into this file?
