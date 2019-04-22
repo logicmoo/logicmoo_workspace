@@ -391,7 +391,7 @@ fluents gameOn.
 ....,terminate gameOn from _ to _,...
 ```
 
-# Summary of program launching commands #
+# Summary of system commands #
 
 Documentation for command line usage is TBD. The folowing are commands to be used on SWISH's query pane. 
 
@@ -422,13 +422,30 @@ Same, but further abstracting numbers into a single constant 'n', and ommitting 
 ##Execute a LPS program in real time##
 These commands start the program and immediately report its progress in real time.
 
-	go
+	go.
 
 Prints actions and events, as well as fluent states, on SWISH's output panel.
 
-	serve(TwoDscene)
+	serve(TwoDscene).
 
 This is the same command already referred above, for background execution. But **if** there are ```d(Thing,DisplayProperties)`` clauses in the program, a [2D scene representation](://bitbucket.org/lpsmasters/lps_corner/src/cefe68210aff7b3c9ac40ee097753443d09b0410/swish/2dWord.md?at=master&fileviewer=file-view-default) is rendered in real time, on SWISH's output panel.
+
+## Syntax conversion commands ##
+
+The program in the text editor panel is assumed to be in lps.swi surface syntax. 
+
+	dump.
+
+Print the internal syntax representation of the program.
+
+	dumplps.
+
+Print the surface syntax representation; useful just for debugging the system.
+
+	dumpjs.
+
+Print the lps.js syntax representation of the program. Error and warning messages may be printed, if the given lps.swi program uses features unavailable on lps.js.
+
 
 # File extension conventions #
 
@@ -438,7 +455,7 @@ Syntax  | File extension
 ------------- | -------------
 Surface, as supported by lps.swi | ```.pl```
 Surface, as supported by lps.js | ```.lps```
-Internal  | ```.lpsw```, ```.pl_P```
+Internal  | ```.lpsw```, ```.pl_P```, ```.lps_.P```
 
 On lps.swi running over swish only ```.pl``` is used.
 
