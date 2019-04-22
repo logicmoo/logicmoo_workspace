@@ -398,7 +398,7 @@ syntax2p(observe(E,T2),_Vars,js2p, null, observe([E],T2)) :- !.
 syntax2p(observe(E,_T1,T2),_Vars,js2p, null, observe([E],T2)) :- !.
 
 syntax2p((unserializable A),Vars,lps2p,Spec,unserializable(NL)) :- !, syntax2p((actions A),Vars,lps2p,Spec,actions(NL)).
-syntax2p((actions A),_Vars,lps2p,lps_delimiter - [Specs],actions(NL)) :- nonvar(A), !, comma_to_list(A,action,Specs,L), functor_arityze(L,NL), remember_declarations(event,NL).
+syntax2p((actions A),_Vars,lps2p,lps_delimiter - [Specs],actions(NL)) :- nonvar(A), !, comma_to_list(A,action,Specs,L), functor_arityze(L,NL), remember_declarations(action,NL).
 syntax2p((actions A),_Vars,lps2p,lps_delimiter - [Specs],actions(L)) :- !, comma_to_list(A,action,Specs,L).
 syntax2p(actions(A),_Vars,js2p,null,actions(L)) :- nonvar(L), !, L=A. % other conversion direction handled by do_not_transform_may_hint(..)
 

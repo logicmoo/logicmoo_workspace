@@ -120,6 +120,7 @@ prolog_colour:term_colours(T,C) :- term_colours(T,C).
 swish_highlight:style(lps_delimiter,lps_delimiter,[text,base(atom)]).
 swish_highlight:style(fluent,fluent,[text,base(atom)]).
 swish_highlight:style(event,event,[text,base(atom)]).
+swish_highlight:style(action,action,[text,base(atom)]).
 swish_highlight:style(time,time,[text,base(atom)]). % atom?
 
 % :- use_module('../engine/db.P',[head_hint/3]).
