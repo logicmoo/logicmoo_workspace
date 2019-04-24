@@ -91,6 +91,7 @@ dumploaded(_,_).
 % ...and finally the generic SWI support:
 
 :- use_module('../engine/db.P',[head_hint/3, '_currenty__defining'/1]).
+:- use_module('checker.P').
 	
 :- thread_local((timeless_ref/1, current_top_term/1)).
 clear_timeless_refs :- retractall(timeless_ref(_)).
