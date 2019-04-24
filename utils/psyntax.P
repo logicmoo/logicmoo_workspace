@@ -73,6 +73,18 @@ lps_swish_clause(H,Body,Vars) :-
 
 :- if( \+ current_module(swish)).
 % Now support for vanilla/barebones SWI Prolog:
+dumploaded(External,Translator) :- 
+	check_translator(Translator),
+	% TODO: warn about generated clauses (e.g. from English) than will not appear here
+	interpreter:lps_program_clause_file(H,Body,_File), 
+	( interpreter:lps_source_position(H,_,_,Vars) -> true ; Vars=[]),
+	(External -> 
+		(Body==true -> InternalTerm=H ; InternalTerm=(H:-Body)),
+		catch( syntax2p(Clause,Vars,Translator,_,InternalTerm), Ex, (print_message(error,Ex),fail))
+		; 
+		Clause = (H:-Body)),
+	pretty_write_withvars(Clause,Translator,Vars), writeln('.'),
+	fail.
 dumploaded(_,_).
 :- endif.
 

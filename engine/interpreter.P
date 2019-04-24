@@ -205,6 +205,10 @@ lps_examples_directory(ED) :-
 	lps_engine_directory(D), file_directory_name(D,LPShome), 
 	concat_atom([LPShome,'/examples'],ED).
 
+lps_utils_directory(UD) :-
+	lps_engine_directory(D), file_directory_name(D,LPShome), 
+	concat_atom([LPShome,'/utils'],UD).
+
 :- multifile user:file_search_path/2.
 user:file_search_path(system, S) :- lps_engine_directory(D), atomic_list_concat([D,'/system'],S). % Apparently needed on SWI-Prolog 7.7.19 and later
 user:file_search_path(example, S) :- lps_examples_directory(ED), atomic_list_concat([ED,'/CLOUT_workshop'],S).
@@ -993,7 +997,8 @@ lps_program_clause_file(Pred,Body,File) :-
 	% exception(error(permission_error(access,private_procedure,read_util:read_line_to_codes/2),context(system:clause/3,_4882))) 
 	catch(clause(M:Pred,Body,Ref),_,fail), 
 	(prolog_clause:clause_info(Ref, File, _TermPos, _VarOffsets, _) -> true ; File=asserted),
-	\+ exclude_file(File).
+	File \== asserted,
+	\+ excluded_file(File).
 
 	
 % we need to exclude the postmortem predicates themselves...??
@@ -1001,10 +1006,14 @@ exclude_from_user_program(P) :- temporary_predicate(P,_).
 exclude_from_user_program(mylog(_)).
 exclude_from_user_program(mylogFile(_)).
 exclude_from_user_program(option(_)). % kind of a hack, can't be added to temporary_predicate
+exclude_from_user_program('_currenty__defining'(_)).
+exclude_from_user_program(head_hint(_,_,_)).
 % others to exclude from system: screen_property, ...
 exclude_from_user_program(G) :- nonvar(G), functor(G,F,_), atom_chars(F,['$'|_]).
 
-exclude_file(File) :- current_prolog_flag(home, Home), atom_prefix(File,Home).
+excluded_file(File) :- current_prolog_flag(home, Home), atom_prefix(File,Home), !.
+excluded_file(File) :- lps_engine_directory(Home), atom_prefix(File,Home), !.
+excluded_file(File) :- lps_utils_directory(Home), atom_prefix(File,Home).
 
 program_predicate(actions(_)).
 program_predicate(unserializable(_)).
