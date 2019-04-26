@@ -23,7 +23,7 @@
 */
 
 :- module(psyntax,[ 
-	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, syntax2p_literal/7, golps/2, golps/1,
+	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, syntax2p_literal/7, golps/2, golps/1, dumpjs/2, dumpjs/1,
 	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/2
 	]).
 
@@ -91,7 +91,7 @@ dumploaded(_,_).
 % ...and finally the generic SWI support:
 
 :- use_module('../engine/db.P',[head_hint/3, '_currenty__defining'/1]).
-:- use_module('checker.P').
+:- use_module('checker.P',[check_js_compliance/1]).
 	
 :- thread_local((timeless_ref/1, current_top_term/1)).
 clear_timeless_refs :- retractall(timeless_ref(_)).
@@ -104,7 +104,8 @@ set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; fun
 
 :- use_module('../engine/interpreter.P',[go/3, print_error/2, is_some_time/1,
 	uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,
-	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1, cleanup_program/0]).
+	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1, cleanup_program/0,
+	print_error_notices/1, date_stamp/1]).
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
@@ -209,8 +210,21 @@ golps(LPSP_file,Options,Results) :-
 
 golps(LPSP_file,Options) :- golps(LPSP_file,Options,[]).
 
-golps(LPSP_file) :- golps(LPSP_file,[]).
-	
+golps(LPSP_file) :- golps(LPSP_file,[dc]).
+
+% Support for lps.js
+dumpjs(F,Options) :-
+	(member(swish,Options) -> go(F,[initialize_only|Options]); golps(F,[initialize_only|Options])),
+	check_js_compliance(Notices),
+	print_error_notices(Notices),
+	date_stamp(D),
+	(var(F)->F='SWISH editor';true),
+	format("% Generated from ~w on ~w~n",[F,D]),
+	writeln("% Preamble for lps.js:\n is(A,A). \n%---"), % lps.js has no is/a, but does evaluate arith expressions in arguments
+	dumploaded(true,js2p).
+
+dumpjs(F) :- dumpjs(F,[dc]).
+
 % File converters:
 
 % Fails if no source file exists
@@ -799,7 +813,7 @@ pretty_write((H if B),Translator,I,Vars,S) :- !,
 	my_tab(S,I), my_write(S,H,Vars), writeln(S,' if'), 
 	my_tab(S,I), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
 pretty_write((H <- B),Translator,I,Vars,S) :- !, 
-	my_tab(S,I), my_write(S,H,Vars), writeln(S,' <-'), 
+	my_tab(S,I), my_write(S,H,Vars,Translator), writeln(S,' <-'), 
 	my_tab(S,I), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
 pretty_write((<- B),Translator,I,Vars,S) :- !, 
 	my_tab(S,I), writeln(S,'<- '), 

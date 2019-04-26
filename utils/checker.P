@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 % Various LPS program checking utilities, working on the loaded program
 
 :- module(checker,[ 
-	check_js_compliance/1
+	check_js_compliance/1, lps_literals/1
 	]).
 
 :- use_module('../engine/interpreter.P').
@@ -46,12 +46,68 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 % Similar to check_syntax in interpreter.P, which could move to here!
 check_js_compliance(Notices) :- 
 	F = _, % useless?
+	% no updating of subterms; e.g. examples/CLOUT_workshop/RockPaperScissors.pl
 	findall( notice(error,ET,Pos), (
 		updated(Ev, Fl, Old-New, Cond), 
 		source_position(updated(Ev, Fl, Old-New, Cond),F,Pos,Vars),
 		(Old==Fl ->true; buildError(Old,Vars,' must be the whole fluent, not just a part of it ',ET))
 		), 
 		OverDetailedUpdates),	
-	% find initiate/terminate/update, if-then-else, c->t;e, negated sequences :
-	% meta fluents and events
-	append([OverDetailedUpdates],Notices).
+	% No if-then-else; e.g. examples/CLOUT_workshop/goto_with_ifthenelse.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member((I->T;E),L), 
+		source_position(Clause,F,Pos,Vars),
+		buildError((I->T;E),Vars,' if-then-else not supported, please refactor your clause ',ET)
+		),
+		ITE),	
+	% No editing actions, initiate/terminate/update; e.g. examples/forTesting/editingActions.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(happens(EA,_,_),L), nonvar(EA),
+		member(EA,[initiate(_),terminate(_),update(_,_)]),
+		source_position(Clause,F,Pos,Vars),
+		buildError(EA,Vars,' editing actions not supported, please create explicit action and a post condition ',ET)
+		),
+		EAs),	
+	% No meta fluents and events; e.g. examples/forTesting/meta.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(Lit,L), 
+		(Lit=holds(X,_);Lit=happens(X,_,_)), var(X),
+		source_position(Clause,F,Pos,Vars),
+		buildError(Lit,Vars,' an event or fluent cannot be a free variable ',ET)
+		),
+		Meta),	
+	% warn about ignored d/2 declarations; e.g. examples/CLOUT_workshop/burning.pl
+	findall( notice(warning,ET,Pos), (
+		Head=d(_,_),
+		interpreter:user_prolog_clause(Head,Body),
+		(Body==true -> Clause=Head; Clause=(Head:-Body)),
+		source_position(Clause,F,Pos,Vars),
+		buildError(Head,Vars,' visualization directive ignored ',ET)
+		),
+		Vis),	
+	% No \==, \= allowed; e.g. examples/bank account_terse.pl
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(Lit,L), 
+		( Lit = (A \== B), Neg = (A==B) ; Lit = (A \= B), Neg = (A=B)),
+		source_position(Clause,F,Pos,Vars),
+		format(atom(Msg)," cannot use ~w, use not(~w) instead",[Lit,Neg]),
+		buildError(Lit,Vars,Msg,ET)
+		),
+		Comparators),	
+	append([OverDetailedUpdates,ITE,EAs,Meta,Vis,Comparators],Notices).
+
+% lps_literals(-Goal,-EnclosingClause) a "clause"-like metapredicate to enumerate all head/body combinations
+lps_literals(Events,observe(Obs, Next)) :- interpreter:observe(Obs, Next), Previous is Next-1, findall(happens(Ev,Previous,Next),member(Ev,Obs),Events).
+lps_literals([E,holds(Fl,_)|Cond],terminated(E,Fl,Cond)) :- interpreter:terminated(E,Fl,Cond).
+lps_literals([E,holds(Fl,_)|Cond],initiated(E,Fl,Cond)) :- interpreter:initiated(E,Fl,Cond).
+lps_literals([E,holds(Fl,_)|Cond_],updated(E,Fl,Old-New,Cond)) :- 
+	interpreter:updated(E,Fl,Old-New,Cond), % this boils down to two rules in fact:
+	(Cond_=Cond ; interpreter:replace_term(Fl,Old,New,NewFl), Cond_=[holds(NewFl,_)|Cond]).
+lps_literals(L,d_pre(L)) :- interpreter:d_pre(L). % Arguably correct, given that pre conditions filter rather than generate, but we're looking for all constants...
+lps_literals(L,reactive_rule(H,B)) :- interpreter:reactive_rule(H,B), append(H,B,L).
+lps_literals([H|Body],Clause) :- 
+	(Clause=l_int(H,Body);Clause=l_events(H,Body);Clause=l_timeless(H,Body)), 
+	interpreter:Clause.
+lps_literals([Pred,Body],Clause) :- interpreter:user_prolog_clause(Pred,Body), (Body==true->Clause=Pred;Clause=(Pred:-Body)). 
+
+lps_literals(L) :- lps_literals(L,_).

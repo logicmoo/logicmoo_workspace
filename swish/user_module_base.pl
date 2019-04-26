@@ -68,6 +68,7 @@ sandbox:safe_primitive(interpreter:lps_welcome_message).
 sandbox:safe_primitive(visualizer:gojson(_JSON)). 
 sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON,_DFAgraph)). 
 sandbox:safe_primitive(psyntax:dumploaded(_,_)). 
+sandbox:safe_primitive(psyntax:dumpjs(_,_)). 
 sandbox:safe_primitive(states_explorer:explore(_,Options)) :- \+ member(cycle_hook(_,_,_),Options).
 
 /*
@@ -150,7 +151,8 @@ prolog_colour:style(lps_delimiter,[bold(true)]) :- mylog(lps_delimiter). */
 
 dump :- psyntax:dumploaded(false,lps2p).
 dumplps :- psyntax:dumploaded(true,lps2p).
-dumpjs :- psyntax:dumploaded(true,js2p).
+
+dumpjs :- psyntax:dumpjs(_,[swish,dc]).
 
 go(T,Options) :- \+ member(cycle_hook(_,_,_),Options), \+ member(background(_),Options), 
 	(catch(lps_server_UI:lps_user_is_super,_,fail) -> true ; \+ member(timeout(_),Options)), 

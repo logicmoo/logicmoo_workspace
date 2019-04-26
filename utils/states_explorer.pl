@@ -15,7 +15,8 @@
 :- module(states_explorer,[load_program/1,explore/2,phb/0,print_phb/0,print_transitions/0,print_phb/1,print_transitions/1]).
 
 :- ensure_loaded('psyntax.P').
-:- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1, event_pred/1, abstract_numbers/2]).
+:- use_module('../engine/interpreter.P',[flat_sequence/2, action_/1, event_pred/1, abstract_numbers/2, user_prolog_clause/2]).
+:- use_module('checker.P',[lps_literals/1]).
 
 % Backtrackable assert/retract of state
 assert_fluent(X) :- interpreter:uassert(state(X)).
@@ -72,27 +73,6 @@ print_transitions(AbstractNumbers) :-
 	forall(member(T,Trans), writeln(T)).
 print_transitions(_) :- 
 	writeln("No transitions.").
-
-% lps_literals(-Goal) a "clause"-like metapredicate to enumerate all head/body combinations
-lps_literals(Events) :- interpreter:observe(Obs, Next), Previous is Next-1, findall(happens(Ev,Previous,Next),member(Ev,Obs),Events).
-lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:terminated(E,Fl,Cond).
-lps_literals([E,holds(Fl,_)|Cond]) :- interpreter:initiated(E,Fl,Cond).
-lps_literals([E,holds(Fl,_)|Cond_]) :- 
-	interpreter:updated(E,Fl,Old-New,Cond), % this boils down to two rules in fact:
-	(Cond_=Cond ; interpreter:replace_term(Fl,Old,New,NewFl), Cond_=[holds(NewFl,_)|Cond]).
-lps_literals(L) :- interpreter:d_pre(L). % Arguably correct, given that pre conditions filter rather than generate, but we're looking for all constants...
-lps_literals(L) :- interpreter:reactive_rule(H,B), append(H,B,L).
-lps_literals([H|Body]) :- interpreter:l_int(H,Body); interpreter:l_events(H,Body); interpreter:l_timeless(H,Body).
-lps_literals([Pred,Body]) :- user_prolog_clause(Pred,Body). 
-
-user_prolog_clause(Pred,Body) :- 
-	interpreter:lps_program_clause_file(Pred,Body,File), File\=asserted, 
-	\+ sub_string(File,_,_,_,'/lps_corner/engine/'), 
-	\+ sub_string(File,_,_,_,'/lps_corner/utils/'), 
-	\+ sub_string(File,_,_,_,'/lps_corner/swish/'), 
-	\+ sub_string(File,_,_,_,'/lc/'), % proprietary LogicalContracts code   TODO: refactor this out of here
-	\+ sub_string(File,_,_,_,'swish/lib/'), 
-	\+ interpreter:program_predicate(Pred).
 
 lps_fact(H) :- 
 	interpreter:l_int(H,[]); interpreter:l_events(H,[]); interpreter:l_timeless(H,[]); user_prolog_clause(H,true).

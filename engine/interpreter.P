@@ -44,13 +44,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	test_examples/0, test_examples_dc/0, build_all_test_results/0, do_test_suite/2, load_test_file_for/1, regenerate_file/1, check_load_postmortem/0, lps_test_result_item/3, lps_test_action_ancestor/3,
 	load_check_syntax/2, print_error/3, print_error/2, my_term_to_atom/2, collect_current_fluents/2, collect_current_actions/2, collect_guessed_declarations/1,
 	intensional/1,macroaction/1,d_event/1,system_fluent/1,system_action/1,action_/1,event_/1,updated/4,event_pred/1,(observe)/2, lps_program_module/1, d/2, misc_to_realtime/2, is_some_time/1,
-	lps_engine_directory/1, uassert/1, uretractall/1, cleanup_program/0, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1, flat_sequence/2,
+	lps_engine_directory/1, uassert/1, uretractall/1, cleanup_program/0, check_lps_program_module/1, get_lps_program_module/1, program_predicate/1, flat_sequence/2, user_prolog_clause/2,
 	check_lps_program_swish_module/0, get_lps_program_hash/1, server_log_filename/2, lps_program_clause_file/3, callprolog/1, replace_term/4, abstract_numbers/2,
 	bindAllVars/1, lps_welcome_message/0, endTime/1, simulatedRealTimeBeginning/1, beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1,
 	background_execution/7, inject_events_fetch_fluents/5, inject_events/3, get_fluents/4, get_rtb_fluent_event_templates/5,
 	premature_system_action/1, 
 	lps_ask/2, lps_ask/3, lps_outcome/2, lps_save_finish_execution/1, set_paused/1,
-	source_position/4, buildError/4]).
+	source_position/4, buildError/4, print_error_notices/1, date_stamp/1]).
 
 % This fact will contain this file's directory; its presence also denotes "LPS running"
 :- dynamic lps_engine_directory/1.
@@ -1001,7 +1001,10 @@ lps_program_clause_file(Pred,Body,File) :-
 	File \== asserted,
 	\+ excluded_file(File).
 
-	
+user_prolog_clause(Pred,Body) :- 
+	lps_program_clause_file(Pred,Body,_File), 
+	\+ program_predicate(Pred).
+
 % we need to exclude the postmortem predicates themselves...??
 exclude_from_user_program(P) :- temporary_predicate(P,_).
 exclude_from_user_program(mylog(_)).
@@ -1014,7 +1017,10 @@ exclude_from_user_program(G) :- nonvar(G), functor(G,F,_), atom_chars(F,['$'|_])
 
 excluded_file(File) :- current_prolog_flag(home, Home), atom_prefix(File,Home), !.
 excluded_file(File) :- lps_engine_directory(Home), atom_prefix(File,Home), !.
-excluded_file(File) :- lps_utils_directory(Home), atom_prefix(File,Home).
+excluded_file(File) :- lps_utils_directory(Home), atom_prefix(File,Home), !.
+excluded_file(File) :- sub_string(File,_,_,_,'/lps_corner/swish/'), !.
+excluded_file(File) :- sub_string(File,_,_,_,'swish/lib/'), !. % SWISH stuff
+excluded_file(File) :- sub_string(File,_,_,_,'/lc/'), !. % proprietary LogicalContracts code TODO: refactor this out of here
 
 program_predicate(actions(_)).
 program_predicate(unserializable(_)).
@@ -1546,12 +1552,7 @@ print_errors(File) :-
 	(option(background(_)) -> % can't print from background threads
 		(Notices = [] -> true ; Notices=[N|_], throw(N)) 
 		; true), 
-	( 
-		member(notice(Type,M,Position),Notices), 
-		(M=subterm(_,M_)->true;M=M_),
-		print_syntax_error(Type,M_,Position), 
-		fail 
-	; Notices=[]),
+	print_error_notices(Notices),
 	((\+ option(silent), option(priority), \+ reactive_rule(_,_,_)) 
 		-> print_error(warning,'No rules with priority present!') 
 		; true),
@@ -1559,6 +1560,14 @@ print_errors(File) :-
 		-> print_error(warning,'No reactive rules are present!')
 		; true).
 
+% Fails after printing if there are notices
+print_error_notices(Notices) :-
+	member(notice(Type,M,Position),Notices), 
+	(M=subterm(_,M_)->true;M=M_),
+	print_syntax_error(Type,M_,Position), 
+	fail.
+print_error_notices([]).
+	
 concat_terms(Terms,Atom) :- concat_terms(Terms,[],Codes), atom_codes(Atom,Codes).
 
 concat_terms([T1|Tn],C,Cn) :- term_to_codes(T1,C1), append(C,C1,C2), concat_terms(Tn,C2,Cn).
