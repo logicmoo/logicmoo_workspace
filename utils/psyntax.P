@@ -213,7 +213,7 @@ golps(LPSP_file,Options) :- golps(LPSP_file,Options,[]).
 golps(LPSP_file) :- golps(LPSP_file,[dc]).
 
 % Support for lps.js
-dumpjs(F,Options) :-
+dumpjs(F,Options) :- 
 	(member(swish,Options) -> go(F,[initialize_only|Options]); golps(F,[initialize_only|Options])),
 	check_js_compliance(Notices),
 	print_error_notices(Notices),

@@ -50,7 +50,7 @@ check_js_compliance(Notices) :-
 	findall( notice(error,ET,Pos), (
 		updated(Ev, Fl, Old-New, Cond), 
 		source_position(updated(Ev, Fl, Old-New, Cond),F,Pos,Vars),
-		(Old==Fl ->true; buildError(Old,Vars,' must be the whole fluent, not just a part of it ',ET))
+		(Old==Fl ->fail; buildError(Old,Vars,' must be the whole fluent, not just a part of it ',ET))
 		), 
 		OverDetailedUpdates),	
 	% No if-then-else; e.g. examples/CLOUT_workshop/goto_with_ifthenelse.pl

@@ -246,7 +246,10 @@ prolog:message(lps_error(rejected_observations(Events,Conds),_)) -->
 prolog:message(lps_error(M, _)) --> [ 'LPS: ~w'-[M]].
               
 print_syntax_error(Type,Message,Position) :- 
-	print_message(Type,error(syntax_error(Message),Position)). % SWI's universal messaging pipeline
+	\+ \+ ( % avoid binding Message...
+	(var(Message)->Message='??';true),
+	print_message(Type,error(syntax_error(Message),Position)) % SWI's universal messaging pipeline
+	). 
 
 print_error(Type,Message,Position) :- option(swish), option(background(_)), !, % avoid disturbing SWISH's textual output
 	catch( http_log('lps ~w: ~w ~w', [Type,Message,Position]),_,true),
@@ -1522,7 +1525,7 @@ check_syntax(F,Notices) :-
 buildError(BadSubterm,Vars,Message,NoticeSubterm) :-
 	copy_term(BadSubterm+Vars,BadSubterm_+Vars_),
 	buildError(BadSubterm_,Vars_,Vars,Message,NoticeSubterm).
-buildError(X,Vars_,Vars,M,subterm(X,MM)) :- catch(psyntax:syntax2p_literal(NicerTerm,[],lps2p,_,_,X),_,fail), !, 
+buildError(X,Vars_,Vars,M,subterm(X,MM)) :- catch(psyntax:syntax2p_literal(NicerTerm,[],lps2p,_,_,_,X),_,fail), !, 
 	Vars=Vars_, bindAllVars(Vars),
 	concat_terms([NicerTerm,M],MM). % should probably use SWI's term_string and make sure M quotes do not make it to the output
 buildError(X,Vars,Vars,M,subterm(X,MM)) :- bindAllVars(Vars), concat_terms([X,M],MM).
@@ -1563,7 +1566,7 @@ print_errors(File) :-
 % Fails after printing if there are notices
 print_error_notices(Notices) :-
 	member(notice(Type,M,Position),Notices), 
-	(M=subterm(_,M_)->true;M=M_),
+	((nonvar(M),M=subterm(_,M_))->true;M=M_),
 	print_syntax_error(Type,M_,Position), 
 	fail.
 print_error_notices([]).
