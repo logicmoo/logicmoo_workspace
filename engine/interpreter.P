@@ -1563,13 +1563,13 @@ print_errors(File) :-
 		-> print_error(warning,'No reactive rules are present!')
 		; true).
 
-% Fails after printing if there are notices
+% Fails after printing if there are error notices
 print_error_notices(Notices) :-
 	member(notice(Type,M,Position),Notices), 
 	((nonvar(M),M=subterm(_,M_))->true;M=M_),
 	print_syntax_error(Type,M_,Position), 
 	fail.
-print_error_notices([]).
+print_error_notices(Notices) :- \+ member(notice(error,_M,_Position),Notices).
 	
 concat_terms(Terms,Atom) :- concat_terms(Terms,[],Codes), atom_codes(Atom,Codes).
 
