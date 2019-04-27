@@ -68,7 +68,6 @@ wrappers(Name//Arity) -->
     wrappers(Name/Arity1).
 wrappers(Name/Arity) -->
     { atom(Name), integer(Arity), Arity >= 0,
-      !,
       functor(Head, Name, Arity),
       atom_concat(Name, ' rtchecked', WrapName),
       Head =.. [Name|Args],
