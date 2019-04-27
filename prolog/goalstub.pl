@@ -93,7 +93,7 @@ requires_stub_rename_head((Head1 :- Body),
     requires_stub_rename_head_(Head1, Head, 0, M).
 requires_stub_rename_head((Head1 --> Body),
                           (Head  --> Body),
-                          M) :- !,
+                          M) :-
     requires_stub_rename_head_(Head1, Head, 2, M).
 
 
