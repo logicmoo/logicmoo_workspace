@@ -75,6 +75,9 @@ hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), codewalk_prolog).
 hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
 hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
 hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
+hide_var_dynamic_hook(current_det_check(_, _, _), check_useless_cuts).
+hide_var_dynamic_hook(do_current_det_check(_, _, _, _), check_useless_cuts).
+hide_var_dynamic_hook(walk_body(_, _, _, _, _), check_useless_cuts).
 
 :- dynamic
     wrong_dynamic_db/4,

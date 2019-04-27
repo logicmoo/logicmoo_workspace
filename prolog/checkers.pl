@@ -35,6 +35,7 @@
 :- module(checkers, []).
 
 :- reexport(library(checkers/checker)).
+:- use_module(checkers(check_useless_cuts)).
 :- use_module(checkers(check_assertions)).
 :- use_module(checkers(check_deprecated)).
 :- use_module(checkers(check_dupcode)).
