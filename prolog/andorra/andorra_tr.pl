@@ -26,7 +26,7 @@ andorra_term_expansion((:- determinate(H,Cond)), Cls) :-
     teh_determinate(H, NH, HSusp, L, L1, Cls, Clt),
     tec_determinate(Cond, NH, HSusp, L, L1, Clt).
 andorra_term_expansion((H :- B), []) :- !, te_cond_suspend(H, B).
-andorra_term_expansion(H, []) :- !, te_cond_suspend(H, true).
+andorra_term_expansion(H, []) :- te_cond_suspend(H, true).
 
 te_cond_suspend(H, B) :-
     functor(H, F, A),

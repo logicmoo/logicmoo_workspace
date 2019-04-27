@@ -47,26 +47,26 @@
 :- pred predicate_property(callable, ?).
 :- pred current_predicate(atm, callable).
 
-:- pred (+arithexpression> +arithexpression) is semidet.
-:- pred (+arithexpression< +arithexpression) is semidet.
-:- pred (+arithexpression>= +arithexpression) is semidet.
-:- pred (+arithexpression=< +arithexpression) is semidet.
-:- pred (+arithexpression=\= +arithexpression) is semidet.
-:- pred (+arithexpression=:= +arithexpression) is semidet.
+:- pred (+arithexpression  >  +arithexpression) is semidet.
+:- pred (+arithexpression  <  +arithexpression) is semidet.
+:- pred (+arithexpression  >= +arithexpression) is semidet.
+:- pred (+arithexpression =<  +arithexpression) is semidet.
+:- pred (+arithexpression =\= +arithexpression) is semidet.
+:- pred (+arithexpression =:= +arithexpression) is semidet.
 :- pred ((is)/2) : (var*arithexpression) => (num*arithexpression) is det.
 :- pred ((is)/2) : (num*arithexpression) is semidet.
 
-:- pred atomic_list_concat(+list(constant), +constant).
-:- pred atomic_list_concat(+list(constant), -atm).
+:- pred atomic_list_concat(+list(constant), +constant) is semidet.
+:- pred atomic_list_concat(+list(constant), -atm) is det.
 
-:- pred atomic_list_concat(+list(constant), +constant, -atm).
-:- pred atomic_list_concat(?list(constant), +constant, +constant).
+:- pred atomic_list_concat(?list(constant), +constant, +constant) is semidet.
+:- pred atomic_list_concat(+list(constant), +constant, -atm) is det.
 
 :- pred atom_number(+atm,-num) is semidet.
 :- pred atom_number(?atm,+num) is det.
 
 :- pred atom_codes(+atomic, -list) is det.
-:- pred atom_codes(-atm, +list) is det.
+:- pred atom_codes(-atm,    +list) is det.
 :- pred atom_codes(+atomic, ?list) is semidet.
 
 :- pred sub_atom(+atomic,?int,?int,?int,?atm).
@@ -80,13 +80,25 @@
 
 :- pred memberchk(?, ?list) is semidet.
 
-:- true prop [ground/1,
-              atom/1,
-              atomic/1,
-              float/1,
-              integer/1,
-              nonvar/1,
-              number/1,
-              var/1,
-              member/2,
-              callable/1].
+:- true prop [[ground/1,
+               atom/1,
+               atomic/1,
+               float/1,
+               integer/1,
+               nonvar/1,
+               number/1,
+               var/1,
+               callable/1
+              ] is semidet,
+              member/2].
+
+:- pred [asserta/1,
+         assertz/1,
+         retractall/1,
+         findall/3,
+         ignore/1] is det.
+
+:- pred [(\+)/1,
+         forall/2,
+         once/1
+        ] is semidet.

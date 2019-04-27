@@ -314,4 +314,4 @@ or(C1, false, C1):- !.
 or(false, C2, C2):- !.
 or(_C1, true, true):- !.
 %or(true, _C2, true):- !.
-or(C1, C2, (C1; C2)):- !.
+or(C1, C2, (C1; C2)).
