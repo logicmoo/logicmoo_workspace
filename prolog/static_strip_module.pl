@@ -37,7 +37,8 @@
 %!  static_strip_module(Call, ContextModule, Head, Module) is det.
 %
 %   Like strip_module/4, but assume as Module the ContextModule if Call is
-%   uninstantiated
+%   uninstantiated. Note that this work even if T and M are vars, which 
+%   make this different from strip_module(M:C, X, Y), when M and C are vars
 %
 static_strip_module(T, M, T, M) :-
     var(T), !.
