@@ -42,7 +42,6 @@
 :- use_module(library(codewalk)).
 :- use_module(library(dynamic_locations)).
 :- use_module(library(checkable_predicate)).
-:- use_module(library(implementation_module)).
 
 :- multifile
     prolog:message//1.
@@ -108,7 +107,7 @@ collect_trivial_fails(MatchAI, MGoal, Caller, From) :-
 cu_caller_hook(MatchAI, Caller, H, CM, Type, _, _, From) :-
     ground(CM),
     callable(H),
-    implementation_module(CM:H, M),
+    predicate_property(CM:H, implementation_module(M)),
     MGoal = M:H,
     checkable_predicate(MGoal),
     \+ ignore_predicate(H, M),

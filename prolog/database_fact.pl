@@ -45,7 +45,6 @@
 
 :- use_module(library(assrt_lib)).
 :- use_module(library(plprops)).
-:- use_module(library(implementation_module)).
 :- use_module(library(extend_args)).
 :- use_module(library(static_strip_module)).
 
@@ -77,7 +76,7 @@ is_meta(G) :-
     database_fact(0).
 
 database_fact(M:G) :-
-    implementation_module(M:G, IM),
+    predicate_property(M:G, implementation_module(IM)),
     database_fact(IM:G, _).
 database_fact(MG) :-
     prop_asr(head, MG, _, Asr),

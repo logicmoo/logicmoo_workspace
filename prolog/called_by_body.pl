@@ -35,7 +35,6 @@
 :- module(called_by_body, [called_by_body/4]).
 
 :- use_module(library(extend_args)).
-:- use_module(library(implementation_module)).
 
 called_by_body(Body, CM, Body, CM) :- var(Body), !, fail.
 called_by_body(CM:Body, _, H, M) :- called_by_body(Body, CM, H, M).
@@ -51,7 +50,7 @@ called_by_body(Goal, CM, H, M) :-
     predicate_property(CM:Goal, meta_predicate(Spec)),
     called_by_args(Goal, Spec, CM, H, M).
 called_by_body(Goal, CM, Goal, M) :-
-    implementation_module(CM:Goal, M).
+    predicate_property(CM:Goal, implementation_module(M)).
 
 called_by_args(Goal, Spec, CM, H, M) :-
     arg(N, Goal, Arg),

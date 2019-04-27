@@ -43,7 +43,6 @@
                         used_predicates/3
                        ]).
 
-:- use_module(library(implementation_module)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
@@ -107,9 +106,9 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
     ; loc_dynamic(H, M, dynamic(Type, CM, Caller), From),
       memberchk(Type, DynTypes)
     ; loc_declaration(H, CM, goal, From),
-      implementation_module(CM:H, M)
+      predicate_property(CM:H, implementation_module(M))
     ; curr_prop_asr(head, CM:H, From, _),
-      implementation_module(CM:H, M),
+      predicate_property(CM:H, implementation_module(M)),
       Caller = '<assertion>'(M:H)
     ).
 
@@ -118,7 +117,7 @@ current_used_from(DynTypes, H, M, CM, From, Caller) :-
 collect_call_point(IM, M, Caller, MGoal, Caller, From) :-
     ignore(record_location_dynamic(MGoal, IM, From)),
     MGoal = M:Goal,
-    implementation_module(MGoal, IM),
+    predicate_property(MGoal, implementation_module(IM)),
     update_fact_from(called_from_db(Goal, IM, M, Caller), From).
 
 print_call_point(L-A) :-

@@ -41,7 +41,6 @@
 :- use_module(library(lists)).
 :- use_module(library(prolog_codewalk), []).
 :- use_module(library(clambda)).
-:- use_module(library(implementation_module)).
 :- use_module(library(normalize_head)).
 :- use_module(library(database_fact)).
 :- use_module(library(extra_location)).
@@ -133,7 +132,7 @@ all_call_refs(Prop, Goal, IM, CM, CM:Fact) :-
 record_location_callable(Head, CM, Type, Call, _, From) :-
     callable(Head),
     ground(CM),
-    implementation_module(CM:Head, M),
+    predicate_property(CM:Head, implementation_module(M)),
     compact_goal(Call, Comp),
     record_location_goal(Head, M, Type, CM, Comp, From).
 
@@ -148,7 +147,7 @@ record_location(Head, M, Type, From) :-
 
 record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
     static_strip_module(MCall, M, Call, CM),
-    implementation_module(MCall, IM),
+    predicate_property(MCall, implementation_module(IM)),
     call(FactBuilder, Type, Call, IM, CM, MFact),
     static_strip_module(MFact, CM, Fact, FM),
     call(Recorder, Fact, FM, Type, IM:Call, CM, From).

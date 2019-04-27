@@ -41,7 +41,6 @@
 :- use_module(library(extend_args)).
 :- use_module(library(extra_location)).
 :- use_module(library(from_utils)).
-:- use_module(library(implementation_module)).
 :- use_module(library(meta_args)).
 :- use_module(library(option_utils)).
 
@@ -108,7 +107,7 @@ current_assertion_goal(FromChk, From, AsrPartL, M:Head, CM:Goal) :-
     assrt_lib:asr_head_prop(Asr, HM, Head, _, _, VNL, AFrom),
     b_setval('$variable_names', VNL),
     call(FromChk, AFrom),
-    implementation_module(HM:Head, M),
+    predicate_property(HM:Head, implementation_module(M)),
     member(AsrPart, AsrPartL),
     assertion_goal(AsrPart, Asr, Goal, CM, From),
     current_context_value(trace_vars, TraceVars),

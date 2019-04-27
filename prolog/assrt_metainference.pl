@@ -36,7 +36,6 @@
 
 :- use_module(library(assrt_lib)).
 :- use_module(library(transpose)).
-:- use_module(library(implementation_module)).
 :- use_module(library(prolog_metainference), []).
 
 applicable_type(calls).
@@ -61,7 +60,7 @@ infer_meta_assertions :-
               memberchk(Status, [true, trust, check]),
               applicable_type(Type),
               functor(Head, F, A),
-              implementation_module(CM:Head, M),
+              predicate_property(CM:Head, implementation_module(M)),
               findall([Head, Arg, Spec],
                       ( member(Key, [comp, call, succ]),
                         meta_prop(Prop, Spec, Arg),

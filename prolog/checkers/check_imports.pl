@@ -38,7 +38,6 @@
 :- use_module(library(apply)).
 :- use_module(library(clambda)).
 :- use_module(library(expansion_module)).
-:- use_module(library(implementation_module)).
 :- use_module(library(codewalk)).
 :- use_module(library(extra_location)).
 :- use_module(library(from_utils)).
@@ -171,7 +170,7 @@ current_used_use_module(M, FromChk, UE, From) :-
     \+ ( member(F/A, PIL),
          functor(Head, F, A),
          MHead = UM:Head,
-         implementation_module(MHead, IM),
+         predicate_property(MHead, implementation_module(IM)),
          ( used_usemod(M, IM)                        % is used
          ; predicate_property(MHead, multifile),   % is extended
            clause(MHead, _, Ref),
@@ -182,7 +181,7 @@ current_used_use_module(M, FromChk, UE, From) :-
 mark_import(Head, CM, _, _, _, _) :-
     nonvar(CM),
     callable(Head),
-    implementation_module(CM:Head, M),
+    predicate_property(CM:Head, implementation_module(M)),
     mark_import(Head, M, CM).
 
 mark_import(Head, M, CM) :-

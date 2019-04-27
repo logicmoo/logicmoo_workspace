@@ -50,7 +50,6 @@
 :- use_module(library(option_utils)).
 :- use_module(library(compact_goal)).
 :- use_module(library(from_utils)).
-:- use_module(library(implementation_module)).
 
 :- multifile
     prolog:message//1,
@@ -209,7 +208,7 @@ record_location_wd(Caller, Fact, CM, Type, MGoal, _, From) :-
     ( callable(Fact),
       atom(CM)
     ->functor(Fact, F, A),
-      implementation_module(CM:Fact, M),
+      predicate_property(CM:Fact, implementation_module(M)),
       record_location_goal(Fact, M, Type, CM, Comp, From),
       update_fact_from(wrong_dynamic_db(Type, M:F/A, MPI), From)
     ; \+ database_fact(Caller)

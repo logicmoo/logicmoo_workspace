@@ -41,7 +41,6 @@
            linked_arg/2]).
 
 :- use_module(library(codewalk)).
-:- use_module(library(implementation_module)).
 
 :- dynamic
     clause_db/1,
@@ -146,7 +145,7 @@ record_linked(H, M, Idx, Pos, Stage, Id) :-
 propagate_argument(GoalCondition, RecordCallee, Stage, NStage, MGoal, MCaller, From) :-
     MGoal = _:Goal,
     compound(Goal),
-    implementation_module(MGoal, IM),
+    predicate_property(MGoal, implementation_module(IM)),
     MCaller = CM:Caller,
     compound(Caller),
     functor(Caller, F, A),

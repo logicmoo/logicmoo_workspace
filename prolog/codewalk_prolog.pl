@@ -37,7 +37,6 @@
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assrt_lib)).
 :- use_module(library(extra_location)).
-:- use_module(library(implementation_module)).
 :- use_module(library(option_utils)).
 
 :- thread_local
@@ -143,7 +142,7 @@ walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
     forall(( AHead = assrt_lib:asr_head_prop(Asr, HM, Head, _, _, _, From),
              clause(AHead, _, Ref),
              call(FromChk, From),
-             implementation_module(HM:Head, M),
+             predicate_property(HM:Head, implementation_module(M)),
              prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
              member(AsrPart, AsrPartL),
              assertion_goal(AsrPart, Head, HM, Asr, Goal, CM)

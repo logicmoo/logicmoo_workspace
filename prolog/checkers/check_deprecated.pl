@@ -37,7 +37,6 @@
 :- use_module(library(checkers/checker)).
 :- use_module(library(globprops)).
 :- use_module(library(check), []).
-:- use_module(library(implementation_module)).
 :- use_module(library(location_utils)).
 :- use_module(library(referenced_by)).
 :- use_module(library(assrt_lib)).
@@ -56,7 +55,7 @@ deprecated_predicate(MGoal, Comment, DFrom, CFrom) :-
     prop_asr(glob, deprecated(_), _, Asr),
     curr_prop_asr(comm, Comment, CFrom, Asr).
 deprecated_predicate(M:Goal, " Use ~q instead."-[Alt], [], []) :-
-    implementation_module(M:Goal, IM),
+    predicate_property(M:Goal, implementation_module(IM)),
     deprecated_predicate(Goal, IM, Alt).
 
 checker:check(deprecated, Result, Options) :-
@@ -74,7 +73,7 @@ check_deprecated(Options1, Pairs) :-
     walk_code(Options),
     findall(information-((DLoc/(IM:F/A))-((CLoc/Comment)-(Loc/CI))),
             ( retract(deprecated_db(Call, M, Comment, DFrom, CFrom, From)),
-              implementation_module(M:Call, IM),
+              predicate_property(M:Call, implementation_module(IM)),
               functor(Call, F, A),
               from_location(DFrom, DLoc),
               from_location(CFrom, CLoc),

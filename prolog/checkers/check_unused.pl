@@ -47,7 +47,6 @@
 :- use_module(library(commited_retract)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(checkable_predicate)).
-:- use_module(library(implementation_module)).
 :- use_module(library(current_defined_predicate)).
 :- use_module(library(codewalk)).
 :- use_module(library(extra_location)).
@@ -335,7 +334,7 @@ semantic_head(H, M, 0, dynamic(Type, CM, Call), Caller, From) :-
     ).
 semantic_head(H, M, -1, assertion(S, T), '<assertion>'(M:H), From) :-
     assrt_lib:asr_head_prop(_, CM, H, S, T, _, From),
-    implementation_module(CM:H, M).
+    predicate_property(CM:H, implementation_module(M)).
 
 unmarked(M, FromChk, Node, D, From) :-
     Ref = M:H,
@@ -462,7 +461,7 @@ caller_ptr(M:H,                _, M:H).
 cu_caller_hook(Caller, Head, CM, Type, Goal, _, From) :-
     callable(Head),
     nonvar(CM),
-    implementation_module(CM:Head, M),
+    predicate_property(CM:Head, implementation_module(M)),
     ( Type \= lit
     ->compact_goal(Goal, Comp),
       record_location_goal(Head, M, Type, CM, Comp, From)
