@@ -46,7 +46,6 @@
 :- use_module(library(metaprops)).
 :- use_module(library(rtchecks_flags)).
 :- use_module(library(qualify_meta_goal)).
-:- use_module(library(implementation_module)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
@@ -114,7 +113,7 @@ rtcheck_goal(CM:Goal1, Call) :-
     resolve_calln(Goal1, Goal),
     ( ppassertion_type_goal(Goal, Type, Pred)
     ->rtc_call(Type, call(Call, CM:Pred), CM:Pred)
-    ; implementation_module(CM:Goal, M),
+    ; predicate_property(CM:Goal, implementation_module(M)),
       collect_rtasr(Goal, CM, Pred, M, RAsrL),
       check_goal(rt, call(Call, CM:Pred), M, CM, RAsrL)
     ).
@@ -124,7 +123,7 @@ rtcheck_goal(CM:Goal1, Call, RTCheck) :-
     resolve_calln(Goal1, Goal),
     ( ppassertion_type_goal(Goal, Type, Pred)
     ->RTCheck = rtc_call(Type, call(Call, CM:Pred), CM:Pred)
-    ; implementation_module(CM:Goal, M),
+    ; predicate_property(CM:Goal, implementation_module(M)),
       collect_rtasr(Goal, CM, Pred, M, RAsrL),
       RAsrL \= [],
       RTCheck = rtcheck_goal(call(Call, CM:Pred), M, CM, RAsrL)

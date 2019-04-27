@@ -42,7 +42,6 @@
 :- use_module(system:library(rtchecks_rt)).
 :- use_module(system:library(rtchecks_tracer_rt)).
 :- use_module(library(rtchecks_utils)).
-:- use_module(library(implementation_module)).
 :- use_module(library(intercept)).
 :- use_module(library(ontrace)).
 :- use_module(library(static_strip_module)).
@@ -254,10 +253,10 @@ setup_clause_bpt(Clause, Frame, Action) :-
         ; call_instr_param(TInstr, PI),
           ( PI=LM:F/A
           ->functor(Goal, F, A),
-            implementation_module(LM:Goal, IM)
+            predicate_property(LM:Goal, implementation_module(IM))
           ; PI=F/A
           ->functor(Goal, F, A),
-            implementation_module(CM:Goal, IM)
+            predicate_property(CM:Goal, implementation_module(IM))
           ),
           \+ black_list_callee(IM, Goal),
           ( current_prolog_flag(rtchecks_level, exports)
@@ -323,7 +322,7 @@ do_break_hook(Clause, PC, FR, Goal1, Action) :-
     ( \+ black_list_caller(Caller)
     ->resolve_calln(Goal1, Goal2),
       static_strip_module(Goal2, FCM, Goal, CM),
-      implementation_module(CM:Goal, IM),
+      predicate_property(CM:Goal, implementation_module(IM)),
       ( \+ black_list_callee(IM, Goal)
       ->( nb_current('$current_goal', CurrGoal),
           CurrGoal =@= CM:Goal

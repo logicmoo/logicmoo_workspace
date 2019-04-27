@@ -208,7 +208,7 @@ goal_expansion(IM, Goal1, Pos1, _, _) :-
 goal_expansion(Goal1, Pos1, Goal, Pos) :-
     \+ expanding,
     '$current_source_module'(M),
-    implementation_module(M:Goal1, IM),
+    predicate_property(M:Goal1, implementation_module(IM)),
     goal_expansion(IM, Goal1, Pos1, Goal, Pos).
 
 :- multifile

@@ -53,7 +53,6 @@
 :- use_module(library(clambda)).
 :- use_module(library(context_values)).
 :- use_module(library(rtcprops)).
-:- use_module(library(implementation_module)).
 :- use_module(library(metaprops)).
 
 :- meta_predicate checkif_modl(?, ?, 0, ?, 0).
@@ -252,7 +251,7 @@ comps_to_goal2([Check|Checks], Check1, Goal) -->
 
 :- meta_predicate check_call(+, +, 0).
 check_call(T, AsrL, CM:Goal) :-
-    implementation_module(CM:Goal, M),
+    predicate_property(CM:Goal, implementation_module(M)),
     ctrt_call(T, CM:Goal, Call),
     check_goal(T, Call, M, CM, AsrL).
 
