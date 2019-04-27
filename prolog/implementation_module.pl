@@ -46,3 +46,12 @@ implementation_module(M:Goal, IM) :-
     ->IM = IM1 %% Allow usage as test
     ; IM = M   %% Asume that if not imported, it is defined here
     ).
+    % ( predicate_property(M:Goal, implementation_module(IM2)),
+    %   ( IM==IM2
+    %   ->true
+    %   ; print_message(warning,
+    %                   format("In ~w, the output does not match with the ~w property",
+    %                          [predicate_property(M:Goal, implementation_module(IM)),
+    %                           implementation_module(IM2)]))
+    %   )
+    % ).

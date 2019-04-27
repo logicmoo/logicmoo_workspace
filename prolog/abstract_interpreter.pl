@@ -150,13 +150,13 @@ intr_ai(_).
 
 mod_qual(M, G as R, I:H as B:C) :- !,
     strip_module(M:G, N, H),
-    implementation_module(N:H, I),
+    predicate_property(N:H, implementation_module(I)),
     strip_module(M:R, A, C),
-    implementation_module(A:C, B).
+    predicate_property(A:C, implementation_module(B)).
 mod_qual(M, G, I:F/A) :-
     strip_module(M:G, N, F/A),
     functor(H, F, A),
-    implementation_module(N:H, I).
+    predicate_property(N:H, implementation_module(I)).
 
 :- public
     default_on_error/1.
@@ -243,10 +243,10 @@ abstract_interpreter_body(catch(Goal, Ex, Handler), M, Abs, State, S1, S) :-
 abstract_interpreter_body(once(Goal), M, Abs, State, S1, S) :- !,
     once(abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
 abstract_interpreter_body(distinct(Goal), M, Abs, State, S1, S) :-
-    implementation_module(M:distinct(_), solution_sequences), !,
+    predicate_property(M:distinct(_), implementation_module(solution_sequences)), !,
     distinct(Goal, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
 abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S1, S) :-
-    implementation_module(M:distinct(_, _), solution_sequences), !,
+    predicate_property(M:distinct(_, _), implementation_module(solution_sequences)), !,
     distinct(Witness, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
 
 ord_spec(asc(_)).
@@ -496,7 +496,7 @@ match_head_body(MGoal, CMBody, From) :-
 :- multifile extra_clauses/4.
 
 extra_clauses(Goal, CM, I:Goal, _From) :-
-    implementation_module(CM:Goal, M),
+    predicate_property(CM:Goal, implementation_module(M)),
     functor(Goal, F, A),
     ( interface:'$interface'(M, DIL, IIL),
       ( memberchk(F/A, DIL)

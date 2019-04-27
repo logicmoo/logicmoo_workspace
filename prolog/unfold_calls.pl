@@ -35,7 +35,6 @@
 :- module(unfold_calls,
           [unfold_calls/4]).
 
-:- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
 
 :- multifile
@@ -43,7 +42,7 @@
 
 :- meta_predicate unfold_calls(+, +, 2, -).
 unfold_calls(Goal, CM, IsUnfold, Calls) :-
-    implementation_module(CM:Goal, M),
+    predicate_property(CM:Goal, implementation_module(M)),
     findall(Call, ( unfold_call(Goal, CM, IsUnfold, [], Call),
                     \+ M:Goal =@= Call
                   ), Calls).
@@ -59,7 +58,7 @@ unfold_call(CM:Goal, _, IsUnfold, NonUnfoldL, Call) :-
     unfold_call(Goal, CM, IsUnfold, NonUnfoldL, Call).
 unfold_call(Goal1, CM, IsUnfold, NonUnfoldL, Call) :-
     CMGoal1 = CM:Goal1,
-    implementation_module(CMGoal1, M),
+    predicate_property(CMGoal1, implementation_module(M)),
     qualify_meta_goal(CMGoal1, _:Goal),
     ( unfold_call_hook(Goal, M, CM, Goal2)
     *->

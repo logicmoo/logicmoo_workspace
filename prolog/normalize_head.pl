@@ -41,7 +41,7 @@ current_predicate_ext(M:F/A) :-
       findall(M:F/A, current_predicate(M:F/A), PIL1)
     ; findall(M:F/A, (current_predicate(CM:F/A),
                       functor(H, F, A),
-                      implementation_module(CM:H, M)), PIL1)
+                      predicate_property(CM:H, implementation_module(M))), PIL1)
     ),
     sort(PIL1, PIL),
     member(M:F/A, PIL),
