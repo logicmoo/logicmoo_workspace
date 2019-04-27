@@ -131,8 +131,8 @@ curr_prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 
 prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
     asr_head_prop(Asr, C, H, Stat, Type, Dict, From),
-    implementation_module(C:H, IM),
-    implementation_module(M:H, IM).
+    predicate_property(C:H, implementation_module(IM)),
+    predicate_property(M:H, implementation_module(IM)).
 
 :- meta_predicate
        prop_asr(?, 0, +, +),
@@ -140,13 +140,13 @@ prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
 
 prop_asr(Key, M:P, From, Asr) :-
     curr_prop_asr(Key, C:P, From, Asr),
-    implementation_module(C:P, IM),
-    implementation_module(M:P, IM).
+    predicate_property(C:P, implementation_module(IM)),
+    predicate_property(M:P, implementation_module(IM)).
 
 aprop_asr(Key, M:P, From, Asr) :-
     asr_aprop(Asr, Key, C:P, From),
-    implementation_module(C:P, IM),
-    implementation_module(M:P, IM).
+    predicate_property(C:P, implementation_module(IM)),
+    predicate_property(M:P, implementation_module(IM)).
 
 add_arg(_, G1, G2, _, _) :-
     var(G1),
@@ -968,7 +968,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
                member(Gl, [declaration, declaration(_)]),
                strip_module(MGl, PM, Gl),
                add_arg(_, Gl, Pr, GPos, _),
-               implementation_module(PM:Pr, metaprops),
+               predicate_property(PM:Pr, implementation_module(metaprops)),
                functor(Head, Op, 1)
              )),
         Clause = (:- '$export_ops'([op(1125, fy, Op)], PM, File))
@@ -979,7 +979,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
                     global(_)]),
         strip_module(MGl, PM, Gl),
         add_arg(_, Gl, Pr, _, _),
-        implementation_module(PM:Pr, metaprops)
+        predicate_property(PM:Pr, implementation_module(metaprops))
       ->functor(Head, Fn, N),
         ( \+ predicate_property(M:Head, meta_predicate(_)),
           functor(Meta, Fn, N),

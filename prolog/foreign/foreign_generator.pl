@@ -46,7 +46,6 @@
 :- use_module(library(extra_messages)).
 :- use_module(library(foldnl)).
 :- use_module(library(foreign/foreign_props)).
-:- use_module(library(implementation_module)).
 :- use_module(library(key_value)).
 :- use_module(library(lists)).
 :- use_module(library(metaprops)).
@@ -1319,14 +1318,14 @@ assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict,
     ->true
     ; Comm = ""
     ),
-    implementation_module(CM:Head, M),
+    predicate_property(CM:Head, implementation_module(M)),
     collect_props(Asr, CM, Comp, Call, Succ, Glob).
 
 current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
                      DictL, FuncName, PredName, BindName, Arity, KeyProp) :-
     asr_head_prop(Asr, Context, Head, check, Type, _, _),
     memberchk(Type, [pred, prop]),
-    implementation_module(Context:Head, Module),
+    predicate_property(Context:Head, implementation_module(Module)),
     once(( call(GenKeyProp, KeyProp),
            prop_asr(glob, KeyProp, _, Asr)
          )),
