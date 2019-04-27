@@ -179,9 +179,10 @@ current_used_use_module(M, FromChk, UE, From) :-
          )
        ).
 
-mark_import(M:Head, CM, _, _, _, _) :-
-    nonvar(M),
+mark_import(Head, CM, _, _, _, _) :-
+    nonvar(CM),
     callable(Head),
+    implementation_module(CM:Head, M),
     mark_import(Head, M, CM).
 
 mark_import(Head, M, CM) :-

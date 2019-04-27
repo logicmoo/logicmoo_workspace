@@ -130,11 +130,10 @@ all_call_refs(Prop, Goal, IM, CM, CM:Fact) :-
     prop_t(Prop),
     database_fact(Prop, IM:Goal, Fact).
 
-record_location_callable(MGoal, CM, Type, Call, _, From) :-
-    normalize_head(MGoal, MHead),
-    strip_module(MHead, M, Head),
-    ground(M),
+record_location_callable(Head, CM, Type, Call, _, From) :-
     callable(Head),
+    ground(CM),
+    implementation_module(CM:Head, M),
     compact_goal(Call, Comp),
     record_location_goal(Head, M, Type, CM, Comp, From).
 
@@ -152,8 +151,7 @@ record_location_meta_each(MCall, M, From, FactBuilder, Recorder) :-
     implementation_module(MCall, IM),
     call(FactBuilder, Type, Call, IM, CM, MFact),
     static_strip_module(MFact, CM, Fact, FM),
-    implementation_module(FM:Fact, M),
-    call(Recorder, M:Fact, FM, Type, IM:Call, CM, From).
+    call(Recorder, Fact, FM, Type, IM:Call, CM, From).
 
 :- meta_predicate record_location_meta(+,?,+,5,6).
 record_location_meta(MCall, M, From, FactBuilder, Recorder) :-

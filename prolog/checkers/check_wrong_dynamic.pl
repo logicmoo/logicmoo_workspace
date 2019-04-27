@@ -50,6 +50,7 @@
 :- use_module(library(option_utils)).
 :- use_module(library(compact_goal)).
 :- use_module(library(from_utils)).
+:- use_module(library(implementation_module)).
 
 :- multifile
     prolog:message//1,
@@ -202,12 +203,13 @@ collect_wrong_dynamic(M, MGoal, Caller, From) :-
     ignore(record_location_meta(MGoal, M, From, \T^G^MG^_^F^database_fact_ort(T,G,MG,F),
                                 record_location_wd(Caller))).
 
-record_location_wd(Caller, M:Fact, CM, Type, MGoal, _, From) :-
+record_location_wd(Caller, Fact, CM, Type, MGoal, _, From) :-
     compact_goal(MGoal, Comp),
     normalize_pi(Comp, MPI),
-    ( atom(M),
-      callable(Fact)
+    ( callable(Fact),
+      atom(CM)
     ->functor(Fact, F, A),
+      implementation_module(CM:Fact, M),
       record_location_goal(Fact, M, Type, CM, Comp, From),
       update_fact_from(wrong_dynamic_db(Type, M:F/A, MPI), From)
     ; \+ database_fact(Caller)

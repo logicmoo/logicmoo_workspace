@@ -42,6 +42,7 @@
 :- use_module(library(codewalk)).
 :- use_module(library(dynamic_locations)).
 :- use_module(library(checkable_predicate)).
+:- use_module(library(implementation_module)).
 
 :- multifile
     prolog:message//1.
@@ -104,10 +105,11 @@ ignore_predicate(inferred_meta_pred(_, _, _), prolog_metainference).
 collect_trivial_fails(MatchAI, MGoal, Caller, From) :-
     record_location_meta(MGoal, _, From, all_call_refs, cu_caller_hook(MatchAI, Caller)).
 
-cu_caller_hook(MatchAI, Caller, MGoal, CM, Type, _, _, From) :-
-    atom(CM),
-    MGoal = M:H,
+cu_caller_hook(MatchAI, Caller, H, CM, Type, _, _, From) :-
+    ground(CM),
     callable(H),
+    implementation_module(CM:H, M),
+    MGoal = M:H,
     checkable_predicate(MGoal),
     \+ ignore_predicate(H, M),
     copy_term_nat(CM:H, Term),

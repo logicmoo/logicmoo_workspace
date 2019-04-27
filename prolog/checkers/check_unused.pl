@@ -459,9 +459,10 @@ caller_ptr('<declaration>',    _, '<declaration>'   ) :- !.
 caller_ptr(_,        clause(Ptr), clause(Ptr)       ) :- !.
 caller_ptr(M:H,                _, M:H).
 
-cu_caller_hook(Caller, M:Head, CM, Type, Goal, _, From) :-
-    nonvar(M),
+cu_caller_hook(Caller, Head, CM, Type, Goal, _, From) :-
     callable(Head),
+    nonvar(CM),
+    implementation_module(CM:Head, M),
     ( Type \= lit
     ->compact_goal(Goal, Comp),
       record_location_goal(Head, M, Type, CM, Comp, From)
