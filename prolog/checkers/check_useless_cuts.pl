@@ -35,6 +35,7 @@
 :- module(check_useless_cuts, []).
 
 :- use_module(library(assrt_lib)).
+:- use_module(library(countsols)).
 :- use_module(library(gcu)).
 :- use_module(library(location_utils)).
 :- use_module(library(intercept)).
@@ -226,7 +227,21 @@ walk_body(fail, _, _, _, _) :- !, fail.
 walk_body(false, _, _, _, _) :- !, fail.
 walk_body(Lit, M, _, _, _) :-
     ( valid_prop_asr(Lit, M, _)
-    ->( forall(valid_prop_asr(Lit, M, Asr),
+    ->( ( functor(Lit, F, A),
+          functor(Term, F, A),
+          Lit =@= Term,
+          valid_prop_asr(Lit, M, Asr),
+          member(DetProp,
+                 [globprops:multi(_),
+                  globprops:non_det(_),
+                  globprops:nondet(_)
+                 ]),
+          prop_asr(glob, DetProp, _, Asr)
+        )
+      ->( true
+        ; fail
+        )
+      ; ( forall(valid_prop_asr(Lit, M, Asr),
                ( member(DetProp,
                         [globprops:det(_),
                          globprops:semidet(_),
@@ -235,21 +250,25 @@ walk_body(Lit, M, _, _, _) :-
                         ]),
                  prop_asr(glob, DetProp, _, Asr)
                ))
+        )
       ->true
-      ; forall(valid_prop_asr(Lit, M, Asr),
+      ; ( forall(valid_prop_asr(Lit, M, Asr),
                ( member(NegProp,
                         [globprops:fails(_),
                          globprops:failure(_)
                         ]),
                  prop_asr(glob, NegProp, _, Asr)
                ))
+        )
       ->fail
       )
     ; predicate_property(M:Lit, built_in)
     ->( true
       ; fail
       )
-    ; catch(findall(clause(B, R), clause(M:Lit, B, R), ClauseL), _, ClauseL = [_, _]),
+    ; catch(findall(clause(B, R), countsols(2, clause(M:Lit, B, R)), ClauseL),
+            _,
+            ClauseL = [_, _]),
       ( ClauseL = []
       ->fail
       ; ClauseL = [_]
