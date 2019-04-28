@@ -45,6 +45,9 @@
 :- multifile
     prolog:message//1.
 
+:- meta_predicate
+    walk_call(+, +, +, 1).
+
 prolog:message(acheck(useless_cuts)) -->
     ['Check useless cuts',nl,
      '------------------',nl,
