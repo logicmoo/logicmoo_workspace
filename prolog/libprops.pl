@@ -96,7 +96,11 @@
          assertz/1,
          retractall/1,
          findall/3,
-         ignore/1] is det.
+         ignore/1,
+         writeln/1,
+         writeln/2,
+         format/2,
+         format/3] is det.
 
 :- pred [(\+)/1,
          forall/2,
