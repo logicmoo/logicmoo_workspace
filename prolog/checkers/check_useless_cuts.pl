@@ -34,6 +34,8 @@
 
 :- module(check_useless_cuts, []).
 
+:- use_module(library(assrt_lib)).
+:- use_module(library(gcu)).
 :- use_module(library(location_utils)).
 :- use_module(library(intercept)).
 :- use_module(library(option_utils)).
@@ -124,10 +126,39 @@ valid_status(check).
 valid_type(pred).
 valid_type(prop).
 
+walk_body_if_branch(C, M, Ref, CA, SFlag, CP1, CP2) :-
+    ( CP1 == CP2
+    ->prolog_current_choice(CP3)
+    ; prolog_current_choice(CP3),
+      ( true
+      ; SFlag = s(FlagL),
+        nb_setarg(1, SFlag, [leave_cp1|FlagL]),
+        fail
+      )
+    ),
+    prolog_current_choice(CP4),
+    walk_body(C, M, Ref, CA, CP3),
+    prolog_current_choice(CP5),
+    ( CP3 == CP5
+    ->true
+    ; CP4 == CP5
+    ->true
+    ; catch(prolog_cut_to(CP4), _, true), % catch because CP4 could be gone
+      SFlag = s(FlagL),
+      nb_setarg(1, SFlag, [insert_cp|FlagL])
+    ),
+    fail.
+
+walk_body(V, _, _, _, _) :-
+    var(V),
+    !,
+    ( true
+    ; fail
+    ).
 walk_body(!, _, Ref, CA, CP1) :-
     !,
     prolog_current_choice(CP),
-    ( CP1==CP
+    ( CP1 == CP
     ->call(CA, Ref)
     ; prolog_cut_to(CP1)
     ).
@@ -138,12 +169,58 @@ walk_body((A, B), M, Ref, CA, CP) :-
     !,
     walk_body(A, M, Ref, CA, CP),
     walk_body(B, M, Ref, CA, CP).
+walk_body(Lit, M, Ref, CA, CP1) :-
+    Lit = (AB; C),
+    member(AB, [(A->B), (A*->B)]),
+    !,
+    prolog_current_choice(CP2),
+    SFlag = s([]),
+    findall(Lit,
+            ( member(Branch, [AB, C]),
+              walk_body_if_branch(Branch, M, Ref, CA, SFlag, CP1, CP2)
+            ), [Term|TermL]),
+    foldl(greatest_common_unifier, TermL, Term, Lit),
+    ( member(leave_cp1, FlagL)
+    ->true
+    ; prolog_cut_to(CP1)
+    ),
+    ( member(insert_cp, FlagL)
+    ->( true
+      ; fail
+      )
+    ; true
+    ).
+walk_body((A->B), M, Ref, CA, CP1) :-
+    !,
+    ( prolog_current_choice(CP2),
+      walk_body(A, M, Ref, CA, CP2)
+    ->walk_body(B, M, Ref, CA, CP1)
+    ).
+walk_body((A*->B), M, Ref, CA, CP1) :-
+    !,
+    ( prolog_current_choice(CP2),
+      walk_body(A, M, Ref, CA, CP2),
+      walk_body(B, M, Ref, CA, CP1)
+    ).
 walk_body((A; B), M, Ref, CA, CP1) :-
     !,
     ( prolog_current_choice(CP2),
       walk_body(A, M, Ref, CA, CP2)
     ; walk_body(B, M, Ref, CA, CP1)
     ).
+walk_body(call(A), M, Ref, CA, _) :-
+    !,
+    prolog_current_choice(CP),
+    walk_body(A, M, Ref, CA, CP).
+walk_body(\+ (A), M, Ref, CA, _) :-
+    !,
+    \+ ( prolog_current_choice(CP),
+         walk_body(A, M, Ref, CA, CP),
+         fail
+       ).
+walk_body(true, _, _, _, _) :- !.
+walk_body(fail, _, _, _, _) :- !, fail.
+walk_body(false, _, _, _, _) :- !, fail.
 walk_body(Lit, M, _, _, _) :-
     ( valid_prop_asr(Lit, M, _)
     ->( forall(valid_prop_asr(Lit, M, Asr),
