@@ -93,8 +93,24 @@ check_js_compliance(Notices) :-
 		format(atom(Msg)," cannot use ~w, use not(~w) instead",[Lit,Neg]),
 		buildError(Lit,Vars,Msg,ET)
 		),
+		NegComparators),	
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(Lit,L), 
+		( Lit = (A =< B), Remedy = (A<=B) ),
+		source_position(Clause,F,Pos,Vars),
+		format(atom(Msg)," cannot use ~w, use ~w instead",[Lit,Remedy]),
+		buildError(Lit,Vars,Msg,ET)
+		),
 		Comparators),	
-	append([OverDetailedUpdates,ITE,EAs,Meta,Vis,Comparators],Notices).
+	findall( notice(error,ET,Pos), (
+		lps_literals(L,Clause), member(findall(_,(G1,G2),_),L), 
+		source_position(Clause,F,Pos,Vars),
+		format(atom(Msg)," findall cannot have complex goals, please refactor by introducing a new predicate ",[(G1,G2)]),
+		buildError((G1,G2),Vars,Msg,ET)
+		),
+		Findall),	
+	% TODO: inspect literal argumentsin depth  to forbid Prolog-like operators and suggest replacement by regular functors
+	append([OverDetailedUpdates,ITE,EAs,Meta,Vis,NegComparators,Comparators,Findall],Notices).
 
 % lps_literals(-Goal,-EnclosingClause) a "clause"-like metapredicate to enumerate all head/body combinations
 lps_literals(Events,observe(Obs, Next)) :- interpreter:observe(Obs, Next), Previous is Next-1, findall(happens(Ev,Previous,Next),member(Ev,Obs),Events).

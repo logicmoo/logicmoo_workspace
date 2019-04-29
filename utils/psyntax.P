@@ -91,7 +91,6 @@ dumploaded(_,_).
 % ...and finally the generic SWI support:
 
 :- use_module('../engine/db.P',[head_hint/3, '_currenty__defining'/1]).
-:- use_module('checker.P',[check_js_compliance/1]).
 	
 :- thread_local((timeless_ref/1, current_top_term/1)).
 clear_timeless_refs :- retractall(timeless_ref(_)).
@@ -146,7 +145,11 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(1200,xfx,user:(<-)).
 :- op(1050,fx,user:(<-)).
 % -> is already defined as 1050, xfy, which will do given that lps.js does not support if-then-elses
+:- op(700,xfx,user:(<=)).
 
+user:(A<=B) :- A=<B.
+
+:- use_module('checker.P',[check_js_compliance/1]).
 
 % This colours lps2p terms, articulated with SWI's prolog_colour.pl
 term_colours(T,C) :- 
@@ -806,7 +809,7 @@ pretty_write((if A then C),Translator,I,Vars,S) :- !,
 	my_tab(S,I), write(S,'then '), writeln(S,''), 
 	NI is I+4, pretty_write(C,Translator,NI,Vars,S).
 pretty_write(( A->C),js2p,I,Vars,S) :- !, 
-	my_tab(S,I),  my_write(S,A,Vars), write(S,' ->'), nl(S),
+	my_tab(S,I),  pretty_write(A,js2p,I,Vars,S), write(S,' ->'), nl(S),
 	my_tab(S,I), writeln(S,''), 
 	NI is I+4, pretty_write(C,js2p,NI,Vars,S).
 pretty_write((H if B),Translator,I,Vars,S) :- !, 
@@ -841,8 +844,10 @@ pretty_write(PostCondition,Translator,I,Vars,S) :-
 	; throw(unknown_syntax(Translator))
 	).
 pretty_write((H:-true),Translator,I,Vars,S) :- !, pretty_write(H,Translator,I,Vars,S).
-pretty_write((H:-B),Translator,I,Vars,S) :- !, 
-	my_tab(S,I), my_write(S,H,Vars), writeln(S,' :-'), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
+pretty_write((H:-B),lps2p,I,Vars,S) :- !, 
+	my_tab(S,I), my_write(S,H,Vars), writeln(S,' :-'), NI is I+4, pretty_write(B,lps2p,NI,Vars,S).
+pretty_write((H:-B),js2p,I,Vars,S) :- !, 
+	my_tab(S,I), my_write(S,H,Vars), writeln(S,' <-'), NI is I+4, pretty_write(B,js2p,NI,Vars,S).
 pretty_write((G1,G2),Translator,I,Vars,S) :- !, 
 	my_tab(S,I), my_write(S,G1,Vars,Translator), writeln(S,','), pretty_write(G2,Translator,I,Vars,S).
 pretty_write(not(G),Translator,I,Vars,S) :- !, my_tab(S,I), write(S,'not('), pretty_write(G,Translator,I,Vars,S), write(S,')').
