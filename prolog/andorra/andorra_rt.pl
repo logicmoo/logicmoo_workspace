@@ -32,8 +32,7 @@ set_read_mode(Value) :-
 verify_det(HOrig,LGyCs,NewLGyCs):-
     set_read_mode(yes),
     update_state(HOrig,LGyCs,NewLGyCs),
-    set_read_mode(no),
-    !.
+    set_read_mode(no).
 
 wake_determinate_(_):-
     '$read_mode'(yes),
@@ -49,7 +48,7 @@ update_state(HOrig,[guard_clause(H,R)|LGyCs],[guard_clause(H,R)|NewLGyCs]):-
     update_state(HOrig,LGyCs,NewLGyCs).
 
 update_state(HOrig,[guard_clause(_H,_R)|LGyCs],NewLGyCs):-
-    update_state(HOrig,LGyCs,NewLGyCs),!.
+    update_state(HOrig,LGyCs,NewLGyCs).
 
 valid([]) :- !.
 valid([Const|Rest]):-
@@ -65,7 +64,6 @@ test_unify(X,Y) :-
     set_read_mode(no).
 test_unify(_X,_Y) :-
     set_read_mode(no),
-    !,
     fail.
 
 wakeup(L1,L2) :- L1==L2, !.
