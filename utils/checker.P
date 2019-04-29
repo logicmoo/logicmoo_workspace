@@ -88,7 +88,7 @@ check_js_compliance(Notices) :-
 	% No \==, \= allowed; e.g. examples/bank account_terse.pl
 	findall( notice(error,ET,Pos), (
 		lps_literals(L,Clause), member(Lit,L), 
-		( Lit = (A \== B), Neg = (A==B) ; Lit = (A \= B), Neg = (A=B)),
+		( Lit = (A \== B), Neg = (A==B) ; Lit = (A \= B), Neg = (A==B)),
 		source_position(Clause,F,Pos,Vars),
 		format(atom(Msg)," cannot use ~w, use not(~w) instead",[Lit,Neg]),
 		buildError(Lit,Vars,Msg,ET)

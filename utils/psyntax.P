@@ -218,8 +218,8 @@ dumpjs(F,Options) :-
 	check_js_compliance(Notices),
 	print_error_notices(Notices),
 	date_stamp(D),
-	(var(F)->F='SWISH editor';true),
-	format("% Generated from ~w on ~w~n",[F,D]),
+	(atomic(F)->F=FF;FF='SWISH Editor'),
+	format("% Generated from ~w on ~w~n",[FF,D]),
 	writeln("% Preamble for lps.js:\n is(A,A). \n%---"), % lps.js has no is/a, but does evaluate arith expressions in arguments
 	dumploaded(true,js2p).
 
@@ -779,7 +779,7 @@ my_write(S,(X to T2),Vars,js2p) :- !,
 	format(S," from ~W",[ T2,[quoted(true),variable_names(Vars)] ]).
 my_write(S,(X at T),Vars,js2p) :- !, 
 	my_write_js_literal(S,X,Vars), 
-	format(S," from ~W",[ T,[quoted(true),variable_names(Vars)] ]).
+	format(S," at ~W",[ T,[quoted(true),variable_names(Vars)] ]).
 my_write(S,X,Vars,js2p) :- my_write_js_literal(S,X,Vars).
 
 my_write_js_literal(S,X,Vars) :- var(X), !, write_term(S,X,[variable_names(Vars)]).
@@ -845,6 +845,7 @@ pretty_write((H:-B),Translator,I,Vars,S) :- !,
 	my_tab(S,I), my_write(S,H,Vars), writeln(S,' :-'), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
 pretty_write((G1,G2),Translator,I,Vars,S) :- !, 
 	my_tab(S,I), my_write(S,G1,Vars,Translator), writeln(S,','), pretty_write(G2,Translator,I,Vars,S).
+pretty_write(not(G),Translator,I,Vars,S) :- !, my_tab(S,I), write(S,'not('), pretty_write(G,Translator,I,Vars,S), write(S,')').
 pretty_write(G,Translator,I,Vars,S) :- my_tab(S,I), my_write(S,G,Vars,Translator).
 
 my_tab(_S,0) :- !.
