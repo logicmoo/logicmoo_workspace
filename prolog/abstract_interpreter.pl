@@ -90,7 +90,6 @@ evaluable_body_hook(atomic_list_concat(A, B, C), _,
 evaluable_body_hook(upcase_atom(A, _), _, ground(A)).
 evaluable_body_hook(downcase_atom(A, _), _, ground(A)).
 evaluable_body_hook(nb_current(A, _), _, ground(A)).
-evaluable_body_hook(nb_getval(A, _), _, ground(A)).
 evaluable_body_hook(_ is A, _, ground(A)).
 evaluable_body_hook(A > B, _, (ground(A),ground(B))).
 evaluable_body_hook(A >= B, _, (ground(A),ground(B))).
@@ -116,7 +115,7 @@ evaluable_body_hook(integer(A), _, nonvar(A)).
 evaluable_body_hook(clause(A, _), _, nonvar(A)).
 evaluable_body_hook(clause(A, _, _), _, nonvar(A)).
 evaluable_body_hook(format(Out, Format, Args), _,
-                    (nonvar(Out), nonvar(Format), ground(Args))).
+                    (compound(Out), nonvar(Format), ground(Args))).
 evaluable_body_hook(sort(A, _), _, (is_list(A), maplist(nonvar, A))).
 evaluable_body_hook(A==B, _, (A==B;A\=B)).
 
@@ -129,6 +128,7 @@ replace_goal_hook(call_ai(G), abstract_interpreter, G).
 replace_goal_hook(eval_ai(G), abstract_interpreter, G).
 replace_goal_hook(skip_ai(_), abstract_interpreter, true).
 replace_goal_hook(V is A, _, (ground(A)->V is A; var(V))).
+replace_goal_hook(nb_getval(A, V), _, ignore((nonvar(A), nb_current(A, V)))).
 
 replace_body_hook(with_value(G, _, _), context_values, G).
 replace_body_hook(with_value(G, _, _, _), context_values, G).
