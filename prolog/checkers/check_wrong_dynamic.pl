@@ -78,8 +78,8 @@ hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
 hide_var_dynamic_hook(current_det_check(_, _), check_useless_cuts).
 hide_var_dynamic_hook(infer_det(_, _, _), check_useless_cuts).
 hide_var_dynamic_hook(walk_call(_, _, _), check_useless_cuts).
-hide_var_dynamic_hook(walk_body(_, _, _, _, _), check_useless_cuts).
-hide_var_dynamic_hook(del_det_clause(_, _, _), check_useless_cuts).
+hide_var_dynamic_hook(walk_lit(_, _, _, _, _), check_useless_cuts).
+hide_var_dynamic_hook(det_clause(_, _), check_useless_cuts).
 
 :- dynamic
     wrong_dynamic_db/4,
