@@ -80,6 +80,14 @@
 
 :- pred memberchk(?, ?list) is semidet.
 
+:- true pred [(==)/2,
+              (\==)/2,
+              (=)/2,
+              (\=)/2,
+              (=@=)/2,
+              is_list/1
+             ] is semidet.
+
 :- true prop [[ground/1,
                atom/1,
                atomic/1,
@@ -88,7 +96,9 @@
                nonvar/1,
                number/1,
                var/1,
-               callable/1
+               string/1,
+               callable/1,
+               compound/1
               ] is semidet,
               member/2].
 
