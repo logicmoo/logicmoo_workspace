@@ -35,7 +35,6 @@
 :- module(check_useless_cuts, []).
 
 :- use_module(library(assrt_lib)).
-:- use_module(library(countsols)).
 :- use_module(library(abstract_interpreter), []).
 :- use_module(library(gcu)).
 :- use_module(library(location_utils)).
@@ -51,6 +50,7 @@
 :- dynamic
     cut_info/2,
     inferred_det_db/3,
+    det_checking/1,
     det_checking/2,
     det_clause_db/2.
 
@@ -78,7 +78,14 @@ check_useless_cuts(Options1, Pairs) :-
                   [module(M)
                   ], Options),
     option_fromchk(Options, _, FromChk),
-    cuts_check(M, FromChk, Pairs).
+    cuts_check(M, FromChk, Pairs),
+    cleanup_useless_cuts.
+
+cleanup_useless_cuts :-
+    retractall(inferred_det_db(_, _, _)),
+    retractall(det_checking(_)),
+    retractall(det_checking(_, _)),
+    retractall(det_clause_db(_, _)).
 
 cuts_check(M, FromChk, Pairs) :-
     forall(current_det_check(M, FromChk),
@@ -98,14 +105,15 @@ collect_useless_cut(useless_cut(Loc, M:F/A-I), FromChk) :-
 % are semidet
 
 current_det_check(M, FromChk) :-
-    % PI=M:F/A,
-    current_predicate(M:F/A),
-    functor(H, F, A),
-    MH = M:H,
-    \+ predicate_property(MH, imported_from(_)),
-    \+ \+ ( catch(clause(MH, _, Ref), _, fail),
-            call(FromChk, clause(Ref))
-          ),
+    order_by([asc(M:F/A)],
+             ( current_predicate(M:F/A),
+               functor(H, F, A),
+               MH = M:H,
+               \+ predicate_property(MH, imported_from(_)),
+               \+ \+ ( catch(clause(MH, _, Ref), _, fail),
+                       call(FromChk, clause(Ref))
+                     )
+             )),
     check_det(H, M, _).
 
 clauses_accessible(MH) :-
@@ -122,9 +130,7 @@ check_det(H, M, Det) :-
     ; ( predef_det(H, M, Det)
       ->true
       ; % format(user_error, "? ~q~n", [M:H]),
-        with_det_checking(
-            H, M, info,
-            forall(walk_call(H, M, info), true)),
+        with_det_checking(H, M, forall(walk_call(H, M, info), true)),
         infer_det(H, M, Det)
         % format(user_error, "! ~q: ~w~n", [M:H, Det])
       )
@@ -132,11 +138,11 @@ check_det(H, M, Det) :-
     ; print_message(error, format("unexpected failure of infer_def/3 or predef_det/3 ~q", [M:H]))
     ).
 
-inferred_det(Lit, M, Det) :-
-    functor(Lit, F, A),
+inferred_det(C, M, Det) :-
+    functor(C, F, A),
     functor(H, F, A),
-    predicate_property(M:H, implementation_module(IM)),
-    check_det(H, IM, Det1),
+    predicate_property(M:H, implementation_module(I)),
+    check_det(H, I, Det1),
     Det1 = Det.
 
 %!  predef_det(-DetInfo, +Head, +Module) is semidet.
@@ -194,11 +200,12 @@ add_cp.
 add_cp :- fail.
 
 :- meta_predicate
-    with_det_checking(+, +, +, 0).
+    with_det_checking(+, +, 0 ),
+    with_det_checking(+, 0 ).
 
-with_det_checking(H, M, CA, Call) :-
+with_det_checking(H, M, Call) :-
     ( det_checking(H, M)
-    ->add_new_cp(CA)
+    ->true
     ; functor(H, F, A),
       functor(P, F, A),
       setup_call_cleanup(
@@ -206,6 +213,19 @@ with_det_checking(H, M, CA, Call) :-
           Call,
           erase(DCRef))
     ).
+
+with_det_checking(ClauseL, Call) :-
+    ( member(Clause, ClauseL),
+      det_checking(Clause)
+    ->add_cp
+    ; setup_call_cleanup(
+          maplist(assert_det_checking, ClauseL, RefL),
+          Call,
+          maplist(erase, RefL))
+    ).
+
+assert_det_checking(Clause, Ref) :-
+    assertz(det_checking(Clause), Ref).
 
 walk_call(H, M, CA) :-
     prolog_current_choice(CP1),
@@ -223,9 +243,6 @@ walk_call(H, M, CA) :-
           % , erase(DCRef))
     ),
     remove_new_cp(CA, CP2).
-
-add_new_cp(noop) :- add_cp.
-add_new_cp(info).
 
 cut_to(CP) :- catch(safe_prolog_cut_to(CP), _, true).
 
@@ -476,22 +493,17 @@ walk_lit(H, M, CM, Ref, CP) :-
     ; inferred_det(C, M, fails)
     ->cut_to(CP),
       fail
-    ; catch(findall(clause(B, R),
-                    ( countsols(N, clause(M:C, B, R)),
-                      ( N < 2
-                      ->true
-                      ; !
-                      )
-                    ), ClauseL),
+    ; catch(findall(R, clause(M:C, _, R), ClauseL),
             _,
-            ClauseL = [_, _]),
+            AddCP = true),
       ( ClauseL = []
       ->cut_to(CP),
         fail
-      ; ClauseL = [_]
-      ->with_det_checking(C, M, noop, walk_call(C, M, noop))
-      ; % abstraction step: making this decidable by not analyzing if there is a
-        % choice point introduced by the clause
-        add_cp
+      ; AddCP == true
+      ->add_cp
+      ; % abstraction step: with_det_checking ensures decidability by not
+        % analyzing if there is a recursion that requires to analyze the same
+        % call again
+        with_det_checking(ClauseL, walk_call(C, M, noop))
       )
     ).
