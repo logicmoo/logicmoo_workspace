@@ -108,7 +108,7 @@ evaluable_body_hook(var(V),     _, nonvar(V)).
 evaluable_body_hook(nonvar(V),  _, nonvar(V)).
 evaluable_body_hook(atomic(A),  _, nonvar(A)).
 evaluable_body_hook(atom(A),    _, nonvar(A)).
-evaluable_body_hook(is_list(A), _, is_list(A)).
+evaluable_body_hook(is_list(A), _, (ground(A);is_list(A))).
 evaluable_body_hook(number(A),  _, nonvar(A)).
 evaluable_body_hook(float(A),   _, nonvar(A)).
 evaluable_body_hook(integer(A), _, nonvar(A)).
