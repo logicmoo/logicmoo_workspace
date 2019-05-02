@@ -69,6 +69,12 @@
 :- pred atom_codes(-atm,    +list) is det.
 :- pred atom_codes(+atomic, ?list) is semidet.
 
+:- pred atom_concat(+atomic, +atomic, -atm) is det.
+:- pred atom_concat(+atomic, +atomic, +atomic) is semidet.
+:- pred atom_concat(-atm, +atomic, +atomic) is semidet.
+:- pred atom_concat(+atomic, -atm, +atomic) is semidet.
+:- pred atom_concat(-atm, -atm, +atomic) is multi.
+
 :- pred sub_atom(+atomic,?int,?int,?int,?atm).
 
 :- use_module(library(apply)).
