@@ -129,16 +129,12 @@ clauses_accessible(MH) :-
     \+ predicate_property(MH, multifile).
 
 check_det(H, M, Det) :-
-    % ( H = berechnung_neu(_,_,_,_,_,_,_)
-    % ->gtrace
-    % ; true
-    % ),
     ( inferred_det_db(H, M, Det)
     ->true
     ; ( predef_det(H, M, Det)
       ->true
       ; % format(user_error, "? ~q~n", [M:H]),
-        with_det_checking(H, M, forall(walk_call(H, M, info), true)),
+        with_det_checking_pr(H, M, forall(walk_call(H, M, info), true)),
         infer_det(H, M, Det)
         % format(user_error, "! ~q: ~w~n", [M:H, Det])
       )
@@ -193,10 +189,12 @@ det_predef_asr(Det, H, M) :-
 collect_valid_glob_asr(Det, GL, H, M) :-
     member(Det, [fails, isdet]),
     neck,
+    \+ \+ valid_prop_asr(H, M, _),
     forall(valid_prop_asr(H, M, A),
            valid_glob_asr(GL, A)).
 collect_valid_glob_asr(Det, GL, H, M) :-
     member(Det, [nodet]),
+    neck,
     valid_prop_asr(H, M, A),
     valid_glob_asr(GL, A).
 
@@ -218,31 +216,35 @@ add_cp.
 add_cp :- fail.
 
 :- meta_predicate
-    with_det_checking(+, +, 0 ),
-    with_det_checking(+, 0 ).
+    with_det_checking_pr(+, +, 0 ),
+    with_det_checking_cl(+, +, 0 ).
 
-with_det_checking(H, M, Call) :-
+with_det_checking_pr(H, M, Call) :-
     ( det_checking(H, M)
     ->true
     ; functor(H, F, A),
       functor(P, F, A),
       setup_call_cleanup(
           assertz(det_checking(P, M), DCRef),
-          Call,
-          erase(DCRef))
+          ( Call,
+            erase(DCRef)
+          ),
+          erase_nf(DCRef))
     ).
 
-with_det_checking(ClauseL, Call) :-
-    ( member(Clause, ClauseL),
-      det_checking(Clause)
+with_det_checking_cl(info, _,      Call) :- call(Call).
+with_det_checking_cl(noop, Clause, Call) :-
+    ( det_checking(Clause)
     ->add_cp
     ; setup_call_cleanup(
-          maplist(assert_det_checking, ClauseL, RefL),
-          ( Call,
-            maplist(erase, RefL)
+          assert_det_checking(Clause, Ref),
+          ( call(Call),
+            erase(Ref)
           ),
-          maplist(erase, RefL))
+          erase_nf(Ref))
     ).
+
+erase_nf(Ref) :- ignore(erase(Ref)).
 
 assert_det_checking(Clause, Ref) :-
     assertz(det_checking(Clause), Ref).
@@ -253,14 +255,11 @@ walk_call(H, M, CA) :-
     prolog_current_choice(CP2),
     ( Body = true
     ->true
-    % ; det_checking(Ref)
-    % ->add_cp
     ; add_neg_clause(CA, Ref),
       clause_property(Ref, module(CM)),
-      % setup_call_cleanup(
-      %     assertz(det_checking(Ref), DCRef),
-          do_walk_body(Body, CM, Ref, CA, CP1, CP2)
-          % , erase(DCRef))
+      with_det_checking_cl(
+          CA, Ref,
+          do_walk_body(Body, CM, Ref, CA, CP1, CP2))
     ),
     remove_new_cp(CA, CP2).
 
@@ -454,7 +453,13 @@ walk_body(A, M, Ref, _, _, CP, CP) :-
     ; cut_to(CP),
       fail
     ).
-
+walk_body(atom_concat(_, B, _), _, _, _, _, CP, CP) :-
+    atomic(B),
+    !.
+walk_body(atom_concat(A, B, C), _, _, _, _, CP, CP) :-
+    atomic(C),
+    !,
+    atom_concat(A, B, C).
 catched_call(Call, Ref) :-
     catch(Call,
           Error,
@@ -513,10 +518,6 @@ walk_lit(H, M, CM, Ref, CP) :-
       ; % abstraction step: with_det_checking ensures decidability by not
         % analyzing if there is a recursion that requires to analyze the same
         % call again
-        % ( C = define_stream(_, _, _, _)
-        % ->gtrace
-        % ; true
-        % ),
-        with_det_checking(ClauseL, walk_call(C, M, noop))
+        walk_call(C, M, noop)
       )
     ).
