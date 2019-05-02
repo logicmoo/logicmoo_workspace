@@ -291,7 +291,7 @@ have_choicepoints(Goal) :-
     ; true
     ).
 
-%!  num_solutions_eq(:Goal, Num:int)
+%!  num_solutions_eq(Num:int, :Goal)
 %
 %   Goal have Num solutions
 
@@ -329,7 +329,7 @@ num_solutions_eq(N, Goal) :-
       )
     ).
 
-%!   num_solutions(:Goal, :Check)
+%!   num_solutions(:Check, :Goal)
 %
 %    If the number of solutions of Goal is N, call(Check, N) succeeds.
 
@@ -364,9 +364,10 @@ num_solutions(Check, Goal) :-
 %
 %    Goal produces the solutions listed in Sols
 
-:- global solutions(:, +list).
+:- meta_predicate solutions(+, 0).
+:- global solutions(+list, 0).
 
-solutions(Goal, Sols) :-
+solutions(Sols, Goal) :-
     Goal = _:Sol,
     Remaining = solutions(Sols),
     ( true
