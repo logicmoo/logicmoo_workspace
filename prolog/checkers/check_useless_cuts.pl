@@ -49,7 +49,7 @@
     prolog:message//1.
 
 :- dynamic
-    cut_info/2,
+    cut_info/3,
     inferred_det_db/3,
     det_checking/1,
     det_checking/2,
@@ -68,8 +68,10 @@ prolog:message(acheck(useless_cuts)) -->
 prolog:message(acheck(useless_cuts, Issue)) -->
     issue_type_message(Issue).
 
-issue_type_message(useless_cut(Loc, CI)) -->
-    Loc, ['Useless cut in ~q'-[CI], nl].
+issue_type_message(useless_cut(Loc, CI)-CutPosL) -->
+    Loc,
+    {length(CutPosL, N)},
+    ['~q has ~w useless cut(s) (~q)'-[CI, N, CutPosL], nl].
 
 checker:check(useless_cuts, Result, Options) :-
     check_useless_cuts(Options, Result).
@@ -94,15 +96,16 @@ cleanup_useless_cuts :-
 cuts_check(M, FromChk, Pairs) :-
     forall(current_det_check(M, FromChk),
            true),
-    retractall(cut_info(_, needed)),
+    retractall(cut_info(_, _, needed)),
     findall(warning-Issue,
             collect_issues(Issue, FromChk), Pairs).
 
-collect_issues(useless_cut(Loc, M:F/A-I), FromChk) :-
-    retract(cut_info(Ref, unused)),
+collect_issues(useless_cut(Loc, M:F/A-I)-CutPos, FromChk) :-
+    retract(cut_info(Ref, RCutPos, unused)),
     call(FromChk, clause(Ref)), % Avoid warnings from out there
     nth_clause(M:H, I, Ref),
     functor(H, F, A),
+    reverse(RCutPos, CutPos), % reverse is more human-readable
     from_location(clause(Ref), Loc).
 
 % 1. A cut is useless, if is located at the last clause, and the literals above
@@ -278,23 +281,23 @@ do_walk_body(Body, CM, Ref, CA, CP1, CP2) :-
     ; add_cp
     ),
     prolog_current_choice(CP4),
-    walk_body(Body, CM, Ref, CA, CP3, CP4, _),
+    walk_body(Body, CM, [], Ref, CA, CP3, CP4, _),
     prolog_current_choice(CP5),
     add_det_clause(CA, Ref, CP3, CP5).
 
 % TBD: distinguish between different cuts in a given clause
-add_cut_info(noop, _, _).
-add_cut_info(info, Ref, Info) :-
-    add_cut_info(Info, Ref).
+add_cut_info(noop, _, _, _).
+add_cut_info(info, LitPos, Ref, Info) :-
+    add_cut_info(Info, LitPos, Ref).
 
-add_cut_info(unused, Ref) :-
-    ( cut_info(Ref, _)
+add_cut_info(unused, LitPos, Ref) :-
+    ( cut_info(Ref, LitPos, _)
     ->true
-    ; assertz(cut_info(Ref, unused))
+    ; assertz(cut_info(Ref, LitPos, unused))
     ).
-add_cut_info(needed, Ref) :-
-    retractall(cut_info(Ref, _)),
-    assertz(cut_info(Ref, needed)).
+add_cut_info(needed, LitPos, Ref) :-
+    retractall(cut_info(Ref, LitPos, _)),
+    assertz(cut_info(Ref, LitPos, needed)).
 
 det_clause(Ref, Det) :-
     nth_clause(Pred, Idx, Ref),
@@ -324,15 +327,25 @@ add_neg_clause(info, Ref) :-
     assertz(det_clause_db(Ref, fails)).
 add_neg_clause(noop, _).
 
-:- discontiguous walk_body/7.
+add_pos([], Pos, [Pos]).
+add_pos([Pos1|LitPos1], Pos, LitPos) :-
+    ( Pos1 = Pos
+    ->LitPos = [Pos-2|LitPos1]
+    ; Pos1 = Pos-N1
+    ->succ(N1, N),
+      LitPos = [Pos-N|LitPos1]
+    ; LitPos = [Pos, Pos1|LitPos1]
+    ).
 
-walk_body(V, M, _, _, _, CP, CP) :-
+:- discontiguous walk_body/8.
+
+walk_body(V, M, _, _, _, _, CP, CP) :-
     ( var(V)
     ; var(M)
     ),
     !,
     add_cp.
-walk_body(!, _, Ref, CA, CP1, _, CP1) :-
+walk_body(!, _, LitPos, Ref, CA, CP1, _, CP1) :-
     !,
     prolog_current_choice(CP),
     ( CP1 \= CP
@@ -340,22 +353,25 @@ walk_body(!, _, Ref, CA, CP1, _, CP1) :-
       cut_to(CP1)
     ; Info = unused
     ),
-    add_cut_info(CA, Ref, Info).
-walk_body(M:Lit, _, Ref, CA, CP1, CP2, CP) :-
+    add_cut_info(CA, LitPos, Ref, Info).
+walk_body(M:A, _, LitPos, Ref, CA, CP1, CP2, CP) :-
     !,
-    walk_body(Lit, M, Ref, CA, CP1, CP2, CP).
-walk_body((A, B), M, Ref, CA, CP1, CP2, CP) :-
+    add_pos(LitPos, 2, LitPosA),
+    walk_body(A, M, LitPosA, Ref, CA, CP1, CP2, CP).
+walk_body((A, B), M, LitPos, Ref, CA, CP1, CP2, CP) :-
     !,
-    walk_body(A, M, Ref, CA, CP1, CP2, CP3),
-    walk_body(B, M, Ref, CA, CP1, CP3, CP).
-walk_body((A; B), M, Ref, CA, CP1, CP2, CP) :-
+    add_pos(LitPos, 1, LitPosA),
+    add_pos(LitPos, 2, LitPosB),
+    walk_body(A, M, LitPosA, Ref, CA, CP1, CP2, CP3),
+    walk_body(B, M, LitPosB, Ref, CA, CP1, CP3, CP).
+walk_body((A; B), M, LitPos, Ref, CA, CP1, CP2, CP) :-
     !,
     ( member(A, [(_->_), (_*->_)])
     ->prolog_current_choice(CP3),
       SFlag = s([]),
       findall((A; B),
-              ( member(Branch, [A, B]),
-                walk_body_if_branch(Branch, M, Ref, CA, SFlag, CP1, CP3)
+              ( member(Branch-Pos, [A-1, B-2]),
+                walk_body_if_branch(Branch, M, [Pos|LitPos], Ref, CA, SFlag, CP1, CP3)
               ), [Term|TermL]),
       foldl(greatest_common_unifier, TermL, Term, (A; B)),
       SFlag = s(FlagL),
@@ -369,12 +385,14 @@ walk_body((A; B), M, Ref, CA, CP1, CP2, CP) :-
       ; true
       )
     ; ( prolog_current_choice(CP3),
-        walk_body(A, M, Ref, CA, CP3, CP3, CP)
-      ; walk_body(B, M, Ref, CA, CP1, CP2, CP)
+        add_pos(LitPos, 1, LitPosA),
+        walk_body(A, M, LitPosA, Ref, CA, CP3, CP3, CP)
+      ; add_pos(LitPos, 2, LitPosB),
+        walk_body(B, M, LitPosB, Ref, CA, CP1, CP2, CP)
       )
     ).
 
-walk_body_if_branch(C, M, Ref, CA, SFlag, CP1, CP2) :-
+walk_body_if_branch(C, M, LitPos, Ref, CA, SFlag, CP1, CP2) :-
     ( CP1 == CP2
     ->prolog_current_choice(CP3)
     ; prolog_current_choice(CP3),
@@ -385,7 +403,7 @@ walk_body_if_branch(C, M, Ref, CA, SFlag, CP1, CP2) :-
       )
     ),
     prolog_current_choice(CP4),
-    walk_body(C, M, Ref, CA, CP3, CP4, _),
+    walk_body(C, M, LitPos, Ref, CA, CP3, CP4, _),
     prolog_current_choice(CP5),
     ( CP3 == CP5
     ->true
@@ -396,45 +414,51 @@ walk_body_if_branch(C, M, Ref, CA, SFlag, CP1, CP2) :-
       nb_setarg(1, SFlag, [insert_cp|FlagL])
     ).
 
-walk_body((A->B), M, Ref, CA, CP1, CP2, CP) :-
+walk_body((A->B), M, LitPos, Ref, CA, CP1, CP2, CP) :-
     !,
     ( prolog_current_choice(CP3),
-      walk_body(A, M, Ref, CA, CP3, CP2, CP4)
-    ->walk_body(B, M, Ref, CA, CP1, CP4, CP)
+      add_pos(LitPos, 1, LitPosA),
+      walk_body(A, M, LitPosA, Ref, CA, CP3, CP2, CP4)
+    ->add_pos(LitPos, 2, LitPosB),
+      walk_body(B, M, LitPosB, Ref, CA, CP1, CP4, CP)
     ).
-walk_body((A*->B), M, Ref, CA, CP1, CP2, CP) :-
+walk_body((A*->B), M, LitPos, Ref, CA, CP1, CP2, CP) :-
     !,
     ( prolog_current_choice(CP3),
-      walk_body(A, M, Ref, CA, CP3, CP2, CP4),
-      walk_body(B, M, Ref, CA, CP1, CP4, CP)
+      add_pos(LitPos, 1, LitPosA),
+      walk_body(A, M, LitPosA, Ref, CA, CP3, CP2, CP4),
+      add_pos(LitPos, 2, LitPosB),
+      walk_body(B, M, LitPosB, Ref, CA, CP1, CP4, CP)
     ).
-walk_body(call(A), M, Ref, CA, _, CP2, CP) :-
+walk_body(call(A), M, LitPos, Ref, CA, _, CP2, CP) :-
     !,
     prolog_current_choice(CP3),
-    walk_body(A, M, Ref, CA, CP3, CP2, CP).
-walk_body(\+ (A), M, Ref, CA, _, CP2, CP2) :-
+    add_pos(LitPos, 1, LitPosA),
+    walk_body(A, M, LitPosA, Ref, CA, CP3, CP2, CP).
+walk_body(\+ (A), M, LitPos, Ref, CA, _, CP2, CP2) :-
     !,
     \+ ( prolog_current_choice(CP),
-         walk_body(A, M, Ref, CA, CP, CP, _),
+         add_pos(LitPos, 1, LitPosA),
+         walk_body(A, M, LitPosA, Ref, CA, CP, CP, _),
          fail
        ).
-walk_body(true, _, _, _, _, CP, CP)  :- !.
-walk_body(fail, _, _, _, _, CP, _) :-
+walk_body(true, _, _, _, _, _, CP, CP)  :- !.
+walk_body(fail, _, _, _, _, _, CP, _) :-
     !,
     catch(safe_prolog_cut_to(CP), _, true),
     fail.
-walk_body(false, _, _, _, _, CP, _) :-
+walk_body(false, _, _, _, _, _, CP, _) :-
     !,
     catch(safe_prolog_cut_to(CP), _, true),
     fail.
-walk_body(A=B, _, _, _, _, CP, CP) :-
+walk_body(A=B, _, _, _, _, _, CP, CP) :-
     !,
     ( A = B
     ->true
     ; cut_to(CP),
       fail
     ).
-walk_body(A\=B, _, _, _, _, CP, CP) :-
+walk_body(A\=B, _, _, _, _, _, CP, CP) :-
     !,
     ( A \= B
     ->true
@@ -444,7 +468,7 @@ walk_body(A\=B, _, _, _, _, CP, CP) :-
     ->cut_to(CP),
       fail
     ).
-walk_body(A, M, Ref, _, _, CP, CP) :-
+walk_body(A, M, _, Ref, _, _, CP, CP) :-
     abstract_interpreter:evaluable_body_hook(A, M, Condition),
     call(Condition),
     !,
@@ -453,13 +477,7 @@ walk_body(A, M, Ref, _, _, CP, CP) :-
     ; cut_to(CP),
       fail
     ).
-walk_body(atom_concat(_, B, _), _, _, _, _, CP, CP) :-
-    atomic(B),
-    !.
-walk_body(atom_concat(A, B, C), _, _, _, _, CP, CP) :-
-    atomic(C),
-    !,
-    atom_concat(A, B, C).
+
 catched_call(Call, Ref) :-
     catch(Call,
           Error,
@@ -470,11 +488,19 @@ catched_call(Call, Ref) :-
                     Error)),
             fail
           )).
-walk_body(nb_getval(A, B), _, _, _, _, CP, CP) :-
+
+walk_body(atom_concat(_, B, _), _, _, _, _, _, CP, CP) :-
+    atomic(B),
+    !.
+walk_body(atom_concat(A, B, C), _, _, _, _, _, CP, CP) :-
+    atomic(C),
+    !,
+    atom_concat(A, B, C).
+walk_body(nb_getval(A, B), _, _, _, _, _, CP, CP) :-
     ignore((nonvar(A), nb_current(A, B))).
-walk_body(@(M:H, C), _, Ref, _, _, CP, CP) :-
+walk_body(@(M:H, C), _, _, Ref, _, _, CP, CP) :-
     walk_lit(H, M, C, Ref, CP).
-walk_body(H, M, Ref, _, _, CP, CP) :-
+walk_body(H, M, _, Ref, _, _, CP, CP) :-
     walk_lit(H, M, M, Ref, CP).
 
 walk_lit(H, M, CM, Ref, CP) :-
