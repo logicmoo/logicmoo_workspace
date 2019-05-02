@@ -41,8 +41,8 @@
 :- use_module(library(list_sequence)).
 :- reexport(library(compound_expand)).
 
-%!  neck is det
-%!  neck/2 is det
+%!  neck is det.
+%!  neck(L, L) is det.
 %
 %   Stablish that everything above it should be evaluated at compile time, be
 %   careful since such part should contain only predicates already defined.  In
@@ -57,8 +57,9 @@ neck --> [].
 term_expansion_hb(Head, Body1, ClauseL) :-
     '$current_source_module'(M),
     sequence_list(Body1, List, []),
-    once(( member(Neck, [neck, neck(X, X)]),
-           append(Left, [Neck|Right], List)
+    once(( append(Left, [Neck|Right], List),
+           nonvar(Neck),
+           memberchk(Neck, [neck, neck(X, X)])
          )),
     list_sequence(Left, Static),
     once(( append(LRight, RRight, Right),
@@ -102,6 +103,7 @@ term_expansion_hb(Head, Body1, ClauseL) :-
 term_expansion((Head :-  Body), ClauseL) :- term_expansion_hb(Head, Body, ClauseL).
 term_expansion((Head --> Body), ClauseL) :-
     sequence_list(Body, List, []),
-    append(_, [neck|_], List),
+    append(_, [Neck|_], List),
+    Neck == neck,
     dcg_translate_rule((Head --> Body), _, (H :- B), _),
     term_expansion_hb(H, B, ClauseL).
