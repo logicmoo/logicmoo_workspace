@@ -35,6 +35,7 @@
 :- module(check_useless_cuts, []).
 
 :- use_module(library(assrt_lib)).
+:- use_module(library(neck)).
 :- use_module(library(abstract_interpreter), []).
 :- use_module(library(gcu)).
 :- use_module(library(location_utils)).
@@ -62,9 +63,12 @@ prolog:message(acheck(useless_cuts)) -->
      'the calls before the cut and the clause itself where', nl,
      'deterministic or they have one of the next properties:', nl,
      'det, semidet, is_det or fails.  Note that in recursive', nl,
-     'predicates the cut would be needed, but is reported anyway', nl,
-     'since it can be avoided via refactoring.', nl, nl].
-prolog:message(acheck(useless_cuts, useless_cut(Loc, CI))) -->
+     'predicates the cut would look as needed, but it is not', nl,
+     'since it can be removed or avoided via refactoring.', nl, nl].
+prolog:message(acheck(useless_cuts, Issue)) -->
+    issue_type_message(Issue).
+
+issue_type_message(useless_cut(Loc, CI)) -->
     Loc, ['Useless cut in ~q'-[CI], nl].
 
 checker:check(useless_cuts, Result, Options) :-
@@ -82,19 +86,19 @@ check_useless_cuts(Options1, Pairs) :-
     cleanup_useless_cuts.
 
 cleanup_useless_cuts :-
-    retractall(inferred_det_db(_, _, _)),
     retractall(det_checking(_)),
     retractall(det_checking(_, _)),
-    retractall(det_clause_db(_, _)).
+    retractall(det_clause_db(_, _)),
+    retractall(inferred_det_db(_, _, _)).
 
 cuts_check(M, FromChk, Pairs) :-
     forall(current_det_check(M, FromChk),
            true),
     retractall(cut_info(_, needed)),
     findall(warning-Issue,
-            collect_useless_cut(Issue, FromChk), Pairs).
+            collect_issues(Issue, FromChk), Pairs).
 
-collect_useless_cut(useless_cut(Loc, M:F/A-I), FromChk) :-
+collect_issues(useless_cut(Loc, M:F/A-I), FromChk) :-
     retract(cut_info(Ref, unused)),
     call(FromChk, clause(Ref)), % Avoid warnings from out there
     nth_clause(M:H, I, Ref),
@@ -125,6 +129,10 @@ clauses_accessible(MH) :-
     \+ predicate_property(MH, multifile).
 
 check_det(H, M, Det) :-
+    % ( H = berechnung_neu(_,_,_,_,_,_,_)
+    % ->gtrace
+    % ; true
+    % ),
     ( inferred_det_db(H, M, Det)
     ->true
     ; ( predef_det(H, M, Det)
@@ -135,7 +143,7 @@ check_det(H, M, Det) :-
         % format(user_error, "! ~q: ~w~n", [M:H, Det])
       )
     ->assertz(inferred_det_db(H, M, Det))
-    ; print_message(error, format("unexpected failure of infer_def/3 or predef_det/3 ~q", [M:H]))
+    ; print_message(error, format("unexpected failure of infer_det/3 or predef_det/3 ~q", [M:H]))
     ).
 
 inferred_det(C, M, Det) :-
@@ -155,35 +163,45 @@ inferred_det(C, M, Det) :-
 predef_det(H, M, Det) :-
     once(det_predef(Det, H, M)).
 
-det_predef(Det, H, M) :- inferred_det_db(H, M, Det).
-det_predef(fails, H, M) :-
-    once(valid_prop_asr(H, M, _)),
-    forall(valid_prop_asr(H, M, Asr),
-           ( member(Prop,
-                    [globprops:fails(_),
-                     globprops:failure(_)
-                    ]),
-             prop_asr(glob, Prop, _, Asr)
-           )).
-det_predef(isdet, H, M) :-
-    once(valid_prop_asr(H, M, _)),
-    forall(valid_prop_asr(H, M, Asr),
-           ( member(Prop,
-                    [globprops:det(_),
-                     globprops:semidet(_),
-                     globprops:is_det(_),
-                     globprops:no_choicepoints(_)
-                    ]),
-             prop_asr(glob, Prop, _, Asr)
-           )).
-det_predef(nodet, H, M) :-
-    valid_prop_asr(H, M, Asr),
-    member(Prop,
-           [globprops:multi(_),
-            globprops:non_det(_),
-            globprops:nondet(_)
-           ]),
-    prop_asr(glob, Prop, _, Asr).
+valid_prop_asr(Lit, M, Asr) :-
+    prop_asr(Lit, M, Status, Type, _, _, Asr),
+    valid_status(Status),
+    valid_type(Type).
+
+valid_status(true).
+valid_status(check).
+
+valid_type(pred).
+valid_type(prop).
+
+valid_glob_asr(GL, A) :-
+    member(G, GL),
+    prop_asr(glob, globprops:G, _, A).
+
+:- public
+    det_props/2.
+
+det_props(fails, [fails(_), failure(_)]).
+det_props(isdet, [det(_), semidet(_), is_det(_), no_choicepoints(_)]).
+det_props(nodet, [multi(_), non_det(_), nondet(_)]).
+
+det_predef_asr(Det, H, M) :-
+    det_props(Det, GL),
+    neck,
+    collect_valid_glob_asr(Det, GL, H, M).
+
+collect_valid_glob_asr(Det, GL, H, M) :-
+    member(Det, [fails, isdet]),
+    neck,
+    forall(valid_prop_asr(H, M, A),
+           valid_glob_asr(GL, A)).
+collect_valid_glob_asr(Det, GL, H, M) :-
+    member(Det, [nodet]),
+    valid_prop_asr(H, M, A),
+    valid_glob_asr(GL, A).
+
+det_predef(Det,   H, M) :- inferred_det_db(H, M, Det).
+det_predef(Det,   H, M) :- det_predef_asr(Det, H, M).
 det_predef(nodet, H, M) :- det_checking(H, M).
 det_predef(nodet, H, M) :- \+ clauses_accessible(M:H).
 det_predef(fails, H, M) :- predicate_property(M:H, number_of_clauses(0 )).
@@ -220,7 +238,9 @@ with_det_checking(ClauseL, Call) :-
     ->add_cp
     ; setup_call_cleanup(
           maplist(assert_det_checking, ClauseL, RefL),
-          Call,
+          ( Call,
+            maplist(erase, RefL)
+          ),
           maplist(erase, RefL))
     ).
 
@@ -304,17 +324,6 @@ add_det_clause(noop, _, _, _).
 add_neg_clause(info, Ref) :-
     assertz(det_clause_db(Ref, fails)).
 add_neg_clause(noop, _).
-
-valid_prop_asr(Lit, M, Asr) :-
-    prop_asr(Lit, M, Status, Type, _, _, Asr),
-    valid_status(Status),
-    valid_type(Type).
-
-valid_status(true).
-valid_status(check).
-
-valid_type(pred).
-valid_type(prop).
 
 :- discontiguous walk_body/7.
 
@@ -504,6 +513,10 @@ walk_lit(H, M, CM, Ref, CP) :-
       ; % abstraction step: with_det_checking ensures decidability by not
         % analyzing if there is a recursion that requires to analyze the same
         % call again
+        % ( C = define_stream(_, _, _, _)
+        % ->gtrace
+        % ; true
+        % ),
         with_det_checking(ClauseL, walk_call(C, M, noop))
       )
     ).
