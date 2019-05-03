@@ -385,8 +385,12 @@ walk_body((A; B), M, LitPos, Ref, CA, CP1, CP2, CP) :-
       ; true
       )
     ; ( prolog_current_choice(CP3),
+        % add_cp will mark a cut as needed, since it can cut the internal
+        % choicepoint of :/2
+        add_cp,
+        prolog_current_choice(CP4),
         add_pos(LitPos, 1, LitPosA),
-        walk_body(A, M, LitPosA, Ref, CA, CP3, CP3, CP)
+        walk_body(A, M, LitPosA, Ref, CA, CP3, CP4, CP)
       ; add_pos(LitPos, 2, LitPosB),
         walk_body(B, M, LitPosB, Ref, CA, CP1, CP2, CP)
       )
