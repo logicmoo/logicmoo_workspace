@@ -104,6 +104,10 @@
 
 :- pred memberchk(?, ?list) is semidet.
 
+:- use_module(library(process)).
+
+:- pred process_create(+, +list, +) is det.
+
 :- true pred [(==)/2,
               (\==)/2,
               (=)/2,
