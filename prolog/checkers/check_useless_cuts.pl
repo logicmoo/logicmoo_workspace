@@ -42,6 +42,7 @@
 :- use_module(library(option_utils)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(safe_prolog_cut_to)).
+:- use_module(library(checkable_predicate)).
 :- use_module(library(checkers/checker)).
 :- use_module(library(check), []).
 
@@ -131,7 +132,7 @@ current_det_check(M, FromChk) :-
     check_det(H, M, _).
 
 clauses_accessible(MH) :-
-    \+ predicate_property(MH, built_in),
+    \+ is_built_in(MH),
     \+ predicate_property(MH, foreign),
     % Although for dynamic and multifile clauses are readable, its provided
     % information could change and therefore are useless for this analysis
@@ -514,6 +515,11 @@ walk_body(atom_concat(A, B, C), _, _, _, _, _, CP, CP) :-
     atomic(C),
     !,
     atom_concat(A, B, C).
+walk_body(atom_length(A, B), _, _, _, _, _, CP, CP) :-
+    atomic(A),
+    !,
+    atom_length(A, B).
+walk_body(atom_length(_, _), _, _, _, _, _, CP, CP) :- !.
 walk_body(nb_getval(A, B), _, _, _, _, _, CP, CP) :-
     ignore((nonvar(A), nb_current(A, B))).
 walk_body(@(M:H, C), _, _, Ref, _, _, CP, CP) :-

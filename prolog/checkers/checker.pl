@@ -57,7 +57,7 @@ user:file_search_path(checkers, library(checkers)).
     check/3.
 
 :- meta_predicate
-    with_prolog_flag(+, +, 0).
+    with_prolog_flag(+, +, 0 ).
 
 prolog:called_by(Goal, _, M, [M:Macro]) :-
     functor(Goal, F, A),

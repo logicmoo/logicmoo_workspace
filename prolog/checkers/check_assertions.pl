@@ -49,6 +49,7 @@
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(assertions)).
 :- use_module(library(option_utils)).
+:- use_module(library(checkable_predicate)).
 :- use_module(library(ctrtchecks)).
 :- use_module(library(rtchecks_rt)).
 :- use_module(library(rtchecks_utils), []).
@@ -105,7 +106,7 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     functor(H, F, A),
     MH = M:H,
     \+ predicate_property(MH, imported_from(_)),
-    \+ predicate_property(MH, built_in),
+    \+ is_built_in(MH),
     \+ predicate_property(MH, foreign),
     generate_ctchecks(H, M, [], CTCheck),
     CTCheck \= _:true,

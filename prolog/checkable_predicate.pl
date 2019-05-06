@@ -32,7 +32,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(checkable_predicate, [checkable_predicate/1]).
+:- module(checkable_predicate,
+          [checkable_predicate/1,
+           is_built_in/1]).
+
+:- meta_predicate
+    is_built_in(0 ).
 
 % An application predicate is a predicate that have at least one clause in the
 % application side. We distinguish application from libraries, to extend the
@@ -40,8 +45,16 @@
 
 :- multifile application_predicate/1.
 
+% For some reason we can not use the property built_in in saved states:
+is_built_in(P) :-
+    predicate_property(P, implementation_module(M)),
+    ( M == system
+    ->true
+    ; atom_concat('$', _, M)
+    ).
+
 not_checkable_predicate(P) :-
-    predicate_property(P, built_in),
+    is_built_in(P),
     \+ predicate_property(P, multifile),
     \+ predicate_property(P, dynamic).
 not_checkable_predicate(P) :-
