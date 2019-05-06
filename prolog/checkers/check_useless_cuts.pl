@@ -46,7 +46,9 @@
 :- use_module(library(check), []).
 
 :- multifile
-    prolog:message//1.
+    prolog:message//1,
+    walk_body_hook/9,
+    has_body_hook/2.
 
 :- dynamic
     cut_info/3,
@@ -116,6 +118,11 @@ current_det_check(M, FromChk) :-
              ( current_predicate(M:F/A),
                functor(H, F, A),
                MH = M:H,
+               % Start analyzing exported predicates, ancillary predicates will
+               % be analyzed by det_check/3 if the argument instantiation can
+               % not be determined, or by walk_lit/5 for specific
+               % instantiations.
+               predicate_property(MH, exported),
                \+ predicate_property(MH, imported_from(_)),
                \+ \+ ( catch(clause(MH, _, Ref), _, fail),
                        call(FromChk, clause(Ref))
@@ -222,6 +229,13 @@ add_cp :- fail.
     with_det_checking_pr(+, +, 0 ),
     with_det_checking_cl(+, +, 0 ).
 
+
+%!  with_det_checking_pr(+Head, +Module, :Call).
+%!  with_det_checking_cl(+Head, +Module, :Call).
+
+%   with_det_checking ensures decidability by not analyzing if there is a
+%   recursion that requires to analyze the same call again (abstraction step)
+
 with_det_checking_pr(H, M, Call) :-
     ( det_checking(H, M)
     ->true
@@ -285,11 +299,6 @@ do_walk_body(Body, CM, Ref, CA, CP1, CP2) :-
     prolog_current_choice(CP5),
     add_det_clause(CA, Ref, CP3, CP5).
 
-% TBD: distinguish between different cuts in a given clause
-add_cut_info(noop, _, _, _).
-add_cut_info(info, LitPos, Ref, Info) :-
-    add_cut_info(Info, LitPos, Ref).
-
 add_cut_info(unused, LitPos, Ref) :-
     ( cut_info(Ref, LitPos, _)
     ->true
@@ -345,7 +354,7 @@ walk_body(V, M, _, _, _, _, CP, CP) :-
     ),
     !,
     add_cp.
-walk_body(!, _, LitPos, Ref, CA, CP1, _, CP1) :-
+walk_body(!, _, LitPos, Ref, _, CP1, _, CP1) :-
     !,
     prolog_current_choice(CP),
     ( CP1 \= CP
@@ -353,7 +362,7 @@ walk_body(!, _, LitPos, Ref, CA, CP1, _, CP1) :-
       cut_to(CP1)
     ; Info = unused
     ),
-    add_cut_info(CA, LitPos, Ref, Info).
+    add_cut_info(Info, LitPos, Ref).
 walk_body(M:A, _, LitPos, Ref, CA, CP1, CP2, CP) :-
     !,
     add_pos(LitPos, 2, LitPosA),
@@ -446,7 +455,7 @@ walk_body(\+ (A), M, LitPos, Ref, CA, _, CP2, CP2) :-
          walk_body(A, M, LitPosA, Ref, CA, CP, CP, _),
          fail
        ).
-walk_body(true, _, _, _, _, _, CP, CP)  :- !.
+walk_body(true, _, _, _, _, _, CP, CP) :- !.
 walk_body(fail, _, _, _, _, _, CP, _) :-
     !,
     catch(safe_prolog_cut_to(CP), _, true),
@@ -472,6 +481,11 @@ walk_body(A\=B, _, _, _, _, _, CP, CP) :-
     ->cut_to(CP),
       fail
     ).
+walk_body(C, M, LitPos, Ref, CA, CP1, CP2, CP3) :-
+    predicate_property(M:C, implementation_module(I)),
+    has_body_hook(C, I),
+    !,
+    walk_body_hook(C, I, M, LitPos, Ref, CA, CP1, CP2, CP3).
 walk_body(A, M, _, Ref, _, _, CP, CP) :-
     abstract_interpreter:evaluable_body_hook(A, M, Condition),
     call(Condition),
@@ -545,9 +559,6 @@ walk_lit(H, M, CM, Ref, CP) :-
         fail
       ; AddCP == true
       ->add_cp
-      ; % abstraction step: with_det_checking ensures decidability by not
-        % analyzing if there is a recursion that requires to analyze the same
-        % call again
-        walk_call(C, M, noop)
+      ; walk_call(C, M, noop)
       )
     ).
