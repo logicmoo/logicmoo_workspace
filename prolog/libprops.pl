@@ -62,8 +62,20 @@
 :- pred atomic_list_concat(?list(constant), +constant, +constant) is semidet.
 :- pred atomic_list_concat(+list(constant), +constant, -atm) is det.
 
+:- pred atomics_to_string(+list(constant), +constant) is semidet.
+:- pred atomics_to_string(+list(constant), -str) is det.
+
+:- pred atomics_to_string(?list(constant), +constant, +constant) is semidet.
+:- pred atomics_to_string(+list(constant), +constant, -str) is det.
+
 :- pred atom_number(+atm,-num) is semidet.
 :- pred atom_number(?atm,+num) is det.
+
+:- pred string_upper(+atomic, -str) is det.
+:- pred string_upper(+atomic, ?atomic) is semidet.
+
+:- pred string_lower(+atomic, -str) is det.
+:- pred string_lower(+atomic, ?atomic) is semidet.
 
 :- pred atom_codes(+atomic, -list) is det.
 :- pred atom_codes(-atm,    +list) is det.
@@ -74,6 +86,12 @@
 :- pred atom_concat(-atm, +atomic, +atomic) is semidet.
 :- pred atom_concat(+atomic, -atm, +atomic) is semidet.
 :- pred atom_concat(-atm, -atm, +atomic) is multi.
+
+:- pred string_concat(+atomic, +atomic, -str) is det.
+:- pred string_concat(+atomic, +atomic, +atomic) is semidet.
+:- pred string_concat(-str, +atomic, +atomic) is semidet.
+:- pred string_concat(+atomic, -str, +atomic) is semidet.
+:- pred string_concat(-str, -str, +atomic) is multi.
 
 :- pred sub_atom(+atomic,?int,?int,?int,?atm).
 
@@ -91,7 +109,11 @@
               (=)/2,
               (\=)/2,
               (=@=)/2,
-              is_list/1
+              is_list/1,
+              is_dict/1,
+              is_stream/1,
+              cyclic_term/1,
+              rational/1
              ] is semidet.
 
 :- true prop [[ground/1,
@@ -110,15 +132,27 @@
 
 :- pred [asserta/1,
          assertz/1,
+         assert/1,
          retractall/1,
          findall/3,
          ignore/1,
          writeln/1,
          writeln/2,
          format/2,
-         format/3] is det.
+         format/3,
+         get_time/1] is det.
 
 :- pred [(\+)/1,
          forall/2,
-         once/1
+         once/1,
+         erase/1,
+         atom_string/2,
+         text_to_string/2,
+         file_directory_name/2,
+         file_base_name/2,
+         compound_name_arity/3,
+         functor/3,
+         (=..)/2,
+         sort/2,
+         same_file/2
         ] is semidet.
