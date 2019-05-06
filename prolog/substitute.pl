@@ -76,5 +76,4 @@ substitute_values(Pairs, Term1, Term) :-
 is_subterm(SubTerm, Term) :-
     substitute_value(SubTerm, Var, Term, Term1),
     occurrences_of_var(Var, Term1, N),
-    !,
     N > 0.

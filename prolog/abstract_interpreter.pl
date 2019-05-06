@@ -82,13 +82,16 @@ evaluable_body_hook(atom_concat(A, B, C), _,
                     ; nonvar(A), nonvar(C)
                     ; nonvar(B), nonvar(C)
                     )).
-evaluable_body_hook(atomic_list_concat(A, B), _, (ground(A);ground(B))).
+evaluable_body_hook(atomic_list_concat(A, _), _, ground(A)).
 evaluable_body_hook(atomic_list_concat(A, B, C), _,
                     ( ground(A), ground(B)
                     ; ground(B), ground(C)
                     )).
+evaluable_body_hook(atom_length(A, _), _, ground(A)).
 evaluable_body_hook(upcase_atom(A, _), _, ground(A)).
 evaluable_body_hook(downcase_atom(A, _), _, ground(A)).
+evaluable_body_hook(string_lower(A, _), _, ground(A)).
+evaluable_body_hook(string_upper(A, _), _, ground(A)).
 evaluable_body_hook(nb_current(A, _), _, ground(A)).
 evaluable_body_hook(_ is A, _, ground(A)).
 evaluable_body_hook(A > B, _, (ground(A),ground(B))).
