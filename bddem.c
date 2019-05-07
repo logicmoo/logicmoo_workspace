@@ -1704,22 +1704,16 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
 
   list_impacts = malloc(sizeof(node_impact)*(int)nutils);
 
-  // Cudd_DisableGarbageCollection(env->mgr); // <--------------------------
+  // Cudd_DisableGarbageCollection(env->mgr); 
 
   while(PL_get_list(bdd_list, head_bdd, bdd_list) && PL_get_list(util_list, head_util, util_list)) {
     ret=PL_get_pointer(head_bdd,(void **)&current_root);
     RETURN_IF_FAIL
     ret=PL_get_float(head_util,&current_cost);
     RETURN_IF_FAIL
-    //     sprintf(filename,"out_%d.dot",cont);
-    // 
-    // Cudd_RecursiveDeref(env->mgr,current_root);
-    // printf("here__\n");
 
-    // write_dot(env,current_root,filename);
-    
     root_pre = Probability_dd_bdd(env,current_root);
-    Cudd_Ref(root_pre); // <--- importante
+    Cudd_Ref(root_pre); // <--- 
 
     if(Cudd_IsComplement(current_root)) {
       add_one = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
@@ -1736,24 +1730,17 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
     }
     // Cudd_Ref(root);
     // Cudd_RecursiveDeref(env->mgr,root_pre);
-    // printf("here \n");
-    // sprintf(filename,"out_%d.dot",cont);
-    // cont++;
-    Cudd_RecursiveDeref(env->mgr,current_root);
-    // printf("here__\n");
 
-    // write_dot(env,root,filename);
+    Cudd_RecursiveDeref(env->mgr,current_root);
 
     // Cudd_Ref(root);
     // printf("Root - DdNode nodes: %d \n", Cudd_DagSize(root_pre)); /*Reports the number of nodes in the BDD*/
     
-    // printf("current cost: %f\n",current_cost);
     // Cudd_PrintDebug(env->mgr, root, 2, 4);
     constant = Cudd_addConst(env->mgr,current_cost); // cast a (CUDD_VALUE_TYPE)
 		Cudd_Ref(constant);
 		list_impacts[i].root = Cudd_addApply(env->mgr,Cudd_addTimes,root,constant);
     Cudd_Ref(list_impacts[i].root);
-    // printf("llist_impacts[%d].root\n",i);
  
     Cudd_RecursiveDeref(env->mgr,constant);
     Cudd_RecursiveDeref(env->mgr,root);
@@ -1763,23 +1750,10 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
     list_impacts[i].impact = max_v;
     min_v = Cudd_V(Cudd_addFindMin(env->mgr,list_impacts[i].root));
     list_impacts[i].impact += -min_v;
-    // if(abs(max_v) > abs(min_v)) {
-    //   list_impacts[i].impact = max_v-min_v;      
-    // }
-    // else {
-    //   list_impacts[i].impact = min_v - max_v;      
-    // }
 
-    // printf("max: %lf, min: %lf\n",Cudd_V(Cudd_addFindMax(env->mgr,list_impacts[i].root)),Cudd_V(Cudd_addFindMin(env->mgr,list_impacts[i].root)));
-
-    // list_impacts[i].impact = Cudd_V(Cudd_addFindMax(env->mgr,list_impacts[i].root)) - Cudd_V(Cudd_addFindMin(env->mgr,list_impacts[i].root));
-    // printf("Impact -> %lf\n",list_impacts[i].impact);
-    
     utility_sum += list_impacts[i].impact; 
-    // printf("utility_sum: %lf\n",utility_sum);
 
     // Cudd_PrintDebug(env->mgr, list_impacts[i].root, 2, 4);
-    // printf("impact %d: %lf\n",i,list_impacts[i].impact);
 
     // not consider the utility facts with impact 0
     if(list_impacts[i].impact == 0 && max_v == 0) {
@@ -1796,7 +1770,6 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
   nutils = nutils - n_zero_impact;
 
   qsort(list_impacts,nutils,sizeof(node_impact),compare_utils);  
-  // printf("ordinati\n");
   if(DEBUG) {
     printf("nutils: %d \n",(int)nutils);
     for(int i = 0; i < (int)nutils; i++) {
@@ -1809,7 +1782,7 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
 	Cudd_Ref(add_sum);
   // printf("utility_sum: %lf\n",utility_sum);
   if(DEBUG) {
-    printf("\n\n*****INIZIO CICLO\n\n");
+    printf("\n\nCYCLE\n\n");
     debug_cudd_env(env,0);
   }
   
@@ -1818,63 +1791,41 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
       debug_cudd_env(env,0);    
     }
     temp = Cudd_addApply(env->mgr,Cudd_addPlus,add_sum,list_impacts[i].root);
-    // printf("apply\n");
-		Cudd_Ref(temp);
+		
+    Cudd_Ref(temp);
 		Cudd_RecursiveDeref(env->mgr,add_sum);
 		Cudd_RecursiveDeref(env->mgr,list_impacts[i].root);
 		add_sum = temp;
     if(DEBUG) {
-      printf("ITERAZIONE %d\n",i);
+      printf("ITERATIONS %d\n",i);
       // Cudd_PrintDebug(env->mgr, add_sum, 2, 4);
       debug_cudd_env(env,0);
     }
     
-
-    if(i < (int)nutils-1) { // 
-      // printf("utility_sum: %lf\n",utility_sum);
-      // printf("list_impacts[%d].impact: %lf\n",i,list_impacts[i].impact);
-      // printf("abs(list_impacts[i].impact): %lf\n",fabs(list_impacts[i].impact));
-      // if(list_impacts[i].impact < 0)
-			//   utility_sum = utility_sum + list_impacts[i].impact; 
-      // else 
-      //   utility_sum = utility_sum - list_impacts[i].impact;
-
+    if(i < (int)nutils-1) { 
       utility_sum -= list_impacts[i].impact;
 			max_node = Cudd_addFindMax(env->mgr,add_sum);
-      // printf("Cudd_V(max_node): %lf, thresh: %lf\n",Cudd_V(max_node),Cudd_V(max_node)-utility_sum);
 			temp = setLowerBound(env->mgr,add_sum,Cudd_V(max_node)-utility_sum);
-      // printf("lower\n");
 
 			Cudd_Ref(temp);
 			Cudd_RecursiveDeref(env->mgr,add_sum);
 			add_sum = temp;
 		}
-
- 
-
-
   }
 
   // printf("\n--- FINAL ADD ---\n");
   // Cudd_PrintDebug(env->mgr, add_sum, 2, 4);
-
 
   // write_dot(env,temp,"addsum.dot");
   if(list_impacts) {
     free(list_impacts);
   }
 
-  // debug_cudd_env(env,0);
-
-
   // find the best strategy
   array_of_parents = (int *)malloc(sizeof(int));
-  // traverse tree to find terminal nodes
-  // traverse_tree(root,&bestNode,&index,&value);
 
   bestNode = Cudd_addFindMax(env->mgr,add_sum);
   value = Cudd_V(bestNode);
-  // printf("cudd add findmax, value: %lf\n",value);
 
   // check if found
   if(bestNode == NULL) {
@@ -1885,32 +1836,18 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
     return PL_unify(opt_cost,cost);
   } 
   else {
-    // find path: root -> terminal
-    // printf("best value: %lf\n",value);
     ret = find_path(add_sum,value,&array_of_parents,&len_array_of_parents);
-    // printf("fin path ret: %d\n",ret);
     if(ret != 1) {
       return ret;
     }
-    // printf("len arr of parents: %d\n",len_array_of_parents);
-    // for(int j = 0; j < len_array_of_parents; j++) {
-    //   printf("p[%d]: %d | ",j,array_of_parents[j]);
-    // }
-
     for (i = 0; i < len_array_of_parents; i++) {
-      // converto l'array di parents in rule number?
       ret = PL_put_integer(head,array_of_parents[i]); 
       RETURN_IF_FAIL
-      // printf("ok put integer\n");
       ret = PL_cons_list(list,head,list);
       RETURN_IF_FAIL
-      // printf("ok cons list\n");
-
     }
     ret = PL_put_float(opt_cost,value);
     RETURN_IF_FAIL
-    // printf("ok put float\n");
-
   }
 
   if(array_of_parents) {
@@ -1918,8 +1855,6 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
   }
 
   Cudd_RecursiveDeref(env->mgr,add_sum);
-
-  // printf("pre unify\n");
 
   return(PL_unify(list,strategy_list) && (PL_unify(opt_cost,cost)));
 }
@@ -1929,9 +1864,7 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   int ret;
   term_t out;
   DdNode *bdd, *root, *add_one, *root1;
-  // DdNode *add_conversion;
   environment *env;
-
 
   ret = PL_get_pointer(env_ref,(void **)&env);
   RETURN_IF_FAIL
@@ -1939,28 +1872,6 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   ret = PL_get_pointer(bdd_ref,(void **)&bdd);
   RETURN_IF_FAIL
 
-
-  // convert the BDD to ADD to get rid of the 
-  // complemented arcs
-  
-  // add_conversion = Cudd_BddToAdd(env->mgr,bdd);
-  // Cudd_Ref(add_conversion);
-  // Cudd_RecursiveDeref(env->mgr,bdd); 
-
-  // FILE *fp,*fp1;
-  // fp = fopen("bdd.dot","w");
-  // fp1 = fopen("add.dot","w");
-  // write_dot(env,bdd,fp);
-  // write_dot(env,add_conversion,fp1);
-  // fclose(fp);
-  // fclose(fp1);
-  // scanf("%s",NULL);
-  
-
-  // table = init_table(env->boolVars);
-
-  // dump_env(env);
-  // root = Probability_dd(env,add_conversion,table);
   if(Cudd_IsConstant(bdd)) {
     printf("const val: %lf\n",Cudd_V(bdd));
     root = Cudd_addConst(env->mgr,1);
@@ -1978,7 +1889,6 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
   out = PL_new_term_ref();
   
   if(Cudd_IsComplement(bdd)) {
-    // printf("Complemented\n");
     add_one = Cudd_addConst(env->mgr,(CUDD_VALUE_TYPE) 1);
     Cudd_Ref(add_one);
     root1 = Cudd_addApply(env->mgr,Cudd_addMinus,add_one,root);
@@ -1996,15 +1906,12 @@ static foreign_t probability_dd(term_t env_ref, term_t bdd_ref, term_t add_out) 
     RETURN_IF_FAIL
     // Cudd_RecursiveDeref(env->mgr,root);
   }
-  Cudd_RecursiveDeref(env->mgr,bdd); // <----------------- aggiunto
+  Cudd_RecursiveDeref(env->mgr,bdd); // <---
 
 
   // // count the number of terminal nodes with the following line:
   // printf("Path: %ld\n",(long)Cudd_CountPath(root1));
 
-  // Cudd_RecursiveDeref(env->mgr,add_conversion);
-
-  
   // Cudd_RecursiveDeref(env->mgr,node);
   return(PL_unify(out,add_out));
 }
@@ -2048,7 +1955,7 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
     printf("Error in CUDD_T\n");
     return NULL;
   }
-  Cudd_Ref(T); // <----- serve!!!
+  Cudd_Ref(T); // <----- 
   // Cudd_RecursiveDeref(env->mgr,current_node);
   // Cudd_RecursiveDeref(env->mgr,T);
 
@@ -2057,13 +1964,12 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
     printf("Error in CUDD_E\n");
     return NULL;
   }
-  Cudd_Ref(E); // <----- serve!!
+  Cudd_Ref(E); // <----- 
 
 
   // Cudd_RecursiveDeref(env->mgr,current_node);
   addh = Probability_dd_bdd(env,T);
   if(addh == NULL) {
-    // return PL_warning("List of X is not a proper list.");
     printf("ADDH ERROR\n"); 
     return NULL;
   }
@@ -2099,38 +2005,8 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
   index = (int)Cudd_NodeReadIndex(current_node);
   if(index >= env->boolVars) {
     printf("INDEX BOOL ERROR\n"); 
-    printf("Cudd_IsConstant(current_node): %d\n",Cudd_IsConstant(current_node));
-    printf("Cudd_V(current_node): %lf\n",Cudd_V(current_node));
-    printf("Max memory: %ld\n",Cudd_ReadMaxMemory(env->mgr));
-    printf("Index: %d - boolvars: %d \n",index,env->boolVars);
-    printf("Cudd_ReadPerm: %d\n",Cudd_ReadPerm(env->mgr,index));
-    // printf("Cudd_CheckZeroRef: %d\n",Cudd_CheckZeroRef(env->mgr));
-    // printf("Max memory: %ld\n - if val = -1 -> exceeded!!!",Cudd_ReadMaxMemory(env->mgr));
-    // printf("In use memory: %ld\n",Cudd_ReadMemoryInUse(env->mgr));
-    printf("DdManager nodes: %ld | ", Cudd_ReadNodeCount(env->mgr)); /*Reports the number of live nodes in BDDs and ADDs*/
-    printf("DdManager vars: %d | ", Cudd_ReadSize(env->mgr) ); /*Returns the number of BDD variables in existance*/
-    printf("DdNode nodes: %d | ", Cudd_DagSize(current_node)); /*Reports the number of nodes in the BDD*/
-    printf("DdNode vars: %d | ", Cudd_SupportSize(env->mgr, current_node) ); /*Returns the number of variables in the BDD*/
-    printf("DdManager reorderings: %d | ", Cudd_ReadReorderings(env->mgr) ); /*Returns the number of times reordering has occurred*/
-    printf("DdManager memory: %ld |\n\n", Cudd_ReadMemoryInUse(env->mgr) ); /*Returns the memory in use by the manager measured in bytes*/
-    Cudd_PrintDebug(env->mgr, current_node, 2, 4);
-    printf("Cudd_NodeReadIndex(Cudd_Regular(current_node)): %u\n",Cudd_NodeReadIndex(Cudd_Regular(current_node))); /*Returns the memory in use by the manager measured in bytes*/
-    printf("Cudd_IsComplement(current_node): %d\n",Cudd_IsComplement(current_node));
-    printf("Cudd_IsConstant(current_node): %d\n",Cudd_IsConstant(current_node));
-    printf("Cudd_CountLeaves: %d |\n\n", Cudd_CountLeaves(current_node)); /*Returns the memory in use by the manager measured in bytes*/
-    debug_cudd_env(env,0);
-
-    // dump_env(env);
     return NULL;
   }
-  
-  // if(TRUE) {
-  //   printf("Cudd_CheckZeroRef: %d\n",Cudd_CheckZeroRef(env->mgr));
-  // }
-  
-
-  // printf("Index: %d - boolvars: %d \n",index,env->boolVars);
-  // printf("Cudd_ReadPerm: %d\n",Cudd_ReadPerm(env->mgr,index));
   
   // get the index of the multival var
   indexMultival = env->bVar2mVar[index];
@@ -2138,30 +2014,6 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
     printf("INDEX MULTIVAR ERROR\n"); 
     return NULL;
   }
-
-  // if(env->rules[indexMultival] > 4) {
-    // printf("env->vars[%d].nRule %d\n",indexMultival,env->vars[indexMultival].nRule);
-    // dump_env(env);
-  // }
-
-  // printf("nrule: %d\n",env->vars[indexMultival].nRule);
-  // int nr = env->vars[indexMultival].nRule;
-  // printf("var: %d\n",env->vars[indexMultival].nRule);
-  // printf("imulti: %d\n",indexMultival);
-  // printf("index: %d\n",index);
-
-
-
-
-
-  // if(indexMultival != env->vars[indexMultival].firstBoolVar) {
-  //   printf("**** indexMultival != env->vars[indexMultival].firstBoolVar ****\n");
-  //   printf("Index: %i - mval: %i - nrule: %d \n",index,indexMultival,env->vars[indexMultival].nRule);
-  //   printf("env->vars[indexMultival].firstBoolVar: %li\n",(long)env->vars[indexMultival].firstBoolVar);
-  //   // dump_env(env);
-  // }
-  // printf("env->vars[index].firstBoolVar: %d\n",env->vars[index].firstBoolVar);
-  // printf("env->nVars: %d\n",env->nVars);
 
   // check if the multival var is decision or prob
   if(env->vars[indexMultival].decision == 1) { // if decision var
@@ -2180,7 +2032,7 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
       return NULL;
     }
     Cudd_Ref(result);
-    Cudd_RecursiveDeref(env->mgr,tmp); // <---- ora
+    Cudd_RecursiveDeref(env->mgr,tmp); // <---- 
     Cudd_RecursiveDeref(env->mgr,addh);
     Cudd_RecursiveDeref(env->mgr,addl_new);
     return result;
@@ -2221,7 +2073,6 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
     }
     Cudd_Ref(nodep1);
     
-
     // Cudd_RecursiveDeref(env->mgr,nodep);
    
     nodepb = Cudd_addApply(env->mgr,Cudd_addTimes,nodep1,addl_new);
@@ -2231,11 +2082,9 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
     }
     Cudd_Ref(nodepb);
     Cudd_RecursiveDeref(env->mgr,nodep1);
-    // Cudd_RecursiveDeref(env->mgr,nodep1);
     Cudd_RecursiveDeref(env->mgr,addl_new);
 
     result = Cudd_addApply(env->mgr,Cudd_addPlus,nodepa,nodepb);
-    // add_node(table,result,-1);
     if(result == NULL) {
       printf("ERROR ADDAPPLY PLUS\n");
       return NULL;
@@ -2314,7 +2163,7 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
 
 static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, term_t cost) {
   int ret, i;
-  int *array_of_parents; // array containing the indexes of the parents encountered 
+  int *array_of_parents; // array containing the indexes of the parents 
   int len_array_of_parents = 0;
   double value = -1;
   double opt_cost;
@@ -2334,30 +2183,25 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
   opt_cost = PL_new_term_ref();
   head = PL_new_term_ref();
 
-  // // dump_env(env);
-  // printf("Cudd_CheckZeroRef: %d\n",Cudd_CheckZeroRef(env->mgr));
-  // // printf("Max memory: %lu\n",Cudd_ReadMaxMemory(env->mgr));
-  // // printf("In use memory: %ld\n",Cudd_ReadMemoryInUse(env->mgr));
-  // printf("DdManager nodes: %ld | ", Cudd_ReadNodeCount(env->mgr)); /*Reports the number of live nodes in BDDs and ADDs*/
-  // printf("DdManager vars: %d | ", Cudd_ReadSize(env->mgr) ); /*Returns the number of BDD variables in existance*/
-  // printf("DdNode nodes: %d | ", Cudd_DagSize(root)); /*Reports the number of nodes in the BDD*/
-	// printf("DdNode vars: %d | ", Cudd_SupportSize(env->mgr, root) ); /*Returns the number of variables in the BDD*/
-  // printf("DdManager reorderings: %d | ", Cudd_ReadReorderings(env->mgr) ); /*Returns the number of times reordering has occurred*/
-  // printf("DdManager memory: %ld |\n\n", Cudd_ReadMemoryInUse(env->mgr) ); /*Returns the memory in use by the manager measured in bytes*/
-  // printf("Cudd_CountLeaves: %ld |\n\n", Cudd_CountLeaves(root)); /*Returns the memory in use by the manager measured in bytes*/
-  
-  // debug_cudd_env(env,0);
-  
-  // // Cudd_PrintDebug(env->mgr, root, 2, 4);
+  if(DEBUG) {  
+    printf("Cudd_CheckZeroRef: %d\n",Cudd_CheckZeroRef(env->mgr));
+    printf("Max memory: %lu\n",Cudd_ReadMaxMemory(env->mgr));
+    printf("In use memory: %ld\n",Cudd_ReadMemoryInUse(env->mgr));
+    printf("DdManager nodes: %ld | ", Cudd_ReadNodeCount(env->mgr)); /*Reports the number of live nodes in BDDs and ADDs*/
+    printf("DdManager vars: %d | ", Cudd_ReadSize(env->mgr) ); /*Returns the number of BDD variables in existance*/
+    printf("DdNode nodes: %d | ", Cudd_DagSize(root)); /*Reports the number of nodes in the BDD*/
+    printf("DdNode vars: %d | ", Cudd_SupportSize(env->mgr, root) ); /*Returns the number of variables in the BDD*/
+    printf("DdManager reorderings: %d | ", Cudd_ReadReorderings(env->mgr) ); /*Returns the number of times reordering has occurred*/
+    printf("DdManager memory: %ld |\n\n", Cudd_ReadMemoryInUse(env->mgr) ); /*Returns the memory in use by the manager measured in bytes*/
+    printf("Cudd_CountLeaves: %d |\n\n", Cudd_CountLeaves(root)); /*Returns the memory in use by the manager measured in bytes*/
+    debug_cudd_env(env,0);
+    Cudd_PrintDebug(env->mgr, root, 2, 4);
+  }
 
   array_of_parents = malloc(sizeof(int));
   // traverse tree to find terminal nodes
   // traverse_tree(root,&bestNode,&index,&value);
-
   
-  // printf("\n--- FINAL ADD ---\n");
-  // Cudd_PrintDebug(env->mgr, root, 2, 4);
-
   bestNode = Cudd_addFindMax(env->mgr,root);
 
   // check if found
@@ -2377,7 +2221,6 @@ static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, 
     }
 
     for (i = 0; i < len_array_of_parents; i++) {
-      // converto l'array di parents in rule number?
       ret = PL_put_integer(head,array_of_parents[i]); 
       RETURN_IF_FAIL
       ret = PL_cons_list(list,head,list);
