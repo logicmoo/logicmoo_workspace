@@ -133,11 +133,7 @@ current_det_check(M, FromChk) :-
 
 clauses_accessible(MH) :-
     \+ is_built_in(MH),
-    \+ predicate_property(MH, foreign),
-    % Although for dynamic and multifile clauses are readable, its provided
-    % information could change and therefore are useless for this analysis
-    \+ predicate_property(MH, dynamic),
-    \+ predicate_property(MH, multifile).
+    \+ predicate_property(MH, foreign).
 
 check_det(H, M, Det) :-
     ( inferred_det_db(H, M, Det)
@@ -213,11 +209,14 @@ det_predef(Det,   H, M) :- inferred_det_db(H, M, Det).
 det_predef(Det,   H, M) :- det_predef_asr(Det, H, M).
 det_predef(nodet, H, M) :- det_checking(H, M).
 det_predef(nodet, H, M) :- \+ clauses_accessible(M:H).
-det_predef(fails, H, M) :- predicate_property(M:H, number_of_clauses(0 )).
+det_predef(fails, H, M) :-
+    \+ predicate_property(M:H, dynamic),
+    \+ predicate_property(M:H, multifile),
+    predicate_property(M:H, number_of_clauses(0 )).
 
 infer_det(H, M, Det) :-
     member(Det1, [multi, isdet, fails]),
-    \+ \+ ( clause(M:H, _, Ref),
+    \+ \+ ( current_clause(M:H, _, Ref),
             det_clause(Ref, Det1)
           ),
     !,
@@ -267,11 +266,31 @@ erase_nf(Ref) :- ignore(erase(Ref)).
 assert_det_checking(Clause, Ref) :-
     assertz(det_checking(Clause), Ref).
 
-walk_call(H, M, CA) :-
+:- meta_predicate current_clause(0, -, -).
+
+current_clause(MH, Body, Ref) :-
+    \+ predicate_property(MH, dynamic),
+    \+ predicate_property(MH, multifile),
+    !,
+    clause(MH, Body, Ref).
+current_clause(MH, Body, Ref) :-
+    % for dynamic and multifile, add a choicepoint at the end of the clause
+    ( clause(MH, Body, Ref)
+    ; Body = true,
+      Ref = null,
+      add_cp
+    ).
+
+current_clause(MH, Body, Ref, CP1, CP2) :-
     prolog_current_choice(CP1),
-    clause(M:H, Body, Ref),
-    prolog_current_choice(CP2),
-    ( Body = true
+    current_clause(MH, Body, Ref),
+    prolog_current_choice(CP2).
+
+walk_call(H, M, CA) :-
+    current_clause(M:H, Body, Ref, CP1, CP2),
+    ( Ref = null
+    ->add_det_clause(CA, Ref, CP1, CP2)
+    ; Body = true
     ->true
     ; add_neg_clause(CA, Ref),
       clause_property(Ref, module(CM)),
@@ -310,6 +329,10 @@ add_cut_info(needed, LitPos, Ref) :-
     assertz(cut_info(Ref, LitPos, needed)).
 
 det_clause(Ref, Det) :-
+    det_clause_db(Ref, Det1),
+    !,
+    Det = Det1.
+det_clause(Ref, Det) :-
     nth_clause(Pred, Idx, Ref),
     clause(_, Body, Ref),
     Body = true,
@@ -318,10 +341,6 @@ det_clause(Ref, Det) :-
     ->Det = isdet
     ; Det = multi
     ).
-det_clause(Ref, Det) :-
-    det_clause_db(Ref, Det1),
-    !,
-    Det = Det1.
 det_clause(_, multi).
 
 add_det_clause(info, Ref, CP2, CP3) :-
@@ -487,6 +506,22 @@ walk_body(C, M, LitPos, Ref, CA, CP1, CP2, CP3) :-
     has_body_hook(C, I),
     !,
     walk_body_hook(C, I, M, LitPos, Ref, CA, CP1, CP2, CP3).
+
+:- public
+    curr_wrapper/3.
+
+curr_wrapper(start_tabling(_, C), '$tabling', C).
+curr_wrapper(start_rtcheck(_, C), rtchecks,   C).
+
+has_body_hook(W, M) :-
+    curr_wrapper(W, M, _),
+    neck.
+
+walk_body_hook(W, I, M, LitPos, Ref, CA, CP1, CP2, CP3) :-
+    curr_wrapper(W, I, A),
+    neck,
+    walk_body(call(A), M, LitPos, Ref, CA, CP1, CP2, CP3).
+
 walk_body(A, M, _, Ref, _, _, CP, CP) :-
     abstract_interpreter:evaluable_body_hook(A, M, Condition),
     call(Condition),
@@ -527,7 +562,14 @@ walk_body(@(M:H, C), _, _, Ref, _, _, CP, CP) :-
 walk_body(H, M, _, Ref, _, _, CP, CP) :-
     walk_lit(H, M, M, Ref, CP).
 
+walk_lit(V, M, _, _, _) :-
+    ( var(V)
+    ; var(M)
+    ),
+    !,
+    add_cp.
 walk_lit(H, M, CM, Ref, CP) :-
+    % ( H \= fakt_dampfdruck(_, _, _) -> true ; gtrace ),
     ( predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(CM:H, Meta, C)
     ; C = H
@@ -557,7 +599,7 @@ walk_lit(H, M, CM, Ref, CP) :-
     ; inferred_det(C, M, fails)
     ->cut_to(CP),
       fail
-    ; catch(findall(R, clause(M:C, _, R), ClauseL),
+    ; catch(findall(-, current_clause(M:C, _, _), ClauseL),
             _,
             AddCP = true),
       ( ClauseL = []
