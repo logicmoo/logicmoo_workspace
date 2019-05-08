@@ -144,6 +144,8 @@
          writeln/2,
          format/2,
          format/3,
+         downcase_atom/2,
+         upcase_atom/2,
          get_time/1] is det.
 
 :- pred [(\+)/1,
