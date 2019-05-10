@@ -29,8 +29,8 @@ using gradient descent and Backpropagation
 %:-use_module(library(lbfgs)).
 :-set_prolog_flag(unknown,warning).
 
-%:-load_foreign_library(foreign(phil)).
-:-load_foreign_library(phil).
+:-load_foreign_library(foreign(phil)).
+%:-load_foreign_library(phil).
 
 
 :- dynamic getIndex/1.
@@ -717,9 +717,9 @@ genHPLP(DB,M,Bottoms,HPLP):-
   M:local_setting(probability,Prob),
   M:local_setting(max_layer,Max1),
   M:local_setting(generate_mega_hplp,GenerateBottom),
-  M:local_setting(saveFile,SaveFile1),
-  M:local_setting(testFold,TestFold),
-  string_concat(SaveFile1,TestFold,SaveFile),
+  %M:local_setting(saveFile,SaveFile1),
+  %M:local_setting(testFold,TestFold),
+  %string_concat(SaveFile1,TestFold,SaveFile),
   Temp is -1,
   ((Max1=:=Temp) ->
      MaxLayer is 2147000000
@@ -738,7 +738,7 @@ genHPLP(DB,M,Bottoms,HPLP):-
       getTrees(Bottoms,Trees),
       Trees1=[t(head,Trees)],
       generateHPLPs(-1,HeadFunctor,MaxLayer,Prob,Trees1,HPLPs,Levels),
-      saveHPLPs(HPLPs,SaveFile,Levels),
+      %saveHPLPs(HPLPs,SaveFile,Levels),
       HPLPs=[HPLP|_]
     ;
       getTrees(Bottoms,Trees),
