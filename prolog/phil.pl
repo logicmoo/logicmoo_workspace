@@ -1396,6 +1396,7 @@ writeClause(List,FileName):-
   open(FileName,write, Stream),
   copy_term(List,ListCopy),
   numbervars((ListCopy,_ListVar),0,_V),
+  nl(Stream),
   writeln(Stream,"Learned Program"),
   writeClause1(Stream,ListCopy),
   close(Stream).
@@ -1404,6 +1405,7 @@ writeClause(List,FileName):-
 writeClauseOutput(List):-
   copy_term(List,ListCopy),
   numbervars((ListCopy,_ListVar),0,_V),
+  nl(user_output),
   writeln(user_output,"Learned Program"),
   writeClause1(user_output,ListCopy).
 
