@@ -156,6 +156,7 @@
          text_to_string/2,
          file_directory_name/2,
          file_base_name/2,
+         directory_file_path/3,
          compound_name_arity/3,
          functor/3,
          (=..)/2,
