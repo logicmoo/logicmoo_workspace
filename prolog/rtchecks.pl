@@ -39,7 +39,6 @@
           ]).
 
 :- reexport(library(compound_expand)).
-:- use_module(library(implementation_module)).
 :- use_module(library(rtcprops), []).
 :- use_module(library(ctrtchecks)).
 :- use_module(system:library(rtchecks_rt)).
@@ -76,7 +75,7 @@ wrappers(Name/Arity) -->
       check_unexpanded_usage(Name, Arity, Module)
     },
     ['$rtchecked'(Head, Level)],
-    ( { implementation_module(Module:Head, Module),
+    ( { predicate_property(Module:Head, implementation_module(Module)),
         \+ predicate_property(Module:Head, multifile),
         \+ '$get_predicate_attribute'(Module:Head, (discontiguous), 1),
         \+ predicate_property(Module:Head, dynamic)
