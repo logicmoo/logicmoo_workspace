@@ -37,7 +37,6 @@
 :- use_module(library(extra_location)). % shold be the first
 :- use_module(library(apply)).
 :- use_module(library(filepos_line)).
-:- use_module(library(implementation_module)).
 :- use_module(library(from_utils)).
 
 :- multifile
