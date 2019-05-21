@@ -38,7 +38,7 @@
 
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(atomics_atom)).
 :- use_module(library(call_ref)).
 :- use_module(library(camel_snake)).

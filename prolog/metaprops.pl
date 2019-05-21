@@ -47,7 +47,7 @@ type(Goal) :- call(Goal).
 
 :- true prop (global)/1 + (global(prop), declaration)
 # "A property that is global, i.e., can appear after the + in the assertion.
-and as meta predicates, meta_predicate F(0) (assrt_lib.pl)".
+and as meta predicates, meta_predicate F(0)".
 
 global(Goal) :- call(Goal).
 

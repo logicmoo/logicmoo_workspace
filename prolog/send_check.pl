@@ -35,7 +35,7 @@
 :- module(send_check, [send_check/4,
                        send_comp_rtcheck/3]).
 
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(intercept)).
 
 get_comp_rtcheck_info(Goal, Name, ALoc) :-
