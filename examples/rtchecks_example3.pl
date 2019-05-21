@@ -35,8 +35,6 @@ family(B) :- atm(B).
 
 :- rtchecked fullasr/2.
 
-:- entry fullasr(A, B) : (animal(A), var(B)).
-
 :- pred fullasr(A, _) :: atm(A) : atm(A) => atm(A).
 :- pred fullasr(A, B) :: atm(A) : (animal(A), atm(A)) => family(B) + not_fails.
 :- pred fullasr(A, B) :: atm(A) : animal(A) => family(B) + is_det.

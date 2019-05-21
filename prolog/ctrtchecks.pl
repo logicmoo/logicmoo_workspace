@@ -72,14 +72,12 @@ part_time(glob, rt).
 
 %!  assrt_op(+Part, +Step, +Level, +Type).
 
-assrt_op(call, step1, _,       entry).
 assrt_op(call, step1, exports, calls).
 assrt_op(call, step1, exports, pred).
 assrt_op(call, step1, exports, prop).
 assrt_op(call, step2, inner,   calls).
 assrt_op(call, step2, inner,   pred).
 assrt_op(call, step2, inner,   prop).
-assrt_op(succ, step1, _,       exit).
 assrt_op(succ, step1, exports, success).
 assrt_op(succ, step1, exports, pred).
 assrt_op(succ, step1, exports, prop).
@@ -93,7 +91,6 @@ assrt_op(glob, step2, inner,   comp).
 assrt_op(glob, step2, inner,   pred).
 assrt_op(glob, step2, inner,   prop).
 
-is_valid_status_type(true, entry) :- current_prolog_flag(rtchecks_entry, yes).
 is_valid_status_type(Status, Type) :-
         rtcheck_assr_type(Type),
         rtcheck_assr_status(Status).
@@ -106,7 +103,6 @@ rtcheck_assr_type(calls).
 rtcheck_assr_type(pred).
 rtcheck_assr_type(prop).
 rtcheck_assr_type(comp).
-rtcheck_assr_type(exit) :- current_prolog_flag(rtchecks_exit, yes).
 rtcheck_assr_type(success).
 
 /*

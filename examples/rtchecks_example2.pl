@@ -42,8 +42,8 @@
 /** <module> Examples of assertions for processing by the run-time checker.
 */
 
-:- entry pred1/2 : (int * int).
-:- entry pred1/2 : (atm * atm).
+:- pred pred1/2 : (int * int).
+:- pred pred1/2 : (atm * atm).
 
 pred1(X, Y) :-
         display(pred1(X, Y)),
@@ -52,7 +52,7 @@ pred1(X, Y) :-
 pred2(X, Y) :-
         pred1(X, Y).
 
-:- entry pred3(X) : int(X).
+:- pred pred3(X) : int(X).
 
 pred3(X) :-
         display(X),
@@ -65,21 +65,21 @@ pred4(X, Y) :-
         display(p(X, Y)),
         nl.
 
-:- entry pred5/2.
-
 :- export(pred5/2).
+
+:- pred pred5/2.
 
 pred5(a, b).
 
 :- check success aconcat(A, B, X) : (A = [1, 2], B = [3]) => (X == [1, 2, 4]).
 
-:- check exit aconcat/3 : (list * list * var) => (list * list * list).
+:- check success aconcat/3 : (list * list * var) => (list * list * list).
 
 aconcat([],    X, X).
 aconcat([X|Y], Z, [X|T]) :-
         aconcat(Y, Z, T).
 
-:- check exit bad_concat/3
+:- check success bad_concat/3
         : (list * list * var) => (list * list * list).
 
 bad_concat(_A, _X, a).
