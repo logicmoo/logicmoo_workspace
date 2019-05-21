@@ -48,7 +48,7 @@
            rtcheck_assr_status/1]).
 
 :- use_module(library(apply)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
 :- use_module(library(context_values)).

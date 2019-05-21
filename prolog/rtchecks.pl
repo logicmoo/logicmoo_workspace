@@ -43,7 +43,7 @@
 :- use_module(library(rtcprops), []).
 :- use_module(library(ctrtchecks)).
 :- use_module(system:library(rtchecks_rt)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 
 rtchecked(PlList) :-
     throw(error(context_error(nodirective, rtchecked(PlList)), _)).
@@ -158,7 +158,7 @@ check_unexpanded_usage(_, _, _).
 term_expansion((:- rtchecked(Preds)), []) :-
     generate_rtchecks(Preds).
 
-term_expansion(assrt_lib:asr_head_prop(_, M, Pred, Status, Type, _, _), _) :-
+term_expansion(assertions:asr_head_prop(_, M, Pred, Status, Type, _, _), _) :-
     current_prolog_flag(rtchecks_static, StaticL),
     memberchk(Status, StaticL),
     Type \= (prop),

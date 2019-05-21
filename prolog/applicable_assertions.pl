@@ -36,14 +36,14 @@
           [applicable_prop_check/3,
            applicable_assertions/3]).
 
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(ctrtchecks)).
 :- use_module(library(intercept)).
 
 :- meta_predicate
        applicable_assertions(0, -, -).
 
-assrt_lib:asr_aprop(spec(Asr), Key, Prop, From) :-
+assertions:asr_aprop(spec(Asr), Key, Prop, From) :-
     curr_prop_asr(Key, Prop, From, Asr).
 
 applicable_prop_check(T, Part, Asr) :-

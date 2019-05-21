@@ -166,7 +166,7 @@ collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
 
 wrap_asr_rtcheck(Asr, rtcheck(Asr)).
 
-assrt_lib:asr_aprop(rtcheck(Asr), Key, Prop, From) :-
+assertions:asr_aprop(rtcheck(Asr), Key, Prop, From) :-
     curr_prop_asr(Key, Prop, From, Asr).
 
 % ----------------------------------------------------------------------------

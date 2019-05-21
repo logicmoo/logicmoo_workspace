@@ -36,7 +36,7 @@
                             do_trace_rtc/1]).
 
 :- use_module(library(mapargs)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(apply)).
 :- use_module(library(context_values)).
 :- use_module(system:library(rtchecks_rt)).
@@ -155,7 +155,7 @@ black_list_module('$bags').
 black_list_module('$expand').
 black_list_module('$messages').
 black_list_module(abstract_interpreter).
-black_list_module(assrt_lib).
+black_list_module(assertions).
 black_list_module(assrt_meta).
 black_list_module(context_values).
 black_list_module(ctrtchecks).
