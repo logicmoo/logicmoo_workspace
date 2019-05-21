@@ -45,7 +45,6 @@
                                  intr_ai/1,
                                  match_noloops/6]).
 
-:- use_module(library(implementation_module)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(term_size)).
@@ -402,7 +401,7 @@ abstract_interpreter_body(A, M, _, state(Loc, _, OnError, _, _, _)) -->
     ).
 
 abstract_interpreter_body(G, M, _, state(_, EvalL, _, _, _, _)) -->
-    { implementation_module(M:G, IM),
+    { predicate_property(M:G, implementation_module(IM)),
       ( ( evaluable_goal_hook(G, IM)
         ; functor(G, F, A),
           memberchk(IM:F/A, EvalL)
@@ -435,7 +434,7 @@ abstract_interpreter_lit(H, M, CM, Abs, State1) -->
     ; Goal = H
     },
     { State1 = state(Loc, EvalL, OnError, CallL, Data, Cont),
-      implementation_module(M:Goal, IM)
+      predicate_property(M:Goal, implementation_module(IM))
     },
     ( {member(MCall, CallL),
        MCall =@= IM:Goal
