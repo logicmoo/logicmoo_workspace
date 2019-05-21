@@ -35,7 +35,7 @@
 :- module(check_assertions, []).
 
 :- use_module(library(checkers/checker)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(codewalk)).
@@ -199,7 +199,7 @@ type_message_prop(Loc-PIL) -->
     {compact_pi_list(PIL, PIC)},
     Loc, ['In assertions of ~q:'-[PIC], nl].
 
-black_list(assertion_head(_, _, _, _, _, _, _), assrt_lib).
+black_list(assertion_head(_, _, _, _, _, _, _), assertions).
 % Issues in the assertion body will be reported when checking properties.
 black_list(M:Call) :- black_list(Call, M).
 
@@ -307,7 +307,7 @@ generate_ctchecks(Goal, M, VInf, CTChecks) :-
 
 wrap_asr_ctcheck(VInf, Asr, ctcheck(VInf, Asr)).
 
-assrt_lib:asr_aprop(ctcheck(VInf, Asr), Key, Prop, From) :-
+assertions:asr_aprop(ctcheck(VInf, Asr), Key, Prop, From) :-
     asr_aprop_ctcheck(Key, VInf, Asr, Prop, From).
 
 %!  asr_aprop_ctcheck(Asr, Section, Property, From)

@@ -43,7 +43,7 @@
            fa_to_head/3
           ]).
 
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(plprops)).
 :- use_module(library(extend_args)).
 :- use_module(library(static_strip_module)).

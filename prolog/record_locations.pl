@@ -52,7 +52,7 @@ record_location. % Enable recording of locations
 
 % Extra location for assertions of a given predicate
 extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
-    assrt_lib:asr_head_prop(_, CM, Head, Status, Type, _, From),
+    assertions:asr_head_prop(_, CM, Head, Status, Type, _, From),
     predicate_property(CM:Head, implementation_module(M)).
 
 :- multifile skip_record_decl/1.
@@ -61,10 +61,10 @@ skip_record_decl(initialization(_)) :- !.
 skip_record_decl(Decl) :-
     nonvar(Decl),
     '$current_source_module'(M),
-    predicate_property(M:Decl, imported_from(assrt_lib)),
+    predicate_property(M:Decl, imported_from(assertions)),
     functor(Decl, Type, Arity),
     memberchk(Arity, [1, 2]),
-    assrt_lib:assrt_type(Type), !.
+    assertions:assrt_type(Type), !.
 
 :- public record_extra_location/4.
 

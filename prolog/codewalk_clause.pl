@@ -36,7 +36,7 @@
 
 :- use_module(library(prolog_xref), []).
 :- use_module(library(apply)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(context_values)).
 :- use_module(library(extend_args)).
 :- use_module(library(extra_location)).
@@ -104,7 +104,7 @@ walk_from_loc_declaration(FromChk, From) :-
            walk_head_body('<declaration>', M:Head)).
 
 current_assertion_goal(FromChk, From, AsrPartL, M:Head, CM:Goal) :-
-    assrt_lib:asr_head_prop(Asr, HM, Head, _, _, VNL, AFrom),
+    assertions:asr_head_prop(Asr, HM, Head, _, _, VNL, AFrom),
     b_setval('$variable_names', VNL),
     call(FromChk, AFrom),
     predicate_property(HM:Head, implementation_module(M)),

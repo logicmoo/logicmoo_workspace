@@ -39,7 +39,7 @@
 :- use_module(library(check), []).
 :- use_module(library(location_utils)).
 :- use_module(library(referenced_by)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(codewalk)).
 :- use_module(library(from_utils)).
 

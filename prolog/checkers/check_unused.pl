@@ -333,7 +333,7 @@ semantic_head(H, M, 0, dynamic(Type, CM, Call), Caller, From) :-
       Caller = M:P
     ).
 semantic_head(H, M, -1, assertion(S, T), '<assertion>'(M:H), From) :-
-    assrt_lib:asr_head_prop(_, CM, H, S, T, _, From),
+    assertions:asr_head_prop(_, CM, H, S, T, _, From),
     predicate_property(CM:H, implementation_module(M)).
 
 unmarked(M, FromChk, Node, D, From) :-

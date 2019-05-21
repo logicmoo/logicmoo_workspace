@@ -37,7 +37,7 @@
 :- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(clambda)).
 :- use_module(library(extend_args)).
 :- use_module(library(extra_location)).

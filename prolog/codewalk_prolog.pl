@@ -35,7 +35,7 @@
 :- module(codewalk_prolog, []).
 
 :- use_module(library(prolog_codewalk)).
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(extra_location)).
 :- use_module(library(option_utils)).
 
@@ -139,7 +139,7 @@ walk_from_goal(Head, M, Ref, OTerm) :-
                     ).
 
 walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
-    forall(( AHead = assrt_lib:asr_head_prop(Asr, HM, Head, _, _, _, From),
+    forall(( AHead = assertions:asr_head_prop(Asr, HM, Head, _, _, _, From),
              clause(AHead, _, Ref),
              call(FromChk, From),
              predicate_property(HM:Head, implementation_module(M)),

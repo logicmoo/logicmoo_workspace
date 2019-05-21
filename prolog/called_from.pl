@@ -43,7 +43,7 @@
                         used_predicates/3
                        ]).
 
-:- use_module(library(assrt_lib)).
+:- use_module(library(assertions)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).
 :- use_module(library(codewalk)).

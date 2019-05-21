@@ -56,7 +56,7 @@ is_entry_point_hook(prolog_load_file(_, _), user).
 is_entry_point_hook(message_hook(_, _, _), user).
 is_entry_point_hook(prolog_trace_interception(_, _, _, _), user).
 is_entry_point_hook(_, prolog).
-is_entry_point_hook(doc_db(_, _, _, _), assrt_lib).
+is_entry_point_hook(doc_db(_, _, _, _), assertions).
 is_entry_point_hook(H, sandbox) :- predicate_property(sandbox:H, multifile).
 is_entry_point_hook(goal_colours(_, _, _), prolog_colour).
 
