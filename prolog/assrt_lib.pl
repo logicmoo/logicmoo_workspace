@@ -36,7 +36,7 @@
           [asr_head/2,
            assrt_type/1,
            assrt_status/1,
-           assertion_records/4,
+           expand_assertion/4,
            asr_head_prop/7,
            curr_prop_asr/4,
            asr_aprop/4,
@@ -51,6 +51,7 @@
 :- use_module(library(filepos_line)).
 :- use_module(library(lists)).
 :- use_module(library(list_sequence)).
+:- use_module(library(neck)).
 :- use_module(library(implementation_module)).
 :- use_module(library(subpos_utils)).
 :- use_module(library(prolog_codewalk), []).
@@ -294,23 +295,41 @@ invalid_cp(_/_).
 
 %!  assrt_type(Type)
 %
-%  The type of assertion
+%  The type of assertion, could be the following values:
+%
+%  exit  - Specifies the properties on success, but only for external calls.
+%
+%  entry - Specifies the properties at call time, only for external entry.
+%
+%  calls - Specifies the properties at call time.
+%
+%  success - Specifies the properties on success, but only for external calls.
+%
+%  comp - Assertion type comp, specifies computational or global properties.
+%
+%  prop - States that the predicate is a property
+%
+%  pred - Union of calls, success and comp assertion types
 
 assrt_type(pred).
 assrt_type(prop).
-% assrt_type(decl). % Not used, instead we have declaration
-% assrt_type(func).
 assrt_type(calls).
 assrt_type(success).
 assrt_type(comp).
 assrt_type(entry).
 assrt_type(exit).
-% assrt_type(modedef).
 
 %!  assrt_status(Status)
 %
 %   The status of an assertion. Be careful, since they are not compatible with
 %   Ciao-Prolog.
+%
+%   @tbd: The next are intended to be used internally, once the system be able
+%   to infer new assertions:
+%
+%   right: inferred by the static analysis
+%   trust: Ciao-Prolog like, provided by the user
+%   fail: false, inferred by the static analyss.
 
 assrt_status(true).    % Assertion is true, provided by the user
 assrt_status(false).   % Assertion is false, provided by the user
@@ -322,22 +341,16 @@ assrt_status(static).  % Assertion is always instrumented in the code, in other
                        % analysis prove it is always true, however such feature
                        % is not implemented yet.
 
-% The next are intended to be used internally, once the system be able to infer
-% new assertions:
-%
-% right: inferred by the static analysis
-% trust: Ciao-Prolog like provided by the user
-% fail: false, inferred by the static analyss.
-
-%!  default_assrt_status(+Type:assrt_type,-Status:assrt_status)
+%!  default_assrt_status(Type:assrt_type, Status:assrt_status)
 %
 %   Defines the status to be used for a given assertion type, if an
 %   assertion status is not specified explicitly.
 
-default_assrt_status(entry,   true) :- !. % ???
+default_assrt_status(entry,   true).
 default_assrt_status(X,       check) :-
     assrt_type(X),
-    !.
+    X \= (entry),
+    neck.
 
 normalize_status_and_type(Assertions, APos, AssrtStatus, AssrtType, UBody, BPos) :-
     normalize_status_and_type_1(Assertions, APos, AssrtStatus, AssrtType, UBody, BPos),
@@ -382,65 +395,6 @@ expand_nodirective_error(Clauses) :-
             ),
             ClauseT).
 
-%!  exit(+Status, +AssertionBody)
-%
-%   Assertion type exit, specifies the properties on success, but only for
-%   external calls.
-
-%!  exit(+AssertionBody)
-%
-%   Same as exit/2, but with default status check
-
-%!  entry(+Status, +AssertionBody)
-%
-%   Assertion type entry, specifies the properties at call time, only for
-%   external entry.
-
-%!  entry(+AssertionBody)
-%
-%   Same as entry/2, but with default status check
-
-%!  calls(+Status, +AssertionBody)
-%
-%   Assertion type calls, specifies the properties at call time.
-
-%!  calls(+AssertionBody)
-%
-%   Same as calls/2, but with default status check
-
-%!  success(+Status, +AssertionBody)
-%
-%   Assertion type success, specifies the properties on success, but only for
-%   external calls.
-
-%!  success(+AssertionBody)
-%
-%   Same as success/2, but with default status check
-
-%!  comp(+Status, +AssertionBody)
-%
-%   Assertion type comp, specifies computational or global properties.
-
-%!  comp(+AssertionBody)
-%
-%   Same as comp/2, but with default status check
-
-%!  prop(+Status, +AssertionBody)
-%
-%   States that the predicate is a property
-
-%!  prop(+AssertionBody)
-%
-%   Same as prop/2, but with default status check
-
-%!  pred(+Status, +AssertionBody)
-%
-%   Union of calls, success and comp assertion types
-
-%!  pred(+AssertionBody)
-%
-%   Same as pred/2, but with default status check
-
 % To Avoid attempts to execute asertions (must be declarations):
 generate_nodirective_error.
 
@@ -454,12 +408,11 @@ assertion_format(decl, X) :- assrt_format_code(X). % ?
 assertion_format(prop, X) :- assrt_format_code(X).
 assertion_format(calls,   c).
 assertion_format(success, s).
-% DTM: New assertion type
-assertion_format(exit, s).
+assertion_format(exit, s). % TODO: remove (never used)
 assertion_format(comp, g).
 % These to become obsolete?
-assertion_format(entry, c).
-assertion_format(entry, t).
+assertion_format(entry, c). % TODO: remove (never used)
+assertion_format(entry, t). % TODO: remove (never used)
 
 %!  assrt_format_code(X)
 %
@@ -884,19 +837,19 @@ prop_arg(V, A, M, Pos) -->
     {add_arg(V, A, P, Pos, PPos)},
     [(M:P)-PPos].
 
-assertion_records_helper(Match, a(Match, Record, Pos), Record, Pos).
+expand_assertion_helper(Match, a(Match, Record, Pos), Record, Pos).
 
-assertion_records(M, Dict, Decl, PPos, Records, RPos) :-
+expand_assertion(M, Dict, Decl, PPos, Records, RPos) :-
     nonvar(PPos),
     PPos = parentheses_term_position(_, _, Pos),
     !,
-    assertion_records(M, Dict, Decl, Pos, Records, RPos).
-assertion_records(_, Dict, M:Decl, term_position(_, _, _, _, [_, DPos]),
+    expand_assertion(M, Dict, Decl, Pos, Records, RPos).
+expand_assertion(_, Dict, M:Decl, term_position(_, _, _, _, [_, DPos]),
                   Records, RPos) :-
     atom(M),
     !,
-    assertion_records(M, Dict, Decl, DPos, Records, RPos).
-assertion_records(M, Dict, doc(Key, Doc),
+    expand_assertion(M, Dict, Decl, DPos, Records, RPos).
+expand_assertion(M, Dict, doc(Key, Doc),
                   term_position(From, To, FFrom, FTo, [KPos, DPos]),
                   assrt_lib:doc_db(Key, M, Doc, Dict),
                   term_position(0, 0, 0, 0,
@@ -906,13 +859,13 @@ assertion_records(M, Dict, doc(Key, Doc),
 % Note: We MUST save the full location (File, HPos), because later we will not
 % have access to source_location/2, and this will fails for further created
 % clauses --EMM
-assertion_records(CM, Dict, Assertions, APos, Records, RPos) :-
+expand_assertion(CM, Dict, Assertions, APos, Records, RPos) :-
     Match=(Assertions-Dict),
     findall(a(Match, Clause, HPos),
             assertion_record_each(CM, Dict, Assertions, APos, Clause, HPos),
             ARecords),
     ARecords \= [],
-    maplist(assertion_records_helper(Match), ARecords, Records, RPos).
+    maplist(expand_assertion_helper(Match), ARecords, Records, RPos).
 
 assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ignore(source_location(File, Line1)),
@@ -1007,15 +960,15 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ; true
     ).
 
-%!  assertion_records(+Decl, DPos, -Records, RPos) is semidet.
+%!  expand_assertion(+Decl, DPos, -Records, RPos) is semidet.
 %
 %   Process a Declaration as an assertion.  This is called in a term_expansion/2
 %   of the assertion module. Fails if Decl is not a valid assertion.
 
-assertion_records(Decl, DPos, Records, RPos) :-
+expand_assertion(Decl, DPos, Records, RPos) :-
     '$current_source_module'(M),
-    assertion_records(M, Dict, Decl, DPos, Records, RPos),
-    % Dict Must be assigned after assertion_records/6 to avoid performance
+    expand_assertion(M, Dict, Decl, DPos, Records, RPos),
+    % Dict Must be assigned after expand_assertion/6 to avoid performance
     % issues --EMM
     ( nb_current('$variable_names', Dict)
     ->true

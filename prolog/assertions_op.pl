@@ -52,7 +52,6 @@
            op(1150, fx,  (exit)),
            op(1150, xfx, (exit)),
            op(550,  yfx, (#)),
-           % From basicmodes:
            op(500,  fx, (?)),
            op(500,  fx, (:)),
            op(500,  fx, (=)),
