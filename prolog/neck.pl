@@ -54,7 +54,7 @@ neck.
 
 neck --> [].
 
-term_expansion_hb(Head, Body1, ClauseL) :-
+term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
     '$current_source_module'(M),
     sequence_list(Body1, List, []),
     once(( append(Left, [Neck|Right], List),
@@ -80,14 +80,15 @@ term_expansion_hb(Head, Body1, ClauseL) :-
       term_variables(ExpBody, VarBU),
       sort(VarBU, VarBL),
       ord_intersection(VarHL, VarBL, ArgNB),
-      strip_module(M:Head, IM, Pred),
-      functor(Pred, F, A),
       variant_sha1(ArgNB-ExpBody, Hash),
-      format(atom(FNB), '__aux_neck_~w:~w/~d_~w', [IM, F, A, Hash]),
-      SepHead =.. [FNB|ArgNB],
+      freeze(Head, ( strip_module(M:Head, IM, Pred),
+                     functor(Pred, F, A),
+                     format(atom(FNB), '__aux_neck_~w:~w/~d_~w', [IM, F, A, Hash]),
+                     SepHead =.. [FNB|ArgNB]
+                   )),
       append(LRight, [SepHead], NeckL),
       list_sequence(NeckL, NeckBody),
-      findall((Head :- NeckBody), Expanded, ClauseL),
+      findall(Pattern, Expanded, ClauseL),
       ( '$get_predicate_attribute'(M:SepHead, defined, 1)
       ->true
       ; ClauseL \= [_]
@@ -97,13 +98,16 @@ term_expansion_hb(Head, Body1, ClauseL) :-
       ; '$expand':compile_aux_clauses([SepHead :- ExpBody])
       )
     ; list_sequence(Right, NeckBody),
-      findall((Head :- NeckBody), Expanded, ClauseL)
+      findall(Pattern, Expanded, ClauseL)
     ).
 
-term_expansion((Head :-  Body), ClauseL) :- term_expansion_hb(Head, Body, ClauseL).
+term_expansion((Head :- Body), ClauseL) :-
+    term_expansion_hb(Head, Body, NB, (Head :- NB), ClauseL).
 term_expansion((Head --> Body), ClauseL) :-
     sequence_list(Body, List, []),
     append(_, [Neck|_], List),
     Neck == neck,
     dcg_translate_rule((Head --> Body), _, (H :- B), _),
-    term_expansion_hb(H, B, ClauseL).
+    term_expansion_hb(H, B, NB, (H :- NB), ClauseL).
+term_expansion((:- Body), ClauseL) :-
+    term_expansion_hb(decl, Body, NB, (:- NB), ClauseL).
