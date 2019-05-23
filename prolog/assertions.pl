@@ -119,9 +119,9 @@
 
 %!  asr_head(?Asr, ?Head) is det
 %
-%   Extract the Head for a given assertion identifier.  Note that for convention
-%   the first and second arguments of the Assertion identifier contains the
-%   module and the head respectively.
+%   Extract the Head for a given assertion identifier.  Note that the first and
+%   second arguments of the Assertion identifier should contain the module and
+%   the head respectively.
 
 asr_head(Asr, M:Head) :-
     ( nonvar(Asr)
@@ -209,32 +209,56 @@ var_location(Term, Pos, Var, Loc) :-
     ; true
     ).
 
-term_expansion((decompose_assertion_body(Body, A, B, C, D, E, F) :- valid_cp(C)),
+term_expansion((decompose_assertion_body(Body, AB, C, D, E) :- valid_cp(C)),
                (decompose_assertion_body(Body, Pos,
-                                         A,   B,   C,   D,   E,   F,
-                                         PDP, DPP, CPP, APP, GPP, COP) :- valid_cp(C))) :-
+                                         AB,   C,   D,   E,
+                                         PDPP, CPP, APP, GPP) :- valid_cp(C))) :-
     !,
     maplist(var_location(Body, Pos),
-            [A,   B,   C,   D,   E,   F],
-            [PDP, DPP, CPP, APP, GPP, COP]).
+            [AB,   C,   D,   E],
+            [PDPP, CPP, APP, GPP]).
 
-term_expansion((decompose_assertion_body(Body, A, B, C, D, E, F)),
+term_expansion((decompose_assertion_body(Body, AB, C, D, E)),
                (decompose_assertion_body(Body, Pos,
-                                         A,   B,   C,   D,   E,   F,
-                                         PDP, DPP, CPP, APP, GPP, COP))) :-
+                                         AB,   C,   D,   E,
+                                         PDPP, CPP, APP, GPP))) :-
     maplist(var_location(Body, Pos),
-            [A,   B,   C,   D,   E,   F],
-            [PDP, DPP, CPP, APP, GPP, COP]).
+            [AB,   C,   D,   E],
+            [PDPP, CPP, APP, GPP]).
+
 term_expansion((decompose_assertion_body(Body, A, B, C, D, E, F) :-
-                    decompose_assertion_body(BO, A, B, C, D, E, "")),
+                    decompose_assertion_body(BO, A, B, C, D, E)),
                (decompose_assertion_body(Body, Pos,
                                          A,   B,   C,   D,   E,   F,
                                          PDP, DPP, CPP, APP, GPP, COP) :-
                     decompose_assertion_body(BO, BOP,
-                                             A,   B,   C,   D,   E,   "",
-                                             PDP, DPP, CPP, APP, GPP, _))) :-
-    Body = BO#F,
-    maplist(var_location(Body, Pos), [BO, F], [BOP, COP]).
+                                             A,   B,   C,   D,   E,
+                                             PDP, DPP, CPP, APP, GPP))) :-
+    ( nonvar(Body),
+      Body = (BO#F)
+    ->maplist(var_location(Body, Pos), [BO, F], [BOP, COP])
+    ; BO = Body,
+      F = ""
+    ).
+
+term_expansion((decompose_assertion_body(Body, A, B, C, D, E) :-
+                    decompose_assertion_body(BO, H, C, D, E)),
+               (decompose_assertion_body(Body, Pos,
+                                         A,   B,   C,   D,   E,
+                                         PDP, DPP, CPP, APP, GPP) :-
+                    decompose_assertion_body(BO, BOP,
+                                             H,   C,   D,   E,
+                                             HPP, CPP, APP, GPP))) :-
+    ( nonvar(Body),
+      Body = (A::BO)
+    ->B = H,
+      HPP = DPP,
+      maplist(var_location(Body, Pos), [A, BO], [PDP, BOP])
+    ; BO = Body,
+      B = true,
+      A = H,
+      HPP = PDP
+    ).
 
 %!  decompose_assertion_body(+Body, +Pos, -Head, -Compat, -Call, -Succ, -Glob, Comment, -HPos, -CmpPos, -CPos, -SPos, -GPos, -ComPos)
 %
@@ -250,57 +274,25 @@ term_expansion((decompose_assertion_body(Body, A, B, C, D, E, F) :-
 %   - Usage of is/2 in addition to +/2.
 %   - Solved ambiguity of :/2 and module qualification (valid_cp/1)
 
-% ----------------------- A  B C  D    E F- -A--B-----C-----D-----E-----F--- %ABCDEF
-decompose_assertion_body((A::B:C=>D  + E#F), A, B,    C,    D,    E,    F ). %111111
-decompose_assertion_body((A::B:C=>D is E#F), A, B,    C,    D,    E,    F ). %111111
-decompose_assertion_body((A::B:C=>D  + E  ), A, B,    C,    D,    E,    ""). %111100
-decompose_assertion_body((A::B:C=>D is E  ), A, B,    C,    D,    E,    ""). %111100
-decompose_assertion_body((A::B:C=>D     #F), A, B,    C,    D,    true, F ). %111011
-decompose_assertion_body((A::B:C=>D       ), A, B,    C,    D,    true, ""). %111000
-decompose_assertion_body((A::B:C     + E#F), A, B,    C,    true, E,    F ). %110111
-decompose_assertion_body((A::B:C    is E#F), A, B,    C,    true, E,    F ). %110111
-decompose_assertion_body((A::B:C     + E  ), A, B,    C,    true, E,    ""). %110100
-decompose_assertion_body((A::B:C    is E  ), A, B,    C,    true, E,    ""). %110100
-decompose_assertion_body((A::B:C        #F), A, B,    C,    true, true, F ). %110011
-decompose_assertion_body((A::B:C          ), A, B,    C,    true, true, ""). %110000
-decompose_assertion_body((A::B  =>D  + E#F), A, B,    true, D,    E,    F ). %101111
-decompose_assertion_body((A::B  =>D is E#F), A, B,    true, D,    E,    F ). %101111
-decompose_assertion_body((A::B  =>D  + E  ), A, B,    true, D,    E,    ""). %101100
-decompose_assertion_body((A::B  =>D is E  ), A, B,    true, D,    E,    ""). %101100
-decompose_assertion_body((A::B  =>D     #F), A, B,    true, D,    true, F ). %101011
-decompose_assertion_body((A::B  =>D       ), A, B,    true, D,    true, ""). %101000
-decompose_assertion_body((A::B       + E#F), A, B,    true, true, E,    F ). %100111
-decompose_assertion_body((A::B      is E#F), A, B,    true, true, E,    F ). %100111
-decompose_assertion_body((A::B       + E  ), A, B,    true, true, E,    ""). %100100
-decompose_assertion_body((A::B      is E  ), A, B,    true, true, E,    ""). %100100
-decompose_assertion_body((A::B          #F), A, B,    true, true, true, F ). %100011
-decompose_assertion_body((A::B            ), A, B,    true, true, true, ""). %100000
-decompose_assertion_body((A   :C=>D  + E#F), A, true, C,    D,    E,    F ) :- valid_cp(C). %011111
-decompose_assertion_body((A   :C=>D is E#F), A, true, C,    D,    E,    F ) :- valid_cp(C). %011111
-decompose_assertion_body((A   :C=>D  + E  ), A, true, C,    D,    E,    "") :- valid_cp(C). %011100
-decompose_assertion_body((A   :C=>D is E  ), A, true, C,    D,    E,    "") :- valid_cp(C). %011100
-decompose_assertion_body((A   :C=>D     #F), A, true, C,    D,    true, F ) :- valid_cp(C). %011011
-decompose_assertion_body((A   :C=>D       ), A, true, C,    D,    true, "") :- valid_cp(C). %011000
-decompose_assertion_body((A   :C     + E#F), A, true, C,    true, E,    F ) :- valid_cp(C). %010111
-decompose_assertion_body((A   :C    is E#F), A, true, C,    true, E,    F ) :- valid_cp(C). %010111
-decompose_assertion_body((A   :C     + E  ), A, true, C,    true, E,    "") :- valid_cp(C). %010100
-decompose_assertion_body((A   :C    is E  ), A, true, C,    true, E,    "") :- valid_cp(C). %010100
-decompose_assertion_body((A   :C        #F), A, true, C,    true, true, F ) :- valid_cp(C). %010011
-decompose_assertion_body((A   :C          ), A, true, C,    true, true, "") :- valid_cp(C). %010000
-decompose_assertion_body((A     =>D  + E#F), A, true, true, D,    E,    F ). %001111
-decompose_assertion_body((A     =>D is E#F), A, true, true, D,    E,    F ). %001111
-decompose_assertion_body((A     =>D  + E  ), A, true, true, D,    E,    ""). %001100
-decompose_assertion_body((A     =>D is E  ), A, true, true, D,    E,    ""). %001100
-decompose_assertion_body((A     =>D     #F), A, true, true, D,    true, F ). %001011
-decompose_assertion_body((A     =>D       ), A, true, true, D,    true, ""). %001000
-decompose_assertion_body((A          + E#F), A, true, true, true, E,    F ). %000111
-decompose_assertion_body((A         is E#F), A, true, true, true, E,    F ). %000111
-decompose_assertion_body((A          + E  ), A, true, true, true, E,    ""). %000100
-decompose_assertion_body((A         is E  ), A, true, true, true, E,    ""). %000100
-decompose_assertion_body((BO            #F), A, B,    C,    D,    E,    F ) :-
-    decompose_assertion_body(BO, A, B, C, D, E, "").                         %000011
-decompose_assertion_body((A             #F), A, true, true, true, true, F ). %000011
-decompose_assertion_body((A               ), A, true, true, true, true, ""). %000000
+% ----------------------- A  B C  D    E- -A--B-----C-----D-----E----- %BCDE
+decompose_assertion_body((A   :C=>D  + E), A, C,    D,    E   ) :- valid_cp(C). %111
+decompose_assertion_body((A   :C=>D is E), A, C,    D,    E   ) :- valid_cp(C). %111
+decompose_assertion_body((A   :C=>D     ), A, C,    D,    true) :- valid_cp(C). %110
+decompose_assertion_body((A   :C     + E), A, C,    true, E   ) :- valid_cp(C). %101
+decompose_assertion_body((A   :C    is E), A, C,    true, E   ) :- valid_cp(C). %101
+decompose_assertion_body((A   :C        ), A, C,    true, true) :- valid_cp(C). %100
+decompose_assertion_body((A     =>D  + E), A, true, D,    E   ). %011
+decompose_assertion_body((A     =>D is E), A, true, D,    E   ). %011
+decompose_assertion_body((A     =>D     ), A, true, D,    true). %010
+decompose_assertion_body((A          + E), A, true, true, E   ). %001
+decompose_assertion_body((A         is E), A, true, true, E   ). %001
+decompose_assertion_body((A             ), A, true, true, true). %000
+
+decompose_assertion_body((BO#F), A, B, C, D, E, F ) :- decompose_assertion_body(BO, A, B, C, D, E).
+decompose_assertion_body(BO,     A, B, C, D, E, "") :- decompose_assertion_body(BO, A, B, C, D, E).
+
+decompose_assertion_body((A::BO), A, B,    C, D, E) :- decompose_assertion_body(BO, B, C, D, E).
+decompose_assertion_body(BO,      A, true, C, D, E) :- decompose_assertion_body(BO, A, C, D, E).
 
 valid_cp(C) :- \+ invalid_cp(C).
 
@@ -425,31 +417,43 @@ generate_nodirective_error.
 
 % EMM: Support for grouped global properties
 
-current_body(M:BodyS, _, term_position(_, _, _, _, [_, PosS]), Body, BPos, Gl1, Gl) :-
+current_body(M:BodyS, _, term_position(_, _, _, _, [_, PosS]), Body, BM, BPos, Gl1, Gl) :-
     atom(M),
     !,
-    current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl).
+    current_body(BodyS, M, PosS, Body, BM, BPos, Gl1, Gl).
+current_body(BodyS#Co, M,
+             term_position(From, To, FFrom, FTo, [PosS, PosCo]), Body#Co, BM,
+             term_position(From, To, FFrom, FTo, [BPos, PosCo]), Gl1, Gl) :-
+    !,
+    current_body(BodyS, M, PosS, Body, BM, BPos, Gl1, Gl).
+current_body(BodyS::Term+BGl, M,
+             term_position(From, To, FFrom, FTo,
+                           [PosS,
+                            term_position(_, _, _, _, [PGl, PosTe])]), Body::Term, BM,
+             term_position(From, To, FFrom, FTo, [BPos, PosTe]), Gl1, Gl) :-
+    !,
+    propdef(BGl, M, PGl, Gl1, Gl2),
+    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
+current_body(BodyS::Term is BGl, M,
+             term_position(From, To, FFrom, FTo,
+                           [PosS,
+                            term_position(_, _, _, _, [PGl, PosTe])]), Body::Term, BM,
+             term_position(From, To, FFrom, FTo, [BPos, PosTe]), Gl1, Gl) :-
+    !,
+    propdef(BGl, M, PGl, Gl1, Gl2),
+    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
 current_body(BodyS + BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BPos, Gl1, Gl) :-
+             Body, BM, BPos, Gl1, Gl) :-
     !,
     propdef(BGl, M, PGl, Gl1, Gl2),
-    current_body(BodyS, M, PosS, Body, BPos, Gl2, Gl).
-current_body(BodyS is BGl#Co, M,
-             term_position(From, To, _, _, [PosS, A2TermPos1]),
-             Body, BPos, Gl1, Gl) :-
-    !,
-    cleanup_parentheses(A2TermPos1, A2TermPos),
-    f2_pos(A2TermPos, FFrom, FTo, PGl, PosCo),
-    propdef(BGl, M, PGl, Gl1, Gl2),
-    current_body(BodyS#Co, M, term_position(From, To, FFrom, FTo, [PosS, PosCo]),
-                 Body, BPos, Gl2, Gl).
+    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
 current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BPos, Gl1, Gl) :-
+             Body, BM, BPos, Gl1, Gl) :-
     !,
     propdef(BGl, M, PGl, Gl1, Gl2),
-    current_body(BodyS, M, PosS, Body, BPos, Gl2, Gl).
+    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
 
-current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl) :-
+current_body(BodyS, M, PosS, Body, BM, BPos, Gl1, Gl) :-
     is_decl_global(BodyS, M),
     BodyS =.. [F, Head|GArgL],
     nonvar(Head),
@@ -459,18 +463,17 @@ current_body(BodyS, M, PosS, Body, BPos, Gl1, Gl) :-
     current_body(Head + BGl, M,
                  term_position(_, _, _, _,
                                [HPos, term_position(_, _, FF, FT, [PArgL])]),
-                 Body, BPos, Gl1, Gl).
-current_body(BodyS, M, PosS1, Body, BPos, Gl1, Gl) :-
+                 Body, BM, BPos, Gl1, Gl).
+current_body(BodyS, M, PosS1, Body, BM, BPos, Gl1, Gl) :-
     cleanup_parentheses(PosS1, PosS),
     ( body_member(BodyS, PosS, Lit, LPos)
     *->
-      current_body(Lit, M, LPos, Body, BPos, Gl1, Gl)
-    ; Body = M:BodyS,
+      current_body(Lit, M, LPos, Body, BM, BPos, Gl1, Gl)
+    ; Body = BodyS,
+      BM = M,
       Gl = Gl1,
       BPos = PosS
     ).
-
-f2_pos(term_position(_, _, FFrom, FTo, [PGl, PosCo]), FFrom, FTo, PGl, PosCo).
 
 body_member(Body, _, _, _) :-
     var(Body),
@@ -534,7 +537,7 @@ current_decomposed_assertion_(Assertions, M, APos, Pred, Status, Type, Cp, Ca, S
                                    Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos)
     ; decompose_status_and_type(Assertions, APos, Status, Type, BodyS, PosS1),
       cleanup_parentheses(PosS1, PosS),
-      current_body(BodyS, M, PosS, BM:Body, BPos, Gl, Gl1),
+      current_body(BodyS, M, PosS, Body, BM, BPos, Gl, Gl1),
       decompose_assertion_head_body(Body, BM, BPos, Pred, Cp, Ca, Su, Gl1, Co, CoPos, RPos),
       validate_body_sections(Type, Cp, Ca, Su, Gl, MustBeEmpty, MustNotBeEmpty),
       maplist(report_must_be_empty(Type), MustBeEmpty),

@@ -33,9 +33,7 @@
 */
 
 :- module(assertions_op,
-          [op(975,  xfx, (=>)),
-           op(978,  xfx, (::)),
-           op(1150, fx,  (decl)),
+          [op(1150, fx,  (decl)),
            op(1150, xfx, (decl)),
            op(1150, fx,  (pred)),
            op(1150, xfx, (pred)),
@@ -47,7 +45,9 @@
            op(1150, xfx, (success)),
            op(1150, fx,  (comp)),
            op(1150, xfx, (comp)),
-           op(550,  yfx, (#)),
+           op(980,  yfx, (#)),
+           op(978,  xfx, (::)),
+           op(975,  xfx, (=>)),
            op(500,  fx, (?)),
            op(500,  fx, (:)),
            op(500,  fx, (=)),

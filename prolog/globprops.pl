@@ -711,14 +711,14 @@ use_output_mf(File, S, Goal) :-
 asserta_user_output_check(File, _, _) :-
     open_memory_file(File, write, Stream),
     tell(Stream).
- asserta_user_output_check(File, S, Goal) :-
+asserta_user_output_check(File, S, Goal) :-
     told,
     output_check(File, S, Goal),
     fail.
 
 retract_user_output_check(_, _, _) :-
     told.
- retract_user_output_check(File, _, _) :-
+retract_user_output_check(File, _, _) :-
     open_memory_file(File, append, Stream),
     append(Stream),
     fail.
