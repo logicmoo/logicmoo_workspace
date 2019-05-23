@@ -80,7 +80,7 @@ assertions:asr_glob(ac_asr(M, H, S, D, F), PM, P, F) :- asrc_prop(glob, M, H, S,
 
 asrc_prop(Type, M, H, Mode, D, F, PM, P) :-
     ac_head_prop_idx(H, M, Mode, D, F),
-    assertions:current_normalized_assertion(pred Mode is D, M, _, M:H, _, _, CpL, CaL, SuL, GlL, _, _, _),
+    assertions:current_decomposed_assertion(pred Mode is D, M, _, M:H, _, _, CpL, CaL, SuL, GlL, _, _, _),
     ( member(Type-PrL, [comp-CpL, call-CaL, succ-SuL]),
       member(MPr-_, PrL),
       strip_module(MPr, PM, P)

@@ -41,7 +41,6 @@
            op(1150, xfx, (pred)),
            op(1150, fx,  (prop)),
            op(1150, xfx, (prop)),
-           op(1150, fx,  (modedef)),
            op(1150, fx,  (calls)),
            op(1150, xfx, (calls)),
            op(1150, fx,  (success)),
