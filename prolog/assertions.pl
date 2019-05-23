@@ -274,19 +274,19 @@ term_expansion((decompose_assertion_body(Body, A, B, C, D, E) :-
 %   - Usage of is/2 in addition to +/2.
 %   - Solved ambiguity of :/2 and module qualification (valid_cp/1)
 
-% ----------------------- A  B C  D    E- -A--B-----C-----D-----E----- %BCDE
-decompose_assertion_body((A   :C=>D  + E), A, C,    D,    E   ) :- valid_cp(C). %111
-decompose_assertion_body((A   :C=>D is E), A, C,    D,    E   ) :- valid_cp(C). %111
-decompose_assertion_body((A   :C=>D     ), A, C,    D,    true) :- valid_cp(C). %110
-decompose_assertion_body((A   :C     + E), A, C,    true, E   ) :- valid_cp(C). %101
-decompose_assertion_body((A   :C    is E), A, C,    true, E   ) :- valid_cp(C). %101
-decompose_assertion_body((A   :C        ), A, C,    true, true) :- valid_cp(C). %100
-decompose_assertion_body((A     =>D  + E), A, true, D,    E   ). %011
-decompose_assertion_body((A     =>D is E), A, true, D,    E   ). %011
-decompose_assertion_body((A     =>D     ), A, true, D,    true). %010
-decompose_assertion_body((A          + E), A, true, true, E   ). %001
-decompose_assertion_body((A         is E), A, true, true, E   ). %001
-decompose_assertion_body((A             ), A, true, true, true). %000
+% ----------------------- AB C  D    E- -AB--C-----D-----E----- %BCDE
+decompose_assertion_body((AB:C=>D  + E), AB, C,    D,    E   ) :- valid_cp(C). %111
+decompose_assertion_body((AB:C=>D is E), AB, C,    D,    E   ) :- valid_cp(C). %111
+decompose_assertion_body((AB:C=>D     ), AB, C,    D,    true) :- valid_cp(C). %110
+decompose_assertion_body((AB:C     + E), AB, C,    true, E   ) :- valid_cp(C). %101
+decompose_assertion_body((AB:C    is E), AB, C,    true, E   ) :- valid_cp(C). %101
+decompose_assertion_body((AB:C        ), AB, C,    true, true) :- valid_cp(C). %100
+decompose_assertion_body((AB  =>D  + E), AB, true, D,    E   ). %011
+decompose_assertion_body((AB  =>D is E), AB, true, D,    E   ). %011
+decompose_assertion_body((AB  =>D     ), AB, true, D,    true). %010
+decompose_assertion_body((AB       + E), AB, true, true, E   ). %001
+decompose_assertion_body((AB      is E), AB, true, true, E   ). %001
+decompose_assertion_body((AB          ), AB, true, true, true). %000
 
 decompose_assertion_body((BO#F), A, B, C, D, E, F ) :- decompose_assertion_body(BO, A, B, C, D, E).
 decompose_assertion_body(BO,     A, B, C, D, E, "") :- decompose_assertion_body(BO, A, B, C, D, E).
@@ -392,28 +392,23 @@ decompose_status_and_type_1(Assertions, term_position(_, _, _, _, [_, BPos]),
     Assertions =.. [AssrtType, AssrtStatus, UBody],
     neck.
 
-term_expansion(generate_nodirective_error, Clauses) :-
-    expand_nodirective_error(Clauses).
-
-expand_nodirective_error(Clauses) :-
-    findall((:- export(Type/Arity)),
-            ( assrt_type(Type),
-              member(Arity, [1, 2])
-            ), Clauses, ClauseT),
-    findall((Assr :- Body),
-            ( assrt_type(Type),
-              decompose_status_and_type_1(Assr, _, Status, Type, _, _),
-              functor(Assr, Type, Arity),
-              Body1 = ignore(nodirective_error_hook(Assr)),
-              ( Arity = 1
-              ->Body = Body1
-              ; Body = (assrt_status(Status), Body1)
-              )
-            ),
-            ClauseT).
-
 % To Avoid attempts to execute asertions (must be declarations):
-generate_nodirective_error.
+
+:- assrt_type(Type),
+   member(Arity, [1, 2]),
+   neck,
+   export(Type/Arity).
+
+Assr :-
+    decompose_status_and_type_1(Assr, _, Status, Type, _, _),
+    functor(Assr, Type, Arity),
+    Body1 = ignore(nodirective_error_hook(Assr)),
+    ( Arity = 1
+    ->Body = Body1
+    ; Body = (assrt_status(Status), Body1)
+    ),
+    neck,
+    Body.
 
 % EMM: Support for grouped global properties
 
@@ -426,7 +421,7 @@ current_body(BodyS#Co, M,
              term_position(From, To, FFrom, FTo, [BPos, PosCo]), Gl1, Gl) :-
     !,
     current_body(BodyS, M, PosS, Body, BM, BPos, Gl1, Gl).
-current_body(BodyS::Term+BGl, M,
+current_body(BodyS::Term + BGl, M,
              term_position(From, To, FFrom, FTo,
                            [PosS,
                             term_position(_, _, _, _, [PGl, PosTe])]), Body::Term, BM,
