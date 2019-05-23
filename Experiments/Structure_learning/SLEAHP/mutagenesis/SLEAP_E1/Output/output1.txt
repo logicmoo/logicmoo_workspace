@@ -1,0 +1,76 @@
+Time=85.246000 
+LL: -13.98495692707145
+AUCROC: 0.6571428571428571
+AUCPR: 0.876416287131955
+Learned Program
+active:0.009646787954261526:-bond(A,B,7),hidden_1(A,B).
+active:0.0018544984781556195:-bond(C,D,7),hidden_2(C,D).
+active:0.004365938075716258:-bond(E,F,7),hidden_6(E,F).
+active:0.43043562927032325:-bond(G,H,7),hidden_8(G,H).
+active:0.010519751580795855:-bond(I,J,7),hidden_16(I,J).
+active:0.007715868907098411:-bond(K,L,7),hidden_17(K,L).
+hidden_1(A,B):0.029285072773723185:-bond(B,M,7),hidden_1_1(A,B,M).
+hidden_1(A,B):0.0009864793295037088:-bond(N,A,7),hidden_1_2(B,N,A).
+hidden_1(A,B):0.2704934940207295:-bond(A,O,1),hidden_1_3(B,A,O).
+hidden_1(A,B):0.08141612119670753:-bond(B,P,1),hidden_1_4(A,B,P).
+hidden_1(A,B):0.0004641425067347882:-atm(A,c,22,Q).
+hidden_2(C,D):0.0028175799917789846:-bond(D,R,7),hidden_2_1(C,D,R).
+hidden_6(E,F):0.08860183837996374:-bond(F,S,7),hidden_6_1(E,F,S).
+hidden_6(E,F):0.00041612007040612296:-bond(T,E,7),hidden_6_2(F,T,E).
+hidden_6(E,F):0.7803801149251285:-bond(E,U,1),hidden_6_3(F,E,U).
+hidden_6(E,F):0.15218033158935212:-atm(F,c,22,V),hidden_6_4(E,F,V).
+hidden_8(G,H):0.5303759591727157:-bond(H,W,7),hidden_8_1(G,H,W).
+hidden_8(G,H):0.009024131167143424:-bond(X,G,7),hidden_8_2(H,X,G).
+hidden_8(G,H):0.0004001285335675675:-bond(G,Y,1).
+hidden_8(G,H):0.1752998667594511:-bond(H,Z,1),hidden_8_4(G,H,Z).
+hidden_8(G,H):0.3834960436552137:-atm(H,c,22,A1),hidden_8_5(G,H,A1).
+hidden_16(I,J):0.0012430921198188117:-bond(B1,I,7),hidden_16_1(J,B1,I).
+hidden_16(I,J):0.9270239155977833:-bond(J,C1,1),hidden_16_3(I,J,C1).
+hidden_16(I,J):0.0009677040467295228:-atm(I,c,22,D1).
+hidden_16(I,J):0.005406634940663934:-atm(J,c,22,D1),hidden_16_4(I,J,D1).
+hidden_17(K,L):0.09248094533904805:-bond(L,E1,7),hidden_17_1(K,L,E1).
+hidden_17(K,L):0.0009956199611224291:-bond(F1,K,7).
+hidden_1_1(A,B,M):0.028286797385408135:-bond(M,G1,7).
+hidden_1_2(B,N,A):0.00033014867054816934:-bond(N,H1,1).
+hidden_1_3(B,A,O):0.8184841107035481:-atm(O,h,3,I1),hidden_1_3_1(B,A,O,I1).
+hidden_1_4(A,B,P):0.801459742706129:-atm(P,h,3,J1),hidden_1_4_1(A,B,P,J1).
+hidden_2_1(C,D,R):0.07732685562366441:-bond(R,K1,7).
+hidden_6_1(E,F,S):0.028384062770680885:-bond(S,L1,7),hidden_6_1_1(E,F,S,L1).
+hidden_6_1(E,F,S):0.00044768416545366564:-bond(S,M1,1).
+hidden_6_2(F,T,E):0.0026658110526682323:-bond(T,N1,1).
+hidden_6_3(F,E,U):0.28527113402251414:-atm(U,h,3,O1),hidden_6_3_1(F,E,U,O1).
+hidden_6_4(E,F,V):0.5817752676536656:-atm(S,c,22,V).
+hidden_8_1(G,H,W):0.004389445198262365:-bond(W,P1,7),hidden_8_1_1(G,H,W,P1).
+hidden_8_1(G,H,W):0.0011245535778471095:-bond(W,Q1,7),hidden_8_1_2(G,H,W,Q1).
+hidden_8_1(G,H,W):0.3760140852265351:-atm(W,c,27,R1).
+hidden_8_2(H,X,G):0.0009576792246889454:-bond(S1,X,7).
+hidden_8_4(G,H,Z):0.19671151750490026:-atm(Z,h,3,T1),hidden_8_4_1(G,H,Z,T1).
+hidden_8_5(G,H,A1):0.08734187627114806:-atm(Q1,c,22,A1).
+hidden_16_1(J,B1,I):0.0028766689469648552:-bond(B1,U1,1).
+hidden_16_3(I,J,C1):0.20863770466016832:-atm(C1,h,3,V1),hidden_16_3_1(I,J,C1,V1).
+hidden_16_4(I,J,D1):0.30878291549288406:-atm(W1,c,22,D1).
+hidden_17_1(K,L,E1):7.909189357633296e-5:-bond(E1,X1,7),hidden_17_1_1(K,L,E1,X1).
+hidden_17_1(K,L,E1):0.00019355438828370098:-atm(E1,c,22,Y1).
+hidden_1_3_1(B,A,O,I1):0.07307242054571361:-atm(Z1,h,3,I1).
+hidden_1_4_1(A,B,P,J1):0.04978577296037656:-atm(A2,h,3,J1).
+hidden_6_1_1(E,F,S,L1):0.001647593292898364:-bond(L1,B2,1).
+hidden_6_3_1(F,E,U,O1):0.48867006507771293:-atm(M1,h,3,O1).
+hidden_8_1_1(G,H,W,P1):0.00948021248191253:-bond(P1,C2,7).
+hidden_8_1_2(G,H,W,Q1):0.0018112055000187866:-bond(Q1,D2,7),hidden_8_1_2_1(G,H,W,Q1,D2).
+hidden_8_4_1(G,H,Z,T1):0.0027759271060858737:-atm(E2,h,3,T1).
+hidden_16_3_1(I,J,C1,V1):0.17576670174685205:-atm(F2,h,3,V1).
+hidden_17_1_1(K,L,E1,X1):0.006535464336457153:-bond(X1,G2,1).
+hidden_8_1_2_1(G,H,W,Q1,D2):0.0006857154092926975:-bond(D2,H2,1).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? yes
+Number of arithmetic circuits: 169 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

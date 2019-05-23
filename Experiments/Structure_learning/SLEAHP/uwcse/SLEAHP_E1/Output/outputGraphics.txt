@@ -1,0 +1,35 @@
+Time=364.451000 
+LL: -11850.539871310713
+AUCROC: 0.9559646041610376
+AUCPR: 0.05822698703713771
+Learned Program
+advisedby(A,B):0.045490349124179374:-professor(B).
+advisedby(A,B):0.016769874080841872:-hasposition(B,C).
+advisedby(A,B):0.22234745723289961:-taughtby(D,B,E).
+advisedby(A,B):0.004797176595275232:-taughtby(F,B,G),hidden_5(A,F,B,G).
+advisedby(A,B):0.7031926239094901:-taughtby(H,B,I).
+advisedby(A,B):0.08636183896514922:-ta(J,A,K).
+advisedby(A,B):5.175200967642013e-5:-taughtby(L,B,M),hidden_14(A,L,B,M).
+advisedby(A,B):0.857167657782702:-publication(N,B).
+advisedby(A,B):0.6180756947556801:-taughtby(O,B,P).
+advisedby(A,B):3.4980649797944355e-5:-taughtby(Q,B,R),hidden_22(A,Q,B,R).
+advisedby(A,B):0.0006745176251570228:-taughtby(S,B,T),hidden_24(A,S,B,T).
+hidden_5(A,F,B,G):0.06535573485398345:-ta(F,U,V).
+hidden_14(A,L,B,M):0.15076604764672083:-taughtby(L,W,X).
+hidden_22(A,Q,B,R):0.20524572048780101:-taughtby(Y,Z,R).
+hidden_22(A,Q,B,R):0.00010061473360565288:-ta(Q,A1,R).
+hidden_24(A,S,B,T):0.11313984011867433:-taughtby(B1,C1,T).
+hidden_24(A,S,B,T):0.9086771713487906:-ta(D1,E1,T).
+
+ Hyperparameters of uwcse_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 3831 
+Max Iteration= 1000 
+Epsilon= -0,000100 
+Delta= -0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

@@ -1,0 +1,40 @@
+Time=7.763000 
+LL: -167.26002372607672
+AUCROC: 0.5901238342761045
+AUCPR: 0.24613326238193836
+Learned Program
+christian_religion(A):0.04338764376272468:-politics(A,B,C,D,E).
+christian_religion(A):0.04246570804332767:-economy(A,F,G,H,I,J).
+christian_religion(A):0.01568637027545937:-language(A,K,L).
+christian_religion(A):0.012522424060237469:-ethnicGroup(A,M,N).
+christian_religion(A):0.0409573607922547:-encompasses(A,O,P),hidden_1(A,O,P).
+christian_religion(A):0.06736797121663071:-language(A,Q,R),hidden_2(A,Q,R).
+christian_religion(A):0.04167677140821193:-encompasses(A,S,T),hidden_3(A,S,T).
+christian_religion(A):0.01594119795985581:-isMember(A,U,V).
+hidden_1(A,O,P):0.012157111042863713:-encompasses(W,O,P).
+hidden_2(A,Q,R):0.014144044169469124:-language(X,Q,Y),hidden_2_1(A,R,X,Q,Y).
+hidden_3(A,S,T):0.012754225544340789:-encompasses(Z,S,T).
+hidden_2_1(A,R,X,Q,Y):0.030876847387549103:-ethnicGroup(X,A1,B1).
+hidden_2_1(A,R,X,Q,Y):0.027898350666350557:-borders(X,C1,D1),hidden_2_1_1(A,R,Q,Y,X,C1,D1).
+hidden_2_1(A,R,X,Q,Y):0.02419986716976588:-borders(E1,X,F1).
+hidden_2_1_1(A,R,Q,Y,X,C1,D1):0.030193208856111788:-encompasses(C1,G1,H1).
+
+ Hyperparameters of mondial_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 176 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Parameters are initialized with values in the range [-0,50 0,50]
+Eta= 0,900000 
+Beta1= 0,900000 
+Beta2= 0,999000 
+Adam_hat= 0,0000000100  
+BatchSize= 0 
+Strategy= batch 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

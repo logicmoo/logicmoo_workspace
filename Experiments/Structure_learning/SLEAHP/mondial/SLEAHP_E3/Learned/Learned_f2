@@ -1,0 +1,13 @@
+
+Learned Program
+christian_religion(A):1.0055202308517486e-5:-ethnicGroup(A,B,C).
+christian_religion(A):0.026050878989995557:-language(A,D,E),hidden_2(A,D,E).
+christian_religion(A):0.0045248648725896255:-isMember(A,F,G).
+christian_religion(A):0.06590981922533837:-encompasses(A,H,I),hidden_3(A,H,I).
+christian_religion(A):0.013654664581586859:-language(A,J,K),hidden_4(A,J,K).
+hidden_2(A,D,E):0.01654487823362936:-language(L,D,M),hidden_2_1(A,E,L,D,M).
+hidden_3(A,H,I):0.25624949894880156:-encompasses(N,H,I).
+hidden_4(A,J,K):0.009633512709148204:-language(O,J,P),hidden_4_1(A,K,O,J,P).
+hidden_2_1(A,E,L,D,M):0.03544461596746796:-ethnicGroup(L,Q,R).
+hidden_4_1(A,K,O,J,P):0.015846316289308108:-borders(O,S,T),hidden_4_1_1(A,K,J,P,O,S,T).
+hidden_4_1_1(A,K,J,P,O,S,T):0.007428873438207548:-encompasses(S,U,V).

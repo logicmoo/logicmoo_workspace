@@ -1,0 +1,32 @@
+Time=277.026000 
+LL: -180.78127293167114
+AUCROC: 0.9221025433490022
+AUCPR: 0.05011649338751238
+Learned Program
+advisedby(A,B):0.017201163195011412:-professor(B).
+advisedby(A,B):0.0006940332180940495:-hasposition(B,C).
+advisedby(A,B):0.000737160896360897:-publication(D,B).
+advisedby(A,B):6.070849306370457e-5:-publication(E,B).
+advisedby(A,B):0.00013067291034969103:-publication(F,B).
+advisedby(A,B):0.00022521579620503392:-taughtby(G,B,H).
+advisedby(A,B):0.0020215646391553484:-taughtby(I,B,J).
+advisedby(A,B):0.013550566798223817:-taughtby(K,B,L).
+advisedby(A,B):2.5621272218182614e-5:-publication(M,B).
+advisedby(A,B):7.349481646525192e-5:-taughtby(N,B,O).
+advisedby(A,B):0.00016171408378345132:-taughtby(P,B,Q).
+advisedby(A,B):0.00010983871782042491:-publication(R,B).
+advisedby(A,B):0.000635731113119841:-taughtby(S,B,T).
+
+ Hyperparameters of uwcse_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 2343 
+Max Iteration= 1000 
+Epsilon= -0,000100 
+Delta= -0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type L3:
+a:0,000000
+fraction of examples b:0,100000

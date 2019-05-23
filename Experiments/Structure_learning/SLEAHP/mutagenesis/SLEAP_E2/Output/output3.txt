@@ -1,0 +1,54 @@
+Time=17.521000 
+LL: -17.511473761762165
+AUCROC: 0.8809523809523808
+AUCPR: 0.9375563230342643
+Learned Program
+active:0.5049250583203058:-bond(A,B,7),hidden_1(A,B).
+active:0.01705139955391205:-bond(C,D,7),hidden_2(C,D).
+active:0.06554138693671746:-benzene(E),hidden_3(E).
+active:0.009398897467117029:-benzene(F),hidden_4(F).
+active:0.3651816343125122:-ring_size_5(G).
+hidden_1(A,B):0.026766689087136364:-bond(B,H,7),hidden_1_1(A,B,H).
+hidden_1(A,B):0.21053426118079943:-bond(I,A,7).
+hidden_1(A,B):0.12548561622817184:-bond(B,J,1),hidden_1_3(A,B,J).
+hidden_1(A,B):0.10426951591469488:-bond(A,K,1),hidden_1_4(B,A,K).
+hidden_1(A,B):0.06505496888493068:-atm(B,c,22,L),hidden_1_5(A,B,L).
+hidden_2(C,D):0.6869988884409796:-bond(D,M,7),hidden_2_1(C,D,M).
+hidden_2(C,D):0.21605584346336298:-bond(N,C,7).
+hidden_3(E):0.04698124734042064:-ring_size_6(E).
+hidden_4(F):0.044167441174195354:-ring_size_6(F).
+hidden_1_1(A,B,H):0.11740649185257551:-bond(H,O,7),hidden_1_1_1(A,B,H,O).
+hidden_1_1(A,B,H):0.024251273204100032:-bond(H,P,1),hidden_1_1_2(A,B,H,P).
+hidden_1_1(A,B,H):0.08526826510997754:-atm(H,c,22,Q).
+hidden_1_3(A,B,J):0.12752203292685285:-atm(J,h,3,R),hidden_1_3_1(A,B,J,R).
+hidden_1_4(B,A,K):0.014731814234993035:-bond(S,K,2).
+hidden_1_4(B,A,K):0.06715843607921818:-bond(K,T,2),hidden_1_4_2(B,A,K,T).
+hidden_1_4(B,A,K):0.002858362060497721:-atm(K,n,38,U).
+hidden_1_5(A,B,L):0.47187148947436064:-atm(V,c,22,L).
+hidden_2_1(C,D,M):0.1811572035746641:-bond(M,W,7),hidden_2_1_1(C,D,M,W).
+hidden_2_1(C,D,M):0.04142275677201407:-bond(M,X,1),hidden_2_1_2(C,D,M,X).
+hidden_1_1_1(A,B,H,O):0.16745227943239316:-bond(O,V,7).
+hidden_1_1_1(A,B,H,O):0.01890938366055228:-atm(O,c,29,Y),hidden_1_1_1_2(A,B,H,O,Y).
+hidden_1_1_2(A,B,H,P):0.03933230037168717:-bond(P,Z,2),hidden_1_1_2_1(A,B,H,P,Z).
+hidden_1_3_1(A,B,J,R):0.14909867963079262:-atm(A1,h,3,R).
+hidden_1_4_2(B,A,K,T):0.08084974497759223:-atm(T,o,40,B1),hidden_1_4_2_1(B,A,K,T,B1).
+hidden_2_1_1(C,D,M,W):0.19966504759620599:-bond(W,C1,7),hidden_2_1_1_1(C,D,M,W,C1).
+hidden_2_1_1(C,D,M,W):0.18022498703860262:-bond(W,D1,1).
+hidden_2_1_2(C,D,M,X):0.032840028765369345:-bond(X,E1,2).
+hidden_1_1_1_2(A,B,H,O,Y):0.020261802377513738:-atm(N,c,29,Y).
+hidden_1_1_2_1(A,B,H,P,Z):0.037067315242315324:-atm(Z,o,40,F1).
+hidden_1_4_2_1(B,A,K,T,B1):0.10259150657896049:-atm(G1,o,40,B1).
+hidden_2_1_1_1(C,D,M,W,C1):0.23454647603148046:-bond(C1,H1,1).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 169 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L2 
+Gamma: 10,000000

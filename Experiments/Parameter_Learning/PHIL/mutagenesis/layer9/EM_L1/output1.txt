@@ -1,0 +1,31 @@
+Wall time=4.972000  CLL=-92.262228 
+LL: -30.15681785557966
+AUCROC: 0.7142857142857143
+AUCPR: 0.9035370567684811
+Learned Program
+active:0.03183634917804738:-bond(A,B,1),hidden_1(A,B).
+active:0.6536785150217469:-benzene(C),hidden_2(C).
+hidden_1(A,B):0.01845102247734758:-bond(D,A,7),hidden_1_2(B,D,A).
+hidden_1(E,F):0.013266973887471067:-bond(F,G,7),hidden_1_3(E,F,G).
+hidden_1(H,I):0.007689359756659542:-bond(J,H,7),hidden_1_4(I,J,H).
+hidden_2(C):0.6536844025831812:-ring_size_6(C).
+hidden_1_2(B,D,A):0.12810825332308012:-bond(D,K,7),hidden_1_2_1(B,A,D,K).
+hidden_1_3(E,F,G):3.113647337613656e-5:-atm(G,c,22,L),hidden_1_3_3(E,F,G,L).
+hidden_1_4(I,J,H):0.0006238029525547972:-atm(J,c,22,M).
+hidden_1_2_1(B,A,D,K):0.01904864820930925:-bond(K,N,7),hidden_1_2_1_1(B,A,D,K,N).
+hidden_1_3_3(E,F,G,L):0.0005044217740191925:-atm(O,c,22,L).
+hidden_1_2_1_1(B,A,D,K,N):0.02427918014034276:-bond(N,P,7),hidden_1_2_1_1_1(B,A,D,K,N,P).
+hidden_1_2_1_1_1(B,A,D,K,N,P):0.002578884040678986:-bond(P,Q,7).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 169 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

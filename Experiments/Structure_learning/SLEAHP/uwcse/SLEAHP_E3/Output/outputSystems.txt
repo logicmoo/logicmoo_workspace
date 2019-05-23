@@ -1,0 +1,27 @@
+Time=224.230000 
+LL: -209.23408178488498
+AUCROC: 0.8987457569286342
+AUCPR: 0.02870871515229784
+Learned Program
+advisedby(A,B):0.02492492174182057:-professor(B).
+advisedby(A,B):0.002114282526257073:-hasposition(B,C).
+advisedby(A,B):1.420806308774726e-5:-publication(D,B).
+advisedby(A,B):0.012808733488756729:-taughtby(E,B,F).
+advisedby(A,B):0.0005073086196191937:-publication(G,B).
+advisedby(A,B):0.00026698747152048357:-publication(H,A).
+advisedby(A,B):6.436623372717601e-5:-publication(I,B).
+advisedby(A,B):0.0003138020757579811:-publication(J,A).
+
+ Hyperparameters of uwcse_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 2671 
+Max Iteration= 1000 
+Epsilon= -0,000100 
+Delta= -0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type L3:
+a:0,000000
+fraction of examples b:0,100000

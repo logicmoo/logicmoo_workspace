@@ -1,0 +1,30 @@
+Wall time=1.161000  CLL=-302.425409 
+LL: -72.85378149790488
+AUCROC: 0.9735341799513645
+AUCPR: 0.279861879206988
+Learned Program
+advisedby(A,B):0.8042711710843378:-professor(B),hidden_1(A,B).
+hidden_1(A,B):0.7455425326374779:-student(A),hidden_1_1(A,B).
+hidden_1(C,D):0.10248031894648194:-student(C),hidden_1_2(C,D).
+hidden_1_1(A,B):0.11890933725987338:-hasposition(B,faculty).
+hidden_1_1(E,F):0.5694492137633105:-publication(G,E),hidden_1_1_2(E,F,G).
+hidden_1_2(C,D):0.12236236025315747:-publication(H,C),hidden_1_2_1(C,D,H).
+hidden_1_1_2(E,F,G):0.569449737694633:-publication(G,F).
+hidden_1_2_1(C,D,H):0.10732580129121061:-publication(H,I),hidden_1_2_1_1(C,D,H,I).
+hidden_1_2_1_1(C,D,H,I):0.10055937454939112:-I\==C,hidden_1_2_1_1_1(C,D,H,I).
+hidden_1_2_1_1_1(C,D,H,I):0.17453315259604096:-I\==D,hidden_1_2_1_1_1_1(C,D,H,I).
+hidden_1_2_1_1_1_1(C,D,H,I):0.10027613066043273:-inphase(C,J),hidden_1_2_1_1_1_1_1(C,D,H,I,J).
+hidden_1_2_1_1_1_1_1(C,D,H,I,J):0.10008732791052921:-inphase(I,J).
+
+ Hyperparameters of uwcse_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 3831 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

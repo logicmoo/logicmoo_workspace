@@ -1,0 +1,95 @@
+Time=341.302000 
+LL: -63.78068434361603
+AUCROC: 0.9789964157706093
+AUCPR: 0.38212322872117865
+Learned Program
+advisedby(A,B):6.653193042160122e-5:-professor(B).
+advisedby(A,B):6.149966499227436e-5:-student(A).
+advisedby(A,B):6.485590823710598e-5:-hasposition(B,C).
+advisedby(A,B):6.042438752332201e-5:-publication(D,A),hidden_1(B,D,A).
+advisedby(A,B):6.223004490065221e-5:-inphase(A,E).
+advisedby(A,B):6.666647959061668e-5:-yearsinprogram(A,F).
+advisedby(A,B):6.157378212988808e-5:-taughtby(G,B,H).
+advisedby(A,B):6.881900120159842e-5:-taughtby(I,B,J),hidden_2(A,I,B,J).
+advisedby(A,B):6.139856926286025e-5:-taughtby(K,B,L),hidden_3(A,K,B,L).
+advisedby(A,B):6.420269760063266e-5:-publication(M,B).
+advisedby(A,B):6.697701702737885e-5:-publication(N,B),hidden_4(A,N,B).
+advisedby(A,B):6.317134718908134e-5:-publication(O,B),hidden_5(A,O,B).
+advisedby(A,B):6.975551971089743e-5:-taughtby(P,B,Q),hidden_6(A,P,B,Q).
+advisedby(A,B):6.596503491150417e-5:-taughtby(R,B,S),hidden_7(A,R,B,S).
+advisedby(A,B):6.057635079809824e-5:-taughtby(T,B,U),hidden_8(A,T,B,U).
+advisedby(A,B):6.46393874817704e-5:-taughtby(T,B,V),hidden_9(A,T,B,V).
+advisedby(A,B):6.17056096648237e-5:-taughtby(W,B,X),hidden_10(A,W,B,X).
+advisedby(A,B):6.0864414649335035e-5:-taughtby(Y,B,Z),hidden_11(A,Y,B,Z).
+advisedby(A,B):6.53495421583481e-5:-publication(A1,B),hidden_12(A,A1,B).
+advisedby(A,B):6.221894750390413e-5:-publication(B1,B),hidden_13(A,B1,B).
+advisedby(A,B):6.14121495753582e-5:-publication(C1,B),hidden_14(A,C1,B).
+advisedby(A,B):6.109450553567195e-5:-publication(D1,B),hidden_15(A,D1,B).
+advisedby(A,B):6.156820433242357e-5:-publication(E1,B),hidden_16(A,E1,B).
+advisedby(A,B):6.910590407826571e-5:-taughtby(F1,B,G1),hidden_17(A,F1,B,G1).
+advisedby(A,B):6.708730974815768e-5:-taughtby(H1,B,I1),hidden_18(A,H1,B,I1).
+advisedby(A,B):6.358446083484506e-5:-taughtby(J1,B,K1),hidden_19(A,J1,B,K1).
+advisedby(A,B):6.679302747146012e-5:-publication(L1,A),hidden_20(B,L1,A).
+advisedby(A,B):6.292564915614289e-5:-publication(M1,B),hidden_21(A,M1,B).
+advisedby(A,B):6.55923629600724e-5:-publication(N1,B),hidden_22(A,N1,B).
+advisedby(A,B):6.517942968500255e-5:-publication(O1,B),hidden_23(A,O1,B).
+advisedby(A,B):6.166079013475668e-5:-taughtby(P1,B,Q1),hidden_24(A,P1,B,Q1).
+advisedby(A,B):6.216947984150765e-5:-taughtby(R1,B,S1),hidden_25(A,R1,B,S1).
+advisedby(A,B):6.702297549392186e-5:-taughtby(P1,B,T1),hidden_26(A,P1,B,T1).
+advisedby(A,B):6.690469677298486e-5:-taughtby(P1,B,U1),hidden_27(A,P1,B,U1).
+advisedby(A,B):6.221215804958326e-5:-taughtby(R1,B,V1),hidden_28(A,R1,B,V1).
+advisedby(A,B):6.972820236809679e-5:-ta(W1,A,X1),hidden_29(B,W1,A,X1).
+hidden_1(B,D,A):6.334827059809111e-5:-publication(D,Y1).
+hidden_2(A,I,B,J):0.0008931381551333631:-taughtby(Z1,A2,J).
+hidden_3(A,K,B,L):0.00125399879562251:-taughtby(Z1,B2,L).
+hidden_3(A,K,B,L):0.0010968944387959555:-ta(K,C2,L).
+hidden_4(A,N,B):6.88468318867816e-5:-publication(N,D2).
+hidden_5(A,O,B):6.49888557017812e-5:-publication(O,E2).
+hidden_6(A,P,B,Q):0.010531654032940003:-taughtby(P,F2,G2).
+hidden_7(A,R,B,S):0.0038120066791292873:-taughtby(R,H2,G2).
+hidden_8(A,T,B,U):0.00022761109851905745:-taughtby(R,I2,U).
+hidden_9(A,T,B,V):0.004152669563545234:-taughtby(T,J2,G2).
+hidden_10(A,W,B,X):0.0003580834879649838:-taughtby(K2,H2,X).
+hidden_11(A,Y,B,Z):0.00032244049537150283:-taughtby(R,F2,Z).
+hidden_11(A,Y,B,Z):0.0031334926824950265:-ta(Y,L2,Z).
+hidden_12(A,A1,B):6.893655338409346e-5:-publication(A1,M2).
+hidden_13(A,B1,B):6.553222500330766e-5:-publication(B1,N2).
+hidden_14(A,C1,B):6.120667630103702e-5:-publication(C1,O2).
+hidden_15(A,D1,B):7.003258382955555e-5:-publication(D1,P2).
+hidden_16(A,E1,B):6.746945682308824e-5:-publication(E1,Q2).
+hidden_17(A,F1,B,G1):0.0005733783197503528:-taughtby(F1,R2,S2).
+hidden_18(A,H1,B,I1):0.003234754934088691:-ta(H1,T2,I1).
+hidden_19(A,J1,B,K1):0.0004992511464193453:-taughtby(J1,R2,G1).
+hidden_19(A,J1,B,K1):0.0029409866199657914:-ta(J1,U2,V2).
+hidden_20(B,L1,A):6.05437882783927e-5:-publication(L1,W2).
+hidden_21(A,M1,B):6.715694514755966e-5:-publication(M1,X2).
+hidden_22(A,N1,B):6.219384656168133e-5:-publication(N1,Y2).
+hidden_23(A,O1,B):6.18521808214116e-5:-publication(O1,Z2).
+hidden_24(A,P1,B,Q1):0.002066962412969912:-taughtby(A3,B3,Q1).
+hidden_25(A,R1,B,S1):0.002229347306435661:-taughtby(C3,D3,S1).
+hidden_25(A,R1,B,S1):0.002400104882331886:-ta(E3,F3,S1).
+hidden_26(A,P1,B,T1):0.00044515702489837417:-taughtby(A3,G3,T1).
+hidden_27(A,P1,B,U1):0.004603209121072185:-taughtby(A3,B3,U1).
+hidden_28(A,R1,B,V1):0.00034379819345506667:-taughtby(A3,B3,V1).
+hidden_28(A,R1,B,V1):0.0020838055970918558:-ta(R1,H3,T1).
+hidden_29(B,W1,A,X1):6.731157986160413e-5:-ta(A3,I3,X1).
+
+ Hyperparameters of uwcse_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 4092 
+Max Iteration= 1000 
+Epsilon= -0,000100 
+Delta= -0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Parameters are initialized with values in the range [-0,50 0,50]
+Eta= 0,900000 
+Beta1= 0,900000 
+Beta2= 0,999000 
+Adam_hat= 0,0000000100  
+BatchSize= 100 
+Strategy= stochastic 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

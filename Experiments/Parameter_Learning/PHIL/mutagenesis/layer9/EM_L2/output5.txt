@@ -1,0 +1,65 @@
+Wall time=4.735000  CLL=-87.691132 
+LL: -6.859714796502281
+AUCROC: 0.9571428571428572
+AUCPR: 0.9840463108320252
+Learned Program
+active:0.05304996454983796:-bond(A,B,1),hidden_1(A,B).
+active:0.6161278681936293:-benzene(C),hidden_2(C).
+active:0.005976697212859927:-benzene(D),hidden_3(D).
+active:0.11375316847114647:-benzene(E),hidden_4(E).
+active:0.0027463480015982866:-carbon_6_ring(F),hidden_5(F).
+active:0.10296077778439497:-nitro(G).
+hidden_1(A,B):0.006241492396827197:-bond(B,H,7),hidden_1_1(A,B,H).
+hidden_1(I,J):0.10571556702996676:-bond(K,I,7),hidden_1_2(J,K,I).
+hidden_1(L,M):0.20115877632171497:-bond(M,N,7),hidden_1_3(L,M,N).
+hidden_1(O,P):0.1498937203695767:-bond(Q,O,7),hidden_1_4(P,Q,O).
+hidden_2(C):0.6161281084083899:-ring_size_6(C).
+hidden_3(D):0.017746539835850395:-ring_size_6(D).
+hidden_4(E):0.11382375455815097:-ring_size_6(E).
+hidden_5(F):0.0027462955864471783:-ring_size_6(F).
+hidden_1_1(A,B,H):0.005644374682359399:-bond(H,R,1),hidden_1_1_1(A,B,H,R).
+hidden_1_2(J,K,I):0.3279968587233607:-bond(K,S,7),hidden_1_2_1(J,I,K,S).
+hidden_1_3(L,M,N):0.04907485835511244:-bond(N,T,7),hidden_1_3_1(L,M,N,T).
+hidden_1_3(U,V,W):0.05317365124482232:-bond(W,X,1),hidden_1_3_2(U,V,W,X).
+hidden_1_3(Y,Z,A1):0.0720958801508691:-atm(A1,c,22,B1),hidden_1_3_3(Y,Z,A1,B1).
+hidden_1_4(P,Q,O):0.051338872812610514:-bond(Q,C1,1),hidden_1_4_1(P,O,Q,C1).
+hidden_1_1_1(A,B,H,R):0.00020162777819099365:-bond(R,D1,7),hidden_1_1_1_1(A,B,H,R,D1).
+hidden_1_1_1(E1,F1,G1,H1):0.0059788005799140675:-bond(H1,I1,7),hidden_1_1_1_2(E1,F1,G1,H1,I1).
+hidden_1_2_1(J,I,K,S):0.17972912430132162:-bond(S,J1,7),hidden_1_2_1_1(J,I,K,S,J1).
+hidden_1_3_1(L,M,N,T):0.0410585829899166:-bond(T,K1,7),hidden_1_3_1_1(L,M,N,T,K1).
+hidden_1_3_2(U,V,W,X):0.06176763594661566:-atm(X,h,3,L1),hidden_1_3_2_1(U,V,W,X,L1).
+hidden_1_3_3(Y,Z,A1,B1):0.142890723661417:-atm(M1,c,22,B1).
+hidden_1_4_1(P,O,Q,C1):0.09246778591006247:-atm(C1,h,3,N1).
+hidden_1_1_1_1(A,B,H,R,D1):0.00020148033656197661:-bond(D1,O1,1).
+hidden_1_1_1_2(E1,F1,G1,H1,I1):0.0017328883792734895:-bond(I1,P1,7),hidden_1_1_1_2_1(E1,F1,G1,H1,I1,P1).
+hidden_1_1_1_2(Q1,R1,S1,T1,U1):0.0013128131392157183:-bond(U1,V1,1),hidden_1_1_1_2_2(Q1,R1,S1,T1,U1,V1).
+hidden_1_1_1_2(W1,X1,Y1,Z1,A2):0.002838341025426405:-atm(A2,c,22,B2),hidden_1_1_1_2_3(W1,X1,Y1,Z1,A2,B2).
+hidden_1_2_1_1(J,I,K,S,J1):0.2557256855975344:-bond(J1,C2,7),hidden_1_2_1_1_1(J,I,K,S,J1,C2).
+hidden_1_3_1_1(L,M,N,T,K1):0.024608265168502008:-bond(K1,D2,7),hidden_1_3_1_1_1(L,M,N,T,K1,D2).
+hidden_1_3_2_1(U,V,W,X,L1):0.09170659801156653:-atm(E2,h,3,L1).
+hidden_1_1_1_2_1(E1,F1,G1,H1,I1,P1):0.0013192833765148237:-bond(P1,F2,7),hidden_1_1_1_2_1_1(E1,F1,G1,H1,I1,P1,F2).
+hidden_1_1_1_2_2(Q1,R1,S1,T1,U1,V1):0.0013202817364689201:-atm(V1,h,3,G2),hidden_1_1_1_2_2_1(Q1,R1,S1,T1,U1,V1,G2).
+hidden_1_1_1_2_3(W1,X1,Y1,Z1,A2,B2):0.0028287494535906843:-atm(H2,c,22,B2).
+hidden_1_2_1_1_1(J,I,K,S,J1,C2):0.1375641806982884:-bond(C2,I2,7).
+hidden_1_3_1_1_1(L,M,N,T,K1,D2):0.02566460895510747:-bond(D2,J2,7).
+hidden_1_1_1_2_1_1(E1,F1,G1,H1,I1,P1,F2):0.00040406169606999054:-bond(F2,K2,7),hidden_1_1_1_2_1_1_1(E1,F1,G1,H1,I1,P1,F2,K2).
+hidden_1_1_1_2_1_1(L2,M2,N2,O2,P2,Q2,R2):0.0009099403710073339:-bond(R2,S2,1),hidden_1_1_1_2_1_1_2(L2,M2,N2,O2,P2,Q2,R2,S2).
+hidden_1_1_1_2_2_1(Q1,R1,S1,T1,U1,V1,G2):0.0013000152898634543:-atm(T2,h,3,G2).
+hidden_1_1_1_2_1_1_1(E1,F1,G1,H1,I1,P1,F2,K2):0.00040417535890963086:-bond(K2,U2,7).
+hidden_1_1_1_2_1_1_2(L2,M2,N2,O2,P2,Q2,R2,S2):0.00030280847914865294:-bond(S2,V2,2),hidden_1_1_1_2_1_1_2_1(L2,M2,N2,O2,P2,Q2,R2,S2,V2).
+hidden_1_1_1_2_1_1_2(W2,X2,Y2,Z2,A3,B3,C3,D3):0.0002963928312842423:-bond(D3,E3,2),hidden_1_1_1_2_1_1_2_2(W2,X2,Y2,Z2,A3,B3,C3,D3,E3).
+hidden_1_1_1_2_1_1_2_1(L2,M2,N2,O2,P2,Q2,R2,S2,V2):0.00030169059834128653:-atm(V2,o,40,F3).
+hidden_1_1_1_2_1_1_2_2(W2,X2,Y2,Z2,A3,B3,C3,D3,E3):0.0003027795032321534:-atm(E3,o,40,G3).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 169 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L2 
+Gamma: 10,000000

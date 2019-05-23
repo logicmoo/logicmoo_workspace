@@ -1,0 +1,24 @@
+Wall time=0.099000  CLL=-590.166498 
+LL: -235.846349327952
+AUCROC: 0.9435678862003848
+AUCPR: 0.2956276460620446
+Learned Program
+advisedby(A,B):0.10520149701222434:-professor(B),hidden_1(A,B).
+hidden_1(A,B):0.10533347893948562:-student(A),hidden_1_1(A,B).
+hidden_1_1(A,B):0.08931334297068973:-hasposition(B,faculty).
+hidden_1_1(C,D):0.004500276302862612:-publication(E,C),hidden_1_1_2(C,D,E).
+hidden_1_1_2(C,D,E):0.004500276302858467:-publication(E,D).
+
+ Hyperparameters of uwcse_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 2671 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type L3:
+a:0,000000
+fraction of examples b:0,250000

@@ -1,0 +1,40 @@
+Time=1399.009000 
+LL: -29.399908750129907
+AUCROC: 0.618421052631579
+AUCPR: 0.5524770884020567
+Learned Program
+active:0.41660480233319835:-ames.
+active:0.016197798188920563:-has_property(salmonella,p).
+active:0.052456852269459994:-mutagenic.
+active:0.7034537012863379:-atm(A,h,3,B),hidden_5(A,B).
+active:0.0002561447159602273:-atm(C,c,10,D),hidden_6(C,D).
+active:0.03990769136137822:-atm(E,c,16,F),hidden_8(E,F).
+active:0.22648122803346882:-atm(G,h,3,H),hidden_9(G,H).
+active:0.018665300385270492:-ether(I).
+active:0.032286735546390055:-non_ar_hetero_6_ring(J),hidden_11(J).
+active:0.001648711511720994:-five_ring(K).
+hidden_5(A,B):0.10196967399088044:-atm(L,h,3,B),hidden_5_1(A,L,B).
+hidden_5(A,B):0.21777944594374649:-atm(M,h,3,B),hidden_5_2(A,M,B).
+hidden_5(A,B):0.04022027162671296:-B>= -0.167.
+hidden_6(C,D):0.0015403154510668987:-D>= -0.337.
+hidden_6(C,D):5.459892830777843e-5:-D=<0.082.
+hidden_8(E,F):0.03919162685245806:-symbond(G,E,1).
+hidden_9(G,H):0.12646365048338776:-H>=0.122.
+hidden_11(J):0.032286735546390714:-six_ring(J).
+hidden_5_1(A,L,B):0.00057799640514803:-symbond(L,C,1).
+hidden_5_2(A,M,B):4.131060769466479e-5:-symbond(M,N,1),hidden_5_2_1(A,B,M,N).
+hidden_5_2_1(A,B,M,N):0.8242582589421877:-symbond(O,N,1).
+
+ Hyperparameters of carc_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 298 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type L3:
+a:0,000000
+fraction of examples b:0,100000

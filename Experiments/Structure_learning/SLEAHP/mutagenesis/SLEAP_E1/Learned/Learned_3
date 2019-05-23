@@ -1,0 +1,9 @@
+
+Learned Program
+active:1.1070121759211792e-5:-benzene(A),hidden_9(A).
+active:1.1032854530385628e-5:-carbon_6_ring(B).
+hidden_1(C,D):1.171341695024293e-5:-bond(C,E,1).
+hidden_9(A):1.1228271700290001e-5:-ring_size_6(A).
+hidden_34_1(F,G,H):1.202467110572154e-5:-bond(H,I,1).
+hidden_22_1_1(J,K,L,M):1.2965672135329218e-5:-bond(M,N,7).
+hidden_37_1_1(O,P,Q,R):1.246129554557872e-5:-bond(R,S,7).

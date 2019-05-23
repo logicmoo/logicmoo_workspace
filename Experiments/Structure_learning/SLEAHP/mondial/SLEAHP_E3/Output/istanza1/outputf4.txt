@@ -1,0 +1,34 @@
+Time=1310.636000 
+LL: -242.28010628399073
+AUCROC: 0.5673444427457573
+AUCPR: 0.16486518400485606
+Learned Program
+christian_religion(A):0.4820481158919918:-encompasses(A,B,C),hidden_1(A,B,C).
+christian_religion(A):0.009755887757055512:-encompasses(A,D,E),hidden_3(A,D,E).
+christian_religion(A):0.005808984572991949:-encompasses(A,F,G),hidden_4(A,F,G).
+christian_religion(A):0.5914034286884561:-language(A,H,I),hidden_5(A,H,I).
+christian_religion(A):0.06497080587490675:-borders(A,J,K),hidden_6(A,J,K).
+hidden_1(A,B,C):0.4223631163798542:-encompasses(L,B,C),hidden_1_1(A,L,B,C).
+hidden_3(A,D,E):0.03464540470512698:-encompasses(M,D,E).
+hidden_4(A,F,G):0.21625339482490685:-encompasses(N,F,G),hidden_4_1(A,N,F,G).
+hidden_5(A,H,I):0.6681485639447474:-language(O,H,P),hidden_5_1(A,I,O,H,P).
+hidden_6(A,J,K):0.45196603344300545:-borders(Q,J,R),hidden_6_1(A,K,Q,J,R).
+hidden_1_1(A,L,B,C):1.715831992851563e-5:-isMember(L,S,T).
+hidden_4_1(A,N,F,G):0.3788995779138862:-isMember(N,U,V).
+hidden_5_1(A,I,O,H,P):0.010873311059177087:-encompasses(O,W,X),hidden_5_1_1(A,I,H,P,O,W,X).
+hidden_6_1(A,K,Q,J,R):0.0026243791220166754:-isMember(Q,Y,Z).
+hidden_5_1_1(A,I,H,P,O,W,X):0.32772102138920545:-encompasses(A1,W,X).
+
+ Hyperparameters of mondial_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 176 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type L3:
+a:0,000000
+fraction of examples b:0,200000

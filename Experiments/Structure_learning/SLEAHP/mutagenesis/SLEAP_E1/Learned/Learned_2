@@ -1,0 +1,12 @@
+
+Learned Program
+active:1.1070121747449667e-5:-ball3(A).
+active:1.1032854575028035e-5:-benzene(B).
+hidden_2(C,D):1.2385996799409479e-5:-bond(D,E,7).
+hidden_38(F,G):1.0133726159289378e-5:-atm(G,c,22,H).
+hidden_11_2(I,J,K):1.0042704310754037e-5:-bond(J,L,1).
+hidden_15_3(M,N,O):1.1459512561737206e-5:-atm(O,h,3,P).
+hidden_20_1(Q,R,S):1.2024671078770814e-5:-bond(S,T,7).
+hidden_27_1(U,V,W):1.1050592619074664e-5:-bond(W,X,1).
+hidden_35_1(Y,Z,A1):1.2986460753754525e-5:-bond(A1,B1,1).
+hidden_38_4(F,G,C1):1.2481275676061017e-5:-atm(C1,h,3,D1).

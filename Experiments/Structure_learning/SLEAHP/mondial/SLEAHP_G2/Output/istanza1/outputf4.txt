@@ -1,0 +1,37 @@
+Time=2.414000 
+LL: -105.8249501273035
+AUCROC: 0.589818070631402
+AUCPR: 0.2504500340276498
+Learned Program
+christian_religion(A):0.0011814671756368836:-politics(A,B,C,D,E).
+christian_religion(A):0.0011059248966144848:-economy(A,F,G,H,I,J).
+christian_religion(A):0.0011536771936169444:-encompasses(A,K,L),hidden_1(A,K,L).
+christian_religion(A):0.0010883330073153652:-encompasses(A,M,N),hidden_2(A,M,N).
+christian_religion(A):0.0011163030188904557:-isMember(A,O,P).
+christian_religion(A):0.0011840287346227573:-ethnicGroup(A,Q,R).
+christian_religion(A):0.001106838549618254:-encompasses(A,S,T).
+christian_religion(A):0.0012281656773481709:-language(A,U,V).
+christian_religion(A):0.0011043105845173788:-encompasses(A,W,X),hidden_5(A,W,X).
+hidden_1(A,K,L):0.001144330404966792:-encompasses(Y,K,L).
+hidden_2(A,M,N):0.0011901509974430965:-encompasses(Z,M,N).
+hidden_5(A,W,X):0.0011296400838466966:-encompasses(A1,W,X).
+
+ Hyperparameters of mondial_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 176 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Parameters are initialized with values in the range [-0,50 0,50]
+Eta= 0,900000 
+Beta1= 0,900000 
+Beta2= 0,999000 
+Adam_hat= 0,0000000100  
+BatchSize= 0 
+Strategy= batch 
+Regularization enabled
+Regularization type:L2 
+Gamma: 10,000000

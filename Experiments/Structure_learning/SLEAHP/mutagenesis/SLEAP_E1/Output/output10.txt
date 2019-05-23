@@ -1,0 +1,28 @@
+Time=4.147000 
+LL: -8.75593291117179
+AUCROC: 0.8712121212121212
+AUCPR: 0.9465260897747529
+Learned Program
+active:0.047597961003839374:-bond(A,B,7),hidden_4(A,B).
+active:0.6285286441605393:-benzene(C),hidden_5(C).
+active:0.30184641606714635:-ring_size_5(D).
+hidden_4(A,B):0.14987538996451805:-bond(B,E,7),hidden_4_1(A,B,E).
+hidden_4(A,B):0.001017201006857249:-bond(F,A,7).
+hidden_5(C):0.6284982065386686:-ring_size_6(C).
+hidden_4_1(A,B,E):0.008718571143981535:-bond(E,G,7),hidden_4_1_1(A,B,E,G).
+hidden_4_1_1(A,B,E,G):0.0096895359053633:-bond(G,H,7),hidden_4_1_1_1(A,B,E,G,H).
+hidden_4_1_1(A,B,E,G):0.0005466880685162323:-bond(G,I,1).
+hidden_4_1_1_1(A,B,E,G,H):0.006049301679740893:-bond(H,F,7).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 171 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

@@ -1,0 +1,44 @@
+Warning: Package cplint already attached at '/galileo/home/userexternal/anguemba/lib/swipl/pack/cplint'.
+Warning: 	Ignoring version from cplint
+Warning: Package auc already attached at '/galileo/home/userexternal/anguemba/lib/swipl/pack/auc'.
+Warning: 	Ignoring version from auc
+Warning: Package bddem already attached at '/galileo/home/userexternal/anguemba/lib/swipl/pack/bddem'.
+Warning: 	Ignoring version from bddem
+Warning: Package matrix already attached at '/galileo/home/userexternal/anguemba/lib/swipl/pack/matrix'.
+Warning: 	Ignoring version from matrix
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:588:
+Warning:    Singleton variables: [Stream]
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:667:
+Warning:    Singleton variables: [CLL]
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:716:
+Warning:    Singleton variables: [DB]
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:716:
+Warning:    Singleton variable in branch: Levels
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:829:
+Warning:    Singleton variables: [N]
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:975:
+Warning:    Singleton variables: [Acc,Count]
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:976:
+Warning:    Singleton variables: [Prob]
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:976:
+Warning:    Singleton variable in branch: R
+Warning:    Singleton variable in branch: Prob
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:1426:
+Warning:    Singleton variables: [G,H,I,M]
+Warning: /galileo/home/userexternal/anguemba/lib/swipl/pack/phil/prolog/phil.pl:1440:
+Warning:    Singleton variables: [A,F1,G1]
+Warning: /gpfs/work/IscrC_DEEPPLP_0/hplp/SLEAHP/Mondial/EM_L3/mondialdeep.pl:66:
+Warning:    Goal (directive) failed: user:set_sc(iter,1000)
+Warning: /gpfs/work/IscrC_DEEPPLP_0/hplp/SLEAHP/Mondial/EM_L3/mondialdeep.pl:67:
+Warning:    Goal (directive) failed: user:set_sc(epsilon_em,0.0001)
+Warning: /gpfs/work/IscrC_DEEPPLP_0/hplp/SLEAHP/Mondial/EM_L3/mondialdeep.pl:68:
+Warning:    Goal (directive) failed: user:set_sc(epsilon_em_fraction,1.0e-5)
+Warning: /gpfs/work/IscrC_DEEPPLP_0/hplp/SLEAHP/Mondial/EM_L3/mondialdeep.pl:102:
+Warning:    Local definition of user:writeClauseOutput/1 overrides weak import from phil
+Welcome to SWI-Prolog (threaded, 64 bits, version 8.1.5)
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+Please run ?- license. for legal details.
+
+For online help and background, visit http://www.swi-prolog.org
+For built-in help, use ?- help(Topic). or ?- apropos(Word).
+

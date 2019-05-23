@@ -1,0 +1,26 @@
+#!/bin/bash
+#SBATCH -p gll_usr_prod
+#SBATCH -N1 -n2 
+#SBATCH --mem=10GB
+#SBATCH --account=IscrC_DEEPPLP_0
+#SBATCH --time=24:00:00
+#SBATCH --partition=gll_usr_prod 
+#SBATCH --error   /gpfs/work/IscrC_DEEPPLP_0/hplp/SLEAHP/Mondial/EM_L3/mondial.err      
+#SBATCH --output /gpfs/work/IscrC_DEEPPLP_0/hplp/SLEAHP/Mondial/EM_L3/mondial.out 
+cd /gpfs/work/IscrC_DEEPPLP_0/hplp/SLEAHP/Mondial/EM_L3
+Path=./Output/istanza1
+
+#echo "induce([f2,f3,f4,f5],f1,P),test(P,[f1],LL,AUCROC,ROC,AUCPR,PR),write('LL: '),write(LL),nl,write('AUCROC: '),write(AUCROC),nl,write('AUCPR: '),write(AUCPR),writeClauseOutput(P),halt."| $WORK/bin/swipl mondialdeep.pl >$Path/outputf1.txt
+
+#echo "induce([f1,f3,f4,f5,6],f2,P),test(P,[f2],LL,AUCROC,ROC,AUCPR,PR),write('LL: '),write(LL),nl,write('AUCROC: '),write(AUCROC),nl,write('AUCPR: '),write(AUCPR),writeClauseOutput(P),halt."| $WORK/bin/swipl mondialdeep.pl >$Path/outputf2.txt
+
+#echo "induce([f1,f2,f4,f5],f3,P),test(P,[f3],LL,AUCROC,ROC,AUCPR,PR),write('LL: '),write(LL),nl,write('AUCROC: '),write(AUCROC),nl,write('AUCPR: '),write(AUCPR),writeClauseOutput(P),halt."| $WORK/bin/swipl mondialdeep.pl >$Path/outputf3.txt
+
+echo "induce([f1,f2,f3,f5],f4,P),test(P,[f4],LL,AUCROC,ROC,AUCPR,PR),write('LL: '),write(LL),nl,write('AUCROC: '),write(AUCROC),nl,write('AUCPR: '),write(AUCPR),writeClauseOutput(P),halt."| $WORK/bin/swipl mondialdeep.pl >$Path/outputf4.txt
+
+#echo "induce([f1,f2,f3,f4],f5,P),test(P,[f5],LL,AUCROC,ROC,AUCPR,PR),write('LL: '),write(LL),nl,write('AUCROC: '),write(AUCROC),nl,write('AUCPR: '),write(AUCPR),writeClauseOutput(P),halt."| $WORK/bin/swipl mondialdeep.pl >$Path/outputf5.txt
+
+
+
+
+

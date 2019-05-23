@@ -1,0 +1,43 @@
+Time=831.368000 
+LL: -3044.34312879799
+AUCROC: 0.9676702508960574
+AUCPR: 0.1488961325270849
+Learned Program
+advisedby(A,B):0.04664507129152046:-professor(B).
+advisedby(A,B):0.003817372607625602:-hasposition(B,C).
+advisedby(A,B):0.3026139401364705:-publication(D,B).
+advisedby(A,B):0.22061065092902715:-publication(E,B).
+advisedby(A,B):0.012216188781758619:-publication(F,B),hidden_5(A,F,B).
+advisedby(A,B):0.5371774791325461:-publication(G,B).
+advisedby(A,B):0.03951072093003977:-publication(H,B).
+advisedby(A,B):0.00014574686451196417:-taughtby(I,B,J),hidden_11(A,I,B,J).
+advisedby(A,B):0.5265957072005563:-publication(K,B).
+advisedby(A,B):0.0151031124103565:-publication(L,B),hidden_15(A,L,B).
+advisedby(A,B):0.1468660569711599:-publication(M,B).
+advisedby(A,B):0.5853991907123659:-taughtby(N,B,O).
+advisedby(A,B):0.57819013370554:-taughtby(P,B,Q).
+advisedby(A,B):0.21986422615787427:-taughtby(R,B,S).
+advisedby(A,B):0.0023820860290497126:-taughtby(T,B,U),hidden_24(A,T,B,U).
+advisedby(A,B):0.20594895256668805:-publication(V,B).
+advisedby(A,B):0.883895245882061:-taughtby(W,B,X).
+advisedby(A,B):0.14453474500623117:-taughtby(Y,B,Z).
+advisedby(A,B):0.7014700502286606:-taughtby(A1,B,B1),hidden_32(A,A1,B,B1).
+hidden_5(A,F,B):0.00048178470556453634:-publication(F,C1).
+hidden_11(A,I,B,J):0.08050031074775987:-taughtby(I,D1,E1).
+hidden_11(A,I,B,J):0.9686290564382596:-ta(I,F1,G1).
+hidden_15(A,L,B):0.0002516307349598734:-publication(L,H1).
+hidden_24(A,T,B,U):0.03445577943985528:-taughtby(I1,J1,U).
+hidden_32(A,A1,B,B1):0.017308347423938553:-ta(A1,K1,B1).
+
+ Hyperparameters of uwcse_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 4092 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L2 
+Gamma: 10,000000

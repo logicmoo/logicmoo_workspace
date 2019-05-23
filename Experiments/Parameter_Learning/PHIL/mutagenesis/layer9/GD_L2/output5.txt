@@ -1,0 +1,73 @@
+Wall time=4.869000  CLL=-59.052796 
+LL: -7.023611210011985
+AUCROC: 0.9714285714285714
+AUCPR: 0.9897697540554684
+Learned Program
+active:0.3480780698578456:-bond(A,B,1),hidden_1(A,B).
+active:0.3729134278676668:-benzene(C),hidden_2(C).
+active:0.3729134278676668:-benzene(D),hidden_3(D).
+active:0.3729134278676668:-benzene(E),hidden_4(E).
+active:0.3813014067556019:-carbon_6_ring(F),hidden_5(F).
+active:0.23770492218273925:-nitro(G).
+hidden_1(A,B):0.375533681110997:-bond(B,H,7),hidden_1_1(A,B,H).
+hidden_1(I,J):0.347265786981469:-bond(K,I,7),hidden_1_2(J,K,I).
+hidden_1(L,M):0.3226870967890562:-bond(M,N,7),hidden_1_3(L,M,N).
+hidden_1(O,P):0.012680633429316678:-bond(Q,O,7),hidden_1_4(P,Q,O).
+hidden_1(R,S):0.007160139414449149:-atm(S,c,194,T),hidden_1_5(R,S,T).
+hidden_2(C):0.36363538305297755:-ring_size_6(C).
+hidden_3(D):0.36363538305297755:-ring_size_6(D).
+hidden_4(E):0.36363538305297755:-ring_size_6(E).
+hidden_5(F):0.374746934216021:-ring_size_6(F).
+hidden_1_1(A,B,H):0.37150285324122273:-bond(H,U,1),hidden_1_1_1(A,B,H,U).
+hidden_1_2(J,K,I):0.33259516859440813:-bond(K,V,7),hidden_1_2_1(J,I,K,V).
+hidden_1_3(L,M,N):0.3480418836248709:-bond(N,W,7),hidden_1_3_1(L,M,N,W).
+hidden_1_3(X,Y,Z):0.29831156239475615:-bond(Z,A1,1),hidden_1_3_2(X,Y,Z,A1).
+hidden_1_3(B1,C1,D1):0.2644427269820517:-atm(D1,c,22,E1),hidden_1_3_3(B1,C1,D1,E1).
+hidden_1_4(P,Q,O):0.0016005872608098894:-bond(Q,F1,1).
+hidden_1_5(R,S,T):0.007160139414449149:-atm(G1,c,29,T).
+hidden_1_1_1(A,B,H,U):0.35920926541689274:-bond(U,H1,7),hidden_1_1_1_1(A,B,H,U,H1).
+hidden_1_1_1(I1,J1,K1,L1):0.3637685310005907:-bond(L1,M1,7),hidden_1_1_1_2(I1,J1,K1,L1,M1).
+hidden_1_2_1(J,I,K,V):0.3261433581630282:-bond(V,N1,7),hidden_1_2_1_1(J,I,K,V,N1).
+hidden_1_3_1(L,M,N,W):0.3409717689963894:-bond(W,O1,7),hidden_1_3_1_1(L,M,N,W,O1).
+hidden_1_3_2(X,Y,Z,A1):0.28473332352546804:-atm(A1,h,3,P1),hidden_1_3_2_1(X,Y,Z,A1,P1).
+hidden_1_3_3(B1,C1,D1,E1):0.2579737460057961:-atm(Q1,c,22,E1).
+hidden_1_1_1_1(A,B,H,U,H1):0.3338044975309235:-bond(H1,R1,1).
+hidden_1_1_1_2(I1,J1,K1,L1,M1):0.35221485175678263:-bond(M1,S1,7),hidden_1_1_1_2_1(I1,J1,K1,L1,M1,S1).
+hidden_1_1_1_2(T1,U1,V1,W1,X1):0.3514262837866651:-bond(X1,Y1,1),hidden_1_1_1_2_2(T1,U1,V1,W1,X1,Y1).
+hidden_1_1_1_2(Z1,A2,B2,C2,D2):0.346720401715079:-atm(D2,c,22,E2),hidden_1_1_1_2_3(Z1,A2,B2,C2,D2,E2).
+hidden_1_2_1_1(J,I,K,V,N1):0.31239207536674213:-bond(N1,F2,7),hidden_1_2_1_1_1(J,I,K,V,N1,F2).
+hidden_1_3_1_1(L,M,N,W,O1):0.32985433957814114:-bond(O1,G2,7),hidden_1_3_1_1_1(L,M,N,W,O1,G2).
+hidden_1_3_2_1(X,Y,Z,A1,P1):0.2676870635991659:-atm(H2,h,3,P1).
+hidden_1_1_1_2_1(I1,J1,K1,L1,M1,S1):0.3360519341943403:-bond(S1,I2,7),hidden_1_1_1_2_1_1(I1,J1,K1,L1,M1,S1,I2).
+hidden_1_1_1_2_2(T1,U1,V1,W1,X1,Y1):0.330166394749178:-atm(Y1,h,3,J2),hidden_1_1_1_2_2_1(T1,U1,V1,W1,X1,Y1,J2).
+hidden_1_1_1_2_3(Z1,A2,B2,C2,D2,E2):0.3159112936693756:-atm(K2,c,22,E2).
+hidden_1_2_1_1_1(J,I,K,V,N1,F2):0.29168477036793483:-bond(F2,L2,7).
+hidden_1_3_1_1_1(L,M,N,W,O1,G2):0.30239073103100417:-bond(G2,M2,7).
+hidden_1_1_1_2_1_1(I1,J1,K1,L1,M1,S1,I2):0.31033665797060156:-bond(I2,N2,7),hidden_1_1_1_2_1_1_1(I1,J1,K1,L1,M1,S1,I2,N2).
+hidden_1_1_1_2_1_1(O2,P2,Q2,R2,S2,T2,U2):0.31367140513633535:-bond(U2,V2,1),hidden_1_1_1_2_1_1_2(O2,P2,Q2,R2,S2,T2,U2,V2).
+hidden_1_1_1_2_2_1(T1,U1,V1,W1,X1,Y1,J2):0.29713694012676756:-atm(W2,h,3,J2).
+hidden_1_1_1_2_1_1_1(I1,J1,K1,L1,M1,S1,I2,N2):0.27903948596346156:-bond(N2,X2,7).
+hidden_1_1_1_2_1_1_2(O2,P2,Q2,R2,S2,T2,U2,V2):0.2905144140660264:-bond(V2,Y2,2),hidden_1_1_1_2_1_1_2_1(O2,P2,Q2,R2,S2,T2,U2,V2,Y2).
+hidden_1_1_1_2_1_1_2(Z2,A3,B3,C3,D3,E3,F3,G3):0.2905144140660264:-bond(G3,H3,2),hidden_1_1_1_2_1_1_2_2(Z2,A3,B3,C3,D3,E3,F3,G3,H3).
+hidden_1_1_1_2_1_1_2_1(O2,P2,Q2,R2,S2,T2,U2,V2,Y2):0.26389167088464055:-atm(Y2,o,40,I3).
+hidden_1_1_1_2_1_1_2_2(Z2,A3,B3,C3,D3,E3,F3,G3,H3):0.26389167088464055:-atm(H3,o,40,J3).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 169 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Parameters are initialized with the initial program parameters
+Eta= 0,900000 
+Beta1= 0,900000 
+Beta2= 0,999000 
+Adam_hat= 0,0000000100  
+BatchSize= 0 
+Strategy= batch 
+Regularization enabled
+Regularization type:L2 
+Gamma: 10,000000

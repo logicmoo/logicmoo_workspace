@@ -1,0 +1,67 @@
+Time=53.940000 
+LL: -6.649571678361921
+AUCROC: 0.9428571428571428
+AUCPR: 0.9778233671090815
+Learned Program
+active:0.07794776099908632:-bond(A,B,7),hidden_1(A,B).
+active:0.12455570151805659:-bond(C,D,7),hidden_2(C,D).
+active:0.05136881850048667:-bond(E,F,7),hidden_5(E,F).
+active:0.05253133136130543:-benzene(G).
+active:0.15399958282034448:-ring_size_6(H).
+active:0.4040796743875035:-bond(I,J,7),hidden_8(I,J).
+active:0.03126268125824936:-bond(K,L,7),hidden_9(K,L).
+hidden_1(A,B):0.0008476150151182082:-bond(B,M,7),hidden_1_1(A,B,M).
+hidden_1(A,B):1.78236810143062e-5:-bond(A,N,1).
+hidden_1(A,B):0.008778828979075115:-bond(B,O,1),hidden_1_4(A,B,O).
+hidden_1(A,B):4.61596115201246e-5:-atm(A,c,22,P).
+hidden_1(A,B):0.13042574814107866:-atm(B,c,22,P),hidden_1_5(A,B,P).
+hidden_2(C,D):0.004287867830430514:-bond(D,Q,7),hidden_2_1(C,D,Q).
+hidden_5(E,F):0.015007513597561228:-bond(F,R,7),hidden_5_1(E,F,R).
+hidden_5(E,F):0.0025049699949363457:-bond(S,E,7),hidden_5_2(F,S,E).
+hidden_5(E,F):4.25697132300229e-5:-bond(E,T,1),hidden_5_3(F,E,T).
+hidden_5(E,F):0.15420316928875763:-bond(F,U,1),hidden_5_4(E,F,U).
+hidden_5(E,F):0.00020570096113488036:-atm(E,c,22,V).
+hidden_5(E,F):0.09746043724417178:-atm(F,c,22,V),hidden_5_5(E,F,V).
+hidden_8(I,J):0.12311705615402388:-bond(J,W,7),hidden_8_1(I,J,W).
+hidden_8(I,J):0.06294096891201661:-bond(X,I,7).
+hidden_8(I,J):0.054271321903979694:-bond(J,Y,1),hidden_8_3(I,J,Y).
+hidden_9(K,L):0.05893339175663641:-bond(L,Z,7),hidden_9_1(K,L,Z).
+hidden_9(K,L):0.030731430456921772:-bond(A1,K,7).
+hidden_1_1(A,B,M):0.018099403449514283:-bond(M,B1,7),hidden_1_1_1(A,B,M,B1).
+hidden_1_1(A,B,M):0.0019182893799438716:-bond(M,C1,1).
+hidden_1_4(A,B,O):0.4875333958376359:-atm(O,h,3,D1),hidden_1_4_1(A,B,O,D1).
+hidden_1_5(A,B,P):0.07146473606808286:-atm(M,c,22,P).
+hidden_2_1(C,D,Q):0.07676158671158646:-bond(Q,E1,7),hidden_2_1_1(C,D,Q,E1).
+hidden_2_1(C,D,Q):0.0004784016679764136:-bond(Q,F1,1).
+hidden_5_1(E,F,R):0.457916807370043:-bond(R,G1,7),hidden_5_1_1(E,F,R,G1).
+hidden_5_2(F,S,E):0.001371540838999863:-bond(S,H1,1).
+hidden_5_3(F,E,T):1.043292496660797e-5:-atm(T,h,3,I1).
+hidden_5_4(E,F,U):0.9251745612349168:-atm(U,h,3,I1),hidden_5_4_1(E,F,U,I1).
+hidden_5_5(E,F,V):0.5543693465631805:-atm(J1,c,22,V).
+hidden_8_1(I,J,W):0.0003597261535105645:-bond(W,K1,7),hidden_8_1_1(I,J,W,K1).
+hidden_8_3(I,J,Y):0.02336909312462012:-atm(Y,h,3,L1),hidden_8_3_1(I,J,Y,L1).
+hidden_9_1(K,L,Z):0.07304545150318517:-bond(Z,M1,7),hidden_9_1_1(K,L,Z,M1).
+hidden_9_1(K,L,Z):0.00030612600781978474:-bond(Z,N1,1).
+hidden_1_1_1(A,B,M,B1):0.0007024274560308186:-bond(B1,C,1).
+hidden_1_4_1(A,B,O,D1):0.6442127581874502:-atm(C1,h,3,D1).
+hidden_2_1_1(C,D,Q,E1):0.0007937686068999028:-bond(E1,O1,7),hidden_2_1_1_1(C,D,Q,E1,O1).
+hidden_5_1_1(E,F,R,G1):0.03773130137710723:-bond(G1,J1,7),hidden_5_1_1_1(E,F,R,G1,J1).
+hidden_5_4_1(E,F,U,I1):0.36047433070366425:-atm(P1,h,3,I1).
+hidden_8_1_1(I,J,W,K1):0.020359708139244502:-bond(K1,X,7).
+hidden_8_3_1(I,J,Y,L1):0.08075669138797821:-atm(Q1,h,3,L1).
+hidden_9_1_1(K,L,Z,M1):0.011093850071301859:-bond(M1,A1,7).
+hidden_2_1_1_1(C,D,Q,E1,O1):0.006501382790656862:-bond(O1,R1,1).
+hidden_5_1_1_1(E,F,R,G1,J1):0.025538367899480365:-bond(J1,S,7).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 169 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

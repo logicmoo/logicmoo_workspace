@@ -1,0 +1,40 @@
+
+Learned Program
+active:9.977002954680154e-5:-has_property(salmonella,n).
+active:0.00015810112781277293:-ashby_alert(halide10,A),hidden_1(A).
+active:0.00015812939398136702:-ashby_alert(halide10,B),hidden_2(B).
+active:0.0001580909754950487:-ashby_alert(halide10,C),hidden_3(C).
+active:0.00015810772599382254:-ashby_alert(halide10,D),hidden_4(D).
+active:9.977095031504142e-5:-mutagenic.
+active:0.00015811876291751034:-ind(halide10,E),hidden_5(E).
+active:9.978359287713811e-5:-atm(F,c,10,G),hidden_6(F,G).
+active:0.00015804096918478586:-atm(H,cl,93,I),hidden_7(H,I).
+active:9.975191137645887e-5:-atm(J,h,3,K),hidden_8(J,K).
+active:0.0001581472239027264:-atm(L,cl,93,M),hidden_9(L,M).
+hidden_1(A):9.974946680913937e-5:-alkyl_halide(A).
+hidden_1(A):0.00019005695293038998:-ar_halide(A).
+hidden_1(A):9.977160910898282e-5:-connected(A,B).
+hidden_2(B):9.972515723343485e-5:-alkyl_halide(B).
+hidden_2(B):0.0001900545778099368:-ar_halide(B).
+hidden_3(C):9.973611674828055e-5:-alkyl_halide(C).
+hidden_3(C):0.00018999338349440464:-ar_halide(C).
+hidden_3(C):9.976717078854992e-5:-connected(C,D).
+hidden_4(D):9.974096207569121e-5:-alkyl_halide(D).
+hidden_4(D):0.0001900125100923966:-ar_halide(D).
+hidden_5(E):0.00019000628079798428:-E=<4.
+hidden_5(E):0.00019001146111959687:-E>=4.
+hidden_5(E):0.00019005663837534233:-E=4.
+hidden_6(F,G):9.980638297144652e-5:-atm(N,c,10,G),hidden_6_1(F,N,G).
+hidden_6(F,G):9.981791523501315e-5:-symbond(J,F,1).
+hidden_6(F,G):9.985065868306805e-5:-G>=0.037.
+hidden_6(F,G):0.00019785796191897816:-G=0.388.
+hidden_6(F,G):9.983344684644547e-5:-G=<0.388.
+hidden_7(H,I):0.00019002686454998286:-I= -0.212.
+hidden_8(J,K):9.975635794857213e-5:-atm(O,h,3,K).
+hidden_8(J,K):9.980857382484995e-5:-K>=0.037.
+hidden_8(J,K):9.985997004643687e-5:-K=<0.037.
+hidden_8(J,K):0.00019788783924154027:-K=0.037.
+hidden_9(L,M):0.00019005092581991426:-atm(P,cl,93,M).
+hidden_9(L,M):0.00019009607359919757:-M=<0.388.
+hidden_9(L,M):0.00019005553858077054:-M= -0.213.
+hidden_6_1(F,N,G):0.00012608465976257578:-symbond(O,N,1).

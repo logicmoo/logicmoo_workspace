@@ -1,0 +1,33 @@
+Wall time=271.004000  CLL=-1151.744193 
+LL: -305.78419252299045
+AUCROC: 0.5125000000000001
+AUCPR: 0.12670853150523553
+Learned Program
+christian_religion(A):0.007845239469946929:-politics(A,B,C,D,E),hidden_1(A,B,C,D,E).
+hidden_1(F,G,H,I,J):0.0047717370626874376:-economy(F,K,L,M,N,O).
+hidden_1(P,Q,R,S,T):0.006764372828332768:-language(P,U,V),hidden_1_1(Q,R,S,T,P,U,V).
+hidden_1_1(W,X,Y,Z,A1,B1,C1):0.004078405667707024:-language(D1,B1,E1),hidden_1_1_1(W,X,Y,Z,A1,C1,D1,B1,E1).
+hidden_1_1_1(F1,G1,H1,I1,J1,K1,L1,M1,N1):0.005211496839389225:-ethnicGroup(L1,O1,P1).
+hidden_1_1_1(Q1,R1,S1,T1,U1,V1,W1,X1,Y1):0.007943013086316352:-borders(W1,Z1,A2),hidden_1_1_1_1(Q1,R1,S1,T1,U1,V1,X1,Y1,W1,Z1,A2).
+hidden_1_1_1_1(B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2):0.004844513254725433:-borders(M2,K2,N2).
+hidden_1_1_1_1(O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2):0.009657071218968444:-encompasses(X2,Z2,A3),hidden_1_1_1_1_1(O2,P2,Q2,R2,S2,T2,U2,V2,W2,Y2,X2,Z2,A3).
+hidden_1_1_1_1(B3,C3,D3,E3,F3,G3,H3,I3,J3,K3,L3):0.004727559583369711:-isMember(K3,M3,N3).
+hidden_1_1_1_1_1(O3,P3,Q3,R3,S3,T3,U3,V3,W3,X3,Y3,Z3,A4):0.017640006380961956:-encompasses(B4,Z3,C4).
+
+ Hyperparameters of mondial_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 176 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Parameters are initialized with values in the range [-0,50 0,50]
+Eta= 0,900000 
+Beta1= 0,900000 
+Beta2= 0,999000 
+Adam_hat= 0,0000000100  
+BatchSize= 0 
+Strategy= batch 
+Regularization disabled

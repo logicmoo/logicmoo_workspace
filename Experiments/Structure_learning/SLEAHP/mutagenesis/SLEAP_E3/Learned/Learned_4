@@ -1,0 +1,19 @@
+
+Learned Program
+active:0.11164528677802882:-bond(A,B,7),hidden_1(A,B).
+active:0.0006146547683465486:-benzene(C),hidden_2(C).
+active:0.0018026553134594427:-benzene(D).
+active:0.025899802611604048:-nitro(E).
+hidden_1(A,B):0.5001872621932997:-bond(B,F,7),hidden_1_1(A,B,F).
+hidden_1(A,B):0.020264912084866672:-bond(A,G,1),hidden_1_2(B,A,G).
+hidden_1(A,B):0.3250572369793947:-bond(B,H,1),hidden_1_3(A,B,H).
+hidden_1(A,B):0.1274964853887745:-atm(A,c,22,I).
+hidden_1(A,B):0.2620587028599049:-atm(B,c,22,I),hidden_1_4(A,B,I).
+hidden_2(C):0.0039015521180312636:-ring_size_6(C).
+hidden_1_1(A,B,F):0.014687224124987245:-bond(F,J,7).
+hidden_1_1(A,B,F):0.11261292088510132:-atm(F,c,27,K),hidden_1_1_2(A,B,F,K).
+hidden_1_2(B,A,G):0.02583341914928389:-atm(G,h,3,L).
+hidden_1_3(A,B,H):0.05284127359448821:-atm(H,h,3,L),hidden_1_3_1(A,B,H,L).
+hidden_1_4(A,B,I):0.44322255648841385:-atm(M,c,22,I).
+hidden_1_1_2(A,B,F,K):0.06116227776441289:-atm(N,c,27,K).
+hidden_1_3_1(A,B,H,L):0.10842501658740122:-atm(O,h,3,L).

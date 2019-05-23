@@ -1,0 +1,79 @@
+Time=40.389000 
+LL: -9.014046882231986
+AUCROC: 0.9444444444444444
+AUCPR: 0.9404501362834695
+Learned Program
+active:0.06917549990517707:-bond(A,B,7),hidden_1(A,B).
+active:0.10886328527469:-benzene(C).
+active:0.002258626369248229:-benzene(D),hidden_3(D).
+active:0.0014318803614876696:-benzene(E),hidden_4(E).
+active:0.00466036524708735:-carbon_6_ring(F),hidden_5(F).
+active:0.09459004533747839:-nitro(G).
+active:0.7368641803677575:-bond(H,I,7),hidden_6(H,I).
+active:0.029127487372483107:-benzene(J),hidden_7(J).
+active:0.02093001074309131:-benzene(K),hidden_8(K).
+active:0.04212069722384426:-benzene(L),hidden_9(L).
+active:0.04014048718355279:-benzene(M),hidden_10(M).
+active:0.001049220238087678:-carbon_5_aromatic_ring(N),hidden_11(N).
+active:0.3622477251696478:-bond(O,P,7),hidden_12(O,P).
+active:0.00023875409272294812:-benzene(Q),hidden_13(Q).
+active:0.03936786952855059:-benzene(R),hidden_14(R).
+hidden_1(A,B):0.014082870075493137:-bond(S,A,7),hidden_1_1(B,S,A).
+hidden_1(A,B):0.29242110982359376:-bond(B,T,1),hidden_1_2(A,B,T).
+hidden_1(A,B):0.0472197833079272:-bond(A,U,1),hidden_1_3(B,A,U).
+hidden_1(A,B):0.006912822027721366:-atm(A,c,22,V).
+hidden_1(A,B):0.09140050134115968:-atm(B,c,22,V),hidden_1_4(A,B,V).
+hidden_3(D):0.03418704335819406:-ring_size_6(D).
+hidden_4(E):0.04642601507048544:-ring_size_6(E).
+hidden_5(F):0.004660370954616966:-ring_size_6(F).
+hidden_6(H,I):0.19123692524192187:-bond(I,W,7),hidden_6_1(H,I,W).
+hidden_6(H,I):0.12014465587321127:-bond(X,H,7),hidden_6_2(I,X,H).
+hidden_6(H,I):0.1950285429798548:-bond(I,Y,7),hidden_6_3(H,I,Y).
+hidden_6(H,I):0.005613577414370963:-bond(H,Z,1),hidden_6_4(I,H,Z).
+hidden_6(H,I):0.01494470309634921:-atm(H,c,22,A1),hidden_6_5(I,H,A1).
+hidden_6(H,I):0.31107449047628954:-atm(I,c,27,B1),hidden_6_6(H,I,B1).
+hidden_7(J):0.03772304704359869:-ring_size_6(J).
+hidden_8(K):0.043730168609678766:-ring_size_6(K).
+hidden_9(L):0.041437905415416754:-ring_size_6(L).
+hidden_10(M):0.032387878778554424:-ring_size_6(M).
+hidden_11(N):0.00104921946646358:-ring_size_5(N).
+hidden_12(O,P):0.2127201560759634:-bond(P,C1,7),hidden_12_1(O,P,C1).
+hidden_13(Q):0.04560182535227075:-ring_size_6(Q).
+hidden_14(R):0.04114765378423546:-ring_size_6(R).
+hidden_1_1(B,S,A):0.22698651058440644:-bond(S,D1,1).
+hidden_1_2(A,B,T):0.2664760782299238:-atm(T,h,3,E1),hidden_1_2_1(A,B,T,E1).
+hidden_1_3(B,A,U):0.046311069863085474:-bond(U,F1,2).
+hidden_1_3(B,A,U):0.023809160989230582:-atm(U,n,38,G1).
+hidden_1_4(A,B,V):0.11755980089721269:-atm(S,c,22,V).
+hidden_6_1(H,I,W):0.43750005562299865:-bond(W,H1,7),hidden_6_1_1(H,I,W,H1).
+hidden_6_2(I,X,H):0.0077805393276127455:-bond(X,I1,1),hidden_6_2_1(I,H,X,I1).
+hidden_6_3(H,I,Y):0.19401109242623427:-bond(Y,J1,1),hidden_6_3_1(H,I,Y,J1).
+hidden_6_4(I,H,Z):0.7933627004715554:-atm(Z,h,3,K1),hidden_6_4_1(I,H,Z,K1).
+hidden_6_5(I,H,A1):0.6172399378946651:-atm(H1,c,22,A1).
+hidden_6_6(H,I,B1):0.3236863560400451:-atm(L1,c,27,B1).
+hidden_12_1(O,P,C1):0.048732969867080256:-bond(C1,M1,7),hidden_12_1_1(O,P,C1,M1).
+hidden_12_1(O,P,C1):0.0918073643302322:-bond(C1,N1,1),hidden_12_1_2(O,P,C1,N1).
+hidden_1_2_1(A,B,T,E1):0.45745666677998714:-atm(D1,h,3,E1).
+hidden_6_1_1(H,I,W,H1):0.0031987806537550623:-bond(H1,O1,7),hidden_6_1_1_1(H,I,W,H1,O1).
+hidden_6_2_1(I,H,X,I1):0.12184623382326484:-atm(I1,h,3,P1).
+hidden_6_3_1(H,I,Y,J1):0.04272205042626498:-atm(J1,h,3,P1),hidden_6_3_1_1(H,I,Y,J1,P1).
+hidden_6_4_1(I,H,Z,K1):0.21934927319337164:-atm(Q1,h,3,K1).
+hidden_12_1_1(O,P,C1,M1):0.02014491500997556:-bond(M1,R1,7).
+hidden_12_1_1(O,P,C1,M1):0.17944844930132264:-atm(M1,c,22,S1).
+hidden_12_1_2(O,P,C1,N1):0.040237859447133706:-bond(N1,T1,2).
+hidden_12_1_2(O,P,C1,N1):0.021364711845578754:-atm(N1,n,38,U1).
+hidden_6_1_1_1(H,I,W,H1,O1):0.5735795891644857:-bond(O1,X,7).
+hidden_6_3_1_1(H,I,Y,J1,P1):0.8298638321868843:-atm(V1,h,3,P1).
+
+ Hyperparameters of muta_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 169 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L2 
+Gamma: 10,000000

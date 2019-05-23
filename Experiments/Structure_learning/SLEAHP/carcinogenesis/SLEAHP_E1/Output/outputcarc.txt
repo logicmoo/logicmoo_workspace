@@ -1,0 +1,48 @@
+Time=303.057000 
+LL: -28.213022553391017
+AUCROC: 0.6605263157894736
+AUCPR: 0.598095333353954
+Learned Program
+active:0.5322240458549032:-ames.
+active:0.2333929042058557:-has_property(mouse_lymph,p).
+active:0.12885166529223327:-mutagenic.
+active:7.203785280580632e-5:-atm(A,c,22,B),hidden_8(A,B).
+active:0.7510334587953367:-atm(C,c,22,D),hidden_9(C,D).
+active:4.5599120710448915e-5:-atm(E,c,22,F),hidden_10(E,F).
+active:0.0025168014278165174:-atm(G,n,32,H),hidden_12(G,H).
+active:0.04480531373701524:-atm(I,c,10,J),hidden_13(I,J).
+active:0.020097784266909002:-atm(K,c,10,L),hidden_16(K,L).
+active:0.06048715197950685:-amine(M).
+hidden_8(A,B):0.19946569341773285:-atm(N,c,22,B),hidden_8_1(A,N,B).
+hidden_8(A,B):0.4765838404413444:-atm(O,c,22,B).
+hidden_8(A,B):0.0030890767607388626:-symbond(P,A,1).
+hidden_8(A,B):0.004432121510399156:-symbond(O,A,7),hidden_8_3(B,O,A).
+hidden_8(A,B):0.0012901815172654096:-B=<0.037.
+hidden_9(C,D):1.785811909940094e-5:-atm(Q,c,22,D),hidden_9_1(C,Q,D).
+hidden_9(C,D):0.0005652797554716926:-symbond(R,C,1).
+hidden_9(C,D):0.05365624976910795:-D>= -0.133.
+hidden_10(E,F):0.00036064703891725003:-symbond(S,E,1).
+hidden_12(G,H):4.648291187550058e-5:-atm(R,n,32,H),hidden_12_1(G,R,H).
+hidden_13(I,J):0.06576095292220999:-atm(T,c,10,J),hidden_13_1(I,T,J).
+hidden_13(I,J):0.06103256643991699:-symbond(U,I,1).
+hidden_16(K,L):0.41252031992389676:-atm(V,c,10,L),hidden_16_1(K,V,L).
+hidden_16(K,L):0.1222599617501146:-symbond(W,K,1).
+hidden_8_1(A,N,B):0.19928720332845842:-symbond(X,N,1).
+hidden_8_3(B,O,A):0.012986743008855228:-symbond(O,Y,1).
+hidden_9_1(C,Q,D):0.24304755555976953:-symbond(G,Q,1).
+hidden_12_1(G,R,H):1.7615092718870074e-5:-symbond(Z,R,1).
+hidden_13_1(I,T,J):0.04044002193950291:-symbond(A1,T,1).
+hidden_16_1(K,V,L):0.020480594049331557:-symbond(B1,V,1).
+
+ Hyperparameters of carc_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 298 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type:L1 
+Gamma: 10,000000

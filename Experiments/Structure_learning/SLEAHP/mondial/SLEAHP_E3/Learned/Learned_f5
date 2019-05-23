@@ -1,0 +1,14 @@
+
+Learned Program
+christian_religion(A):1.4341735450698165e-5:-politics(A,B,C,D,E).
+christian_religion(A):0.0001949549351637246:-encompasses(A,F,G),hidden_1(A,F,G).
+christian_religion(A):0.6121270234885635:-borders(A,H,I),hidden_2(A,H,I).
+christian_religion(A):0.0021218969529137517:-borders(J,A,K),hidden_3(J,A,K).
+christian_religion(A):2.55584031999137e-5:-encompasses(A,L,M).
+christian_religion(A):0.001430057297116047:-encompasses(A,N,O),hidden_4(A,N,O).
+hidden_1(A,F,G):0.4457070269798421:-encompasses(P,F,G),hidden_1_1(A,P,F,G).
+hidden_2(A,H,I):0.6380159483771013:-borders(Q,H,R).
+hidden_3(J,A,K):0.1604933090729114:-isMember(J,S,T).
+hidden_4(A,N,O):0.9388960362230547:-encompasses(U,N,O),hidden_4_1(A,U,N,O).
+hidden_1_1(A,P,F,G):0.6032994437196982:-isMember(P,V,W).
+hidden_4_1(A,U,N,O):0.4007982486871836:-isMember(U,X,Y).

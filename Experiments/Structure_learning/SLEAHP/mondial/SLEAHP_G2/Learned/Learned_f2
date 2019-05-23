@@ -1,0 +1,22 @@
+
+Learned Program
+christian_religion(A):0.001181683572870399:-politics(A,B,C,D,E).
+christian_religion(A):0.001106117940182789:-economy(A,F,G,H,I,J).
+christian_religion(A):0.0011538848032235996:-language(A,K,L),hidden_1(A,K,L).
+christian_religion(A):0.0010885209162736509:-ethnicGroup(A,M,N).
+christian_religion(A):0.0011164994790401673:-borders(O,A,P).
+christian_religion(A):0.0011842467890187166:-encompasses(A,Q,R),hidden_2(A,Q,R).
+christian_religion(A):0.0011070319794810992:-encompasses(A,S,T),hidden_3(A,S,T).
+christian_religion(A):0.0012283974187241972:-language(A,U,V).
+christian_religion(A):0.0011045031789117454:-borders(A,W,X),hidden_4(A,W,X).
+hidden_1(A,K,L):0.0011441862599451795:-language(Y,K,Z),hidden_1_1(A,L,Y,K,Z).
+hidden_2(A,Q,R):0.0011900089574064573:-encompasses(A1,Q,R).
+hidden_3(A,S,T):0.0011295167690914122:-encompasses(B1,S,T),hidden_3_1(A,B1,S,T).
+hidden_4(A,W,X):0.0012515168029952658:-borders(C1,W,D1),hidden_4_1(A,X,C1,W,D1).
+hidden_4(A,W,X):0.001171651054068671:-encompasses(W,E1,F1),hidden_4_2(A,X,W,E1,F1).
+hidden_1_1(A,L,Y,K,Z):0.001091200188819124:-borders(Y,G1,H1).
+hidden_1_1(A,L,Y,K,Z):0.001150481708935188:-encompasses(Y,I1,J1).
+hidden_1_1(A,L,Y,K,Z):0.0011089986249621195:-isMember(Y,K1,L1).
+hidden_3_1(A,B1,S,T):0.0010961556848169834:-isMember(B1,M1,N1).
+hidden_4_1(A,X,C1,W,D1):0.001161733188613059:-isMember(C1,O1,P1).
+hidden_4_2(A,X,W,E1,F1):0.001116345299485381:-encompasses(Q1,E1,F1).

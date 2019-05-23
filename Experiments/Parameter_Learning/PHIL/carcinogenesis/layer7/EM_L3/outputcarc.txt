@@ -1,0 +1,40 @@
+Wall time=94.685000  CLL=-578.505304 
+LL: -49.581502558704976
+AUCROC: 0.6407894736842106
+AUCPR: 0.6416369064848881
+Learned Program
+active:0.26881407638699695:-ames.
+active:0.10354414845165372:-has_property(salmonella,p).
+active:0.11250908216263997:-atm(A,c,22,B),hidden_4(A,B).
+active:0.023885103851287993:-atm(C,c,22,D).
+active:0.07225826850738418:-amine(E).
+hidden_4(A,B):0.07524310264871237:-atm(F,c,22,B),hidden_4_1(A,F,B).
+hidden_4(G,H):0.029233271997604397:-atm(I,c,22,H),hidden_4_2(G,I,H).
+hidden_4(J,K):0.01923426453690181:-atm(L,c,22,K),hidden_4_3(J,L,K).
+hidden_4(M,N):0.22645395247647399:-symbond(O,M,7),hidden_4_4(N,O,M).
+hidden_4_1(A,F,B):0.41919757853779444:-symbond(P,F,1).
+hidden_4_2(G,I,H):0.35279494566441705:-symbond(Q,I,1).
+hidden_4_3(J,L,K):0.19762003783532228:-symbond(R,L,1).
+hidden_4_4(N,O,M):0.08764517705502503:-symbond(O,S,1).
+hidden_4_4(T,U,V):0.3034010329588788:-symbond(W,U,7),hidden_4_4_1(T,V,W,U).
+hidden_4_4_1(T,V,W,U):0.06525713320929542:-symbond(W,X,1).
+hidden_4_4_1(Y,Z,A1,B1):0.22360228854498626:-symbond(C1,A1,7),hidden_4_4_1_1(Y,Z,B1,C1,A1).
+hidden_4_4_1_1(Y,Z,B1,C1,A1):0.43190297617559176:-symbond(C1,D1,1).
+hidden_4_4_1_1(E1,F1,G1,H1,I1):0.22716300283406396:-symbond(J1,H1,7),hidden_4_4_1_1_1(E1,F1,G1,I1,J1,H1).
+hidden_4_4_1_1_1(E1,F1,G1,I1,J1,H1):0.7606937419234879:-symbond(J1,K1,1).
+hidden_4_4_1_1_1(L1,M1,N1,O1,P1,Q1):0.3296489684015648:-symbond(R1,P1,7),hidden_4_4_1_1_1_1(L1,M1,N1,O1,Q1,R1,P1).
+hidden_4_4_1_1_1_1(L1,M1,N1,O1,Q1,R1,P1):0.3721495021006646:-symbond(R1,S1,1).
+
+ Hyperparameters of carc_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 298 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Regularization enabled
+Regularization type L3:
+a:0,000000
+fraction of examples b:0,250000

@@ -1,0 +1,61 @@
+Wall time=178.268000  CLL=-1827.461778 
+LL: -242.3493011385829
+AUCROC: 0.6026315789473684
+AUCPR: 0.5951435798161004
+Learned Program
+active:0.5295549422054583:-ames.
+active:0.4056890477953146:-has_property(salmonella,p).
+active:0.5033196389575739:-ashby_alert(amino,A),hidden_1(A).
+active:0.36411354314460004:-ashby_alert(di10,B).
+active:0.4380082035894011:-ashby_alert(nitro,C),hidden_2(C).
+active:0.5216142409919148:-ind(amino,D),hidden_3(D).
+active:0.3887262684825562:-atm(E,c,22,F),hidden_4(E,F).
+active:0.5609052453646447:-atm(G,c,22,H),hidden_5(G,H).
+active:0.39705628052437797:-nitro(I).
+active:0.4727514380513561:-amine(J).
+active:0.36293609868223276:-phenol(K).
+hidden_1(L):0.4631171414339297:-connected(L,M).
+hidden_1(N):0.6123452708407935:-connected(O,N),hidden_1_1(O,N).
+hidden_2(P):0.5279652514320531:-connected(P,Q).
+hidden_3(R):0.3625578680713726:-ind(di10,R).
+hidden_4(S,T):0.4639385379455162:-atm(U,c,22,T),hidden_4_1(S,U,T).
+hidden_4(V,W):0.3897437799546768:-atm(X,c,22,W),hidden_4_2(V,X,W).
+hidden_4(Y,Z):0.3631594470941019:-atm(A1,c,22,Z),hidden_4_3(Y,A1,Z).
+hidden_4(B1,C1):0.48155482579865966:-symbond(D1,B1,1).
+hidden_4(E1,F1):0.40749842564110733:-symbond(G1,E1,7),hidden_4_4(F1,G1,E1).
+hidden_5(H1,I1):0.3826042227914101:-symbond(J1,H1,1).
+hidden_1_1(K1,L1):0.4031880107706844:-connected(K1,M1),hidden_1_1_1(L1,K1,M1).
+hidden_1_1(N1,O1):0.4185077906551677:-connected(P1,N1),hidden_1_1_2(O1,P1,N1).
+hidden_4_1(Q1,R1,S1):0.5566108991119945:-symbond(T1,R1,1).
+hidden_4_2(U1,V1,W1):0.5146665783888174:-symbond(X1,V1,1).
+hidden_4_3(Y1,Z1,A2):0.4369119605725672:-symbond(B2,Z1,1).
+hidden_4_4(C2,D2,E2):0.5114458701237712:-symbond(D2,F2,1).
+hidden_4_4(G2,H2,I2):0.42550471828227926:-symbond(J2,H2,7),hidden_4_4_1(G2,I2,J2,H2).
+hidden_1_1_1(K2,L2,M2):0.5200349885336798:-connected(M2,N2),hidden_1_1_1_1(K2,L2,M2,N2).
+hidden_1_1_2(O2,P2,Q2):0.510796878280189:-connected(P2,R2).
+hidden_4_4_1(S2,T2,U2,V2):0.38777503715318457:-symbond(U2,W2,1).
+hidden_4_4_1(X2,Y2,Z2,A3):0.40430162631498145:-symbond(B3,Z2,7),hidden_4_4_1_1(X2,Y2,A3,B3,Z2).
+hidden_1_1_1_1(C3,D3,E3,F3):0.5511973344506554:-connected(F3,G3).
+hidden_4_4_1_1(H3,I3,J3,K3,L3):0.5112930510016416:-symbond(K3,M3,1).
+hidden_4_4_1_1(N3,O3,P3,Q3,R3):0.4043899116554794:-symbond(S3,Q3,7),hidden_4_4_1_1_1(N3,O3,P3,R3,S3,Q3).
+hidden_4_4_1_1_1(T3,U3,V3,W3,X3,Y3):0.5720856758242628:-symbond(X3,Z3,1).
+hidden_4_4_1_1_1(A4,B4,C4,D4,E4,F4):0.43299540073538517:-symbond(G4,E4,7),hidden_4_4_1_1_1_1(A4,B4,C4,D4,F4,G4,E4).
+hidden_4_4_1_1_1_1(H4,I4,J4,K4,L4,M4,N4):0.4415316769865732:-symbond(M4,O4,1).
+
+ Hyperparameters of carc_deep:
+
+Save statistics? no
+Number of arithmetic circuits: 298 
+Max Iteration= 1000 
+Epsilon= 0,000100 
+Delta= 0,000010 
+Value used as zero= 0,000000100
+Seed =3035 
+Parameters are initialized with values in the range [-0,50 0,50]
+Eta= 0,001000 
+Beta1= 0,900000 
+Beta2= 0,999000 
+Adam_hat= 0,0000000100  
+BatchSize= 0 
+Strategy= batch 
+Regularization disabled

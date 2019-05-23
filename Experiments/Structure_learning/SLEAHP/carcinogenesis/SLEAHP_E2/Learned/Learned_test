@@ -1,0 +1,35 @@
+
+Learned Program
+active:0.07644860423381988:-has_property(salmonella,n).
+active:0.11067440301656012:-ashby_alert(halide10,A),hidden_1(A).
+active:0.3156140962904301:-ashby_alert(halide10,B),hidden_2(B).
+active:0.018747689446068805:-ashby_alert(halide10,C),hidden_3(C).
+active:0.043493181648873114:-ind(halide10,D),hidden_4(D).
+active:0.34247235072967436:-atm(E,c,10,F),hidden_5(E,F).
+active:7.685742044816202e-5:-atm(G,c,10,H),hidden_6(G,H).
+active:0.37140872499771294:-atm(I,cl,93,J),hidden_7(I,J).
+active:0.1711756137691729:-atm(K,cl,93,L),hidden_8(K,L).
+active:0.14680763977713956:-atm(M,h,3,N),hidden_9(M,N).
+hidden_1(A):0.11067642927129259:-ar_halide(A).
+hidden_2(B):0.31561409642215554:-ar_halide(B).
+hidden_3(C):0.0267450682894409:-ar_halide(C).
+hidden_4(D):0.03767880541823437:-D=<3.
+hidden_4(D):0.009031123713420408:-D>=3.
+hidden_4(D):0.01578284971163524:-D=3.
+hidden_5(E,F):0.00022483753510538218:-symbond(O,E,1).
+hidden_5(E,F):0.00029161282854711645:-F>= -0.206.
+hidden_5(E,F):0.014423252040164647:-F=0.094.
+hidden_5(E,F):0.011276251056506092:-F=<0.393.
+hidden_6(G,H):0.4311442534196434:-symbond(M,G,1).
+hidden_6(G,H):0.00015229242207681626:-H=0.393.
+hidden_6(G,H):0.161362378556737:-H=<0.393.
+hidden_6(G,H):0.10707049966386081:-H>= -0.206.
+hidden_7(I,J):0.00021038103596920932:-atm(P,cl,93,J).
+hidden_7(I,J):0.329128531038677:-J=<0.044.
+hidden_7(I,J):0.03149985397483629:-J= -0.206.
+hidden_8(K,L):0.10594683335439131:-L=<0.094.
+hidden_8(K,L):0.14983668871555914:-L>= -0.207.
+hidden_8(K,L):0.007038501425782329:-L= -0.207.
+hidden_9(M,N):0.18395723552948812:-N>=0.044.
+hidden_9(M,N):0.18681931683800032:-N=<0.393.
+hidden_9(M,N):0.13054485231178456:-N=0.044.
