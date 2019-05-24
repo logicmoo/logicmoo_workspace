@@ -188,17 +188,20 @@ add_arg(H, M:G1, M:G2,
         term_position(From, To, FFrom, FTo, [MPos, Pos2])) :-
     !,
     add_arg(H, G1, G2, Pos1, Pos2).
-add_arg(H, G1, G2, Pos,
-        term_position(From, To, FFrom, FTo, PosL)) :-
-    ( Pos = term_position(From, To, FFrom, FTo, PosL1)
-    ->( nonvar(PosL1)
-      ->append(PosL1, [0-0], PosL)
-      ; true
-      )  
-    ; Pos = From-To
-    ->FFrom = From,
-      FTo = To,
-      PosL = [0-0]
+add_arg(H, G1, G2, Pos1, Pos2) :-
+    ( var(Pos1)
+    ->true
+    ; ( Pos1 = term_position(From, To, FFrom, FTo, PosL1)
+      ->( nonvar(PosL1)
+        ->append(PosL1, [0-0 ], PosL)
+        ; true
+        )  
+      ; Pos1 = From-To
+      ->FFrom = From,
+        FTo = To,
+        PosL = [0-0 ]
+      ),
+      Pos2 = term_position(From, To, FFrom, FTo, PosL)
     ),
     extend_args(G1, [H], G2).
 
@@ -260,7 +263,7 @@ term_expansion((decompose_assertion_body(Body, A, B, C, D, E) :-
       HPP = PDP
     ).
 
-%!  decompose_assertion_body(+Body, +Pos, -Head, -Compat, -Call, -Succ, -Glob, Comment, -HPos, -CmpPos, -CPos, -SPos, -GPos, -ComPos)
+%!  decompose_assertion_body(+Body, +Pos, -Head, -Compat, -Call, -Succ, -Glob, Comment, -HPos, -CmpPos, -CPos, -SPos, -GPos, -ComPos).
 %
 %   Extract the different sections from the Body of an assertion. Note that this
 %   is expanded during compilation to contain extra arguments with the term
@@ -302,24 +305,24 @@ invalid_cp(_/_).
 %   
 %   Unifies MustBeEmpty with a list of sections that must be empty, and
 %   MustNotBeEmpty with a list of sections that must not be empty.  The elements
-%   of both lists are pairs like Section-List, where section could be compat,
-%   calls, success or global.
+%   of both lists are pairs like Section-List, where section could be
+%   compatibility, preconditions, postconditions or global.
 
 validate_body_sections(pred,     _,  _,     _,  _, [], []).
 validate_body_sections(prop,     _,  _,     _,  _, [], []).
 validate_body_sections(calls,   Cp, Ca,    Su, Gl,
-                       [compatibility-Cp, postconditions-Su, global-Gl],
+                       [compatibility-Cp, postconditions-Su, globalprops-Gl],
                        [preconditions-Ca]).
 validate_body_sections(success, Cp,  _,    Su, Gl,
-                       [compatibility-Cp, global  -Gl],
+                       [compatibility-Cp, globalprops-Gl],
                        [postconditions-Su]).
 validate_body_sections(comp,    Cp,  _,    Su, Gl,
                        [compatibiltiy-Cp, postconditions-Su],
-                       [global-Gl]).
+                       [globalprops-Gl]).
 
 %!  assrt_type(Type)
 %
-%  The type of assertion, could be the following values:
+%  The type of assertion, could have the following values:
 %
 %  calls - Specifies the properties at call time.
 %
@@ -371,8 +374,7 @@ assrt_status(static).
 decompose_status_and_type(Assertions, APos, AssrtStatus, AssrtType, UBody, BPos) :-
     cleanup_parentheses(APos, Pos),
     decompose_status_and_type_1(Assertions, Pos, AssrtStatus, AssrtType, UBody, BPos),
-    assrt_type(AssrtType),
-    once(assrt_status(AssrtStatus)).
+    assrt_status(AssrtStatus).
 
 cleanup_parentheses(Pos1, Pos) :-
     nonvar(Pos1),
@@ -382,7 +384,7 @@ cleanup_parentheses(Pos1, Pos) :-
 cleanup_parentheses(Pos, Pos).
 
 decompose_status_and_type_1(Assertions, term_position(_, _, _, _, [BPos]),
-                            _, AssrtType, UBody, BPos) :-
+                            check, AssrtType, UBody, BPos) :-
     assrt_type(AssrtType),
     Assertions =.. [AssrtType, UBody],
     neck.
@@ -410,81 +412,6 @@ Assr :-
     neck,
     Body.
 
-% EMM: Support for grouped global properties
-
-current_body(M:BodyS, _, term_position(_, _, _, _, [_, PosS]), Body, BM, BPos, Gl1, Gl) :-
-    atom(M),
-    !,
-    current_body(BodyS, M, PosS, Body, BM, BPos, Gl1, Gl).
-current_body(BodyS#Co, M,
-             term_position(From, To, FFrom, FTo, [PosS, PosCo]), Body#Co, BM,
-             term_position(From, To, FFrom, FTo, [BPos, PosCo]), Gl1, Gl) :-
-    !,
-    current_body(BodyS, M, PosS, Body, BM, BPos, Gl1, Gl).
-current_body(BodyS::Term + BGl, M,
-             term_position(From, To, FFrom, FTo,
-                           [PosS,
-                            term_position(_, _, _, _, [PGl, PosTe])]), Body::Term, BM,
-             term_position(From, To, FFrom, FTo, [BPos, PosTe]), Gl1, Gl) :-
-    !,
-    propdef(BGl, M, PGl, Gl1, Gl2),
-    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
-current_body(BodyS::Term is BGl, M,
-             term_position(From, To, FFrom, FTo,
-                           [PosS,
-                            term_position(_, _, _, _, [PGl, PosTe])]), Body::Term, BM,
-             term_position(From, To, FFrom, FTo, [BPos, PosTe]), Gl1, Gl) :-
-    !,
-    propdef(BGl, M, PGl, Gl1, Gl2),
-    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
-current_body(BodyS + BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BM, BPos, Gl1, Gl) :-
-    !,
-    propdef(BGl, M, PGl, Gl1, Gl2),
-    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
-current_body(BodyS is BGl, M, term_position(_, _, _, _, [PosS, PGl]),
-             Body, BM, BPos, Gl1, Gl) :-
-    !,
-    propdef(BGl, M, PGl, Gl1, Gl2),
-    current_body(BodyS, M, PosS, Body, BM, BPos, Gl2, Gl).
-
-current_body(BodyS, M, PosS, Body, BM, BPos, Gl1, Gl) :-
-    is_decl_global(BodyS, M),
-    BodyS =.. [F, Head|GArgL],
-    nonvar(Head),
-    !,
-    PosS = term_position(_, _, FF, FT, [HPos|PArgL]),
-    BGl =.. [F|GArgL],
-    current_body(Head + BGl, M,
-                 term_position(_, _, _, _,
-                               [HPos, term_position(_, _, FF, FT, [PArgL])]),
-                 Body, BM, BPos, Gl1, Gl).
-current_body(BodyS, M, PosS1, Body, BM, BPos, Gl1, Gl) :-
-    cleanup_parentheses(PosS1, PosS),
-    ( body_member(BodyS, PosS, Lit, LPos)
-    *->
-      current_body(Lit, M, LPos, Body, BM, BPos, Gl1, Gl)
-    ; Body = BodyS,
-      BM = M,
-      Gl = Gl1,
-      BPos = PosS
-    ).
-
-body_member(Body, _, _, _) :-
-    var(Body),
-    !,
-    fail.
-body_member([], _, _, _) :- !, fail.
-body_member([A|B], list_position(From, To, [APos|EPos], TPos), Lit, LPos) :-
-    !,
-    ( Lit=A, LPos=APos
-    ; Lit=B, LPos=list_position(From, To, EPos, TPos)
-    ).
-body_member((A, B), term_position(_, _, _, _, [APos, BPos]), Lit, LPos) :-
-    ( Lit=A, LPos=APos
-    ; Lit=B, LPos=BPos
-    ).
-
 is_decl_global(Head, M) :-
     is_decl_global(Head, _, _, M).
 
@@ -510,18 +437,16 @@ current_decomposed_assertion(Assertions, M, PPos, Pred, Status, Type, Cp, Ca, Su
     cleanup_parentheses(PPos, APos),
     current_decomposed_assertion_(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos).
 
-current_decomposed_assertion_(Assertions  + BGl, M, term_position(_, _, _, _, [APos, PGl]),
-                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    !,
-    propdef(BGl, M, PGl, Gl, Gl1),
-    current_decomposed_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl1, Co, CoPos, RPos).
-current_decomposed_assertion_(Assertions is BGl, M, term_position(_, _, _, _, [APos, PGl]),
-                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+current_decomposed_assertion_(AssertionsBGl, M, term_position(_, _, _, _, [APos, PGl]),
+                              Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    member(AssertionsBGl, [Assertions  + BGl,
+                           Assertions is BGl]),
+    neck,
     !,
     propdef(BGl, M, PGl, Gl, Gl1),
     current_decomposed_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl1, Co, CoPos, RPos).
 current_decomposed_assertion_(Assertions # Co2, M, term_position(_, _, _, _, [APos, CoPos2]),
-                             Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+                              Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
     !,
     current_decomposed_assertion(Assertions, M, APos, Pred, Status, Type, Cp, Ca, Su, Gl, Co1, CoPos1, RPos),
     once(merge_comments(Co1, CoPos1, Co2, CoPos2, Co, CoPos)).
@@ -529,11 +454,10 @@ current_decomposed_assertion_(Assertions, M, APos, Pred, Status, Type, Cp, Ca, S
     ( is_decl_global(Assertions, DStatus, DType, M)
     ->Term =.. [DType, DStatus, Assertions],
       current_decomposed_assertion_(Term, M, term_position(_, _, _, _, [0-0, APos]),
-                                   Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos)
+                                    Pred, Status, Type, Cp, Ca, Su, Gl, Co, CoPos, RPos)
     ; decompose_status_and_type(Assertions, APos, Status, Type, BodyS, PosS1),
       cleanup_parentheses(PosS1, PosS),
-      current_body(BodyS, M, PosS, Body, BM, BPos, Gl, Gl1),
-      decompose_assertion_head_body(Body, BM, BPos, Pred, Cp, Ca, Su, Gl1, Co, CoPos, RPos),
+      decompose_assertion_head_body(BodyS, M, PosS, Pred, true, _, Cp, Ca, Su, Gl, Co, CoPos, RPos),
       validate_body_sections(Type, Cp, Ca, Su, Gl, MustBeEmpty, MustNotBeEmpty),
       maplist(report_must_be_empty(Type), MustBeEmpty),
       maplist(report_must_not_be_empty(Type, RPos), MustNotBeEmpty)
@@ -591,32 +515,70 @@ combine_pi_comp_(N1, Head, PosL1, PosL, (H * P), term_position(_, _, _, _, [TPos
 combine_pi_comp_(N, Head, PosL, [Pos|PosL], P, Pos) :-
     arg(N, Head, P).
 
-decompose_assertion_head_body(Body, M, BPos, Pred, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    once(decompose_assertion_body(Body, BPos, Head, BCp1, BCa, BSu,
-                                  BGl, Co, HPos, PCp1, PCa, PSu, PGl, CoPos)),
-    decompose_assertion_head(Head, M, HPos, Pred, BCp1, PCp1, BCp, PCp, Cp1, Ca1, Su1, Gl1, RPos),
-    apropdef(Pred, M, BCp, PCp, Cp, Cp1),
-    apropdef(Pred, M, BCa, PCa, Ca, Ca1),
-    apropdef(Pred, M, BSu, PSu, Su, Su1),
-    propdef(BGl, M, PGl, Gl, Gl1).
+% EMM: Support for grouped global properties
 
+merge_props(BCp1, _,    BCp,  PCp, BCp, PCp) :- strip_module(BCp1, _, true).
+merge_props(BCp,  PCp,  BCp2, _,   BCp, PCp) :- strip_module(BCp2, _, true).
+merge_props(BCp1, PCp1, BCp2, PCp2, (BCp1, BCp2), term_position(_, _, _, _, [PCp1, PCp2])).
+
+decompose_assertion_head_body((B1, B2), M, term_position(_, _, _, _, [P1, P2]),
+                              Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    !,
+    ( decompose_assertion_head_body(B1, M, P1, Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos)
+    ; decompose_assertion_head_body(B2, M, P2, Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos)
+    ).
+decompose_assertion_head_body([B1|B2], M, list_position(From, To, [P1|E], TP),
+                              Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    !,
+    ( decompose_assertion_head_body(B1, M, P1, Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos)
+    ; decompose_assertion_head_body(B2, M, list_position(From, To, E, TP),
+                                               Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos)
+    ).
+decompose_assertion_head_body(M:Body, CM, term_position(From, To, FFrom, FTo, [MPos, BPos]),
+                              Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    atom(M),
+    callable(Body),
+    !,
+    % Switching the body context does not implies switching the context of the
+    % compatibility properties, that is why CM should be preserved in the
+    % compatibility section:
+    decompose_assertion_head_body(Body, M, BPos, Pred, CM:BCp,
+                                  term_position(From, To, FFrom, FTo, [MPos, PCp]),
+                                  Cp, Ca, Su, Gl, Co, CoPos, RPos).
+decompose_assertion_head_body([], _, _, _, _, _, _, _, _, _, _, _, _) :-
+    !,
+    fail.
+decompose_assertion_head_body(Body, M, BPos, Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    is_decl_global(Body, M),
+    Body =.. [F, Head|GArgL],
+    nonvar(Head),
+    !,
+    ( nonvar(BPos)
+    ->BPos = term_position(_, _, FF, FT, [HPos|PArgL]),
+      NPos = term_position(_, _, _, _, [HPos, term_position(_, _, FF, FT, [PArgL])])
+    ; true
+    ),
+    BGl =.. [F|GArgL],
+    decompose_assertion_head_body(Head + BGl, M, NPos, Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos).
+
+decompose_assertion_head_body(Body, M, BPos, Pred, BCp2, PCp2, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
+    ( decompose_assertion_body(Body, BPos, BH1, BCp1, BCa, BSu, BGl, BCo,
+                                           PH1, PCp1, PCa, PSu, PGl, PCo),
+      Body \= BH1
+    ->propdef(BGl, M, PGl, Gl, Gl1),
+      once(merge_props(BCp1, PCp1, BCp2, PCp2, BCp, PCp)),
+      decompose_assertion_head_body(BH1, M, PH1, Pred, BCp, PCp, Cp, Ca1, Su1, Gl1, BCo1, PCo1, RPos),
+      apropdef(Pred, M, BCa, PCa, Ca, Ca1),
+      apropdef(Pred, M, BSu, PSu, Su, Su1),
+      once(merge_comments(BCo1, PCo1, BCo, PCo, Co, CoPos))
+    ; decompose_assertion_head(Body, M, BPos, Pred, BCp2, PCp2, BCp, PCp, Cp1, Ca, Su, Gl, RPos),
+      apropdef(Pred, M, BCp, PCp, Cp, Cp1),
+      Co = ""
+    ).
 decompose_assertion_head(Head, M, PPos, Pred, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, HPos) :-
     cleanup_parentheses(PPos, Pos),
     decompose_assertion_head_(Head, M, Pos, Pred, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, HPos).
 
-decompose_assertion_head_((H1,H2), M, term_position(_, _, _, _, [P1, P2]),
-                          P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP) :-
-    !,
-    ( decompose_assertion_head(H1, M, P1, P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
-    ; decompose_assertion_head(H2, M, P2, P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
-    ).
-decompose_assertion_head_([H1|H2], M, list_position(From, To, [P1|E], TP),
-                         P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP) :-
-    !,
-    ( decompose_assertion_head(H1, M, P1, P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
-    ; decompose_assertion_head(H2, M, list_position(From, To, E, TP),
-                               P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP)
-    ).
 decompose_assertion_head_(M:H, _, term_position(_, _, _, _, [_, HP]),
                           P, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, RP) :-
     atom(M),
@@ -625,9 +587,14 @@ decompose_assertion_head_(M:H, _, term_position(_, _, _, _, [_, HP]),
 decompose_assertion_head_(F/A, M, HPos, M:Pred, BCp1, PCp1, BCp, PCp, Cp, Ca, Su, Gl, Pos) :-
     !,
     functor(Head, F, A),
-    ( BCp1 \= true,
-      %(A=3->gtrace;true),
-      combine_pi_comp(A, Head, [], PosL, BCp1, PCp1)
+    ( once(( BCp1 = CM:BCp2,
+             PCp1 = term_position(_, _, _, _, [_, PCp2])
+           ; BCp1 = BCp2,
+             PCp1 = PCp2,
+             CM = M
+           )),
+      BCp2 \= true,
+      combine_pi_comp(A, Head, [], PosL, BCp2, PCp2)
     ->( nonvar(HPos)
       ->HPos = term_position(From, To, _, _, [FPos, APos]),
         ( nonvar(FPos)
@@ -637,8 +604,8 @@ decompose_assertion_head_(F/A, M, HPos, M:Pred, BCp1, PCp1, BCp, PCp, Cp, Ca, Su
         )
       ; true
       ),
-      decompose_assertion_head_(Head, M, term_position(From, To, FFrom, FTo, PosL),
-                                M:Pred, true, APos, BCp, PCp, Cp, Ca, Su, Gl, Pos)
+      decompose_assertion_head_(Head, CM, term_position(From, To, FFrom, FTo, PosL),
+                                CM:Pred, true, APos, BCp, PCp, Cp, Ca, Su, Gl, Pos)
     ; Pred = Head,
       Cp = [],
       Ca = [],
@@ -704,7 +671,8 @@ do_modedef(A1, M, A2, A, From-To, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, 
     ; A4 is -A1,
       A3 = goal_go(A4, A)
     ),
-    modedef(A3, M, A2, A, term_position(From, To, From, From, [From-From, From-To]), PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    modedef(A3, M, A2, A, term_position(From, To, From, From, [From-From, From-To]),
+            PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
 do_modedef(A1, _, A1, _, PA1, PA1, Cp1, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp1, Cp).
 

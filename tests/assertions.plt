@@ -23,7 +23,7 @@ test(assertions_1) :-
 test(assertions_2) :-
     assertions:expand_assertion(
                   m, [],
-                  (pred system:p(A, B)
+                  (pred [system:p(A, B)]
                                ::int(A):(gnd(A), var(B))
                                         =>(gnd(A), gnd(B))
                                         + not_fails), _, R, _),
@@ -62,7 +62,7 @@ test(assertions_comp) :-
     assertions:expand_assertion(
                   m, [], true comp nfi1(G,V) + (sideff(free), no_acheck), _, R, _),
     assertion(R=[assertions:asr_head_prop(Idx, m, nfi1(G, V), true, comp, [], _),
-                 assertions:asr_glob(Idx, m, sideff(_, free), _),
+                 assertions:asr_glob(Idx, m, sideff(free, _), _),
                  assertions:asr_glob(Idx, m, no_acheck(_), _)
                 ]).
 
