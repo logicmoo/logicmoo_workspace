@@ -241,6 +241,7 @@ term_expansion((decompose_assertion_body(Body, A, B, C, D, E, F) :-
       Body = (BO#F)
     ->maplist(var_location(Body, Pos), [BO, F], [BOP, COP])
     ; BO = Body,
+      BOP = Pos,
       F = ""
     ).
 
@@ -258,6 +259,7 @@ term_expansion((decompose_assertion_body(Body, A, B, C, D, E) :-
       HPP = DPP,
       maplist(var_location(Body, Pos), [A, BO], [PDP, BOP])
     ; BO = Body,
+      BOP = Pos,
       B = true,
       A = H,
       HPP = PDP
@@ -562,8 +564,8 @@ decompose_assertion_head_body(Body, M, BPos, Pred, BCp, PCp, Cp, Ca, Su, Gl, Co,
     decompose_assertion_head_body(Head + BGl, M, NPos, Pred, BCp, PCp, Cp, Ca, Su, Gl, Co, CoPos, RPos).
 
 decompose_assertion_head_body(Body, M, BPos, Pred, BCp2, PCp2, Cp, Ca, Su, Gl, Co, CoPos, RPos) :-
-    ( decompose_assertion_body(Body, BPos, BH1, BCp1, BCa, BSu, BGl, BCo,
-                                           PH1, PCp1, PCa, PSu, PGl, PCo),
+    ( once(decompose_assertion_body(Body, BPos, BH1, BCp1, BCa, BSu, BGl, BCo,
+                                                PH1, PCp1, PCa, PSu, PGl, PCo)),
       Body \= BH1
     ->propdef(BGl, M, PGl, Gl, Gl1),
       once(merge_props(BCp1, PCp1, BCp2, PCp2, BCp, PCp)),
