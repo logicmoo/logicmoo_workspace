@@ -35,33 +35,30 @@
 :- module(assrt_interface, []).
 
 :- use_module(library(assertions), []).
-:- use_module(library(interface), []).
-:- use_module(library(context_values)).
+:- use_module(library(interface),  []).
 
-% Propagate assertions in an interface to the implementation
+% Propagate assertions in an interface to the implementation. Note that this
+% only propagates properties of user-defined assertions.
 
-assertions:asr_head_prop(in_asr(IM, Head, Asr), IM, Head, Status, Type, Dict, Loc) :-
-    head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr).
+assertions:asr_head_prop(in_asr(Asr), IM, Head, Status, Type, Dict, Loc) :-
+    head_prop_asr_intf(IM, Head, Status, Type, Dict, Loc, Asr).
 
-head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr) :-
-    \+ current_context_value(evaluating, true),
+head_prop_asr_intf(IM, Head, Status, Type, Dict, Loc, Asr) :-
     interface:'$implementation'(IM, Interface),
-    with_context_value(assertions:asr_head_prop(Asr, Interface, Head,
-                                               Status, Type, Dict, Loc),
-                       evaluating, true).
+    assertions:st_asr_head_prop(Asr, Interface, Head, Status, Type, Dict, Loc).
 
-assertions:asr_comm(in_asr(IM, Head, Asr), Comm, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
-    assertions:asr_comm(Asr, Comm, Loc).
-assertions:asr_comp(in_asr(IM, Head, Asr), M, Comp, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
-    assertions:asr_comp(Asr, M, Comp, Loc).
-assertions:asr_call(in_asr(IM, Head, Asr), M, Call, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
-    assertions:asr_call(Asr, M, Call, Loc).
-assertions:asr_succ(in_asr(IM, Head, Asr), M, Succ, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
-    assertions:asr_succ(Asr, M, Succ, Loc).
-assertions:asr_glob(in_asr(IM, Head, Asr), M, Glob, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
-    assertions:asr_glob(Asr, M, Glob, Loc).
+assertions:asr_comm(in_asr(Asr), Comm, Loc) :-
+    head_prop_asr_intf(_, _, _, _, _, _, Asr),
+    assertions:st_asr_comm(Asr, Comm, Loc).
+assertions:asr_comp(in_asr(Asr), M, Comp, Loc) :-
+    head_prop_asr_intf(_, _, _, _, _, _, Asr),
+    assertions:st_asr_comp(Asr, M, Comp, Loc).
+assertions:asr_call(in_asr(Asr), M, Call, Loc) :-
+    head_prop_asr_intf(_, _, _, _, _, _, Asr),
+    assertions:st_asr_call(Asr, M, Call, Loc).
+assertions:asr_succ(in_asr(Asr), M, Succ, Loc) :-
+    head_prop_asr_intf(_, _, _, _, _, _, Asr),
+    assertions:st_asr_succ(Asr, M, Succ, Loc).
+assertions:asr_glob(in_asr(Asr), M, Glob, Loc) :-
+    head_prop_asr_intf(_, _, _, _, _, _, Asr),
+    assertions:st_asr_glob(Asr, M, Glob, Loc).
