@@ -32,7 +32,10 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(neck, [neck/0, neck/2]).
+:- module(neck, [neck/0,
+                 neck/2,
+                 necki/0,
+                 necki/2]).
 
 :- use_module(library(lists)).
 :- use_module(library(occurs)).
@@ -42,24 +45,32 @@
 :- reexport(library(compound_expand)).
 
 %!  neck is det.
+%!  necki is det.
 %!  neck(L, L) is det.
+%!  necki(L, L) is det.
 %
 %   Stablish that everything above it should be evaluated at compile time, be
 %   careful since such part should contain only predicates already defined.  In
 %   case of non-determinism, several clauses would be generated.  This is a
 %   practical way to generate automatic clauses with a proper instantiation of
 %   the head. If neck can not be expanded, it will succeed without side effects.
+%   necki is used if you don't want to create ancillary predicates for the body,
+%   but rather have the body inlined.
 
 neck.
 
 neck --> [].
+
+necki.
+
+necki --> [].
 
 term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
     '$current_source_module'(M),
     sequence_list(Body1, List, []),
     once(( append(Left, [Neck|Right], List),
            nonvar(Neck),
-           memberchk(Neck, [neck, neck(X, X)])
+           memberchk(Neck, [neck, neck(X, X), necki, necki(X, X)])
          )),
     list_sequence(Left, Static),
     once(( append(LRight, RRight, Right),
@@ -71,7 +82,8 @@ term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
     term_variables(Head, HVars),
     '$expand':mark_vars_non_fresh(HVars),
     expand_goal(M:Static, Expanded),
-    ( RRight = [_, _|_],
+    ( memberchk(Neck, [neck, neck(_, _)]),
+      RRight = [_, _|_],
       list_sequence(RRight, SepBody),
       expand_goal(M:SepBody, M:ExpBody),
       term_variables(t(Head, Expanded, LRight), VarHU),
