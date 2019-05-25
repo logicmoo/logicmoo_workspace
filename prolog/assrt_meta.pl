@@ -109,7 +109,7 @@ assertions:asr_aprop(am_asr2(_, _, _, From), stat, check, From).
 assertions:asr_aprop(am_asr2(_, _, _, From), type,  pred, From).
 assertions:asr_aprop(am_asr2(M, H, Meta, From), Type,  Prop, From) :-
     (nonvar(Type) -> memberchk(Type, [call, succ]) ; true),
-    assertions:current_decomposed_assertion(pred Meta, M, _, M:H, _,
+    assertions:current_decomposed_assertion(pred Meta, _, M, M:H, _,
                                             _, _, CaL, SuL, _, _, _, _),
     member(Type-PropL, [call-CaL, succ-SuL]),
     member(Prop-_, PropL).
