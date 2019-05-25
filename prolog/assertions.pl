@@ -576,12 +576,13 @@ decompose_args([Pos|PosL], N1, Head, M, Pred, Cp1, Ca1, Su1, Gl1) :-
     decompose_args(PosL, N, Head, M, Pred, Cp2, Ca2, Su2, Gl2).
 decompose_args([], _, _, _, _, [], [], [], []).
 
-:- add_termpos(resolve_type_modes_(+,?,?,?,?,?,?,?,?,?,?)).
+:- add_termpos(resolve_types_modes_(+,?,?,?,?,?,?,?,?,?,?)).
 :- add_termpos(do_modedef(+,?,?,-,?,?,?,?,?,?,?,?,?,?)).
+:- add_termpos(modedef(+,?,?,-,?,?,?,?,?,?,?,?,?,?)).
 :- add_termpos(do_propdef(+,?,?,?,?)).
 :- add_termpos(hpropdef(+,?,?,?,?)).
 
-resolve_types_modes(A,  _, _, A,    Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
+resolve_types_modes(A,     _, _, A, Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
 resolve_types_modes(A1, PPos, M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
     cleanup_parentheses(PPos, Pos),
     resolve_types_modes_(A1, Pos, M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl).
@@ -592,23 +593,23 @@ resolve_types_modes_(A1:T, term_position(_, _, _, _, [PA1, PT]), M, A, Cp1, Ca1,
     do_modedef(A1, PA11, M, A, A2, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !,
     do_propdef(A2, PA2, M, A, Pr2, Pr).
-resolve_types_modes_(A1, PA1, M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
-    do_modedef(A1, PA1, M, A, A2, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
-    do_propdef(A2, PA2, M, A, Pr1, Pr).
+resolve_types_modes_(A1, M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
+    do_modedef(A1, M, A, A2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    do_propdef(A2, M, A, Pr1, Pr).
 
-do_propdef(A,  _, _, A,   Cp,  Cp) :- var(A), !.
-do_propdef(A1, PA1, M, A, Cp1, Cp) :-
-    hpropdef(A1, PA1, M, A, Cp1, Cp).
+do_propdef(A,  _, A, Cp,  Cp) :- var(A), !.
+do_propdef(A1, M, A, Cp1, Cp) :-
+    hpropdef(A1, M, A, Cp1, Cp).
 
-do_modedef(A1, PA1, M, A, A2, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+do_modedef(A1, M, A, A2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     nonvar(A1),
-    modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    modedef(A1, M, A, A2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
 do_modedef(A1, APos, M, A, A2, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     atom(A1),
     A3 =.. [A1, A],
     ( var(APos) -> true ; APos = From-To, Pos = term_position(From, To, From, To, [To-To]) ),
-    modedef(A3, M, A2, A, Pos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    modedef(A3, Pos, M, A, A2, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
 do_modedef(A1, From-To, M, A, A2, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     integer(A1),
@@ -617,36 +618,52 @@ do_modedef(A1, From-To, M, A, A2, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, 
     ; A4 is -A1,
       A3 = goal_go(A4, A)
     ),
-    modedef(A3, M, A2, A, term_position(From, To, From, From, [From-From, From-To]),
+    modedef(A3, term_position(From, To, From, From, [From-From, From-To]), M, A, A2,
             PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
 do_modedef(A1, PA1, _, _, A1, PA1, Cp1, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp1, Cp).
 
+:- add_termpos(put_prop(+,?,?,?)).
+
+put_prop(_, Pos, Prop) --> [Prop-Pos].
+
 % Support for modes are hard-wired here:
 % ISO Modes
-modedef(+A,         M, A, B, Pos, PA, Cp,                       Ca1,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca2, Ca) :- Pos = term_position(_, _, _, _, [PA]),
-    (var(A), var(Ca2) -> Ca1 = [(M:nonvar(B))-Pos|Ca2] ; Ca1 = Ca2). % A bit confuse hack, Ca1 come instantiated to optimize the expression
-modedef(-A,         M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su1,                         Gl,  Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(+A, M, B, A, Cp, Ca1, Su, Gl, Cp, Ca, Su, Gl, Ca2, Ca) :-
+    ( var(A), var(Ca2)
+    ->put_prop(A, M:nonvar(B), Ca1, Ca2)
+    ; Ca1 = Ca2
+    ). % A bit confuse hack, Ca1 come instantiated to optimize the expression
+modedef(-A,   M, B, A, Cp,  Ca2, Su1, Gl,  Cp, Ca, Su, Gl, Su1, Su) :- put_prop(A, M:var(B), Ca2, Ca).
 % Less restrictive - uses further instantiated:
 % modedef(-(A),         _, A, B, Pos, PA, Cp,                       Ca,                Su1,  [(globprops:fi(B))-Pos|Gl], Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(?A,         _, A, _, Pos, PA, Cp1,                      Ca,                Su,                          Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(@(A),         _, A, B, Pos, PA, Cp1,                      Ca,                Su,  [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(?A,   _, _, A, Cp1, Ca,  Su,  Gl,  Cp, Ca, Su, Gl, Cp1, Cp).
+modedef(@(A), _, B, A, Cp1, Ca,  Su,  Gl1, Cp, Ca, Su, Gl, Cp1, Cp) :- put_prop(A, globprops:nfi(B), Gl1, Gl).
 % PlDoc (SWI) Modes
-modedef(:A1,        _, A, B, Pos, PA, Cp,                       Ca1,               Su,                          Gl,  Cp, Ca, Su, Gl, Ca2, Ca) :- Pos = term_position(From, To, FFrom, FTo, [PA1]),
-     % The first part of this check is not redundant if we forgot the meta_predicate declaration
-    (var(A1), var(Ca2) -> Ca1 = [(typeprops:mod_qual(B))-Pos|Ca2], A1 = A ; Ca1 = Ca2, A = typeprops:mod_qual(A1, B), PA = term_position(From, To, FFrom, FTo, [PA1, From-From])).
-modedef(goal_in(N,A), _, A, B, Pos, PA, Cp,  [(typeprops:goal(N,B))-Pos|Ca1],        Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [_,PA]).
-modedef(goal_go(N,A), _, A, B, Pos, PA, Cp,        Ca,    [(typeprops:goal(N,B))-Pos|Su1],                        Gl,  Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [_,PA]).
-modedef(!A,       M, A, B, Pos, PA, Cp1, [(M:compound(B))-Pos|Ca],               Su,                          Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]). % May be modified using setarg/3 or nb_setarg/3 (mutable)
+modedef(:A1, Pos, _, B, A, PA, Cp, Ca1, Su, Gl, Cp, Ca, Su, Gl, Ca2, Ca) :-
+    Pos = term_position(From, To, FFrom, FTo, [PA1]),
+    % The first part of this check is not redundant if we forgot the meta_predicate declaration
+    ( var(A1),
+      var(Ca2)
+    ->put_prop(A, Pos, typeprops:mod_qual(B), Ca1, Ca2),
+      A1 = A,
+      PA = PA1
+    ; Ca1 = Ca2,
+      A = typeprops:mod_qual(A1, B),
+      PA = term_position(From, To, FFrom, FTo, [PA1, From-From])
+    ).
+modedef(goal_in(N,A), _, B, A, Cp,  Ca2,  Su,  Gl, Cp, Ca, Su, Gl, Ca1, Ca) :- put_prop(A, typeprops:goal(N,B), Ca2, Ca1).
+modedef(goal_go(N,A), _, B, A, Cp,  Ca,   Su2, Gl, Cp, Ca, Su, Gl, Su1, Su) :- put_prop(A, typeprops:goal(N,B), Su2, Su1).
+modedef(!A,           M, B, A, Cp1, Ca2,  Su,  Gl, Cp, Ca, Su, Gl, Cp1, Cp) :- put_prop(A, M:compound(B),       Ca2, Ca). % May be modified using setarg/3 or nb_setarg/3 (mutable)
 % Ciao Modes:
-modedef(in(A),        M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca1],                 Su,                       Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(out(A),       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],  [(M:gnd(B))-Pos|Su1],                     Gl,  Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(go(A),        M, A, B, Pos, PA, Cp1,                      Ca,   [(M:gnd(B))-Pos|Su],                      Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]).
+modedef(in(A),  M, B, A, Cp,  Ca2, Su,  Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- put_prop(A, M:ground(B), Ca2, Ca1).
+modedef(out(A), M, B, A, Cp,  Ca2, Su2, Gl,  Cp, Ca, Su, Gl, Su1, Su) :- put_prop(A, M:var(B), Ca2, Ca), put_prop(A, M:gnd(B), Su2, Su1).
+modedef(go(A),  M, B, A, Cp1, Ca,  Su2, Gl,  Cp, Ca, Su, Gl, Cp1, Cp) :- put_prop(A, M:gnd(B), Su2, Su).
 % Additional Modes (See Coding Guidelines for Prolog, Michael A. Covington, 2009):
-modedef(*A,       M, A, B, Pos, PA, Cp,    [(M:ground(B))-Pos|Ca1],              Su,                          Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- Pos = term_position(_, _, _, _, [PA]).
-modedef(=A,       _, A, B, Pos, PA, Cp1,                      Ca,                Su,  [(globprops:nfi(B))-Pos|Gl], Cp, Ca, Su, Gl, Cp1, Cp) :- Pos = term_position(_, _, _, _, [PA]). % The state of A is preserved
-modedef(/A,       M, A, B, Pos, PA, Cp,       [(M:var(B))-Pos|Ca],               Su1, [(globprops:nsh(B))-Pos|Gl], Cp, Ca, Su, Gl, Su1, Su) :- Pos = term_position(_, _, _, _, [PA]). % Like '-' but also A don't share with any other argument
-modedef(>A,       _, A, _, term_position(_, _, _, _, [PA]), PA, Cp, Ca,          Su1,                         Gl,  Cp, Ca, Su, Gl, Su1, Su). % Like output but A might be nonvar on entry
+modedef(*A,     M, B, A, Cp,  Ca2, Su,  Gl,  Cp, Ca, Su, Gl, Ca1, Ca) :- put_prop(A, M:ground(B), Ca2, Ca1).
+modedef(=A,     _, B, A, Cp1, Ca,  Su,  Gl1, Cp, Ca, Su, Gl, Cp1, Cp) :- put_prop(A, globprops:nfi(B), Gl1, Gl). % The state of A is preserved
+modedef(/A,     M, B, A, Cp,  Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Su1, Su) :- put_prop(A, M:var(B), Ca1, Ca), put_prop(A, globprops:nsh(B), Gl1, Gl). % Like '-' but also A don't share with any other argument
+modedef(>A,     _, _, A, Cp,  Ca,  Su1, Gl,  Cp, Ca, Su, Gl, Su1, Su). % Like output but A might be nonvar on entry
 
 % nfi == not_further_inst
 % nsh == not_shared
