@@ -570,42 +570,47 @@ decompose_assertion_head_(Head, Pos, M, M:Head, BCp, PCp, BCp, PCp, [], [], [], 
 decompose_args([Pos|PosL], N1, Head, M, Pred, Cp1, Ca1, Su1, Gl1) :-
     arg(N1, Head, HArg),
     !,
-    resolve_types_modes(HArg, M, PArg, Pos, Cp1, Ca1, Su1, Gl1, Cp2, Ca2, Su2, Gl2),
+    resolve_types_modes(HArg, Pos, M, PArg, Cp1, Ca1, Su1, Gl1, Cp2, Ca2, Su2, Gl2),
     arg(N1, Pred, PArg),
     succ(N1, N),
     decompose_args(PosL, N, Head, M, Pred, Cp2, Ca2, Su2, Gl2).
 decompose_args([], _, _, _, _, [], [], [], []).
 
-resolve_types_modes(A,  _, A, _,    Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
-resolve_types_modes(A1, M, A, PPos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
+:- add_termpos(resolve_type_modes_(+,?,?,?,?,?,?,?,?,?,?)).
+:- add_termpos(do_modedef(+,?,?,-,?,?,?,?,?,?,?,?,?,?)).
+:- add_termpos(do_propdef(+,?,?,?,?)).
+:- add_termpos(hpropdef(+,?,?,?,?)).
+
+resolve_types_modes(A,  _, _, A,    Cp,  Ca,  Su,  Gl,  Cp, Ca, Su, Gl) :- var(A), !.
+resolve_types_modes(A1, PPos, M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
     cleanup_parentheses(PPos, Pos),
-    resolve_types_modes_(A1, M, A, Pos, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl).
+    resolve_types_modes_(A1, Pos, M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl).
 
-resolve_types_modes_(A1:T, M, A, term_position(_, _, _, _, [PA1, PT]), Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
-    do_propdef(T, M, A, PT, Pr1, Pr2),
+resolve_types_modes_(A1:T, term_position(_, _, _, _, [PA1, PT]), M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
+    do_propdef(T, PT, M, A, Pr1, Pr2),
     cleanup_parentheses(PA1, PA11),
-    do_modedef(A1, M, A2, A, PA11, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    do_modedef(A1, PA11, M, A, A2, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !,
-    do_propdef(A2, M, A, PA2, Pr2, Pr).
-resolve_types_modes_(A1, M, A, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
-    do_modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
-    do_propdef(A2, M, A, PA2, Pr1, Pr).
+    do_propdef(A2, PA2, M, A, Pr2, Pr).
+resolve_types_modes_(A1, PA1, M, A, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl) :-
+    do_modedef(A1, PA1, M, A, A2, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
+    do_propdef(A2, PA2, M, A, Pr1, Pr).
 
-do_propdef(A,  _, A, _,   Cp,  Cp) :- var(A), !.
-do_propdef(A1, M, A, PA1, Cp1, Cp) :-
-    hpropdef(A1, M, A, PA1, Cp1, Cp).
+do_propdef(A,  _, _, A,   Cp,  Cp) :- var(A), !.
+do_propdef(A1, PA1, M, A, Cp1, Cp) :-
+    hpropdef(A1, PA1, M, A, Cp1, Cp).
 
-do_modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+do_modedef(A1, PA1, M, A, A2, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     nonvar(A1),
     modedef(A1, M, A2, A, PA1, PA2, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
-do_modedef(A1, M, A2, A, APos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+do_modedef(A1, APos, M, A, A2, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     atom(A1),
     A3 =.. [A1, A],
     ( var(APos) -> true ; APos = From-To, Pos = term_position(From, To, From, To, [To-To]) ),
     modedef(A3, M, A2, A, Pos, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
-do_modedef(A1, M, A2, A, From-To, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
+do_modedef(A1, From-To, M, A, A2, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr) :-
     integer(A1),
     ( A1 >= 0
     ->A3 = goal_in(A1, A)
@@ -615,7 +620,7 @@ do_modedef(A1, M, A2, A, From-To, PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, 
     modedef(A3, M, A2, A, term_position(From, To, From, From, [From-From, From-To]),
             PA1, Cp1, Ca1, Su1, Gl1, Cp, Ca, Su, Gl, Pr1, Pr),
     !.
-do_modedef(A1, _, A1, _, PA1, PA1, Cp1, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp1, Cp).
+do_modedef(A1, PA1, _, _, A1, PA1, Cp1, Ca, Su, Gl, Cp, Ca, Su, Gl, Cp1, Cp).
 
 % Support for modes are hard-wired here:
 % ISO Modes
@@ -651,7 +656,7 @@ modedef(>A,       _, A, _, term_position(_, _, _, _, [PA]), PA, Cp, Ca,         
 prolog:error_message(assertion(il_formed_assertion, Term)) -->
     [ 'Il formed assertion, check term ~w'-[Term]].
 
-hpropdef(A1, M, A, PA1, Cp1, Cp) :-
+hpropdef(A1, PA1, M, A, Cp1, Cp) :-
     term_variables(A1, V),
     ( member(X, V), X==A ->
       Cp1 = [(M:A1)-PA1|Cp]
@@ -667,13 +672,13 @@ apropdef_2(N, Head, M, A, PPos) -->
 apropdef_2_(1, Head, M, A, APos) -->
     {arg(1, Head, V)},
     !,
-    hpropdef(A, M, V, APos).
+    hpropdef(A, APos, M, V).
 apropdef_2_(N1, Head, M, (P * A), term_position(_, _, _, _, [PPos, APos])) -->
     {arg(N1, Head, V)},
     !,
     {succ(N, N1)},
     apropdef_2(N, Head, M, P, PPos),
-    hpropdef(A, M, V, APos).
+    hpropdef(A, APos, M, V).
 
 apropdef(Var, _, _, _) --> {var(Var), !, fail}.
 apropdef(_:Head, M, A, APos) -->
