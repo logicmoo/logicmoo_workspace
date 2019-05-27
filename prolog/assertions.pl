@@ -33,7 +33,8 @@
 */
 
 :- module(assertions,
-          [assrt_type/1,
+          [asr_head/2,
+           assrt_type/1,
            assrt_status/1,
            expand_assertion/4,
            asr_head_prop/7,
@@ -85,29 +86,23 @@
 */
 
 :- multifile
-    asr_call/3,
-    asr_call/4,
-    asr_comm/2,
-    asr_comm/3,
-    asr_comp/3,
-    asr_comp/4,
-    asr_glob/3,
-    asr_glob/4,
-    asr_head_prop/6,
     asr_head_prop/7,
-    asr_succ/3,
+    asr_comm/3,
+    asr_glob/4,
+    asr_comp/4,
+    asr_call/4,
     asr_succ/4,
     doc_db/4,
     nodirective_error_hook/1.
 
 % asr_* declared dynamic to facilitate cleaning
 :- dynamic
-    asr_head_prop/6,
-    asr_comm/2,
-    asr_glob/3,
-    asr_comp/3,
-    asr_call/3,
-    asr_succ/3,
+    asr_head_prop/7,
+    asr_comm/3,
+    asr_glob/4,
+    asr_comp/4,
+    asr_call/4,
+    asr_succ/4,
     doc_db/4,
     nodirective_error_hook/1.
 
@@ -122,6 +117,19 @@
        asr_call/4,
        asr_succ/4,
        asr_glob/4.
+
+%!  asr_head(?Asr, ?Head) is det
+%
+%   Extract the Head for a given assertion identifier.  Note that the first and
+%   second arguments of the Assertion identifier should contain the module and
+%   the head respectively.
+
+asr_head(Asr, M:Head) :-
+    ( nonvar(Asr)
+    ->arg(1, Asr, M),
+      arg(2, Asr, Head)
+    ; true
+    ).
 
 curr_prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
 curr_prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
@@ -785,91 +793,26 @@ expand_assertion_(CM, Dict, Assertions, APos, Records, RPos) :-
     ARecords \= [],
     maplist(expand_assertion_helper(Match), ARecords, Records, RPos).
 
-:- public st_asr/2.
-
-st_asr(st_asr(StAsr), StAsr).
-
-%!  asr_comm(Asr, Co, Loc)
-%   asr_comp(Asr, PM, Pr, Loc)
-%   asr_call(Asr, PM, Pr, Loc)
-%   asr_succ(Asr, PM, Pr, Loc)
-%   asr_glob(Asr, PM, Pr, Loc)
-
-%   Like the predicates with the same name, but returns the locator in the last
-%   argument
-%
-%   @note: The locator comes from the properties of the clause, it should not be
-%   stored in the clause itself to allow detection of duplicated properties.
-
-asr_head_prop(Asr, M, Head, Status, Type, Dict, Loc) :-
-    st_asr(Asr, StAsr),
-    neck,
-    st_asr_head_prop(StAsr, M, Head, Status, Type, Dict, Loc).
-
-asr_comm(Asr, Co, Loc) :-
-    st_asr(Asr, StAsr),
-    neck,
-    st_asr_comm(StAsr, Co, Loc).
-
-asr_comp(Asr, PM, Pr, Loc) :-
-    st_asr(Asr, StAsr),
-    neck,
-    st_asr_comp(StAsr, PM, Pr, Loc).
-
-asr_call(Asr, PM, Pr, Loc) :-
-    st_asr(Asr, StAsr),
-    neck,
-    st_asr_call(StAsr, PM, Pr, Loc).
-
-asr_succ(Asr, PM, Pr, Loc) :-
-    st_asr(Asr, StAsr),
-    neck,
-    st_asr_succ(StAsr, PM, Pr, Loc).
-
-asr_glob(Asr, PM, Pr, Loc) :-
-    st_asr(Asr, StAsr),
-    neck,
-    st_asr_glob(StAsr, PM, Pr, Loc).
-
-st_asr_head_prop(StAsr, M, Head, Status, Type, Dict, Loc) :-
-    call_loc(asr_head_prop(StAsr, M, Head, Status, Type, Dict), Loc).
-
-st_asr_comm(StAsr, Co,     Loc) :- call_loc(asr_comm(StAsr, Co    ), Loc).
-st_asr_comp(StAsr, PM, Pr, Loc) :- call_loc(asr_comp(StAsr, PM, Pr), Loc).
-st_asr_call(StAsr, PM, Pr, Loc) :- call_loc(asr_call(StAsr, PM, Pr), Loc).
-st_asr_succ(StAsr, PM, Pr, Loc) :- call_loc(asr_succ(StAsr, PM, Pr), Loc).
-st_asr_glob(StAsr, PM, Pr, Loc) :- call_loc(asr_glob(StAsr, PM, Pr), Loc).
-
-:- meta_predicate call_loc(0, -).
-
-call_loc(Head, Loc) :-
-    clause(Head, Body, Ref),
-    ( clause_property(Ref, file(File)),
-      clause_property(Ref, line_count(Line))
-    ->Loc = file(File, Line, -1, _)
-    ; true
-    ),
-    clause_property(Ref, module(M)),
-    call(M:Body).
-
-assertion_record_each(CM, Dict, Assertions, APos, LocClause, TermPos) :-
+assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ignore(source_location(File, Line1)),
     ( nonvar(File)
-    ->( var(APos)
+    ->Loc = file(File, Line, Pos, _),
+      ( var(APos)
       ->Line = Line1,
         Pos = -1
       ; true
-      ),
-      LocClause = '$source_location'(File, Line):Clause
-    ; LocClause = Clause
+      )
+    ; true
     ),
     current_decomposed_assertion(Assertions, APos, CM, M:Head, Status,
                                  Type, CpL, CaL, SuL, GlL, Co, CoPos, HPos),
     with_mutex('get_sequence_and_inc/1', get_sequence_and_inc(Count)),
-    term_variables(t(M, Head, Co, CpL, CaL, SuL, GlL), ShareL),
+    term_variables(t(Co, CpL, CaL, SuL, GlL), ShareL),
     atom_number(AIdx, Count),
-    Asr =.. [AIdx|ShareL], % Asr also contains variable bindings
-    ( Clause = assertions:asr_head_prop(Asr, M, Head, Status, Type, Dict),
+    Asr =.. [AIdx, M, Head|ShareL], % Asr also contains variable bindings. By
+                                    % convention, M is in the 1st position and
+                                    % Head in the 2nd, to facilitate work
+    ( Clause = assertions:asr_head_prop(Asr, M, Head, Status, Type, Dict, Loc),
       SubPos = HPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
@@ -879,7 +822,7 @@ assertion_record_each(CM, Dict, Assertions, APos, LocClause, TermPos) :-
       ; true
       )
     ; Co \= "",
-      Clause = assertions:asr_comm(Asr, Co),
+      Clause = assertions:asr_comm(Asr, Co, Loc),
       SubPos = CoPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
@@ -889,13 +832,13 @@ assertion_record_each(CM, Dict, Assertions, APos, LocClause, TermPos) :-
       )
     ; ( Clause = assertions:AClause,
         member(AClause-PrL,
-               [asr_comp(Asr, PM, Pr)-CpL,
-                asr_call(Asr, PM, Pr)-CaL,
-                asr_succ(Asr, PM, Pr)-SuL
+               [asr_comp(Asr, PM, Pr, Loc)-CpL,
+                asr_call(Asr, PM, Pr, Loc)-CaL,
+                asr_succ(Asr, PM, Pr, Loc)-SuL
                ]),
         member(MPr-SubPos, PrL),
         strip_module(MPr, PM, Pr)
-      ; Clause = assertions:asr_glob(Asr, PM, Pr),
+      ; Clause = assertions:asr_glob(Asr, PM, Pr, Loc),
         member(MGl-GPos, GlL),
         strip_module(MGl, PM, Gl),
         add_arg(_, Gl, Pr, GPos, SubPos)
