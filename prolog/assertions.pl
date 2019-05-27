@@ -793,6 +793,14 @@ expand_assertion_(CM, Dict, Assertions, APos, Records, RPos) :-
     ARecords \= [],
     maplist(expand_assertion_helper(Match), ARecords, Records, RPos).
 
+%! assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) is multi.
+%
+%  Unifies clause with each one of the records that defines the assertion in the
+%  assertion database.  Note that Clause contains in the last argument the
+%  locator, this is needed to get more precision, since the location is defined
+%  as file(File, Line, Pos, _), instead of the term
+%  '$source_location'(File,Line):Clause
+
 assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     ignore(source_location(File, Line1)),
     ( nonvar(File)
