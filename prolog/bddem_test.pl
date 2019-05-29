@@ -1,14 +1,15 @@
 :- module(test_bddem,
   [test_bddem/0]).
 :- use_module(library(plunit)).
-:- ensure_loaded(library(bddem)).
+:- use_module(library(bddem)).
 
 :- rand_seed(100).
 
 test_bddem:-
     run_tests([
     prob,em,
-    sampling
+    sampling,
+    dtprob
     ]).
 
 
@@ -17,6 +18,30 @@ v1_0(Env,R,BDD):-
 
 v2_0(Env,R,Val,BDD):-
   add_var(Env,[0.4,0.3,0.3],R,V),equality(Env,V,Val,BDD).
+
+prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat):-
+  add_var(Env,[0.3,0.7],0,VRainy),
+  add_var(Env,[0.5,0.5],1,VWindy),
+  add_decision_var(Env,3,VRaincoat),
+  add_decision_var(Env,2,VUmbrella), % <- attenzione restituisce l'index del nodo, non il numero della var. salvare la corrispondenza
+  equality(Env,VRainy,0,Rainy),
+  equality(Env,VWindy,0,Windy),
+  equality(Env,VUmbrella,0,Umbrella),
+  equality(Env,VRaincoat,0,Raincoat).
+
+dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat):-
+  bdd_not(Env,Rainy,BDDNR),
+  and(Env,Rainy,Raincoat,BDDRR),
+  and(Env,Rainy,Umbrella,BDDRU),
+  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
+  bdd_not(Env,BDDBU,BDDNBU),
+  and(Env,BDDRU,BDDNBU,BDDRUNBU),
+  or(Env,BDDNR,BDDRR,BDDOR),
+  or(Env,BDDOR,BDDRUNBU,BDDD).
+
+broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella):-
+  and(Env,Rainy,Windy,RU),
+  and(Env,RU,Umbrella,BDDBU).
 
 :- begin_tests(prob, []).
 
@@ -248,3 +273,41 @@ check_sample(V):-
   relatively_close_to(N2,2500,0.1),
   relatively_close_to(N3,2500,0.1).
 :- end_tests(sampling).
+
+
+:- begin_tests(dtprob, []).
+
+:-ensure_loaded(library(bddem)).
+
+test(probabilitdd):-
+  %% TODO:
+  init(Env),
+  prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
+  dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
+  broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
+  
+probability_dd(Env,BDDBU,ADDBU),
+  add_prod(Env,ADDBU,-40,ADDDUU),
+
+  probability_dd(Env,Raincoat,ADDRAIN),
+  add_prod(Env,ADDRAIN,-20,ADDRAINOUT),
+  
+  probability_dd(Env,Umbrella,ADDUMB),
+  add_prod(Env,ADDUMB,-2,ADDUMBOUT),
+
+  probability_dd(Env,BDDD,ADDD), % <- returns ADD from BDD
+  add_prod(Env,ADDD,60,ADDDU), % <- computes the value utility*ADD
+  
+  add_sum(Env,ADDDUU,ADDRAINOUT,AO1),
+
+  add_sum(Env,AO1,ADDUMBOUT,AO2),
+
+  add_sum(Env,AO2,ADDDU,AO),
+
+  ret_strategy(Env,AO,S,C,-1,-1), % <- computes the best strategy
+  writeln(S),
+  writeln(C),
+
+  end(Env).
+
+:- end_tests(dtprob).
