@@ -56,9 +56,8 @@
 int(X) :-
     nonvar(X), !,
     integer(X).
-int(0).
 int(X) :-
-    curr_posint(N),
+    between(0, inf, N),
     give_sign(N, X).
 
 :- type posint/1.
@@ -69,10 +68,7 @@ posint(X) :-
     X > 0.
 posint(X) :- curr_posint(X).
 
-curr_posint(1).
-curr_posint(N) :-
-    curr_posint(N1),
-    succ(N1, N).
+curr_posint(N) :- between(1, inf, N).
 
 :- type negint/1.
 
@@ -81,7 +77,6 @@ negint(X) :-
     !,
     integer(X),
     X < 0.
-negint(0).
 negint(X) :-
     curr_posint(N),
     X is -N.
@@ -100,8 +95,8 @@ nnegint(X) :-
     nonvar(X), !,
     integer(X),
     X >= 0.
-nnegint(0).
-nnegint(N) :- curr_posint(N).
+nnegint(N) :-
+    between(0, inf, N).
 
 :- type flt/1.
 
@@ -324,7 +319,7 @@ char(A) :- atm(A). % size(A)=1
 any(_).
 
 :- type linear/1
-# "A linear term, i.e. all variables occurrs only once.".
+# "A linear term, i.e. all variables occurs only once.".
 
 linear(T) :-
     term_variables(T, Vars),
