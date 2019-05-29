@@ -227,6 +227,7 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
 static foreign_t ret_strategy(term_t env_ref, term_t add_A, term_t strategy_list, term_t cost);
 static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_list, term_t strategy_list, term_t cost);
 static term_t debug_cudd_var(term_t env_ref, term_t out_null);
+// static foreign_t add_const(term_t env_ref, term_t val, term_t add_out);
 
 static foreign_t uniform_sample_pl(term_t arg1)
 {
@@ -2019,6 +2020,12 @@ DdNode* Probability_dd_bdd(environment *env, DdNode *current_node) {
   if(env->vars[indexMultival].decision == 1) { // if decision var
     // find the current var by getting its rule number
     // printf("DECISION\n");
+    if(DEBUG) {
+      if(env->vars[indexMultival].nVal != 2) {
+        printf("env->vars[indexMultival].nVal = %d (should be 2)\n",env->vars[indexMultival].nVal);
+      } 
+    }
+    
     tmp = Cudd_addIthVar(env->mgr,env->vars[indexMultival].nRule);
     if(tmp == NULL) {
       printf("ERROR ADDITHVAR\n");
@@ -2160,6 +2167,25 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
 
   return(PL_unify(out,add_out));  
 }
+
+// static foreign_t add_const(term_t env_ref, term_t val, term_t add_out) {
+//   term_t out;
+//   DdNode * node;
+//   environment *env;
+//   int ret,value;
+
+//   ret = PL_get_pointer(env_ref,(void **)&env);
+//   RETURN_IF_FAIL
+//   ret=PL_get_integer(val,&value);
+//   RETURN_IF_FAIL
+
+//   node = Cudd_addConst(env->mgr,value);
+//   Cudd_Ref(node);
+//   out = PL_new_term_ref();
+//   ret=PL_put_pointer(out,(void *) node);
+//   RETURN_IF_FAIL
+//   return(PL_unify(out,add_out));
+// }
 
 static foreign_t ret_strategy(term_t env_ref, term_t add, term_t strategy_list, term_t cost) {
   int ret, i;
@@ -3624,6 +3650,7 @@ install_t install()
   PL_register_foreign("ret_strategy",4,ret_strategy,0);
   PL_register_foreign("compute_best_strategy",5,compute_best_strategy,0);
   PL_register_foreign("debug_cudd_var",2,debug_cudd_var,0);
+  // PL_register_foreign("add_const",3,add_const,0);
 
 //  PL_register_foreign("deref",1,rec_deref,0);
 //  PL_register_foreign("garbage_collect",2,garbage_collect,0);
