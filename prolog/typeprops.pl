@@ -36,9 +36,9 @@
           [list/1, list/2, tlist/2, nlist/2, int/1, nnegint/1, posint/1, pair/1,
            flt/1, nnegflt/1, posflt/1, num/1, nnegnum/1, posnum/1, atm/1, gnd/1,
            any/1, gndstr/1, str/1, struct/1, term/1, char/1, atmel/1, keypair/1,
-           sequence_or_list/2, operator_specifier/1, character_code/1, linear/1,
-           mod_qual/1, mod_qual/2, goal/1, goal/2, arithexpression/1, keylist/1,
-           sequence/2, predname/1, constant/1, rat/1, negint/1
+           sequence/2, negint/1, operator_specifier/1, character_code/1, goal/1,
+           mod_qual/1, mod_qual/2, keylist/1, predname/1, constant/1, linear/1,
+           arithexpression/1, rat/1, goal/2
           ]).
 
 :- use_module(library(neck)).
@@ -337,12 +337,6 @@ sequence_(E, T) :- type(E, T).
 sequence_((E, S), T) :-
         type(E, T),
         sequence_(S, T).
-
-:- type sequence_or_list/2.
-:- meta_predicate sequence_or_list(1, ?).
-
-sequence_or_list(T, E) :- list(T, E).
-sequence_or_list(T, E) :- sequence(T, E).
 
 :- type struct/1 # "A compound term".
 
