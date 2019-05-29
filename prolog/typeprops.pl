@@ -238,13 +238,22 @@ str(S) :-
     list(character_code, L),
     string_codes(S, L).
 
-:- type character_code/1 # "an integer which is a character code.".
+%!  character_code(I)
+%
+%   An integer which is a character code
+
+:- type character_code/1.
 
 character_code(I) :-
     between(0, 255, I),
     neck.
 
-:- type constant/1 # "An atomic term (an atom, string or a number).".
+
+%!  constant(C)
+%
+%   An atomic term (an atom, string or a number)
+
+:- type constant/1.
 
 constant([]).
 constant(T) :- atm(T).
@@ -261,11 +270,19 @@ predname(P/A) :-
     atm(P),
     nnegint(A).
 
-:- type term/1 # "Any term".
+:- type term/1.
+
+%!  term(Term)
+%
+%   Any term
 
 term(_).
 
-:- type list(L) # "~w is a list."-[L].
+:- type list/1.
+
+%!  list(List)
+%
+%   List is a list
 
 list([]).
 list([_|L]) :- list(L).
@@ -280,7 +297,6 @@ list([_|L]) :- list(L).
 list(Type, List) :- list_(List, Type).
 
 :- prop list_/2.
-
 list_([], _).
 list_([E|L], T) :-
     type(T, E),
@@ -295,12 +311,21 @@ keypair(_-_).
 :- type keylist/1.
 keylist(KL) :- list(keypair, KL).
 
-:- type tlist/2 # "@var{L} is a list or a value of @var{T}s".
+%!  tlist(T, L)
+%
+%   L is a list or a value of T's
+
+:- type tlist/2.
 :- meta_predicate tlist(1, ?).
+
 tlist(T, L) :- list(T, L).
 tlist(T, E) :- type(T, E).
 
-:- type nlist/2 # "A nested list".
+%!  nlist(T, NL)
+%
+%   A nested list of T's
+
+:- type nlist/2.
 :- meta_predicate nlist(1, ?).
 
 nlist(Type, NList) :- nlist_(NList, Type).
@@ -318,8 +343,10 @@ char(A) :- atm(A). % size(A)=1
 :- type any/1.
 any(_).
 
-:- type linear/1
-# "A linear term, i.e. all variables occurs only once.".
+:- type linear/1.
+%!  linear(LT)
+%
+%   A linear term, i.e. all variables occurs only once.
 
 linear(T) :-
     term_variables(T, Vars),
@@ -327,7 +354,11 @@ linear(T) :-
 
 occurrs_one(T, Var) :- occurrences_of_var(Var, T, 1).
 
-:- type sequence(T, S) # "~w is a sequence of ~ws."-[S, T].
+%!  sequence(:T, S)
+%
+%   S is a sequence of T's
+
+:- type sequence/2.
 
 :- meta_predicate sequence(1, ?).
 
@@ -352,9 +383,11 @@ gnd(T) :-
     term_variables(T, Vars),
     maplist(gnd, Vars).
 
-:- type arithexpression/1
-    # "Represents an arithmetic expression, i.e., a term that could be
-    an argument for an arithmetic predicate.".
+:- type arithexpression/1.
+
+%!  arithexpression(Expr)
+
+%   An arithmetic expression
 
 :- type gndstr/1.
 
@@ -375,13 +408,20 @@ arithmetic_function(X) :- arithmetic:evaluable(X, _Module).
 % and some variables becomes uninstantiated. That is an SWI-Prolog bug but I
 % don't have time to isolate it --EMM
 
-:- true prop goal(P) # "check that ~w is a defined predicate."-[P].
+%!  goal(:P)
+%
+%   P is a defined predicate
+
+:- true prop goal/1.
 :- meta_predicate goal(0).
 goal(Pred) :- goal(0, Pred).
     % current_predicate(_, M:G).
 
-:- true prop goal(N, P)
-    # "check that ~w is a defined predicate with ~w extra arguments."-[P, N].
+%!  goal(N, :P)
+%
+%   P is a defined predicate with N extra arguments
+
+:- true prop goal/2.
 :- meta_predicate goal(?, :).
 goal(N, Pred) :-
     nnegint(N),
