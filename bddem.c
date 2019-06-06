@@ -1681,12 +1681,13 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
   int ret, i = 0, len_array_of_parents = 0;
   int n_zero_impact = 0; // numbers of utility facts with 0 impact
   int *array_of_parents = NULL; // array containing the indexes of the encountered parents
-  double current_cost, utility_sum = 0, opt_cost = -1.0, value = -1.0;
+  double current_cost, utility_sum = 0, value = -1.0;
   DdNode *root, *add_sum, *temp, *max_node, *bestNode, *current_root, *constant, *root_pre, *add_one;
   term_t head_bdd = PL_new_term_ref();   /* the elements */
   term_t head_util = PL_new_term_ref();
   term_t bdd_list = PL_copy_term_ref(b_list); /* copy (we modify list) */
   term_t util_list = PL_copy_term_ref(u_list); /* copy (we modify list) */
+  term_t outcost=PL_new_term_ref();
   term_t list, head;
   size_t nutils;
   node_impact *list_impacts;
@@ -1754,7 +1755,7 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
 
     utility_sum += list_impacts[i].impact; 
 
-    // Cudd_PrintDebug(env->mgr, list_impacts[i].root, 2, 4);
+     //Cudd_PrintDebug(env->mgr, list_impacts[i].root, 2, 4);
 
     // not consider the utility facts with impact 0
     if(list_impacts[i].impact == 0 && max_v == 0) {
@@ -1792,7 +1793,6 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
       debug_cudd_env(env,0);    
     }
     temp = Cudd_addApply(env->mgr,Cudd_addPlus,add_sum,list_impacts[i].root);
-		
     Cudd_Ref(temp);
 		Cudd_RecursiveDeref(env->mgr,add_sum);
 		Cudd_RecursiveDeref(env->mgr,list_impacts[i].root);
@@ -1832,9 +1832,9 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
   if(bestNode == NULL) {
     // no solution found -> return empty list and -1 as cost
     // printf("no solution\n");
-    ret = PL_put_integer(opt_cost,(long)-1);
+    ret = PL_put_integer(outcost,(long)-1);
     RETURN_IF_FAIL
-    return PL_unify(opt_cost,cost);
+    return PL_unify(outcost,cost);
   } 
   else {
     ret = find_path(add_sum,value,&array_of_parents,&len_array_of_parents);
@@ -1847,17 +1847,15 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
       ret = PL_cons_list(list,head,list);
       RETURN_IF_FAIL
     }
-    ret = PL_put_float(opt_cost,value);
+    ret = PL_put_float(outcost,value);
     RETURN_IF_FAIL
   }
-
   if(array_of_parents) {
     free(array_of_parents);
   }
-
   Cudd_RecursiveDeref(env->mgr,add_sum);
-
-  return(PL_unify(list,strategy_list) && (PL_unify(opt_cost,cost)));
+ 
+  return(PL_unify(list,strategy_list)&&PL_unify(cost,outcost));
 }
 
 
