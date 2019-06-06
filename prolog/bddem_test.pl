@@ -23,7 +23,7 @@ prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat):-
   add_var(Env,[0.3,0.7],0,VRainy),
   add_var(Env,[0.5,0.5],1,VWindy),
   add_decision_var(Env,3,VRaincoat),
-  add_decision_var(Env,2,VUmbrella), % <- attenzione restituisce l'index del nodo, non il numero della var. salvare la corrispondenza
+  add_decision_var(Env,2,VUmbrella),
   equality(Env,VRainy,0,Rainy),
   equality(Env,VWindy,0,Windy),
   equality(Env,VUmbrella,0,Umbrella),
@@ -280,13 +280,12 @@ check_sample(V):-
 :-ensure_loaded(library(bddem)).
 
 test(probabilitdd):-
-  %% TODO:
   init(Env),
   prepare_vars(Env,Rainy,Windy,Umbrella,Raincoat),
   dry(Env,BDDD,Rainy,Windy,Umbrella,Raincoat),
   broken_umbrella(Env,BDDBU,Rainy,Windy,Umbrella),
   
-probability_dd(Env,BDDBU,ADDBU),
+  probability_dd(Env,BDDBU,ADDBU),
   add_prod(Env,ADDBU,-40,ADDDUU),
 
   probability_dd(Env,Raincoat,ADDRAIN),
@@ -304,10 +303,11 @@ probability_dd(Env,BDDBU,ADDBU),
 
   add_sum(Env,AO2,ADDDU,AO),
 
-  ret_strategy(Env,AO,S,C,-1,-1), % <- computes the best strategy
+  ret_strategy(Env,AO,S,C), % <- computes the best strategy
+  S = [2],
+  C = 43.0,
   writeln(S),
   writeln(C),
-
   end(Env).
 
 :- end_tests(dtprob).
