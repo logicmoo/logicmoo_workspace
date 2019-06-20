@@ -445,6 +445,7 @@ or_listc1([H|T],Env,B0,B1):-
 
 /**
  * debug_cudd_var(++Environment:int, -Variable:out) is det.
+ *
  * Prints the debug information which is the result of the call
  * of Cudd_ReadDead, Cudd_CheckZeroRef, Cudd_CheckKeys and 
  * Cudd_DebugCheck(env->mgr));  
