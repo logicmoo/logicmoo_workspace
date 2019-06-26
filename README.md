@@ -19,7 +19,7 @@ It can be installed with `pack_install/1`
     $ swipl
     ?- pack_install(bddem).
 
-The pack uses a foreign library and contains the library binaries for 32 and 64 bits Linux and 64 bits Windows. If you want to recompile the foreign library you can use
+The pack uses a foreign library and contains the library binaries for 32 and 64 bits Linux, MacOs and 64 bits Windows. If you want to recompile the foreign library you can use
 
     ?- pack_rebuild(bddem).
 
