@@ -82,6 +82,9 @@ hide_var_dynamic_hook(det_clause(_, _), check_useless_cuts).
     var_dynamic_db/2.
 
 hide_wrong_dynamic(prolog_trace_interception(_, _, _, _), user).
+hide_wrong_dynamic(Call, _) :-
+    functor(Call, Name, _),
+    atom_concat('__wrap$', _, Name).
 
 cleanup_dynamic_db :-
     retractall(wrong_dynamic_db(_, _, _, _)),

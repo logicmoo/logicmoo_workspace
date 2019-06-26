@@ -424,7 +424,7 @@ unused_type(_, 'unreachable' ).
 
 hide_unused('$exported_op'(_, _, _), _).
 hide_unused('$mode'(_, _), _).
-hide_unused('$tabled'(_), _).
+hide_unused('$tabled'(_, _), _).
 hide_unused('$table_mode'(_, _, _), _).
 hide_unused('$table_update'(_, _, _, _), _).
 hide_unused('$pldoc'(_, _, _, _), _).
@@ -437,7 +437,10 @@ hide_unused(_, plunit).
 hide_unused(_, ciao).
 hide_unused(Call, _) :-
     functor(Call, Name, _),
-    atom_concat('__aux_wrapper_', _, Name).
+    member(Prefix, ['__aux_wrapper_',
+                    '__wrap$'
+                   ]),
+    atom_concat(Prefix, _, Name).
 hide_unused(Call, _) :-
     current_predicate(apply_macros:maplist_expansion/1),
     apply_macros:maplist_expansion(Call).

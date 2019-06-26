@@ -61,6 +61,7 @@ user:file_search_path(checkers, library(checkers)).
 
 prolog:called_by(Goal, _, M, [M:Macro]) :-
     functor(Goal, F, A),
+    \+ blob(F, closure),
     once(atomics_atom(['__aux_', Name, '/', AN, '_', CF, '+', EN], F)),
     atom_number(AN, N),
     atom_number(EN, E),
