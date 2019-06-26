@@ -336,13 +336,20 @@ semantic_head(H, M, -1, assertion(S, T), '<assertion>'(M:H), From) :-
     assertions:asr_head_prop(_, CM, H, S, T, _, From),
     predicate_property(CM:H, implementation_module(M)).
 
+checkable_unused(Ref) :-
+    Ref = M:H,
+    checkable_predicate(Ref),
+    once(( \+ entry_caller(M, H)
+         ; predicate_property(Ref, exported),
+           \+ predicate_property(Ref, public)
+         )).
+
 unmarked(M, FromChk, Node, D, From) :-
     Ref = M:H,
     MPI = M:F/A,
     ( current_defined_predicate(Ref),
       functor(H, F, A),
-      checkable_predicate(Ref),
-      \+ entry_caller(M, H),
+      checkable_unused(Ref),
       ( not_marked(H, M)
       ->Node = MPI,
         property_from(Ref, D, From),
@@ -365,8 +372,7 @@ unmarked(M, FromChk, Node, D, From) :-
       functor(H, F, A),
       check_pred_file(Ref, FromChk, From),
       \+ current_predicate(_, Ref),
-      checkable_predicate(Ref),
-      \+ entry_caller(M, H),
+      checkable_unused(Ref),
       Node = MPI/I
     ).
 
