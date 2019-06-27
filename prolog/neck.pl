@@ -109,7 +109,8 @@ term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
       ->true
       ; '$expand':compile_aux_clauses([SepHead :- ExpBody])
       )
-    ; list_sequence(Right, NeckBody),
+    ; list_sequence(Right, RSequence),
+      expand_goal(M:RSequence, M:NeckBody),
       findall(Pattern, Expanded, ClauseL)
     ).
 
