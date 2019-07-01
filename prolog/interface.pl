@@ -50,13 +50,14 @@ implements(Implementation:Alias) :-
                        [file_type(prolog), access(read)]),
     module_property(Interface, file(File)),
     module_property(Interface, exports(PIL)),
-    compile_aux_clauses(interface:'$implementation'(Implementation, Interface)),
-    findall((:- meta_predicate Implementation:Spec),
-            ( member(F/A, PIL),
-              functor(Pred, F, A),
-              predicate_property(Interface:Pred, meta_predicate(Spec))
-            ), MetaPredicates),
-    compile_aux_clauses(MetaPredicates),
+    phrase(( [interface:'$implementation'(Implementation, Interface)],
+              findall((:- meta_predicate Implementation:Spec),
+                      ( member(F/A, PIL),
+                        functor(Pred, F, A),
+                        predicate_property(Interface:Pred, meta_predicate(Spec))
+                      ))
+           ), Clauses),
+    compile_aux_clauses(Clauses),
     maplist(Implementation:export, PIL).
 
 direct_interface(M, F/A) :-
@@ -80,6 +81,20 @@ end_interface(Interface) :-
            compile_aux_clauses([(Interface:H
                                 :- existence_error(binding, Interface:F/A))])).
 
+prolog:called_by(Pred, Interface, _, PredL) :-
+    '$interface'(Interface, DIL, _),
+    member(F/A, DIL),
+    functor(Pred, F, A),
+    findall(Implementation:Pred,
+            interface:'$implementation'(Implementation, Interface),
+            PredL),
+    PredL \= [].
+prolog:called_by(Pred, Interface, _, [II:Pred]) :-
+    '$interface'(Interface, _, IIL),
+    member(F/A, IIL),
+    functor(Pred, F, A),
+    atom_concat(Interface, '$impl', II).
+
 bind_interface(Interface, Implementation) :-
     ( '$interface'(Interface, DIL, IIL)
     ->true
@@ -95,5 +110,5 @@ bind_interface(Interface, Implementation) :-
     maplist(Interface:abolish, DIL),
     '$import_from_loaded_module'(Implementation, Interface, [imports(DIL)]),
     atom_concat(Interface, '$impl', II),
-    forall(member(P, IIL), abolish(II:P)),
+    maplist(II:abolish, IIL),
     '$import_from_loaded_module'(Implementation, II, [imports(IIL)]).
