@@ -229,15 +229,15 @@ current_edge(X, Y) :-
         CRef = clause(Clause)
       ),
       freeze(PI2, PI2 \= PI)
-    ; ( X = PI/I,
-        I > 0
+    ; ( X = M:F/A-I,
+        integer(I)
       ->functor(H, F, A),
         nth_clause(M:H, I, Clause),
         CRef = clause(Clause)
-      ; X = PI/(-1)
+      ; X = M:F/A-asr
       ->functor(H, F, A),
         CRef = '<assertion>'(M:H)
-      ; X = PI/0
+      ; X = M:F/A-dyn
       ->functor(H, F, A),
         CRef = M:H
       )
@@ -248,9 +248,9 @@ current_edge(X, Y) :-
     ( Y = PI2
     ; ( match_head_clause(M2:H2, YRef),
         nth_clause(_, I2, YRef),
-        Y = PI2/I2
+        Y = M2:F2/A2-I2
       ; %% extra_location(H2, M2, dynamic(use, _, _), _),
-        Y = PI2/0
+        Y = M2:F2/A2-dyn
       ),
       Y \= X
     ).
@@ -327,7 +327,7 @@ sweep(Ref, Pairs) :-
                                     property_location(PI, D, Loc)), Pairs).
 */
 
-semantic_head(H, M, 0, dynamic(Type, CM, Call), Caller, From) :-
+semantic_head(H, M, dyn, dynamic(Type, CM, Call), Caller, From) :-
     loc_dynamic(H, M, dynamic(Type, CM, Call), From),
     ( Type = def
     ->Caller = M:H
@@ -336,10 +336,10 @@ semantic_head(H, M, 0, dynamic(Type, CM, Call), Caller, From) :-
       functor(P, F, A),
       Caller = M:P
     ).
-semantic_head(H, M, -1, assertion(S, T), '<assertion>'(M:H), From) :-
+semantic_head(H, M, asr, assertion(S, T), '<assertion>'(M:H), From) :-
     assertions:asr_head_prop(_, CM, H, S, T, _, From),
     predicate_property(CM:H, implementation_module(M)).
-semantic_head(H, M, -2, export, '<exported>'(M:H), From) :-
+semantic_head(H, M, exp, export, '<exported>'(M:H), From) :-
     loc_declaration(H, M, export, From).
 
 checkable_unused(Ref) :-
@@ -371,7 +371,7 @@ unmarked(M, FromChk, Node, D, From) :-
           not_marked(Mark),
           check_pred_file(Ref, FromChk, From)
         ),
-        Node = MPI/I
+        Node = M:F/A-I
       )
     ; semantic_head(H, M, I, D, Mark, From),
       not_marked(Mark),
@@ -379,7 +379,7 @@ unmarked(M, FromChk, Node, D, From) :-
       check_pred_file(Ref, FromChk, From),
       \+ current_predicate(_, Ref),
       checkable_unused(Ref),
-      Node = MPI/I
+      Node = M:F/A-I
     ).
 
 check_pred_file(Ref, FromChk, From) :-
@@ -394,8 +394,8 @@ prolog:message(acheck(unused)) -->
      'dead-code, part of an incomplete implementation, or called', nl,
      'indirectly by some meta predicate without or with incorrect', nl,
      'meta_predicate declaration.  In any case this represents a', nl,
-     'bad design and must be fixed, either completing the program,',nl,
-     'or exporting/removing the unreferenced predicates.', nl, nl].
+     'bad design and must be fixed, either completing the program',nl,
+     'or removing the unreferenced predicates.', nl, nl].
 prolog:message(acheck(unused, Node-EdgeLL)) -->
     message_unused_node(Node, ['*', ' ']),
     foldl(foldl(message_unused_rec([' ', ' ', ' ', ' '])), EdgeLL).

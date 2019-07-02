@@ -311,7 +311,7 @@ mark_args_non_fresh(I, Head, Meta) :-
     succ(I, I2),
     mark_args_non_fresh(I2, Head, Meta).
 mark_args_non_fresh(_, _, _).
-    
+
 walk_dcg_body(Var, _, _) :-
     var(Var),
     !.
