@@ -4,3 +4,8 @@
 
 a :-
     assertz(b(1)).
+
+:- public x/0.
+
+x :-
+    p(a).

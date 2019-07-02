@@ -70,6 +70,7 @@
     marked_clause/1,
     marked_initialization/0,
     marked_declaration/0,
+    marked_exported/2,
     edge/5.
 
 :- public collect_unused/4.
@@ -114,6 +115,7 @@ cleanup_unused :-
     retractall(marked_predid(_, _)),
     retractall(marked_initialization),
     retractall(marked_declaration),
+    retractall(marked_exported(_, _)),
     retractall(edge(_, _, _, _, _)).
 
 marked('<assertion>'(M:H)) :- marked_assertion(H, M).
@@ -121,12 +123,14 @@ marked(M:H)                :- marked_predid(H, M).
 marked(clause(Ref))        :- marked_clause(Ref).
 marked('<initialization>') :- marked_initialization.
 marked('<declaration>')    :- marked_declaration.
+marked('<exported>'(M:H))  :- marked_exported(H, M).
 
 record_marked('<assertion>'(M:H)) :- assertz(marked_assertion(H, M)).
 record_marked(M:H)                :- assertz(marked_predid(H, M)).
 record_marked(clause(Ref))        :- assertz(marked_clause(Ref)).
 record_marked('<initialization>') :- assertz(marked_initialization).
 record_marked('<declaration>'   ) :- assertz(marked_declaration).
+record_marked('<exported>'(M:H) ) :- assertz(marked_exported(H, M)).
 
 is_entry_caller('<assertion>'(M:H)) :- entry_caller(M, H).
 is_entry_caller('<initialization>').
@@ -150,7 +154,7 @@ mark(M) :-
 
 resolve_meta_goal(H, M, G) :-
     ( ( predicate_property(M:H, meta_predicate(Meta))
-                                % don't use inferred_meta_predicate(M:H, Meta)
+                                % don`t use inferred_meta_predicate(M:H, Meta)
                                 % since actually it is not being used by the
                                 % compiler and would lead to incorrect results
       )
@@ -335,6 +339,8 @@ semantic_head(H, M, 0, dynamic(Type, CM, Call), Caller, From) :-
 semantic_head(H, M, -1, assertion(S, T), '<assertion>'(M:H), From) :-
     assertions:asr_head_prop(_, CM, H, S, T, _, From),
     predicate_property(CM:H, implementation_module(M)).
+semantic_head(H, M, -2, export, '<exported>'(M:H), From) :-
+    loc_declaration(H, M, export, From).
 
 checkable_unused(Ref) :-
     Ref = M:H,
@@ -476,7 +482,11 @@ cu_caller_hook(Caller, Head, CM, Type, Goal, _, From) :-
       record_location_goal(Head, M, Type, CM, Comp, From)
     ; true
     ),
-    record_calls_to(Type, Caller, Head, M, From).
+    record_calls_to(Type, Caller, Head, M, From),
+    ( M \= CM
+    ->put_mark('<exported>'(M:Head))
+    ; true
+    ).
 
 record_calls_to(Type, Caller, Head, M, From) :-
     ( memberchk(Type, [use, lit])
