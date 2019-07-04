@@ -80,11 +80,12 @@ record_extra_decl(Decl, DPos) -->
     },
     foldl(assert_declaration(M), IdL, ArgL, PosL),
     !.
-record_extra_decl(G, _) -->
-    { nonvar(G),
+record_extra_decl(Goal, Pos) -->
+    { nonvar(Goal),
       source_location(File, Line),
       retractall(rl_tmp(File, Line, _)),
-      asserta(rl_tmp(File, Line, 1))
+      asserta(rl_tmp(File, Line, 1)),
+      assert_position(Goal, Pos, body)
     }.
 
 declaration_pos(DM:Decl, term_position(_, _, _, _, [_, DPos]), _, M, ID, U, Pos) :-
@@ -237,7 +238,7 @@ redundant(true).
 redundant(!).
 
 assert_position(G, Pos, T) :-
-    '$set_source_module'(M, M),
+    '$current_source_module'(M),
     assert_position(G, M, T, Pos).
 
 :- public rl_goal_expansion/2.

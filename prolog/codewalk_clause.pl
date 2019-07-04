@@ -99,9 +99,9 @@ walk_from_initialization(FromChk, From) :-
            walk_head_body('<initialization>', Goal)).
 
 walk_from_loc_declaration(FromChk, From) :-
-    forall(( loc_declaration(Head, M, goal, From),
+    forall(( loc_declaration(Body, M, body, From),
              call(FromChk, From)),
-           walk_head_body('<declaration>', M:Head)).
+           walk_head_body('<declaration>', M:Body)).
 
 current_assertion_goal(FromChk, From, AsrPartL, M:Head, CM:Goal) :-
     assertions:asr_head_prop(Asr, HM, Head, _, _, VNL, AFrom),
