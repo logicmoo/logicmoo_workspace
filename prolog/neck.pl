@@ -93,11 +93,15 @@ term_expansion_hb(Head, Body1, NeckBody, Pattern, ClauseL) :-
       sort(VarBU, VarBL),
       ord_intersection(VarHL, VarBL, ArgNB),
       variant_sha1(ArgNB-ExpBody, Hash),
-      freeze(Head, ( strip_module(M:Head, IM, Pred),
-                     functor(Pred, F, A),
-                     format(atom(FNB), '__aux_neck_~w:~w/~d_~w', [IM, F, A, Hash]),
-                     SepHead =.. [FNB|ArgNB]
-                   )),
+      ( nonvar(Head)
+      ->strip_module(M:Head, IM, Pred),
+        functor(Pred, F, A),
+        PI = F/A
+      ; PI = 'HEAD',
+        IM = M
+      ),
+      format(atom(FNB), '__aux_neck_~w:~w_~w', [IM, PI, Hash]),
+      SepHead =.. [FNB|ArgNB],
       append(LRight, [SepHead], NeckL),
       list_sequence(NeckL, NeckBody),
       findall(Pattern, Expanded, ClauseL),
