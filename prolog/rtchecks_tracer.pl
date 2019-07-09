@@ -57,6 +57,11 @@
     trace_rtc(0),
     do_trace_rtc(0).
 
+:- multifile
+    black_list_module/1,
+    black_list_caller/2,
+    black_list_parent/2.
+
 trace_rtc(Goal) :-
     call_rtc(do_trace_rtc(Goal)).
 
@@ -138,6 +143,7 @@ black_list_parent(M:Goal) :- black_list_parent(M, Goal).
 
 black_list_parent(metaprops, _).
 black_list_parent(system, call(_)).
+black_list_parent(system, '$rat_trap'(_, _, _, _, _)).
 
 black_list_callee(M, _) :- black_list_module(M).
 black_list_callee(system, Call) :- black_list_callee_system(Call).
@@ -154,29 +160,36 @@ black_list_callee_system(setup_call_cleanup(_, _, _)).
 black_list_module('$bags').
 black_list_module('$expand').
 black_list_module('$messages').
+black_list_module(apply).
 black_list_module(abstract_interpreter).
 black_list_module(assertions).
 black_list_module(assrt_meta).
 black_list_module(context_values).
-black_list_module(ctrtchecks).
 black_list_module(expansion_module).
+black_list_module(mapargs).
 black_list_module(globprops).
-black_list_module(implementation_module).
 black_list_module(intercept).
+black_list_module(typeprops).
 black_list_module(ontrace).
 black_list_module(plunit).
 black_list_module(qualify_meta_goal).
+black_list_module(applicable_assertions).
+black_list_module(ctrtchecks).
+black_list_module(rtcprops).
+black_list_module(rtchecks).
 black_list_module(rtchecks_rt).
 black_list_module(rtchecks_tracer).
 black_list_module(rtchecks_tracer_rt).
 black_list_module(rtchecks_utils).
 black_list_module(send_check).
-black_list_module(typeprops).
+black_list_module(static_strip_module).
+black_list_module(extend_args).
+black_list_module(resolve_calln).
+black_list_module(swi_option).
 
 black_list_meta(system, Call) :- functor(Call, call, _).
 
-skip_predicate(rtchecks_utils:handle_rtcheck(_)).
-skip_predicate(rtchecks_rt:_).
+skip_predicate(M:_) :- black_list_module(M).
 
 pp_assr(check(_), _).
 pp_assr(trust(_), _).
@@ -199,12 +212,13 @@ rtcheck_port(Port, Frame, Action) :-
 
 rtcheck_port_(unify, Frame, Action) :-
     prolog_frame_attribute(Frame, clause, Clause),
-    setup_clause_bpt(Clause, Frame, Action), !.
+    setup_clause_bpt(Clause, Frame, Action),
+    !.
 rtcheck_port_(_, Frame, Action) :-
-    prolog_frame_attribute(Frame, goal, Goal),
-    ( skip_predicate(Goal)
-    ->Action = skip
-    ; Action = continue
+    ( prolog_frame_attribute(Frame, goal, Goal),
+      \+ skip_predicate(Goal)
+    ->Action = continue
+    ; Action = skip
     ).
 
 call_instr(i_usercall0 ).
