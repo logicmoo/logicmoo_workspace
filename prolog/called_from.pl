@@ -77,12 +77,13 @@ called_from(Ref, CM, Caller, Options, Pairs) :-
 
 collect_called_from(H, M, CM, Caller, Options, Sorted) :-
     collect_called_from(H, M, CM, Caller, Options),
-    findall(Loc-[M:F/A, CPI], ( current_called_from(H, M, CM, From, C),
-                                functor(H, F, A),
-                                normalize_pi(C, CPI),
-                                from_location(From, Loc)
-                              ), Pairs),
-    keysort(Pairs, Sorted).
+    findall(Loc-[M:F/A, CPI],
+            ( current_called_from(H, M, CM, From, C),
+              functor(H, F, A),
+              normalize_pi(C, CPI),
+              from_location(From, Loc)
+            ), Pairs),
+    sort(Pairs, Sorted).
 
 collect_called_from(Ref, M, CM, Caller, Options1) :-
     cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
