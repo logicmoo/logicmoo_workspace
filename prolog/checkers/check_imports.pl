@@ -136,7 +136,13 @@ ignore_import(_, IM) :-
     clause(M:H, _, Ref),
     clause_property(Ref, file(File)),
     module_file(IM, File).
-
+ignore_import(M, IM) :-
+    http_dispatch:handler(_, M:H2, _, _),
+    functor(H2, Name, A2),
+    succ(A2, A),
+    functor(H, Name, A),
+    predicate_property(M:H, implementation_module(IM)).
+                       
 collect_usemods(M, FromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
             ( current_used_use_module(M, FromChk, U, From),
