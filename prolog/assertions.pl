@@ -426,7 +426,7 @@ termpos_location(Pos, Loc) :-
     ignore(source_location(File, Line)),
     ( nonvar(File)
     ->( nonvar(Pos)
-      ->Loc = file_term_position(Pos)
+      ->Loc = file_term_position(File, Pos)
       ; nonvar(Line)
       ->Loc = file(File, Line, -1, _)
       ; true
