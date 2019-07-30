@@ -81,15 +81,7 @@ wrappers(Name/Arity) -->
         \+ predicate_property(Module:Head, dynamic)
       }
     ->{Level = head},
-      % module_transparent is required to be able to execute WrapperHead in the
-      % context where Head was called from, otherwise the runtime-checks will be
-      % incorrectly skipped for imported predicates if rtchecks_level is exports
-      [(:- module_transparent Name/Arity),
-       (Head :- start_rtcheck(Module:Head, WrappedHead))],
-      ( {'$get_predicate_attribute'(Module:Head, (transparent), 1)}
-      ->[(:- module_transparent WrapName/Arity)]
-      ; []
-      )
+      [(Head :- context_module(CM), start_rtcheck(Module:Head, @(WrappedHead, CM)))]
     ; {Level = body}
     ).
 
