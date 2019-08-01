@@ -144,8 +144,6 @@
          writeln/2,
          format/2,
          format/3,
-         downcase_atom/2,
-         upcase_atom/2,
          get_time/1] is det.
 
 :- pred [(\+)/1,
@@ -161,5 +159,7 @@
          functor/3,
          (=..)/2,
          sort/2,
-         same_file/2
+         same_file/2,
+         downcase_atom/2,
+         upcase_atom/2
         ] is semidet.
