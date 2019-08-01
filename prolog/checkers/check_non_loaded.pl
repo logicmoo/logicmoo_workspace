@@ -42,12 +42,9 @@
     prolog:message//1.
 
 checker:check(non_loaded, Results, Options1) :-
-    option_allchk(Options1, Options, FileChk1),
-    ( FileChk1 = option_utils:call_2(true, _)
-    ->FileChk = option_utils:call_2(( working_directory(Dir, Dir),
-                                      check_dir_file(Dir, File, Options)), File)
-    ; FileChk  = FileChk1
-    ),
+    working_directory(Dir, Dir),
+    select_option_default(dir(ADir)-Dir, Options1, Options),
+    option_allchk([dir(ADir)|Options], _, FileChk),
     check_non_loaded(FileChk, Results).
 
 check_non_loaded(FileChk, Pairs) :-

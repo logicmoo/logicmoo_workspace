@@ -151,7 +151,7 @@ do_source_walk_code(Options1) :-
           [on_trace(OnTrace)-(codewalk:true_3),
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
-           if(Loaded)-true,
+           if(Loaded)-loaded,
            variable_names(VNL)-VNL],
           Options1, Options2),
     option_allchk(M, File, FileMGen-[if(Loaded)|Options2], true-Options),

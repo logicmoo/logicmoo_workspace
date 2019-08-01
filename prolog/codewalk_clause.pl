@@ -57,6 +57,10 @@ f_from_chk(From) :-
 :- meta_predicate
     walk_clause(1, +).
 
+load_file_db(File, FileMGen) :-
+    % FileMGen should produce File already deduplicated
+    forall(FileMGen, assertz('$file_db'(File))).
+
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)-(codewalk:true_3),
@@ -64,7 +68,7 @@ codewalk:walk_code(clause, Options1) :-
            module(M)-M,
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
-           if(Loaded)-true,
+           if(Loaded)-loaded,
            trace_variables(TraceVars)-[],
            walkextras(Extras)-[initialization,
                                declaration,
@@ -72,7 +76,7 @@ codewalk:walk_code(clause, Options1) :-
            variable_names(VNL)-VNL],
           Options1, Options2),
     option_allchk(M, File, FileMGen-[if(Loaded)|Options2], true-_),
-    forall(distinct(File, FileMGen), assertz('$file_db'(File))),
+    load_file_db(File, FileMGen),
     with_context_values(
         ( walk_clause(f_from_chk, From),
           maplist(walk_extras(f_from_chk, From), Extras)
