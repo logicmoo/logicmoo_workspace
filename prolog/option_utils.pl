@@ -195,7 +195,7 @@ option_fdirs(File, Loaded, FileGen1-Options1, FileGen-Options2) :-
       )
     ->alias_files(ADirL, Loaded, DirL, Options),
       ( Loaded = true
-      ->Params = source(Options)
+      ->Params = source(Options3)
       ; findall(F, module_file(_, F), FileU),
         sort(FileU, FileL),
         Params = loaded(FileL)
