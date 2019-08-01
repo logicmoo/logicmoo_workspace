@@ -99,7 +99,7 @@ check_unused(Options1, Pairs) :-
                    on_trace(collect_unused(M))
                   ], Options),
     walk_code(Options),
-    option_fromchk(M, _, Options, _, FromChk),
+    option_fromchk(_, _, Options2, _, FromChk),
     mark(M),
     sweep(M, FromChk, Pairs),
     cleanup_unused.
