@@ -55,18 +55,15 @@ mutually_exclusive_predicate(MH) :-
 mutually_exclusive_predicate(check(_, _, _), checker).
 mutually_exclusive_predicate_key(check(K, _, _), checker, K).
 
-option_allmchk(Options1, Options, option_utils:call_2(FileGen, File)) :-
-    option_allchk(_M, File, FileGen-Options1, true-Options).
-
 checker:check(non_mutually_exclusive, Result, Options1) :-
-    option_allmchk(Options1, Options2, FileChk),
+    option_fromchk(Options1, Options2, MFromChk),
     select_option(predicate(Ref), Options2, _, Ref),
-    findall(Pairs, check_non_mutually_exclusive(from_chk(FileChk), Ref, Pairs), Result).
+    findall(Pairs, check_non_mutually_exclusive(MFromChk, Ref, Pairs), Result).
 
-check_non_mutually_exclusive(FromChk, Ref, warning-(Ref-LocIdx)) :-
+check_non_mutually_exclusive(MFromChk, Ref, warning-(Ref-LocIdx)) :-
     normalize_head(Ref, MH),
     mutually_exclusive_predicate(MH),
-    collect_non_mutually_exclusive(FromChk, MH, LocIdxL),
+    collect_non_mutually_exclusive(MFromChk, MH, LocIdxL),
     member(LocIdx, LocIdxL).
 
 cleanup_redundant_groups([], _, []).
@@ -87,13 +84,13 @@ cleanup_redundant_groups([Key-Clause-ClauseNME|ClauseKeyU], ClauseKeyI, ClauseKe
 
 :- meta_predicate collect_non_mutually_exclusive(1, 0, -).
 
-collect_non_mutually_exclusive(FromChk, MH, LocPL) :-
+collect_non_mutually_exclusive(MFromChk, MH, LocPL) :-
     strip_module(MH, M, H),
     findall(I-(Key-Clause),
             ( clause(MH, _, Clause),
               nth_clause(MH, I, Clause),
               From = clause(Clause),
-              call(FromChk, From),
+              call(MFromChk, M, From),
               ( mutually_exclusive_predicate_key(H, M, Key)
               ->true
               ; Key = MH

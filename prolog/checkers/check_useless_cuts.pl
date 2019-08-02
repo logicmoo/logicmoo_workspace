@@ -79,15 +79,9 @@ issue_type_message(useless_cut(Loc, CI)-CutPosL) -->
 checker:check(useless_cuts, Result, Options) :-
     check_useless_cuts(Options, Result).
 
-check_useless_cuts(Options1, Pairs) :-
-    foldl(select_option_default,
-          [module(M)-M],
-          Options1, Options2),
-    merge_options(Options2,
-                  [module(M)
-                  ], Options),
-    option_fromchk(Options, _, FromChk),
-    cuts_check(M, FromChk, Pairs),
+check_useless_cuts(Options, Pairs) :-
+    option_fromchk(Options, _, MFromChk),
+    cuts_check(MFromChk, Pairs),
     cleanup_useless_cuts.
 
 cleanup_useless_cuts :-
@@ -96,16 +90,16 @@ cleanup_useless_cuts :-
     retractall(det_clause_db(_, _)),
     retractall(inferred_det_db(_, _, _)).
 
-cuts_check(M, FromChk, Pairs) :-
-    forall(current_det_check(M, FromChk),
+cuts_check(MFromChk, Pairs) :-
+    forall(current_det_check(MFromChk),
            true),
     retractall(cut_info(_, _, needed)),
     findall(warning-Issue,
-            collect_issues(Issue, FromChk), Pairs).
+            collect_issues(Issue, MFromChk), Pairs).
 
-collect_issues(useless_cut(Loc, M:F/A-I)-CutPos, FromChk) :-
+collect_issues(useless_cut(Loc, M:F/A-I)-CutPos, MFromChk) :-
     retract(cut_info(Ref, RCutPos, unused)),
-    call(FromChk, clause(Ref)), % Avoid warnings from out there
+    call(MFromChk, M, clause(Ref)), % Avoid warnings from out there
     nth_clause(M:H, I, Ref),
     functor(H, F, A),
     reverse(RCutPos, CutPos), % reverse is more human-readable
@@ -114,7 +108,7 @@ collect_issues(useless_cut(Loc, M:F/A-I)-CutPos, FromChk) :-
 % 1. A cut is useless, if is located at the last clause, and the literals above
 % are semidet
 
-current_det_check(M, FromChk) :-
+current_det_check(MFromChk) :-
     order_by([asc(M:F/A)],
              ( current_predicate(M:F/A),
                functor(H, F, A),
@@ -126,7 +120,7 @@ current_det_check(M, FromChk) :-
                predicate_property(MH, exported),
                \+ predicate_property(MH, imported_from(_)),
                \+ \+ ( catch(clause(MH, _, Ref), _, fail),
-                       call(FromChk, clause(Ref))
+                       call(MFromChk, M, clause(Ref))
                      )
              )),
     check_det(H, M, _).
@@ -586,7 +580,7 @@ walk_lit(H, M, CM, Ref, CP) :-
       % We have to check for nodet, instead of multi, since all predicates that
       % don't have det properties inferred yet are marked as multi.
     ->add_cp
-    ; % We can check multy only if all arguments of C are independent
+    ; % We can check multi only if all arguments of C are independent
       % variables, meaning that we can reuse the result of the determinism
       % analysis:
       functor(C, F, A),

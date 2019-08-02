@@ -79,8 +79,7 @@ hide_missing_meta_pred(rename_predicate(_, _), prolog).
 hide_missing_meta_pred(prolog_exception_hook(_, _, _, _), user).
 
 checker:check(meta_decls, Pairs, Options1) :-
-    option_allchk(Options1, Options2, FileChk),
-    select_option(module(M), Options2, _, M),
+    option_fromchk(Options1, _, MFromChk),
     findall(warning-((Loc/M)-Spec),
             ( prolog_metainference:inferred_meta_pred(Head, M, Spec),
               \+ predicate_property(M:Head, meta_predicate(_)),
@@ -89,7 +88,7 @@ checker:check(meta_decls, Pairs, Options1) :-
               is_entry_point(Spec, M),
               \+ hide_missing_meta_pred(Head, M),
               once(( property_from(M:Head, _, From),
-                     from_chk(FileChk, From)
+                     call(MFromChk, M, From)
                    )), % once: only first occurrence
               from_location(From, Loc)
             ), Pairs).

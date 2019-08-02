@@ -78,9 +78,9 @@ checker:check(imports, Result, Options) :-
 check_imports(Options, Pairs) :-
     walk_code([source(false),
                on_trace(collect_imports_wc)|Options]),
-    option_fromchk(M, _, Options, _, FromChk),
-    collect_imports(M, FromChk, Pairs, Tail),
-    collect_usemods(M, FromChk, Tail, []),
+    option_fromchk(Options, _, MFromChk),
+    collect_imports(MFromChk, Pairs, Tail),
+    collect_usemods(MFromChk, Tail, []),
     cleanup_imports.
 
 :- public collect_imports_wc/3.
@@ -98,14 +98,14 @@ caller_module(M:_,                _, M) :- !.
 caller_module('<assertion>'(M:_), _, M) :- !.
 caller_module(_, clause(Ptr), M) :- clause_property(Ptr, module(M)).
 
-collect_imports(M, FromChk, Pairs, Tail) :-
+collect_imports(MFromChk, Pairs, Tail) :-
     findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
-            current_unused_import(M, FromChk, U, Loc, F, A),
+            current_unused_import(MFromChk, U, Loc, F, A),
             Pairs, Tail).
 
-current_unused_import(M, FromChk, U, Loc, F, A) :-
+current_unused_import(MFromChk, U, Loc, F, A) :-
     clause(loc_declaration(Head, M, import(U), From), _, CRef),
-    call(FromChk, From),
+    call(MFromChk, M, From),
     M \= user,
     \+ memberchk(Head, [term_expansion(_,_),
                         term_expansion(_,_,_,_),
@@ -143,20 +143,20 @@ ignore_import(M, IM) :-
     functor(H, Name, A),
     predicate_property(M:H, implementation_module(IM)).
                        
-collect_usemods(M, FromChk, Pairs, Tail) :-
+collect_usemods(MFromChk, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
-            ( current_used_use_module(M, FromChk, U, From),
+            ( current_used_use_module(MFromChk, U, M, From),
               from_location(From, Loc)
             ), Pairs, Tail).
 
-current_used_use_module(M, FromChk, UE, From) :-
+current_used_use_module(MFromChk, UE, M, From) :-
     ( UE = use_module(U),
       loc_declaration(U, M, use_module, From),
       ExL = []
     ; UE = use_module(U, except(ExL)),
       loc_declaration(UE, M, use_module_2, From)
     ),
-    call(FromChk, From),
+    call(MFromChk, M, From),
     M \= user,
     module_property(M, class(Class)),
     memberchk(Class, [user]),

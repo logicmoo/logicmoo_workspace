@@ -71,8 +71,8 @@ hide_var_dynamic_hook(match_clause(_, _, _, _, _, _, _), ontrace).
 hide_var_dynamic_hook(collect_non_mutually_exclusive(_, _, _, _), check_non_mutually_exclusive).
 hide_var_dynamic_hook(ignore_import(_, _), check_imports).
 hide_var_dynamic_hook(current_head_body(_, _, _, _), codewalk_clause).
-hide_var_dynamic_hook(walk_from_assertion(_, _, _, _), codewalk_prolog).
-hide_var_dynamic_hook(current_head_ctcheck(_, _, _), check_assertions).
+hide_var_dynamic_hook(walk_from_assertion(_, _, _), codewalk_prolog).
+hide_var_dynamic_hook(current_head_ctcheck(_, _), check_assertions).
 hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
 hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
 hide_var_dynamic_hook(det_clause(_, _), check_useless_cuts).
@@ -105,16 +105,16 @@ check_wrong_dynamic(Options1, Pairs) :-
                    on_trace(collect_wrong_dynamic(M))],
                   Options),
     walk_code(Options),
-    option_fromchk(M, _, Options, _, FromChk),
-    collect_result(M, FromChk, Pairs),
+    option_fromchk(Options, _, MFromChk),
+    collect_result(MFromChk, Pairs),
     cleanup_dynamic_db.
 
-collect_result(M, FromChk, Pairs) :-
+collect_result(MFromChk, Pairs) :-
     findall(Type-(modified_nondynamic(DType)-((Loc/PI)-(MLoc/MPI))),
             ( current_modified_nondynamic(Type, DType, Loc, PI, From, MPI),
               from_location(From, MLoc)), Pairs, Pairs1),
     findall(warning-(unmodified_dynamic-(Loc-PI)),
-            current_unmodified_dynamic(M:_, FromChk, Loc, PI), Pairs1, Pairs2),
+            current_unmodified_dynamic(MFromChk, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
             ( retract(var_dynamic_db(PI, From)),
               check:predicate_indicator(From, CI, []),
@@ -139,8 +139,8 @@ current_modified_nondynamic(Type, DType, Loc, PI, MFrom, MPI) :-
       once(property_location(PI, _, Loc))
     ).
 
-:- meta_predicate current_unmodified_dynamic(?, 1, -, -).
-current_unmodified_dynamic(Ref, FromChk, Loc, PI) :-
+:- meta_predicate current_unmodified_dynamic(?, 2, -, -).
+current_unmodified_dynamic(MFromChk, Loc, PI) :-
     Ref = M:H,
     PI = M:F/A,
     current_defined_predicate(Ref),
@@ -151,7 +151,7 @@ current_unmodified_dynamic(Ref, FromChk, Loc, PI) :-
     once(( property_from(PI, dynamic, From)
          ; predicate_from(Ref, From)
          )),
-    call(FromChk, From),
+    call(MFromChk, M, From),
     %% ignore predicates with the following properties:
     \+ predicate_property(Ref, multifile),
     % \+ predicate_property(Ref, exported),

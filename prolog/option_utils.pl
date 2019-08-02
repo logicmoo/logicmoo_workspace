@@ -33,18 +33,17 @@
 */
 
 :- module(option_utils, [select_option_default/3,
-                         option_allchk/3,
                          option_dirchk/3,
-                         option_allchk/4,
+                         option_filechk/3,
                          option_fromchk/3,
-                         option_fromchk/5,
                          source_extension/2,
                          call_2/3,
+                         call_4/5,
                          check_dir_file/3,
                          check_pred/2,
                          check_module/2,
-                         from_chk/2,
-                         from_chk/3]).
+                         from_chk/3,
+                         from_chk/5]).
 
 :- reexport(library(module_files)).
 :- use_module(library(apply)).
@@ -77,8 +76,12 @@ alias_files(AliasL, Loaded, FileL, Options) :-
 check_file(true, File) :- access_file(File, exist).  % exist checked at the end to avoid premature fail
 check_file(loaded,  _).
 
+:- table module_file_/2 as subsumptive.
+
+module_file_(M, F) :- module_file(M, F).
+
 check_module(Module, File) :-
-    distinct(File, module_file(Module, File)).
+    distinct(File, module_file_(Module, File)).
 
 source_extension(Type, Ext) :-
     user:prolog_file_type(Ext, Type),
@@ -148,18 +151,20 @@ option_files(File, Loaded, FileGen1-Options1, FileGen-Options2) :-
       FileGen1 = FileGen
     ).
 
-option_exclude_files(File, Loaded, FG-Options1, FG-Options2) :-
+option_exclude_files(File, Loaded, FileGen1-Options1, FileGen-Options2) :-
     foldl(select_option_default,
 	  [exclude_files(ExFileL)-[]
 	  ], Options1, Options2),
     merge_options(Options2, [file_type(prolog)], Options),
     ( ExFileL = []
-    ->true
+    ->FileGen = FileGen1
     ; alias_files(ExFileL, Loaded, FileL, Options),
-      freeze(File, \+ member(File, FileL))
+      FileGen = ( FileGen1,
+                  \+ member(File, FileL)
+                )
     ).
 
-option_exclude_fdirs(File, Loaded, FG-Options1, FG-Options2) :-
+option_exclude_fdirs(File, FileGen1-Options1, FileGen-Options2) :-
     foldl(select_option_default,
 	  [exclude_dirs(ExDirL)-[]
 	  ], Options1, Options2),
@@ -168,11 +173,13 @@ option_exclude_fdirs(File, Loaded, FG-Options1, FG-Options2) :-
 	  ], Options2, Options3),
     merge_options([file_type(directory)], Options3, Options),
     ( ExDirL = []
-    ->true
-    ; alias_files(ExDirL, Loaded, DirL, Options),
-      freeze(File, \+ ( member(ExDir, DirL),
+    ->FileGen = FileGen1
+    ; alias_files(ExDirL, true, DirL, Options),
+      FileGen = ( FileGen1,
+                  \+ ( member(ExDir, DirL),
                         directory_file_path(ExDir, _, File)
-                      ))
+                     )
+                )
     ).
 
 option_fdirs(File, Loaded, FileGen1-Options1, FileGen-Options2) :-
@@ -193,15 +200,18 @@ option_fdirs(File, Loaded, FileGen1-Options1, FileGen-Options2) :-
       ; nonvar(ADir)
       ->ADirL = [ADir]
       )
-    ->alias_files(ADirL, Loaded, DirL, Options),
+    ->alias_files(ADirL, true, DirL, Options),
       ( Loaded = true
       ->Params = source(Options3)
-      ; findall(F, module_file(_, F), FileU),
-        sort(FileU, FileL),
-        Params = loaded(FileL)
+      ; findall(F, module_file_(_, F), LFileU),
+        sort(LFileU, LFileL),
+        Params = loaded(LFileL)
       ),
-      FileGen1 = ( member(Dir, DirL),
-                   check_dir_file(Params, Dir, File),
+      findall(File,
+              ( member(Dir, DirL),
+                check_dir_file(Params, Dir, File)
+              ), FileL),
+      FileGen1 = ( member(File, FileL),
                    FileGen
                  )
     ; FileGen1 = FileGen
@@ -223,7 +233,7 @@ check_dir_file(loaded(FileL), Dir, File) :-
     member(File, FileL),
     directory_file_path(Dir, _, File).
 
-option_exclude_dirs(Dir, Loaded, DG-Options1, DG-Options2) :-
+option_exclude_dirs(Dir, DirGen1-Options1, DirGen-Options2) :-
     foldl(select_option_default,
 	 [exclude_dirs(ExDirL)-[]
 	 ], Options1, Options2),
@@ -232,12 +242,14 @@ option_exclude_dirs(Dir, Loaded, DG-Options1, DG-Options2) :-
 	  ], Options2, Options3),
     merge_options([file_type(directory)], Options3, Options),
     ( ExDirL = []
-    ->true
-    ; alias_files(ExDirL, Loaded, DirL, Options),
-      freeze(Dir, \+ member(Dir, DirL))
+    ->DirGen = DirGen1
+    ; alias_files(ExDirL, true, DirL, Options),
+      DirGen = ( DirGen1,
+                 \+ member(Dir, DirL)
+               )
     ).
 
-option_dirs(Dir, Loaded, DirGen1-Options1, DirGen-Options2) :-
+option_dirs(Dir, DirGen1-Options1, DirGen-Options2) :-
     foldl(select_option_default,
 	  [dirs(Dirs)-Dirs,
 	   dir( ADir)-ADir
@@ -255,7 +267,7 @@ option_dirs(Dir, Loaded, DirGen1-Options1, DirGen-Options2) :-
       ; nonvar(ADir)
       ->ADirL = [ADir]
       )
-    ->alias_files(ADirL, Loaded, DirL, Options),
+    ->alias_files(ADirL, true, DirL, Options),
       DirGen1 = ( member(Dir, DirL),
                   DirGen
                 )
@@ -284,20 +296,20 @@ option_preds(File, FileGen1-Options1, FileGen-Options) :-
 option_module(M, File, Loaded, FileGen1-Options1, FileGen-Options) :-
     select_option(module(M), Options1, Options, M),
     ( nonvar(M)
-    ->FileGen1 = ( module_file(M, File),
+    ->FileGen1 = ( module_file_(M, File),
                    FileGen
                  )
     ; Loaded = true
     ->FileGen1 = ( FileGen,
-                   ignore(module_file(M, File))
+                   ignore(module_file_(M, File))
                  )
     ; FileGen1 = ( FileGen,
                    MFG
                  ),
       freeze(FileGen,
              ( FileGen = true
-             ->MFG = module_file(M, File)
-             ; MFG = once(module_file(M, File))
+             ->MFG = module_file_(M, File)
+             ; MFG = once(module_file_(M, File))
              ))
     ).
 
@@ -326,13 +338,10 @@ fetch_loaded(Loaded, FileGen-Options1, FileGen-Options2) :-
 	  [if(Loaded)-loaded
 	  ], Options1, Options2).
 
-option_allchk(M, File) -->
+option_filechk(M, File) -->
     fetch_loaded(Loaded),
-    option_allchk(M, File, Loaded).
-
-option_allchk(M, File, Loaded) -->
     option_exclude_files(File, Loaded),
-    option_exclude_fdirs(File, Loaded),
+    option_exclude_fdirs(File),
     option_mod_prop(M),
     option_module(M, File, Loaded),
     option_modules(M, File),
@@ -340,53 +349,43 @@ option_allchk(M, File, Loaded) -->
     option_preds(File),
     option_fdirs(File, Loaded).
 
-option_filechk(File, Loaded) -->
-    option_exclude_files(File, Loaded),
-    option_exclude_fdirs(File, Loaded),
-    option_files(File, Loaded),
-    option_preds(File),
-    option_fdirs(File, Loaded).
-
-option_dirchk(Dir, Loaded) -->
-    option_exclude_dirs(Dir, Loaded),
-    option_dirs(Dir, Loaded).
+option_dirchk_(Dir) -->
+    option_exclude_dirs(Dir),
+    option_dirs(Dir).
 
 :- meta_predicate call_2(0,?,?).
-call_2(Goal, File, File) :- call(Goal).
 
-:- meta_predicate from_chk(1,?).
-from_chk(FileChk, From) :-
+call_2(Goal, Dir, Dir) :- call(Goal).
+
+:- meta_predicate call_4(0,?,?,?,?).
+call_4(Goal, M, File, M, File) :- call(Goal).
+
+:- meta_predicate from_chk(2,?,?).
+from_chk(FileMChk, M, From) :-
     ( nonvar(From)
     ->from_to_file(From, File),
-      call(FileChk, File)
+      call(FileMChk, M, File)
     ; true
     ).
 
-:- meta_predicate from_chk(0,?,?).
-from_chk(Goal, File, From) :-
+:- meta_predicate from_chk(0,?,?,?,?).
+from_chk(Goal, M, File, M, From) :-
     ( nonvar(From)
     ->from_to_file(From, File),
       call(Goal)
     ; true
     ).
 
-option_allchk(Options1, Options, option_utils:call_2(FileGen, File)) :-
-    foldl(select_option_default,
-	  [if(Loaded)-loaded
-	  ], Options1, Options2),
-    option_filechk(File, Loaded, FileGen-Options2, true-Options).
+% Note: This was implemented before tabling existed in SWI-Prolog, so now is
+% better to use tabling, and to make this predicates directly generate M and
+% File or Dir
 
-option_fromchk(Options1, Options, option_utils:from_chk(FileGen, File)) :-
-    foldl(select_option_default,
-	  [if(Loaded)-loaded
-	  ], Options1, Options2),
-    option_filechk(File, Loaded, FileGen-Options2, true-Options).
+option_filechk(Options1, Options, option_utils:call_4(MFileGen, M, File)) :-
+    option_filechk(M, File, MFileGen-Options1, true-Options).
 
-option_fromchk(M, File, Options1, Options, option_utils:from_chk(FileMGen, File)) :-
-    option_allchk(M, File, FileMGen-Options1, true-Options).
+option_fromchk(Options1, Options, option_utils:from_chk(MFileGen, M, File)) :-
+    option_filechk(M, File, MFileGen-Options1, true-Options).
 
 option_dirchk(Options1, Options, option_utils:call_2(DirGen, Dir)) :-
-    foldl(select_option_default,
-	  [if(Loaded)-loaded
-	  ], Options1, Options2),
-    option_dirchk(Dir, Loaded, DirGen-Options2, true-Options).
+    merge_options(Options1, [loaded(true)], Options2),
+    option_dirchk_(Dir, DirGen-Options2, true-Options).

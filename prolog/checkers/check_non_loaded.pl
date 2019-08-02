@@ -42,14 +42,22 @@
     prolog:message//1.
 
 checker:check(non_loaded, Results, Options1) :-
-    working_directory(Dir, Dir),
-    select_option_default(dir(ADir)-Dir, Options1, Options),
-    option_allchk([dir(ADir)|Options], _, FileChk),
-    check_non_loaded(FileChk, Results).
+    checker_check_non_loaded(Results, Options1).
 
-check_non_loaded(FileChk, Pairs) :-
+checker_check_non_loaded(Results, Options1) :-
+    ( ( option(dir(_), Options1)
+      ; option(dirs(_), Options1)
+      )
+    ->Options = Options1
+    ; working_directory(Dir, Dir),
+      Options = [dir(Dir)|Options]
+    ),
+    option_filechk(Options, _, MFileChk),
+    check_non_loaded(MFileChk, Results).
+
+check_non_loaded(MFileChk, Pairs) :-
     findall(Dir-Name,
-            ( call(FileChk, File),
+            ( call(MFileChk, _, File),
               directory_file_path(Dir, Name, File)
             ), DirNameU),
     sort(DirNameU, DirName),

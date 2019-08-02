@@ -92,16 +92,16 @@ check_unused(Options1, Pairs) :-
                  [Method1, Method]))
     ; Method = Method1
     ),
-    option(module(M), Options1, M),
+    ignore(option(module(M), Options1)),
     merge_options(Options2,
                   [source(false), % False, otherwise this will not work
                    method(Method),
                    on_trace(collect_unused(M))
                   ], Options),
     walk_code(Options),
-    option_fromchk(_, _, Options2, _, FromChk),
-    mark(M),
-    sweep(M, FromChk, Pairs),
+    option_fromchk(Options2, _, MFromChk),
+    mark,
+    sweep(MFromChk, Pairs),
     cleanup_unused.
 
 cleanup_unused :-
@@ -145,12 +145,12 @@ entry_caller(M, H) :-
     ; loc_declaration(H, M, goal, _)
     ).
 
-entry_point(M, Caller) :-
-    calls_to(Caller, M, _),
+entry_point(Caller) :-
+    calls_to(Caller, _, _),
     is_entry_caller(Caller).
 
-mark(M) :-
-    forall(entry_point(M, Caller), put_mark(Caller)).
+mark :-
+    forall(entry_point(Caller), put_mark(Caller)).
 
 resolve_meta_goal(H, M, G) :-
     ( ( predicate_property(M:H, meta_predicate(Meta))
@@ -259,8 +259,8 @@ current_edge(X, Y) :-
 % results for performance reasons (edge/2), otherwise the analysis will take 20
 % times more --EMM
 %
-sweep(M, FromChk, Pairs) :-
-    findall(node(Node, D, From), unmarked(M, FromChk, Node, D, From), UNodes),
+sweep(MFromChk, Pairs) :-
+    findall(node(Node, D, From), unmarked(MFromChk, Node, D, From), UNodes),
     sort(UNodes, Nodes),
     findall(node(X, DX, LX)-Y,
             ( member(node(X, DX, FX), Nodes),
@@ -350,7 +350,7 @@ checkable_unused(Ref) :-
            \+ predicate_property(Ref, public)
          )).
 
-unmarked(M, FromChk, Node, D, From) :-
+unmarked(MFromChk, Node, D, From) :-
     Ref = M:H,
     MPI = M:F/A,
     ( current_defined_predicate(Ref),
@@ -359,32 +359,32 @@ unmarked(M, FromChk, Node, D, From) :-
       ( not_marked(H, M)
       ->Node = MPI,
         property_from(Ref, D, From),
-        check_pred_file(Ref, FromChk, From)
+        check_pred_file(Ref, MFromChk, M, From)
       ; ( match_head_clause(M:H, CRef),
           clause_property(CRef, file(_)), % Static clauses only
           From = clause(CRef),
           not_marked(From),
-          check_pred_file(Ref, FromChk, From),
+          check_pred_file(Ref, MFromChk, M, From),
           nth_clause(M:H, I, CRef),
           D = clause(I)
         ; semantic_head(H, M, I, D, Mark, From),
           not_marked(Mark),
-          check_pred_file(Ref, FromChk, From)
+          check_pred_file(Ref, MFromChk, M, From)
         ),
         Node = M:F/A-I
       )
     ; semantic_head(H, M, I, D, Mark, From),
       not_marked(Mark),
       functor(H, F, A),
-      check_pred_file(Ref, FromChk, From),
+      check_pred_file(Ref, MFromChk, M, From),
       \+ current_predicate(_, Ref),
       checkable_unused(Ref),
       Node = M:F/A-I
     ).
 
-check_pred_file(Ref, FromChk, From) :-
+check_pred_file(Ref, MFromChk, _, From) :-
     \+ hide_unused_from(Ref, From),
-    call(FromChk, From), !.
+    call(MFromChk, _, From), !.
 
 prolog:message(acheck(unused)) -->
     ['Unused Predicates',nl,

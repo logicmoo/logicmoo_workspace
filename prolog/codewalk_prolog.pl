@@ -44,8 +44,8 @@
 
 %!  extra_walk_module_body(-Module, +Options) is det.
 
-extra_walk_module_body(M, Options) :-
-    ( nonvar(M)
+extra_walk_module_body(Options) :-
+    ( option(module(M), Options)
     ->findall(Ref, current_clause_module_body(M, Ref), RefU),
       sort(RefU, RefL),
       prolog_walk_code([source(false), clauses(RefL)|Options])
@@ -53,28 +53,23 @@ extra_walk_module_body(M, Options) :-
     ).
 
 codewalk:walk_code(prolog, Options1) :-
-    extra_wcsetup(Options1, Options2, FromChk),
+    extra_wcsetup(Options1, Options2, MFromChk),
     foldl(select_option_default,
           [source(S)-false,
-           module(M)-M,
            walkextras(Extras)-[declaration, asrparts([body])],
            on_trace(ETracer)-ETracer
           ],
           Options2, Options3),
-    ( nonvar(M)
-    ->Options4 = [module(M)|Options3]
-    ; Options4 = Options3
-    ),
-    Options = [on_trace(codewalk_prolog:pcw_trace(1, ETracer, FromChk))|Options4],
-    extra_walk_module_body(M, Options),
-    optimized_walk_code(S, Stage, codewalk_prolog:pcw_trace(Stage, ETracer, FromChk), Options4),
+    Options = [on_trace(codewalk_prolog:pcw_trace(1, ETracer, MFromChk))|Options3],
+    extra_walk_module_body(Options),
+    optimized_walk_code(S, Stage, codewalk_prolog:pcw_trace(Stage, ETracer, MFromChk), Options3),
     prolog_codewalk:make_walk_option(Options, OTerm),
-    maplist(walk_extras(OTerm, M, FromChk), Extras).
+    maplist(walk_extras_p(OTerm, MFromChk), Extras).
 
 :- public pcw_trace/6.
 :- meta_predicate pcw_trace(+,3,1,+,+,+).
-pcw_trace(1, ETracer, FromChk, M:Goal, Caller, From) :-
-    call(FromChk, From),
+pcw_trace(1, ETracer, MFromChk, M:Goal, Caller, From) :-
+    call(MFromChk, M, From),
     '$set_source_module'(M),
     call(ETracer, M:Goal, Caller, From),
     ( From = clause(CRef)
@@ -84,10 +79,10 @@ pcw_trace(1, ETracer, FromChk, M:Goal, Caller, From) :-
 pcw_trace(2, ETracer, _, Goal, Caller, From) :-
     call(ETracer, Goal, Caller, From).
 
-walk_extras(OTerm, M, FromChk, Extra) :- walk_extras_(Extra, OTerm, M, FromChk).
+walk_extras_p(OTerm, MFromChk, Extra) :- walk_extras_(Extra, OTerm, MFromChk).
 
-walk_extras_(declaration, OTerm, M, FromChk) :- walk_from_loc_declaration(OTerm, M, FromChk).
-walk_extras_(asrparts(L), OTerm, M, FromChk) :- walk_from_assertion(OTerm, M, FromChk, L).
+walk_extras_(declaration, OTerm, MFromChk) :- walk_from_loc_declaration(OTerm, MFromChk).
+walk_extras_(asrparts(L), OTerm, MFromChk) :- walk_from_assertion(OTerm, MFromChk, L).
 
 current_clause_module_body(CM, Ref) :-
     MH = M:_,
@@ -115,8 +110,8 @@ optimized_walk_code_true(2, Tracer, Options) :-
     ; prolog_walk_code([clauses(Clauses), on_trace(Tracer)|Options])
     ).
 
-extra_wcsetup(Options1, Options, FromChk) :-
-    option_fromchk(Options1, Options2, FromChk),
+extra_wcsetup(Options1, Options, MFromChk) :-
+    option_fromchk(Options1, Options2, MFromChk),
     merge_options(Options2,
                   [infer_meta_predicates(false),
                    autoload(false),
@@ -125,10 +120,10 @@ extra_wcsetup(Options1, Options, FromChk) :-
                    module_class([user, system, library])
                   ], Options).
 
-walk_from_loc_declaration(OTerm, M, FromChk) :-
+walk_from_loc_declaration(OTerm, MFromChk) :-
     forall(( prolog_codewalk:walk_option_caller(OTerm, '<declaration>'),
              clause(loc_declaration(Head, M, goal, From), _, Ref),
-             call(FromChk, From)
+             call(MFromChk, _, From)
            ),
            walk_from_goal(Head, M, Ref, OTerm)).
 
@@ -138,10 +133,10 @@ walk_from_goal(Head, M, Ref, OTerm) :-
                       walk_called_by_body(no_positions, Head, M, OTerm)
                     ).
 
-walk_from_assertion(OTerm, M, FromChk, AsrPartL) :-
+walk_from_assertion(OTerm, MFromChk, AsrPartL) :-
     forall(( AHead = assertions:asr_head_prop(Asr, HM, Head, _, _, _, From),
              clause(AHead, _, Ref),
-             call(FromChk, From),
+             call(MFromChk, _, From),
              predicate_property(HM:Head, implementation_module(M)),
              prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
              member(AsrPart, AsrPartL),

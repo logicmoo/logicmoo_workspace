@@ -45,80 +45,78 @@
 :- use_module(library(option_utils)).
 
 :- dynamic
-    '$file_db'/1.
+    '$mfile_db'/2.
 
 :- thread_local
-    '$file_db'/1.
+    '$mfile_db'/2.
 
-f_from_chk(From) :-
+f_from_chk(M, From) :-
     from_to_file(From, File),
-    '$file_db'(File).
+    '$mfile_db'(File, M).
 
 :- meta_predicate
-    walk_clause(1, +).
+    walk_clause(2, +).
 
-load_file_db(File, FileMGen) :-
+load_file_db(MFileGen) :-
     % FileMGen should produce File already deduplicated
-    forall(FileMGen, assertz('$file_db'(File))).
+    forall(call(MFileGen, M, File), assertz('$mfile_db'(File, M))).
 
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)-(codewalk:true_3),
            on_head(OnHead)-(codewalk:true_2),
-           module(M)-M,
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
-           if(Loaded)-loaded,
            trace_variables(TraceVars)-[],
            walkextras(Extras)-[initialization,
                                declaration,
                                asrparts([body])],
            variable_names(VNL)-VNL],
           Options1, Options2),
-    option_allchk(M, File, FileMGen-[if(Loaded)|Options2], true-_),
-    load_file_db(File, FileMGen),
+    option_filechk(Options2, _, MFileGen),
+    load_file_db(MFileGen),
     with_context_values(
         ( walk_clause(f_from_chk, From),
-          maplist(walk_extras(f_from_chk, From), Extras)
+          maplist(walk_extras_c(f_from_chk, From), Extras)
         ),
         [from, on_trace, on_head, trace_vars, trace_reference, undefined],
         [From, OnTrace,  OnHead,  TraceVars,  To,              Undefined]),
-    retractall('$file_db'(_)).
+    retractall('$mfile_db'(_, _)).
 
-walk_extras(FromChk, From, Extra) :-
+walk_extras_c(FromChk, From, Extra) :-
     walk_extras_(Extra, FromChk, From).
 
-walk_extras_(initialization, FromChk, From) :- walk_from_initialization(FromChk, From).
-walk_extras_(declaration,    FromChk, From) :- walk_from_loc_declaration(FromChk, From).
-walk_extras_(asrparts(L),    FromChk, From) :- walk_from_assertion(FromChk, From, L).
+walk_extras_(initialization, MFromChk, From) :- walk_from_initialization(MFromChk, From).
+walk_extras_(declaration,    MFromChk, From) :- walk_from_loc_declaration(MFromChk, From).
+walk_extras_(asrparts(L),    MFromChk, From) :- walk_from_assertion(MFromChk, From, L).
 
-walk_from_initialization(FromChk, From) :-
+walk_from_initialization(MFromChk, From) :-
     forall(( '$init_goal'(_File, Goal, SourceLocation),
              ( SourceLocation = File:Line
              ->From = file(File, Line, -1, _)
              ; true
              ),
-             call(FromChk, From)
+             call(MFromChk, _, From)
            ),
            walk_head_body('<initialization>', Goal)).
 
-walk_from_loc_declaration(FromChk, From) :-
+walk_from_loc_declaration(MFromChk, From) :-
     forall(( loc_declaration(Body, M, body, From),
-             call(FromChk, From)),
+             call(MFromChk, _, From)),
            walk_head_body('<declaration>', M:Body)).
 
-current_assertion_goal(FromChk, From, AsrPartL, M:Head, CM:Goal) :-
+current_assertion_goal(MFromChk, From, AsrPartL, M:Head, CM:Goal) :-
     assertions:asr_head_prop(Asr, HM, Head, _, _, VNL, AFrom),
     b_setval('$variable_names', VNL),
-    call(FromChk, AFrom),
+    call(MFromChk, _, AFrom),
     predicate_property(HM:Head, implementation_module(M)),
     member(AsrPart, AsrPartL),
     assertion_goal(AsrPart, Asr, Goal, CM, From),
     current_context_value(trace_vars, TraceVars),
     maplist(trace_var(M:Head), TraceVars).
 
-walk_from_assertion(FromChk, From, AsrPartL) :-
-    forall(current_assertion_goal(FromChk, From, AsrPartL, Head, Goal),
+walk_from_assertion(MFromChk, From, AsrPartL) :-
+    forall(current_assertion_goal(MFromChk, From, AsrPartL, Head, Goal),
            walk_head_body('<assertion>'(Head), Goal)).
 
 assertion_goal(AsrPart, Asr, Prop, PM, From) :-
@@ -129,18 +127,18 @@ assertion_goal(AsrPart, Asr, Prop, PM, From) :-
     % For glob, actually is arg(1, Prop, HM:Head), but we keep it uninstantiated for optimization
     curr_prop_asr(Part, PM:Prop, From, Asr).
 
-walk_clause(FromChk, From) :-
-    forall(current_head_body(FromChk, Head, Body, From),
+walk_clause(MFromChk, From) :-
+    forall(current_head_body(MFromChk, Head, Body, From),
            walk_head_body(Head, Body)).
 
-current_head_body(FromChk, Head, CM:Body, From) :-
+current_head_body(MFromChk, Head, CM:Body, From) :-
     From = clause(Ref),
     Head = _:_,
     current_predicate(_, Head),
     \+ predicate_property(Head, imported_from(_)),
     current_context_value(trace_vars, TraceVars),
     catch(clause(Head, Body, Ref), _, fail),
-    call(FromChk, From),
+    call(MFromChk, _, From),
     clause_property(Ref, module(CM)),
     maplist(trace_var(Head), TraceVars).
 

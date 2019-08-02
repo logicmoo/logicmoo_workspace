@@ -73,8 +73,7 @@ cleanup_db :-
 
 check_assertions(Options1, Pairs) :-
     foldl(select_option_default,
-          [module(M)-M,
-           method(Method1)-clause],
+          [method(Method1)-clause],
           Options1, Options2),
     ( \+ memberchk(Method1, [source, clause]) % only these methods are supported
     ->Method = clause,
@@ -85,22 +84,21 @@ check_assertions(Options1, Pairs) :-
     ; Method = Method1
     ),
     merge_options(Options2,
-                  [module(M),
-                   method(Method),
+                  [method(Method),
                    trace_variables([non_fresh]),
                    on_trace(collect_violations)
                   ], Options),
-    option_fromchk(Options, _, FromChk),
+    option_fromchk(Options, _, MFromChk),
     walk_code(Options),
     findall(error-Issue,
             ( retract(violations_db(CPI, CTChecks, From)),
               from_location(From, Loc),
               Issue = body(Loc-CPI)-CTChecks
-            ; current_head_ctcheck(M, FromChk, Issue)
+            ; current_head_ctcheck(MFromChk, Issue)
             ), Pairs, Props),
-    prop_ctcheck(M, FromChk, Props).
+    prop_ctcheck(MFromChk, Props).
 
-current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
+current_head_ctcheck(MFromChk, head(Loc-PI)-AssrErrorL) :-
     PI=M:F/A,
     current_predicate(M:F/A),
     functor(H, F, A),
@@ -112,7 +110,7 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     CTCheck \= _:true,
     clause(MH, _, Clause),
     From = clause(Clause),
-    call(FromChk, From),
+    call(MFromChk, M, From),
     do_check_property_ctcheck(CTCheck, AssrErrorL),
     % Although we have duplicated logic, we don't call check_property_ctcheck/3
     % here because is too slow:
@@ -120,16 +118,16 @@ current_head_ctcheck(M, FromChk, head(Loc-PI)-AssrErrorL) :-
     AssrErrorL \= [],
     from_location(From, Loc).
 
-prop_ctcheck(M, FromChk, Trans) :-
-    findall(Pair, current_prop_ctcheck(M, FromChk, Pair), Pairs),
+prop_ctcheck(MFromChk, Trans) :-
+    findall(Pair, current_prop_ctcheck(MFromChk, Pair), Pairs),
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Groups),
     maplist([K-L, (error-(prop(G)-K))]
             >>group_pairs_by_key(L, G), Groups, Trans).
 
-current_prop_ctcheck(M, FromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
+current_prop_ctcheck(MFromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
     prop_asr(head, M:Head, From, Asr),
-    call(FromChk, From),
+    call(MFromChk, M, From),
     functor(Head, HF,HA),
     PI=M:HF/HA,
     ( member(Part, [comp, call, succ, glob]),
@@ -200,6 +198,10 @@ type_message_prop(Loc-PIL) -->
     Loc, ['In assertions of ~q:'-[PIC], nl].
 
 black_list(assertion_head(_, _, _, _, _, _, _), assertions).
+black_list(_, M) :- black_list_module(M).
+
+black_list_module(extend_args).
+
 % Issues in the assertion body will be reported when checking properties.
 black_list(M:Call) :- black_list(Call, M).
 
