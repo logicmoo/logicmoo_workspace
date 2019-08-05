@@ -88,18 +88,19 @@ check_assertions(Options1, Pairs) :-
                    trace_variables([non_fresh]),
                    on_trace(collect_violations)
                   ], Options),
-    option_fromchk(Options, _, MFromChk),
-    walk_code(Options),
+    option_module_files(Options, MFileD),
+    walk_code([module_files(MFileD)|Options]),
     findall(error-Issue,
             ( retract(violations_db(CPI, CTChecks, From)),
               from_location(From, Loc),
               Issue = body(Loc-CPI)-CTChecks
-            ; current_head_ctcheck(MFromChk, Issue)
+            ; current_head_ctcheck(MFileD, Issue)
             ), Pairs, Props),
-    prop_ctcheck(MFromChk, Props).
+    prop_ctcheck(MFileD, Props).
 
-current_head_ctcheck(MFromChk, head(Loc-PI)-AssrErrorL) :-
+current_head_ctcheck(MFileD, head(Loc-PI)-AssrErrorL) :-
     PI=M:F/A,
+    get_dict(M, MFileD, FileD),
     current_predicate(M:F/A),
     functor(H, F, A),
     MH = M:H,
@@ -109,25 +110,27 @@ current_head_ctcheck(MFromChk, head(Loc-PI)-AssrErrorL) :-
     generate_ctchecks(H, M, [], CTCheck),
     CTCheck \= _:true,
     clause(MH, _, Clause),
-    From = clause(Clause),
-    call(MFromChk, M, From),
+    clause_property(Clause, file(File)),
+    get_dict(File, FileD, _),
     do_check_property_ctcheck(CTCheck, AssrErrorL),
     % Although we have duplicated logic, we don't call check_property_ctcheck/3
     % here because is too slow:
     % check_property_ctcheck(H, M, CTChecks),
     AssrErrorL \= [],
-    from_location(From, Loc).
+    from_location(clause(Clause), Loc).
 
-prop_ctcheck(MFromChk, Trans) :-
-    findall(Pair, current_prop_ctcheck(MFromChk, Pair), Pairs),
+prop_ctcheck(MFileD, Trans) :-
+    findall(Pair, current_prop_ctcheck(MFileD, Pair), Pairs),
     sort(Pairs, Sorted),
     group_pairs_by_key(Sorted, Groups),
     maplist([K-L, (error-(prop(G)-K))]
             >>group_pairs_by_key(L, G), Groups, Trans).
 
-current_prop_ctcheck(MFromChk, (Checker-PLoc/Issues)-(Loc-PI)) :-
+current_prop_ctcheck(MFileD, (Checker-PLoc/Issues)-(Loc-PI)) :-
     prop_asr(head, M:Head, From, Asr),
-    call(MFromChk, M, From),
+    get_dict(M, MFileD, FileD),
+    from_to_file(From, File),
+    get_dict(File, FileD, _),
     functor(Head, HF,HA),
     PI=M:HF/HA,
     ( member(Part, [comp, call, succ, glob]),

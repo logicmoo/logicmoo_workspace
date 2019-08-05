@@ -95,37 +95,38 @@ ignore_dupcode(_,                               user,   declaration(dynamic)).
 ignore_dupcode(_,                               _,      declaration(dynamic(_, _, _))).
 
 checker:check(dupcode, Result, Options) :-
-    option_filechk(Options, _, MFileChk),
-    check_dupcode(MFileChk, Result).
+    option_module_files(Options, MFileD),
+    check_dupcode(MFileD, Result).
 
 :- meta_predicate
-    duptype_elem(+, 0, :, -, -).
+    duptype_elem(+, 0, +, -, -).
 
 %!  duptype_elem(+DupType, :Head, :FileChk, -DupId, -Elem) is multi
 %
 %   For a given Element of the language, returns a duplication key and an
 %   associated value
 %
-duptype_elem(name, M:H, MFileChk, F/A, M:F/A) :-
+duptype_elem(name, M:H, FileD, F/A, M:F/A) :-
     predicate_property(M:H, file(File)),
-    call(MFileChk, M, File),
+    get_dict(File, FileD, _),
     functor(H, F, A).
 % Note: we wrap the DupId with hash/1 to allow easy identification in saved
 % analysis outputs:
-duptype_elem(clause, MH, MFileChk, hash(DupId), M:F/A-Idx) :-
+duptype_elem(clause, MH, FileD, hash(DupId), M:F/A-Idx) :-
     strip_module(MH, M, H),
     \+ has_dupclauses(H, M),
     nth_clause(MH, Idx, Ref),
     clause(MH, MBody, Ref),
-    from_chk(MFileChk, M, clause(Ref)),
+    from_to_file(clause(Ref), File),
+    get_dict(File, FileD, _),
     functor(H, F, A),
     strip_module(MBody, _C, Body),
     copy_term_nat((H :- Body), Term),
     variant_sha1(Term, DupId).
-duptype_elem(predicate, MH, MFileChk, hash(DupId), M:F/A) :-
+duptype_elem(predicate, MH, FileD, hash(DupId), M:F/A) :-
     predicate_property(MH, file(File)),
+    get_dict(File, FileD, _),
     strip_module(MH, M, H),
-    call(MFileChk, M, File),
     findall((H :- B),
             ( clause(MH, MB),
               strip_module(MB, _, B)
@@ -134,10 +135,12 @@ duptype_elem(predicate, MH, MFileChk, hash(DupId), M:F/A) :-
     variant_sha1(Term, DupId),
     functor(H, F, A).
 
-duptype_elem_declaration(H, MFileChk, DupId, From-MTE) :-
+duptype_elem_declaration(MFileD, DupId, From-MTE) :-
     loc_declaration(H, M, T, From),
     \+ ignore_dupcode(H, M, declaration(T)),
-    from_chk(MFileChk, M, From),
+    get_dict(M, MFileD, FileD),
+    from_to_file(From, File),
+    get_dict(File, FileD, _),
     \+ memberchk(T, [goal, assertion(_,_)]),
     once(dtype_dupid_elem(T, T, From, H, M, DupId, Elem)),
     extend_args(M:T, [Elem], MTE).
@@ -187,19 +190,20 @@ has_dupclauses(H, M) :-
 element_head(predicate, M:F/A,   M:H) :- functor(H, F, A).
 element_head(clause,    M:F/A-_, M:H) :- functor(H, F, A).
 
-curr_duptype_elem(MFileChk, DupType, DupId, Elem) :-
+curr_duptype_elem(MFileD, DupType, DupId, Elem) :-
+    get_dict(M, MFileD, FileD),
     current_predicate(M:F/A),
     functor(H, F, A),
     \+ predicate_property(M:H, imported_from(_)),
     duptype(DupType),
     \+ ignore_dupcode(H, M, DupType),
-    duptype_elem(DupType, M:H, MFileChk, DupId, Elem).
-curr_duptype_elem(MFileChk, declaration, DupId, Elem) :-
-    duptype_elem_declaration(_, MFileChk, DupId, Elem).
+    duptype_elem(DupType, M:H, FileD, DupId, Elem).
+curr_duptype_elem(MFileD, declaration, DupId, Elem) :-
+    duptype_elem_declaration(MFileD, DupId, Elem).
 
-check_dupcode(MFileChk, Result) :-
+check_dupcode(MFileD, Result) :-
     findall((DupType-DupId)-Elem,
-            curr_duptype_elem(MFileChk, DupType, DupId, Elem), PU),
+            curr_duptype_elem(MFileD, DupType, DupId, Elem), PU),
     sort(PU, PL),
     group_pairs_by_key(PL, GL),
     partition(\ (_-[_])^true, GL, _, GD), % Consider duplicates

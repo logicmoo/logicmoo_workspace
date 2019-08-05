@@ -42,6 +42,7 @@
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
 :- use_module(library(referenced_by)).
+:- use_module(library(from_utils)).
 
 :- multifile
     prolog:message//1,
@@ -55,15 +56,15 @@ mutually_exclusive_predicate(MH) :-
 mutually_exclusive_predicate(check(_, _, _), checker).
 mutually_exclusive_predicate_key(check(K, _, _), checker, K).
 
-checker:check(non_mutually_exclusive, Result, Options1) :-
-    option_fromchk(Options1, Options2, MFromChk),
-    select_option(predicate(Ref), Options2, _, Ref),
-    findall(Pairs, check_non_mutually_exclusive(MFromChk, Ref, Pairs), Result).
+checker:check(non_mutually_exclusive, Result, Options) :-
+    option_module_files(Options, MFileD),
+    option(predicate(Ref), Options, Ref),
+    findall(Pairs, check_non_mutually_exclusive(MFileD, Ref, Pairs), Result).
 
-check_non_mutually_exclusive(MFromChk, Ref, warning-(Ref-LocIdx)) :-
+check_non_mutually_exclusive(MFileD, Ref, warning-(Ref-LocIdx)) :-
     normalize_head(Ref, MH),
     mutually_exclusive_predicate(MH),
-    collect_non_mutually_exclusive(MFromChk, MH, LocIdxL),
+    collect_non_mutually_exclusive(MFileD, MH, LocIdxL),
     member(LocIdx, LocIdxL).
 
 cleanup_redundant_groups([], _, []).
@@ -82,15 +83,17 @@ cleanup_redundant_groups([Key-Clause-ClauseNME|ClauseKeyU], ClauseKeyI, ClauseKe
     ),
     cleanup_redundant_groups(ClauseKeyU, ClauseKeyI2, ClauseKeyR2).
 
-:- meta_predicate collect_non_mutually_exclusive(1, 0, -).
+:- meta_predicate collect_non_mutually_exclusive(+, 0, -).
 
-collect_non_mutually_exclusive(MFromChk, MH, LocPL) :-
+collect_non_mutually_exclusive(MFileD, MH, LocPL) :-
     strip_module(MH, M, H),
+    get_dict(M, MFileD, FileD),
     findall(I-(Key-Clause),
             ( clause(MH, _, Clause),
               nth_clause(MH, I, Clause),
               From = clause(Clause),
-              call(MFromChk, M, From),
+              from_to_file(From, File),
+              get_dict(File, FileD, _),
               ( mutually_exclusive_predicate_key(H, M, Key)
               ->true
               ; Key = MH

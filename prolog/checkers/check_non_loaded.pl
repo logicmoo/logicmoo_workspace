@@ -52,12 +52,12 @@ checker_check_non_loaded(Results, Options1) :-
     ; working_directory(Dir, Dir),
       Options = [dir(Dir)|Options]
     ),
-    option_filechk(Options, _, MFileChk),
-    check_non_loaded(MFileChk, Results).
+    check_non_loaded(Options, Results).
 
-check_non_loaded(MFileChk, Pairs) :-
+check_non_loaded(Options, Pairs) :-
+    option_files(Options, FileD),
     findall(Dir-Name,
-            ( call(MFileChk, _, File),
+            ( get_dict(File, FileD, _),
               directory_file_path(Dir, Name, File)
             ), DirNameU),
     sort(DirNameU, DirName),

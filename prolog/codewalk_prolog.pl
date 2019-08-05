@@ -38,6 +38,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(extra_location)).
 :- use_module(library(option_utils)).
+:- use_module(library(from_utils)).
 
 :- thread_local
     issues/1.
@@ -53,23 +54,24 @@ extra_walk_module_body(Options) :-
     ).
 
 codewalk:walk_code(prolog, Options1) :-
-    extra_wcsetup(Options1, Options2, MFromChk),
+    extra_wcsetup(Options1, Options2, MFileD),
     foldl(select_option_default,
           [source(S)-false,
            walkextras(Extras)-[declaration, asrparts([body])],
            on_trace(ETracer)-ETracer
-          ],
-          Options2, Options3),
-    Options = [on_trace(codewalk_prolog:pcw_trace(1, ETracer, MFromChk))|Options3],
+          ], Options2, Options3),
+    Options = [on_trace(codewalk_prolog:pcw_trace(1, ETracer, MFileD))|Options3],
     extra_walk_module_body(Options),
-    optimized_walk_code(S, Stage, codewalk_prolog:pcw_trace(Stage, ETracer, MFromChk), Options3),
+    optimized_walk_code(S, Stage, codewalk_prolog:pcw_trace(Stage, ETracer, MFileD), Options3),
     prolog_codewalk:make_walk_option(Options, OTerm),
-    maplist(walk_extras_p(OTerm, MFromChk), Extras).
+    maplist(walk_extras_p(OTerm, MFileD), Extras).
 
 :- public pcw_trace/6.
-:- meta_predicate pcw_trace(+,3,1,+,+,+).
-pcw_trace(1, ETracer, MFromChk, M:Goal, Caller, From) :-
-    call(MFromChk, M, From),
+:- meta_predicate pcw_trace(+,3,+,+,+,+).
+pcw_trace(1, ETracer, MFileD, M:Goal, Caller, From) :-
+    get_dict(M, MFileD, FileD),
+    from_to_file(From, File),
+    get_dict(File, FileD, _),
     '$set_source_module'(M),
     call(ETracer, M:Goal, Caller, From),
     ( From = clause(CRef)
@@ -79,10 +81,10 @@ pcw_trace(1, ETracer, MFromChk, M:Goal, Caller, From) :-
 pcw_trace(2, ETracer, _, Goal, Caller, From) :-
     call(ETracer, Goal, Caller, From).
 
-walk_extras_p(OTerm, MFromChk, Extra) :- walk_extras_(Extra, OTerm, MFromChk).
+walk_extras_p(OTerm, MFileD, Extra) :- walk_extras_(Extra, OTerm, MFileD).
 
-walk_extras_(declaration, OTerm, MFromChk) :- walk_from_loc_declaration(OTerm, MFromChk).
-walk_extras_(asrparts(L), OTerm, MFromChk) :- walk_from_assertion(OTerm, MFromChk, L).
+walk_extras_(declaration, OTerm, MFileD) :- walk_from_loc_declaration(OTerm, MFileD).
+walk_extras_(asrparts(L), OTerm, MFileD) :- walk_from_assertion(OTerm, MFileD, L).
 
 current_clause_module_body(CM, Ref) :-
     MH = M:_,
@@ -110,9 +112,9 @@ optimized_walk_code_true(2, Tracer, Options) :-
     ; prolog_walk_code([clauses(Clauses), on_trace(Tracer)|Options])
     ).
 
-extra_wcsetup(Options1, Options, MFromChk) :-
-    option_fromchk(Options1, Options2, MFromChk),
-    merge_options(Options2,
+extra_wcsetup(Options1, Options, MFileD) :-
+    option_module_files(Options, MFileD),
+    merge_options(Options1,
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
@@ -120,10 +122,12 @@ extra_wcsetup(Options1, Options, MFromChk) :-
                    module_class([user, system, library])
                   ], Options).
 
-walk_from_loc_declaration(OTerm, MFromChk) :-
+walk_from_loc_declaration(OTerm, MFileD) :-
     forall(( prolog_codewalk:walk_option_caller(OTerm, '<declaration>'),
              clause(loc_declaration(Head, M, goal, From), _, Ref),
-             call(MFromChk, _, From)
+             get_dict(M, MFileD, FileD),
+             from_to_file(From, File),
+             get_dict(File, FileD, _)
            ),
            walk_from_goal(Head, M, Ref, OTerm)).
 
@@ -133,10 +137,12 @@ walk_from_goal(Head, M, Ref, OTerm) :-
                       walk_called_by_body(no_positions, Head, M, OTerm)
                     ).
 
-walk_from_assertion(OTerm, MFromChk, AsrPartL) :-
+walk_from_assertion(OTerm, MFileD, AsrPartL) :-
+    option_files([module_files(MFileD)], FileD),
     forall(( AHead = assertions:asr_head_prop(Asr, HM, Head, _, _, _, From),
              clause(AHead, _, Ref),
-             call(MFromChk, _, From),
+             from_to_file(From, File),
+             get_dict(File, FileD, _),
              predicate_property(HM:Head, implementation_module(M)),
              prolog_codewalk:walk_option_caller(OTerm, '<assertion>'(M:Head)),
              member(AsrPart, AsrPartL),

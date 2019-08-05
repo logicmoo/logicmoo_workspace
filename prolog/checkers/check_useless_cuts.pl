@@ -80,8 +80,8 @@ checker:check(useless_cuts, Result, Options) :-
     check_useless_cuts(Options, Result).
 
 check_useless_cuts(Options, Pairs) :-
-    option_fromchk(Options, _, MFromChk),
-    cuts_check(MFromChk, Pairs),
+    option_module_files(Options, MFileD),
+    cuts_check(MFileD, Pairs),
     cleanup_useless_cuts.
 
 cleanup_useless_cuts :-
@@ -90,17 +90,19 @@ cleanup_useless_cuts :-
     retractall(det_clause_db(_, _)),
     retractall(inferred_det_db(_, _, _)).
 
-cuts_check(MFromChk, Pairs) :-
-    forall(current_det_check(MFromChk),
+cuts_check(MFileD, Pairs) :-
+    forall(current_det_check(MFileD),
            true),
     retractall(cut_info(_, _, needed)),
     findall(warning-Issue,
-            collect_issues(Issue, MFromChk), Pairs).
+            collect_issues(Issue, MFileD), Pairs).
 
-collect_issues(useless_cut(Loc, M:F/A-I)-CutPos, MFromChk) :-
+collect_issues(useless_cut(Loc, M:F/A-I)-CutPos, MFileD) :-
     retract(cut_info(Ref, RCutPos, unused)),
-    call(MFromChk, M, clause(Ref)), % Avoid warnings from out there
     nth_clause(M:H, I, Ref),
+    get_dict(M, MFileD, FileD),
+    clause_property(Ref, file(File)),
+    get_dict(File, FileD, _), % Avoid warnings from out there
     functor(H, F, A),
     reverse(RCutPos, CutPos), % reverse is more human-readable
     from_location(clause(Ref), Loc).
@@ -108,9 +110,10 @@ collect_issues(useless_cut(Loc, M:F/A-I)-CutPos, MFromChk) :-
 % 1. A cut is useless, if is located at the last clause, and the literals above
 % are semidet
 
-current_det_check(MFromChk) :-
+current_det_check(MFileD) :-
     order_by([asc(M:F/A)],
-             ( current_predicate(M:F/A),
+             ( get_dict(M, MFileD, FileD),
+               current_predicate(M:F/A),
                functor(H, F, A),
                MH = M:H,
                % Start analyzing exported predicates, ancillary predicates will
@@ -120,7 +123,8 @@ current_det_check(MFromChk) :-
                predicate_property(MH, exported),
                \+ predicate_property(MH, imported_from(_)),
                \+ \+ ( catch(clause(MH, _, Ref), _, fail),
-                       call(MFromChk, M, clause(Ref))
+                       clause_property(Ref, file(File)),
+                       get_dict(File, FileD, _)
                      )
              )),
     check_det(H, M, _).

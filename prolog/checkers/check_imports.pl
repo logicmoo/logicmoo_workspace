@@ -76,11 +76,12 @@ checker:check(imports, Result, Options) :-
     check_imports(Options, Result).
 
 check_imports(Options, Pairs) :-
+    option_module_files(Options, MFileD),
     walk_code([source(false),
+               module_files(MFileD),
                on_trace(collect_imports_wc)|Options]),
-    option_fromchk(Options, _, MFromChk),
-    collect_imports(MFromChk, Pairs, Tail),
-    collect_usemods(MFromChk, Tail, []),
+    collect_imports(MFileD, Pairs, Tail),
+    collect_usemods(MFileD, Tail, []),
     cleanup_imports.
 
 :- public collect_imports_wc/3.
@@ -98,15 +99,17 @@ caller_module(M:_,                _, M) :- !.
 caller_module('<assertion>'(M:_), _, M) :- !.
 caller_module(_, clause(Ptr), M) :- clause_property(Ptr, module(M)).
 
-collect_imports(MFromChk, Pairs, Tail) :-
+collect_imports(MFileD, Pairs, Tail) :-
     findall(warning-(c(use_module, import, U)-(Loc/(F/A))),
-            current_unused_import(MFromChk, U, Loc, F, A),
+            current_unused_import(MFileD, U, Loc, F, A),
             Pairs, Tail).
 
-current_unused_import(MFromChk, U, Loc, F, A) :-
+current_unused_import(MFileD, U, Loc, F, A) :-
+    get_dict(M, MFileD, FileD),
     clause(loc_declaration(Head, M, import(U), From), _, CRef),
-    call(MFromChk, M, From),
     M \= user,
+    from_to_file(From, File),
+    get_dict(File, FileD, _),
     \+ memberchk(Head, [term_expansion(_,_),
                         term_expansion(_,_,_,_),
                         goal_expansion(_,_),
@@ -143,24 +146,25 @@ ignore_import(M, IM) :-
     functor(H, Name, A),
     predicate_property(M:H, implementation_module(IM)).
                        
-collect_usemods(MFromChk, Pairs, Tail) :-
+collect_usemods(MFileD, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
-            ( current_used_use_module(MFromChk, U, M, From),
+            ( current_used_use_module(MFileD, U, M, From),
               from_location(From, Loc)
             ), Pairs, Tail).
 
-current_used_use_module(MFromChk, UE, M, From) :-
+current_used_use_module(MFileD, UE, M, From) :-
+    get_dict(M, MFileD, FileD),
+    M \= user,
+    module_property(M, class(Class)),
+    memberchk(Class, [user]),
     ( UE = use_module(U),
       loc_declaration(U, M, use_module, From),
       ExL = []
     ; UE = use_module(U, except(ExL)),
       loc_declaration(UE, M, use_module_2, From)
     ),
-    call(MFromChk, M, From),
-    M \= user,
-    module_property(M, class(Class)),
-    memberchk(Class, [user]),
     from_to_file(From, File),
+    get_dict(File, FileD, _),
     \+ findall(I, source_file_property(File, included_in(I, _)),
                [_, _|_]),
     absolute_file_name(U, UFile, [file_type(prolog), access(exist),

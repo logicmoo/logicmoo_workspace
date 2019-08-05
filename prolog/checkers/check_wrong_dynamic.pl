@@ -104,17 +104,17 @@ check_wrong_dynamic(Options1, Pairs) :-
                    module_class([user, system, library]),
                    on_trace(collect_wrong_dynamic(M))],
                   Options),
-    walk_code(Options),
-    option_fromchk(Options, _, MFromChk),
-    collect_result(MFromChk, Pairs),
+    option_module_files(Options, MFileD),
+    walk_code([module_files(MFileD)|Options]),
+    collect_result(MFileD, Pairs),
     cleanup_dynamic_db.
 
-collect_result(MFromChk, Pairs) :-
+collect_result(MFileD, Pairs) :-
     findall(Type-(modified_nondynamic(DType)-((Loc/PI)-(MLoc/MPI))),
             ( current_modified_nondynamic(Type, DType, Loc, PI, From, MPI),
               from_location(From, MLoc)), Pairs, Pairs1),
     findall(warning-(unmodified_dynamic-(Loc-PI)),
-            current_unmodified_dynamic(MFromChk, Loc, PI), Pairs1, Pairs2),
+            current_unmodified_dynamic(MFileD, Loc, PI), Pairs1, Pairs2),
     findall(warning-(var_as_dynamic-(PI-(Loc/CI))),
             ( retract(var_dynamic_db(PI, From)),
               check:predicate_indicator(From, CI, []),
@@ -140,9 +140,10 @@ current_modified_nondynamic(Type, DType, Loc, PI, MFrom, MPI) :-
     ).
 
 :- meta_predicate current_unmodified_dynamic(?, 2, -, -).
-current_unmodified_dynamic(MFromChk, Loc, PI) :-
+current_unmodified_dynamic(MFileD, Loc, PI) :-
     Ref = M:H,
     PI = M:F/A,
+    get_dict(M, MFileD, FileD),
     current_defined_predicate(Ref),
     \+ hide_wrong_dynamic(H, M),
     checkable_predicate(Ref),
@@ -151,7 +152,8 @@ current_unmodified_dynamic(MFromChk, Loc, PI) :-
     once(( property_from(PI, dynamic, From)
          ; predicate_from(Ref, From)
          )),
-    call(MFromChk, M, From),
+    from_to_file(From, File),
+    get_dict(File, FileD, _),
     %% ignore predicates with the following properties:
     \+ predicate_property(Ref, multifile),
     % \+ predicate_property(Ref, exported),

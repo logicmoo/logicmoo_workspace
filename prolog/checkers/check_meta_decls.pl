@@ -39,6 +39,7 @@
 :- use_module(library(is_entry_point)).
 :- use_module(library(location_utils)).
 :- use_module(library(option_utils)).
+:- use_module(library(from_utils)).
 
 :- multifile
         prolog:message//1.
@@ -78,17 +79,19 @@ hide_missing_meta_pred(generated_predicate(_), prolog).
 hide_missing_meta_pred(rename_predicate(_, _), prolog).
 hide_missing_meta_pred(prolog_exception_hook(_, _, _, _), user).
 
-checker:check(meta_decls, Pairs, Options1) :-
-    option_fromchk(Options1, _, MFromChk),
+checker:check(meta_decls, Pairs, Options) :-
+    option_module_files(Options, MFileD),
     findall(warning-((Loc/M)-Spec),
             ( prolog_metainference:inferred_meta_pred(Head, M, Spec),
+              get_dict(M, MFileD, FileD),
               \+ predicate_property(M:Head, meta_predicate(_)),
               %% Only exported predicates would require qualification
               %% of meta-arguments -- EMM after JW talk
               is_entry_point(Spec, M),
               \+ hide_missing_meta_pred(Head, M),
               once(( property_from(M:Head, _, From),
-                     call(MFromChk, M, From)
+                     from_to_file(From, File),
+                     get_dict(File, FileD, _)
                    )), % once: only first occurrence
               from_location(From, Loc)
             ), Pairs).

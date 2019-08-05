@@ -152,8 +152,7 @@ do_source_walk_code(Options1) :-
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
            variable_names(VNL)-VNL],
-          Options1, Options2),
-    option_filechk(Options2, Options, MFileChk),
+          Options1, Options),
     freeze(VNL, b_setval('$variable_names', VNL)),
     with_context_values(
         setup_call_cleanup(
@@ -161,15 +160,18 @@ do_source_walk_code(Options1) :-
               freeze(M, '$set_source_module'(_, M)),
               prepare(To, Undefined, Ref)
             ),
-            walk_source(M, File, MFileChk, [variable_names(VNL)|Options]),
+            walk_source(M, File, [variable_names(VNL)|Options]),
             ( '$set_source_module'(_, OldM),
               cleanup(Ref)
             )),
         [file, on_trace],
         [File, OnTrace]).
 
-walk_source(M, File, MFileChk, Options) :-
-    forall(call(MFileChk, M, File),
+walk_source(M, File, Options) :-
+    option_module_files(Options, MFileD),
+    forall(( get_dict(M, MFileD, FileD),
+             get_dict(File, FileD, _)
+           ),
            setup_call_cleanup(
                prolog_open_source(File, In),
                fetch_term(In, Options),
