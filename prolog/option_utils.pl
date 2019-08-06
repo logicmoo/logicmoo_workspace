@@ -34,6 +34,7 @@
 
 :- module(option_utils, [select_option_default/3,
                          option_module_files/2,
+                         option_module_files/3,
                          option_files/2,
                          option_dirs/2,
                          source_extension/2,
@@ -125,12 +126,12 @@ src_files([_|T], Dir, Options) -->
 special(.).
 special(..).
 
-option_files(File, EL, Loaded, Options1, Options2) :-
-    foldl(select_option_default,
-	  [files(Files)-Files,
-	   file( AFile)-AFile
-	  ], Options1, Options2),
-    merge_options(Options2, [file_type(prolog)], Options),
+process_files(File, OFile, Options1) :-
+    EL = OFile.extensions,
+    Loaded = OFile.if,
+    Files = OFile.files,
+    AFile = OFile.file,
+    merge_options(Options1, [file_type(prolog)], Options),
     ( ( nonvar(Files)
       ->( nonvar(AFile)
         ->flatten([AFile|Files], AliasL)
@@ -145,26 +146,23 @@ option_files(File, EL, Loaded, Options1, Options2) :-
     ; AFile = File
     ).
 
-option_exclude_files(EL, Loaded, FileL, Options1, Options2) :-
-    foldl(select_option_default,
-	  [exclude_files(ExFileL)-[]
-	  ], Options1, Options2),
-    merge_options(Options2, [file_type(prolog)], Options),
-    alias_files(ExFileL, EL, Loaded, FileL, Options).
+process_exclude_files(ExFileL, OFile, Options1) :-
+    merge_options(Options1, [file_type(prolog)], Options),
+    EL = OFile.modules,
+    Loaded = OFile.if,
+    AExFileL = OFile.exclude_files,
+    alias_files(AExFileL, EL, Loaded, ExFileL, Options).
 
-option_exclude_fdirs(ExDirL, Options1, Options2) :-
-    foldl(select_option_default,
-	  [exclude_dirs(ExADirL)-[]
-	  ], Options1, Options2),
-    merge_options([file_type(directory)], Options2, Options),
+process_exclude_fdirs(ExDirL, OFile, Options1) :-
+    ExADirL = OFile.exclude_dirs,
+    merge_options([file_type(directory)], Options1, Options),
     alias_files(ExADirL, -, true, ExDirL, Options).
 
-option_fdirs(File, Loaded, Options1, Options2) :-
-    foldl(select_option_default,
-	 [dirs(Dirs)-Dirs,
-	  dir( ADir)-ADir
-	 ], Options1, Options2),
-    merge_options([file_type(directory)], Options2, Options),
+process_fdirs(File, OFile, Options1) :-
+    Loaded = OFile.if,
+    Dirs = OFile.dirs,
+    ADir = OFile.dir,
+    merge_options([file_type(directory)], Options1, Options),
     ( ( nonvar(Dirs)
       ->( nonvar(ADir)
         ->flatten([ADir|Dirs], ADirL)
@@ -176,7 +174,7 @@ option_fdirs(File, Loaded, Options1, Options2) :-
       )
     ->alias_files(ADirL, -, true, DirL, Options),
       ( Loaded = true
-      ->Params = source(Options2)
+      ->Params = source(Options1)
       ; findall(F, module_file_(_, F), LFileU),
         sort(LFileU, LFileL),
         Params = loaded(LFileL)
@@ -231,8 +229,8 @@ check_pred(Head, File) :-
     implemented_in(Head, From, _),
     from_to_file(From, File).
 
-option_preds(File, Options1, Options) :-
-    select_option(preds(HeadL), Options1, Options, HeadL),
+process_preds(File, OFile) :-
+    HeadL = OFile.preds,
     ( is_list(HeadL)
     ->member(Head, HeadL),
       check_pred(Head, File)
@@ -241,51 +239,34 @@ option_preds(File, Options1, Options) :-
     ; true
     ).
 
-option_file(M, File) -->
-    foldl(select_option_default,
-          [module_files(MFileD)-(-)
-          ]),
-    {MFileD \= (-)},
-    !,
-    { get_dict(M, MFileD, FileD),
-      get_dict(File, FileD, _)
-    }.
-option_file(M, File) -->
-    foldl(select_option_default,
-          [if(Loaded)-loaded,
-           module_property(Prop)-[],
-           module(M)-M,
-           modules(ML)-[],
-           extensions(EL)-(-)
-          ]),
-    option_exclude_files(EL, Loaded, ExFileL),
-    option_exclude_fdirs(ExDirL),
-    option_fdirs(File, Loaded),
-    option_preds(File),
-    option_files(File, EL, Loaded),
-    { \+ member(File, ExFileL),
-      \+ ( member(ExDir, ExDirL),
-           directory_file_path(ExDir, _, File)
-         ),
-      ( ML \= []
-      ->member(M, ML)
-      ; true
-      ),
-      ( nonvar(M)
-      ->module_file_(M, File)
-      ; Loaded = true
-      ->ignore(( module_file_(M, File)
-               ; M = (-)
-               ))
-      ; var(File)
-      ->module_file_(M, File)
-      ; once(module_file_(M, File))
-      ),
-      ( Prop \= []
-      ->module_property(M, Prop)
-      ; true
-      )
-    }.
+option_file(M, File, OFile, Options) :-
+    process_exclude_files(ExFileL, OFile, Options),
+    process_exclude_fdirs(ExDirL,  OFile, Options),
+    process_fdirs(File, OFile, Options),
+    process_preds(File, OFile),
+    process_files(File, OFile, Options),
+    \+ member(File, ExFileL),
+    \+ ( member(ExDir, ExDirL),
+         directory_file_path(ExDir, _, File)
+       ),
+    ( ML \= []
+    ->member(M, ML)
+    ; true
+    ),
+    ( nonvar(M)
+    ->module_file_(M, File)
+    ; true = OFile.if
+    ->ignore(( module_file_(M, File)
+             ; M = (-)
+             ))
+    ; var(File)
+    ->module_file_(M, File)
+    ; once(module_file_(M, File))
+    ),
+    ( Prop \= []
+    ->module_property(M, Prop)
+    ; true
+    ).
 
 option_dir(Dir) -->
     foldl(select_option_default,
@@ -300,24 +281,78 @@ to_nv(Name, Name=_).
 pair_nv(M-FileL, M=FileD) :-
     list_dict(FileL, file, FileD).
 
-option_module_files(Options, MFileD) :-
-    option(module_files(MFileD), Options),
-    !.
-option_module_files(Options, MFileD) :-
-    findall(M-File, option_file(M, File, Options, _), MFileU),
+collect_elem(file,  _, File, File).
+collect_elem(mfile, M, File, M-File).
+
+collect_dict(file, FileL, FileD) :-
+    list_dict(FileL, file, FileD).
+collect_dict(mfile, MFileU, MFileD) :-
     keysort(MFileU, MFileS),
     group_pairs_by_key(MFileS, MFileL),
     maplist(pair_nv, MFileL, MFileNV),
     dict_create(MFileD, mfile, MFileNV).
 
+project_dict(file,  M, MFileD, FileD) :-
+    findall(File,
+              ( get_dict(M, MFileD, FileD),
+                get_dict(File, FileD, _)
+              ), FileL),
+    list_dict(FileL, file, FileD).
+project_dict(mfile, _, MFileD, MFileD).
+
+option_collect(Name, Dict, Options1, Options) :-
+    foldl(select_option_default,
+          [module_files(MFileD)-(-),
+           if(Loaded)-loaded,
+           module_property(Prop)-[],
+           module(M)-M,
+           modules(ML)-[],
+           extensions(EL)-(-),
+           exclude_files(AExFileL)-[],
+           exclude_dirs(ExADirL)-[],
+           dirs(Dirs)-Dirs,
+	   dir( ADir)-ADir,
+           preds(HeadL)-HeadL,
+           files(Files)-Files,
+	   file( AFile)-AFile
+          ], Options1, Options),
+    ( MFileD == (-)
+    ->OFile = ofile{if:Loaded,
+                    module_property:Prop,
+                    modules:ML,
+                    extensions:EL,
+                    exclude_files:AExFileL,
+                    exclude_dirs:ExADirL,
+                    dirs:Dirs,
+                    dir:ADir,
+                    preds:HeadL,
+                    files:Files,
+                    file:AFile},
+      findall(Elem,
+              ( option_file(M, File, OFile, Options),
+                collect_elem(Name, M, File, Elem)
+              ), ElemL),
+      collect_dict(Name, ElemL, Dict)
+    ; project_dict(Name, M, MFileD, Dict)
+    ).
+
+option_module_files(Options, MFileD) :-
+    option_module_files(MFileD, Options, _).
+
+
+option_module_files(MFileD, Options1, Options) :-
+    option_collect(mfile, MFileD, Options1, Options).
+
+option_files(Options, FileD) :-
+    option_files(FileD, Options, _).
+
+option_files(FileD, Options1, Options) :-
+    option_collect(file, FileD, Options1, Options).
+
 list_dict(ElemU, Key, ElemD) :-
     sort(ElemU, ElemL),
     maplist(to_nv, ElemL, ElemKVL),
     dict_create(ElemD, Key, ElemKVL).
-
-option_files(Options, FileD) :-
-    findall(File, option_file(_, File, Options, _), FileL),
-    list_dict(FileL, file, FileD).
 
 option_dirs(Options, DirD) :-
     findall(Dir, option_dir(Dir, Options, _), DirU),

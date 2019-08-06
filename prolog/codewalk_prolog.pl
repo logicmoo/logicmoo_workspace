@@ -113,8 +113,8 @@ optimized_walk_code_true(2, Tracer, Options) :-
     ).
 
 extra_wcsetup(Options1, Options, MFileD) :-
-    option_module_files(Options, MFileD),
-    merge_options(Options1,
+    option_module_files(MFileD, Options1, Options2),
+    merge_options(Options2,
                   [infer_meta_predicates(false),
                    autoload(false),
                    evaluate(false),
@@ -140,7 +140,9 @@ walk_from_goal(Head, M, Ref, OTerm) :-
 walk_from_assertion(OTerm, MFileD, AsrPartL) :-
     option_files([module_files(MFileD)], FileD),
     forall(( AHead = assertions:asr_head_prop(Asr, HM, Head, _, _, _, From),
-             clause(AHead, _, Ref),
+             clause(AHead, Body, Ref),
+             module_property(Ref, module(M)),
+             call(M:Body),
              from_to_file(From, File),
              get_dict(File, FileD, _),
              predicate_property(HM:Head, implementation_module(M)),
