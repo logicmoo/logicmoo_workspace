@@ -148,7 +148,7 @@ process_files(File, OFile, Options1) :-
 
 process_exclude_files(ExFileL, OFile, Options1) :-
     merge_options(Options1, [file_type(prolog)], Options),
-    EL = OFile.modules,
+    EL = OFile.extensions,
     Loaded = OFile.if,
     AExFileL = OFile.exclude_files,
     alias_files(AExFileL, EL, Loaded, ExFileL, Options).
