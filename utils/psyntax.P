@@ -283,6 +283,7 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	nonvar(IStr), nonvar(OStr),
 	repeat,
 	catch(my_file_read(IStr,Term_,Vars_),Ex,writeln(ex-Ex)), 
+	nonvar(Term_),
 	term_includer(Term_,Vars_,[],Term,Vars), % inject terms from included files
 	closetail(Vars),
 	( Term==end_of_file -> true
