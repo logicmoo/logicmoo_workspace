@@ -364,6 +364,21 @@ Fluents can also be generalised via meta variables, wrapped in the holds(Fluent,
 superFluent(F) at T if holds(F,T), not system_fluent(F).
 ```
 
+## Meta predicates ##
+
+Similarly to ```clause(Head,Body)``` in Prolog, LPS exposes the current program via the following (timeless) meta predicates:
+
+	reactive_rule(Antecedent,Consequent).
+	l_events(Head,Body).  % composite events
+	l_int(Head,Body). % intensional fluents
+	initiated(Event,Fluent,Conditions). 
+	terminated(Event,Fluent,Conditions).
+	updated(Event,Fluent,OldSubTerm-NewSubTerm,Conditions).
+	d_pre(PreConditions).
+	fluents(F). events(E). actions(A). % declarations
+
+**Note** that in the present implementation the above predicates will cause an error if the program does not contain its corresponding component.
+
 # Editing Actions #
 
 For convenience the following action verbs are available, to directly "edit" the designated fluents without the need to resort to an additional action definition:
