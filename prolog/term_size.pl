@@ -43,7 +43,7 @@ term_size(Term) -->
     {atomic(Term)}, !.
 term_size(Term) -->
     {compound(Term)},
-    {functor(Term, _, N)},
+    {compound_name_arity(Term, _, N)},
     inc(N),
     term_size_arg(1, Term).
 
