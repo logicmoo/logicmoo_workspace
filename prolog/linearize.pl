@@ -32,38 +32,50 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(mklinear, [mklinear/3]).
+:- module(linearize, [linearize/5]).
 
-mklinear(Term, Linear, BindingL) :-
-    term_variables(Term, VarL),
-    exclude(singleton(Term), VarL, VarM),
-    mklinear(Term, Linear, VarM, BindingL, []).
+linearize(term, Term, Linear) --> linearize(term_multi_vars, var, Term, Linear).
+linearize(atom, Term, LnAtom) --> linearize(term_atomics, atomic, Term, LnAtom).
 
-singleton(T, V) :-
-    occurrences_of_var(V, T, 1).
+term_multi_vars(Term, SubsL) :-
+    term_variables(Term, Vars),
+    exclude(singleton(Term), Vars, SubsL).
 
-mklinear(Term, Linear, VarL) -->
+linearize(GetSubTerms, IsSubTerm, Term, Linear) -->
+    {call(GetSubTerms, Term, SubsL)},
+    mklinear(Term, IsSubTerm, Linear, SubsL).
+
+term_atomics(Term, Atomics) :-
+    findall(Atomic,
+            ( sub_term(Atomic, Term),
+              atomic(Atomic),
+              Atomic \= [] % Avoid [] since this will cause problems
+            ), Atomics).
+
+singleton(T, S) :- occurrences_of_var(S, T, 1).
+
+mklinear(Term, IsSubTerm, Subs, SubsL) -->
     {compound(Term)},
     !,
-    { functor(Term, F, A),
-      functor(Linear, F, A)
+    { compound_name_arity(Term, F, A),
+      compound_name_arity(Subs, F, A)
     },
-    mklinear(1, Term, Linear, VarL).
-mklinear(Term, Var, VarL) -->
-    ( { var(Term),
-        member(Var1, VarL),
+    mklinear(1, Term, IsSubTerm, Subs, SubsL).
+mklinear(Term, IsSubTerm, Subs, SubsL) -->
+    ( { call(IsSubTerm, Term),
+        member(Var1, SubsL),
         Term==Var1
       }
-    ->[Var=Term]
-    ; {Var=Term}
+    ->[Subs=Term]
+    ; {Subs=Term}
     ).
 
-mklinear(N, Term, Linear, VarL) -->
+mklinear(N, Term, IsSubTerm, Subs, SubsL) -->
     { arg(N, Term, Arg),
       !,
-      arg(N, Linear, LArg),
+      arg(N, Subs, LArg),
       succ(N, N1)
     },
-    mklinear(Arg, LArg, VarL),
-    mklinear(N1, Term, Linear, VarL).
-mklinear(_, _, _, _) --> [].
+    mklinear(Arg, IsSubTerm, LArg, SubsL),
+    mklinear(N1, Term, IsSubTerm, Subs, SubsL).
+mklinear(_, _, _, _, _) --> [].
