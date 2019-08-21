@@ -461,6 +461,12 @@ hide_unused(Call, _) :-
 hide_unused(Call, _) :-
     current_predicate(apply_macros:maplist_expansion/1),
     apply_macros:maplist_expansion(Call).
+hide_unused(Call, M) :-
+    functor(Call, Func, Arity),
+    member(Prefix, [assert_, asserta_, retract_, retractall_]),
+    atom_concat(Prefix, Name, Func),
+    functor(Generic, Name, Arity),
+    persistency:persistent(M, Generic, _).
 
 hide_unused_from(M:H, _) :- hide_unused(H, M).
 

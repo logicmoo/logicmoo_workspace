@@ -47,6 +47,7 @@
 :- use_module(library(plprops)).
 :- use_module(library(extend_args)).
 :- use_module(library(static_strip_module)).
+:- use_module(library(persistency), []).
 
 :- create_prolog_flag(check_database_preds, false, [type(boolean)]).
 
@@ -120,6 +121,16 @@ database_def_fact(asserta(A),                system,     F) :- clause_head(A, F)
 database_def_fact(asserta(A, _),             system,     F) :- clause_head(A, F).
 database_def_fact(assertz(A),                system,     F) :- clause_head(A, F).
 database_def_fact(assertz(A, _),             system,     F) :- clause_head(A, F).
+database_def_fact(update_fact_from(A, From), from_utils, F) :-
+    nonvar(A),
+    extend_args(A, [From], H),
+    clause_head(H, F).
+database_def_fact(PAssert, M, Fact) :-
+    persistency:persistent(M, Fact, _),
+    functor(Fact, Name, Arity),
+    member(Prefix, [assert_, asserta_]),
+    atom_concat(Prefix, Name, PName),
+    functor(PAssert, PName, Arity).
 
 database_dec_fact(M:H, F) :- database_dec_fact(H, M, F).
 
@@ -133,14 +144,19 @@ database_dec_fact(forall(A, B),              system,     F) :-
 database_dec_fact(\+ A,  system,     F) :-
     subsumes_term((retract(F), \+ true), A),
     A = (retract(F), \+ true).
-
-database_def_fact(update_fact_from(A, From), from_utils, F) :-
-    nonvar(A),
-    extend_args(A, [From], H),
-    clause_head(H, F).
+database_dec_fact(PRetractall, M, Fact) :-
+    persistency:persistent(M, Fact, _),
+    functor(Fact, Name, Arity),
+    atom_concat(retractall_, Name, PName),
+    functor(PRetractall, PName, Arity).
 
 database_retract_fact(retract(A),  system,     F) :- clause_head(A, F).
 database_retract_fact(lretract(A), pce_config, F) :- clause_head(A, F).
+database_retract_fact(PRetract, M, Fact) :-
+    persistency:persistent(M, Fact, _),
+    functor(Fact, Name, Arity),
+    atom_concat(retract_, Name, PName),
+    functor(PRetract, PName, Arity).
 
 database_query_fact(clause(A, _),       system,     F) :- clause_head(A, F).
 database_query_fact(clause(A, _, _),    system,     F) :- clause_head(A, F).
