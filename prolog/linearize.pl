@@ -34,35 +34,34 @@
 
 :- module(linearize, [linearize/5]).
 
-linearize(term, Term, Linear) --> linearize(term_multi_vars, var, Term, Linear).
-linearize(atom, Term, LnAtom) --> linearize(term_atomics, atomic, Term, LnAtom).
-
-term_multi_vars(Term, SubsL) :-
+get_substitutions(term, Term, SubsL) :-
     term_variables(Term, Vars),
     exclude(singleton(Term), Vars, SubsL).
-
-linearize(GetSubTerms, IsSubTerm, Term, Linear) -->
-    {call(GetSubTerms, Term, SubsL)},
-    mklinear(Term, IsSubTerm, Linear, SubsL).
-
-term_atomics(Term, Atomics) :-
+get_substitutions(atom, Term, Atomics) :-
     findall(Atomic,
             ( sub_term(Atomic, Term),
               atomic(Atomic),
               Atomic \= [] % Avoid [] since this will cause problems
             ), Atomics).
 
+substitutable(term, Term) :- var(Term).
+substitutable(atom, Term) :- atomic(Term).
+
+linearize(SubTermType, Term, Linear) -->
+    {get_substitutions(SubTermType, Term, SubsL)},
+    mklinear(Term, SubTermType, Linear, SubsL).
+
 singleton(T, S) :- occurrences_of_var(S, T, 1).
 
-mklinear(Term, IsSubTerm, Subs, SubsL) -->
+mklinear(Term, SubTermType, Subs, SubsL) -->
     {compound(Term)},
     !,
     { compound_name_arity(Term, F, A),
       compound_name_arity(Subs, F, A)
     },
-    mklinear(1, Term, IsSubTerm, Subs, SubsL).
-mklinear(Term, IsSubTerm, Subs, SubsL) -->
-    ( { call(IsSubTerm, Term),
+    mklinear(1, Term, SubTermType, Subs, SubsL).
+mklinear(Term, SubTermType, Subs, SubsL) -->
+    ( { substitutable(SubTermType, Term),
         member(Var1, SubsL),
         Term==Var1
       }
@@ -70,12 +69,12 @@ mklinear(Term, IsSubTerm, Subs, SubsL) -->
     ; {Subs=Term}
     ).
 
-mklinear(N, Term, IsSubTerm, Subs, SubsL) -->
+mklinear(N, Term, SubTermType, Subs, SubsL) -->
     { arg(N, Term, Arg),
       !,
       arg(N, Subs, LArg),
       succ(N, N1)
     },
-    mklinear(Arg, IsSubTerm, LArg, SubsL),
-    mklinear(N1, Term, IsSubTerm, Subs, SubsL).
+    mklinear(Arg, SubTermType, LArg, SubsL),
+    mklinear(N1, Term, SubTermType, Subs, SubsL).
 mklinear(_, _, _, _, _) --> [].
