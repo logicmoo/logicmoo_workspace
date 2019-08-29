@@ -34,16 +34,17 @@
 
 :- module(abstract_interpreter, [abstract_interpreter/3,
                                  abstract_interpreter/4,
-                                 abstract_interpreter/5,
-                                 match_head/6,
+                                 get_state/3,
+                                 put_state/3,
+                                 match_head/4,
                                  match_head_body/3,
                                  bottom/2,
-                                 match_ai/7,
+                                 match_ai/5,
                                  call_ai/1,
                                  eval_ai/1,
                                  skip_ai/1,
                                  intr_ai/1,
-                                 match_noloops/6]).
+                                 match_noloops/4]).
 
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(resolve_calln)).
@@ -52,13 +53,12 @@
 :- use_module(library(neck)).
 
 :- meta_predicate
-    match_head(0,*,*,*,*, *),
+    match_head(0,*,*,*),
     match_head_body(0,*,*),
-    match_ai(*,0,*,*,*, *,*),
-    match_noloops(0,*,*,*,*, *),
-    abstract_interpreter(0,6,?),
-    abstract_interpreter(0,6,+,-),
-    abstract_interpreter(0,6,+,+,-),
+    match_ai(*,0,*,*,*),
+    match_noloops(0,*,*,*),
+    abstract_interpreter(0,4,?),
+    abstract_interpreter(0,4,+,-),
     call_ai(0),
     eval_ai(0),
     skip_ai(0).
@@ -73,7 +73,7 @@
     evaluable_goal_hook/2.
 
 :- discontiguous
-    abstract_interpreter_body/6.
+    abstract_interpreter_body/5.
 
 evaluable_body_hook(absolute_file_name(A, _, O), _, (ground(A), ground(O))).
 evaluable_body_hook(atom_concat(A, B, C), _,
@@ -167,14 +167,15 @@ default_on_error(Error) :-
     print_message(error, Error),
     backtrace(40 ).
 
-abstract_interpreter(M:Goal, Abstraction, Options, Result) :-
+abstract_interpreter(M:Goal, Abstraction, Options, State) :-
     option(location(Loc),   Options, context(toplevel, Goal)),
     option(evaluable(Eval), Options, []),
     option(on_error(OnErr), Options, abstract_interpreter:default_on_error),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
     maplist(mod_qual(M), EvalL, MEvalL),
-    abstract_interpreter(M:Goal, Abstraction,
-                         state(Loc, MEvalL, M:OnErr, [], [], []), [], Result).
+    abstract_interpreter_body(Goal, M, Abstraction,
+                              state(Loc, MEvalL, M:OnErr, [], [], [], []),
+                              State).
 
 abstract_interpreter(MGoal, Abstraction, Options) :-
     abstract_interpreter(MGoal, Abstraction, Options, _).
@@ -207,22 +208,22 @@ cut_to(Goal) -->
 cut_from :- send_signal(cut_from).
 */
 
-abstract_interpreter_body(Goal, M, _, _) -->
+abstract_interpreter_body(Goal, M, _) -->
     {var(Goal) ; var(M)}, bottom, !.
-abstract_interpreter_body(M:Goal, _, Abs, State) -->
+abstract_interpreter_body(M:Goal, _, Abs) -->
     !,
-    abstract_interpreter_body(Goal, M, Abs, State).
-abstract_interpreter_body(@(M:Goal, CM), _, Abs, State) -->
+    abstract_interpreter_body(Goal, M, Abs).
+abstract_interpreter_body(@(M:Goal, CM), _, Abs) -->
     !,
-    cut_to(abstract_interpreter_lit(Goal, M, CM, Abs, State)).
+    cut_to(abstract_interpreter_lit(Goal, M, CM, Abs)).
 
-abstract_interpreter_body(call(Goal), M, Abs, State) --> !,
-    cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
-abstract_interpreter_body(\+ A, M, Abs, State) --> !,
-    abstract_interpret_body_not(A, M, Abs, State).
+abstract_interpreter_body(call(Goal), M, Abs) --> !,
+    cut_to(abstract_interpreter_body(Goal, M, Abs)).
+abstract_interpreter_body(\+ A, M, Abs) --> !,
+    abstract_interpret_body_not(A, M, Abs).
 
-abstract_interpret_body_not(A, M, Abs, State) -->
-    ( cut_to(abstract_interpreter_body(A, M, Abs, State))
+abstract_interpret_body_not(A, M, Abs) -->
+    ( cut_to(abstract_interpreter_body(A, M, Abs))
     ->( \+ is_bottom
       ->!,
         {fail}
@@ -230,113 +231,124 @@ abstract_interpret_body_not(A, M, Abs, State) -->
       )
     ; !
     ).
-abstract_interpret_body_not(_, _, _, _) --> bottom.
+abstract_interpret_body_not(_, _, _) --> bottom.
 
 add_cont(Cont,
-         state(Loc, EvalL, OnErr, CallL, Data, ContL),
-         state(Loc, EvalL, OnErr, CallL, Data, [Cont|ContL])).
+         state(Loc, EvalL, OnErr, CallL, Data, ContL, Result),
+         state(Loc, EvalL, OnErr, CallL, Data, [Cont|ContL], Result)).
 
-abstract_interpreter_body(catch(Goal, Ex, Handler), M, Abs, State, S1, S) :-
+abstract_interpreter_body(catch(Goal, Ex, Handler), M, Abs, S1, S) :-
     !,
-    catch(abstract_interpreter_body(Goal, M, Abs, State, S1, S), Ex,
+    catch(abstract_interpreter_body(Goal, M, Abs, S1, S), Ex,
           ( Handler,
             S = S1
           )).
-abstract_interpreter_body(once(Goal), M, Abs, State, S1, S) :- !,
-    once(abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
-abstract_interpreter_body(distinct(Goal), M, Abs, State, S1, S) :-
+abstract_interpreter_body(once(Goal), M, Abs, S1, S) :- !,
+    once(abstract_interpreter_body(Goal, M, Abs, S1, S)).
+abstract_interpreter_body(distinct(Goal), M, Abs, S1, S) :-
     predicate_property(M:distinct(_), implementation_module(solution_sequences)), !,
-    distinct(Goal, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
-abstract_interpreter_body(distinct(Witness, Goal), M, Abs, State, S1, S) :-
+    distinct(Goal, abstract_interpreter_body(Goal, M, Abs, S1, S)).
+abstract_interpreter_body(distinct(Witness, Goal), M, Abs, S1, S) :-
     predicate_property(M:distinct(_, _), implementation_module(solution_sequences)), !,
-    distinct(Witness, abstract_interpreter_body(Goal, M, Abs, State, S1, S)).
+    distinct(Witness, abstract_interpreter_body(Goal, M, Abs, S1, S)).
 
 ord_spec(asc(_)).
 ord_spec(desc(_)).
 
-abstract_interpreter_body(order_by(Spec, Goal), M, Abs, State, S1, S) :- !,
+abstract_interpreter_body(order_by(Spec, Goal), M, Abs, S1, S) :- !,
     ( is_list(Spec),
       Spec \= [],
       maplist(nonvar, Spec),
       maplist(ord_spec, Spec)
-    ->order_by(Spec, abstract_interpreter_body(Goal, M, Abs, State, S1, S))
-    ; abstract_interpreter_body(Goal, M, Abs, State, S1, S)
+    ->order_by(Spec, abstract_interpreter_body(Goal, M, Abs, S1, S))
+    ; abstract_interpreter_body(Goal, M, Abs, S1, S)
     ).
-abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State, S1, S) :- !,
-    setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State, S1, S2),
-                       abstract_interpreter_body(C, M, Abs, State, S2, S3),
-                       abstract_interpreter_body(E, M, Abs, State, S3, S)).
-abstract_interpreter_body(call_cleanup(C, E), M, Abs, State, S1, S) :- !,
-    call_cleanup(abstract_interpreter_body(C, M, Abs, State, S1, S2),
-                 abstract_interpreter_body(E, M, Abs, State, S2, S)).
-abstract_interpreter_body((A, B), M, Abs, State) --> !,
+abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, S1, S) :- !,
+    setup_call_cleanup(abstract_interpreter_body(S, M, Abs, S1, S2),
+                       abstract_interpreter_body(C, M, Abs, S2, S3),
+                       abstract_interpreter_body(E, M, Abs, S3, S)).
+abstract_interpreter_body(call_cleanup(C, E), M, Abs, S1, S) :- !,
+    call_cleanup(abstract_interpreter_body(C, M, Abs, S1, S2),
+                 abstract_interpreter_body(E, M, Abs, S2, S)).
+abstract_interpreter_body((A, B), M, Abs) -->
+    !,
     { \+ terms_share(A, B)
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    {add_cont(B, State, State2)},
-    abstract_interpreter_body(A, M, Abs, State2),
-    ( abstract_interpreter_body(B, M, Abs, State)
+    get_state(State),
+    add_cont(B),
+    abstract_interpreter_body(A, M, Abs),
+    put_state(State),
+    ( abstract_interpreter_body(B, M, Abs)
     *->[]
     ; { CutOnFail = true
       ->!, fail                 % The whole body will fail
       }
     ).
-abstract_interpreter_body((A*->B;C), M, Abs, State) --> !,
+abstract_interpreter_body((A*->B;C), M, Abs) --> !,
     { \+ terms_share(A, B)
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    {add_cont(B, State, State2)},
-    ( abstract_interpreter_body(A, M, Abs, State2)
+    ( get_state(State),
+      add_cont(B),
+      abstract_interpreter_body(A, M, Abs)
     *->
-      ( abstract_interpreter_body(B, M, Abs, State)
+      ( put_state(State),
+        abstract_interpreter_body(B, M, Abs)
       *->[]
       ; { CutOnFail = true
         ->!, fail                 % The whole body will fail
         }
       )
-    ; abstract_interpreter_body(C, M, Abs, State)
+    ; abstract_interpreter_body(C, M, Abs)
     ).
-abstract_interpreter_body((A->B;C), M, Abs, State) --> !,
+abstract_interpreter_body((A->B;C), M, Abs) --> !,
     {SCE = s(no)},
-    ( interpret_local_cut(A, B, M, Abs, State, CutElse),
+    ( interpret_local_cut(A, B, M, Abs, CutElse),
       {nb_setarg(1, SCE, CutElse)}
     ; ( {SCE = s(no)}
-      ->abstract_interpreter_body(C, M, Abs, State)
+      ->abstract_interpreter_body(C, M, Abs)
       )
     ).
-abstract_interpreter_body((A;B), M, Abs, State) --> !,
-    ( abstract_interpreter_body(A, M, Abs, State)
-    ; abstract_interpreter_body(B, M, Abs, State)
+abstract_interpreter_body((A;B), M, Abs) --> !,
+    ( abstract_interpreter_body(A, M, Abs)
+    ; abstract_interpreter_body(B, M, Abs)
     ).
-abstract_interpreter_body(A->B, M, Abs, State) --> !,
-    interpret_local_cut(A, B, M, Abs, State, _).
-abstract_interpreter_body(CallN, M, Abs, State) -->
+abstract_interpreter_body(A->B, M, Abs) --> !,
+    interpret_local_cut(A, B, M, Abs, _).
+abstract_interpreter_body(CallN, M, Abs) -->
     {do_resolve_calln(CallN, Goal)}, !,
-    cut_to(abstract_interpreter_body(Goal, M, Abs, State)).
+    cut_to(abstract_interpreter_body(Goal, M, Abs)).
 
-push_top(Prev, Prev, []).
+push_top(Prev,
+         state(Loc, EvalL, OnErr, CallL, Data, Cont, Prev),
+         state(Loc, EvalL, OnErr, CallL, Data, Cont, [])).
 
-pop_top(bottom, _, bottom).
-pop_top([], Curr, Curr).
+pop_top(bottom,
+        state(Loc, EvalL, OnErr, CallL, Data, Cont, _),
+        state(Loc, EvalL, OnErr, CallL, Data, Cont, bottom)).
+pop_top([]) --> [].
 
 % CutElse make the failure explicit wrt. B
-interpret_local_cut(A, B, M, Abs, State, CutElse) -->
+interpret_local_cut(A, B, M, Abs, CutElse) -->
     { \+ terms_share(A, B)
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    {add_cont(B, State, State2)},
     push_top(Prev),
-    cut_to(abstract_interpreter_body(A, M, Abs, State2)), % loose of precision
+    get_state(State),
+    add_cont(B),
+    cut_to(abstract_interpreter_body(A, M, Abs)), % loose of precision
+    put_state(State),
     ( \+ is_bottom
     ->!,
       { CutElse = yes }
     ; { CutElse = no  }
     ),
     pop_top(Prev),
-    ( abstract_interpreter_body(B, M, Abs, State)
+    ( abstract_interpreter_body(B, M, Abs)
     *->
       []
     ; ( {CutOnFail = true}
@@ -344,9 +356,9 @@ interpret_local_cut(A, B, M, Abs, State, CutElse) -->
       ; []
       )
     ).
-abstract_interpreter_body(!,    _, _, _) --> !, cut_if_no_bottom.
-abstract_interpreter_body(A=B,  _, _, _) --> !, {A=B}.
-abstract_interpreter_body(A\=B, _, _, _) -->
+abstract_interpreter_body(!,    _, _) --> !, cut_if_no_bottom.
+abstract_interpreter_body(A=B,  _, _) --> !, {A=B}.
+abstract_interpreter_body(A\=B, _, _) -->
     !,
     ( {A\=B}
     ->[]
@@ -354,22 +366,23 @@ abstract_interpreter_body(A\=B, _, _, _) -->
     ->{fail}
     ; bottom
     ).
-abstract_interpreter_body(BinExpr, _, _, _, S0, S) :-
-    member(BinExpr, [A=\=B,
-                     A=:=B,
-                     A>B,
-                     A<B,
-                     A>=B,
-                     A=<B]),
+abstract_interpreter_body(BinExpr, _, _) -->
+    { member(BinExpr, [A=\=B,
+                       A=:=B,
+                       A>B,
+                       A<B,
+                       A>=B,
+                       A=<B])
+    },
     neck,
     !,
-    ( ground(A),
-      ground(B)
-    ->BinExpr,
-      S0 = S
-    ; bottom(S0, S)
+    ( { ground(A),
+        ground(B)
+      }
+    ->{BinExpr}
+    ; bottom
     ).
-abstract_interpreter_body(memberchk(A, B), _, _, _) -->
+abstract_interpreter_body(memberchk(A, B), _, _) -->
     !,
     ( {is_list(B)}
     ->( {nonvar(A)}
@@ -385,9 +398,10 @@ abstract_interpreter_body(memberchk(A, B), _, _, _) -->
       },
       bottom
     ).
-abstract_interpreter_body(true, _, _, _) --> !.
-abstract_interpreter_body(fail, _, _, _) --> !, {fail}.
-abstract_interpreter_body(A, M, _, state(Loc, _, OnError, _, _, _)) -->
+abstract_interpreter_body(true, _, _) --> !.
+abstract_interpreter_body(fail, _, _) --> !, {fail}.
+abstract_interpreter_body(A, M, _) -->
+    get_state(state(Loc, _, OnError, _, _, _, _)),
     {evaluable_body_hook(A, M, Condition)},
     !,
     ( {call(Condition)}
@@ -400,7 +414,8 @@ abstract_interpreter_body(A, M, _, state(Loc, _, OnError, _, _, _)) -->
     ; bottom
     ).
 
-abstract_interpreter_body(G, M, _, state(_, EvalL, _, _, _, _)) -->
+abstract_interpreter_body(G, M, _) -->
+    get_state(state(_, EvalL, _, _, _, _, _)),
     { predicate_property(M:G, implementation_module(IM)),
       ( ( evaluable_goal_hook(G, IM)
         ; functor(G, F, A),
@@ -413,10 +428,12 @@ abstract_interpreter_body(G, M, _, state(_, EvalL, _, _, _, _)) -->
     },
     !,
     {call(M:R)}.
-abstract_interpreter_body(H, M, Abs, State) -->
-    cut_to(abstract_interpreter_lit(H, M, M, Abs, State)).
+abstract_interpreter_body(H, M, Abs) -->
+    cut_to(abstract_interpreter_lit(H, M, M, Abs)).
 
-is_bottom(bottom, bottom).
+is_bottom(State, State) :-
+    State = state(_, _, _, _, _, _, bottom),
+    neck.
 
 cut_if_no_bottom -->
     ( \+ is_bottom
@@ -424,37 +441,35 @@ cut_if_no_bottom -->
     ; []
     ).
 
-abstract_interpreter(MH, Abs, State) -->
-    {strip_module(MH, M, H)},
-    abstract_interpreter_lit(H, M, M, Abs, State).
+get_state(State, State, State).
 
-abstract_interpreter_lit(H, M, CM, Abs, State1) -->
+put_state(State, _, State).
+
+abstract_interpreter_lit(H, M, CM, Abs) -->
     { predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(CM:H, Meta, Goal)
     ; Goal = H
     },
-    { State1 = state(Loc, EvalL, OnError, CallL, Data, Cont),
-      predicate_property(M:Goal, implementation_module(IM))
-    },
+    {predicate_property(M:Goal, implementation_module(IM))},
+    get_state(state(Loc, EvalL, OnError, CallL, Data, Cont, Result)),
     ( {member(MCall, CallL),
        MCall =@= IM:Goal
       }
     ->bottom
-    ; { copy_term(IM:Goal, MCall),
-        State2 = state(Loc, EvalL, OnError, [MCall|CallL], Data, Cont)
-      },
+    ; {copy_term(IM:Goal, MCall)},
+      put_state(state(Loc, EvalL, OnError, [MCall|CallL], Data, Cont, Result)),
       ( { replace_body_hook(Goal, IM, Body)
         ; copy_term(EvalL, EvalC), % avoid undesirable unifications
           memberchk((IM:Goal :- Body), EvalC)
         }
-      ->cut_to(abstract_interpreter_body(Body, M, Abs, State2))
+      ->cut_to(abstract_interpreter_body(Body, M, Abs))
       ; { \+ predicate_property(M:Goal, defined) }
       ->{ call(OnError, error(existence_error(procedure, M:Goal), Loc)),
           % TBD: information to error
           fail
         }
-      ; call(Abs, M:Goal, BM:Body, State2, State),
-        cut_to(abstract_interpreter_body(Body, BM, Abs, State))
+      ; call(Abs, M:Goal, BM:Body),
+        cut_to(abstract_interpreter_body(Body, BM, Abs))
       )
     ).
 
@@ -462,25 +477,26 @@ abstract_interpreter_lit(H, M, CM, Abs, State1) -->
 % bottom: I don't know, universe set.
 % true: exact result
 
-bottom(_, bottom).
+bottom(state(Loc, EvalL, OnErr, CallL, D, Cont, _),
+       state(Loc, EvalL, OnErr, CallL, D, Cont, bottom)).
 
-:- multifile match_ai/7.
+:- multifile match_ai/5.
 
-match_ai(head,    MG, Body, S1, S) --> match_head(   MG, Body, S1, S).
-match_ai(noloops, MG, Body, S1, S) --> match_noloops(MG, Body, S1, S).
+match_ai(head,    MG, Body) --> match_head(   MG, Body).
+match_ai(noloops, MG, Body) --> match_noloops(MG, Body).
 
-match_head(MGoal, M:true, state(_, EvalL, OnErr, CallL, D, Cont), S) -->
-    {predicate_property(MGoal, interpreted)}, !,
+match_head(MGoal, M:true) -->
+    {predicate_property(MGoal, interpreted)},
+    !,
     {strip_module(MGoal, M, _)},
-    { match_head_body(MGoal, Body, Loc)
-    *->S = state(Loc, EvalL, OnErr, CallL, D, Cont)
-    ; fail
-    },
+    get_state(state(_, EvalL, OnErr, CallL, D, Cont, Result)),
+    put_state(state(Loc, EvalL, OnErr, CallL, D, Cont, Result)),
+    {match_head_body(MGoal, Body, Loc)},
     ( {Body = _:true}
     ->[]
     ; bottom %% loose of precision
     ).
-match_head(MGoal, M:true, S, S) -->
+match_head(MGoal, M:true) -->
     {strip_module(MGoal, M, _)},
     bottom.
 
@@ -507,21 +523,22 @@ extra_clauses(Goal, CM, I:Goal, _From) :-
     ->interface:'$implementation'(I, M)
     ).
 
-match_noloops(MGoal, Body, state(Loc1, EvalL, OnErr, CallL, S, Cont),
-              state(Loc, EvalL, OnErr, CallL, [M:F/A-Size|S], Cont)) -->
-    {predicate_property(MGoal, interpreted)}, !,
+match_noloops(MGoal, Body) -->
+    {predicate_property(MGoal, interpreted)},
+    !,
     {strip_module(MGoal, M, Goal)},
-    ( { functor(Goal, F, A),
-        term_size(Goal, Size),
-        \+ ( memberchk(M:F/A-Size1, S),
-             Size1=<Size
-           )
-      }
-    ->{ match_head_body(MGoal, Body, Loc) },
-      []
-    ; { Loc = Loc1 },
-      bottom %% loose of precision
-    ).
-match_noloops(MGoal, M:true, S, S) -->
+    get_state(state(Loc1, EvalL, OnErr, CallL, S, Cont, Result1)),
+    { functor(Goal, F, A),
+      term_size(Goal, Size),
+      \+ ( memberchk(M:F/A-Size1, S),
+           Size1=<Size
+         )
+    ->match_head_body(MGoal, Body, Loc),
+      Result = Result1
+    ; Loc = Loc1,
+      Result = bottom %% loose of precision
+    },
+    put_state(state(Loc, EvalL, OnErr, CallL, [M:F/A-Size|S], Cont, Result)).
+match_noloops(MGoal, M:true) -->
     {strip_module(MGoal, M, _)},
     bottom.

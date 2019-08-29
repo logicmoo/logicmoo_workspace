@@ -32,24 +32,32 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(abstract_slicer, [abstract_slice/3,
-                            slicer_abstraction/9]).
+:- module(abstract_slicer,
+          [abstract_slice/3,
+           abstract_slice/4,
+           apply_mode/5,
+           slicer_abstraction/7]).
 
 :- use_module(library(abstract_interpreter)).
 :- use_module(library(terms_share)).
 
 :- meta_predicate
     abstract_slice(0,+,?),
-    slicer_abstraction(+,+,+,0,?, ?,?,?,?).
+    abstract_slice(0,+,?,-),
+    abstract_slice(0,+,2,?,-),
+    slicer_abstraction(+,+,+,0,?, ?,?).
 
-abstract_slice(M:Call, Mode, OptL) :-
-    apply_mode(Call, Mask, Mode, Spec, RevS),
+abstract_slice(M:Head, Mode, OptL) :-
+    abstract_slice(M:Head, Mode, OptL, _).
+
+abstract_slice(M:Head, Mode, OptL, State) :-
+    apply_mode(Head, Mask, Mode, Spec, RevS),
     term_variables(RevS, VarsR),
     option(eval_scope(Scope), OptL, body),
-    abstract_interpreter(M:Mask, slicer_abstraction(Spec, VarsR, Scope), OptL),
+    abstract_interpreter(M:Mask, slicer_abstraction(Spec, VarsR, Scope), OptL, State),
     % In Mask the output arguments are variable, so the binding is performed
     % after the abstract interpretation. This is a bit inefficient, but correct:
-    Call = Mask.
+    Head = Mask.
 
 apply_mode(Call, Mask, Mode, Spec, RevS) :-
     functor(Call, F, A),
@@ -84,12 +92,11 @@ chain_of_dependencies(Spec, VarsR, Goal, ContL) :-
       chain_of_dependencies(Spec, VarsR, Cont, ContL2)
     ), !.
 
-slicer_abstraction(Spec, VarsR, Scope, MGoal, Body,
-                   state(_, EvalL, OnErr, CallL, Data, Cont),
-                   state(Loc, EvalL, OnErr, CallL, Data, Cont)) -->
+slicer_abstraction(Spec, VarsR, Scope, MGoal, Body) -->
     {predicate_property(MGoal, interpreted)},
     !,
     {strip_module(MGoal, M, Goal)},
+    get_state(state(Loc1, EvalL, OnErr, CallL, Data, Cont, Result1)),
     { \+ ground(Spec),
       chain_of_dependencies(Spec, VarsR, Goal, Cont)
     ->match_head_body(M:Goal, Body1, Loc),
@@ -103,17 +110,18 @@ slicer_abstraction(Spec, VarsR, Scope, MGoal, Body,
       ( Scope = body
       ->distinct(M:Goal,
                  match_head_body(M:Goal, _, Loc))
-      ; true
+      ; Loc = Loc1
       ),
       Body = M:true
     },
-    ( {Scope = head}
-    ->bottom                    % Kludge to avoid cut remove solutions
-    ; []
-    ).
-slicer_abstraction(_, _, _, MGoal, M:true, S, S) -->
-    { S = state(Loc, _, OnError, _, _, _),
-      call(OnError, error(existence_error(evaluation_rule, MGoal), Loc)),
+    { Scope = head
+    ->Result = bottom % Kludge to avoid cut remove solutions
+    ; Result = Result1
+    },
+    put_state(state(Loc, EvalL, OnErr, CallL, Data, Cont, Result)).
+slicer_abstraction(_, _, _, MGoal, M:true) -->
+    get_state(state(Loc, _, OnError, _, _, _, _)),
+    { call(OnError, error(existence_error(evaluation_rule, MGoal), Loc)),
       strip_module(MGoal, M, _)
     },
     bottom.
