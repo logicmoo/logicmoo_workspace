@@ -414,6 +414,8 @@ resolveUntilAction(happens(E,T1_,T2_),A,_,true) :- % select action:
 	current_time(T1), 
 	T2 is T1+1,
 	action_(E), 
+	(event_(E) -> ground(E); true), % hack to allow literals used both as events and actions, e.g. when simulating 2 agents in the same program
+	% notice that simply imposing ground(E) would break editing actions, cf. examples/forTesting/editingActions.pl
 	check_lps_test_action_ancestors(A),
 	uassertz(happens(E,T1,T2)), 
 	( (d_pre(current,Conds),holds_all(Conds,T1,T2)) -> % inadmissible action, undo it
@@ -436,6 +438,9 @@ resolveUntilAction(tc(G), A, Ball, Cont) :- !, Ball = later(tc(G),A), Cont = tc(
 % TODO: should we deprecate/remove l_timeless ?
 resolveUntilAction(G,_A,_,true) :- option(no_parallel), !,
 	(\+l_timeless(G,_Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)).
+resolveUntilAction(G,_Ancestors,_B,true) :- (G = (not G_) ; G = (\+ G_)), !, % negation of timeless goals
+	 ( (\+l_timeless(G_,_Body) -> callprolog(G_) ; l_timeless(G_,Body), evaluate(Body)) -> fail 
+	 	; true).
 resolveUntilAction(G,Ancestors,B,true) :- 
 	findall(G, ( \+l_timeless(G,Body) -> callprolog(G) ; l_timeless(G,Body), evaluate(Body)), Answers), Answers\=[],
 	(Answers = [G] -> true ; B=disjunction(G,Answers,Ancestors)).
@@ -3208,9 +3213,11 @@ l_int_body(P) :- u_user_predicate(P).
 
 % l_events_body(+P)
 %
+l_events_body(holds(P, _)) :- var(P), !.
 l_events_body(holds(P, _)) :- !,
     functor(P,F,N), functor(PP,F,N),
     fluent_pred(PP).
+l_events_body(happens(P, _, _)) :- var(P), !.
 l_events_body(happens(P, _, _)) :- !,
     functor(P,F,N), functor(PP,F,N),
     event_pred(PP).
