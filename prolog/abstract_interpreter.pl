@@ -34,6 +34,7 @@
 
 :- module(abstract_interpreter, [abstract_interpreter/3,
                                  abstract_interpreter/4,
+                                 abstract_interpreter_body/5,
                                  get_state/3,
                                  put_state/3,
                                  match_head/4,
@@ -59,6 +60,7 @@
     match_noloops(0,*,*,*),
     abstract_interpreter(0,4,?),
     abstract_interpreter(0,4,+,-),
+    abstract_interpreter_body(+,+,4,?,?),
     call_ai(0),
     eval_ai(0),
     skip_ai(0).
@@ -131,6 +133,7 @@ replace_goal_hook(eval_ai(G), abstract_interpreter, G).
 replace_goal_hook(skip_ai(_), abstract_interpreter, true).
 replace_goal_hook(V is A, _, (ground(A)->V is A; var(V))).
 replace_goal_hook(nb_getval(A, V), _, ignore((nonvar(A), nb_current(A, V)))).
+replace_goal_hook(nb_setarg(_, _, _), _, true).
 
 replace_body_hook(with_value(G, _, _), context_values, G).
 replace_body_hook(with_value(G, _, _, _), context_values, G).
