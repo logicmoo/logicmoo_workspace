@@ -34,7 +34,7 @@
 
 :- module(abstract_interpreter, [abstract_interpreter/3,
                                  abstract_interpreter/4,
-                                 abstract_interpreter_body/5,
+                                 abstract_interpreter/5,
                                  get_state/3,
                                  put_state/3,
                                  match_head/4,
@@ -60,7 +60,7 @@
     match_noloops(0,*,*,*),
     abstract_interpreter(0,4,?),
     abstract_interpreter(0,4,+,-),
-    abstract_interpreter_body(+,+,4,?,?),
+    abstract_interpreter(+,+,4,?,?),
     call_ai(0),
     eval_ai(0),
     skip_ai(0).
@@ -176,9 +176,12 @@ abstract_interpreter(M:Goal, Abstraction, Options, State) :-
     option(on_error(OnErr), Options, abstract_interpreter:default_on_error),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
     maplist(mod_qual(M), EvalL, MEvalL),
-    abstract_interpreter_body(Goal, M, Abstraction,
+    abstract_interpreter(Goal, M, Abstraction,
                               state(Loc, MEvalL, M:OnErr, [], [], [], []),
                               State).
+
+abstract_interpreter(Goal, M, Abstraction) -->
+    cut_to(abstract_interpreter_body(Goal, M, Abstraction)).
 
 abstract_interpreter(MGoal, Abstraction, Options) :-
     abstract_interpreter(MGoal, Abstraction, Options, _).
@@ -236,9 +239,13 @@ abstract_interpret_body_not(A, M, Abs) -->
     ).
 abstract_interpret_body_not(_, _, _) --> bottom.
 
-add_cont(Cont,
-         state(Loc, EvalL, OnErr, CallL, Data, ContL, Result),
-         state(Loc, EvalL, OnErr, CallL, Data, [Cont|ContL], Result)).
+get_conts(ContL, State, State) :-
+    State = state(_, _, _, _, _, ContL, _),
+    neck.
+
+put_conts(ContL,
+          state(Loc, EvalL, OnErr, CallL, Data, _, Result),
+          state(Loc, EvalL, OnErr, CallL, Data, ContL, Result)).
 
 abstract_interpreter_body(catch(Goal, Ex, Handler), M, Abs, S1, S) :-
     !,
@@ -279,10 +286,10 @@ abstract_interpreter_body((A, B), M, Abs) -->
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    get_state(State),
-    add_cont(B),
+    get_conts(ContL),
+    put_conts([B|ContL]),
     abstract_interpreter_body(A, M, Abs),
-    put_state(State),
+    put_conts(ContL),
     ( abstract_interpreter_body(B, M, Abs)
     *->[]
     ; { CutOnFail = true
@@ -294,11 +301,11 @@ abstract_interpreter_body((A*->B;C), M, Abs) --> !,
     ->CutOnFail = true
     ; CutOnFail = fail
     },
-    ( get_state(State),
-      add_cont(B),
+    ( get_conts(ContL),
+      put_conts([B|ContL]),
       abstract_interpreter_body(A, M, Abs)
     *->
-      ( put_state(State),
+      ( put_conts(ContL),
         abstract_interpreter_body(B, M, Abs)
       *->[]
       ; { CutOnFail = true
@@ -341,10 +348,10 @@ interpret_local_cut(A, B, M, Abs, CutElse) -->
     ; CutOnFail = fail
     },
     push_top(Prev),
-    get_state(State),
-    add_cont(B),
+    get_conts(ContL),
+    put_conts([B|ContL]),
     cut_to(abstract_interpreter_body(A, M, Abs)), % loose of precision
-    put_state(State),
+    put_conts(ContL),
     ( \+ is_bottom
     ->!,
       { CutElse = yes }
