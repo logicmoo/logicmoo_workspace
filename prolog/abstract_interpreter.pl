@@ -34,7 +34,7 @@
 
 :- module(abstract_interpreter, [abstract_interpreter/3,
                                  abstract_interpreter/4,
-                                 abstract_interpreter/5,
+                                 abstract_interpreter_body/5,
                                  get_state/3,
                                  put_state/3,
                                  match_head/4,
@@ -60,7 +60,7 @@
     match_noloops(0,*,*,*),
     abstract_interpreter(0,4,?),
     abstract_interpreter(0,4,+,-),
-    abstract_interpreter(+,+,4,?,?),
+    abstract_interpreter_body(+,+,4,?,?),
     call_ai(0),
     eval_ai(0),
     skip_ai(0).
@@ -176,12 +176,9 @@ abstract_interpreter(M:Goal, Abstraction, Options, State) :-
     option(on_error(OnErr), Options, abstract_interpreter:default_on_error),
     ( is_list(Eval)->EvalL = Eval ; EvalL = [Eval]), % make it easy
     maplist(mod_qual(M), EvalL, MEvalL),
-    abstract_interpreter(Goal, M, Abstraction,
+    abstract_interpreter_body(Goal, M, Abstraction,
                               state(Loc, MEvalL, M:OnErr, [], [], [], []),
                               State).
-
-abstract_interpreter(Goal, M, Abstraction) -->
-    cut_to(abstract_interpreter_body(Goal, M, Abstraction)).
 
 abstract_interpreter(MGoal, Abstraction, Options) :-
     abstract_interpreter(MGoal, Abstraction, Options, _).
@@ -239,13 +236,13 @@ abstract_interpret_body_not(A, M, Abs) -->
     ).
 abstract_interpret_body_not(_, _, _) --> bottom.
 
-get_conts(ContL, State, State) :-
-    State = state(_, _, _, _, _, ContL, _),
+get_conts(Conts, State, State) :-
+    State = state(_, _, _, _, _, Conts, _),
     neck.
 
-put_conts(ContL,
+put_conts(Conts,
           state(Loc, EvalL, OnErr, CallL, Data, _, Result),
-          state(Loc, EvalL, OnErr, CallL, Data, ContL, Result)).
+          state(Loc, EvalL, OnErr, CallL, Data, Conts, Result)).
 
 abstract_interpreter_body(catch(Goal, Ex, Handler), M, Abs, S1, S) :-
     !,
@@ -273,13 +270,15 @@ abstract_interpreter_body(order_by(Spec, Goal), M, Abs, S1, S) :- !,
     ->order_by(Spec, abstract_interpreter_body(Goal, M, Abs, S1, S))
     ; abstract_interpreter_body(Goal, M, Abs, S1, S)
     ).
-abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, S1, S) :- !,
-    setup_call_cleanup(abstract_interpreter_body(S, M, Abs, S1, S2),
-                       abstract_interpreter_body(C, M, Abs, S2, S3),
-                       abstract_interpreter_body(E, M, Abs, S3, S)).
-abstract_interpreter_body(call_cleanup(C, E), M, Abs, S1, S) :- !,
-    call_cleanup(abstract_interpreter_body(C, M, Abs, S1, S2),
-                 abstract_interpreter_body(E, M, Abs, S2, S)).
+abstract_interpreter_body(setup_call_cleanup(S, C, E), M, Abs, State1, State) :- !,
+    setup_call_cleanup(abstract_interpreter_body(S, M, Abs, State1, State2),
+                       abstract_interpreter_body(C, M, Abs, State2, State3),
+                       abstract_interpreter_body(E, M, Abs, State3, State)),
+    ignore((var(State), State = State2)).
+abstract_interpreter_body(call_cleanup(C, E), M, Abs, State1, State) :- !,
+    call_cleanup(abstract_interpreter_body(C, M, Abs, State1, State2),
+                 abstract_interpreter_body(E, M, Abs, State2, State)),
+    ignore((var(State), State = State2)).
 abstract_interpreter_body((A, B), M, Abs) -->
     !,
     { \+ terms_share(A, B)
