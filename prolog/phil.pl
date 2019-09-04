@@ -34,7 +34,7 @@ using gradient descent and Backpropagation
 
 
 :- dynamic getIndex/1.
-
+:- dynamic getRate/1.
 :- dynamic db/1.
 
 :- dynamic input_mod/1.
@@ -107,12 +107,12 @@ default_setting_sc(useInitParams,no). % Default value=no
 default_setting_sc(c_seed,c_seed).
 
 
-default_setting_sc(probability,0.95).
+default_setting_sc(probability,1.0).
+default_setting_sc(rate,0.95).
 default_setting_sc(min_probability,1e-5).
 default_setting_sc(generate_mega_hplp,yes).
-default_setting_sc(max_layer,-1).
 default_setting_sc(saveFile,"hplp").
-default_setting_sc(testFold,"fold").
+default_setting_sc(max_layer,-1).
 
 % EM regularization parameters
 default_setting_sc(regularized,yes). % yes for activating the regularization and no otherwise
@@ -366,7 +366,7 @@ induce_parameters(M:Folds,DB,R):-
   M:in(R00),
   process_clauses(R00,M,[],_,[],R0),
   statistics(walltime,[_,_]),
-  trace,
+  %trace,
   learn_params(DB,M,R0,R,Score2),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
@@ -503,7 +503,7 @@ learn_params(DB,M,R0,R,CLL):-
     M:local_setting(min_probability,Min_prob),
     remove_clauses(R2,Min_prob,R21,Num),
     %format("~d clauses removed",[Num]),
-    (Num=:=0 ->    % if i didn't remove a rule
+    (Num=:=0 ->    
       R=R21
       ;
       R1=[Rule|_],
@@ -691,6 +691,7 @@ induce_rules(M:Folds,R):-
   statistics(walltime,[_,_]),
   (M:local_setting(specialization,bottom)->
     M:local_setting(megaex_bottom,MB),
+    %trace,
     deduct(MB,M,DB,[],InitialTheory),
     remove_duplicates(InitialTheory,R1)
   ;
@@ -713,39 +714,63 @@ induce_rules(M:Folds,R):-
   ).
 
 
-genHPLP(DB,M,Bottoms,HPLP):-
-  M:local_setting(probability,Prob),
-  M:local_setting(max_layer,Max1),
-  M:local_setting(generate_mega_hplp,GenerateBottom),
-  %M:local_setting(saveFile,SaveFile1),
-  %M:local_setting(testFold,TestFold),
-  %string_concat(SaveFile1,TestFold,SaveFile),
-  Temp is -1,
-  ((Max1=:=Temp) ->
-     MaxLayer is 2147000000
+writeParams(InitProb,Rate, MaxLayer,GenerateBottom):-
+  writeln("Hyper-parameters for generating the hierachical PLP \n"),
+  (GenerateBottom=yes ->
+    writeln("The initial HPLP is generated using the entire bottom clauses")
     ;
-    MaxLayer is Max1
+    writeln("The initial HPLP is generated using the first bottom clause")
+
   ),
+  format('Initial Probability=~f ~n',[InitProb]),
+  format('Rate=~f ~n',[Rate]),
+  Temp is -1,
+  (MaxLayer=:=Temp ->
+    format('MaxLayer= no limit ~n')
+    ;
+    format('MaxLayer=~d ~n',[MaxLayer])
+  ).
+
+genHPLP(DB,M,Bottoms,HPLP):-
   (Bottoms=[] ->
     format("No Bottom has been generated~n",[]),
     halt
     ;
     Bottoms=[Rule1|_Rest]
   ),
+  M:local_setting(probability,InitProb),
+  M:local_setting(rate,Rate),
+  M:local_setting(max_layer,Max1),
+  M:local_setting(generate_mega_hplp,GenerateBottom),
+  M:local_setting(saveFile,SaveFile),
+  Temp is -1,
+  (Max1=:=Temp ->
+     MaxLayer is 2147000000,
+     writeParams(InitProb,Rate, Temp,GenerateBottom)
+    ;
+     MaxLayer is Max1,
+     writeParams(InitProb,Rate, MaxLayer,GenerateBottom)
+  ),
+  %trace,
   getHead(Rule1,HeadFunctor),
+  Prob is InitProb,
+  assert(getRate(Rate)),
   (GenerateBottom=yes ->
       maplist(unification(Rule1),Bottoms),
       getTrees(Bottoms,Trees),
       Trees1=[t(head,Trees)],
       generateHPLPs(-1,HeadFunctor,MaxLayer,Prob,Trees1,HPLPs,Levels),
-      %saveHPLPs(HPLPs,SaveFile,Levels),
+      saveHPLPs(HPLPs,SaveFile,Levels),
       HPLPs=[HPLP|_]
     ;
       getTrees(Bottoms,Trees),
       generateHPLPs(0,HeadFunctor,MaxLayer,Prob,Trees,HPLPs,Levels),
-      %saveHPLPs(HPLPs,SaveFile,Levels),
+      saveHPLPs(HPLPs,SaveFile,Levels),
       HPLPs=[HPLP|_]
-    ).
+    ),
+    %trace,
+    retractall(getRate(_Rate)),
+    saveHPLPs(HPLPs,SaveFile,Levels).
 
 
 
@@ -1082,7 +1107,7 @@ generateHPLPs(InitLevel,HeadFunctor,MaxLayer,Prob,[Tree|RestTrees],[HPLP|RestHPL
   retractall(getIndex(_Index1)),
   removeHidden(HPLP1,HPLP11,[HeadFunctor],_),
   reduce([],HPLP11,0,[],HPLP),
-
+  %HPLP=HPLP11,
   %reduceprogram(Head,HPLP1,HPLP),
   generateHPLPs(InitLevel,HeadFunctor,MaxLayer,Prob,RestTrees,RestHPLs,RestLevel).
 
@@ -1141,7 +1166,9 @@ generateHPLPloopCurr(Hidden,PathIndex,Prob,Index,[t(Pred2,ForestChild)|RestFores
             ),
             %atom_concat(PathIndex1,Index,PathIndexNew),
             getHidden(Hidden,Pred2,PathIndexNew,HiddenNew),
-            ProbNew is Prob*Prob,
+            %trace,
+            getRate(Rate),
+            ProbNew is Prob*Rate,
             Temp=[h([HiddenNew,PathIndexNew,ProbNew],ForestChild)],
             Body=[Pred2,HiddenNew]
             %write(Stream,HiddenNew),
@@ -1396,7 +1423,6 @@ writeClause(List,FileName):-
   open(FileName,write, Stream),
   copy_term(List,ListCopy),
   numbervars((ListCopy,_ListVar),0,_V),
-  nl(Stream),
   writeln(Stream,"Learned Program"),
   writeClause1(Stream,ListCopy),
   close(Stream).
@@ -1405,7 +1431,6 @@ writeClause(List,FileName):-
 writeClauseOutput(List):-
   copy_term(List,ListCopy),
   numbervars((ListCopy,_ListVar),0,_V),
-  nl(user_output),
   writeln(user_output,"Learned Program"),
   writeClause1(user_output,ListCopy).
 
@@ -4162,4 +4187,3 @@ user:term_expansion(At, A) :-
       A=Atom1
     )
   ).
-
