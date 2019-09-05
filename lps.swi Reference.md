@@ -418,7 +418,7 @@ These commands execute a LPS program and wait for its end (when failure or timeo
 
 Timeline is rendered graphicall, showing fluent states as blue ranges and atomic events as orange or green dots. 
 
-	go(Timeline,[composite]).
+	go(Timeline,[composites]).
 
 Same, but also includes some composite events in the timeline: those that span more than 2 states, and are either completed macro actions that include atomic actions, or composite events that trigger post conditions; other composites are not shown.
 
