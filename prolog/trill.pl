@@ -1204,11 +1204,15 @@ neg_list([complementOf(H)|T],[H|T1]):-
 
 find_class_prop_range_domain(M,P,S,O,O,D,Expl,(ABox,_Tabs)):-
   findPropertyAssertion(P,S,O,ExplPA,ABox),
+  M:hierarchy(H),
+  member(O,H.individuals),
   M:propertyRange(R,D),
   and_f_ax(M,propertyRange(R,D),ExplPA,Expl).
 
 find_class_prop_range_domain(M,P,S,O,S,D,Expl,(ABox,_Tabs)):-
   findPropertyAssertion(P,S,O,ExplPA,ABox),
+  M:hierarchy(H),
+  member(S,H.individuals),
   M:propertyDomain(R,D),
   and_f_ax(M,propertyDomain(R,D),ExplPA,Expl).
 

@@ -355,29 +355,6 @@ are_subClasses_int(KB,C,C1):-
   memberchk(C1,L),!.
 
 
-% =================================================
-% TODO
-merge_concepts_in_kb(KB0,KB):-
-  Hier0=KB0.hierarchy,
-  Classes=KB0.classes,
-  % get keys from Classes to Keys
-  reduce_list_of_concepts(Keys,Hier0,Hier1). % probably it will be sufficient to pass KB0.
-
-reduce_list_of_concepts([],Hier,Hier):- !.
-
-reduce_list_of_concepts([Class|OtherClasses],Hier0,Hier):-
-  check_for_concepts_to_merge(Class,Hier,ConceptToMerge), % TO CHECK: backtracking here
-  dif(ConceptToMerge,[Class]),!,
-  % Merge in Hier0 to Hier1 TO CHECK what it needs (update of map ID:classes)
-  subtract(OtherClasses,ConceptToMerge,ReducedClasses),
-  reduce_list_of_concepts(ReducedClasses,Hier1,Hier).
-
-reduce_list_of_concepts([Class|OtherClasses],Hier0,Hier):-
-  reduce_list_of_concepts(OtherClasses,Hier0,Hier).
-
-% =================================================
-
-
 check_for_concepts_to_merge(Concept,Hier,ConceptsToMerge):-	% Given a concept C, takes one subConcept Di at a time and checks whether C is reachable from Di. If it is so, collects all the nodes in the cycle between C to C
   neighbours(Concept,Hier,SubClasses),
   check_and_collect_concepts(Concept,Hier,SubClasses,[],ConceptsToMerge).
