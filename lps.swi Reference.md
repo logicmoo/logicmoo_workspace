@@ -434,12 +434,16 @@ Shows the same information as a timeline, but instead as a state transitions dia
 
 Same, but further abstracting numbers into a single constant 'n', and ommitting reflexive edges, e.g. events ans actions which do not change state.
 
-##Execute a LPS program in real time##
-These commands start the program and immediately report its progress in real time.
-
 	go.
 
 Prints actions and events, as well as fluent states, on SWISH's output panel.
+
+	gov.
+
+Same, but with verbose output.
+
+##Execute a LPS program in real time##
+These commands start the program and immediately report its progress in real time.
 
 	serve(TwoDscene).
 
