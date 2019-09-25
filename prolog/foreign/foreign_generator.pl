@@ -514,8 +514,13 @@ define_aux_variables(dict_key_value(_, _, _, _), _, _) --> !, {fail}.
 define_aux_variables(_, _, _) --> [].
 
 implement_type_getter_ini(PName, CName, Spec, Name) -->
-    {ctype_decl(Spec, Decl)},
-    ["int FI_get_"+Name+"(root_t __root, term_t "+PName+", "+Decl+" *"+CName+") {"].
+    { ctype_decl(Spec, Decl1),
+      ( Spec = array(_, _)
+      ->Decl = Decl1
+      ; Decl = Decl1+"*"
+      )
+    },
+    ["int FI_get_"+Name+"(root_t __root, term_t "+PName+", "+Decl+" "+CName+") {"].
 
 c_get_argument_getter(Spec, CNameArg, PNameArg, GetArg) :-
     c_get_argument(Spec, in, CNameArg, PNameArg, GetArg).
@@ -650,16 +655,14 @@ implement_type_getter(dict_end(SubType, _, _), _, _) -->
 
 implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) -->
     {ctype_decl(Spec, Decl)},
-    ["static int get_pair_"+Name+"(root_t, term_t, term_t, "+Decl+" *);",
+    ["static int get_pair_"+Name+"(root_t __root, term_t __keyid, term_t "+PName+", "+Decl+"* "+CName+");",
      ''],
     implement_type_getter_ini(PName, CName, Spec, Name),
     ["    memset("+CName+", 0, sizeof("+Decl+"));",
      "    FI_get_dict_t("+Name+", "+PName+", "+CName+");"
     ],
     implement_type_end,
-    ['static int',
-     "get_pair_"+Name+"(root_t __root, term_t __keyid, term_t "+PName+", "+Decl+" *"+CName
-     +") {",
+    ["static int get_pair_"+Name+"(root_t __root, term_t __keyid, term_t "+PName+", "+Decl+"* "+CName+") {",
      '    int __index;',
      "    FI_get_keyid_index(__"+Module+"_aux_keyid_index_"+Name
      +", __keyid, __index);",
@@ -860,9 +863,10 @@ implement_type_unifier_ini(PName, CName, Name, Spec) -->
       ( \+ref_type(Spec)
       ->DRef = ""
       ; DRef = "*"
-      )
+      ),
+      ctype_suff(Spec, Suff)
     },
-    ["int FI_unify_"+Name+"(term_t "+PName+", "+Decl+DRef+" const "+CName+") {"].
+    ["int FI_unify_"+Name+"(term_t "+PName+", "+Decl+DRef+" const "+CName+Suff+") {"].
 
 apply_name(Name=Value) :-
     camel_snake(Name, Arg),
@@ -957,11 +961,13 @@ declare_struct(union_ini(SubType, _, TPDL), _, Name) -->
 declare_struct(union_end(SubType), _, _) -->
     declare_struct_union_end(SubType).
 declare_struct(atomic(SubType, Name), Spec, Term) -->
-    {ctype_decl(Spec, Decl)},
+    { ctype_decl(Spec, Decl),
+      ctype_suff(Spec, Suff)
+    },
     ( {SubType = union}
     ->{functor(Term, TName, _)},
-      ["    "+Decl+" "+TName+";"]
-    ; ["typedef "+Decl+" "+Name+";"]
+      ["    "+Decl+" "+TName+Suff+";"]
+    ; ["typedef "+Decl+" "+Name+Suff+";"]
     ).
 declare_struct(func_ini(SubType, Spec), _, _) -->
     ( {SubType = union}
@@ -973,11 +979,13 @@ declare_struct(func_end(SubType), Term, _) -->
     ( {SubType = union}
     ->{functor(Term, TName, _)},
       ["    } "+TName+";"]
-    ; ['};']
+    ; ["};"]
     ).
 declare_struct(func_rec(_, _, _, _), Spec, Name) -->
-    {ctype_decl(Spec, Decl)},
-    ["    "+Decl+" "+Name+";"].
+    { ctype_decl(Spec, Decl),
+      ctype_suff(Spec, Suff)
+    },
+    ["    "+Decl+" "+Name+Suff+";"].
 %%
 declare_struct(dict_ini(_, _, _, _), Spec, _) -->
     {ctype_decl(Spec, Decl)},
@@ -986,8 +994,10 @@ declare_struct(dict_ini(_, _, _, _), Spec, _) -->
 declare_struct(dict_key_value(Dict, Desc, N, _), Key, Value) -->
     {key_value_from_desc(Dict, Desc, N, Key, Value)}.
 declare_struct(dict_rec(_, _, _, _, _), Spec, Name) -->
-    {ctype_decl(Spec, Decl)},
-    ["    "+Decl+" "+Name+";"].
+    { ctype_decl(Spec, Decl),
+      ctype_suff(Spec, Suff)
+    },
+    ["    "+Decl+" "+Name+Suff+";"].
 declare_struct(dict_end(_, _, _), _, _) --> ['};'].
 
 declare_type_getter_unifier_union_ini(union, Spec, Name) -->
@@ -1015,14 +1025,18 @@ declare_type_getter_unifier(dict_end(_, _, _), _, _) --> [].
 declare_type_getter_unifier(dict_rec(_, _, _, _, _), _, _) --> [].
 
 declare_type_getter_unifier(Name, Spec) -->
-    { ctype_decl(Spec, Decl),
+    { ctype_decl(Spec, Decl1),
       ( \+ref_type(Spec)
-      ->DRef = ""
-      ; DRef = "*"
+      ->DRef = Decl1
+      ; DRef = Decl1+"*"
+      ),
+      ( Spec = array(_, _)
+      ->Decl = Decl1
+      ; Decl = Decl1+"*"
       )
     },
-    ["int FI_get_"+Name+"(root_t __root, term_t, "+Decl+"*);",
-     "int FI_unify_"+Name+"(term_t, "+Decl+DRef+" const);",
+    ["int FI_get_"+Name+"(root_t __root, term_t, "+Decl+");",
+     "int FI_unify_"+Name+"(term_t, "+DRef+" const);",
      ''].
 
 generate_aux_clauses(Module) -->
@@ -1216,18 +1230,31 @@ declare_foreign_bind_(_, _, _, _, _, _, _, _) --> [].
 
 declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg) -->
     { bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-      ctype_barg_decl(Spec, Mode, Decl)
+      ctype_barg_decl(Spec, Mode, Decl),
+      ctype_barg_suff(Spec, Suff)
     },
-    [Decl+' '+Arg].
+    [Decl+' '+Arg+Suff].
 
 ctype_barg_decl(Spec, Mode, Decl) :-
     ctype_barg_decl(Spec, Mode, Codes, []),
     atom_codes(Decl, Codes).
 
+ctype_barg_suff(Spec, Suff) :-
+    ctype_suff(Spec, Codes, []),
+    atom_codes(Suff, Codes).
+
 ctype_barg_decl(Spec, Mode) -->
     ctype_arg_decl(Spec, Mode),
-    ({Mode = in, \+ ref_type(Spec)} -> [] ; "*"),
-    ({Mode = in} -> " const" ; []). % Ensure const correctness
+    ({ Mode = in,
+       \+ ref_type(Spec)
+     ; Spec = array(_, _)
+     } -> []
+    ; "*"
+    ),
+    ( {Mode = in}
+    ->" const"
+    ; []
+    ). % Ensure const correctness
 
 ctype_arg_decl(Spec, Mode) -->
     ctype_decl(Spec),
@@ -1237,11 +1264,21 @@ ctype_arg_decl(Spec, Mode, Decl) :-
     ctype_arg_decl(Spec, Mode, Codes, []),
     atom_codes(Decl, Codes).
 
+
+ctype_suff(array(Spec, Dim), CDim) --> "[", call(CDim, Dim), "]", ctype_suff(Spec, CDim).
+ctype_suff(Spec, _) -->
+    {member(Spec, [list(_), ptr(_), chrs(_), string(_), type(_), enum(_, _),
+                   term, tdef(_, _), setof(_, _), cdef(_), _-_])},
+    neck.
+
+ctype_suff(Spec) --> ctype_suff(Spec, acodes).
+
 is_ref(term,      _) :- !.
 is_ref(list(_),   _) :- !.        % Always ref
 is_ref(ptr(_),    _) :- !.        % Always ref
 is_ref(chrs(_),   _) :- !.
 is_ref(string(_), _) :- !.
+is_ref(array(_, _), _) :- !.
 is_ref(_, in).
 is_ref(_, out).
 % is_ref(inout, _) :- fail.
@@ -1253,6 +1290,7 @@ ref_type(type(_)).
 ref_type(tdef(_, Spec)) :- ref_type(Spec).
 
 ctype_decl(list(Spec))     --> ctype_decl(Spec), "*".
+ctype_decl(array(Spec, _)) --> ctype_decl(Spec).
 ctype_decl(ptr(Spec))      --> ctype_decl(Spec), "*".
 ctype_decl(chrs(Name))     --> acodes(Name).
 ctype_decl(string(Name))   --> acodes(Name).
@@ -1267,6 +1305,10 @@ ctype_decl(_-CType)        --> acodes(CType).
 ctype_decl(Spec, Decl) :-
     ctype_decl(Spec, Codes, []),
     atom_codes(Decl, Codes).
+
+ctype_suff(Spec, Suff) :-
+    ctype_suff(Spec, Codes, []),
+    atom_codes(Suff, Codes).
 
 acodes(Atom, List, Tail) :-
     atom_codes(Atom, Codes),
@@ -1441,7 +1483,8 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
      ''].
 
 c_set_argument(list(S),     _, C, A, L) :- c_set_argument_rec(list, S, C, A, L).
-c_set_argument(ptr( S),     _, C, A, L) :- c_set_argument_rec(ptr,  S, C, A, L).
+c_set_argument(array(S, D), _, C, A, L) :- c_set_argument_array(S, D, C, A, L).
+c_set_argument(ptr(S),      _, C, A, L) :- c_set_argument_rec(ptr, S, C, A, L).
 c_set_argument(type(T),     M, C, A, L) :- c_set_argument_type(M, T, C, A, L).
 c_set_argument(enum(T, _),  M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(cdef(T),     M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
@@ -1464,6 +1507,12 @@ c_set_argument_chrs(inout, CArg, Arg, "FI_unify_inout_chrs("+Arg+", "+CArg+")").
 c_set_argument_string(out,   CArg, Arg, "__rtc_FI_unify(string, "+Arg+", "+CArg+")").
 c_set_argument_string(inout, CArg, Arg, "FI_unify_inout_string("+Arg+", "+CArg+")").
 
+c_set_argument_array(Spec, Dim, CArg, Arg, "FI_unify_array("+L+", "+CDim+", "+Arg+")") :-
+    Arg_ = Arg+"_",
+    c_var_name(Arg_, CArg_),
+    c_dim(Dim, CDim),
+    c_set_argument(Spec, out, CArg+"["+CArg_+"]", Arg_, L).
+
 c_set_argument_rec(Type, Spec, CArg, Arg, "FI_unify_"+Type+"("+L+", "+Arg+", "+CArg+")") :-
     Arg_ = Arg+"_",
     c_var_name(Arg_, CArg_),
@@ -1476,6 +1525,7 @@ c_set_argument_setof(Mode, Spec, CArg, Arg, "FI_unify_"+Mode+"_setof("+L+", "+Ty
     c_set_argument(Spec, out, CArg_, Arg_, L).
 
 c_get_argument(list(S),     M, C, A, L) :- c_get_argument_rec(M, list, S, C, A, L).
+c_get_argument(array(S, D), _, C, A, L) :- c_get_argument_array(S, D, C, A, L).
 c_get_argument(ptr(S),      M, C, A, L) :- c_get_argument_rec(M, ptr,  S, C, A, L).
 c_get_argument(type(T),     M, C, A, L) :- c_get_argument_type(M, T, C, A, L).
 c_get_argument(enum(T, _),  M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
@@ -1499,6 +1549,12 @@ c_get_argument_chrs(inout, CArg, Arg, "FI_get_inout_chrs("+Arg+", "+CArg+")").
 c_get_argument_string(in, CArg, Arg, "__rtc_FI_get(string, "+Arg+", "+CArg+")").
 c_get_argument_string(inout, CArg, Arg, "FI_get_inout_string("+Arg+", "+CArg+")").
 
+c_get_argument_array(Spec, Dim, CArg, Arg, "FI_get_array("+L+","+CDim+", "+Arg+")") :-
+    Arg_ = Arg+"_",
+    c_var_name(Arg_, CArg_),
+    c_dim(Dim, CDim),
+    c_get_argument(Spec, in, CArg+"["+CArg_+"]", Arg_, L).
+
 c_get_argument_rec(Mode, Type, Spec, CArg, Arg,
                    "FI_get_"+Mode+"_"+Type+"("+L+", "+Arg+", "+CArg+")") :-
     Arg_ = Arg+"_",
@@ -1512,26 +1568,39 @@ c_get_argument_setof(Mode, Spec, CArg, Arg,
     ctype_decl(Spec, Type),
     c_get_argument(Spec, in, CArg_, Arg_, L).
 
+c_dim(Dim) --> {integer(Dim)}, !, acodes(Dim).
+c_dim(Dim) --> "_c_", acodes(Dim).
+
+c_dim(Dim, CDim) :-
+    c_dim(Dim, Codes, []),
+    atom_codes(CDim, Codes).
+
+ctype_c_suff(Spec) --> ctype_suff(Spec, c_dim).
+
+ctype_c_suff(Spec, Suff) :-
+    ctype_c_suff(Spec, Codes, []),
+    atom_codes(Suff, Codes).
+
 bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) -->
     ( {compound(Head)}
-    ->findall("    "+Decl+DN,
+    ->findall(Line,
               ( arg(_, Head, Arg),
                 bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-                ctype_arg_decl(Spec, Mode, Decl),
-                c_var_name(Arg, CArg),
-                ( Spec = term
-                ->DN=" "+CArg+"=PL_new_term_ref();"
-                ; DN=" "+CArg+";"
+                ( ctype_arg_decl(Spec, Mode, Decl),
+                  c_var_name(Arg, CArg),
+                  ( Spec = term
+                  ->DN=" "+CArg+"=PL_new_term_ref();"
+                  ; ctype_c_suff(Spec, CSuff),
+                    DN=" "+CArg+CSuff+";"
+                  ),
+                  Line = "    "+Decl+DN
+                ; memberchk(Mode, [in, inout]),
+                  c_var_name(Arg, CArg1),
+                  CArg = "&"+CArg1,
+                  c_get_argument(Spec, Mode, CArg, Arg, GetArg),
+                  Line = "    "+GetArg+";"
                 )
-              )),
-      findall("    "+GetArg+";",
-              ( arg(_, Head, Arg),
-                bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-                memberchk(Mode, [in, inout]),
-                c_var_name(Arg, CArg1),
-                CArg = "&"+CArg1,
-                c_get_argument(Spec, Mode, CArg, Arg, GetArg)
-             ))
+              ))
     ; []
     ),
     {generate_foreign_call(Bind-Head, M, CM, Comp, Call, Succ, Glob, Return, ForeignCall)},
@@ -1644,8 +1713,10 @@ generate_foreign_call_(N, Head, M, CM, Comp, Call, Succ, Glob, Sep+Deref+CArg+FC
     (N \= 1 -> Sep = ", " ; Sep = ""),
     bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
     c_var_name(Arg, CArg),
-    ( Mode = in,
-      \+ ref_type(Spec)
+    ( ( Mode = in,
+        \+ ref_type(Spec)
+      ; Spec = array(_, _)
+      )
     ->Deref = ""
     ; Deref = "&"
     ),
@@ -1688,6 +1759,15 @@ match_type(Prop, M, K, N, Spec, A) -->
 match_type_k(known, Prop, M, N, Spec, A) --> match_known_type(Prop, M, N, Spec, A).
 match_type_k(unknown, _, _, _, _, _) --> [].
 
+match_known_type_type(Type, A, M, N, MSpec, A) -->
+    {extend_args(Type, [A], Prop)},
+    match_type(Prop, M, known, N, MSpec, A).
+
+match_known_array([], T, A, M, N, MSpec, A) -->
+    match_known_type_type(T, A, M, N, MSpec, A).
+match_known_array([D|L], T, A, M, N, array(Spec, D), A) -->
+    match_known_array(L, T, E, M, N, Spec, E).
+
 match_known_type(atm(A),            _, _, chrs('char*'),   A) --> [].
 match_known_type(atom(A),           _, _, chrs('char*'),   A) --> [].
 match_known_type(str(A),            _, _, string('char*'), A) --> [].
@@ -1700,17 +1780,25 @@ match_known_type(integer(A),        _, _, integer-int,     A) --> [].
 match_known_type(character_code(A), _, _, char_code-char,  A) --> [].
 match_known_type(char(A),           _, _, char-char,       A) --> [].
 match_known_type(num(A),            _, _, float-double,    A) --> [].
+match_known_type(size_t(A),         _, _, size_t-size_t,   A) --> [].
 match_known_type(float_t(A),        _, _, float_t-float,   A) --> [].
 match_known_type(number(A),         _, _, float-double,    A) --> [].
 match_known_type(term(A),           _, _, term,            A) --> [].
+match_known_type(type(Type, A),     M, N, MSpec,           A) -->
+    {nonvar(Type)},
+    match_known_type_type(Type, A, M, N, MSpec, A).
+match_known_type(array(Type, DimL, A), M, N, MSpec, A) -->
+    {nonvar(Type)},
+    match_known_array(DimL, Type, A, M, N, MSpec, A),
+    !.
 match_known_type(MType, M, N, MSpec, A) -->
-    {member(MType-MSpec, [ptr( Type, A)-ptr( Spec),
-                          list(Type, A)-list(Spec)])},
-    neck,
-    { nonvar(Type),
-      extend_args(Type, [E], Prop)
+    { member(MType-MSpec, [ptr( Type, A)-ptr( Spec),
+                           list(Type, A)-list(Spec)])
     },
-    match_type(Prop, M, known, N, Spec, E).
+    neck,
+    {nonvar(Type)},
+    match_known_type_type(Type, E, M, N, Spec, E),
+    !.
 match_known_type(Type, M, _, tdef(Name, Spec), A) -->
     { type_is_tdef(M, Type, Spec, A),
       functor(Type, Name, _)

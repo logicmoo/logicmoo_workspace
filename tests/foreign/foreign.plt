@@ -110,4 +110,9 @@ test(fimport2) :-
     test_ireverse2([1,2,3], Y),
     assertion(Y==[3,2,1]).
 
+test(array) :-
+    fill_array(2,3, Array),
+    test_array(2,3, Array, CheckSum),
+    assertion(abs(CheckSum-2.91666666666666) < 1e-12).
+
 :- end_tests(foreign).

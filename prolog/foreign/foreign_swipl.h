@@ -80,6 +80,7 @@
 #endif
 
 #define FI_get_integer(_, t, i) PL_get_integer(t, i)
+#define FI_get_size_t(_, t, i) PL_get_long(t, (long *)i)
 #define FI_get_long(_, t, l) PL_get_long(t, l)
 #define FI_get_float(_, t, f)   PL_get_float(t, f)
 #define FI_get_float_t(_, t, f) ({			\
@@ -106,6 +107,7 @@
 	    __result;					\
 	})
 
+#define FI_unify_size_t(t, p)    PL_unify_integer(t, p)
 #define FI_unify_integer(t, p)   PL_unify_integer(t, p)
 #define FI_unify_long(t, p)      PL_unify_integer(t, p) /* there is no PL_unify_long */
 #define FI_unify_float(t, p)     PL_unify_float(t, p)
@@ -160,6 +162,17 @@
 	_c_##__term##_++;					\
       };							\
     })
+
+#define FI_get_array(__FI_get_elem, __dim, __term) ({                   \
+            for (size_t _c_##__term##_ = 0;                             \
+                 _c_##__term##_ < __dim;                                \
+                 _c_##__term##_++) {                                    \
+                term_t __term##_ = PL_new_term_ref();                   \
+                __rtcheck(PL_get_arg(                                   \
+                              _c_##__term##_+1, __term, __term##_));    \
+                __FI_get_elem;                                          \
+            }                                                           \
+        })
 
 #define FI_get_inout_list(__FI_get_elem, __term, __value) ({	\
             if(PL_is_variable(__term)) {                        \
@@ -244,13 +257,26 @@
 	__rtcheck(PL_unify_nil(l));				\
       }								\
     })
+    
+#define FI_unify_array(__FI_unify_elem, __dim, __term) ({               \
+            __rtcheck(PL_unify_functor(                                 \
+                          __term,                                       \
+                          PL_new_functor(PL_new_atom("v"), __dim)));    \
+            for(size_t _c_##__term##_ = 0;                              \
+                _c_##__term##_ < __dim;                                 \
+                _c_##__term##_++) {                                     \
+                term_t __term##_ = PL_new_term_ref();                   \
+                __rtcheck(PL_get_arg(                                   \
+                              _c_##__term##_+1, __term, __term##_));    \
+                __FI_unify_elem;					\
+            }                                                           \
+        })
 
 #define FI_unify_setof(__FI_unify_elem, __type, __term, __value) ({     \
             term_t l = PL_copy_term_ref(__term);			\
             term_t __term##_ = PL_new_term_ref();			\
             typeof (__value + 0) __set = __value;                       \
-            __type _c_##__term##_;                                      \
-            for(_c_##__term##_ = 0; __set != 0; _c_##__term##_++) {     \
+            for(size_t _c_##__term##_ = 0; __set != 0; _c_##__term##_++) { \
                 if (FI_is_element(_c_##__term##_, __set)) {             \
                     __rtcheck(PL_unify_list(l, __term##_, l));          \
                     __FI_unify_elem;                                    \

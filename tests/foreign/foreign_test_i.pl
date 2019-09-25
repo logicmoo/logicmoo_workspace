@@ -2,7 +2,8 @@
           [f_enum_example/4, f_union_example/4, f_setof_enum/4, fce/2, fco/2,
            aa/2, eq/2, idx/3, numl/2, io/1, f/1, get_arrays/4, show_arrays/3,
            sio/1, negative_t/1, fortran1/2, positive_t/1, fd1/4, fd2/4, fd3/4,
-           extend/2, test_ireverse1/2, test_ireverse2/2]).
+           extend/2, test_ireverse1/2, test_ireverse2/2, test_array/4,
+           fill_array/3]).
 
 :- use_module(library(neck)).
 :- use_module(library(assertions)).
@@ -252,3 +253,6 @@ ireverse2(X,Y) :- reverse(X, Y).
         size_of(LN, N)
        ).
 */
+
+:- pred test_array(+M:size_t, +N:size_t, +array(num, [M, N]), -R:num) is (foreign, returns(R)).
+:- pred fill_array(+M:size_t, +N:size_t, -array(num, [M, N])) is (foreign).

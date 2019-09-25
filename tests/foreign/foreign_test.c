@@ -189,3 +189,17 @@ void test_ireverse1(root_t __root, int* const var_1, int** var_2) {
 void test_ireverse2(int* const var_1, int** var_2) {
   ireverse2(var_1, var_2);
 }
+
+double test_array(size_t const m, size_t const n, double const array[m][n]) {
+    double s = 0;
+    for (size_t i = 0; i < m; i++)
+        for (size_t j = 0; j < n; j++)
+            s+= array[i][j];
+    return s;
+}
+
+void fill_array(size_t const m, size_t const n, double array[m][n]) {
+    for (size_t i = 0; i < m; i++)
+        for (size_t j = 0; j < n; j++)
+            array[i][j] = 1.0/(1 + i + j);
+}

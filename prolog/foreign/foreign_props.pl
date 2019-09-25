@@ -47,8 +47,10 @@
            memory_root/1,
            ptr/1,
            ptr/2,
+           array/3,
            setof/2,
            float_t/1,
+           size_t/1,
            dict_t/2,
            dict_t/3,
            dict_join_t/4,
@@ -60,6 +62,7 @@
 :- use_module(library(metaprops)).
 :- use_module(library(plprops)).
 :- use_module(library(extend_args)).
+:- use_module(library(mapargs)).
 
 :- global foreign/1.
 foreign(G) :- call(G).
@@ -114,6 +117,28 @@ ptr(Ptr) :- int(Ptr).
 
 :- type long/1 # "Defines a long integer".
 long(Long) :- int(Long).
+
+:- type size_t/1 # "Defines a size".
+size_t(Size) :- nnegint(Size).
+
+%!  array(:Type, Dimensions:list(nnegint), Array)
+%
+%   Defines an array of dimensions Dimentions. In Prolog an array is implemented
+%   as nested terms, with a functor arity equal to the dimension at each
+%   level. In the foreign language is the typical array structure.  Note that we
+%   use functor since they are equivalent to arrays in Prolog.
+
+:- type array(1, list(size_t), term).
+:- meta_predicate array(1, +, ?).
+
+array(Type, DimL, Array) :-
+    array_(DimL, Type, Array).
+
+array_([], T, V) :- type(T, V).
+array_([Dim|DimL], T, V) :-
+    size_t(Dim),
+    functor(V, v, Dim),
+    mapargs(array_(DimL, T), V).
 
 %!  setof(:Type, ?Set)
 %
