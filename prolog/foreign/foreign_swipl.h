@@ -163,6 +163,10 @@
       };							\
     })
 
+#define FI_get_dim(__term, __dim) ({                            \
+            __rtcheck(PL_get_name_arity(__term, NULL, __dim));  \
+        })
+
 #define FI_get_array(__FI_get_elem, __dim, __term) ({                   \
             for (size_t _c_##__term##_ = 0;                             \
                  _c_##__term##_ < __dim;                                \

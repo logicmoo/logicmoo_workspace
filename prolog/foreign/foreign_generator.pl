@@ -180,7 +180,13 @@ compile_library(M, FileSO, File, FSourceL) :-
     ; do_compile_library(M, FileSO, File, FSourceL)
     ).
 
+% Beyond MaxFLIArgs arguments we should pack foreign arguments due to a
+% hard-coded limitation of SWI-Prolog:
+max_fli_args(10 ).
+
 do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
+    max_fli_args(MaxFLIArgs),
+    neck,
     findall(F/A, ( current_foreign_prop(_, Head, M, _, _, _, _, _, _, _, _, _, _),
                    \+ ( predicate_property(M:Head, number_of_clauses(X)),
                         X>0
@@ -199,7 +205,14 @@ do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
                            (:- use_foreign_library(AliasSO)),
                            % make these symbols public:
                            (:- shlib:current_library(AliasSO, _, F1, IModule, _),
-                               open_shared_object(F1, _Handle, [global]))]
+                               open_shared_object(F1, _Handle, [global]))],
+                          findall((Head :- Body),
+                                  ( member(F/A, IntfPIL),
+                                    A > MaxFLIArgs,
+                                    atomic_list_concat(['__aux_pfa_', F, '_', A], NF),
+                                    functor(Head, F, A),
+                                    Body =.. [NF, Head]
+                                  ))
                         ))).
 
 atomic_args(String, ArgL) :-
@@ -431,7 +444,16 @@ write_register_sentence(fimport(_),    M, PredName, Arity, BindName, Line) :- !,
 write_register_sentence(fimport(_, _), M, PredName, Arity, BindName, Line) :- !,
     write_init_fimport_binding(M, PredName, Arity, BindName, Line).
 write_register_sentence(_, _, PredName, Arity, BindName,
-                        "    PL_register_foreign(\""+PredName+"\", "+Arity+", "+BindName+", 0);").
+                        "    PL_register_foreign(\""+PredName+"\", "+Arity+", "+BindName+", 0);") :-
+    max_fli_args(MaxFLIArgs),
+    neck,
+    Arity =< MaxFLIArgs.
+write_register_sentence(_, _, PredName, Arity, BindName,
+                        "    PL_register_foreign(\"__aux_pfa_"+PredName+"_"+Arity
+                        +"\", 1, __aux_pfa_"+BindName+"_"+Arity+", 0);") :-
+    max_fli_args(MaxFLIArgs),
+    neck,
+    Arity > MaxFLIArgs.
 
 write_init_fimport_binding(M, PN, A, BN,
                            "    "+BN+" = PL_predicate(\""+PN+"\", "+A+", \""+M+"\");").
@@ -1178,6 +1200,12 @@ fetch_kv_prop_arg(Key, CM, Value, PropL, M:Prop) :-
       M=CM
     ).
 
+declare_intf_head(PCN, Head, "foreign_t __aux_pfa_"+PCN+"_"+N+"(term_t __args)") :-
+    max_fli_args(MaxFLIArgs),
+    neck,
+    functor(Head, _, N),
+    N > MaxFLIArgs,
+    !.
 declare_intf_head(PCN, Head, "foreign_t "+PCN+"("+TxtL/", "+")") :-
     findall("term_t "+Arg,
             ( compound(Head),
@@ -1214,26 +1242,29 @@ declare_foreign_head(Head, M, CM, Comp, Call, Succ, Glob, (CN/_ as _ + _),
              ->["root_t __root"]
              ; []
              ),
-             ( {compound(Head)}
-             ->declare_foreign_bind_(1, M, CM, Head, Comp, Call, Succ, Glob)
-             ; []
-             )
+             findall(
+                 Line,
+                 distinct(
+                     Key,
+                     ( compound(Head),
+                       arg(_, Head, Arg),
+                       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+                       curr_arg_decl(Arg, Spec, Mode, Key-Line)
+                     )))
            ), ArgL).
 
-declare_foreign_bind_(N, M, CM, Head, Comp, Call, Succ, Glob) -->
-    {arg(N, Head, Arg)},
-    declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg),
-    {succ(N, N1)},
-    !,
-    declare_foreign_bind_(N1, M, CM, Head, Comp, Call, Succ, Glob).
-declare_foreign_bind_(_, _, _, _, _, _, _, _) --> [].
+extra_arg_decl(array(Spec, Dim), KeyLine) :-
+    ( \+ integer(Dim),
+      curr_arg_decl(Dim, size_t-size_t, in, KeyLine)
+    ; extra_arg_decl(Spec, KeyLine)
+    ).
 
-declare_foreign_bind_arg(Head, M, CM, Comp, Call, Succ, Glob, Arg) -->
-    { bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-      ctype_barg_decl(Spec, Mode, Decl),
-      ctype_barg_suff(Spec, Suff)
-    },
-    [Decl+' '+Arg+Suff].
+curr_arg_decl(_, Spec, Mode, KeyLine) :-
+    memberchk(Mode, [in, inout]),
+    extra_arg_decl(Spec, KeyLine).
+curr_arg_decl(Arg, Spec, Mode, Arg-(Decl+' '+Arg+Suff)) :-
+    ctype_barg_decl(Spec, Mode, Decl),
+    ctype_barg_suff(Spec, Suff).
 
 ctype_barg_decl(Spec, Mode, Decl) :-
     ctype_barg_decl(Spec, Mode, Codes, []),
@@ -1466,10 +1497,20 @@ declare_fimp_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
      ''].
 
 declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
-    { Bind = (PI as _/PCN + CheckMode),
+    { max_fli_args(MaxFLIArgs),
+      neck,
+      Bind = (PI as _/PCN + CheckMode),
       declare_intf_head(PCN, Head, PCNH)
     },
     [PCNH+' {'],
+    ( { functor(Head, _, Arity),
+        Arity > MaxFLIArgs
+      }
+    ->findall(["    term_t "+Arg+" = PL_new_term_ref();",
+               "    __rtcheck(PL_get_arg("+N+", __args, "+Arg+"));"],
+              arg(N, Head, Arg))
+    ; []
+    ),
     % If is variable then succeed (because is compatible)
     findall("    if(PL_is_variable("+Arg+")) return TRUE;",
             ( CheckMode==(type),
@@ -1581,25 +1622,56 @@ ctype_c_suff(Spec, Suff) :-
     ctype_c_suff(Spec, Codes, []),
     atom_codes(Suff, Codes).
 
+extra_var_def(array(Spec, Dim), Head, Arg, KeyLine) :-
+    ( \+ integer(Dim),
+      curr_bind_line(dim(Arg), Head, Dim, size_t-size_t, in, KeyLine)
+    ; ( integer(Dim)
+      ->Var = Arg+"_"+Dim
+      ; Var = Dim
+      ),
+      extra_var_def(Spec, Head, Var, Key-Line),
+      ( arg(_, Head, Dim)
+      ->LineL = [Line]
+      ; LineL = ["    term_t "+Var+"=PL_new_term_ref();",
+                 "    __rtcheck(PL_get_arg(1, "+Arg+", "+Var+"));",
+                 Line]
+      ),
+      KeyLine = Key-LineL
+    ).
+
+curr_bind_line(arg, Head, Arg, Spec, Mode, KeyLine) :-
+    memberchk(Mode, [in, inout]),
+    extra_var_def(Spec, Head, Arg, KeyLine).
+curr_bind_line(_, _, Arg, Spec, Mode, dec(Arg)-Line) :-
+    ctype_arg_decl(Spec, Mode, Decl),
+    c_var_name(Arg, CArg),
+    ( Spec = term
+    ->DN=" "+CArg+"=PL_new_term_ref();"
+    ; ctype_c_suff(Spec, CSuff),
+      DN=" "+CArg+CSuff+";"
+    ),
+    Line = "    "+Decl+DN.
+curr_bind_line(arg, _, Arg, Spec, Mode, KeyLine) :-
+    memberchk(Mode, [in, inout]),
+    c_var_name(Arg, CArg1),
+    CArg = "&"+CArg1,
+    c_get_argument(Spec, Mode, CArg, Arg, GetArg),
+    KeyLine = def(Arg)-["    "+GetArg+";"].
+curr_bind_line(dim(Arg), Head, Dim, _, _, def(CDim1)-Line) :-
+    \+ arg(_, Head, Arg),
+    c_var_name(Dim, CDim1),
+    CDim = "&"+CDim1,
+    Line = "    FI_get_dim("+Arg+", "+CDim+");".
+
 bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) -->
     ( {compound(Head)}
     ->findall(Line,
-              ( arg(_, Head, Arg),
-                bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
-                ( ctype_arg_decl(Spec, Mode, Decl),
-                  c_var_name(Arg, CArg),
-                  ( Spec = term
-                  ->DN=" "+CArg+"=PL_new_term_ref();"
-                  ; ctype_c_suff(Spec, CSuff),
-                    DN=" "+CArg+CSuff+";"
-                  ),
-                  Line = "    "+Decl+DN
-                ; memberchk(Mode, [in, inout]),
-                  c_var_name(Arg, CArg1),
-                  CArg = "&"+CArg1,
-                  c_get_argument(Spec, Mode, CArg, Arg, GetArg),
-                  Line = "    "+GetArg+";"
-                )
+              distinct(
+                  Key, % This hack allows automatic definition of dimensions on input arrays
+                  ( arg(_, Head, Arg),
+                    bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+                    curr_bind_line(arg, Head, Arg, Spec, Mode, Key-Line)
+                  )
               ))
     ; []
     ),
@@ -1678,21 +1750,21 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
     ; []
     ).
 
-generate_foreign_call((CN/_A as _ + _)-Head, M, CM, Comp, Call, Succ, Glob, Return,
-                      "    "+Line+CN+"("+MR+FC+");") :-
+generate_foreign_call((CN/_A as _ + _)-Head1, M, CM, Comp, Call, Succ, Glob, Return,
+                      "    "+HLine+CN+"("+MR+LineL/", "+");") :-
     ( member(RS, [returns_state(_), type(_)]),
       memberchk(RS, Glob)
-    ->Line="foreign_t __result=",
-      CHead = Head,
+    ->HLine="foreign_t __result=",
+      Head = Head1,
       Return = "__result"
     ; ( member(returns(Var, _), Glob)
       ->c_var_name(Var, CVar),
-        Line=CVar+"=",
-        Head =.. Args,
+        HLine=CVar+"=",
+        Head1 =.. Args,
         once(select(Var, Args, CArgs)),
-        CHead =.. CArgs
-      ; CHead = Head,
-        Line=""
+        Head =.. CArgs
+      ; Head = Head1,
+        HLine=""
       ),
       ( member(no_exception, Glob)
       ->Return = "TRUE"
@@ -1703,15 +1775,25 @@ generate_foreign_call((CN/_A as _ + _)-Head, M, CM, Comp, Call, Succ, Glob, Retu
     ->MR="__root, "
     ; MR=""
     ),
-    ( compound(CHead)
-    ->generate_foreign_call_(1, CHead, M, CM, Comp, Call, Succ, Glob, FC)
-    ; FC=""
+    findall(Line,
+            distinct(Key,
+                     ( compound(Head),
+                       arg(_, Head, Arg),
+                       bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+                       curr_arg_call(Arg, Spec, Mode, Key-Line)
+                     )
+                    ), LineL).
+
+extra_arg_call(array(Spec, Dim), KeyLine) :-
+    ( \+ integer(Dim),
+      curr_arg_call(Dim, size_t-size_t, in, KeyLine)
+    ; extra_arg_call(Spec, KeyLine)
     ).
 
-generate_foreign_call_(N, Head, M, CM, Comp, Call, Succ, Glob, Sep+Deref+CArg+FC) :-
-    arg(N, Head, Arg),
-    (N \= 1 -> Sep = ", " ; Sep = ""),
-    bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
+curr_arg_call(_, Spec, Mode, KeyLine) :-
+    memberchk(Mode, [in, inout]),
+    extra_arg_call(Spec, KeyLine).
+curr_arg_call(Arg, Spec, Mode, Arg-(Deref+CArg)) :-
     c_var_name(Arg, CArg),
     ( ( Mode = in,
         \+ ref_type(Spec)
@@ -1719,11 +1801,7 @@ generate_foreign_call_(N, Head, M, CM, Comp, Call, Succ, Glob, Sep+Deref+CArg+FC
       )
     ->Deref = ""
     ; Deref = "&"
-    ),
-    N1 is N + 1,
-    !,
-    generate_foreign_call_(N1, Head, M, CM, Comp, Call, Succ, Glob, FC).
-generate_foreign_call_(_, _, _, _, _, _, _, _, "").
+    ).
 
 :- use_module(library(sequence_list)).
 :- use_module(library(prolog_clause), []).
