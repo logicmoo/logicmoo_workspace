@@ -1625,18 +1625,7 @@ ctype_c_suff(Spec, Suff) :-
 extra_var_def(array(Spec, Dim), Head, Arg, KeyLine) :-
     ( \+ integer(Dim),
       curr_bind_line(dim(Arg), Head, Dim, size_t-size_t, in, KeyLine)
-    ; ( integer(Dim)
-      ->Var = Arg+"_"+Dim
-      ; Var = Dim
-      ),
-      extra_var_def(Spec, Head, Var, Key-Line),
-      ( arg(_, Head, Dim)
-      ->LineL = [Line]
-      ; LineL = ["    term_t "+Var+"=PL_new_term_ref();",
-                 "    __rtcheck(PL_get_arg(1, "+Arg+", "+Var+"));",
-                 Line]
-      ),
-      KeyLine = Key-LineL
+    ; extra_var_def(Spec, Head, Arg+"_"+Dim, KeyLine)
     ).
 
 curr_bind_line(arg, Head, Arg, Spec, Mode, KeyLine) :-
@@ -1657,11 +1646,18 @@ curr_bind_line(arg, _, Arg, Spec, Mode, KeyLine) :-
     CArg = "&"+CArg1,
     c_get_argument(Spec, Mode, CArg, Arg, GetArg),
     KeyLine = def(Arg)-["    "+GetArg+";"].
-curr_bind_line(dim(Arg), Head, Dim, _, _, def(CDim1)-Line) :-
-    \+ arg(_, Head, Arg),
+curr_bind_line(dim(Arg), Head, Dim, _, _, def(CDim1)-LineL) :-
+    \+ arg(_, Head, Dim),
     c_var_name(Dim, CDim1),
     CDim = "&"+CDim1,
-    Line = "    FI_get_dim("+Arg+", "+CDim+");".
+    Line = "    FI_get_dim("+Arg+", "+CDim+");",
+    ( arg(_, Head, Arg)
+    ->LineL = [Line]
+    ; Arg = Arg2+"_"+_,
+      LineL = ["    term_t "+Arg+"=PL_new_term_ref();",
+               "    __rtcheck(PL_get_arg(1, "+Arg2+", "+Arg+"));",
+               Line]
+    ).
 
 bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) -->
     ( {compound(Head)}
