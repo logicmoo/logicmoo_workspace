@@ -1730,6 +1730,11 @@ parse_options_([silent|Rest]) :- !,
 parse_options_([log_composites|Rest]) :- !,
     uassertz(option(log_composites)),
     parse_options_(Rest).
+parse_options_([sample(Fluents)|Rest]) :- !,
+	(is_list(Fluents) -> true; print_error(error, "sample(IntensionalFluents) must have a list argument"), fail),
+	% can't check whether they're actually fluents... as the program is not loaded yet
+    uassertz(option(sample(Fluents))),
+    parse_options_(Rest).
 parse_options_([debug|Rest]) :- !,
     uassertz(option(debug)),
     parse_options_(Rest).
@@ -2190,7 +2195,16 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 			; true),
 	
 		% only now do we have the full state:
-		findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents), 
+		findall(Fluent, (state(Fluent), \+ system_fluent(Fluent)), Fluents_), 
+		(option(sample(Templates)) -> 
+			findall(Fluent, (
+				member(Fluent,Templates), 
+				call_with_inference_limit( query(holds(Fluent,_)),500,Res), 
+				% tricky limit; larger limits seem to provoke a cascade of "Unhandled exception: inference_limit_exceeded" on SWISH
+				(Res=inference_limit_exceeded -> throw('Fluent sample specification is too vague') ; true)
+				), IntensionalFluents), 
+			append(IntensionalFluents,Fluents_,Fluents)
+			; Fluents_=Fluents ),
 		test(fluents,Time,Fluents),
 		((\+ state_is_clean(StateFlag)) ->
 			do_write([nl,' State at time ',Time,' is ',Fluents, nl]);
