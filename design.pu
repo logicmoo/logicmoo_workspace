@@ -1,0 +1,59 @@
+@startuml
+
+class animated << (P, #1133FF) >> {
+    {method} +update/0
+}
+
+class xpce << (O, #11FF33) >> {
+    {field} +id/1
+    {field} +size/2
+    {method} +get/2
+    {method} +send/2-4
+    {method} +init/0
+}
+
+class graphical << (O, #11FF33) >> {
+    {field} +location/2
+    {field} +rect/2
+}
+
+class window << (O, #11FF33) >> {
+    {method} +open/0
+}
+
+class background << (O, #11FF33) >> {
+    {field} -colour/1
+}
+
+class bat << (O, #11FF33) >> {
+    {field} -move_step/1
+    {method} +point_collides/1
+    {method} +up/0
+    {method} +down/0
+}
+
+class player << (O, #11FF33) >>
+
+class computer << (O, #11FF33) >>
+
+class game << (O, #FF1133) >> {
+    {method} init/0
+    {method} game_loop/0
+}
+
+class "ball(XVelocity, YVelocity)" << (O, #11FF33) >> {
+    {field} -diameter/1
+    {method} -bounce/3
+}
+
+xpce <|-- window : extends
+xpce <|-- graphical : extends
+graphical <|-- background : extends
+graphical <|-- bat : extends
+bat <|-- player : extends
+bat <|-- computer : extends
+graphical <|-- "ball(XVelocity, YVelocity)" : extends
+animated <-- computer : implements
+animated <-- "ball(XVelocity, YVelocity)" : implements
+
+@enduml
