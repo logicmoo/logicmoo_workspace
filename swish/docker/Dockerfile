@@ -2,6 +2,7 @@
 #
 # 	docker build --build-arg LPS_SHA1=$(git log -1 --pretty=%H) -t logicalcontracts/lps.swi .
 #
+# It should run on a directory with the intended version of LPS, checked out from git so the above can obtain LPS_SHA1
 # Grabed some recipes from https://hub.docker.com/r/dimitriirtimid/lps-swish/dockerfile
 # Execute with
 #	docker run -p 3051:3050 -v /Users/mc/git/lps_corner/swish/docker/tempData:/data -v /Users/mc/git/lps_corner/engine/logs:/home/lps/engine/logs logicalcontracts/lps.swi
