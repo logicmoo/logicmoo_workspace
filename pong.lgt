@@ -75,6 +75,8 @@
 :- object(graphical,
     extends(xpce_o)).
 
+   :- public(colour/1).
+
    :- public(position/2).
    position(X, Y) :-
        ^^get(position, point(X, Y)).
@@ -84,13 +86,17 @@
        self(Self),
        window::display(Self).
 
+   :- public(draw/1).
+   draw(Point) :-
+       self(Self),
+       window::display(Self, Point).
+
 :- end_object.
 
 
 :- object(background,
     extends(graphical)).
 
-    :- private(colour/1).
     colour(black).
 
     init :-
@@ -112,7 +118,7 @@
     extends(graphical),
     implements(animated)).
 
-   :- public([diameter/1, x_velocity/1, y_velocity/1, colour/1]).
+   :- public([diameter/1, x_velocity/1, y_velocity/1]).
    diameter(15).
    x_velocity(_XV_).
    y_velocity(_YV_).
@@ -125,8 +131,7 @@
        ^^send(fill_pattern, colour(Colour)),
        window::size(WW, WH),
        X is WW//2 - Diameter//2, Y is WH//2 - Diameter//2,
-       self(Self),
-       window::display(Self, point(X, Y)).
+       ^^draw(point(X, Y)).
 
    :- public(update/1).
    update(ball(XV, YV)):-
@@ -134,8 +139,7 @@
        ^^position(X, Y),
        bounce(X, Y, XV, YV, D),
        NX is X + XV, NY is Y + YV,
-       self(Self),
-       window::display(Self, point(NX, NY)).
+       ^^draw(point(NX, NY)).
 
    bounce(X, Y, XV, _YV_, _D) :-
        extends_object(O, bat),
@@ -157,7 +161,7 @@
 :- object(bat,
     extends(graphical)).
 
-    :- private([move_step/1, colour/1]).
+    :- private(move_step/1).
     :- public([start_size/2, start_pos/2]).
     start_size(20, 80).
     colour(white).
