@@ -45,11 +45,14 @@
 
 :- end_object.
 
+
 :- object(window,
     extends(xpce_o)).
 
    init :-
-       ^^new(picture('Pong')).
+       ^^new(picture('Pong')),
+       ^^send(recogniser, handler(k, logtalk(player, up))),
+       ^^send(recogniser, handler(j, logtalk(player, down))).
 
    :- public(open/0).
    open :-
@@ -66,21 +69,8 @@
        ^^send(display, ID, Point),
        O::send(flush).
 
-   /*
-   make_window :-
-       ::xpce_id(W),
-       ::bg_id(B),
-       ::width(Width),
-       ::height(Height),
-       new(W, picture('Pong')),
-       send(W, display, new(B, box(Width, Height))),
-       send(B, fill_pattern, colour(black)),
-       send(W, recogniser, handler(k, logtalk(bat, up))),
-       send(W, recogniser, handler(j, logtalk(bat, down))).
-   */
-
-
 :- end_object.
+
 
 :- object(graphical,
     extends(xpce_o)).
@@ -95,6 +85,7 @@
        window::display(Self).
 
 :- end_object.
+
 
 :- object(background,
     extends(graphical)).
@@ -111,9 +102,11 @@
 
 :- end_object.
 
+
 :- protocol(animated).
     :- public(update/1).
 :- end_protocol.
+
 
 :- object(ball(_XV_, _YV_),
     extends(graphical),
@@ -144,14 +137,10 @@
        self(Self),
        window::display(Self, point(NX, NY)).
 
-   /*
-    *bounce(X, Y, XV, _YV_, _D) :-
-    *    ( bat::rect(point(BTX, BTY), point(BBX, BBY))
-    *    ; opponent::rect(point(BTX, BTY), point(BBX, BBY))
-    *    ),
-    *    between(BTX, BBX, X), between(BTY, BBY, Y),
-    *    XV is -_XV_, !.
-    */
+   bounce(X, Y, XV, _YV_, _D) :-
+       extends_object(O, bat),
+       O::point_collides(point(X, Y)),
+       XV is -_XV_, !.
    bounce(X, _Y, XV, _YV_, D) :-
        window::size(Width, _),
        (X < D ; X > Width - D),
@@ -164,92 +153,97 @@
 
 :- end_object.
 
+
+:- object(bat,
+    extends(graphical)).
+
+    :- private([move_step/1, colour/1]).
+    :- public([start_size/2, start_pos/2]).
+    start_size(20, 80).
+    colour(white).
+
+    init :-
+        ::colour(Colour),
+        ::start_size(W, H),
+        ::start_pos(X, Y),
+        ^^new(box(W, H)),
+        ^^send(fill_pattern, colour(Colour)),
+        self(Self),
+        window::display(Self, point(X, Y)).
+
+    :- public(up/0).
+    up :-
+        ^^position(X, Y),
+        ::move_step(S),
+        NY is Y - S,
+        ^^send(position, point(X, NY)),
+        ^^draw.
+
+    :- public(down/0).
+    down :-
+        ^^position(X, Y),
+        ::move_step(S),
+        NY is Y + S,
+        ^^send(position, point(X, NY)),
+        ^^draw.
+
+    :- public(point_collides/1).
+    point_collides(point(X, Y)) :-
+        ^^position(TX, TY),
+        ^^size(W, H),
+        BX is TX + W, BY is TY + H,
+        between(TX, BX, X), between(TY, BY, Y).
+
+:- end_object.
+
+
+:- object(player,
+    extends(bat)).
+   start_pos(40, Y) :-
+       background::size(_, H), Y is H//2.
+   move_step(5).
+:- end_object.
+
+
+:- object(computer,
+    extends(bat),
+    implements(animated)).
+    start_pos(X, Y) :-
+        background::size(W, H),
+        X is W - 60,
+        Y is H//2.
+    move_step(4).
+
+    update(Ball) :-
+        window::size(Width, _), Margin is Width//2,
+        Ball::position(BX, BY), BX > Margin,
+        ^^position(_, Y),
+        ( Y > BY-30, ::up
+        ; Y < BY, ::down
+        ).
+    update(_).
+
+:- end_object.
+
+
 :- object(game).
 
    :- public(play/0).
    play :-
        window::init,
        window::open,
-       sleep(0.1),
+       sleep(0.2),
        background::init,
        ball(_, _)::init,
-       %bat::make_bat,
-       %opponent::make_bat,
+       player::init,
+       computer::init,
        game_loop(ball(3, 1)).
 
    game_loop(Ball) :-
        Ball::update(NewBall),
-       %opponent::update(NewBall),
-       sleep(0.01),
+       computer::update(NewBall),
+       sleep(0.02),
        game_loop(NewBall).
 
 :- end_object.
-
-% EOF, preserving experimental code for features not yet implemented.
-
-/*
-:- object(bat).
-   :- include('xpce_includes.lgt').
-
-   :- public([xpce_id/1, x/1, y/1, width/1, height/1, rect/2, start_pos/2]).
-   xpce_id(@bat).
-   x(X) :- ::xpce_id(ID), get(ID, position, point(X, _)).
-   y(Y) :- ::xpce_id(ID), get(ID, position, point(_, Y)).
-   rect(point(TX, TY), point(BX, BY)) :-
-       ::x(TX), ::y(TY), ::width(W), ::height(H),
-       BX is TX + W,
-       BY is TY + H.
-   width(10).
-   height(80).
-   start_pos(40, 200).
-
-   :- public(make_bat/0).
-   make_bat :-
-       window::xpce_id(W),
-       ::xpce_id(B),
-       ::width(Width), ::height(Height), ::start_pos(X, Y),
-       send(W, display, new(B, box(Width, Height)), point(X, Y)),
-       send(B, fill_pattern, colour(white)).
-
-   :- public(up/0).
-   up :-
-      window::xpce_id(W),
-      ::xpce_id(B),
-      ::y(Y), ::x(X),
-      NY is Y - 5,
-      send(W, display, B, point(X, NY)),
-      send(B, flush).
-   :- public(down/0).
-   down :-
-      window::xpce_id(W),
-      ::xpce_id(B),
-      ::y(Y), ::x(X),
-      NY is Y + 5,
-      send(W, display, B, point(X, NY)),
-      send(B, flush).
-
-:- end_object.
-
-:- object(opponent,
-    extends(bat)).
-   :- include('xpce_includes.lgt').
-
-   xpce_id(@opp).
-   start_pos(X, 200) :-
-       window::width(W), X is W - 40.
-
-   :- public(update/1).
-   update(Ball) :-
-       window::width(Width), Margin is Width//2,
-       Ball::x(BX), BX > Margin,
-       Ball::y(BY), ::y(Y), ::x(X),
-       window::xpce_id(W), ::xpce_id(O),
-       ( Y > BY-20, NY is Y - 2, send(W, display, O, point(X, NY))
-       ; Y < BY, NY is Y + 2, send(W, display, O, point(X, NY))
-       ), send(O, flush).
-   update(_).
-
-:- end_object.
-
-*/
 
