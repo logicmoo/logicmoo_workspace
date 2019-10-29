@@ -21,6 +21,50 @@
 \input{inference}
 
 \input{inf_goals}
+\subsection{Executing a Query with TRILL}
+To run a query, you can simply load the Prolog file, for example \href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
+\begin{verbatim}
+?- [peoplePets].
+\end{verbatim}
+\noindent
+The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of \href{http://vangelisv.github.io/thea/}{Thea} library.
+\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}} is equivalent with the following KB
+\begin{verbatim}
+:- use_module(library(trill)).
+
+:- trill.
+
+:- add_kb_prefix('','http://cohse.semanticweb.org/ontologies/people#').
+
+subClassOf(someValuesFrom('has_animal', 'pet'), 'natureLover').
+subClassOf('cat', 'pet').
+annotationAssertion('disponte:probability', 
+classAssertion('cat', 'Fluffy'), literal('0.4')).
+annotationAssertion('disponte:probability', 
+classAssertion('cat', 'Tom'), literal('0.3')).
+annotationAssertion('disponte:probability', 
+subClassOf('cat', 'pet'), literal('0.6')).
+propertyAssertion('has_animal', 'Kevin', 'Fluffy').
+propertyAssertion('has_animal', 'Kevin', 'Tom').
+classAssertion('cat', 'Fluffy').
+classAssertion('cat', 'Tom').
+\end{verbatim}
+\noindent
+
+
+You can also load an RDF/XML file using the predicate \verb|load_owl_kb(<filename>).| in the following way:
+\begin{itemize}
+	\item load TRILL library\\
+	\verb|use_module(library(trill)).|
+	\item initialize the algorithm you want to perform inference\\
+	\verb|init_trill(<algorithm_name>).|\\
+	For example, if you want to use TRILL$^P$ you should run \verb|init_trill(trillp).|
+	\item load the KB\\
+	\verb|load_owl_kb(<filename>).|\\
+	For example, \verb|load_owl_kb('./examples/biopaxLevel3_rdf.owl').|
+\end{itemize}
+\noindent
+Now the KB is loaded and the queries can be executed in the usual way.
 
 \section{Download Query Results through an API}
 The results of queries can also be downloaded programmatically by directly

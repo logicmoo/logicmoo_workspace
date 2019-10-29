@@ -38,6 +38,7 @@
 <li><a href="#non-probabilistic-queries">Non Probabilistic Queries</a></li>
 </ul></li>
 <li><a href="#trill-useful-predicates">TRILL Useful Predicates</a></li>
+<li><a href="#executing-a-query-with-trill">Executing a Query with TRILL</a></li>
 </ul></li>
 <li><a href="#download-query-results-through-an-api">Download Query Results through an API</a></li>
 <li><a href="#manual-in-pdf">Manual in PDF</a></li>
@@ -369,6 +370,40 @@ remove_axioms(++Axioms:list)</code></pre>
 <p>Finally, we can interrogate TRILL to return the loaded axioms with</p>
 <pre><code>axiom(?Axiom:axiom)</code></pre>
 <p>This predicate searches in the loaded knowledge base axioms that unify with Axiom.</p>
+<h2 id="executing-a-query-with-trill">Executing a Query with TRILL</h2>
+<p>To run a query, you can simply load the Prolog file, for example <a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>, as</p>
+<pre><code>?- [peoplePets].</code></pre>
+<p>The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of <a href="http://vangelisv.github.io/thea/">Thea</a> library. <a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a> is equivalent with the following KB</p>
+<pre><code>:- use_module(library(trill)).
+
+:- trill.
+
+:- add_kb_prefix(&#39;&#39;,&#39;http://cohse.semanticweb.org/ontologies/people#&#39;).
+
+subClassOf(someValuesFrom(&#39;has_animal&#39;, &#39;pet&#39;), &#39;natureLover&#39;).
+subClassOf(&#39;cat&#39;, &#39;pet&#39;).
+annotationAssertion(&#39;disponte:probability&#39;, 
+classAssertion(&#39;cat&#39;, &#39;Fluffy&#39;), literal(&#39;0.4&#39;)).
+annotationAssertion(&#39;disponte:probability&#39;, 
+classAssertion(&#39;cat&#39;, &#39;Tom&#39;), literal(&#39;0.3&#39;)).
+annotationAssertion(&#39;disponte:probability&#39;, 
+subClassOf(&#39;cat&#39;, &#39;pet&#39;), literal(&#39;0.6&#39;)).
+propertyAssertion(&#39;has_animal&#39;, &#39;Kevin&#39;, &#39;Fluffy&#39;).
+propertyAssertion(&#39;has_animal&#39;, &#39;Kevin&#39;, &#39;Tom&#39;).
+classAssertion(&#39;cat&#39;, &#39;Fluffy&#39;).
+classAssertion(&#39;cat&#39;, &#39;Tom&#39;).</code></pre>
+<p>You can also load an RDF/XML file using the predicate <code>load_owl_kb(&lt;filename&gt;).</code> in the following way:</p>
+<ul>
+<li><p>load TRILL library<br />
+<code>use_module(library(trill)).</code></p></li>
+<li><p>initialize the algorithm you want to perform inference<br />
+<code>init_trill(&lt;algorithm_name&gt;).</code><br />
+For example, if you want to use TRILL<span class="math inline">\(^P\)</span> you should run <code>init_trill(trillp).</code></p></li>
+<li><p>load the KB<br />
+<code>load_owl_kb(&lt;filename&gt;).</code><br />
+For example, <code>load_owl_kb('./examples/biopaxLevel3_rdf.owl').</code></p></li>
+</ul>
+<p>Now the KB is loaded and the queries can be executed in the usual way.</p>
 <h1 id="download-query-results-through-an-api">Download Query Results through an API</h1>
 <p>The results of queries can also be downloaded programmatically by directly approaching the Pengine API. Example client code is <a href="https://github.com/friguzzi/trill-on-swish/tree/master/client">available</a>. For example, the <code>swish-ask.sh</code> client can be used with bash to download the results for a query in CSV. The call below downloads a CSV file for the coin example.</p>
 <pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
