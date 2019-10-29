@@ -5,6 +5,7 @@
 test_trillp:-
     trill:set_algorithm(trillp),
     run_tests([trillp_biopax,
+    %trillp_biopax_rdf,
     trillp_dbpedia,
     trillp_brca,
     trillp_commander,
@@ -78,6 +79,15 @@ test(p_twbr_e):-
   run((prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
 
 :- end_tests(trillp_biopax).
+
+:- begin_tests(trillp_biopax_rdf, []).
+
+:-ensure_loaded(library(trill)).
+
+test(p_twbr_e):-
+  run((init_trill(trillp),load_owl_kb('../examples/biopaxLevel3_rdf.owl'),prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
+
+:- end_tests(trillp_biopax_rdf).
 
 
 :- begin_tests(trillp_dbpedia, []).

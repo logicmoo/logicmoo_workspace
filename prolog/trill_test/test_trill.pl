@@ -5,6 +5,7 @@
 test_trill:-
     trill:set_algorithm(trill),
     run_tests([trill_biopax,
+    %trill_biopax_rdf,
     trill_dbpedia,
     trill_brca,
     trill_commander,
@@ -92,6 +93,33 @@ test(ae_twbr_e):-
   )).
 
 :- end_tests(trill_biopax).
+
+:- begin_tests(trill_biopax_rdf, []).
+
+:-ensure_loaded(library(trill)).
+
+test(p_twbr_e):-
+  run((init_trill(trill),load_owl_kb('../examples/biopaxLevel3_rdf.owl'),prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
+test(e_twbr_e):-
+  run((init_trill(trill),load_owl_kb('../examples/biopaxLevel3_rdf.owl'),sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',ListExpl),
+       ListExpl = [subClassOf('http://www.biopax.org/release/biopax-level3.owl#Conversion', 'http://www.biopax.org/release/biopax-level3.owl#Interaction'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#Interaction', 'http://www.biopax.org/release/biopax-level3.owl#Entity'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#Transport', 'http://www.biopax.org/release/biopax-level3.owl#Conversion'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#TransportWithBiochemicalReaction', 'http://www.biopax.org/release/biopax-level3.owl#Transport')]
+  )).
+test(ae_twbr_e):-
+  run((init_trill(trill),load_owl_kb('../examples/biopaxLevel3_rdf.owl'),findall(ListExpl,sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',ListExpl),Expl),
+       Expl = [[subClassOf('http://www.biopax.org/release/biopax-level3.owl#Conversion', 'http://www.biopax.org/release/biopax-level3.owl#Interaction'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#Interaction', 'http://www.biopax.org/release/biopax-level3.owl#Entity'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#Transport', 'http://www.biopax.org/release/biopax-level3.owl#Conversion'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#TransportWithBiochemicalReaction', 'http://www.biopax.org/release/biopax-level3.owl#Transport')],
+       [subClassOf('http://www.biopax.org/release/biopax-level3.owl#BiochemicalReaction', 'http://www.biopax.org/release/biopax-level3.owl#Conversion'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#Conversion', 'http://www.biopax.org/release/biopax-level3.owl#Interaction'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#Interaction', 'http://www.biopax.org/release/biopax-level3.owl#Entity'),
+       subClassOf('http://www.biopax.org/release/biopax-level3.owl#TransportWithBiochemicalReaction', 'http://www.biopax.org/release/biopax-level3.owl#BiochemicalReaction')]]
+  )).
+
+:- end_tests(trill_biopax_rdf).
 
 
 :- begin_tests(trill_dbpedia, []).

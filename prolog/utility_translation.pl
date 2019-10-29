@@ -2663,7 +2663,7 @@ load_owl(String):-
   get_module(M),
   retractall(M:ns4query(_)),
   open(String,read,S),
-  load_owl_from_stream(S).
+  load_owl_from_stream(S),!.
   
 /**
  * load_owl_from_string(++KB:string) is det

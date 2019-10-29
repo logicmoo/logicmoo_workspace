@@ -48,9 +48,9 @@ details.
 :- meta_predicate remove_kb_prefix(:).
 :- meta_predicate remove_axiom(:).
 :- meta_predicate remove_axioms(:).
-:- meta_predicate load_kb(:).
-:- meta_predicate load_owl_kb(:).
-:- meta_predicate load_owl_kb_from_string(:).
+:- meta_predicate load_kb(+).
+:- meta_predicate load_owl_kb(+).
+:- meta_predicate load_owl_kb_from_string(+).
 :- meta_predicate set_algorithm(:).
 :- meta_predicate init_trill(+).
 
@@ -99,7 +99,7 @@ load_owl_kb(FileName):-
  * The predicate loads the knowledge base contained in the given string. 
  * The knowledge base must be defined in pure OWL/RDF format.
  */
-load_owl_kb_from_string(_:String):-
+load_owl_kb_from_string(String):-
   load_owl_from_string(String).
 
 /*****************************/

@@ -5,6 +5,7 @@
 test_tornado:-
     trill:set_algorithm(tornado),
     run_tests([tornado_biopax,
+    %tornado_biopax_rdf,
     tornado_dbpedia,
     tornado_brca,
     tornado_commander,
@@ -66,6 +67,15 @@ test(p_twbr_e):-
   run((prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
 
 :- end_tests(tornado_biopax).
+
+:- begin_tests(tornado_biopax_rdf, []).
+
+:-ensure_loaded(library(trill)).
+
+test(p_twbr_e):-
+  run((init_trill(tornado),load_owl_kb('../examples/biopaxLevel3_rdf.owl'),prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
+
+:- end_tests(tornado_biopax_rdf).
 
 
 :- begin_tests(tornado_dbpedia, []).
