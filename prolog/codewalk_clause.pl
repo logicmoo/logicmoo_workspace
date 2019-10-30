@@ -200,7 +200,7 @@ walk_called_ontrace(Goal, Caller, M) :-
     To \== (-),
     (   subsumes_term(To, M:Goal)
     ->  M2 = M
-    ;   predicate_property(M:Goal, imported_from(M2)),
+    ;   predicate_property(M:Goal, implementation_module(M2)),
         subsumes_term(To, M2:Goal)
     ),
     current_context_value(on_trace, OnTrace),
@@ -208,10 +208,7 @@ walk_called_ontrace(Goal, Caller, M) :-
     call(OnTrace, M2:Goal, Caller, From).
 
 walk_called_3(Goal, Caller, M) :-
-    (   (   predicate_property(M:Goal, imported_from(IM))
-        ->  true
-        ;   IM = M
-        ),
+    (   predicate_property(M:Goal, implementation_module(IM)),
         prolog:called_by(Goal, IM, M, Called)
     ;   prolog:called_by(Goal, Called)
     ),
