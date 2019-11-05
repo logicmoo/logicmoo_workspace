@@ -290,14 +290,30 @@ my_swish_resources -->
 	html_post(head, script([src('/lps/2dWorld_lazy.js')],[])).
 
 	
+
+% Stubs for system actions
+% Redundancy here with db.P:
+lps_ask(A,B,C) :- interpreter:lps_ask(A,B,C).
+lps_ask(A,B) :- interpreter:lps_ask(A,B).
+lps_outcome(A,B) :- interpreter:lps_outcome(A,B).
+
+uassert(X) :- interpreter:uassert(X).
+uasserta(X) :- interpreter:uasserta(X).
+uassertz(X) :- interpreter:uassertz(X).
+uretract(X) :- interpreter:uretract(X).
+uretractall(X) :- interpreter:uretractall(X).
+
 sandbox:safe_primitive(interpreter:lps_ask(_A,_B,_C)). 
 sandbox:safe_primitive(interpreter:lps_ask(_A,_B)). 
 sandbox:safe_primitive(interpreter:lps_outcome(_A,_B)). 
 sandbox:safe_primitive(interpreter:system_fluent(_)). 
+sandbox:safe_primitive(interpreter:uassert(_)). 
+sandbox:safe_primitive(interpreter:uasserta(_)). 
+sandbox:safe_primitive(interpreter:uassertz(_)). 
+sandbox:safe_primitive(interpreter:uretract(_)). 
+sandbox:safe_primitive(interpreter:uretractall(_)). 
 
-lps_ask(A,B,C) :- interpreter:lps_ask(A,B,C).
-lps_ask(A,B) :- interpreter:lps_ask(A,B).
-lps_outcome(A,B) :- interpreter:lps_outcome(A,B).
+
 /** 
 	system_fluent(Fluent) is det 
 

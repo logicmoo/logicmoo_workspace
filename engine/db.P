@@ -164,6 +164,13 @@ lps_ask(A,B) :- interpreter:lps_ask(A,B).
 lps_outcome(A,B) :- interpreter:lps_outcome(A,B).
 lps_save_finish_execution(File) :- interpreter:lps_save_finish_execution(File).
 
+uassert(X) :- interpreter:uassert(X).
+uasserta(X) :- interpreter:uasserta(X).
+uassertz(X) :- interpreter:uassertz(X).
+uretract(X) :- interpreter:uretract(X).
+uretractall(X) :- interpreter:uretractall(X).
+
+
 % Assert into this module all clauses in module M
 % Hacky code; this module MUST have only static predicates, so they're protected against malicious redifinitions in the LPS program
 copy_from_module(M) :- 

@@ -319,8 +319,8 @@ resolveUntilAction(G,Ancestors,Ball,Cont) :- G = holds(_F,_T), real_time_literal
 	!, % extensional fluents with real times, in need of a quick rewrite
 	resolveUntilAction(Goals,Ancestors,Ball,Cont).
 resolveUntilAction(G,Ancestors,Ball,Cont) :- 
-	G = holds(_F,T), 
-	ground(T), current_time(Now), T>Now, % premature, delay
+	G = holds(_F,T_), 
+	ground(T_), expression_to_time(T_,T), current_time(Now), T>Now, % premature, delay
 	!, Ball=later(G,Ancestors), Cont=G.
 % fluent negation handled in query/1
 resolveUntilAction(holds(F,T),_A,_,true) :- option(no_parallel), query(holds(F,T)).
@@ -359,6 +359,7 @@ resolveUntilAction(holds(F,T),Ancestors,B,C) :- % spawn a new disjunctive goal f
 resolveUntilAction(holds(F,T),Ancestors,Ball,Cont) :- !, % on failure, delay if that makes sense
 	\+ ground(T), Ball=later(holds(F,T),Ancestors), Cont=holds(F,T). 
 % events/actions:
+% resolveUntilAction(V,_,_,_) :- V=happens(start(myConveyor),3+1,_), trace, fail. % for debugging
 resolveUntilAction(happens(E,T1,T2),A,B,C) :- 
 	option(no_parallel), % nonvar(T1) was erroneously being used as heuristic condition to dispense parallelism
 	macroaction(E), 
@@ -371,16 +372,16 @@ resolveUntilAction(G,_Ancestors,_Ball,_Cont) :-
 resolveUntilAction(G,Ancestors,Ball,Cont) :- G = happens(_,_,_), real_time_literal(G,Goals), 
 	!, % events with real times, in need of a quick rewrite:
 	resolveUntilAction(Goals,Ancestors,Ball,Cont).
-resolveUntilAction(happens(_E,T1,T2),_A,_,_) :- % outdated action (as per LPS cycle time), we fail
+resolveUntilAction(happens(_E,T1_,T2_),_A,_,_) :- % outdated action (as per LPS cycle time), we fail
 	current_time(Now),
-	(ground(T1),T1<Now ; ground(T2),T2<Now+1), 
+	(expression_to_time(T1_,T1), ground(T1),T1<Now ; expression_to_time(T2_,T2), ground(T2),T2<Now+1), 
 	!, fail. 
-resolveUntilAction(happens(E,T1,T2),A,Ball,Cont) :- % premature, we delay
+resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- % premature, we delay
 	current_time(Now), 
-	(ground(T1), T1>Now ; ground(T2),T2>Now+1, \+ macroaction(E); premature_system_action(E)),
+	(ground(T1_), expression_to_time(T1_,T1), T1>Now ; ground(T2_), expression_to_time(T2_,T2), T2>Now+1, \+ macroaction(E); premature_system_action(E)),
 	% \+ a_real_time_event(E),
 	!,
-	Ball=later(happens(E,T1,T2),A),Cont=happens(E,T1,T2). 
+	Ball=later(happens(E,T1_,T2_),A),Cont=happens(E,T1_,T2_). 
 resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case, spawn disjuntive goals
 	findall(l_events(happens(E,T1,T2),Body), (
 		l_events(happens(E,T1,T2),Body_),
@@ -1071,6 +1072,9 @@ classify_precondition(_Cond,both). % fluents must mean the next state... pointle
 preprocess_external_predicate_for_lps :- 
 	lps_program_module(M), M:current_predicate(F/A), functor(Pred,F,A), 
 	\+ program_predicate(Pred), % might remove this to get into meta space...;-)
+	assert(external_predicate_for_lps(Pred)), fail.
+preprocess_external_predicate_for_lps :- % some special predicates for runtime editing of timeless predicates:
+	member(Pred,[uassert(_),uasserta(_),uassertz(_),uretract(_),uretractall(_)]),
 	assert(external_predicate_for_lps(Pred)), fail.
 preprocess_external_predicate_for_lps.
 
