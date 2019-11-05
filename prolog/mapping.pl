@@ -20,8 +20,8 @@ classExpression2function(CE,CEF):-
 
 iri(IRI,IRI) :- atomic(IRI).
 objectIntersectionOf(intersectionOf(CEs),ClassExpressionFL):-
-  ClassExpressionF = 'ObjectIntersectionOf('
-  findall(classExpression2function(CE,CEF),member(CE,CEs),L),
+  ClassExpressionF = 'ObjectIntersectionOf(',
+  findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
   % append stringhe in L su classExpressionF
   appnedClasses(ClassExpressionF,L,ClassExpressionFL).
 
