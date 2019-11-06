@@ -1,20 +1,16 @@
-prolog2function(class(ListIRI), ClFunc):-
-  % qua IRI sarà una stringa che deve essere aggiunt via append a 'Class'
-  append('Class', ListIRI, ClFunc). 
+prolog2function(class(IRI), ClFunc):- % qua IRI sarà una stringa che deve essere aggiunt via append a 'Class'
+  append('Class', IRI, ClFunc). 
 
-prolog2function(datatype(IRI), 'Datatype(IRI)').
-  %come sopra
+prolog2function(datatype(IRI), DtFunc):- %come sopra
+  append('Datatype', IRI, DtFunc).
 
-prolog2function(objectProperty(IRI), 'Objectproperty(IRI)').
-  %come sopra
-prolog2function(dataPropery(IRI), 'Dataproperty(IRI)').
-  %come sopra
-prolog2function(annotationProperty(IRI), 'AnnotationProperty(IRI)').
-  %come sopra
-prolog2function(namedIndividual(IRI), 'NamedIndividual(IRI)').
-  %come sopra
-prolog2function(anonymousIndividual(IRI), 'AnonymousIndividual(nodeID)'). %% ObjectPropertyAssertion ?
-  %come sopra
+prolog2function(objectProperty(IRI), OpFunc) :- %'Objectproperty(IRI)'). %come sopra
+  append('Objectproperty', IRI, OpFunc).
+
+prolog2function(dataPropery(IRI), 'Dataproperty(IRI)'). %come sopra
+prolog2function(annotationProperty(IRI), 'AnnotationProperty(IRI)'). %come sopra
+prolog2function(namedIndividual(IRI), 'NamedIndividual(IRI)'). %come sopra
+prolog2function(anonymousIndividual(IRI), 'AnonymousIndividual(nodeID)'). %% ObjectPropertyAssertion ? %come sopra
 
 prolog2function(subClassOf(ClassExpression1, ClassExpression2), SCFunc):- % per ora non consideriamo axiomAnnotation, append delle due classExpression
   classExpression2function(ClassExpressionTrill1,ClassExpressionFunctional1),
@@ -25,14 +21,11 @@ prolog2function(equivalentClasses(ListaClassExpression), ECFunc):-  %'Equivalent
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
   appendClasses('EquivalentClasses(',L,ECFunc).
 
-prolog2function(disjointClasses(ListaClassExpression), DCFunc):- %'DisjointClasses(axiomAnnotations, ClassExpression, ClassExpression { ClassExpression })').
-% come equivalent
+prolog2function(disjointClasses(ListaClassExpression), DCFunc):- %'DisjointClasses(axiomAnnotations, ClassExpression, ClassExpression { ClassExpression })'). % come equivalent
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
   appendClasses('DisjointClasses(',L,DCFunc).
 
-prolog2function(disjointUnion(IRI,ListaClassExpression), ECFunc):- %'DisjointUnion(axiomAnnotations, Class disjointClassExpressions)'
- % disjointClassExpressions := ClassExpression ClassExpression { ClassExpression }).
-  % misto fra subClass e equivalentClasses
+prolog2function(disjointUnion(IRI,ListaClassExpression), ECFunc):- %'DisjointUnion(axiomAnnotations, Class disjointClassExpressions)'% disjointClassExpressions := ClassExpression ClassExpression { ClassExpression }).% misto fra subClass e equivalentClasses
   classExpression2function(IRI,ClassExpressionFunctional),
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
   appendClasses('EquivalentClasses',[ClassExpressionFunctional|L],ECFunc).
@@ -46,13 +39,11 @@ prolog2function(equivalentProperties(ListaPropertyExpression)), EPFunc):- %'Equi
   findall(PEF,(menber(,PE,ListaPropertyExpression), propertyExpression2function(PE,PEF)),A),
   appendProperty('EquivalentObjectProperties(', A, EPFunc).
                 
-prolog2function(dijointProperties(ListaPropertyExpression)), DPFunc):- %'DisjointObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })').
-  % come disjoint classes ma su property
+prolog2function(dijointProperties(ListaPropertyExpression)), DPFunc):- %'DisjointObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })'). % come disjoint classes ma su property
   findall(PEF,(member(PE, ListaPropertyExpression), propertyExpression2function(PE,PEF)),A),
   appendProperty('DisjointObjectProperties(', A, DPFunc).
 
-prolog2function(inverseProperties(ObjectPropertyExpression1, ObjectPropertyExpression2), IOPFunc):- %'InverseObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression)').
-  % come subclass
+prolog2function(inverseProperties(ObjectPropertyExpression1, ObjectPropertyExpression2), IOPFunc):- %'InverseObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression)'). % come subclass
   ObjectPropertyExpression2function(ObjectPropertyExpressionTrill1,ObjectPropertyExpressionFunctional1),
   ObjectPropertyExpression2function(ObjectPropertyExpressionTrill2,ObjectPropertyExpressionFunctional2), %append SubClassOf ClassExpressionFunctional1 ClassExpressionFunctional2
   append('InverseObjectProperties',[ObjectPropertyExpressionFunctional1, ObjectPropertyExpressionFunctional2],IOPFunc).
@@ -67,46 +58,44 @@ prolog2function(propertyRange(PropertyExpression, ClassExpression), OPRFunc) :- 
   classExpression2function(ClassExpression,ClassExpressionF),
   append('ObjectPropertyRange',[PropertyExpressionF,ClassExpressionF],OPRFunc).
 
-prolog2function(functionalProperty(propertyExpression),'FunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
-                
-prolog2function(inverseFunctionalProperty(objectPropertyExpression),'InverseFunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression').
-                
-prolog2function(reflexiveProperty(objectPropertyExpression),'ReflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
-                
-prolog2function(irreflexiveProperty(objectPropertyExpression),'IrreflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
-                
-prolog2function(symmetricProperty(objectPropertyExpression),'SymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
-                
-prolog2function(asymmetricProperty(objectPropertyExpression),'AsymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
-                
+prolog2function(functionalProperty(propertyExpression),'FunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %?
+prolog2function(inverseFunctionalProperty(objectPropertyExpression),'InverseFunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression'). %?
+prolog2function(reflexiveProperty(objectPropertyExpression),'ReflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %?               
+prolog2function(irreflexiveProperty(objectPropertyExpression),'IrreflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  %?              
+prolog2function(symmetricProperty(objectPropertyExpression),'SymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %?              
+prolog2function(asymmetricProperty(objectPropertyExpression),'AsymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  %?             
 prolog2function(transitiveProperty(objectPropertyExpression),'TransitiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
+prolog2function(hasKey(classExpression,propertyExpression),'HasKey(axiomAnnotations ClassExpression({ ObjectPropertyExpression }) ({ DataPropertyExpression }))'). %?
                 
-prolog2function(hasKey(classExpression,propertyExpression),'HasKey(axiomAnnotations ClassExpression({ ObjectPropertyExpression }) ({ DataPropertyExpression }))').
+prolog2function(sameIndividual(ListIndividual), SIFunc) :- %'SameIndividual(axiomAnnotations, Individual Individual { Individual })').
+  findall(IEF,(member(IE, ListIndividual), individual2function(IE,IEF)),A),
+  appendIndivudual('SameIndividual(', A, SIFunc).
                 
-prolog2function(sameIndividual(set(individual),'SameIndividual(axiomAnnotations, Individual Individual { Individual })').
+prolog2function(differentIndividual(ListIndividual), DIFunc ) :- %'DifferentIndividuals(axiomAnnotations, Individual Individual { Individual })').
+  findall(IEF,(member(IE, ListIndividual), individual2function(IE,IEF)),A),
+  appendIndivudual('DifferentIndividual(', A, DIFunc).
                 
-prolog2function(differentIndividual(set(Individual),'DifferentIndividuals(axiomAnnotations, Individual Individual { Individual })').
+prolog2function(classAssertion(ClassExpression, Individual), CAFunc) :- %'ClassAssertion(axiomAnnotations, ClassExpression Individual)').
+  classExpression2function(ClassExpression,ClassExpressionF),
+  individual2function(IndividualExpression,IndividualExpressionF),
+  append('ClassAssertion',[ClassExpressionF,IndividualExpressionF],CAFunc).
                 
-prolog2function(classAssertion(classExpression, individual),'ClassAssertion(axiomAnnotations, ClassExpression Individual)').
-                
-prolog2function(propertyAssertion(propertyExpression, individual, individual),'ObjectPropertyAssertion( axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)').
-                
-prolog2function(negativePropertyAssertion(propertyExpression, individual, individual),'NegativeObjectPropertyAssertion(axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)').
-                
-prolog2function(annotationAssertion(annotationProperty, annotationSubject, annotationValue),'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)'
-                AnnotationSubject := IRI | AnonymousIndividual ).
+prolog2function(propertyAssertion(propertyExpression, individual, individual),'ObjectPropertyAssertion( axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). %?
+prolog2function(negativePropertyAssertion(propertyExpression, individual, individual),'NegativeObjectPropertyAssertion(axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). %?
+prolog2function(annotationAssertion(annotationProperty, annotationSubject, annotationValue),'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)' %?
+                AnnotationSubject := IRI | AnonymousIndividual ).%?
                 
 prolog2function(annotation(iri,annotationProperty,annotationValue),'Annotation(annotationAnnotations, AnnotationProperty, AnnotationValue)'
                 annotationAnnotations  := { Annotation }
-                AnnotationValue := AnonymousIndividual | IRI | Literal ).
+                AnnotationValue := AnonymousIndividual | IRI | Literal ). %?
                 
-prolog2function(ontology(IRI),'ontologyIRI(IRI)'). %?
-                
+prolog2function(ontology(IRI), OIFunc ) :- % 'ontologyIRI(IRI)')
+  append(ontologyIRI, IRI, OIFunc).
+
 prolog2function(ontologyAxiom(ontology, axiom),''). %?
-                
 prolog2function(ontologyImport(ontology, IRI),''). %?
-                
 prolog2function(ontologyVersionInfo(ontology, IRI),''). %?
+
 
 classExpression2function(CE,CEF):- 
   iri(CE,CEF); objectIntersectionOf(CE,CEF);objectSomeValuesFrom(CE,CEF),!.
@@ -127,6 +116,7 @@ propertyExpression2function(PE, PEF):-
   appendClasses('ObjectSomeValuesFrom(',[PF,CF], SVFFunc).
 
 appendFunctional(Pred, Lista, Ris):-
-  % 1 append fra Pred e (
-  % 2 append risultato 1 con tutti gli elementi della lista nell'ordine
-  % 3 append del ris di 2 e ) => Ris
+  append(Pred, (', Ris1), % 1 append fra Pred e (
+  append(Ris1, [Lista], Ris2),   % 2 append risultato 1 con tutti gli elementi della lista nell'ordine
+  append (Ris2, '), Ris).   % 3 append del ris di 2 e ) => Ris
+  
