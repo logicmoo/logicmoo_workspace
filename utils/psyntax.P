@@ -611,7 +611,7 @@ syntax2p_literal(NT,_Vars,lps2p,[T1,T2],ET,event-NC,happens(NEA,T1,T2)) :-
 	(nonvar(NT) -> ToInternal=true, NT=..[EA,LT] ; ToInternal=(false), NEA=..[EA,NL]),
 	(EA=initiate ; EA = terminate),
 	% tricky handling to avoid infinite terms in the first branch:
-	( ToInternal, LT = (L from T1_), (var(T1_);number(T1_)), T1=T1_, ET=true, NC=[delimiter-[EF,classify]] ; 
+	( ToInternal, LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_, ET=true, NC=[delimiter-[EF,classify]] ; 
 		ToInternal, LT = (L to T2), ET=true, NC=[delimiter-[EF,classify]] ; 
 		LT = (L from T1 to T2), ET=true, NC=[delimiter-[EF,classify]] ; % reverse translation uses this form
 		ToInternal, LT = (L during [T1,T2]), ET=true, NC=[delimiter-[EF,classify]] ; 
@@ -625,10 +625,10 @@ syntax2p_literal(NT,_Vars,lps2p,[T1,T2],ET,event-NC,happens(NEA,T1,T2)) :-
 syntax2p_literal(update(in(to(Old,New),LT)),_Vars,lps2p,[T1,T2],ET,event-[delimiter-[classify,NC]],happens(update(Old-New,NL),T1,T2)) :- 
 	(nonvar(LT) -> ToInternal=true ; ToInternal=(false)),
 	% tricky handling to avoid infinite terms in the first branch:
-	( ToInternal, LT = (L from T1_), (var(T1_);number(T1_)), T1=T1_, ET=true, NC=[delimiter-[EF,classify]] ; 
-		ToInternal, LT = (L to T2), ET=true, NC=[delimiter-[EF,classify]] ; 
-		LT = (L from T1 to T2), ET=true, NC=[delimiter-[EF,classify]] ; % reverse translation uses this form
-		ToInternal, LT = (L during [T1,T2]), ET=true, NC=[delimiter-[EF,classify]] ; 
+	( ToInternal, LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_, ET=true, NC=delimiter-[EF,classify] ; 
+		ToInternal, LT = (L to T2), ET=true, NC=delimiter-[EF,classify] ; 
+		LT = (L from T1 to T2), ET=true, NC=delimiter-[EF,classify] ; % reverse translation uses this form
+		ToInternal, LT = (L during [T1,T2]), ET=true, NC=delimiter-[EF,classify] ; 
 		ToInternal, LT=L, ET= (false), NC=EF
 	),
 	!,
