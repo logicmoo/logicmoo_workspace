@@ -17,27 +17,32 @@ details.
 @copyright Riccardo Zese
 */
 
-:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3,
-                 instanceOf/2, instanceOf/3, prob_instanceOf/3,
-                 property_value/3, property_value/4, prob_property_value/4,
-                 unsat/1, unsat/2, prob_unsat/2,
-                 inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
+:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3, sub_class/4,
+                 instanceOf/2, instanceOf/3, prob_instanceOf/3, instanceOf/4,
+                 property_value/3, property_value/4, prob_property_value/4, property_value/5,
+                 unsat/1, unsat/2, prob_unsat/2, unsat/3,
+                 inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1, inconsistent_theory/2,
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
 
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
+:- meta_predicate sub_class(:,+,-,+).
 :- meta_predicate prob_sub_class(:,+,-).
 :- meta_predicate instanceOf(:,+).
 :- meta_predicate instanceOf(:,+,-).
+:- meta_predicate instanceOf(:,+,-,+).
 :- meta_predicate prob_instanceOf(:,+,-).
 :- meta_predicate property_value(:,+,+).
 :- meta_predicate property_value(:,+,+,-).
+:- meta_predicate property_value(:,+,+,-,+).
 :- meta_predicate prob_property_value(:,+,+,-).
 :- meta_predicate unsat(:).
 :- meta_predicate unsat(:,-).
+:- meta_predicate unsat(:,-,+).
 :- meta_predicate prob_unsat(:,-).
 :- meta_predicate inconsistent_theory(:).
+:- meta_predicate inconsistent_theory(:,+).
 :- meta_predicate prob_inconsistent_theory(:).
 :- meta_predicate axiom(:).
 :- meta_predicate add_kb_prefix(:,+).
@@ -201,15 +206,16 @@ prolog:message(consistent) -->
   - with and without explanations -
  ***********/
 /**
- * instanceOf(:Class:concept_description,++Ind:individual_name,-Expl:list)
+ * instanceOf(:Class:concept_description,++Ind:individual_name,-Expl:list,-Expl:list,++Assert_ABox:boolean)
  *
  * This predicate takes as input the name or the full URI of a class or the definition
  * of a complex concept as a ground term and name or the full URI of an individual and
  * returns one explanation for the instantiation of the individual to the given class.
  * The returning explanation is a set of axioms.
  * The predicate fails if the individual does not belong to the class.
+ * If Assert_ABox is set to true the list of aboxes is asserted with the predicate final_abox/1.
  */
-instanceOf(M:Class,Ind,Expl):-
+instanceOf(M:Class,Ind,Expl,Assert_ABox):-
   ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
   	set_up(M),
 	retractall(M:exp_found(_,_)),
@@ -219,7 +225,8 @@ instanceOf(M:Class,Ind,Expl):-
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
   	    	add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
-	  	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
+      findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
+      (Assert_ABox==true -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
   		find_expls(M,L,[ClassEx,IndEx],Expl1),
   		check_and_close(M,Expl1,Expl)
   	    )
@@ -229,6 +236,18 @@ instanceOf(M:Class,Ind,Expl):-
     ;
     	print_message(warning,iri_not_exists),!,false
   ).
+
+/**
+ * instanceOf(:Class:concept_description,++Ind:individual_name)
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition
+ * of a complex concept as a ground term and name or the full URI of an individual and
+ * returns one explanation for the instantiation of the individual to the given class.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if the individual does not belong to the class.
+ */
+instanceOf(M:Class,Ind,Expl):-
+  instanceOf(M:Class,Ind,Expl,false).
 
 /**
  * instanceOf(:Class:concept_description,++Ind:individual_name) is det
@@ -260,14 +279,15 @@ instanceOf(M:Class,Ind):-
   ).
 
 /**
- * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list)
+ * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list,++Assert_ABox:boolean)
  *
  * This predicate takes as input the name or the full URI of a property and of two individuals
  * and returns one explanation for the fact Ind1 is related with Ind2 via Prop.
  * The returning explanation is a set of axioms.
  * The predicate fails if the two individual are not Prop-related.
+ * If Assert_ABox is set to true the list of aboxes is asserted with the predicate final_abox/1.
  */
-property_value(M:Prop, Ind1, Ind2,Expl):-
+property_value(M:Prop, Ind1, Ind2,Expl,Assert_ABox):-
   ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
 	set_up(M),
 	retractall(M:exp_found(_,_)),
@@ -277,6 +297,7 @@ property_value(M:Prop, Ind1, Ind2,Expl):-
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
   	    	findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
+          (Assert_ABox==true -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
   		find_expls(M,L,[PropEx,Ind1Ex,Ind2Ex],Expl1),
   		check_and_close(M,Expl1,Expl)
   	    )
@@ -286,6 +307,17 @@ property_value(M:Prop, Ind1, Ind2,Expl):-
     ;
     	print_message(warning,iri_not_exists),!,false
   ).
+
+/**
+ * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list)
+ *
+ * This predicate takes as input the name or the full URI of a property and of two individuals
+ * and returns one explanation for the fact Ind1 is related with Ind2 via Prop.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if the two individual are not Prop-related.
+ */
+property_value(M:Prop, Ind1, Ind2,Expl):-
+  property_value(M:Prop, Ind1, Ind2,Expl,false).
 
 /**
  * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name) is det
@@ -315,6 +347,23 @@ property_value(M:Prop, Ind1, Ind2):-
   ).
 
 /**
+ * sub_class(:Class:concept_description,++SupClass:concept_description,-Expl:list,-Expl:list,++Assert_ABox:boolean)
+ *
+ * This predicate takes as input two concepts which can be given by the name or the full URI 
+ * of two a simple concept or the definition of a complex concept as a ground term and returns
+ * one explanation for the subclass relation between Class and SupClass.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if there is not a subclass relation between the two classes.
+ * If Assert_ABox is set to true the list of aboxes is asserted with the predicate final_abox/1.
+ */
+sub_class(M:Class,SupClass,Expl,Assert_ABox):-
+  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
+	unsat_internal(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Expl,Assert_ABox)
+    ;
+    	print_message(warning,iri_not_exists),!,false
+  ).
+  
+/**
  * sub_class(:Class:concept_description,++SupClass:concept_description,-Expl:list)
  *
  * This predicate takes as input two concepts which can be given by the name or the full URI 
@@ -324,12 +373,7 @@ property_value(M:Prop, Ind1, Ind2):-
  * The predicate fails if there is not a subclass relation between the two classes.
  */
 sub_class(M:Class,SupClass,Expl):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-	unsat_internal(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Expl)
-    ;
-    	print_message(warning,iri_not_exists),!,false
-  ).
-  
+  sub_class(M:Class,SupClass,Expl,false).
 
 /**
  * sub_class(:Class:concept_description,++SupClass:concept_description) is det
@@ -346,6 +390,22 @@ sub_class(M:Class,SupClass):-
   ).
 
 /**
+ * unsat(:Concept:concept_description,-Expl:list,++Assert_ABox:boolean)
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition of 
+ * a complex concept as a ground term and returns one explanation for the unsatisfiability of the concept.
+ * The returning explanation is a set of axioms.
+ * The predicate fails if the concept is satisfiable.
+ * If Assert_ABox is set to true the list of aboxes is asserted with the predicate final_abox/1.
+ */
+unsat(M:Concept,Expl,Assert_ABox):-
+  (check_query_args(M,[Concept],[ConceptEx]) ->
+  	unsat_internal(M:ConceptEx,Expl,Assert_ABox)
+    ;
+    	print_message(warning,iri_not_exists),!,false
+   ).
+
+/**
  * unsat(:Concept:concept_description,-Expl:list)
  *
  * This predicate takes as input the name or the full URI of a class or the definition of 
@@ -354,14 +414,10 @@ sub_class(M:Class,SupClass):-
  * The predicate fails if the concept is satisfiable.
  */
 unsat(M:Concept,Expl):-
-  (check_query_args(M,[Concept],[ConceptEx]) ->
-  	unsat_internal(M:ConceptEx,Expl)
-    ;
-    	print_message(warning,iri_not_exists),!,false
-   ).
+  unsat(M:Concept,Expl,false).
 
 % ----------- %
-unsat_internal(M:Concept,Expl):-
+unsat_internal(M:Concept,Expl,Assert_ABox):-
   set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
@@ -372,12 +428,16 @@ unsat_internal(M:Concept,Expl):-
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
 	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
+  (Assert_ABox==true -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
 	find_expls(M,L,['unsat',Concept],Expl1),
 	check_and_close(M,Expl1,Expl)
      )
     ;
      print_message(warning,inconsistent),!,false
   ).
+
+unsat_internal(M:Concept,Expl):-
+  unsat_internal(M:Concept,Expl,false).
 % ----------- %
 
 /**
@@ -413,11 +473,12 @@ unsat_internal(M:Concept):-
 % ----------- %
 
 /**
- * inconsistent_theory(:Expl:list)
+ * inconsistent_theory(:Expl:list,++Assert_ABox:boolean)
  *
  * This predicate returns one explanation for the inconsistency of the loaded knowledge base.
+ * If Assert_ABox is set to true the list of aboxes is asserted with the predicate final_abox/1.
  */
-inconsistent_theory(M:Expl):-
+inconsistent_theory(M:Expl,Assert_ABox):-
   set_up(M),
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
@@ -425,9 +486,17 @@ inconsistent_theory(M:Expl):-
   build_abox(M,(ABox,Tabs)),
   % Without prior search of clashes in order to find all the possible clashes after expansion
   findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
+  (Assert_ABox==true -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
   find_expls(M,L,['inconsistent','kb'],Expl1),
   check_and_close(M,Expl1,Expl).
 
+/**
+ * inconsistent_theory(:Expl:list)
+ *
+ * This predicate returns one explanation for the inconsistency of the loaded knowledge base.
+ */
+inconsistent_theory(M:Expl):-
+  inconsistent_theory(M:Expl,false).
 
 /**
  * inconsistent_theory
@@ -2416,18 +2485,23 @@ sandbox:safe_primitive(trill:load_owl_kb(_)).
 
 sandbox:safe_meta(trill:sub_class(_,_),[]).
 sandbox:safe_meta(trill:sub_class(_,_,_),[]).
+sandbox:safe_meta(trill:sub_class(_,_,_,_),[]).
 sandbox:safe_meta(trill:prob_sub_class(_,_,_),[]).
 sandbox:safe_meta(trill:instanceOf(_,_),[]).
 sandbox:safe_meta(trill:instanceOf(_,_,_),[]).
+sandbox:safe_meta(trill:instanceOf(_,_,_,_),[]).
 sandbox:safe_meta(trill:prob_instanceOf(_,_,_),[]).
 sandbox:safe_meta(trill:property_value(_,_,_),[]).
 sandbox:safe_meta(trill:property_value(_,_,_,_),[]).
+sandbox:safe_meta(trill:property_value(_,_,_,_,_),[]).
 sandbox:safe_meta(trill:prob_property_value(_,_,_,_),[]).
 sandbox:safe_meta(trill:unsat(_),[]).
 sandbox:safe_meta(trill:unsat(_,_),[]).
+sandbox:safe_meta(trill:unsat(_,_,_),[]).
 sandbox:safe_meta(trill:prob_unsat(_,_),[]).
 sandbox:safe_meta(trill:inconsistent_theory,[]).
 sandbox:safe_meta(trill:inconsistent_theory(_),[]).
+sandbox:safe_meta(trill:inconsistent_theory(_,_),[]).
 sandbox:safe_meta(trill:prob_inconsistent_theory(_),[]).
 sandbox:safe_meta(trill:axiom(_),[]).
 sandbox:safe_meta(trill:add_kb_prefix(_,_),[]).
