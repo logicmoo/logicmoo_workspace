@@ -23,13 +23,11 @@ propertyRange('http://ml.unife.it/disponte#objprop5', 'http://ml.unife.it/dispon
 equivalentProperties(['http://ml.unife.it/disponte#objprop4', 'http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#objprop2']).
 inverseProperties('http://ml.unife.it/disponte#objprop4', 'http://ml.unife.it/disponte#objprop5').
 differentIndividuals(['http://ml.unife.it/disponte#ind1', 'http://ml.unife.it/disponte#ind3']).
-propertyAssertion('http://www.w3.org/2002/07/owl#onProperty', '_:Description9', 'http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#objprop2').
-propertyAssertion('http://www.w3.org/2002/07/owl#someValuesFrom', '_:Description9', 'http://ml.unife.it/disponte#class5').
 propertyAssertion('http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#objprop1', 'http://ml.unife.it/disponte#ind1', 'http://ml.unife.it/disponte#ind2').
 propertyAssertion('http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#dataprop1', 'http://ml.unife.it/disponte#ind1', literal(type('http://www.w3.org/2001/XMLSchema#integer', '3'))).
 sameIndividual(['http://ml.unife.it/disponte#ind1', 'http://ml.unife.it/disponte#ind2']).
 classAssertion('http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#class1', 'http://ml.unife.it/disponte#ind1').
-classAssertion('http://www.w3.org/2002/07/owl#Restriction', '_:Description9').
+classAssertion(someValuesFrom('http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#objprop2','http://ml.unife.it/disponte#class5'), 'http://ml.unife.it/disponte#ind1').
 namedIndividual('http://ml.unife.it/disponte#ind1').
 namedIndividual('http://ml.unife.it/disponte#ind2').
 namedIndividual('http://ml.unife.it/disponte#ind3').
