@@ -1,0 +1,125 @@
+Prefix(:=<http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#>)
+Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
+Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)
+Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
+Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
+
+
+Ontology(<http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10>
+
+Declaration(Class(<http://ml.unife.it/disponte#class10>))
+Declaration(Class(<http://ml.unife.it/disponte#class11>))
+Declaration(Class(<http://ml.unife.it/disponte#class5>))
+Declaration(Class(<http://ml.unife.it/disponte#class6>))
+Declaration(Class(<http://ml.unife.it/disponte#class7>))
+Declaration(Class(<http://ml.unife.it/disponte#class8>))
+Declaration(Class(<http://ml.unife.it/disponte#class9>))
+Declaration(Class(:class1))
+Declaration(Class(:class2))
+Declaration(Class(:class3))
+Declaration(Class(:class4))
+Declaration(ObjectProperty(<http://ml.unife.it/disponte#objprop10>))
+Declaration(ObjectProperty(<http://ml.unife.it/disponte#objprop4>))
+Declaration(ObjectProperty(<http://ml.unife.it/disponte#objprop5>))
+Declaration(ObjectProperty(<http://ml.unife.it/disponte#objprop6>))
+Declaration(ObjectProperty(<http://ml.unife.it/disponte#objprop7>))
+Declaration(ObjectProperty(<http://ml.unife.it/disponte#objprop8>))
+Declaration(ObjectProperty(<http://ml.unife.it/disponte#objprop9>))
+Declaration(ObjectProperty(:objprop1))
+Declaration(ObjectProperty(:objprop2))
+Declaration(ObjectProperty(:objprop3))
+Declaration(DataProperty(:dataprop1))
+Declaration(DataProperty(:dataprop2))
+Declaration(NamedIndividual(<http://ml.unife.it/disponte#ind1>))
+Declaration(NamedIndividual(<http://ml.unife.it/disponte#ind2>))
+Declaration(NamedIndividual(<http://ml.unife.it/disponte#ind3>))
+Declaration(AnnotationProperty(<http://ml.unife.it/disponte#probability>))
+
+############################
+#   Object Properties
+############################
+
+# Object Property: <http://ml.unife.it/disponte#objprop10> (<http://ml.unife.it/disponte#objprop10>)
+
+InverseFunctionalObjectProperty(<http://ml.unife.it/disponte#objprop10>)
+AsymmetricObjectProperty(<http://ml.unife.it/disponte#objprop10>)
+IrreflexiveObjectProperty(<http://ml.unife.it/disponte#objprop10>)
+
+# Object Property: <http://ml.unife.it/disponte#objprop4> (<http://ml.unife.it/disponte#objprop4>)
+
+EquivalentObjectProperties(<http://ml.unife.it/disponte#objprop4> :objprop2)
+InverseObjectProperties(<http://ml.unife.it/disponte#objprop4> <http://ml.unife.it/disponte#objprop5>)
+
+# Object Property: <http://ml.unife.it/disponte#objprop5> (<http://ml.unife.it/disponte#objprop5>)
+
+ObjectPropertyDomain(<http://ml.unife.it/disponte#objprop5> <http://ml.unife.it/disponte#class5>)
+ObjectPropertyDomain(<http://ml.unife.it/disponte#objprop5> <http://ml.unife.it/disponte#class6>)
+ObjectPropertyRange(<http://ml.unife.it/disponte#objprop5> <http://ml.unife.it/disponte#class9>)
+DisjointObjectProperties(<http://ml.unife.it/disponte#objprop5> :objprop1)
+
+# Object Property: <http://ml.unife.it/disponte#objprop9> (<http://ml.unife.it/disponte#objprop9>)
+
+FunctionalObjectProperty(<http://ml.unife.it/disponte#objprop9>)
+SymmetricObjectProperty(<http://ml.unife.it/disponte#objprop9>)
+TransitiveObjectProperty(<http://ml.unife.it/disponte#objprop9>)
+ReflexiveObjectProperty(<http://ml.unife.it/disponte#objprop9>)
+
+# Object Property: :objprop3 (:objprop3)
+
+SubObjectPropertyOf(:objprop3 :objprop1)
+
+
+
+
+############################
+#   Classes
+############################
+
+# Class: <http://ml.unife.it/disponte#class10> (<http://ml.unife.it/disponte#class10>)
+
+SubClassOf(<http://ml.unife.it/disponte#class10> ObjectAllValuesFrom(:objprop1 <http://ml.unife.it/disponte#class9>))
+SubClassOf(<http://ml.unife.it/disponte#class10> ObjectAllValuesFrom(:objprop2 <http://ml.unife.it/disponte#class9>))
+
+# Class: <http://ml.unife.it/disponte#class11> (<http://ml.unife.it/disponte#class11>)
+
+SubClassOf(<http://ml.unife.it/disponte#class11> ObjectMinCardinality(2 :objprop1 <http://ml.unife.it/disponte#class9>))
+SubClassOf(<http://ml.unife.it/disponte#class11> ObjectExactCardinality(3 :objprop2 <http://ml.unife.it/disponte#class9>))
+SubClassOf(<http://ml.unife.it/disponte#class11> ObjectMaxCardinality(4 :objprop1 <http://ml.unife.it/disponte#class9>))
+
+# Class: <http://ml.unife.it/disponte#class7> (<http://ml.unife.it/disponte#class7>)
+
+DisjointClasses(<http://ml.unife.it/disponte#class7> ObjectUnionOf(<http://ml.unife.it/disponte#class5> <http://ml.unife.it/disponte#class6>))
+
+# Class: <http://ml.unife.it/disponte#class8> (<http://ml.unife.it/disponte#class8>)
+
+DisjointUnion(<http://ml.unife.it/disponte#class8> <http://ml.unife.it/disponte#class5> <http://ml.unife.it/disponte#class6>)
+
+# Class: :class2 (:class2)
+
+SubClassOf(Annotation(<http://ml.unife.it/disponte#probability> "0.7"^^xsd:decimal) :class2 :class1)
+
+# Class: :class4 (:class4)
+
+EquivalentClasses(:class4 ObjectIntersectionOf(:class1 :class3))
+
+
+############################
+#   Named Individuals
+############################
+
+# Individual: <http://ml.unife.it/disponte#ind1> (<http://ml.unife.it/disponte#ind1>)
+
+ClassAssertion(Annotation(<http://ml.unife.it/disponte#probability> "0.3"^^xsd:decimal) :class1 <http://ml.unife.it/disponte#ind1>)
+ClassAssertion(ObjectSomeValuesFrom(:objprop2 <http://ml.unife.it/disponte#class5>) <http://ml.unife.it/disponte#ind1>)
+SameIndividual(<http://ml.unife.it/disponte#ind1> <http://ml.unife.it/disponte#ind2>)
+ObjectPropertyAssertion(:objprop1 <http://ml.unife.it/disponte#ind1> <http://ml.unife.it/disponte#ind2>)
+DataPropertyAssertion(:dataprop1 <http://ml.unife.it/disponte#ind1> "3"^^xsd:integer)
+
+# Individual: <http://ml.unife.it/disponte#ind3> (<http://ml.unife.it/disponte#ind3>)
+
+
+
+DifferentIndividuals(<http://ml.unife.it/disponte#ind1> <http://ml.unife.it/disponte#ind3>)
+SubObjectPropertyOf(ObjectPropertyChain(<http://ml.unife.it/disponte#objprop7> <http://ml.unife.it/disponte#objprop8>) <http://ml.unife.it/disponte#objprop6>)
+)
