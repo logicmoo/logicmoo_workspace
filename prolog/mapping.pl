@@ -1,5 +1,6 @@
 prolog2function(class(IRI), ClFunc):- % qua IRI sarà una stringa che deve essere aggiunt via append a 'Class'
   appendFunctional('Class', [IRI], ClFunc). % potrebbe dare errore--> convertire IRI in stringa
+  % NOTE usare predicato iri/2 che hai definito sotto. Eventualmente il controllo lo fai li
 
 prolog2function(datatype(IRI), DtFunc):- %come sopra
   appendFunctional('Datatype', [IRI], DtFunc).
@@ -42,11 +43,11 @@ prolog2function(subPropertyOf(PropertyExpression1, PropertyExpression2), SPFunc)
   propertyExpression2function(PropertyExpressionTrill2,PropertyExpressionFunctional2),
   appendFunctional('SubPropertyOf',[PropertyExpressionFunctional1, PropertyExpressionFunctional2],SPFunc).
      
-prolog2function(equivalentProperties(ListaPropertyExpression)), EPFunc):- %'EquivalentObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })').
-  findall(PEF,(menber(,PE,ListaPropertyExpression), propertyExpression2function(PE,PEF)),A),
+prolog2function(equivalentProperties(ListaPropertyExpression), EPFunc):- %'EquivalentObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })').
+  findall(PEF,(member(PE,ListaPropertyExpression), propertyExpression2function(PE,PEF)),A),
   appendFunctionalProperty('EquivalentObjectProperties', A, EPFunc).
                 
-prolog2function(dijointProperties(ListaPropertyExpression)), DPFunc):- %'DisjointObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })'). % come disjoint classes ma su property
+prolog2function(dijointProperties(ListaPropertyExpression), DPFunc):- %'DisjointObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })'). % come disjoint classes ma su property
   findall(PEF,(member(PE, ListaPropertyExpression), propertyExpression2function(PE,PEF)),A),
   appendFunctionalProperty('DisjointObjectProperties', A, DPFunc).
 
@@ -133,7 +134,7 @@ prolog2function(ontology(IRI), OIFunc ) :-
 %? "spigeazione-> le possiamo trasformare in annotation"
 prolog2function(ontologyAxiom(ontology, axiom),''). 
 
-prolog2function(ontologyImport(ontology(IRI), OIMFunc):- 
+prolog2function(ontologyImport(ontology(IRI)), OIMFunc):- 
   appendFunctional(ontologyImport, [IRI], OIMFunc).
 
 %? La gestiamo alla fine
@@ -144,7 +145,7 @@ classExpression2function(CE,CEF):-
   objectIntersectionOf(CE,CEF);
   objectSomeValuesFrom(CE,CEF); 
   objectUnionOf(CE, CEF);
-  objectComplementOf(CE,CEF) %Da Controllare
+  objectComplementOf(CE,CEF); %Da Controllare
   objectOneOf(CE,CEF);%Da Controllare
   objectAllValuesFrom(CE,CEF); 
   objectHasValue(CE,CEF); 
@@ -157,7 +158,7 @@ classExpression2function(CE,CEF):-
   dataHasValue(CE,CEF);%Da fare
   dataMinCardinality(CE,CEF); %Da fare
   dataMaxCardinality(CE,CEF); %Da fare
-  dataExactCardinality(CE,CEF); %Da fare
+  dataExactCardinality(CE,CEF), %Da fare
   !.
 
 /*
@@ -202,13 +203,13 @@ objectUnionOf(unionOf(CEs),ClassExpressionFL):-
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),% appendFunctional stringhe in L su classExpressionF
   appendFunctional(ClassExpressionF,L,ClassExpressionFL).
 
-%? DA RIGUARDARE!
+%? DA RIGUARDARE! --> NOTE mi sembra aposto
 objectComplementOf(complementOf(CE, CEF)):-
   appendFunctional('ObjectComplementOf', CE, CEF). 
 
 %? DA RIGUARDARE!
 objectOneOf(oneOf(CE, CEF)) :-
-  findall(member(CE,CEF), L),
+  findall(member(CE,CEF), L), % NOTE findall da sistemare, prende tre argomenti
     appendFunctional('ObjectUnionOf', CE, L). 
 
 objectAllValuesFrom(allValueFrom(P, C), AVFFunc):-
