@@ -1,4 +1,6 @@
+:- use_module(library(trill)).
 
+:-trill.
 
 ontology('http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10').
 
@@ -88,3 +90,12 @@ subPropertyOf(propertyChain(['http://ml.unife.it/disponte#objprop7', 'http://ml.
 
 
 
+/*
+swipl kb_trill.pl
+
+['path/mapping.pl'].
+
+findall(Ax,axiom(Ax),L),predicato_traduzione(L,filename).
+
+
+*/

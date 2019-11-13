@@ -1,24 +1,24 @@
 prolog2function(class(IRI), ClFunc):- % qua IRI sarà una stringa che deve essere aggiunt via append a 'Class'
-  appendFunctional('Class', [IRI], ClFunc). % potrebbe dare errore--> convertire IRI in stringa
+  appendFunctional('Class', IRI, ClFunc). % potrebbe dare errore--> convertire IRI in stringa
   % NOTE usare predicato iri/2 che hai definito sotto. Eventualmente il controllo lo fai li
 
 prolog2function(datatype(IRI), DtFunc):- %come sopra
-  appendFunctional('Datatype', [IRI], DtFunc).
+  appendFunctional('Datatype', IRI, DtFunc).
 
 prolog2function(objectProperty(IRI), OpFunc) :-
-  appendFunctional('Objectproperty', [IRI], OpFunc).
+  appendFunctional('Objectproperty', IRI, OpFunc).
 
 prolog2function(dataPropery(IRI), DPFunc):- 
-  appendFunctional('Dataproperty',[IRI], DPFunc).
+  appendFunctional('Dataproperty', IRI, DPFunc).
 
 prolog2function(annotationProperty(IRI), APFunc ):- 
-  appendFunctional('AnnotationProperty',[IRI], APFunc).
+  appendFunctional('AnnotationProperty', IRI, APFunc).
 
 prolog2function(namedIndividual(IRI), NIFunc):- 
-  appendFunctional('NamedIndividual',[IRI], NIFunc).
+  appendFunctional('NamedIndividual', IRI, NIFunc).
 
 prolog2function(anonymousIndividual(IRI), AIFunc):- %'AnonymousIndividual(nodeID)'). 
-  appendFunctional('AnonymousIndividual', [IRI], AIFunc).
+  appendFunctional('AnonymousIndividual', IRI, AIFunc).
 
 prolog2function(subClassOf(ClassExpression1, ClassExpression2), SCFunc):- % per ora non consideriamo axiomAnnotation, appendFunctional delle due classExpression
   classExpression2function(ClassExpressionTrill1,ClassExpressionFunctional1),
@@ -36,7 +36,7 @@ prolog2function(disjointClasses(ListaClassExpression), DCFunc):- %'DisjointClass
 prolog2function(disjointUnion(IRI,ListaClassExpression), ECFunc):- %'DisjointUnion(axiomAnnotations, Class disjointClassExpressions)'% disjointClassExpressions := ClassExpression ClassExpression { ClassExpression }).% misto fra subClass e equivalentClasses
   classExpression2function(IRI,ClassExpressionFunctional),
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
-  appendFunctionalClasses('EquivalentClasses',[ClassExpressionFunctional|L],ECFunc).
+  appendFunctionalClasses('DisjointUnion',[ClassExpressionFunctional|L],ECFunc).
 
 prolog2function(subPropertyOf(PropertyExpression1, PropertyExpression2), SPFunc):- 
   propertyExpression2function(PropertyExpressionTrill1,PropertyExpressionFunctional1),
@@ -119,46 +119,66 @@ prolog2function(negativePropertyAssertion(PropertyExpression, Individual, Indivi
 
 % DA GUARDARE!!
 prolog2function(annotationAssertion(AnnotationProperty, AnnotationSubject, AnnotationValue),AAFunc):- %'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)' %?
+  propertyExpression2function(AnnotationProperty, AnnotationPropertyF),
   propertyExpression2function(AnnotationSubject, AnnotationSubjectF),
-  appendFunctional('AnnotationAssertion', [IRI,AnnotationSubject,IRI], AAFunc). 
-                %AnnotationSubject := IRI | literal(IRI) ).%? annotationProperty: IRI, annotationSubject: lo considero un property2function, annotationValue: può essere un IRI e un literal (literal2function)'""'
+  (
+        % condition 
+        iri(AnnotationValue,AnnotationValueF),
+    ->
+        % true 
+        appendFunctional('AnnotationAssertion', [AnnotationPropertyF,AnnotationSubjectF,AnnotationValueF], AAFunc),
+    ;
+        % false 
+        literal2function(AnnotationValue, AnnotationValueF),
+        appendFunctional('AnnotationAssertion', [AnnotationPropertyF,AnnotationSubjectF,AnnotationValueF], AAFunc),
+  ).
+              
+prolog2function(annotation(AnnotationProperty, AnnotationProperty, AnnotationValue), AFunc)%(iri,annotationProperty,annotationValue),'Annotation(annotationAnnotations, AnnotationProperty, AnnotationValue)'
+  propertyExpression2function(AnnotationProperty, AnnotationPropertyF),
+  (
+        % condition 
+        iri(AnnotationValue,AnnotationValueF),
+    ->
+        % true 
+        appendFunctional('AnnotationAssertion', [AnnotationPropertyF,AnnotationPropertyF,AnnotationValueF], AFunc),
+    ;
+        % false 
+        literal2function(AnnotationValue, AnnotationValueF),
+        appendFunctional('AnnotationAssertion', [AnnotationPropertyF,AnnotationPropertyF,AnnotationValueF], AFunc),
+  ).
 
-% DA GUARDARE!!                
-prolog2function(annotation(iri,annotationProperty,annotationValue),'Annotation(annotationAnnotations, AnnotationProperty, AnnotationValue)'
-                annotationAnnotations  := { Annotation }
-                AnnotationValue := AnonymousIndividual | IRI | Literal ). %?COME SOPRA MA è DA CAPIRE!
-                
-prolog2function(ontology(IRI), OIFunc ) :- 
+
+prolog2function(ontology(IRI), OIFunc) :- 
   appendFunctional(ontologyIRI, [IRI], OIFunc).
 
 %? "spigeazione-> le possiamo trasformare in annotation"
-prolog2function(ontologyAxiom(ontology, axiom),''). 
+%prolog2function(ontologyAxiom(ontology, axiom),''). 
 
 prolog2function(ontologyImport(ontology(IRI)), OIMFunc):- 
   appendFunctional(ontologyImport, [IRI], OIMFunc).
 
 %? La gestiamo alla fine
-prolog2function(ontologyVersionInfo(ontology, IRI),''). 
+%prolog2function(ontologyVersionInfo(ontology, IRI),''). 
 
 classExpression2function(CE,CEF):- 
   iri(CE,CEF); 
   objectIntersectionOf(CE,CEF);
   objectSomeValuesFrom(CE,CEF); 
   objectUnionOf(CE, CEF);
-  objectComplementOf(CE,CEF); %Da Controllare
-  objectOneOf(CE,CEF);%Da Controllare
+  objectComplementOf(CE,CEF); 
+  objectOneOf(CE,CEF);
   objectAllValuesFrom(CE,CEF); 
   objectHasValue(CE,CEF); 
   objectHasSelf(CE,CEF) ;
-  objectMinCardinality(CE,CEF); %Da fare
-  objectMaxCardinality(CE,CEF); %Da fare
-  objectExactCardinality(CE,CEF); %Da fare
-  dataSomeValuesFrom(CE,CEF); %Da fare
-  dataAllValuesFrom(CE,CEF); %Da fare
-  dataHasValue(CE,CEF);%Da fare
-  dataMinCardinality(CE,CEF); %Da fare
-  dataMaxCardinality(CE,CEF); %Da fare
-  dataExactCardinality(CE,CEF), %Da fare
+  objectMinCardinality(CE,CEF); 
+  objectMaxCardinality(CE,CEF); 
+  objectExactCardinality(CE,CEF); 
+  dataSomeValuesFrom(CE,CEF);
+  dataAllValuesFrom(CE,CEF); 
+  dataHasValue(CE,CEF);
+  dataMinCardinality(CE,CEF); 
+  dataMaxCardinality(CE,CEF); 
+  dataExactCardinality(CE,CEF); 
   !.
 
 /*
@@ -181,8 +201,6 @@ DataMaxCardinality := 'DataMaxCardinality' '(' nonNegativeInteger DataPropertyEx
 DataExactCardinality := 'DataExactCardinality' '(' nonNegativeInteger DataPropertyExpression [ DataRange ] ')'
 */
 
-
-
 propertyExpression2function(PE, PEF):-
   iri(PE,PEF); 
  
@@ -200,17 +218,16 @@ objectSomeValuesFrom(someValuesFrom(P,C),SVFFunc):-
 
 objectUnionOf(unionOf(CEs),ClassExpressionFL):-
   ClassExpressionF = 'ObjectUnionOf',
-  findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),% appendFunctional stringhe in L su classExpressionF
+  findall(CEF,(member(CE,CEs),classExpression2function(CE,CEF)),L),% appendFunctional stringhe in L su classExpressionF
   appendFunctional(ClassExpressionF,L,ClassExpressionFL).
 
-%? DA RIGUARDARE! --> NOTE mi sembra aposto
-objectComplementOf(complementOf(CE, CEF)):-
-  appendFunctional('ObjectComplementOf', CE, CEF). 
+objectComplementOf(complementOf(CE), CEF):-
+  classExpression2function(CE,CEs),
+  appendFunctional('ObjectComplementOf', CEs, CEF). %[CEs]
 
-%? DA RIGUARDARE!
-objectOneOf(oneOf(CE, CEF)) :-
-  findall(member(CE,CEF), L), % NOTE findall da sistemare, prende tre argomenti
-    appendFunctional('ObjectUnionOf', CE, L). 
+objectOneOf(oneOf(CE), CEFs) :-
+  findall(CEF, (member(CE,List),classExpression2function(CE,CEF)), L),
+    appendFunctional('ObjectOneOf', L, CEFs). 
 
 objectAllValuesFrom(allValueFrom(P, C), AVFFunc):-
   classExpression2function(C, CF),
@@ -222,23 +239,81 @@ objectHasValue(hasValue(P,I), HVFunc):-
   individual2function(I, IF),
   appendFunctional('ObjectHasValue', [PF, I], HVFunc).
 
-objectHasValue(hasSelf(P), HVFunc):-
+objectHasSelf(hasSelf(P), HVFunc):-
   propertyExpression2function(P, PF),
-  appendFunctional('ObjectHasValue', PF, HVFunc).
+  appendFunctional('ObjectHasSelf', PF, HVFunc).
 
-objectMinCardinality(minCardinality(C, P), OMCFunc):-
-  %number(C),
-  %C>=0,
-  %x: xsd:minExclusive , v
-  % CONTROLLARE COME SI GESTISCONO GLI INTERI ?!?!?!?!?
-  %xsd:nonNegativeInteger,
-  %C: (minExclusive, 0),
+objectMinCardinality(minCardinality(C, P, E), OMiCFunc):-
+  number(C),
+  C>=0,
   propertyExpression2function(P, PF),
-  classExpression2function(C, CF),
-  appendFunctional('ObjectMinCardinality',[PF,CF], OMCFunc).
+  classExpression2function(E, EF),
+  appendFunctional('ObjectMinCardinality',[C,PF,EF], OMiCFunc).
+objectMinCardinality(minCardinality(C, P), OMiCFunc):-
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  appendFunctional('ObjectMinCardinality',[C,PF], OMiCFunc).
 
+objectMaxCardinality(maxCardinality(C, P, E), OMaCFunc):-
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  classExpression2function(E, EF),
+  appendFunctional('ObjectMaxCardinality',[C,PF,EF], OMaCFunc).
+objectMaxCardinality(maxCardinality(C, P), OMaCFunc):-
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  appendFunctional('ObjectMaxCardinality',[C,PF], OMaCFunc).
+  
+objectExactCardinality(exactCardinality(C, P, E), OECFunc):-
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  classExpression2function(E, EF),
+  appendFunctional('ObjectExactCardinality',[C,PF,EF], OECFunc).
+objectExactCardinality(exactCardinality(C, P), OECFunc):-
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  appendFunctional('ObjectExactCardinality',[C,PF], OECFunc).
 
+dataSomeValuesFrom(someValuesFrom(DPE), DataPropertyExpressionFL):-
+  DataPropertyExpressionF= 'DataSomeValuesFrom',
+  findall(DEF,(member(DE,ListaDataPropertyExpression),dataExpression2function(DE,DEF)),L),% appendFunctional stringhe in L su classExpressionF
+	%? dataRange(DR). % todo
+  appendFunctional(DataPropertyExpressionF, L, DataPropertyExpressionFL).
 
+dataAllValuesFrom(allValuesFrom(DPE), DataPropertyExpressionFL):-
+  DataPropertyExpressionF= 'AllSomeValuesFrom',
+  findall(DEF,(member(DE,ListaDataPropertyExpression),dataExpression2function(DE,DEF)),L),
+	%? dataRange(DR). % todo
+  appendFunctional(DataPropertyExpressionF, L, DataPropertyExpressionFL).
+
+dataHasValue(hasValue(P,I), DVFunc):-
+  dataPropertyExpression2function(P, PF),
+  literal2function(I, IF),
+  appendFunctional('DataHasValue', [PF, I], DVFunc).
+
+dataMinCardinality(minCardinality(C, P), DMiCFunc):- 
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  appendFunctional('DataMinCardinality',[C,PF], DMiCFunc).
+
+% DA FARE
+dataMaxCardinality(maxCardinality(C, P), DMaCFunc):- 
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  appendFunctional('DataMaxCardinality',[C,PF], DMaCFunc).
+
+dataExactCardinality(exactCardinality(C, P), DECFunc):-
+  number(C),
+  C>=0,
+  propertyExpression2function(P, PF),
+  appendFunctional('DataExactCardinality',[C,PF], DECFunc).
 
 appendFunctional(Pred, Lista, Ris):-
   atomic_list_concat([Pred,'('|Lista], Atom), 
