@@ -297,6 +297,8 @@ lps_ask(A,B,C) :- interpreter:lps_ask(A,B,C).
 lps_ask(A,B) :- interpreter:lps_ask(A,B).
 lps_outcome(A,B) :- interpreter:lps_outcome(A,B).
 
+% WARNING: these hacky primitives may led to subtle bugs, as the asserted predicates will be 
+%  interpreted by the engine as "timeless" in fact
 uassert(X) :- interpreter:uassert(X).
 uasserta(X) :- interpreter:uasserta(X).
 uassertz(X) :- interpreter:uassertz(X).
