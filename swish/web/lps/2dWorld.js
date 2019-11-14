@@ -551,7 +551,7 @@ function twoDworld() {
 	/** Load and init PaperJS in the given canvas;
 	@param {Object} DOMcontainer
 	@param {String} eager whether onFrame animation will feed eagerly from a cycles array, or lazily a cycle at a time
-	@param {Integer} minimum cycle time (seconds) specified in the LPS program; 0 if unknown
+	@param {Integer} minimum cycle time (seconds) specified in the LPS program; 0 if unknown; passed only for lazy display
 	*/
     function initPaper(DOMcontainer,eager,MinCT){
 		// TODO? preprocess properties: replace Point, Size; scale view, with zoom or scale; possibly at cycle 0
@@ -560,7 +560,6 @@ function twoDworld() {
 		$.ajax({url:"/lps/bower_components/paper/dist/paper-core.js", dataType:"script", cache: true, success:function() {  
 			//mylog("Loaded paperjs");
 			WHITE_COLOR = new paper.Color(255,255,255);
-			minimumCycleTime = MinCT;
 			var canvas = DOMcontainer; // must be a DOM object, not a jQuery object...
 			// Create an empty project and a view for the canvas:
 			paper.setup(canvas);
@@ -597,11 +596,11 @@ function twoDworld() {
 		// Adjust animation frames per cycle:
 		if (cycles.length < 15) framesPerCycle = 60;
 		else if (cycles.length <50) framesPerCycle = 30;
+		else if (cycles.length <100) framesPerCycle = 15;
 		console.log("framesPerCycle:"+framesPerCycle);
 		return true;
 	}
 	
-	var minimumCycleTime = 0; // as declared in the LPS program
 	var eventsLifetime = 0; // number of frames event objects are displayed
 	var zeroCount = null; // as obtained from event.count; moment of last (eager) animation start/resume
 	var didResize = false;
@@ -617,7 +616,7 @@ function twoDworld() {
 	var paused = false;
 	var nextStop = null; // in frame (event) counts
 	var cycle = 0; // current cycle, as determined by onFrame
-	var framesPerCycle = 15; // (LPS cycles)
+	var framesPerCycle = 5; // (LPS cycles)
 	// array of arrays, one for each cycle; each cycle array has an operation object
 	// The object properties may be a Javascript object (for a simple display object)
 	// or an array of display object props, for composite objects
