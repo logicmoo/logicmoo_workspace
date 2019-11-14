@@ -20,12 +20,12 @@
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
-	go/3, my_term_to_atom/2, abstract_numbers/2, endTime/1, d_event/1, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, lps_test_action_ancestor/3,
-	beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1, lps_program_module/1, d/2
+	go/3, my_term_to_atom/2, abstract_numbers/2, endTime/1, d_event/1, l_int/2, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, lps_test_action_ancestor/3,
+	beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1, u_swiclause/3, d/2
 	]).
 
 % Notice that this is only valid in the LPS program thread:
-has_d_clauses :- lps_program_module(M), M:clause(d(_,_),_), !.
+has_d_clauses :- u_swiclause(d(_,_),_,_), !.
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
 :- use_module(lpsUtils('psyntax.P'),[
