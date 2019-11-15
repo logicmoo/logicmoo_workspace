@@ -101,7 +101,7 @@ function drawTimeline(T) {
     link.href = "/lps/bower_components/vis/dist/vis.min.css";
     document.getElementsByTagName("head")[0].appendChild(link);
   }
-  require.config({waitSeconds : 90}); // for very low bandwidth clients
+  require.config({waitSeconds : 180}); // for very low bandwidth clients
   require(["/lps/bower_components/vis/dist/vis.min.js"], function(vis) {
 
       // ... updateSize();
