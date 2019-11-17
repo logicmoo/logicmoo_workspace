@@ -35,6 +35,7 @@
 :- module(substitute,
           [substitute/3,
            substitute_value/4,
+           substitute_value/5,
            substitute_values/3,
            is_subterm/2]).
 
@@ -61,11 +62,15 @@ substitute(N, Comp, Term1, Term) :-
     substitute(N1, Comp, Term1, Term).
 substitute(_, _, _, _).
 
-substitute_one(Value, Var, Term, Var) :-
-    Value==Term.
+substitute_one(Comparator, Value, Subs, Term, Subs) :-
+    call(Comparator, Value, Term).
+
+:- meta_predicate substitute_value(2, ?, ?, ?, ?).
+substitute_value(Comparator, Value, Subs, Term1, Term) :-
+    substitute(substitute_one(Comparator, Value, Subs), Term1, Term).
 
 substitute_value(Value, Subs, Term1, Term) :-
-    substitute(substitute_one(Value, Subs), Term1, Term).
+    substitute_value(==, Value, Subs, Term1, Term).
 
 unpair_eq(V=S, V, S).
 
