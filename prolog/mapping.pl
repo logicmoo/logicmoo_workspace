@@ -118,7 +118,7 @@ prolog2function(negativePropertyAssertion(PropertyExpression, Individual, Indivi
   appendFunctional('ObjectPropertyAssertion', [PropertyExpressionF, IndividualExpression1F, IndividualExpression2F], NOPAFunc).
 
 % DA GUARDARE!!
-prolog2function(annotationAssertion(AnnotationProperty, AnnotationSubject, AnnotationValue),AAFunc):- %'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)' %?
+/*prolog2function(annotationAssertion(AnnotationProperty, AnnotationSubject, AnnotationValue),AAFunc):- %'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)' %?
   propertyExpression2function(AnnotationProperty, AnnotationPropertyF),
   propertyExpression2function(AnnotationSubject, AnnotationSubjectF),
   (
@@ -146,7 +146,7 @@ prolog2function(annotation(AnnotationProperty, AnnotationProperty, AnnotationVal
         literal2function(AnnotationValue, AnnotationValueF),
         appendFunctional('AnnotationAssertion', [AnnotationPropertyF,AnnotationPropertyF,AnnotationValueF], AFunc),
   ).
-
+*/
 
 prolog2function(ontology(IRI), OIFunc) :- 
   appendFunctional(ontologyIRI, [IRI], OIFunc).
@@ -202,7 +202,7 @@ DataExactCardinality := 'DataExactCardinality' '(' nonNegativeInteger DataProper
 */
 
 propertyExpression2function(PE, PEF):-
-  iri(PE,PEF); 
+  iri(PE,PEF).
  
 iri(IRI,IRI) :- atomic(IRI).
 

@@ -67,7 +67,7 @@ subClassOf('http://ml.unife.it/disponte#class11', maxCardinality(4, 'http://www.
 
 disjointClasses(['http://ml.unife.it/disponte#class7', unionOf(['http://ml.unife.it/disponte#class5', 'http://ml.unife.it/disponte#class6'])]).
 
-disjointUnion('http://ml.unife.it/disponte#class8', ['http://ml.unife.it/disponte#class5', 'http://ml.unife.it/disponte#class6']).
+%disjointUnion('http://ml.unife.it/disponte#class8', 'http://ml.unife.it/disponte#class5', 'http://ml.unife.it/disponte#class6']).
 
 subClassOf('http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#class2', 'http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#class1').
 annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability', subClassOf('http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#class2', 'http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10#class1'), literal('0.7')).
