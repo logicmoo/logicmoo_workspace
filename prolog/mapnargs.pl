@@ -119,49 +119,49 @@ mapnargs(_, _).
 mapnargs(Goal, T1, T2) :-
     compound(T1),
     !,
-    functor(T1, N, A),
-    functor(T2, N, A),
+    compound_name_arity(T1, N, A),
+    compound_name_arity(T2, N, A),
     mapnargs_(1, Goal, T1, T2).
 mapnargs(_, T, T).
 
 mapnargs(Goal, T1, T2, T3) :-
     compound(T1),
     !,
-    functor(T1, N, A),
-    functor(T2, N, A),
-    functor(T3, N, A),
+    compound_name_arity(T1, N, A),
+    compound_name_arity(T2, N, A),
+    compound_name_arity(T3, N, A),
     mapnargs_(1, Goal, T1, T2, T3).
 mapnargs(_, T, T, T).
 
 mapnargs(Goal, T1, T2, T3, T4) :-
     compound(T1),
     !,
-    functor(T1, N, A),
-    functor(T2, N, A),
-    functor(T3, N, A),
-    functor(T4, N, A),
+    compound_name_arity(T1, N, A),
+    compound_name_arity(T2, N, A),
+    compound_name_arity(T3, N, A),
+    compound_name_arity(T4, N, A),
     mapnargs_(1, Goal, T1, T2, T3, T4).
 mapnargs(_, T, T, T, T).
 
 mapnargs(Goal, T1, T2, T3, T4, T5) :-
     compound(T1),
     !,
-    functor(T1, N, A),
-    functor(T2, N, A),
-    functor(T3, N, A),
-    functor(T4, N, A),
-    functor(T5, N, A),
+    compound_name_arity(T1, N, A),
+    compound_name_arity(T2, N, A),
+    compound_name_arity(T3, N, A),
+    compound_name_arity(T4, N, A),
+    compound_name_arity(T5, N, A),
     mapnargs_(1, Goal, T1, T2, T3, T4, T5).
 mapnargs(_, T, T, T, T, T).
 
 mapnargs(Goal, T1, T2, T3, T4, T5, T6) :-
     compound(T1),
     !,
-    functor(T1, N, A),
-    functor(T2, N, A),
-    functor(T3, N, A),
-    functor(T4, N, A),
-    functor(T5, N, A),
-    functor(T6, N, A),
+    compound_name_arity(T1, N, A),
+    compound_name_arity(T2, N, A),
+    compound_name_arity(T3, N, A),
+    compound_name_arity(T4, N, A),
+    compound_name_arity(T5, N, A),
+    compound_name_arity(T6, N, A),
     mapnargs_(1, Goal, T1, T2, T3, T4, T5, T6).
 mapnargs(_, T, T, T, T, T, T).
