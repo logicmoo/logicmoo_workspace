@@ -35,10 +35,17 @@
 :- module(subpos_utils,
           [subpos_location/3,
            subterm_location/3,
-           subterm_location_eq/3
+           location_subterm/3,
+           location_subterm_un/3,
+           location_subterm_eq/3
           ]).
 
 :- use_module(library(lists)).
+:- use_module(library(neck)).
+
+:- meta_predicate
+        subterm_location(1,+,?),
+        location_subterm(+,1,+).
 
 location_subpos(PPos, N, SPos) :-
     nonvar(PPos),
@@ -46,31 +53,48 @@ location_subpos(PPos, N, SPos) :-
     location_subpos(Pos, N, SPos).
 location_subpos(term_position(_, _, _, _, PosL), N, Pos) :-
     nth1(N, PosL, Pos).
-location_subpos(list_position(From, To, PosL, Tail), N, Pos) :-
+location_subpos(PPos, N, Pos) :-
+    member(IniP-PPos, [inip(Pos1, From) -list_position(From, To, PosL, Tail),
+                       frto(FrTo)-[FrTo, list_position(From, To, PosL, Tail)]
+                      ]),
+    neck,
     ( N = 1
     ->PosL = [Pos|_]
     ; N = 2
     ->( PosL = [_]
       ->Pos = Tail
-      ; PosL = [_|PosL1],
-        Pos = list_position(From, To, PosL1, Tail)
+      ; PosL = [Pos1|PosL1],
+        lspi(IniP, FT1),
+        PosL1 = [Pos2|_],
+        arg(1, Pos2, PTo),
+        Pos = [FT1, list_position(PTo, To, PosL1, Tail)]
       )
     ).
 location_subpos(brace_term_position(_, _, Pos), 1, Pos).
+
+lspi(inip(Pos1, From), From-To) :-
+    arg(1, Pos1, To).
+lspi(frto(FromTo), FromTo).
 
 subpos_location([],    Pos,    Pos).
 subpos_location([N|L], SubPos, Pos) :-
     location_subpos(SubPos, N, Pos1),
     subpos_location(L, Pos1, Pos).
 
-subterm_location([],    Term, Term).
-subterm_location([N|L], Find, Term) :-
-    compound(Term),
-    arg(N, Term, SubTerm),
-    subterm_location(L, Find, SubTerm).
+location_subterm_un(L, Term, Find) :- location_subterm(L, =(Find), Term).
 
-subterm_location_eq([],    Find, Term) :- Find==Term.
-subterm_location_eq([N|L], Find, Term) :-
+location_subterm_eq(L, Term, Find) :- subterm_location(==(Find), Term, L).
+
+subterm_location(Comparator, Term, []) :-
+    call(Comparator, Term), !.
+subterm_location(Comparator, Term, [N|L]) :-
     compound(Term),
     arg(N, Term, SubTerm),
-    subterm_location_eq(L, Find, SubTerm).
+    subterm_location(Comparator, SubTerm, L).
+
+location_subterm([],    Comparator, Term) :- call(Comparator, Term).
+location_subterm([N|L], Comparator, Term) :-
+    compound(Term),
+    arg(N, Term, SubTerm),
+    location_subterm(L, Comparator, SubTerm).
+
