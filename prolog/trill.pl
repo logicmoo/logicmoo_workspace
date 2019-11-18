@@ -17,14 +17,25 @@ details.
 @copyright Riccardo Zese
 */
 
-:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3, sub_class/4,
+:- module(trill,[fatherNode/4, unionList/3, scanList/4, scanList/3, scanList2/4, cutHead/2, cutList/2, memberd/2, findDirect/2, findDirect2/2, findIndirect/2, sub_class/2, sub_class/3, prob_sub_class/3, sub_class/4,
                  instanceOf/2, instanceOf/3, prob_instanceOf/3, instanceOf/4,
                  property_value/3, property_value/4, prob_property_value/4, property_value/5,
                  unsat/1, unsat/2, prob_unsat/2, unsat/3,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1, inconsistent_theory/2,
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
-                 load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
+                 load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1]).
 
+:- meta_predicate findDirect(:,-).
+:- meta_predicate findDirect2(:,-).
+:- meta_predicate findIndirect(:,-).
+:- meta_predicate unionList(-,-,-).
+:- meta_predicate scanList(-,-,-,-).
+:- meta_predicate scanList(-,-,-).
+:- meta_predicate scanList2(-,-,-,-).
+:- meta_predicate fatherNode(-,-,-,-).
+:- meta_predicate cutHead(-,-).
+:- meta_predicate cutList(-,-).
+:- meta_predicate memberd(-,-).
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
 :- meta_predicate sub_class(:,+,-,+).
@@ -287,6 +298,91 @@ instanceOf(M:Class,Ind):-
  * The predicate fails if the two individual are not Prop-related.
  * If Assert_ABox is set to true the list of aboxes is asserted with the predicate final_abox/1.
  */
+
+scanList([], List, List).
+scanList([H|T], Acc, List) :- (\+memberd(H, Acc) ->
+		              		findDirect(H, Expl),
+			      		findDirect2(H, Expl2),
+					scanList(Expl, Acc, InterList, ''),
+					scanList(Expl2, Acc, InterList2, ''),
+					scanList2(Expl, Acc, InterList3, ''),
+					scanList2(Expl2, Acc, InterList4, ''),
+			      		scanList(T, [H, InterList, InterList2, InterList3, InterList3|Acc], List)
+					;
+					scanList(T, Acc, List)
+			      ).
+
+printList([]) :- nl.
+printList([H|T]) :- nl, write(H), nl,
+		    printList(T).
+
+unionList([], S2, S2).
+unionList([X|REST],S2,S):- member(X, S2), unionList(REST, S2, S).
+unionList([X|REST],S2,[X|S]):- unionList(REST, S2, S).
+
+fatherNode([], List, List, _).
+fatherNode([H|T], Acc, List, Node) :- scanList(T, [], InterList, Node),
+				      fatherNode(T, [InterList|Acc], List, Node).
+
+cutList([], []).
+cutList([_], []).
+cutList([H|T], [H|List]) :- cutList(T, List).
+
+cutHead([], []).
+cutHead([_|T], T).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%   funzioni ausiliarie per ottenere i nodi padre o i nodi figli di un nodo generico dell'albero  %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+memberd(M, [M|_]).
+memberd(M, [H|_]) :- is_list(H), memberd(M, H).
+memberd(M, [_|T]) :- memberd(M, T).
+
+findDirect(M:Concept, List) :- findall(Expl, (check_query_args(M,[Concept],[ConceptEx]), M:propertyAssertion(_, ConceptEx, Expl), namedIndividual(Expl)), List).
+findDirect2(M:Concept, List) :- findall(Expl, (check_query_args(M,[Concept],[ConceptEx]), M:propertyAssertion(_, Expl, ConceptEx), namedIndividual(Expl)), List).
+
+
+scanList2([], List, List, _).
+scanList2([H|T], Acc, List, Node) :- (((Node \== H), \+memberd(H, Acc)) ->
+					findDirect(H, Expl),
+					findDirect2(H, Expl2),
+					(\+length(Expl2, 0) ->
+						scanList2(Expl2, [], InterList2, H)
+						;
+						InterList2 = [],
+						true
+					), scanList(Expl, [], InterList, Node),
+					scanList2(T, [H,InterList,InterList2|Acc], List, Node)
+					;
+					((Node \== H) ->
+						scanList(T, Acc, List, Node)
+						;
+						true
+					)
+				     ).
+
+scanList([], List, List, _).
+scanList([H|T], Acc, List, Node) :- (((Node \== H), \+memberd(H, Acc)) ->
+					findDirect(H, Expl),
+					findDirect2(H, Expl2),
+					scanList(Expl, [], InterList, Node),
+					scanList(T, [H,InterList|Acc], List, Node)
+					;
+					scanList(T, Acc, List, Node)
+				     ).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%   restituisce il nodo da cui parto e tutti quelli collegati direttamente o indirettamente a lui   %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+findIndirect(M:Concept, List) :- check_query_args(M,[Concept],[ConceptEx]),
+				 scanList2([ConceptEx], [], Final, ''),
+				 flatten(Final, List).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 property_value(M:Prop, Ind1, Ind2,Expl,Assert_ABox):-
   ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
 	set_up(M),
@@ -336,6 +432,7 @@ property_value(M:Prop, Ind1, Ind2):-
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
 	        apply_all_rules(M,(ABox,Tabs),(ABox1,_Tabs1)),!,
+		write(ABox1), nl,
 	  	find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),_),ABox1),!
 	      )
 	    ;
@@ -949,6 +1046,9 @@ existsInKB(M,R,C):-
   member(someValuesFrom(R,C),[A,B]).
 
 existsInKB(M,R,C):-
+  write('M - '), write(M), write(nl),
+  write('R - '), write(R), write(nl),
+  write('C - '), write(C), write(nl),
   M:equivalentClasses(L),
   member(someValuesFrom(R,C),L).
 
@@ -2483,6 +2583,17 @@ sandbox:safe_primitive(trill:load_owl_kb(_)).
 
 :- multifile sandbox:safe_meta/2.
 
+sandbox:safe_meta(trill:findDirect(_,_),[]).
+sandbox:safe_meta(trill:findDirect2(_,_),[]).
+sandbox:safe_meta(trill:findIndirect(_,_),[]).
+sandbox:safe_meta(trill:unionList(_,_,_),[]).
+sandbox:safe_meta(trill:scanList(_,_,_,_),[]).
+sandbox:safe_meta(trill:scanList(_,_,_),[]).
+sandbox:safe_meta(trill:scanList2(_,_,_,_),[]).
+sandbox:safe_meta(trill:fatherNode(_,_,_,_),[]).
+sandbox:safe_meta(trill:cutHead(_,_),[]).
+sandbox:safe_meta(trill:cutList(_,_),[]).
+sandbox:safe_meta(trill:memberd(_,_),[]).
 sandbox:safe_meta(trill:sub_class(_,_),[]).
 sandbox:safe_meta(trill:sub_class(_,_,_),[]).
 sandbox:safe_meta(trill:sub_class(_,_,_,_),[]).
