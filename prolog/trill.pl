@@ -350,16 +350,11 @@ scanList2([H|T], Acc, List, Node) :- (((Node \== H), \+memberd(H, Acc)) ->
 					(\+length(Expl2, 0) ->
 						scanList2(Expl2, [], InterList2, H)
 						;
-						InterList2 = [],
-						true
+						InterList2 = []
 					), scanList(Expl, [], InterList, Node),
 					scanList2(T, [H,InterList,InterList2|Acc], List, Node)
 					;
-					((Node \== H) ->
-						scanList(T, Acc, List, Node)
-						;
-						true
-					)
+					scanList(T, Acc, List, Node)
 				     ).
 
 scanList([], List, List, _).
