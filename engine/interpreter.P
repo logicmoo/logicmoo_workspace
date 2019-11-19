@@ -2217,7 +2217,7 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 		(option(sample(Templates)) -> 
 			findall(Fluent, (
 				member(Fluent,Templates), 
-				call_with_inference_limit( query(holds(Fluent,_)),500,Res), 
+				call_with_inference_limit( query(holds(Fluent,_)),1000,Res), 
 				% tricky limit; larger limits seem to provoke a cascade of "Unhandled exception: inference_limit_exceeded" on SWISH
 				(Res=inference_limit_exceeded -> throw('Fluent sample specification is too vague') ; true)
 				), IntensionalFluents), 
