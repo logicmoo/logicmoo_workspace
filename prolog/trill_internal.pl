@@ -347,7 +347,7 @@ absent2([_|T],Expl):-
 build_abox(M,(ABox,Tabs)):-
   retractall(M:final_abox(_)),
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),M:propertyAssertion(Property,Subject, Object),LPA),
+  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),(M:propertyAssertion(Property,Subject, Object),findIndirect(Subject,List),member(Object, List)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
