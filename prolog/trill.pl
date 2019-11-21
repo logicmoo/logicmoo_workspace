@@ -25,6 +25,7 @@ details.
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1]).
 
+
 :- meta_predicate findDirect(:,-).
 :- meta_predicate findDirect2(:,-).
 :- meta_predicate findIndirect(:,-).
