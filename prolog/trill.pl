@@ -226,7 +226,7 @@ instanceOf(M:Class,Ind,Expl,Assert_ABox):-
 	retractall(M:exp_found(_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
-  	build_abox(M,(ABox,Tabs)),
+  	build_abox(M,(ABox,Tabs),IndEx),
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
   	    	add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
@@ -268,7 +268,7 @@ instanceOf(M:Class,Ind):-
 	  retractall(M:exp_found(_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
-	  build_abox(M,(ABox,Tabs)),
+	  build_abox(M,(ABox,Tabs),IndEx),
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
 	        add_q(M,ABox,classAssertion(complementOf(ClassEx),IndEx),ABox0),
@@ -335,7 +335,7 @@ property_value(M:Prop, Ind1, Ind2,Expl,Assert_ABox):-
 	retractall(M:exp_found(_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
-  	build_abox(M,(ABox,Tabs)),
+  	build_abox(M,(ABox,Tabs),Ind1Ex),
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
   	    	findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
@@ -374,7 +374,7 @@ property_value(M:Prop, Ind1, Ind2):-
 	  retractall(M:exp_found(_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
-	  build_abox(M,(ABox,Tabs)),
+	  build_abox(M,(ABox,Tabs),Ind1Ex),
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
 	        apply_all_rules(M,(ABox,Tabs),(ABox1,_Tabs1)),!,
@@ -465,7 +465,7 @@ unsat_internal(M:Concept,Expl,Assert_ABox):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs),''),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
@@ -502,7 +502,7 @@ unsat_internal(M:Concept):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs),''),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
@@ -526,7 +526,7 @@ inconsistent_theory(M:Expl,Assert_ABox):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
-  build_abox(M,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs),''),
   % Without prior search of clashes in order to find all the possible clashes after expansion
   findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
   (Assert_ABox==true -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
@@ -552,7 +552,7 @@ inconsistent_theory:-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
-  build_abox(M,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs),''),
   ( (clash(M,(ABox,Tabs),_),!) -> true
     ;
       (apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),!,
