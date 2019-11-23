@@ -330,6 +330,7 @@ absent2([_|T],Expl):-
 
 /* **************** */
 
+
 /*
   build_abox
   ===============
@@ -348,9 +349,10 @@ absent2([_|T],Expl):-
 build_abox(M,(ABox,Tabs),InitialIndividual):-
   retractall(M:final_abox(_)),
   findIndirect(InitialIndividual,List),
+  write('List - '), write(List), nl,
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),(M:propertyAssertion(Property,Subject, Object),
-	(namedIndividual(Subject) ->
+	(((InitialIndividual \== ''), namedIndividual(Subject)) ->
 		member(Subject, List)
 		;
 		true
