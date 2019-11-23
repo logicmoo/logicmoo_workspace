@@ -54,27 +54,30 @@ location_subpos(PPos, N, SPos) :-
 location_subpos(term_position(_, _, _, _, PosL), N, Pos) :-
     nth1(N, PosL, Pos).
 location_subpos(PPos, N, Pos) :-
-    member(IniP-PPos, [inip(Pos1, From) -list_position(From, To, PosL, Tail),
-                       frto(FrTo)-[FrTo, list_position(From, To, PosL, Tail)]
+    member(IniP-PPos, [inip(Pos1)-list_position(From, To, PosL, Tail),
+                       frto(BTo)-sub_list_position(From, To, BTo, _, PosL, Tail)
                       ]),
     neck,
     ( N = 1
-    ->PosL = [Pos|_]
+    ->( PosL = [Pos|_]
+      ->true
+      ; PosL = []
+      ->Pos = Tail
+      )
     ; N = 2
     ->( PosL = [_]
       ->Pos = Tail
       ; PosL = [Pos1|PosL1],
-        lspi(IniP, FT1),
+        lspi(IniP, BTo1),
         PosL1 = [Pos2|_],
         arg(1, Pos2, PTo),
-        Pos = [FT1, list_position(PTo, To, PosL1, Tail)]
+        Pos = sub_list_position(From, To, BTo1, PTo, PosL1, Tail)
       )
     ).
 location_subpos(brace_term_position(_, _, Pos), 1, Pos).
 
-lspi(inip(Pos1, From), From-To) :-
-    arg(1, Pos1, To).
-lspi(frto(FromTo), FromTo).
+lspi(inip(Pos), BTo) :- arg(1, Pos, BTo).
+lspi(frto(BTo), BTo).
 
 subpos_location([],    Pos,    Pos).
 subpos_location([N|L], SubPos, Pos) :-
@@ -85,8 +88,7 @@ location_subterm_un(L, Term, Find) :- location_subterm(L, =(Find), Term).
 
 location_subterm_eq(L, Term, Find) :- subterm_location(==(Find), Term, L).
 
-subterm_location(Comparator, Term, []) :-
-    call(Comparator, Term), !.
+subterm_location(Comparator, Term, []) :- call(Comparator, Term), !.
 subterm_location(Comparator, Term, [N|L]) :-
     compound(Term),
     arg(N, Term, SubTerm),
