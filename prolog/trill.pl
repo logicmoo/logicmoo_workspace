@@ -17,7 +17,7 @@ details.
 @copyright Riccardo Zese
 */
 
-:- module(trill,[scanList/4, findDirect/2, findDirect2/2, findIndirect/2, sub_class/2, sub_class/3, prob_sub_class/3, sub_class/4,
+:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3, sub_class/4,
                  instanceOf/2, instanceOf/3, prob_instanceOf/3, instanceOf/4,
                  property_value/3, property_value/4, prob_property_value/4, property_value/5,
                  unsat/1, unsat/2, prob_unsat/2, unsat/3,
