@@ -218,7 +218,7 @@ prolog:message(consistent) -->
 instanceOf(M:Class,Ind,Expl,Assert_ABox):-
   ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
   	set_up(M),
-	retractall(M:exp_found(_,_)),
+	retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
   	build_abox(M,(ABox,Tabs)),
@@ -260,7 +260,7 @@ instanceOf(M:Class,Ind):-
   (  check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
 	(
 	  set_up(M),
-	  retractall(M:exp_found(_,_)),
+	  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
 	  build_abox(M,(ABox,Tabs)),
@@ -290,7 +290,7 @@ instanceOf(M:Class,Ind):-
 property_value(M:Prop, Ind1, Ind2,Expl,Assert_ABox):-
   ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
 	set_up(M),
-	retractall(M:exp_found(_,_)),
+	retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
   	build_abox(M,(ABox,Tabs)),
@@ -329,7 +329,7 @@ property_value(M:Prop, Ind1, Ind2):-
   (  check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
 	(
 	  set_up(M),
-	  retractall(M:exp_found(_,_)),
+	  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
 	  build_abox(M,(ABox,Tabs)),
@@ -419,7 +419,7 @@ unsat(M:Concept,Expl):-
 % ----------- %
 unsat_internal(M:Concept,Expl,Assert_ABox):-
   set_up(M),
-  retractall(M:exp_found(_,_)),
+  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
   build_abox(M,(ABox,Tabs)),
@@ -456,7 +456,7 @@ unsat(M:Concept):-
 % ----------- %
 unsat_internal(M:Concept):-
   set_up(M),
-  retractall(M:exp_found(_,_)),
+  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
   build_abox(M,(ABox,Tabs)),
@@ -480,7 +480,7 @@ unsat_internal(M:Concept):-
  */
 inconsistent_theory(M:Expl,Assert_ABox):-
   set_up(M),
-  retractall(M:exp_found(_,_)),
+  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
   build_abox(M,(ABox,Tabs)),
@@ -506,7 +506,7 @@ inconsistent_theory(M:Expl):-
 inconsistent_theory:-
   get_trill_current_module(M),
   set_up(M),
-  retractall(M:exp_found(_,_)),
+  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
   build_abox(M,(ABox,Tabs)),
@@ -981,10 +981,11 @@ scan_and_list(M,[_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
   ===============
 */
 or_rule(M,(ABox0,Tabs0),L):-
-  findClassAssertion(unionOf(LC),Ind,Expl,ABox0),
+  findClassAssertion(unionOf(LC),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
-  not_ind_intersected_union(Ind,LC,ABox0),
+  %not_ind_intersected_union(Ind,LC,ABox0),
   length(LC,NClasses),
+  and_f_ax(M,cp(unionOf(LC),NClasses),Expl0,Expl),
   findall((ABox1,Tabs0),scan_or_list(M,LC,NClasses,Ind,Expl,ABox0,Tabs0,ABox1),L),
   dif(L,[]),!.
 

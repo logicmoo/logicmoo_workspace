@@ -25,12 +25,15 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2).
+  M:(dynamic exp_found/2),
+  M:(dynamic exp_found/3).
 
 clean_up(M):-
   utility_translation:clean_up(M),
   M:(dynamic exp_found/2),
-  retractall(M:exp_found(_,_)).
+  M:(dynamic exp_found/3),
+  retractall(M:exp_found(_,_)),
+  retractall(M:exp_found(_,_,_)).
 
 /***********
   Utilities for queries
@@ -62,29 +65,60 @@ check_and_close(_,Expl,Expl):-
   dif(Expl,[]).
 
 
+find_expls(M,LABoxes,Q,E):-%gtrace,
+  length(LABoxes,N),!,
+  find_expls(M,N,LABoxes,Q,E).
+
 % checks if an explanations was already found
-find_expls(_M,[],_,[]).
+find_expls(M,N,[],[C,I],E):-
+  findall(CPsS-Exp,M:exp_found([C,I,CPsS],Exp),Expl),
+  findall(CPs,member(CPs-_,Expl),CPsL0),
+  sort(CPsL0,CPsL),gtrace,
+  combine_expls_from_nondet_rules(CPsL,Expl,N,E).
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|_T],[C,I],E):-
+find_expls(M,_,[ABox|_T],[C,I],E):-
   clash(M,ABox,EL0),
   member(E0,EL0),
   sort(E0,E),
-  findall(Exp,M:exp_found([C,I],Exp),Expl),
-  not_already_found(M,Expl,[C,I],E),
-  assert(M:exp_found([C,I],E)).
+  findall(CP-N,member(cp(CP,N),E),CPs),
+  (dif(CPs,[]) ->
+    (sort(CPs,CPsS),
+    findall(Exp,M:exp_found([C,I,CPsS],Exp),Expl),
+    not_already_found(M,Expl,[C,I,CPsS],E),
+    assert(M:exp_found([C,I,CPsS],E)),
+    fail
+    )
+    ;
+    (findall(Exp,M:exp_found([C,I],Exp),Expl),
+     not_already_found(M,Expl,[C,I],E),
+     assert(M:exp_found([C,I],E))
+    )
+  ).
 
 % checks if an explanations was already found (property_value version)
-find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls(M,_,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
   member(E,Es),
   findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
   not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
 
-find_expls(M,[_ABox|T],Query,Expl):-
-  \+ length(T,0),
-  find_expls(M,T,Query,Expl).
+find_expls(M,N,[_ABox|T],Query,Expl):-
+  %\+ length(T,0),
+  find_expls(M,N,T,Query,Expl).
+
+combine_expls_from_nondet_rules([],_Expl,_N,[]).
+
+combine_expls_from_nondet_rules([CPs|_T],Expl,_N,E):-
+  member(CP-N,CPs),
+  findall(Exp,member(CP-N-Exp,Expl),Expls),
+  length(Expls,N),
+  flatten(Expls,ExplsF),
+  sort(ExplsF,E).
+
+combine_expls_from_nondet_rules([_CP|T],Expl,N,E):-
+  combine_expls_from_nondet_rules(T,Expl,N,E).
 
 not_already_found(_M,[],_Q,_E):-!.
 
