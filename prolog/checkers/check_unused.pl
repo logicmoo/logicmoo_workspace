@@ -455,7 +455,8 @@ hide_unused(_, ciao).
 hide_unused(Call, _) :-
     functor(Call, Name, _),
     member(Prefix, ['__aux_wrapper_',
-                    '__wrap$'
+                    '__wrap$',
+                    '$wrap$'
                    ]),
     atom_concat(Prefix, _, Name).
 hide_unused(Call, _) :-
