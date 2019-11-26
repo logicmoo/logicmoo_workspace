@@ -1822,7 +1822,7 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
 
   if(DEBUG) {
     printf("nutils: %d \n",(int)nutils);
-    for(int i = 0; i < (int)nutils; i++) {
+    for(i = 0; i < (int)nutils; i++) {
       printf("Impact %d -> %lf\n",i,list_impacts[i].impact);
     }
   }
