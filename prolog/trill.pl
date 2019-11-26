@@ -40,7 +40,7 @@ details.
 :- meta_predicate inconsistent_theory(:).
 :- meta_predicate prob_inconsistent_theory(:).
 :- meta_predicate axiom(:).
-:- meta_predicate kb_perfixes(:).
+:- meta_predicate kb_prefixes(:).
 :- meta_predicate add_kb_prefix(:,+).
 :- meta_predicate add_kb_prefixes(:).
 :- meta_predicate add_axiom(:).
@@ -178,6 +178,8 @@ load_owl_kb_from_string(_:String):-
   M:ns4query(NSList),
   expand_all_ns(M,[Axiom],NSList,[AxiomEx]),
   M:axiom(AxiomEx).*/
+
+:- multifile kb_prefixes/1.
 
 /*****************************
   MESSAGES
