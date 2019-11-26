@@ -1935,27 +1935,32 @@ set_successor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
   merge node in ABox
 */
 
+% TODO update
+
 merge_abox(_M,_X,_Y,_,[],[]).
 
-merge_abox(M,X,Y,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIndividual(L)),[sameIndividual(L)|Expl])|ABox]):-
+merge_abox(M,X,Y,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIndividual(L)),Expl)|ABox]):-
   flatten([X,Y],L0),
   list_to_set(L0,L),
   member(Ind,L),!,
-  and_f(M,Expl0,ExplT,Expl),
+  and_f(M,Expl0,ExplT,Expl1),
+  and_f_ax(M,sameIndividual(L),Expl1,Expl),
   merge_abox(M,X,Y,Expl0,T,ABox).
 
-merge_abox(M,X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),[sameIndividual(L)|Expl])|ABox]):-
+merge_abox(M,X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),Expl)|ABox]):-
   flatten([X,Y],L0),
   list_to_set(L0,L),
   member(Ind1,L),!,
-  and_f(M,Expl0,ExplT,Expl),
+  and_f(M,Expl0,ExplT,Expl1),
+  and_f_ax(M,sameIndividual(L),Expl1,Expl),
   merge_abox(M,X,Y,Expl0,T,ABox).
 
-merge_abox(M,X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),[sameIndividual(L)|Expl])|ABox]):-
+merge_abox(M,X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),Expl)|ABox]):-
   flatten([X,Y],L0),
   list_to_set(L0,L),
   member(Ind2,L),!,
-  and_f(M,Expl0,ExplT,Expl),
+  and_f(M,Expl0,ExplT,Expl1),
+  and_f_ax(M,sameIndividual(L),Expl1,Expl),
   merge_abox(M,X,Y,Expl0,T,ABox).
 
 merge_abox(M,X,Y,Expl0,[H|T],[H|ABox]):-
