@@ -22,7 +22,7 @@ details.
                  property_value/3, property_value/4, prob_property_value/4,
                  unsat/1, unsat/2, prob_unsat/2,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
-                 axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
+                 axiom/1, kb_prefixes/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
 
 :- meta_predicate sub_class(:,+).
@@ -40,6 +40,7 @@ details.
 :- meta_predicate inconsistent_theory(:).
 :- meta_predicate prob_inconsistent_theory(:).
 :- meta_predicate axiom(:).
+:- meta_predicate kb_perfixes(:).
 :- meta_predicate add_kb_prefix(:,+).
 :- meta_predicate add_kb_prefixes(:).
 :- meta_predicate add_axiom(:).
@@ -2430,6 +2431,7 @@ sandbox:safe_meta(trill:inconsistent_theory,[]).
 sandbox:safe_meta(trill:inconsistent_theory(_),[]).
 sandbox:safe_meta(trill:prob_inconsistent_theory(_),[]).
 sandbox:safe_meta(trill:axiom(_),[]).
+sandbox:safe_meta(trill:kb_prefixes(_),[]).
 sandbox:safe_meta(trill:add_kb_prefix(_,_),[]).
 sandbox:safe_meta(trill:add_kb_prefixes(_),[]).
 sandbox:safe_meta(trill:remove_kb_prefix(_,_),[]).
