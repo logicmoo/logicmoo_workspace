@@ -74,8 +74,8 @@ find_expls(M,[],[C,I],E):-
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|_T],[C,I],E):-
-  clash(M,ABox,EL0-CPs),
-  member(E0,EL0),
+  clash(M,ABox,EL0),
+  member(E0-CPs,EL0),
   sort(E0,E),
   (dif(CPs,[]) ->
     (sort(CPs,CPsS),

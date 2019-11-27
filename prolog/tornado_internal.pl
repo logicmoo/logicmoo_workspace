@@ -214,11 +214,11 @@ Explanation Management
 
 initial_expl(M,BDD):-
   get_bdd_environment(M,Env),
-  one(Env,BDD).
+  zero(Env,BDD).
 
 empty_expl(M,BDD):-
   get_bdd_environment(M,Env),
-  zero(Env,BDD).
+  one(Env,BDD).
 
 and_f_ax(M,Axiom,BDD0,BDD):-
   get_bdd_environment(M,Env),
