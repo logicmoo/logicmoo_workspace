@@ -203,7 +203,7 @@ build_abox(M,(ABox,Tabs)):-
   create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),BDDSIA),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_nominal_list(ABox6,Tabs,ABox),
+  add_nominal_list(M,ABox6,Tabs,ABox),
   !.
 
 /**********************
@@ -256,6 +256,15 @@ test(M,L1,L2,F):-
   %sat(F).
   or_f(M,L1,L2,F),
   dif(L2,F).
+
+
+/**********************
+
+Choice Points Management
+
+***********************/
+
+add_choice_point(_,_,Expl,Expl):- !.
 
 
 /**********************

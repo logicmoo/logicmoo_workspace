@@ -65,23 +65,18 @@ check_and_close(_,Expl,Expl):-
   dif(Expl,[]).
 
 
-find_expls(M,LABoxes,Q,E):-%gtrace,
-  length(LABoxes,N),!,
-  find_expls(M,N,LABoxes,Q,E).
-
 % checks if an explanations was already found
-find_expls(M,N,[],[C,I],E):-
+find_expls(M,[],[C,I],E):-
   findall(CPsS-Exp,M:exp_found([C,I,CPsS],Exp),Expl),
   findall(CPs,member(CPs-_,Expl),CPsL0),
-  sort(CPsL0,CPsL),gtrace,
-  combine_expls_from_nondet_rules(CPsL,Expl,N,E).
+  sort(CPsL0,CPsL),
+  combine_expls_from_nondet_rules(CPsL,Expl,E).
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,_,[ABox|_T],[C,I],E):-
-  clash(M,ABox,EL0),
+find_expls(M,[ABox|_T],[C,I],E):-
+  clash(M,ABox,EL0-CPs),
   member(E0,EL0),
   sort(E0,E),
-  findall(CP-N,member(cp(CP,N),E),CPs),
   (dif(CPs,[]) ->
     (sort(CPs,CPsS),
     findall(Exp,M:exp_found([C,I,CPsS],Exp),Expl),
@@ -97,28 +92,28 @@ find_expls(M,_,[ABox|_T],[C,I],E):-
   ).
 
 % checks if an explanations was already found (property_value version)
-find_expls(M,_,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
   member(E,Es),
   findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
   not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
 
-find_expls(M,N,[_ABox|T],Query,Expl):-
+find_expls(M,[_ABox|T],Query,Expl):-
   %\+ length(T,0),
-  find_expls(M,N,T,Query,Expl).
+  find_expls(M,T,Query,Expl).
 
-combine_expls_from_nondet_rules([],_Expl,_N,[]).
+combine_expls_from_nondet_rules([],_Expl,[]).
 
-combine_expls_from_nondet_rules([CPs|_T],Expl,_N,E):-
+combine_expls_from_nondet_rules([CPs|_T],Expl,E):-
   member(CP-N,CPs),
   findall(Exp,member(CP-N-Exp,Expl),Expls),
   length(Expls,N),
   flatten(Expls,ExplsF),
   sort(ExplsF,E).
 
-combine_expls_from_nondet_rules([_CP|T],Expl,N,E):-
-  combine_expls_from_nondet_rules(T,Expl,N,E).
+combine_expls_from_nondet_rules([_CP|T],Expl,E):-
+  combine_expls_from_nondet_rules(T,Expl,E).
 
 not_already_found(_M,[],_Q,_E):-!.
 
@@ -350,11 +345,11 @@ absent1(Expl0,[H|T],[H|Expl],1):-
 absent1(Expl0,[_|T],Expl,Added):-
   absent1(Expl0,T,Expl,Added).
   
-absent2([H],Expl):-
-  length([H],1),
+absent2([H-_],Expl-_):-
+  length([H],1),!,
   subset(H,Expl) -> fail ; true.
 
-absent2([H|_T],Expl):-
+absent2([H-_|_T],Expl-_):-
   subset(H,Expl),!,
   fail.
 
@@ -380,8 +375,8 @@ absent2([_|T],Expl):-
 
 build_abox(M,(ABox,Tabs)):-
   retractall(M:final_abox(_)),
-  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),M:propertyAssertion(Property,Subject, Object),LPA),
+  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]-[]]),M:classAssertion(Class,Individual),LCA),
+  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]-[]]),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
   new_abox(ABox0),
@@ -391,14 +386,14 @@ build_abox(M,(ABox,Tabs)):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]]),M:differentIndividuals(Ld),LDIA),
+  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),[[sameIndividual(L)]]),M:sameIndividual(L),LSIA),
+  findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_nominal_list(ABox6,Tabs,ABox),
+  add_nominal_list(M,ABox6,Tabs,ABox),
   !.
 
 
@@ -410,12 +405,12 @@ Explanation Management
 
 ***********************/
 
-initial_expl(_M,[]):-!.
+initial_expl(_M,[[]-[]]):-!.
 
 empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
-  and_f(M,[[Axiom]],F0,F).
+  and_f(M,[[Axiom]-[]],F0,F).
 
 and_f(_M,[],[],[]):- !.
 
@@ -428,16 +423,28 @@ and_f(_M,L1,L2,F):-
 
 and_f1([],_,L,L).
 
-and_f1([H1|T1],L2,L3,L):-
-  and_f2(H1,L2,L12),
+and_f1([H1-CP1|T1],L2,L3,L):-
+  and_f2(H1,CP1,L2,L12),
   append(L3,L12,L4),
   and_f1(T1,L2,L4,L).
 
-and_f2(_,[],[]):- !.
+and_f2(_,_,[],[]):- !.
 
-and_f2(L1,[H2|T2],[H|T]):-
+and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
   append(L1,H2,H),
-  and_f2(L1,T2,T).
+  append(CP1,CP2,CP),
+  and_f2(L1,CP1,T2,T).
+
+
+/**********************
+
+Choice Points Management
+
+***********************/
+
+add_choice_point(_,CP2Add,Expl-CP0,Expl-CP):-
+  append(CP0,[CP2Add],CP).
+
 
 
 /**********************

@@ -590,7 +590,7 @@ prob_inconsistent_theory(M:Prob):-
 
 % adds the query into the ABox
 add_q(M,ABox,Query,ABox0):-
-  initial_expl(M,Expl),
+  empty_expl(M,Expl),
   add(ABox,(Query,Expl),ABox0).
 
 % expands query arguments using prefixes and checks their existence in the kb
@@ -985,7 +985,7 @@ or_rule(M,(ABox0,Tabs0),L):-
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   %not_ind_intersected_union(Ind,LC,ABox0),
   length(LC,NClasses),
-  and_f_ax(M,cp(unionOf(LC),NClasses),Expl0,Expl),
+  add_choice_point(M,cp(unionOf(LC),NClasses),Expl0,Expl),
   findall((ABox1,Tabs0),scan_or_list(M,LC,NClasses,Ind,Expl,ABox0,Tabs0,ABox1),L),
   dif(L,[]),!.
 
@@ -1078,7 +1078,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(M,D,Ind,ABox1,ABox).
 
 /* -- unfold_rule
       takes a class C1 in which Ind belongs, find a not atomic class C
@@ -1096,7 +1096,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl1,AxL1),
   modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(M,D,Ind,ABox1,ABox).
 
 /* -- unfold_rule
  *    control propertyRange e propertyDomain
@@ -1105,7 +1105,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_class_prop_range_domain(M,Ind,D,Expl,(ABox0,Tabs)),
   modify_ABox(M,ABox0,D,Ind,Expl,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(M,D,Ind,ABox1,ABox).
 
 /*
  * -- unfold_rule
@@ -1117,12 +1117,12 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_neg_class(C,D),
   and_f_ax(M,complementOf(C),Expl,AxL),
   modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
-  add_nominal(D,Ind,ABox1,ABox).
+  add_nominal(M,D,Ind,ABox1,ABox).
 
 % ----------------
 % add_nominal
 
-add_nominal(D,Ind,ABox0,ABox):-
+add_nominal(M,D,Ind,ABox0,ABox):-
   ((D = oneOf(_),
     \+ member(nominal(Ind),ABox0))
     ->
@@ -1132,7 +1132,7 @@ add_nominal(D,Ind,ABox0,ABox):-
      ->
      ABox = ABox1
      ;
-     ABox = [(classAssertion('http://www.w3.org/2002/07/owl#Thing',Ind),[])|ABox1]
+     (empty_expl(M,Expl),ABox = [(classAssertion('http://www.w3.org/2002/07/owl#Thing',Ind),Expl)|ABox1])
      )
    )
     ;
@@ -1318,8 +1318,8 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_sub_sup_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
   modify_ABox(M,ABox0,D,Ind1,Ind2,AxL,ABox1),
-  add_nominal(D,Ind1,ABox1,ABox2),
-  add_nominal(D,Ind2,ABox2,ABox).
+  add_nominal(M,D,Ind1,ABox1,ABox2),
+  add_nominal(M,D,Ind2,ABox2,ABox).
 
 %inverseProperties
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
@@ -1327,8 +1327,8 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_inverse_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
   modify_ABox(M,ABox0,D,Ind2,Ind1,AxL,ABox1),
-  add_nominal(D,Ind1,ABox1,ABox2),
-  add_nominal(D,Ind2,ABox2,ABox).
+  add_nominal(M,D,Ind1,ABox1,ABox2),
+  add_nominal(M,D,Ind2,ABox2,ABox).
 
 %-----------------
 % subPropertyOf
@@ -1464,24 +1464,28 @@ safe_s_neigh([H|T],S,Tabs,[H|ST]):-
   ================
 */
 max_rule(M,(ABox0,Tabs0),L):-
-  findClassAssertion(maxCardinality(N,S,C),Ind,Expl,ABox0),
+  findClassAssertion(maxCardinality(N,S,C),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
   individual_class_C(SN,C,ABox0,SNC),
   length(SNC,LSS),
   LSS @> N,
+  add_choice_point(M,cp(maxCardinality(N,S,C),NCP),Expl0,Expl),
   findall((ABox1,Tabs1),scan_max_list(M,S,SNC,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
   dif(L,[]),
+  length(L,NCP),
   !.
 
 max_rule(M,(ABox0,Tabs0),L):-
-  findClassAssertion(maxCardinality(N,S),Ind,Expl,ABox0),
+  findClassAssertion(maxCardinality(N,S),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
   length(SN,LSS),
   LSS @> N,
+  add_choice_point(M,cp(maxCardinality(N,S),NCP),Expl0,Expl),
   findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
   dif(L,[]),
+  length(L,NCP),
   !.
 %---------------------
 
@@ -1670,20 +1674,21 @@ subProp(M,SubProperty,Property,Subject,Object):-
 
 %--------------
 
-add_nominal_list(ABox0,(T,_,_),ABox):-
+add_nominal_list(M,ABox0,(T,_,_),ABox):-
   vertices(T,NomListIn),
-  prepare_nom_list(NomListIn,NomListOut),
+  prepare_nom_list(M,NomListIn,NomListOut),
   add_all(NomListOut,ABox0,ABox).
 
 %--------------
 
-prepare_nom_list([],[]).
+prepare_nom_list(_,[],[]).
 
-prepare_nom_list([literal(_)|T],T1):-!,
-  prepare_nom_list(T,T1).
+prepare_nom_list(M,[literal(_)|T],T1):-!,
+  prepare_nom_list(M,T,T1).
 
-prepare_nom_list([H|T],[(nominal(H)),(classAssertion('http://www.w3.org/2002/07/owl#Thing',H),[])|T1]):-
-  prepare_nom_list(T,T1).
+prepare_nom_list(M,[H|T],[(nominal(H)),(classAssertion('http://www.w3.org/2002/07/owl#Thing',H),Expl)|T1]):-
+  empty_expl(M,Expl),
+  prepare_nom_list(M,T,T1).
 %--------------
 
 /*
