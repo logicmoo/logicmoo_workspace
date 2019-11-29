@@ -986,7 +986,7 @@ or_rule(M,(ABox0,Tabs0),L):-
   %not_ind_intersected_union(Ind,LC,ABox0),
   length(LC,NClasses),
   add_choice_point(M,cp(unionOf(LC),NClasses),Expl0,Expl),
-  findall((ABox1,Tabs0),scan_or_list(M,LC,NClasses,Ind,Expl,ABox0,Tabs0,ABox1),L),
+  scan_or_list(M,LC,1,Ind,Expl,ABox0,Tabs0,L),
   dif(L,[]),!.
 
 not_ind_intersected_union(Ind,LC,ABox):-
@@ -996,15 +996,14 @@ ind_intersected_union(Ind,LC,ABox) :-
   findClassAssertion(C,Ind,_,ABox),
   member(C,LC),!.
 %---------------
-scan_or_list(M,[C],1,Ind,Expl,ABox0,_Tabs,ABox):- !,
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox).
+scan_or_list(_,[],_,_,_,_,_,[]):- !.
 
-scan_or_list(M,[C|_T],_NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox).
+scan_or_list(M,[C|T],N0,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
+  and_f_ax(M,cp_ph_or(N0),Expl0,Expl),
+  modify_ABox(M,ABox0,C,Ind,Expl,ABox),
+  N is N0 + 1,
+  scan_or_list(M,T,N,Ind,Expl0,ABox0,Tabs,L).
 
-scan_or_list(M,[_C|T],NClasses,Ind,Expl,ABox0,_Tabs,ABox):-
-  NC is NClasses - 1,
-  scan_or_list(M,T,NC,Ind,Expl,ABox0,_,ABox).
 /* **************** */
 
 /*
@@ -1483,7 +1482,7 @@ max_rule(M,(ABox0,Tabs0),L):-
   length(SN,LSS),
   LSS @> N,
   add_choice_point(M,cp(maxCardinality(N,S),NCP),Expl0,Expl),
-  findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
+  findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L), % TODO
   dif(L,[]),
   length(L,NCP),
   !.
@@ -2351,6 +2350,22 @@ compute_prob_ax1([Prob1 | T],Prob):-
   Prob is Prob1 + Prob0 - (Prob1*Prob0).
 
 */
+
+/**********************
+
+Explanation Management
+
+***********************/
+
+and_all_f(M,ExplPartsList,E) :-
+  empty_expl(M,EmptyE),
+  and_all_f(M,ExplPartsList,EmptyE,E).
+
+and_all_f(_,[],E,E) :- !.
+
+and_all_f(M,[H|T],E0,E):-
+  and_f(M,E0,H,E1),
+  and_all_f(M,T,E1,E).
 
 /**********************
 

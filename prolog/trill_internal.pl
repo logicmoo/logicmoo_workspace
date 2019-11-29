@@ -61,16 +61,16 @@ compute_prob_and_close(M,Exps,Prob):-
   compute_prob(M,Exps,Prob).
 
 % checks the explanation
-check_and_close(_,Expl,Expl):-
-  dif(Expl,[]).
+check_and_close(_,Expl0,Expl):-
+  dif(Expl0,[]),
+  sort(Expl0,Expl1),
+  findall(Ax,(member(Ax,Expl1),\+(Ax=..[cp_ph_or|_])),Expl).
 
 
 % checks if an explanations was already found
 find_expls(M,[],[C,I],E):-
-  findall(CPsS-Exp,M:exp_found([C,I,CPsS],Exp),Expl),
-  findall(CPs,member(CPs-_,Expl),CPsL0),
-  sort(CPsL0,CPsL),
-  combine_expls_from_nondet_rules(CPsL,Expl,E).
+  findall(Exp-CPs,M:exp_found([C,I,CPs],Exp),Expl),
+  combine_expls_from_nondet_rules(M,Expl,E).
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|_T],[C,I],E):-
@@ -78,10 +78,10 @@ find_expls(M,[ABox|_T],[C,I],E):-
   member(E0-CPs,EL0),
   sort(E0,E),
   (dif(CPs,[]) ->
-    (sort(CPs,CPsS),
-    findall(Exp,M:exp_found([C,I,CPsS],Exp),Expl),
-    not_already_found(M,Expl,[C,I,CPsS],E),
-    assert(M:exp_found([C,I,CPsS],E)),
+    (
+    findall(Exp,M:exp_found([C,I,CPs],Exp),Expl),
+    not_already_found(M,Expl,[C,I,CPs],E),
+    assert(M:exp_found([C,I,CPs],E)),
     fail
     )
     ;
@@ -103,17 +103,22 @@ find_expls(M,[_ABox|T],Query,Expl):-
   %\+ length(T,0),
   find_expls(M,T,Query,Expl).
 
-combine_expls_from_nondet_rules([],_Expl,[]).
 
-combine_expls_from_nondet_rules([CPs|_T],Expl,E):-
-  member(CP-N,CPs),
-  findall(Exp,member(CP-N-Exp,Expl),Expls),
-  length(Expls,N),
-  flatten(Expls,ExplsF),
-  sort(ExplsF,E).
+combine_expls_from_nondet_rules(M,[Expl0-CPs0|T],E):-
+  check_CP(CPs0,[Expl0-CPs0|T]),
+  findall([ExplPart-[]],member(ExplPart-CPs0,T),ExplPartsList),
+  and_all_f(M,[[Expl0-[]]|ExplPartsList],[E-[]]).
 
-combine_expls_from_nondet_rules([_CP|T],Expl,E):-
-  combine_expls_from_nondet_rules(T,Expl,E).
+combine_expls_from_nondet_rules(M,[_|T],E):-
+  combine_expls_from_nondet_rules(M,T,E).
+
+check_CP([],_).
+
+check_CP([cp(CP,N)|CPT],L):-
+  findall(cp,member(_-[cp(CP,N)|CPT],L),ExplPartsList),
+  length(ExplPartsList,N),
+  check_CP(CPT,L).
+
 
 not_already_found(_M,[],_Q,_E):-!.
 
@@ -432,7 +437,7 @@ and_f2(_,_,[],[]):- !.
 
 and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
   append(L1,H2,H),
-  append(CP1,CP2,CP),
+  append(CP2,CP1,CP),
   and_f2(L1,CP1,T2,T).
 
 
@@ -442,8 +447,22 @@ Choice Points Management
 
 ***********************/
 
-add_choice_point(_,CP2Add,Expl-CP0,Expl-CP):-
-  append(CP0,[CP2Add],CP).
+add_choice_point(_,_,[],[]). %TODO aggiungere livello nel choice point
+
+add_choice_point(_,cp(CPAx,N),[Expl-CP0|T0],[Expl-CP|T]):-
+  (
+    dif(CP0,[]) ->
+    (
+        CP0 = [cp(CPAx0-L0,N0)|CPT],
+        L is L0 + 1,
+        append([cp(CPAx-L,N)],[cp(CPAx0-L0,N0)|CPT],CP)
+    )
+    ;
+    (
+      CP = [cp(CPAx-0,N)]
+    )
+  ),
+  add_choice_point(_,cp(CPAx,N),T0,T).
 
 
 
