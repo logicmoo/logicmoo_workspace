@@ -980,14 +980,15 @@ scan_and_list(M,[_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
   or_rule
   ===============
 */
-or_rule(M,(ABox0,Tabs0),L):-
-  findClassAssertion(unionOf(LC),Ind,Expl0,ABox0),
+or_rule(M,(ABox0,Tabs0),L):- 
+  findClassAssertion(unionOf(LC),Ind,Expl,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   %not_ind_intersected_union(Ind,LC,ABox0),
-  length(LC,NClasses),
-  add_choice_point(M,cp(unionOf(LC),NClasses),Expl0,Expl),
-  scan_or_list(M,LC,1,Ind,Expl,ABox0,Tabs0,L),
-  dif(L,[]),!.
+  % length(LC,NClasses),
+  get_choice_point_id(M,ID),
+  scan_or_list(M,LC,0,ID,Ind,Expl,ABox0,Tabs0,L),
+  dif(L,[]),
+  create_choice_point(M,Ind,or,unionOf(LC),LC,_),!. % last variable whould be equals to ID
 
 not_ind_intersected_union(Ind,LC,ABox):-
   \+ ind_intersected_union(Ind,LC,ABox).
@@ -996,13 +997,13 @@ ind_intersected_union(Ind,LC,ABox) :-
   findClassAssertion(C,Ind,_,ABox),
   member(C,LC),!.
 %---------------
-scan_or_list(_,[],_,_,_,_,_,[]):- !.
+scan_or_list(_,[],_,_,_,_,_,_,[]):- !.
 
-scan_or_list(M,[C|T],N0,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
-  and_f_ax(M,cp_ph_or(N0),Expl0,Expl),
+scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
+  add_choice_point(M,cpp(CP,N0),Expl0,Expl),
   modify_ABox(M,ABox0,C,Ind,Expl,ABox),
   N is N0 + 1,
-  scan_or_list(M,T,N,Ind,Expl0,ABox0,Tabs,L).
+  scan_or_list(M,T,N,CP,Ind,Expl0,ABox0,Tabs,L).
 
 /* **************** */
 
