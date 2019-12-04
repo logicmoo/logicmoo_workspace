@@ -43,5 +43,5 @@ Then
 	$ cd <pack>/phil/prolog/
 	$ swipl
 	?- [uwcsedeep].
-	?- induce_par([ai,graphics,language,systems,theory],P),test(P,[ai],LL,AUCROC,ROC,AUCPR,PR).
+	?- induce_par([ai,graphics,language,systems],P),test(P,[theory],LL,AUCROC,ROC,AUCPR,PR).
 
