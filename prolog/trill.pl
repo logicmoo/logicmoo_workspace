@@ -1470,7 +1470,7 @@ max_rule(M,(ABox0,Tabs0),L):-
   individual_class_C(SN,C,ABox0,SNC),
   length(SNC,LSS),
   LSS @> N,
-  add_choice_point(M,cp(maxCardinality(N,S,C),NCP),Expl0,Expl),
+  get_choice_point_id(M,ID),
   findall((ABox1,Tabs1),scan_max_list(M,S,SNC,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
   dif(L,[]),
   length(L,NCP),

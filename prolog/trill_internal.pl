@@ -72,8 +72,7 @@ check_and_close(_,Expl0,Expl):-
 find_expls(M,[],[C,I],E):- 
   %findall(Exp-CPs,M:exp_found([C,I,CPs],Exp),Expl),
   %dif(Expl,[]),
-  extract_choice_point_list(M,CP), %gtrace,
-  combine_expls_from_nondet_rules(M,[C,I],CP,E).
+  find_expls_from_choice_point_list(M,[C,I],E).
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|_T],[C,I],E):- 
@@ -110,21 +109,22 @@ find_expls(M,[_ABox|T],Query,Expl):-
   find_expls(M,T,Query,Expl).
 
 
-combine_expls_from_nondet_rules(M,[C,I],cp(ID,_,_,_,_,Expl),E):-
+combine_expls_from_nondet_rules(M,[C,I],cp(_,_,_,_,_,Expl),E):-
   check_non_empty_choice(Expl,ExplList),
   and_all_f(M,ExplList,ExplanationsList),
-  check_presence_of_other_choices(ExplanationsList,Explanations,Choices),
+  %check_presence_of_other_choices(ExplanationsList,Explanations,Choices),
+  member(E0-Choices,ExplanationsList),
+  sort(E0,E),
   (
     dif(Choices,[]) ->
     (
       %TODO gestione altri cp
       get_latest_choice(Choices,ID,Choice),
       subtract(Choices,[cpp(ID,Choice)],CPs),
-      update_choice_point_list(M,ID,Choice,ExplanationsList,CPs),
+      update_choice_point_list(M,ID,Choice,E,CPs),
       fail % to force recursion
     ) ;
     (
-      member(E,Explanations),
       findall(Exp,M:exp_found([C,I],Exp),ExplFound),
       not_already_found(M,ExplFound,[C,I],E),
       assert(M:exp_found([C,I],E))
@@ -132,6 +132,12 @@ combine_expls_from_nondet_rules(M,[C,I],cp(ID,_,_,_,_,Expl),E):-
   ).
 
 
+find_expls_from_choice_point_list(M,QI,E):-
+  extract_choice_point_list(M,CP),
+  (
+    combine_expls_from_nondet_rules(M,QI,CP,E) ;
+    find_expls_from_choice_point_list(M,QI,E)
+  ).
 
 check_non_empty_choice(Expl,ExplList):-
   dict_pairs(Expl,_,PairsList),
@@ -178,14 +184,14 @@ get_latest_choice(CPs,ID,Choice):-
 get_latest_choice_point([],ID,ID).
 
 get_latest_choice_point([cpp(ID0,_)|T],ID1,ID):-
-  ID2 = max(ID1,ID0),
+  ID2 is max(ID1,ID0),
   get_latest_choice_point(T,ID2,ID).
 
 
 get_latest_choice_of_cp([],_,C,C).
 
 get_latest_choice_of_cp([cpp(ID,C0)|T],ID,C1,C):- !,
-  C2 = max(C1,C0),
+  C2 is max(C1,C0),
   get_latest_choice_of_cp(T,ID,C2,C).
 
 get_latest_choice_of_cp([_|T],ID,C1,C):-
@@ -401,22 +407,18 @@ absent0(Expl0,Expl1,Expl):-
 
 absent1(Expl,[],Expl,0).
 
-absent1(Expl0,[H|T],[H|Expl],1):-
+absent1(Expl0,[H-CP|T],[H-CP|Expl],1):-
   absent2(Expl0,H),!,
   absent1(Expl0,T,Expl,_).
 
 absent1(Expl0,[_|T],Expl,Added):-
   absent1(Expl0,T,Expl,Added).
-  
-absent2([H-_],Expl-_):-
-  length([H],1),!,
-  subset(H,Expl) -> fail ; true.
 
-absent2([H-_|_T],Expl-_):-
-  subset(H,Expl),!,
-  fail.
+absent2([H-_],Expl):- !,
+  \+ subset(H,Expl).
 
-absent2([_|T],Expl):-
+absent2([H-_|T],Expl):-
+  \+ subset(H,Expl),!,
   absent2(T,Expl).
 
 /* **************** */
@@ -570,8 +572,18 @@ extract_choice_point_list(M,CP):-
 update_choice_point_list(M,ID,Choice,E,CPs):-
   M:delta(CPList0,ID0),
   memberchk(cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),CPList0),
-  ExplToUpdate = ExplPerChoice0.get(Choice),
-  append([E-CPs],ExplToUpdate,ExplUpdated),  % maybe  absent([E-CPs],ExplToUpdate,ExplUpdated)
+  ExplToUpdate = ExplPerChoice0.get(Choice), 
+  ( % if the set of explanations for the choice is empty it simply adds the new explanation -> union i.e., append([E-CPs],ExplToUpdate,ExplUpdated)
+    % otherwise it adds only new explanations dropping those that are already present or those that are supersets of 
+    % already present explanations -> absent(ExplToUpdate,[E-CPs],ExplUpdated)
+    dif(ExplToUpdate,[]) ->
+    (
+      absent(ExplToUpdate,[E-CPs],ExplUpdated)
+    ) ;
+    (
+      ExplUpdated=[E-CPs]
+    )
+  ),
   ExplPerChoice = ExplPerChoice0.put(Choice,ExplUpdated),
   update_choice_point_list_int(CPList0,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,CPList),
   retractall(M:delta(_,_)),
