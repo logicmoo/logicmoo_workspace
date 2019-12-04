@@ -1,22 +1,35 @@
-/** <module> phil
+/** <module> hplp
 
-This module performs parameter learning over Hierachical Probabilic Logic Programs (HPLP)
-using gradient descent and Backpropagation
+This module performs structure and parameter learning of 
+Hierachical Probabilic Logic Programs (HPLP) from data. 
+Parameter learning is done by applying gradient descent (Backpropagation)
+or Expectation maximization.
 
 @author Arnaud Nguembang Fadja and Fabrizio Riguzzi
 @copyright Arnaud Nguembang Fadja and Fabrizio Riguzzi
 */
 
 /*
- PHIL: Parameter learning for HIerarchical probabilistic Logic programs
- Copyright (c) 2018, Arnaud Nguembang Fadja and Fabrizio Riguzzi
+ HPLP: Hierarchical Probabilistic Logic Programs
+ Copyright (c) 2019, Arnaud Nguembang Fadja and Fabrizio Riguzzi
 
 */
-:- module(phil,[read_Program/3,generateHPLPs/7,getTrees/2,saveHPLPs/3,writeClauseOutput/1,resetProb/3,writeClause/2,induce/3,set_sc/2,setting_sc/2,induce_par/2,test/7,list2or/2,list2and/2,sample/4,learn_params/5,op(500,fx,#),op(500,fx,-#),test_prob/6,rules2termHPLPs/2,process_clauses/6,generate_clauses/6,generate_clauses_bg/2,generate_body/3,make_dynamic/1,extract_fancy_vars/2,linked_clause/3,banned_clause/3,take_var_args/3,remove_duplicates/2,exctract_type_vars/3,delete_one/3,get_next_rule_number/2,member_eq/2,delete_one/3,retract_all/1,assert_all/3,write2/2,write3/2,format2/3,format3/3,write_rules2/3,write_rules3/3,nl2/1,nl3/1,onec/1,zeroc/1,andc/3,ac_notc/2,orc/3,equalityc/3,or_list/2]).
+:- module(phil,[read_Program/3,generateHPLPs/7,getTrees/2,
+  saveHPLPs/3,writeClauseOutput/1,resetProb/3,writeClause/2, 
+  induce_par/2,induce/2,set_sc/2,setting_sc/2,test/7,list2or/2,
+  list2and/2,sample/4,learn_params/5,op(500,fx,#),op(500,fx,-#),
+  test_prob/6,rules2termHPLPs/2,process_clauses/6,generate_clauses/6,
+  generate_clauses_bg/2,generate_body/3,make_dynamic/1,
+  extract_fancy_vars/2,linked_clause/3,banned_clause/3,
+  take_var_args/3,remove_duplicates/2,exctract_type_vars/3,
+  delete_one/3,get_next_rule_number/2,member_eq/2,
+  delete_one/3,retract_all/1,assert_all/3,write2/2,
+  write3/2,format2/3,format3/3,write_rules2/3,
+  write_rules3/3,nl2/1,nl3/1,onec/1,zeroc/1,andc/3,
+  ac_notc/2,orc/3,equalityc/3,or_list/2]).
 
 
 
-%:-reexport(library(bddem)).
 :-use_module(library(auc)).
 :-use_module(library(lists)).
 :-use_module(library(random)).
@@ -26,7 +39,6 @@ using gradient descent and Backpropagation
 :-use_module(library(apply)).
 :- use_module(library(pio)).
 :- use_module(library(dialect)).
-%:-use_module(library(lbfgs)).
 :-set_prolog_flag(unknown,warning).
 
 :-load_foreign_library(foreign(phil)).
@@ -41,7 +53,7 @@ using gradient descent and Backpropagation
 
 :- thread_local  input_mod/1.
 
-:- meta_predicate induce(:,-,-).
+:- meta_predicate induce(:,-).
 :- meta_predicate objective_func(:,-,-,-,-,-,-,-).
 
 :- meta_predicate induce_rules(:,-).
@@ -90,37 +102,34 @@ default_setting_sc(d,1).
 
 
 %     Phil  default settings
-default_setting_sc(maxIter_phil,1000).
-default_setting_sc(epsilon_deep,0.0001).
-default_setting_sc(epsilon_deep_fraction,0.00001).
-default_setting_sc(max_initial_weight,0.0).
-default_setting_sc(adam_params,[0.001,0.9,0.999,1e-8]).
-default_setting_sc(batch_strategy,stoch_minibatch(100)).
-% allowed values: batch, minibatch(size), stoch_minibatch(size)
-default_setting_sc(algorithmType,dphil).
-% allowed values: dphil, emphil
-default_setting_sc(statistics_folder,statisitics).
-default_setting_sc(saveStatistics,no).
-default_setting_sc(zero,0.000001).
-default_setting_sc(setSeed,no).
-default_setting_sc(useInitParams,no). % Default value=no
+default_setting_sc(maxIter_phil,1000). % Max iteration
+default_setting_sc(epsilon_deep,0.0001). % epsilon 
+default_setting_sc(epsilon_deep_fraction,0.00001). % delta
+default_setting_sc(max_initial_weight,0.5). % intial weights of dphil in [-0.5 0.5]
+default_setting_sc(adam_params,[0.001,0.9,0.999,1e-8]). % default Adam hyper-pameters
+default_setting_sc(batch_strategy,stoch_minibatch(100)). % allowed values: batch, minibatch(size), stoch_minibatch(size)
+default_setting_sc(algorithmType,dphil).% allowed values: dphil, emphil
+default_setting_sc(saveStatistics,no). % indicates where to safe the statistics or no
+default_setting_sc(statistics_folder,statisitics). %if saveStatistics is different to "no", it indicates the folder where to safe the statistics during paramenter learning.
+default_setting_sc(zero,0.000001).  % Approximate value of 0 
+default_setting_sc(setSeed,no). 
+default_setting_sc(useInitParams,no). % if yes the initial parameters during the learning are the ones indicated in the progam. Otherwise, the parameters are initialy generated randomly
 default_setting_sc(c_seed,c_seed).
 
-
-default_setting_sc(probability,1.0).
-default_setting_sc(rate,0.95).
-default_setting_sc(min_probability,1e-5).
-default_setting_sc(generate_mega_hplp,yes).
-default_setting_sc(saveFile,"hplp").
-default_setting_sc(max_layer,-1).
+% Sleahp default settings
+default_setting_sc(probability,1.0). % Initial value which indicates the probability to go to the next layer during HPLP generation
+default_setting_sc(rate,0.95). % Rate to multiply to the current probability at each layer
+default_setting_sc(min_probability,1e-5).  % Threshold of the probability under which the clause is dropped
+default_setting_sc(generate_mega_hplp,yes). 
+default_setting_sc(saveFile,"hplp"). % File where to save the initial large HPLP generated
+default_setting_sc(max_layer,-1). % Indicates the Max number of clause layer. -1 indicates the highest layer possible
 
 % EM regularization parameters
 default_setting_sc(regularized,yes). % yes for activating the regularization and no otherwise
-default_setting_sc(typeRegularization,1). % set the type of regularizaion
+default_setting_sc(typeRegularization,1). % set the regulariztion type. 1,2 if algorithmType=dphil. Otherwise 1,2,3 
 default_setting_sc(gamma,100). % set the value of gamma according to the type (gamma=a if type=3)
-default_setting_sc(gammaCount,10). % set the value of gamma according to the type (gammaCount=b if type=3)
-%default_setting_sc(a,0).
-%default_setting_sc(frac_b,0.1).
+default_setting_sc(gammaCount,10). % set the value of gammaCount according to the type (gammaCount=b if type=3)
+
 
 
 /*
@@ -167,7 +176,7 @@ default_setting_sc(gammaCount,10). % set the value of gamma according to the typ
 /**
  * forward(AC:+term,++Pobabilities:list,+:integer-Probability:+double) is det
  *
- * Evaluate the arrithmetic circuit AC.
+ * Evaluate the arithmetic circuit AC.
  * Takes as input the list of learned probabilities and the number of rule NR,
  *
  * Returns in Probability the ecaluated output of the AC
@@ -337,9 +346,12 @@ test_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
  * of the input file using the folds indicated in TrainFolds for training.
  * It returns in P the input program with the updated parameters.
  */
-induce_par(Folds,ROut):-
-  induce_parameters(Folds,_DB,R),
-  rules2termHPLPs(R,ROut).
+induce_par(M:Folds,P):-
+  induce_parameters(M:Folds,_DB,R),
+  rules2termHPLPs(R,P),
+  M:local_setting(saveFile,SaveFile),
+  string_concat(SaveFile,"_Learned",Learned),
+  writeClause(P,Learned).
 
 rules2termHPLPs(R,T):-
   maplist(rules2termHPLP,R,T).
@@ -366,7 +378,6 @@ induce_parameters(M:Folds,DB,R):-
   M:in(R00),
   process_clauses(R00,M,[],_,[],R0),
   statistics(walltime,[_,_]),
-  %trace,
   learn_params(DB,M,R0,R,Score2),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
@@ -380,172 +391,11 @@ induce_parameters(M:Folds,DB,R):-
   ).
 
  
-/**
- * learn_params(+DB:list_of_atoms,+M:atom,+R0:probabilistic_program,-P:probabilistic_program,-Score:float) is det
- *
- * The predicate learns the parameters of the program R0 and returns
- * the updated program in R and the score in Score.
- * DB contains the list of interpretations ids and M the module where
- * the data is stored.
- */
 
-
+% Other useful predicates
 remove_p([N,_],N).
 
-getTheory(R0,W,R):-
-  sigma_vec(W,Probs),
-  Probs=..[_|LProbs],
-  update_theory_par(R0,LProbs,R).
 
-getProgram(R0,W,P):-
-  getTheory(R0,W,R),
-  rules2terms(R,P).
-
-take(0, _, []) :- !.
-take(0, _, []) :- !.
-  take(N, [H|TA], [H|TB]) :-
-  N > 0,
-  N2 is N - 1,
-  take(N2, TA, TB).
-
-
-writefile(List,FileName):-
- open(FileName,write, Stream),
- writefile1(Stream,List),
- close(Stream).
-
-writefile1(_Stream,[]):-!.
-writefile1(Stream,[Head|Tail]):-
-   writeln(Stream,Head),
-   writefile1(Stream,Tail).
-  
-delete_AC(_, [], []):-!.
-delete_AC(ACs, [Term|Tail],Result):-
-    member(Term,ACs),!,
-    writeln(Term),
-    delete_AC(ACs, Tail, Result).
-
-delete_AC(ACs, [Head|Tail], [Head|Result]):-
-    delete_AC(ACs, Tail, Result).
-
-getInitialParameters([],[]):-!.
-getInitialParameters([rule(_Number,[_Head:Param,'':_],_Body,_)|Rest],[Param|RestParams]):-
-   getInitialParameters(Rest,RestParams).
-
-  
-
-%!	learn_params
-% learn the parameters of a HPLP
-%
-learn_params(DB,M,R0,R,CLL):-
-  generate_clauses(R0,M,R1,0,[],Th0),
-  assert_all(Th0,M,Th0Ref),
-  assert_all(R1,M,R1Ref),!,
-  length(R0,NR),
-  retractall(M:v(_,_,_)),
-  length(DB,NEx),
-  abolish_all_tables,
-  M:local_setting(group,G),
-  derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
-  maplist(remove_p,Nodes0,Nodes),
-  %writefile(Nodes,"ACs"),
-  M:local_setting(algorithmType,Algorithm),
-  M:local_setting(maxIter_phil,MaxIter),
-  M:local_setting(epsilon_deep,EA),
-  M:local_setting(epsilon_deep_fraction,ER),
-  StopCond=[MaxIter,EA,ER],
-  M:local_setting(statistics_folder,Statistics_folder),
-  M:local_setting(saveStatistics,Save),
-  Folder=[Save,Statistics_folder],
-  M:local_setting(zero,ZERO),
-  M:local_setting(setSeed,Seeded),
-  (Seeded=yes ->
-    M:local_setting(c_seed,Seed)
-  ;
-   Seed is 0
-  ),
-  M:local_setting(useInitParams,Init),
-  (Init=yes ->
-    getInitialParameters(R0,InitParameters),
-    Params=[NR,ZERO,Seeded,Seed,Init,InitParameters]
-    ;
-    Params=[NR,ZERO,Seeded,Seed,Init]
-  ),
-  format3(M,'Initial CLL on PHIL ~f */~n',[CLL0]),
-  retract_all(Th0Ref),
-  retract_all(R1Ref),
-  % Regularization parameters
-  M:local_setting(regularized,Regularized),
-  M:local_setting(typeRegularization,TypeReg),
-  M:local_setting(gamma,Gamma),
-  M:local_setting(gammaCount,GammaCount),
-  (Regularized=yes ->
-    RegParams=[Regularized,TypeReg,Gamma,GammaCount]
-  ;
-    RegParams=[Regularized]
-  ),
-  (Algorithm = emphil ->
-     emphil(Nodes,Params,RegParams,StopCond,Folder,CLL,ProbFinal)
-    ;
-     (Algorithm = dphil ->
-        M:local_setting(adam_params,Adam),
-        M:local_setting(max_initial_weight,MAX_W),
-        AdamReg=[Adam,RegParams],
-        dphil_C(M,Nodes,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal)
-        ;
-        format("The algorithm ~w does not exist. Do you mean dphil or emphil? ~n",[Algorithm]),
-        halt
-     )
-  ),
-  format3(M,'~nFinal CLL ~f ~n',[CLL]),
-  (Regularized=yes ->
-    update_theory_par(R1,ProbFinal,R2),
-    M:local_setting(min_probability,Min_prob),
-    remove_clauses(R2,Min_prob,R21,Num),
-    %format("~d clauses removed",[Num]),
-    (Num=:=0 ->    
-      R=R21
-      ;
-      R1=[Rule|_],
-      Rule1=(Rule,_),
-      getHead(Rule1,HeadFunctor),
-      removeHidden(R21,R,[HeadFunctor],_)
-    )
-  ;
-   update_theory_par(R1,ProbFinal,R)
-  ).
-
-
-/* format3(M,'~nFirst CLL ~f ~n',[CLL1]),
-  update_theory_par(R1,ProbFinal1,R),
-  rules2termHPLPs(R,P1),
-  writeClause(P1,"FirstProgram"),
-  M:local_setting(min_probability,Min_prob),
-  resetProb(Min_prob,ProbFinal1,ProbFinalNew),
-  ParamsNew=[NR,ZERO,Seeded,Seed,yes,ProbFinalNew],
-  emphil(Nodes,ParamsNew,RegParams,StopCond,Folder,CLL,ProbFinal),
-  format3(M,'~nFinal CLL ~f ~n',[CLL]),
-  update_theory_par(R1,ProbFinal,R2),
-  rules2termHPLPs(R2,P2),
-  writeClause(P2,"SecondProgram")*/
-
-dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
-   M:local_setting(batch_strategy,minibatch(BatchSize)),!,
-   Params2=[minibatch,BatchSize,MAX_W],
-   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
-
-dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
-   M:local_setting(batch_strategy,stoch_minibatch(BatchSize)),!,
-   Params2=[stochastic,BatchSize,MAX_W],
-   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
-
-dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
-   M:local_setting(batch_strategy,batch),!,
-   BatchSize is 0,
-   Params2=[batch,BatchSize,MAX_W],
-   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
-
-%-----------------------------End PHIL --------------------------------
 
 %!	resetProb
 %
@@ -561,7 +411,7 @@ resetProb(Min_prob,[Prob|Rest],ProbFinal):-
     resetProb(Min_prob, Rest, ProbFinalRest).
 
   
-
+  % Read probabilistic program from file
   read_Program(Filename,Type,P):-
     open(Filename, read, Stream),
     read_file(Stream,[_|P1]),
@@ -585,7 +435,7 @@ resetProb(Min_prob,[Prob|Rest],ProbFinal):-
     Y=X,
     read_file(Stream,L).
   
-  read_file(Stream,[]) :-
+  read_file(_Stream,[]) :-
     true.
   
   removeArgument([],_,[]).
@@ -648,20 +498,167 @@ resetProb(Min_prob,[Prob|Rest],ProbFinal):-
   checkCharAndReadRest(Char,[Char|Chars],InStream):- 
     get_code(InStream,NextChar), 
     checkCharAndReadRest(NextChar,Chars,InStream).
+
+
+
+getTheory(R0,W,R):-
+  sigma_vec(W,Probs),
+  Probs=..[_|LProbs],
+  update_theory_par(R0,LProbs,R).
+
+getProgram(R0,W,P):-
+  getTheory(R0,W,R),
+  rules2terms(R,P).
+
+take(0, _, []) :- !.
+take(0, _, []) :- !.
+  take(N, [H|TA], [H|TB]) :-
+  N > 0,
+  N2 is N - 1,
+  take(N2, TA, TB).
+
+
+writefile(List,FileName):-
+ open(FileName,write, Stream),
+ writefile1(Stream,List),
+ close(Stream).
+
+writefile1(_Stream,[]):-!.
+writefile1(Stream,[Head|Tail]):-
+   writeln(Stream,Head),
+   writefile1(Stream,Tail).
+  
+delete_AC(_, [], []):-!.
+delete_AC(ACs, [Term|Tail],Result):-
+    member(Term,ACs),!,
+    writeln(Term),
+    delete_AC(ACs, Tail, Result).
+
+delete_AC(ACs, [Head|Tail], [Head|Result]):-
+    delete_AC(ACs, Tail, Result).
+
+getInitialParameters([],[]):-!.
+getInitialParameters([rule(_Number,[_Head:Param,'':_],_Body,_)|Rest],[Param|RestParams]):-
+   getInitialParameters(Rest,RestParams).
+
   
 
+/**
+ * learn_params(+DB:list_of_atoms,+M:atom,+R0:probabilistic_program,-R:probabilistic_program,-Score:float) is det
+ *
+ * The predicate learns the parameters of the program R0 and returns
+ * the updated program in R and the score in Score.
+ * DB contains the list of interpretations ids and M the module where
+ * the data is stored.
+ */
+learn_params(DB,M,R0,R,CLL):-
+  generate_clauses(R0,M,R1,0,[],Th0),
+  assert_all(Th0,M,Th0Ref),
+  assert_all(R1,M,R1Ref),!,
+  length(R0,NR),
+  retractall(M:v(_,_,_)),
+  length(DB,NEx),
+  abolish_all_tables,
+  M:local_setting(group,G),
+  derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
+  maplist(remove_p,Nodes0,Nodes),
+  M:local_setting(algorithmType,Algorithm),
+  M:local_setting(maxIter_phil,MaxIter),
+  M:local_setting(epsilon_deep,EA),
+  M:local_setting(epsilon_deep_fraction,ER),
+  StopCond=[MaxIter,EA,ER],
+  M:local_setting(statistics_folder,Statistics_folder),
+  M:local_setting(saveStatistics,Save),
+  Folder=[Save,Statistics_folder],
+  M:local_setting(zero,ZERO),
+  M:local_setting(setSeed,Seeded),
+  (Seeded=yes ->
+    M:local_setting(c_seed,Seed)
+  ;
+   Seed is 0
+  ),
+  M:local_setting(useInitParams,Init),
+  (Init=yes ->
+    getInitialParameters(R0,InitParameters),
+    Params=[NR,ZERO,Seeded,Seed,Init,InitParameters]
+    ;
+    Params=[NR,ZERO,Seeded,Seed,Init]
+  ),
+  format3(M,'Initial CLL on PHIL ~f */~n',[CLL0]),
+  retract_all(Th0Ref),
+  retract_all(R1Ref),
+  % Regularized parameters
+  M:local_setting(regularized,Regularized),
+  M:local_setting(typeRegularization,TypeReg),
+  M:local_setting(gamma,Gamma),
+  M:local_setting(gammaCount,GammaCount),
+  (Regularized=yes ->
+    RegParams=[Regularized,TypeReg,Gamma,GammaCount]
+  ;
+    RegParams=[Regularized]
+  ),
+  (Algorithm = emphil ->
+     emphil(Nodes,Params,RegParams,StopCond,Folder,CLL,ProbFinal)
+    ;
+     (Algorithm = dphil ->
+        M:local_setting(adam_params,Adam),
+        M:local_setting(max_initial_weight,MAX_W),
+        AdamReg=[Adam,RegParams],
+        dphil_C(M,Nodes,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal)
+        ;
+        format("The algorithm ~w does not exist. Do you mean dphil or emphil? ~n",[Algorithm]),
+        halt
+     )
+  ),
+  format3(M,'~nFinal CLL ~f ~n',[CLL]),
+  (Regularized=yes ->
+    update_theory_par(R1,ProbFinal,R2),
+    M:local_setting(min_probability,Min_prob),
+    remove_clauses(R2,Min_prob,R21,Num),
+    %format("~d clauses removed",[Num]),
+    (Num=:=0 ->    % if no rules was removed
+      R=R21
+      ;
+      R1=[Rule|_], % I have removed some rules so have to insure the program remains hierarchical
+      Rule1=(Rule,_),
+      getHead(Rule1,HeadFunctor),
+      removeHidden(R21,R,[HeadFunctor],_)
+    )
+  ;
+   update_theory_par(R1,ProbFinal,R)
+  ).
+
+dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
+   M:local_setting(batch_strategy,minibatch(BatchSize)),!,
+   Params2=[minibatch,BatchSize,MAX_W],
+   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
+
+dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
+   M:local_setting(batch_strategy,stoch_minibatch(BatchSize)),!,
+   Params2=[stochastic,BatchSize,MAX_W],
+   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
+
+dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
+   M:local_setting(batch_strategy,batch),!,
+   BatchSize is 0,
+   Params2=[batch,BatchSize,MAX_W],
+   dphil(NodesNew,Params,StopCond,Folder,AdamReg,Params2,CLL,ProbFinal).
+
+%-----------------------------End parameter learning PHIL --------------------------------
 
 
+  
  %----------------------Start HPLPs structure------------------
-spy1.
+
 
 %!	induce
 %
 %
-induce(TrainFolds,TestFold,P):-
-  induce_rules(TrainFolds,P0),
+induce(M:TrainFolds,P):-
+  induce_rules(M:TrainFolds,P0),
   rules2termHPLPs(P0,P),
-  string_concat("./Learned/Learned_",TestFold,Learned),
+  M:local_setting(saveFile,SaveFile),
+  string_concat(SaveFile,"_Learned",Learned),
   writeClause(P,Learned).
 
 induce_rules(M:Folds,R):-
@@ -691,19 +688,18 @@ induce_rules(M:Folds,R):-
   statistics(walltime,[_,_]),
   (M:local_setting(specialization,bottom)->
     M:local_setting(megaex_bottom,MB),
-    %trace,
     deduct(MB,M,DB,[],InitialTheory),
     remove_duplicates(InitialTheory,R1)
   ;
     get_head_atoms(O,M),
     generate_top_cl(O,M,R1)
   ),
-  genHPLP(DB,M,R1,HPLP),
+  genHPLP(M,R1,HPLP),
   learn_params(DB,M,HPLP,R,CLL),
   statistics(walltime,[_,WT]),
   WTS is WT/1000,
   %write2(M,'\n\n'),
-  %format2(M,' HPLP Final score ~f~n',[Score]),
+  format2(M,' HPLP Final score ~f~n',[CLL]),
   format('Time=~f ~n',[WTS]),
   set_sc(M:compiling,off),
   (M:bg(RBG0)->
@@ -712,7 +708,6 @@ induce_rules(M:Folds,R):-
   ;
     true
   ).
-
 
 writeParams(InitProb,Rate, MaxLayer,GenerateBottom):-
   writeln("Hyper-parameters for generating the hierachical PLP \n"),
@@ -731,7 +726,7 @@ writeParams(InitProb,Rate, MaxLayer,GenerateBottom):-
     format('MaxLayer=~d ~n',[MaxLayer])
   ).
 
-genHPLP(DB,M,Bottoms,HPLP):-
+genHPLP(M,Bottoms,HPLP):-
   (Bottoms=[] ->
     format("No Bottom has been generated~n",[]),
     halt
@@ -751,7 +746,6 @@ genHPLP(DB,M,Bottoms,HPLP):-
      MaxLayer is Max1,
      writeParams(InitProb,Rate, MaxLayer,GenerateBottom)
   ),
-  %trace,
   getHead(Rule1,HeadFunctor),
   Prob is InitProb,
   assert(getRate(Rate)),
@@ -768,10 +762,8 @@ genHPLP(DB,M,Bottoms,HPLP):-
       saveHPLPs(HPLPs,SaveFile,Levels),
       HPLPs=[HPLP|_]
     ),
-    %trace,
     retractall(getRate(_Rate)),
     saveHPLPs(HPLPs,SaveFile,Levels).
-
 
 
 
@@ -802,57 +794,15 @@ remove_clauses_loop([Rule|Rest],Prob,NumCur,Num,RulesCur,RulesOut):-
   ).
 
 
-
-/*
-coutZero([],Num,Num).
-coutZero([Rule|Rest],NumCur,Num):-
-  Rule=rule(_,[_:X,_],_,_),
-  (X =<0.001 ->
-    NumCur1 is NumCur+1,
-    write(Rule),
-    coutZero(Rest,NumCur1,Num)
-    ;
-    coutZero(Rest,NumCur,Num)
-  ).
-
-
-remove_clauses_loop([Rule|Rest],Prob,RulesCur,RulesOut):-
-  Rule=rule(_N,[_Head:Par|_],[_,Hidden],_),
-  (Par < Prob ->
-    cutHidden(Hidden,Rest,RestNew),
-    remove_clauses_loop(RestNew, Prob, RulesCur, RulesOut)
-    ;
-    append(RulesCur,[Rule],RulesCurNew),
-    remove_clauses_loop(Rest, Prob, RulesCurNew, RulesOut)
-  ).
-
-
-cutHidden(Hidden,Rule,RuleNew):-
-  cutHidden_loop(Hidden,Rule,[],RuleNew).
-
-cutHidden_loop(_,[],Rules,Rules):-!.
-
-cutHidden_loop(Hidden,[Rule|Rest],RulesCurr,Rules):-
-  Rule=rule(_N,[Hidden:Par|_],[_,Hidden_loop],_),!,
-  cutHidden_loop(Hidden_loop, Rest, RulesCurr, Rules)
-  cutHidden_loop(Hidden, Rest, RulesCurr, Rules)
-*/
-
-
 unification(Rule1,Rule2):-
    Rule1=(rule(_,[Head1:_,_],_,_),_),
    Rule2=(rule(_,[Head2:_,_],_,_),_),
   unify_with_occurs_check(Head1,Head2).
 
-  
-  %----------------------End HPLPs structure------------------
-
-
 %------------------Create a tree from Bottom clauses------------------------
-
 getTrees([],[]):-!.
 getTrees([(rule(_,[Head:_,_],_,Body),_)|RestBottom],[Tree|RestTrees]):-
-  functor(Head, N, A),
+  functor(Head,_N, A),
   (A=:=0 ->
       getTree(Body,[],BodyTrees),
       Tree=t(Head,BodyTrees)
@@ -988,115 +938,6 @@ memberVar(X, [Y|T]) :-
 %------------------End tree creation------------------------
 
 
-/*
-reduceprogram(Head,HPLP1,HPLPOut):-
-  removeHidden(HPLP1,HPLP11,[Head],_),
-  %findall(X,(member(X,HPLP11),X=rule(_,[Head:0.5,_],_,true)),ListHead),
-  %maplist(find1(HPLP11),Hiddens,ListHidden),
-  %maplist(reduceHidden(''),Hiddens,ListHidden,HPLPTemp),
-  reduce('',HPLP11,HPLPOut).
-*/
-
-reduce(Acc,[],Count,Rule,Rule):-!.
-reduce(Acc,[Rule2|RestRule],Count,RuleCur,Rule):-
-  (Rule2=rule(_Num,Head,[Body1,Body2],Val) ->
-     R=rule(Count,Head,[Body1,Body2],Val),
-     append(RuleCur,[Rule2],RuleCur1),
-     Count1 is Count+1,
-     reduce(Acc,RestRule,Count1,RuleCur1,Rule)
-   ;
-    Rule2=rule(_,[Head1,Head2],[Pred2],Val),
-    Head1=Head:Prob,
-    functor(Pred2,Name,Arity),
-    New=(Head,Name,Arity),
-    (member(New,Acc)->
-       reduce(Acc,RestRule,Count,RuleCur,Rule)
-    ;
-       append(Acc,[New],AccNew),
-       R=rule(Count,[Head1,Head2],[Pred2],Val),
-       append(RuleCur,[Rule2],RuleCur1),
-       Count1 is Count+1,
-       reduce(AccNew,RestRule,Count1,RuleCur1,Rule)
-    )
-  ).
-  
-
-
-match(rule(_,Head,[Pred1],_),rule(_,Head,[Pred2],_)):-
-  functor(Pred1,Name,Arity),
-  functor(Pred2,Name,Arity).
-  
-
-/*
-find1(HPLP1,Hidden,List):-
-  findall(X,(member(X,HPLP1),X=rule(_,[Hidden:_,_],_,_)),List).
-
-
-reduce([],[],HPLP,HPLP):-!.
-reduce([Hidden|RestH],[Rules|RestRules],ACCcur,HPLPOut):-
-  reduceHidden('',Hidden,Rules,RulesCurr),!,
-  append(ACCcur,RulesCurr,ACCcurLoop),
-  reduce(RestH, RestRules, ACCcurLoop, HPLPOut).
-
-
-reduceHidden(_,_,[],[]):-!.
-reduceHidden(Functor,Hidden,[Rule|RestRule],RestOut):-
-  Rule=rule(Nr,Head,[Pred,Hid],True),
-  reduceHidden(Functor,Hidden,RestRule,Rest),
-  RestOut=[rule(Nr,Head,[Pred,Hid],True)|Rest].
-
-
-reduceHidden(Functor,Hidden,[Rule|RestRule],RestOut):-
-  Rule=rule(Nr,Head,[Pred],True),
-  functor(Pred,Functor1,_),
-  (Functor=Functor1 ->
-      reduceHidden(Functor1,Hidden,RestRule,RestOut) 
-    ;
-      reduceHidden(Functor1,Hidden,RestRule,Rest),
-      RestOut=[rule(Nr,Head,[Pred],True)|Rest]
-    ).
-*/
-
-removeHidden([],[],Hidden,Hidden):-!.
-removeHidden([Rule|Rest],HPLPOut,HiddenCur,HiddenR):-
- Rule=rule(N,Head,[Pred,Hidden],True),
- (exist1(Hidden,Rest) ->
-  functor(Hidden,Name,_),
-  append(HiddenCur,[Name],HiddenCurNew),
-  removeHidden(Rest,HPLPOutLoop,HiddenCurNew,HiddenR),
-  HPLPOut=[Rule|HPLPOutLoop]
-  ;
-   removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR),
-   HPLPOut=[rule(N,Head,[Pred],True)|HPLPOutLoop]
-).
-
-removeHidden([Rule|Rest],HPLPOut,HiddenCur,HiddenR):-
-Rule=rule(_,Head,[Pred],_),
-Head=[Hidden:_,_],
-functor(Hidden,Name,_),
-(memberVar(Name,HiddenCur) ->
-    HPLPOut=[Rule|HPLPOutLoop]
-  ;
-    (isHiddenPredicate(Pred) ->
-        HPLPOut=[Rule|HPLPOutLoop]
-      ;
-        HPLPOut=HPLPOutLoop
-    )
-  ),
-removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR).
-
-exist1(_,[]):-fail,!.
-exist1(Hidden,[rule(_,Head,_,_)|_Rest]):-
-Head=[Hidden:_,_],!.
-
-exist1(Hidden,[_|Rest]):-
-exist1(Hidden,Rest).
-
-isHiddenPredicate(Hidden):-
-  functor(Hidden,Name,_),
-  atom_concat(hidden,_,Name).
-
-
 %---------------Generate HPLPs from trees-----------
 
 generateHPLPs(_,_,_,_,[],[],[]):-!.
@@ -1209,515 +1050,288 @@ unionVar([Var1|R1],List2,[Var1|Rest]):-
 
 %--------------End HPLPS generation--------------------------
 
-/*
-delete_last([], []).
-delete_last([X|Xs], Ys) :-
-  delete_last_loop(Xs, Ys, X).            
 
-delete_last_loop([], [], _).
-delete_last_loop([X1|Xs], [X0|Ys], X0) :-
-  delete_last_loop(Xs, Ys, X1).
+% --------Reduce the initial HPLP---------- 
+reduce(_ACC,[],_Count,Rule,Rule):-!.
+reduce(Acc,[Rule2|RestRule],Count,RuleCur,Rule):-
+  (Rule2=rule(_Num,_Head,[_Body1,_Body2],_Val) ->
+     %R=rule(Count,Head,[Body1,Body2],Val),
+     append(RuleCur,[Rule2],RuleCur1),
+     %append(RuleCur,[R],RuleCur1),
+     Count1 is Count+1,
+     reduce(Acc,RestRule,Count1,RuleCur1,Rule)
+   ;
+    Rule2=rule(_,[Head1,_],[Pred2],_Val),
+    Head1=Head:_Prob,
+    functor(Pred2,Name,Arity),
+    New=(Head,Name,Arity),
+    (member(New,Acc)->
+       reduce(Acc,RestRule,Count,RuleCur,Rule)
+    ;
+       append(Acc,[New],AccNew),
+       %R=rule(Count,[Head1,Head2],[Pred2],Val),
+       append(RuleCur,[Rule2],RuleCur1),
+       Count1 is Count+1,
+       reduce(AccNew,RestRule,Count1,RuleCur1,Rule)
+    )
+  ).
+  
 
-*/
+match(rule(_,Head,[Pred1],_),rule(_,Head,[Pred2],_)):-
+  functor(Pred1,Name,Arity),
+  functor(Pred2,Name,Arity).
+  
 
-/*
-getHPLPs([],[]):-!.
-getHPLPs([[Head,Body]|RestBottom],[t(Head,BodyTrees)|RestTrees]):-
-getTree(Body,[],BodyTrees),
-getHPLPs(RestBottom, RestTrees).
-*/
+removeHidden([],[],Hidden,Hidden):-!.
+removeHidden([Rule|Rest],HPLPOut,HiddenCur,HiddenR):-
+ Rule=rule(N,Head,[Pred,Hidden],True),
+ (exist1(Hidden,Rest) ->
+  functor(Hidden,Name,_),
+  append(HiddenCur,[Name],HiddenCurNew),
+  removeHidden(Rest,HPLPOutLoop,HiddenCurNew,HiddenR),
+  HPLPOut=[Rule|HPLPOutLoop]
+  ;
+   removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR),
+   HPLPOut=[rule(N,Head,[Pred],True)|HPLPOutLoop]
+).
 
+removeHidden([Rule|Rest],HPLPOut,HiddenCur,HiddenR):-
+Rule=rule(_,Head,[Pred],_),
+Head=[Hidden:_,_],
+functor(Hidden,Name,_),
+(memberVar(Name,HiddenCur) ->
+    HPLPOut=[Rule|HPLPOutLoop]
+  ;
+    (isHiddenPredicate(Pred) ->
+        HPLPOut=[Rule|HPLPOutLoop]
+      ;
+        HPLPOut=HPLPOutLoop
+    )
+  ),
+removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR).
 
+exist1(_,[]):-fail,!.
+exist1(Hidden,[rule(_,Head,_,_)|_Rest]):-
+Head=[Hidden:_,_],!.
 
+exist1(Hidden,[_|Rest]):-
+exist1(Hidden,Rest).
+
+isHiddenPredicate(Hidden):-
+  functor(Hidden,Name,_),
+  atom_concat(hidden,_,Name).
+% -------End Reduction the initial HPLP----------
 
 %----------------------------Save HPLPs in a file------------------------------------
 
 saveHPLPs(HPLPs,FileName,Levels):-
-open(FileName,write, Stream),
-%saveHPLPsLoop(Stream,1,HPLPs,Nodes_Heigths),
-length(Levels,NumHPLPs),
-numlist(1,NumHPLPs, Numbers),
-maplist(saveHPLP(Stream), Numbers,HPLPs,Levels),
-close(Stream).
-
-saveHPLPsStream(HPLPs,Stream,Levels):-
+  open(FileName,write, Stream),
   %saveHPLPsLoop(Stream,1,HPLPs,Nodes_Heigths),
   length(Levels,NumHPLPs),
   numlist(1,NumHPLPs, Numbers),
-  maplist(saveHPLP(Stream), Numbers,HPLPs,Levels).
-
-/*
-saveHPLPsLoop(_,_,[],[]).
-saveHPLPsLoop(Stream,Iter,[HPLP|RestHPLPs],[(Nodes,Height)|Rest]):-
-format(Stream,"HPLP Number ~d: Number of nodes=~d  Height=~d ~n",[Iter,Nodes,Height]),
-copy_term(HPLP,HPLPCopy),
-numbervars((HPLPCopy,_HPLPVar),0,_V),
-saveHPLP(Stream,HPLPCopy),
-(RestHPLPs=[]->
-  true
-  ;
+  maplist(saveHPLP(Stream), Numbers,HPLPs,Levels),
+  close(Stream).
+  
+  saveHPLPsStream(HPLPs,Stream,Levels):-
+    %saveHPLPsLoop(Stream,1,HPLPs,Nodes_Heigths),
+    length(Levels,NumHPLPs),
+    numlist(1,NumHPLPs, Numbers),
+    maplist(saveHPLP(Stream), Numbers,HPLPs,Levels).
+  
+  /*
+  saveHPLPsLoop(_,_,[],[]).
+  saveHPLPsLoop(Stream,Iter,[HPLP|RestHPLPs],[(Nodes,Height)|Rest]):-
+  format(Stream,"HPLP Number ~d: Number of nodes=~d  Height=~d ~n",[Iter,Nodes,Height]),
+  copy_term(HPLP,HPLPCopy),
+  numbervars((HPLPCopy,_HPLPVar),0,_V),
+  saveHPLP(Stream,HPLPCopy),
+  (RestHPLPs=[]->
+    true
+    ;
+    nl(Stream),
+    nl(Stream)
+    ),
+  Iter1 is Iter+1,
+  saveHPLPsLoop(Stream, Iter1, RestHPLPs,Rest).
+  */
+  
+  saveHPLP(Stream,Number,HPLP,Level):-
+  %Params=(Nodes,Height),
+  format(Stream,"HPLP ~d: Height=~d ~n",[Number,Level]),
+  copy_term(HPLP,HPLPCopy),
+  numbervars((HPLPCopy,_HPLPVar),0,_V),
+  %saveHPLPLoop(Stream,HPLPCopy),
+  %trace,
+  maplist(saveHPLPLoop(Stream),HPLPCopy),
   nl(Stream),
-  nl(Stream)
-  ),
-Iter1 is Iter+1,
-saveHPLPsLoop(Stream, Iter1, RestHPLPs,Rest).
-*/
-
-saveHPLP(Stream,Number,HPLP,Level):-
-%Params=(Nodes,Height),
-format(Stream,"HPLP ~d: Height=~d ~n",[Number,Level]),
-copy_term(HPLP,HPLPCopy),
-numbervars((HPLPCopy,_HPLPVar),0,_V),
-%saveHPLPLoop(Stream,HPLPCopy),
-%trace,
-maplist(saveHPLPLoop(Stream),HPLPCopy),
-nl(Stream),
-nl(Stream). 
-
-saveHPLPLoop(Stream,rule(_,[Head,_],Body,_)):-
-write(Stream,Head),
-write(Stream,":-"),
-%flush_output(Stream),
-writeBody(Stream,Body).
-
-/*
-saveHPLPLoop(_,[]).
-saveHPLPLoop(Stream,[rule(_,[Head,_],Body,true)|RestRule]):-
-write(Stream,Head),
-write(Stream,":-"),
-writeBody(Stream,Body),
-saveHPLPLoop(Stream,RestRule).
-*/
-
-writeBody(_,[]):-!.
-writeBody(Stream,[Body1|RestBody]):-
-write(Stream,Body1),
-(RestBody=[] ->
-    writeln(Stream,".")
-  ;
-    write(Stream,",")
-  ),
-writeBody(Stream, RestBody).
-
-%--------------End save HPLPs------------------------------------
-
-
+  nl(Stream). 
+  
+  saveHPLPLoop(Stream,rule(_,[Head,_],Body,_)):-
+  write(Stream,Head),
+  write(Stream,":-"),
+  %flush_output(Stream),
+  writeBody(Stream,Body).
+  
+  /*
+  saveHPLPLoop(_,[]).
+  saveHPLPLoop(Stream,[rule(_,[Head,_],Body,true)|RestRule]):-
+  write(Stream,Head),
+  write(Stream,":-"),
+  writeBody(Stream,Body),
+  saveHPLPLoop(Stream,RestRule).
+  */
+  
+  writeBody(_,[]):-!.
+  writeBody(Stream,[Body1|RestBody]):-
+  write(Stream,Body1),
+  (RestBody=[] ->
+      writeln(Stream,".")
+    ;
+      write(Stream,",")
+    ),
+  writeBody(Stream, RestBody).
+  
+  %--------------End save HPLPs------------------------------------
 
 
 %-------------------Other useful predicates--------------------------
 
 saveTrees(Bottoms,FileName):-
-open(FileName,write, Stream),
-saveTrees1(Stream,1,Bottoms),
-close(Stream).
-
-saveTrees1(_,_,[]).
-saveTrees1(Stream,Iter,[Hplp|Rest]):-
-nnodes(Hplp,Number),
-height(Hplp,Height),
-format(Stream,"HPLP N°~d: Number of nodes=~d; Height=~d ~n",[Iter,Number,Height]),
-copy_term(Hplp,HplpCopy),
-numbervars((HplpCopy,_HplpVar),0,_V),
-writeTreeloop(Stream,0,HplpCopy),
-length(Rest,LR),
-(LR=:=0->
-  true
-  ;
-  nl(Stream),
-  nl(Stream)
-  ),
-Iter1 is Iter+1,
-saveTrees1(Stream,Iter1,Rest).
-
-
-writeTrees(Trees,FileName):-
-open(FileName,write, Stream),
-writeTrees1(Stream,Trees),
-close(Stream).
-
-writeTrees1(_Stream, []).
-writeTrees1(Stream,[HeadTree|RestTree]):-
-writeTreeloop(Stream,0,HeadTree),
-nl(Stream),
-nl(Stream),
-writeTrees1(Stream, RestTree).
-
-
-writeTreeloop(Stream,Iter,t(Pred,Forest)):-
-tab(Stream,Iter),
-%write(Stream,"|"),
-writeln(Stream,Pred),
-IterCurr is 2+Iter,
-writeForest(Stream,IterCurr,Forest).
-
-writeForest(_Stream,_Iter,[]).
-writeForest(Stream,Iter,[HeadForest|RestForest]):-
-writeTreeloop(Stream,Iter,HeadForest),
-writeForest(Stream,Iter,RestForest).
-
-
-/**
-*  Some useful predicate on Trees
-*/
-
-/**
-*  Count the Number of Node in a tree
-*/
-nnodes(t(_,F),N) :- nnodes(F,NF), N is NF+1.
-nnodes([],0).
-nnodes([T|Ts],N) :- nnodes(T,NT), nnodes(Ts,NTs), N is NT+NTs.
-
-/**
-*  True if its arguments is a tree
-*/
-istree(t(_,F)):-isforest(F).
-isforest([]).
-isforest([T|Ts]) :- istree(T), isforest(Ts).
-
-/**
-*  add a child to and existing tree
-*/
-
-addChild(t(Pred,Forest),NewChild,t(Pred,NewForest)):-
-append_No_empty(Forest,NewChild,NewForest).
-/**
-*  Return the height of a tree
-*/
-height(Tree,H):-
-tree_depth(Tree,Max),
-H is Max-1.
-tree_depth(nil,0) .   % the depth of an empty tree is 0.
-tree_depth(t(_,Forest),D) :-  % the depth of a non-empty tree is computed thus:
-depth_max(Forest,0,Max),
-D is 1 + Max.             % - the overall depth is 1 more than the maximum depth in the forest.
-
-depth_max([],Max,Max).
-depth_max([Child|RestForest],MaxCurr,Max):-
-tree_depth(Child,MaxChild),
-(MaxChild > MaxCurr ->
-  depth_max(RestForest,MaxChild,Max)
-  ;
-depth_max(RestForest,MaxCurr,Max)
-  ).
-
-
-%!	writeList
-% Write the list List (of terms) in the file FileName
-%
-
-writeList(List,FileName):-
-open(FileName,write, Stream),
-writeList1(Stream,List),
-close(Stream).
-writeList1(_,[]).
-writeList1(Stream,[HeadList|RestList]):-
-writeln(Stream,HeadList),
-writeList1(Stream,RestList).
-
-
-%!	writeClause
-% Write the list List (of terms) in the file FileName
-%
-
-writeClause(List,FileName):-
   open(FileName,write, Stream),
-  copy_term(List,ListCopy),
-  numbervars((ListCopy,_ListVar),0,_V),
-  writeln(Stream,"Learned Program"),
-  writeClause1(Stream,ListCopy),
+  saveTrees1(Stream,1,Bottoms),
   close(Stream).
-
-
-writeClauseOutput(List):-
-  copy_term(List,ListCopy),
-  numbervars((ListCopy,_ListVar),0,_V),
-  writeln(user_output,"Learned Program"),
-  writeClause1(user_output,ListCopy).
-
-writeClause1(_,[]).
-writeClause1(Stream,[HeadList|RestList]):-
-  write(Stream,HeadList),
-  writeln(Stream,"."),
-  writeClause1(Stream,RestList).
-
-
-
-
-%--------------Examples of Bottom clauses--------------------
-
-%!	getTestBottom
-% get a Bottom for testing
-%
-getTestBottom(Bottom):-
-  Head=active,
-  %Head=bond(A,B,7),
-  Body=[bond(A,B,1),bond(B,C,2),bond(C,D,3),bond(D,E,4),
-  bond(E,F,5),bond(F,A,6),bond(A,G,7),bond(E,H,8),
-  bond(F,I,10),
-  bond(C,J,11),
-  bond(J,K,12),
-  bond(K,L,13),
-  bond(L,M,14)],
-  Bottom=[[Head,Body]].
-
-
-
-getBottomClauseMuta(Bottoms):-
-  Head=active,
-  Body=[
-  lumo(A),
-  bond(B,C,7),
-  bond(C,D,7),
-  bond(D,E,7),
-  bond(E,F,7),
-  bond(F,G,7),
-  bond(G,B,7),
-  bond(B,H,1),
-  bond(F,I,1),
-  bond(G,J,1),
-  bond(D,K,7),
-  bond(K,L,7),
-  bond(L,M,7),
-  bond(M,N,7),
-  bond(N,E,7),
-  bond(K,O,1),
-  bond(L,P,1),
-  bond(N,Q,1),
-  bond(M,R,1),
-  bond(C,S,1),
-  bond(T,R,2),
-  bond(R,U,2),
-  bond(S,V,2),
-  bond(S,W,2),
-  atm(B,c,22,X),
-  atm(C,c,22,X),
-  atm(D,c,27,Y),
-  atm(E,c,27,Y),
-  atm(F,c,22,X),
-  atm(G,c,22,X),
-  atm(H,h,3,Z),
-  atm(I,h,3,Z),
-  atm(J,h,3,Z),
-  atm(K,c,22,X),
-  atm(L,c,22,X),
-  atm(M,c,22,X),
-  atm(N,c,22,X),
-  atm(O,h,3,Z),
-  atm(P,h,3,Z),
-  atm(Q,h,3,Z),
-  atm(R,n,38,A1),
-  atm(S,n,38,A1),
-  atm(T,o,40,B1),
-  atm(U,o,40,B1),
-  atm(V,o,40,C1),
-  atm(W,o,40,C1),
-  benzene(D1),
-  benzene(E1),
-  ring_size_6(D1),
-  ring_size_6(E1),
-  nitro(F1),
-  nitro(G1)],
-  Bottom1=[Head,Body],
-  %append_No_empty([],Bottom1,Bottoms).
-  Bottoms=[Bottom1].
+  
+  saveTrees1(_,_,[]).
+  saveTrees1(Stream,Iter,[Hplp|Rest]):-
+  nnodes(Hplp,Number),
+  height(Hplp,Height),
+  format(Stream,"HPLP N°~d: Number of nodes=~d; Height=~d ~n",[Iter,Number,Height]),
+  copy_term(Hplp,HplpCopy),
+  numbervars((HplpCopy,_HplpVar),0,_V),
+  writeTreeloop(Stream,0,HplpCopy),
+  length(Rest,LR),
+  (LR=:=0->
+    true
+    ;
+    nl(Stream),
+    nl(Stream)
+    ),
+  Iter1 is Iter+1,
+  saveTrees1(Stream,Iter1,Rest).
   
   
-getBottomClauseUwcse(Bottoms):-
-  Head1=advisedby(A,B),
-  Body1=[
-  professor(B),
-  student(A),
-  hasposition(B,C),
-  publication(D,B),
-  publication(D,E),
-  inphase(A,F),
-  yearsinprogram(A,G),
-  taughtby(H,E,I),
-  taughtby(J,E,K),
-  taughtby(L,E,M),
-  taughtby(J,E,N),
-  taughtby(O,E,P),
-  taughtby(J,E,Q),
-  taughtby(R,E,S),
-  taughtby(J,E,T),
-  taughtby(U,E,S),
-  taughtby(H,B,V),
-  taughtby(W,B,M),
-  taughtby(H,B,P),
-  taughtby(H,B,X),
-  taughtby(Y,B,S),
-  taughtby(J,Z,T),
-  taughtby(H,A1,B1),
-  taughtby(H,C1,K),
-  taughtby(H,A1,M),
-  taughtby(H,D1,N),
-  taughtby(H,C1,E1),
-  taughtby(H,D1,Q),
-  taughtby(H,Z,S),
-  taughtby(H,D1,T),
-  ta(Y,F1,S),
-  ta(U,G1,S),
-  ta(L,H1,M),
-  ta(H,I1,E1),
-  ta(H,J1,E1),
-  ta(H,K1,X),
-  ta(H,A,X),
-  ta(H,K1,S),
-  ta(H,L1,S),
-  ta(H,M1,S),
-  ta(H,N1,Q),
-  ta(H,O1,P),
-  ta(H,L1,N),
-  ta(H,P1,M),
-  ta(H,L1,M),
-  ta(Q1,O1,X),
-  ta(R1,O1,X),
-  ta(S1,O1,Q),
-  ta(T1,O1,E1),
-  ta(Q1,M1,X),
-  ta(T1,F1,P),
-  ta(U1,F1,N)],
-  Bottom1=[Head1,Body1],
-
-  Head2=professor(A),
-  Body2=[hasposition(A,B),
-  publication(C,A),
-  tempadvisedby(D,A),
-  yearsinprogram(D,E),
-  taughtby(F,A,G),
-  taughtby(H,A,I),
-  taughtby(F,A,J),
-  taughtby(H,A,K),
-  taughtby(H,A,L),
-  taughtby(M,A,N),
-  taughtby(H,A,O),
-  taughtby(M,A,P),
-  taughtby(H,A,Q),
-  taughtby(M,R,G),
-  taughtby(M,S,T),
-  taughtby(M,U,I),
-  taughtby(M,V,W),
-  taughtby(M,U,J),
-  taughtby(M,S,K),
-  taughtby(M,U,L),
-  taughtby(M,X,O),
-  taughtby(M,X,Q),
-  taughtby(F,Y,T),
-  taughtby(F,Z,I),
-  taughtby(F,A1,W),
-  taughtby(F,B1,K),
-  taughtby(F,Z,L),
-  taughtby(F,A1,N),
-  taughtby(F,B1,O),
-  taughtby(F,A1,C1),
-  taughtby(F,D1,P),
-  taughtby(F,B1,Q),
-  ta(M,E1,C1),
-  ta(M,F1,C1),
-  ta(M,G1,P),
-  ta(M,H1,P),
-  ta(M,H1,O),
-  ta(M,I1,N),
-  ta(M,J1,L),
-  ta(M,K1,L),
-  ta(M,F1,K),
-  ta(M,L1,J),
-  ta(M,M1,J),
-  ta(H,I1,K),
-  ta(F,N1,C1),
-  ta(F,O1,C1),
-  ta(F,N1,P),
-  ta(F,P1,P),
-  ta(F,Q1,P),
-  ta(F,R1,O),
-  ta(F,K1,N),
-  ta(F,S1,L),
-  ta(F,D,L),
-  ta(F,P1,K),
-  ta(F,T1,J),
-  ta(F,P1,J),
-  ta(U1,Q1,C1),
-  ta(V1,L1,K),
-  ta(U1,K1,C1),
-  ta(W1,K1,C1),
-  ta(X1,K1,O),
-  ta(Y1,I1,P),
-  ta(Z1,F1,P)],
-  Bottom2=[Head2,Body2],
-
-  Head3=professor(A),
-  Body3=[hasposition(A,B),
-  publication(C,A),
-  tempadvisedby(D,A),
-  yearsinprogram(D,E),
-  taughtby(F,A,G),
-  taughtby(H,A,I),
-  taughtby(F,A,J),
-  taughtby(H,A,K),
-  taughtby(H,A,L),
-  taughtby(M,A,N),
-  taughtby(H,A,O),
-  taughtby(M,A,P),
-  taughtby(H,A,Q),
-  taughtby(M,R,G),
-  taughtby(M,S,T),
-  taughtby(M,U,I),
-  taughtby(M,V,W),
-  taughtby(M,U,J),
-  taughtby(M,S,K),
-  taughtby(M,U,L),
-  taughtby(M,X,O),
-  taughtby(M,X,Q),
-  taughtby(F,Y,T),
-  taughtby(F,Z,I),
-  taughtby(F,A1,W),
-  taughtby(F,B1,K),
-  taughtby(F,Z,L),
-  taughtby(F,A1,N),
-  taughtby(F,B1,O),
-  taughtby(F,A1,C1),
-  taughtby(F,D1,P),
-  taughtby(F,B1,Q),
-  ta(M,E1,C1),
-  ta(M,F1,C1),
-  ta(M,G1,P),
-  ta(M,H1,P),
-  ta(M,H1,O),
-  ta(M,I1,N),
-  ta(M,J1,L),
-  ta(M,K1,L),
-  ta(M,F1,K),
-  ta(M,L1,J),
-  ta(M,M1,J),
-  ta(H,I1,K),
-  ta(F,N1,C1),
-  ta(F,O1,C1),
-  ta(F,N1,P),
-  ta(F,P1,P),
-  ta(F,Q1,P),
-  ta(F,R1,O),
-  ta(F,K1,N),
-  ta(F,S1,L),
-  ta(F,D,L),
-  ta(F,P1,K),
-  ta(F,T1,J),
-  ta(F,P1,J),
-  ta(U1,Q1,C1),
-  ta(V1,L1,K),
-  ta(U1,K1,C1),
-  ta(W1,K1,C1),
-  ta(X1,K1,O),
-  ta(Y1,I1,P),
-  ta(Z1,F1,P)],
-  Bottom3=[Head3,Body3],
-  Bottoms=[Bottom1,Bottom2,Bottom3].
-
-%--------------End examples of Bottom clauses--------------------
+  writeTrees(Trees,FileName):-
+  open(FileName,write, Stream),
+  writeTrees1(Stream,Trees),
+  close(Stream).
+  
+  writeTrees1(_Stream, []).
+  writeTrees1(Stream,[HeadTree|RestTree]):-
+  writeTreeloop(Stream,0,HeadTree),
+  nl(Stream),
+  nl(Stream),
+  writeTrees1(Stream, RestTree).
+  
+  
+  writeTreeloop(Stream,Iter,t(Pred,Forest)):-
+  tab(Stream,Iter),
+  %write(Stream,"|"),
+  writeln(Stream,Pred),
+  IterCurr is 2+Iter,
+  writeForest(Stream,IterCurr,Forest).
+  
+  writeForest(_Stream,_Iter,[]).
+  writeForest(Stream,Iter,[HeadForest|RestForest]):-
+  writeTreeloop(Stream,Iter,HeadForest),
+  writeForest(Stream,Iter,RestForest).
+  
+  
+  /**
+  *  Some useful predicate on Trees
+  */
+  
+  /**
+  *  Count the Number of Node in a tree
+  */
+  nnodes(t(_,F),N) :- nnodes(F,NF), N is NF+1.
+  nnodes([],0).
+  nnodes([T|Ts],N) :- nnodes(T,NT), nnodes(Ts,NTs), N is NT+NTs.
+  
+  /**
+  *  True if its arguments is a tree
+  */
+  istree(t(_,F)):-isforest(F).
+  isforest([]).
+  isforest([T|Ts]) :- istree(T), isforest(Ts).
+  
+  /**
+  *  add a child to and existing tree
+  */
+  
+  addChild(t(Pred,Forest),NewChild,t(Pred,NewForest)):-
+  append_No_empty(Forest,NewChild,NewForest).
+  /**
+  *  Return the height of a tree
+  */
+  height(Tree,H):-
+  tree_depth(Tree,Max),
+  H is Max-1.
+  tree_depth(nil,0) .   % the depth of an empty tree is 0.
+  tree_depth(t(_,Forest),D) :-  % the depth of a non-empty tree is computed thus:
+  depth_max(Forest,0,Max),
+  D is 1 + Max.             % - the overall depth is 1 more than the maximum depth in the forest.
+  
+  depth_max([],Max,Max).
+  depth_max([Child|RestForest],MaxCurr,Max):-
+  tree_depth(Child,MaxChild),
+  (MaxChild > MaxCurr ->
+    depth_max(RestForest,MaxChild,Max)
+    ;
+  depth_max(RestForest,MaxCurr,Max)
+    ).
+  
+  
+  %!	writeList
+  % Write the list List (of terms) in the file FileName
+  %
+  
+  writeList(List,FileName):-
+  open(FileName,write, Stream),
+  writeList1(Stream,List),
+  close(Stream).
+  writeList1(_,[]).
+  writeList1(Stream,[HeadList|RestList]):-
+  writeln(Stream,HeadList),
+  writeList1(Stream,RestList).
+  
+  
+  %!	writeClause
+  % Write the list List (of terms) in the file FileName
+  %
+  
+  writeClause(List,FileName):-
+    open(FileName,write, Stream),
+    copy_term(List,ListCopy),
+    numbervars((ListCopy,_ListVar),0,_V),
+    writeln(Stream,"Learned Program"),
+    writeClause1(Stream,ListCopy),
+    close(Stream).
+  
+  
+  writeClauseOutput(List):-
+    copy_term(List,ListCopy),
+    numbervars((ListCopy,_ListVar),0,_V),
+    writeln(user_output,"Learned Program"),
+    writeClause1(user_output,ListCopy).
+  
+  writeClause1(_,[]).
+  writeClause1(Stream,[HeadList|RestList]):-
+    write(Stream,HeadList),
+    writeln(Stream,"."),
+    writeClause1(Stream,RestList).
 
 
-
-
-/*update_theory_par([],[],[]).
+  /*update_theory_par([],[],[]).
 
 update_theory_par([(Head:_:-Body)|T0],[Par|ParT],[(Head:Par:-Body)|T]):-
   update_theory_par(T0,ParT,T).
@@ -1752,8 +1366,13 @@ update_head_par([],[],[]).
 update_head_par([H:_P|T0],[HP|TP],[H:HP|T]):-
   update_head_par(T0,TP,T).
 
+%----------------------End HPLPs structure------------------
 
 
+
+
+
+%---- derive the aritmetic circuits from the examples and the program--------
 derive_circuit_groupatoms_output_atoms([],_M,_O,_E,_G,Nodes,Nodes,CLL,CLL,LE,LE).
 
 derive_circuit_groupatoms_output_atoms([H|T],M,O,E,G,Nodes0,Nodes,CLL0,CLL,LE0,LE):-
@@ -1785,9 +1404,10 @@ get_node_list_groupatoms([H|T],M,[[AC1,CE]|ACT],CE,Gmax,CLL0,CLL,[H|LE0],LE):-
   CLL2 is CLL0,
   get_node_list_groupatoms(T,M,ACT,CE,Gmax,CLL2,CLL,LE0,LE).
 
-
+%---- End aritmetic circuits derivation--------
  
  
+ % -- Compute the areas under the ROC and PR curve
 compute_prob([],[],[],Pos,Pos,Neg,Neg).
 
 compute_prob([\+ HE|TE],[HP|TP],[P- (\+ HE)|T],Pos0,Pos,Neg0,Neg):-!,
@@ -1885,6 +1505,7 @@ interpolate(I,N,Pos,R0,P0,TPA,FPA,TPB,FPB,A0,A):-
   A1 is A0+(R-R0)*(P+P0)/2,
   I1 is I+1,
   interpolate(I1,N,Pos,R,P,TPA,FPA,TPB,FPB,A1,A).
+% End Areas computation
 
 
 randomize([],[]):-!.
@@ -2527,7 +2148,7 @@ specialize_rule(Rule,M,_SpecRule,_Lit):-
   L=ML,!,
   fail.
 
-%used by cycle_clauses in slipcover.pl
+%used by cycle_clauses in phil.pl
 specialize_rule(Rule,M,SpecRule,Lit):-
   M:local_setting(specialization,bottom),
   Rule = rule(ID,LH,BL,Lits),
@@ -3010,7 +2631,7 @@ assert_all([H|T],M,[HRef|TRef]):-
 assert_all([],[]).
 
 assert_all([H|T],[HRef|TRef]):-
-  assertz(slipcover:H,HRef),
+  assertz(phil:H,HRef),
   assert_all(T,TRef).
 
 
@@ -3694,13 +3315,13 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
 
 :- multifile sandbox:safe_meta/2.
 
-sandbox:safe_meta(slipcover:induce_par(_,_) ,[]).
-sandbox:safe_meta(slipcover:induce(_,_), []).
-sandbox:safe_meta(slipcover:get_node(_,_), []).
-sandbox:safe_meta(slipcover:test_prob(_,_,_,_,_,_), []).
-sandbox:safe_meta(slipcover:test(_,_,_,_,_,_,_), []).
-sandbox:safe_meta(slipcover:set_sc(_,_), []).
-sandbox:safe_meta(slipcover:setting_sc(_,_), []).
+sandbox:safe_meta(phil:induce_par(_,_) ,[]).
+sandbox:safe_meta(phil:induce(_,_), []).
+sandbox:safe_meta(phil:get_node(_,_), []).
+sandbox:safe_meta(phil:test_prob(_,_,_,_,_,_), []).
+sandbox:safe_meta(phil:test(_,_,_,_,_,_,_), []).
+sandbox:safe_meta(phil:set_sc(_,_), []).
+sandbox:safe_meta(phil:setting_sc(_,_), []).
 
 
 
