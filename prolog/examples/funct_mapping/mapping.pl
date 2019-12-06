@@ -1,9 +1,4 @@
-program :-
-  open('file.txt',write, Stream),
-  (   man(Man), write(Stream, Man), fail
-  ;   true
-  ),
-  close(Stream).
+
 prolog2function(class(IRI), ClFunc):- 
   iri(IRI,IRIF),
   appendFunctional('Class', [IRIF], ClFunc). 
@@ -32,9 +27,9 @@ prolog2function(anonymousIndividual(IRI), AIFunc):-
   iri(IRI,IRIF),
   appendFunctional('AnonymousIndividual', [IRIF], AIFunc).
 
-prolog2function(subClassOf(ClassExpression1, ClassExpression2), SCFunc):- % per ora non consideriamo axiomAnnotation, appendFunctional delle due classExpression
+prolog2function(subClassOf(ClassExpression1, ClassExpression2), SCFunc):- %appendFunctional SubClassOf ClassExpressionFunctional1 ClassExpressionFunctional2 
   classExpression2function(ClassExpression1,ClassExpressionFunctional1),
-  classExpression2function(ClassExpression2,ClassExpressionFunctional2), %appendFunctional SubClassOf ClassExpressionFunctional1 ClassExpressionFunctional2
+  classExpression2function(ClassExpression2,ClassExpressionFunctional2), 
   appendFunctional('SubClassOf',[ClassExpressionFunctional1, ClassExpressionFunctional2],SCFunc).
 
 prolog2function(equivalentClasses(ListaClassExpression), ECFunc):-  %'EquivalentClasses(axiomAnnotations, ClassExpression, ClassExpression { ClassExpression } )'):-
@@ -79,25 +74,32 @@ prolog2function(propertyRange(PropertyExpression, ClassExpression), OPRFunc) :- 
   appendFunctional('ObjectPropertyRange',[PropertyExpressionF,ClassExpressionF],OPRFunc).
 
 prolog2function(functionalProperty(PropertyExpression),FOPFunc) :- %'FunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %?
-  appendFunctional('FunctionalObjectProperty',[PropertyExpression] ,FOPFunc).
+  propertyExpression2function(PropertyExpression,IRI),
+  appendFunctional('FunctionalObjectProperty',[IRI] ,FOPFunc).
 
 prolog2function(inverseFunctionalProperty(PropertyExpression), IFPFunc):- %'InverseFunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression'). %? gestisco come quelle sopra
-  appendFunctional('InverseFunctionalObjectProperty',[PropertyExpression] ,IFPFunc).
+  propertyExpression2function(PropertyExpression,IRI),
+  appendFunctional('InverseFunctionalObjectProperty',[IRI] ,IFPFunc).
 
 prolog2function(reflexiveProperty(PropertyExpression), RPFunc) :- % ReflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %? 
-  appendFunctional('ReflexiveObjectProperty',[PropertyExpression] ,RPFunc).
+  propertyExpression2function(PropertyExpression,IRI),
+  appendFunctional('ReflexiveObjectProperty',[IRI] ,RPFunc).
 
 prolog2function(irreflexiveProperty(PropertyExpression), IOPFunc):- %'IrreflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  %? 
-  appendFunctional('IrreflexiveObjectProperty', [PropertyExpression] ,IOPFunc).             
+  propertyExpression2function(PropertyExpression,IRI),
+  appendFunctional('IrreflexiveObjectProperty', [IRI] ,IOPFunc).             
 
 prolog2function(symmetricProperty(PropertyExpression), SOPFunc) :- %'SymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %?              
-  appendFunctional('SymmetricObjectProperty', [PropertyExpression] ,SOPFunc).             
+  propertyExpression2function(PropertyExpression,IRI),
+  appendFunctional('SymmetricObjectProperty', [IRI] ,SOPFunc).             
 
 prolog2function(asymmetricProperty(PropertyExpression), AOPFunc):- %'AsymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  %?             
-  appendFunctional('AsymmetricObjectProperty', [PropertyExpression] ,AOPFunc).             
+  propertyExpression2function(PropertyExpression,IRI),
+  appendFunctional('AsymmetricObjectProperty', [IRI] ,AOPFunc).             
 
 prolog2function(transitiveProperty(PropertyExpression), TOPFunc):- %'TransitiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
-  appendFunctional('TransitiveObjectProperty', [PropertyExpression] ,TOPFunc).             
+  propertyExpression2function(PropertyExpression,IRI),
+  appendFunctional('TransitiveObjectProperty', [IRI] ,TOPFunc).             
 
 prolog2function(hasKey(ClassExpression,PropertyExpression), HKFunc):- %'HasKey(axiomAnnotations ClassExpression({ ObjectPropertyExpression }) ({ DataPropertyExpression }))'). %? come proprerty domain ma al contrario
   classExpression2function(ClassExpression,ClassExpressionF),
@@ -129,7 +131,7 @@ prolog2function(negativePropertyAssertion(PropertyExpression, IndividualExpressi
   individual2function(IndividualExpression2, IndividualExpression2F),
   appendFunctional('ObjectPropertyAssertion', [PropertyExpressionF, IndividualExpression1F, IndividualExpression2F], NOPAFunc).
 
-% DA GUARDARE!!
+/* ANNOTATION */
 prolog2function(annotationAssertion(AnnotationProperty, AnnotationSubject, AnnotationValue),AAFunc):- %'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)' %?
   propertyExpression2function(AnnotationProperty, AnnotationPropertyF),
   propertyExpression2function(AnnotationSubject, AnnotationSubjectF),
@@ -161,16 +163,17 @@ prolog2function(annotation(AnnotationProperty, AnnotationProperty, AnnotationVal
 
 
 prolog2function(ontology(IRI), OIFunc) :- 
-  appendFunctional(ontologyIRI, [IRI], OIFunc).
+  appendFunctional1('Ontology', [IRI], OIFunc).
 
 %? "spigeazione-> le possiamo trasformare in annotation"
 %prolog2function(ontologyAxiom(ontology, axiom),''). 
 
 prolog2function(ontologyImport(ontology(IRI)), OIMFunc):- 
-  appendFunctional(ontologyImport, [IRI], OIMFunc).
+  appendFunctional1(ontologyImport, [IRI], OIMFunc).
 
-%? La gestiamo alla fine
-%prolog2function(ontologyVersionInfo(ontology, IRI),''). 
+prolog2function(ontologyVersionInfo(ontology(IRI), OVFunc)):-
+  appendFunctional1(ontologyVersionInfo, [IRI], OVFunc).
+
 
 classExpression2function(CE,CEF):- 
   iri(CE,CEF); 
@@ -213,15 +216,17 @@ DataMaxCardinality := 'DataMaxCardinality' '(' nonNegativeInteger DataPropertyEx
 DataExactCardinality := 'DataExactCardinality' '(' nonNegativeInteger DataPropertyExpression [ DataRange ] ')'
 */
 
+/* Funzioni che controllano IRI */
 individual2function(PE, PEF):-
   iri(PE,PEF).
 
 propertyExpression2function(PE, PEF):-
   iri(PE,PEF).
- 
+
+/* Per ogni IRI inserisco < > */
 iri(IRI,IRIF) :- 
   atomic(IRI),
-  atomic_list_concat(['<',IRI, '>  '],IRIF).
+  atomic_list_concat([' <',IRI,'> '],IRIF).
 
 objectIntersectionOf(intersectionOf(CEs),ClassExpressionFL):-
    ClassExpressionF = 'ObjectIntersectionOf',
@@ -319,7 +324,6 @@ dataMinCardinality(minCardinality(C, P), DMiCFunc):-
   propertyExpression2function(P, PF),
   appendFunctional('DataMinCardinality',[C,PF], DMiCFunc).
 
-% DA FARE
 dataMaxCardinality(maxCardinality(C, P), DMaCFunc):- 
   number(C),
   C>=0,
@@ -332,10 +336,47 @@ dataExactCardinality(exactCardinality(C, P), DECFunc):-
   propertyExpression2function(P, PF),
   appendFunctional('DataExactCardinality',[C,PF], DECFunc).
 
+/* Funzioni di concatenazione liste e aggiunta delle parentesi */
 appendFunctional(Pred, Lista, Ris):-
   atomic_list_concat([Pred,'('|Lista], Atom), 
   atomic_concat(Atom, ')', Ris).   
 
+appendFunctional1(Pred1, Lista1, Ris1):-
+  atomic_list_concat([Pred1,'(<'|Lista1], Atom1), 
+  atomic_concat(Atom1, '>', Ris1). 
+
+
+
+writefile():-
+  /* Creo il file */
+  open('file.pl', write, Stream),
+  write(Stream,'\n'),  nl(Stream),
+
+  /* Scrittura Prefixes */
+  kb_prefixes(Le),
+  foreach(member(K=P,Le), 
+    (
+      write(Stream, 'Prefix('), 
+      write(Stream, K),
+      write(Stream, ':=<'),
+      write(Stream, P),
+      write(Stream, '>)\n')
+    )
+  ),
+  write(Stream,'\n'),  nl(Stream),
+
+  /* Scrittura ontology */
+  findall(PO, (axiom(ontology(Oiri)),prolog2function(ontology(Oiri),PO)),Lo),
+  foreach(member(Os, Lo), writeln(Stream, Os)), 
+  write(Stream,'\n'),  nl(Stream),
+
+  /* Scrittura axiom */
+  findall(OP,(axiom(Ax),Ax\=ontology(_),prolog2function(Ax,OP)),La),
+  foreach(member(As,La), writeln(Stream,As)),
+  write(Stream,')'),  nl(Stream),%scrivo nel file la chiusura della parentesi
+  write(Stream,'\n'),  nl(Stream),
+  close(Stream).
+ 
 
 
 
