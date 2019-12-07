@@ -1,31 +1,31 @@
 
 prolog2function(class(IRI), ClFunc):- 
   iri(IRI,IRIF),
-  appendFunctional('Class', [IRIF], ClFunc). 
+  appendFunctional2('Class', [IRIF], ClFunc). 
 
 prolog2function(datatype(IRI), DtFunc):- 
   iri(IRI,IRIF),
-  appendFunctional('Datatype', [IRIF], DtFunc).
+  appendFunctional2('Datatype', [IRIF], DtFunc).
 
 prolog2function(objectProperty(IRI), OpFunc) :-
   iri(IRI,IRIF),
-  appendFunctional('Objectproperty', [IRIF], OpFunc).
+  appendFunctional2('ObjectProperty', [IRIF], OpFunc).
 
 prolog2function(dataPropery(IRI), DPFunc):- 
   iri(IRI,IRIF),
-  appendFunctional('Dataproperty', [IRIF], DPFunc).
+  appendFunctional2('Dataproperty', [IRIF], DPFunc).
 
 prolog2function(annotationProperty(IRI), APFunc ):- 
   iri(IRI,IRIF),
-  appendFunctional('AnnotationProperty', [IRIF], APFunc).
+  appendFunctional2('AnnotationProperty', [IRIF], APFunc).
 
 prolog2function(namedIndividual(IRI), NIFunc):- 
   iri(IRI,IRIF),
-  appendFunctional('NamedIndividual', [IRIF], NIFunc).
+  appendFunctional2('NamedIndividual', [IRIF], NIFunc).
 
 prolog2function(anonymousIndividual(IRI), AIFunc):- 
   iri(IRI,IRIF),
-  appendFunctional('AnonymousIndividual', [IRIF], AIFunc).
+  appendFunctional2('AnonymousIndividual', [IRIF], AIFunc).
 
 prolog2function(subClassOf(ClassExpression1, ClassExpression2), SCFunc):- %appendFunctional SubClassOf ClassExpressionFunctional1 ClassExpressionFunctional2 
   classExpression2function(ClassExpression1,ClassExpressionFunctional1),
@@ -43,12 +43,12 @@ prolog2function(disjointClasses(ListaClassExpression), DCFunc):- %'DisjointClass
 prolog2function(disjointUnion(IRI,ListaClassExpression), ECFunc):- %'DisjointUnion(axiomAnnotations, Class disjointClassExpressions)'% disjointClassExpressions := ClassExpression ClassExpression { ClassExpression }).% misto fra subClass e equivalentClasses
   classExpression2function(IRI,ClassExpressionFunctional),
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
-  appendFunctional('DisjointUnion',[ClassExpressionFunctional|L],ECFunc).
+  appendFunctional2('DisjointUnion',[ClassExpressionFunctional|L],ECFunc).
 
 prolog2function(subPropertyOf(PropertyExpression1, PropertyExpression2), SPFunc):- 
   propertyExpression2function(PropertyExpression1,PropertyExpressionFunctional1),
   propertyExpression2function(PropertyExpression2,PropertyExpressionFunctional2),
-  appendFunctional('SubPropertyOf',[PropertyExpressionFunctional1, PropertyExpressionFunctional2],SPFunc).
+  appendFunctional('SubObjectPropertyOf',[PropertyExpressionFunctional1, PropertyExpressionFunctional2],SPFunc).
      
 prolog2function(equivalentProperties(ListaPropertyExpression), EPFunc):- %'EquivalentObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })').
   findall(PEF,(member(PE,ListaPropertyExpression), propertyExpression2function(PE,PEF)),A),
@@ -144,7 +144,7 @@ prolog2function(annotationAssertion(AnnotationProperty, AnnotationSubject, Annot
     ;
         % false 
         (literal2function(AnnotationValue, AnnotationValueF),
-        appendFunctional('AnnotationAssertion', [AnnotationPropertyF,AnnotationSubjectF,AnnotationValueF], AAFunc))
+        appendFunctional2('AnnotationAssertion', [AnnotationPropertyF,AnnotationSubjectF,AnnotationValueF], AAFunc))
   ).
               
 prolog2function(annotation(AnnotationProperty, AnnotationProperty, AnnotationValue), AFunc):-%(iri,annotationProperty,annotationValue),'Annotation(annotationAnnotations, AnnotationProperty, AnnotationValue)'
@@ -158,7 +158,7 @@ prolog2function(annotation(AnnotationProperty, AnnotationProperty, AnnotationVal
     ;
         % false 
         literal2function(AnnotationValue, AnnotationValueF),
-        appendFunctional('AnnotationAssertion', [AnnotationPropertyF,AnnotationPropertyF,AnnotationValueF], AFunc)
+        appendFunctional2('AnnotationAssertion', [AnnotationPropertyF,AnnotationPropertyF,AnnotationValueF], AFunc)
   ).
 
 
@@ -343,14 +343,20 @@ appendFunctional(Pred, Lista, Ris):-
 
 appendFunctional1(Pred1, Lista1, Ris1):-
   atomic_list_concat([Pred1,'(<'|Lista1], Atom1), 
-  atomic_concat(Atom1, '>', Ris1). 
+  atomic_concat(Atom1, '>', Ris1).
+
+appendFunctional2(Pred2, Lista2, Ris2):-
+    atomic_concat('Declaration(',Pred2, Atom2),
+    atomic_list_concat([Atom2,'('|Lista2], Atom3), 
+    atomic_concat(Atom3, '))', Ris2).
 
 
-
+/* Scrittura file */
 writefile():-
+  
   /* Creo il file */
   open('file.pl', write, Stream),
-  write(Stream,'\n'),  nl(Stream),
+  nl(Stream),
 
   /* Scrittura Prefixes */
   kb_prefixes(Le),
@@ -363,18 +369,18 @@ writefile():-
       write(Stream, '>)\n')
     )
   ),
-  write(Stream,'\n'),  nl(Stream),
+  write(Stream,'\n'),
 
   /* Scrittura ontology */
   findall(PO, (axiom(ontology(Oiri)),prolog2function(ontology(Oiri),PO)),Lo),
   foreach(member(Os, Lo), writeln(Stream, Os)), 
-  write(Stream,'\n'),  nl(Stream),
+  write(Stream,'\n'),
 
   /* Scrittura axiom */
   findall(OP,(axiom(Ax),Ax\=ontology(_),prolog2function(Ax,OP)),La),
   foreach(member(As,La), writeln(Stream,As)),
-  write(Stream,')'),  nl(Stream),%scrivo nel file la chiusura della parentesi
-  write(Stream,'\n'),  nl(Stream),
+  write(Stream,')'),%scrivo nel file la chiusura della parentesi
+  write(Stream,'\n'),
   close(Stream).
  
 
