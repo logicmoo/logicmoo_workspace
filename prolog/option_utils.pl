@@ -276,7 +276,8 @@ option_dir(Dir) -->
     option_dirs(EL, Dir),
     {\+ member(Dir, ExDirL)}.
 
-to_nv(Name, Name=_).
+% The empty list doesn't mean anything, is just to avoid usage of a variable
+to_nv(Name, Name=[]).
 
 pair_nv(M-FileL, M=FileD) :-
     list_dict(FileL, file, FileD).
@@ -294,8 +295,8 @@ collect_dict(mfile, MFileU, MFileD) :-
 
 project_dict(file,  M, MFileD, FileD) :-
     findall(File,
-              ( get_dict(M, MFileD, FileD),
-                get_dict(File, FileD, _)
+              ( get_dict(M, MFileD, FileD1),
+                get_dict(File, FileD1, _)
               ), FileL),
     list_dict(FileL, file, FileD).
 project_dict(mfile, _, MFileD, MFileD).

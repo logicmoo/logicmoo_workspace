@@ -141,7 +141,6 @@ current_modified_nondynamic(Type, DType, Loc, PI, MFrom, MPI) :-
       once(property_location(PI, _, Loc))
     ).
 
-:- meta_predicate current_unmodified_dynamic(?, 2, -, -).
 current_unmodified_dynamic(MFileD, Loc, PI) :-
     Ref = M:H,
     PI = M:F/A,
