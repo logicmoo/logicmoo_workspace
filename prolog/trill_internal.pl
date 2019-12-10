@@ -82,7 +82,7 @@ find_expls(M,[ABox|_T],[C,I],E):-
   (dif(CPs0,[]) ->
     (
     % findall(Exp,M:exp_found([C,I,CPs],Exp),Expl), % TODO remove exp_found/3
-    nth0(0,CPs0,cpp(ID,Choice)),
+    get_latest_choice(CPs0,ID,Choice),
     subtract(CPs0,[cpp(ID,Choice)],CPs),
     update_choice_point_list(M,ID,Choice,E,CPs),
     % TODO aggiorna i choice point delle posizioni giuste e continua. ALla fine lavoro solo sui choice point
@@ -298,7 +298,7 @@ modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
   ).
 
 modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
-  ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
+  ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
     )
@@ -513,6 +513,7 @@ Choice Points Management
   the individual and the class that triggered the creation of the choice point,
   the rule that created the cp:
   - or: or_rule
+  - mr: max_rule
   Also it contains the list of possible choices and the explanations for each choice.
 */
 init_delta(M):-

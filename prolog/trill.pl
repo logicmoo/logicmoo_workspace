@@ -632,10 +632,36 @@ find_atom_in_axioms(M,H):-
 ***************/
 
 findClassAssertion(C,Ind,Expl1,ABox):-
-	find((classAssertion(C,Ind),Expl1),ABox).
+  (
+    is_list(Ind) ->
+    (
+      find((classAssertion(C,sameIndividual(Ind)),Expl1),ABox)
+    ) ;
+    (
+      find((classAssertion(C,Ind),Expl1),ABox)
+    )
+  ).
 
 findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox):-
-	find((propertyAssertion(R,Ind1,Ind2),Expl1),ABox).
+	(
+    is_list(Ind1) ->
+    (
+      Ind1S=sameIndividual(Ind1)
+    ) ;
+    (
+      Ind1S=Ind1
+    )
+  ),
+  (
+    is_list(Ind2) ->
+    (
+      Ind2S=sameIndividual(Ind2)
+    ) ;
+    (
+      Ind2S=Ind2
+    )
+  ),
+  find((propertyAssertion(R,Ind1S,Ind2S),Expl1),ABox).
 
 
 /****************************
@@ -727,27 +753,25 @@ clash(M,(ABox,Tabs),Expl):-
   individual_class_C(SN,C,ABox,SNC),
   length(SNC,LSS),
   LSS @> N,
-  make_expl(Ind,S,SNC,Expl1,ABox,Expl2),
-  flatten(Expl2,Expl3),
-  list_to_set(Expl3,Expl).
+  make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
+
 clash(M,(ABox,Tabs),Expl):-
   %write('clash 10'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
   s_neighbours(M,Ind,S,(ABox,Tabs),SN),
   length(SN,LSS),
   LSS @> N,
-  make_expl(Ind,S,SN,Expl1,ABox,Expl2),
-  flatten(Expl2,Expl3),
-  list_to_set(Expl3,Expl).
-*/
+  make_expl(Ind,S,SN,Expl1,ABox,Expl).
+
 
 % --------------
-/*
-make_expl(_,_,[],Expl1,_,Expl1).
 
-make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
+make_expl(_,_,_,[],Expl,_,Expl).
+
+make_expl(M,Ind,S,[H|T],Expl0,ABox,Expl):-
   findPropertyAssertion(S,Ind,H,Expl2,ABox),
-  make_expl(Ind,S,T,Expl1,ABox,Expl).
+  and_f(M,Expl2,Expl0,Expl1),
+  make_expl(M,Ind,S,T,Expl1,ABox,Expl).
 */
 
 % -------------
@@ -1463,7 +1487,7 @@ safe_s_neigh([H|T],S,Tabs,[H|ST]):-
   max_rule
   ================
 */
-max_rule(M,(ABox0,Tabs0),L):-
+max_rule(M,(ABox0,Tabs0),L):- 
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
@@ -1471,10 +1495,9 @@ max_rule(M,(ABox0,Tabs0),L):-
   length(SNC,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),
-  findall((ABox1,Tabs1),scan_max_list(M,S,SNC,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L),
+  scan_max_list(M,S,SN,ID,Ind,Expl0,ABox0,Tabs0,Ind_couples,L),
   dif(L,[]),
-  length(L,NCP),
-  !.
+  create_choice_point(M,Ind,mr,maxCardinality(N,S,C),Ind_couples,_),!. % last variable whould be equals to ID
 
 max_rule(M,(ABox0,Tabs0),L):-
   findClassAssertion(maxCardinality(N,S),Ind,Expl0,ABox0),
@@ -1482,22 +1505,58 @@ max_rule(M,(ABox0,Tabs0),L):-
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
   length(SN,LSS),
   LSS @> N,
-  add_choice_point(M,cp(maxCardinality(N,S),NCP),Expl0,Expl),
-  findall((ABox1,Tabs1),scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0, ABox1,Tabs1),L), % TODO
+  get_choice_point_id(M,ID),
+  scan_max_list(M,S,SN,ID,Ind,Expl0,ABox0,Tabs0,Ind_couples,L),
   dif(L,[]),
-  length(L,NCP),
-  !.
+  create_choice_point(M,Ind,mr,maxCardinality(N,S),Ind_couples,_),!. % last variable whould be equals to ID
 %---------------------
 
-scan_max_list(M,S,SN,Ind,Expl,ABox0,Tabs0,ABox,Tabs):-
+scan_max_list(M,S,SN,CP,Ind,Expl,ABox0,Tabs0,Ind_couples,Tab_list):-
+  create_couples_for_merge(SN,[],Ind_couples), % MAYBE check_individuals_not_equal(M,YI,YJ,ABox0), instead of dif
+  create_list_for_max_rule(M,Ind_couples,0,CP,Ind,S,Expl,ABox0,Tabs0,Tab_list).
+
+create_couples_for_merge([],Ind_couples,Ind_couples).
+
+create_couples_for_merge([H|T],Ind_couples0,Ind_couples):-
+  create_couples_for_merge_int(H,T,Ind_couples0,Ind_couples1),
+  create_couples_for_merge(T,Ind_couples1,Ind_couples).
+
+create_couples_for_merge_int(_,[],Ind_couples,Ind_couples).
+
+create_couples_for_merge_int(I,[H|T],Ind_couples0,Ind_couples):-
+  create_couples_for_merge_int(I,T,[I-H|Ind_couples0],Ind_couples).
+
+create_list_for_max_rule(_,[],_,_,_,_,_,_,_,[]).
+
+create_list_for_max_rule(M,[YI-YJ|Ind_couples],N0,CP,Ind,S,Expl0,ABox0,Tabs0,[(ABox,Tabs)|Tab_list]):-
+  findPropertyAssertion(S,Ind,YI,ExplYI,ABox0),
+  findPropertyAssertion(S,Ind,YJ,ExplYJ,ABox0),
+  and_f(M,ExplYI,ExplYJ,ExplC0),
+  and_f(M,ExplC0,Expl0,ExplT0),
+  add_choice_point(M,cpp(CP,N0),ExplT0,ExplT),
+  merge_all(M,[(sameIndividual([YI,YJ]),ExplT)],ABox0,Tabs0,ABox,Tabs),
+  N is N0 + 1,
+  create_list_for_max_rule(M,Ind_couples,N,CP,Ind,S,Expl0,ABox0,Tabs0,Tab_list).
+
+/*
+scan_max_list(M,S,SN,CP,Ind,Expl,ABox0,Tabs0,YI-YJ,ABox,Tabs):-
   member(YI,SN),
   member(YJ,SN),
+  % genero cp
   check_individuals_not_equal(M,YI,YJ,ABox0),
   findPropertyAssertion(S,Ind,YI,ExplYI,ABox0),
   findPropertyAssertion(S,Ind,YJ,ExplYJ,ABox0),
   and_f(M,ExplYI,ExplYJ,Expl0),
-  and_f(M,Expl,Expl0,ExplT),
+  and_f(M,Expl0,Expl,ExplT0),
+  add_choice_point(M,cpp(CP,N0),ExplT0,ExplT),
   merge_all(M,[(sameIndividual([YI,YJ]),ExplT)],ABox0,Tabs0,ABox,Tabs).
+*/
+%--------------------
+
+separate_merged_ind_from_tab([],[],[]).
+
+separate_merged_ind_from_tab([I1-I2-Tab|L0],[I1-I2|LCP],[Tab|L]):-
+  separate_merged_ind_from_tab(L0,LCP,L).
 
 %--------------------
 check_individuals_not_equal(M,X,Y,ABox):-
@@ -1530,7 +1589,7 @@ o_rule(M,(ABox0,Tabs0),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
   indAsList(X,LX),
   indAsList(Y,LY),
   and_f(M,ExplX,ExplY,ExplC),
-  merge(M,X,Y,(ABox0,Tabs0),(ABox,Tabs)),
+  merge(M,X,Y,ExplC,(ABox0,Tabs0),(ABox,Tabs)),
   flatten([LX,LY],LI0),
   list_to_set(LI0,LI),
   absent(sameIndividual(LI),ExplC,ABox0).
@@ -1839,20 +1898,20 @@ remove_node_from_table(S,T0,T1):-
 /*
  * merge
  */
-merge(M,sameIndividual(L),Y,(ABox0,Tabs0),(ABox,Tabs)):-
+merge(M,sameIndividual(L),Y,Expl,(ABox0,Tabs0),(ABox,Tabs)):-
   !,
   merge_tabs(L,Y,Tabs0,Tabs),
-  merge_abox(M,L,Y,[],ABox0,ABox).
+  merge_abox(M,L,Y,Expl,ABox0,ABox).
 
-merge(M,X,sameIndividual(L),(ABox0,Tabs0),(ABox,Tabs)):-
+merge(M,X,sameIndividual(L),Expl,(ABox0,Tabs0),(ABox,Tabs)):-
   !,
   merge_tabs(X,L,Tabs0,Tabs),
-  merge_abox(M,X,L,[],ABox0,ABox).
+  merge_abox(M,X,L,Expl,ABox0,ABox).
 
-merge(M,X,Y,(ABox0,Tabs0),(ABox,Tabs)):-
+merge(M,X,Y,Expl,(ABox0,Tabs0),(ABox,Tabs)):-
   !,
   merge_tabs(X,Y,Tabs0,Tabs),
-  merge_abox(M,X,Y,[],ABox0,ABox).
+  merge_abox(M,X,Y,Expl,ABox0,ABox).
 
 /*
  * merge node in tableau
@@ -1941,35 +2000,34 @@ set_successor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
 */
 
 % TODO update
-
-merge_abox(_M,_X,_Y,_,[],[]).
-
-merge_abox(M,X,Y,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIndividual(L)),Expl)|ABox]):-
+merge_abox(M,X,Y,Expl0,ABox0,ABox):-
   flatten([X,Y],L0),
   list_to_set(L0,L),
+  merge_abox(M,L,Expl0,ABox0,ABox).
+
+
+merge_abox(_M,_L,_,[],[]).
+
+merge_abox(M,L,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIndividual(L)),Expl)|ABox]):-
   member(Ind,L),!,
   and_f(M,Expl0,ExplT,Expl1),
   and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox(M,X,Y,Expl0,T,ABox).
+  merge_abox(M,L,Expl0,T,ABox).
 
-merge_abox(M,X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),Expl)|ABox]):-
-  flatten([X,Y],L0),
-  list_to_set(L0,L),
+merge_abox(M,L,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),Expl)|ABox]):-
   member(Ind1,L),!,
   and_f(M,Expl0,ExplT,Expl1),
   and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox(M,X,Y,Expl0,T,ABox).
+  merge_abox(M,L,Expl0,T,ABox).
 
-merge_abox(M,X,Y,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),Expl)|ABox]):-
-  flatten([X,Y],L0),
-  list_to_set(L0,L),
+merge_abox(M,L,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),Expl)|ABox]):-
   member(Ind2,L),!,
   and_f(M,Expl0,ExplT,Expl1),
   and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox(M,X,Y,Expl0,T,ABox).
+  merge_abox(M,L,Expl0,T,ABox).
 
-merge_abox(M,X,Y,Expl0,[H|T],[H|ABox]):-
-  merge_abox(M,X,Y,Expl0,T,ABox).
+merge_abox(M,L,Expl0,[H|T],[H|ABox]):-
+  merge_abox(M,L,Expl0,T,ABox).
 
 /* merge node in (ABox,Tabs) */
 
@@ -1978,7 +2036,7 @@ merge_all(_,[],ABox,Tabs,ABox,Tabs).
 merge_all(M,[(sameIndividual(H),Expl)|T],ABox0,Tabs0,ABox,Tabs):-
   find_same(H,ABox0,L,ExplL),
   dif(L,[]),!,
-  merge_all1(M,H,L,ABox0,Tabs0,ABox1,Tabs1),
+  merge_all1(M,H,Expl,L,ABox0,Tabs0,ABox1,Tabs1),
   flatten([H,L],L0),
   list_to_set(L0,L1),
   and_f(M,Expl,ExplL,ExplT),
@@ -1990,26 +2048,26 @@ merge_all(M,[(sameIndividual(H),Expl)|T],ABox0,Tabs0,ABox,Tabs):-
 merge_all(M,[(sameIndividual(H),Expl)|T],ABox0,Tabs0,ABox,Tabs):-
   find_same(H,ABox0,L,_),
   L==[],!,
-  merge_all2(M,H,ABox0,Tabs0,ABox1,Tabs1),
+  merge_all2(M,H,Expl,ABox0,Tabs0,ABox1,Tabs1),
   add(ABox1,(sameIndividual(H),Expl),ABox2),
   merge_all(M,T,ABox2,Tabs1,ABox,Tabs).
 
-merge_all1(_M,[],_,ABox,Tabs,ABox,Tabs).
+merge_all1(_M,[],_,_,ABox,Tabs,ABox,Tabs).
 
-merge_all1(M,[H|T],L,ABox0,Tabs0,ABox,Tabs):-
+merge_all1(M,[H|T],Expl,L,ABox0,Tabs0,ABox,Tabs):-
   \+ member(H,L),
-  merge(M,H,L,(ABox0,Tabs0),(ABox1,Tabs1)),
-  merge_all1(M,T,[H|L],ABox1,Tabs1,ABox,Tabs).
+  merge(M,H,L,Expl,(ABox0,Tabs0),(ABox1,Tabs1)),
+  merge_all1(M,T,Expl,[H|L],ABox1,Tabs1,ABox,Tabs).
 
-merge_all1(M,[H|T],L,ABox0,Tabs0,ABox,Tabs):-
+merge_all1(M,[H|T],Expl,L,ABox0,Tabs0,ABox,Tabs):-
   member(H,L),
-  merge_all1(M,T,L,ABox0,Tabs0,ABox,Tabs).
+  merge_all1(M,T,Expl,L,ABox0,Tabs0,ABox,Tabs).
 
 
 
-merge_all2(M,[X,Y|T],ABox0,Tabs0,ABox,Tabs):-
-  merge(M,X,Y,(ABox0,Tabs0),(ABox1,Tabs1)),
-  merge_all1(M,T,[X,Y],ABox1,Tabs1,ABox,Tabs).
+merge_all2(M,[X,Y|T],Expl,ABox0,Tabs0,ABox,Tabs):-
+  merge(M,X,Y,Expl,(ABox0,Tabs0),(ABox1,Tabs1)),
+  merge_all1(M,T,Expl,[X,Y],ABox1,Tabs1,ABox,Tabs).
 
 find_same(H,ABox,L,Expl):-
   find((sameIndividual(L),Expl),ABox),
