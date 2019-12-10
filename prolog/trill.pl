@@ -2010,20 +2010,20 @@ merge_abox(_M,_L,_,[],[]).
 
 merge_abox(M,L,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,sameIndividual(L)),Expl)|ABox]):-
   member(Ind,L),!,
-  and_f(M,Expl0,ExplT,Expl1),
-  and_f_ax(M,sameIndividual(L),Expl1,Expl),
+  and_f(M,Expl0,ExplT,Expl),
+  %and_f_ax(M,sameIndividual(L),Expl1,Expl),
   merge_abox(M,L,Expl0,T,ABox).
 
 merge_abox(M,L,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,sameIndividual(L),Ind2),Expl)|ABox]):-
   member(Ind1,L),!,
-  and_f(M,Expl0,ExplT,Expl1),
-  and_f_ax(M,sameIndividual(L),Expl1,Expl),
+  and_f(M,Expl0,ExplT,Expl),
+  %and_f_ax(M,sameIndividual(L),Expl1,Expl),
   merge_abox(M,L,Expl0,T,ABox).
 
 merge_abox(M,L,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,sameIndividual(L)),Expl)|ABox]):-
   member(Ind2,L),!,
-  and_f(M,Expl0,ExplT,Expl1),
-  and_f_ax(M,sameIndividual(L),Expl1,Expl),
+  and_f(M,Expl0,ExplT,Expl),
+  %and_f_ax(M,sameIndividual(L),Expl1,Expl),
   merge_abox(M,L,Expl0,T,ABox).
 
 merge_abox(M,L,Expl0,[H|T],[H|ABox]):-
