@@ -69,7 +69,7 @@ check_and_close(_,Expl0,Expl):-
 
 
 % checks if an explanations was already found
-find_expls(M,[],[C,I],E):- 
+find_expls(M,[],[C,I],E):-
   %findall(Exp-CPs,M:exp_found([C,I,CPs],Exp),Expl),
   %dif(Expl,[]),
   find_expls_from_choice_point_list(M,[C,I],E).
@@ -470,6 +470,16 @@ Explanation Management
 
 ***********************/
 
+and_all_f(M,ExplPartsList,E) :-
+  empty_expl(M,EmptyE),
+  and_all_f(M,ExplPartsList,EmptyE,E).
+
+and_all_f(_,[],E,E) :- !.
+
+and_all_f(M,[H|T],E0,E):-
+  and_f(M,E0,H,E1,s),
+  and_all_f(M,T,E1,E).
+
 initial_expl(_M,[[]-[]]):-!.
 
 empty_expl(_M,[]):-!.
@@ -477,28 +487,41 @@ empty_expl(_M,[]):-!.
 and_f_ax(M,Axiom,F0,F):-
   and_f(M,[[Axiom]-[]],F0,F).
 
-and_f(_M,[],[],[]):- !.
+and_f(M,E0,E1,E):-
+  and_f(M,E0,E1,E,n). % Mode=n -> no check of subset, s -> check subset
 
-and_f(_M,[],L,L):- !.
+and_f(_M,[],[],[],_):- !.
 
-and_f(_M,L,[],L):- !.
+and_f(_M,[],L,L,_):- !.
 
-and_f(_M,L1,L2,F):-
-  and_f1(L1,L2,[],F).
+and_f(_M,L,[],L,_):- !.
 
-and_f1([],_,L,L).
+and_f(_M,L1,L2,F,Mode):-
+  and_f1(L1,L2,[],F,Mode).
 
-and_f1([H1-CP1|T1],L2,L3,L):-
-  and_f2(H1,CP1,L2,L12),
+and_f1([],_,L,L,_).
+
+and_f1([H1-CP1|T1],L2,L3,L,Mode):-
+  and_f2(H1,CP1,L2,L12,Mode),
   append(L3,L12,L4),
-  and_f1(T1,L2,L4,L).
+  and_f1(T1,L2,L4,L,Mode).
 
-and_f2(_,_,[],[]):- !.
+and_f2(_,_,[],[],_):- !.
 
-and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
+and_f2(L1,CP1,[H2-CP2|T2],[L1-CP|T],s):-
+  subset(L1,H2),!,
+  append(CP1,CP2,CP),
+  and_f2(L1,CP1,T2,T,s).
+
+and_f2(L1,CP1,[H2-CP2|T2],[H2-CP|T],s):-
+  subset(H2,L1),!,
+  append(CP1,CP2,CP),
+  and_f2(L1,CP1,T2,T,s).
+
+and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T],Mode):-
   append(L1,H2,H),
   append(CP1,CP2,CP),
-  and_f2(L1,CP1,T2,T).
+  and_f2(L1,CP1,T2,T,Mode).
 
 
 /**********************
