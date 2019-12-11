@@ -1494,10 +1494,8 @@ max_rule(M,(ABox0,Tabs0),L):-
   individual_class_C(SN,C,ABox0,SNC),
   length(SNC,LSS),
   LSS @> N,
-  get_choice_point_id(M,ID),
-  scan_max_list(M,S,C,SNC,ID,Ind,Expl0,ABox0,Tabs0,Ind_couples,L),
-  dif(L,[]),
-  create_choice_point(M,Ind,mr,maxCardinality(N,S,C),Ind_couples,_),!. % last variable whould be equals to ID
+  get_choice_point_id(M,ID),%gtrace,
+  scan_max_list(M,maxCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,ABox0,Tabs0,L),!. % last variable whould be equals to ID
 
 max_rule(M,(ABox0,Tabs0),L):-
   findClassAssertion(maxCardinality(N,S),Ind,Expl0,ABox0),
@@ -1506,14 +1504,18 @@ max_rule(M,(ABox0,Tabs0),L):-
   length(SN,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),
-  scan_max_list(M,S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,Ind_couples,L),
-  dif(L,[]),
-  create_choice_point(M,Ind,mr,maxCardinality(N,S),Ind_couples,_),!. % last variable whould be equals to ID
+  scan_max_list(M,maxCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,L),!. 
 %---------------------
 
-scan_max_list(M,S,C,SN,CP,Ind,Expl,ABox0,Tabs0,Ind_couples,Tab_list):-
+scan_max_list(M,MaxCardClass,S,C,SN,CP,Ind,Expl,ABox0,Tabs0,Tab_list):-
   create_couples_for_merge(SN,[],Ind_couples), % MAYBE check_individuals_not_equal(M,YI,YJ,ABox0), instead of dif
-  create_list_for_max_rule(M,Ind_couples,0,CP,Ind,S,C,Expl,ABox0,Tabs0,Tab_list).
+  length(Ind_couples,NChoices),
+  (
+    NChoices @> 1 -> (FirstChoice = -1) ; (FirstChoice = 0)
+  ),
+  create_list_for_max_rule(M,Ind_couples,FirstChoice,CP,Ind,S,C,Expl,ABox0,Tabs0,Tab_list),
+  dif(Tab_list,[]),
+  create_choice_point(M,Ind,mr,MaxCardClass,Ind_couples,_). % last variable whould be equals to ID
 
 create_couples_for_merge([],Ind_couples,Ind_couples).
 
@@ -1537,9 +1539,19 @@ create_list_for_max_rule(M,[YI-YJ|Ind_couples],N0,CP,Ind,S,C,Expl0,ABox0,Tabs0,[
   and_f(M,ExplS0,ExplCYI,ExplS1),
   and_f(M,ExplS1,ExplCYJ,ExplC0),
   and_f(M,ExplC0,Expl0,ExplT0),
-  add_choice_point(M,cpp(CP,N0),ExplT0,ExplT),
-  merge_all(M,[(sameIndividual([YI,YJ]),ExplT)],ABox0,Tabs0,ABox,Tabs),
-  N is N0 + 1,
+  (
+    dif(N0,-1) ->
+    (
+      add_choice_point(M,cpp(CP,N0),ExplT0,ExplT),
+      N is N0 + 1
+    ) ;
+    (
+      ExplT = ExplT0,
+      N = N0
+    )
+  ),
+  flatten([YI,YJ],LI),
+  merge_all(M,[(sameIndividual(LI),ExplT)],ABox0,Tabs0,ABox,Tabs),
   create_list_for_max_rule(M,Ind_couples,N,CP,Ind,S,C,Expl0,ABox0,Tabs0,Tab_list).
 
 /*

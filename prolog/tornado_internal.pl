@@ -108,19 +108,19 @@ check_and_close(M,Expl,dot(Dot)):-
 % checks if an explanations was already found
 find_expls(M,[],_,BDD):-
   get_bdd_environment(M,Env),
-  zero(Env,BDD),!.
+  one(Env,BDD),!.
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|T],[C,I],E):-
   clash(M,ABox,E0),!,
   find_expls(M,T,[C,I],E1),
-  or_f(M,E0,E1,E).
+  and_f(M,E0,E1,E).
 
 % checks if an explanations was already found (property_value version)
 find_expls(M,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),!,
   find_expls(M,T,[PropEx,Ind1Ex,Ind2Ex],E1),
-  or_f(M,E0,E1,E).
+  and_f(M,E0,E1,E).
   
 
 find_expls(M,[_ABox|T],Query,Expl):-

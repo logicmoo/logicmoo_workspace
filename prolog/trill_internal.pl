@@ -64,8 +64,7 @@ compute_prob_and_close(M,Exps,Prob):-
 % checks the explanation
 check_and_close(_,Expl0,Expl):-
   dif(Expl0,[]),
-  sort(Expl0,Expl1),
-  findall(Ax,(member(Ax,Expl1),\+(Ax=..[cp_ph_or|_])),Expl).
+  sort(Expl0,Expl).
 
 
 % checks if an explanations was already found
@@ -74,14 +73,19 @@ find_expls(M,[],[C,I],E):-
   %dif(Expl,[]),
   find_expls_from_choice_point_list(M,[C,I],E).
 
+find_expls(M,[],[C,I],E):-
+  findall(Exp,M:exp_found([C,I],Exp),Expl0),
+  remove_supersets(Expl0,Expl),!,
+  member(E,Expl).
+
+
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|_T],[C,I],E):- 
+find_expls(M,[ABox|_T],[C,I],E):- %gtrace,
   clash(M,ABox,EL0),
   member(E0-CPs0,EL0),
   sort(E0,E),
   (dif(CPs0,[]) ->
     (
-    % findall(Exp,M:exp_found([C,I,CPs],Exp),Expl), % TODO remove exp_found/3
     get_latest_choice(CPs0,ID,Choice),
     subtract(CPs0,[cpp(ID,Choice)],CPs),
     update_choice_point_list(M,ID,Choice,E,CPs),
@@ -90,9 +94,10 @@ find_expls(M,[ABox|_T],[C,I],E):-
     fail
     )
     ;
-    (findall(Exp,M:exp_found([C,I],Exp),Expl),
-     not_already_found(M,Expl,[C,I],E),
-     assert(M:exp_found([C,I],E))
+    (%findall(Exp,M:exp_found([C,I],Exp),Expl),
+     %not_already_found(M,Expl,[C,I],E),
+     assert(M:exp_found([C,I],E)),
+     fail
     )
   ).
 
@@ -100,8 +105,8 @@ find_expls(M,[ABox|_T],[C,I],E):-
 find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
   member(E,Es),
-  findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
-  not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
+  %findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
+  %not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
 
 find_expls(M,[_ABox|T],Query,Expl):-
@@ -125,12 +130,12 @@ combine_expls_from_nondet_rules(M,[C,I],cp(_,_,_,_,_,Expl),E):-
       fail % to force recursion
     ) ;
     (
-      findall(Exp,M:exp_found([C,I],Exp),ExplFound),
-      not_already_found(M,ExplFound,[C,I],E),
-      assert(M:exp_found([C,I],E))
+      %findall(Exp,M:exp_found([C,I],Exp),ExplFound),
+      %not_already_found(M,ExplFound,[C,I],E),
+      assert(M:exp_found([C,I],E)),
+      fail
     )
   ).
-
 
 find_expls_from_choice_point_list(M,QI,E):-
   extract_choice_point_list(M,CP),
@@ -138,6 +143,7 @@ find_expls_from_choice_point_list(M,QI,E):-
     combine_expls_from_nondet_rules(M,QI,CP,E) ;
     find_expls_from_choice_point_list(M,QI,E)
   ).
+
 
 check_non_empty_choice(Expl,ExplList):-
   dict_pairs(Expl,_,PairsList),
@@ -196,6 +202,30 @@ get_latest_choice_of_cp([cpp(ID,C0)|T],ID,C1,C):- !,
 
 get_latest_choice_of_cp([_|T],ID,C1,C):-
   get_latest_choice_of_cp(T,ID,C1,C).
+
+
+remove_supersets([H|T],ExplanationsList):-
+  remove_supersets([H],T,ExplanationsList).
+
+remove_supersets(E,[],E).
+
+remove_supersets(E0,[H|T],ExplanationsList):-
+  remove_supersets_int(E0,H,E),
+  remove_supersets(E,T,ExplanationsList).
+
+remove_supersets_int(E0,H,E0):-
+  memberchk(H,E0),!.
+
+remove_supersets_int(E0,H,E0):-
+  member(H1,E0),
+  subset(H1,H),!.
+
+remove_supersets_int(E0,H,[H|E]):-
+  member(H1,E0),
+  subset(H,H1),!,
+  nth0(_,E0,H1,E).
+
+remove_supersets_int(E,H,[H|E]).
 
 /****************************/
 
@@ -477,7 +507,7 @@ and_all_f(M,ExplPartsList,E) :-
 and_all_f(_,[],E,E) :- !.
 
 and_all_f(M,[H|T],E0,E):-
-  and_f(M,E0,H,E1,s),
+  and_f(M,E0,H,E1,n),
   and_all_f(M,T,E1,E).
 
 initial_expl(_M,[[]-[]]):-!.
@@ -487,42 +517,31 @@ empty_expl(_M,[]):-!.
 and_f_ax(M,Axiom,F0,F):-
   and_f(M,[[Axiom]-[]],F0,F).
 
-and_f(M,E0,E1,E):-
-  and_f(M,E0,E1,E,n). % Mode=n -> no check of subset, s -> check subset
+and_f(_M,[],[],[]):- !.
 
-and_f(_M,[],[],[],_):- !.
+and_f(_M,[],L,L):- !.
 
-and_f(_M,[],L,L,_):- !.
+and_f(_M,L,[],L):- !.
 
-and_f(_M,L,[],L,_):- !.
+and_f(_M,L1,L2,F):-
+  and_f1(L1,L2,[],F).
 
-and_f(_M,L1,L2,F,Mode):-
-  and_f1(L1,L2,[],F,Mode).
+and_f1([],_,L,L).
 
-and_f1([],_,L,L,_).
-
-and_f1([H1-CP1|T1],L2,L3,L,Mode):-
-  and_f2(H1,CP1,L2,L12,Mode),
+and_f1([H1-CP1|T1],L2,L3,L):-
+  and_f2(H1,CP1,L2,L12),
   append(L3,L12,L4),
-  and_f1(T1,L2,L4,L,Mode).
+  and_f1(T1,L2,L4,L).
 
-and_f2(_,_,[],[],_):- !.
+and_f2(_,_,[],[]):- !.
 
-and_f2(L1,CP1,[H2-CP2|T2],[L1-CP|T],s):-
-  subset(L1,H2),!,
-  append(CP1,CP2,CP),
-  and_f2(L1,CP1,T2,T,s).
-
-and_f2(L1,CP1,[H2-CP2|T2],[H2-CP|T],s):-
-  subset(H2,L1),!,
-  append(CP1,CP2,CP),
-  and_f2(L1,CP1,T2,T,s).
-
-and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T],Mode):-
+and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
   append(L1,H2,H),
   append(CP1,CP2,CP),
-  and_f2(L1,CP1,T2,T,Mode).
+  and_f2(L1,CP1,T2,T).
 
+or_f(E0,E1,E):-
+  append(E0,E1,E).
 
 /**********************
 
@@ -602,7 +621,7 @@ update_choice_point_list(M,ID,Choice,E,CPs):-
     % already present explanations -> absent(ExplToUpdate,[E-CPs],ExplUpdated)
     dif(ExplToUpdate,[]) ->
     (
-      absent(ExplToUpdate,[E-CPs],ExplUpdated)
+      or_f(ExplToUpdate,[E-CPs],ExplUpdated)
     ) ;
     (
       ExplUpdated=[E-CPs]
