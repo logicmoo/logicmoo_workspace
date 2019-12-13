@@ -11,7 +11,8 @@ test_trillp:-
     trillp_commander,
     trillp_johnEmployee,
     trillp_peoplePets,
-    trillp_vicodi]).
+    trillp_vicodi,
+    non_det]).
 
 
 :- use_module(library(trill_test/trill_test)).
@@ -114,3 +115,15 @@ test(e_p_j):-
   )).
   
 :- end_tests(trillp_johnEmployee).
+
+
+:- begin_tests(non_det, []).
+
+:-ensure_loaded(library(examples/example_or_rule)).
+
+test(p_u_a):-
+  run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
+
+:- end_tests(non_det).
+
+

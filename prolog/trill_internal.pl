@@ -507,7 +507,7 @@ and_all_f(M,ExplPartsList,E) :-
 and_all_f(_,[],E,E) :- !.
 
 and_all_f(M,[H|T],E0,E):-
-  and_f(M,E0,H,E1,n),
+  and_f(M,E0,H,E1),
   and_all_f(M,T,E1,E).
 
 initial_expl(_M,[[]-[]]):-!.

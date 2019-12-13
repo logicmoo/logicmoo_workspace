@@ -112,20 +112,23 @@ find_expls(M,[],_,BDD):-
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|T],[C,I],E):-
-  clash(M,ABox,E0),!,
+  findall(E0,clash(M,ABox,E0),Expls0),!,
+  or_all_f(M,Expls0,Expls1),
   find_expls(M,T,[C,I],E1),
-  and_f(M,E0,E1,E).
+  and_f(M,Expls1,E1,E).
 
 % checks if an explanations was already found (property_value version)
 find_expls(M,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
-  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),!,
+  findall(E0,find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),Expls0),!,
+  or_all_f(M,Expls0,Expls1),
   find_expls(M,T,[PropEx,Ind1Ex,Ind2Ex],E1),
-  and_f(M,E0,E1,E).
+  and_f(M,Expls1,E1,E).
   
 
 find_expls(M,[_ABox|T],Query,Expl):-
   \+ length(T,0),
   find_expls(M,T,Query,Expl).
+
 
 /****************************/
 
@@ -137,13 +140,7 @@ find_expls(M,[_ABox|T],Query,Expl):-
 findClassAssertion4OWLNothing(M,ABox,Expl):-
   findall(Expl1,findClassAssertion('http://www.w3.org/2002/07/owl#Nothing',_Ind,Expl1,ABox),Expls),
   dif(Expls,[]),
-  or_all(M,Expls,Expl).
-
-or_all(_M,[],[]).
-
-or_all(M,[H|T],Expl):-
-  or_all(M,T,Expl1),
-  or_f(M,H,Expl1,Expl).
+  or_all_f(M,Expls,Expl).
 
 /* ************* */
 
@@ -236,6 +233,13 @@ and_f(M,BDD0,BDD1,BDD):-
 
 
 % or between two formulae
+or_all_f(M,[],BDD):-
+  initial_expl(M,BDD),!.
+
+or_all_f(M,[H|T],Expl):-
+  or_all_f(M,T,Expl1),
+  or_f(M,H,Expl1,Expl),!.
+
 or_f(_,[],BDD,BDD):- !.
   
 or_f(_,BDD,[],BDD):- !.
@@ -263,6 +267,10 @@ test(M,L1,L2,F):-
 Choice Points Management
 
 ***********************/
+
+get_choice_point_id(_,0).
+
+create_choice_point(_,_,_,_,_,0).
 
 add_choice_point(_,_,Expl,Expl):- !.
 

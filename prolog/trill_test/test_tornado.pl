@@ -11,7 +11,8 @@ test_tornado:-
     tornado_commander,
     tornado_johnEmployee,
     tornado_peoplePets,
-    tornado_vicodi]).
+    tornado_vicodi,
+    non_det]).
 
 :- use_module(library(trill_test/trill_test)).
 
@@ -92,7 +93,18 @@ test(p_p_pp):-
 
 :-ensure_loaded(library(examples/johnEmployee)).
 
-test(e_p_j):-
+test(p_p_j):-
   run((prob_instanceOf('johnEmployee:person','johnEmployee:john',Prob),close_to(Prob,1))).
   
 :- end_tests(tornado_johnEmployee).
+
+
+:- begin_tests(non_det, []).
+
+:-ensure_loaded(library(examples/example_or_rule)).
+
+test(p_u_a):-
+  run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
+
+:- end_tests(non_det).
+
