@@ -1452,6 +1452,27 @@ min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
   NoI is N-LSS,
   min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
 
+min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+  findClassAssertion(exactCardinality(N,S),Ind1,Expl,ABox),
+  \+ blocked(Ind1,(ABox,Tabs)),
+  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
+  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  length(SS,LSS),
+  LSS @< N,
+  NoI is N-LSS,
+  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+
+
+min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+  findClassAssertion(exactCardinality(N,S,C),Ind1,Expl,ABox),
+  \+ blocked(Ind1,(ABox,Tabs)),
+  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
+  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  length(SS,LSS),
+  LSS @< N,
+  NoI is N-LSS,
+  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+
 % ----------------------
 min_rule_neigh(_,0,_,_,_,[],ABox,Tabs,ABox,Tabs).
 
@@ -1505,6 +1526,27 @@ max_rule(M,(ABox0,Tabs0),L):-
   LSS @> N,
   get_choice_point_id(M,ID),
   scan_max_list(M,maxCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,L),!. 
+%---------------------
+
+max_rule(M,(ABox0,Tabs0),L):- 
+  findClassAssertion(exactCardinality(N,S,C),Ind,Expl0,ABox0),
+  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
+  s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
+  individual_class_C(SN,C,ABox0,SNC),
+  length(SNC,LSS),
+  LSS @> N,
+  get_choice_point_id(M,ID),%gtrace,
+  scan_max_list(M,exactCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,ABox0,Tabs0,L),!. % last variable whould be equals to ID
+
+max_rule(M,(ABox0,Tabs0),L):-
+  findClassAssertion(exactCardinality(N,S),Ind,Expl0,ABox0),
+  \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
+  s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
+  length(SN,LSS),
+  LSS @> N,
+  get_choice_point_id(M,ID),
+  scan_max_list(M,exactCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,L),!. 
+
 %---------------------
 
 scan_max_list(M,MaxCardClass,S,C,SN,CP,Ind,Expl,ABox0,Tabs0,Tab_list):-

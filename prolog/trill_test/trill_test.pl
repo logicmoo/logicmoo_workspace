@@ -46,3 +46,4 @@ one_of(Expl,CorrExpls):-
 test_formula(F1,F2):-
   \+ trill:test(_,F1,F2),
   \+ trill:test(_,F2,F1).
+

@@ -26,15 +26,12 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
 set_up(M):-
   utility_translation:set_up(M),
   init_delta(M),
-  M:(dynamic exp_found/2),
-  M:(dynamic exp_found/3).
+  M:(dynamic exp_found/2).
 
 clean_up(M):-
   utility_translation:clean_up(M),
   M:(dynamic exp_found/2),
-  M:(dynamic exp_found/3),
-  retractall(M:exp_found(_,_)),
-  retractall(M:exp_found(_,_,_)).
+  retractall(M:exp_found(_,_)).
 
 /***********
   Utilities for queries
@@ -89,8 +86,6 @@ find_expls(M,[ABox|_T],[C,I],E):- %gtrace,
     get_latest_choice(CPs0,ID,Choice),
     subtract(CPs0,[cpp(ID,Choice)],CPs),
     update_choice_point_list(M,ID,Choice,E,CPs),
-    % TODO aggiorna i choice point delle posizioni giuste e continua. ALla fine lavoro solo sui choice point
-    % da https://www.researchgate.net/profile/Bijan_Parsia/publication/228931052_Justifications_for_entailments_in_expressive_description_logics/links/0fcfd5089aafb6517f000000.pdf
     fail
     )
     ;
@@ -262,7 +257,7 @@ find_neg_class(maxCardinality(N,R,C),minCardinality(NMin,R,C)):-
   NMin is N + 1.
 
 %-----------------
-:- multifile find_sub_sup_class/3.
+:- multifile find_sub_sup_class/4.
 
 %role for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S)):-

@@ -207,7 +207,7 @@ initial_expl(_M,[]):-!.
 empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
-  and_f(M,*([Axiom]),F0,F).
+  and_f(M,*([Axiom]),F0,F),!.
 
 % and between two formulae
 and_f(_,[],[],[]):-!.
@@ -253,14 +253,14 @@ and_f(_M,*(A1),*(A2),*(A)):-!,
 and_f(_M,*(A1),+(O1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(_M,*(A1),+(O1),*(A)):-
+and_f(_M,*(A1),+(O1),*(A)):-!,
   append(A1,[+(O1)],A).
 
 % absorption x * (x + y) = x
 and_f(_M,+(O1),*(A1),*(A1)):-
   member(X,A1),
   member(X,O1),!.
-and_f(_M,+(O1),*(A1),*(A)):-
+and_f(_M,+(O1),*(A1),*(A)):-!,
   append([+(O1)],A1,A).
 
 and_f(_M,+(O1),+(O2),*([+(O1),+(O2)])).
