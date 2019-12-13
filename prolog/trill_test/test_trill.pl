@@ -11,7 +11,9 @@ test_trill:-
     trill_johnEmployee,
     trill_peoplePets,
     trill_vicodi,
-    trill_pizza]).
+    trill_pizza,
+    non_det,
+    non_det_max]).
 
 :- use_module(library(trill_test/trill_test)).
 
@@ -150,3 +152,40 @@ test(e_uns_tof):-
 
 :- end_tests(trill_pizza).
 
+:- begin_tests(non_det, []).
+
+:-ensure_loaded(library(examples/example_or_rule)).
+
+test(rkb_non_det):-
+  run((reload_kb(false),true)).
+test(p_u_a):-
+  run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
+
+test(e_u_a):-
+  run((findall(ListExpl,unsat(a,ListExpl),Expl),
+  same_expl(Expl,[
+      [subClassOf(a,intersectionOf([b,someValuesFrom(r,e)])),subClassOf(a,unionOf([complementOf(c),complementOf(d)])),subClassOf(b,intersectionOf([c,d]))],
+      [subClassOf(a,intersectionOf([b,someValuesFrom(r,e)])),subClassOf(a,unionOf([f,allValuesFrom(r,b)])),subClassOf(a,unionOf([complementOf(c),complementOf(f)])),subClassOf(b,complementOf(e)),subClassOf(b,intersectionOf([c,d]))],
+      [subClassOf(a,intersectionOf([b,someValuesFrom(r,e)])),subClassOf(a,unionOf([f,allValuesFrom(r,b)])),subClassOf(a,unionOf([intersectionOf([c,complementOf(c)]),complementOf(f)])),subClassOf(b,complementOf(e))],
+      [subClassOf(a,intersectionOf([b,someValuesFrom(r,e)])),subClassOf(a,unionOf([f,allValuesFrom(r,b)])),subClassOf(b,complementOf(e)),subClassOf(b,complementOf(f))],
+      [subClassOf(a,intersectionOf([b,someValuesFrom(r,e)])),subClassOf(b,complementOf(e)),subClassOf(b,intersectionOf([c,d])),subClassOf(c,intersectionOf([minCardinality(1,r),e]))]
+      ])
+  )).
+
+:- end_tests(non_det).
+
+:- begin_tests(non_det_max, []).
+
+:-ensure_loaded(library(examples/example_max_rule)).
+
+test(rkb_non_det_max):-
+  run((reload_kb(false),true)).
+test(e_i):-
+  run((findall(ListExpl,inconsistent_theory(ListExpl),Expl),
+  same_expl(Expl,[[disjointClasses([b,e,f]),classAssertion(a,'1'),classAssertion(c,'3'),classAssertion(c,'4'),classAssertion(e,'3'),classAssertion(f,'4'),subClassOf(a,maxCardinality(1,s,c)),propertyAssertion(s,'1','3'),propertyAssertion(s,'1','4')],
+                  [disjointClasses([b,e,f]),classAssertion(a,'1'),classAssertion(b,'2'),classAssertion(c,'2'),classAssertion(c,'4'),classAssertion(f,'4'),subClassOf(a,maxCardinality(1,s,c)),propertyAssertion(s,'1','2'),propertyAssertion(s,'1','4')],
+                  [disjointClasses([b,e,f]),classAssertion(a,'1'),classAssertion(b,'2'),classAssertion(c,'2'),classAssertion(c,'3'),classAssertion(e,'3'),subClassOf(a,maxCardinality(1,s,c)),propertyAssertion(s,'1','2'),propertyAssertion(s,'1','3')]
+                ])
+  )).
+
+:- end_tests(non_det_max).

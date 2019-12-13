@@ -11,7 +11,8 @@ test_trillp:-
     trillp_johnEmployee,
     trillp_peoplePets,
     trillp_vicodi,
-    trillp_pizza]).
+    trillp_pizza,
+    non_det]).
 
 
 :- use_module(library(trill_test/trill_test)).
@@ -136,3 +137,14 @@ test(e_uns_tof):-
   )).
 
 :- end_tests(trillp_pizza).
+
+:- begin_tests(non_det, []).
+
+:-ensure_loaded(library(examples/example_or_rule)).
+
+test(rkb_non_det):-
+  run((reload_kb(false),true)).
+test(p_u_a):-
+  run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
+
+:- end_tests(non_det).

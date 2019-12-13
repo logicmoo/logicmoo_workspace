@@ -11,7 +11,8 @@ test_tornado:-
     tornado_commander,
     tornado_johnEmployee,
     tornado_peoplePets,
-    tornado_pizza]).
+    tornado_pizza,
+    non_det]).
 
 :- use_module(library(trill_test/trill_test)).
 
@@ -114,3 +115,15 @@ test(p_uns_tof):-
   run((prob_unsat('tofu',Prob),close_to(Prob,1.0))).
 
 :- end_tests(tornado_pizza).
+
+:- begin_tests(non_det, []).
+
+:-ensure_loaded(library(examples/example_or_rule)).
+
+test(rkb_non_det):-
+  run((reload_kb(false),true)).
+test(p_u_a):-
+  run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
+
+:- end_tests(non_det).
+
