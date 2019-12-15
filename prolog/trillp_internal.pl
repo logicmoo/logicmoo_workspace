@@ -167,11 +167,11 @@ modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
      )
   ),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox),
-  assert_new_added(M,C,Ind).
+  update_expansion_queue(M,C,Ind,EQ0,EQ).
   
   
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]):-
-  assert_new_added(M,C,Ind).
+  update_expansion_queue(M,C,Ind,EQ0,EQ).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
@@ -183,11 +183,11 @@ modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox])
      (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
   ),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
-  assert_new_added(M,P,Ind1,Ind2).
+  update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
   
   
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-
-  assert_new_added(M,P,Ind1,Ind2).
+  update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
 
 /* **************** */
 
@@ -207,7 +207,7 @@ get_hierarchy_from_class(M,Class,H4C):-
   ===============
 */
 
-build_abox(M,ExpansionQueue,(ABox,Tabs)):-
+build_abox(M,(ABox,Tabs)-ExpansionQueue):-
   findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),

@@ -232,12 +232,12 @@ instanceOf(M:Class,Ind,Expl):-
 	retractall(M:exp_found(_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
-  	build_abox(M,ExpansionQueue,(ABox,Tabs)),
+  	build_abox(M,(ABox,Tabs)-ExpansionQueue),
   	%init_expand_abox_wt_hierarchy(M,(ABox,Tabs),ExpansionQueue,(ABox0,Tabs)),
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
   	    	add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ExpansionQueueQ,ABox1),
-  	    	findall((ABox2,Tabs2),expand_queue(M,(ABox1,Tabs),ExpansionQueueQ,(ABox2,Tabs2)),L),
+  	    	findall(FABoxTab,expand_queue(M,(ABox1,Tabs)-ExpansionQueueQ,FABoxTab),L),
   			find_expls(M,L,[ClassEx,IndEx],Expl1),
   			check_and_close(M,Expl1,Expl)
   	    )
@@ -262,12 +262,12 @@ instanceOf(M:Class,Ind):-
 	  retractall(M:exp_found(_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
-	  build_abox(M,ExpansionQueue,(ABox,Tabs)),
+	  build_abox(M,(ABox,Tabs)-ExpansionQueue),
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
-	        add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ExpansionQueueQ,ABox0),
-	        expand_queue(M,(ABox0,Tabs),ExpansionQueueQ,(ABox1,Tabs1)),!,
-	  		clash(M,(ABox1,Tabs1),_),!
+          add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ExpansionQueueQ,ABox0),
+          expand_queue(M,(ABox0,Tabs)-ExpansionQueueQ,FABoxTab),!,
+	  		clash(M,FABoxTab,_),!  % TODO find_single_expl
 	      )
 	    ;
 	      print_message(warning,inconsistent),!,false
@@ -291,10 +291,10 @@ property_value(M:Prop, Ind1, Ind2,Expl):-
 	retractall(M:exp_found(_,_)),
 	retractall(M:trillan_idx(_)),
   	assert(M:trillan_idx(1)),
-  	build_abox(M,ExpansionQueue,(ABox,Tabs)),
+  	build_abox(M,(ABox,Tabs)-ExpansionQueue),
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
-  	    	findall((ABox1,Tabs1),expand_queue(M,(ABox,Tabs),ExpansionQueue,(ABox1,Tabs1)),L),
+  	    	findall(FABoxTab,expand_queue(M,(ABox,Tabs)-ExpansionQueue,FABoxTab),L),
   			find_expls(M,L,[PropEx,Ind1Ex,Ind2Ex],Expl1),
   			check_and_close(M,Expl1,Expl)
   	    )
@@ -318,10 +318,10 @@ property_value(M:Prop, Ind1, Ind2):-
 	  retractall(M:exp_found(_,_)),
 	  retractall(M:trillan_idx(_)),
 	  assert(M:trillan_idx(1)),
-	  build_abox(M,ExpansionQueue,(ABox,Tabs)),
+	  build_abox(M,(ABox,Tabs)-ExpansionQueue),
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
-	        expand_queue(M,(ABox,Tabs),ExpansionQueue,(ABox1,_Tabs1)),!,
+	        expand_queue(M,(ABox,Tabs)-ExpansionQueue,(ABox1,_Tabs1)-_),!,
 	  	find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),_),ABox1),!
 	      )
 	    ;
@@ -384,12 +384,12 @@ unsat_internal(M:Concept,Expl):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,ExpansionQueue,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs)-ExpansionQueue),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,ExpansionQueue,Concept,trillan(1),ExpansionQueueQ,ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-	findall((ABox1,Tabs1),expand_queue(M,(ABox0,Tabs),ExpansionQueueQ,(ABox1,Tabs1)),L),
+	findall(FABoxTab,expand_queue(M,(ABox0,Tabs)-ExpansionQueueQ,FABoxTab),L),
 	find_expls(M,L,['unsat',Concept],Expl1),
 	check_and_close(M,Expl1,Expl)
      )
@@ -417,13 +417,13 @@ unsat_internal(M:Concept):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,ExpansionQueue,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs)-ExpansionQueue),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,ExpansionQueue,Concept,trillan(1),ExpansionQueueQ,ABox0),
-  		expand_queue(M,(ABox0,Tabs),ExpansionQueueQ,(ABox1,Tabs1)),!,
+  		expand_queue(M,(ABox0,Tabs),ExpansionQueueQ,FABoxTab),!,
   		%apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
-  		clash(M,(ABox1,Tabs1),_),!
+  		clash(M,FABoxTab,_),!
      )
     ;
      print_message(warning,inconsistent),!,false
@@ -440,9 +440,9 @@ inconsistent_theory(M:Expl):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
-  build_abox(M,ExpansionQueue,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs)-ExpansionQueue),
   % Without prior search of clashes in order to find all the possible clashes after expansion
-  findall((ABox1,Tabs1),expand_queue(M,(ABox,Tabs),ExpansionQueue,(ABox1,Tabs1)),L),
+  findall(FABoxTab,expand_queue(M,(ABox,Tabs)-ExpansionQueue,FABoxTab),L),
   find_expls(M,L,['inconsistent','kb'],Expl1),
   check_and_close(M,Expl1,Expl).
 
@@ -458,11 +458,11 @@ inconsistent_theory:-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)),
-  build_abox(M,ExpansionQueue,(ABox,Tabs)),
+  build_abox(M,(ABox,Tabs)-ExpansionQueue),
   ( (clash(M,(ABox,Tabs),_),!) -> true
     ;
-      (expand_queue(M,(ABox,Tabs),ExpansionQueue,(ABox1,Tabs1)),!,
-       clash(M,(ABox1,Tabs1),_),!)
+      (expand_queue(M,(ABox,Tabs)-ExpansionQueue,FABoxTab),!,
+       clash(M,FABoxTab,_),!)
   ).
 
 /**
@@ -733,16 +733,20 @@ make_expl(M,Ind,S,[H|T],Expl0,ABox,Expl):-
 % -------------
 % rules application
 % -------------
-expand_queue(_M,ABox,[],ABox).
+expand_queue(M,ABox0-EQ,ABox):-
+  extract_from_expansion_queue(EQ,EA,T),!,
+  apply_all_rules(M,ABox0-T,EA,ABox1),
+  % update_queue(M,T,NewExpQueue), già aggiornata
+  expand_queue(M,ABox1,ABox).
 
-expand_queue(M,ABox0,[EA|T],ABox):-
-  apply_all_rules(M,ABox0,EA,ABox1),
-  update_queue(M,T,NewExpQueue),
-  expand_queue(M,ABox1,NewExpQueue,ABox).
+expand_queue(_M,ABox-_,ABox).
 
 %expand_queue(M,ABox0,[_EA|T],ABox):-
 %  expand_queue(M,ABox0,T,ABox).
-  
+
+extract_from_expansion_queue([[],[EA|T]],EA,[[],T]).
+
+extract_from_expansion_queue([[EA|T],NonDetQ],EA,[T,NonDetQ]).
 
 update_queue(M,[],NewExpQueue):-
   \+ M:new_added_det(_C,_Ind),
@@ -762,7 +766,7 @@ update_queue(M,T0,NewExpQueue):-
 apply_all_rules(M,ABox0,EA,ABox):-
   setting_trill(det_rules,Rules),
   apply_det_rules(M,Rules,ABox0,EA,ABox1),
-  (ABox0=ABox1 ->
+  (same_ABox(ABox0,ABox1) ->
   ABox=ABox1;
   apply_all_rules(M,ABox1,EA,ABox)).
 
@@ -790,6 +794,8 @@ apply_nondet_rules(M,[_|T],ABox0,EA,ABox):-
   apply_nondet_rules(M,T,ABox0,EA,ABox).
 
 
+same_ABox(ABox-_,ABox-_).
+
 expand_close_abox(M,(ABox0,Tabs),(ABox,Tabs)):-%gtrace,
   findall((C,Ind,Expl),M:new_added_det(C,Ind,Expl),ClAss),
   dif(ClAss,[]),
@@ -800,20 +806,20 @@ expand_close_abox(M,(ABox0,Tabs),(ABox,Tabs)):-%gtrace,
 % ------------
 % Utility for rule application
 % ------------
-assert_new_added(M,unionOf(L),Ind):-!,
-  M:assert(new_added_nondet(unionOf(L),Ind)).
+update_expansion_queue(_,unionOf(L),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
+  append(NDQ0,[(unionOf(L),Ind)],NDQ).
 
-assert_new_added(M,maxCardinality(N,S,C),Ind):-!,
-  M:assert(new_added_nondet(maxCardinality(N,S,C),Ind)).
+update_expansion_queue(_,maxCardinality(N,S,C),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
+  append(NDQ0,[(maxCardinality(N,S,C),Ind)],NDQ).
 
-assert_new_added(M,maxCardinality(N,S),Ind):-!,
-  M:assert(new_added_nondet(maxCardinality(N,S),Ind)).
+update_expansion_queue(_,maxCardinality(N,S),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
+  append(NDQ0,[(maxCardinality(N,S),Ind)],NDQ).
 
-assert_new_added(M,C,Ind):-!,
-  M:assert(new_added_det(C,Ind)).
+update_expansion_queue(_,C,Ind,[DQ0,NDQ],[DQ,NDQ]):-!,
+  append(DQ0,[(C,Ind)],DQ).
 
-assert_new_added(M,P,Ind1,Ind2):-!,
-  M:assert(new_added_det(P,Ind1,Ind2)).
+update_expansion_queue(_,P,Ind1,Ind2,[DQ0,NDQ],[DQ,NDQ]):-!,
+  append(DQ0,[(P,Ind1,Ind2)],DQ).
 
 /*
 apply_all_rules(M,ABox0,ABox):-
@@ -968,19 +974,19 @@ apply_rules8((ABox,Tabs),(ABox,Tabs)).
   This rule hasn't a corresponding rule in the tableau
   ========================
 */
-add_exists_rule(M,(ABox0,Tabs),(R,Ind1,Ind2),(ABox,Tabs)):-
+add_exists_rule(M,(ABox0,Tabs)-EQ0,(R,Ind1,Ind2),(ABox,Tabs)-EQ):-
   findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox0),
   existsInKB(M,R,C),
   findClassAssertion(C,Ind2,Expl2,ABox0),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
+  modify_ABox(M,ABox0,EQ0,someValuesFrom(R,C),Ind1,Expl,ABox,EQ).
 
-add_exists_rule(M,(ABox0,Tabs),(C,Ind2),(ABox,Tabs)):-
+add_exists_rule(M,(ABox0,Tabs)-EQ0,(C,Ind2),(ABox,Tabs)-EQ):-
   findClassAssertion(C,Ind2,Expl2,ABox0),
   existsInKB(M,R,C),
   findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox0),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
+  modify_ABox(M,ABox0,EQ0,someValuesFrom(R,C),Ind1,Expl,ABox,EQ).
 
 existsInKB(M,R,C):-
   hierarchy(M:H),
@@ -1003,35 +1009,35 @@ existsInKB(M,R,C):-
   and_rule
   =================
 */
-and_rule(M,(ABox0,Tabs0),(intersectionOf(LC),Ind),(ABox,Tabs0)):-
+and_rule(M,(ABox0,Tabs0)-EQ0,(intersectionOf(LC),Ind),(ABox,Tabs0)-EQ):-
   findClassAssertion(intersectionOf(LC),Ind,Expl,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
-  scan_and_list(M,LC,Ind,Expl,ABox0,Tabs0,ABox,0).
+  scan_and_list(M,LC,Ind,Expl,ABox0,EQ0,Tabs0,ABox,EQ,0).
 
 
 %----------------
-scan_and_list(_M,[],_Ind,_Expl,ABox,_Tabs,ABox,Mod):-
+scan_and_list(_M,[],_Ind,_Expl,ABox,EQ,_Tabs,ABox,EQ,Mod):-
   dif(Mod,0).
 
-scan_and_list(M,[C|T],Ind,Expl,ABox0,Tabs0,ABox,_Mod):-
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),!,
-  scan_and_list(M,T,Ind,Expl,ABox1,Tabs0,ABox,1).
+scan_and_list(M,[C|T],Ind,Expl,ABox0,EQ0,Tabs0,ABox,EQ,_Mod):-
+  modify_ABox(M,ABox0,EQ0,C,Ind,Expl,ABox1,EQ1),!,
+  scan_and_list(M,T,Ind,Expl,ABox1,EQ1,Tabs0,ABox,EQ,1).
 
-scan_and_list(M,[_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
-  scan_and_list(M,T,Ind,Expl,ABox0,Tabs0,ABox,Mod).
+scan_and_list(M,[_C|T],Ind,Expl,ABox0,EQ0,Tabs0,ABox,EQ,Mod):-
+  scan_and_list(M,T,Ind,Expl,ABox0,EQ0,Tabs0,ABox,EQ,Mod).
 /* ************* */
 
 /*
   or_rule
   ===============
 */
-or_rule(M,(ABox0,Tabs0),(unionOf(LC),Ind),L):-
+or_rule(M,(ABox0,Tabs0)-EQ0,(unionOf(LC),Ind),L):-
   findClassAssertion(unionOf(LC),Ind,Expl,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   %not_ind_intersected_union(Ind,LC,ABox0),
   % length(LC,NClasses),
   get_choice_point_id(M,ID),
-  scan_or_list(M,LC,0,ID,Ind,Expl,ABox0,Tabs0,L),
+  scan_or_list(M,LC,0,ID,Ind,Expl,ABox0,Tabs0,EQ0,L),
   dif(L,[]),
   create_choice_point(M,Ind,or,unionOf(LC),LC,_),!. % last variable whould be equals to ID
 
@@ -1042,13 +1048,13 @@ ind_intersected_union(Ind,LC,ABox) :-
   findClassAssertion(C,Ind,_,ABox),
   member(C,LC),!.
 %---------------
-scan_or_list(_,[],_,_,_,_,_,_,[]):- !.
+scan_or_list(_,[],_,_,_,_,_,_,_,[]):- !.
 
-scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
+scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,EQ0,[(ABox,Tabs)-EQ|L]):-
   add_choice_point(M,cpp(CP,N0),Expl0,Expl),
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox),
+  modify_ABox(M,ABox0,EQ0,C,Ind,Expl,ABox,EQ),
   N is N0 + 1,
-  scan_or_list(M,T,N,CP,Ind,Expl0,ABox0,Tabs,L).
+  scan_or_list(M,T,N,CP,Ind,Expl0,ABox0,Tabs,EQ0,L).
 
 /* **************** */
 
@@ -1056,14 +1062,14 @@ scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
   exists_rule
   ==================
 */
-exists_rule(M,(ABox0,Tabs0),(someValuesFrom(R,C),Ind1),(ABox,Tabs)):-
+exists_rule(M,(ABox0,Tabs0)-EQ0,(someValuesFrom(R,C),Ind1),(ABox,Tabs)-EQ):-
   findClassAssertion(someValuesFrom(R,C),Ind1,Expl,ABox0),
   \+ blocked(Ind1,(ABox0,Tabs0)),
   \+ connected_individual(R,C,Ind1,ABox0),
   new_ind(M,Ind2),
   add_edge(R,Ind1,Ind2,Tabs0,Tabs),
-  modify_ABox(M,ABox0,C,Ind2,Expl,ABox1),
-  modify_ABox(M,ABox1,R,Ind1,Ind2,Expl,ABox).
+  modify_ABox(M,ABox0,EQ0,C,Ind2,Expl,ABox1,EQ1),
+  modify_ABox(M,ABox1,EQ1,R,Ind1,Ind2,Expl,ABox,EQ).
 
 
 %---------------
@@ -1077,12 +1083,12 @@ connected_individual(R,C,Ind1,ABox):-
   forall_rule
   ===================
 */
-forall_rule(M,(ABox0,Tabs),(allValuesFrom(R,C),Ind1),(ABox,Tabs)):-
+forall_rule(M,(ABox0,Tabs)-EQ0,(allValuesFrom(R,C),Ind1),(ABox,Tabs)-EQ):-
   findClassAssertion(allValuesFrom(R,C),Ind1,Expl1,ABox0),
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,C,Ind2,Expl,ABox).
+  modify_ABox(M,ABox0,EQ0,C,Ind2,Expl,ABox,EQ).
 
 /* ************** */
 
@@ -1090,14 +1096,14 @@ forall_rule(M,(ABox0,Tabs),(allValuesFrom(R,C),Ind1),(ABox,Tabs)):-
   forall_plus_rule
   =================
 */
-forall_plus_rule(M,(ABox0,Tabs),(allValuesFrom(S,C),Ind1),(ABox,Tabs)):-
+forall_plus_rule(M,(ABox0,Tabs)-EQ0,(allValuesFrom(S,C),Ind1),(ABox,Tabs)-EQ):-
   findClassAssertion(allValuesFrom(S,C),Ind1,Expl1,ABox0),
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
   find_sub_sup_trans_role(M,R,S,Expl3),
   and_f(M,Expl1,Expl2,ExplT),
   and_f(M,ExplT,Expl3,Expl),
-  modify_ABox(M,ABox0,allValuesFrom(R,C),Ind2,Expl,ABox).
+  modify_ABox(M,ABox0,EQ0,allValuesFrom(R,C),Ind2,Expl,ABox,EQ).
 
 % --------------
 find_sub_sup_trans_role(M,R,S,Expl):-
@@ -1119,11 +1125,11 @@ find_sub_sup_trans_role(M,R,S,Expl):-
   ===========
 */
 
-unfold_rule(M,(ABox0,Tabs),(C,Ind),(ABox,Tabs)):-
+unfold_rule(M,(ABox0,Tabs)-EQ0,(C,Ind),(ABox,Tabs)-EQ):-
   findClassAssertion(C,Ind,Expl,ABox0),
   find_sub_sup_class_u(M,C,D,Ax),
   and_f(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
+  modify_ABox(M,ABox0,EQ0,D,Ind,AxL,ABox1,EQ),
   add_nominal(D,Ind,ABox1,ABox).
 
 
@@ -1136,13 +1142,13 @@ unfold_rule(M,(ABox0,Tabs),(C,Ind),(ABox,Tabs)):-
       correspond to the ce_rule
    --
 */
-unfold_rule(M,(ABox0,Tabs),(C1,Ind),(ABox,Tabs)):-
+unfold_rule(M,(ABox0,Tabs)-EQ0,(C1,Ind),(ABox,Tabs)-EQ):-
   %findClassAssertion(C1,Ind,Expl,ABox0),
   find_not_atomic(M,C1,C,L),
   ( C = unionOf(_) -> findClassAssertion(C1,Ind,Expl,ABox0) ; find_all(M,Ind,L,ABox0,Expl)),
   %find_sub_sup_class_u(M,C,D,Ax),
   %and_f(M,Ax,Expl1,AxL1),
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),
+  modify_ABox(M,ABox0,EQ0,C,Ind,Expl,ABox1,EQ),
   add_nominal(C,Ind,ABox1,ABox).
 
 
@@ -1150,9 +1156,9 @@ unfold_rule(M,(ABox0,Tabs),(C1,Ind),(ABox,Tabs)):-
  *    control propertyRange e propertyDomain
  * --
  */
-unfold_rule(M,(ABox0,Tabs),(P,S,O),(ABox,Tabs)):-
+unfold_rule(M,(ABox0,Tabs)-EQ0,(P,S,O),(ABox,Tabs)-EQ):-
   find_class_prop_range_domain(M,P,S,O,Ind,D,Expl,(ABox0,Tabs)),
-  modify_ABox(M,ABox0,D,Ind,Expl,ABox1),
+  modify_ABox(M,ABox0,EQ0,D,Ind,Expl,ABox1,EQ),
   add_nominal(D,Ind,ABox1,ABox).
 
 /*
@@ -1160,11 +1166,11 @@ unfold_rule(M,(ABox0,Tabs),(P,S,O),(ABox,Tabs)):-
  *    manage the negation
  * --
  */
-unfold_rule(M,(ABox0,Tabs),(complementOf(C),Ind),(ABox,Tabs)):-
+unfold_rule(M,(ABox0,Tabs)-EQ0,(complementOf(C),Ind),(ABox,Tabs)-EQ):-
   findClassAssertion(complementOf(C),Ind,Expl,ABox0),
   find_neg_class(C,D),
   and_f_ax(M,complementOf(C),Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
+  modify_ABox(M,ABox0,EQ0,D,Ind,AxL,ABox1,EQ),
   add_nominal(D,Ind,ABox1,ABox).
 
 % ----------------
@@ -1385,20 +1391,20 @@ find_all(M,Ind,[H|T],ABox,ExplT):-
 %  unfold_rule to unfold roles
 % ------------------------
 % sub properties
-unfold_rule(M,(ABox0,Tabs),(C,Ind1,Ind2),(ABox,Tabs)):-
+unfold_rule(M,(ABox0,Tabs)-EQ0,(C,Ind1,Ind2),(ABox,Tabs)-EQ):-
   findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
   find_sub_sup_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind1,Ind2,AxL,ABox1),
+  modify_ABox(M,ABox0,EQ0,D,Ind1,Ind2,AxL,ABox1,EQ),
   add_nominal(D,Ind1,ABox1,ABox2),
   add_nominal(D,Ind2,ABox2,ABox).
 
 %inverseProperties
-unfold_rule(M,(ABox0,Tabs),(C,Ind1,Ind2),(ABox,Tabs)):-
+unfold_rule(M,(ABox0,Tabs)-EQ0,(C,Ind1,Ind2),(ABox,Tabs)-EQ):-
   findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
   find_inverse_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind2,Ind1,AxL,ABox1),
+  modify_ABox(M,ABox0,EQ0,D,Ind2,Ind1,AxL,ABox1,EQ),
   add_nominal(D,Ind1,ABox1,ABox2),
   add_nominal(D,Ind2,ABox2,ABox).
 
@@ -1432,10 +1438,10 @@ find_inverse_property(M,C,C,symmetricProperty(C)):-
   ce_rule
   =============
 */
-ce_rule(M,(ABox0,(T,RBN,RBR)),(ABox,(T,RBN,RBR))):-
+ce_rule(M,(ABox0,(T,RBN,RBR))-EQ0,(ABox,(T,RBN,RBR))-EQ):-
   find_not_sub_sup_class(M,Ax,UnAx),
   vertices(T,Inds),
-  apply_ce_to(M,Inds,Ax,UnAx,ABox0,ABox,(T,RBN,RBR),C),
+  apply_ce_to(M,Inds,Ax,UnAx,ABox0,EQ0,ABox,(T,RBN,RBR),EQ,C),
   C @> 0.
 
 
@@ -1464,14 +1470,14 @@ copy_neg_c(C,[H|T],[H|T1]):-
 %---------------------
 apply_ce_to(_M,[],_,_,ABox,ABox,_,0).
 
-apply_ce_to(M,[Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
+apply_ce_to(M,[Ind|T],Ax,UnAx,ABox0,EQ0,ABox,Tabs,EQ,C):-
   \+ indirectly_blocked(Ind,(ABox0,Tabs)),
-  modify_ABox(M,ABox0,UnAx,Ind,[Ax],ABox1),!,
-  apply_ce_to(M,T,Ax,UnAx,ABox1,ABox,Tabs,C0),
+  modify_ABox(M,ABox0,EQ0,UnAx,Ind,[Ax],ABox1,EQ1),!,
+  apply_ce_to(M,T,Ax,UnAx,ABox1,EQ1,ABox,Tabs,EQ,C0),
   C is C0 + 1.
 
-apply_ce_to(M,[_Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
-  apply_ce_to(M,T,Ax,UnAx,ABox0,ABox,Tabs,C).
+apply_ce_to(M,[_Ind|T],Ax,UnAx,ABox0,EQ0,ABox,Tabs,EQ,C):-
+  apply_ce_to(M,T,Ax,UnAx,ABox0,EQ0,ABox,Tabs,EQ,C).
 
 /* **************** */
 
@@ -1479,7 +1485,7 @@ apply_ce_to(M,[_Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
   min_rule
   =============
 */
-min_rule(M,(ABox,Tabs),(minCardinality(N,S),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+min_rule(M,(ABox,Tabs)-EQ0,(minCardinality(N,S),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)-EQ):-
   findClassAssertion(minCardinality(N,S),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
@@ -1487,10 +1493,10 @@ min_rule(M,(ABox,Tabs),(minCardinality(N,S),Ind1),([(differentIndividuals(NI),Ex
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
-  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,EQ0,ABox1,Tabs1,EQ).
 
 
-min_rule(M,(ABox,Tabs),(minCardinality(N,S,C),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+min_rule(M,(ABox,Tabs)-EQ0,(minCardinality(N,S,C),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)-EQ):-
   findClassAssertion(minCardinality(N,S,C),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
@@ -1498,9 +1504,9 @@ min_rule(M,(ABox,Tabs),(minCardinality(N,S,C),Ind1),([(differentIndividuals(NI),
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
-  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,EQ0,ABox1,Tabs1,EQ).
 
-min_rule(M,(ABox,Tabs),(exactCardinality(N,S),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+min_rule(M,(ABox,Tabs)-EQ0,(exactCardinality(N,S),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)-EQ):-
   findClassAssertion(exactCardinality(N,S),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
@@ -1508,10 +1514,10 @@ min_rule(M,(ABox,Tabs),(exactCardinality(N,S),Ind1),([(differentIndividuals(NI),
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
-  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,EQ0,ABox1,Tabs1,EQ).
 
 
-min_rule(M,(ABox,Tabs),(exactCardinality(N,S,C),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+min_rule(M,(ABox,Tabs)-EQ0,(exactCardinality(N,S,C),Ind1),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)-EQ):-
   findClassAssertion(exactCardinality(N,S,C),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
@@ -1519,33 +1525,33 @@ min_rule(M,(ABox,Tabs),(exactCardinality(N,S,C),Ind1),([(differentIndividuals(NI
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
-  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,EQ0,ABox1,Tabs1,EQ).
 
 % ----------------------
-min_rule_neigh(_,0,_,_,_,[],ABox,Tabs,ABox,Tabs).
+min_rule_neigh(_,0,_,_,_,[],ABox,Tabs,EQ,ABox,Tabs,EQ).
 
-min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox,Tabs,ABox2,Tabs2):-
+min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox,Tabs,EQ0,ABox2,Tabs2,EQ):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
   check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
-  modify_ABox(M,ABox,S,Ind1,Ind2,Expl,ABox1),
-  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox1,Tabs1,ABox2,Tabs2).
+  modify_ABox(M,ABox,EQ0,S,Ind1,Ind2,Expl,ABox1,EQ1),
+  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox1,Tabs1,EQ1,ABox2,Tabs2,EQ).
 
 %----------------------
-min_rule_neigh_C(_,0,_,_,_,_,[],ABox,Tabs,ABox,Tabs).
+min_rule_neigh_C(_,0,_,_,_,_,[],ABox,Tabs,EQ,ABox,Tabs,EQ).
 
-min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,ABox3,Tabs2):-
+min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,EQ0,ABox3,Tabs2,EQ):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
   check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
-  modify_ABox(M,ABox,S,Ind1,Ind2,Expl,ABox1),
+  modify_ABox(M,ABox,EQ0,S,Ind1,Ind2,Expl,ABox1,EQ1),
   and_f_ax(M,propertyAssertion(S,Ind1,Ind2),Expl,ExplC),
-  modify_ABox(M,ABox1,C,Ind2,ExplC,ABox2),
-  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox2,Tabs1,ABox3,Tabs2).
+  modify_ABox(M,ABox1,EQ1,C,Ind2,ExplC,ABox2,EQ2),
+  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox2,Tabs1,EQ2,ABox3,Tabs2,EQ).
 
 %---------------------
 safe_s_neigh([],_,_,[]).
@@ -1559,54 +1565,54 @@ safe_s_neigh([H|T],S,Tabs,[H|ST]):-
   max_rule
   ================
 */
-max_rule(M,(ABox0,Tabs0),(maxCardinality(N,S,C),Ind),L):-
-  findClassAssertion(maxCardinality(N,S,C),Ind,Expl,ABox0),
+max_rule(M,(ABox0,Tabs0)-EQ0,(maxCardinality(N,S,C),Ind),L):-
+  findClassAssertion(maxCardinality(N,S,C),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
   individual_class_C(SN,C,ABox0,SNC),
   length(SNC,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),%gtrace,
-  scan_max_list(M,maxCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,ABox0,Tabs0,L),!. % last variable whould be equals to ID
+  scan_max_list(M,maxCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,ABox0,Tabs0,EQ0,L),!. % last variable whould be equals to ID
 
-max_rule(M,(ABox0,Tabs0),(maxCardinality(N,S),Ind),L):-
-  findClassAssertion(maxCardinality(N,S),Ind,Expl,ABox0),
+max_rule(M,(ABox0,Tabs0)-EQ0,(maxCardinality(N,S),Ind),L):-
+  findClassAssertion(maxCardinality(N,S),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
   length(SN,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),
-  scan_max_list(M,maxCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,L),!. 
+  scan_max_list(M,maxCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,EQ0,L),!. 
 %---------------------
 
-max_rule(M,(ABox0,Tabs0),(exactCardinality(N,S,C),Ind),L):-
-  findClassAssertion(exactCardinality(N,S,C),Ind,Expl,ABox0),
+max_rule(M,(ABox0,Tabs0)-EQ0,(exactCardinality(N,S,C),Ind),L):-
+  findClassAssertion(exactCardinality(N,S,C),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
   individual_class_C(SN,C,ABox0,SNC),
   length(SNC,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),%gtrace,
-  scan_max_list(M,exactCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,ABox0,Tabs0,L),!. % last variable whould be equals to ID
+  scan_max_list(M,exactCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,ABox0,Tabs0,EQ0,L),!. % last variable whould be equals to ID
 
-max_rule(M,(ABox0,Tabs0),(exactCardinality(N,S),Ind),L):-
-  findClassAssertion(exactCardinality(N,S),Ind,Expl,ABox0),
+max_rule(M,(ABox0,Tabs0)-EQ0,(exactCardinality(N,S),Ind),L):-
+  findClassAssertion(exactCardinality(N,S),Ind,Expl0,ABox0),
   \+ indirectly_blocked(Ind,(ABox0,Tabs0)),
   s_neighbours(M,Ind,S,(ABox0,Tabs0),SN),
   length(SN,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),
-  scan_max_list(M,exactCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,L),!. 
+  scan_max_list(M,exactCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,ABox0,Tabs0,EQ0,L),!. 
 
 %---------------------
 
-scan_max_list(M,MaxCardClass,S,C,SN,CP,Ind,Expl,ABox0,Tabs0,Tab_list):-
+scan_max_list(M,MaxCardClass,S,C,SN,CP,Ind,Expl,ABox0,Tabs0,EQ0,Tab_list):-
   create_couples_for_merge(SN,[],Ind_couples), % MAYBE check_individuals_not_equal(M,YI,YJ,ABox0), instead of dif
   length(Ind_couples,NChoices),
   (
     NChoices @> 1 -> (FirstChoice = -1) ; (FirstChoice = 0)
   ),
-  create_list_for_max_rule(M,Ind_couples,FirstChoice,CP,Ind,S,C,Expl,ABox0,Tabs0,Tab_list),
+  create_list_for_max_rule(M,Ind_couples,FirstChoice,CP,Ind,S,C,Expl,ABox0,Tabs0,EQ0,Tab_list),
   dif(Tab_list,[]),
   create_choice_point(M,Ind,mr,MaxCardClass,Ind_couples,_). % last variable whould be equals to ID
 
@@ -1621,9 +1627,9 @@ create_couples_for_merge_int(_,[],Ind_couples,Ind_couples).
 create_couples_for_merge_int(I,[H|T],Ind_couples0,Ind_couples):-
   create_couples_for_merge_int(I,T,[I-H|Ind_couples0],Ind_couples).
 
-create_list_for_max_rule(_,[],_,_,_,_,_,_,_,_,[]).
+create_list_for_max_rule(_,[],_,_,_,_,_,_,_,_,_,[]).
 
-create_list_for_max_rule(M,[YI-YJ|Ind_couples],N0,CP,Ind,S,C,Expl0,ABox0,Tabs0,[(ABox,Tabs)|Tab_list]):-
+create_list_for_max_rule(M,[YI-YJ|Ind_couples],N0,CP,Ind,S,C,Expl0,ABox0,Tabs0,EQ0,[(ABox,Tabs)-EQ|Tab_list]):-
   findPropertyAssertion(S,Ind,YI,ExplYI,ABox0),
   findPropertyAssertion(S,Ind,YJ,ExplYJ,ABox0),
   findClassAssertion(C,YI,ExplCYI,ABox0),
@@ -1644,8 +1650,8 @@ create_list_for_max_rule(M,[YI-YJ|Ind_couples],N0,CP,Ind,S,C,Expl0,ABox0,Tabs0,[
     )
   ),
   flatten([YI,YJ],LI),
-  merge_all(M,[(sameIndividual(LI),ExplT)],ABox0,Tabs0,ABox,Tabs),
-  create_list_for_max_rule(M,Ind_couples,N,CP,Ind,S,C,Expl0,ABox0,Tabs0,Tab_list).
+  merge_all(M,[(sameIndividual(LI),ExplT)],ABox0,Tabs0,EQ0,ABox,Tabs,EQ),
+  create_list_for_max_rule(M,Ind_couples,N,CP,Ind,S,C,Expl0,ABox0,Tabs0,EQ0,Tab_list).
 
 /*
 scan_max_list(M,S,SN,CP,Ind,Expl,ABox0,Tabs0,YI-YJ,ABox,Tabs):-
@@ -1687,7 +1693,7 @@ individual_class_C([_H|T],C,ABox,T1):-
  ============
 */
 
-o_rule(M,(ABox0,Tabs0),(oneOf([C]),X),([(sameIndividual(LI),ExplC)|ABox],Tabs)):-
+o_rule(M,(ABox0,Tabs0),(oneOf([C]),X)-EQ0,([(sameIndividual(LI),ExplC)|ABox],Tabs)-EQ):-
   findClassAssertion(oneOf([C]),X,ExplX,ABox0),
   findClassAssertion(oneOf([D]),Y,ExplY,ABox0),
   dif(X,Y),
@@ -1901,9 +1907,9 @@ subProp(M,SubProperty,Property,Subject,Object):-
 
 %--------------
 
-add_nominal_list(ABox0,(T,_,_),ABox):-
+add_nominal_list(M,ABox0,(T,_,_),ABox):-
   vertices(T,NomListIn),
-  prepare_nom_list(NomListIn,NomListOut),
+  prepare_nom_list(M,NomListIn,NomListOut),
   add_all(NomListOut,ABox0,ABox).
 
 %--------------
@@ -2066,17 +2072,17 @@ remove_node_from_table(S,T0,T1):-
 /*
  * merge
  */
-merge(M,sameIndividual(L),Y,Expl,(ABox0,Tabs0),(ABox,Tabs)):-
+merge(M,sameIndividual(L),Y,Expl,(ABox0,Tabs0)-EQ0,(ABox,Tabs)-EQ):-
   !,
   merge_tabs(L,Y,Tabs0,Tabs),
   merge_abox(M,L,Y,Expl,ABox0,ABox).
 
-merge(M,X,sameIndividual(L),Expl,(ABox0,Tabs0),(ABox,Tabs)):-
+merge(M,X,sameIndividual(L),Expl,(ABox0,Tabs0)-EQ0,(ABox,Tabs)-EQ):-
   !,
   merge_tabs(X,L,Tabs0,Tabs),
   merge_abox(M,X,L,Expl,ABox0,ABox).
 
-merge(M,X,Y,Expl,(ABox0,Tabs0),(ABox,Tabs)):-
+merge(M,X,Y,Expl,(ABox0,Tabs0)-EQ0,(ABox,Tabs)-EQ):-
   !,
   merge_tabs(X,Y,Tabs0,Tabs),
   merge_abox(M,X,Y,Expl,ABox0,ABox).
@@ -2199,43 +2205,43 @@ merge_abox(M,L,Expl0,[H|T],[H|ABox]):-
 
 /* merge node in (ABox,Tabs) */
 
-merge_all(_,[],ABox,Tabs,ABox,Tabs).
+merge_all(_,[],ABox,Tabs,EQ,ABox,Tabs,EQ).
 
-merge_all(M,[(sameIndividual(H),Expl)|T],ABox0,Tabs0,ABox,Tabs):-
+merge_all(M,[(sameIndividual(H),Expl)|T],ABox0,Tabs0,EQ0,ABox,Tabs,EQ):-
   find_same(H,ABox0,L,ExplL),
   dif(L,[]),!,
-  merge_all1(M,H,Expl,L,ABox0,Tabs0,ABox1,Tabs1),
+  merge_all1(M,H,Expl,L,ABox0,Tabs0,EQ0,ABox1,Tabs1,EQ1),
   flatten([H,L],L0),
   list_to_set(L0,L1),
   and_f(M,Expl,ExplL,ExplT),
   add(ABox1,(sameIndividual(L1),ExplT),ABox2),
   delete(ABox2,(sameIndividual(L),ExplL),ABox3),
   retract_sameIndividual(L),
-  merge_all(M,T,ABox3,Tabs1,ABox,Tabs).
+  merge_all(M,T,ABox3,Tabs1,EQ1,ABox,Tabs,EQ).
 
-merge_all(M,[(sameIndividual(H),Expl)|T],ABox0,Tabs0,ABox,Tabs):-
+merge_all(M,[(sameIndividual(H),Expl)|T],ABox0,Tabs0,EQ0,ABox,Tabs,EQ):-
   find_same(H,ABox0,L,_),
   L==[],!,
-  merge_all2(M,H,Expl,ABox0,Tabs0,ABox1,Tabs1),
+  merge_all2(M,H,Expl,ABox0,Tabs0,EQ0,ABox1,Tabs1,EQ1),
   add(ABox1,(sameIndividual(H),Expl),ABox2),
-  merge_all(M,T,ABox2,Tabs1,ABox,Tabs).
+  merge_all(M,T,ABox2,Tabs1,EQ1,ABox,Tabs,EQ).
 
-merge_all1(_M,[],_,_,ABox,Tabs,ABox,Tabs).
+merge_all1(_M,[],_,_,ABox,Tabs,EQ,ABox,Tabs,EQ).
 
-merge_all1(M,[H|T],Expl,L,ABox0,Tabs0,ABox,Tabs):-
+merge_all1(M,[H|T],Expl,L,ABox0,Tabs0,EQ0,ABox,Tabs,EQ):-
   \+ member(H,L),
-  merge(M,H,L,Expl,(ABox0,Tabs0),(ABox1,Tabs1)),
-  merge_all1(M,T,Expl,[H|L],ABox1,Tabs1,ABox,Tabs).
+  merge(M,H,L,Expl,(ABox0,Tabs0)-EQ0,(ABox1,Tabs1)-EQ1),
+  merge_all1(M,T,Expl,[H|L],ABox1,Tabs1,EQ1,ABox,Tabs,EQ).
 
-merge_all1(M,[H|T],Expl,L,ABox0,Tabs0,ABox,Tabs):-
+merge_all1(M,[H|T],Expl,L,ABox0,Tabs0,EQ0,ABox,Tabs,EQ):-
   member(H,L),
-  merge_all1(M,T,Expl,L,ABox0,Tabs0,ABox,Tabs).
+  merge_all1(M,T,Expl,L,ABox0,Tabs0,EQ0,ABox,Tabs,EQ).
 
 
 
-merge_all2(M,[X,Y|T],Expl,ABox0,Tabs0,ABox,Tabs):-
-  merge(M,X,Y,Expl,(ABox0,Tabs0),(ABox1,Tabs1)),
-  merge_all1(M,T,Expl,[X,Y],ABox1,Tabs1,ABox,Tabs).
+merge_all2(M,[X,Y|T],Expl,ABox0,Tabs0,EQ0,ABox,Tabs,EQ):-
+  merge(M,X,Y,Expl,(ABox0,Tabs0)-EQ0,(ABox1,Tabs1)-EQ1),
+  merge_all1(M,T,Expl,[X,Y],ABox1,Tabs1,EQ1,ABox,Tabs,EQ).
 
 find_same(H,ABox,L,Expl):-
   find((sameIndividual(L),Expl),ABox),

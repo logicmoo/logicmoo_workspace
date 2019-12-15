@@ -303,7 +303,7 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
+modify_ABox(_,ABox0,EQ,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox],EQ):-
   ( find((sameIndividual(L),Expl0),ABox) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
@@ -315,24 +315,24 @@ modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
   	(ABox = ABox0,Expl = Expl1)
   ).
 
-modify_ABox(M,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-%gtrace,
+modify_ABox(M,ABox0,EQ0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox],EQ):-%gtrace,
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox),
-      assert_new_added(M,C,Ind)
+      update_expansion_queue(M,C,Ind,EQ0,EQ,EQ0,EQ)
     )
   ;
-    (ABox = ABox0,Expl = Expl1,assert_new_added(M,C,Ind))
+    (ABox = ABox0,Expl = Expl1,update_expansion_queue(M,C,Ind))
   ).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox),
-      assert_new_added(M,P,Ind1,Ind2)
+      update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ)
     )
   ;
-    (ABox = ABox0,Expl = Expl1,assert_new_added(M,P,Ind1,Ind2))
+    (ABox = ABox0,Expl = Expl1,update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ))
   ).
 
 /* ************* */
@@ -478,7 +478,7 @@ get_hierarchy_from_class(M,Class,H4C):-
   add_all(LSPA,ABox2,ABox).
 */
 
-build_abox(M,ExpansionQueue,(ABox,Tabs)):-
+build_abox(M,(ABox,Tabs)-ExpansionQueue):-
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]-[]]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]-[]]),M:propertyAssertion(Property,Subject, Object),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
@@ -550,8 +550,9 @@ and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
   append(CP1,CP2,CP),
   and_f2(L1,CP1,T2,T).
 
-or_f(E0,E1,E):-
-  append(E0,E1,E).
+or_f(_M,Or1,Or2,Or):-
+  append(Or1,Or2,Or0),
+  sort(Or0,Or).
 
 /**********************
 
@@ -576,7 +577,7 @@ get_choice_point_id(M,ID):-
   M:delta(_,ID).
 
 % Creates a new choice point and adds it to the delta/2 set of choice points.
-create_choice_point(M,Ind,Rule,Class,Choices,ID0):-
+create_choice_point(M,Ind,Rule,Class,Choices,ID0):- %gtrace,
   init_expl_per_choice(Choices,ExplPerChoice),
   M:delta(CPList,ID0),
   ID is ID0 + 1,
@@ -631,7 +632,7 @@ update_choice_point_list(M,ID,Choice,E,CPs):-
     % already present explanations -> absent(ExplToUpdate,[E-CPs],ExplUpdated)
     dif(ExplToUpdate,[]) ->
     (
-      or_f(ExplToUpdate,[E-CPs],ExplUpdated)
+      or_f(_,ExplToUpdate,[E-CPs],ExplUpdated)
     ) ;
     (
       ExplUpdated=[E-CPs]
@@ -662,7 +663,7 @@ Hierarchy Explanation Management
 
 ***********************/
 
-hier_initial_expl(_M,[]):-!.
+hier_initial_expl(_M,[[]-[]]):-!.
 
 hier_empty_expl(_M,[]):-!.
 
@@ -672,7 +673,7 @@ hier_or_f_check(_M,Or1,Or2,Or):-absent(Or1,Or2,Or).
 
 hier_or_f(M,Or1,Or2,Or):-or_f(M,Or1,Or2,Or).
 
-hier_ax2ex(_M,Ax,[[Ax]]):- !.
+hier_ax2ex(_M,Ax,[[Ax]-[]]):- !.
   
 get_subclass_explanation(_M,C,D,Expl,Expls):-
   member(ex(C,D)-Expl,Expls).

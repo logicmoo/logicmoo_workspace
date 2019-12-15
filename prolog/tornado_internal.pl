@@ -165,22 +165,22 @@ modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox),
-  assert_new_added(M,C,Ind).
+  update_expansion_queue(M,C,Ind,EQ0,EQ).
   
   
 modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]):-
-  assert_new_added(M,C,Ind).
+  update_expansion_queue(M,C,Ind,EQ0,EQ).
 
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
-  assert_new_added(M,P,Ind1,Ind2).
+  update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
   
   
 modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-
-  assert_new_added(M,P,Ind1,Ind2).
+  update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
 
 /* ************* */
 
@@ -202,7 +202,7 @@ get_hierarchy_from_class(M,Class,H4C):-
   ===============
 */
 
-build_abox(M,ExpansionQueue,(ABox,Tabs)):-
+build_abox(M,(ABox,Tabs)-ExpansionQueue):-
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
