@@ -215,10 +215,11 @@ remove_supersets_int(E0,H,E0):-
   member(H1,E0),
   subset(H1,H),!.
 
-remove_supersets_int(E0,H,[H|E]):-
+remove_supersets_int(E0,H,E):-
   member(H1,E0),
   subset(H,H1),!,
-  nth0(_,E0,H1,E).
+  nth0(_,E0,H1,E1),
+  remove_supersets_int(E1,H,E).
 
 remove_supersets_int(E,H,[H|E]).
 
