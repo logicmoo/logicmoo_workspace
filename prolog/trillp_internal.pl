@@ -137,7 +137,7 @@ findClassAssertion4OWLNothing(M,ABox,Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox]):-
+modify_ABox(_,ABox0,EQ,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox],EQ):-
   find((sameIndividual(L),Expl0),ABox),!,
   sort(L,LS),
   sort(LF,LFS),
@@ -153,9 +153,9 @@ modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox]):-
   ),
   delete(ABox0,[(sameIndividual(L),Expl0)],ABox).
 
-modify_ABox(_,ABox0,sameIndividual(LF),L0,[(sameIndividual(LF),L0)|ABox0]).
+modify_ABox(_,ABox0,EQ,sameIndividual(LF),L0,[(sameIndividual(LF),L0)|ABox0],EQ).
 
-modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,ABox0,EQ0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox],EQ):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -170,10 +170,10 @@ modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   update_expansion_queue(M,C,Ind,EQ0,EQ).
   
   
-modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]):-
+modify_ABox(M,ABox0,EQ0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0],EQ):-
   update_expansion_queue(M,C,Ind,EQ0,EQ).
 
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],EQ):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -186,7 +186,7 @@ modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox])
   update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
   
   
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]):-
+modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],EQ):-
   update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
 
 /* **************** */

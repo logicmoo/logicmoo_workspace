@@ -217,10 +217,11 @@ remove_supersets_int(E0,H,E0):-
   member(H1,E0),
   subset(H1,H),!.
 
-remove_supersets_int(E0,H,[H|E]):-
+remove_supersets_int(E0,H,E):-
   member(H1,E0),
   subset(H,H1),!,
-  nth0(_,E0,H1,E).
+  nth0(_,E0,H1,E1),
+  remove_supersets_int(E1,H,E).
 
 remove_supersets_int(E,H,[H|E]).
 
@@ -319,13 +320,13 @@ modify_ABox(M,ABox0,EQ0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox],EQ):-%gt
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox),
-      update_expansion_queue(M,C,Ind,EQ0,EQ,EQ0,EQ)
+      update_expansion_queue(M,C,Ind,EQ0,EQ)
     )
   ;
-    (ABox = ABox0,Expl = Expl1,update_expansion_queue(M,C,Ind))
+    (ABox = ABox0,Expl = Expl1,update_expansion_queue(M,C,Ind,EQ0,EQ))
   ).
 
-modify_ABox(M,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],EQ):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox),
@@ -490,14 +491,14 @@ build_abox(M,(ABox,Tabs)-ExpansionQueue):-
   add_all(LPA,ABox1,ABox3),
   %add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  init_expansion_queue(LCA,LPA,ExpansionQueue),
+  init_expansion_queue(LCA,LPA,ExpansionQueue0),
   findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs4),
   %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA),
-  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
+  merge_all(M,LSIA,ABox5,Tabs4,ExpansionQueue0,ABox6,Tabs,ExpansionQueue),
   add_nominal_list(M,ABox6,Tabs,ABox),
   !.
 

@@ -236,7 +236,7 @@ instanceOf(M:Class,Ind,Expl):-
   	%init_expand_abox_wt_hierarchy(M,(ABox,Tabs),ExpansionQueue,(ABox0,Tabs)),
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
-  	    	add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ExpansionQueueQ,ABox1),
+  	    	add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ABox1,ExpansionQueueQ),
   	    	findall(FABoxTab,expand_queue(M,(ABox1,Tabs)-ExpansionQueueQ,FABoxTab),L),
   			find_expls(M,L,[ClassEx,IndEx],Expl1),
   			check_and_close(M,Expl1,Expl)
@@ -265,7 +265,7 @@ instanceOf(M:Class,Ind):-
 	  build_abox(M,(ABox,Tabs)-ExpansionQueue),
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
-          add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ExpansionQueueQ,ABox0),
+          add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ABox0,ExpansionQueueQ),
           expand_queue(M,(ABox0,Tabs)-ExpansionQueueQ,FABoxTab),!,
 	  		clash(M,FABoxTab,_),!  % TODO find_single_expl
 	      )
@@ -387,7 +387,7 @@ unsat_internal(M:Concept,Expl):-
   build_abox(M,(ABox,Tabs)-ExpansionQueue),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
-     	add_q(M,ABox,ExpansionQueue,Concept,trillan(1),ExpansionQueueQ,ABox0),
+     	add_q(M,ABox,ExpansionQueue,Concept,trillan(1),ABox0,ExpansionQueueQ),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
 	findall(FABoxTab,expand_queue(M,(ABox0,Tabs)-ExpansionQueueQ,FABoxTab),L),
 	find_expls(M,L,['unsat',Concept],Expl1),
@@ -420,7 +420,7 @@ unsat_internal(M:Concept):-
   build_abox(M,(ABox,Tabs)-ExpansionQueue),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
-     	add_q(M,ABox,ExpansionQueue,Concept,trillan(1),ExpansionQueueQ,ABox0),
+     	add_q(M,ABox,ExpansionQueue,Concept,trillan(1),ABox0,ExpansionQueueQ),
   		expand_queue(M,(ABox0,Tabs),ExpansionQueueQ,FABoxTab),!,
   		%apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
   		clash(M,FABoxTab,_),!
@@ -537,13 +537,10 @@ prob_inconsistent_theory(M:Prob):-
   Utilities for queries
  ***********/
 
-add_q(M,ABox0,ExpQueue,Class,Ind,[(Class,Ind)|ExpQueue],ABox):-
-  add_q(M,ABox0,Class,Ind,ABox).
-
 % adds the query into the ABox
-add_q(M,ABox0,Class,Ind,ABox):-
+add_q(M,ABox0,EQ0,Class,Ind,ABox,EQ):-
   empty_expl(M,Expl),
-  add(ABox0,(classAssertion(Class,Ind),Expl),ABox).
+  modify_ABox(M,ABox0,EQ0,Class,Ind,Expl,ABox,EQ).
 
 % expands query arguments using prefixes and checks their existence in the kb
 check_query_args(M,L,LEx) :-
@@ -744,25 +741,6 @@ expand_queue(_M,ABox-_,ABox).
 %expand_queue(M,ABox0,[_EA|T],ABox):-
 %  expand_queue(M,ABox0,T,ABox).
 
-extract_from_expansion_queue([[],[EA|T]],EA,[[],T]).
-
-extract_from_expansion_queue([[EA|T],NonDetQ],EA,[T,NonDetQ]).
-
-update_queue(M,[],NewExpQueue):-
-  \+ M:new_added_det(_C,_Ind),
-  \+ M:new_added_det(_P,_Ind1,_Ind2),!,
-  findall((C,Ind),M:new_added_nondet(C,Ind),NewExpQueue),
-  retractall(M:new_added_nondet(_,_)).
-
-update_queue(M,T0,NewExpQueue):-
-  findall((C,Ind),M:new_added_det(C,Ind),ClAss),
-  retractall(M:new_added_det(_,_)),
-  findall((R,S,O),M:new_added_det(R,S,O),PrAss),
-  retractall(M:new_added_det(_,_,_)),
-  subtract(T0,ClAss,T1),
-  subtract(T1,PrAss,T2),
-  append([T2,ClAss,PrAss],NewExpQueue).
-
 apply_all_rules(M,ABox0,EA,ABox):-
   setting_trill(det_rules,Rules),
   apply_det_rules(M,Rules,ABox0,EA,ABox1),
@@ -820,6 +798,45 @@ update_expansion_queue(_,C,Ind,[DQ0,NDQ],[DQ,NDQ]):-!,
 
 update_expansion_queue(_,P,Ind1,Ind2,[DQ0,NDQ],[DQ,NDQ]):-!,
   append(DQ0,[(P,Ind1,Ind2)],DQ).
+
+extract_from_expansion_queue([[],[EA|T]],EA,[[],T]).
+
+extract_from_expansion_queue([[EA|T],NonDetQ],EA,[T,NonDetQ]).
+
+init_expansion_queue(LCA,LPA,EQ):-
+  empty_expansion_queue(EmptyEQ),
+  add_classes_expqueue(LCA,EmptyEQ,EQ0),
+  add_prop_expqueue(LPA,EQ0,EQ).
+
+empty_expansion_queue([[],[]]).
+
+add_classes_expqueue([],EQ,EQ).
+
+add_classes_expqueue([(classAssertion(C,I),_)|T],EQ0,EQ):-
+  update_expansion_queue(_,C,I,EQ0,EQ1),
+  add_classes_expqueue(T,EQ1,EQ).
+
+add_prop_expqueue([],EQ,EQ).
+
+add_prop_expqueue([(propertyAssertion(P,S,O),_)|T],EQ0,EQ):-
+  update_expansion_queue(_,P,S,O,EQ0,EQ1),
+  add_prop_expqueue(T,EQ1,EQ).
+
+update_queue(M,[],NewExpQueue):-
+  \+ M:new_added_det(_C,_Ind),
+  \+ M:new_added_det(_P,_Ind1,_Ind2),!,
+  findall((C,Ind),M:new_added_nondet(C,Ind),NewExpQueue),
+  retractall(M:new_added_nondet(_,_)).
+
+update_queue(M,T0,NewExpQueue):-
+  findall((C,Ind),M:new_added_det(C,Ind),ClAss),
+  retractall(M:new_added_det(_,_)),
+  findall((R,S,O),M:new_added_det(R,S,O),PrAss),
+  retractall(M:new_added_det(_,_,_)),
+  subtract(T0,ClAss,T1),
+  subtract(T1,PrAss,T2),
+  append([T2,ClAss,PrAss],NewExpQueue).
+
 
 /*
 apply_all_rules(M,ABox0,ABox):-
@@ -1693,7 +1710,7 @@ individual_class_C([_H|T],C,ABox,T1):-
  ============
 */
 
-o_rule(M,(ABox0,Tabs0),(oneOf([C]),X)-EQ0,([(sameIndividual(LI),ExplC)|ABox],Tabs)-EQ):-
+o_rule(M,(ABox0,Tabs0),(oneOf([C]),X)-EQ,([(sameIndividual(LI),ExplC)|ABox],Tabs)-EQ):-
   findClassAssertion(oneOf([C]),X,ExplX,ABox0),
   findClassAssertion(oneOf([D]),Y,ExplY,ABox0),
   dif(X,Y),
@@ -1844,21 +1861,6 @@ writeABox((ABox,_)):-
 init_expand_abox_wt_hierarchy(M,(ABox0,Tabs),(ABox,Tabs)):-
   findall((C,Ind,Expl),findClassAssertion(C,Ind,Expl,ABox0),ClAss),
   expand_abox_wt_hierarchy(M,ClAss,ABox0,ABox).
-
-init_expansion_queue(LCA,LPA,EQ):-
-  add_classes_expqueue(LCA,EQ0),
-  add_prop_expqueue(LPA,EQ1),
-  append(EQ0,EQ1,EQ).
-
-add_classes_expqueue([],[]).
-
-add_classes_expqueue([(classAssertion(C,I),_)|T],[(C,I)|T0]):-
-  add_classes_expqueue(T,T0).
-
-add_prop_expqueue([],[]).
-
-add_prop_expqueue([(propertyAssertion(P,S,O),_)|T],[(P,S,O)|T0]):-
-  add_prop_expqueue(T,T0).
 
 
 /***********
@@ -2072,17 +2074,17 @@ remove_node_from_table(S,T0,T1):-
 /*
  * merge
  */
-merge(M,sameIndividual(L),Y,Expl,(ABox0,Tabs0)-EQ0,(ABox,Tabs)-EQ):-
+merge(M,sameIndividual(L),Y,Expl,(ABox0,Tabs0)-EQ,(ABox,Tabs)-EQ):-
   !,
   merge_tabs(L,Y,Tabs0,Tabs),
   merge_abox(M,L,Y,Expl,ABox0,ABox).
 
-merge(M,X,sameIndividual(L),Expl,(ABox0,Tabs0)-EQ0,(ABox,Tabs)-EQ):-
+merge(M,X,sameIndividual(L),Expl,(ABox0,Tabs0)-EQ,(ABox,Tabs)-EQ):-
   !,
   merge_tabs(X,L,Tabs0,Tabs),
   merge_abox(M,X,L,Expl,ABox0,ABox).
 
-merge(M,X,Y,Expl,(ABox0,Tabs0)-EQ0,(ABox,Tabs)-EQ):-
+merge(M,X,Y,Expl,(ABox0,Tabs0)-EQ,(ABox,Tabs)-EQ):-
   !,
   merge_tabs(X,Y,Tabs0,Tabs),
   merge_abox(M,X,Y,Expl,ABox0,ABox).
