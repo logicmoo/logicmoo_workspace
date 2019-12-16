@@ -219,14 +219,14 @@ build_abox(M,(ABox,Tabs)-ExpansionQueue):-
   add_all(LPA,ABox1,ABox3),
   %add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  init_expansion_queue(LCA,LPA,ExpansionQueue),
+  init_expansion_queue(LCA,LPA,ExpansionQueue0),
   findall((differentIndividuals(Ld),*([differentIndividuals(Ld)])),M:differentIndividuals(Ld),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs4),
   %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),*([sameIndividual(L)])),M:sameIndividual(L),LSIA),
-  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
+  merge_all(M,LSIA,ABox5,Tabs4,ExpansionQueue0,ABox6,Tabs,ExpansionQueue),
   add_nominal_list(M,ABox6,Tabs,ABox),
   !.
 
@@ -764,9 +764,8 @@ bdd_and(M,Env,[_H|T],BDDAnd):- !,
 bdd_or(M,Env,[*(X)],BDDX):-!,
   bdd_and(M,Env,X,BDDX).
 
-bdd_or(_,_Env,[+(_X)],_BDDX):-
-  write('error: +([+(_)])'),
-  print_message(error,or_in_or),!,false.
+bdd_or(M,Env,[+(X)],BDDX):-
+  bdd_or(M,Env,X,BDDX).
 
 bdd_or(M,Env,[X],BDDX):-
   get_prob_ax(M,X,AxN,Prob),!,
@@ -782,9 +781,10 @@ bdd_or(M,Env,[*(H)|T],BDDAnd):-!,
   bdd_or(M,Env,T,BDDT),
   or(Env,BDDH,BDDT,BDDAnd).
 
-bdd_or(_,_Env,[+(_H)|_T],_BDDX):-
-  write('error: +([+(_)|_])'),
-  print_message(error,or_in_or),!,false.
+bdd_or(M,Env,[+(H)|T],BDDX):-
+  bdd_or(M,Env,H,BDDH),
+  bdd_or(M,Env,T,BDDT),
+  or(Env,BDDH,BDDT,BDDX).
 
 bdd_or(M,Env,[H|T],BDDAnd):-
   get_prob_ax(M,H,AxN,Prob),!,

@@ -220,15 +220,15 @@ build_abox(M,(ABox,Tabs)-ExpansionQueue):-
   add_all(LPA,ABox1,ABox3),
   %add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  init_expansion_queue(LCA,LPA,ExpansionQueue),
+  init_expansion_queue(LCA,LPA,ExpansionQueue0),
   findall((differentIndividuals(Ld),BDDDIA),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs4),
   %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),BDDSIA),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
-  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_nominal_list(ABox6,Tabs,ABox),
+  merge_all(M,LSIA,ABox5,Tabs4,ExpansionQueue0,ABox6,Tabs,ExpansionQueue),
+  add_nominal_list(M,ABox6,Tabs,ABox),
   !.
 
 /**********************
@@ -367,6 +367,18 @@ test(M,L1,L2,F):-
   or_f(M,L1,L2,F),
   dif(L2,F).
 
+
+/**********************
+
+Choice Points Management
+
+***********************/
+
+get_choice_point_id(_,0).
+
+create_choice_point(_,_,_,_,_,0).
+
+add_choice_point(_,_,Expl,Expl):- !.
 
 /**********************
 
