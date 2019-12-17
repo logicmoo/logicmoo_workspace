@@ -1,3 +1,4 @@
+/* mapping.pl */
 
 /* 
   PROGETTO LABORATORIO INTELLIGENZA ARTIFICIALE 
@@ -5,9 +6,8 @@
       ottenute da TRILL da una sintassi Prolog ad una sintassi OWL.
 */
 
-/* File mapping.pl */
-
 /*  
+@author
 
     Matilda Moro 
     N° Matricola 124130
@@ -77,10 +77,6 @@ prolog2function(disjointUnion(IRI,ListaClassExpression), ECFunc):- %'DisjointUni
   classExpression2function(IRI,ClassExpressionFunctional),
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
   appendFunctional2('DisjointUnion',[ClassExpressionFunctional|L],ECFunc).
-
-
-
-/* propertyAxiom(:Axiom) */
 
 % subPropertyOf(?Sub:PropertyExpression, ?Super:ObjectPropertyExpression)
 prolog2function(subPropertyOf(PropertyExpression1, PropertyExpression2), SPFunc):- 
@@ -170,6 +166,9 @@ prolog2function(differentIndividual(ListIndividual), DIFunc ) :- %'DifferentIndi
   findall(IEF,(member(IE, ListIndividual), individual2function(IE,IEF)),A),
   appendFunctional('DifferentIndividual', A, DIFunc).
 
+
+/* Assertion */
+
 % classAssertion(?ClassExpression, ?Individual)               
 prolog2function(classAssertion(ClassExpression, IndividualExpression), CAFunc) :- %'ClassAssertion(axiomAnnotations, ClassExpression Individual)').
   classExpression2function(ClassExpression,ClassExpressionF),
@@ -177,14 +176,14 @@ prolog2function(classAssertion(ClassExpression, IndividualExpression), CAFunc) :
   appendFunctional('ClassAssertion',[ClassExpressionF,IndividualExpressionF],CAFunc).
 
 % propertyAssertion(?PropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)               
-prolog2function(propertyAssertion(PropertyExpression, IndividualExpression1, IndividualExpression2), OPAFunc ):- %'ObjectPropertyAssertion( axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). %? 1property2expression 2individual2function
+prolog2function(propertyAssertion(PropertyExpression, IndividualExpression1, IndividualExpression2), OPAFunc ):- %'ObjectPropertyAssertion( axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). 
   propertyExpression2function(PropertyExpression,PropertyExpressionF),
   individual2function(IndividualExpression1, IndividualExpression1F),
   individual2function(IndividualExpression2, IndividualExpression2F),
   appendFunctional('ObjectPropertyAssertion', [PropertyExpressionF, IndividualExpression1F, IndividualExpression2F], OPAFunc).
 
 % negativePropertyAssertion(?PropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)
-prolog2function(negativePropertyAssertion(PropertyExpression, IndividualExpression1, IndividualExpression2), NOPAFunc ):- %'NegativeObjectPropertyAssertion(axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). %?
+prolog2function(negativePropertyAssertion(PropertyExpression, IndividualExpression1, IndividualExpression2), NOPAFunc ):- %'NegativeObjectPropertyAssertion(axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). 
   propertyExpression2function(PropertyExpression,PropertyExpressionF),
   individual2function(IndividualExpression1, IndividualExpression1F),
   individual2function(IndividualExpression2, IndividualExpression2F),
@@ -194,7 +193,7 @@ prolog2function(negativePropertyAssertion(PropertyExpression, IndividualExpressi
 /* Annotation */
 
 % annotationAssertion(?AnnotationProperty, ?AnnotationSubject, ?AnnotationValue)
-prolog2function(annotationAssertion(AnnotationProperty, AnnotationSubject, AnnotationValue),AAFunc):- %'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)' %?
+prolog2function(annotationAssertion(AnnotationProperty, AnnotationSubject, AnnotationValue),AAFunc):- %'AnnotationAssertion(axiomAnnotations, AnnotationProperty, AnnotationSubject AnnotationValue)'.
   propertyExpression2function(AnnotationProperty, AnnotationPropertyF),
   propertyExpression2function(AnnotationSubject, AnnotationSubjectF),
   (
@@ -240,7 +239,7 @@ prolog2function(ontologyVersionInfo(ontology(IRI), OVFunc)):-
   appendFunctional1('OntologyVersionInfo', [IRI], OVFunc).
 
 
-/* Conversion */
+/*Class expression*/
 
 classExpression2function(CE,CEF):- 
   iri(CE,CEF); 
@@ -299,7 +298,7 @@ iri(IRI,IRIF) :-
 % objectIntersectionOf(+CE) is semidet
 objectIntersectionOf(intersectionOf(CEs),ClassExpressionFL):-
    ClassExpressionF = 'ObjectIntersectionOf',
-   findall(CEF,(member(CE,CEs),classExpression2function(CE,CEF)),L),% appendFunctional stringhe in L su classExpressionF
+   findall(CEF,(member(CE,CEs),classExpression2function(CE,CEF)),L),
    appendFunctional(ClassExpressionF,L,ClassExpressionFL).
 
 % objectSomeValuesFrom(+R) is semidet
@@ -424,14 +423,17 @@ dataExactCardinality(exactCardinality(C, P), DECFunc):-
 
 /* Lists concatenation */
 
+/* Axiom */
 appendFunctional(Pred, Lista, Ris):-
   atomic_list_concat([Pred,'('|Lista], Atom), 
   atomic_concat(Atom, ')', Ris).   
 
+/* Ontology */
 appendFunctional1(Pred1, Lista1, Ris1):-
   atomic_list_concat([Pred1,'(<'|Lista1], Atom1), 
   atomic_concat(Atom1, '>', Ris1).
 
+/* Declaration */
 appendFunctional2(Pred2, Lista2, Ris2):-
     atomic_concat('Declaration(',Pred2, Atom2),
     atomic_list_concat([Atom2,'('|Lista2], Atom3), 
