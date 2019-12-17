@@ -68,7 +68,7 @@ prolog2function(equivalentClasses(ListaClassExpression), ECFunc):-  %'Equivalent
   appendFunctional('EquivalentClasses',L,ECFunc).
 
 % disjointClasses(?ClassExpressions:set(ClassExpression))
-prolog2function(disjointClasses(ListaClassExpression), DCFunc):- %'DisjointClasses(axiomAnnotations, ClassExpression, ClassExpression { ClassExpression })'). % come equivalent
+prolog2function(disjointClasses(ListaClassExpression), DCFunc):- %'DisjointClasses(axiomAnnotations, ClassExpression, ClassExpression { ClassExpression })'). 
   findall(CEF,(member(CE,ListaClassExpression),classExpression2function(CE,CEF)),L),
   appendFunctional('DisjointClasses',L,DCFunc).
 
@@ -118,27 +118,27 @@ prolog2function(functionalProperty(PropertyExpression),FOPFunc) :- %'FunctionalO
   appendFunctional('FunctionalObjectProperty',[IRI] ,FOPFunc).
 
 % inverseFunctionalProperty(?ObjectPropertyExpression)
-prolog2function(inverseFunctionalProperty(PropertyExpression), IFPFunc):- %'InverseFunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression'). %? gestisco come quelle sopra
+prolog2function(inverseFunctionalProperty(PropertyExpression), IFPFunc):- %'InverseFunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression').
   propertyExpression2function(PropertyExpression,IRI),
   appendFunctional('InverseFunctionalObjectProperty',[IRI] ,IFPFunc).
 
 % reflexiveProperty(?ObjectPropertyExpression)
-prolog2function(reflexiveProperty(PropertyExpression), RPFunc) :- % ReflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %? 
+prolog2function(reflexiveProperty(PropertyExpression), RPFunc) :- % ReflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). 
   propertyExpression2function(PropertyExpression,IRI),
   appendFunctional('ReflexiveObjectProperty',[IRI] ,RPFunc).
 
 % irreflexiveProperty(?ObjectPropertyExpression)
-prolog2function(irreflexiveProperty(PropertyExpression), IOPFunc):- %'IrreflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  %? 
+prolog2function(irreflexiveProperty(PropertyExpression), IOPFunc):- %'IrreflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  
   propertyExpression2function(PropertyExpression,IRI),
   appendFunctional('IrreflexiveObjectProperty', [IRI] ,IOPFunc).             
 
 % symmetricProperty(?ObjectPropertyExpression)
-prolog2function(symmetricProperty(PropertyExpression), SOPFunc) :- %'SymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %?              
+prolog2function(symmetricProperty(PropertyExpression), SOPFunc) :- %'SymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').              
   propertyExpression2function(PropertyExpression,IRI),
   appendFunctional('SymmetricObjectProperty', [IRI] ,SOPFunc).             
 
 % asymmetricProperty(?ObjectPropertyExpression)
-prolog2function(asymmetricProperty(PropertyExpression), AOPFunc):- %'AsymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  %?             
+prolog2function(asymmetricProperty(PropertyExpression), AOPFunc):- %'AsymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').             
   propertyExpression2function(PropertyExpression,IRI),
   appendFunctional('AsymmetricObjectProperty', [IRI] ,AOPFunc).             
 
@@ -148,7 +148,7 @@ prolog2function(transitiveProperty(PropertyExpression), TOPFunc):- %'TransitiveO
   appendFunctional('TransitiveObjectProperty', [IRI] ,TOPFunc).             
 
 % hasKey(?ClassExpression,?PropertyExpression)
-prolog2function(hasKey(ClassExpression,PropertyExpression), HKFunc):- %'HasKey(axiomAnnotations ClassExpression({ ObjectPropertyExpression }) ({ DataPropertyExpression }))'). %? come proprerty domain ma al contrario
+prolog2function(hasKey(ClassExpression,PropertyExpression), HKFunc):- %'HasKey(axiomAnnotations ClassExpression({ ObjectPropertyExpression }) ({ DataPropertyExpression }))'). 
   classExpression2function(ClassExpression,ClassExpressionF),
   propertyExpression2function(PropertyExpression,PropertyExpressionF),
   appendFunctional('HasKey',[ClassExpressionF,PropertyExpressionF],HKFunc).
