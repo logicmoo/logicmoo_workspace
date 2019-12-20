@@ -1,6 +1,6 @@
 :- use_module(library(trill)).
 
-:- trillp.
+:- trill.
 
 
 %subClassOf(a,unionOf([b,c])).
