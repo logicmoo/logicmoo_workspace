@@ -465,7 +465,7 @@ unsat_internal(M:Concept,Expl,Assert_ABox):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs),''),
+  build_abox(M,(ABox,Tabs),trillan(1)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
@@ -502,7 +502,7 @@ unsat_internal(M:Concept):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs),''),
+  build_abox(M,(ABox,Tabs),trillan(1)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
