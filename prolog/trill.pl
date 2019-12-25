@@ -1,16 +1,12 @@
 /** <module> trill
-
 This module performs reasoning over probabilistic description logic knowledge bases.
 It reads probabilistic knowledge bases in RDF format or in Prolog format, a functional-like
 sintax based on definitions of Thea library, and answers queries by finding the set 
 of explanations or computing the probability.
-
 [1] http://vangelisv.github.io/thea/
-
 See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
 details.
-
 @version 5.2.1
 @author Riccardo Zese
 @license Artistic License 2.0
@@ -300,6 +296,9 @@ instanceOf(M:Class,Ind):-
 findDirect(M:Concept, List) :- findall(Expl, (check_query_args(M,[Concept],[ConceptEx]), M:propertyAssertion(_, ConceptEx, Expl), namedIndividual(Expl)), List).
 findDirect2(M:Concept, List) :- findall(Expl, (check_query_args(M,[Concept],[ConceptEx]), M:propertyAssertion(_, Expl, ConceptEx), namedIndividual(Expl)), List).
 
+intersect([H|_], List) :- member(H, List), !.
+intersect([_|T], List) :- intersect(T, List).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% restituisco tutti i nodi correlati direttamente o indirettamente al nodo di partenza  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,12 +318,12 @@ scanList([H|T], Acc, List, Node) :- (\+member(H, Node) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% restituisce il nodo da cui parto e tutti quelli collegati direttamente o indirettamente a lui   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-findIndirect(M:Concept, List) :- ((check_query_args(M,[Concept],[ConceptEx]), namedIndividual(ConceptEx)) ->
-				 	scanList([ConceptEx], [], Final, []),
-				 	flatten(Final, List)
+findIndirect(M:Concept, List) :- (namedIndividual(Concept) ->
+					scanList([Concept], [], Final, []),
+			       		flatten(Final, List)
 					;
 					List = []
-				  ).
+				).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -465,7 +464,7 @@ unsat_internal(M:Concept,Expl,Assert_ABox):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs),''),
+  build_abox(M,(ABox,Tabs),trillan(1)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
@@ -502,7 +501,7 @@ unsat_internal(M:Concept):-
   retractall(M:exp_found(_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs),''),
+  build_abox(M,(ABox,Tabs),trillan(1)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
      	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
@@ -787,7 +786,6 @@ clash(M,(ABox,Tabs),Expl):-
 % --------------
 /*
 make_expl(_,_,[],Expl1,_,Expl1).
-
 make_expl(Ind,S,[H|T],Expl1,ABox,[Expl2|Expl]):-
   findPropertyAssertion(S,Ind,H,Expl2,ABox),
   make_expl(Ind,S,T,Expl1,ABox,Expl).
@@ -834,7 +832,6 @@ apply_all_rules(M,ABox0,ABox):-
   (ABox0=ABox1 ->
   ABox=ABox1;
   apply_all_rules(M,ABox1,ABox)).
-
 apply_det_rules([],ABox,ABox).
 apply_det_rules([H|_],ABox0,ABox):-
   %C=..[H,ABox,ABox1],
@@ -854,94 +851,75 @@ apply_nondet_rules([_|T],ABox0,ABox):-
 
 /**********************
    old version for the rules application
-
 apply_rules_0((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules((ABox0,Tabs0),(ABox,Tabs)):-
   %writel(ABox0),nl,
   %apply_rules1((ABox0,Tabs0),(ABox,Tabs)).
   apply_rules1_1((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules1_1((ABox0,Tabs0),(ABox,Tabs)):-
   %write('o_rule: '),nl,
   o_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules1_1((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules1((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules1((ABox0,Tabs0),(ABox,Tabs)):-
   %write('and_rule: '),nl,
   and_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules1((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules2((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules2((ABox0,Tabs0),(ABox,Tabs)):-
   %write('exists_rule: '),nl,
   exists_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules2((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules3((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules3((ABox0,Tabs0),(ABox,Tabs)):-
   %write('forall_rule: '), nl,
   forall_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules3((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules3_1((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules3_1((ABox0,Tabs0),(ABox,Tabs)):-
   %write('forall_plus_rule: '),nl,
   forall_plus_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules3_1((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules4((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules4((ABox0,Tabs0),(ABox,Tabs)):-
   %write('min_rule: '),nl,
   min_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules4((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules5((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules5((ABox0,Tabs0),(ABox,Tabs)):-
   %write('unfold_rule: '),nl,
   unfold_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules5((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules6((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules6((ABox0,Tabs0),(ABox,Tabs)):-
   %write('add_exists_rule: '),nl,
   add_exists_rule((ABox0,Tabs0),(ABox1,Tabs1)),!,
   %writel(ABox1),nl,
   %write('apllyied'),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules6((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules7((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules7((ABox0,Tabs0),(ABox,Tabs)):-
   %write('or_rule: '),nl,
   or_rule((ABox0,Tabs0),L),!,
@@ -949,10 +927,8 @@ apply_rules7((ABox0,Tabs0),(ABox,Tabs)):-
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules7((ABox0,Tabs0),(ABox,Tabs)):-
   apply_rules8((ABox0,Tabs0),(ABox,Tabs)).
-
 apply_rules8((ABox0,Tabs0),(ABox,Tabs)):-
   %write('max_rule: '),nl,
   max_rule((ABox0,Tabs0),L),!,
@@ -960,9 +936,7 @@ apply_rules8((ABox0,Tabs0),(ABox,Tabs)):-
   %write('apllyied'),nl,
   %writel(ABox1),nl,
   apply_rules((ABox1,Tabs1),(ABox,Tabs)).
-
 apply_rules8((ABox,Tabs),(ABox,Tabs)).
-
 */
 
 
@@ -992,9 +966,6 @@ existsInKB(M,R,C):-
   member(someValuesFrom(R,C),[A,B]).
 
 existsInKB(M,R,C):-
-  write('M - '), write(M), write(nl),
-  write('R - '), write(R), write(nl),
-  write('C - '), write(C), write(nl),
   M:equivalentClasses(L),
   member(someValuesFrom(R,C),L).
 
@@ -1278,38 +1249,29 @@ find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S))
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:subClassOf(A,B),
   member(C,[A,B]),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:classAssertion(C,_),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(C,L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:unionOf(L),
   member(C,L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(someValuesFrom(_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(allValuesFrom(_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(minCardinality(_,_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(maxCardinality(_,_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(exactCardinality(_,_,C),L),!.
-
 */
 
 %--------------------
@@ -1328,7 +1290,6 @@ find_not_atomic(M,C,unionOf(L1),L1):-
 find_not_atomic(M,C,intersectionOf(L),L):-
   M:intersectionOf(L),
   member(C,L).
-
 find_not_atomic(M,C,unionOf(L),L):-
   M:unionOf(L),
   member(C,L).
@@ -1619,9 +1580,7 @@ blocked(Ind,(ABox,T)):-
   check_block(Ind,(ABox,T)).
 
 /*
-
   control for block an individual
-
 */
 
 check_block(Ind,(ABox,(T,RBN,RBR))):-
@@ -1769,7 +1728,6 @@ create_tabs([(classAssertion(_,I),_Expl)|Tail],(T0,RBN,RBR),(T,RBN,RBR)):-
 
 /*
   add edge to tableau
-
   add_edge(Property,Subject,Object,Tab0,Tab)
 */
 
@@ -1821,7 +1779,6 @@ graph_edge(Ind1,Ind2,T0):-
 
 /*
   remove edges and nodes from tableau
-
   To remove a node from the tableau use remove_node(Node,Tabs0,Tabs)
 */
 
@@ -2076,10 +2033,8 @@ control(El,ABox):-
 /* abox as a red-black tree */
 /*new_abox(T):-
   rb_new(T).
-
 add(A,(Ass,Ex),A1):-
   rb_insert(A,(Ass,Ex),[],A1).
-
 find((Ass,Ex),A):-
   rb_lookup((Ass,Ex),_,A).
 */
@@ -2087,7 +2042,6 @@ find((Ass,Ex),A):-
 
 /*
   creation of a new individual
-
 */
 new_ind(M,trillan(I)):-
   retract(M:trillan_idx(I)),
@@ -2096,7 +2050,6 @@ new_ind(M,trillan(I)):-
 
 /*
   same label for two individuals
-
 */
 
 same_label(X,Y,ABox):-
@@ -2105,7 +2058,6 @@ same_label(X,Y,ABox):-
 
 /*
   different label in two individuals
-
 */
 
 different_label(X,Y,ABox):-
@@ -2119,7 +2071,6 @@ different_label(X,Y,ABox):-
 
 /*
   all nodes in path from X to Y are blockable?
-
 */
 
 all_node_blockable(X,Y,(ABox,(T,RBN,RBR))):-
@@ -2160,7 +2111,6 @@ min_length([H|T],MP):-
      MP= P).
 /*
  find all ancestor of a node
-
 */
 ancestor(Ind,T,AN):-
   transpose_ugraph(T,T1),
@@ -2176,10 +2126,8 @@ ancestor1([Ind|Tail],T,A,AN):-
 
 %-----------------
 /*
-
  add_all_n(L1,L2,LO)
  add in L2 all item of L1 without duplicates
-
 */
 
 add_all_n([],A,A).
@@ -2291,22 +2239,17 @@ s_predecessors2(M,[H|T],T1,ABox):-
 /* *************
    Probability computation
    Old version
-
    ************* */
 
 /*
 build_formula([],[],Var,Var).
-
 build_formula([D|TD],TF,VarIn,VarOut):-
         build_term(D,[],[],VarIn,Var1),!,
         build_formula(TD,TF,Var1,VarOut).
-
 build_formula([D|TD],[F|TF],VarIn,VarOut):-
         build_term(D,[],F,VarIn,Var1),
         build_formula(TD,TF,Var1,VarOut).
-
 build_term([],F,F,Var,Var).
-
 build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
   (p_x(Ax,_)->
     (nth0_eq(0,NVar,VarIn,(Ax,S))->
@@ -2329,7 +2272,6 @@ build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
       build_term(TC,F0,F,VarIn,VarOut)
     )
   ).
-
 build_term([Ax|TC],F0,F,VarIn,VarOut):-!,
   (p(Ax,_)->
     (nth0_eq(0,NVar,VarIn,(Ax,[]))->
@@ -2352,45 +2294,34 @@ the position in the List that contains an element exactly equal to El
 /*
 nth0_eq(N,N,[H|_T],El):-
         H==El,!.
-
 nth0_eq(NIn,NOut,[_H|T],El):-
         N1 is NIn+1,
         nth0_eq(N1,NOut,T,El).
-
 */
 /* var2numbers converts a list of couples (Rule,Substitution) into a list
 of triples (N,NumberOfHeadsAtoms,ListOfProbabilities), where N is an integer
 starting from 0 */
 /*
 var2numbers([],_N,[]).
-
 var2numbers([(R,_S)|T],N,[[N,2,[Prob,Prob1,0.3,0.7]]|TNV]):-
         (p(R,_);p_x(R,_)),
         compute_prob_ax(R,Prob),!,
         Prob1 is 1-Prob,
         N1 is N+1,
         var2numbers(T,N1,TNV).
-
-
 compute_prob_ax(R,Prob):-
   findall(P, p(R,P),Probs),
   compute_prob_ax1(Probs,Prob).
-
 compute_prob_ax1([Prob],Prob):-!.
-
 compute_prob_ax1([Prob1,Prob2],Prob):-!,
   Prob is Prob1+Prob2-(Prob1*Prob2).
-
 compute_prob_ax1([Prob1 | T],Prob):-
   compute_prob_ax1(T,Prob0),
   Prob is Prob1 + Prob0 - (Prob1*Prob0).
-
 */
 
 /**********************
-
  Probability Computation
-
 ***********************/
 
 :- thread_local
@@ -2582,4 +2513,3 @@ user:term_expansion((:- tornado),[]):-
   set_algorithm(M:tornado),
   set_up(M),
   trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
-

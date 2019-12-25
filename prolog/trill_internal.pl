@@ -1,16 +1,12 @@
 /* trill predicates
-
 This module performs reasoning over probabilistic description logic knowledge bases.
 It reads probabilistic knowledge bases in RDF format or in Prolog format, a functional-like
 sintax based on definitions of Thea library, and answers queries by finding the set 
 of explanations or computing the probability.
-
 [1] http://vangelisv.github.io/thea/
-
 See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
 details.
-
 @author Riccardo Zese
 @license Artistic License 2.0
 @copyright Riccardo Zese
@@ -349,7 +345,12 @@ absent2([_|T],Expl):-
 build_abox(M,(ABox,Tabs),InitialIndividual):-
   retractall(M:final_abox(_)),
   findIndirect(InitialIndividual,List),
-  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),M:classAssertion(Class,Individual),LCA),
+  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),(M:classAssertion(Class,Individual),
+	(((InitialIndividual \== ''), namedIndividual(Individual)) ->
+		member(Individual, List)
+		;
+		true
+	)),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),(M:propertyAssertion(Property,Subject, Object),
 	(((InitialIndividual \== ''), namedIndividual(Subject)) ->
 		member(Subject, List)
@@ -357,7 +358,12 @@ build_abox(M,(ABox,Tabs),InitialIndividual):-
 		true
 	)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
-  findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
+  findall(nominal(NominalIndividual),(M:classAssertion(oneOf(_),NominalIndividual),
+	(((InitialIndividual \== ''), namedIndividual(NominalIndividual)) ->
+		member(NominalIndividual, List)
+		;
+		true
+	)),LNA),
   new_abox(ABox0),
   new_tabs(Tabs0),
   create_tabs(LCA,Tabs0,Tabs1),
@@ -365,12 +371,22 @@ build_abox(M,(ABox,Tabs),InitialIndividual):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]]),M:differentIndividuals(Ld),LDIA),
+  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]]),(M:differentIndividuals(Ld), 
+	(namedIndividual(InitialIndividual) ->
+		intersect(Ld, List)
+		;
+		true
+	)),LDIA),
   add_all(LDIA,ABox4,ABox5),
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),[[sameIndividual(L)]]),M:sameIndividual(L),LSIA),
+  findall((sameIndividual(L),[[sameIndividual(L)]]),(M:sameIndividual(L), 
+	(namedIndividual(InitialIndividual) ->
+		intersect(L, List)
+		;
+		true
+	)),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
   add_nominal_list(ABox6,Tabs,ABox),
   !.
@@ -379,9 +395,7 @@ build_abox(M,(ABox,Tabs),InitialIndividual):-
 /* ********** */
 
 /**********************
-
 Explanation Management
-
 ***********************/
 
 initial_expl(_M,[]):-!.
@@ -415,9 +429,7 @@ and_f2(L1,[H2|T2],[H|T]):-
 
 
 /**********************
-
  TRILL Probability Computation
-
 ***********************/
 
 get_bdd_environment(_M,Env):-
@@ -460,4 +472,3 @@ bdd_and(M,Env,[_H|T],BDDAnd):- !,
   one(Env,BDDH),
   bdd_and(M,Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
-
