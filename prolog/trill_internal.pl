@@ -12,7 +12,6 @@ details.
 @copyright Riccardo Zese
 */
 
-
 /********************************
   SETTINGS
 *********************************/
@@ -22,6 +21,7 @@ setting_trill(nondet_rules,[or_rule,max_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
+  init_delta(M),
   M:(dynamic exp_found/2).
 
 clean_up(M):-
@@ -55,33 +55,108 @@ compute_prob_and_close(M,Exps,Prob):-
   compute_prob(M,Exps,Prob).
 
 % checks the explanation
-check_and_close(_,Expl,Expl):-
-  dif(Expl,[]).
+check_and_close(_,Expl0,Expl):-
+  dif(Expl0,[]),
+  sort(Expl0,Expl).
 
 
 % checks if an explanations was already found
-find_expls(_M,[],_,[]).
+find_expls(M,[],[C,I],E):-
+  %findall(Exp-CPs,M:exp_found([C,I,CPs],Exp),Expl),
+  %dif(Expl,[]),
+  find_expls_from_choice_point_list(M,[C,I],E).
+
+find_expls(M,[],[C,I],E):-
+  findall(Exp,M:exp_found([C,I],Exp),Expl0),
+  remove_supersets(Expl0,Expl),!,
+  member(E,Expl).
+
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|_T],[C,I],E):-
+find_expls(M,[ABox|_T],[C,I],E):- %gtrace,
   clash(M,ABox,EL0),
-  member(E0,EL0),
+  member(E0-CPs0,EL0),
   sort(E0,E),
-  findall(Exp,M:exp_found([C,I],Exp),Expl),
-  not_already_found(M,Expl,[C,I],E),
-  assert(M:exp_found([C,I],E)).
+  (dif(CPs0,[]) ->
+    (
+    get_latest_choice(CPs0,ID,Choice),
+    subtract(CPs0,[cpp(ID,Choice)],CPs),
+    update_choice_point_list(M,ID,Choice,E,CPs),
+    fail
+    )
+    ;
+    (%findall(Exp,M:exp_found([C,I],Exp),Expl),
+     %not_already_found(M,Expl,[C,I],E),
+     assert(M:exp_found([C,I],E)),
+     fail
+    )
+  ).
 
 % checks if an explanations was already found (property_value version)
 find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
   member(E,Es),
-  findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
-  not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
+  %findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
+  %not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
 
 find_expls(M,[_ABox|T],Query,Expl):-
-  \+ length(T,0),
+  %\+ length(T,0),
   find_expls(M,T,Query,Expl).
+
+
+combine_expls_from_nondet_rules(M,[C,I],cp(_,_,_,_,_,Expl),E):-
+  check_non_empty_choice(Expl,ExplList),
+  and_all_f(M,ExplList,ExplanationsList),
+  %check_presence_of_other_choices(ExplanationsList,Explanations,Choices),
+  member(E0-Choices,ExplanationsList),
+  sort(E0,E),
+  (
+    dif(Choices,[]) ->
+    (
+      %TODO gestione altri cp
+      get_latest_choice(Choices,ID,Choice),
+      subtract(Choices,[cpp(ID,Choice)],CPs),
+      update_choice_point_list(M,ID,Choice,E,CPs),
+      fail % to force recursion
+    ) ;
+    (
+      %findall(Exp,M:exp_found([C,I],Exp),ExplFound),
+      %not_already_found(M,ExplFound,[C,I],E),
+      assert(M:exp_found([C,I],E)),
+      fail
+    )
+  ).
+
+find_expls_from_choice_point_list(M,QI,E):-
+  extract_choice_point_list(M,CP),
+  (
+    combine_expls_from_nondet_rules(M,QI,CP,E) ;
+    find_expls_from_choice_point_list(M,QI,E)
+  ).
+
+
+check_non_empty_choice(Expl,ExplList):-
+  dict_pairs(Expl,_,PairsList),
+  findall(Ex,member(_-Ex,PairsList),ExplList),
+  \+ memberchk([],ExplList).
+
+
+check_presence_of_other_choices([],[],[]).
+
+check_presence_of_other_choices([E-[]|ExplanationsList],[E|Explanations],Choices):- !,
+  check_presence_of_other_choices(ExplanationsList,Explanations,Choices).
+
+check_presence_of_other_choices([E-CP|ExplanationsList],[E|Explanations],[CP|Choices]):-
+  check_presence_of_other_choices(ExplanationsList,Explanations,Choices).
+
+check_CP([],_).
+
+check_CP([cp(CP,N)|CPT],L):-
+  findall(cp,member(_-[cp(CP,N)|CPT],L),ExplPartsList),
+  length(ExplPartsList,N),
+  check_CP(CPT,L).
+
 
 not_already_found(_M,[],_Q,_E):-!.
 
@@ -95,6 +170,54 @@ not_already_found(M,[H|_T],Q,E):-
 
 not_already_found(M,[_H|T],Q,E):-
   not_already_found(M,T,Q,E).
+
+
+get_latest_choice([],0,0).
+
+get_latest_choice(CPs,ID,Choice):-
+  get_latest_choice_point(CPs,0,ID),
+  get_latest_choice_of_cp(CPs,ID,0,Choice).
+
+get_latest_choice_point([],ID,ID).
+
+get_latest_choice_point([cpp(ID0,_)|T],ID1,ID):-
+  ID2 is max(ID1,ID0),
+  get_latest_choice_point(T,ID2,ID).
+
+
+get_latest_choice_of_cp([],_,C,C).
+
+get_latest_choice_of_cp([cpp(ID,C0)|T],ID,C1,C):- !,
+  C2 is max(C1,C0),
+  get_latest_choice_of_cp(T,ID,C2,C).
+
+get_latest_choice_of_cp([_|T],ID,C1,C):-
+  get_latest_choice_of_cp(T,ID,C1,C).
+
+
+remove_supersets([H|T],ExplanationsList):-
+  remove_supersets([H],T,ExplanationsList).
+
+remove_supersets(E,[],E).
+
+remove_supersets(E0,[H|T],ExplanationsList):-
+  remove_supersets_int(E0,H,E),
+  remove_supersets(E,T,ExplanationsList).
+
+remove_supersets_int(E0,H,E0):-
+  memberchk(H,E0),!.
+
+remove_supersets_int(E0,H,E0):-
+  member(H1,E0),
+  subset(H1,H),!.
+
+remove_supersets_int(E0,H,E):-
+  member(H1,E0),
+  subset(H,H1),!,
+  nth0(_,E0,H1,E1),
+  remove_supersets_int(E1,H,E).
+
+remove_supersets_int(E,H,[H|E]).
 
 /****************************/
 
@@ -131,7 +254,7 @@ find_neg_class(maxCardinality(N,R,C),minCardinality(NMin,R,C)):-
   NMin is N + 1.
 
 %-----------------
-:- multifile find_sub_sup_class/3.
+:- multifile find_sub_sup_class/4.
 
 %role for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R,S)):-
@@ -197,7 +320,7 @@ modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
   ).
 
 modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
-  ( find((propertyAssertion(P,Ind1,Ind2),Expl),ABox0) ->
+  ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
     )
@@ -306,26 +429,21 @@ absent0(Expl0,Expl1,Expl):-
 
 absent1(Expl,[],Expl,0).
 
-absent1(Expl0,[H|T],[H|Expl],1):-
+absent1(Expl0,[H-CP|T],[H-CP|Expl],1):-
   absent2(Expl0,H),!,
   absent1(Expl0,T,Expl,_).
 
 absent1(Expl0,[_|T],Expl,Added):-
   absent1(Expl0,T,Expl,Added).
-  
-absent2([H],Expl):-
-  length([H],1),
-  subset(H,Expl) -> fail ; true.
 
-absent2([H|_T],Expl):-
-  subset(H,Expl),!,
-  fail.
+absent2([H-_],Expl):- !,
+  \+ subset(H,Expl).
 
-absent2([_|T],Expl):-
+absent2([H-_|T],Expl):-
+  \+ subset(H,Expl),!,
   absent2(T,Expl).
 
 /* **************** */
-
 
 /*
   build_abox
@@ -345,13 +463,13 @@ absent2([_|T],Expl):-
 build_abox(M,(ABox,Tabs),InitialIndividual):-
   retractall(M:final_abox(_)),
   findIndirect(InitialIndividual,List),
-  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]]),(M:classAssertion(Class,Individual),
+  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]-[]]),(M:classAssertion(Class,Individual),
 	(((InitialIndividual \== ''), namedIndividual(Individual)) ->
 		member(Individual, List)
 		;
 		true
 	)),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]]),(M:propertyAssertion(Property,Subject, Object),
+  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]-[]]),(M:propertyAssertion(Property,Subject, Object),
 	(((InitialIndividual \== ''), namedIndividual(Subject)) ->
 		member(Subject, List)
 		;
@@ -371,7 +489,7 @@ build_abox(M,(ABox,Tabs),InitialIndividual):-
   add_all(LPA,ABox1,ABox2),
   add_all(LSPA,ABox2,ABox3),
   add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]]),(M:differentIndividuals(Ld), 
+  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),(M:differentIndividuals(Ld), 
 	(namedIndividual(InitialIndividual) ->
 		intersect(Ld, List)
 		;
@@ -381,14 +499,14 @@ build_abox(M,(ABox,Tabs),InitialIndividual):-
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),[[sameIndividual(L)]]),(M:sameIndividual(L), 
+  findall((sameIndividual(L),[[sameIndividual(L)]-[]]),(M:sameIndividual(L), 
 	(namedIndividual(InitialIndividual) ->
 		intersect(L, List)
 		;
 		true
 	)),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_nominal_list(ABox6,Tabs,ABox),
+  add_nominal_list(M,ABox6,Tabs,ABox),
   !.
 
 
@@ -398,12 +516,22 @@ build_abox(M,(ABox,Tabs),InitialIndividual):-
 Explanation Management
 ***********************/
 
-initial_expl(_M,[]):-!.
+and_all_f(M,ExplPartsList,E) :-
+  empty_expl(M,EmptyE),
+  and_all_f(M,ExplPartsList,EmptyE,E).
+
+and_all_f(_,[],E,E) :- !.
+
+and_all_f(M,[H|T],E0,E):-
+  and_f(M,E0,H,E1),
+  and_all_f(M,T,E1,E).
+
+initial_expl(_M,[[]-[]]):-!.
 
 empty_expl(_M,[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
-  and_f(M,[[Axiom]],F0,F).
+  and_f(M,[[Axiom]-[]],F0,F).
 
 and_f(_M,[],[],[]):- !.
 
@@ -416,16 +544,120 @@ and_f(_M,L1,L2,F):-
 
 and_f1([],_,L,L).
 
-and_f1([H1|T1],L2,L3,L):-
-  and_f2(H1,L2,L12),
+and_f1([H1-CP1|T1],L2,L3,L):-
+  and_f2(H1,CP1,L2,L12),
   append(L3,L12,L4),
   and_f1(T1,L2,L4,L).
 
-and_f2(_,[],[]):- !.
+and_f2(_,_,[],[]):- !.
 
-and_f2(L1,[H2|T2],[H|T]):-
+and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
   append(L1,H2,H),
-  and_f2(L1,T2,T).
+  append(CP1,CP2,CP),
+  and_f2(L1,CP1,T2,T).
+
+or_f(E0,E1,E):-
+  append(E0,E1,E).
+
+/**********************
+Choice Points Management
+***********************/
+
+/*
+  Initializes delta/2 containing the list of choice points and the number of choice points created.
+  Every choice point is modeled by the predicate cp/5 containing the ID of the choice point,
+  the individual and the class that triggered the creation of the choice point,
+  the rule that created the cp:
+  - or: or_rule
+  - mr: max_rule
+  Also it contains the list of possible choices and the explanations for each choice.
+*/
+init_delta(M):-
+  retractall(M:delta(_,_)),
+  assert(M:delta([],0)).
+
+get_choice_point_id(M,ID):-
+  M:delta(_,ID).
+
+% Creates a new choice point and adds it to the delta/2 set of choice points.
+create_choice_point(M,Ind,Rule,Class,Choices,ID0):-
+  init_expl_per_choice(Choices,ExplPerChoice),
+  M:delta(CPList,ID0),
+  ID is ID0 + 1,
+  retractall(M:delta(_,_)),
+  assert(M:delta([cp(ID0,Ind,Rule,Class,Choices,ExplPerChoice)|CPList],ID)).
+
+
+init_expl_per_choice(Choices,ExplPerChoice):-
+  length(Choices,N),
+  init_expl_per_choice_int(0,N,epc{0:[]},ExplPerChoice).
+
+init_expl_per_choice_int(N,N,ExplPerChoice,ExplPerChoice).
+
+init_expl_per_choice_int(N0,N,ExplPerChoice0,ExplPerChoice):-
+  ExplPerChoice1 = ExplPerChoice0.put(N0,[]),
+  N1 is N0 + 1,
+  init_expl_per_choice_int(N1,N,ExplPerChoice1,ExplPerChoice).
+
+
+% cpp/2 is the choice point pointer. It contains the CP's ID (from the list of choice points delta/2)
+% and the pointer of the choice maide at the choice point
+add_choice_point(_,_,[],[]). 
+
+add_choice_point(_,cpp(CPID,N),[Expl-CP0|T0],[Expl-CP|T]):-
+  (
+    dif(CP0,[]) ->
+    (
+        append([cpp(CPID,N)],CP0,CP)
+    )
+    ;
+    (
+      CP = [cpp(CPID,N)]
+    )
+  ),
+  add_choice_point(_,cpp(CPID,N),T0,T).
+
+
+get_choice_point_list(M,CP):-
+  M:delta(CP,_).
+
+extract_choice_point_list(M,CP):-
+  M:delta([CP|CPList],ID),
+  retractall(M:delta(_,_)),
+  assert(M:delta(CPList,ID)).
+
+update_choice_point_list(M,ID,Choice,E,CPs):-
+  M:delta(CPList0,ID0),
+  memberchk(cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),CPList0),
+  ExplToUpdate = ExplPerChoice0.get(Choice), 
+  ( % if the set of explanations for the choice is empty it simply adds the new explanation -> union i.e., append([E-CPs],ExplToUpdate,ExplUpdated)
+    % otherwise it adds only new explanations dropping those that are already present or those that are supersets of 
+    % already present explanations -> absent(ExplToUpdate,[E-CPs],ExplUpdated)
+    dif(ExplToUpdate,[]) ->
+    (
+      or_f(ExplToUpdate,[E-CPs],ExplUpdated)
+    ) ;
+    (
+      ExplUpdated=[E-CPs]
+    )
+  ),
+  ExplPerChoice = ExplPerChoice0.put(Choice,ExplUpdated),
+  update_choice_point_list_int(CPList0,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,CPList),
+  retractall(M:delta(_,_)),
+  assert(M:delta(CPList,ID0)).
+
+update_choice_point_list_int([],_,_,[]):-
+  writeln("Probably something wrong happened. Please report the problem opening an issue on github!").
+  % It should never arrive here.
+
+update_choice_point_list_int([cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0)|T],
+                    cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,
+                    [cp(ID,Ind,Rule,Class,Choices,ExplPerChoice)|T]) :- !.
+
+update_choice_point_list_int([H|T],
+                  cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,
+                  [H|T1]):-
+  update_choice_point_list_int(T,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,T1).
 
 
 /**********************
