@@ -36,7 +36,9 @@
           [subpos_location/3,
            subterm_location/3,
            location_subterm/3,
+           location_subterm/4,
            location_subterm_un/3,
+           location_subterm_un/4,
            location_subterm_eq/3
           ]).
 
@@ -45,7 +47,9 @@
 
 :- meta_predicate
         subterm_location(1,+,?),
-        location_subterm(+,1,+).
+        location_subterm(+,1,+),
+        location_subterm(+,1,1,+),
+        location_subterm_un(+,+,1,+).
 
 location_subpos(PPos, N, SPos) :-
     nonvar(PPos),
@@ -86,6 +90,8 @@ subpos_location([N|L], SubPos, Pos) :-
 
 location_subterm_un(L, Term, Find) :- location_subterm(L, =(Find), Term).
 
+location_subterm_un(L, Term, Tester, Find) :- location_subterm(L, =(Find), Tester, Term).
+
 location_subterm_eq(L, Term, Find) :- subterm_location(==(Find), Term, L).
 
 subterm_location(Comparator, Term, []) :- call(Comparator, Term), !.
@@ -94,9 +100,11 @@ subterm_location(Comparator, Term, [N|L]) :-
     arg(N, Term, SubTerm),
     subterm_location(Comparator, SubTerm, L).
 
-location_subterm([],    Comparator, Term) :- call(Comparator, Term).
-location_subterm([N|L], Comparator, Term) :-
-    compound(Term),
-    arg(N, Term, SubTerm),
-    location_subterm(L, Comparator, SubTerm).
+location_subterm(L, Comparator, Term) :-
+    location_subterm(L, Comparator, compound, Term).
 
+location_subterm([],    Comparator, _, Term) :- call(Comparator, Term).
+location_subterm([N|L], Comparator, Tester, Term) :-
+    call(Tester, Term),
+    arg(N, Term, SubTerm),
+    location_subterm(L, Comparator, Tester, SubTerm).
