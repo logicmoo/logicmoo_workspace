@@ -21,7 +21,7 @@ details.
 *********************************/
 :- multifile setting_trill/2.
 setting_trill(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
-setting_trill(nondet_rules,[or_rule,max_rule]).
+setting_trill(nondet_rules,[or_rule,max_rule,ch_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
