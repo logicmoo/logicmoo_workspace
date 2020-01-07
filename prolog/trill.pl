@@ -236,7 +236,8 @@ instanceOf(M:Class,Ind,Expl):-
   	%init_expand_abox_wt_hierarchy(M,(ABox,Tabs),ExpansionQueue,(ABox0,Tabs)),
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
-  	    	add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ABox1,ExpansionQueueQ),
+  	    	neg_class(ClassEx,NClassEx),
+  	    	add_q(M,ABox,ExpansionQueue,NClassEx,IndEx,ABox1,ExpansionQueueQ),
   	    	findall(FABoxTab,expand_queue(M,(ABox1,Tabs)-ExpansionQueueQ,FABoxTab),L),
   			find_expls(M,L,[ClassEx,IndEx],Expl1),
   			check_and_close(M,Expl1,Expl)
@@ -265,7 +266,8 @@ instanceOf(M:Class,Ind):-
 	  build_abox(M,(ABox,Tabs)-ExpansionQueue),
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
-          add_q(M,ABox,ExpansionQueue,complementOf(ClassEx),IndEx,ABox0,ExpansionQueueQ),
+                neg_class(ClassEx,NClassEx),
+  	    	add_q(M,ABox,ExpansionQueue,NClassEx,IndEx,ABox0,ExpansionQueueQ),
           expand_queue(M,(ABox0,Tabs)-ExpansionQueueQ,FABoxTab),!,
 	  		clash(M,FABoxTab,_),!  % TODO find_single_expl
 	      )
@@ -343,7 +345,10 @@ property_value(M:Prop, Ind1, Ind2):-
  */
 sub_class(M:Class,SupClass,Expl):-
   ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-	unsat_internal(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Expl)
+	    (
+        neg_class(SupClassEx,NSupClassEx),
+        unsat_internal(M:intersectionOf([ClassEx,NSupClassEx]),Expl)
+      )
     ;
     	print_message(warning,iri_not_exists),!,false
   ).
@@ -358,7 +363,9 @@ sub_class(M:Class,SupClass,Expl):-
  */
 sub_class(M:Class,SupClass):-
   ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-        unsat_internal(M:intersectionOf([ClassEx,complementOf(SupClassEx)])),!
+      (  neg_class(SupClassEx,NSupClassEx),
+        unsat_internal(M:intersectionOf([ClassEx,NSupClassEx])),!
+      )
     ;
         print_message(warning,iri_not_exists),!,false
   ).
@@ -1552,7 +1559,7 @@ min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox,Tabs,EQ0,ABox2,Tabs2,EQ):-
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
-  check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
+  %check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
   modify_ABox(M,ABox,EQ0,S,Ind1,Ind2,Expl,ABox1,EQ1),
   min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox1,Tabs1,EQ1,ABox2,Tabs2,EQ).
 
@@ -1564,7 +1571,7 @@ min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,EQ0,ABox3,Tabs2,EQ):-
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
-  check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
+  %check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
   modify_ABox(M,ABox,EQ0,S,Ind1,Ind2,Expl,ABox1,EQ1),
   and_f_ax(M,propertyAssertion(S,Ind1,Ind2),Expl,ExplC),
   modify_ABox(M,ABox1,EQ1,C,Ind2,ExplC,ABox2,EQ2),
@@ -1703,6 +1710,48 @@ individual_class_C([H|T],C,ABox,[H|T1]):-
 individual_class_C([_H|T],C,ABox,T1):-
   %\+ findClassAssertion(C,H,_,ABox),
   individual_class_C(T,C,ABox,T1).
+/* *************** */
+
+/*
+  ch_rule
+  ================
+*/
+ch_rule(M,(ABox0,Tabs0)-EQ0,(maxCardinality(N,S,C),Ind),L):- 
+  findClassAssertion(maxCardinality(N,S,C),Ind1,Expl1,ABox0),
+  \+ indirectly_blocked(Ind1,(ABox0,Tabs0)),
+  findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox0),
+  absent_c_not_c(Ind2,C,ABox0),
+  and_f(M,Expl1,Expl2,Expl),
+  get_choice_point_id(M,ID),%gtrace,
+  neg_class(C,NC),
+  scan_or_list(M,[C,NC],0,ID,Ind2,Expl,ABox0,Tabs0,EQ0,L),
+  dif(L,[]),
+  create_choice_point(M,Ind2,ch,maxCardinality(N,S,C),[C,NC],_),!. % last variable whould be equals to ID
+
+ch_rule(M,(ABox0,Tabs0)-EQ0,(exactCardinality(N,S,C),Ind),L):- 
+  findClassAssertion(exactCardinality(N,S,C),Ind1,Expl1,ABox0),
+  \+ indirectly_blocked(Ind1,(ABox0,Tabs0)),
+  findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox0),
+  absent_c_not_c(Ind2,C,ABox0),
+  and_f(M,Expl1,Expl2,Expl),
+  get_choice_point_id(M,ID),%gtrace,
+  neg_class(C,NC),
+  scan_or_list(M,[C,NC],0,ID,Ind2,Expl,ABox0,Tabs0,EQ0,L),
+  dif(L,[]),
+  create_choice_point(M,Ind2,ch,exactCardinality(N,S,C),[C,NC],_),!. % last variable whould be equals to ID
+
+%---------------------
+
+absent_c_not_c(Ind,C,ABox0) :-
+  \+ is_there_c_not_c(Ind,C,ABox0).
+
+is_there_c_not_c(Ind,C,ABox0) :-
+ findClassAssertion(C,Ind,_,ABox0),!.
+
+is_there_c_not_c(Ind,C,ABox0) :-
+  neg_class(C,NC),
+  findClassAssertion(NC,Ind,_,ABox0),!.
+
 /* *************** */
 
 /*
