@@ -1716,7 +1716,7 @@ individual_class_C([_H|T],C,ABox,T1):-
   ch_rule
   ================
 */
-ch_rule(M,(ABox0,Tabs0)-EQ0,(maxCardinality(N,S,C),Ind),L):- 
+ch_rule(M,(ABox0,Tabs0)-EQ0,(maxCardinality(N,S,C),Ind1),L):- 
   findClassAssertion(maxCardinality(N,S,C),Ind1,Expl1,ABox0),
   \+ indirectly_blocked(Ind1,(ABox0,Tabs0)),
   findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox0),
@@ -1728,7 +1728,7 @@ ch_rule(M,(ABox0,Tabs0)-EQ0,(maxCardinality(N,S,C),Ind),L):-
   dif(L,[]),
   create_choice_point(M,Ind2,ch,maxCardinality(N,S,C),[C,NC],_),!. % last variable whould be equals to ID
 
-ch_rule(M,(ABox0,Tabs0)-EQ0,(exactCardinality(N,S,C),Ind),L):- 
+ch_rule(M,(ABox0,Tabs0)-EQ0,(exactCardinality(N,S,C),Ind1),L):- 
   findClassAssertion(exactCardinality(N,S,C),Ind1,Expl1,ABox0),
   \+ indirectly_blocked(Ind1,(ABox0,Tabs0)),
   findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox0),
