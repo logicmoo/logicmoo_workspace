@@ -317,7 +317,7 @@ hier_or_f(_M,Or1,Or2,Or):-
 hier_ax2ex(_M,Ax,[[Ax]]):- !.
   
 get_subclass_explanation(M,C,D,BDD,Expls):-
-  member(ex(C,D)-Expl,Expls),
+  utility_kb:get_subClass_expl(_,Expls,C,D,Expl),
   get_bdd_environment(M,Env),
   build_expl_bdd(M,Env,Expl,BDD).
 

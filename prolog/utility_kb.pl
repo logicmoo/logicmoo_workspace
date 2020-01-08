@@ -889,6 +889,11 @@ add_subClass_expl(M,Expls0,C,C1,Expl,[ex(C,C1)-ExF|Expls]):-
 
 add_subClass_expl(_M,Expls,C,C1,Expl,[ex(C,C1)-Expl|Expls]).
 
+/*
+ Return the explanation of C subClassOf D
+*/
+get_subClass_expl(_M,Expls,C,D,Expl):-
+  member(ex(C,D)-Expl,Expls).
 
 /*
  Takes a class in Class and returns the set of classes with explanations that are connected with CLass in the hierarchy

@@ -1275,11 +1275,10 @@ find_class_prop_range_domain(M,P,S,O,S,D,Expl,(ABox,_Tabs)):-
 find_sub_sup_class_u(M,C,D,Expl):-
   M:hierarchy(H),
   Classes=H.classes,
-  Expls=H.explanations,
   PC=Classes.find(C),
   edges(H.hierarchy,E),
   utility_kb:get_next(PC,E,Classes,_PD,D),
-  get_subclass_explanation(M,C,D,Expl,Expls).
+  get_subclass_explanation(M,C,D,Expl,H.explanations).
 
 
 :- multifile find_sub_sup_class/4.
