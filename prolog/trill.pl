@@ -1025,8 +1025,8 @@ not_ind_intersected_union(Ind,LC,ABox):-
   \+ ind_intersected_union(Ind,LC,ABox).
 
 ind_intersected_union(Ind,LC,ABox) :-
-  findClassAssertion(C,Ind,_,ABox),
-  member(C,LC),!.
+  member(C,LC),
+  findClassAssertion(C,Ind,_,ABox),!.
 %---------------
 scan_or_list(_,[],_,_,_,_,_,_,[]):- !.
 
