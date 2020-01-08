@@ -800,6 +800,12 @@ update_expansion_queue(_,maxCardinality(N,S,C),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
 update_expansion_queue(_,maxCardinality(N,S),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
   append(NDQ0,[(maxCardinality(N,S),Ind)],NDQ).
 
+update_expansion_queue(_,exactCardinality(N,S,C),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
+  append(NDQ0,[(exactCardinality(N,S,C),Ind)],NDQ).
+
+update_expansion_queue(_,exactCardinality(N,S),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
+  append(NDQ0,[(exactCardinality(N,S),Ind)],NDQ).
+
 update_expansion_queue(_,C,Ind,[DQ0,NDQ],[DQ,NDQ]):-!,
   append(DQ0,[(C,Ind)],DQ).
 
