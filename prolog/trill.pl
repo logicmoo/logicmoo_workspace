@@ -792,25 +792,32 @@ expand_close_abox(M,(ABox0,Tabs),(ABox,Tabs)):-%gtrace,
 % Utility for rule application
 % ------------
 update_expansion_queue(_,unionOf(L),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
-  append(NDQ0,[(unionOf(L),Ind)],NDQ).
+  delete(NDQ0,(unionOf(L),Ind),NDQ1),
+  append(NDQ1,[(unionOf(L),Ind)],NDQ).
 
 update_expansion_queue(_,maxCardinality(N,S,C),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
-  append(NDQ0,[(maxCardinality(N,S,C),Ind)],NDQ).
+  delete(NDQ0,(maxCardinality(N,S,C),Ind),NDQ1),
+  append(NDQ1,[(maxCardinality(N,S,C),Ind)],NDQ).
 
 update_expansion_queue(_,maxCardinality(N,S),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
-  append(NDQ0,[(maxCardinality(N,S),Ind)],NDQ).
+  delete(NDQ0,(maxCardinality(N,S),Ind),NDQ1),
+  append(NDQ1,[(maxCardinality(N,S),Ind)],NDQ).
 
 update_expansion_queue(_,exactCardinality(N,S,C),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
-  append(NDQ0,[(exactCardinality(N,S,C),Ind)],NDQ).
+  delete(NDQ0,(exactCardinality(N,S,C),Ind),NDQ1),
+  append(NDQ1,[(exactCardinality(N,S,C),Ind)],NDQ).
 
 update_expansion_queue(_,exactCardinality(N,S),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
-  append(NDQ0,[(exactCardinality(N,S),Ind)],NDQ).
+  delete(NDQ0,(exactCardinality(N,S),Ind),NDQ1),
+  append(NDQ1,[(exactCardinality(N,S),Ind)],NDQ).
 
 update_expansion_queue(_,C,Ind,[DQ0,NDQ],[DQ,NDQ]):-!,
-  append(DQ0,[(C,Ind)],DQ).
+  delete(DQ0,(C,Ind),DQ1),
+  append(DQ1,[(C,Ind)],DQ).
 
 update_expansion_queue(_,P,Ind1,Ind2,[DQ0,NDQ],[DQ,NDQ]):-!,
-  append(DQ0,[(P,Ind1,Ind2)],DQ).
+  delete(DQ0,(P,Ind1,Ind2),DQ1),
+  append(DQ1,[(P,Ind1,Ind2)],DQ).
 
 extract_from_expansion_queue([[],[EA|T]],EA,[[],T]).
 
