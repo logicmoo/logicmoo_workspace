@@ -1557,7 +1557,7 @@ min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox0,Tabs,EQ0,ABox3,Tabs2,EQ):-
 %----------------------
 min_rule_neigh_C(_,0,_,_,_,_,[],ABox,Tabs,EQ,ABox,Tabs,EQ).
 
-min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,EQ0,ABox3,Tabs2,EQ):-
+min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox0,Tabs,EQ0,ABox4,Tabs2,EQ):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
