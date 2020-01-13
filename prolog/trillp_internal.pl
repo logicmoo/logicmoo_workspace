@@ -227,7 +227,7 @@ build_abox(M,(ABox,Tabs)-ExpansionQueue):-
   %create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),*([sameIndividual(L)])),M:sameIndividual(L),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ExpansionQueue0,ABox6,Tabs,ExpansionQueue),
-  add_nominal_list(M,ABox6,Tabs,ABox),
+  add_owlThing_list(M,ABox6,Tabs,ABox),
   !.
 
 /**********************
