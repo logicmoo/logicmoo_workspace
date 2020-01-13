@@ -200,7 +200,7 @@ build_abox(M,(ABox,Tabs)):-
   create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),BDDSIA),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_nominal_list(M,ABox6,Tabs,ABox),
+  add_owlThing_list(M,ABox6,Tabs,ABox),
   !.
 
 /**********************

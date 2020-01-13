@@ -536,7 +536,7 @@ build_abox(M,(ABox,Tabs)):-
   create_tabs(LSPA,Tabs3,Tabs4),
   findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA),
   merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_nominal_list(M,ABox6,Tabs,ABox),
+  add_owlThing_list(M,ABox6,Tabs,ABox),
   !.
 
 
@@ -588,8 +588,14 @@ and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
   append(CP1,CP2,CP),
   and_f2(L1,CP1,T2,T).
 
-or_f(E0,E1,E):-
-  append(E0,E1,E).
+or_f([],E,E).
+
+or_f([E0|T],E1,E):-
+  memberchk(E0,E1),!,
+  or_f(T,E1,E).
+
+or_f([E0|T],E1,[E0|E]):-
+  or_f(T,E1,E).
 
 /**********************
 

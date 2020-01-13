@@ -225,8 +225,8 @@ instanceOf(M:Class,Ind,Expl,Assert_ABox):-
   	(  \+ clash(M,(ABox,Tabs),_) ->
   	    (
           neg_class(ClassEx,NClassEx),
-  	    	add_q(M,ABox,classAssertion(NClassEx,IndEx),ABox0),
-      findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
+  	    	add_q(M,(ABox,Tabs),classAssertion(NClassEx,IndEx),(ABox0,Tabs0)),
+      findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),L),
       (Assert_ABox==true -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
   		find_expls(M,L,[ClassEx,IndEx],Expl1),
   		check_and_close(M,Expl1,Expl)
@@ -268,8 +268,8 @@ instanceOf(M:Class,Ind):-
 	  (  \+ clash(M,(ABox,Tabs),_) ->
 	      (
 	        neg_class(ClassEx,NClassEx),
-  	    	add_q(M,ABox,classAssertion(NClassEx,IndEx),ABox0),
-	        apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
+          add_q(M,(ABox,Tabs),classAssertion(NClassEx,IndEx),(ABox0,Tabs0)),
+	        apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),!,
 	  	clash(M,(ABox1,Tabs1),_),!
 	      )
 	    ;
@@ -432,9 +432,10 @@ unsat_internal(M:Concept,Expl,Assert_ABox):-
   build_abox(M,(ABox,Tabs)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
-     	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
+       add_q(M,(ABox,Tabs),classAssertion(Concept,trillan(1)),(ABox00,Tabs0)),
+     add_owlThing_ind(M,ABox00,trillan(1),ABox0),
 	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),L),
+	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),L),
   (Assert_ABox==true -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
 	find_expls(M,L,['unsat',Concept],Expl1),
 	check_and_close(M,Expl1,Expl)
@@ -469,9 +470,10 @@ unsat_internal(M:Concept):-
   build_abox(M,(ABox,Tabs)),
   ( \+ clash(M,(ABox,Tabs),_) ->
      (
-     	add_q(M,ABox,classAssertion(Concept,trillan(1)),ABox0),
+     	add_q(M,(ABox,Tabs),classAssertion(Concept,trillan(1)),(ABox00,Tabs0)),
+       add_owlThing_ind(M,ABox00,trillan(1),ABox0),
   	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	apply_all_rules(M,(ABox0,Tabs),(ABox1,Tabs1)),!,
+  	apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),!,
   	clash(M,(ABox1,Tabs1),_),!
      )
     ;
@@ -596,9 +598,10 @@ prob_inconsistent_theory(M:Prob):-
  ***********/
 
 % adds the query into the ABox
-add_q(M,ABox,Query,ABox0):-
+add_q(M,(ABox0,Tabs0),Query,(ABox,Tabs)):-
   empty_expl(M,Expl),
-  add(ABox,(Query,Expl),ABox0).
+  add(ABox0,(Query,Expl),ABox),
+  create_tabs([(Query,Expl)],Tabs0,Tabs).
 
 % expands query arguments using prefixes and checks their existence in the kb
 check_query_args(M,L,LEx) :-
@@ -1045,12 +1048,13 @@ scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
   ==================
 */
 exists_rule(M,(ABox0,Tabs0),([(propertyAssertion(R,Ind1,Ind2),Expl),
-    (classAssertion(C,Ind2),Expl)|ABox0],Tabs)):-
+    (classAssertion(C,Ind2),Expl)|ABox1],Tabs)):-
   findClassAssertion(someValuesFrom(R,C),Ind1,Expl,ABox0),
   \+ blocked(Ind1,(ABox0,Tabs0)),
   \+ connected_individual(R,C,Ind1,ABox0),
   new_ind(M,Ind2),
-  add_edge(R,Ind1,Ind2,Tabs0,Tabs).
+  add_edge(R,Ind1,Ind2,Tabs0,Tabs),
+  add_owlThing_ind(M,ABox0,Ind2,ABox1).
 
 
 %---------------
@@ -1485,35 +1489,37 @@ min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
 % ----------------------
 min_rule_neigh(_,0,_,_,_,[],ABox,Tabs,ABox,Tabs).
 
-min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl)|ABox2],Tabs2):-
+min_rule_neigh(M,N,S,Ind1,Expl,[Ind2|NI],ABox0,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl)|ABox2],Tabs2):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
+  add_owlThing_ind(M,ABox0,Ind2,ABox),
   %check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
   min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs1,ABox2,Tabs2).
 
 %----------------------
 min_rule_neigh_C(_,0,_,_,_,_,[],ABox,Tabs,ABox,Tabs).
 
-min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl),
+min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],ABox0,Tabs,[(propertyAssertion(S,Ind1,Ind2),Expl),
                                           (classAssertion(C,Ind2),[propertyAssertion(S,Ind1,Ind2)|Expl])|ABox2],Tabs2):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
   add_edge(S,Ind1,Ind2,Tabs,Tabs1),
+  add_owlThing_ind(M,ABox0,Ind2,ABox),
   %check_block(Ind2,([(propertyAssertion(S,Ind1,Ind2),Expl)|ABox],Tabs)),
   min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs1,ABox2,Tabs2).
 
 %---------------------
-safe_s_neigh([],_,_,[]).
+safe_s_neigh([],_,_,[]):-!.
 
 safe_s_neigh([H|T],S,Tabs,[H|ST]):-
   safe(H,S,Tabs),
   safe_s_neigh(T,S,Tabs,ST).
 
 
-safe_s_neigh_C([],_,_,_,_,[]).
+safe_s_neigh_C([],_,_,_,_,[]):-!.
 
 safe_s_neigh_C([H|T],S,C,(ABox,Tabs),[H|ST]):-
   safe(H,S,(ABox,Tabs)),
@@ -1788,7 +1794,7 @@ check_block1(Indx,A,N,(ABox,(T,RBN,RBR))):-
   same_label(Indx0,Indy,ABox),
   all_node_blockable(Indx0,Indy0,(ABox,(T,RBN,RBR))),!.
 
-check_block2([],_).
+%check_block2([],_).
 
 check_block2([H|Tail],(ABox,(T,RBN,RBR))):-
   blocked(H,(ABox,(T,RBN,RBR))),
@@ -1810,14 +1816,23 @@ indirectly_blocked(Ind,(ABox,(T,RBN,RBR))):-
 
 safe(Ind,R,(ABox,(T,RBN,RBR))):-
   rb_lookup(R,V,RBR),
-  member((X,Ind),V),
+  get_parent(X,Ind,V),
   blockable(X,(ABox,(T,RBN,RBR))),!.
 
 safe(Ind,R,(ABox,(T,RBN,RBR))):-
   rb_lookup(R,V,RBR),
-  member((X,Ind),V),
+  get_parent(X,Ind,V),
   nominal(X,(ABox,(T,RBN,RBR))),!,
   \+ blocked(Ind,(ABox,(T,RBN,RBR))).
+
+get_parent(X,Ind,[(X,Ind)|_T]):-!.
+
+get_parent(X,Ind,[(X,LI)|_T]):-
+  is_list(LI),
+  member(Ind,LI),!.
+
+get_parent(X,Ind,[_|T]):-
+  get_parent(X,Ind,T).
 
 /* ***** */
 
@@ -1851,7 +1866,11 @@ subProp(M,SubProperty,Property,Subject,Object):-
 
 %--------------
 
-add_nominal_list(M,ABox0,(T,_,_),ABox):-
+add_owlThing_ind(M,ABox0,Ind,ABox):-
+  prepare_nom_list(M,[Ind],NomListOut),
+  add_all(NomListOut,ABox0,ABox).
+
+add_owlThing_list(M,ABox0,(T,_,_),ABox):-
   vertices(T,NomListIn),
   prepare_nom_list(M,NomListIn,NomListOut),
   add_all(NomListOut,ABox0,ABox).
@@ -1863,8 +1882,8 @@ prepare_nom_list(_,[],[]).
 prepare_nom_list(M,[literal(_)|T],T1):-!,
   prepare_nom_list(M,T,T1).
 
-prepare_nom_list(M,[H|T],[(nominal(H)),(classAssertion('http://www.w3.org/2002/07/owl#Thing',H),Expl)|T1]):-
-  empty_expl(M,Expl),
+prepare_nom_list(M,[H|T],[(classAssertion('http://www.w3.org/2002/07/owl#Thing',H),Expl)|T1]):-
+  initial_expl(M,Expl),
   prepare_nom_list(M,T,T1).
 %--------------
 
@@ -2352,8 +2371,9 @@ retract_sameIndividual(L):-
 */
 s_neighbours(M,Ind1,S,(ABox,(_,_,RBR)),SN):-
   rb_lookup(S,VN,RBR),
-  s_neighbours1(Ind1,VN,SN1),
-  s_neighbours2(M,SN1,SN1,SN,ABox).
+  s_neighbours1(Ind1,VN,SN0),
+  flatten(SN0,SN1),
+  s_neighbours2(M,SN1,SN1,SN,ABox),!.
 
 s_neighbours(_,_Ind1,S,(_,_,RBR),[]):-
   \+ rb_lookup(S,_VN,RBR).
@@ -2371,13 +2391,31 @@ s_neighbours2(_,_,[],[],_).
 
 s_neighbours2(M,SN,[H|T],[H|T1],ABox):-
   s_neighbours2(M,SN,T,T1,ABox),
-  \+ same_ind(M,T1,H,ABox).
+  not_same_ind(M,T1,H,ABox),!.
 
-s_neighbours2(M,SN,[H|T],T1,ABox):-
-  s_neighbours2(M,SN,T,T1,ABox),
-  same_ind(M,T1,H,ABox).
+s_neighbours2(M,SN,[_H|T],T1,ABox):-
+  s_neighbours2(M,SN,T,T1,ABox).
+  %same_ind(M,T1,H,ABox).
+
 
 %-----------------
+not_same_ind(M,SN,H,_ABox):-
+  M:differentIndividuals(SI),
+  member(H,SI),
+  member(H2,SI),
+  member(H2,SN),
+  dif(H,H2),!.
+
+not_same_ind(_,SN,H,ABox):-
+  find((differentIndividuals(SI),_),ABox),
+  member(H,SI),
+  member(H2,SI),
+  member(H2,SN),
+  dif(H,H2),!.
+
+not_same_ind(M,SN,H,ABox):-
+  \+ same_ind(M,SN,H,ABox),!.
+
 same_ind(M,SN,H,_ABox):-
   M:sameIndividual(SI),
   member(H,SI),
