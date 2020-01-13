@@ -98,7 +98,7 @@ command_to_atom(Command, Args, Atom) :-
     read_stream_to_codes(Out, String),
     string_to_atom(String, Atom).
 
-fortran_command(M, path(gfortran), ValueL, ValueT) :-
+language_command(for, M, path(gfortran), ValueL, ValueT) :-
     command_to_atom(swipl, ['--dump-runtime-variables'], Atom),
     atomic_list_concat(AtomL, ';\n', Atom),
     findall(Value,
@@ -111,24 +111,41 @@ fortran_command(M, path(gfortran), ValueL, ValueT) :-
               member(Value, ValueL1)
             ),
             ValueL, ValueT).
+language_command(c, M, path('swipl-ld'), ValueL, ValueT) :-
+    findall(COpt, ( COpt = '-shared'
+                  ; ( extra_compiler_opts(M, COpts)
+                    ; pkg_foreign_config(M, Package),
+                      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
+                      atom_concat(COpts, '\n', COpt1)
+                    ),
+                    atomic_args(COpts, COptL1),
+                    member(COpt, COptL1)
+                  ), ValueL, ValueT).
 
 intermediate_obj(M, DirSO, OptL, LibL, Source, Object) -->
-    { intermediate_obj_fortran(M, DirSO, OptL, Source, Object, Command),
-      memberchk(gfortran, LibL)
+    { file_name_extension(Base, Ext, Source),
+      file_base_name(Base, Name),
+      ( Ext = for,
+        memberchk(gfortran, LibL)
+      ->true
+      ; Ext = c
+      ),
+      intermediate_obj_cmd(Ext, Name, M, DirSO, OptL, Source, Object, Command)
     },
     !,
-    [Command].
+    ( {is_newer(Object, Source)}
+    ->[]
+    ; [Command]
+    ).
 intermediate_obj(_, _, _, _, Source, Source) --> [].
 
-intermediate_obj_fortran(M, DirSO, OptL, Source, Object, Fortran-Args) :-
-    file_name_extension(Base, for, Source),
-    file_base_name(Base, Name),
+intermediate_obj_cmd(Ext, Name, M, DirSO, OptL, Source, Object, Fortran-Args) :-
     % Add a preffix to avoid problems with other files with the same base
-    atom_concat(Name, '_for', NameFor),
+    atomic_list_concat([Name, '_', Ext], NameFor),
     file_name_extension(NameFor, o, NameO),
     directory_file_path(DirSO, NameO, Object),
-    append([['-fPIC'|OptL], ['-c', Source, '-o', Object]], FOptL),
-    fortran_command(M, Fortran, Args, FOptL).
+    append([OptL, ['-c', Source, '-o', Object]], FOptL),
+    language_command(Ext, M, Fortran, Args, FOptL).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -241,17 +258,8 @@ do_compile_library(M, FileSO, File, FSourceL) :-
                     atom_concat('-I', Dir, IDir)
                   ), IDirL),
     CommonOptL = ['-fPIC'|IDirL],
-    foldl(intermediate_obj(M, DirSO, CommonOptL, LibL), FSourceL, FTargetL, Commands, CommandsT),
+    foldl(intermediate_obj(M, DirSO, CommonOptL, LibL), [IntfFile|FSourceL], FTargetL, Commands, []),
     once(append(LibL, [], _)),
-    findall(COpt, ( COpt = '-shared'
-                  ; ( extra_compiler_opts(M, COpts)
-                    ; pkg_foreign_config(M, Package),
-                      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
-                      atom_concat(COpts, '\n', COpt1)
-                    ),
-                    atomic_args(COpts, COptL1),
-                    member(COpt, COptL1)
-                  ), COptL),
     findall(CLib, ( ( link_foreign_library(M, Lib)
                     ; member(Lib, LibL)
                     ),
@@ -268,12 +276,11 @@ do_compile_library(M, FileSO, File, FSourceL) :-
                     atom_concat('-L', Dir, LDir)
                   ),
             LDirL),
-    append([COptL, CommonOptL, LDirL, FTargetL, [IntfFile|CLibL]], FArgsL),
-    CommandsT = [path('swipl-ld')-FArgsL],
-    forall(member(Command-ArgL, Commands),
-           compile_1(Command, ArgL)).
+    append([['-shared'|CommonOptL], LDirL, FTargetL, CLibL], FArgsL),
+    concurrent_maplist(compile_1, Commands),
+    compile_1(path('swipl-ld')-FArgsL).
 
-compile_1(Command, ArgL) :-
+compile_1(Command-ArgL) :-
     process_create(Command, ArgL, [stdout(pipe(Out)),
                                    stderr(pipe(Err))]),
     read_string(Err, _, SErr),
