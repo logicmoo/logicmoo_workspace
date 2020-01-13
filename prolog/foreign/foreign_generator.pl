@@ -260,6 +260,15 @@ do_compile_library(M, FileSO, File, FSourceL) :-
     CommonOptL = ['-fPIC'|IDirL],
     foldl(intermediate_obj(M, DirSO, CommonOptL, LibL), [IntfFile|FSourceL], FTargetL, Commands, []),
     once(append(LibL, [], _)),
+    findall(COpt, ( COpt = '-shared'
+                  ; ( extra_compiler_opts(M, COpts)
+                    ; pkg_foreign_config(M, Package),
+                      command_to_atom('pkg-config', ['--cflags', Package], COpt1),
+                      atom_concat(COpts, '\n', COpt1)
+                    ),
+                    atomic_args(COpts, COptL1),
+                    member(COpt, COptL1)
+                  ), COptL),
     findall(CLib, ( ( link_foreign_library(M, Lib)
                     ; member(Lib, LibL)
                     ),
@@ -276,7 +285,7 @@ do_compile_library(M, FileSO, File, FSourceL) :-
                     atom_concat('-L', Dir, LDir)
                   ),
             LDirL),
-    append([['-shared'|CommonOptL], LDirL, FTargetL, CLibL], FArgsL),
+    append([COptL, CommonOptL, LDirL, FTargetL, CLibL], FArgsL),
     concurrent_maplist(compile_1, Commands),
     compile_1(path('swipl-ld')-FArgsL).
 
