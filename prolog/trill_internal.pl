@@ -605,12 +605,12 @@ and_f2(L1,CP1,[H2-CP2|T2],[H-CP|T]):-
 
 or_f(_,[],E,E).
 
-or_f([E0|T],E1,E):-
+or_f(_,[E0|T],E1,E):-
   memberchk(E0,E1),!,
-  or_f(T,E1,E).
+  or_f(_,T,E1,E).
 
-or_f([E0|T],E1,[E0|E]):-
-  or_f(T,E1,E).
+or_f(_,[E0|T],E1,[E0|E]):-
+  or_f(_,T,E1,E).
 
 /**********************
 
