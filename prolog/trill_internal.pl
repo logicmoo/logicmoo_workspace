@@ -234,6 +234,58 @@ findClassAssertion4OWLNothing(_M,ABox,Expl):-
   findClassAssertion('http://www.w3.org/2002/07/owl#Nothing',_Ind,Expl,ABox).
 
 
+%-------------
+% clash managing
+
+%------------
+:- multifile clash/3.
+
+clash(M,(ABox,Tabs),Expl):-
+  %write('clash 9'),nl,
+  findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  LSS @> N,
+  make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
+
+clash(M,(ABox,Tabs),Expl):-
+  %write('clash 10'),nl,
+  findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  length(SN,LSS),
+  LSS @> N,
+  make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
+
+clash(M,(ABox,Tabs),Expl):-
+  %write('clash 9'),nl,
+  findClassAssertion(exactCardinality(N,S,C),Ind,Expl1,ABox),
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  dif(LSS,N),
+  make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
+
+clash(M,(ABox,Tabs),Expl):-
+  %write('clash 10'),nl,
+  findClassAssertion(exactCardinality(N,S),Ind,Expl1,ABox),
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  length(SN,LSS),
+  dif(LSS,N),
+  make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
+
+
+% --------------
+
+make_expl(_,_,_,[],Expl,_,Expl).
+
+make_expl(M,Ind,S,[H|T],Expl0,ABox,Expl):-
+  findPropertyAssertion(S,Ind,H,Expl2,ABox),
+  and_f(M,Expl2,Expl0,Expl1),
+  make_expl(M,Ind,S,T,Expl1,ABox,Expl).
+% --------------
+
+
 /***********
   rules
 ************/

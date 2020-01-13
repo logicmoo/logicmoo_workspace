@@ -2,8 +2,8 @@
 
 :- trill.
 
-%subClassOf(a,f).
-%subClassOf(f,b).
+subClassOf(a,f).
+subClassOf(f,b).
 
 subClassOf(a,unionOf([b,c,d])).
 subClassOf(a,minCardinality(5,r)).

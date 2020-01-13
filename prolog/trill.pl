@@ -687,6 +687,8 @@ find_clash(M,(ABox0,Tabs0),Expl2):-
 % need some tricks in some rules for managing the cases of more than one clash
 % TO IMPROVE!
 %------------
+:- multifile clash/3.
+
 clash(M,(ABox,_),Expl):-
   %write('clash 1'),nl,
   findClassAssertion(C,Ind,Expl1,ABox),
@@ -1453,7 +1455,7 @@ min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
   findClassAssertion(minCardinality(N,S,C),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  safe_s_neigh_C(SN,S,C,(ABox,Tabs),SS),
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
@@ -1474,7 +1476,7 @@ min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
   findClassAssertion(exactCardinality(N,S,C),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  safe_s_neigh_C(SN,S,C,(ABox,Tabs),SS),
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
@@ -1509,6 +1511,15 @@ safe_s_neigh([],_,_,[]).
 safe_s_neigh([H|T],S,Tabs,[H|ST]):-
   safe(H,S,Tabs),
   safe_s_neigh(T,S,Tabs,ST).
+
+
+safe_s_neigh_C([],_,_,_,_,[]).
+
+safe_s_neigh_C([H|T],S,C,(ABox,Tabs),[H|ST]):-
+  safe(H,S,(ABox,Tabs)),
+  findClassAssertion(C,H,_,ABox),!,
+  safe_s_neigh_C(T,S,C,(ABox,Tabs),ST).
+
 /* **************** */
 
 /*
