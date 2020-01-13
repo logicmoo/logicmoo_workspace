@@ -637,6 +637,8 @@ find_clash(M,(ABox0,Tabs0),Expl2):-
 % need some tricks in some rules for managing the cases of more than one clash
 % TO IMPROVE!
 %------------
+:- multifile clash/3.
+
 clash(M,(ABox,_),Expl):-
   %write('clash 1'),nl,
   findClassAssertion(complementOf(C),Ind,Expl2,ABox),

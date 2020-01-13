@@ -240,6 +240,8 @@ findClassAssertion4OWLNothing(_M,ABox,Expl):-
 % clash managing
 
 %------------
+:- multifile clash/3.
+
 clash(M,(ABox,Tabs),Expl):-
   %write('clash 9'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
@@ -255,7 +257,7 @@ clash(M,(ABox,Tabs),Expl):-
   s_neighbours(M,Ind,S,(ABox,Tabs),SN),
   length(SN,LSS),
   LSS @> N,
-  make_expl(Ind,S,SN,Expl1,ABox,Expl).
+  make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
 clash(M,(ABox,Tabs),Expl):-
   %write('clash 9'),nl,
@@ -272,7 +274,7 @@ clash(M,(ABox,Tabs),Expl):-
   s_neighbours(M,Ind,S,(ABox,Tabs),SN),
   length(SN,LSS),
   dif(LSS,N),
-  make_expl(Ind,S,SN,Expl1,ABox,Expl).
+  make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
 
 % --------------
