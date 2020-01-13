@@ -705,34 +705,6 @@ clash(M,(ABox,_),Expl):-
   and_f(M,Expl1,Expl2,ExplT),
   and_f_ax(M,disjointUnion(Class,L),ExplT,Expl).
 
-/*
-clash(M,(ABox,Tabs),Expl):-
-  %write('clash 9'),nl,
-  findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
-  individual_class_C(SN,C,ABox,SNC),
-  length(SNC,LSS),
-  LSS @> N,
-  make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
-
-clash(M,(ABox,Tabs),Expl):-
-  %write('clash 10'),nl,
-  findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
-  length(SN,LSS),
-  LSS @> N,
-  make_expl(Ind,S,SN,Expl1,ABox,Expl).
-
-
-% --------------
-
-make_expl(_,_,_,[],Expl,_,Expl).
-
-make_expl(M,Ind,S,[H|T],Expl0,ABox,Expl):-
-  findPropertyAssertion(S,Ind,H,Expl2,ABox),
-  and_f(M,Expl2,Expl0,Expl1),
-  make_expl(M,Ind,S,T,Expl1,ABox,Expl).
-*/
 
 % -------------
 % rules application
@@ -1536,7 +1508,7 @@ min_rule(M,(ABox,Tabs)-EQ0,(minCardinality(N,S,C),Ind1),([(differentIndividuals(
   findClassAssertion(minCardinality(N,S,C),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  safe_s_neigh_C(SN,S,C,(ABox,Tabs),SS),
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
@@ -1557,7 +1529,7 @@ min_rule(M,(ABox,Tabs)-EQ0,(exactCardinality(N,S,C),Ind1),([(differentIndividual
   findClassAssertion(exactCardinality(N,S,C),Ind1,Expl,ABox),
   \+ blocked(Ind1,(ABox,Tabs)),
   s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
-  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  safe_s_neigh_C(SN,S,C,(ABox,Tabs),SS),
   length(SS,LSS),
   LSS @< N,
   NoI is N-LSS,
@@ -1595,6 +1567,15 @@ safe_s_neigh([],_,_,[]).
 safe_s_neigh([H|T],S,Tabs,[H|ST]):-
   safe(H,S,Tabs),
   safe_s_neigh(T,S,Tabs,ST).
+
+
+safe_s_neigh_C([],_,_,_,_,[]).
+
+safe_s_neigh_C([H|T],S,C,(ABox,Tabs),[H|ST]):-
+  safe(H,S,(ABox,Tabs)),
+  findClassAssertion(C,H,_,ABox),!,
+  safe_s_neigh_C(T,S,C,(ABox,Tabs),ST).
+
 /* **************** */
 
 /*
