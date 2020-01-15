@@ -195,7 +195,7 @@ walk_called(Goal, C, M, O) :-
     fail.
 walk_called(Goal, C, M, O) :-
     ignore(walk_called_ontrace(Goal, C, M, O)),
-    TraceVars = O.trace_variables,
+    option(trace_variables(TraceVars), O),
     maplist(trace_var(M:Goal), TraceVars).
 
 put_attrs_(L, L-V-A) :- maplist(put_attrs, V, A).
