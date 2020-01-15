@@ -37,7 +37,6 @@
 :- use_module(library(prolog_xref), []).
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
-:- use_module(library(context_values)).
 :- use_module(library(extend_args)).
 :- use_module(library(extra_location)).
 :- use_module(library(from_utils)).
@@ -57,51 +56,56 @@ codewalk:walk_code(clause, Options1) :-
            variable_names(VNL)-VNL],
           Options1, Options),
     option_files(Options, FileD),
-    with_context_values(
-        ( walk_clause(FileD, From),
-          maplist(walk_extras_c(FileD, From), Extras)
-        ),
-        [from, on_trace, on_head, trace_vars, trace_reference, undefined],
-        [From, OnTrace,  OnHead,  TraceVars,  To,              Undefined]).
+    Data = data{from:_,
+                on_trace:OnTrace,
+                on_head:OnHead,
+                trace_variables:TraceVars,
+                trace_reference:To,
+                undefined:Undefined},
+    walk_clause(FileD, Data),
+    maplist(walk_extras_c(FileD, Data), Extras).
 
-walk_extras_c(FileD, From, Extra) :-
-    walk_extras_(Extra, FileD, From).
+walk_extras_c(FileD, Opts, Extra) :-
+    walk_extras_(Extra, FileD, Opts).
 
-walk_extras_(initialization, FileD, From) :- walk_from_initialization( FileD, From).
-walk_extras_(declaration,    FileD, From) :- walk_from_loc_declaration(FileD, From).
-walk_extras_(asrparts(L),    FileD, From) :- walk_from_assertion(      FileD, From, L).
+walk_extras_(initialization, FileD, Opts) :- walk_from_initialization( FileD, Opts).
+walk_extras_(declaration,    FileD, Opts) :- walk_from_loc_declaration(FileD, Opts).
+walk_extras_(asrparts(L),    FileD, Opts) :- walk_from_assertion(      FileD, Opts, L).
 
-walk_from_initialization(FileD, From) :-
+walk_from_initialization(FileD, Opts) :-
     forall(( '$init_goal'(_File, Goal, SourceLocation),
              ( SourceLocation = File:Line
              ->get_dict(File, FileD, _),
-               From = file(File, Line, -1, _)
+               From = file(File, Line, -1, _),
+               option(from(From), Opts)
              ; true
              )
            ),
-           walk_head_body('<initialization>', Goal)).
+           walk_head_body('<initialization>', Goal, Opts)).
 
-walk_from_loc_declaration(FileD, From) :-
-    forall(( loc_declaration(Body, M, body, From),
+walk_from_loc_declaration(FileD, Opts) :-
+    forall(( option(from(From), Opts),
+             loc_declaration(Body, M, body, From),
              from_to_file(From, File),
              get_dict(File, FileD, _)
            ),
-           walk_head_body('<declaration>', M:Body)).
+           walk_head_body('<declaration>', M:Body, Opts)).
 
-current_assertion_goal(FileD, From, AsrPartL, M:Head, CM:Goal) :-
+current_assertion_goal(FileD, Opts, AsrPartL, M:Head, CM:Goal) :-
     assertions:asr_head_prop(Asr, HM, Head, _, _, VNL, AFrom),
     from_to_file(AFrom, File),
     get_dict(File, FileD, _),
     b_setval('$variable_names', VNL),
     predicate_property(HM:Head, implementation_module(M)),
     member(AsrPart, AsrPartL),
+    option(from(From), Opts),
     assertion_goal(AsrPart, Asr, Goal, CM, From),
-    current_context_value(trace_vars, TraceVars),
+    option(trace_variables(TraceVars), Opts),
     maplist(trace_var(M:Head), TraceVars).
 
-walk_from_assertion(FileD, From, AsrPartL) :-
-    forall(current_assertion_goal(FileD, From, AsrPartL, Head, Goal),
-           walk_head_body('<assertion>'(Head), Goal)).
+walk_from_assertion(FileD, Opts, AsrPartL) :-
+    forall(current_assertion_goal(FileD, Opts, AsrPartL, Head, Goal),
+           walk_head_body('<assertion>'(Head), Goal, Opts)).
 
 assertion_goal(AsrPart, Asr, Prop, PM, From) :-
     member(AsrPart-PartL,
@@ -111,16 +115,17 @@ assertion_goal(AsrPart, Asr, Prop, PM, From) :-
     % For glob, actually is arg(1, Prop, HM:Head), but we keep it uninstantiated for optimization
     curr_prop_asr(Part, PM:Prop, From, Asr).
 
-walk_clause(FileD, From) :-
-    forall(current_head_body(FileD, Head, Body, From),
-           walk_head_body(Head, Body)).
+walk_clause(FileD, Opts) :-
+    forall(current_head_body(FileD, Head, Body, Opts),
+           walk_head_body(Head, Body, Opts)).
 
-current_head_body(FileD, Head, CM:Body, From) :-
+current_head_body(FileD, Head, CM:Body, Opts) :-
+    option(from(From), Opts),
     From = clause(Ref),
     Head = _:_,
     current_predicate(_, Head),
     \+ predicate_property(Head, imported_from(_)),
-    current_context_value(trace_vars, TraceVars),
+    option(trace_variables(TraceVars), Opts),
     catch(clause(Head, Body, Ref), _, fail),
     from_to_file(From, File),
     get_dict(File, FileD, _),
@@ -133,45 +138,45 @@ trace_var(Head, non_fresh) :-
 trace_var(Head, meta_arg) :-
     mark_meta_arguments(Head).
 
-walk_head_body(Head, Body) :-
-    current_context_value(on_head, OnHead),
-    current_source_location(From),
+walk_head_body(Head, Body, Opts) :-
+    option(on_head(OnHead), Opts),
+    option(from(From), Opts),
     ignore(call(OnHead, Head, From)),
-    walk_called(Body, Head, user),
+    walk_called(Body, Head, user, Opts),
     !.
-walk_head_body(Head, Body) :-
-    writeln(user_error, walk_head_body(Head, Body)),
+walk_head_body(Head, Body, _) :-
+    writeln(user_error, walk_head_body(Head, Body, -)),
     fail.
 
-walk_called(G, _, _) :-
+walk_called(G, _, _, _) :-
     var(G),
     !.
-walk_called(true, _, _) :- !.
-walk_called(M:G, C, _) :-
+walk_called(true, _, _, _) :- !.
+walk_called(M:G, C, _, Opts) :-
     !,
     ( atom(M)
     ->setup_call_cleanup(( '$current_source_module'(OldM),
                            '$set_source_module'(_, M)
                          ),
-                         walk_called(G, C, M),
+                         walk_called(G, C, M, Opts),
                          '$set_source_module'(_, OldM))
     ; true
     ).
-walk_called((A,B), C, M) :-
+walk_called((A,B), C, M, O) :-
     !,
-    walk_called(A, C, M),
-    walk_called(B, C, M).
-walk_called((A->B), C, M) :-
+    walk_called(A, C, M, O),
+    walk_called(B, C, M, O).
+walk_called((A->B), C, M, O) :-
     !,
-    walk_called(A, C, M),
-    walk_called(B, C, M).
-walk_called((A*->B), C, M) :-
+    walk_called(A, C, M, O),
+    walk_called(B, C, M, O).
+walk_called((A*->B), C, M, O) :-
     !,
-    walk_called(A, C, M),
-    walk_called(B, C, M).
-walk_called(\+(A), C, M) :-
-    \+ \+ walk_called(A, C, M).
-walk_called((A;B), C, M) :-
+    walk_called(A, C, M, O),
+    walk_called(B, C, M, O).
+walk_called(\+(A), C, M, O) :-
+    \+ \+ walk_called(A, C, M, O).
+walk_called((A;B), C, M, O) :-
     !,
     term_variables(A, VA),
     term_variables(B, VB),
@@ -180,105 +185,105 @@ walk_called((A;B), C, M) :-
     ord_union(SA, SB, L),
     findall(L-V-Att,
             ( member(E, [A, B]),
-              walk_called(E, C, M),
+              walk_called(E, C, M, O),
               term_attvars(L, V),
               maplist(get_attrs, V, Att)
             ), LVA),
     maplist(put_attrs_(L), LVA).
-walk_called(Goal, C, M) :-
-    walk_called_3(Goal, C, M),
+walk_called(Goal, C, M, O) :-
+    walk_called_3(Goal, C, M, O),
     fail.
-walk_called(Goal, C, M) :-
-    ignore(walk_called_ontrace(Goal, C, M)),
-    current_context_value(trace_vars, TraceVars),
+walk_called(Goal, C, M, O) :-
+    ignore(walk_called_ontrace(Goal, C, M, O)),
+    TraceVars = O.trace_variables,
     maplist(trace_var(M:Goal), TraceVars).
 
 put_attrs_(L, L-V-A) :- maplist(put_attrs, V, A).
 
-walk_called_ontrace(Goal, Caller, M) :-
-    current_context_value(trace_reference, To),
+walk_called_ontrace(Goal, Caller, M, Opts) :-
+    option(trace_reference(To), Opts),
     To \== (-),
     (   subsumes_term(To, M:Goal)
     ->  M2 = M
     ;   predicate_property(M:Goal, implementation_module(M2)),
         subsumes_term(To, M2:Goal)
     ),
-    current_context_value(on_trace, OnTrace),
-    current_source_location(From),
+    option(on_trace(OnTrace), Opts),
+    option(from(From), Opts),
     call(OnTrace, M2:Goal, Caller, From).
 
-walk_called_3(Goal, Caller, M) :-
+walk_called_3(Goal, Caller, M, Opts) :-
     (   predicate_property(M:Goal, implementation_module(IM)),
         prolog:called_by(Goal, IM, M, Called)
     ;   prolog:called_by(Goal, Called)
     ),
     Called \== [],
     !,
-    walk_called_by(Called, Caller, M).
-walk_called_3(Meta, Caller, M) :-
+    walk_called_by(Called, Caller, M, Opts).
+walk_called_3(Meta, Caller, M, Opts) :-
     (   inferred_meta_predicate(M:Meta, Head)
     ;   predicate_property(M:Meta, meta_predicate(Head))
     ),
     !,
     mark_args_non_fresh(1, Head, Meta),
-    walk_meta_call(1, Head, Meta, Caller, M).
-walk_called_3(Goal, _, Module) :-
+    walk_meta_call(1, Head, Meta, Caller, M, Opts).
+walk_called_3(Goal, _, Module, _) :-
     nonvar(Module),
     '$get_predicate_attribute'(Module:Goal, defined, 1),
     !.
-walk_called_3(Goal, Caller, Module) :-
+walk_called_3(Goal, Caller, Module, Opts) :-
     callable(Goal),
     nonvar(Module),
     !,
-    undefined(Module:Goal, Caller).
-walk_called_3(_, _, _).
+    undefined(Module:Goal, Caller, Opts).
+walk_called_3(_, _, _, _).
 
-undefined(_, _) :-
-    current_context_value(undefined, ignore),
+undefined(_, _, Opts) :-
+    option(undefined(ignore), Opts),
     !.
-undefined(Goal, _) :-
+undefined(Goal, _, _) :-
     predicate_property(Goal, autoload(_)),
     !.
-undefined(Goal, Caller) :-
-    current_context_value(undefined, trace),
-    current_context_value(on_trace,  OnTrace),
-    current_source_location(From),
+undefined(Goal, Caller, Opts) :-
+    option(undefined(trace), Opts),
+    option(on_trace(OnTrace), Opts),
+    option(from(From), Opts),
     call(OnTrace, Goal, Caller, From),
     fail.
-undefined(_, _).
+undefined(_, _, _).
 
-walk_called_by([], _, _).
-walk_called_by([H|T], C, M) :-
+walk_called_by([], _, _, _).
+walk_called_by([H|T], C, M, O) :-
     (   H = G+N
-    ->  (   extend(G, N, G1)
-        ->  walk_called(G1, C, M)
+    ->  (   extend(G, N, G1, O)
+        ->  walk_called(G1, C, M, O)
         ;   true
         )
-    ;   walk_called(H, C, M)
+    ;   walk_called(H, C, M, O)
     ),
-    walk_called_by(T, C, M).
+    walk_called_by(T, C, M, O).
 
-walk_meta_call(I, Head, Meta, Caller, M) :-
+walk_meta_call(I, Head, Meta, Caller, M, Opts) :-
     arg(I, Head, AS),
     !,
     (   integer(AS)
     ->  arg(I, Meta, MA),
-        ( extend(MA, AS, Goal)
-        ->walk_called(Goal, Caller, M)
+        ( extend(MA, AS, Goal, Opts)
+        ->walk_called(Goal, Caller, M, Opts)
         ; true
         )
     ;   AS == (^)
     ->  arg(I, Meta, MA),
         remove_quantifier(MA, Goal, M, MG),
-        walk_called(Goal, Caller, MG)
+        walk_called(Goal, Caller, MG, Opts)
     ;   AS == (//)
     ->  arg(I, Meta, DCG),
-        walk_dcg_body(DCG, Caller, M)
+        walk_dcg_body(DCG, Caller, M, Opts)
     ;   true
     ),
     succ(I, I2),
-    walk_meta_call(I2, Head, Meta, Caller, M).
-walk_meta_call(_, _, _, _, _).
+    walk_meta_call(I2, Head, Meta, Caller, M, Opts).
+walk_meta_call(_, _, _, _, _, _).
 
 mark_args_non_fresh(I, Head, Meta) :-
     arg(I, Head, AS),
@@ -296,69 +301,66 @@ mark_args_non_fresh(I, Head, Meta) :-
     mark_args_non_fresh(I2, Head, Meta).
 mark_args_non_fresh(_, _, _).
 
-walk_dcg_body(Var, _, _) :-
+walk_dcg_body(Var, _, _, _) :-
     var(Var),
     !.
-walk_dcg_body([], _, _) :- !.
-walk_dcg_body([_|_], _, _) :- !.
-walk_dcg_body(String, _, _) :-
+walk_dcg_body([], _, _, _) :- !.
+walk_dcg_body([_|_], _, _, _) :- !.
+walk_dcg_body(String, _, _, _) :-
     string(String),
     !.
-walk_dcg_body(!, _, _) :- !.
-walk_dcg_body(M:G, C, _) :-
+walk_dcg_body(!, _, _, _) :- !.
+walk_dcg_body(M:G, C, _, O) :-
     !,
     (   nonvar(M)
-    ->  walk_dcg_body(G, C, M)
+    ->  walk_dcg_body(G, C, M, O)
     ;   fail
     ).
-walk_dcg_body((A,B), C, M) :-
+walk_dcg_body((A,B), C, M, O) :-
     !,
-    walk_dcg_body(A, C, M),
-    walk_dcg_body(B, C, M).
-walk_dcg_body((A->B), C, M) :-
+    walk_dcg_body(A, C, M, O),
+    walk_dcg_body(B, C, M, O).
+walk_dcg_body((A->B), C, M, O) :-
     !,
-    walk_dcg_body(A, C, M),
-    walk_dcg_body(B, C, M).
-walk_dcg_body((A*->B), C, M) :-
+    walk_dcg_body(A, C, M, O),
+    walk_dcg_body(B, C, M, O).
+walk_dcg_body((A*->B), C, M, O) :-
     !,
-    walk_dcg_body(A, C, M),
-    walk_dcg_body(B, C, M).
-walk_dcg_body((A;B), C, M) :-
+    walk_dcg_body(A, C, M, O),
+    walk_dcg_body(B, C, M, O).
+walk_dcg_body((A;B), C, M, O) :-
     !,
-    \+ \+ walk_dcg_body(A, C, M),
-    \+ \+ walk_dcg_body(B, C, M).
-walk_dcg_body((A|B), C, M) :-
+    \+ \+ walk_dcg_body(A, C, M, O),
+    \+ \+ walk_dcg_body(B, C, M, O).
+walk_dcg_body((A|B), C, M, O) :-
     !,
-    \+ \+ walk_dcg_body(A, C, M),
-    \+ \+ walk_dcg_body(B, C, M).
-walk_dcg_body({G}, C, M) :-
+    \+ \+ walk_dcg_body(A, C, M, O),
+    \+ \+ walk_dcg_body(B, C, M, O).
+walk_dcg_body({G}, C, M, O) :-
     !,
-    walk_called(G, C, M).
-walk_dcg_body(G, C, M) :-
+    walk_called(G, C, M, O).
+walk_dcg_body(G, C, M, O) :-
     extend_args(G, [_, _], G2),
-    walk_called(G2, C, M).
+    walk_called(G2, C, M, O).
 
-extend(Goal, _, _) :-
+extend(Goal, _, _, _) :-
     var(Goal),
     !,
     fail.
-extend(Goal, 0, Goal) :- !.
-extend(M:Goal, N, M:GoalEx) :-
+extend(Goal, 0, Goal, _) :- !.
+extend(M:Goal, N, M:GoalEx, Opts) :-
     !,
-    extend(Goal, N, GoalEx).
-extend(Goal, N, GoalEx) :-
+    extend(Goal, N, GoalEx, Opts).
+extend(Goal, N, GoalEx, _) :-
     callable(Goal),
     !,
     length(Extra, N),
     '$expand':mark_vars_non_fresh(Extra),
     extend_args(Goal, Extra, GoalEx).
-extend(Goal, _, _) :-
-    current_source_location(From),
+extend(Goal, _, _, Opts) :-
+    option(from(From), Opts),
     print_message(error, error(type_error(callable, Goal), From)),
     fail.
-
-current_source_location(From) :-
-    current_context_value(from, From).
 
 remove_quantifier(Goal, Goal, M, M) :-
     var(Goal),
