@@ -41,7 +41,7 @@
 ini_counter(N, count(N)).
 
 inc_counter(State, N) :-
-    arg(1, State, N1),
+    State = count(N1),
     succ(N1, N2),
     nb_setarg(1, State, N2),
     N2 = N.
