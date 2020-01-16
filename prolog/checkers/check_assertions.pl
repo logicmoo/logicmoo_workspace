@@ -238,17 +238,16 @@ check_property_ctcheck(Goal, M, Caller, AssrErrorL) :-
 
 set_variable_names(Name=Variable) :- ignore(Variable = '$VAR'(Name)).
 
-:- dynamic
-    assrt_error_db/2.
-
 do_check_property_ctcheck(CTCheck, AssrErrorL) :-
     AssrError = assrchk(_, _),
-    retractall(assrt_error_db(_, _)),
-    intercept(CTCheck, AssrError, CTCheck,
-              assertz(assrt_error_db(CTCheck, AssrError))),
-    findall(CTCheck-AssrError,
-            retract(assrt_error_db(CTCheck, AssrError)), CAssrErrorL),
+    SErrors = s([]),
+    intercept(CTCheck, AssrError, cpc_handler(AssrError), SErrors-CTCheck),
+    SErrors = s(CAssrErrorL),
     maplist(collect_assr_error(CTCheck), CAssrErrorL, AssrErrorL).
+
+cpc_handler(AssrError, SErrors-CTCheck) :-
+    SErrors = s(CAssrErrorL1),
+    nb_setarg(1, SErrors, [CTCheck-AssrError|CAssrErrorL1]).
 
 collect_assr_error(CTCheck, CTCheck-AssrError, AssrError).
 
