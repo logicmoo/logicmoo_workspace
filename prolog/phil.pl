@@ -1,9 +1,6 @@
 /** <module> hplp
 
-This module performs structure and parameter learning of 
-Hierachical Probabilic Logic Programs (HPLP) from data. 
-Parameter learning is done by applying gradient descent (Backpropagation)
-or Expectation maximization.
+This module provides algorithms for learning the structure and the parameters of Hierachical Probabilic Logic Programs (HPLP) from data. Structure learning is done by predicates invention and parameter learning by gradient descent (Backpropagation) or Expectation maximization.
 
 @author Arnaud Nguembang Fadja and Fabrizio Riguzzi
 @copyright Arnaud Nguembang Fadja and Fabrizio Riguzzi
@@ -14,20 +11,9 @@ or Expectation maximization.
  Copyright (c) 2019, Arnaud Nguembang Fadja and Fabrizio Riguzzi
 
 */
-:- module(phil,[read_Program/3,generateHPLPs/7,getTrees/2,
-  saveHPLPs/3,writeClauseOutput/1,resetProb/3,writeClause/2, 
-  induce_par/2,induce/2,set_sc/2,setting_sc/2,test/7,list2or/2,
-  list2and/2,sample/4,learn_params/5,op(500,fx,#),op(500,fx,-#),
-  test_prob/6,rules2termHPLPs/2,process_clauses/6,generate_clauses/6,
-  generate_clauses_bg/2,generate_body/3,make_dynamic/1,
-  extract_fancy_vars/2,linked_clause/3,banned_clause/3,
-  take_var_args/3,remove_duplicates/2,exctract_type_vars/3,
-  delete_one/3,get_next_rule_number/2,member_eq/2,
-  delete_one/3,retract_all/1,assert_all/3,write2/2,
-  write3/2,format2/3,format3/3,write_rules2/3,
-  write_rules3/3,nl2/1,nl3/1,onec/1,zeroc/1,andc/3,
-  ac_notc/2,orc/3,equalityc/3,or_list/2]).
 
+:- module(phil,[induce_hplp_par/2,induce_hplp/2,sample_hplp/4,
+  test_hplp/7,op(500,fx,#),op(500,fx,'-#'),set_hplp/2]).
 
 
 :-use_module(library(auc)).
@@ -49,86 +35,89 @@ or Expectation maximization.
 :- dynamic getRate/1.
 :- dynamic db/1.
 
-:- dynamic input_mod/1.
+:- dynamic input_mod_hplp/1.
 
-:- thread_local  input_mod/1.
+:- thread_local  input_mod_hplp/1.
 
-:- meta_predicate induce(:,-).
-:- meta_predicate objective_func(:,-,-,-,-,-,-,-).
+:- meta_predicate induce_hplp(:,-).
+:- meta_predicate objective_hplp_func(:,-,-,-,-,-,-,-).
 
-:- meta_predicate induce_rules(:,-).
-:- meta_predicate induce_par(:,-).
-:- meta_predicate induce_par_func(:,-,-,-,-,-,-,-,-).
-:- meta_predicate induce_par_func(:,-,-,-,-).
-:- meta_predicate induce_parameters(:,-,-,-).
-:- meta_predicate test(:,+,-,-,-,-,-).
-:- meta_predicate test_prob(:,+,-,-,-,-).
-:- meta_predicate set_sc(:,+).
-:- meta_predicate setting_sc(:,-).
-
-
+:- meta_predicate induce_hplp_rules(:,-).
+:- meta_predicate induce_hplp_par(:,-).
+:- meta_predicate induce_hplp_par_func(:,-,-,-,-,-,-,-,-).
+:- meta_predicate induce_hplp_par_func(:,-,-,-,-).
+:- meta_predicate induce_hplp_parameters(:,-,-,-).
+:- meta_predicate test_hplp(:,+,-,-,-,-,-).
+:- meta_predicate test_hplp_prob(:,+,-,-,-,-).
+:- meta_predicate set_hplp(:,+).
+:- meta_predicate setting_hplp(:,-).
 
 
 
-    % Default setting for generating the AC circuits and the predicate test(..)
-default_setting_sc(group,1). % use in the predicate derive_circuit_groupatoms (..)
-default_setting_sc(megaex_bottom,1).  % Necessary for the predicate test(..)
-default_setting_sc(initial_clauses_per_megaex,1).
-default_setting_sc(max_rules,10).
-default_setting_sc(max_body_length,100).
-default_setting_sc(neg_literals,false).
-default_setting_sc(background_clauses,50).
-default_setting_sc(specialization,bottom).
+
+
+% Default setting for generating the AC circuits and the predicate test_hplp(..)
+default_setting_hplp(group,1). % use in the predicate derive_circuit_groupatoms (..)
+default_setting_hplp(megaex_bottom,1).  % Necessary for the predicate test_hplp(..)
+default_setting_hplp(initial_clauses_per_megaex,1).
+default_setting_hplp(max_var,4).
+default_setting_hplp(max_rules,10).
+default_setting_hplp(maxdepth_var,2).
+default_setting_hplp(max_body_length,100).
+default_setting_hplp(neg_literals,false).
+default_setting_hplp(background_clauses,50).
+default_setting_hplp(specialization,bottom).
 /* allowed values: mode,bottom */
-default_setting_sc(specialize_head,false).
-default_setting_sc(score,ll).
+default_setting_hplp(specialize_head,false).
+default_setting_hplp(score,ll).
 /* allowed values: ll aucpr */
-default_setting_sc(neg_ex,cw).
-default_setting_sc(epsilon_parsing, 1e-5).
-default_setting_sc(tabling, off).
+default_setting_hplp(neg_ex,cw).
+default_setting_hplp(epsilon_parsing, 1e-5).
+default_setting_hplp(tabling, off).
 /* on, off */
-default_setting_sc(bagof,false).
+default_setting_hplp(bagof,false).
 /* values: false, intermediate, all, extra */
-default_setting_sc(depth_bound,false).  %if true, it limits the derivation of the example to the value of 'depth'
-default_setting_sc(depth,2).
-default_setting_sc(single_var,false). %false:1 variable for every grounding of a rule; true: 1 variable for rule (even if a rule has more groundings),simpler.
-default_setting_sc(prob_approx,false). %if true, it limits the number of different solutions found when computing the probability
-default_setting_sc(approx_value,100).
-default_setting_sc(logzero,log(0.000001)).
-default_setting_sc(seed,seed(3032)).
-default_setting_sc(verbosity,1).
-default_setting_sc(compiling,off).
-default_setting_sc(d,1).
+default_setting_hplp(depth_bound,false).  %if true, it limits the derivation of the example to the value of 'depth'
+default_setting_hplp(depth,2).
+default_setting_hplp(single_var,false). %false:1 variable for every grounding of a rule; true: 1 variable for rule (even if a rule has more groundings),simpler.
+default_setting_hplp(prob_approx,false). %if true, it limits the number of different solutions found when computing the probability
+default_setting_hplp(approx_value,100).
+default_setting_hplp(logzero,log(0.000001)).
+default_setting_hplp(seed,seed(3032)).
+default_setting_hplp(verbosity,1).
+default_setting_hplp(compiling,off).
+default_setting_hplp(d,1).
 
 
 %     Phil  default settings
-default_setting_sc(maxIter_phil,1000). % Max iteration
-default_setting_sc(epsilon_deep,0.0001). % epsilon 
-default_setting_sc(epsilon_deep_fraction,0.00001). % delta
-default_setting_sc(max_initial_weight,0.5). % intial weights of dphil in [-0.5 0.5]
-default_setting_sc(adam_params,[0.001,0.9,0.999,1e-8]). % default Adam hyper-pameters
-default_setting_sc(batch_strategy,stoch_minibatch(100)). % allowed values: batch, minibatch(size), stoch_minibatch(size)
-default_setting_sc(algorithmType,dphil).% allowed values: dphil, emphil
-default_setting_sc(saveStatistics,no). % indicates where to safe the statistics or no
-default_setting_sc(statistics_folder,statisitics). %if saveStatistics is different to "no", it indicates the folder where to safe the statistics during paramenter learning.
-default_setting_sc(zero,0.000001).  % Approximate value of 0 
-default_setting_sc(setSeed,no). 
-default_setting_sc(useInitParams,no). % if yes the initial parameters during the learning are the ones indicated in the progam. Otherwise, the parameters are initialy generated randomly
-default_setting_sc(c_seed,c_seed).
+default_setting_hplp(maxIter_phil,1000). % Max iteration
+default_setting_hplp(epsilon_deep,0.0001). % epsilon 
+default_setting_hplp(epsilon_deep_fraction,0.00001). % delta
+default_setting_hplp(max_initial_weight,0.5). % intial weights of dphil in [-0.5 0.5]
+default_setting_hplp(adam_params,[0.001,0.9,0.999,1e-8]). % default Adam hyper-pameters
+default_setting_hplp(batch_strategy,stoch_minibatch(100)). % allowed values: batch, minibatch(size), stoch_minibatch(size)
+default_setting_hplp(algorithmType,dphil).% allowed values: dphil, emphil
+default_setting_hplp(saveStatistics,no). % indicates where to safe the statistics or no
+default_setting_hplp(statistics_folder,statistics). %if saveStatistics is different to "no", it indicates the folder where to safe the statistics during paramenter learning.
+default_setting_hplp(zero,0.000001).  % Approximate value of 0 
+default_setting_hplp(setSeed,no). 
+default_setting_hplp(useInitParams,no). % if yes the initial parameters during the learning are the ones indicated in the progam. Otherwise, the parameters are initialy generated randomly
+default_setting_hplp(c_seed,c_seed).
 
 % Sleahp default settings
-default_setting_sc(probability,1.0). % Initial value which indicates the probability to go to the next layer during HPLP generation
-default_setting_sc(rate,0.95). % Rate to multiply to the current probability at each layer
-default_setting_sc(min_probability,1e-5).  % Threshold of the probability under which the clause is dropped
-default_setting_sc(generate_mega_hplp,yes). 
-default_setting_sc(saveFile,"hplp"). % File where to save the initial large HPLP generated
-default_setting_sc(max_layer,-1). % Indicates the Max number of clause layer. -1 indicates the highest layer possible
-
+default_setting_hplp(probability,1.0). % Initial value which indicates the probability to go to the next layer during HPLP generation
+default_setting_hplp(rate,0.95). % Rate to multiply to the current probability at each layer
+default_setting_hplp(min_probability,1e-5).  % Threshold of the probability under which the clause is dropped
+default_setting_hplp(unifyRoot,yes).
+default_setting_hplp(generate_mega,yes).
+default_setting_hplp(saveHPLP,no). 
+default_setting_hplp(saveFile,"hplp"). % File where to save the initial large HPLP generated
+default_setting_hplp(max_layer,-1). % Indicates the Max number of clause layer. -1 indicates the highest layer possible
 % EM regularization parameters
-default_setting_sc(regularized,yes). % yes for activating the regularization and no otherwise
-default_setting_sc(typeRegularization,1). % set the regulariztion type. 1,2 if algorithmType=dphil. Otherwise 1,2,3 
-default_setting_sc(gamma,100). % set the value of gamma according to the type (gamma=a if type=3)
-default_setting_sc(gammaCount,10). % set the value of gammaCount according to the type (gammaCount=b if type=3)
+default_setting_hplp(regularized,yes). % yes for activating the regularization and no otherwise
+default_setting_hplp(regularizationType,1). % set the regulariztion type. 1,2 if algorithmType=dphil. Otherwise 1,2,3 
+default_setting_hplp(gamma,100). % set the value of gamma according to the type (gamma=a if type=3)
+default_setting_hplp(gammaCount,10). % set the value of gammaCount according to the type (gammaCount=b if type=3)
 
 
 
@@ -173,14 +162,13 @@ default_setting_sc(gammaCount,10). % set the value of gammaCount according to th
  * It returns the final log likelihood of examples CLL and the list of learned Parameters probabilities
  */
 
-/**
- * forward(AC:+term,++Pobabilities:list,+:integer-Probability:+double) is det
- *
- * Evaluate the arithmetic circuit AC.
- * Takes as input the list of learned probabilities and the number of rule NR,
- *
- * Returns in Probability the ecaluated output of the AC
- */
+%!
+ % forward(AC:+term,++Pobabilities:list,+:integer-Probability:+double) is det
+ %
+ % Evaluate the arithmetic circuit AC.
+ % Takes as input the list of learned probabilities and the number of rule NR,
+ %
+ % Returns in Probability the evaluated output of the AC
 
 
 orc(or(A),or(B),or(C)):-
@@ -287,7 +275,7 @@ or_list1([H|T],B0,B1):-
 
 
 /**
- * test(:P:probabilistic_program,+TestFolds:list_of_atoms,-LL:float,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
+ * test_hplp(:P:probabilistic_program,+TestFolds:list_of_atoms,-LL:float,-AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
  *
  * The predicate takes as input in P a probabilistic program,
  * tests P on the folds indicated in TestFolds and returns the
@@ -296,14 +284,14 @@ or_list1([H|T],B0,B1):-
  * of the ROC curve in ROC, the area under the Precision Recall curve in AUCPR
  * and a dict containing the points of the PR curve in PR
  */
-test(P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
-  test_prob(P,TestFolds,_NPos,_NNeg,LL,LG),
+test_hplp(M:P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
+  test_hplp_prob(M:P,TestFolds,_NPos,_NNeg,LL,LG),
   compute_areas_diagrams(LG,AUCROC,ROC,AUCPR,PR).
 
 
 
 /**
- * test_prob(:P:probabilistic_program,+TestFolds:list_of_atoms,-NPos:int,-NNeg:int,-LL:float,-Results:list) is det
+ * test_hplp_prob(:P:probabilistic_program,+TestFolds:list_of_atoms,-NPos:int,-NNeg:int,-LL:float,-Results:list) is det
  *
  * The predicate takes as input in P a probabilistic program,
  * tests P on the folds indicated in TestFolds and returns
@@ -312,7 +300,7 @@ test(P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
  * and in Results a list containing the probabilistic result for each query contained in TestFolds.
  */
 
-test_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
+test_hplp_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
   write2(M,'Testing\n'),
   findall(Exs,(member(F,TestFolds),M:fold(F,Exs)),L),
   append(L,TE),
@@ -340,14 +328,14 @@ test_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
   retract_all(RFRef).
 
 /**
- * induce_par(:TrainFolds:list_of_atoms,-P:probabilistic_program) is det
+ * induce_hplp_par(:TrainFolds:list_of_atoms,-P:probabilistic_program) is det
  *
  * The predicate learns the parameters of the program stored in the in/1 fact
  * of the input file using the folds indicated in TrainFolds for training.
  * It returns in P the input program with the updated parameters.
  */
-induce_par(M:Folds,P):-
-  induce_parameters(M:Folds,_DB,R),
+induce_hplp_par(M:Folds,P):-
+  induce_hplp_parameters(M:Folds,_DB,R),
   rules2termHPLPs(R,P),
   M:local_setting(saveFile,SaveFile),
   string_concat(SaveFile,"_Learned",Learned),
@@ -359,7 +347,7 @@ rules2termHPLPs(R,T):-
 rules2termHPLP(rule(_N,[H:Par|_],BL,_Lit),(H:Par:-B)):-
 list2and(BL,B).
 
-induce_parameters(M:Folds,DB,R):-
+induce_hplp_parameters(M:Folds,DB,R):-
   M:local_setting(seed,Seed),
   set_random(Seed),
   findall(Exs,(member(F,Folds),M:fold(F,Exs)),L),
@@ -378,7 +366,7 @@ induce_parameters(M:Folds,DB,R):-
   M:in(R00),
   process_clauses(R00,M,[],_,[],R0),
   statistics(walltime,[_,_]),
-  learn_params(DB,M,R0,R,Score2),
+  learn_params_hplp(DB,M,R0,R,Score2),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
   format('Wall time=~f  CLL=~f ~n',[CTS,Score2]),
@@ -544,14 +532,14 @@ getInitialParameters([rule(_Number,[_Head:Param,'':_],_Body,_)|Rest],[Param|Rest
   
 
 /**
- * learn_params(+DB:list_of_atoms,+M:atom,+R0:probabilistic_program,-R:probabilistic_program,-Score:float) is det
+ * learn_params_hplp(+DB:list_of_atoms,+M:atom,+R0:probabilistic_program,-R:probabilistic_program,-Score:float) is det
  *
  * The predicate learns the parameters of the program R0 and returns
  * the updated program in R and the score in Score.
  * DB contains the list of interpretations ids and M the module where
  * the data is stored.
  */
-learn_params(DB,M,R0,R,CLL):-
+learn_params_hplp(DB,M,R0,R,CLL):-
   generate_clauses(R0,M,R1,0,[],Th0),
   assert_all(Th0,M,Th0Ref),
   assert_all(R1,M,R1Ref),!,
@@ -562,6 +550,8 @@ learn_params(DB,M,R0,R,CLL):-
   M:local_setting(group,G),
   derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
   maplist(remove_p,Nodes0,Nodes),
+  %write(Nodes),
+  %trace,
   M:local_setting(algorithmType,Algorithm),
   M:local_setting(maxIter_phil,MaxIter),
   M:local_setting(epsilon_deep,EA),
@@ -589,7 +579,7 @@ learn_params(DB,M,R0,R,CLL):-
   retract_all(R1Ref),
   % Regularized parameters
   M:local_setting(regularized,Regularized),
-  M:local_setting(typeRegularization,TypeReg),
+  M:local_setting(regularizationType,TypeReg),
   M:local_setting(gamma,Gamma),
   M:local_setting(gammaCount,GammaCount),
   (Regularized=yes ->
@@ -654,15 +644,15 @@ dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
 %!	induce
 %
 %
-induce(M:TrainFolds,P):-
-  induce_rules(M:TrainFolds,P0),
+induce_hplp(M:TrainFolds,P):-
+  induce_hplp_rules(M:TrainFolds,P0),
   rules2termHPLPs(P0,P),
   M:local_setting(saveFile,SaveFile),
   string_concat(SaveFile,"_Learned",Learned),
   writeClause(P,Learned).
 
-induce_rules(M:Folds,R):-
-  set_sc(M:compiling,on),
+induce_hplp_rules(M:Folds,R):-
+  set_hplp(M:compiling,on),
   M:local_setting(seed,Seed),
   set_random(Seed),
   findall(Exs,(member(F,Folds),M:fold(F,Exs)),L),
@@ -683,7 +673,7 @@ induce_rules(M:Folds,R):-
       true
     ;
       format2(M,"~nWARN: Number of required bottom clauses is greater than the number of training examples!~n. The number of required bottom clauses will be equal to the number of training examples", []),
-      set_sc(M:megaex_bottom, NMegaEx)
+      set_hplp(M:megaex_bottom, NMegaEx)
   ),
   statistics(walltime,[_,_]),
   (M:local_setting(specialization,bottom)->
@@ -694,14 +684,16 @@ induce_rules(M:Folds,R):-
     get_head_atoms(O,M),
     generate_top_cl(O,M,R1)
   ),
+  %trace,
   genHPLP(M,R1,HPLP),
-  learn_params(DB,M,HPLP,R,CLL),
+  %trace,
+  learn_params_hplp(DB,M,HPLP,R,CLL),
   statistics(walltime,[_,WT]),
   WTS is WT/1000,
   %write2(M,'\n\n'),
   format2(M,' HPLP Final score ~f~n',[CLL]),
   format('Time=~f ~n',[WTS]),
-  set_sc(M:compiling,off),
+  set_hplp(M:compiling,off),
   (M:bg(RBG0)->
     retract_all(ThBGRef),
     retract_all(ClBGRef)
@@ -736,8 +728,9 @@ genHPLP(M,Bottoms,HPLP):-
   M:local_setting(probability,InitProb),
   M:local_setting(rate,Rate),
   M:local_setting(max_layer,Max1),
-  M:local_setting(generate_mega_hplp,GenerateBottom),
+  M:local_setting(generate_mega,GenerateBottom),
   M:local_setting(saveFile,SaveFile),
+  M:local_setting(unifyRoot,UnifyRoot),
   Temp is -1,
   (Max1=:=Temp ->
      MaxLayer is 2147000000,
@@ -750,7 +743,11 @@ genHPLP(M,Bottoms,HPLP):-
   Prob is InitProb,
   assert(getRate(Rate)),
   (GenerateBottom=yes ->
-      maplist(unification(Rule1),Bottoms),
+      (UnifyRoot=yes ->
+          maplist(unification(Rule1),Bottoms)
+        ;
+        true
+      ),
       getTrees(Bottoms,Trees),
       Trees1=[t(head,Trees)],
       generateHPLPs(-1,HeadFunctor,MaxLayer,Prob,Trees1,HPLPs,Levels),
@@ -797,7 +794,8 @@ remove_clauses_loop([Rule|Rest],Prob,NumCur,Num,RulesCur,RulesOut):-
 unification(Rule1,Rule2):-
    Rule1=(rule(_,[Head1:_,_],_,_),_),
    Rule2=(rule(_,[Head2:_,_],_,_),_),
-  unify_with_occurs_check(Head1,Head2).
+   Head1=Head2.
+ % unify_with_occurs_check(Head1,Head2).
 
 %------------------Create a tree from Bottom clauses------------------------
 getTrees([],[]):-!.
@@ -807,9 +805,21 @@ getTrees([(rule(_,[Head:_,_],_,Body),_)|RestBottom],[Tree|RestTrees]):-
       getTree(Body,[],BodyTrees),
       Tree=t(Head,BodyTrees)
     ;
+    %trace,
     Bod=[Head|Body],
     getTree(Bod,[],BodyTrees),
-    BodyTrees=[Tree]
+    length(BodyTrees, LTree),
+    (LTree=:=0 ->
+      Tree=[]
+      ;
+      (LTree=:=1 ->
+        BodyTrees=[Tree]
+        ;
+        %trace,
+        BodyTrees=[H1|B1],
+        Tree=t(H1,B1)
+      )
+    )
   ),
 %getTree(Body,[],BodyTrees),
 getTrees(RestBottom, RestTrees).
@@ -876,9 +886,9 @@ insert_tree_loop_Forest(Pred,PreviousForest,[ForestCurr|RestForest],ForestResult
   append_No_empty(ForestResult1,RestForest,ForestResult).
 
 
-/**
-*  Append a list Whitout considering the empty lits 
-*/
+
+% Append a list Whitout considering the empty lits 
+
 append_No_empty(List,[],List).
 append_No_empty([],List,List).
 append_No_empty(List1,List2,List):-
@@ -892,10 +902,9 @@ ischild(Pred1,Pred2):-
   length(Inter,L),
   L >0.
 
-/**
-*  getVariableArgument(+Predicate:Term,-VarArguments:list)
-*  Given a predicate Term, return in VarArguments the list of variable argument of Term.
-*/
+
+%! getVariableArgument(+Predicate:Term,-VarArguments:list)
+%Given a predicate Term, return in VarArguments the list of variable argument %of Term.
 
 getVariableArgument(Predicate,VarArguments):-
   Predicate=..List,
@@ -946,6 +955,7 @@ generateHPLPs(InitLevel,HeadFunctor,MaxLayer,Prob,[Tree|RestTrees],[HPLP|RestHPL
   assert(getIndex(1)),
   generateHPLPloop(MaxLayer,1,InitLevel,[h([Head,'',Prob],Forest)],[],HPLP1,0,Level),
   retractall(getIndex(_Index1)),
+  %trace,
   removeHidden(HPLP1,HPLP11,[HeadFunctor],_),
   reduce([],HPLP11,0,[],HPLP),
   %HPLP=HPLP11,
@@ -1246,33 +1256,33 @@ saveTrees(Bottoms,FileName):-
   writeForest(Stream,Iter,RestForest).
   
   
-  /**
-  *  Some useful predicate on Trees
-  */
   
-  /**
-  *  Count the Number of Node in a tree
-  */
+%    Some useful predicate on Trees
+  
+  
+ 
+%    Count the Number of Node in a tree
+  
   nnodes(t(_,F),N) :- nnodes(F,NF), N is NF+1.
   nnodes([],0).
   nnodes([T|Ts],N) :- nnodes(T,NT), nnodes(Ts,NTs), N is NT+NTs.
   
-  /**
-  *  True if its arguments is a tree
-  */
+  
+%    True if its arguments is a tree
+  
   istree(t(_,F)):-isforest(F).
   isforest([]).
   isforest([T|Ts]) :- istree(T), isforest(Ts).
   
-  /**
-  *  add a child to and existing tree
-  */
+  
+%    add a child to and existing tree
+  
   
   addChild(t(Pred,Forest),NewChild,t(Pred,NewForest)):-
   append_No_empty(Forest,NewChild,NewForest).
-  /**
-  *  Return the height of a tree
-  */
+  
+%    Return the height of a tree
+  
   height(Tree,H):-
   tree_depth(Tree,Max),
   H is Max-1.
@@ -1392,7 +1402,7 @@ derive_circuit_groupatoms([H|T],M,E,G,Nodes0,Nodes,CLL0,CLL,LE0,LE):-
   get_output_atoms(O,M),
   generate_goal(O,M,H,[],GL),
   CardEx is 1.0,
-  %sample(1000,GL,GLTemp,_),
+  %sample_hplp(1000,GL,GLTemp,_),
   get_node_list_groupatoms(GL,M,ACs,CardEx,G,CLL0,CLL1,LE0,LE1),
   append(Nodes0,ACs,Nodes1),
   derive_circuit_groupatoms(T,M,E,G,Nodes1,Nodes,CLL1,CLL,LE1,LE).
@@ -1400,6 +1410,7 @@ derive_circuit_groupatoms([H|T],M,E,G,Nodes0,Nodes,CLL0,CLL,LE0,LE):-
 get_node_list_groupatoms([],_M,[],_CE,_Gmax,CLL,CLL,LE,LE).
 
 get_node_list_groupatoms([H|T],M,[[AC1,CE]|ACT],CE,Gmax,CLL0,CLL,[H|LE0],LE):-
+  %trace,
   get_node(H,M,AC1), 		%creates the AC for atom ,
   CLL2 is CLL0,
   get_node_list_groupatoms(T,M,ACT,CE,Gmax,CLL2,CLL,LE0,LE).
@@ -1650,7 +1661,7 @@ deduct(0,_Mod,_DB,Th,Th):-!.
 
 deduct(NM,Mod,DB,InTheory0,InTheory):-
   get_head_atoms(O,Mod),
-  sample(1,DB,Sampled,DB1),
+  sample_hplp(1,DB,Sampled,DB1),
   (Sampled=[M]->
     generate_head(O,M,Mod,[],HL),
     NM1 is NM-1,
@@ -1731,25 +1742,25 @@ keep_const([H|T],[H1|T1]):-
 
 
 /**
- * sample(+N,List:list,-Sampled:list,-Rest:list) is det
+ * sample_hplp(+N,List:list,-Sampled:list,-Rest:list) is det
  *
  * Samples N elements from List and returns them in Sampled.
  * The rest of List is returned in Rest
  * If List contains less than N elements, Sampled is List and Rest
  * is [].
 */
-sample(0,List,[],List):-!.
+sample_hplp(0,List,[],List):-!.
 
-sample(N,List,List,[]):-
+sample_hplp(N,List,List,[]):-
   length(List,L),
   L=<N,!.
 
-sample(N,List,[El|List1],Li):-
+sample_hplp(N,List,[El|List1],Li):-
   length(List,L),
   random(0,L,Pos),
   nth0(Pos,List,El,Rest),
   N1 is N-1,
-  sample(N1,Rest,List1,Li).
+  sample_hplp(N1,Rest,List1,Li).
 
 sample(0,_List,[]):-!.
 
@@ -2613,13 +2624,6 @@ exceed_depth([H|T],MD):-
 	Dep<MD, %setting_sc(maxdepth_var,MD),
 	exceed_depth(T,MD).
 
-/*
-
-EMBLEM and SLIPCASE
-
-Copyright (c) 2011, Fabrizio Riguzzi and Elena Bellodi
-
-*/
 
 
 assert_all([],_M,[]).
@@ -2911,7 +2915,7 @@ process_body([H|T],AC,AC1,Vars,Vars1,
   process_body(T,AC,AC1,Vars,Vars1,Rest,Module,M).
 
 process_body([H|T],AC,AC1,Vars,[ACH,AC2|Vars1],
-[H1,andc(AC,ACH,AC2)|Rest],Module,M):-!, %agg. cut
+[H1,phil:andc(AC,ACH,AC2)|Rest],Module,M):-!, %agg. cut
   add_ac_arg(H,ACH,Module,H1),
   process_body(T,AC2,AC1,Vars,Vars1,Rest,Module,M).
 
@@ -2944,7 +2948,7 @@ process_body_db([H|T],AC,AC1,DB,Vars,Vars1,
   process_body_db(T,AC,AC1,DB,Vars,Vars1,Rest,Module,M).
 
 process_body_db([H|T],AC,AC1,DB,Vars,[ACH,AC2|Vars1],
-[H1,andc(AC,ACH,AC2)|Rest],Module,M):-!, %agg. cut
+[H1,phil:andc(AC,ACH,AC2)|Rest],Module,M):-!, %agg. cut
   add_ac_arg_db(H,ACH,DB,Module,H1),
   process_body_db(T,AC2,AC1,DB,Vars,Vars1,Rest,Module,M).
 
@@ -2997,14 +3001,14 @@ and_list([H|T],B0,B1):-
 
 
 /**
- * set_sc(:Parameter:atom,+Value:term) is det
+ * set_hplp(:Parameter:atom,+Value:term) is det
  *
  * The predicate sets the value of a parameter
  * For a list of parameters see
  * https://github.com/friguzzi/cplint/blob/master/doc/manual.pdf or
  * http://ds.ing.unife.it/~friguzzi/software/cplint-swi/manual.html
  */
-set_sc(M:Parameter,Value):-
+set_hplp(M:Parameter,Value):-
   retract(M:local_setting(Parameter,_)),
   assert(M:local_setting(Parameter,Value)).
 
@@ -3124,11 +3128,11 @@ to_tabled(M,H0,H):-
   ).
 
 to_tabled_head_list(M,A0:P,A:P):-
-  to_tabled(M,A0,A).
+  phil:to_tabled(M,A0,A).
 
 gen_clause_cw((H :- Body),_M,N,N,(H :- Body),[(H1 :- Body)]):-
   !,
-  to_tabled(H,H1).
+  phil:to_tabled(H,H1).
 
 gen_clause_cw(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   rule(N,HeadList,BodyList,Lit),Clauses):-!,
@@ -3153,7 +3157,7 @@ gen_clause_cw(def_rule(H,BodyList,Lit),_M,N,N,def_rule(H,BodyList,Lit),Clauses) 
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body1),
   add_ac_arg(H,ACAnd,Module,Head1),
-  to_tabled(Head1,Head2),
+  phil:to_tabled(Head1,Head2),
   Clauses=[(Head2 :- Body1)].
 
 
@@ -3168,7 +3172,7 @@ generate_clauses([H|T],M,[H1|T1],N,C0,C):-
 
 gen_clause((H :- Body),_M,N,N,(H :- Body),[(H1 :- Body)]):-
   !,
-  to_tabled(H,H1).
+  phil:to_tabled(H,H1).
 
 
 gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
@@ -3211,7 +3215,7 @@ gen_clause(def_rule(H,BodyList,Lit),M,N,N,def_rule(H,BodyList,Lit),Clauses) :-
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body1),
   add_ac_arg_db(H,ACAnd,DBH,Module,Head1),
-  to_tabled(Head1,Head2),
+  phil:to_tabled(Head1,Head2),
   Clauses=[(Head2 :- (DBH>=1,DB is DBH-1,Body1))].
 
 gen_clause(def_rule(H,BodyList,Lit),M,N,N,def_rule(H,BodyList,Lit),Clauses) :- !,%agg. cut
@@ -3220,7 +3224,7 @@ gen_clause(def_rule(H,BodyList,Lit),M,N,N,def_rule(H,BodyList,Lit),Clauses) :- !
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body1),
   add_ac_arg(H,ACAnd,Module,Head1),
-  to_tabled(Head1,Head2),
+  phil:to_tabled(Head1,Head2),
   Clauses=[(Head2 :- Body1)].
 
 
@@ -3270,7 +3274,7 @@ average(L,Av):-
 term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)])) :-
 % disjunctive clause with a single head atom e DB, con prob. diversa da 1
   M:local_setting(depth_bound,true),
-  ((Head:-Body) \= ((user:term_expansion(_,_) ):- _ )),
+  ((Head:-Body) \= ((system:term_expansion(_,_) ):- _ )),
   Head = (H:_), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr,M,HeadList),
@@ -3291,7 +3295,7 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
 term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)])) :-
 % disjunctive clause with a single head atom e DB, con prob. diversa da 1
   M:local_setting(depth_bound,false),
-  ((Head:-Body) \= ((user:term_expansion(_,_) ):- _ )),
+  ((Head:-Body) \= ((system:term_expansion(_,_) ):- _ )),
   Head = (H:_), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr,M,HeadList),
@@ -3315,13 +3319,13 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
 
 :- multifile sandbox:safe_meta/2.
 
-sandbox:safe_meta(phil:induce_par(_,_) ,[]).
-sandbox:safe_meta(phil:induce(_,_), []).
+sandbox:safe_meta(phil:induce_hplp_par(_,_) ,[]).
+sandbox:safe_meta(phil:induce_hplp(_,_), []).
 sandbox:safe_meta(phil:get_node(_,_), []).
-sandbox:safe_meta(phil:test_prob(_,_,_,_,_,_), []).
-sandbox:safe_meta(phil:test(_,_,_,_,_,_,_), []).
-sandbox:safe_meta(phil:set_sc(_,_), []).
-sandbox:safe_meta(phil:setting_sc(_,_), []).
+sandbox:safe_meta(phil:test_prob_hplp(_,_,_,_,_,_), []).
+sandbox:safe_meta(phil:test_hplp(_,_,_,_,_,_,_), []).
+sandbox:safe_meta(phil:set_hplp(_,_), []).
+sandbox:safe_meta(phil:setting_hplp(_,_), []).
 
 
 
@@ -3685,12 +3689,12 @@ zero_clause(M,A/B,(H:-maplist(nonvar,Args0),phil:zeroc(AC))):-
 
 
 
-user:term_expansion((:- sc), []) :-!,
+system:term_expansion((:- phil), []) :-!,
   prolog_load_context(module, M),
   retractall(M:local_setting(_,_)),
-  findall(local_setting(P,V),default_setting_sc(P,V),L),
+  findall(local_setting(P,V),default_setting_hplp(P,V),L),
   assert_all(L,M,_),
-  assert(input_mod(M)),
+  assert(input_mod_hplp(M)),
   retractall(M:rule_sc_n(_)),
   assert(M:rule_sc_n(0)),
   M:dynamic((modeh/2,modeh/4,fixed_rule/3,banned/2,lookahead/2,
@@ -3702,31 +3706,31 @@ user:term_expansion((:- sc), []) :-!,
   retractall(M:tabled(_)),
   style_check(-discontiguous).
 
-user:term_expansion(end_of_file, C) :-
+system:term_expansion(end_of_file, C) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   make_dynamic(M),
   findall(LZ,M:zero_clauses(LZ),L0),
   append(L0,L),
   retractall(M:zero_clauses(_)),
 %  retractall(M:tabled(_)),
-  %retractall(input_mod(M)),
+  %retractall(input_mod_hplp(M)),
   append(L,[(:- style_check(+discontiguous)),end_of_file],C).
 
-user:term_expansion((:- begin_bg), []) :-
+system:term_expansion((:- begin_bg), []) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   assert(M:bg_on).
 
-user:term_expansion(C, M:bgc(C)) :-
+system:term_expansion(C, M:bgc(C)) :-
   prolog_load_context(module, M),
   C\= (:- end_bg),
-  input_mod(M),
+  input_mod_hplp(M),
   M:bg_on,!.
 
-user:term_expansion((:- end_bg), []) :-
+system:term_expansion((:- end_bg), []) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   retractall(M:bg_on),
   findall(C,M:bgc(C),L),
   retractall(M:bgc(_)),
@@ -3738,20 +3742,20 @@ user:term_expansion((:- end_bg), []) :-
     assert(M:bg(L))
   ).
 
-user:term_expansion((:- begin_in), []) :-
+system:term_expansion((:- begin_in), []) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   assert(M:in_on).
 
-user:term_expansion(C, M:inc(C)) :-
+system:term_expansion(C, M:inc(C)) :-
   prolog_load_context(module, M),
   C\= (:- end_in),
-  input_mod(M),
+  input_mod_hplp(M),
   M:in_on,!.
 
-user:term_expansion((:- end_in), []) :-
+system:term_expansion((:- end_in), []) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   retractall(M:in_on),
   findall(C,M:inc(C),L),
   retractall(M:inc(_)),
@@ -3763,35 +3767,37 @@ user:term_expansion((:- end_in), []) :-
     assert(M:in(L))
   ).
 
-user:term_expansion(output(P/A), [(:- table P1),output(P/A)]) :-
+system:term_expansion(output(P/A), [output(P/A)|TabDir]) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   tab(M,P/A,P1),
   zero_clause(M,P/A,Z),
+  system:term_expansion((:- table P1),TabDir),
   assert(M:zero_clauses([Z])).
 
-user:term_expansion(input(P/A), [(:-table P1),input(P/A)]):-
+system:term_expansion(input(P/A), [input(P/A)|TabDir]):-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   tab(M,P/A,P1),
   zero_clause(M,P/A,Z),
+  system:term_expansion((:- table P1),TabDir),
   assert(M:zero_clauses([Z])).
 
-user:term_expansion(begin(model(I)), []) :-
+system:term_expansion(begin(model(I)), []) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   retractall(M:model(_)),
   assert(M:model(I)),
   assert(M:int(I)).
 
-user:term_expansion(end(model(_I)), []) :-
+system:term_expansion(end(model(_I)), []) :-
   prolog_load_context(module, M),
-  input_mod(M),!,
+  input_mod_hplp(M),!,
   retractall(M:model(_)).
 
-user:term_expansion(At, A) :-
+system:term_expansion(At, A) :-
   prolog_load_context(module, M),
-  input_mod(M),
+  input_mod_hplp(M),
   M:model(Name),
   At \= (_ :- _),
   At \= end_of_file,
