@@ -137,6 +137,10 @@ replace_goal_hook(nb_setarg(_, _, _), _, true).
 
 replace_body_hook(with_value(G, _, _), context_values, G).
 replace_body_hook(with_value(G, _, _, _), context_values, G).
+replace_body_hook(with_context_value(G, _, _), context_values, G).
+replace_body_hook(with_context_value(G, _, _, _), context_values, G).
+replace_body_hook(with_context_values(G, _, _), context_values, G).
+replace_body_hook(with_context_values(G, _, _, _), context_values, G).
 replace_body_hook(rtcheck_lit(_, G, _), _, G).
 replace_body_hook(start_rtcheck(_, G), rtchecks_rt, G).
 replace_body_hook('$with_asr'( G, _), ctrtchecks, G).
