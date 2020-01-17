@@ -77,7 +77,6 @@ concurrent_forall(Cond, Action) :-
                thread_send_message(Queue, goal(I, Action))
            )),
     SWorkers = workers(WorkerCount, Workers),
-    writeln(user_error, nw(WorkerCount)),
     forall(member(_, Workers),
            thread_send_message(Queue, done)),
     Counter = count(I),
