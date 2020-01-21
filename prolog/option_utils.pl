@@ -174,7 +174,12 @@ process_fdirs(File, OFile, Options1) :-
       )
     ->alias_files(ADirL, -, true, DirL, Options),
       ( Loaded = true
-      ->Params = source(Options1)
+      ->EL = OFile.extensions,
+        ( EL = (-)
+        ->Options2 = Options1
+        ; Options2 = [extensions(EL)|Options1]
+        ),
+        Params = source(Options2)
       ; findall(F, module_file_(_, F), LFileU),
         sort(LFileU, LFileL),
         Params = loaded(LFileL)
@@ -304,7 +309,7 @@ project_dict(mfile, _, MFileD, MFileD).
 option_collect(Name, Dict, Options1, Options) :-
     foldl(select_option_default,
           [module_files(MFileD)-(-),
-           if(Loaded)-loaded,
+           if(Loaded)-true,
            module_property(Prop)-[],
            module(M)-M,
            modules(ML)-[],
