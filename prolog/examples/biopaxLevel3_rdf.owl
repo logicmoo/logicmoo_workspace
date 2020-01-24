@@ -2113,7 +2113,7 @@ Comments: This grouping has three semantic implications:
         <owl:disjointWith rdf:resource="http://www.biopax.org/release/biopax-level3.owl#SequenceModificationVocabulary"/>
         <owl:disjointWith rdf:resource="http://www.biopax.org/release/biopax-level3.owl#SequenceRegionVocabulary"/>
         <owl:disjointWith rdf:resource="http://www.biopax.org/release/biopax-level3.owl#TissueVocabulary"/>
-        <rdfs:comment rdf:datatype="&xsd;string">Definiiton: A reference to a term from an entity reference group ontology. As of the writing of this documentation, there is no standard ontology of these terms, though a common type is ‘homology’.</rdfs:comment>
+        <rdfs:comment rdf:datatype="&xsd;string">Definiiton: A reference to a term from an entity reference group ontology. As of the writing of this documentation, there is no standard ontology of these terms, though a common type is "homology".</rdfs:comment>
     </owl:Class>
     
 
