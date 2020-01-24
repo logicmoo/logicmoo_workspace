@@ -599,7 +599,7 @@ prob_inconsistent_theory(M:Prob):-
 
 % adds the query into the ABox
 add_q(M,(ABox0,Tabs0),Query,(ABox,Tabs)):-
-  initial_expl(M,Expl),
+  empty_expl(M,Expl),
   add(ABox0,(Query,Expl),ABox),
   create_tabs([(Query,Expl)],Tabs0,Tabs).
 
@@ -1172,7 +1172,7 @@ add_nominal(M,D,Ind,ABox0,ABox):-
      ->
      ABox = ABox1
      ;
-     (initial_expl(M,Expl),ABox = [(classAssertion('http://www.w3.org/2002/07/owl#Thing',Ind),Expl)|ABox1])
+     (empty_expl(M,Expl),ABox = [(classAssertion('http://www.w3.org/2002/07/owl#Thing',Ind),Expl)|ABox1])
      )
    )
     ;
