@@ -717,7 +717,7 @@ clash(M,(ABox,_),Expl):-
 expand_queue(M,ABox0-EQ,ABox):-
   extract_from_expansion_queue(EQ,EA,T),!,
   apply_all_rules(M,ABox0-T,EA,ABox1),
-  % update_queue(M,T,NewExpQueue), già aggiornata
+  % update_queue(M,T,NewExpQueue),
   expand_queue(M,ABox1,ABox).
 
 expand_queue(_M,ABox-_,ABox).
