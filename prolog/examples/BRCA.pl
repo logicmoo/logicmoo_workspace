@@ -6,7 +6,7 @@
 Model of risk factor of breast cancer, from
 Klinov, P., Parsia, B.: Optimization and evaluation of reasoning in probabilistic
 description logic: Towards a systematic approach. In: International Semantic Web
-Conference. LNCS, vol. 5318, pp. 213–228. Springer (2008)
+Conference. LNCS, vol. 5318, pp. 213-228. Springer (2008)
 */
 
 /** <examples>
