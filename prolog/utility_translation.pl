@@ -1860,7 +1860,7 @@ owl_parse_axiom(M,namedIndividual(D), AnnMode, List) :-
 %
 %     The annotations in G are parsed next. The function ANN assigns a
 %     set of annotations ANN(x) to each IRI or blank node x. This
-%     function is initialized by setting ANN(x) = â.. for each each IRI
+%     function is initialized by setting ANN(x) = a.. for each each IRI
 %     or blank node x. Next, the triple patterns from Table 10 are
 %     matched in G and, for each matched pattern, ANN(x) is extended
 %     with an annotation from the right column. Each time one of these
