@@ -109,7 +109,7 @@ default_setting_hplp(probability,1.0). % Initial value which indicates the proba
 default_setting_hplp(rate,0.95). % Rate to multiply to the current probability at each layer
 default_setting_hplp(min_probability,1e-5).  % Threshold of the probability under which the clause is dropped
 default_setting_hplp(unifyRoot,yes).
-default_setting_hplp(generate_mega,yes).
+default_setting_hplp(use_all_mega_examples,yes).
 default_setting_hplp(saveHPLP,no). 
 default_setting_hplp(saveFile,"hplp"). % File where to save the initial large HPLP generated
 default_setting_hplp(max_layer,-1). % Indicates the Max number of clause layer. -1 indicates the highest layer possible
@@ -302,7 +302,7 @@ test_hplp(M:P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
 
 test_hplp_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
   write2(M,'Testing\n'),
-  findall(Exs,(member(F,TestFolds),M:fold(F,Exs)),L),
+  findall(Exs,(member(F,TestFolds),M:fold_hplp(F,Exs)),L),
   append(L,TE),
   process_clauses(P,M,[],_,[],PRules),
   generate_clauses(PRules,M,RuleFacts,0,[],Th),
@@ -337,9 +337,18 @@ test_hplp_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
 induce_hplp_par(M:Folds,P):-
   induce_hplp_parameters(M:Folds,_DB,R),
   rules2termHPLPs(R,P),
-  M:local_setting(saveFile,SaveFile),
-  string_concat(SaveFile,"_Learned",Learned),
-  writeClause(P,Learned).
+  saveHPLP_learned(M,P).
+
+
+saveHPLP_learned(M,P):- 
+  M:local_setting(saveHPLP,Save),
+  (Save=yes ->
+      M:local_setting(saveFile,SaveFile),
+      string_concat(SaveFile,"_Learned",Learned),
+      writeClause(P,Learned)
+    ;
+    true
+  ).
 
 rules2termHPLPs(R,T):-
   maplist(rules2termHPLP,R,T).
@@ -350,7 +359,7 @@ list2and(BL,B).
 induce_hplp_parameters(M:Folds,DB,R):-
   M:local_setting(seed,Seed),
   set_random(Seed),
-  findall(Exs,(member(F,Folds),M:fold(F,Exs)),L),
+  findall(Exs,(member(F,Folds),M:fold_hplp(F,Exs)),L),
   append(L,DB),
   assert(M:database(DB)),
   statistics(walltime,[_,_]),
@@ -550,7 +559,6 @@ learn_params_hplp(DB,M,R0,R,CLL):-
   M:local_setting(group,G),
   derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
   maplist(remove_p,Nodes0,Nodes),
-  %write(Nodes),
   %trace,
   M:local_setting(algorithmType,Algorithm),
   M:local_setting(maxIter_phil,MaxIter),
@@ -647,15 +655,13 @@ dphil_C(M,NodesNew,Params,StopCond,Folder,AdamReg,MAX_W,CLL,ProbFinal):-
 induce_hplp(M:TrainFolds,P):-
   induce_hplp_rules(M:TrainFolds,P0),
   rules2termHPLPs(P0,P),
-  M:local_setting(saveFile,SaveFile),
-  string_concat(SaveFile,"_Learned",Learned),
-  writeClause(P,Learned).
+  saveHPLP_learned(M,P).
 
 induce_hplp_rules(M:Folds,R):-
   set_hplp(M:compiling,on),
   M:local_setting(seed,Seed),
   set_random(Seed),
-  findall(Exs,(member(F,Folds),M:fold(F,Exs)),L),
+  findall(Exs,(member(F,Folds),M:fold_hplp(F,Exs)),L),
   append(L,DB),
   assert(M:database(DB)),
   (M:bg(RBG0)->
@@ -669,6 +675,7 @@ induce_hplp_rules(M:Folds,R):-
   ),
   length(DB,NMegaEx),
   M:local_setting(megaex_bottom, NumMB),
+  %trace,
   (NMegaEx >= NumMB ->
       true
     ;
@@ -684,9 +691,7 @@ induce_hplp_rules(M:Folds,R):-
     get_head_atoms(O,M),
     generate_top_cl(O,M,R1)
   ),
-  %trace,
   genHPLP(M,R1,HPLP),
-  %trace,
   learn_params_hplp(DB,M,HPLP,R,CLL),
   statistics(walltime,[_,WT]),
   WTS is WT/1000,
@@ -728,8 +733,7 @@ genHPLP(M,Bottoms,HPLP):-
   M:local_setting(probability,InitProb),
   M:local_setting(rate,Rate),
   M:local_setting(max_layer,Max1),
-  M:local_setting(generate_mega,GenerateBottom),
-  M:local_setting(saveFile,SaveFile),
+  M:local_setting(use_all_mega_examples,GenerateBottom),
   M:local_setting(unifyRoot,UnifyRoot),
   Temp is -1,
   (Max1=:=Temp ->
@@ -743,24 +747,28 @@ genHPLP(M,Bottoms,HPLP):-
   Prob is InitProb,
   assert(getRate(Rate)),
   (GenerateBottom=yes ->
-      (UnifyRoot=yes ->
-          maplist(unification(Rule1),Bottoms)
-        ;
-        true
-      ),
-      getTrees(Bottoms,Trees),
-      Trees1=[t(head,Trees)],
-      generateHPLPs(-1,HeadFunctor,MaxLayer,Prob,Trees1,HPLPs,Levels),
-      saveHPLPs(HPLPs,SaveFile,Levels),
-      HPLPs=[HPLP|_]
+    BottomsNew=Bottoms
     ;
-      getTrees(Bottoms,Trees),
-      generateHPLPs(0,HeadFunctor,MaxLayer,Prob,Trees,HPLPs,Levels),
-      saveHPLPs(HPLPs,SaveFile,Levels),
-      HPLPs=[HPLP|_]
-    ),
-    retractall(getRate(_Rate)),
-    saveHPLPs(HPLPs,SaveFile,Levels).
+    Bottoms=[Head|_],
+    BottomsNew=[Head]
+  ),
+  (UnifyRoot=yes ->
+      maplist(unification(Rule1),BottomsNew)
+    ;
+    true
+  ),
+  getTrees(BottomsNew,Trees),
+  Trees1=[t(head,Trees)],
+  generateHPLPs(-1,HeadFunctor,MaxLayer,Prob,Trees1,HPLPs,Levels),
+  M:local_setting(saveHPLP,Save),
+  (Save=yes ->
+      M:local_setting(saveFile,SaveFile),
+      saveHPLPs(HPLPs,SaveFile,Levels)
+    ;
+    true
+  ),
+  HPLPs=[HPLP|_],
+  retractall(getRate(_Rate)).
 
 
 
@@ -815,7 +823,6 @@ getTrees([(rule(_,[Head:_,_],_,Body),_)|RestBottom],[Tree|RestTrees]):-
       (LTree=:=1 ->
         BodyTrees=[Tree]
         ;
-        %trace,
         BodyTrees=[H1|B1],
         Tree=t(H1,B1)
       )
@@ -1410,7 +1417,6 @@ derive_circuit_groupatoms([H|T],M,E,G,Nodes0,Nodes,CLL0,CLL,LE0,LE):-
 get_node_list_groupatoms([],_M,[],_CE,_Gmax,CLL,CLL,LE,LE).
 
 get_node_list_groupatoms([H|T],M,[[AC1,CE]|ACT],CE,Gmax,CLL0,CLL,[H|LE0],LE):-
-  %trace,
   get_node(H,M,AC1), 		%creates the AC for atom ,
   CLL2 is CLL0,
   get_node_list_groupatoms(T,M,ACT,CE,Gmax,CLL2,CLL,LE0,LE).
@@ -3164,7 +3170,6 @@ gen_clause_cw(def_rule(H,BodyList,Lit),_M,N,N,def_rule(H,BodyList,Lit),Clauses) 
 generate_clauses([],_M,[],_N,C,C):-!.
 
 generate_clauses([H|T],M,[H1|T1],N,C0,C):-
-  %trace,
   gen_clause(H,M,N,N1,H1,CL),!,  %agg.cut
   append(C0,CL,C1),
   generate_clauses(T,M,T1,N1,C1,C).
