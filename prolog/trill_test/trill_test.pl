@@ -30,13 +30,18 @@ close_to(V,T,E):-
 	TLow<V,
 	V<THigh.
 
-same_expl([],_CorrExpls).
+same_expl(Expl, CorrExpl):-
+	length(Expl,NE),
+	length(CorrExpl,NE),
+	same_expl_int(Expl, CorrExpl).
 
-same_expl([Expl|Expls],CorrExpls):-
+same_expl_int([],_CorrExpls).
+
+same_expl_int([Expl|Expls],CorrExpls):-
   sort(Expl,ExplSort),
   member(X,CorrExpls),
   sort(X,ExplSort),!,
-  same_expl(Expls,CorrExpls).
+  same_expl_int(Expls,CorrExpls).
 
 one_of(Expl,CorrExpls):-
   sort(Expl,ExplSort),

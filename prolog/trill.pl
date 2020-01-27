@@ -714,13 +714,14 @@ clash(M,(ABox,_),Expl):-
 % -------------
 % rules application
 % -------------
+expand_queue(_M,ABox-[[],[]],ABox).
+
 expand_queue(M,ABox0-EQ,ABox):-
   extract_from_expansion_queue(EQ,EA,T),!,
   apply_all_rules(M,ABox0-T,EA,ABox1),
   % update_queue(M,T,NewExpQueue),
   expand_queue(M,ABox1,ABox).
 
-expand_queue(_M,ABox-_,ABox).
 
 %expand_queue(M,ABox0,[_EA|T],ABox):-
 %  expand_queue(M,ABox0,T,ABox).
