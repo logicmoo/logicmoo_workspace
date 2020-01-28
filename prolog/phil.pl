@@ -2519,15 +2519,15 @@ make_dynamic(M):-
   maplist(to_dyn(M),L).
 
 to_dyn(M,P/A):-
-  atomic_concat(P, ' tabled',PT),
+  %atomic_concat(P, ' tabled',PT),
   A1 is A+1,
   M:(dynamic P/A1),
   A2 is A1+1,
   M:(dynamic P/A2),
-  M:(dynamic PT/A2),
+  %M:(dynamic PT/A2),
   A3 is A2+1,
-  M:(dynamic P/A3),
-  M:(dynamic PT/A3).
+  M:(dynamic P/A3).
+ % M:(dynamic PT/A3).
 
 
 %Computation of the depth of the variables in the clause head/body
@@ -3127,8 +3127,9 @@ generate_clauses_cw([H|T],M,[H1|T1],N,C0,C):-
 to_tabled(M,H0,H):-
   (M:tabled(H0)->
     H0=..[P|Args],
-    atomic_concat(P, ' tabled',PT),
-    H=..[PT|Args]
+    %atomic_concat(P, ' tabled',PT),
+    %H=..[PT|Args]
+    H=..[P|Args]
   ;
     H=H0
   ).
@@ -3199,12 +3200,14 @@ gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
 
 gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   rule(N,HeadList,BodyList,Lit),Clauses):-!,
+  %trace,
 % disjunctive clause with more than one head atom senza depth_bound
   process_body(BodyList,and([N]),ACAnd,[],_Vars,BodyList1,Module,M),
   list2and(BodyList1,Body1),
   append(HeadList,BodyList,List),
   extract_vars_list(List,[],VC),
   get_probs(HeadList,Probs),
+  %trace,
   maplist(to_tabled_head_list(M),HeadList,HeadList1),
   (M:local_setting(single_var,true)->
     generate_rules(HeadList1,Body1,[],N,Probs,ACAnd,0,Clauses,Module,M)
