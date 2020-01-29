@@ -57,6 +57,7 @@ pengines:prepare_module(_Module, swish, _Options) :-
 	syntax2p/4,dumploaded/2,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
 	]).
 :- use_module('../utils/states_explorer.pl',[explore/2]).
+:- use_module('../utils/redis-client.pl').
 
 % This will be useful below, as file searching handling of relative paths differs from what's used
 % by use_module and friends.
@@ -70,6 +71,14 @@ sandbox:safe_primitive(visualizer:gojson(_File,_Options,_Results,_JSON,_DFAgraph
 sandbox:safe_primitive(psyntax:dumploaded(_,_)). 
 sandbox:safe_primitive(psyntax:dumpjs(_,_)). 
 sandbox:safe_primitive(states_explorer:explore(_,Options)) :- \+ member(cycle_hook(_,_,_),Options).
+% TODO: make these depend on user autherntication:
+sandbox:safe_primitive(redisclient:create(_,_,_)).
+sandbox:safe_primitive(redisclient:create(_,_)).
+sandbox:safe_primitive(redisclient:get_key(_,_)).
+sandbox:safe_primitive(redisclient:set_key(_,_)).
+sandbox:safe_primitive(redisclient:get_keys(_)).
+sandbox:safe_primitive(redisclient:get_channels(_)).
+sandbox:safe_primitive(redisclient:kill_all).
 
 /*
 The following could be used to prevent pengines (remote goal) access... but bear in mind that swish (user) browsers communicate directly
