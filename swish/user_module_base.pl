@@ -253,7 +253,8 @@ serve_lps_resources(Request) :- % http://localhost:3050/lps/foo/Gruntfile.js wor
 :- use_module(library(http/html_write)).
 :- use_module(library(http/http_path)).
 
-:- catch(read_file_to_string(googleAnalyticsKey,Key,[]),_,Key=''), 
+% The Google Analytics key file must be placed in the SWISH data directory:
+:- catch(read_file_to_string('data/googleAnalyticsKey',Key,[]),_,Key=''), 
 	format(atom(JS),'
   (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
