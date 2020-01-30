@@ -33,6 +33,13 @@ VOLUME $LPS_DIR/engine/logs
 WORKDIR $LPS_DIR/swish/web/lps
 RUN bower install vis paper
 
+#We actually use only redis-cli, but...
+RUN apt-get update && apt-get install -y wget
+RUN wget http://download.redis.io/releases/redis-5.0.7.tar.gz && \
+	tar xzf redis-5.0.7.tar.gz && \
+	cd redis-5.0.7 && make install
+
 # Configure container startup
 WORKDIR /
 ENTRYPOINT /usr/bin/swipl $LPS_DIR/swish/user_module_file.pl ${SWISH_DIR}/daemon.pl --no-fork --port=3050 --user=$MY_USER --workers=16
+# ENTRYPOINT /bin/bash
