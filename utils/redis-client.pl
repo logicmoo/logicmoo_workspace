@@ -16,6 +16,7 @@ create(Host,Port,Pass) :-
     	throw('Redis-cli subprocess already exists with different parameters; kill it first with kill_all')
     	; true),
     process_create(path("redis-cli"), ["-h", Host, "-p", Port, "-a", Pass], [stdout(pipe(Output)),stdin(pipe(Input)),stderr(std),process(PID)]),
+    set_stream(Input,close_on_exec(false)), set_stream(Input,close_on_exec(false)), % hack to circumvent weird "broken pipe" bug
     assert(client(PID,Output,Input)).
 
 % set/get one key
