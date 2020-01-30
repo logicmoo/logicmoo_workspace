@@ -12,7 +12,7 @@
 create(Server,Password) :- 
     create(Server,6379,Password).
 create(Host,Port,Pass) :- 
-    ((client(Host_,Port_,Pass_),(Host\==Host_;Port\==Port_;Pass\==Pass_))-> 
+    ((client(_,_,_))-> 
     	throw('Redis-cli subprocess already exists; kill it first with kill_all')
     	; true),
     process_create(path("redis-cli"), ["-h", Host, "-p", Port, "-a", Pass], [detached(true),stdout(pipe(Output)),stdin(pipe(Input)),stderr(std),process(PID)]),
