@@ -1136,7 +1136,9 @@ retract_all_axioms(M) :-
 
 utility_translation_init(M) :-
 	assert(M:annotationProperty('http://www.w3.org/2000/01/rdf-schema#label')),
-	assert(M:annotationProperty('http://www.w3.org/2000/01/rdf-schema#comment')).
+	assert(M:annotationProperty('http://www.w3.org/2000/01/rdf-schema#comment')),
+	assert(M:annotationProperty('https://sites.google.com/a/unife.it/ml/disponte#probability')),
+	assert(M:annotationProperty('http://ml.unife.it/disponte#probability')).
 
 consult_axioms(File) :-
         consult(File).
@@ -2682,6 +2684,7 @@ load_owl_from_stream(S):-
   close(S),
   trill:add_kb_prefixes(M:NSList),
   rdf_2_owl(M,'ont'),
+  utility_translation_init(M),
   owl_canonical_parse_3(M,['ont']),
   parse_probabilistic_annotation_assertions(M).
 
@@ -2755,18 +2758,18 @@ assert_list(M,[H|T], Source) :-
 	add_atoms_from_axiom(M,Args),
         assert_list(M,T, Source).
 
-find_all_probabilistic_annotations(M,Ax,PV):-
-	M:annotation(Ax,'https://sites.google.com/a/unife.it/ml/disponte#probability',literal(type(_Type, PV))),
+find_all_probabilistic_annotations(M,An,Ax,PV):-
+	M:annotation(Ax,An,literal(type(_Type, PV))),
 	atomic(PV).
 
-find_all_probabilistic_annotations(M,Ax,PV):-
-	M:annotation(Ax,'https://sites.google.com/a/unife.it/ml/disponte#probability',literal(PV)),
+find_all_probabilistic_annotations(M,An,Ax,PV):-
+	M:annotation(Ax,An,literal(PV)),
 	atomic(PV).
   
 
 parse_probabilistic_annotation_assertions(M) :-
-  forall(find_all_probabilistic_annotations(M,Ax,PV),
-       (assert_axiom(M,annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(PV))))
+  forall(find_all_probabilistic_annotations(M,An,Ax,PV),
+       (assert_axiom(M,annotationAssertion(An,Ax,literal(PV))))
   ),
   % forall(aNN(X,Y,Z),assert(annotation(X,Y,Z))), VV remove 25/1/11
   % annotation/3 axioms created already during owl_parse_annotated_axioms/1
