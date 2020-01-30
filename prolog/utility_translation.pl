@@ -2759,12 +2759,16 @@ assert_list(M,[H|T], Source) :-
         assert_list(M,T, Source).
 
 find_all_probabilistic_annotations(M,An,Ax,PV):-
+	M:annotation(Ax,An,literal(lang(_Lang, PV))),
+	atom(PV).
+
+find_all_probabilistic_annotations(M,An,Ax,PV):-
 	M:annotation(Ax,An,literal(type(_Type, PV))),
-	atomic(PV).
+	atom(PV).
 
 find_all_probabilistic_annotations(M,An,Ax,PV):-
 	M:annotation(Ax,An,literal(PV)),
-	atomic(PV).
+	atom(PV).
   
 
 parse_probabilistic_annotation_assertions(M) :-
