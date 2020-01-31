@@ -12,7 +12,7 @@ This module provides algorithms for learning the structure and the parameters of
 
 */
 
-:- module(phil,[induce_hplp_par/2,induce_hplp/2,sample_hplp/4,
+:- module(phil,[induce_hplp_par/2,induce_hplp/2,sample_hplp/4,inference_hplp/2,inference_hplp/3,
   test_hplp/7,op(500,fx,#),op(500,fx,'-#'),set_hplp/2]).
 
 
@@ -48,63 +48,30 @@ This module provides algorithms for learning the structure and the parameters of
 :- meta_predicate induce_hplp_par_func(:,-,-,-,-).
 :- meta_predicate induce_hplp_parameters(:,-,-,-).
 :- meta_predicate test_hplp(:,+,-,-,-,-,-).
+
+:- meta_predicate inference_hplp(:,+).
+:- meta_predicate inference_hplp(:,+,-).
+
 :- meta_predicate test_hplp_prob(:,+,-,-,-,-).
 :- meta_predicate set_hplp(:,+).
 :- meta_predicate setting_hplp(:,-).
 
 
 
-
-
-% Default setting for generating the AC circuits and the predicate test_hplp(..)
+%      SLEAHP default settings
 default_setting_hplp(group,1). % use in the predicate derive_circuit_groupatoms (..)
 default_setting_hplp(megaex_bottom,1).  % Necessary for the predicate test_hplp(..)
 default_setting_hplp(initial_clauses_per_megaex,1).
-default_setting_hplp(max_var,4).
-default_setting_hplp(max_rules,10).
-default_setting_hplp(maxdepth_var,2).
-default_setting_hplp(max_body_length,100).
 default_setting_hplp(neg_literals,false).
-default_setting_hplp(background_clauses,50).
-default_setting_hplp(specialization,bottom).
-/* allowed values: mode,bottom */
-default_setting_hplp(specialize_head,false).
-default_setting_hplp(score,ll).
-/* allowed values: ll aucpr */
 default_setting_hplp(neg_ex,cw).
 default_setting_hplp(epsilon_parsing, 1e-5).
-default_setting_hplp(tabling, off).
-/* on, off */
-default_setting_hplp(bagof,false).
-/* values: false, intermediate, all, extra */
 default_setting_hplp(depth_bound,false).  %if true, it limits the derivation of the example to the value of 'depth'
 default_setting_hplp(depth,2).
 default_setting_hplp(single_var,false). %false:1 variable for every grounding of a rule; true: 1 variable for rule (even if a rule has more groundings),simpler.
-default_setting_hplp(prob_approx,false). %if true, it limits the number of different solutions found when computing the probability
-default_setting_hplp(approx_value,100).
-default_setting_hplp(logzero,log(0.000001)).
-default_setting_hplp(seed,seed(3032)).
 default_setting_hplp(verbosity,1).
 default_setting_hplp(compiling,off).
 default_setting_hplp(d,1).
 
-
-%     Phil  default settings
-default_setting_hplp(maxIter_phil,1000). % Max iteration
-default_setting_hplp(epsilon_deep,0.0001). % epsilon 
-default_setting_hplp(epsilon_deep_fraction,0.00001). % delta
-default_setting_hplp(max_initial_weight,0.5). % intial weights of dphil in [-0.5 0.5]
-default_setting_hplp(adam_params,[0.001,0.9,0.999,1e-8]). % default Adam hyper-pameters
-default_setting_hplp(batch_strategy,stoch_minibatch(100)). % allowed values: batch, minibatch(size), stoch_minibatch(size)
-default_setting_hplp(algorithmType,dphil).% allowed values: dphil, emphil
-default_setting_hplp(saveStatistics,no). % indicates where to safe the statistics or no
-default_setting_hplp(statistics_folder,statistics). %if saveStatistics is different to "no", it indicates the folder where to safe the statistics during paramenter learning.
-default_setting_hplp(zero,0.000001).  % Approximate value of 0 
-default_setting_hplp(setSeed,no). 
-default_setting_hplp(useInitParams,no). % if yes the initial parameters during the learning are the ones indicated in the progam. Otherwise, the parameters are initialy generated randomly
-default_setting_hplp(c_seed,c_seed).
-
-% Sleahp default settings
 default_setting_hplp(probability,1.0). % Initial value which indicates the probability to go to the next layer during HPLP generation
 default_setting_hplp(rate,0.95). % Rate to multiply to the current probability at each layer
 default_setting_hplp(min_probability,1e-5).  % Threshold of the probability under which the clause is dropped
@@ -113,11 +80,29 @@ default_setting_hplp(use_all_mega_examples,yes).
 default_setting_hplp(saveHPLP,no). 
 default_setting_hplp(saveFile,"hplp"). % File where to save the initial large HPLP generated
 default_setting_hplp(max_layer,-1). % Indicates the Max number of clause layer. -1 indicates the highest layer possible
-% EM regularization parameters
-default_setting_hplp(regularized,yes). % yes for activating the regularization and no otherwise
+
+
+%     PHIL  default settings
+default_setting_hplp(maxIter_phil,1000). % Max iteration
+default_setting_hplp(epsilon_deep,0.0001). % epsilon 
+default_setting_hplp(epsilon_deep_fraction,0.00001). % delta
+default_setting_hplp(max_initial_weight,0.5). % initial weights of dphil in [-0.5 0.5]
+default_setting_hplp(adam_params,[0.001,0.9,0.999,1e-8]). % default Adam hyper-pameters
+default_setting_hplp(batch_strategy,minibatch(100)). % allowed values: batch, minibatch(size), stoch_minibatch(size)
+default_setting_hplp(algorithmType,dphil).% allowed values: dphil, emphil
+default_setting_hplp(saveStatistics,no). % indicates wheter  to safe the statistics or no
+default_setting_hplp(statistics_folder,statistics). %if saveStatistics is different to "no", it indicates the folder where to safe the statistics during paramenter learning.
+default_setting_hplp(zero,0.000001).  % Approximate value of 0 
+default_setting_hplp(useInitParams,no). % if yes the initial parameters during the learning are the ones indicated in the progam. Otherwise, the parameters are initialy generated randomly
+default_setting_hplp(setSeed,no). 
+default_setting_hplp(c_seed,c_seed).
+default_setting_hplp(logzero,log(0.000001)).
+default_setting_hplp(seed,seed(3032)).
+% regularization parameters
+default_setting_hplp(regularized,no). % yes for activating the regularization and no otherwise
 default_setting_hplp(regularizationType,1). % set the regulariztion type. 1,2 if algorithmType=dphil. Otherwise 1,2,3 
-default_setting_hplp(gamma,100). % set the value of gamma according to the type (gamma=a if type=3)
-default_setting_hplp(gammaCount,10). % set the value of gammaCount according to the type (gammaCount=b if type=3)
+default_setting_hplp(gamma,10). % set the value of gamma according to the type (gamma=a if type=3)
+default_setting_hplp(gammaCount,0). % set the value of gammaCount according to the type (gammaCount=b if type=3)
 
 
 
@@ -340,6 +325,61 @@ induce_hplp_par(M:Folds,P):-
   saveHPLP_learned(M,P).
 
 
+
+/**
+ *  inference_hplp(:Query:atom, -Prob:probabity)
+ * 
+ *  Performs inference and returns in Prob  the probability of atom.
+ */
+inference_hplp(M:Query, Prob):-
+  inference_hplp(M:Query, Prob, _Circuit).
+
+
+
+
+/**
+ *  inference_hplp(:Query:atom, +Fold:constant, -Prob:probabity, -Circuit: Term)
+ * 
+ *   Performs inference and returns both the probability and the arithmetic circuit of atom in Prob and Circuit respectively. 
+ */
+inference_hplp(M:Query, Prob,Circuit):-
+  findall(Exs,(member(F,[all]),M:fold_hplp(F,Exs)),L),
+  append(L,DB),
+  assert(M:database(DB)),
+  (M:bg(RBG0)->
+    process_clauses(RBG0,M,[],_,[],RBG),
+    generate_clauses(RBG,M,_RBG1,0,[],ThBG),
+    generate_clauses_bg(RBG,ClBG),
+    assert_all(ClBG,M,ClBGRef),
+    assert_all(ThBG,ThBGRef)
+  ;
+    true
+  ),
+  M:in(R00),
+  process_clauses(R00,M,[],_,[],R0),
+  statistics(walltime,[_,_]),
+  generate_clauses(R0,M,R1,0,[],Th0),
+  assert_all(Th0,M,Th0Ref),
+  assert_all(R1,M,R1Ref),!,
+  retractall(M:v(_,_,_)),
+  %abolish_all_tables,
+  Query=..[Func|Args],
+  %trace,
+  append([_],Args,ArgsNew),
+  QueryNew=..[Func|ArgsNew],
+  findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
+  abolish_all_tables,
+  get_node(QueryNew,M,Circuit),!,
+  length(LR,NUMBER),
+  forward(Circuit,LR,NUMBER,Prob),
+  retract_all(Th0Ref),
+  retract_all(R1Ref),
+  retract_all(ClBGRef),
+  retract_all(ThBGRef).
+
+
+
+
 saveHPLP_learned(M,P):- 
   M:local_setting(saveHPLP,Save),
   (Save=yes ->
@@ -497,15 +537,6 @@ resetProb(Min_prob,[Prob|Rest],ProbFinal):-
     checkCharAndReadRest(NextChar,Chars,InStream).
 
 
-
-getTheory(R0,W,R):-
-  sigma_vec(W,Probs),
-  Probs=..[_|LProbs],
-  update_theory_par(R0,LProbs,R).
-
-getProgram(R0,W,P):-
-  getTheory(R0,W,R),
-  rules2terms(R,P).
 
 take(0, _, []) :- !.
 take(0, _, []) :- !.
@@ -683,14 +714,9 @@ induce_hplp_rules(M:Folds,R):-
       set_hplp(M:megaex_bottom, NMegaEx)
   ),
   statistics(walltime,[_,_]),
-  (M:local_setting(specialization,bottom)->
-    M:local_setting(megaex_bottom,MB),
-    deduct(MB,M,DB,[],InitialTheory),
-    remove_duplicates(InitialTheory,R1)
-  ;
-    get_head_atoms(O,M),
-    generate_top_cl(O,M,R1)
-  ),
+  M:local_setting(megaex_bottom,MB),
+  deduct(MB,M,DB,[],InitialTheory),
+  remove_duplicates(InitialTheory,R1),
   genHPLP(M,R1,HPLP),
   learn_params_hplp(DB,M,HPLP,R,CLL),
   statistics(walltime,[_,WT]),
@@ -1266,8 +1292,7 @@ saveTrees(Bottoms,FileName):-
   
 %    Some useful predicate on Trees
   
-  
- 
+
 %    Count the Number of Node in a tree
   
   nnodes(t(_,F),N) :- nnodes(F,NF), N is NF+1.
@@ -2158,101 +2183,6 @@ remove_duplicates([H|T],L0,L):-
 
 
 
-specialize_rule(Rule,M,_SpecRule,_Lit):-
-  M:local_setting(max_body_length,ML),
-  Rule = rule(_ID,_LH,BL,_Lits),
-  length(BL,L),
-  L=ML,!,
-  fail.
-
-%used by cycle_clauses in phil.pl
-specialize_rule(Rule,M,SpecRule,Lit):-
-  M:local_setting(specialization,bottom),
-  Rule = rule(ID,LH,BL,Lits),
-  delete_one(Lits,RLits,Lit),
-  \+ M:lookahead_cons(Lit,_),
-  \+ M:lookahead_cons_var(Lit,_),
-  \+ member_eq(Lit,BL),
-  append(BL,[Lit],BL1),
-  remove_prob(LH,LH1),
-  delete(LH1,'',LH2),
-  append(LH2,BL1,ALL2),
-  dv(LH2,BL1,M,DList), 	%-DList: list of couples (variable,depth)
-  extract_fancy_vars(ALL2,Vars1),
-  length(Vars1,NV),
-  M:local_setting(max_var,MV),
-  NV=<MV,
-  linked_clause(BL1,M,LH2),
-  M:local_setting(maxdepth_var,MD),
-  exceed_depth(DList,MD),
-  \+ banned_clause(M,LH2,BL1),
-  SpecRule=rule(ID,LH,BL1,RLits).
-
-specialize_rule(Rule,M,SpecRule,Lit):-
-  M:local_setting(specialization,bottom),
-  Rule = rule(ID,LH,BL,Lits),
-  delete_one(Lits,RLits,Lit),
-  \+ member_eq(Lit,BL),
-  append(BL,[Lit],BL0),
-  \+M:lookahead_cons_var(Lit,_),
-  (M:lookahead(Lit,LLit1);M:lookahead_cons(Lit,LLit1)),
-  copy_term(LLit1,LLit2),
-  specialize_rule_la_bot(LLit2,RLits,RLits1,BL0,BL1),
-  remove_prob(LH,LH1),
-  delete(LH1,'',LH2),
-  append(LH2,BL1,ALL2),
-  dv(LH2,BL1,M,DList),
-  extract_fancy_vars(ALL2,Vars1),
-  length(Vars1,NV),
-  M:local_setting(max_var,MV),
-  NV=<MV,
-  linked_clause(BL1,M,LH2),
-  M:local_setting(maxdepth_var,MD),
-  exceed_depth(DList,MD),
-  \+ banned_clause(M,LH2,BL1),
-  SpecRule=rule(ID,LH,BL1,RLits1).
-
-specialize_rule(Rule,M,SpecRule,Lit):-
-  M:local_setting(specialization,bottom),
-  Rule = rule(ID,LH,BL,Lits),
-  delete_one(Lits,RLits,Lit),
-  \+ member_eq(Lit,BL),
-  append(BL,[Lit],BL0),
-  M:lookahead_cons_var(Lit,LLit2),
-  specialize_rule_la_bot(LLit2,RLits,_RLits1,BL0,BL1),
-  remove_prob(LH,LH1),
-  delete(LH1,'',LH2),
-  append(LH2,BL1,ALL2),
-  dv(LH2,BL1,M,DList),
-  extract_fancy_vars(ALL2,Vars1),
-  length(Vars1,NV),
-  M:local_setting(max_var,MV),
-  NV=<MV,
-  linked_clause(BL1,M,LH2),
-  M:local_setting(maxdepth_var,MD),
-  exceed_depth(DList,MD),
-  \+ banned_clause(M,LH2,BL1),
-  SpecRule=rule(ID,LH,BL1,[]).
-
-specialize_rule(Rule,M,SpecRule,Lit):-
-  M:local_setting(specialization,mode),%!,
-  findall(BL , M:modeb(_,BL), BLS),
-  specialize_rule(BLS,Rule,M,SpecRule,Lit).
-
-%specializes the clause head
-specialize_rule(rule(ID,LH,BL,Lits),M,rule(ID,LH2,BL,Lits),Lit):-
-  M:local_setting(specialize_head,true),
-	length(LH,L),
-	L>2,
-	delete_one(LH,LH1,Lit),  %deletes Lit
-	Lit\='',
-	update_head1(LH1,L-1,LH2).  %updates parameters
-
-update_head1([],_N,[]):-!.
-
-update_head1([H:_P|T],N,[H:P|T1]):-
-	       P is 1/N,
-	       update_head1(T,N,T1).
 
 
 banned_clause(M,H,B):-
@@ -2269,72 +2199,12 @@ mysublist([H|T],L):-
   mysublist(T,L).
 
 
-specialize_rule([Lit|_RLit],Rule,M,SpecRul,SLit):-
-  Rule = rule(ID,LH,BL,true),
-  remove_prob(LH,LH1),
-  append(LH1,BL,ALL),
-  specialize_rule1(Lit,M,ALL,SLit),
-  append(BL,[SLit],BL1),
-  (M:lookahead(SLit,LLit1);M:lookahead_cons(SLit,LLit1)),
-  specialize_rule_la(LLit1,M,LH1,BL1,BL2),
-  append(LH1,BL2,ALL2),
-  extract_fancy_vars(ALL2,Vars1),
-  length(Vars1,NV),
-  M:local_setting(max_var,MV),
-  NV=<MV,
-  SpecRul = rule(ID,LH,BL2,true).
-
-specialize_rule([Lit|_RLit],Rule,M,SpecRul,SLit):-
-  Rule = rule(ID,LH,BL,true),
-  remove_prob(LH,LH1),
-  append(LH1,BL,ALL),
-  specialize_rule1(Lit,M,ALL,SLit),
-  \+ M:lookahead_cons(SLit,_),
-  append(BL,[SLit],BL1),
-  append(LH1,BL1,ALL1),
-  extract_fancy_vars(ALL1,Vars1),
-  length(Vars1,NV),
-  M:local_setting(max_var,MV),
-  NV=<MV,
-  SpecRul = rule(ID,LH,BL1,true).
-
-specialize_rule([_|RLit],Rule,M,SpecRul,Lit):-
-  specialize_rule(RLit,Rule,M,SpecRul,Lit).
-
-
-specialize_rule_la([],_M,_LH1,BL1,BL1).
-
-specialize_rule_la([Lit1|T],M,LH1,BL1,BL3):-
-  copy_term(Lit1,Lit2),
-  M:modeb(_,Lit2),
-  append(LH1,BL1,ALL1),
-  specialize_rule1(Lit2,M,ALL1,SLit1),
-  append(BL1,[SLit1],BL2),
-  specialize_rule_la(T,M,LH1,BL2,BL3).
-
-
-specialize_rule_la_bot([],Bot,Bot,BL,BL).
-
-specialize_rule_la_bot([Lit|T],Bot0,Bot,BL1,BL3):-
-  delete_one(Bot0,Bot1,Lit),
-  \+ member_eq(Lit,BL1),
-  append(BL1,[Lit],BL2),
-  specialize_rule_la_bot(T,Bot1,Bot,BL2,BL3).
 
 
 remove_prob(['':_P],[]):-!.
 
 remove_prob([X:_|R],[X|R1]):-
   remove_prob(R,R1).
-
-
-specialize_rule1(Lit,M,Lits,SpecLit):-
-  Lit =.. [Pred|Args],
-  exctract_type_vars(Lits,M,TypeVars0),
-  remove_duplicates(TypeVars0,TypeVars),
-  take_var_args(Args,TypeVars,Args1),
-  SpecLit =.. [Pred|Args1],
-  \+ member_eq(SpecLit,Lits).
 
 
 convert_to_input_vars([],[]):-!.
@@ -2356,24 +2226,6 @@ remove_eq(X,[_|R],R1):-
   remove_eq(X,R,R1).
 
 
-linked_clause(X):-
-  linked_clause(X,[]).
-
-linked_clause([],_M,_).
-
-linked_clause([L|R],M,PrevLits):-
-  term_variables(PrevLits,PrevVars),
-  input_variables(L,M,InputVars),
-  linked(InputVars,PrevVars),!,
-  linked_clause(R,M,[L|PrevLits]).
-
-
-linked([],_).
-
-linked([X|R],L) :-
-  member_eq(X,L),
-  !,
-  linked(R,L).
 
 
 input_variables(\+ LitM,M,InputVars):-
@@ -2623,15 +2475,6 @@ compute_depth([O|Output],D,PD,[[O,D]|RestO]):-
 
 
 
-%checks if a variable depth exceeds the setting_sc
-exceed_depth([],_):-!.
-exceed_depth([H|T],MD):-
-	nth1(2,H,Dep),
-	Dep<MD, %setting_sc(maxdepth_var,MD),
-	exceed_depth(T,MD).
-
-
-
 assert_all([],_M,[]).
 
 assert_all([H|T],M,[HRef|TRef]):-
@@ -2644,12 +2487,12 @@ assert_all([H|T],[HRef|TRef]):-
   assertz(phil:H,HRef),
   assert_all(T,TRef).
 
-
+/*
 retract_all([],_):-!.
 
 retract_all([H|T],M):-
   erase(M,H),
-  retract_all(T,M).
+  retract_all(T,M). */
 
 retract_all([]):-!.
 
@@ -2998,13 +2841,13 @@ given_cw(M,H):-
   functor(H,P,Ar),
   (M:input_cw(P/Ar)).
 
-
+/*
 and_list([],B,B).
 
 and_list([H|T],B0,B1):-
   and(B0,H,B2),
   and_list(T,B2,B1).
-
+*/
 
 /**
  * set_hplp(:Parameter:atom,+Value:term) is det
@@ -3332,6 +3175,8 @@ sandbox:safe_meta(phil:induce_hplp(_,_), []).
 sandbox:safe_meta(phil:get_node(_,_), []).
 sandbox:safe_meta(phil:test_prob_hplp(_,_,_,_,_,_), []).
 sandbox:safe_meta(phil:test_hplp(_,_,_,_,_,_,_), []).
+sandbox:safe_meta(phil:inference_hplp(_,_,_), []).
+sandbox:safe_meta(phil:inference_hplp(_,_), []).
 sandbox:safe_meta(phil:set_hplp(_,_), []).
 sandbox:safe_meta(phil:setting_hplp(_,_), []).
 
