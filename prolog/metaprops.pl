@@ -95,7 +95,7 @@ compat(M:Goal) :-
 :- use_module(library(clambda)).
 :- use_module(library(terms_share)).
 
-:- dynamic
+:- thread_local
         '$last_prop_failure'/2.
 
 generalize_term(STerm, Term, _) :-
