@@ -157,11 +157,11 @@ do_source_walk_code(Options1) :-
     with_context_values(
         setup_call_cleanup(
             ( '$current_source_module'(OldM),
-              freeze(M, '$set_source_module'(_, M)),
+              freeze(M, '$set_source_module'(M)),
               prepare(To, Undefined, Ref)
             ),
             walk_source(M, File, [variable_names(VNL)|Options]),
-            ( '$set_source_module'(_, OldM),
+            ( '$set_source_module'(OldM),
               cleanup(Ref)
             )),
         [file, on_trace],

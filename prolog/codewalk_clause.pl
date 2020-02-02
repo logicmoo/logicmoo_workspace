@@ -42,6 +42,7 @@
 :- use_module(library(from_utils)).
 :- use_module(library(meta_args)).
 :- use_module(library(option_utils)).
+:- use_module(library(concurrent_forall)).
 
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
@@ -116,21 +117,30 @@ assertion_goal(AsrPart, Asr, Prop, PM, From) :-
     curr_prop_asr(Part, PM:Prop, From, Asr).
 
 walk_clause(FileD, Opts) :-
-    forall(current_head_body(FileD, Head, Body, Opts),
-           walk_head_body(Head, Body, Opts)).
-
-current_head_body(FileD, Head, CM:Body, Opts) :-
+    option(trace_variables(TraceVars), Opts),
     option(from(From), Opts),
-    From = clause(Ref),
-    Head = _:_,
+    Head = M:_,
+    concurrent_forall(
+        current_module(M),
+        forall(( current_head(Head),
+                 current_head_body(FileD, Head, Body, From)
+               ),
+               ( maplist(trace_var(Head), TraceVars),
+                 walk_head_body(Head, Body, Opts)
+               ))).
+
+current_head(Head) :-
     current_predicate(_, Head),
     \+ predicate_property(Head, imported_from(_)),
-    option(trace_variables(TraceVars), Opts),
+    predicate_property(Head, number_of_clauses(N)),
+    N > 0.
+
+current_head_body(FileD, Head, CM:Body, From) :-
+    From = clause(Ref),
     catch(clause(Head, Body, Ref), _, fail),
     from_to_file(From, File),
     get_dict(File, FileD, _),
-    clause_property(Ref, module(CM)),
-    maplist(trace_var(Head), TraceVars).
+    clause_property(Ref, module(CM)).
 
 trace_var(Head, non_fresh) :-
     term_variables(Head, Vars),
@@ -156,10 +166,10 @@ walk_called(M:G, C, _, Opts) :-
     !,
     ( atom(M)
     ->setup_call_cleanup(( '$current_source_module'(OldM),
-                           '$set_source_module'(_, M)
+                           '$set_source_module'(M)
                          ),
                          walk_called(G, C, M, Opts),
-                         '$set_source_module'(_, OldM))
+                         '$set_source_module'(OldM))
     ; true
     ).
 walk_called((A,B), C, M, O) :-

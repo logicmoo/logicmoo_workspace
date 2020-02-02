@@ -93,6 +93,11 @@ from_to_line(file(_, Line, _, _), Line).
 :- pred update_fact_from/2 + database.
 update_fact_from(Fact, From) :-
     extend_args(Fact, [From1], FactFrom),
+    functor(Fact, F, A),
+    atomic_list_concat(['__mutex_', F, '/', A], Mutex),
+    with_mutex(Mutex, update_fact_from(FactFrom, From1, From)).
+
+update_fact_from(FactFrom, From1, From) :-
     forall(( clause(FactFrom, _, Ref),
              subsumes_from(From1, From)
            ),
