@@ -34,7 +34,8 @@
 
 :- module(countsols, [countsols/2,
                       ini_counter/2,
-                      inc_counter/2]).
+                      inc_counter/2,
+                      inc_counter/3]).
 
 :- meta_predicate countsols(?, 0).
 
@@ -43,6 +44,12 @@ ini_counter(N, count(N)).
 inc_counter(State, N) :-
     State = count(N1),
     succ(N1, N2),
+    nb_setarg(1, State, N2),
+    N2 = N.
+
+inc_counter(State, Add, N) :-
+    State = count(N1),
+    N2 is N1 + Add,
     nb_setarg(1, State, N2),
     N2 = N.
 
