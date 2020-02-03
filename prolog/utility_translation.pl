@@ -2688,6 +2688,12 @@ load_owl_from_stream(S):-
   owl_canonical_parse_3(M,['ont']),
   parse_probabilistic_annotation_assertions(M).
 
+% Get the KB's prefixes contained into ns4query
+:- multifile trill:kb_prefixes/1.
+
+trill:kb_prefixes(M:L):-
+  M:ns4query(L),!.
+
 % Adds a list of kb prefixes into ns4query
 :- multifile trill:add_kb_prefixes/1.
 

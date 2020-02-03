@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.semanticweb.org/riccardo/ontologies/2019/10/untitled-ontology-10">
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Declaration>
+        <Class IRI="http://ml.unife.it/disponte#class10"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://ml.unife.it/disponte#class11"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://ml.unife.it/disponte#class5"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://ml.unife.it/disponte#class6"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://ml.unife.it/disponte#class7"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://ml.unife.it/disponte#class8"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://ml.unife.it/disponte#class9"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#class1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#class2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#class3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#class4"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop10"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop4"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop5"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop6"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop7"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop8"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop9"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#objprop1"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#objprop2"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#objprop3"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#dataprop1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#dataprop2"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind2"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind3"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://ml.unife.it/disponte#probability"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="#class4"/>
+        <ObjectIntersectionOf>
+            <Class IRI="#class1"/>
+            <Class IRI="#class3"/>
+        </ObjectIntersectionOf>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="http://ml.unife.it/disponte#class10"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#objprop1"/>
+            <Class IRI="http://ml.unife.it/disponte#class9"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://ml.unife.it/disponte#class10"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#objprop2"/>
+            <Class IRI="http://ml.unife.it/disponte#class9"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://ml.unife.it/disponte#class11"/>
+        <ObjectMinCardinality cardinality="2">
+            <ObjectProperty IRI="#objprop1"/>
+            <Class IRI="http://ml.unife.it/disponte#class9"/>
+        </ObjectMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://ml.unife.it/disponte#class11"/>
+        <ObjectExactCardinality cardinality="3">
+            <ObjectProperty IRI="#objprop2"/>
+            <Class IRI="http://ml.unife.it/disponte#class9"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://ml.unife.it/disponte#class11"/>
+        <ObjectMaxCardinality cardinality="4">
+            <ObjectProperty IRI="#objprop1"/>
+            <Class IRI="http://ml.unife.it/disponte#class9"/>
+        </ObjectMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Annotation>
+            <AnnotationProperty IRI="http://ml.unife.it/disponte#probability"/>
+            <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">0.7</Literal>
+        </Annotation>
+        <Class IRI="#class2"/>
+        <Class IRI="#class1"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="http://ml.unife.it/disponte#class7"/>
+        <ObjectUnionOf>
+            <Class IRI="http://ml.unife.it/disponte#class5"/>
+            <Class IRI="http://ml.unife.it/disponte#class6"/>
+        </ObjectUnionOf>
+    </DisjointClasses>
+    <DisjointUnion>
+        <Class IRI="http://ml.unife.it/disponte#class8"/>
+        <Class IRI="http://ml.unife.it/disponte#class5"/>
+        <Class IRI="http://ml.unife.it/disponte#class6"/>
+    </DisjointUnion>
+    <ClassAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://ml.unife.it/disponte#probability"/>
+            <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">0.3</Literal>
+        </Annotation>
+        <Class IRI="#class1"/>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#objprop2"/>
+            <Class IRI="http://ml.unife.it/disponte#class5"/>
+        </ObjectSomeValuesFrom>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind1"/>
+    </ClassAssertion>
+    <SameIndividual>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind1"/>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind2"/>
+    </SameIndividual>
+    <DifferentIndividuals>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind1"/>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind3"/>
+    </DifferentIndividuals>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#objprop1"/>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind1"/>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind2"/>
+    </ObjectPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#dataprop1"/>
+        <NamedIndividual IRI="http://ml.unife.it/disponte#ind1"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">3</Literal>
+    </DataPropertyAssertion>
+    <EquivalentObjectProperties>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop4"/>
+        <ObjectProperty IRI="#objprop2"/>
+    </EquivalentObjectProperties>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#objprop3"/>
+        <ObjectProperty IRI="#objprop1"/>
+    </SubObjectPropertyOf>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop4"/>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop5"/>
+    </InverseObjectProperties>
+    <FunctionalObjectProperty>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop9"/>
+    </FunctionalObjectProperty>
+    <InverseFunctionalObjectProperty>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop10"/>
+    </InverseFunctionalObjectProperty>
+    <SymmetricObjectProperty>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop9"/>
+    </SymmetricObjectProperty>
+    <AsymmetricObjectProperty>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop10"/>
+    </AsymmetricObjectProperty>
+    <TransitiveObjectProperty>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop9"/>
+    </TransitiveObjectProperty>
+    <ReflexiveObjectProperty>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop9"/>
+    </ReflexiveObjectProperty>
+    <IrreflexiveObjectProperty>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop10"/>
+    </IrreflexiveObjectProperty>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop5"/>
+        <Class IRI="http://ml.unife.it/disponte#class5"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop5"/>
+        <Class IRI="http://ml.unife.it/disponte#class6"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop5"/>
+        <Class IRI="http://ml.unife.it/disponte#class9"/>
+    </ObjectPropertyRange>
+    <DisjointObjectProperties>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop5"/>
+        <ObjectProperty IRI="#objprop1"/>
+    </DisjointObjectProperties>
+    <SubObjectPropertyOf>
+        <ObjectPropertyChain>
+            <ObjectProperty IRI="http://ml.unife.it/disponte#objprop7"/>
+            <ObjectProperty IRI="http://ml.unife.it/disponte#objprop8"/>
+        </ObjectPropertyChain>
+        <ObjectProperty IRI="http://ml.unife.it/disponte#objprop6"/>
+    </SubObjectPropertyOf>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
