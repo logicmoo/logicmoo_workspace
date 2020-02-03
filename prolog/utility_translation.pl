@@ -708,12 +708,12 @@ dataPropertyExpression(E) :- nonvar(E),iri(E).
 
 %% dataRange(+DR) is semidet
 dataRange(DR) :-
-    datatype(DR) ;
+    (datatype(DR) ;
     dataIntersectionOf(DR );
     dataUnionOf(DR) ;
     dataComplementOf(DR) ;
     dataOneOf(DR) ;
-    datatypeRestriction(DR).
+    datatypeRestriction(DR)),!.
 
 %% classExpression(+CE) is semidet
 %
@@ -731,13 +731,13 @@ dataRange(DR) :-
 %    dataAllValuesFrom/1 | dataHasValue/1 | dataMinCardinality/1 |
 %    dataMaxCardinality/1 | dataExactCardinality/1
 classExpression(CE):-
-        iri(CE) ;               % NOTE: added to allow cases where class is not imported
+        (iri(CE) ;               % NOTE: added to allow cases where class is not imported
     class(CE) ;
     objectIntersectionOf(CE) ; objectUnionOf(CE) ; objectComplementOf(CE) ; objectOneOf(CE) ;
     objectSomeValuesFrom(CE) ; objectAllValuesFrom(CE) ; objectHasValue(CE) ; objectHasSelf(CE) ;
     objectMinCardinality(CE) ; objectMaxCardinality(CE) ; objectExactCardinality(CE) ;
     dataSomeValuesFrom(CE) ; dataAllValuesFrom(CE) ; dataHasValue(CE) ;
-    dataMinCardinality(CE) ; dataMaxCardinality(CE) ; dataExactCardinality(CE).
+    dataMinCardinality(CE) ; dataMaxCardinality(CE) ; dataExactCardinality(CE)),!.
 
 %% objectIntersectionOf(+CE) is semidet
 % true if CE is a term intersectionOf(ClassExpression:list)
@@ -2687,6 +2687,12 @@ load_owl_from_stream(S):-
   utility_translation_init(M),
   owl_canonical_parse_3(M,['ont']),
   parse_probabilistic_annotation_assertions(M).
+
+% Get the KB's prefixes contained into ns4query
+:- multifile trill:kb_prefixes/1.
+
+trill:kb_prefixes(M:L):-
+  M:ns4query(L),!.
 
 % Adds a list of kb prefixes into ns4query
 :- multifile trill:add_kb_prefixes/1.
