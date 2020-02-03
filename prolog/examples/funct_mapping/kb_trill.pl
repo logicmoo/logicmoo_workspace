@@ -88,14 +88,3 @@ differentIndividuals(['http://ml.unife.it/disponte#ind1', 'http://ml.unife.it/di
 subPropertyOf(propertyChain(['http://ml.unife.it/disponte#objprop7', 'http://ml.unife.it/disponte#objprop8']), 'http://ml.unife.it/disponte#objprop6').
 
 
-
-
-/*
-swipl kb_trill.pl
-
-['path/mapping.pl'].
-
-findall(Ax,axiom(Ax),L),predicato_traduzione(L,filename).
-
-
-*/

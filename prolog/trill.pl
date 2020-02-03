@@ -2801,6 +2801,7 @@ sandbox:safe_meta(trill:load_owl_kb(_),[]).
 :- use_module(library(utility_translation)).
 
 user:term_expansion((:- trill),[]):-
+  write('ooo'),
   utility_translation:get_module(M),
   set_algorithm(M:trill),
   set_up(M),
