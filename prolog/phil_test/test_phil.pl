@@ -1,6 +1,6 @@
 
 :- module(test_phil,
-  [test_phil/0,test_all/0,test_par/0,test_stru/0]).
+  [test_phil/0,test_all/0,test_par/0,test_stru/0,test_inf/0]).
 :- use_module(library(plunit)).
 
 test_phil:-
@@ -9,7 +9,7 @@ test_phil:-
 test_all:-
   par(P),
   stru(S),
-  inf(I)
+  inf(I),
   append(P,S,A1),
   append(I,A1,A),
   run_tests(A).
@@ -27,7 +27,7 @@ test_inf:-
   inf(I),
   run_tests(I).
 
-inf([uwcse, uwcsekeys]).
+inf([uwcsekeys]).
 
 par([bongard,bongardkeys]).
 
@@ -35,9 +35,9 @@ stru([bongard]).
 
 
 
-
+/*
 :- begin_tests(uwcse, []).
-:-ensure_loaded(library(examples/phil/uwcse)).
+:-ensure_loaded(library(examples/uwcse)).
 :-use_module(library(phil_test/phil_test)).
 
 test(inference_hplp):-
@@ -45,16 +45,15 @@ inference_hplp(advisedby(harry, ben),ai,Prob,Circuit),
 writeln('Result:'),
 atomic_list_concat(['\nProbability=',Prob,'\nCircuit=',Circuit],St),
 writeln(St),
-atomic_list_concat(['Expected:\nProbability =', 0.8750801664,
-'\nCircuit =', "or([and([0, or([and([2])])]), and([0, or([and([2])])]), and([0, or([and([2])])]), and([0, or([and([2])])]), and([1]), and([1])])"],St1),
-writeln(St1).
+atomic_list_concat(['Expected:\nProbability =', 0.8750801664,'\nCircuit =', or([and([0, or([and([2])])]), and([0, or([and([2])])]), and([0, or([and([2])])]), and([0, or([and([2])])]), and([1]), and([1])])],St1),
+writeln(St1). 
 
 :- end_tests(uwcse).
-
+*/
 
 
 :- begin_tests(uwcsekeys, []).
-:-ensure_loaded(library(examples/phil/uwcsekeys)).
+:-ensure_loaded(library(examples/uwcsekeys)).
 :-use_module(library(phil_test/phil_test)).
 
 test(inference_hplp):-
@@ -70,18 +69,18 @@ writeln(St1).
 
 
 :- begin_tests(bongard, []).
-:-ensure_loaded(library(examples/phil/bongard)).
+:-ensure_loaded(library(examples/bongard)).
 :-use_module(library(phil_test/phil_test)).
 
 test(induce_hplp_par):-
-induce_hlpl_par([train],P),
+induce_hplp_par([train],P),
 writeln('Result:'),
 writeln(P),
 writeln('Expected:'),
-writeln([(pos:0.18175243160838334:-circle(_218), in(_222, _218)),  (pos:0.1650748334232293:-circle(_218), triangle(_222)),  (pos:0.15476016853764582:-triangle(_218), circle(_222))).
+writeln([(pos:0.18175243160838334:-circle(_218), in(_222, _218)),  (pos:0.1650748334232293:-circle(_218), triangle(_222)),  (pos:0.15476016853764582:-triangle(_218), circle(_222))]).
 
 test(induce_hplp):-
-induce_hplp([all],P),test(P,[all],LL,AUCROC,_ROC,AUCPR,_PR),
+induce_hplp([all],P),test_hplp(P,[all],LL,AUCROC,_ROC,AUCPR,_PR),
 writeln('Result:'),
 writeln(P),
 atomic_list_concat(['\nLL=',LL,'\nAUCROC=',AUCROC,'\nAUCPR=',AUCPR,'\n'],St),
@@ -100,11 +99,11 @@ writeln(St1).
 
 
 :- begin_tests(bongardkeys, []).
-:-ensure_loaded(library(examples/phil/bongardkeys)).
+:-ensure_loaded(library(examples/bongardkeys)).
 :-use_module(library(phil_test/phil_test)).
 
 test(in):-
-in(P),test(P,[all],LL,AUCROC,_ROC,AUCPR,_PR),
+in(P),test_hplp(P,[all],LL,AUCROC,_ROC,AUCPR,_PR),
 writeln('Result:'),
 writeln(P),
 atomic_list_concat(['\nLL=',LL,'\nAUCROC=',AUCROC,'\nAUCPR=',AUCPR,'\n'],St),
@@ -116,10 +115,10 @@ atomic_list_concat(['Expected:\nP =', "[(pos:0.197575:-circle(_1680),in(_1684, _
 writeln(St1).
 
 test(induce_par):-
-  induce_hlpl_par([train],P),
+  induce_hplp_par([train],P),
   writeln('Result:'),
   writeln(P),
   writeln('Expected:'),
-  writeln([(pos:0.18175243160838334:-circle(_218), in(_222, _218)),  (pos:0.1650748334232293:-circle(_218), triangle(_222)),  (pos:0.15476016853764582:-triangle(_218), circle(_222))).  
+  writeln([(pos:0.18175243160838334:-circle(_218), in(_222, _218)),  (pos:0.1650748334232293:-circle(_218), triangle(_222)),  (pos:0.15476016853764582:-triangle(_218), circle(_222))]).
 :- end_tests(bongardkeys).
 
