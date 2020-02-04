@@ -1,6 +1,6 @@
 phil
 ======
-phil is a parameter learning algorithm that learns the parameters of Hierarchical Probabilistic Logic Programs (HPLP) applying gradient descent (dphil) or Expectation Maximization (emphil).
+phil is a suite of algorithms for learning both the parameters and the structure of Hierarchical Probabilistic Logic Programs (HPLP) from data. The parameters are learned applying gradient descent (dphil) or Expectation Maximization (emphil). To perform structure leaning, phil initially generates a large HPLP and applies a regularized parameter learning on it. Then clauses with small values of probabilities are dropped.
 
 Installation
 ------------
@@ -42,6 +42,6 @@ Then
 
 	$ cd <pack>/phil/prolog/
 	$ swipl
-	?- [uwcsedeep].
-	?- induce_par([ai,graphics,language,systems],P),test(P,[theory],LL,AUCROC,ROC,AUCPR,PR).
+	?- [bongard].
+	?- induce_hplp([train],P),test_hplp(P,[test],LL,AUCROC,ROC,AUCPR,PR).
 
