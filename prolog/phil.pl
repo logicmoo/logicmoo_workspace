@@ -12,7 +12,7 @@ This module provides algorithms for learning the structure and the parameters of
 
 */
 
-:- module(phil,[induce_hplp_par/2,induce_hplp/2,sample_hplp/4,inference_hplp/2,inference_hplp/3,
+:- module(phil,[induce_hplp_par/2,induce_hplp/2,sample_hplp/4,inference_hplp/3,inference_hplp/4,
   test_hplp/7,op(500,fx,#),op(500,fx,'-#'),set_hplp/2]).
 
 
@@ -49,8 +49,8 @@ This module provides algorithms for learning the structure and the parameters of
 :- meta_predicate induce_hplp_parameters(:,-,-,-).
 :- meta_predicate test_hplp(:,+,-,-,-,-,-).
 
-:- meta_predicate inference_hplp(:,+).
 :- meta_predicate inference_hplp(:,+,-).
+:- meta_predicate inference_hplp(:,+,-,-).
 
 :- meta_predicate test_hplp_prob(:,+,-,-,-,-).
 :- meta_predicate set_hplp(:,+).
@@ -287,7 +287,7 @@ test_hplp(M:P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
 
 test_hplp_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
   write2(M,'Testing\n'),
-  findall(Exs,(member(F,TestFolds),M:fold_hplp(F,Exs)),L),
+  findall(Exs,(member(F,TestFolds),M:fold(F,Exs)),L),
   append(L,TE),
   process_clauses(P,M,[],_,[],PRules),
   generate_clauses(PRules,M,RuleFacts,0,[],Th),
@@ -327,23 +327,24 @@ induce_hplp_par(M:Folds,P):-
 
 
 /**
- *  inference_hplp(:Query:atom, -Prob:probabity)
+ *  inference_hplp(:Query:atom, +Model:constant -Prob:number)
  * 
  *  Performs inference and returns in Prob  the probability of atom.
  */
-inference_hplp(M:Query, Prob):-
-  inference_hplp(M:Query, Prob, _Circuit).
+inference_hplp(M:Query, Model, Prob):-
+  inference_hplp(M:Query, Model,Prob, _Circuit).
 
 
 
 
 /**
- *  inference_hplp(:Query:atom, +Fold:constant, -Prob:probabity, -Circuit: Term)
+ *  inference_hplp(:Query:atom, +Model:constant, -Prob:probabity, -Circuit: Term)
  * 
  *   Performs inference and returns both the probability and the arithmetic circuit of atom in Prob and Circuit respectively. 
  */
-inference_hplp(M:Query, Prob,Circuit):-
-  findall(Exs,(member(F,[all]),M:fold_hplp(F,Exs)),L),
+inference_hplp(M:Query,Model, Prob,Circuit):-
+  Fold=[Model],
+  findall(Exs,(member(F,Fold),M:fold(F,Exs)),L),
   append(L,DB),
   assert(M:database(DB)),
   (M:bg(RBG0)->
@@ -362,10 +363,8 @@ inference_hplp(M:Query, Prob,Circuit):-
   assert_all(Th0,M,Th0Ref),
   assert_all(R1,M,R1Ref),!,
   retractall(M:v(_,_,_)),
-  %abolish_all_tables,
   Query=..[Func|Args],
-  %trace,
-  append([_],Args,ArgsNew),
+  append(Fold,Args,ArgsNew),
   QueryNew=..[Func|ArgsNew],
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
   abolish_all_tables,
@@ -399,7 +398,7 @@ list2and(BL,B).
 induce_hplp_parameters(M:Folds,DB,R):-
   M:local_setting(seed,Seed),
   set_random(Seed),
-  findall(Exs,(member(F,Folds),M:fold_hplp(F,Exs)),L),
+  findall(Exs,(member(F,Folds),M:fold(F,Exs)),L),
   append(L,DB),
   assert(M:database(DB)),
   statistics(walltime,[_,_]),
@@ -588,9 +587,9 @@ learn_params_hplp(DB,M,R0,R,CLL):-
   length(DB,NEx),
   abolish_all_tables,
   M:local_setting(group,G),
+  %trace,
   derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
   maplist(remove_p,Nodes0,Nodes),
-  %trace,
   M:local_setting(algorithmType,Algorithm),
   M:local_setting(maxIter_phil,MaxIter),
   M:local_setting(epsilon_deep,EA),
@@ -618,11 +617,16 @@ learn_params_hplp(DB,M,R0,R,CLL):-
   retract_all(R1Ref),
   % Regularized parameters
   M:local_setting(regularized,Regularized),
-  M:local_setting(regularizationType,TypeReg),
-  M:local_setting(gamma,Gamma),
-  M:local_setting(gammaCount,GammaCount),
+  
   (Regularized=yes ->
-    RegParams=[Regularized,TypeReg,Gamma,GammaCount]
+    M:local_setting(regularizationType,TypeReg),
+    (TypeReg=:=0 ->
+      RegParams=[no]
+      ;
+      M:local_setting(gamma,Gamma),
+      M:local_setting(gammaCount,GammaCount),
+      RegParams=[Regularized,TypeReg,Gamma,GammaCount]
+    )
   ;
     RegParams=[Regularized]
   ),
@@ -692,7 +696,7 @@ induce_hplp_rules(M:Folds,R):-
   set_hplp(M:compiling,on),
   M:local_setting(seed,Seed),
   set_random(Seed),
-  findall(Exs,(member(F,Folds),M:fold_hplp(F,Exs)),L),
+  findall(Exs,(member(F,Folds),M:fold(F,Exs)),L),
   append(L,DB),
   assert(M:database(DB)),
   (M:bg(RBG0)->
@@ -870,8 +874,8 @@ getTree(RestPred,TreesCurr1,Treesresult).
 %!	insert_tree
 %
 %
-insert_tree(Pred,[],[],[t(Pred,[])]).
-insert_tree(Pred,PreviousTrees,[],TreesResult):-
+insert_tree(Pred,[],[],[t(Pred,[])]):-!.
+insert_tree(Pred,PreviousTrees,[],TreesResult):-!,
 append_No_empty(PreviousTrees,[t(Pred,[])],TreesResult).
 
 insert_tree(Pred1,Previoustrees,[Tree|RestTreesCurr],TreesResult):-
@@ -907,13 +911,13 @@ insert_Forest(Pred1,t(Pred2,Forest),TreeResult):-
 %!	insert_tree_loop_Forest
 %
 %
+insert_tree_loop_Forest(_Pred,_AccForest,[],_ForestResult):-fail.
 insert_tree_loop_Forest(Pred,PreviousForest,[ForestCurr|RestForest],ForestResult):-
   append_No_empty(PreviousForest,[ForestCurr],PreviousForestCurr),
   insert_tree_loop_Forest(Pred,PreviousForestCurr, RestForest, ForestResult).
   
-  
-  insert_tree_loop_Forest(_Pred,_AccForest,[],_ForestResult):-fail.
-  insert_tree_loop_Forest(Pred,PreviousForest,[ForestCurr|RestForest],ForestResult):-
+
+insert_tree_loop_Forest(Pred,PreviousForest,[ForestCurr|RestForest],ForestResult):-
   insert_tree_loop(Pred,ForestCurr,NewForest),!,
   append_No_empty(PreviousForest,[NewForest],ForestResult1),
   append_No_empty(ForestResult1,RestForest,ForestResult).
@@ -921,10 +925,10 @@ insert_tree_loop_Forest(Pred,PreviousForest,[ForestCurr|RestForest],ForestResult
 
 
 % Append a list Whitout considering the empty lits 
-
-append_No_empty(List,[],List).
-append_No_empty([],List,List).
-append_No_empty(List1,List2,List):-
+append_No_empty([],[],[]).
+append_No_empty(List,[],List):-!.
+append_No_empty([],List,List):-!.
+append_No_empty(List1,List2,List):-!,
 append(List1,List2,List).
 
 
@@ -1131,10 +1135,10 @@ removeHidden([Rule|Rest],HPLPOut,HiddenCur,HiddenR):-
  (exist1(Hidden,Rest) ->
   functor(Hidden,Name,_),
   append(HiddenCur,[Name],HiddenCurNew),
-  removeHidden(Rest,HPLPOutLoop,HiddenCurNew,HiddenR),
+  removeHidden(Rest,HPLPOutLoop,HiddenCurNew,HiddenR),!,
   HPLPOut=[Rule|HPLPOutLoop]
   ;
-   removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR),
+   removeHidden(Rest,HPLPOutLoop,HiddenCur,HiddenR),!,
    HPLPOut=[rule(N,Head,[Pred],True)|HPLPOutLoop]
 ).
 
@@ -1204,7 +1208,6 @@ saveHPLPs(HPLPs,FileName,Levels):-
   copy_term(HPLP,HPLPCopy),
   numbervars((HPLPCopy,_HPLPVar),0,_V),
   %saveHPLPLoop(Stream,HPLPCopy),
-  %trace,
   maplist(saveHPLPLoop(Stream),HPLPCopy),
   nl(Stream),
   nl(Stream). 
@@ -2362,11 +2365,12 @@ make_dynamic(M):-
   M:(dynamic int/1),
   findall(O,M:output(O),LO),
   findall(I,M:input(I),LI),
-  findall(I,M:input_cw(I),LIC),
+  %findall(I,M:input_cw(I),LIC),
   findall(D,M:determination(D,_DD),LDH),
   findall(DD,M:determination(_D,DD),LDD),
   findall(DH,(M:modeh(_,_,_,LD),member(DH,LD)),LDDH),
-  append([LO,LI,LIC,LDH,LDD,LDDH],L0),
+  %append([LO,LI,LIC,LDH,LDD,LDDH],L0),
+  append([LO,LI,LDH,LDD,LDDH],L0),
   remove_duplicates(L0,L),
   maplist(to_dyn(M),L).
 
@@ -2839,7 +2843,8 @@ given(M,H):-
 
 given_cw(M,H):-
   functor(H,P,Ar),
-  (M:input_cw(P/Ar)).
+  (M:input(P/Ar)).
+  %(M:input_cw(P/Ar)).
 
 /*
 and_list([],B,B).
@@ -2978,11 +2983,12 @@ to_tabled(M,H0,H):-
   ).
 
 to_tabled_head_list(M,A0:P,A:P):-
-  phil:to_tabled(M,A0,A).
+  to_tabled(M,A0,A).
 
 gen_clause_cw((H :- Body),_M,N,N,(H :- Body),[(H1 :- Body)]):-
   !,
-  phil:to_tabled(H,H1).
+  H1=H.
+ % phil:to_tabled(H,H1).
 
 gen_clause_cw(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   rule(N,HeadList,BodyList,Lit),Clauses):-!,
@@ -2993,7 +2999,7 @@ gen_clause_cw(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   append(HeadList,BodyList,List),
   extract_vars_list(List,[],VC),
   get_probs(HeadList,Probs),
-  maplist(to_tabled_head_list,HeadList,HeadList1),
+  maplist(to_tabled_head_list,M,HeadList,HeadList1),
   (M:local_setting(single_var,true)->
     generate_rules(HeadList1,Body1,[],N,Probs,ACAnd,0,Clauses,Module,M)
   ;
@@ -3007,7 +3013,8 @@ gen_clause_cw(def_rule(H,BodyList,Lit),_M,N,N,def_rule(H,BodyList,Lit),Clauses) 
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body1),
   add_ac_arg(H,ACAnd,Module,Head1),
-  phil:to_tabled(Head1,Head2),
+  %phil:to_tabled(Head1,Head2),
+  Head2=Head1,
   Clauses=[(Head2 :- Body1)].
 
 
@@ -3021,7 +3028,8 @@ generate_clauses([H|T],M,[H1|T1],N,C0,C):-
 
 gen_clause((H :- Body),_M,N,N,(H :- Body),[(H1 :- Body)]):-
   !,
-  phil:to_tabled(H,H1).
+  H1=H.
+ % phil:to_tabled(H,H1).
 
 
 gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
@@ -3043,14 +3051,12 @@ gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
 
 gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   rule(N,HeadList,BodyList,Lit),Clauses):-!,
-  %trace,
 % disjunctive clause with more than one head atom senza depth_bound
   process_body(BodyList,and([N]),ACAnd,[],_Vars,BodyList1,Module,M),
   list2and(BodyList1,Body1),
   append(HeadList,BodyList,List),
   extract_vars_list(List,[],VC),
   get_probs(HeadList,Probs),
-  %trace,
   maplist(to_tabled_head_list(M),HeadList,HeadList1),
   (M:local_setting(single_var,true)->
     generate_rules(HeadList1,Body1,[],N,Probs,ACAnd,0,Clauses,Module,M)
@@ -3066,7 +3072,7 @@ gen_clause(def_rule(H,BodyList,Lit),M,N,N,def_rule(H,BodyList,Lit),Clauses) :-
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body1),
   add_ac_arg_db(H,ACAnd,DBH,Module,Head1),
-  phil:to_tabled(Head1,Head2),
+  to_tabled(M,Head1,Head2),
   Clauses=[(Head2 :- (DBH>=1,DB is DBH-1,Body1))].
 
 gen_clause(def_rule(H,BodyList,Lit),M,N,N,def_rule(H,BodyList,Lit),Clauses) :- !,%agg. cut
@@ -3075,7 +3081,8 @@ gen_clause(def_rule(H,BodyList,Lit),M,N,N,def_rule(H,BodyList,Lit),Clauses) :- !
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body1),
   add_ac_arg(H,ACAnd,Module,Head1),
-  phil:to_tabled(Head1,Head2),
+  %trace,
+  to_tabled(M,Head1,Head2),
   Clauses=[(Head2 :- Body1)].
 
 
@@ -3164,6 +3171,43 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
     generate_clause(H,Body2,VC,R,Probs,ACAnd,0,Clauses,Module,M)
   ).
 
+
+  
+
+term_expansion_int((Head :- Body),M,(Clauses,[def_rule(Head,BodyList,true)])) :-
+  % definite clause senza DB
+    %M:local_setting(compiling,on),
+    %trace,
+    ((Head:-Body) \= ((system:term_expansion(_,_)) :- _ )),!,
+    list2and(BodyList, Body),
+    process_body(BodyList,AC,AC1,[],_Vars,BodyList2,Module,M),
+    append([phil:onec(AC)],BodyList2,BodyList3),
+    list2and(BodyList3,Body2),
+    add_bdd_arg(Head,AC1,Module,Head1),
+    Clauses=(Head1 :- Body2).
+
+
+
+
+
+  add_bdd_arg(A,BDD,A1):-
+    A=..[P|Args],
+    append(Args,[BDD],Args1),
+    A1=..[P|Args1].
+  
+  
+  add_bdd_arg_db(A,BDD,DB,A1):-
+    A=..[P|Args],
+    append(Args,[DB,BDD],Args1),
+    A1=..[P|Args1].
+  
+  
+  add_bdd_arg(A,BDD,Module,A1):-
+    A=..[P|Args],
+    append(Args,[BDD],Args1),
+    A1=..[P,Module|Args1].
+    
+
 /*-----------*/
 
 
@@ -3175,8 +3219,8 @@ sandbox:safe_meta(phil:induce_hplp(_,_), []).
 sandbox:safe_meta(phil:get_node(_,_), []).
 sandbox:safe_meta(phil:test_prob_hplp(_,_,_,_,_,_), []).
 sandbox:safe_meta(phil:test_hplp(_,_,_,_,_,_,_), []).
+sandbox:safe_meta(phil:inference_hplp(_,_,_,_), []).
 sandbox:safe_meta(phil:inference_hplp(_,_,_), []).
-sandbox:safe_meta(phil:inference_hplp(_,_), []).
 sandbox:safe_meta(phil:set_hplp(_,_), []).
 sandbox:safe_meta(phil:setting_hplp(_,_), []).
 

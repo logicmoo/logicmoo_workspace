@@ -1,7 +1,10 @@
 
-:- use_module(phil).
+:- use_module(test_phil).
 
 
-#:- format(user_error,
-#	  'phil.  To run a test run ?- test.~n~n', []).
-test:- writeln("phil loaded").
+:- format(user_error,
+	  'phil test suite.  To run all tests run ?- test.~n~n', []).
+
+
+test:-
+  test_phil.
