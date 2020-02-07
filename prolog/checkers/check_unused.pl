@@ -56,6 +56,7 @@
 :- use_module(library(option_utils)).
 :- use_module(library(ungroup_keys_values)).
 :- use_module(library(compact_goal)).
+:- use_module(library(concurrent_forall)).
 
 :- multifile
     prolog:message//1.
@@ -152,7 +153,7 @@ entry_point(Caller) :-
     is_entry_caller(Caller).
 
 mark :-
-    forall(entry_point(Caller), put_mark(Caller)).
+    concurrent_forall(entry_point(Caller), put_mark(Caller)).
 
 resolve_meta_goal(H, M, G) :-
     ( ( predicate_property(M:H, meta_predicate(Meta))
@@ -264,25 +265,26 @@ current_edge(X, Y) :-
 sweep(FileD, Pairs) :-
     findall(node(Node, D, From), unmarked(FileD, Node, D, From), UNodes),
     sort(UNodes, Nodes),
-    findall(node(X, DX, LX)-Y,
-            ( member(node(X, DX, FX), Nodes),
-              from_location(FX, LX),
-              ( current_edge(X, Y),
-                memberchk(node(Y, _, _), Nodes)
-              *->
-                true
-              ; Y=[]
-              )
-            ), EdgeU),
-    sort(EdgeU, EdgeL),
-    group_pairs_by_key(EdgeL, AdjL),
-    maplist(add_sort_by(EdgeL), AdjL, AdjSG),
+    maplist(get_adjl(Nodes), Nodes, AdjL),
+    maplist(add_sort_by(AdjL), AdjL, AdjSG),
     ungroup_keys_values(AdjSG, AdjSL),
     ungroup_keys_values([warning-AdjSL], Pairs).
 
-add_sort_by(EdgeL, Node-CalleeL, sort_by(InclN, LoopN, CalleeN)/Node-CalleeL) :-
+get_adjl(Nodes, node(X, DX, FX), node(X, DX, LX)-YL) :-
+    from_location(FX, LX),
+    findall(Y,
+            (   current_edge(X, Y),
+                memberchk(node(Y, _, _), Nodes)
+                *-> true
+            ;   Y = []
+            ), YU),
+    sort(YU, YL).
+
+add_sort_by(AdjL, Node-CalleeL, sort_by(InclN, LoopN, CalleeN)/Node-CalleeL) :-
     Node = node(X, _, _),
-    findall(Caller, member(Caller-X, EdgeL), CallerL),
+    findall(Caller, ( member(Caller-XL, AdjL),
+                      member(X, XL)
+                    ), CallerL),
     ( partition(\=(Node), CallerL, InclL, LoopL),
       length(InclL, InclN),
       length(LoopL, LoopN)

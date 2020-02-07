@@ -63,12 +63,12 @@ codewalk:walk_code(clause, Options1) :-
                 trace_variables:TraceVars,
                 trace_reference:To,
                 undefined:Undefined},
-    walk_clause(FileD, Data),
-    maplist(walk_extras_c(FileD, Data), Extras).
+    concurrent_maplist(walk_extras_c(FileD, Data), [clause|Extras]).
 
 walk_extras_c(FileD, Opts, Extra) :-
     walk_extras_(Extra, FileD, Opts).
 
+walk_extras_(clause,         FileD, Opts) :- walk_clause(              FileD, Opts).
 walk_extras_(initialization, FileD, Opts) :- walk_from_initialization( FileD, Opts).
 walk_extras_(declaration,    FileD, Opts) :- walk_from_loc_declaration(FileD, Opts).
 walk_extras_(asrparts(L),    FileD, Opts) :- walk_from_assertion(      FileD, Opts, L).
