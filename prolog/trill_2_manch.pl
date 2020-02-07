@@ -55,222 +55,244 @@ prolog2manchester(anonymousIndividual(IRI), AIFunc):-
 prolog2manchester(subClassOf(ClassExpression1, ClassExpression2), SCFunc):- %appendManchester SubClassOf ClassExpressionFunctional1 ClassExpressionFunctional2 
   classExpression2manchester(ClassExpression1,ClassExpressionFunctional1),
   classExpression2manchester(ClassExpression2,ClassExpressionFunctional2), 
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([ClassExpressionFunctional1, 'subClassOf', ClassExpressionFunctional2],SCFunc) ;
     ( appendManchester('Class',[ClassExpressionFunctional1],SCFunc0),
       appendManchester('SubClassOf',[ClassExpressionFunctional2],SCFunc1),
       appendManchester2([SCFunc0, SCFunc1],SCFunc)
-    ).
+    )
+  ).
 
 % equivalentClasses(?ClassExpressions:set(ClassExpression))
 prolog2manchester(equivalentClasses(ListaClassExpression), ECFunc):-  %'EquivalentClasses(axiomAnnotations, ClassExpression, ClassExpression { ClassExpression } )'):-
   findall(CEF,(member(CE,ListaClassExpression),classExpression2manchester(CE,CEF)),L),
-  length(L,2) ->
+  (length(L,2) ->
     ( L = [C1,C2],
-      trill_2_manch_setting(convertion_mode(simple)) ->
+      (trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester2([C1,'equivalentTo',C2],ECFunc) ;
        ( appendManchester('Class',[C1],SCFunc0),
          appendManchester('EquivalentTo',[C2],SCFunc1),
          appendManchester2([SCFunc0, SCFunc1],ECFunc)
        )
+      )
     )
     ;
     ( trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester3('EquivalentTo',L,ECFunc);
        appendManchester('EquivalentTo',L,ECFunc)
-    ).
+    )
+  ).
 
 % disjointClasses(?ClassExpressions:set(ClassExpression))
 prolog2manchester(disjointClasses(ListaClassExpression), ECFunc):- %'DisjointClasses(axiomAnnotations, ClassExpression, ClassExpression { ClassExpression })'). 
   findall(CEF,(member(CE,ListaClassExpression),classExpression2manchester(CE,CEF)),L),
-  length(L,2) ->
+  (length(L,2) ->
     ( L = [C1,C2],
-      trill_2_manch_setting(convertion_mode(simple)) ->
+      (trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester2([C1,'disjointWith',C2],ECFunc) ;
        ( appendManchester('Class',[C1],SCFunc0),
          appendManchester('DisjointWith',[C2],SCFunc1),
          appendManchester2([SCFunc0, SCFunc1],ECFunc)
        )
+      )
     )
     ;
     ( trill_2_manch_setting(convertion_mode(simple)) ->
         appendManchester3('DisjointWith',L,ECFunc);
         appendManchester('DisjointWith',L,ECFunc)
-    ).
+    )
+  ).
 
 % disjointUnion(?ClassExpression, ?ClassExpressions:set(ClassExpression))
 prolog2manchester(disjointUnion(IRI,ListaClassExpression), ECFunc):- %'DisjointUnion(axiomAnnotations, Class disjointClassExpressions)'% disjointClassExpressions := ClassExpression ClassExpression { ClassExpression })
   classExpression2manchester(IRI,ClassExpressionFunctional),
   objectUnionOf(ListaClassExpression, LM),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([ClassExpressionFunctional,'disjointWith',LM],ECFunc)
     ;
     (
       appendManchester('Class',[ClassExpressionFunctional],SCFunc0),
       appendManchester('DisjointWith',[LM],SCFunc1),
       appendManchester2([SCFunc0, SCFunc1],ECFunc)
-    ).
+    )
+  ).
 
 % subPropertyOf(?Sub:PropertyExpression, ?Super:ObjectPropertyExpression)
 prolog2manchester(subPropertyOf(PropertyExpression1, PropertyExpression2), SPFunc):- 
   propertyExpression2manchester(PropertyExpression1,PropertyExpressionFunctional1),
   propertyExpression2manchester(PropertyExpression2,PropertyExpressionFunctional2),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester([PropertyExpressionFunctional1, 'subPropertyOf', PropertyExpressionFunctional2],SPFunc) ;
     ( appendManchester('ObjectProperty',[PropertyExpressionFunctional1],SPFunc0),
       appendManchester('SubPropertyOf',[PropertyExpressionFunctional1],SPFunc1),
       appendManchester2([SPFunc0, SPFunc1],SPFunc)
-    ).
+    )
+  ).
 
 % equivalentProperties(?PropertyExpressions:set(PropertyExpression))  
 prolog2manchester(equivalentProperties(ListaPropertyExpression), EPFunc):- %'EquivalentObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })').
   findall(PEF,(member(PE,ListaPropertyExpression), propertyExpression2manchester(PE,PEF)),L),
-  length(L,2) ->
+  (length(L,2) ->
     ( L = [P1,P2],
-      trill_2_manch_setting(convertion_mode(simple)) ->
+      (trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester2([P1,'equivalentTo',P2],EPFunc) ;
        ( appendManchester('ObjectProperty',[P1],SPFunc0),
          appendManchester('EquivalentTo',[P2],SPFunc1),
          appendManchester2([SPFunc0, SPFunc1],EPFunc)
        )
+      )
     )
     ;
     ( trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester3('EquivalentTo',L,EPFunc);
        appendManchester('EquivalentTo',L,EPFunc)
-    ).
+    )
+  ).
 
 % disjointProperties(?PropertyExpressions:set(PropertyExpression))                
 prolog2manchester(dijointProperties(ListaPropertyExpression), DPFunc):- %'DisjointObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression { ObjectPropertyExpression })').
   findall(PEF,(member(PE, ListaPropertyExpression), propertyExpression2manchester(PE,PEF)),L),
-  length(L,2) ->
+  (length(L,2) ->
     ( L = [P1,P2],
-      trill_2_manch_setting(convertion_mode(simple)) ->
+      (trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester2([P1,'disjointWith',P2],DPFunc) ;
        ( appendManchester('ObjectProperty',[P1],SPFunc0),
          appendManchester('DisjointWith',[P2],SPFunc1),
          appendManchester2([SPFunc0, SPFunc1],DPFunc)
        )
+      )
     )
     ;
     ( trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester3('DisjointWith',L,DPFunc);
        appendManchester('DisjointWith',L,DPFunc)
-    ).
+    )
+  ).
 
 % inverseProperties(?ObjectPropertyExpression1:ObjectPropertyExpression, ?ObjectPropertyExpression2:ObjectPropertyExpression)
 prolog2manchester(inverseProperties(ObjectPropertyExpression1, ObjectPropertyExpression2), IOPFunc):- %'InverseObjectProperties(axiomAnnotations, ObjectPropertyExpression, ObjectPropertyExpression)'). 
   propertyExpression2manchester(ObjectPropertyExpression1,ObjectPropertyExpressionFunctional1),
   propertyExpression2manchester(ObjectPropertyExpression2,ObjectPropertyExpressionFunctional2), %appendManchester SubClassOf ClassExpressionFunctional1 ClassExpressionFunctional2
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([ObjectPropertyExpressionFunctional1, 'inverseOf',ObjectPropertyExpressionFunctional2],IOPFunc);
     ( appendManchester('ObjectProperty',[ObjectPropertyExpression1],IOPFunc0),
       appendManchester('Inverse',[ObjectPropertyExpression2],IOPFunc1),
       appendManchester2([IOPFunc0, IOPFunc1],IOPFunc)
-    ).
+    )
+  ).
 
 % propertyDomain(?PropertyExpression, ?CE)
 prolog2manchester(propertyDomain(PropertyExpression, ClassExpression), OPDFunc):- %'ObjectPropertyDomain(axiomAnnotations, ObjectPropertyExpression, ClassExpression)').
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
   classExpression2manchester(ClassExpression,ClassExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'domain',ClassExpressionF],OPDFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],OPDFunc0),
       appendManchester('Domain',[ClassExpressionF],OPDFunc1),
       appendManchester2([OPDFunc0, OPDFunc1],OPDFunc)
-    ).
+    )
+  ).
 
 % propertyRange(?PropertyExpression, ?ClassExpression)
 prolog2manchester(propertyRange(PropertyExpression, ClassExpression), OPRFunc) :- %'ObjectPropertyRange(axiomAnnotations, ObjectPropertyExpression, ClassExpression)').
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
   classExpression2manchester(ClassExpression,ClassExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'range',ClassExpressionF],OPRFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],OPRFunc0),
       appendManchester('Range',[ClassExpressionF],OPRFunc1),
       appendManchester2([OPRFunc0, OPRFunc1],OPRFunc)
-    ).
+    )
+  ).
 
 % functionalProperty(?PropertyExpression)
 prolog2manchester(functionalProperty(PropertyExpression),FOPFunc) :- %'FunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). %?
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'functional'],FOPFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],FOPFunc0),
       appendManchester('Characteristic','Functional',FOPFunc1),
       appendManchester2([FOPFunc0, FOPFunc1],FOPFunc)
-    ).
+    )
+  ).
 
 % inverseFunctionalProperty(?ObjectPropertyExpression)
 prolog2manchester(inverseFunctionalProperty(PropertyExpression), IFPFunc):- %'InverseFunctionalObjectProperty(axiomAnnotations, ObjectPropertyExpression').
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'inverseFunctional'],IFPFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],IFPFunc0),
       appendManchester('Characteristic','InverseFunctional',IFPFunc1),
       appendManchester2([IFPFunc0, IFPFunc1],IFPFunc)
-    ).
+    )
+  ).
 
 % reflexiveProperty(?ObjectPropertyExpression)
 prolog2manchester(reflexiveProperty(PropertyExpression), RPFunc) :- % ReflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)'). 
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'reflexive'],RPFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],RPFunc0),
       appendManchester('Characteristic','Reflexive',RPFunc1),
       appendManchester2([RPFunc0, RPFunc1],RPFunc)
-    ).
+    )
+  ).
 
 % irreflexiveProperty(?ObjectPropertyExpression)
 prolog2manchester(irreflexiveProperty(PropertyExpression), IOPFunc):- %'IrreflexiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').  
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'irreflexive'],IOPFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],IOPFunc0),
       appendManchester('Characteristic','Irreflexive',IOPFunc1),
       appendManchester2([IOPFunc0, IOPFunc1],IOPFunc)
-    ).
+    )
+  ).
 
 % symmetricProperty(?ObjectPropertyExpression)
 prolog2manchester(symmetricProperty(PropertyExpression), SOPFunc) :- %'SymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').              
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'symmetric'],SOPFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],SOPFunc0),
       appendManchester('Characteristic','Symmetric',SOPFunc1),
       appendManchester2([SOPFunc0, SOPFunc1],SOPFunc)
-    ).
+    )
+  ).
 
 % asymmetricProperty(?ObjectPropertyExpression)
 prolog2manchester(asymmetricProperty(PropertyExpression), AOPFunc):- %'AsymmetricObjectProperty(axiomAnnotations, ObjectPropertyExpression)').             
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'asymmetric'],AOPFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],AOPFunc0),
       appendManchester('Characteristic','Asymmetric',AOPFunc1),
       appendManchester2([AOPFunc0, AOPFunc1],AOPFunc)
-    ).
+    )
+  ).
 
 % transitiveProperty(?ObjectPropertyExpression)
 prolog2manchester(transitiveProperty(PropertyExpression), TOPFunc):- %'TransitiveObjectProperty(axiomAnnotations, ObjectPropertyExpression)').
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([PropertyExpressionF, 'transitive'],TOPFunc);
     ( appendManchester('ObjectProperty',[PropertyExpressionF],TOPFunc0),
       appendManchester('Characteristic','Transitive',TOPFunc1),
       appendManchester2([TOPFunc0, TOPFunc1],TOPFunc)
-    ).
+    )
+  ).
 
 % hasKey(?ClassExpression,?PropertyExpression)
 prolog2manchester(hasKey(ClassExpression,PropertyExpression), HKFunc):- %'HasKey(axiomAnnotations ClassExpression({ ObjectPropertyExpression }) ({ DataPropertyExpression }))'). 
   classExpression2manchester(ClassExpression,ClassExpressionF),
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([ClassExpressionF, 'hasKey', PropertyExpressionF],HKFunc) ;
     ( appendManchester('Class',[ClassExpressionF],HKFunc0),
       appendManchester('HasKey',[PropertyExpressionF],HKFunc1),
       appendManchester2([HKFunc0, HKFunc1],HKFunc)
-    ).
+    )
+  ).
 
 
 /* Individual */
@@ -278,38 +300,42 @@ prolog2manchester(hasKey(ClassExpression,PropertyExpression), HKFunc):- %'HasKey
 % sameIndividual(?Individuals:set(Individual))
 prolog2manchester(sameIndividual(ListIndividual), SIFunc) :- %'SameIndividual(axiomAnnotations, Individual Individual { Individual })').
   findall(IEF,(member(IE, ListIndividual), individual2manchester(IE,IEF)),L),
-  length(L,2) ->
+  (length(L,2) ->
     ( L = [I1,I2],
-      trill_2_manch_setting(convertion_mode(simple)) ->
+      (trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester2([I1,'sameAs',I2],SIFunc) ;
        ( appendManchester('Individual',[I1],SIFunc0),
          appendManchester('SameAs',[I2],SIFunc1),
          appendManchester2([SIFunc0, SIFunc1],SIFunc)
        )
+      )
     )
     ;
     (trill_2_manch_setting(convertion_mode(simple)) ->
       appendManchester3('SameIndividual',L,SIFunc);
       appendManchester('SameIndividual',L,SIFunc)
-    ).
+    )
+  ).
 
 % differentIndividuals(?Individuals:set(Individual))               
 prolog2manchester(differentIndividual(ListIndividual), DIFunc ) :- %'DifferentIndividuals(axiomAnnotations, Individual Individual { Individual })').
-  findall(IEF,(member(IE, ListIndividual), individual2manchester(IE,IEF)),A),
-  length(L,2) ->
+  findall(IEF,(member(IE, ListIndividual), individual2manchester(IE,IEF)),L),
+  (length(L,2) ->
     ( L = [I1,I2],
-      trill_2_manch_setting(convertion_mode(simple)) ->
+      (trill_2_manch_setting(convertion_mode(simple)) ->
        appendManchester2([I1,'differentFrom',I2],DIFunc) ;
        ( appendManchester('Individual',[I1],DIFunc0),
          appendManchester('DifferentFrom',[I2],DIFunc1),
          appendManchester2([DIFunc0, DIFunc1],DIFunc)
        )
+      )
     )
     ;
     (trill_2_manch_setting(convertion_mode(simple)) ->
       appendManchester3('DifferentIndividuals',L,DIFunc);
       appendManchester('DifferentIndividuals',L,DIFunc)
-    ).
+    )
+  ).
 
 
 /* Assertion */
@@ -318,36 +344,39 @@ prolog2manchester(differentIndividual(ListIndividual), DIFunc ) :- %'DifferentIn
 prolog2manchester(classAssertion(ClassExpression, IndividualExpression), CAFunc) :- %'ClassAssertion(axiomAnnotations, ClassExpression Individual)').
   classExpression2manchester(ClassExpression,ClassExpressionF),
   individual2manchester(IndividualExpression,IndividualExpressionF),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([IndividualExpressionF, 'type', ClassExpressionF],CAFunc) ;
     ( appendManchester('Individual',[IndividualExpressionF],CAFunc0),
       appendManchester('Type',[ClassExpressionF],CAFunc1),
       appendManchester2([CAFunc0, CAFunc1],CAFunc)
-    ).
+    )
+  ).
 
 % propertyAssertion(?PropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)               
 prolog2manchester(propertyAssertion(PropertyExpression, IndividualExpression1, IndividualExpression2), OPAFunc ):- %'ObjectPropertyAssertion( axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). 
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
   individual2manchester(IndividualExpression1, IndividualExpression1F),
   individual2manchester(IndividualExpression2, IndividualExpression2F),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([IndividualExpression1F, PropertyExpressionF, IndividualExpression2F],OPAFunc) ;
     ( appendManchester('Individual',[IndividualExpression1F],OPAFunc0),
       appendManchester('Fact',[PropertyExpressionF, IndividualExpression2F],OPAFunc1),
       appendManchester2([OPAFunc0, OPAFunc1],OPAFunc)
-    ).
+    )
+  ).
 
 % negativePropertyAssertion(?PropertyExpression, ?SourceIndividual:Individual, ?TargetIndividual:Individual)
 prolog2manchester(negativePropertyAssertion(PropertyExpression, IndividualExpression1, IndividualExpression2), NOPAFunc ):- %'NegativeObjectPropertyAssertion(axiomAnnotations, ObjectPropertyExpression, sourceIndividual, targetIndividual)'). 
   propertyExpression2manchester(PropertyExpression,PropertyExpressionF),
   individual2manchester(IndividualExpression1, IndividualExpression1F),
   individual2manchester(IndividualExpression2, IndividualExpression2F),
-  trill_2_manch_setting(convertion_mode(simple)) ->
+  (trill_2_manch_setting(convertion_mode(simple)) ->
     appendManchester2([IndividualExpression1F, PropertyExpressionF, IndividualExpression2F],NOPAFunc) ;
     ( appendManchester('Individual',[IndividualExpression1F],NOPAFunc0),
       appendManchester('Fact',['not', PropertyExpressionF, IndividualExpression2F],NOPAFunc1),
       appendManchester2([NOPAFunc0, NOPAFunc1],NOPAFunc)
-    ).
+    )
+  ).
 
 
 /* Annotation */ 
@@ -394,6 +423,17 @@ prolog2manchester(ontology(IRI), OIFunc):-
   IRIs = [IRIM,IRIs1|IRIs0],
   appendManchester1('Ontology', IRIs, OIFunc).
 
+
+% ontologyImport(?Ontology, ?IRI)
+prolog2manchester(ontologyImport(ontology(IRI)), OIMFunc):- 
+  iri(IRI,IRIM),
+  appendManchester1('Import', [IRIM], OIMFunc).
+
+% ontologyVersionInfo(?Ontology, ?IRI)
+prolog2manchester(ontologyVersionInfo(ontology(IRI), IRIM)):-
+  iri(IRI,IRIM).
+
+
 get_ontology_imports(IRIs0):-
   findall(ontologyImport(ontology(ImportIRI)), axiom(ontologyImport(ontology(ImportIRI))), ImpAxs),
   ( dif(ImpAxs,[]) ->  
@@ -407,15 +447,6 @@ get_ontology_version(IRIs1):-
      IRIs1 = []
   ).
 
-
-% ontologyImport(?Ontology, ?IRI)
-prolog2manchester(ontologyImport(ontology(IRI)), OIMFunc):- 
-  iri(IRI,IRIM),
-  appendManchester1('Import', [IRIM], OIMFunc).
-
-% ontologyVersionInfo(?Ontology, ?IRI)
-prolog2manchester(ontologyVersionInfo(ontology(IRI), IRIM)):-
-  iri(IRI,IRIM).
 
 
 /*Class expression*/
