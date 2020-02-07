@@ -1349,7 +1349,7 @@ expand_ns(URL, URL).
 %	Collapses a full URI of the form Path#fragment to a Namespaced
 %	URI NS:fragment substituting the full expansion for ns from
 %	the ns/2 facts
-%	Char is either ':' for normal ns notation or '_' for builing
+%	Char is either ':' for normal ns notation or '_' for building
 %	prolog terms.
 %	Options supported: no_base(ShortNs): Use only term!
 
