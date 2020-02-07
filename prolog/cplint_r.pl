@@ -496,8 +496,9 @@ sandbox:safe_primitive(cplint_r:histogram_r(_,_)).
 sandbox:safe_primitive(cplint_r:density_r(_)).
 sandbox:safe_primitive(cplint_r:densities_r(_,_)).
 sandbox:safe_primitive(cplint_r:compute_areas_diagrams_r(_,_,_)).
-sandbox:safe_primitive(cplint_r:bar_r(_),[]).
-sandbox:safe_primitive(cplint_r:argbar_r(_),[]).
+sandbox:safe_primitive(cplint_r:bar_r(_)).
+sandbox:safe_primitive(cplint_r:bar_r(_,_)).
+sandbox:safe_primitive(cplint_r:argbar_r(_)).
 
 :- multifile sandbox:safe_meta/2.
 
