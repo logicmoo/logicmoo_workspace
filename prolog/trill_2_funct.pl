@@ -7,7 +7,7 @@ This module translates TRILL format into OWL functional syntax.
 @copyright Riccardo Zese
 */
 
-:- module(trill_2_funct, [convert_explanations/2]).
+:- module(trill_2_funct, [convert_explanations/2, convert_axiom/2]).
 
 
 % class(?IRI)
@@ -484,3 +484,11 @@ convert_explanation([],[]).
 convert_explanation([TRILLAx|OtherTRILLAxs],[FunctAx|OtherFunctAxs]):-
   prolog2function(TRILLAx,FunctAx),
   convert_explanation(OtherTRILLAxs,OtherFunctAxs).
+
+/**
+ * convert_axiom(++TRILLAxiom:axiom,-OWLFunctAxiom:axiom) is det
+ *
+ * The predicate converts the axiom TRILLAxiom from TRILL format to OWL Functional syntax.
+ */
+convert_axiom(TRILLAx,FunctAx):-
+  prolog2function(TRILLAx,FunctAx).

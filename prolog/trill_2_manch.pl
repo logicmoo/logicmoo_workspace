@@ -7,7 +7,7 @@ This module translates TRILL format into OWL manchester syntax.
 @copyright Riccardo Zese
 */
 
-:- module(trill_2_manch, [convert_explanations/2]).
+:- module(trill_2_manch, [convert_explanations/2, convert_axiom/2]).
 
 % simple: some better rendering
 % full:   full Manchester Syntax recommendation TODO
@@ -502,8 +502,10 @@ propertyExpression2manchester(PE, PEF):-
 /* Per ogni IRI inserisco < > e lascio uno spazio per rendere più leggibile la stampa */
 iri(IRI,IRIF) :- 
   atomic(IRI),
-  atomic_list_concat(['<',IRI,'>'],IRIL),
-  atomic_list_concat([IRIL,' '],IRIF).
+  (trill_2_manch_setting(convertion_mode(simple)) ->
+    utility_translation:collapse_ns(IRI,IRIF,_,[no_base(_)]) ;
+    atomic_list_concat([' <',IRI,'> '],IRIF)
+  ).
 
 % objectIntersectionOf(+CE) is semidet
 objectIntersectionOf(intersectionOf(CEs),ClassExpressionFL):-
@@ -515,7 +517,7 @@ objectIntersectionOf(intersectionOf(CEs),ClassExpressionFL):-
 objectSomeValuesFrom(someValuesFrom(P,C),SVFFunc):-
   classExpression2manchester(C,CF),
   propertyExpression2manchester(P,PF),
-  appendManchester4('some',[CF,PF], SVFFunc).
+  appendManchester4('some',[PF,CF], SVFFunc).
 
 % objectUnionOf(+CE) is semidet
 objectUnionOf(unionOf(CEs),ClassExpressionFL):-
@@ -645,8 +647,9 @@ appendManchester1(Pred2, Lista2, Ris2):-
     atomic_list_concat([Pred2,': '|Lista2], Ris2).
 
 /* General concat */
-appendManchester2(Lista, Ris):-
-    atomic_list_concat(Lista, Ris). 
+appendManchester2(List, Ris):-
+  divide_with_pred(' ',List,ListPred),
+  atomic_list_concat(ListPred, Ris). 
 
 /* Declaration */
 appendManchester3(Pred2, Lista2, Ris2):-
@@ -713,10 +716,10 @@ writefile:-
   close(Stream).
  
 /**
- * convert_explanations(++TRILLExplanations:list,-OWLFunctExplanations:list) is det
+ * convert_explanations(++TRILLExplanations:list,-OWLManchesterExplanations:list) is det
  *
  * The predicate converts the axioms contained in the list of explanations
- * returned by TRILL into OWL Functional sytntax.
+ * returned by TRILL into OWL Manchester sytntax.
  */
 convert_explanations([],[]).
 
@@ -729,3 +732,11 @@ convert_explanation([],[]).
 convert_explanation([TRILLAx|OtherTRILLAxs],[FunctAx|OtherFunctAxs]):-
   prolog2manchester(TRILLAx,FunctAx),
   convert_explanation(OtherTRILLAxs,OtherFunctAxs).
+
+/**
+ * convert_axiom(++TRILLAxiom:axiom,-OWLManchesterAxiom:axiom) is det
+ *
+ * The predicate converts the axiom TRILLAxiom from TRILL format to OWL Manchester syntax.
+ */
+convert_axiom(TRILLAx,FunctAx):-
+  prolog2manchester(TRILLAx,FunctAx).
