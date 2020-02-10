@@ -266,7 +266,7 @@ message_duplicated(Pre, LocDL/Elem) -->
     foldl(message_duplicated(Pre, Elem), LocDL).
 
 message_duplicated(Pre, Elem, Loc/D) -->
-    [Pre], Loc, ['duplicated '-[D]],
+    [Pre], Loc, ['duplicated ~w'-[D]],
     message_elem(D, Elem),
     [nl].
 
