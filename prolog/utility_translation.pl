@@ -1137,7 +1137,7 @@ retract_all_axioms(M) :-
 utility_translation_init(M) :-
 	assert(M:annotationProperty('http://www.w3.org/2000/01/rdf-schema#label')),
 	assert(M:annotationProperty('http://www.w3.org/2000/01/rdf-schema#comment')),
-	assert(M:annotationProperty('https://sites.google.com/a/unife.it/ml/disponte#probability')),
+	assert(M:annotationProperty('https://sites.google.com/a/unife.it/ml/disponte#probability')), % Retro-compatibility
 	assert(M:annotationProperty('http://ml.unife.it/disponte#probability')).
 
 consult_axioms(File) :-

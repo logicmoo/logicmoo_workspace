@@ -2644,7 +2644,7 @@ compute_prob(M,Expl,Prob):-
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
-  %findall(1,M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
+  %findall(1,M:annotationAssertion('http://ml.unife.it/disponte#probability',_,_),NAnnAss),length(NAnnAss,NV),
   get_bdd_environment(M,Env),
   build_bdd(M,Env,Expl,BDD),
   ret_prob(Env,BDD,Prob),
@@ -2685,7 +2685,9 @@ get_prob_ax(M,Ax,N,Prob):- !,
   ).
 
 compute_prob_ax(M,Ax,Prob):-
-  findall(ProbA,(M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbAT)),atom_number(ProbAT,ProbA)),Probs),
+  findall(ProbA,(M:annotationAssertion('https://sites.google.com/a/unife.it/ml/disponte#probability',Ax,literal(ProbAT)),atom_number(ProbAT,ProbA)),ProbsOld), % Retro-compatibility
+  findall(ProbA,(M:annotationAssertion('http://ml.unife.it/disponte#probability',Ax,literal(ProbAT)),atom_number(ProbAT,ProbA)),ProbsNew),
+  append(ProbsNew, ProbsOld, Probs),
   compute_prob_ax1(Probs,Prob).
 
 compute_prob_ax1([Prob],Prob):-!.
@@ -2723,7 +2725,7 @@ init_trill(Alg):-
   utility_translation:get_module(M),
   set_algorithm(M:Alg),
   set_up(M),
-  trill:add_kb_prefixes(M:[('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
+  trill:add_kb_prefixes(M:[('disponte'='http://ml.unife.it/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 /**************/
 /*get_trill_current_module('utility_translation'):-
@@ -2804,17 +2806,17 @@ user:term_expansion((:- trill),[]):-
   utility_translation:get_module(M),
   set_algorithm(M:trill),
   set_up(M),
-  trill:add_kb_prefixes(M:[('disponte'='https://sites.google.com/a/unife.it/ml/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
+  trill:add_kb_prefixes(M:[('disponte'='http://ml.unife.it/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 user:term_expansion((:- trillp),[]):-
   utility_translation:get_module(M),
   set_algorithm(M:trillp),
   set_up(M),
-  trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
+  trill:add_kb_prefixes(M:['disponte'='http://ml.unife.it/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
 user:term_expansion((:- tornado),[]):-
   utility_translation:get_module(M),
   set_algorithm(M:tornado),
   set_up(M),
-  trill:add_kb_prefixes(M:['disponte'='https://sites.google.com/a/unife.it/ml/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
+  trill:add_kb_prefixes(M:['disponte'='http://ml.unife.it/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
