@@ -34,6 +34,8 @@
 
 :- module(assrt_metainference, [infer_meta_assertions/0]).
 
+:- use_module(library(lists)).
+:- use_module(library(pairs)).
 :- use_module(library(assertions)).
 :- use_module(library(transpose)).
 :- use_module(library(prolog_metainference), []).
