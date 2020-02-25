@@ -49,6 +49,7 @@
 
 :- use_module(library(extend_args)).
 :- use_module(library(apply)).
+:- use_module(library(pairs)).
 :- use_module(library(extra_messages), []).
 :- use_module(library(filepos_line)).
 :- use_module(library(lists)).
