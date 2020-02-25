@@ -36,6 +36,7 @@
                       bind_interface/2,
                       end_interface/0]).
 
+:- use_module(library(lists)).
 :- use_module(library(apply)).
 :- use_module(library(error)).
 

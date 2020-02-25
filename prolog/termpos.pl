@@ -34,6 +34,8 @@
 
 :- module(termpos, [op(1150, fx, (add_termpos))]).
 
+:- use_module(library(apply)).
+:- use_module(library(lists)).
 :- reexport(library(compound_expand)).
 :- use_module(library(subpos_utils)).
 :- use_module(library(transpose)).

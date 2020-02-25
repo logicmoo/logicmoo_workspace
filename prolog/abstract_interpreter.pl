@@ -47,6 +47,7 @@
                                  intr_ai/1,
                                  match_noloops/4]).
 
+:- use_module(library(lists)).
 :- use_module(library(qualify_meta_goal)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(term_size)).
