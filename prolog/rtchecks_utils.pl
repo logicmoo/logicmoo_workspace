@@ -184,7 +184,7 @@ call_rtc(Goal) :-
                             )))
         ).
 
-:- dynamic rtcheck_db/1.
+:- thread_local rtcheck_db/1.
 
 :- meta_predicate save_rtchecks(0).
 

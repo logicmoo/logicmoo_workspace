@@ -168,8 +168,7 @@ rtcheck_lit_pos(P, term_position(F,T,F,T,[_,P,_])) :-
     arg(1, P, F),
     arg(2, P, T).
 
-:- dynamic  expanding/0.
-:- volatile expanding/0.
+:- thread_local expanding/0.
 
 source_from(Pos, From) :-
     source_location(File, Line),

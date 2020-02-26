@@ -48,7 +48,7 @@
 :- use_module(library(resolve_calln)).
 :- use_module(library(ctrtchecks)).
 
-:- dynamic
+:- thread_local
     rtc_scanned/1,
     rtc_break/2,
     rtc_state/3.
@@ -111,7 +111,7 @@ rtcheck_body_meta_arg(_, _, R, R).
 
 :- multifile user:prolog_trace_interception/4.
 
-:- dynamic trace_rtchecks.
+:- thread_local trace_rtchecks.
 
 user:prolog_trace_interception(Port, Frame, _, Action) :-
     trace_rtchecks,
@@ -231,7 +231,7 @@ call_instr_param(i_depart(PI), PI).
 % Note: We don't use table/1 since sometimes we get this error:
 % ERROR: shift/1: reset/3 `call_info(rtchecks_tracer:inspect_target(x,2,m),...)' does not exist
 
-:- dynamic inspect_target_db/3.
+:- thread_local inspect_target_db/3.
 
 inspect_target(F, A, M) :-
     once(( inspect_target_db(F, A, M)
