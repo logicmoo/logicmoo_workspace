@@ -141,17 +141,15 @@ posflt(Q) :-
 
 :- type rat/1.
 
-rat(A rdiv B) :-
+rat(X) :-
+    rational(X),
+    !.
+rat(X) :-
     int(A),
-    int(B).
+    int(B),
+    X is A rdiv B.
 
-real(X) :-
-    ( number(X)
-    ->true
-    ; X = N rdiv B,
-      integer(N),
-      integer(B)
-    ).
+real(X) :- number(X).
 
 :- type num/1.
 
