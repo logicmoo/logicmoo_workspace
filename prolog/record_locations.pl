@@ -46,8 +46,7 @@
 :- dynamic record_location/0.
 record_location. % Enable recording of locations
 
-:- volatile rl_tmp/3.
-:- dynamic rl_tmp/3. % trick to detect if term_expansion was applied
+:- thread_local rl_tmp/3. % trick to detect if term_expansion was applied
 
 % Extra location for assertions of a given predicate
 extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
