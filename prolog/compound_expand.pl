@@ -77,7 +77,7 @@ collect_expansors(M, ExpansorName, ML) :-
             ), MD),
     remove_dups(MD, ML).
 
-:- dynamic
+:- thread_local
     lock_expansion/1.
 
 call_lock(Goal, ID) :-
@@ -105,8 +105,7 @@ compound_expansion(Type, Term1, Pos1, Term, Pos) :-
 system:goal_expansion(Goal1, Pos1, Goal, Pos) :-
     do_compound_expansion(goal, Goal1, Pos1, Goal, Pos).
 
-:- dynamic compounding/0.
-:- volatile compounding/0.
+:- thread_local compounding/0.
 
 system:term_expansion(Term1, Pos1, Term, Pos) :-
     \+ compounding,

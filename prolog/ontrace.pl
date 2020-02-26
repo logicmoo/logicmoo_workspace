@@ -77,7 +77,7 @@ is_meta(file).
 :- multifile
     user:prolog_trace_interception/4.
 
-:- dynamic
+:- thread_local
     ontrace_enabled/4.
 
 user:prolog_trace_interception(Port, Frame, PC, Action) :-

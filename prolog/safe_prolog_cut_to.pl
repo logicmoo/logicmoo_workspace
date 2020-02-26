@@ -56,10 +56,7 @@ fix_choice(CPC, CP, CPF) :-
     prolog_choice_attribute(CPC, parent, CPP),
     fix_choice(CPP, CP, CPF).
 
-:- dynamic
-    decreasing_cp_db/2.
-        
-:- volatile
+:- thread_local
     decreasing_cp_db/2.
 
 call_decreasing_cp(Call, Arg) :-
