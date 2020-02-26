@@ -440,7 +440,7 @@ dupclauses(M:Goal) :-
     ),
     call(Goal).
 
-:- dynamic signal_db/3.
+:- thread_local signal_db/3.
 
 asserta_signal_check(Choice, _, E, _) :- asserta(signal_db(Choice, no, E)).
 asserta_signal_check(Choice, G, _, Thrown) :-
