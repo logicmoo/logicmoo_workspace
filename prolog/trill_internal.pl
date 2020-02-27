@@ -38,20 +38,20 @@ clean_up(M):-
  ***********/
 
 % to find all axplanations for probabilistic queries
-all_sub_class(M:ClassEx,SupClassEx,Exps):-
-  all_unsat(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
+all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
+  all_unsat_int(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
 
-all_instanceOf(M:ClassEx,IndEx,Exps):-
+all_instanceOf_int(M:ClassEx,IndEx,Exps):-
   findall(Expl,instanceOf(M:ClassEx,IndEx,Expl),Exps).
 
-all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
+all_property_value_int(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
   findall(Expl,property_value(M:PropEx,Ind1Ex,Ind2Ex,Expl),Exps).
 
-all_unsat(M:ConceptEx,Exps):-
+all_unsat_int(M:ConceptEx,Exps):-
   findall(Expl,unsat_internal(M:ConceptEx,Expl),Exps).
 
 
-all_inconsistent_theory(M:Exps):-
+all_inconsistent_theory_int(M:Exps):-
   findall(Expl,inconsistent_theory(M:Expl),Exps).
 
 

@@ -17,32 +17,37 @@ details.
 @copyright Riccardo Zese
 */
 
-:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3, sub_class/4,
-                 instanceOf/2, instanceOf/3, prob_instanceOf/3, instanceOf/4,
-                 property_value/3, property_value/4, prob_property_value/4, property_value/5,
-                 unsat/1, unsat/2, prob_unsat/2, unsat/3,
-                 inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1, inconsistent_theory/2,
+:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3, sub_class/4, all_sub_class/3,
+                 instanceOf/2, instanceOf/3, prob_instanceOf/3, instanceOf/4, all_instanceOf/3,
+                 property_value/3, property_value/4, prob_property_value/4, property_value/5, all_property_value/4,
+                 unsat/1, unsat/2, prob_unsat/2, unsat/3, all_unsat/2,
+                 inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1, inconsistent_theory/2, all_inconsistent_theory/1,
                  axiom/1, kb_prefixes/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
 
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
 :- meta_predicate sub_class(:,+,-,+).
+:- meta_predicate all_sub_class(:,+,-).
 :- meta_predicate prob_sub_class(:,+,-).
 :- meta_predicate instanceOf(:,+).
 :- meta_predicate instanceOf(:,+,-).
 :- meta_predicate instanceOf(:,+,-,+).
+:- meta_predicate all_instanceOf(:,+,-).
 :- meta_predicate prob_instanceOf(:,+,-).
 :- meta_predicate property_value(:,+,+).
 :- meta_predicate property_value(:,+,+,-).
 :- meta_predicate property_value(:,+,+,-,+).
+:- meta_predicate all_property_value(:,+,+,-).
 :- meta_predicate prob_property_value(:,+,+,-).
 :- meta_predicate unsat(:).
 :- meta_predicate unsat(:,-).
 :- meta_predicate unsat(:,-,+).
+:- meta_predicate all_unsat(:,-).
 :- meta_predicate prob_unsat(:,-).
 :- meta_predicate inconsistent_theory(:).
 :- meta_predicate inconsistent_theory(:,+).
+:- meta_predicate all_inconsistent_theory(:).
 :- meta_predicate prob_inconsistent_theory(:).
 :- meta_predicate axiom(:).
 :- meta_predicate kb_prefixes(:).
@@ -230,7 +235,7 @@ query_option(OptList,Option,Value):-
  */
 instanceOf(M:Class,Ind,Expl,Opt):-
   (query_option(Opt,return_prob,Prob) ->
-    ( all_instanceOf(M:Class,Ind,Expl),
+    ( all_instanceOf_int(M:Class,Ind,Expl),
       compute_prob_and_close(M,Expl,Prob)
     )
     ;
@@ -269,6 +274,20 @@ instanceOf(M:Class,Ind,Expl,Opt):-
  */
 instanceOf(M:Class,Ind,Expl):-
   instanceOf(M:Class,Ind,Expl,[]).
+
+/**
+ * all_instanceOf(:Class:concept_description,++Ind:individual_name)
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition
+ * of a complex concept as a ground term and name or the full URI of an individual and
+ * returns all the explanations for the instantiation of the individual to the given class.
+ * The returning explanations are in the form if a list (set) of set of axioms.
+ * The predicate fails if the individual does not belong to the class.
+ */
+all_instanceOf(M:Class,Ind,Expl):-
+  all_instanceOf_int(M:Class,Ind,Expl),
+  empty_expl(M,EExpl),
+  dif(Expl,EExpl).
 
 /**
  * instanceOf(:Class:concept_description,++Ind:individual_name) is det
@@ -314,7 +333,7 @@ instanceOf(M:Class,Ind):-
  */
 property_value(M:Prop, Ind1, Ind2,Expl,Opt):-
   (query_option(Opt,return_prob,Prob) ->
-    ( all_property_value(M:Prop, Ind1, Ind2,Expl),
+    ( all_property_value_int(M:Prop, Ind1, Ind2,Expl),
       compute_prob_and_close(M,Expl,Prob)
     )
     ;
@@ -349,6 +368,19 @@ property_value(M:Prop, Ind1, Ind2,Expl,Opt):-
  */
 property_value(M:Prop, Ind1, Ind2,Expl):-
   property_value(M:Prop, Ind1, Ind2,Expl,[]).
+
+/**
+ * all_property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list)
+ *
+ * This predicate takes as input the name or the full URI of a property and of two individuals
+ * and returns all the explanations for the fact Ind1 is related with Ind2 via Prop.
+ * The returning explanations are in the form if a list (set) of set of axioms.
+ * The predicate fails if the individual does not belong to the class.
+ */
+all_property_value(M:Prop, Ind1, Ind2,Expl):-
+  all_property_value_int(M:Prop, Ind1, Ind2,Expl),
+  empty_expl(M,EExpl),
+  dif(Expl,EExpl).
 
 /**
  * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name) is det
@@ -391,18 +423,18 @@ property_value(M:Prop, Ind1, Ind2):-
  * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
  */
 sub_class(M:Class,SupClass,Expl,Opt):-
-  (query_option(Opt,return_prob,Prob) ->
-    ( all_sub_class(M:Class,SupClass,Expl),
-      compute_prob_and_close(M,Expl,Prob)
-    )
-    ;( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-	    (
-        neg_class(SupClassEx,NSupClassEx),
+  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
+    ( query_option(Opt,return_prob,Prob) ->
+      ( all_sub_class_int(M:ClassEx,SupClassEx,Expl),
+        compute_prob_and_close(M,Expl,Prob)
+      )
+      ;
+      ( neg_class(SupClassEx,NSupClassEx),
         unsat_internal(M:intersectionOf([ClassEx,NSupClassEx]),Expl,Opt)
       )
-    ;
-    	print_message(warning,iri_not_exists),!,false
     )
+    ;
+    (	print_message(warning,iri_not_exists),!,false )
   ).
   
 /**
@@ -416,6 +448,25 @@ sub_class(M:Class,SupClass,Expl,Opt):-
  */
 sub_class(M:Class,SupClass,Expl):-
   sub_class(M:Class,SupClass,Expl,[]).
+
+/**
+ * all_sub_class(:Class:concept_description,++SupClass:concept_description,-Expl:list)
+ *
+ * This predicate takes as input two concepts which can be given by the name or the full URI 
+ * of two a simple concept or the definition of a complex concept as a ground term and returns
+ * all the explanations for the subclass relation between Class and SupClass.
+ * The returning explanations are in the form if a list (set) of set of axioms.
+ * The predicate fails if the individual does not belong to the class.
+ */
+all_sub_class(M:Class,SupClass,Expl):-
+  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
+    ( all_sub_class_int(M:ClassEx,SupClassEx,Expl),
+      empty_expl(M,EExpl),
+      dif(Expl,EExpl)
+    )
+    ;
+    (	print_message(warning,iri_not_exists),!,false )
+  ).
 
 /**
  * sub_class(:Class:concept_description,++SupClass:concept_description) is det
@@ -447,7 +498,7 @@ sub_class(M:Class,SupClass):-
  */
 unsat(M:Concept,Expl,Opt):-
   (query_option(Opt,return_prob,Prob) ->
-    ( all_unsat(M:Concept,Expl),
+    ( all_unsat_int(M:Concept,Expl),
       compute_prob_and_close(M,Expl,Prob)
     )
     ;
@@ -468,6 +519,19 @@ unsat(M:Concept,Expl,Opt):-
  */
 unsat(M:Concept,Expl):-
   unsat(M:Concept,Expl,[]).
+
+/**
+ * all_unsat(:Concept:concept_description,-Expl:list)
+ *
+ * This predicate takes as input the name or the full URI of a class or the definition of 
+ * a complex concept as a ground term and returns all the explanations for the unsatisfiability of the concept.
+ * The returning explanations are in the form if a list (set) of set of axioms.
+ * The predicate fails if the individual does not belong to the class.
+ */
+all_unsat(M:Concept,Expl):-
+  all_unsat_int(M:Concept,Expl),
+  empty_expl(M,EExpl),
+  dif(Expl,EExpl).
 
 % ----------- %
 unsat_internal(M:Concept,Expl,Opt):-
@@ -538,7 +602,7 @@ unsat_internal(M:Concept):-
  */
 inconsistent_theory(M:Expl,Opt):-
   (query_option(Opt,return_prob,Prob) ->
-    ( all_inconsistent_theory(M:Expl),
+    ( all_inconsistent_theory_int(M:Expl),
       compute_prob_and_close(M,Expl,Prob)
     )
     ;
@@ -562,6 +626,18 @@ inconsistent_theory(M:Expl,Opt):-
  */
 inconsistent_theory(M:Expl):-
   inconsistent_theory(M:Expl,[]).
+
+/**
+ * all_inconsistent_theory(:Expl:list)
+ *
+ * This predicate returns all the explanations for the inconsistency of the loaded knowledge base.
+ * The returning explanations are in the form if a list (set) of set of axioms.
+ * The predicate fails if the individual does not belong to the class.
+ */
+all_inconsistent_theory(M:Expl):-
+  all_inconsistent_theory_int(M:Expl),
+  empty_expl(M,EExpl),
+  dif(Expl,EExpl).
 
 /**
  * inconsistent_theory
@@ -589,12 +665,7 @@ inconsistent_theory:-
  * returns the probability of the instantiation of the individual to the given class.
  */
 prob_instanceOf(M:Class,Ind,Prob):-
-  ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
-  	all_instanceOf(M:ClassEx,IndEx,Exps),
-  	compute_prob_and_close(M,Exps,Prob)
-  ;
-  	print_message(warning,iri_not_exists),!,false
-  ).
+  instanceOf(M:Class,Ind,_,[return_prob(Prob)]).
 
 /**
  * prob_property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,--Prob:double) is det
@@ -603,12 +674,7 @@ prob_instanceOf(M:Class,Ind,Prob):-
  * and returns the probability of the fact Ind1 is related with Ind2 via Prop.
  */
 prob_property_value(M:Prop, Ind1, Ind2,Prob):-
-  ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
-  	all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps),
-  	compute_prob_and_close(M,Exps,Prob)
-  ;
-  	print_message(warning,iri_not_exists),!,false
-  ).
+  property_value(M:Prop, Ind1, Ind2,_,[return_prob(Prob)]).
 
 /**
  * prob_sub_class(:Class:concept_description,++SupClass:class_name,--Prob:double) is det
@@ -618,12 +684,7 @@ prob_property_value(M:Prop, Ind1, Ind2,Prob):-
  * the probability of the subclass relation between Class and SupClass.
  */
 prob_sub_class(M:Class,SupClass,Prob):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-  	all_sub_class(M:ClassEx,SupClassEx,Exps),
-  	compute_prob_and_close(M,Exps,Prob)
-  ;
-  	print_message(warning,iri_not_exists),!,false
-  ).
+  sub_class(M:Class,SupClass,_,[return_prob(Prob)]).
 
 /**
  * prob_unsat(:Concept:concept_description,--Prob:double) is det
@@ -633,12 +694,7 @@ prob_sub_class(M:Class,SupClass,Prob):-
  * of the concept.
  */
 prob_unsat(M:Concept,Prob):-
-  ( check_query_args(M,[Concept],[ConceptEx]) ->
-    all_unsat(M:ConceptEx,Exps),
-    compute_prob_and_close(M,Exps,Prob)
-  ;
-    print_message(warning,iri_not_exists),!,false
-  ).
+  unsat(M:Concept,_,[return_prob(Prob)]).
 
 /**
  * prob_inconsistent_theory(:Prob:double) is det
@@ -646,8 +702,7 @@ prob_unsat(M:Concept,Prob):-
  * If the knowledge base is inconsistent, this predicate returns the probability of the inconsistency.
  */
 prob_inconsistent_theory(M:Prob):-
-  all_inconsistent_theory(M:Exps),
-  compute_prob_and_close(M,Exps,Prob).
+  inconsistent_theory(M:_,[return_prob(Prob)]).
 
 /***********
   Utilities for queries

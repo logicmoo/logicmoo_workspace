@@ -54,34 +54,34 @@ prolog:message(and_in_and) -->
  ***********/
 
 % to find all axplanations for probabilistic queries
-all_sub_class(M:ClassEx,SupClassEx,Exps):-
+all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
   sub_class(M:ClassEx,SupClassEx,Exps),!.
 
-all_sub_class(_:_,_,Exps):-
+all_sub_class_int(_:_,_,Exps):-
   empty_expl(_,Exps).
 
-all_instanceOf(M:ClassEx,IndEx,Exps):-
+all_instanceOf_int(M:ClassEx,IndEx,Exps):-
   instanceOf(M:ClassEx,IndEx,Exps),!.
   
-all_instanceOf(_:_,_,Exps):-
+all_instanceOf_int(_:_,_,Exps):-
   empty_expl(_,Exps).
 
-all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
+all_property_value_int(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
   property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps),!.
   
-all_property_value(_:_,_,_,Exps):-
+all_property_value_int(_:_,_,_,Exps):-
   empty_expl(_,Exps).
 
-all_unsat(M:ConceptEx,Exps):-
+all_unsat_int(M:ConceptEx,Exps):-
   unsat(M:ConceptEx,Exps),!.
 
-all_unsat(_:_,Exps):-
+all_unsat_int(_:_,Exps):-
   empty_expl(_,Exps).
 
-all_inconsistent_theory(M:Exps):-
+all_inconsistent_theory_int(M:Exps):-
   inconsistent_theory(M:Exps),!.
 
-all_inconsistent_theory(_:Exps):-
+all_inconsistent_theory_int(_:Exps):-
   empty_expl(_,Exps).
 
 
