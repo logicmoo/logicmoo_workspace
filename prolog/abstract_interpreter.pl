@@ -300,17 +300,18 @@ abstract_interpreter_body((A, B), M, Abs) -->
       ->!, fail                 % The whole body will fail
       }
     ).
-abstract_interpreter_body((A*->B;C), M, Abs) --> !,
+abstract_interpreter_body((A*->B;C), M, Abs) -->
+    !,
     { \+ terms_share(A, B)
     ->CutOnFail = true
     ; CutOnFail = fail
     },
     ( get_conts(ContL),
       put_conts([B|ContL]),
-      abstract_interpreter_body(A, M, Abs)
-    *->
-      ( put_conts(ContL),
-        abstract_interpreter_body(B, M, Abs)
+      abstract_interpreter_body(A, M, Abs),
+    % *->
+      put_conts(ContL),
+      ( abstract_interpreter_body(B, M, Abs)
       *->[]
       ; { CutOnFail = true
         ->!, fail                 % The whole body will fail
