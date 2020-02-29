@@ -32,28 +32,40 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(implemented_in, [implemented_in/1]).
+:- module(implemented_in_base, [implemented_in/3]).
 
-:- use_module(library(implemented_in_base)).
-:- use_module(library(dynamic_locations)).
+:- use_module(library(lists)).
+:- use_module(library(extra_location)).
+:- use_module(library(extra_messages)).
+:- use_module(library(prolog_codewalk), []). % for message_location//1
+:- use_module(library(normalize_head)).
 
-:- dynamic prepared/0.
+:- multifile
+    prolog:message//1.
 
-prepare :-
-    dynamic_locations([source(false),
-                       infer_meta_predicates(false),
-                       autoload(false),
-                       evaluate(false),
-                       trace_reference(_),
-                       module_class([user, system, library])]),
-    retractall(prepared),
-    assertz(prepared).
+prolog:message(implemented_in(Args)) -->
+    ['Implements ~w'-Args].
 
-implemented_in(MGoal) :-
-    ( prepared
-    ->true
-    ; prepare
-    ),
-    forall(implemented_in(MGoal, From, Args),
-           print_message(information, at_location(From,
-                                                  implemented_in(Args)))).
+implemented_in(MGoal1, From, Args) :-
+    normalize_head(MGoal1, MGoal),
+    M:Goal = MGoal,
+    functor(Goal, F, A),
+    findall(MI, ( current_module(M),
+                  \+ predicate_property(MGoal, imported_from(_)),
+                  MI = M
+                ; predicate_property(MGoal, imported_from(MI))
+                ), UML),
+    sort(UML, ML),
+    member(M, ML),
+    ( ( loc_declaration(Goal, M, Declaration, From),
+        Declaration \= goal
+      ; loc_dynamic(Goal, M, Declaration, From),
+        Declaration \= dynamic(query, _, _)
+      ),
+      Args = [M:F/A-Declaration]
+    ; From = clause(ClauseRef),
+      catch(( clause(MGoal, _, ClauseRef),
+              nth_clause(MGoal, N, ClauseRef)
+            ), _, fail),
+      Args = [M:F/A-N]
+    ).

@@ -47,7 +47,7 @@
 :- use_module(library(apply)).
 :- use_module(library(lists)).
 :- use_module(library(from_utils)).
-:- use_module(library(implemented_in)).
+:- use_module(library(implemented_in_base)).
 
 :- multifile user:prolog_file_type/2.
 :- dynamic   user:prolog_file_type/2.
@@ -260,7 +260,10 @@ option_file(M, File, OFile, Options) :-
     ),
     ( nonvar(M)
     ->module_file_(M, File)
-    ; true = OFile.if
+    ; true = OFile.if,
+      \+ ( var(M),
+           var(File)
+         )
     ->ignore(( module_file_(M, File)
              ; M = (-)
              ))

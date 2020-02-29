@@ -35,6 +35,7 @@
 :- module(check_dupcode, []).
 
 :- use_module(library(checkers/checker)).
+:- use_module(library(apply_macros), []).
 :- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(assertions)).
