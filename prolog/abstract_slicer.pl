@@ -44,7 +44,6 @@
 :- meta_predicate
     abstract_slice(0,+,?),
     abstract_slice(0,+,?,-),
-    abstract_slice(0,+,2,?,-),
     slicer_abstraction(+,+,+,0,?, ?,?).
 
 abstract_slice(M:Head, Mode, OptL) :-
