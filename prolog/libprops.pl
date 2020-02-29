@@ -38,7 +38,9 @@
 */
 
 :- use_module(library(assertions)).
-:- use_module(library(plprops)).
+:- use_module(library(metaprops)).
+:- use_module(library(globprops)).
+:- use_module(library(typeprops)).
 
 :- pred functor(+, -constant, -nnegint) is det.
 :- pred functor(-, +constant, +nnegint) is det.

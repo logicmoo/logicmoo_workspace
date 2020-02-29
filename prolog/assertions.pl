@@ -929,5 +929,3 @@ term_expansion_decl(Decl, term_position(_, _, _, _, [DPos]), Records, RPos) :-
 
 term_expansion((:- Decl), DPos, Records, RPos) :-
     term_expansion_decl(Decl, DPos, Records, RPos).
-
-:- use_module(library(plprops)).
