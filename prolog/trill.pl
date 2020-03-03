@@ -222,14 +222,14 @@ query_option(OptList,Option,Value):-
   QUERY PREDICATES
 *****************************/
 
-execute_query(M,QueryType,QueryArgsNC,QueryOptions):-
+execute_query(M,QueryType,QueryArgsNC,Expl,QueryOptions):-
   check_query_args(M,QueryArgsNC,QueryArgs,QueryArgsNotPresent),
   ( dif(QueryArgsNotPresent,[]) ->
-    (print_message(warning,iri_not_exists),!,false)
+    (print_message(warning,iri_not_exists),print_message(warning,QueryArgsNotPresent),!,false) ; true
   ),
   find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions),
-  ( query_option(QueryOptions,ret_prob,Prob) ->
-    compute_prob_and_close(M,Expl,Prob)
+  ( query_option(QueryOptions,return_prob,Prob) ->
+    (compute_prob_and_close(M,Expl,Prob),!) ; true
   ).
 
 
@@ -237,7 +237,11 @@ execute_query(M,QueryType,QueryArgsNC,QueryOptions):-
 find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions):-
   % TODO call_with_time_limit
   ( query_option(QueryOptions,assert_abox,AssertABox) -> Opt=[assert_abox(AssertABox)] ; Opt=[]),
-  ( query_option(QueryOptions,max_expl,N) -> MonitorNExpl = N ; MonitorNExpl=bt),
+  ( query_option(QueryOptions,max_expl,N) -> 
+    MonitorNExpl = N
+    ; 
+    ( ( query_option(QueryOptions,return_prob,_) -> MonitorNExpl=all ; MonitorNExpl=bt) ) % if return_prob is present and no max_expl force to find all the explanations
+  ),
   ( query_option(QueryOptions,time_limit,MonitorTimeLimit) ->
     find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTimeLimit,Opt)
     ;
@@ -332,33 +336,7 @@ add_q(_,it,(ABox,Tabs),_,(ABox,Tabs)):- !. % Do nothing
  * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
  */
 instanceOf(M:Class,Ind,Expl,Opt):-
-  (query_option(Opt,return_prob,Prob) ->
-    ( all_instanceOf_int(M:Class,Ind,Expl),
-      compute_prob_and_close(M,Expl,Prob)
-    )
-    ;
-    ( check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
-  	  set_up(M),
-	    retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-	    retractall(M:trillan_idx(_)),
-  	  assert(M:trillan_idx(1)),
-  	  build_abox(M,(ABox,Tabs)),
-  	  (\+ clash(M,(ABox,Tabs),_) ->
-  	    (
-          neg_class(ClassEx,NClassEx),
-  	    	add_q(M,(ABox,Tabs),classAssertion(NClassEx,IndEx),(ABox0,Tabs0)),
-          findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),L),
-          (query_option(Opt,assert_abox,true) -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
-  		    find_expls(M,L,[ClassEx,IndEx],Expl1),
-  		    check_and_close(M,Expl1,Expl)
-  	    )
-  	  ;
-  	    print_message(warning,inconsistent),!,false
-  	  )
-    ;
-    	print_message(warning,iri_not_exists),!,false
-    )
-  ).
+  execute_query(M,io,[Class,Ind],Expl,Opt).
   
 
 /**
@@ -383,7 +361,7 @@ instanceOf(M:Class,Ind,Expl):-
  * The predicate fails if the individual does not belong to the class.
  */
 all_instanceOf(M:Class,Ind,Expl):-
-  all_instanceOf_int(M:Class,Ind,Expl),
+  execute_query(M,io,[Class,Ind],Expl,[max_expl(all)]),
   empty_expl(M,EExpl),
   dif(Expl,EExpl).
 
@@ -395,27 +373,7 @@ all_instanceOf(M:Class,Ind,Expl):-
  * returns true if the individual belongs to the class, false otherwise.
  */
 instanceOf(M:Class,Ind):-
-  (  check_query_args(M,[Class,Ind],[ClassEx,IndEx]) ->
-	(
-	  set_up(M),
-	  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-	  retractall(M:trillan_idx(_)),
-	  assert(M:trillan_idx(1)),
-	  build_abox(M,(ABox,Tabs)),
-	  (  \+ clash(M,(ABox,Tabs),_) ->
-	      (
-	        neg_class(ClassEx,NClassEx),
-          add_q(M,(ABox,Tabs),classAssertion(NClassEx,IndEx),(ABox0,Tabs0)),
-	        apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),!,
-	  	clash(M,(ABox1,Tabs1),_),!
-	      )
-	    ;
-	      print_message(warning,inconsistent),!,false
-	  )
-	)
-    ;
-        print_message(warning,iri_not_exists),!,false
-  ).
+  execute_query(M,io,[Class,Ind],_,[max_expl(1)]).
 
 /**
  * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list,++Opt:list)
