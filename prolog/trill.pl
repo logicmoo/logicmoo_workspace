@@ -205,6 +205,12 @@ prolog:message(inconsistent) -->
 prolog:message(consistent) -->
   [ 'Consistent ABox' ].
 
+prolog:message(wrong_number_max_expl) -->
+  [ 'max_expl option can take integer values or "all"' ].
+
+prolog:message(timeout_reached) -->
+  [ 'Timeout reached' ].
+
 /*****************************
   QUERY OPTIONS
 ******************************/
@@ -215,6 +221,98 @@ query_option(OptList,Option,Value):-
 /****************************
   QUERY PREDICATES
 *****************************/
+
+execute_query(M,QueryType,QueryArgsNC,QueryOptions):-
+  check_query_args(M,QueryArgsNC,QueryArgs,QueryArgsNotPresent),
+  ( dif(QueryArgsNotPresent,[]) ->
+    (print_message(warning,iri_not_exists),!,false)
+  ),
+  find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions),
+  ( query_option(QueryOptions,ret_prob,Prob) ->
+    compute_prob_and_close(M,Expl,Prob)
+  ).
+
+
+% Execution monitor
+find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions):-
+  % TODO call_with_time_limit
+  ( query_option(QueryOptions,assert_abox,AssertABox) -> Opt=[assert_abox(AssertABox)] ; Opt=[]),
+  ( query_option(QueryOptions,max_expl,N) -> MonitorNExpl = N ; MonitorNExpl=bt),
+  ( query_option(QueryOptions,time_limit,MonitorTimeLimit) ->
+    find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTimeLimit,Opt)
+    ;
+    find_n_explanations(M,QueryType,QueryArgs,Expl,MonitorNExpl,Opt)
+  ).
+
+find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTimeLimit,Opt):-
+  catch(
+    call_with_time_limit(MonitorTimeLimit,find_n_explanations(M,QueryType,QueryArgs,Expl,MonitorNExpl,Opt)),
+    time_limit_exceeded,
+    print_message(warning,timeout_reached)
+  ).
+
+
+
+% findall
+find_n_explanations(M,QueryType,QueryArgs,Expls,all,Opt):-
+  !, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
+  findall(Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls).
+
+% find one in backtracking
+find_n_explanations(M,QueryType,QueryArgs,Expl,bt,Opt):-
+  !, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
+  find_single_explanation(M,QueryType,QueryArgs,Expl,Opt).
+
+% find_n_sol
+find_n_explanations(M,QueryType,QueryArgs,Expls,N,Opt):-
+  (number(N) -> % CUT so that no other4 calls to find_explanation can be ran
+    (findnsols(N,Expl,find_single_explanation(M,QueryType,QueryArgs,Expl),Expls,Opt),!) % CUT otherwise findnsols would backtracks to look for another N sols
+    ;
+    (print_message(warning,wrong_number_max_expl),!,false)
+  ).
+
+
+find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
+  set_up_reasoner(M),
+  build_abox(M,(ABox,Tabs)), % will expand the KB without the query
+  (\+ clash(M,(ABox,Tabs),_) ->
+    (
+      add_q(M,QueryType,(ABox,Tabs),QueryArgs,(ABox0,Tabs0)),
+      findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),L),
+      (query_option(Opt,assert_abox,true) -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
+      find_expls(M,L,QueryArgs,Expl1),
+      check_and_close(M,Expl1,Expl)
+    )
+  ;
+    print_message(warning,inconsistent),!,false
+  ).
+
+set_up_reasoner(M):-
+  set_up(M),
+  retractall(M:exp_found(_,_)),
+  retractall(M:exp_found(_,_,_)),
+  retractall(M:trillan_idx(_)),
+  assert(M:trillan_idx(1)).
+
+% instanceOf
+add_q(M,io,(ABox0,Tabs0),[ClassEx,IndEx],(ABox,Tabs)):- !,
+  neg_class(ClassEx,NClassEx),
+  add_q(M,(ABox0,Tabs0),classAssertion(NClassEx,IndEx),(ABox,Tabs)).
+
+% property_value
+add_q(_,pv,(ABox,Tabs),_,(ABox,Tabs)):-!. % Do nothing
+      
+% sub_class
+add_q(M,sb,(ABox0,Tabs0),[SubClassEx,SupClassEx],(ABox,Tabs)):- !,
+  neg_class(SupClassEx,NSupClassEx),
+  add_q(M,(ABox0,Tabs0),classAssertion(intersectionOf([SubClassEx,NSupClassEx]),trillan(0)),(ABox,Tabs)).
+
+% unsat
+add_q(M,un,(ABox0,Tabs0),[ClassEx],(ABox,Tabs)):- !,
+  add_q(M,(ABox0,Tabs0),classAssertion(ClassEx,trillan(0)),(ABox,Tabs)).
+
+% inconsistent_theory
+add_q(_,it,(ABox,Tabs),_,(ABox,Tabs)):- !. % Do nothing
 
 /***********
   Queries
@@ -713,6 +811,18 @@ add_q(M,(ABox0,Tabs0),Query,(ABox,Tabs)):-
   empty_expl(M,Expl),
   add(ABox0,(Query,Expl),ABox),
   create_tabs([(Query,Expl)],Tabs0,Tabs).
+
+
+% expands query arguments using prefixes and checks their existence in the kb
+% returns the non-present arguments
+check_query_args(_,[],[],[]).
+
+check_query_args(M,[H|T],[HEx|TEx],NotEx):-
+  check_query_args(M,[H],[HEx]),!,
+  check_query_args(M,T,TEx,NotEx).
+
+check_query_args(M,[H|T],TEx,[H|NotEx]):-
+  check_query_args(M,T,TEx,NotEx).
 
 % expands query arguments using prefixes and checks their existence in the kb
 check_query_args(M,L,LEx) :-
