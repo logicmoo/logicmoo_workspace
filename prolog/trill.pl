@@ -196,8 +196,8 @@ load_owl_kb_from_string(String):-
 ******************************/
 :- multifile prolog:message/1.
 
-prolog:message(iri_not_exists) -->
-  [ 'IRIs not existent' ].
+prolog:message(iri_not_exists(IRIs)) -->
+  [ 'IRIs not existent: ~w' -[IRIs] ].
 
 prolog:message(inconsistent) -->
   [ 'Inconsistent ABox' ].
@@ -225,12 +225,13 @@ query_option(OptList,Option,Value):-
 execute_query(M,QueryType,QueryArgsNC,Expl,QueryOptions):-
   check_query_args(M,QueryArgsNC,QueryArgs,QueryArgsNotPresent),
   ( dif(QueryArgsNotPresent,[]) ->
-    (print_message(warning,iri_not_exists),print_message(warning,QueryArgsNotPresent),!,false) ; true
+    (print_message(warning,iri_not_exists(QueryArgsNotPresent)),!,false) ; true
   ),
   find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions),
   ( query_option(QueryOptions,return_prob,Prob) ->
-    (compute_prob_and_close(M,Expl,Prob),!) ; true
-  ).
+    compute_prob_and_close(M,Expl,Prob) ; true
+  ),
+  (query_option(QueryOptions,return_single_prob,false) -> true ; !).
 
 
 % Execution monitor
@@ -255,25 +256,6 @@ find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTi
     print_message(warning,timeout_reached)
   ).
 
-
-
-% findall
-find_n_explanations(M,QueryType,QueryArgs,Expls,all,Opt):-
-  !, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
-  findall(Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls).
-
-% find one in backtracking
-find_n_explanations(M,QueryType,QueryArgs,Expl,bt,Opt):-
-  !, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
-  find_single_explanation(M,QueryType,QueryArgs,Expl,Opt).
-
-% find_n_sol
-find_n_explanations(M,QueryType,QueryArgs,Expls,N,Opt):-
-  (number(N) -> % CUT so that no other4 calls to find_explanation can be ran
-    (findnsols(N,Expl,find_single_explanation(M,QueryType,QueryArgs,Expl),Expls,Opt),!) % CUT otherwise findnsols would backtracks to look for another N sols
-    ;
-    (print_message(warning,wrong_number_max_expl),!,false)
-  ).
 
 
 find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
@@ -307,16 +289,16 @@ add_q(M,io,(ABox0,Tabs0),[ClassEx,IndEx],(ABox,Tabs)):- !,
 add_q(_,pv,(ABox,Tabs),_,(ABox,Tabs)):-!. % Do nothing
       
 % sub_class
-add_q(M,sb,(ABox0,Tabs0),[SubClassEx,SupClassEx],(ABox,Tabs)):- !,
+add_q(M,sc,(ABox0,Tabs0),[SubClassEx,SupClassEx],(ABox,Tabs)):- !,
   neg_class(SupClassEx,NSupClassEx),
   add_q(M,(ABox0,Tabs0),classAssertion(intersectionOf([SubClassEx,NSupClassEx]),trillan(0)),(ABox,Tabs)).
 
 % unsat
-add_q(M,un,(ABox0,Tabs0),[ClassEx],(ABox,Tabs)):- !,
+add_q(M,un,(ABox0,Tabs0),['unsat',ClassEx],(ABox,Tabs)):- !,
   add_q(M,(ABox0,Tabs0),classAssertion(ClassEx,trillan(0)),(ABox,Tabs)).
 
 % inconsistent_theory
-add_q(_,it,(ABox,Tabs),_,(ABox,Tabs)):- !. % Do nothing
+add_q(_,it,(ABox,Tabs),['inconsistent','kb'],(ABox,Tabs)):- !. % Do nothing
 
 /***********
   Queries
@@ -388,31 +370,7 @@ instanceOf(M:Class,Ind):-
  * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
  */
 property_value(M:Prop, Ind1, Ind2,Expl,Opt):-
-  (query_option(Opt,return_prob,Prob) ->
-    ( all_property_value_int(M:Prop, Ind1, Ind2,Expl),
-      compute_prob_and_close(M,Expl,Prob)
-    )
-    ;
-    ( check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
-	  set_up(M),
-	  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-	  retractall(M:trillan_idx(_)),
-  	assert(M:trillan_idx(1)),
-  	build_abox(M,(ABox,Tabs)),
-  	(  \+ clash(M,(ABox,Tabs),_) ->
-  	    (
-  	    	findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
-          (query_option(Opt,assert_abox,true) -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
-  		find_expls(M,L,[PropEx,Ind1Ex,Ind2Ex],Expl1),
-  		check_and_close(M,Expl1,Expl)
-  	    )
-  	 ;
-  	    print_message(warning,inconsistent),!,false
-  	)
-    ;
-    	print_message(warning,iri_not_exists),!,false
-    )
-  ).
+  execute_query(M,pv,[Prop, Ind1, Ind2],Expl,Opt).
 
 /**
  * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list)
@@ -434,7 +392,7 @@ property_value(M:Prop, Ind1, Ind2,Expl):-
  * The predicate fails if the individual does not belong to the class.
  */
 all_property_value(M:Prop, Ind1, Ind2,Expl):-
-  all_property_value_int(M:Prop, Ind1, Ind2,Expl),
+  execute_query(M,pv,[Prop, Ind1, Ind2],Expl,[max_expl(all)]),
   empty_expl(M,EExpl),
   dif(Expl,EExpl).
 
@@ -445,25 +403,7 @@ all_property_value(M:Prop, Ind1, Ind2,Expl):-
  * and returns true if the two individual are Prop-related, false otherwise.
  */
 property_value(M:Prop, Ind1, Ind2):-
-  (  check_query_args(M,[Prop,Ind1,Ind2],[PropEx,Ind1Ex,Ind2Ex]) ->
-	(
-	  set_up(M),
-	  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-	  retractall(M:trillan_idx(_)),
-	  assert(M:trillan_idx(1)),
-	  build_abox(M,(ABox,Tabs)),
-	  (  \+ clash(M,(ABox,Tabs),_) ->
-	      (
-	        apply_all_rules(M,(ABox,Tabs),(ABox1,_Tabs1)),!,
-	  	find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),_),ABox1),!
-	      )
-	    ;
-	      print_message(warning,inconsistent),!,false
-	  )
-	)
-    ;
-        print_message(warning,iri_not_exists),!,false
-  ).
+  execute_query(M,pv,[Prop, Ind1, Ind2],_,[max_expl(1)]).
 
 /**
  * sub_class(:Class:concept_description,++SupClass:concept_description,-Expl:list,++Opt:list)
@@ -479,19 +419,7 @@ property_value(M:Prop, Ind1, Ind2):-
  * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
  */
 sub_class(M:Class,SupClass,Expl,Opt):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-    ( query_option(Opt,return_prob,Prob) ->
-      ( all_sub_class_int(M:ClassEx,SupClassEx,Expl),
-        compute_prob_and_close(M,Expl,Prob)
-      )
-      ;
-      ( neg_class(SupClassEx,NSupClassEx),
-        unsat_internal(M:intersectionOf([ClassEx,NSupClassEx]),Expl,Opt)
-      )
-    )
-    ;
-    (	print_message(warning,iri_not_exists),!,false )
-  ).
+  execute_query(M,sc,[Class,SupClass],Expl,Opt).
   
 /**
  * sub_class(:Class:concept_description,++SupClass:concept_description,-Expl:list)
@@ -515,14 +443,7 @@ sub_class(M:Class,SupClass,Expl):-
  * The predicate fails if the individual does not belong to the class.
  */
 all_sub_class(M:Class,SupClass,Expl):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-    ( all_sub_class_int(M:ClassEx,SupClassEx,Expl),
-      empty_expl(M,EExpl),
-      dif(Expl,EExpl)
-    )
-    ;
-    (	print_message(warning,iri_not_exists),!,false )
-  ).
+  execute_query(M,sc,[Class,SupClass],Expl,[max_expl(all)]).
 
 /**
  * sub_class(:Class:concept_description,++SupClass:concept_description) is det
@@ -532,13 +453,7 @@ all_sub_class(M:Class,SupClass,Expl):-
  * true if Class is a subclass of SupClass, and false otherwise.
  */
 sub_class(M:Class,SupClass):-
-  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
-      (  neg_class(SupClassEx,NSupClassEx),
-        unsat_internal(M:intersectionOf([ClassEx,NSupClassEx])),!
-      )
-    ;
-        print_message(warning,iri_not_exists),!,false
-  ).
+  execute_query(M,sc,[Class,SupClass],_,[max_expl(1)]).
 
 /**
  * unsat(:Concept:concept_description,-Expl:list,++Opt:list)
@@ -553,17 +468,7 @@ sub_class(M:Class,SupClass):-
  * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
  */
 unsat(M:Concept,Expl,Opt):-
-  (query_option(Opt,return_prob,Prob) ->
-    ( all_unsat_int(M:Concept,Expl),
-      compute_prob_and_close(M,Expl,Prob)
-    )
-    ;
-    (check_query_args(M,[Concept],[ConceptEx]) ->
-  	unsat_internal(M:ConceptEx,Expl,Opt)
-    ;
-    	print_message(warning,iri_not_exists),!,false
-   )
-  ).
+  execute_query(M,un,[Concept],Expl,Opt).
 
 /**
  * unsat(:Concept:concept_description,-Expl:list)
@@ -585,34 +490,9 @@ unsat(M:Concept,Expl):-
  * The predicate fails if the individual does not belong to the class.
  */
 all_unsat(M:Concept,Expl):-
-  all_unsat_int(M:Concept,Expl),
+  execute_query(M,un,[Concept],Expl,[max_expl(all)]),
   empty_expl(M,EExpl),
   dif(Expl,EExpl).
-
-% ----------- %
-unsat_internal(M:Concept,Expl,Opt):-
-  set_up(M),
-  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-  retractall(M:trillan_idx(_)),
-  assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs)),
-  ( \+ clash(M,(ABox,Tabs),_) ->
-     (
-       add_q(M,(ABox,Tabs),classAssertion(Concept,trillan(1)),(ABox00,Tabs0)),
-     add_owlThing_ind(M,ABox00,trillan(1),ABox0),
-	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-	findall((ABox1,Tabs1),apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),L),
-  (query_option(Opt,assert_abox,true) -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
-	find_expls(M,L,['unsat',Concept],Expl1),
-	check_and_close(M,Expl1,Expl)
-     )
-    ;
-     print_message(warning,inconsistent),!,false
-  ).
-
-unsat_internal(M:Concept,Expl):-
-  unsat_internal(M:Concept,Expl,[]).
-% ----------- %
 
 /**
  * unsat(:Concept:concept_description) is det
@@ -621,31 +501,7 @@ unsat_internal(M:Concept,Expl):-
  * a complex concept as a ground term and returns true if the concept is unsatisfiable, false otherwise.
  */
 unsat(M:Concept):-
-  (check_query_args(M,[Concept],[ConceptEx]) ->
-  	unsat_internal(M:ConceptEx)
-    ;
-    	print_message(warning,iri_not_exists),!,false
-   ).
-
-% ----------- %
-unsat_internal(M:Concept):-
-  set_up(M),
-  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-  retractall(M:trillan_idx(_)),
-  assert(M:trillan_idx(2)),
-  build_abox(M,(ABox,Tabs)),
-  ( \+ clash(M,(ABox,Tabs),_) ->
-     (
-     	add_q(M,(ABox,Tabs),classAssertion(Concept,trillan(1)),(ABox00,Tabs0)),
-       add_owlThing_ind(M,ABox00,trillan(1),ABox0),
-  	%findall((ABox1,Tabs1),apply_rules_0((ABox0,Tabs),(ABox1,Tabs1)),L),
-  	apply_all_rules(M,(ABox0,Tabs0),(ABox1,Tabs1)),!,
-  	clash(M,(ABox1,Tabs1),_),!
-     )
-    ;
-     print_message(warning,inconsistent),!,false
-  ).
-% ----------- %
+execute_query(M,un,[Concept],_,[max_expl(1)]).
 
 /**
  * inconsistent_theory(:Expl:list,++Opt:list)
@@ -657,23 +513,7 @@ unsat_internal(M:Concept):-
  * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
  */
 inconsistent_theory(M:Expl,Opt):-
-  (query_option(Opt,return_prob,Prob) ->
-    ( all_inconsistent_theory_int(M:Expl),
-      compute_prob_and_close(M,Expl,Prob)
-    )
-    ;
-    (set_up(M),
-    retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-    retractall(M:trillan_idx(_)),
-    assert(M:trillan_idx(1)),
-    build_abox(M,(ABox,Tabs)),
-    % Without prior search of clashes in order to find all the possible clashes after expansion
-    findall((ABox1,Tabs1),apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),L),
-    (query_option(Opt,assert_abox,true) -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
-    find_expls(M,L,['inconsistent','kb'],Expl1),
-    check_and_close(M,Expl1,Expl)
-    )
-  ).
+  execute_query(M,it,[],Expl,Opt).
 
 /**
  * inconsistent_theory(:Expl:list)
@@ -691,7 +531,7 @@ inconsistent_theory(M:Expl):-
  * The predicate fails if the individual does not belong to the class.
  */
 all_inconsistent_theory(M:Expl):-
-  all_inconsistent_theory_int(M:Expl),
+  execute_query(M,it,[],Expl,[max_expl(all)]),
   empty_expl(M,EExpl),
   dif(Expl,EExpl).
 
@@ -702,16 +542,7 @@ all_inconsistent_theory(M:Expl):-
  */
 inconsistent_theory:-
   get_trill_current_module(M),
-  set_up(M),
-  retractall(M:exp_found(_,_)),retractall(M:exp_found(_,_,_)),
-  retractall(M:trillan_idx(_)),
-  assert(M:trillan_idx(1)),
-  build_abox(M,(ABox,Tabs)),
-  ( (clash(M,(ABox,Tabs),_),!) -> true
-    ;
-      (apply_all_rules(M,(ABox,Tabs),(ABox1,Tabs1)),!,
-       clash(M,(ABox1,Tabs1),_),!)
-  ).
+  execute_query(M,it,[],_,[max_expl(1)]).
 
 /**
  * prob_instanceOf(:Class:concept_description,++Ind:individual_name,--Prob:double) is det
@@ -773,14 +604,22 @@ add_q(M,(ABox0,Tabs0),Query,(ABox,Tabs)):-
 
 % expands query arguments using prefixes and checks their existence in the kb
 % returns the non-present arguments
-check_query_args(_,[],[],[]).
+check_query_args(M,QA,QAEx,NotEx):-
+  check_query_args_int(M,QA,QAExT,NotEx),!,
+  ( length(QAExT,1) -> 
+    QAEx = ['unsat'|QAExT]
+    ;
+    ( length(QAExT,0) -> QAEx = ['inconsistent','kb'] ; QAEx = QAExT)
+  ).
 
-check_query_args(M,[H|T],[HEx|TEx],NotEx):-
+check_query_args_int(_,[],[],[]).
+
+check_query_args_int(M,[H|T],[HEx|TEx],NotEx):-
   check_query_args(M,[H],[HEx]),!,
-  check_query_args(M,T,TEx,NotEx).
+  check_query_args_int(M,T,TEx,NotEx).
 
-check_query_args(M,[H|T],TEx,[H|NotEx]):-
-  check_query_args(M,T,TEx,NotEx).
+check_query_args_int(M,[H|T],TEx,[H|NotEx]):-
+  check_query_args_int(M,T,TEx,NotEx).
 
 % expands query arguments using prefixes and checks their existence in the kb
 check_query_args(M,L,LEx) :-

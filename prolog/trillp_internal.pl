@@ -53,36 +53,12 @@ prolog:message(and_in_and) -->
   Utilities for queries
  ***********/
 
-% to find all axplanations for probabilistic queries
-all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
-  sub_class(M:ClassEx,SupClassEx,Exps),!.
+% findall
+find_n_explanations(M,QueryType,QueryArgs,Expls,_,Opt):- % This will not check the arg max_expl as TRILLP returns a pinpointing formula
+  find_single_explanation(M,QueryType,QueryArgs,Expls,Opt),!.
 
-all_sub_class_int(_:_,_,Exps):-
-  empty_expl(_,Exps).
-
-all_instanceOf_int(M:ClassEx,IndEx,Exps):-
-  instanceOf(M:ClassEx,IndEx,Exps),!.
-  
-all_instanceOf_int(_:_,_,Exps):-
-  empty_expl(_,Exps).
-
-all_property_value_int(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
-  property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps),!.
-  
-all_property_value_int(_:_,_,_,Exps):-
-  empty_expl(_,Exps).
-
-all_unsat_int(M:ConceptEx,Exps):-
-  unsat(M:ConceptEx,Exps),!.
-
-all_unsat_int(_:_,Exps):-
-  empty_expl(_,Exps).
-
-all_inconsistent_theory_int(M:Exps):-
-  inconsistent_theory(M:Exps),!.
-
-all_inconsistent_theory_int(_:Exps):-
-  empty_expl(_,Exps).
+find_n_explanations(_,_,_,Expls,_,_):-
+  empty_expl(_,Expls).
 
 
 compute_prob_and_close(M,Exps,Prob):-

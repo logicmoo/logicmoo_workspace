@@ -37,6 +37,25 @@ clean_up(M):-
   Utilities for queries
  ***********/
 
+% findall
+find_n_explanations(M,QueryType,QueryArgs,Expls,all,Opt):-
+!, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
+findall(Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls).
+
+% find one in backtracking
+find_n_explanations(M,QueryType,QueryArgs,Expl,bt,Opt):-
+!, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
+find_single_explanation(M,QueryType,QueryArgs,Expl,Opt).
+
+% find_n_sol
+find_n_explanations(M,QueryType,QueryArgs,Expls,N,Opt):-
+(number(N) -> % CUT so that no other4 calls to find_explanation can be ran
+  (findnsols(N,Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls)) % CUT otherwise findnsols would backtracks to look for another N sols
+  ;
+  (print_message(warning,wrong_number_max_expl),!,false)
+).
+
+
 % to find all axplanations for probabilistic queries
 all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
   all_unsat_int(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
@@ -56,7 +75,7 @@ all_inconsistent_theory_int(M:Exps):-
 
 
 compute_prob_and_close(M,Exps,Prob):-
-  compute_prob(M,Exps,Prob).
+  compute_prob(M,Exps,Prob),!.
 
 % checks the explanation
 check_and_close(_,Expl0,Expl):-
