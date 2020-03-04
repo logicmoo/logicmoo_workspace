@@ -62,10 +62,8 @@ collect_dependencies(FileD) :-
 
 module_loop(Module, Path1, Path) :-
     ( append(Left, [Module|_], Path1)
-    ->append([Module|Left], [Module], Path),
-      Path1 = [UM|_],
-      retractall(dependency(UM, Module))
-    ; dependency(Module, LoadedIn),
+    ->append([Module|Left], [Module], Path)
+    ; retract(dependency(Module, LoadedIn)),
       module_loop(LoadedIn, [Module|Path1], Path)
     ).
 
