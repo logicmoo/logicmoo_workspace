@@ -97,7 +97,7 @@ find_expls(M,[],[C,I],E):-
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[ABox|_T],QueryArgs,E):- %gtrace,
-  %M:query_clash(M,_,EQC1,EQC2),
+  %M:query_clash(_,EQC1,EQC2),
   %and_f(M,EQC1,EQC2,EL0),
   clash(M,ABox,EL0),
   member(E0-CPs0,EL0),

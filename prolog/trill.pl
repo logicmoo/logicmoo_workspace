@@ -898,7 +898,7 @@ set_clash(M,(ABox,T),P,Ind1,Ind2,Expl):-
 :- dynamic query_clash/3.
 
 assert_clash(M,sameIndividual(LF),Expl,ExplC):-
-  retractall(M:query_clash(args(sameIndividual(LF)),_,_)),
+  retractall(M:query_clash(args(sameIndividual(LF)),_,_)), % ID ABox
   M:assert(query_clash(args(sameIndividual(LF)),Expl,ExplC)).
 
 assert_clash(M,C,Ind,ExplC,Expl):-
@@ -1159,7 +1159,7 @@ ind_intersected_union(Ind,LC,ABox) :-
 scan_or_list(_,[],_,_,_,_,_,_,[]):- !.
 
 scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
-  add_choice_point(M,cpp(CP,N0),Expl0,Expl),
+  add_choice_point(M,cpp(CP,N0),Expl0,Expl),  % TODO passare a modify_ABox cpp(CP,N0)
   modify_ABox(M,(ABox0,Tabs),C,Ind,Expl,ABox),
   N is N0 + 1,
   scan_or_list(M,T,N,CP,Ind,Expl0,ABox0,Tabs,L).

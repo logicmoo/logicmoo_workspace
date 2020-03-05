@@ -119,23 +119,23 @@ findClassAssertion4OWLNothing(M,ABox,Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,(ABox0,_),C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
   
   
-modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+modify_ABox(_,(ABox0,_),C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
 
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,(ABox0,_),P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
   delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
   
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
+modify_ABox(_,(ABox0,_),P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
 
 /* ************* */
 
