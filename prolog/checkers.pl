@@ -47,3 +47,4 @@
 :- use_module(checkers(check_undefined)).
 :- use_module(checkers(check_unused)).
 :- use_module(checkers(check_wrong_dynamic)).
+:- use_module(checkers(check_module_loops)).
