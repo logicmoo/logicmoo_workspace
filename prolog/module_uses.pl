@@ -39,7 +39,7 @@
 :- use_module(library(codewalk)).
 
 :- meta_predicate
-    collect_module_uses(+,+,0,+,+).
+    collect_module_uses(+,0,+,+).
 
 :- dynamic module_uses/4.
 
@@ -62,20 +62,16 @@ module_uses_2(Collector, LoadedIn, Uses) :-
                source(false),
                method(clause),
                trace_reference(TR),
-               on_trace(collect_module_uses(Collector, LoadedIn))
+               on_trace(collect_module_uses(LoadedIn))
               ]),
     findall(Pattern, retract(module_uses(LoadedIn, M, F, A)), UsesU),
     sort(UsesU, Uses).
 
 :- public
-    collect_module_uses/5.
+    collect_module_uses/4.
 
-collect_module_uses(Collector, LoadedIn, MGoal, _, _) :-
+collect_module_uses(LoadedIn, MGoal, _, _) :-
     strip_module(MGoal, _, Goal),
     functor(Goal, F, A),
-    collector_module(Collector, MGoal, Module),
+    predicate_property(MGoal, implementation_module(Module)),
     assertz(module_uses(LoadedIn, Module, F, A)).
-
-collector_module(all, MGoal, Module) :-
-    predicate_property(MGoal, implementation_module(Module)).
-collector_module(m(Module), _, Module).
