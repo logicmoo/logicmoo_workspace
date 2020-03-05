@@ -36,8 +36,6 @@
 
 :- use_module(library(option_utils)).
 
-:- thread_local dependency/2.
-
 skip_module(user).
 skip_module(system).
 
@@ -48,24 +46,39 @@ skip_module(system).
 
 module_loops(Loops, Options) :-
     option_files(Options, FileD),
-    collect_dependencies(FileD),
-    findall(Loop, module_loop(_, [], Loop), Loops).
+    collect_dependencies(FileD, DepsL),
+    module_loops(DepsL, Loops, []).
 
-collect_dependencies(FileD) :-
-    retractall(dependency(_, _)),
-    forall(( get_dict(File, FileD, _),
-             '$load_context_module'(File, LoadedIn, _),
-             \+ skip_module(LoadedIn),
-             module_property(Module, file(File))
-           ),
-           assertz(dependency(Module, LoadedIn))).
+collect_dependencies(FileD, DepsL) :-
+    findall(Module-LoadedInL,
+            ( get_dict(File, FileD, _),
+              module_property(Module, file(File)),
+              findall(LoadedIn,
+                      ( '$load_context_module'(File, LoadedIn, _),
+                        \+ skip_module(LoadedIn)
+                      ), LoadedInL),
+              LoadedInL \= []
+           ), DepsL).
 
-module_loop(Module, Path1, Path) :-
-    ( append(Left, [Module|_], Path1)
-    ->append([Module|Left], [Module], Path)
-    ; retract(dependency(Module, LoadedIn)),
-      module_loop(LoadedIn, [Module|Path1], Path)
+module_loops([]) --> [].
+module_loops([Module-LoadedInL|DepsL1]) -->
+    fold_module_loops(LoadedInL, [Module], DepsL1, DepsL),
+    module_loops(DepsL).
+
+module_loops(Module, Path1, DepsL1, DepsL) -->
+    ( {append(Left, [Module|_], Path1)}
+    ->{append([Module|Left], [Module], Path),
+       DepsL = DepsL1},
+      [Path]
+    ; {select(Module-LoadedInL, DepsL1, DepsL2)}
+    ->fold_module_loops(LoadedInL, [Module|Path1], DepsL2, DepsL)
+    ; {DepsL = DepsL1}
     ).
+
+fold_module_loops([],    _,    DepsL,  DepsL) --> [].
+fold_module_loops([M|L], Path, DepsL1, DepsL) -->
+    module_loops(M, Path, DepsL1, DepsL2),
+    fold_module_loops(L, Path, DepsL2, DepsL).
 
 /*
 % Original, raw algorithm:

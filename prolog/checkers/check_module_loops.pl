@@ -36,7 +36,8 @@
 
 :- use_module(library(checkers/checker)).
 :- use_module(library(module_loops)).
-:- use_module(library(module_uses)).
+:- use_module(library(extra_location)).
+:- use_module(library(location_utils)).
 
 :- multifile
         prolog:message//1.
@@ -46,15 +47,22 @@ prolog:message(acheck(module_loops)) -->
      '------------', nl,
      'Module loops could potentially lead to Demeter\'s law violations', nl, nl].
 
-prolog:message(acheck(module_loops, LoopUsesL)) -->
-    ['Module loop found ~w'-[LoopUsesL]].
+prolog:message(acheck(module_loops, Loc/Loop)) -->
+    Loc,
+    ['Module loop found ~w'-[Loop], nl].
 
 checker:check(module_loops, Pairs, Options) :-
     module_loops(Loops, Options),
-    maplist(module_loop_uses, Loops, Pairs).
+    maplist(loops_pairs, Loops, Pairs).
 
-module_loop_uses(Loop, warning-List) :-
-    findall(LoadedIn-Module/Uses,
-            ( append(_, [LoadedIn, Module|_], Loop),
-              module_uses(LoadedIn, Module, Uses)
-            ), List).
+loops_pairs(Loop, warning-Loc/Loop) :-
+    Loop = [LoadedIn, Module|_],
+    ( module_property(Module, file(File)),
+      ( loc_declaration(           Alias,     LoadedIn, use_module,   From)
+      ; loc_declaration(use_module(Alias, _), LoadedIn, use_module_2, From)
+      ),
+      absolute_file_name(Alias, AF, [file_errors(fail), file_type(prolog)]),
+      File == AF
+    ->from_location(From, Loc)
+    ; Loc = []
+    ).
