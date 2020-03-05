@@ -1,5 +1,5 @@
 
-:- include(example('SimulationKit.pl')).
+:- include(example('simulation/SimulationKit.pl')).
 
 % "if true at T then ..." is a way to "observe" (e.g. request to perform) a composite event/action
 % test pump
