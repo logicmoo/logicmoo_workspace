@@ -288,8 +288,9 @@ add_q(M,io,(ABox0,Tabs0),[ClassEx,IndEx],(ABox,Tabs)):- !,
   add_q(M,(ABox0,Tabs0),classAssertion(NClassEx,IndEx),(ABox,Tabs)).
 
 % property_value
-add_q(_,pv,(ABox,Tabs),_,(ABox,Tabs)):-!. % Do nothing
-      
+add_q(M,pv,(ABox0,Tabs0),[PropEx,Ind1Ex,Ind2Ex],(ABox,Tabs)):-!,
+  add_q(M,(ABox0,Tabs0),propertyAssertion(negq(PropEx),Ind1Ex,Ind2Ex),(ABox,Tabs)).
+
 % sub_class
 add_q(M,sc,(ABox0,Tabs0),[SubClassEx,SupClassEx],(ABox,Tabs)):- !,
   neg_class(SupClassEx,NSupClassEx),
@@ -711,7 +712,7 @@ find_clash(M,(ABox0,Tabs0),Expl2):-
 % clash managing
 % previous version, manages only one clash at time
 % need some tricks in some rules for managing the cases of more than one clash
-% TO IMPROVE!
+% TO REMOVE!
 %------------
 :- multifile clash/3.
 
@@ -808,6 +809,105 @@ make_expl(M,Ind,S,[H|T],Expl0,ABox,Expl):-
   and_f(M,Expl2,Expl0,Expl1),
   make_expl(M,Ind,S,T,Expl1,ABox,Expl).
 */
+
+:- multifile clash_expls/5.
+
+clash_expls(_,(ABox,_),C,Ind,Expl):-
+  %write('clash 1'),nl,
+  neg_class(C,CNeg),
+  findClassAssertion(CNeg,Ind,Expl,ABox).
+
+clash_expls(_,(ABox,_),C,sameIndividual(L1),Expl):-
+  %write('clash 3'),nl,
+  neg_class(C,CNeg),
+  findClassAssertion(CNeg,sameIndividual(L2),Expl,ABox),
+  member(X,L1),
+  member(X,L2),!.
+
+clash_expls(_,(ABox,_),C,Ind1,Expl):-
+  %write('clash 4'),nl,
+  neg_class(C,CNeg),
+  findClassAssertion(CNeg,sameIndividual(L2),Expl,ABox),
+  member(Ind1,L2).
+
+clash_expls(_,(ABox,_),C,sameIndividual(L1),Expl):-
+  %write('clash 5'),nl,
+  neg_class(C,CNeg),
+  findClassAssertion(CNeg,Ind2,Expl,ABox),
+  member(Ind2,L1).
+
+clash_expls(_,_,'http://www.w3.org/2002/07/owl#Nothing',_).
+  %write('clash 6'),nl,
+
+clash_expls(M,(ABox,_),C1,Ind,Expl):-
+  %write('clash 7'),nl,
+  M:disjointClasses(L), % TODO use hierarchy
+  member(C1,L),
+  member(C2,L),
+  dif(C1,C2),
+  findClassAssertion(C2,Ind,ExplT,ABox),
+  and_f_ax(M,disjointClasses(L),ExplT,Expl).
+
+clash_expls(M,(ABox,_),C1,Ind,Expl):-
+  %write('clash 8'),nl,
+  M:disjointUnion(Class,L), % TODO use hierarchy
+  member(C1,L),
+  member(C2,L),
+  dif(C1,C2),
+  findClassAssertion(C2,Ind,ExplT,ABox),
+  and_f_ax(M,disjointUnion(Class,L),ExplT,Expl).
+
+
+clash_expls(_,(ABox,_),sameIndividual(LS),Expl):-
+  %write('clash 2'),nl,
+  find((differentIndividuals(LD),Expl),ABox),
+  member(X,LS),
+  member(Y,LS),
+  member(X,LD),
+  member(Y,LD),
+  dif(X,Y).
+
+clash_expls(_,(ABox,_),P,Ind1,Ind2,Expl):-
+  %write('clash 2'),nl,
+  findPropertyAssertion(negq(P),Ind1,Ind2,Expl,ABox).
+
+% -------------
+
+set_clash(M,(ABox,T),sameIndividual(LF),Expl):-
+  ( clash_expls(M,(ABox,T),sameIndividual(LF),ExplC) ->
+    assert_clash(M,sameIndividual(LF),Expl,ExplC)
+    ;
+    true
+  ).
+
+set_clash(M,(ABox,T),C,Ind,Expl):-
+  ( clash_expls(M,(ABox,T),C,Ind,ExplC) ->
+    assert_clash(M,C,Ind,Expl,ExplC)
+    ;
+    true
+  ).
+
+set_clash(M,(ABox,T),P,Ind1,Ind2,Expl):-
+  ( clash_expls(M,(ABox,T),P,Ind1,Ind2,ExplC) ->
+    assert_clash(M,P,Ind1,Ind2,Expl,ExplC)
+    ;
+    true
+  ).
+
+
+:- dynamic query_clash/3.
+
+assert_clash(M,sameIndividual(LF),Expl,ExplC):-
+  retractall(M:query_clash(args(sameIndividual(LF)),_,_)),
+  M:assert(query_clash(args(sameIndividual(LF)),Expl,ExplC)).
+
+assert_clash(M,C,Ind,ExplC,Expl):-
+  retractall(M:query_clash(args(C,Ind),_,_)),
+  M:assert(query_clash(args(C,Ind),Expl,ExplC)).
+
+assert_clash(M,P,Ind1,Ind2,ExplC,Expl):-
+  retractall(M:query_clash(args(P,Ind1,Ind2),_,_)),
+  M:assert(query_clash(args(P,Ind1,Ind2),Expl,ExplC)).
 
 % -------------
 % rules application
@@ -1001,7 +1101,7 @@ add_exists_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind2,Expl2,ABox0),
   %existsInKB(M,R,C),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
+  modify_ABox(M,(ABox0,Tabs),someValuesFrom(R,C),Ind1,Expl,ABox).
 
 existsInKB(M,R,C):-
   M:subClassOf(A,B),
@@ -1028,7 +1128,7 @@ scan_and_list(_M,[],_Ind,_Expl,ABox,_Tabs,ABox,Mod):-
   dif(Mod,0).
 
 scan_and_list(M,[C|T],Ind,Expl,ABox0,Tabs0,ABox,_Mod):-
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox1),!,
+  modify_ABox(M,(ABox0,Tabs0),C,Ind,Expl,ABox1),!,
   scan_and_list(M,T,Ind,Expl,ABox1,Tabs0,ABox,1).
 
 scan_and_list(M,[_C|T],Ind,Expl,ABox0,Tabs0,ABox,Mod):-
@@ -1060,7 +1160,7 @@ scan_or_list(_,[],_,_,_,_,_,_,[]):- !.
 
 scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
   add_choice_point(M,cpp(CP,N0),Expl0,Expl),
-  modify_ABox(M,ABox0,C,Ind,Expl,ABox),
+  modify_ABox(M,(ABox0,Tabs),C,Ind,Expl,ABox),
   N is N0 + 1,
   scan_or_list(M,T,N,CP,Ind,Expl0,ABox0,Tabs,L).
 
@@ -1096,7 +1196,7 @@ forall_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   \+ indirectly_blocked(Ind1,(ABox0,Tabs)),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox0),
   and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,C,Ind2,Expl,ABox).
+  modify_ABox(M,(ABox0,Tabs),C,Ind2,Expl,ABox).
 
 /* ************** */
 
@@ -1111,7 +1211,7 @@ forall_plus_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_sub_sup_trans_role(M,R,S,Expl3),
   and_f(M,Expl1,Expl2,ExplT),
   and_f(M,ExplT,Expl3,Expl),
-  modify_ABox(M,ABox0,allValuesFrom(R,C),Ind2,Expl,ABox).
+  modify_ABox(M,(ABox0,Tabs),allValuesFrom(R,C),Ind2,Expl,ABox).
 
 % --------------
 find_sub_sup_trans_role(M,R,S,Expl):-
@@ -1137,7 +1237,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(C,Ind,Expl,ABox0),
   find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
+  modify_ABox(M,(ABox0,Tabs),D,Ind,AxL,ABox1),
   add_nominal(M,D,Ind,ABox1,ABox).
 
 /* -- unfold_rule
@@ -1155,7 +1255,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   ( C = unionOf(_) -> Expl1 = Expl ; find_all(M,Ind,L,ABox0,Expl1)),
   find_sub_sup_class(M,C,D,Ax),
   and_f_ax(M,Ax,Expl1,AxL1),
-  modify_ABox(M,ABox0,D,Ind,AxL1,ABox1),
+  modify_ABox(M,(ABox0,Tabs),D,Ind,AxL1,ABox1),
   add_nominal(M,D,Ind,ABox1,ABox).
 
 /* -- unfold_rule
@@ -1164,7 +1264,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
  */
 unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   find_class_prop_range_domain(M,Ind,D,Expl,(ABox0,Tabs)),
-  modify_ABox(M,ABox0,D,Ind,Expl,ABox1),
+  modify_ABox(M,(ABox0,Tabs),D,Ind,Expl,ABox1),
   add_nominal(M,D,Ind,ABox1,ABox).
 
 /*
@@ -1176,7 +1276,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findClassAssertion(complementOf(C),Ind,Expl,ABox0),
   find_neg_class(C,D),
   and_f_ax(M,complementOf(C),Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind,AxL,ABox1),
+  modify_ABox(M,(ABox0,Tabs),D,Ind,AxL,ABox1),
   add_nominal(M,D,Ind,ABox1,ABox).
 
 % ----------------
@@ -1377,7 +1477,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
   find_sub_sup_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind1,Ind2,AxL,ABox1),
+  modify_ABox(M,(ABox0,Tabs),D,Ind1,Ind2,AxL,ABox1),
   add_nominal(M,D,Ind1,ABox1,ABox2),
   add_nominal(M,D,Ind2,ABox2,ABox).
 
@@ -1386,7 +1486,7 @@ unfold_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findPropertyAssertion(C,Ind1,Ind2,Expl,ABox0),
   find_inverse_property(M,C,D,Ax),
   and_f_ax(M,Ax,Expl,AxL),
-  modify_ABox(M,ABox0,D,Ind2,Ind1,AxL,ABox1),
+  modify_ABox(M,(ABox0,Tabs),D,Ind2,Ind1,AxL,ABox1),
   add_nominal(M,D,Ind1,ABox1,ABox2),
   add_nominal(M,D,Ind2,ABox2,ABox).
 
@@ -1454,7 +1554,7 @@ apply_ce_to(_M,[],_,_,ABox,ABox,_,0).
 
 apply_ce_to(M,[Ind|T],Ax,UnAx,ABox0,ABox,Tabs,C):-
   \+ indirectly_blocked(Ind,(ABox0,Tabs)),
-  modify_ABox(M,ABox0,UnAx,Ind,[Ax],ABox1),!,
+  modify_ABox(M,(ABox0,Tabs),UnAx,Ind,[Ax],ABox1),!,
   apply_ce_to(M,T,Ax,UnAx,ABox1,ABox,Tabs,C0),
   C is C0 + 1.
 

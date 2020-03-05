@@ -96,7 +96,9 @@ find_expls(M,[],[C,I],E):-
 
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|_T],[C,I],E):- %gtrace,
+find_expls(M,[ABox|_T],QueryArgs,E):- %gtrace,
+  %M:query_clash(M,_,EQC1,EQC2),
+  %and_f(M,EQC1,EQC2,EL0),
   clash(M,ABox,EL0),
   member(E0-CPs0,EL0),
   sort(E0,E),
@@ -110,11 +112,12 @@ find_expls(M,[ABox|_T],[C,I],E):- %gtrace,
     ;
     (%findall(Exp,M:exp_found([C,I],Exp),Expl),
      %not_already_found(M,Expl,[C,I],E),
-     assert(M:exp_found([C,I],E)),
+     assert(M:exp_found(QueryArgs,E)),
      fail
     )
   ).
 
+% TODO to remove
 % checks if an explanations was already found (property_value version)
 find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
@@ -122,6 +125,7 @@ find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   %findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
   %not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
+
 
 find_expls(M,[_ABox|T],Query,Expl):-
   %\+ length(T,0),
@@ -294,7 +298,43 @@ clash(M,(ABox,Tabs),Expl):-
   make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
 
+:- multifile clash_expls/5.
+
+clash_expls(M,(ABox,Tabs),maxCardinality(N,S,C),Ind,Expl):-
+  %write('clash 9'),nl,
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  LSS @> N,
+  make_expl(M,Ind,S,SNC,ABox,Expl).
+
+clash_expls(M,(ABox,Tabs),maxCardinality(N,S),Ind,Expl):-
+  %write('clash 10'),nl,
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  length(SN,LSS),
+  LSS @> N,
+  make_expl(M,Ind,S,SN,ABox,Expl).
+
+clash_expls(M,(ABox,Tabs),exactCardinality(N,S,C),Ind,Expl):-
+  %write('clash 9'),nl,
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  dif(LSS,N),
+  make_expl(M,Ind,S,SNC,ABox,Expl).
+
+clash_expls(M,(ABox,Tabs),exactCardinality(N,S),Ind,Expl):-
+  %write('clash 10'),nl,
+  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  length(SN,LSS),
+  dif(LSS,N),
+  make_expl(M,Ind,S,SN,ABox,Expl).
+
 % --------------
+
+make_expl(M,Ind,S,ExplList,ABox,Expl):-
+  empty_expl(M,EExpl),
+  make_expl(M,Ind,S,ExplList,EExpl,ABox,Expl).
 
 make_expl(_,_,_,[],Expl,_,Expl).
 
@@ -373,7 +413,7 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
+modify_ABox(M,(ABox0,T),sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
   ( find((sameIndividual(L),Expl0),ABox) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
@@ -383,25 +423,28 @@ modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
   	)
   ;
   	(ABox = ABox0,Expl = Expl1)
-  ).
+  ),
+  set_clash(M,(ABox0,T),sameIndividual(LF),Expl).
 
-modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,(ABox0,T),C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
     )
   ;
     (ABox = ABox0,Expl = Expl1)
-  ).
+  ),
+  set_clash(M,(ABox0,T),C,Ind,Expl).
 
-modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,(ABox0,T),P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
       delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
     )
   ;
     (ABox = ABox0,Expl = Expl1)
-  ).
+  ),
+  set_clash(M,(ABox0,T),P,Ind1,Ind2,Expl).
 
 /* ************* */
 
