@@ -132,7 +132,7 @@ walk_from_loc_declaration(OTerm, MFileD) :-
            walk_from_goal(Head, M, Ref, OTerm)).
 
 walk_from_goal(Head, M, Ref, OTerm) :-
-    prolog_codewalk:( scan_module(M, OTerm), !,
+    prolog_codewalk:( scan_module(M, OTerm),
                       walk_option_clause(OTerm, Ref),
                       walk_called_by_body(no_positions, Head, M, OTerm)
                     ).
