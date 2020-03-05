@@ -229,9 +229,11 @@ execute_query(M,QueryType,QueryArgsNC,Expl,QueryOptions):-
   ),
   find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions),
   ( query_option(QueryOptions,return_prob,Prob) ->
-    compute_prob_and_close(M,Expl,Prob) ; true
-  ),
-  (query_option(QueryOptions,return_single_prob,false) -> true ; !).
+    (
+      compute_prob_and_close(M,Expl,Prob),
+      (query_option(QueryOptions,return_single_prob,false) -> true ; !)
+    ) ; true
+  ).
 
 
 % Execution monitor
