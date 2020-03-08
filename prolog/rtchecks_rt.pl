@@ -138,17 +138,13 @@ start_rtcheck(Goal) :-
     do_start_rtcheck(Goal, Goal).
 
 :- meta_predicate start_rtcheck(+, 0 ).
-start_rtcheck(M:_, CM:WrappedHead) :-
-    tracing,
-    !,
-    @(M:WrappedHead, CM).
 start_rtcheck(Goal, WrappedHead) :-
     do_start_rtcheck(Goal, WrappedHead).
 
 do_start_rtcheck(M:Goal1, CM:WrappedHead) :-
     resolve_calln(Goal1, Goal),
     collect_rtasr(Goal, CM, _, M, RAsrL),
-    check_goal(rt, @(M:WrappedHead, CM), M, CM, RAsrL).
+    check_goal(rt, CM:WrappedHead, M, CM, RAsrL).
 
 prolog:called_by(rtcheck_lit(_, C, _), rtchecks_rt, M, [M:C]) :- nonvar(C).
 

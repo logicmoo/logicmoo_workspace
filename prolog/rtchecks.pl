@@ -39,13 +39,11 @@
           ]).
 
 :- reexport(library(compound_expand)).
+:- use_module(library(prolog_wrap)).
 :- use_module(library(rtcprops), []).
 :- use_module(library(ctrtchecks)).
 :- use_module(system:library(rtchecks_rt)).
 :- use_module(library(assertions)).
-
-rtchecked(PlList) :-
-    throw(error(context_error(nodirective, rtchecked(PlList)), _)).
 
 :- multifile
     prolog:rename_predicate/2.
@@ -68,9 +66,6 @@ wrappers(Name//Arity) -->
 wrappers(Name/Arity) -->
     { atom(Name), integer(Arity), Arity >= 0,
       functor(Head, Name, Arity),
-      atom_concat(Name, ' rtchecked', WrapName),
-      Head =.. [Name|Args],
-      WrappedHead =.. [WrapName|Args],
       prolog_load_context(module, Module),
       check_unexpanded_usage(Name, Arity, Module)
     },
@@ -81,31 +76,93 @@ wrappers(Name/Arity) -->
         \+ predicate_property(Module:Head, dynamic)
       }
     ->{Level = head},
-      [(Head :- context_module(CM), start_rtcheck(Module:Head, @(WrappedHead, CM)))]
+      [(:- initialization(
+               wrap_predicate(Module:Head, rtchecks, Wrapped,
+                              start_rtcheck(Module:Head, Wrapped)), now))]
     ; {Level = body}
     ).
 
-%!  prolog:rename_predicate(:Head1, :Head) is semidet.
-%
-%   Hook into term_expansion for  post   processing  renaming of the
-%   generated predicate.
+:- meta_predicate
+    rtchecked(:).
 
-prolog:rename_predicate(M:Head1, M:Head) :-
-    '$defined_predicate'(M:'$rtchecked'(_, _)),
-    call(M:'$rtchecked'(Head1, head)),
-    !,
-    rename_term(Head1, Head).
+rtchecked(PIList) :-
+    setup_call_cleanup(
+        '$set_source_module'(OldModule, M),
+        expand_term((:- rtchecked(PIList)), Clauses),
+        '$set_source_module'(OldModule)),
+    dyn_rtchecked_list(Clauses, M).
 
-rename_term(Compound1, Compound) :-
-    compound(Compound1),
+dyn_rtchecked_list([], _).
+dyn_rtchecked_list([H|T], M) :-
+    dyn_rtchecked(H, M),
+    dyn_rtchecked_list(T, M).
+
+dyn_rtchecked(M:Clause, _) :-
+    dyn_rtchecked(Clause, M).
+dyn_rtchecked(:- Decl, M) :-
+    dyn_rtchecked_decl(Decl, M).
+dyn_rtchecked('$rtchecked'(Head, TLevel), M) :-
+    (   clause(M:'$rtchecked'(Head, OLevel), true, Ref),
+        (   OLevel \== TLevel
+        ->  erase(Ref),
+            fail
+        ;   true
+        )
+    ->  true
+    ;   assertz(M:'$rtchecked'(Head, TLevel))
+    ).
+
+dyn_rtchecked_decl((discontiguous '$rtchecked'/2), M) :-
+    discontiguous(M:'$rtchecked'/2),
+    dynamic(M:'$rtchecked'/2).
+dyn_rtchecked_decl((public '$rtchecked'/2), M) :-
+    public(M:'$rtchecked'/2).
+dyn_rtchecked_decl((initialization(Wrap, now)), M) :-
+    M:Wrap.
+
+unrtchecked(M:PIList) :-
+    unrtchecked(PIList, M).
+
+unrtchecked(Var, _) :-
+    var(Var),
     !,
-    compound_name_arguments(Compound1, Name, Args),
-    atom_concat(Name, ' rtchecked', WrapName),
-    compound_name_arguments(Compound, WrapName, Args).
-rename_term(Name, WrapName) :-
-    atom_concat(Name, ' rtchecked', WrapName).
+    '$instantiation_error'(Var).
+unrtchecked(M:Spec, _) :-
+    !,
+    '$must_be'(atom, M),
+    unrtchecked(Spec, M).
+unrtchecked((A,B), M) :-
+    !,
+    unrtchecked(A, M),
+    unrtchecked(B, M).
+unrtchecked(Name//Arity, M) :-
+    atom(Name), integer(Arity), Arity >= 0,
+    !,
+    Arity1 is Arity+2,
+    unrtchecked(Name/Arity1, M).
+unrtchecked(Name/Arity, M) :-
+    !,
+    functor(Head, Name, Arity),
+    (   M:'$rtchecked'(Head, _)
+    ->  dynamic(M:'$rtchecked'/2),
+        retractall(M:'$rtchecked'(Head, _)),
+        unwrap_predicate(M:Name/Arity, rtchecks)
+    ;   true
+    ).
+unrtchecked(Head, M) :-
+    callable(Head),
+    !,
+    functor(Head, Name, Arity),
+    unrtchecked(Name/Arity, M).
+unrtchecked(TableSpec, _) :-
+    '$type_error'(rtchecked_declaration, TableSpec).
 
 generate_rtchecks(Preds) :-
+    generate_rtchecks(Preds, Clauses),
+    % We use compile_aux_clauses to make Clauses immediately available:
+    compile_aux_clauses(Clauses).
+
+generate_rtchecks(Preds, Clauses) :-
     phrase(( ( { '$current_source_module'(CM),
                  '$defined_predicate'(CM:'$rtchecked'(_, _))
                }
@@ -114,9 +171,7 @@ generate_rtchecks(Preds) :-
                 (:- public '$rtchecked'/2)]
              ),
              wrappers(Preds)
-           ), Clauses),
-    % We use compile_aux_clauses to make Clauses immediately available:
-    compile_aux_clauses(Clauses).
+           ), Clauses).
 
 /* Use the next code to detect incorrect expansion of run-time checks */
 
