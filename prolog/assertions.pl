@@ -44,6 +44,7 @@
            prop_asr/4,
            prop_asr/7]).
 
+:- discontiguous '$exported_op'/3.
 :- reexport(library(compound_expand)).
 :- reexport(library(assertions_op)).
 
