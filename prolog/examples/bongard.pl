@@ -55,21 +55,10 @@ https://dtai.cs.kuleuven.be/static/ACE/doc/
 :- set_hplp(adam_params,[0.1,0.9,0.999,1e-8]). % adam(Eta,Beta1,Beta2,Epsilon_adam_hat)
 % Gradient descent strategy and the corresponding batch size
 :- set_hplp(batch_strategy,minibatch(50)).
-%:- set_hplp(batch_strategy,stoch_minibatch(10)).
+%:- set_hplp(batch_strategy,stoch_minibatch(50)).
 %:- set_hplp(batch_strategy,batch).
 
 
-
-
-
-start :-
-  induce_hplp([train],P),
-  open("Program",write, Stream),
-  write(Stream,P),
-  close(Stream),
-  trace,
-  test_hplp(P,[test],LL,AUCROC,_,AUCPR,_),
-  format("LL=~g, AUCROC=~g, AUCPR=~g", [LL, AUCROC, AUCPR]).
 
 bg([]).
 

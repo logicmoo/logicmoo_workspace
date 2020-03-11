@@ -1,0 +1,26 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}Installation}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Requirements}{3}{section.2.1}
+\contentsline {section}{\numberline {2.2}Example of use}{3}{section.2.2}
+\contentsline {section}{\numberline {2.3}Testing the installation}{3}{section.2.3}
+\contentsline {section}{\numberline {2.4}Datasets}{4}{section.2.4}
+\contentsline {chapter}{\numberline {3}Syntax}{5}{chapter.3}
+\contentsline {chapter}{\numberline {4}Semantics}{7}{chapter.4}
+\contentsline {chapter}{\numberline {5}Inference}{9}{chapter.5}
+\contentsline {chapter}{\numberline {6}Learning}{11}{chapter.6}
+\contentsline {section}{\numberline {6.1}Input}{11}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Preamble}{11}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Background and Initial hierarchical program}{12}{subsection.6.1.2}
+\contentsline {subsection}{\numberline {6.1.3}Language Bias}{13}{subsection.6.1.3}
+\contentsline {subsection}{\numberline {6.1.4}Example Interpretations}{14}{subsection.6.1.4}
+\contentsline {section}{\numberline {6.2}Commands}{16}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Parameter Learning}{16}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}Structure Learning}{16}{subsection.6.2.2}
+\contentsline {subsection}{\numberline {6.2.3}Testing}{16}{subsection.6.2.3}
+\contentsline {section}{\numberline {6.3}Hyper-parameters for Learning}{17}{section.6.3}
+\contentsline {chapter}{\numberline {7}Example Files}{21}{chapter.7}
+\contentsline {chapter}{\numberline {8}Manual in PDF}{23}{chapter.8}
+\contentsline {chapter}{\numberline {9}License}{25}{chapter.9}
+\contentsline {chapter}{\numberline {10}References}{27}{chapter.10}
+\contentsline {chapter}{Bibliography}{29}{chapter*.16}

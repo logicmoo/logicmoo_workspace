@@ -1,13 +1,18 @@
-/* Sample example of hierachical probabilistic logic program. inspired from UWCSE dataset from
-Kok S, Domingos P (2005) Learning the structure of Markov Logic Networks. In:
+/* Sample example for performing inference on hierachical probabilistic logic program. 
+The program is inspired from UWCSE dataset from Kok S, Domingos P (2005) 
+Learning the structure of Markov Logic Networks. In:
 Proceedings of the 22nd international conference on Machine learning, ACM, pp
 441-448
+
+
+      Arnaud Nguembang Fadja and Fabrizio Riguzzi. 
+      Hierachical probabilistic logic programs
 */
 
 
 /** <examples>
-?- inference_hplp(advisedby(harry, ben),ai,Prob).
-?- inference_hplp(advisedby(harry, ben),ai,Prob,Circuit).
+?- inference_hplp(advisedby(harry, ben),ai,Prob).  % Prob contains the probability that harry is advised by ben in the ai interpretation
+?- inference_hplp(advisedby(harry, ben),ai,Prob,Circuit). % Same as the previous query but also returns in Circuit a term representing the arithmetic circuit
 */
 
 
@@ -21,41 +26,8 @@ Proceedings of the 22nd international conference on Machine learning, ACM, pp
 :- phil.
 
 :- set_hplp(verbosity, 1).
-% Structure learning settings
-:- set_hplp(megaex_bottom, 10). % max number of mega examples to considered in the generation of bottoms clauses
-:- set_hplp(initial_clauses_per_megaex, 1).
-:- set_hplp(rate, 1.0). % defines the probabilityu for going from the first layer to the second layer
-:- set_hplp(max_layer, -1). % Define the max number of layer: -1 for the maximum depth possible 
-:- set_hplp(min_probability, 1.0e-5).  % threshold value of the probability under which a clauses is dropped out
-
-% Parameter learning settings
-:- set_hplp(algorithmType, dphil). % parameter learning algorithm dphil or emphil
-% Maximun iteration and other stop conditions.
-:- set_hplp(maxIter_phil, 1000).  
-:- set_hplp(epsilon_deep, 0.0001). 
-:- set_hplp(epsilon_deep_fraction, 1.0e-5).
-:- set_hplp(useInitParams, yes).
-
-% regularization parameters 
-:- set_hplp(regularized, no). % yes to enable regularization and no otherwise 
-:- set_hplp(regularizationType, 2). % 1 for L1, 2 for L2 and 3 for L3. L3 available only for emphil
-:- set_hplp(gamma, 10). % regularization strength
-:- set_hplp(gammaCount, 0). 
-
-% Adam parameter for dphil algorithm
-:- set_hplp(adam_params, [0.1, 0.9, 0.999, 1.0e-8]). % adam(Eta,Beta1,Beta2,Epsilon_adam_hat)
-% Gradient descent strategy and the corresponding batch size
-:- set_hplp(batch_strategy, minibatch(50)).
-%:- set_hplp(batch_strategy,stoch_minibatch(10)).
-%:- set_hplp(batch_strategy,batch).
 
 
-
-start:-
-    inference_hplp(advisedby(harry, ben),ai,Prob),
-    writeln(Prob).
-    %writeln(Circuit).
-  
 bg([]).
 
 :- begin_in.
@@ -89,29 +61,8 @@ input(taughtby/2).
 input(ta/2).
 
 
-determination(advisedby/2, professor/1).
-determination(advisedby/2, student/1).
-determination(advisedby/2, publication/3).
-determination(advisedby/2, taughtby/2).
-determination(advisedby/2, ta/2).
-determination(advisedby/2, project/2).
 
-modeh(*, advisedby(+person, +person)).
-
-
-modeb(*, publication(-title, +person, +project)).
-%modeb(*, publication(+title, -person, +project)).
-modeb(*, project(+person,-project)).
-%modeb(*, project(-person, +project)).
-modeb(*, professor(+person)).
-modeb(*, student(+person)).
-modeb(*, taughtby(-course, +person)).
-%modeb(*, taughtby(+course, -person)).
-modeb(*, ta(-course, +person)).
-%modeb(*, ta(-course, +person)).
-
-
-% data
+% data in model format
 begin(model(ai)).
 student(harry).
 professor(ben).

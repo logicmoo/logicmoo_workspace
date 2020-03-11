@@ -29,9 +29,11 @@ test_inf:-
 
 inf([uwcsekeys]).
 
+stru([bongard]). 
+
 par([bongard,bongardkeys]).
 
-stru([bongard]).
+
 
 
 
@@ -77,7 +79,7 @@ induce_hplp_par([train],P),
 writeln('Result:'),
 writeln(P),
 writeln('Expected:'),
-writeln([(pos:0.18175243160838334:-circle(_218), in(_222, _218)),  (pos:0.1650748334232293:-circle(_218), triangle(_222)),  (pos:0.15476016853764582:-triangle(_218), circle(_222))]).
+writeln([(pos:0.17765741024654796:-circle(_154),in(_158,_154)),(pos:0.09591918413587362:-circle(_154),triangle(_158)),(pos:0.12036384245667597:-triangle(_154),circle(_158))]).
 
 test(induce_hplp):-
 induce_hplp([all],P),test_hplp(P,[all],LL,AUCROC,_ROC,AUCPR,_PR),
@@ -86,10 +88,10 @@ writeln(P),
 atomic_list_concat(['\nLL=',LL,'\nAUCROC=',AUCROC,'\nAUCPR=',AUCPR,'\n'],St),
 writeln(St),
 atomic_list_concat(['Expected:\nP =',
-"[(pos:0.18636350341727298:-triangle(_1270),hidden_1(_1270)),(pos:0.7758937037724625:-triangle(_1272),hidden_2(_1272)),(pos:0.1263338461486964:-triangle(_1274)),(pos:0.00080673464681263:-circle(_1276)),(pos:0.49867916038619536:-triangle(_1324),hidden_3(_1324)),(pos:0.14484825047873356:-triangle(_1326),hidden_4(_1326)),(pos:0.6280341043666394:-triangle(_1328),hidden_5(_1328)),(pos:1.7716167242270878e-6:-square(_1332)),(pos:0.384444724632718:-triangle(_1394),hidden_6(_1394)),(pos:0.6294782571470092:-triangle(_1396),hidden_7(_1396)),(pos:0.839536566838233:-triangle(_1400),hidden_8(_1400)),(hidden_1(_1270):0.07350824866516653:-in(_1276,_1270)),(hidden_1(_1270):0.022599380350125244:-config(_1270,down)),(hidden_2(_1272):0.9986985576673145:-in(_1274,_1272),hidden_2_1(_1274,_1272)),(hidden_2(_1272):0.09926469967818095:-config(_1272,down)),(hidden_3(_1324):0.6897147989831:-in(_1324,_1334)),(hidden_3(_1324):0.090282456674903:-config(_1324,up)),(hidden_4(_1326):0.06108838636370634:-in(_1332,_1326)),(hidden_4(_1326):0.05886657005662841:-config(_1326,down)),(hidden_5(_1328):0.9990776694316461:-in(_1330,_1328),hidden_5_1(_1330,_1328)),(hidden_5(_1328):0.10600474430922273:-config(_1328,down)),(hidden_6(_1394):0.7409218713027834:-in(_1394,_1404)),(hidden_6(_1394):0.030297234989035332:-config(_1394,down)),(hidden_7(_1396):0.9990559405379036:-in(_1398,_1396),hidden_7_1(_1398,_1396)),(hidden_7(_1396):0.1038592859990984:-config(_1396,down)),(hidden_8(_1400):0.997541800088097:-in(_1402,_1400),hidden_8_1(_1402,_1400)),(hidden_8(_1400):0.1207652318716478:-config(_1400,up)),(hidden_2_1(_1274,_1272):0.5003261442441411:-config(_1274,down)),(hidden_5_1(_1330,_1328):0.500230929703047:-config(_1330,down)),(hidden_7_1(_1398,_1396):0.5002363274533916:-config(_1398,up)),(hidden_8_1(_1402,_1400):0.5006173467273577:-config(_1402,up))]",
-'\nLL =', -90.8925,
-'\nAUCROC =', 0.893997,
-'\nAUCPR =', 0.855815],St1),
+"[(pos:0.16270851085553845:-triangle(_136),hidden_1(_136)),(pos:0.4474931750444961:-triangle(_138),hidden_2(_138)),(pos:0.19806104560889168:-triangle(_140)),(pos:0.008787147207427997:-circle(_142)),(pos:0.3152720388399355:-triangle(_190),hidden_3(_190)),(pos:0.1640712959029497:-triangle(_192),hidden_4(_192)),(pos:0.44963975957404595:-triangle(_194),hidden_5(_194)),(pos:0.0039465760210714304:-square(_198)),(pos:0.2920280586393367:-triangle(_260),hidden_6(_260)),(pos:0.19200732087999292:-triangle(_262),hidden_7(_262)),(pos:0.0662228340227013:-square(_264),hidden_8(_264)),(hidden_1(_136):0.0006472774266847546:-in(_142,_136)),(hidden_1(_136):0.10926826869890274:-config(_136,down)),(hidden_2(_138):0.9992263430007895:-in(_140,_138),hidden_2_1(_140,_138)),(hidden_2(_138):0.10089008831781142:-config(_138,down)),(hidden_3(_190):0.7151752015444297:-in(_190,_200)),(hidden_3(_190):0.08494521335770758:-config(_190,up)),(hidden_4(_192):0.002790690870336442:-in(_198,_192)),(hidden_4(_192):0.14285926057566703:-config(_192,down)),(hidden_5(_194):0.9989916404526972:-in(_196,_194),hidden_5_1(_196,_194)),(hidden_5(_194):0.10788242443608247:-config(_194,down)),(hidden_6(_260):0.6580622914189234:-in(_260,_266)),(hidden_6(_260):0.08473152062711986:-config(_260,up)),(hidden_7(_262):0.0315840554855127:-config(_262,up)),(hidden_8(_264):7.584182782736883e-14:-in(_264,_268)),(hidden_2_1(_140,_138):0.5001937079404949:-config(_140,down)),(hidden_5_1(_196,_194):0.500252470981427:-config(_196,down))]",
+'\nLL =', -161.40547689883218,
+'\nAUCROC =', 0.9127012310606061,
+'\nAUCPR =', 0.8673603662785241],St1),
 writeln(St1).
 
 :- end_tests(bongard).
@@ -109,16 +111,18 @@ writeln(P),
 atomic_list_concat(['\nLL=',LL,'\nAUCROC=',AUCROC,'\nAUCPR=',AUCPR,'\n'],St),
 writeln(St),
 atomic_list_concat(['Expected:\nP =', "[(pos:0.197575:-circle(_1680),in(_1684, _1680)), (pos:0.000303421:-circle(_1680),triangle(_1684)), (pos:0.000448807:-triangle(_556),circle(_560))]",
-'\nLL =', -250.33054186204927,
-'\nAUCROC =',0.7626436781609195,
-'\nAUCPR =', 0.5615465293941269],St1),
+'\nLL =', -709.4598740769318,
+'\nAUCROC =',0.6783558238636364,
+'\nAUCPR =', 0.5157498267172048],St1),
 writeln(St1).
 
-test(induce_par):-
+/*
+test(induce_hplp_par):-
   induce_hplp_par([train],P),
   writeln('Result:'),
   writeln(P),
   writeln('Expected:'),
-  writeln([(pos:0.18175243160838334:-circle(_218), in(_222, _218)),  (pos:0.1650748334232293:-circle(_218), triangle(_222)),  (pos:0.15476016853764582:-triangle(_218), circle(_222))]).
+  writeln([(pos:0.17765741024654796:-circle(_3598),in(_3602,_3598)),(pos:0.09591918413587362:-circle(_3598),triangle(_3602)),(pos:0.12036384245667597:-triangle(_3598),circle(_3602))]).
+*/
 :- end_tests(bongardkeys).
 
