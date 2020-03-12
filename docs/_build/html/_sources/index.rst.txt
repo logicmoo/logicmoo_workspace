@@ -575,7 +575,7 @@ The :code:`pack/phil/docs` folder contains this manual in latex, html and pdf.
 
 Manual in PDF
 ==================
-A PDF version of the manual is available at `https://github.com/ArnaudFadja/phil/_build/latex/phil.pdf <https://github.com/ArnaudFadja/phil/_build/latex/phil.pdf>`_.
+A PDF version of the manual is available at `https://arnaudfadja.github.io/phil/_build/latex/phil.pdf <https://arnaudfadja.github.io/phil/_build/latex/phil.pdf>`_.
 
 License
 =======
