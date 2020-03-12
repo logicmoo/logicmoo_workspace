@@ -56,9 +56,11 @@ collect_dependencies(FileD, DepsL) :-
               findall(LoadedIn,
                       ( '$load_context_module'(File, LoadedIn, _),
                         \+ skip_module(LoadedIn)
-                      ), LoadedInL),
+                      ), LoadedInU),
+              sort(LoadedInU, LoadedInL),
               LoadedInL \= []
-           ), DepsL).
+            ), DepsU),
+    sort(DepsU, DepsL).
 
 module_loops([]) --> [].
 module_loops([Module-LoadedInL|DepsL1]) -->
