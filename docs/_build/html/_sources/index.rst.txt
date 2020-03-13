@@ -103,7 +103,7 @@ stands for::
 
     h:1 :- Body.
 
-The following example inspired from the UWCSE dataset used in :cite:`kok2005learning` is represented as (file `uwcse.pl <http://cplint.eu/example/phil/uwcse.pl>`__) ::
+The following example inspired from the UWCSE dataset used in :cite:`kok2005learning` is represented as (file `uwcse.pl <http://cplint.eu/e/phil/uwcse.pl>`__) ::
 
    advisedby(A,B):0.3 :-student(A),professor(B),project(A,C),project(B,C),hid_1(A,B,C).
    advisedby(A,B):0.6 :-student(A),professor(B),ta(C,A),taughtby(C,B).
@@ -143,7 +143,7 @@ phil answers queries using the module phil. It performs exact inference using a 
 
 
 For answering queries, you have to prepare a Prolog file where you first load the inference module :code:`phil`, initialize it with the directive :code:`:- phil` and then enclose the hierarchical program clauses in :code:`:-begin_in.` and :code:`:-end_in.` or enclose the clauses in :code:`in([<clauses>])`. 
-For example, the uwcse program above can be stored in `uwcse.pl <http://cplint.eu/example/phil/uwcse.pl>`__ for performing inference with :code:`phil` as follows ::
+For example, the uwcse program above can be stored in `uwcse.pl <http://cplint.eu/e/phil/uwcse.pl>`__ for performing inference with :code:`phil` as follows ::
 
     :- use_module(library(phil)).
     :- phil.
@@ -170,7 +170,7 @@ For example, the uwcse program above can be stored in `uwcse.pl <http://cplint.e
 You can also have (non-probabilistic) clauses outside :code:`:-begin/end_in.` which can be enclosed in :code:`bg(<list of terms representing clauses>).` 
 These are considered as database clauses. 
 
-To run a query, you can simply load the Prolog file, for example `uwcse.pl <http://cplint.eu/example/phil/uwcse.pl>`_, as::
+To run a query, you can simply load the Prolog file, for example `uwcse.pl <http://cplint.eu/e/phil/uwcse.pl>`_, as::
 
 	?- [uwcse].
 
@@ -214,12 +214,12 @@ To execute the learning algorithms, prepare a Prolog file divided in five parts
 
 The preamble must come first, the order of the other parts can be changed.
 
-For example, consider the Bongard problems of :cite:`RaeLae95-ALT95`. `bongard.pl <http://cplint.eu/example/phil/bongard.pl>`__ and `bongardkeys.pl <http://cplint.eu/example/phil/bongardkeys.pl>`__ represent a Bongard problem for SLEAHP. 
+For example, consider the Bongard problems of :cite:`RaeLae95-ALT95`. `bongard.pl <http://cplint.eu/e/phil/bongard.pl>`__ and `bongardkeys.pl <http://cplint.eu/e/phil/bongardkeys.pl>`__ represent a Bongard problem for SLEAHP. 
 
 
 Preamble
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In the preamble, the PHIL library is loaded with (`bongard.pl <http://cplint.eu/example/phil/bongard.pl>`__): ::
+In the preamble, the PHIL library is loaded with (`bongard.pl <http://cplint.eu/e/phil/bongard.pl>`__): ::
 
 	:- use_module(library(phil)).
 
@@ -253,7 +253,7 @@ Moreover, you can specify an initial program with a fact of the form ::
 The initial program is used in parameter learning for providing the structure. 
 Remember to enclose each clause in parentheses because :code:`:-` has the highest precedence.
 
-For example, `bongard.pl <http://phil.eu/e/bongard.pl>`__ has the initial program ::
+For example, `bongard.pl <http://cplint.eu/e/bongard.pl>`__ has the initial program ::
 	
     in([(pos:0.197575 :-
        circle(A),
@@ -415,13 +415,13 @@ The above interpretation in the keys modality is ::
 	triangle(2,o1).
 	config(2,o1,up).
 
-which is contained in the `bongardkeys.pl <http://cplint.eu/example/phil/bongardkeys.pl>`_. 
+which is contained in the `bongardkeys.pl <http://cplint.eu/e/phil/bongardkeys.pl>`_. 
 This is also how model :code:`2` above is stored in SWI-Prolog database. 
 The two modalities, models and keys, can be mixed in the same file. 
 Facts for :code:`int/1` are not asserted for interpretations in the key modality but can be added by the user explicitly.
 
 Note that you can add background knowledge that is not probabilistic directly to the file writing clauses taking into account the model argument. 
-For example (:code:`carc.pl`) contains ::
+For example (:code:`carc.pl`), available in `phil_datasets <https://github.com/ArnaudFadja/phil_datasets>`_, contains ::
 
 	connected(_M,Ring1,Ring2):-
 		Ring1 \= Ring2,
@@ -465,7 +465,7 @@ To execute PHIL, prepare an input file as indicated above and call ::
 
 where :code:`<list of folds>` is a list of the folds for training and :code:`P` will contain the input program with updated parameters.
 
-For example `bongard.pl <http://cplint.eu/example/phil/bongard.pl>`__, you can perform parameter learning on the :code:`train` fold with ::
+For example `bongard.pl <http://cplint.eu/e/phil/bongard.pl>`__, you can perform parameter learning on the :code:`train` fold with ::
 
 	?- induce_hplp_par([train],P).
 
@@ -477,7 +477,7 @@ To execute SLEAHP, prepare an input file in the editor panel as indicated above 
 
 where :code:`List_of_folds` is a list of the folds for training and :code:`P` will contain the learned program.
 
-For example `bongard.pl <http://cplint.eu/example/phil/bongard.pl>`__, you can perform structure learning on the :code:`train` fold with ::
+For example `bongard.pl <http://cplint.eu/e/phil/bongard.pl>`__, you can perform structure learning on the :code:`train` fold with ::
 
 	?- induce_hplp([train],P).
 

@@ -136,7 +136,7 @@ the form of a normal prolog clause, i.e.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">h</span><span class="p">:</span><span class="mi">1</span> <span class="p">:</span><span class="o">-</span> <span class="n">Body</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>The following example inspired from the UWCSE dataset used in <a class="reference internal" href="#kok2005learning" id="id5">[KD05]</a> is represented as (file <a class="reference external" href="http://cplint.eu/example/phil/uwcse.pl">uwcse.pl</a>)</p>
+<p>The following example inspired from the UWCSE dataset used in <a class="reference internal" href="#kok2005learning" id="id5">[KD05]</a> is represented as (file <a class="reference external" href="http://cplint.eu/e/phil/uwcse.pl">uwcse.pl</a>)</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">advisedby</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">):</span><span class="mf">0.3</span> <span class="p">:</span><span class="o">-</span><span class="n">student</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">professor</span><span class="p">(</span><span class="n">B</span><span class="p">),</span><span class="n">project</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">C</span><span class="p">),</span><span class="n">project</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">),</span><span class="n">hid_1</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">)</span><span class="o">.</span>
 <span class="n">advisedby</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">):</span><span class="mf">0.6</span> <span class="p">:</span><span class="o">-</span><span class="n">student</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">professor</span><span class="p">(</span><span class="n">B</span><span class="p">),</span><span class="n">ta</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="n">A</span><span class="p">),</span><span class="n">taughtby</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="n">B</span><span class="p">)</span><span class="o">.</span>
 <span class="n">hid_1</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">):</span> <span class="mf">0.2</span> <span class="p">:</span><span class="o">-</span> <span class="n">publication</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">C</span><span class="p">),</span><span class="n">publication</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">)</span><span class="o">.</span>
@@ -170,7 +170,7 @@ The probability of a ground atom (the query) is given by the sum of the probabil
 <h2>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">¶</a></h2>
 <p>phil answers queries using the module phil. It performs exact inference using a program transformation technique.  Each program is converted to a set of arithmetic circuits (ACs) or deep neural networks using a modified version of PITA <a class="reference internal" href="#rig14-cj-ij" id="id8">[Rig14]</a> with tabling and answer subsumption <a class="reference internal" href="#rigswi10-iclp10-ic" id="id9">[RS10]</a> as described in <a class="reference internal" href="#ngulamrig17-plp-iw" id="id10">[NguembangFadjaLR17]</a>.</p>
 <p>For answering queries, you have to prepare a Prolog file where you first load the inference module <code class="code docutils literal"><span class="pre">phil</span></code>, initialize it with the directive <code class="code docutils literal"><span class="pre">:-</span> <span class="pre">phil</span></code> and then enclose the hierarchical program clauses in <code class="code docutils literal"><span class="pre">:-begin_in.</span></code> and <code class="code docutils literal"><span class="pre">:-end_in.</span></code> or enclose the clauses in <code class="code docutils literal"><span class="pre">in([&lt;clauses&gt;])</span></code>.
-For example, the uwcse program above can be stored in <a class="reference external" href="http://cplint.eu/example/phil/uwcse.pl">uwcse.pl</a> for performing inference with <code class="code docutils literal"><span class="pre">phil</span></code> as follows</p>
+For example, the uwcse program above can be stored in <a class="reference external" href="http://cplint.eu/e/phil/uwcse.pl">uwcse.pl</a> for performing inference with <code class="code docutils literal"><span class="pre">phil</span></code> as follows</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">:</span><span class="o">-</span> <span class="n">use_module</span><span class="p">(</span><span class="n">library</span><span class="p">(</span><span class="n">phil</span><span class="p">))</span><span class="o">.</span>
 <span class="p">:</span><span class="o">-</span> <span class="n">phil</span><span class="o">.</span>
 
@@ -195,7 +195,7 @@ For example, the uwcse program above can be stored in <a class="reference extern
 </div>
 <p>You can also have (non-probabilistic) clauses outside <code class="code docutils literal"><span class="pre">:-begin/end_in.</span></code> which can be enclosed in <code class="code docutils literal"><span class="pre">bg(&lt;list</span> <span class="pre">of</span> <span class="pre">terms</span> <span class="pre">representing</span> <span class="pre">clauses&gt;).</span></code>
 These are considered as database clauses.</p>
-<p>To run a query, you can simply load the Prolog file, for example <a class="reference external" href="http://cplint.eu/example/phil/uwcse.pl">uwcse.pl</a>, as:</p>
+<p>To run a query, you can simply load the Prolog file, for example <a class="reference external" href="http://cplint.eu/e/phil/uwcse.pl">uwcse.pl</a>, as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>?- [uwcse].
 </pre></div>
 </div>
@@ -239,10 +239,10 @@ These are considered as database clauses.</p>
 <li>example interpretations</li>
 </ul>
 <p>The preamble must come first, the order of the other parts can be changed.</p>
-<p>For example, consider the Bongard problems of <a class="reference internal" href="#raelae95-alt95" id="id13">[DRVL95]</a>. <a class="reference external" href="http://cplint.eu/example/phil/bongard.pl">bongard.pl</a> and <a class="reference external" href="http://cplint.eu/example/phil/bongardkeys.pl">bongardkeys.pl</a> represent a Bongard problem for SLEAHP.</p>
+<p>For example, consider the Bongard problems of <a class="reference internal" href="#raelae95-alt95" id="id13">[DRVL95]</a>. <a class="reference external" href="http://cplint.eu/e/phil/bongard.pl">bongard.pl</a> and <a class="reference external" href="http://cplint.eu/e/phil/bongardkeys.pl">bongardkeys.pl</a> represent a Bongard problem for SLEAHP.</p>
 <div class="section" id="preamble">
 <h4>Preamble<a class="headerlink" href="#preamble" title="Permalink to this headline">¶</a></h4>
-<p>In the preamble, the PHIL library is loaded with (<a class="reference external" href="http://cplint.eu/example/phil/bongard.pl">bongard.pl</a>):</p>
+<p>In the preamble, the PHIL library is loaded with (<a class="reference external" href="http://cplint.eu/e/phil/bongard.pl">bongard.pl</a>):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">:</span><span class="o">-</span> <span class="n">use_module</span><span class="p">(</span><span class="n">library</span><span class="p">(</span><span class="n">phil</span><span class="p">))</span><span class="o">.</span>
 </pre></div>
 </div>
@@ -274,7 +274,7 @@ Moreover, you can specify an initial program with a fact of the form</p>
 </div>
 <p>The initial program is used in parameter learning for providing the structure.
 Remember to enclose each clause in parentheses because <code class="code docutils literal"><span class="pre">:-</span></code> has the highest precedence.</p>
-<p>For example, <a class="reference external" href="http://phil.eu/e/bongard.pl">bongard.pl</a> has the initial program</p>
+<p>For example, <a class="reference external" href="http://cplint.eu/e/bongard.pl">bongard.pl</a> has the initial program</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="ow">in</span><span class="p">([(</span><span class="n">pos</span><span class="p">:</span><span class="mf">0.197575</span> <span class="p">:</span><span class="o">-</span>
    <span class="n">circle</span><span class="p">(</span><span class="n">A</span><span class="p">),</span>
    <span class="ow">in</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)),</span>
@@ -422,12 +422,12 @@ The above interpretation in the keys modality is</p>
 <span class="n">config</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">o1</span><span class="p">,</span><span class="n">up</span><span class="p">)</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>which is contained in the <a class="reference external" href="http://cplint.eu/example/phil/bongardkeys.pl">bongardkeys.pl</a>.
+<p>which is contained in the <a class="reference external" href="http://cplint.eu/e/phil/bongardkeys.pl">bongardkeys.pl</a>.
 This is also how model <code class="code docutils literal"><span class="pre">2</span></code> above is stored in SWI-Prolog database.
 The two modalities, models and keys, can be mixed in the same file.
 Facts for <code class="code docutils literal"><span class="pre">int/1</span></code> are not asserted for interpretations in the key modality but can be added by the user explicitly.</p>
 <p>Note that you can add background knowledge that is not probabilistic directly to the file writing clauses taking into account the model argument.
-For example (<code class="code docutils literal"><span class="pre">carc.pl</span></code>) contains</p>
+For example (<code class="code docutils literal"><span class="pre">carc.pl</span></code>), available in <a class="reference external" href="https://github.com/ArnaudFadja/phil_datasets">phil_datasets</a>, contains</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>connected(_M,Ring1,Ring2):-
         Ring1 \= Ring2,
         member(A,Ring1),
@@ -469,7 +469,7 @@ If <code class="code docutils literal"><span class="pre">List</span></code> has 
 </pre></div>
 </div>
 <p>where <code class="code docutils literal"><span class="pre">&lt;list</span> <span class="pre">of</span> <span class="pre">folds&gt;</span></code> is a list of the folds for training and <code class="code docutils literal"><span class="pre">P</span></code> will contain the input program with updated parameters.</p>
-<p>For example <a class="reference external" href="http://cplint.eu/example/phil/bongard.pl">bongard.pl</a>, you can perform parameter learning on the <code class="code docutils literal"><span class="pre">train</span></code> fold with</p>
+<p>For example <a class="reference external" href="http://cplint.eu/e/phil/bongard.pl">bongard.pl</a>, you can perform parameter learning on the <code class="code docutils literal"><span class="pre">train</span></code> fold with</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>?- induce_hplp_par([train],P).
 </pre></div>
 </div>
@@ -481,7 +481,7 @@ If <code class="code docutils literal"><span class="pre">List</span></code> has 
 </pre></div>
 </div>
 <p>where <code class="code docutils literal"><span class="pre">List_of_folds</span></code> is a list of the folds for training and <code class="code docutils literal"><span class="pre">P</span></code> will contain the learned program.</p>
-<p>For example <a class="reference external" href="http://cplint.eu/example/phil/bongard.pl">bongard.pl</a>, you can perform structure learning on the <code class="code docutils literal"><span class="pre">train</span></code> fold with</p>
+<p>For example <a class="reference external" href="http://cplint.eu/e/phil/bongard.pl">bongard.pl</a>, you can perform structure learning on the <code class="code docutils literal"><span class="pre">train</span></code> fold with</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>?- induce_hplp([train],P).
 </pre></div>
 </div>

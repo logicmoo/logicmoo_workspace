@@ -1103,7 +1103,8 @@ reduce(_ACC,[],_Count,Rule,Rule):-!.
 reduce(Acc,[Rule2|RestRule],Count,RuleCur,Rule):-
   (Rule2=rule(_Num,_Head,[_Body1,_Body2],_Val) ->
      %R=rule(Count,Head,[Body1,Body2],Val),
-     append(RuleCur,[Rule2],RuleCur1),
+     copy_term(Rule2, Rule2_copy),
+     append(RuleCur,[Rule2_copy],RuleCur1),
      %append(RuleCur,[R],RuleCur1),
      Count1 is Count+1,
      reduce(Acc,RestRule,Count1,RuleCur1,Rule)
@@ -1117,7 +1118,8 @@ reduce(Acc,[Rule2|RestRule],Count,RuleCur,Rule):-
     ;
        append(Acc,[New],AccNew),
        %R=rule(Count,[Head1,Head2],[Pred2],Val),
-       append(RuleCur,[Rule2],RuleCur1),
+       copy_term(Rule2, Rule2_copy),
+       append(RuleCur,[Rule2_copy],RuleCur1),
        Count1 is Count+1,
        reduce(AccNew,RestRule,Count1,RuleCur1,Rule)
     )

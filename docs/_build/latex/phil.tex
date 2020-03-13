@@ -54,7 +54,7 @@
 
 
 \title{phil Documentation}
-\date{Mar 12, 2020}
+\date{Mar 13, 2020}
 \release{1.0.0}
 \author{Arnaud Nguembang Fadja, Fabrizio Riguzzi}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -70,7 +70,7 @@
 
 
 \chapter{Introduction}
-\label{\detokenize{index:phil-on-swish-manual-swi-prolog-version}}\label{\detokenize{index:introduction}}
+\label{\detokenize{index:introduction}}\label{\detokenize{index:phil-on-swish-manual-swi-prolog-version}}
 phil is a suite of programs for reasoning with hierarchical probabilistic logic programs (HPLP) \phantomsection\label{\detokenize{index:id1}}{\hyperref[\detokenize{index:ngulamrig17-plp-iw}]{\sphinxcrossref{{[}NguembangFadjaLR17{]}}}}.
 It allows both inference and learning. phil is available only for SWI-Prolog.
 
@@ -195,7 +195,7 @@ stands for:
 \PYG{n}{h}\PYG{p}{:}\PYG{l+m+mi}{1} \PYG{p}{:}\PYG{o}{\PYGZhy{}} \PYG{n}{Body}\PYG{o}{.}
 \end{sphinxVerbatim}
 
-The following example inspired from the UWCSE dataset used in \phantomsection\label{\detokenize{index:id5}}{\hyperref[\detokenize{index:kok2005learning}]{\sphinxcrossref{{[}KD05{]}}}} is represented as (file \sphinxhref{http://cplint.eu/example/phil/uwcse.pl}{uwcse.pl})
+The following example inspired from the UWCSE dataset used in \phantomsection\label{\detokenize{index:id5}}{\hyperref[\detokenize{index:kok2005learning}]{\sphinxcrossref{{[}KD05{]}}}} is represented as (file \sphinxhref{http://cplint.eu/e/phil/uwcse.pl}{uwcse.pl})
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -238,7 +238,7 @@ If the HPLP contains function symbols, the definition is more complex, see \phan
 phil answers queries using the module phil. It performs exact inference using a program transformation technique.  Each program is converted to a set of arithmetic circuits (ACs) or deep neural networks using a modified version of PITA \phantomsection\label{\detokenize{index:id8}}{\hyperref[\detokenize{index:rig14-cj-ij}]{\sphinxcrossref{{[}Rig14{]}}}} with tabling and answer subsumption \phantomsection\label{\detokenize{index:id9}}{\hyperref[\detokenize{index:rigswi10-iclp10-ic}]{\sphinxcrossref{{[}RS10{]}}}} as described in \phantomsection\label{\detokenize{index:id10}}{\hyperref[\detokenize{index:ngulamrig17-plp-iw}]{\sphinxcrossref{{[}NguembangFadjaLR17{]}}}}.
 
 For answering queries, you have to prepare a Prolog file where you first load the inference module \sphinxcode{phil}, initialize it with the directive \sphinxcode{:- phil} and then enclose the hierarchical program clauses in \sphinxcode{:-begin\_in.} and \sphinxcode{:-end\_in.} or enclose the clauses in \sphinxcode{in({[}\textless{}clauses\textgreater{}{]})}.
-For example, the uwcse program above can be stored in \sphinxhref{http://cplint.eu/example/phil/uwcse.pl}{uwcse.pl} for performing inference with \sphinxcode{phil} as follows
+For example, the uwcse program above can be stored in \sphinxhref{http://cplint.eu/e/phil/uwcse.pl}{uwcse.pl} for performing inference with \sphinxcode{phil} as follows
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -267,7 +267,7 @@ For example, the uwcse program above can be stored in \sphinxhref{http://cplint.
 You can also have (non-probabilistic) clauses outside \sphinxcode{:-begin/end\_in.} which can be enclosed in \sphinxcode{bg(\textless{}list of terms representing clauses\textgreater{}).}
 These are considered as database clauses.
 
-To run a query, you can simply load the Prolog file, for example \sphinxhref{http://cplint.eu/example/phil/uwcse.pl}{uwcse.pl}, as:
+To run a query, you can simply load the Prolog file, for example \sphinxhref{http://cplint.eu/e/phil/uwcse.pl}{uwcse.pl}, as:
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -342,12 +342,12 @@ example interpretations
 
 The preamble must come first, the order of the other parts can be changed.
 
-For example, consider the Bongard problems of \phantomsection\label{\detokenize{index:id13}}{\hyperref[\detokenize{index:raelae95-alt95}]{\sphinxcrossref{{[}DRVL95{]}}}}. \sphinxhref{http://cplint.eu/example/phil/bongard.pl}{bongard.pl} and \sphinxhref{http://cplint.eu/example/phil/bongardkeys.pl}{bongardkeys.pl} represent a Bongard problem for SLEAHP.
+For example, consider the Bongard problems of \phantomsection\label{\detokenize{index:id13}}{\hyperref[\detokenize{index:raelae95-alt95}]{\sphinxcrossref{{[}DRVL95{]}}}}. \sphinxhref{http://cplint.eu/e/phil/bongard.pl}{bongard.pl} and \sphinxhref{http://cplint.eu/e/phil/bongardkeys.pl}{bongardkeys.pl} represent a Bongard problem for SLEAHP.
 
 
 \subsection{Preamble}
 \label{\detokenize{index:preamble}}
-In the preamble, the PHIL library is loaded with (\sphinxhref{http://cplint.eu/example/phil/bongard.pl}{bongard.pl}):
+In the preamble, the PHIL library is loaded with (\sphinxhref{http://cplint.eu/e/phil/bongard.pl}{bongard.pl}):
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -396,7 +396,7 @@ Moreover, you can specify an initial program with a fact of the form
 The initial program is used in parameter learning for providing the structure.
 Remember to enclose each clause in parentheses because \sphinxcode{:-} has the highest precedence.
 
-For example, \sphinxhref{http://phil.eu/e/bongard.pl}{bongard.pl} has the initial program
+For example, \sphinxhref{http://cplint.eu/e/bongard.pl}{bongard.pl} has the initial program
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -598,13 +598,13 @@ The above interpretation in the keys modality is
 \PYG{n}{config}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{n}{o1}\PYG{p}{,}\PYG{n}{up}\PYG{p}{)}\PYG{o}{.}
 \end{sphinxVerbatim}
 
-which is contained in the \sphinxhref{http://cplint.eu/example/phil/bongardkeys.pl}{bongardkeys.pl}.
+which is contained in the \sphinxhref{http://cplint.eu/e/phil/bongardkeys.pl}{bongardkeys.pl}.
 This is also how model \sphinxcode{2} above is stored in SWI-Prolog database.
 The two modalities, models and keys, can be mixed in the same file.
 Facts for \sphinxcode{int/1} are not asserted for interpretations in the key modality but can be added by the user explicitly.
 
 Note that you can add background knowledge that is not probabilistic directly to the file writing clauses taking into account the model argument.
-For example (\sphinxcode{carc.pl}) contains
+For example (\sphinxcode{carc.pl}), available in \sphinxhref{https://github.com/ArnaudFadja/phil\_datasets}{phil\_datasets}, contains
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -664,7 +664,7 @@ To execute PHIL, prepare an input file as indicated above and call
 
 where \sphinxcode{\textless{}list of folds\textgreater{}} is a list of the folds for training and \sphinxcode{P} will contain the input program with updated parameters.
 
-For example \sphinxhref{http://cplint.eu/example/phil/bongard.pl}{bongard.pl}, you can perform parameter learning on the \sphinxcode{train} fold with
+For example \sphinxhref{http://cplint.eu/e/phil/bongard.pl}{bongard.pl}, you can perform parameter learning on the \sphinxcode{train} fold with
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -683,7 +683,7 @@ To execute SLEAHP, prepare an input file in the editor panel as indicated above 
 
 where \sphinxcode{List\_of\_folds} is a list of the folds for training and \sphinxcode{P} will contain the learned program.
 
-For example \sphinxhref{http://cplint.eu/example/phil/bongard.pl}{bongard.pl}, you can perform structure learning on the \sphinxcode{train} fold with
+For example \sphinxhref{http://cplint.eu/e/phil/bongard.pl}{bongard.pl}, you can perform structure learning on the \sphinxcode{train} fold with
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
