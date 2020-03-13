@@ -8,7 +8,7 @@ This module provides algorithms for learning the structure and the parameters of
 
 /*
  HPLP: Hierarchical Probabilistic Logic Programs
- Copyright (c) 2019, Arnaud Nguembang Fadja and Fabrizio Riguzzi
+ Copyright (c) 2020, Arnaud Nguembang Fadja and Fabrizio Riguzzi
 
 */
 
@@ -417,7 +417,7 @@ induce_hplp_parameters(M:Folds,DB,R):-
   learn_params_hplp(DB,M,R0,R,Score2),
   statistics(walltime,[_,CT]),
   CTS is CT/1000,
-  format('Wall time=~f  CLL=~f ~n',[CTS,Score2]),
+  format2(M,'Wall time=~f  CLL=~f ~n',[CTS,Score2]),
   write_rules2(M,R,user_output),
   (M:bg(RBG0)->
     retract_all(ThBGRef),
@@ -727,7 +727,7 @@ induce_hplp_rules(M:Folds,R):-
   WTS is WT/1000,
   %write2(M,'\n\n'),
   format2(M,' HPLP Final score ~f~n',[CLL]),
-  format('Time=~f ~n',[WTS]),
+  format2(M,'Time=~f ~n',[WTS]),
   set_hplp(M:compiling,off),
   (M:bg(RBG0)->
     retract_all(ThBGRef),
@@ -736,21 +736,21 @@ induce_hplp_rules(M:Folds,R):-
     true
   ).
 
-writeParams(InitProb,Rate, MaxLayer,GenerateBottom):-
-  writeln("Hyper-parameters for generating the hierachical PLP \n"),
+writeParams(M,InitProb,Rate, MaxLayer,GenerateBottom):-
+  format2(M, "Hyper-parameters for generating the hierachical PLP \n \n", []),
   (GenerateBottom=yes ->
-    writeln("The initial HPLP is generated using the entire bottom clauses")
+    format2(M, "Number of bottom clauses used: all \n", [])
     ;
-    writeln("The initial HPLP is generated using the first bottom clause")
+  format2(M, "Number of bottom clauses used: one \n", [])
 
   ),
-  format('Initial Probability=~f ~n',[InitProb]),
-  format('Rate=~f ~n',[Rate]),
+  format2(M, 'Initial Probability=~f ~n',[InitProb]),
+  format2(M, 'Rate=~f ~n',[Rate]),
   Temp is -1,
   (MaxLayer=:=Temp ->
-    format('MaxLayer= no limit ~n')
+    format2(M, 'MaxLayer= no limit ~n',[])
     ;
-    format('MaxLayer=~d ~n',[MaxLayer])
+    format2(M, 'MaxLayer=~d ~n',[MaxLayer])
   ).
 
 genHPLP(M,Bottoms,HPLP):-
@@ -768,10 +768,10 @@ genHPLP(M,Bottoms,HPLP):-
   Temp is -1,
   (Max1=:=Temp ->
      MaxLayer is 2147000000,
-     writeParams(InitProb,Rate, Temp,GenerateBottom)
+     writeParams(M,InitProb,Rate, Temp,GenerateBottom)
     ;
      MaxLayer is Max1,
-     writeParams(InitProb,Rate, MaxLayer,GenerateBottom)
+     writeParams(M,InitProb,Rate, MaxLayer,GenerateBottom)
   ),
   getHead(Rule1,HeadFunctor),
   Prob is InitProb,

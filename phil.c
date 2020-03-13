@@ -6,7 +6,7 @@ using gradient descent (dphil) or Expectation Maximization (emphil).
 @author Arnaud Nguembang Fadja
 @copyright Arnaud Nguembang Fadja
  PHIL: Parameter learning for HIerarchical Probabilistic Logic programs (DPHIL and EMPHIL)
- Copyright (c) 2018, Arnaud Nguembang Fadja
+ Copyright (c) 2020, Arnaud Nguembang Fadja
 */
 
 #include <math.h>
@@ -1525,7 +1525,7 @@ void secondGrad(double a, double b, double c,double *z2)
     }
     else
     {
-      printf("\nWarming: Discriminante less than 0\n");
+      printf("\nWarming: discriminant less than 0\n");
       *z2 = -b / (2 * a);
       //*z1 = *z2;
     }
@@ -1834,9 +1834,9 @@ static foreign_t pl_dphil(term_t Nodes, term_t Params, term_t StopCond, term_t F
   // Write the trees in the file Tree.txt
   //printTrees(nodes_ex,lenNodes,"Trees.txt");
   // Print the hyperparameters of dphil
-  printCommonParamameters(EA, ER, MaxIter, lenNodes, statisticsFolder, save, seeded, seed);
-  printHyperparamsGD(Eta, Beta1, Beta2, Adam_hat, Max_W, BatchSize, strategy);
-  printRegularizedParameters(TypeReg, Gamma, GammaCount);
+  //printCommonParamameters(EA, ER, MaxIter, lenNodes, statisticsFolder, save, seeded, seed);
+  //printHyperparamsGD(Eta, Beta1, Beta2, Adam_hat, Max_W, BatchSize, strategy);
+  //printRegularizedParameters(TypeReg, Gamma, GammaCount);
 
   // Performs parameter learning with gradient descent descent// Performs parameter learning with gradient descent descent
   Probabilities = (double *)malloc(NR * sizeof(double));
@@ -1870,8 +1870,8 @@ static foreign_t pl_emphil(term_t Nodes, term_t Params, term_t RegParams, term_t
   // Write the trees a file
   //printTrees(nodes_ex,lenNodes,"Trees.txt");
   // Print the Hyperparameters
-  printCommonParamameters(EA, ER, MaxIter, lenNodes, statisticsFolder, save, seeded, seed);
-  printRegularizedParameters(TypeReg, Gamma, GammaCount);
+  //printCommonParamameters(EA, ER, MaxIter, lenNodes, statisticsFolder, save, seeded, seed);
+  //printRegularizedParameters(TypeReg, Gamma, GammaCount);
   // Performs parameter learning with EM
   CLL = emphil(nodes_ex, lenNodes, Probabilities, Expectations, Expectations0, NR, MaxIter, EA, ER, statisticsFolder, save, seeded, seed, TypeReg, Gamma, GammaCount);
   // return the CLL and the learned probabilities
