@@ -21,7 +21,7 @@
 test(histogram_r) :-
     Data=[[1]-2,[3]-5,[8]-9],
     NBins is 2,
-    histogram_r(Data,NBins).
+    histogram_r(Data,[nbins(NBins)]).
 
 test(density_r) :-
     Data=[[1]-2,[3]-5,[8]-9],
