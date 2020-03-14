@@ -101,7 +101,7 @@ find_expls(M,[ABox|_T],[C,I],E):-
 % checks if an explanations was already found (property_value version)
 find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
-  member(E,Es),
+  member(E-_,Es),
   %findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
   %not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
