@@ -18,12 +18,8 @@
 # http://www.perlfoundation.org/artistic_license_2_0.
 #
 
-test:
-	@swipl -s tests/tests.pl -g run_tests,halt -t 'halt(1)'
-
-default: all
-
-all: test
+default:
+	@echo "none."
 
 check:
 	@echo "none."
@@ -42,6 +38,6 @@ upload:
 	@echo "none."
 
 
-.PHONY: test default all check install package doc upload
+.PHONY: default all check install package doc upload
 
 
