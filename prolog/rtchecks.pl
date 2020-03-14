@@ -33,8 +33,8 @@
 */
 
 :- module(rtchecks,
-          [(rtchecked)/1,
-
+          [(rtcheck)/1,
+           unrtcheck/1,
            op(1150, fx, rtchecked)
           ]).
 
@@ -82,26 +82,25 @@ wrappers(Name/Arity) -->
     ; {Level = body}
     ).
 
-:- meta_predicate
-    rtchecked(:).
+:- meta_predicate rtcheck(:).
 
-rtchecked(PIList) :-
+rtcheck(PIList) :-
     setup_call_cleanup(
         '$set_source_module'(OldModule, M),
-        expand_term((:- rtchecked(PIList)), Clauses),
+        expand_term((:- rtcheck(PIList)), Clauses),
         '$set_source_module'(OldModule)),
-    dyn_rtchecked_list(Clauses, M).
+    dyn_rtcheck_list(Clauses, M).
 
-dyn_rtchecked_list([], _).
-dyn_rtchecked_list([H|T], M) :-
-    dyn_rtchecked(H, M),
-    dyn_rtchecked_list(T, M).
+dyn_rtcheck_list([], _).
+dyn_rtcheck_list([H|T], M) :-
+    dyn_rtcheck(H, M),
+    dyn_rtcheck_list(T, M).
 
-dyn_rtchecked(M:Clause, _) :-
-    dyn_rtchecked(Clause, M).
-dyn_rtchecked(:- Decl, M) :-
-    dyn_rtchecked_decl(Decl, M).
-dyn_rtchecked('$rtchecked'(Head, TLevel), M) :-
+dyn_rtcheck(M:Clause, _) :-
+    dyn_rtcheck(Clause, M).
+dyn_rtcheck(:- Decl, M) :-
+    dyn_rtcheck_decl(Decl, M).
+dyn_rtcheck('$rtchecked'(Head, TLevel), M) :-
     (   clause(M:'$rtchecked'(Head, OLevel), true, Ref),
         (   OLevel \== TLevel
         ->  erase(Ref),
@@ -112,35 +111,35 @@ dyn_rtchecked('$rtchecked'(Head, TLevel), M) :-
     ;   assertz(M:'$rtchecked'(Head, TLevel))
     ).
 
-dyn_rtchecked_decl((discontiguous '$rtchecked'/2), M) :-
+dyn_rtcheck_decl((discontiguous '$rtchecked'/2), M) :-
     discontiguous(M:'$rtchecked'/2),
     dynamic(M:'$rtchecked'/2).
-dyn_rtchecked_decl((public '$rtchecked'/2), M) :-
+dyn_rtcheck_decl((public '$rtchecked'/2), M) :-
     public(M:'$rtchecked'/2).
-dyn_rtchecked_decl((initialization(Wrap, now)), M) :-
+dyn_rtcheck_decl((initialization(Wrap, now)), M) :-
     M:Wrap.
 
-unrtchecked(M:PIList) :-
-    unrtchecked(PIList, M).
+unrtcheck(M:PIList) :-
+    unrtcheck(PIList, M).
 
-unrtchecked(Var, _) :-
+unrtcheck(Var, _) :-
     var(Var),
     !,
     '$instantiation_error'(Var).
-unrtchecked(M:Spec, _) :-
+unrtcheck(M:Spec, _) :-
     !,
     '$must_be'(atom, M),
-    unrtchecked(Spec, M).
-unrtchecked((A,B), M) :-
+    unrtcheck(Spec, M).
+unrtcheck((A,B), M) :-
     !,
-    unrtchecked(A, M),
-    unrtchecked(B, M).
-unrtchecked(Name//Arity, M) :-
+    unrtcheck(A, M),
+    unrtcheck(B, M).
+unrtcheck(Name//Arity, M) :-
     atom(Name), integer(Arity), Arity >= 0,
     !,
     Arity1 is Arity+2,
-    unrtchecked(Name/Arity1, M).
-unrtchecked(Name/Arity, M) :-
+    unrtcheck(Name/Arity1, M).
+unrtcheck(Name/Arity, M) :-
     !,
     functor(Head, Name, Arity),
     (   M:'$rtchecked'(Head, _)
@@ -149,12 +148,12 @@ unrtchecked(Name/Arity, M) :-
         unwrap_predicate(M:Name/Arity, rtchecks)
     ;   true
     ).
-unrtchecked(Head, M) :-
+unrtcheck(Head, M) :-
     callable(Head),
     !,
     functor(Head, Name, Arity),
-    unrtchecked(Name/Arity, M).
-unrtchecked(TableSpec, _) :-
+    unrtcheck(Name/Arity, M).
+unrtcheck(TableSpec, _) :-
     '$type_error'(rtchecked_declaration, TableSpec).
 
 generate_rtchecks(Preds) :-
