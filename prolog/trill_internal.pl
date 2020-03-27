@@ -96,7 +96,7 @@ find_expls(M,[],[C,I],E):-
 
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|_T],QueryArgs,E):- %gtrace,
+find_expls(M,[ABox|_T],QueryArgs,E):- gtrace,
   %M:query_clash(_,EQC1,EQC2),
   %and_f(M,EQC1,EQC2,EL0),
   clash(M,ABox,EL0),
@@ -432,9 +432,9 @@ modify_ABox(M,(ABox0,T),C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
       delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
+    (ABox = ABox0,Expl = Expl1) % mettere qua set_clash
   ),
-  set_clash(M,(ABox0,T),C,Ind,Expl).
+  set_clash(M,(ABox0,T),C,Ind,Expl). % Spostarlo nell'if. da fare solo la prima volta che  si aggiunge
 
 modify_ABox(M,(ABox0,T),P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->

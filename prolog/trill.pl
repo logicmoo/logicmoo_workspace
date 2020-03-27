@@ -880,7 +880,7 @@ set_clash(M,(ABox,T),sameIndividual(LF),Expl):-
     true
   ).
 
-set_clash(M,(ABox,T),C,Ind,Expl):-
+set_clash(M,(ABox,T),C,Ind,Expl):-gtrace,
   ( clash_expls(M,(ABox,T),C,Ind,ExplC) ->
     assert_clash(M,C,Ind,Expl,ExplC)
     ;
