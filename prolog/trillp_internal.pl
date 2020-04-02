@@ -73,7 +73,8 @@ check_and_close(_,Expl,Expl):-
 find_expls(_M,[],_,[]):-!.
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|T],[C,I],E):-
+find_expls(M,[Tab|T],[C,I],E):-
+  get_abox(Tab,ABox),
   findall(E0,clash(M,ABox,E0),Expls0),!,
   dif(Expls0,[]),
   or_all_f(M,Expls0,Expls1),
@@ -81,7 +82,8 @@ find_expls(M,[ABox|T],[C,I],E):-
   and_f(M,Expls1,E1,E),!.
 
 % checks if an explanations was already found (property_value version)
-find_expls(M,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls(M,[Tab|T],[PropEx,Ind1Ex,Ind2Ex],E):-
+  get_abox(Tab,ABox),
   findall(E0,find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),Expls0),!,
   dif(Expls0,[]),
   or_all_f(M,Expls0,Expls1),
@@ -89,7 +91,7 @@ find_expls(M,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
   and_f(M,Expls1,E1,E),!.
   
 
-find_expls(M,[_ABox|T],Query,Expl):-
+find_expls(M,[_Tab|T],Query,Expl):-
   \+ length(T,0),
   find_expls(M,T,Query,Expl).
 
@@ -111,7 +113,8 @@ findClassAssertion4OWLNothing(M,ABox,Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(M,Tab0,C,Ind,L0,Tab):-
+  get_abox(Tab0,ABox0),
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -122,12 +125,16 @@ modify_ABox(M,ABox0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox]):-
         (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
      )
   ),
-  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox).
+  remove_from_tableau(ABox0,(classAssertion(C,Ind),Expl1),ABox),
+  set_abox(Tab0,[(classAssertion(C,Ind),Expl)|ABox],Tab).
   
   
-modify_ABox(_,ABox0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0]).
+modify_ABox(_,Tab0,C,Ind,L0,Tab):-
+  get_abox(Tab0,ABox0),
+  set_abox(Tab0,[(classAssertion(C,Ind),L0)|ABox0],Tab).
 
-modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
+  get_abox(Tab0,ABox0),
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -136,10 +143,13 @@ modify_ABox(M,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox])
      % L0 is the new explanation, i.e. the \psi and Expl1 is the old label of an essertion
      (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
   ),
-  delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox).
+  remove_from_tableau(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
+  set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab).
   
   
-modify_ABox(_,ABox0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0]).
+modify_ABox(_,Tab0,P,Ind1,Ind2,L0,Tab):-
+  get_abox(Tab0,ABox0),
+  set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],Tab).
 
 /* ************* */
 
@@ -167,9 +177,10 @@ build_abox(M,(ABox,Tabs)):-
   create_tabs(LDIA,Tabs1,Tabs2),
   create_tabs(LPA,Tabs2,Tabs3),
   create_tabs(LSPA,Tabs3,Tabs4),
+  init_tableau(ABox5,Tabs4,Tableau0),
   findall((sameIndividual(L),*([sameIndividual(L)])),M:sameIndividual(L),LSIA),
-  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_owlThing_list(M,ABox6,Tabs,ABox),
+  merge_all_individuals(M,LSIA,Tableau0,Tableau1),
+  add_owlThing_list(M,Tableau1,Tableau),
   !.
 
 /**********************
