@@ -1479,7 +1479,7 @@ safe_s_neigh_C([H|T],S,C,Tab,ABox,[H|ST]):-
   max_rule
   ================
 */
-max_rule(M,Tab0,L):-
+max_rule(M,Tab0,L):-%gtrace,
   get_abox(Tab0,ABox),
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl0,ABox),
   \+ indirectly_blocked(Ind,Tab0),
@@ -1894,7 +1894,9 @@ merge_all_individuals(M,[(sameIndividual(H),Expl)|T],Tab0,Tab):-
   find_same(H,ABox0,L,ExplL),
   dif(L,[]),!,
   merge_all1(M,H,Expl,L,Tab0,Tab1),
-  list_as_sameIndividual([H,L],SI),
+  list_as_sameIndividual([H,L],SI), %TODO
+  %flatten([H,L],L0),
+  %sort(L0,SI),
   and_f(M,Expl,ExplL,ExplT),
   add_to_tableau(Tab1,(SI,ExplT),Tab2),
   remove_from_tableau(Tab2,(sameIndividual(L),ExplL),Tab3),
@@ -2662,7 +2664,32 @@ remove_node_from_table(S,T0,T1):-
  * 
  * Implement the Merge operation of the tableau. Merge two individuals
  */
+% The first three are needed because T in tabs:(T,RBN,RBR) saves sameIndividuals
+% as a list instead of a single individual sameIndividual(L).
+% The addition of sameIndividual is made after, during the update of the ABox.
+% TODO: it could be improved!
+/*
+merge(M,sameIndividual(LX),sameIndividual(LY),Expl,Tableau0,Tableau):-
+  !,
+  get_tabs(Tableau0,Tabs0),
+  merge_tabs(L,Y,Tabs0,Tabs),
+  get_abox(Tableau0,ABox0),
+  merge_abox(M,L,Y,Expl,ABox0,ABox),
+  set_tabs(Tableau0,Tabs,Tableau1),
+  set_abox(Tableau1,ABox,Tableau).
+
+merge(M,sameIndividual(L),Y,Expl,Tableau0,Tableau):-
+  !,
+  get_tabs(Tableau0,Tabs0),
+  merge_tabs(L,Y,Tabs0,Tabs),
+  get_abox(Tableau0,ABox0),
+  merge_abox(M,L,Y,Expl,ABox0,ABox),
+  set_tabs(Tableau0,Tabs,Tableau1),
+  set_abox(Tableau1,ABox,Tableau).
+*/
+
 merge(M,X,Y,Expl,Tableau0,Tableau):-
+  !,
   get_tabs(Tableau0,Tabs0),
   merge_tabs(X,Y,Tabs0,Tabs),
   get_abox(Tableau0,ABox0),
@@ -2680,7 +2707,9 @@ merge_tabs(X,Y,(T0,RBN0,RBR0),(T,RBN,RBR)):-
   transpose_ugraph(T0,TT),
   (neighbours(X,TT,LPX0)*->assign(LPX0,LPX);assign([],LPX)),
   (neighbours(Y,TT,LPY0)*->assign(LPY0,LPY);assign([],LPY)),
-  list_as_sameIndividual([X,Y],SI),
+  % list_as_sameIndividual([X,Y],SI), %TODO
+  flatten([X,Y],L0),
+  sort(L0,SI),
   set_predecessor(SI,X,LPX,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),!,
   set_successor(SI,X,LSX,(T1,RBN1,RBR1),(T2,RBN2,RBR2)),!,
   set_predecessor(SI,Y,LPY,(T2,RBN2,RBR2),(T3,RBN3,RBR3)),!,
