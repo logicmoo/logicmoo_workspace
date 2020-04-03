@@ -135,17 +135,17 @@ intermediate_obj(M, DirSO, OptL, LibL, Source, Object) -->
     !,
     ( {is_newer(Object, Source)}
     ->[]
-    ; [Command]
+    ; [Ext-Command]
     ).
 intermediate_obj(_, _, _, _, Source, Source) --> [].
 
-intermediate_obj_cmd(Ext, Name, M, DirSO, OptL, Source, Object, Fortran-Args) :-
+intermediate_obj_cmd(Ext, Name, M, DirSO, OptL, Source, Object, Compiler-Args) :-
     % Add a preffix to avoid problems with other files with the same base
     atomic_list_concat([Name, '_', Ext], NameFor),
     file_name_extension(NameFor, o, NameO),
     directory_file_path(DirSO, NameO, Object),
     append([OptL, ['-c', Source, '-o', Object]], FOptL),
-    language_command(Ext, M, Fortran, Args, FOptL).
+    language_command(Ext, M, Compiler, Args, FOptL).
 
 is_newer(File1, File2) :-
     exists_file(File1),
@@ -258,7 +258,7 @@ do_compile_library(M, FileSO, File, FSourceL) :-
                     atom_concat('-I', Dir, IDir)
                   ), IDirL),
     CommonOptL = ['-fPIC'|IDirL],
-    foldl(intermediate_obj(M, DirSO, CommonOptL, LibL), [IntfFile|FSourceL], FTargetL, Commands, []),
+    foldl(intermediate_obj(M, DirSO, CommonOptL, LibL), [IntfFile|FSourceL], FTargetL, ExtCommands, []),
     once(append(LibL, [], _)),
     findall(COpt, ( COpt = '-shared'
                   ; ( extra_compiler_opts(M, COpts)
@@ -286,10 +286,20 @@ do_compile_library(M, FileSO, File, FSourceL) :-
                   ),
             LDirL),
     append([COptL, CommonOptL, LDirL, FTargetL, CLibL], FArgsL),
-    concurrent_maplist(compile_1, Commands),
-    compile_1(path('swipl-ld')-FArgsL).
+    keysort(ExtCommands, Sorted),
+    group_pairs_by_key(Sorted, Grouped),
+    concurrent_maplist(compile_1, Grouped),
+    compile_2(path('swipl-ld')-FArgsL).
 
-compile_1(Command-ArgL) :-
+compile_1(Ext-Commands) :- compile_1(Ext, Commands).
+
+% Note: Due to the presence of Fortran modules, the compilation of Fortran can
+% not be parallelized, since Prolog is not aware of Fortran dependencies, so we
+% compile such modules serialized
+compile_1(for, Commands) :-            maplist(compile_2, Commands).
+compile_1(c,   Commands) :- concurrent_maplist(compile_2, Commands).
+
+compile_2(Command-ArgL) :-
     process_create(Command, ArgL, [stdout(pipe(Out)),
                                    stderr(pipe(Err))]),
     read_string(Err, _, SErr),
