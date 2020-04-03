@@ -2375,6 +2375,9 @@ sandbox:safe_primitive(trill:get_var_n(_,_,_,_,_)).
 % TABLEAU MANAGER
 % ==========================================================================================================
 
+% ======================================================================
+% As Dict
+% ======================================================================
 
 /* getters and setters for Tableau */
 
@@ -2417,6 +2420,34 @@ new_tableau(tableau{abox:ABox, tabs:Tabs, clashes:[]}):-
 init_tableau(ABox,Tabs,tableau{abox:ABox, tabs:Tabs, clashes:[]}).
 
 
+% ======================================================================
+% As List
+% ======================================================================
+/*
+
+get_abox([ABox,_,_],ABox).
+
+set_abox([_,Tabs,C],ABox,[ABox,Tabs,C]).
+
+get_tabs([_,Tabs,_],Tabs).
+
+set_tabs([ABox,_,C],Tabs,[ABox,Tabs,C]).
+
+get_clashes([_,_,Clashes],Clashes).
+
+set_clashes([ABox,Tabs,_],Clashes,[ABox,Tabs,Clashes]).
+
+
+
+new_tableau([ABox,Tabs,[]]):-
+  new_abox(ABox),
+  new_tabs(Tabs).
+
+
+
+init_tableau(ABox,Tabs,[ABox,Tabs,[]]).
+
+*/
 
 
 
