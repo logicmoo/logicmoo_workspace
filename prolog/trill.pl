@@ -1161,14 +1161,15 @@ scan_or_list(M,[C|T],N0,CP,Ind,Expl0,ABox0,Tabs,[(ABox,Tabs)|L]):-
   exists_rule
   ==================
 */
-exists_rule(M,(ABox0,Tabs0),([(propertyAssertion(R,Ind1,Ind2),Expl),
-    (classAssertion(C,Ind2),Expl)|ABox1],Tabs)):-
+exists_rule(M,(ABox0,Tabs0),(ABox,Tabs)):-
   findClassAssertion(someValuesFrom(R,C),Ind1,Expl,ABox0),
   \+ blocked(Ind1,(ABox0,Tabs0)),
   \+ connected_individual(R,C,Ind1,ABox0),
   new_ind(M,Ind2),
   add_edge(R,Ind1,Ind2,Tabs0,Tabs),
-  add_owlThing_ind(M,ABox0,Ind2,ABox1).
+  add_owlThing_ind(M,ABox0,Ind2,ABox1),
+  modify_ABox(M,ABox1,C,Ind2,Expl,ABox2),
+  modify_ABox(M,ABox2,R,Ind1,Ind2,Expl,ABox).
 
 
 %---------------
