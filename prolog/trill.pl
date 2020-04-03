@@ -716,7 +716,7 @@ find_clash(M,(ABox0,Tabs0),Expl2):-
 :- multifile clash/3.
 
 clash(M,Tab,Expl):-
-get_abox(Tab,ABox),
+  get_abox(Tab,ABox),
   %write('clash 1'),nl,
   findClassAssertion(C,Ind,Expl1,ABox),
   findClassAssertion(complementOf(C),Ind,Expl2,ABox),
@@ -1386,7 +1386,7 @@ min_rule(M,Tab0,Tab):-
   safe_s_neigh(SN,S,Tab0,SS),
   length(SS,LSS),
   LSS @< N,
-  NoI is N-LSS,
+  NoI is N-LSS,gtrace,
   min_rule_neigh(M,NoI,S,Ind1,Expl,NI,Tab0,Tab1),
   modify_ABox(M,Tab1,differentIndividuals(NI),Expl,Tab).
 
@@ -1756,50 +1756,49 @@ blocked(Ind,Tab):-
 
 check_block(Ind,Tab):-
   blockable(Ind,Tab),
-  get_tabs(Tab,(T,RBN,RBR)),
+  get_tabs(Tab,(T,_,_)),
   transpose_ugraph(T,T1),
   ancestor(Ind,T,A),
   neighbours(Ind,T1,N),
-  get_abox(Tab,ABox),
-  check_block1(Ind,A,N,(ABox,(T1,RBN,RBR))),!.
+  check_block1(Ind,A,N,Tab),!.
 
 check_block(Ind,Tab):-
   blockable(Ind,Tab),
-  get_tabs(Tab,(T,RBN,RBR)),
+  get_tabs(Tab,(T,_,_)),
   transpose_ugraph(T,T1),
   neighbours(Ind,T1,N),
-  get_abox(Tab,ABox),
-  check_block2(N,(ABox,(T,RBN,RBR))),!.
+  check_block2(N,Tab),!.
 
 
-check_block1(Indx,A,N,(ABox,(T,RBN,RBR))):-
+check_block1(Indx,A,N,Tab):-
   member(Indx0,N),
   member(Indy,A),
   member(Indy0,A),
+  get_tabs(Tab,(T,RBN,_)),
   neighbours(Indy,T,N2),
   member(Indy0,N2),
   rb_lookup((Indx0,Indx),V,RBN),
   rb_lookup((Indy0,Indy),V2,RBN),
   member(R,V),
   member(R,V2),
+  get_abox(Tab,ABox),
   same_label(Indx,Indy0,ABox),
   same_label(Indx0,Indy,ABox),
-  all_node_blockable(Indx0,Indy0,(ABox,(T,RBN,RBR))),!.
+  all_node_blockable(Indx0,Indy0,Tab),!.
 
 %check_block2([],_).
 
-check_block2([H|Tail],(ABox,(T,RBN,RBR))):-
-  blocked(H,(ABox,(T,RBN,RBR))),
-  check_block2(Tail,(ABox,(T,RBN,RBR))).
+check_block2([H|Tail],Tab):-
+  blocked(H,Tab),
+  check_block2(Tail,Tab).
 
 %---------------
 indirectly_blocked(Ind,Tab):-
-  get_tabs(Tab,(T,RBN,RBR)),
+  get_tabs(Tab,(T,_RBN,_RBR)),
   transpose_ugraph(T,T1),
   neighbours(Ind,T1,N),
   member(A,N),
-  get_abox(Tab,ABox),
-  blocked(A,(ABox,(T,RBN,RBR))),!.
+  blocked(A,Tab),!.
 
 %---------------------
 /*
@@ -1865,13 +1864,13 @@ subProp(M,SubProperty,Property,Subject,Object):-
 
 add_owlThing_ind(M,Tab0,Ind,Tab):-
   prepare_nom_list(M,[Ind],NomListOut),
-  add_all(NomListOut,Tab0,Tab).
+  add_all_to_tableau(NomListOut,Tab0,Tab).
 
 add_owlThing_list(M,Tab0,Tab):- % TODO
   get_tabs(Tab0,(T,_,_)),
   vertices(T,NomListIn),
   prepare_nom_list(M,NomListIn,NomListOut),
-  add_all(NomListOut,Tab0,Tab).
+  add_all_to_tableau(NomListOut,Tab0,Tab).
 
 %--------------
 
@@ -1967,15 +1966,16 @@ different_label(X,Y,ABox):-
 
 */
 
-all_node_blockable(X,Y,(ABox,(T,RBN,RBR))):-
+all_node_blockable(X,Y,Tab):-
+  get_tabs(Tab,(T,_,_)),
   graph_min_path(X,Y,T,P),
-  all_node_blockable1(P,(ABox,(T,RBN,RBR))).
+  all_node_blockable1(P,Tab).
 
 all_node_blockable1([],_).
 
-all_node_blockable1([H|Tail],(ABox,(T,RBN,RBR))):-
-  blockable(H,(ABox,(T,RBN,RBR))),
-  all_node_blockable1(Tail,(ABox,(T,RBN,RBR))).
+all_node_blockable1([H|Tail],Tab):-
+  blockable(H,Tab),
+  all_node_blockable1(Tail,Tab).
 
 /*
   find a path in the graph
@@ -2043,7 +2043,7 @@ add_all_n([H|T],A,AN):-
 /*
   find all S neighbours (S is a role)
 */
-s_neighbours(M,Ind1,S,Tab,SN):- gtrace,
+s_neighbours(M,Ind1,S,Tab,SN):- %gtrace,
   get_tabs(Tab,(_,_,RBR)),
   rb_lookup(S,VN,RBR),!,
   s_neighbours1(Ind1,VN,SN0),
@@ -2076,6 +2076,7 @@ s_neighbours2(M,SN,[_H|T],T1,ABox):-
 
 
 %-----------------
+
 not_same_ind(M,SN,H,_ABox):-
   M:differentIndividuals(SI),
   member(H,SI),
@@ -2426,12 +2427,12 @@ new_abox([]).
 /* add El to ABox */
 add_to_tableau(Tableau0,El,Tableau):-
   get_abox(Tableau0,ABox0),
-  add_abox(ABox0,El,ABox),
+  add_to_abox(ABox0,El,ABox),
   set_abox(Tableau0,ABox,Tableau).
 
 remove_from_tableau(Tableau0,El,Tableau):-
   get_abox(Tableau0,ABox0),
-  remove_abox(ABox0,El,ABox),
+  remove_from_abox(ABox0,El,ABox),
   set_abox(Tableau0,ABox,Tableau).
 
 assign(L,L).
@@ -2459,25 +2460,25 @@ find((Ass,Ex),A):-
 /* end of abox as a rb tree */
 
 
-add_abox(ABox,El,[El|ABox]).
+add_to_abox(ABox,El,[El|ABox]).
 
-remove_abox(ABox0,El,ABox):-
+remove_from_abox(ABox0,El,ABox):-
   delete(ABox0,El,ABox).
 
 /*
-  add_all(L1,L2,LO).
+  add_all_to_tableau(L1,L2,LO).
   add in L2 all item of L1
 */
-add_all(L,Tableau0,Tableau):-
+add_all_to_tableau(L,Tableau0,Tableau):-
   get_abox(Tableau0,ABox0),
-  add_all_abox(L,ABox0,ABox),
+  add_all_to_abox(L,ABox0,ABox),
   set_abox(Tableau0,ABox,Tableau).
 
-add_all_abox([],A,A).
+add_all_to_abox([],A,A).
 
-add_all_abox([H|T],A0,A):-
-  add_abox(A0,H,A1),
-  add_all_abox(T,A1,A).
+add_all_to_abox([H|T],A0,A):-
+  add_to_abox(A0,H,A1),
+  add_all_to_abox(T,A1,A).
 
 /* ************** */
 

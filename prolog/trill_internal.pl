@@ -97,8 +97,7 @@ find_expls(M,[],[C,I],E):-
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[Tab|_T],[C,I],E):- %gtrace,
-  get_abox(Tab,ABox),
-  clash(M,ABox,EL0),
+  clash(M,Tab,EL0),
   member(E0-CPs0,EL0),
   sort(E0,E),
   (dif(CPs0,[]) ->
@@ -386,7 +385,7 @@ modify_ABox(_,Tab0,sameIndividual(LF),Expl1,Tab):-
   	  sort(LF,LFS),
   	  LS = LFS,!,
   	  absent(Expl0,Expl1,Expl),
-  	  remove_from_tableau(ABox0,[(sameIndividual(L),Expl0)],ABox)
+  	  remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox)
   	)
   ;
   	(ABox = ABox0,Expl = Expl1)
@@ -400,7 +399,7 @@ modify_ABox(_,Tab0,differentIndividuals(LF),Expl1,Tab):-
   	  sort(LF,LFS),
   	  LS = LFS,!,
   	  absent(Expl0,Expl1,Expl),
-  	  remove_from_tableau(ABox0,[(differentIndividuals(L),Expl0)],ABox)
+  	  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox)
   	)
   ;
   	(ABox = ABox0,Expl = Expl1)
@@ -411,7 +410,7 @@ modify_ABox(_,Tab0,C,Ind,Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      remove_from_tableau(ABox0,(classAssertion(C,Ind),Expl0),ABox)
+      remove_from_abox(ABox0,(classAssertion(C,Ind),Expl0),ABox)
     )
   ;
     (ABox = ABox0,Expl = Expl1)
@@ -422,7 +421,7 @@ modify_ABox(_,Tab0,P,Ind1,Ind2,Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      remove_from_tableau(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+      remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
     )
   ;
     (ABox = ABox0,Expl = Expl1)
@@ -556,9 +555,9 @@ absent2([H-_|T],Expl):-
   findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),propertyAssertion(Property,Subject, Object),LPA),
   findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property,Subject,Object),propertyAssertion(SubProperty,Subject,Object)]),subPropertyOf(SubProperty,Property),LSPA),
   new_abox(ABox0),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox).
+  add_all_to_tableau(LCA,ABox0,ABox1),
+  add_all_to_tableau(LPA,ABox1,ABox2),
+  add_all_to_tableau(LSPA,ABox2,ABox).
 */
 
 build_abox(M,Tableau):-
@@ -573,7 +572,7 @@ build_abox(M,Tableau):-
   init_tableau(ABox0,Tabs0,Tableau0),
   create_tabs(LCA,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),
-  add_all(AddAllList,Tableau1,Tableau2),
+  add_all_to_tableau(AddAllList,Tableau1,Tableau2),
   append([LDIA,LPA],CreateTabsList),
   create_tabs(CreateTabsList,Tableau2,Tableau3),
   findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA),
