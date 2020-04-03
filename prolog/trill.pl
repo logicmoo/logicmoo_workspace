@@ -293,11 +293,13 @@ add_q(_,pv,Tableau,_,Tableau):-!. % Do nothing
 % sub_class
 add_q(M,sc,Tableau0,[SubClassEx,SupClassEx],Tableau):- !,
   neg_class(SupClassEx,NSupClassEx),
-  add_q(M,Tableau0,classAssertion(intersectionOf([SubClassEx,NSupClassEx]),trillan(0)),Tableau).
+  add_q(M,Tableau0,classAssertion(intersectionOf([SubClassEx,NSupClassEx]),trillan(0)),Tableau1),
+  add_owlThing_ind(M,Tableau1,trillan(0),Tableau).
 
 % unsat
 add_q(M,un,Tableau0,['unsat',ClassEx],Tableau):- !,
-  add_q(M,Tableau0,classAssertion(ClassEx,trillan(0)),Tableau).
+  add_q(M,Tableau0,classAssertion(ClassEx,trillan(0)),Tableau1),
+  add_owlThing_ind(M,Tableau1,trillan(0),Tableau).
 
 % inconsistent_theory
 add_q(_,it,Tableau,['inconsistent','kb'],Tableau):- !. % Do nothing
