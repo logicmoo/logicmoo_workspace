@@ -83,8 +83,7 @@ find_expls(M,[],_,BDD):-
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[Tab|T],[C,I],E):-
-  get_abox(Tab,ABox),
-  findall(E0,clash(M,ABox,E0),Expls0),!,
+  findall(E0,clash(M,Tab,E0),Expls0),!,
   or_all_f(M,Expls0,Expls1),
   find_expls(M,T,[C,I],E1),
   and_f(M,Expls1,E1,E).
@@ -126,7 +125,7 @@ modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
-  remove_from_tableau(ABox0,(classAssertion(C,Ind),Expl1),ABox),
+  remove_from_abox(ABox0,(classAssertion(C,Ind),Expl1),ABox),
   set_abox(Tab0,[(classAssertion(C,Ind),Expl)|ABox],Tab).
   
 modify_ABox(_,Tab0,C,Ind,L0,Tab):-
@@ -139,7 +138,7 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
-  remove_from_tableau(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
+  remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab).
   
   
@@ -166,22 +165,18 @@ build_abox(M,Tableau):-
   findall((propertyAssertion(Property,Subject, Object),BDDPA),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
+  findall((differentIndividuals(Ld),BDDDIA),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
-  create_tabs(LCA,Tabs0,Tabs1),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox3),
-  add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),BDDDIA),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
-  add_all(LDIA,ABox4,ABox5),
-  create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs3),
-  create_tabs(LSPA,Tabs3,Tabs4),
-  init_tableau(ABox5,Tabs4,Tableau0),
+  init_tableau(ABox0,Tabs0,Tableau0),
+  create_tabs(LCA,Tableau0,Tableau1),
+  append([LCA,LPA,LNA,LDIA],AddAllList),
+  add_all_to_tableau(AddAllList,Tableau1,Tableau2),
+  append([LDIA,LPA],CreateTabsList),
+  create_tabs(CreateTabsList,Tableau2,Tableau3),
   findall((sameIndividual(L),BDDSIA),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
-  merge_all_individuals(M,LSIA,Tableau0,Tableau1),
-  add_owlThing_list(M,Tableau1,Tableau),
+  merge_all_individuals(M,LSIA,Tableau3,Tableau4),
+  add_owlThing_list(M,Tableau4,Tableau),
   !.
 
 /**********************

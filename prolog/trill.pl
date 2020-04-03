@@ -834,7 +834,7 @@ apply_det_rules(M,[],Tab0,Tab):-
 
 apply_det_rules(M,[H|_],Tab0,Tab):-
   %C=..[H,Tab,Tab1],
-  call(H,M,Tab0,Tab),!,writeln(H).
+  call(H,M,Tab0,Tab),!.
 
 apply_det_rules(M,[_|T],Tab0,Tab):-
   apply_det_rules(M,T,Tab0,Tab).
@@ -844,7 +844,7 @@ apply_nondet_rules(_,[],Tab,Tab).
 
 apply_nondet_rules(M,[H|_],Tab0,Tab):-
   %C=..[H,Tab,L],
-  call(H,M,Tab0,L),!,writeln(H),
+  call(H,M,Tab0,L),!,
   member(Tab,L),
   dif(Tab0,Tab).
 
@@ -977,8 +977,9 @@ exists_rule(M,Tab0,Tab):-
   new_ind(M,Ind2),
   add_edge(R,Ind1,Ind2,Tab0,Tab1),
   add_owlThing_ind(M,Tab1,Ind2,Tab2),
-  modify_ABox(M,Tab2,R,Ind1,Ind2,Expl,Tab3),
-  modify_ABox(M,Tab3,C,Ind2,Expl,Tab).
+  modify_ABox(M,Tab2,C,Ind2,Expl,Tab3),
+  modify_ABox(M,Tab3,R,Ind1,Ind2,Expl,Tab).
+  
 
 
 %---------------
