@@ -388,7 +388,7 @@ modify_ABox(_,Tab0,sameIndividual(LF),Expl1,Tab):-
   	  remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox)
   	)
   ;
-  	(ABox = ABox0,Expl = Expl1)
+  	(ABox = ABox0,Expl = Expl1,L = LF)
   ),
   set_abox(Tab0,[(sameIndividual(L),Expl)|ABox],Tab).
 
@@ -402,7 +402,7 @@ modify_ABox(_,Tab0,differentIndividuals(LF),Expl1,Tab):-
   	  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox)
   	)
   ;
-  	(ABox = ABox0,Expl = Expl1)
+  	(ABox = ABox0,Expl = Expl1,L = LF)
   ),
   set_abox(Tab0,[(differentIndividuals(L),Expl)|ABox],Tab).
 

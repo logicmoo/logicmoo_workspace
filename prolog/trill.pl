@@ -834,7 +834,7 @@ apply_det_rules(M,[],Tab0,Tab):-
 
 apply_det_rules(M,[H|_],Tab0,Tab):-
   %C=..[H,Tab,Tab1],
-  call(H,M,Tab0,Tab),!.
+  call(H,M,Tab0,Tab),!,writeln(H).
 
 apply_det_rules(M,[_|T],Tab0,Tab):-
   apply_det_rules(M,T,Tab0,Tab).
@@ -844,7 +844,7 @@ apply_nondet_rules(_,[],Tab,Tab).
 
 apply_nondet_rules(M,[H|_],Tab0,Tab):-
   %C=..[H,Tab,L],
-  call(H,M,Tab0,L),!,
+  call(H,M,Tab0,L),!,writeln(H),
   member(Tab,L),
   dif(Tab0,Tab).
 
@@ -1386,7 +1386,7 @@ min_rule(M,Tab0,Tab):-
   safe_s_neigh(SN,S,Tab0,SS),
   length(SS,LSS),
   LSS @< N,
-  NoI is N-LSS,gtrace,
+  NoI is N-LSS,
   min_rule_neigh(M,NoI,S,Ind1,Expl,NI,Tab0,Tab1),
   modify_ABox(M,Tab1,differentIndividuals(NI),Expl,Tab).
 
@@ -1488,7 +1488,7 @@ max_rule(M,Tab0,L):-
   length(SNC,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),%gtrace,
-  scan_max_list(M,maxCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,Tab0,L),!. % last variable whould be equals to ID
+  scan_max_list(M,maxCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,Tab0,ABox,L),!. % last variable whould be equals to ID
 
 max_rule(M,Tab0,L):-
   get_abox(Tab0,ABox),
@@ -1498,7 +1498,7 @@ max_rule(M,Tab0,L):-
   length(SN,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),
-  scan_max_list(M,maxCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,Tab0,L),!. 
+  scan_max_list(M,maxCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,Tab0,ABox,L),!. 
 %---------------------
 
 max_rule(M,Tab0,L):-
@@ -1510,7 +1510,7 @@ max_rule(M,Tab0,L):-
   length(SNC,LSS),
   LSS @> N,
   get_choice_point_id(M,ID),%gtrace,
-  scan_max_list(M,exactCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,Tab0,L),!. % last variable whould be equals to ID
+  scan_max_list(M,exactCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,Tab0,ABox,L),!. % last variable whould be equals to ID
 
 max_rule(M,Tab0,L):-
   get_abox(Tab0,ABox),
@@ -2735,7 +2735,7 @@ set_predecessor(NN,X,[H|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
 set_predecessor1(_NN,_H,[],Tabs,Tabs).
 
 set_predecessor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
-  add_edge(R,H,NN,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
+  add_edge_int(R,H,NN,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
   set_predecessor1(NN,H,L,(T1,RBN1,RBR1),(T,RBN,RBR)).
 
 set_successor(_NN,_X,[],Tabs,Tabs).
@@ -2748,7 +2748,7 @@ set_successor(NN,X,[H|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
 set_successor1(_NN,_H,[],Tabs,Tabs).
 
 set_successor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
-  add_edge(R,NN,H,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
+  add_edge_int(R,NN,H,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
   set_successor1(NN,H,L,(T1,RBN1,RBR1),(T,RBN,RBR)).
 
 /*
