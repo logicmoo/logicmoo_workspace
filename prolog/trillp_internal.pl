@@ -159,7 +159,7 @@ modify_ABox(_,Tab0,P,Ind1,Ind2,L0,Tab):-
   ===============
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox(M,Tableau):-
   retractall(M:final_abox(_)),
   findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),

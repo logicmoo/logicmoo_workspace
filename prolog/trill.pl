@@ -977,7 +977,7 @@ exists_rule(M,Tab0,Tab):-
   new_ind(M,Ind2),
   add_edge(R,Ind1,Ind2,Tab0,Tab1),
   add_owlThing_ind(M,Tab1,Ind2,Tab2),
-  modify_ABox(M,Tab2,D,Ind1,Ind2,Expl,Tab3),
+  modify_ABox(M,Tab2,R,Ind1,Ind2,Expl,Tab3),
   modify_ABox(M,Tab3,C,Ind2,Expl,Tab).
 
 
@@ -1331,6 +1331,7 @@ find_inverse_property(M,C,C,symmetricProperty(C)):-
   =============
 */
 ce_rule(M,Tab0,Tab):-
+  get_tabs(Tab0,(T,_,_)),
   find_not_sub_sup_class(M,Ax,UnAx),
   vertices(T,Inds),
   apply_ce_to(M,Inds,Ax,UnAx,Tab0,Tab,C),
@@ -1447,7 +1448,7 @@ min_rule_neigh_C(M,N,S,C,Ind1,Expl,[Ind2|NI],Tab0,Tab):-
   N > 0,
   NoI is N-1,
   new_ind(M,Ind2),
-  add_edge(S,Ind1,Ind2,Tab0,Tabs1),
+  add_edge(S,Ind1,Ind2,Tab0,Tab1),
   add_owlThing_ind(M,Tab1,Ind2,Tab2),
   modify_ABox(M,Tab2,S,Ind1,Ind2,Expl,Tab3),
   modify_ABox(M,Tab3,C,Ind2,[propertyAssertion(S,Ind1,Ind2)|Expl],Tab4),
@@ -1523,7 +1524,7 @@ max_rule(M,Tab0,L):-
 
 %---------------------
 
-scan_max_list(M,MaxCardClass,S,C,SN,CP,Ind,Expl,Tab0,Abox,Tab_list):-
+scan_max_list(M,MaxCardClass,S,C,SN,CP,Ind,Expl,Tab0,ABox,Tab_list):-
   create_couples_for_merge(SN,[],Ind_couples), % MAYBE check_individuals_not_equal(M,YI,YJ,ABox), instead of dif
   length(Ind_couples,NChoices),
   (
@@ -1617,7 +1618,7 @@ ch_rule(M,Tab0,L):-
   dif(L,[]),
   create_choice_point(M,Ind2,ch,maxCardinality(N,S,C),[C,NC],_),!. % last variable whould be equals to ID
 
-ch_rule(M,Tab0,Tab):-
+ch_rule(M,Tab0,L):-
   get_abox(Tab0,ABox),
   findClassAssertion(exactCardinality(N,S,C),Ind1,Expl1,ABox),
   \+ indirectly_blocked(Ind1,Tab0),
@@ -1691,7 +1692,7 @@ list_as_sameIndividual_int([],[]).
 list_as_sameIndividual_int([sameIndividual(L0)|T0],L):-
   !,
   append(L0,T0,L1),
-  list_as_sameIndividual_int(T1,L).
+  list_as_sameIndividual_int(L1,L).
 
 list_as_sameIndividual_int([H|T0],[H|T]):-
   list_as_sameIndividual_int(T0,T).
@@ -1711,7 +1712,6 @@ find_same(_H,_ABox,[],[]).
 */
 retract_sameIndividual(sameIndividual(L)):-
   !,
-  get_trill_current_module(N),
   retract_sameIndividual(L).
 
 retract_sameIndividual(L):-
@@ -1868,6 +1868,7 @@ add_owlThing_ind(M,Tab0,Ind,Tab):-
   add_all(NomListOut,Tab0,Tab).
 
 add_owlThing_list(M,Tab0,Tab):- % TODO
+  get_tabs(Tab0,(T,_,_)),
   vertices(T,NomListIn),
   prepare_nom_list(M,NomListIn,NomListOut),
   add_all(NomListOut,Tab0,Tab).
@@ -2360,6 +2361,439 @@ get_trill_current_module(M):-
 
 sandbox:safe_primitive(trill:get_var_n(_,_,_,_,_)).
 
+
+
+
+
+% ==========================================================================================================
+% TABLEAU MANAGER
+% ==========================================================================================================
+
+
+/* getters and setters for Tableau */
+
+get_abox(Tab,ABox):-
+  ABox = Tab.abox.
+
+set_abox(Tab0,ABox,Tab):-
+  Tab = Tab0.put(abox,ABox).
+
+get_tabs(Tab,Tabs):-
+  Tabs = Tab.tabs.
+
+set_tabs(Tab0,Tabs,Tab):-
+  Tab = Tab0.put(tabs,Tabs).
+
+get_clashes(Tab,Clashes):-
+  Clashes = Tab.clashes.
+
+set_clashes(Tab0,Clashes,Tab):-
+  Tab = Tab0.put(clashes,Clashes).
+
+
+/* initializers */
+
+/**
+ * new_tabelau(-EmptyTableaus:dict)
+ * 
+ * Initialize an empty tableau.
+ */
+new_tableau(tableau{abox:ABox, tabs:Tabs, clashes:[]}):-
+  new_abox(ABox),
+  new_tabs(Tabs).
+
+
+/**
+ * init_tabelau(+ABox:abox, +Tabs:tableau, -InitializedTableaus:dict)
+ * 
+ * Initialize a tableau with the lements given in input.
+ */
+init_tableau(ABox,Tabs,tableau{abox:ABox, tabs:Tabs, clashes:[]}).
+
+
+
+
+
+% ===================================
+% ABOX
+% ===================================
+
+/* abox as a list */
+
+new_abox([]).
+
+ 
+/* add El to ABox */
+add_to_tableau(Tableau0,El,Tableau):-
+  get_abox(Tableau0,ABox0),
+  add_abox(ABox0,El,ABox),
+  set_abox(Tableau0,ABox,Tableau).
+
+remove_from_tableau(Tableau0,El,Tableau):-
+  get_abox(Tableau0,ABox0),
+  remove_abox(ABox0,El,ABox),
+  set_abox(Tableau0,ABox,Tableau).
+
+assign(L,L).
+/*
+  find & control (not find)
+*/
+find(El,ABox):-
+  member(El,ABox).
+
+control(El,ABox):-
+  \+ find(El,ABox).
+
+/* end of abox a s list */
+
+/* abox as a red-black tree */
+/*new_abox(T):-
+  rb_new(T).
+
+add(A,(Ass,Ex),A1):-
+  rb_insert(A,(Ass,Ex),[],A1).
+
+find((Ass,Ex),A):-
+  rb_lookup((Ass,Ex),_,A).
+*/
+/* end of abox as a rb tree */
+
+
+add_abox(ABox,El,[El|ABox]).
+
+remove_abox(ABox0,El,ABox):-
+  delete(ABox0,El,ABox).
+
+/*
+  add_all(L1,L2,LO).
+  add in L2 all item of L1
+*/
+add_all(L,Tableau0,Tableau):-
+  get_abox(Tableau0,ABox0),
+  add_all_abox(L,ABox0,ABox),
+  set_abox(Tableau0,ABox,Tableau).
+
+add_all_abox([],A,A).
+
+add_all_abox([H|T],A0,A):-
+  add_abox(A0,H,A1),
+  add_all_abox(T,A1,A).
+
+/* ************** */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ===================================
+% TABS
+% ===================================
+
+/*
+  initialize the tableau
+  tableau is composed of:
+  	a directed graph T => tableau without label
+  	a red black tree RBN => each node is a pair of inds that contains the label for the edge
+  	a red black tree RBR => each node is a property that contains the pairs of inds
+*/
+new_tabs(([],ItR,RtI)):-
+    rb_new(ItR),
+    rb_new(RtI).
+
+/*
+  adds nodes and edges to tabs given axioms
+*/
+create_tabs(L,Tableau0,Tableau):-
+  get_tabs(Tableau0,Tabs0),
+  create_tabs_int(L,Tabs0,Tabs),
+  set_tabs(Tableau0,Tabs,Tableau).
+
+
+create_tabs_int([],G,G).
+  
+create_tabs_int([(propertyAssertion(P,S,O),_Expl)|T],Tabl0,Tabl):-
+  add_edge_int(P,S,O,Tabl0,Tabl1),
+  create_tabs_int(T,Tabl1,Tabl).
+  
+create_tabs_int([(differentIndividuals(Ld),_Expl)|Tail],(T0,RBN,RBR),(T,RBN,RBR)):-
+  add_vertices(T0,Ld,T1),
+  create_tabs_int(Tail,(T1,RBN,RBR),(T,RBN,RBR)).
+
+create_tabs_int([(classAssertion(_,I),_Expl)|Tail],(T0,RBN,RBR),(T,RBN,RBR)):-
+  add_vertices(T0,[I],T1),
+  create_tabs_int(Tail,(T1,RBN,RBR),(T,RBN,RBR)).
+
+
+/*
+  add edge to tableau
+
+  add_edge(Property,Subject,Object,Tab0,Tab)
+*/
+add_edge(P,S,O,Tableau0,Tableau):-
+  get_tabs(Tableau0,Tabs0),
+  add_edge_int(P,S,O,Tabs0,Tabs),
+  set_tabs(Tableau0,Tabs,Tableau).
+
+add_edge_int(P,S,O,(T0,ItR0,RtI0),(T1,ItR1,RtI1)):-
+  add_node_to_tree(P,S,O,ItR0,ItR1),
+  add_role_to_tree(P,S,O,RtI0,RtI1),
+  add_edge_to_tabl(P,S,O,T0,T1).
+
+add_node_to_tree(P,S,O,RB0,RB1):-
+  rb_lookup((S,O),V,RB0),
+  \+ member(P,V),
+  rb_update(RB0,(S,O),[P|V],RB1).
+ 
+add_node_to_tree(P,S,O,RB0,RB0):-
+  rb_lookup((S,O),V,RB0),
+  member(P,V).
+
+add_node_to_tree(P,S,O,RB0,RB1):-
+  \+ rb_lookup([S,O],_,RB0),
+  rb_insert(RB0,(S,O),[P],RB1).
+
+add_role_to_tree(P,S,O,RB0,RB1):-
+  rb_lookup(P,V,RB0),
+  \+ member((S,O),V),
+  rb_update(RB0,P,[(S,O)|V],RB1).
+
+add_role_to_tree(P,S,O,RB0,RB0):-
+  rb_lookup(P,V,RB0),
+  member((S,O),V).
+
+add_role_to_tree(P,S,O,RB0,RB1):-
+  \+ rb_lookup(P,_,RB0),
+  rb_insert(RB0,P,[(S,O)],RB1).
+
+add_edge_to_tabl(_R,Ind1,Ind2,T0,T0):-
+  graph_edge(Ind1,Ind2,T0),!.
+
+add_edge_to_tabl(_R,Ind1,Ind2,T0,T1):-
+  add_edges(T0,[Ind1-Ind2],T1).
+
+
+
+/*
+  check for an edge
+*/
+graph_edge(Ind1,Ind2,T0):-
+  edges(T0, Edges),
+  member(Ind1-Ind2, Edges),!.
+
+%graph_edge(_,_,_).
+
+/*
+  remove edges and nodes from tableau
+
+  To remove a node from the tableau use remove_node(Node,Tabs0,Tabs)
+*/
+
+% remove_all_nodes_from_tree(Property,Subject,Object,RBN0,RBN)
+% removes from RBN the pair key-values with key (Subject,Object)
+% key (Subject,Object) exists
+remove_all_nodes_from_tree(_P,S,O,RB0,RB1):-
+  rb_lookup((S,O),_,RB0),
+  rb_delete(RB0,(S,O),RB1).
+
+% key (Subject,Object) does not exist
+remove_all_nodes_from_tree(_P,S,O,RB0,_RB1):-
+  \+ rb_lookup((S,O),_,RB0).
+% ----------------
+
+% remove_role_from_tree(Property,Subject,Object,RBR0,RBR)
+% remove in RBR the pair (Subject,Object) from the value associated with key Property
+% pair (Subject,Object) does not exist for key Property
+remove_role_from_tree(P,S,O,RB,RB):-
+  rb_lookup(P,V,RB),
+  \+ member((S,O),V).
+
+% pair (Subject,Object) exists for key Property but it is not the only pair associated to it
+remove_role_from_tree(P,S,O,RB0,RB1):-
+  rb_lookup(P,V,RB0),
+  member((S,O),V),
+  delete(V,(S,O),V1),
+  dif(V1,[]),
+  rb_update(RB0,P,V1,RB1).
+
+% pair (Subject,Object) exists for key Property and it is the only pair associated to it
+remove_role_from_tree(P,S,O,RB0,RB1):-
+  rb_lookup(P,V,RB0),
+  member((S,O),V),
+  delete(V,(S,O),V1),
+  V1==[],
+  rb_delete(RB0,P,RB1).
+% ----------------
+
+% remove_edge_from_table(Property,Subject,Object,Tab0,Tab)
+% removes from T the edge from Subject to Object
+remove_edge_from_table(_P,S,O,T,T):-
+  \+ graph_edge(S,O,T).
+
+remove_edge_from_table(_P,S,O,T0,T1):-
+  graph_edge(S,O,T0),
+  del_edges(T0,[S-O],T1).
+% ----------------
+
+% remove_node_from_table(Subject,Tab0,Tab)
+% removes from T the node corresponding to Subject
+remove_node_from_table(S,T0,T1):-
+  del_vertices(T0,[S],T1).
+
+
+
+
+
+% ===================================
+% FUNCTIONS ON ABOX AND TABS
+% ===================================
+
+/*
+ * merge
+ * 
+ * Implement the Merge operation of the tableau. Merge two individuals
+ */
+merge(M,X,Y,Expl,Tableau0,Tableau):-
+  get_tabs(Tableau0,Tabs0),
+  merge_tabs(X,Y,Tabs0,Tabs),
+  get_abox(Tableau0,ABox0),
+  merge_abox(M,X,Y,Expl,ABox0,ABox),
+  set_tabs(Tableau0,Tabs,Tableau1),
+  set_abox(Tableau1,ABox,Tableau).
+
+/*
+ * merge node in tableau. X and Y single individuals
+ */
+
+merge_tabs(X,Y,(T0,RBN0,RBR0),(T,RBN,RBR)):-
+  (neighbours(X,T0,LSX0)*->assign(LSX0,LSX);assign([],LSX)),
+  (neighbours(Y,T0,LSY0)*->assign(LSY0,LSY);assign([],LSY)),
+  transpose_ugraph(T0,TT),
+  (neighbours(X,TT,LPX0)*->assign(LPX0,LPX);assign([],LPX)),
+  (neighbours(Y,TT,LPY0)*->assign(LPY0,LPY);assign([],LPY)),
+  list_as_sameIndividual([X,Y],SI),
+  set_predecessor(SI,X,LPX,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),!,
+  set_successor(SI,X,LSX,(T1,RBN1,RBR1),(T2,RBN2,RBR2)),!,
+  set_predecessor(SI,Y,LPY,(T2,RBN2,RBR2),(T3,RBN3,RBR3)),!,
+  set_successor(SI,Y,LSY,(T3,RBN3,RBR3),(T4,RBN4,RBR4)),!,
+  remove_nodes(X,Y,(T4,RBN4,RBR4),(T,RBN,RBR)).
+
+remove_nodes(X,Y,Tabs0,Tabs):-
+  remove_node(X,Tabs0,Tabs1),
+  remove_node(Y,Tabs1,Tabs).
+
+% Collects all the connected in input (LP, predecessor) or in output (LS, successor) for node X
+% removes from RBN (remove_all_nodes_from_tree) all the pairs key-value where the key contains node X (pairs (X,Ind1) and (Ind1,X))
+% and from RBR (remove_edges->remove_role_from_tree) all the pairs containing X from the values of the roles entering in or exiting from X
+remove_node(X,(T0,RBN0,RBR0),(T,RBN,RBR)):-
+  (neighbours(X,T0,LS0)*->assign(LS0,LS);assign([],LS)),
+  transpose_ugraph(T0,TT),
+  (neighbours(X,TT,LP0)*->assign(LP0,LP);assign([],LP)),
+  remove_node1(X,LS,RBN0,RBR0,RBN1,RBR1),
+  remove_node2(X,LP,RBN1,RBR1,RBN,RBR),
+  (vertices(T0,VS),member(X,VS)*->del_vertices(T0,[X],T);assign(T0,T)).
+
+remove_node1(_,[],RBN,RBR,RBN,RBR).
+
+remove_node1(X,[H|T],RBN0,RBR0,RBN,RBR):-
+  rb_lookup((X,H),V,RBN0),
+  remove_edges(V,X,H,RBR0,RBR1),
+  remove_all_nodes_from_tree(_,X,H,RBN0,RBN1),
+  remove_node1(X,T,RBN1,RBR1,RBN,RBR).
+
+remove_node2(_,[],RBN,RBR,RBN,RBR).
+
+remove_node2(X,[H|T],RBN0,RBR0,RBN,RBR):-
+  rb_lookup((H,X),V,RBN0),
+  remove_edges(V,H,X,RBR0,RBR1),
+  remove_all_nodes_from_tree(_,H,X,RBN0,RBN1),
+  remove_node1(X,T,RBN1,RBR1,RBN,RBR).
+
+remove_edges([],_,_,RBR,RBR).
+
+remove_edges([H|T],S,O,RBR0,RBR):-
+  remove_role_from_tree(H,S,O,RBR0,RBR1),
+  remove_edges(T,S,O,RBR1,RBR).
+
+
+set_predecessor(_NN,_,[],Tabs,Tabs).
+
+set_predecessor(NN,X,[H|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
+  rb_lookup((H,X),LR,RBN0),
+  set_predecessor1(NN,H,LR,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
+  set_predecessor(NN,X,L,(T1,RBN1,RBR1),(T,RBN,RBR)).
+
+set_predecessor1(_NN,_H,[],Tabs,Tabs).
+
+set_predecessor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
+  add_edge(R,H,NN,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
+  set_predecessor1(NN,H,L,(T1,RBN1,RBR1),(T,RBN,RBR)).
+
+set_successor(_NN,_X,[],Tabs,Tabs).
+
+set_successor(NN,X,[H|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
+  rb_lookup((X,H),LR,RBN0),
+  set_successor1(NN,H,LR,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
+  set_successor(NN,X,L,(T1,RBN1,RBR1),(T,RBN,RBR)).
+
+set_successor1(_NN,_H,[],Tabs,Tabs).
+
+set_successor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
+  add_edge(R,NN,H,(T0,RBN0,RBR0),(T1,RBN1,RBR1)),
+  set_successor1(NN,H,L,(T1,RBN1,RBR1),(T,RBN,RBR)).
+
+/*
+  merge node in ABox
+*/
+
+% TODO update
+merge_abox(M,X,Y,Expl0,ABox0,ABox):-
+  flatten([X,Y],L0),
+  sort(L0,L),
+  list_as_sameIndividual(L,SI),
+  merge_abox_int(M,L,SI,Expl0,ABox0,ABox).
+
+
+merge_abox_int(_M,_L,_,_,[],[]).
+
+merge_abox_int(M,L,SI,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,SI),Expl)|ABox]):-
+  member(Ind,L),!,
+  and_f(M,Expl0,ExplT,Expl),
+  %and_f_ax(M,sameIndividual(L),Expl1,Expl),
+  merge_abox_int(M,L,SI,Expl0,T,ABox).
+
+merge_abox_int(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,SI,Ind2),Expl)|ABox]):-
+  member(Ind1,L),!,
+  and_f(M,Expl0,ExplT,Expl),
+  %and_f_ax(M,sameIndividual(L),Expl1,Expl),
+  merge_abox_int(M,L,SI,Expl0,T,ABox).
+
+merge_abox_int(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,SI),Expl)|ABox]):-
+  member(Ind2,L),!,
+  and_f(M,Expl0,ExplT,Expl),
+  %and_f_ax(M,sameIndividual(L),Expl1,Expl),
+  merge_abox_int(M,L,SI,Expl0,T,ABox).
+
+merge_abox_int(M,L,SI,Expl0,[H|T],[H|ABox]):-
+  merge_abox_int(M,L,SI,Expl0,T,ABox).
+
+
+
+
+
+
+
+
+
+% ==================================================================================================================
 
 /*
 sandbox:safe_primitive(trill:sub_class(_,_)).

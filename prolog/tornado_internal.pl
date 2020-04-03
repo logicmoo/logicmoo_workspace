@@ -155,7 +155,7 @@ modify_ABox(_,Tab0,P,Ind1,Ind2,L0,Tab):-
   ===============
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox(M,Tableau):-
   retractall(M:final_abox(_)),
   retractall(v(_,_,_)),
   retractall(na(_,_)),
