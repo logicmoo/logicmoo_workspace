@@ -395,6 +395,10 @@ resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case,
 	).
 resolveUntilAction(happens(E,T1_,T2_),_A,_,true) :- 
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), happens(E,T1,T2).
+resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- option(more_actions),
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), \+ ground(T1), \+ ground(T2),
+	!, % hack to (also) delay the action
+	resolveUntilAction( (holds(true,T1),happens(E,T1,T2)), A, Ball, Cont).
 resolveUntilAction(happens(E,T1_,T2_),A,_,Cont) :- 
 	% select and execute system action; 
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
@@ -429,6 +433,7 @@ resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- !,
 	(\+ ground(T1), \+ ground(T2)), % worth delaying; 
 	% Possible TODO: are the free variables... time variables...? complicated to find out; the LPS developer should worry about this
 	\+ happens(E,T1,T2) /*, action_(E)*/. 
+
 %deal with mixed time comparisons, involving both structured time and cycle time
 resolveUntilAction(G,A,Ball,Cont) :- mixed_time_comparison(G,NewG), !, 
 	resolveUntilAction(NewG,A,Ball,Cont).
@@ -1764,6 +1769,9 @@ parse_options_([run_test|Rest]) :- !,
 	parse_options_(Rest).
 parse_options_([meta_actions|Rest]) :- !,
 	uassertz(option(meta_actions)),
+	parse_options_(Rest).
+parse_options_([more_actions|Rest]) :- !,
+	uassertz(option(more_actions)),
 	parse_options_(Rest).
 parse_options_([cycle_hook(Predicate,Fluents,Actions)|Rest]) :- !,
 	% Fluents and (basic) Actions are lists of templates; the cycle hook predicate should collect all matching tuples
