@@ -94,10 +94,11 @@ find_expls(M,[],[C,I],E):-
   remove_supersets(Expl0,Expl),!,
   member(E,Expl).
 
-
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[Tab|_T],[C,I],E):- %gtrace,  % QueryArgs
-  clash(M,Tab,EL0),
+  get_clashes(Tab,Clashes),
+  member(Clash,Clashes),
+  clash(M,Clash,Tab,EL0),
   member(E0-CPs0,EL0),
   sort(E0,E),
   (dif(CPs0,[]) ->
@@ -259,9 +260,9 @@ findClassAssertion4OWLNothing(_M,ABox,Expl):-
 % clash managing
 
 %------------
-:- multifile clash/3.
+:- multifile clash/4.
 
-clash(M,Tab,Expl):-
+clash(M,maxCardinality(N,S,C)-Ind,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 9'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
@@ -271,7 +272,7 @@ clash(M,Tab,Expl):-
   LSS @> N,
   make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,maxCardinality(N,S)-Ind,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 10'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
@@ -280,7 +281,7 @@ clash(M,Tab,Expl):-
   LSS @> N,
   make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,exactCardinality(N,S,C)-Ind,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 9'),nl,
   findClassAssertion(exactCardinality(N,S,C),Ind,Expl1,ABox),
@@ -290,7 +291,7 @@ clash(M,Tab,Expl):-
   dif(LSS,N),
   make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,exactCardinality(N,S)-Ind,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 10'),nl,
   findClassAssertion(exactCardinality(N,S),Ind,Expl1,ABox),
@@ -299,6 +300,37 @@ clash(M,Tab,Expl):-
   dif(LSS,N),
   make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
+
+
+:- multifile check_clash/3.
+
+check_clash(M,maxCardinality(N,S,C)-Ind,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 9'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  LSS @> N,!.
+  
+check_clash(M,maxCardinality(N,S)-Ind,Tab):-
+  %write('clash 10'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  length(SN,LSS),
+  LSS @> N,!.
+  
+check_clash(M,exactCardinality(N,S,C)-Ind,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 9'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  dif(LSS,N),!.
+  
+check_clash(M,exactCardinality(N,S)-Ind,Tab):-
+  %write('clash 10'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  length(SN,LSS),
+  dif(LSS,N),!.
 
 % --------------
 
@@ -379,44 +411,50 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(_,Tab0,sameIndividual(LF),Expl1,Tab):-
+modify_ABox(M,Tab0,sameIndividual(LF),Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((sameIndividual(L),Expl0),ABox0) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
   	  LS = LFS,!,
   	  absent(Expl0,Expl1,Expl),
-  	  remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox)
+      remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox),
+      Tab1=Tab0
   	)
   ;
-  	(ABox = ABox0,Expl = Expl1,L = LF)
+  	(ABox = ABox0,Expl = Expl1,L = LF,
+     add_clash_to_tableau(M,Tab0,sameIndividual(LF),Tab1))
   ),
-  set_abox(Tab0,[(sameIndividual(L),Expl)|ABox],Tab).
+  set_abox(Tab1,[(sameIndividual(L),Expl)|ABox],Tab).
 
-modify_ABox(_,Tab0,differentIndividuals(LF),Expl1,Tab):-
+modify_ABox(M,Tab0,differentIndividuals(LF),Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((differentIndividuals(L),Expl0),ABox0) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
   	  LS = LFS,!,
   	  absent(Expl0,Expl1,Expl),
-  	  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox)
+  	  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox),
+      Tab1=Tab0
   	)
   ;
-  	(ABox = ABox0,Expl = Expl1,L = LF)
+  	(ABox = ABox0,Expl = Expl1,L = LF,
+    add_clash_to_tableau(M,Tab0,differentIndividuals(LF),Tab1))
   ),
-  set_abox(Tab0,[(differentIndividuals(L),Expl)|ABox],Tab).
+  set_abox(Tab1,[(differentIndividuals(L),Expl)|ABox],Tab).
 
-modify_ABox(_,Tab0,C,Ind,Expl1,Tab):-
+modify_ABox(M,Tab0,C,Ind,Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      remove_from_abox(ABox0,(classAssertion(C,Ind),Expl0),ABox)
+      remove_from_abox(ABox0,(classAssertion(C,Ind),Expl0),ABox),
+      Tab1=Tab0
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
+    (ABox = ABox0,Expl = Expl1,
+    add_clash_to_tableau(M,Tab0,C-Ind,Tab1))
   ),
-  set_abox(Tab0,[(classAssertion(C,Ind),Expl)|ABox],Tab).
+  set_abox(Tab1,[(classAssertion(C,Ind),Expl)|ABox],Tab).
 
 modify_ABox(_,Tab0,P,Ind1,Ind2,Expl1,Tab):-
   get_abox(Tab0,ABox0),
@@ -425,7 +463,9 @@ modify_ABox(_,Tab0,P,Ind1,Ind2,Expl1,Tab):-
       remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
+    (ABox = ABox0,Expl = Expl1
+    %add_clash_to_tableau(Tab0,sameIndividual(LF),Tab1)
+    )
   ),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab).
 
@@ -571,14 +611,13 @@ build_abox(M,Tableau):-
   new_abox(ABox0),
   new_tabs(Tabs0),
   init_tableau(ABox0,Tabs0,Tableau0),
-  create_tabs(LCA,Tableau0,Tableau1),
+  append([LCA,LDIA,LPA],CreateTabsList),
+  create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),
-  add_all_to_tableau(AddAllList,Tableau1,Tableau2),
-  append([LDIA,LPA],CreateTabsList),
-  create_tabs(CreateTabsList,Tableau2,Tableau3),
+  add_all_to_tableau(M,AddAllList,Tableau1,Tableau2),
   findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA),
-  merge_all_individuals(M,LSIA,Tableau3,Tableau4),
-  add_owlThing_list(M,Tableau4,Tableau),
+  merge_all_individuals(M,LSIA,Tableau2,Tableau3),
+  add_owlThing_list(M,Tableau3,Tableau),
   !.
 
 

@@ -263,7 +263,7 @@ find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTi
 find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
   set_up_reasoner(M),
   build_abox(M,Tableau), % will expand the KB without the query
-  (\+ clash(M,Tableau,_) ->
+  (absence_of_clashes(Tableau) ->
     (
       add_q(M,QueryType,Tableau,QueryArgs,Tableau0),
       findall(Tableau1,apply_all_rules(M,Tableau0,Tableau1),L),
@@ -285,7 +285,8 @@ set_up_reasoner(M):-
 % instanceOf
 add_q(M,io,Tableau0,[ClassEx,IndEx],Tableau):- !,
   neg_class(ClassEx,NClassEx),
-  add_q(M,Tableau0,classAssertion(NClassEx,IndEx),Tableau).
+  add_q(M,Tableau0,classAssertion(NClassEx,IndEx),Tableau1),
+  add_clash_to_tableau(M,Tableau1,NClassEx-IndEx,Tableau).
 
 % property_value
 add_q(_,pv,Tableau,_,Tableau):-!. % Do nothing
@@ -296,12 +297,14 @@ add_q(_,pv,Tableau,_,Tableau):-!. % Do nothing
 add_q(M,sc,Tableau0,[SubClassEx,SupClassEx],Tableau):- !,
   neg_class(SupClassEx,NSupClassEx),
   add_q(M,Tableau0,classAssertion(intersectionOf([SubClassEx,NSupClassEx]),trillan(0)),Tableau1),
-  add_owlThing_ind(M,Tableau1,trillan(0),Tableau).
+  add_owlThing_ind(M,Tableau1,trillan(0),Tableau2),
+  add_clash_to_tableau(M,Tableau2,intersectionOf([SubClassEx,NSupClassEx])-trillan(0),Tableau).
 
 % unsat
 add_q(M,un,Tableau0,['unsat',ClassEx],Tableau):- !,
   add_q(M,Tableau0,classAssertion(ClassEx,trillan(0)),Tableau1),
-  add_owlThing_ind(M,Tableau1,trillan(0),Tableau).
+  add_owlThing_ind(M,Tableau1,trillan(0),Tableau2),
+  add_clash_to_tableau(M,Tableau2,ClassEx-trillan(0),Tableau).
 
 % inconsistent_theory
 add_q(_,it,Tableau,['inconsistent','kb'],Tableau):- !. % Do nothing
@@ -717,18 +720,24 @@ find_clash(M,(ABox0,Tabs0),Expl2):-
 % need some tricks in some rules for managing the cases of more than one clash
 % TO IMPROVE!
 %------------
-:- multifile clash/3.
+:- multifile clash/4.
 
-clash(M,Tab,Expl):-
+clash(M,owlnothing,Tab,Expl):-
+  get_abox(Tab,ABox),
+  %write('clash 6'),nl,
+  findClassAssertion4OWLNothing(M,ABox,Expl).
+
+clash(M,C-Ind,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 1'),nl,
   findClassAssertion(C,Ind,Expl1,ABox),
-  findClassAssertion(complementOf(C),Ind,Expl2,ABox),
+  neg_class(C,NegC),
+  findClassAssertion(NegC,Ind,Expl2,ABox),
   and_f(M,Expl1,Expl2,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,sameIndividual(LS),Tab,Expl):-
   get_abox(Tab,ABox),
-  %write('clash 2'),nl,
+  %write('clash 2.a'),nl,
   find((sameIndividual(LS),Expl1),ABox),
   find((differentIndividuals(LD),Expl2),ABox),
   member(X,LS),
@@ -738,37 +747,47 @@ clash(M,Tab,Expl):-
   dif(X,Y),
   and_f(M,Expl1,Expl2,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,differentIndividuals(LS),Tab,Expl):-
+  get_abox(Tab,ABox),
+  %write('clash 2.b'),nl,
+  find((differentIndividuals(LS),Expl1),ABox),
+  find((sameIndividual(LD),Expl2),ABox),
+  member(X,LS),
+  member(Y,LS),
+  member(X,LD),
+  member(Y,LD),
+  dif(X,Y),
+  and_f(M,Expl1,Expl2,Expl).
+
+clash(M,C-sameIndividual(L1),Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 3'),nl,
   findClassAssertion(C,sameIndividual(L1),Expl1,ABox),
-  findClassAssertion(complementOf(C),sameIndividual(L2),Expl2,ABox),
+  neg_class(C,NegC),
+  findClassAssertion(NegC,sameIndividual(L2),Expl2,ABox),
   member(X,L1),
   member(X,L2),!,
   and_f(M,Expl1,Expl2,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,C-Ind1,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 4'),nl,
   findClassAssertion(C,Ind1,Expl1,ABox),
-  findClassAssertion(complementOf(C),sameIndividual(L2),Expl2,ABox),
+  neg_class(C,NegC),
+  findClassAssertion(NegC,sameIndividual(L2),Expl2,ABox),
   member(Ind1,L2),
   and_f(M,Expl1,Expl2,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,C-sameIndividual(L1),Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 5'),nl,
   findClassAssertion(C,sameIndividual(L1),Expl1,ABox),
-  findClassAssertion(complementOf(C),Ind2,Expl2,ABox),
+  neg_class(C,NegC),
+  findClassAssertion(NegC,Ind2,Expl2,ABox),
   member(Ind2,L1),
   and_f(M,Expl1,Expl2,Expl).
 
-clash(M,Tab,Expl):-
-  get_abox(Tab,ABox),
-  %write('clash 6'),nl,
-  findClassAssertion4OWLNothing(M,ABox,Expl).
-
-clash(M,Tab,Expl):-
+clash(M,C1-Ind,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 7'),nl,
   M:disjointClasses(L), % TODO use hierarchy
@@ -780,7 +799,7 @@ clash(M,Tab,Expl):-
   and_f(M,Expl1,Expl2,ExplT),
   and_f_ax(M,disjointClasses(L),ExplT,Expl).
 
-clash(M,Tab,Expl):-
+clash(M,C1-Ind,Tab,Expl):-
   get_abox(Tab,ABox),
   %write('clash 8'),nl,
   M:disjointUnion(Class,L), % TODO use hierarchy
@@ -821,6 +840,80 @@ make_expl(M,Ind,S,[H|T],Expl0,ABox,Expl):-
   and_f(M,Expl2,Expl0,Expl1),
   make_expl(M,Ind,S,T,Expl1,ABox,Expl).
 */
+
+
+:- multifile check_clash/3.
+
+check_clash(_,'http://www.w3.org/2002/07/owl#Nothing'-_,_):-
+  %write('clash 6'),nl,
+  !.
+
+check_clash(_,C-Ind,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 1'),nl,
+  neg_class(C,NegC),
+  findClassAssertion(NegC,Ind,_,ABox),!.
+  
+check_clash(_,sameIndividual(LS),Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 2.a'),nl,
+  find((differentIndividuals(LD),_Expl2),ABox),
+  member(X,LS),
+  member(Y,LS),
+  member(X,LD),
+  member(Y,LD),
+  dif(X,Y),!.
+  
+check_clash(_,differentIndividuals(LS),Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 2.b'),nl,
+  find((sameIndividual(LD),_Expl2),ABox),
+  member(X,LS),
+  member(Y,LS),
+  member(X,LD),
+  member(Y,LD),
+  dif(X,Y),!.
+  
+check_clash(_,C-sameIndividual(L1),Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 3'),nl,
+  neg_class(C,NegC),
+  findClassAssertion(NegC,sameIndividual(L2),_Expl2,ABox),
+  member(X,L1),
+  member(X,L2),!.
+  
+check_clash(_,C-Ind1,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 4'),nl,
+  neg_class(C,NegC),
+  findClassAssertion(NegC,sameIndividual(L2),_Expl2,ABox),
+  member(Ind1,L2),!.
+  
+check_clash(_,C-sameIndividual(L1),Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 5'),nl,
+  neg_class(C,NegC),
+  findClassAssertion(NegC,Ind2,_,ABox),
+  member(Ind2,L1),!.
+  
+check_clash(M,C1-Ind,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 7'),nl,
+  M:disjointClasses(L), % TODO use hierarchy
+  member(C1,L),
+  member(C2,L),
+  dif(C1,C2),
+  findClassAssertion(C2,Ind,_,ABox),!.
+  
+check_clash(M,C1-Ind,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 8'),nl,
+  M:disjointUnion(_Class,L), % TODO use hierarchy
+  member(C1,L),
+  member(C2,L),
+  dif(C1,C2),
+  findClassAssertion(C2,Ind,_,ABox),!.
+
 
 % -------------
 % rules application
@@ -1869,13 +1962,13 @@ subProp(M,SubProperty,Property,Subject,Object):-
 
 add_owlThing_ind(M,Tab0,Ind,Tab):-
   prepare_nom_list(M,[Ind],NomListOut),
-  add_all_to_tableau(NomListOut,Tab0,Tab).
+  add_all_to_tableau(M,NomListOut,Tab0,Tab).
 
 add_owlThing_list(M,Tab0,Tab):- % TODO
   get_tabs(Tab0,(T,_,_)),
   vertices(T,NomListIn),
   prepare_nom_list(M,NomListIn,NomListOut),
-  add_all_to_tableau(NomListOut,Tab0,Tab).
+  add_all_to_tableau(M,NomListOut,Tab0,Tab).
 
 %--------------
 
@@ -2401,6 +2494,10 @@ get_clashes(Tab,Clashes):-
 set_clashes(Tab0,Clashes,Tab):-
   Tab = Tab0.put(clashes,Clashes).
 
+absence_of_clashes(Tab):-
+  get_clashes(Tab,Clashes),
+  Clashes=[].
+
 
 /* initializers */
 
@@ -2473,6 +2570,14 @@ remove_from_tableau(Tableau0,El,Tableau):-
   remove_from_abox(ABox0,El,ABox),
   set_abox(Tableau0,ABox,Tableau).
 
+add_clash_to_tableau(M,Tableau0,ToCheck,Tableau):-
+  check_clash(M,ToCheck,Tableau0),!,
+  get_clashes(Tableau0,Clashes0),
+  add_to_clashes(Clashes0,ToCheck,Clashes),
+  set_clashes(Tableau0,Clashes,Tableau).
+
+add_clash_to_tableau(_,Tableau,_,Tableau).
+
 assign(L,L).
 /*
   find & control (not find)
@@ -2503,14 +2608,48 @@ add_to_abox(ABox,El,[El|ABox]).
 remove_from_abox(ABox0,El,ABox):-
   delete(ABox0,El,ABox).
 
+
+add_to_clashes(Clashes,'http://www.w3.org/2002/07/owl#Nothing'-_,[owlnothing|Clashes]):-!.
+
+add_to_clashes(Clashes,El,[El|Clashes]).
+
+remove_from_abox(Clashes0,El,Clashes):-
+  delete(Clashes0,El,Clashes).
+
 /*
-  add_all_to_tableau(L1,L2,LO).
+  add_all_to_tableau(M,L1,L2,LO).
   add in L2 all item of L1
 */
-add_all_to_tableau(L,Tableau0,Tableau):-
+add_all_to_tableau(M,L,Tableau0,Tableau):-
   get_abox(Tableau0,ABox0),
-  add_all_to_abox(L,ABox0,ABox),
-  set_abox(Tableau0,ABox,Tableau).
+  get_clashes(Tableau0,Clashes0),
+  add_all_to_abox_and_clashes(M,L,Tableau0,ABox0,ABox,Clashes0,Clashes),
+  set_abox(Tableau0,ABox,Tableau1),
+  set_clashes(Tableau1,Clashes,Tableau).
+
+add_all_to_abox_and_clashes(_,[],_,A,A,C,C).
+
+add_all_to_abox_and_clashes(M,[(classAssertion(C,I),Expl)|T],Tab,A0,A,C0,C):-
+  check_clash(M,C-I,Tab),!,
+  add_to_abox(A0,(classAssertion(C,I),Expl),A1),
+  add_to_clashes(C0,C-I,C1),
+  add_all_to_abox_and_clashes(M,T,A1,A,C1,C).
+
+add_all_to_abox_and_clashes(M,[(sameIndividual(LI),Expl)|T],Tab,A0,A,C0,C):-
+  check_clash(M,sameIndividual(LI),Tab),!,
+  add_to_abox(A0,(sameIndividual(LI),Expl),A1),
+  add_to_clashes(C0,sameIndividual(LI),C1),
+  add_all_to_abox_and_clashes(M,T,A1,A,C1,C).
+
+add_all_to_abox_and_clashes(M,[(differentIndividuals(LI),Expl)|T],Tab,A0,A,C0,C):-
+  check_clash(M,differentIndividuals(LI),Tab),!,
+  add_to_abox(A0,(differentIndividuals(LI),Expl),A1),
+  add_to_clashes(C0,differentIndividuals(LI),C1),
+  add_all_to_abox_and_clashes(M,T,A1,A,C1,C).
+
+add_all_to_abox_and_clashes(M,[H|T],Tab,A0,A,C0,C):-
+  add_to_abox(A0,H,A1),
+  add_all_to_abox_and_clashes(M,T,Tab,A1,A,C0,C).
 
 add_all_to_abox([],A,A).
 
@@ -2563,13 +2702,13 @@ create_tabs_int([(propertyAssertion(P,S,O),_Expl)|T],Tabl0,Tabl):-
   add_edge_int(P,S,O,Tabl0,Tabl1),
   create_tabs_int(T,Tabl1,Tabl).
   
-create_tabs_int([(differentIndividuals(Ld),_Expl)|Tail],(T0,RBN,RBR),(T,RBN,RBR)):-
+create_tabs_int([(differentIndividuals(Ld),_Expl)|Tail],(T0,RBN,RBR),Tabs):-
   add_vertices(T0,Ld,T1),
-  create_tabs_int(Tail,(T1,RBN,RBR),(T,RBN,RBR)).
+  create_tabs_int(Tail,(T1,RBN,RBR),Tabs).
 
-create_tabs_int([(classAssertion(_,I),_Expl)|Tail],(T0,RBN,RBR),(T,RBN,RBR)):-
+create_tabs_int([(classAssertion(_,I),_Expl)|Tail],(T0,RBN,RBR),Tabs):-
   add_vertices(T0,[I],T1),
-  create_tabs_int(Tail,(T1,RBN,RBR),(T,RBN,RBR)).
+  create_tabs_int(Tail,(T1,RBN,RBR),Tabs).
 
 
 /*
@@ -2729,9 +2868,15 @@ merge(M,X,Y,Expl,Tableau0,Tableau):-
   get_tabs(Tableau0,Tabs0),
   merge_tabs(X,Y,Tabs0,Tabs),
   get_abox(Tableau0,ABox0),
-  merge_abox(M,X,Y,Expl,ABox0,ABox),
+  flatten([X,Y],L0),
+  sort(L0,L),
+  list_as_sameIndividual(L,SI),
+  merge_abox(M,L,SI,Expl,ABox0,ABox),
+  get_clashes(Tableau0,Clashes0),
+  update_clashes_after_merge(M,L,SI,Tableau0,Clashes0,Clashes),
   set_tabs(Tableau0,Tabs,Tableau1),
-  set_abox(Tableau1,ABox,Tableau).
+  set_abox(Tableau1,ABox,Tableau2),
+  set_clashes(Tableau2,Clashes,Tableau).
 
 /*
  * merge node in tableau. X and Y single individuals
@@ -2821,37 +2966,57 @@ set_successor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
 */
 
 % TODO update
-merge_abox(M,X,Y,Expl0,ABox0,ABox):-
-  flatten([X,Y],L0),
-  sort(L0,L),
-  list_as_sameIndividual(L,SI),
-  merge_abox_int(M,L,SI,Expl0,ABox0,ABox).
+merge_abox(_M,_L,_,_,[],[]).
 
-
-merge_abox_int(_M,_L,_,_,[],[]).
-
-merge_abox_int(M,L,SI,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,SI),Expl)|ABox]):-
+merge_abox(M,L,SI,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,SI),Expl)|ABox]):-
   member(Ind,L),!,
   and_f(M,Expl0,ExplT,Expl),
   %and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox_int(M,L,SI,Expl0,T,ABox).
+  merge_abox(M,L,SI,Expl0,T,ABox).
 
-merge_abox_int(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,SI,Ind2),Expl)|ABox]):-
+merge_abox(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,SI,Ind2),Expl)|ABox]):-
   member(Ind1,L),!,
   and_f(M,Expl0,ExplT,Expl),
   %and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox_int(M,L,SI,Expl0,T,ABox).
+  merge_abox(M,L,SI,Expl0,T,ABox).
 
-merge_abox_int(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,SI),Expl)|ABox]):-
+merge_abox(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,SI),Expl)|ABox]):-
   member(Ind2,L),!,
   and_f(M,Expl0,ExplT,Expl),
   %and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox_int(M,L,SI,Expl0,T,ABox).
+  merge_abox(M,L,SI,Expl0,T,ABox).
 
-merge_abox_int(M,L,SI,Expl0,[H|T],[H|ABox]):-
-  merge_abox_int(M,L,SI,Expl0,T,ABox).
+merge_abox(M,L,SI,Expl0,[H|T],[H|ABox]):-
+  merge_abox(M,L,SI,Expl0,T,ABox).
 
 
+/*
+ update clashes ofter merge
+ substitute ind in clashes with sameIndividual
+ */
+
+% if last argument is 0 -> need to theck clash for sameIndividual/differentIndividual
+% if there is no clash (check_clash returns false), backtrack to (*)
+update_clashes_after_merge(M,_,SI,Tableau,[],[SI],0):-
+  check_clash(M,SI,Tableau),!.
+
+% (*)
+update_clashes_after_merge(_,_,_,_,[],[],_).
+
+update_clashes_after_merge(M,L,SI,Tableau,[sameIndividual(LC)|TC0],[SI|TC],0):-
+  memberchk(I,L),
+  memberchk(I,LC),!,
+  update_clashes_after_merge(M,L,SI,Tableau,TC0,TC,1).
+
+update_clashes_after_merge(M,L,SI,Tableau,[C-I|TC0],[C-SI|TC],UpdatedSI):-
+  memberchk(I,L),!,
+  update_clashes_after_merge(M,L,SI,Tableau,TC0,TC,UpdatedSI).
+
+update_clashes_after_merge(M,L,SI,Tableau,[Clash|TC0],[Clash|TC],UpdatedSI):-
+  update_clashes_after_merge(M,L,SI,Tableau,TC0,TC,UpdatedSI).
+
+update_clashes_after_merge(M,L,SI,Tableau,Clashes0,Clashes):-
+  update_clashes_after_merge(M,L,SI,Tableau,Clashes0,Clashes,0).
 
 
 
