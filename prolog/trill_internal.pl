@@ -39,21 +39,21 @@ clean_up(M):-
 
 % findall
 find_n_explanations(M,QueryType,QueryArgs,Expls,all,Opt):-
-!, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
-findall(Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls).
+  !, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
+  findall(Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls).
 
 % find one in backtracking
 find_n_explanations(M,QueryType,QueryArgs,Expl,bt,Opt):-
-!, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
-find_single_explanation(M,QueryType,QueryArgs,Expl,Opt).
+  !, % CUT so that no other4 calls to find_explanation can be ran (to avoid running that with variable N)
+  find_single_explanation(M,QueryType,QueryArgs,Expl,Opt).
 
 % find_n_sol
 find_n_explanations(M,QueryType,QueryArgs,Expls,N,Opt):-
-(number(N) -> % CUT so that no other4 calls to find_explanation can be ran
-  (findnsols(N,Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls)) % CUT otherwise findnsols would backtracks to look for another N sols
-  ;
-  (print_message(warning,wrong_number_max_expl),!,false)
-).
+  (number(N) -> % CUT so that no other4 calls to find_explanation can be ran
+    (findnsols(N,Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls)) % CUT otherwise findnsols would backtracks to look for another N sols
+    ;
+    (print_message(warning,wrong_number_max_expl),!,false)
+  ).
 
 
 % to find all axplanations for probabilistic queries
@@ -96,10 +96,8 @@ find_expls(M,[],[C,I],E):-
 
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|_T],QueryArgs,E):- gtrace,
-  %M:query_clash(_,EQC1,EQC2),
-  %and_f(M,EQC1,EQC2,EL0),
-  clash(M,ABox,EL0),
+find_expls(M,[Tab|_T],[C,I],E):- %gtrace,  % QueryArgs
+  clash(M,Tab,EL0),
   member(E0-CPs0,EL0),
   sort(E0,E),
   (dif(CPs0,[]) ->
@@ -112,22 +110,22 @@ find_expls(M,[ABox|_T],QueryArgs,E):- gtrace,
     ;
     (%findall(Exp,M:exp_found([C,I],Exp),Expl),
      %not_already_found(M,Expl,[C,I],E),
-     assert(M:exp_found(QueryArgs,E)),
+     assert(M:exp_found([C,I],E)), % QueryArgs
      fail
     )
   ).
 
 % TODO to remove
 % checks if an explanations was already found (property_value version)
-find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls(M,[Tab|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
+  get_abox(Tab,ABox),
   find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
   member(E-_,Es),
   %findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
   %not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
   assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
 
-
-find_expls(M,[_ABox|T],Query,Expl):-
+find_expls(M,[_Tab|T],Query,Expl):-
   %\+ length(T,0),
   find_expls(M,T,Query,Expl).
 
@@ -263,78 +261,46 @@ findClassAssertion4OWLNothing(_M,ABox,Expl):-
 %------------
 :- multifile clash/3.
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 9'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   individual_class_C(SN,C,ABox,SNC),
   length(SNC,LSS),
   LSS @> N,
   make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 10'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   length(SN,LSS),
   LSS @> N,
   make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 9'),nl,
   findClassAssertion(exactCardinality(N,S,C),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   individual_class_C(SN,C,ABox,SNC),
   length(SNC,LSS),
   dif(LSS,N),
   make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 10'),nl,
   findClassAssertion(exactCardinality(N,S),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   length(SN,LSS),
   dif(LSS,N),
   make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
 
-:- multifile clash_expls/5.
-
-clash_expls(M,(ABox,Tabs),maxCardinality(N,S,C),Ind,Expl):-
-  %write('clash 9'),nl,
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
-  individual_class_C(SN,C,ABox,SNC),
-  length(SNC,LSS),
-  LSS @> N,
-  make_expl(M,Ind,S,SNC,ABox,Expl).
-
-clash_expls(M,(ABox,Tabs),maxCardinality(N,S),Ind,Expl):-
-  %write('clash 10'),nl,
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
-  length(SN,LSS),
-  LSS @> N,
-  make_expl(M,Ind,S,SN,ABox,Expl).
-
-clash_expls(M,(ABox,Tabs),exactCardinality(N,S,C),Ind,Expl):-
-  %write('clash 9'),nl,
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
-  individual_class_C(SN,C,ABox,SNC),
-  length(SNC,LSS),
-  dif(LSS,N),
-  make_expl(M,Ind,S,SNC,ABox,Expl).
-
-clash_expls(M,(ABox,Tabs),exactCardinality(N,S),Ind,Expl):-
-  %write('clash 10'),nl,
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
-  length(SN,LSS),
-  dif(LSS,N),
-  make_expl(M,Ind,S,SN,ABox,Expl).
-
 % --------------
-
-make_expl(M,Ind,S,ExplList,ABox,Expl):-
-  empty_expl(M,EExpl),
-  make_expl(M,Ind,S,ExplList,EExpl,ABox,Expl).
 
 make_expl(_,_,_,[],Expl,_,Expl).
 
@@ -413,38 +379,55 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(M,(ABox0,T),sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
-  ( find((sameIndividual(L),Expl0),ABox) ->
+modify_ABox(_,Tab0,sameIndividual(LF),Expl1,Tab):-
+  get_abox(Tab0,ABox0),
+  ( find((sameIndividual(L),Expl0),ABox0) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
   	  LS = LFS,!,
   	  absent(Expl0,Expl1,Expl),
-  	  delete(ABox0,[(sameIndividual(L),Expl0)],ABox)
+  	  remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox)
   	)
   ;
-  	(ABox = ABox0,Expl = Expl1)
+  	(ABox = ABox0,Expl = Expl1,L = LF)
   ),
-  set_clash(M,(ABox0,T),sameIndividual(LF),Expl).
+  set_abox(Tab0,[(sameIndividual(L),Expl)|ABox],Tab).
 
-modify_ABox(M,(ABox0,T),C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(_,Tab0,differentIndividuals(LF),Expl1,Tab):-
+  get_abox(Tab0,ABox0),
+  ( find((differentIndividuals(L),Expl0),ABox0) ->
+  	( sort(L,LS),
+  	  sort(LF,LFS),
+  	  LS = LFS,!,
+  	  absent(Expl0,Expl1,Expl),
+  	  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox)
+  	)
+  ;
+  	(ABox = ABox0,Expl = Expl1,L = LF)
+  ),
+  set_abox(Tab0,[(differentIndividuals(L),Expl)|ABox],Tab).
+
+modify_ABox(_,Tab0,C,Ind,Expl1,Tab):-
+  get_abox(Tab0,ABox0),
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
-    )
-  ;
-    (ABox = ABox0,Expl = Expl1) % mettere qua set_clash
-  ),
-  set_clash(M,(ABox0,T),C,Ind,Expl). % Spostarlo nell'if. da fare solo la prima volta che  si aggiunge
-
-modify_ABox(M,(ABox0,T),P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
-  ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
-    ( absent(Expl0,Expl1,Expl),
-      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+      remove_from_abox(ABox0,(classAssertion(C,Ind),Expl0),ABox)
     )
   ;
     (ABox = ABox0,Expl = Expl1)
   ),
-  set_clash(M,(ABox0,T),P,Ind1,Ind2,Expl).
+  set_abox(Tab0,[(classAssertion(C,Ind),Expl)|ABox],Tab).
+
+modify_ABox(_,Tab0,P,Ind1,Ind2,Expl1,Tab):-
+  get_abox(Tab0,ABox0),
+  ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
+    ( absent(Expl0,Expl1,Expl),
+      remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+    )
+  ;
+    (ABox = ABox0,Expl = Expl1)
+  ),
+  set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab).
 
 /* ************* */
 
@@ -573,32 +556,29 @@ absent2([H-_|T],Expl):-
   findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),propertyAssertion(Property,Subject, Object),LPA),
   findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property,Subject,Object),propertyAssertion(SubProperty,Subject,Object)]),subPropertyOf(SubProperty,Property),LSPA),
   new_abox(ABox0),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox).
+  add_all_to_tableau(LCA,ABox0,ABox1),
+  add_all_to_tableau(LPA,ABox1,ABox2),
+  add_all_to_tableau(LSPA,ABox2,ABox).
 */
 
-build_abox(M,(ABox,Tabs)):-
+build_abox(M,Tableau):-
   retractall(M:final_abox(_)),
   findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]-[]]),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]-[]]),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
+  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),M:differentIndividuals(Ld),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
-  create_tabs(LCA,Tabs0,Tabs1),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox3),
-  add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),M:differentIndividuals(Ld),LDIA),
-  add_all(LDIA,ABox4,ABox5),
-  create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs3),
-  create_tabs(LSPA,Tabs3,Tabs4),
+  init_tableau(ABox0,Tabs0,Tableau0),
+  create_tabs(LCA,Tableau0,Tableau1),
+  append([LCA,LPA,LNA,LDIA],AddAllList),
+  add_all_to_tableau(AddAllList,Tableau1,Tableau2),
+  append([LDIA,LPA],CreateTabsList),
+  create_tabs(CreateTabsList,Tableau2,Tableau3),
   findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA),
-  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_owlThing_list(M,ABox6,Tabs,ABox),
+  merge_all_individuals(M,LSIA,Tableau3,Tableau4),
+  add_owlThing_list(M,Tableau4,Tableau),
   !.
 
 

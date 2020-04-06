@@ -3,12 +3,11 @@
 :- trill.
 
 
-subClassOf(a,unionOf([b,c])).
-subClassOf(a,complementOf(e)).
-subClassOf(b,e).
-subClassOf(c,e).
+%subClassOf(a,unionOf([b,c])).
+%subClassOf(a,complementOf(e)).
+%subClassOf(b,e).
+%subClassOf(c,e).
 
-/*
 subClassOf(a,intersectionOf([b,someValuesFrom(r,e)])).
 subClassOf(a,unionOf([f,allValuesFrom(r,b)])).
 subClassOf(b,intersectionOf([c,d])).
@@ -37,4 +36,3 @@ annotationAssertion('disponte:probability',subClassOf(b,complementOf(f)),literal
 annotationAssertion('disponte:probability',subClassOf(a,unionOf([intersectionOf([c,complementOf(c)]),complementOf(f)])),literal('0.7')).
 annotationAssertion('disponte:probability',subClassOf(a, unionOf([complementOf(c),complementOf(f)])),literal('0.8')).  % TODO  da testare con Protege
 annotationAssertion('disponte:probability',subClassOf(a, unionOf([complementOf(c),complementOf(d)])),literal('0.9')).
-*/
