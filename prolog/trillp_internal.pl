@@ -55,36 +55,12 @@ prolog:message(and_in_and) -->
   Utilities for queries
  ***********/
 
-% to find all axplanations for probabilistic queries
-all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
-  sub_class(M:ClassEx,SupClassEx,Exps),!.
+% findall
+find_n_explanations(M,QueryType,QueryArgs,Expls,_,Opt):- % This will not check the arg max_expl as TRILLP returns a pinpointing formula
+  find_single_explanation(M,QueryType,QueryArgs,Expls,Opt),!.
 
-all_sub_class_int(_:_,_,Exps):-
-  empty_expl(_,Exps).
-
-all_instanceOf(M:ClassEx,IndEx,Exps):-
-  instanceOf(M:ClassEx,IndEx,Exps),!.
-  
-all_instanceOf(_:_,_,Exps):-
-  empty_expl(_,Exps).
-
-all_property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps):-
-  property_value(M:PropEx,Ind1Ex,Ind2Ex,Exps),!.
-  
-all_property_value(_:_,_,_,Exps):-
-  empty_expl(_,Exps).
-
-all_unsat(M:ConceptEx,Exps):-
-  unsat(M:ConceptEx,Exps),!.
-
-all_unsat(_:_,Exps):-
-  empty_expl(_,Exps).
-
-all_inconsistent_theory(M:Exps):-
-  inconsistent_theory(M:Exps),!.
-
-all_inconsistent_theory(_:Exps):-
-  empty_expl(_,Exps).
+find_n_explanations(_,_,_,Expls,_,_):-
+  empty_expl(_,Expls).
 
 
 compute_prob_and_close(M,Exps,Prob):-
@@ -99,15 +75,17 @@ check_and_close(_,Expl,Expl):-
 find_expls(_M,[],_,[]):-!.
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|T],[C,I],E):-
-  findall(E0,clash(M,ABox,E0),Expls0),!,
+find_expls(M,[Tab|T],[C,I],E):-
+  get_clashes(Tab,Clashes),
+  findall(E0,(member(Clash,Clashes),clash(M,Clash,Tab,E0)),Expls0),!,
   dif(Expls0,[]),
   or_all_f(M,Expls0,Expls1),
   find_expls(M,T,[C,I],E1),
   and_f(M,Expls1,E1,E),!.
 
 % checks if an explanations was already found (property_value version)
-find_expls(M,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls(M,[Tab|T],[PropEx,Ind1Ex,Ind2Ex],E):-
+  get_abox(Tab,ABox),
   findall(E0,find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),Expls0),!,
   dif(Expls0,[]),
   or_all_f(M,Expls0,Expls1),
@@ -115,7 +93,7 @@ find_expls(M,[(ABox,_)|T],[PropEx,Ind1Ex,Ind2Ex],E):-
   and_f(M,Expls1,E1,E),!.
   
 
-find_expls(M,[_ABox|T],Query,Expl):-
+find_expls(M,[_Tab|T],Query,Expl):-
   \+ length(T,0),
   find_expls(M,T,Query,Expl).
 
@@ -137,25 +115,54 @@ findClassAssertion4OWLNothing(M,ABox,Expl):-
   update abox
   utility for tableau
 ************/
-modify_ABox(_,ABox0,EQ,sameIndividual(LF),L0,[(sameIndividual(L),Expl)|ABox],EQ):-
-  find((sameIndividual(L),Expl0),ABox),!,
+modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
+  get_abox(Tab0,ABox0),
+  find((sameIndividual(L),Expl1),ABox0),!,
   sort(L,LS),
   sort(LF,LFS),
   LS = LFS,!,
-  dif(L0,Expl0),
-  ((dif(L0,[]),subset(L0,Expl0)) -> 
+  dif(L0,Expl1),
+  ((dif(L0,[]),subset(L0,Expl1)) -> 
      Expl = L0
    ;
-     (subset(Expl0,L0) -> fail 
+     (subset(Expl1,L0) -> fail 
       ;
-        (test(M,L0,Expl0),or_f(M,L0,Expl0,Expl))
+        (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
      )
   ),
-  delete(ABox0,[(sameIndividual(L),Expl0)],ABox).
+  remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox),
+  set_abox(Tab0,[(sameIndividual(L),Expl)|ABox],Tab).
 
-modify_ABox(_,ABox0,EQ,sameIndividual(LF),L0,[(sameIndividual(LF),L0)|ABox0],EQ).
+modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
+  add_clash_to_tableau(M,Tab0,sameIndividual(LF),Tab1),
+  get_abox(Tab0,ABox0),
+  set_abox(Tab1,[(sameIndividual(L),Expl)|ABox],Tab).
 
-modify_ABox(M,ABox0,EQ0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox],EQ):-
+modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
+  get_abox(Tab0,ABox0),
+  find((sameIndividual(L),Expl1),ABox0),!,
+  sort(L,LS),
+  sort(LF,LFS),
+  LS = LFS,!,
+  dif(L0,Expl1),
+  ((dif(L0,[]),subset(L0,Expl1)) -> 
+     Expl = L0
+   ;
+     (subset(Expl1,L0) -> fail 
+      ;
+        (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
+     )
+  ),
+  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox),
+  set_abox(Tab0,[(differentIndividuals(L),Expl)|ABox],Tab).
+
+modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
+  add_clash_to_tableau(M,Tab0,differentIndividuals(LF),Tab1),
+  get_abox(Tab0,ABox0),
+  set_abox(Tab1,[(differentIndividuals(L),Expl)|ABox],Tab).
+
+modify_ABox(M,Tab0,C,Ind,L0,Tab):-
+  get_abox(Tab0,ABox0),
   findClassAssertion(C,Ind,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -166,14 +173,19 @@ modify_ABox(M,ABox0,EQ0,C,Ind,L0,[(classAssertion(C,Ind),Expl)|ABox],EQ):-
         (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
      )
   ),
-  delete(ABox0,(classAssertion(C,Ind),Expl1),ABox),
-  update_expansion_queue(M,C,Ind,EQ0,EQ).
+  remove_from_abox(ABox0,(classAssertion(C,Ind),Expl1),ABox),
+  set_abox(Tab0,[(classAssertion(C,Ind),Expl)|ABox],Tab1),
+  update_expansion_queue(M,C,Ind,Tab1,Tab).
   
   
-modify_ABox(M,ABox0,EQ0,C,Ind,L0,[(classAssertion(C,Ind),L0)|ABox0],EQ):-
-  update_expansion_queue(M,C,Ind,EQ0,EQ).
+modify_ABox(M,Tab0,C,Ind,L0,Tab):-
+  add_clash_to_tableau(M,Tab0,C-Ind,Tab1),
+  get_abox(Tab0,ABox0),
+  set_abox(Tab1,[(classAssertion(C,Ind),L0)|ABox0],Tab1),
+  update_expansion_queue(M,C,Ind,Tab1,Tab).
 
-modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],EQ):-
+modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
+  get_abox(Tab0,ABox0),
   findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
   dif(L0,Expl1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
@@ -182,15 +194,15 @@ modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),Expl)|AB
      % L0 is the new explanation, i.e. the \psi and Expl1 is the old label of an essertion
      (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
   ),
-  delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
-  update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
+  remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
+  set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab1),
+  update_expansion_queue(M,P,Ind1,Ind2,Tab1,Tab).
   
   
-modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],EQ):-
-  update_expansion_queue(M,P,Ind1,Ind2,EQ0,EQ).
-
-/* **************** */
-
+modify_ABox(_,Tab0,P,Ind1,Ind2,L0,Tab):-
+  get_abox(Tab0,ABox0),
+  set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],Tab1),
+  update_expansion_queue(M,P,Ind1,Ind2,Tab1,Tab).
 
 /* ************* */
 
@@ -199,27 +211,23 @@ modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox
   ===============
 */
 
-build_abox(M,(ABox,Tabs)-ExpansionQueue):-
+build_abox(M,Tableau):-
+  retractall(M:final_abox(_)),
   findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
   findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
+  findall((differentIndividuals(Ld),*([differentIndividuals(Ld)])),M:differentIndividuals(Ld),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
-  create_tabs(LCA,Tabs0,Tabs1),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox3),
-  %add_all(LSPA,ABox2,ABox3),
-  add_all(LNA,ABox3,ABox4),
-  init_expansion_queue(LCA,LPA,ExpansionQueue0),
-  findall((differentIndividuals(Ld),*([differentIndividuals(Ld)])),M:differentIndividuals(Ld),LDIA),
-  add_all(LDIA,ABox4,ABox5),
-  create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs4),
-  %create_tabs(LSPA,Tabs3,Tabs4),
+  init_tableau(ABox0,Tabs0,Tableau0),
+  append([LCA,LDIA,LPA],CreateTabsList),
+  create_tabs(CreateTabsList,Tableau0,Tableau1),
+  append([LCA,LPA,LNA,LDIA],AddAllList),
+  add_all_to_tableau(M,AddAllList,Tableau1,Tableau2),
   findall((sameIndividual(L),*([sameIndividual(L)])),M:sameIndividual(L),LSIA),
-  merge_all(M,LSIA,ABox5,Tabs4,ExpansionQueue0,ABox6,Tabs,ExpansionQueue),
-  add_owlThing_list(M,ABox6,Tabs,ABox),
+  merge_all_individuals(M,LSIA,Tableau2,Tableau3),
+  add_owlThing_list(M,Tableau3,Tableau),
   !.
 
 /**********************
@@ -759,6 +767,12 @@ bdd_or(M,Env,[*(X)],BDDX):-!,
 bdd_or(M,Env,[+(X)],BDDX):-
   bdd_or(M,Env,X,BDDX).
 
+/*
+bdd_or(_,_Env,[+(_X)],_BDDX):-
+  write('error: +([+(_)])'),
+  print_message(error,or_in_or),!,false.
+*/
+
 bdd_or(M,Env,[X],BDDX):-
   get_prob_ax(M,X,AxN,Prob),!,
   ProbN is 1-Prob,
@@ -777,6 +791,12 @@ bdd_or(M,Env,[+(H)|T],BDDX):-
   bdd_or(M,Env,H,BDDH),
   bdd_or(M,Env,T,BDDT),
   or(Env,BDDH,BDDT,BDDX).
+
+/*
+bdd_or(_,_Env,[+(_H)|_T],_BDDX):-
+  write('error: +([+(_)|_])'),
+  print_message(error,or_in_or),!,false.
+*/
 
 bdd_or(M,Env,[H|T],BDDAnd):-
   get_prob_ax(M,H,AxN,Prob),!,

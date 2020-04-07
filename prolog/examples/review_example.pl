@@ -11,4 +11,3 @@ subClassOf(c,maxCardinality(4,r)).
 subClassOf(d,maxCardinality(3,r)).
 
 % query: sub_class(a,b).
-

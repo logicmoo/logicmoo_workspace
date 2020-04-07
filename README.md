@@ -5,7 +5,7 @@ TRILL is a tableau reasoner able to compute probability of queries from probabil
 
 You can find the manual at https://github.com/rzese/trill/blob/master/doc/help-trill.pdf
  
-You can try it online at http://trill.lamping.unife.it/
+You can try it online at http://trill-sw.eu
 
 Installation
 ------------
@@ -22,7 +22,7 @@ It requires the packs
 
  * `bddem` https://github.com/friguzzi/bddem
  
- They are installed automatically when installing pack `cplint` or can installed manually as
+ They are installed automatically when installing pack `trill` or can installed manually as
 
     $ swipl
     ?- pack_install(bddem).

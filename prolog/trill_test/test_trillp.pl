@@ -5,6 +5,7 @@
 test_trillp:-
     trill:set_algorithm(trillp),
     run_tests([trillp_biopax,
+    %trillp_biopax_rdf,
     trillp_dbpedia,
     trillp_brca,
     trillp_commander,
