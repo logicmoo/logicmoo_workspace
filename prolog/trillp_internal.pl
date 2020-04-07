@@ -191,14 +191,6 @@ modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox
 
 /* **************** */
 
-/***********
-  update abox
-  utility for tableau
-************/
-
-get_hierarchy_from_class(M,Class,H4C):-
-  hierarchy(M:H),
-  get_hierarchy(H,Class,H4C),!.
 
 /* ************* */
 

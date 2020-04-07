@@ -320,7 +320,7 @@ find_sub_sup_class(M,exactCardinality(N,R),exactCardinality(N,S),subPropertyOf(R
 
 %concept for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,R,D),Ax):-
-  find_sub_sup_class_dir(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts exactCardinality
 find_sub_sup_class(M,exactCardinality(N,R,C),exactCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -332,7 +332,7 @@ find_sub_sup_class(M,maxCardinality(N,R),maxCardinality(N,S),subPropertyOf(R,S))
 
 %concept for concepts maxCardinality
 find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,R,D),Ax):-
-  find_sub_sup_class_dir(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts maxCardinality
 find_sub_sup_class(M,maxCardinality(N,R,C),maxCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -344,7 +344,7 @@ find_sub_sup_class(M,minCardinality(N,R),minCardinality(N,S),subPropertyOf(R,S))
 
 %concept for concepts minCardinality
 find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,R,D),Ax):-
-  find_sub_sup_class_dir(M,C,D,Ax).
+  find_sub_sup_class(M,C,D,Ax).
 
 %role for concepts minCardinality
 find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R,S)):-
@@ -504,17 +504,6 @@ absent2([H-_|T],Expl):-
   absent2(T,Expl).
 
 /* **************** */
-
-/***********
-  update abox
-  utility for tableau
-************/
-
-get_hierarchy_from_class(M,Class,H4C):-
-  hierarchy(M:H),
-  get_hierarchy(H,Class,H4C),!.
-
-/* ************* */
 
 /*
   build_abox
@@ -714,27 +703,6 @@ update_choice_point_list_int([H|T],
                   [H|T1]):-
   update_choice_point_list_int(T,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,T1).
 
-
-/**********************
-
-Hierarchy Explanation Management
-
-***********************/
-
-hier_initial_expl(_M,[[]-[]]):-!.
-
-hier_empty_expl(_M,[]):-!.
-
-hier_and_f(M,A,B,C):- and_f(M,A,B,C).
-
-hier_or_f_check(_M,Or1,Or2,Or):-absent(Or1,Or2,Or).
-
-hier_or_f(M,Or1,Or2,Or):-or_f(M,Or1,Or2,Or).
-
-hier_ax2ex(_M,Ax,[[Ax]-[]]):- !.
-  
-get_subclass_explanation(_M,C,D,Expl,Expls):-
-  utility_kb:get_subClass_expl(_,Expls,C,D,Expl).
 
 /**********************
 

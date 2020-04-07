@@ -5,12 +5,13 @@
 test_tornado:-
     trill:set_algorithm(tornado),
     run_tests([tornado_biopax,
+    %tornado_biopax_rdf,
     tornado_dbpedia,
-    tornado_vicodi,
     tornado_brca,
     tornado_commander,
     tornado_johnEmployee,
     tornado_peoplePets,
+    tornado_vicodi,
     tornado_pizza,
     non_det]).
 
@@ -20,8 +21,6 @@ test_tornado:-
 
 :- ensure_loaded(library('examples/BRCA.pl')).
 
-test(rkb_brca):-
-  run((reload_kb(false),true)).
 test(p_wlbrcr_h):-
   run((prob_instanceOf('WomanUnderLifetimeBRCRisk','Helen',Prob),close_to(Prob,0.123))).
 test(p_wa_wulbrcr):-
@@ -34,8 +33,6 @@ test(p_wa_wulbrcr):-
 
 :-ensure_loaded(library(examples/vicodi)).
 
-test(rkb_v):-
-  run((reload_kb(false),true)).
 test(p_r_avdpf):-
   run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
 test(p_p_r):-
@@ -48,8 +45,6 @@ test(p_p_r):-
 
 :-ensure_loaded(library(examples/commander)).
 
-test(rkb_c):-
-  run((reload_kb(false),true)).
 test(e_c_j):-
   run((prob_instanceOf(commander,john,Prob),close_to(Prob,1))).
 
@@ -60,8 +55,6 @@ test(e_c_j):-
 
 :-ensure_loaded(library(examples/peoplePets)).
 
-test(rkb_pp):-
-  run((reload_kb(false),true)).
 test(p_nl_k):-
   run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.348))).
 
@@ -72,20 +65,25 @@ test(p_nl_k):-
 
 :-ensure_loaded(library(examples/biopaxLevel3)).
 
-test(rkb_bp):-
-  run((reload_kb(false),true)).
 test(p_twbr_e):-
   run((prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
 
 :- end_tests(tornado_biopax).
+
+:- begin_tests(tornado_biopax_rdf, []).
+
+:-ensure_loaded(library(trill)).
+
+test(p_twbr_e):-
+  run((init_trill(tornado),load_owl_kb('../examples/biopaxLevel3_rdf.owl'),prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
+
+:- end_tests(tornado_biopax_rdf).
 
 
 :- begin_tests(tornado_dbpedia, []).
 
 :-ensure_loaded(library('examples/DBPedia.pl')).
 
-test(rkb_dbp):-
-  run((reload_kb(false),true)).
 test(p_p_pp):-
   run((prob_sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Prob),close_to(Prob,0.8273765902816))).
 
@@ -96,9 +94,7 @@ test(p_p_pp):-
 
 :-ensure_loaded(library(examples/johnEmployee)).
 
-test(rkb_je):-
-  run((reload_kb(false),true)).
-test(e_p_j):-
+test(p_p_j):-
   run((prob_instanceOf('johnEmployee:person','johnEmployee:john',Prob),close_to(Prob,1))).
   
 :- end_tests(tornado_johnEmployee).
@@ -107,8 +103,6 @@ test(e_p_j):-
 
 :- ensure_loaded(library(examples/pizza)).
 
-test(rkb_pizza):-
-  run((reload_kb(false),true)).
 test(p_inc_kb):-
   run((prob_inconsistent_theory(Prob),close_to(Prob,0.0))).
 test(p_uns_tof):-
@@ -120,8 +114,6 @@ test(p_uns_tof):-
 
 :-ensure_loaded(library(examples/example_or_rule)).
 
-test(rkb_non_det):-
-  run((reload_kb(false),true)).
 test(p_u_a):-
   run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
 

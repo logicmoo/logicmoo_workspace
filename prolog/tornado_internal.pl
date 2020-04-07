@@ -184,18 +184,6 @@ modify_ABox(M,ABox0,EQ0,P,Ind1,Ind2,L0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox
 
 /* ************* */
 
-/***********
-  update abox
-  utility for tableau
-************/
-
-get_hierarchy_from_class(M,Class,H4C):-
-  hierarchy(M:H),
-  get_hierarchy(H,Class,H4CE),!,
-  get_bdd_environment(M,Env),
-  hier_build_bdd(M,Env,H4CE,H4C).
-
-/* ************* */
 
 /*
   build_abox
@@ -276,84 +264,6 @@ or_f(M,BDD0,BDD1,BDD):-
   get_bdd_environment(M,Env),
   or(Env,BDD0,BDD1,BDD).
 
-/**********************
-
-Hierarchy Explanation Management
-
-***********************/
-
-hier_initial_expl(_M,[]):-!.
-
-hier_empty_expl(_M,[]):-!.
-
-hier_and_f(_M,[],[],[]):- !.
-
-hier_and_f(_M,[],L,L):- !.
-
-hier_and_f(_M,L,[],L):- !.
-
-hier_and_f(_M,L1,L2,F):-
-  hier_and_f1(L1,L2,[],F).
-
-hier_and_f1([],_,L,L).
-
-hier_and_f1([H1|T1],L2,L3,L):-
-  hier_and_f2(H1,L2,L12),
-  append(L3,L12,L4),
-  hier_and_f1(T1,L2,L4,L).
-
-hier_and_f2(_,[],[]):- !.
-
-hier_and_f2(L1,[H2|T2],[H|T]):-
-  append(L1,H2,H),
-  hier_and_f2(L1,T2,T).
-
-hier_or_f_check(_M,Or1,Or2,Or):-absent(Or1,Or2,Or).
-
-hier_or_f(_M,Or1,Or2,Or):-
-  append(Or1,Or2,Or0),
-  sort(Or0,Or).
-
-hier_ax2ex(_M,Ax,[[Ax]]):- !.
-  
-get_subclass_explanation(M,C,D,BDD,Expls):-
-  utility_kb:get_subClass_expl(_,Expls,C,D,Expl),
-  get_bdd_environment(M,Env),
-  build_expl_bdd(M,Env,Expl,BDD).
-
-/*  absent
-  =========
-*/
-
-absent(Expl0,Expl1,Expl):- % Expl0 already present expls, Expl1 new expls to add, Expl the combination of two lists
-  absent0(Expl0,Expl1,Expl),!.
-
-%------------------
-absent0(Expl0,Expl1,Expl):-
-  absent1(Expl0,Expl1,Expl,Added),
-  dif(Added,0).
-
-absent1(Expl,[],Expl,0).
-
-absent1(Expl0,[H|T],[H|Expl],1):-
-  absent2(Expl0,H),!,
-  absent1(Expl0,T,Expl,_).
-
-absent1(Expl0,[_|T],Expl,Added):-
-  absent1(Expl0,T,Expl,Added).
-  
-absent2([H],Expl):-
-  length([H],1),!,
-  subset(H,Expl) -> !,fail ; !,true.
-
-absent2([H|_T],Expl):-
-  subset(H,Expl),!,
-  fail.
-
-absent2([_|T],Expl):-
-  absent2(T,Expl).
-
-
 
 /**********************
 
@@ -401,17 +311,6 @@ build_bdd(_,Env,[],BDD):- !,
   zero(Env,BDD).
 
 build_bdd(_,_Env,BDD,BDD).
-
-build_expl_bdd(M,Env,[X],BDD):- !,
-  bdd_and(M,Env,X,BDD).
-
-build_expl_bdd(M,Env, [H|T],BDD):-
-  build_expl_bdd(M,Env,T,BDDT),
-  bdd_and(M,Env,H,BDDH),
-  or(Env,BDDH,BDDT,BDD).
-
-build_expl_bdd(_M,Env,[],BDD):- !,
-  zero(Env,BDD).
 
 bdd_and(M,Env,[X],BDDX):-
   get_prob_ax(M,X,AxN,Prob),!,
