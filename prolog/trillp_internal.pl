@@ -74,7 +74,8 @@ find_expls(_M,[],_,[]):-!.
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[Tab|T],[C,I],E):-
-  findall(E0,clash(M,Tab,E0),Expls0),!,
+  get_clashes(Tab,Clashes),
+  findall(E0,(member(Clash,Clashes),clash(M,Clash,Tab,E0)),Expls0),!,
   dif(Expls0,[]),
   or_all_f(M,Expls0,Expls1),
   find_expls(M,T,[C,I],E1),
@@ -128,9 +129,10 @@ modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   set_abox(Tab0,[(classAssertion(C,Ind),Expl)|ABox],Tab).
   
   
-modify_ABox(_,Tab0,C,Ind,L0,Tab):-
+modify_ABox(M,Tab0,C,Ind,L0,Tab):-
+  add_clash_to_tableau(M,Tab0,C-Ind,Tab1),
   get_abox(Tab0,ABox0),
-  set_abox(Tab0,[(classAssertion(C,Ind),L0)|ABox0],Tab).
+  set_abox(Tab1,[(classAssertion(C,Ind),L0)|ABox0],Tab).
 
 modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
   get_abox(Tab0,ABox0),
@@ -168,14 +170,13 @@ build_abox(M,Tableau):-
   new_abox(ABox0),
   new_tabs(Tabs0),
   init_tableau(ABox0,Tabs0,Tableau0),
-  create_tabs(LCA,Tableau0,Tableau1),
+  append([LCA,LDIA,LPA],CreateTabsList),
+  create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),
-  add_all_to_tableau(AddAllList,Tableau1,Tableau2),
-  append([LDIA,LPA],CreateTabsList),
-  create_tabs(CreateTabsList,Tableau2,Tableau3),
+  add_all_to_tableau(M,AddAllList,Tableau1,Tableau2),
   findall((sameIndividual(L),*([sameIndividual(L)])),M:sameIndividual(L),LSIA),
-  merge_all_individuals(M,LSIA,Tableau3,Tableau4),
-  add_owlThing_list(M,Tableau4,Tableau),
+  merge_all_individuals(M,LSIA,Tableau2,Tableau3),
+  add_owlThing_list(M,Tableau3,Tableau),
   !.
 
 /**********************
