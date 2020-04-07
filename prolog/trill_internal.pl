@@ -459,7 +459,7 @@ modify_ABox(M,Tab0,C,Ind,Expl1,Tab):-
   set_abox(Tab1,[(classAssertion(C,Ind),Expl)|ABox],Tab1),
   update_expansion_queue(M,C,Ind,Tab1,Tab).
 
-modify_ABox(_,Tab0,P,Ind1,Ind2,Expl1,Tab):-
+modify_ABox(M,Tab0,P,Ind1,Ind2,Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
@@ -471,7 +471,7 @@ modify_ABox(_,Tab0,P,Ind1,Ind2,Expl1,Tab):-
     )
   ),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab1),
-  update_expansion_queue(M,C,Ind,Tab1,Tab).
+  update_expansion_queue(M,P,Ind1,Ind2,Tab1,Tab).
 
 /* ************* */
 

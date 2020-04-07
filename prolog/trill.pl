@@ -266,7 +266,7 @@ find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
   (absence_of_clashes(Tableau) ->  % if QueryType is inconsistent no check
     (
       add_q(M,QueryType,Tableau,QueryArgs,Tableau0),
-      findall(Tableau1,apply_all_rules(M,Tableau0,Tableau1),L),
+      findall(Tableau1,expand_queue(M,Tableau0,Tableau1),L),
       (query_option(Opt,assert_abox,true) -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
       find_expls(M,L,QueryArgs,Expl1),
       check_and_close(M,Expl1,Expl)
@@ -922,7 +922,7 @@ check_clash(M,C1-Ind,Tab):-
 % rules application
 % -------------
 expand_queue(_M,Tab,Tab):-
-  expansion_queue_is_empy(Tab).
+  expansion_queue_is_empty(Tab).
 
 expand_queue(M,Tab0,Tab):-
   extract_from_expansion_queue(Tab0,EA,Tab1),!,
@@ -957,7 +957,7 @@ apply_nondet_rules(_,[],Tab,_EA,Tab).
 
 apply_nondet_rules(M,[H|_],Tab0,EA,Tab):-
   %C=..[H,Tab,L],
-  call(H,M,Tab0,L),!,
+  call(H,M,Tab0,EA,L),!,
   member(Tab,L),
   dif(Tab0,Tab).
 
@@ -2529,7 +2529,7 @@ absence_of_clashes(Tab):-
   Clashes=[].
 
 get_expansion_queue(Tab,ExpansionQueue):-
-  ExpansionQueue = Tab.expq
+  ExpansionQueue = Tab.expq.
 
 set_expansion_queue(Tab0,ExpansionQueue,Tab):-
   Tab = Tab0.put(expq,ExpansionQueue).
@@ -2568,7 +2568,8 @@ new_tableau(tableau{abox:ABox, tabs:Tabs, clashes:[], expq:ExpansionQueue}):-
  * 
  * Initialize a tableau with the lements given in input.
  */
-init_tableau(ABox,Tabs,tableau{abox:ABox, tabs:Tabs, clashes:[]}).
+init_tableau(ABox,Tabs,tableau{abox:ABox, tabs:Tabs, clashes:[], expq:ExpansionQueue}):-
+  empty_expansion_queue(ExpansionQueue).
 
 
 % ======================================================================
