@@ -175,14 +175,14 @@ modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   ),
   remove_from_abox(ABox0,(classAssertion(C,Ind),Expl1),ABox),
   set_abox(Tab0,[(classAssertion(C,Ind),Expl)|ABox],Tab1),
-  update_expansion_queue(M,C,Ind,Tab1,Tab).
+  update_expansion_queue_in_tableau(M,C,Ind,Tab1,Tab).
   
   
 modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   add_clash_to_tableau(M,Tab0,C-Ind,Tab1),
   get_abox(Tab0,ABox0),
-  set_abox(Tab1,[(classAssertion(C,Ind),L0)|ABox0],Tab1),
-  update_expansion_queue(M,C,Ind,Tab1,Tab).
+  set_abox(Tab1,[(classAssertion(C,Ind),L0)|ABox0],Tab2),
+  update_expansion_queue_in_tableau(M,C,Ind,Tab2,Tab).
 
 modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
   get_abox(Tab0,ABox0),
@@ -196,13 +196,13 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
   ),
   remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab1),
-  update_expansion_queue(M,P,Ind1,Ind2,Tab1,Tab).
+  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab1,Tab).
   
   
 modify_ABox(_,Tab0,P,Ind1,Ind2,L0,Tab):-
   get_abox(Tab0,ABox0),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],Tab1),
-  update_expansion_queue(M,P,Ind1,Ind2,Tab1,Tab).
+  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab1,Tab).
 
 /* ************* */
 

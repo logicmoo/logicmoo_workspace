@@ -456,8 +456,8 @@ modify_ABox(M,Tab0,C,Ind,Expl1,Tab):-
     (ABox = ABox0,Expl = Expl1,
     add_clash_to_tableau(M,Tab0,C-Ind,Tab1))
   ),
-  set_abox(Tab1,[(classAssertion(C,Ind),Expl)|ABox],Tab1),
-  update_expansion_queue(M,C,Ind,Tab1,Tab).
+  set_abox(Tab1,[(classAssertion(C,Ind),Expl)|ABox],Tab2),
+  update_expansion_queue_in_tableau(M,C,Ind,Tab2,Tab).
 
 modify_ABox(M,Tab0,P,Ind1,Ind2,Expl1,Tab):-
   get_abox(Tab0,ABox0),
@@ -471,7 +471,7 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,Expl1,Tab):-
     )
   ),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab1),
-  update_expansion_queue(M,P,Ind1,Ind2,Tab1,Tab).
+  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab1,Tab).
 
 /* ************* */
 
@@ -614,7 +614,8 @@ build_abox(M,Tableau):-
   findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),M:differentIndividuals(Ld),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
-  init_tableau(ABox0,Tabs0,Tableau0),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
+  init_tableau(ABox0,Tabs0,ExpansionQueue,Tableau0),
   append([LCA,LDIA,LPA],CreateTabsList),
   create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),

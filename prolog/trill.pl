@@ -286,10 +286,12 @@ set_up_reasoner(M):-
 add_q(M,io,Tableau0,[ClassEx,IndEx],Tableau):- !,
   neg_class(ClassEx,NClassEx),
   add_q(M,Tableau0,classAssertion(NClassEx,IndEx),Tableau1),
-  add_clash_to_tableau(M,Tableau1,NClassEx-IndEx,Tableau).
+  add_clash_to_tableau(M,Tableau1,NClassEx-IndEx,Tableau2),
+  update_expansion_queue_in_tableau(M,NClassEx,IndEx,Tableau2,Tableau).
 
 % property_value
-add_q(_,pv,Tableau,_,Tableau):-!. % Do nothing
+add_q(M,pv,Tableau0,[PropEx,Ind1Ex,Ind2Ex],Tableau):-!,
+  update_expansion_queue_in_tableau(M,PropEx,Ind1Ex,Ind2Ex,Tableau0,Tableau).
 %add_q(_,pv,Tableau0,[PropEx,Ind1Ex,Ind2Ex],Tableau):-
 %  add_q(M,Tableau0,propertyAssertion(negq(PropEx),Ind1Ex,Ind2Ex),Tableau).
 
@@ -298,13 +300,15 @@ add_q(M,sc,Tableau0,[SubClassEx,SupClassEx],Tableau):- !,
   neg_class(SupClassEx,NSupClassEx),
   add_q(M,Tableau0,classAssertion(intersectionOf([SubClassEx,NSupClassEx]),trillan(0)),Tableau1),
   add_owlThing_ind(M,Tableau1,trillan(0),Tableau2),
-  add_clash_to_tableau(M,Tableau2,intersectionOf([SubClassEx,NSupClassEx])-trillan(0),Tableau).
+  add_clash_to_tableau(M,Tableau2,intersectionOf([SubClassEx,NSupClassEx])-trillan(0),Tableau3),
+  update_expansion_queue_in_tableau(M,intersectionOf([SubClassEx,NSupClassEx]),trillan(0),Tableau3,Tableau).
 
 % unsat
 add_q(M,un,Tableau0,['unsat',ClassEx],Tableau):- !,
   add_q(M,Tableau0,classAssertion(ClassEx,trillan(0)),Tableau1),
   add_owlThing_ind(M,Tableau1,trillan(0),Tableau2),
-  add_clash_to_tableau(M,Tableau2,ClassEx-trillan(0),Tableau).
+  add_clash_to_tableau(M,Tableau2,ClassEx-trillan(0),Tableau3),
+  update_expansion_queue_in_tableau(M,ClassEx,trillan(0),Tableau3,Tableau).
 
 % inconsistent_theory
 add_q(_,it,Tableau,['inconsistent','kb'],Tableau):- !. % Do nothing
@@ -2571,6 +2575,13 @@ new_tableau(tableau{abox:ABox, tabs:Tabs, clashes:[], expq:ExpansionQueue}):-
 init_tableau(ABox,Tabs,tableau{abox:ABox, tabs:Tabs, clashes:[], expq:ExpansionQueue}):-
   empty_expansion_queue(ExpansionQueue).
 
+/**
+ * init_tabelau(+ABox:abox, +Tabs:tableau, +ExpansionQueue:expansion_queue, -InitializedTableaus:dict)
+ * 
+ * Initialize a tableau with the lements given in input.
+ */
+init_tableau(ABox,Tabs,ExpansionQueue,tableau{abox:ABox, tabs:Tabs, clashes:[], expq:ExpansionQueue}).
+
 
 % ======================================================================
 % As List (missing Expansion Queue!)
@@ -2723,6 +2734,18 @@ add_all_to_abox([H|T],A0,A):-
 % ------------
 % Utility for rule application
 % ------------
+update_expansion_queue_in_tableau(M,C,Ind,Tab0,Tab):-
+  get_expansion_queue(Tab0,ExpansionQueue0),
+  update_expansion_queue(M,C,Ind,ExpansionQueue0,ExpansionQueue),
+  set_expansion_queue(Tab0,ExpansionQueue,Tab).
+
+update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab0,Tab):-
+  get_expansion_queue(Tab0,ExpansionQueue0),
+  update_expansion_queue(M,P,Ind1,Ind2,ExpansionQueue0,ExpansionQueue),
+  set_expansion_queue(Tab0,ExpansionQueue,Tab).
+
+
+
 update_expansion_queue(_,unionOf(L),Ind,[DQ,NDQ0],[DQ,NDQ]):-!,
   delete(NDQ0,(unionOf(L),Ind),NDQ1),
   append(NDQ1,[(unionOf(L),Ind)],NDQ).
