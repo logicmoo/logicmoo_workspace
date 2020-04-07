@@ -17,27 +17,32 @@ details.
 @copyright Riccardo Zese
 */
 
-:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3,
-                 instanceOf/2, instanceOf/3, prob_instanceOf/3,
-                 property_value/3, property_value/4, prob_property_value/4,
-                 unsat/1, unsat/2, prob_unsat/2,
-                 inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,
+:- module(trill,[sub_class/2, sub_class/3, prob_sub_class/3,all_sub_class/3,
+                 instanceOf/2, instanceOf/3, prob_instanceOf/3,all_instanceOf/3,
+                 property_value/3, property_value/4, prob_property_value/4,all_property_value/4,
+                 unsat/1, unsat/2, prob_unsat/2,all_unsat/2,
+                 inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1,all_inconsistent_theory/1,
                  axiom/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
                  load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
 
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
+:- meta_predicate all_sub_class(:,+,-).
 :- meta_predicate prob_sub_class(:,+,-).
 :- meta_predicate instanceOf(:,+).
 :- meta_predicate instanceOf(:,+,-).
+:- meta_predicate all_instanceOf(:,+,-).
 :- meta_predicate prob_instanceOf(:,+,-).
 :- meta_predicate property_value(:,+,+).
 :- meta_predicate property_value(:,+,+,-).
+:- meta_predicate all_property_value(:,+,+,-).
 :- meta_predicate prob_property_value(:,+,+,-).
 :- meta_predicate unsat(:).
 :- meta_predicate unsat(:,-).
+:- meta_predicate all_unsat(:,-).
 :- meta_predicate prob_unsat(:,-).
 :- meta_predicate inconsistent_theory(:).
+:- meta_predicate all_inconsistent_theory(:).
 :- meta_predicate prob_inconsistent_theory(:).
 :- meta_predicate axiom(:).
 :- meta_predicate add_kb_prefix(:,+).
@@ -172,7 +177,13 @@ load_owl_kb_from_string(_:String):-
  *
  * This predicate searches in the loaded knowledge base axioms that unify with Axiom.
  */
-:- multifile axiom/1.
+:- multifile axiom/1,all_instanceOf/3,all_property_value/4,all_unsat/2,all_inconsistent_theory/1.
+all_sub_class(M:Class,SupClass,Exps):-
+  ( check_query_args(M,[Class,SupClass],[ClassEx,SupClassEx]) ->
+  	all_sub_class_int(M:ClassEx,SupClassEx,Exps)
+  ;
+  	print_message(warning,iri_not_exists),!,false
+  ).
 /*axiom(M:Axiom):-
   M:ns4query(NSList),
   expand_all_ns(M,[Axiom],NSList,[AxiomEx]),
@@ -1122,7 +1133,7 @@ find_sub_sup_trans_role(M,R,S,Expl):-
 unfold_rule(M,(ABox0,Tabs)-EQ0,(C,Ind),(ABox,Tabs)-EQ):-
   findClassAssertion(C,Ind,Expl,ABox0),
   find_sub_sup_class(M,C,D,Ax),
-  and_f(M,Ax,Expl,AxL),
+  and_f_ax(M,Ax,Expl,AxL),
   modify_ABox(M,ABox0,EQ0,D,Ind,AxL,ABox1,EQ),
   add_nominal(D,Ind,ABox1,ABox).
 

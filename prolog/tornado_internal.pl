@@ -56,11 +56,11 @@ prolog:message(and_in_and) -->
  ***********/
 
 % to find all axplanations for probabilistic queries
-all_sub_class(M:ClassEx,SupClassEx,Exps):-
+all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
   assert(M:keep_env),
   sub_class(M:ClassEx,SupClassEx,Exps),!.
 
-all_sub_class(M:_,_,Exps):-
+all_sub_class_int(M:_,_,Exps):-
   empty_expl(M,Exps).
 
 all_instanceOf(M:ClassEx,IndEx,Exps):-

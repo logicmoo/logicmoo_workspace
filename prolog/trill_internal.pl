@@ -40,7 +40,7 @@ clean_up(M):-
  ***********/
 
 % to find all axplanations for probabilistic queries
-all_sub_class(M:ClassEx,SupClassEx,Exps):-
+all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
   all_unsat(M:intersectionOf([ClassEx,complementOf(SupClassEx)]),Exps).
 
 all_instanceOf(M:ClassEx,IndEx,Exps):-
