@@ -263,7 +263,7 @@ find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTi
 find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
   set_up_reasoner(M),
   build_abox(M,Tableau), % will expand the KB without the query
-  (absence_of_clashes(Tableau) ->
+  (absence_of_clashes(Tableau) ->  % if QueryType is inconsistent no check
     (
       add_q(M,QueryType,Tableau,QueryArgs,Tableau0),
       findall(Tableau1,apply_all_rules(M,Tableau0,Tableau1),L),
@@ -2871,11 +2871,13 @@ merge(M,X,Y,Expl,Tableau0,Tableau):-
   flatten([X,Y],L0),
   sort(L0,L),
   list_as_sameIndividual(L,SI),
-  merge_abox(M,L,SI,Expl,ABox0,ABox),
   get_clashes(Tableau0,Clashes0),
-  update_clashes_after_merge(M,L,SI,Tableau0,Clashes0,Clashes),
-  set_tabs(Tableau0,Tabs,Tableau1),
-  set_abox(Tableau1,ABox,Tableau2),
+  merge_abox(M,L,SI,Expl,ABox0,ABox,ClashesToCheck),
+  set_abox(Tableau0,ABox,Tableau1),
+  check_merged_classes(M,ClashesToCheck,Tableau1,NewClashes),
+  update_clashes_after_merge(M,L,SI,Tableau1,Clashes0,ClashesAM),
+  append(NewClashes,ClashesAM,Clashes),
+  set_tabs(Tableau1,Tabs,Tableau2),
   set_clashes(Tableau2,Clashes,Tableau).
 
 /*
@@ -2966,29 +2968,42 @@ set_successor1(NN,H,[R|L],(T0,RBN0,RBR0),(T,RBN,RBR)):-
 */
 
 % TODO update
-merge_abox(_M,_L,_,_,[],[]).
+merge_abox(_M,_L,_,_,[],[],[]).
 
-merge_abox(M,L,SI,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,SI),Expl)|ABox]):-
+merge_abox(M,L,SI,Expl0,[(classAssertion(C,Ind),ExplT)|T],[(classAssertion(C,SI),Expl)|ABox],[C-SI|CTC]):-
   member(Ind,L),!,
   and_f(M,Expl0,ExplT,Expl),
   %and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox(M,L,SI,Expl0,T,ABox).
+  merge_abox(M,L,SI,Expl0,T,ABox,CTC).
 
-merge_abox(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,SI,Ind2),Expl)|ABox]):-
+merge_abox(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,SI,Ind2),Expl)|ABox],CTC):-
   member(Ind1,L),!,
   and_f(M,Expl0,ExplT,Expl),
   %and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox(M,L,SI,Expl0,T,ABox).
+  merge_abox(M,L,SI,Expl0,T,ABox,CTC).
 
-merge_abox(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,SI),Expl)|ABox]):-
+merge_abox(M,L,SI,Expl0,[(propertyAssertion(P,Ind1,Ind2),ExplT)|T],[(propertyAssertion(P,Ind1,SI),Expl)|ABox],CTC):-
   member(Ind2,L),!,
   and_f(M,Expl0,ExplT,Expl),
   %and_f_ax(M,sameIndividual(L),Expl1,Expl),
-  merge_abox(M,L,SI,Expl0,T,ABox).
+  merge_abox(M,L,SI,Expl0,T,ABox,CTC).
 
-merge_abox(M,L,SI,Expl0,[H|T],[H|ABox]):-
-  merge_abox(M,L,SI,Expl0,T,ABox).
+merge_abox(M,L,SI,Expl0,[H|T],[H|ABox],CTC):-
+  merge_abox(M,L,SI,Expl0,T,ABox,CTC).
 
+
+/*
+  check for new clashes due to merge
+ */
+
+check_merged_classes(_,[],_,[]).
+
+check_merged_classes(M,[ToCheck|TC],Tab,[ToCheck|NewClashes]):-
+  check_clash(M,ToCheck,Tab),!,
+  check_merged_classes(M,TC,Tab,NewClashes).
+
+check_merged_classes(M,[_ToCheck|TC],Tab,NewClashes):-
+  check_merged_classes(M,TC,Tab,NewClashes).
 
 /*
  update clashes ofter merge
@@ -3012,15 +3027,16 @@ update_clashes_after_merge(M,L,SI,Tableau,[C-I|TC0],[C-SI|TC],UpdatedSI):-
   memberchk(I,L),!,
   update_clashes_after_merge(M,L,SI,Tableau,TC0,TC,UpdatedSI).
 
+update_clashes_after_merge(M,L,SI,Tableau,[C-sameIndividual(LOld)|TC0],[C-SI|TC],UpdatedSI):-
+  memberchk(I,L),
+  memberchk(I,LOld),!,
+  update_clashes_after_merge(M,L,SI,Tableau,TC0,TC,UpdatedSI).
+
 update_clashes_after_merge(M,L,SI,Tableau,[Clash|TC0],[Clash|TC],UpdatedSI):-
   update_clashes_after_merge(M,L,SI,Tableau,TC0,TC,UpdatedSI).
 
 update_clashes_after_merge(M,L,SI,Tableau,Clashes0,Clashes):-
   update_clashes_after_merge(M,L,SI,Tableau,Clashes0,Clashes,0).
-
-
-
-
 
 
 
