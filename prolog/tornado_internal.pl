@@ -123,6 +123,9 @@ findClassAssertion4OWLNothing(M,ABox,Expl):-
   update abox
   utility for tableau
 ************/
+modify_ABox(_,Tab,sameIndividual(LF),_Expl1,Tab):-
+  length(LF,1),!.
+
 modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
   get_abox(Tab0,ABox0),
   find((sameIndividual(L),Expl1),ABox0),!,
@@ -131,13 +134,16 @@ modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
   LS = LFS,!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
-  remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox),
+  remove_from_abox(ABox0,[(sameIndividual(L),Expl1)],ABox),
   set_abox(Tab0,[(sameIndividual(L),Expl)|ABox],Tab).
 
 modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
   add_clash_to_tableau(M,Tab0,sameIndividual(LF),Tab1),
   get_abox(Tab0,ABox0),
-  set_abox(Tab1,[(sameIndividual(L),Expl)|ABox],Tab).
+  set_abox(Tab1,[(sameIndividual(LF),L0)|ABox],Tab).
+
+modify_ABox(_,Tab,differentIndividuals(LF),_Expl1,Tab):-
+  length(LF,1),!.
 
 modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
   get_abox(Tab0,ABox0),
@@ -147,13 +153,13 @@ modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
   LS = LFS,!,
   dif(L0,Expl1),
   test(M,L0,Expl1,Expl),
-  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox),
+  remove_from_abox(ABox0,[(differentIndividuals(L),Expl1)],ABox),
   set_abox(Tab0,[(differentIndividuals(L),Expl)|ABox],Tab).
 
 modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
   add_clash_to_tableau(M,Tab0,differentIndividuals(LF),Tab1),
   get_abox(Tab0,ABox0),
-  set_abox(Tab1,[(differentIndividuals(L),Expl)|ABox],Tab).
+  set_abox(Tab1,[(differentIndividuals(LF),L0)|ABox],Tab).
 
 modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   get_abox(Tab0,ABox0),

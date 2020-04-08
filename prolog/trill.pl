@@ -263,7 +263,7 @@ find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTi
 find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
   set_up_reasoner(M),
   build_abox(M,Tableau), % will expand the KB without the query
-  (absence_of_clashes(Tableau) ->  % if QueryType is inconsistent no check
+  (absence_of_clashes(Tableau) ->  % TODO if QueryType is inconsistent no check
     (
       add_q(M,QueryType,Tableau,QueryArgs,Tableau0),
       findall(Tableau1,expand_queue(M,Tableau0,Tableau1),L),
@@ -941,7 +941,7 @@ expand_queue(M,Tab0,Tab):-
 apply_all_rules(M,Tab0,EA,Tab):-
   setting_trill(det_rules,Rules),
   apply_det_rules(M,Rules,Tab0,EA,Tab1),
-  (Tab0=Tab1 ->
+  (same_tableau(Tab0,Tab1) ->
   Tab=Tab1;
   apply_all_rules(M,Tab1,EA,Tab)).
 
@@ -1184,14 +1184,14 @@ unfold_rule(M,Tab0,(C,Ind),Tab):-
    --
 */
 unfold_rule(M,Tab0,(C1,Ind),Tab):-
-  get_abox(Tab0,ABox),
   find_not_atomic(M,C1,C,L),
+  get_abox(Tab0,ABox),
   ( C = unionOf(_) -> findClassAssertion(C1,Ind,Expl,ABox)
    ; find_all(M,Ind,L,ABox,Expl)),
   %find_sub_sup_class(M,C,D,Ax),
   %and_f_ax(M,Ax,Expl1,AxL1),
-  modify_ABox(M,Tab0,D,Ind,Expl,Tab1),
-  add_nominal(M,D,Ind,Tab1,Tab).
+  modify_ABox(M,Tab0,C,Ind,Expl,Tab1),
+  add_nominal(M,C,Ind,Tab1,Tab).
 
 /* -- unfold_rule
  *    control propertyRange e propertyDomain
@@ -1367,35 +1367,43 @@ find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http:
 
 %--------------------
 % looks for not atomic concepts descriptions containing class C
-find_not_atomic(M,C,intersectionOf(L1),L1):-
+find_not_atomic(M,C,Ax,LC):-
   M:subClassOf(A,B),
-  member(intersectionOf(L1),[A,B]),
-  member(C,L1).
+  find_not_atomic_int(C,[A,B],Ax,LC).
+
+find_not_atomic(M,C,Ax,LC):-
+  M:equivalentClasses(L),
+  find_not_atomic_int(C,L,Ax,LC).
 
 find_not_atomic(M,C,unionOf(L1),L1):-
   M:subClassOf(A,B),
   member(unionOf(L1),[A,B]),
   member(C,L1).
 
-/*
-find_not_atomic(M,C,intersectionOf(L),L):-
-  M:intersectionOf(L),
-  member(C,L).
-
-find_not_atomic(M,C,unionOf(L),L):-
-  M:unionOf(L),
-  member(C,L).
-*/
-
-find_not_atomic(M,C,intersectionOf(L1),L1):-
-  M:equivalentClasses(L),
-  member(intersectionOf(L1),L),
-  member(C,L1).
-
 find_not_atomic(M,C,unionOf(L1),L1):-
   M:equivalentClasses(L),
   member(unionOf(L1),L),
   member(C,L1).
+
+
+find_not_atomic_int(C,LC0,intersectionOf(L1),L1):-
+  member(intersectionOf(L1),LC0),
+  member(C,L1).
+
+find_not_atomic_int(C,LC0,Ax,LC):-
+  member(intersectionOf(L1),LC0),
+  find_not_atomic_int(C,L1,Ax,LC).
+
+find_not_atomic_int(C,LC0,unionOf(L1),L1):-
+  member(unionOf(L1),LC0),
+  member(C,L1).
+
+find_not_atomic_int(C,LC0,Ax,LC):-
+  member(unionOf(L1),LC0),
+  find_not_atomic_int(C,L1,Ax,LC).
+
+
+
 
 % -----------------------
 % puts together the explanations of all the concepts found by find_not_atomic/3
@@ -2553,6 +2561,11 @@ expansion_queue_is_empty(Tab):-
 
 empty_expansion_queue([[],[]]).
 
+same_tableau(Tab1,Tab2):-
+  get_abox(Tab1,ABox),
+  get_abox(Tab2,ABox),
+  get_tabs(Tab1,Tabs),
+  get_tabs(Tab2,Tabs).
 
 /* initializers */
 
@@ -2736,13 +2749,19 @@ add_all_to_abox([H|T],A0,A):-
 % ------------
 update_expansion_queue_in_tableau(M,C,Ind,Tab0,Tab):-
   get_expansion_queue(Tab0,ExpansionQueue0),
-  update_expansion_queue(M,C,Ind,ExpansionQueue0,ExpansionQueue),
-  set_expansion_queue(Tab0,ExpansionQueue,Tab).
+  update_expansion_queue(M,C,Ind,ExpansionQueue0,[ES3,ES4]),
+  sort(ES3,ES5),
+  sort(ES4,ES6),
+  set_expansion_queue(Tab0,[ES5,ES6],Tab).
 
 update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab0,Tab):-
-  get_expansion_queue(Tab0,ExpansionQueue0),
-  update_expansion_queue(M,P,Ind1,Ind2,ExpansionQueue0,ExpansionQueue),
-  set_expansion_queue(Tab0,ExpansionQueue,Tab).
+  get_expansion_queue(Tab0,[E1,E2]),
+  sort(E1,ES1),
+  sort(E2,ES2),
+  update_expansion_queue(M,P,Ind1,Ind2,[ES1,ES2],[ES3,ES4]),
+  sort(ES3,ES5),
+  sort(ES4,ES6),
+  set_expansion_queue(Tab0,[ES5,ES6],Tab).
 
 
 

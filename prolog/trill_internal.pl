@@ -413,6 +413,9 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
+modify_ABox(_,Tab,sameIndividual(LF),_Expl1,Tab):-
+  length(LF,1),!.
+
 modify_ABox(M,Tab0,sameIndividual(LF),Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((sameIndividual(L),Expl0),ABox0) ->
@@ -428,6 +431,9 @@ modify_ABox(M,Tab0,sameIndividual(LF),Expl1,Tab):-
      add_clash_to_tableau(M,Tab0,sameIndividual(LF),Tab1))
   ),
   set_abox(Tab1,[(sameIndividual(L),Expl)|ABox],Tab).
+
+modify_ABox(_,Tab,differentIndividuals(LF),_Expl1,Tab):-
+  length(LF,1),!.
 
 modify_ABox(M,Tab0,differentIndividuals(LF),Expl1,Tab):-
   get_abox(Tab0,ABox0),
