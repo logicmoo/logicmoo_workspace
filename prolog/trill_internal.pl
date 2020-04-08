@@ -26,9 +26,7 @@ setting_trill(nondet_rules,[or_rule,max_rule,ch_rule]).
 set_up(M):-
   utility_translation:set_up(M),
   init_delta(M),
-  M:(dynamic exp_found/2),
-  M:(dynamic new_added_det/2, new_added_det/3),
-  M:(dynamic new_added_nondet/2, new_added_nondet/3).
+  M:(dynamic exp_found/2).
 
 clean_up(M):-
   utility_translation:clean_up(M),
