@@ -25,9 +25,7 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
-  M:(dynamic new_added_det/2, new_added_det/3),
-  M:(dynamic new_added_nondet/2, new_added_nondet/3).
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1).
 
 clean_up(M):-
   utility_translation:clean_up(M),
@@ -140,7 +138,7 @@ modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
 modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
   add_clash_to_tableau(M,Tab0,sameIndividual(LF),Tab1),
   get_abox(Tab0,ABox0),
-  set_abox(Tab1,[(sameIndividual(LF),L0)|ABox],Tab).
+  set_abox(Tab1,[(sameIndividual(LF),L0)|ABox0],Tab).
 
 modify_ABox(_,Tab,differentIndividuals(LF),_Expl1,Tab):-
   length(LF,1),!.
@@ -158,7 +156,7 @@ modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
 
 modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
   add_clash_to_tableau(M,Tab0,differentIndividuals(LF),Tab1),
-  get_abox(Tab0,ABox0),
+  get_abox(Tab0,ABox),
   set_abox(Tab1,[(differentIndividuals(LF),L0)|ABox],Tab).
 
 modify_ABox(M,Tab0,C,Ind,L0,Tab):-
@@ -172,8 +170,8 @@ modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   
 modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   add_clash_to_tableau(M,Tab0,C-Ind,Tab1),
-  get_abox(Tab0,ABox0),
-  set_abox(Tab1,[(classAssertion(C,Ind),L0)|ABox0],Tab2),
+  get_abox(Tab0,ABox),
+  set_abox(Tab1,[(classAssertion(C,Ind),L0)|ABox],Tab2),
   update_expansion_queue_in_tableau(M,C,Ind,Tab2,Tab).
 
 
@@ -187,7 +185,7 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
   update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab1,Tab).
   
   
-modify_ABox(_,Tab0,P,Ind1,Ind2,L0,Tab):-
+modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
   % add_clash
   get_abox(Tab0,ABox0),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],Tab1),
@@ -215,7 +213,8 @@ build_abox(M,Tableau):-
   findall((differentIndividuals(Ld),BDDDIA),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
-  init_tableau(ABox0,Tabs0,Tableau0),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
+  init_tableau(ABox0,Tabs0,ExpansionQueue,Tableau0),
   append([LCA,LDIA,LPA],CreateTabsList),
   create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),

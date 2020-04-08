@@ -1375,6 +1375,7 @@ find_not_atomic(M,C,Ax,LC):-
   M:equivalentClasses(L),
   find_not_atomic_int(C,L,Ax,LC).
 
+/*
 find_not_atomic(M,C,unionOf(L1),L1):-
   M:subClassOf(A,B),
   member(unionOf(L1),[A,B]),
@@ -1384,7 +1385,7 @@ find_not_atomic(M,C,unionOf(L1),L1):-
   M:equivalentClasses(L),
   member(unionOf(L1),L),
   member(C,L1).
-
+*/
 
 find_not_atomic_int(C,LC0,intersectionOf(L1),L1):-
   member(intersectionOf(L1),LC0),

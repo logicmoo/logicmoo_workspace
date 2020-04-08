@@ -27,9 +27,7 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2),
-  M:(dynamic new_added_det/2, new_added_det/3),
-  M:(dynamic new_added_nondet/2, new_added_nondet/3).
+  M:(dynamic exp_found/2).
 
 clean_up(M):-
   utility_translation:clean_up(M),
@@ -226,7 +224,8 @@ build_abox(M,Tableau):-
   findall((differentIndividuals(Ld),*([differentIndividuals(Ld)])),M:differentIndividuals(Ld),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
-  init_tableau(ABox0,Tabs0,Tableau0),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
+  init_tableau(ABox0,Tabs0,ExpansionQueue,Tableau0),
   append([LCA,LDIA,LPA],CreateTabsList),
   create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),
