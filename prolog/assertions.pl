@@ -156,7 +156,10 @@ curr_prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
     asr_head_prop(Asr, C, H, Stat, Type, Dict, From),
     predicate_property(C:H, implementation_module(IM)),
-    predicate_property(M:H, implementation_module(IM)).
+    match_modules(H, M, IM).
+
+match_modules(_, M, M) :- !.
+match_modules(H, M, IM) :- predicate_property(M:H, implementation_module(IM)).
 
 :- meta_predicate
        prop_asr(?, 0, +, +),
@@ -165,12 +168,12 @@ prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
 prop_asr(Key, M:P, From, Asr) :-
     curr_prop_asr(Key, C:P, From, Asr),
     predicate_property(C:P, implementation_module(IM)),
-    predicate_property(M:P, implementation_module(IM)).
+    match_modules(P, M, IM).
 
 aprop_asr(Key, M:P, From, Asr) :-
     asr_aprop(Asr, Key, C:P, From),
     predicate_property(C:P, implementation_module(IM)),
-    predicate_property(M:P, implementation_module(IM)).
+    match_modules(P, M, IM).
 
 add_arg(_, G1, G2, _, _) :-
     var(G1),

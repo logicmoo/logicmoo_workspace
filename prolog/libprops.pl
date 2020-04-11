@@ -119,7 +119,23 @@
               is_dict/1,
               is_stream/1,
               cyclic_term/1,
-              rational/1
+              rational/1,
+              (\+)/1,
+              forall/2,
+              once/1,
+              erase/1,
+              atom_string/2,
+              text_to_string/2,
+              file_directory_name/2,
+              file_base_name/2,
+              directory_file_path/3,
+              compound_name_arity/3,
+              functor/3,
+              (=..)/2,
+              sort/2,
+              same_file/2,
+              downcase_atom/2,
+              upcase_atom/2
              ] is semidet.
 
 :- true prop [[ground/1,
@@ -136,32 +152,14 @@
               ] is semidet,
               member/2].
 
-:- pred [asserta/1,
-         assertz/1,
-         assert/1,
-         retractall/1,
-         findall/3,
-         ignore/1,
-         writeln/1,
-         writeln/2,
-         format/2,
-         format/3,
-         get_time/1] is det.
-
-:- pred [(\+)/1,
-         forall/2,
-         once/1,
-         erase/1,
-         atom_string/2,
-         text_to_string/2,
-         file_directory_name/2,
-         file_base_name/2,
-         directory_file_path/3,
-         compound_name_arity/3,
-         functor/3,
-         (=..)/2,
-         sort/2,
-         same_file/2,
-         downcase_atom/2,
-         upcase_atom/2
-        ] is semidet.
+:- true pred [asserta/1,
+              assertz/1,
+              assert/1,
+              retractall/1,
+              findall/3,
+              ignore/1,
+              writeln/1,
+              writeln/2,
+              format/2,
+              format/3,
+              get_time/1] is det.
