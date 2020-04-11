@@ -125,11 +125,6 @@ unrtcheck(M:PIList) :-
     collect_asrs(PIList, M, PIL, []),
     unrtcheck2(M-PIL).
 
-generate_rtchecks(Preds) :-
-    generate_rtchecks(Preds, Clauses),
-    % We use compile_aux_clauses to make Clauses immediately available:
-    compile_aux_clauses(Clauses).
-
 generate_rtchecks(Preds, Clauses) :-
     phrase(( ( { '$current_source_module'(CM),
                  '$defined_predicate'(CM:'$rtchecked'(_))
@@ -144,7 +139,8 @@ generate_rtchecks(Preds, Clauses) :-
 term_expansion((:- rtcheck(Preds)), Clauses) :-
     generate_rtchecks(Preds, Clauses).
 
-term_expansion(assertions:asr_head_prop(_, M, Pred, Status, Type, _, _), _) :-
+term_expansion(assertions:asr_head_prop(Asr, M, Pred, Status, Type, D, F),
+               [assertions:asr_head_prop(Asr, M, Pred, Status, Type, D, F)|Clauses]) :-
     current_prolog_flag(rtchecks_static, StaticL),
     memberchk(Status, StaticL),
     Type \= (prop),
@@ -155,8 +151,7 @@ term_expansion(assertions:asr_head_prop(_, M, Pred, Status, Type, _, _), _) :-
          CM:'$rtchecked'(Pred)
        ),
     functor(Pred, F, A),
-    generate_rtchecks(F/A),
-    fail.
+    generate_rtchecks(F/A, Clauses).
 
 :- multifile
     sandbox:safe_directive/1.
