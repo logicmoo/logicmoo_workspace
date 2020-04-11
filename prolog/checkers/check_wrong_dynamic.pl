@@ -76,8 +76,8 @@ hide_var_dynamic_hook(current_head_ctcheck(_, _), check_assertions).
 hide_var_dynamic_hook(unfold_call(_, _, _, _, _), unfold_calls).
 hide_var_dynamic_hook(no_backtrace_entry(_), filtered_backtrace).
 hide_var_dynamic_hook(det_clause(_, _), check_useless_cuts).
-hide_var_dynamic_hook(dyn_rtcheck(_, _), rtchecks).
-hide_var_dynamic_hook(unrtcheck(_, _), rtchecks).
+hide_var_dynamic_hook(dyn_rtcheck_record(_, _), rtchecks).
+hide_var_dynamic_hook(unrtcheck2(_, _), rtchecks).
 
 :- dynamic
     wrong_dynamic_db/4,

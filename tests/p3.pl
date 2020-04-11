@@ -4,7 +4,7 @@
 :- use_module(library(plprops)).
 :- use_module(library(rtchecks)).
 
-:- rtchecked p/1.
+:- rtcheck p/1.
 
 :- pred p(atm).
 

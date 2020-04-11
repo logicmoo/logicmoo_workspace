@@ -66,18 +66,25 @@ am_head_prop_idx(Head, M, Meta, From) :-
     with_amp(am_head_prop_idx(Flag, Term, M, Meta, From), Flag, none),
     Head = Term.
 
+black_list_module(rtchecks_rt).
+black_list_module(ctrtchecks).
+black_list_module(qualify_meta_goal).
+black_list_module(assertions).
+
 am_head_prop_idx(Flag, Head, M, Meta, From) :-
-    var(Meta), !,
+    var(Meta),
+    !,
     Pred = M:Head,
     ( var(Head)
     ->module_property(M, class(user)),
       current_predicate(M:F/A),
       functor(Head, F, A)
     ; functor(Head, F, A),
-      module_property(M, class(user)),
-      current_predicate(M:F/A) % Narrow answer set for M
+      current_predicate(M:F/A), % Narrow answer set for M
+      module_property(M, class(user))
     ),
-    \+ predicate_property(Pred, imported_from(_)),
+    \+ black_list_module(M),
+    predicate_property(Pred, implementation_module(M)),
     % if something can not be debugged, can not be rtchecked either:
     \+ predicate_property(Pred, nodebug),
     '$predicate_property'(meta_predicate(Meta), Pred),
@@ -93,9 +100,10 @@ am_head_prop_idx(Flag, Head, M, Meta, From) :-
              prop_asr(glob, meta_modes(_), _, Asr)
            ))
     ),
-    once(( property_from(M:Pred, meta_predicate, From)
-         ; predicate_from(Pred, From)
-         )).
+    findall(From1,
+            once(( property_from(M:Pred, meta_predicate, From1)
+                 ; predicate_from(Pred, From1)
+                 )), [From]).
 am_head_prop_idx(_, _, _, _, _).
 
 assertions:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-

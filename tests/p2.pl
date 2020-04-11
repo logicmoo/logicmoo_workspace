@@ -5,7 +5,7 @@
 :- use_module(library(rtchecks)).
 :- use_module(p3).
 
-:- rtchecked p/1.
+:- rtcheck p/1.
 
 :- pred p(int).
 
