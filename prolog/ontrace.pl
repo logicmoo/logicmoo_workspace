@@ -34,8 +34,7 @@
 
 :- module(ontrace, [ontrace/3,
                     clause_pc_location/3,
-		    cleanup_trace/1,
-                    call_inoutex/3]).
+		    cleanup_trace/1]).
 
 :- use_module(library(apply)).
 :- use_module(library(edinburgh)).
@@ -46,6 +45,7 @@
 :- use_module(library(prolog_codewalk), []).
 :- use_module(library(prolog_source)).
 :- use_module(library(clambda)).
+:- use_module(library(call_inoutex)).
 
 :- meta_predicate ontrace(0,6,:).
 
@@ -54,19 +54,6 @@ ontrace(Goal, OnTrace, Options) :-
     call_inoutex(Goal,
         setup_trace(State, OnTrace, Options),
         cleanup_trace(State)).
-
-:- meta_predicate call_inoutex(0,0,0).
-call_inoutex(Goal, OnIn, OnOut) :-
-    catch(call_inout(Goal, OnIn, OnOut),
-          E,  (OnOut, throw(E))).
-
-call_inout(Goal, OnIn, OnOut) :-
-    (OnIn;OnOut,fail),
-    prolog_current_choice(C1),
-    Goal,
-    prolog_current_choice(C2),
-    (OnOut;OnIn,fail),
-    (C1==C2 -> ! ;true).
 
 :- public true_1/1.
 true_1(_).
