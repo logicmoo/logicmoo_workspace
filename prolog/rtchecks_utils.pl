@@ -33,7 +33,10 @@
 */
 
 :- module(rtchecks_utils,
-          [handle_rtcheck/1, call_rtc/1, save_rtchecks/1, load_rtchecks/1,
+          [handle_rtcheck/1,
+           call_rtc/1,
+           save_rtchecks/1,
+           load_rtchecks/1,
            assrchk_error/1]).
 
 :- use_module(library(assertions)).
@@ -67,6 +70,7 @@ filtered_backtrace:no_backtrace_clause_hook('$rat_trap'(_, _, _, _, _), _).
 location_t(Loc) :-
     ( clause('$messages':swi_location(Term, _, _), _)
     ; clause(prolog:message_location(Term, _, _), _)
+    ; Term = []
     ),
     nonvar(Term),
     Term = Loc.
@@ -168,7 +172,7 @@ prop_values(From/Prop-Values) -->
 
 :- meta_predicate call_rtc(0).
 
-:- pred call_rtc/1 : callable # "This predicate calls a goal and if an
+:- true pred call_rtc/1 : callable # "This predicate calls a goal and if an
         rtcheck signal is intercepted, an error message is shown and
         the execution continues. Alternatively, it is re-raised as an
         exception depending on the flag rtchecks_abort_on_error

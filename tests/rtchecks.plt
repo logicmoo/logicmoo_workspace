@@ -67,10 +67,10 @@ test(rtexec3) :-
     % ignore(save_rtchecks(p(_))),
     load_rtchecks(E),
     assertion(E=[assrchk(ppt(rtchecks_example3:r/0,
-                             clause_pc(_, 7)), error(comp, qq, [file(_, _, _, _)/not_fails-[failure]],
+                             clause_pc(_, 7)), error(comp, _:qq, [file(_, _, _, _)/not_fails-[failure]],
                                                      _, file(_, _, _, _))),
                  assrchk(ppt(rtchecks_example3:p/1,
-                             clause_pc(_, 3)), error(comp, r, [file(_, _, _, _)/det-[fails]],
+                             clause_pc(_, 3)), error(comp, _:r, [file(_, _, _, _)/det-[fails]],
                                                      _, file(_, _, _, _)))]).
 
 % The next  two tests  implements run-time checking  via instrumentation  of the
@@ -81,7 +81,7 @@ test(rtexec3) :-
 test(rtexec4) :-
     save_rtchecks(fullasr(3,_B)),
     load_rtchecks(E),
-    assertion(E=[assrchk(asr,error(success,fullasr(3,3),
+    assertion(E=[assrchk(asr,error(success,_:fullasr(3,3),
                                    [_/instan(rtchecks_example3:family(3))-[]], _, _))]).
 
 test(rtexec5) :-

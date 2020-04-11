@@ -37,8 +37,8 @@
            rtcheck_call/1,
            rtcheck_call/2]).
 
-:- use_module(library(ontrace)).
 :- use_module(library(rtchecks_rt)).
+:- use_module(library(call_inoutex)).
 
 :- meta_predicate
        rtcheck_start(0),

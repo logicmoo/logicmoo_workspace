@@ -36,9 +36,9 @@
 	  [rtcheck_goal/2,
            rtcheck_goal/3,
            rtcheck_goal/4,
+           wrap_asr_rtcheck/2,
            start_rtcheck/1,
 	   start_rtcheck/2,
-           rtcheck_lit/3,
 	   rtc_call/3]).
 
 :- use_module(library(apply)).
@@ -50,6 +50,7 @@
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
 :- use_module(library(ctrtchecks)).
+:- use_module(library(call_inoutex)).
 :- reexport(library(ctrtchecks),
             ['$with_asr'/2,
              '$with_gloc'/2,
@@ -129,31 +130,32 @@ rtcheck_goal(CM:Goal1, Call, RTCheck) :-
       RTCheck = rtcheck_goal(call(Call, CM:Pred), M, CM, RAsrL)
     ).
 
+:- thread_local rtchecks_disabled/0.
+
+rtchecks_disable :- assertz(rtchecks_disabled).
+
+rtchecks_enable :- retractall(rtchecks_disabled).
+
 :- meta_predicate rtcheck_goal(0, +, +, +).
-rtcheck_goal(Goal, M, CM, RAsrL) :-
-    check_goal(rt, Goal, M, CM, RAsrL).
+rtcheck_goal(CM:Goal, M, CM, RAsrL) :-
+    ( rtchecks_disabled
+    ->CM:Goal
+    ; call_inoutex(
+          check_goal(rt, rtchecks_rt:call_inoutex(CM:Goal, rtchecks_enable, rtchecks_disable),
+                     M, CM, RAsrL),
+          rtchecks_disable,
+          rtchecks_enable)
+    ).
 
 :- meta_predicate start_rtcheck(0 ).
 start_rtcheck(Goal) :-
-    do_start_rtcheck(Goal, Goal).
+    start_rtcheck(Goal, Goal).
 
 :- meta_predicate start_rtcheck(+, 0 ).
-start_rtcheck(Goal, WrappedHead) :-
-    do_start_rtcheck(Goal, WrappedHead).
-
-do_start_rtcheck(M:Goal1, CM:WrappedHead) :-
+start_rtcheck(M:Goal1, CM:WrappedHead) :-
     resolve_calln(Goal1, Goal),
     collect_rtasr(Goal, CM, _, M, RAsrL),
     check_goal(rt, CM:WrappedHead, M, CM, RAsrL).
-
-prolog:called_by(rtcheck_lit(_, C, _), rtchecks_rt, M, [M:C]) :- nonvar(C).
-
-% Note: it should be 0, but we use : to avoid loop in goal_expansion
-:- meta_predicate rtcheck_lit(+, :, +).
-rtcheck_lit(body, Goal, From) :-
-    '$with_ploc'(start_rtcheck(Goal), From).
-rtcheck_lit(head, Goal, From) :-
-    '$with_ploc'(Goal, From).
 
 collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
     qualify_meta_goal(Goal, M, CM, Pred),
@@ -182,4 +184,3 @@ do_rtcheck(Status, Check, Pred) :-
     fail.
 
 sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).
-sandbox:safe_meta_predicate(rtchecks_rt:rtcheck_lit/3).

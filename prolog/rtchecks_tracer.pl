@@ -47,6 +47,7 @@
 :- use_module(library(static_strip_module)).
 :- use_module(library(resolve_calln)).
 :- use_module(library(ctrtchecks)).
+:- use_module(library(call_inoutex)).
 
 :- thread_local
     rtc_scanned/1,

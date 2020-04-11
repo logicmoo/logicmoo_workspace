@@ -33,7 +33,7 @@ animal(A) :- int(A).
 
 family(B) :- atm(B).
 
-:- rtchecked fullasr/2.
+:- rtcheck fullasr/2.
 
 :- pred fullasr(A, _) :: atm(A) : atm(A) => atm(A).
 :- pred fullasr(A, B) :: atm(A) : (animal(A), atm(A)) => family(B) + not_fails.

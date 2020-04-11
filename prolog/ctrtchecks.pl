@@ -49,6 +49,7 @@
 
 :- use_module(library(apply)).
 :- use_module(library(lists)).
+:- use_module(library(pairs)).
 :- use_module(library(assertions)).
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
@@ -140,11 +141,11 @@ no_acheck_predicate(T, Pred, M) :-
     ).
 
 current_assertion(T, Pred, M, Asr) :-
+    prop_asr(Pred, M, Status, Type, _, _, Asr),
     \+ ( T = rt,
          prop_asr(Pred, M, _, prop, _, _, _)
        ),
     \+ no_acheck_predicate(T, Pred, M),
-    prop_asr(Pred, M, Status, Type, _, _, Asr),
     assertion_is_valid(T, Status, Type, Asr),
     ( current_prolog_flag(rtchecks_level, inner)
     ->true
@@ -280,7 +281,7 @@ check_asr_props(T, PType, Asr-PropValues) :-
 send_check_asr(PType, Asr-PropValues) :-
     ( PropValues = [[]] % Skip property
     ->true
-    ; once(asr_aprop(Asr, head, _:Pred, ALoc)),
+    ; once(asr_aprop(Asr, head, Pred, ALoc)),
       send_check(PropValues, PType, Pred, ALoc)
     ).
 

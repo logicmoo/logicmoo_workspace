@@ -4,7 +4,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
 
-:- rtchecked p1/1.
+:- rtcheck p1/1.
 
 :- pred p1(atm).
 :- pred p1/1 is det.
