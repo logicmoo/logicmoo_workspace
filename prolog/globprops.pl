@@ -541,7 +541,7 @@ throw(E, Goal) :- test_throw_2(Goal, throw(E), F, F \= E).
 :- meta_predicate test_throw_2(0, ?, ?, 0).
 test_throw_2(Goal, Prop, F, Test) :-
     catch(Goal, F,
-          ( ( F \= assrchk(_, _),
+          ( ( F \= assrchk(_),
               Test
             ->send_comp_rtcheck(Goal, Prop, exception(F))
             ; true

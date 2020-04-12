@@ -64,4 +64,4 @@ send_check(Props, ErrType, Name, ALoc) :-
     send_check(Props, ErrType, Name, PLoc, ALoc).
 
 send_check(Props, ErrType, Name, PLoc, ALoc) :-
-    send_signal(assrchk(asr, error(ErrType, Name, Props, PLoc, ALoc))).
+    send_signal(assrchk(error(ErrType, Name, Props, PLoc, ALoc))).
