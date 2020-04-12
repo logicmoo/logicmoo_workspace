@@ -33,6 +33,7 @@
 */
 
 :- module(send_check, [send_check/4,
+                       send_check/5,
                        send_comp_rtcheck/3]).
 
 :- use_module(library(assertions)).
@@ -60,4 +61,7 @@ send_check(Props, ErrType, Name, ALoc) :-
     ->true
     ; PLoc = []
     ),
+    send_check(Props, ErrType, Name, PLoc, ALoc).
+
+send_check(Props, ErrType, Name, PLoc, ALoc) :-
     send_signal(assrchk(asr, error(ErrType, Name, Props, PLoc, ALoc))).
