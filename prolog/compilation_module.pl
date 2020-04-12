@@ -39,7 +39,7 @@
             op(1150, fx, compilation_predicate)
           ]).
 
-:- use_module(library(compound_expand)).
+:- reexport(library(compound_expand)).
 
 :- meta_predicate
         compilation_module(:),
