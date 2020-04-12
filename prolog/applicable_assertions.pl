@@ -66,7 +66,7 @@ applicable_status(check).
 applicable_assertions(Head, AsrGlobL, AsrSuccL) :-
     findall(spec(Asr), prop_asr(head, Head, _, Asr), AsrL),
     intercept(check_asrs_pre(rt, applicable_prop_check, AsrL, AsrGlobPVL, AsrSuccPVL),
-              assrchk(_, _), true),
+              assrchk(_), true),
     findall(Asr,
             ( member(Asr-PVL, AsrGlobPVL),
               memberchk(PVL, [[], [[]]])

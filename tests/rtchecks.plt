@@ -18,23 +18,21 @@ user:message_property(_, stream(current_output)) :- user:error_on_co.
 :- set_prolog_flag(runtime_checks, yes).
 :- set_prolog_flag(rtchecks_check, yes).
 
-test(rtc_external, [blocked('rtchecks for functor/3 is now disabled')]) :-
+test(rtc_external) :-
     call_in_module_dir(plunit_rtchecks,
-                       ( notrace(['../examples/rtc_external']),
-                         save_rtchecks(do_trace_rtc(test_ex)),
+                       ( ['../examples/rtc_external'],
+                         save_rtchecks(with_rtchecks(test_ex)),
                          load_rtchecks(E),
                          % Unload it to avoid further problems with format/3:
                          unload_file('../examples/rtc_external')
                        )),
-    assertion(E = [assrchk(ppt(_,_),
-                           error(comp,
-                                 functor(0, 0, 0 ),
+    assertion(E = [assrchk(error(comp,
+                                 _:functor1(0, 0, 0 ),
                                  [_/fails-[not_fails]],
                                  _,
                                  _)),
-                   assrchk(ppt(_,_),
-                           error(success,
-                                 functor(0, 0, 0 ),
+                   assrchk(error(success,
+                                 _:functor1(0, 0, 0 ),
                                  [_/instan(rtc_external:atom(0))-[]],
                                   _,
                                  _))]).
@@ -54,8 +52,7 @@ test(rtcompile) :-
 test(rtexec1) :-
     save_rtchecks(with_rtchecks(test1)),
     load_rtchecks(E),
-    assertion(E=[assrchk(asr,
-                         error(pp_check, check/1,
+    assertion(E=[assrchk(error(pp_check, check/1,
                                [_/(rtchecks_example3: (0>0 ))-[]], file(_, _, _, _), _))]).
 
 test(rtexec2) :-
@@ -65,10 +62,10 @@ test(rtexec3) :-
     ignore(save_rtchecks(with_rtchecks(p(_)))),
     % ignore(save_rtchecks(p(_))),
     load_rtchecks(E),
-    assertion(E=[assrchk(asr, error(comp, _:qq, [file(_, _, _, _)/not_fails-[failure]],
-                                    [], file(_, _, _, _))),
-                 assrchk(asr, error(comp, _:r, [file(_, _, _, _)/det-[fails]],
-                                    [], file(_, _, _, _)))]).
+    assertion(E=[assrchk(error(comp, _:qq, [file(_, _, _, _)/not_fails-[failure]],
+                               [], file(_, _, _, _))),
+                 assrchk(error(comp, _:r, [file(_, _, _, _)/det-[fails]],
+                               [], file(_, _, _, _)))]).
 
 % The next  two tests  implements run-time checking  via instrumentation  of the
 % predicate  being run-time  checked.  Apart  of  that, be  careful, since  they
@@ -78,8 +75,8 @@ test(rtexec3) :-
 test(rtexec4) :-
     save_rtchecks(fullasr(3,_B)),
     load_rtchecks(E),
-    assertion(E=[assrchk(asr,error(success,_:fullasr(3,3),
-                                   [_/instan(rtchecks_example3:family(3))-[]], _, _))]).
+    assertion(E=[assrchk(error(success,_:fullasr(3,3),
+                               [_/instan(rtchecks_example3:family(3))-[]], _, _))]).
 
 test(rtexec5) :-
     save_rtchecks(fullasr(a,_B)),

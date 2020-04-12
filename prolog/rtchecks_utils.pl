@@ -75,19 +75,11 @@ location_t(Loc) :-
 :- type assrchk_error/1 #
         "Specifies the format of an assertion check error.".
 
-assrchk_error(assrchk(Level, error(Type, _Pred, PropValues, PLoc, ALoc))) :-
-    rtcheck_level(Level),
+assrchk_error(assrchk(error(Type, _Pred, PropValues, PLoc, ALoc))) :-
     rtcheck_type(Type),
     keylist(PropValues),
     location_t(PLoc),
     location_t(ALoc).
-
-:- type rtcheck_level/1.
-
-rtcheck_level(asr).
-rtcheck_level(ppt(Caller, Loc)) :-
-    term(Caller),
-    location_t(Loc).
 
 :- type rtcheck_type/1 # "Specifies the type of run-time errors.".
 
@@ -140,13 +132,7 @@ prolog:error_message(unintercepted_signal(Signal)) -->
 prolog:message(acheck(checks, RTChecks)) -->
     '$foldl'(prolog:message, RTChecks).
 
-assr_level_message(asr) --> [].
-assr_level_message(ppt(Caller, Loc)) -->
-    '$messages':swi_location(Loc),
-    ['At program point in ~q:'-[Caller], nl].
-
-prolog:message(assrchk(Level, Error)) -->
-    assr_level_message(Level),
+prolog:message(assrchk(Error)) -->
     assr_error_message(Error),
     !.
 
@@ -176,7 +162,7 @@ prop_values(From/Prop-Values) -->
         value.".
 
 call_rtc(Goal) :-
-        Error = assrchk(_, _),
+        Error = assrchk(_),
         ( current_prolog_flag(rtchecks_abort_on_error, yes)
 	->intercept(Goal, Error, throw(Error)) % rethrow signal as exception
         ; intercept(Goal, Error,
@@ -193,7 +179,7 @@ call_rtc(Goal) :-
         run-time check exceptions thrown by the goal.".
 
 save_rtchecks(Goal) :-
-        RTError = assrchk(_, _),
+        RTError = assrchk(_),
         intercept(Goal, RTError, assertz(rtcheck_db(RTError))).
 
 :- pred load_rtchecks/1 => list(assrchk_error) # "retract the

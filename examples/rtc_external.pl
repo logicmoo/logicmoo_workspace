@@ -43,7 +43,9 @@
 
 % :- pred functor(F, A, N) : nonvar(F) => (atom(A), nnegint(N)).
 
-:- pred functor/3 : (nonvar * var * var) => (nonvar * atom * nnegint) + fails.
+:- pred functor1/3 : (nonvar * var * var) => (nonvar * atom * nnegint) + fails.
+
+functor1(A, B, C) :- functor(A, B, C).
 
 :- true prop patata/1 + no_signal.
 :- meta_predicate patata(0).
@@ -52,6 +54,6 @@ patata(G) :- call(G).
 :- pred display/1 + patata.
 
 test_ex :-
-        functor(0, A, N),
+        functor1(0, A, N),
         display(A/N),
         nl.
