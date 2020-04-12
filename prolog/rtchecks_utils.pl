@@ -53,8 +53,6 @@
 
 filtered_backtrace:no_backtrace_clause_hook(_, ontrace).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_utils).
-filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer).
-filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_tracer_rt).
 filtered_backtrace:no_backtrace_clause_hook(_, rtchecks_rt).
 filtered_backtrace:no_backtrace_clause_hook(_, ctrtchecks).
 filtered_backtrace:no_backtrace_clause_hook(_, intercept).
@@ -64,7 +62,6 @@ filtered_backtrace:no_backtrace_clause_hook(_, metaprops).
 filtered_backtrace:no_backtrace_clause_hook(_, send_check).
 filtered_backtrace:no_backtrace_clause_hook(_, plprops).
 filtered_backtrace:no_backtrace_clause_hook(_, context_values).
-filtered_backtrace:no_backtrace_clause_hook('$rat_trap'(_, _, _, _, _), _).
 
 :- type location_t/1.
 location_t(Loc) :-

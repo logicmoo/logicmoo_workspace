@@ -42,6 +42,7 @@
 
 :- discontiguous '$exported_op'/3.
 :- reexport(library(compound_expand)).
+:- use_module(library(neck)).
 :- use_module(library(assertions)).
 :- use_module(library(prolog_wrap)).
 :- use_module(library(rtcprops), []).
@@ -181,9 +182,13 @@ local_preds(Name//Arity) :-
 with_rtchecks(Goal) :-
     collect_rtcheckable_preds(GLLL),
     setup_call_cleanup(
-        maplist(rtcheck2, GLLL),
+        ( wrap_ppcheck,
+          maplist(rtcheck2, GLLL)
+        ),
         Goal,
-        maplist(unrtcheck2, GLLL)).
+        ( maplist(unrtcheck2, GLLL),
+          unwrap_ppcheck
+        )).
 
 rtcheck2(M-GLL) :-
     discontiguous(M:'$rtchecked'/1),
@@ -195,6 +200,21 @@ rtcheck2(M, (CM:G)-AsrL) :-
     maplist(wrap_asr_rtcheck, AsrL, RAsrL),
     dyn_rtcheck_record(G, M),
     rtcheck_wrap(M:G, CM, RAsrL).
+
+ppassertion_type_goal(Goal, Status, Pred, Loc) :-
+    pp_status(Status),
+    ( Goal =.. [Status, Pred],
+      Loc = []
+    ; Goal =.. [Status, Pred, Loc]
+    ),
+    neck.
+
+wrap_ppcheck :-
+    forall(ppassertion_type_goal(Goal, Status, Pred, Loc),
+           wrap_predicate(metaprops:Goal, rtchecks, _, pp_call(Status, Pred, Loc))).
+
+unwrap_ppcheck :-
+    forall(pp_status(Status), unwrap_predicate(metaprops:Status/1, rtchecks)).
 
 dyn_rtcheck_record(Head, M) :-
     (   M:'$rtchecked'(Head)

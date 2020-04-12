@@ -9,7 +9,6 @@
 :- use_module(library(call_in_dir)).
 :- use_module(library(substitute)).
 :- use_module(library(rtchecks_utils)).
-:- use_module(library(rtchecks_tracer)).
 :- use_module(library(intercept)).
 :- use_module(library(libprops)).
 
@@ -53,25 +52,23 @@ test(rtcompile) :-
 :- ['../examples/rtchecks_example3'].
 
 test(rtexec1) :-
-    save_rtchecks(do_trace_rtc(test1)),
+    save_rtchecks(with_rtchecks(test1)),
     load_rtchecks(E),
-    assertion(E=[assrchk(ppt(_,_),
+    assertion(E=[assrchk(asr,
                          error(pp_check, check/1,
-                               [_/(rtchecks_example3: (0>0 ))-[]], _, _))]).
+                               [_/(rtchecks_example3: (0>0 ))-[]], file(_, _, _, _), _))]).
 
 test(rtexec2) :-
-    intercept(do_trace_rtc(test1), Error, print_message(information, Error)).
+    intercept(with_rtchecks(test1), Error, print_message(information, Error)).
 
 test(rtexec3) :-
-    ignore(save_rtchecks(do_trace_rtc(p(_)))),
+    ignore(save_rtchecks(with_rtchecks(p(_)))),
     % ignore(save_rtchecks(p(_))),
     load_rtchecks(E),
-    assertion(E=[assrchk(ppt(rtchecks_example3:r/0,
-                             clause_pc(_, 7)), error(comp, _:qq, [file(_, _, _, _)/not_fails-[failure]],
-                                                     _, file(_, _, _, _))),
-                 assrchk(ppt(rtchecks_example3:p/1,
-                             clause_pc(_, 3)), error(comp, _:r, [file(_, _, _, _)/det-[fails]],
-                                                     _, file(_, _, _, _)))]).
+    assertion(E=[assrchk(asr, error(comp, _:qq, [file(_, _, _, _)/not_fails-[failure]],
+                                    [], file(_, _, _, _))),
+                 assrchk(asr, error(comp, _:r, [file(_, _, _, _)/det-[fails]],
+                                    [], file(_, _, _, _)))]).
 
 % The next  two tests  implements run-time checking  via instrumentation  of the
 % predicate  being run-time  checked.  Apart  of  that, be  careful, since  they

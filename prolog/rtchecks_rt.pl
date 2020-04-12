@@ -33,13 +33,11 @@
 */
 
 :- module(rtchecks_rt,
-	  [rtcheck_goal/2,
-           rtcheck_goal/3,
-           rtcheck_goal/4,
+	  [rtcheck_goal/4,
            wrap_asr_rtcheck/2,
            start_rtcheck/1,
 	   start_rtcheck/2,
-	   rtc_call/3]).
+           pp_call/3]).
 
 :- use_module(library(apply)).
 :- use_module(library(assertions)).
@@ -97,37 +95,11 @@ interpreter.
 
 */
 
-check_cond(Cond, Check, PredName) :-
+check_cond(Cond, Check, PredName, PLoc) :-
     ( Cond
     ->last_prop_failure(L),
-      send_check([[]/Check-L], pp_check, PredName, [])
+      send_check([[]/Check-L], pp_check, PredName, PLoc, [])
     ; true
-    ).
-
-ppassertion_type_goal(check(Goal), check, Goal).
-ppassertion_type_goal(trust(Goal), trust, Goal).
-ppassertion_type_goal(true( Goal), true,  Goal).
-ppassertion_type_goal(false(Goal), false, Goal).
-
-:- meta_predicate rtcheck_goal(0, 1).
-rtcheck_goal(CM:Goal1, Call) :-
-    resolve_calln(Goal1, Goal),
-    ( ppassertion_type_goal(Goal, Type, Pred)
-    ->rtc_call(Type, call(Call, CM:Pred), CM:Pred)
-    ; predicate_property(CM:Goal, implementation_module(M)),
-      collect_rtasr(Goal, CM, Pred, M, RAsrL),
-      check_goal(rt, call(Call, CM:Pred), M, CM, RAsrL)
-    ).
-
-:- meta_predicate rtcheck_goal(0, 1, -).
-rtcheck_goal(CM:Goal1, Call, RTCheck) :-
-    resolve_calln(Goal1, Goal),
-    ( ppassertion_type_goal(Goal, Type, Pred)
-    ->RTCheck = rtc_call(Type, call(Call, CM:Pred), CM:Pred)
-    ; predicate_property(CM:Goal, implementation_module(M)),
-      collect_rtasr(Goal, CM, Pred, M, RAsrL),
-      RAsrL \= [],
-      RTCheck = rtcheck_goal(call(Call, CM:Pred), M, CM, RAsrL)
     ).
 
 :- thread_local rtchecks_disabled/0.
@@ -169,18 +141,23 @@ assertions:asr_aprop(rtcheck(Asr), Key, Prop, From) :-
 
 % ----------------------------------------------------------------------------
 
-:- meta_predicate rtc_call(+, 0, ?).
+:- meta_predicate rtc_call(+, 0, ?, +).
 
-rtc_call(Type, Check, Pred) :-
-    \+ do_rtcheck(Type, Check, Pred).
+rtc_call(Type, Check, Pred, PLoc) :-
+    \+ do_rtcheck(Type, Check, Pred, PLoc).
 
-do_rtcheck(Status, Check, Pred) :-
+do_rtcheck(Status, Check, Pred, PLoc) :-
     rtcheck_assr_status(Status),
     ( Status = false
     ->Call = Check
     ; Call = (\+ Check)
     ),
-    check_cond(Call, Pred, Status/1),
+    check_cond(Call, Pred, Status/1, PLoc),
     fail.
+
+:- meta_predicate pp_call(+,0,+).
+
+pp_call(Status, Pred, PLoc) :-
+    rtc_call(Status, call_inoutex(Pred, rtchecks_disable, rtchecks_enable), Pred, PLoc).
 
 sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).
