@@ -60,12 +60,12 @@ test(rtexec2) :-
 
 test(rtexec3) :-
     ignore(save_rtchecks(with_rtchecks(p(_)))),
-    % ignore(save_rtchecks(p(_))),
+    % ignore(call_rtc(with_rtchecks(p(_)))),
     load_rtchecks(E),
     assertion(E=[assrchk(error(comp, _:qq, [file(_, _, _, _)/not_fails-[failure]],
-                               [], file(_, _, _, _))),
+                               clause_pc(_, _), file(_, _, _, _))),
                  assrchk(error(comp, _:r, [file(_, _, _, _)/det-[fails]],
-                               [], file(_, _, _, _)))]).
+                               clause_pc(_, _), file(_, _, _, _)))]).
 
 % The next  two tests  implements run-time checking  via instrumentation  of the
 % predicate  being run-time  checked.  Apart  of  that, be  careful, since  they

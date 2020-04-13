@@ -98,9 +98,21 @@ rtchecks_disable :- assertz(rtchecks_disabled).
 
 rtchecks_enable :- retractall(rtchecks_disabled).
 
+:- meta_predicate '$with_ploc'(0 ).
+
+'$with_ploc'(Goal) :-
+    prolog_current_frame(Curr),
+    prolog_frame_attribute(Curr,  parent, Frame),
+    prolog_frame_attribute(Frame, clause, Clause),
+    prolog_frame_attribute(Curr,  pc,     PC),
+    '$with_ploc'(Goal, clause_pc(Clause, PC)).
+
 :- meta_predicate rtcheck_pred(0, +, +, +).
 
 rtcheck_pred(CM:Goal, M, CM, RAsrL) :-
+    '$with_ploc'(do_rtcheck_pred(CM:Goal, M, CM, RAsrL)).
+
+do_rtcheck_pred(CM:Goal, M, CM, RAsrL) :-
     ( rtchecks_disabled
     ->CM:Goal
     ; call_inoutex(

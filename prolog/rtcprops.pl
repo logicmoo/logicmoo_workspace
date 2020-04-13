@@ -76,8 +76,8 @@
 %   - unknown: We do not know if current implementation of run-time checker is
 %              complete or not.
 %
-%   - complete: The opposite of incomplete, error is reported always
-%               that the property is violated. Default.
+%   - complete: The opposite of incomplete, if the property is violated, error
+%               is always reported. Default.
 %
 %   - impossible: The property must not be run-time checked (for theoretical or
 %                 practical reasons).
