@@ -509,7 +509,6 @@ walk_body(C, M, LitPos, Ref, CA, CP1, CP2, CP3) :-
     curr_wrapper/3.
 
 curr_wrapper(start_tabling(_, C), '$tabling', C).
-curr_wrapper(start_rtcheck(_, C), rtchecks,   C).
 
 has_body_hook(W, M) :-
     curr_wrapper(W, M, _),

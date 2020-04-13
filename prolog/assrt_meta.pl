@@ -109,7 +109,7 @@ am_head_prop_idx(_, _, _, _, _).
 assertions:asr_head_prop(am_asr(M, H, S, F), M, H, check, (comp), [], F) :-
     am_head_prop_idx(H, M, S, F).
 assertions:asr_glob(am_asr(M, H, S, F), assrt_meta,
-                   check_call(rt, [am_asr2(M, H, S, F)], _), F) :-
+                    check_call(rt, [am_asr2(M, H, S, F)], _), F) :-
     am_head_prop_idx(H, M, S, F).
 
 assertions:asr_aprop(am_asr2(M, H, _, From), head,   M:H, From).
