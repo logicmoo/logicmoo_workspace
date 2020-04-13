@@ -54,6 +54,8 @@
 :- multifile
     prolog:rename_predicate/2.
 
+wrap_asr_rtcheck(Asr, rtcheck(Asr)).
+
 :- meta_predicate rtcheck_wrap(0 ).
 
 rtcheck_wrap(M:G) :-
@@ -65,7 +67,7 @@ rtcheck_wrap(M:G) :-
     rtcheck_wrap(M:G, CM, RAsrL).
 
 rtcheck_wrap(M:G, CM, RAsrL) :-
-    wrap_predicate(M:G, rtchecks, W, rtcheck_goal(W, M, CM, RAsrL)).
+    wrap_predicate(M:G, rtchecks, W, rtcheck_pred(W, M, CM, RAsrL)).
 
 wrappers(Var) -->
     { var(Var),
@@ -169,7 +171,6 @@ local_rtchecks_dir(rtcheck(Preds)) :-
     local_preds(Preds).
 
 local_preds((A,B)) :-
-    !,
     local_preds(A),
     local_preds(B).
 
@@ -182,12 +183,16 @@ local_preds(Name//Arity) :-
 with_rtchecks(Goal) :-
     collect_rtcheckable_preds(GLLL),
     setup_call_cleanup(
-        ( wrap_ppcheck,
-          maplist(rtcheck2, GLLL)
+        ( rtchecks_disable,
+          wrap_ppcheck,
+          maplist(rtcheck2, GLLL),
+          rtchecks_enable
         ),
         Goal,
-        ( maplist(unrtcheck2, GLLL),
-          unwrap_ppcheck
+        ( rtchecks_disable,
+          maplist(unrtcheck2, GLLL),
+          unwrap_ppcheck,
+          rtchecks_enable
         )).
 
 rtcheck2(M-GLL) :-
@@ -201,17 +206,17 @@ rtcheck2(M, (CM:G)-AsrL) :-
     dyn_rtcheck_record(G, M),
     rtcheck_wrap(M:G, CM, RAsrL).
 
-ppassertion_type_goal(Goal, Status, Pred, Loc) :-
+ppassertion_type_goal(Goal, Status, Call, Loc) :-
     pp_status(Status),
-    ( Goal =.. [Status, Pred],
+    ( Goal =.. [Status, Call],
       Loc = []
-    ; Goal =.. [Status, Pred, Loc]
+    ; Goal =.. [Status, Call, Loc]
     ),
     neck.
 
 wrap_ppcheck :-
-    forall(ppassertion_type_goal(Goal, Status, Pred, Loc),
-           wrap_predicate(metaprops:Goal, rtchecks, _, pp_call(Status, Pred, Loc))).
+    forall(ppassertion_type_goal(Goal, Status, Call, Loc),
+           wrap_predicate(metaprops:Goal, rtchecks, _, rtcheck_call(Status, Call, Loc))).
 
 unwrap_ppcheck :-
     forall(pp_status(Status), unwrap_predicate(metaprops:Status/1, rtchecks)).

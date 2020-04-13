@@ -33,18 +33,15 @@
 */
 
 :- module(rtchecks_rt,
-	  [rtcheck_goal/4,
-           wrap_asr_rtcheck/2,
-           start_rtcheck/1,
-	   start_rtcheck/2,
-           pp_call/3]).
+	  [rtchecks_disable/0,
+           rtchecks_enable/0,
+           rtcheck_pred/4,
+           rtcheck_call/3]).
 
-:- use_module(library(apply)).
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
+:- use_module(library(neck)).
 :- use_module(library(rtchecks_flags)).
-:- use_module(library(qualify_meta_goal)).
-:- use_module(library(resolve_calln)).
 :- use_module(library(send_check)).
 :- use_module(library(clambda)).
 :- use_module(library(ctrtchecks)).
@@ -95,69 +92,50 @@ interpreter.
 
 */
 
-check_cond(Cond, Check, PredName, PLoc) :-
-    ( Cond
-    ->last_prop_failure(L),
-      send_check([[]/Check-L], pp_check, PredName, PLoc, [])
-    ; true
-    ).
-
 :- thread_local rtchecks_disabled/0.
 
 rtchecks_disable :- assertz(rtchecks_disabled).
 
 rtchecks_enable :- retractall(rtchecks_disabled).
 
-:- meta_predicate rtcheck_goal(0, +, +, +).
-rtcheck_goal(CM:Goal, M, CM, RAsrL) :-
+:- meta_predicate rtcheck_pred(0, +, +, +).
+
+rtcheck_pred(CM:Goal, M, CM, RAsrL) :-
     ( rtchecks_disabled
     ->CM:Goal
     ; call_inoutex(
-          check_goal(rt, rtchecks_rt:call_inoutex(CM:Goal, rtchecks_enable, rtchecks_disable),
+          check_goal(rt,
+                     call_inoutex(CM:Goal,
+                                  rtchecks_enable,
+                                  rtchecks_disable),
                      M, CM, RAsrL),
           rtchecks_disable,
           rtchecks_enable)
     ).
-
-:- meta_predicate start_rtcheck(0 ).
-start_rtcheck(Goal) :-
-    start_rtcheck(Goal, Goal).
-
-:- meta_predicate start_rtcheck(+, 0 ).
-start_rtcheck(M:Goal1, CM:WrappedHead) :-
-    resolve_calln(Goal1, Goal),
-    collect_rtasr(Goal, CM, _, M, RAsrL),
-    check_goal(rt, CM:WrappedHead, M, CM, RAsrL).
-
-collect_rtasr(Goal, CM, Pred, M, RAsrL) :-
-    qualify_meta_goal(Goal, M, CM, Pred),
-    collect_assertions(rt, Pred, M, AsrL),
-    maplist(wrap_asr_rtcheck, AsrL, RAsrL).
-
-wrap_asr_rtcheck(Asr, rtcheck(Asr)).
 
 assertions:asr_aprop(rtcheck(Asr), Key, Prop, From) :-
     curr_prop_asr(Key, Prop, From, Asr).
 
 % ----------------------------------------------------------------------------
 
-:- meta_predicate rtc_call(+, 0, ?, +).
+:- meta_predicate do_rtcheck(+, 0, +).
 
-rtc_call(Type, Check, Pred, PLoc) :-
-    \+ do_rtcheck(Type, Check, Pred, PLoc).
-
-do_rtcheck(Status, Check, Pred, PLoc) :-
+status_cond(false,  Call) :- Call.
+status_cond(Status, Call) :-
     rtcheck_assr_status(Status),
-    ( Status = false
-    ->Call = Check
-    ; Call = (\+ Check)
-    ),
-    check_cond(Call, Pred, Status/1, PLoc),
+    Status \= false,
+    neck,
+    \+ Call.
+
+do_rtcheck(Status, Call, PLoc) :-
+    '$with_ploc'(status_cond(Status, Call), PLoc),
+    last_prop_failure(L),
+    send_check([[]/Call-L], pp_check, Status/1, PLoc, []),
     fail.
 
-:- meta_predicate pp_call(+,0,+).
+:- meta_predicate rtcheck_call(+,0,+).
 
-pp_call(Status, Pred, PLoc) :-
-    rtc_call(Status, call_inoutex(Pred, rtchecks_disable, rtchecks_enable), Pred, PLoc).
-
-sandbox:safe_meta_predicate(rtchecks_rt:start_rtcheck/2).
+rtcheck_call(Status, Call, PLoc) :-
+    rtchecks_disable,
+    \+ do_rtcheck(Status, Call, PLoc),
+    rtchecks_enable.

@@ -160,6 +160,8 @@ collect_assertions(T, Pred, M, AsrL) :-
     findall(Head-Asr, current_assertion(T, Head, M, Asr), Pairs),
     maplist([Pred] +\ (Pred-T)^T^true, Pairs, AsrL).
 
+:- meta_predicate check_goal(+, 0, +, +, +).
+
 check_goal(T, Call, M, CM, AsrL) :-
     current_prolog_flag(rtchecks_level, Level),
     checkif_modl(M, CM,
@@ -221,7 +223,7 @@ comp_pos_to_goal(Asr, g(Asr, M:Glob, Loc), '$with_gloc'(M:Glob, Loc), Goal) :-
 '$with_gloc'(Comp, GLoc) :-
     with_value(Comp, '$with_gloc', GLoc).
 
-:- meta_predicate '$with_ploc'(:, ?).
+:- meta_predicate '$with_ploc'(0, ?).
 '$with_ploc'(Comp, GLoc) :-
     with_value(Comp, '$with_ploc', GLoc).
 
@@ -248,13 +250,13 @@ comps_to_goal2([Check|Checks], Check1, Goal) -->
     comps_to_goal2(Checks, Check, Goal).
 
 :- meta_predicate check_call(+, +, 0).
-check_call(T, AsrL, CM:Goal) :-
-    predicate_property(CM:Goal, implementation_module(M)),
-    ctrt_call(T, CM:Goal, Call),
-    check_goal(T, Call, M, CM, AsrL).
+check_call(T, AsrL, Goal) :-
+    predicate_property(Goal, implementation_module(M)),
+    check_call(T, Goal, M, AsrL).
 
-ctrt_call(rt, Call, Call).
-ctrt_call(ct, _, true). % TBD: use a partial evaluator instead of true
+% TBD: use a partial evaluator instead of true
+check_call(ct, CM:_,    M, AsrL) :- check_goal(ct, CM:true, M, CM, AsrL).
+check_call(rt, CM:Call, M, AsrL) :- check_goal(rt, CM:Call, M, CM, AsrL).
 
 check_asrs_props_calls(T, AsrPVL) :-
     check_asrs_props_all(T, calls, AsrPVL).
