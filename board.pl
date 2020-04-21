@@ -37,3 +37,13 @@ neib(P1, P2, left) :- right(P2, P1).
 corner(X) :- \+ noncorner(X).
 noncorner(X) :- top(_,X),top(X,_).
 noncorner(X) :- right(_,X),right(X,_).
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Unit tests
+%%%%%%%%%%%%%%%%%%%%%%
+:- begin_tests(board).                         
+              %test(bottom) :- top(x1y3, x1y2), bottom(x1y2, x1y3).
+:- end_tests(board).
+
+%:- run_tests.

@@ -89,17 +89,17 @@ stuck(X, Y) :-
 
 /* The Sokoban can move to any empty position in the board, but cannot go  */
 /* through boxes.                                                          */
-:- table can_reach/4.
-can_reach(P1, P1, _Boxes, _Visited).
-can_reach(P1, P2, Boxes, _Visited) :-
-    neib(P1, P2, _),
-    \+ member(P2, Boxes).
-can_reach(P1, P2, Boxes, Visited) :-
-    neib(P1, P3, _),
+%% :- table can_reach/4.
+can_reach(P1, P1, _Boxes, _Visited, []):- !.
+can_reach(P1, P2, Boxes, _Visited, [move(P1,Dir)]) :-
+    neib(P1, P2, Dir),
+    \+ member(P2, Boxes), !.
+can_reach(P1, P2, Boxes, Visited,[move(P1,Dir)|SokobanMoves]) :-
+    neib(P1, P3, Dir),
     P3 \== P2,
     \+ member(P3, Visited),
     \+ member(P3, Boxes),
-    can_reach(P3, P2, Boxes, [P3|Visited]).
+    can_reach(P3, P2, Boxes, [P3|Visited], SokobanMoves), !.
 
 /* A good place to move a box is one that:                                 */
 /*  - is not already occupied by a box.                                    */
@@ -112,21 +112,29 @@ good_move(X, Boxes) :-
 /* Selection of a good movement given a state:                             */
 /*  - any valid movement for every box                                     */
 /*  - the Sokoban must be able to access the push position                 */
-movement(state(Sokoban, Boxes), move(Box, Dir)) :-
+movement(state(Sokoban, Boxes), push(Box, Dir), SokobanMoves) :-
     select(Box, Boxes, BoxesRemain),
     neib(Box, NextLoc, Dir),
     good_move(NextLoc, BoxesRemain),
     neib(PushPosition, Box, Dir),
-    can_reach(Sokoban, PushPosition, Boxes, []), /* Enable this rule to consider Sokoban movement constraint */
+    can_reach(Sokoban, PushPosition, Boxes, [], SokobanMoves), /* Enable this rule to consider Sokoban movement constraint */
     \+ member(PushPosition, Boxes).
 
 
 /***************************************************************************/
 /* Implementation of the state update functionality.                       */
 /***************************************************************************/
-update(state(_Sokoban, Boxes), move(Box, Dir), state(NewSokoban, NewBoxes)) :-
+update(state(_Sokoban, Boxes), push(Box, Dir), state(NewSokoban, NewBoxes)) :-
     NewSokoban = Box,
     subtract(Boxes, [Box], TempList),
     neib(Box, NewPosition, Dir),
     append(TempList, [NewPosition], NewBoxes).
 
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Unit tests
+%%%%%%%%%%%%%%%%%%%%%%
+:- begin_tests(game).
+:- end_tests(game).
+
+%:- run_tests.
