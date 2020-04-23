@@ -36,7 +36,6 @@
 #define __FOREIGN_SWIPL_H__
 
 #include <foreign_interface.h>
-#define PL_ARITY_AS_SIZE
 #include <SWI-Prolog.h>
 
 
