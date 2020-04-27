@@ -1,8 +1,8 @@
 from pyswip import Prolog
 from gym_sokoban.envs.sokoban_env_fast import SokobanEnvFast
 import time
+import pandas as pd
 
-# example_query = "call_with_time_limit(5,solve([[top(x1y1,x1y2),top(x1y2,x1y3),top(x1y3,x1y4),top(x1y4,x1y5),top(x1y5,x1y6),top(x2y1,x2y2),top(x2y2,x2y3),top(x2y3,x2y4),top(x2y4,x2y5),top(x2y5,x2y6)],[right(x1y1,x2y1),right(x1y2,x2y2),right(x1y3,x2y3),right(x1y4,x2y4),right(x1y5,x2y5),right(x1y6,x2y6),right(x2y6,x3y6)],[box(x1y4),box(x2y6)],[solution(x1y2),solution(x1y6)],sokoban(x3y6)],Solution))"
 
 def flatten(container):
     for i in container:
@@ -98,11 +98,11 @@ def find_solution(size=8, num_boxes=2, time_limit=10, seed=0):
                 rewards.append(reward)
             print("Last return {}".format(rewards[-1]))
             if rewards[-1] >= 10:
-                return 1
+                return 1, actions
             else:
-                return 0
+                return 0, []
     except:
-        return 0
+        return 0, []
 
 
 if __name__ == "__main__":
@@ -110,10 +110,16 @@ if __name__ == "__main__":
     number_of_trials = 100
     time_start = time.time()
 
+    df = pd.DataFrame(columns=['seed', 'actions'])
+
     results = 0
     for seed in range(number_of_trials):
         print("Current trial {} result {}".format(seed, results))
-        results += find_solution(size=8, num_boxes=2, time_limit=20, seed=seed)
+        new_result, actions = find_solution(size=8, num_boxes=2, time_limit=20, seed=seed)
+        results += new_result
+        df = df.append({'seed' : seed , 'actions' : actions} , ignore_index=True)
+
 
     print("Number of solutions: {}".format(results))
     print("Total time: {}".format(time.time() - time_start))
+    df.to_csv('results.csv')
