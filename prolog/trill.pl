@@ -610,9 +610,14 @@ prob_inconsistent_theory(M:Prob):-
 
 % adds the query into the ABox
 add_q(M,Tableau0,Query,Tableau):-
-  empty_expl(M,Expl),
+  query_empty_expl(M,Expl),
   add_to_tableau(Tableau0,(Query,Expl),Tableau1),
   create_tabs([(Query,Expl)],Tableau1,Tableau).
+
+
+% initialize an empty explanation for the query with the query placeholder 'qp' in teh choicepoint list
+query_empty_expl(M,Expl):-
+  empty_expl(M,Expl). %TODO add qp
 
 
 % expands query arguments using prefixes and checks their existence in the kb

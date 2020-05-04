@@ -58,10 +58,10 @@ find_n_explanations(M,QueryType,QueryArgs,Expls,_,Opt):- % This will not check t
  assert(M:keep_env),
  find_single_explanation(M,QueryType,QueryArgs,Expls,Opt),!.
 
-find_n_explanations(_,_,_,Expls,_,_):-
- empty_expl(_,Expls).
+find_n_explanations(M,_,_,Expls,_,_):-
+ empty_expl(M,Expls).
 
-compute_prob_and_close(M,Exps,Prob):-
+compute_prob_and_close(M,Exps-_,Prob):-
   compute_prob(M,Exps,Prob),
   retractall(M:keep_env),!.
 
@@ -78,8 +78,7 @@ check_and_close(M,Expl,dot(Dot)):-
 
 % checks if an explanations was already found
 find_expls(M,[],_,BDD):-
-  get_bdd_environment(M,Env),
-  one(Env,BDD),!.
+  empty_expl(M,BDD),!.
 
 % checks if an explanations was already found (instance_of version)
 find_expls(M,[Tab|T],[C,I],E):-
@@ -206,11 +205,11 @@ build_abox(M,Tableau):-
   retractall(rule_n(_)),
   assert(rule_n(0)),
   get_bdd_environment(M,Env),
-  findall((classAssertion(Class,Individual),BDDCA),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
-  findall((propertyAssertion(Property,Subject, Object),BDDPA),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
+  findall((classAssertion(Class,Individual),BDDCA-[]),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
+  findall((propertyAssertion(Property,Subject, Object),BDDPA-[]),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
-  findall((differentIndividuals(Ld),BDDDIA),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
+  findall((differentIndividuals(Ld),BDDDIA-[]),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
   init_expansion_queue(LCA,LPA,ExpansionQueue),
@@ -219,7 +218,7 @@ build_abox(M,Tableau):-
   create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),
   add_all_to_tableau(M,AddAllList,Tableau1,Tableau2),
-  findall((sameIndividual(L),BDDSIA),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
+  findall((sameIndividual(L),BDDSIA-[]),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
   merge_all_individuals(M,LSIA,Tableau2,Tableau3),
   add_owlThing_list(M,Tableau3,Tableau),
   !.
@@ -230,27 +229,28 @@ Explanation Management
 
 ***********************/
 
-initial_expl(M,BDD):-
+initial_expl(M,BDD-[]):-
   get_bdd_environment(M,Env),
   zero(Env,BDD).
 
-empty_expl(M,BDD):-
+empty_expl(M,BDD-[]):-
   get_bdd_environment(M,Env),
   one(Env,BDD).
 
 and_f_ax(M,Axiom,BDD0,BDD):-
   get_bdd_environment(M,Env),
   bdd_and(M,Env,[Axiom],BDDAxiom),
-  and_f(M,BDDAxiom,BDD0,BDD).
+  and_f(M,BDDAxiom-[],BDD0,BDD).
 
 % and between two BDDs
 and_f(_,[],BDD,BDD):- !.
 
 and_f(_,BDD,[],BDD):- !.
 
-and_f(M,BDD0,BDD1,BDD):-
+and_f(M,BDD0-CP0,BDD1-CP1,BDD-CP):-
   get_bdd_environment(M,Env),
-  and(Env,BDD0,BDD1,BDD).
+  and(Env,BDD0,BDD1,BDD),
+  append(CP0,CP1,CP).
 
 
 % or between two formulae
@@ -265,9 +265,10 @@ or_f(_,[],BDD,BDD):- !.
   
 or_f(_,BDD,[],BDD):- !.
   
-or_f(M,BDD0,BDD1,BDD):-
+or_f(M,BDD0-CP0,BDD1-CP1,BDD-CP):-
   get_bdd_environment(M,Env),
-  or(Env,BDD0,BDD1,BDD).
+  or(Env,BDD0,BDD1,BDD),
+  append(CP0,CP1,CP).
 
 
 /**********************

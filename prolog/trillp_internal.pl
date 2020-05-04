@@ -61,7 +61,7 @@ find_n_explanations(_,_,_,Expls,_,_):-
   empty_expl(_,Expls).
 
 
-compute_prob_and_close(M,Exps,Prob):-
+compute_prob_and_close(M,Exps-_,Prob):-
   compute_prob(M,Exps,Prob).
 
 % checks the explanation
@@ -116,19 +116,19 @@ findClassAssertion4OWLNothing(M,ABox,Expl):-
 modify_ABox(_,Tab,sameIndividual(LF),_Expl1,Tab):-
   length(LF,1),!.
 
-modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
+modify_ABox(M,Tab0,sameIndividual(LF),L0-CP0,Tab):-
   get_abox(Tab0,ABox0),
-  find((sameIndividual(L),Expl1),ABox0),!,
+  find((sameIndividual(L),Expl1-CP1),ABox0),!,
   sort(L,LS),
   sort(LF,LFS),
   LS = LFS,!,
-  dif(L0,Expl1),
+  dif(L0-CP0,Expl1-CP1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
      Expl = L0
    ;
      (subset(Expl1,L0) -> fail 
       ;
-        (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
+        (test(M,L0,Expl1),or_f(M,L0-CP0,Expl1-CP1,Expl))
      )
   ),
   remove_from_abox(ABox0,[(sameIndividual(L),Expl1)],ABox),
@@ -142,19 +142,19 @@ modify_ABox(M,Tab0,sameIndividual(LF),L0,Tab):-
 modify_ABox(_,Tab,differentIndividuals(LF),_Expl1,Tab):-
   length(LF,1),!.
 
-modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
+modify_ABox(M,Tab0,differentIndividuals(LF),L0-CP0,Tab):-
   get_abox(Tab0,ABox0),
-  find((sameIndividual(L),Expl1),ABox0),!,
+  find((sameIndividual(L),Expl1-CP1),ABox0),!,
   sort(L,LS),
   sort(LF,LFS),
   LS = LFS,!,
-  dif(L0,Expl1),
+  dif(L0-CP0,Expl1-CP1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
      Expl = L0
    ;
      (subset(Expl1,L0) -> fail 
       ;
-        (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
+        (test(M,L0,Expl1),or_f(M,L0-CP0,Expl1-CP1,Expl))
      )
   ),
   remove_from_abox(ABox0,[(differentIndividuals(L),Expl1)],ABox),
@@ -165,16 +165,16 @@ modify_ABox(M,Tab0,differentIndividuals(LF),L0,Tab):-
   get_abox(Tab0,ABox),
   set_abox(Tab1,[(differentIndividuals(LF),L0)|ABox],Tab).
 
-modify_ABox(M,Tab0,C,Ind,L0,Tab):-
+modify_ABox(M,Tab0,C,Ind,L0-CP0,Tab):-
   get_abox(Tab0,ABox0),
-  findClassAssertion(C,Ind,Expl1,ABox0),!,
-  dif(L0,Expl1),
+  findClassAssertion(C,Ind,Expl1-CP1,ABox0),!,
+  dif(L0-CP0,Expl1-CP1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
      Expl = L0
    ;
      (subset(Expl1,L0) -> fail 
       ;
-        (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
+        (test(M,L0,Expl1),or_f(M,L0-CP0,Expl1-CP1,Expl))
      )
   ),
   remove_from_abox(ABox0,(classAssertion(C,Ind),Expl1),ABox),
@@ -188,15 +188,15 @@ modify_ABox(M,Tab0,C,Ind,L0,Tab):-
   set_abox(Tab1,[(classAssertion(C,Ind),L0)|ABox0],Tab2),
   update_expansion_queue_in_tableau(M,C,Ind,Tab2,Tab).
 
-modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
+modify_ABox(M,Tab0,P,Ind1,Ind2,L0-CP0,Tab):-
   get_abox(Tab0,ABox0),
-  findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox0),!,
-  dif(L0,Expl1),
+  findPropertyAssertion(P,Ind1,Ind2,Expl1-CP1,ABox0),!,
+  dif(L0-CP0,Expl1-CP1),
   ((dif(L0,[]),subset(L0,Expl1)) -> 
      Expl = L0
    ;
      % L0 is the new explanation, i.e. the \psi and Expl1 is the old label of an essertion
-     (test(M,L0,Expl1),or_f(M,L0,Expl1,Expl))
+     (test(M,L0,Expl1),or_f(M,L0-CP0,Expl1-CP1,Expl))
   ),
   remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl1),ABox),
   set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab1),
@@ -217,11 +217,11 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
 
 build_abox(M,Tableau):-
   retractall(M:final_abox(_)),
-  findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])),M:classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),
+  findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])-[]),M:classAssertion(Class,Individual),LCA),
+  findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])-[]),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),
   % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
   findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
-  findall((differentIndividuals(Ld),*([differentIndividuals(Ld)])),M:differentIndividuals(Ld),LDIA),
+  findall((differentIndividuals(Ld),*([differentIndividuals(Ld)])-[]),M:differentIndividuals(Ld),LDIA),
   new_abox(ABox0),
   new_tabs(Tabs0),
   init_expansion_queue(LCA,LPA,ExpansionQueue),
@@ -230,7 +230,7 @@ build_abox(M,Tableau):-
   create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),
   add_all_to_tableau(M,AddAllList,Tableau1,Tableau2),
-  findall((sameIndividual(L),*([sameIndividual(L)])),M:sameIndividual(L),LSIA),
+  findall((sameIndividual(L),*([sameIndividual(L)])-[]),M:sameIndividual(L),LSIA),
   merge_all_individuals(M,LSIA,Tableau2,Tableau3),
   add_owlThing_list(M,Tableau3,Tableau),
   !.
@@ -241,12 +241,12 @@ Explanation Management
 
 ***********************/
 
-initial_expl(_M,[]):-!.
+initial_expl(_M,[]-[]):-!.
 
-empty_expl(_M,[]):-!.
+empty_expl(_M,[]-[]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
-  and_f(M,*([Axiom]),F0,F),!.
+  and_f(M,*([Axiom])-[],F0,F),!.
 
 % and between two formulae
 and_f(_,[],[],[]):-!.
@@ -254,6 +254,10 @@ and_f(_,[],[],[]):-!.
 and_f(_,[],F,F):-!.
 
 and_f(_,F,[],F):-!.
+
+and_f(M,F1-CP1,F2-CP2,F-CP):-
+  and_f(M,F1,F2,F),
+  append(CP1,CP2,CP).
 
 % absorption for subformula (a * (b + (c * d))) * (c * d * e) = a * c * d * e
 and_f(M,*(A1),*(A2),*(A)):-
@@ -516,8 +520,9 @@ or_all_f(M,[H|T],Expl):-
   or_all_f(M,T,Expl1),
   or_f(M,H,Expl1,Expl),!.
 
-or_f(_M,F1,F2,F):-
-  or_f_int([F1],[F2],[F]).
+or_f(_M,F1-CP1,F2-CP2,F-CP):-
+  or_f_int([F1],[F2],[F]),
+  append(CP1,CP2,CP).
 
 or_f_int([*(FC1)],[FC2],OrF):- !,
   findall( +(X), (member(+(X),FC1)), Or), length(Or,Length), 
