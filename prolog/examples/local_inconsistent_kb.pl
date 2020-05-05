@@ -16,7 +16,7 @@ E = [classAssertion(a, ind1),
      subClassOf(a, allValuesFrom(r, x)),
      propertyAssertion(r, ind1, ind2)
     ].
-?- property_value(t,ind3,ind4,E). % locally consistent
+?- property_value(r,ind3,ind4,E). % locally consistent
 ?- instanceOf(x,ind4,E). % locally consistent
 
 
@@ -26,7 +26,7 @@ E = [classAssertion(a, ind1),
 classAssertion(a,ind1).
 subClassOf(a,allValuesFrom(r,x)).
 propertyAssertion(r,ind1,ind2).
-%classAssertion(complementOf(x),ind2).
+%classAssertion(complementOf(x),ind2). %TODO uncomment
 subClassOf(a,b).
 
 propertyAssertion(u,ind3,ind4).

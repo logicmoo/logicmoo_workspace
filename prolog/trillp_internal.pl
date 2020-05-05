@@ -59,10 +59,10 @@ find_n_explanations(M,QueryType,QueryArgs,Expls,_,Opt):- % This will not check t
   find_single_explanation(M,QueryType,QueryArgs,Expls,Opt),!.
 
 find_n_explanations(_,_,_,Expls,_,_):-
-  empty_expl(_,Expls).
+  empty_expl(_,Expls-_).
 
 
-compute_prob_and_close(M,Exps-_,Prob):-
+compute_prob_and_close(M,Exps,Prob):-
   compute_prob(M,Exps,Prob).
 
 % checks the explanation
@@ -71,7 +71,7 @@ check_and_close(_,Expl,Expl):-
 
 
 find_expls(M,Tabs,Q,E):-
-  find_expls_int(M,Tabs,Q,E),!.
+  find_expls_int(M,Tabs,Q,E-_),!.
 
 find_expls(M,_,_,_):-
   M:inconsistent_theory_flag,!,
@@ -81,26 +81,16 @@ find_expls(M,_,_,_):-
 find_expls_int(_M,[],_,[]):-!.
 
 % checks if an explanations was already found (instance_of version)
-find_expls_int(M,[Tab|T],[C,I],E):-
+find_expls_int(M,[Tab|T],Q,E):-
   get_clashes(Tab,Clashes),
   findall(E0,(member(Clash,Clashes),clash(M,Clash,Tab,E0)),Expls0),!,
   dif(Expls0,[]),
   % this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
   % if it is so, it asserts the inconcistency and fails
-  consistency_check(M,Expls0,[C,I]),
+  consistency_check(M,Expls0,Q),
   or_all_f(M,Expls0,Expls1),
-  find_expls_int(M,T,[C,I],E1),
+  find_expls_int(M,T,Q,E1),
   and_f(M,Expls1,E1,E),!.
-
-% checks if an explanations was already found (property_value version)
-find_expls_int(M,[Tab|T],[PropEx,Ind1Ex,Ind2Ex],E):-
-  get_abox(Tab,ABox),
-  findall(E0,find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),Expls0),!,
-  dif(Expls0,[]),
-  or_all_f(M,Expls0,Expls1),
-  find_expls_int(M,T,[PropEx,Ind1Ex,Ind2Ex],E1),
-  and_f(M,Expls1,E1,E),!.
-  
 
 find_expls_int(M,[_Tab|T],Query0,Expl):-
   \+ length(T,0),
@@ -227,9 +217,10 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0-CP0,Tab):-
   
   
 modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
+  add_clash_to_tableau(M,Tab0,P-Ind1-Ind2,Tab1),
   get_abox(Tab0,ABox0),
-  set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],Tab1),
-  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab1,Tab).
+  set_abox(Tab1,[(propertyAssertion(P,Ind1,Ind2),L0)|ABox0],Tab2),
+  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab2,Tab).
 
 /* ************* */
 

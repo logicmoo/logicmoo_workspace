@@ -13,7 +13,8 @@ test_tornado:-
     tornado_peoplePets,
     tornado_vicodi,
     tornado_pizza,
-    non_det]).
+    non_det,
+    local_cons]).
 
 :- use_module(library(trill_test/trill_test)).
 
@@ -118,4 +119,20 @@ test(p_u_a):-
   run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
 
 :- end_tests(non_det).
+
+
+:- begin_tests(local_cons, []).
+
+:-ensure_loaded(library(examples/local_inconsistent_kb)).
+
+%test(p_in):-
+%  run((prob_inconsistent_theory(Prob),close_to(Prob,1.0))).
+
+test(p_pv_3_4):-
+  run((prob_property_value(r,ind3,ind4,Prob),close_to(Prob,1.0))).
+
+test(p_i_x_4):-
+  run((prob_instanceOf(x,ind4,Prob),close_to(Prob,1.0))).
+
+:- end_tests(local_cons).
 

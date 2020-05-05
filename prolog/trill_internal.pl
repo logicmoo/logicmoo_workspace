@@ -84,27 +84,27 @@ check_and_close(_,Expl0,Expl):-
 
 
 % checks if an explanations was already found
-find_expls(M,[],[C,I],E):-
+find_expls(M,[],Q,E):-
   %findall(Exp-CPs,M:exp_found([C,I,CPs],Exp),Expl),
   %dif(Expl,[]),
-  find_expls_from_choice_point_list(M,[C,I],E).
+  find_expls_from_choice_point_list(M,Q,E).
 
 find_expls(M,[],['inconsistent','kb'],E):-!,
   findall(Exp,M:exp_found(['inconsistent','kb'],Exp),Expl0),
   remove_supersets(Expl0,Expl),!,
   member(E,Expl).
 
-find_expls(M,[],[_,_],_):-
+find_expls(M,[],_Q,_):-
   M:exp_found(['inconsistent','kb'],_),!,
   print_message(warning,inconsistent),!,false.
 
-find_expls(M,[],[C,I],E):-
-  findall(Exp,M:exp_found([C,I],Exp),Expl0),
+find_expls(M,[],Q,E):-
+  findall(Exp,M:exp_found(Q,Exp),Expl0),
   remove_supersets(Expl0,Expl),!,
   member(E,Expl).
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[Tab|_T],[C,I],E):- %gtrace,  % QueryArgs
+find_expls(M,[Tab|_T],Q0,E):- %gtrace,  % QueryArgs
   get_clashes(Tab,Clashes),
   member(Clash,Clashes),
   clash(M,Clash,Tab,EL0),
@@ -113,7 +113,7 @@ find_expls(M,[Tab|_T],[C,I],E):- %gtrace,  % QueryArgs
   sort(E0,E),
   % this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
   % if it is so, the explanation is labelled as inconsistent kb via Q
-  consistency_check(CPs1,CPs2,[C,I],Q),
+  consistency_check(CPs1,CPs2,Q0,Q),
   (dif(CPs2,[]) ->
     (
     get_latest_choice(CPs2,ID,Choice),
@@ -128,16 +128,6 @@ find_expls(M,[Tab|_T],[C,I],E):- %gtrace,  % QueryArgs
     fail
     )
   ).
-
-% TODO to remove
-% checks if an explanations was already found (property_value version)
-find_expls(M,[Tab|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
-  get_abox(Tab,ABox),
-  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
-  member(E-_,Es),
-  %findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
-  %not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
-  assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
 
 find_expls(M,[_Tab|T],Query,Expl):-
   %\+ length(T,0),
@@ -493,15 +483,15 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,Expl1,Tab):-
   get_abox(Tab0,ABox0),
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+      remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox),
+      Tab1=Tab0
     )
   ;
-    (ABox = ABox0,Expl = Expl1
-    %add_clash_to_tableau(Tab0,sameIndividual(LF),Tab1)
-    )
+    (ABox = ABox0,Expl = Expl1,
+    add_clash_to_tableau(M,Tab0,P-Ind1-Ind2,Tab1))
   ),
-  set_abox(Tab0,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab1),
-  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab1,Tab).
+  set_abox(Tab1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab2),
+  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab2,Tab).
 
 /* ************* */
 

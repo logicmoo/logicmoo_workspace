@@ -14,7 +14,8 @@ test_trill:-
     trill_vicodi,
     trill_pizza,
     non_det,
-    non_det_max]).
+    non_det_max,
+    local_cons]).
 
 :- use_module(library(trill_test/trill_test)).
 
@@ -195,3 +196,35 @@ test(e_i):-
   )).
 
 :- end_tests(non_det_max).
+
+
+:- begin_tests(local_cons, []).
+
+:-ensure_loaded(library(examples/local_inconsistent_kb)).
+
+
+%test(p_in):-
+%  run((prob_inconsistent_theory(Prob),close_to(Prob,1.0))).
+
+%test(e_in):-
+%  run((all_inconsistent_theory(Expl),
+%       same_expl(Expl,[[classAssertion(a, ind1),classAssertion(complementOf(x), ind2),subClassOf(a, allValuesFrom(r, x)),propertyAssertion(r, ind1, ind2)]])
+%  )).
+
+test(p_pv_3_4):-
+  run((prob_property_value(t,ind3,ind4,Prob),close_to(Prob,1.0))).
+
+test(e_pv_3_4):-
+  run((all_property_value(r,ind3,ind4,Expl),
+       same_expl(Expl,[[subPropertyOf(s, t), subPropertyOf(t, r), subPropertyOf(u, s), propertyAssertion(u, ind3, ind4)]])
+  )).
+
+test(p_i_x_4):-
+  run((prob_instanceOf(x,ind4,Prob),close_to(Prob,1.0))).
+
+test(e_i_x_4):-
+  run((all_instanceOf(x,ind4,Expl),
+       same_expl(Expl,[[classAssertion(a, ind3), subClassOf(a, allValuesFrom(r, x)), subPropertyOf(s, t), subPropertyOf(t, r), subPropertyOf(u, s), propertyAssertion(u, ind3, ind4)]])
+  )).
+
+:- end_tests(local_cons).

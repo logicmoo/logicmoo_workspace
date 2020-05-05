@@ -291,9 +291,11 @@ add_q(M,io,Tableau0,[ClassEx,IndEx],Tableau):- !,
 
 % property_value
 add_q(M,pv,Tableau0,[PropEx,Ind1Ex,Ind2Ex],Tableau):-!,
-  update_expansion_queue_in_tableau(M,PropEx,Ind1Ex,Ind2Ex,Tableau0,Tableau).
-%add_q(_,pv,Tableau0,[PropEx,Ind1Ex,Ind2Ex],Tableau):-
-%  add_q(M,Tableau0,propertyAssertion(negq(PropEx),Ind1Ex,Ind2Ex),Tableau).
+  neg_class(PropEx,NPropEx), %use of neg_class to negate property
+  add_q(M,Tableau0,propertyAssertion(NPropEx,Ind1Ex,Ind2Ex),Tableau1),
+  add_clash_to_tableau(M,Tableau1,NPropEx-Ind1Ex-Ind2Ex,Tableau2),
+  update_expansion_queue_in_tableau(M,PropEx,Ind1Ex,Ind2Ex,Tableau2,Tableau).
+
 
 % sub_class
 add_q(M,sc,Tableau0,[SubClassEx,SupClassEx],Tableau):- !,
@@ -824,6 +826,15 @@ clash(M,C1-Ind,Tab,Expl):-
   and_f(M,Expl1,Expl2,ExplT),
   and_f_ax(M,disjointUnion(Class,L),ExplT,Expl).
 
+clash(M,P-Ind1-Ind2,Tab,Expl):-
+  get_abox(Tab,ABox),
+  %write('clash 11'),nl,
+  findPropertyAssertion(P,Ind1,Ind2,Expl1,ABox),
+  neg_class(P,NegP), % use of neg_class with a property
+  findPropertyAssertion(NegP,Ind1,Ind2,Expl2,ABox),
+  and_f(M,Expl1,Expl2,Expl).
+
+
 /*
 clash(M,Tab,Expl):-
   %write('clash 9'),nl,
@@ -927,6 +938,11 @@ check_clash(M,C1-Ind,Tab):-
   dif(C1,C2),
   findClassAssertion(C2,Ind,_,ABox),!.
 
+check_clash(_,P-Ind1-Ind2,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 11'),nl,
+  neg_class(P,NegP),  % use of neg_class with a property
+  findPropertyAssertion(NegP,Ind1,Ind2,_,ABox),!.
 
 % -------------
 % rules application
@@ -2936,28 +2952,28 @@ add_edge_int(P,S,O,(T0,ItR0,RtI0),(T1,ItR1,RtI1)):-
 
 add_node_to_tree(P,S,O,RB0,RB1):-
   rb_lookup((S,O),V,RB0),
-  \+ member(P,V),
+  \+ member(P,V),!,
   rb_update(RB0,(S,O),[P|V],RB1).
 
 add_node_to_tree(P,S,O,RB0,RB0):-
   rb_lookup((S,O),V,RB0),
-  member(P,V).
+  member(P,V),!.
 
 add_node_to_tree(P,S,O,RB0,RB1):-
-  \+ rb_lookup([S,O],_,RB0),
+  \+ rb_lookup([S,O],_,RB0),!,
   rb_insert(RB0,(S,O),[P],RB1).
 
 add_role_to_tree(P,S,O,RB0,RB1):-
   rb_lookup(P,V,RB0),
-  \+ member((S,O),V),
+  \+ member((S,O),V),!,
   rb_update(RB0,P,[(S,O)|V],RB1).
 
 add_role_to_tree(P,S,O,RB0,RB0):-
   rb_lookup(P,V,RB0),
-  member((S,O),V).
+  member((S,O),V),!.
 
 add_role_to_tree(P,S,O,RB0,RB1):-
-  \+ rb_lookup(P,_,RB0),
+  \+ rb_lookup(P,_,RB0),!,
   rb_insert(RB0,P,[(S,O)],RB1).
 
 add_edge_to_tabl(_R,Ind1,Ind2,T0,T0):-
