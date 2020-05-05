@@ -25,14 +25,15 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1).
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1, inconsistent_theory_flag/0).
 
 clean_up(M):-
   utility_translation:clean_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1),
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1, inconsistent_theory_flag/0),
   retractall(M:exp_found(_,_)),
   retractall(M:keep_env),
-  retractall(M:tornado_bdd_environment(_)).
+  retractall(M:tornado_bdd_environment(_)),
+  retractall(M:inconsistent_theory_flag).
 
 /*****************************
   MESSAGES
@@ -75,32 +76,51 @@ check_and_close(M,Expl,dot(Dot)):-
   clean_environment(M,Env).
 
 
+find_expls(M,Tabs,Q,E):-
+  find_expls_int(M,Tabs,Q,E),!.
+
+find_expls(M,_,_,_):-
+  M:inconsistent_theory_flag,!,
+  print_message(warning,inconsistent),!,false.
 
 % checks if an explanations was already found
-find_expls(M,[],_,BDD):-
+find_expls_int(M,[],_,BDD):-
   empty_expl(M,BDD),!.
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[Tab|T],[C,I],E):-
+find_expls_int(M,[Tab|T],[C,I],E):-
   get_clashes(Tab,Clashes),
   findall(E0,(member(Clash,Clashes),clash(M,Clash,Tab,E0)),Expls0),!,
+  % this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
+  consistency_check(M,Expls0,[C,I]),
   or_all_f(M,Expls0,Expls1),
-  find_expls(M,T,[C,I],E1),
+  find_expls_int(M,T,[C,I],E1),
   and_f(M,Expls1,E1,E).
 
 % checks if an explanations was already found (property_value version)
-find_expls(M,[Tab|T],[PropEx,Ind1Ex,Ind2Ex],E):-
+find_expls_int(M,[Tab|T],[PropEx,Ind1Ex,Ind2Ex],E):-
   get_abox(Tab,ABox),
   findall(E0,find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),E0),ABox),Expls0),!,
   or_all_f(M,Expls0,Expls1),
-  find_expls(M,T,[PropEx,Ind1Ex,Ind2Ex],E1),
+  find_expls_int(M,T,[PropEx,Ind1Ex,Ind2Ex],E1),
   and_f(M,Expls1,E1,E).
   
 
-find_expls(M,[_Tab|T],Query,Expl):-
+find_expls_int(M,[_Tab|T],Query,Expl):-
   \+ length(T,0),
-  find_expls(M,T,Query,Expl).
+  find_expls_int(M,T,Query,Expl).
 
+% this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
+consistency_check(_,_,['inconsistent','kb']):-!.
+
+consistency_check(_,[],_):-!.
+
+consistency_check(M,[_-CPs|T],Q):-
+  dif(CPs,[]),!,
+  consistency_check(M,T,Q).
+
+consistency_check(M,_,_):-
+  assert(M:inconsistent_theory_flag).
 
 /****************************/
 
@@ -277,10 +297,10 @@ TORNADO TEST
 
 ***********************/
 
-test(M,L1,L2,F):-
+test(M,L1,L2-CP2,F-CP):-
   %build_f(L1,L2,F),
   %sat(F).
-  or_f(M,L1,L2,F),
+  or_f(M,L1,L2-CP2,F-CP),
   dif(L2,F).
 
 
@@ -293,6 +313,9 @@ Choice Points Management
 get_choice_point_id(_,0).
 
 create_choice_point(_,_,_,_,_,0).
+
+add_choice_point(_,qp,Expl-CP0,Expl-CP):- !,
+  (memberchk(qp,CP0) -> CP=CP0; CP=[qp]).
 
 add_choice_point(_,_,Expl,Expl):- !.
 

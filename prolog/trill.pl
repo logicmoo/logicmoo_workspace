@@ -368,7 +368,7 @@ all_instanceOf(M:Class,Ind,Expl):-
  * returns true if the individual belongs to the class, false otherwise.
  */
 instanceOf(M:Class,Ind):-
-  execute_query(M,io,[Class,Ind],_,[max_expl(1)]).
+  execute_query(M,io,[Class,Ind],_,[max_expl(1)]),!.
 
 /**
  * property_value(:Prop:property_name,++Ind1:individual_name,++Ind2:individual_name,-Expl:list,++Opt:list)
@@ -416,7 +416,7 @@ all_property_value(M:Prop, Ind1, Ind2,Expl):-
  * and returns true if the two individual are Prop-related, false otherwise.
  */
 property_value(M:Prop, Ind1, Ind2):-
-  execute_query(M,pv,[Prop, Ind1, Ind2],_,[max_expl(1)]).
+  execute_query(M,pv,[Prop, Ind1, Ind2],_,[max_expl(1)]),!.
 
 /**
  * sub_class(:Class:concept_description,++SupClass:concept_description,-Expl:list,++Opt:list)
@@ -466,7 +466,7 @@ all_sub_class(M:Class,SupClass,Expl):-
  * true if Class is a subclass of SupClass, and false otherwise.
  */
 sub_class(M:Class,SupClass):-
-  execute_query(M,sc,[Class,SupClass],_,[max_expl(1)]).
+  execute_query(M,sc,[Class,SupClass],_,[max_expl(1)]),!.
 
 /**
  * unsat(:Concept:concept_description,-Expl:list,++Opt:list)
@@ -514,7 +514,7 @@ all_unsat(M:Concept,Expl):-
  * a complex concept as a ground term and returns true if the concept is unsatisfiable, false otherwise.
  */
 unsat(M:Concept):-
-execute_query(M,un,[Concept],_,[max_expl(1)]).
+execute_query(M,un,[Concept],_,[max_expl(1)]),!.
 
 /**
  * inconsistent_theory(:Expl:list,++Opt:list)
@@ -555,7 +555,7 @@ all_inconsistent_theory(M:Expl):-
  */
 inconsistent_theory:-
   get_trill_current_module(M),
-  execute_query(M,it,[],_,[max_expl(1)]).
+  execute_query(M,it,[],_,[max_expl(1)]),!.
 
 /**
  * prob_instanceOf(:Class:concept_description,++Ind:individual_name,--Prob:double) is det
@@ -616,8 +616,9 @@ add_q(M,Tableau0,Query,Tableau):-
 
 
 % initialize an empty explanation for the query with the query placeholder 'qp' in teh choicepoint list
-query_empty_expl(M,Expl):-
-  empty_expl(M,Expl). %TODO add qp
+query_empty_expl(M,Expl):-%gtrace,
+  empty_expl(M,EExpl),
+  add_choice_point(M,qp,EExpl,Expl).
 
 
 % expands query arguments using prefixes and checks their existence in the kb

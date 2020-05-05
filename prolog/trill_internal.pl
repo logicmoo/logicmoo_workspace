@@ -89,6 +89,15 @@ find_expls(M,[],[C,I],E):-
   %dif(Expl,[]),
   find_expls_from_choice_point_list(M,[C,I],E).
 
+find_expls(M,[],['inconsistent','kb'],E):-!,
+  findall(Exp,M:exp_found(['inconsistent','kb'],Exp),Expl0),
+  remove_supersets(Expl0,Expl),!,
+  member(E,Expl).
+
+find_expls(M,[],[_,_],_):-
+  M:exp_found(['inconsistent','kb'],_),!,
+  print_message(warning,inconsistent),!,false.
+
 find_expls(M,[],[C,I],E):-
   findall(Exp,M:exp_found([C,I],Exp),Expl0),
   remove_supersets(Expl0,Expl),!,
@@ -100,19 +109,23 @@ find_expls(M,[Tab|_T],[C,I],E):- %gtrace,  % QueryArgs
   member(Clash,Clashes),
   clash(M,Clash,Tab,EL0),
   member(E0-CPs0,EL0),
+  sort(CPs0,CPs1),
   sort(E0,E),
-  (dif(CPs0,[]) ->
+  % this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
+  % if it is so, the explanation is labelled as inconsistent kb via Q
+  consistency_check(CPs1,CPs2,[C,I],Q),
+  (dif(CPs2,[]) ->
     (
-    get_latest_choice(CPs0,ID,Choice),
-    subtract(CPs0,[cpp(ID,Choice)],CPs),
+    get_latest_choice(CPs2,ID,Choice),
+    subtract(CPs1,[cpp(ID,Choice)],CPs), %remove cpp from CPs1 so the qp remains inside choice points list
     update_choice_point_list(M,ID,Choice,E,CPs),
     fail
     )
     ;
     (%findall(Exp,M:exp_found([C,I],Exp),Expl),
-     %not_already_found(M,Expl,[C,I],E),
-     assert(M:exp_found([C,I],E)), % QueryArgs
-     fail
+    %not_already_found(M,Expl,[C,I],E),
+    assert(M:exp_found(Q,E)), % QueryArgs
+    fail
     )
   ).
 
@@ -131,25 +144,29 @@ find_expls(M,[_Tab|T],Query,Expl):-
   find_expls(M,T,Query,Expl).
 
 
-combine_expls_from_nondet_rules(M,[C,I],cp(_,_,_,_,_,Expl),E):-
+combine_expls_from_nondet_rules(M,Q0,cp(_,_,_,_,_,Expl),E):-%gtrace,
   check_non_empty_choice(Expl,ExplList),
   and_all_f(M,ExplList,ExplanationsList),
   %check_presence_of_other_choices(ExplanationsList,Explanations,Choices),
-  member(E0-Choices,ExplanationsList),
+  member(E0-Choices0,ExplanationsList),
   sort(E0,E),
+  sort(Choices0,Choices1),
+  % this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
+  % if it is so, the explanation is labelled as inconsistent kb via Q
+  consistency_check(Choices1,Choices,Q0,Q),
   (
     dif(Choices,[]) ->
     (
       %TODO gestione altri cp
       get_latest_choice(Choices,ID,Choice),
-      subtract(Choices,[cpp(ID,Choice)],CPs),
+      subtract(Choices0,[cpp(ID,Choice)],CPs), %remove cpp from Choices1 so the qp remains inside choice points list
       update_choice_point_list(M,ID,Choice,E,CPs),
       fail % to force recursion
     ) ;
     (
       %findall(Exp,M:exp_found([C,I],Exp),ExplFound),
       %not_already_found(M,ExplFound,[C,I],E),
-      assert(M:exp_found([C,I],E)),
+      assert(M:exp_found(Q,E)),
       fail
     )
   ).
@@ -244,6 +261,15 @@ remove_supersets_int(E0,H,E):-
   remove_supersets_int(E1,H,E).
 
 remove_supersets_int(E,H,[H|E]).
+
+
+% this predicate checks if there are inconsistencies in the KB, i.e., explanations with query placeholder qp
+% if it is so, the explanation is labelled as inconsistent kb
+consistency_check(CPs,CPs,['inconsistent','kb'],['inconsistent','kb']):- !.
+
+consistency_check(CPs0,CPs,Q0,Q):-
+  (nth0(_,CPs0,qp,CPs) -> (Q=Q0) ; (Q=['inconsistent','kb'],CPs=CPs0)).
+
 
 /****************************/
 
@@ -650,7 +676,7 @@ and_all_f(M,[H|T],E0,E):-
 
 initial_expl(_M,[[]-[]]):-!.
 
-empty_expl(_M,[]):-!.
+empty_expl(_M,[[]-[]]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
   and_f(M,[[Axiom]-[]],F0,F).
@@ -734,18 +760,18 @@ init_expl_per_choice_int(N0,N,ExplPerChoice0,ExplPerChoice):-
 % and the pointer of the choice maide at the choice point
 add_choice_point(_,_,[],[]). 
 
-add_choice_point(_,cpp(CPID,N),[Expl-CP0|T0],[Expl-CP|T]):-
+add_choice_point(_,CPP,[Expl-CP0|T0],[Expl-CP|T]):- %CPP=cpp(CPID,N)
   (
     dif(CP0,[]) ->
     (
-        append([cpp(CPID,N)],CP0,CP)
+        append([CPP],CP0,CP)
     )
     ;
     (
-      CP = [cpp(CPID,N)]
+      CP = [CPP]
     )
   ),
-  add_choice_point(_,cpp(CPID,N),T0,T).
+  add_choice_point(_,CPP,T0,T).
 
 
 get_choice_point_list(M,CP):-
