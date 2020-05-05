@@ -1018,17 +1018,17 @@ apply_nondet_rules([_|T],Tab0,Tab):-
 */
 add_exists_rule(M,Tab0,[R,Ind1,Ind2],Tab):-
   get_abox(Tab0,ABox),
-  findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
-  %existsInKB(M,R,C),
   findClassAssertion(C,Ind2,Expl2,ABox),
+  %existsInKB(M,R,C),
+  findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
   and_f(M,Expl1,Expl2,Expl),
   modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab).
 
 add_exists_rule(M,Tab0,[C,Ind2],Tab):-
   get_abox(Tab0,ABox),
-  findClassAssertion(C,Ind2,Expl2,ABox),
-  %existsInKB(M,R,C),
   findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
+  %existsInKB(M,R,C),
+  findClassAssertion(C,Ind2,Expl2,ABox),
   and_f(M,Expl1,Expl2,Expl),
   modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab).
 
@@ -1130,6 +1130,14 @@ connected_individual(R,C,Ind1,ABox):-
 */
 forall_rule(M,Tab0,[allValuesFrom(R,C),Ind1],Tab):-
   get_abox(Tab0,ABox),
+  findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox),
+  \+ indirectly_blocked(Ind1,Tab0),
+  findClassAssertion(allValuesFrom(R,C),Ind1,Expl1,ABox),
+  and_f(M,Expl1,Expl2,Expl),
+  modify_ABox(M,Tab0,C,Ind2,Expl,Tab).
+
+forall_rule(M,Tab0,[R,Ind1,Ind2],Tab):-
+  get_abox(Tab0,ABox),
   findClassAssertion(allValuesFrom(R,C),Ind1,Expl1,ABox),
   \+ indirectly_blocked(Ind1,Tab0),
   findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox),
@@ -1143,6 +1151,16 @@ forall_rule(M,Tab0,[allValuesFrom(R,C),Ind1],Tab):-
   =================
 */
 forall_plus_rule(M,Tab0,[allValuesFrom(S,C),Ind1],Tab):-
+  get_abox(Tab0,ABox),
+  findPropertyAssertion(R,Ind1,Ind2,Expl2,ABox),
+  find_sub_sup_trans_role(M,R,S,Expl3),
+  findClassAssertion(allValuesFrom(S,C),Ind1,Expl1,ABox),
+  \+ indirectly_blocked(Ind1,Tab0),
+  and_f(M,Expl1,Expl2,ExplT),
+  and_f(M,ExplT,Expl3,Expl),
+  modify_ABox(M,Tab0,allValuesFrom(R,C),Ind2,Expl,Tab).
+
+forall_plus_rule(M,Tab0,[R,Ind1,Ind2],Tab):-
   get_abox(Tab0,ABox),
   findClassAssertion(allValuesFrom(S,C),Ind1,Expl1,ABox),
   \+ indirectly_blocked(Ind1,Tab0),
@@ -1668,6 +1686,27 @@ max_rule(M,Tab0,[exactCardinality(N,S,C),Ind],L):-
   get_choice_point_id(M,ID),%gtrace,
   scan_max_list(M,exactCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,Tab0,ABox,L),!. % last variable whould be equals to ID
 
+  max_rule(M,Tab0,[S,Ind,_],L):-
+    get_abox(Tab0,ABox),
+    findClassAssertion(exactCardinality(N,S),Ind,Expl0,ABox),
+    \+ indirectly_blocked(Ind,Tab0),
+    s_neighbours(M,Ind,S,Tab0,SN),
+    length(SN,LSS),
+    LSS @> N,
+    get_choice_point_id(M,ID),
+    scan_max_list(M,exactCardinality(N,S),S,'http://www.w3.org/2002/07/owl#Thing',SN,ID,Ind,Expl0,Tab0,ABox,L),!. 
+  
+  max_rule(M,Tab0,[S,Ind,_],L):-
+    get_abox(Tab0,ABox),
+    findClassAssertion(exactCardinality(N,S,C),Ind,Expl0,ABox),
+    \+ indirectly_blocked(Ind,Tab0),
+    s_neighbours(M,Ind,S,Tab0,SN),
+    individual_class_C(SN,C,ABox,SNC),
+    length(SNC,LSS),
+    LSS @> N,
+    get_choice_point_id(M,ID),%gtrace,
+    scan_max_list(M,exactCardinality(N,S,C),S,C,SNC,ID,Ind,Expl0,Tab0,ABox,L),!. % last variable whould be equals to ID
+
 %---------------------
 
 scan_max_list(M,MaxCardClass,S,C,SN,CP,Ind,Expl,Tab0,ABox,Tab_list):-
@@ -1753,9 +1792,9 @@ individual_class_C([_H|T],C,ABox,T1):-
 */
 ch_rule(M,Tab0,[maxCardinality(N,S,C),Ind1],L):-
   get_abox(Tab0,ABox),
-  findClassAssertion(maxCardinality(N,S,C),Ind1,Expl1,ABox),
-  \+ indirectly_blocked(Ind1,Tab0),
   findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox),
+  \+ indirectly_blocked(Ind1,Tab0),
+  findClassAssertion(maxCardinality(N,S,C),Ind1,Expl1,ABox),
   absent_c_not_c(Ind2,C,ABox),
   and_f(M,Expl1,Expl2,Expl),
   get_choice_point_id(M,ID),%gtrace,
@@ -1766,9 +1805,9 @@ ch_rule(M,Tab0,[maxCardinality(N,S,C),Ind1],L):-
 
 ch_rule(M,Tab0,[exactCardinality(N,S,C),Ind1],L):-
   get_abox(Tab0,ABox),
-  findClassAssertion(exactCardinality(N,S,C),Ind1,Expl1,ABox),
-  \+ indirectly_blocked(Ind1,Tab0),
   findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox),
+  \+ indirectly_blocked(Ind1,Tab0),
+  findClassAssertion(exactCardinality(N,S,C),Ind1,Expl1,ABox),
   absent_c_not_c(Ind2,C,ABox),
   and_f(M,Expl1,Expl2,Expl),
   get_choice_point_id(M,ID),%gtrace,
@@ -1776,6 +1815,32 @@ ch_rule(M,Tab0,[exactCardinality(N,S,C),Ind1],L):-
   scan_or_list(M,[C,NC],0,ID,Ind2,Expl,Tab0,L),
   dif(L,[]),
   create_choice_point(M,Ind2,ch,exactCardinality(N,S,C),[C,NC],_),!. % last variable whould be equals to ID
+
+  ch_rule(M,Tab0,[S,Ind1,Ind2],L):-
+    get_abox(Tab0,ABox),
+    findClassAssertion(maxCardinality(N,S,C),Ind1,Expl1,ABox),
+    \+ indirectly_blocked(Ind1,Tab0),
+    findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox),
+    absent_c_not_c(Ind2,C,ABox),
+    and_f(M,Expl1,Expl2,Expl),
+    get_choice_point_id(M,ID),%gtrace,
+    neg_class(C,NC),
+    scan_or_list(M,[C,NC],0,ID,Ind2,Expl,Tab0,L),
+    dif(L,[]),
+    create_choice_point(M,Ind2,ch,maxCardinality(N,S,C),[C,NC],_),!. % last variable whould be equals to ID
+  
+  ch_rule(M,Tab0,[S,Ind1,Ind2],L):-
+    get_abox(Tab0,ABox),
+    findClassAssertion(exactCardinality(N,S,C),Ind1,Expl1,ABox),
+    \+ indirectly_blocked(Ind1,Tab0),
+    findPropertyAssertion(S,Ind1,Ind2,Expl2,ABox),
+    absent_c_not_c(Ind2,C,ABox),
+    and_f(M,Expl1,Expl2,Expl),
+    get_choice_point_id(M,ID),%gtrace,
+    neg_class(C,NC),
+    scan_or_list(M,[C,NC],0,ID,Ind2,Expl,Tab0,L),
+    dif(L,[]),
+    create_choice_point(M,Ind2,ch,exactCardinality(N,S,C),[C,NC],_),!. % last variable whould be equals to ID
 
 %---------------------
 
