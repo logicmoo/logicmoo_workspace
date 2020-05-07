@@ -41,6 +41,7 @@
            arithexpression/1, rat/1, goal/2
           ]).
 
+:- use_module(library(arithmetic)).
 :- use_module(library(neck)).
 :- use_module(library(assertions)).
 :- use_module(library(metaprops)).
@@ -395,12 +396,12 @@ arithexpression(X) :- number(X), !. % Optimization
 arithexpression(X) :- num(X).
 arithexpression(X) :-
     callable(X),
-    arithmetic_function(X),
+    curr_arithmetic_function(X),
     X =.. [_|Args],
     maplist(arithexpression, Args).
 
-arithmetic_function(X) :- current_arithmetic_function(X).
-arithmetic_function(X) :- arithmetic:evaluable(X, _Module).
+curr_arithmetic_function(X) :- current_arithmetic_function(X).
+curr_arithmetic_function(X) :- arithmetic:evaluable(X, _Module).
 
 % BUG: if the trace have all the ports active, we can not use ';'/2 in goal/2
 % and some variables becomes uninstantiated. That is an SWI-Prolog bug but I
