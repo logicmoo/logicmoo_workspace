@@ -91,7 +91,8 @@ sandbox:safe_primitive(lps_server_UI:any_call(G)) :- nonvar(G).
 user:sudo(G) :- any_call(G).
 
 % mechanism to load all Prolog files in the directory, to be used with care!
-consultFilesIn(Dir) :- 
+consultFilesIn(Dir__) :- 
+	absolute_file_name(Dir__,Dir),
 	directory_files(Dir, Files), 
 	(sub_atom(Dir,_,1,0,'/') -> sub_atom(Dir,0,_,1,Dir_) ; Dir=Dir_),
 	forall((member(File,Files), file_name_extension(_,pl,File)),(
