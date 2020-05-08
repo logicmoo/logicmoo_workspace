@@ -90,6 +90,16 @@ sandbox:safe_primitive(lps_server_UI:any_call(G)) :- nonvar(G).
 
 user:sudo(G) :- any_call(G).
 
+% mechanism to load all Prolog files in the directory, to be used with care!
+consultFilesIn(Dir) :- 
+	directory_files(Dir, Files), 
+	(sub_atom(Dir,_,1,0,'/') -> sub_atom(Dir,0,_,1,Dir_) ; Dir=Dir_),
+	forall((member(File,Files), file_name_extension(_,pl,File)),(
+		atomic_list_concat([Dir_,'/',File],F),
+		consult(F)
+	)).
+
+
 :- multifile prolog:message//1.
 prolog:message(unsufficient_lps_user_privilege_for(Op)) --> {lps_user(unknown_user), ! },
 	['To perform ~w you must login first with your Google account. Please use the login button on top right.'-[Op]].
