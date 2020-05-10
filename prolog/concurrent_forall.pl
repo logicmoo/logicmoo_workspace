@@ -39,6 +39,9 @@
 
 :- use_module(library(countsols)).
 :- use_module(library(thread), []).
+:- use_module(library(ordsets)).
+:- use_module(library(debug)).
+:- use_module(library(lists)).
 
 :- meta_predicate
         handle_result(+, 0 ),
