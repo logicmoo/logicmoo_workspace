@@ -37,7 +37,7 @@
                               gen_foreign_library/3]).
 
 :- use_module(library(apply)).
-:- use_module(library(assertions)).
+:- use_module(library(filesex)).
 :- use_module(library(assertions)).
 :- use_module(library(atomics_atom)).
 :- use_module(library(call_ref)).
@@ -50,8 +50,11 @@
 :- use_module(library(lists)).
 :- use_module(library(metaprops)).
 :- use_module(library(neck)).
+:- use_module(library(process)).
+:- use_module(library(solution_sequences)).
 :- use_module(library(substitute)).
 :- use_module(library(transpose)).
+:- use_module(library(pairs)).
 
 :- multifile
     foreign_dependency/2,
