@@ -34,6 +34,7 @@
 
 :- module(rtchecks_flags, []).
 
+:- public define_flag/4.
 define_flag(runtime_checks,          [yes, no],        atom, no).
 define_flag(rtchecks_level,          [inner, exports], atom, inner).
 define_flag(rtchecks_status,         listof([true, false, check, debug, static]), term, [check, static]).
