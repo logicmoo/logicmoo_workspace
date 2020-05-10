@@ -34,6 +34,7 @@
 
 :- module(check_useless_cuts, []).
 
+:- use_module(library(lists)).
 :- use_module(library(assertions)).
 :- use_module(library(neck)).
 :- use_module(library(abstract_interpreter), []).
