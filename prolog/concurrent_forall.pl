@@ -37,7 +37,7 @@
             concurrent_forall/3
           ]).
 
-:- use_module(library(countsols)).
+:- use_module(countsols).
 :- use_module(library(thread), []).
 :- use_module(library(ordsets)).
 :- use_module(library(debug)).
