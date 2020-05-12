@@ -27,13 +27,14 @@ setting_trill(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, inconsistent_theory_flag/0).
+  M:(dynamic exp_found/2, inconsistent_theory_flag/0, trill_time_limit/1).
 
 clean_up(M):-
   utility_translation:clean_up(M),
-  M:(dynamic exp_found/2, inconsistent_theory_flag/0),
+  M:(dynamic exp_found/2, inconsistent_theory_flag/0, trill_time_limit/1),
   retractall(M:exp_found(_,_)),
-  retractall(M:inconsistent_theory_flag).
+  retractall(M:inconsistent_theory_flag),
+  retractall(trill_time_limit(_)).
 
 /*****************************
   MESSAGES

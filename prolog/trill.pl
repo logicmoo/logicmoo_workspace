@@ -252,11 +252,13 @@ find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions):-
   ).
 
 find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTimeLimit,Opt):-
-  catch(
-    call_with_time_limit(MonitorTimeLimit,find_n_explanations(M,QueryType,QueryArgs,Expl,MonitorNExpl,Opt)),
-    time_limit_exceeded,
-    print_message(warning,timeout_reached)
-  ).
+  retractall(M:trill_time_limit(_)),
+  get_time(Start),
+  Timeout is Start + MonitorTimeLimit,
+  assert(M:trill_time_limit(Timeout)),
+  find_n_explanations(M,QueryType,QueryArgs,Expl,MonitorNExpl,Opt),
+  get_time(End),
+  (End<Timeout -> true ; print_message(warning,timeout_reached)).
 
 
 
@@ -274,6 +276,19 @@ find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
   ;
     print_message(warning,inconsistent),!,false
   ).
+
+/*************
+ 
+  Monitor predicates
+
+**************/
+
+check_time_monitor(M):-
+  M:trill_time_limit(Timeout),!,
+  get_time(Now),
+  Timeout<Now. % I must stop
+
+/* *************** */
 
 set_up_reasoner(M):-
   set_up(M),
@@ -1004,8 +1019,8 @@ check_clash(_,P-Ind1-Ind2,Tab):-
 % -------------
 % rules application
 % -------------
-expand_queue(_M,Tab,Tab):-
-  expansion_queue_is_empty(Tab).
+expand_queue(M,Tab,Tab):-
+  test_end_expand_queue(M,Tab),!.
 
 expand_queue(M,Tab0,Tab):-
   extract_from_expansion_queue(Tab0,EA,Tab1),!,
@@ -1014,13 +1029,19 @@ expand_queue(M,Tab0,Tab):-
   expand_queue(M,Tab2,Tab).
 
 
+test_end_expand_queue(M,_):-
+  check_time_monitor(M),!.
+
+test_end_expand_queue(_,Tab):-
+  expansion_queue_is_empty(Tab).
+
 %expand_queue(M,ABox0,[_EA|T],ABox):-
 %  expand_queue(M,ABox0,T,ABox).
 
 apply_all_rules(M,Tab0,EA,Tab):-
   setting_trill(det_rules,Rules),
   apply_det_rules(M,Rules,Tab0,EA,Tab1),
-  (same_tableau(Tab0,Tab1) ->
+  (test_end_apply_rule(M,Tab0,Tab1) ->
   Tab=Tab1;
   apply_all_rules(M,Tab1,EA,Tab)).
 
@@ -1048,6 +1069,11 @@ apply_nondet_rules(M,[_|T],Tab0,EA,Tab):-
   apply_nondet_rules(M,T,Tab0,EA,Tab).
 
 
+test_end_apply_rule(M,_,_):-
+  check_time_monitor(M),!.
+
+test_end_apply_rule(_,Tab0,Tab1):-
+  same_tableau(Tab0,Tab1).
 
 /*
 apply_all_rules(M,Tab0,Tab):-
