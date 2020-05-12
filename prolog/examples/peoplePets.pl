@@ -172,7 +172,7 @@ owl_rdf('<?xml version="1.0"?>
 
     <owl:NamedIndividual rdf:about="http://cohse.semanticweb.org/ontologies/people#Dino">
         <rdf:type rdf:resource="http://cohse.semanticweb.org/ontologies/people#dinosaur"/>
-        <rdfs:label>DIno</rdfs:label>
+        <rdfs:label>Dino</rdfs:label>
         <rdfs:comment></rdfs:comment>
     </owl:NamedIndividual>
     

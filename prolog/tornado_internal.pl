@@ -209,18 +209,31 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
   ===============
 */
 
-build_abox(M,Tableau):-
+build_abox(M,Tableau,QueryType,QueryArgs):-
   retractall(M:final_abox(_)),
   retractall(v(_,_,_)),
   retractall(na(_,_)),
   retractall(rule_n(_)),
   assert(rule_n(0)),
   get_bdd_environment(M,Env),
-  findall((classAssertion(Class,Individual),BDDCA-[]),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
-  findall((propertyAssertion(Property,Subject, Object),BDDPA-[]),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
-  % findall((propertyAssertion(Property,Subject,Object),*([subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)])),subProp(M,SubProperty,Property,Subject,Object),LSPA),
-  findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
-  findall((differentIndividuals(Ld),BDDDIA-[]),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
+  find_connected_individuals(M,QueryType,QueryArgs,ConnectedInds),
+  ( dif(ConnectedInds,[]) ->
+    ( findall((classAssertion(Class,Individual),BDDCA-[]),(member(Individual,ConnectedInds),M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
+      findall((propertyAssertion(Property,Subject, Object),BDDPA-[]),(member(Subject,ConnectedInds),M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
+      % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
+      findall(nominal(NominalIndividual),(member(NominalIndividual,ConnectedInds),M:classAssertion(oneOf(_),NominalIndividual)),LNA),
+      findall((differentIndividuals(Ld),BDDDIA-[]),(M:differentIndividuals(Ld),intersect(Ld,ConnectedInds),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
+      findall((sameIndividual(L),BDDSIA-[]),(M:sameIndividual(L),intersect(L,ConnectedInds),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA)
+    )
+    ; % all the individuals
+    ( findall((classAssertion(Class,Individual),BDDCA-[]),(M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
+      findall((propertyAssertion(Property,Subject, Object),BDDPA-[]),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
+      % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
+      findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
+      findall((differentIndividuals(Ld),BDDDIA-[]),(M:differentIndividuals(Ld),bdd_and(M,Env,[differentIndividuals(Ld)],BDDDIA)),LDIA),
+      findall((sameIndividual(L),BDDSIA-[]),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA)
+    )
+  ),
   new_abox(ABox0),
   new_tabs(Tabs0),
   init_expansion_queue(LCA,LPA,ExpansionQueue),
@@ -229,7 +242,6 @@ build_abox(M,Tableau):-
   create_tabs(CreateTabsList,Tableau0,Tableau1),
   append([LCA,LPA,LNA,LDIA],AddAllList),
   add_all_to_tableau(M,AddAllList,Tableau1,Tableau2),
-  findall((sameIndividual(L),BDDSIA-[]),(M:sameIndividual(L),bdd_and(M,Env,[sameIndividual(L)],BDDSIA)),LSIA),
   merge_all_individuals(M,LSIA,Tableau2,Tableau3),
   add_owlThing_list(M,Tableau3,Tableau),
   !.

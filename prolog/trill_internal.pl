@@ -1,12 +1,16 @@
 /* trill predicates
+
 This module performs reasoning over probabilistic description logic knowledge bases.
 It reads probabilistic knowledge bases in RDF format or in Prolog format, a functional-like
 sintax based on definitions of Thea library, and answers queries by finding the set 
 of explanations or computing the probability.
+
 [1] http://vangelisv.github.io/thea/
+
 See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
 details.
+
 @author Riccardo Zese
 @license Artistic License 2.0
 @copyright Riccardo Zese
@@ -655,11 +659,12 @@ build_abox(M,Tableau,QueryType,QueryArgs):-
   !.
 
 
-
 /* ********** */
 
 /**********************
-Explanation Management
+
+  Explanation Management
+
 ***********************/
 
 and_all_f(M,ExplPartsList,E) :-
@@ -813,112 +818,10 @@ update_choice_point_list_int([H|T],
                   [H|T1]):-
   update_choice_point_list_int(T,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,T1).
 
-or_f(E0,E1,E):-
-  append(E0,E1,E).
-
 /**********************
-Choice Points Management
-***********************/
 
-/*
-  Initializes delta/2 containing the list of choice points and the number of choice points created.
-  Every choice point is modeled by the predicate cp/5 containing the ID of the choice point,
-  the individual and the class that triggered the creation of the choice point,
-  the rule that created the cp:
-  - or: or_rule
-  - mr: max_rule
-  Also it contains the list of possible choices and the explanations for each choice.
-*/
-init_delta(M):-
-  retractall(M:delta(_,_)),
-  assert(M:delta([],0)).
-
-get_choice_point_id(M,ID):-
-  M:delta(_,ID).
-
-% Creates a new choice point and adds it to the delta/2 set of choice points.
-create_choice_point(M,Ind,Rule,Class,Choices,ID0):-
-  init_expl_per_choice(Choices,ExplPerChoice),
-  M:delta(CPList,ID0),
-  ID is ID0 + 1,
-  retractall(M:delta(_,_)),
-  assert(M:delta([cp(ID0,Ind,Rule,Class,Choices,ExplPerChoice)|CPList],ID)).
-
-
-init_expl_per_choice(Choices,ExplPerChoice):-
-  length(Choices,N),
-  init_expl_per_choice_int(0,N,epc{0:[]},ExplPerChoice).
-
-init_expl_per_choice_int(N,N,ExplPerChoice,ExplPerChoice).
-
-init_expl_per_choice_int(N0,N,ExplPerChoice0,ExplPerChoice):-
-  ExplPerChoice1 = ExplPerChoice0.put(N0,[]),
-  N1 is N0 + 1,
-  init_expl_per_choice_int(N1,N,ExplPerChoice1,ExplPerChoice).
-
-
-% cpp/2 is the choice point pointer. It contains the CP's ID (from the list of choice points delta/2)
-% and the pointer of the choice maide at the choice point
-add_choice_point(_,_,[],[]). 
-
-add_choice_point(_,cpp(CPID,N),[Expl-CP0|T0],[Expl-CP|T]):-
-  (
-    dif(CP0,[]) ->
-    (
-        append([cpp(CPID,N)],CP0,CP)
-    )
-    ;
-    (
-      CP = [cpp(CPID,N)]
-    )
-  ),
-  add_choice_point(_,cpp(CPID,N),T0,T).
-
-
-get_choice_point_list(M,CP):-
-  M:delta(CP,_).
-
-extract_choice_point_list(M,CP):-
-  M:delta([CP|CPList],ID),
-  retractall(M:delta(_,_)),
-  assert(M:delta(CPList,ID)).
-
-update_choice_point_list(M,ID,Choice,E,CPs):-
-  M:delta(CPList0,ID0),
-  memberchk(cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),CPList0),
-  ExplToUpdate = ExplPerChoice0.get(Choice), 
-  ( % if the set of explanations for the choice is empty it simply adds the new explanation -> union i.e., append([E-CPs],ExplToUpdate,ExplUpdated)
-    % otherwise it adds only new explanations dropping those that are already present or those that are supersets of 
-    % already present explanations -> absent(ExplToUpdate,[E-CPs],ExplUpdated)
-    dif(ExplToUpdate,[]) ->
-    (
-      or_f(ExplToUpdate,[E-CPs],ExplUpdated)
-    ) ;
-    (
-      ExplUpdated=[E-CPs]
-    )
-  ),
-  ExplPerChoice = ExplPerChoice0.put(Choice,ExplUpdated),
-  update_choice_point_list_int(CPList0,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,CPList),
-  retractall(M:delta(_,_)),
-  assert(M:delta(CPList,ID0)).
-
-update_choice_point_list_int([],_,_,[]):-
-  writeln("Probably something wrong happened. Please report the problem opening an issue on github!").
-  % It should never arrive here.
-
-update_choice_point_list_int([cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0)|T],
-                    cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,
-                    [cp(ID,Ind,Rule,Class,Choices,ExplPerChoice)|T]) :- !.
-
-update_choice_point_list_int([H|T],
-                  cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,
-                  [H|T1]):-
-  update_choice_point_list_int(T,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,T1).
-
-
-/**********************
  TRILL Probability Computation
+
 ***********************/
 
 get_bdd_environment(_M,Env):-
