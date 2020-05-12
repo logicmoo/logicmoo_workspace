@@ -168,6 +168,24 @@ owl_rdf('<?xml version="1.0"?>
     </owl:Axiom>
     
 
+    <!-- http://cohse.semanticweb.org/ontologies/people#Dino -->
+
+    <owl:NamedIndividual rdf:about="http://cohse.semanticweb.org/ontologies/people#Dino">
+        <rdf:type rdf:resource="http://cohse.semanticweb.org/ontologies/people#dinosaur"/>
+        <rdfs:label>DIno</rdfs:label>
+        <rdfs:comment></rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://cohse.semanticweb.org/ontologies/people#Fred -->
+
+    <owl:NamedIndividual rdf:about="http://cohse.semanticweb.org/ontologies/people#Fred">
+        <rdfs:label>Kevin</rdfs:label>
+        <rdfs:comment></rdfs:comment>
+        <has_animal rdf:resource="http://cohse.semanticweb.org/ontologies/people#Dino"/>
+    </owl:NamedIndividual>
+    
 
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -191,4 +209,5 @@ owl_rdf('<?xml version="1.0"?>
 </rdf:RDF>').
 
 subClassOf('cat','pet').
+subClassOf('dinosaur','pet').
 annotationAssertion('disponte:probability',subClassOf('cat','pet'),literal('0.6')).

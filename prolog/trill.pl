@@ -1,12 +1,9 @@
 /** <module> trill
-
 This module performs reasoning over probabilistic description logic knowledge bases.
 It reads probabilistic knowledge bases in RDF format or in Prolog format, a functional-like
 sintax based on definitions of Thea library, and answers queries by finding the set 
 of explanations or computing the probability.
-
 [1] http://vangelisv.github.io/thea/
-
 See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
 details.
@@ -262,7 +259,7 @@ find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTi
 
 find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
   set_up_reasoner(M),
-  build_abox(M,Tableau), % will expand the KB without the query
+  build_abox(M,Tableau,QueryType,QueryArgs), % will expand the KB without the query
   (absence_of_clashes(Tableau) ->  % TODO if QueryType is inconsistent no check
     (
       add_q(M,QueryType,Tableau,QueryArgs,Tableau0),
@@ -300,20 +297,77 @@ add_q(M,pv,Tableau0,[PropEx,Ind1Ex,Ind2Ex],Tableau):-!,
 % sub_class
 add_q(M,sc,Tableau0,[SubClassEx,SupClassEx],Tableau):- !,
   neg_class(SupClassEx,NSupClassEx),
-  add_q(M,Tableau0,classAssertion(intersectionOf([SubClassEx,NSupClassEx]),trillan(0)),Tableau1),
-  add_owlThing_ind(M,Tableau1,trillan(0),Tableau2),
-  add_clash_to_tableau(M,Tableau2,intersectionOf([SubClassEx,NSupClassEx])-trillan(0),Tableau3),
-  update_expansion_queue_in_tableau(M,intersectionOf([SubClassEx,NSupClassEx]),trillan(0),Tableau3,Tableau).
+  query_ind(QInd),
+  add_q(M,Tableau0,classAssertion(intersectionOf([SubClassEx,NSupClassEx]),QInd),Tableau1),
+  add_owlThing_ind(M,Tableau1,QInd,Tableau2),
+  add_clash_to_tableau(M,Tableau2,intersectionOf([SubClassEx,NSupClassEx])-QInd,Tableau3),
+  update_expansion_queue_in_tableau(M,intersectionOf([SubClassEx,NSupClassEx]),QInd,Tableau3,Tableau).
 
 % unsat
 add_q(M,un,Tableau0,['unsat',ClassEx],Tableau):- !,
-  add_q(M,Tableau0,classAssertion(ClassEx,trillan(0)),Tableau1),
-  add_owlThing_ind(M,Tableau1,trillan(0),Tableau2),
-  add_clash_to_tableau(M,Tableau2,ClassEx-trillan(0),Tableau3),
-  update_expansion_queue_in_tableau(M,ClassEx,trillan(0),Tableau3,Tableau).
+  query_ind(QInd),
+  add_q(M,Tableau0,classAssertion(ClassEx,QInd),Tableau1),
+  add_owlThing_ind(M,Tableau1,QInd,Tableau2),
+  add_clash_to_tableau(M,Tableau2,ClassEx-QInd,Tableau3),
+  update_expansion_queue_in_tableau(M,ClassEx,QInd,Tableau3,Tableau).
 
 % inconsistent_theory
 add_q(_,it,Tableau,['inconsistent','kb'],Tableau):- !. % Do nothing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   funzioni ausiliarie per ottenere i nodi padre o i nodi figli di un nodo generico dell'albero  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+find_connected(M,Ind,ConnectedInds):-
+  find_successors(M,H,SuccInds),
+  find_predecessors(M,H,PredInds),
+  append(SuccInds,PredInds,ConnectedInds).
+
+find_successors(M,Ind,List) :- findall(ConnectedInd, (M:propertyAssertion(_,Ind,ConnectedInd)), List).
+find_predecessors(M,Ind,List) :- findall(ConnectedInd, (M:propertyAssertion(_,ConnectedInd,Ind)), List).
+
+intersect([H|_], List) :- member(H, List), !.
+intersect([_|T], List) :- intersect(T, List).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% restituisco tutti i nodi correlati direttamente o indirettamente al nodo di partenza  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+scan_connected_individuals(_,[],_,ConnectedInds,ConnectedInds).
+
+scan_connected_individuals(M,[H|T],AlreadyChecked,ConnectedInds0,ConnectedInds) :-
+  memberchk(H,AlreadyChecked),!,
+  scan_connected_individuals(M,T,AlreadyChecked,ConnectedInds0,ConnectedInds).
+
+scan_connected_individuals(M,[H|T],AlreadyChecked,ConnectedInds0,ConnectedInds) :-
+  find_connected(M,H,ConnectedInds1),
+  append(ConnectedInds1,ConnectedInds0,ConnectedInds2),
+	scan_connected_individuals(M,T,[H|AlreadyChecked],ConnectedInds2,ConnectedInds).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% restituisce il nodo da cui parto e tutti quelli collegati direttamente o indirettamente a lui   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+find_connected_individuals(M,io,[_,IndEx],ConnectedInds):-
+  scan_connected_individuals(M,[IndEx],[],[],ConnectedInds).
+
+find_connected_individuals(M,pv,[_,Ind1Ex,_],ConnectedInds):-
+  scan_connected_individuals(M,[Ind1Ex],[],[],ConnectedInds).
+
+find_connected_individuals(M,sc,[_,_],ConnectedInds):-
+  query_ind(QInd),
+  scan_connected_individuals(M,[QInd],[],[],ConnectedInds).
+
+find_connected_individuals(M,un,['unsat',_],ConnectedInds):-
+  query_ind(QInd),
+  scan_connected_individuals(M,[QInd],[],[],ConnectedInds).
+
+find_connected_individuals(M,it,['inconsistent','kb'],[]):-!.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 /***********
   Queries
@@ -1371,38 +1425,29 @@ find_sub_sup_class(M,someValuesFrom(R,C),someValuesFrom(S,C),subPropertyOf(R,S))
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:subClassOf(A,B),
   member(C,[A,B]),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:classAssertion(C,_),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(C,L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:unionOf(L),
   member(C,L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(someValuesFrom(_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(allValuesFrom(_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(minCardinality(_,_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(maxCardinality(_,_,C),L),!.
-
 find_sub_sup_class(M,C,'http://www.w3.org/2002/07/owl#Thing',subClassOf(C,'http://www.w3.org/2002/07/owl#Thing')):-
   M:equivalentClasses(L),
   member(exactCardinality(_,_,C),L),!.
-
 */
 
 %--------------------
@@ -1606,6 +1651,27 @@ min_rule(M,Tab0,[exactCardinality(N,S,C),Ind1],Tab):-
   NoI is N-LSS,
   min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,Tab0,Tab1),
   modify_ABox(M,Tab1,differentIndividuals(NI),Expl,Tab).
+
+min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+  findClassAssertion(exactCardinality(N,S),Ind1,Expl,ABox),
+  \+ blocked(Ind1,(ABox,Tabs)),
+  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
+  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  length(SS,LSS),
+  LSS @< N,
+  NoI is N-LSS,
+  min_rule_neigh(M,NoI,S,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
+
+
+min_rule(M,(ABox,Tabs),([(differentIndividuals(NI),Expl)|ABox1],Tabs1)):-
+  findClassAssertion(exactCardinality(N,S,C),Ind1,Expl,ABox),
+  \+ blocked(Ind1,(ABox,Tabs)),
+  s_neighbours(M,Ind1,S,(ABox,Tabs),SN),
+  safe_s_neigh(SN,S,(ABox,Tabs),SS),
+  length(SS,LSS),
+  LSS @< N,
+  NoI is N-LSS,
+  min_rule_neigh_C(M,NoI,S,C,Ind1,Expl,NI,ABox,Tabs,ABox1,Tabs1).
 
 % ----------------------
 min_rule_neigh(_,0,_,_,_,[],Tab,Tab).
@@ -2158,6 +2224,11 @@ merge_all2(M,[X,Y|T],Expl,Tab0,Tab):-
 
 
 
+/*
+  creation of the query anon individual
+
+*/
+query_ind(trillan(0)).
 
 /*
   creation of a new individual
@@ -2380,22 +2451,17 @@ s_predecessors2(M,[H|T],T1,ABox):-
 /* *************
    Probability computation
    Old version
-
    ************* */
 
 /*
 build_formula([],[],Var,Var).
-
 build_formula([D|TD],TF,VarIn,VarOut):-
         build_term(D,[],[],VarIn,Var1),!,
         build_formula(TD,TF,Var1,VarOut).
-
 build_formula([D|TD],[F|TF],VarIn,VarOut):-
         build_term(D,[],F,VarIn,Var1),
         build_formula(TD,TF,Var1,VarOut).
-
 build_term([],F,F,Var,Var).
-
 build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
   (p_x(Ax,_)->
     (nth0_eq(0,NVar,VarIn,(Ax,S))->
@@ -2418,7 +2484,6 @@ build_term([(Ax,S)|TC],F0,F,VarIn,VarOut):-!,
       build_term(TC,F0,F,VarIn,VarOut)
     )
   ).
-
 build_term([Ax|TC],F0,F,VarIn,VarOut):-!,
   (p(Ax,_)->
     (nth0_eq(0,NVar,VarIn,(Ax,[]))->
@@ -2441,45 +2506,34 @@ the position in the List that contains an element exactly equal to El
 /*
 nth0_eq(N,N,[H|_T],El):-
         H==El,!.
-
 nth0_eq(NIn,NOut,[_H|T],El):-
         N1 is NIn+1,
         nth0_eq(N1,NOut,T,El).
-
 */
 /* var2numbers converts a list of couples (Rule,Substitution) into a list
 of triples (N,NumberOfHeadsAtoms,ListOfProbabilities), where N is an integer
 starting from 0 */
 /*
 var2numbers([],_N,[]).
-
 var2numbers([(R,_S)|T],N,[[N,2,[Prob,Prob1,0.3,0.7]]|TNV]):-
         (p(R,_);p_x(R,_)),
         compute_prob_ax(R,Prob),!,
         Prob1 is 1-Prob,
         N1 is N+1,
         var2numbers(T,N1,TNV).
-
-
 compute_prob_ax(R,Prob):-
   findall(P, p(R,P),Probs),
   compute_prob_ax1(Probs,Prob).
-
 compute_prob_ax1([Prob],Prob):-!.
-
 compute_prob_ax1([Prob1,Prob2],Prob):-!,
   Prob is Prob1+Prob2-(Prob1*Prob2).
-
 compute_prob_ax1([Prob1 | T],Prob):-
   compute_prob_ax1(T,Prob0),
   Prob is Prob1 + Prob0 - (Prob1*Prob0).
-
 */
 
 /**********************
-
  Probability Computation
-
 ***********************/
 
 :- thread_local
