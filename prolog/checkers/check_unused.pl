@@ -494,6 +494,13 @@ cu_caller_hook(Caller, Head, CM, Type, Goal, _, From) :-
     ( Type \= lit
     ->compact_goal(Goal, Comp),
       record_location_goal(Head, M, Type, CM, Comp, From)
+    ; Caller = '<assertion>'(A:H),
+      member(Goal, [foreign_props:fimport(_),
+                    foreign_props:fimport(_, _)])
+    ->( A \= CM
+      ->put_mark('<exported>'(A:H))
+      ; put_mark(A:H)
+      )
     ; true
     ),
     record_calls_to(Type, Caller, Head, M, From),
