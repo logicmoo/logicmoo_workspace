@@ -3743,9 +3743,9 @@ set_up_kb_loading(M):-
   init_kb_atom(M),
   retractall(M:addKBName),
   assert(M:addKBName),
-  assert(trill_input_mode(M)),
-  format("Loading knowledge base...~n",[]),
-  statistics(walltime,[_,_]).
+  assert(trill_input_mode(M)).
+  %format("Loading knowledge base...~n",[]),
+  %statistics(walltime,[_,_]).
 
 init_kb_atom(M):-
   assert(M:kb_atom(kbatoms{annotationProperty:[],class:[],dataProperty:[],datatype:[],individual:[],objectProperty:[]})).
@@ -3793,10 +3793,10 @@ user:term_expansion(end_of_file, end_of_file) :-
   dif(M,utility_translation),
   fix_wrongly_classified_atoms(M),
   retractall(M:addKBName),
-  retractall(trill_input_mode(_)),
-  statistics(walltime,[_,KBLM]),
-  KBLS is KBLM / 1000,
-  format("Knowledge base loaded in ~f seconds.~n",[KBLS]).
+  retractall(trill_input_mode(_)).
+  %statistics(walltime,[_,KBLM]),
+  %KBLS is KBLM / 1000,
+  %format("Knowledge base loaded in ~f seconds.~n",[KBLS]).
 
 user:term_expansion(TRILLAxiom,[]):-
   get_module(M),
