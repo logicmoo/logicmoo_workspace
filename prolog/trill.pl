@@ -747,7 +747,7 @@ check_query_args_presence(M,[_|T]):-
 % looks for presence of atoms in kb's axioms
 find_atom_in_axioms(M,H):-
   M:kb_atom(L1),
-  member(H,L1),!.
+  ( member(H,L1.class) ; member(H,L1.objectProperty) ; member(H,L1.individual) ; member(H,L1.dataProperty) ; member(H,L1.annotationProperty) ; member(H,L1.datatype) ),!.
 
 /****************************/
 
@@ -3477,17 +3477,20 @@ user:term_expansion((:- trill),[]):-
   utility_translation:get_module(M),
   set_algorithm(M:trill),
   set_up(M),
+  utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:[('disponte'='http://ml.unife.it/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 user:term_expansion((:- trillp),[]):-
   utility_translation:get_module(M),
   set_algorithm(M:trillp),
   set_up(M),
+  utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:['disponte'='http://ml.unife.it/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
 user:term_expansion((:- tornado),[]):-
   utility_translation:get_module(M),
   set_algorithm(M:tornado),
   set_up(M),
+  utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:['disponte'='http://ml.unife.it/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
 
