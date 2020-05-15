@@ -19,20 +19,22 @@ details.
 /********************************
   SETTINGS
 *********************************/
-:- multifile setting_trill/2.
-setting_trill(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
-setting_trill(nondet_rules,[or_rule,max_rule,ch_rule]).
+:- multifile setting_trill_default/2.
+setting_trill_default(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
+setting_trill_default(nondet_rules,[or_rule,max_rule,ch_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
   init_delta(M),
-  M:(dynamic exp_found/2, trill_time_limit/1).
+  M:(dynamic exp_found/2, setting_trill/2),
+  retractall(M:setting_trill(_,_)).
+  %foreach(setting_trill_default(DefaultSetting,DefaultVal),assert(M:setting_trill(DefaultSetting,DefaultVal))).
 
 clean_up(M):-
   utility_translation:clean_up(M),
-  M:(dynamic exp_found/2, trill_time_limit/1),
+  M:(dynamic exp_found/2, setting_trill/2),
   retractall(M:exp_found(_,_)),
-  retractall(trill_time_limit(_)).
+  retractall(M:setting_trill(_,_)).
 
 /***********
   Utilities for queries

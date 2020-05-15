@@ -23,7 +23,8 @@ details.
                  unsat/1, unsat/2, prob_unsat/2, unsat/3, all_unsat/2,
                  inconsistent_theory/0, inconsistent_theory/1, prob_inconsistent_theory/1, inconsistent_theory/2, all_inconsistent_theory/1,
                  axiom/1, kb_prefixes/1, add_kb_prefix/2, add_kb_prefixes/1, add_axiom/1, add_axioms/1, remove_kb_prefix/2, remove_kb_prefix/1, remove_axiom/1, remove_axioms/1,
-                 load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1] ).
+                 load_kb/1, load_owl_kb/1, load_owl_kb_from_string/1, init_trill/1,
+                 set_tableau_expansion_rules/2] ).
 
 :- meta_predicate sub_class(:,+).
 :- meta_predicate sub_class(:,+,-).
@@ -64,6 +65,7 @@ details.
 :- meta_predicate load_owl_kb_from_string(+).
 :- meta_predicate set_algorithm(:).
 :- meta_predicate init_trill(+).
+:- meta_predicate set_tableau_expansion_rules(:,+).
 
 :- use_module(library(lists)).
 :- use_module(library(ugraphs)).
@@ -80,7 +82,7 @@ details.
 /********************************
   SETTINGS
 *********************************/
-:- multifile setting_trill/2.
+:- multifile setting_trill_default/2.
 
 /********************************
   LOAD KNOWLEDGE BASE
@@ -191,6 +193,18 @@ load_owl_kb_from_string(String):-
 
 :- multifile kb_prefixes/1.
 
+/**
+ * set_tableau_expansion_rules(:DetRules:list,++NondetRules:list) is det
+ * 
+ * This predicate set the rules as taken in input, maintaining order and number of rules.
+ * DetRules is the list of deterministic rules, NondetRules the list of non-deterministic ones.
+ */
+set_tableau_expansion_rules(M:DetRules,NondetRules):-
+  retractall(M:setting_trill(det_rules,_)),
+  retractall(M:setting_trill(nondet_rules,_)),
+  assert(M:setting_trill(det_rules,DetRules)),
+  assert(M:setting_trill(nondet_rules,NondetRules)).
+
 /*****************************
   MESSAGES
 ******************************/
@@ -252,10 +266,10 @@ find_explanations(M,QueryType,QueryArgs,Expl,QueryOptions):-
   ).
 
 find_n_explanations_time_limit(M,QueryType,QueryArgs,Expl,MonitorNExpl,MonitorTimeLimit,Opt):-
-  retractall(M:trill_time_limit(_)),
+  retractall(M:setting_trill(timeout,_)),
   get_time(Start),
   Timeout is Start + MonitorTimeLimit,
-  assert(M:trill_time_limit(Timeout)),
+  assert(M:setting_trill(timeout,Timeout)),
   find_n_explanations(M,QueryType,QueryArgs,Expl,MonitorNExpl,Opt),
   get_time(End),
   (End<Timeout -> true ; print_message(warning,timeout_reached)).
@@ -268,6 +282,7 @@ find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
   (absence_of_clashes(Tableau) ->  % TODO if QueryType is inconsistent no check
     (
       add_q(M,QueryType,Tableau,QueryArgs,Tableau0),
+      set_up_tableau(M),
       findall(Tableau1,expand_queue(M,Tableau0,Tableau1),L),
       (query_option(Opt,assert_abox,true) -> (writeln('Asserting ABox...'), M:assert(final_abox(L)), writeln('Done. Asserted in final_abox/1...')) ; true),
       find_expls(M,L,QueryArgs,Expl1),
@@ -284,7 +299,7 @@ find_single_explanation(M,QueryType,QueryArgs,Expl,Opt):-
 **************/
 
 check_time_monitor(M):-
-  M:trill_time_limit(Timeout),!,
+  M:setting_trill(timeout,Timeout),!,
   get_time(Now),
   Timeout<Now. % I must stop
 
@@ -296,6 +311,13 @@ set_up_reasoner(M):-
   retractall(M:exp_found(_,_,_)),
   retractall(M:trillan_idx(_)),
   assert(M:trillan_idx(1)).
+
+set_up_tableau(M):-
+  % TO CHANGE to remove tableau pruning
+  %setting_trill_default(det_rules,DetRules),
+  %setting_trill_default(nondet_rules,NondetRules),
+  %set_tableau_expansion_rules(M:DetRules,NondetRules). 
+  prune_tableau_rules(M).
 
 % instanceOf
 add_q(M,io,Tableau0,[ClassEx,IndEx],Tableau):- !,
@@ -317,6 +339,7 @@ add_q(M,sc,Tableau0,[SubClassEx,SupClassEx],Tableau):- !,
   neg_class(SupClassEx,NSupClassEx),
   query_ind(QInd),
   add_q(M,Tableau0,classAssertion(intersectionOf([SubClassEx,NSupClassEx]),QInd),Tableau1),
+  utility_translation:add_kb_atoms(M,class,[intersectionOf([SubClassEx,NSupClassEx])]), % This is necessary to correctly prune expansion rules
   add_owlThing_ind(M,Tableau1,QInd,Tableau2),
   add_clash_to_tableau(M,Tableau2,intersectionOf([SubClassEx,NSupClassEx])-QInd,Tableau3),
   update_expansion_queue_in_tableau(M,intersectionOf([SubClassEx,NSupClassEx]),QInd,Tableau3,Tableau).
@@ -332,10 +355,11 @@ add_q(M,un,Tableau0,['unsat',ClassEx],Tableau):- !,
 % inconsistent_theory
 add_q(_,it,Tableau,['inconsistent','kb'],Tableau):- !. % Do nothing
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   funzioni ausiliarie per ottenere i nodi padre o i nodi figli di un nodo generico dell'albero  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/*
+  Auxiliary predicates to extract the det of individuals connected to the query
+*/
 
+% Find the individuals directly connected to the given one
 find_connected(M,Ind,[Ind|ConnectedInds]):-
   find_successors(M,Ind,SuccInds),
   find_predecessors(M,Ind,PredInds),
@@ -347,10 +371,7 @@ find_predecessors(M,Ind,List) :- findall(ConnectedInd, (M:propertyAssertion(_,Co
 intersect([H|_], List) :- member(H, List), !.
 intersect([_|T], List) :- intersect(T, List).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% restituisco tutti i nodi correlati direttamente o indirettamente al nodo di partenza  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% Recursively gather all the connected individuals, i.e., isolate the relevant fragment of the KB.
 scan_connected_individuals(_,[],_,ConnectedInds,ConnectedInds).
 
 scan_connected_individuals(M,[H|T],AlreadyChecked,ConnectedInds0,ConnectedInds) :-
@@ -362,30 +383,85 @@ scan_connected_individuals(M,[H|T],AlreadyChecked,ConnectedInds0,ConnectedInds) 
   append(ConnectedInds1,ConnectedInds0,ConnectedInds2),
 	scan_connected_individuals(M,T,[H|AlreadyChecked],ConnectedInds2,ConnectedInds).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% restituisce il nodo da cui parto e tutti quelli collegati direttamente o indirettamente a lui   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Builds the list of individuals conneted given the query type
 find_connected_individuals(M,io,[_,IndEx],ConnectedInds):-
   scan_connected_individuals(M,[IndEx],[],[],ConnectedInds).
 
 find_connected_individuals(M,pv,[_,Ind1Ex,_],ConnectedInds):-
   scan_connected_individuals(M,[Ind1Ex],[],[],ConnectedInds).
 
-find_connected_individuals(M,sc,[_,_],ConnectedInds):-
-  query_ind(QInd),
-  scan_connected_individuals(M,[QInd],[],[],ConnectedInds).
+find_connected_individuals(_,sc,[_,_],[QInd]):- % It is not necessary to check the KB as the individual of the query is a new fresh individual not included in the KB.
+  query_ind(QInd).
 
-find_connected_individuals(M,un,['unsat',_],ConnectedInds):-
-  query_ind(QInd),
-  scan_connected_individuals(M,[QInd],[],[],ConnectedInds).
+find_connected_individuals(_,un,['unsat',_],[QInd]):- % It is not necessary to check the KB as the individual of the query is a new fresh individual not included in the KB.
+  query_ind(QInd).
 
 find_connected_individuals(_,it,['inconsistent','kb'],[]):-!.
 
+/*
+  check the KB atoms to consider only the necessary expansion rules, pruning the useless ones
+*/
+prune_tableau_rules(M):-
+  M:kb_atom(KBA),
+  Classes=KBA.class,
+  setting_trill_default(det_rules,DetRules),
+  prune_tableau_rules(Classes,DetRules,PrunedDetRules),
+  setting_trill_default(nondet_rules,NondetRules),
+  prune_tableau_rules(Classes,NondetRules,PrunedNondetRules),
+  set_tableau_expansion_rules(M:PrunedDetRules,PrunedNondetRules).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule,or_rule,max_rule,ch_rule
+prune_tableau_rules(_,[],[]).
+
+prune_tableau_rules(KBA,[o_rule|TR],[o_rule|PTR]):-
+  memberchk(oneOf(_),KBA),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[and_rule|TR],[and_rule|PTR]):-
+  memberchk(intersectionOf(_),KBA),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[unfold_rule|TR],[unfold_rule|PTR]):-
+  !,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[add_exists_rule|TR],[add_exists_rule|PTR]):-
+  !,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[forall_rule|TR],[forall_rule|PTR]):-
+  memberchk(allValuesFrom(_,_),KBA),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[forall_plus_rule|TR],[forall_plus_rule|PTR]):-
+  memberchk(allValuesFrom(_,_),KBA),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[exists_rule|TR],[exists_rule|PTR]):-
+  memberchk(someValuesFrom(_,_),KBA),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[min_rule|TR],[min_rule|PTR]):-
+  (memberchk(minCardinality(_,_),KBA); memberchk(minCardinality(_,_,_),KBA);memberchk(exactCardinality(_,_),KBA);memberchk(exactCardinality(_,_,_),KBA)),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[or_rule|TR],[or_rule|PTR]):-
+  memberchk(unionOf(_),KBA),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[max_rule|TR],[max_rule|PTR]):-
+  (memberchk(maxCardinality(_,_),KBA); memberchk(maxCardinality(_,_,_),KBA);memberchk(exactCardinality(_,_),KBA);memberchk(exactCardinality(_,_,_),KBA)),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+
+prune_tableau_rules(KBA,[ch_rule|TR],[ch_rule|PTR]):-
+  (memberchk(maxCardinality(_,_),KBA); memberchk(maxCardinality(_,_,_),KBA);memberchk(exactCardinality(_,_),KBA);memberchk(exactCardinality(_,_,_),KBA)),!,
+  prune_tableau_rules(KBA,TR,PTR).
+
+prune_tableau_rules(KBA,[_|TR],PTR):-
+  prune_tableau_rules(KBA,TR,PTR).
 
 /***********
   Queries
@@ -1039,14 +1115,14 @@ test_end_expand_queue(_,Tab):-
 %  expand_queue(M,ABox0,T,ABox).
 
 apply_all_rules(M,Tab0,EA,Tab):-
-  setting_trill(det_rules,Rules),
+  M:setting_trill(det_rules,Rules),
   apply_det_rules(M,Rules,Tab0,EA,Tab1),
   (test_end_apply_rule(M,Tab0,Tab1) ->
   Tab=Tab1;
   apply_all_rules(M,Tab1,EA,Tab)).
 
 apply_det_rules(M,[],Tab0,EA,Tab):-
-  setting_trill(nondet_rules,Rules),
+  M:setting_trill(nondet_rules,Rules),
   apply_nondet_rules(M,Rules,Tab0,EA,Tab).
 
 apply_det_rules(M,[H|_],Tab0,EA,Tab):-
@@ -3470,6 +3546,7 @@ sandbox:safe_meta(trill:add_axiom(_),[]).
 sandbox:safe_meta(trill:add_axioms(_),[]).
 sandbox:safe_meta(trill:load_kb(_),[]).
 sandbox:safe_meta(trill:load_owl_kb(_),[]).
+sandbox:safe_meta(trill:set_tableau_expansion_rules(_,_),[]).
 
 :- use_module(library(utility_translation)).
 
@@ -3493,4 +3570,3 @@ user:term_expansion((:- tornado),[]):-
   set_up(M),
   utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:['disponte'='http://ml.unife.it/disponte#','owl'='http://www.w3.org/2002/07/owl#']).
-

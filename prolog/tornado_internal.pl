@@ -19,22 +19,25 @@ details.
 /********************************
   SETTINGS
 *********************************/
-:- multifile setting_trill/2.
-setting_trill(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]).
-setting_trill(nondet_rules,[or_rule]).
+:- multifile setting_trill_default/2.
+setting_trill_default(det_rules,[and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule]).
+setting_trill_default(nondet_rules,[or_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1, inconsistent_theory_flag/0, trill_time_limit/1).
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1, inconsistent_theory_flag/0, setting_trill/2).
+  %retractall(M:setting_trill(_,_)),
+  %prune_tableau_rules(M).
+  %foreach(setting_trill_default(DefaultSetting,DefaultVal),assert(M:setting_trill(DefaultSetting,DefaultVal))).
 
 clean_up(M):-
   utility_translation:clean_up(M),
-  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1, inconsistent_theory_flag/0, trill_time_limit/1),
+  M:(dynamic exp_found/2, keep_env/0, tornado_bdd_environment/1, inconsistent_theory_flag/0, setting_trill/2),
   retractall(M:exp_found(_,_)),
   retractall(M:keep_env),
   retractall(M:tornado_bdd_environment(_)),
   retractall(M:inconsistent_theory_flag),
-  retractall(trill_time_limit(_)).
+  retractall(M:setting_trill(_,_)).
 
 /*****************************
   MESSAGES
