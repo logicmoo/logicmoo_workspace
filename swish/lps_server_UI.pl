@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-:- module(lps_server_UI, [ check_user_server_usage/0, lps_user_is_super/0, check_powerful_user/1, term_rendering//3]).
+:- module(lps_server_UI, [ check_user_server_usage/0, lps_user_is_super/0, user_is_known, check_powerful_user/1, term_rendering//3]).
 
 :- use_module(library(http/html_write)).
 :- use_module(library(http/term_html)).
@@ -75,9 +75,11 @@ tt:- threadutil:threads. % ...BUT STILL No permission to call sandboxed threadut
 
 
 % call this before every potentially dangerous operation:
-check_powerful_user(serve_ethereum) :- (allow_anonymous_powerful_ops -> true ; lps_user(User), User\=unknown_user ), !. %TODO: move out of open source
+check_powerful_user(serve_ethereum) :- user_is_known, !. %TODO: move out of open source
 check_powerful_user(_Op) :- (allow_anonymous_powerful_ops -> true ; lps_user_is_super), !.
 check_powerful_user(Op) :- throw(unsufficient_lps_user_privilege_for(Op)).
+
+user_is_known :- allow_anonymous_powerful_ops -> true ; lps_user(User), User\=unknown_user.
 
 % Extend this predicate to give some users all powers
 :- multifile lps_server_UI:super_user/1. % Make sure to include quotes in the user ids
