@@ -3,10 +3,12 @@
 user:term_expansion(NiceTerm,'$source_location'(File, Line):ExpandedTerms) :- 
 	% somehow the source location is not being kept, causing later failure of clause_info/5 :-(
 	context_module(user), % LPS programs are in the user module
-	prolog_load_context(source,File), prolog_load_context(term_position,TP), stream_position_data(line_position,TP,Line),
+	prolog_load_context(source,File), atom_prefix(File,'pengine://'), % process only SWISH windows
+	prolog_load_context(term_position,TP), stream_position_data(line_position,TP,Line),
 	catch(lps_nlp_translate(NiceTerm,ExpandedTerms),_,fail), !. % hook for LogicalContracts extension
 user:term_expansion(NiceTerm,ExpandedTerm) :- 
 	context_module(user), % LPS programs are in the user module
+	prolog_load_context(source,File), atom_prefix(File,'pengine://'), % process only SWISH windows
 	may_clear_hints, set_top_term(NiceTerm),
 	% current_syntax(lps2p,true), In the future we may want to support other syntax conversions
 	% variable names probably not available here, but we don't care about lpsp2p syntax anymore:
