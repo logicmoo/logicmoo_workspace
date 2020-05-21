@@ -7,6 +7,10 @@
 :- use_module(library(http/js_write)).
 :- use_module('../../swish/lib/render').
 
+:- multifile user:extra_swish_resource/1. 
+user:extra_swish_resource(script([src('/lps/2dWorld.js')],[])).
+user:extra_swish_resource(script([src('/lps/2dWorld_lazy.js')],[])).
+
 :- register_renderer(lps_2d, "2d world display of a LPS execution").
 
 term_rendering(lps_visualization(_T,TwoD), _Vars, _Options) --> 

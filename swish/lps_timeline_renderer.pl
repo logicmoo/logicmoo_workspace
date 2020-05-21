@@ -7,6 +7,9 @@
 :- use_module(library(http/js_write)).
 :- use_module('../../swish/lib/render').
 
+:- multifile user:extra_swish_resource/1. 
+user:extra_swish_resource(script([src('/lps/timeline.js')],[])).
+
 :- register_renderer(lps_timeline, "Timeline of a LPS execution").
 
 % adapted from lib/render/c3.pl and com/declarativa/fiji/reporting/timelineTemplate.html

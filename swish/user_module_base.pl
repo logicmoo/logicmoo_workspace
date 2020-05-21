@@ -290,16 +290,16 @@ my_swish_navbar(Options) -->
 	swish_navbar(Options).
 	
 my_swish_resources -->
-	{google_analytics_script(JS)},
-	% swish_page:swish_css, swish_page:swish_js, 
-	% {http_absolute_location(lps_resources('lps.css'),LPScss,[])},
-	html_post(head, link([ type('text/css'),rel('stylesheet'),href('/lps/lps.css') ])),
-	html_post(head, script(JS)),
-	html_post(head, script([src('/lps/timeline.js')],[])),
-	html_post(head, script([src('/lps/2dWorld.js')],[])),
-	html_post(head, script([src('/lps/2dWorld_lazy.js')],[])).
+	{findall(R,extra_swish_resource(R),Resources)},
+	html_post_resources(Resources).
 
-	
+html_post_resources([R|Resources]) --> {!}, html_post(head, R), html_post_resources(Resources).
+html_post_resources([]) --> {true}.
+
+:- multifile user:extra_swish_resource/1. % declare a link or script resource to include in the SWISH page
+extra_swish_resource(link([ type('text/css'),rel('stylesheet'),href('/lps/lps.css') ])).
+extra_swish_resource(script(JS)) :- google_analytics_script(JS).
+
 
 % Stubs for system actions
 % Redundancy here with db.P:
