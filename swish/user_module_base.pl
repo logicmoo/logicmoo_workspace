@@ -42,7 +42,7 @@ swish_config:config(include_alias,	system).
 % LPS visualizations will appear courtesy of either of two SWISH answer renderers:
 :- use_module(lps_2d_renderer,[]). % need not and can not import the rendering predicate into here
 :- use_module(lps_timeline_renderer,[]).
-:- multifile 'swish renderer'/2. % to avoid SWISH warnings in other files
+:- multifile user:'swish renderer'/2. % to avoid SWISH warnings in other files
 :- use_rendering(lps_2d). % this will be the preferred... if available for the current visualization
 :- use_rendering(lps_timeline).
 :- use_rendering(graphviz). % for state/transition diagrams
