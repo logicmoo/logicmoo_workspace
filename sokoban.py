@@ -54,7 +54,7 @@ def find_solution(size=8, num_boxes=2, time_limit=10, seed=0):
             if boxes_initial_locations[i,j] == 1:
                 boxes_initial.append("box(x{}y{})".format(i,j))
 
-    boxes_target_locations = board[:,:,2]
+    boxes_target_locations = board[:,:,2] + board[:,:,3] + board[:,:,6]
     boxes_target = []
     for i in range(dim_room[0]):
         for j in range(dim_room[1]):
@@ -99,8 +99,8 @@ def find_solution(size=8, num_boxes=2, time_limit=10, seed=0):
             print("Last return {}".format(rewards[-1]))
             if rewards[-1] >= 10:
                 return 1, actions
-            else:
-                return 0, []
+        return 0, []
+
     except:
         return 0, []
 
