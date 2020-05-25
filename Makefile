@@ -11,7 +11,7 @@ $(PACKSODIR)/rocksdb4pl.$(SOEXT): cpp/rocksdb4pl.cpp
 install::
 
 check::
-	swipl $(PLPATHS) -g test_rocksdb,halt -t 'halt(1)' test/test_rocksdb.pl
+	swipl $(PLPATHS) -g test_rocksdb -t halt test/test_rocksdb.pl
 
 distclean: clean
 	rm -f $(PACKSODIR)/rocksdb4pl.$(SOEXT)
