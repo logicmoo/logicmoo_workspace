@@ -881,6 +881,9 @@ PREDICATE_NONDET(rocks_enum, 3)
       delete state->it;
       free(state);
       return TRUE;
+    default:
+      assert(0);
+      return FALSE;
   }
   PL_fail;
 }
