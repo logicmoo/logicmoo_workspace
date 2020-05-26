@@ -30,9 +30,10 @@ check::
 	swipl $(PLPATHS) -g test_rocksdb -t halt test/test_rocksdb.pl
 
 distclean: clean
-	git -C rocksdb clean -xfd
 	rm -f $(PACKSODIR)/rocksdb4pl.$(SOEXT)
 
 clean:
 	rm -f *~
 
+realclean: distclean
+	git -C rocksdb clean -xfd
