@@ -12,7 +12,7 @@ all:	plugin
 
 rocksdb/INSTALL.md:
 	git submodule update --init rocksdb
-rocksdb/librocksdb.a:
+rocksdb/librocksdb.a: rocksdb/INSTALL.md
 	$(ROCKSENV) make -C rocksdb static_lib $(ROCKSCFLAGS)
 
 plugin:	$(LIBROCKSDB)
