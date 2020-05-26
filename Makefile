@@ -22,7 +22,7 @@ shared_object: $(PACKSODIR)/rocksdb4pl.$(SOEXT)
 
 $(PACKSODIR)/rocksdb4pl.$(SOEXT): cpp/rocksdb4pl.cpp $(LIBROCKSDB) Makefile
 	mkdir -p $(PACKSODIR)
-	gcc $(CPPFLAGS) -shared -o $@ cpp/rocksdb4pl.cpp $(LIBROCKSDB) $(PLATFORM_LDFLAGS) $(SWISOLIB)
+	g++ $(CPPFLAGS) -shared -o $@ cpp/rocksdb4pl.cpp $(LIBROCKSDB) $(PLATFORM_LDFLAGS) $(SWISOLIB)
 
 install::
 
