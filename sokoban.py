@@ -106,16 +106,17 @@ def find_solution(size=8, num_boxes=2, time_limit=10, seed=0):
 
 
 if __name__ == "__main__":
-
+    personal_seed = 3943420000
     number_of_trials = 100
     time_start = time.time()
 
     df = pd.DataFrame(columns=['seed', 'actions'])
 
     results = 0
-    for seed in range(number_of_trials):
+    l = list(range(personal_seed, personal_seed + number_of_trials))
+    for seed in l:
         print("Current trial {} result {}".format(seed, results))
-        new_result, actions = find_solution(size=8, num_boxes=2, time_limit=20, seed=seed)
+        new_result, actions = find_solution(size=8, num_boxes=2, time_limit=30, seed=seed)
         results += new_result
         df = df.append({'seed' : seed , 'actions' : actions} , ignore_index=True)
 

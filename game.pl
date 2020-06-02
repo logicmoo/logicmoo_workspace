@@ -42,7 +42,7 @@
 
 /* The puzzle is solved when all boxes are in a solution position, this is */
 /* the final_state.                                                        */
-final_state(sokoban, state(_Sokoban, Boxes)) :-
+final_state(state(_Sokoban, Boxes)) :-
     all_boxes_in_solution(Boxes), !.
 
 /* All boxes are in a the solution position when each one of them is at a  */
@@ -129,6 +129,7 @@ update(state(_Sokoban, Boxes), push(Box, Dir), state(NewSokoban, NewBoxes)) :-
     subtract(Boxes, [Box], TempList),
     neib(Box, NewPosition, Dir),
     append(TempList, [NewPosition], NewBoxes).
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%
