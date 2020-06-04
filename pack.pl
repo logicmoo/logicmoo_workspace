@@ -9,3 +9,4 @@ home('https://github.com/edisonm/xtools').
 download('https://github.com/edisonm/xtools.git').
 requires(xlibrary).
 requires(rtchecks).
+requires(assertions).
