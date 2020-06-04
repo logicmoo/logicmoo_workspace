@@ -84,7 +84,7 @@ user_is_known :- allow_anonymous_powerful_ops -> true ; lps_user(User), User\=un
 % Extend this predicate to give some users all powers
 :- multifile lps_server_UI:super_user/1. % Make sure to include quotes in the user ids
 
-lps_user_is_super :- lps_user(User), super_user(User).
+lps_user_is_super :- allow_anonymous_powerful_ops -> true ; (lps_user(User), super_user(User)).
 
 any_call(G) :- check_powerful_user(sudo), G.
 
