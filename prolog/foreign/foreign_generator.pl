@@ -1256,9 +1256,9 @@ declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind, Type+FHD) :-
     ->bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Var, Spec, Mode),
       ctype_arg_decl(Spec, Mode, Decl),
       Type = Decl+" ",
-      Head =.. Args,
+      Head =.. [F|Args],
       once(select(Var, Args, CArgs)),
-      CHead =.. CArgs
+      CHead =.. [F|CArgs]
     ; Type = "void ",
       CHead = Head
     ),
@@ -1785,9 +1785,9 @@ generate_foreign_call((CN/_A as _ + _)-Head1, M, CM, Comp, Call, Succ, Glob, Ret
     ; ( member(returns(Var, _), Glob)
       ->c_var_name(Var, CVar),
         HLine=CVar+"=",
-        Head1 =.. Args,
+        Head1 =.. [F|Args],
         once(select(Var, Args, CArgs)),
-        Head =.. CArgs
+        Head =.. [F|CArgs]
       ; Head = Head1,
         HLine=""
       ),
