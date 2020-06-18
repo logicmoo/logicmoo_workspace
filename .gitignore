@@ -10,3 +10,4 @@ swish/docker/tempData
 swish/data
 passwd
 engine/logs
+swish/extensions
