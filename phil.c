@@ -725,10 +725,18 @@ void saveHeadersGD(FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE 
   int i;
   for (i = 0; i < NR; i++)
   {
-    fprintf(probsFile, "Probability_%d ; ", i);
-    fprintf(weightsFile, "Weight_%d ; ", i);
-    fprintf(Moments0File, "Moment0_%d ; ", i);
-    fprintf(Moments1File, "Moment1_%d ; ", i);
+    if (i!=NR -1){
+      fprintf(probsFile, "Probability_%d;", i);
+      fprintf(weightsFile, "Weight_%d;", i);
+      fprintf(Moments0File, "Moment0_%d;", i);
+      fprintf(Moments1File, "Moment1_%d;", i);
+    }else{
+      fprintf(probsFile, "Probability_%d", i);
+      fprintf(weightsFile, "Weight_%d", i);
+      fprintf(Moments0File, "Moment0_%d", i);
+      fprintf(Moments1File, "Moment1_%d", i);
+    }
+    
   }
   fprintf(lls, "Loss\n");
   fprintf(probsFile, "\n");
@@ -744,10 +752,10 @@ void saveStatisticsGD(double Probabilities[], double Weights[], double Moments0[
   for (i = 0; i < NR; i++)
   {
     if (i!= NR-1){
-      fprintf(probsFile, "%f ; ", Probabilities[i]);
-      fprintf(weightsFile, "%f ; ", Weights[i]);
-      fprintf(Moments0File, "%f ; ", Moments0[i]);
-      fprintf(Moments1File, "%f ; ", Moments1[i]);
+      fprintf(probsFile, "%f;", Probabilities[i]);
+      fprintf(weightsFile, "%f;", Weights[i]);
+      fprintf(Moments0File, "%f;", Moments0[i]);
+      fprintf(Moments1File, "%f;", Moments1[i]);
     }else
     {
       fprintf(probsFile, "%f \n", Probabilities[i]);
@@ -1303,10 +1311,10 @@ void saveStatisticsEM(double Probabilities[], double expectations[], double expe
   for (i = 0; i < NR; i++)
   {
     if (i!= NR-1){
-      fprintf(probsFile, "%f ; ", Probabilities[i]);
-      fprintf(expectationsFile, "%f ; ", expectations[i]);
+      fprintf(probsFile, "%f;", Probabilities[i]);
+      fprintf(expectationsFile, "%f;", expectations[i]);
       if (Regularized == 1){
-          fprintf(expectationsFile0, "%f ; ", expectations0[i]);
+          fprintf(expectationsFile0, "%f;", expectations0[i]);
           expectations0[i] = 0;
       }
     }else
