@@ -730,7 +730,7 @@ void saveHeadersGD(FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE 
     fprintf(Moments0File, "Moment0_%d;", i);
     fprintf(Moments1File, "Moment1_%d;", i);
   }
-  fprintf(lls, "Loss\n", lls);
+  fprintf(lls, "Loss\n");
   fprintf(probsFile, "\n");
   fprintf(weightsFile, "\n");
   fprintf(Moments0File, "\n");
@@ -1280,7 +1280,7 @@ void saveHeadersEM(FILE *probsFile, FILE *expectationsFile, FILE *expectationsFi
   }
 
   fprintf(countsFile, "Count\n");
-  fprintf(lls, "Loss\n",);
+  fprintf(lls, "Loss\n");
   fprintf(probsFile, "\n");
   fprintf(expectationsFile, "\n");
   if (Regularized == 1)
