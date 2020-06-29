@@ -71,6 +71,7 @@ void printTrees2(node **nodes_ex, int init, int max, char *FileName);
 
 void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls);
 void closeFilesGD(FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls);
+void saveHeadersGD(FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls,int NR);
 void saveStatisticsGD(double Probabilities[], double Weights[], double Moments0[], double Moments1[], int NR, FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls, double CLL);
 void sigma_vec(double Weights[], double Probabilities[], int NR);
 double update_weights_Adam(double Weights[], double Probabilities[],double Gradients[], int NR, double Moment_0[], double Moment_1[], int Iter, double Eta, double Beta1, double Beta2, long double Epsilon_adam_hat, int TypeReg, double Gamma);
@@ -685,15 +686,15 @@ void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, F
   }
 
   strcat(nameFileProbs, statisticsFolder);
-  strcat(nameFileProbs, "/Probabilities.txt");
+  strcat(nameFileProbs, "/Probabilities.csv");
   strcat(nameFileWeights, statisticsFolder);
-  strcat(nameFileWeights, "/Weights.txt");
+  strcat(nameFileWeights, "/Weights.csv");
   strcat(nameFileClls, statisticsFolder);
-  strcat(nameFileClls, "/clls.txt");
+  strcat(nameFileClls, "/clls.csv");
   strcat(nameFileMoments0, statisticsFolder);
-  strcat(nameFileMoments0, "/Moments0.txt");
+  strcat(nameFileMoments0, "/Moments0.csv");
   strcat(nameFileMoments1, statisticsFolder);
-  strcat(nameFileMoments1, "/Moments1.txt");
+  strcat(nameFileMoments1, "/Moments1.csv");
 
   *probsFile = fopen(nameFileProbs, "w");
   *weightsFile = fopen(nameFileWeights, "w");
@@ -718,22 +719,48 @@ void closeFilesGD(FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FIL
   fclose(*lls);
 }
 
+// Save GD headers of files
+void saveHeadersGD(FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls,int NR)
+{
+  int i;
+  for (i = 0; i < NR; i++)
+  {
+    fprintf(probsFile, "Probability_%d;", i);
+    fprintf(weightsFile, "Weight_%d;", i);
+    fprintf(Moments0File, "Moment0_%d;", i);
+    fprintf(Moments1File, "Moment1_%d;", i);
+  }
+  fprintf(lls, "Loss\n", lls);
+  fprintf(probsFile, "\n");
+  fprintf(weightsFile, "\n");
+  fprintf(Moments0File, "\n");
+  fprintf(Moments1File, "\n");
+}
+
 //Saves the log-likelihood (CLL), the moments and the learned weights/parameters
 void saveStatisticsGD(double Probabilities[], double Weights[], double Moments0[], double Moments1[], int NR, FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE *Moments1File, FILE *lls, double CLL)
 {
   int i;
   for (i = 0; i < NR; i++)
   {
-    fprintf(probsFile, "%f ", Probabilities[i]);
-    fprintf(weightsFile, "%f ", Weights[i]);
-    fprintf(Moments0File, "%f ", Moments0[i]);
-    fprintf(Moments1File, "%f ", Moments1[i]);
+    if (i!= NR-1){
+      fprintf(probsFile, "%f;", Probabilities[i]);
+      fprintf(weightsFile, "%f;", Weights[i]);
+      fprintf(Moments0File, "%f;", Moments0[i]);
+      fprintf(Moments1File, "%f;", Moments1[i]);
+    }else
+    {
+      fprintf(probsFile, "%f", Probabilities[i]);
+      fprintf(weightsFile, "%f", Weights[i]);
+      fprintf(Moments0File, "%f", Moments0[i]);
+      fprintf(Moments1File, "%f", Moments1[i]);
+    }
   }
-  fprintf(lls, "%f \n", CLL);
-  fprintf(probsFile, "\n \n");
-  fprintf(weightsFile, "\n \n");
-  fprintf(Moments0File, "\n \n");
-  fprintf(Moments1File, "\n \n");
+  fprintf(lls, "%f\n", CLL);
+  fprintf(probsFile, "\n");
+  fprintf(weightsFile, "\n");
+  fprintf(Moments0File, "\n");
+  fprintf(Moments1File, "\n");
 }
 
 double sigma(double Weight)
@@ -1138,6 +1165,7 @@ double dphil(node **Nodes, int lenNodes, int MaxIteration, double Probabilities[
   {
     openFilesGD(statisticsFolder, &probsFile, &weightsFile, &Moments0File, &Moments1File, &lls);
     sigma_vec(Weights, Probabilities, NR);
+    saveHeadersGD(probsFile, weightsFile, Moments0File, Moments1File, lls,NR);
     saveStatisticsGD(Probabilities, Weights, Moments0, Moments1, NR, probsFile, weightsFile, Moments0File, Moments1File, lls, CLL1);
   }
   from = 0;
@@ -1194,16 +1222,16 @@ void openFilesEM(char *statisticsFolder, FILE **probsFile, FILE **expectationsFi
     }
   }
   strcat(nameFileProbs, statisticsFolder);
-  strcat(nameFileProbs, "/probabilitiesEM.txt");
+  strcat(nameFileProbs, "/probabilitiesEM.csv");
   strcat(nameFileExpects, statisticsFolder);
-  strcat(nameFileExpects, "/expectationsEM.txt");
+  strcat(nameFileExpects, "/expectationsEM.csv");
   strcat(nameFileExpects0, statisticsFolder);
-  strcat(nameFileExpects0, "/expectationsEM0.txt");
+  strcat(nameFileExpects0, "/expectationsEM0.csv");
 
   strcat(nameFileCount, statisticsFolder);
-  strcat(nameFileCount, "/countsEM.txt");
+  strcat(nameFileCount, "/countsEM.csv");
   strcat(nameFileClls, statisticsFolder);
-  strcat(nameFileClls, "/cllsEM.txt");
+  strcat(nameFileClls, "/cllsEM.csv");
   *probsFile = fopen(nameFileProbs, "w");
   *expectationsFile = fopen(nameFileExpects, "w");
   *expectationsFile0 = fopen(nameFileExpects0, "w");
@@ -1226,34 +1254,78 @@ void closeFilesEM(FILE **probsFile, FILE **expectationsFile, FILE **expectations
   fclose(*lls);
 }
 
+// Save EM headers of files
+void saveHeadersEM(FILE *probsFile, FILE *expectationsFile, FILE *expectationsFile0,FILE *countsFile, FILE *lls, int NR){
+  
+  int i;
+  for (i = 0; i < NR; i++)
+  {
+    if (i != NR-1){
+      fprintf(probsFile, "Probability_%d;", i);
+      fprintf(expectationsFile, "Expectation_%d;",i);
+      if (Regularized == 1){
+          fprintf(expectationsFile0, "Expectation_%d;",i);
+          
+      }
+    }else
+    {
+      fprintf(probsFile, "Probability_%d", i);
+      fprintf(expectationsFile, "Expectation_%d",i);
+      if (Regularized == 1){
+          fprintf(expectationsFile0, "Expectation_%d",i);
+          
+      }
+    }
+     
+  }
+
+  fprintf(countsFile, "Count\n");
+  fprintf(lls, "Loss\n",);
+  fprintf(probsFile, "\n");
+  fprintf(expectationsFile, "\n");
+  if (Regularized == 1)
+    fprintf(expectationsFile0, "\n");
+}
+
 void saveCountsEM(FILE *countsFile, int NR)
 {
   int i;
   for (i = 0; i < NR; i++)
   {
-    fprintf(countsFile, "%d ", Counts[i]);
+    fprintf(countsFile, "%d\n", Counts[i]);
   }
 }
-//Saves the log-likelihood (CLL), The expectations and the count.
 
+//Saves the log-likelihood (CLL), The expectations and the count.
 void saveStatisticsEM(double Probabilities[], double expectations[], double expectations0[], int NR, FILE *probsFile, FILE *expectationsFile, FILE *expectationsFile0, FILE *lls, double CLL)
 {
   int i;
   for (i = 0; i < NR; i++)
   {
-    fprintf(probsFile, "%f ", Probabilities[i]);
-    fprintf(expectationsFile, "%f ", expectations[i]);
-    if (Regularized == 1){
-        fprintf(expectationsFile0, "%f ", expectations0[i]);
-        expectations0[i] = 0;
+    if (i!= NR-1){
+       fprintf(probsFile, "%f;", Probabilities[i]);
+      fprintf(expectationsFile, "%f;", expectations[i]);
+      if (Regularized == 1){
+          fprintf(expectationsFile0, "%f;", expectations0[i]);
+          expectations0[i] = 0;
+      }
+    }else
+    {
+      fprintf(probsFile, "%f", Probabilities[i]);
+      fprintf(expectationsFile, "%f", expectations[i]);
+      if (Regularized == 1){
+          fprintf(expectationsFile0, "%f", expectations0[i]);
+          expectations0[i] = 0;
+      }
     }
+    
     expectations[i] = 0; // reinitialized the expectations
   }
-  fprintf(lls, "%f \n", CLL);
-  fprintf(probsFile, "\n \n");
-  fprintf(expectationsFile, "\n \n");
+  fprintf(lls, "%f\n", CLL);
+  fprintf(probsFile, "\n");
+  fprintf(expectationsFile, "\n");
   if (Regularized == 1)
-    fprintf(expectationsFile0, "\n \n");
+    fprintf(expectationsFile0, "\n");
 }
 
 int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, double *GammaCount)
@@ -1769,6 +1841,7 @@ double emphil(node **Nodes, int lenNodes, double Probabilities[], double expecta
   if (saved == 1)
   {
     openFilesEM(statisticsFolder, &probsFile, &expectationsFile, &expectationsFile0, &countsFile, &lls);
+    saveHeadersEM(probsFile, expectationsFile, expectationsFile0,countsFile, lls,NR);
     saveCountsEM(countsFile, NR);
     fclose(countsFile);
     saveStatisticsEM(Probabilities, expectations, expectations0, NR, probsFile, expectationsFile, expectationsFile0, lls, CLL1);
