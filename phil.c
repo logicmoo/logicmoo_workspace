@@ -752,16 +752,16 @@ void saveStatisticsGD(double Probabilities[], double Weights[], double Moments0[
   for (i = 0; i < NR; i++)
   {
     if (i!= NR-1){
-      fprintf(probsFile, "%f;", Probabilities[i]);
-      fprintf(weightsFile, "%f;", Weights[i]);
-      fprintf(Moments0File, "%f;", Moments0[i]);
-      fprintf(Moments1File, "%f;", Moments1[i]);
+      fprintf(probsFile, "%.5g;", Probabilities[i]);
+      fprintf(weightsFile, "%.5g;", Weights[i]);
+      fprintf(Moments0File, "%.5g;", Moments0[i]);
+      fprintf(Moments1File, "%.5g;", Moments1[i]);
     }else
     {
-      fprintf(probsFile, "%f \n", Probabilities[i]);
-      fprintf(weightsFile, "%f \n", Weights[i]);
-      fprintf(Moments0File, "%f \n", Moments0[i]);
-      fprintf(Moments1File, "%f \n", Moments1[i]);
+      fprintf(probsFile, "%.5g \n", Probabilities[i]);
+      fprintf(weightsFile, "%.5g \n", Weights[i]);
+      fprintf(Moments0File, "%.5g \n", Moments0[i]);
+      fprintf(Moments1File, "%.5g \n", Moments1[i]);
     }
   }
   fprintf(lls, "%f\n", CLL);
@@ -1311,25 +1311,25 @@ void saveStatisticsEM(double Probabilities[], double expectations[], double expe
   for (i = 0; i < NR; i++)
   {
     if (i!= NR-1){
-      fprintf(probsFile, "%f;", Probabilities[i]);
-      fprintf(expectationsFile, "%f;", expectations[i]);
+      fprintf(probsFile, "%.5g;", Probabilities[i]);
+      fprintf(expectationsFile, "%.5g;", expectations[i]);
       if (Regularized == 1){
-          fprintf(expectationsFile0, "%f;", expectations0[i]);
+          fprintf(expectationsFile0, "%.5g;", expectations0[i]);
           expectations0[i] = 0;
       }
     }else
     {
-      fprintf(probsFile, "%f \n", Probabilities[i]);
-      fprintf(expectationsFile, "%f \n", expectations[i]);
+      fprintf(probsFile, "%.5g \n", Probabilities[i]);
+      fprintf(expectationsFile, "%.5g \n", expectations[i]);
       if (Regularized == 1){
-          fprintf(expectationsFile0, "%f \n", expectations0[i]);
+          fprintf(expectationsFile0, "%.5g \n", expectations0[i]);
           expectations0[i] = 0;
       }
     }
     
     expectations[i] = 0; // reinitialized the expectations
   }
-  fprintf(lls, "%f\n", CLL);
+  fprintf(lls, "%.5g\n", CLL);
  /* fprintf(probsFile, "\n");
   fprintf(expectationsFile, "\n");
   if (Regularized == 1)
