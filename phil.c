@@ -725,10 +725,10 @@ void saveHeadersGD(FILE *probsFile, FILE *weightsFile, FILE *Moments0File, FILE 
   int i;
   for (i = 0; i < NR; i++)
   {
-    fprintf(probsFile, "Probability_%d;", i);
-    fprintf(weightsFile, "Weight_%d;", i);
-    fprintf(Moments0File, "Moment0_%d;", i);
-    fprintf(Moments1File, "Moment1_%d;", i);
+    fprintf(probsFile, "Probability_%d ; ", i);
+    fprintf(weightsFile, "Weight_%d ; ", i);
+    fprintf(Moments0File, "Moment0_%d ; ", i);
+    fprintf(Moments1File, "Moment1_%d ; ", i);
   }
   fprintf(lls, "Loss\n");
   fprintf(probsFile, "\n");
@@ -744,23 +744,23 @@ void saveStatisticsGD(double Probabilities[], double Weights[], double Moments0[
   for (i = 0; i < NR; i++)
   {
     if (i!= NR-1){
-      fprintf(probsFile, "%f;", Probabilities[i]);
-      fprintf(weightsFile, "%f;", Weights[i]);
-      fprintf(Moments0File, "%f;", Moments0[i]);
-      fprintf(Moments1File, "%f;", Moments1[i]);
+      fprintf(probsFile, "%f ; ", Probabilities[i]);
+      fprintf(weightsFile, "%f ; ", Weights[i]);
+      fprintf(Moments0File, "%f ; ", Moments0[i]);
+      fprintf(Moments1File, "%f ; ", Moments1[i]);
     }else
     {
-      fprintf(probsFile, "%f", Probabilities[i]);
-      fprintf(weightsFile, "%f", Weights[i]);
-      fprintf(Moments0File, "%f", Moments0[i]);
-      fprintf(Moments1File, "%f", Moments1[i]);
+      fprintf(probsFile, "%f \n", Probabilities[i]);
+      fprintf(weightsFile, "%f \n", Weights[i]);
+      fprintf(Moments0File, "%f \n", Moments0[i]);
+      fprintf(Moments1File, "%f \n", Moments1[i]);
     }
   }
   fprintf(lls, "%f\n", CLL);
-  fprintf(probsFile, "\n");
+  /*fprintf(probsFile, "\n");
   fprintf(weightsFile, "\n");
   fprintf(Moments0File, "\n");
-  fprintf(Moments1File, "\n");
+  fprintf(Moments1File, "\n");*/
 }
 
 double sigma(double Weight)
@@ -1303,18 +1303,18 @@ void saveStatisticsEM(double Probabilities[], double expectations[], double expe
   for (i = 0; i < NR; i++)
   {
     if (i!= NR-1){
-       fprintf(probsFile, "%f;", Probabilities[i]);
-      fprintf(expectationsFile, "%f;", expectations[i]);
+      fprintf(probsFile, "%f ; ", Probabilities[i]);
+      fprintf(expectationsFile, "%f ; ", expectations[i]);
       if (Regularized == 1){
-          fprintf(expectationsFile0, "%f;", expectations0[i]);
+          fprintf(expectationsFile0, "%f ; ", expectations0[i]);
           expectations0[i] = 0;
       }
     }else
     {
-      fprintf(probsFile, "%f", Probabilities[i]);
-      fprintf(expectationsFile, "%f", expectations[i]);
+      fprintf(probsFile, "%f \n", Probabilities[i]);
+      fprintf(expectationsFile, "%f \n", expectations[i]);
       if (Regularized == 1){
-          fprintf(expectationsFile0, "%f", expectations0[i]);
+          fprintf(expectationsFile0, "%f \n", expectations0[i]);
           expectations0[i] = 0;
       }
     }
@@ -1322,10 +1322,10 @@ void saveStatisticsEM(double Probabilities[], double expectations[], double expe
     expectations[i] = 0; // reinitialized the expectations
   }
   fprintf(lls, "%f\n", CLL);
-  fprintf(probsFile, "\n");
+ /* fprintf(probsFile, "\n");
   fprintf(expectationsFile, "\n");
   if (Regularized == 1)
-    fprintf(expectationsFile0, "\n");
+    fprintf(expectationsFile0, "\n");*/
 }
 
 int getRegularizationParameters(term_t RegParams, int *TypeReg, double *Gamma, double *GammaCount)
