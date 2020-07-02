@@ -6,6 +6,7 @@
                               fullasr/2,
                               p/1]).
 
+:- use_module(library(edinburgh)).
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
 :- use_module(library(rtchecks)).

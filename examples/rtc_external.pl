@@ -34,6 +34,7 @@
 
 :- module(rtc_external, [test_ex/0]).
 
+:- use_module(library(edinburgh)).
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
 
