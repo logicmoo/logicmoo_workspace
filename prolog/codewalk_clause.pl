@@ -36,13 +36,18 @@
 
 :- use_module(library(prolog_xref), []).
 :- use_module(library(apply)).
+:- use_module(library(lists)).
+:- use_module(library(thread)).
+:- use_module(library(option)).
+:- use_module(library(ordsets)).
+:- use_module(library(prolog_metainference)).
 :- use_module(library(assertions)).
 :- use_module(library(extend_args)).
 :- use_module(library(extra_location)).
 :- use_module(library(from_utils)).
 :- use_module(library(meta_args)).
 :- use_module(library(option_utils)).
-:- use_module(library(concurrent_forall)).
+% :- use_module(library(concurrent_forall)).
 
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,

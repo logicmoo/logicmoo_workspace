@@ -36,7 +36,7 @@
           [mark_meta_arguments/1]).
 
 :- use_module(library(mapargs)).
-:- use_module(library(prolog_metainference), []).
+:- use_module(library(prolog_metainference)).
 
 :- meta_predicate mark_meta_arguments(0 ).
 

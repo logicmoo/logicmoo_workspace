@@ -34,12 +34,15 @@
 
 :- module(check_assertions, []).
 
+:- use_module(library(apply)).
+:- use_module(library(lists)).
+:- use_module(library(option)).
+:- use_module(library(yall)).
+:- use_module(library(pairs)).
 :- use_module(library(checkers/checker)).
 :- use_module(library(assertions)).
-:- use_module(library(apply)).
 :- use_module(library(check), []).
 :- use_module(library(codewalk)).
-:- use_module(library(yall)).
 :- use_module(library(compact_pi_list)).
 :- use_module(library(intercept)).
 :- use_module(library(normalize_pi)).

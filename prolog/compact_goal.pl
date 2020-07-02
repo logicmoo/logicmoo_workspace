@@ -34,6 +34,8 @@
 
 :- module(compact_goal, [compact_goal/2]).
 
+:- use_module(library(lists)).
+
 % compact_goal/2 is the opposite of expand_goal/2, and is intended to improve
 % display of goals that where expanded by the compiler. It is only approximated
 % and should not be used in other context.

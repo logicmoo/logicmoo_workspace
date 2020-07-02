@@ -34,8 +34,9 @@
 
 :- module(check_imports, []).
 
-:- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
+:- use_module(library(lists)).
+:- use_module(library(checkers/checker)).
 :- use_module(library(clambda)).
 :- use_module(library(expansion_module)).
 :- use_module(library(codewalk)).
@@ -169,7 +170,7 @@ current_used_use_module(MFileD, UE, M, From) :-
                [_, _|_]),
     absolute_file_name(U, UFile, [file_type(prolog), access(exist),
                                   file_errors(fail)]),
-    current_module(UM, UFile),
+    module_property(UM, file(UFile)),
     \+ ignore_import(M, UM),
     module_property(UM, exports(EL)),
     EL \= [],

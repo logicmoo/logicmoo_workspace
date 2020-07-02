@@ -34,8 +34,11 @@
 
 :- module(check_non_loaded, []).
 
-:- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
+:- use_module(library(lists)).
+:- use_module(library(option)).
+:- use_module(library(pairs)).
+:- use_module(library(checkers/checker)).
 :- use_module(library(option_utils)).
 
 :- multifile

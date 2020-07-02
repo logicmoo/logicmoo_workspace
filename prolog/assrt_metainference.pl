@@ -39,6 +39,7 @@
 :- use_module(library(assertions)).
 :- use_module(library(transpose)).
 :- use_module(library(prolog_metainference), []).
+:- prolog_metainference:use_module(library(apply), [maplist/3]).
 
 applicable_type(calls).
 applicable_type(success).
@@ -70,8 +71,8 @@ infer_meta_assertions :-
                       ), HeadArgSpecLL),
               transpose(HeadArgSpecLL, [HeadL, ArgL, SpecL]),
               maplist(=(Head), HeadL),
-              prolog_metainference:( maplist(annotate, ArgL, SpecL),
-                                     meta_annotation(Head, Meta))
+              prolog_metainference:maplist(annotate, ArgL, SpecL),
+              prolog_metainference:meta_annotation(Head, Meta)
             ), KeyMetaU),
     keysort(KeyMetaU, KeyMetaL),
     group_pairs_by_key(KeyMetaL, KeyMetaG),

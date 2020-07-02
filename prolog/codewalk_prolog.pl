@@ -34,6 +34,8 @@
 
 :- module(codewalk_prolog, []).
 
+:- use_module(library(lists)).
+:- use_module(library(option)).
 :- use_module(library(prolog_codewalk)).
 :- use_module(library(assertions)).
 :- use_module(library(extra_location)).

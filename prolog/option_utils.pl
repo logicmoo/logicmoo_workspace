@@ -46,6 +46,9 @@
 :- reexport(library(module_files)).
 :- use_module(library(apply)).
 :- use_module(library(lists)).
+:- use_module(library(option)).
+:- use_module(library(pairs)).
+:- use_module(library(solution_sequences)).
 :- use_module(library(from_utils)).
 :- use_module(library(implemented_in_base)).
 

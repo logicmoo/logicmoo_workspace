@@ -37,6 +37,7 @@
            checkeach/2, check_results/2, check_results/3, available_checker/1,
            head_report/1, body_report/1, body_report/2, full_report/1]).
 
+:- use_module(library(lists)).
 :- use_module(library(atomics_atom)).
 :- use_module(library(thread)).
 :- use_module(library(group_pairs_or_sort)).

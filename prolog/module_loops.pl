@@ -34,6 +34,7 @@
 
 :- module(module_loops, [module_loops/2]).
 
+:- use_module(library(lists)).
 :- use_module(library(option_utils)).
 
 skip_module(user).

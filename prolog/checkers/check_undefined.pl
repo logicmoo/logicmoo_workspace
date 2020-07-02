@@ -35,8 +35,10 @@
 :- module(check_undefined, []).
 
 % A wrapper from library(check)
-:- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
+:- use_module(library(lists)).
+:- use_module(library(pairs)).
+:- use_module(library(checkers/checker)).
 :- use_module(library(clambda)).
 :- use_module(library(infer_alias)).
 :- use_module(library(normalize_pi)).

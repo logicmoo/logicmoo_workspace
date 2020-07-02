@@ -43,6 +43,8 @@
                         used_predicates/3
                        ]).
 
+:- use_module(library(option)).
+:- use_module(library(pairs)).
 :- use_module(library(assertions)).
 :- use_module(library(normalize_head)).
 :- use_module(library(normalize_pi)).

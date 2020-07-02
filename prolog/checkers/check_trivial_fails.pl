@@ -36,6 +36,7 @@
 
 :- use_module(library(checkers/checker)).
 :- use_module(library(apply)).
+:- use_module(library(option)).
 :- use_module(library(abstract_interpreter)).
 :- use_module(library(from_utils)).
 :- use_module(library(location_utils)).

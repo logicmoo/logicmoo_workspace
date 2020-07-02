@@ -34,6 +34,7 @@
 
 :- module(codewalk, [walk_code/1]).
 
+:- use_module(library(option)).
 :- use_module(library(option_utils)).
 
 :- multifile

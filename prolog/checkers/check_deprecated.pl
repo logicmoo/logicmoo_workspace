@@ -34,6 +34,7 @@
 
 :- module(check_deprecated, []).
 
+:- use_module(library(option)).
 :- use_module(library(checkers/checker)).
 :- use_module(library(globprops)).
 :- use_module(library(check), []).

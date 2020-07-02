@@ -35,6 +35,7 @@
 :- module(dynamic_locations,
           [dynamic_locations/1]).
 
+:- use_module(library(option)).
 :- use_module(library(location_utils)).
 :- use_module(library(codewalk)).
 
