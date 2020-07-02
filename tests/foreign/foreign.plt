@@ -1,7 +1,6 @@
-
 :- use_module(library(assertions)).
 :- use_module(foreign_test_i).
-
+:- use_module(library(lists)).
 :- begin_tests(foreign).
 
 test(enum_example) :-

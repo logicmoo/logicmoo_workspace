@@ -5,6 +5,7 @@
            extend/2, test_ireverse1/2, test_ireverse2/2, test_array/3,
            fill_array/3]).
 
+:- use_module(library(filesex)).
 :- use_module(library(neck)).
 :- use_module(library(assertions)).
 :- use_module(library(plprops)).
@@ -96,7 +97,7 @@ nw_stream_s(NwStream) :-
 
 this_dir(Dir) :-
     context_module(M),
-    current_module(M, Path),
+    module_property(M, file(Path)),
     directory_file_path(Dir, _, Path).
 
 :- ( \+ user:file_search_path('.', _)
