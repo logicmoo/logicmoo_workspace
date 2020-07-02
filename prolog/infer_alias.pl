@@ -41,6 +41,8 @@
            pretty_path/2
           ]).
 
+:- use_module(library(lists)).
+:- use_module(library(option)).
 :- use_module(library(term_size)).
 
 infer_alias(File, CAlias, Options) :-

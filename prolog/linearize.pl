@@ -34,6 +34,9 @@
 
 :- module(linearize, [linearize/5]).
 
+:- use_module(library(lists)).
+:- use_module(library(occurs)).
+
 get_substitutions(term, Term, SubsL) :-
     term_variables(Term, Vars),
     exclude(singleton(Term), Vars, SubsL).

@@ -34,6 +34,7 @@
 
 :- module(i18n_test, [i18n_test/1]).
 
+:- use_module(library(filesex)).
 :- use_module(library(i18n/i18n_expansion)).
 :- use_module(library(i18n/i18n_support)).
 

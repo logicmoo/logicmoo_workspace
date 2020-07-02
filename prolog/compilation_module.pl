@@ -53,10 +53,12 @@ compilation_module(A, B) :- use_module(A, B).
 compilation_predicate(_).
 
 term_expansion((:- compilation_module(Alias)),
-               ['$compilation_module'(Alias, all),
+               [(:- discontiguous '$compilation_module'/2),
+                '$compilation_module'(Alias, all),
                 (:- use_module(Alias))]).
 term_expansion((:- compilation_module(Alias, Exports)),
-               ['$compilation_module'(Alias, Exports),
+               [(:- discontiguous '$compilation_module'/2),
+                '$compilation_module'(Alias, Exports),
                 (:- use_module(Alias, Exports))]).
 term_expansion((:- compilation_predicate(F/A)),
                '$compilation_predicate'(F, A)).
