@@ -112,7 +112,7 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(900,fy,user:(not)). 
 :- op(1200,xfx,user:(then)).
 :- op(1185,fx,user:(if)).
-:- op(1200,xfx,user:(if)).
+:- op(1190,xfx,user:(if)).
 % the following is for "conditional expressions", (if C then T else E)
 % this maybe slightly confusing versus (if Antecedent then Consequent) rules, 
 % and other choices would be possible, e.g. Python's or C et.al... but this still feels
