@@ -34,6 +34,8 @@
 
 :- module(check_module_loops, []).
 
+:- use_module(library(lists)).
+:- use_module(library(solution_sequences)).
 :- use_module(library(checkers/checker)).
 :- use_module(library(module_loops)).
 :- use_module(library(extra_location)).
@@ -53,7 +55,15 @@ prolog:message(acheck(module_loops, Loc/Loop)) -->
 
 checker:check(module_loops, Pairs, Options) :-
     module_loops(Loops, Options),
-    maplist(loops_pairs, Loops, Pairs).
+    maplist(normalize_loop, Loops, Norms),
+    sort(Norms, Sorted),
+    maplist(loops_pairs, Sorted, Pairs).
+
+normalize_loop(Loop, Norm) :-
+    once(order_by([asc(Norm)],
+                  ( append(Left, Right, Loop),
+                    append(Right, Left, Norm)
+                  ))).
 
 loops_pairs(Loop, warning-Loc/Loop) :-
     Loop = [LoadedIn, Module|_],

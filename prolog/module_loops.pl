@@ -70,8 +70,9 @@ module_loops([Module-LoadedInL|DepsL1]) -->
 
 module_loops(Module, Path1, DepsL1, DepsL) -->
     ( {append(Left, [Module|_], Path1)}
-    ->{append([Module|Left], [Module], Path),
-       DepsL = DepsL1},
+    ->{ Path = [Module|Left],
+        DepsL = DepsL1
+      },
       [Path]
     ; {select(Module-LoadedInL, DepsL1, DepsL2)}
     ->fold_module_loops(LoadedInL, [Module|Path1], DepsL2, DepsL)
