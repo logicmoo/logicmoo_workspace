@@ -93,8 +93,10 @@ to the server, so their IPs would have to be allowed. I guess full authenticatio
 % Access the user authenticated in the current web request
 lps_user(User) :- lps_user(User,_).
 
-lps_user(User,Email) :- transaction_lps_user(User,Email), !.
+lps_user(User,Email) :- pengines:pengine_self(M), M:transaction_lps_user(User,Email), !.
 lps_user(unknown_user,unknown_email).
+
+sandbox:safe_primitive(user:lps_user(_,_)).
 
 % hack SWISH's http authentication hook in lib/authenticate.pl to maintain the above:
 :- dynamic(pengines:authentication_hook/3). % Needed for SWI Prolog 8.x
@@ -103,16 +105,19 @@ lps_user(unknown_user,unknown_email).
 %TODO: try instead http_current_request(Request) ??
 
 update_user(Request,_User) :- 
-	retractall(transaction_lps_user(_,_)), % hacky retract, good for all clauses...
-	catch( (current_user_info(Request, Info), assert(transaction_lps_user(Info.sub,Info.email))), _Ex, fail), 
+	pengines:pengine_self(M),
+	M:retractall(transaction_lps_user(_,_)), % hacky retract, good for all clauses...
+	catch( (current_user_info(Request, Info), M:assert(transaction_lps_user(Info.sub,Info.email))), _Ex, fail), 
 	!.
 % the above clause may be dumb (or not...) because perhaps the following suffices... TODO: clean up this.
 update_user(_Request,User) :- 
-		catch(user_property(User,email(Email)),_,fail),
-		!,
-		assert(transaction_lps_user(User.identity,Email)).   % local (e.g. HTTP-authenticated) account
+	pengines:pengine_self(M),
+	catch(user_property(User,email(Email)),_,fail),
+	!,
+	M:assert(transaction_lps_user(User.identity,Email)).   % local (e.g. HTTP-authenticated) account
 update_user(_Request,_User) :- 
-	assert(transaction_lps_user(unknown_user,unknown_email)).
+	pengines:pengine_self(M),
+	M:assert(transaction_lps_user(unknown_user,unknown_email)).
 
 % patch SWISH so that "local" (HTTP authenticated users) are kept sandboxed:
 :- dynamic(swish_pep:approve/2). % Needed for SWI Prolog 8.x. 
