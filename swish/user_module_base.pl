@@ -281,7 +281,21 @@ swish_config:reply_page(Options) :-
 	    \(swish_page:swish_title(Options)),
 	    \my_swish_page(Options)).
 
+
+:- multifile user:forbidden_url/1.
+forbidden_url(_) :- fail. % all URLs allowed by default
+% Example:
+% forbidden_url('/example/ISDAlabIntro.swinb') :- lps_user(unknown_user).
+% forbidden_url('/example/bankTransfer.pl') :- lps_user(unknown_user).
+
+
 my_swish_page(Options) -->
+	{
+		% mylog(my_swish_page_options/Options), 
+		((option(url(URL),Options), forbidden_url(URL)) ->
+			throw(no_permission_for(URL))
+			; true)
+	},
 	my_swish_navbar(Options),
 	swish_content(Options). % no need to inject resources here again... is there??
 
