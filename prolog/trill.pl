@@ -360,7 +360,7 @@ add_q(_,it,Tableau,['inconsistent','kb'],Tableau):- !. % Do nothing
 */
 
 % Find the individuals directly connected to the given one
-find_connected(M,Ind,[Ind|ConnectedInds]):-
+gather_connected_individuals(M,Ind,ConnectedInds):-
   find_successors(M,Ind,SuccInds),
   find_predecessors(M,Ind,PredInds),
   append(SuccInds,PredInds,ConnectedInds).
@@ -372,32 +372,36 @@ intersect([H|_], List) :- member(H, List), !.
 intersect([_|T], List) :- intersect(T, List).
 
 % Recursively gather all the connected individuals, i.e., isolate the relevant fragment of the KB.
-scan_connected_individuals(_,[],_,ConnectedInds,ConnectedInds).
+%scan_connected_individuals(M,IndividualsToCheck,IndividualsChecked,IndividualsSet0,IndividualsSet).
+scan_connected_individuals(_,[],_,IndividualsSet0,IndividualsSet):-
+  sort(IndividualsSet0,IndividualsSet).
 
-scan_connected_individuals(M,[H|T],AlreadyChecked,ConnectedInds0,ConnectedInds) :-
-  memberchk(H,AlreadyChecked),!,
-  scan_connected_individuals(M,T,AlreadyChecked,ConnectedInds0,ConnectedInds).
+scan_connected_individuals(M,[H|IndividualsToCheck],IndividualsChecked,IndividualsSet0,IndividualsSet):-
+  memberchk(H,IndividualsChecked),!,
+  scan_connected_individuals(M,IndividualsToCheck,IndividualsChecked,IndividualsSet0,IndividualsSet).
 
-scan_connected_individuals(M,[H|T],AlreadyChecked,ConnectedInds0,ConnectedInds) :-
-  find_connected(M,H,ConnectedInds1),
-  append(ConnectedInds1,ConnectedInds0,ConnectedInds2),
-	scan_connected_individuals(M,T,[H|AlreadyChecked],ConnectedInds2,ConnectedInds).
+
+scan_connected_individuals(M,[H|IndividualsToCheck0],IndividualsChecked,IndividualsSet0,IndividualsSet):-
+  gather_connected_individuals(M,H,NewIndividualsToCheck),
+  append(IndividualsSet0,NewIndividualsToCheck,IndividualsSet1),
+  append(IndividualsToCheck0,NewIndividualsToCheck,IndividualsToCheck),
+  scan_connected_individuals(M,IndividualsToCheck,[H|IndividualsChecked],IndividualsSet1,IndividualsSet).
 
 
 % Builds the list of individuals conneted given the query type
-find_connected_individuals(M,io,[_,IndEx],ConnectedInds):-
-  scan_connected_individuals(M,[IndEx],[],[],ConnectedInds).
+collect_individuals(M,io,[_,IndEx],ConnectedInds):-
+  scan_connected_individuals(M,[IndEx],[],[IndEx],ConnectedInds).
 
-find_connected_individuals(M,pv,[_,Ind1Ex,_],ConnectedInds):-
-  scan_connected_individuals(M,[Ind1Ex],[],[],ConnectedInds).
+collect_individuals(M,pv,[_,Ind1Ex,Ind2Ex],ConnectedInds):-
+  scan_connected_individuals(M,[Ind1Ex,Ind2Ex],[],[Ind1Ex,Ind2Ex],ConnectedInds).
 
-find_connected_individuals(_,sc,[_,_],[QInd]):- % It is not necessary to check the KB as the individual of the query is a new fresh individual not included in the KB.
+collect_individuals(_,sc,[_,_],[QInd]):- % It is not necessary to check the KB as the individual of the query is a new fresh individual not included in the KB.
   query_ind(QInd).
 
-find_connected_individuals(_,un,['unsat',_],[QInd]):- % It is not necessary to check the KB as the individual of the query is a new fresh individual not included in the KB.
+collect_individuals(_,un,['unsat',_],[QInd]):- % It is not necessary to check the KB as the individual of the query is a new fresh individual not included in the KB.
   query_ind(QInd).
 
-find_connected_individuals(_,it,['inconsistent','kb'],[]):-!.
+collect_individuals(_,it,['inconsistent','kb'],[]):-!.
 
 /*
   check the KB atoms to consider only the necessary expansion rules, pruning the useless ones

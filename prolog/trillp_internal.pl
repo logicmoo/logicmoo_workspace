@@ -235,7 +235,7 @@ modify_ABox(M,Tab0,P,Ind1,Ind2,L0,Tab):-
 
 build_abox(M,Tableau,QueryType,QueryArgs):-
   retractall(M:final_abox(_)),
-  find_connected_individuals(M,QueryType,QueryArgs,ConnectedInds),
+  collect_individuals(M,QueryType,QueryArgs,ConnectedInds),
   ( dif(ConnectedInds,[]) ->
     ( findall((classAssertion(Class,Individual),*([classAssertion(Class,Individual)])-[]),(member(Individual,ConnectedInds),M:classAssertion(Class,Individual)),LCA),
       findall((propertyAssertion(Property,Subject, Object),*([propertyAssertion(Property,Subject, Object)])-[]),(member(Subject,ConnectedInds),M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),

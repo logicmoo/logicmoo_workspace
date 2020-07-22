@@ -220,7 +220,7 @@ build_abox(M,Tableau,QueryType,QueryArgs):-
   retractall(rule_n(_)),
   assert(rule_n(0)),
   get_bdd_environment(M,Env),
-  find_connected_individuals(M,QueryType,QueryArgs,ConnectedInds),
+  collect_individuals(M,QueryType,QueryArgs,ConnectedInds),
   ( dif(ConnectedInds,[]) ->
     ( findall((classAssertion(Class,Individual),BDDCA-[]),(member(Individual,ConnectedInds),M:classAssertion(Class,Individual),bdd_and(M,Env,[classAssertion(Class,Individual)],BDDCA)),LCA),
       findall((propertyAssertion(Property,Subject, Object),BDDPA-[]),(member(Subject,ConnectedInds),M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property),bdd_and(M,Env,[propertyAssertion(Property,Subject, Object)],BDDPA)),LPA),
