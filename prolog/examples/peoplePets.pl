@@ -100,6 +100,18 @@ owl_rdf('<?xml version="1.0"?>
         <owl:annotatedTarget rdf:resource="http://cohse.semanticweb.org/ontologies/people#pet"/>
         <owl:annotatedProperty rdf:resource="&rdfs;subClassOf"/>
     </owl:Axiom-->
+        
+    
+
+
+    <!-- http://cohse.semanticweb.org/ontologies/people#dog -->
+    
+    <owl:Class rdf:about="http://cohse.semanticweb.org/ontologies/people#dog">
+        <rdfs:label>cat</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cohse.semanticweb.org/ontologies/people#pet"/>
+        <rdfs:comment></rdfs:comment>
+    </owl:Class>
+        
     
 
 
@@ -187,6 +199,18 @@ owl_rdf('<?xml version="1.0"?>
     </owl:NamedIndividual>
     
 
+
+    <!-- http://cohse.semanticweb.org/ontologies/people#Spike -->
+
+    <owl:NamedIndividual rdf:about="http://cohse.semanticweb.org/ontologies/people#Spike">
+        <rdf:type rdf:resource="http://cohse.semanticweb.org/ontologies/people#dog"/>
+        <rdfs:label>Spike</rdfs:label>
+        <rdfs:comment></rdfs:comment>
+        <is_animal_of rdf:resource="http://cohse.semanticweb.org/ontologies/people#Kevin"/>
+    </owl:NamedIndividual>
+    
+    
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -211,3 +235,6 @@ owl_rdf('<?xml version="1.0"?>
 subClassOf('cat','pet').
 subClassOf('dinosaur','pet').
 annotationAssertion('disponte:probability',subClassOf('cat','pet'),literal('0.6')).
+annotationAssertion('disponte:probability',subClassOf('dog','pet'),literal('0.8')).
+
+inverseProperties('has_animal','is_animal_of').

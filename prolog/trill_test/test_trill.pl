@@ -64,9 +64,9 @@ test(e_c_j):-
 :-ensure_loaded(library(examples/peoplePets)).
 
 test(p_nl_k):-
-  run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.348))).
+  run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.8696))).
 test(ne_nl_k):-
-  run((aggregate_all(count, (instanceOf('natureLover','Kevin',_ListExpl)), Count),Count = 2)).
+  run((aggregate_all(count, (instanceOf('natureLover','Kevin',_ListExpl)), Count),Count = 3)).
 
 :- end_tests(trill_peoplePets).
 

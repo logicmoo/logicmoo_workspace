@@ -57,7 +57,7 @@ test(e_c_j):-
 :-ensure_loaded(library(examples/peoplePets)).
 
 test(p_nl_k):-
-  run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.348))).
+  run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.8696))).
 
 :- end_tests(tornado_peoplePets).
 

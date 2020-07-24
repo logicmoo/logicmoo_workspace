@@ -1198,18 +1198,22 @@ apply_nondet_rules([_|T],Tab0,Tab):-
 add_exists_rule(M,Tab0,[R,Ind1,Ind2],Tab):-
   get_abox(Tab0,ABox),
   findClassAssertion(C,Ind2,Expl2,ABox),
-  %existsInKB(M,R,C),
-  findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
-  and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab).
+  (unifiable(C,someValuesFrom(_,_),_)->false;
+  ( %existsInKB(M,R,C),
+    findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
+    and_f(M,Expl1,Expl2,Expl),
+    modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab)
+  )).
 
 add_exists_rule(M,Tab0,[C,Ind2],Tab):-
-  get_abox(Tab0,ABox),
-  findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
-  %existsInKB(M,R,C),
-  findClassAssertion(C,Ind2,Expl2,ABox),
-  and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab).
+  (unifiable(C,someValuesFrom(_,_),_)->false;
+  ( get_abox(Tab0,ABox),
+    findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
+    %existsInKB(M,R,C),
+    findClassAssertion(C,Ind2,Expl2,ABox),
+    and_f(M,Expl1,Expl2,Expl),
+    modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab)
+  )).
 
 
 /*
