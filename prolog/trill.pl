@@ -1087,12 +1087,15 @@ apply_rules8((ABox,Tabs),(ABox,Tabs)).
   This rule hasn't a corresponding rule in the tableau
   ========================
 */
+
 add_exists_rule(M,(ABox0,Tabs),(ABox,Tabs)):-
   findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox0),
   findClassAssertion(C,Ind2,Expl2,ABox0),
-  %existsInKB(M,R,C),
-  and_f(M,Expl1,Expl2,Expl),
-  modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox).
+  (unifiable(C,someValuesFrom(_,_),_)->false;
+  ( %existsInKB(M,R,C),
+    and_f(M,Expl1,Expl2,Expl),
+    modify_ABox(M,ABox0,someValuesFrom(R,C),Ind1,Expl,ABox)
+  )).
 
 existsInKB(M,R,C):-
   M:subClassOf(A,B),
