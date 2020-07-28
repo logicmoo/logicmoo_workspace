@@ -49,6 +49,9 @@
 :- use_module(library(option_utils)).
 % :- use_module(library(concurrent_forall)).
 
+:- multifile
+    codewalk:walk_code/2.
+
 codewalk:walk_code(clause, Options1) :-
     foldl(select_option_default,
           [on_trace(OnTrace)-(codewalk:true_3),

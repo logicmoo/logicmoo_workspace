@@ -40,6 +40,9 @@
 :- use_module(library(option_utils)).
 :- use_module(library(extend_args)).
 
+:- multifile
+    codewalk:walk_code/2.
+
 codewalk:walk_code(source, Options) :-
     do_source_walk_code(Options).
 

@@ -55,6 +55,9 @@ extra_walk_module_body(Options) :-
     ; true
     ).
 
+:- multifile
+    codewalk:walk_code/2.
+
 codewalk:walk_code(prolog, Options1) :-
     extra_wcsetup(Options1, Options2, MFileD),
     foldl(select_option_default,
