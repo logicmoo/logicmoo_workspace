@@ -11,3 +11,6 @@ Improved general performances of TRILL.
 
 Version 5.2.0
 BDDEM as a separate pack.
+
+Version 5.2.1-beta
+Utilities for the analisys and management of the concepts hierarchy of the KB.

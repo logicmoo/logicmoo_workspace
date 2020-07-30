@@ -19,23 +19,45 @@ details.
 /********************************
   SETTINGS
 *********************************/
-:- multifile setting_trill/2.
-setting_trill(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
-setting_trill(nondet_rules,[or_rule,max_rule,ch_rule]).
+:- multifile setting_trill_default/2.
+setting_trill_default(det_rules,[o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule]).
+setting_trill_default(nondet_rules,[or_rule,max_rule,ch_rule]).
 
 set_up(M):-
   utility_translation:set_up(M),
   init_delta(M),
-  M:(dynamic exp_found/2).
+  M:(dynamic exp_found/2, setting_trill/2),
+  retractall(M:setting_trill(_,_)).
+  %foreach(setting_trill_default(DefaultSetting,DefaultVal),assert(M:setting_trill(DefaultSetting,DefaultVal))).
 
 clean_up(M):-
   utility_translation:clean_up(M),
-  M:(dynamic exp_found/2),
-  retractall(M:exp_found(_,_)).
+  M:(dynamic exp_found/2, setting_trill/2),
+  retractall(M:exp_found(_,_)),
+  retractall(M:setting_trill(_,_)).
 
 /***********
   Utilities for queries
  ***********/
+
+% findall
+find_n_explanations(M,QueryType,QueryArgs,Expls,all,Opt):-
+  !, % CUT so that no other calls to find_explanation can be ran (to avoid running that with variable N)
+  findall(Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls).
+
+% find one in backtracking
+find_n_explanations(M,QueryType,QueryArgs,Expl,bt,Opt):-
+  !, % CUT so that no other calls to find_explanation can be ran (to avoid running that with variable N)
+  find_single_explanation(M,QueryType,QueryArgs,Expl,Opt).
+
+% find_n_sol
+find_n_explanations(M,QueryType,QueryArgs,Expls,N,Opt):-
+  (number(N) -> % CUT so that no other calls to find_explanation can be ran
+    (findnsols(N,Expl,find_single_explanation(M,QueryType,QueryArgs,Expl,Opt),Expls),!) % CUT otherwise findnsols would backtracks to look for another N sols
+    ;
+    (print_message(warning,wrong_number_max_expl),!,false)
+  ).
+
 
 % to find all axplanations for probabilistic queries
 all_sub_class_int(M:ClassEx,SupClassEx,Exps):-
@@ -56,7 +78,7 @@ all_inconsistent_theory_int(M:Exps):-
 
 
 compute_prob_and_close(M,Exps,Prob):-
-  compute_prob(M,Exps,Prob).
+  compute_prob(M,Exps,Prob),!.
 
 % checks the explanation
 check_and_close(_,Expl0,Expl):-
@@ -65,69 +87,79 @@ check_and_close(_,Expl0,Expl):-
 
 
 % checks if an explanations was already found
-find_expls(M,[],[C,I],E):-
+find_expls(M,[],Q,E):-
   %findall(Exp-CPs,M:exp_found([C,I,CPs],Exp),Expl),
   %dif(Expl,[]),
-  find_expls_from_choice_point_list(M,[C,I],E).
+  find_expls_from_choice_point_list(M,Q,E).
 
-find_expls(M,[],[C,I],E):-
-  findall(Exp,M:exp_found([C,I],Exp),Expl0),
+find_expls(M,[],['inconsistent','kb'],E):-!,
+  findall(Exp,M:exp_found(['inconsistent','kb'],Exp),Expl0),
   remove_supersets(Expl0,Expl),!,
   member(E,Expl).
 
+find_expls(M,[],_Q,_):-
+  M:exp_found(['inconsistent','kb'],_),!,
+  print_message(warning,inconsistent),!,false.
+
+find_expls(M,[],Q,E):-
+  findall(Exp,M:exp_found(Q,Exp),Expl0),
+  remove_supersets(Expl0,Expl),!,
+  member(E,Expl).
 
 % checks if an explanations was already found (instance_of version)
-find_expls(M,[ABox|_T],[C,I],E):- %gtrace,
-  clash(M,ABox,EL0),
+find_expls(M,[Tab|_T],Q0,E):- %gtrace,  % QueryArgs
+  get_clashes(Tab,Clashes),
+  member(Clash,Clashes),
+  clash(M,Clash,Tab,EL0),
   member(E0-CPs0,EL0),
+  sort(CPs0,CPs1),
   sort(E0,E),
-  (dif(CPs0,[]) ->
+  % this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
+  % if it is so, the explanation is labelled as inconsistent kb via Q
+  consistency_check(CPs1,CPs2,Q0,Q),
+  (dif(CPs2,[]) ->
     (
-    get_latest_choice(CPs0,ID,Choice),
-    subtract(CPs0,[cpp(ID,Choice)],CPs),
+    get_latest_choice(CPs2,ID,Choice),
+    subtract(CPs1,[cpp(ID,Choice)],CPs), %remove cpp from CPs1 so the qp remains inside choice points list
     update_choice_point_list(M,ID,Choice,E,CPs),
     fail
     )
     ;
     (%findall(Exp,M:exp_found([C,I],Exp),Expl),
-     %not_already_found(M,Expl,[C,I],E),
-     assert(M:exp_found([C,I],E)),
-     fail
+    %not_already_found(M,Expl,[C,I],E),
+    assert(M:exp_found(Q,E)), % QueryArgs
+    fail
     )
   ).
 
-% checks if an explanations was already found (property_value version)
-find_expls(M,[(ABox,_)|_T],[PropEx,Ind1Ex,Ind2Ex],E):-
-  find((propertyAssertion(PropEx,Ind1Ex,Ind2Ex),Es),ABox),
-  member(E-_,Es),
-  %findall(Exp,M:exp_found([PropEx,Ind1Ex,Ind2Ex],Exp),Expl),
-  %not_already_found(M,Expl,[PropEx,Ind1Ex,Ind2Ex],E),
-  assert(M:exp_found([PropEx,Ind1Ex,Ind2Ex],E)).
-
-find_expls(M,[_ABox|T],Query,Expl):-
+find_expls(M,[_Tab|T],Query,Expl):-
   %\+ length(T,0),
   find_expls(M,T,Query,Expl).
 
 
-combine_expls_from_nondet_rules(M,[C,I],cp(_,_,_,_,_,Expl),E):-
+combine_expls_from_nondet_rules(M,Q0,cp(_,_,_,_,_,Expl),E):-%gtrace,
   check_non_empty_choice(Expl,ExplList),
   and_all_f(M,ExplList,ExplanationsList),
   %check_presence_of_other_choices(ExplanationsList,Explanations,Choices),
-  member(E0-Choices,ExplanationsList),
+  member(E0-Choices0,ExplanationsList),
   sort(E0,E),
+  sort(Choices0,Choices1),
+  % this predicate checks if there are inconsistencies in the KB, i.e., explanations without query placeholder qp
+  % if it is so, the explanation is labelled as inconsistent kb via Q
+  consistency_check(Choices1,Choices,Q0,Q),
   (
     dif(Choices,[]) ->
     (
       %TODO gestione altri cp
       get_latest_choice(Choices,ID,Choice),
-      subtract(Choices,[cpp(ID,Choice)],CPs),
+      subtract(Choices0,[cpp(ID,Choice)],CPs), %remove cpp from Choices1 so the qp remains inside choice points list
       update_choice_point_list(M,ID,Choice,E,CPs),
       fail % to force recursion
     ) ;
     (
       %findall(Exp,M:exp_found([C,I],Exp),ExplFound),
       %not_already_found(M,ExplFound,[C,I],E),
-      assert(M:exp_found([C,I],E)),
+      assert(M:exp_found(Q,E)),
       fail
     )
   ).
@@ -223,6 +255,15 @@ remove_supersets_int(E0,H,E):-
 
 remove_supersets_int(E,H,[H|E]).
 
+
+% this predicate checks if there are inconsistencies in the KB, i.e., explanations with query placeholder qp
+% if it is so, the explanation is labelled as inconsistent kb
+consistency_check(CPs,CPs,['inconsistent','kb'],['inconsistent','kb']):- !.
+
+consistency_check(CPs0,CPs,Q0,Q):-
+  (nth0(_,CPs0,qp,CPs) -> (Q=Q0) ; (Q=['inconsistent','kb'],CPs=CPs0)).
+
+
 /****************************/
 
 /****************************
@@ -238,42 +279,77 @@ findClassAssertion4OWLNothing(_M,ABox,Expl):-
 % clash managing
 
 %------------
-:- multifile clash/3.
+:- multifile clash/4.
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,maxCardinality(N,S,C)-Ind,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 9'),nl,
   findClassAssertion(maxCardinality(N,S,C),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   individual_class_C(SN,C,ABox,SNC),
   length(SNC,LSS),
   LSS @> N,
   make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,maxCardinality(N,S)-Ind,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 10'),nl,
   findClassAssertion(maxCardinality(N,S),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   length(SN,LSS),
   LSS @> N,
   make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,exactCardinality(N,S,C)-Ind,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 9'),nl,
   findClassAssertion(exactCardinality(N,S,C),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   individual_class_C(SN,C,ABox,SNC),
   length(SNC,LSS),
   dif(LSS,N),
   make_expl(M,Ind,S,SNC,Expl1,ABox,Expl).
 
-clash(M,(ABox,Tabs),Expl):-
+clash(M,exactCardinality(N,S)-Ind,Tab,Expl):-
+  get_abox(Tab,ABox),
   %write('clash 10'),nl,
   findClassAssertion(exactCardinality(N,S),Ind,Expl1,ABox),
-  s_neighbours(M,Ind,S,(ABox,Tabs),SN),
+  s_neighbours(M,Ind,S,Tab,SN),
   length(SN,LSS),
   dif(LSS,N),
   make_expl(M,Ind,S,SN,Expl1,ABox,Expl).
 
+
+
+:- multifile check_clash/3.
+
+check_clash(M,maxCardinality(N,S,C)-Ind,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 9'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  LSS @> N,!.
+  
+check_clash(M,maxCardinality(N,S)-Ind,Tab):-
+  %write('clash 10'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  length(SN,LSS),
+  LSS @> N,!.
+  
+check_clash(M,exactCardinality(N,S,C)-Ind,Tab):-
+  get_abox(Tab,ABox),
+  %write('clash 9'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  individual_class_C(SN,C,ABox,SNC),
+  length(SNC,LSS),
+  dif(LSS,N),!.
+  
+check_clash(M,exactCardinality(N,S)-Ind,Tab):-
+  %write('clash 10'),nl,
+  s_neighbours(M,Ind,S,Tab,SN),
+  length(SN,LSS),
+  dif(LSS,N),!.
 
 % --------------
 
@@ -354,35 +430,71 @@ find_sub_sup_class(M,minCardinality(N,R,C),minCardinality(N,S,C),subPropertyOf(R
   update abox
   utility for tableau
 ************/
-modify_ABox(_,ABox0,sameIndividual(LF),Expl1,[(sameIndividual(L),Expl)|ABox]):-
-  ( find((sameIndividual(L),Expl0),ABox) ->
+modify_ABox(_,Tab,sameIndividual(LF),_Expl1,Tab):-
+  length(LF,1),!.
+
+modify_ABox(M,Tab0,sameIndividual(LF),Expl1,Tab):-
+  get_abox(Tab0,ABox0),
+  ( find((sameIndividual(L),Expl0),ABox0) ->
   	( sort(L,LS),
   	  sort(LF,LFS),
   	  LS = LFS,!,
   	  absent(Expl0,Expl1,Expl),
-  	  delete(ABox0,[(sameIndividual(L),Expl0)],ABox)
+      remove_from_abox(ABox0,[(sameIndividual(L),Expl0)],ABox),
+      Tab1=Tab0
   	)
   ;
-  	(ABox = ABox0,Expl = Expl1)
-  ).
+  	(ABox = ABox0,Expl = Expl1,L = LF,
+     add_clash_to_tableau(M,Tab0,sameIndividual(LF),Tab1))
+  ),
+  set_abox(Tab1,[(sameIndividual(L),Expl)|ABox],Tab).
 
-modify_ABox(_,ABox0,C,Ind,Expl1,[(classAssertion(C,Ind),Expl)|ABox]):-
+modify_ABox(_,Tab,differentIndividuals(LF),_Expl1,Tab):-
+  length(LF,1),!.
+
+modify_ABox(M,Tab0,differentIndividuals(LF),Expl1,Tab):-
+  get_abox(Tab0,ABox0),
+  ( find((differentIndividuals(L),Expl0),ABox0) ->
+  	( sort(L,LS),
+  	  sort(LF,LFS),
+  	  LS = LFS,!,
+  	  absent(Expl0,Expl1,Expl),
+  	  remove_from_abox(ABox0,[(differentIndividuals(L),Expl0)],ABox),
+      Tab1=Tab0
+  	)
+  ;
+  	(ABox = ABox0,Expl = Expl1,L = LF,
+    add_clash_to_tableau(M,Tab0,differentIndividuals(LF),Tab1))
+  ),
+  set_abox(Tab1,[(differentIndividuals(L),Expl)|ABox],Tab).
+
+modify_ABox(M,Tab0,C,Ind,Expl1,Tab):-
+  get_abox(Tab0,ABox0),
   ( find((classAssertion(C,Ind),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      delete(ABox0,(classAssertion(C,Ind),Expl0),ABox)
+      remove_from_abox(ABox0,(classAssertion(C,Ind),Expl0),ABox),
+      Tab1=Tab0
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
-  ).
+    (ABox = ABox0,Expl = Expl1,
+    add_clash_to_tableau(M,Tab0,C-Ind,Tab1))
+  ),
+  set_abox(Tab1,[(classAssertion(C,Ind),Expl)|ABox],Tab2),
+  update_expansion_queue_in_tableau(M,C,Ind,Tab2,Tab).
 
-modify_ABox(_,ABox0,P,Ind1,Ind2,Expl1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox]):-
+modify_ABox(M,Tab0,P,Ind1,Ind2,Expl1,Tab):-
+  get_abox(Tab0,ABox0),
   ( find((propertyAssertion(P,Ind1,Ind2),Expl0),ABox0) ->
     ( absent(Expl0,Expl1,Expl),
-      delete(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox)
+      remove_from_abox(ABox0,(propertyAssertion(P,Ind1,Ind2),Expl0),ABox),
+      Tab1=Tab0
     )
   ;
-    (ABox = ABox0,Expl = Expl1)
-  ).
+    (ABox = ABox0,Expl = Expl1,
+    add_clash_to_tableau(M,Tab0,P-Ind1-Ind2,Tab1))
+  ),
+  set_abox(Tab1,[(propertyAssertion(P,Ind1,Ind2),Expl)|ABox],Tab2),
+  update_expansion_queue_in_tableau(M,P,Ind1,Ind2,Tab2,Tab).
 
 /* ************* */
 
@@ -511,32 +623,42 @@ absent2([H-_|T],Expl):-
   findall((propertyAssertion(Property,Subject, Object),[propertyAssertion(Property,Subject, Object)]),propertyAssertion(Property,Subject, Object),LPA),
   findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property,Subject,Object),propertyAssertion(SubProperty,Subject,Object)]),subPropertyOf(SubProperty,Property),LSPA),
   new_abox(ABox0),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox).
+  add_all_to_tableau(LCA,ABox0,ABox1),
+  add_all_to_tableau(LPA,ABox1,ABox2),
+  add_all_to_tableau(LSPA,ABox2,ABox).
 */
 
-build_abox(M,(ABox,Tabs)):-
+
+build_abox(M,Tableau,QueryType,QueryArgs):-
   retractall(M:final_abox(_)),
-  findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]-[]]),M:classAssertion(Class,Individual),LCA),
-  findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]-[]]),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),
-  % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
-  findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
+  collect_individuals(M,QueryType,QueryArgs,ConnectedInds),
+  ( dif(ConnectedInds,[]) ->
+    ( findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]-[]]),(member(Individual,ConnectedInds),M:classAssertion(Class,Individual)),LCA),
+      findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]-[]]),(member(Subject,ConnectedInds),M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),
+      % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
+      findall(nominal(NominalIndividual),(member(NominalIndividual,ConnectedInds),M:classAssertion(oneOf(_),NominalIndividual)),LNA),
+      findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),(M:differentIndividuals(Ld),intersect(Ld,ConnectedInds)),LDIA),
+      findall((sameIndividual(L),[[sameIndividual(L)]-[]]),(M:sameIndividual(L),intersect(L,ConnectedInds)),LSIA)
+    )
+    ; % all the individuals
+    ( findall((classAssertion(Class,Individual),[[classAssertion(Class,Individual)]-[]]),M:classAssertion(Class,Individual),LCA),
+      findall((propertyAssertion(Property,Subject, Object),[[propertyAssertion(Property,Subject, Object)]-[]]),(M:propertyAssertion(Property,Subject, Object),dif('http://www.w3.org/2000/01/rdf-schema#comment',Property)),LPA),
+      % findall((propertyAssertion(Property,Subject,Object),[subPropertyOf(SubProperty,Property),propertyAssertion(SubProperty,Subject,Object)]),subProp(M,SubProperty,Property,Subject,Object),LSPA),
+      findall(nominal(NominalIndividual),M:classAssertion(oneOf(_),NominalIndividual),LNA),
+      findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),M:differentIndividuals(Ld),LDIA),
+      findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA)
+    )
+  ),
   new_abox(ABox0),
   new_tabs(Tabs0),
-  create_tabs(LCA,Tabs0,Tabs1),
-  add_all(LCA,ABox0,ABox1),
-  add_all(LPA,ABox1,ABox2),
-  add_all(LSPA,ABox2,ABox3),
-  add_all(LNA,ABox3,ABox4),
-  findall((differentIndividuals(Ld),[[differentIndividuals(Ld)]-[]]),M:differentIndividuals(Ld),LDIA),
-  add_all(LDIA,ABox4,ABox5),
-  create_tabs(LDIA,Tabs1,Tabs2),
-  create_tabs(LPA,Tabs2,Tabs3),
-  create_tabs(LSPA,Tabs3,Tabs4),
-  findall((sameIndividual(L),[[sameIndividual(L)]-[]]),M:sameIndividual(L),LSIA),
-  merge_all(M,LSIA,ABox5,Tabs4,ABox6,Tabs),
-  add_owlThing_list(M,ABox6,Tabs,ABox),
+  init_expansion_queue(LCA,LPA,ExpansionQueue),
+  init_tableau(ABox0,Tabs0,ExpansionQueue,Tableau0),
+  append([LCA,LDIA,LPA],CreateTabsList),
+  create_tabs(CreateTabsList,Tableau0,Tableau1),
+  append([LCA,LPA,LNA,LDIA],AddAllList),
+  add_all_to_tableau(M,AddAllList,Tableau1,Tableau2),
+  merge_all_individuals(M,LSIA,Tableau2,Tableau3),
+  add_owlThing_list(M,Tableau3,Tableau),
   !.
 
 
@@ -544,7 +666,7 @@ build_abox(M,(ABox,Tabs)):-
 
 /**********************
 
-Explanation Management
+  Explanation Management
 
 ***********************/
 
@@ -560,7 +682,7 @@ and_all_f(M,[H|T],E0,E):-
 
 initial_expl(_M,[[]-[]]):-!.
 
-empty_expl(_M,[]):-!.
+empty_expl(_M,[[]-[]]):-!.
 
 and_f_ax(M,Axiom,F0,F):-
   and_f(M,[[Axiom]-[]],F0,F).
@@ -644,18 +766,18 @@ init_expl_per_choice_int(N0,N,ExplPerChoice0,ExplPerChoice):-
 % and the pointer of the choice maide at the choice point
 add_choice_point(_,_,[],[]). 
 
-add_choice_point(_,cpp(CPID,N),[Expl-CP0|T0],[Expl-CP|T]):-
+add_choice_point(_,CPP,[Expl-CP0|T0],[Expl-CP|T]):- %CPP=cpp(CPID,N)
   (
     dif(CP0,[]) ->
     (
-        append([cpp(CPID,N)],CP0,CP)
+        append([CPP],CP0,CP)
     )
     ;
     (
-      CP = [cpp(CPID,N)]
+      CP = [CPP]
     )
   ),
-  add_choice_point(_,cpp(CPID,N),T0,T).
+  add_choice_point(_,CPP,T0,T).
 
 
 get_choice_point_list(M,CP):-
@@ -698,7 +820,6 @@ update_choice_point_list_int([H|T],
                   cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,
                   [H|T1]):-
   update_choice_point_list_int(T,cp(ID,Ind,Rule,Class,Choices,ExplPerChoice0),ExplPerChoice,T1).
-
 
 /**********************
 
@@ -746,4 +867,3 @@ bdd_and(M,Env,[_H|T],BDDAnd):- !,
   one(Env,BDDH),
   bdd_and(M,Env,T,BDDT),
   and(Env,BDDH,BDDT,BDDAnd).
-
