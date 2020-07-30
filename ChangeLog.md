@@ -14,3 +14,11 @@ BDDEM as a separate pack.
 
 Version 5.2.1-beta
 Utilities for the analisys and management of the concepts hierarchy of the KB.
+
+Version 5.2.2
+Several bugs have been fixed.
+
+Version 6.0.0
+TRILL implements now several optimizations making it even faster.
+It implements an expansion queue similar to that implemented in the well known FaCT++ reasoner.
+TRILL also expands now only the part of the tableau that is relevant for the query.
