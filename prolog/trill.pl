@@ -415,6 +415,18 @@ prune_tableau_rules(M):-
   prune_tableau_rules(Classes,NondetRules,PrunedNondetRules),
   set_tableau_expansion_rules(M:PrunedDetRules,PrunedNondetRules).
 
+add_tableau_rules_from_class(M,someValuesFrom(R,C)):-
+  M:setting_trill(det_rules,Rules),
+  memberchk(exists_rule,Rules),!.
+
+add_tableau_rules_from_class(M,C):-
+  M:kb_atom(KBA),
+  Classes=KBA.class,
+  setting_trill_default(det_rules,DetRules),
+  prune_tableau_rules([C|Classes],DetRules,PrunedDetRules),
+  setting_trill_default(nondet_rules,NondetRules),
+  prune_tableau_rules([C|Classes],NondetRules,PrunedNondetRules),
+  set_tableau_expansion_rules(M:PrunedDetRules,PrunedNondetRules).
 
 % o_rule,and_rule,unfold_rule,add_exists_rule,forall_rule,forall_plus_rule,exists_rule,min_rule,or_rule,max_rule,ch_rule
 prune_tableau_rules(_,[],[]).
@@ -1200,6 +1212,7 @@ add_exists_rule(M,Tab0,[R,Ind1,Ind2],Tab):-
   findClassAssertion(C,Ind2,Expl2,ABox),
   (unifiable(C,someValuesFrom(_,_),_)->false;
   ( %existsInKB(M,R,C),
+    add_tableau_rules_from_class(M,someValuesFrom(R,C)),
     findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
     and_f(M,Expl1,Expl2,Expl),
     modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab)
@@ -1210,6 +1223,7 @@ add_exists_rule(M,Tab0,[C,Ind2],Tab):-
   ( get_abox(Tab0,ABox),
     findPropertyAssertion(R,Ind1,Ind2,Expl1,ABox),
     %existsInKB(M,R,C),
+    add_tableau_rules_from_class(M,someValuesFrom(R,C)),
     findClassAssertion(C,Ind2,Expl2,ABox),
     and_f(M,Expl1,Expl2,Expl),
     modify_ABox(M,Tab0,someValuesFrom(R,C),Ind1,Expl,Tab)
