@@ -227,6 +227,8 @@ static foreign_t add_sum(term_t env_ref, term_t add_A, term_t add_B, term_t add_
 static foreign_t ret_strategy(term_t env_ref, term_t add_A, term_t strategy_list, term_t cost);
 static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_list, term_t strategy_list, term_t cost);
 static term_t debug_cudd_var(term_t env_ref, term_t out_null);
+void print_prob_abd_expl(prob_abd_expl *pae);
+void print_abd_explan(explan_t *et);
 // static foreign_t add_const(term_t env_ref, term_t val, term_t add_out);
 
 static foreign_t uniform_sample_pl(term_t arg1)
@@ -1687,9 +1689,9 @@ DdNode* setLowerBound(DdManager *dd, DdNode *current_node, double lowerBound) {
 
 static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_list, term_t strategy_list, term_t cost) {
   int ret, i = 0, len_array_of_parents = 0, j = 0;
-  int n_zero_impact = 0; // numbers of utility facts with 0 impact
+  // int n_zero_impact = 0; // numbers of utility facts with 0 impact
   int *array_of_parents = NULL; // array containing the indexes of the encountered parents
-  double current_cost, utility_sum = 0, opt_cost = -1.0, value = -1.0;
+  double current_cost, utility_sum = 0, value = -1.0;
   DdNode *root = NULL, *add_sum = NULL , *temp = NULL, *max_node = NULL, *bestNode = NULL, *current_root = NULL, *constant = NULL, *root_pre = NULL, *add_one = NULL;
   term_t head_bdd = PL_new_term_ref();   /* the elements */
   term_t head_util = PL_new_term_ref();
@@ -2407,6 +2409,7 @@ static foreign_t add_abd_var(term_t arg1,term_t arg2,term_t arg3,term_t arg4)
 
   v->abducible=1;
   v->query=0;
+  v->decision = 0;
   probTerm=PL_copy_term_ref(arg2);
   ret=PL_skip_list(probTerm,0,&lenProbs);
   if (ret!=PL_LIST) return FALSE;
@@ -2698,7 +2701,7 @@ static foreign_t create_dot_string(term_t arg1, term_t arg2, term_t arg3)
 
 void write_dot(environment * env, DdNode * bdd, FILE * file)
 {
-  char * onames[]={"Out"};
+  const char * onames[]={"Out"};
   char ** inames;
   int i,b,index,nv;
   variable v;
@@ -3593,6 +3596,24 @@ void expl_destroy_table(expltablerow *tab,int varcnt)
 }
 
 // debugging functions
+
+void print_abd_explan(explan_t *et) {
+  explan_t *current_explan;
+  while(current_explan != NULL) {
+    printf("assign var: %d\nassign val: %d\n",current_explan->a.var,current_explan->a.val);
+    current_explan = current_explan->next;
+  }
+}
+
+void print_prob_abd_expl(prob_abd_expl *pae) {
+  explan_t *current_explan = pae->mpa;
+  printf("prob: %lf\nExplan:\n",pae->prob);
+  while(current_explan != NULL) {
+    printf("assign var: %d\nassign val: %d\n",current_explan->a.var,current_explan->a.val);
+    current_explan = current_explan->next;
+  }
+  // print_abd_explan(pae->mpa);
+}
 
 // prints all the fields of a variable data structure
 void dump_var(variable *var) {
