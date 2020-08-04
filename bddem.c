@@ -1201,6 +1201,16 @@ so that it is not recomputed
 
   comp=Cudd_IsComplement(node);
   comp=(comp && !comp_par) ||(!comp && comp_par);
+  if(Cudd_IsConstant(node)) {
+    p1 = 1;
+    if (comp)
+      p1= 1.0-p1;
+
+    delta.prob=p1;
+    delta.mpa=NULL;
+
+    return delta;
+  }
   index=Cudd_NodeReadIndex(node);
   pos=Cudd_ReadPerm(env->mgr,index);
   if (pos>=env->n_abd_boolVars)
@@ -1245,22 +1255,20 @@ so that it is not recomputed
       mpa0=deltaf.mpa;
       mpa1=deltat.mpa;
 
+      assignment.var=env->bVar2mVar[index];
       if (p1>p0)
       {
-        assignment.var=env->bVar2mVar[index];
         assignment.val=1;
         mpa=insert(assignment,mpa1);
         delta.prob=p1;
-        delta.mpa=mpa;
       }
       else
       {
-        assignment.var=env->bVar2mVar[index];
         assignment.val=0;
         mpa=insert(assignment,mpa0);
         delta.prob=p0;
-        delta.mpa=mpa;
       }
+      delta.mpa=mpa;
       expl_add_node(expltable,nodekey,comp,delta);
       return delta;
     }
