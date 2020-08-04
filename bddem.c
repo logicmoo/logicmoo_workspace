@@ -3606,7 +3606,7 @@ void expl_destroy_table(expltablerow *tab,int varcnt)
 // debugging functions
 
 void print_abd_explan(explan_t *et) {
-  explan_t *current_explan;
+  explan_t *current_explan = et;
   while(current_explan != NULL) {
     printf("assign var: %d\nassign val: %d\n",current_explan->a.var,current_explan->a.val);
     current_explan = current_explan->next;
@@ -3614,13 +3614,8 @@ void print_abd_explan(explan_t *et) {
 }
 
 void print_prob_abd_expl(prob_abd_expl *pae) {
-  explan_t *current_explan = pae->mpa;
   printf("prob: %lf\nExplan:\n",pae->prob);
-  while(current_explan != NULL) {
-    printf("assign var: %d\nassign val: %d\n",current_explan->a.var,current_explan->a.val);
-    current_explan = current_explan->next;
-  }
-  // print_abd_explan(pae->mpa);
+  print_abd_explan(pae->mpa);
 }
 
 // prints all the fields of a variable data structure
