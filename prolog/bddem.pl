@@ -25,7 +25,6 @@
   ret_strategy/4,
   compute_best_strategy/5,
   debug_cudd_var/2
-  % add_const/3
   ]).
 /** <module> bddem
 
