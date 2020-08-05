@@ -22,7 +22,7 @@ It requires the packs
 
  * `bddem` https://github.com/friguzzi/bddem
  
- They are installed automatically when installing pack `trill` or can installed manually as
+ It is installed automatically when installing pack `trill` or can installed manually as
 
     $ swipl
     ?- pack_install(bddem).
