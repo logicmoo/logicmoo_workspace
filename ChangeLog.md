@@ -22,3 +22,6 @@ Version 6.0.0
 TRILL implements now several optimizations making it even faster.
 It implements an expansion queue similar to that implemented in the well known FaCT++ reasoner.
 TRILL also expands now only the part of the tableau that is relevant for the query.
+
+Version 6.0.2
+Corrections to the documentations and some minor fixes to TRILL, especially for the integration with BUNDLE.

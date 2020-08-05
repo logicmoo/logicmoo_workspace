@@ -1,6 +1,8 @@
 \documentclass[a4paper,10pt]{scrartcl}
 \RequirePackage[hyperindex]{hyperref}
+\usepackage[pdftex]{graphicx}
 \usepackage{amssymb}
+\usepackage{amsmath}
 \newcommand\cI{{\cal I}}
 \newcommand\cT{{\cal T}}
 \newcommand\cA{{\cal A}}
@@ -19,7 +21,6 @@
 \input{syntax}
 \input{semantics}
 \input{inference}
-
 \input{inf_goals}
 \subsection{Executing a Query with TRILL}
 To run a query, you can simply load the Prolog file, for example \href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
@@ -125,7 +126,11 @@ Prob = 0.51.
 \section{Manual in PDF}
 A PDF version of the manual is available at
 \url{https://github.com/rzese/trill/blob/master/doc/help-trill.pdf}.
-\section{Bibliography}
+
+
 \bibliographystyle{plain}
 \bibliography{bib}
+
+\appendix
+\input{appendix}
 \end{document}
