@@ -3,6 +3,7 @@
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \RequirePackage[hyperindex]{hyperref}
 \usepackage{amssymb}
+\usepackage{amsmath}
 
 \newcommand\cI{{\cal I}}
 \newcommand\cT{{\cal T}}
@@ -29,32 +30,75 @@ riccardo.zese@unife.it}
 \section{Introduction}
 
 
-TRILL (``Tableau Reasoner for descrIption Logics in Prolog'', \cite{ZesBelRig16-AMAI-IJ,Zese17-SSW-BK}) implements a tableau algorithm in
-Prolog to compute the set of all the explanations of a query. 
-TRILL also contains TRILL$^P$ (``TRILL powered by Pinpointing formulas''), which is able to compute a Boolean formula representing the set of explanations for a query, and 
-TORNADO (``Trill powered by pinpOinting foRmula and biNAry DecisiOn diagrams'') which represent the pinpointing formula directly as a binary decision diagram, simplifying the management of the formula.
-After generating the explanations, 
-TRILL can computes the probability of the query. The management of the tableau rules' non-determinism is delegated to the Prolog language.
+TRILL is a framework born from the original TRILL project whose contained a single reasoner~\cite{ZesBelLamRig13-CILC13-NC}. The name of this reasoner, TRILL, is an acronym for ``Tableau Reasoner for descrIption Logics in Prolog''. In the next years, this project has been extended to the current framework (\cite{ZesBelRig16-AMAI-IJ,Zese17-SSW-BK,ZesBelCot19-TPLP-IJ}) that contains three different reasoners:
+\begin{itemize}
+	\item TRILL, which implements a tableau algorithm in Prolog to compute the set of all the explanations of a query;
+	\item TRILL$^P$ (``TRILL powered by Pinpointing formulas''), which is able to compute a Boolean formula, called \emph{pinpointing formula}, representing the set of explanations for a query;
+	\item TORNADO (``Trill powered by pinpOinting foRmula and biNAry DecisiOn diagrams'') which represent the pinpointing formula directly as a binary decision diagram, simplifying the management of the formula.
+\end{itemize}  
 
-TRILL is available in two versions, one for Yap Prolog and one for SWI-Prolog. They differ slightly in the features offered.
-The Yap version differs principally in the absence of the translation module form OWL/RDF to TRILL syntax and in a different management of the explanations in TRILL$^P$.
+After generating the set of explanations  or of the pinpointing formula, 
+TRILL and  TRILL$^P$ represent them as a binary decision diagram. From this diagram, all the reasoners of this framework can computes the probability of the query. The management of the tableau rules' non-determinism is delegated to the Prolog language.
+
+The TRILL framework forms a layer cake, shown in Figure~\ref{fig:trill_arch}, designed to facilitate its extension. The lower layer, called ``Translation Utilities'', contains a library for translating the input KB in case it is given in the RDF/XML format and loading it in the Prolog database, in order to be accessible to the upper layers.
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{img/trill-architecture}
+	\caption{Software architecture of the old version of TRILL.}
+	\label{fig:trill_arch}
+\end{figure}
+
+TRILL framework is available in two versions, one for Yap Prolog and one for SWI-Prolog. They differ slightly in the features offered.
+The Yap version differs principally in the absence of the translation module form OWL/RDF to TRILL syntax and in a different management of the explanations in TRILL$^P$. the Yap version also lacks of TORNADO and it is no more maintained.
 
 \section{Installation}
-TRILL is distributed as a \href{http://www.swi-prolog.org/pack/list?p=trill}{pack} of \href{http://www.swi-prolog.org/}{SWI-Prolog}. To install it, use
+TRILL is distributed as a \href{http://www.swi-prolog.org/pack/list?p=trill}{pack} of \href{http://www.swi-prolog.org/}{SWI-Prolog}.
+It can be installed with \verb|pack_install/1|
 \begin{verbatim}
+$ swipl
 ?- pack_install(trill).
 \end{verbatim}
-Moreover, in order to make sure you have a foreign library that matches your architecture, run
+
+It requires the packs \verb|bddem|\footnote{\url{https://github.com/friguzzi/bddem}}. It is installed automatically when installing pack \verb|trill| or can installed manually as
 \begin{verbatim}
-?- pack_rebuild(trill). 
+$ swipl
+?- pack_install(bddem).
+\end{verbatim}
+The package \verb|bddem| uses a foreign library and contains the library binaries for 32 and 64 bits Linux and 64 bits Windows. If you want to recompile the foreign library you can use
+\begin{verbatim}
+?- pack_rebuild(bdeem).
+\end{verbatim}
+On 32 and 64 bits Linux this should work out of the box. On 64 bits Windows the library must be rebuilt by hand, see the pack page \url{https://github.com/friguzzi/bddem}
+
+You can upgrade the pack with
+\begin{verbatim}
+$ swipl
+?- pack_upgrade(trill).
+\end{verbatim}
+Note that the pack on which \verb|trill| depends are not upgraded automatically in this case so they need to be upgraded manually.
+
+To test the system you can simply run the following commands
+\begin{verbatim}
+$ swipl
+?- [library(trill_test/test)].
+?- test.
 \end{verbatim}
 
+\subsection{Example of use}
+\begin{verbatim}
+$ cd <pack>/trill/prolog/examples
+$ swipl
+?- [library(examples/peoplePets)].
+?- prob_instanceOf('natureLover','Kevin',Prob).
+\end{verbatim}
+	
 
 \input{syntax}
 \input{semantics}
 \input{inference}
 \input{inf_goals}
 \subsection{Executing a Query with TRILL}
+\label{sec:trillq}
 To run a query, you can simply load the Prolog file, for example \href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
 \begin{verbatim}
 ?- [peoplePets].
@@ -156,5 +200,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 \bibliographystyle{plain}
 \bibliography{bib}
+
+\appendix
+\input{appendix}
 
 \end{document}

@@ -9,7 +9,7 @@ TRILL can compute the probability or find an explanation of the following querie
   \item Unsatifiability of a concept.
   \item Inconsistency of the knowledge base.
 \end{itemize}
-All the input arguments have to be atoms or ground terms.
+All the input arguments must be atoms or ground terms.
 Note that it is necessary to specify which algorithm, TRILL, TRILL$^P$ or TORNADO, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive
 \begin{verbatim}
 :- trill.
@@ -46,7 +46,7 @@ as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{
 ?- prob_property_value(has_animal,'Kevin','Tom',Prob).
 \end{verbatim}
 
-If you want to know tho probability with which a class is a subclass of another you have to use
+If you want to know the probability with which a class is a subclass of another you have to use
 \begin{verbatim}
 prob_sub_class(+Concept:term,+SupConcept:term,-Prob:double)
 \end{verbatim}
@@ -65,17 +65,11 @@ as in (\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{
 \end{verbatim}
 This query for example corresponds with a subsumption query, which is represented as the intersection of the subclass and the complement of the superclass.
 
-Finally, you can ask the probability if the inconsistency of the knowledge base with
-\begin{verbatim}
-prob_inconsistent_theory(+Print:boolean,-Prob:double)
-\end{verbatim}
-The first argument takes values \verb|true| or \verb|false|. This will affect the behavior of the predicate when the KB is \emph{consistent}. In this case, if \verb|Print| is true the predicate prints a message and succeeds returning 0.0 as probability, if \verb|Print| is false it fails.
-
-\noindent
-\textbf{NOTE:} For versions below 5.0.0 this predicates does not work. You have to use predicate 
+Finally, you can ask the probability of the inconsistency of the knowledge base with
 \begin{verbatim}
 prob_inconsistent_theory(-Prob:double)
 \end{verbatim}
+
 
 \subsubsection{Non Probabilistic Queries}
 In TRILL you can also ask whether a query is true or false w.r.t. the knowledge base and in case of a succesful query an explanation can be returned as well. 
@@ -135,16 +129,44 @@ In this case, the returned explanation is the same obtained by querying if cat i
 
 Finally, you can ask about the inconsistency of the knowledge base with
 \begin{verbatim}
-inconsistent_theory(+Print:boolean)
-inconsistent_theory(+Print:boolean,-Expl:list)
-\end{verbatim}
-The argument \verb|Print| takes values \verb|true| or \verb|false|. This will affect the behavior of the predicate when the KB is \emph{consistent}. In this case, if \verb|Print| is true the predicate prints a message and succeeds (returning an empty explanation in the second case), if \verb|Print| is false it fails.
-
-\noindent
-\textbf{NOTE:} For versions below 5.0.0 this predicates does not work. You have to use predicate 
-\begin{verbatim}
 inconsistent_theory
 inconsistent_theory(-Expl:list)
+\end{verbatim}
+
+The predicate above returns explanations one at a time. To collect all the explanations with a single goal you can use the predicates:
+\begin{verbatim}
+all_instanceOf(+Concept:term,+Individual:atom,-Expl:list)
+all_property_value(+Prop:atom,+Individual1:atom,
+                        +Individual2:atom,-Expl:list)
+all_sub_class(+Concept:term,+SupConcept:term,-Expl:list)
+all_unsat(+Concept:term,-Expl:list)
+all_inconsistent_theory(-Expl:list)
+\end{verbatim}
+
+\subsection{Query Options}
+The behaviour of the queries can be fine tuned using the \emph{query options}. To use them you need to use the predicates:
+\begin{verbatim}
+instanceOf(+Concept:term,+Individual:atom,-Expl:list,-QueryOptions:list)
+property_value(+Prop:atom,+Individual1:atom,
+                        +Individual2:atom,-Expl:list,-QueryOptions:list)
+sub_class(+Concept:term,+SupConcept:term,-Expl:list,-QueryOptions:list)
+unsat(+Concept:term,-Expl:list,-QueryOptions:list)
+inconsistent_theory(-Expl:list,-QueryOptions:list)
+\end{verbatim}
+
+Options can be:
+\begin{itemize}
+	\item \verb|assert_abox(Boolean)| if Boolean is set to true the list of ABoxes is asserted with the predicate \verb|final_abox/1|;
+	\item \verb|return_prob(Prob)| if present the probability of the query is computed and unified with \verb|Prob|;
+%	\item \verb|return_single_prob(Boolean)| must be used with \verb|return_prob(Prob)|. It forces TRILL to return the probability of each single explanation;
+	\item \verb|max_expl(Value)| to limit the maximum number of explanations to find. \verb|Value| must be an integer. The predicate will return a list containing at most \verb|Value| different explanations;
+	\item \verb|time_limit(Value)| to limit the time for the inference. The predicate will return the explanations found in the time allowed. \verb|Value| is the number of seconds allowed for the search of explanations .
+\end{itemize}
+
+For example, if you want to find the probability of the query $Q=kevin:PetOwner$ computed on at most 2 explanations allowing at most 1 second for the explanations search you can use the goal
+\begin{verbatim}
+instanceOf('natureLover','Kevin',Expl,
+           [time_limit(1),return_prob(Prob),max_expl(2)]).
 \end{verbatim}
 
 \subsection{TRILL Useful Predicates}

@@ -1,35 +1,15 @@
 \section{Semantics}
 \label{semantics}
 
-In the field of Probabilistic Logic Programming (PLP for short) many proposals have been presented. 
-An effective and popular approach is the Distribution Semantics \cite{DBLP:conf/iclp/Sato95}, which underlies many PLP languages such as
- PRISM~\cite{DBLP:conf/iclp/Sato95,DBLP:journals/jair/SatoK01},
- Independent Choice Logic  \cite{Poo97-ArtInt-IJ}, Logic Programs with Annotated Disjunctions \cite{VenVer04-ICLP04-IC} and ProbLog \cite{DBLP:conf/ijcai/RaedtKT07}.
- Along this line, many reserchers proposed to combine probability theory with Description Logics (DLs for short) \cite{DBLP:journals/ws/LukasiewiczS08,DBLP:conf/rweb/Straccia08}.
-DLs are at the basis of the Web Ontology Language (OWL for short), a family of knowledge representation formalisms used for modeling information
- of the Semantic Web
+Finding the explanations for a query is important for probabilistic inference. In the following we briefly describe the DISPONTE semantics~\cite{RigBelLamZes15-SW-IJ}, which requires the set of all the justifications to compute the probability of the queries.
 
-TRILL follows the DISPONTE \cite{RigBelLamZese12-URSW12,Zese17-SSW-BK} semantics to compute the probability of queries.
-DISPONTE applies the distribution semantics \cite{DBLP:conf/iclp/Sato95} of probabilistic logic programming to DLs. 
-A program following this semantics defines a probability distribution over normal logic programs
-called \emph{worlds}. Then the distribution is extended to queries and the probability of a query is obtained by marginalizing the joint distribution of the query and the programs.
-
-In DISPONTE, a \emph{probabilistic knowledge base} $\cK$ is a set of \emph{certain axioms} or \emph{probabilistic axioms} in which each axiom is independent evidence.
-%****************************************%
-Certain axioms take the form of regular DL axioms while probabilistic axioms are
-% \begin{equation}
-% p::E\label{pax}
-% \end{equation}
-$p::E$
+DISPONTE \cite{RigBelLamZes15-SW-IJ,Zese17-SSW-BK} applies the distribution semantics \cite{DBLP:conf/iclp/Sato95} to Probabilistic Description Logic KBs.
+In DISPONTE, a \emph{probabilistic knowledge base} $\cK$ contains a set of \emph{probabilistic axioms} which take the form
+\begin{align}
+& p::E\label{pax} &
+\end{align}
 where $p$ is a real number in $[0,1]$ and $E$ is a DL axiom. 
-
-The idea of DISPONTE is to associate independent Boolean random variables to the probabilistic axioms. 
-To obtain a \emph{world}, we include every formula obtained from a certain axiom. 
-For each probabilistic axiom, we decide whether to include it or not in $w$.
-A world therefore is a non probabilistic KB that can be assigned a semantics in the usual way.
-A query is entailed by a world if it is true in every  model of the world.
-
-The probability $p$ can be interpreted as an \emph{epistemic probability}, i.e., as the degree of our belief in axiom $E$. 
+The probability $p$ can be interpreted as the degree of our belief in the truth of axiom $E$. 
 For example, a probabilistic concept membership axiom
 $
 p::a:C
@@ -39,81 +19,49 @@ A probabilistic concept inclusion axiom of the form
 $
 p::C\sqsubseteq D
 $
-represents our belief in the truth of $C \sqsubseteq D$ with probability $p$. 
+represents the fact that  we believe in the truth of $C \sqsubseteq D$ with probability $p$. 
 
-Formally, an \emph{atomic choice} is a couple $(E_i,k)$ where $E_i$ is the $i$th probabilistic axiom  and $k\in \{0,1\}$. 
-$k$ indicates whether $E_i$ is chosen to be included in a world ($k$ = 1) or not ($k$ = 0). 
-A \emph{composite choice} $\kappa$ is a consistent set of atomic choices, i.e.,  $(E_i,k)\in\kappa, (E_i,m)\in \kappa$ implies $k=m$ (only one decision is taken for each formula). 
-The probability of a composite choice $\kappa$  is 
-$P(\kappa)=\prod_{(E_i,1)\in \kappa}p_i\prod_{(E_i, 0)\in \kappa} (1-p_i)$, where $p_i$ is the probability associated with axiom $E_i$.
-A \emph{selection} $\sigma$ is a total composite choice, i.e., it contains an atomic choice $(E_i,k)$ for every 
-probabilistic axiom  of the probabilistic KB. 
-A selection $\sigma$ identifies a theory $w_\sigma$ called  a \emph{world} in this way:
-$w_\sigma=\cC\cup\{E_i|(E_i,1)\in \sigma\}$ where $\cC$ is the set of certain axioms. Let us indicate with $\mathcal{S}_\cK$ the set of all selections and with $\mathcal{W}_\cK$ the set of all worlds.
-The probability of a world $w_\sigma$  is 
-$P(w_\sigma)=P(\sigma)=\prod_{(E_i,1)\in \sigma}p_i\prod_{(E_i, 0)\in \sigma} (1-p_i)$.
-$P(w_\sigma)$ is a probability distribution over worlds, i.e., $\sum_{w\in \mathcal{W}_\cK}P(w)=1$.
+For more detail about probabilistic inference with the TRILL framework, we refer the interested reader to Appendix~\ref{app:disponte} and to~\cite{ZesBelCot18-TPLP-IJ}.
 
-We can now assign probabilities to queries. 
-Given a world $w$, the probability of a query $Q$ is defined as $P(Q|w)=1$ if $w\models Q$ and 0 otherwise.
-The probability of a query can be defined by marginalizing the joint probability of the query and the worlds, i.e.
-% \begin{equation}
-% \label{pq}
-% P(Q)=\sum_{w\in \mathcal{W}_\cK}P(Q,w)=\sum_{w\in \mathcal{W}_\cK} P(Q|w)p(w)=\sum_{w\in \mathcal{W}_\cK: w\models Q}P(w)
-% \end{equation}
-$P(Q)=\sum_{w\in \mathcal{W}_\cK}P(Q,w)=\sum_{w\in \mathcal{W}_\cK} P(Q|w)p(w)=\sum_{w\in \mathcal{W}_\cK: w\models Q}P(w)$.
-
+The following example illustrates inference under the DISPONTE semantics.
 \begin{example}
-\label{people+petsxy}
-\begin{small}
-Consider the following KB, inspired by the \texttt{people+pets} ontology  \cite{ISWC03-tut}:
-{\center $0.5\ \ ::\ \ \exists hasAnimal.Pet \sqsubseteq NatureLover\ \ \ \ \ 0.6\ \ ::\ \ Cat\sqsubseteq Pet$\\
-$(kevin,tom):hasAnimal\ \ \ \ \ (kevin,\fluffy):hasAnimal\ \ \ \ \ tom: Cat\ \ \ \ \ \fluffy: Cat$\\}
-\noindent The KB indicates that the individuals that own an animal which is a pet are nature lovers with a 50\% probability and that $kevin$ has the animals 
-$\fluffy$ and $tom$.  Fluffy and $tom$ are cats and cats are pets with probability 60\%.
-We associate a Boolean variable to each axiom as follow
-%\begin{small}
-$F_1 = \exists hasAnimal.Pet \sqsubseteq NatureLover$, $F_2=(kevin,\fluffy):hasAnimal$, $F_3=(kevin,tom):hasAnimal$, $F_4=\fluffy: Cat$, $F_5=tom: Cat$ and $F_6= Cat\sqsubseteq Pet$.
-%\end{small}.
+	
+	\begin{align*}
+	&& (E_1)\ 0.5 ::\ & \exists hasAnimal.Pet \sqsubseteq PetOwner\\
+	&& 				& \fluffy: Cat \\
+	&& 				& tom: Cat \\
+	&& (E_2)\ 0.6 ::\ & Cat\sqsubseteq Pet\\
+	&& 				& (kevin,\fluffy):hasAnimal \\
+	&& 				& (kevin,tom):hasAnimal
+	\end{align*}
+	It indicates that the individuals that own an animal which is a pet are pet owners with a 50\% probability and that $kevin$ owns the animals $\fluffy$ and $tom$, which are cats.
+	Moreover, cats are pets with a 60\% probability.
 
-
-The KB has four worlds and the query axiom $Q=kevin:NatureLover$ is true in one of them, the one corresponding to the selection 
-$
-\{(F_1,1),(F_2,1)\}
-$.
-%where each pair contains the corresponding axiom and the value of its the selector is $k = 1$.
-The probability of the query is $P(Q)=0.5\cdot 0.6=0.3$.
-\end{small}
+	The query axiom $Q=kevin:PetOwner$ is true with probability $P(Q)=0.5\cdot 0.6=0.3$.
 \end{example}
 
-\begin{example}
-\label{people+pets_comb}
-\begin{small}
-Sometimes we have to combine knowledge from multiple, untrusted sources, each one with a different reliability. 
-Consider a KB similar to the one of Example \ref{people+petsxy} but where we have a single cat, $\fluffy$.
-{\center $\exists hasAnimal.Pet \sqsubseteq NatureLover\ \ \ \ \ (kevin,\fluffy):hasAnimal\ \ \ \ \ Cat\sqsubseteq Pet$\\}
+the translation of this KB into the TRILL syntax is:
+\begin{verbatim}
+subClassOf(someValuesFrom(hasAnimal, pet), petOwner).
+annotationAssertion(disponte:probability,
+                    subClassOf(someValuesFrom(hasAnimal, pet), petOwner),
+                    literal('0.5'))
+classAssertion(cat, fluffy).
+classAssertion(cat, tom).
+subClassOf(cat, pet).
+annotationAssertion(disponte:probability, subClassOf(cat, pet), literal('0.6'))
+propertyAssertion(hasAnimal, kevin, fluffy).
+propertyAssertion(hasAnimal, kevin, tom).
+\end{verbatim}
+Optionally, the KB can also contain the following axioms
+\begin{verbatim}
+namedIndividual(fluffy).
+namedIndividual(kevin).
+namedIndividual(tom).
+objectProperty(hasAnimal).
+annotationProperty('http://ml.unife.it/disponte#probability').
+class(petOwner).
+class(pet).
+\end{verbatim}
 
-\noindent and there are two sources of information with different reliability that provide the information that $\fluffy$ is a cat. 
-On one source the user has a degree of belief of 0.4, i.e., he thinks it is correct with a 40\% probability,  
-while on the other source he has a degree of belief 0.3. %, i.e. he thinks it is correct with a 30\% probability. 
-The user can reason on this knowledge by adding the following statements to his KB:
-{\center$0.4\ \ ::\ \ \fluffy: Cat\ \ \ \ \ 0.3\ \ ::\ \ \fluffy: Cat$\\}
-The two statements represent independent evidence on $\fluffy$ being a cat. We associate $F_1$ ($F_2$) to the first (second) probabilistic axiom.
 
-The query axiom $Q=kevin:NatureLover$ is true in 3 out of the 4 worlds, those corresponding to the selections 
-$
-\{ \{(F_1,1),(F_2,1)\},
-\{(F_1,1),(F_2,0)\},
-\{(F_1,0),(F_2,1)\}\}
-$. 
-So 
-$P(Q)=0.4\cdot 0.3+0.4\cdot 0.7+ 0.6\cdot 0.3=0.58.$
-This is reasonable if the two sources can be considered as independent. In fact,  the probability comes from the  disjunction of two
-independent Boolean random variables with probabilities respectively 0.4 and 0.3: 
-$
-P(Q) = P(X_1\vee X_2) = P(X_1)+P(X_2)-P(X_1\wedge X_2)
- = P(X_1)+P(X_2)-P(X_1)P(X_2)
- = 0.4+0.3-0.4\cdot 0.3=0.58
-$
-\end{small}
-\end{example}

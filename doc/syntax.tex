@@ -1,25 +1,9 @@
 \section{Syntax}
 \label{syn}
 
-Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web \cite{DBLP:conf/dlog/2003handbook,dlchap} and are used for modeling ontologies.
+Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web \cite{DBLP:conf/dlog/2003handbook,dlchap} and are used for modelling ontologies.
 They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals
-of the domain. In this section, we recall the expressive description logic $\mathcal{ALC}$ \cite{DBLP:journals/ai/Schmidt-SchaussS91}. We refer to 
-\cite{DBLP:journals/ws/LukasiewiczS08} for a detailed description of $\mathcal{SHOIN}(\mathbf{D})$ DL, that is at the basis of OWL DL.
-
-%%ALC
-Let $\mathbf{A}$, $\mathbf{R}$ and $\mathbf{I}$ be sets of \emph{atomic concepts}, \emph{roles} and \emph{individuals}.
-A \emph{role} is an atomic role $R \in \mathbf{R}$. 
-\emph{Concepts} are defined by induction as follows. Each $C \in \mathbf{A}$, $\bot$ and $\top$
-are concepts.
-If $C$, $C_1$ and $C_2$ are concepts and $R \in \mathbf{R}$, then $(C_1\sqcap C_2)$, $(C_1\sqcup C_2 )$, $\neg C$,
-$\exists R.C$, and $\forall R.C$ are concepts. 
-Let $C$, $D$ be concepts,  $R \in \mathbf{R}$ and $a, b \in \mathbf{I}$. 
-An \emph{ABox} $\cA$ is a finite set of \textit{concept membership axioms} $a : C$ and \textit{role membership
-axioms} $(a, b) : R$, while 
-a \emph{TBox} $\cT$ is a finite set of \textit{concept inclusion axioms} $C\sqsubseteq D$. $C \equiv D$ abbreviates $C \sqsubseteq D$ and $D\sqsubseteq  C$.
-
-A \emph{knowledge base} $\cK = (\cT, \cA)$ consists of a TBox $\cT$ and an ABox $\cA$.
-A KB $\cK$ is assigned a semantics in terms of set-theoretic interpretations $\cI = (\Delta^\cI , \cdot^\cI )$, where $\Delta^\cI$ is a non-empty \textit{domain} and $\cdot^\cI$ is the \textit{interpretation function} that assigns  an element in $\Delta ^\cI$ to each $a \in \mathbf{I}$, a subset of $\Delta^\cI$ to each $C \in \mathbf{A}$ and a subset of $\Delta^\cI \times \Delta^\cI$ to each $R \in \mathbf{R}$.
+of the domain. A more formal description can be found in the Appendix \ref{app:dl}.
 
 TRILL allows the use of two different syntaxes used together or individually:
 \begin{itemize}
@@ -28,6 +12,7 @@ TRILL allows the use of two different syntaxes used together or individually:
 \end{itemize}
 
 RDF/XML syntax can be used by exploiting the predicate \verb|owl_rdf/1|. For example:
+\begin{small}
 \begin{verbatim}
 owl_rdf('
 <?xml version="1.0"?>
@@ -38,9 +23,7 @@ owl_rdf('
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
 ]>
-
 <rdf:RDF xmlns="http://here.the.IRI.of.your.ontology#"
-     xml:base="http://here.the.IRI.of.your.ontology"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
@@ -54,12 +37,15 @@ owl_rdf('
 </rdf:RDF>
 ').
 \end{verbatim}
+\end{small}
+
 For a brief introduction on RDF/XML syntax see \textit{RDF/XML syntax and tools} section below (Sec. \ref{rdfxml-syn}).
 
 Note that each single \verb|owl_rdf/1| must be self contained and well formatted, it must start and end with \verb|rdf:RDF| tag and contain all necessary declarations (namespaces, entities, ...).
 
 
 An example of the combination of both syntaxes is shown the example \href{http://trill.lamping.unife.it/example/trill/johnEmployee.pl}{\texttt{johnEmployee.pl}}. It models that \textit{john} is an \textit{employee} and that employees are \textit{workers}, which are in turn people (modeled by the concept \textit{person}).
+\begin{small}
 \begin{verbatim}
 owl_rdf('<?xml version="1.0"?>
 <rdf:RDF xmlns="http://example.foo#"
@@ -96,6 +82,7 @@ owl_rdf('<?xml version="1.0"?>
     </owl:NamedIndividual>
 </rdf:RDF>').
 \end{verbatim}
+\end{small}
 
 \subsection{Prolog Syntax}
 \label{trill-syn}
@@ -184,8 +171,9 @@ annotationAssertion('disponte:probability',
 \end{verbatim}
 
 \subsubsection{Concepts descriptions}
-Complex concepts can be defined using different operators.
+Complex concepts can be defined using different operators:
 
+\noindent
 Existential and universal quantifiers
 \begin{verbatim}
 someValuesFrom("propertyIRI","classIRI").
@@ -213,6 +201,7 @@ Nominal concept
 \begin{verbatim}
 oneOf([list,of,classes]).
 \end{verbatim}
+
 For example, the class \textit{workingman} is the intersection of \textit{worker} with the union of \textit{man} and \textit{woman}. It can be defined as:
 \begin{verbatim}
 equivalentClasses([workingman,

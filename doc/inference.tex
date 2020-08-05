@@ -1,71 +1,56 @@
 \section{Inference}
 \label{inf}
 
-Traditionally, a reasoning algorithm decides  whether an axiom is entailed or not by a KB by refutation: the  axiom $E$ is entailed if $\neg E$ has no model
-in the KB.
-Besides deciding whether an axiom is entailed by a KB, we want to find also explanations for the axiom, in order to compute the probability of the axiom.
+TRILL systems can answer many different queries. To do so, it exploits an algorithm called \emph{tableau} algorithm, which is able to collect explanations. In the following you can find an example that shows how the tableau works. In section~\ref{sec:trillq} we will see how queries can be asked with TRILL systems.
 
-\subsection{Computing Queries Probability}
-The problem of finding  explanations for a query
-has been investigated by various authors \cite{DBLP:conf/ijcai/SchlobachC03,DBLP:journals/ws/KalyanpurPSH05,DBLP:conf/semweb/KalyanpurPHS07,Kalyanpurphd,extended_tracing,Zese17-SSW-BK}.
- It was called  \emph{axiom pinpointing} in 
-\cite{DBLP:conf/ijcai/SchlobachC03}  and considered as a non-standard reasoning service useful for tracing derivations and debugging ontologies. 
-In particular, in \cite{DBLP:conf/ijcai/SchlobachC03} the authors define \emph{minimal axiom sets}  (\emph{MinAs} for short).
-\begin{definition}[MinA]
- Let $\cK$ be a knowledge base and $Q$ an
-axiom that follows from it, i.e., 
-$\cK \models Q$. We call a set 
-$M\subseteq \cK$ a
-\emph{minimal axiom set} or \emph{MinA} for $Q$ in $\cK$ if 
-$M \models Q$ and it is minimal
-w.r.t. set inclusion.
-\end{definition}  
-\noindent The problem of enumerating all MinAs is called \textsc{min-a-enum}.
-\textsc{All-MinAs($Q,\cK$)} is the set of all MinAs for query $Q$ in knowledge base $\cK$.
+Consider a simple knowledge base inspired by the film ``The Godfather'' containing the following axioms:
+\begin{align}
+&tom : Cat\\
+&(donVito, tom) : hasPet\\
+&Cat \sqsubseteq Pet\\
+&\exists hasAnimal.Pet \sqsubseteq NatureLover\\
+&NatureLover \sqsubseteq GoodPerson\\
+&hasPet \sqsubseteq hasAnimal
+\end{align}
 
-A \emph{tableau} is a graph where each node represents an
-individual $a$ and is labeled with the set of concepts $\cL(a)$ it belongs to. Each
-edge $\langle a, b\rangle$ in the graph is labeled with the set of roles to which the couple
-$(a, b)$ belongs. Then, a set of  consistency preserving tableau
-expansion rules are repeatedly applied until a clash (i.e., a contradiction) is detected or a clash-free
-graph is found to which no more rules are applicable. A clash is for example a
-couple $(C, a)$ where $C$ and $\neg C$ are present in the label of a node, i.e. ${C, \neg C} \subseteq \cL(a)$.
+The axioms are telling what is known about the domain: (1) Tom is an individual of the domain, and he is a Cat; (2) donVito (Vito Corleone) has tom as his pet; (3) all cats are also pets; (4) everyone having at least one animal which is a pet is a nature lover; (5) nature lovers are good people; and (6) if one has a pet, she/he also has an animal.
 
-Some expansion rules are non-deterministic, i.e., they generate
-a finite set of tableaux. Thus the algorithm keeps a set of tableaux that is
-consistent if there is any tableau in it that is consistent, i.e., that is clash-free.
-Each time a clash is detected in a tableau $G$, the algorithm stops applying rules
-to $G$. Once every tableau in $T$ contains a clash or no more expansion rules
-can be applied to it, the algorithm terminates. If all the tableaux in the final
-set $T$ contain a clash, the algorithm returns unsatisfiable as no model can be
-found. Otherwise, any one clash-free completion graph in $T$ represents a possible
-model for the concept and the algorithm returns satisfiable.
+This KB can be defined by the following TRILL syntax axioms:
+\begin{verbatim}
+classAssertion(cat, tom).
+propertyAssertion(hasPet, donVito, tom).
+subClassOf(cat, pet).
+subClassOf(someValuesFrom(hasAnimal, pet), natureLover).
+subClassOf(natureLover,goodPerson).
+subPropertyOf(hasPet,hasAnimal).
+\end{verbatim}
 
-To compute the probability of a query, the explanations must be made mutually exclusive, so
-that the probability of each individual explanation is computed and summed
-with the others. To do that we assign independent Boolean random variables to the axioms contained in the explanations and defining 
-the Disjunctive Normal Form (DNF) Boolean formula $f_K$ which models the set of explanations. Thus
-$
-f_K(\mathbf{X})=\bigvee_{\kappa\in K}\bigwedge_{(E_i,1)}X_{i}\bigwedge_{(E_i,0)}\overline{X_{i}}
-$
-where $\mathbf{X}=\{X_{i}|(E_i,k)\in\kappa,\kappa\in K\}$ is the set of Boolean random variables.
-We can now translate $f_K$ to a Binary Decision Diagram (BDD), from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.
+The first two axioms are assertional axioms (hence they constitute the ABox), the other four axioms define the TBox. Axiom 1 is called class assertion, 2 is called property assertion, 3,4,5 are called class subsumption axioms, and axiom 6 is called property subsumption axiom.
 
+To check, for example, whether don Vito Corleone is a good person, the tableau algorithm builds a graph, called the \emph{tableau}. The initial tableau contains information from the ABox plus the negation of the query, as depicted in Figure\ref{fig:tab1}. This last axiom is added since the underlying proof mechanism uses refutation. In logic, working by refutation means assuming the opposite of the query one wants to prove. Then, if this assumption leads to a contradiction, this means that the axioms of the ontology allows to prove that the query is true, and thus that its opposite is false. In practice, working by refutation means that the graph must assume that the posed query be false, the tableau algorithm expands all the known axioms (including the negation of the query) and looks for contradictions present in the final graph. The presence of a contradiction in a node proves that the query is true because the graph depicts at least one way to contradict the negation of that query, and thus it depicts at least one way to prove that the opposite of the query contradicts what is defined by the ontology. 
 
-In \cite{DBLP:journals/jar/BaaderP10,DBLP:journals/logcom/BaaderP10} the authors consider the problem of finding a \emph{pinpointing formula} instead of 
- \textsc{All-MinAs($Q,\cK$)}.
- The pinpointing formula is a monotone Boolean formula in which each Boolean variable corresponds to an axiom of the KB. This formula is built using 
- the variables and the conjunction and disjunction connectives. It compactly encodes the set of all MinAs.
- Let's assume that each axiom $E$ of a KB $\cK$ is associated with a propositional variable, indicated with $var(E)$. The set of all propositional variables is indicated with $var(\cK )$.
- A valuation $\nu$ of a monotone Boolean formula is the set of propositional variables that are true. For a valuation $\nu \subseteq var(\cK)$, let $\cK_{\nu} := \{t \in \cK |var(t)\in\nu\}$.
- \begin{definition}[Pinpointing formula]
- Given a query $Q$ and a KB $\cK$, a monotone Boolean formula $\phi$ over $var(\cK)$ is called a \emph{pinpointing formula} for $Q$ if for every valuation $\nu \subseteq var(\cK)$ it holds that $\cK_{\nu} \models Q$ iff
- $\nu$ satisfies $\phi$.
-  
- \end{definition}
- In Lemma 2.4 of \cite{DBLP:journals/logcom/BaaderP10} the authors proved that the set of all MinAs can be obtained by transforming the pinpointing formula into a Disjunctive Normal Form Boolean formula (DNF) and removing disjuncts implying other disjuncts. 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{img/tab1}
+	\caption{Initial tableau}
+	\label{fig:tab1}
+\end{figure}
 
-Irrespective of which representation of the explanations we choose, a DNF or a general pinpointing formula, we can apply knowledge compilation and \textit{transform it into a Binary Decision Diagram (BDD)}, 
- from which we can compute the probability of the query with a dynamic programming algorithm that is linear in the size of the BDD.
- 
-We refer to \cite{Zese17-SSW-BK,ZesBelRig16-AMAI-IJ} for a detailed description of the two methods.
+This means that if the opposite of the query is (artificially) added to the knowledge base as a new axiom, this ontology will contain at least two pieces of information one contradicting the other.
+
+The tableau has one node for each individual: tom is labelled as cat, $donVito$ is labelled as not a good person (the negation of the query), and the edge between them is labelled as $hasPet$ because the individuals are connected by this property (Figure~\ref{fig:tab1}).
+
+At this point, the graph of Figure~\ref{fig:tab1} is expanded using the axioms of the ontology to check the truth of the query and to build the justifications. Therefore, the tableau algorithm takes e.g. the axiom 3, ``cats are pets'', and adds to the node for tom also the label $pet$ since he is a cat. This new information is true and its justification is given directly by the set of axioms {1,3}: axiom 3 because since $tom$ is a $cat$ (axiom 1) he is also a $pet$. The same operation can be done for the edge (relationship) between tom and $donVito$, which can be labelled also as $hasAnimal$ because of axioms~2 and~6.
+
+At this point, the calculus can deduce that $donVito$ belongs to the class \linebreak $\exists hasAnimal.Pet$ because $donVito$ is connected with $tom$, which is a $pet$ (axioms {1,3}), via property $hasAnimal$ (axioms {2,6}). Therefore, $donVito$’s node is labelled also as $\exists hasAnimal.Pet$ with a justification given by the union of the axioms associated with the used axioms, therefore its justification is given by the set of the involved axioms {1,2,3,6}. Then, the tableau graph is further expanded by adding the class $NatureLover$ to $donVito$’s node using axiom 4 and finally, by adding also the class $GoodPerson$ using label $NatureLover$ (axioms {1,2,3,4,6}) and axiom 5, creating as justification the set of axioms {1,2,3,4,5,6}.
+
+The final graph is shown in Figure~\ref{fig:tab2}.
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{img/tab2}
+	\caption{Initial tableau}
+	\label{fig:tab2}
+\end{figure}
+The expanded graph contains now a contradiction, i.e., $donVito$ is labelled as $GoodPerson$ and as not a $GoodPerson$ (i.e., $\neg GoodPerson$), therefore, by refutation, the query ``Is don Vito Corleone a good person?'' is true, with justification given by the axioms {1,2,3,4,5,6}, that are the axioms of the KB necessary to deduce this information.
+
+From this example, it would be clear why the use of probabilistic information is useful. Indeed, don Vito Corleone is hardly classifiable as a good person. This is because not all people who are nature lovers are also good, and therefore, one could say that axiom 5 is true with probability 0.4. It would also be arguable that everyone who has animals is also a nature lover, making probabilistic also this axiom. For a formal description of how the probability of the query is computed see the Appendix~\ref{app:inf}.

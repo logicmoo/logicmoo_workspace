@@ -228,6 +228,19 @@ prolog:message(timeout_reached) -->
 /*****************************
   QUERY OPTIONS
 ******************************/
+
+/** 
+ * query_option(+OptList:list,+Option:term,?Value:term)
+ * 
+ * Check if the option defined by Option is in OptList and returns the option Value.
+
+ * Options can be:
+ * - assert_abox(Boolean) if Boolean is set to true the list of aboxes is asserted with the predicate final_abox/1
+ * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
+ * - return_single_prob(Boolean) must be used with return_prob(Prob). It forces TRILL to return the probability of each single explanation
+ * - max_expl(Value) to limit the maximum number of explanations to find. Value must be an integer. The predicate will return a list containing at most Value different explanations
+ * - time_limit(Value) to limit the time for the inference. The predicate will return the explanations found in the time allowed. Value is the number of seconds allowed for the search of explanations 
+*/
 query_option(OptList,Option,Value):-
   Opt=..[Option,Value],
   memberchk(Opt,OptList).
@@ -492,10 +505,7 @@ prune_tableau_rules(KBA,[_|TR],PTR):-
  * The returning explanation is a set of axioms.
  * The predicate fails if the individual does not belong to the class.
  * Opt is a list containing settings for the execution of the query. 
- * Settings can be:
- * - assert_abox(Boolean) if Boolean is set to true the list of aboxes is asserted with the predicate final_abox/1
- * - return_prob(Prob) if present the probability of the query is computed and unified with Prob
- */
+  */
 instanceOf(M:Class,Ind,Expl,Opt):-
   execute_query(M,io,[Class,Ind],Expl,Opt).
   
@@ -791,10 +801,10 @@ query_empty_expl(M,Expl):-%gtrace,
 % returns the non-present arguments
 check_query_args(M,QA,QAEx,NotEx):-
   check_query_args_int(M,QA,QAExT,NotEx),!,
-  ( length(QAExT,1) -> 
+  ( length(QA,1) -> 
     QAEx = ['unsat'|QAExT]
     ;
-    ( length(QAExT,0) -> QAEx = ['inconsistent','kb'] ; QAEx = QAExT)
+    ( length(QA,0) -> QAEx = ['inconsistent','kb'] ; QAEx = QAExT)
   ).
 
 check_query_args_int(_,[],[],[]).
@@ -2784,6 +2794,7 @@ init_trill(Alg):-
   utility_translation:get_module(M),
   set_algorithm(M:Alg),
   set_up(M),
+  utility_translation:set_up_kb_loading(M),
   trill:add_kb_prefixes(M:[('disponte'='http://ml.unife.it/disponte#'),('owl'='http://www.w3.org/2002/07/owl#')]).
 
 /**************/
