@@ -415,7 +415,7 @@ prune_tableau_rules(M):-
   prune_tableau_rules(Classes,NondetRules,PrunedNondetRules),
   set_tableau_expansion_rules(M:PrunedDetRules,PrunedNondetRules).
 
-add_tableau_rules_from_class(M,someValuesFrom(R,C)):-
+add_tableau_rules_from_class(M,someValuesFrom(_,_)):-
   M:setting_trill(det_rules,Rules),
   memberchk(exists_rule,Rules),!.
 
