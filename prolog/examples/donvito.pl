@@ -2,6 +2,12 @@
 
 :- trill. % or :- trillp. or :- tornado.
 
+/** <examples>
+
+?- prob_instanceOf(goodPerson,donVito,Prob).
+
+*/
+
 classAssertion(cat, tom).
 propertyAssertion(hasPet, donVito, tom).
 subClassOf(cat, pet).
