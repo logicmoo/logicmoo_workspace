@@ -22,50 +22,8 @@
 \input{semantics}
 \input{inference}
 \input{inf_goals}
-\subsection{Executing a Query with TRILL}
-To run a query, you can simply load the Prolog file, for example \href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
-\begin{verbatim}
-?- [peoplePets].
-\end{verbatim}
-\noindent
-The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of \href{http://vangelisv.github.io/thea/}{Thea} library.
-\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}} is equivalent with the following KB
-\begin{verbatim}
-:- use_module(library(trill)).
-
-:- trill.
-
-:- add_kb_prefix('','http://cohse.semanticweb.org/ontologies/people#').
-
-subClassOf(someValuesFrom('has_animal', 'pet'), 'natureLover').
-subClassOf('cat', 'pet').
-annotationAssertion('disponte:probability', 
-classAssertion('cat', 'Fluffy'), literal('0.4')).
-annotationAssertion('disponte:probability', 
-classAssertion('cat', 'Tom'), literal('0.3')).
-annotationAssertion('disponte:probability', 
-subClassOf('cat', 'pet'), literal('0.6')).
-propertyAssertion('has_animal', 'Kevin', 'Fluffy').
-propertyAssertion('has_animal', 'Kevin', 'Tom').
-classAssertion('cat', 'Fluffy').
-classAssertion('cat', 'Tom').
-\end{verbatim}
-\noindent
-
-
-You can also load an RDF/XML file using the predicate \verb|load_owl_kb(<filename>).| in the following way:
-\begin{itemize}
-	\item load TRILL library\\
-	\verb|use_module(library(trill)).|
-	\item initialize the algorithm you want to perform inference\\
-	\verb|init_trill(<algorithm_name>).|\\
-	For example, if you want to use TRILL$^P$ you should run \verb|init_trill(trillp).|
-	\item load the KB\\
-	\verb|load_owl_kb(<filename>).|\\
-	For example, \verb|load_owl_kb('./examples/biopaxLevel3_rdf.owl').|
-\end{itemize}
-\noindent
-Now the KB is loaded and the queries can be executed in the usual way.
+\section{Using TRILL on your Machine}
+To use TRILL without the need of an Internet connection, you must install it on your machine. Please, read the \href{https://github.com/rzese/trill/blob/master/doc/manual.pdf}{TRILL manual} for detailed information.
 
 \section{Download Query Results through an API}
 The results of queries can also be downloaded programmatically by directly
@@ -74,28 +32,28 @@ approaching the Pengine API. Example client code is
 can be used with bash to download the results for a query in CSV.  The call
 below downloads a CSV file for the coin example.
 \begin{verbatim}
-$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
-  examples/trill/peoplePets.pl \
+$ bash swish-ask.sh --server=http://trill-sw.eu \
+  example/trill/peoplePets.pl \
   Prob "prob_instanceOf('natureLover','Kevin',Prob)"
 \end{verbatim}
 The script can ask queries against Prolog scripts stored in 
-\url{http://trill.lamping.unife.it} by specifying
-the script on the commandline.  User defined files stored
+\url{http://trill-sw.eu} by specifying
+the script on the command line.  User defined files stored
 in TRILL on SWISH (locations of type
-\url{http://trill.lamping.unife.it/p/johnEmployee_user.pl}) can
+\url{http://trill-sw.eu/p/johnEmployee_user.pl}) can
 be directly used, for example:
 \begin{verbatim}
-$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
+$ bash swish-ask.sh --server=http://trill-sw.eu \
   johnEmployee_user.pl Expl "instanceOf(person,john,Expl)"
 \end{verbatim}
 Example programs can be used by specifying the folder portion of the url of the example,
 as in the first johnEmployee example above where the url for the program is 
-\url{http://trill.lamping.unife.it/examples/trill/johnEmployee.pl}.
+\url{http://trill-sw.eu/example/trill/johnEmployee.pl}.
 
 You can also use an url for the program as in 
 \begin{verbatim}
-$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
-  https://raw.githubusercontent.com/friguzzi/trill-on-swish/\
+$ bash swish-ask.sh --server=http://trill-sw.eu \
+  https://raw.githubusercontent.com/friguzzi/trill-on-swish/
   master/examples/trill/peoplePets.pl \
   Prob "prob_instanceOf('natureLover','Kevin',Prob)"
 \end{verbatim}
@@ -103,7 +61,7 @@ Results can be downloaded in JSON using the option \verb|--json-s| or
 \verb|--json-html|.
 With the first the output is in a simple string format where Prolog terms are sent using quoted write, the latter serialize responses as HTML strings. E.g.
 \begin{verbatim}
-$ bash swish-ask.sh --json-s --server=http://trill.lamping.unife.it \
+$ bash swish-ask.sh --json-s --server=http://trill-sw.eu \
   johnEmployee_user.pl Expl "instanceOf(person,john,Expl)"
 \end{verbatim}
 The JSON format can also be modified. See
@@ -113,10 +71,10 @@ Prolog can exploit the Pengine API directly.  For example, the above can
 be called as:
 \begin{verbatim}
 ?- [library(pengines)].
-?- pengine_rpc('http://trill.lamping.unife.it',
+?- pengine_rpc('http://trill-sw.eu',
      prob_instanceOf('natureLover','Kevin',Prob),
      [ src_url('https://raw.githubusercontent.com/friguzzi/trill-on-swish/\
-  master/examples/trill/peoplePets.pl'),
+  master/example/trill/peoplePets.pl'),
      application(swish)
      ]).
 Prob = 0.51.
@@ -124,8 +82,9 @@ Prob = 0.51.
 \end{verbatim}
 
 \section{Manual in PDF}
-A PDF version of the manual is available at
+A PDF version of this help in PDF is available at
 \url{https://github.com/rzese/trill/blob/master/doc/help-trill.pdf}.
+A manual for the standalone version of TRILL is available at \url{https://github.com/rzese/trill/blob/master/doc/manual.pdf}
 
 
 \bibliographystyle{plain}
