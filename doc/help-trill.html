@@ -44,8 +44,8 @@
 </ul></li>
 <li><a href="#query-options">Query Options</a></li>
 <li><a href="#trill-useful-predicates">TRILL Useful Predicates</a></li>
-<li><a href="#executing-a-query-with-trill">Executing a Query with TRILL</a></li>
 </ul></li>
+<li><a href="#using-trill-on-your-machine">Using TRILL on your Machine</a></li>
 <li><a href="#download-query-results-through-an-api">Download Query Results through an API</a></li>
 <li><a href="#manual-in-pdf">Manual in PDF</a></li>
 <li><a href="#app:dl">Description Logics</a></li>
@@ -57,7 +57,7 @@
 </ul>
 </nav>
 <h1 id="syn">Syntax</h1>
-<p>Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web <span class="citation" data-cites="DBLP:conf/dlog/2003handbook dlchap">[<a href="#ref-DBLP:conf/dlog/2003handbook" role="doc-biblioref">1</a>,<a href="#ref-dlchap" role="doc-biblioref">2</a>]</span> and are used for modelling ontologies. They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals of the domain. A more formal description can be found in the Appendix <a href="#app:dl" data-reference-type="ref" data-reference="app:dl">6</a>.</p>
+<p>Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web <span class="citation" data-cites="DBLP:conf/dlog/2003handbook dlchap">[<a href="#ref-DBLP:conf/dlog/2003handbook" role="doc-biblioref">1</a>,<a href="#ref-dlchap" role="doc-biblioref">2</a>]</span> and are used for modelling ontologies. They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals of the domain. A more formal description can be found in the Appendix <a href="#app:dl" data-reference-type="ref" data-reference="app:dl">7</a>.</p>
 <p>TRILL allows the use of two different syntaxes used together or individually:</p>
 <ul>
 <li><p>RDF/XML</p></li>
@@ -251,7 +251,7 @@ propertyAssertion(hasAnimal,kevin,fluffy)</code></pre>
 <p>Finding the explanations for a query is important for probabilistic inference. In the following we briefly describe the DISPONTE semantics <span class="citation" data-cites="RigBelLamZes15-SW-IJ">[<a href="#ref-RigBelLamZes15-SW-IJ" role="doc-biblioref">13</a>]</span>, which requires the set of all the justifications to compute the probability of the queries.</p>
 <p>DISPONTE <span class="citation" data-cites="RigBelLamZes15-SW-IJ Zese17-SSW-BK">[<a href="#ref-RigBelLamZes15-SW-IJ" role="doc-biblioref">13</a>,<a href="#ref-Zese17-SSW-BK" role="doc-biblioref">21</a>]</span> applies the distribution semantics <span class="citation" data-cites="DBLP:conf/iclp/Sato95">[<a href="#ref-DBLP:conf/iclp/Sato95" role="doc-biblioref">15</a>]</span> to Probabilistic Description Logic KBs. In DISPONTE, a <em>probabilistic knowledge base</em> <span class="math inline">\({\cal K}\)</span> contains a set of <em>probabilistic axioms</em> which take the form <span class="math display">\[\begin{aligned}
 &amp; p::E\label{pax} &amp;\end{aligned}\]</span> where <span class="math inline">\(p\)</span> is a real number in <span class="math inline">\([0,1]\)</span> and <span class="math inline">\(E\)</span> is a DL axiom. The probability <span class="math inline">\(p\)</span> can be interpreted as the degree of our belief in the truth of axiom <span class="math inline">\(E\)</span>. For example, a probabilistic concept membership axiom <span class="math inline">\(p::a:C\)</span> means that we have degree of belief <span class="math inline">\(p\)</span> in <span class="math inline">\(C(a)\)</span>. A probabilistic concept inclusion axiom of the form <span class="math inline">\(p::C\sqsubseteq D\)</span> represents the fact that we believe in the truth of <span class="math inline">\(C \sqsubseteq D\)</span> with probability <span class="math inline">\(p\)</span>.</p>
-<p>For more detail about probabilistic inference with the TRILL framework, we refer the interested reader to Appendix <a href="#app:disponte" data-reference-type="ref" data-reference="app:disponte">7</a> and to <span class="citation" data-cites="ZesBelCot18-TPLP-IJ">[<a href="#ref-ZesBelCot18-TPLP-IJ" role="doc-biblioref">22</a>]</span>.</p>
+<p>For more detail about probabilistic inference with the TRILL framework, we refer the interested reader to Appendix <a href="#app:disponte" data-reference-type="ref" data-reference="app:disponte">8</a> and to <span class="citation" data-cites="ZesBelCot18-TPLP-IJ">[<a href="#ref-ZesBelCot18-TPLP-IJ" role="doc-biblioref">22</a>]</span>.</p>
 <p>The following example illustrates inference under the DISPONTE semantics.</p>
 <p><span class="math display">\[\begin{aligned}
 	&amp;&amp; (E_1)\ 0.5 ::\ &amp; \exists hasAnimal.Pet \sqsubseteq PetOwner\\
@@ -313,7 +313,7 @@ subPropertyOf(hasPet,hasAnimal).</code></pre>
 <img src="img/tab2.png" id="fig:tab2" alt="" /><figcaption>Final tableau</figcaption>
 </figure>
 <p>The expanded graph contains now a contradiction, i.e., <span class="math inline">\(donVito\)</span> is labelled as <span class="math inline">\(GoodPerson\)</span> and as not a <span class="math inline">\(GoodPerson\)</span> (i.e., <span class="math inline">\(\neg GoodPerson\)</span>), therefore, by refutation, the query “Is don Vito Corleone a good person?” is true, with justification given by the axioms <span>1,2,3,4,5,6</span>, that are the axioms of the KB necessary to deduce this information.</p>
-<p>From this example, it would be clear why the use of probabilistic information is useful. Indeed, don Vito Corleone is hardly classifiable as a good person. This is because not all people who are nature lovers are also good, and therefore, one could say that axiom 5 is true with probability 0.4. It would also be arguable that everyone who has animals is also a nature lover, making probabilistic also this axiom. For a formal description of how the probability of the query is computed see the Appendix <a href="#app:inf" data-reference-type="ref" data-reference="app:inf">8</a>.</p>
+<p>From this example, it would be clear why the use of probabilistic information is useful. Indeed, don Vito Corleone is hardly classifiable as a good person. This is because not all people who are nature lovers are also good, and therefore, one could say that axiom 5 is true with probability 0.4. It would also be arguable that everyone who has animals is also a nature lover, making probabilistic also this axiom. For a formal description of how the probability of the query is computed see the Appendix <a href="#app:inf" data-reference-type="ref" data-reference="app:inf">9</a>.</p>
 <h2 id="queries">Possible Queries</h2>
 <p>TRILL can compute the probability or find an explanation of the following queries:</p>
 <ul>
@@ -421,70 +421,38 @@ remove_axioms(++Axioms:list)</code></pre>
 <p>We can interrogate TRILL to return the loaded axioms with</p>
 <pre><code>axiom(?Axiom:axiom)</code></pre>
 <p>This predicate searches in the loaded knowledge base axioms that unify with Axiom.</p>
-<h2 id="executing-a-query-with-trill">Executing a Query with TRILL</h2>
-<p>To run a query, you can simply load the Prolog file, for example <a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>, as</p>
-<pre><code>?- [peoplePets].</code></pre>
-<p>The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of <a href="http://vangelisv.github.io/thea/">Thea</a> library. <a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a> is equivalent with the following KB</p>
-<pre><code>:- use_module(library(trill)).
-
-:- trill.
-
-:- add_kb_prefix(&#39;&#39;,&#39;http://cohse.semanticweb.org/ontologies/people#&#39;).
-
-subClassOf(someValuesFrom(&#39;has_animal&#39;, &#39;pet&#39;), &#39;natureLover&#39;).
-subClassOf(&#39;cat&#39;, &#39;pet&#39;).
-annotationAssertion(&#39;disponte:probability&#39;, 
-classAssertion(&#39;cat&#39;, &#39;Fluffy&#39;), literal(&#39;0.4&#39;)).
-annotationAssertion(&#39;disponte:probability&#39;, 
-classAssertion(&#39;cat&#39;, &#39;Tom&#39;), literal(&#39;0.3&#39;)).
-annotationAssertion(&#39;disponte:probability&#39;, 
-subClassOf(&#39;cat&#39;, &#39;pet&#39;), literal(&#39;0.6&#39;)).
-propertyAssertion(&#39;has_animal&#39;, &#39;Kevin&#39;, &#39;Fluffy&#39;).
-propertyAssertion(&#39;has_animal&#39;, &#39;Kevin&#39;, &#39;Tom&#39;).
-classAssertion(&#39;cat&#39;, &#39;Fluffy&#39;).
-classAssertion(&#39;cat&#39;, &#39;Tom&#39;).</code></pre>
-<p>You can also load an RDF/XML file using the predicate <code>load_owl_kb(&lt;filename&gt;).</code> in the following way:</p>
-<ul>
-<li><p>load TRILL library<br />
-<code>use_module(library(trill)).</code></p></li>
-<li><p>initialize the algorithm you want to perform inference<br />
-<code>init_trill(&lt;algorithm_name&gt;).</code><br />
-For example, if you want to use TRILL<span class="math inline">\(^P\)</span> you should run <code>init_trill(trillp).</code></p></li>
-<li><p>load the KB<br />
-<code>load_owl_kb(&lt;filename&gt;).</code><br />
-For example, <code>load_owl_kb('./examples/biopaxLevel3_rdf.owl').</code></p></li>
-</ul>
-<p>Now the KB is loaded and the queries can be executed in the usual way.</p>
+<h1 id="using-trill-on-your-machine">Using TRILL on your Machine</h1>
+<p>To use TRILL without the need of an Internet connection, you must install it on your machine. Please, read the <a href="https://github.com/rzese/trill/blob/master/doc/manual.pdf">TRILL manual</a> for detailed information.</p>
 <h1 id="download-query-results-through-an-api">Download Query Results through an API</h1>
 <p>The results of queries can also be downloaded programmatically by directly approaching the Pengine API. Example client code is <a href="https://github.com/friguzzi/trill-on-swish/tree/master/client">available</a>. For example, the <code>swish-ask.sh</code> client can be used with bash to download the results for a query in CSV. The call below downloads a CSV file for the coin example.</p>
-<pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
-  examples/trill/peoplePets.pl \
+<pre><code>$ bash swish-ask.sh --server=http://trill-sw.eu \
+  example/trill/peoplePets.pl \
   Prob &quot;prob_instanceOf(&#39;natureLover&#39;,&#39;Kevin&#39;,Prob)&quot;</code></pre>
-<p>The script can ask queries against Prolog scripts stored in <a href="http://trill.lamping.unife.it">http://trill.lamping.unife.it</a> by specifying the script on the commandline. User defined files stored in TRILL on SWISH (locations of type <a href="http://trill.lamping.unife.it/p/johnEmployee_user.pl">http://trill.lamping.unife.it/p/johnEmployee_user.pl</a>) can be directly used, for example:</p>
-<pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
+<p>The script can ask queries against Prolog scripts stored in <a href="http://trill-sw.eu">http://trill-sw.eu</a> by specifying the script on the command line. User defined files stored in TRILL on SWISH (locations of type <a href="http://trill-sw.eu/p/johnEmployee_user.pl">http://trill-sw.eu/p/johnEmployee_user.pl</a>) can be directly used, for example:</p>
+<pre><code>$ bash swish-ask.sh --server=http://trill-sw.eu \
   johnEmployee_user.pl Expl &quot;instanceOf(person,john,Expl)&quot;</code></pre>
-<p>Example programs can be used by specifying the folder portion of the url of the example, as in the first johnEmployee example above where the url for the program is <a href="http://trill.lamping.unife.it/examples/trill/johnEmployee.pl">http://trill.lamping.unife.it/examples/trill/johnEmployee.pl</a>.</p>
+<p>Example programs can be used by specifying the folder portion of the url of the example, as in the first johnEmployee example above where the url for the program is <a href="http://trill-sw.eu/example/trill/johnEmployee.pl">http://trill-sw.eu/example/trill/johnEmployee.pl</a>.</p>
 <p>You can also use an url for the program as in</p>
-<pre><code>$ bash swish-ask.sh --server=http://trill.lamping.unife.it \
-  https://raw.githubusercontent.com/friguzzi/trill-on-swish/\
+<pre><code>$ bash swish-ask.sh --server=http://trill-sw.eu \
+  https://raw.githubusercontent.com/friguzzi/trill-on-swish/
   master/examples/trill/peoplePets.pl \
   Prob &quot;prob_instanceOf(&#39;natureLover&#39;,&#39;Kevin&#39;,Prob)&quot;</code></pre>
 <p>Results can be downloaded in JSON using the option <code>--json-s</code> or <code>--json-html</code>. With the first the output is in a simple string format where Prolog terms are sent using quoted write, the latter serialize responses as HTML strings. E.g.</p>
-<pre><code>$ bash swish-ask.sh --json-s --server=http://trill.lamping.unife.it \
+<pre><code>$ bash swish-ask.sh --json-s --server=http://trill-sw.eu \
   johnEmployee_user.pl Expl &quot;instanceOf(person,john,Expl)&quot;</code></pre>
 <p>The JSON format can also be modified. See <a href="http://www.swi-prolog.org/pldoc/doc_for?object=pengines%3Aevent_to_json/4">http://www.swi-prolog.org/pldoc/doc_for?object=pengines%3Aevent_to_json/4</a>.</p>
 <p>Prolog can exploit the Pengine API directly. For example, the above can be called as:</p>
 <pre><code>?- [library(pengines)].
-?- pengine_rpc(&#39;http://trill.lamping.unife.it&#39;,
+?- pengine_rpc(&#39;http://trill-sw.eu&#39;,
      prob_instanceOf(&#39;natureLover&#39;,&#39;Kevin&#39;,Prob),
      [ src_url(&#39;https://raw.githubusercontent.com/friguzzi/trill-on-swish/\
-  master/examples/trill/peoplePets.pl&#39;),
+  master/example/trill/peoplePets.pl&#39;),
      application(swish)
      ]).
 Prob = 0.51.
 ?-</code></pre>
 <h1 id="manual-in-pdf">Manual in PDF</h1>
-<p>A PDF version of the manual is available at <a href="https://github.com/rzese/trill/blob/master/doc/help-trill.pdf">https://github.com/rzese/trill/blob/master/doc/help-trill.pdf</a>.</p>
+<p>A PDF version of this help in PDF is available at <a href="https://github.com/rzese/trill/blob/master/doc/help-trill.pdf">https://github.com/rzese/trill/blob/master/doc/help-trill.pdf</a>. A manual for the standalone version of TRILL is available at <a href="https://github.com/rzese/trill/blob/master/doc/manual.pdf">https://github.com/rzese/trill/blob/master/doc/manual.pdf</a></p>
 <h1 id="app:dl">Description Logics</h1>
 <p>In this section, we recall the expressive description logic <span class="math inline">\(\mathcal{ALC}\)</span> <span class="citation" data-cites="DBLP:journals/ai/Schmidt-SchaussS91">[<a href="#ref-DBLP:journals/ai/Schmidt-SchaussS91" role="doc-biblioref">18</a>]</span>. We refer to <span class="citation" data-cites="DBLP:journals/ws/LukasiewiczS08">[<a href="#ref-DBLP:journals/ws/LukasiewiczS08" role="doc-biblioref">10</a>]</span> for a detailed description of <span class="math inline">\(\mathcal{SHOIN}(\mathbf{D})\)</span> DL, that is at the basis of OWL DL.</p>
 <p>Let <span class="math inline">\(\mathbf{A}\)</span>, <span class="math inline">\(\mathbf{R}\)</span> and <span class="math inline">\(\mathbf{I}\)</span> be sets of <em>atomic concepts</em>, <em>roles</em> and <em>individuals</em>. A <em>role</em> is an atomic role <span class="math inline">\(R \in \mathbf{R}\)</span>. <em>Concepts</em> are defined by induction as follows. Each <span class="math inline">\(C \in \mathbf{A}\)</span>, <span class="math inline">\(\bot\)</span> and <span class="math inline">\(\top\)</span> are concepts. If <span class="math inline">\(C\)</span>, <span class="math inline">\(C_1\)</span> and <span class="math inline">\(C_2\)</span> are concepts and <span class="math inline">\(R \in \mathbf{R}\)</span>, then <span class="math inline">\((C_1\sqcap C_2)\)</span>, <span class="math inline">\((C_1\sqcup C_2 )\)</span>, <span class="math inline">\(\neg C\)</span>, <span class="math inline">\(\exists R.C\)</span>, and <span class="math inline">\(\forall R.C\)</span> are concepts. Let <span class="math inline">\(C\)</span>, <span class="math inline">\(D\)</span> be concepts, <span class="math inline">\(R \in \mathbf{R}\)</span> and <span class="math inline">\(a, b \in \mathbf{I}\)</span>. An <em>ABox</em> <span class="math inline">\({\cal A}\)</span> is a finite set of <em>concept membership axioms</em> <span class="math inline">\(a : C\)</span> and <em>role membership axioms</em> <span class="math inline">\((a, b) : R\)</span>, while a <em>TBox</em> <span class="math inline">\({\cal T}\)</span> is a finite set of <em>concept inclusion axioms</em> <span class="math inline">\(C\sqsubseteq D\)</span>. <span class="math inline">\(C \equiv D\)</span> abbreviates <span class="math inline">\(C \sqsubseteq D\)</span> and <span class="math inline">\(D\sqsubseteq  C\)</span>.</p>
