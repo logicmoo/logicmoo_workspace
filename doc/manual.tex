@@ -97,15 +97,65 @@ $ swipl
 \input{semantics}
 \input{inference}
 \input{inf_goals}
-\subsection{Executing a Query with TRILL}
-\label{sec:trillq}
-To run a query, you can simply load the Prolog file, for example \href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
+\begin{verbatim}
+load_owl_kb(++filename:string)
+load_kb(++filename:string)
+\end{verbatim}
+The predicate \verb|load_owl_kb/1| allows to load a KB defined using a pure RDF/XML syntax. The predicate \verb|load_kb/1| allows to load a KB defined using the Prolog syntax, i.e., axioms and/or \verb|owl_rdf/1| predicate.
+
+\section{Loading a KB in TRILL}
+Once the KB is ready to be used, you must load it in TRILL to perform inference. There are two ways to do that:
+\begin{enumerate}
+	\item prepare the KB so that it contains also the necessary Prolog directives to load the reasoner and load the KB in the Prolog console;
+	\item run the Prolog console, load the reasoner and finally the KB.
+\end{enumerate}
+At this point you can run all the query you want.
+
+\subsection{Case 1: Self-Contained Prolog File}
+In the first case, it is necessary to specify which algorithm, TRILL, TRILL$^P$ or TORNADO, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive
+\begin{verbatim}
+:- trill.
+\end{verbatim}
+for loading TRILL,
+\begin{verbatim}
+:- trillp.
+\end{verbatim}
+for TRILL$^P$ or
+\begin{verbatim}
+:- tornado.
+\end{verbatim}
+for TORNADO.
+
+The KB file will be similar to what shown in the following (\href{http://trill-sw.eu/example/trill/donVito.pl}{\texttt{donVito.pl}} examples):
+\begin{verbatim}
+% Load the reasoner
+:-use_module(library(trill)).
+
+% Init the reasoner
+:- trill. % or :- trillp. or :- tornado.
+
+% Definition of the axioms of the KB
+classAssertion(cat, tom).
+propertyAssertion(hasPet, donVito, tom).
+subClassOf(cat, pet).
+subClassOf(someValuesFrom(hasAnimal, pet), natureLover).
+subClassOf(natureLover,goodPerson).
+subPropertyOf(hasPet,hasAnimal).
+\end{verbatim}
+
+\subsubsection{Executing a Query}
+\label{sec:trillq1}
+To run a query, you can simply load the Prolog file, for example \href{http://trill-sw.eu/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
 \begin{verbatim}
 ?- [peoplePets].
 \end{verbatim}
+or by starting the Prolog console passing the file as argument
+\begin{verbatim}
+$ swipl peoplePets.pl
+\end{verbatim}
 \noindent
 The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of \href{http://vangelisv.github.io/thea/}{Thea} library.
-\href{http://trill.lamping.unife.it/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}} is equivalent with the following KB
+\href{http://trill-sw.eu/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}} is equivalent with the following KB
 \begin{verbatim}
 :- use_module(library(trill)).
 
@@ -126,24 +176,40 @@ propertyAssertion('has_animal', 'Kevin', 'Tom').
 classAssertion('cat', 'Fluffy').
 classAssertion('cat', 'Tom').
 \end{verbatim}
-\noindent
 
+At this point the KB is loaded, you can ask every query or run every predicate shown in Section~\ref{queries}.
 
-You can also load an RDF/XML file using the predicate \verb|load_owl_kb(<filename>).| in the following way:
+\subsection{Case 2: Independent KB File}
+If you do not want to specify in your KB which reasoner to use, you can prepare the KB to that it contains only the axioms. The KB file can be define using pure RDF/XML syntax or TRILL's Prolog syntax. In this case the file will NOT contain the directives:
+\begin{verbatim}
+% Load the reasoner
+:-use_module(library(trill)).
+
+% Init the reasoner
+:- trill. % or :- trillp. or :- tornado.
+\end{verbatim}
+
+\subsubsection{Executing a Query}
+\label{sec:trillq2}
+You can load the KB using the predicates \verb|load_owl_kb(<filename>).| and \verb|load_kb(<filename>).| in the following way:
 \begin{itemize}
+	\item run the Prolog console\\
+	\verb|$ swipl|
 	\item load TRILL library\\
-	\verb|use_module(library(trill)).|
+	\verb|?- use_module(library(trill)).|
 	\item initialize the algorithm you want to perform inference\\
-	\verb|init_trill(<algorithm_name>).|\\
+	\verb|?- init_trill(<algorithm_name>).|\\
 	For example, if you want to use TRILL$^P$ you should run \verb|init_trill(trillp).|
 	\item load the KB\\
-	\verb|load_owl_kb(<filename>).|\\
-	For example, \verb|load_owl_kb('./examples/biopaxLevel3_rdf.owl').|
+	\verb|?- load_owl_kb(<filename>).| or\\
+	\verb|?- load_kb(<filename>).|
+	For example, \verb|load_owl_kb('./examples/biopaxLevel3_rdf.owl').| or \verb|load_kb('./examples/biopaxLevel3.pl').|\\
+	The first predicate allows to load a RDF/XML file, while the second allows to load a KB defined using the Prolog syntax, i.e., axioms and/or \verb|owl_rdf/1| predicate.
 \end{itemize}
 \noindent
-Now the KB is loaded and the queries can be executed in the usual way.
+Now the KB is loaded and the queries or TRILL's utility predicates can be executed in the usual way.
 
-\subsection{Files}
+\section{Files}
 The \texttt{pack/trill/prolog/examples} folder in SWI-Prolog home contains some example programs.
 The \texttt{pack/trill/doc} folder in SWI-Prolog home contains this manual in latex, html and pdf.
 

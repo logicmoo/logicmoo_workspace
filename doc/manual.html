@@ -53,7 +53,17 @@ riccardo.zese@unife.it</p>
 </ul></li>
 <li><a href="#query-options">Query Options</a></li>
 <li><a href="#trill-useful-predicates">TRILL Useful Predicates</a></li>
-<li><a href="#sec:trillq">Executing a Query with TRILL</a></li>
+</ul></li>
+<li><a href="#loading-a-kb-in-trill">Loading a KB in TRILL</a>
+<ul>
+<li><a href="#case-1-self-contained-prolog-file">Case 1: Self-Contained Prolog File</a>
+<ul>
+<li><a href="#sec:trillq1">Executing a Query</a></li>
+</ul></li>
+<li><a href="#case-2-independent-kb-file">Case 2: Independent KB File</a>
+<ul>
+<li><a href="#sec:trillq2">Executing a Query</a></li>
+</ul></li>
 <li><a href="#files">Files</a></li>
 </ul></li>
 <li><a href="#license">License</a></li>
@@ -102,7 +112,7 @@ $ swipl
 ?- [library(examples/peoplePets)].
 ?- prob_instanceOf(&#39;natureLover&#39;,&#39;Kevin&#39;,Prob).</code></pre>
 <h1 id="syn">Syntax</h1>
-<p>Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web <span class="citation" data-cites="DBLP:conf/dlog/2003handbook dlchap">[<a href="#ref-DBLP:conf/dlog/2003handbook" role="doc-biblioref">1</a>,<a href="#ref-dlchap" role="doc-biblioref">2</a>]</span> and are used for modelling ontologies. They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals of the domain. A more formal description can be found in the Appendix <a href="#app:dl" data-reference-type="ref" data-reference="app:dl">7</a>.</p>
+<p>Description Logics (DLs) are knowledge representation formalisms that are at the basis of the Semantic Web <span class="citation" data-cites="DBLP:conf/dlog/2003handbook dlchap">[<a href="#ref-DBLP:conf/dlog/2003handbook" role="doc-biblioref">1</a>,<a href="#ref-dlchap" role="doc-biblioref">2</a>]</span> and are used for modelling ontologies. They are represented using a syntax based on concepts, basically sets of individuals of the domain, and roles, sets of pairs of individuals of the domain. A more formal description can be found in the Appendix <a href="#app:dl" data-reference-type="ref" data-reference="app:dl">8</a>.</p>
 <p>TRILL allows the use of two different syntaxes used together or individually:</p>
 <ul>
 <li><p>RDF/XML</p></li>
@@ -133,7 +143,7 @@ $ swipl
 &#39;).</code></pre>
 <p>For a brief introduction on RDF/XML syntax see <em>RDF/XML syntax and tools</em> section below (Sec. <a href="#rdfxml-syn" data-reference-type="ref" data-reference="rdfxml-syn">3.2</a>).</p>
 <p>Note that each single <code>owl_rdf/1</code> must be self contained and well formatted, it must start and end with <code>rdf:RDF</code> tag and contain all necessary declarations (namespaces, entities, ...).</p>
-<p>An example of the combination of both syntaxes is shown the example <a href="http://trill.lamping.unife.it/example/trill/johnEmployee.pl"><code>johnEmployee.pl</code></a>. It models that <em>john</em> is an <em>employee</em> and that employees are <em>workers</em>, which are in turn people (modeled by the concept <em>person</em>).</p>
+<p>An example of the combination of both syntaxes is shown the example <a href="http://trill-sw.eu/example/trill/johnEmployee.pl"><code>johnEmployee.pl</code></a>. It models that <em>john</em> is an <em>employee</em> and that employees are <em>workers</em>, which are in turn people (modeled by the concept <em>person</em>).</p>
 <pre><code>owl_rdf(&#39;&lt;?xml version=&quot;1.0&quot;?&gt;
 &lt;rdf:RDF xmlns=&quot;http://example.foo#&quot;
      xml:base=&quot;http://example.foo&quot;
@@ -296,7 +306,7 @@ propertyAssertion(hasAnimal,kevin,fluffy)</code></pre>
 <p>Finding the explanations for a query is important for probabilistic inference. In the following we briefly describe the DISPONTE semantics <span class="citation" data-cites="RigBelLamZes15-SW-IJ">[<a href="#ref-RigBelLamZes15-SW-IJ" role="doc-biblioref">13</a>]</span>, which requires the set of all the justifications to compute the probability of the queries.</p>
 <p>DISPONTE <span class="citation" data-cites="RigBelLamZes15-SW-IJ Zese17-SSW-BK">[<a href="#ref-RigBelLamZes15-SW-IJ" role="doc-biblioref">13</a>,<a href="#ref-Zese17-SSW-BK" role="doc-biblioref">21</a>]</span> applies the distribution semantics <span class="citation" data-cites="DBLP:conf/iclp/Sato95">[<a href="#ref-DBLP:conf/iclp/Sato95" role="doc-biblioref">15</a>]</span> to Probabilistic Description Logic KBs. In DISPONTE, a <em>probabilistic knowledge base</em> <span class="math inline">\({\cal K}\)</span> contains a set of <em>probabilistic axioms</em> which take the form <span class="math display">\[\begin{aligned}
 &amp; p::E\label{pax} &amp;\end{aligned}\]</span> where <span class="math inline">\(p\)</span> is a real number in <span class="math inline">\([0,1]\)</span> and <span class="math inline">\(E\)</span> is a DL axiom. The probability <span class="math inline">\(p\)</span> can be interpreted as the degree of our belief in the truth of axiom <span class="math inline">\(E\)</span>. For example, a probabilistic concept membership axiom <span class="math inline">\(p::a:C\)</span> means that we have degree of belief <span class="math inline">\(p\)</span> in <span class="math inline">\(C(a)\)</span>. A probabilistic concept inclusion axiom of the form <span class="math inline">\(p::C\sqsubseteq D\)</span> represents the fact that we believe in the truth of <span class="math inline">\(C \sqsubseteq D\)</span> with probability <span class="math inline">\(p\)</span>.</p>
-<p>For more detail about probabilistic inference with the TRILL framework, we refer the interested reader to Appendix <a href="#app:disponte" data-reference-type="ref" data-reference="app:disponte">8</a> and to <span class="citation" data-cites="ZesBelCot18-TPLP-IJ">[<a href="#ref-ZesBelCot18-TPLP-IJ" role="doc-biblioref">22</a>]</span>.</p>
+<p>For more detail about probabilistic inference with the TRILL framework, we refer the interested reader to Appendix <a href="#app:disponte" data-reference-type="ref" data-reference="app:disponte">9</a> and to <span class="citation" data-cites="ZesBelCot18-TPLP-IJ">[<a href="#ref-ZesBelCot18-TPLP-IJ" role="doc-biblioref">22</a>]</span>.</p>
 <p>The following example illustrates inference under the DISPONTE semantics.</p>
 <p><span class="math display">\[\begin{aligned}
 	&amp;&amp; (E_1)\ 0.5 ::\ &amp; \exists hasAnimal.Pet \sqsubseteq PetOwner\\
@@ -327,7 +337,7 @@ annotationProperty(&#39;http://ml.unife.it/disponte#probability&#39;).
 class(petOwner).
 class(pet).</code></pre>
 <h1 id="inf">Inference</h1>
-<p>TRILL systems can answer many different queries. To do so, it exploits an algorithm called <em>tableau</em> algorithm, which is able to collect explanations. In the following you can find an example that shows how the tableau works. In section <a href="#sec:trillq" data-reference-type="ref" data-reference="sec:trillq">5.4</a> we will see how queries can be asked with TRILL systems.</p>
+<p>TRILL systems can answer many different queries. To do so, it exploits an algorithm called <em>tableau</em> algorithm, which is able to collect explanations. In the following you can find an example that shows how the tableau works. In section <a href="#sec:trillq" data-reference-type="ref" data-reference="sec:trillq">[sec:trillq]</a> we will see how queries can be asked with TRILL systems.</p>
 <p>Consider a simple knowledge base inspired by the film “The Godfather” containing the following axioms: <span class="math display">\[\begin{aligned}
 &amp;tom : Cat\\
 &amp;(donVito, tom) : hasPet\\
@@ -343,6 +353,7 @@ subClassOf(cat, pet).
 subClassOf(someValuesFrom(hasAnimal, pet), natureLover).
 subClassOf(natureLover,goodPerson).
 subPropertyOf(hasPet,hasAnimal).</code></pre>
+<p>You can run this example <a href="http://trill-sw.eu/example/trill/donVito.pl">here</a>.</p>
 <p>The first two axioms are assertional axioms (hence they constitute the ABox), the other four axioms define the TBox. Axiom 1 is called class assertion, 2 is called property assertion, 3,4,5 are called class subsumption axioms, and axiom 6 is called property subsumption axiom.</p>
 <p>To check, for example, whether don Vito Corleone is a good person, the tableau algorithm builds a graph, called the <em>tableau</em>. The initial tableau contains information from the ABox plus the negation of the query, as depicted in Figure<a href="#fig:tab1" data-reference-type="ref" data-reference="fig:tab1">2</a>. This last axiom is added since the underlying proof mechanism uses refutation. In logic, working by refutation means assuming the opposite of the query one wants to prove. Then, if this assumption leads to a contradiction, this means that the axioms of the ontology allows to prove that the query is true, and thus that its opposite is false. In practice, working by refutation means that the graph must assume that the posed query be false, the tableau algorithm expands all the known axioms (including the negation of the query) and looks for contradictions present in the final graph. The presence of a contradiction in a node proves that the query is true because the graph depicts at least one way to contradict the negation of that query, and thus it depicts at least one way to prove that the opposite of the query contradicts what is defined by the ontology.</p>
 <figure>
@@ -354,10 +365,10 @@ subPropertyOf(hasPet,hasAnimal).</code></pre>
 <p>At this point, the calculus can deduce that <span class="math inline">\(donVito\)</span> belongs to the class <span class="math inline">\(\exists hasAnimal.Pet\)</span> because <span class="math inline">\(donVito\)</span> is connected with <span class="math inline">\(tom\)</span>, which is a <span class="math inline">\(pet\)</span> (axioms <span>1,3</span>), via property <span class="math inline">\(hasAnimal\)</span> (axioms <span>2,6</span>). Therefore, <span class="math inline">\(donVito\)</span>’s node is labelled also as <span class="math inline">\(\exists hasAnimal.Pet\)</span> with a justification given by the union of the axioms associated with the used axioms, therefore its justification is given by the set of the involved axioms <span>1,2,3,6</span>. Then, the tableau graph is further expanded by adding the class <span class="math inline">\(NatureLover\)</span> to <span class="math inline">\(donVito\)</span>’s node using axiom 4 and finally, by adding also the class <span class="math inline">\(GoodPerson\)</span> using label <span class="math inline">\(NatureLover\)</span> (axioms <span>1,2,3,4,6</span>) and axiom 5, creating as justification the set of axioms <span>1,2,3,4,5,6</span>.</p>
 <p>The final graph is shown in Figure <a href="#fig:tab2" data-reference-type="ref" data-reference="fig:tab2">3</a>.</p>
 <figure>
-<img src="img/tab2.png" id="fig:tab2" alt="" /><figcaption>Initial tableau</figcaption>
+<img src="img/tab2.png" id="fig:tab2" alt="" /><figcaption>Final tableau</figcaption>
 </figure>
 <p>The expanded graph contains now a contradiction, i.e., <span class="math inline">\(donVito\)</span> is labelled as <span class="math inline">\(GoodPerson\)</span> and as not a <span class="math inline">\(GoodPerson\)</span> (i.e., <span class="math inline">\(\neg GoodPerson\)</span>), therefore, by refutation, the query “Is don Vito Corleone a good person?” is true, with justification given by the axioms <span>1,2,3,4,5,6</span>, that are the axioms of the KB necessary to deduce this information.</p>
-<p>From this example, it would be clear why the use of probabilistic information is useful. Indeed, don Vito Corleone is hardly classifiable as a good person. This is because not all people who are nature lovers are also good, and therefore, one could say that axiom 5 is true with probability 0.4. It would also be arguable that everyone who has animals is also a nature lover, making probabilistic also this axiom. For a formal description of how the probability of the query is computed see the Appendix <a href="#app:inf" data-reference-type="ref" data-reference="app:inf">9</a>.</p>
+<p>From this example, it would be clear why the use of probabilistic information is useful. Indeed, don Vito Corleone is hardly classifiable as a good person. This is because not all people who are nature lovers are also good, and therefore, one could say that axiom 5 is true with probability 0.4. It would also be arguable that everyone who has animals is also a nature lover, making probabilistic also this axiom. For a formal description of how the probability of the query is computed see the Appendix <a href="#app:inf" data-reference-type="ref" data-reference="app:inf">10</a>.</p>
 <h2 id="queries">Possible Queries</h2>
 <p>TRILL can compute the probability or find an explanation of the following queries:</p>
 <ul>
@@ -367,31 +378,25 @@ subPropertyOf(hasPet,hasAnimal).</code></pre>
 <li><p>Unsatifiability of a concept.</p></li>
 <li><p>Inconsistency of the knowledge base.</p></li>
 </ul>
-<p>All the input arguments must be atoms or ground terms. Note that it is necessary to specify which algorithm, TRILL, TRILL<span class="math inline">\(^P\)</span> or TORNADO, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive</p>
-<pre><code>:- trill.</code></pre>
-<p>for loading TRILL,</p>
-<pre><code>:- trillp.</code></pre>
-<p>for TRILL<span class="math inline">\(^P\)</span> or</p>
-<pre><code>:- tornado.</code></pre>
-<p>for TORNADO.</p>
+<p>All the input arguments must be atoms or ground terms.</p>
 <h3 id="probabilistic-queries">Probabilistic Queries</h3>
 <p>TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.</p>
 <p>The probability of an individual to belong to a concept can be asked using TRILL with the predicate</p>
 <pre><code>prob_instanceOf(+Concept:term,+Individual:atom,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_instanceOf(cat,&#39;Tom&#39;,Prob).</code></pre>
 <p>The probability of two individuals to be related by a role can be computed with</p>
 <pre><code>prob_property_value(+Prop:atom,+Individual1:atom,
                     +Individual2:atom,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;,Prob).</code></pre>
 <p>If you want to know the probability with which a class is a subclass of another you have to use</p>
 <pre><code>prob_sub_class(+Concept:term,+SupConcept:term,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_sub_class(cat,pet,Prob).</code></pre>
 <p>The probability of the unsatisfiability of a concept can be asked with the predicate</p>
 <pre><code>prob_unsat(+Concept:term,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_unsat(intersectionOf([cat,complementOf(pet)]),P).</code></pre>
 <p>This query for example corresponds with a subsumption query, which is represented as the intersection of the subclass and the complement of the superclass.</p>
 <p>Finally, you can ask the probability of the inconsistency of the knowledge base with</p>
@@ -401,7 +406,7 @@ subPropertyOf(hasPet,hasAnimal).</code></pre>
 <p>The query if an individual belongs to a concept can be used the predicates</p>
 <pre><code>instanceOf(+Concept:term,+Individual:atom)
 instanceOf(+Concept:term,+Individual:atom,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- instanceOf(pet,&#39;Tom&#39;).
 ?- instanceOf(pet,&#39;Tom&#39;,Expl).</code></pre>
 <p>In the first query the result is <code>true</code> because Tom belongs to cat, in the second case TRILL returns the explanation</p>
@@ -410,19 +415,19 @@ instanceOf(+Concept:term,+Individual:atom,-Expl:list)</code></pre>
 <pre><code>property_value(+Prop:atom,+Individual1:atom,+Individual2:atom)
 property_value(+Prop:atom,+Individual1:atom,
                +Individual2:atom,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;).
 ?- property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;,Expl).</code></pre>
 <p>If you want to know if a class is a subclass of another you have to use</p>
 <pre><code>sub_class(+Concept:term,+SupConcept:term)
 sub_class(+Concept:term,+SupConcept:term,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- sub_class(cat,pet).
 ?- sub_class(cat,pet,Expl).</code></pre>
 <p>The unsatisfiability of a concept can be asked with the predicate</p>
 <pre><code>unsat(+Concept:term)
 unsat(+Concept:term,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- unsat(intersectionOf([cat,complementOf(pet)])).
 ?- unsat(intersectionOf([cat,complementOf(pet)]),Expl).</code></pre>
 <p>In this case, the returned explanation is the same obtained by querying if cat is subclass of pet with the <code>sub_class/3</code> predicate, i.e., <code>[subClassOf(cat,pet)]</code></p>
@@ -468,13 +473,47 @@ add_axioms(++Axioms:list)</code></pre>
 <pre><code>remove_axiom(++Axiom:axiom)
 remove_axioms(++Axioms:list)</code></pre>
 <p>All the axioms must be defined following the TRILL syntax.</p>
-<p>Finally, we can interrogate TRILL to return the loaded axioms with</p>
+<p>We can interrogate TRILL to return the loaded axioms with</p>
 <pre><code>axiom(?Axiom:axiom)</code></pre>
 <p>This predicate searches in the loaded knowledge base axioms that unify with Axiom.</p>
-<h2 id="sec:trillq">Executing a Query with TRILL</h2>
-<p>To run a query, you can simply load the Prolog file, for example <a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>, as</p>
+<pre><code>load_owl_kb(++filename:string)
+load_kb(++filename:string)</code></pre>
+<p>The predicate <code>load_owl_kb/1</code> allows to load a KB defined using a pure RDF/XML syntax. The predicate <code>load_kb/1</code> allows to load a KB defined using the Prolog syntax, i.e., axioms and/or <code>owl_rdf/1</code> predicate.</p>
+<h1 id="loading-a-kb-in-trill">Loading a KB in TRILL</h1>
+<p>Once the KB is ready to be used, you must load it in TRILL to perform inference. There are two ways to do that:</p>
+<ol>
+<li><p>prepare the KB so that it contains also the necessary Prolog directives to load the reasoner and load the KB in the Prolog console;</p></li>
+<li><p>run the Prolog console, load the reasoner and finally the KB.</p></li>
+</ol>
+<p>At this point you can run all the query you want.</p>
+<h2 id="case-1-self-contained-prolog-file">Case 1: Self-Contained Prolog File</h2>
+<p>In the first case, it is necessary to specify which algorithm, TRILL, TRILL<span class="math inline">\(^P\)</span> or TORNADO, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive</p>
+<pre><code>:- trill.</code></pre>
+<p>for loading TRILL,</p>
+<pre><code>:- trillp.</code></pre>
+<p>for TRILL<span class="math inline">\(^P\)</span> or</p>
+<pre><code>:- tornado.</code></pre>
+<p>for TORNADO.</p>
+<p>The KB file will be similar to what shown in the following (<a href="http://trill-sw.eu/example/trill/donVito.pl"><code>donVito.pl</code></a> examples):</p>
+<pre><code>% Load the reasoner
+:-use_module(library(trill)).
+
+% Init the reasoner
+:- trill. % or :- trillp. or :- tornado.
+
+% Definition of the axioms of the KB
+classAssertion(cat, tom).
+propertyAssertion(hasPet, donVito, tom).
+subClassOf(cat, pet).
+subClassOf(someValuesFrom(hasAnimal, pet), natureLover).
+subClassOf(natureLover,goodPerson).
+subPropertyOf(hasPet,hasAnimal).</code></pre>
+<h3 id="sec:trillq1">Executing a Query</h3>
+<p>To run a query, you can simply load the Prolog file, for example <a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>, as</p>
 <pre><code>?- [peoplePets].</code></pre>
-<p>The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of <a href="http://vangelisv.github.io/thea/">Thea</a> library. <a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a> is equivalent with the following KB</p>
+<p>or by starting the Prolog console passing the file as argument</p>
+<pre><code>$ swipl peoplePets.pl</code></pre>
+<p>The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of <a href="http://vangelisv.github.io/thea/">Thea</a> library. <a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a> is equivalent with the following KB</p>
 <pre><code>:- use_module(library(trill)).
 
 :- trill.
@@ -493,18 +532,30 @@ propertyAssertion(&#39;has_animal&#39;, &#39;Kevin&#39;, &#39;Fluffy&#39;).
 propertyAssertion(&#39;has_animal&#39;, &#39;Kevin&#39;, &#39;Tom&#39;).
 classAssertion(&#39;cat&#39;, &#39;Fluffy&#39;).
 classAssertion(&#39;cat&#39;, &#39;Tom&#39;).</code></pre>
-<p>You can also load an RDF/XML file using the predicate <code>load_owl_kb(&lt;filename&gt;).</code> in the following way:</p>
+<p>At this point the KB is loaded, you can ask every query or run every predicate shown in Section <a href="#queries" data-reference-type="ref" data-reference="queries">5.1</a>.</p>
+<h2 id="case-2-independent-kb-file">Case 2: Independent KB File</h2>
+<p>If you do not want to specify in your KB which reasoner to use, you can prepare the KB to that it contains only the axioms. The KB file can be define using pure RDF/XML syntax or TRILL’s Prolog syntax. In this case the file will NOT contain the directives:</p>
+<pre><code>% Load the reasoner
+:-use_module(library(trill)).
+
+% Init the reasoner
+:- trill. % or :- trillp. or :- tornado.</code></pre>
+<h3 id="sec:trillq2">Executing a Query</h3>
+<p>You can load the KB using the predicates <code>load_owl_kb(&lt;filename&gt;).</code> and <code>load_kb(&lt;filename&gt;).</code> in the following way:</p>
 <ul>
+<li><p>run the Prolog console<br />
+<code>$ swipl</code></p></li>
 <li><p>load TRILL library<br />
-<code>use_module(library(trill)).</code></p></li>
+<code>?- use_module(library(trill)).</code></p></li>
 <li><p>initialize the algorithm you want to perform inference<br />
-<code>init_trill(&lt;algorithm_name&gt;).</code><br />
+<code>?- init_trill(&lt;algorithm_name&gt;).</code><br />
 For example, if you want to use TRILL<span class="math inline">\(^P\)</span> you should run <code>init_trill(trillp).</code></p></li>
 <li><p>load the KB<br />
-<code>load_owl_kb(&lt;filename&gt;).</code><br />
-For example, <code>load_owl_kb('./examples/biopaxLevel3_rdf.owl').</code></p></li>
+<code>?- load_owl_kb(&lt;filename&gt;).</code> or<br />
+<code>?- load_kb(&lt;filename&gt;).</code> For example, <code>load_owl_kb('./examples/biopaxLevel3_rdf.owl').</code> or <code>load_kb('./examples/biopaxLevel3.pl').</code><br />
+The first predicate allows to load a RDF/XML file, while the second allows to load a KB defined using the Prolog syntax, i.e., axioms and/or <code>owl_rdf/1</code> predicate.</p></li>
 </ul>
-<p>Now the KB is loaded and the queries can be executed in the usual way.</p>
+<p>Now the KB is loaded and the queries or TRILL’s utility predicates can be executed in the usual way.</p>
 <h2 id="files">Files</h2>
 <p>The <code>pack/trill/prolog/examples</code> folder in SWI-Prolog home contains some example programs. The <code>pack/trill/doc</code> folder in SWI-Prolog home contains this manual in latex, html and pdf.</p>
 <h1 id="license">License</h1>

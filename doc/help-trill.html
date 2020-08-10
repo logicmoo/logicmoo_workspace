@@ -88,7 +88,7 @@
 &#39;).</code></pre>
 <p>For a brief introduction on RDF/XML syntax see <em>RDF/XML syntax and tools</em> section below (Sec. <a href="#rdfxml-syn" data-reference-type="ref" data-reference="rdfxml-syn">1.2</a>).</p>
 <p>Note that each single <code>owl_rdf/1</code> must be self contained and well formatted, it must start and end with <code>rdf:RDF</code> tag and contain all necessary declarations (namespaces, entities, ...).</p>
-<p>An example of the combination of both syntaxes is shown the example <a href="http://trill.lamping.unife.it/example/trill/johnEmployee.pl"><code>johnEmployee.pl</code></a>. It models that <em>john</em> is an <em>employee</em> and that employees are <em>workers</em>, which are in turn people (modeled by the concept <em>person</em>).</p>
+<p>An example of the combination of both syntaxes is shown the example <a href="http://trill-sw.eu/example/trill/johnEmployee.pl"><code>johnEmployee.pl</code></a>. It models that <em>john</em> is an <em>employee</em> and that employees are <em>workers</em>, which are in turn people (modeled by the concept <em>person</em>).</p>
 <pre><code>owl_rdf(&#39;&lt;?xml version=&quot;1.0&quot;?&gt;
 &lt;rdf:RDF xmlns=&quot;http://example.foo#&quot;
      xml:base=&quot;http://example.foo&quot;
@@ -298,6 +298,7 @@ subClassOf(cat, pet).
 subClassOf(someValuesFrom(hasAnimal, pet), natureLover).
 subClassOf(natureLover,goodPerson).
 subPropertyOf(hasPet,hasAnimal).</code></pre>
+<p>You can run this example <a href="http://trill-sw.eu/example/trill/donVito.pl">here</a>.</p>
 <p>The first two axioms are assertional axioms (hence they constitute the ABox), the other four axioms define the TBox. Axiom 1 is called class assertion, 2 is called property assertion, 3,4,5 are called class subsumption axioms, and axiom 6 is called property subsumption axiom.</p>
 <p>To check, for example, whether don Vito Corleone is a good person, the tableau algorithm builds a graph, called the <em>tableau</em>. The initial tableau contains information from the ABox plus the negation of the query, as depicted in Figure<a href="#fig:tab1" data-reference-type="ref" data-reference="fig:tab1">1</a>. This last axiom is added since the underlying proof mechanism uses refutation. In logic, working by refutation means assuming the opposite of the query one wants to prove. Then, if this assumption leads to a contradiction, this means that the axioms of the ontology allows to prove that the query is true, and thus that its opposite is false. In practice, working by refutation means that the graph must assume that the posed query be false, the tableau algorithm expands all the known axioms (including the negation of the query) and looks for contradictions present in the final graph. The presence of a contradiction in a node proves that the query is true because the graph depicts at least one way to contradict the negation of that query, and thus it depicts at least one way to prove that the opposite of the query contradicts what is defined by the ontology.</p>
 <figure>
@@ -309,7 +310,7 @@ subPropertyOf(hasPet,hasAnimal).</code></pre>
 <p>At this point, the calculus can deduce that <span class="math inline">\(donVito\)</span> belongs to the class <span class="math inline">\(\exists hasAnimal.Pet\)</span> because <span class="math inline">\(donVito\)</span> is connected with <span class="math inline">\(tom\)</span>, which is a <span class="math inline">\(pet\)</span> (axioms <span>1,3</span>), via property <span class="math inline">\(hasAnimal\)</span> (axioms <span>2,6</span>). Therefore, <span class="math inline">\(donVito\)</span>’s node is labelled also as <span class="math inline">\(\exists hasAnimal.Pet\)</span> with a justification given by the union of the axioms associated with the used axioms, therefore its justification is given by the set of the involved axioms <span>1,2,3,6</span>. Then, the tableau graph is further expanded by adding the class <span class="math inline">\(NatureLover\)</span> to <span class="math inline">\(donVito\)</span>’s node using axiom 4 and finally, by adding also the class <span class="math inline">\(GoodPerson\)</span> using label <span class="math inline">\(NatureLover\)</span> (axioms <span>1,2,3,4,6</span>) and axiom 5, creating as justification the set of axioms <span>1,2,3,4,5,6</span>.</p>
 <p>The final graph is shown in Figure <a href="#fig:tab2" data-reference-type="ref" data-reference="fig:tab2">2</a>.</p>
 <figure>
-<img src="img/tab2.png" id="fig:tab2" alt="" /><figcaption>Initial tableau</figcaption>
+<img src="img/tab2.png" id="fig:tab2" alt="" /><figcaption>Final tableau</figcaption>
 </figure>
 <p>The expanded graph contains now a contradiction, i.e., <span class="math inline">\(donVito\)</span> is labelled as <span class="math inline">\(GoodPerson\)</span> and as not a <span class="math inline">\(GoodPerson\)</span> (i.e., <span class="math inline">\(\neg GoodPerson\)</span>), therefore, by refutation, the query “Is don Vito Corleone a good person?” is true, with justification given by the axioms <span>1,2,3,4,5,6</span>, that are the axioms of the KB necessary to deduce this information.</p>
 <p>From this example, it would be clear why the use of probabilistic information is useful. Indeed, don Vito Corleone is hardly classifiable as a good person. This is because not all people who are nature lovers are also good, and therefore, one could say that axiom 5 is true with probability 0.4. It would also be arguable that everyone who has animals is also a nature lover, making probabilistic also this axiom. For a formal description of how the probability of the query is computed see the Appendix <a href="#app:inf" data-reference-type="ref" data-reference="app:inf">8</a>.</p>
@@ -322,31 +323,25 @@ subPropertyOf(hasPet,hasAnimal).</code></pre>
 <li><p>Unsatifiability of a concept.</p></li>
 <li><p>Inconsistency of the knowledge base.</p></li>
 </ul>
-<p>All the input arguments must be atoms or ground terms. Note that it is necessary to specify which algorithm, TRILL, TRILL<span class="math inline">\(^P\)</span> or TORNADO, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive</p>
-<pre><code>:- trill.</code></pre>
-<p>for loading TRILL,</p>
-<pre><code>:- trillp.</code></pre>
-<p>for TRILL<span class="math inline">\(^P\)</span> or</p>
-<pre><code>:- tornado.</code></pre>
-<p>for TORNADO.</p>
+<p>All the input arguments must be atoms or ground terms.</p>
 <h3 id="probabilistic-queries">Probabilistic Queries</h3>
 <p>TRILL can be queried for computing the probability of queries. A resulting 0 probaility means that the query is false w.r.t. the knowledge base, while a probability value 1 that the query is certainly true.</p>
 <p>The probability of an individual to belong to a concept can be asked using TRILL with the predicate</p>
 <pre><code>prob_instanceOf(+Concept:term,+Individual:atom,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_instanceOf(cat,&#39;Tom&#39;,Prob).</code></pre>
 <p>The probability of two individuals to be related by a role can be computed with</p>
 <pre><code>prob_property_value(+Prop:atom,+Individual1:atom,
                     +Individual2:atom,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;,Prob).</code></pre>
 <p>If you want to know the probability with which a class is a subclass of another you have to use</p>
 <pre><code>prob_sub_class(+Concept:term,+SupConcept:term,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_sub_class(cat,pet,Prob).</code></pre>
 <p>The probability of the unsatisfiability of a concept can be asked with the predicate</p>
 <pre><code>prob_unsat(+Concept:term,-Prob:double)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- prob_unsat(intersectionOf([cat,complementOf(pet)]),P).</code></pre>
 <p>This query for example corresponds with a subsumption query, which is represented as the intersection of the subclass and the complement of the superclass.</p>
 <p>Finally, you can ask the probability of the inconsistency of the knowledge base with</p>
@@ -356,7 +351,7 @@ subPropertyOf(hasPet,hasAnimal).</code></pre>
 <p>The query if an individual belongs to a concept can be used the predicates</p>
 <pre><code>instanceOf(+Concept:term,+Individual:atom)
 instanceOf(+Concept:term,+Individual:atom,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- instanceOf(pet,&#39;Tom&#39;).
 ?- instanceOf(pet,&#39;Tom&#39;,Expl).</code></pre>
 <p>In the first query the result is <code>true</code> because Tom belongs to cat, in the second case TRILL returns the explanation</p>
@@ -365,19 +360,19 @@ instanceOf(+Concept:term,+Individual:atom,-Expl:list)</code></pre>
 <pre><code>property_value(+Prop:atom,+Individual1:atom,+Individual2:atom)
 property_value(+Prop:atom,+Individual1:atom,
                +Individual2:atom,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;).
 ?- property_value(has_animal,&#39;Kevin&#39;,&#39;Tom&#39;,Expl).</code></pre>
 <p>If you want to know if a class is a subclass of another you have to use</p>
 <pre><code>sub_class(+Concept:term,+SupConcept:term)
 sub_class(+Concept:term,+SupConcept:term,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- sub_class(cat,pet).
 ?- sub_class(cat,pet,Expl).</code></pre>
 <p>The unsatisfiability of a concept can be asked with the predicate</p>
 <pre><code>unsat(+Concept:term)
 unsat(+Concept:term,-Expl:list)</code></pre>
-<p>as in (<a href="http://trill.lamping.unife.it/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
+<p>as in (<a href="http://trill-sw.eu/example/trill/peoplePets.pl"><code>peoplePets.pl</code></a>)</p>
 <pre><code>?- unsat(intersectionOf([cat,complementOf(pet)])).
 ?- unsat(intersectionOf([cat,complementOf(pet)]),Expl).</code></pre>
 <p>In this case, the returned explanation is the same obtained by querying if cat is subclass of pet with the <code>sub_class/3</code> predicate, i.e., <code>[subClassOf(cat,pet)]</code></p>
@@ -423,7 +418,7 @@ add_axioms(++Axioms:list)</code></pre>
 <pre><code>remove_axiom(++Axiom:axiom)
 remove_axioms(++Axioms:list)</code></pre>
 <p>All the axioms must be defined following the TRILL syntax.</p>
-<p>Finally, we can interrogate TRILL to return the loaded axioms with</p>
+<p>We can interrogate TRILL to return the loaded axioms with</p>
 <pre><code>axiom(?Axiom:axiom)</code></pre>
 <p>This predicate searches in the loaded knowledge base axioms that unify with Axiom.</p>
 <h2 id="executing-a-query-with-trill">Executing a Query with TRILL</h2>
