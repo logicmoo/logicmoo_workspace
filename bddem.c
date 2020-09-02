@@ -509,7 +509,7 @@ static foreign_t init_ex(term_t arg1, term_t arg2)
   ex_d->env=(environment *) realloc(ex_d->env, (ex+1)*sizeof(environment));
   ex_d->env[ex].mgr=Cudd_Init(0,0,UNIQUE_SLOTS,CACHE_SLOTS,5120);
   mgr=ex_d->env[ex].mgr;
-  Cudd_AutodynEnable(mgr, CUDD_REORDER_GROUP_SIFT);
+  // Cudd_AutodynEnable(mgr, CUDD_REORDER_GROUP_SIFT);
   Cudd_SetMaxCacheHard(mgr, 0);
   Cudd_SetLooseUpTo(mgr, 0);
   Cudd_SetMinHit(mgr, 15);
