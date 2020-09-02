@@ -148,6 +148,7 @@ prob_abd_expl vit_Prob(DdNode *node, environment * env,
   int comp_par);
 static foreign_t end_ex(term_t);
 static foreign_t init(term_t);
+static foreign_t end(term_t arg1);
 static foreign_t init_ex(term_t arg1, term_t arg2);
 static foreign_t add_var(term_t,term_t,term_t,term_t);
 static foreign_t add_query_var(term_t,term_t,term_t,term_t);
@@ -229,7 +230,6 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
 static term_t debug_cudd_var(term_t env_ref, term_t out_null);
 void print_prob_abd_expl(prob_abd_expl *pae);
 void print_abd_explan(explan_t *et);
-// static foreign_t add_const(term_t env_ref, term_t val, term_t add_out);
 
 static foreign_t uniform_sample_pl(term_t arg1)
 {
@@ -556,7 +556,7 @@ static foreign_t init(term_t arg1)
   // env->mgr=Cudd_Init(0,0,UNIQUE_SLOTS,CACHE_SLOTS,0);
   env->mgr=Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CACHE_SLOTS,0);
 
-  // Cudd_AutodynEnable(env->mgr, CUDD_REORDER_GROUP_SIFT);
+  Cudd_AutodynEnable(env->mgr, CUDD_REORDER_GROUP_SIFT);
   Cudd_SetMaxCacheHard(env->mgr, 0);
   Cudd_SetLooseUpTo(env->mgr, 0);
   Cudd_SetMinHit(env->mgr, 15);
@@ -725,12 +725,14 @@ int reorder_int(environment *env)
   int i,j,var_ind,abd_ind=0,ind=env->n_abd_boolVars;
   variable var,* vars=env->vars;
   DdManager *mgr=env->mgr;
-  int boolVars=env->boolVars;
+  // int boolVars=env->boolVars;
   int * permutation;
   int * bVar2mVar=env->bVar2mVar;
 
-  permutation=malloc(boolVars*sizeof(int));
-  for (i=0;i<boolVars;i++)
+  // permutation=malloc((boolVars)*sizeof(int));
+  permutation = malloc((Cudd_ReadSize(env->mgr))*sizeof(int));
+
+  for (i=0;i<Cudd_ReadSize(env->mgr);i++)
   {
     j=Cudd_ReadInvPerm(mgr,i);
     var_ind=bVar2mVar[j];
@@ -747,7 +749,12 @@ int reorder_int(environment *env)
     }
 
   }
-  return Cudd_ShuffleHeap(mgr,permutation);
+
+  j = Cudd_ShuffleHeap(mgr,permutation);
+
+  free(permutation);
+
+  return j;
 }
 
 static foreign_t reorder(term_t arg1)
@@ -1788,13 +1795,6 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
     Cudd_RecursiveDeref(env->mgr,constant);
     Cudd_RecursiveDeref(env->mgr,root);
 
-    // il numero 8 dà una prob diversa  
-    // if(i == 4) {
-      FILE *fp;
-      fp = fopen("bdd_dump_4.dot","w");
-      write_dot(env,list_impacts[i].root,fp);
-    // }
-
     double max_v, min_v;
     max_v = Cudd_V(Cudd_addFindMax(env->mgr,list_impacts[i].root));
     list_impacts[i].impact = max_v;
@@ -1806,7 +1806,6 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
      //Cudd_PrintDebug(env->mgr, list_impacts[i].root, 2, 4);
 
     // not consider the utility facts with impact 0
-    printf("list_impacts[%d].impact: %lf\n",i,list_impacts[i].impact);
     // if(list_impacts[i].impact == 0 && max_v == 0) {
     //   n_zero_impact++;
     //   // Cudd_RecursiveDeref(env->mgr,list_impacts[i].root);
@@ -2550,7 +2549,7 @@ static foreign_t zero(term_t arg1, term_t arg2)
   return(PL_unify(out,arg2));
 }
 
-// arg1 unused
+// arg1 (env ref) unused
 static foreign_t bdd_not(term_t arg1,term_t arg2, term_t arg3)
 {
   term_t out;
@@ -3631,6 +3630,10 @@ void dump_var(variable *var) {
 // prints all the variables of the environment
 void dump_env(environment *env) {
   int i;
+
+  printf("n_abd_boolVars: %d\n",env->n_abd_boolVars);
+  printf("n_abd: %d\n",env->n_abd);
+
   printf("nVars: %d\n",env->nVars);
   for(i = 0; i < env->nVars; i++) {
     printf("\tvars[%d]: \n",i);
@@ -3657,7 +3660,7 @@ void debug_cudd_env(environment *env, int i) {
   printf("Cudd check keys (Cudd_CheckKeys): %d\n",Cudd_CheckKeys(env->mgr));
   printf("Cudd debug check (Cudd_DebugCheck): %d\n",Cudd_DebugCheck(env->mgr));
   printf("Cudd_ReadMaxMemory: %lu\n",Cudd_ReadMaxMemory(env->mgr));
-  printf("DdManager vars: %d | ", Cudd_ReadSize(env->mgr) ); /*Returns the number of BDD variables in existance*/
+  printf("DdManager vars: %d | ", Cudd_ReadSize(env->mgr)); /*Returns the number of BDD variables in existence*/
   printf("DdManager nodes: %ld | ", Cudd_ReadNodeCount(env->mgr)); /*Reports the number of live nodes in BDDs and ADDs*/
   printf("DdManager reorderings: %d | ", Cudd_ReadReorderings(env->mgr) ); /*Returns the number of times reordering has occurred*/
   printf("DdManager memory: %ld |\n\n", Cudd_ReadMemoryInUse(env->mgr) ); /*Returns the memory in use by the manager measured in bytes*/
