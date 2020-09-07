@@ -237,6 +237,7 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
 static term_t debug_cudd_var(term_t env_ref, term_t out_null);
 void print_prob_abd_expl(prob_abd_expl *pae);
 void print_abd_explan(explan_t *et);
+int in_list(explan_t *list, assign element);
 explan_t *merge_explain(explan_t *a, explan_t *b);
 
 static foreign_t uniform_sample_pl(term_t arg1)
@@ -1282,7 +1283,8 @@ so that it is not recomputed
         if(p != 0 && p != 1) {
           mptemp = merge_explain(mpa0,mpa1);
           mpa = insert(assignment,mptemp);
-          free(mptemp);
+          // free(mptemp);
+          // all the list must be freed, todo
         }
         else {
           mpa=insert(assignment,mpa1);
@@ -1452,8 +1454,18 @@ so that it is not recomputed
   }
 }
 
+int in_list(explan_t *list, assign element) {
+  while (list != NULL) {
+    if(list->a.var == element.var) {
+      return 1;
+    }
+    list = list->next;
+  }
+  return 0;
+}
+
 explan_t *merge_explain(explan_t *a, explan_t *b) {
-  explan_t *init;
+  explan_t *init = NULL;
   explan_t *root = NULL;
   
   if(a == NULL && b == NULL) {
@@ -1476,11 +1488,14 @@ explan_t *merge_explain(explan_t *a, explan_t *b) {
   }
 
   // printf("merging b\n");
+  // not super fast, but it is simple to implement
   while(b != NULL) {
-    init = malloc(sizeof(explan_t));
-    init->a = b->a;
-    init->next = root;
-    root = init;
+    if(in_list(root,b->a) <= 0) {
+      init = malloc(sizeof(explan_t));
+      init->a = b->a;
+      init->next = root;
+      root = init;
+    } 
     b = b->next;
   }
 
