@@ -1279,7 +1279,7 @@ so that it is not recomputed
       if (p1>p0) {
         assignment.val=1;
 
-        if(p != 0) {
+        if(p != 0 && p != 1) {
           mptemp = merge_explain(mpa0,mpa1);
           mpa = insert(assignment,mptemp);
           free(mptemp);
