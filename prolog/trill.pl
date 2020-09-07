@@ -11,7 +11,7 @@ See https://github.com/rzese/trill/blob/master/doc/manual.pdf or
 http://ds.ing.unife.it/~rzese/software/trill/manual.html for
 details.
 
-@version 6.0.0
+@version 6.0.2
 @author Riccardo Zese
 @license Artistic License 2.0
 @copyright Riccardo Zese
@@ -326,7 +326,7 @@ set_up_reasoner(M):-
   assert(M:trillan_idx(1)).
 
 set_up_tableau(M):-
-  % TO CHANGE to remove tableau pruning
+  % TO CHANGE move to KB loading
   %setting_trill_default(det_rules,DetRules),
   %setting_trill_default(nondet_rules,NondetRules),
   %set_tableau_expansion_rules(M:DetRules,NondetRules). 
