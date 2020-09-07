@@ -107,6 +107,13 @@ typedef struct
 
 typedef struct
 {
+  double prob;
+  assign *mpa;
+} prob_abd_expl_array;
+
+
+typedef struct
+{
   DdNode *node;
   int comp;
 } explkey;
@@ -230,6 +237,7 @@ static foreign_t compute_best_strategy(term_t env_ref, term_t b_list, term_t u_l
 static term_t debug_cudd_var(term_t env_ref, term_t out_null);
 void print_prob_abd_expl(prob_abd_expl *pae);
 void print_abd_explan(explan_t *et);
+explan_t *merge_explain(explan_t *a, explan_t *b);
 
 static foreign_t uniform_sample_pl(term_t arg1)
 {
@@ -782,6 +790,8 @@ static foreign_t ret_abd_prob(term_t arg1, term_t arg2,
   int ret;
   double p;
   explan_t * mpa;
+  // assign *array_mpa;
+
 
   ret=PL_get_pointer(arg1,(void **)&env);
   RETURN_IF_FAIL
@@ -791,6 +801,8 @@ static foreign_t ret_abd_prob(term_t arg1, term_t arg2,
 
   ret=reorder_int(env);
   RETURN_IF_FAIL
+
+  // array_mpa = malloc(sizeof(assign) * env->boolVars);
 
   if (!Cudd_IsConstant(node))
   {
@@ -1205,8 +1217,9 @@ so that it is not recomputed
   prob_abd_expl deltat,deltaf,delta,*deltaptr;
   assign assignment;
   explan_t * mpa0,* mpa1,* mpa;
+  explan_t *mptemp;
 
-  comp=Cudd_IsComplement(node);
+  comp = Cudd_IsComplement(node);
   comp=(comp && !comp_par) ||(!comp && comp_par);
   if(Cudd_IsConstant(node)) {
     p1 = 1;
@@ -1255,18 +1268,25 @@ so that it is not recomputed
       }
       else
       {
-        p0=deltaf.prob*(1-p);
-        p1=deltat.prob*p;
+        p0=deltaf.prob;
+        p1=deltat.prob*p + deltaf.prob*(1-p);
       }
 
       mpa0=deltaf.mpa;
       mpa1=deltat.mpa;
 
       assignment.var=env->bVar2mVar[index];
-      if (p1>p0)
-      {
+      if (p1>p0) {
         assignment.val=1;
-        mpa=insert(assignment,mpa1);
+
+        if(p != 0) {
+          mptemp = merge_explain(mpa0,mpa1);
+          mpa = insert(assignment,mptemp);
+          free(mptemp);
+        }
+        else {
+          mpa=insert(assignment,mpa1);
+        }
         delta.prob=p1;
       }
       else
@@ -1430,6 +1450,41 @@ so that it is not recomputed
       return delta;
     }
   }
+}
+
+explan_t *merge_explain(explan_t *a, explan_t *b) {
+  explan_t *init;
+  explan_t *root = NULL;
+  
+  if(a == NULL && b == NULL) {
+    return NULL;
+  }
+  if(a == NULL) {
+    return duplicate(b);
+  }
+  if(b == NULL) {
+    return duplicate(a);
+  }
+
+  // printf("merging a\n");
+  while(a != NULL) {
+    init = malloc(sizeof(explan_t));
+    init->a = a->a;
+    init->next = root;
+    root = init;
+    a = a->next;
+  }
+
+  // printf("merging b\n");
+  while(b != NULL) {
+    init = malloc(sizeof(explan_t));
+    init->a = b->a;
+    init->next = root;
+    root = init;
+    b = b->next;
+  }
+
+  return root;
 }
 
 explan_t * insert(assign assignment,explan_t * head)
