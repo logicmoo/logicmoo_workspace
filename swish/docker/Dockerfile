@@ -8,6 +8,7 @@
 #	docker run -p 3051:3050 -v /Users/mc/git/lps_corner/swish/docker/tempData:/data -v /Users/mc/git/lps_corner/engine/logs:/home/lps/engine/logs logicalcontracts/lps.swi
 #
 FROM logicalcontracts/swish-valentine2019
+# FROM logicalcontracts/swish-june2020
 LABEL maintainer = "mc@logicalcontracts.com"
 
 # Set environment variables
@@ -31,7 +32,10 @@ VOLUME $LPS_DIR/engine/logs
 # probably unneeded: RUN chmod a+w logs  # ...or something finer
 
 WORKDIR $LPS_DIR/swish/web/lps
+# Bower deprecated, vis.js project dead ( https://github.com/almende/vis/issues/4259#issue-412107497 )
 RUN bower install vis paper
+#RUN npm install vis-timeline
+#RUN npm install paper
 
 #We actually use only redis-cli, but...
 RUN apt-get update && apt-get install -y wget
