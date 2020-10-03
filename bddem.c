@@ -1262,16 +1262,16 @@ so that it is not recomputed
       deltat=abd_Prob(T,env,expltable,table,comp);
       p=env->probs[index];
 
-      if (p==1.0)
-      {
+      // if (p==1.0)
+      // {
         p0=deltaf.prob;
         p1=deltat.prob;
-      }
-      else
-      {
-        p0=deltaf.prob;
-        p1=deltat.prob*p + deltaf.prob*(1-p);
-      }
+      // }
+      // else
+      // {
+      //   p0=deltaf.prob;
+      //   p1=deltat.prob*p + deltaf.prob*(1-p);
+      // }
 
       mpa0=deltaf.mpa;
       mpa1=deltat.mpa;
@@ -1280,15 +1280,15 @@ so that it is not recomputed
       if (p1>p0) {
         assignment.val=1;
 
-        if(p != 0 && p != 1) {
-          mptemp = merge_explain(mpa0,mpa1);
-          mpa = insert(assignment,mptemp);
+        // if(p != 0 && p != 1) {
+          // mptemp = merge_explain(mpa0,mpa1);
+          // mpa = insert(assignment,mptemp);
           // free(mptemp);
           // all the list must be freed, todo
-        }
-        else {
+        // }
+        // else {
           mpa=insert(assignment,mpa1);
-        }
+        // }
         delta.prob=p1;
       }
       else
