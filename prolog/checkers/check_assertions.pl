@@ -61,6 +61,7 @@
        violations_db/3.
 
 :- multifile
+       ignore_predicate/2,
        prolog:message//1.
 
 % :- table
@@ -203,13 +204,13 @@ type_message_prop(Loc-PIL) -->
     {compact_pi_list(PIL, PIC)},
     Loc, ['In assertions of ~q:'-[PIC], nl].
 
-black_list(assertion_head(_, _, _, _, _, _, _), assertions).
-black_list(_, M) :- black_list_module(M).
+ignore_predicate(assertion_head(_, _, _, _, _, _, _), assertions).
+ignore_predicate(_, M) :- ignore_module(M).
 
-black_list_module(extend_args).
+ignore_module(extend_args).
 
 % Issues in the assertion body will be reported when checking properties.
-black_list(M:Call) :- black_list(Call, M).
+ignore_predicate(M:Call) :- ignore_predicate(Call, M).
 
 :- public collect_violations/3.
 
@@ -221,7 +222,7 @@ black_list(M:Call) :- black_list(Call, M).
 
 :- meta_predicate collect_violations(0,0,+).
 collect_violations(M:Goal, Caller, From) :-
-    ( \+ black_list(Caller),
+    ( \+ ignore_predicate(Caller),
       check_property_ctcheck(Goal, M, Caller, CTChecks),
       CTChecks \= []
     ->normalize_pi(Caller, CPI),
