@@ -410,7 +410,7 @@ fluents gameOn.
 
 Documentation for command line usage is TBD. The folowing are commands to be used on SWISH's query pane. 
 
-##Execute a LPS program in simulated time##
+## Execute a LPS program in simulated time ##
 
 These commands execute a LPS program and wait for its end (when failure or timeout happens), and only then show its full state evolution and event trace:
 
@@ -446,7 +446,7 @@ Prints actions and events, as well as fluent states, on SWISH's output panel.
 
 Same, but with verbose output.
 
-##Execute a LPS program in real time##
+## Execute a LPS program in real time ##
 These commands start the program and immediately report its progress in real time.
 
 	serve(TwoDscene).
