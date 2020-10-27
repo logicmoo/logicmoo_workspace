@@ -422,6 +422,10 @@ Timeline is rendered graphicall, showing fluent states as blue ranges and atomic
 
 Same, but also includes some composite events in the timeline: those that span more than 2 states, and are either completed macro actions that include atomic actions, or composite events that trigger post conditions; other composites are not shown.
 
+	go(Timeline, [sample(ListOfFluentTemplates)]) .
+
+The selected intensional fluents are "sampled" at each cycle, and displayed together with extensional fluents.
+
 	go(Timeline,[stacked_fluents]).
 
 Displays fluent states stacked, vertically, rather than aligned.
