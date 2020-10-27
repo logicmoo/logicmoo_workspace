@@ -367,12 +367,12 @@ extern predicate_t __foreign_generator_idx_call;
 
 #define FI_get_dict_t(__unifier, __data, __value) {			\
 	term_t __dict = PL_new_term_refs(3);				\
-	PL_put_term(__dict+2, __data);					\
+	__rtcheck(PL_put_term(__dict+2, __data));                       \
 	__rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL,	\
 					      __system_dict_create, __dict), \
 			    __data, "valid data for " # __unifier));	\
 	term_t __args = PL_new_term_refs(3);				\
-	PL_put_term(__args+1, __dict);					\
+	__rtcheck(PL_put_term(__args+1, __dict));                       \
 	qid_t __p = PL_open_query(NULL, PL_Q_NORMAL, __system_get_dict, \
 				  __args);				\
 	term_t __k = __args+0;						\
@@ -385,7 +385,7 @@ extern predicate_t __foreign_generator_idx_call;
 
 #define FI_get_keyid_index(__pred, __keyid, __index) ({			\
       term_t __args = PL_new_term_refs(2);				\
-      PL_put_term(__args, __keyid);					\
+      __rtcheck(PL_put_term(__args, __keyid));                          \
       __rtcheck(__rtctype(PL_call_predicate(NULL, PL_Q_NORMAL, __pred, __args), \
 			__keyid, "valid key of " # __pred));		\
       __rtcheck(PL_get_integer(__args+1, &__index));			\
@@ -411,7 +411,7 @@ extern predicate_t __foreign_generator_idx_call;
 #define FI_dict_create(__dict, __tag, __desc) ({			\
       term_t __args = PL_new_term_refs(3);				\
       PL_put_atom_chars(__args+1, __tag);				\
-      PL_put_term(__args+2, __desc);					\
+      __rtcheck(PL_put_term(__args+2, __desc));                         \
       __rtcheck(PL_call_predicate(NULL, PL_Q_NORMAL,			\
 				  __system_dict_create, __args));	\
       __rtcheck(PL_unify(__dict, __args));				\
