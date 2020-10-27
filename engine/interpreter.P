@@ -394,19 +394,18 @@ resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case,
 		; B = l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives,A), C=true
 	).
 resolveUntilAction(happens(E,T1_,T2_),_A,_,true) :- 
-	expression_to_time(T1_,T1), expression_to_time(T2_,T2), happens(E,T1,T2).
+	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), happens(E,T1,T2).
 resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- option(more_actions),
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), \+ ground(T1), \+ ground(T2),
 	!, % hack to (also) delay the action
 	resolveUntilAction( (holds(true,T1),happens(E,T1,T2)), A, Ball, Cont).
 resolveUntilAction(happens(E,T1_,T2_),A,_,Cont) :- 
 	% select and execute system action; 
-	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
+	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), 
 	\+ happens(E,T1,T2), system_action(E), 
 	\+ functor(E,lps_terminate,_), % this will be handled in next clause: selection and "execution" elsewhere, at the beginning of the next cycle
 	!, % system actions can not be delayed below...
 	Cont=true,
-	current_time(T1), 
 	T2 is T1+1,
 	check_lps_test_action_ancestors(A),
 	% TODO: this (executing) should perhaps be done later, after checking preconditions for all actions,
@@ -414,9 +413,8 @@ resolveUntilAction(happens(E,T1_,T2_),A,_,Cont) :-
 	% backtracking into here can still occur due to other actions violating preconditions:
 	( callprolog(E), uassertz(happens(E,T1,T2)), fail ; happens(E,T1,T2) ; uretractall(happens(E,T1,T2)), fail).
 resolveUntilAction(happens(E,T1_,T2_),A,_,true) :- % select action:
-	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
+	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), 
 	\+ happens(E,T1,T2), 
-	current_time(T1), 
 	T2 is T1+1,
 	action_(E), 
 	(event_(E) -> ground(E); true), % hack to allow literals used both as events and actions, e.g. when simulating 2 agents in the same program
@@ -2420,13 +2418,13 @@ is_structured_time(T) :- nonvar(T), T= _ / _.
 % Introduces some "time slack" via holds(true,..), so that the body isn't firmly glued to the precise boundaries of a day...
 real_time_literal(holds(_F,T),_) :- (var(T) ; is_cycle_time(T) ; is_time_expression(T)), !, fail.
 real_time_literal(holds(F,Y/M/D), [holds(real_date(Y/M/D),T), holds(F,T)] ) :- !.
-real_time_literal(happens(_E,T1,T2),_) :- (var(T1) ; is_cycle_time(T1)), (var(T2) ; is_cycle_time(T2)), !, fail.
+real_time_literal(happens(_E,T1,T2),_) :- once(( (var(T1) ; is_cycle_time(T1) ; is_time_expression(T1)) )), (var(T2) ; is_cycle_time(T2) ; is_time_expression(T2)), !, fail.
 real_time_literal(happens(E,RT1,T2),[
 	happens(real_date_begin(RT1),_,_T1), holds(true,T1), happens(E,T1,T2)
-	]) :- nonvar(RT1), RT1=_Y/_M/_D, (var(T2) ; is_cycle_time(T2)), !.
+	]) :- nonvar(RT1), RT1=_Y/_M/_D, (var(T2) ; is_cycle_time(T2) ; is_time_expression(T2)), !.
 real_time_literal(happens(E,T1,RT2),[
 	happens(E,T1,_T2), /*holds(true,T2),*/ happens(real_date_end(RT2_),_,_), RT2_ @=< RT2
-	]) :- nonvar(RT2), RT2=_Y/_M/_D, (var(T1) ; is_cycle_time(T1)), !.
+	]) :- nonvar(RT2), RT2=_Y/_M/_D, (var(T1) ; is_cycle_time(T1) ; is_time_expression(T1)), !.
 real_time_literal(happens(E,RT1,RT2),[
 	happens(real_date_begin(RT1),_,_T1), holds(true,T1), happens(E,T1,_T2), /*holds(true,T2),*/ happens(real_date_end(RT2_),_,_), RT2_ @=< RT2
 	]) :- nonvar(RT1), nonvar(RT2), RT1=_/_/_, RT2=_/_/_.
