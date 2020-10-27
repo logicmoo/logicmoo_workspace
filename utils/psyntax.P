@@ -518,7 +518,7 @@ syntax2p(Surface,Vars,Tran,lps_delimiter-[SpecHead,SpecBody],PT) :-
 	(ToWei==true -> syntax2p_literal(Head,Vars,Tran,[T1,T2],ETH,SpecHead,NH); true),
 	( 
 		PT = l_events(NH,NB), NH=happens(_,_,_);
-		PT = l_int(NH,NB), NH = holds(_,_)
+		PT = l_int(NH,NB), NH = holds(_,_), remember_fluent_hint(Head)
 		%TODO: make the processor look ahead at the rule body and decide correctly when the head has no explicit time, but events or fluents are in the body;
 	),
 	!,
