@@ -1213,12 +1213,12 @@ so that it is not recomputed
  */
 {
   int index,comp,pos;
-  double p,p0,p1;
+  double p0,p1;
   DdNode *nodekey,*T,*F;
   prob_abd_expl deltat,deltaf,delta,*deltaptr;
   assign assignment;
   explan_t * mpa0,* mpa1,* mpa;
-  explan_t *mptemp;
+  // explan_t *mptemp;
 
   comp = Cudd_IsComplement(node);
   comp=(comp && !comp_par) ||(!comp && comp_par);
@@ -1260,7 +1260,7 @@ so that it is not recomputed
       F = Cudd_E(node);
       deltaf=abd_Prob(F,env,expltable,table,comp);
       deltat=abd_Prob(T,env,expltable,table,comp);
-      p=env->probs[index];
+      // p=env->probs[index];
 
       // if (p==1.0)
       // {
