@@ -309,7 +309,9 @@ current_asr_prop_value(VS, T, Cond, PType, NAsr, PropValue) :-
       asr_aprop(NAsr, Part, Prop, From)
     *->
       valid_prop(T, Prop), % if not valid, ignore property
-      \+ check_prop(Check, VS, Prop),
+      \+ catch(check_prop(Check, VS, Prop),
+               Error,
+               send_signal(at_location(From, Error))),
       last_prop_failure(L),
       (Mult = once -> ! ; true),
       CheckProp =.. [Check, Prop],

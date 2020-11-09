@@ -129,8 +129,12 @@ prolog:error_message(unintercepted_signal(Signal)) -->
     call(Goal, H, V1, V2),
     '$foldl_'(T, Goal, V2, V).
 
+rt_translate_message(Msg) -->
+    '$messages':translate_message(Msg),
+    [nl].
+
 prolog:message(acheck(checks, RTChecks)) -->
-    '$foldl'(prolog:message, RTChecks).
+    '$foldl'(rt_translate_message, RTChecks).
 
 prolog:message(assrchk(Error)) -->
     assr_error_message(Error),
