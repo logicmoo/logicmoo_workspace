@@ -67,8 +67,9 @@ do_ac_head_prop_idx(Head, M, Mode, Det, From) :-
       current_predicate(M:F/A)
     ),
     functor(Mode, F, A),
-    mode(M:Mode, Det),
-    predicate_from(M:Head, From).
+    '$c_current_predicate'(_, M:'$mode'(_,_)),
+    clause(M:'$mode'(Mode, Det), true, Ref),
+    From = clause(Ref).
 do_ac_head_prop_idx(_, _, _, _, _).
 
 assertions:asr_head_prop(ac_asr(M, H, S, D, F), M, H, check, pred, [], F) :-
