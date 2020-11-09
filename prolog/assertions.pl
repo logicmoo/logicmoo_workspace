@@ -76,7 +76,7 @@
     ```
       :- true prop callable/1 is det
     ```
-  
+
   but can be confused with:
   ```
   :- true prop det(callable)
@@ -201,7 +201,7 @@ add_arg(H, G1, G2, Pos1, Pos2) :-
       ->( nonvar(PosL1)
         ->append(PosL1, [0-0 ], PosL)
         ; true
-        )  
+        )
       ; Pos1 = From-To
       ->FFrom = From,
         FTo = To,
@@ -253,7 +253,7 @@ valid_cp(C) :- \+ invalid_cp(C).
 
 invalid_cp(_/_).
 
-%!  validate_body_sections(+Type:assrt_type, -Compat:list(pairs), -Calls:list(pairs), -Success:list(pairs), -Global:list(pairs), -MustBeEmpty:list(pairs), -MustNotBeEmpty:list(pairs)) is det.
+%!  validate_body_sections(+Type:assrt_type, -Compat:list(pair), -Calls:list(pair), -Success:list(pair), -Global:list(pair), -MustBeEmpty:list(pair), -MustNotBeEmpty:list(pair)) is det.
 %   
 %   Unifies MustBeEmpty with a list of sections that must be empty, and
 %   MustNotBeEmpty with a list of sections that must not be empty.  The elements

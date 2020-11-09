@@ -983,7 +983,7 @@ sanitize_csym([C|L], S1) -->
       {S = [0'_|S1]}
     ),
     sanitize_csym(L, S).
-    
+
 declare_struct_union_ini(union, TPDL, Name) -->
     ['typedef enum {'],
     foldnl(ds_union_ini_1(union, Name), 0, TPDL),
