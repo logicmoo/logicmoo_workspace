@@ -90,7 +90,7 @@ cover_info(File, CCov, Clss, LCov, Lits) :-
     CountC = count(CCov, Clss),
     CountL = count(LCov, Lits).
 
-%! ports_color(List:list(pairs), Color:atm)
+%! ports_color(List:list(pair), Color:atm)
 %
 %  Convention: the color that affects the clause should be
 %  darker than those that affects only literals.

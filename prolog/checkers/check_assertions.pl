@@ -243,9 +243,9 @@ check_property_ctcheck(Goal, M, Caller, AssrErrorL) :-
 set_variable_names(Name=Variable) :- ignore(Variable = '$VAR'(Name)).
 
 do_check_property_ctcheck(CTCheck, AssrErrorL) :-
-    AssrError = assrchk(_),
     SErrors = s([]),
-    intercept(CTCheck, AssrError, cpc_handler(AssrError), SErrors-CTCheck),
+    intercept(catch(CTCheck, Error, send_signal(Error)),
+              AssrError, cpc_handler(AssrError), SErrors-CTCheck),
     SErrors = s(CAssrErrorL),
     maplist(collect_assr_error(CTCheck), CAssrErrorL, AssrErrorL).
 
