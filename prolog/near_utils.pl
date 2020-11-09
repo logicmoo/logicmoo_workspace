@@ -10,6 +10,7 @@
            epsilon/2]).
 
 :- use_module(library(mapargs)).
+:- use_module(library(compare_eq)).
 
 :- meta_predicate
         fact_near(0 ),
@@ -105,10 +106,6 @@ near_compare(Comparator, A, B) :-
     ; epsilon(max(abs(A), abs(B)), E),
       compare(Comparator, A, B, E)
     ).
-
-compare_eq(=).
-compare_eq(=<).
-compare_eq(>=).
 
 compare(=,  A, B, E) :- abs(A - B) =< E.
 compare(=<, A, B, E) :- A - B =< E.
