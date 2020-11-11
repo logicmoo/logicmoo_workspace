@@ -38,6 +38,7 @@ swish_config:config(include_alias,	system).
 :- use_module(swish(lib/plugin/login)).
 :- use_module(swish(lib/authenticate)).
 :- use_module(library(settings)).
+:- use_module(library(http/http_session)).
 
 % LPS visualizations will appear courtesy of either of two SWISH answer renderers:
 :- use_module(lps_2d_renderer,[]). % need not and can not import the rendering predicate into here
@@ -105,14 +106,17 @@ lps_user(unknown_user,unknown_email).
 update_user(Request,_User) :- 
 	retractall(transaction_lps_user(_,_)), % hacky retract, good for all clauses...
 	catch( (current_user_info(Request, Info), assert(transaction_lps_user(Info.sub,Info.email))), _Ex, fail), 
+	http_session_retractall(lps_user(_,_)), http_session_assert(lps_user(Info.sub,Info.email)),
 	!.
 % the above clause may be dumb (or not...) because perhaps the following suffices... TODO: clean up this.
 update_user(_Request,User) :- 
 		catch(user_property(User,email(Email)),_,fail),
 		!,
-		assert(transaction_lps_user(User.identity,Email)).   % local (e.g. HTTP-authenticated) account
+		assert(transaction_lps_user(User.identity,Email)),   % local (e.g. HTTP-authenticated) account
+		http_session_retractall(lps_user(_,_)), http_session_assert(lps_user(User.identity,Email)).
 update_user(_Request,_User) :- 
-	assert(transaction_lps_user(unknown_user,unknown_email)).
+	assert(transaction_lps_user(unknown_user,unknown_email)),
+	http_session_retractall(lps_user(_,_)).
 
 % patch SWISH so that "local" (HTTP authenticated users) are kept sandboxed:
 :- dynamic(swish_pep:approve/2). % Needed for SWI Prolog 8.x. 
