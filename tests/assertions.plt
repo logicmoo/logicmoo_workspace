@@ -10,7 +10,7 @@ test(assertions_1) :-
                                        ::int(A):(gnd(A),var(B))
                                                 =>(gnd(A), gnd(B))
                                                 + (not_fails,is_det)), _, R, _),
-    assertion(R=[assertions:asr_head_prop(Idx, m, p(A, B), check, pred, [], _),
+    assertion(R=[assertions:asr_head_prop(Idx, m, p(A, B), check, pred, [], _, _),
                  assertions:asr_comp(Idx, m, int(A), _),
                  assertions:asr_call(Idx, m, gnd(A), _),
                  assertions:asr_call(Idx, m, var(B), _),
@@ -27,7 +27,7 @@ test(assertions_2) :-
                                ::int(A):(gnd(A), var(B))
                                         =>(gnd(A), gnd(B))
                                         + not_fails), _, R, _),
-    assertion(R=[assertions:asr_head_prop(Idx, system, p(A, B), check, pred,[], _),
+    assertion(R=[assertions:asr_head_prop(Idx, system, p(A, B), check, pred, [], _, _),
                  assertions:asr_comp(Idx, m, int(A), _),
                  assertions:asr_call(Idx, m, gnd(A), _),
                  assertions:asr_call(Idx, m, var(B), _),
@@ -46,7 +46,7 @@ test(assertions_simple) :-
                       => (list(A, atom),   atom(B))
                       +  (is_det, iso) # "Write live comments here"),
                   _, Records, _),
-    assertion(Records=[assertions:asr_head_prop(Idx, a, atomic_list_concat(A, B), check, pred, Dict, _),
+    assertion(Records=[assertions:asr_head_prop(Idx, a, atomic_list_concat(A, B), check, pred, Dict, _, _),
                        assertions:asr_comm(Idx, "Write live comments here", _),
                        assertions:asr_comp(Idx, a, list(A, ground), _),
                        assertions:asr_comp(Idx, a, atom(B), _),
@@ -61,7 +61,7 @@ test(assertions_simple) :-
 test(assertions_comp) :-
     assertions:expand_assertion(
                   m, [], true comp nfi1(G,V) + (sideff(free), no_acheck), _, R, _),
-    assertion(R=[assertions:asr_head_prop(Idx, m, nfi1(G, V), true, comp, [], _),
+    assertion(R=[assertions:asr_head_prop(Idx, m, nfi1(G, V), true, comp, [], _, _),
                  assertions:asr_glob(Idx, m, sideff(free, _), _),
                  assertions:asr_glob(Idx, m, no_acheck(_), _)
                 ]).
@@ -75,7 +75,7 @@ test(assertions_sugar) :-
                                      => list(atom)   * atom
                       +  (is_det, iso) # "Write live comments here"), _,
                   Records, _),
-    assertion(Records=[assertions:asr_head_prop(Idx, a, atomic_list_concat(A, B), check, pred, Dict, _),
+    assertion(Records=[assertions:asr_head_prop(Idx, a, atomic_list_concat(A, B), check, (pred), Dict, _, _),
                        assertions:asr_comm(Idx, "Write live comments here", _),
                        assertions:asr_comp(Idx, a, list(ground, A), _),
                        assertions:asr_comp(Idx, a, atom(B), _),
@@ -91,17 +91,17 @@ test(assertions_sugar) :-
 test(assertions_multi) :-
     assertions:expand_assertion(m, [], (pred [(q:a/1+kbmask([+])), b/2+hidden]+kbrule),
                                _, Records, _),
-    assertion(Records=[assertions:asr_head_prop(Idx1, q, a(_), check, pred, [], _),
+    assertion(Records=[assertions:asr_head_prop(Idx1, q, a(_), check, pred, [], _, _),
                        assertions:asr_glob(Idx1, m, kbrule(_), _),
                        assertions:asr_glob(Idx1, q, kbmask([(+)], _), _),
-                       assertions:asr_head_prop(Idx2, m, b(_, _), check, pred, [], _),
+                       assertions:asr_head_prop(Idx2, m, b(_, _), check, pred, [], _, _),
                        assertions:asr_glob(Idx2, m, kbrule(_), _),
                        assertions:asr_glob(Idx2, m, hidden(_), _)
                       ]).
 
 test(assertions_mode1) :-
     assertions:expand_assertion(u, [], pred dict(+int), _, Re, _),
-    assertion(Re=[assertions:asr_head_prop(Idx, u, dict(A), check, pred, [], _),
+    assertion(Re=[assertions:asr_head_prop(Idx, u, dict(A), check, pred, [], _, _),
                   assertions:asr_call(Idx, u, int(A), _)]).
 
 test(assertions_is_plus) :-
@@ -119,7 +119,7 @@ substitute_idx(Idx1, Idx2, Term, Idx2) :-
 
 test(assertions_oddity_1) :-
     assertions:expand_assertion(m, [], (pred a:b/2 : e * l + n), _, R, _),
-    assertion(R=[assertions:asr_head_prop(Idx, a, b(A, B), check, pred, [], _),
+    assertion(R=[assertions:asr_head_prop(Idx, a, b(A, B), check, pred, [], _, _),
                  assertions:asr_call(Idx, a, e(A), _),
                  assertions:asr_call(Idx, a, l(B), _),
                  assertions:asr_glob(Idx, a, n(_), _)
@@ -127,22 +127,26 @@ test(assertions_oddity_1) :-
 
 test(assertions_oddity_2) :-
     assertions:expand_assertion(m, [], (pred (a:b/2) : e * l + n), _, R, _),
-    assertion(R=[assertions:asr_head_prop(Idx, a, b(A, B), check, pred, [], _),
+    assertion(R=[assertions:asr_head_prop(Idx, a, b(A, B), check, (pred), [], _, _),
                  assertions:asr_call(Idx, m, e(A), _),
                  assertions:asr_call(Idx, m, l(B), _),
                  assertions:asr_glob(Idx, m, n(_), _)
                 ]).
 
 test(assertions_abridged_notation) :-
-    assertions:expand_assertion(rt, [], pred check_to_messages(+Time      :ctime_t,
-                                                              +RTCheck   :rtcheck_error,
-                                                              ?Messages1 :list(message_info),
-                                                              ?Messages  :list(message_info))#"c", _, R, _),
+    assertions:expand_assertion(
+                   rt, [],
+                   pred check_to_messages(+Time      :ctime_t,
+                                          +RTCheck   :rtcheck_error,
+                                          ?Messages1 :list(message_info),
+                                          ?Messages  :list(message_info))#"c", _, R, _),
     assertion(R=[assertions:asr_head_prop(Idx,
-                                         rt, check_to_messages(Time,
-                                                               RTCheck,
-                                                               Messages1,
-                                                               Messages), check, pred, [], _),
+                                          rt,
+                                          check_to_messages(Time,
+                                                            RTCheck,
+                                                            Messages1,
+                                                            Messages),
+                                          check, pred, [], _, _),
                  assertions:asr_comm(Idx, "c", _),
                  assertions:asr_comp(Idx, rt, list(message_info, Messages1), _),
                  assertions:asr_comp(Idx, rt, list(message_info, Messages), _),

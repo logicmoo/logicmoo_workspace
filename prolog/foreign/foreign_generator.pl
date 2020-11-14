@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(foreign_generator, [generate_library/5,
+:- module(foreign_generator, [generate_library/6,
                               collect_prop/4,
                               gen_foreign_library/3]).
 
@@ -157,33 +157,35 @@ is_newer(File1, File2) :-
     time_file(File2, Time2),
     Time1 > Time2.
 
-generate_library(M, AliasSO, AliasSOPl, InitL, File) :-
-    absolute_file_name(AliasSO, FileSO, [file_type(executable),
-                                         relative_to(File)]),
-    findall(FSource, ( ( use_foreign_source(M, FAlias)
-                       ; FAlias = library('foreign/foreign_interface.c')
-                       ; FAlias = library('foreign/foreign_swipl.c')
-                       ),
-                       absolute_file_name(FAlias, FSource,
-                                          [extensions(['.c', '']),
-                                           access(read),
-                                           relative_to(File)])
-                     ), FSourceL),
-    ( forall(( Dep = File
-             ; member(Alias, [library(foreign/foreign_generator),
-                              library(foreign/foreign_props),
-                              library(foreign/foreign_interface)
-                             ]),
-               absolute_file_name(Alias, Dep, [file_type(prolog),
-                                               access(read),
-                                               relative_to(File)])),
-             is_newer(FileSO, Dep))
-    ->print_message(informational,
-                    format('Skipping generation of ~w interface: is up to date', [File])),
-      compile_library(M, FileSO, File, FSourceL)
-    ; do_generate_library(M, FileSO, File, InitL),
-      do_generate_wrapper(M, AliasSO, AliasSOPl, File),
-      do_compile_library(M, FileSO, File, FSourceL)
+generate_library(M, AliasSO, InitL, File) -->
+    { absolute_file_name(AliasSO, FileSO, [file_type(executable),
+                                           relative_to(File)]),
+      findall(FSource, ( ( use_foreign_source(M, FAlias)
+                         ; FAlias = library('foreign/foreign_interface.c')
+                         ; FAlias = library('foreign/foreign_swipl.c')
+                         ),
+                         absolute_file_name(FAlias, FSource,
+                                            [extensions(['.c', '']),
+                                             access(read),
+                                             relative_to(File)])
+                       ), FSourceL)
+    },
+    ( {forall(( Dep = File
+              ; member(Alias, [library(foreign/foreign_generator),
+                               library(foreign/foreign_props),
+                               library(foreign/foreign_interface)
+                              ]),
+                absolute_file_name(Alias, Dep, [file_type(prolog),
+                                                access(read),
+                                                relative_to(File)])),
+              is_newer(FileSO, Dep))}
+    ->{ print_message(informational,
+                      format('Skipping generation of ~w interface: is up to date', [File])),
+        compile_library(M, FileSO, File, FSourceL)
+      }
+    ; {do_generate_library(M, FileSO, File, InitL)},
+      do_generate_wrapper(M, AliasSO),
+      {do_compile_library(M, FileSO, File, FSourceL)}
     ).
 
 compile_library(M, FileSO, File, FSourceL) :-
@@ -204,36 +206,29 @@ compile_library(M, FileSO, File, FSourceL) :-
 % hard-coded limitation of SWI-Prolog:
 max_fli_args(10 ).
 
-do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
-    max_fli_args(MaxFLIArgs),
-    neck,
-    findall(F/A, ( current_foreign_prop(_, Head, M, _, _, _, _, _, _, _, _, _, _),
-                   \+ ( predicate_property(M:Head, number_of_clauses(X)),
-                        X>0
-                      ),
-                   functor(Head, F, A)
-                 ), IntfPIU),
-    sort(IntfPIU, IntfPIL),
-    atom_concat(M, '$impl', IModule),
-    absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
-                                             relative_to(File)]),
-    save_to_file(FileSOPl,
-                 phrase(( add_autogen_note(M),
-                          [(:- module(IModule, IntfPIL))],
-                          generate_aux_clauses(M),
-                          ['',
-                           (:- use_foreign_library(AliasSO)),
-                           % make these symbols public:
-                           (:- shlib:current_library(AliasSO, _, F1, IModule, _),
-                               open_shared_object(F1, _Handle, [global]))],
-                          findall((Head :- Body),
-                                  ( member(F/A, IntfPIL),
-                                    A > MaxFLIArgs,
-                                    atomic_list_concat(['__aux_pfa_', F, '_', A], NF),
-                                    functor(Head, F, A),
-                                    Body =.. [NF, Head]
-                                  ))
-                        ))).
+do_generate_wrapper(M, AliasSO) -->
+    { max_fli_args(MaxFLIArgs),
+      neck,
+      findall(F/A, ( current_foreign_prop(_, Head, _, M, _, _, _, _, _, _, _, _, _),
+                     \+ ( predicate_property(M:Head, number_of_clauses(X)),
+                          X>0
+                        ),
+                     functor(Head, F, A)
+                   ), IntfPIU),
+      sort(IntfPIU, IntfPIL)
+    },
+    generate_aux_clauses(M),
+    [(:- use_foreign_library(AliasSO)),
+     % make these symbols public:
+     (:- shlib:current_library(AliasSO, _, F1, M, _),
+         open_shared_object(F1, _Handle, [global]))],
+    findall((Head :- Body),
+            ( member(F/A, IntfPIL),
+              A > MaxFLIArgs,
+              atomic_list_concat(['__aux_pfa_', F, '_', A], NF),
+              functor(Head, F, A),
+              Body =.. [NF, Head]
+            )).
 
 atomic_args(String, ArgL) :-
     atomic_list_concat(ArgL1, ' ', String),
@@ -394,9 +389,7 @@ generate_foreign_intf_h(Module, FileImpl_h) -->
      '',
      '',
      '#include <foreign_swipl.h>',
-     "#include \""+FileImpl_h+"\"",
-     '',
-     "extern module_t __"+Module+"_impl;"],
+     "#include \""+FileImpl_h+"\""],
     findall_tp(Module, type_props_nft, declare_type_getter_unifier),
     findall('extern '+Decl+';',
             ( current_foreign_prop(_, Head, _, Module, _, _, _, _, Dict, _, _, BindName, _, Type),
@@ -441,8 +434,7 @@ generate_foreign_c(Module, Base, InitL, FilePl, FileIntf_h) -->
             )),
     ["#include \""+FileIntf_h+"\"",
      '',
-     "module_t __"+Module+";",
-     "module_t __"+Module+"_impl;"
+     "module_t __"+Module+";"
     ],
     findall_tp(Module, type_props_nft, implement_type_getter),
     findall_tp(Module, type_props_nft, implement_type_unifier),
@@ -456,33 +448,53 @@ generate_foreign_register(Module, Base, InitL) -->
      '    __system_put_dict           =PL_predicate("put_dict",    4, "system");',
      '    __foreign_generator_call_idx=PL_predicate("call_idx",    2, "foreign_generator");',
      '    __foreign_generator_idx_call=PL_predicate("idx_call",    2, "foreign_generator");',
-     "    __"+Module+"     =PL_new_module(PL_new_atom(\""+Module+"\"));",
-     "    __"+Module+"_impl=PL_new_module(PL_new_atom(\""+Module+"$impl\"));"],
+     "    __"+Module+"     =PL_new_module(PL_new_atom(\""+Module+"\"));"],
     findall_tp(Module, type_props_nft, define_aux_variables),
     findall(Line,
             ( current_foreign_prop(_, _, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
-              write_register_sentence(Type, M, PredName, Arity, BindName, Line))),
+              write_register_sentence(Type, M, Module, PredName, Arity, BindName, Line))),
     foldl(generate_init, InitL),
     ["} /* install_"+Base+" */",
     ''].
 
 generate_init(Init) --> ["    "+Init+";"].
 
-write_register_sentence(fimport(_),    M, PredName, Arity, BindName, Line) :- !,
+foreign_import(fimport(_)).
+foreign_import(fimport(_, _)).
+
+foreign_native(foreign(_)).
+foreign_native(foreign(_, _)).
+foreign_native(native(_)).
+foreign_native(native(_, _)).
+
+foreign_native_fimport(H) :- foreign_native(H).
+foreign_native_fimport(H) :- foreign_import(H).
+
+write_register_sentence(IDecl, M, _, PredName, Arity, BindName, Line) :-
+    foreign_import(IDecl),
+    neck,
     write_init_fimport_binding(M, PredName, Arity, BindName, Line).
-write_register_sentence(fimport(_, _), M, PredName, Arity, BindName, Line) :- !,
-    write_init_fimport_binding(M, PredName, Arity, BindName, Line).
-write_register_sentence(_, _, PredName, Arity, BindName,
-                        "    PL_register_foreign(\""+PredName+"\", "+Arity+", "+BindName+", 0);") :-
+write_register_sentence(FDecl, M, CM, PredName, Arity, BindName, Line) :-
+    foreign_native(FDecl),
+    neck,
+    write_register_foreign_native(M, CM, PredName, Arity, BindName, Line).
+write_register_sentence(FDecl, M, CM, PredName, Arity, BindName, Line) :-
+    \+ foreign_native_fimport(FDecl),
+    writeln(user_error,
+            wtf(write_register_sentence(FDecl, M, CM, PredName, Arity, BindName, Line))),
+    fail.
+
+write_register_foreign_native(M, CM, PredName, Arity, BindName, L) :-
     max_fli_args(MaxFLIArgs),
     neck,
-    Arity =< MaxFLIArgs.
-write_register_sentence(_, _, PredName, Arity, BindName,
-                        "    PL_register_foreign(\"__aux_pfa_"+PredName+"_"+Arity
-                        +"\", 1, __aux_pfa_"+BindName+"_"+Arity+", 0);") :-
-    max_fli_args(MaxFLIArgs),
-    neck,
-    Arity > MaxFLIArgs.
+    ( M == CM
+    ->L1="    PL_register_foreign("
+    ; L1="    PL_register_foreign_in_module(\""+M+"\","
+    ),
+    ( Arity =< MaxFLIArgs
+    ->L = L1+"\""+PredName+"\", "+Arity+", "+BindName+", 0);"
+    ; L = L1+"\"__aux_pfa_"+PredName+"_"+Arity+"\", 1, __aux_pfa_"+BindName+"_"+Arity+", 0);"
+    ).
 
 write_init_fimport_binding(M, PN, A, BN,
                            "    "+BN+" = PL_predicate(\""+PN+"\", "+A+", \""+M+"\");").
@@ -544,7 +556,7 @@ type_props_(CM, Type, Dict, Pos, Asr) :-
     % should be only those defined in the current module, but not others that
     % could be imported in CM --EMM
     % prop_asr(Type, CM, check, prop, Dict, Pos, Asr),
-    asr_head_prop(Asr, CM, Type, check, prop, Dict, Pos),
+    asr_head_prop(Asr, CM, Type, check, prop, Dict, _, Pos),
     once(prop_asr(glob, type(_), _, Asr)).
 
 type_props_nf(Module, Type, TypePropLDictL, Pos, Asr) :-
@@ -560,7 +572,7 @@ type_props_nft(Module, Type, TypePropLDictL, Pos, Asr) :-
 
 define_aux_variables(dict_ini(_, Name, M, _), _, _) -->
     !,
-    ["    __rtcwarn((__"+M+"_aux_keyid_index_"+Name+"=PL_pred(PL_new_functor(PL_new_atom(\"__aux_keyid_index_"+Name+"\"), 2), __"+M+"_impl))!=NULL);"].
+    ["    __rtcwarn((__"+M+"_aux_keyid_index_"+Name+"=PL_pred(PL_new_functor(PL_new_atom(\"__aux_keyid_index_"+Name+"\"), 2), __"+M+"))!=NULL);"].
 define_aux_variables(dict_key_value(_, _, _, _), _, _) --> !, {fail}.
 define_aux_variables(_, _, _) --> [].
 
@@ -1374,17 +1386,12 @@ acodes(Atom, List, Tail) :-
     atom_codes(Atom, Codes),
     append(Codes, Tail, List).
 
-cond_qualify_with(CM, MProp, MProp) :-
-    strip_module(CM:MProp, M, Prop),
+cond_qualify_with(CM, MProp1, MProp) :-
+    strip_module(CM:MProp1, M, Prop),
     ( CM = M
     ->MProp = Prop
     ; MProp = M:Prop
     ).
-
-foreign_native(foreign(_)).
-foreign_native(foreign(_, _)).
-foreign_native(native(_)).
-foreign_native(native(_, _)).
 
 current_foreign_prop(Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL, DictL,
                      FuncName, PredName, BindName, Arity) :-
@@ -1414,26 +1421,21 @@ collect_prop(Asr, CM, Part, PropL) :-
                               )
                             ), PropL).
 
-assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Comm, Dict, Loc) :-
-    asr_head_prop(Asr, CM, Head, Status, Type, Dict, Loc),
-    ( curr_prop_asr(comm, Comm, _, Asr)
-    ->true
-    ; Comm = ""
-    ),
-    predicate_property(CM:Head, implementation_module(M)),
+assertion_db(Asr, Head, M, CM, Status, Type, Comp, Call, Succ, Glob, Dict) :-
+    asr_head_prop(Asr, HM, Head, Status, Type, Dict, CM, _Loc),
+    predicate_property(HM:Head, implementation_module(M)),
     collect_props(Asr, CM, Comp, Call, Succ, Glob).
 
 current_foreign_prop(GenKeyProp, Asr, Head, Module, Context, CompL, CallL, SuccL, GlobL,
                      DictL, FuncName, PredName, BindName, Arity, KeyProp) :-
-    asr_head_prop(Asr, Context, Head, check, Type, _, _),
+    asr_head_prop(Asr, HM, Head, check, Type, _, Context, _),
     memberchk(Type, [pred, prop]),
-    predicate_property(Context:Head, implementation_module(Module)),
+    predicate_property(HM:Head, implementation_module(Module)),
     once(( call(GenKeyProp, KeyProp),
            prop_asr(glob, KeyProp, _, Asr)
          )),
     findall(Head-[MComp, MCall, MSucc, MGlob, Dict],
-            ( assertion_db(_, Head, Module, CM, check, Type, Comp, Call, Succ,
-                           Glob, _, Dict, _),
+            ( assertion_db(_, Head, Module, CM, check, Type, Comp, Call, Succ, Glob, Dict),
               maplist(maplist(cond_qualify_with(CM)),
                       [ Comp,  Call,  Succ,  Glob],
                       [MComp, MCall, MSucc, MGlob])
@@ -1480,10 +1482,6 @@ resolve_name(BindName, _, BindName) :- atom(BindName), !.
 resolve_name(name(BindName), _, BindName).
 resolve_name(prefix(Prefix), PredName, BindName) :- atom_concat(Prefix, PredName, BindName).
 resolve_name(suffix(Suffix), PredName, BindName) :- atom_concat(PredName, Suffix, BindName).
-
-foreign_native_fimport(H) :- foreign_native(H).
-foreign_native_fimport(fimport(_)).
-foreign_native_fimport(fimport(_, _)).
 
 read_foreign_properties(Head, M, CM, Comp, Call, Succ, Glob, CN/A as PN/BN + CheckMode, T) :-
     current_foreign_prop(_Asr, Head, M, CM, Comp, Call, Succ, Glob, Dict, CN, PN, BN, A, T),

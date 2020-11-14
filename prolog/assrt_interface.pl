@@ -40,28 +40,27 @@
 
 % Propagate assertions in an interface to the implementation
 
-assertions:asr_head_prop(in_asr(IM, Head, Asr), IM, Head, Status, Type, Dict, Loc) :-
-    head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr).
+assertions:asr_head_prop(in_asr(IM, Head, Asr), IM, Head, Status, Type, Dict, CM, Loc) :-
+    head_prop_asr_intf(Head, IM, Status, Type, Dict, CM, Loc, Asr).
 
-head_prop_asr_intf(Head, IM, Status, Type, Dict, Loc, Asr) :-
+head_prop_asr_intf(Head, IM, Status, Type, Dict, CM, Loc, Asr) :-
     \+ current_context_value(evaluating, true),
     interface:'$implementation'(IM, Interface),
-    with_context_value(assertions:asr_head_prop(Asr, Interface, Head,
-                                               Status, Type, Dict, Loc),
+    with_context_value(assertions:asr_head_prop(Asr, Interface, Head, Status, Type, Dict, CM, Loc),
                        evaluating, true).
 
 assertions:asr_comm(in_asr(IM, Head, Asr), Comm, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
+    head_prop_asr_intf(Head, IM, _, _, _, _, _, Asr),
     assertions:asr_comm(Asr, Comm, Loc).
 assertions:asr_comp(in_asr(IM, Head, Asr), M, Comp, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
+    head_prop_asr_intf(Head, IM, _, _, _, _, _, Asr),
     assertions:asr_comp(Asr, M, Comp, Loc).
 assertions:asr_call(in_asr(IM, Head, Asr), M, Call, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
+    head_prop_asr_intf(Head, IM, _, _, _, _, _, Asr),
     assertions:asr_call(Asr, M, Call, Loc).
 assertions:asr_succ(in_asr(IM, Head, Asr), M, Succ, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
+    head_prop_asr_intf(Head, IM, _, _, _, _, _, Asr),
     assertions:asr_succ(Asr, M, Succ, Loc).
 assertions:asr_glob(in_asr(IM, Head, Asr), M, Glob, Loc) :-
-    head_prop_asr_intf(Head, IM, _, _, _, _, Asr),
+    head_prop_asr_intf(Head, IM, _, _, _, _, _, Asr),
     assertions:asr_glob(Asr, M, Glob, Loc).

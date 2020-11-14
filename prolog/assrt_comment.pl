@@ -72,7 +72,7 @@ do_ac_head_prop_idx(Head, M, Mode, Det, From) :-
     From = clause(Ref).
 do_ac_head_prop_idx(_, _, _, _, _).
 
-assertions:asr_head_prop(ac_asr(M, H, S, D, F), M, H, check, pred, [], F) :-
+assertions:asr_head_prop(ac_asr(M, H, S, D, F), M, H, check, pred, [], M, F) :-
     ac_head_prop_idx(H, M, S, D, F).
 assertions:asr_comp(ac_asr(M, H, S, D, F), PM, P, F) :- asrc_prop(comp, M, H, S, D, F, PM, P).
 assertions:asr_call(ac_asr(M, H, S, D, F), PM, P, F) :- asrc_prop(call, M, H, S, D, F, PM, P).
@@ -102,7 +102,7 @@ r(a).
 
 7 ?- r(a).
 ERROR: /home/edison/apps/plsteroids/pp.pl:8: Assertion failure for r(a).
-ERROR:     In *calls*, unsatisfied properties: 
+ERROR:     In *calls*, unsatisfied properties:
 ERROR:         /home/edison/apps/plsteroids/pp.pl:8: instan(pp:var(a)).
 
 */

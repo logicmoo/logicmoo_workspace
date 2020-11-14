@@ -37,7 +37,7 @@
            assrt_type/1,
            assrt_status/1,
            expand_assertion/4,
-           asr_head_prop/7,
+           asr_head_prop/8,
            curr_prop_asr/4,
            asr_aprop/4,
            aprop_asr/4,
@@ -88,7 +88,7 @@
 */
 
 :- multifile
-    asr_head_prop/7,
+    asr_head_prop/8,
     asr_comm/3,
     asr_glob/4,
     asr_comp/4,
@@ -99,7 +99,7 @@
 
 % asr_* declared dynamic to facilitate cleaning
 :- dynamic
-    asr_head_prop/7,
+    asr_head_prop/8,
     asr_comm/3,
     asr_glob/4,
     asr_comp/4,
@@ -133,10 +133,10 @@ asr_head(Asr, M:Head) :-
     ; true
     ).
 
-curr_prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, From).
-curr_prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, From).
-curr_prop_asr(type,   P, From, Asr) :- asr_head_prop(Asr, _, _, _, P, _, From).
-curr_prop_asr(dict,   D, From, Asr) :- asr_head_prop(Asr, _, _, _, _, D, From).
+curr_prop_asr(head, M:P, From, Asr) :- asr_head_prop(Asr, M, P, _, _, _, _, From).
+curr_prop_asr(stat,   P, From, Asr) :- asr_head_prop(Asr, _, _, P, _, _, _, From).
+curr_prop_asr(type,   P, From, Asr) :- asr_head_prop(Asr, _, _, _, P, _, _, From).
+curr_prop_asr(dict,   D, From, Asr) :- asr_head_prop(Asr, _, _, _, _, D, _, From).
 curr_prop_asr(comm,   C, From, Asr) :- asr_comm(Asr,    C, From).
 curr_prop_asr(comp, M:P, From, Asr) :- asr_comp(Asr, M, P, From).
 curr_prop_asr(call, M:P, From, Asr) :- asr_call(Asr, M, P, From).
@@ -154,7 +154,7 @@ curr_prop_asr(glob, M:P, From, Asr) :- asr_glob(Asr, M, P, From).
 :- multifile asr_aprop/4.
 
 prop_asr(H, M, Stat, Type, Dict, From, Asr) :-
-    asr_head_prop(Asr, C, H, Stat, Type, Dict, From),
+    asr_head_prop(Asr, C, H, Stat, Type, Dict, _, From),
     predicate_property(C:H, implementation_module(IM)),
     match_modules(H, M, IM).
 
@@ -254,7 +254,7 @@ valid_cp(C) :- \+ invalid_cp(C).
 invalid_cp(_/_).
 
 %!  validate_body_sections(+Type:assrt_type, -Compat:list(pair), -Calls:list(pair), -Success:list(pair), -Global:list(pair), -MustBeEmpty:list(pair), -MustNotBeEmpty:list(pair)) is det.
-%   
+%
 %   Unifies MustBeEmpty with a list of sections that must be empty, and
 %   MustNotBeEmpty with a list of sections that must not be empty.  The elements
 %   of both lists are pairs like Section-List, where section could be
@@ -825,7 +825,7 @@ assertion_record_each(CM, Dict, Assertions, APos, Clause, TermPos) :-
     Asr =.. [AIdx, M, Head|ShareL], % Asr also contains variable bindings. By
                                     % convention, M is in the 1st position and
                                     % Head in the 2nd, to facilitate work
-    ( Clause = assertions:asr_head_prop(Asr, M, Head, Status, Type, Dict, Loc),
+    ( Clause = assertions:asr_head_prop(Asr, M, Head, Status, Type, Dict, CM, Loc),
       SubPos = HPos,
       ( nonvar(SubPos)
       ->arg(1, SubPos, From),
