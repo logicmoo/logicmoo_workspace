@@ -343,7 +343,7 @@ semantic_head(H, M, dyn, dynamic(Type, CM, Call), Caller, From) :-
       Caller = M:P
     ).
 semantic_head(H, M, asr, assertion(S, T), '<assertion>'(M:H), From) :-
-    assertions:asr_head_prop(_, CM, H, S, T, _, From),
+    assertions:asr_head_prop(_, CM, H, S, T, _, _, From),
     predicate_property(CM:H, implementation_module(M)).
 semantic_head(H, M, exp, export, '<exported>'(M:H), From) :-
     loc_declaration(H, M, export, From).

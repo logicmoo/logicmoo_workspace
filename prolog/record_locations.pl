@@ -50,7 +50,7 @@ record_location. % Enable recording of locations
 
 % Extra location for assertions of a given predicate
 extra_location:loc_declaration(Head, M, assertion(Status, Type), From) :-
-    assertions:asr_head_prop(_, CM, Head, Status, Type, _, From),
+    assertions:asr_head_prop(_, CM, Head, Status, Type, _, _, From),
     predicate_property(CM:Head, implementation_module(M)).
 
 :- multifile skip_record_decl/1.

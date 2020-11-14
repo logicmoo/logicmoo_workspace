@@ -59,7 +59,7 @@ meta_prop(typeprops:mod_qual(Var), :, Var).
 
 infer_meta_assertions :-
     findall((M:F/A)-Meta,
-            ( asr_head_prop(Asr, CM, Head, Status, Type, _, _From),
+            ( asr_head_prop(Asr, CM, Head, Status, Type, _, _, _From),
               memberchk(Status, [true, trust, check]),
               applicable_type(Type),
               functor(Head, F, A),

@@ -144,7 +144,7 @@ walk_from_goal(Head, M, Ref, OTerm) :-
 
 walk_from_assertion(OTerm, MFileD, AsrPartL) :-
     option_files([module_files(MFileD)], FileD),
-    forall(( AHead = assertions:asr_head_prop(Asr, HM, Head, _, _, _, From),
+    forall(( AHead = assertions:asr_head_prop(Asr, HM, Head, _, _, _, _, From),
              clause(AHead, Body, Ref),
              module_property(Ref, module(M)),
              call(M:Body),

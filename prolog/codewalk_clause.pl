@@ -101,7 +101,7 @@ walk_from_loc_declaration(FileD, Opts) :-
            walk_head_body('<declaration>', M:Body, Opts)).
 
 current_assertion_goal(FileD, Opts, AsrPartL, M:Head, CM:Goal) :-
-    assertions:asr_head_prop(Asr, HM, Head, _, _, VNL, AFrom),
+    assertions:asr_head_prop(Asr, HM, Head, _, _, VNL, _, AFrom),
     from_to_file(AFrom, File),
     get_dict(File, FileD, _),
     b_setval('$variable_names', VNL),
