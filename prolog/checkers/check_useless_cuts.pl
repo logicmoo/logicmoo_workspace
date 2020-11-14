@@ -138,15 +138,25 @@ clauses_accessible(MH) :-
 check_det(H, M, Det) :-
     ( inferred_det_db(H, M, Det)
     ->true
-    ; ( predef_det(H, M, Det)
-      ->true
-      ; % format(user_error, "? ~q~n", [M:H]),
-        with_det_checking_pr(H, M, forall(walk_call(H, M, info), true)),
-        infer_det(H, M, Det)
-        % format(user_error, "! ~q: ~w~n", [M:H, Det])
-      )
+    ; do_check_det(H, M, Det)
     ->assertz(inferred_det_db(H, M, Det))
-    ; print_message(error, format("unexpected failure of infer_det/3 or predef_det/3 ~q", [M:H]))
+    ; print_message(error,
+                    format("unexpected failure of infer_det/3 or predef_det/3 ~q",
+                           [M:H]))
+    ).
+
+do_check_det(H, M, Det) :-
+    ( predef_det(H, M, Det)
+    ->true
+    ; % format(user_error, "? ~q~n", [M:H]),
+      with_det_checking_pr(
+          H, M, catch(forall(walk_call(H, M, info), true),
+                      Error,
+                      print_message(
+                          error,
+                          Error))),
+      infer_det(H, M, Det)
+      % format(user_error, "! ~q: ~w~n", [M:H, Det])
     ).
 
 inferred_det(C, M, Det) :-
@@ -294,11 +304,16 @@ walk_call(H, M, CA) :-
     ->true
     ; add_neg_clause(CA, Ref),
       clause_property(Ref, module(CM)),
-      with_det_checking_cl(
-          CA, Ref,
-          do_walk_body(Body, CM, Ref, CA, CP1, CP2))
+      call_with_location(
+          with_det_checking_cl(
+              CA, Ref,
+              do_walk_body(Body, CM, Ref, CA, CP1, CP2)),
+          Ref)
     ),
     remove_new_cp(CA, CP2).
+
+call_with_location(Call, Ref) :-
+    catch(Call, Error, throw(at_location(clause(Ref), Error))).
 
 cut_to(CP) :- catch(safe_prolog_cut_to(CP), _, true).
 
@@ -525,22 +540,11 @@ walk_body(A, M, _, Ref, _, _, CP, CP) :-
     abstract_interpreter:evaluable_body_hook(A, M, Condition),
     call(Condition),
     !,
-    ( \+ \+ catched_call(M:A, Ref)
-    ->catched_call(M:A, Ref)
+    ( \+ \+ call_with_location(M:A, Ref)
+    ->call(M:A)
     ; cut_to(CP),
       fail
     ).
-
-catched_call(Call, Ref) :-
-    catch(Call,
-          Error,
-          ( print_message(
-                error,
-                at_location(
-                    clause(Ref),
-                    Error)),
-            fail
-          )).
 
 walk_body(atom_concat(_, B, _), _, _, _, _, _, CP, CP) :-
     atomic(B),
