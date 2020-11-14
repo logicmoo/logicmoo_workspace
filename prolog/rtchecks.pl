@@ -143,8 +143,8 @@ generate_rtchecks(Preds, Clauses) :-
 term_expansion((:- rtcheck(Preds)), Clauses) :-
     generate_rtchecks(Preds, Clauses).
 
-term_expansion(assertions:asr_head_prop(Asr, M, Pred, Status, Type, D, F),
-               [assertions:asr_head_prop(Asr, M, Pred, Status, Type, D, F)|Clauses]) :-
+term_expansion(assertions:asr_head_prop(Asr, M, Pred, Status, Type, D, _, F),
+               [assertions:asr_head_prop(Asr, M, Pred, Status, Type, D, _, F)|Clauses]) :-
     current_prolog_flag(rtchecks_static, StaticL),
     memberchk(Status, StaticL),
     Type \= (prop),
