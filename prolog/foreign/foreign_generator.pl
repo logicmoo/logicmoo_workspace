@@ -32,7 +32,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(foreign_generator, [generate_library/6,
+:- module(foreign_generator, [generate_library/5,
                               collect_prop/4,
                               gen_foreign_library/3]).
 
@@ -157,35 +157,33 @@ is_newer(File1, File2) :-
     time_file(File2, Time2),
     Time1 > Time2.
 
-generate_library(M, AliasSO, InitL, File) -->
-    { absolute_file_name(AliasSO, FileSO, [file_type(executable),
-                                           relative_to(File)]),
-      findall(FSource, ( ( use_foreign_source(M, FAlias)
-                         ; FAlias = library('foreign/foreign_interface.c')
-                         ; FAlias = library('foreign/foreign_swipl.c')
-                         ),
-                         absolute_file_name(FAlias, FSource,
-                                            [extensions(['.c', '']),
-                                             access(read),
-                                             relative_to(File)])
-                       ), FSourceL)
-    },
-    ( {forall(( Dep = File
-              ; member(Alias, [library(foreign/foreign_generator),
-                               library(foreign/foreign_props),
-                               library(foreign/foreign_interface)
-                              ]),
-                absolute_file_name(Alias, Dep, [file_type(prolog),
-                                                access(read),
-                                                relative_to(File)])),
-              is_newer(FileSO, Dep))}
-    ->{ print_message(informational,
-                      format('Skipping generation of ~w interface: is up to date', [File])),
-        compile_library(M, FileSO, File, FSourceL)
-      }
-    ; {do_generate_library(M, FileSO, File, InitL)},
-      do_generate_wrapper(M, AliasSO),
-      {do_compile_library(M, FileSO, File, FSourceL)}
+generate_library(M, AliasSO, AliasSOPl, InitL, File) :-
+    absolute_file_name(AliasSO, FileSO, [file_type(executable),
+                                         relative_to(File)]),
+    findall(FSource, ( ( use_foreign_source(M, FAlias)
+                       ; FAlias = library('foreign/foreign_interface.c')
+                       ; FAlias = library('foreign/foreign_swipl.c')
+                       ),
+                       absolute_file_name(FAlias, FSource,
+                                          [extensions(['.c', '']),
+                                           access(read),
+                                           relative_to(File)])
+                     ), FSourceL),
+    ( forall(( Dep = File
+             ; member(Alias, [library(foreign/foreign_generator),
+                              library(foreign/foreign_props),
+                              library(foreign/foreign_interface)
+                             ]),
+               absolute_file_name(Alias, Dep, [file_type(prolog),
+                                               access(read),
+                                               relative_to(File)])),
+             is_newer(FileSO, Dep))
+    ->print_message(informational,
+                    format('Skipping generation of ~w interface: is up to date', [File])),
+      compile_library(M, FileSO, File, FSourceL)
+    ; do_generate_library(M, FileSO, File, InitL),
+      do_generate_wrapper(M, AliasSO, AliasSOPl, File),
+      do_compile_library(M, FileSO, File, FSourceL)
     ).
 
 compile_library(M, FileSO, File, FSourceL) :-
@@ -206,29 +204,36 @@ compile_library(M, FileSO, File, FSourceL) :-
 % hard-coded limitation of SWI-Prolog:
 max_fli_args(10 ).
 
-do_generate_wrapper(M, AliasSO) -->
-    { max_fli_args(MaxFLIArgs),
-      neck,
-      findall(F/A, ( current_foreign_prop(_, Head, _, M, _, _, _, _, _, _, _, _, _),
-                     \+ ( predicate_property(M:Head, number_of_clauses(X)),
-                          X>0
-                        ),
-                     functor(Head, F, A)
-                   ), IntfPIU),
-      sort(IntfPIU, IntfPIL)
-    },
-    generate_aux_clauses(M),
-    [(:- use_foreign_library(AliasSO)),
-     % make these symbols public:
-     (:- shlib:current_library(AliasSO, _, F1, M, _),
-         open_shared_object(F1, _Handle, [global]))],
-    findall((Head :- Body),
-            ( member(F/A, IntfPIL),
-              A > MaxFLIArgs,
-              atomic_list_concat(['__aux_pfa_', F, '_', A], NF),
-              functor(Head, F, A),
-              Body =.. [NF, Head]
-            )).
+do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
+    max_fli_args(MaxFLIArgs),
+    neck,
+    findall(F/A, ( current_foreign_prop(_, Head, M, _, _, _, _, _, _, _, _, _, _),
+                   \+ ( predicate_property(M:Head, number_of_clauses(X)),
+                        X>0
+                      ),
+                   functor(Head, F, A)
+                 ), IntfPIU),
+    sort(IntfPIU, IntfPIL),
+    atom_concat(M, '$impl', IModule),
+    absolute_file_name(AliasSOPl, FileSOPl, [file_type(prolog),
+                                             relative_to(File)]),
+    save_to_file(FileSOPl,
+                 phrase(( add_autogen_note(M),
+                          [(:- module(IModule, IntfPIL))],
+                          generate_aux_clauses(M),
+                          ['',
+                           (:- use_foreign_library(AliasSO)),
+                           % make these symbols public:
+                           (:- shlib:current_library(AliasSO, _, F1, IModule, _),
+                               open_shared_object(F1, _Handle, [global]))],
+                          findall((Head :- Body),
+                                  ( member(F/A, IntfPIL),
+                                    A > MaxFLIArgs,
+                                    atomic_list_concat(['__aux_pfa_', F, '_', A], NF),
+                                    functor(Head, F, A),
+                                    Body =.. [NF, Head]
+                                  ))
+                        ))).
 
 atomic_args(String, ArgL) :-
     atomic_list_concat(ArgL1, ' ', String),
@@ -389,7 +394,9 @@ generate_foreign_intf_h(Module, FileImpl_h) -->
      '',
      '',
      '#include <foreign_swipl.h>',
-     "#include \""+FileImpl_h+"\""],
+     "#include \""+FileImpl_h+"\"",
+     '',
+     "extern module_t __"+Module+"_impl;"],
     findall_tp(Module, type_props_nft, declare_type_getter_unifier),
     findall('extern '+Decl+';',
             ( current_foreign_prop(_, Head, _, Module, _, _, _, _, Dict, _, _, BindName, _, Type),
@@ -434,7 +441,8 @@ generate_foreign_c(Module, Base, InitL, FilePl, FileIntf_h) -->
             )),
     ["#include \""+FileIntf_h+"\"",
      '',
-     "module_t __"+Module+";"
+     "module_t __"+Module+";",
+     "module_t __"+Module+"_impl;"
     ],
     findall_tp(Module, type_props_nft, implement_type_getter),
     findall_tp(Module, type_props_nft, implement_type_unifier),
@@ -448,7 +456,8 @@ generate_foreign_register(Module, Base, InitL) -->
      '    __system_put_dict           =PL_predicate("put_dict",    4, "system");',
      '    __foreign_generator_call_idx=PL_predicate("call_idx",    2, "foreign_generator");',
      '    __foreign_generator_idx_call=PL_predicate("idx_call",    2, "foreign_generator");',
-     "    __"+Module+"     =PL_new_module(PL_new_atom(\""+Module+"\"));"],
+     "    __"+Module+"     =PL_new_module(PL_new_atom(\""+Module+"\"));",
+     "    __"+Module+"_impl=PL_new_module(PL_new_atom(\""+Module+"$impl\"));"],
     findall_tp(Module, type_props_nft, define_aux_variables),
     findall(Line,
             ( current_foreign_prop(_, _, M, Module, _, _, _, _, _, _, PredName, BindName, Arity, Type),
@@ -572,7 +581,7 @@ type_props_nft(Module, Type, TypePropLDictL, Pos, Asr) :-
 
 define_aux_variables(dict_ini(_, Name, M, _), _, _) -->
     !,
-    ["    __rtcwarn((__"+M+"_aux_keyid_index_"+Name+"=PL_pred(PL_new_functor(PL_new_atom(\"__aux_keyid_index_"+Name+"\"), 2), __"+M+"))!=NULL);"].
+    ["    __rtcwarn((__"+M+"_aux_keyid_index_"+Name+"=PL_pred(PL_new_functor(PL_new_atom(\"__aux_keyid_index_"+Name+"\"), 2), __"+M+"_impl))!=NULL);"].
 define_aux_variables(dict_key_value(_, _, _, _), _, _) --> !, {fail}.
 define_aux_variables(_, _, _) --> [].
 

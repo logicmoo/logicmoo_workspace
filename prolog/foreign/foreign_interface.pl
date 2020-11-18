@@ -74,9 +74,19 @@ term_expansion((:- link_foreign_library(Lib)),
                foreign_generator:link_foreign_library(M, Lib)) :-
     '$current_source_module'(M).
 
-term_expansion(end_of_file, ClauseL) :-
+%   Don't get rid of the extra file module_so.pl, it is used to allow the
+%   library to be reloadable, otherwise you will not be able to load it the
+%   second time.
+
+term_expansion(end_of_file, Decl) :-
     '$current_source_module'(M),
     module_property(M, file(File)),
     prolog_load_context(file, File), !,
     gen_foreign_library(M, AliasSO, InitL),
-    generate_library(M, AliasSO, InitL, File, ClauseL, [end_of_file]).
+    change_alias(add_suffix('_so'), AliasSO, AliasSOPl),
+    generate_library(M, AliasSO, AliasSOPl, InitL, File),
+    Decl = [(:- [AliasSOPl]), end_of_file].
+
+add_suffix(Suffix, Name1, Name) :-
+    file_name_extension(Name2, _, Name1),
+    atom_concat(Name2, Suffix, Name).
