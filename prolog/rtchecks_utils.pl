@@ -157,6 +157,8 @@ prop_values(From/Prop-Values) -->
     ),
     [nl].
 
+:- thread_local rtcheck_db/1.
+
 :- meta_predicate call_rtc(0).
 
 :- true pred call_rtc/1 : callable # "This predicate calls a goal and if an
@@ -175,16 +177,14 @@ call_rtc(Goal) :-
                             )))
         ).
 
-:- thread_local rtcheck_db/1.
-
 :- meta_predicate save_rtchecks(0).
 
 :- pred save_rtchecks/1 : callable # "Asserts in rtcheck_db/1 all the
         run-time check exceptions thrown by the goal.".
 
 save_rtchecks(Goal) :-
-        RTError = assrchk(_),
-        intercept(Goal, RTError, assertz(rtcheck_db(RTError))).
+    RTError = assrchk(_),
+    intercept(Goal, RTError, assertz(rtcheck_db(RTError))).
 
 :- pred load_rtchecks/1 => list(assrchk_error) # "retract the
         rtcheck_db/1 facts and return them in a list.".
