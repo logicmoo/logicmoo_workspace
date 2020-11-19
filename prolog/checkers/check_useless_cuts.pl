@@ -296,6 +296,11 @@ current_clause(MH, Body, Ref, CP1, CP2) :-
     current_clause(MH, Body, Ref),
     prolog_current_choice(CP2).
 
+:- meta_predicate call_with_location(0, +).
+
+call_with_location(Call, Ref) :-
+    catch(Call, Error, throw(at_location(clause(Ref), Error))).
+
 walk_call(H, M, CA) :-
     current_clause(M:H, Body, Ref, CP1, CP2),
     ( Ref = null
@@ -311,9 +316,6 @@ walk_call(H, M, CA) :-
           Ref)
     ),
     remove_new_cp(CA, CP2).
-
-call_with_location(Call, Ref) :-
-    catch(Call, Error, throw(at_location(clause(Ref), Error))).
 
 cut_to(CP) :- catch(safe_prolog_cut_to(CP), _, true).
 
@@ -572,7 +574,6 @@ walk_lit(V, M, _, _, _) :-
     !,
     add_cp.
 walk_lit(H, M, CM, Ref, CP) :-
-    % ( H \= fakt_dampfdruck(_, _, _) -> true ; gtrace ),
     ( predicate_property(M:H, meta_predicate(Meta))
     ->qualify_meta_goal(CM:H, Meta, C)
     ; C = H
