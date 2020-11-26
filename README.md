@@ -10,7 +10,7 @@ As well as https://docs.google.com/document/d/1fkOxnmI1LqxadvZuCRS-fGIEweIKyPn6A
 
 ```bash
 cd /opt
-git clone https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
+git clone --recursive https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
 cd logicmoo_workspace
 source ./INSTALL-DEPS.md
 ./StartLogicmoo.sh

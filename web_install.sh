@@ -25,7 +25,7 @@ fi
 mkdir -p /opt
 cd /opt
 if [ ! -d "logicmoo_workspace" ]; then
-  git clone https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
+  git clone --recursive https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
 fi
 
 cd logicmoo_workspace
